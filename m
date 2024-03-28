@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-5308-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5309-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B82E88F842
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 07:57:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92DDF88F846
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 07:58:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 216412954B1
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 06:57:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B77861C245F7
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 06:58:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A39CB5026A;
-	Thu, 28 Mar 2024 06:57:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D241350A6A;
+	Thu, 28 Mar 2024 06:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JSEKJaWx"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iwikHwlM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2044.outbound.protection.outlook.com [40.107.243.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D400852F8B;
-	Thu, 28 Mar 2024 06:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310764F88E;
+	Thu, 28 Mar 2024 06:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711609045; cv=fail; b=oAtWVR8+Ms292qWFoCA0A/uMiFo99B64WzcENMb+1y03a44st/ly8KJM0R0WsbCorZrN0TqDZL/GlEGG9ickq2SH9Yzi3HETcMYuVpRkroMpmleJ0ZmNdJeHZS/pF9BwJsKK2y+yiFLe8hK0xepgOawg1fiOvi+Od5jH5D81YzU=
+	t=1711609047; cv=fail; b=iNO7aEao2EZ1PGVF+l0Cj7FL+yrn/9/Qi6IGuhhluIGm0qUvcEW2HeXRChIzkmh0kWHdmg1kEKKqnjjPaLMVxy8CQ70jtVQzinK1UG/6UCHjjGJVYdBhxgMzHbWXL/PmDwF8T4J4AY1FBeGhq6uDKByIjQGqNWfWKUYTZG7nA1w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711609045; c=relaxed/simple;
-	bh=PbbByKsZgDgsiB3NTWRsPctwYTb9FCCTOCazrgdoKIU=;
+	s=arc-20240116; t=1711609047; c=relaxed/simple;
+	bh=ez7FBpH23ouMxT5Fb+Uh0qtYgFEO6KvmoIuTv4XF0Xo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pFj7mEUGv06xp5AMTTb6rvGz3/WDHQRVkxgdD7W5Cf7Fkfx3OmtCqwZHy9kGvlkjCUN3HjonI6jzBF5j00yBwl7seigdgatbIj/CuCfQ/vS4TB6ZnDFT7yJioLJTakNQVnH1riJxNoQSdHNUl0aXiq1rD9DLBCwGahW+r8ZlpbM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JSEKJaWx; arc=fail smtp.client-ip=40.107.93.87
+	 MIME-Version:Content-Type; b=t8phzWGkWBC41gXDoPfeW7d98tZcUedNdsoBTAs7gg5BrDPMTz1GddVzsA/YQtld4hPkmWCYR/0YzdRdmF3mdfOT8+ARLm1iVfw2P3+bTt9yBbouY8Ma/i+JKN3sDzKsKadGAffouO3aAzS9WIltLRxvCT6nZFjctjXovYhP51I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iwikHwlM; arc=fail smtp.client-ip=40.107.243.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ax6Xo9lg4zxOhudV7/wVGW/5h34WRwlgwn2YuGYMWphY5aANHKAB2QUvVbuqdzPFat4fLqRjfa+32grrHZCu9MhLgD45wmQfVwsTY9V2jMNxr1GPLiJse1n3KqUvOga8ex5CEeHyanEKDdS0KBIxYfRBX5s7PJv0JkbPI4MMTeAbA1UsQSiibasyRd4KqqUarde5bD/uxUdJH0GK4cKATebIFFtSF//a+fiXBwLdKwYnW8Kpp4V85mVshQIVJJXUDQYIbdQ4B6wVhN4NDohTQemAxbwHqaNBxtzrERVDWBole5CudMhjDNZ9PSqKTrM1h0OC0gNBVYJVHxBID3PG/Q==
+ b=T8ZwyuesJuJVxj7aTbKoozNC3lLg7uvihA4ORfeEgRun6YVEmCm3zTZ2/xTQBMkuKvoEBcjxBsK3dEDIZAJhsml4rWfsJQsW7MQFxK1bYgja+U4XmaVGciqCygTkr5vaUnwVp8nVgZEVa7W8zPabK/gDq3nHUIrmj7GM4euO2oE8UrsbKQ5vKkvYsz+KHFiBWI1aGEFaUfnJS18JQtMnKmZ0I75YtU2CR4ztD2xXQj38+2n/jAfDvQn4JwEaRrgfLdZMgc/j++tiLU+NgrcPyvm8L5jOkzcYDlif44w0ShQUKnRTYvgv6y46f8tSMy6A8PvbnW4ulm+gQH1to9Kpdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aI6059EuBtnjnSbkyQUjuatDap0hc10owbqletZh68g=;
- b=ChUkXexTLQh27/sgEPpxPj24o2LDRQGXq7qlhKUgzVTmmgf4wyxKGHRjiIJNqaFkwKrEfBnmVo5UGj6Y2YB8qw4BnmF+2bKVIKON2+ve683FVKF36Ls2OHQlsMFP9H0D8/mV53PuBuzTB3xiwWg+umRelb57YhSvaz2OClQYfV1LMzyOXqrVPEgoIrTMJU5ozz0iG+mNM33oFUdL560WEjCkAswqcpkN9pn3pVp9HiadMG3vAcTmqEKBADq6qHMjMyJsaGpgsRbbAUmYGkkt4SYVSQcezWwZqLDNnVN3qT0BxyDSAS454k9PcTtHItqpTLi/d3mYX3TenxMPBbBVBg==
+ bh=Jf1xx5lV5VxtmOYsSVAPqZLI4ppEFbCrYV78JIY1Svg=;
+ b=nRbk0dXJMw2/7C/g6NC8tvbDl8mcSd1/ijXJjLnAX09y/uhx3TK1/hTvkXXz4y/KEQi7s1SnFA5pvFPQGdTJ+P2VKIs2Jx3LPNdRXATkixJmCZt6XgvH3srHGe253ymFchwui3LVz5QngNP4K4XcyExA+Wv16NAd39dl1dXwETmBqEdn1blTiwP22Nl028Dobt71HRGz5NFgDr0cHEoA5OyvwKp47O72Aayr5S4dxuWIINMmFyt9B66/KbvezLTltrXAauabkfiH8N0XZ0uT33tnWAaCOghC+OLFswO5VQz5cHK+N32DwBPeDijD4SJb94jtUZw3MSVu5hLwuNoPwQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aI6059EuBtnjnSbkyQUjuatDap0hc10owbqletZh68g=;
- b=JSEKJaWxOrkJCQPMQIKTjVJWA813vQSkA3t4p6+Z6cJUuqCzPCi3HAkmFhobAQS744WoVWpQqQatsX8bI1WEwuwvzAMI/Bm3XsOxdENbSvHzup7/WbKY3uLihRMGz8INz8rReur9ZHy6Oy8Y8/dw+E+MKWIoO1JSQM1cqwIjUZ8=
-Received: from BN0PR04CA0205.namprd04.prod.outlook.com (2603:10b6:408:e9::30)
- by MN0PR12MB6247.namprd12.prod.outlook.com (2603:10b6:208:3c1::15) with
+ bh=Jf1xx5lV5VxtmOYsSVAPqZLI4ppEFbCrYV78JIY1Svg=;
+ b=iwikHwlMNoNL9O5hYq9ycZC2a1D2nfU7zTXR+L7NIomMjp5arfI/e2wIShAPcRiviOZwsg0dUW+Rs7OHQvNIByOWywWQFVMnl5gvrZkreT3K5E0+ZfzHtWwl/FNbAa1lPRidayGWKaYdDgVhJUTyuvyC3q+giSRa3/4CT8KCRF4=
+Received: from BN0PR04CA0209.namprd04.prod.outlook.com (2603:10b6:408:e9::34)
+ by CY8PR12MB7491.namprd12.prod.outlook.com (2603:10b6:930:92::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Thu, 28 Mar
- 2024 06:57:19 +0000
+ 2024 06:57:23 +0000
 Received: from BN2PEPF000044A8.namprd04.prod.outlook.com
- (2603:10b6:408:e9:cafe::b1) by BN0PR04CA0205.outlook.office365.com
- (2603:10b6:408:e9::30) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:408:e9:cafe::89) by BN0PR04CA0209.outlook.office365.com
+ (2603:10b6:408:e9::34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.13 via Frontend
- Transport; Thu, 28 Mar 2024 06:57:19 +0000
+ Transport; Thu, 28 Mar 2024 06:57:23 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -65,11 +65,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  BN2PEPF000044A8.mail.protection.outlook.com (10.167.243.102) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7409.10 via Frontend Transport; Thu, 28 Mar 2024 06:57:19 +0000
+ 15.20.7409.10 via Frontend Transport; Thu, 28 Mar 2024 06:57:23 +0000
 Received: from cjq-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 28 Mar
- 2024 01:57:14 -0500
+ 2024 01:57:19 -0500
 From: Jiqian Chen <Jiqian.Chen@amd.com>
 To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
 	<sstabellini@kernel.org>, Oleksandr Tyshchenko
@@ -81,9 +81,9 @@ CC: <xen-devel@lists.xenproject.org>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>, "Stewart
  Hildebrand" <Stewart.Hildebrand@amd.com>, Huang Rui <Ray.Huang@amd.com>,
 	Jiqian Chen <Jiqian.Chen@amd.com>, Huang Rui <ray.huang@amd.com>
-Subject: [RFC KERNEL PATCH v5 2/3] xen/pvh: Setup gsi for passthrough device
-Date: Thu, 28 Mar 2024 14:56:45 +0800
-Message-ID: <20240328065646.354782-3-Jiqian.Chen@amd.com>
+Subject: [RFC KERNEL PATCH v5 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Date: Thu, 28 Mar 2024 14:56:46 +0800
+Message-ID: <20240328065646.354782-4-Jiqian.Chen@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240328065646.354782-1-Jiqian.Chen@amd.com>
 References: <20240328065646.354782-1-Jiqian.Chen@amd.com>
@@ -99,230 +99,100 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A8:EE_|MN0PR12MB6247:EE_
-X-MS-Office365-Filtering-Correlation-Id: c639cee9-d75b-4499-1224-08dc4ef44f98
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A8:EE_|CY8PR12MB7491:EE_
+X-MS-Office365-Filtering-Correlation-Id: c23643eb-95a2-491b-320b-08dc4ef451e0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	adLYiY1ODi5YdjheWVf9BtXB1KUrMl3MOdMqHMgvCJImGi+5/vyJb4i3cqxn43mrabUdruT41nJ9sTSGkt8tykHUfGM/T2ob7s4hlfZcO+2tgYQHe7b9MAqED+P2rAsiAs9tFuFcdI0gP+mhawVksqCrQDxPCF061WXD/eJ5xykNvNAz2rVMCtxo6gwA2JGiF0ELk2Nuk8tINOdbikQJ7zK4GXWlxJkYO7euyEUWh+0ZY2C05jdgKZ4wuZde+9Sy8Wnbxi64rWgUjq1mXLnWTS5uuiiK9eXOLK6qNzf8CuuwYOFlMvGkzWm5ymsBh+sk8MpAZdymsL4KnDhm5Rc0QftT/kBD2rUtnzuPtj8EMJ4ErAi8zXZrJ7auSrRkEBb5hqoRE5NqLHsibAOhrsa+m1cZ07ZHCPVII7OjlV8kVU6p2eBo7EZ7jpxSB+yV49rBBQZjbyEuvaeE0X5yNNFvJkplvJAgIt8jPxLfNgdBb3I+a7l2eQXGvzdCxjXKB99qkXEGGFdbX0Xw1j01D3jkzu9ObTtgTcCrgE7FIzfHoh9adVN1yIinOB3xEC27gQVlZkfwsNcx4KjIX2jQb0pClI8kSxa+JzYtHe1Jz7uHAPZYzNvrbCzL5Hr4aOXSkhUyol5M9gT5MfKZ+p31wmSQA9HzuMSZb5SkGAjhodukNE8okLKeEeMJLXoMJDWY8taBBl1xZBHRM3aGVu/DE9VyyGMKzDUZG09vBp6lh2nc30HNqImiLqkp3MekvHvUeF36
+	ok86Jtt3hNQ0yDEtPHNYn17A7VRXH+3a0mn3RMz56+N6/DwEA3d0AHHZUgzLxuawYnjjaMzmcxaiZdNDIa3eT14qFvfdOtw+HPKhmcbQnG9IJJsNlUHYJz2G6UFU+6wTbqPH/Zoj31OZeZseSW3zKZ9Zk6aZF0eLxlIfR/Q5xnT92ozB9DS2VLsR92a59sx3rRYb86MKkZYPDs422YGJPcj6L4bbTQLLE6q9JGma8ja3DWkyYFZxx5vrvPg+f8sFnOPPk+K1wiTPa3O8MIALyvRovy0B4L5gPyUS9tEITawGOXE4lbMDOZbBLe7GFqbi+vhv5dHwVgYEcmnJLlQj/1Q78utkH+ZvYOvGZswp0O7LBCINDgtTG/mJNk6iVexnbNvybzFLeZ8dZubft42+qKSX3R1gJT6femgaa1sTFzMHo4jsjecBN7BaZL+AS9n/1lwuFoGSPsbddpFAwzh0pH3vL/GBcRdyVM2GA+xyBTRFS3SDbiz2CA7fPt2J79+vh1iucrrAIoCNY/5gSGamGZjSYyiwYlHaqTqWKL1Pi+PMM7E8bFmlHe3AiadIwQG05ii9WLkgttJHtFUU4yVAXDGOKkA1Yz/k3MGn+qJLmMLeRKa1k38Jla8WZCjPjRmbAM1rAwlbC20s5Uds+i3wqEihVFTbkCpis76qK1YWkkFzn3+uBoQyGMIkL3Ta5zZMYwEDA5UKT0Y89aWZ4BNLZhJHhcCVhes6eGOR2bSFesOxJIESgvbrH2D/WzM3vVry
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(82310400014)(7416005)(36860700004);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(82310400014)(376005)(36860700004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 06:57:19.3808
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 06:57:23.1933
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c639cee9-d75b-4499-1224-08dc4ef44f98
+X-MS-Exchange-CrossTenant-Network-Message-Id: c23643eb-95a2-491b-320b-08dc4ef451e0
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BN2PEPF000044A8.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6247
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7491
 
-In PVH dom0, the gsis don't get registered, but the gsi of
-a passthrough device must be configured for it to be able to be
-mapped into a domU.
-
-When assign a device to passthrough, proactively setup the gsi
-of the device during that process.
+There is a need for some scenarios to use gsi sysfs.
+For example, when xen passthrough a device to dumU, it will
+use gsi to map pirq, but currently userspace can't get gsi
+number.
+So, add gsi sysfs for that and for other potential scenarios.
 
 Co-developed-by: Huang Rui <ray.huang@amd.com>
 Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 ---
-RFC: This patch change function acpi_pci_irq_lookup from a static function to non-static, need ACPI Maintainer to give some comments.
+RFC: No feasible suggestions were obtained in the discussion of v4.
+Discussions are still needed where/how to expose the gsi.
+Looking forward to get more comments and suggestions from PCI/ACPI Maintainers.
 
 ---
- arch/x86/xen/enlighten_pvh.c       | 92 ++++++++++++++++++++++++++++++
- drivers/acpi/pci_irq.c             |  2 +-
- drivers/xen/xen-pciback/pci_stub.c |  8 +++
- include/linux/acpi.h               |  1 +
- include/xen/acpi.h                 |  6 ++
- 5 files changed, 108 insertions(+), 1 deletion(-)
+ drivers/acpi/pci_irq.c  |  1 +
+ drivers/pci/pci-sysfs.c | 11 +++++++++++
+ include/linux/pci.h     |  2 ++
+ 3 files changed, 14 insertions(+)
 
-diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-index c28f073c1df5..12be665b27d8 100644
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -2,6 +2,7 @@
- #include <linux/acpi.h>
- #include <linux/export.h>
- #include <linux/mm.h>
-+#include <linux/pci.h>
- 
- #include <xen/hvc-console.h>
- 
-@@ -26,6 +27,97 @@
- bool __ro_after_init xen_pvh;
- EXPORT_SYMBOL_GPL(xen_pvh);
- 
-+typedef struct gsi_info {
-+	int gsi;
-+	int trigger;
-+	int polarity;
-+} gsi_info_t;
-+
-+struct acpi_prt_entry {
-+	struct acpi_pci_id	id;
-+	u8			pin;
-+	acpi_handle		link;
-+	u32			index;		/* GSI, or link _CRS index */
-+};
-+
-+static int xen_pvh_get_gsi_info(struct pci_dev *dev,
-+								gsi_info_t *gsi_info)
-+{
-+	int gsi;
-+	u8 pin;
-+	struct acpi_prt_entry *entry;
-+	int trigger = ACPI_LEVEL_SENSITIVE;
-+	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
-+				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
-+
-+	if (!dev || !gsi_info)
-+		return -EINVAL;
-+
-+	pin = dev->pin;
-+	if (!pin)
-+		return -EINVAL;
-+
-+	entry = acpi_pci_irq_lookup(dev, pin);
-+	if (entry) {
-+		if (entry->link)
-+			gsi = acpi_pci_link_allocate_irq(entry->link,
-+							 entry->index,
-+							 &trigger, &polarity,
-+							 NULL);
-+		else
-+			gsi = entry->index;
-+	} else
-+		gsi = -1;
-+
-+	if (gsi < 0)
-+		return -EINVAL;
-+
-+	gsi_info->gsi = gsi;
-+	gsi_info->trigger = trigger;
-+	gsi_info->polarity = polarity;
-+
-+	return 0;
-+}
-+
-+static int xen_pvh_setup_gsi(gsi_info_t *gsi_info)
-+{
-+	struct physdev_setup_gsi setup_gsi;
-+
-+	if (!gsi_info)
-+		return -EINVAL;
-+
-+	setup_gsi.gsi = gsi_info->gsi;
-+	setup_gsi.triggering = (gsi_info->trigger == ACPI_EDGE_SENSITIVE ? 0 : 1);
-+	setup_gsi.polarity = (gsi_info->polarity == ACPI_ACTIVE_HIGH ? 0 : 1);
-+
-+	return HYPERVISOR_physdev_op(PHYSDEVOP_setup_gsi, &setup_gsi);
-+}
-+
-+int xen_pvh_passthrough_gsi(struct pci_dev *dev)
-+{
-+	int ret;
-+	gsi_info_t gsi_info;
-+
-+	if (!dev)
-+		return -EINVAL;
-+
-+	ret = xen_pvh_get_gsi_info(dev, &gsi_info);
-+	if (ret) {
-+		xen_raw_printk("Fail to get gsi info!\n");
-+		return ret;
-+	}
-+
-+	ret = xen_pvh_setup_gsi(&gsi_info);
-+	if (ret == -EEXIST) {
-+		xen_raw_printk("Already setup the GSI :%d\n", gsi_info.gsi);
-+		ret = 0;
-+	} else if (ret)
-+		xen_raw_printk("Fail to setup GSI (%d)!\n", gsi_info.gsi);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(xen_pvh_passthrough_gsi);
-+
- void __init xen_pvh_init(struct boot_params *boot_params)
- {
- 	u32 msr;
 diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index ff30ceca2203..630fe0a34bc6 100644
+index 630fe0a34bc6..739a58755df2 100644
 --- a/drivers/acpi/pci_irq.c
 +++ b/drivers/acpi/pci_irq.c
-@@ -288,7 +288,7 @@ static int acpi_reroute_boot_interrupt(struct pci_dev *dev,
- }
- #endif /* CONFIG_X86_IO_APIC */
- 
--static struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin)
-+struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin)
- {
- 	struct acpi_prt_entry *entry = NULL;
- 	struct pci_dev *bridge;
-diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-index 46c40ec8a18e..22d4380d2b04 100644
---- a/drivers/xen/xen-pciback/pci_stub.c
-+++ b/drivers/xen/xen-pciback/pci_stub.c
-@@ -20,6 +20,7 @@
- #include <linux/atomic.h>
- #include <xen/events.h>
- #include <xen/pci.h>
-+#include <xen/acpi.h>
- #include <xen/xen.h>
- #include <asm/xen/hypervisor.h>
- #include <xen/interface/physdev.h>
-@@ -435,6 +436,13 @@ static int pcistub_init_device(struct pci_dev *dev)
- 			goto config_release;
- 		pci_restore_state(dev);
+@@ -449,6 +449,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+ 		kfree(entry);
+ 		return 0;
  	}
-+
-+	if (xen_initial_domain() && xen_pvh_domain()) {
-+		err = xen_pvh_passthrough_gsi(dev);
-+		if (err)
-+			goto config_release;
-+	}
-+
- 	/* Now disable the device (this also ensures some private device
- 	 * data is setup before we export)
- 	 */
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index b7165e52b3c6..08f1e316bf27 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -361,6 +361,7 @@ void acpi_unregister_gsi (u32 gsi);
++	dev->gsi = gsi;
  
- struct pci_dev;
+ 	rc = acpi_register_gsi(&dev->dev, gsi, triggering, polarity);
+ 	if (rc < 0) {
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 2321fdfefd7d..c51df88d079e 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -71,6 +71,16 @@ static ssize_t irq_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(irq);
  
-+struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin);
- int acpi_pci_irq_enable (struct pci_dev *dev);
- void acpi_penalize_isa_irq(int irq, int active);
- bool acpi_isa_irq_available(int irq);
-diff --git a/include/xen/acpi.h b/include/xen/acpi.h
-index b1e11863144d..17c4d37f1e60 100644
---- a/include/xen/acpi.h
-+++ b/include/xen/acpi.h
-@@ -67,10 +67,16 @@ static inline void xen_acpi_sleep_register(void)
- 		acpi_suspend_lowlevel = xen_acpi_suspend_lowlevel;
- 	}
- }
-+int xen_pvh_passthrough_gsi(struct pci_dev *dev);
- #else
- static inline void xen_acpi_sleep_register(void)
- {
- }
-+
-+static inline int xen_pvh_passthrough_gsi(struct pci_dev *dev)
++static ssize_t gsi_show(struct device *dev,
++			struct device_attribute *attr,
++			char *buf)
 +{
-+	return -1;
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	return sysfs_emit(buf, "%u\n", pdev->gsi);
 +}
- #endif
++static DEVICE_ATTR_RO(gsi);
++
+ static ssize_t broken_parity_status_show(struct device *dev,
+ 					 struct device_attribute *attr,
+ 					 char *buf)
+@@ -596,6 +606,7 @@ static struct attribute *pci_dev_attrs[] = {
+ 	&dev_attr_revision.attr,
+ 	&dev_attr_class.attr,
+ 	&dev_attr_irq.attr,
++	&dev_attr_gsi.attr,
+ 	&dev_attr_local_cpus.attr,
+ 	&dev_attr_local_cpulist.attr,
+ 	&dev_attr_modalias.attr,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 7ab0d13672da..457043cfdfce 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -529,6 +529,8 @@ struct pci_dev {
  
- #endif	/* _XEN_ACPI_H */
+ 	/* These methods index pci_reset_fn_methods[] */
+ 	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
++
++	unsigned int	gsi;
+ };
+ 
+ static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
 -- 
 2.34.1
 
