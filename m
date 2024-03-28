@@ -1,229 +1,511 @@
-Return-Path: <linux-pci+bounces-5302-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5303-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E177188F4DC
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 02:43:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D003388F4DF
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 02:48:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DBAA1C260F1
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 01:43:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1AED1C27DAB
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 01:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3585B1804A;
-	Thu, 28 Mar 2024 01:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC7078F6B;
+	Thu, 28 Mar 2024 01:48:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h6j2PTnv"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="WpGhIvKM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from esa9.fujitsucc.c3s2.iphmx.com (esa9.fujitsucc.c3s2.iphmx.com [68.232.159.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C541798F;
-	Thu, 28 Mar 2024 01:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230151804A;
+	Thu, 28 Mar 2024 01:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711590201; cv=fail; b=pISabdnk2s/j9jVBNNcIVg6bptZ4eRRcFMEJ7cdKedbxgRARP5RwcIVBFENtNBGgJXzJPR1/u6uOLwdTIUL8Lm2R5xOnpElaornRLmj+5q/nkKDulIfHFjdrj++LX9BKUWYGCDrHIU6IpXX+4ryR4cpjLVIGMEy+KmXGC6p057A=
+	t=1711590505; cv=fail; b=BaaCXr+pvWbrFq6hcFy24pKOFBz5fsmo6TLNMZfTybmCksGtoo+6dNSV3zE5KOP2egzqUNZoKgkSUGaxtRKUj5r9661Zh3pJfEJg5IxVWJ5dCDA7LyRNnag21E7CkLATUbn47W7eaqbp9KPjO2qCpIX1YYy0MWqeVRK/hSu/oMw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711590201; c=relaxed/simple;
-	bh=KhWK3/bUuR/Znl9GylXLMPu6MRT/JT8uxfFj5VWmU98=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=aMlYko+jPZb4Dn8Zsu7C93Jxy2CXuY7cXeDC7l04WzNhaDgz4v3jZxQ/5Qxlpkm4Cwb5wU/LAb4TAdpFEbiNQbSNwF8OdvaHnYElifPNt0q7HODizSnSTuZ0BRYKAfLCm82b13FUgX0xr6wHWOvtiQfMIi+YeKF6YwnPVXjJKZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h6j2PTnv; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711590199; x=1743126199;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=KhWK3/bUuR/Znl9GylXLMPu6MRT/JT8uxfFj5VWmU98=;
-  b=h6j2PTnv2P5FjcLkD+Nh+UPeYrswwz96U+Oev4sm2eBMyPEhxjEQHNnn
-   fXU2QNRWyUkYme7+XlpQi6uH6s7kNeRffkNGN5uVyHgYrefkyRee/hTa3
-   anByn7m6dgUIf4eTFLSJF2HLUHVFYE9Ny587HvWOsiXNMKIvndgh9BDF6
-   c0dIxCrSbJYh8ALoZZSn3TBRV/6sRHAGeQuL+eIjPaPd8xIjVv091yB+M
-   S2AcLbOE9wi9NolbRjohZ5iwhy/7jhVqX1ia4dufUZIRJ1VzMoER6qost
-   zY6ZiKepntOVYPzKlFhhsLHNZrUA9dDkrIOMvV877N2VWEC1Hk5Ka86MQ
-   A==;
-X-CSE-ConnectionGUID: AlCqWuhtTTWZ2au3ZgDxAQ==
-X-CSE-MsgGUID: ClQj+ledQ026VQlVKuUPEA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6915312"
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="6915312"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:43:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
-   d="scan'208";a="17108669"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Mar 2024 18:43:18 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 27 Mar 2024 18:43:17 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 27 Mar 2024 18:43:17 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 27 Mar 2024 18:43:17 -0700
+	s=arc-20240116; t=1711590505; c=relaxed/simple;
+	bh=It5HcSfNPMHif0mjnnjtg6l7glpAzXnbzeIJHMdtqUI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=DbC3BJwV0krGtHZyTQn8Ut8e6OXdz+d238EUd15ToxBXZMUAmyzZv2eqWo3IWf5gw2VuxTiQSFOWX33lB84x/WUoXK2XPfLYn9bJzGtwL0qBMMla8q5Sc10vByFf+eNn0/vnuEdv9KoB/wPnMdnLu5ED5OsXIVFFZ0Vzu4gSRZA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=WpGhIvKM; arc=fail smtp.client-ip=68.232.159.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1711590502; x=1743126502;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=It5HcSfNPMHif0mjnnjtg6l7glpAzXnbzeIJHMdtqUI=;
+  b=WpGhIvKMhG8a1tTwfhMKwDdWRLLEV2yu/vQVlT5vroiFN3XNILEUwDtu
+   AceC7fQRXunaa2z/vrAUhjY4Xts5XngzUOP83U2Fn4D/GIUW6i+A6dE3R
+   xLZdUGYZ5i6taIH7YbkUN5IEAajRQ4GjR8CE6juuD+yt0WbkOcbaSQ75t
+   BdvXfwNLUx4/C8/UVwKBJliMUVYGqMKeVbUTKbMAGWHJWtioAQP9yNG2k
+   aC3ZxiJ1DTDCRgG2EW+0k46U/wk6B6zSb5qyNp95Nj5BgefeGvzGOz7GA
+   2v/atpKXlrP6o4GIsTioEdfdCrsB+VIM0wVtRVMzwQnQM4HK9q7Q2vE3L
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="115394395"
+X-IronPort-AV: E=Sophos;i="6.07,160,1708354800"; 
+   d="scan'208";a="115394395"
+Received: from mail-tycjpn01lp2169.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.169])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 10:47:06 +0900
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ECjTkrm3gymjmYAP5qUmq754GL7ghqHYU1fHPjKW5z8wG9DLpuFIfmjn93FvqFvVV1jg1xYm2OBqvc8fT7GxEfw4Y7U8yPPNGRU8cfsjDiFvPxgoV4bL/JfrpK5wfWLF/k348PhevnJpC34OkX0SH3v3f2fPcVjWk6hCKYLmdA7r32aNN2A+NSrzwGrl7t3uBAPI/+qQDhtow1hEkh9yAhSsHgwOTv5/4dKjxC3njawbKKleALs2KGJS0uLQPBvdl4WJg6mEGKSL/2C7i15x3mmuDKbpJL3WoY+2rsjrVCVzgFIaCWfJ9CazCRTftpnt853GS7UP1+8h4WcjExd3jw==
+ b=IjI24CSmxCQTpovdimB/v/Ppvvw1WDMDZrUZeXCuTxTmUwi4uorKeGHV86XDt/hJ06wtDTaD57Tq2HOFnrdZaeHh7Xc/sKbx7xRjc8hzgjzgTkshMyPr9XfLA3pSwRcilpPz1rCqrf2Ii4CCRWpj7zI0Q0AKRvFvh0zUBnjlGhxVY6YC38Oj9ezET5rR3tgRVJS/ocl94sqKpaz+G+HH3qm/5+DEfLSQWZxW5YCImWiiPTiySAFzSsmdnjyf8Z5AViTsdOM2u2oCJy/Smfc72VFJ+y3xdvCb0dbkD/m+B/VuG4yCE2I6a7DxVIE2BChS+Dr0+5Aw5fCXHAo8loR8HQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a4EVnkcag23VbbmRU89QULEegm90HGwZD8hseNnzVW8=;
- b=TPcTifW31RZfiO8Tdy7dVuT8sE0/iuCEaJsSmdcTgSGL6aPiOoHc3e6Bcy20UhLoztjqktruxzTI3tMPczZKN2J8OROxuFRxdj9S5qvPzoGOu1zDMMX8UaVJPs6tjvD2oDJz+W5LMU818cJLOE5shzXWYrIGgx9dR0b3JQcr2PiwJ0UIVFTvRZoSGwHhXapTO6+mH6hStU2iiB196QDDCa0u68ACOlD5S03e4Mywy43CpGvzDiyR5U1FNUAyZ9i6BK0/6+I+VqxYXabZJ5bm4LwZ7tY25uu6MQ342Apy68FyUMxP00ZxOJfyO5gyDNzCtLQQkayxgPgrKnuA3LdDjg==
+ bh=lQ573rW97l5ZpRMjk07I6lXhng7Mz7lx2yRCx3JA4Aw=;
+ b=L/DdXoXRE3j+t0lJHxocY65Q26IRxGcwwXGaGs4sKI8NNd6D++zIAeJ+RFK9NrAOBl1iny+H8t/hlIq9c64b9dJxGoSxVpeWJ5NFDvMSHRv/fgA97XMGBF2XQJERH+TkGZ7GRp9w50bFU3stPBj7/J563kT2oQNOUAdpO29sLWiiuoinJYHyUwahoC4W+I4Ye+cnZfMdJOIinpqm/0NvHyMaRWRH59QxrCCS5xy0BRyGv0YS95cBanVo7eGTwhk+WchddQXWayCqRcyxVQG8jgmBPrCyCB8yjug7EBZGt+zU5dLJr3/178A7D7//SamqPNvQvXHke5NUUWmQetcM+A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by LV3PR11MB8506.namprd11.prod.outlook.com (2603:10b6:408:1bb::6) with
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
+ by TYCPR01MB5757.jpnprd01.prod.outlook.com (2603:1096:400:46::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Thu, 28 Mar
- 2024 01:43:09 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
- 01:43:09 +0000
-Date: Wed, 27 Mar 2024 18:43:05 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <bhelgaas@google.com>,
-	<lukas@wunner.de>
-Subject: RE: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
-Message-ID: <6604cb299ac50_7702a2946d@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240325235914.1897647-1-dave.jiang@intel.com>
- <20240325235914.1897647-2-dave.jiang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240325235914.1897647-2-dave.jiang@intel.com>
-X-ClientProxiedBy: MW4PR03CA0136.namprd03.prod.outlook.com
- (2603:10b6:303:8c::21) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Thu, 28 Mar
+ 2024 01:47:03 +0000
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::c012:6dff:e4f5:5e1c]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::c012:6dff:e4f5:5e1c%5]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
+ 01:47:03 +0000
+From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
+To: 'Dan Williams' <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "mj@ucw.cz"
+	<mj@ucw.cz>
+Subject: RE: [PATCH v3 1/3] Add sysfs attribute for CXL 1.1 device link status
+Thread-Topic: [PATCH v3 1/3] Add sysfs attribute for CXL 1.1 device link
+ status
+Thread-Index: AQHadFPBx8nrp1zF/UK8IxmlbTRGybFKhXmAgACiphA=
+Date: Thu, 28 Mar 2024 01:47:03 +0000
+Message-ID:
+ <OSAPR01MB7182912D196E74F55BE1A55FBA3B2@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+References: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
+ <20240312080559.14904-2-kobayashi.da-06@fujitsu.com>
+ <6603275faabc_4a98a29470@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To:
+ <6603275faabc_4a98a29470@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=b90f59c5-1030-4ab2-a67b-dc4b5044fa84;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-03-27T08:38:29Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TYCPR01MB5757:EE_
+x-ms-office365-filtering-correlation-id: a800fdda-e5a5-4542-e734-08dc4ec8f76d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ x1kxwX+8rXVbLEI5LVTTmeazn44sbtyrdOBn7CyIK6p2cFRBv0OfPcVFCHW8jWK6awnFlupaDVOrBto7yoAe9fPOWrwxjLPNH6Ja4chNFXgBHeUQ86dOc5XQcj7Ssg5xR4wii11v3GqPEwKKNoNG+kj4nKlFtSlxhE6MWuQ6IHSfyMzWrYX8arkz7/QvyVS7PydoKMqgM91V7kupPN74h4UN4p7+yVWpkZt+o555RIN95qO2t1T4cMNy2bEWqp6UO6JHBpPmrpOXI168z70UzxORHKnMShtA22onxIFrK+nri/C0t7vm8SHrmnTLMWmGiP+icAGBic0dh3ZU8ev/Wr5BhHg7dv/ERCnXAZzQaKhOjwAv9cWIjGOcxG6o3jeWdLzgKF9N5Sc59GM/DtkMQHo6emw3LmVZ4cV4s+dbhBTRTnBiH7feyUljRCOvETnDu2h9C7fgkNN6KjetTzIkHS3HLm5XPWwqDjZiq0t2iQaw55z0w8QuzcnKJw8qZmY0iRGpFnOYVEWd14aUlqe1vwMuBPAwPNBeQq4abDuaK170ksOCc7wLnFKgKDRUJGIAinM87X0FqEI6K5TW3NC8tbHK2OBvO9miaxAoMUaZ5HyLcjj59BvVmiWbIXIppTXFrSJtZ5f1I2TUaY/69oUYsr+E0kQFgo6h9fPtuk3lJqHAUu2n7t5BYkBRXQ2hH8BxiEbGH/CoAY87qnW3JAGew4AW0hT6AxaaGCJx1pDgBH5cq8bQcqwaP4b0596kCl6p
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009)(1580799018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?YWFXZjRNb0d1MTd0cTl6cWZwd3pNUlh2MXoyUlpPVmZBYnZXWURhWC9v?=
+ =?iso-2022-jp?B?NVNvQUN6S2dmUFBQVlVvKzVlZVRYSUk4cktYQXM1N05IQ1RFVlhsRjIx?=
+ =?iso-2022-jp?B?OGJVU0hIRGh5TXBXV1NVdDN6OEl5STluWEI0OVhKM2dSREsrdXQvd245?=
+ =?iso-2022-jp?B?elhNdXJWb0hwdlRTWEpXOFluQlloSVhVN3dCNzI3dHZiVldCa0tNbGpU?=
+ =?iso-2022-jp?B?QzhxU0prWkJwMm8zd05kOW9zbmVHMk1zTVM0b3hqRlovTUJpUTg5TkNO?=
+ =?iso-2022-jp?B?L1NxSE5pT2JpS2hDVVNHY1FnV01lN1VFQ3dWcmpFVTJMbzBpU2dPM1hy?=
+ =?iso-2022-jp?B?enBWeG45L2VBNitwRjgwVlRHOGVKZ2s2Wm1VZ0IrSFZqVk9yRkJNeEdi?=
+ =?iso-2022-jp?B?UjEwOTJBSm90MmtvMWVTRHk4amlsYzI3WGtvWStFMGlzb3NHaGVmeExW?=
+ =?iso-2022-jp?B?ZHY2ZUxaenZCajVHcDkySmJmWCtYOWRoWlA4OHZCZ0dXODh6c0kyZTlj?=
+ =?iso-2022-jp?B?aFNCZkhyVFJHUFArRXFuZUJrUGxCaGcyMHZWKzltbk41MUdZbWFNVUxi?=
+ =?iso-2022-jp?B?UWt2U2RXTmJoUDRXbWE0dGZRK1FkUUxWVFlXS3M1TTIxYVlGdlRsL3k5?=
+ =?iso-2022-jp?B?cDVDMUg0dDRBelV1d0Frdjl4SEJyTHVrWDBPV280bGRSNHpJV1NQY3Ev?=
+ =?iso-2022-jp?B?Z0hlVUxRZG13UjJCNkFOeEhPbkhadzljUFZvV3BsSWVDenUwM3MrWlRJ?=
+ =?iso-2022-jp?B?VUpHTlg4bkJWMXlGSGNOYno4Uks1NWowUWFKVDJqMERsMVMrWEFNSEl1?=
+ =?iso-2022-jp?B?NFlvK1dVRWo5R2YwNG5wUmFrcGVHeVdaV1FMcXRodG1vVW9ZditCekc4?=
+ =?iso-2022-jp?B?eVhPdjZuT2lVZ3Zkd1JJUUFBRzgrODcrRW1BVFcvUGdxMkh6ejRLZkY1?=
+ =?iso-2022-jp?B?Z2RrSm93bTNCOW1mczNubE5zd2U0dmpKQWtRaDR1WFJqT0NrNWxSdkZu?=
+ =?iso-2022-jp?B?dlUyWTRKR2RiMkluTCtEUm1UaTZZM3UzSVYyWXAyQ3ppQmJvcW9JWXQ1?=
+ =?iso-2022-jp?B?c1hndHMyMmtJUTZPdTQzcXB6K3ZXUFJnRjVZbkQzQk10M2pFeHp5YkJV?=
+ =?iso-2022-jp?B?YVMzV202cXVxMmVjRTh1dDBtbExLL2diMEtzbzdzQlVMMGJ3SFNuTDg2?=
+ =?iso-2022-jp?B?cHJzS0U1bjdwVEhLbi96Mmt2YmZGTXJyY0V2R0Fja3MrNXV2bklIVHRu?=
+ =?iso-2022-jp?B?c01YbFNPNDRIU3ROR0Zpa0xIS1NjMVZzejhnWUNsQVNFTWt0SGk2QnZ5?=
+ =?iso-2022-jp?B?TGpRR0dzdHFWd2IrKytBa1dpSFh2SFRHUE8xKzI3cTVwK1kycTFhSDNM?=
+ =?iso-2022-jp?B?VWRQVVlhV0s3Ti9KeFEwcGp5cHBhcnowaGZJRWF6ZFh2bUR0T0ZFcVlF?=
+ =?iso-2022-jp?B?a093aHU4VHdxZmZKYUtXZW9aZUlGSERzWDRjYlRxdXQ5WmJZWnpDM1RB?=
+ =?iso-2022-jp?B?WTY0ckZUc2hEV2syTVNTM1ErSi9KUGtPUDBrczJLeWdHcmlaRWFHVXpx?=
+ =?iso-2022-jp?B?RVdMbHIzcnRXem0zTkRvVUE5Y25mVDNuNE5tNjAwL3ZOWnJta1Y4VU10?=
+ =?iso-2022-jp?B?cUVHL0E5dGc1ZVNGc1BsOS80bUVmc2JrKy9CNlNmS0dCaTNnczJDV25n?=
+ =?iso-2022-jp?B?a0xkdUxIVXVnUUYxeEVyRjdzMWJ5dWJrVVVya0k0VXlyQ1BCdXZNeWRl?=
+ =?iso-2022-jp?B?NnF4S1RnbUNhRHhHVWlHYW83bUNySEtobUp0UjRVeWdVdGxGSEsxQklp?=
+ =?iso-2022-jp?B?bDJyMDlpMW1RTkVnYzNnM2NnelQ2eElsOUFVQ29tOCs1Qnd4b1gvcUgv?=
+ =?iso-2022-jp?B?dXIyZWhsTlJITGs1VW1QVEsrdkJIcWRtQ0VFL3l1RkJUV0wvMGNKR1FJ?=
+ =?iso-2022-jp?B?OW00YmE1Y1dHN0FHVDF5N2lrSlZpN1NKWm1wSnVUQStKZEgyQnhEYXdr?=
+ =?iso-2022-jp?B?V3hPcWc3TU5rb2Rac1lmc3dtQldJN1dUK2tJRjRTZUFhUDlFSVYrdkYr?=
+ =?iso-2022-jp?B?dXA0akxSaDhuVnA2blRGTGpJakU1WXMzZVpzSFRhMFowaThONmJnTHRz?=
+ =?iso-2022-jp?B?aG41SDA0QTVFZlZvOXArVkltYWdYRTJvK0prY2pZK3lkRVg4NnZyclV3?=
+ =?iso-2022-jp?B?bjV1T2pEM1psSzZzcTV2MzdpQWxMQ3R0ak5MbzRpWmwyVUZkZ2JPY0JR?=
+ =?iso-2022-jp?B?TTVsWkFRWXI4RzJxSlVYcklIK3VnSklqbHJpRGJNbzRuZlg0MHlxVXFq?=
+ =?iso-2022-jp?B?VFV0emlnYklma3JCRElndXUrc0FxZnFtbnc9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|LV3PR11MB8506:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b09c4b7-e3bf-4ffe-a7da-08dc4ec86bfe
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +GQRQzwh7BDbHc0oHAXAoMnNzcVrKEZ6OgKIGB95tp40nyyo3Qe9CO8kCV5rV/qyavJS4g8Q+6wM1xkoMlktIhJkZBHE456NWkEnI+WTm2Uk32dZlGvF19JideHQ2sZxExP+hv1Decyf+IZhQFncgpNMiWShnBaG4POb+lDy097g/JwA7Zbn8GxTL7NA9RfEHiLhHKIOux5BIpOuXUWKWnI7TfFj4LYzU734sgwQb0gHZt3amyk21ZhOVYVlDgouWOxWHTVcLtsicpRS26j5nvq/deaxGDoA4t9wpMB92Pp7H0tDN+U3WHZPEjXgpHlOuQosJoxckLKF9ks9XpcydRkzNgXXwIMdfJWq+qrvJqN5RJDJbSsTXji6I/o6f07jT7/7d0GmvVfhFtGY5tQa8lJDsG/CGcYEH3EYGUCc9kO+w2hb2sWuad15QS0qAQhnHeJi1fur2NEcQ9zbcqa7wD8nJyHT4pQrKmY8y0XfmB89Bm0Q1sXO5u9xapgplZzx+KRKj3wsUFjvk+iEW4X4FJrLPJw2yHxNdJHjeLR5m/ZqbJsOXEBLGlJc6gfRAjVc0jqz4hcMUGx15kLCb1FNjljpcptjEW0fLNqRmNMWHGs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lZDIVoOQj+9mTnBkCBphT45pufikHMKCjHq/KMjieRFetRNX+kX+xAsQT+8H?=
- =?us-ascii?Q?LcRiUeEtu7XUz25ZR2ZRN0LBU6EWCcCscJy6sV036XG4dRE0FQd95ImcQWzI?=
- =?us-ascii?Q?J97xCtcEfcYjFKKZZSN7VOfBHPDP0opciU5qlHh95mhM+JVtIpo6ay7/27Sb?=
- =?us-ascii?Q?eM8l8STapwDrsAujg9UCqiyvTx9iNHm2cR0OxUnIaVOJRxefQWqWuGrkC7Qx?=
- =?us-ascii?Q?CqFfXF2W4A6uYEW72qlPaKU3xpH5jfn6VYuQ5Lcmx+LHkxTeUpUnNTlE6/qc?=
- =?us-ascii?Q?k6hHA0XrpzuDKMCSrqupV7J44nS15LVBChxI5/I3iMV1sOphPRIIl0QMWqqn?=
- =?us-ascii?Q?NXwAjJnQhTsQJD6JKiiy1/jiq0dTreSMnDmLtA5u4m8Du1bPdeewsiCy6z0p?=
- =?us-ascii?Q?c+1RMnPxx/V7DYmaQL5IsdSugg10F4cTnpgfeMz8VZtw+CPeHazxZpdOi55A?=
- =?us-ascii?Q?UY/pRsXXaDqY5u9kp+NE9MgMP9Bk5FkAEPXc1MsWtp58Ul0KhbpQwAw3cWW3?=
- =?us-ascii?Q?BJVp265+/KRWXnW0ES/396gtUs6A7EsrPb4/AbtyBWyCQsmySN22qIyiXNcR?=
- =?us-ascii?Q?y/pBkng3IBlKyOugwwjZdak0UKLao35Qwd/ymZLxM4IekUpXOe2zjIipWLyQ?=
- =?us-ascii?Q?b4RE+nUY1cXa04HWgZloijIAJNEoqTKvCTh20/N9T04qgHGiQTN/Zb7zpvsN?=
- =?us-ascii?Q?lOeBHPyDUYAHPifKpj7FGOhgBARbZA/f6htUnzVeriY4NkcB8ynmclDAQixz?=
- =?us-ascii?Q?57+Ezq50IdhVx11F8ccdEkcC9iAYAO+IxSy50vKzQDcoEURBJCHbdehIROcT?=
- =?us-ascii?Q?kLoT2/bzGu3OpnymTTElgOJcQxCGtRk1ul182ESUet2LFUdKqu4UDZtZDrlc?=
- =?us-ascii?Q?j+c7QhMqqATc8oZbMC2LtQ8bHzXYYsB3csDZIRw/nK78jXiltgxUEzzdXNiw?=
- =?us-ascii?Q?Ky/yKHt2Sq8gziYk8o5q7W39Z0g3rABPIlzBmKA9qll7i/VjnPsky6p4gU/o?=
- =?us-ascii?Q?K+quGgaGZvvFnEy23Muon7LNH/141ea/GRNgPe8xBhRZ0o/aTwHGfusnrzU7?=
- =?us-ascii?Q?2IQQAMv9QVaIp89VD/LFwWgrSiRStl79syr698O91uJgQPHAzHv0N7MFpltH?=
- =?us-ascii?Q?T3CoTHRVzqXUhBipuPz/XesIR4JNhQHRFEo5m79Kt/Oslti1c6+TIUvX5SM0?=
- =?us-ascii?Q?sN4ZOJiSFoxKrpMRZCIWFnlAWvDKvu7rKwsMAEtU9xWho0VJBPwVenTXCX33?=
- =?us-ascii?Q?93qLZ9VtaY8dmFKOynqRuM/P/hbal9NCfy91MMzYu2VKeGzeKBsnxfqNxRid?=
- =?us-ascii?Q?JnImjWQprBD2LBpaxQ4wPvHNfV8EaRnZjyOKuaMjhpngVsuhiyjOOLcF3Iy4?=
- =?us-ascii?Q?+4/q/E9kVq4TBAGnzrYdEgjQeQ4i1DE+/IJE2XxnI5X8SLFZA8YAu07x0EQH?=
- =?us-ascii?Q?LssaTbJF7I8+Mar7lpb9bzRRSTsk+tl4Npg4Q/qiKJ5WQpq6W2bMyUMB9Cet?=
- =?us-ascii?Q?xoDyehYSxE58E3gZ3OURBM0YFPsmKPas1Tm5gNl+s/Hir3iw+Jnohycnjy7g?=
- =?us-ascii?Q?15sQv2EUmeIQRCOOt/vQoXCMwCqpmOz1nXpeL+njRiwlDbcbEXB6iSYzwrJ+?=
- =?us-ascii?Q?vA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b09c4b7-e3bf-4ffe-a7da-08dc4ec86bfe
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	AtcOykPPX8+4LAaohpxstKV6bNpd21ZJ1vV8GkwioGmkf7CaCOo52zx8dYbCzYW/82L+TxKlREH1fvheVAbkXkiemjDxG9IES+ZRxbthCCMsnpnethnGm655FA+F3HoNmibLe/QSS6G48Ym2segZsVgNNYB0+dGw8Qitip/oZ0eaiyDNcf2ICadMmr0CogY+JpnKfUAfjWqr3sPpsEFAzx8bsgcZoxQd9hyUJYxmHRwpqOae97NafthhAXE3q1pwn40TSaXPW3TKOZ9c1G1B+fjI72fHIUUHnmx7I2Lea7bqW0AefB965/GOEM6AmIDUsKHt4rRCGSkliEDHknAt6ZwL5X/W2g9aWtFMS42g2EzO4fwON39ncLl3wUmQ4bWJQWoy4L3azFiOVWvrZ5HfIyPWH+BQS+RPWiNXRxnUGLYEQba8EOR/prsyZMMZxOabkviXdtyOXhpn2AVtKPMlAtBHdk/FDhBQ155E5FK8tYquw5pvwElsbiOCNQiy9+4mZtExTZRe5Zr8upQkEZUzAXQYpyidcK7wOP+zMPCje6dvVKDfL2sgaKnKpcSo15SgHreE1zwOVuwzqLNmCFCq5ReLbSzLkAM0RnVr7P92sg3RysypHRXAvrzltPTLqMYN
+X-OriginatorOrg: fujitsu.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 01:43:09.3776
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a800fdda-e5a5-4542-e734-08dc4ec8f76d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2024 01:47:03.1313
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W1KDCXxR60a74lU9XRvd+9lpMFNnFwBULMWycNAGre26t0d4g0VGjRRZC40gLDoZ3hD2Xea1N8PVVd3e5HqV8oHZg9Jq3GuioR1xOKtOJRk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8506
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MOTp1HBqi9k1ST7FUHVZ6htQ/qQFHbeeIjOMyIBbVADOZxWPwAVyKdo63BL+KclJOcZc5a08z2plw3x63dWuRlJdGhyxneGtCAtjzwec47w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB5757
 
-Dave Jiang wrote:
-> Per CXL spec r3.1 8.1.5.2, secondary bus reset is masked unless the
-> "Unmask SBR" bit is set. Add a check to the PCI secondary bus reset
-> path to fail the CXL SBR request if the "Unmask SBR" bit is clear in
-> the CXL Port Control Extensions register by returning -ENOTTY.
-> 
-> With the current behavior, the bus_reset would appear to have executed
-> successfully, however the operation is actually masked if the "Unmask
-> SBR" bit is set with the default value. The intention is to inform the
-> user that SBR for the CXL device is masked and will not go through.
-> 
-> The expectation is that if a user overrides the "Unmask SBR" via a
-> user tool such as setpci then they can trigger a bus reset successfully.
-> 
-> Link: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Dan Williams wrote:
+> Kobayashi,Daisuke wrote:
+> > This patch implements a process to output the link status information
+> > of the CXL1.1 device to sysfs. The values of the registers related to
+> > the link status are outputted into three separate files.
+> >
+> > In CXL1.1, the link status of the device is included in the RCRB
+> > mapped to the memory mapped register area. This function accesses the
+> > address where the device's RCRB is mapped.
+>=20
+> Per the comments on the cover letter I would rewrite this as:
+>=20
 > ---
-[..]
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e5f243dd4288..259e5d6538bb 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4927,10 +4927,55 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
->  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
->  }
->  
-> +static bool pci_is_cxl(struct pci_dev *dev)
-> +{
-> +	return pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					 CXL_DVSEC_PCIE_DEVICE);
-> +}
-> +
-> +static bool is_cxl_port_sbr_masked(struct pci_dev *dev)
-> +{
-> +	int dvsec;
-> +	u16 reg;
-> +	int rc;
-> +
-> +	/*
-> +	 * No DVSEC found, must not be CXL port.
-> +	 */
+> In CXL1.1, the link status of the device is included in the RCRB mapped t=
+o the
+> memory mapped register area. Critically, that arrangement makes the link
+> status and control registers invisible to existing PCI user tooling.
+>=20
+> Export those registers via sysfs with the expectation that PCI user tooli=
+ng will
+> alternatively look for these sysfs files when attempting to access these
+> registers on CXL 1.1 endpoints.
+> ---
+>=20
 
-This comment is unfortunately not correct. Per CXL 9.12.3 "Enumerating
-CXL RPs and DSPs", the CXL_DVSEC_PCIE_PORT disappears when no endpoint
-is connected. So the comment should be:
+This message will be updated in the next patch.
+Thank you for your helpful feedback.
 
-/*
- * No DVSEC found, either is not a CXL port, or not connected in which
- * case mask state is a nop (CXL 3.1 9.12.3 "Enumerating CXL RPs and DSPs") 
- */
+> > Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+> > ---
+> >  drivers/cxl/pci.c | 193
+> > ++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 193 insertions(+)
+> >
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c index
+> > 4fd1f207c84e..8f66f80a7bdc 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -781,6 +781,195 @@ static int cxl_event_config(struct pci_host_bridg=
+e
+> *host_bridge,
+> >  	return 0;
+> >  }
+> >
+> > +static u8 cxl_rcrb_get_pcie_cap_offset(void __iomem *addr){
+> > +	u8 offset;
+> > +	u32 cap_hdr;
+> > +
+> > +	offset =3D readb(addr + PCI_CAPABILITY_LIST);
+> > +	cap_hdr =3D readl(addr + offset);
+> > +	while ((cap_hdr & 0x000000ff) !=3D PCI_CAP_ID_EXP) {
+> > +		offset =3D (cap_hdr >> 8) & 0x000000ff;
+> > +		if (offset =3D=3D 0) // End of capability list
+> > +			return 0;
+> > +		cap_hdr =3D readl(addr + offset);
+> > +	}
+> > +	return offset;
+>=20
+> The location is static, so there should be no need to lookup the location=
+ every
+> time the sysfs attribute is accessed. I also think the values are static =
+unless the
+> link is reset. So my expectation is that these register values can just b=
+e read
+> once and cached.
+>=20
+> Likely the best place to do this is inside __rcrb_to_component(). That ro=
+utine
+> already has the RCRB mapped and can be refactored to collect the the link
+> status registers. Something like, rename __rcrb_to_component() to
+> __rcrb_to_regs() and then have it fill in an updated cxl_rcrb_info():
+>=20
 
-> +	dvsec = pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					  CXL_DVSEC_PCIE_PORT);
-> +	if (!dvsec)
-> +		return false;
-> +
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_PORT_CONTROL, &reg);
-> +	if (rc)
-> +		return true;
+Add processing to__rcrb_to_component() to change the implementation
+to cache these values. As you say, I think these values are static,=20
+so it's not efficient to access the RCRB every time you access the sysfs at=
+tribute.
 
-If the link gets disconnected after the above check but before reading
-the register the value returned *should* be 0xffff which should
-naturally indicate that reset is not masked.
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h index
+> 534e25e2f0a4..16c7472877b7 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -651,7 +651,12 @@ cxl_find_dport_by_dev(struct cxl_port *port, const
+> struct device *dport_dev)
+>=20
+>  struct cxl_rcrb_info {
+>         resource_size_t base;
+> +       resource_size_t component_reg;
+> +       resource_size_t rcd_component_reg;
+>         u16 aer_cap;
+> +       u16 rcd_lnkctrl;
+> +       u16 rcd_lnkstatus;
+> +       u32 rcd_lnkcap;
+>  };
+>=20
+>  /**
+>=20
+> > +
+> > +}
+> > +
+> > +static u32 cxl_rcrb_to_linkcap(struct device *dev, resource_size_t
+> > +rcrb) {
+> > +	void __iomem *addr;
+> > +	u8 offset;
+> > +	u32 linkcap;
+> > +
+> > +	if (WARN_ON_ONCE(rcrb =3D=3D CXL_RESOURCE_NONE))
+> > +		return 0;
+>=20
+> Why is this a WARN_ON_ONCE()? In other words the caller should know ahead
+> of time whether it has a valid RCRB base or not.
+>=20
+> ...oh, I see this is copying cxl_rcrb_to_aer(). I think that
+> WARN_ON_ONCE() in that function is bogus as well.
+>=20
+>=20
+
+Yes, as you mentioned, I have copied cxl_rcrb_to_aer().
+However, it seems to be an improper implementation.
+In the next patch, I will modify the implementation to cache the value,=20
+and consequently, this part of the code will be removed.
+
+> > +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> > +		return 0;
+>=20
+> This is awkward because it may collide with usages of the RCRB, so that i=
+s
+> another reason to cache the values.
+>=20
+> > +
+> > +	addr =3D ioremap(rcrb, SZ_4K);
+> > +	if (!addr)
+> > +		goto out;
+> > +
+> > +	offset =3D cxl_rcrb_get_pcie_cap_offset(addr);
+> > +	if (offset)
+> > +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
+> > +	else
+> > +		goto out;
+> > +
+> > +	linkcap =3D readl(addr + offset + PCI_EXP_LNKCAP);
+> > +	iounmap(addr);
+> > +out:
+> > +	release_mem_region(rcrb, SZ_4K);
+> > +
+> > +	return linkcap;
+> > +}
+> > +
+> > +static ssize_t rcd_link_cap_show(struct device *dev,
+> > +				   struct device_attribute *attr, char *buf) {
+> > +	struct cxl_port *port;
+> > +	struct cxl_dport *dport;
+> > +	struct device *parent =3D dev->parent;
+> > +	struct pci_dev *parent_pdev =3D to_pci_dev(parent);
+> > +	u32 linkcap;
+> > +
+> > +	port =3D cxl_pci_find_port(parent_pdev, &dport);
+> > +	if (!port)
+> > +		return -EINVAL;
+> > +
+> > +	linkcap =3D cxl_rcrb_to_linkcap(dev, dport->rcrb.base + SZ_4K);
+> > +	return sysfs_emit(buf, "%x\n", linkcap);
+>=20
+> This and the other ones should be using "%#x\n" so that the format of the
+> number base is included.
+>=20
+
+I will fix them. Thank you.
+
+> > +}
+> > +static DEVICE_ATTR_RO(rcd_link_cap);
+> > +
+> > +static u16 cxl_rcrb_to_linkctr(struct device *dev, resource_size_t
+> > +rcrb) {
+> > +	void __iomem *addr;
+> > +	u8 offset;
+> > +	u16 linkctrl;
+> > +
+> > +	if (WARN_ON_ONCE(rcrb =3D=3D CXL_RESOURCE_NONE))
+> > +		return 0;
+> > +
+> > +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> > +		return 0;
+>=20
+> ...the other benefit of centralizing this code is that we do not end up w=
+ith
+> multiple copies of similar, but slightly different code.
+>=20
+
+Are you saying that caching values simplifies the show function?
+Then I think you're right. I will change that the value should be cached
+in the same way as the component register.
+
+> > +
+> > +	addr =3D ioremap(rcrb, SZ_4K);
+> > +	if (!addr)
+> > +		goto out;
+> > +
+> > +	offset =3D cxl_rcrb_get_pcie_cap_offset(addr);
+> > +	if (offset)
+> > +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
+> > +	else
+> > +		goto out;
+> > +
+> > +	linkctrl =3D readw(addr + offset + PCI_EXP_LNKCTL);
+> > +	iounmap(addr);
+> > +out:
+> > +	release_mem_region(rcrb, SZ_4K);
+> > +
+> > +	return linkctrl;
+> > +}
+> > +
+> > +static ssize_t rcd_link_ctrl_show(struct device *dev,
+> > +				   struct device_attribute *attr, char *buf) {
+> > +	struct cxl_port *port;
+> > +	struct cxl_dport *dport;
+> > +	struct device *parent =3D dev->parent;
+> > +	struct pci_dev *parent_pdev =3D to_pci_dev(parent);
+> > +	u16 linkctrl;
+> > +
+> > +	port =3D cxl_pci_find_port(parent_pdev, &dport);
+> > +	if (!port)
+> > +		return -EINVAL;
+> > +
+> > +
+> > +	linkctrl =3D cxl_rcrb_to_linkctr(dev, dport->rcrb.base + SZ_4K);
+> > +
+> > +	return sysfs_emit(buf, "%x\n", linkctrl); } static
+> > +DEVICE_ATTR_RO(rcd_link_ctrl);
+> > +
+> > +static u16 cxl_rcrb_to_linkstatus(struct device *dev, resource_size_t
+> > +rcrb) {
+> > +	void __iomem *addr;
+> > +	u8 offset;
+> > +	u16 linksta;
+> > +
+> > +	if (WARN_ON_ONCE(rcrb =3D=3D CXL_RESOURCE_NONE))
+> > +		return 0;
+> > +
+> > +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> > +		return 0;
+> > +
+> > +	addr =3D ioremap(rcrb, SZ_4K);
+> > +	if (!addr)
+> > +		goto out;
+> > +
+> > +	offset =3D cxl_rcrb_get_pcie_cap_offset(addr);
+> > +	if (offset)
+> > +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
+> > +	else
+> > +		goto out;
+> > +
+> > +	linksta =3D readw(addr + offset + PCI_EXP_LNKSTA);
+> > +	iounmap(addr);
+> > +out:
+> > +	release_mem_region(rcrb, SZ_4K);
+> > +
+> > +	return linksta;
+> > +}
+> > +
+> > +static ssize_t rcd_link_status_show(struct device *dev,
+> > +				   struct device_attribute *attr, char *buf) {
+> > +	struct cxl_port *port;
+> > +	struct cxl_dport *dport;
+> > +	struct device *parent =3D dev->parent;
+> > +	struct pci_dev *parent_pdev =3D to_pci_dev(parent);
+> > +	u16 linkstatus;
+> > +
+> > +	port =3D cxl_pci_find_port(parent_pdev, &dport);
+> > +	if (!port)
+> > +		return -EINVAL;
+> > +
+> > +	linkstatus =3D cxl_rcrb_to_linkstatus(dev, dport->rcrb.base + SZ_4K);
+> > +
+> > +	return sysfs_emit(buf, "%x\n", linkstatus); } static
+> > +DEVICE_ATTR_RO(rcd_link_status);
+> > +
+> > +static struct attribute *cxl_rcd_attrs[] =3D {
+> > +		&dev_attr_rcd_link_cap.attr,
+> > +		&dev_attr_rcd_link_ctrl.attr,
+> > +		&dev_attr_rcd_link_status.attr,
+> > +		NULL
+> > +};
+> > +
+> > +static umode_t cxl_rcd_visible(struct kobject *kobj,
+> > +					  struct attribute *a, int n)
+> > +{
+> > +	struct device *dev =3D kobj_to_dev(kobj);
+> > +	struct pci_dev *pdev =3D to_pci_dev(dev);
+> > +
+> > +	if (is_cxl_restricted(pdev))
+> > +		return a->mode;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct attribute_group cxl_rcd_group =3D {
+> > +		.attrs =3D cxl_rcd_attrs,
+> > +		.is_visible =3D cxl_rcd_visible,
+> > +};
+> > +
+> > +__ATTRIBUTE_GROUPS(cxl_rcd);
+> > +
+> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct
+> > pci_device_id *id)  {
+> >  	struct pci_host_bridge *host_bridge =3D
+> > pci_find_host_bridge(pdev->bus); @@ -806,6 +995,9 @@ static int
+> cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (IS_ERR(mds))
+> >  		return PTR_ERR(mds);
+> >  	cxlds =3D &mds->cxlds;
+> > +	device_create_file(&pdev->dev, &dev_attr_rcd_link_cap);
+> > +	device_create_file(&pdev->dev, &dev_attr_rcd_link_ctrl);
+> > +	device_create_file(&pdev->dev, &dev_attr_rcd_link_status);
+>=20
+> No need to manually call device_create_file() when the attribute group is
+> already registered below. I am surprised you did not get duplicate sysfs =
+file
+> warnings when registering these files twice.
+>=20
+
+Thank you for pointing it out. Remove these calls.
+
+> >  	pci_set_drvdata(pdev, cxlds);
+> >
+> >  	cxlds->rcd =3D is_cxl_restricted(pdev); @@ -967,6 +1159,7 @@ static
+> > struct pci_driver cxl_pci_driver =3D {
+> >  	.err_handler		=3D &cxl_error_handlers,
+> >  	.driver	=3D {
+> >  		.probe_type	=3D PROBE_PREFER_ASYNCHRONOUS,
+> > +		.dev_groups	=3D cxl_rcd_groups,
+> >  	},
+> >  };
+> >
+> > --
+> > 2.43.0
+> >
+> >
+>=20
+
 
