@@ -1,103 +1,124 @@
-Return-Path: <linux-pci+bounces-5359-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5360-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19903890C2E
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 22:06:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51182890C36
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 22:08:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 276F01C222D4
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 21:06:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D52231F22FE9
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 21:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A13782870;
-	Thu, 28 Mar 2024 21:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60BA513AD35;
+	Thu, 28 Mar 2024 21:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbKPKWA8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iEyYmbUE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204EA2C6B1;
-	Thu, 28 Mar 2024 21:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1892413AD36
+	for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 21:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711660009; cv=none; b=YBrSvtxcTnkHa6p3mokI+0TjUQHX7cDdbvJ2qrXHCTLNFVmwQVtr8keaztyx8/+m7AIN3hCvwcYci4TpCkSTdN4ab06CffFsJS7jsdk+bQgDoykT2osGj2R0r27SsX/KlkFKE3dctA8F7VCG1rsniFLHBdG8K2mRTY8qGeLafxM=
+	t=1711660052; cv=none; b=fJ9nhl7FRt958C7H4ZejJacSSxQedDLS7QWkZlXmAdZA0kHOwc0nwE/1tcmRyfI17QAwVKrbjz8MESxJ/j0/LIAWWCJGnKc8pCr4z4kRGNa2KdPcMvfmurijv/dHiHcCyaI++0uqWRmdoG/ONtAzzG+5fzbo7Zu58NVimeRB3Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711660009; c=relaxed/simple;
-	bh=uEta2BrWAKz194xIrnBwKypqhcaPd50jFm3BWsmHjQI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=CJhLgoZZ0UvzXRYUu1lI3Mgeoh9xp2HdklNhBtW5sc5Yiv0SNJ6My80W+ULZdil+2suvW0c906X3CvUoE/AGHwPalyuRA7/V1gkFxxcP5a6ZuDZiZNWtbyGqbZe6ehj+gZRcwyqLlAIkPIGVD0ty8vnu7J6keDLm4ARyNBvSiJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbKPKWA8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8BAC433F1;
-	Thu, 28 Mar 2024 21:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711660008;
-	bh=uEta2BrWAKz194xIrnBwKypqhcaPd50jFm3BWsmHjQI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pbKPKWA80fpWni2qqH6zOJXCN+mhBMjc1x7SXcZ3XBlogWvtHnhcwmNKbulZ/n//J
-	 hC4b0c5leZrF2UUHApujsE1XI9HTQNtM1bvWDViVvq/K+wIcl8cq7J/q1b8ACzdYjF
-	 75hlUtmiF2LWfQyWrZ4hSqdgkmdpN2QOcjhTlvyz+IfZf2J8XrYfP1VSbzTBFGOqEO
-	 nTVl883ZEIawOcTaisRdPPvbu3lr/p5tf7GHbnv1W6FxA417YXnIzhA15QYHtsJie7
-	 8qS0/qZ+mL1G/MayQakQbt6AuAULzAYVIxILr91B3E+P7YUFCh3Zg7cj35b+VsJE8F
-	 C+sn6vefotD4A==
-Date: Thu, 28 Mar 2024 16:06:46 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, edmund.raile@proton.me,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <20240328210646.GA1581782@bhelgaas>
+	s=arc-20240116; t=1711660052; c=relaxed/simple;
+	bh=x20Z9wO4XWd6/hqsTvUJ9C5xuiCT/PGoUlQnMNRKhnA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AmmqAkNITSNYhLcFQiEWqPVlHML+71D3ojcS8Uoc2IBuveabSAl8HMmZyZD+VWlUGeU7RSLHGbHe4YQFbL6LUCn8OiqwVU7mHV+Zj68fPC5rk7jnCkz/+o0TOoco+UN7M6YzgRsuSyEVu0MEMW809UD9J5A2PamfwSbEAM8t60g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iEyYmbUE; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc71031680so1399964276.2
+        for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 14:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711660049; x=1712264849; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x20Z9wO4XWd6/hqsTvUJ9C5xuiCT/PGoUlQnMNRKhnA=;
+        b=iEyYmbUEKVoEMLSfm+1dgqqjW6ZSjsrKhnwEgQhuqVelEQdeGl+DinyIFq09FvZxsc
+         icO69KX7mM0OQMgX+nUaflyBQNaEhqo4tIgCtqWh9nf0Z6M/a2GEuOOgtKDonzgxoDIt
+         mK04J3Y/5BcUoV9owDicNq5Ty8wxETWzZNsz4USadunTA7W4uhginvNOklE9YF34bX/v
+         HS3wUdPaMudoWNlzBrOv5AgAI//49/9nGrfOroUnKzEajzVfO4OeiXgLh7vb9zIvBAC8
+         B6LunEHMRIMgVXBENEfOEncCnEIYXkkfpYu5fnNsLhCF/n8XwOthAQ/VUuCNIEU3pa86
+         9mIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711660049; x=1712264849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x20Z9wO4XWd6/hqsTvUJ9C5xuiCT/PGoUlQnMNRKhnA=;
+        b=pd8ZzZrizb/2GTYNZR30NhanJ0MghN1vbMQPi0qSDh15feo4o/nx4fyEwxN9/bEjCR
+         C8M4eIOpGFNlWZtd+gFvVEaqlSC8KRdEffXUBJmf0zeZsNmmJeGwBCpStJ1AMtwRPxPJ
+         NqiVryVn3LgoLCRyX+mAi1qCeiMhzFvI56V/9GKASpE+ORGWDOPntMkbpsS3KVLpTxlj
+         VjIbFgemrhM9gRpvQDJKXDLy3VKHRtPG+hwU9uyBoiy3cso/QDA6uzIIouLxe9iLxWyt
+         5bdP/xV6iSZ/MCwwsM3sZoUOVTIdaii9sl2Iw+ZmBMh/TWqBrGAfQO3Ovepf4tMp8gQ7
+         8sbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLlsxMg6R/PL3o0j3jwZ7FPWn1rUW2eZnN0jf7Z0HzbJPLiDGP2vfoHL5KhhgrAt/92oK79QBJVCBUgzRqki1u2innV07TFvlV
+X-Gm-Message-State: AOJu0YxPYUDWY96BgWkFNqUSNnXeG8xXjlNPsV7je7aWSmnmGtEtAuIt
+	386fPQzQtq84DYvN+Rmh9tLel92LEv76PY7kws36uSnFRaD8rhlw+l3G8Vt8G5R2OMJV3YO1NdL
+	wswtWFYp0HzOgFpPzbJBzoEyqtLmc80cxhHgfBA==
+X-Google-Smtp-Source: AGHT+IEZ00FIAL54100s1/gTVa8Y+4TfoCNoj6CJTr4a+YUNR3bthOuQhK7OnCvzxoRuhI+9C1J8CAiCPfUv2a7d2bw=
+X-Received: by 2002:a25:9e83:0:b0:dc6:bbbd:d4f4 with SMTP id
+ p3-20020a259e83000000b00dc6bbbdd4f4mr470298ybq.33.1711660049195; Thu, 28 Mar
+ 2024 14:07:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328144201.510f6d5e.alex.williamson@redhat.com>
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com> <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Mar 2024 22:07:18 +0100
+Message-ID: <CACRpkdYemzkVW4fjBtHtFPaa-Uy969j5Ti2zmRgjFiZK+jGS7g@mail.gmail.com>
+Subject: Re: [PATCH v4 02/18] pinctrl: pinctrl-single: move suspend()/resume()
+ callbacks to noirq
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 28, 2024 at 02:42:01PM -0600, Alex Williamson wrote:
-> On Wed, 27 Mar 2024 10:01:19 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > On Tue, Mar 26, 2024 at 10:18:58PM +0900, Takashi Sakamoto wrote:
-> > > On Mon, Mar 25, 2024 at 09:41:49AM -0500, Bjorn Helgaas wrote:  
-> > > > So even without this patch, you are able to pass the FW643 to a VM
-> > > > with VFIO, and you don't see any issues caused by VFIO resetting the
-> > > > device?  
-> > >  
-> > > Absolutely yes, at least in my VM, for recent years to maintain Linux
-> > > FireWire subsystem and ALSA firewire stack.  
-> > 
-> > So there must be something different between your system and Edmund's.
-> > Maybe we can refine the quirk so it avoids the SBR on Edmund's system
-> > but not yours.
-> > 
-> > Can you both collect the output of "sudo lspci -vvv" so we can try to
-> > figure out the difference?  Also a complete dmesg log would be helpful
-> > and would contain DMI information that we might need if this is
-> > firmware dependent.
-> 
-> The original patch proposed for this gave me the impression that this
-> was a device used on various old Mac systems, not likely applicable to
-> a general purpose plug-in card.  Given the expanded use case, I'd
-> suggest reverting the patch.
+On Mon, Mar 4, 2024 at 4:36=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-Makes sense, I'll queue up a revert for v6.9 so we can take some time
-to figure this out.
 
-> I think we need significantly more exhaustive testing on the afflicted
-> system to understand whether this is an issue with the endpoint, the
-> root port, the BIOS, etc.
-> 
-> In the meantime, or maybe as a permanent solution, Edmund can make use
-> of the reset_method interface in pci-syfs to restrict the available
-> reset methods for the device rather than risk removing a reset
-> mechanism identified as working by other users.  My 2 cents.  Thanks,
-> 
-> Alex
-> 
+> The goal is to extend the active period of pinctrl.
+> Some devices may need active pinctrl after suspend() and/or before
+> resume().
+> So move suspend()/resume() to suspend_noirq()/resume_noirq() in order to
+> have active pinctrl until suspend_noirq() (included), and from
+> resume_noirq() (included).
+>
+> The deprecated API has been removed to use the new one (dev_pm_ops struct=
+).
+>
+> No need to check the pointer returned by dev_get_drvdata(), as
+> platform_set_drvdata() is called during the probe.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+
+Since this patch looks independent from the rest I ripped it out of the
+patch series and applied it to the pinctrl tree for kernel v6.10.
+
+Yours,
+Linus Walleij
 
