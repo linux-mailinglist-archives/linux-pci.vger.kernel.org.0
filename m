@@ -1,75 +1,75 @@
-Return-Path: <linux-pci+bounces-5315-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5316-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BCF788FAB2
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 10:06:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53FAC88FABA
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 10:07:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F6481C2D708
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 09:06:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 030A31C2E306
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 09:07:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F8525F879;
-	Thu, 28 Mar 2024 09:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A35005DF00;
+	Thu, 28 Mar 2024 09:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PBjPu3NR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xo0Sfd9/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BFB51009
-	for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 09:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7E05FBBE
+	for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 09:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711616810; cv=none; b=Rs/EgYeHBiKHUIz5Oi8VMDJPeS2J1H1ALlsvExztJ0FQEaA/GNXKWo7Optim9hciKv0qGVjYtXq/RtO6ydv8mOIHu2/txEfXvXLFBRwmr/YKn5gkEd+RJpGzwuoT1pJ60HstfXxCm7ele+8f+7EttEYT5lHqJoSImTOim9SLEjs=
+	t=1711616844; cv=none; b=f6p4yGXeIysMTRZ+E8AHuwwz9841oXFLzOGQvR1a3KO3twyd0CvDyOnGogSgmwxl6WUUavAab1wBWLohNc6hoAoMoMQnTwVOHc96ZUANZmXfxL22qSW0YWusGFE+Xk6v/zAhXg74LZGiPtmpHAIIwcOslfqBxmcc6w0+4CIhJLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711616810; c=relaxed/simple;
-	bh=QKZlzANIuQdmukUikdQFyOBcn1TAzWevP344CY635aQ=;
+	s=arc-20240116; t=1711616844; c=relaxed/simple;
+	bh=B5P2QmTqG+zV/6zmv5Tkk3zk8lAWVapCRSaMTRw5r0A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IXR9YPbZ15BRaUEh1mB5rtXHxKDW42Ecl0MbasX6qLfxkSt6cWKr5ny9iIkKazXdUAyZmfL0u5TAjA2IgBmnTDO6A03TGpxglhC4FLk17j4F489XRT8XrxUTL2orzqcEllK4G8uVuMX8iwBdALKxZNMRRNF/lIoH/0NEbr47Wq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PBjPu3NR; arc=none smtp.client-ip=209.85.128.41
+	 In-Reply-To:Content-Type; b=PrW2+HqmdrxB2TuyyZtrb4D6suJLi02XAzTAD12C4d74/kYEbeoYcoZzEBXmB+jPSSdpQGYXGWVZ4GfHXQRjP0RmNf4YrJONwTFLgJ2zKnPHrjGzwtkENPMtoEaqgkkq/xb+HS1A0CXZ5J5w0wMEEMKloyLcUWZsHHOCLB5rYbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xo0Sfd9/; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41545e9f482so1589435e9.2
-        for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 02:06:47 -0700 (PDT)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41494c040a1so4860115e9.2
+        for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 02:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711616806; x=1712221606; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711616840; x=1712221640; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dn0ZZagXdZyiyz8hyk3Yzu6UlAUBcmSNEY43lxmrvpA=;
-        b=PBjPu3NRVGzIWBZxws33C/e0WHBr/mfqOTd1wSRXoDBRm/tcB83plPcBJc38hVZS+D
-         JVt/KtCENHpy0Ex7T51PRJXArLWthgCpa3VbvY/F/P/p70Iw5Tz9fdxlNIIQ/CtCkQcB
-         /HxGpOdYbSkIDwXUCpMj+dqEm+6xbCcau99FzVTmQSssrbgVuKK17QEc8B3osnFTi64F
-         NMS5C4JJk8xbD67n7feMqdfUbdM+uNGELxLz91CPmi36KlTQ7NpLAaOBmTzmmmn/dBm3
-         J6p+tcr8oBmulHTgQaJyOpjBouKTP1JD+OxRSNg3oNjstisYnznnzQ24Yuhjm7+Qj5zW
-         YAoA==
+        bh=kR7691QsLdiheg/qYlTvIwafZmDVMgMpzMu7f9J689k=;
+        b=xo0Sfd9/qBWj+gMrKlvyBeZ13v1Gi5WBWhsmVGYZJQHT3h4OaHMb3TbLrqwYJttNxv
+         HMecEWGEDtk4ZmyHUVpkv/2HxCb/lPya+P8yYcBtbPH64KS0Lpcoo0xc4Up6aQQ0q0HT
+         MpRutvmz4y48q8MTuCPaX+Yrj+NfmGs3uWm9ZhMYJWqjhXOWT6ahAhtum5JqCdB+cXTS
+         /YDCx39LT+LDwFQVZ8wXiJlg3+LSjBkv9skFr3cC5r/A1i1ZTntlFYBtCNOyktEEet7K
+         nUZmEML54bB9lnm1QCAAQO+/4FuDYHUoo/WEmQ0wgFIB7ym0E1a99L/9aVX1uNrOlMYK
+         v4kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711616806; x=1712221606;
+        d=1e100.net; s=20230601; t=1711616840; x=1712221640;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dn0ZZagXdZyiyz8hyk3Yzu6UlAUBcmSNEY43lxmrvpA=;
-        b=kLl6pI+P5xYGzQeTUotPQSRNO1RrEMuu8X1byghsb17XtVnkVf0r/1xMMl/U/Hin/1
-         Q875+ih0TFA3iXzUG1oCG/7S7XG9J759em6cQou543XEPnHoti7aaIbrVlzxrqMIMq+v
-         rQKRGzRDgcHjQPnaBEZLbcyp9dV+OpbKNvJI4N8x7qwzFs97IbE9exYO9/9vkMWAdNFt
-         4mdP0/eCLlMetNoOB7rsquc+M4Wh2kGvjU87/Me3LAMPqnD7rVqMWeu7TYY1nKRkfEwh
-         6XV8bWHotxGIug4wjXpOqswCpB2TBzsFkCHFwRlp9EyE38bnqsbv3IgHhSniMCybrhqm
-         FbyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxQSmimfL9JSVCWtupmKObZVLYD/NRKXSXryb9OjhdHxLFxdP9y7ZfFBk5u/T6mMa3FQmNW2X+AMNAJRwfLO4bIq0meqvUOMgP
-X-Gm-Message-State: AOJu0Yw+S7KcZiokXhbrSW01Pm3EK+f74Xn0zrYKLPnqD8ROk2Up/RYa
-	tglgqVhLPXVojoSCvREPWX11BdtZhY06SLbhaQPhgbJJKsnimybZKe7sTb9C/8I=
-X-Google-Smtp-Source: AGHT+IEriX5MSpAunoRRkPBv7PxELwypyvwD5CMt+D+h1lDKnzldxliMy7AOYv9W2AQi+0cEO5FCTA==
-X-Received: by 2002:a5d:47ce:0:b0:341:8974:9bae with SMTP id o14-20020a5d47ce000000b0034189749baemr2513172wrc.19.1711616806333;
-        Thu, 28 Mar 2024 02:06:46 -0700 (PDT)
+        bh=kR7691QsLdiheg/qYlTvIwafZmDVMgMpzMu7f9J689k=;
+        b=f3lpGb/sOPTaXJvoA0HxrE4YFWOAiUJ+Jcg0poaa3ZdDN+X/2jt27/bW/zv0aSgiZ4
+         90MYw0vAaV9FYn/0zbTZzXbRTUCDLLVQXECHgCiME3YNIYBpb7zVFuUkW9eW+FYH77pO
+         ckSbmrjtnWLeygLuRxmCzu95Vu3CriNZCT3AZ6AmzCDxqHoHdhNO5GR5BYoGkhXfbhR/
+         FDJu5VxrwicKPt8vW9ykCXjboYvd27pw4ZKS1Zc33ZeGU22oo+IXUFaqCR8NA5B0+d7K
+         ZUTY9SZWkKDZZ9P2w8hKM/pGKykc0VKOuSpSzt15XWWfhL0iPUOtHvAdGWSEjkBrcDLr
+         UeEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgwohY1grDJpOQCeKlTk3ERn+mWP+VWTMntt9nZaUxImaibtYozL3ytL0UvdopqLcYfhsk4c1gXJedom2nR7vuFNxKWgGe2UO0
+X-Gm-Message-State: AOJu0YyStawblyyzoWwknmVYbtzS8k+osdUFxmck5nizBx5U43p9T32m
+	ujGLNzbMn7kih+FanKhSqRIoB/tyfw4p6rZ/jR2vTd/OWqbWWI/xIfD9G+RtwBo=
+X-Google-Smtp-Source: AGHT+IFcH20TzPyDooBAuXCMccHixkHgImEVAVGVV0gG91HKEAKRs5otgy4+usrR2yWejLzN7oXoiw==
+X-Received: by 2002:a05:600c:1c23:b0:414:222:ad5e with SMTP id j35-20020a05600c1c2300b004140222ad5emr1870691wms.11.1711616840331;
+        Thu, 28 Mar 2024 02:07:20 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.148])
-        by smtp.gmail.com with ESMTPSA id c3-20020a056000184300b0033e91509224sm1203778wri.22.2024.03.28.02.06.43
+        by smtp.gmail.com with ESMTPSA id w11-20020a05600c474b00b00414927b21f6sm4746668wmo.22.2024.03.28.02.07.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Mar 2024 02:06:45 -0700 (PDT)
-Message-ID: <a18b2f9f-3b54-4f38-a93f-a5665cbebfa8@linaro.org>
-Date: Thu, 28 Mar 2024 10:06:42 +0100
+        Thu, 28 Mar 2024 02:07:19 -0700 (PDT)
+Message-ID: <dfebb955-6fbc-4e1b-bde3-13f9ddc33365@linaro.org>
+Date: Thu, 28 Mar 2024 10:07:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,9 +79,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v6 01/16] regulator: dt-bindings: describe the PMU module
  of the QCA6390 package
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Marcel Holtmann
+ <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
  "David S . Miller" <davem@davemloft.net>, Eric Dumazet
  <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
  Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
@@ -99,8 +98,8 @@ Cc: Marcel Holtmann <marcel@holtmann.org>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Abel Vesa <abel.vesa@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>,
  Lukas Wunner <lukas@wunner.de>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
@@ -108,8 +107,6 @@ Cc: Marcel Holtmann <marcel@holtmann.org>,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20240325131624.26023-1-brgl@bgdev.pl>
  <20240325131624.26023-2-brgl@bgdev.pl>
- <af9def4e-c6d6-49d9-a457-68c40492587a@linaro.org>
- <CAMRc=Mdw9Ox5EC6=GdR_1kzWcfhpdbz1Hu3e7+GY9-wqTh2fhQ@mail.gmail.com>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -156,54 +153,22 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAMRc=Mdw9Ox5EC6=GdR_1kzWcfhpdbz1Hu3e7+GY9-wqTh2fhQ@mail.gmail.com>
+In-Reply-To: <20240325131624.26023-2-brgl@bgdev.pl>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 27/03/2024 19:55, Bartosz Golaszewski wrote:
-> On Wed, Mar 27, 2024 at 7:17 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 25/03/2024 14:16, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>
->>> The QCA6390 package contains discreet modules for WLAN and Bluetooth. They
->>> are powered by the Power Management Unit (PMU) that takes inputs from the
->>> host and provides LDO outputs. This document describes this module.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
->> Can you start using b4?
->>
->> This is a friendly reminder during the review process.
->>
->> It looks like you received a tag and forgot to add it.
->>
->> If you do not know the process, here is a short explanation:
->> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
->> versions, under or above your Signed-off-by tag. Tag is "received", when
->> provided in a message replied to you on the mailing list. Tools like b4
->> can help here. However, there's no need to repost patches *only* to add
->> the tags. The upstream maintainer will do that for tags received on the
->> version they apply.
->>
->> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
->>
->> If a tag was not added on purpose, please state why and what changed.
->>
+On 25/03/2024 14:16, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> As per the first sentence of the cover letter: I dropped review tags
-> from the patches that changed significantly while keeping them for
-> those that didn't. If there's a way to let your automation know about
-> this, please let me know/point me in the right direction because I
-> don't know about it.
+> The QCA6390 package contains discreet modules for WLAN and Bluetooth. They
+> are powered by the Power Management Unit (PMU) that takes inputs from the
+> host and provides LDO outputs. This document describes this module.
 > 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-I went through changelog and did not see any remarks that patch #1
-changed. b4 diff tells me: not much changed. Same properties and you
-just do not require supplies on other variant.
 
-This is rather minor change - just see by yourself.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
