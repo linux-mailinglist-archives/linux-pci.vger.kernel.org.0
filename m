@@ -1,90 +1,105 @@
-Return-Path: <linux-pci+bounces-5310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5313-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 209A588F942
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 08:55:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EC7B88FA4E
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 09:51:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5ACA1F2B927
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 07:55:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C73561F29410
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 08:51:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7186A4F8BB;
-	Thu, 28 Mar 2024 07:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 744C857895;
+	Thu, 28 Mar 2024 08:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcyWY31+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B6PoaNGY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B93754729;
-	Thu, 28 Mar 2024 07:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F45750A97;
+	Thu, 28 Mar 2024 08:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711612536; cv=none; b=pvmxOqC33ev1wOey1NGg8PnkqilaZSEWC/MvUugJ3usrWu9ei3C5SMuzNnPngOEEyuK6P8KXQZzg3ptzCd80IGFovBGR6wLnZ3v7Qe8KJID1WEVk+kdAHKHed9v2GwwAUhlF6lcsFwIZMukDqKjDGDh3ZDZjIfQN/cuEMUsMQFY=
+	t=1711615873; cv=none; b=JMnnzVE3nARL/x5r279wMXk0TlFY6BfNgcN0hJsbWk+mQm+WGOIOh+4dTDCn3pXJUC6l+w5J14+dO/xaSmIC9r6hXC4y9IB5sBKiEiuGP783fZz3Ki6P2c+tyUNVjdaKBMNjgBJkA16S1mdJfwxrWJKWHcEoPw7xX8l6hxxdTMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711612536; c=relaxed/simple;
-	bh=qtwxnMr7h0StCKaCcZw5U9g1eJHIlZTOcNS8LKETAP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MTxCHgPb/AIUDLMtsf45Fo+rS7MRWNUhDlv8sVDemf5gHFtal3Pc5FTcFLVqqTM15nqZJn4RNo2hQH3USndKWEkiob5svCWu3TCOS4pm8ckoRKygmUQUZ1nP8HSF+FZRdbDGt7lfdyQR2ABYlhlMRCHZ84ldUEhQngvUQNeI/3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcyWY31+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FFFC433F1;
-	Thu, 28 Mar 2024 07:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711612535;
-	bh=qtwxnMr7h0StCKaCcZw5U9g1eJHIlZTOcNS8LKETAP8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FcyWY31+GrMBvGrVGqFz8Ek4ORULThUO5C0m5XvK6nOk3tPcEftwNr+Go5N5dCZ77
-	 r103gqrmxD47TN4mLoy3jakKXJPW5q8btiMw/kcwGKm0wgx+gcclnqbWMe+465fSA4
-	 oX8spooTokgRDeAl5q3n0HEn+1V73J8ZuDMTt5WGcFkQft19pUybu2xZhqvxxrXcbc
-	 CJB7EvfYYJOfBsyUsBv6x2OH85xk2+v5WMa8GjRK6bEqDMuHm0nVG+Yvrh72bSNdrm
-	 P01TzUajNFKfAA1hmACtGGfSbetkZ6XDllz2ox7ZEhot/htS0CtpH/YIwvqsfD+BpJ
-	 FOYgkEtJw2KMg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rpkbw-000000002Ez-23ac;
-	Thu, 28 Mar 2024 08:55:45 +0100
-Date: Thu, 28 Mar 2024 08:55:44 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH v2] PCI: dwc: Use the correct sleep function in
- wait_for_link
-Message-ID: <ZgUigCJ1Cq4Mz8sO@hovoldconsulting.com>
-References: <20240215-topic-pci_sleep-v2-1-79334884546b@linaro.org>
+	s=arc-20240116; t=1711615873; c=relaxed/simple;
+	bh=QcfFIfnoXJ39ZOQl9Kq+tID15GTEFiWOpgi2L8iB1Og=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i64ogSxQ5uxFfKaOMhg02aFRk1tZiTVDUgcpbJ+CoUTWfWaYF6uJt4W4130tp+1CDYV1ubDZLGPzVsunVbsyx5GH91X1dENllrQEiraHm5+tfu0tOU5picYvkABozO8oMVjbERLWlXNsfogHOF06MegVQCnVYOnGYuH2D0On8hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=B6PoaNGY; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42S8olmd090450;
+	Thu, 28 Mar 2024 03:50:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711615847;
+	bh=Cacsn4bkQffC1LUgUwIOS+voeU8rwMJR+qK/aUFmy3g=;
+	h=From:To:CC:Subject:Date;
+	b=B6PoaNGYgdqP6IytfDdlSaF6P+8/ooSlT9W7JMOOhdO/ih+j7r2Xpqr5VZd9lqCAU
+	 iMDbGmaS5WONMdK21tRtgL8IvT8MuxsEi6jhRIaVX9tSi4cjIl3TutKpuOXYJTdpPn
+	 l2A7OqmpiQErdvt7QGZfNhE2QC42NFaWzQYc19/M=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42S8olDb031604
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 28 Mar 2024 03:50:47 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 28
+ Mar 2024 03:50:46 -0500
+Received: from fllvsmtp8.itg.ti.com (10.64.41.158) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 28 Mar 2024 03:50:46 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by fllvsmtp8.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42S8ofoQ006765;
+	Thu, 28 Mar 2024 03:50:42 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <manivannan.sadhasivam@linaro.org>,
+        <fancer.lancer@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <cassel@kernel.org>, <dlemoal@kernel.org>,
+        <yoshihiro.shimoda.uh@renesas.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v7 0/2] PCI: keystone: Fix pci_ops for AM654x SoC
+Date: Thu, 28 Mar 2024 14:20:39 +0530
+Message-ID: <20240328085041.2916899-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240215-topic-pci_sleep-v2-1-79334884546b@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, Mar 27, 2024 at 07:24:49PM +0100, Konrad Dybcio wrote:
-> According to [1], msleep should be used for large sleeps, such as the
-> 100-ish ms one in this function. Comply with the guide and use it.
-> 
-> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
-> Tested on Qualcomm SC8280XP CRD
-> ---
-> Changes in v2:
-> - Rename the define
-> - Sleep for 90ms (the lower boundary) instead of 100
-> - Link to v1: https://lore.kernel.org/r/20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org
+Hello,
 
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+This series is based on linux-next tagged next-20240328.
+
+v6:
+https://lore.kernel.org/r/20240326144258.2404433-1-s-vadapalli@ti.com/
+Changes since v6:
+- The v6 patch has been split into two patches based on Bjorn's
+  suggestion at:
+  https://lore.kernel.org/r/20240326232403.GA1502764@bhelgaas/
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (2):
+  PCI: keystone: Relocate ks_pcie_set/clear_dbi_mode()
+  PCI: keystone: Fix pci_ops for AM654x SoC
+
+ drivers/pci/controller/dwc/pci-keystone.c | 136 ++++++++++------------
+ 1 file changed, 60 insertions(+), 76 deletions(-)
+
+-- 
+2.40.1
+
 
