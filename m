@@ -1,131 +1,134 @@
-Return-Path: <linux-pci+bounces-5357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B308E8908EE
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 20:15:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A890890BB9
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 21:43:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53213B2141B
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 19:15:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B5BC1C309FD
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 20:43:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA7E67FBB5;
-	Thu, 28 Mar 2024 19:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE10E13AA5D;
+	Thu, 28 Mar 2024 20:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fPl08Goi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N+qsYqKR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28812B9A7;
-	Thu, 28 Mar 2024 19:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1676313B59B
+	for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 20:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711653299; cv=none; b=sAdRvAVDYCDJLmb5DZ+9Xz0S6CczCPHs015b51KH9Iha0tvoTKl9OqXrgeUNXwQO9ZcRkPsGFGGk6Hv+W6pGIEiiUQsGaerzrYIaiFY2d/5qIz/oTQGVylWlf3Ra9REVlSrQXcPwsIyYsr+oFQ/wJBwxfHCNuBUubCqNjmkbW/A=
+	t=1711658529; cv=none; b=V+exX38AONOZDmq2rBR0wzXI5JLMpxdkBvVlBZiFYY//iO5pUepaq2ou0TeZZoV6kA9e0sUSAhvYtcgZmx5K5L+Orm9K5hcMrihhxY3+GQCJknyUASGjlzSM4+kHtG0Y2vnRP6GojCQ7c4w6dlHmBffgM5DBme/eM8rWhtB38Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711653299; c=relaxed/simple;
-	bh=+T4z2HBredaERjZopJntIuvdL+nijHJUXz6SvJzHMEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=F7E0TSP7qECyglas/ryaP0Bk77fYKwwZ4UpfYUbbaOH1rFaJKwCePjaa8ndu4AfddculDDh9JptWmqM4Oz1Heo4oWecSoFwfgUHpJn5VNrnnK/xTy+DRJ+sj15G7W/eaIrRl8F7ZWmQE7xgv6j5Sb/YKVW7wIzKfabdZto27GyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fPl08Goi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0475C433C7;
-	Thu, 28 Mar 2024 19:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711653299;
-	bh=+T4z2HBredaERjZopJntIuvdL+nijHJUXz6SvJzHMEg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fPl08GoiB4tGYfb66jaqHexEBUNPIoESeN4Kge7bTXdG7esAJ0k6blf3aj668URoq
-	 cu5tg7civ8LAsfyqVUfeJJgmj44tb2nFtUsfNRd3i77qRanweVPzXL3PHdxyqIf7Af
-	 Qzsl2mBpH+BcZ5CVr3fuEH3Q1CI10qE7WQwjIQjeDcZshTyIq+QipK5PfQbtNKzUof
-	 fMa8QR56WuDjv3h6VbWdErw00J9FJffWSSBlvSjP381Z7yJuYXCl+eYp7boG//8Oww
-	 pkQHV+BxC8ZR/zzBMUKXkfJSogKklbM/PrF2nhxws9nI9HrnphsdvIisORTcsToJQ5
-	 KGnpRoZVIMnJA==
-Date: Thu, 28 Mar 2024 14:14:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com,
-	lukas@wunner.de
-Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
-Message-ID: <20240328191457.GA1577365@bhelgaas>
+	s=arc-20240116; t=1711658529; c=relaxed/simple;
+	bh=dx67GYsTkBy2f4E6+nDiqrEy7ZQNVITGQVNCkKyQWmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sFhJyped+9VtPurQ1+mIi921M5b9L/wYAWqLsmIIlicaPrz55FZSuFNATXMrliwh2Oe4GmazZrzELZClXxNkyTeht4aV77GrQwOKAbMne+y1MnlhR7bWNxx18Rq7/C+ch2V/CjxEp8kFyb1mCVd3JEVsI8euptJUfYSQdruEVqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N+qsYqKR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711658527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ry2KwNiHHETpw/ISNKmQIteSWFjYtHm09Kp2vXN04J8=;
+	b=N+qsYqKRm+i4EuyV8gt3qTCKc459T6zB570+8jUkN86oFtAxQI5g0Uvmnmqn2MYmaH2Mi+
+	l5d1YUprPt/OrBx75SEdn2w4xVolPGjQOgRsZxY7L0tVF2WBZGmTOidkQQEzxXh38ftTAw
+	FHDNvfptKm+8DedXTlCvTzLRIm/5gVs=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-692-Gq-UVqmPMUGBWoJFmaOoOQ-1; Thu, 28 Mar 2024 16:42:05 -0400
+X-MC-Unique: Gq-UVqmPMUGBWoJFmaOoOQ-1
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cc74ea8606so137243439f.2
+        for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 13:42:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711658524; x=1712263324;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ry2KwNiHHETpw/ISNKmQIteSWFjYtHm09Kp2vXN04J8=;
+        b=bMLEIPAtg3FE83OIT/EWnamWxHb8OUaIkhTd66YzATqRidoipc/dcK1romPJ0OLPeq
+         LTvyJmx5wxpyCJpVCUltuEi9vLZo5A7myKrg5foVdN/e2+QGGWAD/B26V7f++6R05XpY
+         VAkyp+9H23R8InPueHILzKSSfcvOCtaPgGvRKBnMOHGnFb9b1ymei2f9rZTzPaA4EGUk
+         KqwIaxjSOV6lWtaaEbkfdxGqqs+Wvkr3SkBk9jfqhwk+npXz8tPPwKpg2F7dsDphx+iB
+         JmwBdTBu+4mYmtrK1q9Ff/aofHoepgzW5owLjEPpBk/hNtdv4cqGARmf6y37FQz6xDjI
+         bdFg==
+X-Forwarded-Encrypted: i=1; AJvYcCV54zkZUn3hhQslbA7CtHF6LH7GDCmkC+m2Lw11y9bf8qE3vE9qH7Zc+sWy6ZfWcsbzDCG7nt4TZH4fFdLSKVVjTedH1KwSXRxD
+X-Gm-Message-State: AOJu0Yy9vPI75nkFF5DebKLuEFrBsDAV23ndShUSNpeANN2OAsj2FQgO
+	XtwxREjEninVp7q+26mlHezIHUz6vYWhyhZres18eJbYYD7hpfS2kV0qs9mmym1obYSTSc+zuCW
+	CSwTIvc10w0j7CUnqHRG2GzqzL/kwBq30xGCUzTcWNsrhymqyYPNvQebzNUiaBdxgrQ==
+X-Received: by 2002:a6b:e610:0:b0:7d0:2e09:914 with SMTP id g16-20020a6be610000000b007d02e090914mr311622ioh.14.1711658524509;
+        Thu, 28 Mar 2024 13:42:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IETxGX4iy66B/NI8RaJIF20PbD28PYM4/zW2oAcxKRRkohptt64R98fB5Lkzx1WzA2aqpVdzw==
+X-Received: by 2002:a6b:e610:0:b0:7d0:2e09:914 with SMTP id g16-20020a6be610000000b007d02e090914mr311607ioh.14.1711658524241;
+        Thu, 28 Mar 2024 13:42:04 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id c8-20020a5e8f08000000b007cf185099e6sm602078iok.35.2024.03.28.13.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 13:42:03 -0700 (PDT)
+Date: Thu, 28 Mar 2024 14:42:01 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, edmund.raile@proton.me, Takashi Sakamoto
+ <o-takashi@sakamocchi.jp>
+Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
+Message-ID: <20240328144201.510f6d5e.alex.williamson@redhat.com>
+In-Reply-To: <20240327150119.GA1502858@bhelgaas>
+References: <20240326131858.GA140624@workstation.local>
+	<20240327150119.GA1502858@bhelgaas>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6605bef53c82b_1fb31e29481@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 12:03:17PM -0700, Dan Williams wrote:
-> Bjorn Helgaas wrote:
-> > On Wed, Mar 27, 2024 at 04:57:40PM -0700, Dave Jiang wrote:
-> > > On 3/27/24 2:26 PM, Bjorn Helgaas wrote:
-> > > > On Mon, Mar 25, 2024 at 04:58:01PM -0700, Dave Jiang wrote:
+On Wed, 27 Mar 2024 10:01:19 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> > > >> +/* Compute Express Link (CXL) */
-> > > >> +#define PCI_DVSEC_VENDOR_ID_CXL				0x1e98
-> > > > 
-> > > > I see that you're just moving this #define from drivers/cxl/cxlpci.h,
-> > > > but I'm scratching my head a bit.  As used here, this is to match the
-> > > > DVSEC Vendor ID (PCIe r6.0, sec 7.9.6.2).
-> > > > 
-> > > > IIUC, this should be just a PCI SIG-defined "Vendor ID", e.g.,
-> > > > "PCI_VENDOR_ID_CXL", that doesn't need the "DVSEC" qualifier in the
-> > > > name, and would normally be defined in include/linux/pci_ids.h.
-> > > > 
-> > > > But I don't see CXL in pci_ids.h, and I don't see either "CXL" or the
-> > > > value "1e98" in the PCI SIG list at
-> > > > https://pcisig.com/membership/member-companies.
-> > > > 
-> > > I'll create a new patch and move to include/linux/pci_ids.h first
-> > > for this define and change to PCI_VENDOR_ID_CXL. The value is
-> > > defined in CXL spec r3.1 sec 8.1.1.
-> > 
-> > I saw the CXL mentions of 0x1e98, but IMO that's not an authoritative
-> > source; no vendor is allowed to just squat on a Vendor ID value simply
-> > by mentioning it in their own internal specs.  That would obviously
-> > lead to madness.
-> > 
-> > The footnote in CXL r3.1, sec 3.1.2, about how the 1E98h value is only
-> > for use in DVSEC etc., is really weird.
-> > 
-> > IIUC, the PCI SIG controls the Vendor ID namespace, so I'm still
-> > really confused about why it is not reserved there.  I emailed the PCI
-> > SIG, but the footnote suggests to me that there some kind of history
-> > here that I don't know.
-> > 
-> > Anyway, I think all we can do here is to put the definition in
-> > include/linux/pci_ids.h as you did and hope 0x1e98 is never allocated
-> > to another vendor.
+> On Tue, Mar 26, 2024 at 10:18:58PM +0900, Takashi Sakamoto wrote:
+> > On Mon, Mar 25, 2024 at 09:41:49AM -0500, Bjorn Helgaas wrote:  
+> > > So even without this patch, you are able to pass the FW643 to a VM
+> > > with VFIO, and you don't see any issues caused by VFIO resetting the
+> > > device?  
+> >  
+> > Absolutely yes, at least in my VM, for recent years to maintain Linux
+> > FireWire subsystem and ALSA firewire stack.  
 > 
-> Oh, true, I think this should be PCI_DVSEC_VENDOR_ID_CXL, because afaics
-> it is still possible that 0x1e98 be used as a non-DVSEC vendor-id in
-> some future device.
-
-What a disaster that would be.
-
-> In other words I think the CXL specification usage of 0x1e98 is scoped
-> as "DVSEC Vendor ID", not "Vendor ID".
+> So there must be something different between your system and Edmund's.
+> Maybe we can refine the quirk so it avoids the SBR on Edmund's system
+> but not yours.
 > 
-> However that would mean that a future 0x1e98 device could not publish
-> DVSECs without colliding with CXL DVSECs.
-> 
-> I note this footnote in section 3.1.2 about the 0x1e98 value (all caps
-> emphasis is from the spec, not me):
-> 
-> ---
-> NOTICE TO USERS: THE UNIQUE VALUE THAT IS PROVIDED IN THIS CXL SPECIFICATION IS
-> FOR USE IN VENDOR DEFINED MESSAGE FIELDS, DESIGNATED VENDOR SPECIFIC EXTENDED
-> CAPABILITIES, AND ALTERNATE PROTOCOL NEGOTIATION ONLY...
+> Can you both collect the output of "sudo lspci -vvv" so we can try to
+> figure out the difference?  Also a complete dmesg log would be helpful
+> and would contain DMI information that we might need if this is
+> firmware dependent.
 
-Right, that's the one I thought was really weird.  No sane person
-would put crap like that in a spec, which is why I thought there must
-be some "interesting" history behind it.
+The original patch proposed for this gave me the impression that this
+was a device used on various old Mac systems, not likely applicable to
+a general purpose plug-in card.  Given the expanded use case, I'd
+suggest reverting the patch.
 
-Sigh.
+I think we need significantly more exhaustive testing on the afflicted
+system to understand whether this is an issue with the endpoint, the
+root port, the BIOS, etc.
+
+In the meantime, or maybe as a permanent solution, Edmund can make use
+of the reset_method interface in pci-syfs to restrict the available
+reset methods for the device rather than risk removing a reset
+mechanism identified as working by other users.  My 2 cents.  Thanks,
+
+Alex
+
 
