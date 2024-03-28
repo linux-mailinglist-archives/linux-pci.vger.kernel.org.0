@@ -1,181 +1,229 @@
-Return-Path: <linux-pci+bounces-5301-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5302-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 738F988F447
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 02:01:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E177188F4DC
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 02:43:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA575B219C1
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 01:01:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DBAA1C260F1
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 01:43:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FBE914011;
-	Thu, 28 Mar 2024 01:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3585B1804A;
+	Thu, 28 Mar 2024 01:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYx+HLra"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h6j2PTnv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B465ED8;
-	Thu, 28 Mar 2024 01:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711587712; cv=none; b=YZmRiobntaw6niMU9psJZG3BZEt8144YV8qozl4kMpANkmxYe9/fa47ZvfSM/k+xnWf3c14k7lJzwG/ur78glMbqWwc38V2ClPV87a8Ggmicrrelub3mOucCsHBDSfpiZSxy0zp3cRLvmz0sSlNvykbsxD8VAnve1RlrR/IEB3A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711587712; c=relaxed/simple;
-	bh=2cfHzOeZI9Z39CzJ/8BNbKRI3djDCKB8bHXvwRGu0Y8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CpNXdFPD2WS0EV8CG+S7vNjGupSzaHd8GC/4w4vqwFqo7HDxwHC5GFc1CSF6LOWtWAxq05inyaCWKYl93kvcJJlx3YOUPuu7CvmHZnVCgywZbkuPRSzZ8ObQ/Z7Hf5EytxRxELcvksVOA7ISYP+p0G7RJ4D+49WrBfBGieSmf1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYx+HLra; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56c2c41cbdaso218563a12.2;
-        Wed, 27 Mar 2024 18:01:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711587709; x=1712192509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QVMPOgXiwV6xXIBa4FmJiAt/efk5dy0MaILdoXE0w4A=;
-        b=NYx+HLraYKv81LwJy2p4DS27KEY6U3sJD7mvNm8fDLYfqOZB3aCXJK3dEdhiXScLbh
-         KzzSf75SBIo68jwWC7x+Psn66a9q46gS4dM+KEt6b7s4LNL4KRjw36gvXcl0bEvqi3P0
-         40C/b1po4KEWqPkP16AsgGOEgn3dXCreXepUu5qOQhEaDQ+03lfEvzs2Ul4bw8rCmXh/
-         h2JrAJzrTzedLrIs6k0pp8tJewYZoMAnc+Y3TKbh0BoOyACk1XCaiyP5XpBwI3HjvehG
-         HeCf6EgTfsRYbOQG21ya4mJCcG6NToz4tVp1li7cu/5u1fTRqjCtr2Z4FL7qvFhViXie
-         /pKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711587709; x=1712192509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QVMPOgXiwV6xXIBa4FmJiAt/efk5dy0MaILdoXE0w4A=;
-        b=u1Uwmfku0zQNbxirUxaARW2t21oJcOZLeLL4+MW/43x8gic4NRyXRcgZRJtw+hLF1b
-         cNkgOt7e1uiRys269b4INDThtJyfEinxbQrQlW2HDlpAJpTvJJMi5SvB/3ukH8sDrqJp
-         cRt4gaNCb82wDSGHG/RbnHqp34/591Tcgu6WXvQqTwk+tgVyHDUYSScENA6yaYINY58e
-         AB+YuCZX35XseSkPZWoQeDODGsxxGvxAkVHWlnvXHRXoAhiIrX/vnXYmYbsYyIPWWw45
-         tUEeHKFC7BxvY+AAEivQwP75ttSmppS3puSJKxrcyUXfyNVfD8B9PToP0UFF/oKruVBC
-         PXwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbv1/k5GoQSUKWoloiVFvFpMqBmUNxpdC2Y862FKj1PG8qRDyHS34Cc3DavktC6/+bJ2rLLu4clAUPnwHjlqZLmXzds7uTSjsh+AmnGp9oYFNPe8itE5qmvr7FRgYIAUHnAXbVIdkSpKpc006vpFl/u9e5oprDl+wd5FUTkNBOCZAv
-X-Gm-Message-State: AOJu0YzvQr7UkCwoKZEWouCcA/Q9nhWIGmumkmurkCoPAekr9dtfjUlF
-	yKQ8Uz0SWs8sMJS49dDa6z6w8U4jTvYjCWGzi2JIEmAXbqaSQUZtAui+uu3ns5TsExDXdlOuk4J
-	xO8Hfr9kxSOmraSKxD66CEVINOMY=
-X-Google-Smtp-Source: AGHT+IEVlIyJhQ6HxIzqq7Q5sGErXONlDcW77WKjJYQRC2KjOqtAmGKq33df+o5TBuuUG/8ZMsEdI7NhLu6jizZM5aA=
-X-Received: by 2002:a50:9302:0:b0:56b:7f43:5a49 with SMTP id
- m2-20020a509302000000b0056b7f435a49mr1004214eda.40.1711587708441; Wed, 27 Mar
- 2024 18:01:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C541798F;
+	Thu, 28 Mar 2024 01:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711590201; cv=fail; b=pISabdnk2s/j9jVBNNcIVg6bptZ4eRRcFMEJ7cdKedbxgRARP5RwcIVBFENtNBGgJXzJPR1/u6uOLwdTIUL8Lm2R5xOnpElaornRLmj+5q/nkKDulIfHFjdrj++LX9BKUWYGCDrHIU6IpXX+4ryR4cpjLVIGMEy+KmXGC6p057A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711590201; c=relaxed/simple;
+	bh=KhWK3/bUuR/Znl9GylXLMPu6MRT/JT8uxfFj5VWmU98=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=aMlYko+jPZb4Dn8Zsu7C93Jxy2CXuY7cXeDC7l04WzNhaDgz4v3jZxQ/5Qxlpkm4Cwb5wU/LAb4TAdpFEbiNQbSNwF8OdvaHnYElifPNt0q7HODizSnSTuZ0BRYKAfLCm82b13FUgX0xr6wHWOvtiQfMIi+YeKF6YwnPVXjJKZQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h6j2PTnv; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711590199; x=1743126199;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=KhWK3/bUuR/Znl9GylXLMPu6MRT/JT8uxfFj5VWmU98=;
+  b=h6j2PTnv2P5FjcLkD+Nh+UPeYrswwz96U+Oev4sm2eBMyPEhxjEQHNnn
+   fXU2QNRWyUkYme7+XlpQi6uH6s7kNeRffkNGN5uVyHgYrefkyRee/hTa3
+   anByn7m6dgUIf4eTFLSJF2HLUHVFYE9Ny587HvWOsiXNMKIvndgh9BDF6
+   c0dIxCrSbJYh8ALoZZSn3TBRV/6sRHAGeQuL+eIjPaPd8xIjVv091yB+M
+   S2AcLbOE9wi9NolbRjohZ5iwhy/7jhVqX1ia4dufUZIRJ1VzMoER6qost
+   zY6ZiKepntOVYPzKlFhhsLHNZrUA9dDkrIOMvV877N2VWEC1Hk5Ka86MQ
+   A==;
+X-CSE-ConnectionGUID: AlCqWuhtTTWZ2au3ZgDxAQ==
+X-CSE-MsgGUID: ClQj+ledQ026VQlVKuUPEA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11026"; a="6915312"
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="6915312"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 18:43:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,160,1708416000"; 
+   d="scan'208";a="17108669"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Mar 2024 18:43:18 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 27 Mar 2024 18:43:17 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 27 Mar 2024 18:43:17 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 27 Mar 2024 18:43:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ECjTkrm3gymjmYAP5qUmq754GL7ghqHYU1fHPjKW5z8wG9DLpuFIfmjn93FvqFvVV1jg1xYm2OBqvc8fT7GxEfw4Y7U8yPPNGRU8cfsjDiFvPxgoV4bL/JfrpK5wfWLF/k348PhevnJpC34OkX0SH3v3f2fPcVjWk6hCKYLmdA7r32aNN2A+NSrzwGrl7t3uBAPI/+qQDhtow1hEkh9yAhSsHgwOTv5/4dKjxC3njawbKKleALs2KGJS0uLQPBvdl4WJg6mEGKSL/2C7i15x3mmuDKbpJL3WoY+2rsjrVCVzgFIaCWfJ9CazCRTftpnt853GS7UP1+8h4WcjExd3jw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a4EVnkcag23VbbmRU89QULEegm90HGwZD8hseNnzVW8=;
+ b=TPcTifW31RZfiO8Tdy7dVuT8sE0/iuCEaJsSmdcTgSGL6aPiOoHc3e6Bcy20UhLoztjqktruxzTI3tMPczZKN2J8OROxuFRxdj9S5qvPzoGOu1zDMMX8UaVJPs6tjvD2oDJz+W5LMU818cJLOE5shzXWYrIGgx9dR0b3JQcr2PiwJ0UIVFTvRZoSGwHhXapTO6+mH6hStU2iiB196QDDCa0u68ACOlD5S03e4Mywy43CpGvzDiyR5U1FNUAyZ9i6BK0/6+I+VqxYXabZJ5bm4LwZ7tY25uu6MQ342Apy68FyUMxP00ZxOJfyO5gyDNzCtLQQkayxgPgrKnuA3LdDjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by LV3PR11MB8506.namprd11.prod.outlook.com (2603:10b6:408:1bb::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Thu, 28 Mar
+ 2024 01:43:09 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.031; Thu, 28 Mar 2024
+ 01:43:09 +0000
+Date: Wed, 27 Mar 2024 18:43:05 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+CC: <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <bhelgaas@google.com>,
+	<lukas@wunner.de>
+Subject: RE: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
+Message-ID: <6604cb299ac50_7702a2946d@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240325235914.1897647-1-dave.jiang@intel.com>
+ <20240325235914.1897647-2-dave.jiang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240325235914.1897647-2-dave.jiang@intel.com>
+X-ClientProxiedBy: MW4PR03CA0136.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::21) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327214831.1544595-1-helgaas@kernel.org> <20240327214831.1544595-3-helgaas@kernel.org>
-In-Reply-To: <20240327214831.1544595-3-helgaas@kernel.org>
-From: Ben Chuang <benchuanggli@gmail.com>
-Date: Thu, 28 Mar 2024 09:01:39 +0800
-Message-ID: <CACT4zj9BFwMLsDSzNQ=wHSBCHqoydggtM-7-7rsfo0pRV2iLEg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mmc: sdhci-pci-gli: Use pci_set_power_state(), not
- direct PMCSR writes
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Victor Shih <victor.shih@genesyslogic.com.tw>, 
-	Ben Chuang <ben.chuang@genesyslogic.com.tw>, 
-	Kai-Heng Feng <kai.heng.geng@canonical.com>, Sven van Ashbrook <svenva@chromium.org>, 
-	Stanislaw Kardach <skardach@google.com>, Brian Norris <briannorris@chromium.org>, 
-	Jason Lai <jasonlai.genesyslogic@gmail.com>, Renius Chen <reniuschengl@gmail.com>, 
-	linux-pci@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|LV3PR11MB8506:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b09c4b7-e3bf-4ffe-a7da-08dc4ec86bfe
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +GQRQzwh7BDbHc0oHAXAoMnNzcVrKEZ6OgKIGB95tp40nyyo3Qe9CO8kCV5rV/qyavJS4g8Q+6wM1xkoMlktIhJkZBHE456NWkEnI+WTm2Uk32dZlGvF19JideHQ2sZxExP+hv1Decyf+IZhQFncgpNMiWShnBaG4POb+lDy097g/JwA7Zbn8GxTL7NA9RfEHiLhHKIOux5BIpOuXUWKWnI7TfFj4LYzU734sgwQb0gHZt3amyk21ZhOVYVlDgouWOxWHTVcLtsicpRS26j5nvq/deaxGDoA4t9wpMB92Pp7H0tDN+U3WHZPEjXgpHlOuQosJoxckLKF9ks9XpcydRkzNgXXwIMdfJWq+qrvJqN5RJDJbSsTXji6I/o6f07jT7/7d0GmvVfhFtGY5tQa8lJDsG/CGcYEH3EYGUCc9kO+w2hb2sWuad15QS0qAQhnHeJi1fur2NEcQ9zbcqa7wD8nJyHT4pQrKmY8y0XfmB89Bm0Q1sXO5u9xapgplZzx+KRKj3wsUFjvk+iEW4X4FJrLPJw2yHxNdJHjeLR5m/ZqbJsOXEBLGlJc6gfRAjVc0jqz4hcMUGx15kLCb1FNjljpcptjEW0fLNqRmNMWHGs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lZDIVoOQj+9mTnBkCBphT45pufikHMKCjHq/KMjieRFetRNX+kX+xAsQT+8H?=
+ =?us-ascii?Q?LcRiUeEtu7XUz25ZR2ZRN0LBU6EWCcCscJy6sV036XG4dRE0FQd95ImcQWzI?=
+ =?us-ascii?Q?J97xCtcEfcYjFKKZZSN7VOfBHPDP0opciU5qlHh95mhM+JVtIpo6ay7/27Sb?=
+ =?us-ascii?Q?eM8l8STapwDrsAujg9UCqiyvTx9iNHm2cR0OxUnIaVOJRxefQWqWuGrkC7Qx?=
+ =?us-ascii?Q?CqFfXF2W4A6uYEW72qlPaKU3xpH5jfn6VYuQ5Lcmx+LHkxTeUpUnNTlE6/qc?=
+ =?us-ascii?Q?k6hHA0XrpzuDKMCSrqupV7J44nS15LVBChxI5/I3iMV1sOphPRIIl0QMWqqn?=
+ =?us-ascii?Q?NXwAjJnQhTsQJD6JKiiy1/jiq0dTreSMnDmLtA5u4m8Du1bPdeewsiCy6z0p?=
+ =?us-ascii?Q?c+1RMnPxx/V7DYmaQL5IsdSugg10F4cTnpgfeMz8VZtw+CPeHazxZpdOi55A?=
+ =?us-ascii?Q?UY/pRsXXaDqY5u9kp+NE9MgMP9Bk5FkAEPXc1MsWtp58Ul0KhbpQwAw3cWW3?=
+ =?us-ascii?Q?BJVp265+/KRWXnW0ES/396gtUs6A7EsrPb4/AbtyBWyCQsmySN22qIyiXNcR?=
+ =?us-ascii?Q?y/pBkng3IBlKyOugwwjZdak0UKLao35Qwd/ymZLxM4IekUpXOe2zjIipWLyQ?=
+ =?us-ascii?Q?b4RE+nUY1cXa04HWgZloijIAJNEoqTKvCTh20/N9T04qgHGiQTN/Zb7zpvsN?=
+ =?us-ascii?Q?lOeBHPyDUYAHPifKpj7FGOhgBARbZA/f6htUnzVeriY4NkcB8ynmclDAQixz?=
+ =?us-ascii?Q?57+Ezq50IdhVx11F8ccdEkcC9iAYAO+IxSy50vKzQDcoEURBJCHbdehIROcT?=
+ =?us-ascii?Q?kLoT2/bzGu3OpnymTTElgOJcQxCGtRk1ul182ESUet2LFUdKqu4UDZtZDrlc?=
+ =?us-ascii?Q?j+c7QhMqqATc8oZbMC2LtQ8bHzXYYsB3csDZIRw/nK78jXiltgxUEzzdXNiw?=
+ =?us-ascii?Q?Ky/yKHt2Sq8gziYk8o5q7W39Z0g3rABPIlzBmKA9qll7i/VjnPsky6p4gU/o?=
+ =?us-ascii?Q?K+quGgaGZvvFnEy23Muon7LNH/141ea/GRNgPe8xBhRZ0o/aTwHGfusnrzU7?=
+ =?us-ascii?Q?2IQQAMv9QVaIp89VD/LFwWgrSiRStl79syr698O91uJgQPHAzHv0N7MFpltH?=
+ =?us-ascii?Q?T3CoTHRVzqXUhBipuPz/XesIR4JNhQHRFEo5m79Kt/Oslti1c6+TIUvX5SM0?=
+ =?us-ascii?Q?sN4ZOJiSFoxKrpMRZCIWFnlAWvDKvu7rKwsMAEtU9xWho0VJBPwVenTXCX33?=
+ =?us-ascii?Q?93qLZ9VtaY8dmFKOynqRuM/P/hbal9NCfy91MMzYu2VKeGzeKBsnxfqNxRid?=
+ =?us-ascii?Q?JnImjWQprBD2LBpaxQ4wPvHNfV8EaRnZjyOKuaMjhpngVsuhiyjOOLcF3Iy4?=
+ =?us-ascii?Q?+4/q/E9kVq4TBAGnzrYdEgjQeQ4i1DE+/IJE2XxnI5X8SLFZA8YAu07x0EQH?=
+ =?us-ascii?Q?LssaTbJF7I8+Mar7lpb9bzRRSTsk+tl4Npg4Q/qiKJ5WQpq6W2bMyUMB9Cet?=
+ =?us-ascii?Q?xoDyehYSxE58E3gZ3OURBM0YFPsmKPas1Tm5gNl+s/Hir3iw+Jnohycnjy7g?=
+ =?us-ascii?Q?15sQv2EUmeIQRCOOt/vQoXCMwCqpmOz1nXpeL+njRiwlDbcbEXB6iSYzwrJ+?=
+ =?us-ascii?Q?vA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b09c4b7-e3bf-4ffe-a7da-08dc4ec86bfe
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 01:43:09.3776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W1KDCXxR60a74lU9XRvd+9lpMFNnFwBULMWycNAGre26t0d4g0VGjRRZC40gLDoZ3hD2Xea1N8PVVd3e5HqV8oHZg9Jq3GuioR1xOKtOJRk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8506
+X-OriginatorOrg: intel.com
 
-On Thu, Mar 28, 2024 at 5:49=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> d7133797e9e1 ("mmc: sdhci-pci-gli: A workaround to allow GL9750 to enter
-> ASPM L1.2") and 36ed2fd32b2c ("mmc: sdhci-pci-gli: A workaround to allow
-> GL9755 to enter ASPM L1.2") added writes to the Control register in the
-> Power Management Capability to put the device in D3hot and back to D0.
->
-> Use the pci_set_power_state() interface instead because these are generic
-> operations that don't need to be driver-specific.  Also, the PCI spec
-> requires some delays after these power transitions, and
-> pci_set_power_state() takes care of those, while d7133797e9e1 and
-> 36ed2fd32b2c did not.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Hi Bjorn,
-
-Thanks. It looks better than the vendor specific.
-
-Best regards,
-Ben Chuang
-
+Dave Jiang wrote:
+> Per CXL spec r3.1 8.1.5.2, secondary bus reset is masked unless the
+> "Unmask SBR" bit is set. Add a check to the PCI secondary bus reset
+> path to fail the CXL SBR request if the "Unmask SBR" bit is clear in
+> the CXL Port Control Extensions register by returning -ENOTTY.
+> 
+> With the current behavior, the bus_reset would appear to have executed
+> successfully, however the operation is actually masked if the "Unmask
+> SBR" bit is set with the default value. The intention is to inform the
+> user that SBR for the CXL device is masked and will not go through.
+> 
+> The expectation is that if a user overrides the "Unmask SBR" via a
+> user tool such as setpci then they can trigger a bus reset successfully.
+> 
+> Link: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/mmc/host/sdhci-pci-gli.c | 20 ++++----------------
->  1 file changed, 4 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pc=
-i-gli.c
-> index 3d5543581537..0f81586a19df 100644
-> --- a/drivers/mmc/host/sdhci-pci-gli.c
-> +++ b/drivers/mmc/host/sdhci-pci-gli.c
-> @@ -25,9 +25,6 @@
->  #define   GLI_9750_WT_EN_ON        0x1
->  #define   GLI_9750_WT_EN_OFF       0x0
->
-> -#define PCI_GLI_9750_PM_CTRL   0xFC
-> -#define   PCI_GLI_9750_PM_STATE          GENMASK(1, 0)
-> -
->  #define SDHCI_GLI_9750_CFG2          0x848
->  #define   SDHCI_GLI_9750_CFG2_L1DLY    GENMASK(28, 24)
->  #define   GLI_9750_CFG2_L1DLY_VALUE    0x1F
-> @@ -149,9 +146,6 @@
->  #define PCI_GLI_9755_MISC          0x78
->  #define   PCI_GLI_9755_MISC_SSC_OFF    BIT(26)
->
-> -#define PCI_GLI_9755_PM_CTRL     0xFC
-> -#define   PCI_GLI_9755_PM_STATE    GENMASK(1, 0)
-> -
->  #define SDHCI_GLI_9767_GM_BURST_SIZE                   0x510
->  #define   SDHCI_GLI_9767_GM_BURST_SIZE_AXI_ALWAYS_SET    BIT(8)
->
-> @@ -556,11 +550,8 @@ static void gl9750_hw_setting(struct sdhci_host *hos=
-t)
->         sdhci_writel(host, value, SDHCI_GLI_9750_CFG2);
->
->         /* toggle PM state to allow GL9750 to enter ASPM L1.2 */
-> -       pci_read_config_dword(pdev, PCI_GLI_9750_PM_CTRL, &value);
-> -       value |=3D PCI_GLI_9750_PM_STATE;
-> -       pci_write_config_dword(pdev, PCI_GLI_9750_PM_CTRL, value);
-> -       value &=3D ~PCI_GLI_9750_PM_STATE;
-> -       pci_write_config_dword(pdev, PCI_GLI_9750_PM_CTRL, value);
-> +       pci_set_power_state(pdev, PCI_D3hot);
-> +       pci_set_power_state(pdev, PCI_D0);
->
->         /* mask the replay timer timeout of AER */
->         aer =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
-> @@ -774,11 +765,8 @@ static void gl9755_hw_setting(struct sdhci_pci_slot =
-*slot)
->         pci_write_config_dword(pdev, PCI_GLI_9755_CFG2, value);
->
->         /* toggle PM state to allow GL9755 to enter ASPM L1.2 */
-> -       pci_read_config_dword(pdev, PCI_GLI_9755_PM_CTRL, &value);
-> -       value |=3D PCI_GLI_9755_PM_STATE;
-> -       pci_write_config_dword(pdev, PCI_GLI_9755_PM_CTRL, value);
-> -       value &=3D ~PCI_GLI_9755_PM_STATE;
-> -       pci_write_config_dword(pdev, PCI_GLI_9755_PM_CTRL, value);
-> +       pci_set_power_state(pdev, PCI_D3hot);
-> +       pci_set_power_state(pdev, PCI_D0);
->
->         /* mask the replay timer timeout of AER */
->         aer =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
-> --
-> 2.34.1
->
->
+[..]
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e5f243dd4288..259e5d6538bb 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4927,10 +4927,55 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
+>  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
+>  }
+>  
+> +static bool pci_is_cxl(struct pci_dev *dev)
+> +{
+> +	return pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
+> +					 CXL_DVSEC_PCIE_DEVICE);
+> +}
+> +
+> +static bool is_cxl_port_sbr_masked(struct pci_dev *dev)
+> +{
+> +	int dvsec;
+> +	u16 reg;
+> +	int rc;
+> +
+> +	/*
+> +	 * No DVSEC found, must not be CXL port.
+> +	 */
+
+This comment is unfortunately not correct. Per CXL 9.12.3 "Enumerating
+CXL RPs and DSPs", the CXL_DVSEC_PCIE_PORT disappears when no endpoint
+is connected. So the comment should be:
+
+/*
+ * No DVSEC found, either is not a CXL port, or not connected in which
+ * case mask state is a nop (CXL 3.1 9.12.3 "Enumerating CXL RPs and DSPs") 
+ */
+
+> +	dvsec = pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
+> +					  CXL_DVSEC_PCIE_PORT);
+> +	if (!dvsec)
+> +		return false;
+> +
+> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_PORT_CONTROL, &reg);
+> +	if (rc)
+> +		return true;
+
+If the link gets disconnected after the above check but before reading
+the register the value returned *should* be 0xffff which should
+naturally indicate that reset is not masked.
 
