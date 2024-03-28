@@ -1,407 +1,325 @@
-Return-Path: <linux-pci+bounces-5353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5354-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 769CC890866
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 19:35:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19355890872
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 19:42:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2893F292376
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 18:35:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5410291255
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 18:42:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29BD4136E01;
-	Thu, 28 Mar 2024 18:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5576134419;
+	Thu, 28 Mar 2024 18:42:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="gC2eiEeO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhL3q+An"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15301CF9A
-	for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 18:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7DE52F62;
+	Thu, 28 Mar 2024 18:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711650950; cv=none; b=C5oAL2tj6+bQDITkH3BMTReZszlJtTeULhxrpnyUM49WfTC6DrPuRHI8NKIO4LMounfBHn3wNwqmUjkBndsLpo2j+anIH+jjSKobro3IXahuZvNTG5/hdhGGjKOK3tbGzNXgZYLEq6H7RkgqtruwZIJ/Ph/tGoCCbUoGYk4984M=
+	t=1711651374; cv=none; b=Vt+58OhyXP3oytGuVOdnP5YLYU/5hCYSQ9+htSn/JFmRhzfXOwG2ckbUKbp8Gae5wIMthKNbMmjIy2Lg3FIEJH8c4Dgj68fXGsdEU2dk28FWWRK5Y3vBP9GahrlrmIRD8MMSoxIwXcnuzzJhS/RC+dDHUIdslHiG23CipuU5DMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711650950; c=relaxed/simple;
-	bh=iLrEPB+5fU9F1qjc333b8sqZ5yJuXVogRhNNU1xtFQc=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V6UNZ+FGRcaOEHwNSTohQT+CTzNTMctNyf+yJS9riHBh3Tl7U+QxwCVaBObA5ch2UGHcq6PoTURrgnd3VyZ/4biF7d/oFqYgKXUCqn5MsoF+hwFsGmYIEF7wxBfrCZU3O473oC/5VnQYA4zy2prJ4/ZYdS3/Qe7g5wJpxI4ZosA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=gC2eiEeO; arc=none smtp.client-ip=185.70.43.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=3iqmzdauw5dizhfxw6f6oczsau.protonmail; t=1711650938; x=1711910138;
-	bh=h6ehau0PffhsLY5il9mr/+zmzmgkRB4owQoSHWA/Vjk=;
-	h=Date:To:From:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=gC2eiEeO7bYr+BXxeww9/GyDUnAfevwM6VAARFpMnuFdy7vVf+TbYF/PFvCWCTgEp
-	 Kc78fa499vXgHc/3RoHuJedtwiFYCee9sL5dR9p3AjsizC6WJdir7pH3h1WLOEx397
-	 fdGxMxSUQWHHYcYKhGAmVfreQe12tUm4qyy+YUCW+KhRmbUlwI8R9SaWcJdZHfLvs8
-	 0aWN00O4VokPgeqtzGVUSrftrw3cYrxMnUk9MdsV1lkpnf2no6xvb7erMu91JpXMO8
-	 mBeLJAN+N0X1mQDhNwyCF89ircwfwPP8Iu6+FOCjTllnP2NUFT2tT87h0NHcp09IPf
-	 W/qPjtO+Sl/uA==
-Date: Thu, 28 Mar 2024 18:35:29 +0000
-To: helgaas@kernel.org, o-takashi@sakamocchi.jp, linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-From: "edmund.raile" <edmund.raile@proton.me>
-Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <kodgse5nq6gqor6iaf5s4qo2h7mfykbor34ewtkjvcgh4iraq5@7fxn3rdch2sl>
-In-Reply-To: <20240326131858.GA140624@workstation.local>
-References: <20240325012135.36861-1-o-takashi@sakamocchi.jp> <20240325144149.GA1432902@bhelgaas> <20240326131858.GA140624@workstation.local>
-Feedback-ID: 45198251:user:proton
+	s=arc-20240116; t=1711651374; c=relaxed/simple;
+	bh=Lhjd64SIjhVMv9/lv3bYSJaei3jnDSVww9duNzoywLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uN3Vf/0rrSayHFzLVUtAK70ABYHdsy0hUnWeQyVE584tAvdzBhPNK+pXH4YPM0Rdshq+yDHVjAYuIjHUmFehpm/y8kWKY5wnVHigetGL5CmCCPXBGmrakJzT5tpTSot00+1eZIbsmkuufgttol12XBwQqLozqDbhe4A57cM1Kh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhL3q+An; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0799C433F1;
+	Thu, 28 Mar 2024 18:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711651374;
+	bh=Lhjd64SIjhVMv9/lv3bYSJaei3jnDSVww9duNzoywLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lhL3q+AnF8cBpxy+HC9aPsEt1sU2kR4MRCwq7reUIMtl4htRmWXBN5RNsRamazXfX
+	 BKs1Y0+rbXdrmCjse1Gec3NVTdpSHojDNW9d+wJ7hRBcEBQP8bMrNqxtKJTSFMdxGL
+	 eeXqgGpkKH+3zQ/YRRwz+FzbLXAS7j2P0TqX+5xEZjMjkSO2mz8+vlihgmbILoEf1E
+	 3xYUNJDoJ5OfB/dA7T+J4pOH+I3KWuiO3Cjz9FmePGunVpD3HgOKjxNxN8auRJ51Zt
+	 TK8vWajVfoyao4L5vMhE/6RmfzSxVUyebh3oDdlyGDJt2PSPB7Xy/M3OdTepO9LwDA
+	 3k0nLAaKmIRug==
+Date: Fri, 29 Mar 2024 00:12:48 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
+ EPC init callback
+Message-ID: <ZgW6KB73Wh1X6911@matsya>
+References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
+ <Zf2tXgKo-gc3qy1D@ryzen>
+ <20240326082636.GG9565@thinkpad>
+ <ZgKsBoTvPWWhPO9e@ryzen>
+ <20240327055457.GA2742@thinkpad>
+ <ZgQFXsgqpeLbXMTb@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgQFXsgqpeLbXMTb@ryzen>
 
-So Bjorn Helgaas beat me to it,
+On 27-03-24, 12:39, Niklas Cassel wrote:
+> +CC Vinod
+> 
+> Hello Vinod,
+> 
+> I didn't know the answer, so I chose the "call a friend option" ;)
+> I hope that you can help me out :)
 
-I'm monitoring kernel messages with
-```
-sudo journalctl --system -f
-```
+Anytime :-)
 
-Indeed all that is necessary to generate the trace from the patch is to unb=
-ind the FW643 from ohci on my system (unpatched kernel):
-```
-su -c 'echo -n "0000:03:00.0" > /sys/bus/pci/drivers/firewire_ohci/unbind'
-```
+> 
+> 
+> If you take a look at drivers/pci/endpoint/functions/pci-epf-test.c
+> https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/endpoint/functions/pci-epf-test.c#L448-L471
+> 
+> You can see that the driver always does pci_epc_map_addr(),
+> then it will either use:
+> DMA API, e.g. dma_map_single() etc.
+> or
+> memcpy_fromio()/memcpy_toio()
+> 
+> based on flag FLAG_USE_DMA.
+> 
+> This flag is set via ioctl, so if we run:
+> /usr/bin/pcitest -d
+> the flag will be set, without the -d parameter the flag won't be set.
+> 
+> 
+> If you look at how the DMA channel is requested:
+> https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/endpoint/functions/pci-epf-test.c#L224-L258
+> 
+> If will try to get a private DMA channel, if that fails,
+> it will use the "dummy memcpy" DMA channel.
+> 
+> If the FLAG_USE_DMA is set, the transfers itself will use:
+> https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/endpoint/functions/pci-epf-test.c#L139-L155
+> either dmaengine_prep_slave_single() or dmaengine_prep_dma_memcpy(),
+> depending on if we are using "dummy memcpy" or not.
+> 
+> 
+> 
+> If you take e.g. the DWC PCIe EP controller, it can have an embedded DMA
+> controller on the PCIe controller, and we will try to detect it when
+> initializing the PCIe EP controller using dw_pcie_edma_detect():
+> https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/controller/dwc/pcie-designware-ep.c#L759
+> 
+> For the PCIe EP controller that I am using, which have eDMA built-in,
+> I noticed that if I do not enable the eDMA driver (# CONFIG_DW_EDMA is not
+> set), I noticed that I can still run:
+> /usr/bin/pcitest -d
+> 
+> Which will use the "dummy memcpy" DMA channel.
+> Yes, the performance is poor, but it still works, so it appears that the
+> fallback code is working properly.
+> 
+> 
+> If I enable the eDMA driver (CONFIG_DW_EDMA=y),
+> I can run:
+> /usr/bin/pcitest -d
+> 
+> And the performance is good.
+> 
+> 
+> So my question is:
+> Is the "dummy memcpy" DMA channel always available?
 
-In combination with the kernel parameters intel_iommu=3Don iommu=3Dpt, I ca=
-n then bind it to vfio-pci
-```
-su -c 'echo -n "0000:03:00.0" > /sys/bus/pci/drivers/vfio-pci/bind'
-```
+That depends on the system, you may or maynot have such a system where
+you have a generic memcpy dma controller which can provide you with
+these channels
 
-And then I'd attach it to a qemu Windows VM using `-device vfio-pci,host=3D=
-03:00.0 \`.
-The OS finds the firewire card straightaway and the RME FireFace driver con=
-nects on booting just like it would when booting the guest on bare metal.
+> 
+> Because if it is, I think we could drop the path in the pci-epf-test.c
+> driver which uses memcpy_fromio()/memcpy_toio() instead of DMA API.
+> (Since just having a single path to do I/O in the driver would simplify
+> the driver IMO.)
+> 
+> I assume that the "dummy memcpy" DMA channel just uses memcpy_fromio() and
+> memcpy_toio() under the hood, so I assume that using the memcpy_fromio()/
+> memcpy_toio/() is equivalent to using DMA API + dmaengine_prep_dma_memcpy().
+> 
+> Although it would be nice if we didn't need to have the two separate paths
+> in pci_epf_test_data_transfer() (dmaengine_prep_slave_single() vs
+> dmaengine_prep_dma_memcpy()) to support the "dummy memcpy" channel.
+> But I guess that is not possible...
 
-> $ echo 1 > sudo tee -a /sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/=
-0000:04:02.0/0000:06:00.0/reset
-> (nothing happens)
+Based on my reading you might have this mechanism:
+- eDMA provides dmaengine_prep_slave_single() which transfers data from
+  mem to pci ep device, so fasted
+- dmaengine_prep_dma_memcpy: This will copy the data but treat it as
+  memory. I dont pci internals to figure out how both can work... So
+  cant really make out why it is slowed
+- memcpy_xxx that is IO mem functions, so ofc they will be slowest
 
-Replicating the reset line Takashi sent on my system, there is no error in =
-the kernel log but playback doesn't stop either, leading me to believe that=
- permissions of sudo may be insufficient (root-only)?
-```
-echo 1 > sudo tee -a /sys/devices/pci0000\:00/0000\:00\:1c.1/0000\:03\:00.0=
-/reset
-```
+I think the code is decent from fallback pov... chooses fastest path if
+available on a system
 
-So instead I ran this:
-```
-su -c 'echo 1 > /sys/devices/pci0000\:00/0000\:00\:1c.1/0000\:03\:00.0/rese=
-t'
-```
-Playback stopped immediately and could not be resumed.
+> 
+> 
+> I hope that you can bring some clarity Vinod.
+> (Please read my replies to Mani below before you compose your email,
+> as it does provide more insight to this mess.)
+> 
+> Mani, I tried to reply to you inline below, with my limited understanding
+> of how dmaengine works.
+> 
+> 
+> On Wed, Mar 27, 2024 at 11:48:19AM +0530, Manivannan Sadhasivam wrote:
+> > > So we still want to test:
+> > > -DMA API using the eDMA
+> > > -DMA API using the "dummy" memcpy dma-channel.
+> > > 
+> > 
+> > IMO, the test driver should just test one form of data transfer. Either CPU
+> > memcpy (using iATU or something similar) or DMA. But I think the motive behind
+> > using DMA memcpy is that to support platforms that do not pass DMA slave
+> > channels in devicetree.
+> > 
+> > It is applicable to test driver but not to MHI driver since all DMA supported
+> > MHI platforms will pass the DMA slave channels in devicetree.
+> 
+> I don't understand how device tree is relevant here, e.g. qcom-ep.c
+> specifies pcie_ep->pci.edma.nr_irqs = 1;
+> https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/controller/dwc/pcie-qcom-ep.c#L818
+> which is sufficient for you to be able to probe/detect eDMA successfully,
+> no need for anything in device tree at all.
+> 
+> 
+> > 
+> > > However, it seems like both pci-epf-mhi.c and pci-epf-test.c
+> > > do either:
+> > > -Use DMA API
+> > > or
+> > > -Use memcpy_fromio()/memcpy_toio() instead of DMA API
+> > > 
+> > > 
+> > > To me, it seems like we should always be able to use
+> > > DMA API (using either a eDMA or "dummy" memcpy).
+> > > 
+> > 
+> > No, there are platforms that don't support DMA at all. Like Qcom SDX55, so we
+> > still need to do CPU memcpy.
+> 
+> I assume that you mean the the PCIe controller used in SDX55 does not
+> have the eDMA on the PCIe controller, so dw_pcie_edma_detect() will
+> fail to detect any eDMA. That is fine no?
+> 
+> I assume that this SoC will still able to use the "dummy" memcpy dma-channel?
+> 
+> 
+> > 
+> > > I don't really see the need to have the path that does:
+> > > memcpy_fromio()/memcpy_toio().
+> > > 
+> > > I know that for DWC, when using memcpy (and this also
+> > > memcpy via DMA API), we need to map the address using
+> > > iATU first.
+> > > 
+> > > But that could probably be done using another flag,
+> > > perhaps rename that flag FLAG_USE_DMA to NEEDS_MAP or
+> > > something.
+> > > (Such that we can change these drivers to only have a
+> > > code path that uses DMA API.)
+> > > (...and making sure that inheriting the DMA mask does
+> > > not affect the DMA mask for DMA_MEMCPY.)
+> 
+> I was wrong here, pci-epf-test always calls pci_epc_map_addr()
+> regardless if FLAG_USE_DMA is set or not.
+> 
+> (Even though this should be unnecessary when using the eDMA.)
+> 
+> However, if we look at pci-epf-mhi.c we can see that it does
+> NOT call pci_epc_map_addr() when using DMA API + dmaengine.
+> 
+> Is it really safe to avoid pci_epc_map_addr() in all EPC controllers?
+> I assume that it should be safe for all "real" DMA channels.
+> We can see that it is not safe when using DMA API + "dummy" memcpy
+> dma-channel. (That is why I was asking if we need a NEEDS_MAP, or
+> MAP_NOT_NEEDED flag.)
+> 
+> 
+> > > 
+> > > But perhaps I am missing something... and DMA_MEMCPY is
+> > > not always available?
+> 
+> Right now pci-epf-test driver has three ways:
+> -DMA API + dmaengine dmaengine_prep_slave_single()
+> -DMA API + dmaengine dmaengine_prep_dma_memcpy()
+> -memcpy_toio()/memcpy_fromio().
+> 
+> pci-epf-mhi.c driver has two ways:
+> -DMA API + dmaengine dmaengine_prep_slave_single()
+> -memcpy_toio()/memcpy_fromio().
+> 
+> 
+> pci-epf-test.c:
+> -Always calls pci_epc_map_addr() when using DMA API.
+> 
+> pci-epf-mhi.c:
+> -Never calls pci_epc_map_addr() when using DMA API.
+> 
+> 
+> I honestly don't see any point of having three paths
+> for pci-epf-test. Ideally I would want one, max two.
+> 
+> If you think that:
+> -DMA API + dmaengine dmaengine_prep_slave_single()
+> +
+> -memcpy_toio()/memcpy_fromio().
+> 
+> is more logical than:
+> -DMA API + dmaengine dmaengine_prep_slave_single()
+> +
+> -DMA API + dmaengine dmaengine_prep_dma_memcpy()
+> 
+> Then I think we should rip out the:
+> -DMA API + dmaengine dmaengine_prep_dma_memcpy()
+> it serves no purpose... if you don't have a "real" DMA channel,
+> just run without the -d flag.
+> 
+> Or, if you argue that the dmaengine_prep_dma_memcpy() is there
+> to test the DMA API code (which I can't say that it does, since
+> it doesn't use the exact same code path as a "real" DMA channel, see:
+> https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/endpoint/functions/pci-epf-test.c#L139-L155
+> so this argument is questionable).
+> 
+> Put it under a --use_dummy_dma, and return failure by default
+> if no "real" DMA channel is found.
+> 
+> 
+> But even so, that would not address the pci-epf-test and
+> pci-mhi-test inconsistency WRT pci_epc_map_addr().
+> 
+> I think if we rip out:
+> -DMA API + dmaengine dmaengine_prep_dma_memcpy()
+> we could also move the pci_epc_map_addr() so that it is
+> only used for the memcpy_toio()/memcpy_fromio() path.
+> 
+> (Or if we add a --use_dummy_dma, we can move the pci_epc_map_addr() to
+> that path, and remove it from the dmaengine_prep_slave_single() path.)
+> 
+> 
+> Kind regards,
+> Niklas
 
-Then I received this trace:
-
-INFO: task alsa-sink-Firef:4110 blocked for more than 245 seconds.
-      Tainted: G        W  OE      6.6.10-1-MANJARO #1
-task:alsa-sink-Firef state:D stack:0     pid:4110  ppid:2657   flags:0x0000=
-0002
-Call Trace:
- <TASK>
- __schedule+0x3e7/0x1410
- ? tlb_batch_pages_flush+0x3d/0x70
- schedule+0x5e/0xd0
- schedule_timeout+0x151/0x160
- wait_for_completion+0x8a/0x160
- fw_run_transaction+0xe5/0x120 [firewire_core d9ff4eaf1ffb23a203d413e851f40=
-5323b49fec7]
- ? __pfx_split_transaction_timeout_callback+0x10/0x10 [firewire_core d9ff4e=
-af1ffb23a203d413e851f405323b49fec7]
- ? __pfx_transmit_complete_callback+0x10/0x10 [firewire_core d9ff4eaf1ffb23=
-a203d413e851f405323b49fec7]
- ? __pfx_transaction_callback+0x10/0x10 [firewire_core d9ff4eaf1ffb23a203d4=
-13e851f405323b49fec7]
- snd_fw_transaction+0x70/0x110 [snd_firewire_lib 30b43a591db389bbc6be51459c=
-b243ba1fe1e662]
- ff800_finish_session+0x43/0x70 [snd_fireface 5f7f3f556960f4838886792be8e9c=
-18aa5089b0a]
- snd_ff_stream_stop_duplex+0x39/0x70 [snd_fireface 5f7f3f556960f4838886792b=
-e8e9c18aa5089b0a]
- pcm_hw_free+0x3c/0x50 [snd_fireface 5f7f3f556960f4838886792be8e9c18aa5089b=
-0a]
- snd_pcm_common_ioctl+0xe28/0x12b0 [snd_pcm 24933227879438b755ef98bc4844113=
-025f38cdf]
- ? __seccomp_filter+0x32c/0x510
- ? __vm_munmap+0xbb/0x150
- snd_pcm_ioctl+0x2e/0x50 [snd_pcm 24933227879438b755ef98bc4844113025f38cdf]
- __x64_sys_ioctl+0x94/0xd0
- do_syscall_64+0x5d/0x90
- ? syscall_exit_to_user_mode+0x2b/0x40
- ? do_syscall_64+0x6c/0x90
- ? do_syscall_64+0x6c/0x90
- entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-
-Now of course yanking the device from underneath streaming snd_firewire is =
-not an intended usecase and I get that this has good cause to produce a tra=
-ce but it shows that root privileges are necessary here.
-
-Doing this without running playback yields the same result.
-
-In both instances, I had to REISUO the system as it would keep waiting for =
-that thread to finish when shutting down.
-
-When I instead turned the FireFace off, I got this kernel message:
-snd_fireface fw1.0: transaction failed: bus reset
-snd_fireface fw1.0: transaction failed: bus reset
-snd_fireface fw1.0: transaction failed: bus reset
-Then running the same command, this time no threads went into D state and s=
-tart producing spinlock messages/traces but by that point, BUT I wasn't abl=
-e to use the FireFace after powering it back on again.
-At least shutdown worked normally this time.
-
-Are there other steps necessary to get the FW643 back working again after t=
-his?
-
-System:
-MSI PRO Z690-A DDR4(MS-7D25)
-StarTech FW800 PCIe card (LSI FW643)
-
-A peculiarity about this system that may or may not be of relevance here:
-When rebooting, the FW643 can not be seen by the system any more.
-Its root port also won't show up, regardless of slot used.
-I have to perform a full shutdown for it to be recognized again.
-This behavior is OS-independent, but it never happened on my previous Z68 s=
-ystem with this card (or any), there reboot worked as you'd expect.
-The original MSI BIOS was buggy in this regard (and many others) in that it=
- would not even recognize the card half the time booting from power-off.
-MSI support did not care, said it was an "old device". How they can claim P=
-CIe compliance is beyond me.
-This is why I'm running Dasharo (coreboot), it always picks up the card fro=
-m full power-off and behaves very predictably in other regards.
-It might even be an issue with modern Intel since I've read of very similar=
- issues on other manufacturer's Z690 and even Z790 boards (missing PCIe dev=
-ices after reboot).
-I've learned to live with this as I don't know how to solve it and I'm
-stuck on this platform. Should of bought AMD again this time around.
-
-> Can you both collect the output of "sudo lspci -vvv" so we can try to fig=
-ure out the difference?
-> This is my 1394 OHCI hardware.
-```
-sudo lspci -vvv
-03:00.0 FireWire (IEEE 1394): LSI Corporation FW643 [TrueFire] PCIe 1394b C=
-ontroller (rev 08) (prog-if 10 [OHCI])
-=09Subsystem: Device 5901:1101
-=09Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Step=
-ping- SERR- FastB2B- DisINTx+
-=09Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbort=
-- <MAbort- >SERR- <PERR- INTx-
-=09Latency: 0, Cache Line Size: 64 bytes
-=09Interrupt: pin A routed to IRQ 136
-=09IOMMU group: 13
-=09Region 0: Memory at 50800000 (64-bit, non-prefetchable) [size=3D4K]
-=09Capabilities: [44] Power Management version 3
-=09=09Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=3D375mA PME(D0+,D1+,D2+,D3hot+=
-,D3cold+)
-=09=09Status: D0 NoSoftRst- PME-Enable- DSel=3D0 DScale=3D0 PME+
-=09Capabilities: [4c] MSI: Enable+ Count=3D1/1 Maskable- 64bit+
-=09=09Address: 00000000fee00358  Data: 0000
-=09Capabilities: [60] Express (v1) Endpoint, MSI 00
-=09=09DevCap:=09MaxPayload 256 bytes, PhantFunc 0, Latency L0s <4us, L1 <64=
-us
-=09=09=09ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 10W
-=09=09DevCtl:=09CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-=09=09=09RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
-=09=09=09MaxPayload 256 bytes, MaxReadReq 2048 bytes
-=09=09DevSta:=09CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend=
--
-=09=09LnkCap:=09Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency=
- L0s <512ns, L1 <64us
-=09=09=09ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
-=09=09LnkCtl:=09ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
-=09=09=09ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-=09=09LnkSta:=09Speed 2.5GT/s, Width x1
-=09=09=09TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-=09Capabilities: [100 v1] Advanced Error Reporting
-=09=09UESta:=09DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- Mal=
-fTLP- ECRC- UnsupReq- ACSViol-
-=09=09UEMsk:=09DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- Mal=
-fTLP- ECRC- UnsupReq- ACSViol-
-=09=09UESvrt:=09DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ Ma=
-lfTLP+ ECRC- UnsupReq- ACSViol-
-=09=09CESta:=09RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-=09=09CEMsk:=09RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-=09=09AERCap:=09First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+=
- ECRCChkEn-
-=09=09=09MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-=09=09HeaderLog: 00000000 00000000 00000000 00000000
-=09Capabilities: [140 v1] Virtual Channel
-=09=09Caps:=09LPEVC=3D0 RefClk=3D100ns PATEntryBits=3D1
-=09=09Arb:=09Fixed- WRR32- WRR64- WRR128-
-=09=09Ctrl:=09ArbSelect=3DFixed
-=09=09Status:=09InProgress-
-=09=09VC0:=09Caps:=09PATOffset=3D00 MaxTimeSlots=3D1 RejSnoopTrans-
-=09=09=09Arb:=09Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-=09=09=09Ctrl:=09Enable+ ID=3D0 ArbSelect=3DFixed TC/VC=3Dff
-=09=09=09Status:=09NegoPending- InProgress-
-=09=09VC1:=09Caps:=09PATOffset=3D00 MaxTimeSlots=3D1 RejSnoopTrans-
-=09=09=09Arb:=09Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-=09=09=09Ctrl:=09Enable- ID=3D0 ArbSelect=3DFixed TC/VC=3D00
-=09=09=09Status:=09NegoPending- InProgress-
-=09Capabilities: [170 v1] Device Serial Number 00-00-00-00-00-00-00-00
-=09Kernel driver in use: firewire_ohci
-=09Kernel modules: firewire_ohci
-```
-This does not change whether I boot patched or unpatched kernel.
-
-> > > Can you collect the output of:
-> > >
-> > >   $ find /sys/devices -name reset_method | xargs grep .
-> Edmund, could you run this command, too?
-
-with patch applied:
-```
-sudo find /sys/devices -name reset_method | xargs grep .
-/sys/devices/pci0000:00/0000:00:1c.0/0000:02:00.0/reset_method:pm bus
-/sys/devices/pci0000:00/0000:00:1c.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:1c.1/0000:03:00.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:1c.1/reset_method:pm
-/sys/devices/pci0000:00/0000:00:1a.0/0000:01:00.0/reset_method:flr bus
-/sys/devices/pci0000:00/0000:00:1a.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:1d.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:1d.0/0000:05:00.0/reset_method:flr bus
-/sys/devices/pci0000:00/0000:00:02.0/reset_method:flr pm
-/sys/devices/pci0000:00/0000:00:1c.2/reset_method:pm
-/sys/devices/pci0000:00/0000:00:1c.2/0000:04:00.0/reset_method:flr bus
-```
-without applied patch only bus reset method is added, everything else
-stays the same:
-```
-/sys/devices/pci0000:00/0000:00:1c.1/0000:03:00.0/reset_method:pm bus
-```
-
-This is the root port it is currently connected to:
-```
-sudo lspci -vvv
-00:1c.1 PCI bridge: Intel Corporation Alder Lake-S PCH PCI Express Root Por=
-t #2 (rev 11) (prog-if 00 [Normal decode])
-=09Subsystem: Micro-Star International Co., Ltd. [MSI] Alder Lake-S PCH PCI=
- Express Root Port
-=09Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Step=
-ping- SERR+ FastB2B- DisINTx+
-=09Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbort=
-- <MAbort- >SERR- <PERR- INTx-
-=09Latency: 0, Cache Line Size: 64 bytes
-=09Interrupt: pin B routed to IRQ 124
-=09IOMMU group: 7
-=09Bus: primary=3D00, secondary=3D03, subordinate=3D03, sec-latency=3D0
-=09I/O behind bridge: f000-0fff [disabled] [16-bit]
-=09Memory behind bridge: 50800000-508fffff [size=3D1M] [32-bit]
-=09Prefetchable memory behind bridge: 00000000fff00000-00000000000fffff [di=
-sabled] [64-bit]
-=09Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbort=
-- <MAbort- <SERR- <PERR-
-=09BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
-=09=09PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-=09Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
-=09=09DevCap:=09MaxPayload 256 bytes, PhantFunc 0
-=09=09=09ExtTag- RBE+
-=09=09DevCtl:=09CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
-=09=09=09RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-=09=09=09MaxPayload 256 bytes, MaxReadReq 128 bytes
-=09=09DevSta:=09CorrErr+ NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend=
--
-=09=09LnkCap:=09Port #2, Speed 8GT/s, Width x1, ASPM not supported
-=09=09=09ClockPM- Surprise- LLActRep+ BwNot+ ASPMOptComp+
-=09=09LnkCtl:=09ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
-=09=09=09ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-=09=09LnkSta:=09Speed 2.5GT/s, Width x1
-=09=09=09TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt-
-=09=09SltCap:=09AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise-
-=09=09=09Slot #1, PowerLimit 10W; Interlock- NoCompl+
-=09=09SltCtl:=09Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- Link=
-Chg-
-=09=09=09Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-=09=09SltSta:=09Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock=
--
-=09=09=09Changed: MRL- PresDet- LinkState+
-=09=09RootCap: CRSVisible-
-=09=09RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisibl=
-e-
-=09=09RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-=09=09DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR+
-=09=09=09 10BitTagComp- 10BitTagReq- OBFF Via WAKE#, ExtFmt+ EETLPPrefix+, =
-MaxEETLPPrefixes 2
-=09=09=09 EmergencyPowerReduction Not Supported, EmergencyPowerReductionIni=
-t-
-=09=09=09 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd+
-=09=09=09 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-=09=09DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR+ 10BitTagR=
-eq- OBFF Disabled, ARIFwd-
-=09=09=09 AtomicOpsCtl: ReqEn- EgressBlck-
-=09=09LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer+ 2Retim=
-ers+ DRS-
-=09=09LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
-=09=09=09 Transmit Margin: Normal Operating Range, EnterModifiedCompliance-=
- ComplianceSOS-
-=09=09=09 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
-=09=09LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- Equ=
-alizationPhase1-
-=09=09=09 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-=09=09=09 Retimer- 2Retimers- CrosslinkRes: unsupported
-=09Capabilities: [80] MSI: Enable+ Count=3D1/1 Maskable- 64bit+
-=09=09Address: 00000000fee00278  Data: 0000
-=09Capabilities: [98] Subsystem: Micro-Star International Co., Ltd. [MSI] A=
-lder Lake-S PCH PCI Express Root Port
-=09Capabilities: [a0] Power Management version 3
-=09=09Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA PME(D0+,D1-,D2-,D3hot+,D=
-3cold+)
-=09=09Status: D0 NoSoftRst- PME-Enable- DSel=3D0 DScale=3D0 PME-
-=09Capabilities: [100 v1] Advanced Error Reporting
-=09=09UESta:=09DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- Mal=
-fTLP- ECRC- UnsupReq- ACSViol-
-=09=09UEMsk:=09DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- Mal=
-fTLP- ECRC- UnsupReq- ACSViol-
-=09=09UESvrt:=09DLP+ SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ Ma=
-lfTLP+ ECRC- UnsupReq- ACSViol-
-=09=09CESta:=09RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-=09=09CEMsk:=09RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-=09=09AERCap:=09First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap-=
- ECRCChkEn-
-=09=09=09MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-=09=09HeaderLog: 00000000 00000000 00000000 00000000
-=09=09RootCmd: CERptEn+ NFERptEn+ FERptEn+
-=09=09RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
-=09=09=09 FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
-=09=09ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
-=09Capabilities: [220 v1] Access Control Services
-=09=09ACSCap:=09SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ Egre=
-ssCtrl- DirectTrans-
-=09=09ACSCtl:=09SrcValid+ TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd+ Egre=
-ssCtrl- DirectTrans-
-=09Capabilities: [150 v1] Precision Time Measurement
-=09=09PTMCap: Requester:- Responder:+ Root:+
-=09=09PTMClockGranularity: 4ns
-=09=09PTMControl: Enabled:+ RootSelected:+
-=09=09PTMEffectiveGranularity: Unknown
-=09Capabilities: [a30 v1] Secondary PCI Express
-=09=09LnkCtl3: LnkEquIntrruptEn- PerformEqu-
-=09=09LaneErrStat: 0
-=09Capabilities: [a90 v1] Data Link Feature <?>
-=09Kernel driver in use: pcieport
-```
-
-`lspci -tv` reveals that it is connected to root port #2:
-           +-1c.1-[03]----00.0  LSI Corporation FW643 [TrueFire] PCIe 1394b=
- Controller
-
-I hope this information is of use to you.
-Maybe there is a better solution?
-
-Kind regards,
-Edmund Raile
-
+-- 
+~Vinod
 
