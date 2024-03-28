@@ -1,174 +1,118 @@
-Return-Path: <linux-pci+bounces-5345-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5346-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C32D890499
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 17:08:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 174C18904D5
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 17:19:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E4E5A298925
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 16:08:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF0AC1F26EF4
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Mar 2024 16:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A13980020;
-	Thu, 28 Mar 2024 16:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 840A9131BCA;
+	Thu, 28 Mar 2024 16:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="p3uTm+VK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qAFGfBxE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2059.outbound.protection.outlook.com [40.107.6.59])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E314C12F5AF
-	for <linux-pci@vger.kernel.org>; Thu, 28 Mar 2024 16:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711642017; cv=fail; b=hnDO9nlza5NSd0A+tk7IzeH9XVvaEDiupoJaZ6UzGMHvR95DiJ8Akr+mInvted8TgmCEoZeRciMObewLuSfoHVJHORiKzMrNqquSXmZFMgr91LZZVvRkArtn5uY3aMLQk3y+xzQywdfxdI/0RDEdl1nQ03wSwhl7uI+boQ77JXo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711642017; c=relaxed/simple;
-	bh=bZHaWFUIC68f03oyjjsKCv/JGGSaWImXG69nOdyUFoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=VggdBl4z+fxna+ug7YbkdxQ0iPxGmLySKTx4WIg+XpJeYgGsZ1WGH7GXT8bTlAegsYzd1Ylluwi+B+rgaJHbd8YPhOVMM/SdWA76bIE6FCPfV+XkrNA83ep6tN4v9wgQutG+5sa2njFw/lJJuXrkOig+f8bN6Glboz4rTFBQeGo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=p3uTm+VK; arc=fail smtp.client-ip=40.107.6.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JMVmt6R77/T64UWKdO7h9YXgDyMbCukun/ZEgRiTpEgNGKT+FhLlAzwgYBe4yGlMSjmF+yJZVCjvgKPmlAnXvSbL6kjnLvohsNIj0SzCTmf5xl3pX2R4WQsIrpO11BNtte6H2gVUgr8x334+TcT7Fj1s6+p59LW4WeU9JkPSE0jbIvI9+giPRvHW6kgMwfgFvtwNQoojqyZeaDZTQ8w/pdcI54tv6TpvTalcfQ5bA+8tg4wuMlrU6aWNbofuTlSl09K8R5Rj6FAtNg8wKLGZ5Or+JYTn7/xWxrMsTNd0xqqbNZkmGya1NF0hgRukjlubqkh+qkWuSCRSanoL81fdmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yRX5rkuo9U8LNv72G+bULsW+Uy7YMhbwb1DXsH/ZoXY=;
- b=Qf4usTwcEDg6T6I+nFGKhwYrtSfnZIglLD0IrmXCCQQiOvC9AnYz5LbvOy9DWGbsGfyTtIv9xiDE3TLJFFSsavP5XMBR3xuyV2QvbAvYIdfBraUw7+WT796LYu/8mPXOZ+AOhcxz4q8x1Vk3XOr/8IudBOJRb3Mnt1lQ9TgG9GUSWw4fKZIv69uKAiH8Gr9AWE447iqwqbJnuhRc8NviRiYc5a3rFrDefuzjRAm6dmA9ced/UJf+2cIMMQ5R7NqNYxCm6n28gX8GdmdMLIZcN6nR8/PJf/8jAKqQ7+taLqb8+wXNFXRpD+We0mTul2apChFzxHtDa1MxNDOJbKQVqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yRX5rkuo9U8LNv72G+bULsW+Uy7YMhbwb1DXsH/ZoXY=;
- b=p3uTm+VKNNM9oJHpNYjsmAm3nYKKg8+UTiOiSaTwFAygvz79BgZmOsl+SSeJVb3n/AIl3QL+sBoId+wBCdNqrBCa4mdFfcHrdvBFc0EGO55FpZoifu7LSlgOwdXtoIQZbF6nP1XHYnMIvQt7+yTZ4EJ7SijvRwLsdgSN50QgLeI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS4PR04MB9266.eurprd04.prod.outlook.com (2603:10a6:20b:4e1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27; Thu, 28 Mar
- 2024 16:06:49 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.028; Thu, 28 Mar 2024
- 16:06:49 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: cassel@kernel.org
-Cc: Frank.li@nxp.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	kishon@kernel.org,
-	kw@linux.com,
-	linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org
-Subject: [PATCH 1/1] misc: pci_endpoint_test: Refactor dma_set_mask_and_coherent() logic
-Date: Thu, 28 Mar 2024 12:06:32 -0400
-Message-Id: <20240328160632.848414-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0088.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::33) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EBA131BC8;
+	Thu, 28 Mar 2024 16:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711642714; cv=none; b=oJjIokW7d1TY6SzSqm3X9YeWIQVR6WoHKZ2mzNulbunzccyPVrxMYWXJbiVvFe2TYiccH+Q9iLeAVOVxoh+WW9gdgT7eW/714sSkp3hcsyGXR22UmgYjZ1UpeoTsJJw4T2z4wajJkCGz4MmlVNUBcqwU4kh11ihGqh6uOpwM0FU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711642714; c=relaxed/simple;
+	bh=kZE5AQy7q/LkMQXaYZMu1agyq0gLCEHxcP10dCKXXmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=N7Ye0wFAE2CvrQKZI9l1sJpQmS0sX8jfAKmvxJKWdlqdkV2Z9l/Sd8g72Tj7su/tSdt0rIo5bUrw0UWUX977sUHTgflRTYripwcY0vrbWWZx5hzBUCA3mJzwZorU/AfYLT9ThabzD+rNPB66fDd38EHf4Ql+Kh2XMnUAp7mRA3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qAFGfBxE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B84C433C7;
+	Thu, 28 Mar 2024 16:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711642713;
+	bh=kZE5AQy7q/LkMQXaYZMu1agyq0gLCEHxcP10dCKXXmA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=qAFGfBxELR+ImPcOXEz66ekn6o0evwu/KFpr16+y5/qZlMU4On5lREdB3uM9ZNxoI
+	 kuFSm2UUX//Zc0nwmIewtAYqwtxKjJVQlDhRPixHkcRL6X/y5eKyw3bOTJIznpbxni
+	 gS+mONTxLOb8H65jU9sxsolIVrIuSqLGeV2wgGjxwGeXoF0nFBiwGznsUUzcde5abI
+	 ZJ5ejZ7dxAlhJ/FkQnp3POg3ZExwLp5vTNnQZvfWWNMzLKfE5NP4+Ab4nLCcDNl0Vn
+	 NpH8n/VGZVvZ+E47Zy5qAlJ2sqVOfXwYA3Z+voB3MA6+mhf6kfbbvTcKzbYHmvsy4i
+	 /tcB1/Xk26r7w==
+Date: Thu, 28 Mar 2024 11:18:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: Update pci_find_capability() stub return values
+Message-ID: <20240328161831.GA1568357@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS4PR04MB9266:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe329af0-c21f-413f-b74e-08dc4f4112e7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	JCIoHVlzcr4khgTLtPUHMydNv+AHBcideThKD5WcAAR0brgxRucsbTGgmqULzzUBk0Yi8kTDnjWl+DvWeNlyAjFrSVX9LVfG5eOMBK5zXwpl5qRSNW591KlmDim3PphDSHyIMD1mEj6wc/nwb1cpgVJ3//owXXiuljM3s5+ExFsdFcF/ULrC/+q0EymZJJkubpTn9GuOHkKPNlHTvr5XSorC/MrirIsitl4pNZ0yRbCzRwgR+/H+OvIXSiHuHJqJkCJl7zGGGmG0LNDApuqLbCs4nEBvZHxYDYAvsWil6BF92hSW1+PlMgceMCcFM7JYtOfIOISChDc7/GbJYvaeyjbAiNkj4G7iTDx/0mNosaKZeOyTPd3HraQmYLh3IZmewH8jHqQTq+qFVIlBbK7EotOGqkAnpgpa7U+yIcnUx6n4dtEHu4n0p3/tZOrMvnMI5kehbBOmvyhikz42EYcb/EW2aPTJJMeuJDZnV4usYOU1TZmVcfwcFGe0OPMlCyaAg2PmfjVufckYrF0iwyXikCVH+oIn0w/R+YEWxmWHtBoNC5rot8yHVgyCXnHxig/EDQhZBxaQS5Nrld3d5ANPtI7aEYavjUa3sLxu8x0xLXY+I4sPfXwkPUbqkQW4Oz2CE6bl10hDvSK2EUwqNPhGGzDu7xGTu7XJIwmF71RcXmY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?H1zHDJEPCoYzHduj3cpXdKjtPvjNOJHaXM4bjnJwz2FugYct66mQxpZR9yet?=
- =?us-ascii?Q?8kPnUx4uXRi7qKtNLc95NcXhp1n0TlWrzDiZ+h0lN12y0/5mmn8Cgp/r9gmv?=
- =?us-ascii?Q?GMh/9V7WDhqeuxl2OWj1iTKIwTVi2uadFcJqcCH3+gNpsjXBRNA4btMkFImO?=
- =?us-ascii?Q?oVQWDnDemWLkg37BsU7EJkHCfzgjWpQj7kxTRIYXIKnda12hrf1h4bm9fcoy?=
- =?us-ascii?Q?5pf8Opn+nkcfBlikwIEj68kyaqgYb6Q0u1gJGBjWiG5RWc4pJgAQ9YHp2dv9?=
- =?us-ascii?Q?sRjGeTiob+Y7IJI75meXNFlIou1D0qGP0LvifNlkekxPOaaaJbpNKfa3CvHC?=
- =?us-ascii?Q?juIzlOKoeh9I4Nf4Fp+hqEe/9G1oXZv0bSIxY4edWcxbgDl6NnKxXaG1ffVF?=
- =?us-ascii?Q?r51apz4VInCRUFt0tNq0eKZUJ43QPhgvC43z5hFcQ6prqY9LHXU66A74vTC0?=
- =?us-ascii?Q?OGWQfAlLccCnZMilarzeq83qjHbyxfhbWEB0fUIYr/6qQwj4PMPfICDX4i4c?=
- =?us-ascii?Q?P73MYficJcoo9Z18rhFmbJZ4fzgzymV366TNNXJ3pjIiqj1xS0NO/3b2RkGY?=
- =?us-ascii?Q?IhIGz1Q3RwQVzNg1ARfPrdMyOdc1PYTFLb6WiNo6uCHraguP4cH8Y0EXY3+o?=
- =?us-ascii?Q?AF7xFGJtJEQeu6mrBO+Q6tpbq3a7CdsM51Jl5GTfcOLQlvH2O9SKjyRHQWux?=
- =?us-ascii?Q?QQs8qSPmd1d4wM/B8T3AfJMvX3mmDJQX2jECpJlfYb7yPK4a+keHda0+3qzf?=
- =?us-ascii?Q?laQkJNjey/MeeMdQYTY/G+TuD9gTPXckIyq1MiHUA0l7o6J1CTOxZbOJvxHJ?=
- =?us-ascii?Q?ciU8NhKVnUmUpUk021wg838rWIdsz9R3OD7cApgEePs5f7JExJD/E+mpHbqG?=
- =?us-ascii?Q?WyNGni65A5ezqh6aJsvC371pcLyOuQ8gWjQIv4WGGTIvonQsArbCIZ/r/8e5?=
- =?us-ascii?Q?pvI5JqwHLq8I6CVqzrfvQDONg6lLbO0BnjYCaBC4NNhKKYEzFaUhXeLU3JZk?=
- =?us-ascii?Q?sUWk4yuhbj6J0vXVW7lQ186U/By+Fx/mlxmStVUR7L1PCFIZIkH0h3lwRJ+k?=
- =?us-ascii?Q?jqOi98Q2CbxPjCcIX7RFap71rD0Saw8Yan6B4Sj6TQ6Kj66Cr0ZtdsuRZmfV?=
- =?us-ascii?Q?zgeemXNRENvkwkb6ju1vmAABTrz0eui5Y3D8lXwTTeSeSg41SzMSuVLM1u1r?=
- =?us-ascii?Q?4ecwhYO8d2mQR5AUlaizA30yDa+wM2zavd2Np5XYwIvQJSMENYaWGBdGEzQ9?=
- =?us-ascii?Q?pE2avvFZPYQCY22WWZvsjKFEYKabwW4+rOgQWqc3q4uNIRtQrA6guXUFk7u8?=
- =?us-ascii?Q?6LMihVAssrNdL4MyV7mZ9cs7CzqB8x9gquqJOoj5GIkxxYpjkLfqZ+QGnlC2?=
- =?us-ascii?Q?KgRpmnHeatBeolvJZO0mX/64YoQKcA6/78EKJbsJgmSMYgksJq+VLdaA72Ah?=
- =?us-ascii?Q?K4ywZxRjIze46WqfR9A1By6DenTSXXEMG8LRd92dmGrrMa0smQ8C+tMDIvWt?=
- =?us-ascii?Q?RBGAlDTSI65Ouv2Um40vxuZohPqmfQC4oFN4We24nUpR+lTvz2Pa1Fc7/npr?=
- =?us-ascii?Q?ZSXXuV6CNqz/q0SnOqPWEK/i7H5cu9j/cTx+sG4o?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe329af0-c21f-413f-b74e-08dc4f4112e7
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2024 16:06:48.9666
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: luj0IubnGS7+spJFKgWrSTEVwaQHwFLNnJ6VMPcUSgFM75tDunQA6UHRE1G5xPOl8t+4cMJJQIAE8rkzpR7eKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9266
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a144b96b-6ec4-4a62-b2ab-1ed631d81544@linux.intel.com>
 
-dma_set_mask_and_coherent() will never return failure when mask >= 32bit.
-So needn't  fall back to set dma_set_mask_and_coherent(32).
+On Wed, Mar 27, 2024 at 02:49:34PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On 3/27/24 11:02 AM, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > f646c2a0a668 ("PCI: Return u8 from pci_find_capability() and similar") and
+> > ee8b1c478a9f ("PCI: Return u16 from pci_find_ext_capability() and similar")
+> > updated the return type of the extern declarations, but neglected to update
+> > the type of the stubs used CONFIG_PCI is not enabled.
+> >
+> > Update them to match the extern declarations.
+> >
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> 
+> This change looks fine to me.
+> 
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Even if dma_set_mask_and_coherent(48) failure,
-dma_set_mask_and_coherent(32) will be failure according to the same reason.
+Thanks for reviewing it!
 
-The function dma_set_mask_and_coherent() defines the device DMA access
-address width. If it's capable of accessing 48 bits, it inherently supports
-32-bit space as well.
+> But the callers of these functions still seems to use int
+> declaration to store the output. Any reason for not changing them?
+> Like the usages in drivers/pci/pci.c?
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+This patch is just to make the extern declarations match the stubs.
 
-Notes:
-    Ref: https://lore.kernel.org/linux-pci/20240328154827.809286-1-Frank.Li@nxp.com/T/#u
-    
-    for document change patch. DMA document sample code is miss leading.
+No particular reason not to change users other than I didn't want to
+change the users before the declarations (to avoid warnings about
+assigning an int to a u8 or u16), and there's not a lot of value in
+changing local variables, where an int is just on the stack and works
+fine.
 
- drivers/misc/pci_endpoint_test.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Changing stored values in a struct would have more benefit.  I took a
+quick look and found these possibilities:
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index c38a6083f0a73..56ac6969a8f59 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -824,11 +824,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 	init_completion(&test->irq_raised);
- 	mutex_init(&test->mutex);
- 
--	if ((dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48)) != 0) &&
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)) != 0) {
--		dev_err(dev, "Cannot set DMA mask\n");
--		return -EINVAL;
--	}
-+	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48));
- 
- 	err = pci_enable_device(pdev);
- 	if (err) {
--- 
-2.34.1
+  struct controller.cap_offset (drivers/pci/hotplug/shpchp.h SHPC cap)
+  struct pci_sriov.pos (drivers/pci/pci.h SR-IOV ext cap)
+  struct altera_pcie_data.cap_offset (drivers/pci/controller/pcie-altera.c PCIe cap)
 
+  struct tg3.msi_cap (broadcom/tg3.h MSI cap)
+  struct tg3.pcix_cap (broadcom/tg3.h PCI-X cap)
+  struct bnx2.pm_cap (broadcom/bnx2.h PM cap)
+  struct bnx2.pcix_cap (broadcom/bnx2.h PCI-X cap)
+  struct bnx2x_sriov.cap (broadcom/bnx2x/bnx2x_sriov.h SR-IOV ext cap)
+  struct amd8111e_priv.pm_cap (amd/amd8111e.c, removed [1])
+  struct pci_params.pm_cap (qlogic/qed/qed.h, removed [2])
+  struct qed_hw_sriov_info.cap (qlogic/qed/qed_sriov.h SR-IOV ext cap)
+  struct eeh_dev.pcix_cap (powerpc/include/asm/eeh.h PCI-X cap)
+  struct eeh_dev.pcie_cap (powerpc/include/asm/eeh.h PCIe cap)
+  struct eeh_dev.aer_cap (powerpc/include/asm/eeh.h AER ext cap)
+  struct eeh_dev.af_cap (powerpc/include/asm/eeh.h AF cap)
+  struct icm.vnd_cap (drivers/thunderbolt/icm.c VNDR ext cap)
+
+[1] https://lore.kernel.org/all/20240325220633.1453180-1-helgaas@kernel.org/
+[2] https://lore.kernel.org/all/20240325224931.1462051-1-helgaas@kernel.org/
+
+Bjorn
 
