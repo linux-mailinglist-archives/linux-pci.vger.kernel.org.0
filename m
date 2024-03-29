@@ -1,115 +1,116 @@
-Return-Path: <linux-pci+bounces-5407-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5406-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE621891DC4
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 15:25:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D464891D86
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 15:19:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF12A1C27CC6
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 14:25:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4639F283F79
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 14:19:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D16813165C0;
-	Fri, 29 Mar 2024 12:47:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C729B2319F0;
+	Fri, 29 Mar 2024 12:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/xiYUB5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9vNiMrV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A772E14C580;
-	Fri, 29 Mar 2024 12:47:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36232319EB
+	for <linux-pci@vger.kernel.org>; Fri, 29 Mar 2024 12:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716427; cv=none; b=HIdU7hJxThAkvaJJT4GXDy726Ztujpoy7IcnJlDLdHURbyONmp4V6A5o5pIEVbiGgxEjshPptGvhklj48nxoe26GVNNmBsVSPwPLXp602vvuzgA6n+Yn4Tf5Kua8Q8dlE+k7mn7OsKZ5Zp2fn8D5ZnkprNxeupcf2bpYg31vx1E=
+	t=1711716379; cv=none; b=lM1ZZni/K20THPSohY9HAUQNisg4YrXMDIPj0yoBiI6BYhkUWTPLAV8BZkt8GjCwMzQPQZ25QlVqZgw46WDmFP6WCYHdql/Zvx9PgmVcq42p6IQGcMtP1rAu/oNrqF3Mc4dj8EaNX1fu+MJXqd+yVxAlrNeN62kK0UskQxvQ9C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716427; c=relaxed/simple;
-	bh=3ltKAP+Cgy7PTZG6vBDKVQLPkdWTOdneISLREIlq3Bg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DmqT8yC06NFzEbchQ8NIb8/GH4eG14Ra3FPsCs0QHzp7gyQAI6CbAg4ZkPSa0WdXU5a9AhaEoxx3Vi6nMVIe9EygT8+WsRO263hfCLG2vlJeMMkVT6DMEsp7SoApVmF2isjMAfDErEyCf5CvsFpYGg5Oss0aJDjTCUFO+gOSMC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/xiYUB5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DE1DC43609;
-	Fri, 29 Mar 2024 12:47:06 +0000 (UTC)
+	s=arc-20240116; t=1711716379; c=relaxed/simple;
+	bh=IpjMDZLzrUytvFtsKWmfYOw5lDbAvGoJhWYr2bVnGpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=BRJ4Oj+XrAjIYTGxoJrsbwSLe5WOHESNDExlcjTgzf2hOflbZeHSJJFBiN6/ol1QaXdhfvYk08zbEhAsrgZQYbts4vnYHoldLiLoaPYAD75B1Afhghauk9F1yNHCGORPV2joOdzaefpbC40b/Ym04wycMtDTg3rTt/uuZOECUyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9vNiMrV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7862C433C7;
+	Fri, 29 Mar 2024 12:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716427;
-	bh=3ltKAP+Cgy7PTZG6vBDKVQLPkdWTOdneISLREIlq3Bg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F/xiYUB5s/JORz5PjqJTS55UmSvQAiIDoIEkGYXAlTl+sPUXSnerrMIbwYGUyJr6m
-	 exAfya1ERbpR9sMBuxSMxiCgsEaQRgGk9DcOqNPzZ7wazh5MS5q+SB+gAWo+1L4owz
-	 Ypne7GYQbYJv6dCoby9e+c4EaFbNRHRRugGOSjGE3+w2RbThwRS0AoNaVygvh+6rcV
-	 VvPXhLIHLA3KHAxxf0tZEJuPKcj8bRPtZSzb6KzCPfN/bbmvm8YA6fJWDyV5+eG9et
-	 vit34ACrapLmOfmTjU8254kXD0ZEQWR+ks8YMdFCBcUcxqXlva45vSkgtj6U6pWuZn
-	 4jNjcPunxfdtw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Edmund Raile <edmund.raile@proton.me>,
+	s=k20201202; t=1711716379;
+	bh=IpjMDZLzrUytvFtsKWmfYOw5lDbAvGoJhWYr2bVnGpc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=j9vNiMrVrVkbuOfgrlcVxKPWa9zHaNMEDlIBqXWbPnsW26ZD+z0m99Rk2YIDumo3W
+	 lTr9IieOTlGERGgtldy4nZdUkoqoVY1ub6sK0oxCiFb1RzC/uXy6HLvi7769X5lCXE
+	 nVZOexqdd3XgiW2XqLl3wKhTeqzutx8JBeP7zZf3yQ7zxI93bEwtG/AwRhO0RmOJW1
+	 MQySlPUcMdptxdXpkIvoJ/CjfRj93DJcdfoozEUO4cQV/08Utk9ofuxp9H5NlncMct
+	 fZiSTWEZiqiFVzeyfw7yo1DUReFOW8Lp6FOTy2TJocEd18pKZwv3vipD6OgjuclNsh
+	 lVaLG9X53OVyQ==
+Date: Fri, 29 Mar 2024 07:46:16 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 33/52] PCI: Mark LSI FW643 to avoid bus reset
-Date: Fri, 29 Mar 2024 08:45:27 -0400
-Message-ID: <20240329124605.3091273-33-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329124605.3091273-1-sashal@kernel.org>
-References: <20240329124605.3091273-1-sashal@kernel.org>
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] PCI: rockchip-host: Fix rockchip_pcie_host_init_port()
+ PERST handling
+Message-ID: <20240329124616.GA1639231@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.83
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240329084407.1050307-1-dlemoal@kernel.org>
 
-From: Edmund Raile <edmund.raile@proton.me>
+Observing the timing is the important thing here, if you can wedge
+that into the subject somehow.
 
-[ Upstream commit 29a43dc130ce65d365a8ea9e1cc4bc51005a353e ]
+On Fri, Mar 29, 2024 at 05:44:07PM +0900, Damien Le Moal wrote:
+> The PCI specifications mandate that PERST be asserted for at least
+> 100ms. Make sure that is done in rockchip_pcie_host_init_port() by
+> adding a 100ms sleep before bringing back PESRT signal to high using the
+> ep_gpio GPIO. Comments are also added to clarify this behavior.
 
-Apparently the LSI / Agere FW643 can't recover after a Secondary Bus Reset
-and requires a power-off or suspend/resume and rescan.
+"PERST#" in spec, and to make the "assert" and "set value to 0" all
+match up.
 
-VFIO resets a device before assigning it to a VM, and the FW643 doesn't
-support any other reset methods, so this problem prevented assignment of
-FW643 to VMs.
+s/PESRT/PERST#/
 
-Prevent use of Secondary Bus Reset for this device.
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/controller/pcie-rockchip-host.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 300b9dc85ecc..d526b9d26c18 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -294,6 +294,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+>  	int err, i = MAX_LANE_NUM;
+>  	u32 status;
+>  
+> +	/* Assert PERST */
+>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
+>  
+>  	err = rockchip_pcie_init_port(rockchip);
+> @@ -322,6 +323,11 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+>  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
+>  			    PCIE_CLIENT_CONFIG);
+>  
+> +	/*
+> +	 * PCIe specifications mandate that PERST be asserted for at
+> +	 * least 100ms.
+> +	 */
+> +	msleep(100);
 
-With this change, the FW643 can be assigned to VMs with VFIO.  Note that it
-will not be reset, resulting in leaking state between VMs and host.
+Specific rev, section citation?  And a name for the parameter if there
+is one (T_PVPERL, etc).  And hopefully a macro along the lines of
+PCIE_T_PVPERL_MS since this isn't rockchip-specific.
 
-Link: https://lore.kernel.org/r/20240227131401.17913-1-edmund.raile@proton.me
-Signed-off-by: Edmund Raile <edmund.raile@proton.me>
-[bhelgaas: commit log, comment]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 51d634fbdfb8e..9090da46213b5 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3663,6 +3663,14 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003e, quirk_no_bus_reset);
-  */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
- 
-+/*
-+ * Apparently the LSI / Agere FW643 can't recover after a Secondary Bus
-+ * Reset and requires a power-off or suspend/resume and rescan.  Prevent
-+ * use of that reset.
-+ */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5900, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5901, quirk_no_bus_reset);
-+
- /*
-  * Some TI KeyStone C667X devices do not support bus/hot reset.  The PCIESS
-  * automatically disables LTSSM when Secondary Bus Reset is received and
--- 
-2.43.0
-
+>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
+>  
+>  	/* 500ms timeout value should be enough for Gen1/2 training */
+> -- 
+> 2.44.0
+> 
 
