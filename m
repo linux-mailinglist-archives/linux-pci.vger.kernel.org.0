@@ -1,93 +1,124 @@
-Return-Path: <linux-pci+bounces-5368-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5369-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A1CD891268
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 05:41:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2D06891324
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 06:22:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5289288C84
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 04:41:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 993761F222D3
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 05:22:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F0362DF73;
-	Fri, 29 Mar 2024 04:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF2D381CC;
+	Fri, 29 Mar 2024 05:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="RTAzh/MR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145782C9A;
-	Fri, 29 Mar 2024 04:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D1E2C19D;
+	Fri, 29 Mar 2024 05:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711687288; cv=none; b=tGcCBVYqXEbvQjrI6h38Ic+E0Ce/bZVPxn53foKH8v/344fRtUmtS4xNwjgmaUMXXDGbs/hL3S7zRg6e+75yJeuBwv77TFl9/7iPgVLO6jQ+sOpL3GuaODXWsXAw2KRW62xKzNIVVzgHiHB5Ub8eoZyQ8dLSS0L2YECV1d95038=
+	t=1711689730; cv=none; b=pIdl1nRvnokZe/dV36gq+ahuzpKElIm2zufzyrdlCaYdPS3riKmTq3xoV5wbIvl/ptQTw4yh9p0N3W5bUmk4j48ibi456Nlvs+mJzQyo/9Q72FOQgMxsDRMnfsRqv/smc6niq1D0YlmcgFDQ39GkI32YwV7uz6leMWF2mve5N20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711687288; c=relaxed/simple;
-	bh=xFBtzDrwQogRYJw90bkQgmgiOw9iHxCR+ytb2sDGFUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gkFMhDZeM3lY/3bVWDfooylvtYYjHFBxYqN7zgSlbQ96Ez+A9SPsiQbopyZtwqdN9Glf48fNMILyO7eBz9hzuso6vyX3nKvHYiKP6aODS+ii7fB4JRGdP8TjRaqhs0EMYdud8E0GGNEykhXQETGBYV2HYVFOixz2IHHMORZbr7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id C5A742800BB3F;
-	Fri, 29 Mar 2024 05:41:16 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id B152412BC84; Fri, 29 Mar 2024 05:41:16 +0100 (CET)
-Date: Fri, 29 Mar 2024 05:41:16 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, edmund.raile@proton.me,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <ZgZGbMj0I3_6Rt0f@wunner.de>
-References: <20240326131858.GA140624@workstation.local>
- <20240327150119.GA1502858@bhelgaas>
- <20240328144201.510f6d5e.alex.williamson@redhat.com>
+	s=arc-20240116; t=1711689730; c=relaxed/simple;
+	bh=LHGMb9TOMihgp395z90F1PJE9iR/bXqLN9ckm74CRro=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t6qFLHeUp0Thpz+MxHwfhAIKDwwTPETKofUh7T964ehjZNavIZPkoVSRwJ/AYOkKfVefMEqTys4uHkxnNv92KApDOm5NFeTx2aEfsgL6K/84aPAyeMeWwtcQmuiSjRJqdjLpV2bVZOHhMXqbu3FvjeN+L0iLU+Vg446P8/NAjgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=RTAzh/MR; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 530AB100002;
+	Fri, 29 Mar 2024 08:21:44 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1711689704; bh=olCvRaa/nkRVcZRj5DBHp7AjHPrGwTpg2wCSRtj7O6s=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=RTAzh/MRMn/z01yHxw+Izm/8lMqRUVi+wNeQqVkySEOELaX/KCNMZDM82OpC29rIE
+	 /fRtP0gF9Im26c31vjAyW+uLNBCrJwHNcRQZ9G0CBGrN279nvYXEemoJPD5C9ixwsx
+	 4vsy7ogrxIRmDTZ2KnwULNb4/hHHeq1qOHBcWCWPoAIzTGKeLCPquESnK+Pp4Iuwur
+	 Dxr0erKwPCHGLdegvDssK+8/ilbnbIlR86RUjSimDY+rkbeO4ZlWT3bzbzmwk1da+B
+	 YfiRVyOJhcmje/Gr2Ov63GHIimWGFhudJs5m4B0vNVN5Fw8nURGoA6mWefcgJYUSSm
+	 brwSK8pV8C9fw==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Fri, 29 Mar 2024 08:20:20 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 29 Mar
+ 2024 08:19:59 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Rob Herring <robh@kernel.org>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] PCI: dwc: keystone: Fix potential NULL dereference
+Date: Fri, 29 Mar 2024 08:19:47 +0300
+Message-ID: <20240329051947.28900-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328144201.510f6d5e.alex.williamson@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184478 [Mar 28 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/03/29 03:32:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/03/29 02:35:00 #24501233
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Thu, Mar 28, 2024 at 02:42:01PM -0600, Alex Williamson wrote:
-> On Wed, 27 Mar 2024 10:01:19 -0500 Bjorn Helgaas <helgaas@kernel.org> wrote:
-> The original patch proposed for this gave me the impression that this
-> was a device used on various old Mac systems, not likely applicable to
-> a general purpose plug-in card.
+In ks_pcie_setup_rc_app_regs() resource_list_first_type() may return
+NULL which is later dereferenced. Fix this bug by adding NULL check.
 
-I'm still using one of those "old Mac systems" as my daily driver.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Just checked the ACPI tables and there's an FPEN method below the
-FRWR device which toggles GPIO 48 on the PCH.  Checked the schematics
-as well and GPIO 48 is marked FW_PWR_EN.  The GPIO controls load
-switches which cut power to the FW643 chip when nothing is connected.
+Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/pci/controller/dwc/pci-keystone.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Also, FW_PWR_EN feeds into an SLG4AP016V chip where it seems to
-internally gate FW_CLKREQ_L.
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 844de4418724..00d616654171 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -392,7 +392,11 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ 	struct resource *mem;
+ 	int i;
+ 
+-	mem = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM)->res;
++	struct resource_entry *ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
++	if (!ft)
++		return;
++
++	mem = ft->res;
+ 	start = mem->start;
+ 	end = mem->end;
+ 
+-- 
+2.30.2
 
-I'm guessing the driver may need to call the FPEN ACPI method after
-issuing a SBR to force the chip on (or perhaps first off, then on)
-and thereby re-enable Clock Request.
-
-It's a pity the ohci.c driver doesn't seem to support runtime PM.
-That would allow cutting power to the chip when nothing is connected
-and thus increase battery life.  The ACPI tables indicate that the
-platform sends a notification when something is plugged in, so all
-the necessary ingredients are there but we're not taking advantage
-of them.
-
-Thanks,
-
-Lukas
 
