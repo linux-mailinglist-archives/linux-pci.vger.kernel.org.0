@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-5405-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5407-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40827891E06
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 15:31:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE621891DC4
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 15:25:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55329B2F5C3
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 14:11:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF12A1C27CC6
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 14:25:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92E0F1C68A7;
-	Fri, 29 Mar 2024 12:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D16813165C0;
+	Fri, 29 Mar 2024 12:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxmYgiOD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/xiYUB5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690691C68A5;
-	Fri, 29 Mar 2024 12:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A772E14C580;
+	Fri, 29 Mar 2024 12:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716308; cv=none; b=flkNocJGzA1YdgRm72FOy7V6Rova8SQ5YxNbXzfG3Sh5149S9yPIKPdsI4HE6HcNPlk/eZVbN8SMQcYw8C/bkFiPRi0kOLnFofbi8vQPNFoCTVO9XZkF98JnKLdjBQV3xxJUkaTQRn8EXEyuAOrBp/j8n5iN/FAezXGL9e06Bvs=
+	t=1711716427; cv=none; b=HIdU7hJxThAkvaJJT4GXDy726Ztujpoy7IcnJlDLdHURbyONmp4V6A5o5pIEVbiGgxEjshPptGvhklj48nxoe26GVNNmBsVSPwPLXp602vvuzgA6n+Yn4Tf5Kua8Q8dlE+k7mn7OsKZ5Zp2fn8D5ZnkprNxeupcf2bpYg31vx1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716308; c=relaxed/simple;
-	bh=MNK7HuWoOXNVT4BfoeYZQGbxdA+Bd16yswGD6fUDbyQ=;
+	s=arc-20240116; t=1711716427; c=relaxed/simple;
+	bh=3ltKAP+Cgy7PTZG6vBDKVQLPkdWTOdneISLREIlq3Bg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EYu4Xip30PmNWiq1vS7w/E94Wny9VYkYgh2eVfS3aidICft4n5+3Jq0NbZABaQU3rsrj9Nn1T/tGiNc0Qqe6RiIOfluPRcQnR2rnXDVNfIICK62NUZgaV3nYjgOCyujTUKGG8Yjub3dVxoQOWGM+8fs2iY2AyUs0xaauw4B+v1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxmYgiOD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9411FC43609;
-	Fri, 29 Mar 2024 12:45:07 +0000 (UTC)
+	 MIME-Version; b=DmqT8yC06NFzEbchQ8NIb8/GH4eG14Ra3FPsCs0QHzp7gyQAI6CbAg4ZkPSa0WdXU5a9AhaEoxx3Vi6nMVIe9EygT8+WsRO263hfCLG2vlJeMMkVT6DMEsp7SoApVmF2isjMAfDErEyCf5CvsFpYGg5Oss0aJDjTCUFO+gOSMC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/xiYUB5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DE1DC43609;
+	Fri, 29 Mar 2024 12:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716308;
-	bh=MNK7HuWoOXNVT4BfoeYZQGbxdA+Bd16yswGD6fUDbyQ=;
+	s=k20201202; t=1711716427;
+	bh=3ltKAP+Cgy7PTZG6vBDKVQLPkdWTOdneISLREIlq3Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dxmYgiODu2zB8VbXShVv1M8azTJjzBpzLsSaPvF6TfubHK5gh2ELt7VDKGj8jE4np
-	 uiKwd9abkShYTnIsMJ0lonxa9ee6eVEypR0Zb+nawrNpflHck01jHCiAB89tQJf6FH
-	 4yFPJkGSv66tPqT55CUkUi5GY5uH9Z9y3bqUlDGssfGRqLgLSTzb1Mke1hGGNhvCH5
-	 o8MCNPHToL84xhA2Hx+s3pvmryPOpMQpf4WJvWF9SmJ5V0BTan2ZlOq69pk3rEvdPe
-	 Q9A0PnPIQg7PDoZNDyTjs3frBF0QnJ9Bi4vsFtt7uyUHhfu/zzq7n2THTQVt6zQ3Ua
-	 0aaxet59bLiSA==
+	b=F/xiYUB5s/JORz5PjqJTS55UmSvQAiIDoIEkGYXAlTl+sPUXSnerrMIbwYGUyJr6m
+	 exAfya1ERbpR9sMBuxSMxiCgsEaQRgGk9DcOqNPzZ7wazh5MS5q+SB+gAWo+1L4owz
+	 Ypne7GYQbYJv6dCoby9e+c4EaFbNRHRRugGOSjGE3+w2RbThwRS0AoNaVygvh+6rcV
+	 VvPXhLIHLA3KHAxxf0tZEJuPKcj8bRPtZSzb6KzCPfN/bbmvm8YA6fJWDyV5+eG9et
+	 vit34ACrapLmOfmTjU8254kXD0ZEQWR+ks8YMdFCBcUcxqXlva45vSkgtj6U6pWuZn
+	 4jNjcPunxfdtw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -48,12 +48,12 @@ Cc: Edmund Raile <edmund.raile@proton.me>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 52/75] PCI: Mark LSI FW643 to avoid bus reset
-Date: Fri, 29 Mar 2024 08:42:33 -0400
-Message-ID: <20240329124330.3089520-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 33/52] PCI: Mark LSI FW643 to avoid bus reset
+Date: Fri, 29 Mar 2024 08:45:27 -0400
+Message-ID: <20240329124605.3091273-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329124330.3089520-1-sashal@kernel.org>
-References: <20240329124330.3089520-1-sashal@kernel.org>
+In-Reply-To: <20240329124605.3091273-1-sashal@kernel.org>
+References: <20240329124605.3091273-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.23
+X-stable-base: Linux 6.1.83
 Content-Transfer-Encoding: 8bit
 
 From: Edmund Raile <edmund.raile@proton.me>
@@ -91,10 +91,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b5b96d2a9f4ba..687f9b00b3057 100644
+index 51d634fbdfb8e..9090da46213b5 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -3758,6 +3758,14 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003e, quirk_no_bus_reset);
+@@ -3663,6 +3663,14 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003e, quirk_no_bus_reset);
   */
  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
  
