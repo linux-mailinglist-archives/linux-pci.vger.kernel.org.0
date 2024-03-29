@@ -1,72 +1,74 @@
-Return-Path: <linux-pci+bounces-5425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CBA889263B
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 22:41:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84E4189263C
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 22:41:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EF2D5B21923
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 21:41:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6FEDB2124A
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 21:41:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7EFD29D06;
-	Fri, 29 Mar 2024 21:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A33FC1E535;
+	Fri, 29 Mar 2024 21:41:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbO9+mkh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="as17UjhR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D2D1E535
-	for <linux-pci@vger.kernel.org>; Fri, 29 Mar 2024 21:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B99179DF
+	for <linux-pci@vger.kernel.org>; Fri, 29 Mar 2024 21:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711748462; cv=none; b=VE6C40SXznWRVuq2Cl1VM1mndKwraE2iJ1HuhO6Hkw3TmqVmaY9nsajxkaTtdud2H6HRXvbfzbqDIBDyRplhQjvvQ2+omkMA+7DuRe+EmbJDjopgJCJsP+ebEzRW9k2Pvhz7xCSWPJkBrM7KzO4OsDncYB5II3OgqHQpWny/g0M=
+	t=1711748509; cv=none; b=Sn/8A7FY4LYXOrgmZsTpRFA5fnTcttKBKSCLR7IgBEcvI9b2xlyo63ud0A2YxVcO+Zj5zsNQSR0v65eQTPvsVBCejmIWkykjCQk6BJ0Vc95fjqJq/ZuvSlEjQi1EJMV+PF6BtxBLJBcuBZ1floV/wiqku91j07pMEMAtitq9bhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711748462; c=relaxed/simple;
-	bh=Wu/4zUN6fo7l7u2Wyi4po7j0qwXlwid07I9QD8owjVo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=j1cemwOU3NvhfDCAbk1ogU8uVA9HeyTrKtkzoWGgqdNHMKOnCYuBAoArXAdbTokFqD2vD4uXDaIjZjcoF3vwCDo4f9SS+w4RN7PKnbfdjlCTabvn/RY5kt4hvIwCpObzU4/w3a+crmI28nAiD+qpJGi1BeisShPWGLUdqUXj0Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IbO9+mkh; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1711748509; c=relaxed/simple;
+	bh=tAoMsoJ/iVaiTmFroebM+eRSv2csHcdXzBVtpfdTb2k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VOJzFMdjFnumBlrHHSiYX35zkL1/lPite/lrWOpQYpZW0gh+cgLrLeKltZj6c+bDINCyQ2vEYmZ/lX+Xnf0FFiiHpeLV3MBuv1MmNHPui7CxllwBu/hqrDbzNxyhnrIQzpq7XJMY2X35Vyww3x+/SA/u5ZM4PGwJVOvpUEVPsbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=as17UjhR; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51588f70d2dso2815899e87.3
-        for <linux-pci@vger.kernel.org>; Fri, 29 Mar 2024 14:41:00 -0700 (PDT)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56db72fc3a8so353470a12.0
+        for <linux-pci@vger.kernel.org>; Fri, 29 Mar 2024 14:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711748459; x=1712353259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:autocrypt:subject:from
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gEavmMnwLilIGDdkvLLt0eQ1OCXa8c0i4pI9B19Zeuc=;
-        b=IbO9+mkhwe1KpoOipvzy0dHr8xI65dLrpbGmYfZBg4QUNvw91nKFORi8h8q3qt9thW
-         LhQl5NyXsnUJ4kmgAaleNEsONJ9HaVuhykJIY9JPGCZqardXpBnZcKoVe2/3f7WZAQGk
-         zl067/34dctCtzsUjZ0vkstYawfk1YM/OfAssHmX7h20OXsrpeeK7OKdmuXVaxtOgNWd
-         IO/4e2bh0LN1p9GhX+oOTRr2PWt+yXzZKXH/WCi9TWW39F2irc+583P42U4eEVovt01v
-         HN5nduZO5MBrBolLeXZRRid6Gyv4VXn05FU2XGvrP785jsfdAaKw4tY0m39OozTlTeqs
-         F68w==
+        d=gmail.com; s=20230601; t=1711748506; x=1712353306; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=40Y/dZOeqBYVtqCrclMIQqMCxWUvbpQn0kDZB5mXyjw=;
+        b=as17UjhRvkT9IrZOphuQjGwBWuqX7OhAxlK/geWeiKnNw/5EP4B3aOZqYS02Ij3/Ur
+         aReUMdmXJlM/Pr4Ye6emHxjMB1mHXDLUipr0jgmghhkcCnFdm3lBMtyfISwUY2JyxOe+
+         xgRo5nB6NkoH+c1nxty2BVswmLqdCIz/tygKPzZTxmLAAg7kgRn8b23+Z/TNno4tb2zC
+         xUkvO2vCpyOa6VgrTCKuP73PFvWsqbCA+cn6WxAmnJhpUj49ukEPmpOTtpukkw+kF1A2
+         sdca2kXhKvfGelz/Eac26TtLPXo0I2zXDoUJhKFW0BtQ6iIfQhTxibDdybeHs8pRarxK
+         VX1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711748459; x=1712353259;
-        h=content-transfer-encoding:cc:to:autocrypt:subject:from
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gEavmMnwLilIGDdkvLLt0eQ1OCXa8c0i4pI9B19Zeuc=;
-        b=hooDjK78y7MPDkgW7VYhPjlSxBFOP+2Q26lYknewrxzddSEcOs2vZXiq+a3/Z825S5
-         hL2yC5ZNhECIFz0SzJFNE/CFgCQRcPSE3ElA2cccpVCXW/mKYFc3skTmJY0E637/oILl
-         e4e++dziH9dH13n04LuqYkj2bl7W/7QLa/o9y/bcxSW6UZt++SegUbmdO2G8R01DeXzp
-         FzmETEcv5yLPVrXdiHnYTgEi0gfGHc+W//39zNtF8y5xCMz15Oel53IE5vMdb/rx4MH8
-         Vnr9QihhqIypXDuDsZT8laHtQ9Iefo3lCOyEbLnC+Yxkt+e13m8QsfyUZMP1jQ7Pgbam
-         x08A==
-X-Gm-Message-State: AOJu0YxxjEjsqSPrCmPfZ6y1PzzPWGX3jnGf8+i9Adsf4yPNrBYQ5z+r
-	VRLQNnVjxMi5bhbgCmVH2E5a2X23cyEeu0hXdFMIy/o054x2LI1K
-X-Google-Smtp-Source: AGHT+IE/tPMKqRjtYl+lTfaXs4S04E4bUTHdPYB6E5Aj42ePoEHWaiM5KLXldEN9QhTEBMpm7RV7Sw==
-X-Received: by 2002:a05:6512:4848:b0:515:d1b9:3066 with SMTP id ep8-20020a056512484800b00515d1b93066mr1558976lfb.46.1711748458777;
-        Fri, 29 Mar 2024 14:40:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711748506; x=1712353306;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=40Y/dZOeqBYVtqCrclMIQqMCxWUvbpQn0kDZB5mXyjw=;
+        b=cTf+qNLe07B82wy+vJpnSaQZLnPP+Xfqu7osZfLS29urSmE3tktbfErEKR5ANB9XEj
+         fVIr+h0idDvssW35NTw6KFTfjmOdDqHoh3ZZrorIk06F46Zgk5sAwQsw37xi2IqRtkvG
+         r8koDTZZGU4xCb81iQAdhvJCcE0s6mItor7+EYjCzfhqcNXwc9T/ZfMzuem4mzyRdL3J
+         m4RY5MO19eGyEEsleRko+ANzUSRNR18aR9ZnoImQdrdCTgxb/KTtVg802QFizjzqxL8g
+         aHmPZnyjXAYNNctfU/Wo/RonW8CZUaQ3FisU4NUGa1HO9ciqJPIhgK0u+9LTF4OZI5Xt
+         qGXQ==
+X-Gm-Message-State: AOJu0Yxz+AVVbokPceVt2lMauAJPAB5Qzg2JoAMMgu3dp+50soEu4GBg
+	Pxg+GKHpgysSIypYCaro9AX/ewduo6IB7hszr+AANghgc312W5Ty
+X-Google-Smtp-Source: AGHT+IFbGNIvNc8Nopuo/e09NcCgfCoYDUYLSe6TQF72SA/e3PY/kNKLoViU3hdG2XtRAh5Mm4aqig==
+X-Received: by 2002:a50:d6c5:0:b0:56b:829a:38e3 with SMTP id l5-20020a50d6c5000000b0056b829a38e3mr2394399edj.16.1711748506185;
+        Fri, 29 Mar 2024 14:41:46 -0700 (PDT)
 Received: from ?IPV6:2a01:c22:7bbd:b600:50f7:b974:760:86c8? (dynamic-2a01-0c22-7bbd-b600-50f7-b974-0760-86c8.c22.pool.telefonica.de. [2a01:c22:7bbd:b600:50f7:b974:760:86c8])
-        by smtp.googlemail.com with ESMTPSA id gt14-20020a170906f20e00b00a462e166b9bsm2360805ejb.112.2024.03.29.14.40.57
+        by smtp.googlemail.com with ESMTPSA id t19-20020aa7d713000000b0056c08268768sm2451461edq.10.2024.03.29.14.41.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Mar 2024 14:40:58 -0700 (PDT)
-Message-ID: <cb48fd68-9bfa-45b7-ac4f-d1c2b9b1f207@gmail.com>
-Date: Fri, 29 Mar 2024 22:40:57 +0100
+        Fri, 29 Mar 2024 14:41:45 -0700 (PDT)
+Message-ID: <3bdea180-e0ea-451d-ac14-5b02c192467e@gmail.com>
+Date: Fri, 29 Mar 2024 22:41:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,10 +76,13 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH RFC 0/2] PCI: Restore original PCI_COMMAND value in
+Subject: [PATCH RFC 1/2] PCI: Restore original PCI_COMMAND value in
  pcim_release
+From: Heiner Kallweit <hkallweit1@gmail.com>
+To: Philipp Stanner <pstanner@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <cb48fd68-9bfa-45b7-ac4f-d1c2b9b1f207@gmail.com>
+Content-Language: en-US
 Autocrypt: addr=hkallweit1@gmail.com; keydata=
  xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
  sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
@@ -121,33 +126,73 @@ Autocrypt: addr=hkallweit1@gmail.com; keydata=
  H/0Z53okMykVs3a8tECPHIxnre2UxKdTbCEkjkR4V6JyplTS47oWMw3zyI7zkaadfzVFBxk2
  lo/Tny+FX1Azea3Ce7oOnRUEZtWSsUidtIjmL8YUQFZYm+JUIgfRmSpMFq8JP4VH43GXpB/S
  OCrl+/xujzvoUBFV/cHKjEQYBxo+MaiQa1U54ykM2W4DnHb1UiEf5xDkFd4=
-To: Philipp Stanner <pstanner@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+In-Reply-To: <cb48fd68-9bfa-45b7-ac4f-d1c2b9b1f207@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Philipp's series refactors bigger parts of PCI devres. To reduce
-complexity of the series it may be good to simplify the current
-devres handling as much as possible first.
+Instead of the complex handling of INTX and MWI in PCi devres, let's
+simply restore the original vale of PCI_COMMAND in pcim_release().
 
-The patches proposed in my series allow to remove the MVI and INTX
-related member from struct pci_devres.
+Only side effect I've seen so far is that the "enabling device" info
+message is printed each time a driver is re-probed after a EPROBE_DEFER.
+I propose to silence this message by changing it to debug level.
 
-If Philipp's patches allow to remove the region handling from
-pcim_release(), and flag pinned is moved to struct pci_dev, then
-I think we can completely get rid of struct pci_devres.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/pci/devres.c | 8 ++------
+ drivers/pci/probe.c  | 3 +++
+ include/linux/pci.h  | 1 +
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Heiner Kallweit (2):
-  PCI: Restore original PCI_COMMAND value in pcim_release
-  PCI: Remove MWI and INTX related members from struct pci_devres
-
- drivers/pci/devres.c | 15 ++-------------
- drivers/pci/pci.c    | 11 +----------
- drivers/pci/pci.h    |  3 ---
- drivers/pci/probe.c  |  3 +++
- include/linux/pci.h  |  1 +
- 5 files changed, 7 insertions(+), 26 deletions(-)
-
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 2c562b9ea..7766f4df4 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -172,14 +172,10 @@ static void pcim_release(struct device *gendev, void *res)
+ 		if (this->region_mask & (1 << i))
+ 			pci_release_region(dev, i);
+ 
+-	if (this->mwi)
+-		pci_clear_mwi(dev);
+-
+-	if (this->restore_intx)
+-		pci_intx(dev, this->orig_intx);
+-
+ 	if (this->enabled && !this->pinned)
+ 		pci_disable_device(dev);
++
++	pci_write_config_word(dev, PCI_COMMAND, dev->pci_command);
+ }
+ 
+ /*
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 1325fbae2..60052c979 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2558,6 +2558,9 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+ 
+ 	pci_init_capabilities(dev);
+ 
++	/* Store original register value */
++	pci_read_config_word(dev, PCI_COMMAND, &dev->pci_command);
++
+ 	/*
+ 	 * Add the device to our list of discovered devices
+ 	 * and the bus list for fixup functions, etc.
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 16493426a..92c3c99c9 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -352,6 +352,7 @@ struct pci_dev {
+ 	u8		rom_base_reg;	/* Config register controlling ROM */
+ 	u8		pin;		/* Interrupt pin this device uses */
+ 	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
++	u16		pci_command;	/* Restore original value in pci_disable_device */
+ 	unsigned long	*dma_alias_mask;/* Mask of enabled devfn aliases */
+ 
+ 	struct pci_driver *driver;	/* Driver bound to this device */
 -- 
 2.44.0
+
+
 
