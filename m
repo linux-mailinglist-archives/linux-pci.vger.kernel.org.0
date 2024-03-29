@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-5389-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5390-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 169FE891578
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 10:10:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C024891577
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 10:10:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CE10B227F3
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 09:10:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B19E1F22BAA
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Mar 2024 09:10:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F56C39FD3;
-	Fri, 29 Mar 2024 09:10:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 946BD37165;
+	Fri, 29 Mar 2024 09:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nG9gQ7xQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKI6quCu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492AE37711
-	for <linux-pci@vger.kernel.org>; Fri, 29 Mar 2024 09:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F98B2C6AA
+	for <linux-pci@vger.kernel.org>; Fri, 29 Mar 2024 09:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711703411; cv=none; b=LcfwCgc41l7gsnjrp3nLeDtX6M0qhp9jvvv4jXxPTybedXpIs1v74QuazqiFyBoMTFImxB4AJ7r/1FBP9vyMbX/zO46V1qg0byfqNiG5b+opRvVmJ47+6LD3xmUqexWe5WDQnigriKVq9+BrbqKhbZmWcR5RVTnkqd7ZtydYDPE=
+	t=1711703412; cv=none; b=Ps7ja0V8wQng1XC+eiKc34I3+LLXhuXf9n0f8sLc7eIXHHyYgccaJNmpYu6TCwe9k1OI+edJ0IkvR4D7ysRO5BN6CmbeX0Wpgj6CiX8sRQijACuhXMtIh5fbw23gqRBwo/yH65iK35a2c8bx8CABSA93cGhWEsr6qy9Hn+84fLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711703411; c=relaxed/simple;
-	bh=h8X8PrPgY8Hng7qpmyQmQNd4ZBulxmwQHIfO5ggjjo4=;
+	s=arc-20240116; t=1711703412; c=relaxed/simple;
+	bh=RXLldZKLpPMu+MutiLKOGWj1dxASTXunfudattYEHEs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qNhsRN7jV6FS8amb2afIm3ZRcaWGPECpOzYJjxrFLgnXmyNuzi3XOIptiX3BAj6KRjGXmDG6JOgfLwyWBGsVjNijqK/FMuqpbOD4klpjc52qUMPu1Y/DxlKvdw1MbmcDjYdNNssCCZaSTlzvBi518Io0WAojGl5wAxhnwlU2LOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nG9gQ7xQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED51C433F1;
-	Fri, 29 Mar 2024 09:10:09 +0000 (UTC)
+	 MIME-Version; b=q4Dn1Bl9lGNN6nfQE2RAI7/pS+kNhF8MtPdHUdjf7dhvEO0Ov0nbjR4Xo8yS1E5kPGC/TT3AVlEljd4TRSeRAv67+wDK15g1/bQSkXjeinFfWNWca4MO1jxM4ojPK/Z1XJSXboEhnq2o48N7ElVPRqSs5/nmqSqFEmPEIQwXZyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKI6quCu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FD2C43390;
+	Fri, 29 Mar 2024 09:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711703410;
-	bh=h8X8PrPgY8Hng7qpmyQmQNd4ZBulxmwQHIfO5ggjjo4=;
+	s=k20201202; t=1711703412;
+	bh=RXLldZKLpPMu+MutiLKOGWj1dxASTXunfudattYEHEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nG9gQ7xQmyJ2v7u6XspNZLnVQNnX3iWwigV9fQyL/NpnIq+kDuIRhn0EcKlX0v+IY
-	 WS/I16TOqOHY3Oe8uHG0E5d7u+OjKAQISXIXRqcnx/RZSz5CrSKIFwMfRv4w9IKUNR
-	 zC4t9SpoyRZOP9BQAT3SDWjYB637IfxQ7Bqqjhgi5Xo24qUbKxBJR0dw4sEBPMEYAv
-	 4fyER67K3NZn4Cnpz3Ln+CNTabOg8PVcbqavrROoSvKxDI8Yb6zP1cddZ6OF4qwrOf
-	 3LdDacAErm3+lOLAtgM36/+4td8EAObcRM/LqvNP/6eYkVz2m61NLHO6b5YhnM1nFm
-	 jSe8I0MaWCKsA==
+	b=lKI6quCuJe1QmenF8fJF1NLI7QagbAaAlQPF1h3JDyt2nFUJByBEdlZa+/AhsnzFL
+	 b1Tk9TZzWeO5D9jAHDJT9wlo9YD5vtGGCsrTUUjz0wSZV09oCQLO7VyWvrepubRvcK
+	 mqk14eWHVHDiN6JrUQPI7n5wbFFCX2b/fkuWisgh/9yvATffAD78sHcj3pBjTZuOnU
+	 YlcIB3XRPKGcAbhaVY40YcYQwlioOAyb985mf74Oz4gDL+LY1k1AxxQOsGktm0DfN4
+	 gaa+mQguBnU/jyoM3s2QCr8GMyq/dESFUw9GdH84ob9QWWfSdktvDNutG1y5WVsq7o
+	 y8vgMF8uJi7dA==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -50,9 +50,9 @@ To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Heiko Stuebner <heiko@sntech.de>,
 	linux-pci@vger.kernel.org
 Cc: linux-rockchip@lists.infradead.org
-Subject: [PATCH 15/19] PCI: rockchip-ep: Refactor endpoint link training enable
-Date: Fri, 29 Mar 2024 18:09:41 +0900
-Message-ID: <20240329090945.1097609-16-dlemoal@kernel.org>
+Subject: [PATCH 16/19] PCI: rockship-ep: Introduce rockchip_pcie_ep_stop()
+Date: Fri, 29 Mar 2024 18:09:42 +0900
+Message-ID: <20240329090945.1097609-17-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329090945.1097609-1-dlemoal@kernel.org>
 References: <20240329090945.1097609-1-dlemoal@kernel.org>
@@ -64,89 +64,60 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The function rockchip_pcie_init_port() enables link training for a
-controller configured in EP mode. Enabling link training is again done
-in rockchip_pcie_ep_probe() after that function executed
-rockchip_pcie_init_port(). Enabling link training only needs to be done
-once, and doing so at the probe stage before the controller is actually
-started by the user serves no purpose.
-
-Refactor this by removing the link training enablement from both
-rockchip_pcie_init_port() and rockchip_pcie_ep_probe() and moving it to
-the endpoint start operation defined with rockchip_pcie_ep_start().
-Enabling the controller configuration using the PCIE_CLIENT_CONF_ENABLE
-bit in the same PCIE_CLIENT_CONFIG register is also move to
-rockchip_pcie_ep_start() and both the controller configuration and link
-training enable bits are set with a single call to
-rockchip_pcie_write().
+Define the EPC operation ->stop for the rockchip endpoint driver with
+the function rockchip_pcie_ep_stop(). This function disables link
+training and the controller configuration, as the reverse to what
+the start operation defined with rockchip_pcie_ep_start() does.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 14 ++++++--------
- drivers/pci/controller/pcie-rockchip.c    |  5 +++--
- 2 files changed, 9 insertions(+), 10 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 13 +++++++++++++
+ drivers/pci/controller/pcie-rockchip.h    |  1 +
+ 2 files changed, 14 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index b6b9161932c9..7df036098ecd 100644
+index 7df036098ecd..c126da07bf0c 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -461,6 +461,12 @@ static int rockchip_pcie_ep_start(struct pci_epc *epc)
- 
- 	rockchip_pcie_write(rockchip, cfg, PCIE_CORE_PHY_FUNC_CFG);
- 
-+	/* Enable configuration and start link training */
-+	rockchip_pcie_write(rockchip,
-+			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
-+			    PCIE_CLIENT_CONF_ENABLE,
-+			    PCIE_CLIENT_CONFIG);
-+
+@@ -470,6 +470,18 @@ static int rockchip_pcie_ep_start(struct pci_epc *epc)
  	return 0;
  }
  
-@@ -539,7 +545,6 @@ static int rockchip_pcie_ep_get_resources(struct rockchip_pcie_ep *ep)
++static void rockchip_pcie_ep_stop(struct pci_epc *epc)
++{
++	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
++	struct rockchip_pcie *rockchip = &ep->rockchip;
++
++	/* Stop link training and disable configuration */
++	rockchip_pcie_write(rockchip,
++			    PCIE_CLIENT_CONF_DISABLE |
++			    PCIE_CLIENT_LINK_TRAIN_DISABLE,
++			    PCIE_CLIENT_CONFIG);
++}
++
+ static const struct pci_epc_features rockchip_pcie_epc_features = {
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+@@ -494,6 +506,7 @@ static const struct pci_epc_ops rockchip_pcie_epc_ops = {
+ 	.get_msi	= rockchip_pcie_ep_get_msi,
+ 	.raise_irq	= rockchip_pcie_ep_raise_irq,
+ 	.start		= rockchip_pcie_ep_start,
++	.stop		= rockchip_pcie_ep_stop,
+ 	.get_features	= rockchip_pcie_ep_get_features,
+ };
  
- 	ep->ob_addr = devm_kcalloc(dev, ep->max_regions, sizeof(*ep->ob_addr),
- 				   GFP_KERNEL);
--
- 	if (!ep->ob_addr)
- 		return -ENOMEM;
- 
-@@ -650,16 +655,9 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 
- 	rockchip_pcie_ep_hide_msix_cap(rockchip);
- 
--	/* Establish the link automatically */
--	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
--			    PCIE_CLIENT_CONFIG);
--
- 	/* Only enable function 0 by default */
- 	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
- 
--	rockchip_pcie_write(rockchip, PCIE_CLIENT_CONF_ENABLE,
--			    PCIE_CLIENT_CONFIG);
--
- 	return 0;
- err_release_resources:
- 	rockchip_pcie_ep_release_resources(ep);
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 0ef2e622d36e..dbec700ba9f9 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -244,11 +244,12 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
- 				    PCIE_CLIENT_CONFIG);
- 
--	regs = PCIE_CLIENT_LINK_TRAIN_ENABLE | PCIE_CLIENT_ARI_ENABLE |
-+	regs = PCIE_CLIENT_ARI_ENABLE |
- 	       PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes);
- 
- 	if (rockchip->is_rc)
--		regs |= PCIE_CLIENT_CONF_ENABLE | PCIE_CLIENT_MODE_RC;
-+		regs |= PCIE_CLIENT_LINK_TRAIN_ENABLE |
-+			PCIE_CLIENT_CONF_ENABLE | PCIE_CLIENT_MODE_RC;
- 	else
- 		regs |= PCIE_CLIENT_CONF_DISABLE | PCIE_CLIENT_MODE_EP;
- 
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 30398156095f..0263f158ee8d 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -32,6 +32,7 @@
+ #define   PCIE_CLIENT_CONF_ENABLE	  HIWORD_UPDATE_BIT(0x0001)
+ #define   PCIE_CLIENT_CONF_DISABLE       HIWORD_UPDATE(0x0001, 0)
+ #define   PCIE_CLIENT_LINK_TRAIN_ENABLE	  HIWORD_UPDATE_BIT(0x0002)
++#define   PCIE_CLIENT_LINK_TRAIN_DISABLE  HIWORD_UPDATE(0x0002, 0)
+ #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+ #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+ #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
 -- 
 2.44.0
 
