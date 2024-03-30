@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-5437-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5438-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E459C892946
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44E5B892945
 	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 05:19:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5719CB224D4
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 04:19:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 751F81C2109A
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 04:19:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5258E2F25;
-	Sat, 30 Mar 2024 04:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F4D18BE7;
+	Sat, 30 Mar 2024 04:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SIpfUVs8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhUxeh/U"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEFFB645;
-	Sat, 30 Mar 2024 04:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273D2883C;
+	Sat, 30 Mar 2024 04:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711772388; cv=none; b=Ar87EMfi3UIYj3orw7KSLTUugzmnMqxHbNO6S8g3UVTtKahjfBBFkVcoc+HmBGfYJW7P9kUvuA2FgU2ACTP27n3oR/zyxHXQ7cfc/EiRQOIlwKwtMQ0YycoOiZhcLANnJgqmrazwkWje7uSSYDgE+Et4xKISDG4ibi8I5YqPHCw=
+	t=1711772391; cv=none; b=BPF9R3ISQvlLxxVfocHT1D9gZwyM3Kf53ksJeye+od3vd8vie91LCIgK0CCCbAlTGv/6+jd6sis6QuL7po4epDCt8GbKADgkHW0hsbymmLsB+55ctI8slj9rhk92bnW0/7LrbCDCmwdkvWqFiH9hL3YT0oL+ehUiHLP6vYpvvaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711772388; c=relaxed/simple;
-	bh=3XQZJFnWiBCa0pKYKa49EaaDKQXO1nRdHx3kVp9W1t4=;
+	s=arc-20240116; t=1711772391; c=relaxed/simple;
+	bh=7Csd0n7kv5QXdaAzg91Mtj2IgQHbVhJebQ8xA5NsDJs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oDDyoLe3B/hwQgivrHLGa2y/ZCCqGPXsrERzjA6v4WA7ncm2J1Tgk1uqeWB76uv+2dXK2sUA8WnBM9Fa3Dh+tVIMpbQNrfn8sUmK5DkioDihayY9REEtqeLV6/AfMAZOII8bX6JM+QVD8fphTzy/lE8Z6kp9z9+zCgz31D3QiMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SIpfUVs8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF19C43142;
-	Sat, 30 Mar 2024 04:19:44 +0000 (UTC)
+	 MIME-Version; b=Z5ZMZrSjvY1ENOGooXOr0EJpE+rPP7H7+9FnpSQTHdVIsKqF159Ullr/ovUPujFnJ/82LFPbo4sIAGP4V3BaUxnKIPtLheR6XqN2Pp76oDAYfD20uhiXPRfrdyI7+TP0eqOri5/6f1FD+V9JSiCgZrxAL+dpdJ6p4BuOgYRQRhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhUxeh/U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06708C433B2;
+	Sat, 30 Mar 2024 04:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711772387;
-	bh=3XQZJFnWiBCa0pKYKa49EaaDKQXO1nRdHx3kVp9W1t4=;
+	s=k20201202; t=1711772390;
+	bh=7Csd0n7kv5QXdaAzg91Mtj2IgQHbVhJebQ8xA5NsDJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SIpfUVs8r5fCMYLpr0DqPZiS7/h9HDaAlucZ3PWu0yhGwc+/+5M3sDIglXFB2efR6
-	 kE9LheQ66adzwszcQHewFuwV/Jo6tsBBOE5QKGQ3bjFWvTLHa/P4PRlMBsWaTslWRU
-	 J+KJdj3xC7uihNTREoc63N/3BAMEV55Dej9FLP0cG5pyjWLy0hi0CyEEUjBpfZ1CxW
-	 q9npUiSPglnrq1p/w2CIVcuGtqFCZ6E/TRDSu3h1nBU5k3UDSZFmjSMqgPEnYEXuLx
-	 yz1QjWV4lW3MadTkAuwmUe0oYxJ4FS8oDUDbiNrRi5siA84poPe6R1EjrBfeHVyjv5
-	 nSQ3eEFfQbzdA==
+	b=HhUxeh/UoT/YQhTuYt6KJtbteVy+/KnhJ2v/zGKS5C9UfPfA311npSI+qTeVV3veU
+	 vINHMF2FHveAHt7qWXXPha5EL0DE8gBuVMg7ZKdFAMJl9ERQp1I8txkig671PxQqSB
+	 ARYxkJ5CTbwQLeJe9A5qcMZgRLSgzg0r/FV+EE9XfCqDgP1aUAXG0/3EXxkJQCV9eN
+	 KsTX78SMG8dJdK3+lvWiuhi4DNz1IOhitT3ERABCdj7qrxeorF8wu5MGnhf6+oPLTc
+	 gkWwaLzgbn/ynIFk1v93uwNK6qjg1f4noL6dh5AhQJrGCaGVD7R3V0tgtXiWR58L1P
+	 mchOjcl0kYzqg==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -59,9 +59,9 @@ Cc: linux-rockchip@lists.infradead.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v2 05/18] PCI: endpoint: test: Synchronously cancel command handler work
-Date: Sat, 30 Mar 2024 13:19:15 +0900
-Message-ID: <20240330041928.1555578-6-dlemoal@kernel.org>
+Subject: [PATCH v2 06/18] PCI: endpoint: test: Implement link_down event operation
+Date: Sat, 30 Mar 2024 13:19:16 +0900
+Message-ID: <20240330041928.1555578-7-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240330041928.1555578-1-dlemoal@kernel.org>
 References: <20240330041928.1555578-1-dlemoal@kernel.org>
@@ -73,30 +73,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace the call to cancel_delayed_work() with a call to
-cancel_delayed_work_sync() in pci_epf_test_unbind(). This ensures that
-the command handler is really stopped when proceeding with dma and bar
-cleanup.
+Implement the link_down event operation to stop the command execution
+delayed work when the endpoint controller notifies a link down event.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 0e285e539538..ab40c3182677 100644
+index ab40c3182677..e6d4e1747c9f 100644
 --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -709,7 +709,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
- 	struct pci_epf_bar *epf_bar;
- 	int bar;
+@@ -824,9 +824,19 @@ static int pci_epf_test_link_up(struct pci_epf *epf)
+ 	return 0;
+ }
  
--	cancel_delayed_work(&epf_test->cmd_handler);
++static int pci_epf_test_link_down(struct pci_epf *epf)
++{
++	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
++
 +	cancel_delayed_work_sync(&epf_test->cmd_handler);
- 	pci_epf_test_clean_dma_chan(epf_test);
- 	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
- 		epf_bar = &epf->bar[bar];
++
++	return 0;
++}
++
+ static const struct pci_epc_event_ops pci_epf_test_event_ops = {
+ 	.core_init = pci_epf_test_core_init,
+ 	.link_up = pci_epf_test_link_up,
++	.link_down = pci_epf_test_link_down,
+ };
+ 
+ static int pci_epf_test_alloc_space(struct pci_epf *epf)
 -- 
 2.44.0
 
