@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-5433-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5434-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D26F89293C
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 05:19:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2906892940
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 05:19:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BB3F1C2127B
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 04:19:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04ADAB2251E
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 04:19:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53409B662;
-	Sat, 30 Mar 2024 04:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EFCB2F25;
+	Sat, 30 Mar 2024 04:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ICJPjRGg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NgbRatda"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD478F56;
-	Sat, 30 Mar 2024 04:19:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FB379FE;
+	Sat, 30 Mar 2024 04:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711772377; cv=none; b=bTME2DkVI31SaHbN4VQIaUcFgqGbsqIqETyVwWJe7+QJGebWm/iLTNgn3VPHOTXU9Pc/khA7MpLtXYWNw+mC7ke+hocjLVjmxxbcEF0n/IIxQf4Y5dWSzoOqp3Yq/bI4LtAemofe2/3cposzaRjRlApURvJbeQHSpQ3nytmc9wc=
+	t=1711772381; cv=none; b=Zp99GsYRTK0ntq5SZALd0+L0CmCtXxsFnwTl399zuYzzQ8XM9434Be/VRCZ4RAes8ddMzpIXFzXFFntCX0EOUNUt4G2ShUyuHAJHuZeT9DZcm3oOoFsQb79MX4NHwpF1r4Do4+cyyaLbPN938EKxORW1WFbWiLe+AIl+Kq5yDFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711772377; c=relaxed/simple;
-	bh=PWaeozMIGpKKMKSCRnXNKHlQUzaWsxtzM/PgCIXS/Eg=;
+	s=arc-20240116; t=1711772381; c=relaxed/simple;
+	bh=SbRxx7xRTtT3nznBXshxL4iqyxq35PQ5qfUvq6y785Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tUtuK4D5JmmnItUCUrrFOrLwBrPjVEVQM6WyRpigwQ47EItJyV2k0czYSfESQ41QmGjnF9Xhw5J2RAhlxsP+rnezBw+bdPLUVeMr/QNNmdsS1K3FR/qnceDbNKJGuoF9aCqWzJqOpKPUNopCEDQF2u6XWaNnbjNUkT4ohfW9HyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ICJPjRGg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 984A6C433B1;
-	Sat, 30 Mar 2024 04:19:32 +0000 (UTC)
+	 MIME-Version; b=fNm6vMxUlPthSbSDwUaaaiNE7y/cFObrdCA9Nl3BHGR3jJnFAA6MbczIgu2nq+GM6p9eSxz+nTUDSPMAsLO0DeIiSlcxhYeD7eEGTvkBURZXY6v41b5zv7rXC/2ZkGxfxRI/Xj0rkxix7S1CecPnLhWCnM6y3u1ru8D5gqXROcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NgbRatda; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD449C43399;
+	Sat, 30 Mar 2024 04:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711772375;
-	bh=PWaeozMIGpKKMKSCRnXNKHlQUzaWsxtzM/PgCIXS/Eg=;
+	s=k20201202; t=1711772378;
+	bh=SbRxx7xRTtT3nznBXshxL4iqyxq35PQ5qfUvq6y785Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ICJPjRGgaGJCzWDRXLGghUcGHdRNC78NtVvRihRfIzF+VK1Uoax+3EXyUZbWQCP+5
-	 CeoGWaxcoMB94HX2JhQLx+DxdL2NBLBw8wL4RCgSKKknSLHQZT7sFRoWTrHFVV9340
-	 zn7o4xAFJtY2IkJBJ7xmHgKnoflWlNv2PF3mPmXXaVZD8jWvkygQllDoJrYBUFDaZ1
-	 hl46JZ0BjaAIg3L7+kZo8UzGTfWXuved3q6vp+D8jAO31Gz7UvhMAKo01Ubmog/WD4
-	 Q3d5enzWlXuBYRwO3noz7aV4DU3Xs6NmJiZIgoFRtaax0ZtDDIg1xoNMUc8RBi8NZD
-	 ZzEDG9aQf5I5g==
+	b=NgbRatdaGfK+oHZh7Yh/t8NRyGHi/ZDVZ7mq/bd2Pe9cfOKURaDGyryN2uU7TwgSn
+	 DkU2OMyWJiRAajDKQP/VjsqprfBn39ixtSd4w7jEIa9HSI+yqIqgbj3qFF/Yu59V+U
+	 j7dbXjgmT+DnoMNkyq8hCNavotW0vgtsysbQtpl8gHdVqeljP8Va259oHvQFRY7qUG
+	 050bvmv8py4DX5EIUuTogl7czRrnQXhah5sEZbIlpMbH/4RbpcVhX+QmvuNEIGXBXH
+	 doxGx0dMe2wJVkyCGxtNI4lwAIR1K1ZKgXA9scQQzejaXhOlHs/qmUcPD2cnB9X0BQ
+	 pNRwaui1ljOrA==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -59,9 +59,9 @@ Cc: linux-rockchip@lists.infradead.org,
 	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
 	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH v2 01/18] PCI: endpoint: Introduce pci_epc_function_is_valid()
-Date: Sat, 30 Mar 2024 13:19:11 +0900
-Message-ID: <20240330041928.1555578-2-dlemoal@kernel.org>
+Subject: [PATCH v2 02/18] PCI: endpoint: Introduce pci_epc_map_align()
+Date: Sat, 30 Mar 2024 13:19:12 +0900
+Message-ID: <20240330041928.1555578-3-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240330041928.1555578-1-dlemoal@kernel.org>
 References: <20240330041928.1555578-1-dlemoal@kernel.org>
@@ -73,209 +73,197 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the epc core helper function pci_epc_function_is_valid() to
-verify that an epc pointer, a physical function number and a virtual
-function number are all valid. This avoids repeating the code pattern:
+Some endpoint controllers have requirements on the alignment of the
+controller physical memory address that must be used to map a RC PCI
+address region. For instance, the rockchip endpoint controller uses
+at most the lower 20 bits of a physical memory address region as the
+lower bits of an RC PCI address. For mapping a PCI address region of
+size bytes starting from pci_addr, the exact number of address bits
+used is the number of address bits changing in the address range
+[pci_addr..pci_addr + size - 1].
 
-if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-	return err;
+For this example, this creates the following constraints:
+1) The offset into the controller physical memory allocated for a
+   mapping depends on the mapping size *and* the starting PCI address
+   for the mapping.
+2) A mapping size cannot exceed the controller windows size (1MB) minus
+   the offset needed into the allocated physical memory, which can end
+   up being a smaller size than the desired mapping size.
 
-if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-	return err;
+Handling these constraints independently of the controller being used in
+a PCI EP function driver is not possible with the current EPC API as
+it only provides the ->align field in struct pci_epc_features.
+Furthermore, this alignment is static and does not depend on a mapping
+pci address and size.
 
-in many functions of the endpoint controller core code.
+Solve this by introducing the function pci_epc_map_align() and the
+endpoint controller operation ->map_align to allow endpoint function
+drivers to obtain the size and the offset into a controller address
+region that must be used to map an RC PCI address region. The size
+of the physical address region provided by pci_epc_map_align() can then
+be used as the size argument for the function pci_epc_mem_alloc_addr().
+The offset into the allocated controller memory can be used to
+correctly handle data transfers. Of note is that pci_epc_map_align() may
+indicate upon return a mapping size that is smaller (but not 0) than the
+requested PCI address region size. For such case, an endpoint function
+driver must handle data transfers in fragments.
+
+The controller operation ->map_align is optional: controllers that do
+not have any address alignment constraints for mapping a RC PCI address
+region do not need to implement this operation. For such controllers,
+pci_epc_map_align() always returns the mapping size as equal
+to the requested size and an offset equal to 0.
+
+The structure pci_epc_map is introduced to represent a mapping start PCI
+address, size and the size and offset into the controller memory needed
+for mapping the PCI address region.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 79 +++++++++++------------------
- 1 file changed, 31 insertions(+), 48 deletions(-)
+ drivers/pci/endpoint/pci-epc-core.c | 66 +++++++++++++++++++++++++++++
+ include/linux/pci-epc.h             | 33 +++++++++++++++
+ 2 files changed, 99 insertions(+)
 
 diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index da3fc0795b0b..754afd115bbd 100644
+index 754afd115bbd..37758ca91d7f 100644
 --- a/drivers/pci/endpoint/pci-epc-core.c
 +++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -126,6 +126,18 @@ enum pci_barno pci_epc_get_next_free_bar(const struct pci_epc_features
+@@ -433,6 +433,72 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
  }
- EXPORT_SYMBOL_GPL(pci_epc_get_next_free_bar);
+ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
  
-+static inline bool pci_epc_function_is_valid(struct pci_epc *epc,
-+					     u8 func_no, u8 vfunc_no)
++/**
++ * pci_epc_map_align() - Get the offset into and the size of a controller memory
++ *			 address region needed to map a RC PCI address region
++ * @epc: the EPC device on which address is allocated
++ * @func_no: the physical endpoint function number in the EPC device
++ * @vfunc_no: the virtual endpoint function number in the physical function
++ * @pci_addr: PCI address to which the physical address should be mapped
++ * @size: the size of the mapping starting from @pci_addr
++ * @map: populate here the actual size and offset into the controller memory
++ *       that must be allocated for the mapping
++ *
++ * Invoke the controller map_align operation to obtain the size and the offset
++ * into a controller address region that must be allocated to map @size
++ * bytes of the RC PCI address space starting from @pci_addr.
++ *
++ * The size of the mapping that can be handled by the controller is indicated
++ * using the pci_size field of @map. This size may be smaller than the requested
++ * @size. In such case, the function driver must handle the mapping using
++ * several fragments. The offset into the controller memory for the effective
++ * mapping of the @pci_addr..@pci_addr+@map->pci_size address range is indicated
++ * using the map_ofst field of @map.
++ */
++int pci_epc_map_align(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++		      u64 pci_addr, size_t size, struct pci_epc_map *map)
 +{
-+	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-+		return false;
++	const struct pci_epc_features *features;
++	size_t mask;
++	int ret;
 +
-+	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  * pci_epc_get_features() - get the features supported by EPC
-  * @epc: the features supported by *this* EPC device will be returned
-@@ -143,10 +155,7 @@ const struct pci_epc_features *pci_epc_get_features(struct pci_epc *epc,
- {
- 	const struct pci_epc_features *epc_features;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return NULL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return NULL;
- 
- 	if (!epc->ops->get_features)
-@@ -216,10 +225,7 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	if (!epc->ops->raise_irq)
-@@ -260,10 +266,7 @@ int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc))
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	if (!epc->ops->map_msi_irq)
-@@ -291,10 +294,7 @@ int pci_epc_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
- {
- 	int interrupt;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return 0;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return 0;
- 
- 	if (!epc->ops->get_msi)
-@@ -327,11 +327,10 @@ int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no, u8 interrupts)
- 	int ret;
- 	u8 encode_int;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    interrupts < 1 || interrupts > 32)
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (interrupts < 1 || interrupts > 32)
- 		return -EINVAL;
- 
- 	if (!epc->ops->set_msi)
-@@ -359,10 +358,7 @@ int pci_epc_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
- {
- 	int interrupt;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return 0;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return 0;
- 
- 	if (!epc->ops->get_msix)
-@@ -395,11 +391,10 @@ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    interrupts < 1 || interrupts > 2048)
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (interrupts < 1 || interrupts > 2048)
- 		return -EINVAL;
- 
- 	if (!epc->ops->set_msix)
-@@ -426,10 +421,7 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
- void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 			phys_addr_t phys_addr)
- {
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return;
- 
- 	if (!epc->ops->unmap_addr)
-@@ -457,10 +449,7 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	if (!epc->ops->map_addr)
-@@ -487,12 +476,11 @@ EXPORT_SYMBOL_GPL(pci_epc_map_addr);
- void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 		       struct pci_epf_bar *epf_bar)
- {
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    (epf_bar->barno == BAR_5 &&
--	     epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return;
- 
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (epf_bar->barno == BAR_5 &&
-+	    epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
- 		return;
- 
- 	if (!epc->ops->clear_bar)
-@@ -519,18 +507,16 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	int ret;
- 	int flags = epf_bar->flags;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions ||
--	    (epf_bar->barno == BAR_5 &&
--	     flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
 +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
 +		return -EINVAL;
 +
-+	if ((epf_bar->barno == BAR_5 && flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ||
- 	    (flags & PCI_BASE_ADDRESS_SPACE_IO &&
- 	     flags & PCI_BASE_ADDRESS_IO_MASK) ||
- 	    (upper_32_bits(epf_bar->size) &&
- 	     !(flags & PCI_BASE_ADDRESS_MEM_TYPE_64)))
- 		return -EINVAL;
++	if (!size || !map)
++		return -EINVAL;
++
++	memset(map, 0, sizeof(*map));
++	map->pci_addr = pci_addr;
++	map->pci_size = size;
++
++	if (epc->ops->map_align) {
++		mutex_lock(&epc->lock);
++		ret = epc->ops->map_align(epc, func_no, vfunc_no, map);
++		mutex_unlock(&epc->lock);
++		return ret;
++	}
++
++	/*
++	 * Assume a fixed alignment constraint as specified by the controller
++	 * features.
++	 */
++	features = pci_epc_get_features(epc, func_no, vfunc_no);
++	if (!features || !features->align) {
++		map->map_pci_addr = pci_addr;
++		map->map_size = size;
++		map->map_ofst = 0;
++	}
++
++	mask = features->align - 1;
++	map->map_pci_addr = map->pci_addr & ~mask;
++	map->map_ofst = map->pci_addr & mask;
++	map->map_size = ALIGN(map->map_ofst + map->pci_size, features->align);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pci_epc_map_align);
++
+ /**
+  * pci_epc_map_addr() - map CPU address to PCI address
+  * @epc: the EPC device on which address is allocated
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index cc2f70d061c8..8cfb4aaf2628 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -32,11 +32,40 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
+ 	}
+ }
  
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
--		return -EINVAL;
--
- 	if (!epc->ops->set_bar)
- 		return 0;
- 
-@@ -559,10 +545,7 @@ int pci_epc_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- {
- 	int ret;
- 
--	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
--		return -EINVAL;
--
--	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-+	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
- 		return -EINVAL;
- 
- 	/* Only Virtual Function #1 has deviceID */
++/**
++ * struct pci_epc_map - information about EPC memory for mapping a RC PCI
++ *                      address range
++ * @pci_addr: start address of the RC PCI address range to map
++ * @pci_size: size of the RC PCI address range to map
++ * @map_pci_addr: RC PCI address used as the first address mapped
++ * @map_size: size of the controller memory needed for the mapping
++ * @map_ofst: offset into the controller memory needed for the mapping
++ * @phys_base: base physical address of the allocated EPC memory
++ * @phys_addr: physical address at which @pci_addr is mapped
++ * @virt_base: base virtual address of the allocated EPC memory
++ * @virt_addr: virtual address at which @pci_addr is mapped
++ */
++struct pci_epc_map {
++	phys_addr_t	pci_addr;
++	size_t		pci_size;
++
++	phys_addr_t	map_pci_addr;
++	size_t		map_size;
++	phys_addr_t	map_ofst;
++
++	phys_addr_t	phys_base;
++	phys_addr_t	phys_addr;
++	void __iomem	*virt_base;
++	void __iomem	*virt_addr;
++};
++
+ /**
+  * struct pci_epc_ops - set of function pointers for performing EPC operations
+  * @write_header: ops to populate configuration space header
+  * @set_bar: ops to configure the BAR
+  * @clear_bar: ops to reset the BAR
++ * @map_align: operation to get the size and offset into a controller memory
++ *             window needed to map an RC PCI address region
+  * @map_addr: ops to map CPU address to PCI address
+  * @unmap_addr: ops to unmap CPU address and PCI address
+  * @set_msi: ops to set the requested number of MSI interrupts in the MSI
+@@ -61,6 +90,8 @@ struct pci_epc_ops {
+ 			   struct pci_epf_bar *epf_bar);
+ 	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 			     struct pci_epf_bar *epf_bar);
++	int	(*map_align)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++			    struct pci_epc_map *map);
+ 	int	(*map_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 			    phys_addr_t addr, u64 pci_addr, size_t size);
+ 	void	(*unmap_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+@@ -234,6 +265,8 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		    struct pci_epf_bar *epf_bar);
+ void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		       struct pci_epf_bar *epf_bar);
++int pci_epc_map_align(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++		      u64 pci_addr, size_t size, struct pci_epc_map *map);
+ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		     phys_addr_t phys_addr,
+ 		     u64 pci_addr, size_t size);
 -- 
 2.44.0
 
