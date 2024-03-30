@@ -1,141 +1,185 @@
-Return-Path: <linux-pci+bounces-5452-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5453-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C277C892A55
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 11:14:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6079E892A6E
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 11:32:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60429B21D2D
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 10:14:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 91A511C2094F
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Mar 2024 10:32:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 960F8171B0;
-	Sat, 30 Mar 2024 10:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 761D31C0DE5;
+	Sat, 30 Mar 2024 10:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="dgf4SOTj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TuNxGilP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5EDB67F;
-	Sat, 30 Mar 2024 10:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3473A1C0DD6
+	for <linux-pci@vger.kernel.org>; Sat, 30 Mar 2024 10:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711793663; cv=none; b=csdI/Z3+UjHhtwK+J4v0EgTSRwcVl1o+9WPXq5d9bGrPTNABGak4dS3YF0TDMaPpjx3luRNAy9WtAeYfwjyUqEuYHcspILX65DlzjiHuc/NOf2BAffyKbBSvgEhEgQshPUmVEMglKQFOfeQDIBmLpSDCI+mJS22/5SqkybI0IBA=
+	t=1711794753; cv=none; b=eRi5uLsR86zwJVy5g7XtzWSSvPrjFf8mfTjtr581iaRo0K3lpb3dvVECrKHILHLLk6njkmiRCI2q5gq3v1lzRDwmQIqh9Lm6BkJL6FHT03j/5Ehhuapnionp0qbuQZnNIHn9Louqlu5GIJHwta3/6UbdXGfWZXdjHPRQF3JZPCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711793663; c=relaxed/simple;
-	bh=YtQ2ax9Ae5sMRC6JoihMdusDlRlfsEbpRvytIGtk9ps=;
-	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=YO7BgaB1RCWUxmCHEC6hvOW55sYabFydFCI9g4a49QW8GCBnQC1ePH2zn1iYFVcGbf33BlulVW+S4yo5T32pB1ZDf/rlSqlo7Tf0OXUNMp84bjyjgth9mkLellxCWNEmyTjcGrsUilLvfFuTn0QZZsbTt55fz8DbV3NB76fLXfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=dgf4SOTj; arc=none smtp.client-ip=185.70.43.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1711793651; x=1712052851;
-	bh=0knzfQfMaLa+thbpbFS7QbzPqAlwcHi6glSRC2JkZjQ=;
-	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=dgf4SOTjV4L90VBXGCrShg9WhInL4mliVEIXpFQUHiYDFMNHrXlzOqSdK5ginRdVY
-	 cm20DqSgFQRYq0EVPJ9rNd1jrrBm3ReJz6YoiasdLkkz7S6MeLqeOkiPZt/jJIkGlh
-	 SqKGsLN8k5L78JdvHtRMVbtTty26RunJ1VYHRHyg6idSdoZ1A7qfWQwOAbpzCozTZf
-	 T8yldfGprl4C8wOJ7r+24/YDjLLqYEcUpDMywvo4uh+ycr9IVlDGGi/bKzgP/zKAY2
-	 2j74/YpKW9fhf6W88Iz4jMJLOCxCIo2tK/uR11LDKJxLJDyCVXbkC455WFe1XFzkjH
-	 ybfnrs4Y4THjw==
-Date: Sat, 30 Mar 2024 10:14:06 +0000
-To: helgaas@kernel.org, o-takashi@sakamocchi.jp, alex.williamson@redhat.com, linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-From: "edmund.raile" <edmund.raile@proton.me>
-Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <nmmp42qhsajsxs2inzpmir7k7goeqlm36tfbjhvzuu4uevdcyu@zpatg2zmwd2b>
-Feedback-ID: 45198251:user:proton
+	s=arc-20240116; t=1711794753; c=relaxed/simple;
+	bh=XtM/Gfmk+g0ebxAIgyQGRPZgpW6mCp/0GRoMXkTZgn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CKWUF8vCT6Furu8XonvQ7/EJFWYiWORHgTDM2XOplLx26EcKtVgtT3VzANgFfLJiye4blNPgBzUFMqCgfu2o4NOhtvzWHqelxjKqhabnmD9YSwze7PMBKWcQQEUa6Hxf7YlpW+0kq+lp+4I/o88jlGOrHWm0D//YXol5lQwRK8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TuNxGilP; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711794751; x=1743330751;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XtM/Gfmk+g0ebxAIgyQGRPZgpW6mCp/0GRoMXkTZgn4=;
+  b=TuNxGilPsvhm7QBzRRTgRDMV+vhRs0RHm+sg0fJS2Y4PQV5Fq26+pcyU
+   2rR8DruXYiE846A66Bf2GrafdA366d7gXOcbK0fkuK0XVoDMvYjbRLvBJ
+   J7JEUmhjynZkkUSKlc1ulrspWcdyKq56Fd7aZ6UPPK1OO5Fx/zkUHKEDs
+   HB9AR/oI5pco7kOHGtctIkWPRpiVAvnmex19J6lfUrD5ZFCsbd2ZoYhCH
+   zp2bLYPOIBOAOHFF0F+Mxju67SLNEy7sI28vzPNGOsm5SQFnX3DjQ1qf1
+   H9sPjMjyiYmOZj++TFNqJ0TZilIXcPmjgMKgHxBo6NqMWK4KPJoPc9hDL
+   g==;
+X-CSE-ConnectionGUID: u6Kx1W+OT3iGn6N2XQub9g==
+X-CSE-MsgGUID: YcXY+RRMRxurn+COVXeWZA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="18117913"
+X-IronPort-AV: E=Sophos;i="6.07,166,1708416000"; 
+   d="scan'208";a="18117913"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2024 03:32:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,166,1708416000"; 
+   d="scan'208";a="21871653"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 30 Mar 2024 03:32:27 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rqW0f-0004AM-1U;
+	Sat, 30 Mar 2024 10:32:25 +0000
+Date: Sat, 30 Mar 2024 18:31:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Damien Le Moal <dlemoal@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 19/19] PCI: rockchip-ep: Handle PERST signal in endpoint
+ mode
+Message-ID: <202403301809.VzsJsDFL-lkp@intel.com>
+References: <20240329090945.1097609-20-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240329090945.1097609-20-dlemoal@kernel.org>
 
-> Please mind that current software stack to operate your device does not
-> support this kind of operation, as I've already sent to you several times=
-.
-> Users should cancel any type of communication on IEEE 1394 bus, then
-> unplug devices from the bus (or power them off), finally operate
-> suspending.
+Hi Damien,
 
-Yes I know, that's what I meant by it having "good cause to produce a trace=
-".
-I only meant ot demonstrate that sudo for tee is not potent enough here, wh=
-ich might also
-be a reason why you get no kernel message.
-I'm assuming the unbind indeed produces no kernel trace for you.
-su -c 'echo -n "0000:03:00.0" > /sys/bus/pci/drivers/firewire_ohci/unbind'
+kernel test robot noticed the following build errors:
 
-> The power management method Apple uses to cut power to the FireWire
-> controller, Thunderbolt controller and discrete GPU is nonstandard.
-I sincerely hope any implementation for Apple PCs wouldn't hinder normal
-operation of FW643 add-in-cards.
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.9-rc1 next-20240328]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> In the meantime, or maybe as a permanent solution, Edmund can make use
-> of the reset_method interface in pci-syfs to restrict the available
-> reset methods for the device rather than risk removing a reset
-> mechanism identified as working by other users.=20
+url:    https://github.com/intel-lab-lkp/linux/commits/Damien-Le-Moal/PCI-endpoint-Introduce-pci_epc_check_func/20240329-171158
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240329090945.1097609-20-dlemoal%40kernel.org
+patch subject: [PATCH 19/19] PCI: rockchip-ep: Handle PERST signal in endpoint mode
+config: i386-buildonly-randconfig-005-20240330 (https://download.01.org/0day-ci/archive/20240330/202403301809.VzsJsDFL-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240330/202403301809.VzsJsDFL-lkp@intel.com/reproduce)
 
-> Revert 29a43dc130ce until we figure out a better solution.  In the
-> meantime, we can use the sysfs "reset_method" interface to restrict the
-> available reset methods.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403301809.VzsJsDFL-lkp@intel.com/
 
-I tried your suggestion:
-Instead of the patch:
-DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5901, quirk_no_bus_reset);
-To avoid bus reset, as root, I ran:
-echo -n "pm"> /sys/devices/pci0000:00/0000:00:1c.1/0000:03:00.0/reset_metho=
-d
-Which reduced reset_methods from 'pm bus' to just 'pm', according to
-cat /sys/devices/pci0000:00/0000:00:1c.1/0000:03:00.0/reset_method
+All errors (new ones prefixed by >>):
 
-Then to bind the FW643 to vfio-pci:
-echo -n "fw1.0" > /sys/bus/firewire/drivers/snd_fireface/unbind
-echo -n "0000:03:00.0" > /sys/bus/pci/drivers/firewire_ohci/unbind
-At this point, no kernel message, so I assume unbind worked fine!
+>> drivers/pci/controller/pcie-rockchip-ep.c:633:2: error: call to undeclared function 'irq_set_irq_type'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     633 |         irq_set_irq_type(ep->perst_irq,
+         |         ^
+   drivers/pci/controller/pcie-rockchip-ep.c:633:2: note: did you mean 'irq_set_irq_wake'?
+   include/linux/interrupt.h:482:12: note: 'irq_set_irq_wake' declared here
+     482 | extern int irq_set_irq_wake(unsigned int irq, unsigned int on);
+         |            ^
+>> drivers/pci/controller/pcie-rockchip-ep.c:657:2: error: call to undeclared function 'irq_set_status_flags'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     657 |         irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
+         |         ^
+>> drivers/pci/controller/pcie-rockchip-ep.c:657:38: error: use of undeclared identifier 'IRQ_NOAUTOEN'
+     657 |         irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
+         |                                             ^
+   3 errors generated.
 
-modprobe vfio_pci
-modprobe vfio_iommu_type1
-modprobe vfio_pci
-then strangely binding to vfio-pci returned an error
-echo -n "0000:03:00.0" > /sys/bus/pci/drivers/firewire_ohci/bind
-echo: write error: no matching device found.
-so I used
-echo 11c1 5901 > /sys/bus/pci/drivers/vfio-pci/new_id
 
-Finally running qemu with '-device vfio-pci,host=3D03:00.0' produces these =
-kernel messages:
-pcieport 0000:00:1c.1: broken device, retraining non-functional downstream =
-link at 2.5GT/s
-pcieport 0000:00:1c.1: retraining failed
-pcieport 0000:00:1c.1: broken device, retraining non-functional downstream =
-link at 2.5GT/s
-pcieport 0000:00:1c.1: retraining failed
-vfio-pci 0000:03:00.0: not ready 1023ms after bus reset; waiting
-vfio-pci 0000:03:00.0: not ready 2047ms after bus reset; waiting
-vfio-pci 0000:03:00.0: not ready 4095ms after bus reset; waiting
-vfio-pci 0000:03:00.0: not ready 8191ms after bus reset; waiting
-vfio-pci 0000:03:00.0: not ready 16383ms after bus reset; waiting
-vfio-pci 0000:03:00.0: not ready 32767ms after bus reset; waiting
-vfio-pci 0000:03:00.0: not ready 65535ms after bus reset; giving up
-twice, then:
-vfio-pci 0000:03:00.0: Unable to change power state from D0 to D3hot, devic=
-e inaccessible
-vfio-pci 0000:03:00.0: Unable to change power state from D3cold to D0, devi=
-ce inaccessible
+vim +/irq_set_irq_type +633 drivers/pci/controller/pcie-rockchip-ep.c
 
-So the quirk_no_bus_reset does more than just setting reset_method manually=
-.
+   620	
+   621	static irqreturn_t rockchip_pcie_ep_perst_irq_thread(int irq, void *data)
+   622	{
+   623		struct pci_epc *epc = data;
+   624		struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+   625		struct rockchip_pcie *rockchip = &ep->rockchip;
+   626		u32 perst = gpiod_get_value(rockchip->ep_gpio);
+   627	
+   628		if (perst)
+   629			rockchip_pcie_ep_perst_assert(ep);
+   630		else
+   631			rockchip_pcie_ep_perst_deassert(ep);
+   632	
+ > 633		irq_set_irq_type(ep->perst_irq,
+   634				 (perst ? IRQF_TRIGGER_HIGH : IRQF_TRIGGER_LOW));
+   635	
+   636		return IRQ_HANDLED;
+   637	}
+   638	
+   639	static int rockchip_pcie_ep_setup_irq(struct pci_epc *epc)
+   640	{
+   641		struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+   642		struct rockchip_pcie *rockchip = &ep->rockchip;
+   643		struct device *dev = rockchip->dev;
+   644		int ret;
+   645	
+   646		if (!rockchip->ep_gpio)
+   647			return 0;
+   648	
+   649		/* PCIe reset interrupt */
+   650		ep->perst_irq = gpiod_to_irq(rockchip->ep_gpio);
+   651		if (ep->perst_irq < 0) {
+   652			dev_err(dev, "No corresponding IRQ for PERST GPIO\n");
+   653			return ep->perst_irq;
+   654		}
+   655	
+   656		ep->perst_asserted = true;
+ > 657		irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
+   658		ret = devm_request_threaded_irq(dev, ep->perst_irq, NULL,
+   659						rockchip_pcie_ep_perst_irq_thread,
+   660						IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+   661						"pcie-ep-perst", epc);
+   662		if (ret) {
+   663			dev_err(dev, "Request PERST GPIO IRQ failed %d\n", ret);
+   664			return ret;
+   665		}
+   666	
+   667		return 0;
+   668	}
+   669	
 
-So how can I use it then?
-
-Zooming out, might this not be a general issue with bus reset not working o=
-n Z690?
-Who do I turn to?
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
