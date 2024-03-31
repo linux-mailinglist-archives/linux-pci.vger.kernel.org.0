@@ -1,147 +1,123 @@
-Return-Path: <linux-pci+bounces-5460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86B2B89359F
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Mar 2024 21:34:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33EB989365D
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Apr 2024 01:06:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44FEF1F219EF
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Mar 2024 19:34:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EBE21F21C9F
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Mar 2024 23:06:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9BD146D7A;
-	Sun, 31 Mar 2024 19:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E715B148306;
+	Sun, 31 Mar 2024 23:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="A4ZcmH2V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gw6sdMmc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D858146D67
-	for <linux-pci@vger.kernel.org>; Sun, 31 Mar 2024 19:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFEB26AEA;
+	Sun, 31 Mar 2024 23:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711913686; cv=none; b=ANr4LBOMjau/0jUwn/GpfylMqkL+s/BF5vtqkf7yn1QbMJCo15fgUkX7ryxXsLpdJPJWXGd/20QEbMQJlUvE1kQwx2K0WIBTfTZ40ksVoJdfkOftjH1sjCVLmdhiXaZs66hpyIuqyaIa45v7aGOkkGJ2+h4iiOgXoxGfW+SNKcc=
+	t=1711926381; cv=none; b=dWrqfaA3rxXTQCo7QZfOFQltNNatHVcrmT6JT+da9fn3vp7WirgzOu38qLE8bWqPZU9Zn3opghPzFtlTZKh+IypsFr9OIHjbeLt1Yu8QtQragn6J11KwIFMEuTFRskYRcnBqyrEnCfaVaj5XRP8Y/fi8uPDNLX17RhxPki6knsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711913686; c=relaxed/simple;
-	bh=zhrQ6MyQy59/WuLAjO22xJzJvPfwcyANzVPSisWYHKI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=nONuV4AZP0R26RsitxXgBVtLxL9+kzQJOR8UZL+z3o/PZ9Jt2a318AL+s/kdcoD18sD3p9d7hOb+r8sdrkD8paO86fHxF1hGaI2i4fo+G5mrHRKU17Gvdmp1HxCMwRRscWuTOdi+CrlLAQ27+aSesPX8dhx7Vubp+7dWkr7HhDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=A4ZcmH2V; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1711926381; c=relaxed/simple;
+	bh=14qIqX8MDo3yXNFpqBzy/00s9TGjAWt6G7ERHC7x30A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LEkZQOIZvVYdz9iqlRPM3VGgfye3jvHfwBgzsdFOGg/PyJRR/e/bLAgHw4O4aPttCazfRkhwUJ2YE06aqbB5v2+Rl0Ijpvvm68lpuGIzyBKTXi4jA3ImIalEBN449a6QAblw+KJhRFmCUZ5IyPxi9De09bTWwQHMDiptzo9rERw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gw6sdMmc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC358C433F1;
+	Sun, 31 Mar 2024 23:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711926381;
+	bh=14qIqX8MDo3yXNFpqBzy/00s9TGjAWt6G7ERHC7x30A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gw6sdMmccfg6fv2rsBdDfRpSG7EMGTTmkv9GV0mfGfq78EG0Qa3zFW+rJUZzSqm/1
+	 9rw6aVYZcX3zsaWf+T8zHt+KIJdjHHYF+3GyTxnvmPCDqh8zutCL1T5XgVQX8sf8Ub
+	 XCLjmRv0WFLzmR5UfSYpKO6zco0y/AHJCjO71mC+f9PpTO5gqM/B2OmeCNYooRVxo9
+	 2mKSG0zoKqfErDvmrGPb305oT3IpOq+xTMdWPERY6pzWuFMWaE5sXg9Bo7xIRiphe7
+	 ddcRd9uXmkpF6sUoIMIgiNFlwRzX4TbqA6IWQNgGTC8Bl/Jgmi+8lfUjtYJAAmr2Et
+	 fItqbas/oQN0g==
+Message-ID: <c75cb54a-61c7-4bc3-978e-8a28dde93b08@kernel.org>
+Date: Mon, 1 Apr 2024 08:06:17 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1711913682;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t6Yrm2TEKB8mxEWaCaPBLV4zJHwlikBx3tCoJxDGcRs=;
-	b=A4ZcmH2V1Wx+hrnRjvCuttpggRP8JQh4k/CJWnEaIflJmQ4Ykr0sxPVHDJWu6F8lrpTKSl
-	dHoFPhacrJvK83ZVI4IBC5vNSTuxD7cd8MhPCSgFFM5KQiJu7V8lmxkLGO5Oe8fUYsX/LY
-	JHJyGJQL7RF0czrSCDK3mjn0IqPU6SKJ2FNAT0ALmVs/QvxjvplEFPJbvgPrr/430HFk7M
-	7yuaNyW85GVwU2GIMOUww1OI/uDUOO/8hEyW2sOr7zI6ClSrIxLyYvJyDW1Jvw7S0lKU4J
-	vFyj2tTfR6Bn0OWhQfIplrKpPRPnBQSVrcNsbrGQ7jXj8PewbzURydd6bBORaw==
-Date: Sun, 31 Mar 2024 21:34:42 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: rockchip-host: Fix rockchip_pcie_host_init_port()
- PERST# handling
-In-Reply-To: <20240330035043.1546087-1-dlemoal@kernel.org>
-References: <20240330035043.1546087-1-dlemoal@kernel.org>
-Message-ID: <d1ed4a0bf702d9927d4e9279f19bcf7b@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 17/18] dt-bindings: pci: rockchip,rk3399-pcie-ep: Add
+ ep-gpios property
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>, Niklas Cassel <cassel@kernel.org>
+References: <20240330041928.1555578-1-dlemoal@kernel.org>
+ <20240330041928.1555578-18-dlemoal@kernel.org>
+ <b020b74e-8ae1-448a-9d47-6c9bb13735f9@linaro.org>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <b020b74e-8ae1-448a-9d47-6c9bb13735f9@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hello Damien,
+On 3/30/24 18:16, Krzysztof Kozlowski wrote:
+> On 30/03/2024 05:19, Damien Le Moal wrote:
+>> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+>>
+>> Describe the `ep-gpios` property which is used to map the PERST# input
+>> signal for endpoint mode.
+>>
+>> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+>> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+>> ---
+>>  .../devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml       | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+>> index 6b62f6f58efe..9331d44d6963 100644
+>> --- a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+>> @@ -30,6 +30,9 @@ properties:
+>>      maximum: 32
+>>      default: 32
+>>  
+>> +  ep-gpios:
+>> +    description: Input GPIO configured for the PERST# signal.
+> 
+> Missing maxItems. But more important: why existing property perst-gpios,
+> which you already have there in common schema, is not correct for this case?
 
-Please see my comments below.
+I am confused... Where do you find perst-gpios defined for the rk3399 ?
+Under Documentation/devicetree/bindings/pci/, the only schema I see using
+perst-gpios property are for the qcom (Qualcomm) controllers.
+The RC bindings for the rockchip rk3399 PCIe controller
+(pci/rockchip,rk3399-pcie.yaml) already define the ep-gpios property. So if
+anything, this patch should be probably be modified to move this property to the
+common schema in pci/rockchip,rk3399-pcie-common.yaml.
+No ?
 
-On 2024-03-30 04:50, Damien Le Moal wrote:
-> The PCIe specifications (PCI Express Electromechanical Specification 
-> rev
-> 2.0, section 2.6.2) mandate that the PERST# signal must remain asserted
-> for at least 100 usec (Tperst-clk) after the PCIe reference clock
-> becomes stable (if a reference clock is supplied), for at least 100 
-> msec
-> after the power is stable (Tpvperl).
 > 
-> In addition, the PCI Express Base SPecification Rev 2.0, section 6.6.1
-> state that the host should wait for at least 100 msec from the end of a
-> conventional reset (PERST# is de-asserted) before accessing the
-> configuration space of the attached device.
+> Best regards,
+> Krzysztof
 > 
-> Modify rockchip_pcie_host_init_port() by adding two 100ms sleep, one
-> before and after bringing back PESRT signal to high using the ep_gpio
-> GPIO. Comments are also added to clarify this behavior.
-> 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
-> 
-> Changes from v1:
->  - Add more specification details to the commit message.
->  - Add missing msleep(100) after PERST# is deasserted.
-> 
->  drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c
-> b/drivers/pci/controller/pcie-rockchip-host.c
-> index 300b9dc85ecc..ff2fa27bd883 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -294,6 +294,7 @@ static int rockchip_pcie_host_init_port(struct
-> rockchip_pcie *rockchip)
->  	int err, i = MAX_LANE_NUM;
->  	u32 status;
-> 
-> +	/* Assert PERST */
->  	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
-> 
->  	err = rockchip_pcie_init_port(rockchip);
-> @@ -322,8 +323,19 @@ static int rockchip_pcie_host_init_port(struct
-> rockchip_pcie *rockchip)
->  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
->  			    PCIE_CLIENT_CONFIG);
-> 
-> +	/*
-> +	 * PCIe CME specifications mandate that PERST be asserted for at
-> +	 * least 100ms after power is stable.
-> +	 */
-> +	msleep(100);
 
-Perhaps it would be slightly better to use usleep_range()
-instead of msleep().
+-- 
+Damien Le Moal
+Western Digital Research
 
->  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
-> 
-> +	/*
-> +	 * PCIe base specifications rev 2.0 mandate that the host wait for
-> +	 * 100ms after completion of a conventional reset.
-> +	 */
-> +	msleep(100);
-
-Obviously, the same comment as above applies here.
-
-> +
->  	/* 500ms timeout value should be enough for Gen1/2 training */
->  	err = readl_poll_timeout(rockchip->apb_base + 
-> PCIE_CLIENT_BASIC_STATUS1,
->  				 status, PCIE_LINK_UP(status), 20,
 
