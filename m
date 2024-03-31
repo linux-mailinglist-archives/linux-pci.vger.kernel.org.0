@@ -1,185 +1,147 @@
-Return-Path: <linux-pci+bounces-5459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5460-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D1E7892EB0
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Mar 2024 07:41:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86B2B89359F
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Mar 2024 21:34:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51B67B20D5A
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Mar 2024 05:41:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44FEF1F219EF
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Mar 2024 19:34:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE8E22F3B;
-	Sun, 31 Mar 2024 05:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9BD146D7A;
+	Sun, 31 Mar 2024 19:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fauTo1Qe"
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="A4ZcmH2V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F6679CC
-	for <linux-pci@vger.kernel.org>; Sun, 31 Mar 2024 05:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D858146D67
+	for <linux-pci@vger.kernel.org>; Sun, 31 Mar 2024 19:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711863682; cv=none; b=NAF3jqzHp6mXQev8DPOAzikD2aMJF+18oTd7xFvx+GvbGFb5w5b/xkNkGzJtElQ5e4zRgVwEsrcT2UIsdFRHARCghcP8PSzCBMku0NrpldDYaT/1v0ajVu9Paj//82vok+4K6RD8HKWiD9FEtT0rb6FdfP9a76E8NtHn+i2So/U=
+	t=1711913686; cv=none; b=ANr4LBOMjau/0jUwn/GpfylMqkL+s/BF5vtqkf7yn1QbMJCo15fgUkX7ryxXsLpdJPJWXGd/20QEbMQJlUvE1kQwx2K0WIBTfTZ40ksVoJdfkOftjH1sjCVLmdhiXaZs66hpyIuqyaIa45v7aGOkkGJ2+h4iiOgXoxGfW+SNKcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711863682; c=relaxed/simple;
-	bh=rgBxQWb018sUA1O77Ck6hkUHlAofNm8E+53lqjOtZa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mk+r0ZEc5hFNO9XMGYQZAW6ww4OcDQo08NnBwBx/IvaRH/YFnWquAx4SFFCGiqrvcfAuPRgcYCT1+vKCyv5X2fqe/LP3Z+iJpicsCALLJiQ9Fmj7c9VHq/o7zoWeT/pfVK+opv1yYhxy5aLisI0vk5yTCVkuDoPQEwmt741RJGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fauTo1Qe; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711863681; x=1743399681;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rgBxQWb018sUA1O77Ck6hkUHlAofNm8E+53lqjOtZa0=;
-  b=fauTo1QepqPBObqE7IPDa2rhpFtXdZC8iz0Pcvf/Im+f6aKR3+THlMF2
-   cqazEPlim/a2lLdgJCnt+ppA8h17G6Tob7mG0gjpDHoVZBEuiHDQK3HT9
-   z3w9vXRJCHtfvzQxwROJLExceR8/ir9aqjEi0G0CRR3Y/fL7IKkMd1P1A
-   3NQ6trAn0+kLFu0aftqBjyU0F1EadgmAOZijqqgSCkoCncDkCjA6cViLO
-   Gc6HbIyqYdD7TujyUDVYWhXDP1ZhXJjQwjSofESUedDQHA6rq1CrIQ9Zw
-   MY73g1SV684TzicumW3YBGol87TWFTKC+2h/EWHYNqb+7AaCA8y6q24DK
-   g==;
-X-CSE-ConnectionGUID: EuyxFxxuSmOonmGD7BtJDA==
-X-CSE-MsgGUID: xkr7KOhfSaqeQxs7aCr7kQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11029"; a="10793230"
-X-IronPort-AV: E=Sophos;i="6.07,169,1708416000"; 
-   d="scan'208";a="10793230"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2024 22:41:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,169,1708416000"; 
-   d="scan'208";a="17830104"
-Received: from lkp-server01.sh.intel.com (HELO 3d808bfd2502) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 30 Mar 2024 22:41:17 -0700
-Received: from kbuild by 3d808bfd2502 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rqnwQ-0000py-1f;
-	Sun, 31 Mar 2024 05:41:14 +0000
-Date: Sun, 31 Mar 2024 13:40:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Damien Le Moal <dlemoal@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 19/19] PCI: rockchip-ep: Handle PERST signal in endpoint
- mode
-Message-ID: <202403311327.3pGGy6Qm-lkp@intel.com>
-References: <20240329090945.1097609-20-dlemoal@kernel.org>
+	s=arc-20240116; t=1711913686; c=relaxed/simple;
+	bh=zhrQ6MyQy59/WuLAjO22xJzJvPfwcyANzVPSisWYHKI=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=nONuV4AZP0R26RsitxXgBVtLxL9+kzQJOR8UZL+z3o/PZ9Jt2a318AL+s/kdcoD18sD3p9d7hOb+r8sdrkD8paO86fHxF1hGaI2i4fo+G5mrHRKU17Gvdmp1HxCMwRRscWuTOdi+CrlLAQ27+aSesPX8dhx7Vubp+7dWkr7HhDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=A4ZcmH2V; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240329090945.1097609-20-dlemoal@kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1711913682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t6Yrm2TEKB8mxEWaCaPBLV4zJHwlikBx3tCoJxDGcRs=;
+	b=A4ZcmH2V1Wx+hrnRjvCuttpggRP8JQh4k/CJWnEaIflJmQ4Ykr0sxPVHDJWu6F8lrpTKSl
+	dHoFPhacrJvK83ZVI4IBC5vNSTuxD7cd8MhPCSgFFM5KQiJu7V8lmxkLGO5Oe8fUYsX/LY
+	JHJyGJQL7RF0czrSCDK3mjn0IqPU6SKJ2FNAT0ALmVs/QvxjvplEFPJbvgPrr/430HFk7M
+	7yuaNyW85GVwU2GIMOUww1OI/uDUOO/8hEyW2sOr7zI6ClSrIxLyYvJyDW1Jvw7S0lKU4J
+	vFyj2tTfR6Bn0OWhQfIplrKpPRPnBQSVrcNsbrGQ7jXj8PewbzURydd6bBORaw==
+Date: Sun, 31 Mar 2024 21:34:42 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
+ linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: rockchip-host: Fix rockchip_pcie_host_init_port()
+ PERST# handling
+In-Reply-To: <20240330035043.1546087-1-dlemoal@kernel.org>
+References: <20240330035043.1546087-1-dlemoal@kernel.org>
+Message-ID: <d1ed4a0bf702d9927d4e9279f19bcf7b@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hi Damien,
+Hello Damien,
 
-kernel test robot noticed the following build errors:
+Please see my comments below.
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.9-rc1 next-20240328]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 2024-03-30 04:50, Damien Le Moal wrote:
+> The PCIe specifications (PCI Express Electromechanical Specification 
+> rev
+> 2.0, section 2.6.2) mandate that the PERST# signal must remain asserted
+> for at least 100 usec (Tperst-clk) after the PCIe reference clock
+> becomes stable (if a reference clock is supplied), for at least 100 
+> msec
+> after the power is stable (Tpvperl).
+> 
+> In addition, the PCI Express Base SPecification Rev 2.0, section 6.6.1
+> state that the host should wait for at least 100 msec from the end of a
+> conventional reset (PERST# is de-asserted) before accessing the
+> configuration space of the attached device.
+> 
+> Modify rockchip_pcie_host_init_port() by adding two 100ms sleep, one
+> before and after bringing back PESRT signal to high using the ep_gpio
+> GPIO. Comments are also added to clarify this behavior.
+> 
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+> 
+> Changes from v1:
+>  - Add more specification details to the commit message.
+>  - Add missing msleep(100) after PERST# is deasserted.
+> 
+>  drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c
+> b/drivers/pci/controller/pcie-rockchip-host.c
+> index 300b9dc85ecc..ff2fa27bd883 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -294,6 +294,7 @@ static int rockchip_pcie_host_init_port(struct
+> rockchip_pcie *rockchip)
+>  	int err, i = MAX_LANE_NUM;
+>  	u32 status;
+> 
+> +	/* Assert PERST */
+>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
+> 
+>  	err = rockchip_pcie_init_port(rockchip);
+> @@ -322,8 +323,19 @@ static int rockchip_pcie_host_init_port(struct
+> rockchip_pcie *rockchip)
+>  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
+>  			    PCIE_CLIENT_CONFIG);
+> 
+> +	/*
+> +	 * PCIe CME specifications mandate that PERST be asserted for at
+> +	 * least 100ms after power is stable.
+> +	 */
+> +	msleep(100);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Damien-Le-Moal/PCI-endpoint-Introduce-pci_epc_check_func/20240329-171158
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240329090945.1097609-20-dlemoal%40kernel.org
-patch subject: [PATCH 19/19] PCI: rockchip-ep: Handle PERST signal in endpoint mode
-config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20240331/202403311327.3pGGy6Qm-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240331/202403311327.3pGGy6Qm-lkp@intel.com/reproduce)
+Perhaps it would be slightly better to use usleep_range()
+instead of msleep().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403311327.3pGGy6Qm-lkp@intel.com/
+>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
+> 
+> +	/*
+> +	 * PCIe base specifications rev 2.0 mandate that the host wait for
+> +	 * 100ms after completion of a conventional reset.
+> +	 */
+> +	msleep(100);
 
-All errors (new ones prefixed by >>):
+Obviously, the same comment as above applies here.
 
-   drivers/pci/controller/pcie-rockchip-ep.c: In function 'rockchip_pcie_ep_perst_irq_thread':
->> drivers/pci/controller/pcie-rockchip-ep.c:633:9: error: implicit declaration of function 'irq_set_irq_type'; did you mean 'irq_set_irq_wake'? [-Werror=implicit-function-declaration]
-     633 |         irq_set_irq_type(ep->perst_irq,
-         |         ^~~~~~~~~~~~~~~~
-         |         irq_set_irq_wake
-   drivers/pci/controller/pcie-rockchip-ep.c: In function 'rockchip_pcie_ep_setup_irq':
->> drivers/pci/controller/pcie-rockchip-ep.c:657:9: error: implicit declaration of function 'irq_set_status_flags' [-Werror=implicit-function-declaration]
-     657 |         irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
-         |         ^~~~~~~~~~~~~~~~~~~~
->> drivers/pci/controller/pcie-rockchip-ep.c:657:45: error: 'IRQ_NOAUTOEN' undeclared (first use in this function); did you mean 'IRQF_NO_AUTOEN'?
-     657 |         irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
-         |                                             ^~~~~~~~~~~~
-         |                                             IRQF_NO_AUTOEN
-   drivers/pci/controller/pcie-rockchip-ep.c:657:45: note: each undeclared identifier is reported only once for each function it appears in
-   cc1: some warnings being treated as errors
-
-
-vim +633 drivers/pci/controller/pcie-rockchip-ep.c
-
-   620	
-   621	static irqreturn_t rockchip_pcie_ep_perst_irq_thread(int irq, void *data)
-   622	{
-   623		struct pci_epc *epc = data;
-   624		struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-   625		struct rockchip_pcie *rockchip = &ep->rockchip;
-   626		u32 perst = gpiod_get_value(rockchip->ep_gpio);
-   627	
-   628		if (perst)
-   629			rockchip_pcie_ep_perst_assert(ep);
-   630		else
-   631			rockchip_pcie_ep_perst_deassert(ep);
-   632	
- > 633		irq_set_irq_type(ep->perst_irq,
-   634				 (perst ? IRQF_TRIGGER_HIGH : IRQF_TRIGGER_LOW));
-   635	
-   636		return IRQ_HANDLED;
-   637	}
-   638	
-   639	static int rockchip_pcie_ep_setup_irq(struct pci_epc *epc)
-   640	{
-   641		struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-   642		struct rockchip_pcie *rockchip = &ep->rockchip;
-   643		struct device *dev = rockchip->dev;
-   644		int ret;
-   645	
-   646		if (!rockchip->ep_gpio)
-   647			return 0;
-   648	
-   649		/* PCIe reset interrupt */
-   650		ep->perst_irq = gpiod_to_irq(rockchip->ep_gpio);
-   651		if (ep->perst_irq < 0) {
-   652			dev_err(dev, "No corresponding IRQ for PERST GPIO\n");
-   653			return ep->perst_irq;
-   654		}
-   655	
-   656		ep->perst_asserted = true;
- > 657		irq_set_status_flags(ep->perst_irq, IRQ_NOAUTOEN);
-   658		ret = devm_request_threaded_irq(dev, ep->perst_irq, NULL,
-   659						rockchip_pcie_ep_perst_irq_thread,
-   660						IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-   661						"pcie-ep-perst", epc);
-   662		if (ret) {
-   663			dev_err(dev, "Request PERST GPIO IRQ failed %d\n", ret);
-   664			return ret;
-   665		}
-   666	
-   667		return 0;
-   668	}
-   669	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+>  	/* 500ms timeout value should be enough for Gen1/2 training */
+>  	err = readl_poll_timeout(rockchip->apb_base + 
+> PCIE_CLIENT_BASIC_STATUS1,
+>  				 status, PCIE_LINK_UP(status), 20,
 
