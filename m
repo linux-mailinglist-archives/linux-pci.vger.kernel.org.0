@@ -1,160 +1,254 @@
-Return-Path: <linux-pci+bounces-5496-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5497-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC099894450
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Apr 2024 19:28:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74DE0894468
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Apr 2024 19:42:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 772361F2160C
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Apr 2024 17:28:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DBBA2B2182D
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Apr 2024 17:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B18C4C3C3;
-	Mon,  1 Apr 2024 17:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81A684D108;
+	Mon,  1 Apr 2024 17:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="mlxW8Xic"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VkO5qbtT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2098.outbound.protection.outlook.com [40.107.249.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38D048CDD
-	for <linux-pci@vger.kernel.org>; Mon,  1 Apr 2024 17:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711992501; cv=none; b=qQApDmpLy7M5mk66DyXqF9G0pLktT1YSHmpVjJUOS94rAaQdW4TU8rcveXtuhsZ0tihCr/5+aYsZTZN8obXvFIKQW9BEy4sTwODmS8XEyTMtq1GNUBxduVm0zJ2xSw6XI4H4+SjxTSCyihJPHyqfmkx6Z9BjUnpxmUT4iwWQm0E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711992501; c=relaxed/simple;
-	bh=X+pQ6qg09dZvwCFQeVEOA5bwu4q0gg9n6Hx+6Z9DH6A=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=KJA6wGe360pYD8sfiLLn4BlJUhxI4+MulugNwWqD7hSCNlXuPGoftcljD1Lk7YDWJU2Zc8dcdddmyVcRiabbMhCC9nB3/JFNISsTfKkn065b3SUThI9vTHadIhnVAQyS2lhT+kIr9dq0VefXOLmEuQz+tnM1S/YOuYmH9fTLHrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=mlxW8Xic; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6FC3FE55;
+	Mon,  1 Apr 2024 17:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711993342; cv=fail; b=TnfW8WiSaEDPL7VxX/bryA0jpTXoHDBhSJqHlsPt6hMVz8pTeN/z2jDWA4a6ewGUBoMx0SeT512FPurnL+Mq2rGuAKZYqD0jHE24lmXeBNaamRvjv/oUNedLAHELCICRo0C729zwuprMMGeLxuzwskUST83HT+7eL+sV2kneKoA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711993342; c=relaxed/simple;
+	bh=yUw1i+Qg1bKYG9dlRVK30DS3m9WdMEqGrsLgdbn5d30=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=GN83yTHoNp8BcDu1AJiy2Tw762kxwY5jzxKDegkL8j9aVF54vvvw0a1OvL1JjidBQX4lRg6YUA6lK65aIh7bs6AlMq/OGlqi9fjIf8aT3mFdp2pyYeqCmejCBAI5wltY2n6AkQW6KdXcU2eSkQBisWh05BurpEm3lwqV49WAnnU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=VkO5qbtT; arc=fail smtp.client-ip=40.107.249.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WbK0Jpc1IQXHoI5apNNqY8p5pWGEnYYyWk2nZmL0ewZa+1Y+b97mwYg87mJIDSmTCCr6+1KaCRHlZn2fLpDYR343aNrOfhO01tjpGdbdsFboroq3zGH2/LqVuDKAzPbZJsQpolmlSKboiJBbS8BNeN0Kpqzsd33OIquinNgAVcVr6kVWzC7EKFpleQOPNuOmlRXmnuQthMjEQM9k1AA3ppZeE3QFZZBCmctmiFGBsLjZkB2dYqymiXtNwOag/QnQiArpIqgm4AaM9nXn0mUNgHUk1NAqhf0dWFGaI6R4S9rxM2fR5c1DFjB9mSQCAq3loWUcZgJfzvoBEqzdngVF/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DCuL3SUrmC0AZwVY++sQ7JSSOGlDwwqqFRgsih4XiLM=;
+ b=lsaKBy/wsKzdhSYlDQJYeouCtJWvZ0F1KwPhqYjEY6vlQ0eHE5N66ZS6wS5qq+JRbxbe+sRmd/LF29XnW2uRg+fQDwrYsHkbUx3OELvhKgS+dzH5oIF9u4VVJM38wkSrdX4FwKMtL78mEghSZ0zJKmcnCtGT3zSLvNFHYisGEMUIuoOyBnIyNam8vWE4VTxxdqeB3KNHTj2mw2xj9l+CL5HfzpGv5Gx0Ug9YJg9p46Dx3qYWuyprI1xwDKB58LS2rG/y/vC4H7Bpg2Qf9zX5/71b4j+lZQaK3npyP6M9Bph2QE0YoldZ2XQRapGj9VHiPr0OHTbjMxPrY6UIH8rrQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DCuL3SUrmC0AZwVY++sQ7JSSOGlDwwqqFRgsih4XiLM=;
+ b=VkO5qbtTB02E6wi53ItyhdJjouNz83UC33k8aXUyr5fBIOuoEL55zJZDi/6NHCWEl580tXqlBO14ZKvX/uVWWFDo6KNv7Z7WNCmI8nUKlcENJEqnKXK/DSHpzuy9hq5UqTudRCyrUleVB0uEV+rdFRa7o51UpjmTr1mUUUcMq1E=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM9PR04MB8398.eurprd04.prod.outlook.com (2603:10a6:20b:3b7::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
+ 2024 17:42:17 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Mon, 1 Apr 2024
+ 17:42:17 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: rdunlap@infradead.org,
+	hch@infradead.org
+Cc: Frank.Li@nxp.com,
+	corbet@lwn.net,
+	dmaengine@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lizhijian@fujitsu.com,
+	mst@redhat.com
+Subject: [PATCH v2 1/1] docs: dma: correct dma_set_mask() sample code
+Date: Mon,  1 Apr 2024 13:41:59 -0400
+Message-Id: <20240401174159.642998-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR16CA0001.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::14) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1711992495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GcyQB2SpBRzc7F7Fs2OGW1YzrGJMJNel6cPq11Q+YyE=;
-	b=mlxW8XicAIS9SwXJRhdu9Dv6QzWSW5GARhQYWa6kbRXGk/Pm87W2h9tXDlKP5e8IKiyaor
-	LCobLS1JM7HOG+vHchRqBrraG5hYexy+RUVq6+HO7aiXp8wC/3+rG5vRXipR1AK3j/brYX
-	qdq7UwyFBP38BOlSIXR7IxGmEN3ZjwZCGmJYWl3y8Wvc/THEvMsJUOQyg6mlYBFdKRuiA7
-	5RG+/T0/q8n5RvQZdaqDvey56wI/nvUDcrnUF5HUxGp06TCkbibHZJn7QBlmmdP9Pwh9RU
-	LZSrOjq3MGMJUw33m09BW96YVOur/gD5qN9GqgSlEptgZIiZqP2gV17KoC9Fuw==
-Date: Mon, 01 Apr 2024 19:28:15 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: rockchip-host: Fix rockchip_pcie_host_init_port()
- PERST# handling
-In-Reply-To: <89eb3414-38ba-4397-9ed7-aebebbdadd07@kernel.org>
-References: <20240330035043.1546087-1-dlemoal@kernel.org>
- <d1ed4a0bf702d9927d4e9279f19bcf7b@manjaro.org>
- <89eb3414-38ba-4397-9ed7-aebebbdadd07@kernel.org>
-Message-ID: <19d7def23f537b0a5a0aa09dd0638ac5@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8398:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	vjGX+a6J0ag06c7Hc1X6MWvpbhJEEyDcrcZcjjQFZmwxIoHkQP50jhHpUd60aGvwyWMNYt5nhbE0mAUYrDukdR9Fjlfd2eaxGAFlMsm+HZWqa9Gv6BxuABJ/wzfxWGMAzwIlWOnodHjT6026vsARdHnwYpe96JJEZLlvYM5iALWlXLMTFEp41uJAWBEtWg8wkgnhKXJbjfLojLfVpUUX6Xk0jlNW6mot5x8dPJ6TJmWprFEm3HJllqM6XQCdXZVVGTWqT9FII7pYXJo+L6myuiwekODvSrvO5IoToDtUmrEgMg8fm+UQeJxQcIvLr1nh8nyswhIEbn3KdFsiNaaMYleEWK9PmOdzYKqIPv2OK6Rv8hJ5ncV47PzFHQwrVXf8fqY9ZwiGfXYwqKQXm+tROAsr2Js1VSNJvcEL3ti+adTwwb84YaPBfU5BuD4YtUrDarcPknzIwJeZ4wZu+Jy3omAY+WCZPjTTYCkgWHeii1DUks7yGO/IaYDnfYFHlzG59WyKApt5DeGIZXN0yAmq/1oiQ8qGhf6OoksDhwDm/PeIhAuirYPbRjfZCkVlERPmU+4rndBFi6qGUPmdi2Zez1xCkRwaqM477hwbyW+5bTxVI9vxyMHRK9RucJYA5UlTZtn/SpUMJG1FnZ5rtKN2CCtVrv/GVopGzaPJwgd/gwTyNEi9RUh26Y9zrIU8MszXcOifMLeKCcngG5/0RZJ/2zs258sqLD6su/kduk3iKek=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(366007)(52116005)(1800799015)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Xafy3gIFJS4y/PrNThQh9F0iBsMNhw894eqTmp+kd4QagJWlFjFrXBpzmk2A?=
+ =?us-ascii?Q?KU04L/lLJhN2ev1ZkREZvZprAdofA9Zted6fnpRz8x2S6uu3UZx5WCh6bQL4?=
+ =?us-ascii?Q?NRU1c/n8dOx5iYAAfwCF15DqeBnasV8bYLCxgSPT3UplswwncheJucgFhdt2?=
+ =?us-ascii?Q?ECKLyCiLxluaCVbV7fjEiJY0DYhwA5GkoxKiGDKqZInjNKuFK7Awq4RXENwS?=
+ =?us-ascii?Q?Y5xHgsPU9Pd6EWIzklrmLGd8Dan8w4umC0pf19LAHc0JFFWseFvC9fAcNiS3?=
+ =?us-ascii?Q?rE9Nt6FQSNt0jRFw0buuI31YUTajXxxmOPy9UzuxIHJoWwJXsQq9PYIvu7yY?=
+ =?us-ascii?Q?hpzU7a6/Qg2TjuPQEFZRWyGau99SZCuq6MdfmlS9vAUgMoDjmKUdReFcgOf6?=
+ =?us-ascii?Q?6+S/WvkOC7LEW0nRSQK1+QB8OtFXcFIKSwFBRWA1iYHbN6/RJSAJ46ZvMRdX?=
+ =?us-ascii?Q?b+eV/gnUum0f0f4QBGvtyaKRC1GOdH7NjfXFkrp3k/179NXJQ0DzLYB1yScs?=
+ =?us-ascii?Q?ZtrIsE0r/U+pid1yiijeQE0BpnNg46l75b+n84z3eA/k71fuOnrrI3PQZ3KN?=
+ =?us-ascii?Q?UatSlDKwi+X5FDRmVYNRsJNQx1FVmYuWkehtkdZLuk6wJqqDpFvz6nNVdxmn?=
+ =?us-ascii?Q?1wyVhuMKF2XBHKXlxYSITBx2w+awZvZ4ZKvDzVf5uP1KBc9itMCASXJq2sO9?=
+ =?us-ascii?Q?XpMEnFJ8O7NfMjn2sW9NQhJVXOBrzCEVWgg6DxYJ9ACKvrrKMmWbmpJWIQzD?=
+ =?us-ascii?Q?sM9BRb6HuH/Lr/zrJF+uNUNWFZh1+mc6YNafHdTMwNwIUjxhK//KVc18hHVh?=
+ =?us-ascii?Q?A8tTQDMKIsvGtYaBPwKHz3G9fb63Fibjq+6naruZf+RQ3XkLZ2dvuSAh8ODo?=
+ =?us-ascii?Q?31c8BDBp6JJtb9FXmYIdTfCyDf7+SkwYHoo6Ynk5o5V1V+qYKqhzvvhDvPtf?=
+ =?us-ascii?Q?T3g9QF0YoA9WkiN0qBsxvCSId9dYpkn0wbMzXaiSNPl1quMIbc2w1KQIaSCM?=
+ =?us-ascii?Q?377ZfMHASHoUs7takrNdhRmUnud/A4ciWdVQSw0bqS9kPYGhF8lbeQnbRsqA?=
+ =?us-ascii?Q?vBGvK/v9x2epBJASBvoLcIJEqIvBFyn9idKDrAvadQb/LGUZMa5Im+OdNlMo?=
+ =?us-ascii?Q?0FCDPW9qIWl+6/4VDhaPqAuVFfuubV4uD8F8IllzRJrGVURm0RqYhEd8LwXm?=
+ =?us-ascii?Q?lC/1nkfzEj+AIqcMAiNZdrWzzgKncN9GBvUHp4v2NXBsOw3t9yHOf9j0vCDQ?=
+ =?us-ascii?Q?MEGIs/6/QyhHQm6IjAETx0ZFkDOBECw1vmCbBgpDQcMsN7XEzxkx0E0ZGL2m?=
+ =?us-ascii?Q?ChaE+mYGZfrgWpIH776H+LWsrQm3fJOdaJiCxvRFVl37wX5+PmqZ7GJj/aB+?=
+ =?us-ascii?Q?cPzxuxS/eyMgDB01jVN/zeiMZYfieGWzliqXYLb8/UXemqNUUUK86b2JYS+T?=
+ =?us-ascii?Q?ZsgyHU1NpPc9pfdP35Ti95NTEi087cZS7+cRJ/LbK3gTLb9usjdkkOadcR4y?=
+ =?us-ascii?Q?f9AT24kHffA/zaclhXfIAVzRT6FRZQh0oL9aejYxO6p1VIk7UBFqDNy5M0uQ?=
+ =?us-ascii?Q?e91JqaIw4b1LG9DNwr5FrB/P87hvQGG8A7SgD2Pv?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 986ed8c2-89a9-4861-caa4-08dc527312cc
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 17:42:17.1251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XUfCZDaSu12yqLpc6imfsFY9s/sa1cRDplUn/30/ykxmsD8gncXgD5Mw9WzfPY3gtezel+sH7OeQtLiJvcK89Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8398
 
-On 2024-04-01 08:59, Damien Le Moal wrote:
-> On 4/1/24 04:34, Dragan Simic wrote:
->> Please see my comments below.
->> 
->> On 2024-03-30 04:50, Damien Le Moal wrote:
->>> The PCIe specifications (PCI Express Electromechanical Specification
->>> rev
->>> 2.0, section 2.6.2) mandate that the PERST# signal must remain 
->>> asserted
->>> for at least 100 usec (Tperst-clk) after the PCIe reference clock
->>> becomes stable (if a reference clock is supplied), for at least 100
->>> msec
->>> after the power is stable (Tpvperl).
->>> 
->>> In addition, the PCI Express Base SPecification Rev 2.0, section 
->>> 6.6.1
->>> state that the host should wait for at least 100 msec from the end of 
->>> a
->>> conventional reset (PERST# is de-asserted) before accessing the
->>> configuration space of the attached device.
->>> 
->>> Modify rockchip_pcie_host_init_port() by adding two 100ms sleep, one
->>> before and after bringing back PESRT signal to high using the ep_gpio
->>> GPIO. Comments are also added to clarify this behavior.
->>> 
->>> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
->>> ---
->>> 
->>> Changes from v1:
->>>  - Add more specification details to the commit message.
->>>  - Add missing msleep(100) after PERST# is deasserted.
->>> 
->>>  drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++++++++
->>>  1 file changed, 12 insertions(+)
->>> 
->>> diff --git a/drivers/pci/controller/pcie-rockchip-host.c
->>> b/drivers/pci/controller/pcie-rockchip-host.c
->>> index 300b9dc85ecc..ff2fa27bd883 100644
->>> --- a/drivers/pci/controller/pcie-rockchip-host.c
->>> +++ b/drivers/pci/controller/pcie-rockchip-host.c
->>> @@ -294,6 +294,7 @@ static int rockchip_pcie_host_init_port(struct
->>> rockchip_pcie *rockchip)
->>>  	int err, i = MAX_LANE_NUM;
->>>  	u32 status;
->>> 
->>> +	/* Assert PERST */
->>>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
->>> 
->>>  	err = rockchip_pcie_init_port(rockchip);
->>> @@ -322,8 +323,19 @@ static int rockchip_pcie_host_init_port(struct
->>> rockchip_pcie *rockchip)
->>>  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
->>>  			    PCIE_CLIENT_CONFIG);
->>> 
->>> +	/*
->>> +	 * PCIe CME specifications mandate that PERST be asserted for at
->>> +	 * least 100ms after power is stable.
->>> +	 */
->>> +	msleep(100);
->> 
->> Perhaps it would be slightly better to use usleep_range()
->> instead of msleep().
-> 
-> I can do that, but I fail to see the advantage. Why do you say that
-> it may be better ?
+There are bunch of codes in driver like
 
-Actually, I was wrong.  When sleeping for 100 msec, msleep()
-is actually the preferred variant. [1]
+       if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
+               dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
 
-[1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
+Actually it is wrong because if dma_set_mask_and_coherent(64) fails,
+dma_set_mask_and_coherent(32) will fail for the same reason.
 
->>>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
->>> 
->>> +	/*
->>> +	 * PCIe base specifications rev 2.0 mandate that the host wait for
->>> +	 * 100ms after completion of a conventional reset.
->>> +	 */
->>> +	msleep(100);
->> 
->> Obviously, the same comment as above applies here.
->> 
->>> +
->>>  	/* 500ms timeout value should be enough for Gen1/2 training */
->>>  	err = readl_poll_timeout(rockchip->apb_base +
->>> PCIE_CLIENT_BASIC_STATUS1,
->>>  				 status, PCIE_LINK_UP(status), 20,
+And dma_set_mask_and_coherent(64) never returns failure.
+
+According to the definition of dma_set_mask(), it indicates the width of
+address that device DMA can access. If it can access 64-bit address, it
+must access 32-bit address inherently. So only need set biggest address
+width.
+
+See below code fragment:
+
+dma_set_mask(mask)
+{
+	mask = (dma_addr_t)mask;
+
+	if (!dev->dma_mask || !dma_supported(dev, mask))
+		return -EIO;
+
+	arch_dma_set_mask(dev, mask);
+	*dev->dma_mask = mask;
+	return 0;
+}
+
+dma_supported() will call dma_direct_supported or iommux's dma_supported
+call back function.
+
+int dma_direct_supported(struct device *dev, u64 mask)
+{
+	u64 min_mask = (max_pfn - 1) << PAGE_SHIFT;
+
+	/*
+	 * Because 32-bit DMA masks are so common we expect every architecture
+	 * to be able to satisfy them - either by not supporting more physical
+	 * memory, or by providing a ZONE_DMA32.  If neither is the case, the
+	 * architecture needs to use an IOMMU instead of the direct mapping.
+	 */
+	if (mask >= DMA_BIT_MASK(32))
+		return 1;
+
+	...
+}
+
+The iommux's dma_supported() actually means iommu requires devices's
+minimized dma capability.
+
+An example:
+
+static int sba_dma_supported( struct device *dev, u64 mask)()
+{
+	...
+	 * check if mask is >= than the current max IO Virt Address
+         * The max IO Virt address will *always* < 30 bits.
+         */
+        return((int)(mask >= (ioc->ibase - 1 +
+                        (ioc->pdir_size / sizeof(u64) * IOVP_SIZE) )));
+	...
+}
+
+1 means supported. 0 means unsupported.
+
+Correct document to make it more clear and provide correct sample code.
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+
+Notes:
+    Change from v1 to v2:
+    - fixed typo, review by Randy Dunlap
+
+ Documentation/core-api/dma-api-howto.rst | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/core-api/dma-api-howto.rst b/Documentation/core-api/dma-api-howto.rst
+index e8a55f9d61dbc..5f6a7d86b6bc2 100644
+--- a/Documentation/core-api/dma-api-howto.rst
++++ b/Documentation/core-api/dma-api-howto.rst
+@@ -203,13 +203,33 @@ setting the DMA mask fails.  In this manner, if a user of your driver reports
+ that performance is bad or that the device is not even detected, you can ask
+ them for the kernel messages to find out exactly why.
+ 
+-The standard 64-bit addressing device would do something like this::
++The 24-bit addressing device would do something like this::
+ 
+-	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))) {
++	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(24))) {
+ 		dev_warn(dev, "mydev: No suitable DMA available\n");
+ 		goto ignore_this_device;
+ 	}
+ 
++The standard 64-bit addressing device would do something like this::
++
++	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))
++
++dma_set_mask_and_coherent() never return fail when DMA_BIT_MASK(64). Typical
++error code like::
++
++	/* Wrong code */
++	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
++		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
++
++dma_set_mask_and_coherent() will never return failure when bigger then 32.
++So typical code like::
++
++	/* Recommended code */
++	if (support_64bit)
++		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
++	else
++		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
++
+ If the device only supports 32-bit addressing for descriptors in the
+ coherent allocations, but supports full 64-bits for streaming mappings
+ it would look like this::
+-- 
+2.34.1
+
 
