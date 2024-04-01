@@ -1,177 +1,140 @@
-Return-Path: <linux-pci+bounces-5505-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5506-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7577D8947A9
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 01:24:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B3D28947CA
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 01:36:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EDEA5B222A8
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Apr 2024 23:24:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7EBE1C21FFC
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Apr 2024 23:36:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE52B58210;
-	Mon,  1 Apr 2024 23:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F19B556B7F;
+	Mon,  1 Apr 2024 23:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/1EoP0I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OI1ECswy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62E85820C;
-	Mon,  1 Apr 2024 23:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63DF2E822;
+	Mon,  1 Apr 2024 23:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712013818; cv=none; b=IN8my6F4sBkiCUw6SbGDs8zwfcVfrhuWamhLuQXaa3mWV7nwMIq56+PrF2xg1Gmfidcc7BP5pZwnDlevzz9KSUm7cprQ6SOQecRKWXzj6tFtVbeY8BUXLvJLC5QbqiBPAreayCzFV+sqmVTs9QiKsSWiC7UvrtBDG4T/WWlh2pg=
+	t=1712014611; cv=none; b=lsotWodds4syCToTH2PyjXShz9PVJomN9QEvMnu/r8gNjXdN0wJjESIarWnvAMVutwZeMh6bf6hiDuSwGbT5u2R5yuTAJJ/z8TGMra0NALz0cXh+R/kKlILsLWNTfj7hmLmX4AL09uzf32E89R2EhHxCny6KjzL1XzOoxy16M1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712013818; c=relaxed/simple;
-	bh=o97B29Ox7BgnEbRTW2Nrfwi00DuZ+IE+HV46X4xy7oU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r5vrTANZb2fbrapRHdMrjTCTYReCD9Y8ht7eRWWC/BFxWtKvDhEBmTRSLXRGCRh+j7OB9MUt/5Zm49jdCMV2N01YRxBJkDvrzvTRg5ieh4ymz2XiwAzJ9R9cASr52/TQLjcS++/CCrnq/PgE3s+9G7kEyr39gPuH7ORZ8yixPZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/1EoP0I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E762AC433F1;
-	Mon,  1 Apr 2024 23:23:37 +0000 (UTC)
+	s=arc-20240116; t=1712014611; c=relaxed/simple;
+	bh=8wQEbHsfIcXr4dr2XxcWj3nO0LM8qgHsZ3uOarKVfQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FHRVzzYvRJPb34ps628wpBoIjV6SSxMcNzHUASmrV2QgPzMIcMnR+NQ92oNHAoDDSsOmagVwNDtHJ88Yy+0GGM2mXYzOJsKCellWV3kybrqsqur+dQN3/ige21SjhCGAwd5Z0EilZ66JZUB2EgrYIwY6sfpW7tuGSiFPCXDmGNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OI1ECswy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1324CC433F1;
+	Mon,  1 Apr 2024 23:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712013818;
-	bh=o97B29Ox7BgnEbRTW2Nrfwi00DuZ+IE+HV46X4xy7oU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E/1EoP0IXYDHv85d/3dbGXT5dxUHUgg31fFnH7AkV7ApWny81guVKC1FcX5S3nbdO
-	 NvJlYZVNbjz9lr5pMuNjldbu1V2uvSdiKaOYESTCKGxyQ64gSoW4gE+ha0VKkUbXmL
-	 0iU6f0QvziuudXdfraHRCKlb2pwSRmp8u4l8wXFxBfgX4dPurNWdl5gLzuhPkiMvcV
-	 qX00aIzz8pnLVnpt/wbIjHfoZZu5uRmNbK8HDwEJCeSXGkHo7NeR6F4su0I3PdOxk+
-	 ZFSmsYfkZF+dXC+jSUXni4UEepNoZ5Grz1JLxCXleBOMn+UDzJ7OXsvooSHIFdyagA
-	 1nKybCSHkSEpg==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Megha Dey <megha.dey@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/3] Revert "PCI/MSI: Provide IMS (Interrupt Message Store) support"
-Date: Mon,  1 Apr 2024 18:23:26 -0500
-Message-Id: <20240401232326.1794707-4-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240401232326.1794707-1-helgaas@kernel.org>
-References: <e5bacec0-28ca-4cd9-9ffe-92feaf5fbfef@kernel.org>
- <20240401232326.1794707-1-helgaas@kernel.org>
+	s=k20201202; t=1712014611;
+	bh=8wQEbHsfIcXr4dr2XxcWj3nO0LM8qgHsZ3uOarKVfQ8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OI1ECswy95ztWR1qMgjtRvTP+YtC/H3AmmZiGQn2J+eI8zEOG1rPCP7A37qpNwBLE
+	 et5TTtnKjWCoiVC75z+lA94ahzdQ2s4Xrhezz8feT00f6X61oHBT9acQ4pXOBqCoBZ
+	 rnh49TrrW2yhX9kjwStf9gQGEz7FpSBbZCz1pUUojkwL/xVwPCJGcdW3S9q4P2jIpG
+	 rjs2GACJ/gKERLUohzcvvGo8N7otb7TN2YtxiVdtRjqawmjaIMePq76Nt1DeQdCzZ9
+	 9YqEk1ICTdeu3AHyzLkn337YjnDgQiapEy41C3z7dkdhXhkULVeo+Vjd20RDzw0k5l
+	 bIOJT/gVmGVng==
+Message-ID: <49ecab2e-8f36-47be-a1b0-1bb0089dab0f@kernel.org>
+Date: Tue, 2 Apr 2024 08:36:47 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 17/18] dt-bindings: pci: rockchip,rk3399-pcie-ep: Add
+ ep-gpios property
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>, Niklas Cassel <cassel@kernel.org>
+References: <20240330041928.1555578-1-dlemoal@kernel.org>
+ <20240330041928.1555578-18-dlemoal@kernel.org>
+ <b020b74e-8ae1-448a-9d47-6c9bb13735f9@linaro.org>
+ <c75cb54a-61c7-4bc3-978e-8a28dde93b08@kernel.org>
+ <518f04ea-7ff6-4568-be76-60276d18b209@linaro.org>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <518f04ea-7ff6-4568-be76-60276d18b209@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On 4/1/24 18:57, Krzysztof Kozlowski wrote:
+> On 01/04/2024 01:06, Damien Le Moal wrote:
+>> On 3/30/24 18:16, Krzysztof Kozlowski wrote:
+>>> On 30/03/2024 05:19, Damien Le Moal wrote:
+>>>> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+>>>>
+>>>> Describe the `ep-gpios` property which is used to map the PERST# input
+>>>> signal for endpoint mode.
+>>>>
+>>>> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+>>>> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+>>>> ---
+>>>>  .../devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml       | 3 +++
+>>>>  1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+>>>> index 6b62f6f58efe..9331d44d6963 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+>>>> @@ -30,6 +30,9 @@ properties:
+>>>>      maximum: 32
+>>>>      default: 32
+>>>>  
+>>>> +  ep-gpios:
+>>>> +    description: Input GPIO configured for the PERST# signal.
+>>>
+>>> Missing maxItems. But more important: why existing property perst-gpios,
+>>> which you already have there in common schema, is not correct for this case?
+>>
+>> I am confused... Where do you find perst-gpios defined for the rk3399 ?
+>> Under Documentation/devicetree/bindings/pci/, the only schema I see using
+>> perst-gpios property are for the qcom (Qualcomm) controllers.
+> 
+> You are right, it's so far only in Qualcomm.
+> 
+>> The RC bindings for the rockchip rk3399 PCIe controller
+>> (pci/rockchip,rk3399-pcie.yaml) already define the ep-gpios property. So if
+> 
+> Any reason why this cannot be named like GPIO? Is there already a user
+> of this in Linux kernel? Commit msg says nothing about this, so that's
+> why I would expect name matching the signal.
 
-This reverts commit 0194425af0c87acaad457989a2c6d90dba58e776.
+The RC-mode PCIe controller node of the rk3399 DTS already defines the ep-gpios
+property for RC side PERST# signal handling. So we simply reused the exact same
+name to be consistent between RC and EP. I personnally have no preferences. If
+there is an effort to rename such signal with some preferred pattern, I will
+follow. For the EP node, there was no PERST signal handling in the driver and
+no property defined for it, so any name is fine. "perst-gpios" would indeed be
+a better name, but again, given that the RC controller node has ep-gpios, we
+reused that. What is your recommendation here ?
 
-IMS (Interrupt Message Store) support appeared in v6.2, but there are no
-users yet.
+> 
+> Best regards,
+> Krzysztof
+> 
 
-Remove it for now.  We can add it back when a user comes along.  If this is
-re-added later, the relevant part of 41efa431244f ("PCI/MSI: Provide stubs
-for IMS functions") should be squashed into it.
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/msi/irqdomain.c | 59 -------------------------------------
- include/linux/pci.h         |  5 ----
- 2 files changed, 64 deletions(-)
-
-diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-index cfd84a899c82..03d2dd25790d 100644
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -355,65 +355,6 @@ bool pci_msi_domain_supports(struct pci_dev *pdev, unsigned int feature_mask,
- 	return (supported & feature_mask) == feature_mask;
- }
- 
--/**
-- * pci_create_ims_domain - Create a secondary IMS domain for a PCI device
-- * @pdev:	The PCI device to operate on
-- * @template:	The MSI info template which describes the domain
-- * @hwsize:	The size of the hardware entry table or 0 if the domain
-- *		is purely software managed
-- * @data:	Optional pointer to domain specific data to be stored
-- *		in msi_domain_info::data
-- *
-- * Return: True on success, false otherwise
-- *
-- * An IMS domain is expected to have the following constraints:
-- *	- The index space is managed by the core code
-- *
-- *	- There is no requirement for consecutive index ranges
-- *
-- *	- The interrupt chip must provide the following callbacks:
-- *		- irq_mask()
-- *		- irq_unmask()
-- *		- irq_write_msi_msg()
-- *
-- *	- The interrupt chip must provide the following optional callbacks
-- *	  when the irq_mask(), irq_unmask() and irq_write_msi_msg() callbacks
-- *	  cannot operate directly on hardware, e.g. in the case that the
-- *	  interrupt message store is in queue memory:
-- *		- irq_bus_lock()
-- *		- irq_bus_unlock()
-- *
-- *	  These callbacks are invoked from preemptible task context and are
-- *	  allowed to sleep. In this case the mandatory callbacks above just
-- *	  store the information. The irq_bus_unlock() callback is supposed
-- *	  to make the change effective before returning.
-- *
-- *	- Interrupt affinity setting is handled by the underlying parent
-- *	  interrupt domain and communicated to the IMS domain via
-- *	  irq_write_msi_msg().
-- *
-- * The domain is automatically destroyed when the PCI device is removed.
-- */
--bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
--			   unsigned int hwsize, void *data)
--{
--	struct irq_domain *domain = dev_get_msi_domain(&pdev->dev);
--
--	if (!domain || !irq_domain_is_msi_parent(domain))
--		return false;
--
--	if (template->info.bus_token != DOMAIN_BUS_PCI_DEVICE_IMS ||
--	    !(template->info.flags & MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS) ||
--	    !(template->info.flags & MSI_FLAG_FREE_MSI_DESCS) ||
--	    !template->chip.irq_mask || !template->chip.irq_unmask ||
--	    !template->chip.irq_write_msi_msg || template->chip.irq_set_affinity)
--		return false;
--
--	return msi_create_device_irq_domain(&pdev->dev, MSI_SECONDARY_DOMAIN, template,
--					    hwsize, data, NULL);
--}
--EXPORT_SYMBOL_GPL(pci_create_ims_domain);
--
- /*
-  * Users of the generic MSI infrastructure expect a device to have a single ID,
-  * so with DMA aliases we have to pick the least-worst compromise. Devices with
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3deb3e42d990..98fb20bcd054 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2664,11 +2664,6 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
- void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- #endif
- 
--struct msi_domain_template;
--
--bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
--			   unsigned int hwsize, void *data);
--
- #include <linux/dma-mapping.h>
- 
- #define pci_printk(level, pdev, fmt, arg...) \
 -- 
-2.34.1
+Damien Le Moal
+Western Digital Research
 
 
