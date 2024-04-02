@@ -1,184 +1,239 @@
-Return-Path: <linux-pci+bounces-5536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC0B28953A7
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 14:42:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BA7F895512
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 15:18:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9182A2860BB
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 12:42:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7ECFB1C226CE
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 13:18:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7993B82881;
-	Tue,  2 Apr 2024 12:40:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2142181AB2;
+	Tue,  2 Apr 2024 13:18:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="X1C03tOi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G1NWipWd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2132.outbound.protection.outlook.com [40.107.94.132])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF5C7A151;
-	Tue,  2 Apr 2024 12:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.132
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712061605; cv=fail; b=awwFubHAF4Lc69SHZ4kc+aQhEoKlSJwSeOnwmVjHibteTjutntTNQRfK5WN4/yNaRd2Ni2phanXVbvgfwJSqL87rinPd/zt2m0CPq4VyquC8kO8+2fXwIpq8qGzbFhWcg7sZau8QnWa1hEt9DMqNe1dvYIiK6I/JzgT7+Z2O+jg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712061605; c=relaxed/simple;
-	bh=E6oTosDaLW1ptJhurDkdP/67S6D/v2RnigILb3Mwiuo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eSP5I4JeiWhHSFllR2hp/5u2kSVgIgQjAyflUOG9W39JtFqBZitsUA0H9EaPs6vksBNPY++QAq6UQQ4pcfsO5OQ6SHUr7XHyAy4lgQ9MjqBmf97v3L3IbE+oMQeZ3dMPE7zhljjdh1Pd1Z9k20F1rmeKjJs5iHRcCkvGPDvgbUQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=X1C03tOi; arc=fail smtp.client-ip=40.107.94.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f/PKTrm+GnSb2evSfxRLX1jJ9T3y1BnE3b78TH6BRplJlm2H7SvwK0uXcvBBgZxMdDsTlfp/Mw0+XJDaLzDW3uMLGW1DUw6ilXgx6w2Wd8k4PrDoAnE6KLCAlvtIZ0RnDyYvICuQmrURrvLLp35n+RlWxoSfbLziA++EjCnK5Wj3UzbL9WvLzH8BIaRn8Qv/xUo45m2D7rxJd7tz/RcoEKN5KVaegpV4iCPPX2bIlwIX1tizI4sLYagj0mDmHU0hBs2rsDKZJDnqh0zjQhzZqFWebZUJtTpwMMbFPkHyRqx6xwJ8y3iXp5Dd8fO9yzbzEmStvjcwOHWbl2/fubTS7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HRhxySxByKilHpe/IBdmP9cHDa9d92LSdCdFIS2V2so=;
- b=WotPWnDfon+QxB8b2y1OP3soqOE4ao0KoTz0dXYOLnQ52xz1s9paVTp9h5piWTgT8Jj7b+XE+Ozzjrj/NINrd4MTYiwaD5tAr9zMkA/m/RFJDXJfW6dBL1KaR6MxShtbx5M/sH7PgFyJBlLXOmU+jeFU4aH+JDoUT/EB5VcELGLIEqW5337Ai5iWWjZOM8ONGg0v50YWUGOOUFVilalfKAAnW9gLKy2yMRkSvPJMpGDgbBteszZ3py6jj0iF9ARuPZz0pvRpbIwaYRnubxULtiHeFPGUw6NzGa5xjnkiIJ0jQUtzyn2eR6KBq/I8kIGCM/JX6aPlJmPGNFQEjsBxHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HRhxySxByKilHpe/IBdmP9cHDa9d92LSdCdFIS2V2so=;
- b=X1C03tOiSI1RCTbcrs29oez5KmoYOL+KQk/M8lDs9Srq0clV1E78dhCSFDDdkbU0Oa9l5Hbo9l44LivSqD+IfzTumaFMLrruY3n1Xaj3hby5ZAhOEjUFdss96Lj0BO50SJC1aUIKhsDYkUBzy0W42BkTgHtYeC3Hlk8bYxbKC6/RdSBzyynN+fYMGwvjvQOllRcrMDh/XYo3AdY6jO5b4g77kxkKj8yFuHONyYO+lWvZbLLIqiUKQxjeFOq+Xwl8NJrNQ4wE5ph5nOceOp54jTwom0dYd+jAFrF/eLMR3+HfqOdQ2HsKqC94ICyD0KjZ8OM+PWVQ1wXLl46hgGVtoA==
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
- BY5PR12MB4244.namprd12.prod.outlook.com (2603:10b6:a03:204::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.46; Tue, 2 Apr 2024 12:40:00 +0000
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::5159:5fc3:7933:24c0]) by CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::5159:5fc3:7933:24c0%7]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 12:40:00 +0000
-Message-ID: <5f478d0e-5e7f-4e6d-a7d5-d6d50bb59722@nvidia.com>
-Date: Tue, 2 Apr 2024 13:39:55 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] PCI: tegra194: Fix probe path for Endpoint mode
-Content-Language: en-US
-To: Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org, kw@linux.com,
- robh@kernel.org, bhelgaas@google.com
-Cc: thierry.reding@gmail.com, linux-pci@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20240401150116.298069-1-vidyas@nvidia.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-In-Reply-To: <20240401150116.298069-1-vidyas@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0024.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ae::19) To CO6PR12MB5444.namprd12.prod.outlook.com
- (2603:10b6:5:35e::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AA67F7FD
+	for <linux-pci@vger.kernel.org>; Tue,  2 Apr 2024 13:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712063884; cv=none; b=rPhiCLxJjrvAn6zvipUGj49unJ7DG7AWYjqzrIh8oJTmrUMzrm6JDm/tVfnFBVUcIG9uEjouQAIokEODPSz+HYrjtU+rvkXO3vpO/Mllk8SYP8IwEEzH30W/qDGelmdaI8kfvAnoOpZtU/rjEOcRwqbY5NrfbOLKkMP31AG3wDQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712063884; c=relaxed/simple;
+	bh=PU8e+iIYGTu09EvDAIMMFH5RenifQoc8Af+tvO74/d4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Y132f1uvOI6WW/HQ1QxiyAHq0sHCx6D4qWNMZx6HvmkXeARd/3WUemsndUW7JQVT7YUfIa9yFUlU4nZgOJlP59N0Qd8vO5inLcY3ki8giZIsoXSvayg8D3lplG9J8FqyzNAWf0VAf6PScC7rD4YaLTWoQwFWT3i9DG0YdCiR3jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G1NWipWd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712063881;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PU8e+iIYGTu09EvDAIMMFH5RenifQoc8Af+tvO74/d4=;
+	b=G1NWipWdzFnJ/GzYsSeowR0v3qR+I+ur0UoB8gFLA7driGIY1vnN+ozREY5PotLeMElhbE
+	9sk5vy2s2IdxxIkhnsUMyoaCvMaRdljblKc/QLemVCRrW62ewk+ER3PjG4oApRuq2Ik9xU
+	X4LFjkLnuzXjvNo49zY3tWsZNQaoSXU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-563-kJmkFgwQN92ddHu7DkpNbQ-1; Tue, 02 Apr 2024 09:17:59 -0400
+X-MC-Unique: kJmkFgwQN92ddHu7DkpNbQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4155db7b540so6262655e9.1
+        for <linux-pci@vger.kernel.org>; Tue, 02 Apr 2024 06:17:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712063879; x=1712668679;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PU8e+iIYGTu09EvDAIMMFH5RenifQoc8Af+tvO74/d4=;
+        b=ayH4pBcxmfaA/3q8npCZq8HL5T8jRe3bjKPseW0M+ab2jUFijjAFgnWgSnz9hRUYBn
+         R+4vsZLN8C1ml4igzq+MdYGQP2kWCsAC9C08uZUoaoUEvOBAK9+O8wSPvKyfd0ofIWyM
+         piTMNoXREPvgqh4yrfOzO5u81U0D8tEICzAyBXSHsZAWyDTI823WPw8iaQO9PYax9fJm
+         4Rbh8C+00haD4z/DywctI4M8eKZS3icPiSNmiyiMJVr8d6wtXZqZt1DlI1shIiu4WsrA
+         n+7dSDctE4uFWtiXexnaTqV35KM6ppUakadiiCYFLzRXCf1pc1AFYW1X6O3Bzo3KkeMj
+         2qzw==
+X-Gm-Message-State: AOJu0YyIziodflS7qNLJCp7DP4WMzlfq6X2Yjw7o+RnFqLFGJKVZhRzX
+	UqV0NdxPWm1Q8T8G0h7kHRvM7rdZDR7KtXLnS0GDncMfvkX6ntcAkw6UZIrSwrj+chD4MuzrryK
+	1B2DNZoTs/rQn62XKy6nlbnp9U7e1msghxhyxnv97i94E88dVb/G7sdAyMw==
+X-Received: by 2002:a05:600c:5114:b0:414:8070:cdc9 with SMTP id o20-20020a05600c511400b004148070cdc9mr9709307wms.2.1712063878758;
+        Tue, 02 Apr 2024 06:17:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFxChee4ihAhzMMU+U8ThOu2Z8pGkOAaAkyDBP2LZiAO+4fIE+eH5KfxbBik1I6m4qtaE/rHg==
+X-Received: by 2002:a05:600c:5114:b0:414:8070:cdc9 with SMTP id o20-20020a05600c511400b004148070cdc9mr9709294wms.2.1712063878345;
+        Tue, 02 Apr 2024 06:17:58 -0700 (PDT)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id m28-20020a05600c3b1c00b00414688af147sm21201064wms.20.2024.04.02.06.17.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 06:17:57 -0700 (PDT)
+Message-ID: <a0d0b6b1269babb6a8f4e3bcceafee87bb49dcd1.camel@redhat.com>
+Subject: Re: [PATCH 0/2] PCI: Add and use pcim_iomap_region()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Heiner Kallweit <hkallweit1@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>,  Realtek linux nic maintainers
+ <nic_swsd@realtek.com>, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, David Miller
+ <davem@davemloft.net>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"netdev@vger.kernel.org"
+	 <netdev@vger.kernel.org>
+Date: Tue, 02 Apr 2024 15:17:56 +0200
+In-Reply-To: <7af7182d-0f14-4111-b0c4-b57d2d24edd9@gmail.com>
+References: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
+	 <4cf0d7710a74095a14bedc68ba73612943683db4.camel@redhat.com>
+	 <348fa275-3922-4ad1-944e-0b5d1dd3cff5@gmail.com>
+	 <7af7182d-0f14-4111-b0c4-b57d2d24edd9@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|BY5PR12MB4244:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	tLHiW9jcWcEGn8EqsmT8zKrR1ih11/gVWpb3Hd77kVvGQSmJgFwULP2n6XhAq/I+HCj0fX1WY5rC1VziHiWf2lWC4L742FqwaHry8UEmMvlzFM6z1Yr/deyeB5npB3NRrOUIl5jJ9VYvQprUV8312bpc3kJFVMXrVboaIptJEDwj44BeJdfQzH9qayObnEzY/G6pLEe7FjTyWUUD4MTiw2d+zqJCXwwGkb7xsuCyZGoLdEx/0ncKcHUmCtBdew/KZKuWq1+Ho9mvyGI6i0CemEXzOC6oAaZwB9F64w9pTlTjpnxSd/tB5JobsWj6BLA1EfafFFA+WwR2AKnVxmDUr4sOi7pYyj8m/xoT/36AiSDw7Qx6+bHlYgzraHKroYuqhnohXRnepZQnWXyIEuUlPizbJJ/9FVnddF+soEif33qF9dziFBz6CAZPR9NVY5Sq1jLSsmZ+aoy3K5ZjykvYaEujF6ozUgVjUb8y0KSvANMwWp9dtqbd04HlA/i+nP2QpQn0cP2NljVGHUq2Wcv7YExB95GwdPQogGw2tInhSmFsoH8q1o7n9rLh7ZG+q2GRkb6rGUcH1QNrHYq9deJHtjOQnFr+5IVovIpAE+0Dc99YfERq/8Fu6l4HmanJ9NCo5EcCovuGyR/nlJMG+APZKDSWlg5wQ1ZMzaw3B0xo/nw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K3FaRXZYT1BsU01BYktJRTNJZHM1ZTh1aGtvc0plYlFNNXlVdnZPREhVQ0Ri?=
- =?utf-8?B?TUg1czJUb01KNWNxUDE1cjBMcGRUd2oxQmJyVmNQQytobHlLNG5laVl1MFQy?=
- =?utf-8?B?VFpqTXdzVnVBVWhDRXBoQUtGeURkNjFWRCsrUFdWR1hJR1U3VHVFMUsvTXFT?=
- =?utf-8?B?Vncycm9MelRPTi9Qa2EyMS9uUitzUGZyZHZlTzRFcWw2c3RKNklJeklsVGhk?=
- =?utf-8?B?V1VrSGIwUFBxdjZXd1A0UndtUWpFai9HbmVGMjNMWWI0cmJMbmpBcGhMZ1V5?=
- =?utf-8?B?aE9Ta293ZmgzY0lhMVNYVDMxNWFodkxTZWNqZDc0QjBtV1VpS1ZEempjRC9K?=
- =?utf-8?B?Zlh0VTZVR08rL3VTTENKQit1ZDVFZHFWSmRXWXUrSWhGRm9USXRCbk9hUzhS?=
- =?utf-8?B?TzI3NmpEdnNJUWRVbUdXckFWbHVHSDU2S0h5dEhJL0QwMWpqVC9uWFNaZTg1?=
- =?utf-8?B?NEU0Tk56R25DQkNnUHZVUE85NmVLcFBncU5pOGx5eXY2bnNqajJ4OVdGelhq?=
- =?utf-8?B?eTY1MHB6TFRqVmFxNGNzY0JQcDdRckpIU3RuTURmbE0vTWdzV0JnQjlWd0Ri?=
- =?utf-8?B?cmMva0QyZCtKWnFScFc5L1Q3TWhvRVBvNmlaNTZ0WjlIeVd1RGgyWmdnRjBQ?=
- =?utf-8?B?NW1lNTNrdTJTZ082K1laRU9SdmEyYStEWElkbFRaZkpDN1cxTDZZMTIzYlBm?=
- =?utf-8?B?UzROYVZVN085VGFsQUtiOHAvVW96MXFtdjg2L1ZLc1F3NnFqRlZ2TUJXMlZr?=
- =?utf-8?B?bEZVRU1QRDVkcGtYUTJONE50WmVLL0dKeFB5ZktkcStIMU45UjA3T05ia3RL?=
- =?utf-8?B?V24xZnVoOXZCMC9lU2pYMlVVYUlmcWtaUDBXam8zdVZramZGZG9MWE5CSytz?=
- =?utf-8?B?T29WSzBrRUw4YnpnTjVra1doZjFJUFZuMkpaWHFveVkzMzY4dFdYYk4yYkxW?=
- =?utf-8?B?WDZ0V1NZcUJLUm5BVGUwbExHQ1MzbFpHRk4vbmhwTTMwSHdzR0ZGOVVkZU85?=
- =?utf-8?B?SWdLaXNLUFA3dkdDaVNNbmRxS2VBZlVnZ1NyWVdoVFE5eDRXei8rcnJPTUJV?=
- =?utf-8?B?Sy9NRm5KWFRyL1VVVlE3SVYzSWRub1Bkd0VxTzFhZXRyQnFrLy9pQjVONzNk?=
- =?utf-8?B?VGFBVU16UXVLemhTRFhBbFhnYmoydnlUelhqU08zdmd6bjJ4anB4WWVVS0RL?=
- =?utf-8?B?cFZiZk5WaTNQRFN5SG96djRKdVUwN2VudW9VV0t5ZDBOU3VEQjY2cksvVktQ?=
- =?utf-8?B?UjgwaXd6YTFGeW1ZN2x2T0dtcGs1OEluazN4RWlnSGZlNTl5S3J0TEdQQ1ZD?=
- =?utf-8?B?TW02VHJqM09BZllmQWpLZ3diUmErQnl4ck4zbEFnOEo4cjVEQmtYYldWbUpt?=
- =?utf-8?B?VjNtUE9aazI4aHppSFFWWVVTcFBzTEcxcktzTXpDTjJ6T3YrS1BxeDdoMzNZ?=
- =?utf-8?B?UkFKMkgrQUZldUZySElKREU3a1VIYVRGRkxCMTJCYnR3emJZNVdZRzRoWW16?=
- =?utf-8?B?YXg4cEpGcnNxT1hJTHdjVExqSGswQS9KWC94cHVCbmxNb0RQNzZYbUdRVk5o?=
- =?utf-8?B?Z2xsR0xFYkx4NU5uRVhuYWlRSWZ1cytwZGhLVVpCY1kvbjNzcXlSV1dKUm5R?=
- =?utf-8?B?U2F4cThRUm9qVy8rQW5ZdEVWTktjak95eXJ1R2Y3eG5PT1U2Zkx6VHdOL0xE?=
- =?utf-8?B?bmg5ZENuZGVob0ZBU2tnbEtwc2dJUTdiWlpKbldFMDR5TExTVzk4ZFJOSXcx?=
- =?utf-8?B?ZE9lQWlxcXZyU1N1ODcwbWpuanVJYWlsU0dKUTRuQjl5ZktTQk9mMmlJSWJs?=
- =?utf-8?B?b01YYmR6emptc2l3TUI5ZjdSSzRMb1o0NTFJNStaT0t2cmF3ZmVyYXJFN1FY?=
- =?utf-8?B?dXNNWEtpK3BZV2Y0SmNpMExBU0wxNGdwaUxIblV0ZmxqNEYrWnV0Q0lVMk41?=
- =?utf-8?B?c1dSSTJxREEweUoxYmQ3VW1MVmdKdEFQQlpPMWFWUWZnSGV3aTRJRGN2MGlZ?=
- =?utf-8?B?bnd2a3ZrUTZzaEtuNDFzYnFvZkIxWkRQQ0dLbmtPUmFzZ3Z2OWwrdDNEUGZV?=
- =?utf-8?B?eEtaMkpSTSsrWk5rZVdFRjAwckJOZHd6MUNtSXcxL05hTVdQVWxvajBsenRh?=
- =?utf-8?Q?mYOiNOcov4zqgoWsT8/z4nCJb?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e946729-5164-4340-fe49-08dc531202d0
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 12:40:00.4234
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zW+aB48wBIC4RBoVq9Gd/QYhxg413KkIjFMsIAimm4tsomXrhN4Lvzryz3oPZdV7QWb4jxpXo5S64st2VE3UmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4244
 
+On Thu, 2024-03-28 at 23:03 +0100, Heiner Kallweit wrote:
+> On 28.03.2024 18:35, Heiner Kallweit wrote:
+> > On 27.03.2024 14:20, Philipp Stanner wrote:
+> > > On Wed, 2024-03-27 at 12:52 +0100, Heiner Kallweit wrote:
+> > > > Several drivers use the following sequence for a single BAR:
+> > > > rc =3D pcim_iomap_regions(pdev, BIT(bar), name);
+> > > > if (rc)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0error;
+> > > > addr =3D pcim_iomap_table(pdev)[bar];
+> > > >=20
+> > > > Let's create a simpler (from implementation and usage
+> > > > perspective)
+> > > > pcim_iomap_region() for this use case.
+> > >=20
+> > > I like that idea =E2=80=93 in fact, I liked it so much that I wrote t=
+hat
+> > > myself, although it didn't make it vor v6.9 ^^
+> > >=20
+> > > You can look at the code here [1]
+> > >=20
+> > > Since my series cleans up the PCI devres API as much as possible,
+> > > I'd
+> > > argue that prefering it would be better.
+> > >=20
+> > Thanks for the hint. I'm not in a hurry, so yes: We should refactor
+> > the
+> > pcim API, and then add functionality.
+> >=20
+> > > But maybe you could do a review, since you're now also familiar
+> > > with
+> > > the code?
+> > >=20
+> > I'm not subscribed to linux-pci, so I missed the cover letter, but
+> > had a
+> > look at the patches in patchwork. Few remarks:
+> >=20
+> > Instead of first adding a lot of new stuff and then cleaning up,
+> > I'd
+> > propose to start with some cleanups. E.g. patch 7 could come first,
+> > this would already allow to remove member mwi from struct
+> > pci_devres.
+> >=20
+> When looking at the intx members of struct pci_devres:
+> Why not simply store the initial state of bit
+> PCI_COMMAND_INTX_DISABLE
+> in struct pci_dev and restore this bit in do_pci_disable_device()?
+> This should allow us to get rid of these members.
 
+Those members have been there before I touched anything.
+Patch #8 removes them entirely, so I'd say that result has been
+achieved.
 
-On 01/04/2024 16:01, Vidya Sagar wrote:
-> Tegra194 PCIe probe path is taking failure path in success case for
-> Endpoint mode. Return success from the switch case instead of going
-> into the failure path.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Besides, considering the current fragmentation of devres within the PCI
+subsystem, I think it's wise to do 100% of devres operations in
+devres.c
 
-Fixes: c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
+P.
 
-> ---
->   drivers/pci/controller/dwc/pcie-tegra194.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 4bba31502ce1..1a8178dc899a 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -2273,11 +2273,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->   		ret = tegra_pcie_config_ep(pcie, pdev);
->   		if (ret < 0)
->   			goto fail;
-> +		else
-> +			return 0;
->   		break;
->   
->   	default:
->   		dev_err(dev, "Invalid PCIe device type %d\n",
->   			pcie->of_data->mode);
-> +		ret = -EINVAL;
->   	}
->   
->   fail:
+>=20
+> > By the way, in patch 7 it may be a little simpler to have the
+> > following
+> > sequence:
+> >=20
+> > rc =3D pci_set_mwi()
+> > if (rc)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0error
+> > rc =3D devm_add_action_or_reset(.., __pcim_clear_mwi, ..);
+> > if (rc)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0error
+> >=20
+> > This would avoid the call to devm_remove_action().
+> >=20
+> > We briefly touched the point whether the proposed new function
+> > returns
+> > NULL or an ERR_PTR. I find it annoying that often the kernel doc
+> > function
+> > description doesn't mention whether a function returns NULL or an
+> > ERR_PTR
+> > in the error case. So I have to look at the function code. It's
+> > also a
+> > typical bug source.
+> > We won't solve this in general here. But I think we should be in
+> > line
+> > with what related functions do.
+> > The iomap() functions typically return NULL in the error case.
+> > Therefore
+> > I'd say any new pcim_...iomap...() function should return NULL too.
+> >=20
+> > Then you add support for mapping BAR's partially. I never had such
+> > a use
+> > case. Are there use cases for this?
+> > Maybe we could omit this for now, if it helps to reduce the
+> > complexity
+> > of the refactoring.
+> >=20
+> > I also have bisectability in mind, therefore my personal preference
+> > would
+> > be to make the single patches as small as possible. Not sure
+> > whether there's
+> > a way to reduce the size of what currently is the first patch of
+> > the series.
+> >=20
+> > > Greetings,
+> > > P.
+> > >=20
+> > > [1]
+> > > https://lore.kernel.org/all/20240301112959.21947-1-pstanner@redhat.co=
+m/
+> > >=20
+> > >=20
+> > > >=20
+> > > > Note: The check for !pci_resource_len() is included in
+> > > > pcim_iomap(), so we don't have to duplicate it.
+> > > >=20
+> > > > Make r8169 the first user of the new function.
+> > > >=20
+> > > > I'd prefer to handle this via the PCI tree.
+> > > >=20
+> > > > Heiner Kallweit (2):
+> > > > =C2=A0 PCI: Add pcim_iomap_region
+> > > > =C2=A0 r8169: use new function pcim_iomap_region()
+> > > >=20
+> > > > =C2=A0drivers/net/ethernet/realtek/r8169_main.c |=C2=A0 8 +++----
+> > > > =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 28
+> > > > +++++++++++++++++++++++
+> > > > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+> > > > =C2=A03 files changed, 33 insertions(+), 5 deletions(-)
+> > > >=20
+> > >=20
+> >=20
+> > Heiner
+>=20
 
-
-Otherwise ...
-
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
-
--- 
-nvpublic
 
