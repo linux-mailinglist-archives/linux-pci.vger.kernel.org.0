@@ -1,56 +1,60 @@
-Return-Path: <linux-pci+bounces-5557-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5558-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3B27895886
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 17:47:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DB45895925
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 18:01:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 155211C21E4A
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 15:47:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E1024B222B3
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 16:01:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE9C11339BD;
-	Tue,  2 Apr 2024 15:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F591133439;
+	Tue,  2 Apr 2024 16:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8c2190C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSLA4esj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AF7133994;
-	Tue,  2 Apr 2024 15:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91AB133422;
+	Tue,  2 Apr 2024 16:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712072631; cv=none; b=ajP3oxDpafUxYu0C/Wxuo4/AGQs+/NuOZoRLteD6XoUEmiV4fkYptf1vsvMIZCk2aEFrIZHLnPZeMYE21vY2XwDhBMKyjoyggsZ5HUM83CD+JmFlALGXgjEAr/HNYuskn4RjXS6AsSsdtI3JKwy67biiRiXlL2M9jZ+DNRqyusc=
+	t=1712073698; cv=none; b=qihu3l16+ZPgvQdtp153znlotydyIKZ3M/b5zVfefKH0YH1HcUjlLNEh8gukuZwKu0ewHXsgUTgEvPKaAXmjhK2E/RspNiz54VK4VbknY1s6CBUQzzdSGvS/KHgO0k4oDXwk3jsDTLmgriOWdsJXF75vizoHq4dqi8djkYdQORo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712072631; c=relaxed/simple;
-	bh=RarfvLq+0S7Qq4OzdY0QupY4nd0iXB2pPjTkmq4uGLU=;
+	s=arc-20240116; t=1712073698; c=relaxed/simple;
+	bh=piAeRL8jL5H//bWXatXO+ZkDRSotyneYNOXg1rYkXlU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=suRedW8nQrPzlCHqMweZFN6MBdynbPOTB0ahH8tnD40OUeJyWS2TsEsMQjtk3Tt3H9O4Lio1l8rEzCw+YWNsQXFx2z9go6L+EFLElseSt2jFLf61JdZ8wq4gf3fNF/HHJPFx61p7vhmpXTMTFZjpP4Mrcj2xs87QhfxdGTuL0OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8c2190C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12F5C433C7;
-	Tue,  2 Apr 2024 15:43:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PpJk4bENlLm86kCAYz8/zif2ZST+rJTnvpbrLjphja03INuoMqc+sXxeN3nIbShukjz3AjeiAEkHl20fn3wqLUHTVp+8tvPEGkZQUZRJ67w7q5bW/yVfTFlmjF/rh6qfBweyXPnYJ105+XIFiOckuRBBpD7swZUMbJU6r/OB9nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSLA4esj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36B04C433F1;
+	Tue,  2 Apr 2024 16:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712072631;
-	bh=RarfvLq+0S7Qq4OzdY0QupY4nd0iXB2pPjTkmq4uGLU=;
+	s=k20201202; t=1712073697;
+	bh=piAeRL8jL5H//bWXatXO+ZkDRSotyneYNOXg1rYkXlU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f8c2190Ct4RIqG7jfTaUcyNMOayYCZONs1OhBRf4HbgikqzzKoNuI60Pb1z4hUJA1
-	 jnSi/Fe9r1tNKVdqkz370NtkPMfSkETpUv2VSeafh0wFjt8coy37FJsoLSAcEhDORd
-	 f2dB75H+qf6G0GVKZKnoSVmfJgucMk5AT74ly0lxuyen9BEXQsvVA+1Zp3RfgR6DPF
-	 B3rJvuOT1ae04dq98UUwlonx/Ti3yktYt8tupRZv0s3CQbkFqLIlnMX5vQNFOfW9hY
-	 yzS8eZDSmT0lWG9wE5vQeEA6Tfc0sJZTVTZ96NybxtyN361WF4aNQit+xgcJ6eqbB9
-	 wL5C0UV+//gRw==
-Date: Tue, 2 Apr 2024 17:43:44 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: rdunlap@infradead.org, hch@infradead.org, corbet@lwn.net,
-	dmaengine@vger.kernel.org, imx@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lizhijian@fujitsu.com, mst@redhat.com
-Subject: Re: [PATCH v2 1/1] docs: dma: correct dma_set_mask() sample code
-Message-ID: <ZgwnsEWQXluVsWm-@ryzen>
-References: <20240401174159.642998-1-Frank.Li@nxp.com>
+	b=aSLA4esj25B6Ow9aAFy65xp2uv+GjcvwJVWZJpNlI4qQX93hI9VMBj9DB5pnefXCl
+	 Z5R2qfqGdYil99aiGgFNQIfd+8Gu0mV8X3a7Ti5pw5ZqXiBvnDnJjn54qU6TEdLj3c
+	 fnvjiOLwNPj2sXiwJLxnlIPpzwK5ns6clE5kms1wEp+0HkgQL36ALQc7aZqXCcYERo
+	 QPjPhY1citXxJ7N2/I1kxnrX89IeSHQqzr/4hvCiXuyVjbjUnhGOTQk3F+OLrsGu5O
+	 PBf/CVoGi2mT+YAd2KqzxYFXrsnN29t7LWbTPq/ZYhaSHLHIYcEFI5JRJmLT4hrI13
+	 8odU9toOF8e3Q==
+Date: Tue, 2 Apr 2024 11:01:35 -0500
+From: Rob Herring <robh@kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lpieralisi@kernel.org, mmaddireddy@nvidia.com,
+	linux-kernel@vger.kernel.org, will@kernel.org, jonathanh@nvidia.com,
+	kthota@nvidia.com, frowand.list@gmail.com, kw@linux.com,
+	linux-arm-kernel@lists.infradead.org, lenb@kernel.org,
+	devicetree@vger.kernel.org, sagar.tv@gmail.com, rafael@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org, treding@nvidia.com,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH V5] PCI: Add support for preserving boot configuration
+Message-ID: <171207369295.222743.17702844066682854972.robh@kernel.org>
+References: <20240223080021.1692996-1-vidyas@nvidia.com>
+ <20240401075031.3337211-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,133 +63,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240401174159.642998-1-Frank.Li@nxp.com>
+In-Reply-To: <20240401075031.3337211-1-vidyas@nvidia.com>
 
-On Mon, Apr 01, 2024 at 01:41:59PM -0400, Frank Li wrote:
-> There are bunch of codes in driver like
+
+On Mon, 01 Apr 2024 13:20:31 +0530, Vidya Sagar wrote:
+> Add support for preserving the boot configuration done by the
+> platform firmware per host bridge basis, based on the presence of
+> 'linux,pci-probe-only' property in the respective PCI host bridge
+> device-tree node. It also unifies the ACPI and DT based boot flows
+> in this regard.
 > 
->        if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
->                dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
-> 
-> Actually it is wrong because if dma_set_mask_and_coherent(64) fails,
-> dma_set_mask_and_coherent(32) will fail for the same reason.
-> 
-> And dma_set_mask_and_coherent(64) never returns failure.
-> 
-> According to the definition of dma_set_mask(), it indicates the width of
-> address that device DMA can access. If it can access 64-bit address, it
-> must access 32-bit address inherently. So only need set biggest address
-> width.
-> 
-> See below code fragment:
-> 
-> dma_set_mask(mask)
-> {
-> 	mask = (dma_addr_t)mask;
-> 
-> 	if (!dev->dma_mask || !dma_supported(dev, mask))
-> 		return -EIO;
-> 
-> 	arch_dma_set_mask(dev, mask);
-> 	*dev->dma_mask = mask;
-> 	return 0;
-> }
-> 
-> dma_supported() will call dma_direct_supported or iommux's dma_supported
-> call back function.
-> 
-> int dma_direct_supported(struct device *dev, u64 mask)
-> {
-> 	u64 min_mask = (max_pfn - 1) << PAGE_SHIFT;
-> 
-> 	/*
-> 	 * Because 32-bit DMA masks are so common we expect every architecture
-> 	 * to be able to satisfy them - either by not supporting more physical
-> 	 * memory, or by providing a ZONE_DMA32.  If neither is the case, the
-> 	 * architecture needs to use an IOMMU instead of the direct mapping.
-> 	 */
-> 	if (mask >= DMA_BIT_MASK(32))
-> 		return 1;
-> 
-> 	...
-> }
-> 
-> The iommux's dma_supported() actually means iommu requires devices's
-> minimized dma capability.
-> 
-> An example:
-> 
-> static int sba_dma_supported( struct device *dev, u64 mask)()
-> {
-> 	...
-> 	 * check if mask is >= than the current max IO Virt Address
->          * The max IO Virt address will *always* < 30 bits.
->          */
->         return((int)(mask >= (ioc->ibase - 1 +
->                         (ioc->pdir_size / sizeof(u64) * IOVP_SIZE) )));
-> 	...
-> }
-> 
-> 1 means supported. 0 means unsupported.
-> 
-> Correct document to make it more clear and provide correct sample code.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
+> V5:
+> * Addressed Rob's review comments
 > 
-> Notes:
->     Change from v1 to v2:
->     - fixed typo, review by Randy Dunlap
+> V4:
+> * Addressed Bjorn's review comments
 > 
->  Documentation/core-api/dma-api-howto.rst | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
+> V3:
+> * Unified ACPI and DT flows as part of addressing Bjorn's review comments
 > 
-> diff --git a/Documentation/core-api/dma-api-howto.rst b/Documentation/core-api/dma-api-howto.rst
-> index e8a55f9d61dbc..5f6a7d86b6bc2 100644
-> --- a/Documentation/core-api/dma-api-howto.rst
-> +++ b/Documentation/core-api/dma-api-howto.rst
-> @@ -203,13 +203,33 @@ setting the DMA mask fails.  In this manner, if a user of your driver reports
->  that performance is bad or that the device is not even detected, you can ask
->  them for the kernel messages to find out exactly why.
->  
-> -The standard 64-bit addressing device would do something like this::
-> +The 24-bit addressing device would do something like this::
->  
-> -	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))) {
-> +	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(24))) {
->  		dev_warn(dev, "mydev: No suitable DMA available\n");
->  		goto ignore_this_device;
->  	}
->  
-> +The standard 64-bit addressing device would do something like this::
-> +
-> +	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))
-> +
-> +dma_set_mask_and_coherent() never return fail when DMA_BIT_MASK(64). Typical
-> +error code like::
-> +
-> +	/* Wrong code */
-> +	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
-> +		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
-> +
-> +dma_set_mask_and_coherent() will never return failure when bigger then 32.
+> V2:
+> * Addressed issues reported by kernel test robot <lkp@intel.com>
+> 
+>  drivers/acpi/pci_root.c                  | 12 -----
+>  drivers/pci/controller/pci-host-common.c |  4 --
+>  drivers/pci/of.c                         | 57 +++++++++++++++++++-----
+>  drivers/pci/probe.c                      | 46 ++++++++++++++-----
+>  include/linux/of_pci.h                   |  6 +++
+>  5 files changed, 88 insertions(+), 37 deletions(-)
+> 
 
-Nit:
-s/then/than/
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-
-> +So typical code like::
-> +
-> +	/* Recommended code */
-> +	if (support_64bit)
-> +		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> +	else
-> +		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> +
->  If the device only supports 32-bit addressing for descriptors in the
->  coherent allocations, but supports full 64-bits for streaming mappings
->  it would look like this::
-> -- 
-> 2.34.1
-> 
 
