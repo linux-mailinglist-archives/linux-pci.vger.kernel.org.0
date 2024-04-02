@@ -1,33 +1,34 @@
-Return-Path: <linux-pci+bounces-5574-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5575-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CC56896063
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 01:48:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F03C896064
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 01:48:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 163572824FC
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 23:48:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 707261C21EA8
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 23:48:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42555C5EE;
-	Tue,  2 Apr 2024 23:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF9E812CD8A;
+	Tue,  2 Apr 2024 23:48:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E5058ACC;
-	Tue,  2 Apr 2024 23:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D627A58ACC;
+	Tue,  2 Apr 2024 23:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712101730; cv=none; b=CYvYoaq4CXJ9Hh3tLfsiqvKgITrVjyoR7NGwK8bQx+pGQGXPIX/gmGBislwZZ6MXVp/XRKzV9NuoEKW873VyVmK9qj6qsP5/ilCCNE0YIoqL0hxX+jgVxJzJAJPbihc8kIUVRwg38187NNU/SlGBRTQJJhCK6hE+sJsIWJg1Nuk=
+	t=1712101731; cv=none; b=auJtup4vnCrz3KWqacr31nL76tQY+lss266y6u/vzXDA02Xu8KjBpvJ7O9l1nUzMvyOj88cvb7IHHiRewrfIE1zjJxXTE1zFJ047wSrXexdyUh5D32tW6arD/8uCy8vZTU/v/I++BqXc4STy/Ml0Mdw6Jh4n+VPKHSpQ55tUDRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712101730; c=relaxed/simple;
-	bh=zjgEcDdyFbe4X+zpb5MuXUFZgieVH6PXaVfM9aAdiOw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QRE+w2WCpLY+o8btcpZehPOM3GT2i4vU/pX/IHR3K7fBCay+PKvW+zpzktG50YMWXKiascZpe6m301XFCgqn6suXOhgmssTsBJIyt4nihJm77Dq98NRJ+5QjTBL4eUvmMa4mAC3gFo7hqmXjlr1zRADlcg724clB6aS27mK3Njw=
+	s=arc-20240116; t=1712101731; c=relaxed/simple;
+	bh=mA+sU05JoMmTiNgM3hHSVkqRK59ibDyVx+FChXurszA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AeVkXz01FHJdu80ARS6wa+jpfAQ6Syqa4IajS+tyORUpLWgAVimB8z78QxoUP84B5tvbu6olo8Uf1JqzYbRFAz4RAkkKoGPXu1FhLK0pbANHtjK/3QzaZzDZOYQ8rXq0kAd1i/hN6N3ek+u/dfrDXBOrf7HDuiTtDzd35ggpkkM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C83C433C7;
-	Tue,  2 Apr 2024 23:48:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC59C43390;
+	Tue,  2 Apr 2024 23:48:51 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org,
 	linux-pci@vger.kernel.org
@@ -38,11 +39,14 @@ Cc: dan.j.williams@intel.com,
 	Jonathan.Cameron@huawei.com,
 	dave@stgolabs.net,
 	bhelgaas@google.com,
-	lukas@wunner.de
-Subject: [PATCH 0/4 v3] PCI: Add Secondary Bus Reset (SBR) support for CXL 
-Date: Tue,  2 Apr 2024 16:45:28 -0700
-Message-ID: <20240402234848.3287160-1-dave.jiang@intel.com>
+	lukas@wunner.de,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH v3 1/4] PCI/cxl: Move PCI CXL vendor Id to a common location from CXL subsystem
+Date: Tue,  2 Apr 2024 16:45:29 -0700
+Message-ID: <20240402234848.3287160-2-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240402234848.3287160-1-dave.jiang@intel.com>
+References: <20240402234848.3287160-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -51,63 +55,122 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Bjorn,
-Please consider this series for kernel 6.10. The series attempt to
-add secondary bus reset (SBR) support to CXL. By default, SBR for CXL is
-masked. Per CXL specification r3.1 8.1.5.2, the Port Control Extensions
-register bit 0 (Unmask SBR) in the host bridge controls the masking of CXL SBR.
-"When 0, SBR bit in Bridge Control register of this Port has no effect. When 1,
-the Port shall generate hot reset when SBR in Bridge Control gets set to 1.
-Default value of this bit is 0. When the Port is operating in PCIe mode or RCD
-mode, this field has no effect on SBR functionality and Port shall follow PCIe
-Base Specification."
+Move PCI_DVSEC_VENDOR_ID_CXL in CXL private code to PCI_VENDOR_ID_CXL in
+pci_ids.h in order to be utilized in PCI subsystem.
 
-v3:
-- Move PCI_DVSEC_VENDOR_ID_CXL to PCI_VENDOR_ID_CXL in pci_ids.h (Bjorn)
-- Remove of CXL device checking. (Bjorn)
-- Rename defines to PCI_DVSEC_CXL_PORT_*. (Bjorn)
-- Fix SBR define in commit log. (Bjorn)
-- Update comment on dvsec not found. (Dan)
-- Check return of dvsec value read for error. (Dan)
-- Move cxl_port_dvsec() to an earlier patch. (Dan)
-- Add pci_cfg_access_lock() for bridge access. (Dan)
-- Change cxl_bus_force method to cxl_bus. (Dan)
-- Rename decoder_hw_mismatch() to __cxl_endpoint_decoder_reset_detected(). (Dan)
-- Move CXL register access function to core/pci.c. (Dan)
-- Add kernel taint to decoder reset warning. (Dan)
+The response Bjorn received from the PCI SIG was "1E98h is not a VID in our
+system, but 1E98 has already been reserved by CXL." He suggested "we should
+add '#define PCI_VENDOR_ID_CXL 0x1e98' so that if we ever *do* see such an
+assignment, we'll be more likely to flag it as an issue.
 
-v2:
-- Use pci_upstream_bridge() instead of dev->bus->self. (Lukas)
-- Rename is_cxl_device() to pci_is_cxl(). (Lukas)
-- Return -ENOTTY on error. (Lukas)
+Link: https://lore.kernel.org/linux-cxl/20240402172323.GA1818777@bhelgaas/
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/cxl/core/pci.c  | 6 +++---
+ drivers/cxl/core/regs.c | 2 +-
+ drivers/cxl/cxlpci.h    | 1 -
+ drivers/cxl/pci.c       | 2 +-
+ drivers/perf/cxl_pmu.c  | 2 +-
+ include/linux/pci_ids.h | 2 ++
+ 6 files changed, 8 insertions(+), 7 deletions(-)
 
-Patch 1:
-Move PCI_DVSEC_VENDOR_ID_CXL to PCI_VENDOR_ID_CXL in pci_ids.h and
-adjust related CXL bits.
-
-Patch 2:
-Add check to PCI bus_reset path for CXL device and return with error if "Unmask
-SBR" bit is set to 0. This allows user to realize that SBR is masked for this
-CXL device. However, if the user sets the "Unmask SBR" bit via a tool such as
-setpci, then the bus_reset will proceed.
-
-Patch3:
-Add a new PCI reset method "cxl_bus_force" in order to allow the user an
-intetional way to perform SBR. The code will set the "Unmask SBR" bit to
-1 and proceed with bus_reset. The original value of the bit will be restored
-after the reset operation.
-
-Patch4:
-CXL driver change that provides a ->reset_done() callback. It compares the
-hardware decoder settings with the existing software configuration and emit
-warning if they differ. The difference indicates that decoders were programmed
-before the reset and are now cleared after reset. There may be onlined system
-memory backed by CXL memory device that are now violently ripped away from
-kernel mapping.
-
-Patch series stemmed from this [1] patch. With comments [2] from Bjorn.
-
-[1]: https://lore.kernel.org/linux-cxl/20240215232307.2793530-1-dave.jiang@intel.com/
-[2]: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 0df09bd79408..c496a9710d62 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -525,7 +525,7 @@ static int cxl_cdat_get_length(struct device *dev,
+ 	__le32 response[2];
+ 	int rc;
+ 
+-	rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
++	rc = pci_doe(doe_mb, PCI_VENDOR_ID_CXL,
+ 		     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+ 		     &request, sizeof(request),
+ 		     &response, sizeof(response));
+@@ -555,7 +555,7 @@ static int cxl_cdat_read_table(struct device *dev,
+ 		__le32 request = CDAT_DOE_REQ(entry_handle);
+ 		int rc;
+ 
+-		rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
++		rc = pci_doe(doe_mb, PCI_VENDOR_ID_CXL,
+ 			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+ 			     &request, sizeof(request),
+ 			     rsp, sizeof(*rsp) + remaining);
+@@ -640,7 +640,7 @@ void read_cdat_data(struct cxl_port *port)
+ 	if (!pdev)
+ 		return;
+ 
+-	doe_mb = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
++	doe_mb = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_CXL,
+ 				      CXL_DOE_PROTOCOL_TABLE_ACCESS);
+ 	if (!doe_mb) {
+ 		dev_dbg(dev, "No CDAT mailbox\n");
+diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+index 372786f80955..da52fc9e234b 100644
+--- a/drivers/cxl/core/regs.c
++++ b/drivers/cxl/core/regs.c
+@@ -313,7 +313,7 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 		.resource = CXL_RESOURCE_NONE,
+ 	};
+ 
+-	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
++	regloc = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+ 					   CXL_DVSEC_REG_LOCATOR);
+ 	if (!regloc)
+ 		return -ENXIO;
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 93992a1c8eec..4da07727ab9c 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -13,7 +13,6 @@
+  * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
+  */
+ #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+-#define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
+ 
+ /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+ #define CXL_DVSEC_PCIE_DEVICE					0
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 2ff361e756d6..110478573296 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -817,7 +817,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	cxlds->rcd = is_cxl_restricted(pdev);
+ 	cxlds->serial = pci_get_dsn(pdev);
+ 	cxlds->cxl_dvsec = pci_find_dvsec_capability(
+-		pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
++		pdev, PCI_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
+ 	if (!cxlds->cxl_dvsec)
+ 		dev_warn(&pdev->dev,
+ 			 "Device DVSEC not present, skip CXL.mem init\n");
+diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+index 308c9969642e..a1b742b1a735 100644
+--- a/drivers/perf/cxl_pmu.c
++++ b/drivers/perf/cxl_pmu.c
+@@ -345,7 +345,7 @@ static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
+ 
+ /* For CXL spec defined events */
+ #define CXL_PMU_EVENT_CXL_ATTR(_name, _gid, _msk)			\
+-	CXL_PMU_EVENT_ATTR(_name, PCI_DVSEC_VENDOR_ID_CXL, _gid, _msk)
++	CXL_PMU_EVENT_ATTR(_name, PCI_VENDOR_ID_CXL, _gid, _msk)
+ 
+ static struct attribute *cxl_pmu_event_attrs[] = {
+ 	CXL_PMU_EVENT_CXL_ATTR(clock_ticks,			CXL_PMU_GID_CLOCK_TICKS, BIT(0)),
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index a0c75e467df3..7dfbf6d96b3d 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2607,6 +2607,8 @@
+ 
+ #define PCI_VENDOR_ID_ALIBABA		0x1ded
+ 
++#define PCI_VENDOR_ID_CXL		0x1e98
++
+ #define PCI_VENDOR_ID_TEHUTI		0x1fc9
+ #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
+ #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
+-- 
+2.44.0
 
 
