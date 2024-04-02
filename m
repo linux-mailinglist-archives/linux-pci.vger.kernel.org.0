@@ -1,87 +1,81 @@
-Return-Path: <linux-pci+bounces-5517-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5518-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF738894B09
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 08:02:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D61D894B3E
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 08:21:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA6B7282CC2
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 06:02:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7032B20F7B
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 06:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98FA8182D4;
-	Tue,  2 Apr 2024 06:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EA1F17C72;
+	Tue,  2 Apr 2024 06:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rQkARcJk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFNSO88b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F6318050
-	for <linux-pci@vger.kernel.org>; Tue,  2 Apr 2024 06:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6916E17588
+	for <linux-pci@vger.kernel.org>; Tue,  2 Apr 2024 06:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712037727; cv=none; b=Js2X+j9BEdsOVxWzICmBKGjG+QKoJbHMJS0JdNLjcveHaKO7qr9d7jk+1vJrGULSpNVRIHgIFiY2qSp2I+QqVqx2QPr6MjJGlgFilGibJb8n3RJW8m3O/13d9U7QuuRzCrnSwJ98FULHp9xQ9Nx88LRJ17TWcxIKNnXOgE3cMwc=
+	t=1712038863; cv=none; b=P1TWxarbDgC9wJr7L5xVVC3jHd1FiiOSSAKiEWUKi6fKmLXd8PZVU3TqoWbgbUnSSdkIz7WUC2ibXEfM2ZzD6+fUjmEemxgQaxkswbQ7ND/cz0PBl++5CtDYw07K74VW2486DAB0knK1tN9ltCagml6+1iWgfA8rvXPogZQsnXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712037727; c=relaxed/simple;
-	bh=EZ7Tqo7UTGR0nuXtZvOwSsONYxTeiw8Y1skKOcWnaac=;
+	s=arc-20240116; t=1712038863; c=relaxed/simple;
+	bh=cNoa/WSKdG9WPeHZG826HsCLHIC3JAKzp9lZ2pmKVfk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TrsZDK+QCrQzJRqAmpxClULhBEqFZl/b8SrzWk7F7Va59/hncWuCPGIr+XDtFvgY23wHUljYUSQ9AFjCbA4mocsbxOg5H6UMIi6bTnDbU5R812NDKfYRKNPuz0b8DgKfSPevqqo0J/ijJhv79mlIitA9TeFD0zayOtsqYIypMwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rQkARcJk; arc=none smtp.client-ip=209.85.210.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=glUZxSUQJtPV0h05zGX3coQ9itRIGNLlU8Vvgklh/Jgt+K1D0WNX1DJK/WL6gg+aK2iS5/pCTCtIVq4ufUKhmKKA6NQc8pBvExApfDAJ7lUjgZd9SxSB1YAG3yYRqvWA6mSEFbWTLFGHhO8nPq+xJY+iSaFAi5+rnHpg392hqSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GFNSO88b; arc=none smtp.client-ip=209.85.167.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e6f4ad4c57so3818864b3a.2
-        for <linux-pci@vger.kernel.org>; Mon, 01 Apr 2024 23:02:05 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c3d7e7402dso3173997b6e.1
+        for <linux-pci@vger.kernel.org>; Mon, 01 Apr 2024 23:21:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712037725; x=1712642525; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712038861; x=1712643661; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=iWlujnh/UGREdcoJra5OBi+g0ocKuYapnQiOQEGk2r0=;
-        b=rQkARcJkisEh0mhyqSZ7pLUrOJNW0Y5DDWWi+G5VxELaeDIFupXbm4PvZK8iwqAqip
-         TuHS1kjCnaz5vQGm/DAEdzq2HJV7grFvrfAnoosVU8ZyOQqwckg2JfTOtREH6qN1AA4G
-         0pf8VxBpFTmAXN5P7pnTSPziv7hTIchEkLmAVWEg8qsvQVip6YL1/e5jhFbiioo4rmfy
-         dgTZi/jkkEwiQ0ut7j1pCgOgFJnZPVWmM4uCCqaVwd3Qv3eTdDzjs8xYIa7y2xlG7nXb
-         0tH3NViWzrgwFUrxlzTpqDZSa8y+kbVuvwf8VcqBtyq18PE/Q/FKc4tl1dhpsxdOHVUS
-         6xbA==
+        bh=6yuI2DajbRXNfiAuxNce9EkhiBZe7RWyRs8b4oAe0EA=;
+        b=GFNSO88bXjXH2PeBZW7LAYjHEk1Ptd7YcuIJ5D3zUGyEjQZtnbW02ALekw1eljdIrY
+         CLE67+GaFcExGRgk2aYYP2blg2PyLgByhbJaXg8aFwLsMy1t2vXCIXxHDhdN76HgRwyv
+         QQyPuzGAP1orDZ3LIFGV+xkDRER4Oss48Hesrzhfyc9gmd/N0M8efygPnbDUlrdbhaxL
+         QhGSL4nyaIIzWge8hjcntG3M2wtmb4X50wxzP6+RXmPix6prhyxQRDg+yNm90DgJb5h1
+         DgftHIifFqEAivlq3k1XAlMrEiEjn3PcJWOBPKnMnaR9r6lKSxgjartYDZzcMKNNrTOy
+         I/ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712037725; x=1712642525;
+        d=1e100.net; s=20230601; t=1712038861; x=1712643661;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iWlujnh/UGREdcoJra5OBi+g0ocKuYapnQiOQEGk2r0=;
-        b=jZtt4SQ0HmuUxbrsIr9OTVsIeqEffSdNQP9p6A66aXtlKmtXlBr0bzmthlroU7CLYC
-         W8zJHOO3coGUOBgpTDwYsQgLNlb2uonP8kAFv+daZtWD35QxtnQkcQO3vH8glMwic7x4
-         66VALUCN0RIoQyoJZTWa10doBQXrMfpxjGAmpBS+rtJEubz1JWLYnDEGcl/LxMuTwb1I
-         EmP5CsrZjC6kymtd5fwK4hp/xIQqDQMbwDPgzGOZ8bTnX9GIV9rfJKDtqxQtdUMSGWiL
-         djEHFoSuYfd5+OX0QKs7O22070mzCnOrxluSok3VeCr5sSk1Ibo/dC7mW/qrsHw52HV6
-         eNHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDfVSxwi6lbjvN73LpkdIqZkbpMC/KeQsEZ1ad80/X5LFVE+eQr08abcVUjyGaNA3AiosFyT9NhSO3tmKqvyYPevvAXKOJHKjz
-X-Gm-Message-State: AOJu0Yw0K5do8wJjCPKammllNETTTMxZTO6gwEMEQaDlYTlcCyla+8gi
-	Fjt930Fni8jw/XY6fkh+DHXFK9l+qhQPak+I9MGuxMmkE2U66W559/u876kAfQ==
-X-Google-Smtp-Source: AGHT+IEeY+bN8XZ6/697eZkIqE6Ld9gP5i46gSe5yu2qA3FvpRYE1YeXdblDII2YS6cwnxqeioQnpQ==
-X-Received: by 2002:a05:6a00:a83:b0:6ea:f444:341b with SMTP id b3-20020a056a000a8300b006eaf444341bmr10034781pfl.1.1712037725080;
-        Mon, 01 Apr 2024 23:02:05 -0700 (PDT)
+        bh=6yuI2DajbRXNfiAuxNce9EkhiBZe7RWyRs8b4oAe0EA=;
+        b=f90a48byEsxpIQMpiuU5WeCPor9Axr5suaGtWIQ+TLxgUbPi2IYSizPN9O76J9dQ25
+         EW5iK/vUt+qH/skr2x8JwBHwTqrC4o22ioV1TMrQHZikgHzpoH7eLMScZIcq3Nb/s9ID
+         AnWpoiR23pfCJaKONN9MnqG3CVQWim4Ka+cbAJ8G5juZaRSHk5bEQckuiLE27m4Ruwm2
+         tW8lmhmNXwnT4MD3hyC5arrnBT5AOuMu1i9aozbtX3Gh5yP9JpxCG1wXLCEwqcxtA0cL
+         gcXr0ut9GfRzo6u10TQmzIve1gsVVlyxA/mSz1qmVOcCut+kbVaRXCGLcXZWtkropjjw
+         dkpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmTJP0CuhWR5TNQBeScLT5GQn1XOrF1sOeGhZ6aIIz4mY2jr78n/Xj/u0eoPtw05Xe7BV89vkdr/4SVs+3MrLB7YPCjZeo4ZQE
+X-Gm-Message-State: AOJu0Yza2BG2jQucod259566cMitsOcfemh/ztILYOhPkVJdynwfjHit
+	YNJDOb7OSD/Sxw7PHY7FLOgBtGQP7op6lUfhM2d7DsyTDk8kdPMNtKkpaNi/gw==
+X-Google-Smtp-Source: AGHT+IG7fgTzLpJuGo2z55kJheG895TZsfWHkjmx9KC7ty7XYt+OjJ1AumllvKdmr19w8DVE6kNNIQ==
+X-Received: by 2002:a05:6808:2e92:b0:3c3:ef02:6a87 with SMTP id gt18-20020a0568082e9200b003c3ef026a87mr18063298oib.31.1712038860338;
+        Mon, 01 Apr 2024 23:21:00 -0700 (PDT)
 Received: from thinkpad ([2406:7400:92:96cc:b954:3c38:e709:b65f])
-        by smtp.gmail.com with ESMTPSA id fm1-20020a056a002f8100b006ead0ade02fsm8912427pfb.29.2024.04.01.23.02.01
+        by smtp.gmail.com with ESMTPSA id r7-20020aa79ec7000000b006e65d66bb3csm8916207pfq.21.2024.04.01.23.20.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 23:02:04 -0700 (PDT)
-Date: Tue, 2 Apr 2024 11:31:59 +0530
+        Mon, 01 Apr 2024 23:20:59 -0700 (PDT)
+Date: Tue, 2 Apr 2024 11:50:56 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH v2] PCI: dwc: Use the correct sleep function in
- wait_for_link
-Message-ID: <20240402060159.GA7183@thinkpad>
-References: <20240215-topic-pci_sleep-v2-1-79334884546b@linaro.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: cassel@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+	kishon@kernel.org, kw@linux.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] misc: pci_endpoint_test: Refactor
+ dma_set_mask_and_coherent() logic
+Message-ID: <20240402062056.GB7183@thinkpad>
+References: <20240328160632.848414-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,67 +85,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240215-topic-pci_sleep-v2-1-79334884546b@linaro.org>
+In-Reply-To: <20240328160632.848414-1-Frank.Li@nxp.com>
 
-On Wed, Mar 27, 2024 at 07:24:49PM +0100, Konrad Dybcio wrote:
-> According to [1], msleep should be used for large sleeps, such as the
-> 100-ish ms one in this function. Comply with the guide and use it.
+On Thu, Mar 28, 2024 at 12:06:32PM -0400, Frank Li wrote:
+> dma_set_mask_and_coherent() will never return failure when mask >= 32bit.
+> So needn't  fall back to set dma_set_mask_and_coherent(32).
+
+dma_set_mask_and_coherent() should never fail when the mask is >= 32bit, unless
+the architecture has no DMA support. So no need check for the error and also no
+need to set dma_set_mask_and_coherent(32) as a fallback.
+
 > 
-> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
+> Even if dma_set_mask_and_coherent(48) failure,
+> dma_set_mask_and_coherent(32) will be failure according to the same reason.
 > 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Even if dma_set_mask_and_coherent(48) fails due to the lack of DMA support
+(theoretically), then dma_set_mask_and_coherent(32) will also fail for the same
+reason. So the fallback doesn't make sense.
+
+> The function dma_set_mask_and_coherent() defines the device DMA access
+> address width. If it's capable of accessing 48 bits, it inherently supports
+> 32-bit space as well.
+> 
+
+Due to the above reasons, let's simplify the code by setting the streaming and
+coherent DMA mask to 48 bits.
+
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
 > ---
-> Tested on Qualcomm SC8280XP CRD
-> ---
-> Changes in v2:
-> - Rename the define
-> - Sleep for 90ms (the lower boundary) instead of 100
-> - Link to v1: https://lore.kernel.org/r/20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
->  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 250cf7f40b85..62915e4b2ebd 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->  		if (dw_pcie_link_up(pci))
->  			break;
->  
-> -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-> +		msleep(LINK_WAIT_SLEEP_MS);
->  	}
->  
->  	if (retries >= LINK_WAIT_MAX_RETRIES) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 26dae4837462..b17e8ff54f55 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -63,8 +63,7 @@
->  
->  /* Parameters for the waiting for link up routine */
->  #define LINK_WAIT_MAX_RETRIES		10
-> -#define LINK_WAIT_USLEEP_MIN		90000
-> -#define LINK_WAIT_USLEEP_MAX		100000
-> +#define LINK_WAIT_SLEEP_MS		90
->  
->  /* Parameters for the waiting for iATU enabled routine */
->  #define LINK_WAIT_MAX_IATU_RETRIES	5
+> Notes:
+>     Ref: https://lore.kernel.org/linux-pci/20240328154827.809286-1-Frank.Li@nxp.com/T/#u
+>     
+>     for document change patch. DMA document sample code is miss leading.
 > 
-> ---
-> base-commit: 26074e1be23143b2388cacb36166766c235feb7c
-> change-id: 20240215-topic-pci_sleep-368108a1fb6f
+>  drivers/misc/pci_endpoint_test.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
-> Best regards,
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index c38a6083f0a73..56ac6969a8f59 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -824,11 +824,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  	init_completion(&test->irq_raised);
+>  	mutex_init(&test->mutex);
+>  
+> -	if ((dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48)) != 0) &&
+> -	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)) != 0) {
+> -		dev_err(dev, "Cannot set DMA mask\n");
+> -		return -EINVAL;
+> -	}
+> +	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48));
+>  
+>  	err = pci_enable_device(pdev);
+>  	if (err) {
 > -- 
-> Konrad Dybcio <konrad.dybcio@linaro.org>
+> 2.34.1
 > 
 
 -- 
