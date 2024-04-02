@@ -1,146 +1,110 @@
-Return-Path: <linux-pci+bounces-5571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5573-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BED5F895C76
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 21:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 06543896008
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 01:23:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74B541F2527C
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 19:26:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE9AA1F23A7E
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 23:23:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C9615CD67;
-	Tue,  2 Apr 2024 19:26:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A36D41C7F;
+	Tue,  2 Apr 2024 23:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tr18FGWj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDClBlzz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BF115CD56;
-	Tue,  2 Apr 2024 19:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701451E531;
+	Tue,  2 Apr 2024 23:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712085966; cv=none; b=SEu12x4IkgTcaIWNLyo6NyodxTGXDS0mNt00oaARjYCfaXQQF8Jur8P3THTjHNZMXtvIaw6pw28TdFodyJlQJKlUW2IH48pu52OyKEAajMAo8FW+7Z+euVFj7T84CjxbfLtCZuzhbJWGb7+6ZFlpHYmThB8kitz4LA14gCVcpAc=
+	t=1712100199; cv=none; b=B3RMe/x3dEocBSDOZYCQnGPhAWk+e3QYF1uU0ugLcIE7StIJwGjZjOBh26qr0eSXss5Ko//zkE6qD9gNS3MpdR5pxSiqtbwvV53mKj7hxZm+6ksUJBZLEJPh+4YsHykiJKDO96shoddbMY23rFinZmMW6622xVBVj7oKx6hydMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712085966; c=relaxed/simple;
-	bh=Y3sQe52k1yICnNk6VsdMH27lecC3GY2DlpewVQmBUI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KfJOjZ7ew6uC6EON7yevdJCEP2dAhtOC3hZFwEHRZMTevSqnGizaGTVpQGLzJh63gz65h2J2h3Xxm8b47q4/QJhYbYVqh8W2dkKXBn13ejmVKFqddIbX+JePDTTvgKSrU7do3vggDDvdgqwwjzvDT5V7iOSBrmwUjZcdXJ7ngW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tr18FGWj; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-221a9e5484aso3768413fac.0;
-        Tue, 02 Apr 2024 12:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712085964; x=1712690764; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u509fpdTL3x8h0sKnxRrMd2Q/Sm/IRVlvPpLmK46sCY=;
-        b=Tr18FGWjEOEZS6x+L5oiytweebci5kfquabcQS/5Lrl7kK8s8OHbQ/5p6XFor88Tzv
-         u/JLvY//oCZ0uASc7bSdWzf76QIx8gxlEO67r/bJGOWpDNOu3d1p91sSYW3KtZCobnVC
-         7RqtPOd2wGMJy960XutmRNy7ak4aIH5U6w1K5JpCQacU4rpxX1TIdYdijYd/qbEh0h0z
-         prZ/2JTqF3kXlB/iyzTZxlQtPYJ+rWybzNMKUeUQmcbd0TYVyXmbb5sZfDMngcdiqbp0
-         9YS9u0QUTaT6/RRlYM+Z7cCP+GHAK0pZTrDugX0hGe/atdJb9lQbNaWdPuaAw63VPuEb
-         wNVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712085964; x=1712690764;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u509fpdTL3x8h0sKnxRrMd2Q/Sm/IRVlvPpLmK46sCY=;
-        b=hOe41AOo16w79Z+TVYhR2XPvVRyXb7jsiV5NaZB8bjtJED/g7/jx1dqPY5xg4xzQ7Q
-         rzuB2pFw8WrkBhISEOIrknkPcWXIvbPZ39WyydaWZUFZyeOzNSlacpAN5LoZ39Iyp4AL
-         7WO4rtV2OZHoGKZtOIGYsyKWH9COHPkGmzlYjS6O9XWl+e3ZfXNTwnsGM5AEOUqZp4bH
-         Os7ucodUp8r29lFRnHGTE8Moi0qhNjpFaJLJJRetMTJ0OO/5riK+82Z4+9tKsE4kaLhP
-         4tV/Py9Ni16q3Er/oaWUVDmJxJTTd+uBBsGgvhrUsWWTh8nThi44l7o4zGRnsPRuK6Ao
-         n9WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiGy/KRyylaooJEc7OXAPzNQKSdf7PHSZ3/ds8NGIQOIiC/baamZl4K0dJ202JCjgZqyOn9LD8L6tonU8JOxhf8cZMfDuED2ax4EEznOJZOL5PM3U8eKbsmDU2x37J/tvp1hz3l0GS8lCy2qO14RoDTxNMYlLhgNCvh5HQS1Psn2gFxQGISA==
-X-Gm-Message-State: AOJu0Yz5WdmPEYMXXS9ZhFjCYqoS6LI4gyfZslgPN/77C46sk9tWGAut
-	1azDgCgnXYrlT+hWhzh2L0EBHyIelmqcBKgJslpp+41tz9NLuJRo
-X-Google-Smtp-Source: AGHT+IGXiX0R+pjBUbuLZzc0JHffXaS4BXKCPOLEoUc822a2Ltjo0ljUMsaoACrgDM5sNkY1dTpe7w==
-X-Received: by 2002:a05:6871:1d5:b0:22e:7de8:c745 with SMTP id q21-20020a05687101d500b0022e7de8c745mr791919oad.56.1712085964262;
-        Tue, 02 Apr 2024 12:26:04 -0700 (PDT)
-Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id ld22-20020a0568702b1600b0022e8f9fa89bsm75622oab.57.2024.04.02.12.26.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 12:26:03 -0700 (PDT)
-From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: ansuelsmth@gmail.com,
-	robimarko@gmail.com,
-	Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] PCI: qcom: Add support for IPQ9574
-Date: Tue,  2 Apr 2024 14:25:52 -0500
-Message-Id: <20240402192555.1955204-4-mr.nuke.me@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240402192555.1955204-1-mr.nuke.me@gmail.com>
-References: <20240402192555.1955204-1-mr.nuke.me@gmail.com>
+	s=arc-20240116; t=1712100199; c=relaxed/simple;
+	bh=MeLS86YdjnIzGiuXPd5GfJyCavX2wucsvi48OLJIDeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UiRAvTD76kdlt0d9dl93DQx2/b17VmXiyeWUL7w5vp3NjcYoc/aSsuXCHGnIt0+BrzGW0MZLgBa5yOIrUydevu1zY74rH7Ei7VztfvRPZiBhUp20S8P7GPM+hv2F1iv/CIesCmovoLJO02l0hG5dEBUov5XdN2831TaXYvRto84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDClBlzz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F930C433C7;
+	Tue,  2 Apr 2024 23:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712100199;
+	bh=MeLS86YdjnIzGiuXPd5GfJyCavX2wucsvi48OLJIDeY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iDClBlzz9+EtddVYkNAHFxMOaJoQnATld9xN8+G7AiRLrW7spNjrDNZM/uicl1gNC
+	 /4s+WZzVoGUN+ZuUz4LGB4ROWhXkjWQizKYDFkZf+cAe1AKNQFgXsDfosJpa0agVxB
+	 M5o8dcwAboK6CVcg9uHI7lQ/hN/0aWqMXTdhsK+mcGDXMyKCtQ523hcjTqPEkkJzt2
+	 QsW3JK5SlE5/vyEPltNDECa01GNs189lB/+aCOMZHnHE45q1l/ZlMzWKwP0ybKiXww
+	 MK/AsqJ5mpzh8pdRZ12QUp3pV5t8X8m/qbI2RMyDqYR6uPKZIcqHoIE91YuDIw/zuD
+	 gU/YCoT6iYU9A==
+Message-ID: <992dcef1-00d3-456c-b3ee-253ab475f0cf@kernel.org>
+Date: Wed, 3 Apr 2024 08:23:15 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 17/18] dt-bindings: pci: rockchip,rk3399-pcie-ep: Add
+ ep-gpios property
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>, Niklas Cassel <cassel@kernel.org>
+References: <20240330041928.1555578-1-dlemoal@kernel.org>
+ <20240330041928.1555578-18-dlemoal@kernel.org>
+ <b020b74e-8ae1-448a-9d47-6c9bb13735f9@linaro.org>
+ <c75cb54a-61c7-4bc3-978e-8a28dde93b08@kernel.org>
+ <518f04ea-7ff6-4568-be76-60276d18b209@linaro.org>
+ <49ecab2e-8f36-47be-a1b0-1bb0089dab0f@kernel.org>
+ <57d5d6ea-5fef-423c-9f85-5f295bfa4c5f@linaro.org>
+ <80c4c37b-8c5c-4628-a455-fcccfc3b3730@kernel.org>
+ <be2a0fa0-9d5d-45c3-810a-56d6924c8891@kernel.org>
+ <65b6329a-643c-4adf-9137-281964865d51@linaro.org>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <65b6329a-643c-4adf-9137-281964865d51@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add support for the PCIe on IPQ9574. The main difference from ipq6018
-is that the "iface" clock is not necessarry. Add a special case in
-qcom_pcie_get_resources_2_9_0() to handle this.
+On 4/3/24 03:10, Krzysztof Kozlowski wrote:
+>> Thinking more about this, I think moving the ep-gpios description to the common
+>> schema is the right thing to do given that the driver uses common code between
+>> RC and EP to get that property. But if that is not acceptable, I can rename it
+>> and get that property in the controller EP mode initialization code. That will
+>> be add a little more code in the driver.
+> 
+> I forgot that it is actually the same hardware, so if host has
+> "ep-gpios" already then EP mode should have the same property. Common
+> schema is good idea.
 
-Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+OK. But this will conflict with the patch you sent to add the missing maxItem.
+Is that patch a fix or is it for 6.10 ? If it is the former, I can wait for
+next week to rebase on rc3 and avoid a conflict.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 14772edcf0d3..10560d6d6336 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1101,15 +1101,19 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--	int ret;
-+	int ret, num_clks = ARRAY_SIZE(res->clks) - 1;
- 
--	res->clks[0].id = "iface";
-+	res->clks[0].id = "rchng";
- 	res->clks[1].id = "axi_m";
- 	res->clks[2].id = "axi_s";
- 	res->clks[3].id = "axi_bridge";
--	res->clks[4].id = "rchng";
- 
--	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-+	if (!of_device_is_compatible(dev->of_node, "qcom,pcie-ipq9574")) {
-+		res->clks[4].id = "iface";
-+		num_clks++;
-+	}
-+
-+	ret = devm_clk_bulk_get(dev, num_clks, res->clks);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1664,6 +1668,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-+	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_2_9_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
- 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
+
 -- 
-2.40.1
+Damien Le Moal
+Western Digital Research
 
 
