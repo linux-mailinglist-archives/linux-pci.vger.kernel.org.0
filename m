@@ -1,328 +1,226 @@
-Return-Path: <linux-pci+bounces-5553-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5554-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3D178956FE
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 16:38:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C66888957B6
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 17:05:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 223E11C225F3
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 14:38:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F3D71F24483
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 15:05:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6972A13665E;
-	Tue,  2 Apr 2024 14:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB8DE126F16;
+	Tue,  2 Apr 2024 15:05:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Nv06wxJA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sv4LJepa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2139.outbound.protection.outlook.com [40.107.105.139])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9196412C814;
-	Tue,  2 Apr 2024 14:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712068499; cv=fail; b=pj4ZMcf3h3PEwQp3gHVOMTyD9VF5YiCmavIIb/7uE/moWPGJuvN60fQiNdPJRTk3a+8IYv9GFB8BS+FuYeUVHSVb2mMvRwVE5ifohKhNoaQFfTna5R9N25yVRtSicooUmuD7hRpq5yKNzQdbZwYdF8qbyFsnhlHncmDRc9Cj8xo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712068499; c=relaxed/simple;
-	bh=W5Ja/aOtHcr7fQ+ZC5kV8MpJGt4HFMAXp5sPXdyeNFg=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=rJucS3gAfW4KhNkrUUM8eWX5ZnBxf/MDjT/TvPP2146qbLHquBy1+gx51XfFjgcHC5WEQQozTmhVRaJd5XawX13JYnNr538ySXLeWBrGCD62Gw7zn8vMO8h1dkIMaYEVDOk4lMUbq16CT9NAyO1I/W2dueaf6mLvbs7pk6u575c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Nv06wxJA; arc=fail smtp.client-ip=40.107.105.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FrG58nKmYfQZ6ZyXn3rd8fyaogPMvxY6qhrs2zqCwHl4/lk3P9AFPIEALSkeV4SsHbKrCQCIWCeULFX4a8bN7njiOAbFEhMPaBjNVF4UrBabZo4WVP33GUDbmjwTobPLo8xYFQW5e6dRuvsZe+TKB1aelYYGpO778Yq6NPfwJ67kLfik48xm6iGTiDlF3pQ7duPLgcuI3dIjGI1ML9RCG2ZUoIaD23e7u0AX3LGGah/JzNvH4ko8AxiVUpkFD/9Aehpx6JUOvWfmr7cuZGda9+/qPSGfB9B0FXrYUB7z07bvfL5etFNBZR9uk4/SUklrO7ZQoM6fo4t3ofYU5vIN8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7hT9OuiFh234KpH0JqKQ6bxALCRu9jXU7vD0g8Ik8Mo=;
- b=VfQI1nD+zHHJ4W9TevzC+uWhiPUxWzr0a2OWaGX/jvlY0NMFdx9eE3xWF9JijzYRMC/1WHe5qXc8WbP0kG0RPhXTF7FNAE/419gSUWossteK1OU862ySWD06W5Yw4TEZ8YY6lpmF/Z+BqAYfYfs2xen86xh8m3v8A7utVapbUq0XjQqhcZ7trQ8SKX5iVqu5iPJ87tdLiw5+ubKDcrc8dotdqEctOYLTrjVFcFeZWwPVkZFQXS8TaqGp9xSghUJMrvNadLUUYXw++7DokymVQaQ4akQlmNqEkImxWV4ZuSvjk5bE8eTdw/Nkn3klG5KjeO+NZSJZBWjIcXpZ6fL8TA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7hT9OuiFh234KpH0JqKQ6bxALCRu9jXU7vD0g8Ik8Mo=;
- b=Nv06wxJA6eEzeHP0f8y8kcmRRggEu+7mFBXR7g1I+TbnJxOd4kmzKXhfXRI2qPhMReqKUZxPNM6mDJHVmypzzFbdnCB7GH56uTEJ7OEky9OYoO/tvmIbatJS7OG4RFmSpW7r5nWjtYFYpQI8EMQX20tWEFqsxLy2VP6gfUt6rj4=
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAWPR04MB9986.eurprd04.prod.outlook.com (2603:10a6:102:380::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Tue, 2 Apr
- 2024 14:34:53 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 14:34:53 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Tue, 02 Apr 2024 10:33:47 -0400
-Subject: [PATCH v3 11/11] PCI: imx6: Add i.MX8Q PCIe support
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240402-pci2_upstream-v3-11-803414bdb430@nxp.com>
-References: <20240402-pci2_upstream-v3-0-803414bdb430@nxp.com>
-In-Reply-To: <20240402-pci2_upstream-v3-0-803414bdb430@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pci@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, devicetree@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712068432; l=6004;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=1InHHTt94Qoa5DZtH+PuBX0T7azBh9B1HU0Tvhzx7eM=;
- b=5R3vKC3lwVauaZflM6UtT6VhwD5mbC5po79wmuYX/9cp3gE7+apXI6AtIR2Glza1ywkAI3RvD
- q8FD+vCs6XqDzuegSj1PnZa+VD4vZUb4AjtjCW+21EPTRXz0H2QTUlk
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: PH7PR17CA0011.namprd17.prod.outlook.com
- (2603:10b6:510:324::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6F6482D1
+	for <linux-pci@vger.kernel.org>; Tue,  2 Apr 2024 15:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712070312; cv=none; b=FMy6/ZmvhCbsrKEs2wq3NLxV9AnRvPd9pe770d7NW1eRMNXWugZf4IAjMpizkTU8AiyCujv+k2NZpbwFU6wq+LaxvNngLOLoCBju/bZFcdfaZJPp0g+Ay2kuPwinsVwEb6zFsXt1bIGxktjsqs2hGnOOAqZ4ypsyaxEj9W53Cec=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712070312; c=relaxed/simple;
+	bh=0zgHtiVe8xYLLsFCLpEBlvHEkoV6cJVT1KEvui+GKzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E0ffgIAXOn5Pf9clKp3jJIEqAC3eqtxVwTL4XjJapkwQ7UxXS90Jz/leHPTvKewDKczMEXO9l0difSAa4EGGvKG2DfBH44xxpjIew55X36R9mkEI88b5FFmdlyyLJh5Gb53IxcZ8WpGasF4gdTepFrPkPOZ15WkC9WwSH4WqPvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sv4LJepa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712070310;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jLq2tKtQyU+Xs0r4v3F/+9g6JN1kAENgWuL95Uf8uiI=;
+	b=Sv4LJeparFXwEEaHSGPZ+pOCRBYknDee5bSw0+QKxopDIUmqb885BSqevy7SmtLTShJ/Z/
+	v4ILnAE5caWXbBSvYrXpPMdrTMMIHRsSyaRiZW05rxnAxOQ23MOofFXowIoLbii9za/PSz
+	ycdw/Km5at2G6Q0/YvWyWn9+sUHXRvs=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-206-Lu7NSjchPL21V2whoTDcEA-1; Tue, 02 Apr 2024 11:05:08 -0400
+X-MC-Unique: Lu7NSjchPL21V2whoTDcEA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a46ba1a19fdso393657266b.1
+        for <linux-pci@vger.kernel.org>; Tue, 02 Apr 2024 08:05:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712070307; x=1712675107;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jLq2tKtQyU+Xs0r4v3F/+9g6JN1kAENgWuL95Uf8uiI=;
+        b=MlvN8J3uZuAfXr/6QPpo0BlR7kN5/l7VPwy70s5zCtP13CzxsgxFpuTykEHnGhOof2
+         P8CzVsRb2RsYLSyQQz9VzjVs2HPaUEOXAlMkJLB9LNB5I/dXXpT8TgAnTrx4tlonwWZI
+         FDhJDrY8zX5ERD1aoDns7xA54V52UHueAy+H8X2jTslwsT9NqkpB+aTNJ5AktIedpW+O
+         d5mtL88Y5qP5UlhH55Tgjd0Jm9lkC3lHiYQNQXZTjlGDwpsei3NrW3dckSE7tsqaBcUK
+         NR4huUfJ6VXQQMmg2SXzUORWZboEK5w+EL/LOaYfi/kc85fvU5+yGz5Ywe9ZC450tsin
+         BBqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzWkU2kvuppbUdjdJpBkegqk8HOkuChU2DE4lvXnoFj7U1Ua/KXUAkFe4sVVjgf5W+8lPrtvpfVdn41UJJHKqKywHh5DH0igq8
+X-Gm-Message-State: AOJu0Yx4kE8GDyf8wCv8ciUIAuxyM/r2NVIFmWaRhI5O5WYvVbfG3YuF
+	PkqcL11GwMYxPxgcYI/tS2vdzR9mIo766O7XpLd0YVS7kh4/Z22lh1qXjluYOI9u/wDMriCz28U
+	uLD2Sr6/0717sh3Y4OP4FdRpXtzZDzbbJ54qbkin7gSMi2TToXyMy2v1mdg==
+X-Received: by 2002:a17:906:6152:b0:a4c:de71:54f7 with SMTP id p18-20020a170906615200b00a4cde7154f7mr8156478ejl.27.1712070307204;
+        Tue, 02 Apr 2024 08:05:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IErvFV/CA6M7Wb3IGxb9REEDxn3nHfFMnRbiWOefA61noi+7+L9ilwruGial88ntKLm0HuCtA==
+X-Received: by 2002:a17:906:6152:b0:a4c:de71:54f7 with SMTP id p18-20020a170906615200b00a4cde7154f7mr8156459ejl.27.1712070306609;
+        Tue, 02 Apr 2024 08:05:06 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:2a07:3a01:e7a9:b143:57e6:261b? (2001-1c00-2a07-3a01-e7a9-b143-57e6-261b.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:e7a9:b143:57e6:261b])
+        by smtp.gmail.com with ESMTPSA id ga13-20020a1709070c0d00b00a473f5ac943sm6588626ejc.37.2024.04.02.08.05.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 08:05:06 -0700 (PDT)
+Message-ID: <12fc7d61-54c0-4089-b885-1ae124708ae6@redhat.com>
+Date: Tue, 2 Apr 2024 17:05:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAWPR04MB9986:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+fhuaRh9n3Ea41/EmXveTOJMNUMI9/ntXVZ6PiHcjZYkxNfBF4NjrJ8Z3Pk8gJghn0RsvsnJ1FvvBM17s3NJwItcQhLn+cKBs1nFQ3nIIsem+2wLsIhZQz5ZuHQk5clH0DLbU6o4IsQBDoFClDGOW6gyKORPaM4gYk+IplmRWkwsSSmxW7XNNbQX9eE+DqFdAaNGkDQX02n5/rPn+JE+7WPfQSZGbcPWI3/jgt2j9YK3NRV+l/PhLq1cjx5pSmqXFyEA7+A76bSI7SbQ1TeaACuVVKZI26YBxG5L1HvdRU64gYUOPBkm2zPsyJ8os7/qVn2xHkAbqptSJ2/jwOwmQe1nwGDSOklS5ssWq3GTsF062MnUCb/BQVETkJ1PmLIqm8R9SO7fG680fXN1zyVwsjW6MG17f5kzXtEmlSpxkvEti89+yhV8VkmHzBA6Cklf1yKVmRUdyMiJzdv+jUalmvxQ5W1qFmyyah++4VK+B9nGbSR/sBXdBpC43Tox3GxvjFt9DJlo+W6A+CZKMXOZNPjIiOrJFNeWjaOWxX6fFwGvJQLZS84N0V7zqytqtsBWFxu2/cs5cdwNCJ0sY2JMv8mtVICDJPjEPlRljAm9OIqgfhobpT1hPe2Y+NFIvnjjknyUlGQhCCjj+OkL3UuVFGm21xTHqgCrcUMfHPYm6Ob7bHG2N2c437lN6CyBF3lbLk9mjrtj89rDKjw5/mCEZ4PmbIPcPMwY1Cv9qA6GuR0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(52116005)(376005)(7416005)(38350700005)(921011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TWFKaGlOU21zYktHd08zc2ZYUnFLS3g5SXpIanRzelpvL3BETzdUZE9IYWZT?=
- =?utf-8?B?N1ZHMDVIemVnK01hWDd3UDgrTEN2dkZ1MThycG5xNThSVjhwb3hUa2o2Ylhi?=
- =?utf-8?B?eTNFWElhWnJLS1BPR2s1aVljVHFaVjV3YVVISm80dmQ1T1RoaUszczV4RG5E?=
- =?utf-8?B?SG9VM3g5cmx1eVoraUUyMHlSVjIwTExuNWdydmlUcnhtWDE3RFBDUW9PdXgw?=
- =?utf-8?B?c0pnd3FhOWU5UzhJaDIrNFoySE9jZWx1dmovSEFTY3FjK2ltaUJlM0JuTWlD?=
- =?utf-8?B?azhOVGg5eG0rajBJdTJ6MDhpVmJnaU9lMUQwWE1aTzh6MCtCcVVCYVV0Vm1U?=
- =?utf-8?B?RG80NzdQTTBOZjJwaHVTOURDTUlxbGlGNHlyTVljV0UwV3ZDbVNEKzF6VWxl?=
- =?utf-8?B?eUx2NWJ1cDI1UzFncHNWUUdPeU1qazVjN0FLSDRtSTdvZFdXam5ESmRXU0Rs?=
- =?utf-8?B?R1laTitOc21TdEpld2l3RjFXRW1KWFhycktuNWJ3QWQzRlUxL2haYWlkazM0?=
- =?utf-8?B?M21RL0xrQU9hc25hZnY4dHk4TGVMV3hza0J6U3NybGJUeDVqN3BWbjVSdHp0?=
- =?utf-8?B?NXZidStwOER2RmdqRGJjRTdORld6cE5UdTZpbXhab0NoYmttRVJaaUx2QlU3?=
- =?utf-8?B?SERLR1FvT0VoNXo4aFlLd00xS3Rid2s4WUNUd210NDJ4b1BFTjZMM1NYS2VW?=
- =?utf-8?B?SFExdUg2UU9MR084a1NSMXVTTnRXbjRWcWdmWWJ2bm5sRlEyRFBZVjk1VnJl?=
- =?utf-8?B?a000MGFjYnFvTzhmbjhoVVA2UThoS1NmaHg3WFZEbVFHRml5c1pVa3Y4elhR?=
- =?utf-8?B?Q0FrR1NhaGR3M1pjTlZyanhJbHBWYTk2em9xNjUweXBQTVdyaUQ5OVJqWmtZ?=
- =?utf-8?B?VXlMem1FQ0VQcDlDMWduQ21wWklXelp6cEkyeHhUQ0tyRkJtQ0hsVTZodHll?=
- =?utf-8?B?OUQ0SGgzbzdBckE4NVN5akRmTHQ3TFo0YnU0ZDducGoyVnZCVncwSFlFcC93?=
- =?utf-8?B?NHFCRXlwTy9mOGtBQmFpNlVIYjdGb2dLaURyU1diZkdEUjdPai9VbEdYSlUy?=
- =?utf-8?B?TUNZS3pneDJ3WDJEZHFnNHF5WGY4TjlKaTBQMGNaVnNwbXp0dEg1MFgwa0w5?=
- =?utf-8?B?aVEza2l0Sklld0NJQWRsVmV6b3VmbFB0dWlnejlBNnVoaVk5OHlPZEgvSDla?=
- =?utf-8?B?V2pxOEFvbFVFbk00UWE0bGhFcW9ndlF1VWZKNUJuR3ZYK2lkVFBZZU5EK25G?=
- =?utf-8?B?VmdzWUo2RWpMYXJRaTN2a01hdlpsYklVRzFBZXdIRFpyN3ExK1ZqUEs5a3Ra?=
- =?utf-8?B?WFJGRGlZTU5iT00rN1VlR2pjUmpmRUQ0RzdqN2IxM0VTUnVGc3BHVTFXMzZt?=
- =?utf-8?B?RmUrMTFrT3VBZ1BmQlhUWS9xbFJoRmFmZGZoMFRBRVVDWHlrbzdqQ3pMSGJa?=
- =?utf-8?B?UTd5ZDBNbVZKUnllVGN3R2lBbFdlay94QWU0RGlGMWM4VkswSFVoK1RuK2Zm?=
- =?utf-8?B?Q2hwY3FSSEEwTmRMRnNuVmhnMXlFMDA0cXptOWVhSkN0OWFnMEdyWlk3U1ZI?=
- =?utf-8?B?cXQ5NmtYcW1DWkF2dG9OT05RZEtEOE8xZm9rK3ozSUc4RUpKOFBrNWpTMlZz?=
- =?utf-8?B?bm54a05qV2Z4TU5jeGkvN2lEMEdidWM1RmF0UkprU3F6UjBUazRhOWNuOGRo?=
- =?utf-8?B?NUgxd3RPNHkzSjBXZGQ0aHVIOEdCSlB3Vlg1TmtUREY0TVJ6OHVEWFlveXdG?=
- =?utf-8?B?elYvWjNJT0g3Y1FPcXM0UFlOUjhlNkI5U0RrMmoxQll3S21ROHFSSmhiTFI2?=
- =?utf-8?B?UVdKbFpLb21tcjNBUkJsR3hxaGRLaTZKaUJDaHVRTUNYVW92cWVrcVRyY3JP?=
- =?utf-8?B?Rldack9SeElNQlFJcnpyMWhBbjJGaVl1WFpJcGdEVkxmK0t4eGVuTHp6OHlv?=
- =?utf-8?B?ZHRyaWk2REloeVBNMGdiOFBLZ2k4WFBNUmtzSTFzTkU3emNhZk8wSDJHdFN2?=
- =?utf-8?B?aVBHdGJXaStwMUxCZ2NlN0lpZytNMGpSRmZsZ080eENyMjlxekxuS2VBUUN5?=
- =?utf-8?B?QW9Md1JFMmVkUkcyWWdGd3dkRENWUnpndk1wNlJBYy8yUndrRmRvVXFXa3p4?=
- =?utf-8?Q?d4IM=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4b0d47b-6166-4878-c832-08dc53220f67
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 14:34:53.3416
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: urDcbSTbUEo8ulVIIZwqYpGxGXgKPSE+de5NHMz2eHfSMY/vGcop8Jefu7zeHIJ2HAxrwCjf5v0X1Gw4U/TX8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9986
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/10] drm/vboxvideo: fix mapping leaks
+To: Philipp Stanner <pstanner@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Bjorn Helgaas <bhelgaas@google.com>, Sam Ravnborg <sam@ravnborg.org>,
+ dakr@redhat.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ stable@kernel.vger.org
+References: <20240328175549.GA1574238@bhelgaas>
+ <ffe0e534166f14483d0a6a37342136b7aec9c850.camel@redhat.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ffe0e534166f14483d0a6a37342136b7aec9c850.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Richard Zhu <hongxing.zhu@nxp.com>
+Hi,
 
-Add i.MX8Q (i.MX8QM, i.MX8QXP and i.MX8DXL) PCIe support.
+On 4/2/24 3:50 PM, Philipp Stanner wrote:
+> On Thu, 2024-03-28 at 12:55 -0500, Bjorn Helgaas wrote:
+>> On Fri, Mar 01, 2024 at 12:29:58PM +0100, Philipp Stanner wrote:
+>>> When the PCI devres API was introduced to this driver, it was
+>>> wrongly
+>>> assumed that initializing the device with pcim_enable_device()
+>>> instead
+>>> of pci_enable_device() will make all PCI functions managed.
+>>>
+>>> This is wrong and was caused by the quite confusing PCI devres API
+>>> in
+>>> which some, but not all, functions become managed that way.
+>>>
+>>> The function pci_iomap_range() is never managed.
+>>>
+>>> Replace pci_iomap_range() with the actually managed function
+>>> pcim_iomap_range().
+>>>
+>>> CC: <stable@kernel.vger.org> # v5.10+
+>>
+>> This is marked for stable but depends on the preceding patches in
+>> this
+>> series, which are not marked for stable.
+>>
+>> The rest of this series might be picked up automatically for stable,
+>> but I personally wouldn't suggest backporting it because it's quite a
+>> lot of change and I don't think it fits per
+>> Documentation/process/stable-kernel-rules.rst.
+> 
+> I agree, if I were a stable maintainer I wouldn't apply it.
+> I just put them in CC so that they can make this decision themselves.
+> 
+>> So I think the best way to fix the vboxvideo leaks would be to fix
+>> them independently of this series, then include as a separate patch a
+>> conversion to the new pcim_iomap_range() in this series (or possibly
+>> for the next merge window to avoid merge conflicts).
+> 
+> It is hard to fix independently of our new devres utility.
+> Reason being that it's _impossible_ to have partial BAR mappings *with*
+> the current PCI devres API.
+> 
+> Consequently, a portable vboxvideo would have to revert the entire
+> commit 8558de401b5f and become an unmanaged driver again.
+> 
+> I guess you could do a hacky fix where the regions are handled by
+> devres and the mappings are created and destroyed manually with
+> pci_iomap_range() – but do we really want that...?
+> 
+> The leak only occurs when driver and device detach, so how often does
+> that happen... and as far as I can tell it's also not an exploitable
+> leak, so one could make the decision to just leave it in the stable
+> kernels...
+> 
+> @Hans:
+> What do you say?
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/pci/controller/dwc/pcie-imx.c | 54 +++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+In practice this has never been a problem, so I suggest we just drop
+the Cc: stable .
 
-diff --git a/drivers/pci/controller/dwc/pcie-imx.c b/drivers/pci/controller/dwc/pcie-imx.c
-index 378808262d16b..af7c79e869e70 100644
---- a/drivers/pci/controller/dwc/pcie-imx.c
-+++ b/drivers/pci/controller/dwc/pcie-imx.c
-@@ -30,6 +30,7 @@
- #include <linux/interrupt.h>
- #include <linux/reset.h>
- #include <linux/phy/phy.h>
-+#include <linux/phy/pcie.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
- 
-@@ -81,6 +82,7 @@ enum imx_pcie_variants {
- 	IMX8MQ,
- 	IMX8MM,
- 	IMX8MP,
-+	IMX8Q,
- 	IMX95,
- 	IMX8MQ_EP,
- 	IMX8MM_EP,
-@@ -96,6 +98,7 @@ enum imx_pcie_variants {
- #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
- #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
- #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
-+#define IMX_PCIE_FLAG_CPU_ADDR_FIXUP		BIT(8)
- 
- #define imx_check_flag(pci, val)     (pci->drvdata->flags & val)
- 
-@@ -132,6 +135,7 @@ struct imx_pcie {
- 	struct regmap		*iomuxc_gpr;
- 	u16			msi_ctrl;
- 	u32			controller_id;
-+	u32			local_addr;
- 	struct reset_control	*pciephy_reset;
- 	struct reset_control	*apps_reset;
- 	struct reset_control	*turnoff_reset;
-@@ -402,6 +406,10 @@ static void imx_pcie_configure_type(struct imx_pcie *imx_pcie)
- 	if (!drvdata->mode_mask[id])
- 		id = 0;
- 
-+	/* If mode_mask is 0, means use phy driver to set mode */
-+	if (!drvdata->mode_mask[id])
-+		return;
-+
- 	mask = drvdata->mode_mask[id];
- 	val = mode << (ffs(mask) - 1);
- 
-@@ -957,6 +965,7 @@ static void imx_pcie_ltssm_enable(struct device *dev)
- 	struct imx_pcie *imx_pcie = dev_get_drvdata(dev);
- 	const struct imx_pcie_drvdata *drvdata = imx_pcie->drvdata;
- 
-+	phy_set_speed(imx_pcie->phy, PCI_EXP_LNKCAP_SLS_2_5GB);
- 	if (drvdata->ltssm_mask)
- 		regmap_update_bits(imx_pcie->iomuxc_gpr, drvdata->ltssm_off, drvdata->ltssm_mask,
- 				   drvdata->ltssm_mask);
-@@ -969,6 +978,7 @@ static void imx_pcie_ltssm_disable(struct device *dev)
- 	struct imx_pcie *imx_pcie = dev_get_drvdata(dev);
- 	const struct imx_pcie_drvdata *drvdata = imx_pcie->drvdata;
- 
-+	phy_set_speed(imx_pcie->phy, 0);
- 	if (drvdata->ltssm_mask)
- 		regmap_update_bits(imx_pcie->iomuxc_gpr, drvdata->ltssm_off,
- 				   drvdata->ltssm_mask, 0);
-@@ -1104,6 +1114,12 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
- 			goto err_clk_disable;
- 		}
- 
-+		ret = phy_set_mode_ext(imx_pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
-+		if (ret) {
-+			dev_err(dev, "unable to set pcie PHY mode\n");
-+			goto err_phy_off;
-+		}
-+
- 		ret = phy_power_on(imx_pcie->phy);
- 		if (ret) {
- 			dev_err(dev, "waiting for PHY ready timeout!\n");
-@@ -1154,6 +1170,28 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
- 		regulator_disable(imx_pcie->vpcie);
- }
- 
-+static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
-+{
-+	struct imx_pcie *imx_pcie = to_imx_pcie(pcie);
-+	struct dw_pcie_ep *ep = &pcie->ep;
-+	struct dw_pcie_rp *pp = &pcie->pp;
-+	struct resource_entry *entry;
-+	unsigned int offset;
-+
-+	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
-+		return cpu_addr;
-+
-+	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
-+		offset = ep->phys_base;
-+	} else {
-+		entry = resource_list_first_type(&pp->bridge->windows,
-+						 IORESOURCE_MEM);
-+		offset = entry->res->start;
-+	}
-+
-+	return (cpu_addr + imx_pcie->local_addr - offset);
-+}
-+
- static const struct dw_pcie_host_ops imx_pcie_host_ops = {
- 	.init = imx_pcie_host_init,
- 	.deinit = imx_pcie_host_exit,
-@@ -1162,6 +1200,7 @@ static const struct dw_pcie_host_ops imx_pcie_host_ops = {
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.start_link = imx_pcie_start_link,
- 	.stop_link = imx_pcie_stop_link,
-+	.cpu_addr_fixup = imx_pcie_cpu_addr_fixup,
- };
- 
- static void imx_pcie_ep_init(struct dw_pcie_ep *ep)
-@@ -1481,6 +1520,12 @@ static int imx_pcie_probe(struct platform_device *pdev)
- 					     "Failed to get PCIEPHY reset control\n");
- 	}
- 
-+	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_CPU_ADDR_FIXUP)) {
-+		ret = of_property_read_u32(node, "fsl,local-address", &imx_pcie->local_addr);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "Failed to get local-address");
-+	}
-+
- 	switch (imx_pcie->drvdata->variant) {
- 	case IMX8MQ:
- 	case IMX8MQ_EP:
-@@ -1605,6 +1650,7 @@ static const char * const imx6q_clks[] = {"pcie_bus", "pcie", "pcie_phy"};
- static const char * const imx8mm_clks[] = {"pcie_bus", "pcie", "pcie_aux"};
- static const char * const imx8mq_clks[] = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"};
- static const char * const imx6sx_clks[] = {"pcie_bus", "pcie", "pcie_phy", "pcie_inbound_axi"};
-+static const char * const imx8q_clks[] = {"mstr", "slv", "dbi"};
- 
- static const struct imx_pcie_drvdata drvdata[] = {
- 	[IMX6Q] = {
-@@ -1708,6 +1754,13 @@ static const struct imx_pcie_drvdata drvdata[] = {
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
- 		.set_ref_clk = imx8mm_pcie_set_ref_clk,
- 	},
-+	[IMX8Q] = {
-+		.variant = IMX8Q,
-+		.flags = IMX_PCIE_FLAG_HAS_PHYDRV |
-+			 IMX_PCIE_FLAG_CPU_ADDR_FIXUP,
-+		.clk_names = imx8q_clks,
-+		.clks_cnt = ARRAY_SIZE(imx8q_clks),
-+	},
- 	[IMX95] = {
- 		.variant = IMX95,
- 		.flags = IMX_PCIE_FLAG_HAS_SERDES,
-@@ -1785,6 +1838,7 @@ static const struct of_device_id imx_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
- 	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
- 	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
-+	{ .compatible = "fsl,imx8q-pcie", .data = &drvdata[IMX8Q], },
- 	{ .compatible = "fsl,imx95-pcie", .data = &drvdata[IMX95], },
- 	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
- 	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
+Regards,
 
--- 
-2.34.1
+Hans
+
+
+
+
+>>> Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
+>>> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+>>> ---
+>>>  drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
+>>>  1 file changed, 9 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c
+>>> b/drivers/gpu/drm/vboxvideo/vbox_main.c
+>>> index 42c2d8a99509..d4ade9325401 100644
+>>> --- a/drivers/gpu/drm/vboxvideo/vbox_main.c
+>>> +++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
+>>> @@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private
+>>> *vbox)
+>>>         /* Take a command buffer for each screen from the end of
+>>> usable VRAM. */
+>>>         vbox->available_vram_size -= vbox->num_crtcs *
+>>> VBVA_MIN_BUFFER_SIZE;
+>>>  
+>>> -       vbox->vbva_buffers = pci_iomap_range(pdev, 0,
+>>> -                                            vbox-
+>>>> available_vram_size,
+>>> -                                            vbox->num_crtcs *
+>>> -                                            VBVA_MIN_BUFFER_SIZE);
+>>> -       if (!vbox->vbva_buffers)
+>>> -               return -ENOMEM;
+>>> +       vbox->vbva_buffers = pcim_iomap_range(
+>>> +                       pdev, 0, vbox->available_vram_size,
+>>> +                       vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
+>>> +       if (IS_ERR(vbox->vbva_buffers))
+>>> +               return PTR_ERR(vbox->vbva_buffers);
+>>>  
+>>>         for (i = 0; i < vbox->num_crtcs; ++i) {
+>>>                 vbva_setup_buffer_context(&vbox->vbva_info[i],
+>>> @@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
+>>>         DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
+>>>  
+>>>         /* Map guest-heap at end of vram */
+>>> -       vbox->guest_heap =
+>>> -           pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
+>>> -                           GUEST_HEAP_SIZE);
+>>> -       if (!vbox->guest_heap)
+>>> -               return -ENOMEM;
+>>> +       vbox->guest_heap = pcim_iomap_range(pdev, 0,
+>>> +                       GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
+>>> +       if (IS_ERR(vbox->guest_heap))
+>>> +               return PTR_ERR(vbox->guest_heap);
+>>>  
+>>>         /* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
+>>>         vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4,
+>>> -1,
+>>> -- 
+>>> 2.43.0
+>>>
+>>
+> 
 
 
