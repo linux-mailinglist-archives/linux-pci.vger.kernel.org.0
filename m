@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-5522-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5523-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7A52894CC3
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 09:38:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99306894CC4
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 09:39:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4689EB225B2
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 07:38:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA2C81C20B4A
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 07:39:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C6C328A0;
-	Tue,  2 Apr 2024 07:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656BD32C8B;
+	Tue,  2 Apr 2024 07:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7S6CQI9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhiT1Q/P"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0BD3D39B;
-	Tue,  2 Apr 2024 07:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6A818635;
+	Tue,  2 Apr 2024 07:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712043495; cv=none; b=UWgIpkTRbypEa8HZidNX3CHWu+OyRrhBu6yPaOdXwE89QFI2Rvq5bb8Mqpra+SOnJ/VJQsakcowl1wJGlSYwTSQOEmc8moxejpv8cnKuNg88k5iqlf13lfJ/4duf8v1ImF7OgcYxpxfWLJyaabiUEfg6lHUtmKNZBU6UiQ3/Y+E=
+	t=1712043541; cv=none; b=EwRgEoejLtU/21lMAmlb2v962RrTLTqvLh3MJjplXbDA3KchSgHspX03dShFD4GrBx81jqv3eHxcCQdtcqfP4j9VaW5121E9ydAAIjH64/iCQ2iUcJYEITXMYhAiPew63gqIpjSatgHD2H019XeOjAmasJflw5EdcEUT7SYMxkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712043495; c=relaxed/simple;
-	bh=TfkRnq5Iex/rUtVkNVsPycE3pm25lH41VYxu3rMQUOA=;
+	s=arc-20240116; t=1712043541; c=relaxed/simple;
+	bh=rwUKp8tQcJWIw6WN1+oxtX5t7MIf+fHokhs2hygHdDU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sUQorFgHvKI5oqnrMwrPMGcJgkzeUCUbGBZtACUJhmNuYqWTxU6PaEkgz4Q8y9Cpp2wzWknVFgwmIjOb0lavzaJQ+1W7Am/70r1nUw8cdX6icPzEuRd5gYjXr/GxTqCGLQyhCOI5vMt3JbGqXFfxSjqCF8Lp1cbvHPnoaSACH/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7S6CQI9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C703C433F1;
-	Tue,  2 Apr 2024 07:38:13 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=JRmDmEOrR0ObcHVWg9HFYcIBGagLdFwWA7amS2rk3JJa0X8JO7uPD5i+UbdeAcnggpcQPEj3TdB5UW/nAdvvcFNGQLh6uIqLxldo39EhXzfM00nISws9x5CueC56nVFRcmhmnkhnpUOFMhDv4q+b7mIcoAF7pb98P40IQOejOZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhiT1Q/P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F45C433F1;
+	Tue,  2 Apr 2024 07:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712043495;
-	bh=TfkRnq5Iex/rUtVkNVsPycE3pm25lH41VYxu3rMQUOA=;
+	s=k20201202; t=1712043541;
+	bh=rwUKp8tQcJWIw6WN1+oxtX5t7MIf+fHokhs2hygHdDU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V7S6CQI93E3zwLQFAHvPkTOZroqxnXZLv+j98cTwbl0BfjL5riHoJJlkAWmqd/RzX
-	 QMGelJ3/TmSzX16VOatTUkmy/KgJ4pFHEMvETHPBid9Ud93Icownw9abE3svYuvIYF
-	 4feje6sQtbq3Gl1YyBy1YA5xCyYLY8skgtD52QNgIS19gijoD9rCPvxdXDAAD8KOcS
-	 BBL8jMywvaTotqTRcIM48kKaFZYieUm7CwUSaYwblGSxXFVO511ITLIFcZtfgEvZFC
-	 EEie4rNsP8Q8SEcQLtqKg6gZIdANxMQTWe8OHLcY7d361v9PDIyWJbmDRbEUJ6Qf59
-	 uQtLfckete3pQ==
-Message-ID: <80c4c37b-8c5c-4628-a455-fcccfc3b3730@kernel.org>
-Date: Tue, 2 Apr 2024 16:38:12 +0900
+	b=ZhiT1Q/PVpVwQjGY9RnAZHycKG9jiSCWsIR0PQfL/q705TDjyeUdY54e7vaGUKQR0
+	 BHjhkYUVZaBxKzSjLwN93AJgB1nNFYJdL7+GFD/30gEkwcc1Z23BIAWQSiuUF1yp2P
+	 bsNY+AWxzEbldxixwQVWE5Yp8i3h6My487UX9PECjHRB9QPq1ifOXhiPUsaG4YJJvs
+	 HYmPDSKkv/likU74S7nei7nhptKJ/LfwNeAhn7ymLccKqlKlSJhYglkjUswBOvydPm
+	 9XYs3ODk+yK1WwzUMeAVOqDiorKnam/4kW9TqCm8XAgGpJ7xyF0uO0wjH3Bn38omte
+	 txAncUFpLeYow==
+Message-ID: <ae0544bc-c5e1-4705-8917-0d69d24f06b1@kernel.org>
+Date: Tue, 2 Apr 2024 16:38:57 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -136,16 +136,12 @@ On 4/2/24 16:33, Krzysztof Kozlowski wrote:
 > have code for this in the driver yet (nothing is shared between ep and
 > host), then maybe let's go with perst to match the actual name.
 
-That works for me. The other simple solution would be to move the RC node
-ep-gpios description to the common schema pci/rockchip,rk3399-pcie-common.yaml,
-maybe ? Otherwise, perst-gpios like the Qualcomm schemas would be nice too.
+Forgot to add: the driver code for the EP PERST gpio handling is added in patch
+18 of the series, after this one.
 
 > 
 > Anyway, you need maxItems. I sent a patch for the other binding:
 > https://lore.kernel.org/all/20240401100058.15749-1-krzysztof.kozlowski@linaro.org/
-
-Thanks for that.
-
 > 
 > Best regards,
 > Krzysztof
