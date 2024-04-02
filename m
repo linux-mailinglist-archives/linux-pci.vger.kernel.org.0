@@ -1,56 +1,63 @@
-Return-Path: <linux-pci+bounces-5565-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5566-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80CF3895AA2
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 19:24:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AE1B895AAF
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 19:31:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E16F5B23942
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 17:23:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE6011F2563D
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 17:31:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29FA815A48D;
-	Tue,  2 Apr 2024 17:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AB4E159912;
+	Tue,  2 Apr 2024 17:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jG/Cao38"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJ9HYqDy"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0274B159910;
-	Tue,  2 Apr 2024 17:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54050133283;
+	Tue,  2 Apr 2024 17:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712078606; cv=none; b=sjNcc4K4kfbJQfVJ2jvZpCxZlReYWnpz6O6IHgzVBzdQZozonbiMYTKm1zXG0Fp282KCEvqgQAKVM+oZOsFuTA0lNVlvMpe/+HVwVtc3okQVUXUIJS7/s2/+2L+yXFUs84hcmfn/RY7oHG3VG4rsGDv/aFPmJt8cP/TcVLxdBUM=
+	t=1712079083; cv=none; b=gFCwe3DhVe6tqKGOpHftquEU44FxUT87I0OKyj2juTWimEww8WIw1F2wIqlqes1r9foZX7euoMp2JeKaZ1Lpy79/qf5tWNCkYqskAZgFeEF9kD38ZDvPUmKiCSeg0C9uvcg+Kbx951iAS+AgLbzPI+tBRyKJbrOcPGlJ/jN4U4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712078606; c=relaxed/simple;
-	bh=aiWEoGsthNfBoX4TzpfH80TC69ONo89ixeOUJY2xeS0=;
+	s=arc-20240116; t=1712079083; c=relaxed/simple;
+	bh=lrf2H0YQAGtvMv18gh40GOdVnYqcnYKmW5VFDLEhDT4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=H1l3YCrq6GcoIbP9/xyrhXH/2ziqVFSytwlR3/6hIWpNpe2qpYRfjXIWUGD/lTDlZVCPV+BWB2B+JioIVSXPr/riUeMvRdOGFmY4/GVDRFmF3GValtv14MNEaKkyIKTtMFtS9xtx54zRk++snuIp9c73kkyHNVIMJoUWRX1K3FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jG/Cao38; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC54C433F1;
-	Tue,  2 Apr 2024 17:23:25 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=GrYwr/q1ddzDPlTx/qWljcUOLizwYkX/FK7m0rVy0/dg/iQfRe7NLeFdy+urPzyNI9DPJ467NGUmodnbngUMlVJprA1OX9Xzx3O7LUEQOwLJn/2saYT9EpSin16cAji0H1UJ8mRCDGs6OR1JDzJidGD0j4h1SmH4cbvw9eeU96Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJ9HYqDy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A49F9C433F1;
+	Tue,  2 Apr 2024 17:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712078605;
-	bh=aiWEoGsthNfBoX4TzpfH80TC69ONo89ixeOUJY2xeS0=;
+	s=k20201202; t=1712079082;
+	bh=lrf2H0YQAGtvMv18gh40GOdVnYqcnYKmW5VFDLEhDT4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jG/Cao38PhEpQlu0lpEo54GtEqi3ykvGK/YP8jEPH5ShMyj88mgnnmA9qYjc0PlLG
-	 po1N1rpVdRjkbkIjnRSzqMgGOUycpOf6ENIO6sv9qfRozzI31UwLIg5hJQY3yKxl3h
-	 cGOkGvoZCC+BpZnZjMZDeQK/2FChRWXLNDGKYkycROdF5/bTAy780HytmH3bxEovbY
-	 5o6jU7uN9XT9JTFW2pNJO1jeF6NSHs1ojI2qcKgkPxSqjZdUkuv4eWWCSUtzU2Avb4
-	 bxWfoe6GUYUVbPFCZH6AE2jH2ZiwqlsvxEEfWhUgj492elIvrFtgpsSY3Xm7D/HkRB
-	 aF7QBsL6nCiRg==
-Date: Tue, 2 Apr 2024 12:23:23 -0500
+	b=CJ9HYqDy4b4jUl4HOUQpoeh9rNv2qhvhMunZ0p3zd70XBx2e4NIrrLi7avEG55rQP
+	 qbTizpQGpmibLUJh9G8IjuNwM/oO2B9E5J/7b2Zx3rHcTWpr1+TiwT3yF6Nrifmdvq
+	 WVQA2RreXD4jYpaPBU/9XUT9tqKIAGPRRkyEdgHytU/v5PLy1V4RbY67bbchvmJSvK
+	 krohOg8WwmIs7tIj1r3S5yApyfTRB7EhpAiDh2j13eAWctrSCMOUbKXjT+Mb+qxzSX
+	 XPhNLm1qJJnajdBuNM9UYfVtOuSuFsP93FcARb9OqW2ydUR1K/QWNEpCZd4EHEBdz8
+	 DK5b3G0QkC4gA==
+Date: Tue, 2 Apr 2024 12:31:21 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com,
-	lukas@wunner.de
-Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
-Message-ID: <20240402172323.GA1818777@bhelgaas>
+To: Aleksandr Mishin <amishin@t-argos.ru>
+Cc: Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Subject: Re: [PATCH] PCI: dwc: keystone: Fix potential NULL dereference
+Message-ID: <20240402173121.GA1819268@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,66 +66,55 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6605bef53c82b_1fb31e29481@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20240329051947.28900-1-amishin@t-argos.ru>
 
-On Thu, Mar 28, 2024 at 12:03:17PM -0700, Dan Williams wrote:
-> Bjorn Helgaas wrote:
-> > On Wed, Mar 27, 2024 at 04:57:40PM -0700, Dave Jiang wrote:
-> > > On 3/27/24 2:26 PM, Bjorn Helgaas wrote:
-> > > > On Mon, Mar 25, 2024 at 04:58:01PM -0700, Dave Jiang wrote:
-> ...
-
-> > > > IIUC, this should be just a PCI SIG-defined "Vendor ID", e.g.,
-> > > > "PCI_VENDOR_ID_CXL", that doesn't need the "DVSEC" qualifier in the
-> > > > name, and would normally be defined in include/linux/pci_ids.h.
-> > > > 
-> > > > But I don't see CXL in pci_ids.h, and I don't see either "CXL" or the
-> > > > value "1e98" in the PCI SIG list at
-> > > > https://pcisig.com/membership/member-companies.
-> > > > 
-> > > I'll create a new patch and move to include/linux/pci_ids.h first
-> > > for this define and change to PCI_VENDOR_ID_CXL. The value is
-> > > defined in CXL spec r3.1 sec 8.1.1.
-> > 
-> > I saw the CXL mentions of 0x1e98, but IMO that's not an authoritative
-> > source; no vendor is allowed to just squat on a Vendor ID value simply
-> > by mentioning it in their own internal specs.  That would obviously
-> > lead to madness.
-> > 
-> > The footnote in CXL r3.1, sec 3.1.2, about how the 1E98h value is only
-> > for use in DVSEC etc., is really weird.
-> > 
-> > IIUC, the PCI SIG controls the Vendor ID namespace, so I'm still
-> > really confused about why it is not reserved there.  I emailed the PCI
-> > SIG, but the footnote suggests to me that there some kind of history
-> > here that I don't know.
-> > 
-> > Anyway, I think all we can do here is to put the definition in
-> > include/linux/pci_ids.h as you did and hope 0x1e98 is never allocated
-> > to another vendor.
+On Fri, Mar 29, 2024 at 08:19:47AM +0300, Aleksandr Mishin wrote:
+> In ks_pcie_setup_rc_app_regs() resource_list_first_type() may return
+> NULL which is later dereferenced. Fix this bug by adding NULL check.
 > 
-> Oh, true, I think this should be PCI_DVSEC_VENDOR_ID_CXL, because afaics
-> it is still possible that 0x1e98 be used as a non-DVSEC vendor-id in
-> some future device.
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
 > 
-> In other words I think the CXL specification usage of 0x1e98 is scoped
-> as "DVSEC Vendor ID", not "Vendor ID".
+> Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
+> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+> ---
+>  drivers/pci/controller/dwc/pci-keystone.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> However that would mean that a future 0x1e98 device could not publish
-> DVSECs without colliding with CXL DVSECs.
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 844de4418724..00d616654171 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -392,7 +392,11 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+>  	struct resource *mem;
+>  	int i;
+>  
+> -	mem = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM)->res;
+> +	struct resource_entry *ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> +	if (!ft)
+> +		return;
 
-FWIW, I pinged administration@pcisig.com and got the response that
-"1E98h is not a VID in our system, but 1E98 has already been reserved
-by CXL."
+Like the other one
+(https://lore.kernel.org/all/20240328180126.23574-1-amishin@t-argos.ru/),
+I think this potentially avoids a NULL pointer dereference (though I
+didn't do the analysis in this case to see whether that's actually
+possible), but fails to consider the implication of simply skipping
+the rest of ks_pcie_setup_rc_app_regs().
 
-I wish there were a clearer public statement of this reservation, but
-I interpret the response to mean that CXL is not a "Vendor", maybe due
-to some strict definition of "Vendor," but that PCI-SIG will not
-assign 0x1e98 to any other vendor.
+"start" and "end" are used only for the loop about "Using Direct 1:1
+mapping of RC <-> PCI memory space".  If there's no IORESOURCE_MEM
+resource, obviously that loop makes no sense.  The function would
+probably be improved by moving the resource_list_first_type() so it's
+next to the loop that uses the result.
 
-So IMO we should add "#define PCI_VENDOR_ID_CXL 0x1e98" so that if we
-ever *do* see such an assignment, we'll be more likely to flag it as
-an issue.
+But the rest of the function doesn't depend on that IORESOURCE_MEM
+resource, and it's not at all clear that the rest of the function
+should be skipped.
 
-Bjorn
+> +	mem = ft->res;
+>  	start = mem->start;
+>  	end = mem->end;
+>  
+> -- 
+> 2.30.2
+> 
 
