@@ -1,112 +1,83 @@
-Return-Path: <linux-pci+bounces-5561-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5562-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BCCB895952
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 18:10:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B51AF895973
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 18:16:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83B6B1F2354D
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 16:10:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D94C61C21F62
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 16:16:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD7C13174F;
-	Tue,  2 Apr 2024 16:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA9514AD2C;
+	Tue,  2 Apr 2024 16:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FPjYWxWe"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jUeLaosL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2107.outbound.protection.outlook.com [40.107.6.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096902E40D
-	for <linux-pci@vger.kernel.org>; Tue,  2 Apr 2024 16:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33047A724;
+	Tue,  2 Apr 2024 16:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.107
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712074237; cv=fail; b=Te1tbWtrV0R/Wbgd+iJijqEUtXDezxpafDVKwvLqKsLFxO78FDaVDjlHCnlVNR/cx4rW9ew6qwqBtdRKEmsTifozTI1B9pMz0zv/A6tnnTPtX65b5h/n3/t8RlCUrtn6bAgfyU+JuC7CZVr8JEQfJbRRGFSnRQPtgG4wX6vfXs4=
+	t=1712074569; cv=fail; b=c/lSdj+SmhEeHX47xwBM+NK1I3UERJkeUe31Ha/TrtXGFcVv1Fqcs1TAiN4wcqhAPUwQvJ36OBeHivRrsSnkyL6z9JaDOD75ufvj+oloEdLgY9JQMZVNrNNmA2g0reAnmWlhKhdrtxnZ0q8bx/oiQ8TAlCa5pV1PsrS+aC3rg24=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712074237; c=relaxed/simple;
-	bh=BjA3y9qKq4VBwwYdtqVRBt7x9l1LSGNJIsEMTJAz3k8=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q6AgCXu+71+vhwDbJPG1Mt3uXvmUt88WHcv+BP9SbOB3ZntFUEbY27FX0oSp9cngLBVUXYpw30oiFOCqH3bkerNB+N+3sy3CXgZ2KM/AnE3HkHE4XDAUvmmLbH3BuJAbThZhjnqS+kEHwEca+9eppWZQdwD0+3xgfenDJMlesJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FPjYWxWe; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712074235; x=1743610235;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=BjA3y9qKq4VBwwYdtqVRBt7x9l1LSGNJIsEMTJAz3k8=;
-  b=FPjYWxWeAUeX9G+A+A9QfiB5l8+D2QxB9fY9djtNOYgMabPoWFjDI5GA
-   72MrYNY3oQ4o5tEm6wcHY6iZifbHhm+vyoyS7nP0+ylWC2fd5fiR3Brlm
-   7fRAgtmE1nPhThI9mJ22ojnvNgVpF5BfsxUlN45oZaUzyKqpt0tJcfEwd
-   O60C8OG31ad9Frtg3z6S7zlTm/FeAiinfuF+oUq21sc9YB6E5ez1JI8qL
-   3LxKFrqgGXSU8qt9hI3zeQdUZN5BUOOL8IQ0Vbv1ATKyhY0jZ5h5+C+P7
-   0PEWMWIRQAi1FudXyZL8tFXKU9oAqfBatjHRGmpdLRpbYII6J5WHToJVd
-   w==;
-X-CSE-ConnectionGUID: a94yP8HeSVSFWRRrRvJvAg==
-X-CSE-MsgGUID: UR+jQY8NTdubHfo4HA4Igw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="18617722"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="18617722"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 09:10:15 -0700
-X-CSE-ConnectionGUID: CLqMG06TQVKhkjVUzEQeTg==
-X-CSE-MsgGUID: HV3UpBOUSmWG/p6OyGmKBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="18166799"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Apr 2024 09:10:15 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Apr 2024 09:10:14 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 2 Apr 2024 09:10:14 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 2 Apr 2024 09:10:14 -0700
+	s=arc-20240116; t=1712074569; c=relaxed/simple;
+	bh=3pGR/ddW9dEh8gc9hakUC/itow/9ISfzO+zUdzmjzeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fVzNMEl2pHhOm2+jT6kdI+cncXmwPwhuf3vGgRJmUHI9/jWAqD4vkC43QSS49KUXMUgCZeZ2fqy7a0jqgEz252P0dPAJZaP349iPgUyxfh5AzrgaxOtwsoAGtVXjrqB08dvpS7KTtxxMWCo5LMu4Yz04FSKmx1upxjw/9RDXXfA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=jUeLaosL; arc=fail smtp.client-ip=40.107.6.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i/srMoQCqIFRN+1Z+JzMVuiDLr0g9j9q9e9QaBhJ+A7gMuR5BF6XNXniI5J1VUIsSDiY11fHY6PFx93i/57ONxW+ooBkdcQ0VbaShgEotVGLF/THeKtmyE6wRFrCI3QBqKw1JH7vZlUfYALxcX0WThCQ6QSGONIJ6RYIa/araayPFY1NX2iWqcCQHq2/BkXXzQ20SmSZlU6FDfJp6w0QNioLvrYWe8ZKnbvazwco0s1C0Z0rq7VJcRIrMMSBYpmASYDN66lVcVLk+bfCcZ8s9yd9D6OvGtlHs3UOEr3t1UUQK1dowaTUNExcDb0KU+koZ7ngpY4D4Jf5IVRDhR+jMQ==
+ b=eEBMc1CRn6pOnESFPYeJap54mC75yQXfM770+D26lX+qb6q7/Lnx1EtCHRRivRmRdDL9/e9wGB+cqrwc9yu3vm+AnBvhcQ4xO8AqQEuemx1/XMByGmPQUF2NPEJS8t3kznjzfD2RBEgC4R2zALNTxQdTI6b9fpjnPgh2vAAknLPJthLsxPRGKShwkvNDChpwwq4BkHp6o2XMmdvSpNlZ0ENWPuJMQaVu6+jxfSRnK3HKXILMlek8xSuxolq6y1DB9R1sQmgziiR8SEeG6TAeHlIrAXUrg+E6WeUmkYIgx/oK8eduaY5WXqEMLByQNa05jtuGPxYzzy1JVIZ18pMcHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Lz7lk6VktgQ3PZTtmctNduUEd1T1HhRhmgWeryALTyU=;
- b=fkKaObTttARBukZ0/C6xZdZyAAUlJ1nYvAtqtv49+VCJP1/v2cSdDmLDRhak06n1n7cVw45ImHHvAkHVnLiyt5zWTixfC4nF32VqnqA4oWhDrKYdnP4X9hBOHMrPfxk5rrDxpque8eQRxVtu+ZD5uDsnvs22+g2TwQIMfWD4s6GZCkhfF5ml4KEHf+wSe6nddVbw+1yszvm4TYTRRdZlhdu4WBFl4ZKoQCBZmW4w7wJO6OoQpvm0g+cp9iE0S6tC2E302Nq6D0WDEJluH58C9ea+asJUpmHw7Jdc12lHFPvLhN0+j6h0v99aUlHX/QaXu9yzRKA7t6UA6O+s2tjiQg==
+ bh=62qibg0CLg8Od4rQwvqlnEBbDzREBhUJH2r8VaQGCNI=;
+ b=hU+HvwTqd7SkYpQliQIdImn4bG1MIBDXEfkOxeMVC43jZz/Bf3h6/z2r+O2tuHc7Qma+CFTdwTGHzrHkrm/2cPvESAqcL3AAKxZH8oEJ5V4Av3IAYVdNPD+7MwtPUy8qTG9nnsqwA/6khyjBEaexxmc6sNSndUT+TTY6SW8/w+GWQWMX/tB4d0Zj+/eP9oQYuw2Xn8qpVGa1/cvIVQmkuxoNuMHMqDskgZdCTUn+fPrw7/f9MFQfkCIn6VjXuqY6cvh0JNSSm8txWmtm3KHouhZU0pzXhLLekuX8AnL3n47xYZPiz9aogQfbeMOZqx90TZdftE2MeOEy+7E4OWyCyA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CO6PR11MB5636.namprd11.prod.outlook.com (2603:10b6:5:357::21)
- by MW6PR11MB8411.namprd11.prod.outlook.com (2603:10b6:303:23c::22) with
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=62qibg0CLg8Od4rQwvqlnEBbDzREBhUJH2r8VaQGCNI=;
+ b=jUeLaosLhTLHTSMlvs6Md8KNlQ8Ob16N6B3tx2uY8SnQZz7X9d/t19T3JFKnfDhUypE7qNRYmNyra/yfjz826MIurYI9agcq0ahQ226J4/R5UIcf7FwXPtUatEpp69bDH7tFhzUZVBETqcgd9UOiJXLuVs8zbL4M2qVuQCXBtaI=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM8PR04MB7731.eurprd04.prod.outlook.com (2603:10a6:20b:249::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Tue, 2 Apr
- 2024 16:10:12 +0000
-Received: from CO6PR11MB5636.namprd11.prod.outlook.com
- ([fe80::7c48:3345:4ed4:85e2]) by CO6PR11MB5636.namprd11.prod.outlook.com
- ([fe80::7c48:3345:4ed4:85e2%6]) with mapi id 15.20.7452.019; Tue, 2 Apr 2024
- 16:10:12 +0000
-Message-ID: <5cf66eb2-6820-4514-9d5f-1a7c4228cff9@intel.com>
-Date: Tue, 2 Apr 2024 09:10:08 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Kai-Heng Feng <kai.heng.feng@canonical.com>, Nirmal Patel
-	<nirmal.patel@linux.intel.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	<linux-pci@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20240326210841.GA1497045@bhelgaas>
-Content-Language: en-US
-From: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-In-Reply-To: <20240326210841.GA1497045@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR05CA0171.namprd05.prod.outlook.com
- (2603:10b6:a03:339::26) To CO6PR11MB5636.namprd11.prod.outlook.com
- (2603:10b6:5:357::21)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.42; Tue, 2 Apr
+ 2024 16:16:04 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
+ 16:16:04 +0000
+Date: Tue, 2 Apr 2024 12:15:56 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH v5 0/5] PCI: dwc: Add common pme_turn_off message by
+ using outbound iATU
+Message-ID: <ZgwvPB/LbPRshVCy@lizhi-Precision-Tower-5810>
+References: <20240319-pme_msg-v5-0-af9ffe57f432@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240319-pme_msg-v5-0-af9ffe57f432@nxp.com>
+X-ClientProxiedBy: SJ0P220CA0012.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -114,175 +85,147 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR11MB5636:EE_|MW6PR11MB8411:EE_
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7731:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: igg0UVJH54B+rHYdqZ2tNyKlqwMlgBFK+MXRvvzN86urgKwrsHromi4YVwWdoK4kOpy2W0mqqf/ZRWXFRFJF+Lv0VNhZlxQGeG+c17wV3rl5Ws45FRv9sHJR8td8HnvbR1HsWA8hCREVQhLxvD5CWym4e+p51pw+uCYR32JzT28hVeWYAYg8/QxMr4wDZIcDGkySRu6qzQXa5y+Pek+DzXnq1iZkY0qllAQGmqcBBL/odM4bAdJaRVqa5Schoo3LlUoBLojtgc1F3FOvE0SmE8chjHBmTavUyeQig923TQQ9OY07SAVa7unuZg2T/8N+921W772V7PA4pWSJ9ODhZQoBPZ1guA8lLAR4Nb9hCXX36t2z4Ke8TBIOEsZJc70+aVDMB5lBqwBZBOgG7q0ffw4WE5/djdzZ3y1S1xuHn/qplWCvIzdcFaX3lFzMzXF6yVkcHBwxn4q+LPwq9WXCeZ5SG0lrJCOBqalhSRMMw8QctGb0f479pSo6t6ibOfxkyUJGwqb4peIoPiq0JflOUZzFqLGLkZ8RdV5gau3EE9uT5+hUed5TYWNwSTPY8xmA/KAwY8tmBKFj8rHzRgBOliEbXc6mRfR/RcTmUpmEyLodsrZ3hriIGBq+5OQnCfPkkFyMuS52faPQFE8bn7rQbzDaMLGKgSaGBSC1uSFniCU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5636.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	974Ocef1OVSJPzdjqqvRRDP2MenXpb6XSP6gpKaHUhX9VWGsvfJ/3EoORJuXBNx2EP2XZc6awbKHQEHNdu2tNxwy21e5V/7HKtx8dTuLdYhSepYBnfSYgea88iyje8VR1UShJ+c2tGkYjcgp71ErAZITlPgPtWuI41KBf8lLcKCKMXLuajeZF9MYc9sCo6QL1VQiWxpLvreq77fDm3zgoRfhLBwKfIfoFNJerwbIleXtFpzc8auk6sKb7OfOACwM4OIWL+Zd1pnJs5bRSTl42Oedd4CcUazhBy9MGSjtylx3KH4oLGOlm0huAfctRsm4uaV6ewpltOhvZAtdXUVSD+8mE3DPeZZzYp7vLy84C7tp5ieXOfr8NknQZdItNHtdgLyQMlwwrI3Sjj12/3D9g0Hsdw70zfbcROBQ4kdeenzZMilIoDa+maU3Ea00zlPGXMx91zOX4JUALsHl8Pe3Oi7GS/10+cVfH4lFlAFGhGMYzEZHwQHTo6MqD90l9Cp8HzIzhTvGqg1xh1s7yGS3ihmrpz/IQEfoln0dzHQYbXdqDpMnD2SwAqkZnaN93oWWq4+k03YsS+pvK/XygqC2xUkJc9rwo9kThpxrfWlUbT1KN5BVf7/Hk3o6S9DI+dB4HHdFQS2iPLUerIDXJ0IbP7sr0Ph11JhPyBSG2Plg9ZSXXsz2cofoEUFZefPfYL6a
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(7416005)(376005)(366007)(38350700005)(921011);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?djBIY3JMb1FwT1JOYjZEc0tZR3dGdkEyWGtnNmRwVmtFL2wrWVFpZG1rYjFZ?=
- =?utf-8?B?WkoxMEkzU3R4WnVEb2lJdmVVSTlhUWIzOEdOeE9CT0hUclV2dzhZK1hCYmVM?=
- =?utf-8?B?VTBkQ2dkOG1IMDFBU1FnYUxmNW9wQVdLWGZuRjJFNTRJYVVyQVFWaG41ck9Z?=
- =?utf-8?B?TWhqMDVTL1JkdjBYczFrazBCTjlpbENFYnUxNDRkNVFVTnZZeFp0Mk5IZDZX?=
- =?utf-8?B?NCtRQ1hqQkNQTHY1YVF6MkxneE5rYTFTTEFpRE8xK3lrM01pK1lTSUxjMU5z?=
- =?utf-8?B?MXVleTNBTndXQTlLazl6dHVzbk8xaytKdjlkazB0M1BEcFU1T0toSXErd1li?=
- =?utf-8?B?WTB3c1J4RVZsL3ZQRGtjMjRmQVlTWUZMNWZQTVhhWHBRNWxoRzRnOFFwNjNp?=
- =?utf-8?B?R2RuT2lVRjJPRHk2d24vTmJxSlV0L2JtQ2V2cllCaWJkZWlOQjRVKzhaL3hI?=
- =?utf-8?B?cVArRm1KeUpWLzVqY2RadlorQU1xbmVPSER4QlFyWEtaRFhHOG5Ta0V4SjND?=
- =?utf-8?B?ZFh4R25heVI2SnFoRFN0Q3dkMDRkZlc2NUNaZG42UklDcVZMK0VBZXBjOWht?=
- =?utf-8?B?a2t0bWxLekdXYWxMNmNpVlhJU1hKRU1vVWJ6Z2NqRUhIL292aHl1azBJYm1i?=
- =?utf-8?B?SkJhV3d0eXY0cHdtc1VmRkY5YkVybkFRQ0NkbU5zUVNiaFlDdmNtMnBwd3Av?=
- =?utf-8?B?UlljT29sclJuT3l2dkZJeS9TMldaWW9LZUdHWTBEeHUwYUZqNmpqdTI4eU1Z?=
- =?utf-8?B?QUZwUlFxbEpUVEVKdmF6ejBKdWpIekozSnpaODV1RVdJS1R4M2o2eFN2NlhN?=
- =?utf-8?B?RFdPYXNaYXorKzBPb21Cd2s3c2pKaVR6NXpzUVVNazZkUmNzenFjc3hFd3NZ?=
- =?utf-8?B?b1BIcDNRSnBaYWV1ay9oRXplUmxSQ3NTQkNpUmM4emlXVSszU1FtbC9KRmt6?=
- =?utf-8?B?TWwrTWdNOGx1NlVTZmE1cDR6NFAzejlHbHNBczZEQkhrNXZUZVczRDFVQlVY?=
- =?utf-8?B?YXlDK0hWZEp5L0Q4MFAzSXNabVpWbkJ1OVFxcWF3WGl1VGtudlh1bHkra1hk?=
- =?utf-8?B?SVZiZXVYc2xOb0RGTjdkZ0hNUHJsRUZ4SnJ6RityZDdrY20vOFYyT2xBdUZL?=
- =?utf-8?B?dmxIeEZINW05VURqUXhMY2FBbXNacGl0Yy9jckNIMmp2cHNiejhRMWNZakNO?=
- =?utf-8?B?Yk9pUThqNXZDOW5ZMTJPNW9FbGpqL3FYQldHUEY4UE4ya25MZWY1TjNCMUVH?=
- =?utf-8?B?dGs0cXVvUFEwcUdnc3Z4WnVSTnNGSXUvellvQTdKRWVmbUhrVXRHWTVhWU4y?=
- =?utf-8?B?VnhGMlV5L2ZUdkl0WUZ2NmcwVHJ1dEM4THd3Mm9mdW5aaDhJR0ZBdlhXZE1L?=
- =?utf-8?B?QjJVU09WT0lkK0RLUHQ1N2QyNW90bks3a1pQd3E2cTZpb3VNTUFGQzN5bFQ0?=
- =?utf-8?B?YnRwRy94SlJhNFhjM1cvbVhyMUYvSnU1d3F4elo3eHZoSHcwQUJZeFFCLzRC?=
- =?utf-8?B?Q3lTU2hxWUpVb1VBVjNxU2ZNWWgwQ1JSMk5pZUs2eGdTZmhBWmwxQXlKY3hH?=
- =?utf-8?B?ZHFIclpSUVpNZTMzWlNWazdudi91UktOczhXdDVNNFhRTE51ajhTQnBXRTdR?=
- =?utf-8?B?U3dGZnZpSGUvMHZSdlg0MUx3RW42bGhJTmpTaVFONC9FdlhEKzhQdFpJOXlS?=
- =?utf-8?B?aUg1a0NySThydDBTOTUvT3Fua2dvcVpkQlRyNjhYaGVWRFV2ZkExTEtRc2FP?=
- =?utf-8?B?NlNHZ2lkcG51Y1RwbGk0cUNMYzVvM0d5VmJJOVA0cVFVYTVISzhMUGVHdFhF?=
- =?utf-8?B?Q1RYeXFEZ29vTXQ4S3R4VExSblFxNk9LUlBRUGpscnkwSmI0ZlhRZXAyVXda?=
- =?utf-8?B?QmcyYW85UlFQWWJ2TXRQSjE2dmNNZldsUjZVeWJ5bFpGNUV1aTJlMDIrcG4y?=
- =?utf-8?B?UHUyV1FlOWp6NnlaZDZlN1U4Mys3QzZ2ekpWdllWd29LNGRIWWhvb0dxU3NW?=
- =?utf-8?B?ZjRCRU1TNHVCSDV2WjFwNCtDWHo2b0VuK01iRGQ4QUdZZ2JvR211V2tBVW9K?=
- =?utf-8?B?bEdCTjlOaXVXVThKRi9uZ09MRjErSmJMNEh2S0NMd2RxdHVKaEhwUjJTZTVI?=
- =?utf-8?B?WTFjUG5qTFJXTjVqc2FOVWttN0xubjkvWkFrRFB2WUQ0cXVwVkJ5SEZZMlZR?=
- =?utf-8?B?bEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b88b65ec-1b9b-4324-5144-08dc532f603a
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5636.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tLpR1Y50JzXDqDOlbiZgdQHBuq19xZlQlXstkoCPhdjZH72B2kAok3cY1qCG?=
+ =?us-ascii?Q?qHOMggCmd93sp/zHRw/VYFd48OiX/QCm2e4arU3BK2KICmMILfCi2UsNc5te?=
+ =?us-ascii?Q?Wf/Ig1XX581cPdAb/N23aTgoQ/sP+TPmKvdXZHhLYtXtGkw/6M+2HF60VTRc?=
+ =?us-ascii?Q?4C3hdkcV9sgLWTHi+iODiGkMU2aAVhfu2QXallCF6vOYFLOh5BxFD0EIc1Uw?=
+ =?us-ascii?Q?fSNPRuqV1HefqEHOIek7OP6wCIbRm/8Mo0wUwco7ymX9DhhLZFJ82t5yclYi?=
+ =?us-ascii?Q?J0p4887UwMBuMNofx+M+HuneDf2lgnFEvwbkaFC/iS3I8rNzYXyPRDr56S29?=
+ =?us-ascii?Q?xO0BtdVXHQ4ZJJDn7YFEUCuayQX9OwXZII3C47Pu+FD+ouTy8XfQAfmlPQX+?=
+ =?us-ascii?Q?I8Dfx4IH3p7Bj/B4HRmeUm9kco2aZk+fbzwSOxMdqpXspxLdP0yoAu9v4DhF?=
+ =?us-ascii?Q?emodIzekECVi0H8LVuEKAxUToLzdhsrTkdQArjGDmoKTWmx/9pUYcXsUeJ5f?=
+ =?us-ascii?Q?s/x4doA+3KmcKOtt+o2G+VWYZ6lm1wT55U02D2/JaBhYvyL3kNwsNGWw/GsG?=
+ =?us-ascii?Q?Ivmm68foRjvtbZVcjZzlsGMVq1jxa1BdMzHrvO5J1f5BtxR0PcHA2qkMYYcg?=
+ =?us-ascii?Q?Dywv4yCaIG1o2bdKgWYxq7qJvmtqVSFfhc+qbqXrldHbH5rZ5Xmkqvd2A78h?=
+ =?us-ascii?Q?dP1ilvoSNKDOxkH34n6CAdANdkGCaM7da0jz/DG3hm8tEgQZBAi25CJDdUL2?=
+ =?us-ascii?Q?HEYLHtcijhQfQfXHS0jX3iLZZDKmbOKVEzmYHiQoZ44HiEDGXNbK69YkwLbe?=
+ =?us-ascii?Q?ZIXONHE/oKDaMYv5AeoWTca1aACDtNFJILyHIOsU0Q+e1ExPx5jKoUPaPdOp?=
+ =?us-ascii?Q?kqPBXNhU1XSyApItj4Ud4qCXBHbqQKKFnmYY60x1f4M2y0zJU2MoGgual7Xp?=
+ =?us-ascii?Q?ebJcGXwuClO4a6KBAIe1AWXabzf3jwe/rNQdUcSNW2U+u0qzsva286nUCpkD?=
+ =?us-ascii?Q?LzyoAK+PcUnCPBSn+jbrhCa3d6TYTOvh7iOWBowUBd642k9J5Ax53PJaWjev?=
+ =?us-ascii?Q?U6Q+01r6FQIMS8mKBOGWlyvQpuRgErEthZVMEZbhD2Mp+OyKzkcgk6LttEO2?=
+ =?us-ascii?Q?RzshkYcrpvW9sS9EvhIa71ogL6G4GruHbphQoZVHRuN6EzHdiXzhd1mLQuWa?=
+ =?us-ascii?Q?Ao+T0JGB0pw88I/P3O7b5gZeb0DJGjBJ4e412BpbwwShM8gebippw5z2NwYe?=
+ =?us-ascii?Q?rxrLSnwv7drKGtopck0L/dZsTf3N4MOVTxUJAhBQ7HfJ3S/0laAnmpgRlbvE?=
+ =?us-ascii?Q?cYsJBPWqK5cZj3ZP9xAJ6vkyuO08sGolsKeSs2sapxEpu4GNAfc8HnLji3up?=
+ =?us-ascii?Q?J6CCo1LqSVwBGfVzn+mKJMwTZmanz1WQDtlDFDOCETpBGM1xYewFUvJV3Hf5?=
+ =?us-ascii?Q?o1GbAvVgCq9UFBJ4XsrDeOWI5I2XLYE+juhsGpx0pa0ZH+0i58KvbYRKBvfp?=
+ =?us-ascii?Q?c7ahhJpR7JA4f0yi5TCYTvr3PDdN4Lsf1xcIZfTZTExoyxZyTXZvco81E3tu?=
+ =?us-ascii?Q?Dowq7ajaRU23iUeIE6/W890zvgH8W5ggExNcnRa6?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f8d4fee-e2d3-45a5-4b9c-08dc53303203
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 16:10:12.3956
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 16:16:04.4025
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6DWBavNL27LHjvyloQUzZzz7ZZRYkb3mXwds19UrC7+JFBeA+bXGzcV8xxRzS4r+0VHK/9KsLHF4wuLj2uf6U52H/PEKWGwM+qxYDNj7lUQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR11MB8411
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: gu9Q0E4Hlp1S/z/aD2I8MIBPscFfbQqTL4Ierhiy0j86pr8Bqvx93q5ChsDTlwBXgNNrObkrpBcvzq4gasKLgw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7731
 
-On 3/26/2024 2:08 PM, Bjorn Helgaas wrote:
-> On Tue, Mar 26, 2024 at 08:51:45AM -0700, Paul M Stillwell Jr wrote:
->> On 3/25/2024 6:59 PM, Kai-Heng Feng wrote:
->>> On Tue, Mar 26, 2024 at 8:17 AM Nirmal Patel
->>> <nirmal.patel@linux.intel.com> wrote:
->>>>
->>>> On Fri, 22 Mar 2024 18:36:37 -0500 Bjorn Helgaas
->>>> <helgaas@kernel.org> wrote:
->>>>
->>>>> On Fri, Mar 22, 2024 at 03:43:27PM -0700, Paul M Stillwell Jr
->>>>> wrote:
->>>>>> On 3/22/2024 2:37 PM, Bjorn Helgaas wrote:
->>>>>>> On Fri, Mar 22, 2024 at 01:57:00PM -0700, Nirmal Patel
->>>>>>> wrote:
->>>>>>>> On Fri, 15 Mar 2024 09:29:32 +0800 Kai-Heng Feng
->>>>>>>> <kai.heng.feng@canonical.com> wrote: ...
->>>>>>>
->>>>>>>>> If there's an official document on intel.com, it can
->>>>>>>>> make many things clearer and easier. States what VMD does
->>>>>>>>> and what VMD expect OS to do can be really helpful.
->>>>>>>>> Basically put what you wrote in an official document.
->>>>>>>>
->>>>>>>> Thanks for the suggestion. I can certainly find official
->>>>>>>> VMD architecture document and add that required information
->>>>>>>> to Documentation/PCI/controller/vmd.rst. Will that be
->>>>>>>> okay?
->>>>>>>
->>>>>>> I'd definitely be interested in whatever you can add to
->>>>>>> illuminate these issues.
->>>>>>>
->>>>>>>> I also need your some help/suggestion on following
->>>>>>>> alternate solution. We have been looking at VMD HW
->>>>>>>> registers to find some empty registers. Cache Line Size
->>>>>>>> register offset OCh is not being used by VMD. This is the
->>>>>>>> explanation in PCI spec 5.0 section 7.5.1.1.7: "This
->>>>>>>> read-write register is implemented for legacy compatibility
->>>>>>>> purposes but has no effect on any PCI Express device
->>>>>>>> behavior." Can these registers be used for passing _OSC
->>>>>>>> settings from BIOS to VMD OS driver?
->>>>>>>>
->>>>>>>> These 8 bits are more than enough for UEFI VMD driver to
->>>>>>>> store all _OSC flags and VMD OS driver can read it during
->>>>>>>> OS boot up. This will solve all of our issues.
->>>>>>>
->>>>>>> Interesting idea.  I think you'd have to do some work to
->>>>>>> separate out the conventional PCI devices, where
->>>>>>> PCI_CACHE_LINE_SIZE is still relevant, to make sure nothing
->>>>>>> breaks.  But I think we overwrite it in some cases even for
->>>>>>> PCIe devices where it's pointless, and it would be nice to
->>>>>>> clean that up.
->>>>>>
->>>>>> I think the suggestion here is to use the VMD devices Cache
->>>>>> Line Size register, not the other PCI devices. In that case we
->>>>>> don't have to worry about conventional PCI devices because we
->>>>>> aren't touching them.
->>>>>
->>>>> Yes, but there is generic code that writes PCI_CACHE_LINE_SIZE
->>>>> for every device in some cases.  If we wrote the VMD
->>>>> PCI_CACHE_LINE_SIZE, it would obliterate whatever you want to
->>>>> pass there.
->>>>>
->>>> Our initial testing showed no change in value by overwrite from
->>>> pci. The registers didn't change in Host as well as in Guest OS
->>>> when some data was written from BIOS. I will perform more testing
->>>> and also make sure to write every register just in case.
->>>
->>> If the VMD hardware is designed in this way and there's an official
->>> document states that "VMD ports should follow _OSC expect for
->>> hotplugging" then IMO there's no need to find alternative.
->>
->> There isn't any official documentation for this, it's just the way VMD
->> is designed :). VMD assumes that everything behind it is hotpluggable so
->> the bits don't *really* matter. In other words, VMD supports hotplug and
->> you can't turn that off so hotplug is always on regardless of what the
->> bits say.
+On Tue, Mar 19, 2024 at 12:07:10PM -0400, Frank Li wrote:
+> Involve an new and common mathod to send pme_turn_off() message. Previously
+> pme_turn_off() implement by platform related special register to trigge    
+> it.                                                                        
+>                                                                            
+> But Yoshihiro give good idea by using iATU to send out message. Previously 
+> Yoshihiro provide patches to raise INTx message by dummy write to outbound 
+> iATU.                                                                      
+>                                                                            
+> Use similar mathod to send out pme_turn_off message.                       
+>                                                                            
+> Previous two patches is picked from Yoshihiro' big patch serialise.        
+>  PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()                 
+>  PCI: Add INTx Mechanism Messages macros                                   
+>                                                                            
+> PCI: Add PME_TURN_OFF message macro                                        
+> dt-bindings: PCI: dwc: Add 'msg" register region, Add "msg" region to use  
+> to map PCI msg.                                                            
+>                                                                            
+> PCI: dwc: Add common pme_turn_off message method                           
+> Using common pme_turn_off() message if platform have not define their.
 > 
-> This whole discussion is about who *owns* the feature, not whether the
-> hardware supports the feature.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Changes in v5:
+> - Default disable allocate TLP message memory windows. If driver need use
+> this feature, need set use_atu_msg = true before call dw_host_init().
+
+
+Mani, lorenzo and bjorn
+
+Any comments about these patches? I already set this feature default as
+false. It is common for all dwc platform. 
+
+After this merge, imx6 and layerscape many customer PME code can be
+removed.
+
+Frank
+
 > 
-
-I'm not disagreeing about who owns the feature :) I'm trying to find a 
-solution when the data that the driver gets is wrong.
-
-> The general rule is "if _OSC covers the feature, the platform owns the
-> feature and the OS shouldn't touch it unless the OS requests and is
-> granted control of it."
+> - Link to v4: https://lore.kernel.org/r/20240213-pme_msg-v4-0-e2acd4d7a292@nxp.com
 > 
-
-The code is fine in a bare metal system, but completely broken in a 
-hypervisor because all the _OSC bits are set to 0. So I am trying to 
-find a solution where the hotplug bits can be set correctly in this 
-situation.
-
-> VMD wants special treatment, and we'd like a simple description of
-> what that treatment is.  Right now it sounds like you want the OS to
-> own *hotplug* below VMD regardless of what _OSC says.
+> Changes in v4:
+> - Remove dt-binding patch. Needn't change any dts file and binding doc.
+>   Reserve a region at end of first IORESOURCE_MEM window by call
+>   request_resource(). So PCIe stack will not use this reserve region to any
+> PCIe devices.
+>   I tested it by reserve at begin of IORESOURCE_MEM window. PCIe stack
+> will skip it as expection.
 > 
-
-What I want is for hotplug to be enabled in a hypervisor :) The slot 
-capability register has the correct bits set, but it doesn't make sense 
-(to me) to use a register in a root port to set the bridge settings. 
-That's why this patch just removed the hotplug bits from the code. 
-Everything is set up correctly (as far as I can tell) in both bare metal 
-and hypervisors if we omit those 2 lines.
-
-Does anyone have a better suggestion on how to handle the case where the 
-_OSC bits are incorrect?
-
-Paul
-
-> But I still have no idea about other features like AER, etc., so we're
-> kind of in no man's land about how to handle them.
+>   Fixed a issue, forget set iATU index when sent PME_turn_off.
 > 
-> Bjorn
-
+> - Link to v3: https://lore.kernel.org/r/20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com
+> 
+> Changes in v3:
+> - fix 'MSG"
+> - Add pcie spec ref in head file
+> - using function name dw_pci_pme_turn_off()
+> - Using PCIE_ prefix macro
+> - Link to v2: https://lore.kernel.org/r/20240201-pme_msg-v2-0-6767052fe6a4@nxp.com
+> 
+> Changes in v2:
+>   - Add my sign off at PCI: dwc: Add outbound MSG TLPs support
+>   - Add Bjorn review tag at  Add INTx Mechanism Messages macros
+>   - using PME_Turn_Off match PCIe spec
+>   - ref to pcie spec v6.1
+>   - using section number.
+> 
+> - Link to v1: https://lore.kernel.org/r/20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com
+> 
+> ---
+> Frank Li (2):
+>       PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
+>       PCI: dwc: Add common send PME_Turn_Off message method
+> 
+> Yoshihiro Shimoda (3):
+>       PCI: Add INTx Mechanism Messages macros
+>       PCI: dwc: Consolidate args of dw_pcie_prog_outbound_atu() into a structure
+>       PCI: dwc: Add outbound MSG TLPs support
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   |  21 ++--
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 146 +++++++++++++++++++---
+>  drivers/pci/controller/dwc/pcie-designware.c      |  54 ++++----
+>  drivers/pci/controller/dwc/pcie-designware.h      |  22 +++-
+>  drivers/pci/pci.h                                 |  20 +++
+>  5 files changed, 199 insertions(+), 64 deletions(-)
+> ---
+> base-commit: e08fc59eee9991afa467d406d684d46d543299a9
+> change-id: 20240130-pme_msg-dd2d81ee9886
+> 
+> Best regards,
+> ---
+> Frank Li <Frank.Li@nxp.com>
+> 
 
