@@ -1,154 +1,188 @@
-Return-Path: <linux-pci+bounces-5523-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5524-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99306894CC4
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 09:39:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 281E1894CF5
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 09:53:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA2C81C20B4A
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 07:39:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92ED4B21F3F
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Apr 2024 07:53:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656BD32C8B;
-	Tue,  2 Apr 2024 07:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhiT1Q/P"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ED843D0D5;
+	Tue,  2 Apr 2024 07:53:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6A818635;
-	Tue,  2 Apr 2024 07:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260EC2BD1C;
+	Tue,  2 Apr 2024 07:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712043541; cv=none; b=EwRgEoejLtU/21lMAmlb2v962RrTLTqvLh3MJjplXbDA3KchSgHspX03dShFD4GrBx81jqv3eHxcCQdtcqfP4j9VaW5121E9ydAAIjH64/iCQ2iUcJYEITXMYhAiPew63gqIpjSatgHD2H019XeOjAmasJflw5EdcEUT7SYMxkM=
+	t=1712044406; cv=none; b=ioIqcC5OOxx2AYJW5aZnnniyZjPDlOthjMsCarGXGaFEdr161QDazevBBBGr11YZl28MRzCzp722yC/gj98+/++dHRgK09KKx7wxDSuYmv9qHHwXmQ1/UpXMpdySMO5xeWJyYJzDph1fuBbORlG6wdMRdET/btBIvAOIsFsiKys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712043541; c=relaxed/simple;
-	bh=rwUKp8tQcJWIw6WN1+oxtX5t7MIf+fHokhs2hygHdDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JRmDmEOrR0ObcHVWg9HFYcIBGagLdFwWA7amS2rk3JJa0X8JO7uPD5i+UbdeAcnggpcQPEj3TdB5UW/nAdvvcFNGQLh6uIqLxldo39EhXzfM00nISws9x5CueC56nVFRcmhmnkhnpUOFMhDv4q+b7mIcoAF7pb98P40IQOejOZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhiT1Q/P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F45C433F1;
-	Tue,  2 Apr 2024 07:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712043541;
-	bh=rwUKp8tQcJWIw6WN1+oxtX5t7MIf+fHokhs2hygHdDU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZhiT1Q/PVpVwQjGY9RnAZHycKG9jiSCWsIR0PQfL/q705TDjyeUdY54e7vaGUKQR0
-	 BHjhkYUVZaBxKzSjLwN93AJgB1nNFYJdL7+GFD/30gEkwcc1Z23BIAWQSiuUF1yp2P
-	 bsNY+AWxzEbldxixwQVWE5Yp8i3h6My487UX9PECjHRB9QPq1ifOXhiPUsaG4YJJvs
-	 HYmPDSKkv/likU74S7nei7nhptKJ/LfwNeAhn7ymLccKqlKlSJhYglkjUswBOvydPm
-	 9XYs3ODk+yK1WwzUMeAVOqDiorKnam/4kW9TqCm8XAgGpJ7xyF0uO0wjH3Bn38omte
-	 txAncUFpLeYow==
-Message-ID: <ae0544bc-c5e1-4705-8917-0d69d24f06b1@kernel.org>
-Date: Tue, 2 Apr 2024 16:38:57 +0900
+	s=arc-20240116; t=1712044406; c=relaxed/simple;
+	bh=T/1svwn7eYG5hqU4ksuONqBd8LRcPSNa45Gwide7yRY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VimWtUxI8L5t5VTtq3xL6H8stJfB4+oNA559meSBickkqUme/nwmTga4mWY48sb6D5MkenreVuAIKSrFlpaaU4B2k5flhjNeOS0bO9At1l58J0Tftw/KLq2hGWFTm2CD9EiGU+iA/na99bcfacB/iwWPCbfLp3k7XYdctb4jDTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-615053a5252so9283557b3.1;
+        Tue, 02 Apr 2024 00:53:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712044402; x=1712649202;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gWg+1fJyGKdFnvbvo2K9KM6G1mX2sB/eUJxrYUhr8+M=;
+        b=lyzA/WPs29wecl7rtP///SP3XxLjtRGnSmCmGCHWvfJmD4B6WZqDuc30KmvpEAdwnG
+         QVuoxCWgFEp//aobhDETaiBMCihO2xGSkU0SQS+uiYdc+b5bntiXcsFGY7P8aPUil8LT
+         hMvhlVlQRlQaqWRhvDo1O6tG3MWsuJsTrWBYKnddPCEFznd7LaGcVY1usrpmzhHoYWwJ
+         OCQGStb7dl7Nalk4NzenhXD8isfpqbsaoYsfC3wqxpVYi5dUCTjIFHDMlTqVlDIfOhrg
+         +BDDNofYywO8sHtl5elz0GpLD6kmkvLTxRS++30xViTW6xCsTncAWMn/z0hPSK92eGpv
+         kD5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUGsJrrjJUzXIYya5v8ldXN8UHQtVSQyE7p0cyBVAnsbm9n/l7KiCKm+RfMEGF82xb5HX8pwI/iKX9KWIbF5LFbAgGEL4HdPVowm1BRNqb3aE/1PLbuwhVzIYzwQahub1sc1DPgJrMzNXOL/R4oJe07+Bq9uxdnc5BrHIYHCsBVuia83MwQGYu3
+X-Gm-Message-State: AOJu0YzVZWWvL8ETacimt2CUzh9L0lWGEj27xpOoeZsrzFSQArx6xr9Z
+	ojOgPCyrwEGj+qw2mFMxL1ZfPdSnxDnPHjZN+MSJwXNGnPCqDaHA3+DpCJJMTkQ=
+X-Google-Smtp-Source: AGHT+IE3jX1O5Ths7Fmq/ceI6z1EN/gU6/eW0Z5lwmGz3k8CQNRR3OUcsOXiDRSX3GpSvdNwJnqigA==
+X-Received: by 2002:a81:8d4c:0:b0:611:9a26:429f with SMTP id w12-20020a818d4c000000b006119a26429fmr9101903ywj.10.1712044401893;
+        Tue, 02 Apr 2024 00:53:21 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id r194-20020a819acb000000b0060a0cd01a8fsm2670093ywg.89.2024.04.02.00.53.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 00:53:21 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dbed179f0faso3779559276.1;
+        Tue, 02 Apr 2024 00:53:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUbQboyraP8p94A/x7ehONsM7rb7RAtIQs/F1nmkrGUH3NFJhTW7cY6aZwmNWzGjn6+gX61kL84WmxCdJlB4IOrbesrsDjBPV/gyM69XDt0l26UaEHC1yiuY5YQAcR9DHwNN+rituid2Fq27ICeYaVdNFmbE5LPd5QQERfWIlbkIdUxdY5LcaD1
+X-Received: by 2002:a5b:589:0:b0:dcc:5b7e:ddfe with SMTP id
+ l9-20020a5b0589000000b00dcc5b7eddfemr7810300ybp.4.1712044401276; Tue, 02 Apr
+ 2024 00:53:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 17/18] dt-bindings: pci: rockchip,rk3399-pcie-ep: Add
- ep-gpios property
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Rick Wertenbroek <rick.wertenbroek@gmail.com>,
- Wilfred Mallawa <wilfred.mallawa@wdc.com>, Niklas Cassel <cassel@kernel.org>
-References: <20240330041928.1555578-1-dlemoal@kernel.org>
- <20240330041928.1555578-18-dlemoal@kernel.org>
- <b020b74e-8ae1-448a-9d47-6c9bb13735f9@linaro.org>
- <c75cb54a-61c7-4bc3-978e-8a28dde93b08@kernel.org>
- <518f04ea-7ff6-4568-be76-60276d18b209@linaro.org>
- <49ecab2e-8f36-47be-a1b0-1bb0089dab0f@kernel.org>
- <57d5d6ea-5fef-423c-9f85-5f295bfa4c5f@linaro.org>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <57d5d6ea-5fef-423c-9f85-5f295bfa4c5f@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240401023942.134704-1-yoshihiro.shimoda.uh@renesas.com> <20240401023942.134704-7-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20240401023942.134704-7-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 2 Apr 2024 09:53:09 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXCsye4kEP4=1rYNx97VpXHjjNg9BFawnUBADfL2ADQTw@mail.gmail.com>
+Message-ID: <CAMuHMdXCsye4kEP4=1rYNx97VpXHjjNg9BFawnUBADfL2ADQTw@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] PCI: dwc: rcar-gen4: Add support for r8a779g0
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jingoohan1@gmail.com, 
+	mani@kernel.org, marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/2/24 16:33, Krzysztof Kozlowski wrote:
-> On 02/04/2024 01:36, Damien Le Moal wrote:
->> On 4/1/24 18:57, Krzysztof Kozlowski wrote:
->>> On 01/04/2024 01:06, Damien Le Moal wrote:
->>>> On 3/30/24 18:16, Krzysztof Kozlowski wrote:
->>>>> On 30/03/2024 05:19, Damien Le Moal wrote:
->>>>>> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
->>>>>>
->>>>>> Describe the `ep-gpios` property which is used to map the PERST# input
->>>>>> signal for endpoint mode.
->>>>>>
->>>>>> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
->>>>>> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
->>>>>> ---
->>>>>>  .../devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml       | 3 +++
->>>>>>  1 file changed, 3 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
->>>>>> index 6b62f6f58efe..9331d44d6963 100644
->>>>>> --- a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
->>>>>> @@ -30,6 +30,9 @@ properties:
->>>>>>      maximum: 32
->>>>>>      default: 32
->>>>>>  
->>>>>> +  ep-gpios:
->>>>>> +    description: Input GPIO configured for the PERST# signal.
->>>>>
->>>>> Missing maxItems. But more important: why existing property perst-gpios,
->>>>> which you already have there in common schema, is not correct for this case?
->>>>
->>>> I am confused... Where do you find perst-gpios defined for the rk3399 ?
->>>> Under Documentation/devicetree/bindings/pci/, the only schema I see using
->>>> perst-gpios property are for the qcom (Qualcomm) controllers.
->>>
->>> You are right, it's so far only in Qualcomm.
->>>
->>>> The RC bindings for the rockchip rk3399 PCIe controller
->>>> (pci/rockchip,rk3399-pcie.yaml) already define the ep-gpios property. So if
->>>
->>> Any reason why this cannot be named like GPIO? Is there already a user
->>> of this in Linux kernel? Commit msg says nothing about this, so that's
->>> why I would expect name matching the signal.
->>
->> The RC-mode PCIe controller node of the rk3399 DTS already defines the ep-gpios
->> property for RC side PERST# signal handling. So we simply reused the exact same
->> name to be consistent between RC and EP. I personnally have no preferences. If
->> there is an effort to rename such signal with some preferred pattern, I will
->> follow. For the EP node, there was no PERST signal handling in the driver and
->> no property defined for it, so any name is fine. "perst-gpios" would indeed be
->> a better name, but again, given that the RC controller node has ep-gpios, we
->> reused that. What is your recommendation here ?
-> 
-> Actually I don't know, perst and ep would work for me. If you do not
-> have code for this in the driver yet (nothing is shared between ep and
-> host), then maybe let's go with perst to match the actual name.
+Hi Shimoda-san,
 
-Forgot to add: the driver code for the EP PERST gpio handling is added in patch
-18 of the series, after this one.
+On Mon, Apr 1, 2024 at 4:40=E2=80=AFAM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This driver previously supported r8a779f0 (R-Car S4-8). Add support
+> for r8a779g0 (R-Car V4H).
+>
+> To support r8a779g0, it requires specific firmware.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-> 
-> Anyway, you need maxItems. I sent a patch for the other binding:
-> https://lore.kernel.org/all/20240401100058.15749-1-krzysztof.kozlowski@linaro.org/
-> 
-> Best regards,
-> Krzysztof
-> 
+Thanks for your patch!
 
--- 
-Damien Le Moal
-Western Digital Research
+> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
 
+> +static int rcar_gen4_pcie_update_phy_firmware(struct rcar_gen4_pcie *rca=
+r)
+> +{
+> +       const u32 check_addr[] =3D { 0x00101018, 0x00101118, 0x00101021, =
+0x00101121};
+> +       struct dw_pcie *dw =3D &rcar->dw;
+> +       const struct firmware *fw;
+> +       unsigned int i, timeout;
+> +       u32 data;
+> +       int ret;
+> +
+> +       ret =3D request_firmware(&fw, RCAR_GEN4_PCIE_FIRMWARE_NAME, dw->d=
+ev);
+> +       if (ret) {
+> +               dev_err(dw->dev, "%s: Requesting firmware failed\n", __fu=
+nc__);
+> +               return ret;
+> +       }
+> +
+> +       for (i =3D 0; i < (fw->size / 2); i++) {
+> +               data =3D fw->data[i * 2] | fw->data[(i * 2) + 1] << 8;
+> +               timeout =3D 100;
+> +retry_data:
+> +               dw_pcie_writel_dbi(dw, PRTLGC89, RCAR_GEN4_PCIE_FIRMWARE_=
+BASE_ADDR + i);
+> +               dw_pcie_writel_dbi(dw, PRTLGC90, data);
+> +               if (rcar_gen4_pcie_reg_check_bit(rcar, PRTLGC89, BIT(30))=
+ < 0) {
+
+If you would invert the logic here, you could "break" here, ...
+
+> +                       if (!(--timeout)) {
+> +                               ret =3D -ETIMEDOUT;
+> +                               goto exit;
+> +                       }
+> +                       usleep_range(100, 200);
+> +                       goto retry_data;
+
+... and convert "retry_data: ... goto retry_data" into "do { ... } while (1=
+)",
+avoiding the goto.
+
+> +               }
+> +       }
+> +
+> +       rcar_gen4_pcie_phy_reg_update_bits(rcar, RCAR_GEN4_PCIE_PHY_0f8, =
+BIT(17), BIT(17));
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(check_addr); i++) {
+> +               timeout =3D 100;
+> +retry_check:
+> +               dw_pcie_writel_dbi(dw, PRTLGC89, check_addr[i]);
+> +               ret =3D rcar_gen4_pcie_reg_check_bit(rcar, PRTLGC89, BIT(=
+30));
+> +               ret |=3D rcar_gen4_pcie_reg_check_bit(rcar, PRTLGC90, BIT=
+(0));
+> +               if (ret < 0) {
+> +                       if (!(--timeout)) {
+> +                               ret =3D -ETIMEDOUT;
+> +                               goto exit;
+> +                       }
+> +                       usleep_range(100, 200);
+> +                       goto retry_check;
+
+Likewise.
+
+> +               }
+> +       }
+> +
+> +       ret =3D 0;
+> +exit:
+> +       release_firmware(fw);
+> +
+> +       return ret;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
