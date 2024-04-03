@@ -1,258 +1,344 @@
-Return-Path: <linux-pci+bounces-5611-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5613-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8008896B2A
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 11:56:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FF8D896B6A
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 12:03:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5C15CB2B524
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 09:49:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C85741F2AB15
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 10:03:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2F1E1350CA;
-	Wed,  3 Apr 2024 09:48:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C3B4135A6A;
+	Wed,  3 Apr 2024 10:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHJDPhfQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4voGhwu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77211353E4
-	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 09:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413B1135A51;
+	Wed,  3 Apr 2024 10:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712137729; cv=none; b=g5Cuy7h6Tp/3AeZFxOBAKQWB54aZ4zIzVDCitg6uyJ3AVyPeGykt1Pf0Is+avzARkzlcCf88cvGe0KfKqA0/bSKEjiywwRceWW02oXXoQcADM8j+kJe5KrA2OUbsheNynMwoDVK8HdqmPlQ+h+9Yb46xRGyVFP21EH0rltsG++A=
+	t=1712138556; cv=none; b=gPxHoZRBeJUsIlnDhLBypZu+1oepXWqqL+nd2lyTA+jq17iJ4Bt4t8ptTE1PVPW6ulSJh+mctNeBcNj7WtRrcIx2evgwB3K+t3hUzMwclpavUtz9g6dcwpO6ewRNijvntPeatLXoq8gDyrwjPkgCzMcsXr2FMKGmULLAAA2NRls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712137729; c=relaxed/simple;
-	bh=VZVjk4Lg+32DYX1V0hHFzAoXwy2zWj8ikBfocb2aiao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jNGoyB1C/YwLfWlDVjehR/neV+Qo52Cn0styM7MFaLubd/iB3u13c42vwQecjVUe3LgcL72FnN7y+ylKIgQqW2Jn/HUwK+r6cfU7UxNoQ60rk9P7evSQGQVDWGHOdkTQ8nnDphQri5xtrIOS5Srb9CsI47woV+UtxWIgHICpyrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mHJDPhfQ; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d0262036afso314511439f.3
-        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 02:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712137727; x=1712742527; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EPXFh7gsPyAU+iXcewtYZIELGdFkMytovmlJfVGNhNo=;
-        b=mHJDPhfQel320iBKatX5c98HlzL0+RusBU927Aguf3ZWD+PLIChNO0C0bIGBtxi1e0
-         7WsKbKV/pcnU9+iPPiW/33xY1+aCbBoh3bp2iC0n9IBoPx8kqk/xiEDpZVJbDGQjfZyG
-         gZheo0KYEG6HoQMe9yrzBn+6nrBDhN1myjir+nGtNXMilN4Dmpzh9i21/rf5Ybsm5GQ5
-         aSNMLLtoMMqX4EO/8n1+wOCfu77mKzil+54g9QiG+RUUAqSyYerhe8TmXymrcWezwAtr
-         O/d7K5/eQYZJOMLd2LVmT0dWWRjTTFbimtD7OyKVuSIVUsCnDKOYGDLI3Ld8Wv4qZ6jz
-         Talg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712137727; x=1712742527;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EPXFh7gsPyAU+iXcewtYZIELGdFkMytovmlJfVGNhNo=;
-        b=mNPzFAKYf60WnIb1luAX3XnAXiNAmPruPVCnLz5FbhYIGs02pNEb/JKE6Oo3qlbpSp
-         NI1rAxmuxU1B+DJI7kpIJ4Sc95NX0Be962oG3i0MEGO57tCDhmwXTdteFj3uefBkf1xk
-         3C+RGv3TDsVqyjmPBxzDqGC2esd1C00U7auqaIz3NArqepJ8Gdq2WxhGiUtP1UFimyyr
-         fVA16lAcPLUGCNR3s7x7p4h1ohH3cBFzYN6KMrF+aLCXtXCJ8F3G9Yl2JQuP3vgcPi7a
-         oVKd363X2dgJQlNgCQ+Oo0euU129NGuuGE91k9DBWbnE4aGDvXTp267w/2IiPAyTi7Ul
-         hyTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXeLNqWFwQh3+yvQ9MyGqcWvgG5QQnBvtEYB5voyeJbsgh1gB41ecGRalb+YDe2pCF136ve6Mm01IbuENZSNOtbkMXp4+Is1Wgt
-X-Gm-Message-State: AOJu0YxFhTd5YetIgtEojAyVD/qnx8Eg5ZVJMBBrxVKo81J/h4sjDLSh
-	velK5ZFyv1FRBJwlhZu0oeNiFShwKZ9rEO9cAxzv+HbIyvphY1zoTtxW+FMecg==
-X-Google-Smtp-Source: AGHT+IEbUkv1YVum64pYJ7p3hjvBN8WVLeTTz4TjDHu3j5DUSh/cjz4maB41kqZEWFfHUMT1vj9VFA==
-X-Received: by 2002:a05:6e02:1c08:b0:369:efba:71c1 with SMTP id l8-20020a056e021c0800b00369efba71c1mr1638352ilh.16.1712137726677;
-        Wed, 03 Apr 2024 02:48:46 -0700 (PDT)
-Received: from thinkpad ([103.28.246.48])
-        by smtp.gmail.com with ESMTPSA id d21-20020a634f15000000b005dbd0facb4dsm10931377pgb.61.2024.04.03.02.48.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 02:48:46 -0700 (PDT)
-Date: Wed, 3 Apr 2024 15:18:40 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v2 03/18] PCI: endpoint: Introduce
- pci_epc_mem_map()/unmap()
-Message-ID: <20240403094840.GI25309@thinkpad>
-References: <20240330041928.1555578-1-dlemoal@kernel.org>
- <20240330041928.1555578-4-dlemoal@kernel.org>
+	s=arc-20240116; t=1712138556; c=relaxed/simple;
+	bh=OFc/tla7yRM2W0uhSEfnNs3I433a/mwkIS7CvywyPxg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OtNlOIsdA34XJt5L5ULoQumlRcqHlraa/LtG1lZgwYa4DynZHo/HXwLGYKv86FNDc9/MR5RuH8DibnzXu9W0Jgu6I2WIxQqmBi4vZg5Vi/o0auBEdg3G32B/n+P9wxAOB2k6AJXCFo2FYTs8xseuMEPJTUipPlzofJkPPafKAqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4voGhwu; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712138553; x=1743674553;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OFc/tla7yRM2W0uhSEfnNs3I433a/mwkIS7CvywyPxg=;
+  b=f4voGhwuSdyQyskIaSqYjRIiw/Y/PUOnBFo9Ut4dHvsalmVVbC6u2XO9
+   mkIbkx+/aYEcuQnK+39KccICSA6syWZUNKCaS2cF0qfjY53dHfLXTQ2JC
+   xOjDcqLfhdbUs6okz1Pa4jqVck/r9Z0NXejsx8pxax4YjghXFmdvU50Di
+   7SvapAM38FVdxbaW2bHFzjH0zrmW1OCA+aNJSeRpoTRTXKa+GZ/ojOWDR
+   d91WfZzEIoFmTyQqRtOQ8x0iAPYvHeXOWc1RjEOuSQYrLWk7k4Cu7lvq2
+   WnVbrFH4v234w5f40eEr1ii3qSzrN5NHOVvlhcnFZSXMZ0lnG7e+ELXYc
+   A==;
+X-CSE-ConnectionGUID: Jq2dnjGyQCmOdVKtW7BtUA==
+X-CSE-MsgGUID: 5hAtFqd9QQ6yqsirToP4iA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="18517762"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="18517762"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:02:31 -0700
+X-CSE-ConnectionGUID: sFBe5jNtQe+evZZxlHLqKg==
+X-CSE-MsgGUID: 4o12vKQdQXKOKNJ9edI4Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="49619993"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.24])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:02:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 1/2] PCI: Add TLP Prefix reading into pcie_read_tlp_log()
+Date: Wed,  3 Apr 2024 13:02:05 +0300
+Message-Id: <20240403100206.4403-2-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240403100206.4403-1-ilpo.jarvinen@linux.intel.com>
+References: <20240403100206.4403-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240330041928.1555578-4-dlemoal@kernel.org>
 
-On Sat, Mar 30, 2024 at 01:19:13PM +0900, Damien Le Moal wrote:
-> Introduce the function pci_epc_mem_map() to facilitate controller memory
-> address allocation and mapping to a RC PCI address region in endpoint
-> function drivers.
-> 
-> This function first uses pci_epc_map_align() to determine the controller
-> memory address alignment (offset and size) constraints. The result of
-> this function is used to allocate a controller physical memory region
-> using pci_epc_mem_alloc_addr() and map it to the RC PCI address
-> space with pci_epc_map_addr(). Since pci_epc_map_align() may indicate
-> that a mapping can be smaller than the requested size, pci_epc_mem_map()
-> may only partially map the RC PCI address region specified and return
-> a smaller size for the effective mapping.
-> 
-> The counterpart of pci_epc_mem_map() to unmap and free the controller
-> memory address region is pci_epc_mem_unmap().
-> 
-> Both functions operate using struct pci_epc_map data structure which is
-> extended to contain the physical and virtual addresses of the allocated
-> controller memory. Endpoint function drivers can use struct pci_epc_map
-> to implement read/write accesses within the mapped RC PCI address region
-> using the ->virt_addr and ->size fields.
-> 
-> This commit contains contributions from Rick Wertenbroek
-> <rick.wertenbroek@gmail.com>.
-> 
+pcie_read_tlp_log() handles only 4 TLP Header Log DWORDs but TLP Prefix
+Log (PCIe r6.1 secs 7.8.4.12 & 7.9.14.13) may also be present.
 
-Adding 'Co-developed-by && Signed-off-by' tags would give the due credit.
+Generalize pcie_read_tlp_log() and struct pcie_tlp_log to handle also
+TLP Prefix Log. The layout of relevant registers in AER and DPC
+Capability is not identical but the offsets of TLP Header Log and TLP
+Prefix Log vary so the callers must pass the offsets to
+pcie_read_tlp_log().
 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 68 +++++++++++++++++++++++++++++
->  include/linux/pci-epc.h             |  6 +++
->  2 files changed, 74 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 37758ca91d7f..0095b54bdf9e 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -530,6 +530,74 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_map_addr);
->  
-> +/**
-> + * pci_epc_mem_map() - allocate and map CPU address to PCI address
+Convert eetlp_prefix_path into integer called eetlp_prefix_max and
+make is available also when CONFIG_PCI_PASID is not configured to
+be able to determine the number of E-E Prefixes.
 
-How about, 'pci_epc_alloc_map()'? I think the 'mem' prefix was added to the
-existing APIs since the function definitions are in pci-epc-mem driver, but
-not needed here.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/ats.c             |  2 +-
+ drivers/pci/pci.c             | 34 ++++++++++++++++++++++++++++------
+ drivers/pci/pcie/aer.c        |  4 +++-
+ drivers/pci/pcie/dpc.c        | 22 +++++++++++++++-------
+ drivers/pci/probe.c           | 14 +++++++++-----
+ include/linux/aer.h           |  5 ++++-
+ include/linux/pci.h           |  2 +-
+ include/uapi/linux/pci_regs.h |  2 ++
+ 8 files changed, 63 insertions(+), 22 deletions(-)
 
-> + * @epc: the EPC device on which the CPU address is to be allocated and mapped
-> + * @func_no: the physical endpoint function number in the EPC device
-> + * @vfunc_no: the virtual endpoint function number in the physical function
-> + * @pci_addr: PCI address to which the CPU address should be mapped
-> + * @size: the number of bytes to map starting from @pci_addr
-> + * @map: where to return the mapping information
-> + *
-> + * Allocate a controller physical address region and map it to a RC PCI address
-
-"Allocate an EPC address space region..."
-
-> + * region, taking into account the controller physical address mapping
-> + * constraints (if any). Returns the effective size of the mapping, which may
-
-Return value should be specified separately for Kdoc.
-
-> + * be less than @size, or a negative error code in case of error.
-> + */
-> +ssize_t pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +			u64 pci_addr, size_t size, struct pci_epc_map *map)
-> +{
-> +	int ret;
-> +
-> +	ret = pci_epc_map_align(epc, func_no, vfunc_no, pci_addr, size, map);
-> +	if (ret)
-> +		return ret;
-> +
-> +	map->virt_base = pci_epc_mem_alloc_addr(epc, &map->phys_base,
-> +						map->map_size);
-
-It'd be nice to move pci_epc_map_align() inside the existing
-pci_epc_mem_alloc_addr() API to make sure that the allocated memory follows the
-constraints of the EPC.
-
-Would that make sense?
-
-- Mani
-
-> +	if (!map->virt_base)
-> +		return -ENOMEM;
-> +
-> +	map->phys_addr = map->phys_base + map->map_ofst;
-> +	map->virt_addr = map->virt_base + map->map_ofst;
-> +
-> +	ret = pci_epc_map_addr(epc, func_no, vfunc_no, map->phys_base,
-> +			       map->map_pci_addr, map->map_size);
-> +	if (ret) {
-> +		pci_epc_mem_free_addr(epc, map->phys_base, map->virt_base,
-> +				      map->map_size);
-> +		return ret;
-> +	}
-> +
-> +	return map->pci_size;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_mem_map);
-> +
-> +/**
-> + * pci_epc_mem_unmap() - unmap from PCI address and free a CPU address region
-> + * @epc: the EPC device on which the CPU address is allocated and mapped
-> + * @func_no: the physical endpoint function number in the EPC device
-> + * @vfunc_no: the virtual endpoint function number in the physical function
-> + * @map: the mapping information
-> + *
-> + * Allocate and map local CPU address to a PCI address, accounting for the
-> + * controller local CPU address alignment constraints.
-> + */
-> +void pci_epc_mem_unmap(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +		       struct pci_epc_map *map)
-> +{
-> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
-> +		return;
-> +
-> +	if (!map || !map->pci_size)
-> +		return;
-> +
-> +	pci_epc_unmap_addr(epc, func_no, vfunc_no, map->phys_base);
-> +	pci_epc_mem_free_addr(epc, map->phys_base, map->virt_base,
-> +			      map->map_size);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_mem_unmap);
-> +
->  /**
->   * pci_epc_clear_bar() - reset the BAR
->   * @epc: the EPC device for which the BAR has to be cleared
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 8cfb4aaf2628..86397a500b54 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -304,4 +304,10 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size);
->  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->  			   void __iomem *virt_addr, size_t size);
-> +
-> +ssize_t pci_epc_mem_map(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +			u64 pci_addr, size_t size, struct pci_epc_map *map);
-> +void pci_epc_mem_unmap(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +		       struct pci_epc_map *map);
-> +
->  #endif /* __LINUX_PCI_EPC_H */
-> -- 
-> 2.44.0
-> 
-
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index c570892b2090..e13433dcfc82 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -377,7 +377,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
+ 	if (WARN_ON(pdev->pasid_enabled))
+ 		return -EBUSY;
+ 
+-	if (!pdev->eetlp_prefix_path && !pdev->pasid_no_tlp)
++	if (!pdev->eetlp_prefix_max && !pdev->pasid_no_tlp)
+ 		return -EINVAL;
+ 
+ 	if (!pasid)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e5f243dd4288..af230e6e5557 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1066,26 +1066,48 @@ static void pci_enable_acs(struct pci_dev *dev)
+ 	pci_disable_acs_redir(dev);
+ }
+ 
++/**
++ * aer_tlp_log_len - Calculates TLP Header/Prefix Log length
++ * @dev:	PCIe device
++ *
++ * Return: TLP Header/Prefix Log length
++ */
++unsigned int aer_tlp_log_len(struct pci_dev *dev)
++{
++	return 4 + dev->eetlp_prefix_max;
++}
++
+ /**
+  * pcie_read_tlp_log - read TLP Header Log
+  * @dev: PCIe device
+  * @where: PCI Config offset of TLP Header Log
++ * @where2: PCI Config offset of TLP Prefix Log
++ * @tlp_len: TLP Log length (in DWORDs)
+  * @tlp_log: TLP Log structure to fill
+  *
+  * Fill @tlp_log from TLP Header Log registers, e.g., AER or DPC.
+  *
+  * Return: 0 on success and filled TLP Log structure, <0 on error.
+  */
+-int pcie_read_tlp_log(struct pci_dev *dev, int where,
+-		      struct pcie_tlp_log *tlp_log)
++int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
++		      unsigned int tlp_len, struct pcie_tlp_log *tlp_log)
+ {
+-	int i, ret;
++	unsigned int i;
++	int off, ret;
++	u32 *to;
+ 
+ 	memset(tlp_log, 0, sizeof(*tlp_log));
+ 
+-	for (i = 0; i < 4; i++) {
+-		ret = pci_read_config_dword(dev, where + i * 4,
+-					    &tlp_log->dw[i]);
++	for (i = 0; i < tlp_len; i++) {
++		if (i < 4) {
++			to = &tlp_log->dw[i];
++			off = where + i * 4;
++		} else {
++			to = &tlp_log->prefix[i - 4];
++			off = where2 + (i - 4) * 4;
++		}
++
++		ret = pci_read_config_dword(dev, off, to);
+ 		if (ret)
+ 			return pcibios_err_to_errno(ret);
+ 	}
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index ac6293c24976..ecc1dea5a208 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1245,7 +1245,9 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+ 
+ 		if (info->status & AER_LOG_TLP_MASKS) {
+ 			info->tlp_header_valid = 1;
+-			pcie_read_tlp_log(dev, aer + PCI_ERR_HEADER_LOG, &info->tlp);
++			pcie_read_tlp_log(dev, aer + PCI_ERR_HEADER_LOG,
++					  aer + PCI_ERR_PREFIX_LOG,
++					  aer_tlp_log_len(dev), &info->tlp);
+ 		}
+ 	}
+ 
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a668820696dc..80b1456f95fe 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -187,10 +187,19 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ 	return ret;
+ }
+ 
++static unsigned int dpc_tlp_log_len(struct pci_dev *pdev)
++{
++	/* Remove ImpSpec Log register from the count */
++	if (pdev->dpc_rp_log_size >= 5)
++		return pdev->dpc_rp_log_size - 1;
++
++	return pdev->dpc_rp_log_size;
++}
++
+ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+ {
+ 	u16 cap = pdev->dpc_cap, dpc_status, first_error;
+-	u32 status, mask, sev, syserr, exc, log, prefix;
++	u32 status, mask, sev, syserr, exc, log;
+ 	struct pcie_tlp_log tlp_log;
+ 	int i;
+ 
+@@ -217,20 +226,19 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
+ 
+ 	if (pdev->dpc_rp_log_size < 4)
+ 		goto clear_status;
+-	pcie_read_tlp_log(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG, &tlp_log);
++	pcie_read_tlp_log(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG,
++			  cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG,
++			  dpc_tlp_log_len(pdev), &tlp_log);
+ 	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
+ 		tlp_log.dw[0], tlp_log.dw[1], tlp_log.dw[2], tlp_log.dw[3]);
++	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++)
++		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, tlp_log.prefix[i]);
+ 
+ 	if (pdev->dpc_rp_log_size < 5)
+ 		goto clear_status;
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_IMPSPEC_LOG, &log);
+ 	pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
+ 
+-	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
+-		pci_read_config_dword(pdev,
+-			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
+-		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
+-	}
+  clear_status:
+ 	pci_write_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, status);
+ }
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 1325fbae2f28..02035b005a53 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2211,8 +2211,8 @@ static void pci_configure_relaxed_ordering(struct pci_dev *dev)
+ 
+ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
+ {
+-#ifdef CONFIG_PCI_PASID
+ 	struct pci_dev *bridge;
++	unsigned int eetlp_max;
+ 	int pcie_type;
+ 	u32 cap;
+ 
+@@ -2224,15 +2224,19 @@ static void pci_configure_eetlp_prefix(struct pci_dev *dev)
+ 		return;
+ 
+ 	pcie_type = pci_pcie_type(dev);
++
++	eetlp_max = FIELD_GET(PCI_EXP_DEVCAP2_EE_PREFIX_MAX, cap);
++	/* 00b means 4 */
++	eetlp_max = eetlp_max ?: 4;
++
+ 	if (pcie_type == PCI_EXP_TYPE_ROOT_PORT ||
+ 	    pcie_type == PCI_EXP_TYPE_RC_END)
+-		dev->eetlp_prefix_path = 1;
++		dev->eetlp_prefix_max = eetlp_max;
+ 	else {
+ 		bridge = pci_upstream_bridge(dev);
+-		if (bridge && bridge->eetlp_prefix_path)
+-			dev->eetlp_prefix_path = 1;
++		if (bridge && bridge->eetlp_prefix_max)
++			dev->eetlp_prefix_max = eetlp_max;
+ 	}
+-#endif
+ }
+ 
+ static void pci_configure_serr(struct pci_dev *dev)
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index 4b97f38f3fcf..2484056feb8d 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -20,6 +20,7 @@ struct pci_dev;
+ 
+ struct pcie_tlp_log {
+ 	u32 dw[4];
++	u32 prefix[4];
+ };
+ 
+ struct aer_capability_regs {
+@@ -37,7 +38,9 @@ struct aer_capability_regs {
+ 	u16 uncor_err_source;
+ };
+ 
+-int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
++int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
++		      unsigned int tlp_len, struct pcie_tlp_log *log);
++unsigned int aer_tlp_log_len(struct pci_dev *dev);
+ 
+ #if defined(CONFIG_PCIEAER)
+ int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 16493426a04f..71f505862ef0 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -397,7 +397,7 @@ struct pci_dev {
+ 					   supported from root to here */
+ #endif
+ 	unsigned int	pasid_no_tlp:1;		/* PASID works without TLP Prefix */
+-	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
++	unsigned int	eetlp_prefix_max:3;	/* Max # of End-to-End TLP Prefix, 0=not supported */
+ 
+ 	pci_channel_state_t error_state;	/* Current connectivity state */
+ 	struct device	dev;			/* Generic device interface */
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index a39193213ff2..cf7a07fa4a3b 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -661,6 +661,7 @@
+ #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
+ #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
+ #define  PCI_EXP_DEVCAP2_EE_PREFIX	0x00200000 /* End-End TLP Prefix */
++#define  PCI_EXP_DEVCAP2_EE_PREFIX_MAX	0x00c00000 /* Max End-End TLP Prefixes */
+ #define PCI_EXP_DEVCTL2		0x28	/* Device Control 2 */
+ #define  PCI_EXP_DEVCTL2_COMP_TIMEOUT	0x000f	/* Completion Timeout Value */
+ #define  PCI_EXP_DEVCTL2_COMP_TMOUT_DIS	0x0010	/* Completion Timeout Disable */
+@@ -802,6 +803,7 @@
+ #define  PCI_ERR_ROOT_FATAL_RCV		0x00000040 /* Fatal Received */
+ #define  PCI_ERR_ROOT_AER_IRQ		0xf8000000 /* Advanced Error Interrupt Message Number */
+ #define PCI_ERR_ROOT_ERR_SRC	0x34	/* Error Source Identification */
++#define PCI_ERR_PREFIX_LOG	0x38	/* TLP Prefix LOG Register (up to 16 bytes) */
+ 
+ /* Virtual Channel */
+ #define PCI_VC_PORT_CAP1	0x04
 -- 
-மணிவண்ணன் சதாசிவம்
+2.39.2
+
 
