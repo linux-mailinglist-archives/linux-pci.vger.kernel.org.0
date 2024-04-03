@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-5641-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5642-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68386897AE6
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 23:40:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FE64897AE8
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 23:40:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CA6128B815
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 21:39:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4057A1C26A5A
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 21:40:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04CCF156C40;
-	Wed,  3 Apr 2024 21:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6631156C63;
+	Wed,  3 Apr 2024 21:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HKi4/XcO"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="W7Ta8l8C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282BD15697E
-	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 21:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023B8156C42
+	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 21:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712180355; cv=none; b=Bg3A4H4f18kxthMlhLP7TGDECWDNsMmqOWr/u7nXcZWgiHUQaiPo2631/LqdWBrg1p34apLuXAG7+JTYuYZ/+LPS9D6HqcY07alNWpCanYv7YhM7moYprnmV9Vg6I1xtyjqBdabZqSJ/+dkgExQD7YiqeeAme24ZIbj/jW6t8ZE=
+	t=1712180357; cv=none; b=jqHUOWUQzpgVgo5KBA4gd1LD6DqICp25a77H0EyW+mRJA+9Ra8mIIkHVGiCfOy6WXJ5zF5BYRSfHvI1/rCjVEH6Qb4/g4z91NlkHoMx4EDqJJ3FfLFSdY/I3/CbQfyszh7LRo3d6SAHEQYR53eT351ZTww4dqlpIvxjWfBuin+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712180355; c=relaxed/simple;
-	bh=PjanOenvU2A/yhqHXb8G6g2frpFPKjtVwJqCvWywJhM=;
+	s=arc-20240116; t=1712180357; c=relaxed/simple;
+	bh=mFt0kePq04lVv/Rknfvgm1KNEwPrbqEyqKRKO/wG1lI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type; b=AaGpIiDdT69GJva16UcQign8iVgU5TNu7HhTMknoHAXnpZ62rPl+KP9q/gxtKZJcAodRLfjm8XVQlO5wcqUZ2+lmZUc+tMRbAjCYqkKm59AbvkBTvq5DgCoM0maTtSU+iyQBrMzTQYdKrgWh4uDH4/11mDwYahqA36Rj4AQ+6Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HKi4/XcO; arc=none smtp.client-ip=209.85.221.171
+	 Content-Type; b=E6QZDmHiT6rbrTO+5T2fFRtWQNylYMjZUITzAko75QQm02hYOuWMoxII7INinAbGQxQ0+8KtOYkdkbpkhQmxEw+BBws6/z5Tylg+Q7DyYtjcxDQW1bBFDxgh4/gCufA5Tf7Zs92z0h2SbLsHXn+I8I2THDE4OlgQ0uxIhPac1Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=W7Ta8l8C; arc=none smtp.client-ip=209.85.219.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4d44fb48077so151565e0c.0
-        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 14:39:13 -0700 (PDT)
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6992f97ec8eso1568216d6.3
+        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 14:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1712180352; x=1712785152; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1712180354; x=1712785154; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=udFewVI5GS9fr36Fv3Gd8ZQhI0tuFjVdzeGL15dhRjs=;
-        b=HKi4/XcOuvEj4hZ4AURBzSw2WLHwa6XZPCJVFZz98v+XeL2VAKVQ2Em+p9QzxuzW9z
-         ku9EkAm5x3ISHFadpIoUoHv7Mog6SU8H6aw8UPjxcEriOMhzGdsByuSPTxASlFposqJ5
-         n0T8s3YYnYrvrv9wBNF4rLpvkWu8JjkclW59M=
+        bh=vE2LPsga+WKK4JD8xeA1n7y5E3JX3N88WiTNIOgHNDs=;
+        b=W7Ta8l8CgLAh0QcBhS2cp18RXuV0NPvtDohDz8w3f1WRw8Cu8a6WSSs5mAbdDo3hKs
+         mtmtHoOxY/4ybst2BFpnSd9Z4T1j/x0JqK+/Jub7/ok5JWfC7J2FzcOYKpOBf2EhS8yw
+         3vr9VLnVekQoqVPugqgcYEfh2xaEhFUe9vVG0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712180352; x=1712785152;
+        d=1e100.net; s=20230601; t=1712180354; x=1712785154;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=udFewVI5GS9fr36Fv3Gd8ZQhI0tuFjVdzeGL15dhRjs=;
-        b=s3lgw5V+Q5F0qz62x9ya4TxWIb7kqOiO3/rzLhz/YtVpeINqDufTGPdrLsapNuGP49
-         b02BvcI240E5qa3QhVt4QEA4MsYR44RESAm9Vv/zZcaxG8vqsduooRkWl/XGedGU1jkc
-         YXfJIEZnTQQ5Oh1YOkLU3L9Y1BRIiPmyGhzow/PVWPBO5i+kyC0aVmmx4isUYJ/n7ZS1
-         sccm7kDa2Fneusnykmrdin3hwyKqiy7tiunqNzwR+TFAhG8UyGz7iD871qyaQQe9nYwx
-         qtcawG9t9AosMyL15JOifTTLEXiAeebJwrJD06uVWZGrG6Fq7rvnx4SNbi1qsZnBfpGH
-         e/WA==
-X-Gm-Message-State: AOJu0Yy4VHGU3SangXWqu/p33i7LwA4q0a6j4kATrhKihr6YnKa2izXL
-	zHJ9AJaUrsSvVAX+G41IxEi0bWmkZ0i8/VrZ9LattePhe2sqPpCQkIqByS6kJbspT5R2w6nfMVQ
-	5zGCFFTPrSoNgDy4KS2B49YSdOIl/RHzMf5RXCM+dTk/bs8mUvZilgMZXCszxKwZ2XFOx2Wcv+Q
-	DebNfuWmrxB023ol0Vn0zYWBQOnM0Q1kHExKThgq3TE8XuKQ==
-X-Google-Smtp-Source: AGHT+IErr7Hms47uq2WTpFuYryFwuFomKLlaAAOJj253kxVtX/49vIxPIfd0y1MFwlJjtp1XR8ctqw==
-X-Received: by 2002:a05:6122:a24:b0:4ca:615e:1b61 with SMTP id 36-20020a0561220a2400b004ca615e1b61mr651230vkn.10.1712180352188;
-        Wed, 03 Apr 2024 14:39:12 -0700 (PDT)
+        bh=vE2LPsga+WKK4JD8xeA1n7y5E3JX3N88WiTNIOgHNDs=;
+        b=vjYbsP8cS+eoKkaKoz4h65Vh0DZFyeb800G9tobb8fhuHfIpIpBRLLP9pDLUMTVLq7
+         F6gC5kmZimWlKShShNKEz0Knl6PZ9x0i0lfwrtWJIKj17H/SNa91cCt9pQTZfioj6rv4
+         lP4bK0aPNTu+I/PmXSLZZ6GKWDmzpn0onnsVkkXUzMCOa2SEzZccQw8nnT9udkLwP+Xh
+         RWr0p/9HvGATJwFywlfX6tHXbagYX0uzwhuNtXQGzSDA7m2UyOQ5jqKw8KGpJIYvac+/
+         +aujzldzYlHs/PLdBuOo27kw1THUpHOBjA5Dk/kOMP4O9qnN0O0xD75fg6ZqFHvdCKmj
+         0EbA==
+X-Gm-Message-State: AOJu0Yx3VwdLlMO6mN08pdA/Tb/H+0f5iJoqAqpqboW2x7oxC/6c1ojc
+	pq3mM5C4te/NiWtcNtR0vxVPrREf4ZsIhsdJQGAHWnTxdKk+J7MrgkE5N5YcwIh8mQRgGdqnEwp
+	bEid/CXywcIILDVf6pNkhBUB/YOriH92g2cY0EExD/UOywHRWS8FEgC1N+9J7EBWQzH/l1c4NYX
+	XNxBgExrFbsAqiABwkO6OabtpCc5h0NDcYsD9jF+9+Bmv46w==
+X-Google-Smtp-Source: AGHT+IEHIbfZzH0t9D4V73xu9p99DhY7+YlU0VQbO0wuo5EI9n1h0BpaFDA8+9I9YA7R78bzaSuruQ==
+X-Received: by 2002:ad4:596a:0:b0:699:209f:285a with SMTP id eq10-20020ad4596a000000b00699209f285amr617024qvb.33.1712180354006;
+        Wed, 03 Apr 2024 14:39:14 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id pi10-20020a0562144a8a00b0069903cddc96sm1750739qvb.18.2024.04.03.14.39.10
+        by smtp.gmail.com with ESMTPSA id pi10-20020a0562144a8a00b0069903cddc96sm1750739qvb.18.2024.04.03.14.39.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 14:39:11 -0700 (PDT)
+        Wed, 03 Apr 2024 14:39:13 -0700 (PDT)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -80,137 +80,190 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v9 3/4] PCI: brcmstb: Set downstream maximum {no-}snoop LTR values
-Date: Wed,  3 Apr 2024 17:39:00 -0400
-Message-Id: <20240403213902.26391-4-james.quinlan@broadcom.com>
+Subject: [PATCH v9 4/4] PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream device
+Date: Wed,  3 Apr 2024 17:39:01 -0400
+Message-Id: <20240403213902.26391-5-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240403213902.26391-1-james.quinlan@broadcom.com>
 References: <20240403213902.26391-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b4ef960615380d8c"
+	boundary="000000000000d19f180615380dc5"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
---000000000000b4ef960615380d8c
+--000000000000d19f180615380dc5
 
-Most of our systems do not have FW or ACPI, so it is up to the RC driver to
-set the maximum LTR {no-}snoop latency values of downstream devices.  We
-set them to a value that is slightly smaller than the value of our internal
-bus timeout register.
+The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, must be
+deliberately set by the PCIe RC HW into one of three mutually exclusive
+modes:
+
+"safe" -- No CLKREQ# expected or required, refclk is always provided.  This
+    mode should work for all devices but is not be capable of any refclk
+    power savings.
+
+"no-l1ss" -- CLKREQ# is expected to be driven by the downstream device for
+    CPM and ASPM L0s and L1.  Provides Clock Power Management, L0s, and L1,
+    but cannot provide L1 substate (L1SS) power savings. If the downstream
+    device connected to the RC is L1SS capable AND the OS enables L1SS, all
+    PCIe traffic may abruptly halt, potentially hanging the system.
+
+"default" -- Bidirectional CLKREQ# between the RC and downstream device.
+    Provides ASPM L0s, L1, and L1SS, but not compliant to provide Clock
+    Power Management; specifically, may not be able to meet the T_CLRon max
+    timing of 400ns as specified in "Dynamic Clock Control", section
+    3.2.5.2.2 of the PCIe Express Mini CEM 2.1 specification.  This
+    situation is atypical and should happen only with older devices.
+
+Previously, this driver always set the mode to "no-l1ss", as almost all
+STB/CM boards operate in this mode.  But now there is interest in
+activating L1SS power savings from STB/CM customers, which requires
+"default" mode.  In addition, a bug was filed for RPi4 CM platform because
+most devices did not work in "no-l1ss" mode (see link below).
+
+Note that the mode is specified by the DT property "brcm,clkreq-mode".  If
+this property is omitted, then "default" mode is chosen.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217276
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++++++++-
- 1 file changed, 66 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 79 ++++++++++++++++++++++++---
+ 1 file changed, 70 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index e3480ca4cd57..3d08b92d5bb8 100644
+index 3d08b92d5bb8..3dc8511e6f58 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -182,6 +182,20 @@
- #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
- #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
+@@ -48,6 +48,9 @@
+ #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+ #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
  
-+/*
-+ * What we call "LTR_FMT" is the 16 bit latency field format:
-+ *     [15:15] Requirement bit
-+ *     [12:10] Latency scale
-+ *     [09:00] Latency value
-+ */
-+#define LTR_FMT_TO_NS(p)		(FIELD_GET(GENMASK(15, 15), (p)) \
-+					 * ((unsigned long long)FIELD_GET(GENMASK(9, 0), (p)) \
-+					    << (FIELD_GET(GENMASK(12, 10), (p)) * 5)))
-+#define BRCM_LTR_MAX_SCALE		4 /* Scale==4 => Each unit is 1,048,576ns  */
-+#define BRCM_LTR_MAX_VALUE		9 /* Using the above scale, roughly 9.4 ms */
-+#define BRCM_LTR_MAX_NS			((unsigned long long)(BRCM_LTR_MAX_VALUE \
-+					 << (5 * BRCM_LTR_MAX_SCALE)))
++#define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
++#define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
 +
- /* Rescal registers */
- #define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
- #define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS			0x3
-@@ -679,6 +693,49 @@ static void brcm_extend_internal_bus_timeout(struct brcm_pcie *pcie, u32 nsec)
- 	writel(216 * timeout_us, pcie->base + REG_OFFSET);
+ #define PCIE_RC_DL_MDIO_ADDR				0x1100
+ #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
+ #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
+@@ -121,9 +124,12 @@
+ 
+ #define PCIE_MISC_HARD_PCIE_HARD_DEBUG					0x4204
+ #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
++#define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK		0x200000
+ #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x08000000
+ #define  PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x00800000
+-
++#define  PCIE_CLKREQ_MASK \
++	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
++	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
+ 
+ #define PCIE_INTR2_CPU_BASE		0x4300
+ #define PCIE_MSI_INTR2_BASE		0x4500
+@@ -1100,13 +1106,73 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	return 0;
  }
  
-+/* Sets downstream device latency tolerance registers to max we can handle */
-+static int brcm_set_dev_ltr_max(struct pci_dev *dev, void *data)
++static void brcm_config_clkreq(struct brcm_pcie *pcie)
 +{
-+	u16 ltr_cap_offset = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
-+	u16 ltr_fmt_cur, ltr_fmt = *(u16 *)data;
-+	unsigned long long cur_nsec;
-+	static const u16 reg_offsets[2] = {
-+		PCI_LTR_MAX_SNOOP_LAT,
-+		PCI_LTR_MAX_NOSNOOP_LAT,
-+	};
-+	unsigned int i;
++	static const char err_msg[] = "invalid 'brcm,clkreq-mode' DT string\n";
++	const char *mode = "default";
++	u32 clkreq_cntl;
++	int ret, tmp;
 +
-+	if (!ltr_cap_offset || !dev->ltr_path)
-+		return 0;
-+
-+	/*
-+	 * FW may have already written a value so we want to respect that
-+	 * value if it is lower than ltr_fmt.  Update the current value if
-+	 * it is 0 or if the new value is less than the current.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(reg_offsets); i++) {
-+		pci_read_config_word(dev, ltr_cap_offset + reg_offsets[i],
-+			&ltr_fmt_cur);
-+		cur_nsec = LTR_FMT_TO_NS(ltr_fmt_cur);
-+		if (cur_nsec == 0 || cur_nsec > BRCM_LTR_MAX_NS)
-+			pci_write_config_word(dev, ltr_cap_offset
-+					      + reg_offsets[i], ltr_fmt);
++	ret = of_property_read_string(pcie->np, "brcm,clkreq-mode", &mode);
++	if (ret && ret != -EINVAL) {
++		dev_err(pcie->dev, err_msg);
++		mode = "safe";
 +	}
 +
-+	return 0;
++	/* Start out assuming safe mode (both mode bits cleared) */
++	clkreq_cntl = readl(pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++	clkreq_cntl &= ~PCIE_CLKREQ_MASK;
++
++	if (strcmp(mode, "no-l1ss") == 0) {
++		/*
++		 * "no-l1ss" -- Provides Clock Power Management, L0s, and
++		 * L1, but cannot provide L1 substate (L1SS) power
++		 * savings. If the downstream device connected to the RC is
++		 * L1SS capable AND the OS enables L1SS, all PCIe traffic
++		 * may abruptly halt, potentially hanging the system.
++		 */
++		clkreq_cntl |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
++		/*
++		 * We want to un-advertise L1 substates because if the OS
++		 * tries to configure the controller into using L1 substate
++		 * power savings it may fail or hang when the RC HW is in
++		 * "no-l1ss" mode.
++		 */
++		tmp = readl(pcie->base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
++		u32p_replace_bits(&tmp, 2, PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK);
++		writel(tmp, pcie->base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
++
++	} else if (strcmp(mode, "default") == 0) {
++		/*
++		 * "default" -- Provides L0s, L1, and L1SS, but not
++		 * compliant to provide Clock Power Management;
++		 * specifically, may not be able to meet the Tclron max
++		 * timing of 400ns as specified in "Dynamic Clock Control",
++		 * section 3.2.5.2.2 of the PCIe spec.  This situation is
++		 * atypical and should happen only with older devices.
++		 */
++		clkreq_cntl |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
++
++	} else {
++		/*
++		 * "safe" -- No power savings; refclk is driven by RC
++		 * unconditionally.
++		 */
++		if (strcmp(mode, "safe") != 0)
++			dev_err(pcie->dev, err_msg);
++		mode = "safe";
++	}
++	writel(clkreq_cntl, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++
++	dev_info(pcie->dev, "clkreq-mode set to %s\n", mode);
 +}
 +
-+void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
-+{
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-+	u16 ltr_fmt = FIELD_PREP(GENMASK(9, 0), BRCM_LTR_MAX_VALUE)
-+		| FIELD_PREP(GENMASK(12, 10), BRCM_LTR_MAX_SCALE)
-+		| GENMASK(15, 15);
-+
-+	if (bridge->native_ltr)
-+		pci_walk_bus(bridge->bus, brcm_set_dev_ltr_max, &ltr_fmt);
-+}
-+
- /* The controller is capable of serving in both RC and EP roles */
- static bool brcm_pcie_rc_mode(struct brcm_pcie *pcie)
+ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
  {
-@@ -1074,8 +1131,12 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
- 		return -ENODEV;
- 	}
+ 	struct device *dev = pcie->dev;
+ 	void __iomem *base = pcie->base;
+ 	u16 nlw, cls, lnksta;
+ 	bool ssc_good = false;
+-	u32 tmp;
+ 	int ret, i;
  
--	/* Extend internal bus timeout to 8ms or so */
--	brcm_extend_internal_bus_timeout(pcie, SZ_8M);
-+	/*
-+	 * Extend internal bus timeout to 8-10ms, specifically to a value
-+	 * that is slightly larger than what we are using for the max
-+	 * {no-}snoop latency we will set in downstream devices.
-+	 */
-+	brcm_extend_internal_bus_timeout(pcie, BRCM_LTR_MAX_NS + 1000);
+ 	/* Unassert the fundamental reset */
+@@ -1138,6 +1204,8 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ 	 */
+ 	brcm_extend_internal_bus_timeout(pcie, BRCM_LTR_MAX_NS + 1000);
  
++	brcm_config_clkreq(pcie);
++
  	if (pcie->gen)
  		brcm_pcie_set_gen(pcie, pcie->gen);
-@@ -1616,6 +1677,9 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
  
-+	if (IS_ENABLED(CONFIG_PCIEASPM))
-+		brcm_set_downstream_devs_ltr_max(pcie);
-+
+@@ -1156,13 +1224,6 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ 		 pci_speed_string(pcie_link_speed[cls]), nlw,
+ 		 ssc_good ? "(SSC)" : "(!SSC)");
+ 
+-	/*
+-	 * Refclk from RC should be gated with CLKREQ# input when ASPM L0s,L1
+-	 * is enabled => setting the CLKREQ_DEBUG_ENABLE field to 1.
+-	 */
+-	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+-	tmp |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
+-	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+ 
  	return 0;
- 
- fail:
+ }
 -- 
 2.17.1
 
 
---000000000000b4ef960615380d8c
+--000000000000d19f180615380dc5
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -281,14 +334,14 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCkg7iIQUuVDJNfabd+L2TlIwyTbBmA
-r8iDIVRueaDykjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA0
-MDMyMTM5MTJaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDJrhUmxrQ6Ar75yn4/C2JnbvGBJOPD
+SOUIEmwSdT9YAzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA0
+MDMyMTM5MTRaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAmHJopDKz7XR/6LUtL5dD5xYt8kqL0YnCuPeONl+qPrLcEyKT
-fqTSTwxGNjHGgW+Q5dpwOIjx1wvCjKBl5NwnEioSTq0F6HD1lRRXjqI1oTZJYDsuvdFawVKh9Mpi
-z8/IEKnM4V3GMW8uqxhCdXn8ln5UjTPiNoT0+WJQ0W9QKI/y0SurzPXf1RvsGi2rMrPnVEhYg5p3
-3UAMfJnqT0pP+GQQ4RQooqoegDmfrYshRnBbGcWOkGwNDH2KulXpBlNCR9e7eKA7if9XIC13Q7vl
-vu/0Y0up1cdpSKJp3ETDSahqRZ92nPhRjIRzJmOd6fJlv3ra6rgeifUyml5B1YlwMQ==
---000000000000b4ef960615380d8c--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAdO5s5aQd6Hus1G2kyr7gtU6GPFZQbTRHTVtf1Q9hkz21Z2JL
+EYGWJlSNUrAxayK9y/2JnE3rGgxLqUQ8IW1l1Q2JnOIsUOHquNNIr17AU19+XUaYLyxhiS2W3P+N
+IVSGi8sYGuRyivGId/vFUpRmXVl+R0K8bvsbqVGDHWsf3KLVgif2o3mErBe1MSwLSf20mQ6zkIJw
+8j4IZx7J057zu2pYbKhnRpBxAoDmiCl6infqkOcQRlrdok88lgzMqWRrs0SYu3Irq/2NE4n9jtWv
+iOh8NKpou6JNfmbgULA682iM2TGylfsU6zhNUc1bxww07RbPOm0Cwf7epE0ciAlGAw==
+--000000000000d19f180615380dc5--
 
