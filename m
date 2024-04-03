@@ -1,149 +1,143 @@
-Return-Path: <linux-pci+bounces-5623-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5624-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D01D89731F
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 16:56:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44D62897323
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 16:56:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4F41B23D4D
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 14:55:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7260C1C26C38
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 14:56:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 393D3148FE8;
-	Wed,  3 Apr 2024 14:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C93AA1494DF;
+	Wed,  3 Apr 2024 14:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/kbJZsf"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="aKnImIsP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A313EA73;
-	Wed,  3 Apr 2024 14:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19B91494CB
+	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 14:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712156148; cv=none; b=sKhup6/rJ9sr0NXBxdNQ6lnBUnyriY7bGiiTDN14cN4oaf6YtIuzvTj1/iUszO7IDmYmm+TvYaOirH9QUJPix6mL8x86VnUxJTeAkaPASYseEA32R6WOyXG0UBIwQvLfe5+MAXTIPwQIyo9eZ/6mseAHRt7enibzqgsdSK7u/8w=
+	t=1712156175; cv=none; b=qicDVG1y0qG2x+pTr3Ip6kkGqzAzfxg4QzEPA/LrphiFq1RLcaKTA/6+ZbvsG+Oq35BIrhPDlA3EmpDD4LNLI2mF7VifOQsgS8lxGfsKyNXElDMwnDQ2nZPjOQTqqoi1BGc3cntLxXXPWc8XQzjvWApUVbM200aPk3s148NL6jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712156148; c=relaxed/simple;
-	bh=PY+qnmhD6tmkUpKmIUF5fPyAGpZ93M12JetWWTIsDWY=;
+	s=arc-20240116; t=1712156175; c=relaxed/simple;
+	bh=qIMp/Bi43gG5OxVpu00ce21O5fSpFFXCTZkgJC0kaJQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IUaYPce7hynoweHHaA/+0v6Txn/YRmxQLCPFQ+2WXIsF+R2JcgMJd0ZUEVBSDCeuXieUS6MyK//3aIQCV83UCOPjzoOHCkC/3j7rfuQ9yyM33Xu7Isg05wSRk6ACBArwhuOevVVIHPzN9HCenk3pq/ltsong2BB4k5pduZ8zrdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/kbJZsf; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso6440635276.3;
-        Wed, 03 Apr 2024 07:55:46 -0700 (PDT)
+	 To:Cc:Content-Type; b=X/e9igxKp1MV7GMwsRzeKIkEm6Xaki3rari/H7hABq/te6Jbi3bxNuWuPLFZ6Hf+Vh7YLyVIA+p/vyhA0nmChMgQvcKfzRkQjexqse0tnmX98IE+NWDvRzWg5vyELXsYd2yxM/gfapXq8Kc/7RDyrzZCIAVOLmU4AGy4dHUNQMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=aKnImIsP; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-513e134f73aso8523196e87.2
+        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 07:56:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712156145; x=1712760945; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712156172; x=1712760972; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vdppnCiN5tX2a4wbdOB3yr5PBMxRl9CK0no4lPed/pU=;
-        b=J/kbJZsfJuFwHFK/sFASUShpHd/UnDdV/Zbfj4UdiLPFNdU1BEsJpOwpB/e/vwf0AG
-         C3amxxpshoKAmX3dCVTWgbci5RB9Vzjzk3vWFzpB1D8j2e1nEE2mH4fJcNYoSAgsgGkh
-         YQMy8K8KMTeHGfRVij4FdFMLcVG0iH5t2jYFGFsTqaA1rsxIPA7kmyodakkgKivkjmEq
-         e72xImoTyyP9fYo17z+QDolQfua5JTB33afgspayi5sUhe6KRMjy/ZO5iHTjSSTypsj2
-         sufzJxT68u0QwVJsMpnmfh7k7bbuke0gKr0nU6mZNVB0DJfYnQ0Uv3yMcA5ZKOFsjd6c
-         ICwQ==
+        bh=0AEDPySL2e/8A7unRrzw52gMZQYQQOXlB4w/mt06n1w=;
+        b=aKnImIsP8DZAEOQspUmW8LWc/9dXAMfFVzUOfjLRQsExSm+YC8ycRjE9jQg1o6dCoh
+         5iCfqS8uDMWH8uO6lMAz2bXbEK1O0D1nYOBbq3XqtW79q/Cc7cVCG/R+muXrspBOhUUm
+         wadCcstUMIMt3R/oSq96Xl2cpKgJiSVRjicPLlU31sGKvbVAKvjSD7hEZhM0KUek9PDj
+         D9ZxTZrrn2A9yTFvjpckb3yAeEfUcfL7ftrnJfDZXwe2Sxq44SAu4rCtOAIHV/88Fhxr
+         lrLYKerwj6Ig9SZ5Ouak9rn5oo6VaMzJgxH0mXFJBHIYX3GIlS7S/g+p7/JVK98F7huP
+         C6Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712156145; x=1712760945;
+        d=1e100.net; s=20230601; t=1712156172; x=1712760972;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vdppnCiN5tX2a4wbdOB3yr5PBMxRl9CK0no4lPed/pU=;
-        b=sMoufK+ZbyK/O4DfakCpQTOgUu8wPkmnsKOyp4HsDedYHoNZPdrWhxqAIStrE92T7f
-         vRv9LKtTKsymWWoOCg0i7uKL2xSvs5PCGa/nq3LAMCKkogBy9FPfXEMIeRxolggKL6ZJ
-         fAmsNIXmQLrnFdro1ZUUFQsMeZy/h8fBE9nXrbjD/H02J5e78C6RKQVDMFng/ZXzcg8X
-         NWKwTcJKZWBhjmAv9HbN42k8oKEEzqk64+mt5TQYM2wUCrpvjgW072BYqEpduQtcidRE
-         lsSG5dWEQzkhq+jRSY/E9yb024gUQrLQqTps0DxOPzb/x/1o5MMNuneurp5yViQ4uN5D
-         /1Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCWeDGCZSSEAYe9FbpzjQATSuQ2xFHYmAD65p3DZjxu+kT9QWGcpvUO+jxhvMTDSjPI04pKm5a1+cqnT6/mKLp4JBqI2SDVcHScWm5PfJdW8N5Rqe8EUsN7NJ2/ur21nYMyqXiUgEINdjzP94uNzbYPuilgQMQPLhpF2KTLgArGz
-X-Gm-Message-State: AOJu0Yw4TFXq+Bsx40Us2kxls5w3QJLV+u+HrLnQkDIZ6FBAAHzrk2xQ
-	rEpdvlBpnYz35VutAJjQTdL37nMQ1KNEfNceHyRgCEMvDDUJY3iKMi3ElOyB0/jpO4+65dKNTya
-	pG9qPQXPQzJLmxPkVz3iyN/eVK6M=
-X-Google-Smtp-Source: AGHT+IF93HYpJit0b2L+Msi+ZX3Cwa21oRLYpjSf+q3irAbdFS+IP1VQ1uP65LDf6uGuqjsAhRKQMgMDICSnHpjbQiU=
-X-Received: by 2002:a25:b793:0:b0:dcf:ad31:57c9 with SMTP id
- n19-20020a25b793000000b00dcfad3157c9mr13287436ybh.0.1712156145597; Wed, 03
- Apr 2024 07:55:45 -0700 (PDT)
+        bh=0AEDPySL2e/8A7unRrzw52gMZQYQQOXlB4w/mt06n1w=;
+        b=cEJXlI6EJEGkpcSyGnDcPD8qiN4pb3BFZkUfcWfzdI9GZMRowp3rRfb+ahr1aKfHzE
+         RYy8qR4m9Z04yNTmvWliKitt8lH+jJ6Oz+DJcQOo0IxmJult2aT8JvxJdMVBsohhK4wM
+         1kVW2LaLX/0CUCnu9D+hK1Tye9R5AXgwDWYTqtjGFZGvDLJx/tNR2PG5mTBRDIuoOqh1
+         1Sutx+LjqWV1ST5TSC2y/8UWz7Avw8m3dMaSui6X8WoqOqYBjd7t8vaoG6Mp7lY7xQMv
+         IDExSZ08e12XFK9pLnUm19ilmKKGm4Y37Im5oW/nglKf26Sma+aBwr2SGT1VIDdEMVkA
+         nzfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSzGrdy6WM/Cw+r6p1KgzY2C92uHg6GVmSDIV7QT/gzagqteyqhSS0zULWXgXs8VfoFt5YMn1Knwg8q8kMfRRigNWQxlywNSJN
+X-Gm-Message-State: AOJu0YwU0rYRD7pCXdBDnHaGOO9wquMQolAiIw0ioVpFAFiRH+FVSLUS
+	op4BBLfveWEMb78Z/t4IfBttlRkSvnhNTGgRMIHIGO76fdHtSKVDakkbjSMyYQcfQklXJRrnRT5
+	EF1yUGqAwnrM/uXB2M89r/fapOymgwusr6fyLwQ==
+X-Google-Smtp-Source: AGHT+IH1uAqfWGiUk+RIbBgdGkD1xZiuVe0WG6sH6tI1B254BJw9nsHUMXBNKMkZlc7467jz/bVPfZDn3fzBPSidFbA=
+X-Received: by 2002:a05:6512:36d2:b0:515:c17e:ddb1 with SMTP id
+ e18-20020a05651236d200b00515c17eddb1mr11741487lfs.50.1712156171964; Wed, 03
+ Apr 2024 07:56:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403144508.489835-1-rick.wertenbroek@gmail.com>
-In-Reply-To: <20240403144508.489835-1-rick.wertenbroek@gmail.com>
-From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date: Wed, 3 Apr 2024 16:55:10 +0200
-Message-ID: <CAAEEuhpBWRm4ODQf1eHYUvncZrDC5WUGe0sMMaCFJaUM0dn_1Q@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rockchip-ep: Remove wrong mask on subsys_vendor_id
-To: rick.wertenbroek@heig-vd.ch
-Cc: dlemoal@kernel.org, stable@vger.kernel.org, 
-	Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240325131624.26023-1-brgl@bgdev.pl> <20240325131624.26023-6-brgl@bgdev.pl>
+ <87msqm8l6q.fsf@kernel.org>
+In-Reply-To: <87msqm8l6q.fsf@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Apr 2024 16:56:01 +0200
+Message-ID: <CAMRc=MeCjNn7QdDrcQMuj32JFYoemQ6A8WOYcwKJo1YhDTfY+Q@mail.gmail.com>
+Subject: Re: [PATCH v6 05/16] dt-bindings: net: wireless: describe the ath12k
+ PCI module
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 3, 2024 at 4:45=E2=80=AFPM Rick Wertenbroek
-<rick.wertenbroek@gmail.com> wrote:
+On Mon, Mar 25, 2024 at 3:01=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wrote=
+:
 >
-> Remove wrong mask on subsys_vendor_id. Both the Vendor ID and Subsystem
-> Vendor ID are u16 variables and are written to a u32 register of the
-> controller. The Subsystem Vendor ID was always 0 because the u16 value
-> was masked incorrectly with GENMASK(31,16) resulting in all lower 16
-> bits being set to 0 prior to the shift.
+> Bartosz Golaszewski <brgl@bgdev.pl> writes:
 >
-> Remove both masks as they are unnecessary and set the register correctly
-> i.e., the lower 16-bits are the Vendor ID and the upper 16-bits are the
-> Subsystem Vendor ID.
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > +
+> > +maintainers:
+> > +  - Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> This is documented in the RK3399 TRM section 17.6.7.1.17
->
-> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe cont=
-roller")
-> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/pci/controller/pcie-rockchip-ep.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/cont=
-roller/pcie-rockchip-ep.c
-> index c9046e97a1d2..37d4bcb8bd5b 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -98,10 +98,9 @@ static int rockchip_pcie_ep_write_header(struct pci_ep=
-c *epc, u8 fn, u8 vfn,
->
->         /* All functions share the same vendor ID with function 0 */
->         if (fn =3D=3D 0) {
-> -               u32 vid_regs =3D (hdr->vendorid & GENMASK(15, 0)) |
-> -                              (hdr->subsys_vendor_id & GENMASK(31, 16)) =
-<< 16;
-> -
-> -               rockchip_pcie_write(rockchip, vid_regs,
-> +               rockchip_pcie_write(rockchip,
-> +                                   hdr->vendorid |
-> +                                   hdr->subsys_vendor_id << 16,
->                                     PCIE_CORE_CONFIG_VENDOR);
->         }
->
-> --
-> 2.25.1
+> IMHO it would be better to have just driver maintainers listed here.
 >
 
-This patch was tested on linux next-20240403.
+Why? What's wrong with having the author of the bindings in the Cc list?
 
-The PCI endpoint test function was used and an arbitrary value e.g., 0x1234
-was written to /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_tes=
-t.0/subsys_vendor_id
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - vddaon-supply
+> > +  - vddwlcx-supply
+> > +  - vddwlmx-supply
+> > +  - vddrfacmn-supply
+> > +  - vddrfa0p8-supply
+> > +  - vddrfa1p2-supply
+> > +  - vddrfa1p8-supply
+> > +  - vddpcie0p9-supply
+> > +  - vddpcie1p8-supply
+>
+> Same comment here as in patch 4. There are also ath12k PCI devices which
+> don't need DT at all. I don't know if that should be reflected in the
+> bindings doc but I want to point out this.
+>
 
-This value was then verified with lspci -x / lspci -v on a host
-computer acting as PCI root complex.
+But DT bindings don't apply to devices that don't have DT nodes. This
+isn't an issue at all.
 
-Cheers,
-Rick
+Bart
 
