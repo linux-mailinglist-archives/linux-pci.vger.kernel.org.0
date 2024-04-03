@@ -1,369 +1,202 @@
-Return-Path: <linux-pci+bounces-5616-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5617-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3BC3896EE7
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 14:33:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5571C89712B
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 15:33:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 248C71C238FD
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 12:33:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 794181C2797A
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 13:33:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499DD1E53A;
-	Wed,  3 Apr 2024 12:33:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63BE814882B;
+	Wed,  3 Apr 2024 13:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vzJj53Y3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gU/enAze"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0015C8D7;
-	Wed,  3 Apr 2024 12:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712147621; cv=fail; b=HYVldyYCvatdMSCx37v2siN4cTs6QbKh/IRmoA436Vaek7fRHfQtPrvG+vuhDZ17fEwtjqa5Cja+9rMAXdvqqxyID8m0d/dxDvvBYXAdIdl7+dXL3atoDy4ISm9rD6jAA++g1JN1AMxY4CJGwTttREZV+dT86l7q4ybADjIFPC4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712147621; c=relaxed/simple;
-	bh=tB70sAmlpq0cFzUmt3IAidJwDvYO5AfLxB0brzOLXn8=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FiY/HuGZv/aqnYQ8tH1Gj/T+VbIpk0aua0gvhVHtpm2YpubntGxBYk1O2G+sBru5Q8Utc45+LXT80+J6pF3zZTYWvu3+HPIZgcbY5sHj6CgxfS/R9qpEY4uGtdpTRZyhzM0khvHBMCYhVSzbvMGztwwFFBkbZrCaospVpEJNuVY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vzJj53Y3; arc=fail smtp.client-ip=40.107.236.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lId1XXOO3ZCLlIs0UtIBJlUuXUIo4id4UlSgg0H4VSwh9ic+8xO/hZ4pZfMaHsj3238aZGzq5yJyOQSFuGKuu2L/4dEOdBMsQLsw/r5YC2U2BOj4LAQdwFk3vFFUJKpaeYIF7TSvKo7lGT4vFcCdmozxkXS3YM1o0wgNaZ0b5hfZ6EmSk7tvVrxtIsrwwOzTbXP63uN7ag23aC057t5skv46/pM8Wdq29cvUxb/BLKjE95960BUvnM3Xj/jovX0DGHPGxCpDpJ5kVAItTteICuPJP6g+VcodkzZAKGe88Cw1ADwiw76XkldRBa4naPetLdfIjrmZOgIK/pEIob8xsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h+8Rn//KvzkhPpEux8BovMmmfPQxkICCvCdU9LzpOtI=;
- b=DpWPhM2uobQNk1/PaQY7l4I4DDrXL39EW3kjDi1p2vNAkGnZkZXHXpM2EyIDLB+Cv6BvE2LIifgB6Li8+rLNLNnXjq8wMaRx9VqvVAOdkdtC3Ipp7nIAgJ8gj4rSNx93G8znuOQYZM16rKlJ6YKU4qxkvyWQBkLML+PHIRfLLBo3/ogPHNbmpC/9gxg3oePWgxZlecQK4rCeORv75wrzYtBWrlp7DhuzYHQOhMTbid028buHGqqpgzzYADiK2ICodsCpamyNprWm8obRIGiKYdjviwlktYhSjhiStqkR4k5i7Q+MIoWXNwH77adSZsjkzB+PgzaFQzTUo3EvQ8jjbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h+8Rn//KvzkhPpEux8BovMmmfPQxkICCvCdU9LzpOtI=;
- b=vzJj53Y3GFrYPv0AvmfazB+qiqOH8xYjJfg6JJs8fu+rcBgg1jWsmDWfp75Hio1xVdQwifmjz5QA5zh711f/XQnNH2laby53b4qzOsQscutDM53Gj+xXYFDoTOG200bAaxWGD+typSwCTpSWavNkfnzv6sqgvVT61nyMeUKofGw=
-Received: from BL1PR12MB5827.namprd12.prod.outlook.com (2603:10b6:208:396::19)
- by PH8PR12MB7301.namprd12.prod.outlook.com (2603:10b6:510:222::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
- 2024 12:33:36 +0000
-Received: from BL1PR12MB5827.namprd12.prod.outlook.com
- ([fe80::ad43:48cb:df1c:c72f]) by BL1PR12MB5827.namprd12.prod.outlook.com
- ([fe80::ad43:48cb:df1c:c72f%6]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 12:33:35 +0000
-Message-ID: <dccb87db-d826-43fa-a499-cf36ea9b10d5@amd.com>
-Date: Wed, 3 Apr 2024 18:03:25 +0530
-User-Agent: Mozilla Thunderbird Beta
-From: Kishon Vijay Abraham I <kvijayab@amd.com>
-Subject: Re: [PATCH v2 02/18] PCI: endpoint: Introduce pci_epc_map_align()
-To: Damien Le Moal <dlemoal@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Rick Wertenbroek <rick.wertenbroek@gmail.com>,
- Wilfred Mallawa <wilfred.mallawa@wdc.com>, Niklas Cassel <cassel@kernel.org>
-References: <20240330041928.1555578-1-dlemoal@kernel.org>
- <20240330041928.1555578-3-dlemoal@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20240330041928.1555578-3-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0189.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e8::10) To BL1PR12MB5827.namprd12.prod.outlook.com
- (2603:10b6:208:396::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113F81487DD
+	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 13:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712151146; cv=none; b=Qh1ROAeMgvNNlGQ4hleaSySPehib7Oomewaxs3W7e3Py1bp3bElj/t5wmvOqLVPO+ytiUwh7MdikaRUCSB1RCstTYEWLAPHXfWh90eambuypTCecjvWd+wMqVf7aneN/45V5moMF/cJdIG8XJSxu5wlP81gZhrQ6tYEBVUWB3Zs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712151146; c=relaxed/simple;
+	bh=cSygu0lTdsE1mYb8kt8PaIRN/34pMtkOoObkW9tu3zs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jCNC1CbIj1Gc6vB5c4a82DUAv8aUVvqSHDF5/F4TWcl1XnxCuBZdt/C58dlxBETVOEdT0YNNMMMv9ClH8a3d5V18WwtGbsZ2wrRhKZYp3drv3vvO3DYH0slLnwJ4NLxL1m1fp03mjV6f8A4XjqWpPOoaKth2fKv7JoUDFSULt/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gU/enAze; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e7425a6714so5236984b3a.0
+        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 06:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712151143; x=1712755943; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VgGe+WrjXHejFLqdWYYFDfvaGlNX9pe3wGgL1xVORjQ=;
+        b=gU/enAzegUlw0ZbyaOL3nGUPyIx37Tyh5PD7JY191UEN/H+JYvhFkNN4fPQ1rBtsC7
+         sX5rlTsAxwEzcRvAxkUSg6dEuwDgjLGUPwSfYm/Ig8D04zAlQ6pQPh/TmAIZF+LiN3r2
+         F7spliMW1kHKgKVybhC20rnxosGoYmEhI8uhi3QUNqoV3lRf1Tj/2ReDoHwK3LbxcEtN
+         jnwqKs3jXFcMst4k0MMFC47v9jFTwo3Fgx8Apu74FMLZqEuq0iKthSXoygF8XdSewz9+
+         9KlE8Mc7zGCjtrB9YgvT2fGC38cFbVoF76BpRxx95ojWrGPVASSgV40jyFHVT7MxKL89
+         LyBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712151143; x=1712755943;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VgGe+WrjXHejFLqdWYYFDfvaGlNX9pe3wGgL1xVORjQ=;
+        b=Far1BAfwiCwg+oxHjbdttbgi2/NQ5w2bg++wafpLIjYPfKPJNyQhi4D5kL7BvhT5x0
+         otCD0YO2gfenQpr1GL2PGyGujdVHReEnx4/GRP366dwoX8N+EUBgV3B2nnsoqBjkyCo1
+         nJep6cg1N6lWL1WIH44+Pi5g9VHbyQKE8rBzxsVDB3ScILs52PtS2SUE6y5YUK5jiSHQ
+         pgPBVm4RTmeK95JoD2u9s7nOm/ND0cxKrCCJaIKK+FIQFAoWFqLop8MYrHv03y9iPEJZ
+         6QnLtjVXoYHYeG5dSjUZR0ysX6a43sxDCIgvZE6grXAfZy6q2k4BmDapzPYy7/YELWem
+         +w3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVixuqRad/D1+4VeTViq65hiweEHZfffVtGkdcR1eyghJ2cfAk1sg2wzecFr1hXbH4J8ylTrbYpd6tqXFBBPZ4j7JUonJ36XIHY
+X-Gm-Message-State: AOJu0YyPeNtKqNN9HFxHwhguL55K+eOdV7BZ88IAYaENdpmFMYFKnT9T
+	2Q8Hf0G5Gj0t1pC6x/hGibQzy3OvgdY8Q0/ZlyLfVgE9BVSGwM7vP7CYtXBePg==
+X-Google-Smtp-Source: AGHT+IHd+nfXICNi5snDJqZSl05Xq7tsxxzc7MHxPup9L3i8nMVEIlDZk9E2mY6SCWVq0UJ0c/68VQ==
+X-Received: by 2002:a05:6a21:2d8c:b0:1a7:2d39:51cf with SMTP id ty12-20020a056a212d8c00b001a72d3951cfmr1429986pzb.26.1712151143220;
+        Wed, 03 Apr 2024 06:32:23 -0700 (PDT)
+Received: from thinkpad ([103.28.246.48])
+        by smtp.gmail.com with ESMTPSA id gs5-20020a056a004d8500b006eb3c2bde43sm6479798pfb.205.2024.04.03.06.32.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 06:32:22 -0700 (PDT)
+Date: Wed, 3 Apr 2024 19:02:17 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mhi@lists.linux.dev, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 10/10] PCI: qcom: Implement shutdown() callback to
+ properly reset the endpoint devices
+Message-ID: <20240403133217.GK25309@thinkpad>
+References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
+ <20240401-pci-epf-rework-v2-10-970dbe90b99d@linaro.org>
+ <ZgvpnqdjQ39JMRiV@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5827:EE_|PH8PR12MB7301:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+UJ46gRG37mOCGpQnEQDRgVOvI9ownDHQmNef6PakeRwaH/uxIUegbLVTpIpiyfHP53YrHzUV4pN1rJ1SJT7z3sbkFTxsmw7rEXf6BKt+xABmgAmVbKHpdLp2yZ1WoclNKaaG+MRdYamDH41mgzcicgEegTMThZawlrKWn/YaxzfTss3L8tJ4IktuD7NlxVJOt+FUignwC+aAm+LQdXVY8xBzCg5+eFIcPY9P7ctYiR2oUi83s4xrKzJDoYWcI2CekXk/c+wgmrtZkH7rbICvhQnFb+4DG2VmMdr6lAJ/AlxyxwAfaH4HMh/l0L0C2QKtGMQV5impQnANGqI9nrUKY5SYNLsn5Kd3lhucrFe04yAz9ZCZynYVXCgrzeWHA9RdNcK9F3Zqn6BUkIaX67JR6zppAMqhsVsGdQ5HxNbKZoPRliZHxVjV6OS37RW7587CHQT28GKfdLT91aeG4/95H3qnWDQ/91S53kpX/GXmT6GtN+gvWPIYTn5VInWBtiFTzFIV9wNcgSq5lmSabylBa/GKBkCqKbVPxA0xBG66lYobM5UhrEfgIym8/ZPfjlZoDljRppuPTvyJp2aY/0qOZyn4nzI1btETNfk/ckofNsCBy2NbXQ+BF3+g19ZqZbvpJEs8Sxvpwr+oSp4lUu0R8iAaGlm9631lcob11LkKhQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5827.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005)(921011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QXZjSGZiamljbXBJYnFsdERlaVZmTTZrcy9JOHVaSzRCWko1Vmd3ZktmZkFm?=
- =?utf-8?B?bmlIeDJxendjUnZIOWNUMk5HdWJDaHVCb0FBSm1OeXl5cWhHQjRIT2ZCZHJL?=
- =?utf-8?B?MEtwbUN1RVJxdmxsWDBQaENEM3pVeENxdDUwOHhQbWRjV1Q1eGdJVzBTQ2V4?=
- =?utf-8?B?bUJJbm1HU29Kd29UdjYvN0pyRlIyQzlnQXZueUFHbGNUcjdpNGJpUlpnRThy?=
- =?utf-8?B?eFVQRWJPdjZmNW8xTXBFeGg1Q2p5ZkU4UmFWK1FXL3Y1eThJSnBLVHp1T2Ri?=
- =?utf-8?B?ZmdrMU5UMHdjRHVBUW5FVHhuckpSaldDamRsY0hrajVUdE8rd242RzF3eFVX?=
- =?utf-8?B?dDhkcDM2ckhWTjBRRWc2RFQrZ0kzSE1uVXM0SnpRZ3VJWVdSVVRObWo3ZEE0?=
- =?utf-8?B?TndncE9yUWczb21PanRvazdTTU1YMVBkdlFKa0NORmZ0UWZPNldISjhMTzRF?=
- =?utf-8?B?RmM3WEordHBENkZud2xjME04ZHlFa1ZBSVFqaDl2azVhMWowTERqZThhSjQr?=
- =?utf-8?B?cDlBQ0hHRGFuOUQ5WVRnMGI4TkNzdTdxN082TkgzSWtPQ3pFcWorOTA0RGpu?=
- =?utf-8?B?MHdLcWRxYUg3ZU9aTzF5RlFXZUdLQktXYjdFZUt5TSsxK29DazJOUURhNWlw?=
- =?utf-8?B?M0NPQ1AydjM3Tmc1MXpkVmdTTVh2VXJ2L051WlNHNUYxaE13VHRiblVLWEJQ?=
- =?utf-8?B?RFJUTDVCVjFkUDZ0Q2E2V3FiTUFqV011N3cyQktBM1FmTXdLZVowcDlLNmp2?=
- =?utf-8?B?OWhOSkNtUThNN3ErRkgwYjhiR2dEb0lnQnVmSnRINGpFVzF1cFR0RXEvMUND?=
- =?utf-8?B?UFFsYzJsWHFhMFpGQUNIeVhXQURvMnhVMGRkdENvNWVHbnB1YktvWGdaeU8r?=
- =?utf-8?B?eXFKWWEwNDVTQzRpSEc3THBLSmpWelZoQm1laW5ndUl1Rk0xUThxZGhqaWhj?=
- =?utf-8?B?TDdNMS9kOGl6QVYrMDVjWVFrUE91UE9UY3lmN2hqZFhvTHRDcThGSUw4aHp3?=
- =?utf-8?B?bytKMUZNcGE2U2pOaDdqQkxnTHFkRkxZYkxSbVoxWEtlbkd2T1VmTWhzZ2ZK?=
- =?utf-8?B?QjJSZmFSSi91QmFHOGhBZTJEUnNhb2hrRWlkaUduVTJ6bVAvSUhwWTNsVmRE?=
- =?utf-8?B?Sm9RN0xERDFYdVovMzRETGNVeTM5ZE9nRVoxbUp3YkgxdUdtUzVMRjNuTjB3?=
- =?utf-8?B?RzRRRnU2MXNKQXMvSEZ3RTVqVmtxa0NGVmJMUFdqZFB3TmtMbEdKakMzSlpI?=
- =?utf-8?B?aEVjY0xyRUZNakZYakhsekdVc1p1K2xvODA2cVRmVHNuakhSRVlweDRZc3JG?=
- =?utf-8?B?ajA0RXowS3VRengvV3BRaWJTVk5ndkxVQ3Uvclo1WGxDOUg2VUVQdmUrTkRh?=
- =?utf-8?B?N1VwblFyK2RaYW9GTWZvYWhqYUV3SlhUeTZ2aUJoQXNxOUQrVUdHSTg0ZU10?=
- =?utf-8?B?Wkcya1dXVWttNkFMcG1GUi9yR2VQdVRFWnVRR2dtZjFyRGNqM3MyYUpMb3RI?=
- =?utf-8?B?UTlFT1VmKzVpdmo3Y3l4Q1ovZEFnN2FTNHBlWkcwb0gvQzFlb2dKQmM2S3Iv?=
- =?utf-8?B?ZWJCOWdPR2MvRmdiUU9hcFgvc2UwbDE4dFdCMFpmT0tYS1oyZWNBT1czRXJU?=
- =?utf-8?B?K09SdXpSQkZtdzJsSFJLNFA5OUlsMHgyNzVLMkNqcGVhb1BvWnI1cndBdXJa?=
- =?utf-8?B?NEMxK3pwdWhyNXpwRy9PeEFya0FmMnpIeXZCQk5rVGNUalUwOFpvTnVXeklu?=
- =?utf-8?B?a1pSWUk3VXNBOXJNaC9ldU1DaFRqQlg5UzVlcGZTWTZLd2tjR1ZxcFd5VmlQ?=
- =?utf-8?B?TjFrd1ZJRVpkTExERWFFck5DRlZvWTNBYnhnK2FXdjM3S1pWbjBNQ3o5cFJK?=
- =?utf-8?B?OVFpS0VqUHpyR1NpdW1nandPWm51aW1walNTckZxYjZYR1Nabys4S0Q3bTR2?=
- =?utf-8?B?eWhrb0d2eHhXSWZ2cW02TG45YkExR1lmSHp0V0NwSTJpRUxsT3dYa3dMa2VZ?=
- =?utf-8?B?cThxSHVBUDRIRzJKdzZnMEEyeEovTXNkNGZ3UGdPNW9NMC80QWdmakorTmZu?=
- =?utf-8?B?aU1lNlRLWTlXR3M0NjlxblN2dlJqYkdvOUkwaDlhalJURnFubmdTMkV0NWJq?=
- =?utf-8?Q?qKtYCCs539RbyLpOcg7QBSy7H?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3157dd4-8513-4ce9-c1b3-08dc53da47f9
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5827.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 12:33:35.8758
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zF2W8au1ROuc3Hu+9BhwjwPbMKdLy9tZ4Smgo9ZOrHZCp02Wkk9zotL82ExckmzU+9SlU6K4YbgJXwDI70ifRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7301
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZgvpnqdjQ39JMRiV@ryzen>
 
-Hi Damien,
-
-On 3/30/2024 9:49 AM, Damien Le Moal wrote:
-> Some endpoint controllers have requirements on the alignment of the
-> controller physical memory address that must be used to map a RC PCI
-> address region. For instance, the rockchip endpoint controller uses
-> at most the lower 20 bits of a physical memory address region as the
-> lower bits of an RC PCI address. For mapping a PCI address region of
-> size bytes starting from pci_addr, the exact number of address bits
-> used is the number of address bits changing in the address range
-> [pci_addr..pci_addr + size - 1].
+On Tue, Apr 02, 2024 at 01:18:54PM +0200, Niklas Cassel wrote:
+> On Mon, Apr 01, 2024 at 09:20:36PM +0530, Manivannan Sadhasivam wrote:
+> > PCIe host controller drivers are supposed to properly reset the endpoint
+> > devices during host shutdown/reboot. Currently, Qcom driver doesn't do
+> > anything during host shutdown/reboot, resulting in both PERST# and refclk
+> > getting disabled at the same time. This prevents the endpoint device
+> > firmware to properly reset the state machine. Because, if the refclk is
+> > cutoff immediately along with PERST#, access to device specific registers
+> > within the endpoint will result in a firmware crash.
+> > 
+> > To address this issue, let's call qcom_pcie_host_deinit() inside the
+> > shutdown callback, that asserts PERST# and then cuts off the refclk with a
+> > delay of 1ms, thus allowing the endpoint device firmware to properly
+> > cleanup the state machine.
 > 
-> For this example, this creates the following constraints:
-> 1) The offset into the controller physical memory allocated for a
->     mapping depends on the mapping size *and* the starting PCI address
->     for the mapping.
-> 2) A mapping size cannot exceed the controller windows size (1MB) minus
->     the offset needed into the allocated physical memory, which can end
->     up being a smaller size than the desired mapping size.
+> Hm... a QCOM EP device could be attached to any of the PCIe RC drivers that
+> we have in the kernel, so it seems a bit weird to fix this problem by
+> patching the QCOM RC driver only.
 > 
-> Handling these constraints independently of the controller being used in
-> a PCI EP function driver is not possible with the current EPC API as
-> it only provides the ->align field in struct pci_epc_features.
-> Furthermore, this alignment is static and does not depend on a mapping
-> pci address and size.
+> Which DBI call is it that causes this problem during perst assert on EP side?
 > 
-> Solve this by introducing the function pci_epc_map_align() and the
-> endpoint controller operation ->map_align to allow endpoint function
-> drivers to obtain the size and the offset into a controller address
-> region that must be used to map an RC PCI address region. The size
-> of the physical address region provided by pci_epc_map_align() can then
-> be used as the size argument for the function pci_epc_mem_alloc_addr().
-> The offset into the allocated controller memory can be used to
-> correctly handle data transfers. Of note is that pci_epc_map_align() may
-> indicate upon return a mapping size that is smaller (but not 0) than the
-> requested PCI address region size. For such case, an endpoint function
-> driver must handle data transfers in fragments.
+> I assume that it is pci-epf-test:deinit() callback that calls
+> pci_epc_clear_bar(), which calls dw_pcie_ep_clear_bar(), which will both:
+> -clear local data structures, e.g.
+> ep->epf_bar[bar] = NULL;
+> ep->bar_to_atu[bar] = 0;
 > 
-> The controller operation ->map_align is optional: controllers that do
-> not have any address alignment constraints for mapping a RC PCI address
-> region do not need to implement this operation. For such controllers,
-> pci_epc_map_align() always returns the mapping size as equal
-> to the requested size and an offset equal to 0.
+> but also call:
+> __dw_pcie_ep_reset_bar()
+> dw_pcie_disable_atu()
 > 
-> The structure pci_epc_map is introduced to represent a mapping start PCI
-> address, size and the size and offset into the controller memory needed
-> for mapping the PCI address region.
 > 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
->   drivers/pci/endpoint/pci-epc-core.c | 66 +++++++++++++++++++++++++++++
->   include/linux/pci-epc.h             | 33 +++++++++++++++
->   2 files changed, 99 insertions(+)
+> Do we perhaps need to redesign the .deinit EPF callback?
 > 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 754afd115bbd..37758ca91d7f 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -433,6 +433,72 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->   }
->   EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->   
-> +/**
-> + * pci_epc_map_align() - Get the offset into and the size of a controller memory
-> + *			 address region needed to map a RC PCI address region
-> + * @epc: the EPC device on which address is allocated
-> + * @func_no: the physical endpoint function number in the EPC device
-> + * @vfunc_no: the virtual endpoint function number in the physical function
-> + * @pci_addr: PCI address to which the physical address should be mapped
-> + * @size: the size of the mapping starting from @pci_addr
-> + * @map: populate here the actual size and offset into the controller memory
-> + *       that must be allocated for the mapping
-> + *
-> + * Invoke the controller map_align operation to obtain the size and the offset
-> + * into a controller address region that must be allocated to map @size
-> + * bytes of the RC PCI address space starting from @pci_addr.
-> + *
-> + * The size of the mapping that can be handled by the controller is indicated
-> + * using the pci_size field of @map. This size may be smaller than the requested
-> + * @size. In such case, the function driver must handle the mapping using
-> + * several fragments. The offset into the controller memory for the effective
-> + * mapping of the @pci_addr..@pci_addr+@map->pci_size address range is indicated
-> + * using the map_ofst field of @map.
-> + */
-> +int pci_epc_map_align(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +		      u64 pci_addr, size_t size, struct pci_epc_map *map)
-> +{
-> +	const struct pci_epc_features *features;
-> +	size_t mask;
-> +	int ret;
-> +
-> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
-> +		return -EINVAL;
-> +
-> +	if (!size || !map)
-> +		return -EINVAL;
-> +
-> +	memset(map, 0, sizeof(*map));
-> +	map->pci_addr = pci_addr;
-> +	map->pci_size = size;
-> +
-> +	if (epc->ops->map_align) {
-> +		mutex_lock(&epc->lock);
-> +		ret = epc->ops->map_align(epc, func_no, vfunc_no, map);
-> +		mutex_unlock(&epc->lock);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * Assume a fixed alignment constraint as specified by the controller
-> +	 * features.
-> +	 */
-> +	features = pci_epc_get_features(epc, func_no, vfunc_no);
-> +	if (!features || !features->align) {
-> +		map->map_pci_addr = pci_addr;
-> +		map->map_size = size;
-> +		map->map_ofst = 0;
-> +	}
+> Considering that we know that .deinit() will only be called on platforms
+> where there will be a fundamental core reset, I guess we could do something
+> like introduce a __dw_pcie_ep_clear_bar() which will only clear the local
+> data structures. (It might not need to do any DBI writes, since the
+> fundamental core reset should have reset all values.)
+> 
+> Or perhaps instead of letting pci_epf_test_epc_deinit() call
+> pci_epf_test_clear_bar()/__pci_epf_test_clear_bar() directly, perhaps let
+> pci_epf_test_epc_deinit() call add a .deinit()/.cleanup() defined in the
+> EPC driver.
+> 
+> This EPC .deinit()/.cleanup() callback would then only clear the
+> local data structures (no DBI writes...).
+> 
+> Something like that?
+> 
 
-The 'align' of pci_epc_features was initially added only to address the 
-inbound ATU constraints. This is also added as comment in [1]. The PCI 
-address restrictions (only fixed alignment constraint) were handled by 
-the host side driver and depends on the connected endpoint device 
-(atleast it was like that for pci_endpoint_test.c [2]).
-So pci-epf-test.c used the 'align' in pci_epc_features only as part of 
-pci_epf_alloc_space().
+It is not just about the EPF test driver. A function driver may need to do many
+things to properly reset the state machine. Like in the case of MHI driver, it
+needs to reset channel state, mask interrupts etc... and all requires writing to
+some registers. So certainly there should be some time before cutting off the
+refclk.
 
-Though I have abused 'align' of pci_epc_features in pci-epf-ntb.c using 
-it out of pci_epf_alloc_space(), I think we should keep the 'align' of 
-pci_epc_features only within pci_epf_alloc_space() and controllers with 
-any PCI address restrictions to implement ->map_align(). This could as 
-well be done in a phased manner to let controllers implement 
-->map_align() and then remove using  pci_epc_features in 
-pci_epc_map_align(). Let me know what you think?
+On x86 host machines, I can see that there is enough time before the host cuts
+off the refclk.
 
-Thanks,
-Kishon
+But it is unfortunate that the PCIe spec didn't define it though.
 
-[1] -> 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/pci-epc.h?h=v6.9-rc2#n187
+- Mani
 
-[2] -> 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/misc/pci_endpoint_test.c?h=v6.9-rc2#n127
-> +
-> +	mask = features->align - 1;
-> +	map->map_pci_addr = map->pci_addr & ~mask;
-> +	map->map_ofst = map->pci_addr & mask;
-> +	map->map_size = ALIGN(map->map_ofst + map->pci_size, features->align);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_map_align);
-> +
->   /**
->    * pci_epc_map_addr() - map CPU address to PCI address
->    * @epc: the EPC device on which address is allocated
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index cc2f70d061c8..8cfb4aaf2628 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -32,11 +32,40 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
->   	}
->   }
->   
-> +/**
-> + * struct pci_epc_map - information about EPC memory for mapping a RC PCI
-> + *                      address range
-> + * @pci_addr: start address of the RC PCI address range to map
-> + * @pci_size: size of the RC PCI address range to map
-> + * @map_pci_addr: RC PCI address used as the first address mapped
-> + * @map_size: size of the controller memory needed for the mapping
-> + * @map_ofst: offset into the controller memory needed for the mapping
-> + * @phys_base: base physical address of the allocated EPC memory
-> + * @phys_addr: physical address at which @pci_addr is mapped
-> + * @virt_base: base virtual address of the allocated EPC memory
-> + * @virt_addr: virtual address at which @pci_addr is mapped
-> + */
-> +struct pci_epc_map {
-> +	phys_addr_t	pci_addr;
-> +	size_t		pci_size;
-> +
-> +	phys_addr_t	map_pci_addr;
-> +	size_t		map_size;
-> +	phys_addr_t	map_ofst;
-> +
-> +	phys_addr_t	phys_base;
-> +	phys_addr_t	phys_addr;
-> +	void __iomem	*virt_base;
-> +	void __iomem	*virt_addr;
-> +};
-> +
->   /**
->    * struct pci_epc_ops - set of function pointers for performing EPC operations
->    * @write_header: ops to populate configuration space header
->    * @set_bar: ops to configure the BAR
->    * @clear_bar: ops to reset the BAR
-> + * @map_align: operation to get the size and offset into a controller memory
-> + *             window needed to map an RC PCI address region
->    * @map_addr: ops to map CPU address to PCI address
->    * @unmap_addr: ops to unmap CPU address and PCI address
->    * @set_msi: ops to set the requested number of MSI interrupts in the MSI
-> @@ -61,6 +90,8 @@ struct pci_epc_ops {
->   			   struct pci_epf_bar *epf_bar);
->   	void	(*clear_bar)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->   			     struct pci_epf_bar *epf_bar);
-> +	int	(*map_align)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +			    struct pci_epc_map *map);
->   	int	(*map_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->   			    phys_addr_t addr, u64 pci_addr, size_t size);
->   	void	(*unmap_addr)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> @@ -234,6 +265,8 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->   		    struct pci_epf_bar *epf_bar);
->   void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->   		       struct pci_epf_bar *epf_bar);
-> +int pci_epc_map_align(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +		      u64 pci_addr, size_t size, struct pci_epc_map *map);
->   int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->   		     phys_addr_t phys_addr,
->   		     u64 pci_addr, size_t size);
+> 
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 14772edcf0d3..b2803978c0ad 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -1655,6 +1655,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+> >  	return 0;
+> >  }
+> >  
+> > +static void qcom_pcie_shutdown(struct platform_device *pdev)
+> > +{
+> > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> > +
+> > +	qcom_pcie_host_deinit(&pcie->pci->pp);
+> > +}
+> > +
+> >  static const struct of_device_id qcom_pcie_match[] = {
+> >  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> > @@ -1708,5 +1715,6 @@ static struct platform_driver qcom_pcie_driver = {
+> >  		.pm = &qcom_pcie_pm_ops,
+> >  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> >  	},
+> > +	.shutdown = qcom_pcie_shutdown,
+> >  };
+> >  builtin_platform_driver(qcom_pcie_driver);
+> > 
+> > -- 
+> > 2.25.1
+> > 
 
+-- 
+மணிவண்ணன் சதாசிவம்
 
