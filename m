@@ -1,172 +1,223 @@
-Return-Path: <linux-pci+bounces-5628-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5629-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC698897482
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 17:52:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6497A897536
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 18:27:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 454CD1F288F0
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 15:52:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E519B1F2B250
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 16:27:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB7A14A62A;
-	Wed,  3 Apr 2024 15:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6513714F9EB;
+	Wed,  3 Apr 2024 16:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DRMHnn/1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEdnSZiP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E67914A4F4
-	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 15:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712159515; cv=none; b=rb5Hgnmf3DbgO9bxIKvHuqSYXClf18n0pSIJKYEYHc3yH5GcNkHXh/Q6SMeADSGIsL7zGaCyY9fbn8y4uvUM3i4sTI2G1qhj7ziM5ZIlfbGKpbniW9K+3HF7QBlmk0+lg19z7U+H7iwdHFAMUG/hG1Monp82Gz2Jv5vJQjdxyPw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712159515; c=relaxed/simple;
-	bh=qgIhgArIyknrMhYKo0pXG7L2hPF5611r14caIQJvQ9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gsY+lQCn+z5ZkLEZSPgElwNrrf02ol2D9KjKb+TJKhk9S8Z/K2v4kE1oU0ZaJ5zpxjCUvqn/ckstcVFvdzEzBt/ETybZjEBxBzIILdJcsBj773fv0JXCfECYRL38sEoCYcG8Uv6Z+P/J6Vr7ZN7wEAqYU6qf8UihuutxF+h/wfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DRMHnn/1; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6eae2b57ff2so5367565b3a.2
-        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 08:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712159513; x=1712764313; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RxAX3IORBZmyZAmqt7k7cbWr6HJgfjLBGIug35aDNFY=;
-        b=DRMHnn/12hCEZ+EzEWkSqaeg3Kh/NKXno8djLNTpANfiRYgJ70crpONfAk9RPZiirF
-         ym4+eIlbnGzB4QlFFQNVkfJkmPCPhG1OxGDBvdBny6Se9dLEfXso7WpduMDWmNDSdQPX
-         R7lUMIBExyPDI8RJIxLrlb60MXKhb4MDhPkO9ZkWhDgKfEQkc7Be5ZM7Tkm0UdTjwMrf
-         AG3JtGao5TTxfFlTMEN5A6x8IvNL5RBJzDvylXEznCEajyb3jpvx5U1V+hMcPpcz91RA
-         wydNWp4nDOGPSqVypb3HxkuUEK4/kTwgYFtwuIVgb70X8qwZ8SjDaaoGs0JVa4YWWet0
-         RBeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712159513; x=1712764313;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RxAX3IORBZmyZAmqt7k7cbWr6HJgfjLBGIug35aDNFY=;
-        b=F8VHWfiNkZJb1X56HKqZ/r479xZpACp/wKhjSVx7K61J/HzHFcZ3Sv5sNEDzeVo+MD
-         MN/2m65I7kX+K/5kI6sUdATbY7HKjMznn7sbyNf5nxQAyTbA1T35tI/ugJoYEYeO4Q4U
-         78vDuo1xhwonsvsF59Yfkzmxg0zDburp6HN7BdzQE3x60KVpXlluZWSWNi84aZTPDyn3
-         pmLACQbMMQbywPfDc9Dgm3AiMsGHpQVTnzvBrQHblgfE3jPnNcS7MePgzI76gL369ASs
-         4KvFM2J/FacsK8zcV3Z/+gW21w1IYw+t4fLxb3m6fxByERC4JRNO2rZQG1+Zcvfx637s
-         QrhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4goNLzj72GTrQn+xlDL6iLM72Xqw0t1S++t2bpdBXDktgy/Q7BfuCeXn9dDBqz4/9gHmRouRZnBZ5E37wAmkeLSpbC3CDjLO3
-X-Gm-Message-State: AOJu0Yw3CyEmuRmlkpAwmsWClpnwPdOZt8SpfT+kbRPbRE//hi5cxvQ5
-	Xibxi00m1b88rELaQBwLZIn72n+bT75bmVoj4LbrAVVz7/qdCBnp10gz9ldiLg==
-X-Google-Smtp-Source: AGHT+IFZ8An9frbeOoCjHLGX+h10+JkFjjcUHp5RZHkQCtQER4IRh2CUT8rqcKsB9n/M1uUV2ezDxQ==
-X-Received: by 2002:a05:6a20:6114:b0:1a3:e23d:6003 with SMTP id m20-20020a056a20611400b001a3e23d6003mr21825pzb.62.1712159512806;
-        Wed, 03 Apr 2024 08:51:52 -0700 (PDT)
-Received: from thinkpad ([103.28.246.48])
-        by smtp.gmail.com with ESMTPSA id a17-20020aa78e91000000b006e535bf8da4sm11747015pfr.57.2024.04.03.08.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 08:51:52 -0700 (PDT)
-Date: Wed, 3 Apr 2024 21:21:47 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhi@lists.linux.dev, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] PCI: endpoint: Rename core_init() callback in
- 'struct pci_epc_event_ops' to init()
-Message-ID: <20240403155147.GA85162@thinkpad>
-References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
- <20240401-pci-epf-rework-v2-3-970dbe90b99d@linaro.org>
- <ZgvjWtC0f1CY6DJs@ryzen>
- <20240403134600.GL25309@thinkpad>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B7814A0A2;
+	Wed,  3 Apr 2024 16:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712161659; cv=fail; b=rTIgEDX5RURfDJp42Yd6CWZxogCMfWYW86FRnvdQuKQE2Ej+3lzTvl1pZK+VyTJJpbTm5hAua3pAAZ02JtSF058805Nca7gSJ2qelYVBRymCvC4GrnwvSTXJmvtfRBHBv8VC2+qO7N+uRRmn8tUtg7SlVqcIpIcp+vgDEpv6pLc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712161659; c=relaxed/simple;
+	bh=yejQ62EwgOOtIYboZvGcg7LVTaFwyOig929URyXaHQU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lNiAmhKcsgVzOJPLjVuZtT4+quFoxXhOuSeM+fqk7uuMYloTUva4IZmDMpds9gMM9fOM3XOhuTwSG3SySGB73SX3DESMppwv5iqLk9VnTbpm82SXNjiV5FhzOb76S+qSVOAgUiC/s9v4L4xq/xNLlEcoiEBxvjuIxeIB+y0DhDU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEdnSZiP; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712161657; x=1743697657;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=yejQ62EwgOOtIYboZvGcg7LVTaFwyOig929URyXaHQU=;
+  b=gEdnSZiPssDxEtVXx6rm7bCpDZC0ngW79P6VIBq5FbIYd7ojqwjA0Ikc
+   xu3NgTNousfZy5qkQgEOz5Y5dhinfHUh59KudGmKAQ637dK5knsrkRF7O
+   cKT+NyHkbEf4mS2uqYe127fV89Ms03B+Bj/qVc7SnZvRg1BNFRaHscyQp
+   uNONjhtmV2Y2PUXFNU9k4g4QjYhq5wVKsytt088ti1U8sXLdi07nRytAw
+   pgNa8rqMYWyEiWFwgKqwh2N4kP9y/ON76kWib9ABHtXZmNhz6dU8MZysi
+   WDIoB43pWtwjUBRfEFtz9NI2RnF0Nv+FeRM+aF9Cemaf3o7Y9VMfF1Mop
+   w==;
+X-CSE-ConnectionGUID: zQg9MQSHSTak1l4Rwve9gg==
+X-CSE-MsgGUID: MVQpA0VcRXOJpiGvYNoWOw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7639772"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7639772"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 09:27:36 -0700
+X-CSE-ConnectionGUID: 6GFYJ4zaSKyPrQ+OYflzJg==
+X-CSE-MsgGUID: 66hW9ednQA+SGoPTQvqfmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="22958929"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Apr 2024 09:27:36 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 3 Apr 2024 09:27:35 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 3 Apr 2024 09:27:35 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 3 Apr 2024 09:27:35 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 3 Apr 2024 09:27:34 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GfxXWKGEZfGpGRK41wLPiX9T7VgreJof49VXHMD9z9yaUtE4UAagI21w7iG75Fko837b7v7XZxpkIn0KDCx4GqdFmfcRtNqjP+taLDTLyFr0KhlMILK073pf8xOUscD+KaXAVQE3q1xeNlZjHaNDlQBB+HfejYqCO8KjHk44BhqxdkC+2+Y71VYpBmrh9Vz6BOs6qe8nDcjD+vJOtnFK+MQitF/nVKScJ7cqeFIuc+DonJd0Es2tSW0ZbVE4SDp0gGOZLaIxLa78zSEkPHqqUFdCDxkxLh5RJmmhFY2zWST6BHC1VwK3h7G2oknHbhTZFbbhSHDzw8yaSLyEn1DMFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UpMeF2sDWZhaPu5WDgF34MxCMNV9gAaP7l3A9ZPhD1U=;
+ b=n3B0cYoLvo+HIg//4B9TzXqpWcfh4fZbwh9+80lw2k4ytoGIeJkcQvTnlfML51VxEcgTz3Xfs/sEYuCYLpK07Mmw73ThVDECgSMSc7yM1LQAjbz8jNsTFeda4fqVCt4vA0Eks1DDW+iLHPCT8fGZrq/Hm8eRp+eBfZ7EbLBkKOIG2CYPStlmqAyUx5oDj9mb5wPipPH/UCSCMXZYaAlb9WThLnQaXzOsvz8ZyFkrhjd7rICn36/YuaapOLnlTlogateCGsD3BZHS4m5ZV23Np7WxGD7/uqs38jKzohHXMrKVtUmOUjigsl8ea9q2/vjspf6ELfvdcc5iYiISsrpjsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH8PR11MB6974.namprd11.prod.outlook.com (2603:10b6:510:225::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Wed, 3 Apr
+ 2024 16:27:32 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.031; Wed, 3 Apr 2024
+ 16:27:32 +0000
+Date: Wed, 3 Apr 2024 09:27:28 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+	<dave@stgolabs.net>, <bhelgaas@google.com>, <lukas@wunner.de>
+Subject: Re: [PATCH v3 4/4] cxl: Add post reset warning if reset is detected
+ as Secondary Bus Reset (SBR)
+Message-ID: <660d83708993_2459629416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240402234848.3287160-1-dave.jiang@intel.com>
+ <20240402234848.3287160-5-dave.jiang@intel.com>
+ <20240403163257.000060e1@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240403163257.000060e1@Huawei.com>
+X-ClientProxiedBy: MW4PR04CA0294.namprd04.prod.outlook.com
+ (2603:10b6:303:89::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240403134600.GL25309@thinkpad>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB6974:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: T/qnc3bbp1Tjd7jqO76t7NgzEOaC61B6ZoAZk8rgQb5YDs8bH/2Cv2ZGC5XUjfO8k6wnGKy3dbA/F2dZtl/+yFbZfqTxsHNbyG0F3tLXxTmm2q/H/ikCmwfT79fuyNFSal9zQaRK6pa6MP+CGmWw0++5kXM/9rbEj0Ddy2V30cN/Q1ki39CjBzFLxECQTTJdXQla3F0Ad1QpM0L57ysR5PMDDgw/C/sVHi36lRzsxp7XqiAOntHZTSo92rnkVNQcpToJw032aGe1qcrXV2UMoaibRSp0VkzWrfc4RBXpJp5gcxfXW+tANOWSke5jiHheXhV5IL00GsFAp06kAA5cDhe8GQUWoyB/hwnO/c53oR6wBtO737GxB/5Z8uV+BAa1OLZ23NG0+fa6pyTaPcae4w/SrT1mxzlYcFd4HMtnnWG9iU4Ws+bH4QpiPBBGsIqo28ch1xEmtR9M56fxvlCdv6tNINo9nXmUv6JqnbXxhJT0vppkXDV8+hRksEhbgEzv1LMXv5FIV1q0UYKG2tDkOVAY4CQy+5JcDEIT7Z79DrEygKpiZKYSeL7xdKqvlBFe8IuX0lIAIklf9HZCYOgaH3pn41xbr3A5z0NcX/fzb7yJKI6y91HX/4+BTxmeLxon726cM49PJYzazOe2CYIpL9qc6Y/hCXtJGuxjycvx3uI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0GIxh2KYljXq3vantS/uLYGt29+VA9OH/VN/taoG8FGyo/ceIW06oLpxrtPF?=
+ =?us-ascii?Q?+FjMfHA6fg28ZY0l2MSJJ9P0YN4TtbM6893/TTRLHFUlQeI4d4c9Vjba2zk9?=
+ =?us-ascii?Q?ApuUVB2WA2nEBE/fi9dhXl7/rV4TK7t9I3/cJVCDwzqGCdpkxSFwNkQ/gXP1?=
+ =?us-ascii?Q?drIYvRS5b0nDTUgIX3mGYYYsF5Y9iumcM3nBe2qhqsvAUsJUSLSJfqMVu3L2?=
+ =?us-ascii?Q?vz73SoEhqE1MLPXvGWkMBXmixss709ioT7n2oL2sYNXHO08mlBSypH71MVGx?=
+ =?us-ascii?Q?3eisWIm/HO/pFnMoN2fAAnlNVgPAeGhw7mQa8VFOaZTWlL8wjaYcAKIjqF8G?=
+ =?us-ascii?Q?wBwWpNLtVlyT21KUpKRPCPHKKlb342yOo3DFOwqp9OwVCymWmNwMtmmtDn2L?=
+ =?us-ascii?Q?HOyFYn7pvdfMzKpzJmxOsKQR38Oio/wKm0Jk3+LBOVG9IDsf6YJK2GKzcNDh?=
+ =?us-ascii?Q?kYSmtiEV1bX9UBB+QdAFXWpbtop/bwUaBmvExGmbvr4FqldNhytKBLgxEFnz?=
+ =?us-ascii?Q?KxHkNZJ13q+3OZn0Lpv2n1iytfOouYXIrdqv7Hy0QJJdDXcbGfcVrqiPFIB9?=
+ =?us-ascii?Q?2nnVE28gmeJgMOxuWVYQ32DrEOz6Aq0J1/p7046ES/IH6cJr+E2HpGcJbwZ2?=
+ =?us-ascii?Q?WVLQsewMJ9lsEghxf5R47ub6ainIh/WTa4p0MITZwXh/c3Hie8gpcoGh6Ab2?=
+ =?us-ascii?Q?T2RqzyilNmerYdxf7dmtLjnlGFN7OsY0qvFxFuVsUzfB1XeAVFZv2Up4tL5f?=
+ =?us-ascii?Q?wCfobLin74WfGokH94uM6E4aThySSMIp58SjKR28HTOCmm/Lt37EUlfrgFH/?=
+ =?us-ascii?Q?faDICov8o5Ym0ZrimFrkZlCCCCpAtmUAmAWnRmZRp8VJVA+JsKIwdaBxOC1U?=
+ =?us-ascii?Q?r9QeYaW49/GSrpkpAaERpzjHjHQ2iCxMMdGLIco3QYRIRHDXFSejh+LzWT1B?=
+ =?us-ascii?Q?lsijaaxbuwFbW07gzueSsrrMJMhUp0qwBrPC+h0awJBYOXbDclIlYAvgM0bb?=
+ =?us-ascii?Q?vaJUmIVD2T+EDAzGvUGQS8Pam0+oXw+hdDjNNkhzOtW14FdRvvhgWXHlha/5?=
+ =?us-ascii?Q?DLY/clua9hqeKWf70f38tUgR8KETI6TbYaPu8oppR7hVs5K6MiqcVuOsVUOZ?=
+ =?us-ascii?Q?lRYng5eHCscknqPkTL2qPot6JK29EcaZQRh19dqkrn/MnOy77a7Vxb2c5hnk?=
+ =?us-ascii?Q?ip3ejn5D4cftT6MuHGKS5aOFuYQTOk28yMoBvk0RhDIKZuWzP5KA16D5ikL7?=
+ =?us-ascii?Q?o/f4jWmVhDAJ5gH5bWJsI7Os53y6MSzDTZbwVTvnzqm6g4nbpvr3Cy9QuR+h?=
+ =?us-ascii?Q?9sWQh4IAGS/CgeqIa0H2Cdh+TE4aTxINR2QWvwFwCrAskS+hdzIr5d08GtjQ?=
+ =?us-ascii?Q?FEF24eEQs9LYOVbJBgrMjD7aIEnEPLeX3U5/CYjhVeqIF/nhwhju3uBrAZeE?=
+ =?us-ascii?Q?asKMIyF8ISsZxyl2f/whi6+SLrLmX06i1C2prqPcdRKV4u4da1v1qmHDbv+F?=
+ =?us-ascii?Q?MudLb0r+CZR4lXP3xb14yzXyc1885a7BkGlc38tDeUT7anSFpb9gED6LA3sD?=
+ =?us-ascii?Q?ttP4KkXGi7uY2B/9sO1+NhQk8Dywv3q/5Xs5O04GCr+QXMGK/vwP/ZCGn/1U?=
+ =?us-ascii?Q?cg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ae670d3-1268-46e8-659e-08dc53faf654
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 16:27:32.1472
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7ir5W6ded5iHANFT3jxPnXFy9URfZjJDEHiqf+SDASazXIxPaX7XIhjR0FM/4iJ3m0yT3EY8hrqpYFrpgXtTSKlJnlCGFF86cfL70DvnnPM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6974
+X-OriginatorOrg: intel.com
 
-On Wed, Apr 03, 2024 at 07:16:05PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Apr 02, 2024 at 12:52:10PM +0200, Niklas Cassel wrote:
-> > On Mon, Apr 01, 2024 at 09:20:29PM +0530, Manivannan Sadhasivam wrote:
-> > > core_init() callback is used to notify the EPC initialization event to the
-> > > EPF drivers. The 'core' prefix was used indicate that the controller IP
-> > > core has completed initialization. But it serves no purpose as the EPF
-> > > driver will only care about the EPC initialization as a whole and there is
-> > > no real benefit to distinguish the IP core part.
-> > > 
-> > > So let's rename the core_init() callback in 'struct pci_epc_event_ops' to
-> > > just init() to make it more clear.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  drivers/pci/endpoint/functions/pci-epf-mhi.c  |  4 ++--
-> > >  drivers/pci/endpoint/functions/pci-epf-test.c |  4 ++--
-> > >  drivers/pci/endpoint/pci-epc-core.c           | 16 ++++++++--------
-> > >  include/linux/pci-epf.h                       |  4 ++--
-> > >  4 files changed, 14 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> > > index 280863c0eeb9..b3c26ffd29a5 100644
-> > > --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> > > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> > > @@ -716,7 +716,7 @@ static void pci_epf_mhi_dma_deinit(struct pci_epf_mhi *epf_mhi)
-> > >  	epf_mhi->dma_chan_rx = NULL;
-> > >  }
-> > >  
-> > > -static int pci_epf_mhi_core_init(struct pci_epf *epf)
-> > > +static int pci_epf_mhi_epc_init(struct pci_epf *epf)
-> > >  {
-> > >  	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> > >  	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> > > @@ -897,7 +897,7 @@ static void pci_epf_mhi_unbind(struct pci_epf *epf)
-> > >  }
-> > >  
-> > >  static const struct pci_epc_event_ops pci_epf_mhi_epc_event_ops = {
-> > > -	.core_init = pci_epf_mhi_core_init,
-> > > +	.init = pci_epf_mhi_epc_init,
-> > >  };
-> > >  
-> > >  static const struct pci_epc_bus_event_ops pci_epf_mhi_bus_event_ops = {
-> > > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > index 973db0b1bde2..abcb6ca61c4e 100644
-> > > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > > @@ -731,7 +731,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > -static int pci_epf_test_core_init(struct pci_epf *epf)
-> > > +static int pci_epf_test_epc_init(struct pci_epf *epf)
-> > 
-> > On V1 you agreed that it is better to remove 'epc' from the naming.
-> > (For both pci-epf-test and pci-epf-mhi).
-> > You seem to have forgotten to address this for V2.
-> > 
+Jonathan Cameron wrote:
+> On Tue, 2 Apr 2024 16:45:32 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> Oh yeah, sorry about that. I tried to address comments for both series and
-> apparently this one got missed.
+> > SBR is equivalent to a device been hot removed and inserted again. Doing a
+> > SBR on a CXL type 3 device is problematic if the exported device memory is
+> > part of system memory that cannot be offlined. The event is equivalent to
+> > violently ripping out that range of memory from the kernel. While the
+> > hardware requires the "Unmask SBR" bit set in the Port Control Extensions
+> > register and the kernel currently does not unmask it, user can unmask
+> > this bit via setpci or similar tool.
+> > 
+> > The driver does not have a way to detect whether a reset coming from the
+> > PCI subsystem is a Function Level Reset (FLR) or SBR. The only way to
+> > detect is to note if a decoder is marked as enabled in software but the
+> > decoder control register indicates it's not committed.
+> > 
+> > A helper function is added to find discrepancy between the decoder
+> > software state versus the hardware register state.
+> > 
+> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > 
+> As I said way back on v1, this smells hacky.
+> 
+> Why not pass the info on what reset was done down from the PCI core?
+> I see Bjorn commented it would be *possible* to do it in the PCI core
+> but raised other concerns that needed addressing first (I think you've
+> dealt with thosenow).  Doesn't look that hard to me (I've not coded it
+> up yet though).
+> 
+> The core code knows how far it got down the list reset_methods before
+> it succeeded in resetting.  So...
+> 
+> Modify __pci_reset_function_locked() to return the index of the reset
+> method that succeeded. Then pass that to pci_dev_restore().
+> Finally push it into a reset_done2() that takes that as an extra
+> parameter and the driver can see if it is FLR or SBR.
+> The extended reset_done is to avoid modifying lots of drivers.
+> However a quick grep suggests it's not that heavily used (15ish?)
+> so maybe just add the parameter.
+> 
+> There are a few other paths, but non look that problematic at
+> first glance...
+> 
+> So Bjorn, now the rest of this is hopefully close to what you'll be
+> happey with, which way do you prefer?
 
-Ok, now I remember that I kept the prefix intentionally. The module init
-functions are already named as pci_epf_{test/mhi}_init(), so cannot use the same
-name for the callback also. And using some other name didn't fit, so I kept
-'epc' as the prefix since the callback acts on the EPC initialization event
-anyway.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+I will defer to Bjorn, but I am not fan of this reset_done2() proposal.
+"Revalidate after reset" is a common driver pattern and all that
+plumbing the effective-reset-type does is make cxl_reset_done() more
+precise for no discernible value.
 
