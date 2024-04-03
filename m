@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-5640-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5641-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7169897AE5
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 23:39:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68386897AE6
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 23:40:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F7DCB22FD1
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 21:39:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CA6128B815
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 21:39:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41352156985;
-	Wed,  3 Apr 2024 21:39:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04CCF156C40;
+	Wed,  3 Apr 2024 21:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="es9lpb+W"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HKi4/XcO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8929E156960
-	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 21:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282BD15697E
+	for <linux-pci@vger.kernel.org>; Wed,  3 Apr 2024 21:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712180354; cv=none; b=uNb/9dgxWH7K/2ZIusZNhTxwyhjB5u+nnPG5VuZY+hO/39mrkeyWF9nCQHPETqA/s6plgXKOwKMmfRjI8S6ACGpCQ7ETO6M4ehHVTkKvezFFS1LcR4yOtFvZMh0opOTMaRJxYYNWDDRsBBRapgCDSKzv1gOs5jhRXK6b553ELt0=
+	t=1712180355; cv=none; b=Bg3A4H4f18kxthMlhLP7TGDECWDNsMmqOWr/u7nXcZWgiHUQaiPo2631/LqdWBrg1p34apLuXAG7+JTYuYZ/+LPS9D6HqcY07alNWpCanYv7YhM7moYprnmV9Vg6I1xtyjqBdabZqSJ/+dkgExQD7YiqeeAme24ZIbj/jW6t8ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712180354; c=relaxed/simple;
-	bh=zFtvhoGc4A1WO0mkd89wW7HTV9/2cv/ScBEOx/wnh2w=;
+	s=arc-20240116; t=1712180355; c=relaxed/simple;
+	bh=PjanOenvU2A/yhqHXb8G6g2frpFPKjtVwJqCvWywJhM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type; b=ap/G7Lqved52oHpU3c3R+3LJ+d304YmoXG+ErNElXnxw02fv1+l5A+7AsgEI4KYHYfT+ONoi8hIS9lKB640/k3wIqEEnuf6NJPtzUX7OzNNhPdi8RyZJSW6IyL1pf074Q/hRELy7Lxk32HqFwbLctbHNB1hGLnJ5Oe/MSRGBDW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=es9lpb+W; arc=none smtp.client-ip=209.85.219.46
+	 Content-Type; b=AaGpIiDdT69GJva16UcQign8iVgU5TNu7HhTMknoHAXnpZ62rPl+KP9q/gxtKZJcAodRLfjm8XVQlO5wcqUZ2+lmZUc+tMRbAjCYqkKm59AbvkBTvq5DgCoM0maTtSU+iyQBrMzTQYdKrgWh4uDH4/11mDwYahqA36Rj4AQ+6Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HKi4/XcO; arc=none smtp.client-ip=209.85.221.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6992fc9f143so1420326d6.2
-        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 14:39:12 -0700 (PDT)
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4d44fb48077so151565e0c.0
+        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 14:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1712180350; x=1712785150; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1712180352; x=1712785152; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=fvTcSP7pMo76sA3quOr5d9oJ/TuLv4cTsy8GIfISp6k=;
-        b=es9lpb+WLy8R2PkieX4ZghIIOAeMvkg+QhuP0ehzxrg1n4QhiMARo2xpANMUFuRXIe
-         OJFbwHYINZjwWyQ7CfmFw7b+BLZklsyDlqkv5BIPqd+EFQmM2byogWaTKz0smXkqb9Gh
-         E9Dn0B+owr4hGzTMbdgAzcoW4jrQ8MwPB4NcI=
+        bh=udFewVI5GS9fr36Fv3Gd8ZQhI0tuFjVdzeGL15dhRjs=;
+        b=HKi4/XcOuvEj4hZ4AURBzSw2WLHwa6XZPCJVFZz98v+XeL2VAKVQ2Em+p9QzxuzW9z
+         ku9EkAm5x3ISHFadpIoUoHv7Mog6SU8H6aw8UPjxcEriOMhzGdsByuSPTxASlFposqJ5
+         n0T8s3YYnYrvrv9wBNF4rLpvkWu8JjkclW59M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712180350; x=1712785150;
+        d=1e100.net; s=20230601; t=1712180352; x=1712785152;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fvTcSP7pMo76sA3quOr5d9oJ/TuLv4cTsy8GIfISp6k=;
-        b=bk6QBA/5xuQs3JRc/c3pW/YXWb0W43ujueEEIUejMXCJHBbD83bbyeqh+Z33o0JaDd
-         tc+NGM4nEd8zDNDnm4wVHNITKIkoDhPut7w9Vzq+Ms/AAuR9YZanRZtW4dlRN64Rv6hZ
-         2W6L1AvMmr/n1CY1HDxDhB//bDpwfLqkDuEfG0wxbbFq1oxcB6Vl/eSD7AxPDGKkRx2E
-         MfBLSqI/ij6EbO+LI8Eb1u1NfHkuAJL3RpO1+mcLpJMzIWfsQAOAjnKECHQJJM6LBYhc
-         /Dx2d4RCgl/Xg3l0Cf9FvME9p1P5NisvgwPHsZ2kYKatKwOyR5lSvK6YkrDXgLJoCxog
-         CXqA==
-X-Gm-Message-State: AOJu0YxeSTq+TIukgvC8+AUb6sXyKP7jC1ggMK10sw4ak87G2bmlxcSt
-	8pa6VR96Llgy1A6+VJ6C5edCoTHq/g+c+FECrDkoDYXCJ5k1tTMYy5sg0hjH5jO3vIxLHc3xcbb
-	fsiPiwas/Pu7NL0k3dTVSXvw2oG/zI2+i7b1Ymlf0Sb6H0mQU9vVYTOjf5dTwe5i8XYRZOWfvSv
-	YCVT+ApqixTNHTFJZx+XA/Il/De8RVyhB9/YTVTPtQMBoyOQ==
-X-Google-Smtp-Source: AGHT+IHEm448Vez1EYSZj6vPmBWem+xpStlyl+rBICguhy1s5dmtGdnrQH6c21gr2zp473n79cj1kA==
-X-Received: by 2002:a05:6214:4005:b0:699:247e:a69a with SMTP id kd5-20020a056214400500b00699247ea69amr616685qvb.9.1712180350456;
-        Wed, 03 Apr 2024 14:39:10 -0700 (PDT)
+        bh=udFewVI5GS9fr36Fv3Gd8ZQhI0tuFjVdzeGL15dhRjs=;
+        b=s3lgw5V+Q5F0qz62x9ya4TxWIb7kqOiO3/rzLhz/YtVpeINqDufTGPdrLsapNuGP49
+         b02BvcI240E5qa3QhVt4QEA4MsYR44RESAm9Vv/zZcaxG8vqsduooRkWl/XGedGU1jkc
+         YXfJIEZnTQQ5Oh1YOkLU3L9Y1BRIiPmyGhzow/PVWPBO5i+kyC0aVmmx4isUYJ/n7ZS1
+         sccm7kDa2Fneusnykmrdin3hwyKqiy7tiunqNzwR+TFAhG8UyGz7iD871qyaQQe9nYwx
+         qtcawG9t9AosMyL15JOifTTLEXiAeebJwrJD06uVWZGrG6Fq7rvnx4SNbi1qsZnBfpGH
+         e/WA==
+X-Gm-Message-State: AOJu0Yy4VHGU3SangXWqu/p33i7LwA4q0a6j4kATrhKihr6YnKa2izXL
+	zHJ9AJaUrsSvVAX+G41IxEi0bWmkZ0i8/VrZ9LattePhe2sqPpCQkIqByS6kJbspT5R2w6nfMVQ
+	5zGCFFTPrSoNgDy4KS2B49YSdOIl/RHzMf5RXCM+dTk/bs8mUvZilgMZXCszxKwZ2XFOx2Wcv+Q
+	DebNfuWmrxB023ol0Vn0zYWBQOnM0Q1kHExKThgq3TE8XuKQ==
+X-Google-Smtp-Source: AGHT+IErr7Hms47uq2WTpFuYryFwuFomKLlaAAOJj253kxVtX/49vIxPIfd0y1MFwlJjtp1XR8ctqw==
+X-Received: by 2002:a05:6122:a24:b0:4ca:615e:1b61 with SMTP id 36-20020a0561220a2400b004ca615e1b61mr651230vkn.10.1712180352188;
+        Wed, 03 Apr 2024 14:39:12 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id pi10-20020a0562144a8a00b0069903cddc96sm1750739qvb.18.2024.04.03.14.39.09
+        by smtp.gmail.com with ESMTPSA id pi10-20020a0562144a8a00b0069903cddc96sm1750739qvb.18.2024.04.03.14.39.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 14:39:09 -0700 (PDT)
+        Wed, 03 Apr 2024 14:39:11 -0700 (PDT)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -80,72 +80,137 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v9 2/4] PCI: brcmstb: Set reasonable value for internal bus timeout
-Date: Wed,  3 Apr 2024 17:38:59 -0400
-Message-Id: <20240403213902.26391-3-james.quinlan@broadcom.com>
+Subject: [PATCH v9 3/4] PCI: brcmstb: Set downstream maximum {no-}snoop LTR values
+Date: Wed,  3 Apr 2024 17:39:00 -0400
+Message-Id: <20240403213902.26391-4-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240403213902.26391-1-james.quinlan@broadcom.com>
 References: <20240403213902.26391-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000009ab9bd0615380d20"
+	boundary="000000000000b4ef960615380d8c"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
---0000000000009ab9bd0615380d20
+--000000000000b4ef960615380d8c
 
-HW initializes an internal bus timeout register to a small value for
-debugging convenience.  Set this to something reasonable, i.e. in the
-vicinity of 10 msec.
+Most of our systems do not have FW or ACPI, so it is up to the RC driver to
+set the maximum LTR {no-}snoop latency values of downstream devices.  We
+set them to a value that is slightly smaller than the value of our internal
+bus timeout register.
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++++++++-
+ 1 file changed, 66 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index f9dd6622fe10..e3480ca4cd57 100644
+index e3480ca4cd57..3d08b92d5bb8 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -664,6 +664,21 @@ static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
- 	return 0;
- }
+@@ -182,6 +182,20 @@
+ #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
+ #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
  
 +/*
-+ * An internal HW bus timer value is set to a small value for debugging
-+ * convenience.  Set this to something reasonable, i.e. somewhere around
-+ * 10ms.
++ * What we call "LTR_FMT" is the 16 bit latency field format:
++ *     [15:15] Requirement bit
++ *     [12:10] Latency scale
++ *     [09:00] Latency value
 + */
-+static void brcm_extend_internal_bus_timeout(struct brcm_pcie *pcie, u32 nsec)
-+{
-+	/* TIMEOUT register is two registers before RGR1_SW_INIT_1 */
-+	const unsigned int REG_OFFSET = PCIE_RGR1_SW_INIT_1(pcie) - 8;
-+	u32 timeout_us = nsec / 1000;
++#define LTR_FMT_TO_NS(p)		(FIELD_GET(GENMASK(15, 15), (p)) \
++					 * ((unsigned long long)FIELD_GET(GENMASK(9, 0), (p)) \
++					    << (FIELD_GET(GENMASK(12, 10), (p)) * 5)))
++#define BRCM_LTR_MAX_SCALE		4 /* Scale==4 => Each unit is 1,048,576ns  */
++#define BRCM_LTR_MAX_VALUE		9 /* Using the above scale, roughly 9.4 ms */
++#define BRCM_LTR_MAX_NS			((unsigned long long)(BRCM_LTR_MAX_VALUE \
++					 << (5 * BRCM_LTR_MAX_SCALE)))
 +
-+	/* Each unit in timeout register is 1/216,000,000 seconds */
-+	writel(216 * timeout_us, pcie->base + REG_OFFSET);
+ /* Rescal registers */
+ #define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
+ #define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS			0x3
+@@ -679,6 +693,49 @@ static void brcm_extend_internal_bus_timeout(struct brcm_pcie *pcie, u32 nsec)
+ 	writel(216 * timeout_us, pcie->base + REG_OFFSET);
+ }
+ 
++/* Sets downstream device latency tolerance registers to max we can handle */
++static int brcm_set_dev_ltr_max(struct pci_dev *dev, void *data)
++{
++	u16 ltr_cap_offset = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
++	u16 ltr_fmt_cur, ltr_fmt = *(u16 *)data;
++	unsigned long long cur_nsec;
++	static const u16 reg_offsets[2] = {
++		PCI_LTR_MAX_SNOOP_LAT,
++		PCI_LTR_MAX_NOSNOOP_LAT,
++	};
++	unsigned int i;
++
++	if (!ltr_cap_offset || !dev->ltr_path)
++		return 0;
++
++	/*
++	 * FW may have already written a value so we want to respect that
++	 * value if it is lower than ltr_fmt.  Update the current value if
++	 * it is 0 or if the new value is less than the current.
++	 */
++	for (i = 0; i < ARRAY_SIZE(reg_offsets); i++) {
++		pci_read_config_word(dev, ltr_cap_offset + reg_offsets[i],
++			&ltr_fmt_cur);
++		cur_nsec = LTR_FMT_TO_NS(ltr_fmt_cur);
++		if (cur_nsec == 0 || cur_nsec > BRCM_LTR_MAX_NS)
++			pci_write_config_word(dev, ltr_cap_offset
++					      + reg_offsets[i], ltr_fmt);
++	}
++
++	return 0;
++}
++
++void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
++{
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
++	u16 ltr_fmt = FIELD_PREP(GENMASK(9, 0), BRCM_LTR_MAX_VALUE)
++		| FIELD_PREP(GENMASK(12, 10), BRCM_LTR_MAX_SCALE)
++		| GENMASK(15, 15);
++
++	if (bridge->native_ltr)
++		pci_walk_bus(bridge->bus, brcm_set_dev_ltr_max, &ltr_fmt);
 +}
 +
  /* The controller is capable of serving in both RC and EP roles */
  static bool brcm_pcie_rc_mode(struct brcm_pcie *pcie)
  {
-@@ -1059,6 +1074,9 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+@@ -1074,8 +1131,12 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
  		return -ENODEV;
  	}
  
-+	/* Extend internal bus timeout to 8ms or so */
-+	brcm_extend_internal_bus_timeout(pcie, SZ_8M);
-+
+-	/* Extend internal bus timeout to 8ms or so */
+-	brcm_extend_internal_bus_timeout(pcie, SZ_8M);
++	/*
++	 * Extend internal bus timeout to 8-10ms, specifically to a value
++	 * that is slightly larger than what we are using for the max
++	 * {no-}snoop latency we will set in downstream devices.
++	 */
++	brcm_extend_internal_bus_timeout(pcie, BRCM_LTR_MAX_NS + 1000);
+ 
  	if (pcie->gen)
  		brcm_pcie_set_gen(pcie, pcie->gen);
+@@ -1616,6 +1677,9 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
++	if (IS_ENABLED(CONFIG_PCIEASPM))
++		brcm_set_downstream_devs_ltr_max(pcie);
++
+ 	return 0;
+ 
+ fail:
 -- 
 2.17.1
 
 
---0000000000009ab9bd0615380d20
+--000000000000b4ef960615380d8c
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -216,14 +281,14 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAP7Ro84skZOCKkVYMgSKaNI5cFARDW
-ud7PHkfeyzC91DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA0
-MDMyMTM5MTBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCkg7iIQUuVDJNfabd+L2TlIwyTbBmA
+r8iDIVRueaDykjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA0
+MDMyMTM5MTJaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAoMVOdbWm8F15naWxTnTi2Gpd7hdJ7htucKdo+63JWmA7LNGq
-aauP1XKL1IbdwMLowtQ62NckQ2WwI69ZlySehcaCHIHsuQ6glua6FYdLAijvLiDDOL4YqtwvWr3j
-5IwIz45+GYT70zmnNVMnDCwUgfYll5TL2qyj3iPlJw5aqj+4MmXXICHlPYDbaUVifvQUJ0CXW6np
-eiuZvut86P0JNj4EkXSgsZlAcJC6LkX6DXlwr5+crw4JyPOujDERUebKF7Nem3Q3hNuaiUHhUKSN
-oT/JRb7sdzEk33RQvvt8THxzYOLD0+q83kKSGGtkY64hw5Uu5xhWGvVM//H9X5D30g==
---0000000000009ab9bd0615380d20--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAmHJopDKz7XR/6LUtL5dD5xYt8kqL0YnCuPeONl+qPrLcEyKT
+fqTSTwxGNjHGgW+Q5dpwOIjx1wvCjKBl5NwnEioSTq0F6HD1lRRXjqI1oTZJYDsuvdFawVKh9Mpi
+z8/IEKnM4V3GMW8uqxhCdXn8ln5UjTPiNoT0+WJQ0W9QKI/y0SurzPXf1RvsGi2rMrPnVEhYg5p3
+3UAMfJnqT0pP+GQQ4RQooqoegDmfrYshRnBbGcWOkGwNDH2KulXpBlNCR9e7eKA7if9XIC13Q7vl
+vu/0Y0up1cdpSKJp3ETDSahqRZ92nPhRjIRzJmOd6fJlv3ra6rgeifUyml5B1YlwMQ==
+--000000000000b4ef960615380d8c--
 
