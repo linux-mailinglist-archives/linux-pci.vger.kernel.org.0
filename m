@@ -1,181 +1,157 @@
-Return-Path: <linux-pci+bounces-5630-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5631-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F37888977C3
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 20:05:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BC5E89797F
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 22:03:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8F5D2875E4
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 18:05:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B015A1F248C9
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Apr 2024 20:03:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D712153597;
-	Wed,  3 Apr 2024 18:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7263155753;
+	Wed,  3 Apr 2024 20:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae15G2wK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aOGphwE5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16D215357D;
-	Wed,  3 Apr 2024 18:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87078155749;
+	Wed,  3 Apr 2024 20:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712167526; cv=none; b=or+QKFOXWkfV9nHnL83eS6KstS6PQQqlaxXNAoAkqQmbe3DcgkYNfPetsm4o8t/hr4R/lVNfRqoS5fKdOLxS0dmg3Tw5Jei9k8bZPfnvFSxhNBOKQ88TheJhktd6rd9HEiLAbPLa0vWVGRSHVtBcgFnyj4FUatTN2oHCW0iqtZw=
+	t=1712174613; cv=none; b=VH8v22eBMdNTVOtJdIut23WFrz0Pg+ggU2O4cMROL2F6hzxSUyWRbuoB6lcnQUJ0tU2mUATJoWQYOkRvpkyyuGSR2UNzmrAwdPKElEv096CVwAAiI3h1hJspMCTcHpKjjQGz0Z0vPaYTnSm261+ZL0sIjpMtIxkfBm/H+8Esupg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712167526; c=relaxed/simple;
-	bh=yzV8gvMbMG9aYQ19MBzqxr4amKzhod3/glCMw4VGUZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oSv9ihzXp+9HPsOhWBzP7ZAqAKVHf/c4V2hKp9cqxndwa0WP3xmzT/1lOf3sIdzN2+govJbdjxcxtKvHqGqXv42SJgOY2clU4zwoqeM2hXCWr2EqHmczzKvBZvPiYXMdQiP6XXZKprzIhflK7ZcybDvNUGcv1vBBfsp1DaZrJBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ae15G2wK; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-229661f57cbso70050fac.1;
-        Wed, 03 Apr 2024 11:05:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712167524; x=1712772324; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fZ75uqyXcKd8R5Pz7Ws9tVG0bayyM9hJ1Z1pvbSQndY=;
-        b=Ae15G2wK/YEC5vvYpf5FwQ/xNHB/FDO57tazsJYrpr+3JucPRuVBzAx2QQDyIJ6knf
-         hVn4YJr+jG9UKaNC4thE5A3TPrXg75PgSqEfYyaqNdMa2yxW5hU4AeGlhtoLCQ2xW09N
-         V5n2TdP8fe2OV9Zb9mQlT6lbG433DDg2KCM9Z9KPskRmEV5xy7qsWa6wXo0FdLkWYP+Y
-         BahQJvOPjRuHQDpWszrY5zLUPr/mrV582COYrQWqQ6IgqnYX7xE1B5vlC2WE5qx9hPPa
-         1clp9ErbkLzfPCXnRDr4rh4RM/EDOBW5lUkdGVxZdi/cNA2dWz5/1QpKdi7ogGcKSzmj
-         t3kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712167524; x=1712772324;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fZ75uqyXcKd8R5Pz7Ws9tVG0bayyM9hJ1Z1pvbSQndY=;
-        b=lWJylmC9Y3HHD9KCaNpToIP0B38y59bK3eDBj+r6v8sdWkRNKaNle9ZKSUTG06kmc8
-         5QLkOf/I/5YRQsGOojY+ROQlow0xg96vhn6r/FMbImPRKgwMyZmJv0gS+QbGlnH2qKHF
-         EQ3sEoRQWp+k/tf8jLK2NQ4n5S5kd4a73zZidSziK5xlXT21EoZ7s84C2zCn4Obgpu6t
-         Rt18P1zQn2DrOhQO9xIfW2ffvaQiPdMaLAxK/S3u9X7W+hM0JUPQH+b5qlmCWf7OfZGm
-         FYXpfG1jEucu/BX14GBklTw2/Ir8c7G5oYJdMA/bz0JUcVihYNE/cNjkmTul9XDYTVwH
-         +gqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLOq92sWpzuAoX794TV7Cnod+VvRG8k1XCOXth/UTbPUyuTaBjggdSmmqGytaNQn4oYIwk7+Ng6XLqV8wPziVvJxeVcc7oJpez+yWud1PuUyJMDfJXaoT4Rv+Hw6cHGcvIQ/oznfFcW+f5SHoq47K3skOEzKbtx75uJMSK8w+oYU8k3DLOx4kaq6u3n4mLj4KLwu6hMlHvPLdkUVPNz96v/kU=
-X-Gm-Message-State: AOJu0YxItEXlZBQyJAtKbuRRFojbeYlWK4WTpi52tJfyB5LWPXhGXaiO
-	zEfjwMrq7D+1kiWE+2zWAqmMXOIxUGSd1/Jy1DO9A1W/ex4angmm
-X-Google-Smtp-Source: AGHT+IEtjndM4TcXGUt3GAQI11LA8n53NRmJwToTDskQZ/GbUK0jGW4KyyBCURII9akrd7cabDnLTA==
-X-Received: by 2002:a05:6870:5d85:b0:22a:b3cd:1d7e with SMTP id fu5-20020a0568705d8500b0022ab3cd1d7emr82627oab.27.1712167523575;
-        Wed, 03 Apr 2024 11:05:23 -0700 (PDT)
-Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id hi27-20020a056870c99b00b0022e9bd70567sm317220oab.31.2024.04.03.11.05.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 11:05:23 -0700 (PDT)
-Message-ID: <d35c96ca-24af-fbad-74fe-ad85a433caa2@gmail.com>
-Date: Wed, 3 Apr 2024 13:05:22 -0500
+	s=arc-20240116; t=1712174613; c=relaxed/simple;
+	bh=Ovv7lqjG/5spEzrPzpiFA+SpnlcVPrC9hvQHQkXzbEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGsQS9gOQSt/H6nf5AErpFgRljr43poHuUz0VhmUYaVt+WhGjO2K7MF73GXbGiuxilw2tBniepRpDlEytlgcJzOFCW1SukGGybedemk+1+87ibQpDq0qIeUc4bJXguaiXSgJ0xcwrkj8fTLUEpMsMoc38v1V2l03LuuT9eA4rGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aOGphwE5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A55C433C7;
+	Wed,  3 Apr 2024 20:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712174613;
+	bh=Ovv7lqjG/5spEzrPzpiFA+SpnlcVPrC9hvQHQkXzbEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aOGphwE5GwRdEQesODb7dWfj04T7o4VFCZoUH7f4EKV4/W5v7TSIhhtVUZjAiZC6B
+	 Ojij1K5B0FAaGuqSRTZfc3tvYIY7We+XKjWJlA6F0IW7uccfLUMmK/5snYmSPBA4lr
+	 iJ+ofXVO2x7Vb+pv8JIOOI4LJCbbnetBqviKVJ95MqUIb+qaPL8pEitZk4nYvhwvY/
+	 +Ac6BYtWpvhWAf5GJesUU1/8/ebE07ERBRgdgwfH8lPY7z3lXXYfYNd23ia2Mm8a2K
+	 JSRd3BbiMmSF0ODReSPtsHN77dFJWA7XUW9gWWwjIBlsbXc1FbfLJ2bhO/hSMq71eR
+	 4JmHNKhepy2nQ==
+Date: Wed, 3 Apr 2024 22:03:26 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mhi@lists.linux.dev, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 10/10] PCI: qcom: Implement shutdown() callback to
+ properly reset the endpoint devices
+Message-ID: <Zg22Dhi2c7U5oqoz@ryzen>
+References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
+ <20240401-pci-epf-rework-v2-10-970dbe90b99d@linaro.org>
+ <ZgvpnqdjQ39JMRiV@ryzen>
+ <20240403133217.GK25309@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 3/7] dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: ansuelsmth@gmail.com, robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240402192555.1955204-1-mr.nuke.me@gmail.com>
- <20240402192555.1955204-3-mr.nuke.me@gmail.com>
- <bad88189-cf70-4200-9fa3-650ea923b4b8@linaro.org>
-From: mr.nuke.me@gmail.com
-In-Reply-To: <bad88189-cf70-4200-9fa3-650ea923b4b8@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403133217.GK25309@thinkpad>
 
-
-
-On 4/3/24 02:14, Krzysztof Kozlowski wrote:
-> On 02/04/2024 21:25, Alexandru Gagniuc wrote:
->> IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
->> The only difference is that the "iface" clock is not required.
->> Document this difference along with the compatible string.
->>
->> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->> ---
->>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 32 +++++++++++++++++++
->>   1 file changed, 32 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> index cf9a6910b542..6eb29547c18e 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> @@ -26,6 +26,7 @@ properties:
->>             - qcom,pcie-ipq8064-v2
->>             - qcom,pcie-ipq8074
->>             - qcom,pcie-ipq8074-gen3
->> +          - qcom,pcie-ipq9574
->>             - qcom,pcie-msm8996
->>             - qcom,pcie-qcs404
->>             - qcom,pcie-sdm845
->> @@ -383,6 +384,35 @@ allOf:
->>               - const: axi_s # AXI Slave clock
->>               - const: axi_bridge # AXI bridge clock
->>               - const: rchng
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,pcie-ipq9574
->> +    then:
->> +      properties:
->> +        clocks:
->> +          minItems: 4
->> +          maxItems: 4
->> +        clock-names:
->> +          items:
->> +            - const: axi_m # AXI Master clock
->> +            - const: axi_s # AXI Slave clock
->> +            - const: axi_bridge # AXI bridge clock
->> +            - const: rchng
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,pcie-ipq6018
->> +              - qcom,pcie-ipq8074-gen3
->> +              - qcom,pcie-ipq9574
->> +    then:
+On Wed, Apr 03, 2024 at 07:02:17PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Apr 02, 2024 at 01:18:54PM +0200, Niklas Cassel wrote:
+> > On Mon, Apr 01, 2024 at 09:20:36PM +0530, Manivannan Sadhasivam wrote:
+> > > PCIe host controller drivers are supposed to properly reset the endpoint
+> > > devices during host shutdown/reboot. Currently, Qcom driver doesn't do
+> > > anything during host shutdown/reboot, resulting in both PERST# and refclk
+> > > getting disabled at the same time. This prevents the endpoint device
+> > > firmware to properly reset the state machine. Because, if the refclk is
+> > > cutoff immediately along with PERST#, access to device specific registers
+> > > within the endpoint will result in a firmware crash.
+> > > 
+> > > To address this issue, let's call qcom_pcie_host_deinit() inside the
+> > > shutdown callback, that asserts PERST# and then cuts off the refclk with a
+> > > delay of 1ms, thus allowing the endpoint device firmware to properly
+> > > cleanup the state machine.
+> > 
+> > Hm... a QCOM EP device could be attached to any of the PCIe RC drivers that
+> > we have in the kernel, so it seems a bit weird to fix this problem by
+> > patching the QCOM RC driver only.
+> > 
+> > Which DBI call is it that causes this problem during perst assert on EP side?
+> > 
+> > I assume that it is pci-epf-test:deinit() callback that calls
+> > pci_epc_clear_bar(), which calls dw_pcie_ep_clear_bar(), which will both:
+> > -clear local data structures, e.g.
+> > ep->epf_bar[bar] = NULL;
+> > ep->bar_to_atu[bar] = 0;
+> > 
+> > but also call:
+> > __dw_pcie_ep_reset_bar()
+> > dw_pcie_disable_atu()
+> > 
+> > 
+> > Do we perhaps need to redesign the .deinit EPF callback?
+> > 
+> > Considering that we know that .deinit() will only be called on platforms
+> > where there will be a fundamental core reset, I guess we could do something
+> > like introduce a __dw_pcie_ep_clear_bar() which will only clear the local
+> > data structures. (It might not need to do any DBI writes, since the
+> > fundamental core reset should have reset all values.)
+> > 
+> > Or perhaps instead of letting pci_epf_test_epc_deinit() call
+> > pci_epf_test_clear_bar()/__pci_epf_test_clear_bar() directly, perhaps let
+> > pci_epf_test_epc_deinit() call add a .deinit()/.cleanup() defined in the
+> > EPC driver.
+> > 
+> > This EPC .deinit()/.cleanup() callback would then only clear the
+> > local data structures (no DBI writes...).
+> > 
+> > Something like that?
+> > 
 > 
-> Do not introduce inconsistent style. All if:then: define both clocks and
-> resets, right? And after your patch not anymore?
-> 
-I kept the resets in one place because they are the same cross the ipq* 
-variants.
+> It is not just about the EPF test driver. A function driver may need to do many
+> things to properly reset the state machine. Like in the case of MHI driver, it
+> needs to reset channel state, mask interrupts etc... and all requires writing to
+> some registers. So certainly there should be some time before cutting off the
+> refclk.
 
-Do I understand correctly that you wish me to split up the resets as well?
+I was more thinking that perhaps we should think of .deinit() as in how
+dw_pcie_ep_init() used to be. It was not allowed to have any DBI writes.
+(The DBI writes were all in dw_pcie_ep_init_complete()).
+So perhaps we could define that a EPF .deinit() callback is not allowed
+to have any DBI writes.
 
-     if ipq8074 ipq6018
-         clocks
-         resets
+If we take qcom-ep as an example, as soon as you get a PERST assertion
+the qcom-ep driver calls notify_deinit(), then asserts the reset control,
+disables clocks and regulators.
 
-     if ipq9754
-         clocks
-         resets
+Since the PCIe core is held in reset, the hardware is in a well defined
+state, no? Sure, the data structures e.g. bar_to_iatu[], etc., might be
+out of sync, but these could be memset():ed no? Since this is a fundamental
+reset, all registers should be reset to their default state (once reset
+is deasserted).
 
-Alex
+For a real PCIe card, if you assert + msleep(100) + deassert PERST, surely
+the endpoint is supposed to be in a good/well defined state, regardless if
+he REFCLK was cutoff at the exact time as PERST was asserted or not?
 
-> Best regards,
-> Krzysztof
-> 
+I would assume that we would want a PCI EPF driver to behave the same way,
+if possible.
+
+
+Kind regards,
+Niklas
 
