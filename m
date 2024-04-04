@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-5651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EE10897E72
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 07:01:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B2C4897E79
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 07:02:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A15661C21C84
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 05:01:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AFEDC1F21D2A
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 05:02:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3CB3524B1;
-	Thu,  4 Apr 2024 05:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1854D4CE18;
+	Thu,  4 Apr 2024 05:00:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDD364CE18;
-	Thu,  4 Apr 2024 05:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52EF65473D;
+	Thu,  4 Apr 2024 05:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712206854; cv=none; b=Av3kbCXvF683Ma6FMB+zi3kn0xnrRnqQ1Rnxph/FhLla7OtW9CX/cHvfYLqUcJRlOks4lwXq8L8nfY73JbzWSr3ncYC0J7yXI/h+KxBAjDLR6LBdnHUOvO6Yu2DTNBS0mfOCFA9Xmz1FS8YH7Bt6qffpsbTt5hU/m6A+N9QIwI4=
+	t=1712206857; cv=none; b=nMUMNZreBgoyE2c/FCVHNvEwvhRSMhv7vH9VyKESCWusb8OFhVirmHpA5bOsCmkMpk36kPgrqSU1tcubBeQt3+PLRSqtyp7yJ0svLh7P44bHIkgEXJfJEezmAZtzBnCt/fTy6ySAtr+wkRqIO+Lt8rW8mnJebbqc5BuMN2OuVss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712206854; c=relaxed/simple;
-	bh=7kKBexl8c578dv6sgSv7f/xmW28ziZQmdbhonSn4XD0=;
+	s=arc-20240116; t=1712206857; c=relaxed/simple;
+	bh=Zl34havtMWRq2iGwzVo/GzpE+MdC5jA9xgxGJw9XNA0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MXl+PwTuprSSxGNoRAeNgFlsjFO9upBvYtxfYVJiY2mmON6pXsnPbSGEdnoKDkOH9HA98dU35wKe5MQpmAh/86U8ZGLDWMtsitWazCc9r0EpmVEra1bOQ9VaKqhi4qOn6aTKheIYTOzjeUke286tAqbQ+sI1VJDEzeRfmleghao=
+	 MIME-Version; b=aH8FYCkOIc/ke3qs94haOuvpUC8O6lF0KT2Xz/BHy99r9x7JFzYPsJRyfRDXNFyJK2vRuymoyX4QXJfg484Bq0Mh19PymhfKcP7haT0ygCODL7rCX73sT0+4NkDs0QuUdTM5Vv8+sDQWLGVVTzOQydTj41AxbBkyLqHx/DLLUSQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 0C00F1C02B0;
-	Thu,  4 Apr 2024 14:00:51 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id 1B6FC1C0912;
+	Thu,  4 Apr 2024 14:00:53 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -95,9 +95,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [PATCH v7 09/37] dt-binding: Add compatible SH7750 SoC
-Date: Thu,  4 Apr 2024 13:59:34 +0900
-Message-Id: <4ac65d0f311e890c1ca92bf057c70954ec7ac351.1712205900.git.ysato@users.sourceforge.jp>
+Subject: [PATCH v7 10/37] sh: Common PCI Framework driver support.
+Date: Thu,  4 Apr 2024 13:59:37 +0900
+Message-Id: <1dc50e154999c1cf5f13949fdd7d049fa363c34b.1712205900.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1712205900.git.ysato@users.sourceforge.jp>
 References: <cover.1712205900.git.ysato@users.sourceforge.jp>
@@ -109,31 +109,85 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Add New OF based PCI Host driver.
+This driver conflicts some point in legacy PCI driver.
+To resolve the conflict, I made some changes to the legacy driver.
+
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/sh/include/asm/io.h  |  6 ++++++
+ arch/sh/include/asm/pci.h |  4 ++++
+ arch/sh/kernel/iomap.c    | 18 ++++++++++++++++++
+ 3 files changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-index 84bbe15028a1..265d286ffb2f 100644
---- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-+++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
-@@ -39,6 +39,7 @@ properties:
-           - renesas,tmu-r8a779a0 # R-Car V3U
-           - renesas,tmu-r8a779f0 # R-Car S4-8
-           - renesas,tmu-r8a779g0 # R-Car V4H
-+          - renesas,tmu-sh7750   # SH7750
-       - const: renesas,tmu
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 5c544cf5201b..29b5f996cde3 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -20,6 +20,7 @@
+ #include <asm/page.h>
+ #include <linux/pgtable.h>
+ #include <asm-generic/iomap.h>
++#include <linux/ioport.h>
  
-   reg:
-@@ -96,6 +97,7 @@ if:
-             - renesas,tmu-r8a7740
-             - renesas,tmu-r8a7778
-             - renesas,tmu-r8a7779
-+            - renesas,tmu-sh7750
- then:
-   required:
-     - resets
+ #define __IO_PREFIX     generic
+ #include <asm/io_generic.h>
+@@ -310,4 +311,9 @@ unsigned long long poke_real_address_q(unsigned long long addr,
+ int valid_phys_addr_range(phys_addr_t addr, size_t size);
+ int valid_mmap_phys_addr_range(unsigned long pfn, size_t size);
+ 
++#if defined(CONFIG_PCI) && !defined(CONFIG_GENERIC_IOMAP)
++#define pci_remap_iospace pci_remap_iospace
++int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
++#endif
++
+ #endif /* __ASM_SH_IO_H */
+diff --git a/arch/sh/include/asm/pci.h b/arch/sh/include/asm/pci.h
+index 54c30126ea17..92b3bd604319 100644
+--- a/arch/sh/include/asm/pci.h
++++ b/arch/sh/include/asm/pci.h
+@@ -2,6 +2,7 @@
+ #ifndef __ASM_SH_PCI_H
+ #define __ASM_SH_PCI_H
+ 
++#ifndef CONFIG_SH_DEVICE_TREE
+ /* Can be used to override the logic in pci_scan_bus for skipping
+    already-configured bus numbers - to be used for buggy BIOSes
+    or architectures with incomplete PCI setup by the loader */
+@@ -88,4 +89,7 @@ static inline int pci_proc_domain(struct pci_bus *bus)
+ 	return hose->need_domain_info;
+ }
+ 
++#else /* CONFIG_SH_DEVICE_TREE */
++#include <asm-generic/pci.h>
++#endif
+ #endif /* __ASM_SH_PCI_H */
+diff --git a/arch/sh/kernel/iomap.c b/arch/sh/kernel/iomap.c
+index 0a0dff4e66de..d1b8e496ca23 100644
+--- a/arch/sh/kernel/iomap.c
++++ b/arch/sh/kernel/iomap.c
+@@ -160,3 +160,21 @@ void iowrite32_rep(void __iomem *addr, const void *src, unsigned long count)
+ 	mmio_outsl(addr, src, count);
+ }
+ EXPORT_SYMBOL(iowrite32_rep);
++
++#if defined(pci_remap_iospace)
++int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
++{
++	unsigned long vaddr = res->start;
++
++	if (!(res->flags & IORESOURCE_IO))
++		return -EINVAL;
++
++	if (res->end > IO_SPACE_LIMIT)
++		return -EINVAL;
++
++	__set_io_port_base(phys_addr);
++	return vmap_page_range(vaddr, vaddr + resource_size(res), phys_addr,
++			       pgprot_device(PAGE_KERNEL));
++}
++EXPORT_SYMBOL(pci_remap_iospace);
++#endif
 -- 
 2.39.2
 
