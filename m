@@ -1,56 +1,58 @@
-Return-Path: <linux-pci+bounces-5719-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5720-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7BD489837D
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 10:51:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36F2A8983AF
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 11:02:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 216A91C21989
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 08:51:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C85301F228C8
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 09:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0B6373514;
-	Thu,  4 Apr 2024 08:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00451B7F4;
+	Thu,  4 Apr 2024 09:02:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE0971B40;
-	Thu,  4 Apr 2024 08:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90A029D1C;
+	Thu,  4 Apr 2024 09:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712220707; cv=none; b=XFd/g9fCpxuGGElR/KUe+MQeoWbM1ziXrtlJqfmvJqLaSjkqAS7R+IYPL733Q3gmBaP0/UFZuxrxRCtzlKaY3O7OXGQXDMfVhoTIXqOms9gR00eMrC/+dhJgGD+FQ+LLxF8orT/m2OPT1y+Uy95vPmYWerCbWYAfmJZEizg51i4=
+	t=1712221341; cv=none; b=C7QynhsrWXYy5StxpWoC7pQWc+fOz+mGZWiSRexvPfH5H5U4JPj62QVxHHFhJJAxdRTxC1HIh+Xmhv2mCGGdo4GIOaEtgqXM+CYYhIH9Tc7nQxixPyGU/eDsfJiAgVjWZxbo/9APw1calzkegUzdeOtK/hkLr4+R+qCWONIn384=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712220707; c=relaxed/simple;
-	bh=NRX4u4aBi9RRKb5GnKffOgmpqSNRU11Djm5FO+o7j3Y=;
+	s=arc-20240116; t=1712221341; c=relaxed/simple;
+	bh=V54xmlTq61I+H7vqWTtsq6jt/vv1QM5zvUGjqNwtD3A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hgdHWghrSIVNuMC1za7r1P5ro/SYIYqOo5IWePn8fgLQZ7MIfSS6wd5yvHz/0W6Uwbz26K9M/DTOM5hae5kJkyBKbZL849rrw0xEo1AcjB6BiUEL2sp1pTpXCQN4wZiejmgM2t7aNf4ZqT2YOX/Vnd1VCkao9laKAjToVrtIVKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQzcOJFkHMYK7iU60cbX5rAo0gkmcrYVuyRwOBQDYSUzbIFs0KkqPTSBlxqG/gxsX94abpVund/+jgJCvdg/vdcoGa92hrNAXWfZRJgIDbi5wAIgIs+c8q/f5GvcyrtOsbwFw/1tu54jj5kokMVqfe4iKH2nGJCo9PforYyQ7h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 681F43000222C;
-	Thu,  4 Apr 2024 10:51:36 +0200 (CEST)
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id C29112800BB3F;
+	Thu,  4 Apr 2024 11:02:10 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 61A7D1D17E; Thu,  4 Apr 2024 10:51:36 +0200 (CEST)
-Date: Thu, 4 Apr 2024 10:51:36 +0200
+	id AC4CA1D17E; Thu,  4 Apr 2024 11:02:10 +0200 (CEST)
+Date: Thu, 4 Apr 2024 11:02:10 +0200
 From: Lukas Wunner <lukas@wunner.de>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, dan.j.williams@intel.com,
-	ira.weiny@intel.com, vishal.l.verma@intel.com,
-	alison.schofield@intel.com, dave@stgolabs.net, bhelgaas@google.com
-Subject: Re: [PATCH v3 4/4] cxl: Add post reset warning if reset is detected
- as Secondary Bus Reset (SBR)
-Message-ID: <Zg5qGJCAZJWY4xy9@wunner.de>
-References: <20240402234848.3287160-1-dave.jiang@intel.com>
- <20240402234848.3287160-5-dave.jiang@intel.com>
- <20240403163257.000060e1@Huawei.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org, ira.weiny@intel.com,
+	vishal.l.verma@intel.com, alison.schofield@intel.com,
+	dave@stgolabs.net, bhelgaas@google.com
+Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
+Message-ID: <Zg5skrUCyx17fRjq@wunner.de>
+References: <6605bef53c82b_1fb31e29481@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240402172323.GA1818777@bhelgaas>
+ <660c44604f0a3_19e029497@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <20240403154441.00002e30@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,59 +61,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240403163257.000060e1@Huawei.com>
+In-Reply-To: <20240403154441.00002e30@Huawei.com>
 
-On Wed, Apr 03, 2024 at 04:32:57PM +0100, Jonathan Cameron wrote:
-> On Tue, 2 Apr 2024 16:45:32 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
-> Why not pass the info on what reset was done down from the PCI core?
-> I see Bjorn commented it would be *possible* to do it in the PCI core
-> but raised other concerns that needed addressing first (I think you've
-> dealt with those now).  Doesn't look that hard to me (I've not coded it
-> up yet though).
+On Wed, Apr 03, 2024 at 03:44:41PM +0100, Jonathan Cameron wrote:
+> > Bjorn Helgaas wrote:
+> > > FWIW, I pinged administration@pcisig.com and got the response that
+> > > "1E98h is not a VID in our system, but 1E98 has already been reserved
+> > > by CXL."
+> > > 
+> > > I wish there were a clearer public statement of this reservation, but
+> > > I interpret the response to mean that CXL is not a "Vendor", maybe due
+> > > to some strict definition of "Vendor," but that PCI-SIG will not
+> > > assign 0x1e98 to any other vendor.
+> > > 
+> > > So IMO we should add "#define PCI_VENDOR_ID_CXL 0x1e98" so that if we
+> > > ever *do* see such an assignment, we'll be more likely to flag it as
+> > > an issue.  
 > 
-> The core code knows how far it got down the list reset_methods before
-> it succeeded in resetting.  So...
+> Sorry for late entry on this discussion and I'll be careful what I say
+> on the history.
 > 
-> Modify __pci_reset_function_locked() to return the index of the reset
-> method that succeeded. Then pass that to pci_dev_restore().
-> Finally push it into a reset_done2() that takes that as an extra
-> parameter and the driver can see if it is FLR or SBR.
+> As you've guessed it was "entertaining" and for FWIW that text occurs
+> in other consortium specs (some predate CXL).
+> 
+> It's reserved with agreement from the PCI SIG for a strictly defined set
+> of purposes that does not correspond to those allowed for a normal ID
+> granted to a vendor member. As you say CXL isn't a vendor (don't ask
+> how DMTF got a vendor ID - 0x1AB4).
+> 
+> Hence the naming gymnastics and vague answers to avoid any chance of
+> lawyers getting involved :(
 
-The reset types to distinguish per PCIe r6.2 sec 6.6 are
-Conventional Reset and Function Level Reset.
+Hm, I'm wondering if avoiding the term "vendor" with something like
 
-Secondary Bus Reset is a Conventional Reset.
+#define PCI_CONSORTIUM_ID_CXL 0x1e98
 
-The spec subdivides Conventional Reset into Cold, Warm and Hot,
-but that distinction is probably irrelevant for the kernel.
-
-I think a more generalized (and therefore better) approach would be
-to store the reset type the device has undergone in struct pci_dev,
-right next to error_state, so that not just the ->reset_done()
-callback benefits from the information.  The reset type applied has
-consequences beyond the individual driver:  E.g. an FLR does not
-affect CMA-SPDM session state, but a Conventional Reset does.
-So there may be consumers of that information in the PCI core as well.
-
-It's worth noting that we already have an enum pcie_reset_state in
-<linux/pci.h> which distinguishes between deassert, warm and hot reset.
-It is currently only used by PowerPC EEH to convey to the platform
-which type of reset it should apply.  It might be possible to extend
-the enum so that it can be used to store the reset type that *was*
-applied to a device in struct pci_dev.
-
-That all being said, checking for the *symptoms* of a Conventional Reset,
-as Dave has done here, may actually be more robust than just relying on
-what type of reset was applied.  E.g. after an FLR was handled, the device
-may experience a DPC-induced Hot Reset.  By checking for the *symptoms*,
-the driver may be able to catch that the device has undergone a
-Conventional Reset immediately after an FLR.  Also, who knows if all
-devices are well-behaved and retain their state during an FLR, as they
-should per the spec?  Maybe there are broken devices which do not respect
-that rule.  Checking for symptoms of a Conventional Reset would catch
-those devices as well.
-
-Thanks,
-
-Lukas
+would assuage the angst of a legal misstep? ;)
 
