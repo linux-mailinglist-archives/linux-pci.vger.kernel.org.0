@@ -1,75 +1,76 @@
-Return-Path: <linux-pci+bounces-5710-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5711-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C86AF898139
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 08:08:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DB558898155
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 08:18:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D614287B01
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 06:08:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90B192841CD
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 06:18:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA114776E;
-	Thu,  4 Apr 2024 06:08:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0653E4C635;
+	Thu,  4 Apr 2024 06:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9n4cMxJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uBRpsB9L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148AF45979
-	for <linux-pci@vger.kernel.org>; Thu,  4 Apr 2024 06:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A25C4AEE1
+	for <linux-pci@vger.kernel.org>; Thu,  4 Apr 2024 06:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712210906; cv=none; b=Ha6hJF7HttfLMBqLhAJQYimKLbLvSePgGsx7IKRIOczMHVu22kwsT4n1+2jUT+sV1syg6/V1j2zBtDffHQ32ekufNJzxBb1a4QHynEuJv9jboZcL7W40l4+13rRrPX3z3B4P4uM0HZ44cpxsELk9xOxPP5NzKwtVso96rKoUb28=
+	t=1712211521; cv=none; b=mRvKaEPmrSMayUlCOzZZwHIv3NptXcfR2sSQ90C6+JqGUKwnuyaae7UNSPDZG7FMT3scESZPZe7PBPn5UbzvO6szaRR0PDWouvXMlEpTDE3KcRbggt+VEg4B6UO6TtlfmvbVtF1iBd8QY+M7T2QymW5Dc9vPQjIdaGasBHsLDOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712210906; c=relaxed/simple;
-	bh=ck5HlJSGfEIktIG5FSqBkHcuiI35GZ/YtcLCexW15Ng=;
+	s=arc-20240116; t=1712211521; c=relaxed/simple;
+	bh=2J7Re/HyvlV+/ExJlexrUrhdCVIk2oInihJetZ94u+k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CC1qEQmaxvvdhNdMqCxe+yDQAuUiOswLOmyfFtiGR/d0KqxsJMAO6A2o6IqaULclwxYD9N4OOyvCwV3iRDvqLhF6bklWZiVo9DZckPvXyu9HIivLWZv5YDL0VR3OgcQxnq/c9p8M+VF6IMf9Xa+xrq2s+ggFkAHI1qnfQDUmlX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L9n4cMxJ; arc=none smtp.client-ip=209.85.218.54
+	 In-Reply-To:Content-Type; b=PRTMpSakgpZaz6eQJrl+13cl4jiKvv3/9/haZVv1cdEuEJgvkKTAWqseCQx8Y39ym9U3i67Vrk2mMtrTbuWC8W+upPNRPGtSTCrD1U4mu7/BzQoDwGJdj7lYTog0IY4f52cBbbkNH6Ii4rlr/mFlYUY7ATaZBIF9qu41DULFtO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uBRpsB9L; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a44665605f3so61687166b.2
-        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 23:08:23 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e0f8480fbso567856a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 03 Apr 2024 23:18:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712210902; x=1712815702; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712211518; x=1712816318; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=rxTZ85unwyVpbZ07p+2JFJ30WK5iCDVvonlCXKZGiyE=;
-        b=L9n4cMxJQe5qz0Hxe/fWe2WOKF2mfQiqAfdge1PC5bSmf7WEG05O3aqy2NOlA/gNqg
-         4D+BW4mStGYPpGjTQHCvd72SUftzuLTXp3iYu3APlbwBxUNEwNUHIvrmH+NO/QcsnvtI
-         s4Z06FvNY/vuxHiwlgdwsEZmdElONLolx84oP6yCId7rGqtTEBwJO9BV/uLUTrRRoIyy
-         w+LW/oOuMGV8OrnabxDnnBUtKtyO8uaGfaAaqcFazljtdWf51d6YsI5//M+4n8Gab5TI
-         NOExZLGeIBekQAw6wYssWREdwBA0o2/4H6Dc7NzFza2MTywWZ12Uiu3sOiutAf6UR1iR
-         b9RA==
+        bh=0qKZ+iYWQHqYn9Rd3HRahOpCkdY1YAxGTET1Vitiv1k=;
+        b=uBRpsB9L9MfvKOfuSaSdGho9/DM4FZGlLw281grWQiwYWQd/ifuAgOXf45B9XTo5Xu
+         w7zd5VqzWZxsO80KA0VmaXqQA9NYKGyiwtp3hy2l3WCP0vrsIbdKVkkLDGu+WyQagF/n
+         V/H/tnLMmHvp/EAo6oCKxLK6+YDSjaDvgnkvzZPR4nxz2J62y0wVycDU11f6E3IeEIs+
+         bJLkQjpEA1H9n9EC6QJt/9ToKLY9nXEhnyfwIeq2WQ9uAHw+6u/tD5+jmcwoCnwSGg0S
+         RGGLmGKEAa+UVNqo+U19MiygWChq1EDiGsrQ5HokZEQakMoJwk/olHeu08f/DwbjF+nn
+         fCsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712210902; x=1712815702;
+        d=1e100.net; s=20230601; t=1712211518; x=1712816318;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rxTZ85unwyVpbZ07p+2JFJ30WK5iCDVvonlCXKZGiyE=;
-        b=mXVAVgVif9mAS+qzyu5cxX629lJkhuOOIsYaKnT4YTKA/bEbSn4nUgRyAAUxIQBPNg
-         u8YNVjtHhdz60HJxIuqBi7fWNHszQN4QlVi+W9n3xbo6CsUvnXkiXyMM9pzk87dp2z6P
-         rNwaK4ArN2Wrdjg5x9f8M892ZFnbvE0boPTulsU9vhsEYjvVy+fliipiPAyh1kqZzHZ3
-         3R8euEcJp0g75bRBinl4DEkg2ERQ4xVy6t7EwU1UDCZpDb7iuKEPQPxp5UEXsLkI/BKL
-         2S3OhC84tGX5QU1K0beHt17f6i45s1WTsHtFYaeUTQLPwymMWYbkANkNsTIH3777fBVK
-         OmuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaDBzchLgAO/mq2Ln3B3UvXH5vIu2fE6BjBMBx/XxVkNoeF1kFGJrwccbH87V060O27PRPu8GNdpnpJ7AIcijqw/EK6Y9jxQEo
-X-Gm-Message-State: AOJu0Yyx7r60bnDKpSeu9Xlklm26R2yNp5ZW+sfH4WVXdR9whN/YyDOz
-	i+H8zUjJmOI/z901oribBBbOC4SBvFDEAtePqQkvwCRq7SZYQ2AyUTcxRWR6kfw=
-X-Google-Smtp-Source: AGHT+IFI/qIkJNXTS6UHJf3srgzvcentyDoh5xx2aALaAXZXdTsCp8+U/4aUbwmbKXwuQRzaZ/XKDQ==
-X-Received: by 2002:a17:906:6607:b0:a4e:207e:b71 with SMTP id b7-20020a170906660700b00a4e207e0b71mr909877ejp.6.1712210902408;
-        Wed, 03 Apr 2024 23:08:22 -0700 (PDT)
+        bh=0qKZ+iYWQHqYn9Rd3HRahOpCkdY1YAxGTET1Vitiv1k=;
+        b=qPfze1TCNhtGLbx/W2XqFqDkTPtEvOGPUcIAzYPHj6cmJ9zCwYcpkxVA6aJ0g4RkOc
+         Ac4pMGn5zuCSszMUvx6oW4YQUj7RipWxqOKMMgZAqXaz7bfNVmu7tMBsdASDxUMol68l
+         9SQ9znelUI5vqWqQVvCSGXerBn7o7s0idJNWrHYBZYzxv/a8UBdr0HX6KOIWgTCVkGNJ
+         lGqhM1pVZABg9/r6vOWOmVsnYuWzcBMS6/dlO8KsQGIWq+qICSqfOy6CYYyYnsDjpaU3
+         zwYCBZjyGUpMI1oPNBe0F3ae5uf9by0/mOOAx9X1jo1P4l4bchIICA51P1OjUwdZxHE/
+         OIqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvhaiv7UexOtL572bpaMsH5Q34Mx5no4Un4Ch0WLHWl9n1SBEQR/g2StJeBHSlT3vbET+RqyTqTwLAvI0WWJF6CEHXSsKZ0X9H
+X-Gm-Message-State: AOJu0YyqNJGt4sqA7Hol6wXSaLXCatqTY0+SNX6sLprF4Lm9cio3Q3++
+	S4IhPZZM9YLMoWP7/ks0eVGJGzqQcFJNvMSdG/AEO9cJced0ewTULeRvFN5exDGU6CIC7BzG/mS
+	d
+X-Google-Smtp-Source: AGHT+IE//YeUlWWl3VoukJKYZwvGoO7B7ADUvRMkhV4WjlUseoXIiGv4d/HSDyWXfteAYqN8TIYTlA==
+X-Received: by 2002:a50:9e46:0:b0:56d:fc9e:5143 with SMTP id z64-20020a509e46000000b0056dfc9e5143mr916358ede.14.1712211518504;
+        Wed, 03 Apr 2024 23:18:38 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id w17-20020a170906185100b00a4e9359fbe8sm2307025eje.44.2024.04.03.23.08.18
+        by smtp.gmail.com with ESMTPSA id ew12-20020a056402538c00b0056a033fa007sm8745811edb.64.2024.04.03.23.18.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 23:08:21 -0700 (PDT)
-Message-ID: <f73c3130-3121-4339-8f7a-8870a841005c@linaro.org>
-Date: Thu, 4 Apr 2024 08:08:17 +0200
+        Wed, 03 Apr 2024 23:18:37 -0700 (PDT)
+Message-ID: <8e5fb9c0-fa7a-4691-a9f4-f2b42b66d1e5@linaro.org>
+Date: Thu, 4 Apr 2024 08:18:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,51 +78,22 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND v7 04/37] dt-bindings: interrupt-controller: Add header
- for Renesas SH3/4 INTC.
-To: Yoshinori Sato <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+Subject: Re: [PATCH 3/7] dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
+To: mr.nuke.me@gmail.com, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
  Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
  Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
- Heiko Stuebner <heiko.stuebner@cherry.de>, Shawn Guo <shawnguo@kernel.org>,
- Sebastian Reichel <sre@kernel.org>, Chris Morgan <macromorgan@hotmail.com>,
- Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- David Rientjes <rientjes@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck
- <linux@roeck-us.net>, Kefeng Wang <wangkefeng.wang@huawei.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Javier Martinez Canillas <javierm@redhat.com>, Guo Ren <guoren@kernel.org>,
- Azeem Shaikh <azeemshaikh38@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>,
- Herve Codina <herve.codina@bootlin.com>,
- Manikanta Guntupalli <manikanta.guntupalli@amd.com>,
- Anup Patel <apatel@ventanamicro.com>, Biju Das <biju.das.jz@bp.renesas.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-fbdev@vger.kernel.org
-References: <cover.1712207606.git.ysato@users.sourceforge.jp>
- <d50827196f7e1201bb9a62656fb04223a8989f1d.1712207606.git.ysato@users.sourceforge.jp>
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: ansuelsmth@gmail.com, robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240402192555.1955204-1-mr.nuke.me@gmail.com>
+ <20240402192555.1955204-3-mr.nuke.me@gmail.com>
+ <bad88189-cf70-4200-9fa3-650ea923b4b8@linaro.org>
+ <d35c96ca-24af-fbad-74fe-ad85a433caa2@gmail.com>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -168,27 +140,86 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <d50827196f7e1201bb9a62656fb04223a8989f1d.1712207606.git.ysato@users.sourceforge.jp>
+In-Reply-To: <d35c96ca-24af-fbad-74fe-ad85a433caa2@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/04/2024 07:14, Yoshinori Sato wrote:
-> Renesas SH7751 Interrupt controller priority register define.
+On 03/04/2024 20:05, mr.nuke.me@gmail.com wrote:
 > 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> 
+> On 4/3/24 02:14, Krzysztof Kozlowski wrote:
+>> On 02/04/2024 21:25, Alexandru Gagniuc wrote:
+>>> IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
+>>> The only difference is that the "iface" clock is not required.
+>>> Document this difference along with the compatible string.
+>>>
+>>> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>>> ---
+>>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 32 +++++++++++++++++++
+>>>   1 file changed, 32 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> index cf9a6910b542..6eb29547c18e 100644
+>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>>> @@ -26,6 +26,7 @@ properties:
+>>>             - qcom,pcie-ipq8064-v2
+>>>             - qcom,pcie-ipq8074
+>>>             - qcom,pcie-ipq8074-gen3
+>>> +          - qcom,pcie-ipq9574
+>>>             - qcom,pcie-msm8996
+>>>             - qcom,pcie-qcs404
+>>>             - qcom,pcie-sdm845
+>>> @@ -383,6 +384,35 @@ allOf:
+>>>               - const: axi_s # AXI Slave clock
+>>>               - const: axi_bridge # AXI bridge clock
+>>>               - const: rchng
+>>> +
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - qcom,pcie-ipq9574
+>>> +    then:
+>>> +      properties:
+>>> +        clocks:
+>>> +          minItems: 4
+>>> +          maxItems: 4
+>>> +        clock-names:
+>>> +          items:
+>>> +            - const: axi_m # AXI Master clock
+>>> +            - const: axi_s # AXI Slave clock
+>>> +            - const: axi_bridge # AXI bridge clock
+>>> +            - const: rchng
+>>> +
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - qcom,pcie-ipq6018
+>>> +              - qcom,pcie-ipq8074-gen3
+>>> +              - qcom,pcie-ipq9574
+>>> +    then:
+>>
+>> Do not introduce inconsistent style. All if:then: define both clocks and
+>> resets, right? And after your patch not anymore?
+>>
+> I kept the resets in one place because they are the same cross the ipq* 
+> variants.
+> 
+> Do I understand correctly that you wish me to split up the resets as well?
+> 
+>      if ipq8074 ipq6018
+>          clocks
+>          resets
+> 
+>      if ipq9754
+>          clocks
+>          resets
 
-I got two 37-patchsets...
-
-Anyway, this also did not improve. NAK.
-
-This is a friendly reminder during the review process.
-
-It seems my or other reviewer's previous comments were not fully
-addressed. Maybe the feedback got lost between the quotes, maybe you
-just forgot to apply it. Please go back to the previous discussion and
-either implement all requested changes or keep discussing them.
-
-Thank you.
+Yes, keep it consistent with all other cases.
 
 Best regards,
 Krzysztof
