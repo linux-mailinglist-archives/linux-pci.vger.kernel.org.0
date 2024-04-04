@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-5703-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5704-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F22D08980CB
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 07:27:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C42B8980D5
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 07:28:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D1AC1C21699
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 05:27:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B6031C267BC
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 05:28:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A75B1304A8;
-	Thu,  4 Apr 2024 05:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181D3130E27;
+	Thu,  4 Apr 2024 05:16:00 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C432B12EBF0;
-	Thu,  4 Apr 2024 05:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68006130A7C;
+	Thu,  4 Apr 2024 05:15:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712207757; cv=none; b=r7HMyHE6EBb+H/aTMP4rALxEQidpMoRY4kQwd8ftjdJExWVV0RaxeXMoJQa7GdwFMMH89AUnaD88X+H/zH61XnHyDzuolcomyBkbKtguaF6/SvdQiTJytd8Ol1DJl9TIujLLTaVaXHrNRvG5QRfUKjF751BbUcsRlQwDjbCgV/g=
+	t=1712207760; cv=none; b=FY/pDM9GDEatcUpjicMSMEwqdKYEnrTlZ2SveJs7JNmSYSc1uzhcjx61nKSroOJ7hR4tQnv1Zhao97bREjMagKm5N0f5ZL4xa23p0glLPii6QBB1BxiOVLQhsWfR7n+NvVrx4+ZgV0A/v1xr7rF6nuLp+PViwxb/sHnhMQtTG1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712207757; c=relaxed/simple;
-	bh=E35zkdaNWcOZao+l7hH8SOZK0OTtDSbuFpdV5m0cZbY=;
+	s=arc-20240116; t=1712207760; c=relaxed/simple;
+	bh=Dzew31OGExSBe329XPh2CrwmuS5hQZswGFA6BR2UCxQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NGWNH7xQmUcsyJe0KpLdFs9S06k9nBwyTiEMrQMpBPyrDM/Q181+0msu7epA5cQ5tUxVBgppU7cMgmykVyIFOJZsRYMLvd5zBFqpK5ZbZlK3SVzS6xgAz3u5Lnm0Zb4H/joUu2oWLNHMPFdBvwf0kLXlum4qyOBhtaSzDwKZUmk=
+	 MIME-Version; b=jylgLhadKncb9057J4h/q3+RSw+mn6FnQZL3GsSpzYtm7gSXd1wC82nMoVMyMqgawXvvwzyZ8ZmUQyQRejn4axSaZDb1LVdzFYce4Dpiq3IkSbLk+o3vXeoeQOMEoiNiK6Tq4WTHpi7kxIbSD9E6DC8fMXMDk96MnqUutW/c9XA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id C34441C1001;
-	Thu,  4 Apr 2024 14:15:53 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id A215E1C1056;
+	Thu,  4 Apr 2024 14:15:55 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -95,9 +95,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [RESEND v7 32/37] sh: Add IO DATA USL-5P dts
-Date: Thu,  4 Apr 2024 14:14:43 +0900
-Message-Id: <7bdec205571715a318a76ccf7e86cd28798cc5fa.1712207606.git.ysato@users.sourceforge.jp>
+Subject: [RESEND v7 33/37] sh: j2_mimas_v2.dts update
+Date: Thu,  4 Apr 2024 14:14:44 +0900
+Message-Id: <7cffb0c041744b3c2e324f9908635a912dbb2436.1712207606.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1712207606.git.ysato@users.sourceforge.jp>
 References: <cover.1712207606.git.ysato@users.sourceforge.jp>
@@ -109,105 +109,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-IO DATA DEVICE Inc. USL-5P devicetree.
-
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/boot/dts/usl-5p.dts | 85 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 arch/sh/boot/dts/usl-5p.dts
+ arch/sh/boot/dts/j2_mimas_v2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sh/boot/dts/usl-5p.dts b/arch/sh/boot/dts/usl-5p.dts
-new file mode 100644
-index 000000000000..b90bff50b29a
---- /dev/null
-+++ b/arch/sh/boot/dts/usl-5p.dts
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the IO DATA DEVICE USL-5P
-+ */
-+
-+/dts-v1/;
-+
-+#include "sh7751r.dtsi"
-+
-+/ {
-+	model = "IO-DATA Device USL-5P";
-+	compatible = "iodata,usl-5p", "renesas,sh7751r";
-+
-+	aliases {
-+		serial0 = &scif1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:9600n8";
-+	};
-+
-+	memory@c000000 {
-+		device_type = "memory";
-+		reg = <0x0c000000 0x4000000>;
-+	};
-+
-+	julianintc: interrupt-controller@b0000005 {
-+		compatible = "renesas,sh7751-irl-ext";
-+		reg = <0xb0000005 0x01>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		/*
-+		 * b7: Button
-+		 * b6: Power switch
-+		 * b5: Compact Flash
-+		 * b4: ATA
-+		 * b3: PCI-INTD
-+		 * b2: PCI-INTC
-+		 * b1: PCI-INTB
-+		 * b0: PCI-INTA
-+		 */
-+		renesas,enable-reg = <12 11 10 9 8 7 6 5>;
-+	};
-+
-+	compact-flash@b4000040 {
-+		compatible = "iodata,usl-5p-ata", "ata-generic";
-+		reg = <0xb4000040 0x0e>, <0xb400002c 2>;
-+		reg-shift = <1>;
-+		interrupt-parent = <&julianintc>;
-+		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&extal {
-+	clock-frequency = <22222222>;
-+};
-+
-+&cpg {
-+	renesas,mode = <5>;
-+};
-+
-+&scif1 {
-+	status = "okay";
-+};
-+
-+&pcic {
-+	ranges = <0x02000000 0 0xfd000000 0xfd000000 0 0x01000000>,
-+		 <0x01000000 0 0x00000000 0xfe240000 0 0x00040000>;
-+	dma-ranges = <0x02000000 0 0x0c000000 0x0c000000 0 0x04000000>,
-+		     <0x02000000 0 0xd0000000 0xd0000000 0 0x00000001>;
-+	interrupt-map = <0x0000 0 0 1 &julianintc 5 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0000 0 0 2 &julianintc 6 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0000 0 0 3 &julianintc 7 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0000 0 0 4 &julianintc 8 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 1 &julianintc 6 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 2 &julianintc 7 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 3 &julianintc 8 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 4 &julianintc 5 IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 1 &julianintc 7 IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 2 &julianintc 8 IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 3 &julianintc 5 IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 4 &julianintc 6 IRQ_TYPE_LEVEL_LOW>;
-+	interrupt-map-mask = <0x1800 0 0 7>;
-+	status = "okay";
-+};
+diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas_v2.dts
+index fa9562f78d53..5dfe20866a1c 100644
+--- a/arch/sh/boot/dts/j2_mimas_v2.dts
++++ b/arch/sh/boot/dts/j2_mimas_v2.dts
+@@ -16,7 +16,7 @@ cpus {
+ 
+ 		cpu@0 {
+ 			device_type = "cpu";
+-			compatible = "jcore,j2";
++			compatible = "jcore,j2", "renesas,sh2";
+ 			reg = <0>;
+ 			clock-frequency = <50000000>;
+ 			d-cache-size = <8192>;
 -- 
 2.39.2
 
