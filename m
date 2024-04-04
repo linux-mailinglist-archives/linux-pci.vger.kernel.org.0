@@ -1,159 +1,204 @@
-Return-Path: <linux-pci+bounces-5747-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5748-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9933B898F15
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 21:34:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC884898F53
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 22:01:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A46641C21F94
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 19:34:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45DF71F24068
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 20:01:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167C1134411;
-	Thu,  4 Apr 2024 19:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F447134439;
+	Thu,  4 Apr 2024 20:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b7hGkEG/"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="gprRlAjO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461ED1332A5
-	for <linux-pci@vger.kernel.org>; Thu,  4 Apr 2024 19:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1858C6D1AB;
+	Thu,  4 Apr 2024 20:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712259242; cv=none; b=HaswKEudWeXRBrYmVwB/wAcVDuv9fRn3VjxU1EjJ47KF9DgJUFk4VfsmqAXSeC/MkgsPNZLW/GzhUDgiHTXyy9hhGHFMk0Y//X+CaqSz6oU1vEO8xU9yoUMAw+4altaScZY2/Nvto48kHM7vX+cR52GmTD60/R+vONRufsC/vkU=
+	t=1712260907; cv=none; b=sazwdvwiL2Wcsvp1ocuGBryFM8m5k8zU7V8q/ElsTHQmDtbiVHZA6wAK5elRuFfQuWpGbZczRExbNCJjDUsrEEtGb3KmECMrMF/vjg0WBOo1v1hBBbJz1hpkFa/izO9vknk4PiMUM0YbFWt3wKlXOKAzIEXwBWboQuxOLclfbG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712259242; c=relaxed/simple;
-	bh=SVDKNDrb0NOjmIcNwsafHve9I8qQ4xtJasTbPN/piYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=radkAhqwIWR4URDBeRDjYh5X5odHV2JhZn/fLRnh1LLJmsZ/4zGJRn/mtIvI2xipXdLkz7/F+wKb+jJFehnEy70+ULxIW36itTW6AkinK1yDuvGzbhekXHZ4z4m0L9bidZ4+XwSlYDJTiCJ7XpzEbnDVzMNgCBJ1AorhXkdOHKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b7hGkEG/; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a4a387ff7acso179209466b.2
-        for <linux-pci@vger.kernel.org>; Thu, 04 Apr 2024 12:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712259238; x=1712864038; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FfV3fov2t0k9gHE85d1nbOGKLogXLORP5FadBnHM/Uw=;
-        b=b7hGkEG/vDmgX4+jtvKHmXUUgpNRshFUvcZBt8iJcczzbOtbDMoCaC1RMGl1+Un1y0
-         jekboRp22ZjDSzDJexcz0Of1VK4Fq1fLAl6I8zRBWB6fVjGylVo+q4AjDoS+3VJO9404
-         Da5ENk1JbcY5/u7clJEfjc1digmkBLbm/K7/be1JH/pho+hP3hLKnwg3if747Ab4Uc6O
-         WXbRfXYYunyetAVMcBIuRMHkHIooZ9X6lKC0XT+OA4UJnIFuuWKS2cvCo7g9sqQm0DiR
-         KZi5Fz8ybN0IyaFWBYRUUm6auWQzX5thUi0b8+HAiqtyIvjhLoNUpIk6v5xpYkMYFN3k
-         PXxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712259238; x=1712864038;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FfV3fov2t0k9gHE85d1nbOGKLogXLORP5FadBnHM/Uw=;
-        b=YRGwb4Jtq5Zo3ypr5T+seB30H14qzDETU+CifFmWqSOKBI6M8vAIhwz2igwUgdgM8f
-         3y++gGGnY7QOO+5f8iOvJ68+otN8DBS5cLeyYg/p9UxIyW3NuTLtuZXOZH+GLbXxKoxA
-         NxxPsaou0HUqOVvzTcRD/mthZhyACj8v01nheApUc4qWnrIsSFPRycDoHBzbDPmK/7Mx
-         Rg96h0gdSPwiBOu92twcZdfoS6jAf7LKMtccx6aKgXiTBya9tfHtnuH1NfWTexmQ/IxL
-         ZZzR6RyBDmC2ghED4nv2Os2YoXrQE+YrpLB8viVTsJCRQJ9u65uG9aDK1J6JzJgWnq/l
-         kODQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVd07wiBC4ezQ5sgGxtMnb6Tf/jcvz4z8cqW/yqTmbwlYneqiONRByVhbmk57cCrj8GAb7vOFo7tC5/bxTY7f/+sCS7yVjTZSmX
-X-Gm-Message-State: AOJu0YxomsNx+SJ+QgGBKTc4Dphcq2I2O2ExruzGX3Mz177kZT2/C6y5
-	ws+n7akeSfAp5THonkEfbJbFYNVK9m29YGZvHGEZrm7MaJOuy1AiTAX8Q3JovSM=
-X-Google-Smtp-Source: AGHT+IEmclIaUO21bTVoklUjKzNcu6GjYx0QD+l7+2UA1fVKaAzstAVSLWXESTN6+yKxmOwbErrnGg==
-X-Received: by 2002:a17:906:dfe3:b0:a51:982e:b3f7 with SMTP id lc3-20020a170906dfe300b00a51982eb3f7mr857667ejc.37.1712259238583;
-        Thu, 04 Apr 2024 12:33:58 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id bi2-20020a170907368200b00a4e86dd231dsm3757810ejc.42.2024.04.04.12.33.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 12:33:58 -0700 (PDT)
-Message-ID: <42d1281e-9546-4af1-a30b-8a0c3969be6b@linaro.org>
-Date: Thu, 4 Apr 2024 21:33:56 +0200
+	s=arc-20240116; t=1712260907; c=relaxed/simple;
+	bh=JxyaE0ZL0hvUhMwJSJH0ciGtnwxPSgrxrSBEjSbyWRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QNXWpIYIEbCf3qSdAzF4f37c/XqgKZ8s6PD6tGBww5AJ8rQsGCXotTSsn3DsAfXEG48KbRx/kWwTKGIRsRSsAk+ydgribw/cR+xNW8QhbpyYsp00voFxmFuu+GCaCoWpHaR1e7bGS6Dj++2xJ3Yfe9UQEANSwEQ/fxa6ictETig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=gprRlAjO; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ar7Lw4eA7hfvt1/r0rsI3i5UsJ6oVUk1F07naco9tuc=; b=gprRlAjOYiNDqsDOIwPI3iTr/h
+	I/7c/p843XxMifqRrgotVdV7/DiYdU97vaCKV5WTBdztUG8vS24060IFXLWt7q4azpC+V3lmksQYE
+	wn8Mmf9Pp7ZseDLc7y5cTU2in0zlY4g3R2/103+buy3HQRxmZ/0HML9OhHzsJRrKWAKcHzcpi2Eby
+	yLJnkWhVLAmh1ziwp5b3+0vX0uURaKK93avzifOAJi14kj/Ol1OLLG0UJh3/C3Z4POJtZElKXiZe6
+	Z8V7yRnUdAdTWJPywZdxG2m1DQtJQmAtNcDyZMydCHjnSAOLU0tsGjDGAhm6cekG4/pgiiZVTKcEB
+	mbXjnv8g==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <kibi@debian.org>)
+	id 1rsTHB-00DWaO-8M; Thu, 04 Apr 2024 20:01:34 +0000
+Date: Thu, 4 Apr 2024 22:01:29 +0200
+From: Cyril Brulebois <kibi@debian.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 0/4] PCI: brcmstb: Configure appropriate HW CLKREQ#
+ mode
+Message-ID: <20240404200129.3qp4qs6zklbk2prl@mraw.org>
+Organization: Debian
+References: <20240403213902.26391-1-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Add Qualcomm PCIe ECAM root complex driver
-To: Mayank Rana <quic_mrana@quicinc.com>, linux-pci@vger.kernel.org,
- lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
- andersson@kernel.org, manivannan.sadhasivam@linaro.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, quic_ramkri@quicinc.com,
- quic_nkela@quicinc.com, quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
- quic_nitegupt@quicinc.com
-References: <1712257884-23841-1-git-send-email-quic_mrana@quicinc.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <1712257884-23841-1-git-send-email-quic_mrana@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4mlfdkp3wjmc3cs3"
+Content-Disposition: inline
+In-Reply-To: <20240403213902.26391-1-james.quinlan@broadcom.com>
+X-Debian-User: kibi
 
-On 04/04/2024 21:11, Mayank Rana wrote:
-> On some of Qualcomm platform, firmware takes care of system resources
-> related to PCIe PHY and controller as well bringing up PCIe link and
-> having static iATU configuration for PCIe controller to work into
-> ECAM compliant mode. Hence add Qualcomm PCIe ECAM root complex driver.
-> 
-> Tested:
-> - Validated NVME functionality with PCIe0 and PCIe1 on SA877p-ride platform
-> 
 
-RFC means code is not ready, right? Please get internal review done and
-send it when it is ready. I am not sure if you expect any reviews. Some
-people send RFC and do not expect reviews. Some expect. I have no clue
-and I do not want to waste my time. Please clarify what you expect from
-maintainers regarding this contribution.
+--4mlfdkp3wjmc3cs3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hi Jim,
 
+Jim Quinlan <james.quinlan@broadcom.com> (2024-04-03):
+> v9 -- v8 was setting an internal bus timeout to accomodate large L1 exit
+>       latencies.  After meeting the PCIe HW team it was revealed that the
+>       HW default timeout value was set low for the purposes of HW debuggi=
+ng
+>       convenience; for nominal operation it needs to be set to a higher
+>       value independent of this submission's purpose.  This is now a
+>       separate commit.
+>=20
+>    -- With v8, Bjorne asked what was preventing a device from exceeding t=
+he
+>       time required for the above internal bus timeout.  The answer to th=
+is
+>       is for us to set the endpoints' max latency {no-,}snoop value to
+>       something below this internal timeout value.  If the endpoint
+>       respects this value as it should, it will not send an LTR request
+>       with a larger latency value and not put itself in a situation
+>       that requires more latency than is possible for the platform.
+>=20
+>       Typically, ACPI or FW sets these max latency values.  In most of our
+>       systems we do not have this happening so it is up to the RC driver =
+to
+>       set these values in the endpoint devices.  If the endpoints already
+>       have non-zero values that are lower than what we are setting, we let
+>       them be, as it is possible ACPI or FW set them and knows something
+>       that we do not.
+>=20
+>    -- The "clkreq" commit has only been changed to remove the code that w=
+as
+>       setting the timeout value, as this code is now its own commit.
+
+Given the bot's feedback, I took the liberty of running tests on your
+patch series except with an extra =E2=80=9Cstatic=E2=80=9D keyword. On my b=
+uild system,
+gcc 12 wasn't complaining about it but I didn't spend time trying to
+find the right options, or trying a switch to clang to confirm the
+before/after situation:
+
+    -void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
+    +static void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
+
+
+Anyway, this is still:
+
+Tested-by: Cyril Brulebois <cyril@debamax.com>
+
+
+Test setup:
+-----------
+
+ - using a $CM with the 20230111 EEPROM
+ - on the same CM4 IO Board
+ - with a $PCIE board (PCIe to multiple USB ports)
+ - and the same Samsung USB flash drive + Logitech keyboard.
+
+where $CM is one of:
+
+ - CM4 Lite Rev 1.0
+ - CM4 8/32 Rev 1.0
+ - CM4 4/32 Rev 1.1
+
+and $PCIE is one of:
+
+ - SupaHub PCE6U1C-R02, VER 006
+ - SupaHub PCE6U1C-R02, VER 006S
+ - Waveshare VIA VL805/806-based
+
+
+Results:
+--------
+
+ 1. Given this is already v9, and given I don't see how this could have
+    possibly changed, I didn't build or tested an unpatched kernel,
+    which I would still expect to produce either a successful boot
+    *without* seeing the devices plugged on the PCIe-to-USB board or the
+    dreaded SError in most cases.
+
+ 2. With a patched kernel (v6.7-562-g9f8413c4a66f2 + this series +
+    =E2=80=9Cstatic=E2=80=9D in front of brcm_set_downstream_devs_ltr_max()=
+), for all
+    $CM/$PCIE combinations, I'm getting a system that boots, sees the
+    flash drive, and gives decent read/write performance on it (plus a
+    functional keyboard).
+
+
+Cheers,
+--=20
+Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+D-I release manager -- Release team member -- Freelance Consultant
+
+--4mlfdkp3wjmc3cs3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmYPBxYACgkQ/5FK8MKz
+VSCIpw//YwRVw8lAie3wKx/qgQbpoFTlOXGLNFVwWKZFPhIgx5EQg+iWTKffg3EE
+yoq8uWofgddD3Rcmhspu5a/Af/DX7s7RkrVT3BH3PfwJ+WaAm/60vpVxx8vhNl8r
+kQvc1mwzuyyqh4BgmpcC2vYSn7ECJNSdawcY0bi4lJvCHmU60Bv1Lg4SQ0cqVKs/
+OSjZdwyeLOTfovDQevKD0xRV52WxlrMZg7dhPG2DcUytrKl+36PPEpO6LdzxibCy
+LPAsklzDMOTgfF/7jTZWgAxyL4c5UslXk1X6zkKyWJTmABlvu2RBt7dgdINTKH68
+g+5y5vApXegkbkZDFvFes25QvOZMFNx3JcmHVO4qp2EvsVv4krhAIyFb4BX0Zdjw
+ORHv2KJQD/x56JweQ/iX72oMz2PKZCpLSTExhLerF2lGrBlubqMLmZqII1MwL6T0
+IMwEo1PB4UkBo8wWDZPUhk786Oxp6jNxdNtNRa3caD4KwvQOwP0nbGgSoDN91LHY
+tTb1cjdE03S0fmihIdIdfBM+dHZGKbQY6SoPGZ+xtyW98Moc6VpI8O0uAIJYO5gP
+FdQSn0NEOTFYlVDZvldQMkgPaAUi4fRmNOBQu7WWvaUHa+nlSFG7TpjqWJKY+CYJ
+ekw3PxfOn7Z677QjnBeXPr99kCAqiZBR/KEzs+USaGStNcObWns=
+=LON4
+-----END PGP SIGNATURE-----
+
+--4mlfdkp3wjmc3cs3--
 
