@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-5726-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5727-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACDA98988A2
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 15:16:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E40E58988CA
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 15:29:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67FDA283213
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 13:16:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99F7D1F2B131
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 13:29:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDC6286245;
-	Thu,  4 Apr 2024 13:16:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D17E86630;
+	Thu,  4 Apr 2024 13:29:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A0628689;
-	Thu,  4 Apr 2024 13:16:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D764F126F11;
+	Thu,  4 Apr 2024 13:29:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712236602; cv=none; b=sH/8xHmWn99L5RnpW5aHJhkf4QZ1YjKVigInoYt8EauWXgO1TINZD4ZJE7IrY19H7Yo0SVmJ9UwEOuAe7/IqAEmTVPjfqZSedDqJJbXFEOKbhJzce+lBMdPHdUhIBEH8bc/cFA7d3e7aB5tdPlxnJOTbhDTCWJURm93feLF43hY=
+	t=1712237366; cv=none; b=ZDjmwmSdwYHKmwTZYNIUTX05gA8Kk89Z0FG483K3AOk0QTZrLZ6QLu+TX70++DCqKhJuIEk8THdtsY4w4WPAhh8BhbyT+abf1HahFiiSuCoPBTFp3CEBUNZt7w0O2XJuSqkGo1nDppIekjamkxaekk9Hmv5Q7XFjJxk3qJ4QgtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712236602; c=relaxed/simple;
-	bh=TR7WvF23rSs9wEWaykqODmnHFhPeoYBmYviUs6Ehl2A=;
+	s=arc-20240116; t=1712237366; c=relaxed/simple;
+	bh=JXUSbR3DZMUdA5qPCn8yNi7WcEgGX4f05m/gtXUyQxU=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RqvspCP/4NHsk8waGBnCJXhWFU7DPl0qHBRxpJTqM1WOgFGh32Lzf3p3ed0qD3acAdLR3f5wmujUH2GQX4pR6nCeYizIJQqfQFXmRoV4vEqB9pj2nhKvwLLPr8/ZWLt/B9edmR4rqxpeORq8NleSLaSzYA4YPddnFCStcEn2brg=
+	 MIME-Version:Content-Type; b=EvVWPnNb+Btz7Tq8NOOTH26qlr4TtsjbugsdBcbKBJJGwkZ04AcH/wLUo4UeD+eknuL+dSsn0a7FylNzV1TFzKkVS3h24N9pE1dfVJV6j1eaqWJMgRmCqbTF2DtgWNIQaF3cz0EDM2p0zFhiOwLduHxg4t9uv2MVLMwr0RnG45g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9MYF484Hz6HJZV;
-	Thu,  4 Apr 2024 21:15:13 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9Mm76wPJz6J7Q4;
+	Thu,  4 Apr 2024 21:24:39 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CCA4E140CF4;
-	Thu,  4 Apr 2024 21:16:35 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 33C8F140B2F;
+	Thu,  4 Apr 2024 21:29:19 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 4 Apr
- 2024 14:16:35 +0100
-Date: Thu, 4 Apr 2024 14:16:34 +0100
+ 2024 14:29:10 +0100
+Date: Thu, 4 Apr 2024 14:29:09 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <ira.weiny@intel.com>,
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
 	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
 	<dave@stgolabs.net>, <bhelgaas@google.com>, <lukas@wunner.de>
-Subject: Re: [PATCH v3 4/4] cxl: Add post reset warning if reset is detected
- as Secondary Bus Reset (SBR)
-Message-ID: <20240404141634.00003872@Huawei.com>
-In-Reply-To: <660d83708993_2459629416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Subject: Re: [PATCH v3 3/4] PCI: Create new reset method to force SBR for
+ CXL
+Message-ID: <20240404142909.00002084@Huawei.com>
+In-Reply-To: <3d4a14a8-7720-4ecc-9099-1bb94b3e7013@intel.com>
 References: <20240402234848.3287160-1-dave.jiang@intel.com>
-	<20240402234848.3287160-5-dave.jiang@intel.com>
-	<20240403163257.000060e1@Huawei.com>
-	<660d83708993_2459629416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240402234848.3287160-4-dave.jiang@intel.com>
+	<20240403160911.000016c0@Huawei.com>
+	<3d4a14a8-7720-4ecc-9099-1bb94b3e7013@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -64,70 +64,102 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 3 Apr 2024 09:27:28 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> > On Tue, 2 Apr 2024 16:45:32 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
 > >   
-> > > SBR is equivalent to a device been hot removed and inserted again. Doing a
-> > > SBR on a CXL type 3 device is problematic if the exported device memory is
-> > > part of system memory that cannot be offlined. The event is equivalent to
-> > > violently ripping out that range of memory from the kernel. While the
-> > > hardware requires the "Unmask SBR" bit set in the Port Control Extensions
-> > > register and the kernel currently does not unmask it, user can unmask
-> > > this bit via setpci or similar tool.
-> > > 
-> > > The driver does not have a way to detect whether a reset coming from the
-> > > PCI subsystem is a Function Level Reset (FLR) or SBR. The only way to
-> > > detect is to note if a decoder is marked as enabled in software but the
-> > > decoder control register indicates it's not committed.
-> > > 
-> > > A helper function is added to find discrepancy between the decoder
-> > > software state versus the hardware register state.
-> > > 
-> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
+> >> +
+> >> +	bridge = pci_upstream_bridge(dev);
+> >> +	if (!bridge)
+> >> +		return -ENOTTY;
+> >> +
+> >> +	dvsec = cxl_port_dvsec(bridge);
+> >> +	if (!dvsec)
+> >> +		return -ENOTTY;
+> >> +
+> >> +	if (probe)
+> >> +		return 0;
+> >> +
+> >> +	pci_cfg_access_lock(bridge);
+> >> +	rc = pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
+> >> +	if (rc) {
+> >> +		rc = -ENOTTY;
+> >> +		goto out;
+> >> +	}
+> >> +
+> >> +	if (!(reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)) {
+> >> +		val = reg | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR;
+> >> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
+> >> +				      val);
+> >> +	} else {
+> >> +		val = reg;
+> >> +	}
+> >> +
+> >> +	rc = pci_reset_bus_function(dev, probe);
+> >> +
+> >> +	if (reg != val)
+> >> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, reg);
+> >> +
+> >> +out:
+> >> +	pci_cfg_access_unlock(bridge);  
 > > 
-> > As I said way back on v1, this smells hacky.
-> > 
-> > Why not pass the info on what reset was done down from the PCI core?
-> > I see Bjorn commented it would be *possible* to do it in the PCI core
-> > but raised other concerns that needed addressing first (I think you've
-> > dealt with thosenow).  Doesn't look that hard to me (I've not coded it
-> > up yet though).
-> > 
-> > The core code knows how far it got down the list reset_methods before
-> > it succeeded in resetting.  So...
-> > 
-> > Modify __pci_reset_function_locked() to return the index of the reset
-> > method that succeeded. Then pass that to pci_dev_restore().
-> > Finally push it into a reset_done2() that takes that as an extra
-> > parameter and the driver can see if it is FLR or SBR.
-> > The extended reset_done is to avoid modifying lots of drivers.
-> > However a quick grep suggests it's not that heavily used (15ish?)
-> > so maybe just add the parameter.
-> > 
-> > There are a few other paths, but non look that problematic at
-> > first glance...
-> > 
-> > So Bjorn, now the rest of this is hopefully close to what you'll be
-> > happey with, which way do you prefer?  
+> > Maybe a guard() use case to allow early returns in error paths?  
 > 
-> I will defer to Bjorn, but I am not fan of this reset_done2() proposal.
-> "Revalidate after reset" is a common driver pattern and all that
-> plumbing the effective-reset-type does is make cxl_reset_done() more
-> precise for no discernible value.
+> I'm not seeing a good way to do it. pci_cfg_access_lock/unlock() isn't like your typical lock/unlock. It locks, changes some pci_dev internal stuff, and then unlocks in both functions. The pci_lock isn't being held after lock() call.
+> 
 
-As per other thread branch, I think you are right, but key is this is not
-detecting the SBR at all, it's detecting HDM decoders not being in expected
-state. If they weren't setup before SBR, then we don't warn.  So SBR is
-the cause, but not what is being detected (which is a subset of SBR results)
-  
+You've lost me.
+
+Why does guard() care about the internals?
+
+All it does is stash a copy of the '_lock' - here the bridge struct pci_dev then call the _unlock
+on it when the stashed copy of that pointer when it goes out of scope.
+
+Those functions don't need to hold a conventional lock.  Though in this case
+I believe the lock is effectively pci_dev->block_cfg_access.
+
+FWIW we do the similar in IIO (with a conditional lock for extra fun :)
+https://elixir.bootlin.com/linux/v6.9-rc2/source/include/linux/iio/iio.h#L650
+That is setting a flag much like this one.  Don't look too closely at that though
+as it evolved into a slightly odd form and needs a revisit.
+
+This was a possible nice to have, not something I care that much about
+in this patch set so feel free to not do it :)
+
+Jonathan
+
+
+
+> >   
+> >> +	return rc;
+> >> +}
+> >> +
+> >>  void pci_dev_lock(struct pci_dev *dev)
+> >>  {
+> >>  	/* block PM suspend, driver probe, etc. */
+> >> @@ -5066,6 +5109,7 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
+> >>  	{ pci_af_flr, .name = "af_flr" },
+> >>  	{ pci_pm_reset, .name = "pm" },
+> >>  	{ pci_reset_bus_function, .name = "bus" },
+> >> +	{ cxl_reset_bus_function, .name = "cxl_bus" },
+> >>  };
+> >>  
+> >>  static ssize_t reset_method_show(struct device *dev,
+> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >> index 16493426a04f..235f37715a43 100644
+> >> --- a/include/linux/pci.h
+> >> +++ b/include/linux/pci.h
+> >> @@ -51,7 +51,7 @@
+> >>  			       PCI_STATUS_PARITY)
+> >>  
+> >>  /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
+> >> -#define PCI_NUM_RESET_METHODS 7
+> >> +#define PCI_NUM_RESET_METHODS 8
+> >>  
+> >>  #define PCI_RESET_PROBE		true
+> >>  #define PCI_RESET_DO_RESET	false  
+> >   
 > 
 
 
