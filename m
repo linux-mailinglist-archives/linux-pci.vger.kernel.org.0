@@ -1,131 +1,137 @@
-Return-Path: <linux-pci+bounces-5735-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5736-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1C1A898B9B
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 17:54:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DFC1898C80
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 18:48:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6CAB4B21E42
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 15:53:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 382F11C25CF5
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 16:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDAE12AAEC;
-	Thu,  4 Apr 2024 15:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C9AE1D559;
+	Thu,  4 Apr 2024 16:48:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BVFVrXWG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qp5jlMUK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864DC224DE
-	for <linux-pci@vger.kernel.org>; Thu,  4 Apr 2024 15:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5822F1F945;
+	Thu,  4 Apr 2024 16:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712246027; cv=none; b=KjWbQvQmIlQX3KD3iE/R81osGZmABBvHupUV+MYQN0z6p0wznIIb2jO8z9ToOiC0joG4PrWOUgW6mWOAMXaiNS4yiet8yMi/fSHOPlKhTEIyuHhreNxch8wdWh04sZpp7iQVAhg6rl87UQHfz6H0C5O0LTwq2gInESNk54NGCPc=
+	t=1712249315; cv=none; b=KyrGtGc8ZT/OFEDWpdJH/tfUOfcj3a7BCuBMpHw8ZlrpYCPc8x7IivjR/5TaLsW7ZOt/JEVpsAVsgLe+O0Ow4WpUf3MlMyLkDZC6uTZsG/yBJCeU4+6JeHiSlN8KWQwQZehsI3sEGulXg9+f5KvIjeR491Dbl6YiCXKMgWG7cME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712246027; c=relaxed/simple;
-	bh=IOtUCFZKVp3dT19yR6jJ9GMvsH8zvq9FCQseOX3yf9o=;
+	s=arc-20240116; t=1712249315; c=relaxed/simple;
+	bh=4+baO60/HkS8UEwh6dSBVKOlPPoYLPD8QXa9JwEp79U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cdFLcXuET5OeZsYeXjS0PYV0n2vVb0NzNEGfnhCBK7pfuM3wuBCitklfLQkaL/EB/oa28EWz588yqhyQWctwiwKVQ7xhQZedAgJlT8btW+ZuVCZUlDiRedUnYJj3rEr/yIcGB7JHNux/oBbFHRo0r5Ek9x+Fh+G2t2My6uK+KXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BVFVrXWG; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e2b1cd446fso5543235ad.3
-        for <linux-pci@vger.kernel.org>; Thu, 04 Apr 2024 08:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712246024; x=1712850824; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A76vBCCK1MtmEH4eG8ItKOT6t7ZQD66dj/w9DMvOXMg=;
-        b=BVFVrXWGbHM8qhB83t61mMhoFmPEG/vvXxwDqH1cO4dmIBHr8/1IDsGi4qSkpI1k4n
-         IFPzn/bKEHJ7xk1lTHPvtQOWx8ph68tt3qtGFBM4E0x0kIm+hoCTagL93wBnUpCxbysn
-         ctKRBG/Vphb2ycZOZaC7kb6iP7BdUHqurZCihc2ZdOW7eDxQwu/h6fFMUQJITVpehpwe
-         8du7xfNyX3Jkyq0Sv/YmFPiBj1gfDK/A1GGBhj+6dTEJelt5NWcRC5sa/GI2HjI0X42m
-         CHhzJ5iQUHuc32nLT6KL5UqMS/n9yZ539GAoi4/VZHNF83i/5WULkZmoJ+/P6odCsZ9b
-         r4Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712246024; x=1712850824;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A76vBCCK1MtmEH4eG8ItKOT6t7ZQD66dj/w9DMvOXMg=;
-        b=nxQ3RflBMwjOxw9sr2z/dkp5KBVLAzTbcGU/inekkd+cW0+QuNn9PnMQhKbjra4smb
-         prOIcJFDxo6OP45hKJT+uZsXzIjRfz2vK+35jP5iJUa/0dWOSl8pGhLmpP1lmBB3k5oa
-         uMkLBJvs4/SAylm6ErYPCZCrBNreDV6vOBsi4auCziukA3c03kHLNXYMpo93o1y4K2pk
-         XX32jIYoxsKCwYHdeMUMAqKj58u6s+rqT+GHFsJcUf4/M7uEFr9LQrtp4lbvh8Ds9piQ
-         1oxaCa6/cYdLbVLTXqtqQjddOSwk7TBfQ/U0qOu/rsGoGuexEaqsTnN1+4sORlglcmxK
-         Cxug==
-X-Forwarded-Encrypted: i=1; AJvYcCWbKBp4e1Cr/UdeV2Hcusnju1YZi3hHGN5Ydp5ths/4aFM0qF97xUs/7RWZLmBVkVUHV8hxcE8yCpPIfHe5zLEdciuNyZ8z+TfO
-X-Gm-Message-State: AOJu0YwdgNvItVf0bwRdShDR/1ctpGFUMJwYDVKZVSoJlfsOA7HBRxNX
-	MpiuyQMhM5m/JRhaHFXHragrQS0AIyLHL/IC8vLdYqK0XsrIPz+9LhCO/UPTPA==
-X-Google-Smtp-Source: AGHT+IHdHFRWhWuUy3OLIL8u9AasmKRgsmM+36CA87IVGIRfTrIK/xuFlhL0VT9keY1uCHdtZQz8uw==
-X-Received: by 2002:a17:902:ce86:b0:1e2:5e2f:682 with SMTP id f6-20020a170902ce8600b001e25e2f0682mr3358537plg.2.1712246023633;
-        Thu, 04 Apr 2024 08:53:43 -0700 (PDT)
-Received: from thinkpad ([103.203.73.241])
-        by smtp.gmail.com with ESMTPSA id n18-20020a170903111200b001e0bae4490fsm15599425plh.154.2024.04.04.08.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 08:53:43 -0700 (PDT)
-Date: Thu, 4 Apr 2024 21:23:37 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=X4sPoBCoposnqivR1gcItX9YpBGOGtfNOg6zNPWkqUwF1XXxcN/vwbo1IS7RIZ37qtFq6JqCNPPCs1EZ/2M4+MggXWZk9/8v2RQCCdkGImeFwq38QC3o8+jetIXRe2JI2I8x55DWE3wgB2YqCQnYnKHsvx1fg6BHSwPD8wswKYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qp5jlMUK; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712249314; x=1743785314;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4+baO60/HkS8UEwh6dSBVKOlPPoYLPD8QXa9JwEp79U=;
+  b=Qp5jlMUK0iOxzjD8Q9e8eJ5atyZulISqdhw38BCPv4mMlqnYekqrvQsh
+   aGSXmDq7e9YtrZK7SfAWQVtmv7YYuuX72S9OR5vfl7NogCwH1a7qCRepd
+   pB7VTuM4VuTy07mkMuihm3nQTfHsYRToPPq96aZU7J0+hmx6KGn8RxtM+
+   fQR/G29NaaRYkDW150APCefIustM1OoFzDbZkXdM3ILHR7QH/X5E6xjbL
+   dWrjHPeBeyI5/9UdaWZOCptyUzE199fNMXFPg2/Dm1BQy4oeDHsVKrdYQ
+   Mtbp4nxNrFYyhQfemd8dehaILySDtP93jIiS23+RHsLbOY8WtDmdB9QWu
+   g==;
+X-CSE-ConnectionGUID: qjiki0FtRjmHpoj/GMWYlQ==
+X-CSE-MsgGUID: F4vEdzfkRmWw69I52rONDQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7671623"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="7671623"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 09:48:04 -0700
+X-CSE-ConnectionGUID: czlhlvDrQJSA4NTlZ8L56A==
+X-CSE-MsgGUID: Ai+mWD5GSb6eXXkGMVH61A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="18891118"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 04 Apr 2024 09:48:00 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rsQFq-0001IY-04;
+	Thu, 04 Apr 2024 16:47:58 +0000
+Date: Fri, 5 Apr 2024 00:47:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Phil Elwell <phil@raspberrypi.com>,
+	bcm-kernel-feedback-list@broadcom.com
+Cc: oe-kbuild-all@lists.linux.dev,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
-Message-ID: <20240404155337.GB35218@thinkpad>
-References: <20240319-pme_msg-v5-0-af9ffe57f432@nxp.com>
- <20240319-pme_msg-v5-4-af9ffe57f432@nxp.com>
+	Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 3/4] PCI: brcmstb: Set downstream maximum {no-}snoop
+ LTR values
+Message-ID: <202404050014.hKb6rKUM-lkp@intel.com>
+References: <20240403213902.26391-4-james.quinlan@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240319-pme_msg-v5-4-af9ffe57f432@nxp.com>
+In-Reply-To: <20240403213902.26391-4-james.quinlan@broadcom.com>
 
-On Tue, Mar 19, 2024 at 12:07:14PM -0400, Frank Li wrote:
-> Add PCIE_MSG_CODE_PME_TURN_OFF macros to enable a PCIe host driver to send
-> PME_Turn_Off messages.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/pci.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index ffd066c15f3bb..989681a0d6057 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -40,6 +40,8 @@
->  #define PCIE_MSG_CODE_DEASSERT_INTC	0x26
->  #define PCIE_MSG_CODE_DEASSERT_INTD	0x27
->  
-> +#define PCIE_MSG_CODE_PME_TURN_OFF	0x19
-> +
+Hi Jim,
 
-I think this could be moved before INTx to keep the codes sorted.
+kernel test robot noticed the following build warnings:
 
-- Mani
+[auto build test WARNING on 9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e]
 
->  extern const unsigned char pcie_link_speed[];
->  extern bool pci_early_dump;
->  
-> 
-> -- 
-> 2.34.1
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Jim-Quinlan/dt-bindings-PCI-brcmstb-Add-property-brcm-clkreq-mode/20240404-054118
+base:   9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
+patch link:    https://lore.kernel.org/r/20240403213902.26391-4-james.quinlan%40broadcom.com
+patch subject: [PATCH v9 3/4] PCI: brcmstb: Set downstream maximum {no-}snoop LTR values
+config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240405/202404050014.hKb6rKUM-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240405/202404050014.hKb6rKUM-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404050014.hKb6rKUM-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/controller/pcie-brcmstb.c:728:6: warning: no previous prototype for 'brcm_set_downstream_devs_ltr_max' [-Wmissing-prototypes]
+     728 | void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/brcm_set_downstream_devs_ltr_max +728 drivers/pci/controller/pcie-brcmstb.c
+
+   727	
+ > 728	void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
+   729	{
+   730		struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+   731		u16 ltr_fmt = FIELD_PREP(GENMASK(9, 0), BRCM_LTR_MAX_VALUE)
+   732			| FIELD_PREP(GENMASK(12, 10), BRCM_LTR_MAX_SCALE)
+   733			| GENMASK(15, 15);
+   734	
+   735		if (bridge->native_ltr)
+   736			pci_walk_bus(bridge->bus, brcm_set_dev_ltr_max, &ltr_fmt);
+   737	}
+   738	
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
