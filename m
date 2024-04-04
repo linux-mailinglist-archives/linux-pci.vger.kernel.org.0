@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-5690-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5691-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6A3B898056
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 07:23:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CC3389805D
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 07:24:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 139031C272B1
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 05:23:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A08991C25D42
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 05:24:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 554A28664C;
-	Thu,  4 Apr 2024 05:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28C21272A3;
+	Thu,  4 Apr 2024 05:15:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CC3286279;
-	Thu,  4 Apr 2024 05:15:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D87C8662A;
+	Thu,  4 Apr 2024 05:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712207733; cv=none; b=ZYbGK+M/4XOvOWyiNRnUzFFQ6ZH0Ht7byLdICiOO/rPyQYa8n+lREUJbzj1utxVPGNMhr9ByHdGcTf8NaewOqBupBuVPJU+1atkpltA7PLHbPjimrRtoZl6hYWtRJDvlaB74AsfbSoOqjnKGiQ+aCVv6sgIeGRmKn6YyYs8m5rg=
+	t=1712207734; cv=none; b=FotAleyCsQ7j5yiix5VQBxAdkpkfCQ20YDJFmyh7pYfyDetsZpsCmFhei0YrvyfgHgNm1ixYcL0WGLPm3bO/PtA0mIp3IHPZqZZZsgnba0T2O6dB33a4n/3T6OOoeZ4QTtjL0R8sS7j+q86mw1X21wQKgZ1XdiMiIvKSE/fDlX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712207733; c=relaxed/simple;
-	bh=7IdyKC16TiRcoV3/cW/Zd7MaUktUAv9ffK9AZ3hzcao=;
+	s=arc-20240116; t=1712207734; c=relaxed/simple;
+	bh=/SVwW82/qqoafDX5rrWInlnHjQYhzm2Ysf1xX40RPDI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=enwMgBl7JYwXzDerws05Y/Jg/jlU4rxD1MhxOwKrDku6y5ZpgilVuEOadHn58KfaHXpd1s4P9UDlHxY46pHydAlFJBISQINgHzD5ZOr3AbPUVjRDInQdAkk5utYyChld6cefvxmfjgHApHsQV/VEnJowrCyAzu5Y/YMm6p0+umU=
+	 MIME-Version; b=p/kGHjN/8D0Ra1ZstV6hBOD6ZPLUFlrjVP1Xd8h9TDR5IS1BQJlcV7mMvLWQvcBiDdY/eVkAtBBjXBYJuaW4qVWuvAQjAZaOl9m2mWJ3PO9UntLtEmbCGOfdD615askx/KN8Dh7y/bhEauO2+7OKGN8/ayJjOt9Bzo/cwhNI40w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id C307C1C0FF1;
-	Thu,  4 Apr 2024 14:15:28 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id A1CCF1C0FFA;
+	Thu,  4 Apr 2024 14:15:30 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -95,9 +95,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [RESEND v7 19/37] dt-bindings: interrupt-controller: renesas,sh7751-irl-ext: Add json-schema
-Date: Thu,  4 Apr 2024 14:14:30 +0900
-Message-Id: <8d8dec2d75890f3a14632c9606c332fb11d89a95.1712207606.git.ysato@users.sourceforge.jp>
+Subject: [RESEND v7 20/37] serial: sh-sci: fix SH4 OF support.
+Date: Thu,  4 Apr 2024 14:14:31 +0900
+Message-Id: <38f5834918e7e9dff023e8db970bc3c0160583ec.1712207606.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1712207606.git.ysato@users.sourceforge.jp>
 References: <cover.1712207606.git.ysato@users.sourceforge.jp>
@@ -109,77 +109,54 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Renesas SH7751 external interrupt encoder json-schema.
+- fix earlycon name.
+- fix earlyprintk hung (NULL pointer reference).
+- fix SERIAL_SH_SCI_EARLYCON enablement
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../renesas,sh7751-irl-ext.yaml               | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
+ drivers/tty/serial/Kconfig  | 2 +-
+ drivers/tty/serial/sh-sci.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
-new file mode 100644
-index 000000000000..fc174c0467e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/renesas,sh7751-irl-ext.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas SH7751 external interrupt encoder with enable regs.
-+
-+maintainers:
-+  - Yoshinori Sato <ysato@users.sourceforge.jp>
-+
-+description:
-+  This is the generally used external interrupt encoder on SH7751 based boards.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: renesas,sh7751-irl-ext
-+
-+  reg: true
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  '#address-cells':
-+    const: 0
-+
-+  renesas,set-to-disable:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: Invert enable registers. Setting the bit to 0 enables interrupts.
-+
-+  renesas,enable-reg:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: |
-+      IRQ enable register bit mapping
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+  - renesas,enable-reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    r2dintc: interrupt-controller@a4000000 {
-+        compatible = "renesas,sh7751-irl-ext";
-+        reg = <0xa4000000 0x02>;
-+        interrupt-controller;
-+        #address-cells = <0>;
-+        #interrupt-cells = <1>;
-+        renesas,enable-reg = <12 9 10 3 0 4 1 2 8 5 6 7 15 15 15 11>;
-+    };
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index ffcf4882b25f..dfe5fd436816 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -661,7 +661,7 @@ config SERIAL_SH_SCI_EARLYCON
+ 	depends on SERIAL_SH_SCI=y
+ 	select SERIAL_CORE_CONSOLE
+ 	select SERIAL_EARLYCON
+-	default ARCH_RENESAS
++	default ARCH_RENESAS || SUPERH
+ 
+ config SERIAL_SH_SCI_DMA
+ 	bool "DMA support" if EXPERT
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index e512eaa57ed5..46466fb5a637 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -2717,7 +2717,7 @@ static int sci_remap_port(struct uart_port *port)
+ 	if (port->membase)
+ 		return 0;
+ 
+-	if (port->dev->of_node || (port->flags & UPF_IOREMAP)) {
++	if ((port->dev && port->dev->of_node) || (port->flags & UPF_IOREMAP)) {
+ 		port->membase = ioremap(port->mapbase, sport->reg_size);
+ 		if (unlikely(!port->membase)) {
+ 			dev_err(port->dev, "can't remap port#%d\n", port->line);
+@@ -3545,8 +3545,8 @@ static int __init hscif_early_console_setup(struct earlycon_device *device,
+ 
+ OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
+ OF_EARLYCON_DECLARE(scif, "renesas,scif", scif_early_console_setup);
+-OF_EARLYCON_DECLARE(scif, "renesas,scif-r7s9210", rzscifa_early_console_setup);
+-OF_EARLYCON_DECLARE(scif, "renesas,scif-r9a07g044", rzscifa_early_console_setup);
++OF_EARLYCON_DECLARE(rzscifa, "renesas,scif-r7s9210", rzscifa_early_console_setup);
++OF_EARLYCON_DECLARE(rzscifa, "renesas,scif-r9a07g044", rzscifa_early_console_setup);
+ OF_EARLYCON_DECLARE(scifa, "renesas,scifa", scifa_early_console_setup);
+ OF_EARLYCON_DECLARE(scifb, "renesas,scifb", scifb_early_console_setup);
+ OF_EARLYCON_DECLARE(hscif, "renesas,hscif", hscif_early_console_setup);
 -- 
 2.39.2
 
