@@ -1,65 +1,48 @@
-Return-Path: <linux-pci+bounces-5644-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5645-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3551C897CFD
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 02:21:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B6CE897DCD
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 04:41:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE71328DC66
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 00:21:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15C0528A83F
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 02:41:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C23D647;
-	Thu,  4 Apr 2024 00:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5AA9282E2;
+	Thu,  4 Apr 2024 02:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aE7C3M0M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayh00Toi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F18367;
-	Thu,  4 Apr 2024 00:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28C81CD35;
+	Thu,  4 Apr 2024 02:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712190083; cv=none; b=rR6ifs2/fmCaeMqRluloBo4DlEQrX2c1ypI33DcLK4lRcNaoqOJvM/uBIrYGLasTTK/dVCsA4g40PkdWfxXOJ80B7MqP7taEvHTXkJnSxrS7o7E2CBJAwooo2JuRncKIWCDbW16Mz0tmbpFapR7f7A2KW8x31axAca7rycoanmU=
+	t=1712198441; cv=none; b=I1GW8aUaP2tRru7IXaaBIEmOJVJI7HdfAUicMWNe4g35Oz4qJQFP/xf4fAGY9Ke9WYiVUmZI29OB3mW4+lwWX6IHCsPx272HXTW3jK3lC/JAnmJu+w0zkyZf+ja9dQ1PqazMwt2kERMqRunCvDvDjoR3ic3PBARiCFi8wacYKQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712190083; c=relaxed/simple;
-	bh=vFTQ82vo8wGIbhelQLMSbqColCwk5sKeS/9E2qjoF8M=;
+	s=arc-20240116; t=1712198441; c=relaxed/simple;
+	bh=nWBOnkzfJqiTI89c9fyFiP7jWvqgYA/ILTaVMO7uAq4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tgem2FPuxSRj5hng0ORp9weddmmZSqu26VqL3S+x6CRrcQYRkGzXvbXh0fU0Pr5N8LYBvCcYydV5YccbUmtYjynLzk0QwovKtQc50CpZoEptPUgkNDapNfDXQLfPceM47OBSDmVJLpqJMBNhyUMhdV0/IKa03ICTlIXMhZ/YWVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aE7C3M0M; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712190081; x=1743726081;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vFTQ82vo8wGIbhelQLMSbqColCwk5sKeS/9E2qjoF8M=;
-  b=aE7C3M0MXJte8Acv3RETZShxJFETavivQvwYkZmEdCwZbr4IhtwyQP0H
-   WG1G88ESbzKIHVxuvw6977cTdDszSex1tCm66y+FZlJdZC5WGWWrivK8S
-   sjiDpwr3mwPXIvjal2THErw6dOSIUNoc2HX9fc4UMRwsNMr7OuFpVk8RK
-   MdCcH/ruXAD+Ts0iPE3ockh844FAvHhzILB+N7GXT5DWNGjEkIXPHwdDu
-   KJqQsAKv/hHK2+ncC+R7JOtE+SzViV6Dkpt3pTKrF5Gpu4bkk567SIaNf
-   K3HfUWPsJSzr6wF5rB8bJrv1Zh/9r8gVFyCyo314uZyrSuS/38a+pPWXU
-   w==;
-X-CSE-ConnectionGUID: uga1aK/3SKy/XsuBGWycBA==
-X-CSE-MsgGUID: ow57S+uuRSCvJaVIJOZJMA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7323862"
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="7323862"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 17:21:21 -0700
-X-CSE-ConnectionGUID: uf4d4fHeT2SKBUWxYb6q0Q==
-X-CSE-MsgGUID: JneW1IhoTLOEExVvXt62NQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="23072107"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.162.81]) ([10.213.162.81])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 17:21:20 -0700
-Message-ID: <3d4a14a8-7720-4ecc-9099-1bb94b3e7013@intel.com>
-Date: Wed, 3 Apr 2024 17:21:20 -0700
+	 In-Reply-To:Content-Type; b=Sh0u3aDVFdGBZ+7OQSIsOX+6jA9tgV6EC5Oys9Y21auJ05isBhXiG/FKMXBMgP13WByhLPW9UG+YJZUkuH6d+oBlrTd1u7l9VrazkPO12kSFQXN9WCMnB4lzz17xreRzVi1Xea9CBU5bQJKPJieYs0uEbVMztWkaVKgyinrCz38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayh00Toi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E71C433F1;
+	Thu,  4 Apr 2024 02:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712198441;
+	bh=nWBOnkzfJqiTI89c9fyFiP7jWvqgYA/ILTaVMO7uAq4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ayh00ToiXPZtL5GJsl3/F863u9O6MDDsWUSAWLT2VQZj1MHKal3sR/IBHAbb0f6Ci
+	 JsxvWGs1kdf89k7OFvQLUAhsdCU3oHE6isB4+ulHtquiQST5tkXJV03+J6NZYpa1Gm
+	 GttpkAjIdO6MgjxhgpG+sZkog6YrkWlfeu5Kh6zRaf9GM2o7EZuTsIoYI+yzDLSq29
+	 d+y11ZOd9agspXCKFKVZr6NO7e0cGe+3oYJ5Sgkvazd2T2M/13Gr/7796bWHJNyasw
+	 cYKFNVnhnC2JenmWLxcJ9U2KTUzc78JkCYMO9FO8HAREKkAuFxLSDNiJKVxEAJCWYx
+	 y/Jm9xkiA7ZwQ==
+Message-ID: <62ae8487-b768-424e-b6a5-a5f31b3b55bb@kernel.org>
+Date: Thu, 4 Apr 2024 11:40:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,143 +50,67 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] PCI: Create new reset method to force SBR for CXL
+Subject: Re: [PATCH v2 02/10] PCI: endpoint: Decouple EPC and PCIe bus
+ specific events
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>,
+ linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+ linux-tegra@vger.kernel.org, Niklas Cassel <cassel@kernel.org>
+References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
+ <20240401-pci-epf-rework-v2-2-970dbe90b99d@linaro.org>
+ <45b2db99-2d03-469b-aa37-bc6c63cef141@kernel.org>
+ <20240403142650.GA72531@thinkpad>
+From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, dave@stgolabs.net, bhelgaas@google.com,
- lukas@wunner.de
-References: <20240402234848.3287160-1-dave.jiang@intel.com>
- <20240402234848.3287160-4-dave.jiang@intel.com>
- <20240403160911.000016c0@Huawei.com>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240403160911.000016c0@Huawei.com>
+Organization: Western Digital Research
+In-Reply-To: <20240403142650.GA72531@thinkpad>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 4/3/24 8:09 AM, Jonathan Cameron wrote:
-> On Tue, 2 Apr 2024 16:45:31 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> CXL spec r3.1 8.1.5.2
->> By default Secondary Bus Reset (SBR) is masked for CXL ports. Introduce a
->> new PCI reset method "cxl_bus" to force SBR on CXL ports by setting
->> the unmask SBR bit in the CXL DVSEC port control register before performing
->> the bus reset and restore the original value of the bit post reset. The
->> new reset method allows the user to intentionally perform SBR on a CXL
->> device without needing to set the "Unmask SBR" bit via a user tool.
+On 4/3/24 23:26, Manivannan Sadhasivam wrote:
+> On Tue, Apr 02, 2024 at 09:14:20AM +0900, Damien Le Moal wrote:
+>> On 4/2/24 00:50, Manivannan Sadhasivam wrote:
+>>> Currently, 'struct pci_epc_event_ops' has a bunch of events that are sent
+>>> from the EPC driver to EPF driver. But those events are a mix of EPC
+>>> specific events like core_init and PCIe bus specific events like LINK_UP,
+>>> LINK_DOWN, BME etc...
+>>>
+>>> Let's decouple them to respective structs (pci_epc_event_ops,
+>>> pci_epc_bus_event_ops) to make the separation clear.
 >>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> A few trivial things inline.  Otherwise looks fine.
-> 
-> FWIW
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
->> ---
->> v3:
->> - move cxl_port_dvsec() to previous patch. (Dan)
->> - add pci_cfg_access_lock() for the bridge. (Dan)
->> - Change cxl_bus_force method to cxl_bus. (Dan)
->> ---
->>  drivers/pci/pci.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/pci.h |  2 +-
->>  2 files changed, 45 insertions(+), 1 deletion(-)
+>> I fail to see the benefits here. The event operation names are quite clear and,
+>> in my opinion, it is clear if an event op applies to the controller or to the
+>> bus/link. If anything, "core_init" could a little more clear, so renaming that
+>> "ep_controller_init" or something like that (clearly spelling out what is being
+>> initialized) seems enough to me. Similarly, the "bme" op name is very criptic.
+>> Renaming that to "bus_master_enable" would go a long way clarifying the code.
+>> For link events, "link_up", "link_down" are clear. So I think there is no need
+>> to split the event op struct like this. Renaming the ops is better.
 >>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 00eddb451102..3989c8888813 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -4982,6 +4982,49 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->>  	return pci_parent_bus_reset(dev, probe);
->>  }
->>  
->> +static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
->> +{
->> +	struct pci_dev *bridge;
->> +	int dvsec;
+>> Note that I am not opposed to this patch, but I think it is just code churn
+>> that does not really bring any fundamental improvement. Regardless, renaming
+>> "core_init" and "bme" ops is I think desired.
+>>
 > 
-> Lukas' comment on previous applies to this as well.
+> Niklas shared the same view during v1, but I hate to see the events being mixed
+> in a single ops. Especially that it will confuse the developers who are not
+> familiar with the EP subsystem.
+> 
+> But since the argument is coming twice, I've decided to drop this for now and
+> just rename the 'core_init' callback to 'epc_init' and name the deinit callback
+> as 'epc_deinit'.
 
-ok
+Sounds good. Please also rename the completely unclear "bme" operation. Spell it
+out to be clear.
 
-> 
->> +	int rc;
->> +	u16 reg, val;
-> 
-> Maybe combine lines as appropriate.
+-- 
+Damien Le Moal
+Western Digital Research
 
-ok
-
-> 
->> +
->> +	bridge = pci_upstream_bridge(dev);
->> +	if (!bridge)
->> +		return -ENOTTY;
->> +
->> +	dvsec = cxl_port_dvsec(bridge);
->> +	if (!dvsec)
->> +		return -ENOTTY;
->> +
->> +	if (probe)
->> +		return 0;
->> +
->> +	pci_cfg_access_lock(bridge);
->> +	rc = pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
->> +	if (rc) {
->> +		rc = -ENOTTY;
->> +		goto out;
->> +	}
->> +
->> +	if (!(reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)) {
->> +		val = reg | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR;
->> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
->> +				      val);
->> +	} else {
->> +		val = reg;
->> +	}
->> +
->> +	rc = pci_reset_bus_function(dev, probe);
->> +
->> +	if (reg != val)
->> +		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, reg);
->> +
->> +out:
->> +	pci_cfg_access_unlock(bridge);
-> 
-> Maybe a guard() use case to allow early returns in error paths?
-
-I'm not seeing a good way to do it. pci_cfg_access_lock/unlock() isn't like your typical lock/unlock. It locks, changes some pci_dev internal stuff, and then unlocks in both functions. The pci_lock isn't being held after lock() call.
-
-> 
->> +	return rc;
->> +}
->> +
->>  void pci_dev_lock(struct pci_dev *dev)
->>  {
->>  	/* block PM suspend, driver probe, etc. */
->> @@ -5066,6 +5109,7 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
->>  	{ pci_af_flr, .name = "af_flr" },
->>  	{ pci_pm_reset, .name = "pm" },
->>  	{ pci_reset_bus_function, .name = "bus" },
->> +	{ cxl_reset_bus_function, .name = "cxl_bus" },
->>  };
->>  
->>  static ssize_t reset_method_show(struct device *dev,
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 16493426a04f..235f37715a43 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -51,7 +51,7 @@
->>  			       PCI_STATUS_PARITY)
->>  
->>  /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
->> -#define PCI_NUM_RESET_METHODS 7
->> +#define PCI_NUM_RESET_METHODS 8
->>  
->>  #define PCI_RESET_PROBE		true
->>  #define PCI_RESET_DO_RESET	false
-> 
 
