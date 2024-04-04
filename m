@@ -1,223 +1,285 @@
-Return-Path: <linux-pci+bounces-5646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFAEF897DD3
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 04:44:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0DA2897F44
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 07:11:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0084B1C216F8
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 02:44:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58F551F2751C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 05:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 128891C6B8;
-	Thu,  4 Apr 2024 02:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzGdfQ5L"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE088535AC;
+	Thu,  4 Apr 2024 05:10:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC891CA9F;
-	Thu,  4 Apr 2024 02:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F05E20B35;
+	Thu,  4 Apr 2024 05:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712198668; cv=none; b=Sh2aQTQGd8HABMlthHP6oBe7qSa7zxY/2M2RvHlZB0Q+87BnVFPsRc8xOJF4dpLegsYMRwZqGgL1h8Pd7wuGVw8hXKkN9NSk4RHWmZa5d6UbH+GycCU16GES1Y7awDwh6B15oYZzQFHKVw8mSaN3eiyKy9KrB+a9C6RjZNqY2p4=
+	t=1712207431; cv=none; b=oi8wZJJWCQuLJ1AjBjcBiWlBa0qt4XAhkLTTIHAfFanFxWque2/iXhSD3dKER7LAhiZMsMBd7ImfTZyhzNAZciHdRbFZGtuJwPkKO7XrH0hWESAPUqFMB2VEuujcA7N8DcQg1EcbXSpVXqIF1uyRLk0bOFMH8Yh+8tQrEp4SG9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712198668; c=relaxed/simple;
-	bh=tQ9ZqLh/ARmjH/CVuaNVKJd4tLa7dMh1i7FeCkgw9WQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SE+gTmEo8FX0gKRv7nJkSRJSHX1JC2FL2GrwmI9CEz/tyPDxE5JFyFjhPCXKd9Pbn7NxacE6aaXPnn20LP2IrL2VrgB3Zv0yi/BpLVfo2Hsl4kzheYlCZlRUC8Dw3lYoxtEn+i/55uPqzb5E9JRuayqFxugrcTtM06AsTjIFL48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzGdfQ5L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E8DC433C7;
-	Thu,  4 Apr 2024 02:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712198667;
-	bh=tQ9ZqLh/ARmjH/CVuaNVKJd4tLa7dMh1i7FeCkgw9WQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KzGdfQ5Lux0oFduqAYUlB5pb2TRf/rZosmSC+e36HOOFmbAR/JEZQBAb45PvaURol
-	 3JeE67YzjOxiB9gQntUvPhaQh57Totea4USOATFK2GsR3TmjUi1dIIZFHMLbXuzNTI
-	 obpv/TF7o83OEMTnCZh/CNBSznSKUnm8ayh4CXBdlucLYDfWI2Zd3/2owpXLVS02Xf
-	 VNKcEwzLP8Q850N5Py/QeGimPfCrVOjkntURgFYGM8W/vEr+porMzn0CmaIHBO06VA
-	 88JUapavmqdPWUvpAKNqacj4pkOu1Iy0sB2H9Yo7HPZvxuycfcBldRew+6vX+Bhf+L
-	 v9vH7co5OUZNQ==
-Message-ID: <3a2aff21-4b1d-4f99-bd49-bf75f41cb924@kernel.org>
-Date: Thu, 4 Apr 2024 11:43:47 +0900
+	s=arc-20240116; t=1712207431; c=relaxed/simple;
+	bh=3DF/2Dz6pH2U0aQ7KjEm7anPXTkdGjTa5S1TzcVBgGw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lT8n9NJOWHffiqq6MwfrNozjsCA3OpdHsSkhEYxNAHm2vKAJw5CaNH5dPNEnBXXnSGA01KyY8WJ4nq1KTrCEnyf06wAHmWxwUGLJzKT5qluRqKlluUn1AmqRPNL1EvnnSl0dp1HjxiQD6RwZyjAs/aVmskIrkP7dPSGYrQaZqnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
+Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
+	by sakura.ysato.name (Postfix) with ESMTPSA id 0A0E91C0109;
+	Thu,  4 Apr 2024 14:00:35 +0900 (JST)
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
+To: linux-sh@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lee Jones <lee@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	David Rientjes <rientjes@google.com>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Baoquan He <bhe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Manikanta Guntupalli <manikanta.guntupalli@amd.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-ide@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-pci@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: [PATCH v7 00/37] Device Tree support for SH7751 based board
+Date: Thu,  4 Apr 2024 13:59:25 +0900
+Message-Id: <cover.1712205900.git.ysato@users.sourceforge.jp>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/18] PCI: endpoint: Introduce pci_epc_map_align()
-To: Kishon Vijay Abraham I <kvijayab@amd.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- Rick Wertenbroek <rick.wertenbroek@gmail.com>,
- Wilfred Mallawa <wilfred.mallawa@wdc.com>, Niklas Cassel <cassel@kernel.org>
-References: <20240330041928.1555578-1-dlemoal@kernel.org>
- <20240330041928.1555578-3-dlemoal@kernel.org>
- <dccb87db-d826-43fa-a499-cf36ea9b10d5@amd.com>
-From: Damien Le Moal <dlemoal@kernel.org>
-Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <dccb87db-d826-43fa-a499-cf36ea9b10d5@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/3/24 21:33, Kishon Vijay Abraham I wrote:
-> Hi Damien,
-> 
-> On 3/30/2024 9:49 AM, Damien Le Moal wrote:
->> Some endpoint controllers have requirements on the alignment of the
->> controller physical memory address that must be used to map a RC PCI
->> address region. For instance, the rockchip endpoint controller uses
->> at most the lower 20 bits of a physical memory address region as the
->> lower bits of an RC PCI address. For mapping a PCI address region of
->> size bytes starting from pci_addr, the exact number of address bits
->> used is the number of address bits changing in the address range
->> [pci_addr..pci_addr + size - 1].
->>
->> For this example, this creates the following constraints:
->> 1) The offset into the controller physical memory allocated for a
->>     mapping depends on the mapping size *and* the starting PCI address
->>     for the mapping.
->> 2) A mapping size cannot exceed the controller windows size (1MB) minus
->>     the offset needed into the allocated physical memory, which can end
->>     up being a smaller size than the desired mapping size.
->>
->> Handling these constraints independently of the controller being used in
->> a PCI EP function driver is not possible with the current EPC API as
->> it only provides the ->align field in struct pci_epc_features.
->> Furthermore, this alignment is static and does not depend on a mapping
->> pci address and size.
->>
->> Solve this by introducing the function pci_epc_map_align() and the
->> endpoint controller operation ->map_align to allow endpoint function
->> drivers to obtain the size and the offset into a controller address
->> region that must be used to map an RC PCI address region. The size
->> of the physical address region provided by pci_epc_map_align() can then
->> be used as the size argument for the function pci_epc_mem_alloc_addr().
->> The offset into the allocated controller memory can be used to
->> correctly handle data transfers. Of note is that pci_epc_map_align() may
->> indicate upon return a mapping size that is smaller (but not 0) than the
->> requested PCI address region size. For such case, an endpoint function
->> driver must handle data transfers in fragments.
->>
->> The controller operation ->map_align is optional: controllers that do
->> not have any address alignment constraints for mapping a RC PCI address
->> region do not need to implement this operation. For such controllers,
->> pci_epc_map_align() always returns the mapping size as equal
->> to the requested size and an offset equal to 0.
->>
->> The structure pci_epc_map is introduced to represent a mapping start PCI
->> address, size and the size and offset into the controller memory needed
->> for mapping the PCI address region.
->>
->> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
->> ---
->>   drivers/pci/endpoint/pci-epc-core.c | 66 +++++++++++++++++++++++++++++
->>   include/linux/pci-epc.h             | 33 +++++++++++++++
->>   2 files changed, 99 insertions(+)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index 754afd115bbd..37758ca91d7f 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -433,6 +433,72 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>   
->> +/**
->> + * pci_epc_map_align() - Get the offset into and the size of a controller memory
->> + *			 address region needed to map a RC PCI address region
->> + * @epc: the EPC device on which address is allocated
->> + * @func_no: the physical endpoint function number in the EPC device
->> + * @vfunc_no: the virtual endpoint function number in the physical function
->> + * @pci_addr: PCI address to which the physical address should be mapped
->> + * @size: the size of the mapping starting from @pci_addr
->> + * @map: populate here the actual size and offset into the controller memory
->> + *       that must be allocated for the mapping
->> + *
->> + * Invoke the controller map_align operation to obtain the size and the offset
->> + * into a controller address region that must be allocated to map @size
->> + * bytes of the RC PCI address space starting from @pci_addr.
->> + *
->> + * The size of the mapping that can be handled by the controller is indicated
->> + * using the pci_size field of @map. This size may be smaller than the requested
->> + * @size. In such case, the function driver must handle the mapping using
->> + * several fragments. The offset into the controller memory for the effective
->> + * mapping of the @pci_addr..@pci_addr+@map->pci_size address range is indicated
->> + * using the map_ofst field of @map.
->> + */
->> +int pci_epc_map_align(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->> +		      u64 pci_addr, size_t size, struct pci_epc_map *map)
->> +{
->> +	const struct pci_epc_features *features;
->> +	size_t mask;
->> +	int ret;
->> +
->> +	if (!pci_epc_function_is_valid(epc, func_no, vfunc_no))
->> +		return -EINVAL;
->> +
->> +	if (!size || !map)
->> +		return -EINVAL;
->> +
->> +	memset(map, 0, sizeof(*map));
->> +	map->pci_addr = pci_addr;
->> +	map->pci_size = size;
->> +
->> +	if (epc->ops->map_align) {
->> +		mutex_lock(&epc->lock);
->> +		ret = epc->ops->map_align(epc, func_no, vfunc_no, map);
->> +		mutex_unlock(&epc->lock);
->> +		return ret;
->> +	}
->> +
->> +	/*
->> +	 * Assume a fixed alignment constraint as specified by the controller
->> +	 * features.
->> +	 */
->> +	features = pci_epc_get_features(epc, func_no, vfunc_no);
->> +	if (!features || !features->align) {
->> +		map->map_pci_addr = pci_addr;
->> +		map->map_size = size;
->> +		map->map_ofst = 0;
->> +	}
-> 
-> The 'align' of pci_epc_features was initially added only to address the 
-> inbound ATU constraints. This is also added as comment in [1]. The PCI 
-> address restrictions (only fixed alignment constraint) were handled by 
-> the host side driver and depends on the connected endpoint device 
-> (atleast it was like that for pci_endpoint_test.c [2]).
-> So pci-epf-test.c used the 'align' in pci_epc_features only as part of 
-> pci_epf_alloc_space().
-> 
-> Though I have abused 'align' of pci_epc_features in pci-epf-ntb.c using 
-> it out of pci_epf_alloc_space(), I think we should keep the 'align' of 
-> pci_epc_features only within pci_epf_alloc_space() and controllers with 
-> any PCI address restrictions to implement ->map_align(). This could as 
-> well be done in a phased manner to let controllers implement 
-> ->map_align() and then remove using  pci_epc_features in 
-> pci_epc_map_align(). Let me know what you think?
+This is an updated version of something I wrote about 7 years ago.
+Minimum support for R2D-plus and LANDISK.
+I think R2D-1 will work if you add AX88796 to dts.
+And board-specific functions and SCI's SPI functions are not supported.
 
-Yep, good idea. I will remove the use of "align" as a default alignment
-constraint. For controllers that have a fixed alignment constraint (not
-necessarilly epc->features->align), it is trivial to provide a generic helper
-function that implements the ->map_align method.
+You can get it working with qemu found here.
+https://gitlab.com/yoshinori.sato/qemu/-/tree/landisk
 
+v7 changes.
+- sh/kernel/setup.c: fix kernel parameter handling.
+- clk-sh7750.c: cleanup.
+- sh_tmu.c: cleanup.
+- irq-renesas-sh7751.c: IPR definition move to code.
+- irq-renesas-sh7751irl.c: update register definition.
+- pci-sh7751.c: Register initialization fix. 
+- sm501 and sm501fb: Re-design Device Tree properties.
+
+v6 changes.
+- pci-sh7751: merge register define.
+- pci-sh7751: use 'dma-ranges' property.
+- pci-sh7751: rename general PCI properties.
+- sm501 and sm501fb: Re-design Device Tree properties.
+- sh/kernel/setup: cleanup command line setup.
+- irq-sh7751.c: some cleanup.
+
+v5 changes.
+- pci-sh7751: revert header changes. and some fix in previuous driver.
+- sh/kernel/iomap.c: Use SH io functions.
+- sm501 and sm501fb: re-write DT support.
+
+v4 changes.
+- cpg-sh7750: use clk-divider and clk-gate.
+- pci-sh7751: unified header files to old PCI driver.
+- irq-renesas-sh7751: IPR registers direct mapping.
+- irq-renesas-sh7751irl: useful register bit mapping.
+- sm501 and sm501fb: re-write dt parser.
+- j2_minus: fix build error.
+- dt-binding schema: fix some errors.
+- *.dts: cleanup.
+
+v3 changes.
+- Rewrite clk drivers.
+- Added sh_tmu to OF support.
+- Cleanup PCI stuff.
+- Update sm501 and sm501fb OF support.
+- Update devicetree and documents.
+
+v2 changes.
+- Rebasing v6,6-rc1
+- re-write irqchip driver.
+- Add binding documents.
+- Cleanup review comment.
+
+Yoshinori Sato (37):
+  sh: passing FDT address to kernel startup.
+  sh: Kconfig unified OF supported targets.
+  sh: Enable OF support for build and configuration.
+  dt-bindings: interrupt-controller: Add header for Renesas SH3/4 INTC.
+  sh: GENERIC_IRQ_CHIP support for CONFIG_OF=y
+  sh: kernel/setup Update DT support.
+  sh: Fix COMMON_CLK support in CONFIG_OF=y.
+  clocksource: sh_tmu: CLOCKSOURCE support.
+  dt-binding: Add compatible SH7750 SoC
+  sh: Common PCI Framework driver support.
+  pci: pci-sh7751: Add SH7751 PCI driver
+  dt-bindings: pci: pci-sh7751: Add SH7751 PCI
+  dt-bindings: clock: sh7750-cpg: Add renesas,sh7750-cpg header.
+  clk: Compatible with narrow registers
+  clk: renesas: Add SH7750/7751 CPG Driver
+  irqchip: Add SH7751 INTC driver
+  dt-bindings: interrupt-controller: renesas,sh7751-intc: Add
+    json-schema
+  irqchip: SH7751 external interrupt encoder with enable gate.
+  dt-bindings: interrupt-controller: renesas,sh7751-irl-ext: Add
+    json-schema
+  serial: sh-sci: fix SH4 OF support.
+  dt-bindings: serial: renesas,scif: Add scif-sh7751.
+  dt-bindings: display: smi,sm501: SMI SM501 binding json-schema
+  dt-bindings: display: sm501 register definition helper
+  mfd: sm501: Convert platform_data to OF property
+  dt-binding: sh: cpus: Add SH CPUs json-schema
+  dt-bindings: vendor-prefixes: Add iodata
+  dt-bindings: ata: ata-generic: Add new targets
+  dt-bindings: soc: renesas: sh: Add SH7751 based target
+  sh: SH7751R SoC Internal peripheral definition dtsi.
+  sh: add RTS7751R2D Plus DTS
+  sh: Add IO DATA LANDISK dts
+  sh: Add IO DATA USL-5P dts
+  sh: j2_mimas_v2.dts update
+  sh: Add dtbs target support.
+  sh: RTS7751R2D Plus OF defconfig
+  sh: LANDISK OF defconfig
+  sh: j2_defconfig: update
+
+ .../devicetree/bindings/ata/ata-generic.yaml  |   2 +
+ .../bindings/clock/renesas,sh7750-cpg.yaml    | 105 ++++
+ .../bindings/display/smi,sm501.yaml           | 398 +++++++++++++++
+ .../renesas,sh7751-intc.yaml                  |  53 ++
+ .../renesas,sh7751-irl-ext.yaml               |  57 +++
+ .../bindings/pci/renesas,sh7751-pci.yaml      |  89 ++++
+ .../bindings/serial/renesas,scif.yaml         |   1 +
+ .../devicetree/bindings/sh/cpus.yaml          |  63 +++
+ .../devicetree/bindings/soc/renesas/sh.yaml   |  27 +
+ .../bindings/timer/renesas,tmu.yaml           |   2 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/sh/Kconfig                               |  33 +-
+ arch/sh/boards/Kconfig                        |  23 +-
+ arch/sh/boards/of-generic.c                   |  28 +-
+ arch/sh/boot/compressed/head_32.S             |   5 +-
+ arch/sh/boot/dts/Makefile                     |   5 +
+ arch/sh/boot/dts/j2_mimas_v2.dts              |   2 +-
+ arch/sh/boot/dts/landisk.dts                  |  77 +++
+ arch/sh/boot/dts/rts7751r2dplus.dts           | 169 ++++++
+ arch/sh/boot/dts/sh7751r.dtsi                 | 105 ++++
+ arch/sh/boot/dts/usl-5p.dts                   |  85 ++++
+ arch/sh/configs/j2_defconfig                  |  11 +-
+ arch/sh/configs/landisk-of_defconfig          | 104 ++++
+ arch/sh/configs/rts7751r2dplus-of_defconfig   |  75 +++
+ arch/sh/drivers/Makefile                      |   2 +
+ arch/sh/include/asm/io.h                      |   8 +
+ arch/sh/include/asm/irq.h                     |  10 +-
+ arch/sh/include/asm/pci.h                     |   4 +
+ arch/sh/include/asm/setup.h                   |   1 +
+ arch/sh/kernel/cpu/Makefile                   |   6 +-
+ arch/sh/kernel/cpu/irq/imask.c                |  17 +
+ arch/sh/kernel/cpu/sh4/Makefile               |   3 +
+ arch/sh/kernel/iomap.c                        |  18 +
+ arch/sh/kernel/setup.c                        |  36 +-
+ arch/sh/kernel/time.c                         |  12 +
+ drivers/clk/clk-divider.c                     |  56 +-
+ drivers/clk/clk-gate.c                        |  62 ++-
+ drivers/clk/renesas/Kconfig                   |  13 +-
+ drivers/clk/renesas/Makefile                  |   1 +
+ drivers/clk/renesas/clk-sh7750.c              | 480 ++++++++++++++++++
+ drivers/clocksource/sh_tmu.c                  | 198 +++++---
+ drivers/irqchip/Kconfig                       |  15 +
+ drivers/irqchip/Makefile                      |   3 +
+ drivers/irqchip/irq-renesas-sh7751.c          | 282 ++++++++++
+ drivers/irqchip/irq-renesas-sh7751irl.c       | 221 ++++++++
+ drivers/mfd/sm501.c                           | 315 ++++++++++++
+ drivers/pci/controller/Kconfig                |   9 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pci-sh7751.c           | 342 +++++++++++++
+ drivers/tty/serial/Kconfig                    |   2 +-
+ drivers/tty/serial/sh-sci.c                   |   6 +-
+ drivers/video/fbdev/sm501fb.c                 | 106 ++++
+ include/dt-bindings/clock/sh7750-cpg.h        |  26 +
+ include/dt-bindings/display/sm501.h           |  76 +++
+ .../renesas,sh7751-intc.h                     |  19 +
+ include/linux/clk-provider.h                  |  22 +-
+ include/linux/sh_intc.h                       |   7 +-
+ 57 files changed, 3713 insertions(+), 187 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/renesas,sh7750-cpg.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/smi,sm501.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/renesas,sh7751-pci.yaml
+ create mode 100644 Documentation/devicetree/bindings/sh/cpus.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/renesas/sh.yaml
+ create mode 100644 arch/sh/boot/dts/landisk.dts
+ create mode 100644 arch/sh/boot/dts/rts7751r2dplus.dts
+ create mode 100644 arch/sh/boot/dts/sh7751r.dtsi
+ create mode 100644 arch/sh/boot/dts/usl-5p.dts
+ create mode 100644 arch/sh/configs/landisk-of_defconfig
+ create mode 100644 arch/sh/configs/rts7751r2dplus-of_defconfig
+ create mode 100644 drivers/clk/renesas/clk-sh7750.c
+ create mode 100644 drivers/irqchip/irq-renesas-sh7751.c
+ create mode 100644 drivers/irqchip/irq-renesas-sh7751irl.c
+ create mode 100644 drivers/pci/controller/pci-sh7751.c
+ create mode 100644 include/dt-bindings/clock/sh7750-cpg.h
+ create mode 100644 include/dt-bindings/display/sm501.h
+ create mode 100644 include/dt-bindings/interrupt-controller/renesas,sh7751-intc.h
 
 -- 
-Damien Le Moal
-Western Digital Research
+2.39.2
 
 
