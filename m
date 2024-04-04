@@ -1,142 +1,168 @@
-Return-Path: <linux-pci+bounces-5738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5737-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FC30898C94
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 18:50:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF79D898C8C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 18:49:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6A3DB2670A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 16:49:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A306D284A23
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 16:49:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 802551D55D;
-	Thu,  4 Apr 2024 16:49:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC25F12C7FB;
+	Thu,  4 Apr 2024 16:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xks/IabH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6ovYBBY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA59512FB09;
-	Thu,  4 Apr 2024 16:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6625337B;
+	Thu,  4 Apr 2024 16:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712249347; cv=none; b=G7Zb4H298QTdWZr36aq+V7xXGkPzHkxekm2Sa5B+RhH0t739zDV/oK0EW164tAPL7mt73HLWLvPp53q/YYMLEYEI0mDuFry3XRDKFjHpkWEGdsnywOgeJDgUQvprneZBYOeZQ6+zGRDziZHFv70gfUvxZS5v8PRexMsPouxNRFI=
+	t=1712249327; cv=none; b=EHhKHln7ScCbeZ8fiZTyuojfILqzfORIZBN6KiQ7/bmISRSYB/LFhwrqwy8CKmXHXYFw3OogxYUp/2X3fdM6aQ+pSmPYotkjhT3guwM6hWVmR2oIIyOHLycBn4Gu3qShs68wAkVvX1SKEyvmPUMKvSNdMntSiSYGpJ1RPmxrULg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712249347; c=relaxed/simple;
-	bh=NCHIHhS3NCawYOD9GHi3JKwQbHl1BzIb2rKZtwzxTE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F00HJJPY+r/+v8KVzeESkdDmMZiZjX3IVKbI1LGcZ4PttCzoDL05uMMQkxr1JhDZUG9RpwMgzIWBfUvVINjuZ27Xcm4Zw+mxH6KhgvZEDICYdSull+Bojmy1gctpScYOLvt5DtoE6zWjDsBmIFIp54glvcvK0F61oUVyiFUDazc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xks/IabH; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712249346; x=1743785346;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NCHIHhS3NCawYOD9GHi3JKwQbHl1BzIb2rKZtwzxTE8=;
-  b=Xks/IabHWvwe79k5oZUPuPVpYYCn/uigAWNRgCnKwn3JJbPKodMUn/Sc
-   1h3ud9I0xgJcWxn9QPN14FZPSBTKLFLbCptB6CYtvKCdzilmcq0JJBwe3
-   KTYOQWexyq5Z9QLcXxcYbjbfLikv4DpUv4r9QUSzslG+1mfz8pp5dL6Dq
-   P/oBSTXpkEx+rSmq55eitoBb9DjZw4iY+8bmziom5CSieVSj9GTyFZJAX
-   hF+XOvStBlVYrzaEShlrz5yQP6ZJ7elovyFyE4NxRLQbYPL0cdAXYn+2t
-   kHBwEWb9MgtJTR07zx0s8k98jGp2nEOa46O48nTeSKjmcULCbQQ1GZcQH
-   A==;
-X-CSE-ConnectionGUID: p8bixpu8St6JHymqzhzJSQ==
-X-CSE-MsgGUID: Ko+2F6kMQ3GkP9KqRuxSYg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="32947136"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="32947136"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 09:49:05 -0700
-X-CSE-ConnectionGUID: aE3biAaRTxu8/thS9/7KFg==
-X-CSE-MsgGUID: H0B8oYeDQcelsnsC4rHSxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="49804476"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 04 Apr 2024 09:49:02 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rsQGo-0001Ic-3D;
-	Thu, 04 Apr 2024 16:48:58 +0000
-Date: Fri, 5 Apr 2024 00:48:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Phil Elwell <phil@raspberrypi.com>,
-	bcm-kernel-feedback-list@broadcom.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 3/4] PCI: brcmstb: Set downstream maximum {no-}snoop
- LTR values
-Message-ID: <202404050015.fmF1uXeK-lkp@intel.com>
-References: <20240403213902.26391-4-james.quinlan@broadcom.com>
+	s=arc-20240116; t=1712249327; c=relaxed/simple;
+	bh=f0ZUc9cVkTYbWSm7SlkoyeQqtebVeW+MGfGHY9LAnds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XkIv6zwE50hT+qH/4962mP55oKdMlopZnvJYnZQJIW8Qyl4IlaQdkQx1KLzxF4bNjxGb4IenYuop5uRB+Nz6/2IBGpdpcXZovcNLQdxmOD+jXUugf88bhrxYz6OqcbZC1cda4j4VzASQ7742PPTmqG+w+56byOifBfuiOEHwpVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6ovYBBY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DCEC433B2;
+	Thu,  4 Apr 2024 16:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712249327;
+	bh=f0ZUc9cVkTYbWSm7SlkoyeQqtebVeW+MGfGHY9LAnds=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=K6ovYBBYue9PM8NYfR7YR7xtB4whDjLcBUCl3DhZaB6oF3Hh1QGo6IYwTa/jtb5IV
+	 SJSicYDiRwiOCN8IdaRtBdQgTDx1J53CG/bVCcE3xEegd0umAbjISGW/i47PcRqajk
+	 6GusCggLy9XxctVsC27cT9gPXSN68HdIomjHPQqEf7MGLpTX2J+GA02Jhv3z9sEIcu
+	 65JnbqsBAWB829JqkRYC/EjjscXNWSQN7HrbuoEawtyWxiSONajpsAJrveIvGHapUV
+	 T0bVd8ses2r9LgZR3jSv8xmzMpBeq97ITtsq+hOSE3+YFElkoStrsuFrGW0OOHCGyw
+	 eNETT5AZQt1Sg==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d700beb60bso21464621fa.1;
+        Thu, 04 Apr 2024 09:48:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5vi4+zUMV6D5P1DLp9/oBQeYc8fDZQwMNZxiHvpIU8X+ReWTEGqfwm6JgE3WJjgUlOEflw+ryKJrOHcmZ0d7tNkzhB0TnTEQTrxnv3dWBJ7EwjjX5CPTuc5z6Ap1nLZvfQ2Csv0fges0Nrie0tWpWLyq4kWMjgXO4EKTK8OHSPaXxSJY6NSizB0zTohkmCxK8Zic54tKt2htiT/32VgeVT9JrUV3MI+x37YXulmkrZjqNP+SBcyEh/EkLJ9NY9VKhlaw9tvV7GpSpCzC+iBB7tesmAJ9MLgBliq/F2y53ur5CQ565Y6eLWF457YUeShDvFa0eY76UfQf0apUGLlQLIuWv/Bss9+5q0nWAOi5WMbnGkW9XevQ=
+X-Gm-Message-State: AOJu0YxjASAg226CYO0YGGxy83/2ltWxPq0Yd3EvARdsCK4UioKa9Osm
+	KmdUIrhjqXxJ1Li0oJTe4xui4IUoUvrC9ypOBsfDT1FOCZOuhBBfEOCqfTdb2MNcb4s/Ob7e6eK
+	7Hdr5WqFTc3lMorIieHg6Kx3wxg==
+X-Google-Smtp-Source: AGHT+IGA/B0Olc8HVdDCHlF8+fjMTjFHUiVbJhjDnxrx6ejO3lXuUhtHy5hp5vmBhc80/3eocgT9w6rQF0BvJQeGA5M=
+X-Received: by 2002:a05:651c:1417:b0:2d3:8c1f:c0ff with SMTP id
+ u23-20020a05651c141700b002d38c1fc0ffmr2449840lje.16.1712249325311; Thu, 04
+ Apr 2024 09:48:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403213902.26391-4-james.quinlan@broadcom.com>
+References: <cover.1712207606.git.ysato@users.sourceforge.jp> <a4ce7771faec761b9bbb91ff6694a99e5bc293b6.1712207606.git.ysato@users.sourceforge.jp>
+In-Reply-To: <a4ce7771faec761b9bbb91ff6694a99e5bc293b6.1712207606.git.ysato@users.sourceforge.jp>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 4 Apr 2024 11:48:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLG+v1ujhMM45dQcMXiQkCvjif3pAWZxgeAcKFMe9Sy9Q@mail.gmail.com>
+Message-ID: <CAL_JsqLG+v1ujhMM45dQcMXiQkCvjif3pAWZxgeAcKFMe9Sy9Q@mail.gmail.com>
+Subject: Re: [RESEND v7 06/37] sh: kernel/setup Update DT support.
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, 
+	Heiko Stuebner <heiko.stuebner@cherry.de>, Shawn Guo <shawnguo@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Chris Morgan <macromorgan@hotmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	David Rientjes <rientjes@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Guo Ren <guoren@kernel.org>, 
+	Azeem Shaikh <azeemshaikh38@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Herve Codina <herve.codina@bootlin.com>, 
+	Manikanta Guntupalli <manikanta.guntupalli@amd.com>, Anup Patel <apatel@ventanamicro.com>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jim,
+On Thu, Apr 4, 2024 at 12:15=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+>
+> Fix extrnal fdt initialize and bootargs.
 
-kernel test robot noticed the following build warnings:
+What is the problem you are trying to solve?
 
-[auto build test WARNING on 9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e]
+And a typo.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jim-Quinlan/dt-bindings-PCI-brcmstb-Add-property-brcm-clkreq-mode/20240404-054118
-base:   9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
-patch link:    https://lore.kernel.org/r/20240403213902.26391-4-james.quinlan%40broadcom.com
-patch subject: [PATCH v9 3/4] PCI: brcmstb: Set downstream maximum {no-}snoop LTR values
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240405/202404050015.fmF1uXeK-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240405/202404050015.fmF1uXeK-lkp@intel.com/reproduce)
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+>  arch/sh/Kconfig             | 23 +++++++++++------------
+>  arch/sh/include/asm/setup.h |  1 +
+>  arch/sh/kernel/setup.c      | 36 +++++++++++++++++++++++-------------
+>  3 files changed, 35 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> index 6711cde0d973..242cf30e704d 100644
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -708,17 +708,22 @@ config ROMIMAGE_MMCIF
+>           first part of the romImage which in turn loads the rest the ker=
+nel
+>           image to RAM using the MMCIF hardware block.
+>
+> +config CMDLINE
+> +       string "Kernel command line arguments string"
+> +       default "console=3DttySC1,115200"
+> +
+>  choice
+>         prompt "Kernel command line"
+> -       optional
+> -       default CMDLINE_OVERWRITE
+> -       depends on !OF || USE_BUILTIN_DTB
+> +       default CMDLINE_BOOTLOADER
+> +
+> +config CMDLINE_BOOTLOADER
+> +       bool "Use bootloader kernel arguments"
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404050015.fmF1uXeK-lkp@intel.com/
+This should be the preferred, normal, default way. So why is it a user
+visible option?
 
-All warnings (new ones prefixed by >>):
+>         help
+> -         Setting this option allows the kernel command line arguments
+> -         to be set.
+> +         Uses the command-line options passed by the boot loader.
+> +         If boot loader dosen't provide kernel argments, Use built-in ar=
+gments.
 
->> drivers/pci/controller/pcie-brcmstb.c:728:6: warning: no previous prototype for function 'brcm_set_downstream_devs_ltr_max' [-Wmissing-prototypes]
-   void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
-        ^
-   drivers/pci/controller/pcie-brcmstb.c:728:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
-   ^
-   static 
-   1 warning generated.
+typos
 
+bootloader in some spots, "boot loader" in others. Go with the former.
 
-vim +/brcm_set_downstream_devs_ltr_max +728 drivers/pci/controller/pcie-brcmstb.c
+>
+>  config CMDLINE_OVERWRITE
+> -       bool "Overwrite bootloader kernel arguments"
+> +       bool "Overwrite built-in kernel arguments"
 
-   727	
- > 728	void brcm_set_downstream_devs_ltr_max(struct brcm_pcie *pcie)
-   729	{
-   730		struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-   731		u16 ltr_fmt = FIELD_PREP(GENMASK(9, 0), BRCM_LTR_MAX_VALUE)
-   732			| FIELD_PREP(GENMASK(12, 10), BRCM_LTR_MAX_SCALE)
-   733			| GENMASK(15, 15);
-   734	
-   735		if (bridge->native_ltr)
-   736			pci_walk_bus(bridge->bus, brcm_set_dev_ltr_max, &ltr_fmt);
-   737	}
-   738	
+The original made more sense to me. The default should be to use
+bootloader args. Any built-in kernel command line should be prepend,
+append (extend), or overwrite/replace.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
 
