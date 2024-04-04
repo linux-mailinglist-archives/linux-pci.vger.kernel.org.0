@@ -1,119 +1,111 @@
-Return-Path: <linux-pci+bounces-5728-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5729-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98324898910
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 15:47:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02068898941
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 15:52:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C65F31C25BC1
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 13:46:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 884081C20DBF
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 13:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF6E6128385;
-	Thu,  4 Apr 2024 13:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iN6HA0FF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6D971272A3;
+	Thu,  4 Apr 2024 13:52:49 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED27128361;
-	Thu,  4 Apr 2024 13:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FEC12838B;
+	Thu,  4 Apr 2024 13:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712238417; cv=none; b=bnytUXYrkLF8TEnKPTVNAULtaewnQ85u/nwo5buacL+b3f5gCr3/RELDfEv7QtVwhEZHXbXRF9kC2qStzOaITs0vUs41/bMBFQ24VIRmwdkmtL4LDlorRcwfJBvwEVwocEfsnDESv5qDe6e1GscQU7vVU47YpYtbrO9QarM4NPA=
+	t=1712238769; cv=none; b=UDsQISV6OFnRutT6a4tLHUk1PPJvKudhAVYekD8Rcq8Dx3CkBeTr/3csBjDj4U0UeOzPhTUj2PlxvpXCBys8Xm9LLz5zAkAyrZfm6dMDiQZOsn2bquWBqVWRxIN+Kyj/uRePtucVhc9++qaKJf2iNTNG+PeYuoY15oFocBJeshc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712238417; c=relaxed/simple;
-	bh=YTmuV8AU6ijpWFJ9qUSeRqsG7ZkPrskWPB28srSjA4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dB6E5vWxVy+SQFKQyRh8NdF9CoDH4CnuxN7ICy5dDluRnOmsB1khMHZoknJyNiLk4sGUGvUXFpd6CGQgKM0cl1qqJrpwiBHOT2fxxEQ5Hx3RTLBBwzXtLTHJIkCGNcNtmw08lKUBZEgEPQHHwjlqB7OtGtDY2lFjaOd2wyfbQDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iN6HA0FF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D52C433F1;
-	Thu,  4 Apr 2024 13:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712238417;
-	bh=YTmuV8AU6ijpWFJ9qUSeRqsG7ZkPrskWPB28srSjA4g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=iN6HA0FFgz90MtiQnEAgWRdCm8zcts9f45Sxg2VSsHNeMEL//kXdgXBkuFCxtsMOp
-	 X0y2UQ2sBs5OHeOqlgIbYuJM/b/jHyoWp39lX5Edh6zGWMT45nZw7x9YCR/aXpAaYu
-	 eMsZjAU9wsTUkb16TrzpthEStk7WoiiiYvpnAMO7mNgtSPSrLUA6a9ZjOh+cHkPDor
-	 VLvFgnj76quaNpHeaOIJBKszW0wvwkaa64/OKfiXhxW26b6XWQI2o4aIMrPbyzSfP6
-	 XzMA3Be72lk7jigxbkFuwJDK5o6KLLHNbV3pMsrlxi4bNEYo8p6SRThJsQJ1fgG+nd
-	 AqfZgrH4ZWYDw==
-Date: Thu, 4 Apr 2024 08:46:52 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Shawn Guo <shawnguo@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, David Rientjes <rientjes@google.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Guo Ren <guoren@kernel.org>, Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v7 00/37] Device Tree support for SH7751 based board
-Message-ID: <20240404134652.GA1910402@bhelgaas>
+	s=arc-20240116; t=1712238769; c=relaxed/simple;
+	bh=p/xIWORqgT6hpFpXe4AVo+Pf1rB1FZaKpn1vwwBA98g=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ODFHhLO47IVyTWDTrRy3B9y+zSpN+U1/772omIQjRoQ/QADC7sqllvAoy/+7peL7KqkuRYqrqt2M5CSmI175FCOAtvZkZ/P5K5ezmsSXlPZXsjoFRN0MimZc88xTQYIlzscGf7SzpRFb3rsM0wRxpIaVOMu7PRX2S0c47uIOx1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9NH84qjrz6J7Df;
+	Thu,  4 Apr 2024 21:48:04 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id D9C43140C72;
+	Thu,  4 Apr 2024 21:52:43 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 4 Apr
+ 2024 14:52:43 +0100
+Date: Thu, 4 Apr 2024 14:52:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Lukas Wunner <lukas@wunner.de>
+CC: Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
+	<helgaas@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+	<alison.schofield@intel.com>, <dave@stgolabs.net>, <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
+Message-ID: <20240404145242.00002dd8@Huawei.com>
+In-Reply-To: <Zg5skrUCyx17fRjq@wunner.de>
+References: <6605bef53c82b_1fb31e29481@dwillia2-xfh.jf.intel.com.notmuch>
+	<20240402172323.GA1818777@bhelgaas>
+	<660c44604f0a3_19e029497@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<20240403154441.00002e30@Huawei.com>
+	<Zg5skrUCyx17fRjq@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1712205900.git.ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Apr 04, 2024 at 01:59:25PM +0900, Yoshinori Sato wrote:
-> This is an updated version of something I wrote about 7 years ago.
-> Minimum support for R2D-plus and LANDISK.
-> I think R2D-1 will work if you add AX88796 to dts.
-> And board-specific functions and SCI's SPI functions are not supported.
+On Thu, 4 Apr 2024 11:02:10 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
 
-My comments/questions from
-https://lore.kernel.org/r/20231120181600.GA205977@bhelgaas
-https://lore.kernel.org/r/20231016172742.GA1215127@bhelgaas
-still apply.
+> On Wed, Apr 03, 2024 at 03:44:41PM +0100, Jonathan Cameron wrote:
+> > > Bjorn Helgaas wrote:  
+> > > > FWIW, I pinged administration@pcisig.com and got the response that
+> > > > "1E98h is not a VID in our system, but 1E98 has already been reserved
+> > > > by CXL."
+> > > > 
+> > > > I wish there were a clearer public statement of this reservation, but
+> > > > I interpret the response to mean that CXL is not a "Vendor", maybe due
+> > > > to some strict definition of "Vendor," but that PCI-SIG will not
+> > > > assign 0x1e98 to any other vendor.
+> > > > 
+> > > > So IMO we should add "#define PCI_VENDOR_ID_CXL 0x1e98" so that if we
+> > > > ever *do* see such an assignment, we'll be more likely to flag it as
+> > > > an issue.    
+> > 
+> > Sorry for late entry on this discussion and I'll be careful what I say
+> > on the history.
+> > 
+> > As you've guessed it was "entertaining" and for FWIW that text occurs
+> > in other consortium specs (some predate CXL).
+> > 
+> > It's reserved with agreement from the PCI SIG for a strictly defined set
+> > of purposes that does not correspond to those allowed for a normal ID
+> > granted to a vendor member. As you say CXL isn't a vendor (don't ask
+> > how DMTF got a vendor ID - 0x1AB4).
+> > 
+> > Hence the naming gymnastics and vague answers to avoid any chance of
+> > lawyers getting involved :(  
+> 
+> Hm, I'm wondering if avoiding the term "vendor" with something like
+> 
+> #define PCI_CONSORTIUM_ID_CXL 0x1e98
+> 
+> would assuage the angst of a legal misstep? ;)
+Works for me, but I really hope we don't have to care :(
+
+Jonathan
 
