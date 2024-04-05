@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-5754-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5755-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CB9889924F
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Apr 2024 01:51:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B5B89927E
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Apr 2024 02:12:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F9561C225ED
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Apr 2024 23:51:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F3F32823C9
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Apr 2024 00:12:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4819E13C693;
-	Thu,  4 Apr 2024 23:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E76C393;
+	Fri,  5 Apr 2024 00:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOKeEufW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7BMKCsk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6203013C3FC;
-	Thu,  4 Apr 2024 23:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA1236F;
+	Fri,  5 Apr 2024 00:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712274684; cv=none; b=VUzJr4CPSQMj3fmjmL4Jt6CZBuAwc5OABQZaog+1tu0156XE1nZA/GKXoRq3FGpIoVV3VERR/XaPcdSHPyVQbNiCDFWjpZHqVPMHE4L2Cd7+2BHYKGK0/iJcYXDFlCgdsCCJYl9ISK61ls1XB0qpu0TMvHUtePidimNh50Xo7O4=
+	t=1712275948; cv=none; b=uViorCVDG+mBzutysrJec6BP07VO4fiNDnedUZQKK0fLdQhOo2/ZdHMBucDAFevYmnizlKI25FSGQyR4J5XRn7ClVLl27VFmR8cTkcTt3EJmokXE0BZTNNh7ugh2f2qz4Ne7ZKgAsRHjaX0KJFL+wjwO5IMwp2SOFTlZJk43J3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712274684; c=relaxed/simple;
-	bh=ptbhZ1FqqBBkuR5+U6bO7i5ZKxKbkEhwS4K/4wtLu+U=;
+	s=arc-20240116; t=1712275948; c=relaxed/simple;
+	bh=omc4lpuY9giELKfLxMsx/Ib2N0mC7vAkFp7YcFSNEA8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qocj9YRtSrCEIHvxWPwTdsbbmeg8f+oWU1OPExyQU73wOK+nlmgE6XgRxdAM0RYFxl//lGeyrGDXq97YiI8eKB8uzM7mjjMQGcCg0zy7xadKA/f4k/SIslPv+Qw/oc4pZD7eYUHpphbljIoRWakqIGSPsDe+NLbRYDBAXq837pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOKeEufW; arc=none smtp.client-ip=209.85.221.46
+	 To:Cc:Content-Type; b=Y4E++KEO09mzf0HUwDtjmUbaaWl9GXjBRqDMMFgtuY+TXIMSq7rIZyAzFxFxtQSF2lZACzxLAdn1h9J8yx2S8ucudHUsF8CrtslXMdWroP4aOBdOmbcAks6umtHbcwkw+FrEh/BSqTvyRdZzQ5wSj2Zk6dbeDUQllvW0QQCUtDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7BMKCsk; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-343e096965bso137849f8f.3;
-        Thu, 04 Apr 2024 16:51:22 -0700 (PDT)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3436b096690so2069005f8f.1;
+        Thu, 04 Apr 2024 17:12:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712274681; x=1712879481; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712275945; x=1712880745; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ptbhZ1FqqBBkuR5+U6bO7i5ZKxKbkEhwS4K/4wtLu+U=;
-        b=fOKeEufWgzhcQefE/rpLWWKU27nEYD8Z82kQU3QjNg+9Id+20st+edlf9IR5zyLg4s
-         b/I8Q9cYXChxRxpaNRZEL7p/MG4jpaiylBP5eTOGIik2aAbFGEjXvMlOOBfDXrfb4mAv
-         5EdfQy1/3rsh6nxmnIRSYB9KrWW9rxWZCwmVHukRkVVZZy1vJRSbRGPb9V1hKOg743Wu
-         u/5rd9KrqHfBbM1Lj1Si2uRNXawqHKC2H/FNyQvP8oxQz/FL0UU7EFtBvYL5n0YquFNm
-         64Tb+dA13rUHcc/B3JLz9sWnn6ob/q4ELQfpBfU1qasttRTxTS6AojQsXs3t0Je1C2ul
-         CThw==
+        bh=omc4lpuY9giELKfLxMsx/Ib2N0mC7vAkFp7YcFSNEA8=;
+        b=c7BMKCskirYoKAX0keLUrkLkzgs5060XjfcPJs0R2ueG62eewntIe1km2Xvq+P+b9E
+         LjGpWsV8vzXZuy+u0Fp8dQ2pAcwYTxifC9zlaO5NDcUfnAiwSiL+QgDsTaEHZlZ4PSm1
+         oFcemBqm1QQkeuEdQWPFx2B28VnrhcD6HJxd3pbFW1Wx4ViXqk16Au9Z4Wyg7H/mdap3
+         VszTt90gp09lb/XK1vWpIoZjXnF54s67GfdsWXUhoSH4x+piLUvOVOoPItydf41BkIRg
+         w764cQsoBqdL8CzORNXIlz/XClMGhEbx4WdrT6+G3N7803Fzn5b7FUOJDzWXR7CFekUo
+         elFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712274681; x=1712879481;
+        d=1e100.net; s=20230601; t=1712275945; x=1712880745;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ptbhZ1FqqBBkuR5+U6bO7i5ZKxKbkEhwS4K/4wtLu+U=;
-        b=fJFWfj7EWX7RDt0Y6vw/3UB/ToWrVhIQ+3ufuk5/zPf+s+8y4uW9yGvp05ENWSDQ90
-         Il3ZCxduR4RlE7adMXPk4gcMCLIKDoK23LD3t6cHZ4INEeDW2+a+P9uaE8ADmbfoa9p4
-         Dw+6fPa5UdSkIzXVPd/ryFQhU7tmGrAkqkhRG+JaK4WT2I9FeMxTBYpd3LyH3UuZXX6/
-         0sN6yxhAYu3tpUisjXleUozr3oMi3AwMpPwCcyVMQPzfHCSzG1XrlxiepynAPS0/0Qao
-         wmgG9WSZ5LwCtaatbwdxaWDTtpWgscNH5HA6O8Nvx+N+ij1cjK/UMWMaR0aWZ7FK4Xrl
-         ar9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWPHC535KfKZDgSWHXz9xi4d0ntRBnPdud+qDImpGz/D8erXL2ctJ4RZvnGj7Ol0hxVpJsTIe8z6q5QnbU9IR5WTA/+NAZoFNGtoPuC+Ngca1zqJpd8DGzs7fP7t6xIOEEH
-X-Gm-Message-State: AOJu0Yyf4CtigWtw83eOczLZ1g9k8sYwrEFab22aLqNlAg22KehKwb14
-	AxEM6ljs7ftG55vHQ+DQ7WO1miF66okMw83CBfjZ2glpKaYlBGIm/5Y/fq0EoYkmgaPgQVrI/15
-	u04wQNYbaJfU5mbqVzqUUFbQkTsaNlL/CDl8=
-X-Google-Smtp-Source: AGHT+IGFxAtnrbTQocowjs4JXWVwByQYEpS+I7/eKJdywaxZs5ROgYE8u1N4ZPm2OK5E42RlIP2VC18YQseXJzpA6lA=
-X-Received: by 2002:a5d:6dac:0:b0:343:ded0:1f94 with SMTP id
- u12-20020a5d6dac000000b00343ded01f94mr701290wrs.37.1712274680392; Thu, 04 Apr
- 2024 16:51:20 -0700 (PDT)
+        bh=omc4lpuY9giELKfLxMsx/Ib2N0mC7vAkFp7YcFSNEA8=;
+        b=wArLB/pdkZwwHEcyHafIgv/3pwFHlGf495DEwfkO6QzVPjFQWoEgh17vXiPitdq4Nz
+         ymIcdJ9fGjh2srJg7p1FKzrjpE60YnPTeWplOsSrfh8sgpETLok0t1H6/sxRgiuS1PWB
+         esCAhGI64THw2Ipq9x7dXrrWU7oqNM8mOdOpWAZC7aLl+nuUEOJKHWYkjM22A60O3zTb
+         rJAaGsqqcamakLXWQZzo6ud74nNGfeq6rfjZOPTUBdRRxB4CEla+q+tfariSLK3wewvY
+         6TTlY3IXEpXGT7V9gxZx2V+gjogqnXwRkVDS3YVe4Pu76mZ3v6yLtH2T+M9+50Lx1Kc4
+         ULgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1uQ6OSwZHq5mvTPcBdG4ile9nCE0oX9JRJzRKQFalqcM2TA5bX+Kkysbxcels3PaGLWuAh+JeTpM+i5l6Ud+MXAnHxxwJ0mC9B5Tgf+8OyTqKGC63Roav8+AbbXBg80Yw
+X-Gm-Message-State: AOJu0YzuFT5WMKMtVzl3W2mfB3sYL8IB8lsz9lYYenpX7WjmU0Uff6qy
+	3LxWI9kA7RBF4Fh5q9QEL925fUFmisuhu9UP/3Hmg2HA6a/UcFDzayoFBs2APNih1zgTx72NAlC
+	7ufMxBk/C/JSgpUfiiUIexHgz7n7m7WMq
+X-Google-Smtp-Source: AGHT+IEj8sc/+KAf7eHTTyr96yYzknt0ODX9E3p8wLXyIvypdzWcRah8uQL6CjQ2KVr6hiltGcXoNBH8MCIKc3/5C5c=
+X-Received: by 2002:adf:f14b:0:b0:343:ce15:fd3f with SMTP id
+ y11-20020adff14b000000b00343ce15fd3fmr664071wro.29.1712275944522; Thu, 04 Apr
+ 2024 17:12:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,139 +74,119 @@ MIME-Version: 1.0
 References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
  <Zg6Q8Re0TlkDkrkr@nanopsycho> <CAKgT0Uf8sJK-x2nZqVBqMkDLvgM2P=UHZRfXBtfy=hv7T_B=TA@mail.gmail.com>
  <Zg7JDL2WOaIf3dxI@nanopsycho> <CAKgT0Ufgm9-znbnxg3M3wQ-A13W5JDaJJL0yXy3_QaEacw9ykQ@mail.gmail.com>
- <20240404132548.3229f6c8@kernel.org> <660f22c56a0a2_442282088b@john.notmuch>
-In-Reply-To: <660f22c56a0a2_442282088b@john.notmuch>
+ <20240404132548.3229f6c8@kernel.org> <660f22c56a0a2_442282088b@john.notmuch> <20240404165000.47ce17e6@kernel.org>
+In-Reply-To: <20240404165000.47ce17e6@kernel.org>
 From: Alexander Duyck <alexander.duyck@gmail.com>
-Date: Thu, 4 Apr 2024 16:50:43 -0700
-Message-ID: <CAKgT0UcDrNfNsNDvOmi06eww0O13304vEm4JzLxCKR6L_M_GXw@mail.gmail.com>
+Date: Thu, 4 Apr 2024 17:11:47 -0700
+Message-ID: <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
 Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
  Platforms Host Network Interface
-To: John Fastabend <john.fastabend@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, 
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>, Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, 
 	bhelgaas@google.com, linux-pci@vger.kernel.org, 
 	Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net, pabeni@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 4, 2024 at 2:59=E2=80=AFPM John Fastabend <john.fastabend@gmail=
-.com> wrote:
+On Thu, Apr 4, 2024 at 4:50=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
+te:
 >
-> Jakub Kicinski wrote:
-> > On Thu, 4 Apr 2024 12:22:02 -0700 Alexander Duyck wrote:
-> > > I don't understand that as we are
-> > > contributing across multiple areas in the kernel including networking
-> > > and ebpf. Is Meta expected to start pulling time from our upstream
-> > > maintainers to have them update out-of-tree kernel modules since the
-> > > community isn't willing to let us maintain it in the kernel? Is the
-> > > message that the kernel is expected to get value from Meta, but that
-> > > value is not meant to be reciprocated? Would you really rather have
-> > > us start maintaining our own internal kernel with our own
-> > > "proprietary goodness", and ask other NIC vendors to have to maintain
-> > > their drivers against yet another kernel if they want to be used in
-> > > our data centers?
+> On Thu, 04 Apr 2024 14:59:33 -0700 John Fastabend wrote:
+> > The alternative is much worse someone builds a team of engineers locks
+> > them up they build some interesting pieces and we never get to see it
+> > because we tried to block someone from opensourcing their driver?
+>
+> Opensourcing is just one push to github.
+> There are guarantees we give to upstream drivers.
+
+Are there? Do we have them documented somewhere?
+
+> > Eventually they need some kernel changes and than we block those too
+> > because we didn't allow the driver that was the use case? This seems
+> > wrong to me.
+>
+> The flip side of the argument is, what if we allow some device we don't
+> have access to to make changes to the core for its benefit. Owner
+> reports that some changes broke the kernel for them. Kernel rules,
+> regression, we have to revert. This is not a hypothetical, "less than
+> cooperative users" demanding reverts, and "reporting us to Linus"
+> is a reality :(
+>
+> Technical solution? Maybe if it's not a public device regression rules
+> don't apply? Seems fairly reasonable.
+
+This is a hypothetical. This driver currently isn't changing anything
+outside of itself. At this point the driver would only be build tested
+by everyone else. They could just not include it in their Kconfig and
+then out-of-sight, out-of-mind.
+
+> > Anyways we have zero ways to enforce such a policy. Have vendors
+> > ship a NIC to somebody with the v0 of the patch set? Attach a picture?
+>
+> GenAI world, pictures mean nothing :) We do have a CI in netdev, which
+> is all ready to ingest external results, and a (currently tiny amount?)
+> of test for NICs. Prove that you care about the device by running the
+> upstream tests and reporting results? Seems fairly reasonable.
+
+That seems like an opportunity to be exploited through. Are the
+results going to be verified in any way? Maybe cryptographically
+signed? Seems like it would be easy enough to fake the results.
+
+> > Even if vendor X claims they will have a product in N months and
+> > than only sells it to qualified customers what to do we do then.
+> > Driver author could even believe the hardware will be available
+> > when they post the driver, but business may change out of hands
+> > of the developer.
 > >
-> > Please allow the community to make rational choices in the interest of
-> > the project and more importantly the interest of its broader user base.
-> >
-> > Google would also claim "good faith" -- undoubtedly is supports
-> > the kernel, and lets some of its best engineers contribute.
-> > Did that make them stop trying to build Fuchsia? The "good faith" of
-> > companies operates with the limits of margin of error of they consider
-> > rational and beneficial.
-> >
-> > I don't want to put my thumb on the scale (yet?), but (with my
-> > maintainer hat on) please don't use the "Meta is good" argument, becaus=
-e
-> > someone will send a similar driver from a less involved company later o=
-n
-> > and we'll be accused of playing favorites :( Plus companies can change
-> > their approach to open source from "inclusive" to "extractive"
-> > (to borrow the economic terminology) rather quickly.
-> >
+> > I'm 100% on letting this through assuming Alex is on top of feedback
+> > and the code is good.
 >
-> I'll throw my $.02 in. In this case you have a driver that I only scanned
-> so far, but looks well done. Alex has written lots of drivers I trust he
-> will not just abondon it. And if it does end up abondoned and no one
-> supports it at some future point we can deprecate it same as any other
-> driver in the networking tree. All the feedback is being answered and
-> debate is happening so I expect will get a v2, v3 or so. All good signs
-> in my point.
+> I'd strongly prefer if we detach our trust and respect for Alex
+> from whatever precedent we make here. I can't stress this enough.
+> IDK if I'm exaggerating or it's hard to appreciate the challenges
+> of maintainership without living it, but I really don't like being
+> accused of playing favorites or big companies buying their way in :(
+
+Again, I would say we look at the blast radius. That is how we should
+be measuring any change. At this point the driver is self contained
+into /drivers/net/ethernet/meta/fbnic/. It isn't exporting anything
+outside that directory, and it can be switched off via Kconfig.
+
+When the time comes to start adding new features we can probably start
+by looking at how to add either generic offloads like was done for
+GSO, CSO, ect or how it can also be implemented on another vendor's
+NIC.
+
+At this point the only risk the driver presents is that it is yet
+another driver, done in the same style I did the other Intel drivers,
+and so any kernel API changes will end up needing to be applied to it
+just like the other drivers.
+
+> > I think any other policy would be very ugly to enforce, prove, and
+> > even understand. Obviously code and architecture debates I'm all for.
+> > Ensuring we have a trusted, experienced person signed up to review
+> > code, address feedback, fix whatever syzbot finds and so on is also a
+> > must I think. I'm sure Alex will take care of it.
 >
-> Back to your point about faith in a company. I don't think we even need
-> to care about whatever companies business plans. The author could have
-> submitted with their personal address for what its worth and called it
-> drivers/alexware/duyck.o Bit extreme and I would have called him on it,
-> but hopefully the point is clear.
+> "Whatever syzbot finds" may be slightly moot for a private device ;)
+> but otherwise 100%! These are exactly the kind of points I think we
+> should enumerate. I started writing a list of expectations a while back:
 >
-> We have lots of drivers in the tree that are hard to physically get ahold
-> of. Or otherwise gated by paying some vendor for compute time, etc. to
-> use. We even have some drivers where the hardware itself never made
-> it out into the wild or only a single customer used it before sellers
-> burned it for commercial reasons or hw wasn't workable, team was cut, etc=
-.
+> Documentation/maintainer/feature-and-driver-maintainers.rst
 >
-> I can't see how if I have a physical NIC for it on my desk here makes
-> much difference one way or the other.
+> I think we just need something like this, maybe just a step up, for
+> non-public devices..
 
-The advantage of Meta not selling it publicly at this time is that
-Meta is both the consumer and the maintainer so if a kernel API change
-broke something Meta would be responsible for fixing it. It would be
-Meta's own interest to maintain the part, and if it breaks Meta would
-be the only one impacted assuming the breaking change at least builds.
-So rather than "good faith", maybe I should have said "motivated self
-interest".
+I honestly think we are getting the cart ahead of the horse. When we
+start talking about kernel API changes then we can probably get into
+the whole "private" versus "publicly available" argument. A good
+example of the kind of thing I am thinking of is GSO partial where I
+ended up with Mellanox and Intel sending me 40G and 100G NICs and
+cables to implement it on their devices as all I had was essentially
+igb and ixgbe based NICs.
 
-It seems like the worst case scenario would actually be some
-commercial product being sold. Worse yet, one with proprietary bits
-such as firmware on the device. Should commercial vendors be required
-to provide some sort of documentation proving they are dedicated to
-their product and financially stable enough to maintain it for the
-entire product life cycle? What if the vendor sells some significant
-number of units to Linux users out there, and then either goes under,
-gets acquired, and/or just decides to go in a new direction. In that
-scenario we have the driver unmaintained and consumers impacted, but
-the company responsible for it has no motivation to address it other
-than maybe negative PR.
-
-> The alternative is much worse someone builds a team of engineers locks
-> them up they build some interesting pieces and we never get to see it
-> because we tried to block someone from opensourcing their driver?
-> Eventually they need some kernel changes and than we block those too
-> because we didn't allow the driver that was the use case? This seems
-> wrong to me.
->
-> Anyways we have zero ways to enforce such a policy. Have vendors
-> ship a NIC to somebody with the v0 of the patch set? Attach a picture?
-> Even if vendor X claims they will have a product in N months and
-> than only sells it to qualified customers what to do we do then.
-> Driver author could even believe the hardware will be available
-> when they post the driver, but business may change out of hands
-> of the developer.
-
-This is what I was referring to as being "arbitrary and capricious".
-The issue is what would we define as a NIC being for sale
-commercially. Do we have to support a certain form factor, sell it for
-a certain price, or sell a certain quantity?
-
-If anything maybe we should look more at something like a blast radius
-in terms of inclusion. If this were to go wrong, how could it go wrong
-and who would be impacted.
-
-> I'm 100% on letting this through assuming Alex is on top of feedback
-> and the code is good. I think any other policy would be very ugly
-> to enforce, prove, and even understand. Obviously code and architecture
-> debates I'm all for. Ensuring we have a trusted, experienced person
-> signed up to review code, address feedback, fix whatever syzbot finds
-> and so on is also a must I think. I'm sure Alex will take care of
-> it.
->
-> Thanks,
-> John
-
-Thanks for your reply. I had started a reply, but you probably worded
-this better than I could have.
-
-Thanks
-
-- Alex
+Odds are when we start getting to those kind of things maybe we need
+to look at having a few systems available for developer use, but until
+then I am not sure it makes sense to focus on if the device is
+publicly available or not.
 
