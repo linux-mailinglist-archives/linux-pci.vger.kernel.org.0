@@ -1,142 +1,303 @@
-Return-Path: <linux-pci+bounces-5877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A47B189BC4E
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 11:49:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6723C89BC5D
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 11:52:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5D8E1C21ADA
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 09:49:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A4FB1C21988
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 09:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828DF4CE0E;
-	Mon,  8 Apr 2024 09:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AABC4CDEB;
+	Mon,  8 Apr 2024 09:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yf2meAYW"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l8N/kCju"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D814C634;
-	Mon,  8 Apr 2024 09:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9064EB3D;
+	Mon,  8 Apr 2024 09:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712569792; cv=none; b=oadqY/kZqvnvD+Lh42aQ0O3AV/+ZM01rR8SIkQ7UnAVYfMOuAdzecRBC9K5/aBUSLo/lft8irEiaBsbLI64RUo2aIOLE5C+xkxrQDPnTThEWY++1Bq6f6vNT13/VWG4w1mBJEIg6LZGBoqYSG+ii6fJ0bYig/0XoMDkm1dl+/PQ=
+	t=1712569971; cv=none; b=jlzRheZkjUuLaLN5584fj4jmXrsod1W0gWz65LekJmbB5L6YM13f/Lc3VxlBa5I2dLNl/HJMTQrlYGPDKG+Fr+BLOueBUBQb406s2vE5J9ZT4VnroyuTBmU4C8midnpR4A5NgUtekozuo5bUKzpByO/hGZ+/YrbU39ulc3MVD3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712569792; c=relaxed/simple;
-	bh=xL1SCPj347yWFVgdwNXote2UupJzfKZAH1a3FbrLt0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cZBduevjYj6piioilkGyCPyTQ/dB0W1b4vHQLgWjPWPkyjjcsp+egua8S96nvqEMVsDDbmcgKm/ySDs0SwPB5eWu5AfRWCATOgimFB4A56RyVmkCgtLX946Hy5zLaJXzL52zx/uj40NnBvxo54jI7SA2aIfuynteV4ldvIHWkeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yf2meAYW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D28C433C7;
-	Mon,  8 Apr 2024 09:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712569791;
-	bh=xL1SCPj347yWFVgdwNXote2UupJzfKZAH1a3FbrLt0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yf2meAYWAM11DwJ0kDIFvs6Trkrm1Nh9eLBdYZjK4edSqgu1ZWAZumhJTxAhGqBkG
-	 WtQ0TD0UUTWp3eVJp+pIWbqE5TBxTBoT3UKuCF/buV8yQ6UVwBhOXjiR6uWvyRxCeb
-	 j+lc+Qq83O2Lae+A8hHGNozFermlDwy+d4PRcCaugp4+dGnuYMG7Lv1BA0KySWd0Uq
-	 tsKH/cOXghoKB825UVQCIYGcsPlJVbFM56FkmGIuLHHTtqDyubDAy35dE6f88I3mn1
-	 xk5wq81NQLpEEAKtM5dGqQTD2HEPxz8+c1T3IPeIJ6SDrqpQ7iyPt/WnFstUzuCTfk
-	 hlGJLGyb21I5Q==
-Date: Mon, 8 Apr 2024 11:49:45 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhi@lists.linux.dev, linux-tegra@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [PATCH v2 00/10] PCI: endpoint: Make host reboot handling more
- robust
-Message-ID: <ZhO9udfcdUrNDqQj@ryzen>
-References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
- <ZgvSrLpvChG4jqQl@ryzen>
- <20240403134825.GM25309@thinkpad>
+	s=arc-20240116; t=1712569971; c=relaxed/simple;
+	bh=/VOELRbH4plEYJOGwePqrosJ6i7I1OteBbFhhfratW8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=P+tiFdjSPyQ+Nb6bg9h3NXnhR+O2dUP2DKIc9J9b6BS0o/CXtIlIVi6dBRiaANTFpNHk6G+mGwJC6MtopoJtP62yWiGPeic7w0xQJfNM8+KD+h663GyaYN3pxMKw7D035CHY+P9QcNY+aROZhqgGACTUmOnE1ss//Cg2sJ9b9w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l8N/kCju; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4386e931026786;
+	Mon, 8 Apr 2024 09:52:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=a867BXPNAL7S1LSZKB6Z1PPmPo7m27VujxgxS1VpLfg=; b=l8
+	N/kCjuySa8CK9vHmhgCxnEyT/9c5XGzT0NxWp76ulpDoSb+UGv42m+sUW638XoP2
+	N8n9WAL+slsj0h4OC5TUNRa4akrmbobVAOlTwlGc3p86y+pMZ40SQfyVVvTidLA7
+	1WMvzgoR1L8lYlrDi40HS9xUltqabxbylbokGQu0tgNnC9kCbCW5hdbikmscGOSV
+	iM5XYylLc7FnxiEtVRwdKO3d7cy47JuUQSTSeC4cxXM7oQuHYL9y0yOmyWsv3iCm
+	TyjEs1KZ3LBNQY+lG9bQL2kSnTaqLP+jHJD2PMji1UxBTzmfteVnnBhETIigyXTz
+	xr4quzBFUDD6DHedxkkA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcbg00bcc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 09:52:40 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4389qd3Y018645
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Apr 2024 09:52:39 GMT
+Received: from [10.216.26.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Apr 2024
+ 02:52:30 -0700
+Message-ID: <2a579464-b66b-0186-9e7d-723aaf304a89@quicinc.com>
+Date: Mon, 8 Apr 2024 15:22:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403134825.GM25309@thinkpad>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v9 6/6] PCI: qcom: Add OPP support to scale performance
+ state of power domain
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas
+	<bhelgaas@google.com>, <johan+linaro@kernel.org>,
+        <bmasney@redhat.com>, <djakov@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_parass@quicinc.com>, <krzysztof.kozlowski@linaro.org>
+References: <20240407-opp_support-v9-0-496184dc45d7@quicinc.com>
+ <20240407-opp_support-v9-6-496184dc45d7@quicinc.com>
+ <20240407150048.GE2679@thinkpad>
+ <6e9b4379-5849-73cd-4d89-5e809b4c71a4@quicinc.com>
+ <20240408094525.GB5727@thinkpad>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20240408094525.GB5727@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: -LSZ8ZKRg0_NcZCM9_z_wNg8r0d0qRsr
+X-Proofpoint-ORIG-GUID: -LSZ8ZKRg0_NcZCM9_z_wNg8r0d0qRsr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-08_08,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 mlxlogscore=999 suspectscore=0 adultscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404080076
 
-On Wed, Apr 03, 2024 at 07:18:25PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Apr 02, 2024 at 11:41:00AM +0200, Niklas Cassel wrote:
-> > On Mon, Apr 01, 2024 at 09:20:26PM +0530, Manivannan Sadhasivam wrote:
-> > > Hello,
-> > > 
-> > > This is the follow up series of [1], to improve the handling of host reboot in
-> > > the endpoint subsystem. This involves refining the PERST# and Link Down event
-> > > handling in both the controller and function drivers.
-> > > 
-> > > Testing
-> > > =======
-> > > 
-> > > This series is tested on Qcom SM8450 based development board with both MHI_EPF
-> > > and EPF_TEST function drivers.
-> > > 
-> > > Dependency
-> > > ==========
-> > > 
-> > > This series depends on [1] and [2].
-> > > 
-> > > - Mani
-> > 
-> > Hello Mani,
-> > 
-> > > [1] https://lore.kernel.org/linux-pci/20240314-pci-dbi-rework-v10-0-14a45c5a938e@linaro.org/
-> > > [2] https://lore.kernel.org/linux-pci/20240320113157.322695-1-cassel@kernel.org/
-> > 
-> > AFAICT both these series [1] (DBI rework v12, not v10) and [2] are fully
-> > reviewed and seem to be ready to go.
-> > 
-> > Considering that we have patches depending on [1] and [2],
-> > namely the series in $subject, but also:
-> > https://lore.kernel.org/linux-pci/20240330041928.1555578-1-dlemoal@kernel.org/T/#t
-> > 
-> > I think it would be a good idea if you could apply [1] and [2] to the
-> > pci/endpoint branch.
-> > 
+
+
+On 4/8/2024 3:15 PM, Manivannan Sadhasivam wrote:
+> On Mon, Apr 08, 2024 at 02:32:18PM +0530, Krishna Chaitanya Chundru wrote:
+>>
+>>
+>> On 4/7/2024 8:30 PM, Manivannan Sadhasivam wrote:
+>>> On Sun, Apr 07, 2024 at 10:07:39AM +0530, Krishna chaitanya chundru wrote:
+>>>> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
+>>>> maintains hardware state of a regulator by performing max aggregation of
+>>>> the requests made by all of the clients.
+>>>>
+>>>> PCIe controller can operate on different RPMh performance state of power
+>>>> domain based on the speed of the link. And this performance state varies
+>>>> from target to target, like some controllers support GEN3 in NOM (Nominal)
+>>>> voltage corner, while some other supports GEN3 in low SVS (static voltage
+>>>> scaling).
+>>>>
+>>>> The SoC can be more power efficient if we scale the performance state
+>>>> based on the aggregate PCIe link bandwidth.
+>>>>
+>>>> Add Operating Performance Points (OPP) support to vote for RPMh state based
+>>>> on the aggregate link bandwidth.
+>>>>
+>>>> OPP can handle ICC bw voting also, so move ICC bw voting through OPP
+>>>> framework if OPP entries are present.
+>>>>
+>>>> Different link configurations may share the same aggregate bandwidth,
+>>>> e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same bandwidth
+>>>> and share the same OPP entry.
+>>>>
+>>>
+>>> This info should be part of the dts change.
+>>>
+>> ok I will move this to dts patch in next patch series.
+>>>> As we are moving ICC voting as part of OPP, don't initialize ICC if OPP
+>>>> is supported.
+>>>>
+>>>> Before PCIe link is initialized vote for highest OPP in the OPP table,
+>>>> so that we are voting for maximum voltage corner for the link to come up
+>>>> in maximum supported speed.
+>>>>
+>>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>>>> ---
+>>>>    drivers/pci/controller/dwc/pcie-qcom.c | 72 +++++++++++++++++++++++++++-------
+>>>>    1 file changed, 58 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> index b4893214b2d3..4ad5ef3bf8fc 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>>> @@ -22,6 +22,7 @@
+>>>>    #include <linux/of.h>
+>>>>    #include <linux/of_gpio.h>
+>>>>    #include <linux/pci.h>
+>>>> +#include <linux/pm_opp.h>
+>>>>    #include <linux/pm_runtime.h>
+>>>>    #include <linux/platform_device.h>
+>>>>    #include <linux/phy/pcie.h>
+>>>> @@ -1442,15 +1443,13 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>>>>    	return 0;
+>>>>    }
+>>>> -static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+>>>> +static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
+>>>>    {
+>>>>    	struct dw_pcie *pci = pcie->pci;
+>>>> -	u32 offset, status;
+>>>> +	u32 offset, status, freq;
+>>>> +	struct dev_pm_opp *opp;
+>>>>    	int speed, width;
+>>>> -	int ret;
+>>>> -
+>>>> -	if (!pcie->icc_mem)
+>>>> -		return;
+>>>> +	int ret, mbps;
+>>>>    	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>>>>    	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
+>>>> @@ -1462,10 +1461,26 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+>>>>    	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
+>>>>    	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
+>>>> -	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+>>>> -	if (ret) {
+>>>> -		dev_err(pci->dev, "failed to set interconnect bandwidth for PCIe-MEM: %d\n",
+>>>> -			ret);
+>>>> +	if (pcie->icc_mem) {
+>>>> +		ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+>>>> +		if (ret) {
+>>>> +			dev_err(pci->dev, "failed to set interconnect bandwidth for PCIe-MEM: %d\n",
+>>>
+>>> s/failed/Failed
+>>>
+>>>> +				ret);
+>>>> +		}
+>>>> +	} else {
+>>>> +		mbps = pcie_link_speed_to_mbps(pcie_link_speed[speed]);
+>>>> +		if (mbps < 0)
+>>>> +			return;
+>>>> +
+>>>> +		freq = mbps * 1000;
+>>>> +		opp = dev_pm_opp_find_freq_exact(pci->dev, freq * width, true);
+>>>
+>>> As per the API documentation, dev_pm_opp_put() should be called for both success
+>>> and failure case.
+>>>
+>> ACK.
+>>>> +		if (!IS_ERR(opp)) {
+>>>
+>>> So what is the action if OPP is not found for the freq?
+>>>
+>> There is already a vote for maximum freq in the probe, so if it fails
+>> here we can continue here.
+>> If you feel otherwise let me know I Can make changes as suggested.
 > 
-> Unfortunately, I cannot merge the patches outside 'pci/endpoint' even though
-> these are related to the PCI Endpoint subsystem. But I have delegated these 2
-> series to Krzysztof, so hopefully he'll apply it soon.
+> You should just log the error and continue.
+> 
+>>>> +			ret = dev_pm_opp_set_opp(pci->dev, opp);
+>>>> +			if (ret)
+>>>> +				dev_err(pci->dev, "Failed to set opp: freq %ld ret %d\n",
+>>>
+>>> 'Failed to set OPP for freq (%ld): %d'
+>>>
+>>>> +					dev_pm_opp_get_freq(opp), ret);
+>>>> +			dev_pm_opp_put(opp);
+>>>> +		}
+>>>>    	}
+>>>>    }
+>>>> @@ -1509,8 +1524,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
+>>>>    static int qcom_pcie_probe(struct platform_device *pdev)
+>>>>    {
+>>>>    	const struct qcom_pcie_cfg *pcie_cfg;
+>>>> +	unsigned long max_freq = INT_MAX;
+>>>>    	struct device *dev = &pdev->dev;
+>>>>    	struct qcom_pcie *pcie;
+>>>> +	struct dev_pm_opp *opp;
+>>>>    	struct dw_pcie_rp *pp;
+>>>>    	struct resource *res;
+>>>>    	struct dw_pcie *pci;
+>>>> @@ -1577,9 +1594,33 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>>>>    		goto err_pm_runtime_put;
+>>>>    	}
+>>>> -	ret = qcom_pcie_icc_init(pcie);
+>>>> -	if (ret)
+>>>> +	/* OPP table is optional */
+>>>> +	ret = devm_pm_opp_of_add_table(dev);
+>>>> +	if (ret && ret != -ENODEV) {
+>>>> +		dev_err_probe(dev, ret, "Failed to add OPP table\n");
+>>>>    		goto err_pm_runtime_put;
+>>>> +	}
+>>>> +
+>>>> +	/*
+>>>> +	 * Use highest OPP here if the OPP table is present. At the end of
+>>>
+>>> I believe I asked you to add the information justifying why the highest OPP
+>>> should be used.
+>>>
+>> I added the info in the commit message, I will add as the comment in the
+>> next patch.
+>>
+>>>> +	 * the probe(), OPP will be updated using qcom_pcie_icc_opp_update().
+>>>> +	 */
+>>>> +	if (!ret) {
+>>>> +		opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
+>>>
+>>> Same comment as dev_pm_opp_find_freq_exact().
+>>>
+>>>> +		if (!IS_ERR(opp)) {
+>>>> +			ret = dev_pm_opp_set_opp(dev, opp);
+>>>> +			if (ret)
+>>>> +				dev_err_probe(pci->dev, ret,
+>>>> +					      "Failed to set OPP: freq %ld\n",
+>>>
+>>> Same comment as above.
+>>>
+>>>> +					      dev_pm_opp_get_freq(opp));
+>>>> +			dev_pm_opp_put(opp);
+>>>
+>>> So you want to continue even in the case of failure?
+>>>
+>> I wil make changes to fallback to driver voting for icc bw if it fails here.
+> 
+> That's not needed. If the OPP table is present, then failure to set OPP should
+> be treated as a hard failure.
+> 
+Sure, I will make changes to fail the probe then
 
-Hello Mani, Krzysztof,
-
-These three series:
-https://patchwork.kernel.org/project/linux-pci/list/?series=836730&state=*
-https://patchwork.kernel.org/project/linux-pci/list/?series=838789&state=*
-
-Still haven't been merged.
-
-Considering that the PCI endpoint memory mapping series:
-https://patchwork.kernel.org/project/linux-pci/list/?series=839970
-conflicts with both of these series, I think that it would be nice if the
-two fully reviewed series above could get picked up.
-
-Right now, I think we still have time to get the PCI endpoint memory mapping
-series fully reviewed to live in linux-next for 2 weeks before the next merge
-window opens, but time is running out (because of delays for what appears to
-be no apparent reason).
-
-
-Kind regards,
-Niklas
-
-
-P.S.
-It would also be nice to see:
-https://patchwork.kernel.org/project/linux-pci/list/?series=838545&state=*
-getting picked up.
+- Krishna Chaitanya.
+> - Mani
+> 
 
