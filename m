@@ -1,262 +1,159 @@
-Return-Path: <linux-pci+bounces-5886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EE0589C7E1
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 17:11:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D18BA89C83C
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 17:27:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DABA7285CFB
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 15:11:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01BDD1C2127C
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 15:27:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1ACC13F446;
-	Mon,  8 Apr 2024 15:11:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30FBF140399;
+	Mon,  8 Apr 2024 15:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PusZ6Ru2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7K7pxFA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2123.outbound.protection.outlook.com [40.107.104.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859DF5F87E;
-	Mon,  8 Apr 2024 15:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712589086; cv=fail; b=OI/2kYbNDzONXhjtMOJVgxomdwPpy+mtcL5CClYWqlnEVSgAVjR8LhBPkZ0HswxIokKQkix9Ilg2VPwb18NMxeao/Iw+vbLxJRFcAHZohAOOkoJJMJVAA/I+r479H+YfzyMWiztfR7x/nrgASEssBI8NMjRx09c36su5bdOE8Ik=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712589086; c=relaxed/simple;
-	bh=izuho5vZE3KIs7hubu3upSr/9HMFtzolblsSlpmRtLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=f45Yd8Sb+Vmd9Ir1uB2BZAqXc95TISi1ZrRpfoUGH1d73VgsxyYHgigvwsVG1abih2rlQ33dcwke86GbwOsPXEvVklT3x7bqOR+eqz9vadIRrzpBvorP/Oqx3Yp5/NCUSjdqAmSiR8WANqiPnoVALa4G1dka3np8+h5TNvfmFc4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=PusZ6Ru2; arc=fail smtp.client-ip=40.107.104.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cd7mZ3zzAuNcKzFE0zwSStpMdhUV69zIZyZmxbhTn997k2jbUrZ9POwODKH8mTunzQ+xbSHvyEnHGm5rbB96LObQqIa5xu1FdtFKMJVTzkMtbDgFZeFMVxN/42PFNp58eL063miu79WGrQ7lPJxUXHGQEKQIE6D6eAABTN5VLPeK1YRO/ogEMFkZkgDm1wKl8GSlOJLG/Ug1PKhp7XnHQzki+QhG6FgBjhIdsYZU1fboOzh8PSIMyZZCcQz0EdJiIaJxD5XI3rMKl8R2AGQLt9WJ4XnlZF3mjUke8cTkcke6/NOFxzeoQNo9UNwfpwdk/AGXqv/23f9zwjQMkF54yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X1P7uCXcwP9KvaNfgmuKjf2xNYJ4Gt5Wtvfkzv+EdCo=;
- b=TQVfd8DrO7PgvEcXSQpuYPGC46zjeuhE2pG4HO8IvKjIFkqEujVihm4VWeU1x3zkqvnkvUYcvv8zqbfn8KT/a5oFJCI+3IVGZsCOeXn+PmGyVE1Q+Cz3l7sK/KSHIEPhcQi3+6hyK2QG+4aV/DPJarvG14Gzp5fpzz7W2GMxDi6yI1QjlLZa/HrJp2tqJMSLLK1HO4/IHLyxWD8LI721hfOBa60J2P+D/7NCed8J8hYU4KLPtXdaHJ8HiEED5dISTysNXckSJAse/b6/ggmmugnTUIJj5CKCh+XF1HYb+WgsWz/JBCqZ25MtG7HI5tLNeNurfKw8ArLSEJkO1iikUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X1P7uCXcwP9KvaNfgmuKjf2xNYJ4Gt5Wtvfkzv+EdCo=;
- b=PusZ6Ru2zYc5ztICHSYcDHTYJMCDaCukceOPtEkcfj6CfgdrDHVTBcBRZAqTgmYn2NK19GoH2n1iYF+NuC8031mF54Qr2X8Z/b2lMbNPb0j5wP+EsxNuP18KNTRY3p2QJ2XS3sMONQoe6z63W8Hz3Dt9xouJoJQOmeIVGIx7ibo=
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM7PR04MB6806.eurprd04.prod.outlook.com (2603:10a6:20b:103::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.54; Mon, 8 Apr
- 2024 15:11:22 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Mon, 8 Apr 2024
- 15:11:21 +0000
-Date: Mon, 8 Apr 2024 11:11:11 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 5/5] PCI: dwc: Add common send PME_Turn_Off message
- method
-Message-ID: <ZhQJD7GjRpDwa6jI@lizhi-Precision-Tower-5810>
-References: <20240319-pme_msg-v5-0-af9ffe57f432@nxp.com>
- <20240319-pme_msg-v5-5-af9ffe57f432@nxp.com>
- <20240405062426.GB2953@thinkpad>
- <ZhALNGyNTAzN86GF@lizhi-Precision-Tower-5810>
- <20240406040131.GC2678@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240406040131.GC2678@thinkpad>
-X-ClientProxiedBy: SJ0PR03CA0156.namprd03.prod.outlook.com
- (2603:10b6:a03:338::11) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AED13E88F;
+	Mon,  8 Apr 2024 15:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712590033; cv=none; b=D1zS5gMT14n+r7Mg58v3i5ttY2z195xnaPz8UdRPgaiB+sIKVCqg4Wo+l34GfF7XIDiXbGBn55yJtGoBC4/Xwqu66CYkrLXwVJ+mvyTkUMVzzNEUV0u6VZQ1CQBF14+LxUvJC5N/lf6SVvYTqX0uXafhNXoVchKT3ScrWRsZWGQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712590033; c=relaxed/simple;
+	bh=3foDZQVCE9h+vCaa0c8f4ymTE90zsHWqZ+9zfPuIJ50=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qMkJfE7Wmj6vV+2fW3A85qYBa+GwVDbyW3Zv3KRagI8Lgbs/O4gEtomP3wp0UitafVnjAlBhCteENFvyYbp1ioZMPIpNe4mLh2mmk3phy/LBtX5ZlSrlvaJPXUIlzCZ0tramVskJqX9wBkBRPzky4KgzH5kJy/CMc1E+lVXiDss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7K7pxFA; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-343e46ec237so2606069f8f.2;
+        Mon, 08 Apr 2024 08:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712590030; x=1713194830; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MxlFKPbTGJC+nZ4viqvDhx3xfCRju+xx+nTFlelxLEQ=;
+        b=K7K7pxFAeF0cMC6FY9bWy8G/9luK/6tStHcbZyAq+iTgFO6Mb8oz2I6F6bs/uptk1+
+         Fhm69gxghotYfsMa9UKn1jSYlBVK/pcFW40Y2daZ+2YM/sWq9o7a9EedVFsEjB6Io0Ly
+         hoNRdW0nfr0W5yc1GvQ8GC5JrVWo8jTLlTj9leJpMryEYkfyoQpf2A6ywREqtI9Du74n
+         I6/JqwXTD+ejuCaY6idD5M+KwPakfxYb9cPz5HkOMk8xZ04Z551us6BdbL+D/SJNiy+x
+         +RA/2f2u2RIYOsncWA4F59EymCx2DJTxbDSbXxCsTa0p+Mm/XrGZ9tXl83hA7VjBswnH
+         9ORw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712590030; x=1713194830;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MxlFKPbTGJC+nZ4viqvDhx3xfCRju+xx+nTFlelxLEQ=;
+        b=qeVGXUegtWTds0v0E2mU4Zti41a/489Hue9+YwOPG+0wF2dwR5pavpV0HSp65TbPvq
+         +2FLKgf/6Et00Kf9GDzWrzCJTWof7FMOl3s17+LnDGQClWC7/ufiL9Gy3HHv4AaoshTy
+         ScwiBF6YyDMJzbLIpVcrM4KNUFL0xXQ57PPUPrIFqpfuPHaiMP973tMVpQkE0QiZJ392
+         8zJajXdLJcbHgV4OixMODedqx/DI8Li02DXiH7BDeOiDwWkDdo/yeKpgEGtrbTP/J2Fr
+         X0HTUsGNE5nqvULx9qRjFfA/zlMudIbQ6sLKLcwV0NjS29SMSE/380sUihkFr1tfceMs
+         SyDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxojzDJYtag9RW8bmypPpdXiauUq2rFWXuZ/4PWnO/LiKL7bJe2ENjVfpZJFEgIJz+9b6e/HMGj2ybIum4cl9gGRPI2KQRIU15enfR/fb1IpjanjOBbH7jzts8+0kLjOz0
+X-Gm-Message-State: AOJu0Yw5JUW0W6Qxyyrq7PRWCoB6OkqPFd8dLhgF9Aq55+xxZvqFApVI
+	S1/e7sszsPeONevfISHoFNE6RvSYaktaWtqDGcoMBTSPbPS0ITYBkBuNmphJxDAtb+VpzO2D52b
+	AChKhrTfWTe3lN0uCLusXO662Zoc=
+X-Google-Smtp-Source: AGHT+IEtrOxjmyNRURkAxVwwTKmft/RG0xyBmmm8uwi2Q3wqt2J/AKZ3hloz2706R/DbLGktlXZEz8o1K++xythm0is=
+X-Received: by 2002:a5d:588b:0:b0:345:ca71:5ddb with SMTP id
+ n11-20020a5d588b000000b00345ca715ddbmr2053513wrf.66.1712590029594; Mon, 08
+ Apr 2024 08:27:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB6806:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GIlF+i4Hv5FVv0GXXiI8t/grzmb5ZJ2HxpgoY7uPfYsl5igYZn/36uQAXuXetF8Vbgwq2Hijk9Fbh/ZvS0vdJLobsYbhw6fh2sx2Q8klRiYa+L0mrcclbzDdXuAHs0R3VEZBFn/AxghHsKxrrCw3BsCGXuDliJvtljtSoqq5Civ5Ria/zwBkIJTrel69fazRLMDJm+zmjmRHS+Nu42UhT2BOO4fKoudFHbu2R3t2rP2WUFA9dgNpNeo6BjNCtvoMzb7rGNaHuhFAxYZ3DL6b9P/MVW+D5g8OS0Jk7Ax5toamGYNkJLh3k2Y9D/S9QZi80mgqmPKjQRAOKMvSnqe5Mu0URSkqShgSxg9KTR3SgmDB3+ui3QCEz+lMVshp14bshj8j1q/R+MqcmLdJBpt4db7UjqpjgFdvIxPBTohKjXp6TgftTHITRyXSHt5W5GP60+rM4aJHEQWgEJZM7tGIAcghC81thprnbEAb82GRCHDhFKB1Mn/sHGgbO1vKOTdGIqTmBJOtuz3b2A0I16aFwNH691b/wmJAAkIDVkpvtXO1k+X9/WhE1Gis2J6q6mZ7Gq4pkTNhn5tH2RmsRZce8twi5puXQUVlgy6fdB/euEctd2kgVFnBuky0ze9UBPjxMjy3bUVZABK//tPl1F7AAjeKwrA/6Lg8GMx7Yrw6XtqvesTpiTn64N5Yf3qcMfo59eZf5G9d00xZd09eO8pxnACE1p5juSRf9m5FpQL+9Y0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(1800799015)(7416005)(376005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UzRFVFRMQlVyc0RIQndwd0pHNlFQMlZyNE1oK00rdmhkcDVmSGplcjFFNmlR?=
- =?utf-8?B?MGRKWld3RlUzcC9lYVcrWlVYekpLOWc3b1ZoS0VvNE9YOGZrdVBhRFdoNUdF?=
- =?utf-8?B?UFVxV3hmS29GWW9tS29TM0U1a1RSbXBzTWh5Tm1uWTBVSmxIYy84b0xEWVJK?=
- =?utf-8?B?ZVVQaGRJblJkM05qWHJaNDNCNktRTTNleWExZmtrN2RsTi9ORThjL3lVOHFz?=
- =?utf-8?B?clcyd0RlMUQvQ00vQXAzdWxQWnl1NHBkcVBkT0N6aEFWelROakoyKzN1cUcz?=
- =?utf-8?B?bmFyTXpqRTJOVTRxMlgvSXdTei9qWFBEZHlGMWUrZ1RxWmV0U09nUjB3d29q?=
- =?utf-8?B?OXg2R2ZUdDJJTThOaXlsdGlIL3pjZWZuVEhoTzNYZ1ZjbEFzcmcvOVQ5MEti?=
- =?utf-8?B?WnA0SjBUWmJsUm9aK1pIaFVHRzRuK25uYmk0aFNZWGo1VmV4Nkl1OWxReWlm?=
- =?utf-8?B?YTJ3bVRqSlRSdmxiUWo3YWdlaFRSaGMvZjBYRXZCaEJJcGZ5aTVSN29OWnpQ?=
- =?utf-8?B?aGczaUJENFdJUHloYkhEVk5uNDEzVkxWQldPa2tSRUMrUVI0SENjV1ZDSDNl?=
- =?utf-8?B?NlBDM3dvbnp6UTRmeUxuRG5vL254SVFQTGVUQ0dkS2swejdZU3N0WTBqTU5O?=
- =?utf-8?B?Qld0ZDNrbndiRXVtcFd6TENxRVhkK3pTandPU3YwV1pCeU5kODFUTVFYM0I0?=
- =?utf-8?B?czRBR2hrd0djV2g2dXVaMWZqZ1lzOUlKSDE4NEttWUhCSDV2MEFRcWowb09r?=
- =?utf-8?B?SUVxTEpFbmx3R1NGWFNqOEJQV2ZLNDQyaWJKc0IrKzZKRVhrSUcwcGltUW1k?=
- =?utf-8?B?VzZra0JtQTJ1cVFwc1JsanRnQXZURDFPOFZGaXJYblBJZUVaRjZ0WHhtNHZF?=
- =?utf-8?B?dmdVNE12QWcySGdMdDRXaDYyTWNiZi9FWXE3d3R0RTZSblBBanRhd1NIclc5?=
- =?utf-8?B?cTJ5UHVFV2ttRDJWSEo3K0NTRWZsVkR3R1N1RzhRbjBlVnpMaGxON2VRSlNX?=
- =?utf-8?B?UjVFZklwSTJSdjVYMVhwVTFrSmlYcEQzSW4zeG5vU1hLWmpXMmcrVGwrM2Vi?=
- =?utf-8?B?d3BiWUU3UFhhTEN0cEdBcE5CM2I4c3Z5OFFuQ2tIakxleENYaTR2QlY1eGVD?=
- =?utf-8?B?VWN2UWJGajdJdm1PNUlvN254Mjc0aE5uRzd0VlF4MGFWUlRTQUlTZEhDTEtF?=
- =?utf-8?B?SWZkNngrU0ZDY0ZPZXVtL3luR1prMGdmTUdmd2VoV2tueWtPRi9BOXRxYnk3?=
- =?utf-8?B?elppeUJ5SEhCQStka0dpVHUvOXVmdTdkTmdhSE5OVEZTamdlSWVxZlVSNSta?=
- =?utf-8?B?QkZQN2JoMlVxaTRkQXVkNDJaWXBPSndBbklXdnlpM1pLazRxN2cyOHFLUGxo?=
- =?utf-8?B?UkVtUHlzQU43b0gzamdBQ0c4NVEyb1dnV1plWHlaUmhKd0Z2TkViQlJjQVhO?=
- =?utf-8?B?U0ZBOWRqa0JuZXI3S3FsVDAwZERUSE95S0JSdDFhdE92T25HU0d1VEtwNDl4?=
- =?utf-8?B?UXBocUc3MHpoT054SlRsUVBJV2t3WXB6bHArVkJ1TWVFditDZFk1bUpTV3l5?=
- =?utf-8?B?Y3dBY2p5Mi92cnBtelFWSWZHTzEwc1BuZ0dGeGxtYkpiOUVETXVoMXp0djRH?=
- =?utf-8?B?RE5oZTYzeCs0SXBrRGxYZUFDS0Q3QmZwcFlMRlpWbmJtUm5kbldlNW5sOWJH?=
- =?utf-8?B?WGlmYXlMdFBsSTlrYmZRcGNhRHdraFh2K1BidUN5RTY3WTdwNnZGVjE2ck1Z?=
- =?utf-8?B?NlNMQ3k3eVBEaXhxRUlzKzdJYWxZVTlZNW9iNGhlTFdsSXlpWFNzb0ZsbVNI?=
- =?utf-8?B?LzRETTZMZ0tyMS9sc2EwWFQ0VExEelBVSTBlLzFjNWVwak9nbXBrbWF1Lzlo?=
- =?utf-8?B?blFUb1FXMnYvak41RzZtbXQ1ejhPd04ybFdPVkliUUMvUGhscXlKcUJUWVpN?=
- =?utf-8?B?OHV4d3I2aWNEZC9FMjVaZFo0SHJaTVcrbXczYzBTWkt5UlpLc1U0UmloOEdE?=
- =?utf-8?B?QVU4L2FrSCsyR3Ntc0gxNzhXb1lDdTBlRDJ4T2NEY2VpT0NpTHRleUVoeDU3?=
- =?utf-8?B?cXVMZnR1ZGN6dXIxdmZkeklnZmxRZVpmTkhoZG5qVlN1Qkd4Vk1YQWxnSjd2?=
- =?utf-8?Q?TJ/c=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f7eb2d8-c2f6-448b-409d-08dc57de2652
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 15:11:21.9256
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Y+/I5ByjGd87w/WTmUKm4z0hFeygCPY9zdKvtgmTULfF9ilSx/6DUnDe2fzkjggeCSPgiF+Poyb231rik6/A5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6806
+References: <Zg6Q8Re0TlkDkrkr@nanopsycho> <CAKgT0Uf8sJK-x2nZqVBqMkDLvgM2P=UHZRfXBtfy=hv7T_B=TA@mail.gmail.com>
+ <Zg7JDL2WOaIf3dxI@nanopsycho> <CAKgT0Ufgm9-znbnxg3M3wQ-A13W5JDaJJL0yXy3_QaEacw9ykQ@mail.gmail.com>
+ <20240404132548.3229f6c8@kernel.org> <660f22c56a0a2_442282088b@john.notmuch>
+ <20240404165000.47ce17e6@kernel.org> <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
+ <20240404193817.500523aa@kernel.org> <CAKgT0UdAz1mb48kFEngY5sCvHwYM2vYtEK81VceKj-xo6roFyA@mail.gmail.com>
+ <20240408061846.GA8764@unreal>
+In-Reply-To: <20240408061846.GA8764@unreal>
+From: Alexander Duyck <alexander.duyck@gmail.com>
+Date: Mon, 8 Apr 2024 08:26:33 -0700
+Message-ID: <CAKgT0UcE5cOKO4JgR-PBstP3e9r02+NyG3YrNQe8p2_25Xpf8g@mail.gmail.com>
+Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net, 
+	pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 06, 2024 at 09:31:31AM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Apr 05, 2024 at 10:31:16AM -0400, Frank Li wrote:
-> > On Fri, Apr 05, 2024 at 11:54:26AM +0530, Manivannan Sadhasivam wrote:
-> > > On Tue, Mar 19, 2024 at 12:07:15PM -0400, Frank Li wrote:
-> > > 
-> > > PCI: dwc: Add generic MSG TLP support for sending PME_Turn_Off during system suspend
-> > > 
-> > > > Reserve space at end of first IORESOURCE_MEM window as message TLP MMIO
-> > > > window. This space's size is 'region_align'.
-> > > > 
-> > > > Set outbound ATU map memory write to send PCI message. So one MMIO write
-> > > > can trigger a PCI message, such as PME_Turn_Off.
-> > > > 
-> > > > Add common dwc_pme_turn_off() function.
-> > > > 
-> > > > Call dwc_pme_turn_off() to send out PME_Turn_Off message in general
-> > > > dw_pcie_suspend_noirq() if there are not platform callback pme_turn_off()
-> > > > exist.
-> > > > 
-> > > 
-> > > How about:
-> > > 
-> > > "Instead of relying on the vendor specific implementations to send the
-> > > PME_Turn_Off message, let's introduce a generic way of sending the message using
-> > > the MSG TLP.
-> > > 
-> > > This is achieved by reserving a region for MSG TLP of size 'pci->region_align',
-> > > at the end of the first IORESOURCE_MEM window of the host bridge. And then
-> > > sending the PME_Turn_Off message during system suspend with the help of iATU.
-> > > 
-> > > It should be noted that this generic implementation is optional for the glue
-> > > drivers and can be overridden by a custom 'pme_turn_off' callback."
-> > > 
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware-host.c | 94 ++++++++++++++++++++++-
-> > > >  drivers/pci/controller/dwc/pcie-designware.h      |  3 +
-> > > >  2 files changed, 93 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > index 267687ab33cbc..d5723fce7a894 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > @@ -393,6 +393,31 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
-> > > > +{
-> > > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > > +	struct resource_entry *win;
-> > > > +	struct resource *res;
-> > > > +
-> > > > +	win = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-> > > > +	if (win) {
-> > > > +		res = devm_kzalloc(pci->dev, sizeof(*res), GFP_KERNEL);
-> > > > +		if (!res)
-> > > > +			return;
-> > > > +
-> > > > +		/* Reserve last region_align block as message TLP space */
-> > > > +		res->start = win->res->end - pci->region_align + 1;
-> > > > +		res->end = win->res->end;
-> > > 
-> > > Don't you need to adjust the host bridge window size and end address?
-> > 
-> > Needn't. request_resource will reserve it from bridge window. Like malloc,
-> > if you malloc to get a region of memory, which will never get by malloc
-> > again utill you call free.
-> > 
-> 
-> Hmm, will that modify the window->res->end address and size?
+On Sun, Apr 7, 2024 at 11:18=E2=80=AFPM Leon Romanovsky <leon@kernel.org> w=
+rote:
+>
+> On Fri, Apr 05, 2024 at 08:41:11AM -0700, Alexander Duyck wrote:
+> > On Thu, Apr 4, 2024 at 7:38=E2=80=AFPM Jakub Kicinski <kuba@kernel.org>=
+ wrote:
+>
+> <...>
+>
+> > > > > Technical solution? Maybe if it's not a public device regression =
+rules
+> > > > > don't apply? Seems fairly reasonable.
+> > > >
+> > > > This is a hypothetical. This driver currently isn't changing anythi=
+ng
+> > > > outside of itself. At this point the driver would only be build tes=
+ted
+> > > > by everyone else. They could just not include it in their Kconfig a=
+nd
+> > > > then out-of-sight, out-of-mind.
+> > >
+> > > Not changing does not mean not depending on existing behavior.
+> > > Investigating and fixing properly even the hardest regressions in
+> > > the stack is a bar that Meta can so easily clear. I don't understand
+> > > why you are arguing.
+> >
+> > I wasn't saying the driver wouldn't be dependent on existing behavior.
+> > I was saying that it was a hypothetical that Meta would be a "less
+> > than cooperative user" and demand a revert.  It is also a hypothetical
+> > that Linus wouldn't just propose a revert of the fbnic driver instead
+> > of the API for the crime of being a "less than cooperative maintainer"
+> > and  then give Meta the Nvidia treatment.
+>
+> It is very easy to be "less than cooperative maintainer" in netdev world.
+> 1. Be vendor.
+> 2. Propose ideas which are different.
+> 3. Report for user-visible regression.
+> 4. Ask for a fix from the patch author or demand a revert according to ne=
+tdev rules/practice.
+>
+> And voil=C3=A0, you are "less than cooperative maintainer".
+>
+> So in reality, the "hypothetical" is very close to the reality, unless
+> Meta contribution will be treated as a special case.
+>
+> Thanks
 
-No. This windows already reported to pci system before this function. It is
-not good to modify window-res-end. It just add child resource like below.
+How many cases of that have we had in the past? I'm honestly curious
+as I don't actually have any reference.
 
-windows is root resource, which will create may child when call
-request_resource.
-          bridge -> windows
-		child1 -> msg
-		child2 -> pci ep1
-		child3 -> pci_ep2.
-		...
+Also as far as item 3 isn't hard for it to be a "user-visible"
+regression if there are no users outside of the vendor that is
+maintaining the driver to report it? Again I am assuming that the same
+rules wouldn't necessarily apply in the vendor/consumer being one
+entity case.
 
-Although you see whole bridge window, 'msg' already used and put under root
-resource,  new pci devices will never use 'msg' resource. 
-
-If change windows->res->end here, I worry about it may broken resource
-tree.
-
-> 
-> > > 
-> > > > +		res->name = "msg";
-> > > > +		res->flags = win->res->flags | IORESOURCE_BUSY;
-> > > > +
-> > > 
-> > > Shouldn't this resource be added back to the host bridge?
-> > 
-> > No, this resource will reserver for msg only for whole bridge life cycle.
-> > Genenally alloc resource only happen at PCI devices probe. All pci space
-> > will be fixed after system probe.
-> > 
-> 
-> I don't think so. This resource still belongs to the host bridge, so we should
-> add it back.
-
-When add back?  It was reserved at bridge probe. When bridge remove, all
-resource will released. 
-
-> 
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+Also from my past experience the community doesn't give a damn about
+1. It is only if 3 is being reported by actual users that somebody
+would care. The fact is if vendors held that much power they would
+have run roughshod over the community long ago as I know there are
+vendors who love to provide one-off projects outside of the kernel and
+usually have to work to get things into the upstream later and no
+amount of complaining about "the users" will get their code accepted.
+The users may complain but it is the vendors fault for that so the
+community doesn't have to take action.
 
