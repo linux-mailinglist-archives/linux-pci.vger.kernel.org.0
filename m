@@ -1,359 +1,242 @@
-Return-Path: <linux-pci+bounces-5900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B81EB89CCF6
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 22:34:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B872D89CD06
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 22:44:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B4792837AE
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 20:34:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F776281D20
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 20:44:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FB0743AAD;
-	Mon,  8 Apr 2024 20:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7292146D60;
+	Mon,  8 Apr 2024 20:44:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M52aGI7T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBzXOJim"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AB27482;
-	Mon,  8 Apr 2024 20:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B767C5FB8F;
+	Mon,  8 Apr 2024 20:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712608477; cv=none; b=L5nMgek0el1sX64Q142iubPYca6q8vv7er7Paiu2+tO1MubMPBgScAdCt/stvzCV2RmtndZzZJiNroOw+XumT3O5L5IipceifJbawEqBfYMg1u2E/ce2a+JVOhzGb+Ak/YWn9nHB1QEYvLznzdcWrpjsZLeq7Q1HpZfmhMIXfzE=
+	t=1712609049; cv=none; b=fpK7T1TEuocOuGwIdHBPJsnBker+sIvQ12su2YDutr0ntokinsXP8O1Fy3RHH9mhiSrV9OtQAXBwMkTYmj2MNjoFOnkg+335Sv8f05UtgRqTWjblOtmzoF7s4D6X3ubF8xH7n7qtKNgxpSNb7fj4xUnCSGQxw/iAMlzOFF0Szn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712608477; c=relaxed/simple;
-	bh=PWIA8V18WJY7Lf1DeBwmmMK2HKVS/EQgzN2tHA3xTLY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qHdSzP6DgPufQCeY7Zr98W0N/aYF+xxV38lTRDQwm+B3W55gP0ENM4pA5SPpVYnwAulTIkKy1Az1ExpJu/9ISVaqOwZxs6rJhruvt2pC95L30GzpCupQDuJx/oTrOBtEh5Awli4qPEab+0x5Tr8hshhgscB+Q8qqBBS6Fj5XwUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M52aGI7T; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712608476; x=1744144476;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PWIA8V18WJY7Lf1DeBwmmMK2HKVS/EQgzN2tHA3xTLY=;
-  b=M52aGI7TMenruHGW/jxiEnVJ+KQ1m4eKM5ecIRuN3hxtxzt8YVfhcVZO
-   prp9Te2iYhpbOCdHvL3+50wTiAQKfDtCHGxcf4V3UP/ZNMyigyZ6rjSCN
-   TOCq4PBTesEAyGIMUWaYCHYRj7lh4MXP3Fd4NMBgV6MmsiSjFisMSoYGP
-   xei7U0oxHkSQhVLPvOFeOxAdXLNFBNYi8qL7och2j3jR8g6SPz28+KyD6
-   obAuao5VV7gMAEb5S+pT0qrtKlFTU7DnIQO1LES3hZZ9NAt8yhLR48POu
-   K2xaXoSbxxN7TNneTtOUr6Hv79QCJTBiJgQ+Gh4AIdJbWrvopgoboTQli
-   w==;
-X-CSE-ConnectionGUID: DmLl1g8xTJG7xG9pXOOgtg==
-X-CSE-MsgGUID: x7I2YA0gSSKjBWsTrR25SQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19285619"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="19285619"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 13:34:35 -0700
-X-CSE-ConnectionGUID: j47fw3sGTuCeJaeCJgxwUg==
-X-CSE-MsgGUID: e/mxbEINTRCpqmcD3UwM+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="20121978"
-Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 13:34:34 -0700
-Date: Mon, 8 Apr 2024 13:34:24 -0700 (PDT)
-From: matthew.gerlach@linux.intel.com
-X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-    krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: PCI: altera: Convert to YAML
-In-Reply-To: <2ece9ac2-899c-4185-b0f3-8ab939afc1e5@linaro.org>
-Message-ID: <alpine.DEB.2.22.394.2404081309050.381257@sj-4150-psse-sw-opae-dev2>
-References: <20240405145322.3805828-1-matthew.gerlach@linux.intel.com> <2ece9ac2-899c-4185-b0f3-8ab939afc1e5@linaro.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	s=arc-20240116; t=1712609049; c=relaxed/simple;
+	bh=Y5tz8yV+GP68iA41T4sdpFzai98Z9vK2g0m0fVuViBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h/9pNqH+RaY89wb2JuxBkxFp7hK+5fYIyyp7+Bs6rHYoMWJ1JBL5m8Y/aS2xIu/fNsS1bNoKAZmXEbkKqXB1dli3Dv5u3NwN8bEN9hC/XivMhoofLqSzhU/QQ0o8+KM9j7uj3ypWXlPy7D7HcCWn2N/zYhz5AQz3w+HQpoH4UJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBzXOJim; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4155819f710so37967895e9.2;
+        Mon, 08 Apr 2024 13:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712609046; x=1713213846; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d1o+4pjY29HDvvdTfVxnJIAgrnAGVX4TFUsURZsKsfc=;
+        b=hBzXOJimy/AMV5IlCwN8R6LTFyPhwNGSDAPxmLVJwpI3+wjgPC8601wKW2ojaF9gOz
+         W67J7aYJ5h05PkoZnGqwsOsytmvh6RN85e6LvJdBi9dTanE3XoawxPp3wpGN2FR+1ntz
+         FtMCGFbsYSriWguFvq94xLxJZkXBdSIH1KjHcr4bhxix6HkwQTjj0gbr90ZrsFaFloT0
+         g3ia9k9fxTs1BWt3zN10i0Ocp5Tsdkf4EIDQ8eE5NNdNtxcrHyXbqcmqubDzC6EcR8fN
+         F1yq7BxrTyQv1v1u6ylagJqGZYJFVrktPnGaTKTiFo+opuBay56Ym72p+OPiqhnL4Wes
+         HjZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712609046; x=1713213846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d1o+4pjY29HDvvdTfVxnJIAgrnAGVX4TFUsURZsKsfc=;
+        b=qqcNXHLDeXsqAYYzpxb4HG/5XVQp9MN/TltHmKnCctwWeXZJ1uMJ5M17o6dw3HpoUL
+         a3qS/k6ucERiqF5nEN0vEImGn3EESyf7+b1ZKItXdiXGFaRHkhqHpSWybgQSKo8/Wsp8
+         jiiatDl3aS64pw/1vms0/NaDO2PbY9m9Z3eQSXIGQsPSj9Rxw7VQ40GzOKyxsQ1cmUjx
+         dU7bMG9f+mgtuasXL1jjXhO6+vynhIvD6O7CUq5XTy9XPC02Tj32kgFZHjfb4mD0KMCN
+         wi9jXcIgF1EE8YOQHi4P4tCY2FWHwJedoeDwEvuJIkbv0TNE+X7X1buOlVQ+fTX6LJi3
+         sshw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8uOjx9BSivRq6SZcOoGRrtwFNdpSpdHx3/J8em87ubbIlV9++26LOk3JsDWL16PMtzZdWWLLMOjH752T9aHNfXg1xhvxz2Xp1cjB2kT/0QrVbT8AlQTaNkvdMA/ILYqa/
+X-Gm-Message-State: AOJu0YwwZpgZkCtH+o65wKkSXvqd14muJAEhgYDUWB5KMzsB5iJS36oz
+	35mp6l09BjQ366ONE6pnPgZWvd2kSnWpbOFH2IeudOLcxhtCnV7sGgSta45lJIvN56bmUQlGpA7
+	lFy26hwUSuj0HaausAj6l35DEh5s=
+X-Google-Smtp-Source: AGHT+IEO1N3e3RDKuQmb5tG2Jt5wT6nHcgPVNQPpVpGkMgSV0JrZPJbgdbxGeDa6u9x/O+vcH2YTT5y37o/8DqMt3nA=
+X-Received: by 2002:a05:600c:4e02:b0:416:9e38:3bdd with SMTP id
+ b2-20020a05600c4e0200b004169e383bddmr419800wmq.27.1712609045767; Mon, 08 Apr
+ 2024 13:44:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+References: <Zg7JDL2WOaIf3dxI@nanopsycho> <CAKgT0Ufgm9-znbnxg3M3wQ-A13W5JDaJJL0yXy3_QaEacw9ykQ@mail.gmail.com>
+ <20240404132548.3229f6c8@kernel.org> <660f22c56a0a2_442282088b@john.notmuch>
+ <20240404165000.47ce17e6@kernel.org> <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
+ <20240404193817.500523aa@kernel.org> <CAKgT0UdAz1mb48kFEngY5sCvHwYM2vYtEK81VceKj-xo6roFyA@mail.gmail.com>
+ <20240408061846.GA8764@unreal> <CAKgT0UcE5cOKO4JgR-PBstP3e9r02+NyG3YrNQe8p2_25Xpf8g@mail.gmail.com>
+ <20240408184102.GA4195@unreal>
+In-Reply-To: <20240408184102.GA4195@unreal>
+From: Alexander Duyck <alexander.duyck@gmail.com>
+Date: Mon, 8 Apr 2024 13:43:28 -0700
+Message-ID: <CAKgT0UcLWEP5GOqFEDeyGFpJre+g2_AbmBOSXJsoXZuCprGH0Q@mail.gmail.com>
+Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net, 
+	pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On Sun, 7 Apr 2024, Krzysztof Kozlowski wrote:
-
-> On 05/04/2024 16:53, matthew.gerlach@linux.intel.com wrote:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>
->> Convert the device tree bindings for the Altera Root Port PCIe controller
->> from text to YAML.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> ---
->> v2:
->>  - Move allOf: to bottom of file, just like example-schema is showing
+On Mon, Apr 8, 2024 at 11:41=E2=80=AFAM Leon Romanovsky <leon@kernel.org> w=
+rote:
 >
-> No, just open it and you will see it is placed differently...
-
-I see what you mean. I will match the ordering of example-schema.
-
+> On Mon, Apr 08, 2024 at 08:26:33AM -0700, Alexander Duyck wrote:
+> > On Sun, Apr 7, 2024 at 11:18=E2=80=AFPM Leon Romanovsky <leon@kernel.or=
+g> wrote:
+> > >
+> > > On Fri, Apr 05, 2024 at 08:41:11AM -0700, Alexander Duyck wrote:
+> > > > On Thu, Apr 4, 2024 at 7:38=E2=80=AFPM Jakub Kicinski <kuba@kernel.=
+org> wrote:
+> > >
+> > > <...>
+> > >
+> > > > > > > Technical solution? Maybe if it's not a public device regress=
+ion rules
+> > > > > > > don't apply? Seems fairly reasonable.
+> > > > > >
+> > > > > > This is a hypothetical. This driver currently isn't changing an=
+ything
+> > > > > > outside of itself. At this point the driver would only be build=
+ tested
+> > > > > > by everyone else. They could just not include it in their Kconf=
+ig and
+> > > > > > then out-of-sight, out-of-mind.
+> > > > >
+> > > > > Not changing does not mean not depending on existing behavior.
+> > > > > Investigating and fixing properly even the hardest regressions in
+> > > > > the stack is a bar that Meta can so easily clear. I don't underst=
+and
+> > > > > why you are arguing.
+> > > >
+> > > > I wasn't saying the driver wouldn't be dependent on existing behavi=
+or.
+> > > > I was saying that it was a hypothetical that Meta would be a "less
+> > > > than cooperative user" and demand a revert.  It is also a hypotheti=
+cal
+> > > > that Linus wouldn't just propose a revert of the fbnic driver inste=
+ad
+> > > > of the API for the crime of being a "less than cooperative maintain=
+er"
+> > > > and  then give Meta the Nvidia treatment.
+> > >
+> > > It is very easy to be "less than cooperative maintainer" in netdev wo=
+rld.
+> > > 1. Be vendor.
+> > > 2. Propose ideas which are different.
+> > > 3. Report for user-visible regression.
+> > > 4. Ask for a fix from the patch author or demand a revert according t=
+o netdev rules/practice.
+> > >
+> > > And voil=C3=A0, you are "less than cooperative maintainer".
+> > >
+> > > So in reality, the "hypothetical" is very close to the reality, unles=
+s
+> > > Meta contribution will be treated as a special case.
+> > >
+> > > Thanks
+> >
+> > How many cases of that have we had in the past? I'm honestly curious
+> > as I don't actually have any reference.
 >
->>  - add constraint for reg and reg-names
->
-> Not complete...
+> And this is the problem, you don't have "any reference" and accurate
+> knowledge what happened, but you are saying "less than cooperative
+> maintainer".
 
-I will complete.
+By "less than cooperative maintainer" I was referring to the scenario
+where somebody is maintaining something unique to them, such as the
+Meta Host NIC, and not willing to work with the community to fix it
+and instead just demanding a revert of a change. It doesn't seem like
+it would be too much to ask to work with the author on a fix for the
+problem as long as the maintainer is willing to work with the author
+on putting together and testing the fix.
 
->
->>  - remove unneeded device_type
->>  - drop #address-cells and #size-cells
->>  - change minItems to maxItems for interrupts:
->>  - change msi-parent to just "msi-parent: true"
->>  - cleaned up required:
->>  - make subject consistent with other commits coverting to YAML
->>  - s/overt/onvert/g
->> ---
->>  .../devicetree/bindings/pci/altera-pcie.txt   |  50 ---------
->>  .../bindings/pci/altr,pcie-root-port.yaml     | 106 ++++++++++++++++++
->>  2 files changed, 106 insertions(+), 50 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
->>  create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
->> deleted file mode 100644
->> index 816b244a221e..000000000000
->> --- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
->> +++ /dev/null
->> @@ -1,50 +0,0 @@
->> -* Altera PCIe controller
->> -
->> -Required properties:
->> -- compatible :	should contain "altr,pcie-root-port-1.0" or "altr,pcie-root-port-2.0"
->> -- reg:		a list of physical base address and length for TXS and CRA.
->> -		For "altr,pcie-root-port-2.0", additional HIP base address and length.
->> -- reg-names:	must include the following entries:
->> -		"Txs": TX slave port region
->> -		"Cra": Control register access region
->> -		"Hip": Hard IP region (if "altr,pcie-root-port-2.0")
->> -- interrupts:	specifies the interrupt source of the parent interrupt
->> -		controller.  The format of the interrupt specifier depends
->> -		on the parent interrupt controller.
->> -- device_type:	must be "pci"
->> -- #address-cells:	set to <3>
->> -- #size-cells:		set to <2>
->> -- #interrupt-cells:	set to <1>
->> -- ranges:	describes the translation of addresses for root ports and
->> -		standard PCI regions.
->> -- interrupt-map-mask and interrupt-map: standard PCI properties to define the
->> -		mapping of the PCIe interface to interrupt numbers.
->> -
->> -Optional properties:
->> -- msi-parent:	Link to the hardware entity that serves as the MSI controller
->> -		for this PCIe controller.
->> -- bus-range:	PCI bus numbers covered
->> -
->> -Example
->> -	pcie_0: pcie@c00000000 {
->> -		compatible = "altr,pcie-root-port-1.0";
->> -		reg = <0xc0000000 0x20000000>,
->> -			<0xff220000 0x00004000>;
->> -		reg-names = "Txs", "Cra";
->> -		interrupt-parent = <&hps_0_arm_gic_0>;
->> -		interrupts = <0 40 4>;
->> -		interrupt-controller;
->> -		#interrupt-cells = <1>;
->> -		bus-range = <0x0 0xFF>;
->> -		device_type = "pci";
->> -		msi-parent = <&msi_to_gic_gen_0>;
->> -		#address-cells = <3>;
->> -		#size-cells = <2>;
->> -		interrupt-map-mask = <0 0 0 7>;
->> -		interrupt-map = <0 0 0 1 &pcie_0 1>,
->> -			            <0 0 0 2 &pcie_0 2>,
->> -			            <0 0 0 3 &pcie_0 3>,
->> -			            <0 0 0 4 &pcie_0 4>;
->> -		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
->> -			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
->> -	};
->> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->> new file mode 100644
->> index 000000000000..999dcda05f55
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
->> @@ -0,0 +1,106 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +# Copyright (C) 2024, Intel Corporation
->
-> This is derivative of previous work, which is easily visible by doing
-> the same mistakes in DTS as they were before.
+With that said if the upstream version of things aren't broken then it
+doesn't matter. It shouldn't be expected of the community to maintain
+any proprietary code that wasn't accepted upstream.
 
-This is definitely derivative of previous work, and I want to fix the 
-DTS mistakes too.
+> >
+> > Also as far as item 3 isn't hard for it to be a "user-visible"
+> > regression if there are no users outside of the vendor that is
+> > maintaining the driver to report it?
+>
+> This wasn't the case. It was change in core code, which broke specific
+> version of vagrant. Vendor caught it simply by luck.
 
->
-> You now added fresh copyrights ignoring all previous work, even though
-> you copied it. I don't agree.
->
-> If you want to ignore previous copyrights, then at least don't copy
-> existing code... although even that would not be sufficient.
+Any more info on this? Without context it is hard to say one way or the oth=
+er.
 
-Ignoring previous copyrights was not my intent. There is no copyright 
-statement in the original text version of the device tree bindings. Should 
-that lack of copyright statement carry forward?
+I know I have seen my fair share of hot issues such as when the
+introduction of the tracing framework was corrupting the NVRAM on
+e1000e NICs.[1] It got everyone's attention when it essentially
+bricked one of Linus's systems. I don't recall us doing a full revert
+on function tracing as a result, but I believe it was flagged as
+broken until it could be resolved. So depending on the situation there
+are cases where asking for a fix or revert might be appropriate.
 
+> > Again I am assuming that the same rules wouldn't necessarily apply
+> > in the vendor/consumer being one entity case.
+> >
+> > Also from my past experience the community doesn't give a damn about
+> > 1. It is only if 3 is being reported by actual users that somebody
+> > would care. The fact is if vendors held that much power they would
+> > have run roughshod over the community long ago as I know there are
+> > vendors who love to provide one-off projects outside of the kernel and
+> > usually have to work to get things into the upstream later and no
+> > amount of complaining about "the users" will get their code accepted.
+> > The users may complain but it is the vendors fault for that so the
+> > community doesn't have to take action.
 >
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Altera PCIe Root Port
->> +
->> +maintainers:
->> +  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->
-> Drop items.
+> You are taking it to completely wrong direction with your assumptions.
+> The reality is that regression was reported by real user without any
+> vendor code involved. This is why the end result was so bad for all parti=
+es.
 
-I will drop the items.
+Okay, but that doesn't tie into what is going on here. In this case
+"vendor" =3D=3D "user". Like I was saying the community generally cares
+about the user so 3 would be the important case assuming they are
+using a stock kernel and driver and not hiding behind the vendor
+expecting some sort of proprietary fix. If they are using some
+proprietary stuff behind the scenes, then tough luck.
 
->
->> +      - enum:
->> +          - altr,pcie-root-port-1.0
->> +          - altr,pcie-root-port-2.0
->> +
->
-> Missing reg with constraints.
+> So no, you can get "less than cooperative maintainer" label really easy i=
+n
+> current environment.
 
-I will add the following here:
+I didn't say you couldn't. Without context I cannot say if it was
+deserved or not. I know in the example I cited above Intel had to add
+changes to the e1000e driver to make the NVRAM non-writable until the
+problem patch was found. So Intel was having to patch to fix an issue
+it didn't introduce and deal with the negative press and blow-back
+from a function tracing patch that was damaging NICs.
 
-   reg:
-     minItems: 2
-     maxItems: 3
+The point I was trying to make is that if you are the only owner of
+something, and not willing to work with the community as a maintainer
+it becomes much easier for the community to just revert the driver
+rather than try to change the code if you aren't willing to work with
+them. Thus the "less than cooperative" part. The argument being made
+seems to be that once something is in the kernel it is forever and if
+we get it in and then refuse to work with the community it couldn't be
+reverted. I am arguing that isn't the case, especially if Meta were to
+become a "less than cooperative maintainer" for a device that is
+primarily only going to be available in Meta data centers.
 
-   reg-names:
-     minItems: 2
-     maxItems: 3
+Thanks,
 
->
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  interrupt-map-mask:
->> +    items:
->> +      - const: 0
->> +      - const: 0
->> +      - const: 0
->> +      - const: 7
->> +
->> +  interrupt-map:
->> +    maxItems: 4
->> +
->> +  "#interrupt-cells":
->> +    const: 1
->> +
->> +  msi-parent: true
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - device_type
->> +  - interrupts
->> +  - interrupt-map
->> +  - interrupt-map-mask
->> +
->> +unevaluatedProperties: false
->> +
->> +allOf:
->> +  - $ref: /schemas/pci/pci-bus.yaml#
->
-> That's deprecated, as explained in its description.  You should use
-> pci-host-bridge.yaml.
+- Alex
 
-I will switch to pci-host-bridge.yaml.
-
->
->
->
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          enum:
->> +            - altr,pcie-root-port-1.0
->> +    then:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: TX slave port region
->> +            - description: Control register access region
->> +
->> +        reg-names:
->> +          items:
->> +            - const: Txs
->> +            - const: Cra
->> +
->> +    else:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: Hard IP region
->> +            - description: TX slave port region
->> +            - description: Control register access region
->> +
->> +        reg-names:
->> +          items:
->> +            - const: Hip
->> +            - const: Txs
->> +            - const: Cra
->> +
->
-> unevaluated goes here, just like example-schema.
-
-Yes, just like the example-schema
-
->
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    pcie_0: pcie@c00000000 {
->> +        compatible = "altr,pcie-root-port-1.0";
->> +        reg = <0xc0000000 0x20000000>,
->> +              <0xff220000 0x00004000>;
->> +        reg-names = "Txs", "Cra";
->> +        interrupt-parent = <&hps_0_arm_gic_0>;
->> +        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
->> +        #interrupt-cells = <1>;
->> +        bus-range = <0x0 0xff>;
->> +        device_type = "pci";
->> +        msi-parent = <&msi_to_gic_gen_0>;
->> +        #address-cells = <3>;
->> +        #size-cells = <2>;
->> +        interrupt-map-mask = <0 0 0 7>;
->> +        interrupt-map = <0 0 0 1 &pcie_intc 1>,
->> +                        <0 0 0 2 &pcie_intc 2>,
->> +                        <0 0 0 3 &pcie_intc 3>,
->> +                        <0 0 0 4 &pcie_intc 4>;
->> +        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
->> +                  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
->
-> That's two entries.
-
-I will fix the broken DTS as follows:
-
-        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000>,
-                 <0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
->
-> Best regards,
-> Krzysztof
->
->
-
-Thank you for the review,
-Matthew Gerlach
+[1]: https://lwn.net/Articles/304105/
 
