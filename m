@@ -1,251 +1,116 @@
-Return-Path: <linux-pci+bounces-5896-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5897-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC21989CC40
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 21:09:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 350BD89CC60
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 21:25:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2129B1F21A1D
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 19:09:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D312C1F23565
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 19:25:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D8A41448FD;
-	Mon,  8 Apr 2024 19:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2BD2145321;
+	Mon,  8 Apr 2024 19:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hx3y1hej"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3QsaudN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AC8F51B;
-	Mon,  8 Apr 2024 19:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C62145320;
+	Mon,  8 Apr 2024 19:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712603364; cv=none; b=RoyHH2fGS95Nm8ELlu2M+IUTJiMvW/aI7GsTbxnJ9x0YJTNDCCrj8JaGpxtxnZf4KKImVMFo8RelHPpd/WJ1YyQ3S7PRbZrNu5AxHXp0F9JLDUCTPtPW1taLTzkiZbK/ggy5WS2Z9d0ebRNArLMz5yavqcdgiUaaluM/Duq53RM=
+	t=1712604302; cv=none; b=jAiy10uQ52Og5mI0MENRNNBy7QlS0K7R8IwZdpCEyDJQgwsjFrvXp2EZSG6q1nKKF7h0k8J/wV8sm82BC/NWJbgkdVeNfjUFzNIqDl7di6AxX0HXfEKi3MXIkPm92UA+33g/NtbmjQlu6LpaURJ5PysAV451Q1MSmP+P1CZZ7Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712603364; c=relaxed/simple;
-	bh=U7SlWaamETiCnfY+5UQ6kKK+bxdmnDe6vQ4vt5eDzVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=O6mXJhucqBUDvO1cZm4S31BuMNYsmBwso6scfH5t8T/zrlU4FUIpJIVKyFRIpIB5167fLR5yWanQig3/RWASmfeZcL0dLG+VZMsrFvnkh4OD0eZGtrGhTU8tQMKoJNt2aox4WrKCGhHKsjJYZSMfhEg0WPa2B+maHEyWHF8wux0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hx3y1hej; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 438IxXRd020089;
-	Mon, 8 Apr 2024 19:09:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=0SVnkQsVTBl2dJJx5q8g0sMCd0tZ2akDMqMCk6xxxLU=; b=Hx
-	3y1hejC0xjHb2tua2zESy4+HgcvYV1kg4SUZeMzhu0oGhMUhMyrN4RSiY93gwnVb
-	UzfV3Do5DBq+kaVy8x+cyn0a8Zjk457vOHmpa8hmy0ap9vriwqrv09TINuM6xEBE
-	wEdFGPrSBQLkhBuepzbtM1lN3EBxQDNjJmnlUuY0WVR57PB5pihDLfunJt7BCosN
-	pNNpTnv5wWAUXSYDLsIrCdJf4TJ4+5p8Q8e6k+2n3DhMcqOdUSfmstgm07dGNB59
-	qCmWoYzHmCegdf8WfwGy8tQD3vNuPxNg46/8jnFMf1jaaOtE+/1keR1qcOp12URm
-	zaQNvjLcviOyD7ECEYLg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcbg09pxx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 19:09:14 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 438J9CBG028387
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Apr 2024 19:09:12 GMT
-Received: from [10.110.52.150] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Apr 2024
- 12:09:12 -0700
-Message-ID: <1d6911e2-d0ec-4cb0-b417-af5001a4f8a3@quicinc.com>
-Date: Mon, 8 Apr 2024 12:09:11 -0700
+	s=arc-20240116; t=1712604302; c=relaxed/simple;
+	bh=a9D0uk0Qedve0Ll3vO3jl2yVBSXkeqcxwBkYczAKJMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcdnY3SJ/FSp0x2SVDv6lRQL5vELyNBYDZayweKHqwD37pSubWSyjXKX8t3jklFUl94T0OB5dAke/RIxqKJscSRrsd6y5yFvAErzTCQHFqklGsDXE3vJqrx1sw0JacfPZu8VZsaYtJdHXTg/02R8tFam4bukgV0SOTjnWjrx4lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3QsaudN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F9D9C43399;
+	Mon,  8 Apr 2024 19:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712604302;
+	bh=a9D0uk0Qedve0Ll3vO3jl2yVBSXkeqcxwBkYczAKJMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G3QsaudNhmzWTjozx/3Q/wNd9957Q3jUlQ5zwYr1FaFh2qyOhURaYexVf1gQJ1iIz
+	 DTfr0CjRs0r9A43qAEDPK5hh4qSVSDE3pTzWbt5wPcSMqp3SSFAlc1n/V79kZRyuXl
+	 NdLfEZXTz0tN/hFRQMb4zBrqtQ2zp7436vmg7iifvy2W+1enUm4ADjbJJp4EYjpq+J
+	 wKnI7MgyMIYuczlch6mc0EZPwZoNNV9BAqZrectjjNC8VKriF/mR6c1ldHHwbldszD
+	 krNx9dq77SK/EV8zXiyUowwVdH1CBd0rEmxxJHYkLQMqN8m2hpnexsxWVNzf9v6bht
+	 nRGcgaRKP9EpQ==
+Date: Mon, 8 Apr 2024 12:25:00 -0700
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
+ failure
+Message-ID: <ZhREjBQuCCqS00sb@snoopy>
+References: <20240407210526.8500-1-ppwaskie@kernel.org>
+ <661421574048c_2583ad294d0@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/2] dt-bindings: pcie: Document QCOM PCIE ECAM
- compatible root complex
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <linux-pci@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <andersson@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <quic_ramkri@quicinc.com>,
-        <quic_nkela@quicinc.com>, <quic_shazhuss@quicinc.com>,
-        <quic_msarkar@quicinc.com>, <quic_nitegupt@quicinc.com>
-References: <1712257884-23841-1-git-send-email-quic_mrana@quicinc.com>
- <1712257884-23841-2-git-send-email-quic_mrana@quicinc.com>
- <51b02d02-0e20-49df-ad13-e3dbe3c3214f@linaro.org>
-From: Mayank Rana <quic_mrana@quicinc.com>
-In-Reply-To: <51b02d02-0e20-49df-ad13-e3dbe3c3214f@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pQgWknvelri6Ti57XfXZ4X23az7toq-f
-X-Proofpoint-ORIG-GUID: pQgWknvelri6Ti57XfXZ4X23az7toq-f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-08_16,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 clxscore=1015 spamscore=0 impostorscore=0
- adultscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404080148
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <661421574048c_2583ad294d0@dwillia2-xfh.jf.intel.com.notmuch>
 
-Hi Krzysztof
+On 24/04/08 09:54AM, Dan Williams wrote:
+> ppwaskie@ wrote:
+> > From: PJ Waskiewicz <ppwaskie@kernel.org>
+> > 
+> > Currently, Type 3 CXL devices (CXL.mem) can train using host CXL
+> > drivers on Emerald Rapids systems.  However, on some production
+> > systems from some vendors, a buggy BIOS exists that improperly
+> > populates the ACPI => PCI mappings.  This leads to the cxl_acpi
+> > driver to fail probe when it cannot find the root port's _UID, in
+> > order to look up the device's CXL attributes in the CEDT.
+> > 
+> > Add a bit more of a descriptive message that the lookup failure
+> > could be a bad BIOS, rather than just "failed."
+> 
+> Makes sense, but is the goal here to name and shame the BIOS, or find a
+> potential quirk workaround? Presumably we could fall back to parsing
+> _UID instead of a string and then get some guidance from said BIOS about
+> how to lookup the corresponding ACPI0016 device from that identifier.
 
-On 4/4/2024 12:30 PM, Krzysztof Kozlowski wrote:
-> On 04/04/2024 21:11, Mayank Rana wrote:
->> On some of Qualcomm platform, firmware configures PCIe controller in RC
-> 
-> On which?
-> 
-> Your commit or binding must answer to all such questions.
-> 
->> mode with static iATU window mappings of configuration space for entire
->> supported bus range in ECAM compatible mode. Firmware also manages PCIe
->> PHY as well required system resources. Here document properties and
->> required configuration to power up QCOM PCIe ECAM compatible root complex
->> and PHY for PCIe functionality.
->>
->> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
->> ---
->>   .../devicetree/bindings/pci/qcom,pcie-ecam.yaml    | 94 ++++++++++++++++++++++
->>   1 file changed, 94 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie-ecam.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ecam.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ecam.yaml
->> new file mode 100644
->> index 00000000..c209f12
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ecam.yaml
->> @@ -0,0 +1,94 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pci/qcom,pcie-ecam.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm ECAM compliant PCI express root complex
->> +
->> +description: |
-> Do not need '|' unless you need to preserve formatting.
-ACK
-> 
->> +  Qualcomm SOC based ECAM compatible PCIe root complex supporting MSI controller.
-> 
-> Which SoC?
-ACK
->> +  Firmware configures PCIe controller in RC mode with static iATU window mappings
->> +  of configuration space for entire supported bus range in ECAM compatible mode.
->> +
->> +maintainers:
->> +  - Mayank Rana <quic_mrana@quicinc.com>
->> +
->> +allOf:
->> +  - $ref: /schemas/pci/pci-bus.yaml#
->> +  - $ref: /schemas/power-domain/power-domain-consumer.yaml
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,pcie-ecam-rc
-> 
-> No, this must have SoC specific compatibles.
-This driver is proposed to work with any PCIe controller supported ECAM 
-functionality on Qualcomm platform
-where firmware running on other VM/processor is controlling PCIe PHY and 
-controller for PCIe link up functionality.
-Do you still suggest to have SoC specific compatibles here ?
->> +
->> +  reg:
->> +    minItems: 1
-> 
-> maxItems instead
-> 
->> +    description: ECAM address space starting from root port till supported bus range
->> +
->> +  interrupts:
->> +    minItems: 1
->> +    maxItems: 8
-> 
-> This is way too unspecific.
-will review and update.
->> +
->> +  ranges:
->> +    minItems: 2
->> +    maxItems: 3
-> 
-> Why variable?
-It depends on how ECAM configured to support 32-bit and 64-bit based 
-prefetch address space.
-So there are different combination of prefetch (32-bit or 64-bit or 
-both) and non-prefetch (32-bit), and IO address space available. hence 
-kept it as variable with based on required use case and address space 
-availability.
->> +
->> +  iommu-map:
->> +    minItems: 1
->> +    maxItems: 16
-> 
-> Why variable?
-> 
-> Open existing bindings and look how it is done.
-ok. will review and update as needed.
-> 
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +    description: A phandle to node which is able support way to communicate with firmware
->> +        for enabling PCIe controller and PHY as well managing all system resources needed to
->> +        make both controller and PHY operational for PCIe functionality.
-> 
-> This description does not tell me much. Say something specific. And drop
-> redundant parts like phandle.
-ok. will rephrase it.
-> 
->> +
->> +  dma-coherent: true
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - ranges
->> +  - power-domains
->> +  - device_type
->> +  - linux,pci-domain
->> +  - bus-range
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    soc {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +        pcie0: pci@1c00000 {
->> +            compatible = "qcom,pcie-ecam-rc";
->> +            reg = <0x4 0x00000000 0 0x10000000>;
->> +            device_type = "pci";
->> +            #address-cells = <3>;
->> +            #size-cells = <2>;
->> +            ranges = <0x01000000 0x0 0x40000000 0x0 0x40000000 0x0 0x100000>,
->> +                <0x02000000 0x0 0x40100000 0x0 0x40100000 0x0 0x1ff00000>,
->> +                <0x43000000 0x4 0x10100000 0x4 0x10100000 0x0 0x100000>;
-> 
-> Follow DTS coding style about placement and alignment.
-> 
-> Best regards,
-> Krzysztof
-> 
-Regards,
-Mayank
+In this particular case, I tried making sense of what was the _UID
+value, and what was actually in the CEDT.  There was no sense to be
+made.
+
+For this device, it was ACPI0016:02 with a _UID of CX02.  For this
+particular vendor BIOS, all ACPI0016:* devices' _UID's counted up from
+CX01 => CX* sequentially.  But what was actually in the CEDT in this
+particular case for ACPI0016:02 was 49.  I attempted hex, octal, atoi(),
+literal string interpretation per-character, etc.  It was just plain
+wrong.
+ 
+> In other words, I see this patch as a warning shot of, "hey,
+> $platform_vendor if you
+> don't want folks to RMA these platforms please tell us how to do the
+> association Linux expects per the spec". Otherwise, this can escalate to
+> a loud WARN_TAINT(TAINT_FIRMWARE_WORKAROUND...), but I first want more
+> details from this platform like an acpidump and the exact error code
+> acpi_evaluate_integer() is returning.
+
+Pasting an acpidump is difficult...  It'll be tricky since this particular
+host is walled off from the world.  And moving data in and out of this
+environment is quite challenging due to regulatory reasons.
+
+acpi_evaluate_integer() in this case was returning AE_BUFFER_OVERFLOW.
+
+In the meantime, I'm fine either fixing up the commit message per
+Jonathan's review, or I'm fine shelving it in favor of a broader effort
+to fix the underlying BIOS's with the vendors.  I don't have a strong
+preference.  I've been in the weeds with this for awhile, so I know why
+it's breaking.  But someone new to CXL with shiny new hardware may be
+left scratching their heads.
+
+-PJ
 
