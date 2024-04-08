@@ -1,93 +1,126 @@
-Return-Path: <linux-pci+bounces-5853-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5856-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A218489B539
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 03:25:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAEE389B5C8
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 04:03:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C51D2814B9
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 01:25:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DBD11F213CC
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 02:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29E51C0DD6;
-	Mon,  8 Apr 2024 01:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CEAA10E9;
+	Mon,  8 Apr 2024 02:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3fwipnk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAAC41852;
-	Mon,  8 Apr 2024 01:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B614A1D;
+	Mon,  8 Apr 2024 02:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712539512; cv=none; b=VjU66fBh9UxcWcpkS3i+GcBMZyqATMGDpgYajSDN8HtsNjBv+1QjQxi5joCLIaPZGZgR6uF9qGLyeaRbdcZS9wGQKjFkXCV/FRdV6H2H03asFpCs67XUS0Q69oABdmQkGN5NY/fkylK4M1ejk61+HHlGklDgqO/aAfLCE/KP3/0=
+	t=1712541806; cv=none; b=Vwv5SOgg3fKW829454Kp7okGjaEUAnnrfG/nEugQApcGcq7jdann5akl0WE2xV/N2JKDuRQ0BFozl8mCbFcsdcrqXM4gVuFNX+IAF590sdUQK1Q3Rxw3mVuINWtB/1UC6hpNSKjvf2Rim2X0jlf6q5z7nA7bAVLzJy772BLoCHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712539512; c=relaxed/simple;
-	bh=rDGADCXyQhug1jHaaVuWWWUGQXoCuhG2D6lBeCel1wQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LvBljCklRE7FqaTDKP54AnAJTXR/3w52YFlAe0yaivtOqP0HbowEPboKi4Q6WGLhabYwzApa7qfiIZWUvcZeEh/180h3N0sEtWmZjtCMwjLgexX5lN8++J7L8CejAFL043rq34h0FdSbZQ+Gqn7ziVzk5fUueQm2FfRjbPbiZs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-IronPort-AV: E=Sophos;i="6.07,186,1708354800"; 
-   d="scan'208";a="204613294"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 08 Apr 2024 10:25:00 +0900
-Received: from localhost.localdomain (unknown [10.166.13.99])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id B7ABF402C339;
-	Mon,  8 Apr 2024 10:25:00 +0900 (JST)
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jingoohan1@gmail.com,
-	mani@kernel.org
-Cc: marek.vasut+renesas@gmail.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Frank Li <Frank.li@nxp.com>
-Subject: [PATCH v5 7/7] misc: pci_endpoint_test: Document a policy about adding pci_device_id
-Date: Mon,  8 Apr 2024 10:24:58 +0900
-Message-Id: <20240408012458.3717977-8-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240408012458.3717977-1-yoshihiro.shimoda.uh@renesas.com>
-References: <20240408012458.3717977-1-yoshihiro.shimoda.uh@renesas.com>
+	s=arc-20240116; t=1712541806; c=relaxed/simple;
+	bh=fYm7KFC5U/QW6ssZd3s4lbnjdDOAG3MIETvCHATRU/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dNmS0upVfT0I9UAT4/00wICgw8xBoGUfBWDuOdCQa7SeJFfTBovEOhN6aVr6Dse9SK8xvq3alFRlPpqR2WzLqEYXkwDtaf02s6lGmIf57osZIv2eblTXiuxv0ELTOEsrOVmGsgLNpKOPE2njD4Aaq+uUg4pPTKIlrCyoJRt6VNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3fwipnk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B5A1C433C7;
+	Mon,  8 Apr 2024 02:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712541805;
+	bh=fYm7KFC5U/QW6ssZd3s4lbnjdDOAG3MIETvCHATRU/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i3fwipnkx6662oFevfQz2J4ciSbXSf21so8hiZqbSljhAvlKH8VYiNvw+NRr6GsN7
+	 hp/Z6Qb4NkhLbCepMYG9xa0vOLCxBiSQZ8bxY0JHyt2em0USzvzC2JJuFkypiE0KwF
+	 TS0qrxtN3JzKro+CKn5Ck3Gdyq7EIWSdW569C1l+sjL8+J4qMr7OvtsLLWoR1g75PX
+	 GhVO5BRABtyRiHOri+SFI2hEprS/UBvoL9O9nXeqZZHsQ279JFsQgR5I22Do2WxhUi
+	 /7mDX+yEFbhwc6+DmmRSUeRqQp+PyI1Zc2MYXayBMIxQVtaLSWfbkh2cr2pgHPoktY
+	 MTuhaCFUeJCmQ==
+Date: Sun, 7 Apr 2024 19:03:23 -0700
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
+ failure
+Message-ID: <ZhNQa8wAflycciNA@snoopy>
+References: <20240407210526.8500-1-ppwaskie@kernel.org>
+ <ZhMP-NBMb387KD4Y@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZhMP-NBMb387KD4Y@wunner.de>
 
-To avoid becoming struct pci_device_id pci_endpoint_test_tbl longer
-and longer, document a policy. For example, if PCIe endpoint controller
-can configure vendor id and/or product id, you can reuse one of
-existing entries to test.
+On 24/04/07 11:28PM, Lukas Wunner wrote:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Hi Lukas,
+
+> On Sun, Apr 07, 2024 at 02:05:26PM -0700, ppwaskie@kernel.org wrote:
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -504,7 +504,7 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
+> >  
+> >  	rc = acpi_evaluate_integer(hb->handle, METHOD_NAME__UID, NULL, &uid);
+> >  	if (rc != AE_OK) {
+> > -		dev_err(dev, "unable to retrieve _UID\n");
+> > +		dev_err(dev, "unable to retrieve _UID. Potentially buggy BIOS\n");
+> >  		return -ENOENT;
+> >  	}
+> 
+> dev_err(dev, FW_BUG "unable to retrieve _UID\n");
+>              ^^^^^^
+> 
+> There's a macro for that.
+
+Doh...it's been awhile since I've crossed buggy BIOS's.  Thanks for the
+review and comment.
+
+Updated patch:
+
+cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup failure
+
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+
+Currently, Type 3 CXL devices (CXL.mem) can train using host CXL
+drivers on Emerald Rapids systems.  However, on some production
+systems from some vendors, a buggy BIOS exists that improperly
+populates the ACPI => PCI mappings.  This leads to the cxl_acpi
+driver to fail probe when it cannot find the root port's _UID, in
+order to look up the device's CXL attributes in the CEDT.
+
+Add a bit more of a descriptive message that the lookup failure
+could be a bad BIOS, rather than just "failed."
+
+v2: Updated message to use existing FW_BUG macro
+
+Signed-off-by: PJ Waskiewicz <ppwaskie@kernel.org>
 ---
-Cc: Frank Li <Frank.li@nxp.com>
----
- drivers/misc/pci_endpoint_test.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cxl/acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index c38a6083f0a7..3c8a0afad91d 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -980,6 +980,7 @@ static const struct pci_endpoint_test_data j721e_data = {
- 	.irq_type = IRQ_TYPE_MSI,
- };
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index af5cb818f84d..d321cfbd4682 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -504,7 +504,7 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
  
-+/* Don't need to add a new entry if you can use existing entry to test */
- static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x),
- 	  .driver_data = (kernel_ulong_t)&default_data,
+ 	rc = acpi_evaluate_integer(hb->handle, METHOD_NAME__UID, NULL, &uid);
+ 	if (rc != AE_OK) {
+-		dev_err(dev, "unable to retrieve _UID\n");
++		dev_err(dev, FW_BUG "unable to retrieve _UID\n");
+ 		return -ENOENT;
+ 	}
+ 
 -- 
-2.25.1
-
+2.40.1
 
