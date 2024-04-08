@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-5908-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5909-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 508C589CDD1
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 23:49:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6128A89CDD6
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 23:52:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B23FBB21975
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 21:49:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8697B22587
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 21:52:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30C521442F3;
-	Mon,  8 Apr 2024 21:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6631487ED;
+	Mon,  8 Apr 2024 21:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkX++shC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cgt4hJF5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEE511725;
-	Mon,  8 Apr 2024 21:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05B6146D74;
+	Mon,  8 Apr 2024 21:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712612975; cv=none; b=aB4+gayCLk/bgAHGAyvQz/Foyv34H19zPhVahEiaCNbYSugxsGw4+/PnwX9SHsZwntIsbMS9FdgbbQ/nFeuA1Vm2rcn5ISrdfaYXDCJAL2zijpKPelPPCzcphRUP1o6dF4HQJivWMVgUgIxLZzUhe1eoEqcMdp19ADhdR1s9NxQ=
+	t=1712613138; cv=none; b=VKG0H6vEPafixxG2anErUR88ZYTt5W1C/Q3oZP5f2+jeLdpGWdbkwAxRf1sFj+e+C5ZQ4kqg2jt9P7nqywIoM1Hsv8kYRlDCKfQKhG6SupYTFAHWT8RdVtCLmiGXd+7OTosvi4tpbm3mvq86YaFxumG84Nob4hAEgLqPCr3VLzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712612975; c=relaxed/simple;
-	bh=LKPnWiTJXmCozHWVTeeMRgpk04GJwmAMX6odIBEbfC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0Jen0p/zwu4sFw3PxhoDVPOKzoSj0oFzRoSJStookG58Ug9UC7pnC1OW20AXrmSrfQSGBAPq1GN/uc5m2bwIkainQpJLROXts8uBEOpxOWeMX7v0cFbMEQgqTiebgcx2eigixRMGgZL81u8kcRuAe5qhj/4DhbRk/ycKzvMs/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkX++shC; arc=none smtp.client-ip=209.85.222.172
+	s=arc-20240116; t=1712613138; c=relaxed/simple;
+	bh=hb9SYQFj2t1P28x3CX/m54HgTRWoaz+drxkpDylTfDw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JXYkLbs2sXAcfQPYvbDgre96sHcwxezrsC/pM0ZUPc/laZ4DGA4g4e8PGONjAcw6CLv/aHcK3N5HSXyiweoDkAG/zdUyJRFf0KAEXddwJRBJOh72rPhqwb1n4dEATUJtsPKwgh07MM50PfRs62TqafkTOeEqbIYmXCYzt3lhf3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cgt4hJF5; arc=none smtp.client-ip=209.85.222.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78d5f0440d3so156860485a.2;
-        Mon, 08 Apr 2024 14:49:33 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-7e057fb0b69so1160353241.0;
+        Mon, 08 Apr 2024 14:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712612972; x=1713217772; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=gmail.com; s=20230601; t=1712613135; x=1713217935; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iD6zDjCWvz4YFRVtFhzQxnseOjPCjKVXg++Ec5xmhI4=;
-        b=KkX++shCCKTJWZKgKf742Sx/VQzIQJRu6x+YhTs0AFjtYiUGA53w1YC4WWeu5NlPLS
-         htuGcCKI/U769kMsGVh9Mu+CXDWf6B3eSeosa4VO+SG1XO+NyhFtViA6u5eHDT8xP8uO
-         cG3JbaguBfPMMcf+QsKW0TIlfA8RHlDfiJBVC4iGVar83hkaTtFFx58nANYDw0cUEUQ+
-         Ww7d5jUholAnaJEuyfDdlqV078o0aE58ejO9YF50f7jiSZYXbeFgoaJ2vCYCV3kkAJEo
-         XXiMqT2Uq89FaEIAJUOGIY5W3k8cD1fJ40IxeEf4wQafj7dm1/MfFI5fxZcgTjUwzK0T
-         +A8w==
+        bh=BzpOdXd2P0az+B4oPxEYqAXzG6a93+7qUz8cfvKLvLU=;
+        b=cgt4hJF5lUZoGE2BMK9KKgRBSsjq3Ovre2W5U2518DbOD7MIgQhobPjKICP0nljO6/
+         3DzifBrLJxEaa9NCTIA5rftls6XDu11fiDcPShaiifgr2/pMCfqsL0hgK6Vq4LXn9xh1
+         P1lxS++3OI/nlpXmt0zh5rcl7WHd20pYzTNGDGUaoypcs+uQX3ouqlF8kqxIh4GH0fkG
+         g2xSLM28qUoBNqqHUs9IVc3hGVoDNF3dHCoFqYely7MyjKErGPCRYP69g7ZRQL92MKOb
+         kafAuMSr4SD70q8aERxKXg0mjjaB6CHCo+Jesjo/cqjmK8GoVldx660P2z/9WrVkr02d
+         PoKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712612972; x=1713217772;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20230601; t=1712613135; x=1713217935;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iD6zDjCWvz4YFRVtFhzQxnseOjPCjKVXg++Ec5xmhI4=;
-        b=oCtGN30v3jhcHXKjAv/xYM61SL5MApMPk/GtIYAEleahEnZs6+Jk5jNlxY7Grdr3aE
-         ECqnDUEi62YQks5xJT3sZkKSyU1iEJH5G/yGGa4FPdr0rAiPEEBV769n/zsiYpHU9n3Z
-         TkiGkCa/puPVb2sbwDAvwxbQ50fdzfiWGGFVrEMMh1RnNTqhmHtipz6OuNZ9gOJkfe4e
-         7C0omw1N2bUm35uqXBvSbDLDtzBWDdvJ3kQF6nfgpetkrRkRjucWx6l9w3LjaIoWBRqS
-         C22j/X01VxBHVvQYFL4sCOkV3oK0nfxGcXectJiyFU7ppaDtiHQwaCugXEIdoVboDHgi
-         n8yA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUjifg49IkcIBPSSr3TMJKatrK4JB5kTWVygegKLtEBcYDMg1jdkb0ZByN7Ql+0yryOhv9uFkLZo0lMswQX81K2OGUThlz72iKk34FiOf+UgZKJee/GPtNjbVoFMV79oaT
-X-Gm-Message-State: AOJu0YxUBxhwx8oe54T2GgPDqskWNjaCU6dFuDoT+g+IKEdRKXUcFmOe
-	+0hOKt4tlB5RsUVud/xmSh5J9aYCZ1vQXhuirdXMk8Od54XSts5RR9l00EU8
-X-Google-Smtp-Source: AGHT+IF8nYgpLnGrm/cgrjEj7bvCeIGyu6FXEd28j321+N78nFCwdE7gFdtX32QwwaO9IlHQp8rqKg==
-X-Received: by 2002:a05:620a:15b1:b0:78d:67aa:9d66 with SMTP id f17-20020a05620a15b100b0078d67aa9d66mr3081393qkk.15.1712612972563;
-        Mon, 08 Apr 2024 14:49:32 -0700 (PDT)
+        bh=BzpOdXd2P0az+B4oPxEYqAXzG6a93+7qUz8cfvKLvLU=;
+        b=VFp9jbuKzi9h2xYU5LvjnckDdxkPbHjPo0CmEb/JAKI+hQA4Jn3IP6W4OCacvr86Pg
+         L5vfeMxS+k3JPmKXZkax9BrdKVq8YuPD81gBw3bYHjpm7m/75e8k0re9x8Ml//uBf3QV
+         ihj0JE1tLv6c1yC/9Pa0bXcpYCmzC/F4ycYxXRdcuCyum1u5KSHwWJPbdwHZTBb1DHAB
+         SE5PkyFUHZVMtP4rA9ty8Z2kJ02FvyL1eolaUqOiQMox4oPqibQxV90W88oamjbhy6V8
+         ABSloUWi1bnA34tGsUUNBzGb9enLNwXKMPP0c7tkFJb7SNcaetkhGEjcm4XPuI/eReCY
+         MkkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAKTB9iBYEcviYa+GEbh4YtxkOvJoXeiZlwc/4z3A5kFAA1jhyJfN7LmMumKmF2AOpjCn+hb+45w/GoGtLLhjNuWeu03ion3o0KtKkj1IHtS3GzAmiYhjTeE7h2WxVG1/T
+X-Gm-Message-State: AOJu0YxotNDn+FRDdtX11Vx6zF4dngBtD9V81zxh/PQFg9tsk9uCuL2w
+	FVZqxKqxD9BiWxGlHe5hsw74l7dOPyIsTA19oBnBwxOD7vXqA89W
+X-Google-Smtp-Source: AGHT+IHO9B9Y+hNiUlJchmPGO1bfla/oVAYbPDtR59a/yutgGUGcgccRztyGfHpnEXp0JW+cccfCVQ==
+X-Received: by 2002:a05:6102:292b:b0:479:e377:2c2d with SMTP id cz43-20020a056102292b00b00479e3772c2dmr8776468vsb.32.1712613135444;
+        Mon, 08 Apr 2024 14:52:15 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id i4-20020a05620a0a0400b0078bdbba4993sm3556541qka.47.2024.04.08.14.49.29
+        by smtp.googlemail.com with ESMTPSA id p5-20020a0cfac5000000b006987272f5cbsm3456831qvo.71.2024.04.08.14.52.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 14:49:31 -0700 (PDT)
-Message-ID: <73ef7e23-d09d-42ec-8a11-0a42b8b6e459@gmail.com>
-Date: Mon, 8 Apr 2024 14:49:27 -0700
+        Mon, 08 Apr 2024 14:52:14 -0700 (PDT)
+Message-ID: <ab38046a-a56d-43c9-85de-157e88ad2053@gmail.com>
+Date: Mon, 8 Apr 2024 14:52:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,6 +79,7 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
  Platforms Host Network Interface
 Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
 To: Alexander Duyck <alexander.duyck@gmail.com>,
  Leon Romanovsky <leon@kernel.org>
 Cc: Jakub Kicinski <kuba@kernel.org>,
@@ -97,25 +98,31 @@ References: <Zg7JDL2WOaIf3dxI@nanopsycho>
  <CAKgT0UcE5cOKO4JgR-PBstP3e9r02+NyG3YrNQe8p2_25Xpf8g@mail.gmail.com>
  <20240408184102.GA4195@unreal>
  <CAKgT0UcLWEP5GOqFEDeyGFpJre+g2_AbmBOSXJsoXZuCprGH0Q@mail.gmail.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <CAKgT0UcLWEP5GOqFEDeyGFpJre+g2_AbmBOSXJsoXZuCprGH0Q@mail.gmail.com>
+ <73ef7e23-d09d-42ec-8a11-0a42b8b6e459@gmail.com>
+In-Reply-To: <73ef7e23-d09d-42ec-8a11-0a42b8b6e459@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/8/24 13:43, Alexander Duyck wrote:
+On 4/8/24 14:49, Florian Fainelli wrote:
+> On 4/8/24 13:43, Alexander Duyck wrote:
+>>>>
+>>>> Also as far as item 3 isn't hard for it to be a "user-visible"
+>>>> regression if there are no users outside of the vendor that is
+>>>> maintaining the driver to report it?
 >>>
->>> Also as far as item 3 isn't hard for it to be a "user-visible"
->>> regression if there are no users outside of the vendor that is
->>> maintaining the driver to report it?
+>>> This wasn't the case. It was change in core code, which broke specific
+>>> version of vagrant. Vendor caught it simply by luck.
 >>
->> This wasn't the case. It was change in core code, which broke specific
->> version of vagrant. Vendor caught it simply by luck.
+>> Any more info on this? Without context it is hard to say one way or 
+>> the other.
 > 
-> Any more info on this? Without context it is hard to say one way or the other.
+> Believe this is the thread in question:
+> 
+> https://lore.kernel.org/netdev/MN2PR12MB44863139E562A59329E89DBEB982A@MN2PR12MB4486.namprd12.prod.outlook.com/
 
-Believe this is the thread in question:
+And the follow up:
 
-https://lore.kernel.org/netdev/MN2PR12MB44863139E562A59329E89DBEB982A@MN2PR12MB4486.namprd12.prod.outlook.com/
+https://lore.kernel.org/netdev/14459261ea9f9c7d7dfb28eb004ce8734fa83ade.1704185904.git.leonro@nvidia.com/
 -- 
 Florian
 
