@@ -1,159 +1,359 @@
-Return-Path: <linux-pci+bounces-5899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5900-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F5B489CCAC
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 21:50:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B81EB89CCF6
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 22:34:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBA711F22BF9
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 19:50:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B4792837AE
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Apr 2024 20:34:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99476146019;
-	Mon,  8 Apr 2024 19:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FB0743AAD;
+	Mon,  8 Apr 2024 20:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UxWVPtzn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M52aGI7T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514CC14601D
-	for <linux-pci@vger.kernel.org>; Mon,  8 Apr 2024 19:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AB27482;
+	Mon,  8 Apr 2024 20:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712605826; cv=none; b=nIKjh+ZdmFLU1yIAqmQssY6FSYQ6o54ctC6E5b+0VT4yeNX9virWTVkx8MY8QG2kFsWoUto74kRUslu+zAlfIK7LtEeYZUZLaZ2CIG1RIlkKJ/i2IVfUAho92Bi5pJriyDX816D5781BKXfmdoryUy9YppeBey4aAeBEZEoHLY8=
+	t=1712608477; cv=none; b=L5nMgek0el1sX64Q142iubPYca6q8vv7er7Paiu2+tO1MubMPBgScAdCt/stvzCV2RmtndZzZJiNroOw+XumT3O5L5IipceifJbawEqBfYMg1u2E/ce2a+JVOhzGb+Ak/YWn9nHB1QEYvLznzdcWrpjsZLeq7Q1HpZfmhMIXfzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712605826; c=relaxed/simple;
-	bh=JjKQNFwllksFgRPBLRvoHBOCq6aFlTpzZMgB9FrxS9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DfrqszNbWz+oZTESyF4Nc06YMORO/CAggDLr7av65t5BEcOqKZ9UAJR8ti/67Gcop2Fn3tJkKZXFpZYj1oR7fUmI2F2rF7eroccA2MGl2PEIJ71MSEc0gJ9TboOM4WI83bZxIYbYsozonHKCB9vC7b8+phIkUH+4Rd8hn7A3hF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UxWVPtzn; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso6648941a12.2
-        for <linux-pci@vger.kernel.org>; Mon, 08 Apr 2024 12:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712605821; x=1713210621; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JjKQNFwllksFgRPBLRvoHBOCq6aFlTpzZMgB9FrxS9k=;
-        b=UxWVPtzndzja55vqTUUnSV8vpV2At1AuamDiJdoptD/UqiKm+PFe9BdX2BXdZW1t4O
-         CB9fzV4BnQeMAoR5xcK2A6nYGDemAGtSpPMO5ROEfKy85a2ntid6WYNkRL2c2O34Zt1I
-         k/5Gn403VeVSnxftd3xcY7NkrjpOvNM1ncryEmQYQT8VFRY9QJgYpYvjBXR5rACJnfEs
-         T8AGSY2V521UxGu2RgxJvepWDlMhJ4puAa2LA1iHgG+T6wex5fGMumyHpefdi0lX72xy
-         mqJ8lZPd+ZZCkqnyYlqEGN/fSz+ZKTsCUoZKhIG4SZX4yKY8d5BZCA+tA9780uTTz/ZG
-         d0nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712605821; x=1713210621;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JjKQNFwllksFgRPBLRvoHBOCq6aFlTpzZMgB9FrxS9k=;
-        b=gT1vzeKNmAeVbLkfaqBma3BE4HlA9+zZwLCoP7tw0GMzciYzPMF4Rv0Pod7WyUelbT
-         iKYitqFnqjAyFwXcpqLdd5xUYMuPdPDrD2iKtMpF7gu/NVl8pE5rZOewyYYNBDM+9l+y
-         PR3vx77hqQhgfDa2x+W0cBedpFwCKu/MZDATKiQvD/VfV2cWlttsmq7ZWWRyC8FtTJjA
-         +kAyue7VLYjZCKDiXUtxFEgmHv3MRoNUQtAxW47Ssm9ZenSkB+nQAYF4eZOOLnQFsYwg
-         caZ3/kkSXYBfyoS5liJDzkBwnhrnGS48MAoDyryLxO13syLj3nEw+spKDINZML8N66p7
-         AFMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWFrKh1Bi4ENY3Zm8YovFGRQvF6CAeGY2h8w931zGkVFiH72zHwNs/vAcYh9ZXRzq8MC29vgHK0dPQTxTN2EF8LfFVJ0vyRC1z
-X-Gm-Message-State: AOJu0YynuvIeNlYKVaqByh7509zHeU221riok1x31m3k+vDs4gkR3T25
-	MadhuHAUzeZKP+CN2Iuc9pvCRrDkaO3SsgwLfJGpBOubLFTQc/Jf6F31xWT3A+Eqoi3w96e+bkj
-	d4aZPyLoRKQ2cLTR5qqCWzRpmBxxvAIm5CPHC
-X-Google-Smtp-Source: AGHT+IHVzkkoMgsAyVJZUQkSXu1B8zeCMn9DkJtjVrTmXb52LArEmzcVkeTpkQDA7zBc34jUEeRbIfG4BhSGsdLRAqc=
-X-Received: by 2002:a17:906:ad90:b0:a51:e2d2:c236 with SMTP id
- la16-20020a170906ad9000b00a51e2d2c236mr1014157ejb.39.1712605821430; Mon, 08
- Apr 2024 12:50:21 -0700 (PDT)
+	s=arc-20240116; t=1712608477; c=relaxed/simple;
+	bh=PWIA8V18WJY7Lf1DeBwmmMK2HKVS/EQgzN2tHA3xTLY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=qHdSzP6DgPufQCeY7Zr98W0N/aYF+xxV38lTRDQwm+B3W55gP0ENM4pA5SPpVYnwAulTIkKy1Az1ExpJu/9ISVaqOwZxs6rJhruvt2pC95L30GzpCupQDuJx/oTrOBtEh5Awli4qPEab+0x5Tr8hshhgscB+Q8qqBBS6Fj5XwUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M52aGI7T; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712608476; x=1744144476;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PWIA8V18WJY7Lf1DeBwmmMK2HKVS/EQgzN2tHA3xTLY=;
+  b=M52aGI7TMenruHGW/jxiEnVJ+KQ1m4eKM5ecIRuN3hxtxzt8YVfhcVZO
+   prp9Te2iYhpbOCdHvL3+50wTiAQKfDtCHGxcf4V3UP/ZNMyigyZ6rjSCN
+   TOCq4PBTesEAyGIMUWaYCHYRj7lh4MXP3Fd4NMBgV6MmsiSjFisMSoYGP
+   xei7U0oxHkSQhVLPvOFeOxAdXLNFBNYi8qL7och2j3jR8g6SPz28+KyD6
+   obAuao5VV7gMAEb5S+pT0qrtKlFTU7DnIQO1LES3hZZ9NAt8yhLR48POu
+   K2xaXoSbxxN7TNneTtOUr6Hv79QCJTBiJgQ+Gh4AIdJbWrvopgoboTQli
+   w==;
+X-CSE-ConnectionGUID: DmLl1g8xTJG7xG9pXOOgtg==
+X-CSE-MsgGUID: x7I2YA0gSSKjBWsTrR25SQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19285619"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="19285619"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 13:34:35 -0700
+X-CSE-ConnectionGUID: j47fw3sGTuCeJaeCJgxwUg==
+X-CSE-MsgGUID: e/mxbEINTRCpqmcD3UwM+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="20121978"
+Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 13:34:34 -0700
+Date: Mon, 8 Apr 2024 13:34:24 -0700 (PDT)
+From: matthew.gerlach@linux.intel.com
+X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+    krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: PCI: altera: Convert to YAML
+In-Reply-To: <2ece9ac2-899c-4185-b0f3-8ab939afc1e5@linaro.org>
+Message-ID: <alpine.DEB.2.22.394.2404081309050.381257@sj-4150-psse-sw-opae-dev2>
+References: <20240405145322.3805828-1-matthew.gerlach@linux.intel.com> <2ece9ac2-899c-4185-b0f3-8ab939afc1e5@linaro.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKgT0Ufgm9-znbnxg3M3wQ-A13W5JDaJJL0yXy3_QaEacw9ykQ@mail.gmail.com>
- <20240404132548.3229f6c8@kernel.org> <660f22c56a0a2_442282088b@john.notmuch>
- <20240404165000.47ce17e6@kernel.org> <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
- <678f49b06a06d4f6b5d8ee37ad1f4de804c7751d.camel@redhat.com>
- <20240405122646.GA166551@nvidia.com> <CAKgT0UeBCBfeq5TxTjND6G_S=CWYZsArxQxVb-2paK_smfcn2w@mail.gmail.com>
- <20240405151703.GF5383@nvidia.com> <CAKgT0UeK=KdCJN3BX7+Lvy1vC2hXvucpj5CPs6A0F7ekx59qeg@mail.gmail.com>
- <20240405190209.GJ5383@nvidia.com> <CAKgT0UdZz3fKpkTRnq5ZO2nW3NQcQ_DWahHMyddODjmNDLSaZQ@mail.gmail.com>
-In-Reply-To: <CAKgT0UdZz3fKpkTRnq5ZO2nW3NQcQ_DWahHMyddODjmNDLSaZQ@mail.gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 8 Apr 2024 12:50:07 -0700
-Message-ID: <CAHS8izNTLbi5vzi6ThVo7jcyOyhhv13eyEZT8wMowWceZyNqPg@mail.gmail.com>
-Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, 
-	Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net, Christoph Hellwig <hch@lst.de>, 
-	Eric Dumazet <edumazet@google.com>, Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Sat, Apr 6, 2024 at 9:05=E2=80=AFAM Alexander Duyck
-<alexander.duyck@gmail.com> wrote:
-> > > > You have an unavailable NIC, so we know it is only ever operated wi=
-th
-> > > > Meta's proprietary kernel fork, supporting Meta's proprietary
-> > > > userspace software. Where exactly is the open source?
-> > >
-> > > It depends on your definition of "unavailable". I could argue that fo=
-r
-> > > many most of the Mellanox NICs are also have limited availability as
-> > > they aren't exactly easy to get a hold of without paying a hefty
-> > > ransom.
-> >
-> > And GNIC's that run Mina's series are completely unavailable right
-> > now. That is still a big different from a temporary issue to a
-> > permanent structural intention of the manufacturer.
+
+
+On Sun, 7 Apr 2024, Krzysztof Kozlowski wrote:
+
+> On 05/04/2024 16:53, matthew.gerlach@linux.intel.com wrote:
+>> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>
+>> Convert the device tree bindings for the Altera Root Port PCIe controller
+>> from text to YAML.
+>>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>> v2:
+>>  - Move allOf: to bottom of file, just like example-schema is showing
 >
-> I'm assuming it is some sort of firmware functionality that is needed
-> to enable it? One thing with our design is that the firmware actually
-> has minimal functionality. Basically it is the liaison between the
-> BMC, Host, and the MAC. Otherwise it has no role to play in the
-> control path so when the driver is loaded it is running the show.
+> No, just open it and you will see it is placed differently...
+
+I see what you mean. I will match the ordering of example-schema.
+
+>
+>>  - add constraint for reg and reg-names
+>
+> Not complete...
+
+I will complete.
+
+>
+>>  - remove unneeded device_type
+>>  - drop #address-cells and #size-cells
+>>  - change minItems to maxItems for interrupts:
+>>  - change msi-parent to just "msi-parent: true"
+>>  - cleaned up required:
+>>  - make subject consistent with other commits coverting to YAML
+>>  - s/overt/onvert/g
+>> ---
+>>  .../devicetree/bindings/pci/altera-pcie.txt   |  50 ---------
+>>  .../bindings/pci/altr,pcie-root-port.yaml     | 106 ++++++++++++++++++
+>>  2 files changed, 106 insertions(+), 50 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+>>  create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+>> deleted file mode 100644
+>> index 816b244a221e..000000000000
+>> --- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
+>> +++ /dev/null
+>> @@ -1,50 +0,0 @@
+>> -* Altera PCIe controller
+>> -
+>> -Required properties:
+>> -- compatible :	should contain "altr,pcie-root-port-1.0" or "altr,pcie-root-port-2.0"
+>> -- reg:		a list of physical base address and length for TXS and CRA.
+>> -		For "altr,pcie-root-port-2.0", additional HIP base address and length.
+>> -- reg-names:	must include the following entries:
+>> -		"Txs": TX slave port region
+>> -		"Cra": Control register access region
+>> -		"Hip": Hard IP region (if "altr,pcie-root-port-2.0")
+>> -- interrupts:	specifies the interrupt source of the parent interrupt
+>> -		controller.  The format of the interrupt specifier depends
+>> -		on the parent interrupt controller.
+>> -- device_type:	must be "pci"
+>> -- #address-cells:	set to <3>
+>> -- #size-cells:		set to <2>
+>> -- #interrupt-cells:	set to <1>
+>> -- ranges:	describes the translation of addresses for root ports and
+>> -		standard PCI regions.
+>> -- interrupt-map-mask and interrupt-map: standard PCI properties to define the
+>> -		mapping of the PCIe interface to interrupt numbers.
+>> -
+>> -Optional properties:
+>> -- msi-parent:	Link to the hardware entity that serves as the MSI controller
+>> -		for this PCIe controller.
+>> -- bus-range:	PCI bus numbers covered
+>> -
+>> -Example
+>> -	pcie_0: pcie@c00000000 {
+>> -		compatible = "altr,pcie-root-port-1.0";
+>> -		reg = <0xc0000000 0x20000000>,
+>> -			<0xff220000 0x00004000>;
+>> -		reg-names = "Txs", "Cra";
+>> -		interrupt-parent = <&hps_0_arm_gic_0>;
+>> -		interrupts = <0 40 4>;
+>> -		interrupt-controller;
+>> -		#interrupt-cells = <1>;
+>> -		bus-range = <0x0 0xFF>;
+>> -		device_type = "pci";
+>> -		msi-parent = <&msi_to_gic_gen_0>;
+>> -		#address-cells = <3>;
+>> -		#size-cells = <2>;
+>> -		interrupt-map-mask = <0 0 0 7>;
+>> -		interrupt-map = <0 0 0 1 &pcie_0 1>,
+>> -			            <0 0 0 2 &pcie_0 2>,
+>> -			            <0 0 0 3 &pcie_0 3>,
+>> -			            <0 0 0 4 &pcie_0 4>;
+>> -		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+>> -			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+>> new file mode 100644
+>> index 000000000000..999dcda05f55
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+>> @@ -0,0 +1,106 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +# Copyright (C) 2024, Intel Corporation
+>
+> This is derivative of previous work, which is easily visible by doing
+> the same mistakes in DTS as they were before.
+
+This is definitely derivative of previous work, and I want to fix the 
+DTS mistakes too.
+
+>
+> You now added fresh copyrights ignoring all previous work, even though
+> you copied it. I don't agree.
+>
+> If you want to ignore previous copyrights, then at least don't copy
+> existing code... although even that would not be sufficient.
+
+Ignoring previous copyrights was not my intent. There is no copyright 
+statement in the original text version of the device tree bindings. Should 
+that lack of copyright statement carry forward?
+
+>
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Altera PCIe Root Port
+>> +
+>> +maintainers:
+>> +  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>
+> Drop items.
+
+I will drop the items.
+
+>
+>> +      - enum:
+>> +          - altr,pcie-root-port-1.0
+>> +          - altr,pcie-root-port-2.0
+>> +
+>
+> Missing reg with constraints.
+
+I will add the following here:
+
+   reg:
+     minItems: 2
+     maxItems: 3
+
+   reg-names:
+     minItems: 2
+     maxItems: 3
+
+>
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-map-mask:
+>> +    items:
+>> +      - const: 0
+>> +      - const: 0
+>> +      - const: 0
+>> +      - const: 7
+>> +
+>> +  interrupt-map:
+>> +    maxItems: 4
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 1
+>> +
+>> +  msi-parent: true
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - reg-names
+>> +  - device_type
+>> +  - interrupts
+>> +  - interrupt-map
+>> +  - interrupt-map-mask
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/pci/pci-bus.yaml#
+>
+> That's deprecated, as explained in its description.  You should use
+> pci-host-bridge.yaml.
+
+I will switch to pci-host-bridge.yaml.
+
+>
+>
+>
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          enum:
+>> +            - altr,pcie-root-port-1.0
+>> +    then:
+>> +      properties:
+>> +        reg:
+>> +          items:
+>> +            - description: TX slave port region
+>> +            - description: Control register access region
+>> +
+>> +        reg-names:
+>> +          items:
+>> +            - const: Txs
+>> +            - const: Cra
+>> +
+>> +    else:
+>> +      properties:
+>> +        reg:
+>> +          items:
+>> +            - description: Hard IP region
+>> +            - description: TX slave port region
+>> +            - description: Control register access region
+>> +
+>> +        reg-names:
+>> +          items:
+>> +            - const: Hip
+>> +            - const: Txs
+>> +            - const: Cra
+>> +
+>
+> unevaluated goes here, just like example-schema.
+
+Yes, just like the example-schema
+
+>
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    pcie_0: pcie@c00000000 {
+>> +        compatible = "altr,pcie-root-port-1.0";
+>> +        reg = <0xc0000000 0x20000000>,
+>> +              <0xff220000 0x00004000>;
+>> +        reg-names = "Txs", "Cra";
+>> +        interrupt-parent = <&hps_0_arm_gic_0>;
+>> +        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+>> +        #interrupt-cells = <1>;
+>> +        bus-range = <0x0 0xff>;
+>> +        device_type = "pci";
+>> +        msi-parent = <&msi_to_gic_gen_0>;
+>> +        #address-cells = <3>;
+>> +        #size-cells = <2>;
+>> +        interrupt-map-mask = <0 0 0 7>;
+>> +        interrupt-map = <0 0 0 1 &pcie_intc 1>,
+>> +                        <0 0 0 2 &pcie_intc 2>,
+>> +                        <0 0 0 3 &pcie_intc 3>,
+>> +                        <0 0 0 4 &pcie_intc 4>;
+>> +        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+>> +                  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+>
+> That's two entries.
+
+I will fix the broken DTS as follows:
+
+        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000>,
+                 <0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+>
+> Best regards,
+> Krzysztof
+>
 >
 
-Sorry, I didn't realize our devmem TCP work was mentioned in this
-context. Just jumping in to say, no, this is not the case, devmem TCP
-does not require firmware functionality AFAICT. The selftest provided
-with the devmem TCP series should work on any driver that:
-
-1. supports header split/flow steering/rss/page pool (I guess this
-support may need firmware changes...).
-
-2. supports the new queue configuration ndos:
-https://patchwork.kernel.org/project/netdevbpf/patch/20240403002053.2376017=
--2-almasrymina@google.com/
-
-3. supports the new netmem page_pool APIs:
-https://patchwork.kernel.org/project/netdevbpf/patch/20240403002053.2376017=
--8-almasrymina@google.com/
-
-No firmware changes specific to devmem TCP are needed, AFAICT. All
-these are driver changes. I also always publish a full branch with all
-the GVE changes so reviewers can check if there is anything too
-specific to GVE that we're doing, so far there are been no issues, and
-to be honest I can't see anything specific that we do with GVE for
-devmem TCP:
-
-https://github.com/mina/linux/commits/tcpdevmem-v7/
-
-In fact, GVE is IMO a relatively feature light driver, and the fact
-that GVE can do devmem TCP IMO makes it easier for fancier NICs to
-also do devmem TCP.
-
-I'm working with folks interested in extending devmem TCP to their
-drivers, and they may follow up with patches after the series is
-merged (or before). The only reason I haven't implemented devmem TCP
-for multiple different drivers is a logistical one. I don't have
-access to hardware that supports all these prerequisite features other
-than GVE.
-
---=20
-Thanks,
-Mina
+Thank you for the review,
+Matthew Gerlach
 
