@@ -1,85 +1,84 @@
-Return-Path: <linux-pci+bounces-5928-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5929-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A92A689D752
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 12:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C4E189D788
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 13:02:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 204DA1F24F39
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 10:56:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E79991F24F03
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 11:02:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D02C82D7F;
-	Tue,  9 Apr 2024 10:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A015A85629;
+	Tue,  9 Apr 2024 11:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="oL1D7pwC"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="xQjy2pj2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0978981AA5
-	for <linux-pci@vger.kernel.org>; Tue,  9 Apr 2024 10:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3E381AA5
+	for <linux-pci@vger.kernel.org>; Tue,  9 Apr 2024 11:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712660175; cv=none; b=dX+Plt2Mmk+IX8Co8f3EHJ+5gR8ur4hgq6nXpKakTUYsm5FG0bzICkDWrhC04h7z+zSg2Zu9jdfxBluHjEGJWU5VN3DbzzL4+m7feNMAURsQX/akXWlAxQb5UITMkk8gIsnLSVp9U98zsNyie7CRWxxKzU4FTxlxEmsHQS/3ZGY=
+	t=1712660519; cv=none; b=dklsTZek/eK/HHGgXkYGAtAROCJukanZMumSzCuYHoIAt6k5zozZ4pYCf8sfPVgLZjeVb0/5q8mGMD6488aDyQNBUVF9HD0h3DUUkuN1993gz4v0JmaFNYLPGASvTM/tqq9wXgtG4mXcLDmkoWgQHgzo/frp2kmcgathVDq24Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712660175; c=relaxed/simple;
-	bh=6y89ex60K2u4aYRRegTZ7ifaOtdL3U4CSFJzYwsl4+Q=;
+	s=arc-20240116; t=1712660519; c=relaxed/simple;
+	bh=cyKMv918CGWEOV5m/jVZ6fedw33r0JWxw/IGrvBc0Ys=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGxts65NDguBxKzbh9h0G5aIr42CImWnCVHcP0Xh3JL3/gfA+6t5fNI1rmoo2LvMXSWt5JZhy+DiKlOo9DBtaIQ+8rK4lWK106auOwHLT89DK7eBuKYVSPJkBS7wt4ALiJWWSmVTejwKkNois91d5Izf8oqlqYIhiimxRjeSIMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=oL1D7pwC; arc=none smtp.client-ip=209.85.208.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=nW9d3+eJXIcS69t3jrMSBTOz2xhOeb9Ljv4h/umbk3kcP0DHKZBkLKBaO/aKRAQZrwFsGOrW4QZzDvbuJDXH0fQ1IAIQ9zC3ST3IVY+uLjmMVKJp2/eD6qRwNcEGY8psETdfEdMTOWuJDTZszl1ZVHwMKh+ywojvE/SocMMrwJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=xQjy2pj2; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d717603aa5so64616701fa.0
-        for <linux-pci@vger.kernel.org>; Tue, 09 Apr 2024 03:56:12 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4169d794358so5440775e9.1
+        for <linux-pci@vger.kernel.org>; Tue, 09 Apr 2024 04:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1712660171; x=1713264971; darn=vger.kernel.org;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1712660516; x=1713265316; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=2lLoy9rmgjgwScKRCHTbVCLRe4qHVdiF76SVyXj+DFY=;
-        b=oL1D7pwCOzD5gooa0X7xyW2iXD0E90umsYr8DBZED7wTGLcHYayPfy8YRsjaNdY0Q1
-         QF/D/xsUnW4ReSgo70iZR+Ty0loUk6LFBF1ag3B2BfOc34En57KnrzwUVaHdftZQIgHa
-         Aalh15tOuxv1STeLxWFDruUyBcH3DbD/+t5U4fbUjEcFVHMnw4iwWS6uK1HnhDylUPsj
-         1N6MAQ6o7oghMxPI6KJV63bGfQvGCGWT+HwOY0LptQAULCmRf0O1MSbEClX1Zix/OVzb
-         zL1M+GuS2RX8OxeF3YWJ9krSYJJBBV+YxyHcrGczBAaNvLXCKJJqpH41D4qm9R/6/9ED
-         LQLg==
+        bh=ghzoZZbiK4pCy4yVHv3cKJnocQh3hGrEdW9JRT2mUaM=;
+        b=xQjy2pj2W4jczdc7wGDNw3iiSAn18ne8PXTSKDrfWkrnebRD2uAT46N15MKcz12SEt
+         kVz+FXwEUov6AVHNAqS4HSPsIUMg2Ev7yThhnwTzrDEoN6g8FaG2CRDQnRRqmRvjUGmA
+         EQIJri1lO3zGUCrsNiCiCuuVsvgA3URfldoujnhdO/dADr+E1hDjvl2S9jONPzhKUdsa
+         P8TaFzS8MrcpbP+2NJl4xUsqPiYEHsdI4LlP1ebBJncWnd+GSTOzrfbAA/mQwl7fUmjL
+         G2aPepPSb9CcMomHhwFQKbWsgtLGwvF4q2e+IRQQnmSWRgpvhtHn4WYkItjIJkjFqR65
+         g2nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712660171; x=1713264971;
+        d=1e100.net; s=20230601; t=1712660516; x=1713265316;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2lLoy9rmgjgwScKRCHTbVCLRe4qHVdiF76SVyXj+DFY=;
-        b=qQJ6POQ1MvebpS+WyLy4DR+ib9K7WRooOhWNonCp1xis8WHf+kxj3Skw52nLTLs0Z3
-         Jk6ArYBwX5To6xbtiX74idBPznh9+ftfIQZSJOMC26dkPTTXk6nCZRpWNH+fTQPO1Deh
-         HjBASfQFU2tLNs+xkSGC/iAvCZFS588zcDRAqUdixfJ1DEnvbbH2khZvlUpWiF6OM2yD
-         jMhB8eIPPEmbXbmMMi7R8SRNao8sUUPyj6lU8akux7OlcNQMCWbG8A1+wrjUayig0BiM
-         RqpzPAFbDA7lZX2NUzubGaOV5QPSyIrLDvTK2kDfJLdofoiVwqP3SUxJDo6bNdQizzAW
-         eurw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbjlNNuQO5qncTcv4hZC3ffvXh8WozkGkkaET29jNGAC9pA5CcS1uarGjyxLqvAnqfJMPo9hfGB9z2BkwsBc48O1QVY+126HYm
-X-Gm-Message-State: AOJu0YxbsTQ6sFa86e+8OX3JC5tCl/pkIwvudIUqm33VsgR9XzetbeL2
-	xFeCzf/GCfODFlsFOOKsZeCt6IEasMZEjAfFO6Y4uXJhAJJj/6SMyxpprVUzdXY=
-X-Google-Smtp-Source: AGHT+IGYdleoQk8Sk3Y8LauYX0LG7vjnwVtCQfGveRWFnQHINd7pKGpDrS/pEVDoleWGVw0JKctwqA==
-X-Received: by 2002:a2e:90d4:0:b0:2d8:4cff:73e9 with SMTP id o20-20020a2e90d4000000b002d84cff73e9mr7513284ljg.46.1712660170813;
-        Tue, 09 Apr 2024 03:56:10 -0700 (PDT)
+        bh=ghzoZZbiK4pCy4yVHv3cKJnocQh3hGrEdW9JRT2mUaM=;
+        b=CswwmgHx7eL9iJRxvjDkO30lSeX3F8gEngheXkWiaubzuvTCTewqwCvKU9AfP9tOT9
+         XOSxtC8zvCPvGuqNWPovKNoUYI/BPIK1tB6VkXQ0/6r+E38DvUr+GI8vEyACHdkjUvCJ
+         nnSIzQwHTem6h1qHQlnMLEmoEOUagYm9SbFO73U0coQtiAtUleZ0TjdXUvP94OqJwTa5
+         2DFBB9qjc3QQdf9EwM2w4TK0xKOXSoCv+feioE8n8A5JUM7csDLbnhR2D4w3TZpsjtTV
+         SZyve3516HuvEtM5fbs7gQhDrDp5cFc1mygJft97qdd4S4gSexgKVZmh5l5iDJ3RUyVM
+         mHyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1/0wLyqCxOxmqxsduz4ObhAFZC4KH7NyzISi2Mb4dDvz9ZsJC9iFIoh8UpRxx1/GdzH1u7x74LK0uxAfVGGej3RrGbA1E9/AH
+X-Gm-Message-State: AOJu0YyngJ8Snwycx76BwyISWCm93+ZkNKsLtzdkO6ZvnmBNdyZa8Nuq
+	9iVJBzk+9dBzaZliltJsd75q0fuB0AwMdz5LISnfL3ToJwcbjSis3Wt5OQ+N/XQ=
+X-Google-Smtp-Source: AGHT+IFOvJd21kmVeIM6N9PkG+qQRefctpXlG9vlyyHwj2ExttRLNEEhInVzA6Ph+qNg7LoR/crftg==
+X-Received: by 2002:a05:600c:4fc3:b0:416:a36b:995 with SMTP id o3-20020a05600c4fc300b00416a36b0995mr1298568wmq.18.1712660515782;
+        Tue, 09 Apr 2024 04:01:55 -0700 (PDT)
 Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id x8-20020adfffc8000000b00343c1cd5aedsm11089617wrs.52.2024.04.09.03.56.09
+        by smtp.gmail.com with ESMTPSA id n1-20020a05600c4f8100b004169836bf9asm3487052wmq.23.2024.04.09.04.01.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 03:56:10 -0700 (PDT)
-Date: Tue, 9 Apr 2024 12:56:05 +0200
+        Tue, 09 Apr 2024 04:01:55 -0700 (PDT)
+Date: Tue, 9 Apr 2024 13:01:51 +0200
 From: Jiri Pirko <jiri@resnulli.us>
-To: Florian Fainelli <f.fainelli@gmail.com>
+To: John Fastabend <john.fastabend@gmail.com>
 Cc: Alexander Duyck <alexander.duyck@gmail.com>,
 	Jason Gunthorpe <jgg@nvidia.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
 	bhelgaas@google.com, linux-pci@vger.kernel.org,
 	Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net,
 	Christoph Hellwig <hch@lst.de>
 Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
  Platforms Host Network Interface
-Message-ID: <ZhUexUl-kD6F1huf@nanopsycho>
+Message-ID: <ZhUgH9_beWrKbwwg@nanopsycho>
 References: <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
  <678f49b06a06d4f6b5d8ee37ad1f4de804c7751d.camel@redhat.com>
  <20240405122646.GA166551@nvidia.com>
@@ -89,7 +88,7 @@ References: <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
  <ZhPaIjlGKe4qcfh_@nanopsycho>
  <CAKgT0UfcK8cr8UPUBmqSCxyLDpEZ60tf1YwTAxoMVFyR1wwdsQ@mail.gmail.com>
  <ZhQgmrH-QGu6HP-k@nanopsycho>
- <ae67d1a6-8ca6-432e-8f1d-2e3e45cad848@gmail.com>
+ <66142a4b402d5_2cb7208ec@john.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,90 +98,139 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ae67d1a6-8ca6-432e-8f1d-2e3e45cad848@gmail.com>
+In-Reply-To: <66142a4b402d5_2cb7208ec@john.notmuch>
 
-Mon, Apr 08, 2024 at 11:36:42PM CEST, f.fainelli@gmail.com wrote:
->On 4/8/24 09:51, Jiri Pirko wrote:
+Mon, Apr 08, 2024 at 07:32:59PM CEST, john.fastabend@gmail.com wrote:
+>Jiri Pirko wrote:
 >> Mon, Apr 08, 2024 at 05:46:35PM CEST, alexander.duyck@gmail.com wrote:
->> > On Mon, Apr 8, 2024 at 4:51 AM Jiri Pirko <jiri@resnulli.us> wrote:
->> > > 
->> > > Fri, Apr 05, 2024 at 08:38:25PM CEST, alexander.duyck@gmail.com wrote:
->> > > > On Fri, Apr 5, 2024 at 8:17 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->> > > > > 
->> > > > > On Fri, Apr 05, 2024 at 07:24:32AM -0700, Alexander Duyck wrote:
->> > > > > > > Alex already indicated new features are coming, changes to the core
->> > > > > > > code will be proposed. How should those be evaluated? Hypothetically
->> > > > > > > should fbnic be allowed to be the first implementation of something
->> > > > > > > invasive like Mina's DMABUF work? Google published an open userspace
->> > > > > > > for NCCL that people can (in theory at least) actually run. Meta would
->> > > > > > > not be able to do that. I would say that clearly crosses the line and
->> > > > > > > should not be accepted.
->> > > > > > 
->> > > > > > Why not? Just because we are not commercially selling it doesn't mean
->> > > > > > we couldn't look at other solutions such as QEMU. If we were to
->> > > > > > provide a github repo with an emulation of the NIC would that be
->> > > > > > enough to satisfy the "commercial" requirement?
->> > > > > 
->> > > > > My test is not "commercial", it is enabling open source ecosystem vs
->> > > > > benefiting only proprietary software.
->> > > > 
->> > > > Sorry, that was where this started where Jiri was stating that we had
->> > > > to be selling this.
->> > > 
->> > > For the record, I never wrote that. Not sure why you repeat this over
->> > > this thread.
->> > 
->> > Because you seem to be implying that the Meta NIC driver shouldn't be
->> > included simply since it isn't going to be available outside of Meta.
->> > The fact is Meta employs a number of kernel developers and as a result
->> > of that there will be a number of kernel developers that will have
->> > access to this NIC and likely do development on systems containing it.
->> > In addition simply due to the size of the datacenters that we will be
->> > populating there is actually a strong likelihood that there will be
->> > more instances of this NIC running on Linux than there are of some
->> > other vendor devices that have been allowed to have drivers in the
->> > kernel.
+>> >On Mon, Apr 8, 2024 at 4:51 AM Jiri Pirko <jiri@resnulli.us> wrote:
+>> >>
+>> >> Fri, Apr 05, 2024 at 08:38:25PM CEST, alexander.duyck@gmail.com wrote:
+>> >> >On Fri, Apr 5, 2024 at 8:17 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
+>> >> >>
+>> >> >> On Fri, Apr 05, 2024 at 07:24:32AM -0700, Alexander Duyck wrote:
+>> >> >> > > Alex already indicated new features are coming, changes to the core
+>> >> >> > > code will be proposed. How should those be evaluated? Hypothetically
+>> >> >> > > should fbnic be allowed to be the first implementation of something
+>> >> >> > > invasive like Mina's DMABUF work? Google published an open userspace
+>> >> >> > > for NCCL that people can (in theory at least) actually run. Meta would
+>> >> >> > > not be able to do that. I would say that clearly crosses the line and
+>> >> >> > > should not be accepted.
+>> >> >> >
+>> >> >> > Why not? Just because we are not commercially selling it doesn't mean
+>> >> >> > we couldn't look at other solutions such as QEMU. If we were to
+>> >> >> > provide a github repo with an emulation of the NIC would that be
+>> >> >> > enough to satisfy the "commercial" requirement?
+>> >> >>
+>> >> >> My test is not "commercial", it is enabling open source ecosystem vs
+>> >> >> benefiting only proprietary software.
+>> >> >
+>> >> >Sorry, that was where this started where Jiri was stating that we had
+>> >> >to be selling this.
+>> >>
+>> >> For the record, I never wrote that. Not sure why you repeat this over
+>> >> this thread.
+>> >
+>> >Because you seem to be implying that the Meta NIC driver shouldn't be
+>> >included simply since it isn't going to be available outside of Meta.
+>> >The fact is Meta employs a number of kernel developers and as a result
+>> >of that there will be a number of kernel developers that will have
+>> >access to this NIC and likely do development on systems containing it.
+>> >In addition simply due to the size of the datacenters that we will be
+>> >populating there is actually a strong likelihood that there will be
+>> >more instances of this NIC running on Linux than there are of some
+>> >other vendor devices that have been allowed to have drivers in the
+>> >kernel.
 >> 
 >> So? The gain for community is still 0. No matter how many instances is
 >> private hw you privately have. Just have a private driver.
 >
->I am amazed and not in a good way at how far this has gone, truly.
+>The gain is the same as if company X makes a card and sells it
+>exclusively to datacenter provider Y. We know this happens.
+
+Different story. The driver is still the same. Perhaps only some parts
+of it are tailored to fit one person's need, maybe. But here, the whole
+thing is obviously is targeted to one person. Can't you see the scale on
+which these are different?
+
+
+>Vendors would happily spin up a NIC if a DC with scale like this
+>would pay for it. They just don't advertise it in patch 0/X,
+>"adding device for cloud provider foo".
 >
->This really is akin to saying that any non-zero driver count to maintain is a
->burden on the community. Which is true, by definition, but if the goal was to
->build something for no users, then clearly this is the wrong place to be in,
->or too late. The systems with no users are the best to maintain, that is for
->sure.
+>There is no difference here. We gain developers, we gain insights,
+>learnings and Linux and OSS drivers are running on another big
+>DC. They improve things and find bugs they upstream them its a win.
 >
->If the practical concern is wen you make tree wide API change that fbnic
->happens to use, and you have yet another driver (fbnic) to convert, so what?
->Work with Alex ahead of time, get his driver to be modified, post the patch
->series. Even if Alex happens to move on and stop being responsible and there
->is no maintainer, so what? Give the driver a depreciation window for someone
->to step in, rip it, end of story. Nothing new, so what has specifically
->changed as of April 4th 2024 to oppose such strong rejection?
+>The opposite is also true if we exclude a driver/NIC HW that is
+>running on major DCs we lose a lot of insight, experience, value.
 
-How you describe the flow of internal API change is totally distant from
-reality. Really, like no part is correct:
-1) API change is responsibility of the person doing it. Imagine working
-   with 40 driver maintainers for every API change. I did my share of
-   API changes in the past, maintainer were only involved to be cced.
-2) To deprecate driver because the maintainer is not responsible. Can
-   you please show me one example when that happened in the past?
+Could you please describe in details and examples what exactly is we
+are about to loose? I don't see it.
 
 
+>DCs are all starting to build their own hardware if we lose this
+>section of HW we lose those developers too. We are less likely
+>to get any advances they come up with. I think you have it backwards.
+>Eventually Linux networking becomes either commodity and irrelevant
+>for DC deployments.
 >
->Like it was said, there are tons of drivers in the Linux kernel that have a
->single user, this one might have a few more than a single one, that should be
->good enough.
-
-This will have exactly 0. That is my point. Why to merge something
-nobody will ever use?
-
-
+>So I strongly disagree we lose by excluding drivers and win by
+>bringing it in.
 >
->What the heck is going on?
->-- 
->Florian
+>> 
+>> 
+>> >
+>> >So from what I can tell the only difference is if we are manufacturing
+>> >this for sale, or for personal use. Thus why I mention "commercial"
+>> >since the only difference from my perspective is the fact that we are
+>> >making it for our own use instead of selling it.
+>> 
+>> Give it for free.
+>
+>Huh?
+>
+>> 
+>> 
+>> >
+>> >[...]
+>> >
+>> >> >> > I agree. We need a consistent set of standards. I just strongly
+>> >> >> > believe commercial availability shouldn't be one of them.
+>> >> >>
+>> >> >> I never said commercial availability. I talked about open source vs
+>> >> >> proprietary userspace. This is very standard kernel stuff.
+>> >> >>
+>> >> >> You have an unavailable NIC, so we know it is only ever operated with
+>> >> >> Meta's proprietary kernel fork, supporting Meta's proprietary
+>> >> >> userspace software. Where exactly is the open source?
+>> >> >
+>> >> >It depends on your definition of "unavailable". I could argue that for
+>> >> >many most of the Mellanox NICs are also have limited availability as
+>> >> >they aren't exactly easy to get a hold of without paying a hefty
+>> >> >ransom.
+>> >>
+>> >> Sorry, but I have to say this is ridiculous argument, really Alex.
+>> >> Apples and oranges.
+>> >
+>> >Really? So would you be making the same argument if it was
+>> >Nvidia/Mellanox pushing the driver and they were exclusively making it
+>> >just for Meta, Google, or some other big cloud provider? I suspect
+>> 
+>> Heh, what ifs :) Anyway, chance that happens is very close to 0.
+>> 
+>> 
+>> >not. If nothing else they likely wouldn't disclose the plan for
+>> >exclusive sales to get around this sort of thing. The fact is I know
+>> >many of the vendors make proprietary spins of their firmware and
+>> >hardware for specific customers. The way I see it this patchset is
+>> >being rejected as I was too honest about the general plan and use case
+>> >for it.
+>> >
+>> >This is what I am getting at. It just seems like we are playing games
+>> >with semantics where if it is a vendor making the arrangement then it
+>> >is okay for them to make hardware that is inaccessible to most, but if
+>> >it is Meta then somehow it isn't.
+>
 >
 
