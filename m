@@ -1,34 +1,34 @@
-Return-Path: <linux-pci+bounces-5955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9BCC89DFF9
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 18:03:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AEB689DFFA
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 18:03:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74E7328596F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 16:03:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6481728710B
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 16:03:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D48213D8A8;
-	Tue,  9 Apr 2024 16:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AC4C13DB88;
+	Tue,  9 Apr 2024 16:03:04 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AD913AD3F;
-	Tue,  9 Apr 2024 16:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2B113D63F;
+	Tue,  9 Apr 2024 16:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712678582; cv=none; b=P2Y+2kJ/o67CrwfVMvbfO0ZKoN35JHofVhkVZZglfg75ZeuFKqJECgKl9wxJSAWq8TIyCwofBNDLEwiAsyFfJYMVk2wFgjUgWEmtKSi16MwDL0Xz25fwmGUCJXQ0cic0FTadjI5MPPEZqekpGh2YhsvM3WPXBjXjMbTvYmFN7ok=
+	t=1712678584; cv=none; b=uat0LK1at/5KI/aoqSz6/Q31V7Z2ijWzL/yeSfgz5BamBXk12GFZo5/qzly32iCd46cJe+D9qzyYTsK7O2g2yHg/doIQLslUk0rLsj7QZZLNH2IFM0FlSA71HuxMrxpihfv3pqkhLvbk/kyjAXaOR+KuKuR3uYzBVeKF17YJHMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712678582; c=relaxed/simple;
-	bh=vvWR5zO14zGXLal37SMteyWzk17WOIVGlVgn28GuZqg=;
+	s=arc-20240116; t=1712678584; c=relaxed/simple;
+	bh=BXhwjnE1qVxS2euH04MQtLni9o0QfDZ0qo+X7qh1//w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nph6D53OsKO760BbH0Z9SMEv6MjWIqxBMxsTyPbXXB45+Tkwf87QI1KO3LOnCklScNCgGllu7THU4CaRDHe869gGfHbTY9YlCmPAfm1uIJQm/1ze1Veie6HWMI0EKdxKEiQCo2whgzFuq98yCvG/dYcoQ0kYnP1XLq0LroRu9lg=
+	 MIME-Version; b=q9h5QPTc573RaIz2gLIGBeLW7G+PbE3AVqupO0FvvP5NrdGrzmD5nh8JfXcAxFuMHwmaArL4dJPkrwNa+cFLuRtKC/5MO6RPA5QTnqIKQ/kt4kHF0Z+/dLIaPg0zm9kqBZvVqHqgoRZg1zusQDSso1jwE8xz6rz0292o43t/g00=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF130C433F1;
-	Tue,  9 Apr 2024 16:03:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A81AEC433F1;
+	Tue,  9 Apr 2024 16:03:03 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org,
 	linux-pci@vger.kernel.org
@@ -40,9 +40,9 @@ Cc: dan.j.williams@intel.com,
 	dave@stgolabs.net,
 	bhelgaas@google.com,
 	lukas@wunner.de
-Subject: [PATCH v4 3/4] PCI: Create new reset method to force SBR for CXL
-Date: Tue,  9 Apr 2024 09:01:16 -0700
-Message-ID: <20240409160256.94184-4-dave.jiang@intel.com>
+Subject: [PATCH v4 4/4] cxl: Add post reset warning if reset results in loss of previously committed HDM decoders
+Date: Tue,  9 Apr 2024 09:01:17 -0700
+Message-ID: <20240409160256.94184-5-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240409160256.94184-1-dave.jiang@intel.com>
 References: <20240409160256.94184-1-dave.jiang@intel.com>
@@ -54,94 +54,122 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-CXL spec r3.1 8.1.5.2
-By default Secondary Bus Reset (SBR) is masked for CXL ports. Introduce a
-new PCI reset method "cxl_bus" to force SBR on CXL ports by setting
-the unmask SBR bit in the CXL DVSEC port control register before performing
-the bus reset and restore the original value of the bit post reset. The
-new reset method allows the user to intentionally perform SBR on a CXL
-device without needing to set the "Unmask SBR" bit via a user tool.
+SBR is equivalent to a device been hot removed and inserted again. Doing a
+SBR on a CXL type 3 device is problematic if the exported device memory is
+part of system memory that cannot be offlined. The event is equivalent to
+violently ripping out that range of memory from the kernel. While the
+hardware requires the "Unmask SBR" bit set in the Port Control Extensions
+register and the kernel currently does not unmask it, user can unmask
+this bit via setpci or similar tool.
 
+The driver does not have a way to detect whether a reset coming from the
+PCI subsystem is a Function Level Reset (FLR) or SBR. The only way to
+detect is to note if a decoder is marked as enabled in software but the
+decoder control register indicates it's not committed.
+
+A helper function is added to find discrepancy between the decoder
+software state versus the hardware register state.
+
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
 v4:
-- Use pci_dev_lock guard() on bridge. (Dan)
+- Update commit subject to clarify. (Jonathan)
 ---
- drivers/pci/pci.c   | 39 +++++++++++++++++++++++++++++++++++++++
- include/linux/pci.h |  2 +-
- 2 files changed, 40 insertions(+), 1 deletion(-)
+ drivers/cxl/core/pci.c | 31 +++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h      |  2 ++
+ drivers/cxl/pci.c      | 20 ++++++++++++++++++++
+ 3 files changed, 53 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 570b00fe10f7..3b4f7b369287 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4982,6 +4982,44 @@ static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
- 	return pci_parent_bus_reset(dev, probe);
- }
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index c496a9710d62..597221f7f19b 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1045,3 +1045,34 @@ long cxl_pci_get_latency(struct pci_dev *pdev)
  
-+static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
+ 	return cxl_flit_size(pdev) * MEGA / bw;
+ }
++
++static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
 +{
-+	struct pci_dev *bridge;
-+	u16 dvsec, reg, val;
-+	int rc;
++	struct cxl_endpoint_decoder *cxled;
++	struct cxl_port *port = data;
++	struct cxl_decoder *cxld;
++	struct cxl_hdm *cxlhdm;
++	void __iomem *hdm;
++	u32 ctrl;
 +
-+	bridge = pci_upstream_bridge(dev);
-+	if (!bridge)
-+		return -ENOTTY;
-+
-+	dvsec = cxl_port_dvsec(bridge);
-+	if (!dvsec)
-+		return -ENOTTY;
-+
-+	if (probe)
++	if (!is_endpoint_decoder(dev))
 +		return 0;
 +
-+	guard(pci_dev)(bridge);
-+	rc = pci_read_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
-+	if (rc)
-+		return -ENOTTY;
++	cxled = to_cxl_endpoint_decoder(dev);
++	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
++		return 0;
 +
-+	if (!(reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)) {
-+		val = reg | PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR;
-+		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
-+				      val);
-+	} else {
-+		val = reg;
-+	}
++	cxld = &cxled->cxld;
++	cxlhdm = dev_get_drvdata(&port->dev);
++	hdm = cxlhdm->regs.hdm_decoder;
++	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
 +
-+	rc = pci_reset_bus_function(dev, probe);
-+
-+	if (reg != val)
-+		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL, reg);
-+
-+	return rc;
++	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
 +}
 +
- void pci_dev_lock(struct pci_dev *dev)
- {
- 	/* block PM suspend, driver probe, etc. */
-@@ -5066,6 +5104,7 @@ static const struct pci_reset_fn_method pci_reset_fn_methods[] = {
- 	{ pci_af_flr, .name = "af_flr" },
- 	{ pci_pm_reset, .name = "pm" },
- 	{ pci_reset_bus_function, .name = "bus" },
-+	{ cxl_reset_bus_function, .name = "cxl_bus" },
++bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
++{
++	return device_for_each_child(&port->dev, port,
++				     __cxl_endpoint_decoder_reset_detected);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 534e25e2f0a4..e3c237c50b59 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -895,6 +895,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+ 			     struct access_coordinate *c1,
+ 			     struct access_coordinate *c2);
+ 
++bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
++
+ /*
+  * Unit test builds overrides this to __weak, find the 'strong' version
+  * of these symbols in tools/testing/cxl/.
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 110478573296..5dc1f28a031d 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -957,11 +957,31 @@ static void cxl_error_resume(struct pci_dev *pdev)
+ 		 dev->driver ? "successful" : "failed");
+ }
+ 
++static void cxl_reset_done(struct pci_dev *pdev)
++{
++	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &pdev->dev;
++
++	/*
++	 * FLR does not expect to touch the HDM decoders and related registers.
++	 * SBR however will wipe all device configurations.
++	 * Issue warning if there was active decoder before reset that no
++	 * longer exists.
++	 */
++	if (cxl_endpoint_decoder_reset_detected(cxlmd->endpoint)) {
++		dev_warn(dev, "SBR happened without memory regions removal.\n");
++		dev_warn(dev, "System may be unstable if regions hosted system memory.\n");
++		add_taint(TAINT_USER, LOCKDEP_NOW_UNRELIABLE);
++	}
++}
++
+ static const struct pci_error_handlers cxl_error_handlers = {
+ 	.error_detected	= cxl_error_detected,
+ 	.slot_reset	= cxl_slot_reset,
+ 	.resume		= cxl_error_resume,
+ 	.cor_error_detected	= cxl_cor_error_detected,
++	.reset_done	= cxl_reset_done,
  };
  
- static ssize_t reset_method_show(struct device *dev,
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 16493426a04f..235f37715a43 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -51,7 +51,7 @@
- 			       PCI_STATUS_PARITY)
- 
- /* Number of reset methods used in pci_reset_fn_methods array in pci.c */
--#define PCI_NUM_RESET_METHODS 7
-+#define PCI_NUM_RESET_METHODS 8
- 
- #define PCI_RESET_PROBE		true
- #define PCI_RESET_DO_RESET	false
+ static struct pci_driver cxl_pci_driver = {
 -- 
 2.44.0
 
