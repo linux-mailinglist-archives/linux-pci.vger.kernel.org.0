@@ -1,54 +1,56 @@
-Return-Path: <linux-pci+bounces-5934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28E7D89DA12
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 15:22:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46CAF89DA52
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 15:35:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75F32B23C78
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 13:22:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB95C1F21ABC
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 13:35:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AF0212F391;
-	Tue,  9 Apr 2024 13:22:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53632137740;
+	Tue,  9 Apr 2024 13:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhYzTK0U"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcYfZ8Gt"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA5E12F38E;
-	Tue,  9 Apr 2024 13:22:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259ED136E3D;
+	Tue,  9 Apr 2024 13:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712668964; cv=none; b=nes0E5OpN5rzS69tPuhao4s6iNe/WZLoVZgZsFBXsTcI3/Ua1n6yogTuZueA/xEp0UHlfP48HH7g9/vKwRCNRFAPY8CkVpsz4XG3WgHOXhsyVshD8PLvZ0+xiHCNJHcEbwYQP+u7rjzZKIRd9MD3FLgErYQUVHvVMSsGsTBic8Q=
+	t=1712669291; cv=none; b=YsGPipPMGWJYV3SfgWkoMPVgwZKR4O2rZJIJ+vYfYJD+zGyHznXvcM/Vn+J2Gb5ZdcIvr/TXV4NEJ77HqdYskksHEQxxcLoEu/udvSJ2JhwvDriYiTFZjYYzjCYY8PxsX3xLTcADQE6nmEf1pGR71dClzQwJfebk2epV4lnw8jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712668964; c=relaxed/simple;
-	bh=0ZWvbvLK1XD95XLQAIVSGXfXjBT4UbBzmYUhKoyHqgQ=;
+	s=arc-20240116; t=1712669291; c=relaxed/simple;
+	bh=HOJtXBcppUU+aQAwrlJyYEWKDyMaLDEV80FbFejpZKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=e8C8I2PY/5MtH67YDfJjlGZuaMvlkBbYOgU5wLjHQEy+7CGvBlIl+b4mu0F+FwV5wtaT2byaDjFXXgxBfHitCDykCdLeXVDnhOetwJFolnICu1jG8b6KCW+Hgi20Yj4lYnq9eB+zj9C0TYEDyLfdwXJ2RXrcz/V64YVok++cx/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhYzTK0U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87502C433F1;
-	Tue,  9 Apr 2024 13:22:43 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=W0E5CVOnA3SaN+lW/UHStBUL7IDaX2B4zOQYFRaeGdnKaCatQAeTEzUTaYieBVUrVL2ZFVmhimRcOPLlOrj6HywKI4o6gGKbgvj8hUlFYa9y868yKTohqycgO9FKsvw98l28BcDsxlWXcqWXa/sodzcj1KkqeMRX1TF84PcHsUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcYfZ8Gt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63163C433F1;
+	Tue,  9 Apr 2024 13:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712668963;
-	bh=0ZWvbvLK1XD95XLQAIVSGXfXjBT4UbBzmYUhKoyHqgQ=;
+	s=k20201202; t=1712669290;
+	bh=HOJtXBcppUU+aQAwrlJyYEWKDyMaLDEV80FbFejpZKg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XhYzTK0UJbnxsl4W+kiyrvLUP+wHyBDYiX2fo8yLQSAL18XcE2l6PctoxiwC+nMwZ
-	 mdh9WfaNufQJfmz+4r92n4nIlsH/HZfkppTxCe+7qhdhVbj3aMOWDZ50MNbkh7VAHe
-	 jBUnlJDHLeIE796YBFGLiB150oKjZ/oaLG0rFUWQxkE4WXfL7Q/yibdZfY/9y6PmFT
-	 +l3lBDs3x1MaVEQv+valb+7Qjtn1oBR1xDiIrTGekuthlt6tk0epN2Pz58VlIAwm1w
-	 2Vp/YeOgAxCmmQdCEnM+YaNaR5R79/YBSwi2FV+hkP9yXau4wh6EAMbNcG9m8OQrO9
-	 Esaon+PCQ7wqA==
-Date: Tue, 9 Apr 2024 08:22:41 -0500
+	b=VcYfZ8GtK+3jrdb//TKysWx8cjqyUKp2ggTvTeFCgJwHdWOvDUCHEd4Fax/cXaWkC
+	 5f+djQfIsSg5X+RI2UkYVaYNJ9tx0XyzDYYBoT9T9xVws2G8A1RNG2Vgt9KwgjeQas
+	 qRUtYXhRypQXHETc7YTZTCth4xCzta0IgAWX1De+tIb3rkEWGQuK+5xtYyZ2hMHFaK
+	 SuykwdtX7iY0xXLcZeyQnY62PsyEaLx/+kobCIGxivW9PojQjHaj/EopJhwDSK1jFW
+	 sIifIEW2Wva6sURqrjo1zKyskCLxH224kIyH0BR3WjnTIW4wy4T8I3YzlAQTM5J2rC
+	 3TsYtA2B1jmeg==
+Date: Tue, 9 Apr 2024 08:28:08 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: ppwaskie@kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
- failure
-Message-ID: <20240409132241.GA2071709@bhelgaas>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org,
+	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] PCI: dwc: rcar-gen4: Add R-Car V4H support
+Message-ID: <20240409132808.GA2071934@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,46 +59,33 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240407210526.8500-1-ppwaskie@kernel.org>
+In-Reply-To: <20240408012458.3717977-1-yoshihiro.shimoda.uh@renesas.com>
 
-On Sun, Apr 07, 2024 at 02:05:26PM -0700, ppwaskie@kernel.org wrote:
-> From: PJ Waskiewicz <ppwaskie@kernel.org>
-> 
-> Currently, Type 3 CXL devices (CXL.mem) can train using host CXL
-> drivers on Emerald Rapids systems.  However, on some production
-> systems from some vendors, a buggy BIOS exists that improperly
-> populates the ACPI => PCI mappings.
+On Mon, Apr 08, 2024 at 10:24:51AM +0900, Yoshihiro Shimoda wrote:
 
-Can you be more specific about what this ACPI => PCI mapping is?
-If you already know what the problem is, I'm sure this is obvious, but
-otherwise it's not.
+> Yoshihiro Shimoda (7):
+>   dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H compatible
+>   dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4H compatible
+>   PCI: dwc: Add PCIE_PORT_{FORCE,LANE_SKEW} macros
+>   PCI: dwc: rcar-gen4: Add rcar_gen4_pcie_platdata
+>   PCI: dwc: rcar-gen4: Add .ltssm_enable() for other SoC support
+>   PCI: dwc: rcar-gen4: Add support for r8a779g0
 
-> This leads to the cxl_acpi
-> driver to fail probe when it cannot find the root port's _UID, in
-> order to look up the device's CXL attributes in the CEDT.
+Previous history for this file uses a "PCI: rcar-gen4: " prefix
+(without "dwc:").  I don't think we need to replicate the whole file
+path here in the precious subject line space, so "PCI: rcar-gen4: "
+should be enough.
+
+>   misc: pci_endpoint_test: Document a policy about adding pci_device_id
 > 
-> Add a bit more of a descriptive message that the lookup failure
-> could be a bad BIOS, rather than just "failed."
+>  .../bindings/pci/rcar-gen4-pci-ep.yaml        |   4 +-
+>  .../bindings/pci/rcar-gen4-pci-host.yaml      |   4 +-
+>  drivers/misc/pci_endpoint_test.c              |   1 +
+>  drivers/pci/controller/dwc/pcie-designware.h  |   6 +
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 272 +++++++++++++++++-
+>  5 files changed, 270 insertions(+), 17 deletions(-)
 > 
-> Signed-off-by: PJ Waskiewicz <ppwaskie@kernel.org>
-> ---
->  drivers/cxl/acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index af5cb818f84d..56019466a09c 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -504,7 +504,7 @@ static int cxl_get_chbs(struct device *dev, struct acpi_device *hb,
->  
->  	rc = acpi_evaluate_integer(hb->handle, METHOD_NAME__UID, NULL, &uid);
->  	if (rc != AE_OK) {
-> -		dev_err(dev, "unable to retrieve _UID\n");
-> +		dev_err(dev, "unable to retrieve _UID. Potentially buggy BIOS\n");
->  		return -ENOENT;
->  	}
->  
 > -- 
-> 2.40.1
+> 2.25.1
 > 
 
