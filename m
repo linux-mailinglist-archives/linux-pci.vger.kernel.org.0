@@ -1,163 +1,197 @@
-Return-Path: <linux-pci+bounces-5957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7BF889E027
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 18:16:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F3A989E071
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 18:31:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8190228ADC2
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 16:16:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA2521F229EB
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 16:31:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED93313D8A0;
-	Tue,  9 Apr 2024 16:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B04714EC55;
+	Tue,  9 Apr 2024 16:31:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdMlwBtc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPhJdsli"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A9D13D63C
-	for <linux-pci@vger.kernel.org>; Tue,  9 Apr 2024 16:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC79314E2FA;
+	Tue,  9 Apr 2024 16:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712679360; cv=none; b=dSbzKQN1RdATOj/NF7gqnUG9LLxq81eN+wYKE6IJo6SJCo76g7jpIBo165lxln80D1S1kfdFheIpUkQD9OozCydGxmgxMgfo0dppPTCPQqZjtYoAthqTI8TciBMuEs/roi5yA6xmcnjnEbxL/2jRvh4RHLad6USI/Rzj7D9L6F0=
+	t=1712680307; cv=none; b=bqglP1Txf7jt3X9mnaiq8CFEz0cs418PCPgwG/x1sjwmojg1m8PaX0m/eusBV3bNDaviGpFqno8g0CYNmcuXlc7xhntt6QAPrg2wy2VffxH9S19ZDkXmbJ2dFIExdG+9HYrDRIITBVYVXwt4aDsJSiZkgBIq/DqYHvyNpiz32uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712679360; c=relaxed/simple;
-	bh=AcZ3QNcbgLEVSP63LdF8sRSKm3cjsDvhlKbu7sqN0Yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=F2BUN3amY4Fiefmxy46k3wuTOraWbzH9euLFtB1L8j0zjCDLV6vPiqSFegmby0Gt6Q4tr3R0J9ruHNRf07e+pWhqUWRiCefBJcFu7+PcnBHD1sMsDt7yAUMvkWSN0iFJ/YkCTHP7xVSueR7n2ttRwTTj9Cs7/BkVPPyQaMeaQF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdMlwBtc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3B2C433C7;
-	Tue,  9 Apr 2024 16:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712679360;
-	bh=AcZ3QNcbgLEVSP63LdF8sRSKm3cjsDvhlKbu7sqN0Yo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GdMlwBtcEN+nL3PndlKHfnpn7S2v8i0VjbL2Y5fZGNLIH1sCdMJCHFXZXCzBRaEiS
-	 UGX79JT9mtiJMtVrqDdXfHlOyzzvJ5EwhU/Hk75K9oYD7ipMhOBf9ymwAxh4kvq67W
-	 wgP23CfzTlaJC7+sElyjX6YjYPrQuq0fuYKRwuBsRosHZIvPVuxvWlDO6ykYWhAYsi
-	 FpXQdxtvatLrXSXzF9SMlPx0tiAthIX9v+1SAmPgQMtkGVihqrXmCIqxtMEcOMZiJ2
-	 fgWYrow5+abWnUEOC/rKc18PyQpzSWN3x+T6tEemb1Hrv8sWuE2qh07AV+QLs7s6AQ
-	 um8lMK8z1qn+w==
-Date: Tue, 9 Apr 2024 11:15:58 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: rockchip-host: Fix
- rockchip_pcie_host_init_port() PERST# handling
-Message-ID: <20240409161558.GA2077808@bhelgaas>
+	s=arc-20240116; t=1712680307; c=relaxed/simple;
+	bh=4+5+t9ivZThSeoTjClZN1zIyssiggPgMe259i9/bH6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lTtzhADHJYDC2pzOxAzVKZ1JdPmOnKs+9aFtjo5JCyV+G8ytOOZJLQMl9SpIrX9wJPlT6Zhkqn9lr7TnTUVI/q5FMxj98M6sylDiWuOydmDhfx7TXMLiXeRJOhpZtThFpVmTrU0dVgGhRSdVvJk5dZKtpXKyOGXw8zFqWwpinP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPhJdsli; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-415515178ceso37808915e9.0;
+        Tue, 09 Apr 2024 09:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712680304; x=1713285104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9gCQfMJnF5/zaFvkv148A9uprhljB7Ds6cmqVUuQOMk=;
+        b=NPhJdsli81ZJh2Yhr9lCq2Qrw3cP4kb1b4UK5xk5q7tP3skpODZsaiVoYFMAcCYNTg
+         jgM1LTK6BH6FOWdkS/qmeNkcPap0vPnb0weo/clijbSfzuitRwaBcAin9QcT9FrkYqKQ
+         lXULm17uWQkEWM/4EADK01SBB9CXtKhEpV/hp/sL9XpPY5s5YF85r0Jnvb3IwTgWNG7t
+         7lBV/g98HHtP3TQGxUDqkV6+DY8Hdwt8ZrHvN3v8WOcYIuIR/rkuHhgdJMx6UnN8povE
+         D8DHDbbfAnQUAI7DyBaT0bkJxWMlIqvjA+ji22CK2NwhwS9ETx8hPkpP7tlL4TBoZ5m6
+         EZTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712680304; x=1713285104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9gCQfMJnF5/zaFvkv148A9uprhljB7Ds6cmqVUuQOMk=;
+        b=J/PseOLPQTcvlXG4Mrn8L5I9Lg4Sg/36rLc/Wnp2NhmbnyWnpJl6MWFR1yL25vQ6gf
+         Oa3y0OKHKA7mT1LY8rimCcDeDyLU+6rLvTQqxg2a6xJ8zOK7KXb4i1i1+tW/OcV5DtFN
+         BpovmNcNzIaRPc9nwlv7JB+kz9DbWj9zKN+KgBwxZ0SfEkwmydMRSqqHMPNv82UXbczB
+         1rIZq+J5q9BOBdrejRl2hY3rnfyJibxrbGIun3YSPysSabsmkzrBYx/fHiK0ZOEkM/JX
+         fPBu3QmaJ+r88qNjP75xa+bdrxyFhyfoBXBEt06WR8qN1SL51t607VoeDIrdOLVc8zKY
+         ztEA==
+X-Forwarded-Encrypted: i=1; AJvYcCURTprlNDOkntJWooj6BSVLGrlqRve2Fz78lrJOv0uS3fROp50AQvDRUOx7y0r65g3/GeYnINogTeyu2eLSlJ0xnwMDQh9NU/Izwk7pslkcz7RqHeJVAwxSHqfeQiiQKMJ7
+X-Gm-Message-State: AOJu0Yz03ymNffWGuPZWEtI9endWTsTaCfESR82Kw1rGIGPRMU3OHAzr
+	/NBfuejRfoz8d/m4zsmpp2CIE0I3jnS/S3V/BrhjxlJCr7YFsUe/dxWwY4F8Fv1w+pjyI3oycb4
+	LNAiz3l6T56uPgqt5Bl/4VFk7psY=
+X-Google-Smtp-Source: AGHT+IH3ZMJs8B8V2n9l9tJX0XL9K3/OdZubIcGN8oNrV+TqdQ05Qu2wsK4v0rCz6IACPnEde/F2qOCL8j33X8ZxaA4=
+X-Received: by 2002:a5d:6d85:0:b0:33e:48f9:169d with SMTP id
+ l5-20020a5d6d85000000b0033e48f9169dmr194224wrs.31.1712680303633; Tue, 09 Apr
+ 2024 09:31:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240330035043.1546087-1-dlemoal@kernel.org>
+References: <20240404165000.47ce17e6@kernel.org> <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
+ <20240404193817.500523aa@kernel.org> <CAKgT0UdAz1mb48kFEngY5sCvHwYM2vYtEK81VceKj-xo6roFyA@mail.gmail.com>
+ <20240408061846.GA8764@unreal> <CAKgT0UcE5cOKO4JgR-PBstP3e9r02+NyG3YrNQe8p2_25Xpf8g@mail.gmail.com>
+ <20240408184102.GA4195@unreal> <CAKgT0UcLWEP5GOqFEDeyGFpJre+g2_AbmBOSXJsoXZuCprGH0Q@mail.gmail.com>
+ <20240409081856.GC4195@unreal> <CAKgT0UewAZSqU6JF4-cPf7hZM41n_QMuiF_K8SY8hyoROQLgfQ@mail.gmail.com>
+ <20240409153932.GY5383@nvidia.com>
+In-Reply-To: <20240409153932.GY5383@nvidia.com>
+From: Alexander Duyck <alexander.duyck@gmail.com>
+Date: Tue, 9 Apr 2024 09:31:06 -0700
+Message-ID: <CAKgT0UeSNxbq3JYe8oNaoWYWSn9+vd1c+AfjvUsietUtS09r0g@mail.gmail.com>
+Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net, pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 30, 2024 at 12:50:43PM +0900, Damien Le Moal wrote:
-> The PCIe specifications (PCI Express Electromechanical Specification rev
-> 2.0, section 2.6.2) mandate that the PERST# signal must remain asserted
-> for at least 100 usec (Tperst-clk) after the PCIe reference clock
-> becomes stable (if a reference clock is supplied), for at least 100 msec
-> after the power is stable (Tpvperl).
+On Tue, Apr 9, 2024 at 8:39=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wro=
+te:
+>
+> On Tue, Apr 09, 2024 at 07:43:07AM -0700, Alexander Duyck wrote:
+>
+> > I see. So this is what you were referencing. Arguably I can see both
+> > sides of the issue. Ideally what should have been presented would have
+> > been the root cause of why the diff
+>
+> Uh, that almost never happens in the kernel world. Someone does a
+> great favour to us all to test rc kernels and finds bugs. The
 
-Reference current spec, e.g., "PCIe CEM r5.1, sec 2.9.2" and a note
-about why you mention two parameters here but the code change only
-uses one of them.
+Thus why I mentioned "Ideally". Most often that cannot be the case due
+to various reasons. However, that said that would have been the Ideal
+solution, not the practical one.
 
-> In addition, the PCI Express Base SPecification Rev 2.0, section 6.6.1
-> state that the host should wait for at least 100 msec from the end of a
-> conventional reset (PERST# is de-asserted) before accessing the
-> configuration space of the attached device.
+> expectation is generally things like:
+>
+>  - The bug is fixed immediately because the issue is obvious to the
+>    author
+>  - Iteration and rapid progress is seen toward enlightening the author
+>  - The patch is reverted, often rapidly, try again later with a good
+>    patch
 
-Current spec, e.g., "PCIe r6.0, sec 6.6.1".
+When working on a development branch that shouldn't be the
+expectation. I suspect that is why the revert was pushed back on
+initially. The developer wanted a chance to try to debug and resolve
+the issue with root cause.
 
-> Modify rockchip_pcie_host_init_port() by adding two 100ms sleep, one
-> before and after bringing back PESRT signal to high using the ep_gpio
-> GPIO. Comments are also added to clarify this behavior.
+Honestly what I probably would have proposed was a build flag that
+would have allowed the code to stay but be disabled with a "Broken"
+label to allow both developers to work on their own thing. Then if
+people complained about the RFC non-compliance issue, but didn't care
+about the Vagrant setup they could have just turned it on to test and
+verify it fixed their issue and get additional testing. However I
+assume that would have introduced additional maintenance overhead.
 
-s/PESRT/PERST#/
+> Unsophisticated reporters should not experience regressions,
+> period. Unsophisticated reporters shuld not be expected to debug
+> things on their own (though it sure is nice if they can!). We really
+> like it and appreciate it if reporters can run experiments!
 
-This is two separate changes that really would be better as separate
-patches.
+Unsophisticated reporters/users shouldn't be running net-next. If this
+has made it to or is about to go into Linus's tree then I would agree
+the regression needs to be resolved ASAP as that stuff shouldn't exist
+past rc1 at the latest.
 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-> ---
-> 
-> Changes from v1:
->  - Add more specification details to the commit message.
->  - Add missing msleep(100) after PERST# is deasserted.
-> 
->  drivers/pci/controller/pcie-rockchip-host.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 300b9dc85ecc..ff2fa27bd883 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -294,6 +294,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  	int err, i = MAX_LANE_NUM;
->  	u32 status;
->  
-> +	/* Assert PERST */
->  	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
->  
->  	err = rockchip_pcie_init_port(rockchip);
-> @@ -322,8 +323,19 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
->  			    PCIE_CLIENT_CONFIG);
->  
-> +	/*
-> +	 * PCIe CME specifications mandate that PERST be asserted for at
-> +	 * least 100ms after power is stable.
-> +	 */
+> In this particular instance there was some resistance getting to a fix
+> quickly. I think a revert for something like this that could not be
+> immediately fixed is the correct thing, especially when it effects
+> significant work within the community. It gives the submitter time to
+> find out how to solve the regression.
+>
+> That there is now so much ongoing bad blood over such an ordinary
+> matter is what is really distressing here.
 
-Remove comment completely (given use of PCIE_T_PVPERL_MS below).
+Well much of it has to do with the fact that this is supposed to be a
+community. Generally I help you, you help me and together we both make
+progress. So within the community people tend to build up what we
+could call karma. Generally I think some of the messages sent seemed
+to make it come across that the Mellanox/Nvidia folks felt it "wasn't
+their problem" so they elicited a bit of frustration from the other
+maintainers and built up some negative karma.
 
-> +	msleep(100);
+As I had mentioned in the case of the e1000e NVRAM corruption. It
+wasn't an Intel issue that caused the problem but Intel had to jump in
+to address it until they found the root cause that was function
+tracing. Unfortunately one thing that tends to happen with upstream is
+that we get asked to do things that aren't directly related to the
+project we are working on. We saw that at Intel quite often. I
+referred to it at one point as the "you stepped in it, you own it"
+phenomenon where if we even brushed against block of upstream code
+that wasn't being well maintained we would be asked to fix it up and
+address existing issues before we could upstream any patches.
 
-s/100/PCIE_T_PVPERL_MS/
+> I think Leon's point is broadly that those on the "vendor" side seem
+> to often be accused of being a "bad vendor". I couldn't help but
+> notice the language from Meta on this thread seemed to place Meta
+> outside of being a vendor, despite having always very much been doing
+> typical vendor activities like downstream forks, proprietary userspace
+> and now drivers for their own devices.
 
->  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
->  
-> +	/*
-> +	 * PCIe base specifications rev 2.0 mandate that the host wait for
-> +	 * 100ms after completion of a conventional reset.
-> +	 */
-> +	msleep(100);
+I wouldn't disagree that we are doing "vendor" things. Up until about
+4 years ago I was on the "vendor" side at Intel. One difference is
+that Meta is also the "consumer". So if I report an issue it is me
+complaining about something as a sophisticated user instead of a
+unsophisticated one. So hopefully we have gone though and done some
+triage to at least bisect it down to a patch and are willing to work
+with the community as you guys did. If we can work with the other
+maintainers to enable them to debug and root cause the issue then even
+better. The revert is normally the weapon of last resort to be broken
+out before the merge window opens, or if an issue is caught in Linus's
+tree.
 
-Please add a #define for this since it's generic across all PCIe, not
-just Rockchip.
+> In my view the vendor/!vendor distinction is really toxic and should
+> stop.
 
-I don't think the PCIe spec actually names this parameter.  It's
-similar to T_rhfa (Conventional PCI r3.0, sec 4.3.2), although I think
-devices must be ready to accept config cycles after T_rhfa.
-
-This delay is a little different because IIUC, a PCIe device doesn't
-have to be "Configuration Ready"; after 100ms, it only has to be able
-to respond with a "Request Retry Status" completion if it isn't
-Configuration Ready yet.
-
-So I think we should add something like
-
-  #define PCIE_T_RRS_READY_MS   100
-
-to drivers/pci/pci.h for this case.
-
->  	/* 500ms timeout value should be enough for Gen1/2 training */
->  	err = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
->  				 status, PCIE_LINK_UP(status), 20,
-> -- 
-> 2.44.0
-> 
+I agree. However that was essentially what started all this when Jiri
+pointed out that we weren't selling the NIC to anyone else. That made
+this all about vendor vs !vendor, and his suggestion of just giving
+the NICs away isn't exactly practical. At least not an any sort of
+large scale. Maybe we should start coming up with a new term for the
+!vendor case. How about "prosumer", as in "producer" and "consumer"?
 
