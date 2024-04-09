@@ -1,194 +1,158 @@
-Return-Path: <linux-pci+bounces-5918-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5919-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D07589D346
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 09:35:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0859389D407
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 10:19:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3CB6B23CEA
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 07:35:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B31AD1F2295A
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 08:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 604227E574;
-	Tue,  9 Apr 2024 07:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1365F7E792;
+	Tue,  9 Apr 2024 08:19:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="kBIlOl2/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgEoe7En"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6F97E105;
-	Tue,  9 Apr 2024 07:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EF77E77B;
+	Tue,  9 Apr 2024 08:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712648086; cv=none; b=qWsthREPESos0/5/MAs5WIF3GDVnAVgMP4TS2RCZY7iJY/DcG85KWELi1mz/aAx1i9kzklIlxcpWvFzXj0yiSx7kO3gC/ZaMfVohD/lmTeHryP7KMuEh7UZxlFYr1EiJeMMhx0lJ0XthxNXx4UAdyPCrkzffknDoxm0sIY+9tc0=
+	t=1712650741; cv=none; b=ljPspaX++Pz1NH7zNoYZQTT5+U3T8I1Vf4wruazWdPV2BGbOuW1pzZgasM8VZ4A9mYKEnjbwXz4Y5bkHaJVIhf6Yv9beGCap5YZQB7oyV2PiIDYCA8m1CNHRVR1EXS31i9h6mWwomJp1xRhbOfMNhM0hZUyVnYGque1iwW8z8p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712648086; c=relaxed/simple;
-	bh=J3w0/ylkb4XiYg+NOVUCBlML1Xs+JJ1NLrEyKUxtTsc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IzJUWEgZI7khyNs3uHrzlf8j5GGFDw4Tn1Uzqo19SWbdvnGCNOGRbfOrE93JHvdlrQBnyglOrGMpzO0JUbtJrN2AMn1PuFzpUgq44OtkB0klrGBCk91gxR0w4jko9TIh68qV8EFdY7lTZlDCenuyKSZu8CJZ3o/EXNUI5xiCYwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=kBIlOl2/; arc=none smtp.client-ip=139.138.61.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1712648084; x=1744184084;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=J3w0/ylkb4XiYg+NOVUCBlML1Xs+JJ1NLrEyKUxtTsc=;
-  b=kBIlOl2/GeAVXj0EeSQ5Izo5xQT77mG/Ejow8SdDKGH0TsyyPAI+3+tT
-   wWr5sO9WnIn7WtHk7n++7s6bnwMZIi3JRTN+WWjpxCDqXGumz/dSYdypN
-   ZplT1RdKC9DQJK0VukP2vo+UHJS/F3Ab7FrqXzFx4yIke5iIRlyUUHwHJ
-   CzxTzBCjwQBbySgyvD+k8VEjYN6Lb7aknj08CUlxlvxYUFU0DS838XWaf
-   7kywr5/p37Vc9vddRA0TD2BNUnfN+rXFxoB/+OCDh7NAI0NOrL6GhQe8j
-   A6+heO1ADEMv3C3ctfs9Fd5GIpkMY/eifxgZ4bsXZRBrx8nCChf8AYMdi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="133822738"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708354800"; 
-   d="scan'208";a="133822738"
-Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 16:33:31 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6D38AE9A34;
-	Tue,  9 Apr 2024 16:33:29 +0900 (JST)
-Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id B037D35C3E;
-	Tue,  9 Apr 2024 16:33:28 +0900 (JST)
-Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 85718204E19B;
-	Tue,  9 Apr 2024 16:33:28 +0900 (JST)
-From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-To: kobayashi.da-06@jp.fujitsu.com,
-	linux-cxl@vger.kernel.org
-Cc: y-goto@fujitsu.com,
-	linux-pci@vger.kernel.org,
-	mj@ucw.cz,
-	dan.j.williams@intel.com,
-	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: [PATCH v4 3/3] cxl/pci: Add sysfs attribute for CXL 1.1 device link status
-Date: Tue,  9 Apr 2024 16:35:28 +0900
-Message-ID: <20240409073528.13214-4-kobayashi.da-06@fujitsu.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240409073528.13214-1-kobayashi.da-06@fujitsu.com>
-References: <20240409073528.13214-1-kobayashi.da-06@fujitsu.com>
+	s=arc-20240116; t=1712650741; c=relaxed/simple;
+	bh=Q3XIy7GKrH3hBQ7X0khzJAv0hJN0tBosWvY47yskPCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QIJIFQzcqd0/5mI2IgYloUy1UpbpSwJQhVukFVIGSV/48V1As/N8b3bpk/sRH3pMDDq2aBr2Dwtf8dDC5MdV9lF6GQRq4n7ykwSpRK7ak2HTwA48fC10lv/SZS6pexxq/qayLoJ7Ul7ys2v4pNflPbQNbDyPuDV/hDZ4jFXqa+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgEoe7En; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B6CC433F1;
+	Tue,  9 Apr 2024 08:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712650741;
+	bh=Q3XIy7GKrH3hBQ7X0khzJAv0hJN0tBosWvY47yskPCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FgEoe7EnyqYvOdFKQgcmu+ZTQ6OECLlFfpPmcl40xwH9936kdrho2yu5S5hyXOO9i
+	 S6Om9zTbmsIs2XsKWVWvGu+/6Vjy17UAtkIFCun3acPIrs87hOisFvNOPWH0fhbYu1
+	 zKMRTQfj8vrJrnh7DqinCQMwjd3gllYDBvL+Apcldon34pm6tdH2ip5NFuS7xktKWb
+	 rMDbKB1vE8PcGww3IFram/6fqGj2Aixo/egio5cVUlnBKZZF9Y+sm4GDpvp2EAwZ95
+	 Fbq0z2DyMRZtAUBHU3UB6mP4LBMAlf32ypb9DUUh+qjcuA4pHQp9dIXfQ+pWqlW5ZY
+	 8nc6du6zCmQhw==
+Date: Tue, 9 Apr 2024 11:18:56 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net,
+	pabeni@redhat.com
+Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+Message-ID: <20240409081856.GC4195@unreal>
+References: <20240404132548.3229f6c8@kernel.org>
+ <660f22c56a0a2_442282088b@john.notmuch>
+ <20240404165000.47ce17e6@kernel.org>
+ <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
+ <20240404193817.500523aa@kernel.org>
+ <CAKgT0UdAz1mb48kFEngY5sCvHwYM2vYtEK81VceKj-xo6roFyA@mail.gmail.com>
+ <20240408061846.GA8764@unreal>
+ <CAKgT0UcE5cOKO4JgR-PBstP3e9r02+NyG3YrNQe8p2_25Xpf8g@mail.gmail.com>
+ <20240408184102.GA4195@unreal>
+ <CAKgT0UcLWEP5GOqFEDeyGFpJre+g2_AbmBOSXJsoXZuCprGH0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+In-Reply-To: <CAKgT0UcLWEP5GOqFEDeyGFpJre+g2_AbmBOSXJsoXZuCprGH0Q@mail.gmail.com>
 
-Add sysfs attribute for CXL 1.1 device link status to the cxl pci device.
+On Mon, Apr 08, 2024 at 01:43:28PM -0700, Alexander Duyck wrote:
+> On Mon, Apr 8, 2024 at 11:41 AM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > On Mon, Apr 08, 2024 at 08:26:33AM -0700, Alexander Duyck wrote:
+> > > On Sun, Apr 7, 2024 at 11:18 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > > >
+> > > > On Fri, Apr 05, 2024 at 08:41:11AM -0700, Alexander Duyck wrote:
+> > > > > On Thu, Apr 4, 2024 at 7:38 PM Jakub Kicinski <kuba@kernel.org> wrote:
+> > > >
+> > > > <...>
+> > > >
+> > > > > > > > Technical solution? Maybe if it's not a public device regression rules
+> > > > > > > > don't apply? Seems fairly reasonable.
+> > > > > > >
+> > > > > > > This is a hypothetical. This driver currently isn't changing anything
+> > > > > > > outside of itself. At this point the driver would only be build tested
+> > > > > > > by everyone else. They could just not include it in their Kconfig and
+> > > > > > > then out-of-sight, out-of-mind.
+> > > > > >
+> > > > > > Not changing does not mean not depending on existing behavior.
+> > > > > > Investigating and fixing properly even the hardest regressions in
+> > > > > > the stack is a bar that Meta can so easily clear. I don't understand
+> > > > > > why you are arguing.
+> > > > >
+> > > > > I wasn't saying the driver wouldn't be dependent on existing behavior.
+> > > > > I was saying that it was a hypothetical that Meta would be a "less
+> > > > > than cooperative user" and demand a revert.  It is also a hypothetical
+> > > > > that Linus wouldn't just propose a revert of the fbnic driver instead
+> > > > > of the API for the crime of being a "less than cooperative maintainer"
+> > > > > and  then give Meta the Nvidia treatment.
+> > > >
+> > > > It is very easy to be "less than cooperative maintainer" in netdev world.
+> > > > 1. Be vendor.
+> > > > 2. Propose ideas which are different.
+> > > > 3. Report for user-visible regression.
+> > > > 4. Ask for a fix from the patch author or demand a revert according to netdev rules/practice.
+> > > >
+> > > > And voilà, you are "less than cooperative maintainer".
+> > > >
+> > > > So in reality, the "hypothetical" is very close to the reality, unless
+> > > > Meta contribution will be treated as a special case.
+> > > >
+> > > > Thanks
+> > >
+> > > How many cases of that have we had in the past? I'm honestly curious
+> > > as I don't actually have any reference.
+> >
+> > And this is the problem, you don't have "any reference" and accurate
+> > knowledge what happened, but you are saying "less than cooperative
+> > maintainer".
 
-In CXL1.1, the link status of the device is included in the RCRB mapped to
-the memory mapped register area. Critically, that arrangement makes the link
-status and control registers invisible to existing PCI user tooling.
+<...>
 
-Export those registers via sysfs with the expectation that PCI user
-tooling will alternatively look for these sysfs files when attempting to
-access to these CXL 1.1 endpoints registers.
+> Any more info on this? Without context it is hard to say one way or the other.
 
-Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
----
- drivers/cxl/pci.c | 74 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+<...>
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 2ff361e756d6..0ff15738b1ba 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -786,6 +786,79 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
- 	return 0;
- }
- 
-+static ssize_t rcd_link_cap_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct device *parent = dev->parent;
-+	struct pci_dev *parent_pdev = to_pci_dev(parent);
-+
-+	port = cxl_pci_find_port(parent_pdev, &dport);
-+	if (!port)
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkcap);
-+}
-+static DEVICE_ATTR_RO(rcd_link_cap);
-+
-+static ssize_t rcd_link_ctrl_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct device *parent = dev->parent;
-+	struct pci_dev *parent_pdev = to_pci_dev(parent);
-+
-+	port = cxl_pci_find_port(parent_pdev, &dport);
-+	if (!port)
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkctrl);
-+}
-+static DEVICE_ATTR_RO(rcd_link_ctrl);
-+
-+static ssize_t rcd_link_status_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port;
-+	struct cxl_dport *dport;
-+	struct device *parent = dev->parent;
-+	struct pci_dev *parent_pdev = to_pci_dev(parent);
-+
-+	port = cxl_pci_find_port(parent_pdev, &dport);
-+	if (!port)
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%x\n", dport->rcrb.rcd_lnkstatus);
-+}
-+static DEVICE_ATTR_RO(rcd_link_status);
-+
-+static struct attribute *cxl_rcd_attrs[] = {
-+		&dev_attr_rcd_link_cap.attr,
-+		&dev_attr_rcd_link_ctrl.attr,
-+		&dev_attr_rcd_link_status.attr,
-+		NULL
-+};
-+
-+static umode_t cxl_rcd_visible(struct kobject *kobj,
-+					  struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (is_cxl_restricted(pdev))
-+		return a->mode;
-+
-+	return 0;
-+}
-+
-+static struct attribute_group cxl_rcd_group = {
-+		.attrs = cxl_rcd_attrs,
-+		.is_visible = cxl_rcd_visible,
-+};
-+__ATTRIBUTE_GROUPS(cxl_rcd);
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-@@ -969,6 +1042,7 @@ static struct pci_driver cxl_pci_driver = {
- 	.id_table		= cxl_mem_pci_tbl,
- 	.probe			= cxl_pci_probe,
- 	.err_handler		= &cxl_error_handlers,
-+	.dev_groups		= cxl_rcd_groups,
- 	.driver	= {
- 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
- 	},
--- 
-2.44.0
+> I didn't say you couldn't. Without context I cannot say if it was
+> deserved or not. 
 
+Florian gave links to the context, so I'll skip this part.
+
+In this thread, Jakub tried to revive the discussion about it.
+https://lore.kernel.org/netdev/20240326133412.47cf6d99@kernel.org/
+
+<...>
+
+> The point I was trying to make is that if you are the only owner of
+> something, and not willing to work with the community as a maintainer
+
+Like Jakub, I don't understand why you are talking about regressions in
+the driver, while you brought the label of "less than cooperative maintainer"
+and asked for "then give Meta the Nvidia treatment".
+
+I don't want to get into the discussion about if this driver should be
+accepted or not.
+
+I'm just asking to stop label people and companies based on descriptions
+from other people, but rely on facts.
+
+Thanks
 
