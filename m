@@ -1,210 +1,254 @@
-Return-Path: <linux-pci+bounces-5943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3807189DD11
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 16:43:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EE4B89DD1B
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 16:44:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB5C31F23FBA
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 14:43:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8EFE1F21752
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 14:44:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A484312FF99;
-	Tue,  9 Apr 2024 14:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AD9912F5AF;
+	Tue,  9 Apr 2024 14:43:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="BW0d5GQ+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5r2XKN5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9224D85652
-	for <linux-pci@vger.kernel.org>; Tue,  9 Apr 2024 14:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF8B50275;
+	Tue,  9 Apr 2024 14:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712673676; cv=none; b=jBopwECNWGogah/KtciMXa7JeApumpIoFrMrJkxOMZDMGGLx3vxnjM49vEcI70aDWVji9vi0+aia/abmGnPosCiFRzrzI7teC7Uw4EtxxbEA1+A3CxKNrbLvKEiwL1VbVUvnro+JcJGF+xjKo0PGpXN1JiaXI3kNIbhXYV6mVOI=
+	t=1712673829; cv=none; b=Ahi66O1z7rGMZKGHgVRpwp+ARPkO2dEY1IZ14ibMnJzJA65jcAEXCZgKugyDC6jSCINaZs0qUwhCuJHp9oMYHEbQ+SOip1W3vM4/NC+7uIOY9W8T5LsdFezQOYR6ErT2jH63WiKTWf85BnuZxwxpgcHyTXNWiARNZX6SZvbM6bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712673676; c=relaxed/simple;
-	bh=crZHliPSczw38fmT73x6jx2VXnB+ZuL4FAMKSW97us4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TXamHNwVyChv9bc8uOf2Ytx6RqIz64CMSwdLBqBWwpE6YS+wCTNL0HAryZgw5tUiAjvtCsbd89bOyRlb1TpzITwYOUoE3jhm2R8kIC1E52lcwHSRtLqmxQ8lMHNR669WKLEmVXn8qV5+pFb428AY5Bz3u+nF6U5L6dGZC8eRee4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=BW0d5GQ+; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e136cbcecso7950475a12.3
-        for <linux-pci@vger.kernel.org>; Tue, 09 Apr 2024 07:41:14 -0700 (PDT)
+	s=arc-20240116; t=1712673829; c=relaxed/simple;
+	bh=n9tQsLOyEcQf8vlY4RV5gPxuCqiukaMIvcLOHq/0ouo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ClZJDBTVOq4ae9LcU5zCgg7HjIMCD4NvMFUqqmyKwSfn8Ri6QGgWJKESPR8yRZIfXrtDEi+GvxViVMMZu0yONScupNl+I3fi0zulvrckQTTE5KWUy9Jo//i7Ja9zrQsT8BfS5tURihGAACEQyh0zhXv0bdF+jievhXdwfNjG3rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X5r2XKN5; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d48d75ab70so76793381fa.0;
+        Tue, 09 Apr 2024 07:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1712673673; x=1713278473; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3YM0svOKwvw0vj20M9m4hQD/WKGUTfYpCfTIb0VEe5Y=;
-        b=BW0d5GQ+cU+MHypDX38aEB1KvT3DIEHGUjnTWt7aZ/E2LH/74iVHO9mCippxcz2kIg
-         FjD6o/0JF6Z4V0VoqcTvRLnAiTDe1EIcWDGKclRPGweelma3BZZqSs44ELZrPzBGWOGO
-         /SaRdnR0FAqqZjwOMhWDobWzN++7uD0jEk2uiEZ7JZSVapOKuI6SFZMoegHBNqnAX7J+
-         CjXrdE2aivd8fb3ttmWRz8ku3/CRoU9Iba1ZG57ZcECoC+MKCps8GbpbldCakuymIBuD
-         ij0HowEEIORpDxkIQYB6DSsfZZwcnsSD6YUGbzNyn1Z9eD7NLQ1uBsCvOJTIrH6+b4RA
-         l2Ng==
+        d=gmail.com; s=20230601; t=1712673825; x=1713278625; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vpG1egRcf2YviGdFgIY5mkdL66YS2IFlhDf2Y7Ur080=;
+        b=X5r2XKN5OrY7z58By9Ah11+rTWOD373VUYO3xu9H7KAaQVMEQ3/EaqHRx+O9aSeeEa
+         TUWPNC/1La4uUlcUPPkDFQiW0+aBwWsvTzuGI6ftEU5OrEp8CQr3plzn+qG7r2hkcElk
+         io22uMY/lWZBvmTvUOMFJt3E13SNzfLOoIKS9qIgxxZC3KRTDOfqFMJT5zHGphC9gaM7
+         VVzUZippW6n/uIbe7QkaLP6QNWvEWsS9dKXCqg1zq5ctAmIOcHmwIHrJpq/stv5EQ6BF
+         Woi/hmAwsTgnbNdglQLiSk/WiCMR1tzZIIq+BtOOPBTlMqbWNqUEVMQ9ss4X23C9KlJc
+         LSKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712673673; x=1713278473;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3YM0svOKwvw0vj20M9m4hQD/WKGUTfYpCfTIb0VEe5Y=;
-        b=QPzaaooaeSsFrtFQfA6y65hFtYH5BJaOkNNk64jmD7tuFJtXk8LFGlBoTQWpyLtdUD
-         X4fHggOzxeBJLggU3NivUb0YqAqgd65lpsv/6ec3a7Rhq4P1YI68qn3+IFVWi6nZprwj
-         AnyQqzNsj9P+4jimtu/2JSQb3xffMFNSbjedUkcb9upfrtLYkCcnpB9lUfRLl4dye748
-         RJGAdtPSDDRkQZ6ma4ym92lmubh1r53Ch+G21s96dEqjt5lZpFliagPZ2TFfEtnqnb2z
-         IWA+Br23SlHBGhtqz/E+1aSpWPLzw1wwtj3TV6nWF3y17Aboq/6mS6y0uaEQCiYMGOVn
-         i8BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUphRaS3jXGAnuS6E9jipINhfCTTZVi83v3HFFkZqNeISTQM0Pkhw+zIrRCbG5SnoVl5WAb6ohJx6gAGRHiQexEXLnTG3/nQDpy
-X-Gm-Message-State: AOJu0YxqvvLPirH6k1GJOHr0Lr7HcJ5cjX5/+N748c+WR9ytkAlm3t0u
-	w0GmjnMq2Opr9OpLjbQ3+qhPcC2XJzAWB0EflPnIsmhG1f6+UVEVZp6bypTS070=
-X-Google-Smtp-Source: AGHT+IE8BN7L+U9byp33eLZHsIGbXcOcBnUDnv+w8oAvonuY0OxyonFU4AewVbRCx1e8iaeM4hOIoQ==
-X-Received: by 2002:a50:c358:0:b0:56e:6d9:7bd6 with SMTP id q24-20020a50c358000000b0056e06d97bd6mr11113651edb.34.1712673672424;
-        Tue, 09 Apr 2024 07:41:12 -0700 (PDT)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id bc23-20020a056402205700b0056e064a6d2dsm5321689edb.2.2024.04.09.07.41.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 07:41:11 -0700 (PDT)
-Date: Tue, 9 Apr 2024 16:41:10 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: John Fastabend <john.fastabend@gmail.com>,
-	Alexander Duyck <alexander.duyck@gmail.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
-Message-ID: <ZhVThhwFSV0HgQ0B@nanopsycho>
-References: <20240405122646.GA166551@nvidia.com>
- <CAKgT0UeBCBfeq5TxTjND6G_S=CWYZsArxQxVb-2paK_smfcn2w@mail.gmail.com>
- <20240405151703.GF5383@nvidia.com>
- <CAKgT0UeK=KdCJN3BX7+Lvy1vC2hXvucpj5CPs6A0F7ekx59qeg@mail.gmail.com>
- <ZhPaIjlGKe4qcfh_@nanopsycho>
- <CAKgT0UfcK8cr8UPUBmqSCxyLDpEZ60tf1YwTAxoMVFyR1wwdsQ@mail.gmail.com>
- <ZhQgmrH-QGu6HP-k@nanopsycho>
- <66142a4b402d5_2cb7208ec@john.notmuch>
- <ZhUgH9_beWrKbwwg@nanopsycho>
- <9dd78c52-868e-4955-aba2-36bbaf3e0d88@intel.com>
+        d=1e100.net; s=20230601; t=1712673825; x=1713278625;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vpG1egRcf2YviGdFgIY5mkdL66YS2IFlhDf2Y7Ur080=;
+        b=vR8H090SHIGj66DCVmhRUa5WvLqSDWPi2uIYkYpJGd6dMJ3fQi63iEZQa6W0DwyuZh
+         jrzWUzZJ4H+e6mu+3n5MzdhYPiGp4k8JnbZpQ4qXFyMGmBNTtR3xbq6ttxxCx9x57OvV
+         ma3m/0B5sFopBh9zhl0xTk2T49G5DtKpVZduY3Ag04dRkUynXaK6nBVu8MFnNZOMg/2t
+         5JGBX2oYhPvP3qUF99sGt5lxTb7TSpFdFhuQ3RS4/jdVDp/5sxsyby+/gZ09S9yY/oAv
+         di5hs4PQkAJeDPscK8hrZ73MPq4fPNu83h0pffdRSyNO+r4WRcCIyC6RV8Y9rJL/VMRp
+         4DWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBqEYRQIGVaTswOwcqkIOn8PIVIbA4Xe+FlDVsYisqccRs48YMV8n5PjkCKo4v8401IAHBk7ujbSUQTDdCyfQVow9Z+sLR4jAiiOQIrDpHz34+VHNxTBsQ+J9bb7atlgQT
+X-Gm-Message-State: AOJu0YzAiIk+wNW7wHAE4AcRRqHjhVu+IqsTM0cfxpnKLuEuORcgombj
+	/V/dEZI2BMPi5FRviAceeF2sOvx8jQdv+RTpSxlPgjNkHAnGq0cowpihhORmw4UIusKs1KRN1fT
+	wZgmxVu/B9V2X9+UzCHre7kA+GE7nw5z2PqQ=
+X-Google-Smtp-Source: AGHT+IHAFEzl3DHWl/i8AnFdUQy7LRVeJy1u8HmFgYCgdAHJry0I0hwIjypKFOFGIc5R9alUx9dUkkDlb7S/VI47gFQ=
+X-Received: by 2002:a2e:bc11:0:b0:2d7:b4f:e3fe with SMTP id
+ b17-20020a2ebc11000000b002d70b4fe3femr22628ljf.34.1712673825015; Tue, 09 Apr
+ 2024 07:43:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9dd78c52-868e-4955-aba2-36bbaf3e0d88@intel.com>
+References: <20240404132548.3229f6c8@kernel.org> <660f22c56a0a2_442282088b@john.notmuch>
+ <20240404165000.47ce17e6@kernel.org> <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
+ <20240404193817.500523aa@kernel.org> <CAKgT0UdAz1mb48kFEngY5sCvHwYM2vYtEK81VceKj-xo6roFyA@mail.gmail.com>
+ <20240408061846.GA8764@unreal> <CAKgT0UcE5cOKO4JgR-PBstP3e9r02+NyG3YrNQe8p2_25Xpf8g@mail.gmail.com>
+ <20240408184102.GA4195@unreal> <CAKgT0UcLWEP5GOqFEDeyGFpJre+g2_AbmBOSXJsoXZuCprGH0Q@mail.gmail.com>
+ <20240409081856.GC4195@unreal>
+In-Reply-To: <20240409081856.GC4195@unreal>
+From: Alexander Duyck <alexander.duyck@gmail.com>
+Date: Tue, 9 Apr 2024 07:43:07 -0700
+Message-ID: <CAKgT0UewAZSqU6JF4-cPf7hZM41n_QMuiF_K8SY8hyoROQLgfQ@mail.gmail.com>
+Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+To: Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net, 
+	pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tue, Apr 09, 2024 at 03:11:21PM CEST, aleksander.lobakin@intel.com wrote:
->From: Jiri Pirko <jiri@resnulli.us>
->Date: Tue, 9 Apr 2024 13:01:51 +0200
+On Tue, Apr 9, 2024 at 1:19=E2=80=AFAM Leon Romanovsky <leon@kernel.org> wr=
+ote:
 >
->> Mon, Apr 08, 2024 at 07:32:59PM CEST, john.fastabend@gmail.com wrote:
->>> Jiri Pirko wrote:
->>>> Mon, Apr 08, 2024 at 05:46:35PM CEST, alexander.duyck@gmail.com wrote:
->>>>> On Mon, Apr 8, 2024 at 4:51 AM Jiri Pirko <jiri@resnulli.us> wrote:
->>>>>>
->>>>>> Fri, Apr 05, 2024 at 08:38:25PM CEST, alexander.duyck@gmail.com wrote:
->>>>>>> On Fri, Apr 5, 2024 at 8:17 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->>>>>>>>
->>>>>>>> On Fri, Apr 05, 2024 at 07:24:32AM -0700, Alexander Duyck wrote:
->>>>>>>>>> Alex already indicated new features are coming, changes to the core
->>>>>>>>>> code will be proposed. How should those be evaluated? Hypothetically
->>>>>>>>>> should fbnic be allowed to be the first implementation of something
->>>>>>>>>> invasive like Mina's DMABUF work? Google published an open userspace
->>>>>>>>>> for NCCL that people can (in theory at least) actually run. Meta would
->>>>>>>>>> not be able to do that. I would say that clearly crosses the line and
->>>>>>>>>> should not be accepted.
->>>>>>>>>
->>>>>>>>> Why not? Just because we are not commercially selling it doesn't mean
->>>>>>>>> we couldn't look at other solutions such as QEMU. If we were to
->>>>>>>>> provide a github repo with an emulation of the NIC would that be
->>>>>>>>> enough to satisfy the "commercial" requirement?
->>>>>>>>
->>>>>>>> My test is not "commercial", it is enabling open source ecosystem vs
->>>>>>>> benefiting only proprietary software.
->>>>>>>
->>>>>>> Sorry, that was where this started where Jiri was stating that we had
->>>>>>> to be selling this.
->>>>>>
->>>>>> For the record, I never wrote that. Not sure why you repeat this over
->>>>>> this thread.
->>>>>
->>>>> Because you seem to be implying that the Meta NIC driver shouldn't be
->>>>> included simply since it isn't going to be available outside of Meta.
+> On Mon, Apr 08, 2024 at 01:43:28PM -0700, Alexander Duyck wrote:
+> > On Mon, Apr 8, 2024 at 11:41=E2=80=AFAM Leon Romanovsky <leon@kernel.or=
+g> wrote:
+> > >
+> > > On Mon, Apr 08, 2024 at 08:26:33AM -0700, Alexander Duyck wrote:
+> > > > On Sun, Apr 7, 2024 at 11:18=E2=80=AFPM Leon Romanovsky <leon@kerne=
+l.org> wrote:
+> > > > >
+> > > > > On Fri, Apr 05, 2024 at 08:41:11AM -0700, Alexander Duyck wrote:
+> > > > > > On Thu, Apr 4, 2024 at 7:38=E2=80=AFPM Jakub Kicinski <kuba@ker=
+nel.org> wrote:
+> > > > >
+> > > > > <...>
+> > > > >
+> > > > > > > > > Technical solution? Maybe if it's not a public device reg=
+ression rules
+> > > > > > > > > don't apply? Seems fairly reasonable.
+> > > > > > > >
+> > > > > > > > This is a hypothetical. This driver currently isn't changin=
+g anything
+> > > > > > > > outside of itself. At this point the driver would only be b=
+uild tested
+> > > > > > > > by everyone else. They could just not include it in their K=
+config and
+> > > > > > > > then out-of-sight, out-of-mind.
+> > > > > > >
+> > > > > > > Not changing does not mean not depending on existing behavior=
+.
+> > > > > > > Investigating and fixing properly even the hardest regression=
+s in
+> > > > > > > the stack is a bar that Meta can so easily clear. I don't und=
+erstand
+> > > > > > > why you are arguing.
+> > > > > >
+> > > > > > I wasn't saying the driver wouldn't be dependent on existing be=
+havior.
+> > > > > > I was saying that it was a hypothetical that Meta would be a "l=
+ess
+> > > > > > than cooperative user" and demand a revert.  It is also a hypot=
+hetical
+> > > > > > that Linus wouldn't just propose a revert of the fbnic driver i=
+nstead
+> > > > > > of the API for the crime of being a "less than cooperative main=
+tainer"
+> > > > > > and  then give Meta the Nvidia treatment.
+> > > > >
+> > > > > It is very easy to be "less than cooperative maintainer" in netde=
+v world.
+> > > > > 1. Be vendor.
+> > > > > 2. Propose ideas which are different.
+> > > > > 3. Report for user-visible regression.
+> > > > > 4. Ask for a fix from the patch author or demand a revert accordi=
+ng to netdev rules/practice.
+> > > > >
+> > > > > And voil=C3=A0, you are "less than cooperative maintainer".
+> > > > >
+> > > > > So in reality, the "hypothetical" is very close to the reality, u=
+nless
+> > > > > Meta contribution will be treated as a special case.
+> > > > >
+> > > > > Thanks
+> > > >
+> > > > How many cases of that have we had in the past? I'm honestly curiou=
+s
+> > > > as I don't actually have any reference.
+> > >
+> > > And this is the problem, you don't have "any reference" and accurate
+> > > knowledge what happened, but you are saying "less than cooperative
+> > > maintainer".
 >
->BTW idpf is also not something you can go and buy in a store, but it's
->here in the kernel. Anyway, see below.
+> <...>
+>
+> > Any more info on this? Without context it is hard to say one way or the=
+ other.
+>
+> <...>
+>
+> > I didn't say you couldn't. Without context I cannot say if it was
+> > deserved or not.
+>
+> Florian gave links to the context, so I'll skip this part.
+>
+> In this thread, Jakub tried to revive the discussion about it.
+> https://lore.kernel.org/netdev/20240326133412.47cf6d99@kernel.org/
+>
+> <...>
 
-IDK, why so many people in this thread are so focused on "buying" nic.
-IDPF device is something I assume one may see on a VM hosted in some
-cloud, isn't it? If yes, it is completely legit to have it in. Do I miss
-something?
+I see. So this is what you were referencing. Arguably I can see both
+sides of the issue. Ideally what should have been presented would have
+been the root cause of why the diff was breaking things and then it
+could have been fixed. However instead what was presented was
+essentially a bisect with a request to revert.
+
+Ultimately Eric accepted the revert since there was an issue that
+needed to be fixed. However I can't tell what went on in terms of
+trying to get to the root cause as that was taken offline for
+discussion so I can't say what role Mellanox played in either good or
+bad other than at least performing the bisect.
+
+Ultimately I think this kind of comes down to the hobbyist versus
+commercial interests issue that I brought up earlier. The hobbyist
+side should at least be curious about what about the Vagrant
+implementation was not RFC compliant which the changes supposedly
+were, thus the interest in getting a root cause. However that said it
+is broken and needs to be fixed so curiosity be damned, we cannot
+break userspace or not interop with other TCP implementations.
+
+> > The point I was trying to make is that if you are the only owner of
+> > something, and not willing to work with the community as a maintainer
+>
+> Like Jakub, I don't understand why you are talking about regressions in
+> the driver, while you brought the label of "less than cooperative maintai=
+ner"
+> and asked for "then give Meta the Nvidia treatment".
+
+Because I have been trying to keep the  whole discussion about the
+fbnic driver that is presented in this patch set. When I was referring
+to a "less than cooperative maintainer" it was in response to the
+hypothetical about what if Meta started refusing to work with the
+community after this was accepted, and the "Nvidia treatment" I was
+referring was the graphics side about 10 years ago[1] as the question
+was about somebody running to Linus to complain that their proprietary
+hardware got broken by a kernel change. The general idea being if we
+are a proprietary NIC with ourselves as the only customer Linus would
+be more likely to give Meta a similar message.
 
 
+> I don't want to get into the discussion about if this driver should be
+> accepted or not.
 >
->>>>> The fact is Meta employs a number of kernel developers and as a result
->>>>> of that there will be a number of kernel developers that will have
->>>>> access to this NIC and likely do development on systems containing it.
->
->[...]
->
->>> Vendors would happily spin up a NIC if a DC with scale like this
->>> would pay for it. They just don't advertise it in patch 0/X,
->>> "adding device for cloud provider foo".
->>>
->>> There is no difference here. We gain developers, we gain insights,
->>> learnings and Linux and OSS drivers are running on another big
->>> DC. They improve things and find bugs they upstream them its a win.
->>>
->>> The opposite is also true if we exclude a driver/NIC HW that is
->>> running on major DCs we lose a lot of insight, experience, value.
->> 
->> Could you please describe in details and examples what exactly is we
->> are about to loose? I don't see it.
->
->As long as driver A introduces new features / improvements / API /
->whatever to the core kernel, we benefit from this no matter whether I'm
->actually able to run this driver on my system.
->
->Some drivers even give us benefit by that they are of good quality (I
->don't speak for this driver, just some hypothetical) and/or have
->interesting design / code / API / etc. choices. The drivers I work on
->did gain a lot just from that I was reading new commits / lore threads
->and look at changes in other drivers.
->
->I saw enough situations when driver A started using/doing something the
->way it wasn't ever done anywhere before, and then more and more drivers
->stated doing the same thing and at the end it became sorta standard.
+> I'm just asking to stop label people and companies based on descriptions
+> from other people, but rely on facts.
 
-So bottom line is, the unused driver *may* introduce some features and
-*may* provide as an example of how to do things for other people.
-Is this really that beneficial for the community that it overweights
-the obvious cons (not going to repeat them)?
+Sorry, it wasn't meant to be any sort of attack on Nvidia/Mellanox.
+The Nvidia I was referencing was the graphics side which had a bad
+reputation with the community long before Mellanox got involved.
 
-Like with any other patch/set we merge in, we always look at the cons
-and pros. I'm honestly surprised that so many people here
-want to make exception for Meta's internal toy project.
+> Thanks
 
+Thank you. I understand now that you and Jason were just trying to
+warn me about what the community will and won't accept. Like I
+mentioned before I had just misconstrued Jason's comments as backing
+Jiri initially in this. In my mind I was prepared for the
+Nvidia/Mellanox folks dog piling me so I was just prepared for
+attacks.
 
->
->I didn't read this patchset and thus can't say if it will bring us good
->immediately or some time later, but I believe there's no reason to
->reject the driver only because you can't buy a board for it in your
->gadget store next door.
+Just for the record this will be the third NIC driver I have added to
+the kernel following igbvf and fm10k, and years maintaining some of
+the other Intel network drivers. So I am well aware of the
+expectations of a maintainer. I might be a bit rusty due to a couple
+years of being focused on this project and not being able to post as
+much upstream, but as the expression goes "This isn't my first rodeo".
 
-Again with "buying", uff.
+- Alex
 
-
->
->[...]
->
->Thanks,
->Olek
+[1]: https://arstechnica.com/information-technology/2012/06/linus-torvalds-=
+says-f-k-you-to-nvidia/
 
