@@ -1,91 +1,110 @@
-Return-Path: <linux-pci+bounces-5930-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5931-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6368789D9C4
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 15:06:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5ED6189D9E9
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 15:13:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9638B258AE
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 13:05:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13DAF28149D
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 13:13:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E95B512DDAC;
-	Tue,  9 Apr 2024 13:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2019812E1F0;
+	Tue,  9 Apr 2024 13:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4XU849l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DrfDtLtI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0C0129E7A;
-	Tue,  9 Apr 2024 13:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712667954; cv=none; b=dfqScjOioRIDwkdmso2Bo+nTKYZHALRJRGqqhV/3HhOM2ScdVQpse14FsjebFDgUwzxQU6IBtpAdU/JVfDAomMqkGw835pSjzCqT6Q0NMwXv9oOV1ZYTPWmHQqHE7hD6Uvrz3M3NLBWng7FatalmiZKzYtmeclQ9my1tCp6E9Xc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712667954; c=relaxed/simple;
-	bh=FO+ORzJiSilGxUMRAWWqR0U48P+F3I6inohuLoPPM4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SXwTX1nfr5gnpCfj6g11mKwL0hy1Ojgjs8lZMpR1h+DsjvEFiZbwUNju4+L8s3CkKbJ8gT6bUCwfuXsQt4h9Oi80wCyqpcrwLIiIeKp+zsAJmHredVacesPhqN4Crw+xhKde2mM1VGkwewo+l0WGOcpb4hsftioafC8Hn42BcaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K4XU849l; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a484f772e2so2531887a91.3;
-        Tue, 09 Apr 2024 06:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712667952; x=1713272752; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=hLrJ6jord7ioD87xPU4dXsplwp31JxzrQ+IqsL0p+OI=;
-        b=K4XU849lQE4KvYa9pxr2Ml0+cUvrETuW4O7QvIV0KwkVAVojkvLiuL6YDeeCe2dltl
-         xCoHb1u6Z1TE+w7OH1yXqN6PUXjdppMcsyyupQsl5N2YPlG3rXNyUV3BaL0/LgxCTFDm
-         e0F6F3uWNApm0EbTx411zOxrU4Xs5Tny+tEeN/mwgkREs3H4UkomgsqQI5679KPoZlQj
-         WEv3tNrDSNf+pkT0RE/Cgb8tTp6cmQC99Gudg1+creGiq1aOdW/aA6ILQ84pq8fPRSHS
-         V4PUxCsXFbyQCjIppvpgfhDbSDJ7/BujCtzqCErmUsQdbekU/X6BiSShACcKL1gHFS4h
-         KJMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712667952; x=1713272752;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hLrJ6jord7ioD87xPU4dXsplwp31JxzrQ+IqsL0p+OI=;
-        b=sVXjoYojTX5TIKzks+GpLhPIlhaOwK2lixQUDAstn5R4qbRppS1iQRhiGWHlI1jjda
-         BXRmeHECpQsGR5k2vYnG7sYHDMpq9JH+zffLhGHcUVFu+e31o3ziEFAv9By7iaOAThD/
-         BChqVlQZfCPnGJEFrmL1u5EYcqAB9WqGhRIF3NvwdNethJD1sS22plV6ynvpGyanxOyI
-         A27kfPbYc7wyYy4Fuu79eAiGUZ6jkyDd0Wd2WSCAB6Y8ZXcidSlrfpdNmm5s6i4JUkA5
-         F1i4QG1iTkW8dn+xSvK1pZlfAmhjfvuyeIkb54Juba7ZoxD5fSAX7YBoWgS3cb0H8xJj
-         Snuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkqyutKOUXDrzJ3QkOw40eVlM5lCoaSBHnhaIyEgq6fnAVAnGRLaLHo+m0LGB4CThsMtcFx94Y6ZR59CVllGyPZz2h0aTG/g4ZjipEAERiRg+lLdg/5mT3eTnz+lxTNFq9
-X-Gm-Message-State: AOJu0Yyh5iiNZd91j8YH6Y3Bv4ekZiVCkgY6qEyOXMZ62o9IXT0zCgtj
-	lEG7EjyjLuEiXPLkeE6Q+UzNA9NwABOXqWtdQrE5ScJw/sFdRBRl
-X-Google-Smtp-Source: AGHT+IGb2ne58Q5GkN6x7rPFJmdH/2KIXLfi/cS25KQKdoFx7yN48zpMpjUp1cdPUm5hmiqVcAkpHQ==
-X-Received: by 2002:a17:90b:617:b0:2a2:c6fa:233 with SMTP id gb23-20020a17090b061700b002a2c6fa0233mr11297664pjb.31.1712667952337;
-        Tue, 09 Apr 2024 06:05:52 -0700 (PDT)
-Received: from [10.230.29.214] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id p22-20020a17090a0e5600b002a584b59ca4sm946400pja.43.2024.04.09.06.05.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 06:05:51 -0700 (PDT)
-Message-ID: <49d7e1ba-0d07-43d2-a5e7-81f142152f8a@gmail.com>
-Date: Tue, 9 Apr 2024 06:05:47 -0700
-Precedence: bulk
-X-Mailing-List: linux-pci@vger.kernel.org
-List-Id: <linux-pci.vger.kernel.org>
-List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D5C7EF03;
+	Tue,  9 Apr 2024 13:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712668410; cv=fail; b=uGkbYSHYqXdJurjuQw3ulAZVzXDFzrI2iuqKDqAHlQ9ICDiMVL2T6lYddJBzQQuN/2Hy4WjCqTcIOGmvATUxDOnOqMGcugzGAFKneASU1PJahZXmnMMR+/6FdhpiPLJiCViSQ1RjoihzPEsAniBMwuSOu7lSKaw5L1hdSGMNIdI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712668410; c=relaxed/simple;
+	bh=gR53o5Ti/S49eEae+DIIrVWoJxzcfYJGJyVzrFwwzfc=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=r6ZUmp97kMMMsyG5MHyGyWK3jp6LDLTQDAphf+3vl0EM27tb3QHAy9CuMnqmGhlO7UiTlurD19aunCrwTG+YjZiBm0lwLihyMKguhtVI2MEbZGUSlRL9UEFmtWxL0xFnybRUNZ5XTaDwUs+Kh+/BRNxgZQ1x4PKf+yUGRUXPuXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DrfDtLtI; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712668408; x=1744204408;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=gR53o5Ti/S49eEae+DIIrVWoJxzcfYJGJyVzrFwwzfc=;
+  b=DrfDtLtImWAG6Iggpiy/tPI32kEILFdh17/mgfFvUOuJR2kgNYLmsGuM
+   xhXLKz4iZLlF68xmvRowXI8tvPQfyFH/YzLhYE8qBRJbQGA/5OS2StT1n
+   pl03THQMJU2Hfkhh8dbD4VimYODLtouzZU9Zt8iUgYHsD20XAiltOc23I
+   B8ajhSamOVONEn5Hlo4nNRk/fWOOcgoNCNsaFbE/WP6zIOjg8LuwrCttH
+   Ncnk8LhUJPz8rkl9CDm2zYf+G3ME052lDBE5tzHHz8NC8ryL8G1Bsiyvt
+   BqXDNzEcn9N8SvpdFvhIJnn9ecL0QYsQtRutBQNtx7ff4tZCH8uABUytT
+   g==;
+X-CSE-ConnectionGUID: aC4gG+7gRHKfKRhCbxVb0g==
+X-CSE-MsgGUID: VwOB8Vq6Tiqupq+Vq+uLCQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8554294"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="8554294"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 06:13:26 -0700
+X-CSE-ConnectionGUID: KBBDLJ+AQAyViIxfbYu6Iw==
+X-CSE-MsgGUID: hYks9dmxSD6stcTsGunFqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="51218025"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Apr 2024 06:13:26 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Apr 2024 06:13:25 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Apr 2024 06:13:25 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 9 Apr 2024 06:13:25 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 9 Apr 2024 06:13:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=azAYB6PGJn97bW+s4xkqUXRkrD8hOOilA52Y//q96t3M5li3xzc/tGWgAVKPQUUs3JMHgoQ8QwjuRT+iwpGfoNXhpzyZTWl/qsi0BUvT1YIjsPJTTUCRVuq4wtYoGw7noWCog0mkXapwvA+qqsXvy7JgLw6/d1VPSO525YPuW3j8KOPEM9lRweLEgVQ6XAGz01vnk/C6tTHcx/cv81qmsqZXimhfmqpPrFcndmiqKK1FCN09AyYXA4h8iekWx5FSrL8DIv4hLUNM9ZuoM+iQZR2M65yh9fE1hgfUNs+97c+W3FYF97AbfZPHgLcuhYwpvnuveV+6WtKWiTADb/BieQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q/ljh2oLCP2rkbS4qb9/+BweBHwDJ++ZEBcWBF9NTUk=;
+ b=Erqo7IqGfOidiEkK5RmKXs1550f4LKPXx03w8J/tBk8zlGYNsKk0r2uYHlE7KgYkbSS6pKFOif55IWFb5Zry4RCj/9DY6biYcGUprqwR+snAZWoEZ8QA851mNBjdea8Z4yIPYJ4JhvLRAbOXGtsQZdBRTthvN7bBG5UhsPvu1T1bqbe574ebVSZSy9pi4JRij2xoRPE60utTeBUrhiMT2CHA4+fULHdefzXbucES1HsLxqk6asEyR2zCeRnsh2mTQbOEad+H4ap3OShIAb5mMjWO0AqAOv/o5hKlZR/DqE6CYUdcmHzcNT/Nj+mflQ+0v25Esiwc/P5/tfU9nwIAPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by SN7PR11MB6798.namprd11.prod.outlook.com (2603:10b6:806:262::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.15; Tue, 9 Apr
+ 2024 13:13:23 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::654c:d66a:ec8e:45e9]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::654c:d66a:ec8e:45e9%6]) with mapi id 15.20.7452.019; Tue, 9 Apr 2024
+ 13:13:23 +0000
+Message-ID: <9dd78c52-868e-4955-aba2-36bbaf3e0d88@intel.com>
+Date: Tue, 9 Apr 2024 15:11:21 +0200
 User-Agent: Mozilla Thunderbird
 Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
  Platforms Host Network Interface
 To: Jiri Pirko <jiri@resnulli.us>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
- netdev@vger.kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
- Alexander Duyck <alexanderduyck@fb.com>, davem@davemloft.net,
- Christoph Hellwig <hch@lst.de>
+CC: John Fastabend <john.fastabend@gmail.com>, Alexander Duyck
+	<alexander.duyck@gmail.com>, Jason Gunthorpe <jgg@nvidia.com>, Paolo Abeni
+	<pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	<netdev@vger.kernel.org>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	Alexander Duyck <alexanderduyck@fb.com>, <davem@davemloft.net>, "Christoph
+ Hellwig" <hch@lst.de>
 References: <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
  <678f49b06a06d4f6b5d8ee37ad1f4de804c7751d.camel@redhat.com>
  <20240405122646.GA166551@nvidia.com>
@@ -94,53 +113,84 @@ References: <CAKgT0UcmE_cr2F0drUtUjd+RY-==s-Veu_kWLKw8yrds1ACgnw@mail.gmail.com>
  <CAKgT0UeK=KdCJN3BX7+Lvy1vC2hXvucpj5CPs6A0F7ekx59qeg@mail.gmail.com>
  <ZhPaIjlGKe4qcfh_@nanopsycho>
  <CAKgT0UfcK8cr8UPUBmqSCxyLDpEZ60tf1YwTAxoMVFyR1wwdsQ@mail.gmail.com>
- <ZhQgmrH-QGu6HP-k@nanopsycho>
- <ae67d1a6-8ca6-432e-8f1d-2e3e45cad848@gmail.com>
- <ZhUexUl-kD6F1huf@nanopsycho>
+ <ZhQgmrH-QGu6HP-k@nanopsycho> <66142a4b402d5_2cb7208ec@john.notmuch>
+ <ZhUgH9_beWrKbwwg@nanopsycho>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
 Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- HGuUuzv+GKZ6nsysJw==
-In-Reply-To: <ZhUexUl-kD6F1huf@nanopsycho>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <ZhUgH9_beWrKbwwg@nanopsycho>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ZRAP278CA0009.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:10::19) To DS0PR11MB8718.namprd11.prod.outlook.com
+ (2603:10b6:8:1b9::20)
+Precedence: bulk
+X-Mailing-List: linux-pci@vger.kernel.org
+List-Id: <linux-pci.vger.kernel.org>
+List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|SN7PR11MB6798:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tbRYVLghygth5ZuEqSCtSfgpQtVdzeBLHW+AgJ+oLeBR+MdI0HAGuLfucqwIgsDJXYN/HI89+HTlIv3tiXfndFo9rGkFHyoA1ApzLLHeDwv1kmFrJVHwbfpwIhNnBSerin8uKmyr7hcxEIKWad0DAoG+m9yEEqvwF2xLG7THJt4IknLSjTjEDY3QpW2BHFKTaMTnqgq+QjIYjM/6foZTNh+DqHOq5tJlOw8bNMnM1AhEfKOUTGh7nu8uX+wFSjZAKB4Ge3BF9mvSM39bIVrIvvrPmkaDv5VyevjwWHZHUL2xnzJxA3nt6S4Q8EpAB+CCiEO1RNqcpvX6haScr3wfYxqb4OPKHByScwp0ZTDKfJDXeAuFz/qKfYh6GRWApsLG9L1n3SrnPnikxumPDpNR9dSJAOv98UHAGXQoA0ooTCMDfOOU3NEWjk+hB5tP5HD8nlRynriBYNNFWsdLLbP7G0zBKSWMCaVOz8qRnYFqPtyFZkCl0+0xt8thAuFS3m2oovSoQ5kEjM+6F43clw7SmbznFBgEqAwQtRVGdUOCY3xPLanzqmWxXgS5TKc49/5WOEoWTSXBhUXqrFg8al8k+ZQBQJWJodMXHbNlwG4EcbI0yZe78HgxfYHu6PThzdT5Ok2BHrMfCLK2jucBupZPR7H6gceMtT5lKC9v4nBm/40=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L21aeDVkVVpLR1ZEZ1ZFbmZIOFVvUnNKblZGK2FDSkFCaFNoV2VsYVpOYzNJ?=
+ =?utf-8?B?VEV4TkFMWlZVelN3cWsrVHlFL0NLbjJSbUx2K1ZRS21MNlFJK3VSWHVvaXJ0?=
+ =?utf-8?B?QmVYTThqRlU1YW1XcmdkczU4MlRMR2Z6cE80ZW1HZEVTcWZUMThsTlREU1RR?=
+ =?utf-8?B?MVBTb1NLV214czBldDhlbXRDaFNRSnQwb3hNM0tvMURyNE5xNEp5VE53WHpJ?=
+ =?utf-8?B?cFRpZEU2YWpBSDlIWW5nUXJ1S0VTWFBRWXdxMkw3ejZzRXI3VDZGQ0ZBZllU?=
+ =?utf-8?B?NHhDMDJZelBOR2JkZ2QyU1JWblU0d0xoZHdLRE5STzVhYytUV2d3MVBmWDBZ?=
+ =?utf-8?B?SFhycWFaNFVkT3dJVUkvSjg2Z3dORjRLUGRqdXFyKzJON2g1NXRMME1qVXQz?=
+ =?utf-8?B?MWZYRDJGOG5iVG9NaEhSQ3BnVTVuQ1NVbGJOdk1URUJNMFREL1pZcGgxQjJz?=
+ =?utf-8?B?eHhFaUZTc2wrRTZZaDVKWkhFZWltckE5TXRJK1FIWGFEZjZvNmNFajZzVVZ0?=
+ =?utf-8?B?NTVWQXJ2ZSsxOU1ZYmR3WHArTzNIa3dzUklNMGxmMHRZNEk5NlQ1T3ExMEhh?=
+ =?utf-8?B?NDRZVDQ2VzJhcVdsT1dXbzFxamlKeVhLZEN3NWN1ODI4d01xaEMrK3lpRG5P?=
+ =?utf-8?B?Zkx5RjBRdEo1dy80SUFCU09EaUpzUG9JaHVNQ0sxLzN3b1Q0SWVBM1J3dHNk?=
+ =?utf-8?B?ZUpFWlYyQlZhM3A3SmVwOVBFYXFNYjJnUFFkcFpGSWZYalFSUFI5SC9yeXhW?=
+ =?utf-8?B?SkZ5NVE0cTU5SGdDSmt5YUt6WkpjaUdSR2Z5c1hERnVrTUVXbkNtWUIrb05K?=
+ =?utf-8?B?U2F2SE9yekxjVk5Ucnh0ZnJMdE1OL3BBemlQYW5iU1ZURlFOSzFHQUduN0FG?=
+ =?utf-8?B?VkNYUForZ3BXTUMvMlhWaWJjRnAxZ0VZTFhKME5DeUFNajkvNTFQR0lKR1hw?=
+ =?utf-8?B?UWhkVHRjOWdaUkZabXFFWVBlWDNvTm9oTkhtS01qYjBqS2tUeHlBUUdCMGJS?=
+ =?utf-8?B?ZlFhSjZYdHlvUllxTWFqQjhSUm5Wb2ptakw2dnNqS2ZVazFKWWRtbkpUamNk?=
+ =?utf-8?B?NzdOdVZrcUs0MzZPUWdXa2lyaiswYVoxRGhCSXBFQnZSMU1lTjNZT0J2Y2Qv?=
+ =?utf-8?B?SlUyWGZjM2s1NlJqMTQwZGxBMWcxYzZMdEQ5OWxiWlFybGJQWnpySk5sQ2pW?=
+ =?utf-8?B?NE5KTGgwZWVDNHVVZ3NPY3QzTHFlVVpONFI1OXA2WFl4dUhWTE9DMDExV2J5?=
+ =?utf-8?B?MFpTRGFka01PTVc4eG5BMGF3MGVpNmVBYWUzTkVDYi9vSm1GbkIweU5SbHRP?=
+ =?utf-8?B?ZVZiTENMQUV4YVU4SnhXcmF6cVlQZzBzL1IybVI5dmZzVy9OaDVDUXo4U2Z2?=
+ =?utf-8?B?aXVXbm5lMUVVajFtVFVTb0NFN0hzVElpMTVINDVDUVFUZ2FKRE1FNWJvME1E?=
+ =?utf-8?B?OS9lUUt3L1NRZXZUNEQ4eWV1b0xWSVFIdXMraEYxT2FtWnpGeEMrRTdGeUpX?=
+ =?utf-8?B?RnZldU1jKzd6K29xTDZmL2NMS1dpZ05pVGVXc1lkaFg3ajNuNUE3SDJqdjlY?=
+ =?utf-8?B?MHMyTDNPT21acmNFWCsyY09GWHRIdnNJM3UxREFmbW9HT2hjWDBSM0hFdjN3?=
+ =?utf-8?B?SHZCTG16WWNRbjk2eTdZZTU2VHMzQmVQNDhRQkI5STM4eGNqdnF1aHdNY1k0?=
+ =?utf-8?B?U0pZRHhYU3NITm0wY1Z3aSt2QURIelFRRmFkLytaTzk4eXo3RHRqcHdnWVpu?=
+ =?utf-8?B?eUp3RFRoOG9tOWUrYzRTWERDT3Q2SDF2KzBCVFRIOHlZT1IxeFJaZlhab3Zw?=
+ =?utf-8?B?UkNWeW4vdHlKUW05cjBCSEc5enJHQWpMUm1XV0RFKzU0NzMya3FXWlFOSlRY?=
+ =?utf-8?B?MkxKV3ZvaVpVdEdTQXg4dWYrdFpmc2JTK3p3R1REbHE3NmVvSmo4eDRQMHk5?=
+ =?utf-8?B?RElTOWREMjg3NmFXelEyQUsyQ2ZwSXU0TFU0dHQ5UzlUeFRXVmVXTURlSmFa?=
+ =?utf-8?B?eFpuUlBob1FhQUtNczJvM0x0Nm5nQ091SldDdk5ad3V5ek1Va3RNbjUyYktE?=
+ =?utf-8?B?MXloSkdqbk40WUhMS3IvVzIrLysrV2NVY1hJaVpwZXpDU2w4NThmeG5jVHBz?=
+ =?utf-8?B?VVo3aVIvS2VKY2l3SVV0am9LN1NDekNSWkV2VUJVd1lHTGdzWFE0REJSTnpK?=
+ =?utf-8?B?Qmc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c65e08a-6537-4ff5-d384-08dc5896d5b1
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 13:13:23.5506
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n5a5l6NBqKpDZH0VhsEw9CO1QSdy2rbbPe8XDd+u5tQyYBM0bDUAGDriEfgocQ5e5gce2vgY3Y6yDOk65K4XxEQt/+VDXF0fi1Bnib4k+KA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6798
+X-OriginatorOrg: intel.com
 
+From: Jiri Pirko <jiri@resnulli.us>
+Date: Tue, 9 Apr 2024 13:01:51 +0200
 
-
-On 4/9/2024 3:56 AM, Jiri Pirko wrote:
-> Mon, Apr 08, 2024 at 11:36:42PM CEST, f.fainelli@gmail.com wrote:
->> On 4/8/24 09:51, Jiri Pirko wrote:
+> Mon, Apr 08, 2024 at 07:32:59PM CEST, john.fastabend@gmail.com wrote:
+>> Jiri Pirko wrote:
 >>> Mon, Apr 08, 2024 at 05:46:35PM CEST, alexander.duyck@gmail.com wrote:
 >>>> On Mon, Apr 8, 2024 at 4:51 AM Jiri Pirko <jiri@resnulli.us> wrote:
 >>>>>
@@ -172,90 +222,51 @@ On 4/9/2024 3:56 AM, Jiri Pirko wrote:
 >>>>
 >>>> Because you seem to be implying that the Meta NIC driver shouldn't be
 >>>> included simply since it isn't going to be available outside of Meta.
+
+BTW idpf is also not something you can go and buy in a store, but it's
+here in the kernel. Anyway, see below.
+
 >>>> The fact is Meta employs a number of kernel developers and as a result
 >>>> of that there will be a number of kernel developers that will have
 >>>> access to this NIC and likely do development on systems containing it.
->>>> In addition simply due to the size of the datacenters that we will be
->>>> populating there is actually a strong likelihood that there will be
->>>> more instances of this NIC running on Linux than there are of some
->>>> other vendor devices that have been allowed to have drivers in the
->>>> kernel.
->>>
->>> So? The gain for community is still 0. No matter how many instances is
->>> private hw you privately have. Just have a private driver.
+
+[...]
+
+>> Vendors would happily spin up a NIC if a DC with scale like this
+>> would pay for it. They just don't advertise it in patch 0/X,
+>> "adding device for cloud provider foo".
 >>
->> I am amazed and not in a good way at how far this has gone, truly.
+>> There is no difference here. We gain developers, we gain insights,
+>> learnings and Linux and OSS drivers are running on another big
+>> DC. They improve things and find bugs they upstream them its a win.
 >>
->> This really is akin to saying that any non-zero driver count to maintain is a
->> burden on the community. Which is true, by definition, but if the goal was to
->> build something for no users, then clearly this is the wrong place to be in,
->> or too late. The systems with no users are the best to maintain, that is for
->> sure.
->>
->> If the practical concern is wen you make tree wide API change that fbnic
->> happens to use, and you have yet another driver (fbnic) to convert, so what?
->> Work with Alex ahead of time, get his driver to be modified, post the patch
->> series. Even if Alex happens to move on and stop being responsible and there
->> is no maintainer, so what? Give the driver a depreciation window for someone
->> to step in, rip it, end of story. Nothing new, so what has specifically
->> changed as of April 4th 2024 to oppose such strong rejection?
+>> The opposite is also true if we exclude a driver/NIC HW that is
+>> running on major DCs we lose a lot of insight, experience, value.
 > 
-> How you describe the flow of internal API change is totally distant from
-> reality. Really, like no part is correct:
-> 1) API change is responsibility of the person doing it. Imagine working
->     with 40 driver maintainers for every API change. I did my share of
->     API changes in the past, maintainer were only involved to be cced.
+> Could you please describe in details and examples what exactly is we
+> are about to loose? I don't see it.
 
-As a submitter you propose changes and silence is acknowledgement. If 
-one of your API changes broke someone's driver and they did not notify 
-you of the breakage during the review cycle, it falls on their shoulder 
-to fix it for themselves and they should not be holding back your work, 
-that would not be fair. If you know about the breakage, and there is 
-still no fix, that is an indication the driver is not actively used and 
-maintained.
+As long as driver A introduces new features / improvements / API /
+whatever to the core kernel, we benefit from this no matter whether I'm
+actually able to run this driver on my system.
 
-This also does not mean you have to do the entire API changes to a 
-driver you do not know about on your own. Nothing ever prevents you from 
-posting the patches as RFC and say: "here is how I would go about 
-changing your driver, please review and help me make corrections". If 
-the driver maintainers do not respond there is no reason their lack of 
-involvement should refrain your work, and so your proposed changes will 
-be merged eventually.
+Some drivers even give us benefit by that they are of good quality (I
+don't speak for this driver, just some hypothetical) and/or have
+interesting design / code / API / etc. choices. The drivers I work on
+did gain a lot just from that I was reading new commits / lore threads
+and look at changes in other drivers.
 
-Is not this the whole point of being a community and be able to delegate 
-and mitigate the risk of large scale changes?
+I saw enough situations when driver A started using/doing something the
+way it wasn't ever done anywhere before, and then more and more drivers
+stated doing the same thing and at the end it became sorta standard.
 
-> 2) To deprecate driver because the maintainer is not responsible. Can
->     you please show me one example when that happened in the past?
+I didn't read this patchset and thus can't say if it will bring us good
+immediately or some time later, but I believe there's no reason to
+reject the driver only because you can't buy a board for it in your
+gadget store next door.
 
-I cannot show you an example because we never had to go that far and I 
-did not say that this is an established practice, but that we *could* do 
-that if we ever reached that point.
+[...]
 
-> 
-> 
->>
->> Like it was said, there are tons of drivers in the Linux kernel that have a
->> single user, this one might have a few more than a single one, that should be
->> good enough.
-> 
-> This will have exactly 0. That is my point. Why to merge something
-> nobody will ever use?
-
-Even if Alex and his firmware colleague end up being the only two people 
-using this driver if the decision is to make it upstream because this is 
-the desired distribution and development model of the driver we should 
-respect that.
-
-And just to be clear, we should not be respecting that because Meta, or 
-Alex or anyone decided that they were doing the world a favor by working 
-in the open rather than being closed door, but simply because we cannot 
-*presume* about their intentions and the future.
-
-For drivers specifically, yes, there is a question of to which degree 
-can we scale horizontally, and I do not think there is ever going to be 
-an answer to that, as we will continue to see new drivers emerge, 
-possibly with few users, for some definition of few.
--- 
-Florian
+Thanks,
+Olek
 
