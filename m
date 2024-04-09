@@ -1,163 +1,214 @@
-Return-Path: <linux-pci+bounces-5976-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5977-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D64D789E4BB
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 23:06:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1E2F89E4EC
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 23:28:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62E961F23185
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 21:06:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94F7D283FDA
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Apr 2024 21:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1346F158864;
-	Tue,  9 Apr 2024 21:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31DA6158851;
+	Tue,  9 Apr 2024 21:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhYFTx5j"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bOSCJ9pM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700E28562A;
-	Tue,  9 Apr 2024 21:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B49B763F1;
+	Tue,  9 Apr 2024 21:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712696770; cv=none; b=iWLKJbZwvfiKRCxNtiCSzDNb0dhqY0eq3wZno4P3BhdVmJxcQHR2ppAo5yMAjWn+RUlocT8uY7Gnvj38qcKdDFo2onSF5UBXsxItyybsJQ2WFt70bRbk9z2CcWd1H31CRaCdv7hc27GjWWm8TDV4XKRhwKpIwQhgFJfNudOiUag=
+	t=1712698084; cv=none; b=EUOVPfakv03dHQIRBHpWjK4O1zwYeA3opnDuZcAY9M55PhPeKtIb3tLP8ssA2O+NHPD90fydTc82J8OQi7f02keVowvzJ3VvvzVwwd+z3pUPfnxL5EyBUFEJjt/441fVmYjKg7/BCk+SO9pCwW5fx9q/XrhCl1AzFRkUMNJJniU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712696770; c=relaxed/simple;
-	bh=6z1+RdCcqb/CBTYitm+BtQkT5A1/JzJsiQV8l07KZ6o=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=KpDLoyoU1/Nbu9lKI0NYw4rwYpPF5WKaCny3JPqQyD9alifAIR3NkGKcGFztcJkAr2KV8elt7rfKmTfD8InGCzdUvvPQRTQErgsz1ndlg4afvo/2hSaJohdK8ZBMkI9itKq4lW4rroLOu3r8G485b4hgbbLYTamDaN0VmzfApik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MhYFTx5j; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-78a2a97c296so351857385a.2;
-        Tue, 09 Apr 2024 14:06:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712696767; x=1713301567; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EiiaHNmJsReIJo5FVxsSThVW7lNMMSYq5RIKd+Z8MPg=;
-        b=MhYFTx5jt1432Xoh6tetjHeRrjkwOksZnlAOMYJac42OTDnclPnslRDsCL7iJaM652
-         a+wBtSpRykkBnL8xqA/k0jRjzGmEZYOBHLmrye1BTjjPUzR0wraKDjSz8PU+UyfGe7Xh
-         XfsILerENZvDrWnc5dRy5hW7uOSdjetZO8z0g0KdHy+NYmW/LzyenMtEXacwbAM8HYD0
-         lyBCnN68dBC5v+zHTbwY3NCIgbTlNpQWzC4TTMtXoeoa/libEc3Ly5ehXflhVcq5DibA
-         wQBuBQO1OVW6N4zbmqyuCP/420oqJ8xEyhlvsDlMGXgBjJYtQg8kqBu0DDcTHZ/1alPw
-         7yJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712696767; x=1713301567;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EiiaHNmJsReIJo5FVxsSThVW7lNMMSYq5RIKd+Z8MPg=;
-        b=LIaIKrHwRsPdtHZgVFVAEau8Gb3NbdN2EHuxkB0+QndmTwlfZnRrkUicqNk18G7an2
-         Hzz/XRQRluUuLBDAjF0Kd3bM1T2prn4FQ35sidLIIdPjTct/GNHWu8FTtJSuyEmK7U7f
-         Vxwxpp1Rn03OVtZXSLEbEH8roWh6dUA45BBoGbnbxNi2MZXWdKkHutEz2TsG4kqJ1WXv
-         Iv/hY1/bBtsBITfvqRnRlAtAMIF985ZW6PwjVYgA5HAZrCM/rlGrtGR2+Di0+XRf0VL1
-         NbMIjYit+JVYBJMyRcrn7hiBISO8t96Ep8aU0B647523hogAVoPdDA/Kg0mKO4O9Xl3m
-         Co2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWI3yM2u9+sSKKgxsPcABxA6gAiye9QtXcvV+7rpMUOVUf77T4S+ZIIjsFX+ZP8INrcZUqSl+sYh0+w6ySiDcEgDM/UYeydnJaXY+khnY3SmurMudxw7I2V6QmhSipMPYKW
-X-Gm-Message-State: AOJu0YyM/+GXLimvinN6RqPyyX2VyuEXYOgH0H/rgLkMk+jv5jMl+icj
-	YPLkkSbuBc1PB+GqV5c2cz3OTcm70U2jkdsKpvnPRuWQJi2hTdlX
-X-Google-Smtp-Source: AGHT+IGRCjM3Wztikucl9H4B8RXePYAYxBhfjiF2FaTYXzsdrz6I9+iPcOkSwkQYid4Jg9kxZ1aEcw==
-X-Received: by 2002:a05:620a:1113:b0:78d:74f8:a333 with SMTP id o19-20020a05620a111300b0078d74f8a333mr943344qkk.27.1712696767188;
-        Tue, 09 Apr 2024 14:06:07 -0700 (PDT)
-Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
-        by smtp.gmail.com with ESMTPSA id d7-20020a05620a166700b0078d671c943fsm2093400qko.45.2024.04.09.14.06.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 14:06:06 -0700 (PDT)
-Date: Tue, 09 Apr 2024 17:06:05 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>, 
- pabeni@redhat.com, 
- John Fastabend <john.fastabend@gmail.com>, 
- Alexander Lobakin <aleksander.lobakin@intel.com>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Andrew Lunn <andrew@lunn.ch>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- Edward Cree <ecree.xilinx@gmail.com>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>, 
- netdev@vger.kernel.org, 
- bhelgaas@google.com, 
- linux-pci@vger.kernel.org, 
- Alexander Duyck <alexanderduyck@fb.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Message-ID: <6615adbde1430_249cf52944@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240409135142.692ed5d9@kernel.org>
-References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
- <20240409135142.692ed5d9@kernel.org>
-Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
+	s=arc-20240116; t=1712698084; c=relaxed/simple;
+	bh=ZTrc2RdVV4v29qfNaF6SXOOfEwF/e27UDGshggT5dg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TDsmLwfRFufEd8GFsQeN7K2YJNwe5iq1Duhr6A7+jgzMADWs2QrDKr3C1aRirfVp6x3I8wdk4gMTwd77GULHdrOQWUcm3vHfKllttzfpcslTkPNI3Xxx1sgY/wkUXOtU5kwJXlyp66ybchFYSdBZdGFK7H44+IHL4iREIo4Z5iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bOSCJ9pM; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712698082; x=1744234082;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZTrc2RdVV4v29qfNaF6SXOOfEwF/e27UDGshggT5dg4=;
+  b=bOSCJ9pM55XJMlmwprlnsk7z5EN0shrdYaN6EZbbH9amVDc0VyUuZAaX
+   dm9fxk1FR4Up+dEfDMsUhUDb9fvjeSETNt0QgqCDQ4uk+4Q6Kxn0ofEoy
+   IEn6J2mfR/t82VesLIyMyUTo7hfeMK0sD5LtD1vlW7BXT+AgQrVSpdVoN
+   rejazDTFCud2CukJush76F97T0qr7Agl9gtBAvnJKVqFzLrGK3Jn4GS5h
+   KFGJ/7OMQ4gmYIHLJiytcFCfv5/ZFde4G3xCotEuw8WQRG5BSZ7B8cDy8
+   iQcgOebGljWb95OWw4dhF7hZjyDe5V++3PPrcFoAmiXP+yt1hhkK6OkTn
+   w==;
+X-CSE-ConnectionGUID: IBPrSfT+SgGxaFt1FzQzVw==
+X-CSE-MsgGUID: 912Mv8VFTgqNVp27mVSGNg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8214155"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="8214155"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 14:28:02 -0700
+X-CSE-ConnectionGUID: mnMiwWaQRx6EkmQmuUQ+dQ==
+X-CSE-MsgGUID: KN06rIUATZakk1Htx9OhJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20785006"
+Received: from osezer-mobl.amr.corp.intel.com (HELO [10.209.70.70]) ([10.209.70.70])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 14:28:01 -0700
+Message-ID: <162f9331-8e42-4a0d-b2f1-56bbb780a03b@linux.intel.com>
+Date: Tue, 9 Apr 2024 14:28:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] PCI/cxl: Move PCI CXL vendor Id to a common
+ location from CXL subsystem
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ bhelgaas@google.com, lukas@wunner.de, Bjorn Helgaas <helgaas@kernel.org>
+References: <20240409160256.94184-1-dave.jiang@intel.com>
+ <20240409160256.94184-2-dave.jiang@intel.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240409160256.94184-2-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Jakub Kicinski wrote:
-> On Wed, 03 Apr 2024 13:08:24 -0700 Alexander Duyck wrote:
-> > This patch set includes the necessary patches to enable basic Tx and Rx
-> > over the Meta Platforms Host Network Interface. To do this we introduce a
-> > new driver and driver and directories in the form of
-> > "drivers/net/ethernet/meta/fbnic".
-> 
-> Let me try to restate some takeaways and ask for further clarification
-> on the main question...
-> 
-> First, I think there's broad support for merging the driver itself.
-> 
-> IIUC there is also broad support to raise the expectations from
-> maintainers of drivers for private devices, specifically that they will:
->  - receive weaker "no regression" guarantees
->  - help with refactoring / adapting their drivers more actively
->  - not get upset when we delete those drivers if they stop participating
-> 
-> If you think that the drivers should be merged *without* setting these
-> expectations, please speak up.
-> 
-> Nobody picked me up on the suggestion to use the CI as a proactive
-> check whether the maintainer / owner is still paying attention, 
-> but okay :(
-> 
-> 
-> What is less clear to me is what do we do about uAPI / core changes.
-> Of those who touched on the subject - few people seem to be curious /
-> welcoming to any reasonable features coming out for private devices
-> (John, Olek, Florian)? Others are more cautious focusing on blast
-> radius and referring to the "two driver rule" (Daniel, Paolo)?
-> Whether that means outright ban on touching common code or uAPI
-> in ways which aren't exercised by commercial NICs, is unclear. 
-> Andrew and Ed did not address the question directly AFAICT.
-> 
-> Is my reading correct? Does anyone have an opinion on whether we should
-> try to dig more into this question prior to merging the driver, and
-> set some ground rules? Or proceed and learn by doing?
 
-Thanks for summarizing. That was my reading too
+On 4/9/24 9:01 AM, Dave Jiang wrote:
+> Move PCI_DVSEC_VENDOR_ID_CXL in CXL private code to PCI_VENDOR_ID_CXL in
+> pci_ids.h in order to be utilized in PCI subsystem.
+>
+> The response Bjorn received from the PCI SIG was "1E98h is not a VID in our
+> system, but 1E98 has already been reserved by CXL." He suggested "we should
+> add '#define PCI_VENDOR_ID_CXL 0x1e98' so that if we ever *do* see such an
+> assignment, we'll be more likely to flag it as an issue.
 
-Two distict questions
+Nit: Instead of including the comments as-it-is, I think it is better just state
+the conclusion.
 
-1. whether a standard driver is as admissible if the device is not
-   available on the open market.
+>
+> Link: https://lore.kernel.org/linux-cxl/20240402172323.GA1818777@bhelgaas/
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-2. whether new device features can be supported without at least
-   two available devices supporting it.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-FWIW, +1 for 1 from me. Any serious device that exists in quantity
-and is properly maintained should be in-tree.
+> ---
+>  drivers/cxl/core/pci.c  | 6 +++---
+>  drivers/cxl/core/regs.c | 2 +-
+>  drivers/cxl/cxlpci.h    | 1 -
+>  drivers/cxl/pci.c       | 2 +-
+>  drivers/perf/cxl_pmu.c  | 2 +-
+>  include/linux/pci_ids.h | 2 ++
+>  6 files changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 0df09bd79408..c496a9710d62 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -525,7 +525,7 @@ static int cxl_cdat_get_length(struct device *dev,
+>  	__le32 response[2];
+>  	int rc;
+>  
+> -	rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
+> +	rc = pci_doe(doe_mb, PCI_VENDOR_ID_CXL,
+>  		     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+>  		     &request, sizeof(request),
+>  		     &response, sizeof(response));
+> @@ -555,7 +555,7 @@ static int cxl_cdat_read_table(struct device *dev,
+>  		__le32 request = CDAT_DOE_REQ(entry_handle);
+>  		int rc;
+>  
+> -		rc = pci_doe(doe_mb, PCI_DVSEC_VENDOR_ID_CXL,
+> +		rc = pci_doe(doe_mb, PCI_VENDOR_ID_CXL,
+>  			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+>  			     &request, sizeof(request),
+>  			     rsp, sizeof(*rsp) + remaining);
+> @@ -640,7 +640,7 @@ void read_cdat_data(struct cxl_port *port)
+>  	if (!pdev)
+>  		return;
+>  
+> -	doe_mb = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> +	doe_mb = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_CXL,
+>  				      CXL_DOE_PROTOCOL_TABLE_ACCESS);
+>  	if (!doe_mb) {
+>  		dev_dbg(dev, "No CDAT mailbox\n");
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 372786f80955..da52fc9e234b 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -313,7 +313,7 @@ int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  		.resource = CXL_RESOURCE_NONE,
+>  	};
+>  
+> -	regloc = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> +	regloc = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+>  					   CXL_DVSEC_REG_LOCATOR);
+>  	if (!regloc)
+>  		return -ENXIO;
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 93992a1c8eec..4da07727ab9c 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -13,7 +13,6 @@
+>   * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
+>   */
+>  #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
+> -#define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
+>  
+>  /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+>  #define CXL_DVSEC_PCIE_DEVICE					0
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 2ff361e756d6..110478573296 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -817,7 +817,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	cxlds->rcd = is_cxl_restricted(pdev);
+>  	cxlds->serial = pci_get_dsn(pdev);
+>  	cxlds->cxl_dvsec = pci_find_dvsec_capability(
+> -		pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
+> +		pdev, PCI_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
+>  	if (!cxlds->cxl_dvsec)
+>  		dev_warn(&pdev->dev,
+>  			 "Device DVSEC not present, skip CXL.mem init\n");
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 308c9969642e..a1b742b1a735 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -345,7 +345,7 @@ static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
+>  
+>  /* For CXL spec defined events */
+>  #define CXL_PMU_EVENT_CXL_ATTR(_name, _gid, _msk)			\
+> -	CXL_PMU_EVENT_ATTR(_name, PCI_DVSEC_VENDOR_ID_CXL, _gid, _msk)
+> +	CXL_PMU_EVENT_ATTR(_name, PCI_VENDOR_ID_CXL, _gid, _msk)
+>  
+>  static struct attribute *cxl_pmu_event_attrs[] = {
+>  	CXL_PMU_EVENT_CXL_ATTR(clock_ticks,			CXL_PMU_GID_CLOCK_TICKS, BIT(0)),
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index a0c75e467df3..7dfbf6d96b3d 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2607,6 +2607,8 @@
+>  
+>  #define PCI_VENDOR_ID_ALIBABA		0x1ded
+>  
+> +#define PCI_VENDOR_ID_CXL		0x1e98
+> +
+>  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
+>  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
+>  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
 
-In terms of trusting Meta, it is less about karma, but an indication
-of these two requirements when the driver first appears. We would not
-want to merge vaporware drivers from unknown sources or university
-research projects.
-
-2 is out of scope for this series. But I would always want to hear
-about potential new features that an organization finds valuable
-enough to implement. Rather than a blanket rule against them.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 
