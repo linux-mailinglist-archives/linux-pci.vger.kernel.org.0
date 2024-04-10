@@ -1,106 +1,91 @@
-Return-Path: <linux-pci+bounces-6078-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6079-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAB068A00F6
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 22:01:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5EAB8A00FD
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 22:03:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4106DB24A84
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 20:01:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 558581F247CB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 20:03:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E07181305;
-	Wed, 10 Apr 2024 20:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F1818133A;
+	Wed, 10 Apr 2024 20:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oV1VEBNv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poKjChGY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E858E28FD;
-	Wed, 10 Apr 2024 20:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9DE18132B;
+	Wed, 10 Apr 2024 20:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712779310; cv=none; b=pC0exwqrIUsgSksO0KiJILeGopQzdpM6pFe5WvXF0wyXmCBl2stHnfmo8C4jYLdrFdIWCZCD3VAtzGp7u3ssCoajdJuM0eFe6/5uBuQKVHvfByEzJlo1QoEr2I/IrDer+NyZI+uYDkPoSLgWoTpyda7pp2NNT04z2kYqy/bnU2Y=
+	t=1712779426; cv=none; b=dylt2snQwyaUZwMV6HHy6eGYgoiDRRjO86OuOPs/PSpcuqJ2ux3zvUuDIA1kpVq3fqzKbfA9u8wvqt+ZHMvbbREbem6vKFwAQtGWdaxh0soLt0ELMh5jCsmvPvMDigreEO621MP2F+xUlf4BPImTQpmaYCAVjp8XjQKTjYaourM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712779310; c=relaxed/simple;
-	bh=PlbRE0plJ17S1yMslUNWUHHm+hpzWR0/FI1Ir+nDCQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AdfZZSkDcSF3S0z3ZebSeRbqtkqnvh2sGCqB9uA9hwBhjjmPOrq1kRgZYKkJVrqJ6pwX7U0Z53Za/XFeY2lyd1IdZ6FptiKcrljHuCY5KAa4a8/s7f838GVUpHSOFLffWeiXl8saeH41TKDgqlziZbiQeqQTg36B6QmNy4g2t3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=oV1VEBNv; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=q2uZY5anmk4dC1owI6zZObdhGeH9uP04+O3JfrU/Xj0=; b=oV
-	1VEBNv6294yFzGzmdGKQepe6PORtFJwA/jvD2kzq4IBDK9w8gGPIggPg+mgpp2vc0uL3+KA0nv9HO
-	sVJQigj73/6d3GlSXkkFW8sPSiqS1/yOcMPkFhiijEmEKKeo+S5Y7z2FSh5e4WTCwnfzjNf2uCwgn
-	JpnGlDcoQhHo0PM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rue8R-00ChWw-P6; Wed, 10 Apr 2024 22:01:31 +0200
-Date: Wed, 10 Apr 2024 22:01:31 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, pabeni@redhat.com,
-	John Fastabend <john.fastabend@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Edward Cree <ecree.xilinx@gmail.com>, netdev@vger.kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	Alexander Duyck <alexanderduyck@fb.com>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+	s=arc-20240116; t=1712779426; c=relaxed/simple;
+	bh=fgfKsB/fGZU/LvMCIubsUr0QwnLuGK+aV9HTKLwAaOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kDCcUxO7lJxKBfaIaG0AsmSSaoXy1URs0sGrpM817bbY1zMAg7YU8Z325sTwiy6KNke9hCCkxL4hwLSuUyXVBioMQ2mHAfVIhyhHwDoiGkdN3U8PrWIKO01bNNsgulpx/si/JfejxA7YOP9rqqtn6exHA9fPNuRD5cIeg4OCTt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poKjChGY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 684E8C433F1;
+	Wed, 10 Apr 2024 20:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712779425;
+	bh=fgfKsB/fGZU/LvMCIubsUr0QwnLuGK+aV9HTKLwAaOU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=poKjChGYwJW0JiDLoaI7U8L7osIThOIHfjN16wtAhAVHmFc42xl1jb+hGVOpPNSac
+	 Jw7LNmyo+6cRU9dPbfjtaKdgiwK9NGGWoQNO6NUz89eOXFgwTc7QVBKtwTbY3tzlgh
+	 Gsz26j250nE0XCuIXNUDuY0K20ncDUWqJhq8QLdcAEhA+TPDM8oPKBVOdvHwZhuJqX
+	 AGgpGly14f1FD4TECCoFmfaYCWYF+lH9B1WtC+MjK8yxpJH2UqYKUzV+1Ezkd4P1i9
+	 oHYO6HwgkOOdjgNVPCboUffNURvceco2AsJXCQJrz3lmioKpvuCkGLkSVFybbQIHHr
+	 deUPnKO3iZFfQ==
+Date: Wed, 10 Apr 2024 13:03:44 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jiri Pirko <jiri@resnulli.us>, pabeni@redhat.com, John Fastabend
+ <john.fastabend@gmail.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, Andrew Lunn <andrew@lunn.ch>, Daniel
+ Borkmann <daniel@iogearbox.net>, Edward Cree <ecree.xilinx@gmail.com>,
+ Alexander Duyck <alexander.duyck@gmail.com>, netdev@vger.kernel.org,
+ bhelgaas@google.com, linux-pci@vger.kernel.org, Alexander Duyck
+ <alexanderduyck@fb.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>
 Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
  Platforms Host Network Interface
-Message-ID: <c820695d-bda7-4452-a563-170700baf958@lunn.ch>
+Message-ID: <20240410130344.11292750@kernel.org>
+In-Reply-To: <d8433563-f867-428a-bd8a-9bfffe744da4@gmail.com>
 References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
- <20240409135142.692ed5d9@kernel.org>
- <44093329-f90e-41a6-a610-0f9dd88254eb@lunn.ch>
- <CAKgT0UcVnhgmXNU2FGcy6hbzUQZwNBZw0EKbFF3DsKDc8r452A@mail.gmail.com>
+	<20240409135142.692ed5d9@kernel.org>
+	<ZhZC1kKMCKRvgIhd@nanopsycho>
+	<20240410064611.553c22e9@kernel.org>
+	<ZhasUvIMdewdM3KI@nanopsycho>
+	<20240410103531.46437def@kernel.org>
+	<c0f643ee-2dee-428c-ac5f-2fd59b142c0e@gmail.com>
+	<20240410105619.3c19d189@kernel.org>
+	<d8433563-f867-428a-bd8a-9bfffe744da4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKgT0UcVnhgmXNU2FGcy6hbzUQZwNBZw0EKbFF3DsKDc8r452A@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 10, 2024 at 08:56:31AM -0700, Alexander Duyck wrote:
-> On Tue, Apr 9, 2024 at 4:42 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > What is less clear to me is what do we do about uAPI / core changes.
-> >
-> > I would differentiate between core change and core additions. If there
-> > is very limited firmware on this device, i assume Linux is managing
-> > the SFP cage, and to some extend the PCS. Extending the core to handle
-> > these at higher speeds than currently supported would be one such core
-> > addition. I've no problem with this. And i doubt it will be a single
-> > NIC using such additions for too long. It looks like ClearFog CX LX2
-> > could make use of such extensions as well, and there are probably
-> > other boards and devices, maybe the Zynq 7000?
-> 
-> The driver on this device doesn't have full access over the PHY.
-> Basically we control everything from the PCS north, and the firmware
-> controls everything from the PMA south as the physical connection is
-> MUXed between 4 slices. So this means the firmware also controls all
-> the I2C and the QSFP and EEPROM. The main reason for this is that
-> those blocks are shared resources between the slices, as such the
-> firmware acts as the arbitrator for 4 slices and the BMC.
+On Wed, 10 Apr 2024 11:00:35 -0700 Florian Fainelli wrote:
+> although I cannot really think about an "implied" metric that we could 
+> track, short of monitoring patches/bug reports coming from outside of 
+> the original driver authors/owners as an indication of how widely 
+> utilized a given driver is.
 
-Ah, shame. You took what is probably the least valuable intellectual
-property, and most shareable with the community and locked it up in
-firmware where nobody can use it.
+Not metric, just to clarify. I think the discussion started from 
+my email saying:
 
-You should probably stop saying there is not much firmware with this
-device, and that Linux controls it. It clearly does not...
+ - help with refactoring / adapting their drivers more actively
 
-	Andrew
+and that may be an empty promise if the person doing the refactoring
+does not know they could ask. It's not uncommon for a relative
+newcomer to redo some internal API. Not that it's usually a hard
+transformation.. Dunno, a bit hypothetical.
 
