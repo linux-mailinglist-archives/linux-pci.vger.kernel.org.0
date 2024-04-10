@@ -1,103 +1,94 @@
-Return-Path: <linux-pci+bounces-6098-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6099-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C1488A037C
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 00:37:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18F0B8A0388
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 00:45:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B659B22193
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 22:37:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 358CA288428
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 22:45:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46EEE79DF;
-	Wed, 10 Apr 2024 22:37:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD600175A4;
+	Wed, 10 Apr 2024 22:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XUV1hJ3x"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x2VUPn7B";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XHwcKB+F"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C407F;
-	Wed, 10 Apr 2024 22:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAB7C8DE;
+	Wed, 10 Apr 2024 22:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712788653; cv=none; b=oMXHV23XREROpXQEqa6gM9BMIGBB+GgOQdHWACKMpzXGG3zQImYUrWQMMeNxApHoNYedzEhP4spLbeppdOaHQrtCra+esBbcX68kkrUvHBqoJRi3+VJ+bf2KF+wptyYZatIg9dcHyOWKpNhNJzr19MjYngoy7m+S76GJo7G9QxY=
+	t=1712789112; cv=none; b=DR9F/FwZUv19I+hTM5+7YBTOgJ0OJ/LNeeFHHvKwTetapQ5NUSK5p+JSYeMMxyBDXtu0B5kn9SSCux576uoWisY805OphgOSCQM8xDUmd/EngN5M9/S5Rx44Jk7/Nk3jJE6xYMz6948Qq775fyW7jzLuKkIMiINCq/9kNJX0i64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712788653; c=relaxed/simple;
-	bh=rJd3I0lFxC/TyIkFxSTVQ+nTVKLHJ2m2+xlQZAXqST0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bxIrmHWZeyy2tY/0qWXBuxwiR74/iTu9lVSxWl/zYjyv4rkTapNhG/V9PoeUpJ4EZNjlMftpe+g3fL3WRwWXg8xVFC1gPwvt9GKUnB7ork8OOdxigl/u15EQeQBxpMbvaxg+bhqUZLppyTrAke7iUsWo7HUGpI8UM536GNwuzgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XUV1hJ3x; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=zUFTjk3Uz1sjAZCF89cY7ibFazq/lwzoV5czJsG613U=; b=XUV1hJ3xAeU9NZpY4WaspCHDiH
-	TcU+rk8t3HXnAavXpdF3M5vSZGcYFoP93BgyIuwdQlWP9T4RJb6L0fImTVE5H9qlUWzFi3HhT/MHd
-	Dc/6trPjdYii/s0ZkSrBBtTXYg5W2QD/Px3Gy0r2JvEzptj6zjbCTy/HB6Vb7BeJBsjU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rugZF-00Ci8j-KA; Thu, 11 Apr 2024 00:37:21 +0200
-Date: Thu, 11 Apr 2024 00:37:21 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, pabeni@redhat.com,
-	John Fastabend <john.fastabend@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Edward Cree <ecree.xilinx@gmail.com>, netdev@vger.kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	Alexander Duyck <alexanderduyck@fb.com>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
-Message-ID: <c437cf8e-57d5-44d3-a71d-c95ea84838fd@lunn.ch>
-References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
- <20240409135142.692ed5d9@kernel.org>
- <44093329-f90e-41a6-a610-0f9dd88254eb@lunn.ch>
- <CAKgT0UcVnhgmXNU2FGcy6hbzUQZwNBZw0EKbFF3DsKDc8r452A@mail.gmail.com>
- <c820695d-bda7-4452-a563-170700baf958@lunn.ch>
- <CAKgT0Uf4i_MN-Wkvpk29YevwsgFrQ3TeQ5-ogLrF-QyMSjtiug@mail.gmail.com>
+	s=arc-20240116; t=1712789112; c=relaxed/simple;
+	bh=WeZllxq7TttKSWb/B/xcRfnzOGFwGN/uRbD0A2tilJo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=c/r5FwMiT3pipPWfrTbQ2q4uT5UGVLesfoaiYlzKY9o7SJj2fsgZ+hcFBXBiYjBy4M/wuJF+RG/3YkNYtc/5dHRb6pEYKwvS7LXz6OrErjIU12dC7Gs/cZSAdmCMR7BXbIkPgY9XA0d5yDePr9NlyAuWkU5dqJdpDuHt4eGkWWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x2VUPn7B; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XHwcKB+F; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712789109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=73LrkXOaXiFL9Q356e61wUHtK1Ks48GRA3mlWdlLbVs=;
+	b=x2VUPn7BPO/ZPg9Pa3S+OrYrnms+v2nZgwRuq9JUk7yDkGtUDyph3q29SQhmYbtFQ+9bXh
+	qN03qDIE1DwOCSK/tcdfXRU6Di73hdHk4Sg7X5PtRO10m6srfh6iYpC2OmJSnnciSGn6tR
+	+MwW92Wo7yksogaJq6LA4d/55jEALi2qV/Tgvra+0RpXUXHvHo3UjlVi4GmqDib8AvxWh3
+	hKSH7tF0tWfx3W5ZhcEhQIRZHIxJ2wvkNA9CAA4z9UHSEhZJQOwmOqjxtFd94pzZ3B8GJd
+	Z31EGJPIpCte0So2Xu2JBMTejmnJjgEVwp/UwcKALmyh1UWA+5gVWge/Wamcbw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712789109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=73LrkXOaXiFL9Q356e61wUHtK1Ks48GRA3mlWdlLbVs=;
+	b=XHwcKB+FT/a82sWEvZhG0tMj9ZcsMjAaf3GCAeOU8rR8hQuSGJ1vb45oNC2QvxX4XGe78m
+	vmNC82VPdKduooCw==
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, Joerg
+ Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Cc: Kevin Tian <kevin.tian@intel.com>, Marc Zyngier <maz@kernel.org>,
+ Reinette Chatre <reinette.chatre@intel.com>, Jason Gunthorpe
+ <jgg@nvidia.com>, Alex Williamson <alex.williamson@redhat.com>, Dave Jiang
+ <dave.jiang@intel.com>, Megha Dey <megha.dey@intel.com>, Suravee
+ Suthikulpanit <suravee.suthikulpanit@amd.com>, Robin Murphy
+ <robin.murphy@arm.com>, David Woodhouse <dwmw2@infradead.org>, Lu Baolu
+ <baolu.lu@linux.intel.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 0/7] PCI/MSI: Remove IMS (Interrupt Message Store)
+ support for now
+In-Reply-To: <20240410221307.2162676-1-helgaas@kernel.org>
+References: <20240410221307.2162676-1-helgaas@kernel.org>
+Date: Thu, 11 Apr 2024 00:45:08 +0200
+Message-ID: <87wmp425xn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0Uf4i_MN-Wkvpk29YevwsgFrQ3TeQ5-ogLrF-QyMSjtiug@mail.gmail.com>
+Content-Type: text/plain
 
-> Well I was referring more to the data path level more than the phy
-> configuration. I suspect different people have different levels of
-> expectations on what minimal firmware is. With this hardware we at
-> least don't need to use firmware commands to enable or disable queues,
-> get the device stats, or update a MAC address.
-> 
-> When it comes to multi-host NICs I am not sure there are going to be
-> any solutions that don't have some level of firmware due to the fact
-> that the cable is physically shared with multiple slots.
+On Wed, Apr 10 2024 at 17:13, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> IMS (Interrupt Message Store) support appeared in v6.2, but there are no
+> users yet.
 
-This is something Russell King at least considered. I don't really
-know enough to know why its impossible for Linux to deal with multiple
-slots.
+Bah.
 
-> I am assuming we still want to do the PCS driver. So I will still see
-> what I can do to get that setup.
+> Remove it for now.  We can add it back when a user comes along.
+>
+> I propose to merge this via the PCI tree unless somebody else wants it.
 
-You should look at the API offered by drivers in drivers/net/pcs. It
-is designed to be used with drivers which actually drive the hardware,
-and use phylink. Who is responsible for configuring and looking at the
-results of auto negotiation? Who is responsible for putting the PCS
-into the correct mode depending on the SFP modules capabilities?
-Because you seemed to of split the PCS into two, and hidden some of it
-away, i don't know if it makes sense to try to shoehorn what is left
-into a Linux driver.
+Go wild!
 
-     Andrew
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
