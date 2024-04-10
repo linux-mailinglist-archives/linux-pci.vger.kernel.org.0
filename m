@@ -1,68 +1,100 @@
-Return-Path: <linux-pci+bounces-6084-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6085-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A615F8A01BC
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 23:10:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F2078A01F1
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 23:26:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C79228470D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 21:10:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1CAD9B24CCC
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 21:26:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A41AA1836D8;
-	Wed, 10 Apr 2024 21:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BCA21836E7;
+	Wed, 10 Apr 2024 21:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kq7zG0h5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7uw442U"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6350D15AAD6;
-	Wed, 10 Apr 2024 21:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32AE1836CE;
+	Wed, 10 Apr 2024 21:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712783407; cv=none; b=gAgOmrBUaMDifRh1wcZiA9f1ToqWr9kOIfxP/CC/aAsHbgMFvF23JFclFYle+wlG93nBcv3+bXWf+D2M02RJiAjFBzNdwoJbdmh8E1ZYcDKpG6RrKyFiR74jO6rJjN62KticPnMWZ8tMJSToWskt+0g7Ue6R4lg4ApPtGA7y/Tk=
+	t=1712784401; cv=none; b=AdoObEr7Di2ZtUF4ipPNja3TUCdUKDfndtH1GaRgAYCVQEQ2QflGuB6L3fN3YeK2LJVNJPekEneyncpLsRNEmblHp7LKdMS19gaB+3DyUlNznBhgmOSGapaWr2w6q7UDf5Rw2qlcZpywRlOByfAMkOAkqTeM2WyQDqYSKDOSuDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712783407; c=relaxed/simple;
-	bh=epqxiRJJT06ouxXsQ6dNk3Sxe1Z+04pN0RBFaN6a68g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a1vV/cKp86XsE+TJGaMGhCAhQEcaj59JFa4Xp33aNtWmwrT0D0zsvVuq9e/vU9ZKE0YutSYyoyCyf1E+uCY4kaMxM2CDVXZnfcxckqDtGgb1NJDPQx/7htFFX9l7UO8ynEQPxnHJxZgXcKOZzCtFxbhKjz/BQtICUcVY4YCTNB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kq7zG0h5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26899C433F1;
-	Wed, 10 Apr 2024 21:10:03 +0000 (UTC)
+	s=arc-20240116; t=1712784401; c=relaxed/simple;
+	bh=ZHY0Qb2p6hZj2F9UUpHFyF1+cCJBE7U8HaVGMIWgfJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=gSC5sLKRCxDYWJbmzE9UalWM1Zp8qkjhwaoUoMR0dVba0Axb001SaEuyt0SZGt7AywHsJsMyJjmbA8YXGjiZeBIxHzwZubESgLCcMVGSnQDZtBhwNzEIbMwFM3zZXEG1zdM4qHtjp1Q5iplJRPLCbg0o1lJVrDCvnpahd+OPvc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7uw442U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D5B8C433F1;
+	Wed, 10 Apr 2024 21:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712783407;
-	bh=epqxiRJJT06ouxXsQ6dNk3Sxe1Z+04pN0RBFaN6a68g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kq7zG0h5SrekrSqAIw+NC6D2j3BaZVhgpOgUGupokoJKCz/HQPs1FjTM9YwwSddb5
-	 3Lf/9jM6lYOXCaDYAEJKz6nOJaRNxrLdgjXk4KLULbnOkSbYPPAgmFjuc/+ubF3/Wt
-	 2tkB62Sfl43fSMYh1TsFufYeJE8pF8RFLEfCInX/FkEzajdkwrXY/4ocd9fdIynrbk
-	 ERYPKG7lYMb402h1QoFDUrswFeo3Z1NZ+1Vx4Nef3xRjot+Id3mXxPe/IS4xOwTQvg
-	 typpy3hFMCPinD6ZUiNAkUkjkqyk6LRQhGLDHnoIEUoX0Hlql4VWpK6cDJz0FMfBeo
-	 xkVxny7zNWdeQ==
-Date: Wed, 10 Apr 2024 23:10:01 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	s=k20201202; t=1712784400;
+	bh=ZHY0Qb2p6hZj2F9UUpHFyF1+cCJBE7U8HaVGMIWgfJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=X7uw442UbgIpqeMvt0lGFcXg86xEWI2esbZmYrlcuSZ0IHUAEfYztCnABCY3OWfcN
+	 qha3LHFaAPenRfxa13l39CP+7GGIX0nvuojS+bJEjDEo/05E+SEw4/981rCoRB7mZ8
+	 AiCC0TmbExTNmCkcQyOEEymnER7zgHtneM1Ex3ay5q4H0OOK9cRxPP9m9yKRxq/6Zo
+	 Kd9xqDj2EzKSRE0wcXWJAeACN6Slg9b5ZPc42hYpHHJ/9g/3XlaGWpH6fKTo1jFdGv
+	 wtWzLc4tD0iN1BOu/0zmhzyFLK8qGFJjMIMUEWb18MkFUt8L+lqhYbq+ugp0UKiIGb
+	 RxRImDtJqxM1w==
+Date: Wed, 10 Apr 2024 16:26:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Mark Kettenis <kettenis@openbsd.org>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhi@lists.linux.dev, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] PCI: qcom: Implement shutdown() callback to
- properly reset the endpoint devices
-Message-ID: <ZhcAKSJCQag6AX09@ryzen>
-References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
- <20240401-pci-epf-rework-v2-10-970dbe90b99d@linaro.org>
- <ZgvpnqdjQ39JMRiV@ryzen>
- <20240403133217.GK25309@thinkpad>
- <Zg22Dhi2c7U5oqoz@ryzen>
- <20240410105410.GC2903@thinkpad>
- <Zhanol2xi_E2Ypv3@ryzen>
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
+ child node reg
+Message-ID: <20240410212638.GA2159326@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,77 +103,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zhanol2xi_E2Ypv3@ryzen>
+In-Reply-To: <20240410181521.269431-2-krzysztof.kozlowski@linaro.org>
 
-On Wed, Apr 10, 2024 at 04:52:18PM +0200, Niklas Cassel wrote:
-> On Wed, Apr 10, 2024 at 04:24:10PM +0530, Manivannan Sadhasivam wrote:
-> > 
-> > Well, we could prevent the register access during PERST# assert time in the
-> > endpoint, but my worry is that we will end up with 2 version of the cleanup
-> > APIs. Lets take an example of dw_pcie_edma_remove() API which gets called
-> > during deinit and it touches some eDMA registers.
-> > 
-> > So should we introduce another API which just clears the sw data structure and
-> > not touching the registers? And this may be needed for other generic APIs as
-> > well.
+On Wed, Apr 10, 2024 at 08:15:19PM +0200, Krzysztof Kozlowski wrote:
+> MT7621 PCI host bridge has children which apparently are also PCI host
+> bridges, at least that's what the binding suggest.
+
+What does it even mean for a PCI host bridge to have a child that is
+also a PCI host bridge?
+
+Does this mean a driver binds to the "parent" host bridge, enumerates
+the PCI devices below it, and finds a "child" host bridge?
+
+> The children have
+> "reg" property, but do not explicitly define it.  Instead they rely on
+> pci-bus.yaml schema, but that one has "reg" without any constraints.
 > 
-> I agree that it will be hard to come up with an elegant solution to this
-> problem.
+> Define the "reg" for the children, so the binding will be more specific
+> and later will allow dropping reference to deprecated pci-bus.yaml
+> schema.
 > 
-> These endpoint controllers that cannot do register accesses to their own
-> controllers' DBI/register space without the RC providing a refclock are
-> really becoming a pain... and the design and complexity of the PCI endpoint
-> APIs is what suffers as a result.
+> Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> PERST could be asserted at any time.
-> So for your system to not crash/hang by accessing registers in the controller,
-> an EPF driver must be designed with great care to never do any register access
-> when it is not safe...
+> ---
 > 
-> Perhaps the the EPF core should set the state (i.e. init_complete = false,
-> even before calling the deinit callback in EPF driver, and perhaps even add
-> safe-guards against init_complete in some APIs, so that e.g. a set_bar() call
-> cannot trigger a crash because PERST# is asserted.. but even then, it could
-> still be asserted in the middle of set_bar()'s execution.)
+> Changes in v2:
+> 1. Add tags.
+> ---
+>  .../devicetree/bindings/pci/mediatek,mt7621-pcie.yaml          | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+> index e63e6458cea8..61d027239910 100644
+> --- a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+> @@ -36,6 +36,9 @@ patternProperties:
+>      $ref: /schemas/pci/pci-bus.yaml#
+>  
+>      properties:
+> +      reg:
+> +        maxItems: 1
+> +
+>        resets:
+>          maxItems: 1
+>  
+> -- 
+> 2.34.1
 > 
-> Looking at the databook, it looks like core_clk is derived from pipe_clk
-> output of the PHY. The PHY will either use external clock or internal clock.
-> 
-> 4.6.2 DBI Protocol Transactions
-> it looks like core_clk must be active to read/write the DBI.
-> 
-> I really wish those controllers could e.g. change the clock temporarily
-> using a mux, so that it could still perform DBI read/writes when there is
-> not external refclk... Something like pm_sel_aux_clk selecting to use the
-> aux clk instead of core_clk when in low power states.
-> But I don't know the hardware well enough to know if that is possible for
-> the DBI, so that might just be wishful thinking...
-
-
-Looking at the rock5b SBC (rockchip rk3588), the PHY refclk can either
-be taken from
--a PLL internally from the SoC.
-or
--an external clock on the SBC.
-
-There does not seem to be an option to get the refclk as an input from
-the PCIe slot. (The refclk can only be output to the PCIe slot.)
-
-So when running two rock5b SBC, you cannot use a common clock for the RC
-and the EP side, you have to use a separate reference clock scheme,
-either SRNS or SRIS.
-
-Since I assume that you use two qcom platforms of the same model
-(I remember that you wrote that you usually test with
-qcom,sdx55-pcie-ep somewhere.)
-Surely this board must be able to supply a reference clock?
-(How else does it send this clock to the EP side?)
-
-So... why can't you run in SRNS or SRIS mode, where the EP provides
-it's own clock?
-
-
-Kind regards,
-Niklas
 
