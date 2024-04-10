@@ -1,166 +1,154 @@
-Return-Path: <linux-pci+bounces-6038-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6039-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E432F89FC47
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 17:58:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB22989FC49
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 17:59:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 141D01C2171C
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 15:58:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 915021F249F3
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 15:59:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60EB16F266;
-	Wed, 10 Apr 2024 15:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C24D0176FB8;
+	Wed, 10 Apr 2024 15:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/4A8qiR"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HREO9ktn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE7516F264;
-	Wed, 10 Apr 2024 15:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29111171659;
+	Wed, 10 Apr 2024 15:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712764632; cv=none; b=QLjJ7CtuUeZhtIWbAYJ8Go4LccVoEeCe70SD5AFZcU5Id42il377hje8O5xCpv2Gt5XmKaL8h240uy247GtAkLCgYqfhA3GRGaE25kzjpYg33uJvXdbX8VLbTu6PkiE0EoTCuCBzakSdT8TvCPuJ9dHcVbzUR5Vx1LmOQWOtwog=
+	t=1712764679; cv=none; b=eghJnFG6YoV2w9xlyt/deV6Uw9Qqq9mwFWFLP7tcj0F/JXgXN+kvzMUVpkbiVllmjKUtXGbbAJgGPVQvmc5oxPtM+gVdH/VFeeRNPXy+7oDOKef6Zy/t5pkyS5x8H3OBykQ6xt5fOhF+TnlkER99OHOvXpw7wS55TDuwo0q24hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712764632; c=relaxed/simple;
-	bh=hm8DXi9iNej36872WOw7ngnCKk1oF/OYrdDzBrYyFug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kk7Z2ThDXK0Cd84crM08RerZ8ZM9NAdJeLZX+xkOHI3oonIqZVFvrRqCr1Ew1h/InFmhcEG/bNpFGGaSnf8kZcRYX83O58E5/YwIva8LafE30TcXWkwYCE+hqK88H3j3FTColenUJhsDIt/Y04JqszrhVG4ns/O94rpevC2Hc80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d/4A8qiR; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3462178fbf9so931037f8f.1;
-        Wed, 10 Apr 2024 08:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712764629; x=1713369429; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cDmE0PyuwVApDK9lCw057eM05JQxQyJj1I6OK2rpFdw=;
-        b=d/4A8qiR+QLAa2Upp7DKAELkPg5qY/2drLgYyD90TJfNsJJfp+VOLVzQVGKnj9Pyfb
-         R7+H9gfKp6lESqwV3GD2EEKnK7eT4uECXY1HNxDFghS3ebw/7nno4Zr4T4BEgSdrfxXs
-         HoWyeJPvxOPaiLonZZX50/XoQNkzVT4ehiqtluTU5QFlFgZSCmlqIt3WjgHybH2Pgu/c
-         jn6GRA2k6jr2lVrJLFAMhs7xpO/dx7r15bHGXogrwjYBs9hBf52gWK1FXruK0ZbAhdBt
-         HBwRwAKA4fnLCXj85oQ8Cf8sxxsWMsQrjaosW80NKB9cR4Pt8bSC78g+PYzfCiH7O0y9
-         2HKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712764629; x=1713369429;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cDmE0PyuwVApDK9lCw057eM05JQxQyJj1I6OK2rpFdw=;
-        b=UW6/np3/8SugyAXhJMZ6xNNn9530NitejDi/ikG+vNvMDreEMRTJhPDWkAKjUPdYiO
-         cQU7Qd+krnvXjfM6OmwFQU6/QkeC9iv/OV9zijJVHi/QlleF1LQGjVf6XhhmqdALPmO1
-         cVrAgZE8V4qfQUCS2MODjVxRYJvUOpgCLoyVK2HVRYsL5bULhBd2djLSnLA2lv+Qa7fs
-         M0WsIrD9R/Q13djOTkPxSKy1dcuj5aMJMnnr+19l9+Opv89VLQxFdK/M8WMpXfkFmxo0
-         lRuBa+AqSMOou6FyK9D58UXPM/CL9TTIL86kVtk1Ug7yCcWJc8Hc+vGID7QhTgSlB+iD
-         WZBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXf4d7l6ajL8o8H/qUVyj0dZrlPauHKPFhEJPtnAwcyaEoikaRqxyMHytvlHelZDYy+cQRNLPDZH3Z3MmdXGcxbYt5Zo58jdfc8Ti4x/ky4oEMfxF0XY4wN7FydxMFfgdje
-X-Gm-Message-State: AOJu0Yx28SofwoKYMfNQfgFcNZj3RAinohAGrjAkGlGqH8r9LN8kyi4S
-	SK2ocpdwKk32pqV4sKVDtHXGYtMirk86y1C7bYfUn/p3rBCLvQ8HGTiTlhzLr5OaFA/bNfprB01
-	dmYzP1cp9PlbQwmp736pGzd+jLZk=
-X-Google-Smtp-Source: AGHT+IH/oeulYx1XVv1Z3auyKq3gKDR6pMFcF5pyq6/MbW0ULuRjsr2OOK8nH1U47rlr5mjIvcmm+720erwXhJhggLo=
-X-Received: by 2002:a05:6000:18af:b0:343:734e:73d1 with SMTP id
- b15-20020a05600018af00b00343734e73d1mr4086237wri.37.1712764628554; Wed, 10
- Apr 2024 08:57:08 -0700 (PDT)
+	s=arc-20240116; t=1712764679; c=relaxed/simple;
+	bh=158o41P2FOBJVftCLhVbau3btyhldhHWhOVhDa5UebY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dvgCr5YI/S/8pZVDWNnKenfkTo7sRsNzDkwXw83+LNndmApW3dtg+B0hgYsxb1ZTdyEIma9DzeSPUmYWd8kb2Aoo+A0h98ozokCcqhgsn/LA6FrpfkZd28quheVYKJV1EVCD03v5CQEnXnSunqyi5VRqXlyuIpFOsTNuH0Zi05c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HREO9ktn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43AF0ClY000446;
+	Wed, 10 Apr 2024 15:57:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=5aUBuklUBGSU6oQ9ct3EHBYDelFvRczJm6cBGAEe6Gc=; b=HR
+	EO9ktnalsEAReLS3NbmAK7tHz6cgXKCg3PSIiktdljMVABHYLhLHbhDkghtaDotK
+	rmy4j29uhWo74jKA1RIiFZr06/oPdhwaqmbc1RymOY7SDK3zD7UvnDlZnjT9erXI
+	uRhU1ZDI7HhfzTTlPcsXcJdP8WeDTfjeZE0hFbDKj6OXC/qh2b7IfhcpzVgIBNvm
+	uR5J5yKxLpUZ2F855cjNT/ES6kPrlxDUZLQ78JEKGFvuCGLwW9dnJGrYv9S0ZXyD
+	jZJqk42M+t8p4vvJamPZvZk2c6XryMwmxRqnY4KFwYLxgUsvfAIK0W9CnOgUcI6W
+	Hrw0ljAA9NjMIQra4lFw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xdskjh8vg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 15:57:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43AFvQeM014775
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 15:57:26 GMT
+Received: from [10.110.37.144] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 10 Apr
+ 2024 08:57:25 -0700
+Message-ID: <c47bfa2d-42d9-4765-b6ea-c76a15fa994f@quicinc.com>
+Date: Wed, 10 Apr 2024 08:57:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
- <20240409135142.692ed5d9@kernel.org> <44093329-f90e-41a6-a610-0f9dd88254eb@lunn.ch>
-In-Reply-To: <44093329-f90e-41a6-a610-0f9dd88254eb@lunn.ch>
-From: Alexander Duyck <alexander.duyck@gmail.com>
-Date: Wed, 10 Apr 2024 08:56:31 -0700
-Message-ID: <CAKgT0UcVnhgmXNU2FGcy6hbzUQZwNBZw0EKbFF3DsKDc8r452A@mail.gmail.com>
-Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jakub Kicinski <kuba@kernel.org>, pabeni@redhat.com, 
-	John Fastabend <john.fastabend@gmail.com>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Edward Cree <ecree.xilinx@gmail.com>, netdev@vger.kernel.org, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 14/16] power: pwrseq: add a driver for the PMU module
+ on the QCom WCN chipsets
+Content-Language: en-US
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marcel Holtmann
+	<marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        "David
+ S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+        Bjorn
+ Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Catalin
+ Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Geert
+ Uytterhoeven <geert+renesas@glider.be>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Neil
+ Armstrong <neil.armstrong@linaro.org>,
+        Marek Szyprowski
+	<m.szyprowski@samsung.com>,
+        Alex Elder <elder@linaro.org>,
+        Srini Kandagatla
+	<srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Abel Vesa <abel.vesa@linaro.org>,
+        Manivannan
+ Sadhasivam <mani@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Dmitry
+ Baryshkov <dmitry.baryshkov@linaro.org>,
+        Amit Pundir
+	<amit.pundir@linaro.org>, Xilin Wu <wuxilin123@gmail.com>
+CC: <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>,
+        Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>
+References: <20240410124628.171783-1-brgl@bgdev.pl>
+ <20240410124628.171783-15-brgl@bgdev.pl>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240410124628.171783-15-brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: EfQl4YuLzXuLVNYx9EwXY-G2mjg3Jw8I
+X-Proofpoint-ORIG-GUID: EfQl4YuLzXuLVNYx9EwXY-G2mjg3Jw8I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ clxscore=1015 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 phishscore=0 impostorscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404100116
 
-On Tue, Apr 9, 2024 at 4:42=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > What is less clear to me is what do we do about uAPI / core changes.
->
-> I would differentiate between core change and core additions. If there
-> is very limited firmware on this device, i assume Linux is managing
-> the SFP cage, and to some extend the PCS. Extending the core to handle
-> these at higher speeds than currently supported would be one such core
-> addition. I've no problem with this. And i doubt it will be a single
-> NIC using such additions for too long. It looks like ClearFog CX LX2
-> could make use of such extensions as well, and there are probably
-> other boards and devices, maybe the Zynq 7000?
+On 4/10/2024 5:46 AM, Bartosz Golaszewski wrote:
+[...]
+> +if POWER_SEQUENCING
+> +
+> +config POWER_SEQUENCING_QCOM_WCN
+> +	tristate "Qualcomm WCN family PMU driver"
+> +	default m if ARCH_QCOM
+> +	help
+> +	  Say U here to enable the power sequencing driver for Qualcomm
 
-The driver on this device doesn't have full access over the PHY.
-Basically we control everything from the PCS north, and the firmware
-controls everything from the PMA south as the physical connection is
-MUXed between 4 slices. So this means the firmware also controls all
-the I2C and the QSFP and EEPROM. The main reason for this is that
-those blocks are shared resources between the slices, as such the
-firmware acts as the arbitrator for 4 slices and the BMC.
+did you mean: Say Y here?
 
-> > Is my reading correct? Does anyone have an opinion on whether we should
-> > try to dig more into this question prior to merging the driver, and
-> > set some ground rules? Or proceed and learn by doing?
->
-> I'm not too keen on keeping potentially shareable code in the driver
-> just because of UEFI. It has long been the norm that you should not
-> have wrappers so you can reuse code in different OSes. And UEFI is
-> just another OS. So i really would like to see a Linux I2C bus master
-> driver, a linux GPIO driver if appropriate, and using phylink, just as
-> i've pushed wangxun to do that, and to some extend nvidia with their
-> GPIO controller embedded in their NIC. The nice thing is, the
-> developers for wangxun has mostly solved all this for a PCIe device,
-> so their code can be copied.
+> +	  WCN Bluetooth/WLAN chipsets.
 
-Well when you are a one man driver development team sharing code
-definitely makes one's life much easier when you have to maintain
-multiple drivers. That said, I will see what I can do to comply with
-your requests while hopefully not increasing my maintenance burden too
-much. If nothing else I might just write myself a kernel compatibility
-shim in UEFI so I can reuse the code that way.
-
-The driver has no access to I2C or GPIO. The QSFP and EEPROM are
-shared so I don't have access directly from the driver and I will have
-to send any messages over the Host/FW mailbox to change any of that.
-
-> Do we need to set some ground rules? No. I can give similar feedback
-> as i gave the wangxun developers, if Linux subsystems are not used
-> appropriately.
->
->        Andrew
-
-Yeah, I kind of assume that will always be the case. Rules only mean
-something if they are enforced anway. Although having the rules
-documented does help in terms of making them known to all those
-involved.
-
-Anyway, I have already incorporated most of the feedback from the
-other maintainers. The two requests you had were a bit more difficult
-as they are in areas I am not entirely familiar with so I thought I
-would check in with you before I dive into them.
-
-One request I recall you having was to look at using the LED framework
-for the LEDs. I think I have enough info to chase that down and get it
-resolved for v2. However if you have some examples you would prefer I
-follow I can look into that.
-
-As far as the PCS block does it matter if I expose what the actual
-underlying IP is or isn't? My request for info on what I can disclose
-seems to be moving at the speed of bureaucracy so I don't know how
-long it would take if I were to try to write something truly generic.
-That said if I just put together something that referred to this as
-pcs-fbnic for now, would that work for making this acceptable for
-upstream?
 
