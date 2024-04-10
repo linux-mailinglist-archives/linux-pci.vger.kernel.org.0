@@ -1,824 +1,216 @@
-Return-Path: <linux-pci+bounces-5997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBDA489EAD4
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 08:27:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 758E489EBA6
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 09:16:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46D671F21AB5
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 06:27:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 273642833AB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 07:16:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66485286AC;
-	Wed, 10 Apr 2024 06:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E373C13CAB8;
+	Wed, 10 Apr 2024 07:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yGQlZAOU"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="xCtv8Qzs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa4.fujitsucc.c3s2.iphmx.com (esa4.fujitsucc.c3s2.iphmx.com [68.232.151.214])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC38A36B00
-	for <linux-pci@vger.kernel.org>; Wed, 10 Apr 2024 06:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712730430; cv=none; b=i08jplpBOYqzSyPVL2eF9Ny4RIN8PG5aV6yfOAE4vfl6yCAO93WyqCZX3XhWzUWzGxyTLzWiDejj80CHqP4qACKDIq1tJwKFtn7bekwHeqIFjiLD8kVLe9vWFopZIAo2uHHF2lJVjFNuGhHJnIdhASCJdrJyY5d9f5s7aNxP3E0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712730430; c=relaxed/simple;
-	bh=Ni15uz2l5DY+KdUCZuwj9YFBnqcFMYlLbHeP9dXBMqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rxi2zWkfoPBdnMD/ua1Zd5sF7sIkNdrRVMjHDpEq0fgZ7VDHUCd85fpVcYSAIFs/pcqgeHYlQ3RSESc1A+NebRM2xU8LqMs5JqUXSSQFQflldCMMoH1yABakBnhc2Gwf6BUbDMZeEYpeqAvMJ6eCj/j58jSVzHbDmvpTXrFR+WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yGQlZAOU; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-229d01e81f1so3553482fac.2
-        for <linux-pci@vger.kernel.org>; Tue, 09 Apr 2024 23:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712730426; x=1713335226; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ReNAPOpc6odhPlGW61oz0PGYOCGlC9lbSAT7h+TglyM=;
-        b=yGQlZAOU3tbX8EmBfBkOoDCfjUv+HNK2XZYwV9MnfQzO7jKP7Xc7PTZUQSMek/sii4
-         9jFuXWgLcHZk+O9dX2aQQZ+rxCX8G+a3LhsVz/3X32PDrP8zcc7Prehhwr+o/F8UWAdP
-         JzVrZf8DlGWXD9Xu+W8I2XKHihS51DQFt8/+ckguzi+cyri7r26imKvS3HokJmkVN4Eo
-         fQtfhpGoXB3GLiaI2vHPeAwa96RWxQ/XMLF/HLYILMU1pzRdS+J774320XYe7QulitWo
-         fegqPkvuRi9eB7V71JYJguAWVT/CSMPGCgZPu9zSPiwSoTwDoU+WDJ8E21sJfNvOdkCV
-         zesA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712730426; x=1713335226;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ReNAPOpc6odhPlGW61oz0PGYOCGlC9lbSAT7h+TglyM=;
-        b=OwXNApz+C+nZvmydntZubFvkFpSK/1ehDFdvzKzYg+zeXgKZgjkoK055C6mOffCGw+
-         FLkyPPRDKCjijtAom5H5QK+GU4KnOOX74fNfSfs4RECyaShD/eKF9SCjqylsdyo9rolG
-         bPkMr6qUXlX7QPm0srZwJT8+X5j91cKj9FoEWLHTPl64do3/UtgcsxcNnd9aYHGf4MVh
-         xpFhn7lZpAoUTWYHHU4CZmRY4HkFxu/g2JB+QkKr92CeVKYevwR63bLm9Y5i1slNDKam
-         ezRuyhRle37QzRCezCjcsi/0YQoQtpE7UjPOpqfb1UYqjKJPAbkmMTkSCkq/l1Mx0zP+
-         +/yw==
-X-Gm-Message-State: AOJu0Yw2TocLCyqfT5hZqlJJNLWnZLhKCcFCL44qujvgZKn5kfWAgMu/
-	HjRUwWTKDdBHYwt2Wsx30U10I+0XipXbZmJKOTZ60MYoc8naqDLf2V1u+27ytw==
-X-Google-Smtp-Source: AGHT+IHQck0i4AahUuA4p4/AnnQDJkZYi9sxgDRl4nbqStov7RdHQYIzN1LF7JmWrIx1r6Q6F2Tynw==
-X-Received: by 2002:a05:6870:c152:b0:22e:c343:aafe with SMTP id g18-20020a056870c15200b0022ec343aafemr1936356oad.57.1712730425741;
-        Tue, 09 Apr 2024 23:27:05 -0700 (PDT)
-Received: from thinkpad ([120.60.76.50])
-        by smtp.gmail.com with ESMTPSA id it24-20020a056a00459800b006ea81423c65sm9711529pfb.148.2024.04.09.23.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 23:27:04 -0700 (PDT)
-Date: Wed, 10 Apr 2024 11:56:56 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mayank Rana <quic_mrana@quicinc.com>
-Cc: linux-pci@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, andersson@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
-	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
-	quic_nitegupt@quicinc.com
-Subject: Re: [RFC PATCH 2/2] PCI: Add Qualcomm PCIe ECAM root complex driver
-Message-ID: <20240410062656.GA2903@thinkpad>
-References: <1712257884-23841-1-git-send-email-quic_mrana@quicinc.com>
- <1712257884-23841-3-git-send-email-quic_mrana@quicinc.com>
- <20240405052918.GA2953@thinkpad>
- <e2ff3031-bd71-4df7-a3a4-cec9c2339eaa@quicinc.com>
- <20240406041717.GD2678@thinkpad>
- <0b738556-0042-43ab-80f2-d78ed3b432f7@quicinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9FF13CABB;
+	Wed, 10 Apr 2024 07:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.151.214
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712733339; cv=fail; b=Plm+bimoVB3gW3gErmBLXqwb/rIzfyv8v5OSLdhFRubm0Kmt1VpwRApc7a3Itiv4BvQ6wm3TwlQUMDt1a7sz19+sQnMAxJ9P07zEBB3KhFkOpRfCszenebozE2hCOb18z87a52sEKkVuufIT0YdFVVcFaRMWm+c52zzw+3LVBQw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712733339; c=relaxed/simple;
+	bh=NCJOLKw1qzr5AqpkST9zKrjI4mQwmWAvhUZMqp3SAg0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=M49XE+1au6QM8CCuXm1tBjynzRk1xRLXg4bQl+OhIAo1My/F5HHP+9+tQqYMVOHB5Bql7Z48ian2cliyKmWVTVUY6ogSjXo0e+kFGGve7WfP5GmLpvxZQDlxR+vdd+Rcu5ZQBw7TFl5MawDKFXOrpMsD7UP6+KEDpbzaYfGw71U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=xCtv8Qzs; arc=fail smtp.client-ip=68.232.151.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1712733329; x=1744269329;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=NCJOLKw1qzr5AqpkST9zKrjI4mQwmWAvhUZMqp3SAg0=;
+  b=xCtv8Qzsv82Qpcl+jSEZv2kY0ottBNH7BMD003LoG/Ow37WWKGA2qMSp
+   t8hxALkM1mkWjMFytDi3grPC9u5F1TQ4KK62VeTbzuKsCFRSbsKtQo+hm
+   IAKdcVLYwFBu0M0yhX1en/o+4t+lwrrEiWz6iHnzJNEsWoJ8sZhDHAopF
+   50++faaAE4F0ZU9AILiWyqURNL1Ohxa52ZnzYrPyuQJndWm8Mt5z23IPt
+   I0q9nir+Fc6y71s6FxGFfshSR4HBtC2a1sCk7Iax8mcZ56qWWxId1J3kp
+   ZCUFlZvh0lNJS9z48fqzANWHNX8AT3Kq1Y9DOFljGtqoY+VJeDvwVcNyK
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="29433072"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708354800"; 
+   d="scan'208";a="29433072"
+Received: from mail-os0jpn01lp2105.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.105])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 16:14:06 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YGxvQbd2XEwqKoAFQFZaBkH6+axzbC6DitYZNp5Ro0BmRUffDoJZ67iC4O3H3mHdIsBEXfr/lxZFjK6SO/arMyMmN7TlUMrv2SKNgTCw7V6hzUkf9g7iFRkoYIzfyIOWch68+pqECLlXtqfTEnnbpzHtwTW6P5yfK/1J86Kj/kR+6nClomYEoNcuwUJY+NXq0BdhMyb6GuticG+cCw5z0/u5591QHfFStnAfbKp6C32o0Rwa2LoKTWbDkSf4deiAGPzpTQVXSzvgaq+LEsdKU2h53iutqhVYIZ46M69l63DCtE1jBNI1a9/ZR8d4DaukrgeZs9xFepI5wxfwmtzfiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NCJOLKw1qzr5AqpkST9zKrjI4mQwmWAvhUZMqp3SAg0=;
+ b=iQMcd259ZE/+z25Hp3VYBQHj1zI6CTVPhgTX6gVu7bQb52I0pWOB++pTaYFPJ/vMxnWTM+f3LgkbQ9QvWsSJoMHME/iJXeovtXoTzP3QfoptYzIUXCo8SrdrSEDocqTdnpxbfUcVInuOXhVLv66uIGWBRQ24ia85hxaf1j4a9aNci7a+j3ONGbl2DOvl66C86GRI6Olxphx3tFor412MBl+1IO4dL9pSFMWMNN5RnXngeucD6+qFMVKrN1KjtG2b8GFy8lfOPZdFoaqbJlvLptIlIx9LHeAP+4gpnw1/wEx3YQ+MyoHTl8u5bLtObsl3D40z85fOGrm3kwMKevoVrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com (2603:1096:604:141::5)
+ by TY3PR01MB9916.jpnprd01.prod.outlook.com (2603:1096:400:22a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Wed, 10 Apr
+ 2024 07:14:03 +0000
+Received: from OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::c012:6dff:e4f5:5e1c]) by OSAPR01MB7182.jpnprd01.prod.outlook.com
+ ([fe80::c012:6dff:e4f5:5e1c%5]) with mapi id 15.20.7409.042; Wed, 10 Apr 2024
+ 07:14:03 +0000
+From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
+To: 'Dave Jiang' <dave.jiang@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+CC: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "mj@ucw.cz"
+	<mj@ucw.cz>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Subject: RE: [PATCH v4 2/3] cxl/core/regs: Add rcd_regs initialization at
+ __rcrb_to_component()
+Thread-Topic: [PATCH v4 2/3] cxl/core/regs: Add rcd_regs initialization at
+ __rcrb_to_component()
+Thread-Index: AQHailA0Un0IiwjThEGYnV5alDa917FgUAoAgADHMoA=
+Date: Wed, 10 Apr 2024 07:14:03 +0000
+Message-ID:
+ <OSAPR01MB718246E0D06276B7F9C6F58CBA062@OSAPR01MB7182.jpnprd01.prod.outlook.com>
+References: <20240409073528.13214-1-kobayashi.da-06@fujitsu.com>
+ <20240409073528.13214-3-kobayashi.da-06@fujitsu.com>
+ <519bf934-840b-496d-9a5e-7b183c5be258@intel.com>
+In-Reply-To: <519bf934-840b-496d-9a5e-7b183c5be258@intel.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ =?utf-8?B?TVNJUF9MYWJlbF8xZTkyZWY3My0wYWQxLTQwYzUtYWQ1NS00NmRlMzM5Njgw?=
+ =?utf-8?B?MmZfQWN0aW9uSWQ9YzU2ZGI0NDItOTA3My00MWJiLWFhMjktMmFiNjVmOTE2?=
+ =?utf-8?B?Nzg4O01TSVBfTGFiZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFkNTUtNDZkZTMz?=
+ =?utf-8?B?OTY4MDJmX0NvbnRlbnRCaXRzPTA7TVNJUF9MYWJlbF8xZTkyZWY3My0wYWQx?=
+ =?utf-8?B?LTQwYzUtYWQ1NS00NmRlMzM5NjgwMmZfRW5hYmxlZD10cnVlO01TSVBfTGFi?=
+ =?utf-8?B?ZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFkNTUtNDZkZTMzOTY4MDJmX01ldGhv?=
+ =?utf-8?B?ZD1Qcml2aWxlZ2VkO01TSVBfTGFiZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFk?=
+ =?utf-8?B?NTUtNDZkZTMzOTY4MDJmX05hbWU9RlVKSVRTVS1QVUJMSUPigIs7TVNJUF9M?=
+ =?utf-8?B?YWJlbF8xZTkyZWY3My0wYWQxLTQwYzUtYWQ1NS00NmRlMzM5NjgwMmZfU2V0?=
+ =?utf-8?B?RGF0ZT0yMDI0LTA0LTEwVDA3OjEzOjEzWjtNU0lQX0xhYmVsXzFlOTJlZjcz?=
+ =?utf-8?B?LTBhZDEtNDBjNS1hZDU1LTQ2ZGUzMzk2ODAyZl9TaXRlSWQ9YTE5ZjEyMWQt?=
+ =?utf-8?Q?81e1-4858-a9d8-736e267fd4c7;?=
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSAPR01MB7182:EE_|TY3PR01MB9916:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ RcOYkNPlTyJX+XCbmjKuNIhVSbZEXtzhQx/6NMmg8uffvtRw33SzHS8B9/KbPuJEk83ThJ7L2YkKLdgap5lh7HkrGDc8dD7diSZFpIeaUnwQ1zFEqZQwIT0h8z/eGl3W+lo60Y31XmSzl88LXP0cnu8equsq6VojY87q50Q3CchFxpe9EnxhvyjdYRqY3GEolIgGLPzy/7tjBw1HSFkP2y0yR7p7gJydp8jZj0uKJ19W/c2XcH95dSu+tVZiLr9ymRl10Wc5rSvJPQ1FH4w1z9CfxyP7SDjjEY7NZ58urVY0zR4fyzUP/NVTDZTvRS5cRpvmGCI5VS8P/JzU5zsm56nk5H8Y6OmTYFV6KK/z1FqmTIUd/7MG1iOqcS1l6xS+/rw5YbOUBeWmd96M8HmDXCII4t6TS/o/cu1Y/8yQdn8Yw2Bn8QXJ61088PYZJGkr+OzJDSrPJdYHYksEmysyLhr0+HVb8cBJ+sUijSjUdd0t4+L1jdUGxVyOyM6A27+auPGFkBpBKwUCgFWKAWUCEtbH+bO5VW61GWrFlDEfDsndRXZPPl1kAxHuKbx/0W5rw/wblRq5Fwi6kwEXbmy2kiq1+4m56MhNA8jXCmBp91LYpuWfzwkV28dd0xlGjg6BanzKYlfi1ZRGH+E4hE8YSGWV5zylrWgq+/nPBSTlzrbGXo6PD+OwEbDSjs4m/CZD3fcipUnpZd+aaCVASDVvow==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB7182.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(1580799018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ZXlNOHh4bHh1NWQ5aGx2d2NYVnlZYTcrTytqUkl4dW5pZFRVemVQUjg4Um5x?=
+ =?utf-8?B?Wm84SFU5NXJDTU5vRzUrME5vT05udVlEemlEOXM0aEJzVmszeXBPWFhnV3NS?=
+ =?utf-8?B?T1VGd1UxWGZxUHlNSi9VTWpmeG5VTG1qMU1RWDEwSWlJa3lmTlI0a1VnR1oy?=
+ =?utf-8?B?YnJsWDJSWDAvQUt0bXlPUTl5dEE3eldpUENSY1pTMHh0RzRjZG1HVVA0VUY2?=
+ =?utf-8?B?a3RkRS9qcWpLQkpHYkE5eVk2SWdtSWtUdWxRR1RZd2J3RXJOTFRudjkwTEZa?=
+ =?utf-8?B?K2JmT0xnWS8yeWM0L1ArZ0hIOVF6QXZLanlPdzhXYXV1aWhMeXRzTWZkL09r?=
+ =?utf-8?B?MDR4MFVVNzJSVCtld3M3dXJEdFE0ekE4aWJ6MFlOVlFJQ0F1VzRlQlJkTVpQ?=
+ =?utf-8?B?VFRQRnR4bFVlYjNDdit1eDJlNU5tVEZZMWl6MDdpbU1vZGNRdkN0R28waUoy?=
+ =?utf-8?B?a29XMHFPcmh1d0xrSG5oYmdEWjhSZlI3QXdMWVRJaHRiakxkWVFrQTIycXJD?=
+ =?utf-8?B?Q013TFJaY0s5ODg3bVhHK1cxaUVKbmN1YkZmeUphbEVGK0xhb3ByUVUvSGZQ?=
+ =?utf-8?B?ZTUvZmlzZ1pkZXl6Kzh6TW4vbDdhQ3hrU0pxcUZsVHFyQ2dTaStGYlUySXhM?=
+ =?utf-8?B?ZHZOMUFmVFVjWklHZFNOekIxL0VhUTRwN0MrUEVyc1hHV2kvcE5sbG4wZnFE?=
+ =?utf-8?B?SEY4UEpKZktPZEhrVjd5dE9UK2lFbHEzQ1RhTVRNUEo5YzJuYkVRWVk2Y1Qz?=
+ =?utf-8?B?SW10M3hPS1gwbTFoc2Z3VURzUE5IcThZb2pFVGF6M1BrMGtDRjV5SWVpdGtJ?=
+ =?utf-8?B?RVo3aWhpeHIvK055bzFjVGhMbG1SaFhqRFpEdDRMTnRIUG1mTlJIU0ZCNEJW?=
+ =?utf-8?B?cythdWswWjZZbHVLdERENFFDN0ExUHVMdEdSRUlvVzNGaFdWTFF1U0lQSFIw?=
+ =?utf-8?B?VW5FTW1pd1hsa0k0R2NsNmY1NDhJaVhXOXJsYTZIRFFaWTlrYi9WOURtMDdC?=
+ =?utf-8?B?Wi8ra2I0SGl6RmRLSlphc09DWVZ5RElad3I3SWd0RzhwZm9LRk5HOCtab1pp?=
+ =?utf-8?B?V1NoWW9OVGp0NDRJSDZ1NkNHK25PMFlNNUQzVVQwYm5WazdyZUozSWhJMlM2?=
+ =?utf-8?B?U3hWZGRXaXMzamNzQkFaaGxtRktIc2NTN2lPQ3pmdjgxWDU3UXB0ZGZBSTNC?=
+ =?utf-8?B?dDNLaWhHaXdibXpTUUFpczJyMTk0NTA4RUJXZk5rUFRhSklNSTlrM0U2UGxW?=
+ =?utf-8?B?OVAzNUtLL3VyU2p3d1h0RGxHWU9DdUVKem1xNzNxUjMvYmRWd2E5SjJJTStO?=
+ =?utf-8?B?NmFtMm5OU2ZxNWFRbU9VUXJJWjZmclBHSzhxK2JuTURhTFpVTzk1aGNMYk0v?=
+ =?utf-8?B?VjhRYkU5MFExOHErZ2hnMjBNdENqblZGalRtMVRPTDBuZmZlUVVzaitzSGZI?=
+ =?utf-8?B?Z3ZFMlM2NlpJYUx6aUJpR0VNNFlTSUtzN0k3bUNmSHpFYWdqREJyVUd3Vkdr?=
+ =?utf-8?B?VUtaWmRRWnFsSzRBRzhtTWY3ZlFHbnFBNnlkN051ZzFOTDIzSlFWcWR0bWVs?=
+ =?utf-8?B?cjBCVXo4NnQrZlFrb3Bta0gzamNjMi9hT2tPUTdOZXF6ZFRwUWlQeXd1OEMr?=
+ =?utf-8?B?UkxvUXJNdVl3bld5Z3AzZXJDdTRHOG1sdklPNzRySmg0Nm1RVy9lZWYvTmkw?=
+ =?utf-8?B?U1M1U2h0Q3lReEY4a1liSUlaTWU1aE9HSC9kVDZpSk1PdjNqQlVVVEhRckxU?=
+ =?utf-8?B?RWRPTXBZQ1JVby9rVVlIYjJDQ2dQK1RXT242ZFJlVlNCUjhkdEF2Y1loZWNF?=
+ =?utf-8?B?RTNpL2FXczJBWEVWTVpMNFd3KzFTTVdGWk8vK0R2dnIzTmY2UmpDc2hiK2V0?=
+ =?utf-8?B?OUZGYjJPcHB5K2Q4dHAvWE92TnIxaEcwTVQ0Q1RMd24xbXN3S1lDR1ZGdXNP?=
+ =?utf-8?B?S1YyNldaVmVNZ1Ztdm9zeGtqcGUxL2lTcWVhelU5a3FVbjhwQU9SL1cwQWVk?=
+ =?utf-8?B?RTdrZXVpdGpyc21OdzdDRGJTZ3FUbndoN0tPWFloOUU2TmFyd2FFWnNQanM2?=
+ =?utf-8?B?bXZRNmVkWmhwckFvMDNEY05HWlgyek1RTDBWNHJOM3dKV3o1WkpvM3BpRnZO?=
+ =?utf-8?B?czZxQng0NlBDQ2gxbXZoTkJxeEdOLzg2Zkhrc3U5c3IrMld2bC94aTFBN3NG?=
+ =?utf-8?B?N3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0b738556-0042-43ab-80f2-d78ed3b432f7@quicinc.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	PAyEM3k+em3MvZinKYrxwfU25EBYm92IiWqajgh88ycZI36qaAxyec47ZvjAilKqnZoIYR0OCuYPLMNWB49qqzf+/rLZkLQfm8DXbYwhpEetLlUz+UlIHhzEkGZ+GAoE0jzXcdCU9ibZPO9JAl4+HG1Qn5rTCH5apIdEn4QjHsxIPaF9itjJBX5Xo9deHFAPAIamrxVttGUIlWdaw6l8SQELBtNvt0x9glheLNls3dkljymHwCDYTDK92vLvZl11vsVgxA/Fz7U6UKO+nLk0dd1l65yv4KHUEDlycBhy52N9ygrwFhjrinJ3unf5j+SyZiQ9VaEFRxTt8TQqsNdZ0Zk4kqCkl3yFh0Dfc6qPUuVlR9PvTpDJLMzapMznM1FazkHBLa+BqiUFcPQ+88HgfnBELbz1TjcAkVzT+p9PyBl6ZcxsrTTCTsaXFSMJeMsfkOmRwSDzvZa0skl9p8pDYQCl88Y2TIKj9WwrdOXxNaSKvHzj8+GCzf2X/T3BeKtu7sFjFFvIIcc+hTp9XAVCwOo66qjkQ0GU0eRM/dBMoEMT0W1DvWa6heJkctDDqXZNGAUkONtYSXFdMc1jGrnA+7x6Ho9w+DzFP6wUtSwnisB3vNpzJu6XF2m9KVTwFIUP
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB7182.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0dcef98b-141a-4e29-4966-08dc592dcd3f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2024 07:14:03.1358
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MoymX7G+w+9AP9zLgBryJuVQC+0tbNP1cdne5D03t/B4A2bu6YMt1xuq4qR9TA5Hj1MLTNxrs63+Oer5hLVBe5Vmf6B5Xea2Ra87WKfefFg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB9916
 
-On Mon, Apr 08, 2024 at 11:57:58AM -0700, Mayank Rana wrote:
-> Hi Mani
-> 
-> On 4/5/2024 9:17 PM, Manivannan Sadhasivam wrote:
-> > On Fri, Apr 05, 2024 at 10:41:15AM -0700, Mayank Rana wrote:
-> > > Hi Mani
-> > > 
-> > > On 4/4/2024 10:30 PM, Manivannan Sadhasivam wrote:
-> > > > On Thu, Apr 04, 2024 at 12:11:24PM -0700, Mayank Rana wrote:
-> > > > > On some of Qualcomm platform, firmware configures PCIe controller into
-> > > > > ECAM mode allowing static memory allocation for configuration space of
-> > > > > supported bus range. Firmware also takes care of bringing up PCIe PHY
-> > > > > and performing required operation to bring PCIe link into D0. Firmware
-> > > > > also manages system resources (e.g. clocks/regulators/resets/ bus voting).
-> > > > > Hence add Qualcomm PCIe ECAM root complex driver which enumerates PCIe
-> > > > > root complex and connected PCIe devices. Firmware won't be enumerating
-> > > > > or powering up PCIe root complex until this driver invokes power domain
-> > > > > based notification to bring PCIe link into D0/D3cold mode.
-> > > > > 
-> > > > 
-> > > > Is this an in-house PCIe IP of Qualcomm or the same DWC IP that is used in other
-> > > > SoCs?
-> > > > 
-> > > > - Mani
-> > > Driver is validated on SA8775p-ride platform using PCIe DWC IP for
-> > > now.Although this driver doesn't need to know used PCIe controller and PHY
-> > > IP as well programming sequence as that would be taken care by firmware.
-> > > 
-> > 
-> > Ok, so it is the same IP but firmware is controlling the resources now. This
-> > information should be present in the commit message.
-> > 
-> > Btw, there is an existing generic ECAM host controller driver:
-> > drivers/pci/controller/pci-host-generic.c
-> > 
-> > This driver is already being used by several vendors as well. So we should try
-> > to extend it for Qcom usecase also.
-> I did review pci-host-generic.c driver for usage. although there are more
-> functionalityneeded for use case purpose as below:
-> 1. MSI functionality
-> 2. Suspend/Resume
-> 3. Wakeup Functionality (not part of current change, but would be added
-> later)
-> 4. Here this driver provides way to virtualized PCIe controller. So VMs only
-> talk to a generic ECAM whereas HW is only directed accessed by service VM.
-> 5. Adding more Auto based safety use cases related implementation
-> 
-> Hence keeping pci-host-generic.c as generic driver where above functionality
-> may not be needed. Also here we may add more functionality using PM runtime
-> based GenPD/Power Domain with SCMI communication with firmware.
-> 
-
-Ok. I think it is fine for now. But why should this driver be called
-'pcie-qcom-ecam'? For sure the driver is ECAM compatible, but that's not the
-only factor, right? I think it is better to call it as 'pcie-qcom-generic'. Even
-though 'generic' may bring some ambiguity, I think still it is a better naming.
-
-> > > > > This driver also support MSI functionality using PCIe controller based
-> > > > > MSI controller as GIC ITS based MSI functionality is not available on
-> > > > > some of platform.
-> > > > > 
-> > 
-> > So is this the same internal MSI controller in the DWC IP? If so, then we
-> > already have the MSI implementation in
-> > drivers/pci/controller/dwc/pcie-designware-host.c and that should be reused here
-> > instead of duplicating the code.
-> If you are referring just MSI implementation as duplication code than I
-> agree with you.
-> Although proposed new driver is agnostic to specific PCIe controller related
-> IP. Currently we are using PCIe DWC controller based MSI controller for MSI
-> functionality using controller specific SPIs. Although I am looking into
-> implementation where we can use free SPIs (there is no free SPIs available
-> on SA877p-ride platform) or extended
-> SPIs to use for MSI functionality so we don't need to use PCIe controller
-> based MSI controller. extended SPI based MSI functionality related work is
-> under progress and eventually will replace current proposed solution based
-> MSI implementation. With that we would have generic enough implementation
-> for MSI functionality using free SPIs/extended SPIs with this new driver.\
-
-Ok for keeping it in the driver.
-
-But this driver depends on the SCMI firmware design, that is still being
-discussed. There should be a note in the cover letter about it.
-
-Also, the discussion on whether to use a new compatible or a property is not yet
-concluded afair. So that should also be mentioned (More importantly, this driver
-should not get merged till that discussion is concluded).
-
-I'm planning to do the code review later this week.
-
-- Mani
-
-> > - Mani
-> > 
-> Regards,
-> Mayank
-> > > > > Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
-> > > > > ---
-> > > > >    drivers/pci/controller/Kconfig          |  12 +
-> > > > >    drivers/pci/controller/Makefile         |   1 +
-> > > > >    drivers/pci/controller/pcie-qcom-ecam.c | 575 ++++++++++++++++++++++++++++++++
-> > > > >    3 files changed, 588 insertions(+)
-> > > > >    create mode 100644 drivers/pci/controller/pcie-qcom-ecam.c
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > > > index e534c02..abbd9f2 100644
-> > > > > --- a/drivers/pci/controller/Kconfig
-> > > > > +++ b/drivers/pci/controller/Kconfig
-> > > > > @@ -353,6 +353,18 @@ config PCIE_XILINX_CPM
-> > > > >    	  Say 'Y' here if you want kernel support for the
-> > > > >    	  Xilinx Versal CPM host bridge.
-> > > > > +config PCIE_QCOM_ECAM
-> > > > > +	tristate "QCOM PCIe ECAM host controller"
-> > > > > +	depends on ARCH_QCOM && PCI
-> > > > > +	depends on OF
-> > > > > +	select PCI_MSI
-> > > > > +	select PCI_HOST_COMMON
-> > > > > +	select IRQ_DOMAIN
-> > > > > +	help
-> > > > > +	 Say 'Y' here if you want to use ECAM shift mode compatible Qualcomm
-> > > > > +	 PCIe root host controller. The controller is programmed using firmware
-> > > > > +	 to support ECAM compatible memory address space.
-> > > > > +
-> > > > >    source "drivers/pci/controller/cadence/Kconfig"
-> > > > >    source "drivers/pci/controller/dwc/Kconfig"
-> > > > >    source "drivers/pci/controller/mobiveil/Kconfig"
-> > > > > diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> > > > > index f2b19e6..2f1ee1e 100644
-> > > > > --- a/drivers/pci/controller/Makefile
-> > > > > +++ b/drivers/pci/controller/Makefile
-> > > > > @@ -40,6 +40,7 @@ obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
-> > > > >    obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
-> > > > >    obj-$(CONFIG_PCIE_APPLE) += pcie-apple.o
-> > > > >    obj-$(CONFIG_PCIE_MT7621) += pcie-mt7621.o
-> > > > > +obj-$(CONFIG_PCIE_QCOM_ECAM) += pcie-qcom-ecam.o
-> > > > >    # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
-> > > > >    obj-y				+= dwc/
-> > > > > diff --git a/drivers/pci/controller/pcie-qcom-ecam.c b/drivers/pci/controller/pcie-qcom-ecam.c
-> > > > > new file mode 100644
-> > > > > index 00000000..5b4c68b
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/pci/controller/pcie-qcom-ecam.c
-> > > > > @@ -0,0 +1,575 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > +/*
-> > > > > + * Qualcomm PCIe ECAM root host controller driver
-> > > > > + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-> > > > > + */
-> > > > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > > > +
-> > > > > +#include <linux/irq.h>
-> > > > > +#include <linux/irqchip/chained_irq.h>
-> > > > > +#include <linux/irqdomain.h>
-> > > > > +#include <linux/kernel.h>
-> > > > > +#include <linux/module.h>
-> > > > > +#include <linux/msi.h>
-> > > > > +#include <linux/of_address.h>
-> > > > > +#include <linux/of_irq.h>
-> > > > > +#include <linux/of_pci.h>
-> > > > > +#include <linux/pci.h>
-> > > > > +#include <linux/pci-ecam.h>
-> > > > > +#include <linux/platform_device.h>
-> > > > > +#include <linux/pm_domain.h>
-> > > > > +#include <linux/pm_runtime.h>
-> > > > > +#include <linux/slab.h>
-> > > > > +#include <linux/types.h>
-> > > > > +
-> > > > > +#define PCIE_MSI_CTRL_BASE			(0x820)
-> > > > > +#define PCIE_MSI_CTRL_SIZE			(0x68)
-> > > > > +#define PCIE_MSI_CTRL_ADDR_OFFS			(0x0)
-> > > > > +#define PCIE_MSI_CTRL_UPPER_ADDR_OFFS		(0x4)
-> > > > > +#define PCIE_MSI_CTRL_INT_N_EN_OFFS(n)		(0x8 + 0xc * (n))
-> > > > > +#define PCIE_MSI_CTRL_INT_N_MASK_OFFS(n)	(0xc + 0xc * (n))
-> > > > > +#define PCIE_MSI_CTRL_INT_N_STATUS_OFFS(n)	(0x10 + 0xc * (n))
-> > > > > +
-> > > > > +#define	MSI_DB_ADDR	0xa0000000
-> > > > > +#define MSI_IRQ_PER_GRP (32)
-> > > > > +
-> > > > > +/**
-> > > > > + * struct qcom_msi_irq - MSI IRQ information
-> > > > > + * @client:	pointer to MSI client struct
-> > > > > + * @grp:	group the irq belongs to
-> > > > > + * @grp_index:	index in group
-> > > > > + * @hwirq:	hwirq number
-> > > > > + * @virq:	virq number
-> > > > > + * @pos:	position in MSI bitmap
-> > > > > + */
-> > > > > +struct qcom_msi_irq {
-> > > > > +	struct qcom_msi_client *client;
-> > > > > +	struct qcom_msi_grp *grp;
-> > > > > +	unsigned int grp_index;
-> > > > > +	unsigned int hwirq;
-> > > > > +	unsigned int virq;
-> > > > > +	u32 pos;
-> > > > > +};
-> > > > > +
-> > > > > +/**
-> > > > > + * struct qcom_msi_grp - MSI group information
-> > > > > + * @int_en_reg:		memory-mapped interrupt enable register address
-> > > > > + * @int_mask_reg:	memory-mapped interrupt mask register address
-> > > > > + * @int_status_reg:	memory-mapped interrupt status register address
-> > > > > + * @mask:		tracks masked/unmasked MSI
-> > > > > + * @irqs:		structure to MSI IRQ information
-> > > > > + */
-> > > > > +struct qcom_msi_grp {
-> > > > > +	void __iomem *int_en_reg;
-> > > > > +	void __iomem *int_mask_reg;
-> > > > > +	void __iomem *int_status_reg;
-> > > > > +	u32 mask;
-> > > > > +	struct qcom_msi_irq irqs[MSI_IRQ_PER_GRP];
-> > > > > +};
-> > > > > +
-> > > > > +/**
-> > > > > + * struct qcom_msi - PCIe controller based MSI controller information
-> > > > > + * @clients:		list for tracking clients
-> > > > > + * @dev:		platform device node
-> > > > > + * @nr_hwirqs:		total number of hardware IRQs
-> > > > > + * @nr_virqs:		total number of virqs
-> > > > > + * @nr_grps:		total number of groups
-> > > > > + * @grps:		pointer to all groups information
-> > > > > + * @bitmap:		tracks used/unused MSI
-> > > > > + * @mutex:		for modifying MSI client list and bitmap
-> > > > > + * @inner_domain:	parent domain; gen irq related
-> > > > > + * @msi_domain:		child domain; pcie related
-> > > > > + * @msi_db_addr:	MSI doorbell address
-> > > > > + * @cfg_lock:		lock for configuring MSI controller registers
-> > > > > + * @pcie_msi_cfg:	memory-mapped MSI controller register space
-> > > > > + */
-> > > > > +struct qcom_msi {
-> > > > > +	struct list_head clients;
-> > > > > +	struct device *dev;
-> > > > > +	int nr_hwirqs;
-> > > > > +	int nr_virqs;
-> > > > > +	int nr_grps;
-> > > > > +	struct qcom_msi_grp *grps;
-> > > > > +	unsigned long *bitmap;
-> > > > > +	struct mutex mutex;
-> > > > > +	struct irq_domain *inner_domain;
-> > > > > +	struct irq_domain *msi_domain;
-> > > > > +	phys_addr_t msi_db_addr;
-> > > > > +	spinlock_t cfg_lock;
-> > > > > +	void __iomem *pcie_msi_cfg;
-> > > > > +};
-> > > > > +
-> > > > > +/**
-> > > > > + * struct qcom_msi_client - structure for each client of MSI controller
-> > > > > + * @node:		list to track number of MSI clients
-> > > > > + * @msi:		client specific MSI controller based resource pointer
-> > > > > + * @dev:		client's dev of pci_dev
-> > > > > + * @nr_irqs:		number of irqs allocated for client
-> > > > > + * @msi_addr:		MSI doorbell address
-> > > > > + */
-> > > > > +struct qcom_msi_client {
-> > > > > +	struct list_head node;
-> > > > > +	struct qcom_msi *msi;
-> > > > > +	struct device *dev;
-> > > > > +	unsigned int nr_irqs;
-> > > > > +	phys_addr_t msi_addr;
-> > > > > +};
-> > > > > +
-> > > > > +static void qcom_msi_handler(struct irq_desc *desc)
-> > > > > +{
-> > > > > +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > > > > +	struct qcom_msi_grp *msi_grp;
-> > > > > +	u32 status;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	chained_irq_enter(chip, desc);
-> > > > > +
-> > > > > +	msi_grp = irq_desc_get_handler_data(desc);
-> > > > > +	status = readl_relaxed(msi_grp->int_status_reg);
-> > > > > +	status ^= (msi_grp->mask & status);
-> > > > > +	writel(status, msi_grp->int_status_reg);
-> > > > > +
-> > > > > +	for (i = 0; status; i++, status >>= 1)
-> > > > > +		if (status & 0x1)
-> > > > > +			generic_handle_irq(msi_grp->irqs[i].virq);
-> > > > > +
-> > > > > +	chained_irq_exit(chip, desc);
-> > > > > +}
-> > > > > +
-> > > > > +static void qcom_msi_mask_irq(struct irq_data *data)
-> > > > > +{
-> > > > > +	struct irq_data *parent_data;
-> > > > > +	struct qcom_msi_irq *msi_irq;
-> > > > > +	struct qcom_msi_grp *msi_grp;
-> > > > > +	struct qcom_msi *msi;
-> > > > > +	unsigned long flags;
-> > > > > +
-> > > > > +	parent_data = data->parent_data;
-> > > > > +	if (!parent_data)
-> > > > > +		return;
-> > > > > +
-> > > > > +	msi_irq = irq_data_get_irq_chip_data(parent_data);
-> > > > > +	msi = msi_irq->client->msi;
-> > > > > +	msi_grp = msi_irq->grp;
-> > > > > +
-> > > > > +	spin_lock_irqsave(&msi->cfg_lock, flags);
-> > > > > +	pci_msi_mask_irq(data);
-> > > > > +	msi_grp->mask |= BIT(msi_irq->grp_index);
-> > > > > +	writel(msi_grp->mask, msi_grp->int_mask_reg);
-> > > > > +	spin_unlock_irqrestore(&msi->cfg_lock, flags);
-> > > > > +}
-> > > > > +
-> > > > > +static void qcom_msi_unmask_irq(struct irq_data *data)
-> > > > > +{
-> > > > > +	struct irq_data *parent_data;
-> > > > > +	struct qcom_msi_irq *msi_irq;
-> > > > > +	struct qcom_msi_grp *msi_grp;
-> > > > > +	struct qcom_msi *msi;
-> > > > > +	unsigned long flags;
-> > > > > +
-> > > > > +	parent_data = data->parent_data;
-> > > > > +	if (!parent_data)
-> > > > > +		return;
-> > > > > +
-> > > > > +	msi_irq = irq_data_get_irq_chip_data(parent_data);
-> > > > > +	msi = msi_irq->client->msi;
-> > > > > +	msi_grp = msi_irq->grp;
-> > > > > +
-> > > > > +	spin_lock_irqsave(&msi->cfg_lock, flags);
-> > > > > +	msi_grp->mask &= ~BIT(msi_irq->grp_index);
-> > > > > +	writel(msi_grp->mask, msi_grp->int_mask_reg);
-> > > > > +	pci_msi_unmask_irq(data);
-> > > > > +	spin_unlock_irqrestore(&msi->cfg_lock, flags);
-> > > > > +}
-> > > > > +
-> > > > > +static struct irq_chip qcom_msi_irq_chip = {
-> > > > > +	.name		= "qcom_pci_msi",
-> > > > > +	.irq_enable	= qcom_msi_unmask_irq,
-> > > > > +	.irq_disable	= qcom_msi_mask_irq,
-> > > > > +	.irq_mask	= qcom_msi_mask_irq,
-> > > > > +	.irq_unmask	= qcom_msi_unmask_irq,
-> > > > > +};
-> > > > > +
-> > > > > +static int qcom_msi_domain_prepare(struct irq_domain *domain, struct device *dev,
-> > > > > +				int nvec, msi_alloc_info_t *arg)
-> > > > > +{
-> > > > > +	struct qcom_msi *msi = domain->parent->host_data;
-> > > > > +	struct qcom_msi_client *client;
-> > > > > +
-> > > > > +	client = kzalloc(sizeof(*client), GFP_KERNEL);
-> > > > > +	if (!client)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	client->msi = msi;
-> > > > > +	client->dev = dev;
-> > > > > +	client->msi_addr = msi->msi_db_addr;
-> > > > > +	mutex_lock(&msi->mutex);
-> > > > > +	list_add_tail(&client->node, &msi->clients);
-> > > > > +	mutex_unlock(&msi->mutex);
-> > > > > +
-> > > > > +	/* zero out struct for pcie msi framework */
-> > > > > +	memset(arg, 0, sizeof(*arg));
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static struct msi_domain_ops qcom_msi_domain_ops = {
-> > > > > +	.msi_prepare	= qcom_msi_domain_prepare,
-> > > > > +};
-> > > > > +
-> > > > > +static struct msi_domain_info qcom_msi_domain_info = {
-> > > > > +	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-> > > > > +			MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-> > > > > +	.ops	= &qcom_msi_domain_ops,
-> > > > > +	.chip	= &qcom_msi_irq_chip,
-> > > > > +};
-> > > > > +
-> > > > > +static int qcom_msi_irq_set_affinity(struct irq_data *data,
-> > > > > +				const struct cpumask *mask, bool force)
-> > > > > +{
-> > > > > +	struct irq_data *parent_data = irq_get_irq_data(irqd_to_hwirq(data));
-> > > > > +	int ret = 0;
-> > > > > +
-> > > > > +	if (!parent_data)
-> > > > > +		return -ENODEV;
-> > > > > +
-> > > > > +	/* set affinity for MSI HW IRQ */
-> > > > > +	if (parent_data->chip->irq_set_affinity)
-> > > > > +		ret = parent_data->chip->irq_set_affinity(parent_data, mask, force);
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +static void qcom_msi_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> > > > > +{
-> > > > > +	struct irq_data *parent_data = irq_get_irq_data(irqd_to_hwirq(data));
-> > > > > +	struct qcom_msi_irq *msi_irq = irq_data_get_irq_chip_data(data);
-> > > > > +	struct qcom_msi_client *client = msi_irq->client;
-> > > > > +
-> > > > > +	if (!parent_data)
-> > > > > +		return;
-> > > > > +
-> > > > > +	msg->address_lo = lower_32_bits(client->msi_addr);
-> > > > > +	msg->address_hi = upper_32_bits(client->msi_addr);
-> > > > > +	msg->data = msi_irq->pos;
-> > > > > +}
-> > > > > +
-> > > > > +static struct irq_chip qcom_msi_bottom_irq_chip = {
-> > > > > +	.name			= "qcom_msi",
-> > > > > +	.irq_set_affinity	= qcom_msi_irq_set_affinity,
-> > > > > +	.irq_compose_msi_msg	= qcom_msi_irq_compose_msi_msg,
-> > > > > +};
-> > > > > +
-> > > > > +static int qcom_msi_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> > > > > +				unsigned int nr_irqs, void *args)
-> > > > > +{
-> > > > > +	struct device *dev = ((msi_alloc_info_t *)args)->desc->dev;
-> > > > > +	struct qcom_msi_client *tmp, *client = NULL;
-> > > > > +	struct qcom_msi *msi = domain->host_data;
-> > > > > +	int i, ret = 0;
-> > > > > +	int pos;
-> > > > > +
-> > > > > +	mutex_lock(&msi->mutex);
-> > > > > +	list_for_each_entry(tmp, &msi->clients, node) {
-> > > > > +		if (tmp->dev == dev) {
-> > > > > +			client = tmp;
-> > > > > +			break;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > > +	if (!client) {
-> > > > > +		dev_err(msi->dev, "failed to find MSI client dev\n");
-> > > > > +		ret = -ENODEV;
-> > > > > +		goto out;
-> > > > > +	}
-> > > > > +
-> > > > > +	pos = bitmap_find_next_zero_area(msi->bitmap, msi->nr_virqs, 0,
-> > > > > +					nr_irqs, nr_irqs - 1);
-> > > > > +	if (pos > msi->nr_virqs) {
-> > > > > +		ret = -ENOSPC;
-> > > > > +		goto out;
-> > > > > +	}
-> > > > > +
-> > > > > +	bitmap_set(msi->bitmap, pos, nr_irqs);
-> > > > > +	for (i = 0; i < nr_irqs; i++) {
-> > > > > +		u32 grp = pos / MSI_IRQ_PER_GRP;
-> > > > > +		u32 index = pos % MSI_IRQ_PER_GRP;
-> > > > > +		struct qcom_msi_irq *msi_irq = &msi->grps[grp].irqs[index];
-> > > > > +
-> > > > > +		msi_irq->virq = virq + i;
-> > > > > +		msi_irq->client = client;
-> > > > > +		irq_domain_set_info(domain, msi_irq->virq,
-> > > > > +				msi_irq->hwirq,
-> > > > > +				&qcom_msi_bottom_irq_chip, msi_irq,
-> > > > > +				handle_simple_irq, NULL, NULL);
-> > > > > +		client->nr_irqs++;
-> > > > > +		pos++;
-> > > > > +	}
-> > > > > +out:
-> > > > > +	mutex_unlock(&msi->mutex);
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +static void qcom_msi_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-> > > > > +				unsigned int nr_irqs)
-> > > > > +{
-> > > > > +	struct irq_data *data = irq_domain_get_irq_data(domain, virq);
-> > > > > +	struct qcom_msi_client *client;
-> > > > > +	struct qcom_msi_irq *msi_irq;
-> > > > > +	struct qcom_msi *msi;
-> > > > > +
-> > > > > +	if (!data)
-> > > > > +		return;
-> > > > > +
-> > > > > +	msi_irq = irq_data_get_irq_chip_data(data);
-> > > > > +	client  = msi_irq->client;
-> > > > > +	msi = client->msi;
-> > > > > +
-> > > > > +	mutex_lock(&msi->mutex);
-> > > > > +	bitmap_clear(msi->bitmap, msi_irq->pos, nr_irqs);
-> > > > > +
-> > > > > +	client->nr_irqs -= nr_irqs;
-> > > > > +	if (!client->nr_irqs) {
-> > > > > +		list_del(&client->node);
-> > > > > +		kfree(client);
-> > > > > +	}
-> > > > > +	mutex_unlock(&msi->mutex);
-> > > > > +
-> > > > > +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-> > > > > +}
-> > > > > +
-> > > > > +static const struct irq_domain_ops msi_domain_ops = {
-> > > > > +	.alloc	= qcom_msi_irq_domain_alloc,
-> > > > > +	.free	= qcom_msi_irq_domain_free,
-> > > > > +};
-> > > > > +
-> > > > > +static int qcom_msi_alloc_domains(struct qcom_msi *msi)
-> > > > > +{
-> > > > > +	msi->inner_domain = irq_domain_add_linear(NULL, msi->nr_virqs,
-> > > > > +						&msi_domain_ops, msi);
-> > > > > +	if (!msi->inner_domain) {
-> > > > > +		dev_err(msi->dev, "failed to create IRQ inner domain\n");
-> > > > > +		return -ENOMEM;
-> > > > > +	}
-> > > > > +
-> > > > > +	msi->msi_domain = pci_msi_create_irq_domain(of_node_to_fwnode(msi->dev->of_node),
-> > > > > +					&qcom_msi_domain_info, msi->inner_domain);
-> > > > > +	if (!msi->msi_domain) {
-> > > > > +		dev_err(msi->dev, "failed to create MSI domain\n");
-> > > > > +		irq_domain_remove(msi->inner_domain);
-> > > > > +		return -ENOMEM;
-> > > > > +	}
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int qcom_msi_irq_setup(struct qcom_msi *msi)
-> > > > > +{
-> > > > > +	struct qcom_msi_grp *msi_grp;
-> > > > > +	struct qcom_msi_irq *msi_irq;
-> > > > > +	int i, index, ret;
-> > > > > +	unsigned int irq;
-> > > > > +
-> > > > > +	/* setup each MSI group. nr_hwirqs == nr_grps */
-> > > > > +	for (i = 0; i < msi->nr_hwirqs; i++) {
-> > > > > +		irq = irq_of_parse_and_map(msi->dev->of_node, i);
-> > > > > +		if (!irq) {
-> > > > > +			dev_err(msi->dev,
-> > > > > +				"MSI: failed to parse/map interrupt\n");
-> > > > > +			ret = -ENODEV;
-> > > > > +			goto free_irqs;
-> > > > > +		}
-> > > > > +
-> > > > > +		msi_grp = &msi->grps[i];
-> > > > > +		msi_grp->int_en_reg = msi->pcie_msi_cfg +
-> > > > > +				PCIE_MSI_CTRL_INT_N_EN_OFFS(i);
-> > > > > +		msi_grp->int_mask_reg = msi->pcie_msi_cfg +
-> > > > > +				PCIE_MSI_CTRL_INT_N_MASK_OFFS(i);
-> > > > > +		msi_grp->int_status_reg = msi->pcie_msi_cfg +
-> > > > > +				PCIE_MSI_CTRL_INT_N_STATUS_OFFS(i);
-> > > > > +
-> > > > > +		for (index = 0; index < MSI_IRQ_PER_GRP; index++) {
-> > > > > +			msi_irq = &msi_grp->irqs[index];
-> > > > > +
-> > > > > +			msi_irq->grp = msi_grp;
-> > > > > +			msi_irq->grp_index = index;
-> > > > > +			msi_irq->pos = (i * MSI_IRQ_PER_GRP) + index;
-> > > > > +			msi_irq->hwirq = irq;
-> > > > > +		}
-> > > > > +
-> > > > > +		irq_set_chained_handler_and_data(irq, qcom_msi_handler, msi_grp);
-> > > > > +	}
-> > > > > +
-> > > > > +	return 0;
-> > > > > +
-> > > > > +free_irqs:
-> > > > > +	for (--i; i >= 0; i--) {
-> > > > > +		irq = msi->grps[i].irqs[0].hwirq;
-> > > > > +
-> > > > > +		irq_set_chained_handler_and_data(irq, NULL, NULL);
-> > > > > +		irq_dispose_mapping(irq);
-> > > > > +	}
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +static void qcom_msi_config(struct irq_domain *domain)
-> > > > > +{
-> > > > > +	struct qcom_msi *msi;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	msi = domain->parent->host_data;
-> > > > > +
-> > > > > +	/* program termination address */
-> > > > > +	writel(msi->msi_db_addr, msi->pcie_msi_cfg + PCIE_MSI_CTRL_ADDR_OFFS);
-> > > > > +	writel(0, msi->pcie_msi_cfg + PCIE_MSI_CTRL_UPPER_ADDR_OFFS);
-> > > > > +
-> > > > > +	/* restore mask and enable all interrupts for each group */
-> > > > > +	for (i = 0; i < msi->nr_grps; i++) {
-> > > > > +		struct qcom_msi_grp *msi_grp = &msi->grps[i];
-> > > > > +
-> > > > > +		writel(msi_grp->mask, msi_grp->int_mask_reg);
-> > > > > +		writel(~0, msi_grp->int_en_reg);
-> > > > > +	}
-> > > > > +}
-> > > > > +
-> > > > > +static void qcom_msi_deinit(struct qcom_msi *msi)
-> > > > > +{
-> > > > > +	irq_domain_remove(msi->msi_domain);
-> > > > > +	irq_domain_remove(msi->inner_domain);
-> > > > > +}
-> > > > > +
-> > > > > +static struct qcom_msi *qcom_msi_init(struct device *dev)
-> > > > > +{
-> > > > > +	struct qcom_msi *msi;
-> > > > > +	u64 addr;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	msi = devm_kzalloc(dev, sizeof(*msi), GFP_KERNEL);
-> > > > > +	if (!msi)
-> > > > > +		return ERR_PTR(-ENOMEM);
-> > > > > +
-> > > > > +	msi->dev = dev;
-> > > > > +	mutex_init(&msi->mutex);
-> > > > > +	spin_lock_init(&msi->cfg_lock);
-> > > > > +	INIT_LIST_HEAD(&msi->clients);
-> > > > > +
-> > > > > +	msi->msi_db_addr = MSI_DB_ADDR;
-> > > > > +	msi->nr_hwirqs = of_irq_count(dev->of_node);
-> > > > > +	if (!msi->nr_hwirqs) {
-> > > > > +		dev_err(msi->dev, "no hwirqs found\n");
-> > > > > +		return ERR_PTR(-ENODEV);
-> > > > > +	}
-> > > > > +
-> > > > > +	if (of_property_read_reg(dev->of_node, 0, &addr, NULL) < 0) {
-> > > > > +		dev_err(msi->dev, "failed to get reg address\n");
-> > > > > +		return ERR_PTR(-ENODEV);
-> > > > > +	}
-> > > > > +
-> > > > > +	dev_dbg(msi->dev, "hwirq:%d pcie_msi_cfg:%llx\n", msi->nr_hwirqs, addr);
-> > > > > +	msi->pcie_msi_cfg = devm_ioremap(dev, addr + PCIE_MSI_CTRL_BASE, PCIE_MSI_CTRL_SIZE);
-> > > > > +	if (!msi->pcie_msi_cfg)
-> > > > > +		return ERR_PTR(-ENOMEM);
-> > > > > +
-> > > > > +	msi->nr_virqs = msi->nr_hwirqs * MSI_IRQ_PER_GRP;
-> > > > > +	msi->nr_grps = msi->nr_hwirqs;
-> > > > > +	msi->grps = devm_kcalloc(dev, msi->nr_grps, sizeof(*msi->grps), GFP_KERNEL);
-> > > > > +	if (!msi->grps)
-> > > > > +		return ERR_PTR(-ENOMEM);
-> > > > > +
-> > > > > +	msi->bitmap = devm_kcalloc(dev, BITS_TO_LONGS(msi->nr_virqs),
-> > > > > +				sizeof(*msi->bitmap), GFP_KERNEL);
-> > > > > +	if (!msi->bitmap)
-> > > > > +		return ERR_PTR(-ENOMEM);
-> > > > > +
-> > > > > +	ret = qcom_msi_alloc_domains(msi);
-> > > > > +	if (ret)
-> > > > > +		return ERR_PTR(ret);
-> > > > > +
-> > > > > +	ret = qcom_msi_irq_setup(msi);
-> > > > > +	if (ret) {
-> > > > > +		qcom_msi_deinit(msi);
-> > > > > +		return ERR_PTR(ret);
-> > > > > +	}
-> > > > > +
-> > > > > +	qcom_msi_config(msi->msi_domain);
-> > > > > +	return msi;
-> > > > > +}
-> > > > > +
-> > > > > +static int qcom_pcie_ecam_suspend_noirq(struct device *dev)
-> > > > > +{
-> > > > > +	return pm_runtime_put_sync(dev);
-> > > > > +}
-> > > > > +
-> > > > > +static int qcom_pcie_ecam_resume_noirq(struct device *dev)
-> > > > > +{
-> > > > > +	return pm_runtime_get_sync(dev);
-> > > > > +}
-> > > > > +
-> > > > > +static int qcom_pcie_ecam_probe(struct platform_device *pdev)
-> > > > > +{
-> > > > > +	struct device *dev = &pdev->dev;
-> > > > > +	struct qcom_msi *msi;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	ret = devm_pm_runtime_enable(dev);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +
-> > > > > +	ret = pm_runtime_resume_and_get(dev);
-> > > > > +	if (ret < 0) {
-> > > > > +		dev_err(dev, "fail to enable pcie controller: %d\n", ret);
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	msi = qcom_msi_init(dev);
-> > > > > +	if (IS_ERR(msi)) {
-> > > > > +		pm_runtime_put_sync(dev);
-> > > > > +		return PTR_ERR(msi);
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = pci_host_common_probe(pdev);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "pci_host_common_probe() failed:%d\n", ret);
-> > > > > +		qcom_msi_deinit(msi);
-> > > > > +		pm_runtime_put_sync(dev);
-> > > > > +	}
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +static const struct dev_pm_ops qcom_pcie_ecam_pm_ops = {
-> > > > > +	NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_ecam_suspend_noirq,
-> > > > > +				qcom_pcie_ecam_resume_noirq)
-> > > > > +};
-> > > > > +
-> > > > > +static const struct pci_ecam_ops qcom_pcie_ecam_ops = {
-> > > > > +	.pci_ops	= {
-> > > > > +		.map_bus	= pci_ecam_map_bus,
-> > > > > +		.read		= pci_generic_config_read,
-> > > > > +		.write		= pci_generic_config_write,
-> > > > > +	}
-> > > > > +};
-> > > > > +
-> > > > > +static const struct of_device_id qcom_pcie_ecam_of_match[] = {
-> > > > > +	{
-> > > > > +		.compatible	= "qcom,pcie-ecam-rc",
-> > > > > +		.data		= &qcom_pcie_ecam_ops,
-> > > > > +	},
-> > > > > +	{ },
-> > > > > +};
-> > > > > +MODULE_DEVICE_TABLE(of, qcom_pcie_ecam_of_match);
-> > > > > +
-> > > > > +static struct platform_driver qcom_pcie_ecam_driver = {
-> > > > > +	.probe	= qcom_pcie_ecam_probe,
-> > > > > +	.driver	= {
-> > > > > +		.name			= "qcom-pcie-ecam-rc",
-> > > > > +		.suppress_bind_attrs	= true,
-> > > > > +		.of_match_table		= qcom_pcie_ecam_of_match,
-> > > > > +		.probe_type		= PROBE_PREFER_ASYNCHRONOUS,
-> > > > > +		.pm			= &qcom_pcie_ecam_pm_ops,
-> > > > > +	},
-> > > > > +};
-> > > > > +module_platform_driver(qcom_pcie_ecam_driver);
-> > > > > +
-> > > > > +MODULE_DESCRIPTION("Qualcomm PCIe ECAM root complex driver");
-> > > > > +MODULE_LICENSE("GPL");
-> > > > > -- 
-> > > > > 2.7.4
-> > > > > 
-> > > > 
-> > 
-
--- 
-மணிவண்ணன் சதாசிவம்
+DQpEYXZlIEppYW5nIHdyb3RlOg0KPiBPbiA0LzkvMjQgMTI6MzUgQU0sIEtvYmF5YXNoaSxEYWlz
+dWtlIHdyb3RlOg0KPiA+IEFkZCByY2RfcmVncyBpbml0aWFsaXphdGlvbiBhdCBfX3JjcmJfdG9f
+Y29tcG9uZW50KCkgdG8gY2FjaGUgdGhlDQo+ID4gY3hsMS4xIGRldmljZSBsaW5rIHN0YXR1cyBp
+bmZvcm1hdGlvbi4gUmVkdWNlIGFjY2VzcyB0byB0aGUgbWVtb3J5IG1hcA0KPiA+IGFyZWEgd2hl
+cmUgdGhlIFJDUkIgaXMgbG9jYXRlZCBieSBjYWNoaW5nIHRoZSBjeGwxLjEgZGV2aWNlIGxpbmsg
+c3RhdHVzDQo+IGluZm9ybWF0aW9uLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogIktvYmF5YXNo
+aSxEYWlzdWtlIiA8a29iYXlhc2hpLmRhLTA2QGZ1aml0c3UuY29tPg0KPiA+IC0tLQ0KPiA+ICBk
+cml2ZXJzL2N4bC9jb3JlL3JlZ3MuYyB8IDE4ICsrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvY3hsL2NvcmUvcmVncy5jIGIvZHJpdmVycy9jeGwvY29yZS9yZWdzLmMgaW5kZXgNCj4gPiAz
+NzI3ODZmODA5NTUuLjMwOGViOTUxNjEzZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2N4bC9j
+b3JlL3JlZ3MuYw0KPiA+ICsrKyBiL2RyaXZlcnMvY3hsL2NvcmUvcmVncy5jDQo+ID4gQEAgLTUx
+NCw2ICs1MTQsOCBAQCByZXNvdXJjZV9zaXplX3QgX19yY3JiX3RvX2NvbXBvbmVudChzdHJ1Y3Qg
+ZGV2aWNlDQo+ICpkZXYsIHN0cnVjdCBjeGxfcmNyYl9pbmZvICpyaQ0KPiA+ICAJdTMyIGJhcjAs
+IGJhcjE7DQo+ID4gIAl1MTYgY21kOw0KPiA+ICAJdTMyIGlkOw0KPiA+ICsJdTE2IG9mZnNldDsN
+Cj4gPiArCXUzMiBjYXBfaGRyOw0KPiA+DQo+ID4gIAlpZiAod2hpY2ggPT0gQ1hMX1JDUkJfVVBT
+VFJFQU0pDQo+ID4gIAkJcmNyYiArPSBTWl80SzsNCj4gPiBAQCAtNTM3LDYgKzUzOSwyMiBAQCBy
+ZXNvdXJjZV9zaXplX3QgX19yY3JiX3RvX2NvbXBvbmVudChzdHJ1Y3QgZGV2aWNlDQo+ICpkZXYs
+IHN0cnVjdCBjeGxfcmNyYl9pbmZvICpyaQ0KPiA+ICAJY21kID0gcmVhZHcoYWRkciArIFBDSV9D
+T01NQU5EKTsNCj4gPiAgCWJhcjAgPSByZWFkbChhZGRyICsgUENJX0JBU0VfQUREUkVTU18wKTsN
+Cj4gPiAgCWJhcjEgPSByZWFkbChhZGRyICsgUENJX0JBU0VfQUREUkVTU18xKTsNCj4gPiArDQo+
+ID4gKwlvZmZzZXQgPSByZWFkdyhhZGRyICsgUENJX0NBUEFCSUxJVFlfTElTVCk7DQo+ID4gKwlv
+ZmZzZXQgJj0gMHgwMGZmOw0KPiANCj4gR0VOTUFTSyg3LDApIGlzIHByZWZlcnJlZCB0byAweDAw
+ZmYuIEFsdGhvdWdoIGEgcHJvcGVybHkgZGVmaW5lZCBtYXNrIHdvdWxkDQo+IGJlIG5pY2UuDQo+
+IEFsc28gcGxlYXNlIGNvbnNpZGVyIHVzaW5nIEZJRUxEX0dFVCgpLg0KPiANClRoYW5rIHlvdSBm
+b3IgeW91ciBmZWVkYmFjay4NCkkgd2lsbCB1cGRhdGUgdGhlIHBhdGNoIHRvIHVzZSB0aG9zZSBt
+YWNyb3MuDQoNCj4gPiArCWNhcF9oZHIgPSByZWFkbChhZGRyICsgb2Zmc2V0KTsNCj4gPiArCXdo
+aWxlICgoY2FwX2hkciAmIDB4MDAwMDAwZmYpICE9IFBDSV9DQVBfSURfRVhQKSB7DQo+IA0KPiBT
+YW1lIGNvbW1lbnQgYXMgYWJvdmUNCj4gDQo+IA0KPiA+ICsJCW9mZnNldCA9IChjYXBfaGRyID4+
+IDgpICYgMHgwMDAwMDBmZjsNCj4gDQo+IEFsc28gaGVyZQ0KPiANCj4gPiArCQlpZiAob2Zmc2V0
+ID09IDApIC8vIEVuZCBvZiBjYXBhYmlsaXR5IGxpc3QNCj4gDQo+IFBsZWFzZSB1c2UgLyogKi8g
+aW5zdGVhZCBvZiAvLyBmb3IgTGludXgga2VybmVsIGNvZGUNCj4gDQpBbHNvIEkgd2lsbCBmaXgg
+aXQuDQoNCj4gPiArCQkJYnJlYWs7DQo+ID4gKwkJY2FwX2hkciA9IHJlYWRsKGFkZHIgKyBvZmZz
+ZXQpOw0KPiA+ICsJfQ0KPiA+ICsJaWYgKG9mZnNldCkgew0KPiA+ICsJCXJpLT5yY2RfbG5rY2Fw
+ID0gcmVhZGwoYWRkciArIG9mZnNldCArIFBDSV9FWFBfTE5LQ0FQKTsNCj4gPiArCQlyaS0+cmNk
+X2xua2N0cmwgPSByZWFkbChhZGRyICsgb2Zmc2V0ICsgUENJX0VYUF9MTktDVEwpOw0KPiA+ICsJ
+CXJpLT5yY2RfbG5rc3RhdHVzID0gcmVhZGwoYWRkciArIG9mZnNldCArIFBDSV9FWFBfTE5LU1RB
+KTsNCj4gPiArCX0NCj4gPiArDQo+ID4gIAlpb3VubWFwKGFkZHIpOw0KPiA+ICAJcmVsZWFzZV9t
+ZW1fcmVnaW9uKHJjcmIsIFNaXzRLKTsNCj4gPg0K
 
