@@ -1,225 +1,208 @@
-Return-Path: <linux-pci+bounces-6086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1E698A021D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 23:30:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A08328A024B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 23:42:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 26D75B22968
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 21:30:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5595928401C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 21:42:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 194871836EB;
-	Wed, 10 Apr 2024 21:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C5D5181D17;
+	Wed, 10 Apr 2024 21:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TjGXiIvP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGraRTPP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590E5181D19;
-	Wed, 10 Apr 2024 21:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712784616; cv=fail; b=mZZ6BUvmiD6pJu8zUsHZFq3CO8Tj5Z+fcwIPeLGuR5jj0tS98t2it4htUdhk9mU64WmUeCoGDvbfF70xJCMMhVFrRspbhxdLEc2aQjB/5mUOTzEN/AOaJGnDQik3gdPihjy8Xx7eBAMzoPZA/UCm52wwPepBh0CJcHq+Ze8VJag=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712784616; c=relaxed/simple;
-	bh=EE96jmQR6YAwGT6akNvfBu4875lJW1qLTVUM0QtVtgg=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GByzVrw4awQBwo5Zz+lWDmSSCL/Y55hBw3K8b36CwVqZYYVObcKEOYLDxlCqxv4ccnTNBZFouEzVchWlOtM++D+ZY13pgkDxaj0uPT4sbDxilNLcIIWmscq4W2n9gy778E1ijWahnG4eLkvKwNY89Lt2wztwQ183GX0YPlaGWH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TjGXiIvP; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712784614; x=1744320614;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=EE96jmQR6YAwGT6akNvfBu4875lJW1qLTVUM0QtVtgg=;
-  b=TjGXiIvPrnNFFsKD3c/o77egOFTDaJu3q8b+TrZEZ5TafGgQnHY40PO3
-   Sq+fWp08hzn5OlgkqCy6we4FdC2HCVnVRql1rol8N4Fb7sz8nZW5W30Nk
-   MXYSrQ+BLigDYSuWTsWLi5vjUvum5h/uO3KJfOF5BIObTsVbOma5yyDHB
-   ry4YRr+U47/m1ZUY3yZrzFPc0OeTtrNcjVSWbs262xc5KUJ1IZgupqqOZ
-   rOGAkTu7j8v44REarmao/koCJoHf5YDU+Z/JR/ZgNE8Y9ykRCM8qyrFAb
-   /cWeBekeXQ8KR34rKHYFEj53dycqLMfnPfOGs6VesfVMw937WLE4SNTRD
-   g==;
-X-CSE-ConnectionGUID: Thl0mW0CRqe1mwMqVVoMAg==
-X-CSE-MsgGUID: LyT6kjzpTjm+bu/Fc0R2Tw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="30657476"
-X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
-   d="scan'208";a="30657476"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 14:30:13 -0700
-X-CSE-ConnectionGUID: WTKhxh4mSRStYqPddo6ODg==
-X-CSE-MsgGUID: xpM3l86WR4iGVY5miHwxdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
-   d="scan'208";a="58114199"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Apr 2024 14:30:12 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 10 Apr 2024 14:30:12 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 10 Apr 2024 14:30:11 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 10 Apr 2024 14:30:11 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 10 Apr 2024 14:30:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fqcH/Ct4iW371QXXLNrxquSekFlqKR3Nk8yOWsyETjUWnCPSq/wBy+wsMf4Om2MzqVJGFQmNXXmNa6d//U+qZDeXZTStaFKK4D0r8Ep0AU4fCIeqtMqNhozwKQ4AVZhjqqw5Vx669brQuWGWQAS4+OuYz2OZAZUtYb2zY+SQkNDQpTeso1gmtEDWTehIhjK/WP3LpIYm+4UaxgzjdiWTwnDB8C2cTxPoTx7Rky2/of6AJA5l3jd5AFCy2YKW5wRVQ76Rbb2MYmu1dsLIypuhUdNxDGzqzA7/azoCLXhWqkaIVJ0BKpTw7YWpFViawrkmCFN0Ra9AawgLLiNcd3vO4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N9KWfh+1KSCMfMXVyCB3iKSrFIzEdce6FUxbruJFHEs=;
- b=EoP2DKV+M+XrXDYvn8QFBaXGMfR1B4fJgzKd4lENeBBDmy1UHxw8+xCVGFNHZlbdqxK/kOo9zGUN000wEA/xlZlTicLdIkdVUXvJf5S2JeDxyGqUg0aeDjeF7VoWFGCvYLNyCcQ3xzhqFwG1Q2Os5m7/bZHF3TcAIzISVkG8rEfD76MkYUQahaETUqy8zH965HOHhj2bcYJtbZxKN6McFjsPkfVdfenZ86EQdQv4MYHpPqP1P5iVljKhbfBkjVe/qhCVH5vVwEbPwOVkMXvtw2jgqYap8R4MYEos4+ovmeEIgDkPJr/5gwnZESyQr05ny/m8kXI1Osv6+X0x/f5XhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
- by IA0PR11MB8400.namprd11.prod.outlook.com (2603:10b6:208:482::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Wed, 10 Apr
- 2024 21:30:10 +0000
-Received: from CO1PR11MB5089.namprd11.prod.outlook.com
- ([fe80::b383:e86d:874:245a]) by CO1PR11MB5089.namprd11.prod.outlook.com
- ([fe80::b383:e86d:874:245a%5]) with mapi id 15.20.7452.019; Wed, 10 Apr 2024
- 21:30:10 +0000
-Message-ID: <885f0615-81e8-4f1f-9e97-b82f4d9509d3@intel.com>
-Date: Wed, 10 Apr 2024 14:30:08 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
-To: Jiri Pirko <jiri@resnulli.us>, Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>
-CC: Jakub Kicinski <kuba@kernel.org>, <pabeni@redhat.com>, John Fastabend
-	<john.fastabend@gmail.com>, Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Daniel
- Borkmann <daniel@iogearbox.net>, Edward Cree <ecree.xilinx@gmail.com>,
-	Alexander Duyck <alexander.duyck@gmail.com>, <netdev@vger.kernel.org>,
-	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Alexander Duyck
-	<alexanderduyck@fb.com>
-References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
- <20240409135142.692ed5d9@kernel.org>
- <6615adbde1430_249cf52944@willemb.c.googlers.com.notmuch>
- <ZhY_MVfBMMlGAuK5@nanopsycho>
-Content-Language: en-US
-From: Jacob Keller <jacob.e.keller@intel.com>
-In-Reply-To: <ZhY_MVfBMMlGAuK5@nanopsycho>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0278.namprd04.prod.outlook.com
- (2603:10b6:303:89::13) To CO1PR11MB5089.namprd11.prod.outlook.com
- (2603:10b6:303:9b::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7269913CF86;
+	Wed, 10 Apr 2024 21:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712785318; cv=none; b=u3W/hJmb6Z6wG8MBLW4u4p3XlStnMyhUuK+4AXbnl8cYkoFeiNEF6R0XQ4l+av8+MFvtPk2xxs9hNyoNDCcU66cRqmi9RyNkNzsGKoB+RLeKAojYrzZECShOj+HRlRgZhWZnnxpzv3lB2yAsKBprfS+gNaz0/QybpTlr1xO2x1g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712785318; c=relaxed/simple;
+	bh=v5VKIxAHNdPaciK1cCZY42INz6c1J/uhVWupzoP4eOw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=alOjoaATnapTJ5c2tw32uhKeOkocbQHPqrKU3tzcc0ColdGKm86mWolPSvROqNOnG5n0it3kUVRFWtDhxtjhkWGHS9EqN8Ozz5ID9dMAl8ZlyP+VI3eMiQ6bUKEXO1v1Y9dDAiTv7qThb2EjAiFAJL1WOK2K5iXNletufaGC/CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGraRTPP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED367C433A6;
+	Wed, 10 Apr 2024 21:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712785318;
+	bh=v5VKIxAHNdPaciK1cCZY42INz6c1J/uhVWupzoP4eOw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bGraRTPP7OUzda/NQ/Ze4jPU38N01xy3avM9SkfUdRPU7c8do3DNYhhB8OWFgTFlq
+	 FSyqEdWLklMMbWHqM9/3EfDcHAlwaJUhiQc5eD4z8Q3f82uSG7E5LdybkxahQ/0W1o
+	 PCRLE67SAzkw4ziQBp2iqHc7htKTClOPV65bCwowdYiKqTT1248SEg0FYbUNOkpmTN
+	 K6y3PicyjuK7n+1aGTkiWYfdkH7WIIXmc9y+YGEjkoRG96LORJZ37aSkrxcYdAgA/h
+	 ecURbVcv0fTCw/yX9n++VOVYAMWyoWWtoez/x+VIo6f1FvWFr47tz8fGiXqLs6feo0
+	 atrjlBZJ+Ls+A==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516d1ecaf25so7778111e87.2;
+        Wed, 10 Apr 2024 14:41:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUBInXUVDaZIeJcYo4Fl/1B+SYQcnHppXKqBhNJvSTMXbDykVKGVhooOMhbsLRuEfk95HM13dmJwXMF6b3FsDjbV7XRGCAn+ojg0DugnDPNQhMxwIHT31+5HToanx7P2KpGH1UGIaT9
+X-Gm-Message-State: AOJu0YxzlDNB4PQh9TJ63DqKiuR2XamaW8qERUc/oApSkOCOV62F110r
+	1e8LpKiVr287TVsvgON3Asyd66zZhWpWgSeZVGlxgK+u/amXRTIE6+Z7sXa+5DluH0Gg0apkfZQ
+	fsl6rEm7Vi8lkTADWI6N+enlijg==
+X-Google-Smtp-Source: AGHT+IEigZA7pTO077Z8kSR1QMNpUnpfScYWexE4LyZTUa3vOium71t/lXHTN2AIKYqGgnzLIsbc/QbOGLrMjme6c2M=
+X-Received: by 2002:ac2:4c29:0:b0:516:a115:4a4d with SMTP id
+ u9-20020ac24c29000000b00516a1154a4dmr2075888lfq.68.1712785316184; Wed, 10 Apr
+ 2024 14:41:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR11MB5089:EE_|IA0PR11MB8400:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: piQnrfPDyJwnlXnviq5QRh8sFjsJlbmULYukEM3781yg6vDhd5+r/87UJfjOfEDjR+X7GbJXnZRGTVw26jQ3J/AJBZzEQqQwqNDIpsifyv8zslgI8SLyPlQSlxkubmKYxYYfuhRTL9Nz+nZW1ZSK64bGC6amUyNNz2yJZ7kwTUhrFo3irBBhL5RuwKO79ru5LqCyu+Hr6p28KIb1XHnnw9piA/KAb1s1A1+7djkpYMIARzQrleenoT8O2NUilVUMbp2NODY86G+Z29lXiq2v6yoTHbKCR/+am7zoMitJQiN41yOAtaQQOpSt7Ruzqeo6GbI8Jt6mvdn0j4B/7Q3JA3/9W4p6/e1k5vAYp+7GILTf0fj3m3s0IPSu0IJfB8fRKC3mMnHd2xri7rkY8HmVd58t97mTmt6R+TWKFQY5CfnJCCeu5ov235GGg3hdDPcOm774lhxwfp3LUcRKElKzXZHL0H6Y8k4T8rDOiSZao9iWfG6TLeaerYIyKJJuIEInPbxXRRI8IcCg3vn65G/1Aif9PP8UzQpu8uT0YzXL/pawJ65iFxahjPTbJIZybZPKaucuhdHagZ+FvvceIvaVaPFDwmDXOGhbPJSJYLYlRbKO7Aqo+QHQ4HdgXheMk5znFlXXXLH8UYgUg8dXWuMfi1V0OCcRt8WWYKxTP1cyKXk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b0E2UjFhUlJscWRQMFNENEhTckhMVi9xd2dGbjJUQUIwMW5nN3RwZWtvZGVU?=
- =?utf-8?B?eHJBYTg2T3NQU1ZrclROQTZVNTNjZFF4UHB2TlNkdW5NOGF3WjNudTh2aUxT?=
- =?utf-8?B?NVMzSlB1NVluM1lmYzJRNTVOOU0rSGM5aFIzZUFqcjZwZ01xOVlvcUJ3Q1lI?=
- =?utf-8?B?NFpIMWVZVjN2b05lKzVoTEJCdVA5UDIwRkVQN3V6dU1IVkZ0UGhYcnNJUExa?=
- =?utf-8?B?dkVJYXRVQUQ5K01rZ3NzZ3BtbUx4V1BqTWNjWXV0UmRaNlpqamZLWjVhT1Jq?=
- =?utf-8?B?VEV0Z1l0bnpoZG5CMm5XVU1JZzQ2T2U3WUxVb24ycnFIY0Z6SmZwVi9Db1JE?=
- =?utf-8?B?cFFCZytvTEVBSHdncXltaGpMNzNHMHhQVWFHSm9ydU81N3VuTjlSWms0Z0Fr?=
- =?utf-8?B?K1NzcEhvQ2RRa0lQZUZNQTlSbjZTd3Z3RUl0MjBZcG9iZTVOSnpEVW12YUJU?=
- =?utf-8?B?N21DVzM0UWpNeXM1Wk1iZnBkTTQvUzFqNWx3TmYrUHFKa3JCVUhLQStZQ1U3?=
- =?utf-8?B?QWVialVzYVJydDNRbHNCVnEzclE4cUJnbnV2T1U3ejAzQTJvaXdjek5DVFdP?=
- =?utf-8?B?ZDBhMUhaLzZkeWs0OVFxS0ZJNWZrQWUvTkpveGoyM051QkliT0dXdVZ4WWpX?=
- =?utf-8?B?b1gvMmlDNzhuNXRmK3JpS3A1WFNFMGxhOWZ5UkRtSCttOVJyNCt6QTh6MG5I?=
- =?utf-8?B?N0dzMU9iYTNJVjI0K1Vwekp1bXhTR28zUW43YWc1RnlIT1haQS9JMTRGTGVZ?=
- =?utf-8?B?UXkwVFRRbWlGalpZQnFjZU5MVmJSRXJvY25jbTlDQmEwVUNCTDZuMkU4aG9m?=
- =?utf-8?B?MTJrbFE4bmdDSXcvYzFHU0hNYVlsc3NEOVdwLzZ6MHpUaklFUGFqa1RxVGY4?=
- =?utf-8?B?SlQrWGlZZ280eUFhMTUxdTR6aEs1VU9Tc3AyQjZrdmJlemlJekNvSmhwZm9U?=
- =?utf-8?B?QWY0eTlCaW1vd2s0TUlONXE5cE1XMEZpZDdQckRLcXh0UG0vbVJyZ3FSS0Rl?=
- =?utf-8?B?MXUxOEkvZGRFdy8zaG5LWmN3bXJmTEhjYVE0M2toMWVTTGhFS1BseUZnNThQ?=
- =?utf-8?B?bUdGZ3AzSnVTbVd4NkhROTFyNURmNHNBN3ZFMCtWM1pQYkRkaHdPOU5CRkh6?=
- =?utf-8?B?OXAyV3o3VHp1bmdlekhkMDljRUt0dDNQUjhsTE1Wd0plUnYxZUVYcEdidXhw?=
- =?utf-8?B?aExES0VTckVoYmowcmtjK08vN1p0WGlJblloNlpuaENOV1hrSW91RmdiajVj?=
- =?utf-8?B?a0I1OU03ZVRydzVUa3V2UFBOYzFNemtPMDZLalZEMmVEeWFjaHYrSGpscUpF?=
- =?utf-8?B?cjJOVVpYNGxBREFRdnpITTlHbGJWRnNyUDV2OElLN00vRVVVczk4cUpERTFM?=
- =?utf-8?B?dXA3Qzl1Q3VDNlJVQXM2ZUVwT3lUWHBhTldZSktWK3ErUW50U0pXb3k4UU9V?=
- =?utf-8?B?S01DcUd0YS82WGlnWEJ0UEJxTWprZWtlWHNNUC9iZ1VXbDJ4K09IQlhYK0xC?=
- =?utf-8?B?dnR4RlZYa25SN051dk1KRWxqeXl0SVkrNXVHbmtlNVZVbUhRa3JVZUxSSlFt?=
- =?utf-8?B?R1JxV054ZDFGUk5mNWFqQklPQTcwTWtZSEdnVmFyRjJ1VHRtQ0tTTnFLZDJO?=
- =?utf-8?B?UnpGN283VnNzNmdTV0xkUjN5VWF6bnlYemVBRU5saUZmeUwwYTNyWHdsTklC?=
- =?utf-8?B?WWpBdDcvSGhGQ2VUalZmQ1hWNXNpbERvRENKYnhYK2hmdGkzU1VCcDd5YnpS?=
- =?utf-8?B?L3l3aG9mcnpqUmpUSU1UVXZHcWRCd2FITHFEQmpqVldGZkFSaUZjSzJhRElm?=
- =?utf-8?B?dmNUTGI2NDhjODhsNWZMcWhmVjA1SnFlQk1TRVYzZVphNkIrUHZIYzFkbk82?=
- =?utf-8?B?dXFJMU9LS0JJc1E3QngvcC9Eb0Q0UnA5YVcySll4NzdQR2pBb2VjeEoyNE42?=
- =?utf-8?B?bjRMcXZZMjZuWGV5aTVkSVhISys2TjdHVFFnZC9WTzJ5VmU0Mm1hdDNPZVh1?=
- =?utf-8?B?WVVRWXFFQ0pqWmduTVpkb0lQU3EraFVXYjQ0S0hHR3JscjFUcUVjLy90WVJ4?=
- =?utf-8?B?ZmJoZFc4R2ppTHhBcitsOHB3SEdFWXNxTEs5eHZENmdwOGhsUS96Q1U1SzhJ?=
- =?utf-8?B?NTJMeGM2VmwwenRtK1BKZUxtTkd3b0hVVWVJenhyOHZzekNlVmJuNmdqVEgv?=
- =?utf-8?B?WVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: adb75ef9-bc3f-4957-39dc-08dc59a5664f
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 21:30:10.1619
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VRpg6Xvpxifq+4H349DKz0H2AhbdeV5Bf9wnzGZgkMcWgX6/J6uyzIYCwB2l2Nvq1+FiMmQK8lb4+lDSIFhJn5/EYmft1eQziQAkhEh/0to=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB8400
-X-OriginatorOrg: intel.com
+References: <20231215145207.0cf098e5@bootlin.com> <20240319152513.GA1227721@bhelgaas>
+ <20240319173404.019b424a@bootlin.com>
+In-Reply-To: <20240319173404.019b424a@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 10 Apr 2024 16:41:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJOgkJtOipzskWc_NzUYUE1g0VsTT3eyPbbKw=NZO_4aQ@mail.gmail.com>
+Message-ID: <CAL_JsqJOgkJtOipzskWc_NzUYUE1g0VsTT3eyPbbKw=NZO_4aQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, 
+	Max Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, 
+	Stefano Stabellini <stefano.stabellini@xilinx.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 19, 2024 at 11:34=E2=80=AFAM Herve Codina <herve.codina@bootlin=
+.com> wrote:
+>
+> Hi Bjorn,
+>
+> On Tue, 19 Mar 2024 10:25:13 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> > [+cc Krzysztof]
+> >
+> > On Fri, Dec 15, 2023 at 02:52:07PM +0100, Herve Codina wrote:
+> > > On Mon, 4 Dec 2023 07:59:09 -0600
+> > > Rob Herring <robh@kernel.org> wrote:
+> > > > On Mon, Dec 4, 2023 at 6:43=E2=80=AFAM Herve Codina <herve.codina@b=
+ootlin.com> wrote:
+> > > > > On Fri, 1 Dec 2023 16:26:45 -0600
+> > > > > Rob Herring <robh@kernel.org> wrote:
+> > > > > > On Thu, Nov 30, 2023 at 10:57=E2=80=AFAM Herve Codina <herve.co=
+dina@bootlin.com> wrote:
+> > > > > > ...
+> >
+> > > > > > --- a/drivers/pci/of.c
+> > > > > > +++ b/drivers/pci/of.c
+> > > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
+> > > > > >                 return 0;
+> > > > > >
+> > > > > >         node =3D of_pci_find_child_device(dev->bus->dev.of_node=
+, dev->devfn);
+> > > > > > +       if (!node && pci_is_bridge(dev))
+> > > > > > +               of_pci_make_dev_node(dev);
+> > > > > >         if (!node)
+> > > > > >                 return 0;
+> > > > >
+> > > > > Maybe it is too early.
+> > > > > of_pci_make_dev_node() creates a node and fills some properties b=
+ased on
+> > > > > some already set values available in the PCI device such as its s=
+truct resource
+> > > > > values.
+> > > > > We need to have some values set by the PCI infra in order to crea=
+te our DT node
+> > > > > with correct values.
+> > > >
+> > > > Indeed, that's probably the issue I'm having. In that case,
+> > > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still befor=
+e
+> > > > device_add().
+> > > >
+> > > > I think modifying sysfs after device_add() is going to race with
+> > > > userspace. Userspace is notified of a new device, and then the of_n=
+ode
+> > > > link may or may not be there when it reads sysfs. Also, not sure if
+> > > > we'll need DT modaliases with PCI devices, but they won't work if t=
+he
+> > > > DT node is not set before device_add().
+> > >
+> > > DECLARE_PCI_FIXUP_HEADER is too early as well as doing the DT node cr=
+eation
+> > > just before the device_add() call.
+> > > Indeed, in order to fill the DT properties, resources need to be assi=
+gned
+> > > (needed for the 'ranges' property used for addresses translation).
+> > > The resources assignment is done after the call to device_add().
+> >
+> > Do we need to know the actual address *value* before creating the
+> > sysfs file, or is it enough to know that the file should *exist*, even
+> > if the value may be changed later?
+>
+> I think, the problematic file is 'of_node'.
+> This file is a symlink present in the device directory pointing to the
+> node in a device-tree subdir.
+>
+> How can we create this of_node symlink without having the device-tree
+> subdir available ?
+>
+> >
+> > > Some PCI sysfs files are already created after adding the device by t=
+he
+> > > pci_create_sysfs_dev_files() call:
+> > >   https://elixir.bootlin.com/linux/v6.6/source/drivers/pci/bus.c#L347
+> > >
+> > > Is it really an issue to add the of_node link to sysfs on an already
+> > > present device ?
+> >
+> > Yes, I think this would be an issue.  We've been trying to get rid of
+> > pci_create_sysfs_dev_files() altogether because there's a long history
+> > of race issues related to it:
+> >
+> >   https://lore.kernel.org/r/1271099285.9831.13.camel@localhost/ WARNING=
+: at fs/sysfs/dir.c:451 sysfs_add_one: sysfs: cannot create duplicate filen=
+ame '/devices/pci0000:00/0000:00:01.0/slot'
+> >   https://lore.kernel.org/r/19461.26166.427857.612983@pilspetsen.it.uu.=
+se/ [2.6.35-rc1 regression] sysfs: cannot create duplicate filename ... XVR=
+-600 related?
+> >   https://lore.kernel.org/r/20200716110423.xtfyb3n6tn5ixedh@pali/ PCI: =
+Race condition in pci_create_sysfs_dev_files
+> >   https://lore.kernel.org/r/m3eebg9puj.fsf@t19.piap.pl/ PCI: Race condi=
+tion in pci_create_sysfs_dev_files (can't boot)
+> >   https://bugzilla.kernel.org/show_bug.cgi?id=3D215515 sysfs: cannot cr=
+eate duplicate filename '.../0000:e0'
+> >
+> > And several previous attempts to fix them:
+> >
+> >   https://lore.kernel.org/r/4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.=
+com/ Guard pci_create_sysfs_dev_files with atomic value
+> >   https://lore.kernel.org/r/20230316103036.1837869-1-alexander.stein@ew=
+.tq-group.com PCI/sysfs: get rid of pci_sysfs_init late_initcall
+> >   https://lore.kernel.org/r/1702093576-30405-1-git-send-email-ssengar@l=
+inux.microsoft.com/ PCI/sysfs: Fix race in pci sysfs creation
+> >
+>
+> I am not sure we are facing in the same kind of issues.
+> The ones you mentioned are related to some sysfs duplication.
+> In the of_node case, the issue (if any) is that the symlink will be creat=
+ed
+> after the other device's file. Not sure that it can lead to some file
+> duplication.
 
+Again, if you notify userspace and it wants to make some decisions
+based on of_node, then it has to be there when the notification
+happens. As Greg says frequently, you've raced with userspace and
+lost.
 
-On 4/10/2024 12:26 AM, Jiri Pirko wrote:
-> Tue, Apr 09, 2024 at 11:06:05PM CEST, willemdebruijn.kernel@gmail.com wrote:
->> Jakub Kicinski wrote:
->>> On Wed, 03 Apr 2024 13:08:24 -0700 Alexander Duyck wrote:
-> 
-> [...]
-> 
->>
->> 2. whether new device features can be supported without at least
->>   two available devices supporting it.
->>
-> 
-> [...]
-> 
->>
->> 2 is out of scope for this series. But I would always want to hear
->> about potential new features that an organization finds valuable
->> enough to implement. Rather than a blanket rule against them.
-> 
-> This appears out of the nowhere. In the past, I would say wast majority
-> of the features was merged with single device implementation. Often, it
-> is the only device out there at a time that supports the feature.
-> This limitation would put break for feature additions. I can put a long
-> list of features that would not be here ever (like 50% of mlxsw driver).
-> 
->>
->>
-> 
+I imagine Bjorn won't like it, but may we need another fixup point?
 
-Jakub already mentioned this being nuanced in a previous part of the
-thread. In reality, lots of features do get implemented by only one
-driver first.
-
-I think its good practice to ensure multiple vendors/drivers can use
-whatever common uAPI or kernel API exists. It can be frustrating when
-some new API gets introduced but then can't be used by another device..
-In most cases thats on the vendors for being slow to respond or work
-with each other when developing the new API.
+Rob
 
