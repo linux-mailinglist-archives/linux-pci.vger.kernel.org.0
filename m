@@ -1,123 +1,104 @@
-Return-Path: <linux-pci+bounces-6054-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6055-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBCBF89FEB4
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 19:36:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F45589FEAB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 19:35:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 148B1B22AF9
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 17:35:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F4F51C22460
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 17:35:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66C2417BB2B;
-	Wed, 10 Apr 2024 17:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51DBF17BB2F;
+	Wed, 10 Apr 2024 17:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKuTdcBD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qnw+36ra"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B95315B0E4;
-	Wed, 10 Apr 2024 17:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABE51779B4;
+	Wed, 10 Apr 2024 17:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712770516; cv=none; b=damVUClWM2V0pGe5i0jJlNr+sOSY6RHyw/5GWynD0SMIkqMdJ5QBYwLcIcUfbqBYhOmzHL8CyttUNZu63uCxwxhOq6XZdyeH1LNiw4pKgLlqpoPh4DqzDWLX+eVcJfmO9lgk1YJXW/lnIuXnwyBy7gfcxXlV10O9lnjAYmgcYP4=
+	t=1712770533; cv=none; b=tMJYAIatH8OfrRFMPfcH0DsJLwjyV5RKFIPe+EtYfwENkUebxt8qKnCxlPYDpaFRfnYhXF/EhD9grV4jDu6wxr8nc7UGuFTbJ7slf4tbn4QZwYF/LFA+MvrZe1kh4rqPeVk1EKzDJJ6ZfMGPn3GK/081z7ZiUzAElrR03nGY+F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712770516; c=relaxed/simple;
-	bh=VQcH65WHqA/FS4uddL5zUJwX+BidAKnJYJdgb3MS8lk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lq0dCbnWzPbrDRx+UW2FFdan1+gRxs+3/jjOs1hD94xp+NKoWzy/sU2Kfee01W5x0zjP8eoBMmK3/hSvBZvW5crn2x9IeD7nqJP8pAXL6ClrfV1rsLabRReRe66qoP8B1/QxZWG7/By6kKK0fF5I8RZdt+ZzBMfA1jyMKrbP2kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKuTdcBD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8678C433C7;
-	Wed, 10 Apr 2024 17:35:15 +0000 (UTC)
+	s=arc-20240116; t=1712770533; c=relaxed/simple;
+	bh=7Kgj+FnDCOAeFadMFeTnbWKsHPEUddUSL9aEnFJgj6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C7fu8yW/0K5eLW0uomVlajBABJxAIZP1hNIPzS/Y+ILLTUYMrnyMnLx6b7W8gXqF3tMeGN0ez8SaVZI9H+KieEL5RBljvwXRrCES2qB8JmkyygXlsjuo9cI+JSzngwxCOUvrFqINKXcln7XO/fr069JMM9zuxt+HdSQK5Xz0Wiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qnw+36ra; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 303FBC433C7;
+	Wed, 10 Apr 2024 17:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712770516;
-	bh=VQcH65WHqA/FS4uddL5zUJwX+BidAKnJYJdgb3MS8lk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AKuTdcBDWerDwjKr3wEagpSw7BfaYoAXlOYEPY1HHrIQnQupK0az+5WFmhYNEKTUB
-	 vQhp2T8kjdsj9V1lGZzOq+Jmv8XJn72N1Ac3f058geLGA7P1GNtjvHAQk9e1gqituj
-	 BrDcAFeKc4sugwHyGJ9801R0GJKa5T7qdFRIqR7UIl6a98qbGS0q9kO4CNrkAL6/uf
-	 MJuMEvyla07qZ+4Hq+hTO09S8LuKbG3A2Sl5HKiYXTnsS9XI9KCSdTvL+dqjU9BTZr
-	 GUdwqTTXsSFkucF0Pa5wvW/43dtwxTA6XuGHYSf09CItKdCMRLF9eSTZ6ar6cXTH5d
-	 otR8iI9lpsx4g==
-Date: Wed, 10 Apr 2024 12:35:13 -0500
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Tom Joseph <tjoseph@cadence.com>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-arm-msm@vger.kernel.org,
-	Ray Jui <rjui@broadcom.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Michal Simek <michal.simek@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>, asahi@lists.linux.dev,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
-	linux-rockchip@lists.infradead.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Hector Martin <marcan@marcan.st>,
-	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-kernel@vger.kernel.org,
-	Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: cdns,cdns-pcie-host: drop
- redundant msi-parent and pci-bus.yaml
-Message-ID: <171277051181.788021.12147595660219307279.robh@kernel.org>
-References: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org>
+	s=k20201202; t=1712770532;
+	bh=7Kgj+FnDCOAeFadMFeTnbWKsHPEUddUSL9aEnFJgj6c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qnw+36raATUEr+UHJR/erciW7EqRUnbyMXmTYJSq43nUOhkNipsOyjJwMlIeSceAT
+	 nuk7IzCYHvInrSCIuHRuz5DhIhKjHdYk3q8RgsQv3qq61fzr8ymJIeoRhtvF5JtvU2
+	 zQI5rnSUL+XRrgkRVRskG7RqdUjQXQjnDROJF1b5Pa5VTajLuum+ctqDhlB3dzfQ21
+	 exYxymeDjTPJl3ziEPPZ6MeXAC3cgfcqMtKMiUb3rCbOSFiMViBJzuoTlSurhpBepe
+	 vmdk3aRL1b9I6p6P1WdqSTRN3TZey6NtUrRNt1F42I19mlk63N95Ouc/WN1lo3/fPn
+	 xi//PCJhaQNvQ==
+Date: Wed, 10 Apr 2024 10:35:31 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jiri Pirko <jiri@resnulli.us>
+Cc: pabeni@redhat.com, John Fastabend <john.fastabend@gmail.com>, Alexander
+ Lobakin <aleksander.lobakin@intel.com>, Florian Fainelli
+ <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Daniel Borkmann
+ <daniel@iogearbox.net>, Edward Cree <ecree.xilinx@gmail.com>, Alexander
+ Duyck <alexander.duyck@gmail.com>, netdev@vger.kernel.org,
+ bhelgaas@google.com, linux-pci@vger.kernel.org, Alexander Duyck
+ <alexanderduyck@fb.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+Message-ID: <20240410103531.46437def@kernel.org>
+In-Reply-To: <ZhasUvIMdewdM3KI@nanopsycho>
+References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
+	<20240409135142.692ed5d9@kernel.org>
+	<ZhZC1kKMCKRvgIhd@nanopsycho>
+	<20240410064611.553c22e9@kernel.org>
+	<ZhasUvIMdewdM3KI@nanopsycho>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-
-On Sun, 07 Apr 2024 12:19:58 +0200, Krzysztof Kozlowski wrote:
-> The binding reference common cdns-pcie-host.yaml, which already defines
-> msi-parent and has a reference to pci-bus.yaml schema.  Drop redundant
-> pieces here to make it a bit smaller.
+On Wed, 10 Apr 2024 17:12:18 +0200 Jiri Pirko wrote:
+> >> For these kind of unused drivers, I think it would be legit to
+> >> disallow any internal/external api changes. Just do that for some
+> >> normal driver, then benefit from the changes in the unused driver.  
+> >
+> >Unused is a bit strong, and we didn't put netdevsim in a special
+> >directory. Let's see if more such drivers appear and if there
+> >are practical uses for the separation for scripts etc?  
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 3 ---
->  1 file changed, 3 deletions(-)
-> 
+> The practical use I see that the reviewer would spot right away is
+> someone pushes a feature implemented in this unused driver only.
+> Say it would be a clear mark for a driver of lower category.
+> For the person doing API change it would be an indication that he
+> does not have that cautious to not to break anything in this driver.
+> The driver maintainer should be the one to deal with potential issues.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hm, we currently group by vendor but the fact it's a private device
+is probably more important indeed. For example if Google submits
+a driver for a private device it may be confusing what's public
+cloud (which I think/hope GVE is) and what's fully private.
 
+So we could categorize by the characteristic rather than vendor:
+
+drivers/net/ethernet/${term}/fbnic/
+
+I'm afraid it may be hard for us to agree on an accurate term, tho.
+"Unused" sounds.. odd, we don't keep unused code, "private"
+sounds like we granted someone special right not took some away,
+maybe "exclusive"? Or "besteffort"? Or "staging" :D  IDK.
+
+> With this clear marking and Documentation to describe it, I think I
+> would be ok to let this in, FWIW.
 
