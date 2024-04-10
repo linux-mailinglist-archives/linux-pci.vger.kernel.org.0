@@ -1,168 +1,161 @@
-Return-Path: <linux-pci+bounces-6075-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA5458A0093
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 21:28:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99AA58A00A3
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 21:32:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82F8A286029
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 19:28:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F10A286E35
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 19:32:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D0B0181313;
-	Wed, 10 Apr 2024 19:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F523181335;
+	Wed, 10 Apr 2024 19:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4KcJiaC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tq4rrWfX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CC317F370;
-	Wed, 10 Apr 2024 19:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5348D181322;
+	Wed, 10 Apr 2024 19:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712777323; cv=none; b=u/+CwLzWMaOYNdxa+aDhQwdFIMey22efMw64wRfbU1KJqXAoTw1FYM2LddlhzB1izQTqRTolo152MfVYM8Yfvn9Jtsq21I/zq8d3Pdv93D6GwIPtGl4L6xfh0eHOsnDseWpLJq4mJBVcXYbH7qzmJse345qMIR0S7E8Kv7xPooU=
+	t=1712777553; cv=none; b=e/mQ06VkSWAXIrCuSc05MtA3uv8WGh4NhXwkGuhKDH07PPDrAPWBVAr7QAIn9+1sqg0AaJtt7z6nnRLzrVmxncFWrnv2pTXd4TG9ZC8BUyd/K771IZIwaUZMIQRtXpFyiK4GFwHxrvT54VvUouPCaMUUZE3W89ZpLZ71VgiXSJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712777323; c=relaxed/simple;
-	bh=WOeeQkSWa4cC+JdRWhi+F3uBgT2A/qX4BlXL0RnkUCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Rpg8Awrzuecq5aZxtisoWwVZZJ7G/NusLTPMZyWljALC43sMyoT4d/F3L4n7AqMvakeyjxvI+gjf2yzYSQ+U2q8S8onv2iChH8oGQyXd8ezHcgKU7OMqp6tee8F99AYliTBck3WvGQf9/xPwrtH13RFV04ypINydCe+c+Izhm4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4KcJiaC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5928DC433F1;
-	Wed, 10 Apr 2024 19:28:42 +0000 (UTC)
+	s=arc-20240116; t=1712777553; c=relaxed/simple;
+	bh=WW5sMpVOz0tGbMU1O5onTUR51y42uNFu9wn05WPtkWY=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=d8fzlFMknzzDdOw9Ya/qxCVLVE/zzVJnQWH/LWVdqvFUvHTsJS34wOlPY9tQ41W0abVnxkKFqExT8WoI4Xe2bnLLBoifJLZiOc0n4LUmaogtqnl1+Xp9KJIamL3yAwbnnBT2Q91q66+dwUzogrO5x8rWAwf3kg1WuzXfgmBs0rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tq4rrWfX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88179C43390;
+	Wed, 10 Apr 2024 19:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712777322;
-	bh=WOeeQkSWa4cC+JdRWhi+F3uBgT2A/qX4BlXL0RnkUCI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=V4KcJiaCI8JlpuHxsNMA2kz2SSkPb8I65KHr01c0bKDpPWkjrrN9fJ2uS8aDjHR1d
-	 npEtvjCySIDywAXfkqTrCw05tsQT7NvA1DrpALdePR392tb4lVeuk8u4c3879QTyCO
-	 BiJpuEt1IfiHGy/dBiQQ/T0yyIUDSWLo1LI4o/QIB/wePkwZs+peO8FEj6rJa1P1cV
-	 seUk5IOw7Xzt9xUoOmk+c15h4jYVYuQ0sjaGT2Da2fQ7KBzNqr97uoDgXec2wvB33/
-	 oWNw3w/JrPhXPs6vWXZ6chIdKRXa19HVfg9mzOE0GHvFFPF6wchSzhAZA4CYXL8XL7
-	 YcYPIZwuxh3JA==
-Date: Wed, 10 Apr 2024 14:28:40 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Krishna Thota <kthota@nvidia.com>, Will Deacon <will@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>
-Subject: Re: [Query] ACS enablement in the DT based boot flow
-Message-ID: <20240410192840.GA2147526@bhelgaas>
+	s=k20201202; t=1712777552;
+	bh=WW5sMpVOz0tGbMU1O5onTUR51y42uNFu9wn05WPtkWY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=tq4rrWfX9sfVjyG1eyRA5JQGhmGUZZ7uZmnP8xeGteU4tmjtBJwX1rIwj8QFaJQjX
+	 hazgBdZOKaDhWWOOpBX6HrGOSdUUKtAERdIR/r8t0ihV2Y0E50ZsNeIdGCuECZsGc4
+	 MVhev7smKrOV3LTOgTQd6psiBKajiUbE3PItXRb805uwXE93PscA8sScGPOQ0bD2h3
+	 yL4o4fFtnh+PyXMspoVkdeCYh+yHEbJJA7uBTYcP8lE1egXnKItFj4r5SyFia/wVYd
+	 et+x2ylnr2iBKZZMb3xWvQ/x8CxEmBdAQqRiw1NTwJlG9b10JfdjTo1V82rU5g43Wu
+	 5YHbgdVHo6jUg==
+Date: Wed, 10 Apr 2024 14:32:31 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH8PR12MB667446D4A4CAD6E0A2F488B5B83F2@PH8PR12MB6674.namprd12.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-rockchip@lists.infradead.org, 
+ Scott Branden <sbranden@broadcom.com>, 
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>, 
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>, 
+ Will Deacon <will@kernel.org>, Sven Peter <sven@svenpeter.dev>, 
+ Heiko Stuebner <heiko@sntech.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, 
+ Jim Quinlan <jim2101024@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, 
+ Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, asahi@lists.linux.dev, 
+ linux-arm-msm@vger.kernel.org, Hector Martin <marcan@marcan.st>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Mark Kettenis <kettenis@openbsd.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Tom Joseph <tjoseph@cadence.com>, linux-renesas-soc@vger.kernel.org, 
+ Jianjun Wang <jianjun.wang@mediatek.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Michal Simek <michal.simek@amd.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Nicolas Saenz Julienne <nsaenz@kernel.org>, Ray Jui <rjui@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Daire McNamara <daire.mcnamara@microchip.com>, 
+ Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ linux-mediatek@lists.infradead.org, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Srikanth Thokala <srikanth.thokala@intel.com>, 
+ Ryder Lee <ryder.lee@mediatek.com>, Bjorn Andersson <andersson@kernel.org>, 
+ Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20240410181521.269431-4-krzysztof.kozlowski@linaro.org>
+References: <20240410181521.269431-1-krzysztof.kozlowski@linaro.org>
+ <20240410181521.269431-4-krzysztof.kozlowski@linaro.org>
+Message-Id: <171277754988.1212749.4199877903133990039.robh@kernel.org>
+Subject: Re: [PATCH v2 4/4] dt-bindings: PCI: mediatek,mt7621-pcie: switch
+ from deprecated pci-bus.yaml
 
-[+cc Will, Joerg]
 
-On Mon, Apr 01, 2024 at 10:40:15AM +0000, Vidya Sagar wrote:
-> Hi folks,
-> ACS (Access Control Services) is configured for a PCI device through
-> pci_enable_acs().  The first thing pci_enable_acs() checks for is
-> whether the global flag 'pci_acs_enable' is set or not.  The global
-> flag 'pci_acs_enable' is set by the function pci_request_acs().
+On Wed, 10 Apr 2024 20:15:21 +0200, Krzysztof Kozlowski wrote:
+> dtschema package with core schemas deprecated pci-bus.yaml schema in
+> favor of individual schemas per host, device and pci-pci.
 > 
-> pci_enable_acs() function is called whenever a new PCI device is
-> added to the system
+> Switch Mediatek MT7621 PCIe host bridge binding to this new schema.
 > 
->  pci_enable_acs+0x4c/0x2a4
->  pci_acs_init+0x38/0x60
->  pci_device_add+0x1a0/0x670
->  pci_scan_single_device+0xc4/0x100
->  pci_scan_slot+0x6c/0x1e0
->  pci_scan_child_bus_extend+0x48/0x2e0
->  pci_scan_root_bus_bridge+0x64/0xf0
->  pci_host_probe+0x18/0xd0
+> This requires dtschema package newer than v2024.02 to work fully.
+> v2024.02 will partially work: with a warning.
 > 
-> In the case of a system that boots using device-tree blob,
-> pci_request_acs() is called when the device driver binds with the
-> respective device
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> of_iommu_configure+0xf4/0x230
-> of_dma_configure_id+0x110/0x340
-> pci_dma_configure+0x54/0x120
-> really_probe+0x80/0x3e0
-> __driver_probe_device+0x88/0x1c0
-> driver_probe_device+0x3c/0x140
-> __device_attach_driver+0xe8/0x1e0
-> bus_for_each_drv+0x78/0xf0
-> __device_attach+0x104/0x1e0
-> device_attach+0x14/0x30
-> pci_bus_add_device+0x50/0xd0
-> pci_bus_add_devices+0x38/0x90
-> pci_host_probe+0x40/0xd0
+> ---
 > 
-> Since the device addition always happens first followed by the
-> driver binding, this flow effectively makes sure that ACS never gets
-> enabled.
+> Important: v2024.03 (said dtschema newer than v2024.02) was not yet
+> released, therefore this patch probably should wait a bit. Previous
+> patches do not depend anyhow on future release, so they can be taken as
+> is.
 > 
-> Ideally, I would expect the pci_request_acs() get called (probably
-> by the OF framework itself) before calling pci_enable_acs().
+> Changes in v2:
+> 1. New patch
+> 2. Split mediatek,mt7621-pcie to separate patch as it uses
+>    pci-pci-bridge schema.
+> ---
+>  .../devicetree/bindings/pci/mediatek,mt7621-pcie.yaml         | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> This happens in the ACPI flow where pci_request_acs() is called
-> during IORT node initialization (i.e. iort_init_platform_devices()
-> function).
-> 
-> Is this understanding correct? If yes, would it make sense to call
-> pci_request_acs() during OF initialization (similar to IORT
-> initialization in ACPI flow)?
 
-Your understanding looks correct to me.  My call graph notes, FWIW:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-  mem_init
-    pci_iommu_alloc                   # x86 only
-      amd_iommu_detect                # init_state = IOMMU_START_STATE
-        iommu_go_to_state(IOMMU_IVRS_DETECTED)
-          state_next
-            switch (init_state)
-            case IOMMU_START_STATE:
-              detect_ivrs
-                pci_request_acs
-                  pci_acs_enable = 1  # <--
-      detect_intel_iommu
-        pci_request_acs
-          pci_acs_enable = 1          # <--
+yamllint warnings/errors:
 
-  pci_scan_single_device              # PCI enumeration
-    ...
-      pci_init_capabilities
-        pci_acs_init
-          pci_enable_acs
-            if (pci_acs_enable)       # <--
-              pci_std_enable_acs
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dtb: pcie@1e140000: pcie@0,0: Unevaluated properties are not allowed ('clocks', 'phy-names', 'phys', 'resets' were unexpected)
+	from schema $id: http://devicetree.org/schemas/pci/mediatek,mt7621-pcie.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dtb: pcie@1e140000: pcie@1,0: Unevaluated properties are not allowed ('clocks', 'phy-names', 'phys', 'resets' were unexpected)
+	from schema $id: http://devicetree.org/schemas/pci/mediatek,mt7621-pcie.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dtb: pcie@1e140000: pcie@2,0: Unevaluated properties are not allowed ('clocks', 'phy-names', 'phys', 'resets' were unexpected)
+	from schema $id: http://devicetree.org/schemas/pci/mediatek,mt7621-pcie.yaml#
 
-  __driver_probe_device
-    really_probe
-      pci_dma_configure               # pci_bus_type.dma_configure
-        if (OF)
-          of_dma_configure
-            of_dma_configure_id
-              of_iommu_configure
-                pci_request_acs       # <-- 6bf6c24720d3
-                iommu_probe_device
-        else if (ACPI)
-          acpi_dma_configure
-            acpi_dma_configure_id
-              acpi_iommu_configure_id
-                iommu_probe_device
+doc reference errors (make refcheckdocs):
 
-The pci_request_acs() in of_iommu_configure(), which happens too late
-to affect pci_enable_acs(), was added by 6bf6c24720d3 ("iommu/of:
-Request ACS from the PCI core when configuring IOMMU linkage"), so I
-cc'd Will and Joerg.  I don't know if that *used* to work and got
-broken somehow, or if it never worked as intended.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240410181521.269431-4-krzysztof.kozlowski@linaro.org
 
-Bjorn
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
