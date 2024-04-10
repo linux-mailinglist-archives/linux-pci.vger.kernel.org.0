@@ -1,63 +1,74 @@
-Return-Path: <linux-pci+bounces-6040-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6041-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 540B389FC6D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 18:06:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD8A389FC97
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 18:13:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1011228D3DF
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 16:06:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 093DB1C21C5A
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 16:13:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31D86178CCC;
-	Wed, 10 Apr 2024 16:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74D0179671;
+	Wed, 10 Apr 2024 16:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZthO1lbM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jT74nrU5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAE51779B6;
-	Wed, 10 Apr 2024 16:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165CF15F3F1;
+	Wed, 10 Apr 2024 16:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712765162; cv=none; b=OpTS7KzUcJCwJf/VqHXvK2DTkd28re5/2RCGvW/bKZkz9jSGASlyTD1NrWOi08thUiaHekKlvXvk5xkkxtMy+MuXxl8KqYBnxCCtFtyosebCmYitaouio9E/o5ZUvSSBNxZ5qhfvVGxuHekZOte2usV+CeMg/L4njj2Z83K1CTg=
+	t=1712765587; cv=none; b=hx3BqmpWQrjYKu/HZurU1oisDOA8IIB35A49wyPiln0IWzRnE1A6j20BrQasnj6rsfpmTFb6YK2xZ//Q6ESJ/ZbRHmNOI+7Y6X462BwawVoYN2Zg/+bpv+JUb3MRUN8nHgq2jqTXdzT3CzFp4N4X0rQ/Nw644ZGLVnKG4tx452c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712765162; c=relaxed/simple;
-	bh=piq+aZgljrVoCDKhCfSkoGK2WF2WNTFw7ziQ5tAjdOc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Lc8Ox9B9x8w7XPCLcLfCcVjyI54QwnThiRi3Jetn7rh+Bc2I46DOsfCHJI5sct4jW8p5Ku3jfL3FgOtOzR7JPJBG4zhoKAynlnaZmbHMQ3HI3fV6TZtLWYjUfF2vUEfvCsE9QfO9qoPes1KUY8vGBmzqDrTkHCaE+0mvFjI3DWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZthO1lbM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43AFr5a9030162;
-	Wed, 10 Apr 2024 16:05:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=gofH+p75A2H6MwZ+LcSc2nUNvgwMF53ULI8Ss/9g+q4=; b=Zt
-	hO1lbMnlBlYM6pnlELChyEfOLMh6lvk+6K4hFEz7irHMPx5GRtqr6QJL8OHa4STH
-	oY2274kPX9yaO21fipOT6y3smAhYzPP6GRS/B3aLVLAftOCeGcbeugvhU/G7yK29
-	05SlUnMnkyOMoDEzkj2dQ/8cr08q9dNwIbh/yvuEkLnP6wbKlqYmpXtMd9h/m2du
-	ui1PMRupXHY6oDfb2oMbIKBVK9Zl4o9ukJmcptWLKV/xFDZIsIyyxjPUTswV841P
-	1Jy+QeZYF7p3HG0g7Xb0a/Q2QTLXpZ5Cu4gXcK9WwsPFkTaadMR3vIQNdILQQ/IG
-	jFrXvEZsUHa3880I6uYQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xdskjha29-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 16:05:30 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43AG5T7f022079
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 16:05:29 GMT
-Received: from [10.110.37.144] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 10 Apr
- 2024 09:05:27 -0700
-Message-ID: <c128cf9b-de30-49f1-9adb-8b03b61f4d51@quicinc.com>
-Date: Wed, 10 Apr 2024 09:05:26 -0700
+	s=arc-20240116; t=1712765587; c=relaxed/simple;
+	bh=FQCYN6IqaR3axpJN1TW2Hx67diOfXeWRYKQJ0xq71j4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rOY4hX9uQ1zM6/UhSobL9s8gbc9hyM8KgrGTz2n6PFisi/+RG0OHjWw41hH4plMRNKXJpTvCKnI/t5bXNbUrDZzEx0h9WZ4LXP14L/EOzU7caKlvOGs9RQtSbtcBaz921Ra69+qs542WPFI8lSC2HMe82d2sNQSRbfhk3Upf3oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jT74nrU5; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a7d6bc81c6so4898648eaf.2;
+        Wed, 10 Apr 2024 09:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712765585; x=1713370385; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WD4ah+6AHBgHczyWQvPumlZfTe3vXiDmawFaF5dvJH8=;
+        b=jT74nrU5aAw3ghIC9lGCLYli1VrbQGslVxGGOAkluTme6oQEVmgyVEmNtfikDL5+RX
+         xohRC5YJ1zjmNG83GYfD444tBOC/mEsOZyq7MPWhtDIiJwrLOk/6oY5gnR1uy3CMfOsx
+         s0c6XwglrY08Fkk6fmqB55lC4ISJu+UF5irtOgMvl5hKKhWCXg/k6mcUvsP8y4b5W9gn
+         OS+HbbHoY0cFs704UboPGKaLeSnzALW5VrVQX0UXjzzHMRuc2twvnqEp0Iw3WT+uvGM4
+         2Qhv5ZGWKM7l/AKKnNNaygr4+BCP77qOHrYhGIaBV/glrVP5Q7JGLYbpxFrZbzbffAnq
+         08hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712765585; x=1713370385;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WD4ah+6AHBgHczyWQvPumlZfTe3vXiDmawFaF5dvJH8=;
+        b=iDbnv2+rH5x3Qzamwm5+XnMcvMZJ5QVax4MqRB3a+qLvqMwtQAyxfXNyBYyRAcl1UC
+         CbH+tUvEKGfSfAZHxkQlalUNkSj+ykQJWAU5WnrV3pn+3BKu2+daprR3OsO9Nd3+SzuM
+         PZPO1mUJcHtEureYD6b8k+wS9a30qJ0Eeh20xLoxsA4MAM2nDHO87aPQYNn5MiBF06OT
+         ALMLyYOvuAPF14eG9lDTr5LZQb7u50nHMniIKZoCfAxkqW8D7Z8c9qI71msikQP76c6V
+         Rmd2EV+OeVm3+8t3efzXygjTukYSc2XdgPjUvWaC0z7+qQmuh5ot29Bz4EJ+54D26cR9
+         AEEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRKf4WAtsbd2uCrwznmeET3ztLApvt1nufKJcY0AVIe6c0lrglFL7CXM/fnLRMXss2fmqUOd8+B7gtBZFHKrHMPAScvPIHqsuAQddp
+X-Gm-Message-State: AOJu0YwyyAkCbYUxIqAF/kgLrjoj6Sy5ZPb85woF0l+zthTKTGStZ4Ha
+	dQNkbV2tE4hLqdbykAN0kt0n2k3cgx9zZanoIelFmB9NMZvQ0eUN
+X-Google-Smtp-Source: AGHT+IG8kseDukhMLLg4zaEnxqa7XZcV89fTCiN8y3vTuHgCKPjxUjwFtcJutGdwfyAsrnnkZ4P62A==
+X-Received: by 2002:a05:6871:7801:b0:22a:582a:9bcc with SMTP id oy1-20020a056871780100b0022a582a9bccmr3234482oac.53.1712765585061;
+        Wed, 10 Apr 2024 09:13:05 -0700 (PDT)
+Received: from [192.168.20.112] (76-251-167-31.lightspeed.austtx.sbcglobal.net. [76.251.167.31])
+        by smtp.gmail.com with ESMTPSA id vq10-20020a056871a08a00b0022eac68988esm3172220oab.20.2024.04.10.09.13.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 09:13:04 -0700 (PDT)
+Message-ID: <037179a4-5e7e-47cf-b0c2-ed6035df6041@gmail.com>
+Date: Wed, 10 Apr 2024 11:13:03 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,104 +76,82 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 16/16] PCI/pwrctl: add a PCI power control driver for
- power sequenced devices
+Subject: Re: [PATCH] PCI: Add a quirk for preventing D3 on a bridge
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Eric Heintzmann <heintzmann.eric@free.fr>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20240307163709.323-1-mario.limonciello@amd.com>
 Content-Language: en-US
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Marcel Holtmann
-	<marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        "David
- S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Bjorn
- Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Catalin
- Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Geert
- Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Neil
- Armstrong <neil.armstrong@linaro.org>,
-        Marek Szyprowski
-	<m.szyprowski@samsung.com>,
-        Alex Elder <elder@linaro.org>,
-        Srini Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Manivannan
- Sadhasivam <mani@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Dmitry
- Baryshkov <dmitry.baryshkov@linaro.org>,
-        Amit Pundir
-	<amit.pundir@linaro.org>, Xilin Wu <wuxilin123@gmail.com>
-CC: <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>
-References: <20240410124628.171783-1-brgl@bgdev.pl>
- <20240410124628.171783-17-brgl@bgdev.pl>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240410124628.171783-17-brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+From: Mario Limonciello <superm1@gmail.com>
+In-Reply-To: <20240307163709.323-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DT7Wv9f2L7fktC3xWXbBoB4QdMNzyLRm
-X-Proofpoint-ORIG-GUID: DT7Wv9f2L7fktC3xWXbBoB4QdMNzyLRm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 lowpriorityscore=0
- mlxscore=0 phishscore=0 impostorscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404100117
 
-On 4/10/2024 5:46 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On 3/7/24 10:37, Mario Limonciello wrote:
+> Hewlett-Packard HP Pavilion 17 Notebook PC/1972 is an Intel Ivy Bridge
+> system with a muxless AMD Radeon dGPU.  Attempting to use the dGPU fails
+> with the following sequence:
 > 
-> Add a PCI power control driver that's capable of correctly powering up
-> devices using the power sequencing subsystem. The first user of this
-> driver is the ath11k module on QCA6390.
-[...]
-> +config PCI_PWRCTL_PWRSEQ
-> +	tristate "PCI Power Control driver using the Power Sequencing subsystem"
-> +	select POWER_SEQUENCING
-> +	select PCI_PWRCTL
-> +	default m if (ATH11K_PCI && ARCH_QCOM)
-[...]
-> +static const struct of_device_id pci_pwrctl_pwrseq_of_match[] = {
+> ```
+> ACPI Error: Aborting method \AMD3._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20230628/psparse-529)
+> radeon 0000:01:00.0: not ready 1023ms after resume; waiting
+> radeon 0000:01:00.0: not ready 2047ms after resume; waiting
+> radeon 0000:01:00.0: not ready 4095ms after resume; waiting
+> radeon 0000:01:00.0: not ready 8191ms after resume; waiting
+> radeon 0000:01:00.0: not ready 16383ms after resume; waiting
+> radeon 0000:01:00.0: not ready 32767ms after resume; waiting
+> radeon 0000:01:00.0: not ready 65535ms after resume; giving up
+> radeon 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+> radeon 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+> ```
+> 
+> The issue is that the root port the dGPU is connected to can't handle
+> the transition from D3cold to D0 so the dGPU can't properly exit runpm.
+> 
+> The existing logic in pci_bridge_d3_possible() checks for systems that
+> are newer than 2015 to decide that D3 is safe.  This would nominally work
+> for an Ivy Bridge system (which was discontinued in 2015), but this system
+> appears to have continued to receive BIOS updates until 2017 and so this
+> existing logic doesn't appropriately capture it.
+> 
+> Add the system to bridge_d3_blacklist to prevent port pm from being used.
+> 
+> Reported-and-tested-by: Eric Heintzmann <heintzmann.eric@free.fr>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3229
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   drivers/pci/pci.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index c3585229c12a..9d5d08a420f1 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3102,6 +3102,18 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
+>   			DMI_MATCH(DMI_BOARD_VERSION, "Continental Z2"),
+>   		},
+>   	},
 > +	{
-> +		/* ATH11K in QCA6390 package. */
-> +		.compatible = "pci17cb,1101",
-> +		.data = "wlan",
+> +		/*
+> +		 * Changing power state of root port dGPU is connected fails
+> +		 * https://gitlab.freedesktop.org/drm/amd/-/issues/3229
+> +		 */
+> +		.ident = "Hewlett-Packard HP Pavilion 17 Notebook PC/1972",
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "1972"),
+> +			DMI_MATCH(DMI_BOARD_VERSION, "95.33"),
+> +		},
 > +	},
-> +	{
-> +		/* ATH12K in WCN7850 package. */
-> +		.compatible = "pci17cb,1107",
-> +		.data = "wlan",
+>   #endif
+>   	{ }
+>   };
 
-since you are adding both ath11k and ath12k packages, should you update the
-commit text and the config "default m if" condition to include ath12k?
+Bjorn,
 
-/jeff
+Ping on this quirk.
 
