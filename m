@@ -1,103 +1,54 @@
-Return-Path: <linux-pci+bounces-6046-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6047-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F2B489FD25
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 18:38:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9184789FD66
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 18:48:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A4C5283A3F
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 16:38:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8CCBB2273D
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 16:46:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25C617B4F5;
-	Wed, 10 Apr 2024 16:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF1517B4F8;
+	Wed, 10 Apr 2024 16:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1E3obt2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrlISI/1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE2C15B10A;
-	Wed, 10 Apr 2024 16:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EA73C38;
+	Wed, 10 Apr 2024 16:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712767111; cv=none; b=q2sguF1cPG65C2gtDPYg+SYdM48B9YCiLnH7kLGPXvtCBQnvQAPhuDofURhrff1L3q2u0bdNLo06Syl8UoebRCp6IYIIGCNxKdfIO4NBQy+6wIFH4XCO75dm1AQcWLDnyHHYXRATPN4bRlJ0Gf0i5PKMarXGgC+E0w2GNgLzaBA=
+	t=1712767602; cv=none; b=KzqU9GhrvLV3kD8ebFIYNQ4+3Knn9rj/AYZ2IC7sMCj436VvSISOt4eV64Fcw22N3suX4zKSoqp6EK+kKceg115tqYJvg+T5NOKJwh2+tXcp33wt5iwtb7nrDQ39ZqQlJa2lVR06/EChGmFzfENoqrY0b8t7tATXJALMq7knai8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712767111; c=relaxed/simple;
-	bh=iX3oV/OqzRjgmC93miXiwRYAlMbRuyED7tJL1s5mjUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iaSGPH3JKU6cP6eHgDYy/inGNXFdslviSFuAlBX2DFRQ7h+by2/nQQ5jbvrX398tA3vnhi8MRIitzV+ms1EVwNWjj1Jz/O6KLsMvRtoB/Fgni5hr06fPE1AUI3zrTIpukk9n6qSy65sd6uGMI+z8smoX3B+TguvxP4dc+YxMqho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1E3obt2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCBACC433F1;
-	Wed, 10 Apr 2024 16:38:30 +0000 (UTC)
+	s=arc-20240116; t=1712767602; c=relaxed/simple;
+	bh=qii5UQvff+KsRQSbgkC2NNYV6wkpNnpnheroe4v9t/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JqUVJTSNBfUDi7iQYK2SzUAPNriyCWeHXFr4Q9WJSqwpQEtv3fs9BYfnpIAuEBAZrDLCFD8NcrSReFf6lgTqPwMMxArIomJTyZQC6IRqgo5jZaYjFuBN243y1kXFz1AvfV4CzWb9qxzNw/n1rOdyJ8aDlP6OKGzrAz/kNIcQ8I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrlISI/1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B60AC433C7;
+	Wed, 10 Apr 2024 16:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712767111;
-	bh=iX3oV/OqzRjgmC93miXiwRYAlMbRuyED7tJL1s5mjUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R1E3obt2kD4S6U3A41s/x8MeAVa76xSg0hM9zZpclfIcJGjDZd7Z+Z0oYq9MJjeZ4
-	 mwBHLzTYLuLg32YIyFi4t8HXlKgVkKjrVp9rxxwggjzoxqfaLdenVywR8GgmFSF/nD
-	 Vbvb/AgS/82DgK2Sxcu9t0GA3TuHZQ2bppmX/BLPI4zdDSn/nywvxiFRXBCLLA3tFb
-	 t1cPPDYPyzH9e3FbeBPvEotYVc9H71bVUbed6R4mKRqmKAPiVjl98z2F4BZeB6v60q
-	 htHY38WGEOQju1dBN7aXVO99lAXTd3Jkj5EdTaOHm4i56ebD+dIvmin4tPSylnAF9J
-	 xPvGnvbDpXI/Q==
-Date: Wed, 10 Apr 2024 11:38:28 -0500
-From: Rob Herring <robh@kernel.org>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: David Rientjes <rientjes@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>, Helge Deller <deller@gmx.de>,
-	linux-pci@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-clk@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Lee Jones <lee@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>, linux-serial@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-renesas-soc@vger.kernel.org,
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Stephen Boyd <sboyd@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Niklas Cassel <cassel@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Baoquan He <bhe@redhat.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-fbdev@vger.kernel.org, Anup Patel <apatel@ventanamicro.com>,
-	David Airlie <airlied@gmail.com>, linux-sh@vger.kernel.org,
-	Jiri Slaby <jirislaby@kernel.org>, Rich Felker <dalias@libc.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
-	Jacky Huang <ychuang3@nuvoton.com>
-Subject: Re: [RESEND v7 28/37] dt-bindings: soc: renesas: sh: Add SH7751
- based target
-Message-ID: <171276710677.411211.12362682268802975581.robh@kernel.org>
-References: <cover.1712207606.git.ysato@users.sourceforge.jp>
- <3c2937039026fdb827709b2584528aca263f2668.1712207606.git.ysato@users.sourceforge.jp>
+	s=k20201202; t=1712767601;
+	bh=qii5UQvff+KsRQSbgkC2NNYV6wkpNnpnheroe4v9t/w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rrlISI/1hPx3IK1LGSir1GMuUTLKufF2CXZlbXUh8V3HTisTyPo/IdycxxKaDl5Sl
+	 YNca5UxKCfT6KMSIaF389cW7WNDhKt4WD2Ebkne3OzYkvLkJUTIG9/rvoHYzGFzdd9
+	 66E4j2QaPDntzVWR39GfbQSw3AEjHLhTc9ZgwcEDYzv3Bybv5gy8RpS7AxbaefoeWe
+	 EYv0mkkgmKazPoD6f1tM954DWU8fGndLL/dyhlUfHu7y1ZW0UNIgX7HmziGLEeo0kL
+	 cE+xC9JOoQYcwVaJC7JLE45R4W1loTLRhedDrHdpPrP6FCeRFuIcbFx9RiSRKuVpfv
+	 OgS+je+X/CZrg==
+Date: Wed, 10 Apr 2024 11:46:39 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Eric Heintzmann <heintzmann.eric@free.fr>
+Subject: Re: [PATCH] PCI: Add a quirk for preventing D3 on a bridge
+Message-ID: <20240410164639.GA2145972@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -106,17 +57,71 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3c2937039026fdb827709b2584528aca263f2668.1712207606.git.ysato@users.sourceforge.jp>
+In-Reply-To: <20240307163709.323-1-mario.limonciello@amd.com>
 
-
-On Thu, 04 Apr 2024 14:14:39 +0900, Yoshinori Sato wrote:
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  .../devicetree/bindings/soc/renesas/sh.yaml   | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/renesas/sh.yaml
+On Thu, Mar 07, 2024 at 10:37:09AM -0600, Mario Limonciello wrote:
+> Hewlett-Packard HP Pavilion 17 Notebook PC/1972 is an Intel Ivy Bridge
+> system with a muxless AMD Radeon dGPU.  Attempting to use the dGPU fails
+> with the following sequence:
 > 
+> ```
+> ACPI Error: Aborting method \AMD3._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20230628/psparse-529)
+> radeon 0000:01:00.0: not ready 1023ms after resume; waiting
+> radeon 0000:01:00.0: not ready 2047ms after resume; waiting
+> radeon 0000:01:00.0: not ready 4095ms after resume; waiting
+> radeon 0000:01:00.0: not ready 8191ms after resume; waiting
+> radeon 0000:01:00.0: not ready 16383ms after resume; waiting
+> radeon 0000:01:00.0: not ready 32767ms after resume; waiting
+> radeon 0000:01:00.0: not ready 65535ms after resume; giving up
+> radeon 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+> radeon 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+> ```
+> 
+> The issue is that the root port the dGPU is connected to can't handle
+> the transition from D3cold to D0 so the dGPU can't properly exit runpm.
+> 
+> The existing logic in pci_bridge_d3_possible() checks for systems that
+> are newer than 2015 to decide that D3 is safe.  This would nominally work
+> for an Ivy Bridge system (which was discontinued in 2015), but this system
+> appears to have continued to receive BIOS updates until 2017 and so this
+> existing logic doesn't appropriately capture it.
+> 
+> Add the system to bridge_d3_blacklist to prevent port pm from being used.
+> 
+> Reported-and-tested-by: Eric Heintzmann <heintzmann.eric@free.fr>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3229
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to pci/pm for v6.10, thanks!
 
+> ---
+>  drivers/pci/pci.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index c3585229c12a..9d5d08a420f1 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3102,6 +3102,18 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
+>  			DMI_MATCH(DMI_BOARD_VERSION, "Continental Z2"),
+>  		},
+>  	},
+> +	{
+> +		/*
+> +		 * Changing power state of root port dGPU is connected fails
+> +		 * https://gitlab.freedesktop.org/drm/amd/-/issues/3229
+> +		 */
+> +		.ident = "Hewlett-Packard HP Pavilion 17 Notebook PC/1972",
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "1972"),
+> +			DMI_MATCH(DMI_BOARD_VERSION, "95.33"),
+> +		},
+> +	},
+>  #endif
+>  	{ }
+>  };
+> -- 
+> 2.34.1
+> 
 
