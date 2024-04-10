@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-6091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 092948A0304
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 00:13:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B1CE8A0306
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 00:14:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B710928725B
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 22:13:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E99AE287B6C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 22:14:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39471190695;
-	Wed, 10 Apr 2024 22:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 714AB194C7B;
+	Wed, 10 Apr 2024 22:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7AL//34"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHPI+RsH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1045E190691;
-	Wed, 10 Apr 2024 22:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B36184107;
+	Wed, 10 Apr 2024 22:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712787200; cv=none; b=IKYYkjSp5SypGxZeMGgDIzxksHkUmIj6eslvmSWDKUkcqY3rl4irK5En3p0bAahlsGl02e+k7iXQnYWar47VrIvdSrFyfdkAnbqeRZCKjiSMrNjEPFEnbv9fJ3GujFGoPRnAr2x6rdEFJsLQgyMw6G+piugdrNFVVSAudZZRCz4=
+	t=1712787202; cv=none; b=HwLjjA49XtgLfDXxNh7nEgyW8mkS8BlWaHCfJ2PHBnLGpAhxuTeqqzeLX/ygq+K0E6OH6MgUjJFXleoaNlJK0ktfUVSr6kJUE1bJiVGKMBYIGuF3wSo3Dn2H9wRswvCzaOoKbbFIe3LNO0RBbYFgY8uILO0qO9WEMMbRn3pVA0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712787200; c=relaxed/simple;
-	bh=vXdvLxzg6tPLALkBtcaM7WqR73Z1FvDR7DPdIR3tcOM=;
+	s=arc-20240116; t=1712787202; c=relaxed/simple;
+	bh=1PLUZkZ+UYcL+67Y6uWNqq+qHl2vJs0y02TfeBgV6cE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cHuIP5yvh3b1efditJI6yUbEovy9FtXUuP0BJOEguXZQjv6jSTj5MqCQpSYN0NfS/frmUl/JMkUVROSFtIrTr9ffcS+g4RjTeHV0N9ZjxM7Mu7SKoqQcqmBktk8OYzZ8nuQzIQ4ZlKDNRcPjfpo/7pD5K1iV4sDW+1SN4aAq5zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7AL//34; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA31AC433C7;
-	Wed, 10 Apr 2024 22:13:19 +0000 (UTC)
+	 MIME-Version; b=IGhm8CDi/zccEpqyjuZvof4BIKCkaDS20GgR9hLaKI6FZwZY9c4daWvBawo4JzMXxCY66qiumhZ9NJwhaSzCGUwAX9rKsEVzHwD86UaU4Sxu9TurL4001k7kEiWFWMEQbDXR3ut4Yuvfq4Is6mgwyRRg+5UMX76VHWrwWGVp1qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHPI+RsH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84075C433C7;
+	Wed, 10 Apr 2024 22:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712787199;
-	bh=vXdvLxzg6tPLALkBtcaM7WqR73Z1FvDR7DPdIR3tcOM=;
+	s=k20201202; t=1712787201;
+	bh=1PLUZkZ+UYcL+67Y6uWNqq+qHl2vJs0y02TfeBgV6cE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k7AL//343t7hQV+zGTg1RZrW7D/EXBa2/GDB51CVRrl8tW10CSK42D1KwThmhMXS4
-	 PWx9xQvBOUHPnwM3adLM0HxvGGfX7jMQW7zZgbJqEzJ0ab8Tyg7SJXxT3CQu21kzWj
-	 vD/9Jr9/13aHEPDKFZm/qXE0KiUU/4Lu03yn6nyjaLlk3GTR7qAzqEKYtNBoIVVIUx
-	 BGmaWRFKoZR7m1JsmGWFLMyTj6GTysLL5YG7fjfq137LTqLX4gK2J9vRWlJDhb7Agl
-	 09YErmUxeFSPDMg2MzoDQn1AeTDA0+eUZbTyJtJqggUeE7KTMxdB040RL7jOcdBK2w
-	 xIeAKbKuBHD0Q==
+	b=CHPI+RsHTpEi1qrodoFGb1o5Ggg99/asKny9tfjlY22MTAgS9+KByTkPrp6Uvr3JE
+	 hX2eqGUT3o9FlAOL1+Z07G9TvbfizTQLMfqsWltq4r09dFbqeQidRkhaBY114JbaBn
+	 tnAQFqWnSExMCNtiQuINCo4c/CYs/q2EGk/1DdJJMpjQGWrHpboX4Ic5vbj7OcpD6H
+	 u+/9PJG1OXG0f0OxpiySauOKCui9cxWfX84qxJCfhBEnUYhL75rKleNh8VRntp+4EJ
+	 LkUpb4PvjLrg6nr8NGbxtD+YvAcr/l+MioWae+viroGlFL6yUzKQJ7bmZVhAvWkHG/
+	 xt7SVF8CVzOrg==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org,
 	Joerg Roedel <joro@8bytes.org>,
@@ -60,9 +60,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 2/7] Revert "PCI/MSI: Provide pci_ims_alloc/free_irq()"
-Date: Wed, 10 Apr 2024 17:13:02 -0500
-Message-Id: <20240410221307.2162676-3-helgaas@kernel.org>
+Subject: [PATCH v2 3/7] Revert "PCI/MSI: Provide IMS (Interrupt Message Store) support"
+Date: Wed, 10 Apr 2024 17:13:03 -0500
+Message-Id: <20240410221307.2162676-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240410221307.2162676-1-helgaas@kernel.org>
 References: <20240410221307.2162676-1-helgaas@kernel.org>
@@ -76,7 +76,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-This reverts commit c9e5bea273834a63b5e9ba90ad94b305ba50704e.
+This reverts commit 0194425af0c87acaad457989a2c6d90dba58e776.
 
 IMS (Interrupt Message Store) support appeared in v6.2, but there are no
 users yet.
@@ -88,85 +88,96 @@ for IMS functions") should be squashed into it.
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 ---
- drivers/pci/msi/api.c | 50 -------------------------------------------
- include/linux/pci.h   |  3 ---
- 2 files changed, 53 deletions(-)
+ drivers/pci/msi/irqdomain.c | 59 -------------------------------------
+ include/linux/pci.h         |  5 ----
+ 2 files changed, 64 deletions(-)
 
-diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
-index be679aa5db64..3c1cd29c5cf2 100644
---- a/drivers/pci/msi/api.c
-+++ b/drivers/pci/msi/api.c
-@@ -365,56 +365,6 @@ const struct cpumask *pci_irq_get_affinity(struct pci_dev *dev, int nr)
+diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+index cfd84a899c82..03d2dd25790d 100644
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -355,65 +355,6 @@ bool pci_msi_domain_supports(struct pci_dev *pdev, unsigned int feature_mask,
+ 	return (supported & feature_mask) == feature_mask;
  }
- EXPORT_SYMBOL(pci_irq_get_affinity);
  
 -/**
-- * pci_ims_alloc_irq - Allocate an interrupt on a PCI/IMS interrupt domain
-- * @dev:	The PCI device to operate on
-- * @icookie:	Pointer to an IMS implementation specific cookie for this
-- *		IMS instance (PASID, queue ID, pointer...).
-- *		The cookie content is copied into the MSI descriptor for the
-- *		interrupt chip callbacks or domain specific setup functions.
-- * @affdesc:	Optional pointer to an interrupt affinity descriptor
+- * pci_create_ims_domain - Create a secondary IMS domain for a PCI device
+- * @pdev:	The PCI device to operate on
+- * @template:	The MSI info template which describes the domain
+- * @hwsize:	The size of the hardware entry table or 0 if the domain
+- *		is purely software managed
+- * @data:	Optional pointer to domain specific data to be stored
+- *		in msi_domain_info::data
 - *
-- * There is no index for IMS allocations as IMS is an implementation
-- * specific storage and does not have any direct associations between
-- * index, which might be a pure software construct, and device
-- * functionality. This association is established by the driver either via
-- * the index - if there is a hardware table - or in case of purely software
-- * managed IMS implementation the association happens via the
-- * irq_write_msi_msg() callback of the implementation specific interrupt
-- * chip, which utilizes the provided @icookie to store the MSI message in
-- * the appropriate place.
+- * Return: True on success, false otherwise
 - *
-- * Return: A struct msi_map
+- * An IMS domain is expected to have the following constraints:
+- *	- The index space is managed by the core code
 - *
-- *	On success msi_map::index contains the allocated index (>= 0) and
-- *	msi_map::virq the allocated Linux interrupt number (> 0).
+- *	- There is no requirement for consecutive index ranges
 - *
-- *	On fail msi_map::index contains the error code and msi_map::virq
-- *	is set to 0.
+- *	- The interrupt chip must provide the following callbacks:
+- *		- irq_mask()
+- *		- irq_unmask()
+- *		- irq_write_msi_msg()
+- *
+- *	- The interrupt chip must provide the following optional callbacks
+- *	  when the irq_mask(), irq_unmask() and irq_write_msi_msg() callbacks
+- *	  cannot operate directly on hardware, e.g. in the case that the
+- *	  interrupt message store is in queue memory:
+- *		- irq_bus_lock()
+- *		- irq_bus_unlock()
+- *
+- *	  These callbacks are invoked from preemptible task context and are
+- *	  allowed to sleep. In this case the mandatory callbacks above just
+- *	  store the information. The irq_bus_unlock() callback is supposed
+- *	  to make the change effective before returning.
+- *
+- *	- Interrupt affinity setting is handled by the underlying parent
+- *	  interrupt domain and communicated to the IMS domain via
+- *	  irq_write_msi_msg().
+- *
+- * The domain is automatically destroyed when the PCI device is removed.
 - */
--struct msi_map pci_ims_alloc_irq(struct pci_dev *dev, union msi_instance_cookie *icookie,
--				 const struct irq_affinity_desc *affdesc)
+-bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
+-			   unsigned int hwsize, void *data)
 -{
--	return msi_domain_alloc_irq_at(&dev->dev, MSI_SECONDARY_DOMAIN, MSI_ANY_INDEX,
--				       affdesc, icookie);
--}
--EXPORT_SYMBOL_GPL(pci_ims_alloc_irq);
+-	struct irq_domain *domain = dev_get_msi_domain(&pdev->dev);
 -
--/**
-- * pci_ims_free_irq - Allocate an interrupt on a PCI/IMS interrupt domain
-- *		      which was allocated via pci_ims_alloc_irq()
-- * @dev:	The PCI device to operate on
-- * @map:	A struct msi_map describing the interrupt to free as
-- *		returned from pci_ims_alloc_irq()
-- */
--void pci_ims_free_irq(struct pci_dev *dev, struct msi_map map)
--{
--	if (WARN_ON_ONCE(map.index < 0 || map.virq <= 0))
--		return;
--	msi_domain_free_irqs_range(&dev->dev, MSI_SECONDARY_DOMAIN, map.index, map.index);
--}
--EXPORT_SYMBOL_GPL(pci_ims_free_irq);
+-	if (!domain || !irq_domain_is_msi_parent(domain))
+-		return false;
 -
- /**
-  * pci_free_irq_vectors() - Free previously allocated IRQs for a device
-  * @dev: the PCI device to operate on
+-	if (template->info.bus_token != DOMAIN_BUS_PCI_DEVICE_IMS ||
+-	    !(template->info.flags & MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS) ||
+-	    !(template->info.flags & MSI_FLAG_FREE_MSI_DESCS) ||
+-	    !template->chip.irq_mask || !template->chip.irq_unmask ||
+-	    !template->chip.irq_write_msi_msg || template->chip.irq_set_affinity)
+-		return false;
+-
+-	return msi_create_device_irq_domain(&pdev->dev, MSI_SECONDARY_DOMAIN, template,
+-					    hwsize, data, NULL);
+-}
+-EXPORT_SYMBOL_GPL(pci_create_ims_domain);
+-
+ /*
+  * Users of the generic MSI infrastructure expect a device to have a single ID,
+  * so with DMA aliases we have to pick the least-worst compromise. Devices with
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index abbef75b2b92..3deb3e42d990 100644
+index 3deb3e42d990..98fb20bcd054 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -2668,9 +2668,6 @@ struct msi_domain_template;
+@@ -2664,11 +2664,6 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
+ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+ #endif
  
- bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
- 			   unsigned int hwsize, void *data);
--struct msi_map pci_ims_alloc_irq(struct pci_dev *pdev, union msi_instance_cookie *icookie,
--				 const struct irq_affinity_desc *affdesc);
--void pci_ims_free_irq(struct pci_dev *pdev, struct msi_map map);
- 
+-struct msi_domain_template;
+-
+-bool pci_create_ims_domain(struct pci_dev *pdev, const struct msi_domain_template *template,
+-			   unsigned int hwsize, void *data);
+-
  #include <linux/dma-mapping.h>
  
+ #define pci_printk(level, pdev, fmt, arg...) \
 -- 
 2.34.1
 
