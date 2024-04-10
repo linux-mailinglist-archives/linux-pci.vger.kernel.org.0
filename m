@@ -1,54 +1,65 @@
-Return-Path: <linux-pci+bounces-6047-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6048-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9184789FD66
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 18:48:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A49EA89FD84
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 18:58:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8CCBB2273D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 16:46:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E0AF1F217F7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 16:58:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF1517B4F8;
-	Wed, 10 Apr 2024 16:46:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99B2515B151;
+	Wed, 10 Apr 2024 16:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrlISI/1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="feBZRsBQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EA73C38;
-	Wed, 10 Apr 2024 16:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693211552F7;
+	Wed, 10 Apr 2024 16:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712767602; cv=none; b=KzqU9GhrvLV3kD8ebFIYNQ4+3Knn9rj/AYZ2IC7sMCj436VvSISOt4eV64Fcw22N3suX4zKSoqp6EK+kKceg115tqYJvg+T5NOKJwh2+tXcp33wt5iwtb7nrDQ39ZqQlJa2lVR06/EChGmFzfENoqrY0b8t7tATXJALMq7knai8=
+	t=1712768312; cv=none; b=bBtRoRhXCSW7y60xj5VUiWAxbFha5ilLBRWagT4stsY5wRHOW7uicKIxt9P9iugZwC2iX1SL7dPrzZQuLOaO7TVKfmfcjwegq33H7zD+S8p7IGb+0wYPaiuc4WJROrF0wMrX/xCviiZBXjsTEoHe4ZuMhM1LxubS21nSYE9Mmn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712767602; c=relaxed/simple;
-	bh=qii5UQvff+KsRQSbgkC2NNYV6wkpNnpnheroe4v9t/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JqUVJTSNBfUDi7iQYK2SzUAPNriyCWeHXFr4Q9WJSqwpQEtv3fs9BYfnpIAuEBAZrDLCFD8NcrSReFf6lgTqPwMMxArIomJTyZQC6IRqgo5jZaYjFuBN243y1kXFz1AvfV4CzWb9qxzNw/n1rOdyJ8aDlP6OKGzrAz/kNIcQ8I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrlISI/1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B60AC433C7;
-	Wed, 10 Apr 2024 16:46:41 +0000 (UTC)
+	s=arc-20240116; t=1712768312; c=relaxed/simple;
+	bh=qclzrS6NsZXz3AIVjRhCh6Kq817U/fsiAXFdu2DM+2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFnBiIbllSer5igAvHmQ7tXZvPsgBqq03FiDn34aVbVBoVb/JykIVkjZgCXfd2IZFlui9RfOkYQgN8fxJ2LawKxB2QyDyzJkHZgHZO4E1hfy/ftZ0upLqpfPar3mxTH3Tnjz9E9Nrh+bsbN2mky5q33/YO8HF1tKkWt6VSohe2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=feBZRsBQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0BC0C433F1;
+	Wed, 10 Apr 2024 16:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712767601;
-	bh=qii5UQvff+KsRQSbgkC2NNYV6wkpNnpnheroe4v9t/w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rrlISI/1hPx3IK1LGSir1GMuUTLKufF2CXZlbXUh8V3HTisTyPo/IdycxxKaDl5Sl
-	 YNca5UxKCfT6KMSIaF389cW7WNDhKt4WD2Ebkne3OzYkvLkJUTIG9/rvoHYzGFzdd9
-	 66E4j2QaPDntzVWR39GfbQSw3AEjHLhTc9ZgwcEDYzv3Bybv5gy8RpS7AxbaefoeWe
-	 EYv0mkkgmKazPoD6f1tM954DWU8fGndLL/dyhlUfHu7y1ZW0UNIgX7HmziGLEeo0kL
-	 cE+xC9JOoQYcwVaJC7JLE45R4W1loTLRhedDrHdpPrP6FCeRFuIcbFx9RiSRKuVpfv
-	 OgS+je+X/CZrg==
-Date: Wed, 10 Apr 2024 11:46:39 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Eric Heintzmann <heintzmann.eric@free.fr>
-Subject: Re: [PATCH] PCI: Add a quirk for preventing D3 on a bridge
-Message-ID: <20240410164639.GA2145972@bhelgaas>
+	s=k20201202; t=1712768312;
+	bh=qclzrS6NsZXz3AIVjRhCh6Kq817U/fsiAXFdu2DM+2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=feBZRsBQazOE6ZZBdOKoboh7JrOW6aek/GUaYR7dibew/1RRPQ+QlMdQMYjwrDRlu
+	 PKTL5EK6QYNZ3PvYV6jdaYyB/MiuTRftX6a+V9XhW312hvZAfYodrIMykgVTswjlb1
+	 7gzAAO0ZKM+3xV7bh06WKoTPcSA1Rs45f5EPXICAdLoFZC2Mt4d2HZOwsSWhfPh6/4
+	 PPs/n/prhRtisIxJesesolYIQTcgTeT0RJh+FCS5rXePDHxWBgmM+pq2JkZ/r5442P
+	 85eoS32Ta36f2Q8QV9n3OctHj6rgqlyu9Sh8201hu0c+CWNKt1D19iiWWGkQcjFFtm
+	 rQh1y95qKGlKw==
+Date: Wed, 10 Apr 2024 11:58:29 -0500
+From: Rob Herring <robh@kernel.org>
+To: Mayank Rana <quic_mrana@quicinc.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, andersson@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
+	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
+	quic_nitegupt@quicinc.com
+Subject: Re: [RFC PATCH 2/2] PCI: Add Qualcomm PCIe ECAM root complex driver
+Message-ID: <20240410165829.GA418382-robh@kernel.org>
+References: <1712257884-23841-1-git-send-email-quic_mrana@quicinc.com>
+ <1712257884-23841-3-git-send-email-quic_mrana@quicinc.com>
+ <20240405052918.GA2953@thinkpad>
+ <e2ff3031-bd71-4df7-a3a4-cec9c2339eaa@quicinc.com>
+ <20240406041717.GD2678@thinkpad>
+ <0b738556-0042-43ab-80f2-d78ed3b432f7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,71 +68,83 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240307163709.323-1-mario.limonciello@amd.com>
+In-Reply-To: <0b738556-0042-43ab-80f2-d78ed3b432f7@quicinc.com>
 
-On Thu, Mar 07, 2024 at 10:37:09AM -0600, Mario Limonciello wrote:
-> Hewlett-Packard HP Pavilion 17 Notebook PC/1972 is an Intel Ivy Bridge
-> system with a muxless AMD Radeon dGPU.  Attempting to use the dGPU fails
-> with the following sequence:
+On Mon, Apr 08, 2024 at 11:57:58AM -0700, Mayank Rana wrote:
+> Hi Mani
 > 
-> ```
-> ACPI Error: Aborting method \AMD3._ON due to previous error (AE_AML_LOOP_TIMEOUT) (20230628/psparse-529)
-> radeon 0000:01:00.0: not ready 1023ms after resume; waiting
-> radeon 0000:01:00.0: not ready 2047ms after resume; waiting
-> radeon 0000:01:00.0: not ready 4095ms after resume; waiting
-> radeon 0000:01:00.0: not ready 8191ms after resume; waiting
-> radeon 0000:01:00.0: not ready 16383ms after resume; waiting
-> radeon 0000:01:00.0: not ready 32767ms after resume; waiting
-> radeon 0000:01:00.0: not ready 65535ms after resume; giving up
-> radeon 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
-> radeon 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
-> ```
-> 
-> The issue is that the root port the dGPU is connected to can't handle
-> the transition from D3cold to D0 so the dGPU can't properly exit runpm.
-> 
-> The existing logic in pci_bridge_d3_possible() checks for systems that
-> are newer than 2015 to decide that D3 is safe.  This would nominally work
-> for an Ivy Bridge system (which was discontinued in 2015), but this system
-> appears to have continued to receive BIOS updates until 2017 and so this
-> existing logic doesn't appropriately capture it.
-> 
-> Add the system to bridge_d3_blacklist to prevent port pm from being used.
-> 
-> Reported-and-tested-by: Eric Heintzmann <heintzmann.eric@free.fr>
-> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3229
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> On 4/5/2024 9:17 PM, Manivannan Sadhasivam wrote:
+> > On Fri, Apr 05, 2024 at 10:41:15AM -0700, Mayank Rana wrote:
+> > > Hi Mani
+> > > 
+> > > On 4/4/2024 10:30 PM, Manivannan Sadhasivam wrote:
+> > > > On Thu, Apr 04, 2024 at 12:11:24PM -0700, Mayank Rana wrote:
+> > > > > On some of Qualcomm platform, firmware configures PCIe controller into
+> > > > > ECAM mode allowing static memory allocation for configuration space of
+> > > > > supported bus range. Firmware also takes care of bringing up PCIe PHY
+> > > > > and performing required operation to bring PCIe link into D0. Firmware
+> > > > > also manages system resources (e.g. clocks/regulators/resets/ bus voting).
+> > > > > Hence add Qualcomm PCIe ECAM root complex driver which enumerates PCIe
+> > > > > root complex and connected PCIe devices. Firmware won't be enumerating
+> > > > > or powering up PCIe root complex until this driver invokes power domain
+> > > > > based notification to bring PCIe link into D0/D3cold mode.
+> > > > > 
+> > > > 
+> > > > Is this an in-house PCIe IP of Qualcomm or the same DWC IP that is used in other
+> > > > SoCs?
+> > > > 
+> > > > - Mani
+> > > Driver is validated on SA8775p-ride platform using PCIe DWC IP for
+> > > now.Although this driver doesn't need to know used PCIe controller and PHY
+> > > IP as well programming sequence as that would be taken care by firmware.
+> > > 
+> > 
+> > Ok, so it is the same IP but firmware is controlling the resources now. This
+> > information should be present in the commit message.
+> > 
+> > Btw, there is an existing generic ECAM host controller driver:
+> > drivers/pci/controller/pci-host-generic.c
+> > 
+> > This driver is already being used by several vendors as well. So we should try
+> > to extend it for Qcom usecase also.
 
-Applied to pci/pm for v6.10, thanks!
+I would take it a bit further and say if you need your own driver, then 
+just use the default QCom driver. Perhaps extend it to support ECAM. 
+Better yet, copy your firmware setup and always configure the QCom h/w 
+to use ECAM.
 
-> ---
->  drivers/pci/pci.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index c3585229c12a..9d5d08a420f1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3102,6 +3102,18 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
->  			DMI_MATCH(DMI_BOARD_VERSION, "Continental Z2"),
->  		},
->  	},
-> +	{
-> +		/*
-> +		 * Changing power state of root port dGPU is connected fails
-> +		 * https://gitlab.freedesktop.org/drm/amd/-/issues/3229
-> +		 */
-> +		.ident = "Hewlett-Packard HP Pavilion 17 Notebook PC/1972",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "1972"),
-> +			DMI_MATCH(DMI_BOARD_VERSION, "95.33"),
-> +		},
-> +	},
->  #endif
->  	{ }
->  };
-> -- 
-> 2.34.1
-> 
+If you want to extend the generic driver, that's fine, but we don't need 
+a 3rd.
+
+> I did review pci-host-generic.c driver for usage. although there are more
+> functionalityneeded for use case purpose as below:
+> 1. MSI functionality
+
+Pretty sure the generic driver already supports that.
+
+> 2. Suspend/Resume
+
+Others might want that to work as well.
+
+> 3. Wakeup Functionality (not part of current change, but would be added
+> later)
+
+Others might want that to work as well.
+
+> 4. Here this driver provides way to virtualized PCIe controller. So VMs only
+> talk to a generic ECAM whereas HW is only directed accessed by service VM.
+
+That's the existing driver. If if doesn't work for a VM, fix the VM.
+
+> 5. Adding more Auto based safety use cases related implementation
+
+Now that's just hand waving.
+
+> Hence keeping pci-host-generic.c as generic driver where above functionality
+> may not be needed. 
+
+Duplicating things to avoid touching existing drivers is not how kernel 
+development works.
+
+Rob
 
