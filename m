@@ -1,56 +1,101 @@
-Return-Path: <linux-pci+bounces-6053-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6054-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51F0589FE8C
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 19:32:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBCBF89FEB4
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 19:36:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B07E71F242EE
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 17:32:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 148B1B22AF9
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Apr 2024 17:35:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F0F17BB11;
-	Wed, 10 Apr 2024 17:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66C2417BB2B;
+	Wed, 10 Apr 2024 17:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELJtWoV/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKuTdcBD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56E53EA69;
-	Wed, 10 Apr 2024 17:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B95315B0E4;
+	Wed, 10 Apr 2024 17:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712770322; cv=none; b=pj8i6NTwpRz21cSvIDvWRmoi60O70T3veJQYbh3uFzlA1TziwemzhEySWKogme7pKA8MwpgTTLn1kMbqf5tgAiDgK/+V+wDJ0NB4BydfAW8tPenskKy28jnnWvpM/md6fVLMYZlbc674Zv0ToFDwAtEocRJ+pgDe+e3oMoPdkWY=
+	t=1712770516; cv=none; b=damVUClWM2V0pGe5i0jJlNr+sOSY6RHyw/5GWynD0SMIkqMdJ5QBYwLcIcUfbqBYhOmzHL8CyttUNZu63uCxwxhOq6XZdyeH1LNiw4pKgLlqpoPh4DqzDWLX+eVcJfmO9lgk1YJXW/lnIuXnwyBy7gfcxXlV10O9lnjAYmgcYP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712770322; c=relaxed/simple;
-	bh=WLlddfp2+ZgiviFBbFbot52MremZ90azsOwdk9ybE0g=;
+	s=arc-20240116; t=1712770516; c=relaxed/simple;
+	bh=VQcH65WHqA/FS4uddL5zUJwX+BidAKnJYJdgb3MS8lk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hCm79jL5wFIGzZQmVlTBqusrIwUB+GzyRWG5yHl7SuVLFU8MzOStynYju4GimAcYCY3ESue5eAB/bQ/EokkaKbDFnXNGDwH5PSR4KfAVYevLKMb3xXZruFXLYvvI/sdWOqr9FUeIsAuQNDrZlyfbDRMLOxu2/pnkwF8NjgnJpIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELJtWoV/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDF9C433F1;
-	Wed, 10 Apr 2024 17:32:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lq0dCbnWzPbrDRx+UW2FFdan1+gRxs+3/jjOs1hD94xp+NKoWzy/sU2Kfee01W5x0zjP8eoBMmK3/hSvBZvW5crn2x9IeD7nqJP8pAXL6ClrfV1rsLabRReRe66qoP8B1/QxZWG7/By6kKK0fF5I8RZdt+ZzBMfA1jyMKrbP2kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKuTdcBD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8678C433C7;
+	Wed, 10 Apr 2024 17:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712770321;
-	bh=WLlddfp2+ZgiviFBbFbot52MremZ90azsOwdk9ybE0g=;
+	s=k20201202; t=1712770516;
+	bh=VQcH65WHqA/FS4uddL5zUJwX+BidAKnJYJdgb3MS8lk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ELJtWoV/Y36h5tXrUe6/rj19IYt0LypzyGhqI+vvVHOeHEaQ8LCVFGgi/hhb+CMUx
-	 /sGdSD2ND5S8HGawQtQqa8HOrYlRG9o7dQ6iT7T5elxPo8+6gMC/SptqCBppGbFlZj
-	 ZRd8hv1xDoKg2jYQIPOWlg7TbgSNHSSxky30KnqjsNdZwPXVNZA0O0Xa0+44h6INtU
-	 uSFxSZvRJ+wc9JcHYl9sgf3FHYmLypmtS/ybizS77bBMKk0cmOCsr+Q/crbVo4v+Sk
-	 nyyZNSLhM+lG/zRPu+Pr4zA28EogSTPk/R9NUrhm11lryT7AshkFTjz/JzzaPLHvDK
-	 NVuOGiiL38UVg==
-Date: Wed, 10 Apr 2024 12:31:59 -0500
+	b=AKuTdcBDWerDwjKr3wEagpSw7BfaYoAXlOYEPY1HHrIQnQupK0az+5WFmhYNEKTUB
+	 vQhp2T8kjdsj9V1lGZzOq+Jmv8XJn72N1Ac3f058geLGA7P1GNtjvHAQk9e1gqituj
+	 BrDcAFeKc4sugwHyGJ9801R0GJKa5T7qdFRIqR7UIl6a98qbGS0q9kO4CNrkAL6/uf
+	 MJuMEvyla07qZ+4Hq+hTO09S8LuKbG3A2Sl5HKiYXTnsS9XI9KCSdTvL+dqjU9BTZr
+	 GUdwqTTXsSFkucF0Pa5wvW/43dtwxTA6XuGHYSf09CItKdCMRLF9eSTZ6ar6cXTH5d
+	 otR8iI9lpsx4g==
+Date: Wed, 10 Apr 2024 12:35:13 -0500
 From: Rob Herring <robh@kernel.org>
-To: matthew.gerlach@linux.intel.com
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: PCI: altera: Convert to YAML
-Message-ID: <20240410173159.GA733161-robh@kernel.org>
-References: <20240405145322.3805828-1-matthew.gerlach@linux.intel.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-arm-msm@vger.kernel.org,
+	Ray Jui <rjui@broadcom.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mark Kettenis <kettenis@openbsd.org>,
+	Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Michal Simek <michal.simek@amd.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>, asahi@lists.linux.dev,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
+	linux-rockchip@lists.infradead.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Hector Martin <marcan@marcan.st>,
+	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-kernel@vger.kernel.org,
+	Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: cdns,cdns-pcie-host: drop
+ redundant msi-parent and pci-bus.yaml
+Message-ID: <171277051181.788021.12147595660219307279.robh@kernel.org>
+References: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,208 +104,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240405145322.3805828-1-matthew.gerlach@linux.intel.com>
+In-Reply-To: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org>
 
-On Fri, Apr 05, 2024 at 09:53:22AM -0500, matthew.gerlach@linux.intel.com wrote:
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+
+On Sun, 07 Apr 2024 12:19:58 +0200, Krzysztof Kozlowski wrote:
+> The binding reference common cdns-pcie-host.yaml, which already defines
+> msi-parent and has a reference to pci-bus.yaml schema.  Drop redundant
+> pieces here to make it a bit smaller.
 > 
-> Convert the device tree bindings for the Altera Root Port PCIe controller
-> from text to YAML.
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
-> v2:
->  - Move allOf: to bottom of file, just like example-schema is showing
->  - add constraint for reg and reg-names
->  - remove unneeded device_type
->  - drop #address-cells and #size-cells
->  - change minItems to maxItems for interrupts:
->  - change msi-parent to just "msi-parent: true"
->  - cleaned up required:
->  - make subject consistent with other commits coverting to YAML
->  - s/overt/onvert/g
-> ---
->  .../devicetree/bindings/pci/altera-pcie.txt   |  50 ---------
->  .../bindings/pci/altr,pcie-root-port.yaml     | 106 ++++++++++++++++++
->  2 files changed, 106 insertions(+), 50 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+>  Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> deleted file mode 100644
-> index 816b244a221e..000000000000
-> --- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
-> +++ /dev/null
-> @@ -1,50 +0,0 @@
-> -* Altera PCIe controller
-> -
-> -Required properties:
-> -- compatible :	should contain "altr,pcie-root-port-1.0" or "altr,pcie-root-port-2.0"
-> -- reg:		a list of physical base address and length for TXS and CRA.
-> -		For "altr,pcie-root-port-2.0", additional HIP base address and length.
-> -- reg-names:	must include the following entries:
-> -		"Txs": TX slave port region
-> -		"Cra": Control register access region
-> -		"Hip": Hard IP region (if "altr,pcie-root-port-2.0")
-> -- interrupts:	specifies the interrupt source of the parent interrupt
-> -		controller.  The format of the interrupt specifier depends
-> -		on the parent interrupt controller.
-> -- device_type:	must be "pci"
-> -- #address-cells:	set to <3>
-> -- #size-cells:		set to <2>
-> -- #interrupt-cells:	set to <1>
-> -- ranges:	describes the translation of addresses for root ports and
-> -		standard PCI regions.
-> -- interrupt-map-mask and interrupt-map: standard PCI properties to define the
-> -		mapping of the PCIe interface to interrupt numbers.
-> -
-> -Optional properties:
-> -- msi-parent:	Link to the hardware entity that serves as the MSI controller
-> -		for this PCIe controller.
-> -- bus-range:	PCI bus numbers covered
-> -
-> -Example
-> -	pcie_0: pcie@c00000000 {
-> -		compatible = "altr,pcie-root-port-1.0";
-> -		reg = <0xc0000000 0x20000000>,
-> -			<0xff220000 0x00004000>;
-> -		reg-names = "Txs", "Cra";
-> -		interrupt-parent = <&hps_0_arm_gic_0>;
-> -		interrupts = <0 40 4>;
-> -		interrupt-controller;
-> -		#interrupt-cells = <1>;
-> -		bus-range = <0x0 0xFF>;
-> -		device_type = "pci";
-> -		msi-parent = <&msi_to_gic_gen_0>;
-> -		#address-cells = <3>;
-> -		#size-cells = <2>;
-> -		interrupt-map-mask = <0 0 0 7>;
-> -		interrupt-map = <0 0 0 1 &pcie_0 1>,
-> -			            <0 0 0 2 &pcie_0 2>,
-> -			            <0 0 0 3 &pcie_0 3>,
-> -			            <0 0 0 4 &pcie_0 4>;
-> -		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
-> -			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> new file mode 100644
-> index 000000000000..999dcda05f55
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> @@ -0,0 +1,106 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (C) 2024, Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Altera PCIe Root Port
-> +
-> +maintainers:
-> +  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - altr,pcie-root-port-1.0
-> +          - altr,pcie-root-port-2.0
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-map-mask:
-> +    items:
-> +      - const: 0
-> +      - const: 0
-> +      - const: 0
-> +      - const: 7
-> +
-> +  interrupt-map:
-> +    maxItems: 4
-> +
-> +  "#interrupt-cells":
-> +    const: 1
 
-Already defined in the common schema, drop.
+Acked-by: Rob Herring <robh@kernel.org>
 
-> +
-> +  msi-parent: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - device_type
-
-Drop.
-
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +unevaluatedProperties: false
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - altr,pcie-root-port-1.0
-> +    then:
-> +      properties:
-> +        reg:
-> +          items:
-> +            - description: TX slave port region
-> +            - description: Control register access region
-> +
-> +        reg-names:
-> +          items:
-> +            - const: Txs
-> +            - const: Cra
-> +
-> +    else:
-> +      properties:
-> +        reg:
-> +          items:
-> +            - description: Hard IP region
-> +            - description: TX slave port region
-> +            - description: Control register access region
-> +
-> +        reg-names:
-> +          items:
-> +            - const: Hip
-> +            - const: Txs
-> +            - const: Cra
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    pcie_0: pcie@c00000000 {
-> +        compatible = "altr,pcie-root-port-1.0";
-> +        reg = <0xc0000000 0x20000000>,
-> +              <0xff220000 0x00004000>;
-> +        reg-names = "Txs", "Cra";
-> +        interrupt-parent = <&hps_0_arm_gic_0>;
-> +        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> +        #interrupt-cells = <1>;
-> +        bus-range = <0x0 0xff>;
-> +        device_type = "pci";
-> +        msi-parent = <&msi_to_gic_gen_0>;
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        interrupt-map-mask = <0 0 0 7>;
-> +        interrupt-map = <0 0 0 1 &pcie_intc 1>,
-> +                        <0 0 0 2 &pcie_intc 2>,
-> +                        <0 0 0 3 &pcie_intc 3>,
-> +                        <0 0 0 4 &pcie_intc 4>;
-> +        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
-> +                  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-> +    };
-> -- 
-> 2.34.1
-> 
 
