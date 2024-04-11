@@ -1,229 +1,260 @@
-Return-Path: <linux-pci+bounces-6125-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6126-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C98C8A15A2
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 15:34:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B2798A1693
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 16:04:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6EDA284BCA
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 13:34:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEA391C213D8
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 14:04:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5DA51514D3;
-	Thu, 11 Apr 2024 13:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B2AC14B09C;
+	Thu, 11 Apr 2024 14:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Js1uhFjg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IyLtAQvu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505561514E0;
-	Thu, 11 Apr 2024 13:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC4614D71B
+	for <linux-pci@vger.kernel.org>; Thu, 11 Apr 2024 14:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842431; cv=none; b=SI5QDiJklmleld58NzJBMjTG+BhVl4G4TN8sE4jJ6KgB3oc0Y9aIDHvRukntm0k/ZqnVFep7O5/Y9HW4q2NUrkkfHB5uv3KUE6Um62fK0xtQjLq8w+hwD4rSPkhN0bqafrEyMbZPU6eg3MkQ4LA7JnmlkcFmjkpVyugkVAQQ3lM=
+	t=1712844096; cv=none; b=KrYZJjMrHicG0FIbEq5KwSJnnnny8BF4UsAxx85Po5AIleoMS/TgrQlcqz3a5/HDCxsa9H8T0NBm16OD2CDob8C+O8ahZePcOp9tdihvU9YiknWwuyDnbPQ+Fw8uQM5EZaQuic1XA37bAv2KC4OowsLgPlhbogC+seW78AYRYVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842431; c=relaxed/simple;
-	bh=IsdcePQGmtwf23Dn6ZnBklfJevHVN5lRzy64rGYlrRg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FD/usqhYzNBKHYQs2r8eNzZSd6PZvOcLrfysyMnYz+QmPtqXYpKUFW8OLyp6FfqJgJMXsfx/RN/GpHpI5/jI1Rts8oiL0b+omu/vJZBxSmmdoWvs4h00ZRfK4s3IeFP5RTpf+YkLzhI43LvEB2ROs+cKMclqTzcOtoAflRZ6EF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Js1uhFjg; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5a49261093cso4007544eaf.3;
-        Thu, 11 Apr 2024 06:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712842429; x=1713447229; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tbcCaa8DX09SvsMoBHm+TyAMbhm9qLZzeE5P/R6GO7M=;
-        b=Js1uhFjgMFdtEGeQzgkjk/l/2w54FrgIHPZQsZ+KzHmXFWTNuzOQyNqPGoiugd/QzX
-         JlS9//xxaSFGWExtD86/a7fEsk1LZXsautey1Qsto3lt1M65XHigrRSG1Iq0z47DNj1u
-         juQvx4pJ+mwF7oY3kDl7H6ymZyWfOAjKDepLxBw+X17tiUiop3mB075qjIOnGix871Wb
-         Jc8bqrg3ncgjUlvrgssCiKEYkB9UWDBP3aHMcF4nk1fNxS9A//hDfAKLpTyhLjHy3vXd
-         bTtAGiH2VibZhO4AVRLXJPc9FRZfD8ynZ40Z5Zy2i7mI18T24CIKB3miMbv3jNR29xhp
-         c3qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712842429; x=1713447229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tbcCaa8DX09SvsMoBHm+TyAMbhm9qLZzeE5P/R6GO7M=;
-        b=fAVzGBLV/JUM6dvyWp7qWcGbKsaf1vJ5uqZPpD07UnVmCArFA+R9FzFZmg4YsvHz7D
-         +AaXmnrpj+/1efEZuQKLMhHS/yrYH56CXmGUkT8ZjVFHY8aZnv3+XrbZmxNbAxEwFBWV
-         0aBALQredgzOqQ65Ua8Upo4QWzN5v+0SmkG34yrrtc1AC6oSIgkcI4ukr8z/1HsIyTp7
-         sfpDqQdNojBI0ncbbUVSi+EHR6VOHlKX3cvrm7wI7R5Gs9kAF2n/a6hT7k2ZEHjdB8sB
-         t7bUMH6pCDhbNsQgQQY6qhgdiJ3To90v9h89b5mxqIuDbgqABAgOF5U//3sBWeckQ4U7
-         ianQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ2//Lc6Tk0VZY2L4/fphfeK2kj/ChS7p/lMnpZVNjOmQSBidDePq20Hoz4s682jU3kieXcvqRWZ2sJsu/pfSufrSzue76cAmo9rXq3Wf8ytTBVhSF0pwV87YmwIgVTkH2IeUKXgnzpRr91FI0vdbQDORIbdgVKpJFi7qTgl0OD2ef8ISxAB15mqlbb0ENiluml5Xy37DC6lCVtEI5RceCBzqzKF5fkgnz3ONp0y8PK8pEX/2TVK6B2szI77lMkWUADScOdA==
-X-Gm-Message-State: AOJu0YyuF0luFDI92wH0kBm0u7Tx9B3O+sl0t7RGVXp4EgET3uGMbqcA
-	MS6gjMvEfAa85EtYot6hq18keOa9xyHJt/JoYwfp+kK4XXrB59bGaItC1BIj5JkTLggeHqHIRBT
-	sFvi8A5NP2BXNgTn2vsdhf2LBvMU=
-X-Google-Smtp-Source: AGHT+IG525FFbMbsm9efSCrv2KXUqFOj0YhoVxH+Cl2iHx5VYUfIZRxfPUChUh11UqyLT5/SR86etSAM7EFlCNkHgHs=
-X-Received: by 2002:a05:6870:b411:b0:22e:e6:673 with SMTP id
- x17-20020a056870b41100b0022e00e60673mr5611022oap.37.1712842429406; Thu, 11
- Apr 2024 06:33:49 -0700 (PDT)
+	s=arc-20240116; t=1712844096; c=relaxed/simple;
+	bh=f6uXJIEHo9ii1F0OE342N6XvMbpsj+uV2B62ZD4FinM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cS0ZB6mLDzq4n51DBvTspm0o9KBhW7gLqD0oCyJ+8V5l8AnzSOGu6GaBfKwQ9rGM1neAK/JajfmXiXgVZ1CNIVezKUIeNFcApkyHBFN2J6h77mPdW7wDJPntqsYqPAwvKz4GZdMp8lf5SsgbwhvdNM4urWzqJ5VGOwYVE37Q7us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IyLtAQvu; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712844095; x=1744380095;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=f6uXJIEHo9ii1F0OE342N6XvMbpsj+uV2B62ZD4FinM=;
+  b=IyLtAQvuPYZ5fiLSkLljm73fe7edqvwm7pPuR3HPV3S/giDY9ZD5xJmD
+   qHexoI8Q3AWlECKYb/OSSYQgMWgTx6yVbILSWTqVZdIvtYo6ncxdiB390
+   O6gXsCfqMbZUi75BRaWkhqRhcHbd0Mff578XL6eUBfE3aWsxqolx7XWbi
+   li3GHKdI1pcbkVcjYS6YG/kktQAMJYqHKUn6SxysPrddpEHuexxoIB905
+   Z6lwtFT6bJ9DWIoComFN+jgez84d9GSgJeaYagfMPxm5Bm3q8SPiAT3vz
+   o5pyxulwOK+yHs+L4birFI9/xXmZXjooKDzQacJohw65Ks1zKgRlb4Ym6
+   w==;
+X-CSE-ConnectionGUID: CAsjwL9ETHu/DFYujuyKDA==
+X-CSE-MsgGUID: RxtjLFvJSj2vYeFyUW4Qcw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="19645855"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="19645855"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 07:01:34 -0700
+X-CSE-ConnectionGUID: Cl7BCbsTQFStzOtxroOmxQ==
+X-CSE-MsgGUID: J+BquXdyTFG98pRJWGrktQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="21349251"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 11 Apr 2024 07:01:32 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ruuza-0008ft-1K;
+	Thu, 11 Apr 2024 14:01:30 +0000
+Date: Thu, 11 Apr 2024 22:01:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/cadence] BUILD SUCCESS
+ 07db0fa80cf311be17da55e01f99d455f83a7c7b
+Message-ID: <202404112213.YJMb0D4i-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMhs-H82Ymc=isxu6AX4_s1QnNpSSNt74--ED1j7JxpzE=eCRg@mail.gmail.com>
- <20240411123917.GA2180141@bhelgaas>
-In-Reply-To: <20240411123917.GA2180141@bhelgaas>
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Thu, 11 Apr 2024 15:33:37 +0200
-Message-ID: <CAMhs-H_imwV4__G4_pt7eWHdyLPe9_fttWJ2a3x1ESP=B6bb_w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
- child node reg
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Will Deacon <will@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Srikanth Thokala <srikanth.thokala@intel.com>, 
-	Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, Michal Simek <michal.simek@amd.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Mark Kettenis <kettenis@openbsd.org>, 
-	Tom Joseph <tjoseph@cadence.com>, Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 
-On Thu, Apr 11, 2024 at 2:39=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Thu, Apr 11, 2024 at 08:13:18AM +0200, Sergio Paracuellos wrote:
-> > On Thu, Apr 11, 2024 at 8:01=E2=80=AFAM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> > > On 10/04/2024 23:26, Bjorn Helgaas wrote:
-> > > > On Wed, Apr 10, 2024 at 08:15:19PM +0200, Krzysztof Kozlowski wrote=
-:
-> > > >> MT7621 PCI host bridge has children which apparently are also PCI =
-host
-> > > >> bridges, at least that's what the binding suggest.
-> > > >
-> > > > What does it even mean for a PCI host bridge to have a child that i=
-s
-> > > > also a PCI host bridge?
-> > > >
-> > > > Does this mean a driver binds to the "parent" host bridge, enumerat=
-es
-> > > > the PCI devices below it, and finds a "child" host bridge?
-> >
-> > Yes, that is exactly what you can see on enumeration.
-> >
-> > The following is a typical boot trace where all bridges has a device al=
-so below:
-> >
-> > mt7621-pci 1e140000.pcie: host bridge /pcie@1e140000 ranges:
-> > mt7621-pci 1e140000.pcie:   No bus range found for /pcie@1e140000, usin=
-g [bus 00-ff]
-> > mt7621-pci 1e140000.pcie:      MEM 0x0060000000..0x006fffffff -> 0x0060=
-000000
-> > mt7621-pci 1e140000.pcie:       IO 0x001e160000..0x001e16ffff -> 0x0000=
-000000
-> > mt7621-pci 1e140000.pcie: PCIE0 enabled
-> > mt7621-pci 1e140000.pcie: PCIE1 enabled
-> > mt7621-pci 1e140000.pcie: PCIE2 enabled
-> > mt7621-pci 1e140000.pcie: PCI host bridge to bus 0000:00
->
-> 1e140000.pcie is a host bridge.  It has some CPU-specific bus on the
-> upstream side, standard PCI (domain 0000, buses 00-ff) on the
-> downstream side.
->
-> > pci 0000:00:00.0: [0e8d:0801] type 01 class 0x060400
-> > pci 0000:00:01.0: [0e8d:0801] type 01 class 0x060400
-> > pci 0000:00:02.0: [0e8d:0801] type 01 class 0x060400
->
-> > pci 0000:01:00.0: [1b21:0611] type 00 class 0x010185
->
-> > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> > pci 0000:00:00.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
-> > pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff pref]
->
-> 00:00.0 looks like a PCIe Root Port to bus 01.  This is not a host
-> bridge; it's just a standard PCI-to-PCI bridge with PCI on both the
-> upstream and downstream sides.
->
-> > pci 0000:02:00.0: [1b21:0611] type 00 class 0x010185
->
-> > pci 0000:00:01.0: PCI bridge to [bus 02-ff]
-> > pci 0000:00:01.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:01.0:   bridge window [mem 0x00000000-0x000fffff]
-> > pci 0000:00:01.0:   bridge window [mem 0x00000000-0x000fffff pref]
->
-> 00:01.0 is another Root Port to bus 02.
->
-> > pci 0000:03:00.0: [1b21:0611] type 00 class 0x010185
->
-> > pci 0000:00:02.0: PCI bridge to [bus 03-ff]
-> > pci 0000:00:02.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff]
-> > pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff pref]
-> > pci_bus 0000:03: busn_res: [bus 03-ff] end is updated to 03
->
-> And 00:02.0 is a third Root Port to bus 03.
->
-> > pci 0000:00:00.0: PCI bridge to [bus 01]
-> > pci 0000:00:00.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:00.0:   bridge window [mem 0x60000000-0x600fffff]
-> > pci 0000:00:00.0:   bridge window [mem 0x60100000-0x601fffff pref]
-> > pci 0000:00:01.0: PCI bridge to [bus 02]
-> > pci 0000:00:01.0:   bridge window [io  0x1000-0x1fff]
-> > pci 0000:00:01.0:   bridge window [mem 0x60200000-0x602fffff]
-> > pci 0000:00:01.0:   bridge window [mem 0x60300000-0x603fffff pref]
-> > pci 0000:00:02.0: PCI bridge to [bus 03]
-> > pci 0000:00:02.0:   bridge window [io  0x2000-0x2fff]
-> > pci 0000:00:02.0:   bridge window [mem 0x60400000-0x604fffff]
-> >
-> > > I think the question should be towards Mediatek folks. I don't know w=
-hat
-> > > this hardware is exactly, just looks like pci-pci-bridge. The driver
-> > > calls the children host bridges as "ports".
-> >
-> > You can see the topology here in my first driver submit cover letter
-> > message [0].
-> >
-> >  [0]: https://lore.kernel.org/all/CAMhs-H-BA+KzEwuDPzcmrDPdgJBFA2XdYTBv=
-T4R4MEOUB=3DWQ1g@mail.gmail.com/t/
->
-> Nothing unusual here, this looks like the standard PCIe topology.
->
-> What *might* be unusual is describing the Root Ports in DT.  Since
-> they are standard PCI devices, they shouldn't need DT description
-> unless there's some unusual power/clock/reset control or something
-> that is not discoverable via PCI enumeration.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/cadence
+branch HEAD: 07db0fa80cf311be17da55e01f99d455f83a7c7b  PCI: cadence: Set a 64-bit BAR if requested
 
-It looks like it is necessary since every port has its own
-configuration registers, phy, clock, reset and interrupt.
+elapsed time: 1187m
 
-Thanks,
-    Sergio Paracuellos
+configs tested: 165
+configs skipped: 3
 
-> Bjorn
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                   randconfig-001-20240411   gcc  
+arc                   randconfig-002-20240411   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                           omap1_defconfig   gcc  
+arm                   randconfig-001-20240411   gcc  
+arm                   randconfig-002-20240411   gcc  
+arm                   randconfig-004-20240411   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-002-20240411   gcc  
+arm64                 randconfig-003-20240411   gcc  
+arm64                 randconfig-004-20240411   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240411   gcc  
+csky                  randconfig-002-20240411   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240411   clang
+i386         buildonly-randconfig-002-20240411   clang
+i386         buildonly-randconfig-003-20240411   clang
+i386         buildonly-randconfig-004-20240411   clang
+i386         buildonly-randconfig-005-20240411   clang
+i386         buildonly-randconfig-006-20240411   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240411   gcc  
+i386                  randconfig-002-20240411   gcc  
+i386                  randconfig-003-20240411   clang
+i386                  randconfig-004-20240411   clang
+i386                  randconfig-005-20240411   gcc  
+i386                  randconfig-006-20240411   clang
+i386                  randconfig-011-20240411   clang
+i386                  randconfig-012-20240411   gcc  
+i386                  randconfig-013-20240411   gcc  
+i386                  randconfig-014-20240411   gcc  
+i386                  randconfig-015-20240411   clang
+i386                  randconfig-016-20240411   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240411   gcc  
+loongarch             randconfig-002-20240411   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                            mac_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                         bigsur_defconfig   gcc  
+mips                      fuloong2e_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240411   gcc  
+nios2                 randconfig-002-20240411   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                randconfig-001-20240411   gcc  
+parisc                randconfig-002-20240411   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240411   gcc  
+powerpc               randconfig-003-20240411   gcc  
+powerpc64             randconfig-002-20240411   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-002-20240411   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                    randconfig-001-20240411   gcc  
+sh                    randconfig-002-20240411   gcc  
+sh                           se7206_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240411   gcc  
+sparc64               randconfig-002-20240411   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240411   gcc  
+um                    randconfig-002-20240411   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240411   gcc  
+x86_64       buildonly-randconfig-002-20240411   clang
+x86_64       buildonly-randconfig-003-20240411   clang
+x86_64       buildonly-randconfig-004-20240411   gcc  
+x86_64       buildonly-randconfig-005-20240411   clang
+x86_64       buildonly-randconfig-006-20240411   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240411   clang
+x86_64                randconfig-002-20240411   clang
+x86_64                randconfig-003-20240411   gcc  
+x86_64                randconfig-004-20240411   clang
+x86_64                randconfig-005-20240411   gcc  
+x86_64                randconfig-006-20240411   clang
+x86_64                randconfig-011-20240411   clang
+x86_64                randconfig-012-20240411   gcc  
+x86_64                randconfig-013-20240411   clang
+x86_64                randconfig-014-20240411   gcc  
+x86_64                randconfig-015-20240411   gcc  
+x86_64                randconfig-016-20240411   gcc  
+x86_64                randconfig-071-20240411   clang
+x86_64                randconfig-072-20240411   clang
+x86_64                randconfig-073-20240411   clang
+x86_64                randconfig-074-20240411   gcc  
+x86_64                randconfig-075-20240411   gcc  
+x86_64                randconfig-076-20240411   clang
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240411   gcc  
+xtensa                randconfig-002-20240411   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
