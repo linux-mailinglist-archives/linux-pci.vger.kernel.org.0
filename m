@@ -1,143 +1,161 @@
-Return-Path: <linux-pci+bounces-6113-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6114-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07DA98A0892
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 08:37:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94CBA8A089B
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 08:39:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 266C01C2279C
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 06:37:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EF1B1F21AEC
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 06:39:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C4313D617;
-	Thu, 11 Apr 2024 06:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E00813D254;
+	Thu, 11 Apr 2024 06:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QudKxKt8"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="DA7PbQm0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DD213CF9F;
-	Thu, 11 Apr 2024 06:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5438910A11
+	for <linux-pci@vger.kernel.org>; Thu, 11 Apr 2024 06:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712817442; cv=none; b=ht2PoyHum38PZU0p7AOMU72Ht76Bv7XWqASmFr/hmnZLQRz/zpHYpdwNpdCKQuwsnMxoVYQcxonT0d/qrHpZmhcx7yD7xmihv5zHE1H4aZYHTEuTTXMMTMRdHHdUBjTO/n/ZWanpG2F0lLG9Df/y8kdRMYqSKJ6uBmZm1mFQ9ys=
+	t=1712817581; cv=none; b=tMpnO9v+Onb9jcCO1OZv00Wst61z53R79zDngtAyu/XO+Qr93jIuIZ6LoyNtiex7+yviOPoNfeEdlJG9GoNL/ti2YgKZTTQoZwIxoe27+ljcLIp9Nq7T3yjGZPaOzutPIj3WsSW2OLD9InXolEK20zz564XCJN2BAenwc2chLjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712817442; c=relaxed/simple;
-	bh=2ipZN9n0TtN3o+SfMKeB61oRs+EH1yEZUxvjc7CAjrE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jUGrpRgybC8TRRXF5cF9vq1WTKPCoad89chTkxxGotryrmMmhu1tlAGxCmQYv+BrgUfPFqLBVqcl3fbVL/20pYsFC9f0UOQypIT0HWrAXGuoqKj4hIVUZD0ZrLaenkHAYuN3PmC/mO8kKnfU3iCPqAvyeYsbOR2yyfCUfr2F98E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QudKxKt8; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5aa400b917dso2493138eaf.0;
-        Wed, 10 Apr 2024 23:37:21 -0700 (PDT)
+	s=arc-20240116; t=1712817581; c=relaxed/simple;
+	bh=npWe+bs1tluTxELJVg4uRxupj2EbfLou25t2yt6eHGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VKg1fZzBrZWzDm9xfMzFyMPRvC2s1MDxk3vLPS2ocSzgcvxaVfiC0/4NX1usNnkSZ8OnX6KD9S95htK0bc60o7RqfclQuGRdurCTSSnI7DkiVuihB7aD1XacjKI5lq/ZAL/mwSac+vCXH3WQb2sWfIMBFqmhX6prQiOr2JQof0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=DA7PbQm0; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a52176b2cb6so111691466b.2
+        for <linux-pci@vger.kernel.org>; Wed, 10 Apr 2024 23:39:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712817440; x=1713422240; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rVtF0FbxwDL1+EyVXXt8m5PuumkGURWxInjDGKcvjBg=;
-        b=QudKxKt8WRSuOcBggswmX19sSrnaLJY8oqE2eB3Zz/M5jCejqZ8FMSmwb7DtDgxgSr
-         NHBtNB+QOzt7z+2+MQhMrPEWSlsxceXXmtVeobYcsbANF36YKchzxtf7ZNbziaKiEI0H
-         XxkgJlN/tADOp6wl9cHY6GWIFJFPyeZqWq/2vlfxdLMpK/yPvx9zL97N+AJ0gq4o3rG1
-         HbhMPnoxk0/6nmrgVUAjVgQL2pUfkmsbqsL3mz3iVnhTJ24mb898VVACswXb8Fw6q/KO
-         Z3qRw3qKeKqsQ1zUZIumDnNvxbOAQY7l9+c6OqzA4nXoKybJQ1oWUZi/FCNiU93sA70I
-         ra/g==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1712817577; x=1713422377; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CLEhKjTBYYSzqpvs3oidNdffm+PATdvhj+mdGT9W/00=;
+        b=DA7PbQm0eEgFZlLH0ZorgTwv5OTidbP1NoHCou2FLmtzSjo565BsewakMGLKszNFwE
+         amQSgUVDS7HGUuEfwhpXbfktNkb7xH7jth5dN3mQYv1LtufSjeIPHqFXinp4x45BU25S
+         7FhpOU3pZYCNAkHPtWDWWWxTRegslke7h5pqqwXxG+855P3jiROCkPVqZNmzBau3GnHP
+         rLjwQ9K4QFAPufWIevfA/M7ISWbE7GsUfQ+WJQs6z/31vKpNnCXCstH8WDZyIejaiX9Y
+         uvcE67YaiWLM79lHMP5Qn4IqV6+WLBPU9gPSqQJOFKXpvranOibPvxzDRnAnKI6V4bz4
+         AMYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712817440; x=1713422240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rVtF0FbxwDL1+EyVXXt8m5PuumkGURWxInjDGKcvjBg=;
-        b=s79n/GDwRhnfowyqxh/M/i0UJDm/PI7FOEpTaPHioHvPlVJE87Pe+eTS9TnZOer2J/
-         yV7q5lw7i9IjSt4aDsu4yA6p4/oO/o4jCl7U6usIyJOZxqHhf7v5PB+hH5ugtAiKiQta
-         1zOXpznzz7bZrs8QQuUyErwdFUo7iUD8ueqZoVz0MVariWDohRemMSE1nCk2PL0zeMxr
-         8xN3Awr9Fc2ioL3RaJQggJksPlvgEQ2Tfc31spVwx7emf4MzI3Br6D4758PkOkoxbo2Z
-         TCvsBmSXL3l4qucvXUfY+pslYd4jFu8qcHCZghwT7G1eFysD8Ryx+aZhxdl88HAybhbi
-         RTKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuStSMoVGJurBq4h+J/BCRArVej44w/wPf2zIiZ0OHwLxnbXicXxLKeVZYgfU4KV1WgyY4TXqDTMPcI52zWQmGCM1iNPLofPhv86fzW9Ad8QmPddIcWGQIOwkjW4qxlIO0BQwBh+8MjVxAGg0oissvOUbMK7zMC8yegTIC4to6MTEsoimBGCOX9TDSmbBoS3Q/+KwL4+elimzNoK1ApQ5Edqo4Py8H9U4iGVm69z+gEUzZao8uqR8Pr8ftZROoD+TLzPRVTA==
-X-Gm-Message-State: AOJu0YyL0hc9o0lRp1Kbjz+b9reBOoDjXxiv+hx2rUciPuHoGZ0mH/j+
-	+4UtfsxrbfDa0GYcC2Rv7VKeehJhrNmvJxZuXGCLVGl2LZem3La7zB8nldXp+30hN8ouhjbGZMi
-	u5KXW7edtFLTTYGnR02E4OpCeGTM=
-X-Google-Smtp-Source: AGHT+IES9majFVr22VozspwWyOs+YbISGsgQi1H0N7wgH6XHm1MFch0WdzdzAv98JrRwXB0nazk545ZDOwQPlvcyYH8=
-X-Received: by 2002:a05:6870:55cd:b0:22e:6b4e:d2ac with SMTP id
- qk13-20020a05687055cd00b0022e6b4ed2acmr5468350oac.12.1712817440529; Wed, 10
- Apr 2024 23:37:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712817577; x=1713422377;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CLEhKjTBYYSzqpvs3oidNdffm+PATdvhj+mdGT9W/00=;
+        b=jgByu4JceddRbj/Odr+u+44fV+veRdNIIMh28ZCaaPTa199jqVXea9c6rzQDv2MEPc
+         DtMdWZIv6XwjUAVlECUAle9tyowT1eHEe7mk9BYfu8npNLT4pc4HF1J/hI9ZJg55tpAg
+         /vy5cQi7JTfOeZCizimCLVc/8ACUD11nzD2+eLPV/1OLrfof/lm0MPDqEw4wjmFMRNVq
+         ANG3u4FkxPConIM3DAqun6DyE6abBaqHx2GJJ7/ZmGH+RQrNrbkFoGloagOkt7dNW9tc
+         I08gjs2jaDf/s3T0+lRhyqr5EVSori+qJK/O6kUN7RlCTM9HyHUKRcIIOYu61aRUdbrC
+         Vl7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXjV82cW+JfnoXSXUMHQnhnJjYfJwia/tWyAWWpknBOjTrKNkCl3gRMFc29tw150cBOqX5yhjbFhi4x9xFgabQfmr53Fcn2rDDW
+X-Gm-Message-State: AOJu0YzQVuKjGKzokPgyHi94s4teTfLLBxec47KLbwPg8ee0RU1+sZ4b
+	dmnvln8iFFLDIf45mFAXO1nheG6ii1ALCdGtsZ6wl76587zcFyU+dDIusp80al8=
+X-Google-Smtp-Source: AGHT+IFpYvKPdJnGf0YpmT4OSVh4n8gdmu1Sex6/8w5++RlibDPjjob7o/e9BQmj6XILXtNewiFV0g==
+X-Received: by 2002:a17:906:509:b0:a4e:679b:8437 with SMTP id j9-20020a170906050900b00a4e679b8437mr2213954eja.59.1712817577532;
+        Wed, 10 Apr 2024 23:39:37 -0700 (PDT)
+Received: from localhost (host-213-179-129-39.customer.m-online.net. [213.179.129.39])
+        by smtp.gmail.com with ESMTPSA id jy3-20020a170907762300b00a521603e14csm441715ejc.138.2024.04.10.23.39.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 23:39:37 -0700 (PDT)
+Date: Thu, 11 Apr 2024 08:39:35 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	pabeni@redhat.com, John Fastabend <john.fastabend@gmail.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Edward Cree <ecree.xilinx@gmail.com>, netdev@vger.kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	Alexander Duyck <alexanderduyck@fb.com>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+Message-ID: <ZheFp_Sf66DpaFFm@nanopsycho>
+References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
+ <20240409135142.692ed5d9@kernel.org>
+ <44093329-f90e-41a6-a610-0f9dd88254eb@lunn.ch>
+ <CAKgT0UcVnhgmXNU2FGcy6hbzUQZwNBZw0EKbFF3DsKDc8r452A@mail.gmail.com>
+ <c820695d-bda7-4452-a563-170700baf958@lunn.ch>
+ <CAKgT0Uf4i_MN-Wkvpk29YevwsgFrQ3TeQ5-ogLrF-QyMSjtiug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410212638.GA2159326@bhelgaas> <458ce909-0616-487d-b4bd-42b58d059198@linaro.org>
- <CAMhs-H82Ymc=isxu6AX4_s1QnNpSSNt74--ED1j7JxpzE=eCRg@mail.gmail.com> <0336b752-ba98-497b-96d0-efc01ffbd93c@linaro.org>
-In-Reply-To: <0336b752-ba98-497b-96d0-efc01ffbd93c@linaro.org>
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Thu, 11 Apr 2024 08:37:09 +0200
-Message-ID: <CAMhs-H_yWFn7JvCYhVqELmBjwHO8KCU_UVE5XTas2WVJC1UsAw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
- child node reg
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Will Deacon <will@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Srikanth Thokala <srikanth.thokala@intel.com>, 
-	Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, Michal Simek <michal.simek@amd.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Mark Kettenis <kettenis@openbsd.org>, 
-	Tom Joseph <tjoseph@cadence.com>, Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKgT0Uf4i_MN-Wkvpk29YevwsgFrQ3TeQ5-ogLrF-QyMSjtiug@mail.gmail.com>
 
-On Thu, Apr 11, 2024 at 8:20=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Wed, Apr 10, 2024 at 11:07:02PM CEST, alexander.duyck@gmail.com wrote:
+>On Wed, Apr 10, 2024 at 1:01 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>>
+>> On Wed, Apr 10, 2024 at 08:56:31AM -0700, Alexander Duyck wrote:
+>> > On Tue, Apr 9, 2024 at 4:42 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>> > >
+>> > > > What is less clear to me is what do we do about uAPI / core changes.
+>> > >
+>> > > I would differentiate between core change and core additions. If there
+>> > > is very limited firmware on this device, i assume Linux is managing
+>> > > the SFP cage, and to some extend the PCS. Extending the core to handle
+>> > > these at higher speeds than currently supported would be one such core
+>> > > addition. I've no problem with this. And i doubt it will be a single
+>> > > NIC using such additions for too long. It looks like ClearFog CX LX2
+>> > > could make use of such extensions as well, and there are probably
+>> > > other boards and devices, maybe the Zynq 7000?
+>> >
+>> > The driver on this device doesn't have full access over the PHY.
+>> > Basically we control everything from the PCS north, and the firmware
+>> > controls everything from the PMA south as the physical connection is
+>> > MUXed between 4 slices. So this means the firmware also controls all
+>> > the I2C and the QSFP and EEPROM. The main reason for this is that
+>> > those blocks are shared resources between the slices, as such the
+>> > firmware acts as the arbitrator for 4 slices and the BMC.
+>>
+>> Ah, shame. You took what is probably the least valuable intellectual
+>> property, and most shareable with the community and locked it up in
+>> firmware where nobody can use it.
+>>
+>> You should probably stop saying there is not much firmware with this
+>> device, and that Linux controls it. It clearly does not...
+>>
+>>         Andrew
 >
-> On 11/04/2024 08:13, Sergio Paracuellos wrote:
-> >
-> >>
-> >> I think the question should be towards Mediatek folks. I don't know wh=
-at
-> >> this hardware is exactly, just looks like pci-pci-bridge. The driver
-> >> calls the children host bridges as "ports".
-> >
-> > You can see the topology here in my first driver submit cover letter
-> > message [0].
-> >
+>Well I was referring more to the data path level more than the phy
+>configuration. I suspect different people have different levels of
+>expectations on what minimal firmware is. With this hardware we at
+>least don't need to use firmware commands to enable or disable queues,
+>get the device stats, or update a MAC address.
 >
-> Useful diagram, thanks. It would be great if you could add it to the
-> binding description.
+>When it comes to multi-host NICs I am not sure there are going to be
+>any solutions that don't have some level of firmware due to the fact
 
-Sure, I will do it depending on time hopefully sooner than later :-).
+A small linux host on the nic that controls the eswitch perhaps? I mean,
+the multi pf nic without a host in charge of the physical port and
+swithing between it and pf is simply broken design. And yeah you would
+probably now want to argue others are doing it already in the same way :)
+True that.
 
-Best regards,
-    Sergio Paracuellos
 
+>that the cable is physically shared with multiple slots.
 >
-> Best regards,
-> Krzysztof
+>I am assuming we still want to do the PCS driver. So I will still see
+>what I can do to get that setup.
+>
+>Thanks,
+>
+>- Alex
 >
 
