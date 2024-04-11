@@ -1,204 +1,247 @@
-Return-Path: <linux-pci+bounces-6152-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6153-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C19208A1F4D
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 21:16:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF32B8A1F92
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 21:37:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3594D1F2A0B5
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 19:16:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E1431F2A8E6
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 19:37:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04BE4205E35;
-	Thu, 11 Apr 2024 19:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5905816419;
+	Thu, 11 Apr 2024 19:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pzhs1o84"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NYQzpHJm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF4FF9DF;
-	Thu, 11 Apr 2024 19:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C8A175A5
+	for <linux-pci@vger.kernel.org>; Thu, 11 Apr 2024 19:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712862969; cv=none; b=j8sD/We9w3RC7h/+utfz2uBtQLeC7LnTwTSSX3fkbaf2PDqVoCUnSWDCM87EqA08LbzKwcb/mgmAplhhN6AxGh+BWXjOvXffBUpy+HQaaKK15CkJs1AAmEaNh04pFa+3f5GXu3wG31AnlRKJF0BB8aJXjUMLHa53rgJsegLl/Fg=
+	t=1712864248; cv=none; b=rusC7heFWxRVylULK2ULdEYKLfoTno2vrKjU7mFnjCK49vWRs/jAPd5x20b+gWbYvijsNuTnDhPdzPCuaeGNvoHxDi8P9QT5AvR23vb7/0K0LNIjKt8iQoTdlY+npdn0fXQUoVKQoyE6iouzCOqOmmn5nB2mR7FnjsDkq41evRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712862969; c=relaxed/simple;
-	bh=xwu1Lyvb4geu/kIf3urHXorMd7iumeFJO7hXvoKCOII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rP/UIa17ogKQemx4qN9ZcI64vnQrgV3BIVyP2MNaD/X23vrSL3sly8dBKT+trx3kYXP/KSAIXDNiTZXBlSbzB/1N2dMHK/pTIT/dWRxNapX+3cL0Hg7Au9rw/c8reRGo/Y+x7rfUeBJu2ZyCgN7y5yF8B1nfb4GJwbEA5Y6/arQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pzhs1o84; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712864248; c=relaxed/simple;
+	bh=3rsTPXJR7lq+8MYPBM9faUmJwfoPErQv4ZdSeLfDLiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Xk/KjJRFA41ySd8IT80T/UoLTu/D42sKSUD5NL7V178dimppPjABx9gtw3u4t7ATEiNOf/QRKAX3P6l8yHxzfV/ef/sjEqhAu0DsOTRTT7+pQ/4Wy5EjvTP+U/WWBDhmIfOon6bWGWNLffvvUs20Je5ebIGozK+62bJxFunnbsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NYQzpHJm; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712862969; x=1744398969;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xwu1Lyvb4geu/kIf3urHXorMd7iumeFJO7hXvoKCOII=;
-  b=Pzhs1o84hREufZytn015hu311k0L/BCZS+btoexWJUVymj6appD4cdVu
-   FfrWjtWOV6DuTjnf0H92nBPm89pwWyM7YW8u9N93R3waTdeB0KI7QR71v
-   /cHX35VGRdyz1yfBlFW4v3Ve21U6pPuFEIZ0gthLzEtYB6GPWumaKUxmr
-   YRvLIM4c8buhwFCTUXxeRS/KqP7xWVT2y06YcOhGDT7AxPyGVoy3A+aNt
-   EpFVdJvsBHVa38ADvaCvoNHoU+mZc3RIM1eNq7hnMDdF4MSMrdH9pe85/
-   0NWCYp5qKimUQV8h/mZ8wIMopBkBXZDV0pyvy7rijiggcJCuXK3Ddq9Bz
-   A==;
-X-CSE-ConnectionGUID: CgNx3H3vR26hjkXNFzfj+A==
-X-CSE-MsgGUID: xBrT2lBjQCaxH7Ep3IveNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="12084220"
+  t=1712864245; x=1744400245;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=3rsTPXJR7lq+8MYPBM9faUmJwfoPErQv4ZdSeLfDLiM=;
+  b=NYQzpHJm15NKF9AOPvKfmiHYjHVS8Z+3Rq9Z8X1QYkwgMligKbRM1B4T
+   hzhmVg+zWg6sLpiz8ZpJum+67VEVhqMCQH7oXPCTy8OQlnNDJLPg98odt
+   QAjt9GOCDprZthPV88I885LbgPuNVej413xa4djJFJdlsCkw9WTbqp/W9
+   yjc6ndoFo4Q7n9yeUvdadz1q0WqO3PK8jnFcBccb8PGbqyIqnNXQQjGJ+
+   ILvZO4L8sLM9J3HnZKlWLlozo57ikEOI1f3itHsgtI9ua4xHpJwCjikoi
+   a/vF6VT3SZoDBRq01GQatGvbnQljlkDp2YMwUBM0DyHNtH6vNoqWWVIyZ
+   g==;
+X-CSE-ConnectionGUID: QZBzrLxYRu+iANtaORVb6g==
+X-CSE-MsgGUID: ANGsl2oLSL6NHJsl1IeDiA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8467128"
 X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="12084220"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 12:16:08 -0700
-X-CSE-ConnectionGUID: jmaJMGkISoqLiJ2p2IZYhw==
-X-CSE-MsgGUID: Kd5Vby8OQKCXTdujpsXnLw==
+   d="scan'208";a="8467128"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 12:37:24 -0700
+X-CSE-ConnectionGUID: 9WVK3IbQRiyn2OBjSgES3w==
+X-CSE-MsgGUID: mxCcPsp7R/CyL3DaOlUkyQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="21036760"
-Received: from kaspence-mobl.amr.corp.intel.com (HELO [10.209.90.14]) ([10.209.90.14])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 12:16:07 -0700
-Message-ID: <d1f40ee3-ffac-4277-a5b5-6f3d678dff6b@linux.intel.com>
-Date: Thu, 11 Apr 2024 12:16:06 -0700
+   d="scan'208";a="52177156"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 11 Apr 2024 12:37:24 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rv0Eb-0008vl-39;
+	Thu, 11 Apr 2024 19:37:21 +0000
+Date: Fri, 12 Apr 2024 03:37:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/tegra194] BUILD SUCCESS
+ 19326006a21da26532d982254677c892dae8f29b
+Message-ID: <202404120313.VpTatnJq-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 10/11] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, ashok.raj@intel.com,
- Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20240411180757.GA2190937@bhelgaas>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240411180757.GA2190937@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/tegra194
+branch HEAD: 19326006a21da26532d982254677c892dae8f29b  PCI: tegra194: Fix probe path for Endpoint mode
 
-On 4/11/24 11:07 AM, Bjorn Helgaas wrote:
-> On Mon, Mar 23, 2020 at 05:26:07PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> Error Disconnect Recover (EDR) is a feature that allows ACPI firmware to
->> notify OSPM that a device has been disconnected due to an error condition
->> (ACPI v6.3, sec 5.6.6).  OSPM advertises its support for EDR on PCI devices
->> via _OSC (see [1], sec 4.5.1, table 4-4).  The OSPM EDR notify handler
->> should invalidate software state associated with disconnected devices and
->> may attempt to recover them.  OSPM communicates the status of recovery to
->> the firmware via _OST (sec 6.3.5.2).
->>
->> For PCIe, firmware may use Downstream Port Containment (DPC) to support
->> EDR.  Per [1], sec 4.5.1, table 4-6, even if firmware has retained control
->> of DPC, OSPM may read/write DPC control and status registers during the EDR
->> notification processing window, i.e., from the time it receives an EDR
->> notification until it clears the DPC Trigger Status.
->>
->> Note that per [1], sec 4.5.1 and 4.5.2.4,
->>
->>   1. If the OS supports EDR, it should advertise that to firmware by
->>      setting OSC_PCI_EDR_SUPPORT in _OSC Support.
->>
->>   2. If the OS sets OSC_PCI_EXPRESS_DPC_CONTROL in _OSC Control to request
->>      control of the DPC capability, it must also set OSC_PCI_EDR_SUPPORT in
->>      _OSC Support.
->>
->> Add an EDR notify handler to attempt recovery.
->>
->> [1] Downstream Port Containment Related Enhancements ECN, Jan 28, 2019,
->>     affecting PCI Firmware Specification, Rev. 3.2
->>     https://members.pcisig.com/wg/PCI-SIG/document/12888
->> +static int acpi_enable_dpc(struct pci_dev *pdev)
->> +{
->> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->> +	union acpi_object *obj, argv4, req;
->> +	int status;
->> +
->> +	/*
->> +	 * Some firmware implementations will return default values for
->> +	 * unsupported _DSM calls. So checking acpi_evaluate_dsm() return
->> +	 * value for NULL condition is not a complete method for finding
->> +	 * whether given _DSM function is supported or not. So use
->> +	 * explicit func 0 call to find whether given _DSM function is
->> +	 * supported or not.
->> +	 */
->> +        status = acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> +				1ULL << EDR_PORT_DPC_ENABLE_DSM);
->> +        if (!status)
->> +                return 0;
->> +
->> +	status = 0;
->> +	req.type = ACPI_TYPE_INTEGER;
->> +	req.integer.value = 1;
->> +
->> +	argv4.type = ACPI_TYPE_PACKAGE;
->> +	argv4.package.count = 1;
->> +	argv4.package.elements = &req;
->> +
->> +	/*
->> +	 * Per Downstream Port Containment Related Enhancements ECN to PCI
->> +	 * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_DSM is
->> +	 * optional.  Return success if it's not implemented.
->> +	 */
->> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> +				EDR_PORT_DPC_ENABLE_DSM, &argv4);
-> This has been upstream for a while, just a follow-up question: this
-> _DSM function was defined by the ECN with Rev 5.  The ECN was
-> incorporated into the PCI Firmware spec r3.3 with slightly different
-> behavior as Rev 6.
->
-> The main differences are:
->
->   ECN
->     - Rev 5
->     - Arg3 is an Integer
->     - Return is 0 (DPC disabled) or 1 (DPC enabled)
->
->   r3.3 spec
->     - Rev 6
->     - Arg3 is a Package of one Integer
->     - Return is 0 (DPC disabled, Hot-Plug Surprise may be set), 1 (DPC
->       enabled, Hot-Plug Surprise may be cleared), or 2 (failure)
->
-> So the question is whether this actually implements Rev 5 or Rev 6?
-> It looks like this builds a *package* for Arg3 (which would correspond
-> to Rev 6), but we're evaluating Rev 5, which specified an Integer.
->
-> The meaning of the Arg3 values is basically the same, so I don't see
-> an issue there, but it looks like if a platform implemented Rev 5
-> according to the ECN to take a bare Integer, this might not work
-> correctly.
+elapsed time: 1451m
 
-I think it implements rev 6. The version number needs to be updated.
+configs tested: 152
+configs skipped: 3
 
-If you would like, I can submit a patch to fix it.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->
->> +	if (!obj)
->> +		return 0;
->> +
->> +	if (obj->type != ACPI_TYPE_INTEGER) {
->> +		pci_err(pdev, FW_BUG "Enable DPC _DSM returned non integer\n");
->> +		status = -EIO;
->> +	}
->> +
->> +	if (obj->integer.value != 1) {
->> +		pci_err(pdev, "Enable DPC _DSM failed to enable DPC\n");
->> +		status = -EIO;
->> +	}
->> +
->> +	ACPI_FREE(obj);
->> +
->> +	return status;
->> +}
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                   randconfig-001-20240411   gcc  
+arc                   randconfig-002-20240411   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                           omap1_defconfig   gcc  
+arm                   randconfig-001-20240411   gcc  
+arm                   randconfig-002-20240411   gcc  
+arm                   randconfig-004-20240411   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-002-20240411   gcc  
+arm64                 randconfig-003-20240411   gcc  
+arm64                 randconfig-004-20240411   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240411   gcc  
+csky                  randconfig-002-20240411   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240411   clang
+i386         buildonly-randconfig-002-20240411   clang
+i386         buildonly-randconfig-003-20240411   clang
+i386         buildonly-randconfig-004-20240411   clang
+i386         buildonly-randconfig-005-20240411   clang
+i386         buildonly-randconfig-006-20240411   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240411   gcc  
+i386                  randconfig-002-20240411   gcc  
+i386                  randconfig-003-20240411   clang
+i386                  randconfig-004-20240411   clang
+i386                  randconfig-005-20240411   gcc  
+i386                  randconfig-006-20240411   clang
+i386                  randconfig-011-20240411   clang
+i386                  randconfig-012-20240411   gcc  
+i386                  randconfig-013-20240411   gcc  
+i386                  randconfig-014-20240411   gcc  
+i386                  randconfig-015-20240411   clang
+i386                  randconfig-016-20240411   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240411   gcc  
+loongarch             randconfig-002-20240411   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                            mac_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                         bigsur_defconfig   gcc  
+mips                      fuloong2e_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240411   gcc  
+nios2                 randconfig-002-20240411   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                randconfig-001-20240411   gcc  
+parisc                randconfig-002-20240411   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240411   gcc  
+powerpc               randconfig-003-20240411   gcc  
+powerpc64             randconfig-002-20240411   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-002-20240411   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                    randconfig-001-20240411   gcc  
+sh                    randconfig-002-20240411   gcc  
+sh                           se7206_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240411   gcc  
+sparc64               randconfig-002-20240411   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240411   gcc  
+um                    randconfig-002-20240411   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240411   gcc  
+x86_64       buildonly-randconfig-004-20240411   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-003-20240411   gcc  
+x86_64                randconfig-005-20240411   gcc  
+x86_64                randconfig-012-20240411   gcc  
+x86_64                randconfig-014-20240411   gcc  
+x86_64                randconfig-015-20240411   gcc  
+x86_64                randconfig-016-20240411   gcc  
+x86_64                randconfig-074-20240411   gcc  
+x86_64                randconfig-075-20240411   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240411   gcc  
+xtensa                randconfig-002-20240411   gcc  
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
