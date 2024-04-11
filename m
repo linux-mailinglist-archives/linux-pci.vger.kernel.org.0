@@ -1,115 +1,234 @@
-Return-Path: <linux-pci+bounces-6140-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6141-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E80BF8A1C70
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 19:48:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 234EA8A1C78
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 19:49:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D9E01F21813
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 17:48:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F8FC1C2382C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 17:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B8B19DF68;
-	Thu, 11 Apr 2024 16:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3580657871;
+	Thu, 11 Apr 2024 16:24:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="Rp/6YmRb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iJzcS8ka"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB11199EAC;
-	Thu, 11 Apr 2024 16:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826C11A0B16
+	for <linux-pci@vger.kernel.org>; Thu, 11 Apr 2024 16:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712852579; cv=none; b=c7/wCZiz5cRmRoCR0guReZpu/0RqPuSM3PrF+N3jV1m/NtHizGLhUN+vEXp9sTql9fvPX62bZAOYX5poQdie0PThoJ5ZCnkz72YLXHN7r4VeX3fKWSX8CsfkP4S3qfycRkNJe2OXETCXNjleh2TJ86lXX06RXG8CZNSbr02SXjU=
+	t=1712852641; cv=none; b=kGg57tSbCl3+orjzBNfmSe8L0sOM8rNubQMs7ScmoVHPLFlMxCG4Ox4SVn+gBB4owQ4lSoKZGJidQht6g8utrgLB2gVZuJuc7THQ10yWwPir9cpMhWemyCB7CypDzlX+IExKdZpMKS6RWy80zFqWqTCfAsiiNJmoq1+F/ZG1e5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712852579; c=relaxed/simple;
-	bh=WvA6WiAIcx48MsampV65+//J153uNQiTZJE17RY9yfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZrbjBNL5UpLJa0Z6j0mK5pvkjh73RMNPNWBSR9ZTBXx/FWPYLz4kaKOgVAb03r14nh8Kd/WBubSE8dIEWROLTynjo2P3MZZcnZo1W1/ruGhwyOGHa2iC5wBGf/aqjo9T70TtlJiN8tkH2H/dOz/sdf5bVWtNvuvTHw+9wmZpPwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=Rp/6YmRb; arc=none smtp.client-ip=74.208.4.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
-	s=s1-ionos; t=1712852571; x=1713457371; i=parker@finest.io;
-	bh=hwWgxxmXda6kOw96M4hFTIyZvfWGTAS0PHP54N9tvUg=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:In-Reply-To:
-	 References;
-	b=Rp/6YmRbqNs6BYufkZOMf/ZBhld93ZsokpFJWV9mAHPrYVKs7MhkVLDvq5YCmif1
-	 RqzAHrjFm5Vb84aeOgEKLl8ztAJwjJs/6kQE27EunsbyGc8wg6eur13Y2KCdjcKY3
-	 dGwmSia9+bvPlniGSmeLeVcgksNmdutiulXashSe4wLx4ClaCAHYgaUx/SoXoExg0
-	 5EMsab31nxRgGmcnJGj2V8mKKQt7gZYm9sS+Mus+ZHj2VJvvCkq6lGM7XXhp8AuNn
-	 deB8eOYwHqlP/Hyb2W+qXbCry/ayESA8ZPN+mGEVL1GDwXz9ESdh9Cg0aeYDYPgJ0
-	 eCPBmTUjL/2E/tuqXw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
- mrelay.perfora.net (mreueus003 [74.208.5.2]) with ESMTPSA (Nemesis) id
- 0LlDCS-1sVvuX2GM2-00b6Km; Thu, 11 Apr 2024 18:22:51 +0200
-Date: Thu, 11 Apr 2024 12:22:48 -0400
-From: Parker Newman <parker@finest.io>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, Parker Newman <pnewman@connecttech.com>
-Subject: Re: [PATCH 1/2] serial: exar: add missing CTI/Exar PCI IDs to
- include/linux/pci_ids.h
-Message-ID: <20240411122248.5070c840@SWDEV2.connecttech.local>
-In-Reply-To: <2024041124-blah-obligate-5f6d@gregkh>
-References: <cover.1712846025.git.pnewman@connecttech.com>
-	<936439b200c810f83076a710eab81acd1e79ec83.1712846025.git.pnewman@connecttech.com>
-	<2024041124-blah-obligate-5f6d@gregkh>
-Organization: Connect Tech Inc.
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712852641; c=relaxed/simple;
+	bh=W5nocX6cFVtMFf2/FmKO0uqNAoXjb/ZO8RYPy7G47HY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gJPA665f18QwmGUrwY18epfXSRADz0Hg0pmMhn4AjwnhvptnCjPwhSzMWTR79iKNCC+CyPFiHaXsUA2gBtWVeB4Nf6Ol73xXtZijP7CZ0UGnJSHTTsQ6F/TmoSY/abwt8UG9B8iu4P1iqYxBBAroLGb9TUkkQA8ZzrPKl4k6GfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iJzcS8ka; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712852639; x=1744388639;
+  h=date:from:to:cc:subject:message-id;
+  bh=W5nocX6cFVtMFf2/FmKO0uqNAoXjb/ZO8RYPy7G47HY=;
+  b=iJzcS8ka3H0oyXsvhEeOn4C4SqeSm+e9P8/mAt7y474KJiTuTs2MPdFI
+   Y/qIhfVTGvzLuJCCeMui0u3ts1AQ6prLKQAj5Eq8Fh9ix/8ljue0VV/83
+   q+2B5gLsdIaYT4i8c2Zb1NuhiyJcask57OzWzHxF6mpzzboSuzZnFiqqn
+   cmIAxPa/qv7o1KzyArdf3a3MCVLHY1Ny00fIwTi1fSZW9cy6awMHQr4NZ
+   u45Gh2/Jp7RbEY6uWvKGW3TiOpSrs9fBtsI9n5Kb4Ki/vtLl8Cd6e3KSQ
+   59sqrVjk3/usg3gIfGFfy/ShLYrL2o+eYyCB+RqRIINeGrR/rYDhKodWp
+   w==;
+X-CSE-ConnectionGUID: FCyBZbcxR06hcm0l0cEcKQ==
+X-CSE-MsgGUID: E9VubflORAaCSGoVOn2B7g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="18835940"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="18835940"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 09:23:58 -0700
+X-CSE-ConnectionGUID: mUMWe7MISbOl6QL7WaNElg==
+X-CSE-MsgGUID: d/NEyYSLTuaePQyG2ekg+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="25421181"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 11 Apr 2024 09:23:57 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ruxDO-0008nN-2K;
+	Thu, 11 Apr 2024 16:23:54 +0000
+Date: Fri, 12 Apr 2024 00:23:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ ced360f2a021b8bf0cb7c0222cb551b8cad3cf91
+Message-ID: <202404120022.wYURPvoV-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pjdGvLr/eoeXrJdCn078IyqSe+0HQmPzG1q90oBpDFWQRB32DH2
- cCIfMeB/FWtUc0oPDKcfbnOFdoJsQa8Qiwq++9A73Q8qv2WoiS7xepA6vBR55tn1FBxyfUd
- 2jpbLou1RCA9z1rfgiE8xbUPOhAUUz3BhBh1+nALzi6HdTTnN5lkdTceinyaYT8avPkuB2t
- GOA2lYntt1PTE0dA9NrgQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:aqGDdD3EIFw=;0d/rEnUuyg9oWdY1xKNe5Pmvl2G
- WU7QwO4nHirmSzCqtDlmcV/WSXbBG7VJxtepxuiPwS8GwORoMCD9ZOGPAW9xvLkIJxJJONyXU
- 8EcFP873ITtDy1J1V/jgGgRAWl7G9opSSwlE1VYVCphddQmbj1qKtIEcLZQrOCvaWGOxqMFoB
- 8fx1fjjjlPrrsVzJHDrTU5Wtg/ZRWgnZtPbqCk7Yvx3OSvPfodBH8NozhaJ9i2LWdQh42vlpW
- 4rGZVKzrsz7nNnBFME+InyMfwIQj7RumBNzbFCcFen0UZHJPSeQNv8SUJxa4E/HqaSrb8PUBJ
- Q0EgXFIngPygONnDfpwSu24npTFDyGqQ/p2KeOUZ8yn1hW2wkyq2YTRSCvuEFqCr75o7Objnm
- +B2I3EKSBg92jZP5gJWmoKBBkfrojUmaq8iYUeCcGZZFCPKos1vA6EwELt1yewjHjZBfPxywl
- zKvaq/+7wMD1s4BRkpLIt53PP018mzaFIKH8Nya+nu1jue2MhesiuGkzc4r3nEDLbud/AJBH0
- C2u7Cgx8a6iqHbVl1KmLVKdJ9EzJDa0y9w+04dIjibLCj6hPDGDMbWyeR940j+lqICrUIyzrb
- Gg3hve4K2vgO9iyt8G9BxQMBQJiqmTJWUB4BhSlK74t4drNqcUEXDOvkcveSGINONMJhSt78Y
- krDZWB5rGiTT7P28SGaHP2nwfwQqicGdPoS9LRJG5HyuwIz+s1IOeLZ4k04jUMiqC2TIg/Y/F
- XiWCDchRsD061WMxoIQ2OLAN0i9UXpKnFIOXCgbPxJURIjSZkbzPtE=
 
-On Thu, 11 Apr 2024 17:54:45 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: ced360f2a021b8bf0cb7c0222cb551b8cad3cf91  Merge branch 'pci/dt-bindings'
 
-> On Thu, Apr 11, 2024 at 11:29:26AM -0400, parker@finest.io wrote:
-> > From: Parker Newman <pnewman@connecttech.com>
-> >
-> > - Added missing CTI serial car PCI IDs
-> > - Added missing Exar XR17V25X PCI IDs
-> > - Moved XR17V4358 and XR17V8358 PCI ID defines to pci_ids.h
->
-> Did you read the top of the pci_ids.h file?  Don't add new ids there
-> unless it is going to be needed in multiple files please.
->
-> thanks,
->
-> greg k-h
-No sorry I missed that... I was just trying to consolidate them all
-in one place.
+elapsed time: 1113m
 
-Would it be better to move all the Connect Tech sub-IDs from
-pci_ids.h into 8250_exar.c? Or should I just add the missing ones
-to 8250_exar.c instead of pci_ids.h?
+configs tested: 141
+configs skipped: 3
 
-Thank you,
--Parker
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                   randconfig-001-20240411   gcc  
+arc                   randconfig-002-20240411   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                           omap1_defconfig   gcc  
+arm                   randconfig-001-20240411   gcc  
+arm                   randconfig-002-20240411   gcc  
+arm                   randconfig-004-20240411   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-002-20240411   gcc  
+arm64                 randconfig-003-20240411   gcc  
+arm64                 randconfig-004-20240411   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240411   gcc  
+csky                  randconfig-002-20240411   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240411   clang
+i386         buildonly-randconfig-002-20240411   clang
+i386         buildonly-randconfig-003-20240411   clang
+i386         buildonly-randconfig-004-20240411   clang
+i386         buildonly-randconfig-005-20240411   clang
+i386         buildonly-randconfig-006-20240411   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240411   gcc  
+i386                  randconfig-002-20240411   gcc  
+i386                  randconfig-003-20240411   clang
+i386                  randconfig-004-20240411   clang
+i386                  randconfig-005-20240411   gcc  
+i386                  randconfig-006-20240411   clang
+i386                  randconfig-011-20240411   clang
+i386                  randconfig-012-20240411   gcc  
+i386                  randconfig-013-20240411   gcc  
+i386                  randconfig-014-20240411   gcc  
+i386                  randconfig-015-20240411   clang
+i386                  randconfig-016-20240411   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240411   gcc  
+loongarch             randconfig-002-20240411   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                            mac_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                         bigsur_defconfig   gcc  
+mips                      fuloong2e_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240411   gcc  
+nios2                 randconfig-002-20240411   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                randconfig-001-20240411   gcc  
+parisc                randconfig-002-20240411   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240411   gcc  
+powerpc               randconfig-003-20240411   gcc  
+powerpc64             randconfig-002-20240411   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-002-20240411   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                    randconfig-001-20240411   gcc  
+sh                    randconfig-002-20240411   gcc  
+sh                           se7206_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240411   gcc  
+sparc64               randconfig-002-20240411   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240411   gcc  
+um                    randconfig-002-20240411   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240411   gcc  
+xtensa                randconfig-002-20240411   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
