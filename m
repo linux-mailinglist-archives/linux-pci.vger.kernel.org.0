@@ -1,208 +1,145 @@
-Return-Path: <linux-pci+bounces-6102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6103-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6DB98A05DB
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 04:33:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ECC68A0721
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 06:29:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B724A1C22855
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 02:33:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF73E1F235F3
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 04:29:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E827A13AD1F;
-	Thu, 11 Apr 2024 02:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A3113BAFA;
+	Thu, 11 Apr 2024 04:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NSgU+cSi"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AkkI0yaz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2073.outbound.protection.outlook.com [40.107.93.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4351F5FA;
-	Thu, 11 Apr 2024 02:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712802785; cv=none; b=OnBeanuLGPXWKtyjFrXDKee5J+zeiNDzwfbyfoP0ghzF9p5NaEydBU5a0HAmxTwT+CnSAzXnN1ap5CXIGcbK0FXQlDtDXf2ghlsAWXKNnBtd1YxpW0SzAXVgNy8MY/sqQfBI8tiimJ6FO2/UFTePUFDpwieXnCQIGa7TJ2nSSsE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712802785; c=relaxed/simple;
-	bh=lbTPOYvSPz3ocuH2IuW7VvwSA+zx01OQxCxSasNyqVk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p8L0Fzw6CAFC/9arlSV9MeuIdZ3VAyIZNa+3xaO5BMsx/Nlpew5Wu64GevBDiyvrihAOd7qo4Mj/PaKiNZ34+2Od9GC180sk0WnSAfauFdndmxgZaCvAwwlCt6w9IQHC5/PASuUJam2mzo9no35HXzKU2UUHtVWgV058ljblUv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NSgU+cSi; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712802784; x=1744338784;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lbTPOYvSPz3ocuH2IuW7VvwSA+zx01OQxCxSasNyqVk=;
-  b=NSgU+cSia3EWuZS5aT32c5rcmXGq5hkwymwgmJFGl5dHg27/WGPR7XwT
-   ybEv4EXD0tx846q807K6CnVXN6EvP1vScxGy7YyawRJ1KD8vOXGZRf85q
-   nbl2XwPOrJz7x8jQFFQJEPl9iyuIkx1ut1C14j/HLdnVDKHps6j5WwoIk
-   u7i490ziVvO9fchLWI1I2TYcuyay419Rtv+QCHFXFbvqpZcKwqL6YnN20
-   OiLMWpCzM9AMQryAhsN5CSoBQNpqRJSN+R+PEZ0gIw0z6Qb50B5Tf5HIU
-   hhTukP67c6H4t4drlvF9K1Y4dNqU8A/lGfHrEvNoLI97igQ1zfT48q6qW
-   g==;
-X-CSE-ConnectionGUID: tbSE+BstTxGgN+RqcxhzMg==
-X-CSE-MsgGUID: m6fUNGKbS7u5iKpIprXzKQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8053543"
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="8053543"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 19:33:03 -0700
-X-CSE-ConnectionGUID: 1xxNz+KsR0e5RVKCjx9U+A==
-X-CSE-MsgGUID: FfgGP88QSwyjrxTM0753XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="25274483"
-Received: from tashley-mobl.amr.corp.intel.com (HELO [10.255.230.246]) ([10.255.230.246])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 19:33:02 -0700
-Message-ID: <f18734ef-9a9e-47d6-b302-81f61ad3c438@linux.intel.com>
-Date: Wed, 10 Apr 2024 19:33:02 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A840113B78E
+	for <linux-pci@vger.kernel.org>; Thu, 11 Apr 2024 04:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712809741; cv=fail; b=q2Jpoz19tljAYJ5jtP+JQmVsrqxiHDZxFd5G3PJC9u1+vIjWBsCEBEnYuKOv/msDFdAeAiiAkXLCJLQVmx04ipEM+Xdabwo3iV3EtfoLsEllhW+yijDZN1VlmpfBbfAhB9ye69g71UqiIQY8v/0H31ZAcj7bCrdCHhoJ+YoFOYk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712809741; c=relaxed/simple;
+	bh=oz1UPOUlChDCDsblMifspUB98+11Jw8WpfL1uhGuZdE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nVOFHBmWkDXUm1A1CK8JAPU4JYnFNTVLvzCptD1hxbD1KA2Vr9EVQvUlLz/ZY5G+YRaWd+YJkwlLemL8kfR1+1k9CBE9Lmkyd5inlNEF/WFkmsffJiGk4f9ftYk9IsthGvZVZ9wJqVD4ex4BaQxkpXxtoh02JLoaA0b50JwxAUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AkkI0yaz; arc=fail smtp.client-ip=40.107.93.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MSv5GvlSgkPSEOmdIb/fiMAmNwpkpV404aZKD+bCG5MSpSQdXclsbk/U+y/X9vF2yhQIm5jk0UWtVYW2K2ruH1bEL1ak/kOK069mGZJ+sSNVHNfFWLaWTQJtPEMmu92+uBUeWvXINFdUGcr0QsRjXPGTB6AxDtTecdDYxPagdHko9SKgWOKqmYk5RyFIIoIyA4ZO3u+uLqvRvtzBNbv1JOnl4GQUPivC20on/QwBffVEn8XXb6L8f712WQtkiP5NFbM/UcmCFvaTPG+DUdH2CgP9QQrXzx0RC616mQdIi6UjTehC+QWOapE9uZFxewNR+NtLI855Ybsz72t9LvGwkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q0gKrG7nN0G1LTqcJG/rqjLykoDlOenNHBMxA8oiSJQ=;
+ b=Rua9sD2D3NFhPNdzdYSX+iyeTo+Rb1yGrFKJDW0AnedQIlJ1Y3IZR5f1EUTk2PM1HuPhGzFlLKfCY0aqTepnyK4zLg+jEp7QZYFxxMQ4lMPrPQwX3iAfF7tu0Kk2VEkkUFcTWzUT86olIXBLrzxSg4+vcV0g2oSNxQEanmYupYFVJnVEuV2UBv+S2kAt4MeSEDTK2K7uoBeX6mR6BXzANLaRk7NWDlf5LW5b36UI0uoV/VuAUpAwR8o7qVRHjs+cAC7AZ2vv+8zNUDxwlkIr4svqU7aFDFysXDVOym66ziGG+QslUZxE1omhU0AXXIaKMiezEULTEbEZEV//mV3dlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q0gKrG7nN0G1LTqcJG/rqjLykoDlOenNHBMxA8oiSJQ=;
+ b=AkkI0yazMdXH6UZQd1pMlXyUn135tsR1iz+vvMBNBD3qAotshMxqIFJLdSoa3aDdSm5ASoNc4TrpYQmLAV5xUOincN3EZ7T0QWAhWF0zBb2IxHL0CnErZwcGeApTVTYGOjavB0ffPOaW9kuXJkxquNVeOXlEq4eMOFh1oEH/YnQ=
+Received: from MW4P221CA0023.NAMP221.PROD.OUTLOOK.COM (2603:10b6:303:8b::28)
+ by LV8PR12MB9184.namprd12.prod.outlook.com (2603:10b6:408:18f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
+ 2024 04:28:57 +0000
+Received: from CO1PEPF000044FA.namprd21.prod.outlook.com
+ (2603:10b6:303:8b:cafe::88) by MW4P221CA0023.outlook.office365.com
+ (2603:10b6:303:8b::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.19 via Frontend
+ Transport; Thu, 11 Apr 2024 04:28:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044FA.mail.protection.outlook.com (10.167.241.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7495.0 via Frontend Transport; Thu, 11 Apr 2024 04:28:56 +0000
+Received: from aiemdee.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 10 Apr
+ 2024 23:28:54 -0500
+From: Alexey Kardashevskiy <aik@amd.com>
+To: <linux-pci@vger.kernel.org>
+CC: =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>, Alexey Kardashevskiy
+	<aik@amd.com>
+Subject: [PATCH pciutils] ls-ecaps: Correct IDE link state reporting
+Date: Thu, 11 Apr 2024 14:28:44 +1000
+Message-ID: <20240411042844.2241434-1-aik@amd.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] PCI: Add check for CXL Secondary Bus Reset
-To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- bhelgaas@google.com, lukas@wunner.de
-References: <20240409160256.94184-1-dave.jiang@intel.com>
- <20240409160256.94184-3-dave.jiang@intel.com>
- <da8ca6a2-860f-44a5-bb47-b5967f40be90@linux.intel.com>
- <f3394e7d-8094-4821-9fec-1d7b296805bc@intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <f3394e7d-8094-4821-9fec-1d7b296805bc@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FA:EE_|LV8PR12MB9184:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3b71544-f68d-4c7a-b66a-08dc59dfe6d0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	LSgFpIL6hZByrAdfJ+gdWDcr0YYec95yiyhKLhk/tFnpRlNGdOdurf39wRVLUeGZu3+gJBZbfosYU0ilxg6RTxFv/7QnQg2JzhnddRmcCbIMrnNtHq/hPdwXe/QprPvp7QFYc6BCYDVi3feJ4goVRNUITaB23inIdnBYwfz0haBnXI0Bu7KnAR2kQ5H2heuLE3AVuNUBpnz4QkFax9swj+UbquPRwNDwsaWjf6e8/nCn43EDQcKyQpZByw81zbSDlPLcYFwGF4s8ltCviEVH6OgC/RnIcIES2lZcrN4MhvZ58olhn4PQ/tub9H9CIS1NS3lYi5H0VYGxWsWK8AIhfc97qSpJnsQTnnp2BNuxNBsCx0rDHXg6GEGyB/RoTaevFCyWoR+lW2M9uA1MqrvC7lSugJ/w7X2r6pfdrrKBmcGmuy5q3uBroUhJcEMMKHCPYSXIGgznBU95QRATkhnTDHEvSpOorLmSWKvHFrg9ijpxH+uViy3WSNVG9PXg4mS1cmV6gZ7cm/ahYQGly4ukHAZNmv8iBpv/zZRkFTbPGRhRG0lhe3gxfcihT9oZCXlEahbFpwlT0s1pX9DKK/+mNXcUU5h9FhRvlsOo2/ZUmgFxVIBb78NzKF46OKQhzn9PX/b84K5Gi8ENbWoyDtNJgjx29MAyvuR52XibA67E/0mkfNh3lEmogVZOW4kLoMgnv9oDoY6OGoACi0ZWSWOFidT/JYzqx2p09i3Z5VLvBvBFK8X/Maw8AQuSEQYE7sIC
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(1800799015)(376005)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 04:28:56.3065
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3b71544-f68d-4c7a-b66a-08dc59dfe6d0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044FA.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9184
 
+PCIe r6.0, sec 7.9.26.4.2 "Link IDE Stream Status Register defines"
+the link state as:
 
-On 4/9/24 2:56 PM, Dave Jiang wrote:
->
-> On 4/9/24 2:39 PM, Kuppuswamy Sathyanarayanan wrote:
->> On 4/9/24 9:01 AM, Dave Jiang wrote:
->>> Per CXL spec r3.1 8.1.5.2, Secondary Bus Reset (SBR) is masked unless the
->>> "Unmask SBR" bit is set. Add a check to the PCI secondary bus reset
->>> path to fail the CXL SBR request if the "Unmask SBR" bit is clear in
->>> the CXL Port Control Extensions register by returning -ENOTTY.
->>>
->>> When the "Unmask SBR" bit is set to 0 (default), the bus_reset would
->>> appear to have executed successfully. However the operation is actually
->>> masked. The intention is to inform the user that SBR for the CXL device
->>> is masked and will not go through.
->>>
->>> If the "Unmask SBR" bit is set to 1, then the bus reset will execute
->>> successfully.
->>>
->>> Link: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
->>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>> ---
+0000b Insecure
+0010b Secure
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+The same definition applies to selective streams as well.
+The existing code wrongly assumes "secure" is 0001b, fix that for both
+link and selective streams.
 
->>> v4:
->>> - cxl_port_dvsec() should return u16. (Lukas)
->>> ---
->>>  drivers/pci/pci.c             | 45 +++++++++++++++++++++++++++++++++++
->>>  include/uapi/linux/pci_regs.h |  5 ++++
->>>  2 files changed, 50 insertions(+)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index e5f243dd4288..570b00fe10f7 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -4927,10 +4927,55 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
->>>  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
->>>  }
->>>  
->>> +static u16 cxl_port_dvsec(struct pci_dev *dev)
->>> +{
->>> +	return pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
->>> +					 PCI_DVSEC_CXL_PORT);
->>> +}
->> Since cxl_sbr_masked() is the only user of this function, why not directly
->> check for this capability there.
-> It's used by another function in the 3rd patch. I previously had it open coded. But Dan said to reduce churn, just create the function to begin with instead of moving that code to a function later on.
+Fixes: 42fc4263ec0e ("ls-ecaps: Add decode support for IDE Extended Capability")
+Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+---
+ ls-ecaps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-May be that patch would be the right place to introduce a helper function. But I think it fine either way.
-
->>> +
->>> +static bool cxl_sbr_masked(struct pci_dev *dev)
->>> +{
->>> +	u16 dvsec, reg;
->>> +	int rc;
->>> +
->>> +	/*
->>> +	 * No DVSEC found, either is not a CXL port, or not connected in which
->>> +	 * case mask state is a nop (CXL r3.1 sec 9.12.3 "Enumerating CXL RPs
->>> +	 * and DSPs"
->>> +	 */
->>> +	dvsec = cxl_port_dvsec(dev);
->>> +	if (!dvsec)
->>> +		return false;
->>> +
->>> +	rc = pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_PORT_CTL, &reg);
->>> +	if (rc || PCI_POSSIBLE_ERROR(reg))
->>> +		return false;
->>> +
->>> +	/*
->>> +	 * CXL spec r3.1 8.1.5.2
->>> +	 * When 0, SBR bit in Bridge Control register of this Port has no effect.
->>> +	 * When 1, the Port shall generate hot reset when SBR bit in Bridge
->>> +	 * Control gets set to 1.
->>> +	 */
->>> +	if (reg & PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR)
->>> +		return false;
->>> +
->>> +	return true;
->>> +}
->>> +
->>>  static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->>>  {
->>> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
->>>  	int rc;
->>>  
->>> +	/* If it's a CXL port and the SBR control is masked, fail the SBR */
->>> +	if (bridge && cxl_sbr_masked(bridge)) {
->>> +		if (probe)
->>> +			return 0;
->> Why return success during the probe?
-> Otherwise the reset_method will disappear as available after initial probe. We want to leave the reset method available. If the register bit gets unmasked we can perform a bus reset. We don't want to take it away the option entirely if it's masked.
-
-Ok.
-
->>> +
->>> +		return -ENOTTY;
->>> +	}
->>> +
->>>  	rc = pci_dev_reset_slot_function(dev, probe);
->>>  	if (rc != -ENOTTY)
->>>  		return rc;
->>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->>> index a39193213ff2..d61fa43662e3 100644
->>> --- a/include/uapi/linux/pci_regs.h
->>> +++ b/include/uapi/linux/pci_regs.h
->>> @@ -1148,4 +1148,9 @@
->>>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
->>>  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
->>>  
->>> +/* Compute Express Link (CXL) */
->>> +#define PCI_DVSEC_CXL_PORT				3
->>> +#define PCI_DVSEC_CXL_PORT_CTL				0x0c
->>> +#define PCI_DVSEC_CXL_PORT_CTL_UNMASK_SBR		0x00000001
->>> +
->>>  #endif /* LINUX_PCI_REGS_H */
-
+diff --git a/ls-ecaps.c b/ls-ecaps.c
+index b40ba72..5c2724e 100644
+--- a/ls-ecaps.c
++++ b/ls-ecaps.c
+@@ -1512,7 +1512,7 @@ static void
+ cap_ide(struct device *d, int where)
+ {
+     const char *hdr_enc_mode[] = { "no", "17:2", "25:2", "33:2", "41:2" };
+-    const char *stream_state[] = { "insecure", "secure" };
++    const char *stream_state[] = { "insecure", "reserved", "secure" };
+     const char *aggr[] = { "-", "=2", "=4", "=8" };
+     u32 l, l2, linknum = 0, selnum = 0, addrnum, off, i, j;
+     char buf1[16], buf2[16], offs[16];
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.41.0
 
 
