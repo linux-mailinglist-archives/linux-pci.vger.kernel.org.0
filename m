@@ -1,160 +1,143 @@
-Return-Path: <linux-pci+bounces-6112-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6113-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7C608A0884
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 08:34:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07DA98A0892
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 08:37:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 821752876C9
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 06:34:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 266C01C2279C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 06:37:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58B6C13C3F4;
-	Thu, 11 Apr 2024 06:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C4313D617;
+	Thu, 11 Apr 2024 06:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="1YzeAQVF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QudKxKt8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFC141AAC
-	for <linux-pci@vger.kernel.org>; Thu, 11 Apr 2024 06:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DD213CF9F;
+	Thu, 11 Apr 2024 06:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712817279; cv=none; b=gElDS8WBcgfVGMCTmB/G1N7iUncbLp7ZkxjdF6vjZw8lTi+C5pAFB9rAcFJU9DRkTudhVJ4C5G0p8Gfv7fiYxS9NH6J6klORwYrk4swMjp+fs07LQafukGyY4QOJqHK9SX/E7bwdev9NsGlW5tVCt4YHPtjPoOo6m6VJWuDl4MY=
+	t=1712817442; cv=none; b=ht2PoyHum38PZU0p7AOMU72Ht76Bv7XWqASmFr/hmnZLQRz/zpHYpdwNpdCKQuwsnMxoVYQcxonT0d/qrHpZmhcx7yD7xmihv5zHE1H4aZYHTEuTTXMMTMRdHHdUBjTO/n/ZWanpG2F0lLG9Df/y8kdRMYqSKJ6uBmZm1mFQ9ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712817279; c=relaxed/simple;
-	bh=ObuoOQmCK8gUlvTP5nscYhRAbR5j9i/hAuLi+p4+QuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lpq5YYvAkBbRsgkvG+iTb8NJ5BhnJ6n263LHhAVqwHurMquMye8jasAryqtgaLDqG7/gHzZpQF/Wvf/kCsmMu0HafiTDCUeuziM17WWvLg7/PGxlqFZJktzcb/T6jDQ/rPbP2u5Q/oUk8WoCIDn9vIxO6yhdYosYE3CQSe0mvoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=1YzeAQVF; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a51969e780eso923259266b.3
-        for <linux-pci@vger.kernel.org>; Wed, 10 Apr 2024 23:34:37 -0700 (PDT)
+	s=arc-20240116; t=1712817442; c=relaxed/simple;
+	bh=2ipZN9n0TtN3o+SfMKeB61oRs+EH1yEZUxvjc7CAjrE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jUGrpRgybC8TRRXF5cF9vq1WTKPCoad89chTkxxGotryrmMmhu1tlAGxCmQYv+BrgUfPFqLBVqcl3fbVL/20pYsFC9f0UOQypIT0HWrAXGuoqKj4hIVUZD0ZrLaenkHAYuN3PmC/mO8kKnfU3iCPqAvyeYsbOR2yyfCUfr2F98E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QudKxKt8; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5aa400b917dso2493138eaf.0;
+        Wed, 10 Apr 2024 23:37:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1712817276; x=1713422076; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gACNAQK/3KMTgTHdAXSuj1n/QGKhg5qwwF8BZdwnAbY=;
-        b=1YzeAQVFljvQKLvX2zgrY4Qv63OfrGVfOjcB2TQPxMJHo0jpDsp9qR5flTPhjn1QfJ
-         vFCp6Bso+IYrlAGulqydEx1wF2++jkT/Q7Gj2qTl3TCi4xdGQ02j0FFMACrHcRHkExLB
-         MRs1g4i3KAj1IJ/MpMKRAkC9vK/V+umIEodYz8c/q0LGOOCLWGxZpkSc0CBuRI0iXU+m
-         GnJB/JgLmOCiqQhDFJoJsHE18XEzyFscBJIaSZCQ8W1cnB7gFFO+vFF1ZA/wmUqgR3f+
-         SLeVcj4aI5bt7t7xiKMjwMD5mRFrPz4evihJ/+J6Z0KmtVrCV6tOY3d/fLbKuOmdBndZ
-         jDpQ==
+        d=gmail.com; s=20230601; t=1712817440; x=1713422240; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rVtF0FbxwDL1+EyVXXt8m5PuumkGURWxInjDGKcvjBg=;
+        b=QudKxKt8WRSuOcBggswmX19sSrnaLJY8oqE2eB3Zz/M5jCejqZ8FMSmwb7DtDgxgSr
+         NHBtNB+QOzt7z+2+MQhMrPEWSlsxceXXmtVeobYcsbANF36YKchzxtf7ZNbziaKiEI0H
+         XxkgJlN/tADOp6wl9cHY6GWIFJFPyeZqWq/2vlfxdLMpK/yPvx9zL97N+AJ0gq4o3rG1
+         HbhMPnoxk0/6nmrgVUAjVgQL2pUfkmsbqsL3mz3iVnhTJ24mb898VVACswXb8Fw6q/KO
+         Z3qRw3qKeKqsQ1zUZIumDnNvxbOAQY7l9+c6OqzA4nXoKybJQ1oWUZi/FCNiU93sA70I
+         ra/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712817276; x=1713422076;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gACNAQK/3KMTgTHdAXSuj1n/QGKhg5qwwF8BZdwnAbY=;
-        b=A7AWghId93YzCrZpx4kDjlum1duULZj86O+LhpjWCJchkzjtqG/C5MnFIpIg23RHrx
-         SEhzKB2US8G9s68YRtq9n7WPkbXe6BLCEzLIhmQQlRIxUz5bOlIKK59jdt/O8MTdXA7z
-         ffdPDcAt886wTOsiQLAvO59kCjdKjvYs6Bll7CbL2lthRMb13qt0ztlXL3JFHMJLwN9P
-         P/V95bTHoq3sL0jSVrS7GHRvXD8pZRmAzYLSNFodJxDLWs2jL7pxe5VGeMxzEOQNp/41
-         wMLs7rTOLOTYGwhFrIPXOD6LmcZc7cB3acoOKaX+NgAKNzrC0qQVxBrr0Uqzr7brmfMD
-         j6cw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEAv41mfuamSejE/fJ0WXKYU1nszCCJdVDCuHNHpvR7E5jKxdA/wZbslvaIplIgiujfXsjgLp6GrA0rwe9gGo7qXhe3ZeuxfMD
-X-Gm-Message-State: AOJu0YzvYTmHD9TrD7i8ydm9XcSUOCTuCZq0L0N25bUAWfvDpW7Gu4Et
-	Ksu3TCPPFEODjWv88l5zc8g2Zis0TqLv+UgO4Z8/Wd28kV2daNjtqd4VaRO6nH4=
-X-Google-Smtp-Source: AGHT+IHsOeiG9iP7Zif3ocJyJINoKkP8etLHrDqisAkt+e8GRUFWs1wEHdC5HgQCYtdQmH59yR/upQ==
-X-Received: by 2002:a17:906:2554:b0:a51:adac:e1dd with SMTP id j20-20020a170906255400b00a51adace1ddmr3369527ejb.26.1712817275732;
-        Wed, 10 Apr 2024 23:34:35 -0700 (PDT)
-Received: from localhost (host-213-179-129-39.customer.m-online.net. [213.179.129.39])
-        by smtp.gmail.com with ESMTPSA id hg20-20020a1709072cd400b00a5225c87f65sm122045ejc.56.2024.04.10.23.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 23:34:35 -0700 (PDT)
-Date: Thu, 11 Apr 2024 08:34:33 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>, pabeni@redhat.com,
-	John Fastabend <john.fastabend@gmail.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Edward Cree <ecree.xilinx@gmail.com>, netdev@vger.kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	Alexander Duyck <alexanderduyck@fb.com>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: Re: [net-next PATCH 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
-Message-ID: <ZheEeT-Gajp0rl3H@nanopsycho>
-References: <171217454226.1598374.8971335637623132496.stgit@ahduyck-xeon-server.home.arpa>
- <20240409135142.692ed5d9@kernel.org>
- <ZhZC1kKMCKRvgIhd@nanopsycho>
- <20240410064611.553c22e9@kernel.org>
- <ZhasUvIMdewdM3KI@nanopsycho>
- <20240410103531.46437def@kernel.org>
- <c0f643ee-2dee-428c-ac5f-2fd59b142c0e@gmail.com>
- <20240410105619.3c19d189@kernel.org>
- <CAKgT0UepNfYJN73J9LRWwAGqQ7YPwQUNTXff3PTN26DpwWix8Q@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1712817440; x=1713422240;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rVtF0FbxwDL1+EyVXXt8m5PuumkGURWxInjDGKcvjBg=;
+        b=s79n/GDwRhnfowyqxh/M/i0UJDm/PI7FOEpTaPHioHvPlVJE87Pe+eTS9TnZOer2J/
+         yV7q5lw7i9IjSt4aDsu4yA6p4/oO/o4jCl7U6usIyJOZxqHhf7v5PB+hH5ugtAiKiQta
+         1zOXpznzz7bZrs8QQuUyErwdFUo7iUD8ueqZoVz0MVariWDohRemMSE1nCk2PL0zeMxr
+         8xN3Awr9Fc2ioL3RaJQggJksPlvgEQ2Tfc31spVwx7emf4MzI3Br6D4758PkOkoxbo2Z
+         TCvsBmSXL3l4qucvXUfY+pslYd4jFu8qcHCZghwT7G1eFysD8Ryx+aZhxdl88HAybhbi
+         RTKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWuStSMoVGJurBq4h+J/BCRArVej44w/wPf2zIiZ0OHwLxnbXicXxLKeVZYgfU4KV1WgyY4TXqDTMPcI52zWQmGCM1iNPLofPhv86fzW9Ad8QmPddIcWGQIOwkjW4qxlIO0BQwBh+8MjVxAGg0oissvOUbMK7zMC8yegTIC4to6MTEsoimBGCOX9TDSmbBoS3Q/+KwL4+elimzNoK1ApQ5Edqo4Py8H9U4iGVm69z+gEUzZao8uqR8Pr8ftZROoD+TLzPRVTA==
+X-Gm-Message-State: AOJu0YyL0hc9o0lRp1Kbjz+b9reBOoDjXxiv+hx2rUciPuHoGZ0mH/j+
+	+4UtfsxrbfDa0GYcC2Rv7VKeehJhrNmvJxZuXGCLVGl2LZem3La7zB8nldXp+30hN8ouhjbGZMi
+	u5KXW7edtFLTTYGnR02E4OpCeGTM=
+X-Google-Smtp-Source: AGHT+IES9majFVr22VozspwWyOs+YbISGsgQi1H0N7wgH6XHm1MFch0WdzdzAv98JrRwXB0nazk545ZDOwQPlvcyYH8=
+X-Received: by 2002:a05:6870:55cd:b0:22e:6b4e:d2ac with SMTP id
+ qk13-20020a05687055cd00b0022e6b4ed2acmr5468350oac.12.1712817440529; Wed, 10
+ Apr 2024 23:37:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKgT0UepNfYJN73J9LRWwAGqQ7YPwQUNTXff3PTN26DpwWix8Q@mail.gmail.com>
+References: <20240410212638.GA2159326@bhelgaas> <458ce909-0616-487d-b4bd-42b58d059198@linaro.org>
+ <CAMhs-H82Ymc=isxu6AX4_s1QnNpSSNt74--ED1j7JxpzE=eCRg@mail.gmail.com> <0336b752-ba98-497b-96d0-efc01ffbd93c@linaro.org>
+In-Reply-To: <0336b752-ba98-497b-96d0-efc01ffbd93c@linaro.org>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Thu, 11 Apr 2024 08:37:09 +0200
+Message-ID: <CAMhs-H_yWFn7JvCYhVqELmBjwHO8KCU_UVE5XTas2WVJC1UsAw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
+ child node reg
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
+	Nicolas Saenz Julienne <nsaenz@kernel.org>, Will Deacon <will@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Srikanth Thokala <srikanth.thokala@intel.com>, 
+	Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang <jianjun.wang@mediatek.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, 
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, Michal Simek <michal.simek@amd.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Mark Kettenis <kettenis@openbsd.org>, 
+	Tom Joseph <tjoseph@cadence.com>, Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Wed, Apr 10, 2024 at 08:01:44PM CEST, alexander.duyck@gmail.com wrote:
->On Wed, Apr 10, 2024 at 10:56 AM Jakub Kicinski <kuba@kernel.org> wrote:
->>
->> On Wed, 10 Apr 2024 10:39:11 -0700 Florian Fainelli wrote:
->> > > Hm, we currently group by vendor but the fact it's a private device
->> > > is probably more important indeed. For example if Google submits
->> > > a driver for a private device it may be confusing what's public
->> > > cloud (which I think/hope GVE is) and what's fully private.
->> > >
->> > > So we could categorize by the characteristic rather than vendor:
->> > >
->> > > drivers/net/ethernet/${term}/fbnic/
->> > >
->> > > I'm afraid it may be hard for us to agree on an accurate term, tho.
->> > > "Unused" sounds.. odd, we don't keep unused code, "private"
->> > > sounds like we granted someone special right not took some away,
->> > > maybe "exclusive"? Or "besteffort"? Or "staging" :D  IDK.
->> >
->> > Do we really need that categorization at the directory/filesystem level?
->> > cannot we just document it clearly in the Kconfig help text and under
->> > Documentation/networking/?
->>
->> From the reviewer perspective I think we will just remember.
->> If some newcomer tries to do refactoring they may benefit from seeing
->> this is a special device and more help is offered. Dunno if a newcomer
->> would look at the right docs.
->>
->> Whether it's more "paperwork" than we'll actually gain, I have no idea.
->> I may not be the best person to comment.
+On Thu, Apr 11, 2024 at 8:20=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
->Are we going to go through and retro-actively move some of the drivers
->that are already there that are exclusive to specific companies? That
->is the bigger issue as I see it. It has already been brought up that
-
-Why is it an issue? Very easy to move drivers to this new directory.
-
-
->idpf is exclusive. In addition several other people have reached out
->to me about other devices that are exclusive to other organizations.
+> On 11/04/2024 08:13, Sergio Paracuellos wrote:
+> >
+> >>
+> >> I think the question should be towards Mediatek folks. I don't know wh=
+at
+> >> this hardware is exactly, just looks like pci-pci-bridge. The driver
+> >> calls the children host bridges as "ports".
+> >
+> > You can see the topology here in my first driver submit cover letter
+> > message [0].
+> >
 >
->I don't see any value in it as it would just encourage people to lie
->in order to avoid being put in what would essentially become a
->blacklisted directory.
+> Useful diagram, thanks. It would be great if you could add it to the
+> binding description.
 
-You are thinking all or nothing. I'd say that if we have 80% of such
-drivers in the correct place/directory, it's a win. The rest will lie.
-Shame for them when it is discovered.
+Sure, I will do it depending on time hopefully sooner than later :-).
 
+Best regards,
+    Sergio Paracuellos
 
 >
->If we are going to be trying to come up with some special status maybe
->it makes sense to have some status in the MAINTAINERS file that would
->indicate that this driver is exclusive to some organization and not
->publicly available so any maintenance would have to be proprietary.
+> Best regards,
+> Krzysztof
+>
 
