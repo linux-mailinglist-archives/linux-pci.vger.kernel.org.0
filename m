@@ -1,216 +1,108 @@
-Return-Path: <linux-pci+bounces-6130-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6133-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB7768A1707
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 16:21:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D132A8A1AFF
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 19:17:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AC0D1F22061
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 14:21:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F31B1F27B15
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 17:17:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CFA314F110;
-	Thu, 11 Apr 2024 14:21:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DE5C201999;
+	Thu, 11 Apr 2024 15:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmnqtmXm"
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="N+JmWxX8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2B914F100;
-	Thu, 11 Apr 2024 14:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732DC1FFC5C;
+	Thu, 11 Apr 2024 15:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712845271; cv=none; b=K3mWneNr9+Hk5KLSLxdx22WsqBmDhzSqkvXa3NYvqqjz3bdiYzwrRDXParnKG/t6wJdkXy74SzBjg0oAEjll1IjhKvXhrerFU0YvdMFEB7W6aAZ3GQ78i1yM2G29QhxbXYWUMpzATxczrrIc/S6D5NrHgOzWcfLXM8XN/xMfi1Y=
+	t=1712850214; cv=none; b=UUPtjEslIPE4H0bQih5T1hJ8h+2RTxnVFlFAUlYeMoX4Hc9D9XLeHtPu4qJdE4COXlgVcohAUExXqWWq+zs7GKNfLqKzfYWo9VdM1fnIOzyOq3x9PdLpl1Rk8J+RmHpKhxhuOtUrr1XGRA8ps3OZKGYuPDBSaL2JlVpOYU132+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712845271; c=relaxed/simple;
-	bh=RDt5jlNMS3ucSwKcH7tgpvFGKzTFvccMBgH0b+eayeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVFa7a4W1PWrl+Pr4HGtwNMVimFU44ugZ6YMYZgLWhjD70EMPCOWCILrqPKlGqYcCoRTUUyDgHoeX2oiMTbXPPAEtIeZq0kWGYMGaSotvULdMLxzjiF3F/KuCWfbwJb8TJ6Ul1OqRxFhf6ucAS8IDYdN3CXekfuss9ThSpm+RVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmnqtmXm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07DE0C2BD10;
-	Thu, 11 Apr 2024 14:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712845270;
-	bh=RDt5jlNMS3ucSwKcH7tgpvFGKzTFvccMBgH0b+eayeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FmnqtmXmyodJdgHKHjF/o9qh0gQ3yPVudJEayUfxMetCRKixf7MadURZeFX5r6J9F
-	 KZO4x26OQWLGTjpaYAKntJwCodgLP+aDt47OO2TKPR3PsJ4isKj268a8KfvYJVeiUA
-	 xIhTuT3AZ/SJc2XgyX2Qg7zwimd9QfG4T/XfpBUGwOjo3qoholwNk1YikECUI0aeJ3
-	 JKccakGSkbBD0N+gV6mcpbFZG4UhhKtCGsuBFNPpBXQ3yDfgtOIize3x3mLBOom0s0
-	 clIRJHM0xExk3YKLWu8DH34d19gGTvnMgL6DQhTuO1wpS9k189rIpVZjfDsQEG42r9
-	 nLPeassxXKhKg==
-Date: Thu, 11 Apr 2024 09:21:07 -0500
-From: Rob Herring <robh@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	s=arc-20240116; t=1712850214; c=relaxed/simple;
+	bh=G/uDq8R2cEJGETysdgyw+/FbbvpRatIhc4DdkmlZI7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rQ6I8/gSc3L2JqJPDzOUSPO2tvZ2+KaHCiytmffbjlLY7p+m5vLA4kkf/CCAMEdh1ZwGIDt/zn+NNbQ0E5zxk7bofBRQMdiAvdDriS2SX3cV2ys6XOwca+0VTFccLwQxbmikR9ipiRuUC095udtHYjNN7yhQf6ku3SEoxjj+ZQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=N+JmWxX8; arc=none smtp.client-ip=74.208.4.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1712850207; x=1713455007; i=parker@finest.io;
+	bh=Wmyh4+ECtBW0Jh/HVjgWQOVgBLp1r/1BdeWBCqXIMJU=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=N+JmWxX8X2C7iukAkyyle1+I3fOz7RM7RDk0GDHH1HhP0zu4JLEFcd96sXkELpB+
+	 LGM7jd0Py4pCpqzkTpJBwzgA9f6TXel4lA9P6+E/UYc4Xyjn2dLRirSBwaEhDkWmT
+	 c9NlzfkZ8xvBwLiYXt8O2ksx54Efyft1Tg7ZH6Re4U2epCTeEN6wiUpEhQjdJKsPL
+	 yA+aLj6vqvjlG8Tl1UBQpGjyF0ej4sSTpW77Jne7iFWmbgy24wnmsnnUqoQR1rCKe
+	 Gw0X80eq9/TVFx9gCFn63ZCu00MrEzAvG/hj7k60UA2ZwmBeYOh9LpT9qH7HIB7rE
+	 rhwueu2nxhw5l41jyw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus002
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0LsBB3-1suW0J0tXL-00to1W; Thu, 11 Apr
+ 2024 17:30:04 +0200
+From: parker@finest.io
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	Tom Joseph <tjoseph@cadence.com>,
-	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
- child node reg
-Message-ID: <20240411142107.GA3537062-robh@kernel.org>
-References: <CAMhs-H82Ymc=isxu6AX4_s1QnNpSSNt74--ED1j7JxpzE=eCRg@mail.gmail.com>
- <20240411123917.GA2180141@bhelgaas>
+	linux-pci@vger.kernel.org
+Cc: Parker Newman <pnewman@connecttech.com>
+Subject: [PATCH 0/2] serial: exar: add Connect Tech serial cards to Exar driver
+Date: Thu, 11 Apr 2024 11:29:25 -0400
+Message-ID: <cover.1712846025.git.pnewman@connecttech.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240411123917.GA2180141@bhelgaas>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xqtzeB7BoSjGN76zplJXS9B9wmmGlf1dciTVJVO/D8DMswVfxcC
+ Jz8+JXKQu2GMLzZdvxrVG+dGGWoe5r6dmqzd1bx14wa+dKMu8noevmQx9rlyXprlTMdukSG
+ yK1KHNe8K1OskvxzGad1doerz6uOFgiNwdm8wlIDIPXjtFGa8D60PJM7kJU4bK3YcfJRJbO
+ LY0Vnmona40ZK0nlDWQ8g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XfH5YioreMY=;q20CEaQ7J56knqbZMJLYmfWUUgK
+ XmmlL0se7pW3gdsuAS3egnk7UTa8F/j+4dt/4tR5asMi+6zB/Jf1X1g82huV5o65LTh6dki74
+ eIQpVRbePI17eH1RF6lgve0cXxMVNAqzMwkXOxsWEtxcTXygI7O+K2IWK+q/Wgg3HEZbr8SpH
+ Z9jXS88vufPqjIw8K4//vG/gBYKqsl75/0cf5Pj6XEq8jHf8MAVo9kDnXAcWprNqvxLFFQVLW
+ tYe0NfpjrSfFL7TSJRbn0vAd9VqiB+xoTkzS6W89M1MvkvOrlUWmx+s24uHwaH6NDEmxef8re
+ ikMFZ3BIc5rlXC9nljVrPd8R2JcIg/qIagUHzKQwt2nvaN9mJ44W4XOi6F0hZSh/wlglDUNjo
+ KbJLybG2nbd2YkqBWuZK5QphcJpEkjRdqIdZgvy6n0pJvXWPixXk9Y7ZtlhcLJYXWtxYOQI4B
+ vsi+RMh4V+6LofVYOWcSeQGn1ROB6sq5Us9p+V7CBNkInVgGX3Ev85QbG8CLLYO8NKIR91W3M
+ Y/sheKDNQLL6ndiVYV29qdM1o1g5mqsd/toh8eJSdxBKx1fpm3dAhxdkVWChmac+MBulMIT5B
+ VxCiSeWOU/kbFOf6CQvjqqvUTrAFvPhIr0mYcDzotaoY+txoQspkd6ZS0Bv8uQI17Z5V6ZS7J
+ TJivTsfZWQDFShp9oCjTQ02Z6s6SXB3Sd8YZyCwerftwdYOnKh8pQ6kwcoVPcC5XuIeVINfWn
+ FPT6kNji1yLowUUeWUVAafL6tXJdZja6KDt8Ht/1Mq6DrXvnxi5oZE=
 
-On Thu, Apr 11, 2024 at 07:39:17AM -0500, Bjorn Helgaas wrote:
-> On Thu, Apr 11, 2024 at 08:13:18AM +0200, Sergio Paracuellos wrote:
-> > On Thu, Apr 11, 2024 at 8:01 AM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> > > On 10/04/2024 23:26, Bjorn Helgaas wrote:
-> > > > On Wed, Apr 10, 2024 at 08:15:19PM +0200, Krzysztof Kozlowski wrote:
-> > > >> MT7621 PCI host bridge has children which apparently are also PCI host
-> > > >> bridges, at least that's what the binding suggest.
-> > > >
-> > > > What does it even mean for a PCI host bridge to have a child that is
-> > > > also a PCI host bridge?
+From: Parker Newman <pnewman@connecttech.com>
 
-It should say 'root port' instead as the binding description correctly 
-says.
+Hello,
+These patches add proper support for most of Connect Tech's (CTI) Exar
+based serial cards. Previously, only a subset of CTI's cards would work
+with the Exar driver while the rest required the CTI out-of-tree driver.
+These patches are intended to phase out the out-of-tree driver.
 
-> > > >
-> > > > Does this mean a driver binds to the "parent" host bridge, enumerates
-> > > > the PCI devices below it, and finds a "child" host bridge?
-> > 
-> > Yes, that is exactly what you can see on enumeration.
-> > 
-> > The following is a typical boot trace where all bridges has a device also below:
-> > 
-> > mt7621-pci 1e140000.pcie: host bridge /pcie@1e140000 ranges:
-> > mt7621-pci 1e140000.pcie:   No bus range found for /pcie@1e140000, using [bus 00-ff]
-> > mt7621-pci 1e140000.pcie:      MEM 0x0060000000..0x006fffffff -> 0x0060000000
-> > mt7621-pci 1e140000.pcie:       IO 0x001e160000..0x001e16ffff -> 0x0000000000
-> > mt7621-pci 1e140000.pcie: PCIE0 enabled
-> > mt7621-pci 1e140000.pcie: PCIE1 enabled
-> > mt7621-pci 1e140000.pcie: PCIE2 enabled
-> > mt7621-pci 1e140000.pcie: PCI host bridge to bus 0000:00
-> 
-> 1e140000.pcie is a host bridge.  It has some CPU-specific bus on the
-> upstream side, standard PCI (domain 0000, buses 00-ff) on the
-> downstream side.
-> 
-> > pci 0000:00:00.0: [0e8d:0801] type 01 class 0x060400
-> > pci 0000:00:01.0: [0e8d:0801] type 01 class 0x060400
-> > pci 0000:00:02.0: [0e8d:0801] type 01 class 0x060400
-> 
-> > pci 0000:01:00.0: [1b21:0611] type 00 class 0x010185
-> 
-> > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> > pci 0000:00:00.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
-> > pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff pref]
-> 
-> 00:00.0 looks like a PCIe Root Port to bus 01.  This is not a host
-> bridge; it's just a standard PCI-to-PCI bridge with PCI on both the
-> upstream and downstream sides.
-> 
-> > pci 0000:02:00.0: [1b21:0611] type 00 class 0x010185
-> 
-> > pci 0000:00:01.0: PCI bridge to [bus 02-ff]
-> > pci 0000:00:01.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:01.0:   bridge window [mem 0x00000000-0x000fffff]
-> > pci 0000:00:01.0:   bridge window [mem 0x00000000-0x000fffff pref]
-> 
-> 00:01.0 is another Root Port to bus 02.
-> 
-> > pci 0000:03:00.0: [1b21:0611] type 00 class 0x010185
-> 
-> > pci 0000:00:02.0: PCI bridge to [bus 03-ff]
-> > pci 0000:00:02.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff]
-> > pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff pref]
-> > pci_bus 0000:03: busn_res: [bus 03-ff] end is updated to 03
-> 
-> And 00:02.0 is a third Root Port to bus 03.
-> 
-> > pci 0000:00:00.0: PCI bridge to [bus 01]
-> > pci 0000:00:00.0:   bridge window [io  0x0000-0x0fff]
-> > pci 0000:00:00.0:   bridge window [mem 0x60000000-0x600fffff]
-> > pci 0000:00:00.0:   bridge window [mem 0x60100000-0x601fffff pref]
-> > pci 0000:00:01.0: PCI bridge to [bus 02]
-> > pci 0000:00:01.0:   bridge window [io  0x1000-0x1fff]
-> > pci 0000:00:01.0:   bridge window [mem 0x60200000-0x602fffff]
-> > pci 0000:00:01.0:   bridge window [mem 0x60300000-0x603fffff pref]
-> > pci 0000:00:02.0: PCI bridge to [bus 03]
-> > pci 0000:00:02.0:   bridge window [io  0x2000-0x2fff]
-> > pci 0000:00:02.0:   bridge window [mem 0x60400000-0x604fffff]
-> > 
-> > > I think the question should be towards Mediatek folks. I don't know what
-> > > this hardware is exactly, just looks like pci-pci-bridge. The driver
-> > > calls the children host bridges as "ports".
-> > 
-> > You can see the topology here in my first driver submit cover letter
-> > message [0].
-> > 
-> >  [0]: https://lore.kernel.org/all/CAMhs-H-BA+KzEwuDPzcmrDPdgJBFA2XdYTBvT4R4MEOUB=WQ1g@mail.gmail.com/t/
-> 
-> Nothing unusual here, this looks like the standard PCIe topology.
-> 
-> What *might* be unusual is describing the Root Ports in DT.  Since
-> they are standard PCI devices, they shouldn't need DT description
-> unless there's some unusual power/clock/reset control or something
-> that is not discoverable via PCI enumeration.
+I am new to the mailing lists and contributing to the kernel so please
+let me know if I have made any mistakes or if you have any feedback.
 
-It's only unusual because typically there's only 1 RP per host bridge 
-and properties which really apply to the RP get stuck in the host bridge 
-node because we don't have a RP node. An example is perst-gpios. That's 
-not a property of the RP either, but the RP is the upstream side of a 
-slot and we often don't have a node for the device either.
+Thank you,
 
-Rob
+Parker Newman (2):
+  serial: exar: add missing CTI/Exar PCI IDs to include/linux/pci_ids.h
+  serial: exar: adding CTI PCI/PCIe serial port support to 8250_exar
+
+ drivers/tty/serial/8250/8250_exar.c | 1092 +++++++++++++++++++++++++--
+ include/linux/pci_ids.h             |  104 ++-
+ 2 files changed, 1094 insertions(+), 102 deletions(-)
+
+=2D-
+2.43.2
+
 
