@@ -1,198 +1,216 @@
-Return-Path: <linux-pci+bounces-6129-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3BD88A16B0
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 16:07:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB7768A1707
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 16:21:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C75A51C22364
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 14:07:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AC0D1F22061
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Apr 2024 14:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B95D14F9D5;
-	Thu, 11 Apr 2024 14:05:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CFA314F110;
+	Thu, 11 Apr 2024 14:21:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LsjVOHx8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmnqtmXm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C87014D44D;
-	Thu, 11 Apr 2024 14:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2B914F100;
+	Thu, 11 Apr 2024 14:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844356; cv=none; b=MtLbTTm9qKWj7TVIYT7Ng6VmafOLyyDRYmXvzebFUkFTMIIYikzsNqD6Mj2H3slFrS1Xr7Ca6BNvHM/v5Kls0aW18Qv25hRu1IpAA8xdtE6ad6cW0KmPjG/tyNFRlT8XEXopGLZRJx4/I5HuKFTMu+T6dVlGOL8NaAxxRdY5U1c=
+	t=1712845271; cv=none; b=K3mWneNr9+Hk5KLSLxdx22WsqBmDhzSqkvXa3NYvqqjz3bdiYzwrRDXParnKG/t6wJdkXy74SzBjg0oAEjll1IjhKvXhrerFU0YvdMFEB7W6aAZ3GQ78i1yM2G29QhxbXYWUMpzATxczrrIc/S6D5NrHgOzWcfLXM8XN/xMfi1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844356; c=relaxed/simple;
-	bh=w02JCMP3BbzdBAjdyFpEXBM6uQChrEYUSHmWMjV3wlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HC8UrSiI3i67xIBNIGe0FT6DLyAcBiRdJhvFHMLQE+H/WCWKdT0ZvxQmi5zoGfjWPLLRa4U/ylhv/YExxnf5+LqcqBIGteCT3MzZXhXGWG3XaCJgSlg7C8H/kSsMT3Kv+JoEuakRzjJYamSpEnebD3RDSmkfm8/MfLAGWoUIkLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LsjVOHx8; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E6D94000B;
-	Thu, 11 Apr 2024 14:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712844351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=99XoepWmaxoXSZpnM0X9ck++OvRAJQLOkxrhY2CyXm8=;
-	b=LsjVOHx8DIQnU5iKlRvy7tXAeU70ECSr9FiiBw0siyrjylQ9vLfFpZsyVLhfz3DVKZ1gRT
-	Wx6ANDMv/8DKJNynXoW4e0tuZXR8UlS9nVZPHlypJr2PtsgXjyDvfvJBPoK4sk0jG/ypHr
-	oBsW0UYfEvwYvuw4LVvSkXhPL49LN2YTLXO8LS9rrGzWzBtzRoH1pNsfRQXGShiCGlkoQp
-	NYvZjanqFs+t5jkFihuA/I/C+Z7LR/iV3mIoYntWnvSkjwenZyx+0fk+8IkxLkmn4Nj1UG
-	b596yJmKoyAd6DZb89CaYyMVtX/mHVjPENd86ieCi9bIaszBsP/Ud2XcjXWSrQ==
-Date: Thu, 11 Apr 2024 16:05:48 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
- Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano
- Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, Allan
- Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-Message-ID: <20240411160548.06fa9b11@bootlin.com>
-In-Reply-To: <CAL_JsqJOgkJtOipzskWc_NzUYUE1g0VsTT3eyPbbKw=NZO_4aQ@mail.gmail.com>
-References: <20231215145207.0cf098e5@bootlin.com>
-	<20240319152513.GA1227721@bhelgaas>
-	<20240319173404.019b424a@bootlin.com>
-	<CAL_JsqJOgkJtOipzskWc_NzUYUE1g0VsTT3eyPbbKw=NZO_4aQ@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1712845271; c=relaxed/simple;
+	bh=RDt5jlNMS3ucSwKcH7tgpvFGKzTFvccMBgH0b+eayeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aVFa7a4W1PWrl+Pr4HGtwNMVimFU44ugZ6YMYZgLWhjD70EMPCOWCILrqPKlGqYcCoRTUUyDgHoeX2oiMTbXPPAEtIeZq0kWGYMGaSotvULdMLxzjiF3F/KuCWfbwJb8TJ6Ul1OqRxFhf6ucAS8IDYdN3CXekfuss9ThSpm+RVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmnqtmXm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07DE0C2BD10;
+	Thu, 11 Apr 2024 14:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712845270;
+	bh=RDt5jlNMS3ucSwKcH7tgpvFGKzTFvccMBgH0b+eayeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FmnqtmXmyodJdgHKHjF/o9qh0gQ3yPVudJEayUfxMetCRKixf7MadURZeFX5r6J9F
+	 KZO4x26OQWLGTjpaYAKntJwCodgLP+aDt47OO2TKPR3PsJ4isKj268a8KfvYJVeiUA
+	 xIhTuT3AZ/SJc2XgyX2Qg7zwimd9QfG4T/XfpBUGwOjo3qoholwNk1YikECUI0aeJ3
+	 JKccakGSkbBD0N+gV6mcpbFZG4UhhKtCGsuBFNPpBXQ3yDfgtOIize3x3mLBOom0s0
+	 clIRJHM0xExk3YKLWu8DH34d19gGTvnMgL6DQhTuO1wpS9k189rIpVZjfDsQEG42r9
+	 nLPeassxXKhKg==
+Date: Thu, 11 Apr 2024 09:21:07 -0500
+From: Rob Herring <robh@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Mark Kettenis <kettenis@openbsd.org>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
+ child node reg
+Message-ID: <20240411142107.GA3537062-robh@kernel.org>
+References: <CAMhs-H82Ymc=isxu6AX4_s1QnNpSSNt74--ED1j7JxpzE=eCRg@mail.gmail.com>
+ <20240411123917.GA2180141@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+In-Reply-To: <20240411123917.GA2180141@bhelgaas>
 
-On Wed, 10 Apr 2024 16:41:43 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Tue, Mar 19, 2024 at 11:34 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Hi Bjorn,
-> >
-> > On Tue, 19 Mar 2024 10:25:13 -0500
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >  
-> > > [+cc Krzysztof]
-> > >
-> > > On Fri, Dec 15, 2023 at 02:52:07PM +0100, Herve Codina wrote:  
-> > > > On Mon, 4 Dec 2023 07:59:09 -0600
-> > > > Rob Herring <robh@kernel.org> wrote:  
-> > > > > On Mon, Dec 4, 2023 at 6:43 AM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > > > > On Fri, 1 Dec 2023 16:26:45 -0600
-> > > > > > Rob Herring <robh@kernel.org> wrote:  
-> > > > > > > On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> > > > > > > ...  
-> > >  
-> > > > > > > --- a/drivers/pci/of.c
-> > > > > > > +++ b/drivers/pci/of.c
-> > > > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
-> > > > > > >                 return 0;
-> > > > > > >
-> > > > > > >         node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
-> > > > > > > +       if (!node && pci_is_bridge(dev))
-> > > > > > > +               of_pci_make_dev_node(dev);
-> > > > > > >         if (!node)
-> > > > > > >                 return 0;  
-> > > > > >
-> > > > > > Maybe it is too early.
-> > > > > > of_pci_make_dev_node() creates a node and fills some properties based on
-> > > > > > some already set values available in the PCI device such as its struct resource
-> > > > > > values.
-> > > > > > We need to have some values set by the PCI infra in order to create our DT node
-> > > > > > with correct values.  
-> > > > >
-> > > > > Indeed, that's probably the issue I'm having. In that case,
-> > > > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still before
-> > > > > device_add().
-> > > > >
-> > > > > I think modifying sysfs after device_add() is going to race with
-> > > > > userspace. Userspace is notified of a new device, and then the of_node
-> > > > > link may or may not be there when it reads sysfs. Also, not sure if
-> > > > > we'll need DT modaliases with PCI devices, but they won't work if the
-> > > > > DT node is not set before device_add().  
+On Thu, Apr 11, 2024 at 07:39:17AM -0500, Bjorn Helgaas wrote:
+> On Thu, Apr 11, 2024 at 08:13:18AM +0200, Sergio Paracuellos wrote:
+> > On Thu, Apr 11, 2024 at 8:01 AM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> > > On 10/04/2024 23:26, Bjorn Helgaas wrote:
+> > > > On Wed, Apr 10, 2024 at 08:15:19PM +0200, Krzysztof Kozlowski wrote:
+> > > >> MT7621 PCI host bridge has children which apparently are also PCI host
+> > > >> bridges, at least that's what the binding suggest.
 > > > >
-> > > > DECLARE_PCI_FIXUP_HEADER is too early as well as doing the DT node creation
-> > > > just before the device_add() call.
-> > > > Indeed, in order to fill the DT properties, resources need to be assigned
-> > > > (needed for the 'ranges' property used for addresses translation).
-> > > > The resources assignment is done after the call to device_add().  
-> > >
-> > > Do we need to know the actual address *value* before creating the
-> > > sysfs file, or is it enough to know that the file should *exist*, even
-> > > if the value may be changed later?  
-> >
-> > I think, the problematic file is 'of_node'.
-> > This file is a symlink present in the device directory pointing to the
-> > node in a device-tree subdir.
-> >
-> > How can we create this of_node symlink without having the device-tree
-> > subdir available ?
-> >  
-> > >  
-> > > > Some PCI sysfs files are already created after adding the device by the
-> > > > pci_create_sysfs_dev_files() call:
-> > > >   https://elixir.bootlin.com/linux/v6.6/source/drivers/pci/bus.c#L347
+> > > > What does it even mean for a PCI host bridge to have a child that is
+> > > > also a PCI host bridge?
+
+It should say 'root port' instead as the binding description correctly 
+says.
+
 > > > >
-> > > > Is it really an issue to add the of_node link to sysfs on an already
-> > > > present device ?  
-> > >
-> > > Yes, I think this would be an issue.  We've been trying to get rid of
-> > > pci_create_sysfs_dev_files() altogether because there's a long history
-> > > of race issues related to it:
-> > >
-> > >   https://lore.kernel.org/r/1271099285.9831.13.camel@localhost/ WARNING: at fs/sysfs/dir.c:451 sysfs_add_one: sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:01.0/slot'
-> > >   https://lore.kernel.org/r/19461.26166.427857.612983@pilspetsen.it.uu.se/ [2.6.35-rc1 regression] sysfs: cannot create duplicate filename ... XVR-600 related?
-> > >   https://lore.kernel.org/r/20200716110423.xtfyb3n6tn5ixedh@pali/ PCI: Race condition in pci_create_sysfs_dev_files
-> > >   https://lore.kernel.org/r/m3eebg9puj.fsf@t19.piap.pl/ PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
-> > >   https://bugzilla.kernel.org/show_bug.cgi?id=215515 sysfs: cannot create duplicate filename '.../0000:e0'
-> > >
-> > > And several previous attempts to fix them:
-> > >
-> > >   https://lore.kernel.org/r/4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.com/ Guard pci_create_sysfs_dev_files with atomic value
-> > >   https://lore.kernel.org/r/20230316103036.1837869-1-alexander.stein@ew.tq-group.com PCI/sysfs: get rid of pci_sysfs_init late_initcall
-> > >   https://lore.kernel.org/r/1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com/ PCI/sysfs: Fix race in pci sysfs creation
-> > >  
-> >
-> > I am not sure we are facing in the same kind of issues.
-> > The ones you mentioned are related to some sysfs duplication.
-> > In the of_node case, the issue (if any) is that the symlink will be created
-> > after the other device's file. Not sure that it can lead to some file
-> > duplication.  
+> > > > Does this mean a driver binds to the "parent" host bridge, enumerates
+> > > > the PCI devices below it, and finds a "child" host bridge?
+> > 
+> > Yes, that is exactly what you can see on enumeration.
+> > 
+> > The following is a typical boot trace where all bridges has a device also below:
+> > 
+> > mt7621-pci 1e140000.pcie: host bridge /pcie@1e140000 ranges:
+> > mt7621-pci 1e140000.pcie:   No bus range found for /pcie@1e140000, using [bus 00-ff]
+> > mt7621-pci 1e140000.pcie:      MEM 0x0060000000..0x006fffffff -> 0x0060000000
+> > mt7621-pci 1e140000.pcie:       IO 0x001e160000..0x001e16ffff -> 0x0000000000
+> > mt7621-pci 1e140000.pcie: PCIE0 enabled
+> > mt7621-pci 1e140000.pcie: PCIE1 enabled
+> > mt7621-pci 1e140000.pcie: PCIE2 enabled
+> > mt7621-pci 1e140000.pcie: PCI host bridge to bus 0000:00
 > 
-> Again, if you notify userspace and it wants to make some decisions
-> based on of_node, then it has to be there when the notification
-> happens. As Greg says frequently, you've raced with userspace and
-> lost.
+> 1e140000.pcie is a host bridge.  It has some CPU-specific bus on the
+> upstream side, standard PCI (domain 0000, buses 00-ff) on the
+> downstream side.
 > 
-> I imagine Bjorn won't like it, but may we need another fixup point?
+> > pci 0000:00:00.0: [0e8d:0801] type 01 class 0x060400
+> > pci 0000:00:01.0: [0e8d:0801] type 01 class 0x060400
+> > pci 0000:00:02.0: [0e8d:0801] type 01 class 0x060400
 > 
-> Rob
+> > pci 0000:01:00.0: [1b21:0611] type 00 class 0x010185
+> 
+> > pci 0000:00:00.0: PCI bridge to [bus 01-ff]
+> > pci 0000:00:00.0:   bridge window [io  0x0000-0x0fff]
+> > pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+> > pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff pref]
+> 
+> 00:00.0 looks like a PCIe Root Port to bus 01.  This is not a host
+> bridge; it's just a standard PCI-to-PCI bridge with PCI on both the
+> upstream and downstream sides.
+> 
+> > pci 0000:02:00.0: [1b21:0611] type 00 class 0x010185
+> 
+> > pci 0000:00:01.0: PCI bridge to [bus 02-ff]
+> > pci 0000:00:01.0:   bridge window [io  0x0000-0x0fff]
+> > pci 0000:00:01.0:   bridge window [mem 0x00000000-0x000fffff]
+> > pci 0000:00:01.0:   bridge window [mem 0x00000000-0x000fffff pref]
+> 
+> 00:01.0 is another Root Port to bus 02.
+> 
+> > pci 0000:03:00.0: [1b21:0611] type 00 class 0x010185
+> 
+> > pci 0000:00:02.0: PCI bridge to [bus 03-ff]
+> > pci 0000:00:02.0:   bridge window [io  0x0000-0x0fff]
+> > pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff]
+> > pci 0000:00:02.0:   bridge window [mem 0x00000000-0x000fffff pref]
+> > pci_bus 0000:03: busn_res: [bus 03-ff] end is updated to 03
+> 
+> And 00:02.0 is a third Root Port to bus 03.
+> 
+> > pci 0000:00:00.0: PCI bridge to [bus 01]
+> > pci 0000:00:00.0:   bridge window [io  0x0000-0x0fff]
+> > pci 0000:00:00.0:   bridge window [mem 0x60000000-0x600fffff]
+> > pci 0000:00:00.0:   bridge window [mem 0x60100000-0x601fffff pref]
+> > pci 0000:00:01.0: PCI bridge to [bus 02]
+> > pci 0000:00:01.0:   bridge window [io  0x1000-0x1fff]
+> > pci 0000:00:01.0:   bridge window [mem 0x60200000-0x602fffff]
+> > pci 0000:00:01.0:   bridge window [mem 0x60300000-0x603fffff pref]
+> > pci 0000:00:02.0: PCI bridge to [bus 03]
+> > pci 0000:00:02.0:   bridge window [io  0x2000-0x2fff]
+> > pci 0000:00:02.0:   bridge window [mem 0x60400000-0x604fffff]
+> > 
+> > > I think the question should be towards Mediatek folks. I don't know what
+> > > this hardware is exactly, just looks like pci-pci-bridge. The driver
+> > > calls the children host bridges as "ports".
+> > 
+> > You can see the topology here in my first driver submit cover letter
+> > message [0].
+> > 
+> >  [0]: https://lore.kernel.org/all/CAMhs-H-BA+KzEwuDPzcmrDPdgJBFA2XdYTBvT4R4MEOUB=WQ1g@mail.gmail.com/t/
+> 
+> Nothing unusual here, this looks like the standard PCIe topology.
+> 
+> What *might* be unusual is describing the Root Ports in DT.  Since
+> they are standard PCI devices, they shouldn't need DT description
+> unless there's some unusual power/clock/reset control or something
+> that is not discoverable via PCI enumeration.
 
-I'am not sure that a fixup point can fix the issue.
+It's only unusual because typically there's only 1 RP per host bridge 
+and properties which really apply to the RP get stuck in the host bridge 
+node because we don't have a RP node. An example is perst-gpios. That's 
+not a property of the RP either, but the RP is the upstream side of a 
+slot and we often don't have a node for the device either.
 
-In order to have the of_node available before the notification, we need
-to a have the of_node set and filled before the device_add() call.
-
-In order to create the 'ranges' property in the DT node, we need PCI
-resources computed. These resources are computed after the device_add()
-call.
-
-Hervé
+Rob
 
