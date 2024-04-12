@@ -1,107 +1,108 @@
-Return-Path: <linux-pci+bounces-6201-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6202-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D86888A37E0
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 23:31:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 656508A37E9
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 23:33:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE2A51C212D4
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 21:31:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96C761C214E4
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 21:33:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 696AE152160;
-	Fri, 12 Apr 2024 21:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A88C15099F;
+	Fri, 12 Apr 2024 21:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvCl0MJg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhSTbhDx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F13A2F875;
-	Fri, 12 Apr 2024 21:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61815610B;
+	Fri, 12 Apr 2024 21:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712957497; cv=none; b=JQ1YMCqTJMruQI3xYchdt6bIdPigVb7rW+3HetdAFg+3IX0XUI2jcnrnrhq01HM1NUZ0q5ezfERCT135+FnxisBYKQfsEORR/Tx0Zs+joOyOj5K8gmByH1xGe3nrmYf/uCy8iJ9d5WOiRUgWxA4zeddfiZUlxXqBFsx+jzuoM6g=
+	t=1712957610; cv=none; b=gYtMhdqm+FIZJZxhh4Y/v6yCxVfEmgUXfanti8upPkwTuqeqYZk9nEruH1qKUjXbLKgXbenuqpPW/LjV5W7thDhAzGD+GfUF7plDI2+kFNU5GfxO/K4wtfve6jbUjZr6g4LOjp4tRRCxjj2zeGUXZA2NOYA/sgTeF+zGerihXws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712957497; c=relaxed/simple;
-	bh=ObWfLvWBq6s8s6uqs5mSK6jOY0sHRmTty6j0VqL6iHo=;
+	s=arc-20240116; t=1712957610; c=relaxed/simple;
+	bh=CtC3I2fZQ9mZwBg/TkYlfnfS9MFN0gpK2lQ696PJfG4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=I7qEiwnLK0GCMQ/oCfIhFj54yaEPTT9Ahw3p0czWMrqP5CupR8xw6tnvBDZRhfVHBKt7vNmrEJOnChhPORr8ibYMwD2nhRZtETWyOjJfebRzwXnRRgm0/9lVnHDGtbJtXBJyzPnrceGk7F3SHP5vaiOw08PpKQiY0bvlcPbr4Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvCl0MJg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 891D7C113CC;
-	Fri, 12 Apr 2024 21:31:36 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=tDQpeCxcWK26FT8E/UshpxRx62RGr569tdfLVb2VxPr0bCyItzEXD3JrDIrsiVwLQ/p7LZs5YYhOduw5/UbExUplo80ZKYQVgXkAsUdhwcvc8HOwQJb+11eHfAm0dhMZ6HrsimcRzYc87eogRGTxkzs78Q6Vr4FpUAqqB0jUXJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhSTbhDx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BF3C113CC;
+	Fri, 12 Apr 2024 21:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712957496;
-	bh=ObWfLvWBq6s8s6uqs5mSK6jOY0sHRmTty6j0VqL6iHo=;
+	s=k20201202; t=1712957610;
+	bh=CtC3I2fZQ9mZwBg/TkYlfnfS9MFN0gpK2lQ696PJfG4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hvCl0MJgkzpgVnvrmbBdafROrWJnurNYNDoN3iLzVlKXXmSWHvYLVTQIboHDuaII5
-	 0cs/meBAWzu/nfQUtrSYwUNwMi2SuCqBbeVc6Y6m3VUD8ddoq3QdvyYYGNZzmZQdmX
-	 NrHPDKMPJgOR3t9UQmOk2QTWXvHjVl9krrbzXeMWAnPHfTj3n6Wxa89mQHIXnZ0OYA
-	 ZpxPLSPyd6BsiAFd6R+xqImO/SqrN8xOnETgYN4e5ZXheRk1yuVYbshk7KhTiNcAUi
-	 K/dUBAA6TH/2Wz1Qn93FQfrskac4VV/hpt3NeNHn8/lTtG6CNp5hDQkrQZ6tO3ZGkh
-	 +JtRLymU0gKWA==
-Date: Fri, 12 Apr 2024 16:31:34 -0500
+	b=HhSTbhDx+UWURLfC7hyj8yyHFrTuSDmbdVUCnommqoKxlUxohFWXZfu8zZy4uL+oO
+	 bNexmE9vPvhh3q/VdkYgk2zTi8NtvrRth2hbv4WSvNwDnvWnHiL6HQHAqzOScatefn
+	 noUtbdiM9PKpxBqMmC54oC5bUgu6mS6n7Nymk9BuYWJpVfJA8IVYmXtfTf6K5TOMhY
+	 CgM5RxS+q4mYVevj/nkmA1h/yhdDDT8DLjh5RwT08wbD4zgEjI7UpoFsTEAdUX6jwg
+	 n2GnhytXq2vfNm19rt+JkfOe4dU4zR3CEpSCIRp/oXtCfaN3RNJrF/rv2x8tS4Tyc6
+	 1tWYqreRv2HUw==
+Date: Fri, 12 Apr 2024 16:33:28 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Kevin Tian <kevin.tian@intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Dave Jiang <dave.jiang@intel.com>, Megha Dey <megha.dey@intel.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 0/7] PCI/MSI: Remove IMS (Interrupt Message Store)
- support for now
-Message-ID: <20240412213134.GA19180@bhelgaas>
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: mt7621: Fix possible string truncation in snprintf
+Message-ID: <20240412213328.GA19361@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240410221307.2162676-1-helgaas@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240111082704.2259450-1-sergio.paracuellos@gmail.com>
 
-On Wed, Apr 10, 2024 at 05:13:00PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Thu, Jan 11, 2024 at 09:27:04AM +0100, Sergio Paracuellos wrote:
+> The following warning appears when driver is compiled with W=1.
 > 
-> IMS (Interrupt Message Store) support appeared in v6.2, but there are no
-> users yet.
+> CC      drivers/pci/controller/pcie-mt7621.o
+> drivers/pci/controller/pcie-mt7621.c: In function ‘mt7621_pcie_probe’:
+> drivers/pci/controller/pcie-mt7621.c:228:49: error: ‘snprintf’ output may
+> be truncated before the last format character [-Werror=format-truncation=]
+> 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
+>     |                                                 ^
+> drivers/pci/controller/pcie-mt7621.c:228:9: note: ‘snprintf’ output between
+> 10 and 11 bytes into a destination of size 10
+> 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
+>     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> Remove it for now.  We can add it back when a user comes along.
+> Clean this up increasing destination buffer one byte.
 > 
-> I propose to merge this via the PCI tree unless somebody else wants it.
-> 
-> 
-> Changes since v1 (https://lore.kernel.org/linux-pci/20240401232326.1794707-1-helgaas@kernel.org/):
->   - Revert other IMS commits in IOMMU, apic, genirq, suggested by Kevin
-> 
-> Bjorn Helgaas (7):
->   Revert "PCI/MSI: Provide stubs for IMS functions"
->   Revert "PCI/MSI: Provide pci_ims_alloc/free_irq()"
->   Revert "PCI/MSI: Provide IMS (Interrupt Message Store) support"
->   Revert "iommu/amd: Enable PCI/IMS"
->   Revert "iommu/vt-d: Enable PCI/IMS"
->   Revert "x86/apic/msi: Enable PCI/IMS"
->   Revert "genirq/msi: Provide constants for PCI/IMS support"
-> 
->  arch/x86/kernel/apic/msi.c          |  5 ---
->  drivers/iommu/amd/iommu.c           | 17 +--------
->  drivers/iommu/intel/irq_remapping.c | 19 ++--------
->  drivers/pci/msi/api.c               | 50 ------------------------
->  drivers/pci/msi/irqdomain.c         | 59 -----------------------------
->  include/linux/irqdomain_defs.h      |  1 -
->  include/linux/msi.h                 |  2 -
->  include/linux/msi_api.h             |  1 -
->  include/linux/pci.h                 | 26 -------------
->  9 files changed, 5 insertions(+), 175 deletions(-)
+> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> Closes: https://lore.kernel.org/linux-pci/20240110212302.GA2123146@bhelgaas/T/#t
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-I applied this to pci/ims-removal for v6.10.
+Krzysztof applied this to pci/controller/mt7621 for v6.10, thanks!  I
+just pulled that branch into "next", so it should appear in the next
+linux-next.
+
+> ---
+>  drivers/pci/controller/pcie-mt7621.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+> index 79e225edb42a..d97b956e6e57 100644
+> --- a/drivers/pci/controller/pcie-mt7621.c
+> +++ b/drivers/pci/controller/pcie-mt7621.c
+> @@ -202,7 +202,7 @@ static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
+>  	struct mt7621_pcie_port *port;
+>  	struct device *dev = pcie->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+> -	char name[10];
+> +	char name[11];
+>  	int err;
+>  
+>  	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+> -- 
+> 2.25.1
+> 
 
