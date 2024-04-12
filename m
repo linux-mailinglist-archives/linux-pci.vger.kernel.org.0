@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-6204-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6205-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13E2A8A386E
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 00:00:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45D318A3870
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 00:02:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A33401F21FEF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 22:00:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 764391C22314
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 22:02:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADF03152164;
-	Fri, 12 Apr 2024 22:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B3B39FD5;
+	Fri, 12 Apr 2024 22:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZQ9gV1L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GBvZNMhc"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A15B39FD5
-	for <linux-pci@vger.kernel.org>; Fri, 12 Apr 2024 22:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E458714C593
+	for <linux-pci@vger.kernel.org>; Fri, 12 Apr 2024 22:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712959244; cv=none; b=WhzEtsLWWJ287DepjaH6ql8pRyOXOV/cINRJWm/+YLhMtDlANO9/vXd8UBypRNlcD1mkIpj6uBKsZyQ0vK4RDbXOMyOEPd2LF5vhhGHoe03yRqG7ONqz3l7IEdJNAc/03GWG831Cx2ojEAG6ajkcQqFZai1PvSn3/yHZoadrWac=
+	t=1712959340; cv=none; b=bQZmIWdrFSxY335Qy3WQt7HwdcVNVUKIFkzN2YAM+89sbUgAPtJghazyIcSYErH7rLz5RYDqhnglhfy4J1woPO17EZs7MaFlujTU6rg06sQSeVJyN+8R5V2RC02N+K3fR8fO/Sgc0Ve/mtRpo5VA2x55Xxzfzl/BFg6lBoBKqHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712959244; c=relaxed/simple;
-	bh=ZKH3KzVTUFLwzZCC+c/nh0ruTG6gvkEa8ggu7OQagqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ngU8k5sNRQVDQgzpWTWOb1ODoDi82WvuKKqNDRI+O/JPZ1SaL+edzuQKWNnvYVxXa1/Hc+Q3Fo98M95KFeETQV2mgcQmVU17YcpOwo31nokQ2bRASuH5iTJxus3tAIG8yO2eq5p8xdu97EhTI+6XCFC4eNgKMB+QPOKDMkJOlfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZQ9gV1L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D22F1C2BD11;
-	Fri, 12 Apr 2024 22:00:43 +0000 (UTC)
+	s=arc-20240116; t=1712959340; c=relaxed/simple;
+	bh=ocjkvdjpN1yOh232yqtZ4lw0AkNcIVCsY2DeR3aycgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cD4LTnxJTSCb5v8B+5kcp+k54csxUFtnCmPnyJxPngnxZWIx8HLY/KpJMAgOKdmxxcrPMWjU5pPWZ6fJrPpYvriUcDyq2eswzJyq27So7CY0+txtsyxEMAiyM0ZzDuzH9fztbBgiAtc3+pdbZLBMZ5nJGicqCHtr/CQctD4oMt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GBvZNMhc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07372C113CC;
+	Fri, 12 Apr 2024 22:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712959244;
-	bh=ZKH3KzVTUFLwzZCC+c/nh0ruTG6gvkEa8ggu7OQagqA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RZQ9gV1LUSC/cxhceFmKioUlqU7p9ousMNjktpWfRQZ9A1KU72H2y0Nz43XOgFXfN
-	 Lz5BiqapFj8BEe3KP3+3eEL7hKGvFrftnsHWlNcAzd5M7D7uNHE0W2xYcraD/76958
-	 P2JV2GIgH9gMqT5fym21tg6xyMUgWmYLGufpN+ESzw/Kw0Ftw9//wov3BL/nZbIHt+
-	 XYoc481BPKSs5mNhpWjBBdHT35OhsbIGyq4qfcXk9bqZc2bLvJn+hTT8CcDEKrnqlH
-	 qolq62p8JcApggYM2JjE4zluaRK2arn+RyWi4S7YIVEDeWPvRpAA4tPZlzg/6B2izR
-	 VCnBkrhBiMLEw==
-Date: Fri, 12 Apr 2024 17:00:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
+	s=k20201202; t=1712959339;
+	bh=ocjkvdjpN1yOh232yqtZ4lw0AkNcIVCsY2DeR3aycgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GBvZNMhcZIFVHE1FvgsTOo8/KoF2PbI5Aki6vEaTW6jqxSZVMZOFomYRxTA16Ocv8
+	 7xzsL6lgwIewwpijdj3VKUstih/3F8aNXxlKsaBSM532YpTxUmZSIUq+vNBc1hMHJr
+	 3gd73wHBEQ6vqqSe9HmxDvDS5ki+BSOnshgLompHsEzQYoTEUsdxZ0XL2ovZ/QLkE9
+	 3CtOUJMTPR1EWTJXHRz2g3EuPrQJZUjwaPBxX8gWnepy4IYBBKE46hwH86yMBvl9Zp
+	 ZES6+VbB8GxF/fHQvR1GJBvbbgtdUrnFr3WmuffCx7PMWiz7WyGUjhtr+JJ8dm5nxQ
+	 kp8hcwDsCZnrA==
+Date: Sat, 13 Apr 2024 00:02:12 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Shawn Lin <shawn.lin@rock-chips.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -55,7 +55,9 @@ Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	linux-rockchip@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v3 8/9] PCI: rockchip-ep: Set a 64-bit BAR if requested
-Message-ID: <20240412220042.GA21397@bhelgaas>
+Message-ID: <ZhmvZJg7A11tyh5Q@ryzen>
+References: <20240313105804.100168-9-cassel@kernel.org>
+ <20240412185901.GA10301@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,80 +66,58 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZhmqG6avmX8ZOtIX@ryzen>
+In-Reply-To: <20240412185901.GA10301@bhelgaas>
 
-On Fri, Apr 12, 2024 at 11:39:39PM +0200, Niklas Cassel wrote:
-> On Fri, Apr 12, 2024 at 12:51:27PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Mar 13, 2024 at 11:58:00AM +0100, Niklas Cassel wrote:
-> > > Ever since commit f25b5fae29d4 ("PCI: endpoint: Setting a BAR size > 4 GB
-> > > is invalid if 64-bit flag is not set") it has been impossible to get the
-> > > .set_bar() callback with a BAR size > 4 GB, if the BAR was also not
-> > > requested to be configured as a 64-bit BAR.
-> > > 
-> > > It is however possible that an EPF driver configures a BAR as 64-bit,
-> > > even if the requested size is < 4 GB.
-> > > 
-> > > Respect the requested BAR configuration, just like how it is already
-> > > repected with regards to the prefetchable bit.
-> > 
-> > Does this (and the similar cadence patch) need a Fixes: tag for
-> > f25b5fae29d4?
+On Fri, Apr 12, 2024 at 01:59:01PM -0500, Bjorn Helgaas wrote:
+> On Wed, Mar 13, 2024 at 11:58:00AM +0100, Niklas Cassel wrote:
+> > ...
 > 
-> I don't think so.
+> > --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> > @@ -153,7 +153,7 @@ static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
+> >  		ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_IO_32BITS;
+> >  	} else {
+> >  		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
+> > -		bool is_64bits = sz > SZ_2G;
+> > +		bool is_64bits = !!(flags & PCI_BASE_ADDRESS_MEM_TYPE_64);
+> >  
+> >  		if (is_64bits && (bar & 1))
+> >  			return -EINVAL;
 > 
-> Both patches are about respecting the configuration requested by an EPF
-> driver.
+> Completely unrelated to *these* patches, but the BAR_CFG_CTRL
+> definitions in both cadence and rockchip lead to some awkward case
+> analysis:
 > 
-> So if an EPF driver requests a 64-bit BAR, the EPC driver should configure
-> that. (Regardless of the size that the EPF driver requests for the BAR.)
+>   #define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_32BITS              0x4
+>   #define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_32BITS     0x5
+>   #define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_64BITS              0x6
+>   #define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_64BITS     0x7
 > 
-> If we really want a Fixes-tag, I would imagine that it will be the respective
-> initial commits that added these drivers (pcie-cadence-ep.c and
-> pcie-rockchip-ep.c), as it has been this way since then.
+>   if (is_64bits && is_prefetch)
+>           ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_64BITS;
+>   else if (is_prefetch)
+>           ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_32BITS;
+>   else if (is_64bits)
+>           ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_64BITS;
+>   else
+>           ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_32BITS;
 > 
-> If you look at the EPF drivers we currently have, they will currently only
-> request a 64-bit BAR if any of the BARs can only be configured as a 64-bit
-> BAR because of hardware limitiations.
+> that *could* be just something like this:
 > 
-> $ git grep only_64bit
+>   #define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM           0x4
+>   #define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_64BITS        0x2
+>   #define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH      0x1
 > 
-> Neither of these two drivers have any such hardware limitiations,
-> so these commits are currently a bit pointless.
-> 
-> However, the drivers should of course do the right thing, because other
-> EPC drivers might look at them and copy their code.
-> 
-> And who knows, maybe sometime in the future there will be an EPF driver
-> that will explicitly request a 64-bit BAR, regardless of size.
-> 
-> TL;DR: I don't think these two commits are worth backporting.
+>   ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM;
+>   if (is_64bits)
+>     ctrl |= ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_64BITS;
+>   if (is_prefetch)
+>     ctrl |= ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH;
 
-OK, thanks!
 
-> > > Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> > > ---
-> > >  drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-> > > index c9046e97a1d2..57472cf48997 100644
-> > > --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> > > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> > > @@ -153,7 +153,7 @@ static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
-> > >  		ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_IO_32BITS;
-> > >  	} else {
-> > >  		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
-> > > -		bool is_64bits = sz > SZ_2G;
-> > > +		bool is_64bits = !!(flags & PCI_BASE_ADDRESS_MEM_TYPE_64);
-> > >  
-> > >  		if (is_64bits && (bar & 1))
-> > >  			return -EINVAL;
-> > > -- 
-> > > 2.44.0
-> > > 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+If you send the cleanup patches, I will send the Reviewed-by tags ;)
+
+
+Kind regards,
+Niklas
 
