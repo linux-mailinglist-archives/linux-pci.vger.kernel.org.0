@@ -1,79 +1,73 @@
-Return-Path: <linux-pci+bounces-6163-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6164-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C4C08A259C
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 07:18:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4AF48A25A0
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 07:19:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3BBD284D9E
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 05:18:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7F661C21ED6
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 05:19:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 198F018C1A;
-	Fri, 12 Apr 2024 05:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47EA017BCE;
+	Fri, 12 Apr 2024 05:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNCvEJlg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+myu+Kq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FE01BC4B;
-	Fri, 12 Apr 2024 05:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9548F18B1B
+	for <linux-pci@vger.kernel.org>; Fri, 12 Apr 2024 05:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712899117; cv=none; b=WvCQn+u6rIAYao0GL5SjO75z5PKeSCXJPq44qwkv97gP8OrUfIHTo4CkEIuFKcn4mtaMCdbrtaMnfdd8m7Hkasil+o4OKugQsWG7auXjT+BLnRRu45tCZmjk3hqqOC+hmfcLI4PwTwYTy/BJnHP8c3aynZbYixrYsvZi9aFQ2Fo=
+	t=1712899174; cv=none; b=EFkAaQ3e7uMubYdKG4FzpyC+6eN4HD7nJyOgwHLpZMJHdQ5N3Yc1uMB3yhGiUbXJNhvolHHQYJwXmto5ugq3+oSeCPB0jN2CDR0gdamAwzXgaMvCqxj2QGN+8X7w8N3iOia7Pnmnlg+IZXP6UQ+g9BZbwkoIOEB0uLBMpVmKTwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712899117; c=relaxed/simple;
-	bh=uwFlHt+PTlQqrCZdxzJ/sKwf6ogszPPv5s8ONO3bywk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HnxdiXdzlkPjyUF6iehx7Uqge/+Md3RrHxH8wVV+QLnU0iWiD3Rq3UlrlYJ3NAAJBAnXN+o2A1L7i1svx3SIKTeywtR50QFnXeQjCvAYEQQCgvV76CqTv2rvRmzF8wPrv3vvZPh7xTQdW9PbW4eRP47UG/nc4CHRcmFZZ7WEndg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNCvEJlg; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1712899174; c=relaxed/simple;
+	bh=eFFBQjo/ehSWrTSD3r1E9EXtFQW/tDFRlMu8YPWnJes=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qbasXLh9sntM1OnkKW1ThTREWT/Kc8X6U+zmFrEY1XkO8bQePdXRaorx9q8bSi8KNabQq7C+TqtZ0nRGWS2m1NZIJs5b8gZdAE9XVGjcq2P9d1ruk2AicWGQ0um8JkKXwjOcykDTxDPf1LrjI3e7C7qzvUwezYZ5ppSj2e4c91M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+myu+Kq; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712899114; x=1744435114;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uwFlHt+PTlQqrCZdxzJ/sKwf6ogszPPv5s8ONO3bywk=;
-  b=SNCvEJlgEqppFzvSzBwyoMrnSB7ia2PINpetDZxKlpr/7mFzjlc0pfL1
-   AqZZvDtcxft7oveGT4uFilCwsWfu0GXRf2DHN9nZ/Lg9pHNG7zUYkVQqu
-   m5LuB1IIgbYthNFrbxlQ9nBTX+DP+I45RjagnV0dUXY/JMhL2vSe808Fm
-   XtuJmDsZr5hmi8wfjkB7+cSe+cqwyncV+Qb1iPSVFPL506hH4foBtikQV
-   8SyUUKDOySaK+xuCFHXTikf9FPoxzVsXme8epdPrcYHDMfoDc17FkheOU
-   z6/hIyp7S7DnZ9a0mwpUjZvutngsESU7Cgy9KJOLX1hCoYySA4/M9kmDy
-   Q==;
-X-CSE-ConnectionGUID: AwEHOiJUTQurruZoA2vRsg==
-X-CSE-MsgGUID: b6d3Px25QgKk4DxZvCwYJw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8510209"
+  t=1712899173; x=1744435173;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=eFFBQjo/ehSWrTSD3r1E9EXtFQW/tDFRlMu8YPWnJes=;
+  b=n+myu+KqRagjaCEHUB/N2aTazshvDvjruFLylTyhCJgUY7epzU+4Rkx+
+   AhCDUBrB1ZfdM0GsZpUzeQ3XFyIXLDyBq598ec8utG5eVUZo4SWLReL8o
+   BgI0PjbSicpKvtO4qsnen0ucAhM5+oh1pyDvImqsLu2070/qorYBAV6V7
+   TjWy+P4YD6wGYg0cDYN1wUA3eozk2xuVrbzvQb6dnN58jwFAhl59wN6ux
+   HawjrTepRsETZw7GXFQDXRxmejqob2C1ty1qDMEzrjUZx/LvnIgVGhdhC
+   xE0l1zQ/LQLG0pgXqk3Swvslm2kkmr1nWRKcqcecw7o70aZmjvjQM5y8M
+   g==;
+X-CSE-ConnectionGUID: c1/YlZA+SAWACS2G92nXRw==
+X-CSE-MsgGUID: dWQ4zA7fQK2e3qwKW1LiEw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="19763419"
 X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="8510209"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 22:18:34 -0700
-X-CSE-ConnectionGUID: ANtLcTM0Q3uJIRQrzST4CA==
-X-CSE-MsgGUID: bA8DNO+FS1yeaDDSQiu1MQ==
+   d="scan'208";a="19763419"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 22:19:32 -0700
+X-CSE-ConnectionGUID: 3YSlHJg8Rlei016usjx6uA==
+X-CSE-MsgGUID: 714q36lJSQOPmMRmRIc0pQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="21558046"
+   d="scan'208";a="21177947"
 Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 11 Apr 2024 22:18:31 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 11 Apr 2024 22:19:31 -0700
 Received: from kbuild by e61807b1d151 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rv9Iy-0009PU-1c;
-	Fri, 12 Apr 2024 05:18:28 +0000
-Date: Fri, 12 Apr 2024 13:17:42 +0800
+	id 1rv9Jw-0009Pn-1x;
+	Fri, 12 Apr 2024 05:19:28 +0000
+Date: Fri, 12 Apr 2024 13:18:44 +0800
 From: kernel test robot <lkp@intel.com>
-To: parker@finest.io, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-	linux-pci@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Parker Newman <pnewman@connecttech.com>
-Subject: Re: [PATCH 2/2] serial: exar: adding CTI PCI/PCIe serial port
- support to 8250_exar
-Message-ID: <202404121307.6nkI7fuG-lkp@intel.com>
-References: <9ffdef053f455c87f705dff169346bc10d307787.1712846026.git.pnewman@connecttech.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/mt7621] BUILD SUCCESS
+ fd6eb49a84a85150d5e9ffbd85d3b102303f9470
+Message-ID: <202404121341.7OY66pzl-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,87 +75,202 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ffdef053f455c87f705dff169346bc10d307787.1712846026.git.pnewman@connecttech.com>
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/mt7621
+branch HEAD: fd6eb49a84a85150d5e9ffbd85d3b102303f9470  PCI: mt7621: Fix string truncation in mt7621_pcie_parse_port()
 
-kernel test robot noticed the following build warnings:
+elapsed time: 1028m
 
-[auto build test WARNING on tty/tty-testing]
-[also build test WARNING on tty/tty-next tty/tty-linus usb/usb-testing usb/usb-next usb/usb-linus pci/next pci/for-linus linus/master v6.9-rc3 next-20240411]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 183
+configs skipped: 3
 
-url:    https://github.com/intel-lab-lkp/linux/commits/parker-finest-io/serial-exar-add-missing-CTI-Exar-PCI-IDs-to-include-linux-pci_ids-h/20240412-011902
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-patch link:    https://lore.kernel.org/r/9ffdef053f455c87f705dff169346bc10d307787.1712846026.git.pnewman%40connecttech.com
-patch subject: [PATCH 2/2] serial: exar: adding CTI PCI/PCIe serial port support to 8250_exar
-config: riscv-defconfig (https://download.01.org/0day-ci/archive/20240412/202404121307.6nkI7fuG-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 8b3b4a92adee40483c27f26c478a384cd69c6f05)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240412/202404121307.6nkI7fuG-lkp@intel.com/reproduce)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404121307.6nkI7fuG-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/tty/serial/8250/8250_exar.c:13:
-   In file included from include/linux/interrupt.h:21:
-   In file included from arch/riscv/include/asm/sections.h:9:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/tty/serial/8250/8250_exar.c:1573:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-    1573 |                 default:
-         |                 ^
-   drivers/tty/serial/8250/8250_exar.c:1573:3: note: insert 'break;' to avoid fall-through
-    1573 |                 default:
-         |                 ^
-         |                 break; 
-   2 warnings generated.
-
-
-vim +1573 drivers/tty/serial/8250/8250_exar.c
-
-  1547	
-  1548	static unsigned int exar_get_nr_ports(struct exar8250_board *board,
-  1549						struct pci_dev *pcidev)
-  1550	{
-  1551		unsigned int nr_ports = 0;
-  1552	
-  1553		if (!board || !pcidev)
-  1554			return 0;
-  1555	
-  1556		if (pcidev->vendor == PCI_VENDOR_ID_ACCESSIO) {
-  1557			nr_ports = BIT(((pcidev->device & 0x38) >> 3) - 1);
-  1558		} else if (board->num_ports > 0) {
-  1559			//Check if board struct overrides number of ports
-  1560			nr_ports = board->num_ports;
-  1561		} else if (pcidev->vendor == PCI_VENDOR_ID_EXAR) {
-  1562			//Exar encodes # ports in last nibble of PCI Device ID ex. 0358
-  1563			nr_ports = pcidev->device & 0x0f;
-  1564		} else  if (pcidev->vendor == PCI_VENDOR_ID_CONNECT_TECH) {
-  1565			//Handle CTI FPGA cards
-  1566			switch (pcidev->device) {
-  1567			case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X:
-  1568			case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X:
-  1569				nr_ports = 12;
-  1570				break;
-  1571			case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16:
-  1572				nr_ports = 16;
-> 1573			default:
-  1574				break;
-  1575			}
-  1576		}
-  1577	
-  1578		return nr_ports;
-  1579	}
-  1580	
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                            hsdk_defconfig   gcc  
+arc                   randconfig-001-20240412   gcc  
+arc                   randconfig-002-20240412   gcc  
+arm                              alldefconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                       omap2plus_defconfig   gcc  
+arm                   randconfig-001-20240412   gcc  
+arm                   randconfig-002-20240412   clang
+arm                   randconfig-003-20240412   clang
+arm                   randconfig-004-20240412   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240412   gcc  
+arm64                 randconfig-002-20240412   gcc  
+arm64                 randconfig-003-20240412   clang
+arm64                 randconfig-004-20240412   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240412   gcc  
+csky                  randconfig-002-20240412   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240412   clang
+hexagon               randconfig-002-20240412   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240411   clang
+i386         buildonly-randconfig-002-20240411   clang
+i386         buildonly-randconfig-002-20240412   clang
+i386         buildonly-randconfig-003-20240411   clang
+i386         buildonly-randconfig-004-20240411   clang
+i386         buildonly-randconfig-005-20240411   clang
+i386         buildonly-randconfig-006-20240411   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240411   gcc  
+i386                  randconfig-001-20240412   clang
+i386                  randconfig-002-20240411   gcc  
+i386                  randconfig-003-20240411   clang
+i386                  randconfig-003-20240412   clang
+i386                  randconfig-004-20240411   clang
+i386                  randconfig-004-20240412   clang
+i386                  randconfig-005-20240411   gcc  
+i386                  randconfig-005-20240412   clang
+i386                  randconfig-006-20240411   clang
+i386                  randconfig-011-20240411   clang
+i386                  randconfig-011-20240412   clang
+i386                  randconfig-012-20240411   gcc  
+i386                  randconfig-013-20240411   gcc  
+i386                  randconfig-013-20240412   clang
+i386                  randconfig-014-20240411   gcc  
+i386                  randconfig-015-20240411   clang
+i386                  randconfig-016-20240411   clang
+i386                  randconfig-016-20240412   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240412   gcc  
+loongarch             randconfig-002-20240412   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     cu1000-neo_defconfig   gcc  
+mips                  decstation_64_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240412   gcc  
+nios2                 randconfig-002-20240412   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240412   gcc  
+parisc                randconfig-002-20240412   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      arches_defconfig   gcc  
+powerpc               randconfig-001-20240412   clang
+powerpc               randconfig-002-20240412   clang
+powerpc               randconfig-003-20240412   gcc  
+powerpc                     tqm5200_defconfig   gcc  
+powerpc64             randconfig-001-20240412   gcc  
+powerpc64             randconfig-002-20240412   gcc  
+powerpc64             randconfig-003-20240412   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240412   clang
+riscv                 randconfig-002-20240412   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240412   gcc  
+s390                  randconfig-002-20240412   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        edosk7705_defconfig   gcc  
+sh                    randconfig-001-20240412   gcc  
+sh                    randconfig-002-20240412   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                          rsk7264_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240412   gcc  
+sparc64               randconfig-002-20240412   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240412   clang
+um                    randconfig-002-20240412   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240412   gcc  
+x86_64       buildonly-randconfig-002-20240412   gcc  
+x86_64       buildonly-randconfig-003-20240412   gcc  
+x86_64       buildonly-randconfig-004-20240412   clang
+x86_64       buildonly-randconfig-005-20240412   clang
+x86_64       buildonly-randconfig-006-20240412   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240412   clang
+x86_64                randconfig-002-20240412   gcc  
+x86_64                randconfig-003-20240412   gcc  
+x86_64                randconfig-004-20240412   clang
+x86_64                randconfig-005-20240412   clang
+x86_64                randconfig-006-20240412   clang
+x86_64                randconfig-011-20240412   clang
+x86_64                randconfig-012-20240412   gcc  
+x86_64                randconfig-013-20240412   clang
+x86_64                randconfig-014-20240412   clang
+x86_64                randconfig-015-20240412   clang
+x86_64                randconfig-016-20240412   gcc  
+x86_64                randconfig-071-20240412   gcc  
+x86_64                randconfig-072-20240412   clang
+x86_64                randconfig-073-20240412   clang
+x86_64                randconfig-074-20240412   gcc  
+x86_64                randconfig-075-20240412   gcc  
+x86_64                randconfig-076-20240412   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240412   gcc  
+xtensa                randconfig-002-20240412   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
