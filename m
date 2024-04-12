@@ -1,222 +1,111 @@
-Return-Path: <linux-pci+bounces-6185-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6186-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B101A8A2FA0
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 15:37:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95D6B8A2FA6
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 15:38:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66E16284023
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 13:37:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 00158B237A5
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 13:38:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643AF83CDB;
-	Fri, 12 Apr 2024 13:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E381D83CD1;
+	Fri, 12 Apr 2024 13:37:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OxCRcSmE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXeKwuen"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5C8824BC;
-	Fri, 12 Apr 2024 13:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B921D1DFD9;
+	Fri, 12 Apr 2024 13:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712929030; cv=none; b=IPICDX2dbwAg+xlfAowDy/6tlP6X5ijy6lUfbWerkE54y+ZHVppMabn5oecEPdpyPct+T0QrUpuIZRi8n8tBMGFqB76Q3iUNBORXuA12x0jCimOOsmUVtQoEQ+sWxFmi2uxj5faOaBhMi9rg7j1nxvjHXrZJFF6lE3O7BfCBKNk=
+	t=1712929074; cv=none; b=sMhe2lseVgyl6s0ShnZewntoXZRWOpG9S2yR8J+Akz3nwuCuTNZocS8XciUlnrl1KDaA4AbqTIACOwmxWC3WcCohjMQ0rKYJ7MENY6X5pY0BKBmo5/BhRBdRgqaQTe4unC/Ygrtj5bmw5YmbyLv4HWcFkf7G1jDMEclFVjjYcog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712929030; c=relaxed/simple;
-	bh=VWKB4YBkBGiUFfx/DCMZTK1YmSwqd9/AxvqBDvCXap8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RDTtHgjKOhbDUOjXb4dM+4EXY25qWpKEKgom0hvzBbXqiSUJ5/ubvrp3YOUB7ggHlunmeYl1uqwFJmbJXiyuikjaDg41gQ32425lbE/NHuT2P1bV6Ed2Ch6j+UjC0Zz/7Z5CBDUG1yqAOSevVTp8nkeCXIerUpAi/cqfyN3DiXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OxCRcSmE; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712929028; x=1744465028;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VWKB4YBkBGiUFfx/DCMZTK1YmSwqd9/AxvqBDvCXap8=;
-  b=OxCRcSmEgY1e0yJV1nt8hXTnKNMhJU6MBzPCIsLTvwVZHpGji0eRxhjw
-   1tP4p6dtf0DqLHlZVfQkSahlxjOOAYKCbMoJ2K9RoLW/Dz3ToNX04+EAz
-   8zZCzG/b1je3Ht1tSU4PZY+f4jdo2axVPkskkLr6QblF5/yDeYtDfXsxp
-   bICdgCalSJ3t4lb7t7Cl4QEN+Ropvx9/KFhJ3gTjPsQOUdylapj491NbL
-   J0QN4Ly8F/RDGmiS9kv/B2Q4dLs4SYPYafTQJoc3JYgMhizMDdVGK5Tkx
-   GJSpB9XpesfquRkyPJsfmTEfz9xhCS0uNViKvrMLOZW8fpkH++12E3KFr
-   Q==;
-X-CSE-ConnectionGUID: synnqT46T9m/8N0CNGnG+g==
-X-CSE-MsgGUID: UlRCxipcRzKKsNjSTX2Miw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="25897900"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="25897900"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:37:08 -0700
-X-CSE-ConnectionGUID: B2Dqbe6xRFywg7xQBz1M/g==
-X-CSE-MsgGUID: aZvyjeKHQ/mN71oHXEf4VQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21211657"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.32])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:37:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 2/2] PCI: Create helper to print TLP Header and Prefix Log
-Date: Fri, 12 Apr 2024 16:36:35 +0300
-Message-Id: <20240412133635.3831-3-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412133635.3831-1-ilpo.jarvinen@linux.intel.com>
-References: <20240412133635.3831-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1712929074; c=relaxed/simple;
+	bh=BtXw/kQS9H2R5Z9NHOeu97SUGojR8hmFg+yh11PQUcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RXrCGu4ki9la631m0siHNlUnfWlu/XYSMTt0rhwjIgn4//zmJDa6rJpoc/cbfN9imRIjDwEmlRhBOCTrN61OL7uJlROzPRnsS2qd+j9DRITm0NrHEVsOkhJhBN3MQERj4GIM11J5F4XH0e43M8CjstcaYUW1yUcxuyJSyV2QILk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXeKwuen; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69051C3277B;
+	Fri, 12 Apr 2024 13:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712929074;
+	bh=BtXw/kQS9H2R5Z9NHOeu97SUGojR8hmFg+yh11PQUcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DXeKwuencmMy8ddA+0WHxID67LX0wCavx41hTotgshniEDU9JeRGoUaiJlQtLxQa7
+	 t9sALtTijN1Rg3DJpT3+48FRvUnsmzdySfXaNfS1yV3HeJA2UMuS5jQzaO6FqjeSfs
+	 KA9Pz4MsIZtsINxAe6bUuNaEvxKGRLgfXN1p0X3qtZS8jQ9k9JdUXSn5yn1ufLxnfr
+	 neXrCOi0YEez7QJZa+kGtCeXK81uHxtYsRYNiTYJ3e8H249Bd+l6OacxSC3ombOl1h
+	 A8x/WhkZWirauZOSH5FEgWNivzSg0Xk9j7QqKpcjeabgYuwsiI4xI8lKQw6e1eEBq2
+	 6KoTgp6yhNVSA==
+Date: Fri, 12 Apr 2024 15:37:48 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, helgaas@kernel.org,
+	bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+	imx@lists.linux.dev, jdmason@kudzu.us, jingoohan1@gmail.com,
+	kw@linux.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, lpieralisi@kernel.org, robh@kernel.org
+Subject: Re: [PATCH v3 1/1] PCI: dwc: Fix index 0 incorrectly being
+ interpreted as a free ATU slot
+Message-ID: <Zhk5LERFKTFkPl4b@ryzen>
+References: <20240326193540.3610570-1-Frank.Li@nxp.com>
+ <ZhPFmFYorWa-sfLp@ryzen>
+ <20240410180341.GF16629@thinkpad>
+ <ZhbXlOMNxc2nMIW8@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhbXlOMNxc2nMIW8@lizhi-Precision-Tower-5810>
 
-Add pcie_print_tlp_log() helper to print TLP Header and Prefix Log.
-Print End-End Prefixes only if they are non-zero.
+On Wed, Apr 10, 2024 at 02:16:52PM -0400, Frank Li wrote:
+> On Wed, Apr 10, 2024 at 11:33:41PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Apr 08, 2024 at 12:23:20PM +0200, Niklas Cassel wrote:
+> > > On Tue, Mar 26, 2024 at 03:35:40PM -0400, Frank Li wrote:
+> > > > When PERST# assert and deassert happens on the PERST# supported platforms,
+> > > > the both iATU0 and iATU6 will map inbound window to BAR0. DMA will access
+> > > > to the area that was previously allocated (iATU0) for BAR0, instead of the
+> > > > new area (iATU6) for BAR0.
+> > > 
+> > > Nit: If we want additional clarity, we could also add:
+> > > ""
+> > > Right now, we dodge the bullet because both iATU0 and iATU6 should currently
+> > > translate inbound accesses to BAR0 to the same allocated memory area. However,
+> > > having two separate inbound mappings for the same BAR is a disaster waiting to
+> > > happen.
+> > > ""
+> > 
+> > Since Bjorn asked for the above info, it should get added.
+> > 
+> > With that,
+> > 
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Mani:
+> 
+> Do you need me rework patch? Or you can handle it by yourself when apply?
 
-Consolidate the few places which currently print TLP using custom
-formatting.
+It appears that Krzysztof is the one picking up patches for:
+drivers/pci/controller/dwc/
 
-The first attempt used pr_cont() instead of building a string first but
-it turns out pr_cont() is not compatible with pci_err() but prints on a
-separate line. When I asked about this, Andy Shevchenko suggested
-pr_cont() should not be used in the first place (to eventually get rid
-of it) so pr_cont() is now replaced with building the string first.
+Since he has the bottommost Signed-off-by on patches in:
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller%2Fdwc
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/pci.c      | 32 ++++++++++++++++++++++++++++++++
- drivers/pci/pcie/aer.c | 10 ++--------
- drivers/pci/pcie/dpc.c |  5 +----
- include/linux/aer.h    |  2 ++
- 4 files changed, 37 insertions(+), 12 deletions(-)
+So I don't think that Mani can amend it, since he is most likely not the
+one picking up this patch.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index af230e6e5557..54d4872d14b8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/array_size.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -1116,6 +1117,37 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
- }
- EXPORT_SYMBOL_GPL(pcie_read_tlp_log);
- 
-+/**
-+ * pcie_print_tlp_log - Print TLP Header / Prefix Log contents
-+ * @dev:	PCIe device
-+ * @tlp_log:	TLP Log structure
-+ * @pfx:	Internal string prefix (for indentation)
-+ *
-+ * Prints TLP Header and Prefix Log information held by @tlp_log.
-+ */
-+void pcie_print_tlp_log(const struct pci_dev *dev,
-+			const struct pcie_tlp_log *tlp_log, const char *pfx)
-+{
-+	char buf[(10 + 1) * (4 + ARRAY_SIZE(tlp_log->prefix)) + 14 + 1];
-+	unsigned int i;
-+	int len;
-+
-+	len = scnprintf(buf, sizeof(buf), "%#010x %#010x %#010x %#010x",
-+			tlp_log->dw[0], tlp_log->dw[1], tlp_log->dw[2],
-+			tlp_log->dw[3]);
-+
-+	if (tlp_log->prefix[0])
-+		len += scnprintf(buf + len, sizeof(buf) - len, " E-E Prefixes:");
-+	for (i = 0; i < ARRAY_SIZE(tlp_log->prefix); i++) {
-+		if (!tlp_log->prefix[i])
-+			break;
-+		len += scnprintf(buf + len, sizeof(buf) - len,
-+				 " %#010x", tlp_log->prefix[i]);
-+	}
-+
-+	pci_err(dev, "%sTLP Header: %s\n", pfx, buf);
-+}
-+
- /**
-  * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
-  * @dev: PCI device to have its BARs restored
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ecc1dea5a208..efb9e728fe94 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -664,12 +664,6 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
- 	}
- }
- 
--static void __print_tlp_header(struct pci_dev *dev, struct pcie_tlp_log *t)
--{
--	pci_err(dev, "  TLP Header: %08x %08x %08x %08x\n",
--		t->dw[0], t->dw[1], t->dw[2], t->dw[3]);
--}
--
- static void __aer_print_error(struct pci_dev *dev,
- 			      struct aer_err_info *info)
- {
-@@ -724,7 +718,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	__aer_print_error(dev, info);
- 
- 	if (info->tlp_header_valid)
--		__print_tlp_header(dev, &info->tlp);
-+		pcie_print_tlp_log(dev, &info->tlp, "  ");
- 
- out:
- 	if (info->id && info->error_dev_num > 1 && info->id == id)
-@@ -796,7 +790,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 			aer->uncor_severity);
- 
- 	if (tlp_header_valid)
--		__print_tlp_header(dev, &aer->header_log);
-+		pcie_print_tlp_log(dev, &aer->header_log, "  ");
- 
- 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
- 			aer_severity, tlp_header_valid, &aer->header_log);
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 80b1456f95fe..3f8e3b6c7948 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -229,10 +229,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
- 	pcie_read_tlp_log(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG,
- 			  cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG,
- 			  dpc_tlp_log_len(pdev), &tlp_log);
--	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
--		tlp_log.dw[0], tlp_log.dw[1], tlp_log.dw[2], tlp_log.dw[3]);
--	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++)
--		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, tlp_log.prefix[i]);
-+	pcie_print_tlp_log(pdev, &tlp_log, "");
- 
- 	if (pdev->dpc_rp_log_size < 5)
- 		goto clear_status;
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 2484056feb8d..1e8c61deca65 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -41,6 +41,8 @@ struct aer_capability_regs {
- int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
- 		      unsigned int tlp_len, struct pcie_tlp_log *log);
- unsigned int aer_tlp_log_len(struct pci_dev *dev);
-+void pcie_print_tlp_log(const struct pci_dev *dev,
-+			const struct pcie_tlp_log *tlp_log, const char *pfx);
- 
- #if defined(CONFIG_PCIEAER)
- int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
--- 
-2.39.2
+The fastest way is probably just to send out a v4.
+(But I feel you... this patch has already taken too long :P)
 
+
+Kind regards,
+Niklas
 
