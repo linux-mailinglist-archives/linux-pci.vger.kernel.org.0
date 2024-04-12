@@ -1,147 +1,192 @@
-Return-Path: <linux-pci+bounces-6172-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6173-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8792B8A28EE
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 10:10:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F52B8A2A2A
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 11:03:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44CFA2854CB
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 08:10:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 174271F22AB6
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 09:03:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58FF4EB3F;
-	Fri, 12 Apr 2024 08:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8441F50A88;
+	Fri, 12 Apr 2024 08:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pBrJVHzS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRC4/W++"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E944C4E1B3;
-	Fri, 12 Apr 2024 08:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F8C537EE
+	for <linux-pci@vger.kernel.org>; Fri, 12 Apr 2024 08:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712909434; cv=none; b=QbhNgKICmrNFx6xKikCQyd2+qtYGc5nkVe3eawbl0SLExEDrYpxBheWgdDHl26NzE2/XqKXYHCRfte3uPch5a+Rmo87dEkncl2OCwbkQIfyzPw6VtK/ljtCa7UiZvNxL6E6rcxak8eVW5KqB8zjB0diVJvGjKeF9p1oaqwiyAiA=
+	t=1712911906; cv=none; b=Q22dk4qryyKNU5Y2w3EKyQ6H0M1O0qIfHXn81XAurokvqqYp08Lg5/68UwPPD5uRPl5ThOqjCqTUxyFiiuPE+n5z+orm7cq+bwl/U6082FecUYl3Oi+ow9ek7fuVc2fk9slj9m5Fb5pUhwgp8OHQeS3QOnccUQZ+VJkGpkLRTPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712909434; c=relaxed/simple;
-	bh=lyrvQ1jQSDzDlOlLk6Ni8xRBq5CvyRT9MGKZEiVCukg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cp7JztNTTlUMRe+8EAsOR2MePSCS8M6YS6ziAsBDfawTvayW3fIZQomfsSPXKdv5MCfINNfXHGIlalfFZo/K85XSyEAkZFvxjoVCzfHs8xV031jXz2BtC2YEb/oWh3nnDfYo9GpK/CngphHcD3OUWe6FTKPA6tnrf5HPook8W5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pBrJVHzS; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EFFD360007;
-	Fri, 12 Apr 2024 08:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712909421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q0E7/dykhn14vt5idbhGa3zPIsvtfStWumlOd8mo6+0=;
-	b=pBrJVHzSSzlEzc5mqWMjA8Ebi4s/3qDkjT4bVoMZncY6YlMUaVSbtpMHizdauR8LTxd8hW
-	OrzVVpm/3TTgrHYaNi33eVL/nal4LrhFQDkb2JTcX6MLbJyy0Ll6EAY0HOfD/zoKqeD4fL
-	RD3Al1Mpkmry4eBsj+LCpgz1WDe1SFsKtGOpuVmBwQNdv3Ci42vGvoZ757A6/E7XPf/fV0
-	wLu85gSC6ydbLRo00vyDiB/HyVeSzh0Aty396FnUJN0//u0CBaQhWHgo7k0/x9bYPHdIJX
-	/Y+BlPo6sA5ty+IqxzIthendSUW1adLNzWGiodC05S9LXy7r4fuYGq0p1ewyEQ==
-Date: Fri, 12 Apr 2024 10:10:19 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
- Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano
- Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: of: Attach created of_node to existing
- device
-Message-ID: <20240412101019.7ceee755@bootlin.com>
-In-Reply-To: <2024041219-impure-upcountry-9e9d@gregkh>
-References: <20240325153919.199337-1-herve.codina@bootlin.com>
-	<20240325153919.199337-3-herve.codina@bootlin.com>
-	<2024041142-applause-spearman-bd38@gregkh>
-	<20240411203449.GA2641-robh@kernel.org>
-	<2024041219-impure-upcountry-9e9d@gregkh>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1712911906; c=relaxed/simple;
+	bh=qDcp4lyReDJ40MmcSzMB7x5FG1dP6FNsaEiiicdIDeU=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=AUngM71EibYXHjFCed/+NmaftelhL3Xvu3xIq+72rDQ0J22PD76K+tdOD1hetDjC6zyoE1uBIk20hGGFRpSZJXVVOH2TOyV45jihiLMtxSfmrdR9PvKRkqb0vfIsAThD7CVwPWV6ohc9GKzGQzkfECgihr3Htc+MeD34LxIGOJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IRC4/W++; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712911904; x=1744447904;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qDcp4lyReDJ40MmcSzMB7x5FG1dP6FNsaEiiicdIDeU=;
+  b=IRC4/W++MNyHH+dOXnufisqjVtVzHU4fZg6gBokEiAqlHmV2RCkM/1o3
+   hVRUB1nNtfYl6QxAJnvF4hWd9csKCJxLGK1b+dGpR0TmmAEhPijkUqax8
+   KLDFbEjLnB74pvwcXkPVDs02EiUBi8j9+sqwhmx7zx6rTyxk4Uwe5G4Cv
+   spedUfEhtXn+VFOQe7wztGOMWE/YgXFPMOj5wm8uvJ15LNeumzr4KMHE3
+   hD18QGTqbeuS3Jyr7fuQ+9+iYNzatbfEqV94TGhyaNPTfi3w58RCRcKO0
+   m+NwefxxvYvuyFizyVMbwh3TMiLWrcpC+phmFZFARbeHWiG8Rn1lrKwk4
+   Q==;
+X-CSE-ConnectionGUID: ZVPjomNpQHmACG2pR8gcPg==
+X-CSE-MsgGUID: QZAnDZo1R0Ka5GFXWF3Hvg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="25815280"
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="25815280"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 01:51:44 -0700
+X-CSE-ConnectionGUID: DscWwm+9RVq41CXGFW9CNA==
+X-CSE-MsgGUID: ViZA8zDrRYGf9XRoJ8WkcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="21751058"
+Received: from aclausch-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.251.15.202])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 01:51:44 -0700
+Subject: [RFC PATCH v2 0/6] Towards a shared TSM sysfs-ABI for Confidential
+ Computing
+From: Dan Williams <dan.j.williams@intel.com>
+To: linux-coco@lists.linux.dev
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Xu Yilun <yilun.xu@linux.intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>,
+ Samuel Ortiz <sameo@rivosinc.com>, Lukas Wunner <lukas@wunner.de>,
+ Wu Hao <hao.wu@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>,
+ Yilun Xu <yilun.xu@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+ John Allen <john.allen@amd.com>, bhelgaas@google.com, kevin.tian@intel.com,
+ gregkh@linuxfoundation.org, linux-pci@vger.kernel.org, lukas@wunner.de
+Date: Fri, 12 Apr 2024 01:51:43 -0700
+Message-ID: <171291190324.3532867.13480405752065082171.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Greg, Rob,
+Here is a revised attempt at creating a shared sysfs-ABI for the concept
+of a TSM (TEE Security Manager) as described by PCIe TDISP (PCIe 6.2
+Section 11 TEE Device Interface Security Protocol). It remains an RFC
+until at least one vendor (Intel, AMD, Rivos...) completes integration
+with their low level TSM driver. I am actively working on that with Hao
+Wu and Yilun Xu, but if another vendor adopts this before us, great.
 
-On Fri, 12 Apr 2024 09:41:19 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+Changes since v1: [1]
+* Major simplifications:
+  * Drop the 'struct pci_tsm_req' concept (Yilun), but keep a common
+    @exec entry point from the PCI core to the low level driver.
+  * Drop Link IDE and related sysfs attributes (Alexey). This
+    sophistication may come back later, but no need to tackle that
+    complexity now.
+  * Move policy choice of requiring native CMA before TSM connection
+    to userspace policy. This removes the need to build on top of the
+    moving CMA baseline, and these series can now be considered on
+    indpendent timelines.
+* Create a guest/ vs host/ split in drivers/virt/coco/ (Sathya)
+* Require a parent device for the common TSM class device (Jonathan)
+* Create a 'tdx' virtual bus and 'tdx_tsm' device to parent the TSM
+  class device
+* Create a 'tdx_tsm' for the low-level TDX calls
+* Rebase on v6.9-rc1 that includes a DEFINE_SYSFS_GROUP_VISIBLE()
+* Cleanup usage of __free() to match the proposed style guide [2]
+  (Jonathan)
+* Cleanup, clarifications, and fixes (Kevin)
+* Improve the cover letter prose below (Bjorn, Kevin)
 
-> On Thu, Apr 11, 2024 at 03:34:49PM -0500, Rob Herring wrote:
-> > On Thu, Apr 11, 2024 at 03:23:55PM +0200, Greg Kroah-Hartman wrote:  
-> > > On Mon, Mar 25, 2024 at 04:39:15PM +0100, Herve Codina wrote:  
-> > > > The commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> > > > creates of_node for PCI devices.
-> > > > 
-> > > > During the insertion handling of these new DT nodes done by of_platform,
-> > > > new devices (struct device) are created. For each PCI devices a struct
-> > > > device is already present (created and handled by the PCI core).
-> > > > Having a second struct device to represent the exact same PCI device is
-> > > > not correct.
-> > > > 
-> > > > On the of_node creation:
-> > > > - tell the of_platform that there is no need to create a device for this
-> > > >   node (OF_POPULATED flag),
-> > > > - link this newly created of_node to the already present device,
-> > > > - tell fwnode that the device attached to this of_node is ready using
-> > > >   fwnode_dev_initialized().
-> > > > 
-> > > > With this fix, the of_node are available in the sysfs device tree:
-> > > > /sys/devices/platform/soc/d0070000.pcie/
-> > > > + of_node -> .../devicetree/base/soc/pcie@d0070000
-> > > > + pci0000:00
-> > > >   + 0000:00:00.0
-> > > >     + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0
-> > > >     + 0000:01:00.0
-> > > >       + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0/dev@0,0
-> > > > 
-> > > > On the of_node removal, revert the operations.
-> > > > 
-> > > > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
-> > > 
-> > > I need an ack from the maintainer here before I can take this.  
-> > 
-> > Correct me if I'm wrong, but having the of_node sysfs link populated or 
-> > changed after device_add is a race we lost. Userspace is notified about 
-> > the new device and then some time later the symlink shows up.  
-> 
-> Ah, yes, I missed that, good catch, this will not work.
-> 
-> > However, it so far is not appearing that there's an easy way to 
-> > reshuffle order of things to fix this.
-> > 
-> > Maybe the short term (and stable) answer just don't create any of_node 
-> > symlinks on these dynamically created nodes.  
-> 
-> That would work, but does userspace really need to know this
-> information?
-> 
+[1]: http://lore.kernel.org/r/170660662589.224441.11503798303914595072.stgit@dwillia2-xfh.jf.intel.com
+[2]: http://lore.kernel.org/r/171140738438.1574931.15717256954707430472.stgit@dwillia2-xfh.jf.intel.com
 
-I don't think that the user space really need this information.
-I agree, it should work.
+Confidential Computing (CC) introduces the concept of hardware protected
+(integrity and confidentiality) guest private memory. The next phase of
+that journey is private memory access for guest assigned devices. To
+date, assigned devices for CC guests are constrained to accessing shared
+memory, unprotected clear-text memory. That mode incurs a bounce buffer
+performance penalty as every DMA (direct-memory-access) performed by the
+device must be later copied from shared-to-private memory for
+device-write and private-to-shared copies for device-reads.
 
-Let me rework my series in that sense and perform some tests before
-sending a new iteration removing the of_node sysfs link creation.
+The PCIe TEE Device Interface Security Protocol (TDISP) arranges for
+devices to be permitted to DMA to private memory directly, but it
+requires significant infrastructure to authenticate, validate, and
+provision a virtual-device interface to be used in CC guest.
 
-Best regards,
-Hervé
+TDISP specifies a TEE Security Manager (TSM) as a platform agent that
+can manage the IOMMU, PCI host, and endpoint Device Security Manager
+capabilities to convert an guest assigned device (physical function or
+sriov-virtual function) into private mode operation.
+
+What follows is common shared infrastructure for the PCI core to
+interface with the platform TSM and a TDX as an example low level
+consumer of these core capabilities.
+
+Enable the PCI core to export a "connect" verb via sysfs for a given
+device which, when the low level platform implementation is added,
+arranges for the device to be authenticated and its link protected by
+encryption and integrity checks.
+
+---
+
+Dan Williams (6):
+      configfs-tsm: Namespace TSM report symbols
+      coco/guest: Move shared guest CC infrastructure to drivers/virt/coco/guest/
+      x86/tdx: Introduce a "tdx" subsystem and "tsm" device
+      coco/tsm: Introduce a class device for TEE Security Managers
+      PCI/TSM: Authenticate devices via platform TSM
+      tdx_tsm: TEE Security Manager driver for TDX
+
+
+ Documentation/ABI/testing/sysfs-bus-pci |   46 +++++
+ MAINTAINERS                             |    7 +
+ arch/x86/include/asm/shared/tdx.h       |    3 
+ arch/x86/virt/vmx/tdx/tdx.c             |   70 ++++++++
+ drivers/pci/Kconfig                     |   13 +
+ drivers/pci/Makefile                    |    2 
+ drivers/pci/pci-sysfs.c                 |    4 
+ drivers/pci/pci.h                       |   10 +
+ drivers/pci/probe.c                     |    1 
+ drivers/pci/remove.c                    |    1 
+ drivers/pci/tsm.c                       |  270 +++++++++++++++++++++++++++++++
+ drivers/virt/coco/Kconfig               |    8 -
+ drivers/virt/coco/Makefile              |    3 
+ drivers/virt/coco/guest/Kconfig         |    7 +
+ drivers/virt/coco/guest/Makefile        |    2 
+ drivers/virt/coco/guest/tsm_report.c    |   32 ++--
+ drivers/virt/coco/host/Kconfig          |   12 +
+ drivers/virt/coco/host/Makefile         |    8 +
+ drivers/virt/coco/host/tdx_tsm.c        |   68 ++++++++
+ drivers/virt/coco/host/tsm-core.c       |  131 +++++++++++++++
+ drivers/virt/coco/sev-guest/sev-guest.c |    8 -
+ drivers/virt/coco/tdx-guest/tdx-guest.c |    8 -
+ include/linux/pci-tsm.h                 |   80 +++++++++
+ include/linux/pci.h                     |   11 +
+ include/linux/tsm.h                     |   31 ++--
+ include/uapi/linux/pci_regs.h           |    4 
+ 26 files changed, 795 insertions(+), 45 deletions(-)
+ create mode 100644 drivers/pci/tsm.c
+ create mode 100644 drivers/virt/coco/guest/Kconfig
+ create mode 100644 drivers/virt/coco/guest/Makefile
+ rename drivers/virt/coco/{tsm.c => guest/tsm_report.c} (92%)
+ create mode 100644 drivers/virt/coco/host/Kconfig
+ create mode 100644 drivers/virt/coco/host/Makefile
+ create mode 100644 drivers/virt/coco/host/tdx_tsm.c
+ create mode 100644 drivers/virt/coco/host/tsm-core.c
+ create mode 100644 include/linux/pci-tsm.h
+
+base-commit: 4cece764965020c22cff7665b18a012006359095
 
