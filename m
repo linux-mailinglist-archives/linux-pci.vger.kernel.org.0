@@ -1,244 +1,117 @@
-Return-Path: <linux-pci+bounces-6179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F7C78A2A30
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 11:03:49 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0B5B8A2B96
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 11:51:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04159289908
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 09:03:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2FB38B21F9F
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 09:51:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E50A25381A;
-	Fri, 12 Apr 2024 08:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C6951C54;
+	Fri, 12 Apr 2024 09:50:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MP3XMpdD"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="iwRtVJQh";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="eLJcdaXt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6060057863
-	for <linux-pci@vger.kernel.org>; Fri, 12 Apr 2024 08:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FF45102F;
+	Fri, 12 Apr 2024 09:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911944; cv=none; b=d0XsGO5wk4Moc+/dh+IDJxiGdtZ1nuRCc+6u0XOKwvht1FhUJwdmZ8p+NYBALd1qHatPtpjfP8+HLaxq6zbSlkmWJ/8srAe5sQsbxtpkzbax+903E3L25Ib8Daz7jDKF6OIjx+Ccd3VtQGnQ/+7f20+4IMVh44jqvrZz458ov3U=
+	t=1712915456; cv=none; b=IL7N6AN268o/FwZffB3Jv+D7EPKvTPg4iP7h4GxrGh/8uj2CKMui+Ace9uAXJOhvBKiUvu/aTWLjl1sTCSAl/pHvCY7QH+u4rMeAdik+g5z4pvgvkmnsUPBUQaGfqmMCUGyZnZILLPvL/JfSiXjJ3g4Ns6L4a4VsPwn+YgROLtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911944; c=relaxed/simple;
-	bh=jvwzkc4NJiqQPer3dGrkLLA+FbF5C2jPfbxxf6z4618=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ncQWt2joFOta0qWNI8qSALbEH1S172etD4R3pShmDYeAxDZFICHmiW9sEeb7t+4U45czueVGVtTfzRGmUR49b9Okcm5TiExpFdyNWcWatRPZTVt7fGeeh5zmBLnrPwxTZD2DIX1Xa0Fr7aEryXMinZk5Z+yqPg64HJzol5uv8Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MP3XMpdD; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712911944; x=1744447944;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jvwzkc4NJiqQPer3dGrkLLA+FbF5C2jPfbxxf6z4618=;
-  b=MP3XMpdDgk5/H4DkUFYsOlSHVb7R8wUij0Nek37nK29uKAcSq3/fPog8
-   vuYGc4IyPe8I/hPVIgczCuHcz3N6b3F2efvB8OlwXtcXjjlrdo2wOFyJC
-   RplBbvr0plaLAJGxBxx4t9LvUDCs9JvxoHC0b0Jks4p1+f2leHvlthyWp
-   tW8wHSkweS3TYbdDp8cFwKIq9AUf1pWbgOqtPoGkv6EugST454IV3mocE
-   8XupG24YOKwWoJSOLQScU5po9DdtHQHnx2703PETpMvq1gG1Cy6aviXeN
-   FxyaWxRmUfdOxGg9bY6/Fz4yAljMm5nUf4MvcLiUIdA46qUi3WS7kgoV2
+	s=arc-20240116; t=1712915456; c=relaxed/simple;
+	bh=1IgzUj1eTO/PMSNfq6ZmN/QoFcyQyezZTR1aBc3v9QI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OU10xsCfz7o8JNOMIhfbdoMDsKEP2q2fXHM4hHZEy4KlWzhs0X6PcEp7vKL/oMlrPc8bjelTtIm+KHGKQ9t9ZEH6PQEypBuwkgac7Pz+Yx9140v9pdRBtsF/+xnhFSmnfwebCTupZr2ZqQkUUmP5DkS5i0NeE65Tzfa9rD4MuzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=iwRtVJQh; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=eLJcdaXt reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1712915452; x=1744451452;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QgmGdOEg7DQ1tbApfsUFEBLKwsTG/q51J960XOq9RNs=;
+  b=iwRtVJQhcCSjgOFKCaIKKXQwhAZGjglnNnytQyCCJyl5m/H2guHT0xSH
+   HBC4QdhhakSourEZaNKxDry8aNMmG7sA6jz0Sw8lWztHXJRp+MF0zX7lf
+   KGlmHrTD5cErln5KBH3jGss8H6Ailpao4fHM6t6HKp94EIu27fg6MeW9A
+   Qd8v7IWWyrlz+2d18CD06Z9tuBWwLo3o6Et1+Hqhs0yA7ePU8Muh9iMdt
+   udmrquofLK543ui9WLehQFY63as95/5tA+IyfHszzDNfsaxrvM5ipgoAZ
+   KEpajY2hJyPgGg9ZJs3KJRk6bHcT+1Uls4ItgNDzdKC/RNNuViH7cPsQ3
    g==;
-X-CSE-ConnectionGUID: Vpf70/9ITDywwBVCkTZv2g==
-X-CSE-MsgGUID: 9mdUIytoRgWs9NxNy2Bw2A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="12152279"
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="12152279"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 01:52:23 -0700
-X-CSE-ConnectionGUID: /ku+IJAsT8aI4rIHwWYQgw==
-X-CSE-MsgGUID: qrcxVCH8Qu+RmjmEz8NdIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="25718664"
-Received: from aclausch-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.251.15.202])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 01:52:20 -0700
-Subject: [RFC PATCH v2 6/6] tdx_tsm: TEE Security Manager driver for TDX
-From: Dan Williams <dan.j.williams@intel.com>
-To: linux-coco@lists.linux.dev
-Cc: bhelgaas@google.com, kevin.tian@intel.com, gregkh@linuxfoundation.org,
- linux-pci@vger.kernel.org, lukas@wunner.de
-Date: Fri, 12 Apr 2024 01:52:19 -0700
-Message-ID: <171291193896.3532867.11285766993255838266.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <171291190324.3532867.13480405752065082171.stgit@dwillia2-xfh.jf.intel.com>
-References: <171291190324.3532867.13480405752065082171.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+X-IronPort-AV: E=Sophos;i="6.07,195,1708383600"; 
+   d="scan'208";a="36387222"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 12 Apr 2024 11:50:43 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 51F3416F476;
+	Fri, 12 Apr 2024 11:50:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1712915439; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=QgmGdOEg7DQ1tbApfsUFEBLKwsTG/q51J960XOq9RNs=;
+	b=eLJcdaXtCcPDUsh17wT3L4DWPuDzstek0kkdq7E5sWLD6P4yD0hbvexOeCkhqKsFnWXTtz
+	mID5ZL1IO42zIhi4YWfIDeZ4zVlT40FCENCWnrr6i2L5t0mQcVjnnyyTHDIx984ef5isKU
+	JyoXnBh3vGJMiMNV7GPsH/oZcNMFbpv0S2ClUUnIov9nGRauiJzb5Wbn0gUmBJnK3b/+N4
+	3at3Lhb9HKEq9Q4UVCZ16vlBR5bplj5nMNqBkZh8biiGgzFrqcEhvGX2UuhxQdxAeVqzsC
+	gZD9XFXaYk7BcyUfWdcdG8i7PQ9zZhR3lSmMbPODXKS77/sR7lVyfpwoePPGsQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] Documentation: PCI: pci-endpoint: Fix EPF ops list
+Date: Fri, 12 Apr 2024 11:50:31 +0200
+Message-Id: <20240412095031.256163-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Recall that a TEE Security Manager (TSM) is a platform agent that speaks
-the TEE Device Interface Security Protocol (TDISP) to PCIe devices and
-manages private memory resources for the platform. The tdx_tsm driver
-loads against a device of the same name registered at TDX Module
-initialization time. The device lives on the "tdx" bus which is a
-virtual subsystem that hosts the TDX module sysfs ABI.
+With commit 5779dd0a7dbd7 ("PCI: endpoint: Use notification chain
+mechanism to notify EPC events to EPF") the linkup callback has been
+removed and replaced by EPC event notifications.
 
-It allows for device-security enumeration and initialization flows to be
-deferred from TDX Module init time. Crucially, when / if TDX Module
-init moves earlier in x86 initialization flow this driver is still
-guaranteed to run after IOMMU and PCI init (i.e. subsys_initcall() vs
-device_initcall()).
+With commit 256ae475201b1 ("PCI: endpoint: Add pci_epf_ops to expose
+function-specific attrs") a new (optional) add_cfs callback was added.
+Update documentation accordingly.
 
-The ability to unload the module, or unbind the driver is also useful
-for debug and coarse grained transitioning between PCI TSM operation and
-PCI CMA operation (native kernel PCI device authentication).
-
-For now this is the basic boilerplate with sysfs attributes and
-operation flows to be added later.
-
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
- arch/x86/include/asm/shared/tdx.h |    3 ++
- arch/x86/virt/vmx/tdx/tdx.c       |    9 ++++-
- drivers/virt/coco/host/Kconfig    |    6 +++
- drivers/virt/coco/host/Makefile   |    2 +
- drivers/virt/coco/host/tdx_tsm.c  |   68 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 87 insertions(+), 1 deletion(-)
- create mode 100644 drivers/virt/coco/host/tdx_tsm.c
+Changes in v2:
+* Separated paragraphs by blank line
 
-diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
-index fdfd41511b02..7cc5cfb65e8d 100644
---- a/arch/x86/include/asm/shared/tdx.h
-+++ b/arch/x86/include/asm/shared/tdx.h
-@@ -132,5 +132,8 @@ static __always_inline u64 hcall_func(u64 exit_reason)
-         return exit_reason;
- }
+ Documentation/PCI/endpoint/pci-endpoint.rst | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
+index 4f5622a65555..3961ff4e5beb 100644
+--- a/Documentation/PCI/endpoint/pci-endpoint.rst
++++ b/Documentation/PCI/endpoint/pci-endpoint.rst
+@@ -172,8 +172,7 @@ by the PCI endpoint function driver.
+ 	 * bind: ops to perform when a EPC device has been bound to EPF device
+ 	 * unbind: ops to perform when a binding has been lost between a EPC
+ 	   device and EPF device
+-	 * linkup: ops to perform when the EPC device has established a
+-	   connection with a host system
++	 * add_cfs: optional ops to create function specific config attributes
  
-+/* tdx_tsm driver interfaces */
-+extern const struct bus_type tdx_subsys;
-+
- #endif /* !__ASSEMBLY__ */
- #endif /* _ASM_X86_SHARED_TDX_H */
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index e23bddf31daa..13b285e4e91e 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -1099,9 +1099,16 @@ static int init_tdmrs(struct tdmr_info_list *tdmr_list)
- 	return 0;
- }
- 
--static const struct bus_type tdx_subsys = {
-+static int tdx_uevent(const struct device *dev, struct kobj_uevent_env *env)
-+{
-+	return add_uevent_var(env, "MODALIAS=%s", dev_name(dev));
-+}
-+
-+const struct bus_type tdx_subsys = {
- 	.name = "tdx",
-+	.uevent = tdx_uevent,
- };
-+EXPORT_SYMBOL_NS_GPL(tdx_subsys, TDX);
- 
- struct tdx_tsm {
- 	struct device dev;
-diff --git a/drivers/virt/coco/host/Kconfig b/drivers/virt/coco/host/Kconfig
-index 4fbc6ef34f12..2155507b8516 100644
---- a/drivers/virt/coco/host/Kconfig
-+++ b/drivers/virt/coco/host/Kconfig
-@@ -4,3 +4,9 @@
- #
- config TSM
- 	tristate
-+
-+config TDX_TSM
-+	depends on INTEL_TDX_HOST
-+	select PCI_TSM
-+	select TSM
-+	tristate
-diff --git a/drivers/virt/coco/host/Makefile b/drivers/virt/coco/host/Makefile
-index be0aba6007cd..2612f17ec966 100644
---- a/drivers/virt/coco/host/Makefile
-+++ b/drivers/virt/coco/host/Makefile
-@@ -4,3 +4,5 @@
- 
- obj-$(CONFIG_TSM) += tsm.o
- tsm-y := tsm-core.o
-+
-+obj-$(CONFIG_TDX_TSM) += tdx_tsm.o
-diff --git a/drivers/virt/coco/host/tdx_tsm.c b/drivers/virt/coco/host/tdx_tsm.c
-new file mode 100644
-index 000000000000..95d1352589c9
---- /dev/null
-+++ b/drivers/virt/coco/host/tdx_tsm.c
-@@ -0,0 +1,68 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+#include <linux/tsm.h>
-+#include <linux/pci-tsm.h>
-+#include <asm/tdx.h>
-+
-+static int tdx_tsm_add(struct pci_dev *pdev)
-+{
-+	return 0;
-+}
-+
-+static void tdx_tsm_del(struct pci_dev *pdev)
-+{
-+}
-+
-+static int tdx_tsm_exec(struct pci_dev *pdev, enum pci_tsm_cmd cmd)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct pci_tsm_ops tdx_pci_tsm_ops = {
-+	.add = tdx_tsm_add,
-+	.del = tdx_tsm_del,
-+	.exec = tdx_tsm_exec,
-+};
-+
-+static void unregister_tsm(void *subsys)
-+{
-+	tsm_unregister(subsys);
-+}
-+
-+static int tdx_tsm_probe(struct device *dev)
-+{
-+	struct tsm_subsys *subsys;
-+
-+	subsys = tsm_register(dev, NULL, &tdx_pci_tsm_ops);
-+	if (IS_ERR(subsys)) {
-+		dev_err(dev, "failed to register TSM: (%pe)\n", subsys);
-+		return PTR_ERR(subsys);
-+	}
-+
-+	return devm_add_action_or_reset(dev, unregister_tsm, subsys);
-+}
-+
-+static struct device_driver tdx_tsm_driver = {
-+	.probe = tdx_tsm_probe,
-+	.bus = &tdx_subsys,
-+	.owner = THIS_MODULE,
-+	.name = KBUILD_MODNAME,
-+	.mod_name = KBUILD_MODNAME,
-+};
-+
-+static int __init tdx_tsm_init(void)
-+{
-+	return driver_register(&tdx_tsm_driver);
-+}
-+module_init(tdx_tsm_init);
-+
-+static void __exit tdx_tsm_exit(void)
-+{
-+	driver_unregister(&tdx_tsm_driver);
-+}
-+module_exit(tdx_tsm_exit);
-+
-+MODULE_IMPORT_NS(TDX);
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("tdx_tsm");
-+MODULE_DESCRIPTION("TDX TEE Security Manager");
+   The PCI Function driver can then register the PCI EPF driver by using
+   pci_epf_register_driver().
+-- 
+2.34.1
 
 
