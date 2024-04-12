@@ -1,56 +1,83 @@
-Return-Path: <linux-pci+bounces-6194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6195-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 653718A3639
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 21:14:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5FEF8A36A1
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 21:58:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96B691C21934
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 19:14:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 830C7287A7C
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 19:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8928D150988;
-	Fri, 12 Apr 2024 19:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D19831509A5;
+	Fri, 12 Apr 2024 19:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjVggVJ8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGLpNFOb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D12914AD37;
-	Fri, 12 Apr 2024 19:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9585714EC4E;
+	Fri, 12 Apr 2024 19:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712949245; cv=none; b=kCCGG2BFc0QP5zoRZ2h9R9aTGbZ2vlHw4sTklas0JtYs7CQ9vzqUECBBzem0ccsGXTSJcqNwIbxk/6ZTVmN+RTtw8rQp0MlyM/SV3LZwnhVcGQYzGsxX8fsRKAYbXdLoZuUVp7TyI77D2KP2uAYebz6h8Pk0DzPLFKxObOLjT78=
+	t=1712951918; cv=none; b=tUNWqS8kDPD2iSRPXX7ITzIOurlnUJO34qa7H8vSyQcbT4N/FvjH5Ou62Ss4tKQ+GTNoK0dmKZ79E2x2X/De1XROV1vYtQV7u5toFuKbOUPkST2T/i99+IxG8tuWDEO+s3QN3YFx4H2KvzSNGGRkgJgTzpag1USrikgS8yxMewM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712949245; c=relaxed/simple;
-	bh=cQNWyLD2FXfR0yTg5/S/h+2fInQpSquK/RmrY9b7Mz8=;
+	s=arc-20240116; t=1712951918; c=relaxed/simple;
+	bh=9HYoa2q9zbdAwhkuDRDtehEu+C2d3K7WfVfQ1MwY5ts=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uNkjP5sbbFtzF5p2kR7kEhiNUT+FnjcoYtslmQ9s27/gfowKr/vanzEfruSmZGTcn5u9SUta9PLFcj0wQ+AWzaBsFbphK+F88qEOcfp13/oIguTV/JVhHyrg1NVzKA4T5pCrrguBCav/b36uNJOQsR/jlib0Q3ew0AxXz97hohQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjVggVJ8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E21C113CC;
-	Fri, 12 Apr 2024 19:14:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=UsMt+tALfGQvR5WojI3kGQuCYNcAgf0jkY0t4zMgTu1sd92HQk1Mh1jQKPWWkdVXFIR7rYzpyds/KIVkKjm+4MwbDW9Fq5P7LKc6xqJTyooB8CefGvDLsDybDzoVCR4oi8twyh38lFfNcgAeboUPaKhVk4ZggKEcYlIxuMLxpG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGLpNFOb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECFEAC113CC;
+	Fri, 12 Apr 2024 19:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712949244;
-	bh=cQNWyLD2FXfR0yTg5/S/h+2fInQpSquK/RmrY9b7Mz8=;
+	s=k20201202; t=1712951918;
+	bh=9HYoa2q9zbdAwhkuDRDtehEu+C2d3K7WfVfQ1MwY5ts=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SjVggVJ87kGjQuEsrOsNZnIIfAWGFMlRga+rNqiycOEgJOppv6aYB55CDWixv2RAm
-	 +iuQR4ebN6F8HeU73Ay0Z9vUXZTnoni3WoKYYOjGZcMBqYLIoVe0bNiBAW+v7y9HkG
-	 TI34d6nA8XrJYbcKnSQAPLfPkJoLdXljv2GkTCvY1YgBlPsSYXriEQmEk7Tj/vXgPi
-	 BDYlUkIR1Zhy/gF6zp/JSCtMFbRtZbOWKMp+zKki2RnPRROrnx4aylrfVW6yJvlQdY
-	 7Td/LciZFcnWYHIU8k/ka2mROB7uwYk55DqUQjJcKI9ObxPuZ3d+xOkvX/hjiRgpu9
-	 BggogoAJ7PdDA==
-Date: Fri, 12 Apr 2024 14:14:02 -0500
+	b=SGLpNFOblQMeIbaJAa2RR1y9xP1A4VwRPfNvrMemMrQdH7DFIEqXfWjED1/QhvtxO
+	 hJwupFe0Zppd9Hx7FQ6sAD9A8zlkGNqxCKL93Lgv+HM/Tlv2ihysEEhBSMme0WU/xZ
+	 RmyWk2LZ0EfMI6v7/A50srEd/rQl8GV6TNI7lhloC7ZsNkN79QdcezoDxDudu48TlU
+	 6yeJb0nSJDsOMZYNoTJ//yRoBGLYAUywwOLqZRW1kYosaZ/FAmRG8UQ0qWOU9fuvNj
+	 MUvOqI6C3if4nm0zgjmb2nXTx/fQpWCIEwE1QW09jgPv9Q7AQOn6hkEUrmUqhOGaI4
+	 DTF2TST3dsEgA==
+Date: Fri, 12 Apr 2024 14:58:36 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, thierry.reding@gmail.com, jonathanh@nvidia.com,
-	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kthota@nvidia.com,
-	mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V2] PCI: tegra194: Fix probe path for Endpoint mode
-Message-ID: <20240412191402.GA10938@bhelgaas>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, Niklas Cassel <cassel@kernel.org>,
+	linux-arm-kernel@axis.com, linux-rockchip@lists.infradead.org,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v12 2/8] PCI: dwc: ep: Add Kernel-doc comments for APIs
+Message-ID: <20240412195836.GA13344@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,50 +86,23 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240408093053.3948634-1-vidyas@nvidia.com>
+In-Reply-To: <20240327-pci-dbi-rework-v12-2-082625472414@linaro.org>
 
-On Mon, Apr 08, 2024 at 03:00:53PM +0530, Vidya Sagar wrote:
-> Tegra194 PCIe probe path is taking failure path in success case for
-> Endpoint mode. Return success from the switch case instead of going
-> into the failure path.
-> 
-> Fixes: c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
-> v2:
-> * Added 'Fixes' and 'Reviewed-by' from Jon Hunter
-> 
->  drivers/pci/controller/dwc/pcie-tegra194.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 4bba31502ce1..1a8178dc899a 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -2273,11 +2273,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->  		ret = tegra_pcie_config_ep(pcie, pdev);
->  		if (ret < 0)
->  			goto fail;
-> +		else
-> +			return 0;
+On Wed, Mar 27, 2024 at 02:43:31PM +0530, Manivannan Sadhasivam wrote:
+> All of the APIs are missing the Kernel-doc comments. Hence, add them.
 
-Wow, how did you ever notice this?  It looks like this path would
-previously have returned "ret" (which was most likely 0 for success)
-but with an extra tegra_bpmp_put() that we shouldn't have done.
+> + * dw_pcie_ep_reset_bar - Reset endpoint BAR
 
-Eagle eyes!
+Apparently this resets @bar for every function of the device, so it's
+not just a single BAR?
 
->  		break;
->  
->  	default:
->  		dev_err(dev, "Invalid PCIe device type %d\n",
->  			pcie->of_data->mode);
-> +		ret = -EINVAL;
->  	}
->  
->  fail:
-> -- 
-> 2.25.1
-> 
+> + * dw_pcie_ep_raise_intx_irq - Raise INTx IRQ to the host
+> + * @ep: DWC EP device
+> + * @func_no: Function number of the endpoint
+> + *
+> + * Return: 0 if success, errono otherwise.
+
+s/errono/errno/ (another instance below)
+
+Bjorn
 
