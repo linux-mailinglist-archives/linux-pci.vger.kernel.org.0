@@ -1,108 +1,139 @@
-Return-Path: <linux-pci+bounces-6202-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6203-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 656508A37E9
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 23:33:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 544988A37F7
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 23:39:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96C761C214E4
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 21:33:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EDD531F22865
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Apr 2024 21:39:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A88C15099F;
-	Fri, 12 Apr 2024 21:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD39152175;
+	Fri, 12 Apr 2024 21:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhSTbhDx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rvlgo99E"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61815610B;
-	Fri, 12 Apr 2024 21:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47F339FD5
+	for <linux-pci@vger.kernel.org>; Fri, 12 Apr 2024 21:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712957610; cv=none; b=gYtMhdqm+FIZJZxhh4Y/v6yCxVfEmgUXfanti8upPkwTuqeqYZk9nEruH1qKUjXbLKgXbenuqpPW/LjV5W7thDhAzGD+GfUF7plDI2+kFNU5GfxO/K4wtfve6jbUjZr6g4LOjp4tRRCxjj2zeGUXZA2NOYA/sgTeF+zGerihXws=
+	t=1712957985; cv=none; b=aMZ22z7DIptDcQ32Kn07EDsVCEc58mpyJyLrf6Jl1JfkkZJkgPzuxHnlpOrvKJDznVqw00U6MMI7hh6EreG8cBKMJJhxuBkidHNRK3gwhA1pgYSXZ4DB7thQQng6agJChKZCrHWMiG7jzIuNFTFhvq5J4awgOyzWvPJ9kxoREXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712957610; c=relaxed/simple;
-	bh=CtC3I2fZQ9mZwBg/TkYlfnfS9MFN0gpK2lQ696PJfG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tDQpeCxcWK26FT8E/UshpxRx62RGr569tdfLVb2VxPr0bCyItzEXD3JrDIrsiVwLQ/p7LZs5YYhOduw5/UbExUplo80ZKYQVgXkAsUdhwcvc8HOwQJb+11eHfAm0dhMZ6HrsimcRzYc87eogRGTxkzs78Q6Vr4FpUAqqB0jUXJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhSTbhDx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BF3C113CC;
-	Fri, 12 Apr 2024 21:33:29 +0000 (UTC)
+	s=arc-20240116; t=1712957985; c=relaxed/simple;
+	bh=StRJuGJHX5iauCPjJNLmRUJ//vqsBQy0hLFpKuERmhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f4gD50d1tI9F4yF3Vv70UX/InDcFA6r768tmX4bSoG/nttUg5cU7gHBbUayB1MjmdIBHgQzH/R2QRq3j8WL78iIrtcoVuBLrVqnM9aqdNGkePFx539GMsJ/N4rzRMJs9j5WC/RGFUvM8XKxdWN5PcV4hqnuH8UvpIZ9ZgmlsucM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rvlgo99E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 702EBC2BD11;
+	Fri, 12 Apr 2024 21:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712957610;
-	bh=CtC3I2fZQ9mZwBg/TkYlfnfS9MFN0gpK2lQ696PJfG4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HhSTbhDx+UWURLfC7hyj8yyHFrTuSDmbdVUCnommqoKxlUxohFWXZfu8zZy4uL+oO
-	 bNexmE9vPvhh3q/VdkYgk2zTi8NtvrRth2hbv4WSvNwDnvWnHiL6HQHAqzOScatefn
-	 noUtbdiM9PKpxBqMmC54oC5bUgu6mS6n7Nymk9BuYWJpVfJA8IVYmXtfTf6K5TOMhY
-	 CgM5RxS+q4mYVevj/nkmA1h/yhdDDT8DLjh5RwT08wbD4zgEjI7UpoFsTEAdUX6jwg
-	 n2GnhytXq2vfNm19rt+JkfOe4dU4zR3CEpSCIRp/oXtCfaN3RNJrF/rv2x8tS4Tyc6
-	 1tWYqreRv2HUw==
-Date: Fri, 12 Apr 2024 16:33:28 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: mt7621: Fix possible string truncation in snprintf
-Message-ID: <20240412213328.GA19361@bhelgaas>
+	s=k20201202; t=1712957985;
+	bh=StRJuGJHX5iauCPjJNLmRUJ//vqsBQy0hLFpKuERmhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rvlgo99ErNnDhg98e7amVSEoduth588jCU5MZCuerHGA0kFtSFXweE4TU2xp8wuc6
+	 kb6SCDGn22VN8VsYxFvOApM1oTjEeioKUoUdCIFsD48l1kN/LCsFzl/anTSrlDnxYi
+	 VZbHIr6vPQVpc90WkincsveIGyUhSrhTXoJ/z0FTbOZRgIfPt8j4a/K4LVV9WPdruY
+	 Rv3N2pHN0K5WbdN/it06v6dcMCblSwkV4Hst2VehrRWnwEvhJXwpOQHpfhb1AHdl8I
+	 YJCfGyHpkuU4if9LVwp9KCTVLmjC82Pa/GJb8y0XGBqVgAC+2kPDDzrEIpYZm3DbwP
+	 qP71fwrI9U0eg==
+Date: Fri, 12 Apr 2024 23:39:39 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Shradha Todi <shradha.t@samsung.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 8/9] PCI: rockchip-ep: Set a 64-bit BAR if requested
+Message-ID: <ZhmqG6avmX8ZOtIX@ryzen>
+References: <20240313105804.100168-9-cassel@kernel.org>
+ <20240412175127.GA8613@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240111082704.2259450-1-sergio.paracuellos@gmail.com>
+In-Reply-To: <20240412175127.GA8613@bhelgaas>
 
-On Thu, Jan 11, 2024 at 09:27:04AM +0100, Sergio Paracuellos wrote:
-> The following warning appears when driver is compiled with W=1.
+On Fri, Apr 12, 2024 at 12:51:27PM -0500, Bjorn Helgaas wrote:
+> On Wed, Mar 13, 2024 at 11:58:00AM +0100, Niklas Cassel wrote:
+> > Ever since commit f25b5fae29d4 ("PCI: endpoint: Setting a BAR size > 4 GB
+> > is invalid if 64-bit flag is not set") it has been impossible to get the
+> > .set_bar() callback with a BAR size > 4 GB, if the BAR was also not
+> > requested to be configured as a 64-bit BAR.
+> > 
+> > It is however possible that an EPF driver configures a BAR as 64-bit,
+> > even if the requested size is < 4 GB.
+> > 
+> > Respect the requested BAR configuration, just like how it is already
+> > repected with regards to the prefetchable bit.
 > 
-> CC      drivers/pci/controller/pcie-mt7621.o
-> drivers/pci/controller/pcie-mt7621.c: In function ‘mt7621_pcie_probe’:
-> drivers/pci/controller/pcie-mt7621.c:228:49: error: ‘snprintf’ output may
-> be truncated before the last format character [-Werror=format-truncation=]
-> 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
->     |                                                 ^
-> drivers/pci/controller/pcie-mt7621.c:228:9: note: ‘snprintf’ output between
-> 10 and 11 bytes into a destination of size 10
-> 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
->     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Clean this up increasing destination buffer one byte.
-> 
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> Closes: https://lore.kernel.org/linux-pci/20240110212302.GA2123146@bhelgaas/T/#t
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> Does this (and the similar cadence patch) need a Fixes: tag for
+> f25b5fae29d4?
 
-Krzysztof applied this to pci/controller/mt7621 for v6.10, thanks!  I
-just pulled that branch into "next", so it should appear in the next
-linux-next.
+I don't think so.
 
-> ---
->  drivers/pci/controller/pcie-mt7621.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Both patches are about respecting the configuration requested by an EPF
+driver.
+
+So if an EPF driver requests a 64-bit BAR, the EPC driver should configure
+that. (Regardless of the size that the EPF driver requests for the BAR.)
+
+If we really want a Fixes-tag, I would imagine that it will be the respective
+initial commits that added these drivers (pcie-cadence-ep.c and
+pcie-rockchip-ep.c), as it has been this way since then.
+
+If you look at the EPF drivers we currently have, they will currently only
+request a 64-bit BAR if any of the BARs can only be configured as a 64-bit
+BAR because of hardware limitiations.
+
+$ git grep only_64bit
+
+Neither of these two drivers have any such hardware limitiations,
+so these commits are currently a bit pointless.
+
+However, the drivers should of course do the right thing, because other
+EPC drivers might look at them and copy their code.
+
+And who knows, maybe sometime in the future there will be an EPF driver
+that will explicitly request a 64-bit BAR, regardless of size.
+
+TL;DR: I don't think these two commits are worth backporting.
+
+
 > 
-> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-> index 79e225edb42a..d97b956e6e57 100644
-> --- a/drivers/pci/controller/pcie-mt7621.c
-> +++ b/drivers/pci/controller/pcie-mt7621.c
-> @@ -202,7 +202,7 @@ static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
->  	struct mt7621_pcie_port *port;
->  	struct device *dev = pcie->dev;
->  	struct platform_device *pdev = to_platform_device(dev);
-> -	char name[10];
-> +	char name[11];
->  	int err;
->  
->  	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> -- 
-> 2.25.1
-> 
+> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> > ---
+> >  drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> > index c9046e97a1d2..57472cf48997 100644
+> > --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> > @@ -153,7 +153,7 @@ static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
+> >  		ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_IO_32BITS;
+> >  	} else {
+> >  		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
+> > -		bool is_64bits = sz > SZ_2G;
+> > +		bool is_64bits = !!(flags & PCI_BASE_ADDRESS_MEM_TYPE_64);
+> >  
+> >  		if (is_64bits && (bar & 1))
+> >  			return -EINVAL;
+> > -- 
+> > 2.44.0
+> > 
 
