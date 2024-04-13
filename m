@@ -1,219 +1,293 @@
-Return-Path: <linux-pci+bounces-6216-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5789B8A3DB1
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 18:23:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 840BD8A3DF6
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 19:27:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D0F52821EE
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 16:23:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A86FB1C20A10
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 17:27:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C5E94C637;
-	Sat, 13 Apr 2024 16:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 037224D595;
+	Sat, 13 Apr 2024 17:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="myLm0rHB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QgXTkt+u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D26495FD
-	for <linux-pci@vger.kernel.org>; Sat, 13 Apr 2024 16:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B85A347A2;
+	Sat, 13 Apr 2024 17:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713025418; cv=none; b=EsxGzgPPdNuHBfMJPOx5bTxow1CZBRyHulwQX0oGeupLgCzsmsqYzBZR/mtYw1EwzVFZsTFd7m+5jMth13nh/TsPhrw25L8Fx3t/2mM/7Im9h0EA8voNC8MHs5Bia4TVy6fBU9RW+0BVnglje0T43/DnBUgc3xIkV0KOGUQSNdk=
+	t=1713029220; cv=none; b=oZL2Y6yf1kXR2Dj5GMKUf4AZX2iR4OXoGFkdmaBxjTw5FviRUmNjSKPUnV23wK711PsOubyjNECJx6l+/hMnwwOn6QO7VWYsMJ8o3KzcyYYPGxL8MBz+LL5ZVFsyXyfnQCZf8fU5WGJ1AdmlRk3ydoI6w5i4DkBpfSthgyIBNQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713025418; c=relaxed/simple;
-	bh=pBMs0o9qa+/9WEtQCtYDmN/6sp+EDNK5gBfxymPj+ME=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EfzyFb3KWbODCRReEOP2Uiymysnh+qV+88O1Cs2bVGLz+3Z4YyNgc1E/C1+TDflHK8q6rgUUT3vBGDonJNk7ddozIqKanBDEJsQPLsgCw7whidNAk86DrT7kwSadJQK4Sxa5HPm6LVPlg2FquwBCBhNyWJCUPDT+NpjphjfCMmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=myLm0rHB; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713029220; c=relaxed/simple;
+	bh=5UeKOyi53VeVQcVkrVDSoWnTbPIVlOepA4P5i5nnoUc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M8W9LZCV4gt5CqFWzgpfemfe20QNCIGpUV8RWOkngbtol/TaxYiOBD3ZCT3E+2MReRtT5uDopymr9c1IlgM2zDWYJ2W7m44FquwyFOv56m7wcTm1vqJug5ky0wgMHSr6f4eZj3d6+BsJY5Y6ddon8EMvPwkV+GwwUiL/VyAgIWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QgXTkt+u; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713025416; x=1744561416;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=pBMs0o9qa+/9WEtQCtYDmN/6sp+EDNK5gBfxymPj+ME=;
-  b=myLm0rHBL3aU4P6X6jkXmMIuf4eWxjMeYgfwz81F6nO5qRsTZyNIvW7j
-   xROoeD3k2/TwpCk8dRECxfwtDNkYeQ39cmOqJ3AvEN+FCLQlMHSUCnQK2
-   qy5Mu3exTAlZmo8zGYtcwmGBi6+RAWipPIuB1Djhps/DJ5THpl3fep51x
-   wCciESb7Dgyp/NXVUqy64YljwN+SFhIhIOsOblwSINBRnE1NDWGBsNRgh
-   t2j4mx56u3X4ZStDBTmJ5LjlR4obOtXvQkI6m5s2qaTmuWPmgJwtfQyLi
-   YimEMBEuYsq6ro2lv7dOW6eG9ftiTZ/BAuo3vvs7NgMzJpOiR7cyNGPDq
+  t=1713029218; x=1744565218;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5UeKOyi53VeVQcVkrVDSoWnTbPIVlOepA4P5i5nnoUc=;
+  b=QgXTkt+u/YUi92jtpdvtfeJNWi6AQEqHg6RE9YX1VwgSCCW8K9oPtwwo
+   85Gxu4qJBP9LlcA+tmh+Y8lWgSLoocVt8NmGqCeaJC4pSxccA3/nNWfQS
+   VLcij949Kp8hXFwjsomTuLhDT3n/qObq08nQHcpeZp4ddeorR+Z8lV+En
+   PHSQXndAQxkuXDv271ldjkqVNkHfVkLyKAMCmW9itiGUTRQHSTM/UeIBP
+   ohTbAaQ8XbB5BRdK92Jwk08i1anA7Fzz9sBynUWQdr9+vMmz+pcGyYR9y
+   HkCCh7MWjf8UoPezwzDW4Qv4jRfTTOn2Llvd2spCDd49tnY7bJe3NRB9E
    Q==;
-X-CSE-ConnectionGUID: Q9LhJmjiTRed01M7Yes64A==
-X-CSE-MsgGUID: J2LiQVQ0Rtulsk++2p47WA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11043"; a="12245069"
+X-CSE-ConnectionGUID: vhKUOqhGRTWQtMhv3mhd7Q==
+X-CSE-MsgGUID: 1yuT8kTmQHSHOEo1AhAurQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11043"; a="8637614"
 X-IronPort-AV: E=Sophos;i="6.07,199,1708416000"; 
-   d="scan'208";a="12245069"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2024 09:23:36 -0700
-X-CSE-ConnectionGUID: bqgIAxP/TAS3Iy9wsHamMg==
-X-CSE-MsgGUID: CJj0c6TWSeGzkUvUZErTIw==
+   d="scan'208";a="8637614"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2024 10:26:57 -0700
+X-CSE-ConnectionGUID: ijmeSYHbRPGRhMqmmVVECw==
+X-CSE-MsgGUID: THg4LPW5SrSJE+P+Sjkgxg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,199,1708416000"; 
-   d="scan'208";a="22076838"
-Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 13 Apr 2024 09:23:34 -0700
-Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rvgA8-0002tW-18;
-	Sat, 13 Apr 2024 16:23:32 +0000
-Date: Sun, 14 Apr 2024 00:22:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:dt-bindings] BUILD SUCCESS
- 01fec70206d48891b76ee8a3a4bfbd331543c18a
-Message-ID: <202404140041.1rJw2Q9E-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="26202088"
+Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
+  by orviesa003.jf.intel.com with ESMTP; 13 Apr 2024 10:26:58 -0700
+From: matthew.gerlach@linux.intel.com
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v3] dt-bindings: PCI: altera: Convert to YAML
+Date: Sat, 13 Apr 2024 12:26:41 -0500
+Message-Id: <20240413172641.436341-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
-branch HEAD: 01fec70206d48891b76ee8a3a4bfbd331543c18a  dt-bindings: PCI: ti,j721e-pci-host: Add support for J722S SoC
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-elapsed time: 1453m
+Convert the device tree bindings for the Altera Root Port PCIe controller
+from text to YAML.
 
-configs tested: 124
-configs skipped: 3
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+---
+v3:
+ - Added years to copyright
+ - Correct order in file of allOf and unevaluatedProperties
+ - remove items: in compatible field
+ - fix reg and reg-names constraints
+ - replace deprecated pci-bus.yaml with pci-host-bridge.yaml
+ - fix entries in ranges property
+ - remove device_type from required
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+v2:
+ - Move allOf: to bottom of file, just like example-schema is showing
+ - add constraint for reg and reg-names
+ - remove unneeded device_type
+ - drop #address-cells and #size-cells
+ - change minItems to maxItems for interrupts:
+ - change msi-parent to just "msi-parent: true"
+ - cleaned up required:
+ - make subject consistent with other commits coverting to YAML
+ - s/overt/onvert/g
+---
+ .../devicetree/bindings/pci/altera-pcie.txt   |  50 --------
+ .../bindings/pci/altr,pcie-root-port.yaml     | 112 ++++++++++++++++++
+ 2 files changed, 112 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     nsimosci_hs_defconfig   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                           h3600_defconfig   gcc  
-arm                         s3c6400_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240413   gcc  
-i386         buildonly-randconfig-002-20240413   gcc  
-i386         buildonly-randconfig-003-20240413   clang
-i386         buildonly-randconfig-004-20240413   clang
-i386         buildonly-randconfig-005-20240413   clang
-i386         buildonly-randconfig-006-20240413   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240413   clang
-i386                  randconfig-002-20240413   gcc  
-i386                  randconfig-003-20240413   clang
-i386                  randconfig-004-20240413   gcc  
-i386                  randconfig-005-20240413   clang
-i386                  randconfig-006-20240413   clang
-i386                  randconfig-011-20240413   gcc  
-i386                  randconfig-012-20240413   clang
-i386                  randconfig-013-20240413   gcc  
-i386                  randconfig-014-20240413   gcc  
-i386                  randconfig-015-20240413   clang
-i386                  randconfig-016-20240413   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch                 loongson3_defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                       bvme6000_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                          multi_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     cu1000-neo_defconfig   gcc  
-mips                     loongson2k_defconfig   gcc  
-mips                      maltasmvp_defconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                 simple_smp_defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-32bit_defconfig   gcc  
-parisc64                         alldefconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      arches_defconfig   gcc  
-powerpc                    ge_imp3a_defconfig   gcc  
-powerpc                     kmeter1_defconfig   gcc  
-powerpc                 xes_mpc85xx_defconfig   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  cadence_csp_defconfig   gcc  
-xtensa                    xip_kc705_defconfig   gcc  
-
+diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+deleted file mode 100644
+index 816b244a221e..000000000000
+--- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-* Altera PCIe controller
+-
+-Required properties:
+-- compatible :	should contain "altr,pcie-root-port-1.0" or "altr,pcie-root-port-2.0"
+-- reg:		a list of physical base address and length for TXS and CRA.
+-		For "altr,pcie-root-port-2.0", additional HIP base address and length.
+-- reg-names:	must include the following entries:
+-		"Txs": TX slave port region
+-		"Cra": Control register access region
+-		"Hip": Hard IP region (if "altr,pcie-root-port-2.0")
+-- interrupts:	specifies the interrupt source of the parent interrupt
+-		controller.  The format of the interrupt specifier depends
+-		on the parent interrupt controller.
+-- device_type:	must be "pci"
+-- #address-cells:	set to <3>
+-- #size-cells:		set to <2>
+-- #interrupt-cells:	set to <1>
+-- ranges:	describes the translation of addresses for root ports and
+-		standard PCI regions.
+-- interrupt-map-mask and interrupt-map: standard PCI properties to define the
+-		mapping of the PCIe interface to interrupt numbers.
+-
+-Optional properties:
+-- msi-parent:	Link to the hardware entity that serves as the MSI controller
+-		for this PCIe controller.
+-- bus-range:	PCI bus numbers covered
+-
+-Example
+-	pcie_0: pcie@c00000000 {
+-		compatible = "altr,pcie-root-port-1.0";
+-		reg = <0xc0000000 0x20000000>,
+-			<0xff220000 0x00004000>;
+-		reg-names = "Txs", "Cra";
+-		interrupt-parent = <&hps_0_arm_gic_0>;
+-		interrupts = <0 40 4>;
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-		bus-range = <0x0 0xFF>;
+-		device_type = "pci";
+-		msi-parent = <&msi_to_gic_gen_0>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &pcie_0 1>,
+-			            <0 0 0 2 &pcie_0 2>,
+-			            <0 0 0 3 &pcie_0 3>,
+-			            <0 0 0 4 &pcie_0 4>;
+-		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+-			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+new file mode 100644
+index 000000000000..13b97f4fd5ee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+@@ -0,0 +1,112 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright (C) 2015, 2019, 2024, Intel Corporation
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Altera PCIe Root Port
++
++maintainers:
++  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
++
++properties:
++  compatible:
++    enum:
++      - altr,pcie-root-port-1.0
++      - altr,pcie-root-port-2.0
++
++  reg:
++    minItems: 2
++    maxItems: 3
++
++  reg-names:
++    minItems: 2
++    maxItems: 3
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-map-mask:
++    items:
++      - const: 0
++      - const: 0
++      - const: 0
++      - const: 7
++
++  interrupt-map:
++    maxItems: 4
++
++  "#interrupt-cells":
++    const: 1
++
++  msi-parent: true
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - interrupt-map
++  - interrupt-map-mask
++
++allOf:
++  - $ref: /schemas/pci/pci-host-bridge.yaml#
++  - if:
++      properties:
++        compatible:
++          enum:
++            - altr,pcie-root-port-1.0
++    then:
++      properties:
++        reg:
++          items:
++            - description: TX slave port region
++            - description: Control register access region
++
++        reg-names:
++          items:
++            - const: Txs
++            - const: Cra
++
++    else:
++      properties:
++        reg:
++          items:
++            - description: Hard IP region
++            - description: TX slave port region
++            - description: Control register access region
++
++        reg-names:
++          items:
++            - const: Hip
++            - const: Txs
++            - const: Cra
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    pcie_0: pcie@c00000000 {
++        compatible = "altr,pcie-root-port-1.0";
++        reg = <0xc0000000 0x20000000>,
++              <0xff220000 0x00004000>;
++        reg-names = "Txs", "Cra";
++        interrupt-parent = <&hps_0_arm_gic_0>;
++        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++        #interrupt-cells = <1>;
++        bus-range = <0x0 0xff>;
++        device_type = "pci";
++        msi-parent = <&msi_to_gic_gen_0>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++        interrupt-map-mask = <0 0 0 7>;
++        interrupt-map = <0 0 0 1 &pcie_intc 1>,
++                        <0 0 0 2 &pcie_intc 2>,
++                        <0 0 0 3 &pcie_intc 3>,
++                        <0 0 0 4 &pcie_intc 4>;
++        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000>,
++                 <0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
++    };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
