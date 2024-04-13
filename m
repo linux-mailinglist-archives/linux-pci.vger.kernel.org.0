@@ -1,141 +1,124 @@
-Return-Path: <linux-pci+bounces-6210-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6211-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27B2D8A3A3F
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 03:50:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 043158A3C1F
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 12:11:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5742D1C20F77
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 01:50:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98BA91F2220F
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 10:11:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 197127492;
-	Sat, 13 Apr 2024 01:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE72C383AA;
+	Sat, 13 Apr 2024 10:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFAE1hq5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqLjDwxp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ED210962
-	for <linux-pci@vger.kernel.org>; Sat, 13 Apr 2024 01:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795A61BDE6;
+	Sat, 13 Apr 2024 10:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712973044; cv=none; b=RmH0NZWB1XXcvP3L8YZFqSoC9Z35B2A0MfKCFx1FMGxtKa28JEERk6bjSoUhQpNnYjZhHSBTEAsnSfRuYom/gpZNlIQRdJmRJTgRF4G9OMko5qojhciHO+iK2DrwCNVJdRO4y4SNS55eDI+WzfzJ/k5QksTG+UcBXho/Hw68GPo=
+	t=1713003064; cv=none; b=qJsg57354Jhf7lciwIdop3CTlKP74F6TdeWOGPlegOTZqzTt0kpnVoc8WjAaESvggZJI7IrT6PYogfgQ4sbHfyidN/QF3D+1Mx5AUkmerKiQs2UwlDLIup/ZHvQRk98Mb5bFSlP+eopvUpA9sruzLPSf7jepJZ1jZBuBsyVb2F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712973044; c=relaxed/simple;
-	bh=JfDhAkZ7NqPI1BHC5+qlpIyO3RdLjwXqyssIHUY7iME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Elymu8lIoH1BDt6AurC022oR4RYNoJjwFo1Qh0UwswCGzMQkUj+ifY6kTrXi3ZyeYTZ17mbScaknE8qK9ERA6Q4SZXLG2M9t+gzreaJ8pWrNQThpAx9R+Q+rFpt1QTxlh3PlcTqmzef9MV5sw/wFwcTLp2liCKnWgjLqQkqIk/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFAE1hq5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22DBCC113CC;
-	Sat, 13 Apr 2024 01:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712973043;
-	bh=JfDhAkZ7NqPI1BHC5+qlpIyO3RdLjwXqyssIHUY7iME=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UFAE1hq5am1I2pRPOK2srF287pPcWBqQGoUHEe0/PsrFbAGnXex3mk60YYqfA2rIZ
-	 iuyOrtD4uQ1lcvDe4clvy4JTTUXjnofYk6TmdoTJhno4K7V/QGG8d/O+MOZa1kNOKM
-	 DEm35qrYgo6tFN1WF0d5h06kFSzNrYhTeJ3fj9d8mYqegEJknMU74ct0kIkq6o3I2A
-	 u3cVvYPcu/It9gUJp1tFEAoIqu9ter9ac+Fz/fBC2y9Wt1xBJko7fq8skx2vSQ/J2v
-	 nT/S2xU73pH5sDd2lDtTC4UqMgwpCm8CKFKBSCjdJ2PzdgqFxEogNWPV4TKezx98/0
-	 Vuo3n1K4nEEhA==
-Message-ID: <89bbe0a0-55d3-4f25-b50a-9b3737697807@kernel.org>
-Date: Sat, 13 Apr 2024 10:50:40 +0900
+	s=arc-20240116; t=1713003064; c=relaxed/simple;
+	bh=9n23xcSIvhfwRBwgRidm0Nmbhtmcr9UunIBGBhcaPyk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KtiK0zBrIDu9+m8NykpO5fWi33A+tLl5ZhR+6oxJR+jlnlAByYfNmUcrgsKQXNuUkKWZQZcPoRlRv2t3qtsPIN6ylQIBUD1p2YLj1eUj+RDy7VhWcqDFrv6uoF02vM3H7heG+lSakN+nIONbU/ZCl0PRDukbrwwTzF0E1vXZLFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VqLjDwxp; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2228c4c5ac3so983706fac.0;
+        Sat, 13 Apr 2024 03:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713003062; x=1713607862; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2ZBciApKLMvjxOVZYXzIoJbnqbwzjS65kVqw40ak0hE=;
+        b=VqLjDwxpLKTEu8Xik0fzud+CmpPWjeXbobDI4Inyy//Lu0W2ukHT/xIIZmMrx9ZbUh
+         NaDi7IpLcztY7w5+F9zONhxWe5wbrPnmXP1PCyUdpZjecnlH/LyiJCZVNNlszrmU8EOj
+         ywN/Hfd9wVzBvjt3VjbWwfnXP1xv4m+W08ewvR+ghOjH6FlJlpn0zYMdwDQibFATSrAj
+         CEFyIrFWonHRI2Zv04PkkHeMrDc6HpOX/cnN2s424c5LsugLhEgulrxu0xAzWeNOwvzA
+         3mL14KY5Hld/2VVKEMHrMpEJY3XSX4EH5R/29EmymheI8d6n8rTF5nVpxTlU+yxKZxzg
+         nU9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713003062; x=1713607862;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2ZBciApKLMvjxOVZYXzIoJbnqbwzjS65kVqw40ak0hE=;
+        b=mT3GV/D2awhABYu4DEYGW3P//An0jkL8ZU/DVpTZ6Fmla9v40/T015FZOAeu3ByPW6
+         KwuwjjjwvtMJxKSI4J1KKdA2VEWtU+mukxyxLUe4sILVwfwwH3gXdWv7bl8JXdcQ1gi2
+         XWeDVyy+q2GyeowbDuq0CQHTCkhBdqJacLmnd5eOe7Zp6OpmmZsUvi8CqLAVLC6wRpxP
+         xz7yFxcMnBGCi9K+WSPeMHoa9/UOgHLAgCOBU/3Nf280rqOHPp5IwcHyogygVGiKrRV4
+         UThMALyYZKu17Frc9okuMRoHpTsz/Rzmn+3IGRhrw170iED53w/MwTe5WxFS5ribZkmR
+         pUuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwMG/oMYNnjaFM6oQwRUQqCWyHk2t2T4Jdq/iULADE6+ul1TfC6g8eHKhFwilZ22UnNDPtb27uOIPLo99PYAAXKA2VGsCuxWLdM129
+X-Gm-Message-State: AOJu0Yy4cTEa4gKD6GvrgEHanjqVnhGOfmM6Fy3J1FJQAqUVh59MrEE5
+	DOpH3XH3fEF/ax4yz+trhmMSIkgBBlocWCCIHn584KHLuw8Ga3WJ2E63Jh/dvCOI+5G5fVWgcYL
+	v2NG5wPnFlAKHP9XGDQCdvVrDINM=
+X-Google-Smtp-Source: AGHT+IF6froqlMKKHPZGGxDZaZCd9+PLuvrqkLxfrrlHTkfygyF32u4tsaPghUAiwCTEKYeeEXNjwrVbcox5him7Ktc=
+X-Received: by 2002:a05:6870:f10f:b0:21f:d2a0:60f with SMTP id
+ k15-20020a056870f10f00b0021fd2a0060fmr5876813oac.51.1713003062633; Sat, 13
+ Apr 2024 03:11:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] PCI: rockchip-host: Wait 100ms after reset before
- starting configuration
+References: <20240111082704.2259450-1-sergio.paracuellos@gmail.com> <20240412213328.GA19361@bhelgaas>
+In-Reply-To: <20240412213328.GA19361@bhelgaas>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Sat, 13 Apr 2024 12:10:51 +0200
+Message-ID: <CAMhs-H-OWe3WRQb1iBj2oSy1s5wzazSo4ce9Hd+wxKUivy+3aQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mt7621: Fix possible string truncation in snprintf
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- linux-pci@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-References: <20240412212916.GA18789@bhelgaas>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20240412212916.GA18789@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, matthias.bgg@gmail.com, 
+	angelogioacchino.delregno@collabora.com, linux-mediatek@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/13/24 06:29, Bjorn Helgaas wrote:
-> On Fri, Apr 12, 2024 at 11:37:21AM +0900, Damien Le Moal wrote:
->> The PCI Express Base Specification r6.0, section 6.6.1, states that the
->> host should wait for at least 100 msec from the end of a conventional
->> reset (PERST# is de-asserted) before sending a configuration request to
->> ensure that the device is able to respond with a "Request Retry Status"
->> completion.
->>
->> Add the PCIE_T_RRS_READY_MS macro to define this wait time and modify
->> rockchip_pcie_host_init_port() to add this 100ms sleep after bringing
->> back PESRT# signal to high using the ep_gpio GPIO.
-> 
-> s/PESRT#/PERST#/
-> s/bringing back PERST# signal to high/deasserting PERST#/
-> 
->> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
->> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
->> ---
->>  drivers/pci/controller/pcie-rockchip-host.c | 2 ++
->>  drivers/pci/pci.h                           | 7 +++++++
->>  2 files changed, 9 insertions(+)
->>
->> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
->> index fc868251e570..cbec71114825 100644
->> --- a/drivers/pci/controller/pcie-rockchip-host.c
->> +++ b/drivers/pci/controller/pcie-rockchip-host.c
->> @@ -325,6 +325,8 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->>  	msleep(PCIE_T_PVPERL_MS);
->>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
->>  
->> +	msleep(PCIE_T_RRS_READY_MS);
->> +
->>  	/* 500ms timeout value should be enough for Gen1/2 training */
->>  	err = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
->>  				 status, PCIE_LINK_UP(status), 20,
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 17fed1846847..c93ffc5e6e1f 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -16,6 +16,13 @@
->>  /* Power stable to PERST# inactive from PCIe card Electromechanical Spec */
->>  #define PCIE_T_PVPERL_MS		100
->>  
->> +/*
->> + * End of conventional reset (PERST# de-asserted) to first configuration
->> + * request (device able to respond with a "Request Retry Status" completion),
->> + * from PCI Express Base Specification r6.0, section 6.6.1.
-> 
-> "PCIe r6.0, sec 6.6.1" to match typical style, e.g., the reference
-> just below.
-> 
-> Whoever applies this can take care of this.
+On Fri, Apr 12, 2024 at 11:33=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> On Thu, Jan 11, 2024 at 09:27:04AM +0100, Sergio Paracuellos wrote:
+> > The following warning appears when driver is compiled with W=3D1.
+> >
+> > CC      drivers/pci/controller/pcie-mt7621.o
+> > drivers/pci/controller/pcie-mt7621.c: In function =E2=80=98mt7621_pcie_=
+probe=E2=80=99:
+> > drivers/pci/controller/pcie-mt7621.c:228:49: error: =E2=80=98snprintf=
+=E2=80=99 output may
+> > be truncated before the last format character [-Werror=3Dformat-truncat=
+ion=3D]
+> > 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
+> >     |                                                 ^
+> > drivers/pci/controller/pcie-mt7621.c:228:9: note: =E2=80=98snprintf=E2=
+=80=99 output between
+> > 10 and 11 bytes into a destination of size 10
+> > 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
+> >     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Clean this up increasing destination buffer one byte.
+> >
+> > Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+> > Closes: https://lore.kernel.org/linux-pci/20240110212302.GA2123146@bhel=
+gaas/T/#t
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>
+> Krzysztof applied this to pci/controller/mt7621 for v6.10, thanks!  I
+> just pulled that branch into "next", so it should appear in the next
+> linux-next.
 
-To make it easier to apply, I sent v4 with the corrections. Thanks.
+Awesome. Thanks for letting me know.
 
-> 
->> +#define PCIE_T_RRS_READY_MS	100
-> 
-> Thanks a lot for doing this; there are many similar places we can
-> update to use this #define.
-> 
->>  /*
->>   * PCIe r6.0, sec 5.3.3.2.1 <PME Synchronization>
->>   * Recommends 1ms to 10ms timeout to check L2 ready.
->> -- 
->> 2.44.0
->>
-
--- 
-Damien Le Moal
-Western Digital Research
-
+Best regards,
+    Sergio Paracuellos
 
