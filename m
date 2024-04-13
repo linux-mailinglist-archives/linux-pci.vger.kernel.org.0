@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-6218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 309B78A3E90
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 23:01:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DE8B8A3E94
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 23:06:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59CBB1C20AC0
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 21:01:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04AF91F21632
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Apr 2024 21:06:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A985453E3B;
-	Sat, 13 Apr 2024 21:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD375466D;
+	Sat, 13 Apr 2024 21:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWmKSF1w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pg3TbGZZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F06D4D106
-	for <linux-pci@vger.kernel.org>; Sat, 13 Apr 2024 21:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8DF2901
+	for <linux-pci@vger.kernel.org>; Sat, 13 Apr 2024 21:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713042082; cv=none; b=r1R4ZwfFrFv65mQNW6JXlIsegAdQxrYKmRrQldY+Pg6ZqocF1iGBJkLzmaj9PWVaN41elVGV0eDbFHDhiWAYlDI7arUSvptANcvzjIBPVzXLEvTR0dEBH4My95GrvOlYBxDn7FuIOiyXHC8DxFyFaYgwFcOCnSloV945Cv7O02c=
+	t=1713042357; cv=none; b=m05awmTmUTDKMs56455LUAfpLgiKcvr01ZkaG2g3WzNklthS4X4PoO/H1rnvbBfJGojgpIo20fuNgggAJwHBSPmFcCMDOc3ohZKdPcjAtIxMKe5cuivJiBEE6QIE8oKtYJDXZ7/cNj0z0eemoi0kkeh7s6B7yyzJDWrgaHNvxw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713042082; c=relaxed/simple;
-	bh=AutqEzy2oqbK17kWUfhNtOruZpVN2n3EfnR+jf+IqdA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=a9+7ym9cFv051NUbHoWb8jKnQvnQubPXU0SGAaEtCdPe/s4NbK1eYFbUug7twBFoZbbCwEhlxzHXZkjQ/8TB7BAzVMApq69XunrhSUvmGVVsrWqv9f9DmBp+briP+10jOQZtgOUjf5tTR7sYbrheqoBBCYdDzH7i4fovgdfq8p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWmKSF1w; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1713042357; c=relaxed/simple;
+	bh=DWhsmcm3XPQV/1BHhz/IG8/6xSHXBoYJXRgQjdtxhtA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=bC8NL5yS8HkS/YM6elXmh8wAraOvTLYBR82VeJewdwUnlRaQv9nKWfvQEIdApOi2/YDU2ge2VqpVMu0uTVvpetgD0GrYPSf4dsep7foKXcwLzm/hKBm7Tq/++b/GZdyBR7w51u3wYqrrG42jek8X0t8+eJ910Q/z/azKKyRQyo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pg3TbGZZ; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so2903539a12.2
-        for <linux-pci@vger.kernel.org>; Sat, 13 Apr 2024 14:01:20 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56c5d05128dso1899037a12.0
+        for <linux-pci@vger.kernel.org>; Sat, 13 Apr 2024 14:05:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713042079; x=1713646879; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713042354; x=1713647154; darn=vger.kernel.org;
         h=content-transfer-encoding:autocrypt:subject:from:cc:to
          :content-language:user-agent:mime-version:date:message-id:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pw4qbR9A+GSAMahp/yy+ZAGWYyaHrjVRWo8Z7Wm7D0c=;
-        b=XWmKSF1wZzVyIN8wGHBCpsU9vBCAl1xZ4MC0mnCqHWwPP6/2sfK5XJ86Dls/wAmSIq
-         b9yGKpX2MmGoB07jDtv7JsxCh0bTM8/eJI6lhUPTW+ssr5XjAlb0et4dWzeUBqxDO1wO
-         6iud7nMdDCUNx96coYrMcqcR6mfnb0MDdEWCU4pa25pnYrSpOBZpVtmQ93LG8MeY3d+T
-         eRxg5xtKSrrVE4WBFN8HLWKKiUZF6szQtZKI1yUUZdcA1o0a6TaMFzij3HnaFYiUK12r
-         7+upuciLLFx30dA/Dd4ibeBaLWjkTIPU3rdfvtAWz58GMhugqB5feO7X/gtz7Rxp+Nhz
-         /q1g==
+        bh=fCsy7VDIm99QBLyzuqwru6Ud169oH1X0shiG+sTOPOo=;
+        b=Pg3TbGZZsdhfKuLHtyzHC3zye8C2bxcvpSa4pLY2DPWOB8RPJpbfVNAslS20XPZpYU
+         3U97GI4Oj11PUvomiCpiYsqu6y2v6S63EeCbE+RlbmXMaomJiE06jSk6lkIhKeGQz3Y5
+         D+QXU/XOZaNLUCRQ44XYa9y0IrBeRdkpCTX/Wt0hxhhnke6Ghdu6gidSuT8ymn3f/isC
+         9EXAYcN3mshtinpsuGWCZrwRwt7f4ApPEnQeeoIyHC4Y5YhT7eT+WWiuKvTAjGkcTSoa
+         uGkgyF1q4ZnLyt0G01EnqQy0DKie1D2HhGnQCqi4AbHo3KFZouWL3Wn3L7nyb8we8A/6
+         Ovqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713042079; x=1713646879;
+        d=1e100.net; s=20230601; t=1713042354; x=1713647154;
         h=content-transfer-encoding:autocrypt:subject:from:cc:to
          :content-language:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pw4qbR9A+GSAMahp/yy+ZAGWYyaHrjVRWo8Z7Wm7D0c=;
-        b=vIjQ/O9UqIyRD+yDCgGfEkeq9VjQxIpSiroUkyTRcyv5OCeu4nOWCp9DOGsMQSCoc6
-         WH93zaK6mg40ckl0PMmC45GGuXcKugmXby5Zb0F5Xe90/lTlkMASAYN+fmRoaIZ1GTY8
-         eiVsSRsqhwET0ftq1RbqfSgwMVoG9TKhoGBJjTy/ImtoZjh+104Yc/FXAYpm0Gadhyd/
-         LkV+sf4nKtHQY3kA3nqpF9zDmjcEyMFgSVCzu0omf1qP6lUUPoX7HpyUy+DTUCGPlS7a
-         0sxFqObdheHy8Foq6Jk/68wOjt00Db0A6WBEwJuL2iKML4VQY4QoMCmU5kfdR6aauzVa
-         Doxw==
-X-Gm-Message-State: AOJu0Yz9m+lOlSl1gZHLI+BJzaSODBemRg+ZY0vyRrBUj9+mucktV2tE
-	CjTwogvdY9cyA3RHfHbI/lDte4wUAjqkX3Pm1qc63ytf/WwNbgnyVEq6ZQ==
-X-Google-Smtp-Source: AGHT+IG7InbVUntzwC4Lf9SsNmnSYVuBbskE47+1v9VNdzfKC3Td5ULi5HitVmbPo2SDv3T282kZ1Q==
-X-Received: by 2002:a50:ab15:0:b0:56e:2493:e3c2 with SMTP id s21-20020a50ab15000000b0056e2493e3c2mr3683463edc.37.1713042079121;
-        Sat, 13 Apr 2024 14:01:19 -0700 (PDT)
+        bh=fCsy7VDIm99QBLyzuqwru6Ud169oH1X0shiG+sTOPOo=;
+        b=nrGk6ZAlF0M+9Pif6n6Wf60gVsGr8VtNT4pVLJlsELtbgvB4zMfpH9/wE7AxjUPwEV
+         6HbyCHzo5+jrasstD5xO+s2VYcwiK3/ZqMb2Op+u7ot2Wzho7YY9aPsjR4fbyv2MzGTW
+         RwALDkdpo9X3PZUMkuVOxJtEGBtJ3nHZ2KIunupxg/Nb0KjX9KQCkxveMLwjbrNZWaPP
+         X36u0O2cNCeyI8oOCzGvG5ugVaopmt0N7vU+Yn9eazox37CDK9pm7roGExtgmfLIPgyY
+         xknbTKuFvTO3VyZlCTYbt6dZGFVspz6UBq2e1CB9+Q0QOsP55xpevYiZxflyxGog4gPh
+         dJvA==
+X-Gm-Message-State: AOJu0Yy+nddQi79aj/fs9pTzkdukcvlKzI5a8SKC4ZxvLlqzzbHLe/er
+	viVkgbOC0du1DpRzZZuw0JSmhBnk/wPUYZb07z8AQ8Df4TNuTzlFhYGeAg==
+X-Google-Smtp-Source: AGHT+IFf5TSGSWGvml054SyjdxjlC5w5UxAb9x6Sl5BbyXnjr0d2uwXCFxUI+gQ1VY/zfWVg7ytNKg==
+X-Received: by 2002:a50:d54f:0:b0:56d:fbea:40ae with SMTP id f15-20020a50d54f000000b0056dfbea40aemr4093217edj.23.1713042353735;
+        Sat, 13 Apr 2024 14:05:53 -0700 (PDT)
 Received: from ?IPV6:2a01:c22:7b4e:ed00:81c3:86f6:8077:78ae? (dynamic-2a01-0c22-7b4e-ed00-81c3-86f6-8077-78ae.c22.pool.telefonica.de. [2a01:c22:7b4e:ed00:81c3:86f6:8077:78ae])
-        by smtp.googlemail.com with ESMTPSA id u12-20020a056402110c00b0056e51535a2esm2949664edv.82.2024.04.13.14.01.17
+        by smtp.googlemail.com with ESMTPSA id w4-20020a056402128400b0056e2b351956sm2976062edv.22.2024.04.13.14.05.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Apr 2024 14:01:18 -0700 (PDT)
-Message-ID: <5e01f46f-266f-4fb3-be8a-8cb9e566cd75@gmail.com>
-Date: Sat, 13 Apr 2024 23:01:17 +0200
+        Sat, 13 Apr 2024 14:05:53 -0700 (PDT)
+Message-ID: <ccb214ae-4c51-46b0-85f0-dba7ebe77743@gmail.com>
+Date: Sat, 13 Apr 2024 23:05:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,7 +78,8 @@ Content-Language: en-US
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] PCI: Constify pcibus_class
+Subject: [PATCH] PCI: Annotate pci_cache_line_size variables as
+ __ro_after_init
 Autocrypt: addr=hkallweit1@gmail.com; keydata=
  xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
  sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
@@ -125,26 +126,45 @@ Autocrypt: addr=hkallweit1@gmail.com; keydata=
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Constify pcibus_class. All users take a const struct class * argument.
+Annotate both variables as __ro_after_init, enforcing that they can't
+be changed after the init phase.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci.c   | 4 ++--
+ include/linux/pci.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 1325fbae2..4ec903291 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -95,7 +95,7 @@ static void release_pcibus_dev(struct device *dev)
- 	kfree(pci_bus);
- }
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 5f8edba78..e7ac4474b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -142,8 +142,8 @@ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
+  * the dfl or actual value as it sees fit.  Don't forget this is
+  * measured in 32-bit words, not bytes.
+  */
+-u8 pci_dfl_cache_line_size = L1_CACHE_BYTES >> 2;
+-u8 pci_cache_line_size;
++u8 pci_dfl_cache_line_size __ro_after_init = L1_CACHE_BYTES >> 2;
++u8 pci_cache_line_size __ro_after_init;
  
--static struct class pcibus_class = {
-+static const struct class pcibus_class = {
- 	.name		= "pci_bus",
- 	.dev_release	= &release_pcibus_dev,
- 	.dev_groups	= pcibus_groups,
+ /*
+  * If we set up a device for bus mastering, we need to check the latency
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 69b10f2fb..cf63be0c9 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2334,8 +2334,8 @@ extern int pci_pci_problems;
+ 
+ extern unsigned long pci_cardbus_io_size;
+ extern unsigned long pci_cardbus_mem_size;
+-extern u8 pci_dfl_cache_line_size;
+-extern u8 pci_cache_line_size;
++extern u8 pci_dfl_cache_line_size __ro_after_init;
++extern u8 pci_cache_line_size __ro_after_init;
+ 
+ /* Architecture-specific versions may override these (weak) */
+ void pcibios_disable_device(struct pci_dev *dev);
 -- 
 2.44.0
 
