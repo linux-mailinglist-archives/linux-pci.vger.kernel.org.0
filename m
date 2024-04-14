@@ -1,110 +1,88 @@
-Return-Path: <linux-pci+bounces-6225-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6226-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58C418A41F1
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 12:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C49568A4267
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 15:01:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D30491F212A7
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 10:52:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5171C1F212C6
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 13:01:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CF32E85A;
-	Sun, 14 Apr 2024 10:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F33AE20323;
+	Sun, 14 Apr 2024 13:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CWaP99Nr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i29OXoiC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB23B2E646
-	for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 10:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8331CF89
+	for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 13:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713091922; cv=none; b=ZPt0civuco9utFBwIXeZ307QlDyH0SayYuZTIwS3KQRz9f5lNUlfxWfgSmfgHJyJ0fdosW+X6WlcUKWASwbg6Fiz7gIE2wGq8+Sk3YI1o6RND2RhQF/fkek1ERFcR5leRU3MXxyUEXfGEEU2ibEJ4YlwtN73fMuq83cHIcZAzFw=
+	t=1713099667; cv=none; b=vDUUywFRddLNxLPhExzL07KrZOWWroE1QnynfUUbhuyJPvA9GQEb7LZkA0eGZ+93RcdOEoawMgmwIjMsNiN95q0g/91iqwDxj5GMNAFZutfeF1XGoCaRnyEjbitGmVN8R2nB4QGm+W43/91+bTNS2QDN//fB4S+A+RTFFo2buHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713091922; c=relaxed/simple;
-	bh=Fskwbnc4cdeRPyqLU32Z5qy2jXRijiOAUXtekazEu2U=;
+	s=arc-20240116; t=1713099667; c=relaxed/simple;
+	bh=+JGinkGUgeetfZe7KdVXDzaihf5FNpwgQUbEfhGRNT4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UpvKcHkIcKo8QfrT5nuaKHPllJhqjWXeQFJcOHO1J04Nv9ydOHM+XQ8rwi7zvAZnVeGhY8rV34tkAC6cxVUXOGjHZpkzzO7ZZvjY4aOLY1dv1L6HahRYjYLuSKY46OhVg2ZatEfVPOORxc0wS7hA1iNWZf7o8KUmSdMLE6vj1mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CWaP99Nr; arc=none smtp.client-ip=209.85.161.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=YmGjnOpFtZ6SyMOgE2L0BEgIlfPdNZ/wVH6l/YlyhDan5lXqXES995v72LeXtyEAGMyJ4KleWR70PpDbnVhcsxZyp5LNKc/zFTZNbQaPsK23o3Gnf+6CjJW/uzkPpgYou7BTlryreKAZCxiDn4dsWgf0yTrbMTFtXjqyi+P9lzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i29OXoiC; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5aa241232faso2079443eaf.0
-        for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 03:52:00 -0700 (PDT)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2a52c544077so1586522a91.1
+        for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 06:01:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713091920; x=1713696720; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713099665; x=1713704465; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=z86tADjA34jPDvp0sH69LSJjWH6CGCLDMrpq88/Jt4c=;
-        b=CWaP99NrQRXk3iFK/wgoPbgyUyGNFKCr4YFHVgLI5kt74TfD3aPIvUhRxQY35Y72gr
-         8US1fOCunZipK17hTN/LOMXEdlxau01EEf07VFTwJvlw3ts18vKMRyQ8LpQOU19oQYhD
-         lOQcO/ev3XiUEttz4LZOXi8DicZ9/bpTUpAO3tM5HiY3kYzQLnhKkZGlTKPb3+axyWtb
-         L7BbkVoyNfRPHCY+51XaJ4kWSuK5GRTPbpDr2N3drgzT7KO0mJ1PnbDSKJrQx04ySfmL
-         hcuq/+Ncj6C+V+qaDlmdU1nfDW3po9kZiKu3LAl4VWu1iSZY+uiCsB8KPQgDFlMt0MT1
-         1NZw==
+        bh=jvVS8fZDPWZ6C8BGJgV7+o1D33foaDJkSVY8UEluGQI=;
+        b=i29OXoiCjtgSjs2WBqyG62ltMF/8D8w132h2e+o9kphYy9ihfvaP5X0ibOC3K6AU65
+         c19NIO7yAlI/SCOT/LAH4wUZPYbAhG+eOyhb9v3l0eaZ0V/1dIF8f2Jm12aBSSWQfBiJ
+         +qhARDzTXliTEexQkXCq5tXgeXrAW8x0joKuj1H5aOXKp68kQc9IbDw7NU6QbMGvPPI2
+         f+yQx5JapUMoeUzhGPWomwr5MioNdAFi+QjlMAjgOoigA/wFD/MeqzlcAtrbJl4dH5ZX
+         EwyBn+TG/7jsv0vt6j/j/lF43WaE8hmLdjHw1KNrnLDIVatgg4fJ62xewf4KwTU48eoh
+         +50Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713091920; x=1713696720;
+        d=1e100.net; s=20230601; t=1713099665; x=1713704465;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z86tADjA34jPDvp0sH69LSJjWH6CGCLDMrpq88/Jt4c=;
-        b=it9BDn/BOzN49BvJOB7V3/AGDZSPmhEdoLDbvoW6qg0j7URG9L3nF0fz/FZCTg75f0
-         lm9myCHBIMg7DyWRvZ5B/L/oaQbz3dh/NwwyvG2jZA/zA5+So0ush1Mum/ktvVHQoZB9
-         2hACvvC7BJqHECP5sYkil0yc/+xMV+2R9M/UzNHg4vIxy2VMMGym21fK8mPZx5JrVfpD
-         sHa0qnNkMZs3TVZNp8UrqcW9s4skcVeKT4K2njgQmdB5TEsWdHzlMYmh/vqle+ganl0G
-         h/OS6pxz+kRJVTEzvUJVKR/Jf10MqQjSTOlvOdx/tg+8RvMZ4qY4m2mcq6k/8aZ/yYVp
-         MEcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnR8zQVU8TNHUpy3ioh6yb1STlFuNUcYu+9EUy3/G1SwW3plti2kXhGU/CtRJQw5yX/p9HI6EDQDVrGcw0xcnd9qL4cTUc7PVB
-X-Gm-Message-State: AOJu0Yw+fEzSGS0/Od/hRUy3EMYyILTzTmhltM9rsidf89n5D2GL3/fV
-	4tpS+rhnCZkGjUUCQpgDUUejhm9F50AjOk3iRLOECXyLIM2yLtXF1cvtGb/UAQ==
-X-Google-Smtp-Source: AGHT+IHG73jN0JyTXE5YMG9IYvVbYRtG5PEk5LWJ00N9WZxttyYSYCMKrPxspcM2aGpT1bTva1r7xA==
-X-Received: by 2002:a05:6808:218c:b0:3c5:eddb:47c1 with SMTP id be12-20020a056808218c00b003c5eddb47c1mr9182957oib.5.1713091919486;
-        Sun, 14 Apr 2024 03:51:59 -0700 (PDT)
-Received: from thinkpad ([120.60.136.171])
-        by smtp.gmail.com with ESMTPSA id im22-20020a170902bb1600b001dcfaf4db22sm5944167plb.2.2024.04.14.03.51.50
+        bh=jvVS8fZDPWZ6C8BGJgV7+o1D33foaDJkSVY8UEluGQI=;
+        b=T68IGFzTyxfrWh9LYv5Bz2w7BU6VbWcQQtyRc60Z+Ws/IqGar8ZUNMRCjswF5vkd+e
+         tXVcCg/zHndGXVzVxovpdSncKgaB+4vI8YNlGSa18biH1R1/XtwQ4YR7Ky0FKnAW61i8
+         IHNfBYi6cgpfOGcQ0FDz5GPJf5WsbOe3rmSIWKauM6wpjDMWBk4mYlXobk1nGDPbitTl
+         Ldu3VIZ9+6BCP1tremjpLEc+iZciuIZCYO1kN8+8PbLFwH47A2PqIPHK4VqdeGRwJ3HV
+         NHlHUk9IGof9+P3h5dURM9yc7OkLZiZvjoJiUm0OOpvAlVw8IHfKEDC5IMtmf01SjYKQ
+         MsPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUn9AIZztwnBO7hPV+8gUkm15dQ6VOyaGgkII12ydc9BZfT25l7aeaYSnU6QAVRS0fBPPqJNhYN0DvtXRkUT5d2tMy0+dOGZKU+
+X-Gm-Message-State: AOJu0Yx5/AukXuabPT1/xoL7VDEnPYXzyvJB1HiqJSEoIcNLTYxy9aPS
+	90+855h1PnRqk7zcwe05O23tmzMXAa4wmTpgVG9pd+ovigWP7k9hgVS8njagag==
+X-Google-Smtp-Source: AGHT+IFGLYOEvtQ17A4IP+js2HGKJp/jc1XXKTbOcw6VnyVS54fNx/L51bEWNL/vMzMdch8Lr03TXg==
+X-Received: by 2002:a17:90a:2f65:b0:2a0:2fb3:c1ff with SMTP id s92-20020a17090a2f6500b002a02fb3c1ffmr5676444pjd.15.1713099664882;
+        Sun, 14 Apr 2024 06:01:04 -0700 (PDT)
+Received: from thinkpad ([103.246.195.153])
+        by smtp.gmail.com with ESMTPSA id x15-20020a17090a164f00b002a5cf58aae2sm5989216pje.11.2024.04.14.06.01.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Apr 2024 03:51:59 -0700 (PDT)
-Date: Sun, 14 Apr 2024 16:21:48 +0530
+        Sun, 14 Apr 2024 06:01:04 -0700 (PDT)
+Date: Sun, 14 Apr 2024 18:30:58 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
+To: Kishon Vijay Abraham I <kvijayab@amd.com>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, Niklas Cassel <cassel@kernel.org>,
-	linux-arm-kernel@axis.com, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v12 8/8] PCI: endpoint: Remove "core_init_notifier" flag
-Message-ID: <20240414105148.GC2294@thinkpad>
-References: <20240327-pci-dbi-rework-v12-8-082625472414@linaro.org>
- <20240412202216.GA14590@bhelgaas>
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for
+ outbound window memory allocation
+Message-ID: <20240414130058.GA2231@thinkpad>
+References: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
+ <37cfa724-f9ed-41ef-bad4-f00246a4ee8a@amd.com>
+ <20240320112928.GB2525@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -114,77 +92,158 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240412202216.GA14590@bhelgaas>
+In-Reply-To: <20240320112928.GB2525@thinkpad>
 
-On Fri, Apr 12, 2024 at 03:22:16PM -0500, Bjorn Helgaas wrote:
-> On Wed, Mar 27, 2024 at 02:43:37PM +0530, Manivannan Sadhasivam wrote:
-> > "core_init_notifier" flag is set by the glue drivers requiring refclk from
-> > the host to complete the DWC core initialization. Also, those drivers will
-> > send a notification to the EPF drivers once the initialization is fully
-> > completed using the pci_epc_init_notify() API. Only then, the EPF drivers
-> > will start functioning.
+On Wed, Mar 20, 2024 at 04:59:28PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Mar 20, 2024 at 03:26:41PM +0530, Kishon Vijay Abraham I wrote:
+> > Hi Mani,
 > > 
-> > For the rest of the drivers generating refclk locally, EPF drivers will
-> > start functioning post binding with them. EPF drivers rely on the
-> > 'core_init_notifier' flag to differentiate between the drivers.
-> > Unfortunately, this creates two different flows for the EPF drivers.
+> > On 3/17/2024 11:39 AM, Manivannan Sadhasivam wrote:
+> > > As proposed during the last year 'PCI Endpoint Subsystem Open Items
+> > > Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
+> > > framework for managing the endpoint outbound window memory allocation.
+> > > 
+> > > PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
+> > > driver from the start for managing the memory required to map the host
+> > > address space (outbound) in endpoint. Even though it works well, it
+> > > completely defeats the purpose of the 'Genalloc framework', a general
+> > > purpose memory allocator framework created to avoid various custom memory
+> > > allocators in the kernel.
+> > > 
+> > > The migration to Genalloc framework is done is such a way that the existing
+> > > API semantics are preserved. So that the callers of the EPC mem APIs do not
+> > > need any modification (apart from the pcie-designware-epc driver that
+> > > queries page size).
+> > > 
+> > > Internally, the EPC mem driver now uses Genalloc framework's
+> > > 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
+> > > based on the requested size as like the previous allocator. And the
+> > > page size passed during pci_epc_mem_init() API is used as the minimum order
+> > > for the memory allocations.
+> > > 
+> > > During the migration, 'struct pci_epc_mem' is removed as it is seems
+> > > redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
+> > > is now used to hold the address windows of the endpoint controller.
+> > > 
+> > > [1] https://lpc.events/event/17/contributions/1419/
 > > 
-> > So to avoid that, let's get rid of the "core_init_notifier" flag and follow
-> > a single initialization flow for the EPF drivers. This is done by calling
-> > the dw_pcie_ep_init_notify() from all glue drivers after the completion of
-> > dw_pcie_ep_init_registers() API. This will allow all the glue drivers to
-> > send the notification to the EPF drivers once the initialization is fully
-> > completed.
+> > Thank you for working on this!
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-designware-ep.c |  14 +-
+> > >   drivers/pci/endpoint/pci-epc-mem.c              | 182 +++++++++---------------
+> > >   include/linux/pci-epc.h                         |  25 +---
+> > >   3 files changed, 81 insertions(+), 140 deletions(-)
+> > > 
+> > .
+> > .
+> > > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> > > index a9c028f58da1..f9e6e1a6aeaa 100644
+> > > --- a/drivers/pci/endpoint/pci-epc-mem.c
+> > > +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> > > @@ -4,37 +4,18 @@
+> > >    *
+> > >    * Copyright (C) 2017 Texas Instruments
+> > >    * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> > > + *
+> > > + * Copyright (C) 2024 Linaro Ltd.
+> > > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > >    */
+> > > +#include <linux/genalloc.h>
+> > >   #include <linux/io.h>
+> > >   #include <linux/module.h>
+> > >   #include <linux/slab.h>
+> > >   #include <linux/pci-epc.h>
+> > > -/**
+> > > - * pci_epc_mem_get_order() - determine the allocation order of a memory size
+> > > - * @mem: address space of the endpoint controller
+> > > - * @size: the size for which to get the order
+> > > - *
+> > > - * Reimplement get_order() for mem->page_size since the generic get_order
+> > > - * always gets order with a constant PAGE_SIZE.
+> > > - */
+> > > -static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+> > > -{
+> > > -	int order;
+> > > -	unsigned int page_shift = ilog2(mem->window.page_size);
+> > > -
+> > > -	size--;
+> > > -	size >>= page_shift;
+> > > -#if BITS_PER_LONG == 32
+> > > -	order = fls(size);
+> > > -#else
+> > > -	order = fls64(size);
+> > > -#endif
+> > > -	return order;
+> > > -}
+> > > -
+> > >   /**
+> > >    * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
+> > >    * @epc: the EPC device that invoked pci_epc_mem_init
+> > > @@ -48,17 +29,11 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+> > >   			   struct pci_epc_mem_window *windows,
+> > >   			   unsigned int num_windows)
+> > >   {
+> > > -	struct pci_epc_mem *mem = NULL;
+> > > -	unsigned long *bitmap = NULL;
+> > > -	unsigned int page_shift;
+> > > +	struct pci_epc_mem_window *window = NULL;
+> > >   	size_t page_size;
+> > > -	int bitmap_size;
+> > > -	int pages;
+> > >   	int ret;
+> > >   	int i;
+> > > -	epc->num_windows = 0;
+> > > -
+> > >   	if (!windows || !num_windows)
+> > >   		return -EINVAL;
+> > > @@ -70,45 +45,51 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+> > >   		page_size = windows[i].page_size;
+> > >   		if (page_size < PAGE_SIZE)
+> > >   			page_size = PAGE_SIZE;
+> > > -		page_shift = ilog2(page_size);
+> > > -		pages = windows[i].size >> page_shift;
+> > > -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> > > -		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> > > -		if (!mem) {
+> > > +		windows[i].pool = gen_pool_create(ilog2(page_size), -1);
+> > > +		if (!windows[i].pool) {
+> > >   			ret = -ENOMEM;
+> > > -			i--;
+> > > -			goto err_mem;
+> > > +			goto err_free_mem;
+> > > +		}
+> > > +
+> > > +		gen_pool_set_algo(windows[i].pool, gen_pool_first_fit_order_align,
+> > > +				  NULL);
+> > > +
+> > > +		windows[i].virt_base = ioremap(windows[i].phys_base, windows[i].size);
+> > 
+> > Do you have to ioremap upfront the entire window? This could be a problem in
+> > 32-bit systems which has limited vmalloc space. I have faced issues before
+> > when trying to map the entire memory window and had to manipulate vmalloc
+> > boot parameter.
+> > 
+> > I'd prefer we find a way to do ioremap per allocation as before.
+> > 
 > 
-> Thanks for doing this!  I think this is a significantly nicer
-> solution than core_init_notifier was.
+> Hmm, thanks for pointing it out. Current genalloc implementation works on the
+> virtual address as opposed to physical address (that might be due to majority of
+> its users managing the virtual address only). That's the reason I did ioremap of
+> the entire window upfront.
 > 
-> One question: both qcom and tegra194 call dw_pcie_ep_init_registers()
-> from an interrupt handler, but they register that handler in a
-> different order with respect to dw_pcie_ep_init().
-> 
-> I don't know what actually starts the process that leads to the
-> interrupt, but if it's dw_pcie_ep_init(), then one of these (qcom, I
-> think) must be racy:
+> Let me see if we can somehow avoid this.
 > 
 
-Your analysis is correct. But there is no race observed as of now since the IRQ
-will only be enabled by configuring the endpoint using configfs interface and
-right now I use an init script to do that. By that time, the driver would've
-already probed completely.
+Looks like we have to introduce some good amount of change to support dynamic
+ioremap with genalloc. But IMO it doesn't worth the effort to introduce these
+changes for some old systems which are supposed to go away soon.
 
-But there is a slight chance that if the driver gets loaded as a module and the
-userspace script starts configuring the endpoint interface using inotify watch
-or something similar, then race could occur since the IRQ handler may not be
-registered at that point.
+So I think we can keep the old and genalloc based allocators and use the old one
+only for 32bit systems and genalloc allocator for the rest.
 
->   qcom_pcie_ep_probe
->     dw_pcie_ep_init                                             <- A
->     qcom_pcie_ep_enable_irq_resources
->       devm_request_threaded_irq(qcom_pcie_ep_perst_irq_thread)  <- B
-> 
->   qcom_pcie_ep_perst_irq_thread
->     qcom_pcie_perst_deassert
->       dw_pcie_ep_init_registers
-> 
->   tegra_pcie_dw_probe
->     tegra_pcie_config_ep
->       devm_request_threaded_irq(tegra_pcie_ep_pex_rst_irq)      <- B
->       dw_pcie_ep_init                                           <- A
-> 
->   tegra_pcie_ep_pex_rst_irq
->     pex_ep_event_pex_rst_deassert
->       dw_pcie_ep_init_registers
-> 
-> Whatever the right answer is, I think qcom and tegra194 should both
-> order dw_pcie_ep_init() and the devm_request_threaded_irq() the same
-> way.
-> 
-
-Agree. The right way is to register the IRQ handler first and then do
-dw_pcie_ep_init(). I will fix it in the qcom driver.
-
-Thanks for spotting!
+What do you think?
 
 - Mani
 
