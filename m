@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-6223-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6224-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0276E8A41DC
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 12:39:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BF488A41E4
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 12:44:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A55DE281B1C
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 10:39:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4978D1C20AFC
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 10:44:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 910CC2D7B8;
-	Sun, 14 Apr 2024 10:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8E332D7B8;
+	Sun, 14 Apr 2024 10:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ofepjH0w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YLSq0jO5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469F41D537;
-	Sun, 14 Apr 2024 10:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C9F1865;
+	Sun, 14 Apr 2024 10:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713091177; cv=none; b=tKnCSZOQDaPq8SEoz1xeCf8IQgRTNKthmHD0AwKDnWfI6qZhSOOQy7BmU+kq2+DPsVxG/SyiBZVp41SBtE/C/AZ3i/JbmXZv84asskmSavTt7/aRb/uUwn6Gd9lsVDpwx6Lzr9xzDWYsx6HU3orjfAiI2hwcvlwjveRbpcn3qaI=
+	t=1713091465; cv=none; b=pIQ2eFj4GTisDFNS1P9jo7G1h8ZpfoqjsZByMOCK2PPzgQ6sYNuTYR727wvljc6R/rUkFiRmQA1+F6+XvnhHlN09mVN3RqN4oZlljHsGVwJ9I6fDZcSPy9Hrx11xhrQDL6Essa164L5O4UjjSKZedXlk3hEzlNHYSIzYjmrDSdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713091177; c=relaxed/simple;
-	bh=JbtOUWHVC7wNzadBF8bYSYuSrVY77oLf7wqjRB8KLZE=;
+	s=arc-20240116; t=1713091465; c=relaxed/simple;
+	bh=jScTQYNuKSdQRN71THl1woAyTI/mIsL2raQkX/Y0bi0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qfkWH7wfCOHXYxaCjGWiECTNRgjuy51xwlGT110PjwZz0Wre1mLfy5BSnpUanx3/p2hvrC/8m/kb2WO+jHPwAUlCeFfba3CSDy1vmdNRJCBlEpfNaytZ3IAFtzhxsagXnMsn1eF1qmIEl2kQozjF0qsg2oNb7toMmD5WpZvtNC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ofepjH0w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 963E6C072AA;
-	Sun, 14 Apr 2024 10:39:28 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=nWLippfyOH72rHuyZPK44aii6cmLT7ApAAAFecYA+zvG+mTHPVPiSUih8pT4UUxM/conGxd8+FvCubp0JTV0qgPXel9nub0L4/yH8R5lIuZwpyhx02mim+lSKhSb49V4N3Iz7RBkjfvQYo4T+FckuB85ndVNdUi82Z2a6tgxM/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YLSq0jO5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC6FC072AA;
+	Sun, 14 Apr 2024 10:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713091176;
-	bh=JbtOUWHVC7wNzadBF8bYSYuSrVY77oLf7wqjRB8KLZE=;
+	s=k20201202; t=1713091465;
+	bh=jScTQYNuKSdQRN71THl1woAyTI/mIsL2raQkX/Y0bi0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ofepjH0wUf3Os10OXvzt5lHI9qsH/w9nNsvcYVyBhHvdV4m2cw1ohO/Vis0QJOZPT
-	 QNyIPOOSPN9/npG3/acx1bApWHvcRg4inaWGF7oI86g09jSvOtGs3JJuOQmxR5+DqK
-	 V/5DIXQc2ngSjOvui34lFC+GSfpozW/Y1/RcAEHh13yGpVo7SBlIDUUVXg8NY9TQw0
-	 pBiSrPRv47ciuhlJwVmwEsGvS1Jq7za0ry0lmYTjh0Gn3/rXYJWaXhUKZXdofrNYTe
-	 2JXfiqIDu/+DKNmMNI7krvG53xb65g67PP1mGaNc9TkDe1l4j5Xn0zP+PRvAt0VObl
-	 j1ne7+aCuG2ig==
-Date: Sun, 14 Apr 2024 11:39:26 +0100
+	b=YLSq0jO5BrG1cv9zv6kr3rQyeJsfGcqSJLz+Q7xeorHaa5lcEYIxKgLs8BydAqvJP
+	 q00VFElDlEjTcopyOUK1waF3ME2oKgyJyJuhNQ8v/L8qH/uHwBUxhuIj2eGfyki+TS
+	 cLaDO8XBRUmtvlQO17LNXikT/+ciPNG1G1mOLE6MzEOdH1OptnO0yOhbRwnIdnsFhS
+	 4KWPi5WnG8WA941iN29H2UDTT3MDtEtM6u0lugw1xKbrjNJbZqgMCGeunfLGAPErlS
+	 AiJgH3QgEOBt5HNed+WHbbgABU7V7RXOdFVKKS3RjTj/GAM8+Uc4/AZvtIHjdNwcLA
+	 sV8f64OIiMB0Q==
+Date: Sun, 14 Apr 2024 11:44:14 +0100
 From: Simon Horman <horms@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Marcel Holtmann <marcel@holtmann.org>,
@@ -77,10 +77,11 @@ Cc: Marcel Holtmann <marcel@holtmann.org>,
 	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v7 13/16] power: sequencing: implement the pwrseq core
-Message-ID: <20240414103926.GB645060@kernel.org>
+Subject: Re: [PATCH v7 14/16] power: pwrseq: add a driver for the PMU module
+ on the QCom WCN chipsets
+Message-ID: <20240414104414.GC645060@kernel.org>
 References: <20240410124628.171783-1-brgl@bgdev.pl>
- <20240410124628.171783-14-brgl@bgdev.pl>
+ <20240410124628.171783-15-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,56 +90,84 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240410124628.171783-14-brgl@bgdev.pl>
+In-Reply-To: <20240410124628.171783-15-brgl@bgdev.pl>
 
-On Wed, Apr 10, 2024 at 02:46:25PM +0200, Bartosz Golaszewski wrote:
+On Wed, Apr 10, 2024 at 02:46:26PM +0200, Bartosz Golaszewski wrote:
 
 ...
 
-> +/**
-> + * pwrseq_device_register() - Register a new power sequencer.
-> + * @config: Configuration of the new power sequencing device.
-> + *
-> + * The config structure is only used during the call and can be freed after
-> + * the function returns. The config structure *must* have the parent device
-> + * as well as the match() callback and at least one target set.
-> + *
-> + * Returns:
-> + * Returns the address of the new pwrseq device or ERR_PTR() on failure.
-> + */
-> +struct pwrseq_device *
-> +pwrseq_device_register(const struct pwrseq_config *config)
+> +static int pwrseq_qcom_wcn_probe(struct platform_device *pdev)
 > +{
-> +	struct pwrseq_device *pwrseq;
-> +	int ret;
+> +	struct device *dev = &pdev->dev;
+> +	struct pwrseq_qcom_wcn_ctx *ctx;
+> +	struct pwrseq_config config;
+> +	int i, ret;
 > +
-> +	if (!config->parent || !config->match || !config->targets ||
-> +	    !config->targets[0])
-> +		return ERR_PTR(-EINVAL);
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
 > +
-> +	pwrseq = kzalloc(sizeof(*pwrseq), GFP_KERNEL);
-> +	if (!pwrseq)
-> +		return ERR_PTR(-ENOMEM);
+> +	ctx->of_node = dev->of_node;
 > +
-> +	pwrseq->dev.type = &pwrseq_device_type;
-> +	pwrseq->dev.bus = &pwrseq_bus;
-> +	pwrseq->dev.parent = config->parent;
-> +	device_set_node(&pwrseq->dev, dev_fwnode(config->parent));
-> +	dev_set_drvdata(&pwrseq->dev, config->drvdata);
+> +	ctx->pdata = of_device_get_match_data(dev);
+> +	if (!ctx->pdata)
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "Failed to obtain platform data\n");
 > +
-> +	pwrseq->id = ida_alloc(&pwrseq_ida, GFP_KERNEL);
-> +	if (pwrseq->id < 0) {
-> +		kfree(pwrseq);
+> +	ctx->regs = devm_kcalloc(dev, ctx->pdata->num_vregs,
+> +				 sizeof(*ctx->regs), GFP_KERNEL);
+> +	if (!ctx->regs)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < ctx->pdata->num_vregs; i++)
+> +		ctx->regs[i].supply = ctx->pdata->vregs[i];
+> +
+> +	ret = devm_regulator_bulk_get(dev, ctx->pdata->num_vregs, ctx->regs);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, PTR_ERR(ctx->regs),
+> +				     "Failed to get all regulators\n");
 
 Hi Bartosz,
 
-pwrseq is freed on the line above,
-so it should not be dereferenced on the line below.
+It looks like ctx->regs is not an error pointer here,
+should this be:
+
+		return dev_err_probe(dev, ret, ...
 
 Flagged by Smatch.
 
-> +		return ERR_PTR(pwrseq->id);
-> +	}
+> +
+> +	ctx->bt_gpio = devm_gpiod_get_optional(dev, "bt-enable", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ctx->bt_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
+> +				     "Failed to get the Bluetooth enable GPIO\n");
+> +
+> +	ctx->wlan_gpio = devm_gpiod_get_optional(dev, "wlan-enable",
+> +						 GPIOD_OUT_LOW);
+> +	if (IS_ERR(ctx->wlan_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->wlan_gpio),
+> +				     "Failed to get the WLAN enable GPIO\n");
+> +
+> +	ctx->clk = devm_clk_get_optional(dev, NULL);
+> +	if (IS_ERR(ctx->clk))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->clk),
+> +				     "Failed to get the reference clock\n");
+> +
+> +	memset(&config, 0, sizeof(config));
+> +
+> +	config.parent = dev;
+> +	config.owner = THIS_MODULE;
+> +	config.drvdata = ctx;
+> +	config.match = pwrseq_qcom_wcn_match;
+> +	config.targets = pwrseq_qcom_wcn_targets;
+> +
+> +	ctx->pwrseq = devm_pwrseq_device_register(dev, &config);
+> +	if (IS_ERR(ctx->pwrseq))
+> +		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
+> +				     "Failed to register the power sequencer\n");
+> +
+> +	return 0;
+> +}
 
 ...
 
