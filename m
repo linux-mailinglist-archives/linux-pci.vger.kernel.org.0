@@ -1,173 +1,193 @@
-Return-Path: <linux-pci+bounces-6224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BF488A41E4
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 12:44:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58C418A41F1
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 12:52:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4978D1C20AFC
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 10:44:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D30491F212A7
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Apr 2024 10:52:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8E332D7B8;
-	Sun, 14 Apr 2024 10:44:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CF32E85A;
+	Sun, 14 Apr 2024 10:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YLSq0jO5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CWaP99Nr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C9F1865;
-	Sun, 14 Apr 2024 10:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB23B2E646
+	for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 10:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713091465; cv=none; b=pIQ2eFj4GTisDFNS1P9jo7G1h8ZpfoqjsZByMOCK2PPzgQ6sYNuTYR727wvljc6R/rUkFiRmQA1+F6+XvnhHlN09mVN3RqN4oZlljHsGVwJ9I6fDZcSPy9Hrx11xhrQDL6Essa164L5O4UjjSKZedXlk3hEzlNHYSIzYjmrDSdw=
+	t=1713091922; cv=none; b=ZPt0civuco9utFBwIXeZ307QlDyH0SayYuZTIwS3KQRz9f5lNUlfxWfgSmfgHJyJ0fdosW+X6WlcUKWASwbg6Fiz7gIE2wGq8+Sk3YI1o6RND2RhQF/fkek1ERFcR5leRU3MXxyUEXfGEEU2ibEJ4YlwtN73fMuq83cHIcZAzFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713091465; c=relaxed/simple;
-	bh=jScTQYNuKSdQRN71THl1woAyTI/mIsL2raQkX/Y0bi0=;
+	s=arc-20240116; t=1713091922; c=relaxed/simple;
+	bh=Fskwbnc4cdeRPyqLU32Z5qy2jXRijiOAUXtekazEu2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWLippfyOH72rHuyZPK44aii6cmLT7ApAAAFecYA+zvG+mTHPVPiSUih8pT4UUxM/conGxd8+FvCubp0JTV0qgPXel9nub0L4/yH8R5lIuZwpyhx02mim+lSKhSb49V4N3Iz7RBkjfvQYo4T+FckuB85ndVNdUi82Z2a6tgxM/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YLSq0jO5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC6FC072AA;
-	Sun, 14 Apr 2024 10:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713091465;
-	bh=jScTQYNuKSdQRN71THl1woAyTI/mIsL2raQkX/Y0bi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YLSq0jO5BrG1cv9zv6kr3rQyeJsfGcqSJLz+Q7xeorHaa5lcEYIxKgLs8BydAqvJP
-	 q00VFElDlEjTcopyOUK1waF3ME2oKgyJyJuhNQ8v/L8qH/uHwBUxhuIj2eGfyki+TS
-	 cLaDO8XBRUmtvlQO17LNXikT/+ciPNG1G1mOLE6MzEOdH1OptnO0yOhbRwnIdnsFhS
-	 4KWPi5WnG8WA941iN29H2UDTT3MDtEtM6u0lugw1xKbrjNJbZqgMCGeunfLGAPErlS
-	 AiJgH3QgEOBt5HNed+WHbbgABU7V7RXOdFVKKS3RjTj/GAM8+Uc4/AZvtIHjdNwcLA
-	 sV8f64OIiMB0Q==
-Date: Sun, 14 Apr 2024 11:44:14 +0100
-From: Simon Horman <horms@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Amit Pundir <amit.pundir@linaro.org>,
-	Xilin Wu <wuxilin123@gmail.com>, linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v7 14/16] power: pwrseq: add a driver for the PMU module
- on the QCom WCN chipsets
-Message-ID: <20240414104414.GC645060@kernel.org>
-References: <20240410124628.171783-1-brgl@bgdev.pl>
- <20240410124628.171783-15-brgl@bgdev.pl>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UpvKcHkIcKo8QfrT5nuaKHPllJhqjWXeQFJcOHO1J04Nv9ydOHM+XQ8rwi7zvAZnVeGhY8rV34tkAC6cxVUXOGjHZpkzzO7ZZvjY4aOLY1dv1L6HahRYjYLuSKY46OhVg2ZatEfVPOORxc0wS7hA1iNWZf7o8KUmSdMLE6vj1mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CWaP99Nr; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5aa241232faso2079443eaf.0
+        for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 03:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713091920; x=1713696720; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=z86tADjA34jPDvp0sH69LSJjWH6CGCLDMrpq88/Jt4c=;
+        b=CWaP99NrQRXk3iFK/wgoPbgyUyGNFKCr4YFHVgLI5kt74TfD3aPIvUhRxQY35Y72gr
+         8US1fOCunZipK17hTN/LOMXEdlxau01EEf07VFTwJvlw3ts18vKMRyQ8LpQOU19oQYhD
+         lOQcO/ev3XiUEttz4LZOXi8DicZ9/bpTUpAO3tM5HiY3kYzQLnhKkZGlTKPb3+axyWtb
+         L7BbkVoyNfRPHCY+51XaJ4kWSuK5GRTPbpDr2N3drgzT7KO0mJ1PnbDSKJrQx04ySfmL
+         hcuq/+Ncj6C+V+qaDlmdU1nfDW3po9kZiKu3LAl4VWu1iSZY+uiCsB8KPQgDFlMt0MT1
+         1NZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713091920; x=1713696720;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z86tADjA34jPDvp0sH69LSJjWH6CGCLDMrpq88/Jt4c=;
+        b=it9BDn/BOzN49BvJOB7V3/AGDZSPmhEdoLDbvoW6qg0j7URG9L3nF0fz/FZCTg75f0
+         lm9myCHBIMg7DyWRvZ5B/L/oaQbz3dh/NwwyvG2jZA/zA5+So0ush1Mum/ktvVHQoZB9
+         2hACvvC7BJqHECP5sYkil0yc/+xMV+2R9M/UzNHg4vIxy2VMMGym21fK8mPZx5JrVfpD
+         sHa0qnNkMZs3TVZNp8UrqcW9s4skcVeKT4K2njgQmdB5TEsWdHzlMYmh/vqle+ganl0G
+         h/OS6pxz+kRJVTEzvUJVKR/Jf10MqQjSTOlvOdx/tg+8RvMZ4qY4m2mcq6k/8aZ/yYVp
+         MEcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnR8zQVU8TNHUpy3ioh6yb1STlFuNUcYu+9EUy3/G1SwW3plti2kXhGU/CtRJQw5yX/p9HI6EDQDVrGcw0xcnd9qL4cTUc7PVB
+X-Gm-Message-State: AOJu0Yw+fEzSGS0/Od/hRUy3EMYyILTzTmhltM9rsidf89n5D2GL3/fV
+	4tpS+rhnCZkGjUUCQpgDUUejhm9F50AjOk3iRLOECXyLIM2yLtXF1cvtGb/UAQ==
+X-Google-Smtp-Source: AGHT+IHG73jN0JyTXE5YMG9IYvVbYRtG5PEk5LWJ00N9WZxttyYSYCMKrPxspcM2aGpT1bTva1r7xA==
+X-Received: by 2002:a05:6808:218c:b0:3c5:eddb:47c1 with SMTP id be12-20020a056808218c00b003c5eddb47c1mr9182957oib.5.1713091919486;
+        Sun, 14 Apr 2024 03:51:59 -0700 (PDT)
+Received: from thinkpad ([120.60.136.171])
+        by smtp.gmail.com with ESMTPSA id im22-20020a170902bb1600b001dcfaf4db22sm5944167plb.2.2024.04.14.03.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Apr 2024 03:51:59 -0700 (PDT)
+Date: Sun, 14 Apr 2024 16:21:48 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, Niklas Cassel <cassel@kernel.org>,
+	linux-arm-kernel@axis.com, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v12 8/8] PCI: endpoint: Remove "core_init_notifier" flag
+Message-ID: <20240414105148.GC2294@thinkpad>
+References: <20240327-pci-dbi-rework-v12-8-082625472414@linaro.org>
+ <20240412202216.GA14590@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240410124628.171783-15-brgl@bgdev.pl>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240412202216.GA14590@bhelgaas>
 
-On Wed, Apr 10, 2024 at 02:46:26PM +0200, Bartosz Golaszewski wrote:
+On Fri, Apr 12, 2024 at 03:22:16PM -0500, Bjorn Helgaas wrote:
+> On Wed, Mar 27, 2024 at 02:43:37PM +0530, Manivannan Sadhasivam wrote:
+> > "core_init_notifier" flag is set by the glue drivers requiring refclk from
+> > the host to complete the DWC core initialization. Also, those drivers will
+> > send a notification to the EPF drivers once the initialization is fully
+> > completed using the pci_epc_init_notify() API. Only then, the EPF drivers
+> > will start functioning.
+> > 
+> > For the rest of the drivers generating refclk locally, EPF drivers will
+> > start functioning post binding with them. EPF drivers rely on the
+> > 'core_init_notifier' flag to differentiate between the drivers.
+> > Unfortunately, this creates two different flows for the EPF drivers.
+> > 
+> > So to avoid that, let's get rid of the "core_init_notifier" flag and follow
+> > a single initialization flow for the EPF drivers. This is done by calling
+> > the dw_pcie_ep_init_notify() from all glue drivers after the completion of
+> > dw_pcie_ep_init_registers() API. This will allow all the glue drivers to
+> > send the notification to the EPF drivers once the initialization is fully
+> > completed.
+> 
+> Thanks for doing this!  I think this is a significantly nicer
+> solution than core_init_notifier was.
+> 
+> One question: both qcom and tegra194 call dw_pcie_ep_init_registers()
+> from an interrupt handler, but they register that handler in a
+> different order with respect to dw_pcie_ep_init().
+> 
+> I don't know what actually starts the process that leads to the
+> interrupt, but if it's dw_pcie_ep_init(), then one of these (qcom, I
+> think) must be racy:
+> 
 
-...
+Your analysis is correct. But there is no race observed as of now since the IRQ
+will only be enabled by configuring the endpoint using configfs interface and
+right now I use an init script to do that. By that time, the driver would've
+already probed completely.
 
-> +static int pwrseq_qcom_wcn_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pwrseq_qcom_wcn_ctx *ctx;
-> +	struct pwrseq_config config;
-> +	int i, ret;
-> +
-> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +
-> +	ctx->of_node = dev->of_node;
-> +
-> +	ctx->pdata = of_device_get_match_data(dev);
-> +	if (!ctx->pdata)
-> +		return dev_err_probe(dev, -ENODEV,
-> +				     "Failed to obtain platform data\n");
-> +
-> +	ctx->regs = devm_kcalloc(dev, ctx->pdata->num_vregs,
-> +				 sizeof(*ctx->regs), GFP_KERNEL);
-> +	if (!ctx->regs)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < ctx->pdata->num_vregs; i++)
-> +		ctx->regs[i].supply = ctx->pdata->vregs[i];
-> +
-> +	ret = devm_regulator_bulk_get(dev, ctx->pdata->num_vregs, ctx->regs);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, PTR_ERR(ctx->regs),
-> +				     "Failed to get all regulators\n");
+But there is a slight chance that if the driver gets loaded as a module and the
+userspace script starts configuring the endpoint interface using inotify watch
+or something similar, then race could occur since the IRQ handler may not be
+registered at that point.
 
-Hi Bartosz,
+>   qcom_pcie_ep_probe
+>     dw_pcie_ep_init                                             <- A
+>     qcom_pcie_ep_enable_irq_resources
+>       devm_request_threaded_irq(qcom_pcie_ep_perst_irq_thread)  <- B
+> 
+>   qcom_pcie_ep_perst_irq_thread
+>     qcom_pcie_perst_deassert
+>       dw_pcie_ep_init_registers
+> 
+>   tegra_pcie_dw_probe
+>     tegra_pcie_config_ep
+>       devm_request_threaded_irq(tegra_pcie_ep_pex_rst_irq)      <- B
+>       dw_pcie_ep_init                                           <- A
+> 
+>   tegra_pcie_ep_pex_rst_irq
+>     pex_ep_event_pex_rst_deassert
+>       dw_pcie_ep_init_registers
+> 
+> Whatever the right answer is, I think qcom and tegra194 should both
+> order dw_pcie_ep_init() and the devm_request_threaded_irq() the same
+> way.
+> 
 
-It looks like ctx->regs is not an error pointer here,
-should this be:
+Agree. The right way is to register the IRQ handler first and then do
+dw_pcie_ep_init(). I will fix it in the qcom driver.
 
-		return dev_err_probe(dev, ret, ...
+Thanks for spotting!
 
-Flagged by Smatch.
+- Mani
 
-> +
-> +	ctx->bt_gpio = devm_gpiod_get_optional(dev, "bt-enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(ctx->bt_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
-> +				     "Failed to get the Bluetooth enable GPIO\n");
-> +
-> +	ctx->wlan_gpio = devm_gpiod_get_optional(dev, "wlan-enable",
-> +						 GPIOD_OUT_LOW);
-> +	if (IS_ERR(ctx->wlan_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->wlan_gpio),
-> +				     "Failed to get the WLAN enable GPIO\n");
-> +
-> +	ctx->clk = devm_clk_get_optional(dev, NULL);
-> +	if (IS_ERR(ctx->clk))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->clk),
-> +				     "Failed to get the reference clock\n");
-> +
-> +	memset(&config, 0, sizeof(config));
-> +
-> +	config.parent = dev;
-> +	config.owner = THIS_MODULE;
-> +	config.drvdata = ctx;
-> +	config.match = pwrseq_qcom_wcn_match;
-> +	config.targets = pwrseq_qcom_wcn_targets;
-> +
-> +	ctx->pwrseq = devm_pwrseq_device_register(dev, &config);
-> +	if (IS_ERR(ctx->pwrseq))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
-> +				     "Failed to register the power sequencer\n");
-> +
-> +	return 0;
-> +}
-
-...
+-- 
+மணிவண்ணன் சதாசிவம்
 
