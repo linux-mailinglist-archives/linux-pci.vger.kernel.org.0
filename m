@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-6283-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6284-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 316E38A59C1
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 20:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 494D08A59C8
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 20:22:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 541651C20F28
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 18:22:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71BA31C21153
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 18:22:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 266B513C3C9;
-	Mon, 15 Apr 2024 18:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E6813C3FD;
+	Mon, 15 Apr 2024 18:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVLu2y9P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fE2uEqRI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F54613AA48;
-	Mon, 15 Apr 2024 18:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DB413C3D4;
+	Mon, 15 Apr 2024 18:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713205283; cv=none; b=EjmthONO9HnLgUPaBun8AUzyNzC6kuzZzMWZEjBiT4aqCOr0/DLL870qBFfMQCkwnm/RhzFFw+VGZHlWnPgfAfjrhAIrAItsUzwTQkp+3rCof4O1YoBjwlqW6Ga1xpZMpFBVSvAQUODhLtEGHHaBM+X0ZFE+vzECHhRkGCWMglo=
+	t=1713205284; cv=none; b=CBONvkaWX4PPKK2pbjBTbhustWGPCnkIXMQjGm2PjnzAGg1RIqBXv2OtrzjO0sIuTGl8Hu1iDRfIGvi0uw0A8L3QGRkY92fAexXOXLVMzKAFWDpJfEIr1Vdq+mcqx+NLWyZ09qY1krbyQ8Zejxa6x6KSyiHzLqOW4b069h4eYpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713205283; c=relaxed/simple;
-	bh=Y3sQe52k1yICnNk6VsdMH27lecC3GY2DlpewVQmBUI0=;
+	s=arc-20240116; t=1713205284; c=relaxed/simple;
+	bh=Bi/K2DoHrhLP69oUmfE7G8EDr42IWdwAMdYVVLQinQ0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lcrfwvrUcypGNagHDwmgjINQBBNiqxexaUCTUqerWpxWCWsLx6ZkwARRmg7kzAKrDUzhtKY6wzWc8PQy3RBpgGRs+OOxIWrnkN42W1Eo/wGKTGP0FqZoo+orYwmuldZnzobaPZjSI9xOkmIhfzS9cgwPeUrxPC7yQbJCo5Ee1fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WVLu2y9P; arc=none smtp.client-ip=209.85.160.43
+	 MIME-Version; b=cP11pKW0D1eaBqq2GV7DnS4UaqcxvkKMUB96/SWJyDVeZioQmCoXylIDlhkNyJlPbASsDCnk9/XIpS8a1VhICwiVQJnvlIJOCecvopp1YqeqZlgSwyos2/7PlxRqhPIS2MfwdU2EENc2TBkwKm3GxH9+i8nhsbcm6RvZ2meOlXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fE2uEqRI; arc=none smtp.client-ip=209.85.161.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-22edbb5dd40so1375385fac.1;
-        Mon, 15 Apr 2024 11:21:21 -0700 (PDT)
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a9ec68784cso2100159eaf.2;
+        Mon, 15 Apr 2024 11:21:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713205281; x=1713810081; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1713205282; x=1713810082; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u509fpdTL3x8h0sKnxRrMd2Q/Sm/IRVlvPpLmK46sCY=;
-        b=WVLu2y9PWr7IT5mHJ5TO6wVGVWXM+Mp52aYTMbd8s9FKg8R1hBLRAmkagCCbLM5zbm
-         WDuoE09nRBtsRNoY2aO22MxpaxNysl6aZ52kO5vCzIrWLmbDOqN0aBY7WIV7RqfyUyEl
-         8sn5QQI+PoYY7YJbpzK3rDzuEp/Zj27p2vyAHGh47C6BDPU9j1hPUmsd5c3rkYBB60GV
-         ipPXI/pYsEv4wgM842XCn80TGTe3LhEL8xZMASTHzAKiFJ3OI4epcDjPBQwgZSpTaXzt
-         UCz/CnbA+nUvgIzzsviPPMHKs4awZ+PkhpT2jlQb4gXCs6tLevtZ6WfRhOUD7HwnhQMX
-         qgeA==
+        bh=CTnP6eipSs1lQbgXBNYS3udbxY0JHas09pkOXVb4n1w=;
+        b=fE2uEqRIHdvYvWf2qg1OII8T2eQ5VaXiWmv//NPWUWSYr2hLlJCjmF83YG/PV/ZEVH
+         CTbdChqr10thcNnPPaj3q1ErMukXzaVX5P+Goua7dgeQtzSbYQ/37vYoF5mIBhtiTBxY
+         TQNdtaaL0xKOvWKGfoDDfT3VZ37/dejAIxVU75CwfK/QaZDJHb7KQdPGtIalHstGbNOs
+         sBjhf6OFYE/ghIiBtYahdrBDbSakU6xLbFi9vt5PRfGF7IfK0EuahfoSLYOLaxbm3cOH
+         E1UPcV2MLa+WLSBCKv2w3utgBwMpf8LAPDvey1Ttde8j8ag2c9e/FquYsiLI+xfQ+AIU
+         5BRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713205281; x=1713810081;
+        d=1e100.net; s=20230601; t=1713205282; x=1713810082;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u509fpdTL3x8h0sKnxRrMd2Q/Sm/IRVlvPpLmK46sCY=;
-        b=WDr24KAUU0LsYvvdSHbziQ8bjzSpCD6hVaBIFr6ppvTPjx/Dln1Y5UYme7c1FMYnZ5
-         HjT9Pnj1ERlt9OKlkbyPkh0J/o68zjvfjcCs0apthAp9sKiWNzQRTZn72dG5ulHyvyS2
-         UpQGE47ekb1gMrvmA6J2isAj8eu1C/tlMi0ns6s7wiWGBL+5knIB3iykl9FEkWnjpRMu
-         E184ITh70Mb9xnWHqcvfidxnqF/+e5io9ZvPxGQ01uvnZ1X8f8lndGptlqKmdc5Q8PxV
-         i5K8ijixxYGybfZh7YjM8DF13KV2zx3bOrwJBO5NmQFD7mU82WbrDBIQLqOR1T61QEnA
-         A4kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoDC3U5ETV0zgsWbFQ7Uj7tQHOIuEBNnA5+kcOCunxljs6ce/ob8gXSXdJFB1V5aqYUaEohXoYKqSL+ZBKNkP0LLA782FazF+H2GhZMVfTZ70pNklmXlnam0WcuMBVKYJ4ma3yIm2HF/w2keNnVU34FMsi8rf6Bc2sKddWAe8mNblRfejhKKXh64/6sqSmS/ejTEpzFj70LrSq7xAkc37cngGflDJCCEJFn4OH2WpkN1YT5u5QFc6QrpvNAuU=
-X-Gm-Message-State: AOJu0YwdO5TRR9x2iTlMtzK9y8mpVkY63nQ+3P3QdLOEZOYGLP1LZdgw
-	ycjX/Hf296TQfJDKD7yQ9NuSpYl42A8kYWn6kjqSlCXtoQqoaS6H
-X-Google-Smtp-Source: AGHT+IH/8B0e9NM5WliOP9w/PF1ZRgCApTZi+SCJC4O7CiUjYmCpNmOGWSyNpvTqihZDA+VKDZbWTg==
-X-Received: by 2002:a05:6870:f694:b0:233:6e01:69b8 with SMTP id el20-20020a056870f69400b002336e0169b8mr159816oab.3.1713205280834;
-        Mon, 15 Apr 2024 11:21:20 -0700 (PDT)
+        bh=CTnP6eipSs1lQbgXBNYS3udbxY0JHas09pkOXVb4n1w=;
+        b=pWMZfZ1upI2upk+DULXJGujdaja4Ux9bhoy0vksxiHqhHRHhiHPYox7ZmFNSrfzxrV
+         u6Ntr25D9hPsPvQX0GkH2tWN9xMFkbseoQuvdTyo3ygKeNfuW7PNImZ4m5hTDBfsQkoa
+         Upa7aoiPjk6FZPm0+l+f9KZJUXGN3O18ly0Ll20yyp/KUgZXkt/1OZbyyG4n86N4Id+h
+         +gakOcKvxVVA01oNA/e9K4YTzyqZNohLCjz+Jsl4720YxrdPtdYfHXue2GkIJmSgpKzA
+         yGOcCF45a10zJNgHuVfAfoXk5xHhm0kB6VLRc1qnMAVz50zKHwQIZSUK1SBOXh8Hr4e7
+         gABQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW15RxRrc7Nz2dmPsJOt2PkRTV92fONaUZ9GiitNs67w+Ev+Coj0lrN1+yPR/297BFGAkWQ7gxfcLvK3kQIeNqEd/ihYPFTqo5drkRLNIH8dupZ9kF/aBuuSj81C7Vwh19GdoJReacT3j57hQ46a/zYrnoRwRFBDkXCQA2OGdmDgmKrwLAXkdhPhO7Hi/MXroUuKkwOnUUQeozO0u5vlPK19oD23EMWyx0t79PfpyBvKqApECkt2k9XpyIVu4w=
+X-Gm-Message-State: AOJu0Yz8zktAFvxawW9kaOTMbfztdx1NJospZ5p1v1SDhjcZHRQBQ/d7
+	HxblcdreVRmRjM7qYwwqwpB+pxfd1Lgn4yvRRiYiK1iSRbC/BMYvgePOg3r1x4U=
+X-Google-Smtp-Source: AGHT+IHg5ugq1lohZEm0ehzMxEcdWVwoP8XQwZRTCLQ22SHdryJbt4bEX3o8wVWphYHKU7n0nCcShA==
+X-Received: by 2002:a4a:1482:0:b0:5ac:c39b:3a7a with SMTP id 124-20020a4a1482000000b005acc39b3a7amr1127677ood.1.1713205282432;
+        Mon, 15 Apr 2024 11:21:22 -0700 (PDT)
 Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id x4-20020a056820104400b005a4dc7abc01sm2177494oot.11.2024.04.15.11.21.19
+        by smtp.gmail.com with ESMTPSA id x4-20020a056820104400b005a4dc7abc01sm2177494oot.11.2024.04.15.11.21.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 11:21:20 -0700 (PDT)
+        Mon, 15 Apr 2024 11:21:22 -0700 (PDT)
 From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -88,9 +88,9 @@ To: Bjorn Andersson <andersson@kernel.org>,
 	linux-phy@lists.infradead.org,
 	linux-clk@vger.kernel.org
 Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Subject: [PATCH v3 4/7] PCI: qcom: Add support for IPQ9574
-Date: Mon, 15 Apr 2024 13:20:49 -0500
-Message-Id: <20240415182052.374494-5-mr.nuke.me@gmail.com>
+Subject: [PATCH v3 5/7] dt-bindings: phy: qcom,ipq8074-qmp-pcie: add ipq9574 gen3x2 PHY
+Date: Mon, 15 Apr 2024 13:20:50 -0500
+Message-Id: <20240415182052.374494-6-mr.nuke.me@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240415182052.374494-1-mr.nuke.me@gmail.com>
 References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
@@ -102,51 +102,81 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for the PCIe on IPQ9574. The main difference from ipq6018
-is that the "iface" clock is not necessarry. Add a special case in
-qcom_pcie_get_resources_2_9_0() to handle this.
+The IPQ9574 gen3x2 PHY is very similar to IPQ6018. It requires two
+extra clocks named "anoc" and "snoc". Document this, and add a
+new compatible string for this PHY.
 
 Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ .../phy/qcom,ipq8074-qmp-pcie-phy.yaml        | 36 ++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 14772edcf0d3..10560d6d6336 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1101,15 +1101,19 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--	int ret;
-+	int ret, num_clks = ARRAY_SIZE(res->clks) - 1;
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml
+index 634cec5d57ea..89949f4e89db 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq8074-qmp-pcie-phy.yaml
+@@ -19,19 +19,24 @@ properties:
+       - qcom,ipq6018-qmp-pcie-phy
+       - qcom,ipq8074-qmp-gen3-pcie-phy
+       - qcom,ipq8074-qmp-pcie-phy
++      - qcom,ipq9574-qmp-gen3x2-pcie-phy
  
--	res->clks[0].id = "iface";
-+	res->clks[0].id = "rchng";
- 	res->clks[1].id = "axi_m";
- 	res->clks[2].id = "axi_s";
- 	res->clks[3].id = "axi_bridge";
--	res->clks[4].id = "rchng";
+   reg:
+     items:
+       - description: serdes
  
--	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-+	if (!of_device_is_compatible(dev->of_node, "qcom,pcie-ipq9574")) {
-+		res->clks[4].id = "iface";
-+		num_clks++;
-+	}
+   clocks:
+-    maxItems: 3
++    minItems: 3
++    maxItems: 5
+ 
+   clock-names:
++    minItems: 3
+     items:
+       - const: aux
+       - const: cfg_ahb
+       - const: pipe
++      - const: anoc
++      - const: snoc
+ 
+   resets:
+     maxItems: 2
+@@ -61,6 +66,35 @@ required:
+   - clock-output-names
+   - "#phy-cells"
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,ipq6018-qmp-pcie-phy
++              - qcom,ipq8074-qmp-gen3-pcie-phy
++              - qcom,ipq8074-qmp-pcie-phy
++    then:
++      properties:
++        clocks:
++          maxItems: 3
++        clock-names:
++          maxItems: 3
 +
-+	ret = devm_clk_bulk_get(dev, num_clks, res->clks);
- 	if (ret < 0)
- 		return ret;
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,ipq9574-qmp-gen3x2-pcie-phy
++    then:
++      properties:
++        clocks:
++          minItems: 5
++        clock-names:
++          minItems: 5
++
+ additionalProperties: false
  
-@@ -1664,6 +1668,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-+	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_2_9_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
- 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+ examples:
 -- 
 2.40.1
 
