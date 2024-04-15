@@ -1,159 +1,268 @@
-Return-Path: <linux-pci+bounces-6277-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6278-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05C328A58A7
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 19:07:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC9AE8A599D
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 20:15:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B290B2858D6
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 17:07:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 65DA31F22CFB
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 18:15:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FBFB8624E;
-	Mon, 15 Apr 2024 17:03:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718248248E;
+	Mon, 15 Apr 2024 18:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="S+2Xh3yf"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Mk7KiGMn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021007.outbound.protection.outlook.com [52.101.128.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A8F82862
-	for <linux-pci@vger.kernel.org>; Mon, 15 Apr 2024 17:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713200619; cv=none; b=kFA5HtZuqn7Q+tPWXyVktNJbvcD30jE+u9aIIEQiYD7I87vRDKk11SI5rEPaAfazY75eqySP9VqD7ws33145UVP5Oywtznrg1uRLUFUScqjVg9tqS3aRJkkmsBoR7rWTND1EiZ6iPqlun3vEp9CrJ0NwyrKTqkFXk+KpBQcHAOk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713200619; c=relaxed/simple;
-	bh=egibTauTOK5De6SrAZsOC/2NVkpwGlv29Ym3R/RrsZM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q2ptgCcrQrWAVkLYWUqOgaZ06hvgf+Wo03HkjpIoYvmvmH0x+TV606WXxYBBclZaihwQLBnVGC9VeQvlU53g1IgX3Pf5WT2qTGFWbktd1T5Ci+JIr4yBvWZnaCJZTOiyD5ICbdCrNQytW6mAIwIVcHaajV5Z1gy3AAtJCjLBPFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=S+2Xh3yf; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ecf05fd12fso3345212b3a.2
-        for <linux-pci@vger.kernel.org>; Mon, 15 Apr 2024 10:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1713200618; x=1713805418; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O4XnyCkVtMil3j8A/KjvpJf48jXr01BLYuVmlXnWMII=;
-        b=S+2Xh3yfocQEr4U7oungQ9wWoas84CArQ5iojn3Jhxjg1TrR+U9MkCtaGNUzfdaYQ4
-         MMrYMjrOHTlj+tbeEssAovI0oz1ao6nlGeW5qP0a7SymcRXQWhx3YejF28sF5aHcn1Gt
-         Ik9mvV5L00m+PIpOZFqwuQniQcbJylajPnGnr9hG/Mi2DwfYIw8VB0YxeQad8s3guGYu
-         6pc5fat7iv5BLOeaCi5PYs1XkBJGGEBvVRziGRH71ngc33KsAi6WiWRLMgdLvY7P/4XS
-         kJkeH/ft//1Pd1QqJ0P2MItbXxxXX6NOKMi1UwXYK6MgKoN21o06Zlbpvedl4VlqKRfP
-         Dtvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713200618; x=1713805418;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O4XnyCkVtMil3j8A/KjvpJf48jXr01BLYuVmlXnWMII=;
-        b=QSePl8yGFJlZ821zMoBQesTSWEEw9tLuPL5kqmJMqr67P5TGY9qoTJs9gKew3eQ48U
-         rLnzcFqvw+5QBrdGDOPI/6sR/q2MIdQIL+8p4pc1yxertE6X+XZAVJvya46s4C1n289o
-         ZKcdU3ql4pkamXUkFa4CgJHoxo5ls9Bd2LS09ShHzFpO+uRONT9g4cypS9lPF95dH+sE
-         TkrMIeTPxmpj9bRACcTlSFywH+/kJpY5NOX/vNaNqRNulgZtVCznhGdWqaZbLX5vOrg7
-         IDgLHoMpSrwFDoECykioYLMWITFwrsxczPYA/Q9hWO3vyV+ZZJ+sBEb7ZwiiydgTh705
-         CtTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXV+OT1aUyq014yl5f5Nfl+LT+IT+c+WLnNvdfBJWiy4SBFtYha1JKbG47lO/G+KdEQYgz+q4oOYai8jKoZsUYujLwqoLYVaFUK
-X-Gm-Message-State: AOJu0YyjuWNB/e6UB6O+N5egFV7+xP0Dn0xm2fTsFKg6d5WiiEvPh1Kf
-	4ek+Vi4rPi9+V4886o7JVb79ZaBV3T1H0Ls77xvevC756g9GRzHlAFcB9JBLb4s=
-X-Google-Smtp-Source: AGHT+IEZ3MSxzXsGAz+ZLkxl8S7XJ3zcQ2NIg6LwPVYoJf81xxbiq6s9OomXLtGiFPJD3YOtkLtUPQ==
-X-Received: by 2002:a05:6a00:acb:b0:6ed:21d5:fc2c with SMTP id c11-20020a056a000acb00b006ed21d5fc2cmr12682862pfl.26.1713200617123;
-        Mon, 15 Apr 2024 10:03:37 -0700 (PDT)
-Received: from sunil-pc.Dlink ([106.51.187.230])
-        by smtp.gmail.com with ESMTPSA id 1-20020a056a00072100b006ed045e3a70sm7433158pfm.25.2024.04.15.10.03.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 10:03:36 -0700 (PDT)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Robert Moore <robert.moore@intel.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Andrei Warkentin <andrei.warkentin@intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v4 20/20] ACPI: pci_link: Clear the dependencies after probe
-Date: Mon, 15 Apr 2024 22:31:13 +0530
-Message-Id: <20240415170113.662318-21-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240415170113.662318-1-sunilvl@ventanamicro.com>
-References: <20240415170113.662318-1-sunilvl@ventanamicro.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E63E13A406;
+	Mon, 15 Apr 2024 18:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713204933; cv=fail; b=XxieeS0efKxUZA6iwjagtQDxohYbX2aBtXxcbcF/dB5LlzCQUp5IbcPfI5y53xrqdRQNvi9Jj5exkhunUXmtQrf/o6appVZitWdJtl4pCeQrBjjF9v9bMZAzkOrl/h2kWh0B8h4EViPl0PlIvgFkG3j9GrPLakyAqizkUNaGJFw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713204933; c=relaxed/simple;
+	bh=jHUdvvNs+Zql2D8HxNLWkmDxi1ZVL9zHRJ/tZyjVwtg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YiXMkv1SKf+xZ4HuKBjr7MyUgk8SbxQ5m4fg4vutW9BO3fTrnby0ysTF95PXe/XBX/1mHQF/lTEgws/8Vq13MwD0LONerFbLv5edFQV71SciSM36VvMBuzs/gStZ9M8jGpuPH4mhgw0O/LqQHJMdKV6FTfOjJC51fiojnzHfBbc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Mk7KiGMn; arc=fail smtp.client-ip=52.101.128.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z6NCHq8qAQwd4V1I+NcTcru1puDTyCwv1KgXs+CBBhcDZ98G9HaVkg4Z6FyCdN/3GIZHyKSiVYFhtbTpGkgJ/zjs/bo1Arxo9YvszjP04L6HaSIbG5ky1GZvBidq/FQrJjCereVjVyCZCOKzmBEEZe1F65rTDIk3NTMOuVWpPmRDu8x2VZ1LXK8YLRyjpnUW182nhYJtYJO8ykzbv4zq+It2KEioVIG6HQOrI2KkpNDg+txAFHf8LFbrXLYX+seS4RuS1IGTtw1xBW8GgbxKTrpJ4hWzqCrgB+Gf4d0f5IcgQqYS1kvGRi+AE/vcYubFI7FyzA2qDRZqg3180i1Djw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CKlHCtro5eiV4RPpoW/fEKWPLIMgNtDUsPnQkL3ueeQ=;
+ b=Dh4OYQbIBDPssYWW1Ue7/ny46iYnzwrbG4kgzWeoc1Woykkefqzpikcniz6HWWzXe7mm5dY65zsp7ILes1ZbgwsJb71kYeTTYP742uKlUkm2yY+jxM+yeWb0ZxnPVpMFtw/6EIlbIdjRLaU1VJelU57YY5ts75uOB95/4SMvrQo5E0zU8SLdA63FZuNe5wB3vG8B3b4sjowpzdqIFoc150Hp13jiRV5W1bYQ0wmU2OoX7jAJvlDh67I4cHV09AXdRgzHFT4EgvPrNSO0lipZC6KCh57DiZBhVgHewJ0KtJ8EvJCJ7HOk0ZiXgWNQeg+YqQ0pEXjWgdLLRXzUIRYp3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CKlHCtro5eiV4RPpoW/fEKWPLIMgNtDUsPnQkL3ueeQ=;
+ b=Mk7KiGMnFIi1ddiPH/BKFl4AG9sdCI2FlOlYJUdWTln9XhurqBVuG2fX9N4W3kS3wfsSRB7MgPnG3ltFJF0KgI1sUV38gPMDiuJ+AQx23KLcgdB9uFrNPcs16t62mYR99IEzB5n/f6w8Yjk3T/wfh8Ls0rtR+E7lqzqj61UyGwQ=
+Received: from TYZP153MB0796.APCP153.PROD.OUTLOOK.COM (2603:1096:400:28d::11)
+ by SEZP153MB0994.APCP153.PROD.OUTLOOK.COM (2603:1096:101:1eb::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.6; Mon, 15 Apr
+ 2024 18:15:24 +0000
+Received: from TYZP153MB0796.APCP153.PROD.OUTLOOK.COM
+ ([fe80::46d0:1c9a:b530:b4c5]) by TYZP153MB0796.APCP153.PROD.OUTLOOK.COM
+ ([fe80::46d0:1c9a:b530:b4c5%7]) with mapi id 15.20.7519.000; Mon, 15 Apr 2024
+ 18:15:24 +0000
+From: Saurabh Singh Sengar <ssengar@microsoft.com>
+To: =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Bjorn
+ Helgaas <helgaas@kernel.org>
+CC: Saurabh Singh Sengar <ssengar@linux.microsoft.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "alexander.stein@ew.tq-group.com"
+	<alexander.stein@ew.tq-group.com>, Dexuan Cui <decui@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
+Thread-Topic: [EXTERNAL] Re: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
+Thread-Index: AQHaaln0LoL5M9udFkyInQrJU6JCMbEgANSAgEnr8sA=
+Date: Mon, 15 Apr 2024 18:15:24 +0000
+Message-ID:
+ <TYZP153MB0796837C6C017FFA20E94C5CBE092@TYZP153MB0796.APCP153.PROD.OUTLOOK.COM>
+References:
+ <20240227171458.GA16664@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20240228152222.GA272403@bhelgaas> <20240228172255.GA3579062@rocinante>
+In-Reply-To: <20240228172255.GA3579062@rocinante>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=3be92694-a260-4380-a5b2-d04b33afaed0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2024-04-15T18:14:21Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZP153MB0796:EE_|SEZP153MB0994:EE_
+x-ms-office365-filtering-correlation-id: 5a910d68-c769-475b-8859-08dc5d78052e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?2XmF+g97+CGevLrCb1DVM1Qcb0McGNTeq+YV6qswziFFlM0xnTC1xx4bsN?=
+ =?iso-8859-2?Q?dwDflmWt451KZ3UNl99+y43AYdDLfRiHvbM/rk7Du0opTerk6LoVKUXDLF?=
+ =?iso-8859-2?Q?qqzJZSyb4YU3srLxU5SiogW77s1UO4vLNAzI4qbhYlObawQMu7HzlsvFAl?=
+ =?iso-8859-2?Q?ZfDjCggJah7JYGNsrnQ6Kyf1hEJPa0yibLNjfVyySjGBVbhhIhth4jfdKB?=
+ =?iso-8859-2?Q?F3/Nclj3qfqu36TKKFroCA+n1oefWdtlpWy0gOlqz1NOyaq0oTGr92FbDF?=
+ =?iso-8859-2?Q?XvjIL47Aj5jrU6+mE4yKTWlDOfxDT5lZyMOyp52BHnkr38rQVzFUPnVR/5?=
+ =?iso-8859-2?Q?Pv4JQHdYszV+ACMR4DONV75+HLFVxhdyel6NnDKFjqAp9+5IRnYnWlXawl?=
+ =?iso-8859-2?Q?f7E8nOm1LRB4OCQD9eD+gbchDcR82Np0iav3R0iyFyakqM6D6OYM1vssaX?=
+ =?iso-8859-2?Q?/rAs58CoKcd8v6iuKC8Aocx/VhUsOMl+o3Unz5zSmxDMPVvDgZwfs+nvxB?=
+ =?iso-8859-2?Q?Ob+Yipb1GxDXL5CNhH00uVnKDwKCSMUS0RrenzC7wM2dZ8XLhC2+bdErwk?=
+ =?iso-8859-2?Q?gLfUKW6g6B0hGvFOUeYP8Q7Bmn94bfKeiFeA+jqFJoj6g1Gt6HyiX4QJJ4?=
+ =?iso-8859-2?Q?zCpdBNSz5Exoh4os1tPoSekd42HXmPLokyIH8A9eiyzDMHsg0kwv24YvPN?=
+ =?iso-8859-2?Q?Z+w8+FWY7mYxatbMk793goIu1lVi7Z4bg1qhhfE+uW4bajL20ccP0yG6Yo?=
+ =?iso-8859-2?Q?Yq62uC5YWOBavocxbe1KUwADQ3Y29yjbMHgptDRyyqbxzEJxC9axrBAIry?=
+ =?iso-8859-2?Q?rNtW6iUDbsfK8WiIYxqcLRVbYRvSI8J4ULmc6QbwF6QW21bgWInVpBCiqZ?=
+ =?iso-8859-2?Q?RUuPgiiqJ9nqTCK4sS5CtYexTQxlzEZhMPu+goj5xP3JR+OO7snOhEnKWX?=
+ =?iso-8859-2?Q?Ngjv7DvK6WBCjMhrkGOqriqcko4TpXHgjlHIa7C3FQlp9rce/+nsTAtla+?=
+ =?iso-8859-2?Q?iAatFl05yHfwhFCpHO8/r761bu2mfs+tQnMj3P5zj1wozfAfCmLYnjYmzo?=
+ =?iso-8859-2?Q?ZTJhZLkqlshC5CkXzUYteI5J5dKYYya4+iuHwv+HslkfQSDgtyhxr6HXFT?=
+ =?iso-8859-2?Q?S/MSy/rfU4W9geU/AEcHC9PuXEG1UTJ088OodmU1LSGrTDT4noBeftaMAS?=
+ =?iso-8859-2?Q?7vICzTPDc6YMyFGABAGbq9S+AN13IqD4kZOthG5ondUkdKFHnHe7NWAFvk?=
+ =?iso-8859-2?Q?aG8e7J5+TJ8HmfJpNLAX2o9D+YIroaIK3nRANuQyBnbumzjKEiOdp/rPch?=
+ =?iso-8859-2?Q?UwFBEY2ON4KDDUvJ8mmTg83lFQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZP153MB0796.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?xjQ4Ebi461jpFFudoGMz1i2Hgm6OC98PDpDyo8hs5uNKeLNJ3dM2kKi0iB?=
+ =?iso-8859-2?Q?lWx6ZqvQ2/weX3NhdGCSIKaAIQn/0kO7sTGLbFT2MtV63kJbkjQXKCSgTR?=
+ =?iso-8859-2?Q?Mqke0TYsUuWTQaYowzWs2k7w0F7oH/PpJOE0jCztoaV4PJS9wpUS0b33Gf?=
+ =?iso-8859-2?Q?CmNxiIChxqwEbIi50jjAYr0XxjUK0lg9ISgXYbuPzhZL9MD4M8lW98bwyo?=
+ =?iso-8859-2?Q?81SfOYAT8379QSq0PIQxLQ7z/A4X77B41JA3rcBaimkvYh6ThEjBzTMe58?=
+ =?iso-8859-2?Q?N24EOc+W6puC/iK5ulv+lwiAZn7b5RBS70zHdtbzE6NTW4v3rJEpOFzSPl?=
+ =?iso-8859-2?Q?uEYRP48+tjGZYJX+XszxUkldKFxpCbfSm4VW5cWVhP5e1OvaL12vbAYVcb?=
+ =?iso-8859-2?Q?1z3S8KDB7jBLYXjmIqdBMMPH4jpypmgt4JXrwfaYiEojrQcGmfwx3GijV2?=
+ =?iso-8859-2?Q?B7OrKgR0/GpGB5P+EuHNzQdx8/2r+VBg59w9hRavZkFA7qoYBBfbnb7ZYR?=
+ =?iso-8859-2?Q?p86pFRFivuW64LCyLfMMynWX3AwX7qtXt85VMgkqDBYVV0F22i0PHLctf2?=
+ =?iso-8859-2?Q?OvEeZMN2DUw2vIVXYD82s4hGK0TL/fj53W0AzD5K/4aSjIa2ErvNiTU7tR?=
+ =?iso-8859-2?Q?8SZt4p/ROGISpG6le+MVxbrwReuCD7q8+BHwHiozKZA8RZEV2nnc3IBHId?=
+ =?iso-8859-2?Q?NuqGemuNfynge1BxRIdLTlePYoS867GX6I1oo1WUYhulWfNpgHlRVttCUL?=
+ =?iso-8859-2?Q?6Zu91LzqTTna6+dzDTEhdah1QQOZ74yKBHdn8GCS9+3+bGQEKvrG5akirt?=
+ =?iso-8859-2?Q?njrI6x4m/6ucs+4Xvib+EN5E6oNPsAkpvidWbNCzx2GLEniemNnRtTELvt?=
+ =?iso-8859-2?Q?c4FyzxgJNehFd+EHvMIJcUMozVoyeUwOBVK/4RQg4nOwnj36abxNxmFBu9?=
+ =?iso-8859-2?Q?alyTDNNzK1LjrsfIzhFAHbXEd55FqlqTjAUQsQKkKTOfo2JME5k/5ExTLn?=
+ =?iso-8859-2?Q?mnAo1uu2tEMHR2Tpow8Et1Ai1Eh99Eabepy1N91/NNSEJU54/r4cDzug+H?=
+ =?iso-8859-2?Q?+wTv8owTMIhpuEAuv2zhjucDohkq3Yyu+0DPqXrtZ8e+1fISz8fYRQtHf1?=
+ =?iso-8859-2?Q?oIU9WQctmkXplnFwyG5RznYInwWFZB9I3+cCI2mu0MEJks2ymjijoRCUoF?=
+ =?iso-8859-2?Q?pRyC/x6F69TQFRKpOMoEUtXYkY0cImw56ynkeo+xGJ0rAupksJqJm8TD0r?=
+ =?iso-8859-2?Q?6ifOcLCq5bOcumc3iieSgJ/IN4vjZtrnIgjKf6x6xduw6lWq2RFXgpKt0K?=
+ =?iso-8859-2?Q?b/291LXtMsSh61p/u++5qjC7/pGco5rWAy2SL3V3SdTB9i/jFxJ99htEXd?=
+ =?iso-8859-2?Q?DalV1fT+ZKW43Agn8YpNUNS+F6ZQxj073rrQQsrm/hlfXiCKM3AsCwdt+5?=
+ =?iso-8859-2?Q?iqXQVKMToQcUisja96d73eFKit4wQdMNeERLu0tJ5qpVavZjGKRlYJMzmQ?=
+ =?iso-8859-2?Q?upY8mHeypLJrrQEDvBdwPzw27eaJ+jlwT5kn8G7g9XKXBNqASgJWdgviti?=
+ =?iso-8859-2?Q?k5aiE74pR9tXdtA5r1WP68f9XIDSeuY3n6Z1Jb72mkr8ERcVAa2Pqi6gHw?=
+ =?iso-8859-2?Q?45ln84ZmZsaqZQCOCed9SqkhhMbAgunYGR?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZP153MB0796.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a910d68-c769-475b-8859-08dc5d78052e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2024 18:15:24.3960
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Q+5815MwBFWE1JU86LQRJZsSsj8cKW/p8+vnK4NDCGrBP6Ja4jFTkv5Lmarj4usMjsfs+DwPVfD3hcLkaZ0W6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZP153MB0994
 
-RISC-V platforms need to use dependencies between PCI host bridge, Link
-devices and the interrupt controllers to ensure probe order. The
-dependency is like below.
 
-Interrupt controller <-- Link Device <-- PCI Host bridge.
 
-If there is no dependency added between Link device and PCI Host Bridge,
-then the PCI end points can get probed prior to link device unable to
-get mapping for INTx.
+> -----Original Message-----
+> From: Krzysztof Wilczy=F1ski <kwilczynski@kernel.org>
+> Sent: Wednesday, February 28, 2024 10:53 PM
+> To: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Saurabh Singh Sengar <ssengar@linux.microsoft.com>;
+> bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; alexander.stein@ew.tq-group.com; Dexuan Cui
+> <decui@microsoft.com>
+> Subject: [EXTERNAL] Re: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
+>=20
+> [You don't often get email from kwilczynski@kernel.org. Learn why this is
+> important at https://aka.ms/LearnAboutSenderIdentification ]
+>=20
+> Hello,
+>=20
+> Sorry for late reply.
+>=20
+> [...]
+> > > > > Krzysztof has done a ton of work to convert these files to
+> > > > > static attributes, where the device model prevents most of these
+> races:
+> > > > >
+> > > > >   506140f9c06b ("PCI/sysfs: Convert "index", "acpi_index", "label=
+" to
+> static attributes")
+> > > > >   d93f8399053d ("PCI/sysfs: Convert "vpd" to static attribute")
+> > > > >   f42c35ea3b13 ("PCI/sysfs: Convert "reset" to static attribute")
+> > > > >   527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute")
+> > > > >   e1d3f3268b0e ("PCI/sysfs: Convert "config" to static
+> > > > > attribute")
+> > > > >
+> > > > > and he even posted a series to do the same for the resource files=
+:
+> > > > >
+> > > > >
+> > > > > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F=
+%
+> > > > > 2Flore.kernel.org%2Flinux-pci%2F20210910202623.2293708-1-
+> kw%40li
+> > > > >
+> nux.com%2F&data=3D05%7C02%7Cssengar%40microsoft.com%7C99b036f685e
+> 4
+> > > > >
+> 448ddb5408dc3881e998%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0
+> %
+> > > > >
+> 7C638447377886194494%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjA
+> wMDA
+> > > > >
+> iLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sda
+> > > > >
+> ta=3DTsOJsR8CQGaOrJVnw0BPm0QGL%2FAUQ0GCTuzgrN8FX%2BQ%3D&reserve
+> d=3D0
+> > > > >
+> > > > > I can't remember why we didn't apply that at the time, and it no
+> > > > > longer applies cleanly, but I think that's the direction we shoul=
+d go.
+> > > >
+> > > > Thanks for you review.
+> > > >
+> > > > Please inform me if there's existing feedback explaining why this
+> > > > series hasn't been merged yet. I am willing to further improve it
+> > > > if necessary.
+> > >
+> > > Let us know your opinion so that we can move ahead in fixing this
+> > > long pending bug.
+>=20
+> I really thought you were asking me about your patch.  So, I didn't reply
+> since Bjorn added his review.
+>=20
+> > There's no feedback on the mailing list (I checked the link above), so
+> > the way forward is to update the series so it applies cleanly again
+> > and post it as a v3.
+>=20
+> Start with a review, if you have some time.  Perhaps we can make it bette=
+r
+> before sending another revision.
+>=20
+> There are two areas which this series decided not to tackle initially:
+>=20
+>   - Support for the Alpha platform
+>   - Support for legacy PCI platforms
+>=20
+> Feel free to have a look at the above.  Perhaps you will have some ideas =
+on
+> how to best convert both of these to use static attributes, so that we co=
+uld
+> convert everything at the same time.
+>=20
+> > There's no need to wait for Krzysztof to refresh it, and if you have
+> > time to do it, it would be very welcomed!  The best base would be
+> > v6.8-rc1.
+>=20
+> That I can do, perhaps this coming weekend.  Or even sooner when I find
+> some time this week.
+>=20
+>         Krzysztof
 
-So, add the link device's HID to dependency honor list and also clear it
-after its probe.
-
-Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
----
- drivers/acpi/pci_link.c | 3 +++
- drivers/acpi/scan.c     | 1 +
- 2 files changed, 4 insertions(+)
-
-diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-index aa1038b8aec4..48cdcedafad6 100644
---- a/drivers/acpi/pci_link.c
-+++ b/drivers/acpi/pci_link.c
-@@ -748,6 +748,9 @@ static int acpi_pci_link_add(struct acpi_device *device,
- 	if (result)
- 		kfree(link);
- 
-+	if (IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI))
-+		acpi_dev_clear_dependencies(device);
-+
- 	return result < 0 ? result : 1;
- }
- 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 086ae040a5ad..32865af071ce 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -835,6 +835,7 @@ static const char * const acpi_honor_dep_ids[] = {
- 	"INTC10CF", /* IVSC (MTL) driver must be loaded to allow i2c access to camera sensors */
- 	"RSCV0001", /* RISC-V PLIC */
- 	"RSCV0002", /* RISC-V APLIC */
-+	"PNP0C0F",  /* PCI Link Device */
- 	NULL
- };
- 
--- 
-2.40.1
-
+Krzysztof,
+Are you still planning to send the revised version for it ?
 
