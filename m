@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-6245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AE448A4CAF
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 12:42:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 466F28A4CC4
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 12:44:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3596F1F2273A
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 10:42:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 023CC285461
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 10:44:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA885D47F;
-	Mon, 15 Apr 2024 10:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C41135C8FF;
+	Mon, 15 Apr 2024 10:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T2gNX3w6"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DK+ytEaX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B81D5CDF2;
-	Mon, 15 Apr 2024 10:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553385C614;
+	Mon, 15 Apr 2024 10:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713177745; cv=none; b=pmuPgIDwxt5LZoAoyWFv/oj/V9nnLbpkZu0k67ViPNm0KBTrgQGWqbJ7mGbHUHmIhy64Ixju9x9XLjU6P27JaQ29BI7X9iZFYuHeHRdQ70tgdqBcCOzTfqvcMSz7b7OCA7s1MbZOmAUshT865rDzRW/aF/VcUUdLout3VriS8jY=
+	t=1713177845; cv=none; b=ZVhvEeOxlUBrt163Fyrt0VKzXmEIQ09IuI6ABPefdp4IJYHFFwTdADy5GJpx78+waoLVd1UBALdpZtfexT2BJPUB9nVgoLzcDBjZAgcbyiv0/+0fVQNtfUhf8i0ZSMG10Q6qf6o95YlcyAu/g6kYcRKkux7tqCo1mdmet8ZdfrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713177745; c=relaxed/simple;
-	bh=2LE6BYHGaIkUEPfoSEEycHjkQxb7ScTXGb+1RjmYa40=;
+	s=arc-20240116; t=1713177845; c=relaxed/simple;
+	bh=2lgF7xR+4qhwMSfR8x9yYIAkTKgSFGBLk6Cbmg0EIkg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bqNto/6QRBE2DViegmRexk6nX1WOhhniALwrbwh/dM5re/qzDL02ve8Px5ReMflnJ4E4iExJ6mSCzoWLdNvQvz2/L7MMbDQIbntWRt+bRcpbtMeqxs06S6oSKF73jS3405kqRAF4eSBDT1gAwTafhw2+cRb3Xtl6m1PBge7LzFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T2gNX3w6; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=p9eiLXWx/9GNWqkHE0RTOoPSTu4qmSWBE9EAxdHSzfVwoD3TSF4UK6oPdWnlhu84MNtNKfd5Npedjndt81rUwfhnYiAWU0lISEdzQ1fG6scC9ZIrVn1848WLC8RE5AVjJXgOvCBg22Xh9QvaxaFYI1kGzrSbQZFIvFdLObjiTuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=DK+ytEaX; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713177742;
-	bh=2LE6BYHGaIkUEPfoSEEycHjkQxb7ScTXGb+1RjmYa40=;
+	s=mail; t=1713177842;
+	bh=2lgF7xR+4qhwMSfR8x9yYIAkTKgSFGBLk6Cbmg0EIkg=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=T2gNX3w6MCKpptHBDjWUa0QuL/mlCEZSlhCMsoGDBrxpKIvs4dHlqUnieB9UCpW29
-	 2PFQjmzexQqeqQZrqbnkudvAHehcY2FUeZdfBG4Vf7SyHFr8gBFQIoPaPpX2JgIUaI
-	 fbz7W4mutYJjKLayzskqfUkboqxrPq9cyFJUi31kqBp8AXncDR43OC4L+Hcrrler5w
-	 X9SgHm/WQ3bPyCE7mn19NgCIZiLAv1HUKzD4k8CwX8gujpSd8XJlRJOzQznsCjHGsB
-	 j/tysx8yw7KUuChgUEp5FARuoWlDit9S8ZQdm3htwcOPa6WbEIMOk0eR1LFbqOGBM4
-	 lFjD+q3xy5wkw==
+	b=DK+ytEaXTOqx2FzSSHYQPTt/xtHPpXCcERxMHTYDoMVqa7HGcIK/fBphXul7q3W40
+	 ttwyhBWMgsK6rP/lkrYI+3c9cH6zoNbv28XeIMHyVQzsE2XEeIXRtl/NGeSO9LYWwp
+	 MYwSu8DaBrPF/6pXWQnWO0kfJA1xrAtrvw2aF0uMG7D5YztqoLyYcEN5QhFIUfxo9I
+	 6WDOwnXPq1bujONMsZ0HrRslWlHbhinnM7Iy6PStJ8N57yhciGH/oDETzmHgcN6Wms
+	 JyZO4sKkUToBygSCeXdT938x4PREqBqdIUxmMRR3WMKTU47M3il9wZz3U8sgJGbqPt
+	 z3vsOZAWhbjWw==
 Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0E156378042B;
-	Mon, 15 Apr 2024 10:42:18 +0000 (UTC)
-Message-ID: <4f1142a5-e231-401b-9b84-cc44d3800a7d@collabora.com>
-Date: Mon, 15 Apr 2024 12:42:18 +0200
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5B9B23782039;
+	Mon, 15 Apr 2024 10:43:59 +0000 (UTC)
+Message-ID: <1f88a0b3-273a-4de8-8733-c4fc1ac407ca@collabora.com>
+Date: Mon, 15 Apr 2024 12:43:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,8 +57,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
- child node reg
+Subject: Re: [PATCH v3 4/4] dt-bindings: PCI: mediatek,mt7621-pcie: switch
+ from deprecated pci-bus.yaml
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  Bjorn Helgaas <bhelgaas@google.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -103,25 +103,22 @@ To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
  linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
 References: <20240413151617.35630-1-krzysztof.kozlowski@linaro.org>
- <20240413151617.35630-2-krzysztof.kozlowski@linaro.org>
+ <20240413151617.35630-4-krzysztof.kozlowski@linaro.org>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20240413151617.35630-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240413151617.35630-4-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Il 13/04/24 17:16, Krzysztof Kozlowski ha scritto:
-> MT7621 PCI host bridge has children which are PCI root ports.  The
-> children have "reg" property, but do not explicitly define it.  Instead
-> they rely on pci-bus.yaml schema, but that one has "reg" without any
-> constraints.
+> dtschema package with core schemas deprecated pci-bus.yaml schema in
+> favor of individual schemas per host, device and pci-pci.
 > 
-> Define the "reg" for the children, so the binding will be more specific
-> and later will allow dropping reference to deprecated pci-bus.yaml
-> schema.
+> Switch Mediatek MT7621 PCIe host bridge binding to this new schema.
 > 
-> Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> This requires dtschema package newer than v2024.02 to work fully.
+> v2024.02 will partially work: with a warning.
+> 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
 
