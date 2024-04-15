@@ -1,207 +1,194 @@
-Return-Path: <linux-pci+bounces-6297-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6298-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10D678A5CE9
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 23:26:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51AAA8A5DC0
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 00:34:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 762311F22999
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 21:26:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF908282990
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 22:34:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29756156F2C;
-	Mon, 15 Apr 2024 21:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E19B745FD;
+	Mon, 15 Apr 2024 22:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPJ9KN6N"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ey4fZt+M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60CF156236;
-	Mon, 15 Apr 2024 21:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD112E852
+	for <linux-pci@vger.kernel.org>; Mon, 15 Apr 2024 22:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713216352; cv=none; b=UI2L3HPSv+zzlmMxNT2SIxhipvqab/U6Jsry0HPDM3UXW0aHBCktdVp3+ifDeGGmJLsKvHPs7KoG1h9hAVpGP+ASnWVJ+PCnfURQtw81TQ7U9lc3YsLv7EfTQ3BTfdRjUlLEGHQM56PDdiDGjDKfPg6IBjjBGiMj4v8wnpA33zg=
+	t=1713220453; cv=none; b=AESbyiLGOUalTbC4UeM/R9n7qZTrOUfRs/3ZCCWaKjA2hJnbH66u17jV4ApHmA/eOXnOkaMBBgGy4BQxmN0k8YU7usniHrhvZLuRTQIEMw0ZroTsb+IbRQOXlDheM9qq/A3D12fH9GrhSt+XQWULX/KQod3a/rQXTnnO2XPWvQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713216352; c=relaxed/simple;
-	bh=xDX9qwIGAqnxwZvcmlu1AWdO+expzOyzESC+Fa4D8aE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qXlHoESN2Bm777Q3qEDHxa6GSach2FltB+KOo423iP7Ju3cFSzoespg8haBAaLbSFrvYNksZbRtEmiTOtNle4ZNZQG3XdhFGbWvomq/Z5hiEHzjH4Qx+KujUXw+VePMzWLbTiHGCqGZBCexFr0GYvQaw+KUIrRxoH/pi4nSEuJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GPJ9KN6N; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3c70ef25e19so641711b6e.3;
-        Mon, 15 Apr 2024 14:25:50 -0700 (PDT)
+	s=arc-20240116; t=1713220453; c=relaxed/simple;
+	bh=7acQjHE0FRAyHEHJVTS5Zrtc4ySTWdRrmVh7RnffPDc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lEl5mG8a9KCAYqblnPsSP4jU1ptZXj6xRu6FA5Yg3MxmhTRW+O6tgl3Qq5icwqeI+ODfVFHg/SrQRUlg9Qu/cRPG+eKH6ufCOxRgd4QKIQxOilqM3Y9+09xl6T8dTLzTJjOmJCuuVolqG2qUhGHQKOun87bkUY5+ulDAqFSXGjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ey4fZt+M; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-479dc603962so1182439137.2
+        for <linux-pci@vger.kernel.org>; Mon, 15 Apr 2024 15:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713216350; x=1713821150; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MnRyb1KC+1OBK62QHuW79588BJIAAupCpTaTbO7XI1c=;
-        b=GPJ9KN6NTAyYLzxxokgqxpDFNYq08tLfEorB1Y9ujzYPwgNKLJSVlHPJswHEZxE+dS
-         CbpKXd6SAGGht4ehPTkMfxaPI2pYqzCxOWRO6jqTJ07LAmY9OTGT27+t+yKamHX4/knw
-         ZTfmMchWBoVIfvprL2j667YtCueUfGALbGz5bZdsilF4cRPew1Ym15AVuYw/VC6UYPOJ
-         HcZVwoocCscuiTHQVwBCOwNOz7dI8oCjSmLK9Cylw6g0eRySVDaKQQ72oRHJobo35b9c
-         L8plfmrUbPmYKIs+YZqlH2UOPiX325ZPg1xNDAFNO2nu0LOgA/mHf7E+5G4gfyb6wJgS
-         nhwg==
+        d=chromium.org; s=google; t=1713220451; x=1713825251; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=67AIpHDTzJHchwF056bG2a4yzdGbydIfluO3yoiihTI=;
+        b=Ey4fZt+M7JKFa6z6Qd9AfmoTUBBk88hfBQvsJp/u6jmMprcqrm9xoU+MdI++KxNxBn
+         VnZclu1L1uBq4JKCwF6pkh3NWQIcx2yvIwLA3ba9jAnKp+2CxgnIdZk+SVXbgkBSldK/
+         swth6RpVjVhiJ0chKL52BWT86c4ofy10whPjg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713216350; x=1713821150;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MnRyb1KC+1OBK62QHuW79588BJIAAupCpTaTbO7XI1c=;
-        b=MdACqbEvaITeb246+bX7wi80dOQQeoBqx5Z6E5W43Acs1ZhV3H0M2IG3GkPDuS8X9Z
-         t21NTeYmugbHU7/Qde1ksIbTs/Pqy4d1X6cVFsLEpq5p/0tddnE5v4NSnl2QKnz7L/g7
-         ets2kI03JdJC3LftmkIFaRy5ox9HVMhSP4FtEiwMXhITyB8xo0yVYfEXqxm6KEfMKPjn
-         AWUhdEYbciXbnbhHxggw+eB3ywLw/2BhJjrJAuNxa0WhMTBoG2FhYiFY2m8geyvndKDl
-         0hIpOdiMxSISsLDim2Bjr7lOjGk1pqrMXbuTUuxFRaCkqHFZWrmz1UCbDU+A1TcnptOr
-         1klA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmUmSlbY7xFZmbQlVH+SMGCJV1YHRu+IuaoI4n1zKvn2IPYPB1aHBOa+cbKMhrIqc9QPARlgJl1dlNJvBB3/QdukT0LVN9+24zSbQUPKbaIRe1MgY5lwegNA52RxloA6t+vg0SiGM7fU4SCv0GEm9UuX2rEaAj12SyrjNFpAqiVHBeGCRv648QifJd/FRdS7ckt1QOjFgFHq3P9G5fJfzTxYq7yxDcjlC8zLZ8aS1/woxqyHKN4eSnEoYJjvc=
-X-Gm-Message-State: AOJu0YyogEzsHbM+FT/Sjbkqh1rxLrP8UQ4NjbGGh9UXIKzeekmlzY1o
-	5pHdrTD5tDcKkl8sG9v/gq7vTP79uSsQydkDwhW9Mhj1OpE+3hPB
-X-Google-Smtp-Source: AGHT+IFVx8xuKRS2VgjDQ5gszpCC9VDV/CVDiERN6wC4LXmwFjfelkaJR7tB/uZCbmijCe/eZtORlA==
-X-Received: by 2002:a05:6808:2a69:b0:3c7:76c:c279 with SMTP id fu9-20020a0568082a6900b003c7076cc279mr6166827oib.14.1713216349788;
-        Mon, 15 Apr 2024 14:25:49 -0700 (PDT)
-Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id n4-20020aca2404000000b003c60db822e7sm1774266oic.4.2024.04.15.14.25.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 14:25:49 -0700 (PDT)
-Message-ID: <6726fa2b-f5fe-10fb-6aab-f76d61f0b3cd@gmail.com>
-Date: Mon, 15 Apr 2024 16:25:48 -0500
+        d=1e100.net; s=20230601; t=1713220451; x=1713825251;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=67AIpHDTzJHchwF056bG2a4yzdGbydIfluO3yoiihTI=;
+        b=thFh3UrzagNxnStqCEgKTs+34mbsEsRTPZBIALk0xyAs+59s/EqrVyF6Q9aOMEbJ3w
+         NVwufBAa/MR4H32tv0uNhxyd4WYEtcZwlobee44Ih8chy3Tv8DexuNoxiJObOOSOK4eP
+         rnUC5DZ9sz8Gq6vMDEY7D0MlnlVec+2DL1dZDgvo/MKRKYMJn5VoC8jlc+S+gQf0joni
+         DzGgNckBKHO9v9jCyMs/e4vi0DG37BFqx985IHU6uHMu3RQ0JDDYEv+/1vXzncW+Y+uc
+         6lY/yPZRdF7nVqW28NQrT6Zebq/YrtQe2lZijb05hb+0eAku26aKy82pKORJIciFzNBS
+         201w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCf0q5YvOqodSFXZgLf2i1D23kqf276/Ihte7OL6o87noih9zI8PK0o4gg0K8dh/A27i/rZ8KZ863aaSwbBsr93b2Nrpqn2RKo
+X-Gm-Message-State: AOJu0YzLMXfaOyQV6CITkvlRUflbtSbmYu0KDgbnCo2E+ulL5Rsjde3m
+	MC2CR8X8dPFwmrO1NuHT05khaPHr6Bs12clzbOCntxNPRiJV+kcoOSmRXVqst+xMo5XW29aS64+
+	BnwOMly3MWLEBB0FDLg/mrbDFSy6dVfOLCh1g
+X-Google-Smtp-Source: AGHT+IE9wMrayCQ//dB3BHrVi3zj6zncCfJH35JYbhYekkl7tuDKaZ6sfL0DUpsQ6gPR7Y83low3zp4CddX8xeGHGe0=
+X-Received: by 2002:a05:6102:3c89:b0:47b:8c4b:1054 with SMTP id
+ c9-20020a0561023c8900b0047b8c4b1054mr3085718vsv.3.1713220450916; Mon, 15 Apr
+ 2024 15:34:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 6/7] phy: qcom-qmp-pcie: add support for ipq9574 gen3x2
- PHY
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-clk@vger.kernel.org
-References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
- <20240415182052.374494-7-mr.nuke.me@gmail.com>
- <CAA8EJpqY1aDZMaeqBULEOD26UeGYbLd8RsA16jZw7zXJ7_oGPQ@mail.gmail.com>
-From: mr.nuke.me@gmail.com
-In-Reply-To: <CAA8EJpqY1aDZMaeqBULEOD26UeGYbLd8RsA16jZw7zXJ7_oGPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20231228132517.GA12586@wunner.de> <20231228133949.GG2543524@black.fi.intel.com>
+ <CA+Y6NJFQq39WSSwHwm37ZQV8_rwX+6k5r+0uUs_d1+UyGGLqUw@mail.gmail.com>
+ <20240118060002.GV2543524@black.fi.intel.com> <23ee70d5-d6c0-4dff-aeac-08cc48b11c54@amd.com>
+ <ZalOCPrVA52wyFfv@google.com> <20240119053756.GC2543524@black.fi.intel.com>
+ <20240119074829.GD2543524@black.fi.intel.com> <20240119102258.GE2543524@black.fi.intel.com>
+ <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com> <20240123061820.GL2543524@black.fi.intel.com>
+ <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
+In-Reply-To: <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
+From: Esther Shimanovich <eshimanovich@chromium.org>
+Date: Mon, 15 Apr 2024 18:34:00 -0400
+Message-ID: <CA+Y6NJGz6f8hE4kRDUTGgCj+jddUyHeD_8ocFBkARr7w90jmBw@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+Hey!
+Asking for some help on implementation.
+So I implemented most of this, and successfully tested the quirk on 6
+different devices with various types of discrete fixed JHL Thunderbolt
+chips.
+
+However I want to add an additional check. A device wouldn't need this
+quirk if it already has Thunderbolt functionality built in within its
+Root Port.
+
+I tried to use "is_thunderbolt" as an identifier for that type of
+device--- but when I tested on a device with a thunderbolt root port,
+"is_thunderbolt" was false for all the Thunderbolt PCI components
+listed below.
+
+~ # lspci -nn | grep Thunderbolt
+00:07.0 PCI bridge [0604]: Intel Corporation Tiger Lake-LP Thunderbolt
+4 PCI Express Root Port #1 [8086:9a25] (rev 01)
+00:07.2 PCI bridge [0604]: Intel Corporation Tiger Lake-LP Thunderbolt
+4 PCI Express Root Port #2 [8086:9a27] (rev 01)
+00:0d.0 USB controller [0c03]: Intel Corporation Tiger Lake-LP
+Thunderbolt 4 USB Controller [8086:9a13] (rev 01)
+00:0d.2 USB controller [0c03]: Intel Corporation Tiger Lake-LP
+Thunderbolt 4 NHI #0 [8086:9a1b] (rev 01)
+00:0d.3 USB controller [0c03]: Intel Corporation Tiger Lake-LP
+Thunderbolt 4 NHI #1 [8086:9a1d] (rev 01)
+
+The device I tested was the Lenovo carbon X1 Gen 9. When
+set_pcie_thunderbolt is run, the devices listed above return false on
+the pci_find_next_ext_capability check.
+
+I have spent some time trying to see if there are any ACPI values or
+any alternative indicators to reliably know if a root port has
+thunderbolt capabilities. I do see that ADBG is often set to TBT but
+that looks like a debugging tool in ACPI.
+
+I also looked through lspci -vvv and compared the output with a device
+that has no Thunderbolt built into its CPU, which gave me nothing.
+
+I also tried looking through values in /sys/bus and searching through
+the kernel, looking through logs etc. The only option I see now is
+figuring out how to get the string value returned by the lspci and
+parsing it, but I'm not 100% sure if all Thunderbolt CPUs would have
+Root ports specifically labeled as "Thunderbolt Root Port". I'm also
+not sure if that value is supposed to be used in that way.
+
+I was hoping that someone may have a suggestion here.
 
 
+Just for reference, this is the fix I have so far. I don't want to
+submit it as a new patch, until I resolve the above question.
 
-On 4/15/24 15:10, Dmitry Baryshkov wrote:
-> On Mon, 15 Apr 2024 at 21:23, Alexandru Gagniuc <mr.nuke.me@gmail.com> wrote:
->>
->> Add support for the gen3x2 PCIe PHY on IPQ9574, ported form downstream
->> 5.4 kernel. Only the serdes and pcs_misc tables are new, the others
->> being reused from IPQ8074 and IPQ6018 PHYs.
->>
->> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 +++++++++++++++++-
->>   .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
->>   2 files changed, 149 insertions(+), 1 deletion(-)
->>
-> 
-> [skipped]
-> 
->> @@ -2448,7 +2542,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->>
->>   /* list of clocks required by phy */
->>   static const char * const qmp_pciephy_clk_l[] = {
->> -       "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux",
->> +       "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux", "anoc", "snoc"
-> 
-> Are the NoC clocks really necessary to drive the PHY? I think they are
-> usually connected to the controllers, not the PHYs.
-
-The system will hang if these clocks are not enabled. They are also 
-attached to the PHY in the QCA 5.4 downstream kernel.
-
->>   };
->>
->>   /* list of regulators */
->> @@ -2499,6 +2593,16 @@ static const struct qmp_pcie_offsets qmp_pcie_offsets_v4x1 = {
->>          .rx             = 0x0400,
->>   };
->>
->> +static const struct qmp_pcie_offsets qmp_pcie_offsets_ipq9574 = {
->> +       .serdes         = 0,
->> +       .pcs            = 0x1000,
->> +       .pcs_misc       = 0x1400,
->> +       .tx             = 0x0200,
->> +       .rx             = 0x0400,
->> +       .tx2            = 0x0600,
->> +       .rx2            = 0x0800,
->> +};
->> +
->>   static const struct qmp_pcie_offsets qmp_pcie_offsets_v4x2 = {
->>          .serdes         = 0,
->>          .pcs            = 0x0a00,
->> @@ -2728,6 +2832,33 @@ static const struct qmp_phy_cfg sm8250_qmp_gen3x1_pciephy_cfg = {
->>          .phy_status             = PHYSTATUS,
->>   };
->>
->> +static const struct qmp_phy_cfg ipq9574_pciephy_gen3x2_cfg = {
->> +       .lanes                  = 2,
->> +
->> +       .offsets                = &qmp_pcie_offsets_ipq9574,
->> +
->> +       .tbls = {
->> +               .serdes         = ipq9574_gen3x2_pcie_serdes_tbl,
->> +               .serdes_num     = ARRAY_SIZE(ipq9574_gen3x2_pcie_serdes_tbl),
->> +               .tx             = ipq8074_pcie_gen3_tx_tbl,
->> +               .tx_num         = ARRAY_SIZE(ipq8074_pcie_gen3_tx_tbl),
->> +               .rx             = ipq6018_pcie_rx_tbl,
->> +               .rx_num         = ARRAY_SIZE(ipq6018_pcie_rx_tbl),
->> +               .pcs            = ipq6018_pcie_pcs_tbl,
->> +               .pcs_num        = ARRAY_SIZE(ipq6018_pcie_pcs_tbl),
->> +               .pcs_misc       = ipq9574_gen3x2_pcie_pcs_misc_tbl,
->> +               .pcs_misc_num   = ARRAY_SIZE(ipq9574_gen3x2_pcie_pcs_misc_tbl),
->> +       },
->> +       .reset_list             = ipq8074_pciephy_reset_l,
->> +       .num_resets             = ARRAY_SIZE(ipq8074_pciephy_reset_l),
->> +       .vreg_list              = NULL,
->> +       .num_vregs              = 0,
->> +       .regs                   = pciephy_v4_regs_layout,
-> 
-> So, is it v4 or v5?
-
-Please give me a day or so to go over my notes and give you a more 
-coherent explanation of why this versioning was chosen. I am only 
-working from the QCA 5.4 downstream sources. I don't have any 
-documentation for the silicon
-
-Alex
-> 
->> +
->> +       .pwrdn_ctrl             = SW_PWRDN | REFCLK_DRV_DSBL,
->> +       .phy_status             = PHYSTATUS,
->> +};
->> +
->>   static const struct qmp_phy_cfg sm8250_qmp_gen3x2_pciephy_cfg = {
->>          .lanes                  = 2,
->>
-> 
-> 
-> 
-> --
-> With best wishes
-> Dmitry
++static bool get_pci_exp_upstream_port(struct pci_dev *dev,
++                                   struct pci_dev **upstream_port)
++{
++       struct pci_dev *parent = dev;
++
++       // If the dev is an upstream port, return itself
++       if (pci_pcie_type(dev) == PCI_EXP_TYPE_UPSTREAM) {
++               *upstream_port = dev;
++               return true;
++       }
++
++       // Iterate through the dev's parents to find its upstream port
++       while ((parent = pci_upstream_bridge(parent))) {
++               if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
++                       *upstream_port = parent;
++                       return true;
++               }
++       }
++       return false;
++}
++
++static void relabel_internal_thunderbolt_chip(struct pci_dev *dev)
++{
++       struct pci_dev *upstream_port;
++       struct pci_dev *upstream_ports_parent;
++
++       // Get the upstream port closest to the dev
++       if (!(get_pci_exp_upstream_port(dev, &upstream_port)))
++               return;
++
++       // Next, we confirm if the upstream port is directly behind a PCIe root
++       // port.
++       if (!(upstream_ports_parent == pci_upstream_bridge(upstream_port)))
++               return;
++       if (!(pci_pcie_type(upstream_ports_parent) == PCI_EXP_TYPE_ROOT_PORT))
++               return; // quirk does not apply
++
++       // If a device's root port already has thunderbolt capabilities, then
++       // it shouldn't be using this quirk.
++       // TODO: THIS CHECK DOES NOT WORK
++       // I ALSO TRIED USING pci_is_thunderbolt_attached WHICH DIDN'T
+WORK EITHER
++       if (!(upstream_ports_parent->is_thunderbolt))
++               return; // thunderbolt functionality is built into root port
++
++       // Apply quirk
++       dev_set_removable(&dev->dev, DEVICE_FIXED);
++
++       // External facing bridges must be marked as such so that devices
++       // below them can correctly be labeled as REMOVABLE
++       if ((pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)
++            && (dev->devfn == 0x08 | dev->devfn == 0x20))
++               dev->external_facing = true;
++}
 
