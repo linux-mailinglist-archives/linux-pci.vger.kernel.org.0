@@ -1,74 +1,73 @@
-Return-Path: <linux-pci+bounces-6230-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6231-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 305098A4858
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 08:49:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 636548A485E
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 08:51:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA3471F219EC
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 06:49:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C3862B209B1
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Apr 2024 06:51:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3D311CFB9;
-	Mon, 15 Apr 2024 06:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 109231EB30;
+	Mon, 15 Apr 2024 06:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yOd/1iz8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOkocNCN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666DE1D53F
-	for <linux-pci@vger.kernel.org>; Mon, 15 Apr 2024 06:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926621D53F
+	for <linux-pci@vger.kernel.org>; Mon, 15 Apr 2024 06:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713163746; cv=none; b=XLVd2ihp2e6yOHt2bHFBWzX05NEMP6RHsRCZbEUSIt7UvuFlXU9Z/m9OjTbqWbY52bobpC//NbnOSk1sbu2O8nQuhOvX9BHOpzqlwnmxkAHsvpixt9oGPwjlD6ZF+xvYYFBRlb8CSVPqHDF3g9VLTLqjrlwkqqa5d30huaptqEI=
+	t=1713163865; cv=none; b=NfEtodWb/KKE2fXdmKLReUp+IPVK2GWLlB9m9Kyhiie79inJ2LbatZkAGw86yW/efffz0l5uXGjbcyUyad6IAh4B9DUVMpGKTvTBq+G6z1w/tUMVcf6C4Vwfj0g0woSMTEQKgOg2mFabM81ivBy+ClVDttqSInN2SmIeedLnsaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713163746; c=relaxed/simple;
-	bh=ZGTWmt7VQ+HNU+nhCbLrAteLkGAt9wTCd5mwZqRX45Y=;
+	s=arc-20240116; t=1713163865; c=relaxed/simple;
+	bh=CJqyLObOQ6APeNi1XLwgvfNQ3BSrUovNB0H8kCnOS7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aavKAy0kdWupo/7WvrePztIjOByo+A4ki3lFjjIiGKG7ktLl23/VA9IJ2DvMtL0n2XN/Ovo1QyYfKid6Ltw1m/x3Xmz4PL/uu7cj0yET6pD5SLDDoUn/G+vwd1IS9HwbcQNKMjkmFPD9A6JYLMZblFfWxuUFFPcNQIejYhHtnxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yOd/1iz8; arc=none smtp.client-ip=209.85.216.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=ArzFgBh4xWX/724AzOkGrFm1zUn2mj9tFMgJInlRJ9lgTxiHjhLb/d5VorpQBlV+jqjBad5gMTDarm0V3GG7pwuuO/2EsSKvaMIl6rPSsJsmW67JjMyhTriJij9RckkUia96t7qzaoK6FWObggi3/tB1DW+3GpNDTotYXlxjkcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TOkocNCN; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a2dd2221d3so1969291a91.0
-        for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 23:49:05 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ed11782727so2374742b3a.1
+        for <linux-pci@vger.kernel.org>; Sun, 14 Apr 2024 23:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713163745; x=1713768545; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713163863; x=1713768663; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=wbma48kMrwhXpK04EVJIgSb7zQnNro8/X2QtwMKJVXw=;
-        b=yOd/1iz8jOJNehySnMCwXU8gax63h3htwM5Fc2BMydgJnQHtd1UWMeMyEfaAo5ljdD
-         ue+J4aGLKiqb/79tG1875iH6Y4HCa+1WgxHs8Xj/BzoaDZMX2fkL7awqp27wJ5Rk6hGh
-         63InB3dO1LNqW68DRTOQPOA2OG7+aMBxVgk6oRCWrbLPSKMR9LE0Db16uJzQtEYtpXE0
-         nhG66UkPfefECmN34ATwikBhgD+vykWx8bft54XPvnkVKNKsRIdeoyHiStaHWIDU636V
-         UwVoF74MsBUnxxtAzoDDZIF5Ce05qdA096gKb1oX3CpGQGj0WrhyO3PnSg/5iTnSG4Wy
-         VV+Q==
+        bh=PEJxfvpeTL9PwsFNBxOiLehpxuzN2ftOHpkf1xALIpg=;
+        b=TOkocNCNuOrKQKPy69WjYNmHN4ZCy7dQkj5PUbsHenXMnHx4aP/l6GypSl+hDSPwhr
+         ugYdy9wlzlXyJEEz9liftKj8Pllbq5wrnYumd01sb+XfJwdxs8hwFXmS7Fwgt/0pSDV6
+         7b0PHtSawuiEcRGiOB0FqKh+8Cl1N2WkN2hJWqHlQWN703cwZgE3LJOtX3JH/IaQl2ED
+         4e/AxDf46fBwkYKllilXFuD9u3C9O5OWPRmNWSX8eYNKqGOKrhqy4hrCHmlT4lmQocXk
+         VWQyDIolvyTgj6mFDSmiU3JPZTDp4q5HIUZiasK/lKa+R50mrh6HLXZQma899TeBm9zH
+         U6og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713163745; x=1713768545;
+        d=1e100.net; s=20230601; t=1713163863; x=1713768663;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wbma48kMrwhXpK04EVJIgSb7zQnNro8/X2QtwMKJVXw=;
-        b=vn8jS7u3z0+O8oYVe7Qq+b96io8FoAnOt5oKyhj5q0WYwpWaY95cviV9c41FaqQsqy
-         6q5Kv0brH9xeS/uzJWKX6LPhPIczEgxU+I4NeWw3wW7+SNRJvUr5BVrxl548eDNs5Fhv
-         8o+Wlu+3stPrGt46/RR3g5WwFyfJ8dzexAC5At6ol7JsCuQWjDjI0tO9f5cAq5923D2K
-         RlrA/0M8zuswpE2/ZcUBMgCjlczxFKfwJ8tXxFcorue27YoXzkqOH6pDa0TdDJUt3J50
-         7W9Pi5cPoiecEbKnvqQgx0DWlzsX3ZZTjM5RbqXHfQDfvBPnYbuOkhe0naxS/cPW2rdF
-         RqwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWUIq6SEpAKtcIc8Jf/Oslaz4ecbxuCNpKRLrN3T5eFCi0/cLCJBV6tPhqgD5ClxNZXi0WqQzI3nhunfQ0k1S6psDQCmN3Gs7u
-X-Gm-Message-State: AOJu0Ywt2FnLqF/FF5hYFb96AQbZdoMuyPDC7GHYmY5+o4znZAOAbrKy
-	eBR7NsyV6Zy+E6QDrUZSimj1mj2JKuNpCA8EC3tMlyJnID31rl6stc01LtgUrNDEgWADxsIgmH4
-	=
-X-Google-Smtp-Source: AGHT+IGC8V47YXDa/6cXYpOHnzIDDAqTZinRyZksANZMUlFOAS1daDDExrMfx9Hmclx5tmkYR75Oiw==
-X-Received: by 2002:a17:90a:fb82:b0:2a5:3399:b703 with SMTP id cp2-20020a17090afb8200b002a53399b703mr6948189pjb.11.1713163744476;
-        Sun, 14 Apr 2024 23:49:04 -0700 (PDT)
+        bh=PEJxfvpeTL9PwsFNBxOiLehpxuzN2ftOHpkf1xALIpg=;
+        b=EhyL4yUcjGEdR9FBRbplks3MGdbBblHDdqEwcG0NK1ZZo6ypTX+ZrD5Ma/GIf3yn7T
+         SCfV1grb49oesMnCrROf9A0I43F7qU+v1eDBNLcsI80HgNg5CN7aC10Mu3icA0YnZ5ES
+         BATPPF2SbQZgEkbp8BeD3GHGnf4unjFZKWhG57aQes131vtE4Unf3ahN1C+udojabQL7
+         VOplElg819GQ9Z9jHl8gcgMXV/sQTFFDmpJpz6pa47X88wjoNeT6qXHXHMWuhYf2L9CD
+         T82O+qiFVyRsvna2PThblC8cloEPty71UNu3T3DlCGn5tQeFPQChQ2JwT3quE1V9kjyR
+         Jbbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxeKHAbRDHH60JtN8XbbmPmLj+x2TSSBwXjNKfJDlT3FT03ZpukjlQk8Hl3w0tLC2NBSCdtBFZtY1gV6nXOp69ogRP2l20AkXw
+X-Gm-Message-State: AOJu0YxCL4dPzSYhr3fIILZR8zRUx/ar0jEJegPsD0BlmZaPRM2JiGdr
+	sGfwYRSk6sEclqC2UwWLoOilkclS91rLeSXptgtxZkrhgGTZEP2vehnITF3VvA==
+X-Google-Smtp-Source: AGHT+IEAEfajN2yAj/y0OrMWFHmYxxtw5arcoHq58B7ItcGW4hY4E4nE+BGBSQk4MLak5kFXkoAnXg==
+X-Received: by 2002:a05:6a21:8881:b0:1a3:ae4a:930 with SMTP id tb1-20020a056a21888100b001a3ae4a0930mr9656451pzc.33.1713163862718;
+        Sun, 14 Apr 2024 23:51:02 -0700 (PDT)
 Received: from thinkpad ([103.28.246.218])
-        by smtp.gmail.com with ESMTPSA id nh14-20020a17090b364e00b002a67b6f4417sm5898986pjb.24.2024.04.14.23.49.01
+        by smtp.gmail.com with ESMTPSA id p7-20020a17090a348700b002a21b9805f8sm7237084pjb.17.2024.04.14.23.51.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Apr 2024 23:49:04 -0700 (PDT)
-Date: Mon, 15 Apr 2024 12:18:59 +0530
+        Sun, 14 Apr 2024 23:51:02 -0700 (PDT)
+Date: Mon, 15 Apr 2024 12:20:58 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Damien Le Moal <dlemoal@kernel.org>
 Cc: Shawn Lin <shawn.lin@rock-chips.com>,
@@ -78,11 +77,11 @@ Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	linux-rockchip@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/2] PCI: rockchip-host: Fix
- rockchip_pcie_host_init_port() PERST# handling
-Message-ID: <20240415064859.GC7537@thinkpad>
+Subject: Re: [PATCH v4 2/2] PCI: rockchip-host: Wait 100ms after reset before
+ starting configuration
+Message-ID: <20240415065058.GD7537@thinkpad>
 References: <20240413004120.1099089-1-dlemoal@kernel.org>
- <20240413004120.1099089-2-dlemoal@kernel.org>
+ <20240413004120.1099089-3-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,20 +91,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240413004120.1099089-2-dlemoal@kernel.org>
+In-Reply-To: <20240413004120.1099089-3-dlemoal@kernel.org>
 
-On Sat, Apr 13, 2024 at 09:41:19AM +0900, Damien Le Moal wrote:
-> The PCIe specifications (PCIe CEM r5.1, sec 2.9.2) mandate that the
-> PERST# signal must remain asserted for at least 100 usec (Tperst-clk)
-> after the PCIe reference clock becomes stable (if a reference clock is
-> supplied), and for at least 100 msec after the power is stable (Tpvperl,
-> defined by the macro PCIE_T_PVPERL_MS).
+On Sat, Apr 13, 2024 at 09:41:20AM +0900, Damien Le Moal wrote:
+> The PCI Express Base Specification r6.0, section 6.6.1, states that the
+> host should wait for at least 100 msec from the end of a conventional
+> reset (PERST# is de-asserted) before sending a configuration request to
+> ensure that the device is able to respond with a "Request Retry Status"
+> completion.
 > 
-> Modify rockchip_pcie_host_init_port() to satisfy these constraints by
-> adding a sleep period before deasserting PERST# using the ep_gpio GPIO.
-> Since Tperst-clk is the shorter wait time, add an msleep() call for the
-> longer PCIE_T_PVPERL_MS milliseconds to handle both timing requirements.
+> Add the PCIE_T_RRS_READY_MS macro to define this wait time and modify
+> rockchip_pcie_host_init_port() to add this 100ms sleep after deasserting
+> PERST# using the ep_gpio GPIO.
 > 
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
 > Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
@@ -113,21 +112,41 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  drivers/pci/controller/pcie-rockchip-host.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/pci/controller/pcie-rockchip-host.c | 2 ++
+>  drivers/pci/pci.h                           | 7 +++++++
+>  2 files changed, 9 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 300b9dc85ecc..fc868251e570 100644
+> index fc868251e570..cbec71114825 100644
 > --- a/drivers/pci/controller/pcie-rockchip-host.c
 > +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -322,6 +322,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
->  	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
->  			    PCIE_CLIENT_CONFIG);
->  
-> +	msleep(PCIE_T_PVPERL_MS);
+> @@ -325,6 +325,8 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+>  	msleep(PCIE_T_PVPERL_MS);
 >  	gpiod_set_value_cansleep(rockchip->ep_gpio, 1);
 >  
+> +	msleep(PCIE_T_RRS_READY_MS);
+> +
 >  	/* 500ms timeout value should be enough for Gen1/2 training */
+>  	err = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_BASIC_STATUS1,
+>  				 status, PCIE_LINK_UP(status), 20,
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 17fed1846847..c93ffc5e6e1f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -16,6 +16,13 @@
+>  /* Power stable to PERST# inactive from PCIe card Electromechanical Spec */
+>  #define PCIE_T_PVPERL_MS		100
+>  
+> +/*
+> + * End of conventional reset (PERST# de-asserted) to first configuration
+> + * request (device able to respond with a "Request Retry Status" completion),
+> + * from PCI Express Base Specification r6.0, section 6.6.1.
+> + */
+> +#define PCIE_T_RRS_READY_MS	100
+> +
+>  /*
+>   * PCIe r6.0, sec 5.3.3.2.1 <PME Synchronization>
+>   * Recommends 1ms to 10ms timeout to check L2 ready.
 > -- 
 > 2.44.0
 > 
