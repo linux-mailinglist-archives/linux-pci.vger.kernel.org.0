@@ -1,150 +1,132 @@
-Return-Path: <linux-pci+bounces-6328-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BF318A6E84
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 16:37:52 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A40F28A70CD
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 18:02:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 711BEB2571F
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 14:33:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2AB3AB242EB
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 16:02:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37AB012D741;
-	Tue, 16 Apr 2024 14:33:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1F0413175E;
+	Tue, 16 Apr 2024 16:01:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FTyNhICr"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hxAl+vKX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8102712C52E;
-	Tue, 16 Apr 2024 14:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C213119E;
+	Tue, 16 Apr 2024 16:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713277985; cv=none; b=YWBm6morQ7Iqy/AYcPmXK3OXKCpw8zC3j/yjpyVncx9HaKtys7V+DpdvkqRmAFP8kNvWjoMrqM44zfzrKsCdKBepfXRFHII+YGzkgDnqzmJCzQNaJEzAQ6ZxSkEc4ZquQNA5QbSqHXmBwmlNAcjMHX5gS5YKzin055kpU7odBn4=
+	t=1713283314; cv=none; b=HWgjU4pspXf1kFToRMjYClCfGVjuYPiX6JUlPu2u2ZLFJxxMxjz48ncNj8dYyX3ngEBwBpOtepyN3yiOnY8iVBqG+GjBBIpopMzYjbVi0VVz8/AFfFTBpxYhQQpCND8VuYGisYcT3pRDlnznoKfw5FIBzdCvU1VVQLpq1TbJvts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713277985; c=relaxed/simple;
-	bh=SbzdP1AH6OgPsATD5J3vkA9ntkgZ4zZS5HmxfvGTu5I=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=O+W+OePXHkBMpQefvoi6809GzuESTFHAv7Ahy/1Wxia0Esb6q4nu7+ukKNxXes9DZM7FreXcCLm2kntvz56aIH7rf/QefA71wwXTKo+H6DNzYaFVyahkX1Vj/4hTqh7ILY3hjwYcJn4QfVxPZdIiGgPbaTqsdAKKEnGKqeuIEAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FTyNhICr; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713277984; x=1744813984;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SbzdP1AH6OgPsATD5J3vkA9ntkgZ4zZS5HmxfvGTu5I=;
-  b=FTyNhICrQy6qtfnNaVw/ePRrJNpZpj6bd6ab3ZI9BvCmy2b9od17Bn7l
-   duTFGYjsYSoDmhBeW6J++6MTMvxjQGCGGoX1V6Us53XMc1tarp+2t5yQ7
-   cG4Hw2ikHV8UC4qbakPaprWA15XYpMUXkgKxG3FChTMcifHL9+mQRDNB0
-   t9zdR7CAB6gG2ef5AmNXP17g70b5q32hBobgFKEr23A5/mtkdyHIe3M19
-   S1wbuXOL1YFtR7ZptnYNAfcbFQoT8MBlkW+SJMpxPgN9GueBSEeF6U63y
-   UTvQFDp0Q0Mdr4mWBOwUgblqERrWAIrNBwACPvpSTjVtgOO0KCZPYmchN
-   Q==;
-X-CSE-ConnectionGUID: RMEKeY7vTr26/Ki+akK3Jw==
-X-CSE-MsgGUID: njNXOqjWTLCdBA5Le9+kSA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8884823"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="8884823"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:33:03 -0700
-X-CSE-ConnectionGUID: 6tgnHvJKSWS5fRMPbFupLA==
-X-CSE-MsgGUID: e/XnE5zKQYaC8e/6ZqIVtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22748577"
-Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:33:02 -0700
-Date: Tue, 16 Apr 2024 07:32:52 -0700 (PDT)
-From: matthew.gerlach@linux.intel.com
-X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-    krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: PCI: altera: Convert to YAML
-In-Reply-To: <c21f6d49-bd70-465e-a446-fb70838bab48@linaro.org>
-Message-ID: <alpine.DEB.2.22.394.2404160720360.424541@sj-4150-psse-sw-opae-dev2>
-References: <20240413172641.436341-1-matthew.gerlach@linux.intel.com> <c21f6d49-bd70-465e-a446-fb70838bab48@linaro.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	s=arc-20240116; t=1713283314; c=relaxed/simple;
+	bh=CIIWnHafYS85G8cd9e60rj7Vkph8QEAZkp+usIKi/X8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mQhvUCUROgCZ2iqGMsyopKKx7ywpFylGgmEBpw/VXzoPSEZv9M3RDRGZG66zDHgVORilaLZj3lY501qSO90g2/zpIVXSMOkAMtQXsbcR67NkPRTdgplzs6KY9SpqGRT4SdaOAUJd9ZYNEoyN50gJlyElj+9nfaZO+JXCjgESHjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hxAl+vKX; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4A265C0008;
+	Tue, 16 Apr 2024 16:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713283303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y7lcnqaRazFwJFVK5/WHOD289rB7ddonTK7K7dl1R7o=;
+	b=hxAl+vKX+Mf28jmCLqp3EiKVxs99qWvy6NWTthAfL/1rQYtCSESgYzQEgIcs9JNjpuyKag
+	cgtHErhGAkaYL237+kfmsg1uL1hzBndwQT6uMSnnFHEAXzLfXg0Rjqh4Afm+iKRTPKDZPq
+	if3ChBmix4sTpHn2V5XYpZa0lCIGhLOgnwjCyKWlpu2E4PBgu50gjLbDYD3/5/W0Su88cO
+	rzfckWPAUlM+xsXn6dBgX34WOOFUm3dd4PnZ7+780r/AZu4gbz/Rf/hz1zDQZHQxpQOFf5
+	CXQ1lFvZNiUf3xCdT7bRFM7WkpkM3Fgb2RSq88sn8cnTOfMbv+he40GgOokbkQ==
+Message-ID: <fcd7b616-07e0-45a3-b14a-d0c194d58a86@bootlin.com>
+Date: Tue, 16 Apr 2024 18:01:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 05/11] PCI: cadence: Extract link setup sequence from
+ cdns_pcie_host_setup()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-5-4b8c46711ded@bootlin.com>
+ <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-
-
-On Sun, 14 Apr 2024, Krzysztof Kozlowski wrote:
-
-> On 13/04/2024 19:26, matthew.gerlach@linux.intel.com wrote:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>
->> Convert the device tree bindings for the Altera Root Port PCIe controller
->> from text to YAML.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->
-> ...
->
->> +allOf:
->> +  - $ref: /schemas/pci/pci-host-bridge.yaml#
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          enum:
->> +            - altr,pcie-root-port-1.0
->> +    then:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: TX slave port region
->> +            - description: Control register access region
+On 4/16/24 16:16, Dan Carpenter wrote:
+> On Tue, Apr 16, 2024 at 03:29:54PM +0200, Thomas Richard wrote:
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 5b14f7ee3c79..93d9922730af 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -497,6 +497,30 @@ static int cdns_pcie_host_init(struct device *dev,
+>>  	return cdns_pcie_host_init_address_translation(rc);
+>>  }
+>>  
+>> +int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+>> +{
+>> +	struct cdns_pcie *pcie = &rc->pcie;
+>> +	struct device *dev = rc->pcie.dev;
+>> +	int ret;
 >> +
->> +        reg-names:
->> +          items:
->> +            - const: Txs
->> +            - const: Cra
+>> +	if (rc->quirk_detect_quiet_flag)
+>> +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
 >> +
->> +    else:
->> +      properties:
->> +        reg:
->> +          items:
->> +            - description: Hard IP region
->
-> Why Hip is the first? Old binding suggested it to be the last entry. It
-> would also make binding easier, as you describe reg and reg-names in
-> top-level and just limit them with min/maxItems.
->
-> Does anything depend on different order (Hip as first)?
-
-I don't think the order really matters. So Hip could go last, and it makes 
-sense to only mention the reg/reg-names once in the top and then add 
-limits with min/maxItems in the allOf section.
-
-Thanks for the feedback,
-Matthew Gerlach
-
->
->> +            - description: TX slave port region
->> +            - description: Control register access region
+>> +	cdns_pcie_host_enable_ptm_response(pcie);
 >> +
->> +        reg-names:
->> +          items:
->> +            - const: Hip
->> +            - const: Txs
->> +            - const: Cra
+>> +	ret = cdns_pcie_start_link(pcie);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to start link\n");
+>> +		return ret;
+>> +	}
 >> +
->
->
-> Best regards,
-> Krzysztof
->
->
+>> +	ret = cdns_pcie_host_start_link(rc);
+>> +	if (ret)
+>> +		dev_dbg(dev, "PCIe link never came up\n");
+> 
+> If we're going to ignore this error the message should be a dev_err()
+> at least.
+
+Hello Dan,
+
+In fact we already ignore this error [1]
+I only moved the hardware configuration part of cdns_pcie_host_setup()
+into a new function cdns_pcie_host_link_setup().
+
+But I can use this patch to switch to dev_err() if needed.
+
+[1]
+https://elixir.bootlin.com/linux/v6.9-rc4/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L549
+
+Regards,
+
+Thomas
+
 
