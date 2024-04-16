@@ -1,61 +1,73 @@
-Return-Path: <linux-pci+bounces-6330-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6331-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE5A68A71D8
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 19:02:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C781D8A75E7
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 22:47:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 954501F234A7
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 17:02:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 679A81F21A73
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 20:47:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D526130ACC;
-	Tue, 16 Apr 2024 17:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5774317C;
+	Tue, 16 Apr 2024 20:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZqFs0N2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSFZDRtQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182F36CDC8;
-	Tue, 16 Apr 2024 17:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698C717736;
+	Tue, 16 Apr 2024 20:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713286965; cv=none; b=CfCg1pk1H5YSCj/3M6gPq2YR4ez5y2wand4/8xE471UszDhLOhjTLCO9pkkoInO8y4Wh1MVhAXUl3pjKwiqMoUPbQrKeib3WRGn6s+HpqgEB235biqs0eBxLh+uEGcJoa8Z+z2bduX/HiE2oZp5GrCY5iA3pFSv/UOhf8LIquPw=
+	t=1713300416; cv=none; b=trE695kUU2Cy8CPHaPckvGwuLqoMiB+Sf5KOWh7Bw8EP1SfZdRHh2aFhdZfbi9vFeOnpx4XOILvPKzQTyEDnIdI46/s+m4x6KbHKfHLBaxrK7KegAOh+l3XwSTSJ+OnEHcjOyW4ffpBMFpE8CM7bDRsq6xxoZAnFaoGK57A6AwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713286965; c=relaxed/simple;
-	bh=swpRmuyUm0NTUnfkBwhLOJvbAum9jZWIxRc49A9ZH5s=;
+	s=arc-20240116; t=1713300416; c=relaxed/simple;
+	bh=PzXDXli+NQ8Ipg2Q4mQ6/IuDWq/2DB2/UEhvKB1bDGY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=KJQzVtqfNYJJw8cp/bYzTfUfyw6tFiltDsqxrZNywdIjQmx2NwTAYO0ZZDFb2Wy57yTSFhnWpcACGbChlXsorTckYzlman/SNlYYTNE+geT1+Js/ErdByuGDyr4VR42/IkedBA4zkBsM8XjEJwqF6nw4YR7vSnWzliAmJLhIqFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZqFs0N2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FC6C113CE;
-	Tue, 16 Apr 2024 17:02:44 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=jaVGvYHqB2EYPP+aIgQnYNctO+XxGE0A16yQmMYGrRPm9y/dQhDiu4g2CIdMMQc6pedBY7uMptMBCmzDfrN1dWPHxgxCi9+zgqNJGv38UQteIC6RrMoP5cNEYzFVBTU0C1l6tQHKNitMcdSsqorqPd4ncc1V5falv0CEZAqlG4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSFZDRtQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE13DC113CE;
+	Tue, 16 Apr 2024 20:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713286964;
-	bh=swpRmuyUm0NTUnfkBwhLOJvbAum9jZWIxRc49A9ZH5s=;
+	s=k20201202; t=1713300416;
+	bh=PzXDXli+NQ8Ipg2Q4mQ6/IuDWq/2DB2/UEhvKB1bDGY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HZqFs0N2qr133iHkYPMr1Mc2JByYkEaWVvjnKEfjaX32Nhmv2fqJG7Th2YDS66Tqs
-	 4tpQoGzhikLNsaxlvpvZfPLEZ5mkf63F7BV6Y45dcVMkLUHVXzQjwmE6LNJHlU6qSa
-	 HCITBkntv5/CzIqgXeNgaitqisOJRTNxP27ZMevlI1SM9fXNRp4bLw5RiNzHbUhuET
-	 iMApbzOVc2SajcWEOI/aWRYOin/aZ25kh1mxYg5zENyMQ+DAYGVGpZRZqeV/WyM0v2
-	 /fqYQzwTKLJvd6PHAdItQkBHuMO64xfKG98KmGhkCWJyC39XXmMqJpFqP1+TYm1Rv7
-	 1SgIAXwx7MGiw==
-Date: Tue, 16 Apr 2024 12:02:42 -0500
+	b=fSFZDRtQHi98DyjaM7ap3zCMfLlmmte/nFr/5XWlWTnTM1LpqvArQ+D8bckThywai
+	 jFMa7mUCIFjhJ1oWR5p8SMN3y+R7l15DYEeFuqYu+hsTyNPM/RteaxG1JUO1BhDKgs
+	 CrPUvOqTDDMl72OsXWjnO+jy5TEy4Wl5iPb/XgpMaiEktYx2XSYFM+F0IGvNhd5T8M
+	 s32geYw0IVrgqrG54iJT61/6UeLeWhZ+vFl+wVtT5nrNT7V1W6bJ/7UDTXHjnV9J5g
+	 k4S265Dw8ltfIt6gbU1DfKSUOJlTSed0ol1qhvoiaUS9wMATn9An1Tw38qqQwxejlW
+	 PDM8tZvF67x5A==
+Date: Tue, 16 Apr 2024 15:46:53 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 4/5] PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
-Message-ID: <20240416170242.GA164032@bhelgaas>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Robert Moore <robert.moore@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Subject: Re: [RFC PATCH v4 03/20] PCI: Make pci_create_root_bus() declare its
+ reliance on MSI domains
+Message-ID: <20240416204653.GA164172@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,52 +76,80 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240415-pme_msg-v6-4-56dad968ad3a@nxp.com>
+In-Reply-To: <Zh41pOmtAJ0EcbiN@sunil-laptop>
 
-On Mon, Apr 15, 2024 at 03:33:28PM -0400, Frank Li wrote:
-> Add PCIE_MSG_CODE_PME_TURN_OFF macros to enable a PCIe host driver to send
-> PME_Turn_Off messages.
+On Tue, Apr 16, 2024 at 01:54:04PM +0530, Sunil V L wrote:
+> Hi Bjorn,
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/pci.h | 2 ++
->  1 file changed, 2 insertions(+)
+> On Mon, Apr 15, 2024 at 06:15:23PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Apr 15, 2024 at 10:30:56PM +0530, Sunil V L wrote:
+> > > Similar to commit 9ec37efb8783 ("PCI/MSI: Make
+> > > pci_host_common_probe() declare its reliance on MSI domains"), declare
+> > > this dependency for PCI probe in ACPI based flow.
+> > > 
+> > > This is required especially for RISC-V platforms where MSI controller
+> > > can be absent. However, setting this for all architectures seem to cause
+> > > issues on non RISC-V architectures [1]. Hence, enabled this only for
+> > > RISC-V.
+> > > 
+> > > [1] - https://lore.kernel.org/oe-lkp/202403041047.791cb18e-oliver.sang@intel.com
+> > > 
+> > > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> > > ---
+> > >  drivers/pci/probe.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > > index 1325fbae2f28..e09915bee2ee 100644
+> > > --- a/drivers/pci/probe.c
+> > > +++ b/drivers/pci/probe.c
+> > > @@ -3048,6 +3048,9 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+> > >  	bridge->sysdata = sysdata;
+> > >  	bridge->busnr = bus;
+> > >  	bridge->ops = ops;
+> > > +#ifdef CONFIG_RISCV
+> > > +	bridge->msi_domain = true;
+> > > +#endif
+> > 
+> > Ugh.  I looked at [1], but that's not a very good justification for
+> > this #ifdef.  The fault mentioned in [1] would need to be fixed, but
+> > not this way.
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 19b4227a8a7e8..1f6d54a5a7cfc 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -30,6 +30,8 @@
->  #define PCIE_MSG_TYPE_R_LOCAL	4
->  #define PCIE_MSG_TYPE_R_GATHER	5
->  
-> +#define PCIE_MSG_CODE_PME_TURN_OFF	0x19
-
-This is defined in PCIe r6.0, sec 2.2.8.2, so move this below the INTx
-#defines so they're all in the order of the spec sections and add the
-spec citation to follow the same style as the surrounding #defines,
-i.e.,
-
-  /* Power Management Messages; PCIe r6.0, sec 2.2.8.2 */
-  #define PCIE_MSG_CODE_PME_TURN_OFF   0x19
-
-While you're at it, tweak the [1/5] comments to be:
-
-  /* Message Routing (r[2:0]); PCIe r6.0, sec 2.2.8 */
-  /* INTx Mechanism Messages; PCIe r6.0, sec 2.2.8.1 */
-
-since the "Message Routing See: PCIe ..." comments are run together
-and need some punctuation between the text and the citation.
-
-With these,
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
->  /* INTx Mechanism Messages See: PCIe r6.0, sec 2.2.8.1 */
->  #define PCIE_MSG_CODE_ASSERT_INTA	0x20
->  #define PCIE_MSG_CODE_ASSERT_INTB	0x21
+> Thank you again for the feedback!
 > 
-> -- 
-> 2.34.1
+> I agree. This is due to my limitation with knowledge and resources to
+> debug the issue happening on non-UEFI x86 system with some particular
+> PCIe RC. Also, I was worried that we get into a rat hole of
+> assumptions/quirks with various architecture/PCIe RC combinations.
+
+The problem is that adding #ifdefs like this leads to a rat hole
+itself.  We need to understand and fix the underlying issue instead.
+
+> For ex: I think the issue is, somehow MSI domain is not set at the time
+> of PCI host bridge registration in pci_register_host_bridge() causing
+> PCI_BUS_FLAGS_NO_MSI to be set. This causes pci_alloc_irq_vectors() to
+> fail. In portdrv.c, pcie_init_service_irqs() doesn't switch to INTx
+> handling if MSI can not be used. It switches only if pcie_pme_no_msi()
+> returns true. I couldn't find who actually sets up MSI domain bit late
+> on this platform so that it somehow worked when we didn't set this flag.
 > 
+> Unfortunately, I don't have system to root cause and fix this issue with
+> confidence. Also, I don't know if any other architectures have similar
+> issues which are not caught yet. Hence, I thought it may be better
+> just restrict the change to RISC-V.
+
+It sounds like the above is a good start on analyzing the problem.
+
+I don't quite understand your statement that pcie_init_service_irqs()
+doesn't fall back to INTx when MSI/MSI-X is not available.
+
+I'm looking at this:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/portdrv.c?id=v6.8#n177
+pcie_port_enable_irq_vec() attempts
+pci_alloc_irq_vectors(PCI_IRQ_MSIX | PCI_IRQ_MSI) and returns 0 if
+successful.  If it returns failure, it looks like
+pcie_init_service_irqs() *does* fall through to trying INTx
+(PCI_IRQ_LEGACY).
+
+Bjorn
 
