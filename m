@@ -1,91 +1,84 @@
-Return-Path: <linux-pci+bounces-6310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6311-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF72D8A688D
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 12:35:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E87FD8A6993
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 13:28:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1ADAF1C20A3B
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 10:35:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72A88B2126A
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Apr 2024 11:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3243FC2;
-	Tue, 16 Apr 2024 10:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8685128377;
+	Tue, 16 Apr 2024 11:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eK/cESzy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LU6S/1bT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92B0127B60
-	for <linux-pci@vger.kernel.org>; Tue, 16 Apr 2024 10:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEA1127B4E
+	for <linux-pci@vger.kernel.org>; Tue, 16 Apr 2024 11:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713263730; cv=none; b=ha0hOcllqTaIYNlWvwBBhwlmrrN0DYVdiJZMRG1aM2bz4jVHp4kgrL9NMqVxV9eM+rQi/NioizLvHGfP4+jSi6vnTYEHmknaxfwBxhfPvw72fyhJpDWwlXzae931t+xcKJwQBDlQssa0/0WZ3NgEZOKHPjOnAR7euVSE6dwvLO4=
+	t=1713266894; cv=none; b=RD5av53I2lEJrrpgCMyCeSWLsmfkSp1b3VLK5XcVpDmN5AJG3l6ns5KKz5e+8Q8ekCOIxsk2UFXn9CezDwINsUa3p3e+OkL5ie9MwkrA7eDfa7trX/D8vxzbe0R3tVfrVtsiidYiRbkrBRUeKMrFrXi7jzXphbPkJDTlKkLCLEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713263730; c=relaxed/simple;
-	bh=cY42OW8UeSirFeqsOJxYe5yMqVTg3yFG09RL5cMYF+A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q26L1M/nDATF4ojzHmFEw0M42djcoK7qH/MFZ0o4VY62brr8TP6YgwhKhDN0tdCYjoIrjId7SEj/BuxR5rFOwACmwuQBpdly3h2DUa5R0GgtiE5puqOTJ/iKU13OYpGlyR7JR09ovUNFzbcz70JedSCuyMX/pF8nEVqqsArUneo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eK/cESzy; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6eb7d1a5d39so1425174a34.2
-        for <linux-pci@vger.kernel.org>; Tue, 16 Apr 2024 03:35:28 -0700 (PDT)
+	s=arc-20240116; t=1713266894; c=relaxed/simple;
+	bh=PPaCYZgU3jMIV/6zWWtOMUY/I7M2S9h+j6BmR3DdglY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uH6nKbhu1CJOcn9gbAae/mfenWsSmcYMYOx0PJ6vNtqo7lHiW/A6K87rFZxYcbofvv1ycaJHu7uFBkfpT6Nyj2ubqkkAGAYdGfKs4kV1Kd1riqTsC58KGttNwKYnIMPEWodIybPzgtLJwsV48oNP4FtfaPAESZx4vPsSnFc9XxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LU6S/1bT; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so3284375a12.3
+        for <linux-pci@vger.kernel.org>; Tue, 16 Apr 2024 04:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713263727; x=1713868527; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cY42OW8UeSirFeqsOJxYe5yMqVTg3yFG09RL5cMYF+A=;
-        b=eK/cESzy9DYx6Ftc5nRxf9q2nhW38LXzJ8J2VaEfU/qLoE9I69vVhcV5XNpreTRcnQ
-         4ELnTb99LCjNPuHc8+XFUZ/j1WLRcaKPYJGQh3Y/4E7eybenya/0wQkvfd14HRAGU6R6
-         mKy3MNtedOEpIBAapZlcr/B8nsPclzrPc09fSJuiisOECKWd+Labx/R9wOU3hjM2duzd
-         bzABB2pbVpBzLZuaDbyr7OH8hMWrhRfFgiNOPe9/tGSSKfefot1sXTtNel/87Q0EnYif
-         1aaplox588jYLWw3QkaRw/b+Po5roavV3UeZEjo1shRAxHrP5AUKgmi/2ovv8l5Quxf0
-         /OpQ==
+        d=linaro.org; s=google; t=1713266893; x=1713871693; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zdTNnxpaxrR1ctyKVzJEH9wDta0s4TNTOOwoGZ9Hzm8=;
+        b=LU6S/1bTmXcareSI9YYAj9TsE4+nX2wE1MuOSKVK1f2lV+vUa2HdKsNSnxUP8JPQty
+         FuTquQqalxWaoptnGtysy0L9tdy9Oh2appEPVGow9CTIFMNVGqU0FjLFjRDCPeEsIuN+
+         vdWvSG+dX9JAoX4KXNvKVM8PqL3s+RWCJ7modWBLsO8gwFwcbrELwSF3Hq+s7aJ6cYyI
+         06lpoQjvNqqC+3iZzBqDx6yO+441MKxggnd8qh3m5DTIAgACwocfR+I6ybwpVCBsWYzU
+         rF99+lysMqfirMfRLbWAlQrGPWqu66jmfOBJa5XkU5BarxIzHRTpj+kR8QNRQtApwzNh
+         gl4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713263727; x=1713868527;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cY42OW8UeSirFeqsOJxYe5yMqVTg3yFG09RL5cMYF+A=;
-        b=ZzWahL+ArlXLQEzLNq1yOKOUddAImU8i9FJ2+Fy9CmtkaSzbPOziyrdkDLOOb9i2Z7
-         nQ9vS/ILvGXcvXSQmF3kb62jaFNV1Nt5jb+f5gJofl/c7+vpuRIHUYd3TLjNqTdJOesF
-         ox2hnyHY3I6neSOYISkG1GZydrZHz9+wgOljVPMNOU2HA1G5wuWhogEkzEBG6jaSt5dO
-         xh8QyHkzg9xsc+rFlVz1bFU9iqPL0pj9SySixQ3EA7aCDCzQHZ8KhiF7hm9uYgeZITA0
-         ExO4qCo4TnOXfoXYlboyWmMVj6jVoMM9MkRFW/L4ePFK4xCvo7z6R1bFyqUb+lDXPAaZ
-         CT0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXxHXmjjifCB3SrphpAX4NM3S64G/qWYmdnJW7AJkrTP87aWPFcxbAKHIknttJmtxh5pydr5XEB7PMhgjAevYvOQNAuxYgPXXjy
-X-Gm-Message-State: AOJu0Yz1mYt86Ndfed3jFlPl9iCphWjaU4Ld1djfNF/NLZtmDpBFComl
-	xFrVqS0hNuJsbgL/pv2AjBtjq0HgcG6dMkMlO5xFaySik5GtnPFS/L0n4BeaCCw=
-X-Google-Smtp-Source: AGHT+IEw9cmwM2hIAoklpoZ7SS+Np/6aL4HkLZt9UHslpEDKjbR9asrxOOJl5iBbyhftJP409IHk2A==
-X-Received: by 2002:a05:6830:1147:b0:6eb:7260:cbd with SMTP id x7-20020a056830114700b006eb72600cbdmr7828300otq.4.1713263727617;
-        Tue, 16 Apr 2024 03:35:27 -0700 (PDT)
-Received: from localhost.localdomain ([221.220.135.251])
-        by smtp.gmail.com with ESMTPSA id o65-20020a634144000000b005dc36761ad1sm8677293pga.33.2024.04.16.03.35.22
+        d=1e100.net; s=20230601; t=1713266893; x=1713871693;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zdTNnxpaxrR1ctyKVzJEH9wDta0s4TNTOOwoGZ9Hzm8=;
+        b=QSGo1xk65iGBNSSvwrAk2BSi/YWP7LwdC6Ob9XdFsSG2jPuSYc0p1TS4g9vyOtUvCW
+         kgG5ka4bt4g1nBGQRETPcraMHScgk8BXlfjmRzcm1Zri+WfHUXS6lZtPjAzcViC8URaw
+         p4l6UdrU/tYUbTvM4QCP5mYb55FdTCJdQTIMwtt+nU0wQALohi4x63Vph1VvvTcFW9Rn
+         JvyvrLexYH2HNFVMLyoPPBEV0YvCv97Gf64wwKCPz2oPXrNQmPoMnrrF0ctZ6+y/RlwR
+         108vsaiiCcs3q+0VEPM0mN6AT/YYezDCkJ/vaqgVxE7ak8E4x2GhEFRCri4kFwCl3E/I
+         a3pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW12S0ex1nNwfbboCpYwVt89en3LS5ZtkH4IqfijBto2o3I1Jj6SbST7e/FkNqr2T+6Mp6CPkoXJl0+xjSR+N1qh5tYEhdgKHBt
+X-Gm-Message-State: AOJu0Yy1w+oh6LFMKQSeenB6YDn0W0wHuMRY5dAFBPLX6/Brm893wsRK
+	icekbhMNe7ivtxo7GucvmwLegLvGROtiHJPo8NwimMDAreLTRJ+l4Fph5y+RUw==
+X-Google-Smtp-Source: AGHT+IGeuKxJIbqW3XQXNTArgkzHXa2+NyC8omydrI7ODv5FfOAcPf2JI0TAcwL9eO2rQVR1QEDI1g==
+X-Received: by 2002:a05:6a20:971a:b0:1a3:57b4:ed1c with SMTP id hr26-20020a056a20971a00b001a357b4ed1cmr9903003pzc.25.1713266892340;
+        Tue, 16 Apr 2024 04:28:12 -0700 (PDT)
+Received: from thinkpad ([120.56.207.234])
+        by smtp.gmail.com with ESMTPSA id s16-20020a170902ea1000b001e27462b988sm9534702plg.61.2024.04.16.04.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 03:35:27 -0700 (PDT)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: cassel@kernel.org
-Cc: bhelgaas@google.com,
-	dlemoal@kernel.org,
-	heiko@sntech.de,
-	kw@linux.com,
+        Tue, 16 Apr 2024 04:28:11 -0700 (PDT)
+Date: Tue, 16 Apr 2024 16:58:07 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	lpieralisi@kernel.org,
-	robh@kernel.org,
-	sebastian.reichel@collabora.com,
-	shawn.lin@rock-chips.com,
-	Jianfeng Liu <liujianfeng1994@gmail.com>
+	linux-rockchip@lists.infradead.org
 Subject: Re: [PATCH] PCI: dw-rockchip: Fix GPIO initialization flag
-Date: Tue, 16 Apr 2024 18:35:12 +0800
-Message-Id: <20240416103512.330489-1-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240327152531.814392-1-cassel@kernel.org>
+Message-ID: <20240416112807.GC2454@thinkpad>
 References: <20240327152531.814392-1-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -93,15 +86,92 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240327152531.814392-1-cassel@kernel.org>
 
-Test on rock5b with RTL8822CE connected to M.2 E slot.
-Before this patch RTL8822CE is not detected sometimes, and I tried to
-fix it by a patch[1] but that could not solve it. And in that thread
-Sebastian mentioned this fix. Now with this patch my pcie wifi can get
-detected normally.
+On Wed, Mar 27, 2024 at 04:25:31PM +0100, Niklas Cassel wrote:
+> PERST is active low according to the PCIe specification.
+> 
+> However, the existing pcie-dw-rockchip.c driver does:
+> gpiod_set_value(..., 0); msleep(100); gpiod_set_value(..., 1);
+> When asserting + deasserting PERST.
+> 
+> This is of course wrong, but because all the device trees for this
+> compatible string have also incorrectly marked this GPIO as ACTIVE_HIGH:
+> $ git grep -B 10 reset-gpios arch/arm64/boot/dts/rockchip/rk3568*
+> $ git grep -B 10 reset-gpios arch/arm64/boot/dts/rockchip/rk3588*
+> 
+> The actual toggling of PERST is correct.
+> (And we cannot change it anyway, since that would break device tree
+> compatibility.)
+> 
+> However, this driver does request the GPIO to be initialized as
+> GPIOD_OUT_HIGH, which does cause a silly sequence where PERST gets
+> toggled back and forth for no good reason.
+> 
+> Fix this by requesting the GPIO to be initialized as GPIOD_OUT_LOW
+> (which for this driver means PERST asserted).
+> 
+> This will avoid an unnecessary signal change where PERST gets deasserted
+> (by devm_gpiod_get_optional()) and then gets asserted
+> (by rockchip_pcie_start_link()) just a few instructions later.
+> 
+> Before patch, debug prints on EP side, when booting RC:
+> [  845.606810] pci: PERST asserted by host!
+> [  852.483985] pci: PERST de-asserted by host!
+> [  852.503041] pci: PERST asserted by host!
+> [  852.610318] pci: PERST de-asserted by host!
+> 
+> After patch, debug prints on EP side, when booting RC:
+> [  125.107921] pci: PERST asserted by host!
+> [  132.111429] pci: PERST de-asserted by host!
+> 
+> Without this change, there is no guarantee that PERST will be asserted
+> while the core is performing a fundamental reset.
 
-[1] https://lore.kernel.org/all/20240401081302.942742-1-liujianfeng1994@gmail.com/
+There is no 'core' here, are you referring to the device?
 
-Tested-by: Jianfeng Liu <liujianfeng1994@gmail.com>
+> (E.g. if the bootloader would leave PERST deasserted.)
+> 
+
+I don't follow this last sentence. But even without that, the commit message
+itself is descriptive enough.
+
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+
+This is a legitimate bug fix. So you should add the fixes tag and CC stable to
+get it backported.
+
+But the patch itself looks fine to me.
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index d6842141d384..a909e42b4273 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -240,7 +240,7 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
+>  		return PTR_ERR(rockchip->apb_base);
+>  
+>  	rockchip->rst_gpio = devm_gpiod_get_optional(&pdev->dev, "reset",
+> -						     GPIOD_OUT_HIGH);
+> +						     GPIOD_OUT_LOW);
+>  	if (IS_ERR(rockchip->rst_gpio))
+>  		return PTR_ERR(rockchip->rst_gpio);
+>  
+> -- 
+> 2.44.0
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
