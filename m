@@ -1,40 +1,75 @@
-Return-Path: <linux-pci+bounces-6351-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6352-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C21738A8407
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 15:16:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 585178A84C8
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 15:34:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E47A51C21F60
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 13:16:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6EE91F2036E
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 13:34:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D41813D62C;
-	Wed, 17 Apr 2024 13:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B9B813F01A;
+	Wed, 17 Apr 2024 13:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKpS8zwe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5A513DDAE
-	for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 13:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DAC13EFEE
+	for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 13:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713359775; cv=none; b=GNTkatrzf+oHHLQTgQHgVMreT5eI5dnLfSOKyTOn5It3Psu9PzBU2BIV3wXFCLnVjDvYmlcDPSRR5bsZSMvzeMTR8C7na30DP3s7zk+E81nOlJNP7NGOS+rWpYxHAGvs6hu6aJtt7fT3acB5cEnH1VHf7mcW75CsWe408M6MAoc=
+	t=1713360879; cv=none; b=J1kLlVSGSqvnBcMO5u+UonT0d3COdKsz+huXU2whzcM2WY5HY7D2U1U76SQQb1N38mruKwuqb/4S9Op862WKyvAX7Ib5jhxPzs0tBE4CJIf4Jwq0qt41ErjTzurma1QSvvJJG2pKNJzBMoOkNAGuo/tYxmqmMqEEFSEnIks/Nfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713359775; c=relaxed/simple;
-	bh=05iGaNZerxPYbvgZ8UhCGbTTyp/C7lHEXiSREq79azY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=a8J2J6Iof/YOJQZF4ACi8xa4c7OdJOKKtCyoJbPw26u8bhoCQh4OajHh5XzVxFVWxQISnWfUG8iZSRzMouKvb6C/FFHQUd2Rq39L/ZQJjwI4ULEcaqXDWuRk5JMT1fc7kx7aTk7LuYI5bICj6fDzvUfv7oN3HFgsFWCXX6ap64c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bakke.com; spf=pass smtp.mailfrom=bakke.com; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bakke.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bakke.com
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 472D380E62;
-	Wed, 17 Apr 2024 13:16:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: dag@bakke.com) by omf19.hostedemail.com (Postfix) with ESMTPA id C18B620029;
-	Wed, 17 Apr 2024 13:16:07 +0000 (UTC)
-Message-ID: <45df4a61-580d-49f9-96a9-13b091b9e256@bakke.com>
-Date: Wed, 17 Apr 2024 15:16:06 +0200
+	s=arc-20240116; t=1713360879; c=relaxed/simple;
+	bh=alH/EZJM1d1TCFDY15jFAXlKwQO39PxcOVlCV8uY/dY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jRh5Yrx52AQLcQEXO6onRTdnhS5UtWht8sH8gBhJvM4+yJIMwJemtfsonBZJEQjB2rb4sWGfiwMNtxsOILEdZ2eo85WqkoO8cFpxFoZbYumxzSA0HnBpqhHhC0gGPu8djveQOkrPMBnAnmRv7r9Yd50Vo6PtNDCfyAm/7TZfzMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GKpS8zwe; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e5c7d087e1so38089905ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 06:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713360878; x=1713965678; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=qQpk6M7q24ajxJBZjKob9s9mchMKviv3ZIY6EByy4P0=;
+        b=GKpS8zweXq8tlhYKHP7xb7KrjsVHQbVYHaPd0AQRby8ZW3EXsep7JSSegFR6O1xSg/
+         baqp8/6SFZCubZr1pNl4XKxcEC26Lcb5f/Wwiuk0hCmY0yWBiPxPxxaK7FRdwT9CL3nV
+         YUsZg/A9nRcilxuRwFSRTWCu5dO3IpOQJc39bSj4bS3X6cR/tS+1FuUtIF2REsCWA5eM
+         B7oiFlen0jVQ60dChR3HqYe7vKkgutSPSqcgKSzCBBceoQsvnfGfe8/khVXo67vyPWd6
+         C0JCi5EOlI62oTJaJUhzJAOVIOi8YEn0qrHFqOz1bYJz8wuDxvdSMq1oloGnEhvC2mPe
+         3MVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713360878; x=1713965678;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qQpk6M7q24ajxJBZjKob9s9mchMKviv3ZIY6EByy4P0=;
+        b=R7zTU2A5njv4cOwftwoXJRJciar+ru0OpMQr3TpJEfiF5JfsX3+GJB3WoWdjv67++M
+         6kWd+2NRdyxFFrg2RKGZMWZ28YpsUvKz6/gwQhXKhzev/pORU+efZxJ0zoIVMkYw3yiZ
+         0GpyPeaYnupA4dYKbYt+h1LZuI1grsa/5vjG5+vYLcLuteNusnCgfXP3mKoRzp3M4K0e
+         b5fvgql6MnNLep4vJ94LMDDoK2kByC/zFHlPqdJ9VvdEt6jqEhBp0R3nPZ7iso/NlrtV
+         hoWpSgae9jMpdKD1n0DRbuUmXAEN14EzaeNh4ly3QWn+o1r9gR2VEnmAmTgK7E9fbg2q
+         wo7g==
+X-Forwarded-Encrypted: i=1; AJvYcCV473olfJ9c5nnX8qti4n7QsHkgojHanTuxST6XE+G+3ygn/qGSqPBZXHiUE2PZnHPMRlLIyEKOBKoFWsQEqMmyw6Rm3dhdPvkk
+X-Gm-Message-State: AOJu0YyBwpw2XpzcJAGJbKSO4kZGOIJ0bn6Iu5B3W6W4YIhmTDN5hnTP
+	2rUg3MdZCidxiJKWj7zV+k+n8q6DsZ1Z/G1QyyLTuf227B8sFs30sLJTYHAYBzU=
+X-Google-Smtp-Source: AGHT+IHNFNE8rpBby9S+K49GhqlBngJX8LZuUeYNpl230n9/7QUVMXSQQnsuylZ2sfm7+Zh0iPKPGQ==
+X-Received: by 2002:a17:903:22c4:b0:1e0:b9d0:f6b with SMTP id y4-20020a17090322c400b001e0b9d00f6bmr15384739plg.68.1713360877982;
+        Wed, 17 Apr 2024 06:34:37 -0700 (PDT)
+Received: from [172.20.9.36] ([209.37.221.130])
+        by smtp.gmail.com with ESMTPSA id d14-20020a170902aa8e00b001e5e6877494sm8408204plr.238.2024.04.17.06.34.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 06:34:37 -0700 (PDT)
+Message-ID: <27686f2a-a517-4923-ba6d-58233cf149af@linaro.org>
+Date: Wed, 17 Apr 2024 15:34:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -42,259 +77,78 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] dt-bindings: PCI: altera: Convert to YAML
+To: matthew.gerlach@linux.intel.com
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240413172641.436341-1-matthew.gerlach@linux.intel.com>
+ <c21f6d49-bd70-465e-a446-fb70838bab48@linaro.org>
+ <alpine.DEB.2.22.394.2404160720360.424541@sj-4150-psse-sw-opae-dev2>
 Content-Language: en-US
-From: Dag B <dag@bakke.com>
-Subject: PCIE BAR resizing blocked by another BAR on same device?
-To: linux-pci@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: C18B620029
-X-Stat-Signature: td67afji5eww5x69186kk975riampwqj
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 6461674062616B6B652E636F6D
-X-Session-ID: U2FsdGVkX19eB91gdPZBmwwUHxlKiPD3hMW7fbfUwu8=
-X-HE-Tag: 1713359767-260895
-X-HE-Meta: U2FsdGVkX19ssJrft2qhHkruSTpGI80SOKyiGCLggIvMH3/GFhtwickDScYt7pyq4lsdVMPofM6Y6xxX5Sc7BmPokmzoylEkMW8vyZHMOfI7une0tmM70vwOrcIVulVm+mAoH5GhFfm/cUua1yvl9euHPDqwKEtIF6CdbTf868vJ6zQ8jXn1m5ezS3SnJPVWOL2y6//ut/OsXT4HnU5jA3o4WrULnw1yh4E9EyAkOIYoP1bsQzIX2Rt5n8VDsxfejhVrtHSc1K0wMziAZ9k7pO72Y4QMrrZNIe49WWi1J4ZVC8CWIEa+ug2lcFhmJsmtr85tix56chWBLFJb7dUd5MOfDLJ1gdIQ
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <alpine.DEB.2.22.394.2404160720360.424541@sj-4150-psse-sw-opae-dev2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi.
+On 16/04/2024 16:32, matthew.gerlach@linux.intel.com wrote:
+>>
+>> Why Hip is the first? Old binding suggested it to be the last entry. It
+>> would also make binding easier, as you describe reg and reg-names in
+>> top-level and just limit them with min/maxItems.
+>>
+>> Does anything depend on different order (Hip as first)?
+> 
+> I don't think the order really matters. So Hip could go last, and it makes 
 
-In short, I have a GPU for which lspci reveals:
+The order matters, it is the ABI.
 
-Capabilities: [bb0 v1] Physical Resizable BAR
-
-         BAR 0: current size: 16MB, supported: 16MB
-         BAR 1: current size: 128MB, supported: 64MB 128MB 256MB 512MB 
-1GB 2GB 4GB 8GB 16GB 32GB
-         BAR 3: current size: 32MB, supported: 32MB
-
-In dmesg I see:
-
-[    0.517191] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x600fffffff 
-64bit pref]: assigned
-[    0.517238] pci 0000:08:00.0: BAR 3 [mem 0x6010000000-0x6011ffffff 
-64bit pref]: assigned
-[    0.517261] pci 0000:08:00.0: BAR 0 [mem 0xa4000000-0xa4ffffff]: assigned
-
-I take it the location of BAR 3 right after BAR 1 explains why I get:
-
-p53 # echo 9 > resource1_resize
--bash: echo: write error: No space left on device
-
-Shrinking it and increasing it to the orginal size works.
-
-
-Is there anything I can do with current kernel functionality to reserve 
-memory address space for the full-fat BAR 1? Or relocate it?
-
-If not, is this something which *can* be worked around in the kernel? 
-And if so, does it belong with the PCI subsystem? Or the devicedriver 
-for the device in question?
-
-Is there a good ELI13 resource explaining how resizable BAR works in Linux?
-
-My current kernel command-line contains: pci=assign-busses,realloc
-
-My GPU is attached via TB3 to a system for which resizable BAR is and 
-will remain a foreign concept in the BIOS.
-
-dmesg excerpt below reflects resizing the BAR to 128MB and then back to 
-256MB.
-
-[ 1730.091789] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x600fffffff 
-64bit pref]: releasing
-[ 1730.091875] pci 0000:08:00.0: BAR 3 [mem 0x6010000000-0x6011ffffff 
-64bit pref]: releasing
-[ 1730.092072] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x6017ffffff 64bit pref]: releasing
-[ 1730.092151] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x6017ffffff 64bit pref]: assigned
-[ 1730.092223] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x600fffffff 
-64bit pref]: assigned
-[ 1730.092335] pci 0000:08:00.0: BAR 3 [mem 0x6010000000-0x6011ffffff 
-64bit pref]: assigned
-[ 1730.092444] pcieport 0000:06:00.0: PCI bridge to [bus 07-09]
-[ 1730.092510] pcieport 0000:06:00.0:   bridge window [io 0x4000-0x6fff]
-[ 1730.092595] pcieport 0000:06:00.0:   bridge window [mem 
-0xa4000000-0xafffffff]
-[ 1730.092680] pcieport 0000:06:00.0:   bridge window [mem 
-0x6000000000-0x601fffffff 64bit pref]
-[ 1730.092778] pcieport 0000:07:01.0: PCI bridge to [bus 08]
-[ 1730.092850] pcieport 0000:07:01.0:   bridge window [io 0x4000-0x4fff]
-[ 1730.092933] pcieport 0000:07:01.0:   bridge window [mem 
-0xa4000000-0xa57fffff]
-[ 1730.093018] pcieport 0000:07:01.0:   bridge window [mem 
-0x6000000000-0x6017ffffff 64bit pref]
-[ 1759.817306] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x600fffffff 
-64bit pref]: releasing
-[ 1759.817394] pci 0000:08:00.0: BAR 3 [mem 0x6010000000-0x6011ffffff 
-64bit pref]: releasing
-[ 1759.817591] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x6017ffffff 64bit pref]: releasing
-[ 1759.817668] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x600bffffff 64bit pref]: assigned
-[ 1759.817740] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x6007ffffff 
-64bit pref]: assigned
-[ 1759.817853] pci 0000:08:00.0: BAR 3 [mem 0x6008000000-0x6009ffffff 
-64bit pref]: assigned
-[ 1759.817964] pcieport 0000:06:00.0: PCI bridge to [bus 07-09]
-[ 1759.818035] pcieport 0000:06:00.0:   bridge window [io 0x4000-0x6fff]
-[ 1759.818120] pcieport 0000:06:00.0:   bridge window [mem 
-0xa4000000-0xafffffff]
-[ 1759.818204] pcieport 0000:06:00.0:   bridge window [mem 
-0x6000000000-0x601fffffff 64bit pref]
-[ 1759.818303] pcieport 0000:07:01.0: PCI bridge to [bus 08]
-[ 1759.818374] pcieport 0000:07:01.0:   bridge window [io 0x4000-0x4fff]
-[ 1759.818459] pcieport 0000:07:01.0:   bridge window [mem 
-0xa4000000-0xa57fffff]
-[ 1759.818544] pcieport 0000:07:01.0:   bridge window [mem 
-0x6000000000-0x600bffffff 64bit pref]
-[ 1769.797178] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x6007ffffff 
-64bit pref]: releasing
-[ 1769.797241] pci 0000:08:00.0: BAR 3 [mem 0x6008000000-0x6009ffffff 
-64bit pref]: releasing
-[ 1769.797417] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x600bffffff 64bit pref]: releasing
-[ 1769.797473] pcieport 0000:07:01.0: bridge window [mem size 0x30000000 
-64bit pref]: can't assign; no space
-[ 1769.797515] pcieport 0000:07:01.0: bridge window [mem size 0x30000000 
-64bit pref]: failed to assign
-[ 1769.797557] pci 0000:08:00.0: BAR 1 [mem size 0x20000000 64bit pref]: 
-can't assign; no space
-[ 1769.797594] pci 0000:08:00.0: BAR 1 [mem size 0x20000000 64bit pref]: 
-failed to assign
-[ 1769.797630] pci 0000:08:00.0: BAR 3 [mem size 0x02000000 64bit pref]: 
-can't assign; no space
-[ 1769.797666] pci 0000:08:00.0: BAR 3 [mem size 0x02000000 64bit pref]: 
-failed to assign
-[ 1769.797703] pcieport 0000:06:00.0: PCI bridge to [bus 07-09]
-[ 1769.797761] pcieport 0000:06:00.0:   bridge window [io 0x4000-0x6fff]
-[ 1769.797829] pcieport 0000:06:00.0:   bridge window [mem 
-0xa4000000-0xafffffff]
-[ 1769.797895] pcieport 0000:06:00.0:   bridge window [mem 
-0x6000000000-0x601fffffff 64bit pref]
-[ 1769.797972] pcieport 0000:07:01.0: PCI bridge to [bus 08]
-[ 1769.798027] pcieport 0000:07:01.0:   bridge window [io 0x4000-0x4fff]
-[ 1769.798089] pcieport 0000:07:01.0:   bridge window [mem 
-0xa4000000-0xa57fffff]
-[ 1769.798155] pcieport 0000:07:01.0:   bridge window [mem 
-0x6000000000-0x600bffffff 64bit pref]
-[ 1769.798270] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x6007ffffff 
-64bit pref]: assigned
-[ 1769.798358] pci 0000:08:00.0: BAR 3 [mem 0x6008000000-0x6009ffffff 
-64bit pref]: assigned
-[ 2669.324929] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x6007ffffff 
-64bit pref]: releasing
-[ 2669.324992] pci 0000:08:00.0: BAR 3 [mem 0x6008000000-0x6009ffffff 
-64bit pref]: releasing
-[ 2669.325164] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x600bffffff 64bit pref]: releasing
-[ 2669.325219] pcieport 0000:07:01.0: bridge window [mem size 0x30000000 
-64bit pref]: can't assign; no space
-[ 2669.327023] pcieport 0000:07:01.0: bridge window [mem size 0x30000000 
-64bit pref]: failed to assign
-[ 2669.328798] pci 0000:08:00.0: BAR 1 [mem size 0x20000000 64bit pref]: 
-can't assign; no space
-[ 2669.330482] pci 0000:08:00.0: BAR 1 [mem size 0x20000000 64bit pref]: 
-failed to assign
-[ 2669.331104] pci 0000:08:00.0: BAR 3 [mem size 0x02000000 64bit pref]: 
-can't assign; no space
-[ 2669.331682] pci 0000:08:00.0: BAR 3 [mem size 0x02000000 64bit pref]: 
-failed to assign
-[ 2669.332258] pcieport 0000:06:00.0: PCI bridge to [bus 07-09]
-[ 2669.332855] pcieport 0000:06:00.0:   bridge window [io 0x4000-0x6fff]
-[ 2669.333444] pcieport 0000:06:00.0:   bridge window [mem 
-0xa4000000-0xafffffff]
-[ 2669.334130] pcieport 0000:06:00.0:   bridge window [mem 
-0x6000000000-0x601fffffff 64bit pref]
-[ 2669.334821] pcieport 0000:07:01.0: PCI bridge to [bus 08]
-[ 2669.335460] pcieport 0000:07:01.0:   bridge window [io 0x4000-0x4fff]
-[ 2669.336063] pcieport 0000:07:01.0:   bridge window [mem 
-0xa4000000-0xa57fffff]
-[ 2669.336657] pcieport 0000:07:01.0:   bridge window [mem 
-0x6000000000-0x600bffffff 64bit pref]
-[ 2669.337442] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x6007ffffff 
-64bit pref]: assigned
-[ 2669.338073] pci 0000:08:00.0: BAR 3 [mem 0x6008000000-0x6009ffffff 
-64bit pref]: assigned
-[ 2673.200263] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x6007ffffff 
-64bit pref]: releasing
-[ 2673.201935] pci 0000:08:00.0: BAR 3 [mem 0x6008000000-0x6009ffffff 
-64bit pref]: releasing
-[ 2673.203801] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x600bffffff 64bit pref]: releasing
-[ 2673.205461] pcieport 0000:07:01.0: bridge window [mem 
-0x6000000000-0x6017ffffff 64bit pref]: assigned
-[ 2673.206197] pci 0000:08:00.0: BAR 1 [mem 0x6000000000-0x600fffffff 
-64bit pref]: assigned
-[ 2673.206800] pci 0000:08:00.0: BAR 3 [mem 0x6010000000-0x6011ffffff 
-64bit pref]: assigned
-[ 2673.207534] pcieport 0000:06:00.0: PCI bridge to [bus 07-09]
-[ 2673.208143] pcieport 0000:06:00.0:   bridge window [io 0x4000-0x6fff]
-[ 2673.208734] pcieport 0000:06:00.0:   bridge window [mem 
-0xa4000000-0xafffffff]
-[ 2673.209323] pcieport 0000:06:00.0:   bridge window [mem 
-0x6000000000-0x601fffffff 64bit pref]
-[ 2673.209916] pcieport 0000:07:01.0: PCI bridge to [bus 08]
-[ 2673.210526] pcieport 0000:07:01.0:   bridge window [io 0x4000-0x4fff]
-[ 2673.211170] pcieport 0000:07:01.0:   bridge window [mem 
-0xa4000000-0xa57fffff]
-[ 2673.211755] pcieport 0000:07:01.0:   bridge window [mem 
-0x6000000000-0x6017ffffff 64bit pref]
-
-
-Unsure what else from dmesg or kernel config is relevant here. Can post 
-the full 100k here or somewhere else. Or excerpts.
-
-[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009efff] usable
-[    0.000000] BIOS-e820: [mem 0x000000000009f000-0x00000000000fffff] 
-reserved
-[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000006f23bfff] usable
-[    0.000000] BIOS-e820: [mem 0x000000006f23c000-0x000000006f23cfff] 
-reserved
-[    0.000000] BIOS-e820: [mem 0x000000006f23d000-0x000000007a792fff] usable
-[    0.000000] BIOS-e820: [mem 0x000000007a793000-0x000000007fa6cfff] 
-reserved
-[    0.000000] BIOS-e820: [mem 0x000000007fa6d000-0x000000007fca9fff] 
-ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x000000007fcaa000-0x000000007fd0efff] 
-ACPI data
-[    0.000000] BIOS-e820: [mem 0x000000007fd0f000-0x000000007fd0ffff] usable
-[    0.000000] BIOS-e820: [mem 0x000000007fd10000-0x0000000087ffffff] 
-reserved
-[    0.000000] BIOS-e820: [mem 0x0000000088000000-0x00000000887fffff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000088800000-0x000000008f7fffff] 
-reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fe010000-0x00000000fe010fff] 
-reserved
-[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000106c7fffff] usable
-[    0.000000] efi: Not removing mem55: MMIO 
-range=[0xfe010000-0xfe010fff] (4KB) from e820 map
-[    0.000003] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
-[    0.000006] e820: remove [mem 0x000a0000-0x000fffff] usable
-[    0.503260] e820: reserve RAM buffer [mem 0x0009f000-0x0009ffff]
-[    0.503262] e820: reserve RAM buffer [mem 0x6f23c000-0x6fffffff]
-[    0.503263] e820: reserve RAM buffer [mem 0x7a793000-0x7bffffff]
-[    0.503264] e820: reserve RAM buffer [mem 0x7fd10000-0x7fffffff]
-[    0.503265] e820: reserve RAM buffer [mem 0x88800000-0x8bffffff]
-[    0.503266] e820: reserve RAM buffer [mem 0x106c800000-0x106fffffff]
-
-
-[    0.255546] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
-[    0.445755] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM 
-ClockPM Segments MSI HPX-Type3]
-[    0.447023] acpi PNP0A08:00: _OSC: platform does not support [AER]
-[    0.449507] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME 
-PCIeCapability LTR]
-[    0.449511] acpi PNP0A08:00: FADT indicates ASPM is unsupported, 
-using BIOS configuration
-
-[    0.522380] caller snb_uncore_imc_init_box+0x73/0xd0 mapping multiple 
-BARs
-
-
-Thanks,
-
-
-Dag B
+Best regards,
+Krzysztof
 
 
