@@ -1,88 +1,95 @@
-Return-Path: <linux-pci+bounces-6342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE4B08A7CC2
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 09:05:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 833C88A7CC8
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 09:06:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BBAE1C20E97
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 07:05:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A8182820BD
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Apr 2024 07:06:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC1C6A33B;
-	Wed, 17 Apr 2024 07:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C2169E0C;
+	Wed, 17 Apr 2024 07:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GHPwHfOD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RUgCveJ6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC1F657DE
-	for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 07:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60D36A329
+	for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 07:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713337534; cv=none; b=Pa0DcD+RVaIgr/E8hu/LVRxD/mYZVyrItylxsm5XwT4ukiS/HisK8eDzHawKfzuj9+lXifOcw62MUMRGQbfVnkg0QenzBVxgWC176hKKdb1eVE/IyiPQOstdJzwU7OgIyyy3GOIs3OSvYXA3BqjDpSFeS5JIee3g87bEyiAKndk=
+	t=1713337592; cv=none; b=oY4HOXr6qJCQzUrDrmwNQ/GaOSXCqtPKAKHkSaFIzgYdeEhGFPRTVTh0bwwES9RvVqSYH86mCg/Fh+4PAwptTkvZF8KETey1vSl73z+g4fUdBebtH8R9IKh5noQOtL2qhh3jGmcK8AkbN//KG9+c/6MA3zwYVLWlnZaO3LX7MhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713337534; c=relaxed/simple;
-	bh=bPEa0MkxN7S2larn21dK+8bkmH9iV2RJi0htA1d/rBU=;
+	s=arc-20240116; t=1713337592; c=relaxed/simple;
+	bh=TOB6vp87U9Lnnn2dsE4owyfBnMI3t4WxK3sGEUGR9XI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uuhDQ8Yfbq5yJWXlPya1kCw8RpI8kyrB1zEY2m1sAqjNpSKEjae7V0+GP+jgQvwm+ROSgGDYz5cFrPv1omOHI29huQ9qhqFG1a8OihAtq6PAqlQ0XQVU1jdeiThAJ7nxSzcL8pijRnixcnUW2lprRvh263+iMwayalRem2LCbWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GHPwHfOD; arc=none smtp.client-ip=209.85.216.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cppxr3Hwfi2lF/TAKZyRdBD2Vgy/+ZwWrrNmuSyrO/3PaDCHDD99qf9I9Xwt4EcAGwTrsktz8HDZxcmyobcp0tNyds1xXUy4n5mfDX3M7WiAU6ifq9r5Ielx7bkDgGFHBpRvHdYZ2lYQMeoQGNrcIJ/pxsXrzKT4yjJ2akyNU5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RUgCveJ6; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a53a4a283eso4367386a91.0
-        for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 00:05:31 -0700 (PDT)
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6eced6fd98aso4732591b3a.0
+        for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 00:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713337531; x=1713942331; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713337590; x=1713942390; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=nT6tFhvCySxWh9JfwI+ew2P3H0H+myzNUarVTSp+pTw=;
-        b=GHPwHfODLy+t5EHgMZzCnTCW66IoAfDPVnLeKv4Sx5HELRxYyrh7DcV9f5xpcUGI1c
-         TOLV47kOzcPzbAC8VflvLs9KsjVlfEm8nkitQCsHexYbyMz+YcHySrP1u+soRHL7Ql8O
-         juhqN3KlOcBs7Q/4uI/NEsdE/3oekQ0eYQgxEtQpjmM2oQb8+wMJpHH0jwdEaXFhmc/k
-         M8vzsZHFj6FwD6V6yPjo9EjgejN8t0CzYrnt5yFwQe5O2baHcQbIrc9vyGMSzyJ6TgzQ
-         v9yw5JyuUP17Plofd1NiGs85WkAnnJMhjrmkB4aMAuWRfmijnTafyQgemQxmTWWRuswz
-         /JWQ==
+        bh=Id9wk8bOD3jpvQHQWy0txCOh7lELBvXiW74KprcLKWE=;
+        b=RUgCveJ6QvF6PTGt7ORkajy1ZJT0hzUkS+VzTq0m7bBQK76HZD6gOQfWlXzMxBhbbY
+         6x15t1OU4V+r5YPUekLHJ64SYD7wEfqxTaBzGk2tNM1GUn7K9bccuat+UlGjxUFuo4Op
+         V4BySagYccoRpTJM9+hwiOpYzwb/iR/Cfds4JQe8RB9Dol9V8UHbrCEkGRCyNS8Jbkz8
+         kHHkcV9LP3cuEzXtc7YN+/oSRq9X96dQtLr9oWF7Nbm61cXZDo2hLmZBZwGjFOONYuo0
+         /Vhvd39mDdN6pZhYZ7/L/XkqqzYgChHFUNVwlFGav0SZCUDAKCAarm8BKlUWp/J8nx4a
+         UzwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713337531; x=1713942331;
+        d=1e100.net; s=20230601; t=1713337590; x=1713942390;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nT6tFhvCySxWh9JfwI+ew2P3H0H+myzNUarVTSp+pTw=;
-        b=oBNL7GllmCoieSkAQJxrAuipwwhdTMuRbGRHTyMV37ytefRN4JBMWM5aPYSzhH13gA
-         aaQQ/JhrmtujcFlT0Cw5qTNWMFe4gXKrHn7cxoa14BAS4KWygTShlZUsWHPrmTQVPJX3
-         oZOJsf1V7O8T0YG50LgQxhaCz8Ckq7vEiGlXcamkgCUZxFiKpNBAvZfbH3f+uHUxHoOO
-         LSqqJ6iQ7rXINRA5YwlEE7BWhYtTxKp1qZLAsGSf1xXJjgB3TanQLBBU2fJjTdFjnCVa
-         RpmiRAA4OJW6oqEJxFYxlR+TJlfz/zclgX2AmKTBevVDI0/ZwoJscA3OYryh0XiQcF/4
-         e8Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3w2XbcIPJDii73533FH0eUKCCldg/zvG8SvNAsu6jGE4OSHf+/W9kF3f+VC2PAG5ukk0vlwn4snJBRbEU2gTnhcmDqBw860eW
-X-Gm-Message-State: AOJu0YwNZ3RJu3VlAJC9p2VhwAx9hDHdJYSL4Wnv/h+TbiL4FcBrNXvm
-	K/JJsdvx3nCp3rcwepa9eBasQvY9E9SIG3D8v3wfjTOPxLqysPofKR2nJVsNoQ==
-X-Google-Smtp-Source: AGHT+IGAJTHf5aNDmeLGgicc5pedNPBoDApozmgw0H37DWBqBhEOgFpy2m6jFPd4h60UnfNZs6FWAA==
-X-Received: by 2002:a17:90b:1b4b:b0:2a2:73e9:c3bf with SMTP id nv11-20020a17090b1b4b00b002a273e9c3bfmr14427402pjb.20.1713337530516;
-        Wed, 17 Apr 2024 00:05:30 -0700 (PDT)
+        bh=Id9wk8bOD3jpvQHQWy0txCOh7lELBvXiW74KprcLKWE=;
+        b=QJAACS8fKjZI7Jm7lNEfz/N+jGpZAA+yJ5gRO74zKguqS31t7XnyH6Ss4IKqIiawwN
+         jfbJb90zNded0sVdBDjF65eROkXwH6JoniaPeU2J5BGrovI9e501lehJ7IbTvOYOlQus
+         AsuA5cdQ0A8+I7B2our9NHODdY9Q+tPwpV8PoeNQiXOpOIuo2RlTfmNWXMdt3Bho128h
+         +6iPOnW6DpMp5gArzOhEfh+33uD21sBuwSDFs5eBwVjfYUT3mUo+I60h+rbA7FmILpOa
+         fopoysRB5T4FWlwA1Xr2sVUBGChqiIOrZYxDSo/MZXXS+T+FiwpiUWy0ExEnt44kedp2
+         t1Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVA54I7oiNxNHTfU0er+L6tRubrHKVyE/RAgK7wfPpRn7+xeWiAPC5XKU8onS7MeWQD1WudTRCdO18i8gG7GPJNzVMoxEYDGgAb
+X-Gm-Message-State: AOJu0Yw2yv/iJlSvCdb5o9tsYKXNtuZrmE9ZA3y1ZjUdR6XulTAq7xiA
+	6djulB9F2EPy40ru9BVlwllieNSItVUD1Bk9AzpsUJBXlcnoeG3hazl8heFlqQ==
+X-Google-Smtp-Source: AGHT+IH83KUdU6BtzRYL1t2NbRvI4qrrCGxtRd9cEdm+JtEHXxziFKFvGoFUMzWi78eYTsfdqTGaMA==
+X-Received: by 2002:a05:6a21:3a85:b0:1aa:755f:1746 with SMTP id zv5-20020a056a213a8500b001aa755f1746mr911915pzb.22.1713337589983;
+        Wed, 17 Apr 2024 00:06:29 -0700 (PDT)
 Received: from thinkpad ([120.60.54.9])
-        by smtp.gmail.com with ESMTPSA id in17-20020a17090b439100b002a20c0dcebbsm699083pjb.31.2024.04.17.00.05.27
+        by smtp.gmail.com with ESMTPSA id a21-20020aa78655000000b006e6c16179dbsm10134759pfo.24.2024.04.17.00.06.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 00:05:30 -0700 (PDT)
-Date: Wed, 17 Apr 2024 12:35:17 +0530
+        Wed, 17 Apr 2024 00:06:29 -0700 (PDT)
+Date: Wed, 17 Apr 2024 12:36:16 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+To: mr.nuke.me@gmail.com
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] PCI: qcom: Add support for IPQ9574
-Message-ID: <20240417070517.GA3894@thinkpad>
-References: <20240409190833.3485824-1-mr.nuke.me@gmail.com>
- <20240409190833.3485824-5-mr.nuke.me@gmail.com>
- <dca1e891-cfde-4e95-864e-419934d385e5@linaro.org>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] PCI: qcom: Add support for IPQ9574
+Message-ID: <20240417070616.GB3894@thinkpad>
+References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
+ <20240415182052.374494-5-mr.nuke.me@gmail.com>
+ <CAA8EJpqKWJBqDUacE0xTLzxny32ZTStiRgXsd2LBD=Hou_CRBw@mail.gmail.com>
+ <3cfc26e6-5587-d4a2-f217-1a30169ad1a0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,53 +99,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <dca1e891-cfde-4e95-864e-419934d385e5@linaro.org>
+In-Reply-To: <3cfc26e6-5587-d4a2-f217-1a30169ad1a0@gmail.com>
 
-On Wed, Apr 10, 2024 at 01:50:26PM +0200, Konrad Dybcio wrote:
+On Mon, Apr 15, 2024 at 03:07:02PM -0500, mr.nuke.me@gmail.com wrote:
 > 
 > 
-> On 4/9/24 21:08, Alexandru Gagniuc wrote:
-> > Add support for the PCIe on IPQ9574. The main difference from ipq6018
-> > is that the "iface" clock is not necessarry. Add a special case in
-> > qcom_pcie_get_resources_2_9_0() to handle this.
+> On 4/15/24 15:04, Dmitry Baryshkov wrote:
+> > On Mon, 15 Apr 2024 at 21:22, Alexandru Gagniuc <mr.nuke.me@gmail.com> wrote:
+> > > 
+> > > Add support for the PCIe on IPQ9574. The main difference from ipq6018
+> > > is that the "iface" clock is not necessarry. Add a special case in
+> > > qcom_pcie_get_resources_2_9_0() to handle this.
+> > > 
+> > > Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++----
+> > >   1 file changed, 9 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > index 14772edcf0d3..10560d6d6336 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -1101,15 +1101,19 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
+> > >          struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> > >          struct dw_pcie *pci = pcie->pci;
+> > >          struct device *dev = pci->dev;
+> > > -       int ret;
+> > > +       int ret, num_clks = ARRAY_SIZE(res->clks) - 1;
+> > > 
+> > > -       res->clks[0].id = "iface";
+> > > +       res->clks[0].id = "rchng";
+> > >          res->clks[1].id = "axi_m";
+> > >          res->clks[2].id = "axi_s";
+> > >          res->clks[3].id = "axi_bridge";
+> > > -       res->clks[4].id = "rchng";
+> > > 
+> > > -       ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> > > +       if (!of_device_is_compatible(dev->of_node, "qcom,pcie-ipq9574")) {
+> > > +               res->clks[4].id = "iface";
+> > > +               num_clks++;
+> > > +       }
+> > > +
+> > > +       ret = devm_clk_bulk_get(dev, num_clks, res->clks);
 > > 
-> > Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> > Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > ---
-> >   drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++----
-> >   1 file changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 14772edcf0d3..10560d6d6336 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -1101,15 +1101,19 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
-> >   	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> >   	struct dw_pcie *pci = pcie->pci;
-> >   	struct device *dev = pci->dev;
-> > -	int ret;
-> > +	int ret, num_clks = ARRAY_SIZE(res->clks) - 1;
-> > -	res->clks[0].id = "iface";
-> > +	res->clks[0].id = "rchng";
-> >   	res->clks[1].id = "axi_m";
-> >   	res->clks[2].id = "axi_s";
-> >   	res->clks[3].id = "axi_bridge";
-> > -	res->clks[4].id = "rchng";
-> > -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-> > +	if (!of_device_is_compatible(dev->of_node, "qcom,pcie-ipq9574")) {
-> > +		res->clks[4].id = "iface";
-> > +		num_clks++;
+> > Just use devm_clk_bulk_get_optional() here.
 > 
-> Or use devm_clk_bulk_get_optional and rely on the bindings to sanity-check.
-> 
-> Mani, thoughts?
+> Thank you! I wasn't sure if this was the correct solution here. I will get
+> this updated in v4.
 > 
 
-I'd prefer to use devm_clk_bulk_get_all() and just rely on DT schema to do the
-validation. There was a patch hanging in my branch for some time and I sent it
-now: https://lore.kernel.org/linux-pci/20240417-pci-qcom-clk-bulk-v1-1-52ca19b3d6b2@linaro.org/
+Please rebase on top of [1] and mention the dependency in cover letter.
 
 - Mani
+
+[1] https://lore.kernel.org/linux-pci/20240417-pci-qcom-clk-bulk-v1-1-52ca19b3d6b2@linaro.org/
+
+> Alex
+> 
+> > >          if (ret < 0)
+> > >                  return ret;
+> > > 
+> > > @@ -1664,6 +1668,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+> > >          { .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+> > >          { .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+> > >          { .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
+> > > +       { .compatible = "qcom,pcie-ipq9574", .data = &cfg_2_9_0 },
+> > >          { .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+> > >          { .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+> > >          { .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+> > > --
+> > > 2.40.1
+> > > 
+> > > 
+> > 
+> > 
 
 -- 
 மணிவண்ணன் சதாசிவம்
