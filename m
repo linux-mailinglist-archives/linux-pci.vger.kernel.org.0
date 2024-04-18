@@ -1,463 +1,237 @@
-Return-Path: <linux-pci+bounces-6412-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6413-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A6628A97DC
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 12:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5C9D8A97E4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 12:53:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50D92282379
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 10:53:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C9CB28129B
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 10:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE0715DBA0;
-	Thu, 18 Apr 2024 10:52:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28E2E15E1FC;
+	Thu, 18 Apr 2024 10:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="c0IC4Rjc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57A315D5C1
-	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 10:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713437547; cv=none; b=Z5LtKmrZJTEctUY/pVU5tfyC9xJrzu5Cxihm/siZ0SbzbtNL0k8i7espj4lgdCNj9B77buc1HgP7xxccgw0LJ8nPE8/ZNLgcn5U5pkIhG8LV5O8Ax3vD98fsD4ntpwVgn2qsN2mjGHGrJ5g0gkwIKMfT4sqStvcBQqZGiSVq+es=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713437547; c=relaxed/simple;
-	bh=AF5pNreT+z3H0VNDlDv63FSwzLWHUdCOAQcmeV7Io7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TZTvce7zjimqeABnfRGUqdS0nX5x6TSdgLNB/gDSMBZhztmzzgj9uMR5RqGwg2yjkJ/HOAer4AxxbFoCV1knNUn+vpf9nymOKFhp768w5WNLCEtFgortcWrbMYbgfH8Zt5pOMA9b1saVAjFUhGhPrMWzMzPoxjskdiEVZcLpJXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bakke.com; spf=pass smtp.mailfrom=bakke.com; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bakke.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bakke.com
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 2366B1A0F0B;
-	Thu, 18 Apr 2024 10:42:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: dag@bakke.com) by omf12.hostedemail.com (Postfix) with ESMTPA id 4677817;
-	Thu, 18 Apr 2024 10:42:26 +0000 (UTC)
-Message-ID: <fa9245d6-ffb7-4bac-8740-219af7fcd02a@bakke.com>
-Date: Thu, 18 Apr 2024 12:42:24 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F74715B96D;
+	Thu, 18 Apr 2024 10:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713437578; cv=fail; b=hNtrqiWevLOn5/+jnn4xrVnUAzkwvgBS9tpO4f5CXYDzilpWjVUJGzALkoreNpuZmp1biedaajTlO77YGzJNQtiypKpzDzflxwOY5lUYll0fZ2ezjhIZNbLAWLCW8oR3F9M1X9XvgGTqEWtn5HrRPn33TZIt2SAzL1oLXM1AA9s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713437578; c=relaxed/simple;
+	bh=ZRvujl/Cy326XtpHiD8ybAESeoFmvx5PaA2ZEUf2pyk=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ca1RhMQo65y4+y6dvv07Gc5c098BJW3osLkD+ulXJLRv7ut2kDsYGcgigBRqZKNm4IZohlfd3iPAmJGQnkzLg3VduuskXPqgPV/Dsid1Komf3Aw7irtSl2Eczqjo57Ezr2HPnA+bGnh6sOPJVDp8J830gsitymvtEI5t/oMdzQc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=c0IC4Rjc; arc=fail smtp.client-ip=40.107.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lQFJpPAtF6S36nxCj/3WuSP4PeCwWvgLL2bE0ErmAhGn/gkHzVgSs3vpbwSellxR5WGPvzDD/a/MmugxSjhjoWWm1oPyKGXX4hz1vd0PKnFI1RVQp7OS2Uj9Xb7pfQ8I3kzfhoKpfBYup2IlLoY60CyYXBgqf+fG+cPy/zdahiDLHy3oQyeFs+pSEcNJtYvcdJb5W49Xw7J/piTBe5pGOxuLzbPJn8obu0XCb6fJKy732cR2iNQkI1JQHt7oWoaEQCaVcv5M6QS5fu1qXvkqc9XdvC86ePqT6ceedWISzUHTv+ML6FbqluIotC2FAD61igKWpXtJ07fcssVclWFYeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=E7qT5TGqE5E9TTrsZEV38RAXRgt4rJ4kJosYuVGvvLk=;
+ b=bJI0ngQbIqkY71th5uKgwJy0zvm9X1ZHkoP15RdVqhsZMymr6s+4+BGoIWfjIXcSwoChEZVB1iBIZZzubGjfYTKlJoCUhqmWr9KRTJbmh0Lux3fEbAjQR4KEN15LxBWaBG4hxkAzA6bGxrIF2PVE3/u5xDsKiRLwsVPqv+mcCb5Irn19JtvYjP/g2YwfbQvbtZIhRr0muHPUqqS0g1PX66CXE+MFOXqligftrP3E9ROyIOOPYnS3MvtbvvzdyQcaSa8rweDDVPeSWYirSUic0oZDXKmROopcfbGD6w+WisoeHLyVymd6xRl7IesuNC6AUxz4fZXtZtKyUkfM/JuZDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E7qT5TGqE5E9TTrsZEV38RAXRgt4rJ4kJosYuVGvvLk=;
+ b=c0IC4RjczhpRfGjpaZ6y5bQq1NLGYTHOOZoYVJ7R6zCNEMsPqqaGYsNyQPq/Yl2s7GcdNpudVB1//3aog1ef6s05WE2Sv5k+3GQPEN340zKcMXke7eipvb196dpxfZzUUoWItoFow/erT9sWcPWrAuBdgDBKGBwUTQQwaEmEwxDgG7AqMGIi2IAKEXSU7WRoqrWiOt6ZWbfUvvM9M1qevmxqsDypgnM9DvpnjEtAMFfvhOXc5GbuBU1ItwO6MzdSwBmQ5688HoYl2iOopiwur8OrPAibiT0dRimqXS6KX9Y8s/96w8e+AAbxeL5J2k+J6biCBOyEx+VT+EjgXyJ7lA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
+ by IA1PR12MB7520.namprd12.prod.outlook.com (2603:10b6:208:42f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Thu, 18 Apr
+ 2024 10:52:52 +0000
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::780:77f6:e0af:5b5c]) by PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::780:77f6:e0af:5b5c%4]) with mapi id 15.20.7452.049; Thu, 18 Apr 2024
+ 10:52:52 +0000
+Message-ID: <1427a905-1d01-4b90-8af5-acd1a7f5b1d7@nvidia.com>
+Date: Thu, 18 Apr 2024 16:22:43 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] PCI: Clear errors logged in Secondary Status Register
+From: Vidya Sagar <vidyas@nvidia.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, treding@nvidia.com, jonathanh@nvidia.com,
+ kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20240122230026.GA290856@bhelgaas>
+ <d93a3f29-b260-4910-aaf5-d734e6242223@nvidia.com>
+ <0c948351-9715-4c5c-ad0c-3727cd2ba8a8@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <0c948351-9715-4c5c-ad0c-3727cd2ba8a8@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MA1PR01CA0149.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:71::19) To PH8PR12MB6674.namprd12.prod.outlook.com
+ (2603:10b6:510:1c1::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PCIE BAR resizing blocked by another BAR on same device?
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-References: <20240417151313.GA202307@bhelgaas>
- <d509c9e6-37be-44ab-8f47-6fe55397794e@amd.com>
-Content-Language: en-US
-From: Dag B <dag@bakke.com>
-In-Reply-To: <d509c9e6-37be-44ab-8f47-6fe55397794e@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4677817
-X-Stat-Signature: gaj4y4dhqxfj7gyzs7foy8z6stat9ccn
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 6461674062616B6B652E636F6D
-X-Session-ID: U2FsdGVkX1/SlrnKAiZ7MpxXE+UiziaycxnAuEVvkVo=
-X-HE-Tag: 1713436946-931717
-X-HE-Meta: U2FsdGVkX1/zHiV7DBXTpIhw1yMTnNShu1HOumU4gDjtcOBuM8r356qyMAUW83ja85IGzkItD8YE6PAvBpetLZlxxDCWM3cpSJuaXrsfCDubPvwVbA91d/7vCI9T4Awh8RqngdfpHn9fUAcbAOqy4JtKLaZt3rczQhO+Ksw2Wiwyjdjg9o8GPg0L2/mKBSAmYl2uPx5iiye8xSfkb0cGFBCm1qEXaYFfmNOjmIZWa35O6GdbUiyzEoUa8BTvnrTBLQZUrQPj9QZwVNssyzFJlrpaix/ifG5JaiFeDInmKkrRAoJmmnIQlSM+6XfDtR8DbN6Cok9zfmRx7C//qdBBsOyVOOOdiixv
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6674:EE_|IA1PR12MB7520:EE_
+X-MS-Office365-Filtering-Correlation-Id: 73cd9b77-eb02-4737-abc8-08dc5f95b1e1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	yg5VPMwqZsZlwfBA1UZt/whu4u1QfUKmqCnZ8BBLCr8OHPVlptXTHc98eQF0HhVhL5radQ0QWaytn/D7l122fC/HJUjM6Z0S5MU3HHnq6QfIw2KR+7bO21jfBga9OSWVYNJxiD5WUf7dmkWtX0yhZ+CgZbEFQS6PUn2vHLvUoLBk3JKGDbNjUZcvinxwI7VYTiCvBe2eggHco8EZB7MY/IamXkIOY6YDmAxvZHjhe4dWKIa2slAQD5epZlh9a916j5tttt/rcrLEhMdrvfSW4rFxUbZjjbhKDEbCccnQSXWtaV+gk2xZdodAHcmHs7x7GskKioCJa0p50cgwJGVeMCE8ZFlZp9pRcQFmh/o6q8RnCAdxS1ASG1vHPmc6gcCP2+unhvs9yd3Xt5/dFrE5Qaoc+4Ayo5Gi3CyHPDtVqvQmjQB/wkxwRKnr6uqMBUdcFG9wGPkyzdw2cgb5HpEFGyJasdbNsb34/fLSMPUufjujp+Aa7n+dy3a0rBQnSVhpv2Pp5jmKyo13aKX89JHqKoWYwRnXznSQZEkFoiMN4joziORddXbyIR/9xX9GiGbXOVnCU1IyUChHpf7/LP0gBTcUpdREpdGJnQ7IMYBIEqSjOlff7HCirwopQ4Bsg9p4zJtTqvqJavR8iwFyafyGwG6M6QqInVpaaT6aPMizI8s=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RUx2eE53cjJoVU9QL0toUzRKck5ydTFtNUhGcUhLNlhhR2tGeWFpT1hOUmpj?=
+ =?utf-8?B?MTZnVnpiZG9XY0xOY21PcVk0TUJRSnJ3R0tYd0xrMEptK1cxWDkxU2pqZ1Bu?=
+ =?utf-8?B?SU42dXB5WDdkWmNtckF5QXVmVFV5VUQ3OXp1Mk1obGU4KytRYkNZSU1LSHYr?=
+ =?utf-8?B?VnF3a3NLTWxtTC9GazVpYy9QclpOVE5pR2ZtUHRLNzhoSXBVZVV5Ti9NUkNU?=
+ =?utf-8?B?NWE0cGNFOXdsS3lrR3pWakY0LzVjYVNnZzRzV1dEM2RjV3VCNnJDMDYxdnhn?=
+ =?utf-8?B?Wnc0ZkVBbVBTWGM0UlVETitmM2VveklLT2VLOGpiZWVxY1lNQmhGTU1xdlRs?=
+ =?utf-8?B?YkxwcURvTUVvRm9mTWhmS3lIL3ZZNzdCS0U2VTJxS0Nwc3h3Vy9LeGhhZDR2?=
+ =?utf-8?B?M1VpY0srREk2NlFxekNqM3ZFVjZVUDhmbVJ2QVBOdldUS1dMRDdGbkRzMHEw?=
+ =?utf-8?B?dkl5cVY2NlBpQ1FDN0RkRmJCYzcwa2dpVG1hYXNYeHRianMrc0FqQ2N1ZTQ0?=
+ =?utf-8?B?VWVMb1NnOXB4SmkwUFhrSUhvN2Vmc2dBc2ZPZENEc0JQc1JVQVZSSTJ2MTdJ?=
+ =?utf-8?B?T1dWVkx4NmJYeUc0YnUxMUhDY20vYWtuNmNOd0xNa1hQaVRiRTYreFZqUU9I?=
+ =?utf-8?B?dFB2QWpoMEdKWFBIa0h2ODVVL0U2M2pXM2s1dkZ4OFJpSTBOWEhYbGhhdnV3?=
+ =?utf-8?B?Vk1RRVJ3NlhRUnlPZzdldFY2aWs4MHc4QmlFUFNzdUxMS0FOSWIxUFNVbEdQ?=
+ =?utf-8?B?bE9qdzNOM3Jnek1aYXV6RFdVM1d0VG5obHlzS05FeVZsVGFpUTErV24vY0Ny?=
+ =?utf-8?B?OFBsYmFCc1BvN0lJdHZwVHd0dHFlK20yS2VsRlM1ekpMT2VweXdJeHFPNmxv?=
+ =?utf-8?B?dlNUK2svb1crSjE5NjFiRWM0bVljUmZOcnFvZDJGMnBLeitBMzhMMFdkek0r?=
+ =?utf-8?B?eHFkZExvaEJSSWZNOHZuczZZcTFjMjYrV2M1ejR2WDgzNnZzYkNuem9yMzY4?=
+ =?utf-8?B?b0NUYldwS0pWT25vamVWZUtBbmc4dGhPRGtEZ0VBZldrUHBpT2NwTGNVQy85?=
+ =?utf-8?B?UzgwVWY5NkxXRHVUNlB4SytNSjg1Rk9pKy9Qb1ZoamlQT3dQWFB1a24zUmNT?=
+ =?utf-8?B?VXZLZjh3b3Z0cTYzV0d0L1JLblBtZE5qMk83bzhLNHBvblhFUG1MU0xkNDZ4?=
+ =?utf-8?B?b3Q2NGY0anBYcFZDNUZ3Qy9aN3UyZkY3cjhUYmRwNUJaZjY1NnoyZzNWMnpw?=
+ =?utf-8?B?QVc0aFNqLzJaT2JqOUNwd2FQS2l2ZFNtWExCVEE0RmIzbHpWSVNaZmJHd3BC?=
+ =?utf-8?B?Z3UxRlYrRTM5dDd5YVZ5dEhPTEVIbDZOUGp0aDdoYVY0dDNEc1JoaUUzOUlQ?=
+ =?utf-8?B?ZlBCU3VkWDJzMXc1QlRTeG40SDIvTlAxT21kV05uRWxsbzRZdk5vclJwUFhD?=
+ =?utf-8?B?RkhjQ2hweVdodzh6VFpPQUpwOUZ6YUVWOHNDaEhrQWpCTEIxQmhxNFc0b2s3?=
+ =?utf-8?B?MGJ2d05iQlllNFY5KzQrSm40S3c1OStaL3JMRU8xYktJNk1tbnl2cXBzYkJr?=
+ =?utf-8?B?YzRWOGs0TTVOUG81WUV4OHUwNXg0NDBKcU84WkhCYjd5MnBtSlZSU1RxVUNz?=
+ =?utf-8?B?aExXTGgxWHpmeGNuN25LbkF4eTNLZDcyZDJ2ZXJDazZmaENwMHhaRnIvNzh0?=
+ =?utf-8?B?Qlo1VzhoTG5kd2NqOTd2SG1mcEhwTmVKLzRpT2JsM1VoTUppcm4rVGNYbEtE?=
+ =?utf-8?B?QzZXTE1Ya1NKNUFXKzZPRndHMk1SUDJpVkxSbFR3Q2pvaUxsNm9BM2h5MWtl?=
+ =?utf-8?B?bnNkN2hWSzZESmdpSlZEWEhoeFZHckhjTitwRTYrMGNUYjA5U3BZa2tmdHJI?=
+ =?utf-8?B?NUdrUzJSNHhJSjA3VzdTSm01NWdOb1F0dGd1M2J0SVEzZ2M1RVkyeDFMakN4?=
+ =?utf-8?B?U3dESWpOVldSM1phMDM3dDdxNjJvTkllSmdTNXhTVkNMVEhkenBrOE0rRjJs?=
+ =?utf-8?B?VU9vWGV1ckpmK1Y5YklwSEVEVjRMS1RnSi9oUDd4eW0veVFzRjBMckJiWHhR?=
+ =?utf-8?B?bnhEL2hIcktGWGJXQVl6MnRySVV4QVRSZ1pEam9ZODNlR3pwU3g0RjJ4clNj?=
+ =?utf-8?Q?qu2+25vPddTmIeqSf8g3vD2vj?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73cd9b77-eb02-4737-abc8-08dc5f95b1e1
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2024 10:52:52.2346
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vmvzy1yR+ADUmOqb7ccaQ04JZxADCoyPzncnoa8+ReGrFe3uJcOP92xW+2lT+IoP/XPr+j8+Qp3lAHnmUL5BkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7520
 
-
-On 18.04.2024 09:51, Christian König wrote:
-> Hi Dag and Bjorn,
->
-> Am 17.04.24 um 17:13 schrieb Bjorn Helgaas:
->> [+to Christian, resizable BAR expert]
->>
->> On Wed, Apr 17, 2024 at 03:16:06PM +0200, Dag B wrote:
->>> Hi.
->>>
->>> In short, I have a GPU for which lspci reveals:
->>>
->>> Capabilities: [bb0 v1] Physical Resizable BAR
->>>
->>>          BAR 0: current size: 16MB, supported: 16MB
->>>          BAR 1: current size: 128MB, supported: 64MB 128MB 256MB 
->>> 512MB 1GB
->>> 2GB 4GB 8GB 16GB 32GB
->>>          BAR 3: current size: 32MB, supported: 32MB
->>>
->>> In dmesg I see:
->>>
->>> [    0.517191] pci 0000:08:00.0: BAR 1 [mem 
->>> 0x6000000000-0x600fffffff 64bit
->>> pref]: assigned
->>> [    0.517238] pci 0000:08:00.0: BAR 3 [mem 
->>> 0x6010000000-0x6011ffffff 64bit
->>> pref]: assigned
->>> [    0.517261] pci 0000:08:00.0: BAR 0 [mem 0xa4000000-0xa4ffffff]: 
->>> assigned
->>>
->>> I take it the location of BAR 3 right after BAR 1 explains why I get:
->>>
->>> p53 # echo 9 > resource1_resize
->>> -bash: echo: write error: No space left on device
->>>
->>> Shrinking it and increasing it to the orginal size works.
->>>
->>>
->>> Is there anything I can do with current kernel functionality to reserve
->>> memory address space for the full-fat BAR 1? Or relocate it?
->
-> No, sorry. The BARs have to be released and re-assigned all at the 
-> same time for this to work correctly.
->
-> That's one of the reasons why we choose to do this in the driver 
-> during the load process instead of the PCI subsystem.
->
-> The sysfs functionality is more or less just for testing.
->
->>> If not, is this something which *can* be worked around in the 
->>> kernel? And if
->>> so, does it belong with the PCI subsystem? Or the devicedriver for the
->>> device in question?
->
-> The device driver is the only place where you know all the hw specific 
-> things necessary to release a device BAR and eventually move and 
-> resize upstream bridges.
-
-Noted.
-
-
->
->>>
->>> Is there a good ELI13 resource explaining how resizable BAR works in 
->>> Linux?
->>>
->>> My current kernel command-line contains: pci=assign-busses,realloc
->
-> That's a really really bad idea. The "assign-busses" flag was 
-> introduced to get 20year old laptops to see their cardbus PCI devices.
-
-I threw a lot of mud at the wall to see what stuck. Removing it now did 
-not make a big difference.
-
-Removing realloc prevents the second TB3 GPU from being initialized, so 
-keeping that for now.
-
-
->
->>> My GPU is attached via TB3 to a system for which resizable BAR is 
->>> and will
->>> remain a foreign concept in the BIOS.
->
-> What happens if you hot remove and re-plug the TB3 after the system 
-> has started?
->
-Much the same as during initial boot. Both good and bad. See below.
-
-
-Do any of the pci=hp* options have any significance/impact on what dmesg 
-says below?
-
-Is IO address space moveable? Relevant kernel config/options impacting 
-this? Is it all in the hands of the device driver?
-
-So, so many questions. And barely competent to ask them. Please forgive me.
-
-
-Current kernel command-line snippet: 
-pci=realloc,hpiosize=16K,hpmemsize=64M,pcie_scan_all,hpbussize=0x33
-
-
-I very much appreciate your input. Will try to get the attention of the 
-people responsible for the driver.
-
+Hi Bjorn,
+Sorry to bug you.
+Is this change good to be accepted?
 
 Thanks,
+Vidya Sagar
 
-
-Dag B
-
-
-p53 ~ # dmesg | grep 09:00.0
-[    0.471780] pci 0000:09:00.0: [10de:2204] type 00 class 0x030000 PCIe 
-Legacy Endpoint
-[    0.471816] pci 0000:09:00.0: BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.471844] pci 0000:09:00.0: BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.471873] pci 0000:09:00.0: BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.471890] pci 0000:09:00.0: BAR 5 [io  0x0000-0x007f]
-[    0.471907] pci 0000:09:00.0: ROM [mem 0x00000000-0x0007ffff pref]
-[    0.472133] pci 0000:09:00.0: PME# supported from D0 D3hot
-[    0.472382] pci 0000:09:00.0: 8.000 Gb/s available PCIe bandwidth, 
-limited by 2.5 GT/s PCIe x4 link at 0000:05:01.0 (capable of 252.048 
-Gb/s with 16.0 GT/s PCIe x16 link)
-[    0.491866] pci 0000:09:00.0: vgaarb: bridge control possible
-[    0.491866] pci 0000:09:00.0: vgaarb: VGA device added: 
-decodes=io+mem,owns=none,locks=none
-[    0.491866] pnp 00:03: disabling [io  0x002e-0x002f] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:03: disabling [io  0x004e-0x004f] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:03: disabling [io  0x0061] because it overlaps 
-0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:03: disabling [io  0x0063] because it overlaps 
-0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:03: disabling [io  0x0065] because it overlaps 
-0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:03: disabling [io  0x0067] because it overlaps 
-0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:03: disabling [io  0x0070] because it overlaps 
-0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0010-0x001f] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0024-0x0025] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0028-0x0029] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x002c-0x002d] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0030-0x0031] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0034-0x0035] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0038-0x0039] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x003c-0x003d] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0050-0x0053] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.491866] pnp 00:08: disabling [io  0x0072-0x0077] because it 
-overlaps 0000:09:00.0 BAR 5 [io  0x0000-0x007f]
-[    0.493216] pnp 00:0b: disabling [mem 0x00000000-0x0009ffff] because 
-it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493220] pnp 00:0b: disabling [mem 0x000c0000-0x000c3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493225] pnp 00:0b: disabling [mem 0x000c8000-0x000cbfff disabled] 
-because it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493230] pnp 00:0b: disabling [mem 0x000d0000-0x000d3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493234] pnp 00:0b: disabling [mem 0x000d8000-0x000dbfff disabled] 
-because it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493238] pnp 00:0b: disabling [mem 0x000e0000-0x000e3fff] because 
-it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493242] pnp 00:0b: disabling [mem 0x000e8000-0x000ebfff] because 
-it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493247] pnp 00:0b: disabling [mem 0x000f0000-0x000fffff] because 
-it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493251] pnp 00:0b: disabling [mem 0x00100000-0x8f7fffff] because 
-it overlaps 0000:09:00.0 BAR 0 [mem 0x00000000-0x00ffffff]
-[    0.493255] pnp 00:0b: disabling [mem 0x00000000-0x0009ffff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493260] pnp 00:0b: disabling [mem 0x000c0000-0x000c3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493265] pnp 00:0b: disabling [mem 0x000c8000-0x000cbfff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493270] pnp 00:0b: disabling [mem 0x000d0000-0x000d3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493274] pnp 00:0b: disabling [mem 0x000d8000-0x000dbfff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493279] pnp 00:0b: disabling [mem 0x000e0000-0x000e3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493283] pnp 00:0b: disabling [mem 0x000e8000-0x000ebfff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493288] pnp 00:0b: disabling [mem 0x000f0000-0x000fffff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493292] pnp 00:0b: disabling [mem 0x00100000-0x8f7fffff disabled] 
-because it overlaps 0000:09:00.0 BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    0.493297] pnp 00:0b: disabling [mem 0x00000000-0x0009ffff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493302] pnp 00:0b: disabling [mem 0x000c0000-0x000c3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493306] pnp 00:0b: disabling [mem 0x000c8000-0x000cbfff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493311] pnp 00:0b: disabling [mem 0x000d0000-0x000d3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493315] pnp 00:0b: disabling [mem 0x000d8000-0x000dbfff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493320] pnp 00:0b: disabling [mem 0x000e0000-0x000e3fff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493324] pnp 00:0b: disabling [mem 0x000e8000-0x000ebfff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493329] pnp 00:0b: disabling [mem 0x000f0000-0x000fffff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.493333] pnp 00:0b: disabling [mem 0x00100000-0x8f7fffff disabled] 
-because it overlaps 0000:09:00.0 BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    0.503894] pci 0000:09:00.0: BAR 1 [mem 0x6000000000-0x600fffffff 
-64bit pref]: assigned
-[    0.503940] pci 0000:09:00.0: BAR 3 [mem 0x6010000000-0x6011ffffff 
-64bit pref]: assigned
-[    0.503963] pci 0000:09:00.0: BAR 0 [mem 0xa4000000-0xa4ffffff]: assigned
-[    0.503972] pci 0000:09:00.0: ROM [mem 0xa5000000-0xa507ffff pref]: 
-assigned
-[    0.503984] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    0.503987] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    0.504331] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    0.504334] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    0.504704] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    0.504707] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    0.505073] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    0.505076] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    0.505441] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    0.505444] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    0.505810] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    0.505813] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    0.507057] pci 0000:09:00.1: D0 power state depends on 0000:09:00.0
-[    0.509437] pci 0000:09:00.0: Adding to iommu group 23
-[    2.833427] nvidia 0000:09:00.0: enabling device (0000 -> 0002)
-[    2.833519] nvidia 0000:09:00.0: vgaarb: VGA decodes changed: 
-olddecodes=io+mem,decodes=none:owns=none
-[    4.954613] [drm] Initialized nvidia-drm 0.0.0 20160202 for 
-0000:09:00.0 on minor 2
-[  228.414765] NVRM: GPU 0000:09:00.0: GPU has fallen off the bus.
-[  228.445633] pci 0000:09:00.0: Unable to change power state from 
-unknown to D0, device inaccessible
-[  233.991103] pci 0000:09:00.0: [10de:2204] type 00 class 0x030000 PCIe 
-Legacy Endpoint
-[  233.993053] pci 0000:09:00.0: BAR 0 [mem 0x00000000-0x00ffffff]
-[  233.994986] pci 0000:09:00.0: BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[  233.996854] pci 0000:09:00.0: BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[  233.998727] pci 0000:09:00.0: BAR 5 [io  0x0000-0x007f]
-[  234.000585] pci 0000:09:00.0: ROM [mem 0x00000000-0x0007ffff pref]
-[  234.002720] pci 0000:09:00.0: PME# supported from D0 D3hot
-[  234.004889] pci 0000:09:00.0: 8.000 Gb/s available PCIe bandwidth, 
-limited by 2.5 GT/s PCIe x4 link at 0000:05:01.0 (capable of 252.048 
-Gb/s with 16.0 GT/s PCIe x16 link)
-[  234.007000] pci 0000:09:00.0: Adding to iommu group 23
-[  234.008925] pci 0000:09:00.0: vgaarb: bridge control possible
-[  234.010828] pci 0000:09:00.0: vgaarb: VGA device added: 
-decodes=io+mem,owns=none,locks=none
-[  234.087850] pci 0000:09:00.0: BAR 1 [mem 0x6000000000-0x600fffffff 
-64bit pref]: assigned
-[  234.089631] pci 0000:09:00.0: BAR 3 [mem 0x6010000000-0x6011ffffff 
-64bit pref]: assigned
-[  234.091492] pci 0000:09:00.0: BAR 0 [mem 0xa4000000-0xa4ffffff]: assigned
-[  234.093241] pci 0000:09:00.0: ROM [mem 0xa5000000-0xa507ffff pref]: 
-assigned
-[  234.096831] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[  234.098652] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[  234.155043] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[  234.156615] pci 0000:09:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[  234.183809] nvidia 0000:09:00.0: enabling device (0000 -> 0002)
-[  234.185579] nvidia 0000:09:00.0: vgaarb: VGA decodes changed: 
-olddecodes=io+mem,decodes=none:owns=none
-[  234.310173] pci 0000:09:00.1: D0 power state depends on 0000:09:00.0
-
-
-
-And doing the same for the 2nd GPU:
-
-p53 ~ # dmesg | grep 2f:00.0
-[    1.215862] pci 0000:2f:00.0: [10de:2204] type 00 class 0x030000 PCIe 
-Legacy Endpoint
-[    1.215893] pci 0000:2f:00.0: BAR 0 [mem 0x00000000-0x00ffffff]
-[    1.215918] pci 0000:2f:00.0: BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[    1.215942] pci 0000:2f:00.0: BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[    1.215956] pci 0000:2f:00.0: BAR 5 [io  0x0000-0x007f]
-[    1.215970] pci 0000:2f:00.0: ROM [mem 0x00000000-0x0007ffff pref]
-[    1.216765] pci 0000:2f:00.0: PME# supported from D0 D3hot
-[    1.217000] pci 0000:2f:00.0: 8.000 Gb/s available PCIe bandwidth, 
-limited by 2.5 GT/s PCIe x4 link at 0000:05:04.0 (capable of 252.048 
-Gb/s with 16.0 GT/s PCIe x16 link)
-[    1.217226] pci 0000:2f:00.0: Adding to iommu group 29
-[    1.217237] pci 0000:2f:00.0: vgaarb: bridge control possible
-[    1.217238] pci 0000:2f:00.0: vgaarb: VGA device added: 
-decodes=io+mem,owns=none,locks=none
-[    1.218458] pci 0000:2f:00.0: BAR 1 [mem 0x6020000000-0x602fffffff 
-64bit pref]: assigned
-[    1.218481] pci 0000:2f:00.0: BAR 3 [mem 0x6030000000-0x6031ffffff 
-64bit pref]: assigned
-[    1.218501] pci 0000:2f:00.0: BAR 0 [mem 0xb1000000-0xb1ffffff]: assigned
-[    1.218507] pci 0000:2f:00.0: ROM [mem 0xb0800000-0xb087ffff pref]: 
-assigned
-[    1.218514] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    1.218514] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    1.218579] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[    1.218580] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[    1.219748] pci 0000:2f:00.1: D0 power state depends on 0000:2f:00.0
-[    2.883186] nvidia 0000:2f:00.0: enabling device (0000 -> 0002)
-[    2.883945] nvidia 0000:2f:00.0: vgaarb: VGA decodes changed: 
-olddecodes=io+mem,decodes=none:owns=none
-[    6.367931] [drm] Initialized nvidia-drm 0.0.0 20160202 for 
-0000:2f:00.0 on minor 3
-[  485.913085] NVRM: GPU 0000:2f:00.0: GPU has fallen off the bus.
-[  485.913727] NVRM: GPU 0000:2f:00.0: GPU serial number is PKWUQ0B9VFK0SG.
-[  485.938963] pci 0000:2f:00.0: Unable to change power state from 
-unknown to D0, device inaccessible
-[  489.941767] pci 0000:2f:00.0: [10de:2204] type 00 class 0x030000 PCIe 
-Legacy Endpoint
-[  489.944551] pci 0000:2f:00.0: BAR 0 [mem 0x00000000-0x00ffffff]
-[  489.947287] pci 0000:2f:00.0: BAR 1 [mem 0x00000000-0x0fffffff 64bit 
-pref]
-[  489.950056] pci 0000:2f:00.0: BAR 3 [mem 0x00000000-0x01ffffff 64bit 
-pref]
-[  489.952835] pci 0000:2f:00.0: BAR 5 [io  0x0000-0x007f]
-[  489.955655] pci 0000:2f:00.0: ROM [mem 0x00000000-0x0007ffff pref]
-[  489.958721] pci 0000:2f:00.0: PME# supported from D0 D3hot
-[  489.961746] pci 0000:2f:00.0: 8.000 Gb/s available PCIe bandwidth, 
-limited by 2.5 GT/s PCIe x4 link at 0000:05:04.0 (capable of 252.048 
-Gb/s with 16.0 GT/s PCIe x16 link)
-[  489.964859] pci 0000:2f:00.0: Adding to iommu group 29
-[  489.967703] pci 0000:2f:00.0: vgaarb: bridge control possible
-[  489.970506] pci 0000:2f:00.0: vgaarb: VGA device added: 
-decodes=io+mem,owns=none,locks=none
-[  490.025678] pci 0000:2f:00.0: BAR 1 [mem 0x6020000000-0x602fffffff 
-64bit pref]: assigned
-[  490.027887] pci 0000:2f:00.0: BAR 3 [mem 0x6030000000-0x6031ffffff 
-64bit pref]: assigned
-[  490.029918] pci 0000:2f:00.0: BAR 0 [mem 0xb1000000-0xb1ffffff]: assigned
-[  490.031940] pci 0000:2f:00.0: ROM [mem 0xb0800000-0xb087ffff pref]: 
-assigned
-[  490.036008] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[  490.038096] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[  490.075208] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: can't assign; 
-no space
-[  490.077005] pci 0000:2f:00.0: BAR 5 [io  size 0x0080]: failed to assign
-[  490.099288] nvidia 0000:2f:00.0: enabling device (0000 -> 0002)
-[  490.101217] nvidia 0000:2f:00.0: vgaarb: VGA decodes changed: 
-olddecodes=io+mem,decodes=none:owns=none
-[  490.265952] pci 0000:2f:00.1: D0 power state depends on 0000:2f:00.0
-
-
-BAR 5 is missing in the lspci output. Same for both.
-
-lspci specifies 'Physical Resizable'. Is that implied for all BARs?
-
-     Capabilities: [bb0 v1] Physical Resizable BAR
-         BAR 0: current size: 16MB, supported: 16MB
-         BAR 1: current size: 256MB, supported: 64MB 128MB 256MB 512MB 
-1GB 2GB 4GB 8GB 16GB 32GB
-         BAR 3: current size: 32MB, supported: 32MB
-
+On 01-04-2024 13:29, Vidya Sagar wrote:
+> Hi Bjorn,
+> Just checking on this thread.
+> Is there anything else you want me to clarify on?
+>
+> Thanks,
+> Vidya Sagar
+>
+> On 14-03-2024 06:09, Vidya Sagar wrote:
+>>
+>>
+>> On 23-01-2024 04:30, Bjorn Helgaas wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Tue, Jan 16, 2024 at 08:02:58PM +0530, Vidya Sagar wrote:
+>>>> The enumeration process leaves the 'Received Master Abort' bit set in
+>>>> the Secondary Status Register of the downstream port in the following
+>>>> scenarios.
+>>>>
+>>>> (1) The device connected to the downstream port has ARI capability
+>>>>      and that makes the kernel set the 'ARI Forwarding Enable' bit in
+>>>>      the Device Control 2 Register of the downstream port. This
+>>>>      effectively makes the downstream port forward the configuration
+>>>>      requests targeting the devices downstream of it, even though they
+>>>>      don't exist in reality. It causes the downstream devices return
+>>>>      completions with UR set in the status in turn causing 'Received
+>>>>      Master Abort' bit set.
+>>>>
+>>>>      In contrast, if the downstream device doesn't have ARI capability,
+>>>>      the 'ARI Forwarding Enable' bit in the downstream port is not set
+>>>>      and any configuration requests targeting the downstream devices
+>>>>      that don't exist are terminated (section 6.13 of PCI Express Base
+>>>>      6.0 spec) in the downstream port itself resulting in no change of
+>>>>      the 'Received Master Abort' bit.
+>>>>
+>>>> (2) A PCIe switch is connected to the downstream port and when the
+>>>>      enumeration flow tries to explore the presence of devices that
+>>>>      don't really exist downstream of the switch, the downstream
+>>>>      port receives the completions with UR set causing the 'Received
+>>>>      Master Abort' bit set.
+>>> Are these the only possible ways this error is logged?  I expected
+>>> them to be logged when we enumerate below a Root Port that has nothing
+>>> attached, for example.
+>> In this case, there won't be any TLP sent downstream. I talked about this 
+>> scenario in the
+>> second paragraph of point (1) above.
+>>> Does clearing them in pci_scan_bridge_extend() cover all ways this
+>>> error might be logged during enumeration?  I can't remember whether
+>>> all enumeration goes through this path.
+>> So far in my testing, clearing it in pci_scan_bridge_extend() covers all the 
+>> cases.
+>>
+>>>> Clear 'Received Master Abort' bit to keep the bridge device in a clean
+>>>> state post enumeration.
+>>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> ---
+>>>> V2:
+>>>> * Changed commit message based on Bjorn's feedback
+>>>>
+>>>>   drivers/pci/probe.c | 3 +++
+>>>>   1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>>>> index 795534589b98..640d2871b061 100644
+>>>> --- a/drivers/pci/probe.c
+>>>> +++ b/drivers/pci/probe.c
+>>>> @@ -1470,6 +1470,9 @@ static int pci_scan_bridge_extend(struct pci_bus 
+>>>> *bus, struct pci_dev *dev,
+>>>>        }
+>>>>
+>>>>   out:
+>>>> +     /* Clear errors in the Secondary Status Register */
+>>>> +     pci_write_config_word(dev, PCI_SEC_STATUS, 0xffff);
+>>>> +
+>>>>        pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+>>>>
+>>>>        pm_runtime_put(&dev->dev);
+>>>> -- 
+>>>> 2.25.1
+>>>>
+>>
+>
 
 
