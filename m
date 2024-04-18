@@ -1,118 +1,163 @@
-Return-Path: <linux-pci+bounces-6385-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6386-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 373798A8FFA
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 02:24:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DB298A9080
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 03:16:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA572B2232C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 00:24:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F39F1C21989
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 01:16:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE0D382;
-	Thu, 18 Apr 2024 00:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5286AD6;
+	Thu, 18 Apr 2024 01:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="opzSoicw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G/CMBFif"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C2D10FA
-	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 00:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99B1E48B;
+	Thu, 18 Apr 2024 01:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713399857; cv=none; b=LyOZpOX/yQla9uyiV5/1woYBMYBCVDU8CdD041niJwjqbZcx4hXNVDxaE2+VGSWAaHXHI9m+WRckKiUOdNalpI7rDf6RZjm/ZufwuqlgGtIiUwtAzihWeYAsKX2/F4P9vxOe5x2xmwQc5zPOhSiCpqZDpsGNxjCZ3bsXki/BBGc=
+	t=1713402954; cv=none; b=NGJJtJONQWhjHdumoNmGDUpMzdxj9zBCGTiLiRQWJd3jEBXVGplQLax5GdOo87TVynDkhwkTiXV2Me1TgwCkimcCM3H7B6O7d+V5SKZ28aM+H7rX+pUYmZK52rD/Cu51bUs/9XfQxkgTRrv3VJQKMc6emnLw1JoDOtnv5BkD4Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713399857; c=relaxed/simple;
-	bh=0iN+zs7FbJTFFZKHkZZGXu99GW8qS8VPabqrDqZaBXg=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=VOzB8VBLHFneBdI2w7CTWFj5pq2cHnwxUnF51dVCnVzBp77j4OepCyO+4zVq4p3UEQAm+vMaOVLni6K6+QQCZDi9cDIveNNXCpR3o/jMp+DJdGlr7k5CU6OAG3K38CtB2CkE0cmQjoMn4+6B2NSVXegh47toLgndj6nLd4JImH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=opzSoicw; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D92022C02B0;
-	Thu, 18 Apr 2024 12:24:06 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1713399846;
-	bh=0iN+zs7FbJTFFZKHkZZGXu99GW8qS8VPabqrDqZaBXg=;
-	h=From:To:Subject:Date:From;
-	b=opzSoicw9JjaW0tmG3jy3zTWlNXpjW61G70j/xhSyqsmyaR0RXbMcAGbgeH15yrfu
-	 WjWwScogSc9UUvG2L74+sI93VE7f39uM+SMXJwLIIhCC6N6vFaMURjfVdsJhEgIAG6
-	 /phbJ3yQasPJ750KVUfdO8Zv6CVLgj+TZVsz2YSit2z4QS7ToQ7zFu1AFALfapqjfg
-	 NOYzSP+k0e88OPV6ybEEnkF6Ir9ZqSnIf+t1fxlsrTyy3xb5Ydsa4a5NJO8sCMIqCY
-	 CaEeGorViz02l5nupoPOLTRgCSlnJ1XnrNyhrq1XlYg+BcODm6UeGqYAh8hkSaTntL
-	 yvW9+q2L/DGCA==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B662068260000>; Thu, 18 Apr 2024 12:24:06 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 18 Apr 2024 12:24:06 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.009; Thu, 18 Apr 2024 12:24:06 +1200
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: local bus enumeration beyond a PCI device
-Thread-Topic: local bus enumeration beyond a PCI device
-Thread-Index: AQHakSa58Ehmqkf3b0um4G7kLubeEw==
-Date: Thu, 18 Apr 2024 00:24:06 +0000
-Message-ID: <bad63409-ed2b-4cef-988b-3c143636e9fa@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5A3D632F701D594E939AE2FF35281DCD@atlnz.lc>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1713402954; c=relaxed/simple;
+	bh=uFbfo87nO14001kmIG2rJyAQXlEfsQr2jrkvTkeyE/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=boJvzUhS9Yf9pZFEiQ6QODGsRBmxONw3aVX7jfMhpylWO5/owHQd0bXPz9kV/OluERAUcgTd0YykTfMXMuGLU9+Wl2OzGPXCM1LJYKPNz9KTnNqD+LhFdL0wztsYxee1VUW01ia/FZC7Hr5w7F29YsZhSO4jQja/fLS9QlF5FM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G/CMBFif; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713402953; x=1744938953;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uFbfo87nO14001kmIG2rJyAQXlEfsQr2jrkvTkeyE/M=;
+  b=G/CMBFif4soIZ9ddP8mHS3wmG2dhMSwhk3n4xuI70N9/dG7/yCmK0R32
+   Ei7QEgCiogBnaqvtO8jYySEO5ntrexIt8QqL57vPLmnlu9D/oMAU6byDz
+   6YnINYd4DDprK6vj/3iLgeaD6vWnDngMRuzAIFn9IJqwjQlnPrRMIPAfj
+   tftP1GGY+5VEyBdz038yTyypTXWW3qXru4iRfpz2HBDw7AoAFeun5xSQQ
+   1ThpOhYuoHxrD42v6r2upHfW+cvwAhfHy+rK6AjpSee9wO03iJqv1vf20
+   +TFIaRLcMoQyVucdLadMGI7/1D2b1mJ5d7IK8xlkYqyV1TNntC7j64yQn
+   A==;
+X-CSE-ConnectionGUID: 8geL3SgbS/u7hVup4wYxFg==
+X-CSE-MsgGUID: hdXBxz+vSBaItwSP08/Exg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8799536"
+X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
+   d="scan'208";a="8799536"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 18:15:53 -0700
+X-CSE-ConnectionGUID: Qg3sfDisSnqFwL5IYU/Blw==
+X-CSE-MsgGUID: ay2i8yP0QI2Tkuy5KlkNFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,210,1708416000"; 
+   d="scan'208";a="27470822"
+Received: from kglossop-mobl.amr.corp.intel.com (HELO [10.209.94.180]) ([10.209.94.180])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 18:15:52 -0700
+Message-ID: <2aff18aa-32b7-4092-8235-aead9b708ea0@linux.intel.com>
+Date: Wed, 17 Apr 2024 18:15:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=dY4j3mXe c=1 sm=1 tr=0 ts=66206826 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=HKGT0sa775DmyZdDYaUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/3] PCI: Add helper to check if any of ancestor device
+ support D3cold
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
+Cc: mahesh@linux.ibm.com, oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ bagasdotme@gmail.com, regressions@lists.linux.dev,
+ linux-nvme@lists.infradead.org, kch@nvidia.com, hch@lst.de,
+ gloriouseggroll@gmail.com, kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
+References: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240416043225.1462548-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SGksDQoNCldlJ3ZlIGdvdCBhIGN1c3RvbSB4ODZfNjQgYmFzZWQgZGVzaWduIHRoYXQgaXMgdXNp
-bmcgYW4gQVNJWDkxMDAgdG8gDQpwcm92aWRlIGEgUENJIHRvIGxvY2FsIGJ1cyBicmlkZ2UuIEF0
-dGFjaGVkIHRvIHRoYXQgbG9jYWwgYnVzIGlzIGFuIEZQR0EgDQp3aGljaCBtb3N0bHkgcHJvdmlk
-ZXMgc29tZSBHUElPcyBhY2Nlc3NlZCB2aWEgcmVnaXN0ZXJzIG9uIHRoZSBsb2NhbCANCmJ1cy4g
-UmlnaHQgbm93IHdlJ3ZlIGdvdCBhIGN1c3RvbSBkcml2ZXIgdGhhdCBidW5kbGVzIGV2ZXJ5dGhp
-bmcgDQp0b2dldGhlciBzbyBlZmZlY3RpdmVseSB3ZSd2ZSBnb3QgYSBQQ0kgZGV2aWNlIHRoYXQg
-cHJvdmlkZXMgR1BJT3MuDQoNCkJ1dCBhcyB0aGluZ3MgY2FuIGNoYW5nZSBiYXNlZCBvbiB0aGUg
-RlBHQSBwcm9ncmFtIEknZCBsaWtlIHNvbWUgDQpmbGV4aWJpbGl0eSB0byB0cmVhdCBpdCBzZXBh
-cmF0ZWx5IGZyb20gdGhlIFBDSSBicmlkZ2UuIFNvIHJlYWxseSBJJ2QgDQpsaWtlIHRvIGhhdmUg
-YSBQQ0kgZGV2aWNlIGRyaXZlciBmb3IgdGhlIEFTSVg5MTAwIHRoYXQgcHJvdmlkZXMgYSBsb2Nh
-bCANCmJ1cyBjb250cm9sbGVyIGFuZCBhIChwbGF0Zm9ybT8pIGRyaXZlciBmb3IgdGhlIEZQR0Eg
-dGhhdCBwcm92aWRlcyB0aGUgDQpHUElPcyB3aGVyZSBJIGNhbiBoYXZlIGRpZmZlcmVudCBjb21w
-YXRpYmxlcyBmb3IgdGhlIGRpZmZlcmVudCANCmltcGxlbWVudGF0aW9ucy4NCg0KVGhlbiBpbiB0
-aGUgQUNQSSBvdmVybGF5IEknZCBoYXZlIHNvbWV0aGluZyBsaWtlDQoNCiDCoMKgwqAgU2NvcGUg
-KFxfU0IuUENJMC5EMEIwKQ0KIMKgwqDCoCB7DQogwqDCoMKgwqDCoMKgwqAgRGV2aWNlIChBU0lY
-KQ0KIMKgwqDCoMKgwqDCoMKgIHsNCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIE5hbWUgKF9BRFIs
-IDB4MDAwMCkNCg0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIERldmljZSAoRlBHQSkNCiDCoMKgwqAg
-wqDCoMKgIMKgwqDCoCB7DQogwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKg
-wqAgTmFtZSAoX0hJRCwgIlBSUDAwMDEiKQ0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDC
-oMKgwqAgwqDCoMKgIE5hbWUgKF9EU0QsIFBhY2thZ2UgKCkNCiDCoMKgwqAgwqDCoMKgIMKgwqDC
-oCDCoMKgwqAgwqDCoMKgIMKgwqDCoCB7DQpUb1VVSUQoImRhZmZkODE0LTZlYmEtNGQ4Yy04YTkx
-LWJjOWJiZjRhYTMwMSIpLA0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDC
-oMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIFBhY2thZ2UgKCkNCiDCoMKgwqAgwqDCoMKgIMKgwqDC
-oCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCB7DQogwqDCoMKgIMKg
-wqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDC
-oMKgIMKgwqDCoCDCoMKgwqAgUGFja2FnZSAoKSB7IA0KImNvbXBhdGlibGUiLCAibXktcGxhdGZv
-cm0tZHJpdmVyLWZvci1mcGdhIiB9LA0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKg
-wqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIH0NCiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDC
-oMKgwqAgwqDCoMKgIMKgwqDCoCB9KQ0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIH0NCiDCoMKgwqDC
-oMKgwqDCoCB9DQogwqDCoMKgIH0NCg0KIMKgwqAgU2NvcGUoXF9TQikNCiDCoMKgIHsNCiDCoMKg
-wqAgwqDCoMKgIERldmljZShPVEhSKQ0KIMKgwqDCoCDCoMKgwqAgew0KIMKgwqDCoCDCoMKgwqAg
-wqDCoMKgIEdwaW9JbyAoRXhjbHVzaXZlLCBQdWxsVXAsIDAsIDAsIElvUmVzdHJpY3Rpb25JbnB1
-dE9ubHksIA0KIlxcX1NCLlBDSTAuRDBCMC5BU0lYLkZQR0EiLCkgeyAwIH0NCiDCoMKgwqAgwqDC
-oMKgIH0NCiDCoMKgIH0NCg0KSXMgaXQgZXZlbiBwb3NzaWJsZSB0byByZWdpc3RlciBhIGhvc3Qg
-Y29udHJvbGxlciBmb3IgYW5vdGhlciBwbGF0Zm9ybSBidXM/DQoNClRoYW5rcywNCkNocmlzDQo=
+
+On 4/15/24 9:32 PM, Kai-Heng Feng wrote:
+> In addition to nearest upstream bridge, driver may want to know if the
+> entire hierarchy can be powered off to perform different action.
+>
+> So walk higher up the hierarchy to find out if any device has valid
+> _PR3.
+>
+> The user will be introduced in next patch.
+>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+
+Since it has been a while, I was not sure what this series is about.
+
+IMO, it is better to include a cover letter with the summary of your
+changes.
+
+
+> v8:
+>  - No change.
+>
+>  drivers/pci/pci.c   | 16 ++++++++++++++++
+>  include/linux/pci.h |  2 ++
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e5f243dd4288..7a5662f116b8 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6225,6 +6225,22 @@ bool pci_pr3_present(struct pci_dev *pdev)
+>  		acpi_has_method(adev->handle, "_PR3");
+>  }
+>  EXPORT_SYMBOL_GPL(pci_pr3_present);
+> +
+> +bool pci_ancestor_pr3_present(struct pci_dev *pdev)
+> +{
+> +	struct pci_dev *parent = pdev;
+> +
+> +	if (acpi_disabled)
+> +		return false;
+> +
+> +	while ((parent = pci_upstream_bridge(parent))) {
+> +		if (pci_pr3_present(pdev))
+
+I think it should be "parent" here?
+
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_ancestor_pr3_present);
+>  #endif
+>  
+>  /**
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 16493426a04f..cd71ebfd0f89 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2620,10 +2620,12 @@ struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+>  void
+>  pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
+>  bool pci_pr3_present(struct pci_dev *pdev);
+> +bool pci_ancestor_pr3_present(struct pci_dev *pdev);
+>  #else
+>  static inline struct irq_domain *
+>  pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+>  static inline bool pci_pr3_present(struct pci_dev *pdev) { return false; }
+> +static inline bool pci_ancestor_pr3_present(struct pci_dev *pdev) { return false; }
+>  #endif
+>  
+>  #ifdef CONFIG_EEH
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
