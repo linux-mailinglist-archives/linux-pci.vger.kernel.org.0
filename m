@@ -1,62 +1,59 @@
-Return-Path: <linux-pci+bounces-6448-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6449-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCCCB8A9FB8
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 18:12:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C072F8AA0CA
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 19:10:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 852B5286AB0
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 16:12:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C94F28162F
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 17:10:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27CBD16F906;
-	Thu, 18 Apr 2024 16:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA20C16F855;
+	Thu, 18 Apr 2024 17:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iE+QD7BL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9OddMzf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E879C23D7;
-	Thu, 18 Apr 2024 16:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FEB15FA72;
+	Thu, 18 Apr 2024 17:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713456732; cv=none; b=H1Rgl7mnsICXKKdnnAEt4Wrfa61zMhIACVtS5Ib/ItG0HoayTEl+0gSmrtz8oQCbvb1LQDHhFBnMu/9QQDEXt+lojcUAfHbn1zQ249St4wNP7e3VUJWXOfuXeh74bwR7MLU8CSG1V9Co5HvpIoC+a+o2Gp9/sIs3EnAgEyay+K0=
+	t=1713460213; cv=none; b=gK36kmC7sUtJ7INg4hmUyxOTNvxnK5Dn3ivRNAhptiBWv8mBO6rHakzKah5KqlxqEMC6idRPTltlSG40uWPflTvGF8CusgeZBYAjtZwAMePSQAY/2Pb2XQ7gDf78TxwRT4BAjj0k8Wuyl4rQtytMGNqnnhp7ExVjriYI6TlJvhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713456732; c=relaxed/simple;
-	bh=eRwB3YCw2t/w180tUcjZCYanbt8cMadquiphPHE1TiA=;
+	s=arc-20240116; t=1713460213; c=relaxed/simple;
+	bh=kl0oAxdGo+sXqPTli9f/DOJgHUCpe4k+GtvAOTn9Q0M=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jZD1eXFAoY/jMxKPYDUvpmNxcKgmwAnQXTPldh4r115dTkYnJdIteQPaR+GD0mrIyOlIdClX7MmOwBdKLB9v9lc/L03VLxyvDYVYCvmpUuFsFwFKl2Rm56kfFuNHKSEe+w06AHn4UH325xqwOe6agOnCD1zpPth0LK65/kuxmYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iE+QD7BL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8ABC3277B;
-	Thu, 18 Apr 2024 16:12:11 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=GC68SHefMoh9BTvpa2p1gwMAK2WY2FduXr42DGrUAqqwOpeCGH3zV+TcCw/77QxaDQLGtlyRXZ/SMov8a3CwT5nGAN4WCRxm4xc0LE3Yz372v2zjKRi2RiMxcAT2hyQlpnAMtq1GSjikJjxlHFMlUy9VDfz7gI97RuYZTbE7gZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9OddMzf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B642C113CC;
+	Thu, 18 Apr 2024 17:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713456731;
-	bh=eRwB3YCw2t/w180tUcjZCYanbt8cMadquiphPHE1TiA=;
+	s=k20201202; t=1713460213;
+	bh=kl0oAxdGo+sXqPTli9f/DOJgHUCpe4k+GtvAOTn9Q0M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=iE+QD7BLSB9x6TGqXDdv4Zdg0SxEzUneBlr02PnQCY9J93OeWYeFLE7Z2izfpbo9V
-	 7/+xMMaxc5o490jmdY8cyBOuAqJvTrU/lKvPAybVUs1PzpSi1j4spg6tN01mYU9IRH
-	 Xma2PLYFuPx07sHGMvWD9p0LAv85X0uQGQx595NQQWssB09z18Cu7PlY9Fsqij/gxM
-	 j5iY0NBTID0B8Te4oEcr54uWMWuqbqCy/bZLKQthJgZYhSc2nQYHjmWac4O7HdRbSE
-	 +FVfiKdrXzgdjmNmwwDyTTudYOePPw6pyTJvqzQRQ3ccMjXHdY0PUdgphryOjC2tsn
-	 tInUT5nAvtNhg==
-Date: Thu, 18 Apr 2024 11:12:09 -0500
+	b=h9OddMzfpmDhGWyoOoQUndZjnz5KmnKYn9fv+GuLfL5syWSxwFrRN+bMzVXigc1hF
+	 UPAtrO1mw63M+0n3GUmLDymcQ3e73CHFCJtrBb15rHCLW/fizqKY86gnPQm5uJKEgT
+	 HBcX/0h8QKiOOO3icqqjKS6qIF9MDZJvZTLTULI9t102r1wTghkNKtSvbKUQjIMMgA
+	 YAWEjQR+FK7mRUNgEp2FpAmGoeImUmmZenGJ5F/b1uL4NaBk+NErEfCPHrSX4rnLhP
+	 VXFuiPGkPOqXzA6ZprDyEEmjg9QWaFvBBQaH2DR+Cec355u0am1e9ppuFKJL0Wmdf7
+	 yLlIy5XA9qdag==
+Date: Thu, 18 Apr 2024 12:10:11 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhi@lists.linux.dev, linux-tegra@vger.kernel.org,
-	Niklas Cassel <cassel@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>
-Subject: Re: [PATCH v3 3/9] PCI: endpoint: Rename BME to Bus Master Enable
-Message-ID: <20240418161209.GA239309@bhelgaas>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Mateusz Kaduk <mateusz.kaduk@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, Tj <linux@iam.tj>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86/pci: Skip early E820 check for ECAM region
+Message-ID: <20240418171011.GA243400@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,47 +62,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418-pci-epf-rework-v3-3-222a5d1ed2e5@linaro.org>
+In-Reply-To: <11f55f7e-92f9-4689-9dd8-75fb45f8afe5@linux.intel.com>
 
-On Thu, Apr 18, 2024 at 05:28:31PM +0530, Manivannan Sadhasivam wrote:
-> BME which stands for 'Bus Master Enable' is not defined in the PCIe base
-> spec even though it is commonly referred in many places (vendor docs). But
-> to align with the spec, let's rename it to its expansion 'Bus Master
-> Enable'.
+On Wed, Apr 17, 2024 at 08:10:28PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> 
+> On 4/17/24 1:40 PM, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > Arul, Mateusz, Imcarneiro91, and Aman reported a regression caused by
+> > 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map").  On the
+> > Lenovo Legion 9i laptop, that commit removes the area containing ECAM from
+> > E820, which means the early E820 validation started failing, which meant we
+> > didn't enable ECAM in the "early MCFG" path
+> ...
 
-Thanks for doing this.  I'm always in favor of using terms from the
-spec.
+> LGTM
+> 
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-> -		dev_dbg(dev, "Received BME event. Link is enabled!\n");
-> +		dev_dbg(dev, "Received Bus Master Enable event. Link is enabled!\n");
+Thanks for taking a look!
 
-Nothing to do with *this* patch, but this message reads a little weird
-to me because setting Bus Master Enable has nothing to do with link
-enablement.
+> > -	if (!early && !acpi_disabled) {
+> > +	if (early) {
+> > +
+> > +		/*
+> > +		 * Don't try to do this check unless configuration type 1
+> > +		 * is available.  How about type 2?
+> 
+> I don't understand why above question is included in the comment. Do
+> you think it is better to drop that part of the comment?
 
-Also incidental: some of these messages and comments refer to a "Bus
-Master Enable *event*".  Does "event" here refer to the act of the
-host setting the Bus Master Enable bit in the Command register?  This
-is in qcom_pcie_ep_global_irq_thread(), so I assume there's something
-in the endpoint hardware that generates an IRQ when the Command
-register is written?
+The "How about type 2?" questio was added by bb63b4219976 ("x86 pci:
+remove checking type for mmconfig probe").  I only moved it and fixed
+the capitalization and formatting.
 
-> - * pci_epc_bme_notify() - Notify the EPF device that the EPC device has received
-> - *			  the BME event from the Root complex
-> - * @epc: the EPC device that received the BME event
-> + * pci_epc_bus_master_enable_notify() - Notify the EPF device that the EPC
-> + *					device has received the Bus Master
-> + *					Enable event from the Root complex
-> + * @epc: the EPC device that received the Bus Master Enable event
->   *
->   * Invoke to Notify the EPF device that the EPC device has received the Bus
-> - * Master Enable (BME) event from the Root complex
-> + * Master Enable event from the Root complex
-
-There's no "set Bus Master Enable" transaction that would appear on
-the PCIe link, so I assume "the Bus Master Enable event from the Root
-Complex" is a way of saying something like "host has written the
-Command register to set the Bus Master Enable bit"?
-
-Bjorn
+> > -	/* Don't try to do this check unless configuration
+> > -	   type 1 is available. how about type 2 ?*/
+> > -	if (raw_pci_ops)
+> > -		return is_mmconf_reserved(e820__mapped_all, cfg, dev,
+> > -					  "E820 entry");
+> > -
+> >  	return false;
+> >  }
 
