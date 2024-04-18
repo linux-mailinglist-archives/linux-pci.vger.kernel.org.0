@@ -1,191 +1,208 @@
-Return-Path: <linux-pci+bounces-6410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6411-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 412C58A95A1
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 11:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B66AC8A9642
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 11:35:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FB91B2180F
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 09:08:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8ED45B20D4A
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 09:34:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 820C7136991;
-	Thu, 18 Apr 2024 09:08:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 878E615AD87;
+	Thu, 18 Apr 2024 09:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFUoSndn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JssaNVm4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEB415AADB
-	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 09:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB49158209
+	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 09:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713431315; cv=none; b=n2iU8NrNl27YdL2pQZd5uDiO53SpqgUZkehAR7E6uww63k7+nrKWCQ8QnYZPae2MaxiOL6/qiDHgY1TR4z3zllVWTgQWfVDvzgfVTiWjpvMj+MXtSp86nnBqZbSt8+FrwNW0BJThYV8KbDErKaCgGeODX1kExWXqWbcLbCiIlJc=
+	t=1713432893; cv=none; b=Q5AFhrmpXli0x4yRaOYsGYE9IGIPqIFDaqI1VD5xiTbElr2V3gtmGzLdtr3oTr1Yr+ABb7rnABZsMNP3ZlWNneRl/YrPtkCpObfDve7dPGvCeUTQDHGbNGmBR2uwhScbo6Zx7sIFldDL9eS2dpYH+p0W20bk0p1zQ8h/OhN9BWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713431315; c=relaxed/simple;
-	bh=w9qtibCyHNCUzxVnJHgPVlM+BKHeYHUkm7Q0VyZNp2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UnptCSfT77PQ2b/Wjgm7vJW2AChA9fiDjtO4rScS4Fa2W+8HXaU8KYmfHvU0CTf7XfkPZV5SwVKHzzAtBHRXjwoTyygOOVymZ2E/n5mMakONhI918PSnEx4+TBWGJLak2FaWfBBel06L64UQeAOB3fSmo5GfiXZTJ+lXVVKsYeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFUoSndn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0D90C32782;
-	Thu, 18 Apr 2024 09:08:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713431314;
-	bh=w9qtibCyHNCUzxVnJHgPVlM+BKHeYHUkm7Q0VyZNp2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bFUoSndn3XE7X22WrD1a8wbKF/b/GDvri3V+A+QfpXaQ4KdM3UWA2UNFY/tzM52jD
-	 WMyZXcGJD1sx+ar/aRZuyDvf9MN7HhQlbGK+Gn/ppgb2bSctIfh2/MmrEM+6fgAwCI
-	 PT1B/ZlQ6Hlmsw0GphtVvGbIPHfM/96TDpbqvXi1Yc4zjUrxgcT/vJ3qN8Yu5tywAm
-	 1Ldmz1JjKA0cIGvLA18cchnN4/quDQjsa+1M+rW7vJu/4kDzVENeWMYgP9ZXyDl6y+
-	 AdY5mO0aCJGFiZyt1sHZZCaEh3WzEC/NWZ7Pmcz8RTHY9LsFcqrUSc1FefCWPRpgVE
-	 IVDJawAXj98Gw==
-Date: Thu, 18 Apr 2024 11:08:29 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] misc: pci_endpoint_test: Use
- memcpy_toio()/memcpy_fromio() for BAR tests
-Message-ID: <ZiDjDUlmDLAehonO@ryzen>
-References: <20240322164139.678228-1-cassel@kernel.org>
+	s=arc-20240116; t=1713432893; c=relaxed/simple;
+	bh=Zf5XgpxHawdvCDXLshLtb7cI6CqNp9iYvNYappfzDa8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=JZipm3uCXE8HDNhdWrln6it7RB5KW4dw92/X09xwB5Nj132tYPUl6oLOSClF6eeOgyIxrRgUcZyr+gFMm1PrexSN4E9ft09L630+16PtTE+TBq6eryn2tkznpIMNRjlFnDWsqZZh0bBdAU55NFQprTC4FBmvaT0b+NHn4dF36n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JssaNVm4; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713432892; x=1744968892;
+  h=date:from:to:cc:subject:message-id;
+  bh=Zf5XgpxHawdvCDXLshLtb7cI6CqNp9iYvNYappfzDa8=;
+  b=JssaNVm4gbnO5s+6QmO0ty/7fjAJkv/+6Ibop/ueGyIrmUcNqyZTZp4W
+   5m1Mc6DF+1nDVn59PtgfCi6uWgFNtmoCLJs4AcrknpEqIPTIVJXvtvQxX
+   qUaUUn9OAO3S9+oK1e+tzCYwtCRbASGgYLTKGUBmzgxZogsuYNq0IUsMx
+   q02pF7iAo/eR3tYwXrQhLid1hZp7PDT/tReC3yiJgdVFTKFwojj6s2TYC
+   nheMQsqCs1ynvGwR9W0GwtmyocbF8cDwGh8LPqShPa+o3LAfIwxVrXm8A
+   Tv875BL7sVthUsPY0jdiD3RwUck3uX5yIEVV2YDxBfU/IkK5+mg6RqB5B
+   A==;
+X-CSE-ConnectionGUID: 7JVLhZXbQi2zXvqnClbl1w==
+X-CSE-MsgGUID: 0gtS0JvWTsSM/3zTZ+DIfQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8833102"
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="8833102"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 02:34:51 -0700
+X-CSE-ConnectionGUID: OH4wDBZAQD+oUU93WCT0yA==
+X-CSE-MsgGUID: U0LxHgH9S3a0nOKKJGhMIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
+   d="scan'208";a="23010244"
+Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 18 Apr 2024 02:34:50 -0700
+Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rxOAK-0007Sc-0B;
+	Thu, 18 Apr 2024 09:34:48 +0000
+Date: Thu, 18 Apr 2024 17:34:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ e30556bf682d36a88cc5aef98d1123ca71adb245
+Message-ID: <202404181734.ISTzEbTO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322164139.678228-1-cassel@kernel.org>
 
-On Fri, Mar 22, 2024 at 05:41:38PM +0100, Niklas Cassel wrote:
-> The current code uses writel()/readl(), which has an implicit memory
-> barrier for every single readl()/writel().
-> 
-> Additionally, reading 4 bytes at a time over the PCI bus is not really
-> optimal, considering that this code is running in an ioctl handler.
-> 
-> Use memcpy_toio()/memcpy_fromio() for BAR tests.
-> 
-> Before patch with a 4MB BAR:
-> $ time /usr/bin/pcitest -b 1
-> BAR1:           OKAY
-> real    0m 1.56s
-> 
-> After patch with a 4MB BAR:
-> $ time /usr/bin/pcitest -b 1
-> BAR1:           OKAY
-> real    0m 0.54s
-> 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
-> Changes since v3:
-> -Use scope-based resource management __free attribute from cleanup.h to
->  avoid overly verbose gotos and labels for error handling.
-> -Added a comment related to why we allocate a buffer of max 1MB.
->  (kmalloc() default upper limit is usually 4 MB on ARM and x86.)
-> 
->  drivers/misc/pci_endpoint_test.c | 54 +++++++++++++++++++++++++-------
->  1 file changed, 42 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 705029ad8eb5..bf64d3aff7d8 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -7,6 +7,7 @@
->   */
->  
->  #include <linux/crc32.h>
-> +#include <linux/cleanup.h>
->  #include <linux/delay.h>
->  #include <linux/fs.h>
->  #include <linux/io.h>
-> @@ -272,31 +273,60 @@ static const u32 bar_test_pattern[] = {
->  	0xA5A5A5A5,
->  };
->  
-> +static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
-> +					enum pci_barno barno, int offset,
-> +					void *write_buf, void *read_buf,
-> +					int size)
-> +{
-> +	memset(write_buf, bar_test_pattern[barno], size);
-> +	memcpy_toio(test->bar[barno] + offset, write_buf, size);
-> +
-> +	memcpy_fromio(read_buf, test->bar[barno] + offset, size);
-> +
-> +	return memcmp(write_buf, read_buf, size);
-> +}
-> +
->  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
->  				  enum pci_barno barno)
->  {
-> -	int j;
-> -	u32 val;
-> -	int size;
-> +	int j, bar_size, buf_size, iters, remain;
-> +	void *write_buf __free(kfree) = NULL;
-> +	void *read_buf __free(kfree) = NULL;
->  	struct pci_dev *pdev = test->pdev;
->  
->  	if (!test->bar[barno])
->  		return false;
->  
-> -	size = pci_resource_len(pdev, barno);
-> +	bar_size = pci_resource_len(pdev, barno);
->  
->  	if (barno == test->test_reg_bar)
-> -		size = 0x4;
-> +		bar_size = 0x4;
->  
-> -	for (j = 0; j < size; j += 4)
-> -		pci_endpoint_test_bar_writel(test, barno, j,
-> -					     bar_test_pattern[barno]);
-> +	/*
-> +	 * Allocate a buffer of max size 1MB, and reuse that buffer while
-> +	 * iterating over the whole BAR size (which might be much larger).
-> +	 */
-> +	buf_size = min(SZ_1M, bar_size);
->  
-> -	for (j = 0; j < size; j += 4) {
-> -		val = pci_endpoint_test_bar_readl(test, barno, j);
-> -		if (val != bar_test_pattern[barno])
-> +	write_buf = kmalloc(buf_size, GFP_KERNEL);
-> +	if (!write_buf)
-> +		return false;
-> +
-> +	read_buf = kmalloc(buf_size, GFP_KERNEL);
-> +	if (!read_buf)
-> +		return false;
-> +
-> +	iters = bar_size / buf_size;
-> +	for (j = 0; j < iters; j++)
-> +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
-> +						 write_buf, read_buf, buf_size))
-> +			return false;
-> +
-> +	remain = bar_size % buf_size;
-> +	if (remain)
-> +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
-> +						 write_buf, read_buf, remain))
->  			return false;
-> -	}
->  
->  	return true;
->  }
-> -- 
-> 2.44.0
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: e30556bf682d36a88cc5aef98d1123ca71adb245  PCI: Constify pcibus_class
 
-Gentle ping :)
+elapsed time: 1027m
 
+configs tested: 115
+configs skipped: 3
 
-Kind regards,
-Niklas
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                                 defconfig   clang
+arm                            mmp2_defconfig   gcc  
+arm                         s3c6400_defconfig   gcc  
+arm                    vt8500_v6_v7_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240418   gcc  
+i386         buildonly-randconfig-002-20240418   gcc  
+i386         buildonly-randconfig-003-20240418   clang
+i386         buildonly-randconfig-004-20240418   gcc  
+i386         buildonly-randconfig-005-20240418   clang
+i386         buildonly-randconfig-006-20240418   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240418   gcc  
+i386                  randconfig-002-20240418   gcc  
+i386                  randconfig-003-20240418   clang
+i386                  randconfig-004-20240418   gcc  
+i386                  randconfig-005-20240418   gcc  
+i386                  randconfig-006-20240418   gcc  
+i386                  randconfig-011-20240418   clang
+i386                  randconfig-012-20240418   clang
+i386                  randconfig-013-20240418   gcc  
+i386                  randconfig-014-20240418   gcc  
+i386                  randconfig-015-20240418   gcc  
+i386                  randconfig-016-20240418   clang
+loongarch                        alldefconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        m5307c3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      malta_kvm_defconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                     tqm5200_defconfig   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                          urquell_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
