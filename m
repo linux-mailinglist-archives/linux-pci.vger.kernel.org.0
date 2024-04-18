@@ -1,110 +1,180 @@
-Return-Path: <linux-pci+bounces-6460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B8868AA31E
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 21:44:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D8F78AA412
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 22:35:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 000841F23360
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 19:44:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 719801C21605
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 20:35:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A16D181BA8;
-	Thu, 18 Apr 2024 19:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B97717AD66;
+	Thu, 18 Apr 2024 20:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ra6OSZtY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqMh5SX8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74EE18133F
-	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 19:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A462F30;
+	Thu, 18 Apr 2024 20:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713469402; cv=none; b=ssyOzZ8Ffb+M9q2kbwrWcHweouflM1JBeQKGiKaDz0toyPop/fA7RZPlIoik8gXNEcyFLUiOwGFCgMOk2rorE8C7RTkljlC7gXtck1TIrKaKEA+P9nZBExtMKhrUEz6TqPK/DP3b2uk5npkTP/7qisaXC/5Yo7NHFGGzUH7vkeA=
+	t=1713472534; cv=none; b=I0mRYmGB0yWujApE1L5az0gTUTfIQCaGS4SYJBJFFRP4Jpr4be6IuMQwGMjI4Fupkdk5JNYgQz0rxTfGQdjDypNhgFdrU40axf1IwMurzXh943jmWlQFiQ362o8T51RBJoutK0eaRv2Q6Thxtd86MDE9EJVxr/THvbLgFmsBC70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713469402; c=relaxed/simple;
-	bh=VbIGz95YZH3XYNg7XInkIfak5ZfhCtKIPtLRE4aQudg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q5UezGKfmLUlsTdDDWMUU8Ys7nlrTOJUANCoXC7Ex5Up1+MDw+kbJPXQSh4ma36M+tXEkUH0qaTVafeYRgQOmtJmlNoZYkBH2E7VsIEgkn6QH+VS/GcEYGztEjQAFr9OkmbF8n64cJvymFedsyAzCQO7DNf9QeKv9+y7l4ODmbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ra6OSZtY; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7e85a26e821so336932241.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 12:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1713469399; x=1714074199; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YpGkUZCBQa/pLyWOb8XDuhl5v0v9yjefjo0KD4tR0lQ=;
-        b=Ra6OSZtYCimdkymXprSN7VMvRz5dMtNTwbO58pKWFa8hH2RpgPH6Lg2MVmZ3Mdeucr
-         3HWsgS97nRuge6qAojGMYcgap24wN0D/P7JYP1l5r/sWRVvQV2p7AF/P8WH1H207zkwm
-         NecLT+NwTAI3CsFXE31djYuFBECejWr2HpE4k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713469399; x=1714074199;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YpGkUZCBQa/pLyWOb8XDuhl5v0v9yjefjo0KD4tR0lQ=;
-        b=b2xEtgHFf7Zhq7NnyXJ5LTORnrmK1q70PdSjndUZUWdiqGL4NtszM9Nl+dtfQAenLU
-         3NDFtkXMZ/MBAiu7sAhd1a7drK6vTVCXQinZD3dtggm7biWg/UG1IHjpHBsnxjqWFPAo
-         ZeuAWF8Mt0ACacJ97zqL6NNjDDcijrFfUY6DlKjtEihe/689pH3d35+9tvsEeokY+RQX
-         I85CmvLolg5ScfV5X47X1sA5SQtEw0MkeZ/nwFkF0uqGvaYavyyZrawbSGRa72xmgaf7
-         1lq6XoOvYESjlKLgq7iC95+pyni7v0o04KpCKghnzr04VXOFQ7o3E1EkJobgGGPsIAq3
-         /1RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5CDAKUY6k9jRgrz42sQVRtzyHZ1TowP6VmXWd8zFubSE5QQR5KMiQYIf6mnZgXE+ZlmdDgmAeZB/h9kxb8MIkU7BYnH5LHHW3
-X-Gm-Message-State: AOJu0YzuZb4lXsUijOKpQC/kUzYBpw+XpdiD7sOBQTSkRxCa+Td2fkAe
-	qlVR0e3tXMIB9BfS+TAdyshLPtAEO3UmM4kGOWL1jAytETmRBiM2GPOdrDZdl9XeqRGUNr5Jg2a
-	JlTJZiQLB9Fl/9qxdWgOGBGzQBnH5Mi9RyPY9
-X-Google-Smtp-Source: AGHT+IECjWKB6YH4nmd2JutpjqRG2yKbFCZooTJpITrlEUsuTUJk/P5FN2jEfGiO3NADYx74ECyoS12q0xh1/WFROLI=
-X-Received: by 2002:a05:6102:3ed4:b0:47b:b405:e479 with SMTP id
- n20-20020a0561023ed400b0047bb405e479mr5002750vsv.22.1713469398922; Thu, 18
- Apr 2024 12:43:18 -0700 (PDT)
+	s=arc-20240116; t=1713472534; c=relaxed/simple;
+	bh=/k8CBxtFFxCCrPyB0ZQkRVXX+qR7tZDSRdyejPSOIGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=M+ELGr6ALsN4FQ7hYJnl9iA6nX1WwR0YtBYuvsx2th6DOL/OKRy56gvVV8PABOjhsProXJD74Vcej+TfL/Z9x597G2T2/4JlvVoYaxkAmnPc/oY7pvnmxXZNmtXxQnaHWiNQmdEOUZQdNDd796p3g7YOU03mR8VD9z+7jI/IDAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqMh5SX8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22406C113CC;
+	Thu, 18 Apr 2024 20:35:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713472533;
+	bh=/k8CBxtFFxCCrPyB0ZQkRVXX+qR7tZDSRdyejPSOIGs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lqMh5SX89qQB4n0qiw+izwaIkIAQ9m5dPQcveLPH9gV04HsYTxKOqyV8WjIy8YPDm
+	 BjMiHFMgSW1lLjFpuhr5b/MKyBGNWBuqzUxQDvHB8FONBTMR1Mx9rd/qZtH2C/QJHh
+	 T1WQQnf/Fl3i57nr5m7v09tpEhCH5clUGCA+23zY/B/8P4w5LxBpU6NQPtUA59FhB3
+	 4p8O4tUN8AyPthpZOn5UtZ1MbfKcLlxLGSAnRTQ1B7E3NCabGXoeS32keleyGYfETw
+	 brXTPMqtDcxieiwey+Qu8NTZlP8WR+aLwPLPYKRTrsiSdgRgDS1+v7eTDwHkRrB5/M
+	 HQZsTmxFMiBgQ==
+Date: Thu, 18 Apr 2024 15:35:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com,
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org,
+	kch@nvidia.com, hch@lst.de, gloriouseggroll@gmail.com,
+	kbusch@kernel.org, sagi@grimberg.me, hare@suse.de
+Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+Message-ID: <20240418203531.GA251408@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118060002.GV2543524@black.fi.intel.com> <23ee70d5-d6c0-4dff-aeac-08cc48b11c54@amd.com>
- <ZalOCPrVA52wyFfv@google.com> <20240119053756.GC2543524@black.fi.intel.com>
- <20240119074829.GD2543524@black.fi.intel.com> <20240119102258.GE2543524@black.fi.intel.com>
- <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com> <20240123061820.GL2543524@black.fi.intel.com>
- <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
- <CA+Y6NJGz6f8hE4kRDUTGgCj+jddUyHeD_8ocFBkARr7w90jmBw@mail.gmail.com> <20240416050353.GI112498@black.fi.intel.com>
-In-Reply-To: <20240416050353.GI112498@black.fi.intel.com>
-From: Esther Shimanovich <eshimanovich@chromium.org>
-Date: Thu, 18 Apr 2024 15:43:08 -0400
-Message-ID: <CA+Y6NJF6+s5zUZeaWtagpMt8Qu0a1oE+3re3c6EsppH+ZsuMRQ@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416043225.1462548-2-kai.heng.feng@canonical.com>
 
-Thank you for your response! It is very much appreciated.
+On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
+> When the power rail gets cut off, the hardware can create some electric
+> noise on the link that triggers AER. If IRQ is shared between AER with
+> PME, such AER noise will cause a spurious wakeup on system suspend.
+> 
+> When the power rail gets back, the firmware of the device resets itself
+> and can create unexpected behavior like sending PTM messages. For this
+> case, the driver will always be too late to toggle off features should
+> be disabled.
+> 
+> As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+> Management", TLP and DLLP transmission are disabled for a Link in L2/L3
+> Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
+> the power will be turned off during suspend process, disable AER service
+> and re-enable it during the resume process. This should not affect the
+> basic functionality.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218090
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-On the Tiger Lake device I was testing on, the usb4-host-interface
-value is NOT listed in its ACPI.
+Thanks for reviving this series.  I tried follow the history about
+this, but there are at least two series that were very similar and I
+can't put it all together.
 
-I then decided to query the ACPI values collected from devices in my
-office, to see if this issue is limited to my device.
-Ice Lake - 4 devices, none had "usb4-host-interface"
-Tiger Lake - 31 devices, none have "usb4-host-interface"
-Alder Lake - 32 devices, I see that 15 of them have
-"usb4-host-interface" in their ACPI
-Raptor Lake - 1 device, does not have "usb4-host-interface"
+> ---
+> v8:
+>  - Add more bug reports.
+> 
+> v7:
+>  - Wording
+>  - Disable AER completely (again) if power will be turned off
+> 
+> v6:
+> v5:
+>  - Wording.
+> 
+> v4:
+> v3:
+>  - No change.
+> 
+> v2:
+>  - Only disable AER IRQ.
+>  - No more check on PME IRQ#.
+>  - Use helper.
+> 
+>  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index ac6293c24976..bea7818c2d1b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/kfifo.h>
+>  #include <linux/slab.h>
+> +#include <linux/suspend.h>
+>  #include <acpi/apei.h>
+>  #include <acpi/ghes.h>
+>  #include <ras/ras_event.h>
+> @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
+>  	return 0;
+>  }
+>  
+> +static int aer_suspend(struct pcie_device *dev)
+> +{
+> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = rpc->rpd;
+> +
+> +	if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
+> +		aer_disable_rootport(rpc);
 
-It looks like only Alder Lake has usb4-host-interface  listed in its
-ACPI for whatever reason.
+Why do we check pci_ancestor_pr3_present(pdev) and
+pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
+to disable AER interrupts on suspend in general.  I think it will be
+better if we do that consistently on all platforms, not special cases
+based on details of how we suspend.
 
-It seems like I cannot use usb4-host-interface as a determinant
-whether the CPU has Thunderbolt capabilities (thus not needing a
-discrete Thunderbolt chip).
-ExternalFacingPort is listed in devices that don't have CPUs with
-Thunderbolts, so that can't be a determinant.
+Also, why do we use aer_disable_rootport() instead of just
+aer_disable_irq()?  I think it's the interrupt that causes issues on
+suspend.  I see that there *were* some versions that used
+aer_disable_irq(), but I can't find the reason it changed.
 
-Am I missing something?
+> +
+> +	return 0;
+> +}
+> +
+> +static int aer_resume(struct pcie_device *dev)
+> +{
+> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = rpc->rpd;
+> +
+> +	if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
+> +		aer_enable_rootport(rpc);
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+>   * @dev: pointer to Root Port, RCEC, or RCiEP
+> @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver = {
+>  	.service	= PCIE_PORT_SERVICE_AER,
+>  
+>  	.probe		= aer_probe,
+> +	.suspend	= aer_suspend,
+> +	.resume		= aer_resume,
+>  	.remove		= aer_remove,
+>  };
+>  
+> -- 
+> 2.34.1
+> 
 
