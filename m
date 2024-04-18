@@ -1,133 +1,94 @@
-Return-Path: <linux-pci+bounces-6457-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 284118AA23C
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 20:45:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D2BC8AA243
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 20:46:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B9AC71F214F2
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 18:45:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F2E21C20896
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 18:46:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6934D176FB1;
-	Thu, 18 Apr 2024 18:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E0A168B17;
+	Thu, 18 Apr 2024 18:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTTj0Mz5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oS3ixYd4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B463174EF9;
-	Thu, 18 Apr 2024 18:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306EE16F919
+	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 18:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713465934; cv=none; b=mXiNYAv834zuiALudCeJiBehQy5An8wowmMlGpmSYMST8OJ4QEcFSq0isFm3LB8GhLq8pGCX/gNJj3kRk8qbZzBw7Ntsj1VuxJVnazuLHBpvNNPAJakJlJk39iV8kxmo7BgjBUS1BhC4VxT25lPxNcAmoDFj6TDiZO/Hx2aIFEM=
+	t=1713466006; cv=none; b=s7Abs3RJxyiYaX4Jfka77PoByaIg0Q/sMTmBSLM30QJCwgBIQ4saHwKP/Xq58P+sIDj2212VJy2JAviS5/mDddvcctON4guBdMmaix7T6Kb0P5SHBtqx7bfXAdAHI189BHO08q6Ezm+rEOBBpNZy5OgBO1L1/bBiUyMSs1RvlJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713465934; c=relaxed/simple;
-	bh=lKM6jp4loR9UtX0QaVbNiZZcTUL3CirpRy3Imh5A0mk=;
+	s=arc-20240116; t=1713466006; c=relaxed/simple;
+	bh=OpSGAMtEEJoFVbRL8K/2yS2PcHKsqlAZZNDOGY0Nz9g=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lmdbgZvGN+uJoJm3rsyJPOh+ZAOJWvTdHxp3mQN6bIdWpNOeK6DP7YUMApr87/CZLwXIow2HvRKfEIQwnpaojiUiZ1AfR0cOJSufR3RhQIrZSGS7S5s6W1WheOBVWntBAlT7c6dLpQwYZfCMWB+87Ik3ZuHlAKH8jJafpq5hY1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTTj0Mz5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8141DC113CC;
-	Thu, 18 Apr 2024 18:45:33 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Bw4y2icB+LcB+738hgEGnQ5pIvSxuDKv+Mdbokk+CJrwLR4vKX3HQ3uTvCKKv7acvrDXOI+XQYvVxRbMskNnEX9y06sA+tkjCwuxuS2f8vMu/vNYL9W5V2yHZrJypuhs/e3tiGuUMqdRixhxeVATkAvkJCiWBCFH7S3s4PSIDTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oS3ixYd4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E772C113CC;
+	Thu, 18 Apr 2024 18:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713465933;
-	bh=lKM6jp4loR9UtX0QaVbNiZZcTUL3CirpRy3Imh5A0mk=;
+	s=k20201202; t=1713466005;
+	bh=OpSGAMtEEJoFVbRL8K/2yS2PcHKsqlAZZNDOGY0Nz9g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QTTj0Mz5XF92ESwg63sIEASiwqS2+47Ysq+/8nAqQdLB+L0KxMCi60r9Jo8I95gES
-	 b0EwoBKcfHO/F0zrXMqsXSpnA+pSbezCyNneX+Ys0IFLDcZ985ZhkaMECookvDHA2F
-	 I7vfwa2HZCb9idOIDQ3pHE4VAELdDmfOqQWQNlJ8+DwbJ4GDDvac3ei/ltznZb2ov4
-	 5uzX8izHuIgYDpSBMpeGrsVBqCXvxUL0mJRX++mrbR+C+04sMwHMI6wu1Srk2G4W2X
-	 XgrrWHcOJ42xgc2fCNckIhxyV0p9nnP9Rp3CsPuyN+Hj1ZiK6nC8JeOgjmhx/NWXjD
-	 yZYgWxlEN7EZg==
-Date: Thu, 18 Apr 2024 13:45:31 -0500
+	b=oS3ixYd4PhuF2e9A5iuZGVj5oOfg3J7j3nuDHMv9nhNxG7wsz2/r5I5Q9njMeZg4s
+	 4oMH3qWrgUfBG5YWVZEttLkTnbORx0RL7YgkGPSVjipM9kjI7vzcIjuYjnnTq1+hUA
+	 HKN8x5EgYvXlue7PA4IPOOKBEtG7TtO10WL4c2CtplSNYsbl4wDhUCfCJ3tnv0zX27
+	 JNl+L9YX6/4SzW00QuUyu+iLVSHaJ27QU8ZkuZOxHK00C/P/29Qmq38i0rq7UjtGPt
+	 CzoI2nQv7jOLavS/UzQsW606qfcIeS5vWi1RL8k+jLTlcCe9dQSbdAJuF+GRcZ6jqb
+	 VrufD9Bd6DIjA==
+Date: Thu, 18 Apr 2024 13:46:44 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: Re: local bus enumeration beyond a PCI device
-Message-ID: <20240418184531.GA245970@bhelgaas>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: Annotate pci_cache_line_size variables as
+ __ro_after_init
+Message-ID: <20240418184644.GA246566@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bad63409-ed2b-4cef-988b-3c143636e9fa@alliedtelesis.co.nz>
+In-Reply-To: <52fd058d-6d72-48db-8e61-5fcddcd0aa51@gmail.com>
 
-[+cc Herve]
+On Thu, Apr 18, 2024 at 08:29:21PM +0200, Heiner Kallweit wrote:
+> Annotate both variables as __ro_after_init, enforcing that they can't
+> be changed after the init phase.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 
-On Thu, Apr 18, 2024 at 12:24:06AM +0000, Chris Packham wrote:
-> Hi,
-> 
-> We've got a custom x86_64 based design that is using an ASIX9100 to 
-> provide a PCI to local bus bridge. Attached to that local bus is an FPGA 
-> which mostly provides some GPIOs accessed via registers on the local 
-> bus. Right now we've got a custom driver that bundles everything 
-> together so effectively we've got a PCI device that provides GPIOs.
+Applied to pci/misc for v6.10, thanks!
 
-What's the local bus?  The ASIX9100 (for which Google doesn't find any
-details) would have a PCI interface on the primary (upstream) side.
-What's the local bus on the secondary (downstream) side?  Below you
-mention "PCI bridge", which normally means both the primary and
-secondary sides are PCI buses.
-
-If the local bus is not PCI, I guess the ASIX9100 would look to the OS
-like an endpoint, i.e., PCI_HEADER_TYPE_NORMAL, and the ASIX9100
-driver would handle any "bridge" functionality completely internally?
-
-Maybe Herve's work at
-https://lore.kernel.org/r/20240325153919.199337-1-herve.codina@bootlin.com
-would be relevant?
-
-> But as things can change based on the FPGA program I'd like some 
-> flexibility to treat it separately from the PCI bridge. So really I'd 
-> like to have a PCI device driver for the ASIX9100 that provides a local 
-> bus controller and a (platform?) driver for the FPGA that provides the 
-> GPIOs where I can have different compatibles for the different 
-> implementations.
+> ---
+> v2:
+> - remove annotation from extern declaration in pci.h
+> ---
+>  drivers/pci/pci.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Then in the ACPI overlay I'd have something like
-> 
->      Scope (\_SB.PCI0.D0B0)
->      {
->          Device (ASIX)
->          {
->              Name (_ADR, 0x0000)
-> 
->              Device (FPGA)
->              {
->                          Name (_HID, "PRP0001")
->                          Name (_DSD, Package ()
->                          {
-> ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                                      Package ()
->                                      {
->                                                  Package () { 
-> "compatible", "my-platform-driver-for-fpga" },
->                                      }
->                          })
->              }
->          }
->      }
-> 
->     Scope(\_SB)
->     {
->          Device(OTHR)
->          {
->              GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly, 
-> "\\_SB.PCI0.D0B0.ASIX.FPGA",) { 0 }
->          }
->     }
-> 
-> Is it even possible to register a host controller for another platform bus?
-> 
-> Thanks,
-> Chris
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 5f8edba78..59aaebb67 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -142,8 +142,8 @@ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
+>   * the dfl or actual value as it sees fit.  Don't forget this is
+>   * measured in 32-bit words, not bytes.
+>   */
+> -u8 pci_dfl_cache_line_size = L1_CACHE_BYTES >> 2;
+> -u8 pci_cache_line_size;
+> +u8 pci_dfl_cache_line_size __ro_after_init = L1_CACHE_BYTES >> 2;
+> +u8 pci_cache_line_size __ro_after_init ;
+>  
+>  /*
+>   * If we set up a device for bus mastering, we need to check the latency
+> -- 
+> 2.44.0
 
