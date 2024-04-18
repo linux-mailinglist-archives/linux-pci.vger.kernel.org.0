@@ -1,90 +1,85 @@
-Return-Path: <linux-pci+bounces-6391-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6392-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25A1E8A9255
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 07:24:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F4F08A928B
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 07:43:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9D64282745
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 05:24:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 920B11C209DB
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 05:43:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA88254BFD;
-	Thu, 18 Apr 2024 05:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 407EE54F92;
+	Thu, 18 Apr 2024 05:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gQEsRAUM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NtOx973P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF1E37162
-	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 05:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29062207A
+	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 05:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713417878; cv=none; b=ARN85wsqkzYhcp5uB+bgKQbhcrGMhVw8v8/VjdLDZ3K3ZyHQ4H1kSWlpfo8n+Eh27QAjTa/ZGuSzqXSOfT0PaLkC4s+c4YhstVn20ASt/0mN/i6TTai7s7dAxKOPu+yUOwrxXEehidTWBaqQ6FpXuszwHuTMj8TFcJqPYSmDFSI=
+	t=1713419007; cv=none; b=D76eKkljOAcOlOOpxf93L1ekiGRiXllKDIDUnb6coABXqSR6d4+kUXwAZZATldmqjx5REhj7N0aJEvUH7qwhMjRxJV1WOQZT24KsYcWCkyHyfPR4ePPNLzzv0ULW88sUVN6+kH8pN8xrvSwG16GyLNkgoVCUfB1TGN7hE3XeLZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713417878; c=relaxed/simple;
-	bh=yTHNcJV6mkbvbACM8MlRUqxTGaeuT75VpWTO8vyzG/0=;
+	s=arc-20240116; t=1713419007; c=relaxed/simple;
+	bh=TqyiQoC0g16lJ9+TzRASnQUPEbTxbgzwT1YYI/p2QQU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PCgt53qN/jK+Y9yPEdhYGxECFIPqvcANiN+4tIQ0A1wwKhQtc5nA3AWHGqcCdeFgFyxKZF97//HO9HnSZ9jTETGZ8/vwtmDt2ej3R7RT+Vpfr+MehN0/XWdsjv0YPdJWGxOCn9ZK02OfZjLw+4ujHhfWJmd6cnRnBcZtTao1WP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gQEsRAUM; arc=none smtp.client-ip=209.85.214.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5EDJdG8tLJsXpDms1RKeCIxWd5u/9Glahwfiso9A+zlkSep85E2mJkl0gOFZNef67bjzUuLzwxXf5tdF/VxAJLEjopPfFGlkZOenN0dqpMMDyqstr7BnVf0HiErKmfBji9yKsZtpXx7IizlDyvru8kRKbSRpUzw6+Obx4BVdrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NtOx973P; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so3738155ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 22:24:35 -0700 (PDT)
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2a2dd2221d3so459852a91.0
+        for <linux-pci@vger.kernel.org>; Wed, 17 Apr 2024 22:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713417875; x=1714022675; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713419005; x=1714023805; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=RTmvBEErcjD5aHY5zUc6t4jtR6420JIpn91iQd/AW8M=;
-        b=gQEsRAUMJOZFo4yXtaPsNZ8DPgyRdTS5amBreYnxB5EWDAKLpGUCNkiTQET/p38jnf
-         kPaIRy9/WDX2PoLrjTFLlvlj5AEwtjQYZFeXalhxCpA6PAVURZ/eUAwfV4Bf89aLmqFg
-         7Lwu2TW4i1k9qtn1Lw0T9A1K6NeEr0blu53quHt46GUJHvXjisxsAaLLpkgG1ts7IyWP
-         3KDlHpMk5B5k2j+6ZyB0xKIG0cN3nMZM+nizddtkVR6DzDT4rruCtEjb/B2iL0aHHJLS
-         vWc+pOPBGtifr7LNOigvz1smBntnKTUMVJ/YDmQhEpSCcBShSyK+8Zw4Uxv2CLPzQLEs
-         qp1A==
+        bh=ZPz6zQ9n0XvVQuYL65yFLeQ68AHLD/9kPRWZ54My/QY=;
+        b=NtOx973PD50HOe8psM3rFm62leAEb59rLeOm8PXWZHGd+1f8iEtHaBrASiBypSDW7k
+         1l06RrLIIui8ekTn3toGFOVbAmLXwkZNDJvNKOqpxBTqa2+MEougwT4Z+fiNrKUH8Dmn
+         xQCx+NeGv2wGOTG1/1U9vqIE4mBvu7nUBsdXENfcHkAJNHpmYEQWHlDKRpjS/NUrp29V
+         p8E5PI1j9q8U0I52V/82YbmoSB8gGZQKpFw3RzFqEnTjrf6ZLOrMrJxVHs5/sUSyjex2
+         U/oBdfTJuzDm+sJ76uwNElkqZHBEAMd7nPBJuMvlHNV2IGgHGnzcjWNKNCD8ii/ueJ6G
+         ryxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713417875; x=1714022675;
+        d=1e100.net; s=20230601; t=1713419005; x=1714023805;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RTmvBEErcjD5aHY5zUc6t4jtR6420JIpn91iQd/AW8M=;
-        b=xJe/Ff7EFzs0lagOsZNhmysUsjSK7/pZ02HMZBUjwWZaHHl+M4bwyTdnTIbWysG9Ng
-         6myKkjrqhCUgnceAB1Hpesh6OL1SdVNCkTRCv3573EEJFseH2YrefvFYwDSmHOwScMjk
-         p6zX9CbVHJ8OzUEHFlIcNP4Z2BmiE0gQ5ebVzGMzhalurDQdovRFjCG8x1AX6ajsR5KG
-         wQkrmABhYSthY/VHAYQAHtIUASWP2PE5Pj4n78G2UHmGyQwtsZ6hut9XjIv8LK1ZqhDP
-         +v7TOO11Fzdg3AKoB5rUupfyZMzSDH+vbstzivIlczrTupxgagDUgPj6JqQvAqUNRlMa
-         y52A==
-X-Forwarded-Encrypted: i=1; AJvYcCU3PCUH6BsbN7B0QQ414MXAyJkHkOrc3WjWNiPgSitaWtU/ojjdyJ7J4w9BoxeesC4zdirWHZbRjwDWnhv46tcY+45vAMFfiC9W
-X-Gm-Message-State: AOJu0Yxk+6hqe15vWvIoHqnr15j861eqvwYYBestJf/ae4a0j0GlZjq2
-	FP/mncgTBa+/uZJMjKYUE9tuX7GbGSch7gWag7xvxgZ1mGZobb/WeRa8++Rshw==
-X-Google-Smtp-Source: AGHT+IHEOOqHGUiSRn2TocR0J8LOMIOqxHp0qWssyNvOhSsUetlt1AXCFNMJ0XeZNG/NbwCklsQskw==
-X-Received: by 2002:a17:902:d4c3:b0:1e2:abc5:e28b with SMTP id o3-20020a170902d4c300b001e2abc5e28bmr2131840plg.19.1713417874975;
-        Wed, 17 Apr 2024 22:24:34 -0700 (PDT)
+        bh=ZPz6zQ9n0XvVQuYL65yFLeQ68AHLD/9kPRWZ54My/QY=;
+        b=mwKemEueF6fm8MPUQKp21P+Wydm747qFgjRN7Q6i3jzjFCeALcM22uSGkt7dgjlcE0
+         Qe56+nuc5SMoU4OSzFP8eqCuHHnfkFn8k7nnLUkZPdMAv/1+4h62M75GqmU5U8fm0PRQ
+         uefQFuxxcATMGIWXox6AvQrwlZ1YQsu0muK8FCBinEFQvIMKUI9jpXtVLkhta2t0B/Z7
+         p0iC0JJuQWyB/4jim9HOShdgzZuuJxkJArC16YwydP7J6owVvSX6QQur9yy8x+psLZFN
+         u006np4cYWuNxE6oEXdMAIuFTu8WYTUKK7Wl7NZ1+wTBmsTbOM+mRc92B9sEK/l1FE6S
+         Yr+w==
+X-Forwarded-Encrypted: i=1; AJvYcCU3LrCB6dd3kJOkRjnS9OUgDIwrh+4a6MzNuUZ6hu8T8HIACg399BA7SbrmH+4KsIxxVQde0sIR/FmfKwrcD2VeDTctV0q09si+
+X-Gm-Message-State: AOJu0YxowGwWOk0k+0nkL9BWGzYB/jellxxbvU3p8XNL2Ud77qtBuFpL
+	Zqf7QkN36Ya5+qNi2gOxLAGyuZ09hl4N8duSBE4K/mB+kMJmpuyOBOX68MNh1Q==
+X-Google-Smtp-Source: AGHT+IFEE2uClZuhQfrNvSdTPK9z9KdBSy1PpaOvM69JRhG2H58TZmh1y81qPpWCM3/rGyV0lRDkXA==
+X-Received: by 2002:a17:90a:d705:b0:2ab:400a:2ba5 with SMTP id y5-20020a17090ad70500b002ab400a2ba5mr1669899pju.31.1713419004814;
+        Wed, 17 Apr 2024 22:43:24 -0700 (PDT)
 Received: from thinkpad ([120.56.197.253])
-        by smtp.gmail.com with ESMTPSA id u7-20020a17090341c700b001e2a7fb6e01sm587621ple.44.2024.04.17.22.24.31
+        by smtp.gmail.com with ESMTPSA id u23-20020a17090ae01700b002a219f8079fsm618871pjy.33.2024.04.17.22.43.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 22:24:34 -0700 (PDT)
-Date: Thu, 18 Apr 2024 10:54:29 +0530
+        Wed, 17 Apr 2024 22:43:24 -0700 (PDT)
+Date: Thu, 18 Apr 2024 11:13:19 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Kishon Vijay Abraham I <kvijayab@amd.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for
- outbound window memory allocation
-Message-ID: <20240418052429.GA2861@thinkpad>
-References: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
- <37cfa724-f9ed-41ef-bad4-f00246a4ee8a@amd.com>
- <20240320112928.GB2525@thinkpad>
- <20240414130058.GA2231@thinkpad>
- <6984ee8c-7848-46f8-a421-1b31d8c2231a@amd.com>
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] PCI: endpoint: pci-epf-test: Make use of cached
+ 'epc_features' in pci_epf_test_core_init()
+Message-ID: <20240418054319.GB2861@thinkpad>
+References: <20240417-pci-epf-test-fix-v1-1-653c911d1faa@linaro.org>
+ <ZiALuYlshLmwLhvu@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,169 +89,121 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6984ee8c-7848-46f8-a421-1b31d8c2231a@amd.com>
+In-Reply-To: <ZiALuYlshLmwLhvu@ryzen>
 
-On Thu, Apr 18, 2024 at 10:14:57AM +0530, Kishon Vijay Abraham I wrote:
-> Hi Mani,
+On Wed, Apr 17, 2024 at 07:49:45PM +0200, Niklas Cassel wrote:
+> On Wed, Apr 17, 2024 at 10:47:25PM +0530, Manivannan Sadhasivam wrote:
+> > Instead of getting the epc_features from pci_epc_get_features() API, use
+> > the cached pci_epf_test::epc_features value to avoid the NULL check. Since
+> > the NULL check is already performed in pci_epf_test_bind(), having one more
+> > check in pci_epf_test_core_init() is redundant and it is not possible to
+> > hit the NULL pointer dereference. This also leads to the following smatch
+> > warning:
+> > 
+> > drivers/pci/endpoint/functions/pci-epf-test.c:784 pci_epf_test_core_init()
+> > error: we previously assumed 'epc_features' could be null (see line 747)
+> > 
+> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > Closes: https://lore.kernel.org/linux-pci/024b5826-7180-4076-ae08-57d2584cca3f@moroto.mountain/
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> On 4/14/2024 6:30 PM, Manivannan Sadhasivam wrote:
-> > On Wed, Mar 20, 2024 at 04:59:28PM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Mar 20, 2024 at 03:26:41PM +0530, Kishon Vijay Abraham I wrote:
-> > > > Hi Mani,
-> > > > 
-> > > > On 3/17/2024 11:39 AM, Manivannan Sadhasivam wrote:
-> > > > > As proposed during the last year 'PCI Endpoint Subsystem Open Items
-> > > > > Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
-> > > > > framework for managing the endpoint outbound window memory allocation.
-> > > > > 
-> > > > > PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
-> > > > > driver from the start for managing the memory required to map the host
-> > > > > address space (outbound) in endpoint. Even though it works well, it
-> > > > > completely defeats the purpose of the 'Genalloc framework', a general
-> > > > > purpose memory allocator framework created to avoid various custom memory
-> > > > > allocators in the kernel.
-> > > > > 
-> > > > > The migration to Genalloc framework is done is such a way that the existing
-> > > > > API semantics are preserved. So that the callers of the EPC mem APIs do not
-> > > > > need any modification (apart from the pcie-designware-epc driver that
-> > > > > queries page size).
-> > > > > 
-> > > > > Internally, the EPC mem driver now uses Genalloc framework's
-> > > > > 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
-> > > > > based on the requested size as like the previous allocator. And the
-> > > > > page size passed during pci_epc_mem_init() API is used as the minimum order
-> > > > > for the memory allocations.
-> > > > > 
-> > > > > During the migration, 'struct pci_epc_mem' is removed as it is seems
-> > > > > redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
-> > > > > is now used to hold the address windows of the endpoint controller.
-> > > > > 
-> > > > > [1] https://lpc.events/event/17/contributions/1419/
-> > > > 
-> > > > Thank you for working on this!
-> > > > > 
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > ---
-> > > > >    drivers/pci/controller/dwc/pcie-designware-ep.c |  14 +-
-> > > > >    drivers/pci/endpoint/pci-epc-mem.c              | 182 +++++++++---------------
-> > > > >    include/linux/pci-epc.h                         |  25 +---
-> > > > >    3 files changed, 81 insertions(+), 140 deletions(-)
-> > > > > 
-> > > > .
-> > > > .
-> > > > > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> > > > > index a9c028f58da1..f9e6e1a6aeaa 100644
-> > > > > --- a/drivers/pci/endpoint/pci-epc-mem.c
-> > > > > +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> > > > > @@ -4,37 +4,18 @@
-> > > > >     *
-> > > > >     * Copyright (C) 2017 Texas Instruments
-> > > > >     * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> > > > > + *
-> > > > > + * Copyright (C) 2024 Linaro Ltd.
-> > > > > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > >     */
-> > > > > +#include <linux/genalloc.h>
-> > > > >    #include <linux/io.h>
-> > > > >    #include <linux/module.h>
-> > > > >    #include <linux/slab.h>
-> > > > >    #include <linux/pci-epc.h>
-> > > > > -/**
-> > > > > - * pci_epc_mem_get_order() - determine the allocation order of a memory size
-> > > > > - * @mem: address space of the endpoint controller
-> > > > > - * @size: the size for which to get the order
-> > > > > - *
-> > > > > - * Reimplement get_order() for mem->page_size since the generic get_order
-> > > > > - * always gets order with a constant PAGE_SIZE.
-> > > > > - */
-> > > > > -static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
-> > > > > -{
-> > > > > -	int order;
-> > > > > -	unsigned int page_shift = ilog2(mem->window.page_size);
-> > > > > -
-> > > > > -	size--;
-> > > > > -	size >>= page_shift;
-> > > > > -#if BITS_PER_LONG == 32
-> > > > > -	order = fls(size);
-> > > > > -#else
-> > > > > -	order = fls64(size);
-> > > > > -#endif
-> > > > > -	return order;
-> > > > > -}
-> > > > > -
-> > > > >    /**
-> > > > >     * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
-> > > > >     * @epc: the EPC device that invoked pci_epc_mem_init
-> > > > > @@ -48,17 +29,11 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
-> > > > >    			   struct pci_epc_mem_window *windows,
-> > > > >    			   unsigned int num_windows)
-> > > > >    {
-> > > > > -	struct pci_epc_mem *mem = NULL;
-> > > > > -	unsigned long *bitmap = NULL;
-> > > > > -	unsigned int page_shift;
-> > > > > +	struct pci_epc_mem_window *window = NULL;
-> > > > >    	size_t page_size;
-> > > > > -	int bitmap_size;
-> > > > > -	int pages;
-> > > > >    	int ret;
-> > > > >    	int i;
-> > > > > -	epc->num_windows = 0;
-> > > > > -
-> > > > >    	if (!windows || !num_windows)
-> > > > >    		return -EINVAL;
-> > > > > @@ -70,45 +45,51 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
-> > > > >    		page_size = windows[i].page_size;
-> > > > >    		if (page_size < PAGE_SIZE)
-> > > > >    			page_size = PAGE_SIZE;
-> > > > > -		page_shift = ilog2(page_size);
-> > > > > -		pages = windows[i].size >> page_shift;
-> > > > > -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
-> > > > > -		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> > > > > -		if (!mem) {
-> > > > > +		windows[i].pool = gen_pool_create(ilog2(page_size), -1);
-> > > > > +		if (!windows[i].pool) {
-> > > > >    			ret = -ENOMEM;
-> > > > > -			i--;
-> > > > > -			goto err_mem;
-> > > > > +			goto err_free_mem;
-> > > > > +		}
-> > > > > +
-> > > > > +		gen_pool_set_algo(windows[i].pool, gen_pool_first_fit_order_align,
-> > > > > +				  NULL);
-> > > > > +
-> > > > > +		windows[i].virt_base = ioremap(windows[i].phys_base, windows[i].size);
-> > > > 
-> > > > Do you have to ioremap upfront the entire window? This could be a problem in
-> > > > 32-bit systems which has limited vmalloc space. I have faced issues before
-> > > > when trying to map the entire memory window and had to manipulate vmalloc
-> > > > boot parameter.
-> > > > 
-> > > > I'd prefer we find a way to do ioremap per allocation as before.
-> > > > 
-> > > 
-> > > Hmm, thanks for pointing it out. Current genalloc implementation works on the
-> > > virtual address as opposed to physical address (that might be due to majority of
-> > > its users managing the virtual address only). That's the reason I did ioremap of
-> > > the entire window upfront.
-> > > 
-> > > Let me see if we can somehow avoid this.
-> > > 
-> > 
-> > Looks like we have to introduce some good amount of change to support dynamic
-> > ioremap with genalloc. But IMO it doesn't worth the effort to introduce these
-> > changes for some old systems which are supposed to go away soon.
-> > 
-> > So I think we can keep the old and genalloc based allocators and use the old one
-> > only for 32bit systems and genalloc allocator for the rest.
-> > 
-> > What do you think?
-> 
-> sure, that should be okay. But can we check with genalloc maintainers to see
-> what they think?
+> I think you forgot:
+> Fixes: a01e7214bef9 ("PCI: endpoint: Remove "core_init_notifier" flag")
 > 
 
-There seems to be no maintainer for genalloc. It was written way back in 2005
-and improved by lot of folks. But there is no one to take care of it.
+No, that's not the correct fixes tag I suppose. This redudant check is
+introduced by commit, 5e50ee27d4a5 ("PCI: pci-epf-test: Add support to defer
+core initialization") and this commit removes the redundant check (fixing smatch
+warning is a side effect). So if the fixes tag needs to be added, then this
+commit should be referenced.
+
+> 
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 9 ++++-----
+> >  1 file changed, 4 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > index 977fb79c1567..0d28f413cb07 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > @@ -743,11 +743,10 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
+> >  	bool msi_capable = true;
+> >  	int ret;
+> >  
+> > -	epc_features = pci_epc_get_features(epc, epf->func_no, epf->vfunc_no);
+> > -	if (epc_features) {
+> > -		msix_capable = epc_features->msix_capable;
+> > -		msi_capable = epc_features->msi_capable;
+> > -	}
+> > +	epc_features = epf_test->epc_features;
+> 
+> How about:
+> 
+> index 977fb79c1567..4d6105c07ac0 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -735,7 +735,7 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
+>  {
+>         struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>         struct pci_epf_header *header = epf->header;
+> -       const struct pci_epc_features *epc_features;
+> +       const struct pci_epc_features *epc_features = epf_test->epc_features;
+>         struct pci_epc *epc = epf->epc;
+>         struct device *dev = &epf->dev;
+>         bool linkup_notifier = false;
+> @@ -743,12 +743,6 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
+>         bool msi_capable = true;
+>         int ret;
+>  
+> -       epc_features = pci_epc_get_features(epc, epf->func_no, epf->vfunc_no);
+> -       if (epc_features) {
+> -               msix_capable = epc_features->msix_capable;
+> -               msi_capable = epc_features->msi_capable;
+> -       }
+> -
+>         if (epf->vfunc_no <= 1) {
+>                 ret = pci_epc_write_header(epc, epf->func_no, epf->vfunc_no, header);
+>                 if (ret) {
+> @@ -761,6 +755,7 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
+>         if (ret)
+>                 return ret;
+>  
+> +       msi_capable = epc_features->msi_capable;
+>         if (msi_capable) {
+>                 ret = pci_epc_set_msi(epc, epf->func_no, epf->vfunc_no,
+>                                       epf->msi_interrupts);
+> @@ -770,6 +765,7 @@ static int pci_epf_test_core_init(struct pci_epf *epf)
+>                 }
+>         }
+>  
+> +       msix_capable = epc_features->msix_capable;
+>         if (msix_capable) {
+>                 ret = pci_epc_set_msix(epc, epf->func_no, epf->vfunc_no,
+>                                        epf->msix_interrupts,
+> @@ -814,11 +810,9 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>         void *base;
+>         enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+>         enum pci_barno bar;
+> -       const struct pci_epc_features *epc_features;
+> +       const struct pci_epc_features *epc_features = epf_test->epc_features;
+>         size_t test_reg_size;
+>  
+> -       epc_features = epf_test->epc_features;
+> -
+>         test_reg_bar_size = ALIGN(sizeof(struct pci_epf_test_reg), 128);
+>  
+>         msix_capable = epc_features->msix_capable;
+> 
+> 
+> Instead?
+> 
+> That way, we assign msi_capable/msix_capable just before the if-statement
+> where it is used. (Which matches how we already assign msix_capable just
+> before the if-statement in pci_epf_test_alloc_space().)
+> 
+
+Ok, if we go with this pattern, then pci_epf_test_set_bar() also needs to be
+updated.
 
 - Mani
 
