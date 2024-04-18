@@ -1,139 +1,94 @@
-Return-Path: <linux-pci+bounces-6433-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6434-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 218FE8A9CEA
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 16:25:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 015188A9D22
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 16:31:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A32D41F22AA1
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 14:25:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 941721F25049
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Apr 2024 14:31:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4730D16D4E1;
-	Thu, 18 Apr 2024 14:20:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FA5168B11;
+	Thu, 18 Apr 2024 14:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="fvbI6H5q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adFE2rRT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3716D4D9
-	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 14:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7636A8CA;
+	Thu, 18 Apr 2024 14:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713450036; cv=none; b=AK/bow4EQ3rM5UfSRMeOeMb6cPQOjyH9Pf2knUoBrb1DGuzUcZrfuAUamON/PNGF84zdmJJV5xEegZ95M7NqaIQQcJEQij9+hE/dcdfHnqvyN9JYmu7ngI/Mt+zq7W9PVYz0Zn9/NZe+7q8JxJ22FkrRQz6inAXGkmzKjiA9VzQ=
+	t=1713450598; cv=none; b=PR3oPQpHMOCmIwobDJMkenuEzak7ViiB/Sukm8c9R6lzPTdE8orTwMlkZxPylHtfOieY95qfZP+P5jPr6A8KK/vU4+50vpowtox3C9nbJTkuc77Js7b70gkDpcO4Ioki75ZHJcSZY3TNsVxrQeEldPNDTUjZuQX0auPIhRhvTw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713450036; c=relaxed/simple;
-	bh=gAa7Kq1mYFyz8jqtnXVIe79COqi9Rf6W5LHAFGe3mjc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=olpm9DRRZQSV1mYQU07BV3GRlIrVmxiWUqSEbxoG22BzebZywk8meDG/y8GR700m4m1yJJVI9PqezV4vYUw+TzP9Ez+tkS4ESVK8ceP+rkouQnDAxtEmQGJPJpOPstywNdh3m+lGRmldM8hqc+tnpMlTCiRcxnlrYUwg4wHCUHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=fvbI6H5q; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id DDBD13F8EB
-	for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 14:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1713450030;
-	bh=6MdH0R6Fh42BcaDDw8FV00JACUmgNVaSlcHYQMVpZWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=fvbI6H5qEJyOKKXg7sMdwyQPj8Pgv4iI0ilE1qO82dS3NLZ2XpSkWx54aE5Sm1wwh
-	 CB3WJHpsMQgwi0J3tejoQZBN1jjxZoKSfsNYMbr27uICGeNPvvW4JPXo9zOVf5gsYw
-	 eyRYqYhx70tqGGf8nIGsObMKkyUM7k9z7knHs3UdsLTbwlnZmqC5D9oGlB7KvJv8Lf
-	 sCcHI+U5QK8eZu17sBn0DjuB1IIuEMSY1kPKQWiu0ENJWCsesAB5hykLd4rAELmVox
-	 0YYN+xKE8werAeh+OJUR0hB6YRRq8X8wUOQi+/QzQyy4FgRDziNpwmRB2Kd0nWJtGI
-	 rNZOqDfGkKf8A==
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-416a844695dso5565065e9.2
-        for <linux-pci@vger.kernel.org>; Thu, 18 Apr 2024 07:20:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713450030; x=1714054830;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6MdH0R6Fh42BcaDDw8FV00JACUmgNVaSlcHYQMVpZWk=;
-        b=MaWVpQlB9DxFB2vM2ek+gAewwBR+/RkvvXgFbKmBsZGKBBYmYEUMUyBlqEp2BXzJpw
-         SkcUZAeK+1Li1H0u8PftaW8D7RP2/A5w+JqaOw4ptv4JH0eyNzXyza0xtHoCmk1lvx4l
-         +f0G9v+h+X2jIlYfq1IMLPAClXn64NY4kahuM0UA0i2opSEQK6y/bLmJqgEQ+sdq6v6S
-         XWVoa2n9BDNUXCUWBMOl5aWk3ARASQKco9kPVzenymUO3S5SJNtScXUdsMLWnjscHFum
-         WzFejRz9hybV8D4ov6BW00+VGLbQ21ByP5RGULMe3o1Aek+k0xG1VQsubhCWYvFhiLAs
-         4yFA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6D7XXb/rf4fsYG0mxijtkFIOzYqbJKYrb9HrAVgwtzide2k8qUHJ/eQYGlXtwLUTmisEO1lEImH6Ef54YGr69p7vf2822g1hW
-X-Gm-Message-State: AOJu0YyJ44BD4DJ/03L0v3n7oWFQPfQHGqZNBRqFmvE2UX5DrmVO6bqQ
-	itOA9PcTd4RcMhl1qvMolqXhRoMiYyC6MTTsHKF6z84bv/o0TWPtoO7mOsWAx5XJ7xOmjXppboA
-	GRcwayh+oawen6M2cTh1BotdHRlWjK9sdyBna5F6Gxa0ncvBXEtXUeTUiqkaOtH4x2Z/J+hlCWA
-	==
-X-Received: by 2002:a05:600c:4e87:b0:418:d077:2cbd with SMTP id f7-20020a05600c4e8700b00418d0772cbdmr2340898wmq.40.1713450029739;
-        Thu, 18 Apr 2024 07:20:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFT2UI5195uUHY+LxtGsmAza41kuNxu3PsqfU28U6vm2gIhE1ZKzhOvItctvv3fW1IYrvOjmg==
-X-Received: by 2002:a05:600c:4e87:b0:418:d077:2cbd with SMTP id f7-20020a05600c4e8700b00418d0772cbdmr2340875wmq.40.1713450029353;
-        Thu, 18 Apr 2024 07:20:29 -0700 (PDT)
-Received: from [192.168.123.126] (ip-062-143-245-032.um16.pools.vodafone-ip.de. [62.143.245.32])
-        by smtp.gmail.com with ESMTPSA id u17-20020a05600c19d100b00416b163e52bsm6658726wmq.14.2024.04.18.07.20.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 07:20:28 -0700 (PDT)
-Message-ID: <ef065a0e-1996-4ca2-b6f0-3a152edd3540@canonical.com>
-Date: Thu, 18 Apr 2024 16:20:26 +0200
+	s=arc-20240116; t=1713450598; c=relaxed/simple;
+	bh=397GVEGYbJQ7o030+SIw56SSDOb9yvxIBUZuoZ+8sUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wm2fFMPKIXSYAlOW8ZoIxHkuJdV0S4Djv9oSIcOUaFEsYn8+PkVxK6M2kOS6vYMjOaH4Zr+wrZdZ+CZbQWh1SXK7kPeQss9+csrtjWGUGjLPcHD6hUcAi+p8LycJ7o0Ebhu7GG2H0oky/rfCHxXEr6OSz1OSXTMJ4sqqfKKxfzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adFE2rRT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5D7C113CC;
+	Thu, 18 Apr 2024 14:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713450597;
+	bh=397GVEGYbJQ7o030+SIw56SSDOb9yvxIBUZuoZ+8sUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=adFE2rRTIuhaF2fqVVuxanQlIMSSWuypZf4jqitXbRMydllkwHmao9RDDQl7Rl7JW
+	 lk7o44ydc0mZ86efJx8M5bt1N36Us5RFQ3ow0r02Mk1Z0aJOC8W6vf7Lt0oOQnSSGF
+	 AxkuzG4SGFfmr2XMR0wrzQT4e+h+ilJ/PhfKJWAZ76qf1KB4+gCZ0zpkHhypFZsKqN
+	 fCRKWcP3tc/IQ1IQd6TBSsR/syAa5ElJuR75sfMU+Gf3VWcetKozHAVrteiNYjpfVQ
+	 jRroMZz07EEVg5by6Up8DO2rmJLbnVfgk6WBF51DUqbK5owdsT+fqJ5CnednyaW2os
+	 8JF0twCcj2Q2Q==
+Date: Thu, 18 Apr 2024 16:29:50 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mhi@lists.linux.dev, linux-tegra@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH v3 0/9] PCI: endpoint: Make host reboot handling more
+ robust
+Message-ID: <ZiEuXpoFI-up2pmE@ryzen>
+References: <20240418-pci-epf-rework-v3-0-222a5d1ed2e5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 00/20] RISC-V: ACPI: Add external interrupt
- controller support
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
- linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Anup Patel <anup@brainfault.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Samuel Holland <samuel.holland@sifive.com>,
- Robert Moore <robert.moore@intel.com>, Haibo1 Xu <haibo1.xu@intel.com>,
- Conor Dooley <conor.dooley@microchip.com>,
- Andrew Jones <ajones@ventanamicro.com>,
- Atish Kumar Patra <atishp@rivosinc.com>,
- Andrei Warkentin <andrei.warkentin@intel.com>, Marc Zyngier
- <maz@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-References: <20240415170113.662318-1-sunilvl@ventanamicro.com>
- <87a5lqsrvh.fsf@all.your.base.are.belong.to.us>
- <ZiEnHtWbT04bXYmP@sunil-laptop>
-Content-Language: en-US
-From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <ZiEnHtWbT04bXYmP@sunil-laptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418-pci-epf-rework-v3-0-222a5d1ed2e5@linaro.org>
 
-On 18.04.24 15:58, Sunil V L wrote:
-> Hi Björn,
+On Thu, Apr 18, 2024 at 05:28:28PM +0530, Manivannan Sadhasivam wrote:
+> Hello,
 > 
-> This is cool!. I was not aware that u-boot also supports ACPI on
-> RISC-V. Many thanks!
+> This is the follow up series of [1], to improve the handling of host reboot in
+> the endpoint subsystem. This involves refining the PERST# and Link Down event
+> handling in both the controller and function drivers.
 > 
-> Thanks,
-> Sunil
+> Testing
+> =======
+> 
+> This series is tested on Qcom SM8450 based development board with both MHI_EPF
+> and EPF_TEST function drivers.
+> 
+> Dependency
+> ==========
+> 
+> This series depends on [1] and [2] which are currently in pci/next.
+> 
+> @Niklas: I've dropped your Tested-by tags as there were some changes in between
+> and I want to make sure this version gets tested again. So please give it a go!
 
-For RISC-V and ARM we have
-
-* pass-through for QEMU ACPI tables
-* pass-through for QEMU SMBIOS tables
-* generation of SMBIOS tables
-
-Generation of ACPI tables in U-Boot has up now only been implemented for 
-x86 but would be feasible for RISC-V boards too.
-
-Cf. https://docs.u-boot.org/en/latest/board/emulation/acpi.html
-
-Best regards
-
-Heinrich
+For the series:
+Tested-by: Niklas Cassel <cassel@kernel.org>
 
