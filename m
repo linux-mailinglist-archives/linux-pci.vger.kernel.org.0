@@ -1,103 +1,132 @@
-Return-Path: <linux-pci+bounces-6478-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6479-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0D848AAACB
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 10:47:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64F2C8AAB70
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 11:26:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 289741C213C3
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 08:47:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1F051F210AA
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 09:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFF926519F;
-	Fri, 19 Apr 2024 08:47:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 009A278276;
+	Fri, 19 Apr 2024 09:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNRP7gv4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zGUF9Kg+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68871E4BE;
-	Fri, 19 Apr 2024 08:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F8A7641B
+	for <linux-pci@vger.kernel.org>; Fri, 19 Apr 2024 09:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713516428; cv=none; b=lRNX/MI8uvKQVWy8NoHc0dgzeIzosyJLdqzs0kipVIwVLI5tXPbGAPXevJTfn2IWrkBVvSuTcVPputBzAImLd45braCKqsRUvHPRYYhut3EHd7FQ22Za8HWoFN3pW+JleyCCS5J6koVbzUccgqNrZvIi+JEf6DHjNq3qjaixM8Q=
+	t=1713518798; cv=none; b=VWbaTla6UHO73ZiCCfb5TrWjEUzB+7pxvyuBEni8QdjZ3yI890Lp2cEkG8MgJpc0Kst389S6VtNEN/xCR3i4jqrmxV3Ve5u3K7mc6jPHBoKfPZIcvRWUXTXZBu18/mxXinKNEcffJrTnDEVD4UtEToV6o+0vNYqN88JtodLqpqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713516428; c=relaxed/simple;
-	bh=JMeqt/5R/X4ObeTie5ZZL2cEEJlLOQITn5aJcjiO5xA=;
+	s=arc-20240116; t=1713518798; c=relaxed/simple;
+	bh=nEQE1bgcahfGAeEROm4nIOqoBwmVPoodJbRFX+eJFiA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hr+hRNFETC/8IL6IEYvlUb+GHwKogAzdFT98d4S7ozlHC6VfpwG9DCGgD29kTJMi4ueV9MG0vPXyqnzzuKYfUrPaUvERpnHBCeOzOQ/r6Jpm6QxPee60mDb80N4GTUs0pzH4CWuhdDaGb7kEVYdvGM4s5m+9WFZU+KwB0DfkT1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNRP7gv4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E7B3C072AA;
-	Fri, 19 Apr 2024 08:47:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713516428;
-	bh=JMeqt/5R/X4ObeTie5ZZL2cEEJlLOQITn5aJcjiO5xA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XNRP7gv4zpvIDLVA6xhX7CxYZWDeV+CQJyPorxrIuZsEvZ2b6d8UOWD1aPQUwe1jR
-	 hwyjW4qE3KT8wa+MDpguSeQr+XGI/Xf/51zvT7mXKyUmjlngFcKJgZDoEYGpRtX1wR
-	 PcreBNXDbbY7k/AZysJfwNWKY8ZBcWbveoTnTXCMYpd3Ck3PidHWtELXSakSWR4qui
-	 JYaXXEZq3I0sROMMP+SCMyixZBjKZXwVkiwo+XaLddiuWFunYl/lyMGmTnV2VSW7UH
-	 moyB6IielIcUXx1jOkPTzueokbZN77sRvvjdr1ttXYM5+mF6yDzGQHmq0j9VT4Xhdg
-	 B8f97vxlGOP7g==
-Date: Fri, 19 Apr 2024 10:47:03 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Vignesh R <vigneshr@ti.com>, Peter Rosin <peda@axentia.se>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
-	thomas.petazzoni@bootlin.com, u-kumar1@ti.com, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v5 02/11] i2c: omap: wakeup the controller during
- suspend() callback
-Message-ID: <eld637v3jvgqrjubwqlsxkafgqiqcfpukfwpcd5qoyvyrhubff@n6gzrwzr2klh>
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
- <20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CU1WMo+0Uathou1EiJtkTegXNRlDxvqFf3k4OI0e/bJgD6PSqMwq4UFJjpCCrwRl+wUW+Zz8ZAnzN5vyShD0RfJ0vgoAZRpssC14rTwELTpYG+erzONaQTI9nL5gVmCRIgKVyskbOpicTq1flQ+hVF3oqXiFKOJEi2+MAz2DDG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zGUF9Kg+; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c74b643aebso119495b6e.0
+        for <linux-pci@vger.kernel.org>; Fri, 19 Apr 2024 02:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713518796; x=1714123596; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f2k6wBjEwpSJIIcZ8MPn1YroTKsxMSXWDSsv1Yc3sRE=;
+        b=zGUF9Kg+YfIg5reVeeXUQSnLyDkpUGj4ulcrTG/5U9jobWew3+UbDq2OCWNOICgrin
+         7hq+3cPPix++lBy9F14RWm5Kz62j93bljrW2wyIbZfSBeV6hVlDONbm0khRSoONFcdlX
+         m41WZ3vCnL/HRQCbm9Qj5cOGZ83h+9xNVYIElD3ISyaC3qoGA2OXFv93nWqtkEmGcRmf
+         xia1REZQMbnyGTtMXEg7PqQug4haRsaTWrvhTunIto3xjfTmbDau0evVRjD2xId5dtLs
+         XrYMSEZPOuvjnznpUiRiIb5UH5FkSK+75423udCleJnPXJH82URJBsBFXKV9Z6T+oSqn
+         DmWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713518796; x=1714123596;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f2k6wBjEwpSJIIcZ8MPn1YroTKsxMSXWDSsv1Yc3sRE=;
+        b=js+qLfiuL6gQICum/ZmJGwjs9zmmY0weVXUvRW8dJ8b3YqsOo11wFd5MfJTE3f+H9H
+         Oc+q/2scOEGI3kEkTJDetQ9YoopcQpFpFUr97dSgwNwcOqVN3WojIADucjbX+93tt40J
+         oiv9rEH/WFSbKW0+F8Lr62FGZfOxofUF2dAEHa42/2u4FyQDnzt5CqUO8fgyQdFQVx+O
+         usEZhYvUOJOGy3tS7fgJ8w611ABNanSn9Y2ECvWXIqN8xxPQxUPal57GykBvMNE33yZz
+         /CkhjkPaZp6j8W079qSfZg5GkafUZS2MeT+UC5e+ATYpI1jUcZVTOjZiOHguR4sCqbrI
+         9EgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdvGZ5o3FejPgdjgntixVskHNiuMiD+0yKpIS4BxDXF4f6RH4KehBbkMvxAUEQL/R+xn31g4dig2+ja4sTNP1Qi+Pkstgr74xF
+X-Gm-Message-State: AOJu0YypA6h2GFnkmCEsOold4gMvH7NKizW/zbyqQhxukFtLOVQRGgnN
+	CbEj3jBooAoD0zpR8MBsRNNJE8k2vqiBqhJ4TZ8bP4v8pBPSOm23ogLmVlUAUw==
+X-Google-Smtp-Source: AGHT+IGPIPPIitXX4Yw0hrulDjF2tnglO0Qdegfb3hKjRqYEF4E5wtIteUhkJR61YJc1aF7VAjq+9A==
+X-Received: by 2002:a05:6870:12d9:b0:22e:c37c:453d with SMTP id 25-20020a05687012d900b0022ec37c453dmr1625314oam.30.1713518796449;
+        Fri, 19 Apr 2024 02:26:36 -0700 (PDT)
+Received: from thinkpad ([220.158.156.51])
+        by smtp.gmail.com with ESMTPSA id z17-20020a634c11000000b005f0793db2ebsm2715872pga.74.2024.04.19.02.26.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Apr 2024 02:26:35 -0700 (PDT)
+Date: Fri, 19 Apr 2024 14:56:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mhi@lists.linux.dev, linux-tegra@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH v3 3/9] PCI: endpoint: Rename BME to Bus Master Enable
+Message-ID: <20240419092629.GA3636@thinkpad>
+References: <20240418-pci-epf-rework-v3-0-222a5d1ed2e5@linaro.org>
+ <20240418-pci-epf-rework-v3-3-222a5d1ed2e5@linaro.org>
+ <ZiEy4EVcVpUry9qn@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZiEy4EVcVpUry9qn@ryzen>
 
-Hi Thomas,
+On Thu, Apr 18, 2024 at 04:49:04PM +0200, Niklas Cassel wrote:
+> On Thu, Apr 18, 2024 at 05:28:31PM +0530, Manivannan Sadhasivam wrote:
+> > BME which stands for 'Bus Master Enable' is not defined in the PCIe base
+> > spec even though it is commonly referred in many places (vendor docs). But
+> > to align with the spec, let's rename it to its expansion 'Bus Master
+> > Enable'.
+> > 
+> > Suggested-by: Damien Le Moal <dlemoal@kernel.org>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> 
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> 
+> 
+> Outside the scope of this patch/series:
+> Do we perhaps want to add a bus_master_enable() callback also for the
+> pci-epf-test driver?
+> 
 
-> +static int omap_i2c_suspend(struct device *dev)
-> +{
-> +	/*
-> +	 * If the controller is autosuspended, there is no way to wakeup it once
-> +	 * runtime pm is disabled (in suspend_late()).
-> +	 * But a device may need the controller up during suspend_noirq() or
-> +	 * resume_noirq().
-> +	 * Wakeup the controller while runtime pm is enabled, so it is available
-> +	 * until its suspend_noirq(), and from resume_noirq().
-> +	 */
-> +	return pm_runtime_resume_and_get(dev);
-> +}
-> +
-> +static int omap_i2c_resume(struct device *dev)
-> +{
-> +	pm_runtime_mark_last_busy(dev);
-> +	pm_runtime_put_autosuspend(dev);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct dev_pm_ops omap_i2c_pm_ops = {
->  	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->  				      pm_runtime_force_resume)
-> +	SET_SYSTEM_SLEEP_PM_OPS(omap_i2c_suspend, omap_i2c_resume)
+Makes sense to me.
 
-If you don't have CONFIG_PM_SLEEP, though, this doesn't compile.
+> In my opinion, the test driver should be "the driver" that tests that
+> all the EPF features/callbacks work, at least a basic test "does it
+> work at all". Other EPF drivers can implement the callbacks, and do
+> more intelligent things, i.e. more than just seeing that "it works".
+> 
 
-Andi
+Agree. Feel free to send a patch :)
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
