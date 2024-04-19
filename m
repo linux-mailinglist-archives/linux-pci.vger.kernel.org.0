@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-6473-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6474-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 221278AA742
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 05:37:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E21228AA745
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 05:37:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA7AE282336
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 03:37:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 128061C209C3
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Apr 2024 03:37:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1B0C15D;
-	Fri, 19 Apr 2024 03:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DA7D1095C;
+	Fri, 19 Apr 2024 03:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T2SQFhKl"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bFBSlXLQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB09B669;
-	Fri, 19 Apr 2024 03:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B74C8FF;
+	Fri, 19 Apr 2024 03:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713497807; cv=fail; b=E0arK49xxcrntM0m6T6MeKQG9gDSUl1wWuWYGYZ4VBbLEvQhcFI4mwnTsqLVQ+6Zvo1Wy7Gt58Yi5X17dbxDtmzhUT5x574aihvxc34GYLkQu3GWhaIudCqbO9Q4yFsP1fiVUMSvgheG2+FGL7pWMct3xJjMyH0I1b/CnbdR47Y=
+	t=1713497809; cv=fail; b=OOAu1pgFrILcFEs6M3crPEAnVNSXpwnNVolZSWMQ84CaWe/5aCp0lVIJx9Y/nxEsHWMPSFp36RNt742JXE8i1pBMuGYr2X0aSb+VbjMAo2NVV9S+50mo+TbzUayUkZZT2xiFJFMuoG1ieKnAJ1P1RHVebDifisOtqeiSQIfl3Es=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713497807; c=relaxed/simple;
-	bh=nMXy4aD9JLuf7XvLqC6t3vrSWHV3pGThN+CaSkCAvUU=;
+	s=arc-20240116; t=1713497809; c=relaxed/simple;
+	bh=TXMiNvh0VO/5mjFj73gDDPssazD7Ienm7AuHcYPkbX4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LDG73QvU7dc/1k9FCIDKH48gysaXZRUmQDun19VNGpEfynIa4Ps1bOM6GEn6hFqb5PITcpmwjtimvwPjehzoeSlg3Dt4Z9GTrVpOTPrsnTCbbiNUr2h3FLO/zJ9N79XBtglHly1mRf6jfL+o/fXesGuyyVLlBHxvY/aN78Nd8Wg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T2SQFhKl; arc=fail smtp.client-ip=40.107.94.78
+	 MIME-Version:Content-Type; b=mZh0Jrb0xG645ISb84DwoLhdKA41bVgTBvKy1ZdEk18i97kbCqw8/0bc7VH20AXrUnaVNrbCb7DpBruM7x0rOIWnbm88AnT1/R+KXdmA8UsVjhPWSyMSXgd5H5WnjeRYCG43kK6MSZYcfxH3hVxBa9hsKNdCV22+tB6DjvW3x0A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bFBSlXLQ; arc=fail smtp.client-ip=40.107.93.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d2LaaC7xLoswDGmBTsAUwTT7FgR/hITuePD86oXWancbxg/CrSDRJX1lpHdGhWbMGoIPSQSl9HrQqUmDZdKHtnPAdtYJzL4qJkhGyUTrjemd1XoJMiqmsMoTP5bPCgI7bjLQuh2fGnK0rA6PnqAxWJhW/JBh26C9I/xuKmVpmyDKLc5eh/+xHa7yi7xHFmzyXt3RzzMvC0YsF0RUP0ptQJGhCyn6uTUIbT/e1/iW+Zul7olC9k3z9t0vnhTM58MaQmbuayHFcsX6zuHNqzIdFUaysgQJHYfKU4BUelFHUo4DADvw7eq/koljkc1Lm93dpJmoWOnkDAaBPAZV7R9TbQ==
+ b=TMALzLdiL29migiT8Ei+bXTD6vaVif0K3vrATKLUgBPVId/eVvxeA/zVP7Op6WgIODBWsELSuzjobTp3heUeX4ulWO5KX8rf6saHfdjkp0UKhzt9pprW2teNqIVz44X1nIStuGWCeIcBsO9Kh19VMM7HuOb6Rp/eOuEYAI2G4c9Yi5ImH7i3W87OJUGxFmcATVQGoL3wsAvPAHwM2LJp1lSiLanLyq3VcAzz+A653jJMOwXzWnLINoSv+zo4eqinQQxsaWWmkgU0iFvmTa39K3ERKablozmnnal+daBcyKT9EBb1oxsbpH298AXG7+5gaB5CvuyX9cp09k7j/Zv2jg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eRBHDqPoVZS88OuDyH4d1T2swxIHcPAdP/Hn8UiTaGA=;
- b=mnAof2NHq5021KwI06GO4N+vuUHNhZxVjN5PHBtgVFo5+DNnB8EzyQSKHTG6Ga+YtcJSNvVB7JAW0/9JD7gMQQVLdibe/S80xXj9lBRNpf0Fz8B7n5UQwXn9YQyKYr63z6oQ5JzqNcvAaW3gybjcMP9CIGok03COMqzpXBAtaauxtP6lzezn3S9O0eoBa+styPAhYgv9AFh5lXJAnbNz1eDTp9q0F5tE/6gkCimH/RfTqNH7PoSB+uahSFvPuUMzIHynZc+a+zKUjxvAFwQQGqZk+ErGs9NpS9WW5StZf5hFkSw8xbnJtJtoa/f19EClMUIR12dUVdmMRLLtpeh1RA==
+ bh=TrsH2kqfUbago2wYG2lTp8qlxKK3xB7MTeNRFg867cs=;
+ b=UImrf7Ql0xDcUJqwD6BA4PHCKDCm1PXz3mimvc5BWZvssJosD5AwDlxbRWSM8PC1EHJqTtvxV69XbCAfYfLvz1JjbHTk3hJcbnj2jTu1e0UPvYW36e79VjCXTC+CfGeHnQm+ZpAHM1sEUmJ4rtDFX2eX06j0VHvXCsvJ70Vg7yuiHtpGtETeNgkKZJ7ckmrFvqcI9gmeO896QOCCpSbF5jSk4zm8CI7fP/zisq5QiycGIGI2Il4GYquyv00eRYiWIlM1r2XcGIVj0yz8tFbaWhLkKvW8EZHmIPo5XY2JP7xHHza1T1LOpbNEamLI7+u9O/J9CQ8VFIFmxADi4Wjjfg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eRBHDqPoVZS88OuDyH4d1T2swxIHcPAdP/Hn8UiTaGA=;
- b=T2SQFhKlD1NYa5RWitLYVYnit9B+3hjQNDUrNykAWKmpdToYLLs9K/VSfxYEqFzUj/H2DyjyYxMkob/cGaCGsbFzPJ7qcDoXnab2C0Qom3hCqCnaJmxsuMaQ08jKkguE/RoANdHtGj3VMNf+VR+VgV6fs5idEFq6Kuu3gG7vU6U=
-Received: from SJ0PR03CA0090.namprd03.prod.outlook.com (2603:10b6:a03:331::35)
- by IA1PR12MB6601.namprd12.prod.outlook.com (2603:10b6:208:3a3::15) with
+ bh=TrsH2kqfUbago2wYG2lTp8qlxKK3xB7MTeNRFg867cs=;
+ b=bFBSlXLQVO3BmiuAcDERRIP4XdB5wGj8zYXILR6mRe9pOmcnrXPdchEB82VAqGzeTQ7wcKFoqmHILWCA4/OONbDLuVxy7WvHEi4toETAENK07jk9oa+tZskhYOropqbVUiWmU5ivzr7gL1o9sCPrhQwpuCri97Qg5Pk9lruvNlg=
+Received: from SJ0PR03CA0063.namprd03.prod.outlook.com (2603:10b6:a03:331::8)
+ by SN7PR12MB7812.namprd12.prod.outlook.com (2603:10b6:806:329::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.55; Fri, 19 Apr
- 2024 03:36:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Fri, 19 Apr
+ 2024 03:36:44 +0000
 Received: from SJ5PEPF000001CE.namprd05.prod.outlook.com
- (2603:10b6:a03:331:cafe::b0) by SJ0PR03CA0090.outlook.office365.com
- (2603:10b6:a03:331::35) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:a03:331:cafe::d5) by SJ0PR03CA0063.outlook.office365.com
+ (2603:10b6:a03:331::8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.30 via Frontend
- Transport; Fri, 19 Apr 2024 03:36:41 +0000
+ Transport; Fri, 19 Apr 2024 03:36:44 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -65,11 +65,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  SJ5PEPF000001CE.mail.protection.outlook.com (10.167.242.38) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 03:36:41 +0000
+ 15.20.7452.22 via Frontend Transport; Fri, 19 Apr 2024 03:36:44 +0000
 Received: from cjq-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Apr
- 2024 22:36:37 -0500
+ 2024 22:36:40 -0500
 From: Jiqian Chen <Jiqian.Chen@amd.com>
 To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
 	<sstabellini@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J .
@@ -79,9 +79,9 @@ CC: <xen-devel@lists.xenproject.org>, <linux-pci@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>, Huang Rui
 	<Ray.Huang@amd.com>, Jiqian Chen <Jiqian.Chen@amd.com>, Huang Rui
 	<ray.huang@amd.com>
-Subject: [RFC KERNEL PATCH v6 2/3] xen/pvh: Setup gsi for passthrough device
-Date: Fri, 19 Apr 2024 11:36:15 +0800
-Message-ID: <20240419033616.607889-3-Jiqian.Chen@amd.com>
+Subject: [RFC KERNEL PATCH v6 3/3] xen/privcmd: Add new syscall to get gsi from irq
+Date: Fri, 19 Apr 2024 11:36:16 +0800
+Message-ID: <20240419033616.607889-4-Jiqian.Chen@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240419033616.607889-1-Jiqian.Chen@amd.com>
 References: <20240419033616.607889-1-Jiqian.Chen@amd.com>
@@ -97,227 +97,316 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CE:EE_|IA1PR12MB6601:EE_
-X-MS-Office365-Filtering-Correlation-Id: b801c304-3894-4251-ca35-08dc6021ed95
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CE:EE_|SN7PR12MB7812:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4140075f-2dcc-449d-b2e2-08dc6021ef85
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	3gD2kv+Ka5xTX50F1sprXoF3r0R/SRbwokZpFEfL6rkL3tmw6y3DQ2+soJzjQySIwgs8PFmNjeEXOzSj0siFE1bASZi3gy3jEeRp9Qhc0WVTNW6lpdnk8XGFYd+Gpp0FCi87LMerlvPbhffEfzdhmY+16oENa1uhnXOb/4+ifR+DOxEqE4GF3rdADk6J4McklJTrDobbp0llW8T8g6KybYFVwl7nTCkZ36zKn2/FhO6tal2H8EKvlmQlc4Gb8B6/mhcRfT/K8Bj1zBXhTQaITc6Rmki5qkvdmYFM87zIJFNdJeWLWRcVb9myFmC30wwohmvm12dqODb6x1QyUm6eeHeUE1vHmA4t7ErQ71Ix+dRQnYWPXbhzp/30avIwZcvX+vtYOfGL0vsvZnkzxnI/RZf+RWz8xeft0z/pSrrmrCXwf9Vl36SwPxiTOP3ZMR9o3HFYqqcGqh/k2cKWpr9y63c6koBspewIwx/JDPxxt72wTiwiat43IGMbkgg5emcpz5FTUlqf9L6p1iiHuX/AxZ+80iZIPDKom74jSyzj97PypcizT9onpXDmVYyeDdN5NlONx5fuShWeb3Q6u//gDiPf21TWxNEI+FSdPywdlPFvlBRl/+Plbwi5yJNkOUJvwczBbUnNi8TJp9ea1PCL/9fobjm19nvvGn8MkRLePbohl5fWY+Lss6UD9fjEH/Ycr1e5QxRZpoZ+APAyP6+UidBHVWhXZG+iGHnh3QZqeQuClADHBqS+LZGJhGKoF4id
+	=?us-ascii?Q?qCoDbzT3dA3YI352qyd7ZF+UOoe1knwr+Mb92/8u4yyOWpGerUQlhQvjI98Q?=
+ =?us-ascii?Q?1u/33fa59PlPavQbkdx1D1tGzyXJcVBs6HFHizb2rnwG3ycQ24XBnRQ6e5cY?=
+ =?us-ascii?Q?PKFgT4I1/SspMMzUqeit+zeghMzqI/nUnMfG93O6VCwDTyI9RGm7sZb9jPTv?=
+ =?us-ascii?Q?/1l2yX6VjSijN3NWEQmaZBg+LhRuPaTNyU9SRzPO1RdyQDq1gJfAaTio5g4P?=
+ =?us-ascii?Q?TLnypU6Js6Ok/zHiorDHFpU4W1co5DbRIfb78Orz+drvlFjmFwppiKivejUq?=
+ =?us-ascii?Q?MUPVvviTGGtYHOdE3G+eUo0mtRBUMipjVXUHjtLGxPcJ6euX5hbwgWa6cEw3?=
+ =?us-ascii?Q?qicVbUM6xrM0agrnwOwL/gvJF6osVJIiEmUSzqcvQUMNZb2KKIbLQLt1d7eP?=
+ =?us-ascii?Q?rt1zIyFVUfTkE1VevI+hcYp1rArCNSq6mo/Ar3KGv5OxYQfzsj/9YMbMv9ae?=
+ =?us-ascii?Q?fCsCkGDBcw+vLaowXXhm8nJb/xkfZDe8Whc1k7Zvq6+mHSvA5InMUP8PSGYM?=
+ =?us-ascii?Q?tl/YAGZ05ZHk2KtQmCxhf7S4boXi1f+9/F5DSHgBVKubkIhdBzqwJzUcXK2U?=
+ =?us-ascii?Q?yJejKpl4gvwQup+XTJWM0s0qWQCwAYoRtcCLGrrE7QV2FRQ4Vuuar3l9Y3aZ?=
+ =?us-ascii?Q?5/F/qboc5Lwjto4h0r2b4iHs2puQwNmLoq51qWl8KyriddoTk5wtK7QnJSBO?=
+ =?us-ascii?Q?1XWuQ0Hpt1u8tIYc3IhFVIXDixaBLg9VQmpQfySuJrugZeSF5Hrpo2o8xEvM?=
+ =?us-ascii?Q?0dg4igRtSfqxBFeHMBMcHxvvbB9QykiYSuFsuAoEDodn4gkkG97uUx/Ut/RY?=
+ =?us-ascii?Q?9rPOzmBBL4OsTnCGXYywdOhNhKrmQ1+ZHsKg5V716i7h4dPR5JSasfBZSsqH?=
+ =?us-ascii?Q?teYTtxw7+6ucbvwDubKp6+slByjh6ZZutOW98ai+RJOMAY0uJj9mMKvQbe5o?=
+ =?us-ascii?Q?1WR0KNTB4SPwblMMg0ur2qiIwcRbZf9cnvqtCv6ya0U4T6m5q/YQbssFyYhr?=
+ =?us-ascii?Q?CalN3aZ8RwX1nviVJK5rerlu+Z0Ees8f+ztDYEsvrT5hWI3tfjl4nrRESYWm?=
+ =?us-ascii?Q?PsHE4ia6t/Edde+6W/nE7Xr7NQbzT56fC4Vii0U9yMYlXjIMhEnVXGwaAxrU?=
+ =?us-ascii?Q?UZFFmeCyIAq4t+UPjykt+bFBg68efyhKRvyeu+CdkVnJuIaLn7r9PK0lcGEP?=
+ =?us-ascii?Q?7QTZd/nB0iyspvkugFFizCZbPNUnZ0dNTmoy5ryLHW5/KycEqcoTZ8iDuPsi?=
+ =?us-ascii?Q?lGpjtZBB9CB0nxQL0k8qLzHPi7iORj3p6AsDuZJlvaVzyDMMYz11OdLHi/bR?=
+ =?us-ascii?Q?Htxvl0vYQuy4+5yUF71qRGl5gZvm3F9KTQ/9TEtUT/UHl9x+uTS7dr9PgKKN?=
+ =?us-ascii?Q?+wp5ramO1IrsKAWcTE1AoNugGbYR?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(376005)(82310400014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(82310400014)(36860700004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 03:36:41.4253
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2024 03:36:44.7221
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b801c304-3894-4251-ca35-08dc6021ed95
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4140075f-2dcc-449d-b2e2-08dc6021ef85
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SJ5PEPF000001CE.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6601
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7812
 
-In PVH dom0, the gsis don't get registered, but the gsi of
-a passthrough device must be configured for it to be able to be
-mapped into a domU.
+In PVH dom0, it uses the linux local interrupt mechanism,
+when it allocs irq for a gsi, it is dynamic, and follow
+the principle of applying first, distributing first. And
+the irq number is alloced from small to large, but the
+applying gsi number is not, may gsi 38 comes before gsi 28,
+it causes the irq number is not equal with the gsi number.
+And when passthrough a device, QEMU will use device's gsi
+number to do pirq mapping, but the gsi number is got from
+file /sys/bus/pci/devices/<sbdf>/irq, irq!= gsi, so it will
+fail when mapping.
+And in current linux codes, there is no method to translate
+irq to gsi for userspace.
 
-When assign a device to passthrough, proactively setup the gsi
-of the device during that process.
+For above purpose, record the relationship of gsi and irq
+when PVH dom0 do acpi_register_gsi_ioapic for devices and
+adds a new syscall into privcmd to let userspace can get
+that translation when they have a need.
 
 Co-developed-by: Huang Rui <ray.huang@amd.com>
 Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 ---
- arch/x86/xen/enlighten_pvh.c       | 92 ++++++++++++++++++++++++++++++
- drivers/acpi/pci_irq.c             |  2 +-
- drivers/xen/xen-pciback/pci_stub.c |  8 +++
- include/linux/acpi.h               |  1 +
- include/xen/acpi.h                 |  6 ++
- 5 files changed, 108 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/apic.h      |  8 +++++++
+ arch/x86/include/asm/xen/pci.h   |  5 ++++
+ arch/x86/kernel/acpi/boot.c      |  2 +-
+ arch/x86/pci/xen.c               | 21 +++++++++++++++++
+ drivers/xen/events/events_base.c | 39 ++++++++++++++++++++++++++++++++
+ drivers/xen/privcmd.c            | 19 ++++++++++++++++
+ include/uapi/xen/privcmd.h       |  7 ++++++
+ include/xen/events.h             |  5 ++++
+ 8 files changed, 105 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-index c28f073c1df5..12be665b27d8 100644
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -2,6 +2,7 @@
- #include <linux/acpi.h>
- #include <linux/export.h>
- #include <linux/mm.h>
-+#include <linux/pci.h>
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 9d159b771dc8..dd4139250895 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -169,6 +169,9 @@ extern bool apic_needs_pit(void);
  
- #include <xen/hvc-console.h>
+ extern void apic_send_IPI_allbutself(unsigned int vector);
  
-@@ -26,6 +27,97 @@
- bool __ro_after_init xen_pvh;
- EXPORT_SYMBOL_GPL(xen_pvh);
- 
-+typedef struct gsi_info {
-+	int gsi;
-+	int trigger;
-+	int polarity;
-+} gsi_info_t;
++extern int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
++				    int trigger, int polarity);
 +
-+struct acpi_prt_entry {
-+	struct acpi_pci_id	id;
-+	u8			pin;
-+	acpi_handle		link;
-+	u32			index;		/* GSI, or link _CRS index */
-+};
-+
-+static int xen_pvh_get_gsi_info(struct pci_dev *dev,
-+								gsi_info_t *gsi_info)
+ #else /* !CONFIG_X86_LOCAL_APIC */
+ static inline void lapic_shutdown(void) { }
+ #define local_apic_timer_c2_ok		1
+@@ -183,6 +186,11 @@ static inline void apic_intr_mode_init(void) { }
+ static inline void lapic_assign_system_vectors(void) { }
+ static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
+ static inline bool apic_needs_pit(void) { return true; }
++static inline int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
++				    int trigger, int polarity)
 +{
-+	int gsi;
-+	u8 pin;
-+	struct acpi_prt_entry *entry;
-+	int trigger = ACPI_LEVEL_SENSITIVE;
-+	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
-+				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
-+
-+	if (!dev || !gsi_info)
-+		return -EINVAL;
-+
-+	pin = dev->pin;
-+	if (!pin)
-+		return -EINVAL;
-+
-+	entry = acpi_pci_irq_lookup(dev, pin);
-+	if (entry) {
-+		if (entry->link)
-+			gsi = acpi_pci_link_allocate_irq(entry->link,
-+							 entry->index,
-+							 &trigger, &polarity,
-+							 NULL);
-+		else
-+			gsi = entry->index;
-+	} else
-+		gsi = -1;
-+
-+	if (gsi < 0)
-+		return -EINVAL;
-+
-+	gsi_info->gsi = gsi;
-+	gsi_info->trigger = trigger;
-+	gsi_info->polarity = polarity;
-+
-+	return 0;
++	return (int)gsi;
 +}
-+
-+static int xen_pvh_setup_gsi(gsi_info_t *gsi_info)
-+{
-+	struct physdev_setup_gsi setup_gsi;
-+
-+	if (!gsi_info)
-+		return -EINVAL;
-+
-+	setup_gsi.gsi = gsi_info->gsi;
-+	setup_gsi.triggering = (gsi_info->trigger == ACPI_EDGE_SENSITIVE ? 0 : 1);
-+	setup_gsi.polarity = (gsi_info->polarity == ACPI_ACTIVE_HIGH ? 0 : 1);
-+
-+	return HYPERVISOR_physdev_op(PHYSDEVOP_setup_gsi, &setup_gsi);
-+}
-+
-+int xen_pvh_passthrough_gsi(struct pci_dev *dev)
-+{
-+	int ret;
-+	gsi_info_t gsi_info;
-+
-+	if (!dev)
-+		return -EINVAL;
-+
-+	ret = xen_pvh_get_gsi_info(dev, &gsi_info);
-+	if (ret) {
-+		xen_raw_printk("Fail to get gsi info!\n");
-+		return ret;
-+	}
-+
-+	ret = xen_pvh_setup_gsi(&gsi_info);
-+	if (ret == -EEXIST) {
-+		xen_raw_printk("Already setup the GSI :%d\n", gsi_info.gsi);
-+		ret = 0;
-+	} else if (ret)
-+		xen_raw_printk("Fail to setup GSI (%d)!\n", gsi_info.gsi);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(xen_pvh_passthrough_gsi);
-+
- void __init xen_pvh_init(struct boot_params *boot_params)
- {
- 	u32 msr;
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index ff30ceca2203..630fe0a34bc6 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -288,7 +288,7 @@ static int acpi_reroute_boot_interrupt(struct pci_dev *dev,
- }
- #endif /* CONFIG_X86_IO_APIC */
+ #endif /* !CONFIG_X86_LOCAL_APIC */
  
--static struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin)
-+struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin)
- {
- 	struct acpi_prt_entry *entry = NULL;
- 	struct pci_dev *bridge;
-diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-index 46c40ec8a18e..22d4380d2b04 100644
---- a/drivers/xen/xen-pciback/pci_stub.c
-+++ b/drivers/xen/xen-pciback/pci_stub.c
-@@ -20,6 +20,7 @@
- #include <linux/atomic.h>
- #include <xen/events.h>
- #include <xen/pci.h>
-+#include <xen/acpi.h>
- #include <xen/xen.h>
- #include <asm/xen/hypervisor.h>
- #include <xen/interface/physdev.h>
-@@ -435,6 +436,13 @@ static int pcistub_init_device(struct pci_dev *dev)
- 			goto config_release;
- 		pci_restore_state(dev);
- 	}
-+
-+	if (xen_initial_domain() && xen_pvh_domain()) {
-+		err = xen_pvh_passthrough_gsi(dev);
-+		if (err)
-+			goto config_release;
-+	}
-+
- 	/* Now disable the device (this also ensures some private device
- 	 * data is setup before we export)
- 	 */
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index b7165e52b3c6..08f1e316bf27 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -361,6 +361,7 @@ void acpi_unregister_gsi (u32 gsi);
- 
- struct pci_dev;
- 
-+struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin);
- int acpi_pci_irq_enable (struct pci_dev *dev);
- void acpi_penalize_isa_irq(int irq, int active);
- bool acpi_isa_irq_available(int irq);
-diff --git a/include/xen/acpi.h b/include/xen/acpi.h
-index b1e11863144d..17c4d37f1e60 100644
---- a/include/xen/acpi.h
-+++ b/include/xen/acpi.h
-@@ -67,10 +67,16 @@ static inline void xen_acpi_sleep_register(void)
- 		acpi_suspend_lowlevel = xen_acpi_suspend_lowlevel;
- 	}
- }
-+int xen_pvh_passthrough_gsi(struct pci_dev *dev);
+ #ifdef CONFIG_X86_X2APIC
+diff --git a/arch/x86/include/asm/xen/pci.h b/arch/x86/include/asm/xen/pci.h
+index 9015b888edd6..aa8ded61fc2d 100644
+--- a/arch/x86/include/asm/xen/pci.h
++++ b/arch/x86/include/asm/xen/pci.h
+@@ -5,6 +5,7 @@
+ #if defined(CONFIG_PCI_XEN)
+ extern int __init pci_xen_init(void);
+ extern int __init pci_xen_hvm_init(void);
++extern int __init pci_xen_pvh_init(void);
+ #define pci_xen 1
  #else
- static inline void xen_acpi_sleep_register(void)
+ #define pci_xen 0
+@@ -13,6 +14,10 @@ static inline int pci_xen_hvm_init(void)
  {
+ 	return -1;
  }
-+
-+static inline int xen_pvh_passthrough_gsi(struct pci_dev *dev)
++static inline int pci_xen_pvh_init(void)
 +{
 +	return -1;
 +}
  #endif
+ #ifdef CONFIG_XEN_PV_DOM0
+ int __init pci_xen_initial_domain(void);
+diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+index 85a3ce2a3666..72c73458c083 100644
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -749,7 +749,7 @@ static int acpi_register_gsi_pic(struct device *dev, u32 gsi,
+ }
  
- #endif	/* _XEN_ACPI_H */
+ #ifdef CONFIG_X86_LOCAL_APIC
+-static int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
++int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+ 				    int trigger, int polarity)
+ {
+ 	int irq = gsi;
+diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+index 652cd53e77f6..f056ab5c0a06 100644
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -114,6 +114,21 @@ static int acpi_register_gsi_xen_hvm(struct device *dev, u32 gsi,
+ 				 false /* no mapping of GSI to PIRQ */);
+ }
+ 
++static int acpi_register_gsi_xen_pvh(struct device *dev, u32 gsi,
++				    int trigger, int polarity)
++{
++	int irq;
++
++	irq = acpi_register_gsi_ioapic(dev, gsi, trigger, polarity);
++	if (irq < 0)
++		return irq;
++
++	if (xen_pvh_add_gsi_irq_map(gsi, irq) == -EEXIST)
++		printk(KERN_INFO "Already map the GSI :%u and IRQ: %d\n", gsi, irq);
++
++	return irq;
++}
++
+ #ifdef CONFIG_XEN_PV_DOM0
+ static int xen_register_gsi(u32 gsi, int triggering, int polarity)
+ {
+@@ -558,6 +573,12 @@ int __init pci_xen_hvm_init(void)
+ 	return 0;
+ }
+ 
++int __init pci_xen_pvh_init(void)
++{
++	__acpi_register_gsi = acpi_register_gsi_xen_pvh;
++	return 0;
++}
++
+ #ifdef CONFIG_XEN_PV_DOM0
+ int __init pci_xen_initial_domain(void)
+ {
+diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+index 27553673e46b..80d4f7faac64 100644
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -953,6 +953,43 @@ int xen_irq_from_gsi(unsigned gsi)
+ }
+ EXPORT_SYMBOL_GPL(xen_irq_from_gsi);
+ 
++int xen_gsi_from_irq(unsigned irq)
++{
++	struct irq_info *info;
++
++	list_for_each_entry(info, &xen_irq_list_head, list) {
++		if (info->type != IRQT_PIRQ)
++			continue;
++
++		if (info->irq == irq)
++			return info->u.pirq.gsi;
++	}
++
++	return -1;
++}
++EXPORT_SYMBOL_GPL(xen_gsi_from_irq);
++
++int xen_pvh_add_gsi_irq_map(unsigned gsi, unsigned irq)
++{
++	int tmp_irq;
++	struct irq_info *info;
++
++	tmp_irq = xen_irq_from_gsi(gsi);
++	if (tmp_irq != -1)
++		return -EEXIST;
++
++	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	if (info == NULL)
++		panic("Unable to allocate metadata for GSI%d\n", gsi);
++
++	info->type = IRQT_PIRQ;
++	info->irq = irq;
++	info->u.pirq.gsi = gsi;
++	list_add_tail(&info->list, &xen_irq_list_head);
++
++	return 0;
++}
++
+ static void __unbind_from_irq(struct irq_info *info, unsigned int irq)
+ {
+ 	evtchn_port_t evtchn;
+@@ -2295,6 +2332,8 @@ void __init xen_init_IRQ(void)
+ 	xen_init_setup_upcall_vector();
+ 	xen_alloc_callback_vector();
+ 
++	if (xen_pvh_domain())
++		pci_xen_pvh_init();
+ 
+ 	if (xen_hvm_domain()) {
+ 		native_init_IRQ();
+diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+index 67dfa4778864..11feed529e1d 100644
+--- a/drivers/xen/privcmd.c
++++ b/drivers/xen/privcmd.c
+@@ -842,6 +842,21 @@ static long privcmd_ioctl_mmap_resource(struct file *file,
+ 	return rc;
+ }
+ 
++static long privcmd_ioctl_gsi_from_irq(struct file *file, void __user *udata)
++{
++	struct privcmd_gsi_from_irq kdata;
++
++	if (copy_from_user(&kdata, udata, sizeof(kdata)))
++		return -EFAULT;
++
++	kdata.gsi = xen_gsi_from_irq(kdata.irq);
++
++	if (copy_to_user(udata, &kdata, sizeof(kdata)))
++		return -EFAULT;
++
++	return 0;
++}
++
+ #ifdef CONFIG_XEN_PRIVCMD_EVENTFD
+ /* Irqfd support */
+ static struct workqueue_struct *irqfd_cleanup_wq;
+@@ -1529,6 +1544,10 @@ static long privcmd_ioctl(struct file *file,
+ 		ret = privcmd_ioctl_ioeventfd(file, udata);
+ 		break;
+ 
++	case IOCTL_PRIVCMD_GSI_FROM_IRQ:
++		ret = privcmd_ioctl_gsi_from_irq(file, udata);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/uapi/xen/privcmd.h b/include/uapi/xen/privcmd.h
+index 8b8c5d1420fe..61f0ffbec077 100644
+--- a/include/uapi/xen/privcmd.h
++++ b/include/uapi/xen/privcmd.h
+@@ -126,6 +126,11 @@ struct privcmd_ioeventfd {
+ 	__u8 pad[2];
+ };
+ 
++struct privcmd_gsi_from_irq {
++	__u32 irq;
++	__u32 gsi;
++};
++
+ /*
+  * @cmd: IOCTL_PRIVCMD_HYPERCALL
+  * @arg: &privcmd_hypercall_t
+@@ -157,5 +162,7 @@ struct privcmd_ioeventfd {
+ 	_IOW('P', 8, struct privcmd_irqfd)
+ #define IOCTL_PRIVCMD_IOEVENTFD					\
+ 	_IOW('P', 9, struct privcmd_ioeventfd)
++#define IOCTL_PRIVCMD_GSI_FROM_IRQ				\
++	_IOC(_IOC_NONE, 'P', 10, sizeof(struct privcmd_gsi_from_irq))
+ 
+ #endif /* __LINUX_PUBLIC_PRIVCMD_H__ */
+diff --git a/include/xen/events.h b/include/xen/events.h
+index 3b07409f8032..411298ae7fb0 100644
+--- a/include/xen/events.h
++++ b/include/xen/events.h
+@@ -127,6 +127,11 @@ int xen_pirq_from_irq(unsigned irq);
+ /* Return the irq allocated to the gsi */
+ int xen_irq_from_gsi(unsigned gsi);
+ 
++/* Return the gsi from irq */
++int xen_gsi_from_irq(unsigned irq);
++
++int xen_pvh_add_gsi_irq_map(unsigned gsi, unsigned irq);
++
+ /* Determine whether to ignore this IRQ if it is passed to a guest. */
+ int xen_test_irq_shared(int irq);
+ 
 -- 
 2.34.1
 
