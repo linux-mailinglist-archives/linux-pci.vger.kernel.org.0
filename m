@@ -1,91 +1,112 @@
-Return-Path: <linux-pci+bounces-6499-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6500-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA19D8AC0D2
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Apr 2024 21:03:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5E748AC0D6
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Apr 2024 21:09:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A4C91F21385
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Apr 2024 19:03:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 435C51F213C4
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Apr 2024 19:09:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C56B3D978;
-	Sun, 21 Apr 2024 19:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C9043F9D9;
+	Sun, 21 Apr 2024 19:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uXtAHIMZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pA5ujGR6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A3F3B185;
-	Sun, 21 Apr 2024 19:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F4C3EA73;
+	Sun, 21 Apr 2024 19:09:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713726207; cv=none; b=bj9fyceaF9qUqpBMybsLDdVHbWcBf5QK7maK7C5BXwi4kXVzI3gcvI+qym+Pa3d2Nz3shoO2wQiXnaNadnLfZFa96XX/PNtin4P1A2eoWaQnrP5u7gFsafxMLW5gBprB5LBpSS1xWQWtjvUu2lOh4CGBJqawIw0llLI4BPfYKGY=
+	t=1713726568; cv=none; b=FYqQwsGw2gz6ualTPP/2oxm9JZy3XWJH9J6XmVTkW3Ho5r38aIGGADw11juh10qLJPO7FnIuzdA/QD/5iGRzz1qtgFkIt8hvKphfyad4HXBbWCjqUFY0OhkpZQGKx8nP1i5RqvW01gpOPIo+rhaN6Ri/FHxKKf24dyXUtLP8yhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713726207; c=relaxed/simple;
-	bh=n6SwaZjcVFkNjY8H2WkLa4Pno+VxulX+IYzOLA17DN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QFZSAhRKj/VF/M6Y2ZrdTfwnx6ZmtlrTmnW8rBrSqNGSDQTQ4mm5w7bQOqkRAnSHEe74pQ+04Umj8y2bFMeJ2dr/kZZFlLZMpb8kYhsK+BmH+TFffiLKIKASFgjC4389BlOGZESY76uJoA9Wrrz4Ti+8anNaEBpFt6Yr5Kgwi9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uXtAHIMZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F0F2C113CE;
-	Sun, 21 Apr 2024 19:03:26 +0000 (UTC)
+	s=arc-20240116; t=1713726568; c=relaxed/simple;
+	bh=Cg1eXO0eZNRYPj2a7qijOthKjtEPw18jmjNdvJvLi/c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VhA/5mSOm8JXlLw1sBnp6rtQuvTwOAa+Qc3dTv84NfDvD/fZOtMpx/Ca1mY7KPKCP3UndpuxnUbM55I1IzXXuoGmF0/G7iPL9IQplPdGE5TRvFt+HRgevRE1ZIImE31+lqqOnZefgv62JnXjkdXRZZ0l9syB/tVGrZjqK6+5bcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pA5ujGR6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10610C113CE;
+	Sun, 21 Apr 2024 19:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713726206;
-	bh=n6SwaZjcVFkNjY8H2WkLa4Pno+VxulX+IYzOLA17DN0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=uXtAHIMZ+qdvwY4KOBlp6kyl/izvObBoe0q9E24/x2a/oAvezSFan1OX6VQTOp5sp
-	 XbGSwwLd9l+P5+xnWrZ6I8KOTHVWcrWSbpLP42QT8DyqGhcoOqtc+a4DOCmgRm9IFe
-	 oiDyiIdBxuKDhRFLp4hadXjFd7MqxDhekNxh4U47OZkS47ymQAtT8qZ8kej/O6J1Uo
-	 jtfSym6QZTLu+OP9Fuec09FOoXd77svf/Ixyw6ARqTOX7uCDJ5jgA7HSRRA3gEsKmD
-	 +CU3Cgb0BdfBgGTD+eIL5Inooarzhz6Un0ujHX+X5m2SBtGa8Mm+aYlkfQ3NmUeyNG
-	 M0WIDRGCe6UbQ==
-Date: Sun, 21 Apr 2024 14:03:24 -0500
+	s=k20201202; t=1713726567;
+	bh=Cg1eXO0eZNRYPj2a7qijOthKjtEPw18jmjNdvJvLi/c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pA5ujGR6O+RicashdOKTnXSJ6tMhHjCXt/2zQb8itsO7yEOogMV/1iF9dGN1YLc1D
+	 EiBkI9Eak40xo6wntraDzxAkSYiczGW5Vs36B9zyptvmdXzMPg2bqzuFtLq3bMQd/v
+	 GVhdhuc/WcG6q7JJ/9DQrtGcaHxPviHGE0QdDUH4r5jd+RjBS87pfpagNBzOihFqt2
+	 qV3T9uCOZLURZI/pBgcRnfiKxOh089ZAJ20XwMqR0mSds0Da4fCJMNUpnM/26K8rQU
+	 tZz2V5H5QORxJxfc+awPheGq9ISTd+2rUiNEkojfhbcqp8ZCy0+/JiGxrZ12+vZFE1
+	 11q//awSIjvaw==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, rafael@kernel.org, lenb@kernel.org,
-	will@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, frowand.list@gmail.com, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-	mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V6] PCI: Add support for preserving boot configuration
-Message-ID: <20240421190324.GA373874@bhelgaas>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Krishna Thota <kthota@nvidia.com>,
+	Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+	Vidya Sagar <sagar.tv@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v7-incomplete 0/3] PCI: Add support for preserving boot configuration
+Date: Sun, 21 Apr 2024 14:09:11 -0500
+Message-Id: <20240421190914.374399-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240418174043.3750240-1-vidyas@nvidia.com>
+References: <20240418174043.3750240-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418174043.3750240-1-vidyas@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 18, 2024 at 11:10:43PM +0530, Vidya Sagar wrote:
-> Add support for preserving the boot configuration done by the
-> platform firmware per host bridge basis, based on the presence of
-> 'linux,pci-probe-only' property in the respective PCI host bridge
-> device-tree node. It also unifies the ACPI and DT based boot flows
-> in this regard.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-This looks great; my only comments are:
+This is Vidya's work; I started splitting it into separate patches.
 
-  - It might make sense to move the _DSM evaluation to pci-acpi.c
-    instead of probe.c.
+This is based on v6
+(https://lore.kernel.org/r/20240418174043.3750240-1-vidyas@nvidia.com) but
+is missing a few pieces, so it's not complete yet.  I just wanted to show
+the idea of what I had in mind.
 
-  - There are a few different things going on (move _DSM, look at DT
-    host bridge in addition to of_chosen, integrate ACPI and DT flows,
-    tweak usage of PCI_PROBE_ONLY vs bridge->preserve_config, use
-    pci_assign_unassigned_root_bus_resources() when we didn't before),
-    and I think they could be split into multiple patches to make it
-    easier to read.
+The missing pieces are:
 
-I took a stab at splitting this, but didn't quite complete it.  I'll
-post that as v7-incomplete, and if you compare with v6, you'll see
-what's missing (the PCI_PROBE_ONLY and assign resources stuff --
-there's some subtlety there that wasn't obvious to me).
+  - Set PCI_REASSIGN_ALL_BUS if !PCI_PROBE_ONLY
 
-Bjorn
+  - Use bridge->preserve_config instead of PCI_PROBE_ONLY
+
+  - Change to use pci_assign_unassigned_root_bus_resources() instead of 
+    pci_bus_size_bridge() and pci_bus_assign_resources()
+
+Bjorn Helgaas (3):
+  PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to
+    pci_register_host_bridge()
+  PCI: of: Add of_pci_preserve_config() for per-host bridge support
+  PCI: Unify ACPI and DT 'preserve config' support
+
+ drivers/acpi/pci_root.c | 12 ---------
+ drivers/pci/of.c        | 60 ++++++++++++++++++++++++++++++++---------
+ drivers/pci/pci-acpi.c  | 22 +++++++++++++++
+ drivers/pci/pci.h       | 12 +++++++++
+ drivers/pci/probe.c     | 14 ++++++++++
+ 5 files changed, 95 insertions(+), 25 deletions(-)
+
+-- 
+2.34.1
+
 
