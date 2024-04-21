@@ -1,273 +1,91 @@
-Return-Path: <linux-pci+bounces-6498-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6499-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82B0A8ABC15
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Apr 2024 16:54:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA19D8AC0D2
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Apr 2024 21:03:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 90351B20D97
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Apr 2024 14:54:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A4C91F21385
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Apr 2024 19:03:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FB4322301;
-	Sat, 20 Apr 2024 14:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C56B3D978;
+	Sun, 21 Apr 2024 19:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oyi4d1fo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uXtAHIMZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9F1B669;
-	Sat, 20 Apr 2024 14:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A3F3B185;
+	Sun, 21 Apr 2024 19:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713624847; cv=none; b=Si71hZGAE07igW7NJJmyGoeY8cqjJbhu0b4olDyFUAqeKDLf9lHzuMlMy2i9PVysRW3KlROb6YENZ/0AvTpupxRJJAWQeCS6eFzoh0UOMJBbD5zRTC/FBawvH5CocSi0Qq9ywFpdTFdit7HohlOB/ZbElLXRpxl5W2bFGv1ac0U=
+	t=1713726207; cv=none; b=bj9fyceaF9qUqpBMybsLDdVHbWcBf5QK7maK7C5BXwi4kXVzI3gcvI+qym+Pa3d2Nz3shoO2wQiXnaNadnLfZFa96XX/PNtin4P1A2eoWaQnrP5u7gFsafxMLW5gBprB5LBpSS1xWQWtjvUu2lOh4CGBJqawIw0llLI4BPfYKGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713624847; c=relaxed/simple;
-	bh=oIrb6wJ4fZuey5KYNJS/voO+opaNOiTbqtomeD0H9EQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I+Lwm7qJjQ7AGMKcjbPyRyR6xjnIHD/uRADaOO0ruQMnQRVODIfTI/bsubityQunel5j1GmNL0ZODPRnMNi2JMi0bVgTx9hq2QsM8vRZPz+KvG/Ru1tAUjPJAE8ByQidVFTYtnt52vcxPIYkluS8+X+qq/Sn4QUSmNOoaG7+9v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oyi4d1fo; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713624845; x=1745160845;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oIrb6wJ4fZuey5KYNJS/voO+opaNOiTbqtomeD0H9EQ=;
-  b=Oyi4d1foWrAdT7nvDlyWcWfARTpVyOJ5KSF3hifoMSFHdLhcLY4/H29p
-   HPb5W1swFGiPZxwLEhHgjXgbcrhuLzUwP6l8sNVUucVXHejB0h/q0QQML
-   CdtHxaX2vfUTtO4i8jF0xTdbS0dFZP1QQpx/6FNtyBcGgZydxifNZhcMn
-   FymH33XrRbXdJWK8JYqYLD3gTkE7bova2uonrNj7HuabpcBLQv8Uh1yzY
-   k5hbu63Crx8JtSJkc8uyZATawjqalYu0J9PJoKsPNwuxP6szxdphCDGwf
-   qR2imr1sclzGiuJxyAUl7Mat4PGscdoTCPapW2yZoyhqNrILisKeqAg7c
-   g==;
-X-CSE-ConnectionGUID: hSyxUjwAQi+nK3QBaJQPiw==
-X-CSE-MsgGUID: JZQ1tPTiSCa1MAUw0K+DRQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11050"; a="31696851"
-X-IronPort-AV: E=Sophos;i="6.07,216,1708416000"; 
-   d="scan'208";a="31696851"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2024 07:54:04 -0700
-X-CSE-ConnectionGUID: YWHLdN4jTM2kWBYvcjtEtQ==
-X-CSE-MsgGUID: rpM0sb4sRoqDyyTYw2qWrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,216,1708416000"; 
-   d="scan'208";a="54528949"
-Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
-  by orviesa002.jf.intel.com with ESMTP; 20 Apr 2024 07:54:04 -0700
-From: matthew.gerlach@linux.intel.com
-To: bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH v4] dt-bindings: PCI: altera: Convert to YAML
-Date: Sat, 20 Apr 2024 09:53:42 -0500
-Message-Id: <20240420145342.118643-1-matthew.gerlach@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1713726207; c=relaxed/simple;
+	bh=n6SwaZjcVFkNjY8H2WkLa4Pno+VxulX+IYzOLA17DN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QFZSAhRKj/VF/M6Y2ZrdTfwnx6ZmtlrTmnW8rBrSqNGSDQTQ4mm5w7bQOqkRAnSHEe74pQ+04Umj8y2bFMeJ2dr/kZZFlLZMpb8kYhsK+BmH+TFffiLKIKASFgjC4389BlOGZESY76uJoA9Wrrz4Ti+8anNaEBpFt6Yr5Kgwi9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uXtAHIMZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F0F2C113CE;
+	Sun, 21 Apr 2024 19:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713726206;
+	bh=n6SwaZjcVFkNjY8H2WkLa4Pno+VxulX+IYzOLA17DN0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=uXtAHIMZ+qdvwY4KOBlp6kyl/izvObBoe0q9E24/x2a/oAvezSFan1OX6VQTOp5sp
+	 XbGSwwLd9l+P5+xnWrZ6I8KOTHVWcrWSbpLP42QT8DyqGhcoOqtc+a4DOCmgRm9IFe
+	 oiDyiIdBxuKDhRFLp4hadXjFd7MqxDhekNxh4U47OZkS47ymQAtT8qZ8kej/O6J1Uo
+	 jtfSym6QZTLu+OP9Fuec09FOoXd77svf/Ixyw6ARqTOX7uCDJ5jgA7HSRRA3gEsKmD
+	 +CU3Cgb0BdfBgGTD+eIL5Inooarzhz6Un0ujHX+X5m2SBtGa8Mm+aYlkfQ3NmUeyNG
+	 M0WIDRGCe6UbQ==
+Date: Sun, 21 Apr 2024 14:03:24 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: bhelgaas@google.com, rafael@kernel.org, lenb@kernel.org,
+	will@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, frowand.list@gmail.com, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
+	mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V6] PCI: Add support for preserving boot configuration
+Message-ID: <20240421190324.GA373874@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418174043.3750240-1-vidyas@nvidia.com>
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+On Thu, Apr 18, 2024 at 11:10:43PM +0530, Vidya Sagar wrote:
+> Add support for preserving the boot configuration done by the
+> platform firmware per host bridge basis, based on the presence of
+> 'linux,pci-probe-only' property in the respective PCI host bridge
+> device-tree node. It also unifies the ACPI and DT based boot flows
+> in this regard.
 
-Convert the device tree bindings for the Altera Root Port PCIe controller
-from text to YAML.
+This looks great; my only comments are:
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
----
-v4:
- - reorder reg-names to match original binding
- - move reg and reg-names to top level with limits.
+  - It might make sense to move the _DSM evaluation to pci-acpi.c
+    instead of probe.c.
 
-v3:
- - Added years to copyright
- - Correct order in file of allOf and unevaluatedProperties
- - remove items: in compatible field
- - fix reg and reg-names constraints
- - replace deprecated pci-bus.yaml with pci-host-bridge.yaml
- - fix entries in ranges property
- - remove device_type from required
+  - There are a few different things going on (move _DSM, look at DT
+    host bridge in addition to of_chosen, integrate ACPI and DT flows,
+    tweak usage of PCI_PROBE_ONLY vs bridge->preserve_config, use
+    pci_assign_unassigned_root_bus_resources() when we didn't before),
+    and I think they could be split into multiple patches to make it
+    easier to read.
 
-v2:
- - Move allOf: to bottom of file, just like example-schema is showing
- - add constraint for reg and reg-names
- - remove unneeded device_type
- - drop #address-cells and #size-cells
- - change minItems to maxItems for interrupts:
- - change msi-parent to just "msi-parent: true"
- - cleaned up required:
- - make subject consistent with other commits coverting to YAML
- - s/overt/onvert/g
----
- .../devicetree/bindings/pci/altera-pcie.txt   | 50 -----------
- .../bindings/pci/altr,pcie-root-port.yaml     | 88 +++++++++++++++++++
- 2 files changed, 88 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+I took a stab at splitting this, but didn't quite complete it.  I'll
+post that as v7-incomplete, and if you compare with v6, you'll see
+what's missing (the PCI_PROBE_ONLY and assign resources stuff --
+there's some subtlety there that wasn't obvious to me).
 
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-deleted file mode 100644
-index 816b244a221e..000000000000
---- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--* Altera PCIe controller
--
--Required properties:
--- compatible :	should contain "altr,pcie-root-port-1.0" or "altr,pcie-root-port-2.0"
--- reg:		a list of physical base address and length for TXS and CRA.
--		For "altr,pcie-root-port-2.0", additional HIP base address and length.
--- reg-names:	must include the following entries:
--		"Txs": TX slave port region
--		"Cra": Control register access region
--		"Hip": Hard IP region (if "altr,pcie-root-port-2.0")
--- interrupts:	specifies the interrupt source of the parent interrupt
--		controller.  The format of the interrupt specifier depends
--		on the parent interrupt controller.
--- device_type:	must be "pci"
--- #address-cells:	set to <3>
--- #size-cells:		set to <2>
--- #interrupt-cells:	set to <1>
--- ranges:	describes the translation of addresses for root ports and
--		standard PCI regions.
--- interrupt-map-mask and interrupt-map: standard PCI properties to define the
--		mapping of the PCIe interface to interrupt numbers.
--
--Optional properties:
--- msi-parent:	Link to the hardware entity that serves as the MSI controller
--		for this PCIe controller.
--- bus-range:	PCI bus numbers covered
--
--Example
--	pcie_0: pcie@c00000000 {
--		compatible = "altr,pcie-root-port-1.0";
--		reg = <0xc0000000 0x20000000>,
--			<0xff220000 0x00004000>;
--		reg-names = "Txs", "Cra";
--		interrupt-parent = <&hps_0_arm_gic_0>;
--		interrupts = <0 40 4>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		bus-range = <0x0 0xFF>;
--		device_type = "pci";
--		msi-parent = <&msi_to_gic_gen_0>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0 0 0 1 &pcie_0 1>,
--			            <0 0 0 2 &pcie_0 2>,
--			            <0 0 0 3 &pcie_0 3>,
--			            <0 0 0 4 &pcie_0 4>;
--		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
--			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
--	};
-diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-new file mode 100644
-index 000000000000..5794396f0986
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) 2015, 2019, 2024, Intel Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Altera PCIe Root Port
-+
-+maintainers:
-+  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - altr,pcie-root-port-1.0
-+      - altr,pcie-root-port-2.0
-+
-+  reg:
-+    items:
-+      - description: TX slave port region
-+      - description: Control register access region
-+      - description: Hard IP region
-+    minItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: Txs
-+      - const: Cra
-+      - const: Hip
-+    minItems: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-map-mask:
-+    items:
-+      - const: 0
-+      - const: 0
-+      - const: 0
-+      - const: 7
-+
-+  interrupt-map:
-+    maxItems: 4
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  msi-parent: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-map
-+  - interrupt-map-mask
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    pcie_0: pcie@c00000000 {
-+        compatible = "altr,pcie-root-port-1.0";
-+        reg = <0xc0000000 0x20000000>,
-+              <0xff220000 0x00004000>;
-+        reg-names = "Txs", "Cra";
-+        interrupt-parent = <&hps_0_arm_gic_0>;
-+        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+        #interrupt-cells = <1>;
-+        bus-range = <0x0 0xff>;
-+        device_type = "pci";
-+        msi-parent = <&msi_to_gic_gen_0>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        interrupt-map-mask = <0 0 0 7>;
-+        interrupt-map = <0 0 0 1 &pcie_intc 1>,
-+                        <0 0 0 2 &pcie_intc 2>,
-+                        <0 0 0 3 &pcie_intc 3>,
-+                        <0 0 0 4 &pcie_intc 4>;
-+        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000>,
-+                 <0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-+    };
--- 
-2.34.1
-
+Bjorn
 
