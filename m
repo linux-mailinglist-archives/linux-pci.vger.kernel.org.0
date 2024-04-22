@@ -1,202 +1,136 @@
-Return-Path: <linux-pci+bounces-6526-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6527-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B9CB8AD31D
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 19:09:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95DAE8AD4B1
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 21:17:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 01B941F22268
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 17:09:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D12AC1C210BC
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 19:17:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11163153BD2;
-	Mon, 22 Apr 2024 17:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8EE155316;
+	Mon, 22 Apr 2024 19:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQwGaxlI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLOKgyHG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4826153839;
-	Mon, 22 Apr 2024 17:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0654155321
+	for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 19:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713805745; cv=none; b=A8cUfX9vzxxnCmw1vk/u3CfIqgujtkf/dg5SM48bZQn5aRqVUT+0vg1vmML1vjj5xkI1HwoomWWOYthmVLb4Z8yMICYjVM4kuqxKA9rREj3cnBg/JkjJ1U5pCtWCY0K07AfsHsCOVPN3E5u9VFiLQDrVY1Ced6U4KznIK43SyKQ=
+	t=1713813458; cv=none; b=j2k8+CpEzXUxC9mRp87onFiKd7fVBgQj9DhrF6vHmHwqtJYENYsBojD7083iTF77utedqmxQfZVP+o/KgtFDgGYt8xvQlwxuxJRsYls28luU2npDQzw33ksbdlaq5eLta+YYJby4T63kRhgYOBQBxrcQGqVmXnzcFHP18/KU/+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713805745; c=relaxed/simple;
-	bh=+gIC4KdUtfmTwuaNPgYrW2N0OiI+7zGr44ir/9OqFhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqrYkJTFDXFC0Wx2doZ3jnzvfYPOgTkcOc4jFWxv0pn5gNIlpCD8TIG/zt1dJnv/hGFBOGozz1H/oisBH8tsn5wltjK8nigChts6QJ1uzFIekZFlxhZIBw7diUfSo1xV/oCTfzT/qkOwmQ7wyWqg9DWddlDySspuCDkDHRpHaHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQwGaxlI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC6AC113CC;
-	Mon, 22 Apr 2024 17:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713805744;
-	bh=+gIC4KdUtfmTwuaNPgYrW2N0OiI+7zGr44ir/9OqFhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CQwGaxlIPaHJP73+DrBusG65P+8fNgSoFXCy+lJLRAF4UYA0NXuAnRrSMPEtjOJ6A
-	 wVi3FL3AKf0brAjJ8AsMq0WeASveHhJM2NPjtooKhiJnvhxZITiX5nGGDwM/rkZ5+Q
-	 xM3E5R+l3tOpkSVi3Z8plKVzk6qWqJLy0zrimEFmEU5E+tCLUuoiI3IkTLt9AaG1E5
-	 WAXd6vbd+M86WAUGiRxMJZqw1IINNveEqEsYAyqMMGJkTaISiVhYzqI3FREegk4xEw
-	 xELTbLPxLSzFJkLZ2xokPXafDMYfPrXRtz/oDuS3vHLdeu9BgxilBpWDU+B1fkZyIk
-	 25BVKD69v4B7A==
-Date: Mon, 22 Apr 2024 22:38:47 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org,
-	bmasney@redhat.com, djakov@kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	vireshk@kernel.org, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org
-Subject: Re: [PATCH v10 4/6] arm64: dts: qcom: sm8450: Add OPP table support
- to PCIe
-Message-ID: <20240422170847.GI9775@thinkpad>
-References: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
- <20240409-opp_support-v10-4-1956e6be343f@quicinc.com>
- <20240422144431.GE9775@thinkpad>
- <aaee8605-848f-fe9c-63aa-af4ae2d399a6@quicinc.com>
+	s=arc-20240116; t=1713813458; c=relaxed/simple;
+	bh=/x1SyMb4ASJVh4p8qtH5Zq8S4yTFQsv6VhQl0Ka60Eg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mpc/jbvCOkE1/T1iuuiG6K6bVoB+y3fwJga7wFG1ejH1Tk1bXzuM8prVGF1WFmXSuSJJ412rEq1GkYSuE1L1PhqjuBuHzXd9Jav2nSvb6kD1cuKkwn4vufPss/y6CQRThADF9BXbZJJX4MaBV8zjTfDME2IkJ8QV+jXzGqd1pko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QLOKgyHG; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-479c39b78dbso1909811137.2
+        for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 12:17:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1713813455; x=1714418255; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/x1SyMb4ASJVh4p8qtH5Zq8S4yTFQsv6VhQl0Ka60Eg=;
+        b=QLOKgyHG2qzS57PEqSlBYrgZIZCbBjbe9l2jhcKMbo6vnVFC0O51vGvqnNu4eGErGO
+         ORgkk6PUzxyi8n+exYagdYoO1kv94wEzNZl6MWE1XPL5Xpu803pu0zfeXVv/7S9LRiRx
+         7OnnOyd2ocl9GvyZy7j4kLeqVxAtbJD3IrC9k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713813455; x=1714418255;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/x1SyMb4ASJVh4p8qtH5Zq8S4yTFQsv6VhQl0Ka60Eg=;
+        b=nIKUVW6ICMukVUw8X5UNbSPzb1OZqEYz1MI5AWcYiljBd6bnL+rzG4dVfA5Em5uHro
+         I9fL6Plrf4wHH8Gyhe/S5LYJRPthA8qz2hjbwzi+Wuakc4D+LUksSg4RoeyafrYYj9o8
+         Vd/MdLTHHqam/gLkGdvpoEGCnn8kwmd3N9/qWukdR/2huoGHQRL+wsOcDsuHHtWrEa+w
+         LLQhUN9gA+DEYAaFc/HRgzDTrz0kVIeehlMzWxNEq2idWNvq66BpuQYHw6gFTb8XkV0Q
+         C+z04YzEsPDmZdeWysWXloFdfaGANItpMJBJTvI5cZi6SUcd3Efofy9uxXEem7V2NpTB
+         UVjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7nR+FYQmB42voYxu6t08bX0+Qsf8HgaZ8gCf8FE6tVVrDUwnuoGZu2LHWsFzaOYg5+5Hf8+1zrSKxT6oTiLKSFQFEXkUMfcXK
+X-Gm-Message-State: AOJu0YyrnVfznKV8zoTdgGPZgzIk4xsXF+7qdkQs4iw7MxX0zrHPkOut
+	knE2GOCszglOxwR56ZzYZ6qNyVplYWj7aG60mOr8MCp44R6T2e1TGHgBp//YalnaB/XUD4BVaY7
+	vLD4iSA/jGeG1d7fNcVsdWw4/dvxkaa8LIKrc
+X-Google-Smtp-Source: AGHT+IGat54NrGK6Mz3mBIecbfXww4A+FxvBErevCOh6Np31L1gqxAPJAiVFGy3UCYoqXZahijUsku6TR5cCluT6Wcc=
+X-Received: by 2002:a67:ee16:0:b0:47b:f1ae:9c77 with SMTP id
+ f22-20020a67ee16000000b0047bf1ae9c77mr3331254vsp.23.1713813455682; Mon, 22
+ Apr 2024 12:17:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aaee8605-848f-fe9c-63aa-af4ae2d399a6@quicinc.com>
+References: <ZalOCPrVA52wyFfv@google.com> <20240119053756.GC2543524@black.fi.intel.com>
+ <20240119074829.GD2543524@black.fi.intel.com> <20240119102258.GE2543524@black.fi.intel.com>
+ <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com> <20240123061820.GL2543524@black.fi.intel.com>
+ <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
+ <CA+Y6NJGz6f8hE4kRDUTGgCj+jddUyHeD_8ocFBkARr7w90jmBw@mail.gmail.com>
+ <20240416050353.GI112498@black.fi.intel.com> <CA+Y6NJF6+s5zUZeaWtagpMt8Qu0a1oE+3re3c6EsppH+ZsuMRQ@mail.gmail.com>
+ <20240419044945.GR112498@black.fi.intel.com>
+In-Reply-To: <20240419044945.GR112498@black.fi.intel.com>
+From: Esther Shimanovich <eshimanovich@chromium.org>
+Date: Mon, 22 Apr 2024 15:17:24 -0400
+Message-ID: <CA+Y6NJEpWpfPqHO6=Z1XFCXZDUq1+g6EFryB+Urq1=h0PhT+fg@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 22, 2024 at 10:25:06PM +0530, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 4/22/2024 8:14 PM, Manivannan Sadhasivam wrote:
-> > On Tue, Apr 09, 2024 at 03:43:22PM +0530, Krishna chaitanya chundru wrote:
-> > > PCIe needs to choose the appropriate performance state of RPMh power
-> > 
-> > 'PCIe host controller driver'
-> > 
-> > > domain and interconnect bandwidth based up on the PCIe data rate.
-> > 
-> > 'based on the PCIe data rate'
-> > 
-> > > 
-> > > Add the OPP table support to specify RPMh performance states and
-> > 
-> > 'Hence, add...'
-> > 
-> > > interconnect peak bandwidth.
-> > > 
-> > > Different link configurations may share the same aggregate bandwidth,
-> > 
-> > 'It should be noted that the different...'
-> > 
-> > > e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same bandwidth
-> > > and share the same OPP entry.
-> > > 
-> > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/sm8450.dtsi | 77 ++++++++++++++++++++++++++++++++++++
-> > >   1 file changed, 77 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > index 615296e13c43..9dfe16012726 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > @@ -1855,7 +1855,35 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-> > >   			pinctrl-names = "default";
-> > >   			pinctrl-0 = <&pcie0_default_state>;
-> > > +			operating-points-v2 = <&pcie0_opp_table>;
-> > > +
-> > >   			status = "disabled";
-> > > +
-> > > +			pcie0_opp_table: opp-table {
-> > > +				compatible = "operating-points-v2";
-> > > +
-> > > +				/* GEN 1 x1 */
-> > > +				opp-2500000 {
-> > > +					opp-hz = /bits/ 64 <2500000>;
-> > > +					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <250000 1>;
-> > > +				};
-> > > +
-> > > +				/* GEN 2 x1 */
-> > > +				opp-5000000 {
-> > > +					opp-hz = /bits/ 64 <5000000>;
-> > > +					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <500000 1>;
-> > > +				};
-> > > +
-> > > +				/* GEN 3 x1 */
-> > > +				opp-8000000 {
-> > > +					opp-hz = /bits/ 64 <8000000>;
-> > 
-> > I doubt this value. See below...
-> > 
-> > > +					required-opps = <&rpmhpd_opp_nom>;
-> > > +					opp-peak-kBps = <984500 1>;
-> > > +				};
-> > > +			};
-> > > +
-> > >   		};
-> > >   		pcie0_phy: phy@1c06000 {
-> > > @@ -1982,7 +2010,56 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-> > >   			pinctrl-names = "default";
-> > >   			pinctrl-0 = <&pcie1_default_state>;
-> > > +			operating-points-v2 = <&pcie1_opp_table>;
-> > > +
-> > >   			status = "disabled";
-> > > +
-> > > +			pcie1_opp_table: opp-table {
-> > > +				compatible = "operating-points-v2";
-> > > +
-> > > +				/* GEN 1 x1 */
-> > > +				opp-2500000 {
-> > > +					opp-hz = /bits/ 64 <2500000>;
-> > > +					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <250000 1>;
-> > > +				};
-> > > +
-> > > +				/* GEN 1 x2 GEN 2 x1 */
-> > > +				opp-5000000 {
-> > > +					opp-hz = /bits/ 64 <5000000>;
-> > > +					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <500000 1>;
-> > > +				};
-> > > +
-> > > +				/* GEN 2 x2 */
-> > > +				opp-10000000 {
-> > > +					opp-hz = /bits/ 64 <10000000>;
-> > > +					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <1000000 1>;
-> > > +				};
-> > > +
-> > > +				/* GEN 3 x1 */
-> > > +				opp-8000000 {
-> > > +					opp-hz = /bits/ 64 <8000000>;
-> > 
-> > GEN 3 x1 frequency is lower than GEN 2 x2? This looks strange. Both should be of
-> > same frequency.
-> > 
-> Gen2 is 5GT/s where as GEN3 is 8GT/s. so the freq for 3 x1(8 x1 GT/s) is
-> less than Gen2 x2(5 x2 GT/s)
-> 
+Thanks for the explanation! I still don't fully understand how that
+would work for my use case.
 
-Sorry, that's my bad. I missed the fact that the spec doubled the data rate
-starting from GEN 3 only.
+Perhaps it would be better for me to describe the case I am trying to
+protect against.
 
-- Mani
+To rehash, this quirk was written for devices with discrete
+Thunderbolt controllers.
 
--- 
-மணிவண்ணன் சதாசிவம்
+For example,
+CometLake_CPU -> AlpineRidge_Chip -> USB-C Port
+This device has the ExternalFacingPort property in ACPI.
+My quirk relabels the Alpine Ridge chip as "fixed" and
+external-facing, so that devices attached to the USB-C port could be
+labeled as "removable"
+
+Let's say we have a TigerLake CPU, which has integrated
+Thunderbolt/USB4 capabilities:
+
+TigerLake_ThunderboltCPU -> USB-C Port
+This device also has the ExternalFacingPort property in ACPI and lacks
+the usb4-host-interface property in the ACPI.
+
+My worry is that someone could take an Alpine Ridge Chip Thunderbolt
+Dock and attach it to the TigerLake CPU
+
+TigerLake_ThunderboltCPU -> USB-C Port -> AlpineRidge_Dock
+
+If that were to happen, this quirk would incorrectly label the Alpine
+Ridge Dock as "fixed" instead of "removable".
+
+My thinking was that we could prevent this scenario from occurring if
+we filtered this quirk not to apply on CPU's like Tiger Lake, with
+integrated Thunderbolt/USB4 capabilities.
+
+ExternalFacingPort is found both on the Comet Lake ACPI and also on
+the Tiger Lake ACPI. So I can't use that to distinguish between CPUs
+which don't have integrated Thunderbolt, like Comet Lake, and CPUs
+with integrated Thunderbolt, like Tiger Lake.
+
+I am looking for something that can tell me if the device's Root Port
+has the Thunderbolt controller upstream to it or not.
+Is there anything like that?
+Or perhaps should I add a check which compares the name of the
+device's CPU with a list of CPUs that this quirk can be applied to?
+Or is there some way I can identify the Thunderbolt controller, then
+determine if it's upstream or downstream from the root port?
+Or are Alpine Ridge docks not something to worry about at all?
 
