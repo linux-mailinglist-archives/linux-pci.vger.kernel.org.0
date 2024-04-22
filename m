@@ -1,129 +1,254 @@
-Return-Path: <linux-pci+bounces-6517-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6518-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 883B68ACF63
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 16:29:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B70F8ACF73
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 16:32:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9FC81C20F30
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 14:29:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E52C81F216D8
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 14:32:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C211514D9;
-	Mon, 22 Apr 2024 14:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67788152199;
+	Mon, 22 Apr 2024 14:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="li+Aj8Fo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JREs8Q4M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4711514CB
-	for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 14:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37863152191
+	for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 14:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713796170; cv=none; b=GKywxausO8NHm5uvkCUEDV+nKl/ozOaDvpsYOK4V5yK6fEHLsRT0CF9w1cZFZVcP4QXbNAfBfPvAmnkXQCkkBaHZOxg7xPd6aEMvG1odi6mjG+aVyG3lzXClDYwN8CCcm03GcpsYTzZaV0DIbcEsGCHnyZuT4wUljIBQGHkAnUM=
+	t=1713796315; cv=none; b=Z+1nCun3IM+TmJeyzPnjeY1NG4zUdK4HLUH5ko9u16/o+TlK5UCkmhUKY5i60UCjrzrjsra9au6LHvIQH4O7u/XOqzMbcwlLzdONAwAuHssX5C12Vj4IiQkJY9CLBsuZgsQTnSw/ZH2PIlHnS5PEZxkiuMcW3sAYS0MuG0lDlgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713796170; c=relaxed/simple;
-	bh=2nUa3Ja53feSTxJmwBVeEpCaY43Yvj2yiQKQ8D1rksw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LRKRKyZGp1w1+ec9A2VJPd5bJtC5EGs7nVI7N+X/2dbMfAj1o51k1ajO4orquQqQB4wF+aXdkf+H8pYjkvCberFS5GOs9JM0sjKgtTjtvg9wGbK/nxGbrbj8qvtFmQP8Py5XbMQVPBpMJIjQpuX4FuAgl42BIjz5EZ1U4qQD41Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=li+Aj8Fo; arc=none smtp.client-ip=209.85.167.41
+	s=arc-20240116; t=1713796315; c=relaxed/simple;
+	bh=Ygh4m5cCpdrw4QNncMQcx2VxNsPyT145KZ8wuVy33pk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eT81Bp0SdVQT6Q9i8PwPC6HQp+zO+YuBi1RDs01Cn0PjcLy5YCiYB1+sAtK1fUlTFfBaHJCQj99c/hszkKs8p4q7BpBP2mMqAPf8FUk2/LfW/CIUNAZHXB9/sMcSnvOsl/62l+q6tGzAlhnSclPBy4e+UdBiyYiW9SBw7PnV5dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JREs8Q4M; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51ab47ce811so4041173e87.1
-        for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 07:29:28 -0700 (PDT)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ecee1f325bso3580547b3a.2
+        for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 07:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713796167; x=1714400967; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LXHHnDak7lgem7M5GBJJasjq0fymlxs7eNC3HgwuabY=;
-        b=li+Aj8FoCrxBqonIPixTgHs8dlwXYBzAo0TF4c7Pwamq+PzyWXhc1PmVj2b2Hfrh1H
-         QVn39p4sEr2EyfBmXEP1ozPItdD4AbL/XcVs3qzzwAq0zN0ywaLyLxPLQEQmw7l9cYUY
-         rde9WIQE9MHn8tKNQqQv5H6RYbh5EWJsU1Kpdszyjf5au7ilyQ8ceg7NKhBbZ5qBYcf1
-         TJQEczoYmKSC1i48QwbJPS08To0/+t4ZMj8NhzAH+oPjNueZeZG7370GQD3PAKB7MsEK
-         gO2NP5xhO5vVz1sdA/m22/OA0T/CFgBhDH98BviltABa9Zz+M9i9cSqeiyh3hXCpz2mh
-         Yp1A==
+        d=linaro.org; s=google; t=1713796312; x=1714401112; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=I6gA3DduJ/5QN/9c3l1EeoTlW606PB+epDSKgeExDug=;
+        b=JREs8Q4MVaau6uRCIWjOyu0XuSncFGs2GV4Qh37aPbHKEi+qtsqJwRdL3uV8EfWkOj
+         up9zORgSYNkVFrhSOWafgpENUDJSsx2zS11bK9JGBZU3Tt73D2lQ21huFmm1iBs9Gw4l
+         WhQ0mKwd6eQvNfDof1W71ZFM/FvpVHihCGPnnNXZ2Jg3VV8AUJ1B3L95srdLu602wjN3
+         rb556ePbG3Z3R64pIxTdBUJPA97PNdK13AF9soALoQCdUOQ9pm6Gf/xDVhuGPSxSyc0P
+         OTglbY+EBAf6VrOy0OavmR+3PD3bC4/vRylkByPA1rkBtrxcDEr0vCYRi8ttgTh7eZhz
+         w2dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713796167; x=1714400967;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1713796312; x=1714401112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LXHHnDak7lgem7M5GBJJasjq0fymlxs7eNC3HgwuabY=;
-        b=xQc5kD4nIPVbEuotqBpglvgwUP6okWMLG6WrAMKsj00syUS7T/o6aZDB1PnMc9+n4n
-         F5EHUeQLCXx2a1kfXszMCqtxLwCWd+qDjISW6fMbsmIsbvuTzQKTHorVkSs5QJ4TDfLG
-         ZtiFVJnCyB/pPbwjoqB2PWjRwRdL5CwHQGY49xi8nV5XLHAkQ5L6nDWsEHXsgFBMaLcU
-         oFIb4hFJpuiOgoJIJnaV1vZfSwHPA3f6c6XzWv83WOO6Oouyhaz5FJd1JaRcOXh0fp3B
-         9Nx9OsW2h1gZcMIpmsugQY8Ry0SCSj7FXHHUW/xrPpaWX7DyI7waHV3kAagOEaJ4AlEI
-         OpOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEr8+QjPXDqktUgFtWrIUGd0mYjmOKYUln3rS5tEYzz0OS2uSKY2e7msfR7t5yw89t17rKS8bfXvyaYSeLnvtUTYjTNuF5PcE3
-X-Gm-Message-State: AOJu0Yw5fDbZNcTkmWDrz6HH2lnriYncDrdQLlNFpSZydm5qlal6oE/O
-	bI6bGCOTkZInUzwiyYIAk6pDKW+hWDr7k0gAvpxIhbpdbdhw3mka395YcRr9tWQ=
-X-Google-Smtp-Source: AGHT+IFURma49nlaoif2Ttdrovjgb+IMnG5pgohKMHIuVNPmGWqDe7YcAEozJ3QOwed9btGw+bfpRw==
-X-Received: by 2002:a05:6512:3e0d:b0:51a:c8bb:fcf7 with SMTP id i13-20020a0565123e0d00b0051ac8bbfcf7mr6809395lfv.3.1713796166491;
-        Mon, 22 Apr 2024 07:29:26 -0700 (PDT)
-Received: from [172.30.205.46] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id a22-20020a195f56000000b00518e16f8297sm1780897lfj.55.2024.04.22.07.29.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 07:29:25 -0700 (PDT)
-Message-ID: <130c31dc-5224-4442-bae3-88ed0ec23fe2@linaro.org>
-Date: Mon, 22 Apr 2024 16:29:24 +0200
+        bh=I6gA3DduJ/5QN/9c3l1EeoTlW606PB+epDSKgeExDug=;
+        b=Hr7loO0K0emqdTeusSUdt5uVdU+eu23AE2kTC0P1cSqCW8e4gEtlIDdqrZQLXcH6sG
+         o5SCqY7Omwfvr8uIq314t0/brHN2y7I1gs6oEdWyVqwlqJW0uwQAcA9nAklAkc36PzF6
+         B44k6LFL/7Yhd68FgE1XkCjAEmu8CPkGF8xkNvIGGyQAW6GXBKmmPY4LKbrSbsfmuhJT
+         /OkPvuHZbMsxNb+NZY4YcgjtyQ+c0xK+ZdtuWNvgAboUW/aqWvgvryKXne2dl0HG0trq
+         zdBOPFJhJHGAe5vrk1mYtz4RLdG2gJSZtANUzsR89KAS/NBmVxoDYJZkJAsPGMqOAb7Z
+         ptgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXT7I+UQ0KLeXpSu7nX1R1CD/Emfm26yKCIjiFP8oPYLoAITM7mHFJZ5b4zP91QfPuEn8HwTxV1TF7Smqtm9vryLwRCAxWjZuvz
+X-Gm-Message-State: AOJu0YxJoXODDl52dULNhbfi8mu/xis/3YeSWy38+8l9PNbJbZ6czaxV
+	AOeaFLwHifWY0ltkXZUsQM6z7UNqlE83Z4ZWXj5Ksb73JARvMCkQ/dNDVt9B4Q==
+X-Google-Smtp-Source: AGHT+IGN2yX1hZi9NqmP5nGDbTnPt2JRBgZs/+VkK0pGcrgVLali0lkvBAV10nf0CRDwS9U0erEjfw==
+X-Received: by 2002:a05:6a20:734d:b0:1aa:755f:1746 with SMTP id v13-20020a056a20734d00b001aa755f1746mr15651557pzc.22.1713796312334;
+        Mon, 22 Apr 2024 07:31:52 -0700 (PDT)
+Received: from thinkpad ([120.60.70.118])
+        by smtp.gmail.com with ESMTPSA id f33-20020a056a000b2100b006ecee611c05sm7904647pfu.182.2024.04.22.07.31.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 07:31:51 -0700 (PDT)
+Date: Mon, 22 Apr 2024 20:01:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org,
+	bmasney@redhat.com, djakov@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v10 2/6] PCI: qcom: Add ICC bandwidth vote for CPU to
+ PCIe path
+Message-ID: <20240422143143.GD9775@thinkpad>
+References: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
+ <20240409-opp_support-v10-2-1956e6be343f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: ipq9574: add PCIe2 nodes
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- mr.nuke.me@gmail.com
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-clk@vger.kernel.org
-References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
- <20240415182052.374494-8-mr.nuke.me@gmail.com>
- <20240417073412.GD3894@thinkpad>
- <e8957b07-692f-7d38-e276-b0e3791d31f4@gmail.com>
- <20240422071054.GA9522@thinkpad>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240422071054.GA9522@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240409-opp_support-v10-2-1956e6be343f@quicinc.com>
 
+On Tue, Apr 09, 2024 at 03:43:20PM +0530, Krishna chaitanya chundru wrote:
+> To access PCIe registers of the host controller and endpoint PCIe
+> BAR space, config space the CPU-PCIe ICC (interconnect) path should
 
+'To access the host controller registers and endpoint BAR/Config space,'
 
-[...]
+> be voted otherwise it may lead to NoC (Network on chip) timeout.
+> We are surviving because of other driver voting for this path.
+> 
+> As there is less access on this path compared to PCIe to mem path
+> add minimum vote i.e 1KBps bandwidth always which is sufficient enough
+> to keep the path active and is recommended by HW team.
+> 
+> In suspend to ram case there can be some DBI access. Except in suspend
+> to ram case disable CPU-PCIe ICC path after register space access
+> is done.
+> 
 
+During S2RAM (Suspend-to-RAM), DBI access can happen very late (while disabling
+the boot CPU). So do not disable the CPU-PCIe interconnect path during S2RAM as
+that may lead to NoC error.
 
->>>> +
->>>> +			#interrupt-cells = <1>;
->>>> +			interrupt-map-mask = <0 0 0 0x7>;
->>>> +			interrupt-map = <0 0 0 1 &intc 0 0 164
->>>> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->>>> +					<0 0 0 2 &intc 0 0 165
->>>> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
->>>> +					<0 0 0 3 &intc 0 0 186
->>>> +					 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
->>>> +					<0 0 0 4 &intc 0 0 187
->>>> +					 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
->>>
->>> Use a single line for each INTX entry even if it exceeds 80 column width.
->>
->> Yes. Will do.
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 43 ++++++++++++++++++++++++++++++----
+>  1 file changed, 39 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 14772edcf0d3..e53422171c01 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -245,6 +245,7 @@ struct qcom_pcie {
+>  	struct phy *phy;
+>  	struct gpio_desc *reset;
+>  	struct icc_path *icc_mem;
+> +	struct icc_path *icc_cpu;
+>  	const struct qcom_pcie_cfg *cfg;
+>  	struct dentry *debugfs;
+>  	bool suspended;
+> @@ -1409,6 +1410,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>  	if (IS_ERR(pcie->icc_mem))
+>  		return PTR_ERR(pcie->icc_mem);
+>  
+> +	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
+> +	if (IS_ERR(pcie->icc_cpu))
+> +		return PTR_ERR(pcie->icc_cpu);
+>  	/*
+>  	 * Some Qualcomm platforms require interconnect bandwidth constraints
+>  	 * to be set before enabling interconnect clocks.
+> @@ -1418,7 +1422,20 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>  	 */
+>  	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+>  	if (ret) {
+> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+> +		dev_err(pci->dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n",
 
-And drop the /* int_x */ comments
+'Failed to set bandwidth for PCIe-MEM interconnect path: %d\n'
 
-Konrad
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Since the CPU-PCIe path is only used for activities like register
+> +	 * access of the host controller and endpoint Config/BAR space access,
+> +	 * HW team has recommended to use a  minimal bandwidth of 1KBps just to
+
+Single space after 'a'
+
+> +	 * keep the path active.
+> +	 */
+> +	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
+> +	if (ret) {
+> +		dev_err(pci->dev, "Failed to set interconnect bandwidth for CPU-PCIe: %d\n",
+
+'Failed to set bandwidth for CPU-PCIe interconnect path: %d\n'
+
+>  			ret);
+>  		return ret;
+>  	}
+> @@ -1448,7 +1465,7 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+>  
+>  	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+>  	if (ret) {
+> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+> +		dev_err(pci->dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n",
+
+'Failed to set bandwidth for PCIe-MEM interconnect path: %d\n'
+
+>  			ret);
+>  	}
+>  }
+> @@ -1610,7 +1627,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>  	 */
+>  	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
+>  	if (ret) {
+> -		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
+> +		dev_err(dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n", ret);
+
+'Failed to set bandwidth for PCIe-MEM interconnect path: %d\n'
+
+>  		return ret;
+>  	}
+>  
+> @@ -1634,7 +1651,17 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>  		pcie->suspended = true;
+>  	}
+>  
+> -	return 0;
+> +	/*
+> +	 * In suspend to ram case there are DBI access, except in suspend to ram case
+> +	 * remove the vote for CPU-PCIe path now, since at this point onwards,
+> +	 * no register access will be done.
+> +	 */
+
+	/*
+	 * Only disable CPU-PCIe interconnect path if the suspend is non-S2RAM.
+	 * Because on some platforms, DBI access can happen very late during the
+	 * S2RAM and a non-active CPU-PCIe interconnect path may lead to NoC
+	 * error.
+	 */
+
+> +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+> +		ret = icc_disable(pcie->icc_cpu);
+> +		if (ret)
+> +			dev_err(dev, "Failed to disable Interconnect path of CPU-PCIe: %d\n", ret);
+
+'Failed to disable CPU-PCIe interconnect path: %d\n'
+
+> +	}
+> +	return ret;
+>  }
+>  
+>  static int qcom_pcie_resume_noirq(struct device *dev)
+> @@ -1642,6 +1669,14 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+>  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+>  	int ret;
+>  
+> +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+> +		ret = icc_enable(pcie->icc_cpu);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to enable Interconnect path of CPU-PCIe: %d\n", ret);
+
+'Failed to enable CPU-PCIe interconnect path: %d\n'
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
