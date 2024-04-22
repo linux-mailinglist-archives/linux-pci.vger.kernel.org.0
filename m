@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-6522-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6523-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 865448AD06D
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 17:16:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4865D8AD07B
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 17:20:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B1001F2182B
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 15:16:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E5B7B250B2
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 15:20:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F76715251B;
-	Mon, 22 Apr 2024 15:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31B7B152E05;
+	Mon, 22 Apr 2024 15:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DddYxD9Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXb653V/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F8913E8B2;
-	Mon, 22 Apr 2024 15:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02469152180;
+	Mon, 22 Apr 2024 15:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713799009; cv=none; b=MbWLap5TVNrcImOYkW0H9YaFL5ivQwLKR06HG7L2K4bPzSQEerl4S4Dv7IppWHyoOdeoaLIbUclASU58ArLeGhP79qSmzjkRX856W0i7D1/6w01yQM+3ZeIIfMqygScTFlBn637PAtH/7a5MHQiyqzmfnLnnTtdzY2BqI7saj5g=
+	t=1713799229; cv=none; b=hs0i3u2wKPsaxhzuuSOhS68RQ38l7SNUq1hc0CY0AE+qUxPnR5rzYbocJUmzWMVRRdphqAkmLeil//qki3RwH4Dzarve3t/xSBWznzCBunN1ApaIw0r4LwXEvXdnv6DI5xkpreXYjRre9CJ/vuTct9Z9bs0kgQu6Dpt8EZRqgro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713799009; c=relaxed/simple;
-	bh=xdss4el+V60V2ws+xgbpajq8iInRegrkoN8TP9o57z4=;
+	s=arc-20240116; t=1713799229; c=relaxed/simple;
+	bh=8HaVfJKvqWGHvcxPN33NHmNUUwHk6gqR8TII4nLb7v8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PW60hQyYDN30s72eA6xcvVEyhwz8hSFddXbP73h0Wl3EDc+Gg/tJucDAzWsdATNpvLyCaJvHj/VM54oPPmcH0JZAZJoRyhN0JdlyhSshzxZzXtPm9HSfvBPUAx59AqvC8m6W9GhYhg5W8kvOczJZ6PW1jxwsMRPA8HvPp9me6DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DddYxD9Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB90C113CC;
-	Mon, 22 Apr 2024 15:16:41 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=r7NSAPuEFJCpKq8OPq5K0qSKOXfh0o3DdjehbsDiN/6xL9OBpdhU3HZYXs69cJVJ5EjsLL4aky789Qct3PUdd62qqKlO3kRIHj+W1GG9MKE1slBXHSr7POHozI4DA9rJ0vlOEWe0cdY6rlH8mmkCchSVQ6izmHYGCYZL8ziq7kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXb653V/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82542C4AF08;
+	Mon, 22 Apr 2024 15:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713799009;
-	bh=xdss4el+V60V2ws+xgbpajq8iInRegrkoN8TP9o57z4=;
+	s=k20201202; t=1713799228;
+	bh=8HaVfJKvqWGHvcxPN33NHmNUUwHk6gqR8TII4nLb7v8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DddYxD9YcuuEidSLLrYzsRR3+SBt+y8BsJI9lzFM7Oh2dDlY4SIjUYUdFZXrjUwjg
-	 DvPq5dxVbuSrfeWu/L2fBW+txJx9AS5lKr/EBr0qaSErcEJnEA/Uyz9nT3L/92mTut
-	 o4dTFf4CJF/PezRBGIdcAs0tFvnlm46Lgl13kEeLFbvfwar4gLgyVCLc0JsR3Yj72H
-	 YdXfREIcykUKw6GlqJSMj3bWZyTMkJRB91aNXiagWco5GJ+Gwv91f+F8876d94qrJv
-	 qLC1BizS13XrI9+LTmn7L9mUPGHvfxVaIHmDqjBChimXf1+CNtM2C5oTR04gd/rFlN
-	 iOwKaftYRw7yg==
-Date: Mon, 22 Apr 2024 20:46:25 +0530
+	b=WXb653V/XRhG2uNOnv4FLgEEk/VB5ngoTOHIa0sbTdzBUgRUGCOr1C62BmuHNSuk4
+	 9DfEue4HChucR70C+bi+IAZPdYFOULCLTKitm+rq64gq56+MV1p5EiPL5FchNgceJG
+	 Xrz766qunLT3UfhVmp0MiH7DcyNrH3ISIDO7a5wux2LvoPbuzOt9lCJTpa7DQ43cDd
+	 sJLtpw82v9/zQjI79PqSdmUMxr6gxUp/9jRQLM11OcKZ4Lbp71QPmgj3W3DsMp1ZZ7
+	 PghdGYHuw7z9+ahjGXNzGY36mNsLSb3Lwed8LUjh2ojVk7ZhhKOlMkxDcMGC1IMTTW
+	 jFwPe2kAicn4g==
+Date: Mon, 22 Apr 2024 20:50:10 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
@@ -57,10 +57,10 @@ Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
 	Conor Dooley <conor.dooley@microchip.com>,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] PCI: qcom: Add equalization settings for 16GT/s
-Message-ID: <20240422151625.GG9775@thinkpad>
+Subject: Re: [PATCH v3 3/3] PCI: qcom: Add rx margining settings for 16GT/s
+Message-ID: <20240422152010.GH9775@thinkpad>
 References: <20240419001013.28788-1-quic_schintav@quicinc.com>
- <20240419001013.28788-3-quic_schintav@quicinc.com>
+ <20240419001013.28788-4-quic_schintav@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,102 +70,78 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240419001013.28788-3-quic_schintav@quicinc.com>
+In-Reply-To: <20240419001013.28788-4-quic_schintav@quicinc.com>
 
-On Thu, Apr 18, 2024 at 05:09:35PM -0700, Shashank Babu Chinta Venkata wrote:
+On Thu, Apr 18, 2024 at 05:09:36PM -0700, Shashank Babu Chinta Venkata wrote:
 
-PCI: qcom: Add PCIe link equalization settings for 16 GT/s
+PCI: qcom: Add RX lane margining settings for 16 GT/s data rate
 
-> GEN3_RELATED_OFFSET is being used to determine data rate of shadow
-> registers. Select data rate as 16GT/s and set appropriate equilization
-> settings to improve link stability for 16GT/s data rate.
+> Add rx lane margining settings for 16GT/s(GEN 4) data rate. These
+
+RX
+
+16 GT/s
+
+> settings improve link stability while operating at high date rates
+> and helps to improve signal quality.
 > 
-
-How about:
-
-'To improve the PCIe link stability while running at the rate of 16 GT/s, set
-the appropriate link equalization settings for both RC and EP controllers.'
-
-However, I don't understand the statement about 'GEN3_RELATED_OFFSET' and
-'shadow registers'. Please reword it to make it understandable.
-
 > Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware.h  | 12 ++++++++
->  drivers/pci/controller/dwc/pcie-qcom-common.c | 30 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  | 18 ++++++++++++++
+>  drivers/pci/controller/dwc/pcie-qcom-common.c | 24 +++++++++++++++++++
 >  drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  3 ++
->  drivers/pci/controller/dwc/pcie-qcom.c        |  3 ++
->  5 files changed, 49 insertions(+)
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        |  4 +++-
+>  5 files changed, 49 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 26dae4837462..ad771bb52d29 100644
+> index ad771bb52d29..e8c48855143f 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware.h
 > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -122,6 +122,18 @@
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+> @@ -203,6 +203,24 @@
 >  
-> +#define GEN3_EQ_CONTROL_OFF			0x8a8
-> +#define GEN3_EQ_CONTROL_OFF_FB_MODE(n)		FIELD_PREP(GENMASK(3, 0), n)
-> +#define GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE(n)	FIELD_PREP(BIT(4), n)
-> +#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC(n)	FIELD_PREP(GENMASK(23, 8), n)
-> +#define GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL(n)	FIELD_PREP(BIT(24), n)
-> +
-> +#define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF          0x8ac
-> +#define GEN3_EQ_FMDC_T_MIN_PHASE23(n)	FIELD_PREP(GENMASK(4, 0), n)
-> +#define GEN3_EQ_FMDC_N_EVALS(n)		FIELD_PREP(GENMASK(9, 5), n)
-> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA(n)	FIELD_PREP(GENMASK(13, 10), n)
-> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA(n)	FIELD_PREP(GENMASK(17, 14), n)
-> +
->  #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
->  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+>  #define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
 >  
+> +/*
+> + * GEN4 lane margining register definitions
+
+16 GT/s (GEN 4)
+
+> + */
+> +#define GEN4_LANE_MARGINING_1_OFF		0xb80
+> +#define MARGINING_MAX_VOLTAGE_OFFSET(n)		FIELD_PREP(GENMASK(29, 24), n)
+> +#define MARGINING_NUM_VOLTAGE_STEPS(n)		FIELD_PREP(GENMASK(22, 16), n)
+> +#define MARGINING_MAX_TIMING_OFFSET(n)		FIELD_PREP(GENMASK(13, 8), n)
+> +#define MARGINING_NUM_TIMING_STEPS(n)		FIELD_PREP(GENMASK(5, 0), n)
+> +
+> +#define GEN4_LANE_MARGINING_2_OFF		0xb84
+> +#define MARGINING_IND_ERROR_SAMPLER(n)		FIELD_PREP(BIT(28), n)
+> +#define MARGINING_SAMPLE_REPORTING_METHOD(n)	FIELD_PREP(BIT(27), n)
+> +#define MARGINING_IND_LEFT_RIGHT_TIMING(n)	FIELD_PREP(BIT(26), n)
+> +#define MARGINING_IND_UP_DOWN_VOLTAGE(n)	FIELD_PREP(BIT(25), n)
+> +#define MARGINING_VOLTAGE_SUPPORTED(n)		FIELD_PREP(BIT(24), n)
+> +#define MARGINING_MAXLANES(n)			FIELD_PREP(GENMASK(20, 16), n)
+> +#define MARGINING_SAMPLE_RATE_TIMING(n)		FIELD_PREP(GENMASK(13, 8), n)
+> +#define MARGINING_SAMPLE_RATE_VOLTAGE(n)	FIELD_PREP(GENMASK(5, 0), n)
+>  /*
+>   * iATU Unroll-specific register definitions
+>   * From 4.80 core version the address translation will be made by unroll
 > diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-> index dc2120ec5fef..a6f3eb4c3ee6 100644
+> index a6f3eb4c3ee6..3279314ae78c 100644
 > --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
 > +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-> @@ -16,6 +16,36 @@
->  #define QCOM_PCIE_LINK_SPEED_TO_BW(speed) \
->  		Mbps_to_icc(PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]))
+> @@ -46,6 +46,30 @@ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
 >  
-> +void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
+> +void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci)
 > +{
 > +	u32 reg;
 > +
-> +	/*
-> +	 * GEN3_RELATED_OFF is repurposed to be used with GEN4(16GT/s) rate
-> +	 * as well based on RATE_SHADOW_SEL_MASK settings on this register.
+> +	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_1_OFF);
+> +	reg = MARGINING_MAX_VOLTAGE_OFFSET(0x24) |
 
-Same comment as above.
-
-> +	 */
-> +	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
-> +	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
-> +	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
-> +	reg |= (0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
-
-Use FIELD_PREP()
-
-> +	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
-> +
-> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
-> +	reg = GEN3_EQ_FMDC_T_MIN_PHASE23(0) |
-
-You are reading 'reg' above and then overwriting immediately.
-
-> +		GEN3_EQ_FMDC_N_EVALS(0xD) |
-
-'0xd'
-
-> +		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA(0x5) |
-> +		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA(0x5);
-> +	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
-> +
-> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
-> +	reg = GEN3_EQ_CONTROL_OFF_FB_MODE(0) |
-
-Same as above.
+Same comment as previous patch. Are you doing it intentionally for some reason?
 
 - Mani
 
