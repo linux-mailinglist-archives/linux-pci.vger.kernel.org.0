@@ -1,56 +1,76 @@
-Return-Path: <linux-pci+bounces-6513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D1678AC8C1
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 11:21:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37EA28AC8E7
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 11:30:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EB381C20CCD
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 09:21:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB8FC1F21901
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 09:30:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A63E13A878;
-	Mon, 22 Apr 2024 09:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 311A654FB8;
+	Mon, 22 Apr 2024 09:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJzhJEIE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A00131BAE;
-	Mon, 22 Apr 2024 09:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49B35029A;
+	Mon, 22 Apr 2024 09:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713777626; cv=none; b=bC+cl7QpBFjrIDxDPMVdEmt+2/FEMRALdM1JNChYQ4KFTVoMFqApSCaBJBlrvil1q0eTvi0V4ktPjRL35rDw3HUwRD35zGLpwc+TEHGBQHI3bSXnWfQHNZagNFGcbOQGjyX/WT+n+oBFm4J9Kkw60TjVZmbcxJ2lADwzuO0sxCQ=
+	t=1713778217; cv=none; b=mr+PARSRvO02FRc4iE+3rzVBRMf2iO5QnETFRouGeXnQhmhOT+TL/TYq6Y6ZpfcDEOO8arjCXrlGwR60v5UU2x7YhREbT7Aknf+rk4o56k67bvl2Su0quGuDN4h1eXwqjyodQK0jDgIuVlxlFEuituKIwZ4Gt+JwXWzwchfTfHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713777626; c=relaxed/simple;
-	bh=T5tRASABoyAmF4/TwmiQdb4aSxJ5IjEe6kgVUHlghnY=;
+	s=arc-20240116; t=1713778217; c=relaxed/simple;
+	bh=EESYxXe371fcWRXjGI9bPSFEjgmbWU9a8XVa2tbzFQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T1J9NVUEboMegjPA5eL2FD5jIY+vGAjX97VuS6NdsiEX/P21C0H4YOLuuUn7JVByy2iFm2gYBvN14aUnT1+dRbxt9ega9DyQvSwZsVQbONTXO5m2QNYF/UUBbzZ6CIo4FzVjuLxEIiLOgQByikl4Ao9bYElQQESCaQcDG9rbysA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 2EF4A280108A8;
-	Mon, 22 Apr 2024 11:20:16 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 03FB34D34A; Mon, 22 Apr 2024 11:20:15 +0200 (CEST)
-Date: Mon, 22 Apr 2024 11:20:15 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: gregkh@linuxfoundation.org,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Marc Herbert <marc.herbert@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-coco@lists.linux.dev, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 1/3] sysfs: Fix crash on empty group attributes array
-Message-ID: <ZiYrzzk9Me1aksmE@wunner.de>
-References: <170863444851.1479840.10249410842428140526.stgit@dwillia2-xfh.jf.intel.com>
- <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kCzuRWycpLn+yDlxfZ8UeXiyTPtKEHutfqIIlLNXR3FLcMEUpDgfNgCMIsSZ/kNZVe16gAGUIfjEq1GkvN3E7Bg65idbfSfkxE0hTp2lSFZ2uCRvX4OQUhCOfH8v8UNIcCRndIhCXoGGM/GL/xQNHuc82FxEIEsi1x2SKFMJGCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJzhJEIE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F17BC113CC;
+	Mon, 22 Apr 2024 09:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713778216;
+	bh=EESYxXe371fcWRXjGI9bPSFEjgmbWU9a8XVa2tbzFQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GJzhJEIEdrVn3UR5wDwmgtXyJ3D1hYmqDK9ZCaV5oHq0LHAWy77vYsB5zGSsc24Ti
+	 BUEtAfqwYUlUffVIrbiGfyCWudcRomRqBKmg5sSoIL4lCpPH9a/1WVLDSZUzi2oCoo
+	 CcZjP+LCBcwW2t7PhVhXRj7ote5xbSuEN9JyQggWdxgB0LWQnggJ7tlIbQ9rvg5LPc
+	 M8lULz/DFG+nHfCzuBHecDLJ5AWL9mZ29tmDG8rE/oUOzRIy/jyime52EqZjgetPBf
+	 0iSDy5zZmctguF+py2v5ixATr2R404SpElNFrls7KAaGaoLc+Pmaix5wOHQMbYNXIJ
+	 xxZ6gFl/6iVbw==
+Date: Mon, 22 Apr 2024 11:30:09 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-tegra@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
+ EPC init callback
+Message-ID: <ZiYuIaX7ZV0exKMt@ryzen>
+References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
+ <Zf2tXgKo-gc3qy1D@ryzen>
+ <20240326082636.GG9565@thinkpad>
+ <ZgKsBoTvPWWhPO9e@ryzen>
+ <20240327055457.GA2742@thinkpad>
+ <ZgQFXsgqpeLbXMTb@ryzen>
+ <ZgW6KB73Wh1X6911@matsya>
+ <Zg5oeDzq5u3jmKIu@ryzen>
+ <20240422075521.GB9775@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,65 +79,68 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170863445442.1479840.1818801787239831650.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <20240422075521.GB9775@thinkpad>
 
-On Thu, Feb 22, 2024 at 12:40:54PM -0800, Dan Williams wrote:
-> It turns out that arch/x86/events/intel/core.c makes use of "empty"
-> attributes.
+On Mon, Apr 22, 2024 at 01:25:21PM +0530, Manivannan Sadhasivam wrote:
+> > 
+> > What I would like is more consistency between the EPF drivers.
+> > 
+> > I guess an if-statement that skips the pci_epc_map_addr() in pci-epf-test
+> > if using eDMA would make pci-epf-mhi and pci-epf-test most consistent.
+> > 
 > 
-> 	static struct attribute *empty_attrs;
+> Agree.
+
+
+> > 1) Do we want to rely on the fact that hopefully none of the iATUs in the DWC
+> > controller has configured a mapping that might mess things up for us?
+> > I don't see why the PCI/DMA address of the remote buffer, supplied to
+> > pci-epf-test via test_reg BAR, might not fall within the physical iATU window
+> > on the local EP system. (As long as the PCI EPF driver has mapped any address
+> > using pci_epc_map_addr().)
+> > 
+> > This is a big argument that EPF drivers running on a DWC-based EPC should
+> > definitely NOT call pci_epc_map_addr() needlessly when using eDMA, as it
+> > can be catastrophic. (pci-epf-test needs to be patched.)
+> > 
 > 
-> 	__init int intel_pmu_init(void)
-> 	{
-> 	        struct attribute **extra_skl_attr = &empty_attrs;
-> 	        struct attribute **extra_attr = &empty_attrs;
-> 	        struct attribute **td_attr    = &empty_attrs;
-> 	        struct attribute **mem_attr   = &empty_attrs;
-> 	        struct attribute **tsx_attr   = &empty_attrs;
-> 		...
+> Right. There is no need to do iATU translation for DMA. I avoid that in MHI
+> driver.
+
+There is no need for pci_epc_map_addr() when using DMA_SLAVE *for DWC-based
+controllers*.
+
+Are we certain that this will not break pci-epf-test for non DWC-based
+controllers?
+
+
+> > 2) Can we really assume that both pci-epf-test and pci-epf-mhi does not need
+> > to call pci_epc_map_addr() when using a DMA_SLAVE DMA controller?
+> > This seems to be designed only with DWC in mind. Other PCIe endpoint
+> > controllers might require this.
+> > (Yes, for DWC-based controllers, this definitely should be skipped, but EPF
+> > drivers are supposed to be independent from a specific EPC.)
+> > 
 > 
-> That breaks the assumption __first_visible() that expects that if
-> grp->attrs is set then grp->attrs[0] must also be set and results in
-> backtraces like:
-> 
->     BUG: kernel NULL pointer dereference, address: 00rnel mode
->     #PF: error_code(0x0000) - not-present ] PREEMPT SMP NOPTI
->     CPU: 1 PID: 1 Comm: swapper/IP: 0010:exra_is_visible+0x14/0x20
->      ? exc_page_fault+0x68/0x190
->      internal_create_groups+0x42/0xa0
->      pmu_dev_alloc+0xc0/0xe0
->      perf_event_sysfs_init+0x580000000000 ]---
->     RIP: 0010:exra_is_visible+0x14/0
-> 
-> Check for non-empty attributes array before calling is_visible().
-[...]
-> --- a/fs/sysfs/group.c
-> +++ b/fs/sysfs/group.c
-> @@ -33,10 +33,10 @@ static void remove_files(struct kernfs_node *parent,
->  
->  static umode_t __first_visible(const struct attribute_group *grp, struct kobject *kobj)
->  {
-> -	if (grp->attrs && grp->is_visible)
-> +	if (grp->attrs && grp->attrs[0] && grp->is_visible)
->  		return grp->is_visible(kobj, grp->attrs[0], 0);
->  
-> -	if (grp->bin_attrs && grp->is_bin_visible)
-> +	if (grp->bin_attrs && grp->bin_attrs[0] && grp->is_bin_visible)
->  		return grp->is_bin_visible(kobj, grp->bin_attrs[0], 0);
->  
->  	return 0;
+> For TEST yes, but for MHI, no. In MHI, I kind of mix both iATU and DMA to ripe
+> most of the performance (small vs big transactions). But for the TEST driver, it
+> is fair to not call pci_epc_map_addr() when DMA_SLAVE is supported.
 
-I'm wondering why 0 is returned by default and not SYSFS_GROUP_INVISIBLE.
+I agree that we should definitely skip pci_epc_map_addr() in pci-epf-test when
+using DMA_SLAVE on DWC-based controllers, but I don't feel comfortable in
+submitting a patch that does this unconditionally for pci-epf-test.c,
+as I don't know how the DMA hardware in:
+drivers/pci/controller/cadence/pcie-cadence-ep.c
+drivers/pci/controller/pcie-rcar-ep.c
+drivers/pci/controller/pcie-rockchip-ep.c
 
-An empty attribute list (containing just the NULL sentinel) will now
-result in the attribute group being visible as an empty directory.
+works, and I do not want to regress them.
 
-I thought the whole point was to hide such empty directories.
+I did suggest that DWC-based drivers could set a DMA_SLAVE_SKIP_MEM_MAP flag
+or similar when registering the eDMA, which pci-epf-test then could check,
+but I got no response if anoyone else thought that this was a good idea.
 
-Was it a conscious decision to return 0?
-Did you expect breakage if SYSFS_GROUP_INVISIBLE is returned?
 
-Thanks,
-
-Lukas
+Kind regards,
+Niklas
 
