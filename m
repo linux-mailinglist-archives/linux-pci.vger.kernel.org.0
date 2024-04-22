@@ -1,250 +1,174 @@
-Return-Path: <linux-pci+bounces-6544-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6545-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C4C68AD868
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 01:03:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31FFD8AD897
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 01:07:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 946C1B24747
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 23:03:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 684A8B244E2
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 23:07:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C45CA181326;
-	Mon, 22 Apr 2024 22:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 116D21A38EA;
+	Mon, 22 Apr 2024 22:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMuEuw3R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d5lJ08Xp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F531181325
-	for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 22:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAF81BED72
+	for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 22:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713826377; cv=none; b=REZYejGWINCF8yW+8gRWa0JguNCqIPlWeXXxDF/i1orZF3MPnBADsARvpCykXWK+W6sZBxYwxDkwTe06DZ1JvgByKK0irFnPq5IB767DyarRLV4WxiXHnr7MgRFd35q6NCW6wBrgxqNBGzEVNKeNDdXfQXdc4eWK0sI0IS5nwbc=
+	t=1713826703; cv=none; b=DNSCAndb/3VKNEGZ4pCg3mHsZ33mpxTZaBaMT4kmkzJDyUKFBTcyqE8P58f/6zVFbuVcSbOOEyy5sHsWVJyVWzWoycT6bSAmOGeHD3MU6X/Xsu9fEmnOJNVfXt4wvSWoRM6VUEGXvFG7w1uWHvjSTKgV2ryrTPeAP01umJm2PGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713826377; c=relaxed/simple;
-	bh=WA2HzIxe19OolAiE2Ffa22JSNPMSIdh8a4ZUV4ljiak=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NLCXmid3YcseeYpBCu/884ipYm3ju+Qt5685zrZWBamTfrOj4yOFW4E8AnmH+Z4AaGp1G3LVcuxifAsvW9HeqxSMq0uloi12PzT3Io33Cjsmtk8cHJ3dQpgutClFa0JFmB4VUx2KmsBzyEcxbeIcYm9RLBW2a1eGQrBBHzgn4UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMuEuw3R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01D6C2BD11;
-	Mon, 22 Apr 2024 22:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713826377;
-	bh=WA2HzIxe19OolAiE2Ffa22JSNPMSIdh8a4ZUV4ljiak=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=MMuEuw3Rq8WVZZRJaOngg4dWZ3qN02X92RsSOI9DZ02pREpSEHvTLL4DFK4uZxCDy
-	 xWRsgCVXVWzFyoGNgCHjooqQA9q4VWSdzyDOzHSMTG7CUyfT2spkGiQL+xKrPqFYni
-	 ifAQNMlBJDpN+ptjWZrfniEP8dPcD+wQmhjEvMYZypqTOF0YJX083awKXmNf3/Hurh
-	 t1p3ct+1vDxs/y7mHsYZZunqNzdaqzG9MJZdmYwP616pS6p0D/SAka5XYrunINJgBA
-	 wUIvFXOfq2IXpLnppVomlyF0T7bZrVKu2Pb2goB4iWu5uBhM6QkYRRo9eSj6vNy6R4
-	 34m4Q/hgKu4aA==
-Date: Mon, 22 Apr 2024 17:52:55 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-Cc: linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] Documentation: PCI: add vmd documentation
-Message-ID: <20240422225255.GA419484@bhelgaas>
+	s=arc-20240116; t=1713826703; c=relaxed/simple;
+	bh=thOoIj8H0LNVaMm+8xqbhoPN1/fKkLQssvNM5xvvzCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qGtGr2IZJqzEDfWUhUPYk6XnhvS15dSNZ/dt0tPKf5oEaWr6MI2U1D5gGTPS/NB1cx3Cz/Zoln0GCBj4cw+Dt5FmBlFGWdYyz5yfD445dH3nktVMePzVOITlpQxFMGx59sstpGJTCvqiJXquOODYkFh8kepXI2lc0lj0Ml7j6xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d5lJ08Xp; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so6052226e87.2
+        for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 15:58:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713826699; x=1714431499; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CGGnNleS6pq8ROfMjbtk13lB1tYV2wW+fjvh+BoINVM=;
+        b=d5lJ08Xpr0SkTGHTL1qmpgJfmDeGFBTPgGWiuqHg/w8wb8DSV1/8WgQHeMVm9yNnwG
+         K5E2GfZvIkSgn+WSd7U8fBkeNQHd/VmI241ffclockxN5zo1ML3wvtm82B6Jj5Erougt
+         NFlD4Mebm+Re6/fC29UBY+tINbc2MnKOtI1X/MIe+gMsAKGswoOPZb8bRXDDuPgNmnJB
+         +7Oz8MIyWgVOpbu+YVwfUaKZKxkgr3DEkYMAXeGNIKrQe3pNgc+F8a1WvnadxoIItvpW
+         mo8SWWGsq6GcX3Q6nk8pMfjMadXFKgx7+7I0V0rCdK3/g+DMD52Ssg1MQ6BDyZpBHAKN
+         ITog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713826699; x=1714431499;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CGGnNleS6pq8ROfMjbtk13lB1tYV2wW+fjvh+BoINVM=;
+        b=bEwJnzOZMO59dkEyC5diRSR/KH/RS3s+QjG4F3NKsmVHrKfyf/XZsFeVbkSDx+pHjv
+         0qS0TeGf3X0FMCc1eB+d/pQl3GOdXUNHHaBb+GFnaUszfbXfv1inBpYHSBRDQXpR8FAM
+         virzjU4YIzXzIE0FwDswnpoJojIGCR65aWYt5bU3aXlW31u/mTDHluOFzIizuJ2yl9Ep
+         tRtJA7nWsiyYYbUyPPx0x+oSO8ICf8oodU0aYDxGuahlxJtcPaYY6eXHHCbSDq44kYPE
+         2gWnCk9EsheBFpnIKgqYdyJB4EQ6/Gr+8Gw/Q7XVJ213tYh7RKfPiuz7xAEu1HRM14FI
+         emOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7qnMn82VREx8punF5qUBURyfKJej/Mo1zU51mRKoBBEU/VXwuVnRmYf5DiJw7Q/wGIVWRqXgaZ9VqtmmYdKeUbrnLBaF0mUo6
+X-Gm-Message-State: AOJu0YyrsMyNSKhURairN6ygSGzmxP7S4lY5p3AiDk90InqUMDSKqxFi
+	oKm06sSzTPieqV5lJdJKhREu8+YX4GSM8Qni0KftisCG23svdeJIu3LkHG/YLFk=
+X-Google-Smtp-Source: AGHT+IE3JW5i0TZ/iw0u6mb9hzFt2DO7Qxo8mdGCoGs95SLJhdave1LdDOaJnsu2juzz/HsQwMOSnQ==
+X-Received: by 2002:ac2:455c:0:b0:51a:f362:ab2a with SMTP id j28-20020ac2455c000000b0051af362ab2amr4280647lfm.59.1713826699464;
+        Mon, 22 Apr 2024 15:58:19 -0700 (PDT)
+Received: from [172.30.204.103] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id f13-20020a056512360d00b0051ad4552454sm1217213lfs.148.2024.04.22.15.58.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Apr 2024 15:58:19 -0700 (PDT)
+Message-ID: <02ae9e6b-b652-433e-b36d-e6106d4fbcd1@linaro.org>
+Date: Tue, 23 Apr 2024 00:58:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ba96aab-10ee-41b4-988b-2609b4d39f33@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] PCI: qcom: Add rx margining settings for 16GT/s
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
+ agross@kernel.org, andersson@kernel.org, mani@kernel.org
+Cc: quic_msarkar@quicinc.com, quic_kraravin@quicinc.com,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Serge Semin <fancer.lancer@gmail.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20240419001013.28788-1-quic_schintav@quicinc.com>
+ <20240419001013.28788-4-quic_schintav@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240419001013.28788-4-quic_schintav@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 22, 2024 at 02:39:16PM -0700, Paul M Stillwell Jr wrote:
-> On 4/22/2024 1:27 PM, Bjorn Helgaas wrote:
-> > On Fri, Apr 19, 2024 at 03:18:19PM -0700, Paul M Stillwell Jr wrote:
-> > > On 4/19/2024 2:14 PM, Bjorn Helgaas wrote:
-> > > > On Thu, Apr 18, 2024 at 02:51:19PM -0700, Paul M Stillwell Jr wrote:
-> > > > > On 4/18/2024 11:26 AM, Bjorn Helgaas wrote:
-> > > > > > On Wed, Apr 17, 2024 at 01:15:42PM -0700, Paul M Stillwell Jr wrote:
-> > > > > > > Adding documentation for the Intel VMD driver and updating the index
-> > > > > > > file to include it.
-> > 
-> > > > > >      - Which devices are passed through to a virtual guest and enumerated
-> > > > > >        there?
-> > > > > 
-> > > > > All devices under VMD are passed to a virtual guest
-> > > > 
-> > > > So the guest will see the VMD Root Ports, but not the VMD RCiEP
-> > > > itself?
-> > > 
-> > > The guest will see the VMD device and then the vmd driver in the guest will
-> > > enumerate the devices behind it is my understanding
-> > > 
-> > > > > >      - Where does the vmd driver run (host or guest or both)?
-> > > > > 
-> > > > > I believe the answer is both.
-> > > > 
-> > > > If the VMD RCiEP isn't passed through to the guest, how can the vmd
-> > > > driver do anything in the guest?
-> > > 
-> > > The VMD device is passed through to the guest. It works just like bare metal
-> > > in that the guest OS detects the VMD device and loads the vmd driver which
-> > > then enumerates the devices into the guest
-> > 
-> > I guess it's obvious that the VMD RCiEP must be passed through to the
-> > guest because the whole point of
-> > https://lore.kernel.org/linux-pci/20240408183927.135-1-paul.m.stillwell.jr@intel.com/
-> > is to do something in the guest.
-> > 
-> > It does puzzle me that we have two copies of the vmd driver (one in
-> > the host OS and another in the guest OS) that think they own the same
-> > physical device.  I'm not a virtualization guru but that sounds
-> > potentially problematic.
-> > 
-> > > > IIUC, the current situation is "regardless of what firmware said, in
-> > > > the VMD domain we want AER disabled and hotplug enabled."
-> > > 
-> > > We aren't saying we want AER disabled, we are just saying we want hotplug
-> > > enabled. The observation is that in a hypervisor scenario AER is going to be
-> > > disabled because the _OSC bits are all 0.
-> > 
-> > 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features") is saying
-> > we want AER disabled for the VMD domain, isn't it?
+
+
+On 4/19/24 02:09, Shashank Babu Chinta Venkata wrote:
+> Add rx lane margining settings for 16GT/s(GEN 4) data rate. These
+> settings improve link stability while operating at high date rates
+> and helps to improve signal quality.
 > 
-> I don't see it that way, but maybe I'm misunderstanding something. Here is
-> the code from that commit (only the portion of interest):
+> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+> ---
+>   drivers/pci/controller/dwc/pcie-designware.h  | 18 ++++++++++++++
+>   drivers/pci/controller/dwc/pcie-qcom-common.c | 24 +++++++++++++++++++
+>   drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
+>   drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 +++-
+>   drivers/pci/controller/dwc/pcie-qcom.c        |  4 +++-
+>   5 files changed, 49 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index ad771bb52d29..e8c48855143f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -203,6 +203,24 @@
+>   
+>   #define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
+>   
 > +/*
-> + * Since VMD is an aperture to regular PCIe root ports, only allow it to
-> + * control features that the OS is allowed to control on the physical PCI
-> bus.
+> + * GEN4 lane margining register definitions
 > + */
-> +static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
-> +                                      struct pci_host_bridge *vmd_bridge)
-> +{
-> +       vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-> +       vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-> +       vmd_bridge->native_aer = root_bridge->native_aer;
-> +       vmd_bridge->native_pme = root_bridge->native_pme;
-> +       vmd_bridge->native_ltr = root_bridge->native_ltr;
-> +       vmd_bridge->native_dpc = root_bridge->native_dpc;
-> +}
+> +#define GEN4_LANE_MARGINING_1_OFF		0xb80
+> +#define MARGINING_MAX_VOLTAGE_OFFSET(n)		FIELD_PREP(GENMASK(29, 24), n)
+> +#define MARGINING_NUM_VOLTAGE_STEPS(n)		FIELD_PREP(GENMASK(22, 16), n)
+> +#define MARGINING_MAX_TIMING_OFFSET(n)		FIELD_PREP(GENMASK(13, 8), n)
+> +#define MARGINING_NUM_TIMING_STEPS(n)		FIELD_PREP(GENMASK(5, 0), n)
 > +
-> 
-> When I look at this, we are copying whatever is in the root_bridge to the
-> vmd_bridge.
+> +#define GEN4_LANE_MARGINING_2_OFF		0xb84
+> +#define MARGINING_IND_ERROR_SAMPLER(n)		FIELD_PREP(BIT(28), n)
+> +#define MARGINING_SAMPLE_REPORTING_METHOD(n)	FIELD_PREP(BIT(27), n)
+> +#define MARGINING_IND_LEFT_RIGHT_TIMING(n)	FIELD_PREP(BIT(26), n)
+> +#define MARGINING_IND_UP_DOWN_VOLTAGE(n)	FIELD_PREP(BIT(25), n)
+> +#define MARGINING_VOLTAGE_SUPPORTED(n)		FIELD_PREP(BIT(24), n)
+> +#define MARGINING_MAXLANES(n)			FIELD_PREP(GENMASK(20, 16), n)
+> +#define MARGINING_SAMPLE_RATE_TIMING(n)		FIELD_PREP(GENMASK(13, 8), n)
+> +#define MARGINING_SAMPLE_RATE_VOLTAGE(n)	FIELD_PREP(GENMASK(5, 0), n)
 
-Right.  We're copying the results of the _OSC that applies to the VMD
-RCiEP (not an _OSC that applies to the VMD domain).
+That's a.. rather unusual.. use of FIELD_/GENMASK.. Usually, the fields are
+defined with GENMASK and then referenced through FIELD_xyz(BITFIELD_NAME, val)
 
-> In a bare metal scenario, this is correct and AER will be whatever
-> the BIOS set up (IIRC on my bare metal system AER is enabled).
+That said, I'm not entirely against this if Mani is ok with it
 
-I think the first dmesg log at
-https://bugzilla.kernel.org/show_bug.cgi?id=215027 is from a host OS:
+>   /*
+>    * iATU Unroll-specific register definitions
+>    * From 4.80 core version the address translation will be made by unroll
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> index a6f3eb4c3ee6..3279314ae78c 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-common.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+> @@ -46,6 +46,30 @@ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
+>   }
+>   EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
+>   
+> +void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci)
+> +{
+> +	u32 reg;
+> +
+> +	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_1_OFF);
+> +	reg = MARGINING_MAX_VOLTAGE_OFFSET(0x24) |
+> +		MARGINING_NUM_VOLTAGE_STEPS(0x78) |
+> +		MARGINING_MAX_TIMING_OFFSET(0x32) |
+> +		MARGINING_NUM_TIMING_STEPS(0x10);
+> +	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_1_OFF, reg);
 
-  [    0.000000] DMI: Dell Inc. Dell G15 Special Edition 5521/, BIOS 0.4.3 10/20/2021
-  [    0.408990] ACPI: PCI Root Bridge [PC00] (domain 0000 [bus 00-e0])
-  [    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-  [    0.412207] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR]
-  [    1.367220] vmd 0000:00:0e.0: PCI host bridge to bus 10000:e0
-  [    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
+Since this is DW-common, why is this inside the qcom driver?
 
-We evaluated _OSC for domain 0000 with OSC_QUERY_ENABLE ("Query
-Support Flag" in the specs) and learned the platform doesn't support
-AER, so we removed that from the features we request.  We don't
-request control of AER in domain 0000, so native_aer will be 0.  AER
-might be enabled by firmware, but the host Linux should not enable it
-in domain 0000.
-
-In domain 10000, the host Linux *does* enable AER because all new host
-bridges (including the new VMD domain 10000) assume native control to
-start with, and we update that based on _OSC results.  There's no ACPI
-device describing the VMD host bridge, so there's no _OSC that applies
-to it, so Linux assumes it owns everything.
-
-> In a hypervisor scenario the root_bridge bits will all be 0 which
-> effectively disables AER and all the similar bits.
-
-I don't think https://bugzilla.kernel.org/show_bug.cgi?id=215027
-includes a dmesg log from a hypervisor guest, so I don't know what
-happens there.
-
-The host_bridge->native_* bits always start as 1 (OS owns the feature)
-and they only get cleared if there's an _OSC that retains firmware
-ownership.
-
-> Prior to this commit all the native_* bits were set to 1 because
-> pci_init_host_bridge() sets them all to 1 so we were enabling AER et all
-> despite what the OS may have wanted. With the commit we are setting the bits
-> to whatever the BIOS has set them to.
-
-Prior to 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features"),
-the host OS owned all features in the VMD domain.  After 04b12ef163d1,
-it depended on whatever the _OSC for the VMD RCiEP said.
-
-On the Dell mentioned in that bugzilla, the domain 0000 _OSC said AER
-wasn't supported, and 04b12ef163d1 applied that to the VMD domain as
-well, so the host OS didn't enable AER in either domain.
-
-But other machines would have different answers.  On a machine that
-supports AER and grants ownership to the OS, 04b12ef163d1 would enable
-AER in both domain 0000 and the VMD domain.
-
-I don't think we know the root cause of the Correctable Errors from
-that bugzilla.  But it's likely that they would still occur on a
-machine that granted AER to the OS, and if we enable AER in the VMD
-domain, we would probably still have the flood.
-
-That's is why I think 04b12ef163d1 is problematic: it only disables
-AER in the VMD domain when AER happens to be disabled in domain 0000. 
-
-> > > > It seems like the only clear option is to say "the vmd driver owns all
-> > > > PCIe services in the VMD domain, the platform does not supply _OSC for
-> > > > the VMD domain, the platform can't do anything with PCIe services in
-> > > > the VMD domain, and the vmd driver needs to explicitly enable/disable
-> > > > services as it needs."
-> > > 
-> > > I actually looked at this as well :) I had an idea to set the _OSC bits to 0
-> > > when the vmd driver created the domain. The look at all the root ports
-> > > underneath it and see if AER and PM were set. If any root port underneath
-> > > VMD set AER or PM then I would set the _OSC bit for the bridge to 1. That
-> > > way if any root port underneath VMD had enabled AER (as an example) then
-> > > that feature would still work. I didn't test this in a hypervisor scenario
-> > > though so not sure what I would see.
-> > 
-> > _OSC negotiates ownership of features between platform firmware and
-> > OSPM.  The "native_pcie_hotplug" and similar bits mean that "IF a
-> > device advertises the feature, the OS can use it."  We clear those
-> > native_* bits if the platform retains ownership via _OSC.
-> > 
-> > If BIOS doesn't enable the VMD host bridge and doesn't supply _OSC for
-> > the domain below it, why would we assume that BIOS retains ownership
-> > of the features negotiated by _OSC?  I think we have to assume the OS
-> > owns them, which is what happened before 04b12ef163d1.
-> 
-> Sorry, this confuses me :) If BIOS doesn't enable VMD (i.e. VMD is disabled)
-> then all the root ports and devices underneath VMD are visible to the BIOS
-> and OS so ACPI would run on all of them and the _OSC bits should be set
-> correctly.
-
-Sorry, that was confusing.  I think there are two pieces to enabling
-VMD:
-
-  1) There's the BIOS "VMD enable" switch.  If set, the VMD device
-  appears as an RCiEP and the devices behind it are invisible to the
-  BIOS.  If cleared, VMD doesn't exist; the VMD RCiEP is hidden and
-  the devices behind it appear as normal Root Ports with devices below
-  them.
-
-  2) When the BIOS "VMD enable" is set, the OS vmd driver configures
-  the VMD RCiEP and enumerates things below the VMD host bridge.
-
-  In this case, BIOS enables the VMD RCiEP, but it doesn't have a
-  driver for it and it doesn't know how to enumerate the VMD Root
-  Ports, so I don't think it makes sense for BIOS to own features for
-  devices it doesn't know about.
-
-Bjorn
+Konrad
 
