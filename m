@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-6518-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B70F8ACF73
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 16:32:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3D858ACFCE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 16:45:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E52C81F216D8
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 14:32:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A141281754
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Apr 2024 14:45:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67788152199;
-	Mon, 22 Apr 2024 14:31:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B9C415217C;
+	Mon, 22 Apr 2024 14:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JREs8Q4M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lhu3AVpL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37863152191
-	for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 14:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57001514F2
+	for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 14:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713796315; cv=none; b=Z+1nCun3IM+TmJeyzPnjeY1NG4zUdK4HLUH5ko9u16/o+TlK5UCkmhUKY5i60UCjrzrjsra9au6LHvIQH4O7u/XOqzMbcwlLzdONAwAuHssX5C12Vj4IiQkJY9CLBsuZgsQTnSw/ZH2PIlHnS5PEZxkiuMcW3sAYS0MuG0lDlgU=
+	t=1713797084; cv=none; b=oNUO02KRn/TzUbUkCSIhacudCUMhEd2yjoj3s3V741L681fTcek6PWJS3drils4YnPpcWsfqJ+7LprxtyCRao40LP/8fYFQ/fmNmuk8f6u/jGiTGcwhwUQSc98NO0kC8df3+NjVaqHIorpZF7MRt1V7IUDEDv2N4OdDr4mNq7Fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713796315; c=relaxed/simple;
-	bh=Ygh4m5cCpdrw4QNncMQcx2VxNsPyT145KZ8wuVy33pk=;
+	s=arc-20240116; t=1713797084; c=relaxed/simple;
+	bh=uWsKl1wAe7kVcGq6U6naQwvSk15aE/AV9VCmlH9NuAE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eT81Bp0SdVQT6Q9i8PwPC6HQp+zO+YuBi1RDs01Cn0PjcLy5YCiYB1+sAtK1fUlTFfBaHJCQj99c/hszkKs8p4q7BpBP2mMqAPf8FUk2/LfW/CIUNAZHXB9/sMcSnvOsl/62l+q6tGzAlhnSclPBy4e+UdBiyYiW9SBw7PnV5dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JREs8Q4M; arc=none smtp.client-ip=209.85.210.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=uP+RZ4dBIyZ4e+OB8ixB0zCA8hQwZNiT6LJ7nNa7v+ew6vDvmwPSve7RvFIpYJdeGqTlGuDOkCF9sliUgTnCt5c83/XmikSiJ58E25NmnFyy+SdCpmpWJPpV7YuuYascV8OUAZ6kAjzlklHxvOSf2pJ3fHiHQ4DfttBHre9Dlpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lhu3AVpL; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ecee1f325bso3580547b3a.2
-        for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 07:31:53 -0700 (PDT)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e2c725e234so41585155ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 22 Apr 2024 07:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713796312; x=1714401112; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713797082; x=1714401882; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=I6gA3DduJ/5QN/9c3l1EeoTlW606PB+epDSKgeExDug=;
-        b=JREs8Q4MVaau6uRCIWjOyu0XuSncFGs2GV4Qh37aPbHKEi+qtsqJwRdL3uV8EfWkOj
-         up9zORgSYNkVFrhSOWafgpENUDJSsx2zS11bK9JGBZU3Tt73D2lQ21huFmm1iBs9Gw4l
-         WhQ0mKwd6eQvNfDof1W71ZFM/FvpVHihCGPnnNXZ2Jg3VV8AUJ1B3L95srdLu602wjN3
-         rb556ePbG3Z3R64pIxTdBUJPA97PNdK13AF9soALoQCdUOQ9pm6Gf/xDVhuGPSxSyc0P
-         OTglbY+EBAf6VrOy0OavmR+3PD3bC4/vRylkByPA1rkBtrxcDEr0vCYRi8ttgTh7eZhz
-         w2dA==
+        bh=LVRNChhXa7FZ9k90/6TDVi7/XDV6ST4jrfTPlduROb4=;
+        b=lhu3AVpLMOqAeeqq2ozi6/Puu3pZhvDMoarqfG2GKHmJuzNQ30EBCebevlcCVbmFGF
+         O3rz7Jq9sykVtDQ9C6ZfdJjEmZvm7LqROI+HDMhgce0EwXZd4prynwGlI99qK/ZniTG/
+         caRVrpqM6kLWBZbzWGDnsYf4rvFzazcjCUtMQ9iJu8giUISVtfRHAhNlhNQaU6IiNzVE
+         dD3Qp64WAli3yVKgzAienVIfX+STTTo9hbxKJ1GpLBKteESvBoNz38NU5NSvgm1Nvpcj
+         njle/hkn3TH0Ziyjl9eP25HGYXre6qkYTxL0BhDpPYu8YnbKmP5ekrr2YBaMEmRXwfPu
+         zFCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713796312; x=1714401112;
+        d=1e100.net; s=20230601; t=1713797082; x=1714401882;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6gA3DduJ/5QN/9c3l1EeoTlW606PB+epDSKgeExDug=;
-        b=Hr7loO0K0emqdTeusSUdt5uVdU+eu23AE2kTC0P1cSqCW8e4gEtlIDdqrZQLXcH6sG
-         o5SCqY7Omwfvr8uIq314t0/brHN2y7I1gs6oEdWyVqwlqJW0uwQAcA9nAklAkc36PzF6
-         B44k6LFL/7Yhd68FgE1XkCjAEmu8CPkGF8xkNvIGGyQAW6GXBKmmPY4LKbrSbsfmuhJT
-         /OkPvuHZbMsxNb+NZY4YcgjtyQ+c0xK+ZdtuWNvgAboUW/aqWvgvryKXne2dl0HG0trq
-         zdBOPFJhJHGAe5vrk1mYtz4RLdG2gJSZtANUzsR89KAS/NBmVxoDYJZkJAsPGMqOAb7Z
-         ptgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXT7I+UQ0KLeXpSu7nX1R1CD/Emfm26yKCIjiFP8oPYLoAITM7mHFJZ5b4zP91QfPuEn8HwTxV1TF7Smqtm9vryLwRCAxWjZuvz
-X-Gm-Message-State: AOJu0YxJoXODDl52dULNhbfi8mu/xis/3YeSWy38+8l9PNbJbZ6czaxV
-	AOeaFLwHifWY0ltkXZUsQM6z7UNqlE83Z4ZWXj5Ksb73JARvMCkQ/dNDVt9B4Q==
-X-Google-Smtp-Source: AGHT+IGN2yX1hZi9NqmP5nGDbTnPt2JRBgZs/+VkK0pGcrgVLali0lkvBAV10nf0CRDwS9U0erEjfw==
-X-Received: by 2002:a05:6a20:734d:b0:1aa:755f:1746 with SMTP id v13-20020a056a20734d00b001aa755f1746mr15651557pzc.22.1713796312334;
-        Mon, 22 Apr 2024 07:31:52 -0700 (PDT)
+        bh=LVRNChhXa7FZ9k90/6TDVi7/XDV6ST4jrfTPlduROb4=;
+        b=c2mZsVLlytOgJfgEGM9Dth2QI8MDnWrLn9uSxbRrEel0QCa4aweAgX3crlISKejP0g
+         PxINOGAQjAa+ZkN++pui9xUFzCPRqSbsYW8+7DWicL2feQxAxZgS3ExpMBjWdXCJ+qL7
+         sriDVJEWeWi7/TuFhkNkCwA5juS5cAxzks6QV2VVZkiCN/XRyXk+wstiDOpMROw0/ETU
+         mj0vpQyaFfkQxSlKN/8U9j6fZNlygkT3uGPbVoHAtToK5924EBud0GzUtzdX78KN05VJ
+         mgupTFQajBudW24ItpT59u4JIbH/Y4ECk8G/kcUeuHELrqUO8q60ks/wcsxi6w/oK4Mb
+         R25g==
+X-Forwarded-Encrypted: i=1; AJvYcCXY4ekpZcDtP1nkK5dJ/qhGdfZdwYPcE5axgYCeIHmvrDjEHDwuTTV0N+hbN8YmB7Tro5MiavGdCBIqq/Y8a60SMXXABE+MOCj9
+X-Gm-Message-State: AOJu0Yw8TTYTuqaw/H35r3Zc3G60UZVytPiDlUCXNH9+M1o4jIqf/1ye
+	Ke47zJM77HJDFQS7+Ig6WXD0F7BscpjiByg7xa19fiYG1DEt3wcVCxcDTAmzrw==
+X-Google-Smtp-Source: AGHT+IG6t5wD268CJ9WM36yr69Ky8Cqce1xxt3gCjMhfQP8IBUnGiHqPiYx8GUUBwnRLDr0gdFewlg==
+X-Received: by 2002:a17:903:2308:b0:1ea:147:d4fd with SMTP id d8-20020a170903230800b001ea0147d4fdmr243785plh.32.1713797081973;
+        Mon, 22 Apr 2024 07:44:41 -0700 (PDT)
 Received: from thinkpad ([120.60.70.118])
-        by smtp.gmail.com with ESMTPSA id f33-20020a056a000b2100b006ecee611c05sm7904647pfu.182.2024.04.22.07.31.46
+        by smtp.gmail.com with ESMTPSA id w19-20020a170902c79300b001e0c956f0dcsm8215015pla.213.2024.04.22.07.44.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 07:31:51 -0700 (PDT)
-Date: Mon, 22 Apr 2024 20:01:43 +0530
+        Mon, 22 Apr 2024 07:44:41 -0700 (PDT)
+Date: Mon, 22 Apr 2024 20:14:31 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
@@ -83,13 +83,12 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	vireshk@kernel.org, quic_vbadigan@quicinc.com,
 	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v10 2/6] PCI: qcom: Add ICC bandwidth vote for CPU to
- PCIe path
-Message-ID: <20240422143143.GD9775@thinkpad>
+	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org
+Subject: Re: [PATCH v10 4/6] arm64: dts: qcom: sm8450: Add OPP table support
+ to PCIe
+Message-ID: <20240422144431.GE9775@thinkpad>
 References: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
- <20240409-opp_support-v10-2-1956e6be343f@quicinc.com>
+ <20240409-opp_support-v10-4-1956e6be343f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,153 +98,125 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240409-opp_support-v10-2-1956e6be343f@quicinc.com>
+In-Reply-To: <20240409-opp_support-v10-4-1956e6be343f@quicinc.com>
 
-On Tue, Apr 09, 2024 at 03:43:20PM +0530, Krishna chaitanya chundru wrote:
-> To access PCIe registers of the host controller and endpoint PCIe
-> BAR space, config space the CPU-PCIe ICC (interconnect) path should
+On Tue, Apr 09, 2024 at 03:43:22PM +0530, Krishna chaitanya chundru wrote:
+> PCIe needs to choose the appropriate performance state of RPMh power
 
-'To access the host controller registers and endpoint BAR/Config space,'
+'PCIe host controller driver'
 
-> be voted otherwise it may lead to NoC (Network on chip) timeout.
-> We are surviving because of other driver voting for this path.
+> domain and interconnect bandwidth based up on the PCIe data rate.
+
+'based on the PCIe data rate'
+
 > 
-> As there is less access on this path compared to PCIe to mem path
-> add minimum vote i.e 1KBps bandwidth always which is sufficient enough
-> to keep the path active and is recommended by HW team.
-> 
-> In suspend to ram case there can be some DBI access. Except in suspend
-> to ram case disable CPU-PCIe ICC path after register space access
-> is done.
-> 
+> Add the OPP table support to specify RPMh performance states and
 
-During S2RAM (Suspend-to-RAM), DBI access can happen very late (while disabling
-the boot CPU). So do not disable the CPU-PCIe interconnect path during S2RAM as
-that may lead to NoC error.
+'Hence, add...'
 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> interconnect peak bandwidth.
+> 
+> Different link configurations may share the same aggregate bandwidth,
+
+'It should be noted that the different...'
+
+> e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same bandwidth
+> and share the same OPP entry.
+> 
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 43 ++++++++++++++++++++++++++++++----
->  1 file changed, 39 insertions(+), 4 deletions(-)
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 77 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 14772edcf0d3..e53422171c01 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -245,6 +245,7 @@ struct qcom_pcie {
->  	struct phy *phy;
->  	struct gpio_desc *reset;
->  	struct icc_path *icc_mem;
-> +	struct icc_path *icc_cpu;
->  	const struct qcom_pcie_cfg *cfg;
->  	struct dentry *debugfs;
->  	bool suspended;
-> @@ -1409,6 +1410,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	if (IS_ERR(pcie->icc_mem))
->  		return PTR_ERR(pcie->icc_mem);
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index 615296e13c43..9dfe16012726 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -1855,7 +1855,35 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pcie0_default_state>;
 >  
-> +	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
-> +	if (IS_ERR(pcie->icc_cpu))
-> +		return PTR_ERR(pcie->icc_cpu);
->  	/*
->  	 * Some Qualcomm platforms require interconnect bandwidth constraints
->  	 * to be set before enabling interconnect clocks.
-> @@ -1418,7 +1422,20 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	 */
->  	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
->  	if (ret) {
-> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> +		dev_err(pci->dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n",
-
-'Failed to set bandwidth for PCIe-MEM interconnect path: %d\n'
-
-> +			ret);
-> +		return ret;
-> +	}
+> +			operating-points-v2 = <&pcie0_opp_table>;
 > +
-> +	/*
-> +	 * Since the CPU-PCIe path is only used for activities like register
-> +	 * access of the host controller and endpoint Config/BAR space access,
-> +	 * HW team has recommended to use a  minimal bandwidth of 1KBps just to
+>  			status = "disabled";
+> +
+> +			pcie0_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				/* GEN 1 x1 */
+> +				opp-2500000 {
+> +					opp-hz = /bits/ 64 <2500000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <250000 1>;
+> +				};
+> +
+> +				/* GEN 2 x1 */
+> +				opp-5000000 {
+> +					opp-hz = /bits/ 64 <5000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <500000 1>;
+> +				};
+> +
+> +				/* GEN 3 x1 */
+> +				opp-8000000 {
+> +					opp-hz = /bits/ 64 <8000000>;
 
-Single space after 'a'
+I doubt this value. See below...
 
-> +	 * keep the path active.
-> +	 */
-> +	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
-> +	if (ret) {
-> +		dev_err(pci->dev, "Failed to set interconnect bandwidth for CPU-PCIe: %d\n",
-
-'Failed to set bandwidth for CPU-PCIe interconnect path: %d\n'
-
->  			ret);
->  		return ret;
->  	}
-> @@ -1448,7 +1465,7 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +					opp-peak-kBps = <984500 1>;
+> +				};
+> +			};
+> +
+>  		};
 >  
->  	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
->  	if (ret) {
-> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> +		dev_err(pci->dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n",
-
-'Failed to set bandwidth for PCIe-MEM interconnect path: %d\n'
-
->  			ret);
->  	}
->  }
-> @@ -1610,7 +1627,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->  	 */
->  	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
->  	if (ret) {
-> -		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
-> +		dev_err(dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n", ret);
-
-'Failed to set bandwidth for PCIe-MEM interconnect path: %d\n'
-
->  		return ret;
->  	}
+>  		pcie0_phy: phy@1c06000 {
+> @@ -1982,7 +2010,56 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pcie1_default_state>;
 >  
-> @@ -1634,7 +1651,17 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->  		pcie->suspended = true;
->  	}
->  
-> -	return 0;
-> +	/*
-> +	 * In suspend to ram case there are DBI access, except in suspend to ram case
-> +	 * remove the vote for CPU-PCIe path now, since at this point onwards,
-> +	 * no register access will be done.
-> +	 */
+> +			operating-points-v2 = <&pcie1_opp_table>;
+> +
+>  			status = "disabled";
+> +
+> +			pcie1_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
+> +				/* GEN 1 x1 */
+> +				opp-2500000 {
+> +					opp-hz = /bits/ 64 <2500000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <250000 1>;
+> +				};
+> +
+> +				/* GEN 1 x2 GEN 2 x1 */
+> +				opp-5000000 {
+> +					opp-hz = /bits/ 64 <5000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <500000 1>;
+> +				};
+> +
+> +				/* GEN 2 x2 */
+> +				opp-10000000 {
+> +					opp-hz = /bits/ 64 <10000000>;
+> +					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <1000000 1>;
+> +				};
+> +
+> +				/* GEN 3 x1 */
+> +				opp-8000000 {
+> +					opp-hz = /bits/ 64 <8000000>;
 
-	/*
-	 * Only disable CPU-PCIe interconnect path if the suspend is non-S2RAM.
-	 * Because on some platforms, DBI access can happen very late during the
-	 * S2RAM and a non-active CPU-PCIe interconnect path may lead to NoC
-	 * error.
-	 */
+GEN 3 x1 frequency is lower than GEN 2 x2? This looks strange. Both should be of
+same frequency.
 
-> +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
-> +		ret = icc_disable(pcie->icc_cpu);
-> +		if (ret)
-> +			dev_err(dev, "Failed to disable Interconnect path of CPU-PCIe: %d\n", ret);
+> +					required-opps = <&rpmhpd_opp_nom>;
+> +					opp-peak-kBps = <984500 1>;
+> +				};
+> +
+> +				/* GEN 3 x2 GEN 4 x1 */
 
-'Failed to disable CPU-PCIe interconnect path: %d\n'
-
-> +	}
-> +	return ret;
->  }
->  
->  static int qcom_pcie_resume_noirq(struct device *dev)
-> @@ -1642,6 +1669,14 @@ static int qcom_pcie_resume_noirq(struct device *dev)
->  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
->  	int ret;
->  
-> +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
-> +		ret = icc_enable(pcie->icc_cpu);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to enable Interconnect path of CPU-PCIe: %d\n", ret);
-
-'Failed to enable CPU-PCIe interconnect path: %d\n'
+'GEN 3 x2 and GEN 4 x1'
 
 - Mani
 
