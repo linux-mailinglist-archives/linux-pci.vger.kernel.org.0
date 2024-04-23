@@ -1,178 +1,143 @@
-Return-Path: <linux-pci+bounces-6581-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6582-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 470FF8AEAF1
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 17:24:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 340CB8AEB2B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 17:32:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECC1C1F23718
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 15:24:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55F0A1C216DF
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 15:32:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA6113C3C7;
-	Tue, 23 Apr 2024 15:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oCsfVJTT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40B8313C80C;
+	Tue, 23 Apr 2024 15:32:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8DE5820E;
-	Tue, 23 Apr 2024 15:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F2686273;
+	Tue, 23 Apr 2024 15:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713885846; cv=none; b=mS4+dr9uAQyeaWf4F91Vu7E01+U6fd/EZ6QLrBBlMW4v+KtIfA/GFTa5NzV2HEMtQmVi4XWS6t/wwbwxqo69welVd2cCmYC7vtzqfzfjo/unisXpOdRG60K9RnQPESsq9t4azVgemLiaSH1pvd/Q15YO2W1EVauFzHnhGSqa8as=
+	t=1713886336; cv=none; b=tNKgtB6B93n2WBbG7kwJDneKmvObraaQJcvomhCM1SHOynqgF/AgT5Dsa70ayaSMUqsJGXU+RwEMn672LndvqEuIhsoQaR6JA1+FNNTTf/LRaRCD/LaMJs07mmRtccmhZc/ERV0TX/3Xv6NGDE9bCAFCnwUFo7dZEe5Vnu6f7O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713885846; c=relaxed/simple;
-	bh=mD0vvUwgdC13kb4/PXO2KQ82sAyp3j2+v63zyLz5Ris=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H0G8UPOhvYlCd2zmDDTohWumR+LiAS6azymN51D41u4wnKvLqFDupeUruDJO1zs2kvVoq7wt7R2lZU+bZgju5nVs/I4K+U/7PvGdbaM9osegBotaEKoAdT95Ct+GT9eXVdqtN/XcML7UCoI+VIGNHZPhvslRV4Fr5iJ8HEvE8Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oCsfVJTT; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713885844; x=1745421844;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mD0vvUwgdC13kb4/PXO2KQ82sAyp3j2+v63zyLz5Ris=;
-  b=oCsfVJTTyMdwi1Y7ZO8J66sR1FA5lmh4lzCLfTrxonVLpw9cDCx/IHme
-   iXDPN/k3jaop83LN3TPpfbssSxzAnK3kNYNU8JDGZRYM5zZFrq9UIO+Zy
-   eZLnsXQdjCEN+K7sR0wznZ/CxE9MgYwgJNt2wqRuAo/uyTukUxrFGSKFJ
-   XN2evV0ZRu20WJnpCWhQshiNqGK1Kj+cDcM/OPREDcrO4T85v2+7Q4/xO
-   Zl8OtovZYhh/kAHrPraPlFFilPLCdmQvP5z2wwW8H9kyYf30ctUP2/XTO
-   4I6M9JtaV7BUmos8fLyjOTemnYrAee3zT7jzzluiJSojvJ0stjQLfGmYl
-   w==;
-X-CSE-ConnectionGUID: dTvUyiMzSoW9QfJEEYzIlg==
-X-CSE-MsgGUID: Y97Sd2eaRG2j3SUdlhoarA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13262477"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="13262477"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 08:24:03 -0700
-X-CSE-ConnectionGUID: lKSM7utiRrOhAMNiblA3QA==
-X-CSE-MsgGUID: SSpv677+TW+q4Epka+axrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24440874"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.108.21]) ([10.212.108.21])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 08:24:03 -0700
-Message-ID: <c7a6bcb9-5727-46c0-8efb-6430604cd344@intel.com>
-Date: Tue, 23 Apr 2024 08:24:02 -0700
+	s=arc-20240116; t=1713886336; c=relaxed/simple;
+	bh=Axa3Mn5+KVTK6qIzldvrgQzSEYO2/lcirqLJInKyRG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GZXUHKad3OyzKN5sXvMkdcCwHi/SC+qdEiHlkpBu2RC39c/65eVwFVLgqCaKD0yxWm9nxqE7vzg9cGu2cc/n8sXv6gCB0IH4N4+gwcLp6Ao0P/rt5gYcjdPVX0csfc+Zwww0OvvARN5u9n7k5snp8/ROvx7LcmHdmMD3hQDFlTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61816fc256dso50988897b3.0;
+        Tue, 23 Apr 2024 08:32:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713886333; x=1714491133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pCFrzV7qoH1GMPZYbyZsRzzURQK7cGFU6Wp+TTcFvr8=;
+        b=LPth/cZFk4JlInnptjMDl2XXrxBuMp0XvL4yz+QzMwOw+nQtJnNxU6IvnOtkHNc26g
+         r9Dsdbd1RCRnGCFLbPbtbpU+ComM9edt8DNvVWY+mVi69/tQM/Q2USepwH3CsauSfZ9E
+         8exeAQQQQppYsLSrrz5XTkAEV2rRg73eMmQ5p3MyR3zVSBjvdCMOrk1tua83g4WSld/t
+         G4aiJ/8uvsFwDgJ6Bsve8MnyL78nzphgOt3ns2KOPA6ljKo5pPAeDG1T2KuJnt9JeXMS
+         Cm8teEftdPyUAw6hasL1/6DLyB5YdYc7DcWLwKHaV7dW6tB5VOu+HQCXTCl9K4D9kA8P
+         PXGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Vti+OI5iSIThtBBjC6Chrsdy7O4OEQNRvPLTCumRwOTuJLD5zxzGA4u/7GRbgZeyd/zojaC9pFjziwq/YLzKiWpgfRxHO/f7kClseyR0dQc5vUA/HnCK6hsnlrS2fuuu9YiSIwf0X5CIRmXTQYLHR4h80VlJP2HDo9kf/Q/ztw6ImdQqlRwyANXZYO7kVASOVF+j3ZLvBwXKY7w3mEiuvMhMi1Ki6eWlaWGnH808ZQO0OVKzlHLZNK9gPuz/y0kzX5SRmQOpW5sOuyo7dKWrFoMhXotd02GAZ1suCw==
+X-Gm-Message-State: AOJu0YzgtujE/L709zM1lFPaeDlAMuS5nUCbJ3TtZPrjo6NHsudG/Cvq
+	GfMAJYIMAaYua5dSWK3IevJZh2dw+E4v7jWNtHEVtsizwisZ6Paid/fXetzm
+X-Google-Smtp-Source: AGHT+IEn9o9kwpQ21sUDm3boQ5gEGYvUxHSf9p6oYyBqPVpgAQDC1EghII1JwoT01XsucnyZNFnveA==
+X-Received: by 2002:a05:690c:61c6:b0:61b:1a4f:158b with SMTP id hk6-20020a05690c61c600b0061b1a4f158bmr13675592ywb.6.1713886331234;
+        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id z12-20020a81ac4c000000b00617f1b4943esm2480486ywj.106.2024.04.23.08.32.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso5760935276.2;
+        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVI4gBTrDCBV79aoDQ+Z2jvbLk16BClJTyYYOHXBbHU8Dw6HZCDo28WffVKQpmrv7wzQliCHqJ0khwkjoH/BrxdVBlBuyiLZRkb+HuKTWWexZ0C2P7teEWKhR/F2i4ol7O9imDwzh12qvMGkwVfPbXI2S+iVhDSlPEmrxQl/jpA20Mmt9caMzgK+7T3Y+xQ8W9WKB7nFoZAkeTTTbv1Iixy2777zCnQaTNfLmalj6hUQqeCtPncVGQz4zwJKMWH+DChm1sbM90hIcRf31RUNGRC/jTHghxzSNZd4vI/UA==
+X-Received: by 2002:a25:86c7:0:b0:de0:d45f:7c5 with SMTP id
+ y7-20020a2586c7000000b00de0d45f07c5mr11933981ybm.20.1713886329809; Tue, 23
+ Apr 2024 08:32:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] cxl/core/regs: Add rcd_regs initialization at
- __rcrb_to_component()
-To: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Cc: "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "mj@ucw.cz" <mj@ucw.cz>, "dan.j.williams@intel.com"
- <dan.j.williams@intel.com>
-References: <20240412070715.16160-1-kobayashi.da-06@fujitsu.com>
- <20240412070715.16160-2-kobayashi.da-06@fujitsu.com>
- <dcf61e50-2a56-4e1e-a21d-c887e3c07427@intel.com>
- <OSAPR01MB71823658767F3088CDA09489BA112@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <OSAPR01MB71823658767F3088CDA09489BA112@OSAPR01MB7182.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com> <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+ <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com> <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
+In-Reply-To: <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 23 Apr 2024 17:31:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV3NbCHchm9eHhGQNuvzmdwuP_fdt31m7vNY7Cp2-3-=Q@mail.gmail.com>
+Message-ID: <CAMuHMdV3NbCHchm9eHhGQNuvzmdwuP_fdt31m7vNY7Cp2-3-=Q@mail.gmail.com>
+Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Thomas,
 
+On Tue, Apr 23, 2024 at 12:53=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> On 4/23/24 12:34, Andy Shevchenko wrote:
+> > On Tue, Apr 23, 2024 at 12:42=E2=80=AFPM Geert Uytterhoeven
+> > <geert@linux-m68k.org> wrote:
+> >> On Tue, Apr 16, 2024 at 3:31=E2=80=AFPM Thomas Richard
+> >> <thomas.richard@bootlin.com> wrote:
+> >
+> > ...
+> >
+> >>         +i2c-rcar e66d8000.i2c: error -16 : 10000005
+> >
+> > It probably means that I=C2=B2C host controller is already in power off
+> > mode and can't serve anymore.
+>
+> Yes the i2c controller is already off.
+> In fact it's the same issue I had with the i2c-omap driver.
+> In suspend-noirq, the runtime pm is disabled, so you can't wakeup a
+> device. More details available in this thread [1].
+> So the trick is to wakeup the device during suspend (like I did for the
+> i2c-omap driver [2].
+>
+> [1]
+> https://lore.kernel.org/all/f68c9a54-0fde-4709-9d2f-0d23a049341b@bootlin.=
+com/
+> [2]
+> https://lore.kernel.org/all/20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@boo=
+tlin.com/
+>
+> I think the patch below should fix the issue.
 
-On 4/23/24 1:33 AM, Daisuke Kobayashi (Fujitsu) wrote:
-> Dave Jiang wrote:
->> On 4/12/24 12:07 AM, Kobayashi,Daisuke wrote:
->>> Add rcd_regs and its initialization at __rcrb_to_component() to cache
->>> the cxl1.1 device link status information. Reduce access to the memory
->>> map area where the RCRB is located by caching the cxl1.1 device
->>> link status information.
->>>
->>> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
->>> ---
->>>  drivers/cxl/core/regs.c | 16 ++++++++++++++++
->>>  drivers/cxl/cxl.h       |  3 +++
->>>  2 files changed, 19 insertions(+)
->>>
->>> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
->>> index 372786f80955..e0e96be0ca7d 100644
->>> --- a/drivers/cxl/core/regs.c
->>> +++ b/drivers/cxl/core/regs.c
->>> @@ -514,6 +514,8 @@ resource_size_t __rcrb_to_component(struct device
->> *dev, struct cxl_rcrb_info *ri
->>>  	u32 bar0, bar1;
->>>  	u16 cmd;
->>>  	u32 id;
->>> +	u16 offset;
->>> +	u32 cap_hdr;
->>>
->>>  	if (which == CXL_RCRB_UPSTREAM)
->>>  		rcrb += SZ_4K;
->>> @@ -537,6 +539,20 @@ resource_size_t __rcrb_to_component(struct device
->> *dev, struct cxl_rcrb_info *ri
->>>  	cmd = readw(addr + PCI_COMMAND);
->>>  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
->>>  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
->>> +	offset = FIELD_GET(GENMASK(7, 0), readw(addr +
->> PCI_CAPABILITY_LIST));
->>
->> Maybe
->> #define PCI_RCRB_CAPABILITY_LIST_ID_MASK	GENMASK(7, 0)
->>
->>> +	cap_hdr = readl(addr + offset);
->>> +	while ((cap_hdr & GENMASK(7, 0)) != PCI_CAP_ID_EXP) {
->>
->> while ((FIELD_GET(PCI_RCRB_CAP_HDR_ID_MASK, cap_hdr) !=
->> PCI_CAP_ID_EXP) {
->>
->> Also I think you need to add a check and see if the loop went beyond SZ_4K that
->> was mapped.
->>
->>> +		offset = (cap_hdr >> 8) & GENMASK(7, 0);
->>
->> #define PCI_RCRB_CAP_HDR_NEXT_MASK	GENMASK(15, 8);
->> offset = FIELD_GET(PCI_RCRB_CAP_HDR_NEXT_MASK, cap_hdr);
-> 
-> Thank you for your comment. In the next patch I will define and use additional masks.
-> 
->>> +		if (offset == 0)
->>> +			break;
->>> +		cap_hdr = readl(addr + offset);
->>> +	}
->>> +	if (offset) {
->>> +		ri->rcd_lnkcap = readl(addr + offset + PCI_EXP_LNKCAP);
->>> +		ri->rcd_lnkctrl = readl(addr + offset + PCI_EXP_LNKCTL);
->>> +		ri->rcd_lnkstatus = readl(addr + offset + PCI_EXP_LNKSTA);
->>> +	}
->>> +
->>>  	iounmap(addr);
->>>  	release_mem_region(rcrb, SZ_4K);
->>>
->>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->>> index 003feebab79b..2dc827c301a1 100644
->>> --- a/drivers/cxl/cxl.h
->>> +++ b/drivers/cxl/cxl.h
->>> @@ -647,6 +647,9 @@ cxl_find_dport_by_dev(struct cxl_port *port, const
->> struct device *dport_dev)
->>>  struct cxl_rcrb_info {
->>>  	resource_size_t base;
->>>  	u16 aer_cap;
->>> +	u16 rcd_lnkctrl;
->>> +	u16 rcd_lnkstatus;
->>> +	u32 rcd_lnkcap;
->>>  };
->>>
->>>  /**
-> 
-> Please let me know if any revisions are necessary for merging this patch.
+Thanks, I gave that a try, but it doesn't make any difference.
 
-Yes please send out a revision with updates. I'd also like to see a review tag from one of the other maintainers before merging. Thanks! 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
