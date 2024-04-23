@@ -1,80 +1,86 @@
-Return-Path: <linux-pci+bounces-6564-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6565-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99CA68AE12D
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 11:42:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EC8B8AE247
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 12:35:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE3E61C21A07
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 09:42:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08848283620
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 10:35:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACEEC59148;
-	Tue, 23 Apr 2024 09:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0FB451C5F;
+	Tue, 23 Apr 2024 10:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+iWXxHe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8761051016;
-	Tue, 23 Apr 2024 09:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482EA322A;
+	Tue, 23 Apr 2024 10:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713865349; cv=none; b=LJ/HoSt1E6m7CaSdBgu9NUQip+dLwlisyrzamlse/KXUbp79JhMd17fppnDLhhYZ6K8nrjwv9UJASlnUZM0qfEawv8RrjMyAsCt9qAzFDP1YYrp9eOv4vhlCifl6Vj6SkgERJ19srs+b3lj7gCrYLlVZzTg6yQ33C56y5/3Tl0I=
+	t=1713868500; cv=none; b=BOoFtYswEgu62SqVKYiDh89gsWNu2PvJ0tp0XBca7uBs0CtmSOy5y/ib+eKEjQUTbGb0UorQEHRO9dAA3+m5YoX3BPiEOHFj+3VWMHiXuKrWKYItChHQsOOKdhuvyt35RCN2fEO+Ydi20mW1L5LozpSA0b0mf/SFXHAhXUcHJmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713865349; c=relaxed/simple;
-	bh=SeejIbtFL3q2Ah+TgrTpf656eWgMzRmReKNJR8SEw/M=;
+	s=arc-20240116; t=1713868500; c=relaxed/simple;
+	bh=BE29/rVJCvFya+GV7ARo6mMJrICMWxGYpyyg3ySIPvU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fKPQNB3SE8ua+a0XYloNDAd5UlFsmGsc0Bo2wcTCfGGm8VI4aIxqM160gq5OAOWxr8fCdvEF1MrfrPfuDXNZY4RKDQSCKqbA2n4d4dxkjYOQ+rxNN50mrvOWbDjC5L9ONIGKZ+v5pJa730yKqJIf5NcIZcktUYk+NfU5Rdv28gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=fd/JKyqWK8SiijA0jHTVwiwwd15LXzPC1IinDk8tOOcNx4VLQM5WwjREBNMzYjQfFut8r1pcx6/hQRRBLugdq/wA2Nv4JqB+i0wwdHcYFw5n19wXWVgXWoXMoMndfhJTGeL2xlaPN5uTQNrR2FuHxXs+VtYSKr/0GxW0BuyY0II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+iWXxHe; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61816fc256dso47363617b3.0;
-        Tue, 23 Apr 2024 02:42:27 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57215beb09bso1326816a12.3;
+        Tue, 23 Apr 2024 03:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713868497; x=1714473297; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QpfHmgVTBXM1G+3QVd/pCxFW4zgJHvWXKJ+R0G1BFoM=;
+        b=i+iWXxHekub1wE3LPhLjz/AEuz779d9ST0jwdl3qgPdUHjjItQgcixOxGUDwXBrxm8
+         Vpbw2G8gjBdKkK33L48UnbvBAINNDsGjtY63mDhn0PZo0ZgHPlx2WqPiONIjLFm+JJdX
+         YDNN2peFleEqKroQRwY1YYyNCNr2vf3zwaLONQIAvTzbQcxi5fUmCvy4VMh1qlDmjtcy
+         T2SI1yWa/YFsryGQzhNw1w6hPqC5q6a6RRM2NpTUVu0qGU71wJFIgS/zSyDSxneR/KQj
+         wiUfqi/nZWAPMDlK85PTwtaMLn4hy1dVivIyAIlr7aWSfG2YPEvau5AHxXCfU6AkV6IJ
+         LeIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713865345; x=1714470145;
+        d=1e100.net; s=20230601; t=1713868497; x=1714473297;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wqVVfPd+WN3revU4fg7rebmHFdp/AiB0hyvlw5Bb61g=;
-        b=uqlflhjQyo+9UkWaG+dQ4pRyc+Mv+OpWEMAW0vD60iz9rdtwHbj+g+de5B/R6Jf2ZA
-         Id0x20wVLLl7i0iZTky0o4upJb6sCBLlvXtsXCef7jrSDQCEvprL6cTKyJ51Vi4fAdbv
-         t5T5EebEQj09IgyU0yeAJ+oWhQbaOMWzKjYX8n7FpLI4iQ67ko/Rt8I0hRJiN9/NW6xp
-         twThh+nUIe4N78sJgLJVcGzp1ZtsIVn1l8tw7bAYdda1NpJAu3L9S65AyFnE6rwD6x3Y
-         UyR/C1cVtns40GbYcuz7Oc1uLMEib1wTX4KZ1Tm6mKrA0nA+GwUMDbXh/brJ6mYxH/3T
-         X7yA==
-X-Forwarded-Encrypted: i=1; AJvYcCV/BtNrVgqwaiHe/N4MnHaMuXWSqtJNmmofUoT01/741JPnVPkp4gdFVBuP8g3lfO55cDv9TSZNFZvzjIaOC1prvNui4ctw70yIk/0Ert5vYxZsvj5zfJ+T8y3CgZlPsd4zhsM2jQM5QWGnCx4FJsIo0sitT1+8GObJ6mO7WXwRQeR4+KgAOGgWx4uzW39TXPhyMATdnEJ9LVX8e2WQHHCRCVqN1UGkyh5vN0uPbgAeiSuCDRyGLzeGnrz8lsE+Pw7FR6Nwiti53Lx8+aDdzn4QCBj9nYbDYldgWYzEFA==
-X-Gm-Message-State: AOJu0YxSF6CcvH9qT1ALkXUGgQRpZfkNTwURQ1ob9rpgEe6hQlXb+zgh
-	MBuMY5dv3mLrCbjWVbPspOGsXwwBAzRKKy/N6qgh3/usmyR5pIB2HrcwqlUB
-X-Google-Smtp-Source: AGHT+IHxjd25aXH4Pg198Wdzat7g29/g3mpyPaK2cuNtRCeV9WCFBJbFMsrV78FnEW7acppO2pJ2og==
-X-Received: by 2002:a05:690c:3501:b0:61a:fb4d:6fc3 with SMTP id fq1-20020a05690c350100b0061afb4d6fc3mr12942508ywb.35.1713865345073;
-        Tue, 23 Apr 2024 02:42:25 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id p204-20020a0de6d5000000b0061575978d53sm2426862ywe.55.2024.04.23.02.42.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 02:42:24 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so5240006276.1;
-        Tue, 23 Apr 2024 02:42:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXBe/ttW7jIQwk9mvXAqBujSj9nhpbCsQuTPJY0CECTUuPCrqHHiZhB2mFgyTMrI1nDQp6kb5glsHU4jLy3cr3NIKXyMQGCRXqPJ4AKP9BPNhBEIc4XzgvGCfD54yK/ckAKz/+72YFdRBJyhb9DMWhfpAzENfCIPQK1Uj3a6QPAAh7SANu6/VltdVwXTSt+TA88CQPrrDeY9YW4KnumNDzghIpiTFk8Jg8UhUGHGxfZlHw6pAl7h+gF4svd9Fz6G1BUGuohz8SsZKYRn1rwfc0sO78GOCH2II309HXqHg==
-X-Received: by 2002:a25:804f:0:b0:de4:6aa6:9ea2 with SMTP id
- a15-20020a25804f000000b00de46aa69ea2mr11819127ybn.32.1713865344325; Tue, 23
- Apr 2024 02:42:24 -0700 (PDT)
+        bh=QpfHmgVTBXM1G+3QVd/pCxFW4zgJHvWXKJ+R0G1BFoM=;
+        b=WBfaCMy348WLu47Zibde2xKpbiZhxtRzvmPbGxrc/xJbgz4Xyy/PCJM1Mu6Q5P323u
+         YGvl+VbWkRF55iSesSeoctE7ClPrB0gZc5OCiIz/lJrEGhCRT3UiGGgu+f5yy32uavV4
+         YdvzFMEkQN3Kfeidz0b6659Ig9l9xPk7MHHlNEDsYc4gPI257+LHA/pEZnogASYq7uUK
+         AaqNUSYa+BB/26xGH9o62V2cFZ67zKUMiM80D/qvHjMbG5lJFlGYOJ4GW15PXzrOocLl
+         IRGBxmbDdCyG6EZaPXyOPGaU5OvzR1A7F6+8wNYx9DnKWjjBnnspJnC/wy2zHF/tOlin
+         Ia2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVc4KYwKDYti/OF/W9+DKM5C3a9n1hei5l9hljunFuUfj/A8fW7lbcz1rxHzcOeAJeITevVKqNp7kOGBYV3xW17Hj/t5YLipbjj9vBRbNlhllrHYgmHD6lj6HPBhNGo8pU9JGqN9N+KF/eGt9+R9UZWD1wlu+YzeWy58yJ1XPuyBs9HVSzOO5Nf3RPH7GAxwq57sew0bE/8nzee89HGB0N1mhvAxns5W+yLdI71Qk3MgtsofacIQrQ80Grm0aazHvxEsHhfglfMbWzpRxulS/J1SrOh/WhWYk3L9+DTKQ==
+X-Gm-Message-State: AOJu0Yw/CtBIPLEBI4LG69JsBls7p9zDKoEOuro+h0man8tFgGqQNlfA
+	yF6fvtbQmQoyMu2FLEGugE4BSxAMCW60GBW4zRdFgchySgB11LARFkqsF7t12cGgdW4n66hIiz0
+	JfF9fr9P4htjXOGcuFnCR6NbRtkY=
+X-Google-Smtp-Source: AGHT+IHkSAdNfoHHoj8gE8tCVdLt0/qh7w1c39WozB9nDYm8+OzxWhrEGs93n5j5fcE7kwKuVsOivNjDiZwSQXQBRdQ=
+X-Received: by 2002:a17:906:2491:b0:a52:6fcb:564a with SMTP id
+ e17-20020a170906249100b00a526fcb564amr7200221ejb.9.1713868497304; Tue, 23 Apr
+ 2024 03:34:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com> <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 23 Apr 2024 11:42:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
-Message-ID: <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com> <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 23 Apr 2024 13:34:21 +0300
+Message-ID: <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com>
 Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
 	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
 	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
@@ -85,142 +91,45 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl
 	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
 	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
 	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
+On Tue, Apr 23, 2024 at 12:42=E2=80=AFPM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Tue, Apr 16, 2024 at 3:31=E2=80=AFPM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
 
-On Tue, Apr 16, 2024 at 3:31=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> Some IOs can be needed during suspend_noirq()/resume_noirq().
-> So move suspend()/resume() to noirq.
->
-> Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+...
 
-Thanks for your patch, which is now commit 86eb98127332748f ("gpio:
-pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()")
-in i2c-host/i2c/i2c-host.
+>         +i2c-rcar e66d8000.i2c: error -16 : 10000005
 
-This patch causes regressions on e.g. Salvator-XS.
+It probably means that I=C2=B2C host controller is already in power off
+mode and can't serve anymore.
 
-    s2idle:
+>         +pca953x 4-0020: Failed to sync GPIO dir registers: -16
+>         +pca953x 4-0020: Failed to restore register map: -16
+>         +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
+> returns -16
+>         +pca953x 4-0020: PM: failed to resume async noirq: error -16
 
-         Freezing user space processes
-         Freezing user space processes completed (elapsed 0.006 seconds)
-         OOM killer disabled.
-         Freezing remaining freezable tasks
-         Freezing remaining freezable tasks completed (elapsed 0.003 second=
-s)
-         sd 0:0:0:0: [sda] Synchronizing SCSI cache
-         ata1.00: Entering standby power mode
-        +i2c-rcar e66d8000.i2c: error -16 : 10000005
-        +pca953x 4-0020: Failed to sync GPIO dir registers: -16
-        +pca953x 4-0020: Failed to restore register map: -16
-        +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
-returns -16
-        +pca953x 4-0020: PM: failed to resume async noirq: error -16
+Yeah, with this it's kinda forcing _every_ I=C2=B2C host controller PM to
+be moved also to noirq() or alike.
 
-    s2ram:
+...
 
-         Detected VIPT I-cache on CPU7
-         CPU7: Booted secondary processor 0x0000000103 [0x410fd034]
-         CPU7 is up
-        +i2c-rcar e66d8000.i2c: error -110 : 10000001
-        +pca953x 4-0020: Failed to sync GPIO dir registers: -110
-        +pca953x 4-0020: Failed to restore register map: -110
-        +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
-returns -110
-        +pca953x 4-0020: PM: failed to resume async noirq: error -110
-         usb usb1: root hub lost power or was reset
-         ...
-         PM: suspend exit
-         ata1: link resume succeeded after 1 retries
-        -ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
-        -sd 0:0:0:0: [sda] Starting disk
-        -ata1.00: configured for UDMA/133
-        -ata1.00: Entering active power mode
-        +ata1: SATA link down (SStatus 0 SControl 300)
-        +ata1: link resume succeeded after 1 retries
-        +ata1: SATA link down (SStatus 0 SControl 300)
-        +ata1: limiting SATA link speed to <unknown>
-        +ata1: link resume succeeded after 1 retries
-        +ata1: SATA link down (SStatus 0 SControl 3F0)
-        +ata1.00: disable device
-        +ata1.00: detaching (SCSI 0:0:0:0)
-        +sd 0:0:0:0: [sda] Synchronizing SCSI cache
-        +sd 0:0:0:0: [sda] Synchronize Cache(10) failed: Result:
-hostbyte=3D0x04 driverbyte=3DDRIVER_OK
+> All issues above are fixed by reverting this commit.
 
-    When trying to read from /dev/sda afterwards:
+Let's revert as we close to the end of the cycle and this is not
+something that can be fixed ASAP in my opinion.
 
-        ata1: link resume succeeded after 1 retries
-        ata1: SATA link down (SStatus 0 SControl 3F0)
-        ata1.00: disable device
-        ata1.00: detaching (SCSI 0:0:0:0)
-        device offline error, dev sda, sector 0 op 0x0:(READ) flags
-0x80700 phys_seg 4 prio class 0
-        device offline error, dev sda, sector 0 op 0x0:(READ) flags
-0x0 phys_seg 1 prio class 0
-        Buffer I/O error on dev sda, logical block 0, async page read
-        sd 0:0:0:0: [sda] Synchronizing SCSI cache
-        sd 0:0:0:0: [sda] Synchronize Cache(10) failed: Result:
-hostbyte=3D0x04 driverbyte=3DDRIVER_OK
+...
 
-All issues above are fixed by reverting this commit.
-
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -1234,7 +1234,7 @@ static void pca953x_save_context(struct pca953x_chi=
-p *chip)
->         regcache_cache_only(chip->regmap, true);
->  }
->
-> -static int pca953x_suspend(struct device *dev)
-> +static int pca953x_suspend_noirq(struct device *dev)
->  {
->         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
->
-> @@ -1248,7 +1248,7 @@ static int pca953x_suspend(struct device *dev)
->         return 0;
->  }
->
-> -static int pca953x_resume(struct device *dev)
-> +static int pca953x_resume_noirq(struct device *dev)
->  {
->         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
->         int ret;
-> @@ -1268,7 +1268,8 @@ static int pca953x_resume(struct device *dev)
->         return ret;
->  }
->
-> -static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x=
-_resume);
-> +static DEFINE_NOIRQ_DEV_PM_OPS(pca953x_pm_ops,
-> +                              pca953x_suspend_noirq, pca953x_resume_noir=
-q);
->
->  /* convenience to stop overlong match-table lines */
->  #define OF_653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __=
-int))
->
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thanks for the report, It's a pity that it wasn't tested before from
+the mailing list...
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
 
