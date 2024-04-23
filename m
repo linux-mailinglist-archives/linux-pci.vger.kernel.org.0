@@ -1,143 +1,143 @@
-Return-Path: <linux-pci+bounces-6582-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6583-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 340CB8AEB2B
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 17:32:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A2E478AEB4B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 17:41:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55F0A1C216DF
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 15:32:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3FDE1C21BEA
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 15:41:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40B8313C80C;
-	Tue, 23 Apr 2024 15:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EB2F13BAFE;
+	Tue, 23 Apr 2024 15:41:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F2686273;
-	Tue, 23 Apr 2024 15:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EF413BACF
+	for <linux-pci@vger.kernel.org>; Tue, 23 Apr 2024 15:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713886336; cv=none; b=tNKgtB6B93n2WBbG7kwJDneKmvObraaQJcvomhCM1SHOynqgF/AgT5Dsa70ayaSMUqsJGXU+RwEMn672LndvqEuIhsoQaR6JA1+FNNTTf/LRaRCD/LaMJs07mmRtccmhZc/ERV0TX/3Xv6NGDE9bCAFCnwUFo7dZEe5Vnu6f7O8=
+	t=1713886878; cv=none; b=N0+4CclfZr3t69JiW3l4WH4f7d+fSgHIgvF6rv9okbovTa4qu8Ht5fdwMNXa03hOWcavTwS95TjCiherVYDpLTGkV/DT5gveF/DibDjbbAaBFOXc01pbPFyHTLqbPdDj3ej7sWiUXrDNBnLV4C8yaqeq2HFfodtZMihDF1rUABs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713886336; c=relaxed/simple;
-	bh=Axa3Mn5+KVTK6qIzldvrgQzSEYO2/lcirqLJInKyRG8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GZXUHKad3OyzKN5sXvMkdcCwHi/SC+qdEiHlkpBu2RC39c/65eVwFVLgqCaKD0yxWm9nxqE7vzg9cGu2cc/n8sXv6gCB0IH4N4+gwcLp6Ao0P/rt5gYcjdPVX0csfc+Zwww0OvvARN5u9n7k5snp8/ROvx7LcmHdmMD3hQDFlTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61816fc256dso50988897b3.0;
-        Tue, 23 Apr 2024 08:32:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713886333; x=1714491133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pCFrzV7qoH1GMPZYbyZsRzzURQK7cGFU6Wp+TTcFvr8=;
-        b=LPth/cZFk4JlInnptjMDl2XXrxBuMp0XvL4yz+QzMwOw+nQtJnNxU6IvnOtkHNc26g
-         r9Dsdbd1RCRnGCFLbPbtbpU+ComM9edt8DNvVWY+mVi69/tQM/Q2USepwH3CsauSfZ9E
-         8exeAQQQQppYsLSrrz5XTkAEV2rRg73eMmQ5p3MyR3zVSBjvdCMOrk1tua83g4WSld/t
-         G4aiJ/8uvsFwDgJ6Bsve8MnyL78nzphgOt3ns2KOPA6ljKo5pPAeDG1T2KuJnt9JeXMS
-         Cm8teEftdPyUAw6hasL1/6DLyB5YdYc7DcWLwKHaV7dW6tB5VOu+HQCXTCl9K4D9kA8P
-         PXGA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7Vti+OI5iSIThtBBjC6Chrsdy7O4OEQNRvPLTCumRwOTuJLD5zxzGA4u/7GRbgZeyd/zojaC9pFjziwq/YLzKiWpgfRxHO/f7kClseyR0dQc5vUA/HnCK6hsnlrS2fuuu9YiSIwf0X5CIRmXTQYLHR4h80VlJP2HDo9kf/Q/ztw6ImdQqlRwyANXZYO7kVASOVF+j3ZLvBwXKY7w3mEiuvMhMi1Ki6eWlaWGnH808ZQO0OVKzlHLZNK9gPuz/y0kzX5SRmQOpW5sOuyo7dKWrFoMhXotd02GAZ1suCw==
-X-Gm-Message-State: AOJu0YzgtujE/L709zM1lFPaeDlAMuS5nUCbJ3TtZPrjo6NHsudG/Cvq
-	GfMAJYIMAaYua5dSWK3IevJZh2dw+E4v7jWNtHEVtsizwisZ6Paid/fXetzm
-X-Google-Smtp-Source: AGHT+IEn9o9kwpQ21sUDm3boQ5gEGYvUxHSf9p6oYyBqPVpgAQDC1EghII1JwoT01XsucnyZNFnveA==
-X-Received: by 2002:a05:690c:61c6:b0:61b:1a4f:158b with SMTP id hk6-20020a05690c61c600b0061b1a4f158bmr13675592ywb.6.1713886331234;
-        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id z12-20020a81ac4c000000b00617f1b4943esm2480486ywj.106.2024.04.23.08.32.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso5760935276.2;
-        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVI4gBTrDCBV79aoDQ+Z2jvbLk16BClJTyYYOHXBbHU8Dw6HZCDo28WffVKQpmrv7wzQliCHqJ0khwkjoH/BrxdVBlBuyiLZRkb+HuKTWWexZ0C2P7teEWKhR/F2i4ol7O9imDwzh12qvMGkwVfPbXI2S+iVhDSlPEmrxQl/jpA20Mmt9caMzgK+7T3Y+xQ8W9WKB7nFoZAkeTTTbv1Iixy2777zCnQaTNfLmalj6hUQqeCtPncVGQz4zwJKMWH+DChm1sbM90hIcRf31RUNGRC/jTHghxzSNZd4vI/UA==
-X-Received: by 2002:a25:86c7:0:b0:de0:d45f:7c5 with SMTP id
- y7-20020a2586c7000000b00de0d45f07c5mr11933981ybm.20.1713886329809; Tue, 23
- Apr 2024 08:32:09 -0700 (PDT)
+	s=arc-20240116; t=1713886878; c=relaxed/simple;
+	bh=uoGspbq94loW2asPzj0yT6cjfVSQmiJ7oJmjAntAZ7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q22NqTsxBovc9uAVOtTc+o2RFYaBVEX6Oyyu+xI03URT+9TXr0iV2/DrilJnTByQacvoSizj4yas4vYUsp+pBpowFH0lw5Lw9rhAVC4yFTqvbfehiRurUF6bUsbC5zJKeXNjmxiK0WztTdNkHBcWo1Tnecd4XZCoPcPJLHXGNKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6344F61E5FE06;
+	Tue, 23 Apr 2024 17:40:56 +0200 (CEST)
+Message-ID: <884be16f-1f01-4002-a825-797e6c68e95e@molgen.mpg.de>
+Date: Tue, 23 Apr 2024 17:40:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
- <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com> <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
- <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com> <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
-In-Reply-To: <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 23 Apr 2024 17:31:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV3NbCHchm9eHhGQNuvzmdwuP_fdt31m7vNY7Cp2-3-=Q@mail.gmail.com>
-Message-ID: <CAMuHMdV3NbCHchm9eHhGQNuvzmdwuP_fdt31m7vNY7Cp2-3-=Q@mail.gmail.com>
-Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 218765] New: broken device,
+ retraining non-functional downstream link at 2.5GT/s]
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, linux-pci@vger.kernel.org
+References: <20240423152330.GA441398@bhelgaas>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20240423152330.GA441398@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+Dear Bjorn,
 
-On Tue, Apr 23, 2024 at 12:53=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> On 4/23/24 12:34, Andy Shevchenko wrote:
-> > On Tue, Apr 23, 2024 at 12:42=E2=80=AFPM Geert Uytterhoeven
-> > <geert@linux-m68k.org> wrote:
-> >> On Tue, Apr 16, 2024 at 3:31=E2=80=AFPM Thomas Richard
-> >> <thomas.richard@bootlin.com> wrote:
-> >
-> > ...
-> >
-> >>         +i2c-rcar e66d8000.i2c: error -16 : 10000005
-> >
-> > It probably means that I=C2=B2C host controller is already in power off
-> > mode and can't serve anymore.
->
-> Yes the i2c controller is already off.
-> In fact it's the same issue I had with the i2c-omap driver.
-> In suspend-noirq, the runtime pm is disabled, so you can't wakeup a
-> device. More details available in this thread [1].
-> So the trick is to wakeup the device during suspend (like I did for the
-> i2c-omap driver [2].
->
-> [1]
-> https://lore.kernel.org/all/f68c9a54-0fde-4709-9d2f-0d23a049341b@bootlin.=
-com/
-> [2]
-> https://lore.kernel.org/all/20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@boo=
-tlin.com/
->
-> I think the patch below should fix the issue.
 
-Thanks, I gave that a try, but it doesn't make any difference.
+Thank you for your instant reply.
 
-Gr{oetje,eeting}s,
+Am 23.04.24 um 17:23 schrieb Bjorn Helgaas:
+> FYI.  The retraining was added by a89c82249c37 ("PCI: Work around PCIe
+> link training failures").
+> 
+> Paul, is this a regression?  a89c82249c37 appeared in v6.5.  I
+> *assume* whatever is below bus 01 did actually work before v6.5, in
+> spite of the fact that apparently PCI_EXP_LNKSTA_DLLLA was not set
+> when we enumerated the 00:1c.0 Root Port?
 
-                        Geert
+Only used 6.5 and onward on the Dell XPS 9360, so I cannot say if it 
+worked before. I have to find time to boot an old Linux kernel image. 
+(I’d like to emphasize again, that this only happens having USB-C 
+adapter connected during system firmware phase, and disconnecting it 
+before Linux boots – for example, when in GRUB.)
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Kind regards,
+
+Paul
+
+
+> ----- Forwarded message from bugzilla-daemon@kernel.org -----
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=218765
+> 
+> Created attachment 306199
+>    --> https://bugzilla.kernel.org/attachment.cgi?id=306199&action=edit
+> Linux 6.9-rc5+ messages (output of `dmesg`)
+> 
+> I noticed a one second delay with Linux 6.9-rc5+:
+> 
+> ```
+> [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
+> […]
+> [    0.201109] pci 0000:00:1c.0: [8086:9d10] type 01 class 0x060400 PCIe Root Port
+> [    0.201109] pci 0000:00:1c.0: PCI bridge to [bus 01-39]
+> [    0.201109] pci 0000:00:1c.0:   bridge window [mem 0xc4000000-0xda0fffff]
+> [    0.201109] pci 0000:00:1c.0:   bridge window [mem 0xa0000000-0xc1ffffff 64bit pref]
+> [    0.201109] pci 0000:00:1c.0: broken device, retraining non-functional downstream link at 2.5GT/s
+> [    1.209109] pci 0000:00:1c.0: retraining failed
+> [    1.209143] pci 0000:00:1c.0: PME# supported from D0 D3hot D3cold
+> [    1.209677] pci 0000:00:1c.4: [8086:9d14] type 01 class 0x060400 PCIe Root Port
+> [    1.209700] pci 0000:00:1c.4: PCI bridge to [bus 3a]
+> [    1.209705] pci 0000:00:1c.4:   bridge window [mem 0xdc000000-0xdc1fffff]
+> [    1.209771] pci 0000:00:1c.4: PME# supported from D0 D3hot D3cold
+> […]
+> ```
+> 
+> Looking through all the logs since March 2024, I only found *one* other
+> occurrence with Linux 6.9-rc4+.
+> 
+> ```
+> $ lspci -tvnn
+> -[0000:00]-+-00.0  Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:5904]
+>             +-02.0  Intel Corporation HD Graphics 620 [8086:5916]
+>             +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903]
+>             +-14.0  Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f]
+>             +-14.2  Intel Corporation Sunrise Point-LP Thermal subsystem [8086:9d31]
+>             +-15.0  Intel Corporation Sunrise Point-LP Serial IO I2C Controller #0 [8086:9d60]
+>             +-15.1  Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61]
+>             +-16.0  Intel Corporation Sunrise Point-LP CSME HECI #1 [8086:9d3a]
+>             +-1c.0-[01-39]----00.0-[02-39]--+-00.0-[03]--
+>             |                               +-01.0-[04-38]--
+>             |                               \-02.0-[39]----00.0  Intel Corporation DSL6340 USB 3.1 Controller [Alpine Ridge] [8086:15b5]
+>             +-1c.4-[3a]----00.0  Qualcomm Atheros QCA6174 802.11ac Wireless Network Adapter [168c:003e]
+>             +-1d.0-[3b]----00.0  SK hynix PC300 NVMe Solid State Drive 512GB [1c5c:1284]
+>             +-1f.0  Intel Corporation Sunrise Point-LP LPC Controller [8086:9d58]
+>             +-1f.2  Intel Corporation Sunrise Point-LP PMC [8086:9d21]
+>             +-1f.3  Intel Corporation Sunrise Point-LP HD Audio [8086:9d71]
+>             \-1f.4  Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
+> ```
+> 
+> The adapter wasn’t plugged in, when Linux started.
+> 
+> It could be related to unplugging an Dell DA300 USB Type-C adapter during
+> system firmware (UEFI) to avoid a five second delay in Linux (ACPI). I need to
+> test that later, but maybe you already have an idea.
+> 
+> ----- End forwarded message -----
 
