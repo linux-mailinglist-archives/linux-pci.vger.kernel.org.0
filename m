@@ -1,299 +1,226 @@
-Return-Path: <linux-pci+bounces-6563-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6564-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 646908AE0BB
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 11:10:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99CA68AE12D
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 11:42:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE5CFB237FD
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 09:10:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE3E61C21A07
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 09:42:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A4685823F;
-	Tue, 23 Apr 2024 09:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZPTtj8hl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACEEC59148;
+	Tue, 23 Apr 2024 09:42:29 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC5F59B56;
-	Tue, 23 Apr 2024 09:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8761051016;
+	Tue, 23 Apr 2024 09:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713863325; cv=none; b=sxXXob/vCp4OAUTNe+5uWoq7vRz5+mrvB+GPoSIfnXL3iXK6ixkGHl7jGeEJ/GWeptXJNfYCxlEkl51p4uQ1EWKPEtcMhY9H55AacnBzPTyj0vWBhHka/UqOTOgyffiPeA20TFaITmZ4zFt2Xo1gLdUqsjCaf/7YIX8gQeK09GI=
+	t=1713865349; cv=none; b=LJ/HoSt1E6m7CaSdBgu9NUQip+dLwlisyrzamlse/KXUbp79JhMd17fppnDLhhYZ6K8nrjwv9UJASlnUZM0qfEawv8RrjMyAsCt9qAzFDP1YYrp9eOv4vhlCifl6Vj6SkgERJ19srs+b3lj7gCrYLlVZzTg6yQ33C56y5/3Tl0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713863325; c=relaxed/simple;
-	bh=wwNv0pI2dMCLeSzhSpOy/MncHRyQ8g1i4vlar+nCwXg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=bfy7yciiopXFowdHiGVYlyu0sKyFWV1TuQD23JO+YuLjxfutkMMVQ9nHXvhFTMK/ZhonHTtoK8/FIa2g7iPoRGhXKfcsSgARy9QnNyJRba1tEBwpvyOB1e/kSAbGY1rhjTqUIgVjTZEBOyR/sQaA4gtKacwWkQl59rqn4+sn9oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZPTtj8hl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43N8Ni04017570;
-	Tue, 23 Apr 2024 09:08:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=DzTEn0h78zzgvHCZTdcWfLx+CrnPL+niHNjH4pJ1fC8
-	=; b=ZPTtj8hlo1mShx7H6qW+GnkFfsh1RqucS/V3ws1nbYk7J5Jzl/i46ldo7zQ
-	CZ9ZLkfq431/Otzz7FLinadZtpeWY/2H8jWC+23p8ExDY19TmEWl/8sY0AIHIKO2
-	DNFDXQGZheoIFrFkXExSHcrlWFnVBOm/MTebggkJlMtA5VY9PA4gjmlQoDrpooA6
-	8TNy7j+/3W516x9U96/qQLxSgD25CahtKGLeiMd3HQ3VNvWroWzqstPfN8v5ajSW
-	LuY+nP6iOwyii8HppuvcoXZYBNOk7C9KBpWumonZv/mHoJ0IrA0B2UMmebtqb14q
-	4hlrwnExClx95vflaxSnAWs7euA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xp6n2gde2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 09:08:33 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43N98W7j031875
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Apr 2024 09:08:32 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 23 Apr 2024 02:08:26 -0700
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Tue, 23 Apr 2024 14:37:00 +0530
-Subject: [PATCH v11 6/6] PCI: qcom: Add OPP support to scale performance
+	s=arc-20240116; t=1713865349; c=relaxed/simple;
+	bh=SeejIbtFL3q2Ah+TgrTpf656eWgMzRmReKNJR8SEw/M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fKPQNB3SE8ua+a0XYloNDAd5UlFsmGsc0Bo2wcTCfGGm8VI4aIxqM160gq5OAOWxr8fCdvEF1MrfrPfuDXNZY4RKDQSCKqbA2n4d4dxkjYOQ+rxNN50mrvOWbDjC5L9ONIGKZ+v5pJa730yKqJIf5NcIZcktUYk+NfU5Rdv28gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61816fc256dso47363617b3.0;
+        Tue, 23 Apr 2024 02:42:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713865345; x=1714470145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wqVVfPd+WN3revU4fg7rebmHFdp/AiB0hyvlw5Bb61g=;
+        b=uqlflhjQyo+9UkWaG+dQ4pRyc+Mv+OpWEMAW0vD60iz9rdtwHbj+g+de5B/R6Jf2ZA
+         Id0x20wVLLl7i0iZTky0o4upJb6sCBLlvXtsXCef7jrSDQCEvprL6cTKyJ51Vi4fAdbv
+         t5T5EebEQj09IgyU0yeAJ+oWhQbaOMWzKjYX8n7FpLI4iQ67ko/Rt8I0hRJiN9/NW6xp
+         twThh+nUIe4N78sJgLJVcGzp1ZtsIVn1l8tw7bAYdda1NpJAu3L9S65AyFnE6rwD6x3Y
+         UyR/C1cVtns40GbYcuz7Oc1uLMEib1wTX4KZ1Tm6mKrA0nA+GwUMDbXh/brJ6mYxH/3T
+         X7yA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/BtNrVgqwaiHe/N4MnHaMuXWSqtJNmmofUoT01/741JPnVPkp4gdFVBuP8g3lfO55cDv9TSZNFZvzjIaOC1prvNui4ctw70yIk/0Ert5vYxZsvj5zfJ+T8y3CgZlPsd4zhsM2jQM5QWGnCx4FJsIo0sitT1+8GObJ6mO7WXwRQeR4+KgAOGgWx4uzW39TXPhyMATdnEJ9LVX8e2WQHHCRCVqN1UGkyh5vN0uPbgAeiSuCDRyGLzeGnrz8lsE+Pw7FR6Nwiti53Lx8+aDdzn4QCBj9nYbDYldgWYzEFA==
+X-Gm-Message-State: AOJu0YxSF6CcvH9qT1ALkXUGgQRpZfkNTwURQ1ob9rpgEe6hQlXb+zgh
+	MBuMY5dv3mLrCbjWVbPspOGsXwwBAzRKKy/N6qgh3/usmyR5pIB2HrcwqlUB
+X-Google-Smtp-Source: AGHT+IHxjd25aXH4Pg198Wdzat7g29/g3mpyPaK2cuNtRCeV9WCFBJbFMsrV78FnEW7acppO2pJ2og==
+X-Received: by 2002:a05:690c:3501:b0:61a:fb4d:6fc3 with SMTP id fq1-20020a05690c350100b0061afb4d6fc3mr12942508ywb.35.1713865345073;
+        Tue, 23 Apr 2024 02:42:25 -0700 (PDT)
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
+        by smtp.gmail.com with ESMTPSA id p204-20020a0de6d5000000b0061575978d53sm2426862ywe.55.2024.04.23.02.42.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 02:42:24 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so5240006276.1;
+        Tue, 23 Apr 2024 02:42:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXBe/ttW7jIQwk9mvXAqBujSj9nhpbCsQuTPJY0CECTUuPCrqHHiZhB2mFgyTMrI1nDQp6kb5glsHU4jLy3cr3NIKXyMQGCRXqPJ4AKP9BPNhBEIc4XzgvGCfD54yK/ckAKz/+72YFdRBJyhb9DMWhfpAzENfCIPQK1Uj3a6QPAAh7SANu6/VltdVwXTSt+TA88CQPrrDeY9YW4KnumNDzghIpiTFk8Jg8UhUGHGxfZlHw6pAl7h+gF4svd9Fz6G1BUGuohz8SsZKYRn1rwfc0sO78GOCH2II309HXqHg==
+X-Received: by 2002:a25:804f:0:b0:de4:6aa6:9ea2 with SMTP id
+ a15-20020a25804f000000b00de46aa69ea2mr11819127ybn.32.1713865344325; Tue, 23
+ Apr 2024 02:42:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240423-opp_support-v11-6-15fdd40b0f95@quicinc.com>
-References: <20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com>
-In-Reply-To: <20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
-        <bmasney@redhat.com>, <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
-        <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1713863266; l=5815;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=wwNv0pI2dMCLeSzhSpOy/MncHRyQ8g1i4vlar+nCwXg=;
- b=/wkgG3cJms8d4E4TIKUeCCyVI1I4iEO2IGXCw/HJu3+oigMAozJyBNqCMGr25/i6phoETJymI
- Om1fUSC3ZbQAnnopG6YHryEOtkhZBYrEjmVRTjnfxOlVivKZqhKQ55e
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: B0390ZIcVmepJJsBiIrUPH0Byf6hBex-
-X-Proofpoint-ORIG-GUID: B0390ZIcVmepJJsBiIrUPH0Byf6hBex-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-23_07,2024-04-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404230025
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com> <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 23 Apr 2024 11:42:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+Message-ID: <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-maintains hardware state of a regulator by performing max aggregation of
-the requests made by all of the clients.
+Hi Thomas,
 
-PCIe controller can operate on different RPMh performance state of power
-domain based on the speed of the link. And this performance state varies
-from target to target, like some controllers support GEN3 in NOM (Nominal)
-voltage corner, while some other supports GEN3 in low SVS (static voltage
-scaling).
+On Tue, Apr 16, 2024 at 3:31=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> Some IOs can be needed during suspend_noirq()/resume_noirq().
+> So move suspend()/resume() to noirq.
+>
+> Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-The SoC can be more power efficient if we scale the performance state
-based on the aggregate PCIe link bandwidth.
+Thanks for your patch, which is now commit 86eb98127332748f ("gpio:
+pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()")
+in i2c-host/i2c/i2c-host.
 
-Add Operating Performance Points (OPP) support to vote for RPMh state based
-on the aggregate link bandwidth.
+This patch causes regressions on e.g. Salvator-XS.
 
-OPP can handle ICC bw voting also, so move ICC bw voting through OPP
-framework if OPP entries are present.
+    s2idle:
 
-As we are moving ICC voting as part of OPP, don't initialize ICC if OPP
-is supported.
+         Freezing user space processes
+         Freezing user space processes completed (elapsed 0.006 seconds)
+         OOM killer disabled.
+         Freezing remaining freezable tasks
+         Freezing remaining freezable tasks completed (elapsed 0.003 second=
+s)
+         sd 0:0:0:0: [sda] Synchronizing SCSI cache
+         ata1.00: Entering standby power mode
+        +i2c-rcar e66d8000.i2c: error -16 : 10000005
+        +pca953x 4-0020: Failed to sync GPIO dir registers: -16
+        +pca953x 4-0020: Failed to restore register map: -16
+        +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
+returns -16
+        +pca953x 4-0020: PM: failed to resume async noirq: error -16
 
-Before PCIe link is initialized vote for highest OPP in the OPP table,
-so that we are voting for maximum voltage corner for the link to come up
-in maximum supported speed.
+    s2ram:
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 81 ++++++++++++++++++++++++++++------
- 1 file changed, 67 insertions(+), 14 deletions(-)
+         Detected VIPT I-cache on CPU7
+         CPU7: Booted secondary processor 0x0000000103 [0x410fd034]
+         CPU7 is up
+        +i2c-rcar e66d8000.i2c: error -110 : 10000001
+        +pca953x 4-0020: Failed to sync GPIO dir registers: -110
+        +pca953x 4-0020: Failed to restore register map: -110
+        +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
+returns -110
+        +pca953x 4-0020: PM: failed to resume async noirq: error -110
+         usb usb1: root hub lost power or was reset
+         ...
+         PM: suspend exit
+         ata1: link resume succeeded after 1 retries
+        -ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+        -sd 0:0:0:0: [sda] Starting disk
+        -ata1.00: configured for UDMA/133
+        -ata1.00: Entering active power mode
+        +ata1: SATA link down (SStatus 0 SControl 300)
+        +ata1: link resume succeeded after 1 retries
+        +ata1: SATA link down (SStatus 0 SControl 300)
+        +ata1: limiting SATA link speed to <unknown>
+        +ata1: link resume succeeded after 1 retries
+        +ata1: SATA link down (SStatus 0 SControl 3F0)
+        +ata1.00: disable device
+        +ata1.00: detaching (SCSI 0:0:0:0)
+        +sd 0:0:0:0: [sda] Synchronizing SCSI cache
+        +sd 0:0:0:0: [sda] Synchronize Cache(10) failed: Result:
+hostbyte=3D0x04 driverbyte=3DDRIVER_OK
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 465d63b4be1c..66bda30305a8 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -22,6 +22,7 @@
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/pci.h>
-+#include <linux/pm_opp.h>
- #include <linux/pm_runtime.h>
- #include <linux/platform_device.h>
- #include <linux/phy/pcie.h>
-@@ -1443,15 +1444,13 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
--static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
-+static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
- {
- 	struct dw_pcie *pci = pcie->pci;
--	u32 offset, status;
-+	u32 offset, status, freq;
-+	struct dev_pm_opp *opp;
- 	int speed, width;
--	int ret;
--
--	if (!pcie->icc_mem)
--		return;
-+	int ret, mbps;
- 
- 	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-@@ -1463,10 +1462,26 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
- 	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
- 	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
- 
--	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
--	if (ret) {
--		dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
--			ret);
-+	if (pcie->icc_mem) {
-+		ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-+		if (ret) {
-+			dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
-+				ret);
-+		}
-+	} else {
-+		mbps = pcie_link_speed_to_mbps(pcie_link_speed[speed]);
-+		if (mbps < 0)
-+			return;
-+
-+		freq = mbps * 1000;
-+		opp = dev_pm_opp_find_freq_exact(pci->dev, freq * width, true);
-+		if (!IS_ERR(opp)) {
-+			ret = dev_pm_opp_set_opp(pci->dev, opp);
-+			if (ret)
-+				dev_err(pci->dev, "Failed to set opp for freq (%ld): %d\n",
-+					dev_pm_opp_get_freq(opp), ret);
-+		}
-+		dev_pm_opp_put(opp);
- 	}
- }
- 
-@@ -1510,7 +1525,9 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
- static int qcom_pcie_probe(struct platform_device *pdev)
- {
- 	const struct qcom_pcie_cfg *pcie_cfg;
-+	unsigned long max_freq = INT_MAX;
- 	struct device *dev = &pdev->dev;
-+	struct dev_pm_opp *opp;
- 	struct qcom_pcie *pcie;
- 	struct dw_pcie_rp *pp;
- 	struct resource *res;
-@@ -1578,9 +1595,42 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_pm_runtime_put;
- 	}
- 
--	ret = qcom_pcie_icc_init(pcie);
--	if (ret)
-+	/* OPP table is optional */
-+	ret = devm_pm_opp_of_add_table(dev);
-+	if (ret && ret != -ENODEV) {
-+		dev_err_probe(dev, ret, "Failed to add OPP table\n");
- 		goto err_pm_runtime_put;
-+	}
-+
-+	/*
-+	 * Before PCIe link is initialized vote for highest OPP in the OPP table,
-+	 * so that we are voting for maximum voltage corner for the link to come up
-+	 * in maximum supported speed. At the end of the probe(), OPP will be
-+	 * updated using qcom_pcie_icc_opp_update().
-+	 */
-+	if (!ret) {
-+		opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
-+		if (IS_ERR(opp)) {
-+			dev_err_probe(pci->dev, PTR_ERR(opp),
-+				      "Unable to find max freq OPP\n");
-+			goto err_pm_runtime_put;
-+		} else {
-+			ret = dev_pm_opp_set_opp(dev, opp);
-+		}
-+
-+		dev_pm_opp_put(opp);
-+		if (ret) {
-+			dev_err_probe(pci->dev, ret,
-+				      "Failed to set OPP for freq (%ld): %d\n",
-+				      max_freq, ret);
-+			goto err_pm_runtime_put;
-+		}
-+	} else {
-+		/* Skip ICC init if OPP is supported as it is handled by OPP */
-+		ret = qcom_pcie_icc_init(pcie);
-+		if (ret)
-+			goto err_pm_runtime_put;
-+	}
- 
- 	ret = pcie->cfg->ops->get_resources(pcie);
- 	if (ret)
-@@ -1600,7 +1650,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_phy_exit;
- 	}
- 
--	qcom_pcie_icc_update(pcie);
-+	qcom_pcie_icc_opp_update(pcie);
- 
- 	if (pcie->mhi)
- 		qcom_pcie_init_debugfs(pcie);
-@@ -1661,6 +1711,9 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
- 		ret = icc_disable(pcie->icc_cpu);
- 		if (ret)
- 			dev_err(dev, "Failed to disable CPU-PCIe interconnect path: %d\n", ret);
-+
-+		if (!pcie->icc_mem)
-+			dev_pm_opp_set_opp(pcie->pci->dev, NULL);
- 	}
- 	return ret;
- }
-@@ -1686,7 +1739,7 @@ static int qcom_pcie_resume_noirq(struct device *dev)
- 		pcie->suspended = false;
- 	}
- 
--	qcom_pcie_icc_update(pcie);
-+	qcom_pcie_icc_opp_update(pcie);
- 
- 	return 0;
- }
+    When trying to read from /dev/sda afterwards:
 
--- 
-2.42.0
+        ata1: link resume succeeded after 1 retries
+        ata1: SATA link down (SStatus 0 SControl 3F0)
+        ata1.00: disable device
+        ata1.00: detaching (SCSI 0:0:0:0)
+        device offline error, dev sda, sector 0 op 0x0:(READ) flags
+0x80700 phys_seg 4 prio class 0
+        device offline error, dev sda, sector 0 op 0x0:(READ) flags
+0x0 phys_seg 1 prio class 0
+        Buffer I/O error on dev sda, logical block 0, async page read
+        sd 0:0:0:0: [sda] Synchronizing SCSI cache
+        sd 0:0:0:0: [sda] Synchronize Cache(10) failed: Result:
+hostbyte=3D0x04 driverbyte=3DDRIVER_OK
 
+All issues above are fixed by reverting this commit.
+
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -1234,7 +1234,7 @@ static void pca953x_save_context(struct pca953x_chi=
+p *chip)
+>         regcache_cache_only(chip->regmap, true);
+>  }
+>
+> -static int pca953x_suspend(struct device *dev)
+> +static int pca953x_suspend_noirq(struct device *dev)
+>  {
+>         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
+>
+> @@ -1248,7 +1248,7 @@ static int pca953x_suspend(struct device *dev)
+>         return 0;
+>  }
+>
+> -static int pca953x_resume(struct device *dev)
+> +static int pca953x_resume_noirq(struct device *dev)
+>  {
+>         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
+>         int ret;
+> @@ -1268,7 +1268,8 @@ static int pca953x_resume(struct device *dev)
+>         return ret;
+>  }
+>
+> -static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x=
+_resume);
+> +static DEFINE_NOIRQ_DEV_PM_OPS(pca953x_pm_ops,
+> +                              pca953x_suspend_noirq, pca953x_resume_noir=
+q);
+>
+>  /* convenience to stop overlong match-table lines */
+>  #define OF_653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __=
+int))
+>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
