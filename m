@@ -1,108 +1,117 @@
-Return-Path: <linux-pci+bounces-6598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10F078AF8D1
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 23:18:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDD1E8AF8E6
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 23:26:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A56B31F220E4
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 21:18:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 734AD283008
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 21:26:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93440143864;
-	Tue, 23 Apr 2024 21:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEB391422CB;
+	Tue, 23 Apr 2024 21:26:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KeEf18QK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNRQlx+g"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE864142624;
-	Tue, 23 Apr 2024 21:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA79013CFA4
+	for <linux-pci@vger.kernel.org>; Tue, 23 Apr 2024 21:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713907107; cv=none; b=l/S0ZECfTbkYFoq5nsHXj+6JUbfxEJmKvVYzTaBmvjvpjwR9ngRb35Ql7JK42cZr8Ul2VaOtbvPkR5/PCGs1s6AMG6OjdKEtTeHUe6ZP42FCkTUGMRIcVgcoGB4zOzyvajSRmWMWEThtaxZSrL1doQV1iyCWFn+yz/jOvwg0OXU=
+	t=1713907588; cv=none; b=sBBUko+CAaOrG35FGm7nqK7xDQcB3t1hBKXy/STp8krjoYRmDz/SM7Tx+kdP0X0RosZv8u6xa+2cxybpGTgwMUssNAUgBXpkUJ9DvkhxvCovmlDnWddnGTPIZdXn006Im99eU1BLAw9n2HW2hjg9NHYCN5H4bmKiZ+EYFlLmfwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713907107; c=relaxed/simple;
-	bh=CJmlaW/WMNPHb2CyrsKTyGi+evxiFQAXb/u85TPFwss=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o+vtauRWffFPQlVDGIUWqmcRaR1R/c3zsFZL/LI3bfvlpMCru/tRuMPduAciSIFGKPOARCGOlqGbwl3yx199xE5UpfirS+b24ew/oXmU9+5uihHDm6pmZOIqSooglTTNSojB/TQ6whuPeNCjbf5MWeygn24GMCxlwc8mF1KzoK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KeEf18QK; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713907106; x=1745443106;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CJmlaW/WMNPHb2CyrsKTyGi+evxiFQAXb/u85TPFwss=;
-  b=KeEf18QKitJwhsouG9tcHPOcSfHmoyCoUjmNautjBe0TyL07z4zIedlQ
-   r/S8ahZdG9FkgfqZN47p3nRnGvPg83FkSB6KtqjtRvfLPQk3RUwsnEVHB
-   L6sPFvuAGhgOXm7/ETN9HpF/vM8uk1/GtT74nW5cFZRTreNASFlAGWgrW
-   w4KV/T/gCxz7S+Z/TJC/bSzKtq/FnidYnpEPe7TmZ5VYGOGWZfD7Mutu+
-   Stwd71MyctX+6W/QvsyAFveH2SPkoRtx5hZ8svWlWIsjhpAsQPrFKaazL
-   V/ZiHFKmg2uCIiNMIcKsXiYQQ8euwb48ZWvApAhOsPxb1Ldsh4ccWlyEN
-   Q==;
-X-CSE-ConnectionGUID: D9vRfGi6Qk68Osb+XMMWyg==
-X-CSE-MsgGUID: fgjZQQB3QJiulhFhc9b1lg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13302380"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="13302380"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 14:18:25 -0700
-X-CSE-ConnectionGUID: oxTR76zQS9Kuda1m6qRMJw==
-X-CSE-MsgGUID: EXcF+n1aR165ZtRQG6CROA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="29139854"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 23 Apr 2024 14:18:22 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D2E8F28A; Wed, 24 Apr 2024 00:18:20 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] PCI: dra7xx: Add missing header inclusion
-Date: Wed, 24 Apr 2024 00:18:17 +0300
-Message-ID: <20240423211817.3995488-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1713907588; c=relaxed/simple;
+	bh=WaVdFUPAxuXzPATTznV3wyAlDPNxiivntGtfy0dSuA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EJt65e6dmWLTV2Xu8pRL0SSwb5vq2gzS9kuArlMrjJomcE1StMYpVEqNhZuRel8zkiEGfCT7Uep94Lv/EmdlD3haa7uVIH3keI1ieilkOXtjr27yYDLh9+lytuYUfQcl6qKIHH6bC8uTjH3tk5RmId7GAqQ5NKfRKGCEGmNXSMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNRQlx+g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E80EC116B1;
+	Tue, 23 Apr 2024 21:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713907588;
+	bh=WaVdFUPAxuXzPATTznV3wyAlDPNxiivntGtfy0dSuA8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rNRQlx+ghErU2OLaIlErDmqGpzQzYu+agwBkfz/TmySZPxLv3YZoP0hcCMxutfDmh
+	 H69OKvFZ4+9uX3bVNobxRca0cL8rj31W/kEec8TaHxIqbUbbhDayu3+tbLuTy56iBS
+	 6hXGWd2bX+prvELm1J8UAPR4PCfmnPfOQH9XaXSzSG5z6DEPShcfrcMrAPv403Ok6k
+	 KYsQ2bU3d0BH7+NCAM319SJ4myiAdpmLr/HwDQ0jyfBY2/nn5PE/rqLvmupdzcw2cW
+	 EDOPbXGPwyA7PCkvekBg4HlFWLOg3kKMa057O77TBEons2g+Yb4OMe3qclzISzqPLS
+	 UhyjET+YO6gDQ==
+Date: Tue, 23 Apr 2024 16:26:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
+Cc: linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] Documentation: PCI: add vmd documentation
+Message-ID: <20240423212626.GA458714@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c6dafda7-c151-416c-a6f7-0c142b228b85@intel.com>
 
-Driver is using chained_irq_*() APIs, add the respective inclusion.
+On Mon, Apr 22, 2024 at 04:39:19PM -0700, Paul M Stillwell Jr wrote:
+> On 4/22/2024 3:52 PM, Bjorn Helgaas wrote:
+> > On Mon, Apr 22, 2024 at 02:39:16PM -0700, Paul M Stillwell Jr wrote:
+> > > On 4/22/2024 1:27 PM, Bjorn Helgaas wrote:
+> ...
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > > _OSC negotiates ownership of features between platform firmware and
+> > > > OSPM.  The "native_pcie_hotplug" and similar bits mean that "IF a
+> > > > device advertises the feature, the OS can use it."  We clear those
+> > > > native_* bits if the platform retains ownership via _OSC.
+> > > > 
+> > > > If BIOS doesn't enable the VMD host bridge and doesn't supply _OSC for
+> > > > the domain below it, why would we assume that BIOS retains ownership
+> > > > of the features negotiated by _OSC?  I think we have to assume the OS
+> > > > owns them, which is what happened before 04b12ef163d1.
+> > > 
+> > > Sorry, this confuses me :) If BIOS doesn't enable VMD (i.e. VMD is disabled)
+> > > then all the root ports and devices underneath VMD are visible to the BIOS
+> > > and OS so ACPI would run on all of them and the _OSC bits should be set
+> > > correctly.
+> > 
+> > Sorry, that was confusing.  I think there are two pieces to enabling
+> > VMD:
+> > 
+> >    1) There's the BIOS "VMD enable" switch.  If set, the VMD device
+> >    appears as an RCiEP and the devices behind it are invisible to the
+> >    BIOS.  If cleared, VMD doesn't exist; the VMD RCiEP is hidden and
+> >    the devices behind it appear as normal Root Ports with devices below
+> >    them.
+> > 
+> >    2) When the BIOS "VMD enable" is set, the OS vmd driver configures
+> >    the VMD RCiEP and enumerates things below the VMD host bridge.
+> > 
+> >    In this case, BIOS enables the VMD RCiEP, but it doesn't have a
+> >    driver for it and it doesn't know how to enumerate the VMD Root
+> >    Ports, so I don't think it makes sense for BIOS to own features for
+> >    devices it doesn't know about.
+> 
+> That makes sense to me. It sounds like VMD should own all the features, I
+> just don't know how the vmd driver would set the bits other than hotplug
+> correctly... We know leaving them on is problematic, but I'm not sure what
+> method to use to decide which of the other bits should be set or not.
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 2015f51664bc..cf8392190856 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+My starting assumption would be that we'd handle the VMD domain the
+same as other PCI domains: if a device advertises a feature, the
+kernel includes support for it, and the kernel owns it, we enable it.
 
+If a device advertises a feature but there's a hardware problem with
+it, the usual approach is to add a quirk to work around the problem.
+The Correctable Error issue addressed by 04b12ef163d1 ("PCI: vmd:
+Honor ACPI _OSC on PCIe features"), looks like it might be in this
+category.
+
+Bjorn
 
