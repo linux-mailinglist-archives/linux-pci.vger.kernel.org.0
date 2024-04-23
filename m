@@ -1,136 +1,108 @@
-Return-Path: <linux-pci+bounces-6597-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6598-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D93B48AF8C1
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 23:10:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10F078AF8D1
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 23:18:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9454928FE39
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 21:10:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A56B31F220E4
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Apr 2024 21:18:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4616143865;
-	Tue, 23 Apr 2024 21:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93440143864;
+	Tue, 23 Apr 2024 21:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W25NFkYB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KeEf18QK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C72142E85;
-	Tue, 23 Apr 2024 21:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE864142624;
+	Tue, 23 Apr 2024 21:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713906596; cv=none; b=Z9hHoRLpr5Ak6KkSXvi3vMixaTLhUwjeR4kf4TKuOIo4psLOHQ8bT79ecGL4V4qoNZTYCKeX6DKLHVp3kl+qBqtq4VCToK3Uoqz+ZO9IO8DXBhPvt1+XckCDqUSz9KkmIKYRoFjkc26AFOhPQTGbmft0ur1/jS+TlZdapEUAsKQ=
+	t=1713907107; cv=none; b=l/S0ZECfTbkYFoq5nsHXj+6JUbfxEJmKvVYzTaBmvjvpjwR9ngRb35Ql7JK42cZr8Ul2VaOtbvPkR5/PCGs1s6AMG6OjdKEtTeHUe6ZP42FCkTUGMRIcVgcoGB4zOzyvajSRmWMWEThtaxZSrL1doQV1iyCWFn+yz/jOvwg0OXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713906596; c=relaxed/simple;
-	bh=FIZLwnCJ46nQbu1Ba72yWKSGnIGxieYcIGj7+JomHgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=DgbSB1r2sFgXC/Mns9NujlX+yhhZ4pGmev/74HaPJf/oIZ+eyyIM2aqzgywg1TKcSukkUjTAlgCPrj6XyElNJdgyJFOjB4Y6aJ8w0sVh+kuwmNpiLlVIggU9cVYKD/vrE++L5SIwejmKqmtIGcqrC2gx8zotZfYofgm9MtG0DAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W25NFkYB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFCCCC116B1;
-	Tue, 23 Apr 2024 21:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713906596;
-	bh=FIZLwnCJ46nQbu1Ba72yWKSGnIGxieYcIGj7+JomHgU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=W25NFkYBxeqYwzD6bWFyCiPs+/hDKJ5tM9c7gw7IddM2ObyMGQliK7AubkPy1bRNk
-	 AacBYM457pzUWBi+TxeNgSqierSERtATQ09RfBVv/wU9KOh417QI02SAqndawIasGg
-	 VFT3e5VBEqtejXS6KzchJcnzyuhMOvziWcurziITzpPs3lBh/Cqyi1eiwuGi/ZnjAM
-	 xjXm5koQN0rjh+NCQ5tuH60x3b8w4Gly0YgMHGUdyP+pCn0VakdL4OYaevq5XdzcKv
-	 jjs6eXn+StBMxt1YsqIHBmq4oczpBFd38T++5OYs5QoZhmwhe76AxPNihTCumo8cIu
-	 Rqz+0rsXieylA==
-Date: Tue, 23 Apr 2024 16:09:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V2] PCI: Clear errors logged in Secondary Status Register
-Message-ID: <20240423210954.GA467443@bhelgaas>
+	s=arc-20240116; t=1713907107; c=relaxed/simple;
+	bh=CJmlaW/WMNPHb2CyrsKTyGi+evxiFQAXb/u85TPFwss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o+vtauRWffFPQlVDGIUWqmcRaR1R/c3zsFZL/LI3bfvlpMCru/tRuMPduAciSIFGKPOARCGOlqGbwl3yx199xE5UpfirS+b24ew/oXmU9+5uihHDm6pmZOIqSooglTTNSojB/TQ6whuPeNCjbf5MWeygn24GMCxlwc8mF1KzoK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KeEf18QK; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713907106; x=1745443106;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CJmlaW/WMNPHb2CyrsKTyGi+evxiFQAXb/u85TPFwss=;
+  b=KeEf18QKitJwhsouG9tcHPOcSfHmoyCoUjmNautjBe0TyL07z4zIedlQ
+   r/S8ahZdG9FkgfqZN47p3nRnGvPg83FkSB6KtqjtRvfLPQk3RUwsnEVHB
+   L6sPFvuAGhgOXm7/ETN9HpF/vM8uk1/GtT74nW5cFZRTreNASFlAGWgrW
+   w4KV/T/gCxz7S+Z/TJC/bSzKtq/FnidYnpEPe7TmZ5VYGOGWZfD7Mutu+
+   Stwd71MyctX+6W/QvsyAFveH2SPkoRtx5hZ8svWlWIsjhpAsQPrFKaazL
+   V/ZiHFKmg2uCIiNMIcKsXiYQQ8euwb48ZWvApAhOsPxb1Ldsh4ccWlyEN
+   Q==;
+X-CSE-ConnectionGUID: D9vRfGi6Qk68Osb+XMMWyg==
+X-CSE-MsgGUID: fgjZQQB3QJiulhFhc9b1lg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13302380"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="13302380"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 14:18:25 -0700
+X-CSE-ConnectionGUID: oxTR76zQS9Kuda1m6qRMJw==
+X-CSE-MsgGUID: EXcF+n1aR165ZtRQG6CROA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="29139854"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 23 Apr 2024 14:18:22 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D2E8F28A; Wed, 24 Apr 2024 00:18:20 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] PCI: dra7xx: Add missing header inclusion
+Date: Wed, 24 Apr 2024 00:18:17 +0300
+Message-ID: <20240423211817.3995488-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240116143258.483235-1-vidyas@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 16, 2024 at 08:02:58PM +0530, Vidya Sagar wrote:
-> The enumeration process leaves the 'Received Master Abort' bit set in
-> the Secondary Status Register of the downstream port in the following
-> scenarios.
-> 
-> (1) The device connected to the downstream port has ARI capability
->     and that makes the kernel set the 'ARI Forwarding Enable' bit in
->     the Device Control 2 Register of the downstream port. This
->     effectively makes the downstream port forward the configuration
->     requests targeting the devices downstream of it, even though they
->     don't exist in reality. It causes the downstream devices return
->     completions with UR set in the status in turn causing 'Received
->     Master Abort' bit set.
-> 
->     In contrast, if the downstream device doesn't have ARI capability,
->     the 'ARI Forwarding Enable' bit in the downstream port is not set
->     and any configuration requests targeting the downstream devices
->     that don't exist are terminated (section 6.13 of PCI Express Base
->     6.0 spec) in the downstream port itself resulting in no change of
->     the 'Received Master Abort' bit.
-> 
-> (2) A PCIe switch is connected to the downstream port and when the
->     enumeration flow tries to explore the presence of devices that
->     don't really exist downstream of the switch, the downstream
->     port receives the completions with UR set causing the 'Received
->     Master Abort' bit set.
-> 
-> Clear 'Received Master Abort' bit to keep the bridge device in a clean
-> state post enumeration.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Driver is using chained_irq_*() APIs, add the respective inclusion.
 
-Applied to pci/enumeration for v6.10, thanks!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I shortened the commit log because I think this happens all the time,
-not just in the specific cases you mentioned above:
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 2015f51664bc..cf8392190856 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
++#include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-    PCI: Clear Secondary Status errors after enumeration
-
-    We enumerate devices by attempting config reads to the Vendor ID of each
-    possible device.  On conventional PCI, if no device responds, the read
-    terminates with a Master Abort (PCI r3.0, sec 6.1).  On PCIe, the config
-    read is terminated as an Unsupported Request (PCIe r6.0, sec 2.3.2,
-    7.5.1.3.7).  In either case, if the read addressed a device below a bridge,
-    it is logged by setting "Received Master Abort" in the bridge Secondary
-    Status register.
-
-    Clear any errors logged in the Secondary Status register after enumeration.
-
-> ---
-> V2:
-> * Changed commit message based on Bjorn's feedback
-> 
->  drivers/pci/probe.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 795534589b98..640d2871b061 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1470,6 +1470,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  	}
->  
->  out:
-> +	/* Clear errors in the Secondary Status Register */
-> +	pci_write_config_word(dev, PCI_SEC_STATUS, 0xffff);
-> +
->  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
->  
->  	pm_runtime_put(&dev->dev);
-> -- 
-> 2.25.1
-> 
 
