@@ -1,79 +1,83 @@
-Return-Path: <linux-pci+bounces-6624-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6626-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA2428B08D0
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 13:58:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98C1A8B09D1
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 14:37:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 277C41C20C49
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 11:58:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F2981F25666
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 12:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E89315A48B;
-	Wed, 24 Apr 2024 11:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6492633989;
+	Wed, 24 Apr 2024 12:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="ZKosjc/A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7A8C159919
-	for <linux-pci@vger.kernel.org>; Wed, 24 Apr 2024 11:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7656219EA
+	for <linux-pci@vger.kernel.org>; Wed, 24 Apr 2024 12:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713959910; cv=none; b=d+J8Et4HK5gjXt/s+5RilTEELE66WhkkZA9I/fo8B9Npu5+Y5GlLzN1TToO5K5MKVVNG4oDUinLK8vjUZlPxPB/UrUYBZsPIWnORW2Wb6oPj0p96nMKxO9Bx2BQ0gxDXUxUH0Zy8zxyC7dyUmTZOcGi97SltO2Qp3kqZkvBW6KY=
+	t=1713962268; cv=none; b=FdPcXdTMivmaKRjCd7mY3f9x0XQTafz7DN4Ct+Llb7u2kL5LLgghDpOSS+JF8tqEVOHqyFuifzwteEl7GWpdZYhPLS4wedCWQKWKEMxpyvyZoDec7YHw1pC+pwO6PCK8Zj8fbHMNcU6XvTaJ4aFyNTgIfpEI6VPkiqecWbt2qt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713959910; c=relaxed/simple;
-	bh=NeXDK5p3aNzw3rjcaMN51LxcwHpcq+bz8Z40G1upPMU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RygCdK9ztK7PeeE2hUBlPoVuPDd8rHDgIieMYaRy5AXkhdmDZgnDYc0I4oeKNxF97lkBc7WJLx0BYXZRhDSaGtgVakCccFZwGEsnxva8fpxmWfbQ2xqSWCmyQRrQ+XNmnaLKZuGBNj0xauLrmzH/o/jJSpIUnPEpmduQZWwsDf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 0E63E92009C; Wed, 24 Apr 2024 13:58:25 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 0AEA692009B;
-	Wed, 24 Apr 2024 12:58:25 +0100 (BST)
-Date: Wed, 24 Apr 2024 12:58:24 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
-    linux-pci@vger.kernel.org
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 218765] New: broken device,
- retraining non-functional downstream link at 2.5GT/s]
-In-Reply-To: <20240423152330.GA441398@bhelgaas>
-Message-ID: <alpine.DEB.2.21.2404241240530.9972@angie.orcam.me.uk>
-References: <20240423152330.GA441398@bhelgaas>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1713962268; c=relaxed/simple;
+	bh=wd4veTdLpoEtjArjvTVZaErpq4Brh+HhcvjqxPMOy50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gygAXh8rCyPxLlO8kDEkD1pV48Vk47gNU/LLlZlmKtkXof00w+TYnGNtNPaUzV3FU7fgyY5p5buSZeX2mj20JKZLG1lMXCY7lkLGG3eK54L/rGx5/UrfNcfx4vMyNFbd/Y5jW+W2LmYzZpLoaeJeqd160GpDhKNADbyqQsGcj0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=ZKosjc/A; arc=none smtp.client-ip=195.113.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
+	id 2FCF2286B01; Wed, 24 Apr 2024 14:32:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1713961943;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kKg+n8l4yLlSXI5sdMj2S8L++IfRqJSYpd46cLDsdOw=;
+	b=ZKosjc/A6maDW+heshK89NgpXaus9MNjIRvl+FNqh8G5B3A9JRbTuWTppePUvMdbkSh+68
+	tWcwl0HLZQV67+Zpj08T26whiFunrRCMKfcGe9IbJ018qf8X3tJby03E7al0Vc+1slVhMz
+	p4sxT8MgZnhN9rvk0XilAQlmSSEdtCA=
+Date: Wed, 24 Apr 2024 14:32:23 +0200
+From: Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: linux-pci@vger.kernel.org
+Subject: Re: [PATCH pciutils v3] ls-ecaps: Correct the link state reporting
+Message-ID: <mj+md-20240424.123213.99334.nikam@ucw.cz>
+References: <20240424102011.1706839-1-aik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424102011.1706839-1-aik@amd.com>
 
-On Tue, 23 Apr 2024, Bjorn Helgaas wrote:
+Hi!
 
-> FYI.  The retraining was added by a89c82249c37 ("PCI: Work around PCIe
-> link training failures").
+> PCIe r6.0, sec 7.9.26.4.2 "Link IDE Stream Status Register defines"
+> the link state as:
 > 
-> Paul, is this a regression?  a89c82249c37 appeared in v6.5.  I
-> *assume* whatever is below bus 01 did actually work before v6.5, in
-> spite of the fact that apparently PCI_EXP_LNKSTA_DLLLA was not set 
-> when we enumerated the 00:1c.0 Root Port?
+> 0000b Insecure
+> 0010b Secure
+> 
+> The same definition applies to selective streams as well.
+> The existing code wrongly assumes "secure" is 0001b, fix that for both
+> link and selective streams.
+> 
+> While at this, add missing "Selective IDE for Configuration Requests Enable".
+> Also fix the base and limit parsing for the memory and RID ranges.
+> 
+> Fixes: 42fc4263ec0e ("ls-ecaps: Add decode support for IDE Extended Capability")
+> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
 
-Bjorn,
+Thanks, applied.
 
- Has <https://patchwork.kernel.org/project/linux-pci/list/?series=824858> 
-gone anywhere?  I believe this would've addressed the issue of the delay.
-
- Over the last couple of months Ilpo and myself have been discussing the 
-issue of clearing leftover LBMS state and Smita has literally just posted 
-a proposed solution for that, which I haven't yet had time to go through.  
-The combination of a new day job, overall shortage of time, and hardware
-playing tricks with me has contributed to me not having made anything in 
-this area recently.  I haven't lost interest though and I'll see what I 
-can do.
-
-  Maciej
+				Martin
 
