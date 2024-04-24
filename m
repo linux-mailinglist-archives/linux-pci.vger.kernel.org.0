@@ -1,230 +1,262 @@
-Return-Path: <linux-pci+bounces-6612-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6613-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 431AE8B0617
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 11:32:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DC8B8B0725
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 12:21:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6CEF41C22AF4
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 09:32:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3314DB213D3
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 10:21:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B5E8158D98;
-	Wed, 24 Apr 2024 09:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DFFE158D9A;
+	Wed, 24 Apr 2024 10:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UWpiYij3"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="k7qZjpBo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9272D1EF1A;
-	Wed, 24 Apr 2024 09:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713951169; cv=none; b=iYEEadptpD6vJvOj77Pn5NQ0ibm2/w++O1hRbtuRF0FO2yRdNct+ysqC/mDVjVpB07i08b47OkA9w/gDxtqmqtmwsIKExJPuD0MFF/aQ3pnq0Q5WL8PaIPxMByVKztpGfUMpmcyeJhtXXtQv8M2ei/2AgZRUEw5PBfbAIsdKWt0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713951169; c=relaxed/simple;
-	bh=odLCeXV/7pBP8vRHrz9jbJlhc8urXDK1R3TAXp+bME0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BRXiXTPfxkmZRHCaPQ+KAe7iEnNpSf5Xo4EdIAO5LhCJLEANVF6Z75GSrbfPybC/cQjclSrJbMjUHNlLe+0ipF67ZB5/PF50PZ/Y9H8xCPZ7oA6nBtBQmMx07rVsUb56pIkBLeiRswgMG82mxb36jqKFC0fmzaKZa3Gi2L/zl/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UWpiYij3; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713951168; x=1745487168;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=odLCeXV/7pBP8vRHrz9jbJlhc8urXDK1R3TAXp+bME0=;
-  b=UWpiYij31oNeUXiVNFPFvtB2c5QqZvH77tYC44rURL8rUGL/mIREaD9s
-   bLJ9rlzcjt5XHYYxlSsTOGuhjUWmpRF6wa8dxcULweycI4wrUqMUR2p8n
-   WysrlRR/D3d24i6UYnKwyxXTB+RmDWbvChP7i9w0doEco02huumJdffaV
-   mV5/i4d+A3qfKEA4f3tXjDxg2LMGi6pE0Gx7QXq5kBaqHYwAFvsJtr/xj
-   s7Lqt8R+FQnr5+big1vfwtIZ3YCTCs2ed6yXhIfz7nuDe6G32DmOlIWsu
-   1Xk8RS3OdBPEab4jWW6Ha/tbSQKUUWvWN/YL5rmx2xW8P/kqBIEI79iS5
-   Q==;
-X-CSE-ConnectionGUID: xY7vXIJAQzC+bsrUtGxXMA==
-X-CSE-MsgGUID: WwS+QIxOQnKbDzVXdwqw6Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="20266894"
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="20266894"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 02:32:46 -0700
-X-CSE-ConnectionGUID: 1IlfOP5SSgKRTdVfu3HG8A==
-X-CSE-MsgGUID: 3htIX186StqgyE5VNjzD0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,225,1708416000"; 
-   d="scan'208";a="47910954"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.41])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 02:32:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 24 Apr 2024 12:32:36 +0300 (EEST)
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-cc: linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <helgaas@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, 
-    Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>, 
-    Hagan Billy <billy.hagan@amd.com>, Simon Guinot <simon.guinot@seagate.com>, 
-    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
-    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH] PCI: pciehp: Clear LBMS on hot-remove to prevent link
- speed reduction
-In-Reply-To: <20240424033339.250385-1-Smita.KoralahalliChannabasappa@amd.com>
-Message-ID: <52290bb0-97bc-aa52-6606-cc734a492cc1@linux.intel.com>
-References: <20240424033339.250385-1-Smita.KoralahalliChannabasappa@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBCE159592
+	for <linux-pci@vger.kernel.org>; Wed, 24 Apr 2024 10:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713954045; cv=fail; b=KjorArdlU3cfB8yhiAFLgZ8Ys5VPeI36uxC2j4TKMdtv1xx9fwdlnRpztVTXlLbZHVdzLHdoHCQIOzvRsV4TiVMAcVCyFQgcb8toHiIu5lxWteN0ByFRXe5wJTsg9WyoKbNxdeoGl8gv6Gei0f+7Em95YrKjXJVqdPcVC7ACB28=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713954045; c=relaxed/simple;
+	bh=XJj0hTky3zt9EccBK+vrD2anRRy4tuHexKC8QkoOhi8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HzjohX0/thRaIr8nlIaqNo8DSgv+n6R5NG2BNWE2Cdi+Z54aCioTxvCS9EmniaT1GZYokgbHi71tMzX5KX/Koi1nL2F/UT5gFLEiuhIIKv1iiqa4k322bgd9igY34GXcmyqt54f79eblFQI/+l6WW/5vbMTxZiwhx2erg1VjUKQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=k7qZjpBo; arc=fail smtp.client-ip=40.107.223.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mpJX4pMiMV3kEp3MXCjWtXNZPZCYUSS1i/sXd7XCJREpjXKwcYvx160XLfM0orEwNJGktNZZeBY9XzSgbH26DBR/4UBfTd8FV9AC9/Aia2c+y+5RF7HnLUjuoXkQoRKuwUOx1PHKihM8uzTj9BZkqRRsKg0o/Z4gI9/y5VeEyVcebKaA902jV7uMQaGgQw454GGz4FejuAgqiu59Pzmdrf7U/zYS+3pVoHvpkLJX3rRVMBviZs43CHdar5Xh3Y4dI2ZZ2RxZXIbPbNaSiljoXwi9ejLCCuL2sVDQZU4mBvAQKv2RkXkagrPo1blvj1v3H4zOba1WB2H/Z1nqCzF4NQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0DMooJliNxAiIw4hfMPXmQrtIWDl96H6nIsXDSvB644=;
+ b=U63kEXSwiqGp9S+bWgBxbivQ/YjKXaZNJpc6r0PrsoTXY+wTXgSE22FOQJJM0CH43AjDfZB11ABM3fT8RXNeQZ2UmcRpwFywoMu0wFQni2i5FhM30vzC+7A+i8KO22XgXpv+e05VMbIDvi+O+2qCyX23WzDA3yh2QNp5ST1alD45mQNPItXtXeMnrg+xDvp/yRtf23JIqR4FD1VPCapdqgsopT6A32CkzsTU2lnQ5jW7WFZbPlF6tj3bN7IBT8OvhtPmjB6PikU0FELRiPOA16eNjITGuBRWSPCMfZ0xQuvul9wLx5oHsjaI4OySordmtKht7Y3qSoibXZdlPXzNlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0DMooJliNxAiIw4hfMPXmQrtIWDl96H6nIsXDSvB644=;
+ b=k7qZjpBorq6/mnJgClVFsakMZ2vuR67mB9INDmcjry0tk51RRvj3PLq6nWu0XRBbmV3PNYVJ//nxpXmRMCvsw9LWPX2CTEmuUgEMspEFylMNSPIlqp06i5x2YV/v3Hf1lE6u3TsXG0BTBQISBrr78me3nCN7+nxhoztK4roAz1o=
+Received: from CH2PR18CA0048.namprd18.prod.outlook.com (2603:10b6:610:55::28)
+ by CY5PR12MB6251.namprd12.prod.outlook.com (2603:10b6:930:21::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
+ 2024 10:20:41 +0000
+Received: from CH2PEPF00000142.namprd02.prod.outlook.com
+ (2603:10b6:610:55:cafe::94) by CH2PR18CA0048.outlook.office365.com
+ (2603:10b6:610:55::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.35 via Frontend
+ Transport; Wed, 24 Apr 2024 10:20:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF00000142.mail.protection.outlook.com (10.167.244.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7519.19 via Frontend Transport; Wed, 24 Apr 2024 10:20:41 +0000
+Received: from aiemdee.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Apr
+ 2024 05:20:39 -0500
+From: Alexey Kardashevskiy <aik@amd.com>
+To: <linux-pci@vger.kernel.org>
+CC: =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>, Alexey Kardashevskiy
+	<aik@amd.com>
+Subject: [PATCH pciutils v3] ls-ecaps: Correct the link state reporting
+Date: Wed, 24 Apr 2024 20:20:11 +1000
+Message-ID: <20240424102011.1706839-1-aik@amd.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000142:EE_|CY5PR12MB6251:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f466953-27d2-45d7-ae97-08dc6448319f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4sG+jPlEj54bIAHQ61ZM+BkNwBPgmf96borR51nFi7zEYA6ij60EAHBLVFRn?=
+ =?us-ascii?Q?UXBklm+0C/VIX81sCh5pF87VQ54k02ZbUNxi6tVJrBla2e/3o/YLKlofpyph?=
+ =?us-ascii?Q?HBAGSMSbH8eQ9H63LGlGTfCl9aXUknfDgyXR5HYiGLoqluPyHAtx85aIbUc/?=
+ =?us-ascii?Q?jPYcaXBG0gOpP2/1nuJB7Ft9lWZOjZ+K5VHOnvDJOyQM9CA50DW+nwXQrhIF?=
+ =?us-ascii?Q?wrJVZkJkOWWAK1GR1+BsCohgqXApCuqq+ilrMuPy/U+g5+oDL+jsyp5KvzCS?=
+ =?us-ascii?Q?kzUPsqztmii2dyEOC6AELeNl8xC2y4Nf2ZZ266uI3+066OYgLltVE72kCHQ2?=
+ =?us-ascii?Q?WKhzxmx3NHyhJcfh9hc+ipWzESr7aLodiECJIbF2HyXRNwuhxjrdiKhzVm8D?=
+ =?us-ascii?Q?aOv2mHervugKJU5NmSVebL4iw0cMvxVU4L2MvhfyVdoc7ZDgOoRo07Ee7FX4?=
+ =?us-ascii?Q?2EUFSuI9b1L0FAtqD+EW3IXjZBHhxlD/FGXSs1+4QSPaAZvEU6Grr5/iqu2B?=
+ =?us-ascii?Q?NtremSowlaMqatHDcpQmU2uPirLOcXaWQyu3wyVS6BLuWb5WejKOA/XTQ18+?=
+ =?us-ascii?Q?gGiaVtmPpmX6Vp6p308rDkE4w2NdQPFoR8nZ6j1LXhfATJKB3pNX9Qb0E5JD?=
+ =?us-ascii?Q?Y/irHIErMu5pJWp1fld6VMuzbxkPNXG7zRxeAnAhXVQ7x8GMuaALDcn9RFuN?=
+ =?us-ascii?Q?pqG2+MJs80o9125skeenqUNM1TE+3YVW02Q5D86y22mtg/GHXYXIlW9mv5LT?=
+ =?us-ascii?Q?ocOJGBNnd3FVzYWIIs4cCpBU+EF7+AX3Ik/7WC0ORVIwUxyQA8hUUALVCog9?=
+ =?us-ascii?Q?DwBwrEchxscWrxyLu7JFRMEPOafQp8mxJ65yshsR/Zf6vkqPGDapzxMTC/BD?=
+ =?us-ascii?Q?9M64vtmHatZrhrtx96hhrbL09PH7ahVlOuwqYfAFPu6A3z40TQnOKz/4HBl3?=
+ =?us-ascii?Q?MrXifYePCgJgm1NCGEyzXR2Y1tINt6CzjNnXNZJ7NfelBIWOWCEgDBX2oAPG?=
+ =?us-ascii?Q?b2TVmIxJlhVbyU5+4MYo84GCJ2RAX1xT8vNatgZGfALByi0WlN1PpS5pWD6f?=
+ =?us-ascii?Q?tvpuuspli1oAwBA+7Zw+Ym3BuyVDRqNz29WDW1Zn4NtgDNL5erYG32T74mEd?=
+ =?us-ascii?Q?5bXxFMu+jOmStX5WQ7/XxchzSz3lVgrh+sJuposbioDDRcimo+cUs9WEJoeO?=
+ =?us-ascii?Q?G8vMAexglIT+Pn4I2m+aEp/CpNgcM5w4O+lTwjCqsPUoJXaRxo4St2IyPx4F?=
+ =?us-ascii?Q?NE/TXEAOlmdpcdz2lZaGMepgxUqrYNEQFIvzOqgzA+MBSV8lGSglOhlLMY93?=
+ =?us-ascii?Q?2IaAnL5pnxQFdiYwPac2hfAoG2OGwJ4qWbibwi6Uf8g2L0V/h3PxOuGmwLGb?=
+ =?us-ascii?Q?5aWycGVAfQOCdORFH9VUmKQkh7/u?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(36860700004)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 10:20:41.2114
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f466953-27d2-45d7-ae97-08dc6448319f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF00000142.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6251
 
-On Wed, 24 Apr 2024, Smita Koralahalli wrote:
+PCIe r6.0, sec 7.9.26.4.2 "Link IDE Stream Status Register defines"
+the link state as:
 
-> Clear Link Bandwidth Management Status (LBMS) if set, on a hot-remove event.
-> 
-> The hot-remove event could result in target link speed reduction if LBMS
-> is set, due to a delay in Presence Detect State Change (PDSC) happening
-> after a Data Link Layer State Change event (DLLSC).
-> 
-> In reality, PDSC and DLLSC events rarely come in simultaneously. Delay in
-> PDSC can sometimes be too late and the slot could have already been
-> powered down just by a DLLSC event. And the delayed PDSC could falsely be
-> interpreted as an interrupt raised to turn the slot on. This false process
-> of powering the slot on, without a link forces the kernel to retrain the
-> link if LBMS is set, to a lower speed to restablish the link thereby
-> bringing down the link speeds [2].
-> 
-> According to PCIe r6.2 sec 7.5.3.8 [1], it is derived that, LBMS cannot
-> be set for an unconnected link and if set, it serves the purpose of
-> indicating that there is actually a device down an inactive link.
-> However, hardware could have already set LBMS when the device was
-> connected to the port i.e when the state was DL_Up or DL_Active. Some
-> hardwares would have even attempted retrain going into recovery mode,
-> just before transitioning to DL_Down.
-> 
-> Thus the set LBMS is never cleared and might force software to cause link
-> speed drops when there is no link [2].
-> 
-> Dmesg before:
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> 	pcieport 0000:20:01.1: broken device, retraining non-functional downstream link at 2.5GT/s
-> 	pcieport 0000:20:01.1: retraining failed
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): No link
-> 
-> Dmesg after:
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): No link
-> 
-> [1] PCI Express Base Specification Revision 6.2, Jan 25 2024.
->     https://members.pcisig.com/wg/PCI-SIG/document/20590
-> [2] Commit a89c82249c37 ("PCI: Work around PCIe link training failures")
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> ---
-> 1. Should be based on top of fixes for link retrain status in
-> pcie_wait_for_link_delay()
-> https://patchwork.kernel.org/project/linux-pci/list/?series=824858
-> https://lore.kernel.org/linux-pci/53b2239b-4a23-a948-a422-4005cbf76148@linux.intel.com/
-> 
-> Without the fixes patch output would be:
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> 	pcieport 0000:20:01.1: broken device, retraining non-functional downstream link at 2.5GT/s
-> 	pcieport 0000:20:01.1: retraining failed
-> 	pcieport 0000:20:01.1: pciehp: Slot(59): No device found.
+0000b Insecure
+0010b Secure
 
-Did you hit the 60 sec delay issue without series 824858? If you've tested 
-them and the fixes helped your case, could you perhaps give Tested-by for 
-that series too (in the relevant thread)?
+The same definition applies to selective streams as well.
+The existing code wrongly assumes "secure" is 0001b, fix that for both
+link and selective streams.
 
-> 2. I initially attempted to wait for both events PDSC and DLLSC to happen
-> and then turn on the slot.
-> Similar to: https://lore.kernel.org/lkml/20190205210701.25387-1-mr.nuke.me@gmail.com/
-> but before turning on the slot.
-> 
-> Something like:
-> -		ctrl->state = POWERON_STATE;
-> -		mutex_unlock(&ctrl->state_lock);
-> -		if (present)
-> +		if (present && link_active) {
-> +			ctrl->state = POWERON_STATE;
-> +			mutex_unlock(&ctrl->state_lock);
-> 			ctrl_info(ctrl, "Slot(%s): Card present\n",
-> 				  slot_name(ctrl));
-> -		if (link_active)
-> 			ctrl_info(ctrl, "Slot(%s): Link Up\n",
-> 				  slot_name(ctrl));
-> -		ctrl->request_result = pciehp_enable_slot(ctrl);
-> -		break;
-> +			ctrl->request_result = pciehp_enable_slot(ctrl);
-> +			break;
-> +		}
-> +		else {
-> +			mutex_unlock(&ctrl->state_lock);
-> +			break;
-> +		}
-> 
-> This would also avoid printing the lines below on a remove event.
-> pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> pcieport 0000:20:01.1: pciehp: Slot(59): No link
-> 
-> I understand this would likely be not applicable in places where broken
-> devices hardwire PDS to zero and PDSC would never happen. But I'm open to
-> making changes if this is more applicable. Because, SW cannot directly
-> track the interference of HW in attempting link retrain and setting LBMS.
-> 
-> 3. I tried introducing delay similar to pcie_wait_for_presence() but I
-> was not successful in picking the right numbers. Hence hit with the same
-> link speed drop.
-> 
-> 4. For some reason I was unable to clear LBMS with:
-> 	pcie_capability_clear_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
-> 				   PCI_EXP_LNKSTA_LBMS);
+While at this, add missing "Selective IDE for Configuration Requests Enable".
+Also fix the base and limit parsing for the memory and RID ranges.
 
-LBMS is write-1-to-clear, pcie_capability_clear_word() tries to write 0 
-there (the accessor doesn't do what you seem to expect, it clears normal 
-bits, not write-1-to-clear bits).
+Fixes: 42fc4263ec0e ("ls-ecaps: Add decode support for IDE Extended Capability")
+Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+---
+Changes:
+v3:
+* added clause about memory/rid ranges
 
-> ---
->  drivers/pci/hotplug/pciehp_pci.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-> index ad12515a4a12..9155fdfd1d37 100644
-> --- a/drivers/pci/hotplug/pciehp_pci.c
-> +++ b/drivers/pci/hotplug/pciehp_pci.c
-> @@ -92,7 +92,7 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
->  {
->  	struct pci_dev *dev, *temp;
->  	struct pci_bus *parent = ctrl->pcie->port->subordinate;
-> -	u16 command;
-> +	u16 command, lnksta;
->  
->  	ctrl_dbg(ctrl, "%s: domain:bus:dev = %04x:%02x:00\n",
->  		 __func__, pci_domain_nr(parent), parent->number);
-> @@ -134,4 +134,10 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
->  	}
->  
->  	pci_unlock_rescan_remove();
-> +
-> +	/* Clear LBMS on removal */
-> +	pcie_capability_read_word(ctrl->pcie->port, PCI_EXP_LNKSTA, &lnksta);
-> +	if (lnksta & PCI_EXP_LNKSTA_LBMS)
-> +		pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
-> +					   PCI_EXP_LNKSTA_LBMS);
+v2:
+* fixed memory and RID base/limit values parsing
+* added missing "IDE for Configuration Requests Enable"
+* fixed the example
+---
+ lib/header.h  |  1 +
+ ls-ecaps.c    | 13 +++++++++----
+ tests/cap-ide | 12 ++++++------
+ 3 files changed, 16 insertions(+), 10 deletions(-)
 
-It's enough to unconditionally write PCI_EXP_LNKSTA_LBMS, no need to 
-check first. The comment is just spelling out what can already be read 
-from the code so I'd drop the comment.
-
-I agree it makes sense to clear the LBMS when device is removed.
-
+diff --git a/lib/header.h b/lib/header.h
+index 0b0ed9a..031912f 100644
+--- a/lib/header.h
++++ b/lib/header.h
+@@ -1464,6 +1464,7 @@
+ #define  PCI_IDE_SEL_CTL_TX_AGGR_PR(x)	(((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
+ #define  PCI_IDE_SEL_CTL_TX_AGGR_CPL(x)	(((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
+ #define  PCI_IDE_SEL_CTL_PCRC_EN	0x100	/* PCRC Enable */
++#define  PCI_IDE_SEL_CTL_CFG_EN         0x200   /* Selective IDE for Configuration Requests Enable */
+ #define  PCI_IDE_SEL_CTL_PART_ENC(x)	(((x) >> 10) & 0xf)  /* Partial Header Encryption Mode */
+ #define  PCI_IDE_SEL_CTL_ALG(x)		(((x) >> 14) & 0x1f) /* Selected Algorithm */
+ #define  PCI_IDE_SEL_CTL_TC(x)		(((x) >> 19) & 0x7)  /* Traffic Class */
+diff --git a/ls-ecaps.c b/ls-ecaps.c
+index b40ba72..2340084 100644
+--- a/ls-ecaps.c
++++ b/ls-ecaps.c
+@@ -1512,7 +1512,7 @@ static void
+ cap_ide(struct device *d, int where)
+ {
+     const char *hdr_enc_mode[] = { "no", "17:2", "25:2", "33:2", "41:2" };
+-    const char *stream_state[] = { "insecure", "secure" };
++    const char *stream_state[] = { "insecure", "reserved", "secure" };
+     const char *aggr[] = { "-", "=2", "=4", "=8" };
+     u32 l, l2, linknum = 0, selnum = 0, addrnum, off, i, j;
+     char buf1[16], buf2[16], offs[16];
+@@ -1613,7 +1613,7 @@ cap_ide(struct device *d, int where)
+         // Selective IDE Stream Control Register
+         l = get_conf_long(d, off);
+ 
+-        printf("\t\t%sSelectiveIDE#%d Ctl: En%c NPR%s PR%s CPL%s PCRC%c HdrEnc=%s Alg='%s' TC%d ID%d%s\n",
++        printf("\t\t%sSelectiveIDE#%d Ctl: En%c NPR%s PR%s CPL%s PCRC%c CFG%c HdrEnc=%s Alg='%s' TC%d ID%d%s\n",
+           offstr(offs, off),
+           i,
+           FLAG(l, PCI_IDE_SEL_CTL_EN),
+@@ -1621,6 +1621,7 @@ cap_ide(struct device *d, int where)
+           aggr[PCI_IDE_SEL_CTL_TX_AGGR_PR(l)],
+           aggr[PCI_IDE_SEL_CTL_TX_AGGR_CPL(l)],
+           FLAG(l, PCI_IDE_SEL_CTL_PCRC_EN),
++          FLAG(l, PCI_IDE_SEL_CTL_CFG_EN),
+           TABLE(hdr_enc_mode, PCI_IDE_SEL_CTL_PART_ENC(l), buf1),
+           ide_alg(buf2, sizeof(buf2), PCI_IDE_SEL_CTL_ALG(l)),
+           PCI_IDE_SEL_CTL_TC(l),
+@@ -1664,14 +1665,18 @@ cap_ide(struct device *d, int where)
+ 
+             l = get_conf_long(d, off);
+             limit = get_conf_long(d, off + 4);
++            limit <<= 32;
++            limit |= (PCI_IDE_SEL_ADDR_1_LIMIT_LOW(l) << 20) | 0xFFFFF;
+             base = get_conf_long(d, off + 8);
++            base <<= 32;
++            base |= PCI_IDE_SEL_ADDR_1_BASE_LOW(l) << 20;
+             printf("\t\t%sSelectiveIDE#%d RID#%d: Valid%c Base=%lx Limit=%lx\n",
+               offstr(offs, off),
+               i,
+               j,
+               FLAG(l, PCI_IDE_SEL_ADDR_1_VALID),
+-              (base << 32) | PCI_IDE_SEL_ADDR_1_BASE_LOW(l),
+-              (limit << 32) | PCI_IDE_SEL_ADDR_1_LIMIT_LOW(l));
++              base,
++              limit);
+             off += 12;
+           }
+       }
+diff --git a/tests/cap-ide b/tests/cap-ide
+index 01a9e09..edae551 100644
+--- a/tests/cap-ide
++++ b/tests/cap-ide
+@@ -79,10 +79,10 @@ e1:00.0 Class 0800: Device aaaa:bbbb
+ 		IDECap: Lnk=0 Sel=1 FlowThru- PartHdr- Aggr- PCPC- IDE_KM+ Alg='AES-GCM-256-96b' TCs=8 TeeLim+
+ 		IDECtl: FTEn-
+ 		SelectiveIDE#0 Cap: RID#=1
+-		SelectiveIDE#0 Ctl: En- NPR- PR- CPL- PCRC- HdrEnc=no Alg='AES-GCM-256-96b' TC0 ID0
+-		SelectiveIDE#0 Sta: insecure RecvChkFail-
+-		SelectiveIDE#0 RID: Valid- Base=0 Limit=0 SegBase=0
+-		SelectiveIDE#0 RID#0: Valid- Base=0 Limit=0
++		SelectiveIDE#0 Ctl: En+ NPR- PR- CPL- PCRC- CFG- HdrEnc=no Alg='AES-GCM-256-96b' TC0 ID0 Default
++		SelectiveIDE#0 Sta: secure RecvChkFail-
++		SelectiveIDE#0 RID: Valid+ Base=0 Limit=ffff SegBase=0
++		SelectiveIDE#0 RID#0: Valid+ Base=0 Limit=ffffffffffffffff
+ 	Capabilities: [e00 v2] Data Object Exchange
+ 		DOECap: IntSup-
+ 		DOECtl: IntEn-
+@@ -219,8 +219,8 @@ f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ 810: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ 820: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ 830: 30 00 01 e0 42 e0 00 01 00 00 00 00 01 00 00 00
+-840: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+-850: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++840: 01 00 40 00 02 00 00 00 00 ff ff 00 01 00 00 00
++850: 01 00 f0 ff ff ff ff ff 00 00 00 00 00 00 00 00
+ 860: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ 870: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ 880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 -- 
- i.
+2.41.0
 
 
