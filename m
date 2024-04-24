@@ -1,119 +1,174 @@
-Return-Path: <linux-pci+bounces-6649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E257E8B120F
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 20:21:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC41C8B1435
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 22:12:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 068BEB21F4E
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 18:21:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3ED821F238FB
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 20:12:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF9B01836C7;
-	Wed, 24 Apr 2024 18:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4361D13C9C6;
+	Wed, 24 Apr 2024 20:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3cj5rbl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcNalWWx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E77C181326;
-	Wed, 24 Apr 2024 18:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F2A1BC46;
+	Wed, 24 Apr 2024 20:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713982524; cv=none; b=sJCsXqgCmwaqGjU0LqmFOkaoZ8/B8a8aiHamDceqgbIJwQ2b5D0EsfCn8k1xYxMWq6/SapKc8A8h7zpK28mAFA6cUcDQz6SNnk7JpYu6a6a3/IgWMlXJ9GdX4VwSIjfFFxvadGD1XRnr1n+JdtC/j7naHNQOyCPItrT6htfpMvk=
+	t=1713989552; cv=none; b=kTrSCbOPqnZzGAJGpZfUyvxR9Otbiad4GvXjfNk0LTlqowkn4/YfkjEg9KBce30lPg5fy4REnVTpk9GVzIaVLkkfSnwTpesv1SY6HbtGJpkZ428Z30XbgHEPa7kDqfZGJeN3QWQFqZboC+V8pXsBaoEn6WWk23hqbUukf7orVoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713982524; c=relaxed/simple;
-	bh=obhXYEmt6d4ZPBEnG583vH7Ox14Ir+rTrmmNAEgF6jg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=seFhzEHQ9gn8XJWiPF+QRuIz2N1OrP8gnh5RrUqdWUwS3JpFrV+ZNEoNYosrFDe6c/wZNbyQGQTDIMWNJkXYmJCSrjF9YXY9MaRqBcsYisxtvq8RMLFcc8IZbrcxqhPByD4G2Z7Usx48Xd7KJBL56Q+jG6cLEu+Q1mhDvQgmii4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3cj5rbl; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713982521; x=1745518521;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=obhXYEmt6d4ZPBEnG583vH7Ox14Ir+rTrmmNAEgF6jg=;
-  b=B3cj5rblgcOnu7sbJn3nZ6XpbLriNwm3J5GbITYADQK568h/LFJSiUT8
-   UimrECfPEpMig6AckfbBLfsuktxc41MaXrrG14A5hR+a+AStygTFKu4FY
-   3ixfK4A+GOJElGXBZ0yGAnb0chM8TdAhDWg+udOQAG1qsGwjFU1vd6c9s
-   ZA7+4QM0TYcJYtk7zzQMoLqYxBdEg0TGu4J1fnY18l+iD7RkmSGjljDDo
-   9Mws2y9QAj7ajRGt8Dv/mCYy3lOqVed1nwWnUgMyzjLQ2fTCIBuyzcV/j
-   tpnvl13t4cKwf82g375OYGIyREESPJrMq6PEZ4rhqMZT5EbQ5AGpr/E6O
-   Q==;
-X-CSE-ConnectionGUID: gGjtlU4CTWi2nxX1DEfAjw==
-X-CSE-MsgGUID: CG7faPwISdCsUXGIJl3fdA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9503539"
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="9503539"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:21 -0700
-X-CSE-ConnectionGUID: VcIiWi/bQZai5oz5I5U70w==
-X-CSE-MsgGUID: lbQj+TPeSR6BAaCag2O2PQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
-   d="scan'208";a="55750130"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:15:20 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v4 42/71] x86/PCI: Switch to new Intel CPU model defines
-Date: Wed, 24 Apr 2024 11:15:20 -0700
-Message-ID: <20240424181520.41965-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240424181245.41141-1-tony.luck@intel.com>
-References: <20240424181245.41141-1-tony.luck@intel.com>
+	s=arc-20240116; t=1713989552; c=relaxed/simple;
+	bh=l1RGYmYQuIqY4fDQ48B8iWBxN7iKGEFcCbhtbIhBmrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FQNf9v7zgKnsu3OC0Kg70AkrQKdFfOPukItuo3YIlHL1stZgW5PfCW+CSbbn+vD5iBLW84Zatd0Zwxvvf2bSwrE1WnnGTy5RTqAhNY4QTMgt2tbGoVFDbcN+dxAXEaBdfQ7QgTI/77IHO+mOyANBFr4pXlMt7OlWS+ohogSFIas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcNalWWx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D1BC113CD;
+	Wed, 24 Apr 2024 20:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713989551;
+	bh=l1RGYmYQuIqY4fDQ48B8iWBxN7iKGEFcCbhtbIhBmrE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FcNalWWxpCc4o499SxiFn2Cwa8YJLOHHzrNRUz8AXiOhIPU37REbmJfFyL7TcHVOe
+	 SCbR6x276i0hcxXD6oLp/YQYcj1wPVJNbrBA1pH3sP3B/6RYKWG52mX2WGXDVZW0jj
+	 dLjfsL0eXY14W7to1URhERVGxMMQtvpy++eJplf4diEk5Na7tvyIkiU4w1nh18q+yJ
+	 m9sETJCH6vMmsWCd7b8L6yNzcx/lLrsZL5j38+2RikjiXS26tbFHYzH9oaQ7DyLnej
+	 sJHR1S4R1XLwDkN50wQdvhuYvOemESHhPPE/A5gGnZY4yFTbUO4rDFna4NUTMiMwV3
+	 M/rsBId6Kx/7Q==
+Date: Wed, 24 Apr 2024 15:12:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 00/10] Make PCI's devres API more consistent
+Message-ID: <20240424201229.GA503230@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240408084423.6697-1-pstanner@redhat.com>
 
-New CPU #defines encode vendor and family as well as model.
+On Mon, Apr 08, 2024 at 10:44:12AM +0200, Philipp Stanner wrote:
+> ...
+> PCI's devres API suffers several weaknesses:
+> 
+> 1. There are functions prefixed with pcim_. Those are always managed
+>    counterparts to never-managed functions prefixed with pci_ – or so one
+>    would like to think. There are some apparently unmanaged functions
+>    (all region-request / release functions, and pci_intx()) which
+>    suddenly become managed once the user has initialized the device with
+>    pcim_enable_device() instead of pci_enable_device(). This "sometimes
+>    yes, sometimes no" nature of those functions is confusing and
+>    therefore bug-provoking. In fact, it has already caused a bug in DRM.
+>    The last patch in this series fixes that bug.
+> 2. iomappings: Instead of giving each mapping its own callback, the
+>    existing API uses a statically allocated struct tracking one mapping
+>    per bar. This is not extensible. Especially, you can't create
+>    _ranged_ managed mappings that way, which many drivers want.
+> 3. Managed request functions only exist as "plural versions" with a
+>    bit-mask as a parameter. That's quite over-engineered considering
+>    that each user only ever mapps one, maybe two bars.
+> 
+> This series:
+> - add a set of new "singular" devres functions that use devres the way
+>   its intended, with one callback per resource.
+> - deprecates the existing iomap-table mechanism.
+> - deprecates the hybrid nature of pci_ functions.
+> - preserves backwards compatibility so that drivers using the existing
+>   API won't notice any changes.
+> - adds documentation, especially some warning users about the
+>   complicated nature of PCI's devres.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/pci/intel_mid_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+There's a lot of good work here; thanks for working on it.
 
-diff --git a/arch/x86/pci/intel_mid_pci.c b/arch/x86/pci/intel_mid_pci.c
-index 8edd62206604..933ff795e53e 100644
---- a/arch/x86/pci/intel_mid_pci.c
-+++ b/arch/x86/pci/intel_mid_pci.c
-@@ -216,7 +216,7 @@ static int pci_write(struct pci_bus *bus, unsigned int devfn, int where,
- }
- 
- static const struct x86_cpu_id intel_mid_cpu_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID, NULL),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT_MID, NULL),
- 	{}
- };
- 
-@@ -243,7 +243,7 @@ static int intel_mid_pci_irq_enable(struct pci_dev *dev)
- 		model = id->model;
- 
- 	switch (model) {
--	case INTEL_FAM6_ATOM_SILVERMONT_MID:
-+	case VFM_MODEL(INTEL_ATOM_SILVERMONT_MID):
- 		polarity_low = false;
- 
- 		/* Special treatment for IRQ0 */
--- 
-2.44.0
+> Philipp Stanner (10):
+>   PCI: Add new set of devres functions
 
+This first patch adds some infrastructure and several new exported
+interfaces:
+
+  void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar, const char *name)
+  void pcim_iounmap_region(struct pci_dev *pdev, int bar)
+  int pcim_request_region(struct pci_dev *pdev, int bar, const char *name)
+  void pcim_release_region(struct pci_dev *pdev, int bar)
+  void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
+  void __iomem *pcim_iomap_region_range(struct pci_dev *pdev, int bar,
+  void pcim_iounmap_region_range(struct pci_dev *pdev, int bar,
+
+>   PCI: Deprecate iomap-table functions
+
+This adds a little bit of infrastructure (add/remove to legacy_table),
+reimplements these existing interfaces:
+
+  void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned long maxlen)
+  void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr)
+  int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name)
+  int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
+  void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
+
+and adds a couple new exported interfaces:
+
+  void pcim_release_all_regions(struct pci_dev *pdev)
+  int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+
+There's a lot going on in these two patches, so they're hard to
+review.  I think it would be easier if you could do the fixes to
+existing interfaces first, followed by adding new things, maybe
+something like separate patches that:
+
+  - Add pcim_addr_devres_alloc(), pcim_addr_devres_free(),
+    pcim_addr_devres_clear().
+
+  - Add pcim_add_mapping_to_legacy_table(),
+    pcim_remove_mapping_from_legacy_table(),
+    pcim_remove_bar_from_legacy_table().
+
+  - Reimplement pcim_iomap(), pcim_iomap_regions(), pcim_iounmap().
+
+  - Add new interfaces like pcim_iomap_region(),
+    pcim_request_region(), etc.
+
+    AFAICS, except for pcim_iomap_range() (used by vbox), these new
+    interfaces have no users outside drivers/pci, so ... we might
+    defer adding them, or at least defer exposing them via
+    include/linux/pci.h, until we have users for them.
+
+>   PCI: Warn users about complicated devres nature
+>   PCI: Make devres region requests consistent
+>   PCI: Move dev-enabled status bit to struct pci_dev
+>   PCI: Move pinned status bit to struct pci_dev
+>   PCI: Give pcim_set_mwi() its own devres callback
+>   PCI: Give pci(m)_intx its own devres callback
+>   PCI: Remove legacy pcim_release()
+>   drm/vboxvideo: fix mapping leaks
+> 
+>  drivers/gpu/drm/vboxvideo/vbox_main.c |   20 +-
+>  drivers/pci/devres.c                  | 1011 +++++++++++++++++++++----
+>  drivers/pci/iomap.c                   |   18 +
+>  drivers/pci/pci.c                     |  123 ++-
+>  drivers/pci/pci.h                     |   21 +-
+>  include/linux/pci.h                   |   18 +-
+>  6 files changed, 999 insertions(+), 212 deletions(-)
+> 
+> -- 
+> 2.44.0
+> 
 
