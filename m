@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-6620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B78D8B07F2
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 13:02:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 056668B07F7
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 13:03:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48CB4283650
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 11:02:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 293FF1C21A72
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Apr 2024 11:03:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6035915990D;
-	Wed, 24 Apr 2024 11:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFFC8159906;
+	Wed, 24 Apr 2024 11:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="Qjry9X9S"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="Ow7zLLXf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18A41598FF
-	for <linux-pci@vger.kernel.org>; Wed, 24 Apr 2024 11:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B051428F9
+	for <linux-pci@vger.kernel.org>; Wed, 24 Apr 2024 11:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713956528; cv=none; b=YOnnMgeeQCWIE4Wenc3ciaXH5ouwZphhMGyTKbcZ1Z62HgCYowIrBFXap59R3EEZxVZH9DCuuaYwb4hTdE9j7fNKxuQd0SbGXKPyaTqE2ovIw6pHBLUk0CuPz2xibDo6pqYSUBPXZxknbA1PCJubaE6/e2Ggr34c6/LJPLcwz/s=
+	t=1713956596; cv=none; b=nVlkJal51aUa7mbNUIOwB9TDsC/bj/aRBg1Yfoky6rVdfTJI8v5aZvebc08uGtGvuCSsk7TT5+pfeUTJpg/MpbK4vPaCyX3osCHNzEj/fsdzkEiG42g+EGkXmX6abJCICyQpm5Y3kUPWGxCyoDb3whrenNfjGdcZnPq+SYxh6ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713956528; c=relaxed/simple;
-	bh=2jKIjdLV7lftx+xiDBEvy7i/MFRg4Wb2datzsreIZFw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZiPgctZjmMJxY/3DUGc0/CBSWLcGwSpdP74JNW669ZeKjk14PVeV/3zxXCekAXkBO3aFWLEzqnOK1/EtUUHzyGA5tfwid2MeM8FBtW3WvCW49XeZrC/jbhZSYUoN9qfotjZW+Gv6qbgu8ujB+bEQclSomXgxM2WhCp5KDFlao2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=Qjry9X9S; arc=none smtp.client-ip=209.85.215.178
+	s=arc-20240116; t=1713956596; c=relaxed/simple;
+	bh=uV0/1aSVVcRIoF8efqTChlHildc7U8iR42Xo+0S+bPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WP3aEdN5+NzCWXJsbWvDIXU07MoegS9Vp+eXS9PgsiV2/c/6r98/CSBOBCDjO+jaN3TkZsQER5TKJ97LscYqnc6kLK8hX8SFpaIqJf6t7CTSQ2rrQyue7jGRmWULc2S4Sg1iK6c4Fjr+0XKASqJHT3drEK1IJY5eahW7SPdZUas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=Ow7zLLXf; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5c66b093b86so623176a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 24 Apr 2024 04:02:06 -0700 (PDT)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f074520c8cso6426666b3a.0
+        for <linux-pci@vger.kernel.org>; Wed, 24 Apr 2024 04:03:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1713956526; x=1714561326; darn=vger.kernel.org;
+        d=endlessos.org; s=google; t=1713956594; x=1714561394; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UVuD14qd2v2GJpWMUKxJKGrbwwgi+TYXxSr/usBLCtM=;
-        b=Qjry9X9S+WvNwQfxxgJ5jAjOYuWuZCXuTBgz8HFxuZzfFyOfoOB8QKY9AruVXXCIbc
-         gdPonmkV7sO9AvDKKqza/JapMF6nrPnq2sf4y5zM4A9UDdHQXdpd9Jbl9tcE6wnhxV2Y
-         lWWQfaNjZYdh3YNQqTpL2p2xW3oNVgN7QfBiz5NZFOONqTS3wYD4KSqob3ZhyFg7XdtG
-         zBxtNbekjskRwFXRhPz0Rmh7/gwbPVJpnJNk1lrTnvIIg7gAucDeQUEbETViEi9EYnfK
-         +vGB3coC4QqfY5uvUtWImGQgo+3Km/aGFmWL6/wNAo73CmQvBvfmVTpYDKaWsID2jeVq
-         jVpg==
+        bh=ViRbv3+94h9HjFBDUVRxRf1hCf57UQ+V86PhnGFbsxM=;
+        b=Ow7zLLXfVVeT8oiGPskEQCGP3m190TxDiuU1G/wWEptygtCCmfvqa81TCUWDtWEGfq
+         kaIrkyb9Epn30zeBIUPDg0h9AeKZrVqAyER5RqllvUEY9BOisIF6wCK/WzO/N5igpk2D
+         SN7p9EWns0rFoUBohaiQzJi50Rg6akTJUexY07vE7Ct3Xe6SqCXHsCLXgi8+fJmIEywh
+         WHvY4gEOApKCaBBqSmGi/Sql5ebGb9tqSU6ZbwA3Tqk7EXCJMG5tAP5PVFFpHtqDBX3F
+         Ikgn8QhhhbAD2NAVC8fh+OtE1t82X+xFP3DZzFoRcDq4PisVSoPvyeM9V+Luo2onLhcz
+         bn7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713956526; x=1714561326;
+        d=1e100.net; s=20230601; t=1713956594; x=1714561394;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UVuD14qd2v2GJpWMUKxJKGrbwwgi+TYXxSr/usBLCtM=;
-        b=LMUX0ZFhqGy/AdG/UeVxKCMqwzvIy7rG79lRh3QXb5Fm14D0qYQm8pAHBsGzcvN0IR
-         0nEM/eafDiOSmn+r0C5Rl5FEyWDwfFrm9O5h3mXxjQ1Rq5hATy+FrkAebBkef2NcrdIU
-         AGWxV3GoawFyXjV75HvZGbaiv+GsaDnyhYsJ1vXwnh1rSa5d9TWqGL+kn/h1ydT/3KEm
-         4pCnrTwlchrrq4f//+VmSMSRg1irFF2p5xEO/UynTq2WeZGhymbvGT5d1mSnTjRV+R7i
-         yNn9PYg3xLKWUyns7364M5HAr11Ue9s9rdiL3nDg7QzCdx1RwoIO4EAgaPzEjRHju1AA
-         vsyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXQS21eM7G1QNlWwGsDYL9GBzi9KF/Qov3ac6RhCSs6eijL897HrCMOt2tOD+m6q8xnQZL6CAQmcAUtBC0MAKK6f0paO/O1jKV
-X-Gm-Message-State: AOJu0YwBlSC4pg9gKYpd7qCu64RIfzDDfxmLYhFTPeCZ+4VXd/Mux5A1
-	C73TdB4hu0BNzrZGnNpYSda0krwmmkwCRFci+OFlSbCaYt0NP3nQeaJaNkGWk0I=
-X-Google-Smtp-Source: AGHT+IHGwVsOxC3KDLv+3r/1YnzNplxHumhenciI16CLN8PKLRoRBfKLbi53rsWsJbT33eWrnNUl+Q==
-X-Received: by 2002:a17:90a:5513:b0:2a5:be1a:6831 with SMTP id b19-20020a17090a551300b002a5be1a6831mr7456226pji.19.1713956526095;
-        Wed, 24 Apr 2024 04:02:06 -0700 (PDT)
+        bh=ViRbv3+94h9HjFBDUVRxRf1hCf57UQ+V86PhnGFbsxM=;
+        b=f/aZxdKshTAOrYqyXKJ4Pi7xJf+4+RR7fVavP5bRNfjcQYbbYpRgFN13KiF32qnLsm
+         GiJnQlNLpzq/7HjxNQywDbC0aAdqWhwYpzSrUaARbDL1mx7Jhf5sgO5atjIS1x/EOaVx
+         S9wrA66mNWqKxZyz7YpLKD2oc7aezBjaNKSuwfm+mT6HG6oiRdLwjv9MiaEvtS1G3GGX
+         wRDCmK5OdsHiU7NMqGTdOGCNBzjtue5mpLMU6/bBVomL4R3DOWbf+RcxYU285WEhPacK
+         lT8F740ckDCJ26TlFZiiBK+k2biXmufFmbm5Vu1yBlR0PskGQStYiK6n/+x/95ZTTIZt
+         IYpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVghJ5ve03R4ivHS9tIC2Piukp4Bdv7QgcbKfwJCU5qPLvZA7wtzozToML7XiLNykj21FtmKnpRRfEN7CPy4ztCmL/r4/A0MIGL
+X-Gm-Message-State: AOJu0YwZgwrJnCcbTxRYvfHt7snmLYj1DowYA81XoN12DhKllV4TXtRu
+	tfzsa45NkKExFAPc2CN9lrjg/jw5eRUdqSIBd3zGrjBcRD5Ey91PT/jHfIiwqPI=
+X-Google-Smtp-Source: AGHT+IExdGa5rGS/22T53uS80/g8TO4jGAJIp46+PqMsXAM1a+dNmdOR9XUe5M3Ut5BW90bUdVCchg==
+X-Received: by 2002:a05:6a20:6a0b:b0:1a7:aa08:16de with SMTP id p11-20020a056a206a0b00b001a7aa0816demr2218545pzk.40.1713956593648;
+        Wed, 24 Apr 2024 04:03:13 -0700 (PDT)
 Received: from localhost.localdomain ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id x5-20020a17090a388500b002a53b33afa3sm13990338pjb.8.2024.04.24.04.02.03
+        by smtp.googlemail.com with ESMTPSA id it4-20020a056a00458400b006e623639a80sm11592482pfb.19.2024.04.24.04.03.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 04:02:05 -0700 (PDT)
+        Wed, 24 Apr 2024 04:03:13 -0700 (PDT)
 From: Jian-Hong Pan <jhp@endlessos.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Johan Hovold <johan@kernel.org>,
@@ -78,9 +78,9 @@ Cc: Johan Hovold <johan@kernel.org>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jian-Hong Pan <jhp@endlessos.org>
-Subject: [PATCH v5 3/4] PCI/ASPM: Introduce aspm_get_l1ss_cap()
-Date: Wed, 24 Apr 2024 19:00:48 +0800
-Message-ID: <20240424110047.21766-2-jhp@endlessos.org>
+Subject: [PATCH v5 4/4] PCI/ASPM: Fix L1.2 parameters when enable link state
+Date: Wed, 24 Apr 2024 19:02:24 +0800
+Message-ID: <20240424110223.21799-2-jhp@endlessos.org>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -90,57 +90,92 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce aspm_get_l1ss_cap() which is extracted from aspm_l1ss_init() to
-get the PCIe's L1SS capability. This does not change any behavior, but
-aspm_get_l1ss_cap() can be reused later.
+Currently, when enable link's L1.2 features with __pci_enable_link_state(),
+it configs the link directly without ensuring related L1.2 parameters, such
+as T_POWER_ON, Common_Mode_Restore_Time, and LTR_L1.2_THRESHOLD have been
+programmed.
+
+This leads the link's L1.2 between PCIe Root Port and child device gets
+wrong configs when a caller tries to enabled it.
+
+Here is a failed example on ASUS B1400CEAE with enabled VMD:
+
+10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
+    ...
+    Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+        	  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+        	   T_CommonMode=45us LTR1.2_Threshold=101376ns
+        L1SubCtl2: T_PwrOn=50us
+
+10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
+    ...
+    Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=10us
+
+According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the PCIe
+Root Port and the child NVMe, they should be programmed with the same
+LTR1.2_Threshold value. However, they have different values in this case.
+
+Invoke aspm_calc_l12_info() to program the L1.2 parameters properly before
+enable L1.2 bits of L1 PM Substates Control Register in
+__pci_enable_link_state().
 
 Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
 Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
 ---
- drivers/pci/pcie/aspm.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+v2:
+- Prepare the PCIe LTR parameters before enable L1 Substates
+
+v3:
+- Only enable supported features for the L1 Substates part
+
+v4:
+- Focus on fixing L1.2 parameters, instead of re-initializing whole L1SS
+
+v5:
+- Fix typo and commit message
+- Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introduce
+  aspm_get_l1ss_cap()"
+
+ drivers/pci/pcie/aspm.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 91a8b35b1ae2..c55ac11faa73 100644
+index c55ac11faa73..553327dee991 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -612,6 +612,18 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- 	}
- }
+@@ -1402,6 +1402,8 @@ EXPORT_SYMBOL(pci_disable_link_state);
+ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+ {
+ 	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
++	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	u32 parent_l1ss_cap, child_l1ss_cap;
  
-+static u32 aspm_get_l1ss_cap(struct pci_dev *pdev)
-+{
-+	u32 l1ss_cap;
-+
-+	pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CAP, &l1ss_cap);
-+
-+	if (!(l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
-+		l1ss_cap = 0;
-+
-+	return l1ss_cap;
-+}
-+
- /* Calculate L1.2 PM substate timing parameters */
- static void aspm_calc_l12_info(struct pcie_link_state *link,
- 				u32 parent_l1ss_cap, u32 child_l1ss_cap)
-@@ -722,15 +734,8 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
- 		return;
+ 	if (!link)
+ 		return -EINVAL;
+@@ -1433,6 +1435,16 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+ 		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
+ 	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+ 		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
++	/*
++	 * Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
++	 * LTR_L1.2_THRESHOLD are programmed properly before enable bits for
++	 * L1.2, per PCIe r6.0, sec 5.5.4.
++	 */
++	if (state & link->aspm_capable & ASPM_STATE_L1_2_MASK) {
++		parent_l1ss_cap = aspm_get_l1ss_cap(parent);
++		child_l1ss_cap = aspm_get_l1ss_cap(child);
++		aspm_calc_l12_info(link, parent_l1ss_cap, child_l1ss_cap);
++	}
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
  
- 	/* Setup L1 substate */
--	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CAP,
--			      &parent_l1ss_cap);
--	pci_read_config_dword(child, child->l1ss + PCI_L1SS_CAP,
--			      &child_l1ss_cap);
--
--	if (!(parent_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
--		parent_l1ss_cap = 0;
--	if (!(child_l1ss_cap & PCI_L1SS_CAP_L1_PM_SS))
--		child_l1ss_cap = 0;
-+	parent_l1ss_cap = aspm_get_l1ss_cap(parent);
-+	child_l1ss_cap = aspm_get_l1ss_cap(child);
- 
- 	/*
- 	 * If we don't have LTR for the entire path from the Root Complex
+ 	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
 -- 
 2.44.0
 
