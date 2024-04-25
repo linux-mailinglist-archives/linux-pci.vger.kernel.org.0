@@ -1,55 +1,57 @@
-Return-Path: <linux-pci+bounces-6682-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6683-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88F658B2D23
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 00:32:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 497F38B2D47
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 00:51:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 443CB2824E9
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 22:32:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ED5C1C213C0
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 22:51:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0477917BB9;
-	Thu, 25 Apr 2024 22:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF7D15573C;
+	Thu, 25 Apr 2024 22:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9ZWC4j5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XH8PCaKH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AAE175A5
-	for <linux-pci@vger.kernel.org>; Thu, 25 Apr 2024 22:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981EE1514D8;
+	Thu, 25 Apr 2024 22:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714084341; cv=none; b=TH2MzPtVysFnyIlc1GbEFsPqModsfuQBJW9gC6ztpmsyQ0zblqij4/JUd0Zh7qlYMBMfDvasQjDHbvTatjLHECdR0lcBusXM+JQRCeRaxaDO2sS4dpNZZmrWJGLomUMExciC1NbVn5/4n9C658+sqqQFGcwFIBBeTHSmY7M437k=
+	t=1714085498; cv=none; b=hjOkdjEgtic83w30OFfLBmir4L+t3jtQ68PWfcBKxhwqq948Od+hImabJhXgijaLPBTOyoLwmGN9IewrLm4dALLumuHoJI8k6jP7bquZqoohgxUpTGcjazy6AxESBsu+DZkYtKkeG72c+ETMO9b7kCzJkby2bh8MCpvgtB3i8Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714084341; c=relaxed/simple;
-	bh=AwlumUN5dXAkuBRxwv43Oi9CorUhyEOe+51EvU7NEqU=;
+	s=arc-20240116; t=1714085498; c=relaxed/simple;
+	bh=fzTC02Z3yZ/JFXO4P23uwv3PJvwKXpoAsaKRDxN2nV8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R3Up1QVeq5kouxJljCzu8aySCOY6FDDscS2YKRsTP746+/LRi62g4Lqi6J8DoOPIFxmB/tNB70WjW1BLjzmEINR2bX7ibBa+3IAHl3Nuk8Lb43h1kqCu24w03VYJmhW+M50XHB5GAfT5LK1DWKA/ODtAXMRDj5ikqPeg+1ASLv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9ZWC4j5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1631FC113CC;
-	Thu, 25 Apr 2024 22:32:20 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=eySZgL7r8XSli460JnmTP0yMortCrM3EF8B/jqdYn9JoiONa6IMeNpIoC4j4n3LjYy8LbnzV3kwqdGWSSyh61E8xvuMvcyJNdEIgAyFzBwxpOC/ZNrYlW12FA+Ji4jx+gLNwrzbGroOkge6g99IdWGaywFwoDCShtsH4LnQBjpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XH8PCaKH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88C3C113CC;
+	Thu, 25 Apr 2024 22:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714084341;
-	bh=AwlumUN5dXAkuBRxwv43Oi9CorUhyEOe+51EvU7NEqU=;
+	s=k20201202; t=1714085498;
+	bh=fzTC02Z3yZ/JFXO4P23uwv3PJvwKXpoAsaKRDxN2nV8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=N9ZWC4j5cFe+TXUO0cYIx43hADUsyjdCPSWex9Zkh2FaSbSc6VDlLlSfERxaj6CN4
-	 ZXsVsM22Z8+f7U0keznnHlKJVeAjcLwzfKD9c7OqcRCQOSTf4esbYJJ8LvFDaBuuPd
-	 JmX9GIgQA7S4/Q3Xww/ZLqGPds7aExGKHLCI04GzRAMfsJqjO7XsXyhBMfUAnQb7gS
-	 iC39/UXXYmrN4eAvLVGNkq0VYq7EiFii12HBYyB4DDv0G0OiOO9tNOZlTeudCOMvch
-	 rR8e072xWgPFXKndvsIc2TMe/JLVvqJryB/RqygS8Y6jcr2fDe9yeikxtimv9OIaeu
-	 zFAmCqQnYHSbw==
-Date: Thu, 25 Apr 2024 17:32:19 -0500
+	b=XH8PCaKHDj2VlrO3+tQ4N5m+Zj+HMflo7xhyvM66QQhHmWud2EJxBiXA9velLX0F7
+	 3E19W3YjaGb2EACJzZbYs9RqmfFy3P/F/TkIr/kfxKbfkjv48UpKOfQyUX/avvEg+8
+	 j3E2l++Y2o9VddjCtV/mHsDQMh+I0Rmv6/eSbGXQ67Npzrj5NTXe50o84xbXNR7C5w
+	 WOStueHC6niyJVk5Q8DexzUJDlZzvEpSf9RRmWrJn7h7F2I+JP+uEFY6N28lWDBNjB
+	 aWQZ/t0uvX5nnRu07qNRwAagQLbrwDpo9tvQYC6lzPSkxmsfQAUecs1lKUJs+p5V6V
+	 jzxywseduiefQ==
+Date: Thu, 25 Apr 2024 17:51:36 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-Cc: linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] Documentation: PCI: add vmd documentation
-Message-ID: <20240425223219.GA546005@bhelgaas>
+To: Dexuan Cui <decui@microsoft.com>
+Cc: bhelgaas@google.com, wei.liu@kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, lpieralisi@kernel.org,
+	linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Boqun.Feng@microsoft.com,
+	sunilmut@microsoft.com, ssengar@microsoft.com
+Subject: Re: [PATCH] PCI: Add a mutex to protect the global list
+ pci_domain_busn_res_list
+Message-ID: <20240425225136.GA541002@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,93 +60,97 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <935baf43-791e-4c8e-9566-e05335e74cea@intel.com>
+In-Reply-To: <20240419015302.13871-1-decui@microsoft.com>
 
-On Thu, Apr 25, 2024 at 02:43:07PM -0700, Paul M Stillwell Jr wrote:
-> On 4/25/2024 10:24 AM, Bjorn Helgaas wrote:
-> > On Wed, Apr 24, 2024 at 02:29:16PM -0700, Paul M Stillwell Jr wrote:
-> > > On 4/23/2024 5:47 PM, Bjorn Helgaas wrote:
-> ...
-
-> > > > _OSC is the only mechanism for negotiating ownership of these
-> > > > features, and PCI Firmware r3.3, sec 4.5.1, is pretty clear that _OSC
-> > > > only applies to the hierarchy originated by the PNP0A03/PNP0A08 host
-> > > > bridge that contains the _OSC method.  AFAICT, there's no
-> > > > global/device-specific thing here.
-> > > > 
-> > > > The BIOS may have a single user-visible setting, and it may apply that
-> > > > setting to all host bridge _OSC methods, but that's just part of the
-> > > > BIOS UI, not part of the firmware/OS interface.
-> > > 
-> > > Fair, but we are still left with the question of how to set the _OSC bits
-> > > for the VMD bridge. This would normally happen using ACPI AFAICT and we
-> > > don't have that for the devices behind VMD.
-> > 
-> > In the absence of a mechanism for negotiating ownership, e.g., an ACPI
-> > host bridge device for the hierarchy, the OS owns all the PCIe
-> > features.
+On Thu, Apr 18, 2024 at 06:53:02PM -0700, Dexuan Cui wrote:
+> There has been an effort to make the pci-hyperv driver support
+> async-probing to reduce the boot time. With async-probing, multiple
+> kernel threads can be running hv_pci_probe() -> create_root_hv_pci_bus() ->
+> pci_scan_root_bus_bridge() -> pci_bus_insert_busn_res() at the same time to
+> update the global list, causing list corruption.
 > 
-> I'm new to this space so I don't know what it means for the OS to
-> own the features. In other words, how would the vmd driver figure
-> out what features are supported?
+> Add a mutex to protect the list.
 
-There are three things that go into this:
+I think it's a good idea to support probing multiple PCI root buses in
+parallel.
 
-  - Does the OS support the feature, e.g., is CONFIG_PCIEAER enabled?
+The problem in get_pci_domain_busn_res() is the global
+pci_domain_busn_res_list.  I'm not even sure what that list contains,
+since it's a lookup by "domain_nr".  In the hv case, you probably have
+one host bridge per domain, but in general there may be multiple root
+buses in the same domain, e.g.,
 
-  - Has the platform granted permission to the OS to use the feature,
-    either explicitly via _OSC or implicitly because there's no
-    mechanism to negotiate ownership?
+  ACPI: PCI Root Bridge [PC00] (domain 0000 [bus 00-16])
+  ACPI: PCI Root Bridge [PC01] (domain 0000 [bus 17-39])
+  ACPI: PCI Root Bridge [PC02] (domain 0000 [bus 3a-5c])
+  ...
 
-  - Does the device advertise the feature, e.g., does it have an AER
-    Capability?
+We only use get_pci_domain_busn_res() for root buses, and we should
+know the bus number range for root buses when we set up the struct
+pci_host_bridge, so it seems like we should keep the bus number
+resource there instead of allocating it in this sort of random place.
 
-If all three are true, Linux enables the feature.
+Then we shouldn't need this weird pci_domain_busn_res_list at all.
 
-I think vmd has implicit ownership of all features because there is no
-ACPI host bridge device for the VMD domain, and (IMO) that means there
-is no way to negotiate ownership in that domain.
-
-So the VMD domain starts with all the native_* bits set, meaning Linux
-owns the features.  If the vmd driver doesn't want some feature to be
-used, it could clear the native_* bit for it.
-
-I don't think vmd should unilaterally claim ownership of features by
-*setting* native_* bits because that will lead to conflicts with
-firmware.
-
-> > 04b12ef163d1 basically asserted "the platform knows about a hardware
-> > issue between VMD and this NVMe and avoided it by disabling AER in
-> > domain 0000; therefore we should also disable AER in the VMD domain."
-> > 
-> > Your patch at
-> > https://lore.kernel.org/linux-pci/20240408183927.135-1-paul.m.stillwell.jr@intel.com/
-> > says "vmd users *always* want hotplug enabled."  What happens when a
-> > platform knows about a hotplug hardware issue and avoids it by
-> > disabling hotplug in domain 0000?
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>  drivers/pci/probe.c | 25 ++++++++++++++++++-------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
 > 
-> I was thinking about this also and I could look at all the root ports
-> underneath vmd and see if hotplug is set for any of them. If it is then we
-> could set the native_*hotplug bits based on that.
-
-No.  "Hotplug is set" means the device advertises the feature via
-config space, in this case, it has the Hot-Plug Capable bit in the
-PCIe Slot Capabilities set.  That just means the device has hardware
-support for the feature.
-
-On ACPI systems, the OS can only use pciehp on the device if firmware
-has granted ownership to the OS via _OSC because the firmware may want
-to use the feature itself.  If both OS and firmware think they own the
-feature, they will conflict with each other.
-
-If firmware retains owership of hotplug, it can field hotplug events
-itself and notify the OS via the ACPI hotplug mechanism.  The acpiphp
-driver handles those events for PCI.
-
-Firmware may do this if it wants to work around hardware defects it
-knows about, or if it wants to do OS-independent logging (more
-applicable for AER), or if it wants to intercept hotplug events to do
-some kind of initialization, etc.
-
-Bjorn
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index e19b79821dd6..1327fd820b24 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -37,6 +37,7 @@ LIST_HEAD(pci_root_buses);
+>  EXPORT_SYMBOL(pci_root_buses);
+>  
+>  static LIST_HEAD(pci_domain_busn_res_list);
+> +static DEFINE_MUTEX(pci_domain_busn_res_list_lock);
+>  
+>  struct pci_domain_busn_res {
+>  	struct list_head list;
+> @@ -47,14 +48,22 @@ struct pci_domain_busn_res {
+>  static struct resource *get_pci_domain_busn_res(int domain_nr)
+>  {
+>  	struct pci_domain_busn_res *r;
+> +	struct resource *ret;
+>  
+> -	list_for_each_entry(r, &pci_domain_busn_res_list, list)
+> -		if (r->domain_nr == domain_nr)
+> -			return &r->res;
+> +	mutex_lock(&pci_domain_busn_res_list_lock);
+> +
+> +	list_for_each_entry(r, &pci_domain_busn_res_list, list) {
+> +		if (r->domain_nr == domain_nr) {
+> +			ret = &r->res;
+> +			goto out;
+> +		}
+> +	}
+>  
+>  	r = kzalloc(sizeof(*r), GFP_KERNEL);
+> -	if (!r)
+> -		return NULL;
+> +	if (!r) {
+> +		ret = NULL;
+> +		goto out;
+> +	}
+>  
+>  	r->domain_nr = domain_nr;
+>  	r->res.start = 0;
+> @@ -62,8 +71,10 @@ static struct resource *get_pci_domain_busn_res(int domain_nr)
+>  	r->res.flags = IORESOURCE_BUS | IORESOURCE_PCI_FIXED;
+>  
+>  	list_add_tail(&r->list, &pci_domain_busn_res_list);
+> -
+> -	return &r->res;
+> +	ret = &r->res;
+> +out:
+> +	mutex_unlock(&pci_domain_busn_res_list_lock);
+> +	return ret;
+>  }
+>  
+>  /*
+> -- 
+> 2.25.1
+> 
 
