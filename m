@@ -1,234 +1,172 @@
-Return-Path: <linux-pci+bounces-6661-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6662-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99FCC8B1BF2
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 09:33:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC8128B1E21
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 11:36:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD83A1C23E07
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 07:33:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8CE21C22C37
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 09:36:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43CAD6EB5C;
-	Thu, 25 Apr 2024 07:33:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 056FA84D3E;
+	Thu, 25 Apr 2024 09:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="K/N2DRIa"
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="O9cWtCRY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036096EB46
-	for <linux-pci@vger.kernel.org>; Thu, 25 Apr 2024 07:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7208D84D2D;
+	Thu, 25 Apr 2024 09:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714030404; cv=none; b=dWmlrhgpoDPw4VTJXvaRKHtUtKAzbxWq+0MunWf4GVd1yOg9BEXVOEo6mpYt5ZXnGj8fk/VsaqblnrCwGU+JT5cu87y+04JJZ+HsrQJ1UOu2hsTMrEdVaebqy2QihCKqtWRnne850xBkhRQkXsyXb/atNmpGD2U1SfLjYQEY6C0=
+	t=1714037719; cv=none; b=tuVTsoMesUkajJklpcwPqnr0yzAvKQgYQ06buVGDSRnpC5/biRV6DGeEgR7k3ASMW92AgZvLJzzbhlL7I975YS6gAvGBJQq4j/0l9m9lKtrf/pSXmUC6Tw3GbrvQcmhYfB8uQamOe7HUK99zkFVZIKIUaEQkPRDdL1JkLGfP1DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714030404; c=relaxed/simple;
-	bh=BcHYLSESJ0hPv7oQYl6LtJ1bX+Ez09LQmP/mQu7Fbac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KOMAqEFqrLFpaz4tAWSBDq2OCV5zDa3m8saYEDYJAntw1b4c3ez4k3VDr4K/vLdorEl5mtSjtqaQPBfaqX5BaC8qniCp0rPnfm7Uli7cYW3zCbOkbY+oW7m0P9exwJ4KBfsjLfew0PNpPKffrfvoJPfnUk7rQ4d9ugrTa0mva5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=K/N2DRIa; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 403763F6FD
-	for <linux-pci@vger.kernel.org>; Thu, 25 Apr 2024 07:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1714030395;
-	bh=N49t3AK4kKaDmcRRhdLxt0k+B5LqZexfU9NZVLcAJRM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=K/N2DRIaAjRmNok+zH6+pAoU60HS5IhDtlWrvgoAC+5zlde01ji/jFB9aetPrMeeN
-	 9pgn7qyz659domxob/FkcKPJfW0/vk6864KnoOLXosCrt26NqEll/LCHjuYSDs/KAK
-	 /GwwGVFrS2ib1JkZmgqqi70fNvWJrYPjia0XLMXh/kwHDiN9adj4Szvs+t1ZlomlI4
-	 bdGPm7KpPZG1k8Djjtmdbj6XX3BSHM5D9NKVQH2DoGwj29Y3neOyH2rSiX1S1e7N0R
-	 WTe0I3dRI8Wklfu4T9wdQXSsC7s5A3dcbFa1Rxfqdq3KulbSK3SGmzfuYMtzFqCF6A
-	 fDlP1dnM0ifTg==
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ae0abc0b41so869777a91.2
-        for <linux-pci@vger.kernel.org>; Thu, 25 Apr 2024 00:33:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714030394; x=1714635194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N49t3AK4kKaDmcRRhdLxt0k+B5LqZexfU9NZVLcAJRM=;
-        b=adb7HMqr+q8R+GclZH80VopnP+VrRFv71rAy9iCKpUC/3mxrsXM+d6sgw151xqrgMJ
-         KmeSz4pHaAT+pxBYtTOAjNdhogpsikK0CRPBIx2kRnhdll1dVjXFByVQLNVI6Mjr/BuF
-         nNWnDnYJmhzisO/AjumhTW5750FKyVZ5c68S8QZNzh+bBIOj4SpvoZp+upZOHVXk94py
-         gyyzeYNldHh0Kj2mCpoX4okGBaxoHi3yFEmQ/+FfKh9fY+FgIXULFzqwvfDq0hSw/Ao6
-         UureeiFcJrUXR7dI9zzTEUctBLHzfxofNlZoCZO/c440y+AiL7oz/uacCT686qwe9rDy
-         VXIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsgWBGQ35Lun9A/Fb1F5oi07LJjCCbe3OPvZIuDoaQEL1u9YqhYfygTo/fxaNEHySmeVHKcUW2eFfC8rLxpucfz3C9jdKRh1Yr
-X-Gm-Message-State: AOJu0YzOqLaASRzWo8HSNnkB7d012NU4lVeIooUky5YWSD2LafnwgP6E
-	b4DmTh6Yc65/Mi3aqaXhzsZ0XfpWtQj4+7dnQgD8wKD/KnBgi98URP/T1z0RNrWOOAhaohhxjt2
-	5HzRsbbvMgp1z5bD+SU6OCM67a/kdLOe+KnJTGGOl/HrvaZTbUq5ld1ngC3Ql4I4AwXq8Vim2qu
-	QjF5mXcnfEjHYiizFnMzoykkNlcCE89a1VCWtLtHdTXGnr2VKe
-X-Received: by 2002:a17:90a:f18c:b0:2a2:775:9830 with SMTP id bv12-20020a17090af18c00b002a207759830mr3635614pjb.11.1714030393820;
-        Thu, 25 Apr 2024 00:33:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxdkPh6jUQbDypZw6ih5aBEWZ8OaLuVmwkpiSeYBIaD8D8JrEbgl1UlPs5pmFlAQ5PAStLbkRGh+jSeMu9NOg=
-X-Received: by 2002:a17:90a:f18c:b0:2a2:775:9830 with SMTP id
- bv12-20020a17090af18c00b002a207759830mr3635577pjb.11.1714030393404; Thu, 25
- Apr 2024 00:33:13 -0700 (PDT)
+	s=arc-20240116; t=1714037719; c=relaxed/simple;
+	bh=SI8dYxg4nlJIfknRlpUsqJy0WPDol6IUX4YbYt9uIGc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T7kB69BBQ10AF1r3hlK20MeINiYv2YmyUMB3b/JJPhf+TKYyevWLPcqpvdw7oloHtXuOWMMydmyfMaoLkLNhiJT3lF5tf2tjtl3RtMQQLKJd2RyZmelwnoLU4RZh7aF2QnQqXWHkDAFHdpQnjv4mbGACEkuLuojqLjnzpxlmq6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=O9cWtCRY; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id BA7DE100002;
+	Thu, 25 Apr 2024 12:23:46 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1714037026; bh=DPLnFAg5Eyfks9NW8S+aGjEu3lnapyvcLprsK9kTWQg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=O9cWtCRYMZOPnwu/CbHaVCze+o3cfoGbTZWhj7JT4G+4hDDbXlptzxE/t0Dvkh2W5
+	 Zi3F2LgoYBk9NGiMyhJhqLVt0QeKR4KSM2sHySwyT4NY7tFBJmVrcNDTzSi0Z6cEI3
+	 91gntxVtarQVc65WNgmdWeLN9hT8n2oCU0+a5Lj/AzHUinFWnUPHEO23u7fINoBTdJ
+	 zD+Ia/YgLB5fq/cu13J36uaG3ZYSWsveDdgrPG7devDZO0eTmVDkoWzVxhl9iG5tZ8
+	 QxEq4mu4EbMgCOGc/yOzopjWRG4iWGY/+WBUxA+ZtkigqhtmWAHfkmuxcut62Nr14V
+	 F72me3ZMmRe3g==
+Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu, 25 Apr 2024 12:22:21 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 25 Apr
+ 2024 12:22:00 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Rob Herring <robh@kernel.org>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
+	<kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, Damien Le Moal <dlemoal@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH v2] PCI: dwc: keystone: Fix potential NULL dereference
+Date: Thu, 25 Apr 2024 12:21:35 +0300
+Message-ID: <20240425092135.13348-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240329051947.28900-1-amishin@t-argos.ru>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416043225.1462548-2-kai.heng.feng@canonical.com> <20240418203531.GA251408@bhelgaas>
-In-Reply-To: <20240418203531.GA251408@bhelgaas>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Thu, 25 Apr 2024 15:33:01 +0800
-Message-ID: <CAAd53p7O51mG7LMrEobEgGrD8tsDFO3ZFSPAu02Dk-R0W3mkvg@mail.gmail.com>
-Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com, 
-	regressions@lists.linux.dev, linux-nvme@lists.infradead.org, kch@nvidia.com, 
-	hch@lst.de, gloriouseggroll@gmail.com, kbusch@kernel.org, sagi@grimberg.me, 
-	hare@suse.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184912 [Apr 25 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/25 08:19:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/24 23:31:00 #24963607
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Fri, Apr 19, 2024 at 4:35=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
-> > When the power rail gets cut off, the hardware can create some electric
-> > noise on the link that triggers AER. If IRQ is shared between AER with
-> > PME, such AER noise will cause a spurious wakeup on system suspend.
-> >
-> > When the power rail gets back, the firmware of the device resets itself
-> > and can create unexpected behavior like sending PTM messages. For this
-> > case, the driver will always be too late to toggle off features should
-> > be disabled.
-> >
-> > As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
-> > Management", TLP and DLLP transmission are disabled for a Link in L2/L3
-> > Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. So if
-> > the power will be turned off during suspend process, disable AER servic=
-e
-> > and re-enable it during the resume process. This should not affect the
-> > basic functionality.
-> >
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D209149
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218090
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->
-> Thanks for reviving this series.  I tried follow the history about
-> this, but there are at least two series that were very similar and I
-> can't put it all together.
->
-> > ---
-> > v8:
-> >  - Add more bug reports.
-> >
-> > v7:
-> >  - Wording
-> >  - Disable AER completely (again) if power will be turned off
-> >
-> > v6:
-> > v5:
-> >  - Wording.
-> >
-> > v4:
-> > v3:
-> >  - No change.
-> >
-> > v2:
-> >  - Only disable AER IRQ.
-> >  - No more check on PME IRQ#.
-> >  - Use helper.
-> >
-> >  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index ac6293c24976..bea7818c2d1b 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -28,6 +28,7 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/kfifo.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/suspend.h>
-> >  #include <acpi/apei.h>
-> >  #include <acpi/ghes.h>
-> >  #include <ras/ras_event.h>
-> > @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev)
-> >       return 0;
-> >  }
-> >
-> > +static int aer_suspend(struct pcie_device *dev)
-> > +{
-> > +     struct aer_rpc *rpc =3D get_service_data(dev);
-> > +     struct pci_dev *pdev =3D rpc->rpd;
-> > +
-> > +     if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware())
-> > +             aer_disable_rootport(rpc);
->
-> Why do we check pci_ancestor_pr3_present(pdev) and
-> pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
-> to disable AER interrupts on suspend in general.  I think it will be
-> better if we do that consistently on all platforms, not special cases
-> based on details of how we suspend.
+In ks_pcie_setup_rc_app_regs() resource_list_first_type() may return
+NULL which is later dereferenced. Fix this bug by adding NULL check.
 
-Sure. Will change in next revision.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
->
-> Also, why do we use aer_disable_rootport() instead of just
-> aer_disable_irq()?  I think it's the interrupt that causes issues on
-> suspend.  I see that there *were* some versions that used
-> aer_disable_irq(), but I can't find the reason it changed.
+Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+v2: Add return code processing
 
-Interrupt can cause system wakeup, if it's shared with PME.
+ drivers/pci/controller/dwc/pci-keystone.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-The reason why aer_disable_rootport() is used over aer_disable_irq()
-is that when the latter is used the error still gets logged during
-sleep cycle. Once the pcieport driver resumes, it invokes
-aer_root_reset() to reset the hierarchy, while the hierarchy hasn't
-resumed yet.
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 844de4418724..5c6786d9f3e9 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -382,17 +382,22 @@ static void ks_pcie_clear_dbi_mode(struct keystone_pcie *ks_pcie)
+ 	} while (val & DBI_CS2);
+ }
+ 
+-static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
++static int ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ {
+ 	u32 val;
+ 	u32 num_viewport = ks_pcie->num_viewport;
+ 	struct dw_pcie *pci = ks_pcie->pci;
+ 	struct dw_pcie_rp *pp = &pci->pp;
+-	u64 start, end;
++	struct resource_entry *ft;
+ 	struct resource *mem;
++	u64 start, end;
+ 	int i;
+ 
+-	mem = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM)->res;
++	ft = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
++	if (!ft)
++		return -EINVAL;
++
++	mem = ft->res;
+ 	start = mem->start;
+ 	end = mem->end;
+ 
+@@ -403,7 +408,7 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ 	ks_pcie_clear_dbi_mode(ks_pcie);
+ 
+ 	if (ks_pcie->is_am6)
+-		return;
++		return 0;
+ 
+ 	val = ilog2(OB_WIN_SIZE);
+ 	ks_pcie_app_writel(ks_pcie, OB_SIZE, val);
+@@ -420,6 +425,8 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+ 	val |= OB_XLAT_EN_VAL;
+ 	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
++
++	return 0;
+ }
+ 
+ static void __iomem *ks_pcie_other_map_bus(struct pci_bus *bus,
+@@ -814,7 +821,10 @@ static int __init ks_pcie_host_init(struct dw_pcie_rp *pp)
+ 		return ret;
+ 
+ 	ks_pcie_stop_link(pci);
+-	ks_pcie_setup_rc_app_regs(ks_pcie);
++	ret = ks_pcie_setup_rc_app_regs(ks_pcie);
++	if (ret < 0)
++		return ret;
++
+ 	writew(PCI_IO_RANGE_TYPE_32 | (PCI_IO_RANGE_TYPE_32 << 8),
+ 			pci->dbi_base + PCI_IO_BASE);
+ 
+-- 
+2.30.2
 
-So use aer_disable_rootport() to prevent such issue from happening.
-
-Kai-Heng
-
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int aer_resume(struct pcie_device *dev)
-> > +{
-> > +     struct aer_rpc *rpc =3D get_service_data(dev);
-> > +     struct pci_dev *pdev =3D rpc->rpd;
-> > +
-> > +     if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware())
-> > +             aer_enable_rootport(rpc);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  /**
-> >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
-> >   * @dev: pointer to Root Port, RCEC, or RCiEP
-> > @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdriver =
-=3D {
-> >       .service        =3D PCIE_PORT_SERVICE_AER,
-> >
-> >       .probe          =3D aer_probe,
-> > +     .suspend        =3D aer_suspend,
-> > +     .resume         =3D aer_resume,
-> >       .remove         =3D aer_remove,
-> >  };
-> >
-> > --
-> > 2.34.1
-> >
 
