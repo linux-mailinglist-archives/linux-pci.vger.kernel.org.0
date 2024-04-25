@@ -1,78 +1,71 @@
-Return-Path: <linux-pci+bounces-6678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE7E38B2A5B
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 23:01:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A70C8B2A75
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 23:10:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7715B2811BC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 21:01:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6A18281292
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Apr 2024 21:10:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF10C153BF2;
-	Thu, 25 Apr 2024 21:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 753D41552F5;
+	Thu, 25 Apr 2024 21:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RnEhW8Ui"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cVTBTsUw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17966153BC7;
-	Thu, 25 Apr 2024 21:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D041552EE
+	for <linux-pci@vger.kernel.org>; Thu, 25 Apr 2024 21:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714078911; cv=none; b=sdH8irzn8Kq2BROPwdcfYuGQ8zxGTOJSLhQSj+LM86F3axHa9E62jkN8w1Y3IsUTzw/bb6jO+j6LJ3ofvl9BYocokf/U7tktJtA/97sFz4lZNnYP8hBp+hSIoIdp8gtoo4T9obOKV7JvQA/45WbnX46bChXCG/gdY0WSzYZswyU=
+	t=1714079435; cv=none; b=P9E72b8rYnFk1lfeEJD9o17PAgZnJVzKZabaMmzPvRepdYG1Ir9FKAsJSf8BcSP1WM8mna763Yvgr8+Gql4GGOJkfB6VQhDF+DoBqxvlKARwF+Feywm4OlRDHCVF36YE42e06n2lsKZ2/vsF4PS4uuyofBkDafan3Hm4a97OAqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714078911; c=relaxed/simple;
-	bh=A2dKCGsB/Ici8fMlijpabSHqnvQKwWrWdSSIk88w2yQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jxTIzHgyV0iTFBqVI+wrB4hs1/ZP2Q1ffr/pc3kl4vxQoPU/e8QGlHcH6hpWE+DFwP1fotU/0tqswgzcZiqgKALT52gvGInq5HGF/cNQmaYIz3PeZ1M+mnxWcg1gh/VJxbFMJInn+ecPxDwYqeyIAYo2+VPiduUj16bJzWD4cIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RnEhW8Ui; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1714079435; c=relaxed/simple;
+	bh=+GuGWw0UTFC6a65lA2q0dTbNroNzyTgF7yBzJFKmW5U=;
+	h=Date:From:To:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BilCn1Db16Cg+3BYnUB/XZ46Z7wITMF0TEaRziydM5JdPeAAWcxIIfAIYUJvpgi92gNIGWHN8rE92hJ7eQ+CXA5okRqK3E75fUPH43/oTh23W7aGCFWpntgJqn7hXpz0DoEZpuRcZTcr/L5+8dtYZGke3Z8pUzS6q3nVX66TSJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cVTBTsUw; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714078910; x=1745614910;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=A2dKCGsB/Ici8fMlijpabSHqnvQKwWrWdSSIk88w2yQ=;
-  b=RnEhW8UiwHrjJaj+FzhOLpIdVMRRVtWVA38AOgAU4igwYbksPWWcFUsK
-   0y69nqX2sAheOVypXYMcMvc0PTRAUX2ubaAQdpCftjvKIFSrKqunILsz8
-   Ar/RF6ghKV8nuY+DP8k9YZStlVabQKfAPCT3Xlb8BtnYYRn8XKQY02YeT
-   cwCOgeldNga/mQyTorTK196bAEtH/Z6+/Y6QG/Al+n9auWw0K5Pg+XBso
-   D5JzbH6WquMgS2qajBImc4LWxXmYoxL93g2eyPY0x8xYvlxBUSckX6S7a
-   nZYvKS4CE9mzCCefl793fCv0S+aBFNa3dSfra0iKdnGc92EBmUznHI+3j
-   A==;
-X-CSE-ConnectionGUID: ZqN86O9vQM2KbSJxDo5AfA==
-X-CSE-MsgGUID: ibPDEImPSqmvjMbACHEb7w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="10331472"
+  t=1714079434; x=1745615434;
+  h=date:from:to:subject:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=+GuGWw0UTFC6a65lA2q0dTbNroNzyTgF7yBzJFKmW5U=;
+  b=cVTBTsUwNPFfj4fQzfWL9HitYN1isnKRuXO910tGbNovyyQ7GXjhhXKE
+   IEtvMIYpCc2UbUMRiiMTid8rNFTHrVG54A+sHorzPg+s2g+fN/7ALuu9F
+   CTf4SUGh5KvGRs2n8Z56Ms3phZcqoVetAQYUZ8Vsf4lcsfp9eG1gf4UnR
+   o7nRnRNeNn0jURbvf4ZvbL1ey3c9M3FYdQROYFk/UD7Mc/ii1FxpnAQtB
+   wPMC1RJ7XvvC+slA3hYcYKzIhi4ZA49911X5C8wOpzv9glKT5luV1jg6j
+   gSU7UESelEI63s5n/jnz2ccB67cby3ST8xQXilP8AeWtyV/pwGjDeG/0G
+   w==;
+X-CSE-ConnectionGUID: tWbeM2JUQXiK+hqmLsjHQQ==
+X-CSE-MsgGUID: dsBGoof2RWWVDGrDdXlu2A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="20485737"
 X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="10331472"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 14:01:49 -0700
-X-CSE-ConnectionGUID: SijPsIOcSD6JjPyqCYF1fg==
-X-CSE-MsgGUID: JrO6dyC7TOasSciPvgFpvw==
+   d="scan'208";a="20485737"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 14:10:33 -0700
+X-CSE-ConnectionGUID: ZrwHNSpDRwiV+SXvz2uO9A==
+X-CSE-MsgGUID: Z8+hWMtGSkO47hyV4j1JSA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,230,1708416000"; 
-   d="scan'208";a="25209874"
+   d="scan'208";a="25301729"
 Received: from patelni-desk.amr.corp.intel.com (HELO localhost) ([10.2.132.135])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 14:01:48 -0700
-Date: Thu, 25 Apr 2024 14:01:44 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 14:10:33 -0700
+Date: Thu, 25 Apr 2024 14:10:31 -0700
 From: Nirmal Patel <nirmal.patel@linux.intel.com>
-To: Jian-Hong Pan <jhp@endlessos.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>,
- David Box <david.e.box@linux.intel.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Kuppuswamy Sathyanarayanan
- <sathyanarayanan.kuppuswamy@linux.intel.com>, Mika Westerberg
- <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>,
- Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, <paul.m.stillwell.jr@intel.com>
-Subject: Re: [PATCH v5 0/4] PCI: vmd: Enable PCI PM's L1 substates of
- remapped PCIe Root Port and NVMe
-Message-ID: <20240425140144.000049a4@linux.intel.com>
-In-Reply-To: <20240424105814.21690-2-jhp@endlessos.org>
-References: <20240424105814.21690-2-jhp@endlessos.org>
+To: <lpieralisi@kernel.org>, <linux-pci@vger.kernel.org>,
+ <paul.e.luse@intel.com>
+Subject: Re: [PATCH v4] PCI: vmd: Disable MSI remap only for low MSI count
+Message-ID: <20240425141031.000019d4@linux.intel.com>
+In-Reply-To: <20240418153121.291534-1-nirmal.patel@linux.intel.com>
+References: <20240418153121.291534-1-nirmal.patel@linux.intel.com>
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -83,61 +76,69 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 24 Apr 2024 18:58:15 +0800
-Jian-Hong Pan <jhp@endlessos.org> wrote:
+On Thu, 18 Apr 2024 11:31:21 -0400
+Nirmal Patel <nirmal.patel@linux.intel.com> wrote:
 
-> Re-send for the version information.
+> VMD MSI remapping is disabled by default for all the CPUs with 28c0
+> VMD deviceID. We used to disable remapping because drives supported
+> more vectors than the VMD so the performance was better without
+> remapping. Now with CPUs that support more than 64 (128 VMD MSIx
+> vectors for gen5) we no longer need to disable this feature.
 > 
-> Notice the VMD remapped PCIe Root Port and NVMe have PCI PM L1
-> substates capability, but they are disabled originally.
+> Note, pci_msix_vec_count() failure is translated to ENODEV per typical
+> expectations that drivers may return ENODEV when some driver-known
+> fundamental detail of the device is missing.
 > 
-> Here is a failed example on ASUS B1400CEAE with enabled VMD:
+> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> ---
+> v1->v2: Updating commit message.
+> v2->v3: Use VMD MSI count instead of cpu count.
+> v3->v4: Updating commit message.
+> ---
+>  drivers/pci/controller/vmd.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor
-> PCIe Controller (rev 01) (prog-if 00 [Normal decode]) ...
->     Capabilities: [200 v1] L1 PM Substates
->         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-> L1_PM_Substates+ PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
->         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->         	   T_CommonMode=45us LTR1.2_Threshold=101376ns
->         L1SubCtl2: T_PwrOn=50us
-> 
-> 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
-> SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
->     Capabilities: [900 v1] L1 PM Substates
->         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> L1_PM_Substates+ PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
->         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->                    T_CommonMode=0us LTR1.2_Threshold=0ns
->         L1SubCtl2: T_PwrOn=10us
-> 
-> According to "PCIe r6.0, sec 5.5.4", to config the link between the
-> PCIe Root Port and the child device correctly:
-> * Ensure both devices are in D0 before enabling PCI-PM L1 PM
-> Substates.
-> * Ensure L1.2 parameters: Common_Mode_Restore_Times, T_POWER_ON and
->   LTR_L1.2_THRESHOLD are programmed properly on both devices before
-> enable bits for L1.2.
-> 
-> Prepare this series to fix that.
-> 
-> Jian-Hong Pan (4):
->   PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates
->   PCI/ASPM: Add notes about enabling PCI-PM L1SS to
-> pci_enable_link_state(_locked) PCI/ASPM: Introduce aspm_get_l1ss_cap()
->   PCI/ASPM: Fix L1.2 parameters when enable link state
-> 
->  drivers/pci/controller/vmd.c | 13 ++++++++----
->  drivers/pci/pcie/aspm.c      | 41
-> ++++++++++++++++++++++++++++-------- 2 files changed, 41
-> insertions(+), 13 deletions(-)
-> 
+> diff --git a/drivers/pci/controller/vmd.c
+> b/drivers/pci/controller/vmd.c index 769eedeb8802..ba63af70bb63 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -34,6 +34,8 @@
+>  #define MB2_SHADOW_OFFSET	0x2000
+>  #define MB2_SHADOW_SIZE		16
+>  
+> +#define VMD_MIN_MSI_VECTOR_COUNT 64
+> +
+>  enum vmd_features {
+>  	/*
+>  	 * Device may contain registers which hint the physical
+> location of the @@ -807,13 +809,20 @@ static int
+> vmd_enable_domain(struct vmd_dev *vmd, unsigned long features) 
+>  	sd->node = pcibus_to_node(vmd->dev->bus);
+>  
+> +	vmd->msix_count = pci_msix_vec_count(vmd->dev);
+> +	if (vmd->msix_count < 0)
+> +		return -ENODEV;
+> +
+>  	/*
+>  	 * Currently MSI remapping must be enabled in guest
+> passthrough mode
+>  	 * due to some missing interrupt remapping plumbing. This is
+> probably
+>  	 * acceptable because the guest is usually CPU-limited and
+> MSI
+>  	 * remapping doesn't become a performance bottleneck.
+> +	 * Disable MSI remapping only if supported by VMD hardware
+> and when
+> +	 * VMD MSI count is less than or equal to minimum MSI count.
+>  	 */
+>  	if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
+> +	    vmd->msix_count > VMD_MIN_MSI_VECTOR_COUNT ||
+>  	    offset[0] || offset[1]) {
+>  		ret = vmd_alloc_irqs(vmd);
+>  		if (ret)
 
-Hi,
+Gentle ping!
 
-We are running some tests to make sure we dont have issue with other
-platforms and trying to avoid another hotplug scenario. Please wait for
-our Ack before merging this patch. Thanks.
-
--nirmal
+Thanks
+nirmal
 
