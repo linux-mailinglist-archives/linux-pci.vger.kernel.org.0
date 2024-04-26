@@ -1,52 +1,63 @@
-Return-Path: <linux-pci+bounces-6706-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6707-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21A388B423E
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 00:40:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2494D8B4256
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 00:47:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9448B1F21FFD
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 22:40:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2979A1C21DFA
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 22:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B8B239856;
-	Fri, 26 Apr 2024 22:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B38727721;
+	Fri, 26 Apr 2024 22:47:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffoKaCag"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifll98HQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC72C3B79C
-	for <linux-pci@vger.kernel.org>; Fri, 26 Apr 2024 22:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C073987B;
+	Fri, 26 Apr 2024 22:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714171208; cv=none; b=VoLkWvBcW+EPEgk9I288gz2TDHNYMaKBF+urM21t/AsW0zVH60odTmlE34s6Kp5o+SwAGPNLKoQPvMYLcDuamKfaH6LrGbRzoQeSXaKN4KCIm9/Y3E8ImOhK8GVhMj+85d1X0okWUqWXQrM7vmsv8U52cofjaed94N55UrFkQyU=
+	t=1714171668; cv=none; b=ChnUGvBYDptmesORhvfgr09ii7U5ypJeeaI+xMD/voO7oNAyjY4g9gJI9qDHmWmYktct4l7gUjAnnn59cfe00pl0oU8nQi8yfaWwIxUxPa5Kfd+UFT19+fPIv9NP6b3MqVobwdqR9DZisd7lzuXzXgNv6Xo4CfBEzk/7TQGGte4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714171208; c=relaxed/simple;
-	bh=Z4vIo6oxvepWs2wMwGJmKWI/lutvFxAU+zCQEwqETG8=;
+	s=arc-20240116; t=1714171668; c=relaxed/simple;
+	bh=yQE9PcLddlqN+PjCL2wReDNOleVRYw7TxRmvpGTP2kQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=I6lM6zLuU7SnUnHUgpmS/iLE2P3szunuVWZaJHOA24AVUNXnzmkRCV3QkvV6fo651BI4gLvvY6cvtITtdRZvuEt/stu934FPm1ungjTEQGiXKl6KiurR09YvylUkd/CeyZIJXeEm+FmeNjNRTu4nqpp4rSIkPbQCiDkwSR3h2WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffoKaCag; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6F73C32783;
-	Fri, 26 Apr 2024 22:40:07 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=X30lyTFI5CvuVREGFAweZv4qcZdiWJ9XiEWWTugx3HdejCmtlTAN+nhIn9rAJ5giYI21+txk35KYklBsixPoLiD2ld8oQDB3y6zzURbrsoPeDInXEQd8hPCqEdKxLm4OlReRBahPiaUZSJZU8+WtYGih8QvMRBRofzlZqneaoXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifll98HQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C906C113CD;
+	Fri, 26 Apr 2024 22:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714171208;
-	bh=Z4vIo6oxvepWs2wMwGJmKWI/lutvFxAU+zCQEwqETG8=;
+	s=k20201202; t=1714171667;
+	bh=yQE9PcLddlqN+PjCL2wReDNOleVRYw7TxRmvpGTP2kQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ffoKaCagS8oPUYrXZTSMqEG2pfUx2DwUqWWxkzhnhaJ/g+eErHNcoYma7nj3vxN3v
-	 fJtOq45baPpF2Z6nnouPArqThWWG4bZFOcvAA4IjFgkOZDsxrBU6MPLmUC9VB8a6mL
-	 Si5nwtto5OPzlv1EDLS004MWEzGpSObZ7fVHVwjHPRk9SUN/PUMGb92rljgnUo+hwz
-	 Cb9Siz+L8tAh/FdC46GEgUdLSzo92ZuNsXTn42bYnVzij7TA6WjnST8INSZE8v5A0N
-	 YOimDF+cHbRVNC+zoRTGIhZF581gtubet2p6pLPCC73NdIPo5zcl1CYBYKEFBMdI7e
-	 ZzFqDLVZFX74w==
-Date: Fri, 26 Apr 2024 17:39:57 -0500
+	b=ifll98HQNoPtaFrvJKYgNdp1fbYND85HXjZGlEB8//OewHQRBhyw8SH2woc5dB4OH
+	 Lnu90GwsjucyG5unuHJrLCu5J9OhMWCT2fehQGrdgcyaGLrwR58+3FYQs5e/uc6+3m
+	 QY4n2PBYcTe3Cw0/38IQsAJhUn7qenmF95d/BsUvsZ20XxjGafYloHeUvyW+hf8KJK
+	 28s7ZXajI9iuEMxLXcwLXnEkUxV9bP132JTnKg7vM6P+a9qrQCnt03hJEMqZdfbw79
+	 Vxy2iQBLE1AQIn3RxSjRKji3vZUS+dS6h15y696/ulumtlRnFdMVW6AJKRhdLQOVK6
+	 ZjYBOFOIUT4jA==
+Date: Fri, 26 Apr 2024 17:47:46 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: vmd: Disable MSI remap only for low MSI count
-Message-ID: <20240426223957.GA609812@bhelgaas>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Aleksandr Mishin <amishin@t-argos.ru>, Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Subject: Re: [PATCH v2] PCI: dwc: keystone: Fix potential NULL dereference
+Message-ID: <20240426224746.GA611050@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,125 +66,33 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240418153121.291534-1-nirmal.patel@linux.intel.com>
+In-Reply-To: <63b89455-3e30-421a-a082-00d39e836e20@intel.com>
 
-I think this refers specifically to MSI-X, so use "MSI-X" in the
-subject.
-
-On Thu, Apr 18, 2024 at 11:31:21AM -0400, Nirmal Patel wrote:
-> VMD MSI remapping is disabled by default for all the CPUs with 28c0 VMD
-> deviceID. We used to disable remapping because drives supported more
-> vectors than the VMD so the performance was better without remapping.
-> Now with CPUs that support more than 64 (128 VMD MSIx vectors for gen5)
-> we no longer need to disable this feature.
-
-"because drives supported more vectors" ... I guess you are referring
-to typical devices that might be behind a VMD?  But I assume there's
-no actual requirement that those devices be "drives", right?
-
-"CPUs that support more than 64 ... 128 VMD vectors"  Are we talking
-about *CPUs* that support more vectors, or *VMDs* that support more
-vectors?
-
-I guess you probably think of CPUs here because VMD is integrated into
-the same package, right?  That would explain the "CPUs with 28c0 VMD"
-comment.  But the vmd driver doesn't care about that; it just claims a
-PCI device.
-
-s/MSI remapping/MSI-X remapping/ (I think?)
-s/MSIx/MSI-X/ to match spec usage.
-
-A reference to ee81ee84f873 ("PCI: vmd: Disable MSI-X remapping when
-possible"), which added VMD_FEAT_CAN_BYPASS_MSI_REMAP, might be
-useful because it has nice context.
-
-IIUC this will keep MSI-X remapping enabled in more cases, e.g., on
-new devices that support more vectors.  What is the benefit of keeping
-it enabled?
-
-The ee81ee84f873 commit log suggests two issues:
-
-  - Number of vectors available to child domain is limited by size of
-    VMD MSI-X table.
-
-  - Remapping means child interrupts have to go through the VMD domain
-    interrupt handler instead of going straight to the device handler.
-
-But this commit log suggests that with more vectors, you can enable
-remapping even without a performance penalty?  Maybe the VMD domain
-interrupt handler was only needed because of vector sharing?
-
-I'm just a little confused because this commit log doesn't say what
-the actual benefit is, other than "keeping remapping enabled", and I
-don't know enough to know why that's good.
-
-> Note, pci_msix_vec_count() failure is translated to ENODEV per typical
-> expectations that drivers may return ENODEV when some driver-known
-> fundamental detail of the device is missing.
+On Thu, Apr 25, 2024 at 03:00:14PM +0200, Alexander Lobakin wrote:
+> From: Aleksandr Mishin <amishin@t-argos.ru>
+> Date: Thu, 25 Apr 2024 12:21:35 +0300
 > 
-> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> ---
-> v1->v2: Updating commit message.
-> v2->v3: Use VMD MSI count instead of cpu count.
-> v3->v4: Updating commit message.
-> ---
->  drivers/pci/controller/vmd.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> > In ks_pcie_setup_rc_app_regs() resource_list_first_type() may return
+> > NULL which is later dereferenced. Fix this bug by adding NULL check.
+> > 
+> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
 > 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 769eedeb8802..ba63af70bb63 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -34,6 +34,8 @@
->  #define MB2_SHADOW_OFFSET	0x2000
->  #define MB2_SHADOW_SIZE		16
->  
-> +#define VMD_MIN_MSI_VECTOR_COUNT 64
-> +
->  enum vmd_features {
->  	/*
->  	 * Device may contain registers which hint the physical location of the
-> @@ -807,13 +809,20 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  
->  	sd->node = pcibus_to_node(vmd->dev->bus);
->  
-> +	vmd->msix_count = pci_msix_vec_count(vmd->dev);
-> +	if (vmd->msix_count < 0)
-> +		return -ENODEV;
-> +
->  	/*
->  	 * Currently MSI remapping must be enabled in guest passthrough mode
->  	 * due to some missing interrupt remapping plumbing. This is probably
->  	 * acceptable because the guest is usually CPU-limited and MSI
->  	 * remapping doesn't become a performance bottleneck.
+> Please stop spamming with "potential fixes" made mechanically from
+> static analyzer reports without looking into the code flow. These
+> patches are mostly incorrect and may hurt.
+> Either have a stable repro and then fix the real bug or don't touch
+> anything at all.
 
-This part of the comment might need some updating.  I don't see the
-connection with guest passthrough mode in the code.
+Did you look at the actual patch?  I'm not a keystone expert, but this
+patch looks reasonable to me.
 
-> +	 * Disable MSI remapping only if supported by VMD hardware and when
-> +	 * VMD MSI count is less than or equal to minimum MSI count.
+It might still be the case that we're guaranteed to have an
+IORESOURCE_MEM window by other code, but it looks like a real hassle
+to prove that.
 
-Add blank line between paragraphs or rewrap into a single paragraph.
-
->  	 */
->  	if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
-> +	    vmd->msix_count > VMD_MIN_MSI_VECTOR_COUNT ||
->  	    offset[0] || offset[1]) {
-
-I think this conditional might be easier to read if it were inverted:
-
-  if (features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) && ...) {
-    vmd_set_msi_remapping(vmd, false);
-  } else {
-    ret = vmd_alloc_irqs(vmd);
-    ...
-  }
-
-Maybe a separate patch though.
-
->  		ret = vmd_alloc_irqs(vmd);
->  		if (ret)
-> -- 
-> 2.31.1
+> > Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
+> > Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
 > 
+> Thanks,
+> Olek
 
