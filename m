@@ -1,341 +1,174 @@
-Return-Path: <linux-pci+bounces-6688-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6689-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00B7C8B3324
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 10:42:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E2B28B373C
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 14:28:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9FBB28683B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 08:42:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BDB4283737
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 12:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3588343ACD;
-	Fri, 26 Apr 2024 08:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24FB145B08;
+	Fri, 26 Apr 2024 12:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OXe6VZZc"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eUkiWTPW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2055.outbound.protection.outlook.com [40.107.237.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA0D3D57D;
-	Fri, 26 Apr 2024 08:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714120954; cv=none; b=krrq2PZORevndMvfDmqwAH/WB8YM7cLoji1Fj2+BJTgPObnDcd2MQaOiOomt6n7qwiT4b6NVZD48twT6O2CWRjq3E9P6qJvgvLJZ+0iYaxnXUqKSefkIhhuvGy0qQPbAmFvnpVySamK5qztYRqqDZrsiQ4vqR4plBZt/uCCT8aE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714120954; c=relaxed/simple;
-	bh=w0uh5w7GTitfg6PmY2X3+PvccK3BLnO70DnZjCGubWs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MkEbPWexoajrOgOulTTEv5c0sud0oddi4SZNE5VOdUfn34QCh+SKi/tFW06Izawuis0wiCvI1iPsV4arz+4EkGpD1uXk09eTbdaHgZ9WYOuomka47ODOID9+dY3PU+b0uUtnzz2zgA8IUP8RnL1PHFmSy/c7m5FOamJUqr8nQBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OXe6VZZc; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714120952; x=1745656952;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=w0uh5w7GTitfg6PmY2X3+PvccK3BLnO70DnZjCGubWs=;
-  b=OXe6VZZcrowTF2vgJnBpM6mmwBL7TW8Kq2qWdqL75d7gaQ+TafrQszLt
-   ROo2cx7qKgwSHCdoDoXa7rM+mm3fLBMEMLcKOcfBvjrL1KWUNxN39dgfy
-   4tTAhQEBgvNWJNOYhx3WNBRIVG9bcjbX0LV62pt4ff/1fp/4xTwgCFrA6
-   eqVQhOe7USp8g+Wnzo3v3pnmcWI3wrri35RXy37+uMu0hzXubkhxivHDd
-   DnbqfPH5rvzJz/hwFgvui4gP3EzS76Uwle0irNGeewmStfNkKqSJDXS1W
-   +07Gm2iJ0RQau2+ZSYdK1+jZkvnqceTl/d4uyE7tsT6nJ/NtdeTMPCqlr
-   w==;
-X-CSE-ConnectionGUID: AhqLBiBLSease/RhoYMNgA==
-X-CSE-MsgGUID: kZUG0RqGR9izZUdSlQ0mmg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="10381197"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="10381197"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 01:42:30 -0700
-X-CSE-ConnectionGUID: 9qPrIU/CQPuE+mbnpjgbCQ==
-X-CSE-MsgGUID: NRANCpWRTV26KgEmwm16yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="29805805"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.43])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 01:42:26 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 26 Apr 2024 11:42:23 +0300 (EEST)
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-cc: linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <helgaas@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, 
-    Yazen Ghannam <yazen.ghannam@amd.com>, Bowman Terry <terry.bowman@amd.com>, 
-    Hagan Billy <billy.hagan@amd.com>, Simon Guinot <simon.guinot@seagate.com>, 
-    "Maciej W . Rozycki" <macro@orcam.me.uk>, 
-    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    jon.grimm@amd.com, pradeepvineshreddy.kodamati@amd.com
-Subject: Re: [PATCH] PCI: pciehp: Clear LBMS on hot-remove to prevent link
- speed reduction
-In-Reply-To: <4852519a-c941-aa0c-2912-f6383c708ade@amd.com>
-Message-ID: <38cfc6fa-ad39-86e6-3904-45f5fc937609@linux.intel.com>
-References: <20240424033339.250385-1-Smita.KoralahalliChannabasappa@amd.com> <52290bb0-97bc-aa52-6606-cc734a492cc1@linux.intel.com> <4852519a-c941-aa0c-2912-f6383c708ade@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB6F14535C;
+	Fri, 26 Apr 2024 12:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714134491; cv=fail; b=ImC+wLBX7pFguqccLSq2vx4oNaoqjekYvPXGejnT3iZdlg+BCZrj/YIwFyADIun/k4BdUiFTrVGelqGaanewNUz0gYSI2G7KbukrXdnFs8XLo8Fq3XZqRNT15JYSU/++SBNUNRoQEq3cPZpLnekOlMVl2isHnVRgcLn4nIxNb5g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714134491; c=relaxed/simple;
+	bh=riFXBKJN2AiW4z33ywwA4gvuJMX1zBckt612L6RUcU0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LzCPBl0LNgA+5ybAAw36rF+lGTePlbHQjvsd+6n68smIyMqzVHLEs+6SfUTB9ysy+kSf2mbeAVHsMp5K9P7K8DjyJDU8kJ6i8y1Tzn+BLs5XGRlV2gAGV9WdjUIaL5YGOR7+IA7U7Z/xZtFkVh66Hni87Hy49oRd+uzW1T3Od7U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=eUkiWTPW; arc=fail smtp.client-ip=40.107.237.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z6xZMmSpkqaT1K2MA9pUl6tteyUTVAZbphwArOCdECTyeT/AzouuwVdmCfEYoCficCUghnHkaKaNgEc5VmUWRbdfX6Ea29NnfBShbHgV0dNJN6JGmRmsnVUc2DA531Smo9gFvaxeLLiWPejXWatRYkgj/XYtpvGPoLKmbXbmrNO8BwpLP3gFIsPw1mmZI1+lKlhMUV+Br0gVz/QbDeyo7J/ABZ+CPYbxyH873ee8BErLO5K2SLGpN+2wJ8C9AHG1WW6bEMhWhkAWW8GnMtmBW0cAwYPKk7tOo3OJQpu3uj5Gx+Uslcw9SspHnHyHnKoc/jFRJpWaw3YV9Aq6KQ6UhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=poHmnVwy7jh5PlAka6Fd0Sagaqcckqj/ioJ1aSAPwqU=;
+ b=BwOtSArknGubvbccAFtZX5VEemVwgh8DnQ8d+b6VHjgdAR5ZnxyIy7970thQL5zeAWn1eUpWT8a0TAsa8GAG1knYoz8gktnzTgvxow7vglS/ThVA5XyBPCKnyMAVxsOPe9sGljPUjDfHmGbBhk7OCNCgqU0kB20TOAQk8+wnCFvnbBVMOQs2ENh/Aa9+RdUtV4/phTuLdS29ZKA7/xeQFK7j8cZulkurSoK/OMo83X/ZnExBi0fUrT/OVwBi2tcUefwPc90aY09RTXA4tpWsNGcJktXk9sfDBNXmtop/uxR1Ft/R0puCvLjO9++MCELrNBwYaG2oNMW1j1iuI12yDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=poHmnVwy7jh5PlAka6Fd0Sagaqcckqj/ioJ1aSAPwqU=;
+ b=eUkiWTPWxTJqdpalIe7kj9hb9e9DFwbo99VFJ98/35Zxt7b536KSxilDyIf66HXwA68C39DZa8I8nidwPq4yKM6Y6faSRsw+jnpWTPO/7o7Qy5h1Hhvt53ND7NN7sHkgzqYaOuRfpek8ElvYj17tJM/nQywDq37rpk5m1iiTd+fvPmZjWoKud8j+m0UdO5SlClzza19VMbzOsU7uJCYpC2NEQOdA2k16TAm2aCypI8++h8+EDT5lIzm1lbgCWhouVYwPeyMCQZstaT+WWr7vTFKwpTqhZ6M700Ug7d1LJPt4cUgqKVxnM+qiiY7iDCOKXVRKbNBqM4F0N5oBS1lgMw==
+Received: from SA9PR13CA0153.namprd13.prod.outlook.com (2603:10b6:806:28::8)
+ by SA1PR12MB7038.namprd12.prod.outlook.com (2603:10b6:806:24d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.31; Fri, 26 Apr
+ 2024 12:28:06 +0000
+Received: from SA2PEPF000015C9.namprd03.prod.outlook.com
+ (2603:10b6:806:28:cafe::e1) by SA9PR13CA0153.outlook.office365.com
+ (2603:10b6:806:28::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.18 via Frontend
+ Transport; Fri, 26 Apr 2024 12:28:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SA2PEPF000015C9.mail.protection.outlook.com (10.167.241.199) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7519.19 via Frontend Transport; Fri, 26 Apr 2024 12:28:06 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 26 Apr
+ 2024 05:27:42 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 26 Apr
+ 2024 05:27:41 -0700
+Received: from moonraker.home (10.127.8.9) by mail.nvidia.com (10.129.68.9)
+ with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Fri, 26 Apr
+ 2024 05:27:40 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, Thierry Reding <thierry.reding@gmail.com>
+CC: Vidya Sagar <vidyas@nvidia.com>, <linux-pci@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, "Manikanta
+ Maddireddy" <mmaddireddy@nvidia.com>
+Subject: [PATCH] PCI: tegra194: Set address alignment for endpoint mode
+Date: Fri, 26 Apr 2024 13:27:31 +0100
+Message-ID: <20240426122731.42499-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-160196204-1714115264=:1049"
-Content-ID: <1b7e0b79-7cbd-ceeb-f69d-b1f04aeb7631@linux.intel.com>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C9:EE_|SA1PR12MB7038:EE_
+X-MS-Office365-Filtering-Correlation-Id: 543f33ab-b157-423f-a332-08dc65ec537b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|82310400014|36860700004|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?w/dGcr5wktF1BKfLq+vV76j0Lv2iOn0xEOOi7Ln+CWSpM3Dxuutq6tqz0tsv?=
+ =?us-ascii?Q?n6gKzJ8mmC2yHavF5QqenIcgo1blsFqrhNmrcWK3DO52nJwd+oiKOkJ+Bhzf?=
+ =?us-ascii?Q?Zo5w+PhXramogSIFjPxFnmhvNgQNKffXfXWzO6hWXXdCq6bcyDuIvW5ZzqvR?=
+ =?us-ascii?Q?hXRBgcZSzET0aWNx5bLbO9TKOP51LHN14ZfbA2c690+eSJ/Dxy070NwAjMRA?=
+ =?us-ascii?Q?1DYL0nsaQwAnZfhsljjgKeGZ3mzTp+ZP+VV80z6jDNd0hMHECjZ64r2EL5uq?=
+ =?us-ascii?Q?WDPzRZ3sTAvk5E6dURZ/2f+TICxqlzx0hZcwQ4dDngJ6GhYJx4JwfuASxlpx?=
+ =?us-ascii?Q?2l6xMPxGl1r0uivOPoo+Rcx1uARD+wnjXeNOZvvwO/8WOqt2T9ikmkY+xQ85?=
+ =?us-ascii?Q?nS2cmGlGWtqW0rCH3g5Zls2YdH4Jn6ERMAoEnaq3poVAPjE1QrZjbTf6IvrS?=
+ =?us-ascii?Q?EJJooxS3dJxuSEHh6Xuy9fkgvt0bX2n6XDndh/UcnS+kTHj8HQyjEt1hwzIH?=
+ =?us-ascii?Q?aXzS7wiz4RB9kcFUUBW/earnqy1T/s3uc5SRb8zAFfaRO+D8Qz79BsrcnATC?=
+ =?us-ascii?Q?XlcjFio/Xh9bzU8vowhCLpSmASn+BobGyC1htIsWwvZy0xg54c7tFfn+jCgf?=
+ =?us-ascii?Q?2eGoH5LdLoS1Jrgu1kozMaPlwzdSLvZgR7gRQ7AsV9B1WrFnKc7MXQHv1Crb?=
+ =?us-ascii?Q?aMWd9X4Xfq81ntTgDWWbZ0BKQ4nSW0dmhDgbm5k9bGqyBPF8NDM2R04hzx+w?=
+ =?us-ascii?Q?osyg8NXi22/XLdjJWE0z+XT8WZZBKjqQnmybbGOfMz3E7aQgZNdb7DcocG97?=
+ =?us-ascii?Q?/ppiyj0MHaHFe7wJnRq/pZVB+f5K6YAZ60s/0UXP3it8BDW7xBlXb7pUv8f0?=
+ =?us-ascii?Q?nFxDoAGLRjdUcs8qiYzwTDjfoisbie9LMvQrUpe1RmEBIHyBrdchWYfqjWcb?=
+ =?us-ascii?Q?iuBBTSLfSOnHFA59HE59B2T9iDkkelTirs2JiMEGhAshaQllnpiT3tSBNtjx?=
+ =?us-ascii?Q?wpkA0vpVrr64++sDMNXV+E3p2jaaXTWesWWyK3MYAIvEGaZaKpp2HqmR5pFW?=
+ =?us-ascii?Q?W8LvEsT20tsc/TFzKq2RQVRpL3oaKzcG+kxzh/IS7P7bWAqB1Ai9bmHg0x+L?=
+ =?us-ascii?Q?HVI8rtDkeIwdBOxflJyks3TIf7K2l2lQnjIZafmAZ7Ypgzliedch1gGBhoYz?=
+ =?us-ascii?Q?0tDeU3Nf9kyHnF0hKTZHlp3H/JoYcep+tyAo958mxI6w+Ft68jXuWfUmn/kX?=
+ =?us-ascii?Q?UF4plzyuXKL7dnqPpa6VeuoqPPoLjAgfa5vOsKtA/hVc1/uYV01jgQXM8GqH?=
+ =?us-ascii?Q?8zK2qRKYlTwD3wHCnbQ3cC6kUZ6kUI5u5n1UtCQyY5g59xL7Ex+YKquV0zxl?=
+ =?us-ascii?Q?F+60XYF+hukHDdF3sCd4UiYHno2p?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(82310400014)(36860700004)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 12:28:06.5504
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 543f33ab-b157-423f-a332-08dc65ec537b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7038
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Tegra194 and Tegra234 devices require that the endpoint address is
+aligned on a 64kB boundary and therefore, set the endpoint address
+alignment to 64kB in the Tegra194 PCIe driver.
 
---8323328-160196204-1714115264=:1049
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <247a7619-7709-9080-fd6f-ec8e2357393e@linux.intel.com>
+Fixes: c57247f940e8 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
+Suggested-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, 25 Apr 2024, Smita Koralahalli wrote:
-> On 4/24/2024 2:32 AM, Ilpo J=E4rvinen wrote:
-> > On Wed, 24 Apr 2024, Smita Koralahalli wrote:
-> >=20
-> > > Clear Link Bandwidth Management Status (LBMS) if set, on a hot-remove
-> > > event.
-> > >=20
-> > > The hot-remove event could result in target link speed reduction if L=
-BMS
-> > > is set, due to a delay in Presence Detect State Change (PDSC) happeni=
-ng
-> > > after a Data Link Layer State Change event (DLLSC).
-> > >=20
-> > > In reality, PDSC and DLLSC events rarely come in simultaneously. Dela=
-y in
-> > > PDSC can sometimes be too late and the slot could have already been
-> > > powered down just by a DLLSC event. And the delayed PDSC could falsel=
-y be
-> > > interpreted as an interrupt raised to turn the slot on. This false pr=
-ocess
-> > > of powering the slot on, without a link forces the kernel to retrain =
-the
-> > > link if LBMS is set, to a lower speed to restablish the link thereby
-> > > bringing down the link speeds [2].
-> > >=20
-> > > According to PCIe r6.2 sec 7.5.3.8 [1], it is derived that, LBMS cann=
-ot
-> > > be set for an unconnected link and if set, it serves the purpose of
-> > > indicating that there is actually a device down an inactive link.
-> > > However, hardware could have already set LBMS when the device was
-> > > connected to the port i.e when the state was DL_Up or DL_Active. Some
-> > > hardwares would have even attempted retrain going into recovery mode,
-> > > just before transitioning to DL_Down.
-> > >=20
-> > > Thus the set LBMS is never cleared and might force software to cause =
-link
-> > > speed drops when there is no link [2].
-> > >=20
-> > > Dmesg before:
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> > > =09pcieport 0000:20:01.1: broken device, retraining non-functional
-> > > downstream link at 2.5GT/s
-> > > =09pcieport 0000:20:01.1: retraining failed
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): No link
-> > >=20
-> > > Dmesg after:
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): No link
-> > >=20
-> > > [1] PCI Express Base Specification Revision 6.2, Jan 25 2024.
-> > >      https://members.pcisig.com/wg/PCI-SIG/document/20590
-> > > [2] Commit a89c82249c37 ("PCI: Work around PCIe link training failure=
-s")
-> > >=20
-> > > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.=
-com>
-> > > ---
-> > > 1. Should be based on top of fixes for link retrain status in
-> > > pcie_wait_for_link_delay()
-> > > https://patchwork.kernel.org/project/linux-pci/list/?series=3D824858
-> > > https://lore.kernel.org/linux-pci/53b2239b-4a23-a948-a422-4005cbf7614=
-8@linux.intel.com/
-> > >=20
-> > > Without the fixes patch output would be:
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> > > =09pcieport 0000:20:01.1: broken device, retraining non-functional
-> > > downstream link at 2.5GT/s
-> > > =09pcieport 0000:20:01.1: retraining failed
-> > > =09pcieport 0000:20:01.1: pciehp: Slot(59): No device found.
-> >=20
-> > Did you hit the 60 sec delay issue without series 824858? If you've tes=
-ted
-> > them and the fixes helped your case, could you perhaps give Tested-by f=
-or
-> > that series too (in the relevant thread)?
->=20
-> I'm assuming the 60s delay issue is from pci_dev_wait()?
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 93f5433c5c55..4537313ef37a 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -2015,6 +2015,7 @@ static const struct pci_epc_features tegra_pcie_epc_features = {
+ 	.bar[BAR_3] = { .type = BAR_RESERVED, },
+ 	.bar[BAR_4] = { .type = BAR_RESERVED, },
+ 	.bar[BAR_5] = { .type = BAR_RESERVED, },
++	.align = SZ_64K,
+ };
+ 
+ static const struct pci_epc_features*
+-- 
+2.34.1
 
-Yes.
-=20
-> Correct me if I'm wrong.
-> I think series 824858 potentially fixes the bug at two different places. =
-What
-> you are seeing is at suspend/resume operation called from the calls below=
-=2E
->
-> pci_pm_runtime_resume()
->     pci_pm_bridge_power_up_actions()
->       pci_bridge_wait_for_secondary_bus()
->         pcie_wait_for_link_delay()
->           pcie_failed_link_retrain()
->         pci_dev_wait()
->=20
-> But series 824858 helped me in properly returning an error code from
-> pcie_wait_for_link_delay() and also avoiding the 100ms delay inside
-> pcie_wait_for_link_delay() and probably the timeout in
-> pcie_wait_for_presence()..
->=20
-> The sequence of operations which I'm looking at is after an PDSC event as
-> below:
-> pciehp_handle_presence_or_link_change()
->   pciehp_enable_slot()
->     __pciehp_enable_slot()
->       board_added()
->         pciehp_check_link_status()
->           pcie_wait_for_link()
->             pcie_wait_for_link_delay()
->               pcie_failed_link_retrain()
->=20
-> pcie_failed_link_retrain() would initially return false on a "failed link
-> retrain" attempt which would make pcie_wait_for_link_delay() and
-> pcie_wait_for_link() to erroneously succeed thereby unnecessarily proceed=
-ing
-> with other checks in pciehp_check_link_status().
->=20
-> Series 824858 fixes the bug by properly returning an error code.
-
-Yes, that series also fixes other bugs too. I wasn't aware how the
-incorrect return value impacted hotplug too.
-
-> However, I had missed looking at your patchset when I initially wrote
-> this. From the patch below I see you have addressed clearing LBMS as well=
- but
-> at a different place. But I didn't understand why was it dropped.
->=20
-> https://lore.kernel.org/all/20240129112710.2852-2-ilpo.jarvinen@linux.int=
-el.com/
-
-That change wasn't perfect solution given how the target speed quirk=20
-works. Unconditional clearing might have broken the quirk so localizing=20
-the LBMS clearing into the cases where the device is actually gone would=20
-be the best approach.
-
-For normal hotplug, it's relatively easy to clear LBMS as demonstrated by=
-=20
-your patch (I have consider putting it into somewhere in remove.c if the=20
-device is in disconnected state while removing the function 0 but roughly=
-=20
-the same idea as in your patch).
-
-The additional problem with suspend/resume cycle is that the device can=20
-disappear while suspended and we only notice the disconnection after=20
-hotplug has resumed. This occurs only after full portdrv resume because it=
-=20
-requires interrupt which is too late to avoid the 60secs delay. Series=20
-824858 avoids the 60secs delay even for suspend/resume but if LBMS could=20
-be cleared in time, it would help things further because the quirk=20
-wouldn't even trigger, or at minimum, the wait delays could be=20
-short-circuited if device disconnection is noticed while the wait is in=20
-progress.
-
-> From what I understood while experimenting is, tracking the set/unset beh=
-avior
-> of LBMS is hard, as HW has the right to attempt retrain at any point exce=
-pt
-> when the status is DL_Down as per the statement from the the SPEC: "This =
-bit
-> is Set by hardware to indicate that either of the following has occurred
-> without the Port transitioning through DL_Down status".
-
-It's actually not that hard. On medium term, I'm trying to get PCIe BW=20
-controller into kernel (about to send a new version of it, probably next=20
-week), which will keep clearing LBMS by enabling BW notifications that are=
-=20
-the SW/OS way to track LBMS assertions.
-
-> The set LBMS when the port was not in DL_Down, is never unset after the P=
-ort
-> is transitioned to DL_Down. So, I think clearing it after the port status=
- is
-> DL_Down (which I assume happens after DLLSC interrupt fires to bring the =
-slot
-> down) makes it remain cleared only until the port remains at DL_Down stat=
-e. As
-> soon as the port transitions to other states (I don't know how SW could t=
-rack
-> the states) there is no guarantee that the bit is still clear as HW might=
- have
-> attempted retrain.
->=20
-> The only way would be to track the DL_Down and Active/Up states. I at the
-> moment don't know how to do it or if it is possible to do it in SW in the
-> first place. Hence, I'm more inclined pushing [2] below as a fix  for lin=
-k
-> speed drop. However, that has some complexities as well :(
->=20
-> After talking to HW folks one place where our HW sets LBMS is:
->=20
-> Device is removed.
->   DL_Up doesn't immediately change.
->     HW will just see errors on the receiver and doesn't automatically
->     know that it was because of a hot remove, and tries to recover the
->     link.
->     LBMS gets set here as rate change is attempted.
-
-That's interesting. I have earlier thought it's only set when the rate=20
-change was actually successful but it seems that isn't even meant to be=20
-the case here when I now reread the spec.
-
->     DL_Down occurs after this.
->=20
-> Once DL_Down occurs nobody is supposed to set the bit. But the set bit is
-> never cleared and is creating all issues.
->
-> HW mostly considers other parameters and LTSSM behaviors in transitioning
-> between Active/Up to Down states which I'm not sure at the moment how muc=
-h of
-> it is transparent to OS. :/
->
-> > > @@ -134,4 +134,10 @@ void pciehp_unconfigure_device(struct controller
-> > > *ctrl, bool presence)
-> > >   =09}
-> > >     =09pci_unlock_rescan_remove();
-> > > +
-> > > +=09/* Clear LBMS on removal */
-> > > +=09pcie_capability_read_word(ctrl->pcie->port, PCI_EXP_LNKSTA, &lnks=
-ta);
-> > > +=09if (lnksta & PCI_EXP_LNKSTA_LBMS)
-> > > +=09=09pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
-> > > +=09=09=09=09=09   PCI_EXP_LNKSTA_LBMS);
-> >=20
-> > It's enough to unconditionally write PCI_EXP_LNKSTA_LBMS, no need to
-> > check first. The comment is just spelling out what can already be read
-> > from the code so I'd drop the comment.
->=20
-> Sure, I will make changes once I send v2 and if we consider to address it=
- this
-> way.. :)
->=20
-> >=20
-> > I agree it makes sense to clear the LBMS when device is removed.
->=20
-> Thank you!
-
-As I said, I think it's correct thing to do when we know the device is=20
-gone and shouldn't interfere with the target speed quirk unlike my=20
-clear-LBMS-on-resume attempt.
-
-This won't help the disconnected while suspended case for now but it's=20
-still a step into correct direction even for that.
-
---=20
- i.
---8323328-160196204-1714115264=:1049--
 
