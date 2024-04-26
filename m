@@ -1,276 +1,188 @@
-Return-Path: <linux-pci+bounces-6701-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6702-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E4C28B40C5
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 22:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D3A8B414A
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 23:36:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA5BC284D56
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 20:23:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3DA7282E59
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Apr 2024 21:36:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39702261F;
-	Fri, 26 Apr 2024 20:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9426E2C85F;
+	Fri, 26 Apr 2024 21:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDt7XFC5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDfxjmy+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB542562E;
-	Fri, 26 Apr 2024 20:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704F7376E6
+	for <linux-pci@vger.kernel.org>; Fri, 26 Apr 2024 21:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714162981; cv=none; b=VneV8+tDepOzUPiTOV9Dh35ldG0QJtlAW5vdutevNRf3OOT8z+B2W0cZ6JGz9t3sNNrbuBiHer3Kar7Q+WMZhCPaKvqt+CCCSRQhGipyKRBqccnVbNs2ErW2v3PfR9pH3DPcKzTvmSWhD+u1K/MqHLmKBxG8PwLr/pC7N1wQELI=
+	t=1714167394; cv=none; b=sqIhDKDxjudSpz/Z1TFRg0WhBKjnDTGCiSSuhfBEKR+ZUQ8xJuz1nunGclDjhnHYiNH7Vx+bEZnVCUrOq+SjD4xwGaaKDrKSKI4Afbo+ScEqS6s6lvn3wf2+NFi0KFY7dwsGEmc+pP+GL2Wwvl+ZcMfhsdlvVR9whFpA23ScEao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714162981; c=relaxed/simple;
-	bh=GbaTYwdZ8id3LPa579gAi+LysdGAYbNVBDYDNoM7P+o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YxrmpfOEDSE46hUS2NRU6RnvK/2qwzfg6MKm94FDv7SMHW3bG2SjVrsJCRrbJjZfol0fhcxlor+fR7YXpb1CcF0Wz4nSI/MvdPSMVAS5PsuApcVzUYTjYyjkryW3v64eopUdOyuDG3N0XG2ZhnzMsnTgxwKSkMoMn69fceAS5ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDt7XFC5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA3D1C113CD;
-	Fri, 26 Apr 2024 20:23:00 +0000 (UTC)
+	s=arc-20240116; t=1714167394; c=relaxed/simple;
+	bh=TGlsc33Shhmp/lT2WcH/NokOXpLoGLNQosg2WnC2FkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=afDz+jSIwi1KNRvGeJ3OCI3y+qXBzvXKSj3Z/IwEqYcpKbTkn7L9QB+3XwkZD40cuVZaxhj5rAG+Xu9K9SNbAot1KXjd6c8VzCW7hOdpq5765zPJ4pTWB/FPdxeVGrwD2AA+k4iErpcUoWoPyrExmgcP8oj7evDrdthTj0BBu/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDfxjmy+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA3E2C2BD11;
+	Fri, 26 Apr 2024 21:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714162981;
-	bh=GbaTYwdZ8id3LPa579gAi+LysdGAYbNVBDYDNoM7P+o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BDt7XFC5+ZlqbRPkXwezHFzXgsKBQ233OU/DL9YQ4CO8IvTo1gw/IpfQXQ2kyd6g7
-	 9Ms/jBsIMGaVM2n7UsxElrXKY+ChUQsNPLXBWXN1suiLlr0KQYBdPYBweG6fVFUja+
-	 zyKACwTXpGSZTjSOkd8B0ob4kTLQBV3TK+vaAXHgB1vZXo4WldQmBM7I4GVTFiZRQH
-	 y/uRsqc2XcZ7OjqpGyV8U9RA+7CRi1E3hlLwXucNJmX4njy26oSR0YpHauNSMcdoEW
-	 aVy3/SoitHOWufMcdRUft+hv6eYaTzPvWyOOKw1/8GBN9Q002HWo5k71l41zLqm8xd
-	 HT2AgHiysMayQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-phy@lists.infradead.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH] dt-bindings: Drop unnecessary quotes on keys
-Date: Fri, 26 Apr 2024 15:22:37 -0500
-Message-ID: <20240426202239.2837516-1-robh@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1714167394;
+	bh=TGlsc33Shhmp/lT2WcH/NokOXpLoGLNQosg2WnC2FkU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aDfxjmy+RRW9eLNr2v1adPmd5YT0OBgkjYWhWsejOaV6gwgcpCkSq6Ygf5QuvKopi
+	 eNEHDsMwkQENGY3XxrLW/+Z5bwvvi0+CkfW8pHwtLPSsWo8MLSd+sfHxchTUpMDC5a
+	 ScRX67F6nB1bSzXIqdis4IYawUIkKxPDfvL30XUOurcVghGy5cqsBLt6wnsun0w6WS
+	 1qnupxnZZgyMLejYt1gd1kqIDNa871fOsjf/T5H6gU6Oo/YPNbr6gmC8fV/0Ao/NEZ
+	 wjAMnMVVCLuWSqwO6c3W8TkW9Dhwl5rRMUyBJGSmW1mT7e/BKVul+/k6VfPaCgW5O0
+	 7xJGUZY/vM/gw==
+Date: Fri, 26 Apr 2024 16:36:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
+Cc: linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] Documentation: PCI: add vmd documentation
+Message-ID: <20240426213631.GA594688@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51c5f46e-5649-4ab4-9828-5711dd06ee5d@intel.com>
 
-The yamllint quoted-strings check wasn't checking keys for quotes, but
-support for checking keys was added in 1.34 release. Fix all the errors
-found when enabling the check.
+On Thu, Apr 25, 2024 at 04:32:21PM -0700, Paul M Stillwell Jr wrote:
+> On 4/25/2024 3:32 PM, Bjorn Helgaas wrote:
+> > On Thu, Apr 25, 2024 at 02:43:07PM -0700, Paul M Stillwell Jr wrote:
+> > > On 4/25/2024 10:24 AM, Bjorn Helgaas wrote:
+> > > > On Wed, Apr 24, 2024 at 02:29:16PM -0700, Paul M Stillwell Jr wrote:
+> > > > > On 4/23/2024 5:47 PM, Bjorn Helgaas wrote:
+> > > ...
+> > 
+> > > > > > _OSC is the only mechanism for negotiating ownership of these
+> > > > > > features, and PCI Firmware r3.3, sec 4.5.1, is pretty clear that _OSC
+> > > > > > only applies to the hierarchy originated by the PNP0A03/PNP0A08 host
+> > > > > > bridge that contains the _OSC method.  AFAICT, there's no
+> > > > > > global/device-specific thing here.
+> > > > > > 
+> > > > > > The BIOS may have a single user-visible setting, and it may apply that
+> > > > > > setting to all host bridge _OSC methods, but that's just part of the
+> > > > > > BIOS UI, not part of the firmware/OS interface.
+> > > > > 
+> > > > > Fair, but we are still left with the question of how to set the _OSC bits
+> > > > > for the VMD bridge. This would normally happen using ACPI AFAICT and we
+> > > > > don't have that for the devices behind VMD.
+> > > > 
+> > > > In the absence of a mechanism for negotiating ownership, e.g., an ACPI
+> > > > host bridge device for the hierarchy, the OS owns all the PCIe
+> > > > features.
+> > > 
+> > > I'm new to this space so I don't know what it means for the OS to
+> > > own the features. In other words, how would the vmd driver figure
+> > > out what features are supported?
+> > 
+> > There are three things that go into this:
+> > 
+> >    - Does the OS support the feature, e.g., is CONFIG_PCIEAER enabled?
+> > 
+> >    - Has the platform granted permission to the OS to use the feature,
+> >      either explicitly via _OSC or implicitly because there's no
+> >      mechanism to negotiate ownership?
+> > 
+> >    - Does the device advertise the feature, e.g., does it have an AER
+> >      Capability?
+> > 
+> > If all three are true, Linux enables the feature.
+> > 
+> > I think vmd has implicit ownership of all features because there is no
+> > ACPI host bridge device for the VMD domain, and (IMO) that means there
+> > is no way to negotiate ownership in that domain.
+> > 
+> > So the VMD domain starts with all the native_* bits set, meaning Linux
+> > owns the features.  If the vmd driver doesn't want some feature to be
+> > used, it could clear the native_* bit for it.
+> > 
+> > I don't think vmd should unilaterally claim ownership of features by
+> > *setting* native_* bits because that will lead to conflicts with
+> > firmware.
+> 
+> This is the crux of the problem IMO. I'm happy to set the native_* bits
+> using some knowledge about what the firmware wants, but we don't have a
+> mechanism to do it AFAICT. I think that's what commit 04b12ef163d1 ("PCI:
+> vmd: Honor ACPI _OSC on PCIe features") was trying to do: use a domain that
+> ACPI had run on and negotiated features and apply them to the vmd domain.
 
-Clean-up the xilinx-versal-cpm formatting while we're here.
+Yes, this is the problem.  We have no information about what firmware
+wants for the VMD domain because there is no ACPI host bridge device.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- Documentation/devicetree/bindings/net/sff,sfp.yaml   | 12 ++++++------
- .../devicetree/bindings/pci/xilinx-versal-cpm.yaml   |  7 +++++--
- .../devicetree/bindings/pci/xlnx,nwl-pcie.yaml       |  2 +-
- .../devicetree/bindings/phy/brcm,sata-phy.yaml       |  8 ++++----
- .../devicetree/bindings/regulator/ti,tps62864.yaml   |  2 +-
- .../bindings/soc/tegra/nvidia,tegra20-pmc.yaml       |  6 +++---
- Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml  |  4 ++--
- 7 files changed, 22 insertions(+), 19 deletions(-)
+We have information about what firmware wants for *other* domains.
+04b12ef163d1 assumes that also applies to the VMD domain, but I don't
+think that's a good idea.
 
-diff --git a/Documentation/devicetree/bindings/net/sff,sfp.yaml b/Documentation/devicetree/bindings/net/sff,sfp.yaml
-index bf6cbc7c2ba3..90611b598d2b 100644
---- a/Documentation/devicetree/bindings/net/sff,sfp.yaml
-+++ b/Documentation/devicetree/bindings/net/sff,sfp.yaml
-@@ -29,39 +29,39 @@ properties:
-       allowable by a module in the slot, in milli-Watts. Presently, modules can
-       be up to 1W, 1.5W or 2W.
- 
--  "mod-def0-gpios":
-+  mod-def0-gpios:
-     maxItems: 1
-     description:
-       GPIO phandle and a specifier of the MOD-DEF0 (AKA Mod_ABS) module
-       presence input gpio signal, active (module absent) high. Must not be
-       present for SFF modules
- 
--  "los-gpios":
-+  los-gpios:
-     maxItems: 1
-     description:
-       GPIO phandle and a specifier of the Receiver Loss of Signal Indication
-       input gpio signal, active (signal lost) high
- 
--  "tx-fault-gpios":
-+  tx-fault-gpios:
-     maxItems: 1
-     description:
-       GPIO phandle and a specifier of the Module Transmitter Fault input gpio
-       signal, active (fault condition) high
- 
--  "tx-disable-gpios":
-+  tx-disable-gpios:
-     maxItems: 1
-     description:
-       GPIO phandle and a specifier of the Transmitter Disable output gpio
-       signal, active (Tx disable) high
- 
--  "rate-select0-gpios":
-+  rate-select0-gpios:
-     maxItems: 1
-     description:
-       GPIO phandle and a specifier of the Rx Signaling Rate Select (AKA RS0)
-       output gpio signal, low - low Rx rate, high - high Rx rate Must not be
-       present for SFF modules
- 
--  "rate-select1-gpios":
-+  rate-select1-gpios:
-     maxItems: 1
-     description:
-       GPIO phandle and a specifier of the Tx Signaling Rate Select (AKA RS1)
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index 4734be456bde..c41344f8a242 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -48,13 +48,16 @@ properties:
-   interrupt-controller:
-     description: Interrupt controller node for handling legacy PCI interrupts.
-     type: object
-+    additionalProperties: false
-+
-     properties:
-       "#address-cells":
-         const: 0
-+
-       "#interrupt-cells":
-         const: 1
--      "interrupt-controller": true
--    additionalProperties: false
-+
-+      interrupt-controller: true
- 
- required:
-   - reg
-diff --git a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-index 426f90a47f35..cbe832c23dae 100644
---- a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-@@ -84,7 +84,7 @@ properties:
-       "#interrupt-cells":
-         const: 1
- 
--      "interrupt-controller": true
-+      interrupt-controller: true
- 
-     required:
-       - "#address-cells"
-diff --git a/Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml b/Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml
-index 8467c8e6368c..439bda142764 100644
---- a/Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml
-@@ -59,14 +59,14 @@ patternProperties:
-       "#phy-cells":
-         const: 0
- 
--      "brcm,enable-ssc":
-+      brcm,enable-ssc:
-         $ref: /schemas/types.yaml#/definitions/flag
-         description: |
-           Use spread spectrum clocking (SSC) on this port
-           This property is not applicable for "brcm,iproc-ns2-sata-phy",
-           "brcm,iproc-nsp-sata-phy" and "brcm,iproc-sr-sata-phy".
- 
--      "brcm,rxaeq-mode":
-+      brcm,rxaeq-mode:
-         $ref: /schemas/types.yaml#/definitions/string
-         description:
-           String that indicates the desired RX equalizer mode.
-@@ -75,7 +75,7 @@ patternProperties:
-           - auto
-           - manual
- 
--      "brcm,rxaeq-value":
-+      brcm,rxaeq-value:
-         $ref: /schemas/types.yaml#/definitions/uint32
-         description: |
-             When 'brcm,rxaeq-mode' is set to "manual", provides the RX
-@@ -83,7 +83,7 @@ patternProperties:
-         minimum: 0
-         maximum: 63
- 
--      "brcm,tx-amplitude-millivolt":
-+      brcm,tx-amplitude-millivolt:
-         description: |
-             Transmit amplitude voltage in millivolt.
-         $ref: /schemas/types.yaml#/definitions/uint32
-diff --git a/Documentation/devicetree/bindings/regulator/ti,tps62864.yaml b/Documentation/devicetree/bindings/regulator/ti,tps62864.yaml
-index 0f29c75f42ea..dddea27596e9 100644
---- a/Documentation/devicetree/bindings/regulator/ti,tps62864.yaml
-+++ b/Documentation/devicetree/bindings/regulator/ti,tps62864.yaml
-@@ -24,7 +24,7 @@ properties:
-     type: object
- 
-     properties:
--      "SW":
-+      SW:
-         type: object
-         $ref: regulator.yaml#
-         unevaluatedProperties: false
-diff --git a/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml b/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml
-index b86f6f53ca95..7140c312d898 100644
---- a/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml
-+++ b/Documentation/devicetree/bindings/soc/tegra/nvidia,tegra20-pmc.yaml
-@@ -365,9 +365,9 @@ allOf:
- additionalProperties: false
- 
- dependencies:
--  "nvidia,suspend-mode": ["nvidia,core-pwr-off-time", "nvidia,cpu-pwr-off-time"]
--  "nvidia,core-pwr-off-time": ["nvidia,core-pwr-good-time"]
--  "nvidia,cpu-pwr-off-time": ["nvidia,cpu-pwr-good-time"]
-+  nvidia,suspend-mode: ["nvidia,core-pwr-off-time", "nvidia,cpu-pwr-off-time"]
-+  nvidia,core-pwr-off-time: ["nvidia,core-pwr-good-time"]
-+  nvidia,cpu-pwr-off-time: ["nvidia,cpu-pwr-good-time"]
- 
- examples:
-   - |
-diff --git a/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml b/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-index 50a3fd31241c..8b0d3d4be5d8 100644
---- a/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-+++ b/Documentation/devicetree/bindings/tpm/ibm,vtpm.yaml
-@@ -33,13 +33,13 @@ properties:
-   reg:
-     maxItems: 1
- 
--  'ibm,#dma-address-cells':
-+  ibm,#dma-address-cells:
-     description:
-       number of cells that are used to encode the physical address field of
-       dma-window properties
-     $ref: /schemas/types.yaml#/definitions/uint32-array
- 
--  'ibm,#dma-size-cells':
-+  ibm,#dma-size-cells:
-     description:
-       number of cells that are used to encode the size field of
-       dma-window properties
--- 
-2.43.0
+> Using the 3 criteria you described above, could we do this for the hotplug
+> feature for VMD:
+> 
+> 1. Use IS_ENABLED(CONFIG_<whatever hotplug setting we need>) to check to see
+> if the hotplug feature is enabled
 
+That's already there.
+
+> 2. We know that for VMD we want hotplug enabled so that is the implicit
+> permission
+
+The VMD domain starts with all native_* bits set.  All you have to do
+is avoid *clearing* them.
+
+The problem (IMO) is that 04b12ef163d1 clears bits based on the _OSC
+for some other domain.
+
+> 3. Look at the root ports below VMD and see if hotplug capability is set
+
+This is already there, too.
+
+> If 1 & 3 are true, then we set the native_* bits for hotplug (we can look
+> for surprise hotplug as well in the capability to set the
+> native_shpc_hotplug bit corrrectly) to 1. This feels like it would solve the
+> problem of "what if there is a hotplug issue on the platform" because the
+> user would have disabled hotplug for VMD and the root ports below it would
+> have the capability turned off.
+> 
+> In theory we could do this same thing for all the features, but we don't
+> know what the firmware wants for features other than hotplug (because we
+> implicitly know that vmd wants hotplug). I feel like 04b12ef163d1 is a good
+> compromise for the other features, but I hear your issues with it.
+> 
+> I'm happy to "do the right thing" for the other features, I just can't
+> figure out what that thing is :)
+
+04b12ef163d1 was motivated by a flood of Correctable Errors.
+
+Kai-Heng says the errors occur even when booting with
+"pcie_ports=native" and VMD turned off, i.e., when the VMD RCiEP is
+disabled and the NVMe devices appear under plain Root Ports in domain
+0000.  That suggests that they aren't related to VMD at all.
+
+I think there's a significant chance that those errors are caused by a
+software defect, e.g., ASPM configuration.  There are many similar
+reports of Correctable Errors where "pcie_aspm=off" is a workaround.
+
+If we can nail down the root cause of those Correctable Errors, we may
+be able to fix it and just revert 04b12ef163d1.  That would leave all
+the PCIe features owned and enabled by Linux in the VMD domain.  AER
+would be enabled and not a problem, hotplug would be enabled as you
+need, etc.
+
+There are a zillion reports of these errors and I added comments to
+some to see if anybody can help us get to a root cause.
+
+Bjorn
 
