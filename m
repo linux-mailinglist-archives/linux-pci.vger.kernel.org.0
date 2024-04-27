@@ -1,305 +1,248 @@
-Return-Path: <linux-pci+bounces-6710-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6711-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1515D8B437D
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 03:28:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F28528B439B
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 03:54:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 386C51C20325
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 01:28:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62C411F22950
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 01:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C1002E403;
-	Sat, 27 Apr 2024 01:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FB33383AC;
+	Sat, 27 Apr 2024 01:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="At7Ac59Z"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UdYVLNYY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8662C6B0
-	for <linux-pci@vger.kernel.org>; Sat, 27 Apr 2024 01:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714181280; cv=fail; b=rHDq3GkxX8zBhQihmYT+IYEkgVAGdJ4doNyzAFgw6H0acWncgDE+23wNqUOBUhbsd+IefsBIMDV67OG7U5isZC/XLfQ0/YcMtGrauv2beCzBgPQQJlJZff6mWrVeZ6bC/2yGy04zLzbrqL+s/UW5qoqU3e6Nhd7mNBEP68qYh+4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714181280; c=relaxed/simple;
-	bh=awie/jxEgU//zKp2xe/kZhNY+tfaV9Be4/pUMaq08hk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=K9vpTgiv/FrhwpPr5dPn3g9nriouInKzTk5Ict6zoNzJSU44FpBuqbXDdXRXmcLUYAmRmcNeR9LB7EtI72jkVAXpqz9mkPG5NGe7sZhYEdy4yyIKhXecPbgxiE2UqTojmtwzpn/hT1XMBd2MSFcBRa4E5ETdnhaymvfhP4EGM54=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=At7Ac59Z; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714181278; x=1745717278;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=awie/jxEgU//zKp2xe/kZhNY+tfaV9Be4/pUMaq08hk=;
-  b=At7Ac59ZzYfKcJOa3zmCeP//+Uru2NuktQTAqEewoVhNXPz24A3hhlJ3
-   k02Hz7fy5QWBzSlEidLhlrUOF6FXgn7XkzqQ5PnWT+FFY9MdQi+u6u340
-   H8vJvNywY6V/KK2YaUSu2ACWgQLAnMP8qDQQq9LqfrohsXXuG3DaWgkGY
-   x6O0IyrajGwuVtFTs6vQ5ypuSQOE6CS/Jytd81wnJJfz7lBp1tFVwsFg1
-   Vn4gujvsEEw4bFLH4Nj1KuBxhCGX+OOka62PsvxPCu7+oZiEyw70dDV8C
-   jzrXoI9Ut5XLrGeWfKCITSwj4pRYfCeB+o+PhJvobnQd/95UTB1dKl/BX
-   Q==;
-X-CSE-ConnectionGUID: FNqsf/u3Rnmgl0d/wYJdkA==
-X-CSE-MsgGUID: 2/sOi+UqTrWEXLofuDMahA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="12867693"
-X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="12867693"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 18:27:57 -0700
-X-CSE-ConnectionGUID: vuPcW6ZzQbqp5wtrsbA1kg==
-X-CSE-MsgGUID: mdvfrpBERU6GTlr/S2E6tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,234,1708416000"; 
-   d="scan'208";a="26217765"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Apr 2024 18:27:57 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 26 Apr 2024 18:27:56 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 26 Apr 2024 18:27:56 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990714C63;
+	Sat, 27 Apr 2024 01:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714182841; cv=none; b=DEVyr8BcQgxJgBQ317bobof3HiluglkAqu8Q6Zuz1XZzgqbtXWsji5v83JbfihAA98+1qvjOj2A4mr+dwrOZ96eqQ9/6Rmve9Z3zFvcLqTd5xgjraQqR+oNimvTPEUQ4wy+Apt9JtR+0NRwih15zLp8slOY7KuedPiRI6ZxzYxo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714182841; c=relaxed/simple;
+	bh=ws9kDSCXhP/j0zDNe5K30ull+cRQqEqRkm3CaRmK7Kk=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=FEg0eJcpr4tf5Q6HwSreOcr8oCcrc59kWqDesN/gR4i5NVDa8fXOfPj6Jxpvm0c7DPwK01398G9q+WGPvwHNkXRIsTz47zazSk5mm1Ihb8/1JMJzdryx9mtxaAl4CqQU1dzozPupb2gqu1VB8uih+6u0qUUWGAoAW8ZLC9usTUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UdYVLNYY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43R1o27n019390;
+	Sat, 27 Apr 2024 01:53:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=6qVY2QHU4ftEp7
+	G936IjsFXoiOAitJv527DRnnUNNPk=; b=UdYVLNYYWYVDF7YbF4j8rsZMUaLH0H
+	HbmfkKvPJau/zNw6omNLK2UgoKTuuvF69XK7GkPKVXuh8aMY/0qD9/T0juJ/zsrG
+	+41PCHDoLNI5L6BkhV2DcoGwSHuNaWNry4e2s3EzKHwZ2B/P75DGnDxwItWCAMWS
+	PXC416KuEiUNwmuF1Lbe7pOo/KqONA8TTXHDJfoa3vNYdyIUhzjekF+dpRpFcu9u
+	Ugwr7GcXhsdiKJA9l/HrIbF7GXMS/gWS97kX2EL/GVLF+ycBwmhE4E44odQnvSf4
+	xjDEJHYHm/AkoIzfltMuJlp7zKipLuNyrwtVUGQwTN2fDYedwXCSpRfw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xranmhn7u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 27 Apr 2024 01:53:46 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43R1rjwF003269
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 27 Apr 2024 01:53:45 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 26 Apr 2024 18:27:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jahc3GAGJ105Kl4b5KxPjU7uDwfSCLy6xZ00xlLL1zbm9Z1OwAcKzXO5TQ6hd1K06rTL8zB3XLn2Wu99EVpXlATRW2Gtm81V2LHnJGr18iJ9+gpyfunoZSGCkA2dfS3AoFpZ323BdgCiBNrpdpXBu5VnbQLB5/Mhg7HaBNkEkmnrVg7XA4H6zR+NO4LGpxTPjdKBvutfK/moNUXKt1oLFKe5uDdn+6Id0aZLAPXYG3F/nhsB7CwPRrnlErYdZ6/0+h/Tip/KOMihStF4tcIJJh2RKcH0HpIDn3MV6EnwHYw1fzBVJjIPdeMIS4bD6aTmD9Vtljc2RayAb6n37nslDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IOZwmhjL+3GuKIV7hAY2Tb2CH6R5giGudKn+6gnmRrI=;
- b=hBivuYg+4KByGuCcS/OmcBgbRUS12qsJ+twkSafDDIKjdkFJovZAmwqmYPNdbmZZ15UeXEzlSxjHIi+L079czGPNN4ArCiYvzhnBAqWjgM5xazBKrsnOSTi1crVfu9jJRhB+HpS3jaTPDY7XiablqFvgg/kG1aXJgiEAdyf6EgUJ6qZAnKHT+YY3m6jetIebCEfeskocG2AnFBBcDuoxu4x3YCbqZmC70N6sEnyPFCyXyiIFAqlhVB+zumlg5OH3npj0bTBgEMfJwdWY2eEwB2Dr3pZTE+VY1VN1FOrKLp3H2qBuaMmePH86zob+MJTa+KoQWu0p4SLgW06itMhfOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA1PR11MB7343.namprd11.prod.outlook.com (2603:10b6:208:424::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Sat, 27 Apr
- 2024 01:27:54 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7452.046; Sat, 27 Apr 2024
- 01:27:53 +0000
-Date: Fri, 26 Apr 2024 18:27:50 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, Wu Hao <hao.wu@intel.com>, Yilun Xu
-	<yilun.xu@intel.com>, Lukas Wunner <lukas@wunner.de>, Samuel Ortiz
-	<sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, Xu Yilun <yilun.xu@linux.intel.com>,
-	<kevin.tian@intel.com>, <gregkh@linuxfoundation.org>,
-	<linux-pci@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 5/6] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <662c5496d5b9f_b6e0294ab@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <171291193308.3532867.129739584130889725.stgit@dwillia2-xfh.jf.intel.com>
- <20240419220729.GA307280@bhelgaas>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240419220729.GA307280@bhelgaas>
-X-ClientProxiedBy: MW4PR02CA0015.namprd02.prod.outlook.com
- (2603:10b6:303:16d::6) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ 15.2.1544.9; Fri, 26 Apr 2024 18:53:38 -0700
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Subject: [PATCH v12 0/6] PCI: qcom: Add support for OPP
+Date: Sat, 27 Apr 2024 07:22:33 +0530
+Message-ID: <20240427-opp_support-v12-0-f6beb0a1f2fc@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB7343:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a56c766-5fb8-44a9-5faa-08dc665942a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?rH2CXmvA9Bvzu0NnFGYD2ffif4XRfVkhFp7Q7IHdjOO5djoXja/WUTddeksN?=
- =?us-ascii?Q?XXH1sZ7kWbFAELIKWzexr6/XI2EDhRfE6/KZC2b+rjd2BnJCyYyqlfJx/CBR?=
- =?us-ascii?Q?PW+xkqgcOUKAeFcWoazhDy7kRFBlEUNPCtFYXetSFYbJ6F30mmQ+TL3yca/7?=
- =?us-ascii?Q?dnhIqp5oqbUjYFq7Ra4CSf9+ZYBqR7uDBJ4VQHvlG1sVIKyT56IzGBEcpiD4?=
- =?us-ascii?Q?PpHtqCAa7xBmlQicecxQgcTyDfYrCJrVYMp1NfU4oclohQBoGUMzJnId8eBO?=
- =?us-ascii?Q?ohTt3IUgskDclpWAz9kd7deDryEHlztxNQ6Xv2lihyTk+WW+dWf5rmZFY+bs?=
- =?us-ascii?Q?pGfBq6hIWPJe/SJIJTAtpo5LfhzRS418wemj4Za/AGZOYZmbt5FanDrJfWzd?=
- =?us-ascii?Q?0mlbDXC2Zft5TNxG9oNO6MrDkWT0fyhMo40kUiy775zQUzDKBabDLacDlTtd?=
- =?us-ascii?Q?2nF853IxEtr5usJapnFB0WSRXuwl6qSv1zhxg4Qxverute/XWHpILXnkPA1Q?=
- =?us-ascii?Q?7pGjqg0jWiizS/W+YeEz0gay3BpkSZsWL761JqI/19/sdfh/Ju4E0grJsvQs?=
- =?us-ascii?Q?TbxkhVsWguZArcHWc27g4sgYa9t1cdOWIe9aw8M88eQUzRw8+9KiraZh83wR?=
- =?us-ascii?Q?9iODaN6H6wWmp4Txzpo4AQkgAj3wyk3mHqeCDSxkbSto37+6WJ/M6EeDElR6?=
- =?us-ascii?Q?zksGdfvF+4+abWTvLliMdtEMriJk1OOgseIAXFe+RQcIvFIa7VthB8FizADP?=
- =?us-ascii?Q?qoIyzOqMILTFjJ/5C0yfzaUHUpX9C9O3tKk0K/OUSYi6xYKAV0Gnh9cZ+hX0?=
- =?us-ascii?Q?pkHJR0PaVfQiurawTWVsFdc21igG4CCwhNtSoXHZ+/bAWVCfH8+ZQg1PAUdW?=
- =?us-ascii?Q?KoQBr2YUogJ/zgwD4bLCrSsu0BnDxJ9vD8T/fg6RSFgGyjQLeUu1qcb/OuLW?=
- =?us-ascii?Q?B3FlskLw/G53qhVnIKg9PTegky2R7Ca35SQBcPIMLpLymRQ1N3Xmwbz9Udq9?=
- =?us-ascii?Q?wMifoGnelol7OXje59111Jv1apboQRLf+iRXa8kESfwcb2tm1u535cV3KI3T?=
- =?us-ascii?Q?JUUTdzTV/U34XUEwYDi6FH4SzLYwiO/bOje4dft0u5oeaFjG5jvACC/YgZ6Z?=
- =?us-ascii?Q?SpxdBAMcFvQODeqfVrSLzgBiVNN2XEr8+GQRRLjjQVhLHOVHSvR8KfKkfnYd?=
- =?us-ascii?Q?fy3w8Vq0hNlfECKBfyGpYc9k0gr/GScF/h9Juufmq+6pyzD6dXS8ha9heCcR?=
- =?us-ascii?Q?JpURRaSNZKIo73hFj3HbhhpxxjjZDo76sQH/TDo9vQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/ApD9OMFFPDXlb/Ci911Mg4zoM43mSp1lXzfe0k8Sv4d4DmpfthqSc+XrIu0?=
- =?us-ascii?Q?/SrB12Zql3rkNEyg/CS7lpf7CewIOwKLYWRJra9cysgsAs5xDClW8CubzTAX?=
- =?us-ascii?Q?v0t1aH6aPSp8Wp8CDLOjvjvk02farUvn4qlgowajh9QlEZ65H5VAHFnnI8xU?=
- =?us-ascii?Q?Zrv28/1dtkYJO3FfIqNZFSTFa8a3YIIwTMM95Dy38Hls4648scAKBer5POep?=
- =?us-ascii?Q?s0nOv5nypkyQ0Ycqqo0pJNVWOy+tKkLyAurYSEFaT7jebtBWsVameSjTNQhH?=
- =?us-ascii?Q?7FriZGwfgtnpv/iax2O7FHP904sSuQC5VPm00s9bWU9aaY2pOJPJ3Xbbt1oY?=
- =?us-ascii?Q?x9LahuN4b8tRfO8uHZfgw434cbC0whuI2XRA0++IBqGHUISlwjzc5T52jFCO?=
- =?us-ascii?Q?RvIwoz8n/M4HtT+MK5VdH+V6t/Fbdjovg1AM8cyaZhhNcnin0NrLTHTmTz5e?=
- =?us-ascii?Q?xt6qsFPG3JtkcgWUI7d7c0Jxu6ILbzEGqF3Mn6j8zpgGA4nSxVqIErP6lrU2?=
- =?us-ascii?Q?s7nAJM2lZZ8vxboy5ILF/bV7DfUEV8lnyJqJgGqau5skl2iP0NwJuJiTLwRZ?=
- =?us-ascii?Q?bYz+JCw5J/S0MxEO5DAXZjBrbL6YJr8qxtxaP2fr/y7TzQP4U+2LOVkcgpbN?=
- =?us-ascii?Q?f/t5wktxZS0aDR8FhQWycv+Vr/MzOsrSYTrqo7mVdonSGL0Wloc9aG4JPhxo?=
- =?us-ascii?Q?0BWyNM7kBEAOTHbwuCwZ2I7akB6qGTRHzFfifjXh3Q0VymJ8PxYhxcKK9Ku2?=
- =?us-ascii?Q?jwOoVwzLx7Rp063JXqUb6vXOvFG+zVjAHKo1xQFFubTaOULdmtmf7inUZYTH?=
- =?us-ascii?Q?CUQBqPi/fcx60GokUQ3GO87dt6kg3HP+CgacR0roCfFWKqRSIHdmNSapZ+wj?=
- =?us-ascii?Q?awQaB92ZML04sA03JbUB5PT/KkMW9uembUZZ31ppCESijtu8hk8pTX/6tAEj?=
- =?us-ascii?Q?nwO+6oeePYgx+os5TCdAFOyohcNr+nVgU2eYRrnGHLyCYKox2/B7pCO4OVTr?=
- =?us-ascii?Q?nuHvIDz1PuDxAIFckYIUrQj2rmmwNWl5EQyBZ7ocO1udmYPxJ8z70tAZEcGu?=
- =?us-ascii?Q?ZFPtbDC3wsUrWuyqYNYaunk5KOMjHvd9wLxLisBQbYnfgehMbHrVXWdP7C55?=
- =?us-ascii?Q?LKgonXr44w/ND9W+pJ4uPscddyJdi9pMc9nzGTZoIStXCZbIp0M/ottLmvZM?=
- =?us-ascii?Q?G87gk4r0O+w1FLTSXUeT/Nkmp9flsWzZxh+RsfdKhH+vHrHWCgKVpgaqOrXW?=
- =?us-ascii?Q?oaxlEKRMnOZk79X9PD/sSklME0nFrCaGE9Ic722gw0w5ykzPzQzMD/e47Z+s?=
- =?us-ascii?Q?8DykPXO4FQOBpOyG1r+hOkVVRv639vR7dIE7FNDYoMWVhQn/8/NYBU0OhVnr?=
- =?us-ascii?Q?Uwfyj0zJtWm0stk1O1WA0go2YvcH2yMYOubJDgv1P12qtJ14vGB/WiPXHuud?=
- =?us-ascii?Q?vewe4oTPrt++PZHSIDFQ0HZOjv2rdjEA87ePynmvTKhPsqmoKM9i66EhByv/?=
- =?us-ascii?Q?d+YcNA6z71aeMB0XRCGE5TB/EuJPXERxO+Ryctsv3/doh4cNrZtotxFZHkhU?=
- =?us-ascii?Q?lquU+JDgW9wCvYNaqBbN8oZptDd7zOFKSjItrX3cmhNYG8oxq8P0OAsVcCiC?=
- =?us-ascii?Q?Zw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a56c766-5fb8-44a9-5faa-08dc665942a4
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2024 01:27:53.7667
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: U0WU0Z7U1vXdCTP3TfzhQ0Rv4T7OFw1QT6hvk79mqBvcWWTTA3zt+1M11XFI3ldv2GjHEQh1cO81oWGyw2gIT9Dczw3jsX4ROlBSLWZdUps=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7343
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGNaLGYC/23M3wqCMByG4VuJHbf4bW7aOuo+IsL9yx3k1qZSi
+ PfeFAKNDr8PnndEyURnEjrtRhTN4JLzbR6E7ndINXV7N9jpfCAKlAGDEvsQbqkPwccOqxoENxI
+ KKhnKIkRj3WvJXa55Ny51Pr6X+iDm99upNp1BYMBMlOTItGJcV+dn75Rr1UH5B5pLA4E1F1tOI
+ HsieGlKaQpW2D+erDwtfjyZPbdaM5BgBd/6aZo+/FXBaikBAAA=
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
+        <bmasney@redhat.com>, <djakov@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
+        <krzysztof.kozlowski@linaro.org>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714182817; l=6284;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=ws9kDSCXhP/j0zDNe5K30ull+cRQqEqRkm3CaRmK7Kk=;
+ b=0jbUKvsz9762zw1R5lJ59W1j9trPMpYTMfIzxhcclPG3sXO3cYE1jK2YWUay9QjaiC2xsiWwe
+ qdJ7NosM9HHB4Bn2mfuTea5gijifYag2eWTq/+9n+dvdLwICJkVv4Ka
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 8qLpTmi0wxEL0opbpuFOQ2sv5XLOhrYa
+X-Proofpoint-ORIG-GUID: 8qLpTmi0wxEL0opbpuFOQ2sv5XLOhrYa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_22,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 adultscore=0 impostorscore=0 spamscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404270012
 
-Bjorn Helgaas wrote:
-> On Fri, Apr 12, 2024 at 01:52:13AM -0700, Dan Williams wrote:
-> > The PCIe 6.1 specification, section 11, introduces the Trusted Execution
-> > Environment (TEE) Device Interface Security Protocol (TDISP).  This
-> > interface definition builds upon Component Measurement and
-> > Authentication (CMA), and link Integrity and Data Encryption (IDE). It
-> > adds support for assigning devices (PCI physical or virtual function) to
-> > a confidential VM such that the assigned device is enabled to access
-> > guest private memory protected by technologies like Intel TDX, AMD
-> > SEV-SNP, RISCV COVE, or ARM CCA.
-> > 
-> > The "TSM" (TEE Security Manager) is a concept in the TDISP specification
-> > of an agent that mediates between a "DSM" (Device Security Manager) and
-> > system software in both a VMM and a confidential VM. A VMM uses TSM ABIs
-> > to setup link security and assign devices. A confidential VM uses TSM
-> > ABIs to transition an assigned device into the TDISP "RUN" state and
-> > validate its configuration. From a Linux perspective the TSM abstracts
-> > many of the details of TDISP, IDE, and CMA. Some of those details leak
-> > through at times, but for the most part TDISP is an internal
-> > implementation detail of the TSM.
-> > 
-> > Similar to the PCI core extensions to support CONFIG_PCI_CMA,
-> > CONFIG_PCI_TSM builds upon that to reuse the "authenticated" sysfs
-> > attribute, and add more properties + controls in a tsm/ subdirectory of
-> > the PCI device sysfs interface. Unlike CMA that can depend on a local to
-> > the PCI core implementation, PCI_TSM needs to be prepared for late
-> > loading of the platform TSM driver. Consider that the TSM driver may
-> > itself be a PCI driver. Userspace can depend on the common TSM device
-> > uevent to know when the PCI core has TSM services enabled. The PCI
-> > device tsm/ subdirectory is supplemented by the TSM device pci/
-> > directory for platform global TSM properties + controls.
-> > 
-> > The common verbs that the low-level TSM drivers implement are defined by
-> > 'enum pci_tsm_cmd'. For now only connect and disconnect are defined for
-> > establishing a trust relationship between the host and the device,
-> > securing the interconnect (optionally establishing IDE), and tearing
-> > that down.
-> > 
-> > The locking allows for multiple devices to be executing commands
-> > simultaneously, one outstanding command per-device and an rwsem flushes
-> > all inflight commands when a TSM low-level driver/device is removed.
-> > 
-> > In addition to commands submitted through an 'exec' operation the
-> > low-level TSM driver is notified of device arrival and departure events
-> > via 'add' and 'del' operations. With those it can setup per-device
-> > context, or filter devices that the TSM is not prepared to support.
-> > 
-> > Cc: Wu Hao <hao.wu@intel.com>
-> > Cc: Yilun Xu <yilun.xu@intel.com>
-> > Cc: Lukas Wunner <lukas@wunner.de>
-> > Cc: Samuel Ortiz <sameo@rivosinc.com>
-> > Cc: Alexey Kardashevskiy <aik@amd.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# PCI parts
+This patch adds support for OPP to vote for the performance state of RPMH
+power domain based upon PCIe speed it got enumerated.
 
-Great, thanks Bjorn! This lets us move forward on the TSM details
-knowing that it looks like this meets your expectations on the PCI
-integration aspects. Will continue to include you on revisions as this
-evolves, but this is good news for the cross vendor collaboration effort
-in process here.
+QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
+maintains hardware state of a regulator by performing max aggregation of
+the requests made by all of the processors.
 
-> > +What:		/sys/bus/pci/devices/.../tsm/
-> > +Date:		March 2024
-> > +Contact:	linux-coco@lists.linux.dev
-> > +Description:
-> > +		This directory only appears if a device supports CMA and IDE,
-> > +		and only after a TSM driver has loaded and evaluated this
-> > +		PCI device. All present devices shall be dispositioned
-> > +		after the 'add' event for /sys/class/tsm/tsm0 triggers.
-> 
-> What does "dispositioned" mean?
+PCIe controller can operate on different RPMh performance state of power
+domain based up on the speed of the link. And this performance state varies
+from target to target.
 
-When /sys/class/tsm/tsm0/uevent signals KOBJ_ADD, arrival of the TSM
-device, a udev script can assume that the kernel has walked all PCI
-devices and toggled the visibility of the all
-/sys/bus/pci/devices/$pdev/tsm/ attribute directories.
+It is manadate to scale the performance state based up on the PCIe speed
+link operates so that SoC can run under optimum power conditions.
 
-> What devices does "all present devices" cover?
+Add Operating Performance Points(OPP) support to vote for RPMh state based
+upon GEN speed link is operating.
 
-A snapshot of the state of /sys/bus/pci/devices at TSM arrival. So a
-udev script that, for example, wants to perform the TSM "connect"
-operation as soon as possible should watch PCI KOBJ_ADD uevents and try
-to connect if the TSM is present at that time, but if not, try again
-after TSM KOBJ_ADD.
+Before link up PCIe driver will vote for the maximum performance state.
 
-Similar for the PCI-hot-add case. TSM may arrive first, so that policy
-script should recheck when PCI KOBJ_ADD, for the device it wants to
-connect, fires.
+As now we are adding ICC BW vote in OPP, the ICC BW voting depends both
+GEN speed and link width using opp-level to indicate the opp entry table
+will be difficult.
 
-> 
-> Is "tsm0" a special global thing?  Is there doc for
-> /sys/class/tsm/...?
+In PCIe certain gen speeds like 2.5GT/s x2 & 5.0 GT/s X1 or 8.0 GT/s x2 &
+16GT/s x1 use same ICC bw if we use freq in the OPP table to represent the
+PCIe speed number of PCIe entries can reduced.
 
-Yes, it is a special common object that any platform with a TSM will
-export. I had yet to create a document since there are no common
-attributes defined in this version of the patch set, but I can go ahead
-and create it and mention what userspace can expect about the state of
-/sys/bus/pci/devices when the device shows up.
+So going back to use freq in the OPP table instead of level.
 
-> 
-> > +++ b/drivers/pci/Makefile
-> > @@ -35,6 +35,8 @@ obj-$(CONFIG_VGA_ARB)		+= vgaarb.o
-> >  obj-$(CONFIG_PCI_DOE)		+= doe.o
-> >  obj-$(CONFIG_PCI_DYNAMIC_OF_NODES) += of_property.o
-> >  
-> > +obj-$(CONFIG_PCI_TSM)		+= tsm.o
-> 
-> Maybe put it next to CONFIG_PCI_DOE or at least not off in a special
-> separate list?
+To access PCIe registers of the host controller and endpoint PCIe
+BAR space, config space the CPU-PCIe ICC (interconnect) path should
+be voted otherwise it may lead to NoC (Network on chip) timeout.
+We are surviving because of other driver voting for this path.
 
-Sure, will do.
+As there is less access on this path compared to PCIe to mem path
+add minimum vote i.e 1KBps bandwidth always which is sufficient enough
+to keep the path active and is recommended by HW team.
+
+In suspend to ram case there can be some DBI access. Except in suspend
+to ram case disable CPU-PCIe ICC path after register space access
+is done.
+
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+Changes from v11:
+	- added nicpicks suggested by mani.
+	- Link to v11: https://lore.kernel.org/r/20240423-opp_support-v11-0-15fdd40b0f95@quicinc.com
+Changes from v10:
+	- Updated comments and logs as suggested by mani.
+	- Link to v10: https://lore.kernel.org/r/20240409-opp_support-v10-0-1956e6be343f@quicinc.com
+Changes from v9:
+	- Disable interconnect CPU-PCIe path only system is not suspend to ram case.
+	- If opp find freq fails in the probe fail the probe as suggested by mani.
+	- Modify comments as suggested by mani
+	- Link to v9: https://lore.kernel.org/r/20240407-opp_support-v9-0-496184dc45d7@quicinc.com
+Changes from v8:
+	- Removed the ack-by and reviewed by on dt-bindings as dt-bindings moved to new files.
+	- Removed dt-binding patch for interconnects as it is added in the common file.
+	- Added tags for interconnect as suggested by konrad
+	- Added the comments as suggested by mani
+	- In ICC BW vote for CPU to PCIe path if icc_disable() fails log error and return instead of re-init.
+	- Link to v8: https://lore.kernel.org/linux-arm-msm/20240302-opp_support-v8-0-158285b86b10@quicinc.com/
+Changes from v7:
+	- Fix the compilation issue in patch3
+	- Change the commit text and wrap the comments to 80 columns as suggested by bjorn
+	- remove PCIE_MBS2FREQ macro as this is being used by only qcom drivers.
+	- Link to v7: https://lore.kernel.org/r/20240223-opp_support-v7-0-10b4363d7e71@quicinc.com
+Changes from v6:
+	- change CPU-PCIe bandwidth to 1KBps as suggested by HW team.
+	- Create a new API to get frequency based upon PCIe speed as suggested
+	  by mani.
+	- Updated few commit texts and comments.
+	- Setting opp to NULL in suspend to remove any votes.
+	- Link for v6: https://lore.kernel.org/linux-arm-msm/20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com/
+Changes from v5:
+	- Add ICC BW voting as part of OPP, rebase the latest kernel, and only
+	- either OPP or ICC BW voting will supported we removed the patch to
+	- return error for icc opp update patch.
+	- As we added the icc bw voting in opp table I am not including reviewed
+	- by tags given in previous patch.
+	- Use opp freq to find opp entries as now we need to include pcie link
+	- also in to considerations.
+	- Add CPU-PCIe BW voting which is not present till now.
+	- Drop  PCI: qcom: Return error from 'qcom_pcie_icc_update' as either opp or icc bw
+	- only one executes and there is no need to fail if opp or icc update fails.
+	- Link for v5: https://lore.kernel.org/linux-arm-msm/20231101063323.GH2897@thinkpad/T/
+Changes from v4:
+	- Added a separate patch for returning error from the qcom_pcie_upadate
+	  and moved opp update logic to icc_update and used a bool variable to 
+	  update the opp.
+	- Addressed comments made by pavan.
+changes from v3:
+	- Removing the opp vote on suspend when the link is not up and link is not
+	  up and add debug prints as suggested by pavan.
+	- Added dev_pm_opp_find_level_floor API to find the highest opp to vote.
+changes from v2:
+	- Instead of using the freq based opp search use level based as suggested
+	  by Dmitry Baryshkov.
+Changes from v1:
+        - Addressed comments from Krzysztof Kozlowski.
+        - Added the rpmhpd_opp_xxx phandle as suggested by pavan.
+        - Added dev_pm_opp_set_opp API call which was missed on previous patch.
+---
+
+---
+Krishna chaitanya chundru (6):
+      arm64: dts: qcom: sm8450: Add interconnect path to PCIe node
+      PCI: qcom: Add ICC bandwidth vote for CPU to PCIe path
+      dt-bindings: pci: qcom: Add OPP table
+      arm64: dts: qcom: sm8450: Add OPP table support to PCIe
+      PCI: Bring the PCIe speed to MBps logic to new pcie_link_speed_to_mbps()
+      PCI: qcom: Add OPP support to scale performance
+
+ .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  |   4 +
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               |  89 +++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             | 123 ++++++++++++++++++---
+ drivers/pci/pci.c                                  |  19 +---
+ drivers/pci/pci.h                                  |  22 ++++
+ 5 files changed, 222 insertions(+), 35 deletions(-)
+---
+base-commit: 6c6e47d69d821047097909288b6d7f1aafb3b9b1
+change-id: 20240406-opp_support-ca095eb032b4
+
+Best regards,
+-- 
+Krishna chaitanya chundru <quic_krichai@quicinc.com>
+
 
