@@ -1,107 +1,86 @@
-Return-Path: <linux-pci+bounces-6724-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6725-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 131258B44C4
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 09:23:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B9E88B44F5
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 09:41:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 330B41C20D5B
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 07:23:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6CD211C20FBE
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 07:41:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DBC03BBD2;
-	Sat, 27 Apr 2024 07:23:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33C4739AF9;
+	Sat, 27 Apr 2024 07:41:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fg/2IeCW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cbaiDA7u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03E242055
-	for <linux-pci@vger.kernel.org>; Sat, 27 Apr 2024 07:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C84836AEC;
+	Sat, 27 Apr 2024 07:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714202634; cv=none; b=mZdD70HbBYAc8HbpTyDvLz7cpLrWAJP9Sa/CMWmVjs6DF5GfC/knAipvq7YhvCvGgpY8WvVuzeOX4/q/9YJKlko43tX38xZTeuFAN3QO0rd82NHT6sPvbRv7L1LxsVEVbAv7OhLQlNXRzdc7cKxLjZmI+cKqZLKXdYEiliZwMa4=
+	t=1714203711; cv=none; b=ZTE48wXc01pSmdhD+ikoIf7gFpZ5RbnRbAJHTDVDBjMIUxCviyfdfTUuTGEPoyVH9gFVyhvKj2wb9vTFv9dEHXtuPy+Npj5J7ZJSlCZttzpAZCHX6uRLnrwplpSe+GQ5apAMlr9cZnF7+X4A9UDzQPIfSpaTyU2XYYqAgtaFuFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714202634; c=relaxed/simple;
-	bh=QQ9X6/B/OY5Rpbf27ZZgDjJFLbBrR5d8bJENXinX6zw=;
+	s=arc-20240116; t=1714203711; c=relaxed/simple;
+	bh=SDRme7v+9fMuy3jIlBPR7b2mzba950u1Nro4MGcYrHk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=II+XqeS/pfxnsmzXdWF/O8LuyMP5s4yMmSt1QEUhSpBrmkFwKyPm38Ka3ogj/lQU3f7Wi5cpdjrnQjYf5GyNFlc9UHalvZCWTfiueks1FMdefeSXtavACq+4k3ilFfB423uQrWY12GbPBVJW8HNj49kTqa7esXbduOkV28RtPnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fg/2IeCW; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c70a55988dso1688368b6e.0
-        for <linux-pci@vger.kernel.org>; Sat, 27 Apr 2024 00:23:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714202631; x=1714807431; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=X6/zlDycsKlLm9oMWJCj8T6cyudX5ggjd/VxiVnvZxs=;
-        b=fg/2IeCWyMO/S6izUCgCQNDghhIKYjU+T6hOND0LtmyTjS8Byu2OiK4pMtEivGByOs
-         r2xXmIJe/oxBCwRhLSEuapbFxR/vMymVGFlDuCW/mLscC4Qb+QKKut/+DZwezvQGB6CY
-         68reJeSPKIi7flNd1LfjDl40RNIsGwkzySSaE3DYJmInQNRxFtoPwKYW8jty9XKDd1Kh
-         sTzY1h7Fhly2ijIiKCEj7cBwuvxxCPvM29RDIZSYzMJ5mFTMvGKRFasJvP+SVGfzeT8w
-         zrMR1ATysDxQ3dnVor8ovLWSoGtQYrbCYWT7xY77FDfAuErpQNeyEQYbN61M2z1KbWVN
-         BYEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714202631; x=1714807431;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X6/zlDycsKlLm9oMWJCj8T6cyudX5ggjd/VxiVnvZxs=;
-        b=Peue6dFbYPYxgvi7T7m+fd1ueqRE7D7aNOhw5DXsXX2bBnE2exxXuOYWzMg0CVhgyo
-         jCEp3RAxpVWKyPDYjXp5IS0tbjzN99G6hGmLv+nHSeBJfhvbH3WbF2HnDDc26y+UqWdw
-         JBIa/2HwxSEc82msw4uGzKqsgPPILKMfuK3TV3P8Ojei2qfLeE+WjZSinhgaPBWZhoAj
-         MWqyng34VZ6fyHaAQWUfaVGwjKUjcpJ8dR0laRtr5mHwJYWNEUFybCzHPiFc34QGvMxu
-         blHI+F0lSLiBa6FUruTH6CXbdNogMIzs4n8Hwa3PNSKZX6oWHkIc/a8J4Xy59SjHgN/w
-         GKAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpEw9kETEiBGx8SFEzsgfS3Vj2Yt9BQu9JfZFLAeNWB+MZm3LU3CGorBpKoy5VaKBMGPwWw8y0UAbfD1DxJrmm+GxknC091nde
-X-Gm-Message-State: AOJu0YzM4KqZ2iyfyeE71kdqKD/LerdgTD6DHvVWAnACMuXG9MtW2EMN
-	b9d8123V7as4vnaEPQuWbku5ozJTMhtsv/xI//e5zWqDvU5HGLrajv+bXJxJsg==
-X-Google-Smtp-Source: AGHT+IHfipPHYlZH0dzUMyHUrOzKZyinCxBfDMz+pa+y5kowAJsMrQzIMhjdPr+G4bo6/Uiu7Lh6tA==
-X-Received: by 2002:a05:6808:85:b0:3c7:4b27:57fb with SMTP id s5-20020a056808008500b003c74b2757fbmr5763377oic.29.1714202630707;
-        Sat, 27 Apr 2024 00:23:50 -0700 (PDT)
-Received: from thinkpad ([120.60.53.237])
-        by smtp.gmail.com with ESMTPSA id i123-20020a639d81000000b005f7ff496050sm13702516pgd.76.2024.04.27.00.23.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Apr 2024 00:23:50 -0700 (PDT)
-Date: Sat, 27 Apr 2024 12:53:35 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Frank Li <Frank.Li@nxp.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@Amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH v2 4/4] PCI: kirin: Convert to agnostic GPIO API
-Message-ID: <20240427072335.GC1981@thinkpad>
-References: <20240423172208.2723892-1-andriy.shevchenko@linux.intel.com>
- <20240423172208.2723892-5-andriy.shevchenko@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HU0eS5tl4k83CgZFKTY9ZANqDTx50fKguqCKnOJkYsNC1PPToc/pDNm55PL2IQ1qkgjaSghxcFHrkvf5Xe9SQHVZ2X1ydKnmSensB6nhd3J3WgkX8g26XXt9lTnqFuELqN2NgZINTPYO8c14dnStl13tDX5figUv7Mp3sgF0wwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cbaiDA7u; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714203710; x=1745739710;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SDRme7v+9fMuy3jIlBPR7b2mzba950u1Nro4MGcYrHk=;
+  b=cbaiDA7uNGkG0nmg+Eohc27giR+ogCMJiM8XbXJAJb0da0+Q4em7nHx2
+   6bdYz2yWCT9l0nClalYpqysq0PfJ/DAghpS5dwx0QCNaSB860L9ZzoXbx
+   KDb074QEceeC2ekdvOEFwjYLFLm71YrIV4A3O/FFYvf+yFbTlzNGCSWgA
+   onThEz4Ab4+FxsYc9JPxN1pOKnfrBxjXTS/JZZY3D/WMTT5ISIrH0G1IX
+   ocR5R6UADMwgD7IEALN6+X+igmKW0XiXCaMt78thUrW3zAAM0+OXBIthq
+   80sawFDhMp2NAVAJWzBNzgOutKHRrxUav1z7VKHdfm0jHedMB+Q/5YhP+
+   w==;
+X-CSE-ConnectionGUID: 8J6ziTvFSHmQVFKqMtqG/w==
+X-CSE-MsgGUID: qzxsUA4BQpiBLBdnH60Ezg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="13770867"
+X-IronPort-AV: E=Sophos;i="6.07,235,1708416000"; 
+   d="scan'208";a="13770867"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2024 00:41:49 -0700
+X-CSE-ConnectionGUID: SHEzQjZ1TVC12YTR0YPuJw==
+X-CSE-MsgGUID: Tv8ehnxeQfuQbtL64YuwDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,235,1708416000"; 
+   d="scan'208";a="25702352"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP; 27 Apr 2024 00:41:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 5A9C1329; Sat, 27 Apr 2024 10:41:45 +0300 (EEST)
+Date: Sat, 27 Apr 2024 10:41:45 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>,
+	Gil Fine <gil.fine@linux.intel.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <20240427074145.GD3969176@black.fi.intel.com>
+References: <CA+Y6NJF6+s5zUZeaWtagpMt8Qu0a1oE+3re3c6EsppH+ZsuMRQ@mail.gmail.com>
+ <20240419044945.GR112498@black.fi.intel.com>
+ <CA+Y6NJEpWpfPqHO6=Z1XFCXZDUq1+g6EFryB+Urq1=h0PhT+fg@mail.gmail.com>
+ <7d68a112-0f48-46bf-9f6d-d99b88828761@amd.com>
+ <20240423053312.GY112498@black.fi.intel.com>
+ <7197b2ce-f815-48a1-a78e-9e139de796b7@amd.com>
+ <20240424085608.GE112498@black.fi.intel.com>
+ <CA+Y6NJFyi6e7ype6dTAjxsy5aC80NdVOt+Vg-a0O0y_JsfwSGg@mail.gmail.com>
+ <20240426045207.GI112498@black.fi.intel.com>
+ <ZiyOpZlHVH2yaC1B@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -110,233 +89,42 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240423172208.2723892-5-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <ZiyOpZlHVH2yaC1B@wunner.de>
 
-On Tue, Apr 23, 2024 at 08:19:07PM +0300, Andy Shevchenko wrote:
-> The of_gpio.h is going to be removed. In preparation of that convert
-> the driver to the agnostic API.
+On Sat, Apr 27, 2024 at 07:35:33AM +0200, Lukas Wunner wrote:
+> On Fri, Apr 26, 2024 at 07:52:07AM +0300, Mika Westerberg wrote:
+> > On Thu, Apr 25, 2024 at 05:16:24PM -0400, Esther Shimanovich wrote:
+> > > I did find one example of a docking station that uses the DSL6540
+> > > chip, which has PCI IDs defined in include/linux/pci_ids.h:
+> > > #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI     0x1577
+> > > #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE  0x1578
+> > > It seems like it has an NHI, despite being in an external, removable
+> > > docking station. This appears to contradict what you say about only
+> > > having "NHI" on a host router. I am assuming that by host router, you
+> > > mean the fixed discrete, fixed thunderbolt chip, or the thunderbolt
+> > > controller upstream to the root port. Please correct me if I got
+> > > anything wrong!
+> > 
+> > So it goes same way with other discrete chips from Intel at least. It is
+> > the same silicon but the NHI is disabled on device routers.
+> > 
+> > That said, it is entirely possible for a "malicious" device to pretend
+> > to have one so we need to be careful.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 105 ++++++++----------------
->  1 file changed, 35 insertions(+), 70 deletions(-)
+> If a device (accidentally or maliciously) exposes an NHI, the thunderbolt
+> driver will try to bind to it.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index d5523f302102..1753ab63a541 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -12,12 +12,10 @@
->  #include <linux/compiler.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
-> -#include <linux/gpio.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/of.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/of_pci.h>
->  #include <linux/phy/phy.h>
->  #include <linux/pci.h>
-> @@ -78,16 +76,16 @@ struct kirin_pcie {
->  	void		*phy_priv;	/* only for PCIE_KIRIN_INTERNAL_PHY */
->  
->  	/* DWC PERST# */
-> -	int		gpio_id_dwc_perst;
-> +	struct gpio_desc *id_dwc_perst_gpio;
->  
->  	/* Per-slot PERST# */
->  	int		num_slots;
-> -	int		gpio_id_reset[MAX_PCI_SLOTS];
-> +	struct gpio_desc *id_reset_gpio[MAX_PCI_SLOTS];
->  	const char	*reset_names[MAX_PCI_SLOTS];
->  
->  	/* Per-slot clkreq */
->  	int		n_gpio_clkreq;
-> -	int		gpio_id_clkreq[MAX_PCI_SLOTS];
-> +	struct gpio_desc *id_clkreq_gpio[MAX_PCI_SLOTS];
->  	const char	*clkreq_names[MAX_PCI_SLOTS];
->  };
->  
-> @@ -381,15 +379,20 @@ static int kirin_pcie_get_gpio_enable(struct kirin_pcie *pcie,
->  	pcie->n_gpio_clkreq = ret;
->  
->  	for (i = 0; i < pcie->n_gpio_clkreq; i++) {
-> -		pcie->gpio_id_clkreq[i] = of_get_named_gpio(dev->of_node,
-> -						    "hisilicon,clken-gpios", i);
-> -		if (pcie->gpio_id_clkreq[i] < 0)
-> -			return pcie->gpio_id_clkreq[i];
-> +		pcie->id_clkreq_gpio[i] = devm_gpiod_get_index(dev,
-> +							"hisilicon,clken", i,
-> +							GPIOD_ASIS);
+> Do we take any precautions to prevent that?
 
-Please don't use GPIOD_ASIS even if the old code was using it.
+Not at the moment but it will be behind the IOMMU so it cannot access
+any other memory that what is reserved for it.
 
-For all 3 GPIOs in this driver, GPIOD_OUT_LOW flag should be used as the default
-state is assert (considering the fact that the DT uses GPIO_ACTIVE_HIGH).
+> AFAICS we'd be allocating a duplicate root_switch with route 0.
+> Seems dangerous if two driver instances talk to the same Root Switch.
 
-- Mani
+I don't think it even works because it cannot have topology ID of 0 if
+it is a device router which it is in this case since it is being first
+enumerated by the "real" host.
 
-> +		if (IS_ERR(pcie->id_clkreq_gpio[i]))
-> +			return dev_err_probe(dev, PTR_ERR(pcie->id_clkreq_gpio[i]),
-> +					     "unable to get a valid clken gpio\n");
->  
->  		pcie->clkreq_names[i] = devm_kasprintf(dev, GFP_KERNEL,
->  						       "pcie_clkreq_%d", i);
->  		if (!pcie->clkreq_names[i])
->  			return -ENOMEM;
-> +
-> +		gpiod_set_consumer_name(pcie->id_clkreq_gpio[i],
-> +					pcie->clkreq_names[i]);
->  	}
->  
->  	return 0;
-> @@ -407,10 +410,16 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  		for_each_available_child_of_node(parent, child) {
->  			i = pcie->num_slots;
->  
-> -			pcie->gpio_id_reset[i] = of_get_named_gpio(child,
-> -							"reset-gpios", 0);
-> -			if (pcie->gpio_id_reset[i] < 0)
-> -				continue;
-> +			pcie->id_reset_gpio[i] = devm_fwnode_gpiod_get_index(dev,
-> +							 of_fwnode_handle(child),
-> +							 "reset", 0, GPIOD_ASIS,
-> +							 NULL);
-> +			if (IS_ERR(pcie->id_reset_gpio[i])) {
-> +				if (PTR_ERR(pcie->id_reset_gpio[i]) == -ENOENT)
-> +					continue;
-> +				return dev_err_probe(dev, PTR_ERR(pcie->id_reset_gpio[i]),
-> +						     "unable to get a valid reset gpio\n");
-> +			}
->  
->  			pcie->num_slots++;
->  			if (pcie->num_slots > MAX_PCI_SLOTS) {
-> @@ -434,6 +443,9 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  				ret = -ENOMEM;
->  				goto put_node;
->  			}
-> +
-> +			gpiod_set_consumer_name(pcie->id_reset_gpio[i],
-> +						pcie->reset_names[i]);
->  		}
->  	}
->  
-> @@ -463,14 +475,11 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
->  		return PTR_ERR(kirin_pcie->apb);
->  
->  	/* pcie internal PERST# gpio */
-> -	kirin_pcie->gpio_id_dwc_perst = of_get_named_gpio(dev->of_node,
-> -							  "reset-gpios", 0);
-> -	if (kirin_pcie->gpio_id_dwc_perst == -EPROBE_DEFER) {
-> -		return -EPROBE_DEFER;
-> -	} else if (!gpio_is_valid(kirin_pcie->gpio_id_dwc_perst)) {
-> -		dev_err(dev, "unable to get a valid gpio pin\n");
-> -		return -ENODEV;
-> -	}
-> +	kirin_pcie->id_dwc_perst_gpio = devm_gpiod_get(dev, "reset", GPIOD_ASIS);
-> +	if (IS_ERR(kirin_pcie->id_dwc_perst_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(kirin_pcie->id_dwc_perst_gpio),
-> +				     "unable to get a valid gpio pin\n");
-> +	gpiod_set_consumer_name(kirin_pcie->id_dwc_perst_gpio, "pcie_perst_bridge");
->  
->  	ret = kirin_pcie_get_gpio_enable(kirin_pcie, pdev);
->  	if (ret)
-> @@ -553,7 +562,7 @@ static int kirin_pcie_add_bus(struct pci_bus *bus)
->  
->  	/* Send PERST# to each slot */
->  	for (i = 0; i < kirin_pcie->num_slots; i++) {
-> -		ret = gpio_direction_output(kirin_pcie->gpio_id_reset[i], 1);
-> +		ret = gpiod_direction_output_raw(kirin_pcie->id_reset_gpio[i], 1);
->  		if (ret) {
->  			dev_err(pci->dev, "PERST# %s error: %d\n",
->  				kirin_pcie->reset_names[i], ret);
-> @@ -623,44 +632,6 @@ static int kirin_pcie_host_init(struct dw_pcie_rp *pp)
->  	return 0;
->  }
->  
-> -static int kirin_pcie_gpio_request(struct kirin_pcie *kirin_pcie,
-> -				   struct device *dev)
-> -{
-> -	int ret, i;
-> -
-> -	for (i = 0; i < kirin_pcie->num_slots; i++) {
-> -		if (!gpio_is_valid(kirin_pcie->gpio_id_reset[i])) {
-> -			dev_err(dev, "unable to get a valid %s gpio\n",
-> -				kirin_pcie->reset_names[i]);
-> -			return -ENODEV;
-> -		}
-> -
-> -		ret = devm_gpio_request(dev, kirin_pcie->gpio_id_reset[i],
-> -					kirin_pcie->reset_names[i]);
-> -		if (ret)
-> -			return ret;
-> -	}
-> -
-> -	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++) {
-> -		if (!gpio_is_valid(kirin_pcie->gpio_id_clkreq[i])) {
-> -			dev_err(dev, "unable to get a valid %s gpio\n",
-> -				kirin_pcie->clkreq_names[i]);
-> -			return -ENODEV;
-> -		}
-> -
-> -		ret = devm_gpio_request(dev, kirin_pcie->gpio_id_clkreq[i],
-> -					kirin_pcie->clkreq_names[i]);
-> -		if (ret)
-> -			return ret;
-> -
-> -		ret = gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 0);
-> -		if (ret)
-> -			return ret;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static const struct dw_pcie_ops kirin_dw_pcie_ops = {
->  	.read_dbi = kirin_pcie_read_dbi,
->  	.write_dbi = kirin_pcie_write_dbi,
-> @@ -680,7 +651,7 @@ static int kirin_pcie_power_off(struct kirin_pcie *kirin_pcie)
->  		return hi3660_pcie_phy_power_off(kirin_pcie);
->  
->  	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++)
-> -		gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 1);
-> +		gpiod_direction_output_raw(kirin_pcie->id_clkreq_gpio[i], 1);
->  
->  	phy_power_off(kirin_pcie->phy);
->  	phy_exit(kirin_pcie->phy);
-> @@ -707,10 +678,6 @@ static int kirin_pcie_power_on(struct platform_device *pdev,
->  		if (IS_ERR(kirin_pcie->phy))
->  			return PTR_ERR(kirin_pcie->phy);
->  
-> -		ret = kirin_pcie_gpio_request(kirin_pcie, dev);
-> -		if (ret)
-> -			return ret;
-> -
->  		ret = phy_init(kirin_pcie->phy);
->  		if (ret)
->  			goto err;
-> @@ -723,11 +690,9 @@ static int kirin_pcie_power_on(struct platform_device *pdev,
->  	/* perst assert Endpoint */
->  	usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
->  
-> -	if (!gpio_request(kirin_pcie->gpio_id_dwc_perst, "pcie_perst_bridge")) {
-> -		ret = gpio_direction_output(kirin_pcie->gpio_id_dwc_perst, 1);
-> -		if (ret)
-> -			goto err;
-> -	}
-> +	ret = gpiod_direction_output_raw(kirin_pcie->id_dwc_perst_gpio, 1);
-> +	if (ret)
-> +		goto err;
->  
->  	usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
->  
-> -- 
-> 2.43.0.rc1.1336.g36b5255a03ac
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+That said we have not tested this either so can be 100% sure.
 
