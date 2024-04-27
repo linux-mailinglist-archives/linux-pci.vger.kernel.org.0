@@ -1,89 +1,148 @@
-Return-Path: <linux-pci+bounces-6720-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6721-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA61D8B4480
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 08:20:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F16628B4494
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 08:38:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 873EB283434
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 06:20:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B3281F21E73
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Apr 2024 06:38:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED94D3D575;
-	Sat, 27 Apr 2024 06:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B413541C77;
+	Sat, 27 Apr 2024 06:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DOzp9565"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16283BBF8;
-	Sat, 27 Apr 2024 06:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B95B4086A
+	for <linux-pci@vger.kernel.org>; Sat, 27 Apr 2024 06:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714198808; cv=none; b=n2DFqbDRfASd6iUCPYNOfkAdmm6s+mEw34gP38EwDZexb0Ofz2MTCt2uxWomyBU0tlLDwjiWsBNmeCp+jOUYzqgH0gLbzraspFYKWpvogBgfQO0ABaYKJPfuFt5QCRu57L/cHtI1oMfOBmI8XeXZJO5rJROEFwxmfxMWfuNHBnM=
+	t=1714199933; cv=none; b=lxbqHr10YTAXqzh6ihOmqRC7eXNnkdVYZUBLhOEBfeyuNH4qqDXNufiHd1Y9bPsdM0kwMfNqXmaP0twxbggJqw9h09jYCr0Uf82+ehno53wrrzvagMulnu55C3ZFwsjnsRYHzuKnN8/YaId405uHZPw1P+tSwrXXR/iGI9uC4Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714198808; c=relaxed/simple;
-	bh=/xJEAhZH0Zk2g9NfWsGaNADXVhIjlC0gvs1hSvu7Q70=;
+	s=arc-20240116; t=1714199933; c=relaxed/simple;
+	bh=rMhrAE8YXNfqvYLpIvyBbY1dUGHNrT55DGekIZ7UUJM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TshSk2fGe0/jzKzyVOloYcBJd3xblVSvIWAGEdeAO/f59L+/lb3IRE3/mmANC9QC0cOX2pFbEG48ECBJRETkAx77FCbO2UjcUOQGv3nR5tS3B9MQoP+9ofUXk0t+eZ6kch6jMfYlwmEEq58XM3aLZGzYhhOz+GCmG2RdpUoLOOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id B4E7D28010383;
-	Sat, 27 Apr 2024 08:19:56 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 81E317EB19; Sat, 27 Apr 2024 08:19:56 +0200 (CEST)
-Date: Sat, 27 Apr 2024 08:19:56 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com
-Subject: Re: [PATCH v4 3/4] PCI: Create new reset method to force SBR for CXL
-Message-ID: <ZiyZDKSxtfeYi0N4@wunner.de>
-References: <20240409160256.94184-1-dave.jiang@intel.com>
- <20240409160256.94184-4-dave.jiang@intel.com>
- <662c04a5d8f5f_b6e02945f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TuSwJxE56adR+1JTHUBOPHBPxnl31vVo/TDVfmVbgeNIecRNirDgipWXzNWAPnRgRSOOjA3ug29KRBmzud+xv2mhfRgRQR1IG5cF8Se8H5IYpEJm7s7+Jyiz8Ig1vdRMTm/PBbaGY3qIKb72kZUBxhXJ1BiujTMfwucBcPbDBY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DOzp9565; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f074520c8cso2918937b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 26 Apr 2024 23:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714199930; x=1714804730; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=u5BZd/9PlqkZZUs68lDdFcJ5CEc1B68syvKugYGnzVE=;
+        b=DOzp95659UO3eerx0uYq6o4KMA0dECAzYmjddVHLYj7Z5e6hAp6+UDXVLcvXzs5Tih
+         MdkvtNE37QraCX+BFD8AIZ7965H9tjNwYyyWPwFkgbdrOebpweGOpkSDR3iXjDG0mded
+         Om4rLQk5GokgLLnCh25+LFFjcX6oG5hZeQjb6k/wlivh/lU2f9CS45i9XWZgUT6fs8FP
+         T79T96J+kNvfDM6IOUN0b5KJoFA7mnsvq6e4XXOO9KWH9W6zQVQiVc19aiXBzM+lE0Lf
+         JaFn7fci/jHQ+NfRjiBQ45w8pYp1e7hQMtnJstwWrCw3t0I/mCkRPRzd3bvmgtQxVSqh
+         /SUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714199930; x=1714804730;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u5BZd/9PlqkZZUs68lDdFcJ5CEc1B68syvKugYGnzVE=;
+        b=Tou4l6oAh64yQPo6wfAnLsNsMwBlw+7Pv/9YZhw34+h+vISOtLrkfZDtbkKRqdpgJV
+         wL3x4/jPFZP7KiXvm+gf/Hy4TzVvdODFmdEjS9Z/qZ+LT/JWL26KZv9lBRzVGot+Ngic
+         pUBCZA58iOM42a7+mGGfUUWxJf6ZCLiGzZDAssDM47/2nCiPsvxNBEDWFEKTCJNL8PVi
+         Asi+2Vnpbr9HAZ4prFxcYJHqCjxeKAmiwOZ9zW8dE1grgPxmUDC0h0t1OsvY2K9qbH2g
+         fLTR/StKjsLASNQBX2s4j+rj4NxXOmFXal0l7D5Ena3EVgdVrkz+lTjPLEMKqLxe53z6
+         rHwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBtM0UEnh6km/gXwNrVA6qDXxfrjcf7GbltvSosLyjS93if20fgKgfuWyRnJG5C2aYtamkyuWMc9upS79cXmwW8M/DWAgaLxY/
+X-Gm-Message-State: AOJu0Yxisc5BurVF8+yWSOU0VqZvN0U5kJutTL5rgV5+vIBff11Ve3JA
+	RT3Zsy2XIkh8P2fQWOUJITHOjuM83zaHZZNse5SWzP9KjiJpjeF4kAXo0/Pmhg==
+X-Google-Smtp-Source: AGHT+IFOTwYBRJQ6hpSLIlWNvowiugvVRk7RGAo5g37wQTTmlbJt9WKRQxSRhuQmeF2kLwvwvDKZ0g==
+X-Received: by 2002:a05:6a20:f394:b0:1a3:55d2:1489 with SMTP id qr20-20020a056a20f39400b001a355d21489mr4790412pzb.7.1714199930233;
+        Fri, 26 Apr 2024 23:38:50 -0700 (PDT)
+Received: from thinkpad ([120.60.53.237])
+        by smtp.gmail.com with ESMTPSA id r18-20020aa79892000000b006ed0c9751d0sm16232311pfl.98.2024.04.26.23.38.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 23:38:49 -0700 (PDT)
+Date: Sat, 27 Apr 2024 12:08:32 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Frank Li <Frank.Li@nxp.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@Amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Xiaowei Song <songxiaowei@hisilicon.com>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH v2 1/4] PCI: aardvark: Remove unused of_gpio.h
+Message-ID: <20240427063832.GA1981@thinkpad>
+References: <20240423172208.2723892-1-andriy.shevchenko@linux.intel.com>
+ <20240423172208.2723892-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <662c04a5d8f5f_b6e02945f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240423172208.2723892-2-andriy.shevchenko@linux.intel.com>
 
-On Fri, Apr 26, 2024 at 12:46:45PM -0700, Dan Williams wrote:
-> This also highlights that the pci_dev_lock() performed by
-> pci_reset_function() has long been insufficient for the
-> pci_reset_bus_function() method case that could race userspace when
-> pci_reset_secondary_bus() is manipulating the bridge control register.
+On Tue, Apr 23, 2024 at 08:19:04PM +0300, Andy Shevchenko wrote:
+> of_gpio.h is deprecated and subject to remove.
+> The driver doesn't use it, simply remove the unused header.
 > 
-> So, if the goal of the lock is to prevent userspace from clobbering the
-> kernel's read-modify-write cycles of @dev's parent bridge, then the lock
-> needs to be held over both the cxl_reset_bus_function() and the
-> pci_reset_bus_function() cases, and it needs to be taken in
-> upstream-bridge => endpoint order.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-No, the device lock is taken to prevent the driver from unbinding.
-It has nothing to do with protecting RMW of parent bridge registers.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Here's Christoph Hellwig's explanation why he introduced acquisition
-of the device lock in the PCI reset code paths:
+- Mani
 
-https://lore.kernel.org/all/20200325104018.GA30853@lst.de/
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 71ecd7ddcc8a..8b3e1a079cf3 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -23,7 +23,6 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/msi.h>
+>  #include <linux/of_address.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/of_pci.h>
+>  
+>  #include "../pci.h"
+> -- 
+> 2.43.0.rc1.1336.g36b5255a03ac
+> 
 
-TL;DR:  The PCI core calls the driver's ->reset_prepare and ->reset_done
-callbacks and the driver needs to be held in place for that.
-
-Thanks,
-
-Lukas
+-- 
+மணிவண்ணன் சதாசிவம்
 
