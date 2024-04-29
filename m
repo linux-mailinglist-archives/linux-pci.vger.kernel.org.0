@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-6758-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6759-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 745728B5471
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2024 11:47:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 295528B5476
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2024 11:47:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15F0A1F216EB
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2024 09:47:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4AD6283448
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Apr 2024 09:47:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2041D554;
-	Mon, 29 Apr 2024 09:47:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE9672561F;
+	Mon, 29 Apr 2024 09:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mX0vPlXr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aDTs/k8q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7985110A13;
-	Mon, 29 Apr 2024 09:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0A6241E7;
+	Mon, 29 Apr 2024 09:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714384039; cv=none; b=EnJZOC22hou1aJ7nEX0UyJU7bkOMu8+ST/sXHGodD9TTnTGSnHvfJtIDwWhrHNLc+DHfNTyhSEAKIOfYNyIol03BnvQ8Z2Oe13/paP3u58T9paLwALeIzilycLhEHc/atY6v7woINGJOT9sDHCAOts0fVV2A12gbZbw/hkervjE=
+	t=1714384046; cv=none; b=J5EWnh1uHpvoHHtRQwy7qDwB37U0Lxc6c7S57HuGLx/9WA67DwiARxd116IENZRKlJZKxorA65eAfmv5O23wQCllX/axjdI4LrVbjCbe5ebx7Vi49GsXeEhsCAE3UQQajes2gBz2lzB9yFLXXX/+eGTxRVn8y7fRPeLPoTncnZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714384039; c=relaxed/simple;
-	bh=T07B8FcITBSPGezVMSWE2NrugikmY3RzmLEKiCA9YLw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=LJNqZTH73cp0wyfDLN4Z6mmgFcP1guncSPYsTK4obmbO6g8cTTcEnEbQ0rDte22UNPyizkHxd8WAXYoY6UIaViHhbZrFE9z8ZkjeQyBLjhY6Ffej7MiwOD9yH21ABAhCjhsw8Py/yeCTanQJ3w45Fd8kJtsKe8diCD0rFDZdpHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mX0vPlXr; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1714384046; c=relaxed/simple;
+	bh=FiUQFSZ5TWsRn5gQDgwM56G22Frjahny+X6RQ44e+/U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZwqzUVVInYwt7EWadQxZ80NiRedHklebzeagN6BkhBp8xTl7z5O8ULFygvxC2vIJ2VPF+NnTLDo2UpJ9hRFlMU/fXRgG7xFPLMBikZaWT5xkGAv7BTFRCVwnDrIOnmQqUBXWbNcfpQY44mIHMsiZcftf2Gc3bjgKHRq8S8X/H5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aDTs/k8q; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714384038; x=1745920038;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=T07B8FcITBSPGezVMSWE2NrugikmY3RzmLEKiCA9YLw=;
-  b=mX0vPlXrEfbEcCJKlGwb+wMvb0DEAWR2Srr77YAlR2ue57tihG+4BwxR
-   FjhCQ9OFbvy89Y75rvyPFgzCT93QBCl5Bg/4jXtXvf0zZH25yA9dGddv0
-   HvwfbEMNrpzrU/Z1pXWToe8uqX37rjaZUxtF3a/YMgWZFpXJ1RI7D9w7x
-   bT3p4SkkV4ZudutvMbgb9+Hn9IYEJZQYKIvKJ4+S3FElqHJRESuLYJuN7
-   MDnwADEWecw1QB+9ucC6MI8cBU93/yEhsAqIX0Dm93yYvDw042RTfLuT/
-   tDfBUYZlJDIcTnpQmjBJSlQ6FmeR4cf2IWfTcFBwctvhNEd5sq4Ym9o3M
-   g==;
-X-CSE-ConnectionGUID: i7iUNk6YRGqUrX9L2W+o8w==
-X-CSE-MsgGUID: mCIBViWXQQi0C+/Vk04LbQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="13812899"
+  t=1714384045; x=1745920045;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FiUQFSZ5TWsRn5gQDgwM56G22Frjahny+X6RQ44e+/U=;
+  b=aDTs/k8qAsO01J4Z5vN0e03B84U7CULODv7f6xSgfmQvcl4BjBB1etUg
+   Zmcv1B1nd8yO3TBNW7/VClWnsDlenTGvfYGRxA2InZg+9TyMg+jcJLFSt
+   iTeqCalxk3gfPQ985bvDOVqP2dRJyXk8JW90dNAFvbYomG+Wp0NAEZ9Bx
+   T8eePgdBkvstj7RxQcb5ntlwY/7Kng3w4FnwHml+NJWwkbRK4wNZ7NWTX
+   ebnVO/vlSRDnoloUbvrzkdHw7LMbluIqgybKUNt4BZAs/lKexA/mU7XLX
+   Dh2kZV/m/cKtSuc5N3nhPKJ+qy1mGmfD73Njxb3CBSgpbIBgd6MEO+EAB
+   w==;
+X-CSE-ConnectionGUID: OQvjCC7RQjGH7IAwr1w8zw==
+X-CSE-MsgGUID: +n0zUJK3RWiHeO3HvOxiQA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="9961070"
 X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="13812899"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:47:17 -0700
-X-CSE-ConnectionGUID: z6OSQ0dYTbe1DPADCmYT5Q==
-X-CSE-MsgGUID: AFMEwtDORWKTOYvFQldNVw==
+   d="scan'208";a="9961070"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:47:25 -0700
+X-CSE-ConnectionGUID: ouePNqYqRRSgHEWMUv9Klw==
+X-CSE-MsgGUID: 1mLGzO2EQrWAR0Wkl6iAOQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="30715624"
+   d="scan'208";a="26058079"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.45])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:47:14 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 02:47:23 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linuxppc-dev@lists.ozlabs.org,
+To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/2] PCI/ERR: Cleanup misleading indentation inside if conditions
-Date: Mon, 29 Apr 2024 12:47:06 +0300
-Message-Id: <20240429094707.2529-1-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 2/2] PCI: Cleanup accessor macros formatting
+Date: Mon, 29 Apr 2024 12:47:07 +0300
+Message-Id: <20240429094707.2529-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240429094707.2529-1-ilpo.jarvinen@linux.intel.com>
+References: <20240429094707.2529-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,52 +78,119 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A few if conditions align misleadingly with the following code block.
-The checks are really cascading NULL checks that fit into 80 chars so
-remove newlines in between and realign to the if condition indent.
+Cleanup formatting of PCI accessor macros:
+
+- Put return statements on own line
+- Add a few empty lines for better readability
+- Align macro continuation backslashes
+- Correct function call argument indentation level
+- Reorder variable declarations to reverse xmas tree
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/pcie/err.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/pci/access.c | 36 +++++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 705893b5f7b0..31090770fffc 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -116,9 +116,7 @@ static int report_mmio_enabled(struct pci_dev *dev, void *data)
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 6449056b57dd..4962a841fa35 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -36,10 +36,13 @@ DEFINE_RAW_SPINLOCK(pci_lock);
+ int noinline pci_bus_read_config_##size \
+ 	(struct pci_bus *bus, unsigned int devfn, int pos, type *value)	\
+ {									\
+-	int res;							\
+ 	unsigned long flags;						\
+ 	u32 data = 0;							\
+-	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
++	int res;							\
++									\
++	if (PCI_##size##_BAD)						\
++		return PCIBIOS_BAD_REGISTER_NUMBER;			\
++									\
+ 	pci_lock_config(flags);						\
+ 	res = bus->ops->read(bus, devfn, pos, len, &data);		\
+ 	if (res)							\
+@@ -47,6 +50,7 @@ int noinline pci_bus_read_config_##size \
+ 	else								\
+ 		*value = (type)data;					\
+ 	pci_unlock_config(flags);					\
++									\
+ 	return res;							\
+ }
  
- 	device_lock(&dev->dev);
- 	pdrv = dev->driver;
--	if (!pdrv ||
--		!pdrv->err_handler ||
--		!pdrv->err_handler->mmio_enabled)
-+	if (!pdrv || !pdrv->err_handler || !pdrv->err_handler->mmio_enabled)
- 		goto out;
+@@ -54,12 +58,16 @@ int noinline pci_bus_read_config_##size \
+ int noinline pci_bus_write_config_##size \
+ 	(struct pci_bus *bus, unsigned int devfn, int pos, type value)	\
+ {									\
+-	int res;							\
+ 	unsigned long flags;						\
+-	if (PCI_##size##_BAD) return PCIBIOS_BAD_REGISTER_NUMBER;	\
++	int res;							\
++									\
++	if (PCI_##size##_BAD)						\
++		return PCIBIOS_BAD_REGISTER_NUMBER;			\
++									\
+ 	pci_lock_config(flags);						\
+ 	res = bus->ops->write(bus, devfn, pos, len, value);		\
+ 	pci_unlock_config(flags);					\
++									\
+ 	return res;							\
+ }
  
- 	err_handler = pdrv->err_handler;
-@@ -137,9 +135,7 @@ static int report_slot_reset(struct pci_dev *dev, void *data)
+@@ -216,24 +224,27 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+ }
  
- 	device_lock(&dev->dev);
- 	pdrv = dev->driver;
--	if (!pdrv ||
--		!pdrv->err_handler ||
--		!pdrv->err_handler->slot_reset)
-+	if (!pdrv || !pdrv->err_handler || !pdrv->err_handler->slot_reset)
- 		goto out;
- 
- 	err_handler = pdrv->err_handler;
-@@ -158,9 +154,7 @@ static int report_resume(struct pci_dev *dev, void *data)
- 	device_lock(&dev->dev);
- 	pdrv = dev->driver;
- 	if (!pci_dev_set_io_state(dev, pci_channel_io_normal) ||
--		!pdrv ||
--		!pdrv->err_handler ||
--		!pdrv->err_handler->resume)
-+	    !pdrv || !pdrv->err_handler || !pdrv->err_handler->resume)
- 		goto out;
- 
- 	err_handler = pdrv->err_handler;
+ /* Returns 0 on success, negative values indicate error. */
+-#define PCI_USER_READ_CONFIG(size, type)					\
++#define PCI_USER_READ_CONFIG(size, type)				\
+ int pci_user_read_config_##size						\
+ 	(struct pci_dev *dev, int pos, type *val)			\
+ {									\
+ 	int ret = PCIBIOS_SUCCESSFUL;					\
+ 	u32 data = -1;							\
++									\
+ 	if (PCI_##size##_BAD)						\
+ 		return -EINVAL;						\
+-	raw_spin_lock_irq(&pci_lock);				\
++									\
++	raw_spin_lock_irq(&pci_lock);					\
+ 	if (unlikely(dev->block_cfg_access))				\
+ 		pci_wait_cfg(dev);					\
+ 	ret = dev->bus->ops->read(dev->bus, dev->devfn,			\
+-					pos, sizeof(type), &data);	\
+-	raw_spin_unlock_irq(&pci_lock);				\
++				  pos, sizeof(type), &data);		\
++	raw_spin_unlock_irq(&pci_lock);					\
+ 	if (ret)							\
+ 		PCI_SET_ERROR_RESPONSE(val);				\
+ 	else								\
+ 		*val = (type)data;					\
++									\
+ 	return pcibios_err_to_errno(ret);				\
+ }									\
+ EXPORT_SYMBOL_GPL(pci_user_read_config_##size);
+@@ -244,14 +255,17 @@ int pci_user_write_config_##size					\
+ 	(struct pci_dev *dev, int pos, type val)			\
+ {									\
+ 	int ret = PCIBIOS_SUCCESSFUL;					\
++									\
+ 	if (PCI_##size##_BAD)						\
+ 		return -EINVAL;						\
+-	raw_spin_lock_irq(&pci_lock);				\
++									\
++	raw_spin_lock_irq(&pci_lock);					\
+ 	if (unlikely(dev->block_cfg_access))				\
+ 		pci_wait_cfg(dev);					\
+ 	ret = dev->bus->ops->write(dev->bus, dev->devfn,		\
+-					pos, sizeof(type), val);	\
+-	raw_spin_unlock_irq(&pci_lock);				\
++				   pos, sizeof(type), val);		\
++	raw_spin_unlock_irq(&pci_lock);					\
++									\
+ 	return pcibios_err_to_errno(ret);				\
+ }									\
+ EXPORT_SYMBOL_GPL(pci_user_write_config_##size);
 -- 
 2.39.2
 
