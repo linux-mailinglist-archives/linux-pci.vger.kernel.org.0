@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-6882-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6883-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CA618B754D
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 14:03:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC2558B754F
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 14:03:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4DA21C22664
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 12:03:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72A151F213F7
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 12:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DCF140E3D;
-	Tue, 30 Apr 2024 12:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C802313D892;
+	Tue, 30 Apr 2024 12:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yc2VNkSu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bh1innN4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E0413D2A6;
-	Tue, 30 Apr 2024 12:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A022413D2A6;
+	Tue, 30 Apr 2024 12:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714478568; cv=none; b=gFRH8p88sum2kcjNiNHMviEdTqDK+UNwPJE0dszOfWFhM9SsKcMpf8n2pSJGSOUrnylnU0wB6raVGmrt66c2jR2eq47Z+WDjSoafBWZhibGu8E8dcG5WveMfrXJZnZQ7eCiu2o5jYsSN/r975uZIooCiAqq3m7lpvpyjX3OzR7E=
+	t=1714478572; cv=none; b=lBi3whLmj1bdU9MhdSuxl+Gh87x81GaIN2FdEg9RmvzrlK0SSghyLSmhyzmlXs9Svl71BjvM9mzaCgx1WW7tLNbpMxZ4/NZm5WTLFGYQEumtlujQjwnGe12dn8Iwgnig4x7Dy887dE4YStWw9KcAk3B6BfJmL2tA1lEnJT0krDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714478568; c=relaxed/simple;
-	bh=xz35v8bxYvqgegncoSCGyIO3ONqjFxudlkCESFdUVaA=;
+	s=arc-20240116; t=1714478572; c=relaxed/simple;
+	bh=zV5QDNN0Jd7t4ZstveDXwSQbOhLYZJYhoixvLN8ii44=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aIBHrnDCewT0/1XbMC6WtyuDoTl4d0EbS2qehCQRc9+LFzLeDTQGRHCegk+pUJ0Y8TQmifYsIci5qo2uT6RuDAY8D3JDLxU3KM6K0cogMMNKUIJ7THKaGZ10CFDR7eiHXr1O5H9c1hhHJWB4Wf1p0Ufn8pa0appqyHfVzjgCsCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yc2VNkSu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B9F1C4AF18;
-	Tue, 30 Apr 2024 12:02:43 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=Gezo6G1sI6zgormKW/W+ecg3Hdkq9a0kmu9nDYz0R0pTGPFeQvN2+vBMJj/hPBE6uMdc0cJ1HEYkiR6kfq9YCc9IiM6SvMAz03EdSlQMSjNW7P8aJxGxkerC86NG201myXbkjzVC9ek6Ylb0dpJhuoTo3oSofbb/mlMCNBqIFrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bh1innN4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63837C4AF19;
+	Tue, 30 Apr 2024 12:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714478567;
-	bh=xz35v8bxYvqgegncoSCGyIO3ONqjFxudlkCESFdUVaA=;
+	s=k20201202; t=1714478572;
+	bh=zV5QDNN0Jd7t4ZstveDXwSQbOhLYZJYhoixvLN8ii44=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Yc2VNkSuE7HFl+WPcKW2rKl6MknP7M5cKkRq10sOeLEMY2hLHek353uXhl6lVNlrX
-	 RtktzsP3QWQlT/vEjkkQCmC7QBRItzxX81gB8fgV/hpzUukn8hphbYi1p0Z9H3cdky
-	 a/85YK803ONUf5Ct51pEHuv6iLoYDkqV+/0UXHaIwwqNVlGmBeyyLk/WFDSDpEoEVw
-	 X2gaKux4AzInTCDOu9ttgyhvK7tcRvRH5n5TWdAxMmwz5tjdq9aULGoOQikfi2GNy9
-	 PNp5gDEW9U94e/XTZhmwZPqpD7bk78wCiLAVvYAcp+9wZts2248htW7mIMFevM/uQ9
-	 twE/BG/o50FTw==
+	b=bh1innN4bSe7ShLCJYGYTiTn7nounMZ/tuwOze97iGXMMxJzpXvE5cmZ+nXYs8TZB
+	 2X4ukO9gW+fs+7tZPXqR3v0itT1QHjEDlJ7rs53Wj5+88nZubq+HuVOYUzd9BF04bT
+	 G9GyjlWT0AU+s1HNeB5tgl7kxs6XJ0Gq5HUt/Q3yoYiTQj3ZLssgoeLUUea5FZPdfZ
+	 uDVziwjZhcn6TTw3PtW3XL3h46HvhMZtJiBIbzPUO3NrUZ1X4ESpdSTLASWmAVQ8n5
+	 c7hDG4Estl8M1pVXfWIcDbQBz4T/EqEKpypgrmoDc5NpGtmaO/28+0qXxnR53C+T1y
+	 NEhj+vxPyu2aQ==
 From: Niklas Cassel <cassel@kernel.org>
-Date: Tue, 30 Apr 2024 14:01:09 +0200
-Subject: [PATCH v2 12/14] misc: pci_endpoint_test: Add support for rockchip
- rk3588
+Date: Tue, 30 Apr 2024 14:01:10 +0200
+Subject: [PATCH v2 13/14] arm64: dts: rockchip: Add PCIe endpoint mode
+ support
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-rockchip-pcie-ep-v1-v2-12-a0f5ee2a77b6@kernel.org>
+Message-Id: <20240430-rockchip-pcie-ep-v1-v2-13-a0f5ee2a77b6@kernel.org>
 References: <20240430-rockchip-pcie-ep-v1-v2-0-a0f5ee2a77b6@kernel.org>
 In-Reply-To: <20240430-rockchip-pcie-ep-v1-v2-0-a0f5ee2a77b6@kernel.org>
 To: Jingoo Han <jingoohan1@gmail.com>, 
@@ -70,72 +70,74 @@ To: Jingoo Han <jingoohan1@gmail.com>,
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-rockchip@lists.infradead.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2286; i=cassel@kernel.org;
- h=from:subject:message-id; bh=xz35v8bxYvqgegncoSCGyIO3ONqjFxudlkCESFdUVaA=;
- b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIM7m7YEHKXM1//Y8si07YXJfdu6LRc7MnX/RQa+u+17
- 8WDL+f7dpSyMIhxMciKKbL4/nDZX9ztPuW44h0bmDmsTCBDGLg4BWAiWzIYGZocdtnpfFi01zZZ
- 1Crk9711OzY/efb/akWoXVNY+vGtqiaMDGu/RDM6pQRGX7e6KBabV3Gwa29JkMitWdcPn9vyfH7
- ZZlYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2324; i=cassel@kernel.org;
+ h=from:subject:message-id; bh=zV5QDNN0Jd7t4ZstveDXwSQbOhLYZJYhoixvLN8ii44=;
+ b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIM7m6ov7r60hGGqQvvepXPNCxu+1PJdOj+JvVm58SFH
+ 4XDTgt+7yhlYRDjYpAVU2Tx/eGyv7jbfcpxxTs2MHNYmUCGMHBxCsBEfokz/BV/9uKufcXXieVh
+ N6/euePQ1WHJvYU5yLZ2t8abI8VuFZEM/wN13hnMEnCXkrGPWJegVGm1bmXV++eJjGrGQktj1X5
+ OYAYA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp;
  fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 
-Rockchip rk3588 requires 64k alignment.
-While there is an existing device_id:vendor_id in the driver with 64k
-alignment, that device_id:vendor_id is am654, which uses BAR2 instead of
-BAR0 as the test_reg_bar, and also has special is_am654_pci_dev() checks
-in the driver to disallow BAR0. In order to allow testing all BARs, add a
-new rk3588 entry in the driver.
+Add a device tree node representing PCIe endpoint mode.
 
-We intentionally do not add the vendor id to pci_ids.h, since the policy
-for that file is that the vendor id has to be used by multiple drivers.
+The controller can either be configured to run in Root Complex or Endpoint
+node.
 
-Hopefully, this new entry will be short-lived, as there is a series on the
-mailing list which intends to move the address alignment restrictions from
-this driver to the endpoint side.
-
-Add a new entry for rk3588 in order to allow us to test all BARs.
+If a user wants to run the controller in endpoint mode, the user has to
+disable the pcie3x4 node and enable the pcie3x4_ep node.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3588.dtsi | 35 ++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index c38a6083f0a7..a7f593b4e3b3 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -84,6 +84,9 @@
- #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
- #define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
+index 5519c1430cb7..09a06e8c43b7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
+@@ -136,6 +136,41 @@ pcie3x4_intc: legacy-interrupt-controller {
+ 		};
+ 	};
  
-+#define PCI_VENDOR_ID_ROCKCHIP			0x1d87
-+#define PCI_DEVICE_ID_ROCKCHIP_RK3588		0x3588
++	pcie3x4_ep: pcie-ep@fe150000 {
++		compatible = "rockchip,rk3588-pcie-ep";
++		clocks = <&cru ACLK_PCIE_4L_MSTR>, <&cru ACLK_PCIE_4L_SLV>,
++			 <&cru ACLK_PCIE_4L_DBI>, <&cru PCLK_PCIE_4L>,
++			 <&cru CLK_PCIE_AUX0>, <&cru CLK_PCIE4L_PIPE>;
++		clock-names = "aclk_mst", "aclk_slv",
++			      "aclk_dbi", "pclk",
++			      "aux", "pipe";
++		interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "sys", "pmc", "msg", "legacy", "err",
++				  "dma0", "dma1", "dma2", "dma3";
++		max-link-speed = <3>;
++		num-lanes = <4>;
++		phys = <&pcie30phy>;
++		phy-names = "pcie-phy";
++		power-domains = <&power RK3588_PD_PCIE>;
++		reg = <0xa 0x40000000 0x0 0x00100000>,
++		      <0xa 0x40100000 0x0 0x00100000>,
++		      <0x0 0xfe150000 0x0 0x00010000>,
++		      <0x9 0x00000000 0x0 0x40000000>,
++		      <0xa 0x40300000 0x0 0x00100000>;
++		reg-names = "dbi", "dbi2", "apb", "addr_space", "atu";
++		resets = <&cru SRST_PCIE0_POWER_UP>, <&cru SRST_P_PCIE0>;
++		reset-names = "pwr", "pipe";
++		status = "disabled";
++	};
 +
- static DEFINE_IDA(pci_endpoint_test_ida);
- 
- #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
-@@ -980,6 +983,11 @@ static const struct pci_endpoint_test_data j721e_data = {
- 	.irq_type = IRQ_TYPE_MSI,
- };
- 
-+static const struct pci_endpoint_test_data rk3588_data = {
-+	.alignment = SZ_64K,
-+	.irq_type = IRQ_TYPE_MSI,
-+};
-+
- static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x),
- 	  .driver_data = (kernel_ulong_t)&default_data,
-@@ -1017,6 +1025,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721S2),
- 	  .driver_data = (kernel_ulong_t)&j721e_data,
- 	},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_ROCKCHIP, PCI_DEVICE_ID_ROCKCHIP_RK3588),
-+	  .driver_data = (kernel_ulong_t)&rk3588_data,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
+ 	pcie3x2: pcie@fe160000 {
+ 		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
+ 		#address-cells = <3>;
 
 -- 
 2.44.0
