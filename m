@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-6857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9658C8B6D23
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:43:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FFD68B6D29
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:43:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53638285765
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:43:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0E871C22812
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:43:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754831BED98;
-	Tue, 30 Apr 2024 08:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B261BF6EB;
+	Tue, 30 Apr 2024 08:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="T8OBmKDe"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F7kImKJ0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107EC1272D9;
-	Tue, 30 Apr 2024 08:39:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B025A1BED87;
+	Tue, 30 Apr 2024 08:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466374; cv=none; b=r9W8gaLQ6Jf0fiyBWP36f0P/s4RHmaV4wnO+TH0d83FJxK5Zldq+tRwffFq1Ma29CouCp20Ft3jTqkd6MwrtrVshKE3VH2NN3/+IJn0U7wm/3OhqQGbV2YEagoA2LsdJan4SgpL/MdtPMYjlFUB2USMZW2HEv1q/02o3CsS4ato=
+	t=1714466376; cv=none; b=b26/H7qQB51ZZ53ROpz6PPN0fROx3kxLATFNIpnj5xfEuT+/w4WxOC7uUsVhCKxKv30QF4b5R62gKusZYLkHqcfcvn3Q4ptvNF8ncuhjc0VtN8oiKaDeW1ISzRgeGEg+5KKCuMDjYCNWf0dbORHtQSx4Z8GsWYWwhNQdn4LPj2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466374; c=relaxed/simple;
-	bh=bSOs+xbWjg9vODwLMkXoJiN1ThLHAAoIZudT6CvSiOo=;
+	s=arc-20240116; t=1714466376; c=relaxed/simple;
+	bh=QZpvZsfKgX3F8oDhD1XKg83UlmJnd2VYkZjW6DQVGU0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dxXIQXo/cEfYwL1YnIohg9uAQVe3/OQRid9Kqo9WEkR+wKpmcQ6goOtX3Y8IkJLb0N49Hq6Jqx/Hzpto9vFD8lBtAx0hSi17s0DtNTX8/1mzl/e/ieIe5l7Ot/h5DRDkBMtnZ9tHUzmy4y1AZrG/AH9JxQQovcSHfDC1ka6xQ4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=T8OBmKDe; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=j4RleFKudDKe/Nkh7LvVoqKgReMgPpAYsJgs5ZX6rSk+Dsz7riYoKl0ESollgr0lpwBf2UMjqTHpeAVQ9tax26gYyYvJ2ZPrth7FPO4KnAhGPFKLJdIAAEONDVzFrlWPNRO7EwUckOtrnm4VnfENgr+p1pKJTf/iOskHfUVXnaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F7kImKJ0; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 0457220013;
-	Tue, 30 Apr 2024 08:39:28 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 8EF7C2000F;
+	Tue, 30 Apr 2024 08:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714466370;
+	t=1714466372;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SWV2WownCQqThDbEDxGOIR5UaYMGbOqs8DN2r6iZpIY=;
-	b=T8OBmKDebQPuP9ujPP9wF2MImU2z1DhKgiSRaOeHsx8b7WKIwDuTlow/eEWk2Ew4Fm9K9m
-	ZMsbf5HTgPWu16Vho0B/8ijio7viF0+AuOat2hY0OX1fd/EqpBTc26hEVPx8nPbs9pZp8K
-	aQMYIDNJknPSNuctrljpnqZwrih5U57O/oAe3qtcdzqxRnHrjSt6vLgr3/anSgW4npDFM+
-	RCqid5yIBdB/lOXwzzUp657tjLz217q1WTKHwTRG/OgEJNMULTR3EplQHyaW+CQ3OuQ8Cr
-	RHqwFHmTwFdpKGwbCTo+r3zCtY3DpydokqAqgt9q8maKXuAPNv4oOhbL83Okfw==
+	bh=HOrdL8D1Yo1+FTRkcba34oG6bd3Uzs7JBNkhgICtpjg=;
+	b=F7kImKJ0zmG8XOjLM+GJ3WGHJg94BRx9PKzFcwJtvbab1UExnVPJ2t0MEJyrQ2BBifkU68
+	HeUwQkBVa6NFUWChkprKxl7x4daH0239zjzr7iW1Oq+xiZRl7NmoMbkfPF3p2PX0a2cPvt
+	5hx/A/9725qGixJZbfHadeDiLoO3uR8wxKPr2+gXTKnddSnpb1JIbcbQj0KL/KGzLCaodc
+	jhM5ig5JcSyahH/y9bRSct+7j9YPbbit16TsKCznxOvvOQsGMOdyr1nbjUuHVP6IPgc/iE
+	5XUcWe5r+J0D10Id0dSE1a26F4lUj3D5caTy51zcfxrLsuU6dKX6b/UVUTcxsQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -78,9 +78,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 13/17] MAINTAINERS: Add the Microchip LAN966x OIC driver entry
-Date: Tue, 30 Apr 2024 10:37:22 +0200
-Message-ID: <20240430083730.134918-14-herve.codina@bootlin.com>
+Subject: [PATCH 14/17] of: dynamic: Introduce of_changeset_add_prop_bool()
+Date: Tue, 30 Apr 2024 10:37:23 +0200
+Message-ID: <20240430083730.134918-15-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430083730.134918-1-herve.codina@bootlin.com>
 References: <20240430083730.134918-1-herve.codina@bootlin.com>
@@ -93,31 +93,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-After contributing the driver, add myself as the maintainer for the
-Microchip LAN966x OIC driver.
+APIs to add some properties in a changeset exist but nothing to add a DT
+boolean property (i.e. a property without any values).
+
+Fill this lack with of_changeset_add_prop_bool().
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/of/dynamic.c | 25 +++++++++++++++++++++++++
+ include/linux/of.h   |  3 +++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ebf03f5f0619..a15f19008d6e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14465,6 +14465,12 @@ L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/ethernet/microchip/lan966x/*
- 
-+MICROCHIP LAN966X OIC DRIVER
-+M:	Herve Codina <herve.codina@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
-+F:	drivers/irqchip/irq-lan966x-oic.c
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 4d57a4e34105..37d3b0a272dc 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -1052,3 +1052,28 @@ int of_changeset_add_prop_u32_array(struct of_changeset *ocs,
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(of_changeset_add_prop_u32_array);
 +
- MICROCHIP LCDFB DRIVER
- M:	Nicolas Ferre <nicolas.ferre@microchip.com>
- L:	linux-fbdev@vger.kernel.org
++/**
++ * of_changeset_add_prop_bool - Add a boolean property (i.e. a property without
++ * any values) to a changeset.
++ *
++ * @ocs:	changeset pointer
++ * @np:		device node pointer
++ * @prop_name:	name of the property to be added
++ *
++ * Create a boolean property and add it to a changeset.
++ *
++ * Return: 0 on success, a negative error value in case of an error.
++ */
++int of_changeset_add_prop_bool(struct of_changeset *ocs, struct device_node *np,
++			       const char *prop_name)
++{
++	struct property prop;
++
++	prop.name = (char *)prop_name;
++	prop.length = 0;
++	prop.value = NULL;
++
++	return of_changeset_add_prop_helper(ocs, np, &prop);
++}
++EXPORT_SYMBOL_GPL(of_changeset_add_prop_bool);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a0bedd038a05..9633199a954a 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1652,6 +1652,9 @@ static inline int of_changeset_add_prop_u32(struct of_changeset *ocs,
+ 	return of_changeset_add_prop_u32_array(ocs, np, prop_name, &val, 1);
+ }
+ 
++int of_changeset_add_prop_bool(struct of_changeset *ocs, struct device_node *np,
++			       const char *prop_name);
++
+ #else /* CONFIG_OF_DYNAMIC */
+ static inline int of_reconfig_notifier_register(struct notifier_block *nb)
+ {
 -- 
 2.44.0
 
