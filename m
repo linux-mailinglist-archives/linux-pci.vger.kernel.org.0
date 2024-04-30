@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-6872-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6873-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F6BC8B7532
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 14:02:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6648A8B7533
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 14:02:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B07428637A
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 12:02:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 969D61C20A93
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 12:02:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A6413D273;
-	Tue, 30 Apr 2024 12:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3985413D26E;
+	Tue, 30 Apr 2024 12:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmLBbkco"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cI1UUdyJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE00D13D26E;
-	Tue, 30 Apr 2024 12:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137BE13D268;
+	Tue, 30 Apr 2024 12:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714478526; cv=none; b=VS2rivKq0HTMu8SQ2RQ/Y2VdP3QjBu9xZc0/h9c2LMbaw8QUd5XmX2gzz72d1qcgZadbdpd8D5WPS/VK+/f/ooyLVMuse2K9091uC3ijoUU1/9/r8TxIk0Joi67UvE0pEOpBfwjLRjJ/YXoURuZjXQB93uCdSFVwR6Kx09PCO4Q=
+	t=1714478530; cv=none; b=YNXfQGM7LpaqPlkOmi3X5sTKPtSkvmL5U88f2Lzo5lJHHEPVDCJvO5YXUAC7Owzu/q3Eq33iNRJYcylyfPXpcIPAw9EK1DdIYHQvLCscEpaPsCBotKuKMcnLhNLmlBlvTBBm14up5ecBJqiGmkpLKuN7qsFbqXTdB60HexY+m00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714478526; c=relaxed/simple;
-	bh=dazCN/iT/MHdY+ckymlAcfBjUpa3OmMTl+4+NDKJR2A=;
+	s=arc-20240116; t=1714478530; c=relaxed/simple;
+	bh=MgvdOL0gkl34L22gpJGsJpktQEWaY6MRdjg4t+pKTZ4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aAy5yonV2Qx1pWL9asCBn1x9oHmsijpDbu0pmJ64O2yrjsA0fqlHULVgvaQxDpyn3/uxpwpMo7/QKJcH9YYBkgRoRhkbMxREN0frZ05oTojfsUVYvSu82lKJHDM8eGQfgL/uxdd6UU3vlCsu9FfWKa3fWT3ruVLC8OuFmjbiERw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmLBbkco; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9693C4AF1B;
-	Tue, 30 Apr 2024 12:02:01 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=N9a7SjB3yuPHWzvmKi956lb9iTfTLBv329WpVxOzg+F7oZad+iBg6dN9E4LbUTgVbFi/P83ijYXXBGAnjA0xzs+XJ6W3k3XtpgNkUZZ4++4nSiKZXTqYp4omxVaJy02I9bbJxyKxbRvT/Vn0XpwCCTL+sUOjPnTsfjZiluTXCCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cI1UUdyJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1CF0C4AF19;
+	Tue, 30 Apr 2024 12:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714478525;
-	bh=dazCN/iT/MHdY+ckymlAcfBjUpa3OmMTl+4+NDKJR2A=;
+	s=k20201202; t=1714478529;
+	bh=MgvdOL0gkl34L22gpJGsJpktQEWaY6MRdjg4t+pKTZ4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GmLBbkco7H+9TF70s3xCJzzCfE+wdzetILLrSRfKajcLXOUyneNVwNAo2N0wW/2Qu
-	 JVs/Y6Zk1mr5uKcN1+7av/t5pKjBiAGS+brI7STdhgcZS/XTDp2OJLEiMwMRHcWmQV
-	 itYQP8UD5ZA/mI7VxSN6Wc3ekS5uXsvw68IsM31imleh37XZzmyORiXqbxZlEOBQ7B
-	 jEtwHGzrjebJBmyCAcJpV8WeIOZm1n8sHSB9iX230DK7X9H7V9qHWjBeTMVlsXLjnS
-	 ptfChZylMwPiEjKjertC235sJDxMHxsiaE+ChLcxr9nEgMdJaKPdsemMK+36b6yVeB
-	 cvISqnHavpxtA==
+	b=cI1UUdyJQ6nyysGSO+1CFiMo62exm3q0sFo04KTrjpmYiOW67SwkDuj9cRNXEN11s
+	 wSnF0O7y79kXJwkUWHGrELr5bH+QlrU5yMipuuudfpGgSb3vA7GpSV9rzrzVBDAluN
+	 VmdlApL/NjvYILsWii/g6Eye6VHZAoAeV0PeYnH1sQOLQdnag8tbSPXgpp3INP8QX+
+	 PIRR2tYDbGz+bGoavGTRKAeEUj+Fq1PtCMjKfxdM4iE4ZORcpGVLyhaIqQtIRsd56I
+	 77Bbcn4BowgktzugL1IPpW+k0v+9ZglQVHXFROw/sBoGUQoHvyNPhYq2OC8BeQU3Ok
+	 ogZ7mR+B9cDIQ==
 From: Niklas Cassel <cassel@kernel.org>
-Date: Tue, 30 Apr 2024 14:00:59 +0200
-Subject: [PATCH v2 02/14] dt-bindings: PCI: snps,dw-pcie-ep: Add vendor
- specific interrupt-names
+Date: Tue, 30 Apr 2024 14:01:00 +0200
+Subject: [PATCH v2 03/14] dt-bindings: PCI: snps,dw-pcie-ep: Add
+ tx_int{a,b,c,d} legacy irqs
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-rockchip-pcie-ep-v1-v2-2-a0f5ee2a77b6@kernel.org>
+Message-Id: <20240430-rockchip-pcie-ep-v1-v2-3-a0f5ee2a77b6@kernel.org>
 References: <20240430-rockchip-pcie-ep-v1-v2-0-a0f5ee2a77b6@kernel.org>
 In-Reply-To: <20240430-rockchip-pcie-ep-v1-v2-0-a0f5ee2a77b6@kernel.org>
 To: Jingoo Han <jingoohan1@gmail.com>, 
@@ -70,43 +70,49 @@ To: Jingoo Han <jingoohan1@gmail.com>,
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-rockchip@lists.infradead.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1267; i=cassel@kernel.org;
- h=from:subject:message-id; bh=dazCN/iT/MHdY+ckymlAcfBjUpa3OmMTl+4+NDKJR2A=;
- b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIM7m5wV9fa+ca2plhz546ct3//n9v0lXNZ8tKMOcf2h
- /1s2zxjQkcpC4MYF4OsmCKL7w+X/cXd7lOOK96xgZnDygQyhIGLUwAmYjmFkeHQvPVe1rsP/PMS
- bLy9+FVcTWhc8HJ1/d7c+1ueJzRus2hh+Gd1jdEjKMfuqtt3B50n1vb6QedjFq6Uf2W3ZFWKDWd
- WFRsA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1672; i=cassel@kernel.org;
+ h=from:subject:message-id; bh=MgvdOL0gkl34L22gpJGsJpktQEWaY6MRdjg4t+pKTZ4=;
+ b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIM7m74LT61fuHJ1GeOp0xSvxu7LDd9d7BFXTVe+2UK6
+ 42p3lLGHaUsDGJcDLJiiiy+P1z2F3e7TzmueMcGZg4rE8gQBi5OAZjIp80M/x3+/Im7ezlCNc/5
+ x4Hi/z/zby/I6tylEpLMzsH59UMq11OGP/zr778T9bgTftz889UJtwrNwlkSfU4FMEx4raB5fAJ
+ rGxsA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp;
  fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 
-Considering that some drivers (e.g. pcie-dw-rockchip.c) already use the
-interrupt-names "sys", "pmc", "msg", "err" for the device tree binding in
-Root Complex mode (snps,dw-pcie.yaml), it doesn't make sense that those
-drivers should use different interrupt-names when running in Endpoint mode
-(snps,dw-pcie-ep.yaml).
+The DWC core has four interrupt signals: tx_inta, tx_intb, tx_intc, tx_intd
+that are triggered when the PCIe controller (when running in Endpoint mode)
+has sent an Assert_INTA Message to the upstream device.
 
-Therefore, since "sys", "pmc", "msg", "err" are already defined in
-snps,dw-pcie.yaml, add them also for snps,dw-pcie-ep.yaml.
+Some DWC controllers have these interrupt in a combined interrupt signal.
+
+Add the description of these interrupts to the device tree binding.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-index 00dec01f1f73..f5f12cbc2cb3 100644
+index f5f12cbc2cb3..f474b9e3fc7e 100644
 --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
 +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-@@ -156,7 +156,7 @@ properties:
+@@ -151,6 +151,15 @@ properties:
+             Application-specific IRQ raised depending on the vendor-specific
+             events basis.
+           const: app
++        - description:
++            Interrupts triggered when the controller itself (in Endpoint mode)
++            has sent an Assert_INT{A,B,C,D}/Desassert_INT{A,B,C,D} message to
++            the upstream device.
++          pattern: "^tx_int(a|b|c|d)$"
++        - description:
++            Combined interrupt signal raised when the controller has sent an
++            Assert_INT{A,B,C,D} message. See "^tx_int(a|b|c|d)$" for details.
++          const: legacy
+         - description:
+             Vendor-specific IRQ names. Consider using the generic names above
              for new bindings.
-           oneOf:
-             - description: See native "app" IRQ for details
--              enum: [ intr ]
-+              enum: [ intr, sys, pmc, msg, err ]
- 
-   max-functions:
-     maximum: 32
 
 -- 
 2.44.0
