@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-6853-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6854-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2A598B6D15
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:41:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D938B6D1A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:42:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F305A1C2276D
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:41:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0F9D284290
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:42:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CDD51A0AE4;
-	Tue, 30 Apr 2024 08:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0021A0B1A;
+	Tue, 30 Apr 2024 08:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZrW8MfNX"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mHAOEK+e"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FBA199EB1;
-	Tue, 30 Apr 2024 08:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC8819DF6E;
+	Tue, 30 Apr 2024 08:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466367; cv=none; b=B00SJwtle1uclKBEy5r/gvywDXJg25SbSX3xRI8zSZZMXF1X2AFCXrB1VmxFFTLcbd/OLL+LrirMyuPzpjdLYUvgG5jJzwTgbqBWO8gjIbUfVoUn/SklZOYCoJXl3X5U+SjVMCLYaR0BxnlsR5ypIC6a+/VnvozbZOu/lTnn+gA=
+	t=1714466369; cv=none; b=AbyxLTTf5vqwiMN44WYEwnaJyZCjLgbrsMAIfajIWf+tpgaNaZv9h4M4UGct1RsNuj5saSZM1YaPlqSy/TsOfkeEgmKBYa7r0JZXVY/eBoGfTzuSLgMYcfu8FEyMsJMPC8cYPe2gw0FcUuJukKxvR6vJvfHploYAJvdLyKeyojw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466367; c=relaxed/simple;
-	bh=BmIPRrPsWExE/bvNJkt/S/QgFBuICgJGLZOGqiYJQD8=;
+	s=arc-20240116; t=1714466369; c=relaxed/simple;
+	bh=gSXVwtdIWbvqyHA1LHIG2txFyFYNd3M5GrZOOtiWc6s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ml46xtuzGIToI21HABDXn2TSMTzJJc6G3S2Xskld5HyKI3MjVoRrHcBfav49uIXM2AZWMijLok93JBioQh3g0gmrHRg6VNWnDoZDGUHJ5QxCWbi5qcIopMJJdSBvx6rnSYdOtVx88ntJJ9+Ucq+c56+HRls+qckcaLmNqjJinLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZrW8MfNX; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=DZ5ZBNpIl8AMLjk2J7A9BgOX7Q71w5poGsHyQr5XQBBu8Ndn4L+REcs3Bh/yU4OwdRui/YhjJFz2R33ARFjjJZQ4Wd2xFM/N65TxN1rC9WRTMqVh2otsx5PpyQvUSSOPhPJucQo+SLE0PPO2ig+42SQce3Cqjfp/H42tbacKP3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mHAOEK+e; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 2156720017;
-	Tue, 30 Apr 2024 08:39:22 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id DC0462000F;
+	Tue, 30 Apr 2024 08:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714466363;
+	t=1714466365;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2nJGaOl0FeqlO/nJG1uJcVNnq20e1Q7cPnBeXIjZqf8=;
-	b=ZrW8MfNXswi6w4Sw9CbwPmY76PE29Aj3BQ7N1U/LH7sqHw1sHivT3CQ9v9vYY3FkVovjTv
-	VOMY7PlGhWAvLItJ2pRHdgSwfFeDHqZzwMVsKlh7XWg2/S9kTF8bWnUmN3rj1cb0Q/c4IZ
-	TiQmQeMzWnPcaNEsjQdkZ7mMNjmew7DBSpzYVCqh3I92HRHB2lH+7L/Qi4+4Z9S7ii3KmF
-	B9fGO67kPYYkpCpZw9mVV7vYTQEYGRA9kbmshlxrvZno/j/ZQePJxD8fyUPNaQGfp9r07O
-	lqn8MnG92Kp18n0ErZcFfutRfKQoiUl8Uh8o4QE71M5e7KAObu/oxb14cfM8xA==
+	bh=vW5ZHo+q6cI+MkyIRY7diNLEI/hwcmD0uHSjypXUjAM=;
+	b=mHAOEK+eE7xWNOSsxKQaxgm5u3y1GZXmIyb8qWRuL9rrvzi4kMWMKI4BONS85C+XFQvjDz
+	4dLS9dcfA92zvpqnRfaL0l2GWPYRb3JZRqm2wmxRdsJ7GB+xiKYGwVhiWJkZPZQyYKapLp
+	owwE1LrrF2c8IMBkUfNKU7GRsRRbSPKMqqeFXpPsv13GSSSFbo0VglAGvcui8z6zrRQC6L
+	yDtTiTlWrm3/7+Bs1NnoRX18c65wMvxYQnEgOJzuTXKsB3pVRLCCN77vTe2nu3KT82sRuj
+	G+iQprPOdHzs6NnEr0+lZlX/J4VHJ7YGu+1oWd6WWcJJZocQqRGR1FHloTjn7A==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -78,9 +78,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 09/17] dt-bindings: interrupt-controller: Add support for Microchip LAN966x OIC
-Date: Tue, 30 Apr 2024 10:37:18 +0200
-Message-ID: <20240430083730.134918-10-herve.codina@bootlin.com>
+Subject: [PATCH 10/17] irqdomain: Add missing parameter descriptions in docs
+Date: Tue, 30 Apr 2024 10:37:19 +0200
+Message-ID: <20240430083730.134918-11-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430083730.134918-1-herve.codina@bootlin.com>
 References: <20240430083730.134918-1-herve.codina@bootlin.com>
@@ -93,79 +93,89 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-The Microchip LAN966x outband interrupt controller (OIC) maps the
-internal interrupt sources of the LAN966x device to an external
-interrupt.
-When the LAN966x device is used as a PCI device, the external interrupt
-is routed to the PCI interrupt.
+During compilation, several warning of the following form were raised:
+  Function parameter or struct member 'x' not described in 'yyy'
+
+Add the missing function parameter descriptions.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- .../microchip,lan966x-oic.yaml                | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+ kernel/irq/irqdomain.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
-new file mode 100644
-index 000000000000..b2adc7174177
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/microchip,lan966x-oic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip LAN966x outband interrupt controller
-+
-+maintainers:
-+  - Herve Codina <herve.codina@bootlin.com>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+description: |
-+  The Microchip LAN966x outband interrupt controller (OIC) maps the internal
-+  interrupt sources of the LAN966x device to an external interrupt.
-+  When the LAN966x device is used as a PCI device, the external interrupt is
-+  routed to the PCI interrupt.
-+
-+properties:
-+  compatible:
-+    const: microchip,lan966x-oic
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - '#interrupt-cells'
-+  - interrupt-controller
-+  - interrupts
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@e00c0120 {
-+        compatible = "microchip,lan966x-oic";
-+        reg = <0xe00c0120 0x190>;
-+        #interrupt-cells = <2>;
-+        interrupt-controller;
-+        interrupts = <0>;
-+        interrupt-parent = <&intc>;
-+    };
-+...
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 3dd1c871e091..1ed8c4d3cf2e 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -111,6 +111,7 @@ EXPORT_SYMBOL_GPL(__irq_domain_alloc_fwnode);
+ 
+ /**
+  * irq_domain_free_fwnode - Free a non-OF-backed fwnode_handle
++ * @fwnode: fwnode_handle to free
+  *
+  * Free a fwnode_handle allocated with irq_domain_alloc_fwnode.
+  */
+@@ -981,6 +982,12 @@ EXPORT_SYMBOL_GPL(__irq_resolve_mapping);
+ 
+ /**
+  * irq_domain_xlate_onecell() - Generic xlate for direct one cell bindings
++ * @d: IRQ domain involved in the translation
++ * @ctrlr: the DT node for the device whose interrupt we're translating
++ * @intspec: the interrupt specifier data from the DT
++ * @intsize: the number of entries in @intspec
++ * @out_hwirq: pointer at which to write the hwirq number
++ * @out_type: pointer at which to write the interrupt type
+  *
+  * Device Tree IRQ specifier translation function which works with one cell
+  * bindings where the cell value maps directly to the hwirq number.
+@@ -999,6 +1006,12 @@ EXPORT_SYMBOL_GPL(irq_domain_xlate_onecell);
+ 
+ /**
+  * irq_domain_xlate_twocell() - Generic xlate for direct two cell bindings
++ * @d: IRQ domain involved in the translation
++ * @ctrlr: the DT node for the device whose interrupt we're translating
++ * @intspec: the interrupt specifier data from the DT
++ * @intsize: the number of entries in @intspec
++ * @out_hwirq: pointer at which to write the hwirq number
++ * @out_type: pointer at which to write the interrupt type
+  *
+  * Device Tree IRQ specifier translation function which works with two cell
+  * bindings where the cell values map directly to the hwirq number
+@@ -1017,6 +1030,12 @@ EXPORT_SYMBOL_GPL(irq_domain_xlate_twocell);
+ 
+ /**
+  * irq_domain_xlate_onetwocell() - Generic xlate for one or two cell bindings
++ * @d: IRQ domain involved in the translation
++ * @ctrlr: the DT node for the device whose interrupt we're translating
++ * @intspec: the interrupt specifier data from the DT
++ * @intsize: the number of entries in @intspec
++ * @out_hwirq: pointer at which to write the hwirq number
++ * @out_type: pointer at which to write the interrupt type
+  *
+  * Device Tree IRQ specifier translation function which works with either one
+  * or two cell bindings where the cell values map directly to the hwirq number
+@@ -1050,6 +1069,10 @@ EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
+ /**
+  * irq_domain_translate_onecell() - Generic translate for direct one cell
+  * bindings
++ * @d: IRQ domain involved in the translation
++ * @fwspec: FW interrupt specifier to translate
++ * @out_hwirq: pointer at which to write the hwirq number
++ * @out_type: pointer at which to write the interrupt type
+  */
+ int irq_domain_translate_onecell(struct irq_domain *d,
+ 				 struct irq_fwspec *fwspec,
+@@ -1067,6 +1090,10 @@ EXPORT_SYMBOL_GPL(irq_domain_translate_onecell);
+ /**
+  * irq_domain_translate_twocell() - Generic translate for direct two cell
+  * bindings
++ * @d: IRQ domain involved in the translation
++ * @fwspec: FW interrupt specifier to translate
++ * @out_hwirq: pointer at which to write the hwirq number
++ * @out_type: pointer at which to write the interrupt type
+  *
+  * Device Tree IRQ specifier translation function which works with two cell
+  * bindings where the cell values map directly to the hwirq number
 -- 
 2.44.0
 
