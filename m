@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-6858-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6859-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FFD68B6D29
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:43:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 041068B6D2F
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:43:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0E871C22812
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:43:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29D8CB22A0B
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:43:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B261BF6EB;
-	Tue, 30 Apr 2024 08:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93BEA1C0DEB;
+	Tue, 30 Apr 2024 08:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F7kImKJ0"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a1xRvzFe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B025A1BED87;
-	Tue, 30 Apr 2024 08:39:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D751BF6D7;
+	Tue, 30 Apr 2024 08:39:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466376; cv=none; b=b26/H7qQB51ZZ53ROpz6PPN0fROx3kxLATFNIpnj5xfEuT+/w4WxOC7uUsVhCKxKv30QF4b5R62gKusZYLkHqcfcvn3Q4ptvNF8ncuhjc0VtN8oiKaDeW1ISzRgeGEg+5KKCuMDjYCNWf0dbORHtQSx4Z8GsWYWwhNQdn4LPj2k=
+	t=1714466377; cv=none; b=WcDmRhc/MTUm5oUZu+SrIok13oVAe40FqzpHslSEZDiyrnf46MP5sITLVW8jrTbdVfcwPPXekYblqyVCgUxxb3akROSZAXvjE9sg+NLNafz2pfeMery44a8/jhmp7T8KxIilFOWOMERH+N3hIaTJSBrBL5Jp0hq1sdfteacJJr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466376; c=relaxed/simple;
-	bh=QZpvZsfKgX3F8oDhD1XKg83UlmJnd2VYkZjW6DQVGU0=;
+	s=arc-20240116; t=1714466377; c=relaxed/simple;
+	bh=wDWXPuQPX0SK7eCiZC1Dda7dfb6gfYPOkdHIxbXuONY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j4RleFKudDKe/Nkh7LvVoqKgReMgPpAYsJgs5ZX6rSk+Dsz7riYoKl0ESollgr0lpwBf2UMjqTHpeAVQ9tax26gYyYvJ2ZPrth7FPO4KnAhGPFKLJdIAAEONDVzFrlWPNRO7EwUckOtrnm4VnfENgr+p1pKJTf/iOskHfUVXnaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F7kImKJ0; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=kQaUJesp0Vlzd+6ysaeCNsBY3zSfmZdQQd0fvbvqHlAAVovzWt/a9x3MlBw9Cjmx/FaJKq5M1OfxQuNFKfNfZUUyy/T27dL3pfWRutcL2I0xZnNUv+ZQ5Vo1L3oGCLEHhSp2OWbqBbaTv/l6OFezysOU6ZZRiNGB1KYIobcvia8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a1xRvzFe; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 8EF7C2000F;
-	Tue, 30 Apr 2024 08:39:30 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 331C320014;
+	Tue, 30 Apr 2024 08:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714466372;
+	t=1714466373;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HOrdL8D1Yo1+FTRkcba34oG6bd3Uzs7JBNkhgICtpjg=;
-	b=F7kImKJ0zmG8XOjLM+GJ3WGHJg94BRx9PKzFcwJtvbab1UExnVPJ2t0MEJyrQ2BBifkU68
-	HeUwQkBVa6NFUWChkprKxl7x4daH0239zjzr7iW1Oq+xiZRl7NmoMbkfPF3p2PX0a2cPvt
-	5hx/A/9725qGixJZbfHadeDiLoO3uR8wxKPr2+gXTKnddSnpb1JIbcbQj0KL/KGzLCaodc
-	jhM5ig5JcSyahH/y9bRSct+7j9YPbbit16TsKCznxOvvOQsGMOdyr1nbjUuHVP6IPgc/iE
-	5XUcWe5r+J0D10Id0dSE1a26F4lUj3D5caTy51zcfxrLsuU6dKX6b/UVUTcxsQ==
+	bh=EL/+wWthdbbXpsMfHadEqQrahJY+3VcTmg9gLeOEcoI=;
+	b=a1xRvzFeeKIKQGG0I7FiPVUgVyIrQwZl8MJm/CPkMjOEjYyT9Ie0Umir5GpeC47xIn0y/Z
+	yLGkaqdm3WCC0uX/WrU2T1flH87ngShPmFcd8QL75pDHdbngjKiwUYkt3Sy80J8OzKn7Md
+	1XHxJ9mqrv4sbtLXSy8KgpRLlFCogcZFyfSo06fmkfGmhLf/yJgAQTne7vUgEV59l+trvl
+	aKhvnI9PDh9/XBwZ4e4fQ1lBevOlWcl9KProlh5ZBfDDioNS5bDakrHdtkB2rN+gJMw+KQ
+	+8jybgwR+4yDjCxRTs6Jlsz87DdhrYHfDqHE7i0VuW9w9zkJtlHQn8KwYVuc+A==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -78,9 +78,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 14/17] of: dynamic: Introduce of_changeset_add_prop_bool()
-Date: Tue, 30 Apr 2024 10:37:23 +0200
-Message-ID: <20240430083730.134918-15-herve.codina@bootlin.com>
+Subject: [PATCH 15/17] pci: of_property: Add the interrupt-controller property in PCI device nodes
+Date: Tue, 30 Apr 2024 10:37:24 +0200
+Message-ID: <20240430083730.134918-16-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430083730.134918-1-herve.codina@bootlin.com>
 References: <20240430083730.134918-1-herve.codina@bootlin.com>
@@ -93,64 +93,74 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-APIs to add some properties in a changeset exist but nothing to add a DT
-boolean property (i.e. a property without any values).
+PCI devices and bridges DT nodes created during the PCI scan are created
+with the interrupt-map property set to handle interrupts.
 
-Fill this lack with of_changeset_add_prop_bool().
+In order to set this interrupt-map property at a specific level, a
+phandle to the parent interrupt controller is needed.
+On systems that are not fully described by a device-tree, the parent
+interrupt controller may be unavailable (i.e. not described by the
+device-tree).
+
+As mentioned in the [1], avoiding the use of the interrupt-map property
+and considering a PCI device as an interrupt controller itself avoid the
+use of a parent interrupt phandle.
+
+In that case, the PCI device itself as an interrupt controller is
+responsible for routing the interrupts described in the device-tree
+world (DT overlay) to the PCI interrupts.
+
+Add the 'interrupt-controller' property in the PCI device DT node.
+
+[1]: https://lore.kernel.org/lkml/CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com/
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/of/dynamic.c | 25 +++++++++++++++++++++++++
- include/linux/of.h   |  3 +++
- 2 files changed, 28 insertions(+)
+ drivers/pci/of_property.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 4d57a4e34105..37d3b0a272dc 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -1052,3 +1052,28 @@ int of_changeset_add_prop_u32_array(struct of_changeset *ocs,
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(of_changeset_add_prop_u32_array);
-+
-+/**
-+ * of_changeset_add_prop_bool - Add a boolean property (i.e. a property without
-+ * any values) to a changeset.
-+ *
-+ * @ocs:	changeset pointer
-+ * @np:		device node pointer
-+ * @prop_name:	name of the property to be added
-+ *
-+ * Create a boolean property and add it to a changeset.
-+ *
-+ * Return: 0 on success, a negative error value in case of an error.
-+ */
-+int of_changeset_add_prop_bool(struct of_changeset *ocs, struct device_node *np,
-+			       const char *prop_name)
-+{
-+	struct property prop;
-+
-+	prop.name = (char *)prop_name;
-+	prop.length = 0;
-+	prop.value = NULL;
-+
-+	return of_changeset_add_prop_helper(ocs, np, &prop);
-+}
-+EXPORT_SYMBOL_GPL(of_changeset_add_prop_bool);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a0bedd038a05..9633199a954a 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1652,6 +1652,9 @@ static inline int of_changeset_add_prop_u32(struct of_changeset *ocs,
- 	return of_changeset_add_prop_u32_array(ocs, np, prop_name, &val, 1);
+diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+index c2c7334152bc..9f8b940029ed 100644
+--- a/drivers/pci/of_property.c
++++ b/drivers/pci/of_property.c
+@@ -183,6 +183,26 @@ static int of_pci_prop_interrupts(struct pci_dev *pdev,
+ 	return of_changeset_add_prop_u32(ocs, np, "interrupts", (u32)pin);
  }
  
-+int of_changeset_add_prop_bool(struct of_changeset *ocs, struct device_node *np,
-+			       const char *prop_name);
++static int of_pci_prop_intr_ctrl(struct pci_dev *pdev, struct of_changeset *ocs,
++				 struct device_node *np)
++{
++	int ret;
++	u8 pin;
 +
- #else /* CONFIG_OF_DYNAMIC */
- static inline int of_reconfig_notifier_register(struct notifier_block *nb)
++	ret = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
++	if (ret != 0)
++		return ret;
++
++	if (!pin)
++		return 0;
++
++	ret = of_changeset_add_prop_u32(ocs, np, "#interrupt-cells", 1);
++	if (ret)
++		return ret;
++
++	return of_changeset_add_prop_bool(ocs, np, "interrupt-controller");
++}
++
+ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+ 				struct device_node *np)
  {
+@@ -334,6 +354,10 @@ int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
+ 		ret = of_pci_prop_intr_map(pdev, ocs, np);
+ 		if (ret)
+ 			return ret;
++	} else {
++		ret = of_pci_prop_intr_ctrl(pdev, ocs, np);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	ret = of_pci_prop_ranges(pdev, ocs, np);
 -- 
 2.44.0
 
