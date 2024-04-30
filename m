@@ -1,124 +1,114 @@
-Return-Path: <linux-pci+bounces-6861-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6843-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F27A38B6D35
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:44:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9816C8B6CE9
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:38:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9106E1F22694
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:44:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C93F51C22978
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:38:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C201C233C;
-	Tue, 30 Apr 2024 08:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AeWRr0Io"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9317F1272D9;
+	Tue, 30 Apr 2024 08:38:30 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B43F1C2304;
-	Tue, 30 Apr 2024 08:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C05D1272C6;
+	Tue, 30 Apr 2024 08:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466380; cv=none; b=Gve7HC/pLamaDfEOcYmIwE35jmeBWO0MvKT4wSKot+BeWU5dlnsKJa3ynjejb48XqLGM8TKBkylutocXfRTHA7fLTvNpwYRuB8Z/ZT3w4VDMM8d90GgZgNFiK48E63DBOVdicb2vTlCXN1HWnurg0ShMJdPSrAK1ozaT6GBJ+io=
+	t=1714466310; cv=none; b=GCnyC7Tz+uhVj2HLLwlg8UHsfGPpBaw9KiJ+HEcuxzEx/0KVIpySwDNWIEZwjRkCLKNtScYrMFXdmLH8QTh3OYnvKuLl81/pHLqahj9HQ6fHJ2bm23EuQCABocCA05DKdJcWSfali5ggGz0J90Vyb8M5kGlz3Q5lPnk2Vv2K/yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466380; c=relaxed/simple;
-	bh=5RFr74Pe6D1ZFqvIhmLXlfFBy/4XhcaQ3RoCErooxVk=;
+	s=arc-20240116; t=1714466310; c=relaxed/simple;
+	bh=JPAY6hy0dx2EEWypghWseKBA28SpgSG3Jr5Y4Fm3M/E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bfd85p1DtTa+8+Gzh292IPPcRd3696K8hTHtPYeRhtWfWjDKxKbaNc0oCwQ3oe0vKjmlWC2nn4BUq1ZznXVgt1bzzqKu0po8lq5/MCdkYisD7Aq7X2MLIJamloLryH1RFNowB/LEbe9s6qjkIDv9r9CGs6BNlvwxbSQtB41YIWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AeWRr0Io; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 7E7A320005;
-	Tue, 30 Apr 2024 08:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714466377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h9Wz1fNXtXid8B91ankxGvMHVtEanfjUpTSsFi3KMI4=;
-	b=AeWRr0IouEROb6M4dR7xEI6v5ErsDh8dNlttH5bdLK4fZ+HD/Sh36x4Mp2haqOSK7+EcYy
-	tYKhlo6ZSkIyKD8C0YlNyqr2ZYqPn68ml3TAjWPPshG1asqzHCBQHioMWdX3W5UM4iQigS
-	hzu/xySB6rv+53C/4ojuoc60Q+eNs+WkYwKgs95FiokWhQwnSwz+T0QZsR1bokAJcYUtf2
-	Vv5oK9qcwpRz54RGq8nRh+9f+7TCmV9jRYVWJNObufHWuA96XwNj041LzWsgXYNXyShYpm
-	ckZ06HlsumTk7uEqIR18tgU+RbTFlWR5ZTgoRi1KfN4Y904RpOXiGl0iTFz3FQ==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Herve Codina <herve.codina@bootlin.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Lee Jones <lee@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 17/17] MAINTAINERS: Add the Microchip LAN966x PCI driver entry
-Date: Tue, 30 Apr 2024 10:37:26 +0200
-Message-ID: <20240430083730.134918-18-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240430083730.134918-1-herve.codina@bootlin.com>
-References: <20240430083730.134918-1-herve.codina@bootlin.com>
+	 MIME-Version:Content-Type; b=buchR4VSuKhXFGNVdV7+J0FottTPJNci3NQUaWlTPMj+RasA9JztDkpp0Cx6jBjH+jj/3v1vmmFl3VjE9jnwl25ofTCguuX37IbyzOiVS+duwAh0YGbZ+Q6YKJWenbRcggPVzQnJ34NB2Z2ti4Oq/CJQQ839J1AIIwj5pfeLFR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b01.versanet.de ([83.135.91.1] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1s1j06-0007i9-Ie; Tue, 30 Apr 2024 10:38:10 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?utf-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Simon Xue <xxm@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>,
+ Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ stable@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3] PCI: dw-rockchip: Fix initial PERST# GPIO value
+Date: Tue, 30 Apr 2024 10:38:09 +0200
+Message-ID: <2493811.Mh6RI2rZIc@diego>
+In-Reply-To: <20240417164227.398901-1-cassel@kernel.org>
+References: <20240417164227.398901-1-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-After contributing the driver, add myself as the maintainer for the
-Microchip LAN966x PCI driver.
+Am Mittwoch, 17. April 2024, 18:42:26 CEST schrieb Niklas Cassel:
+> PERST# is active low according to the PCIe specification.
+> 
+> However, the existing pcie-dw-rockchip.c driver does:
+> gpiod_set_value(..., 0); msleep(100); gpiod_set_value(..., 1);
+> When asserting + deasserting PERST#.
+> 
+> This is of course wrong, but because all the device trees for this
+> compatible string have also incorrectly marked this GPIO as ACTIVE_HIGH:
+> $ git grep -B 10 reset-gpios arch/arm64/boot/dts/rockchip/rk3568*
+> $ git grep -B 10 reset-gpios arch/arm64/boot/dts/rockchip/rk3588*
+> 
+> The actual toggling of PERST# is correct.
+> (And we cannot change it anyway, since that would break device tree
+> compatibility.)
+> 
+> However, this driver does request the GPIO to be initialized as
+> GPIOD_OUT_HIGH, which does cause a silly sequence where PERST# gets
+> toggled back and forth for no good reason.
+> 
+> Fix this by requesting the GPIO to be initialized as GPIOD_OUT_LOW
+> (which for this driver means PERST# asserted).
+> 
+> This will avoid an unnecessary signal change where PERST# gets deasserted
+> (by devm_gpiod_get_optional()) and then gets asserted
+> (by rockchip_pcie_start_link()) just a few instructions later.
+> 
+> Before patch, debug prints on EP side, when booting RC:
+> [  845.606810] pci: PERST# asserted by host!
+> [  852.483985] pci: PERST# de-asserted by host!
+> [  852.503041] pci: PERST# asserted by host!
+> [  852.610318] pci: PERST# de-asserted by host!
+> 
+> After patch, debug prints on EP side, when booting RC:
+> [  125.107921] pci: PERST# asserted by host!
+> [  132.111429] pci: PERST# de-asserted by host!
+> 
+> This extra, very short, PERST# assertion + deassertion has been reported
+> to cause issues with certain WLAN controllers, e.g. RTL8822CE.
+> 
+> Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
+> Tested-by: Jianfeng Liu <liujianfeng1994@gmail.com>
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: stable@vger.kernel.org	# 5.15+
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a15f19008d6e..2dfb010dc211 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14471,6 +14471,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
- F:	drivers/irqchip/irq-lan966x-oic.c
- 
-+MICROCHIP LAN966X PCI DRIVER
-+M:	Herve Codina <herve.codina@bootlin.com>
-+S:	Maintained
-+F:	drivers/mfd/lan966x_pci.c
-+F:	drivers/mfd/lan966x_pci.dtso
-+
- MICROCHIP LCDFB DRIVER
- M:	Nicolas Ferre <nicolas.ferre@microchip.com>
- L:	linux-fbdev@vger.kernel.org
--- 
-2.44.0
+it also matches what the vendor kernel does.
+
 
 
