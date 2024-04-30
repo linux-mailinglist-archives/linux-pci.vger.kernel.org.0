@@ -1,163 +1,196 @@
-Return-Path: <linux-pci+bounces-6837-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6838-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ED108B6A67
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:16:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 321668B6A82
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:31:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7EBC3B207B8
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 06:16:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D27B1B21530
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 06:31:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 769EA7BB01;
-	Tue, 30 Apr 2024 06:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71A2B33EC;
+	Tue, 30 Apr 2024 06:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WWfF+HS8"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JW19BNTd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE38F84D26
-	for <linux-pci@vger.kernel.org>; Tue, 30 Apr 2024 06:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DD6205E25;
+	Tue, 30 Apr 2024 06:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714457680; cv=none; b=pzIZazCcMkZQw28OZPkXGsf0uFC6IB5az7c8DeL7vLsk64dEreXVzU+XeQDLSnZ6GhGIdTNGMGaVzIqs+qIFE8PPX9+semdv0N5Leo6u3MidQEXIniFxoQslPTG/ZV/1duFfiVmEM/2gt1x1eUstJREZiZ9CQt10qEuisapGix4=
+	t=1714458703; cv=none; b=bMP8hmWv4FdZAiBTs4XiARLP6O3tclp2OvvWkxKS7Y9GuXEC6bR897xZ1HBJHn0r4A+3YYPVL4d4/6fSqi8SgbMqBkQUE4nIK5FrvWTl9Q01XW3VBGKXYrPwHVqTeEx3xGvEVOAmV7Xyofjy9klH6H0I1geT+aQelhMyll4mwY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714457680; c=relaxed/simple;
-	bh=gwJkiWxyW/wamW6kH7+GRx7VSH7hXsYT3WZXX3driJ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z+27HInfHPAVseQ/wMxmSkDxVDA2i7qdrJMK3BqwhGnKGgOxGla0OF0MXOG+tHn8CfeT2rk71OuK5WNJBOHhpfKfh9lQTt6AKNhJsweT9CCpWkN24Ys6M9gnK2iCI0Q7mT9VsrFZtuChssRkuEyqCbb0IFgaAjowlTVKUnKrOOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WWfF+HS8; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e834159f40so42655585ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 29 Apr 2024 23:14:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714457678; x=1715062478; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zfACtQQSDUwMHO1/0RK0ntsz+YmSOQ8ynC0u7vL0q8w=;
-        b=WWfF+HS8623sWjdYlAr6UUNKZJVc2+6d8C/ash6g0yNTqoeN0Rl9EB95SE6MfDfRY0
-         jC7ZkrpedNAic7BZ0yP9AI28zwK8J5RxVG/w7g88RFmdd+lvRz/pD98VNWYouq8k69BZ
-         YUENRNNN+1F7mJKOzQiK5FiTjVqFgUt0FRl0EnBIJZpfpDMyTfc13HXsDZ06/4XCoZ80
-         P3TJYeNVqeO/aTq8Teu0n2lkeZWwwayu20gtgqPKRK6fP6u9lgMBobWC6AqK/TloVpwP
-         qXgnbiCKNQuvR4xUt6afnHTheuMcP1/n/86vCdhqmrOrycZtUMRIa0cZXbzs6UoGvsb2
-         YMOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714457678; x=1715062478;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zfACtQQSDUwMHO1/0RK0ntsz+YmSOQ8ynC0u7vL0q8w=;
-        b=PjZGR27/M9FKoPsigwbfafCNXP3BIvBCwFztQi2gotf9QJw74MNwAEY19Uypvjv3T4
-         Iv41MPcAWV3Vg8K6hHcGxWXUhtjClVfZytyrlnJegLeuadlx9YBjtx7BxMaL4OqSR3rO
-         fNFoGwT1dmLRQHjUAVWxBdBE/nNeWKWVjN2q2QvPdsJwrJLaaVdmu9b+Wl5UOaQ9Chm2
-         aHaiVZ7RYQapbHgtR/SCvnUfAqfLUuQwC5kFwWJohbIPaebmLuOzIDYSIRY5PiWHldWb
-         qN/jghjhC1K74KU0fPRzejfhINcOH7rXKKVgqIlFpu8Oi95vUuF8j2r0D/JAKm5v/RFU
-         dW1w==
-X-Gm-Message-State: AOJu0YwZqgzENaKUMGN4eYpNSdNIJKOykEqyG1i1k9UusTwnh8ZDbJBX
-	sDtN3Qn40rfRAVz4S5IvIs/Scxk99XXVMDLDcVBMgm0hiX3E3n5IjjIl0Kpu5w==
-X-Google-Smtp-Source: AGHT+IGWSiYL4QGZLQ9kxcs8EksybyJBj3Q5TS+tl4f5cOjnz0JQqoAPxUgOn1Wokxhf05hTLpZtWw==
-X-Received: by 2002:a17:902:7087:b0:1e6:68d0:d6c1 with SMTP id z7-20020a170902708700b001e668d0d6c1mr12539439plk.40.1714457678284;
-        Mon, 29 Apr 2024 23:14:38 -0700 (PDT)
-Received: from [127.0.1.1] ([220.158.156.15])
-        by smtp.gmail.com with ESMTPSA id bi2-20020a170902bf0200b001e27ad5199csm21393298plb.281.2024.04.29.23.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 23:14:37 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Tue, 30 Apr 2024 11:43:51 +0530
-Subject: [PATCH v4 10/10] PCI: endpoint: pci-epf-test: Handle Link Down
- event
+	s=arc-20240116; t=1714458703; c=relaxed/simple;
+	bh=7JutYdlyKjRm/d6CPhcXCZiskF7ZHRoD4M0QLTajHCA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ugy0yDI3a0VBb6xrFI8CXTxFAR9KPdrUPadmMQ0hRWiSgHDzmbf/pYXDY6McKuhY4CWIGmn0M9ANvOIQZYMhdsvQA7ckNKrlQMvcopYjcHChJUM4z5lXn1HePhA9OdoBLXt/xc9xx/acrQDwdD0EzfMtTt+I2KofDUgAUL6GTMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JW19BNTd; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43U4RaBk019841;
+	Tue, 30 Apr 2024 06:31:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=/EDHGHEVWUCmdxp3Bjyh7
+	Wce+g5mQmyF9Sk2EZ1/ZSE=; b=JW19BNTdgmH04Jj119dRFlpPitsdisGC8g4iD
+	cdj7l26qhA9cvTNh1ZeQNuwlrBJD4bgiw6RnB09pNs5PxIPlsKoROng4rE13UrPW
+	DGkFkxlZtVXLgHvNaQRloS/wLMlt5Dd9G7WracQKSE7kcgelGJBaQ+iQOZt+PVxr
+	Mj5F0LBtXpjdB3IxnCwZMH9HsqHMkdbHbdlC8qxyTCHCwRA57fsIrkuhhWqi9Sj/
+	yImsDK6EUFl6FK844wer1ev/p/OJ2g+ZL8bt8ku827neEfK6Au2LJNNp9lxKP92W
+	xGxK3VmvlhuotxnIQpuefuXrlhBa6c2Wmqnhf5TWQhrQXPGiQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtd8kkmjy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 06:31:26 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43U6VP4x008281
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Apr 2024 06:31:25 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 29 Apr 2024 23:31:18 -0700
+Date: Tue, 30 Apr 2024 12:01:15 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Alex G. <mr.nuke.me@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I
+	<kishon@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen
+ Boyd <sboyd@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v3 6/7] phy: qcom-qmp-pcie: add support for ipq9574
+ gen3x2 PHY
+Message-ID: <ZjCQM24T2XIJ6GAR@hu-varada-blr.qualcomm.com>
+References: <20240415182052.374494-1-mr.nuke.me@gmail.com>
+ <20240415182052.374494-7-mr.nuke.me@gmail.com>
+ <CAA8EJpqY1aDZMaeqBULEOD26UeGYbLd8RsA16jZw7zXJ7_oGPQ@mail.gmail.com>
+ <6726fa2b-f5fe-10fb-6aab-f76d61f0b3cd@gmail.com>
+ <4a7b1e1d-ac68-4857-8925-f90c9e123fd1@gmail.com>
+ <CAA8EJppGW=qyk2P6Z_S=dp0njsCjqZaXjw8qU4MY1HOZR-N=4A@mail.gmail.com>
+ <Zi88Hdx6UgBo/gti@hu-varada-blr.qualcomm.com>
+ <CAA8EJpq+Bbws8yH5Xq7rHyA+-=DaCcfEcgUa5RUt2+LWQW0kKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-pci-epf-rework-v4-10-22832d0d456f@linaro.org>
-References: <20240430-pci-epf-rework-v4-0-22832d0d456f@linaro.org>
-In-Reply-To: <20240430-pci-epf-rework-v4-0-22832d0d456f@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Jingoo Han <jingoohan1@gmail.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, mhi@lists.linux.dev, 
- linux-tegra@vger.kernel.org, Niklas Cassel <cassel@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1926;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=gwJkiWxyW/wamW6kH7+GRx7VSH7hXsYT3WZXX3driJ8=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmMIwd973TI9incgBAwvQzAk1axQR3EQfp2S+v7
- 0yLEScJY42JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZjCMHQAKCRBVnxHm/pHO
- 9W9wB/9fKbNDwL0ouS8vXUIF1ITwHRCULxFhwVZnrKt6wJZZ10YPd6A9VuBZdad+tngXVjkuP8w
- y2VLFDcc4KgVEadpMF08dctlEfIju4UbBdEFJSEWUynyOkW//VQHFnjFFqRDUzgxJGS0/HVtCOx
- DIKJ2WR27vm+b9WdcJqbVuQvS2DJ0p3qbJatfzAVrFxcVxLDH+9DGD9CeExys4NrUyu9TKYZdB0
- ZiL8A0W9pOjEvFALzu9UAY1mhQpoZxwMX4Ldz8ABwFNHKktBYLKK4nD+YcsB2OrFE3EzmJo2Ol/
- GH7xP7PBMproKqyLDV/eCbdhGxKOw/9TTP1FAzdVXKFtqbz1
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpq+Bbws8yH5Xq7rHyA+-=DaCcfEcgUa5RUt2+LWQW0kKg@mail.gmail.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Kz9y3fLxciuZSj0DW7v68K0H1YjdIf0m
+X-Proofpoint-ORIG-GUID: Kz9y3fLxciuZSj0DW7v68K0H1YjdIf0m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-30_02,2024-04-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxscore=0 phishscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404300046
 
-As per the PCIe base spec r5.0, section 5.2, Link Down event can happen
-under any of the following circumstances:
+On Mon, Apr 29, 2024 at 01:55:32PM +0300, Dmitry Baryshkov wrote:
+> On Mon, 29 Apr 2024 at 09:20, Varadarajan Narayanan
+> <quic_varada@quicinc.com> wrote:
+> >
+> > On Wed, Apr 17, 2024 at 12:50:49AM +0300, Dmitry Baryshkov wrote:
+> > > On Wed, 17 Apr 2024 at 00:25, Alex G. <mr.nuke.me@gmail.com> wrote:
+> > > >
+> > > > Hi Dmitry,
+> > > >
+> > > > On 4/15/24 16:25, mr.nuke.me@gmail.com wrote:
+> > > > >
+> > > > >
+> > > > > On 4/15/24 15:10, Dmitry Baryshkov wrote:
+> > > > >> On Mon, 15 Apr 2024 at 21:23, Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> > > > >> wrote:
+> > > > >>>
+> > > > >>> Add support for the gen3x2 PCIe PHY on IPQ9574, ported form downstream
+> > > > >>> 5.4 kernel. Only the serdes and pcs_misc tables are new, the others
+> > > > >>> being reused from IPQ8074 and IPQ6018 PHYs.
+> > > > >>>
+> > > > >>> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> > > > >>> ---
+> > > > >>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 +++++++++++++++++-
+> > > > >>>   .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
+> > > > >>>   2 files changed, 149 insertions(+), 1 deletion(-)
+> > > > >>>
+> > > > >>
+> > > > >> [skipped]
+> > > > >>
+> > > > >>> @@ -2448,7 +2542,7 @@ static inline void qphy_clrbits(void __iomem
+> > > > >>> *base, u32 offset, u32 val)
+> > > > >>>
+> > > > >>>   /* list of clocks required by phy */
+> > > > >>>   static const char * const qmp_pciephy_clk_l[] = {
+> > > > >>> -       "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux",
+> > > > >>> +       "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux",
+> > > > >>> "anoc", "snoc"
+> > > > >>
+> > > > >> Are the NoC clocks really necessary to drive the PHY? I think they are
+> > > > >> usually connected to the controllers, not the PHYs.
+> > > > >
+> > > > > The system will hang if these clocks are not enabled. They are also
+> > > > > attached to the PHY in the QCA 5.4 downstream kernel.
+> > >
+> > > Interesting.
+> > > I see that Varadarajan is converting these clocks into interconnects.
+> > > Maybe it's better to wait for those patches to land and use
+> > > interconnects instead. I think it would better suit the
+> > > infrastructure.
+> > >
+> > > Varadarajan, could you please comment, are these interconnects
+> > > connected to the PHY too or just to the PCIe controller?
+> >
+> > Sorry for the late response. Missed this e-mail.
+> >
+> > These 2 clks are related to AXI port clk on Aggnoc/SNOC, not
+> > directly connected to PCIE wrapper, but it should be enabled to
+> > generate pcie traffic.
+>
+> So, are they required for the PHY or are they required for the PCIe
+> controller only?
 
-1. Fundamental/Hot reset
-2. Link disable transmission by upstream component
-3. Moving from L2/L3 to L0
+These 2 clks are required for PCIe controller only.
+PCIE controller need these clks to send/receive axi pkts.
 
-When the event happens, the EPC driver capable of detecting it may pass the
-notification to the EPF driver through link_down() callback in 'struct
-pci_epc_event_ops'.
+Thanks
+Varada
 
-While the PCIe spec has not defined the actual behavior of the endpoint
-when the Link Down event happens, we may assume that at least the ongoing
-transactions need to be stopped as the link won't be active. So let's
-cancel the command handler work in the callback implementation
-pci_epf_test_link_down(). The work will be started again in
-pci_epf_test_link_up() once the link comes back again.
-
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
-Tested-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index c8d0c51ae329..afb28df174c3 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -809,10 +809,20 @@ static int pci_epf_test_link_up(struct pci_epf *epf)
- 	return 0;
- }
- 
-+static int pci_epf_test_link_down(struct pci_epf *epf)
-+{
-+	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-+
-+	cancel_delayed_work_sync(&epf_test->cmd_handler);
-+
-+	return 0;
-+}
-+
- static const struct pci_epc_event_ops pci_epf_test_event_ops = {
- 	.epc_init = pci_epf_test_epc_init,
- 	.epc_deinit = pci_epf_test_epc_deinit,
- 	.link_up = pci_epf_test_link_up,
-+	.link_down = pci_epf_test_link_down,
- };
- 
- static int pci_epf_test_alloc_space(struct pci_epf *epf)
-
--- 
-2.25.1
-
+> > > > They are named "anoc_lane", and "snoc_lane" in the downstream kernel.
+> > > > Would you like me to use these names instead?
+> > >
+> > > I'm fine either way.
+> > >
+>
+>
+>
+> --
+> With best wishes
+> Dmitry
 
