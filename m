@@ -1,50 +1,49 @@
-Return-Path: <linux-pci+bounces-6876-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6877-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E81D98B753F
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 14:02:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B71438B7541
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 14:02:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A30AE2866E2
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 12:02:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38FFA1F22C07
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 12:02:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF0E313F44C;
-	Tue, 30 Apr 2024 12:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 060C713D53E;
+	Tue, 30 Apr 2024 12:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ec2nS7AB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mshrpd3+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D3A13D267;
-	Tue, 30 Apr 2024 12:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AE413D289;
+	Tue, 30 Apr 2024 12:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714478542; cv=none; b=rLsiyS7AEaytvJRIq/41D/7qKN8Z7DF6Fevk2c5fs5xROhxJAYrIk2T8OOCqI1HdyAAOclT8zT78q1PYhPCW4jQ2Z/lHPT2/k6342AAutd5jgpE32lP1WCl4FgTGQmrQjR3T0yOWsOCZnZTpDb/+K+ZcLQ7xILOhBu/0M+QaPac=
+	t=1714478546; cv=none; b=MJWW9HXxkl/aeD14emteZFCDiG75WjAfirt1m1dEXjBp5/U3PhnqVW0EZX9yLR1ziWzmx0VFY5dYoPD5P+9C6VK+oW//944faRBFvwbil/pmuZwaUu0VsxCAzuimR1epm5R6gqGk1W2wltr6SdGJ4jlsam9ohTpbLaiWEHwmVZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714478542; c=relaxed/simple;
-	bh=lzYyTB2OvdhD5k4zG4pbiEVMIEt2tbp4NUdYxqaO9x8=;
+	s=arc-20240116; t=1714478546; c=relaxed/simple;
+	bh=lzJ2BxKBBswxjN9lBrWUoaKYI/aG2NTtIprX120aOD4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dgKjL+5As+2VCDReCxgaLOOC6zVboAfkvUsqVISvMhGKi6nl77QVFD1nXELKXskPCXj4KRAebFJsgBxyX/hutToHvG0Ay8123xKrWO+ztgHUzDjybbVVhXcPzvuSo+91aFRBP4TPBk1iCaMpPWyxvDA1G+jF2Z1fhs7tI0FJ5VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ec2nS7AB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A80D6C4AF51;
-	Tue, 30 Apr 2024 12:02:18 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=TVhSlJ98dHCCAv+CP84WwuJ77P9RJGz23G15rCe9Ha13MHRforR1g3PmC8HS1rAcnG9hsg8ybda9XjfCHKovCwa6CJSpMc/sdK0B8Tg8Ufv79SEGU1O6T8al4WcCwTvh3xoEwQyP77uBmJ1gzTOC1l4YthMN/2kVW86HxBIF8BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mshrpd3+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC8DC4AF19;
+	Tue, 30 Apr 2024 12:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714478542;
-	bh=lzYyTB2OvdhD5k4zG4pbiEVMIEt2tbp4NUdYxqaO9x8=;
+	s=k20201202; t=1714478546;
+	bh=lzJ2BxKBBswxjN9lBrWUoaKYI/aG2NTtIprX120aOD4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ec2nS7ABva/cSfofJiBnJSh0tLqY6xNang2HofW9orU8v9x//svVgR2kN7lPY/f5s
-	 zcLkdCR37VaVk3Jz1uR771McTUui7beQdRQ4zmxPKfNq5+xfClYngKAvmVec9RwgHx
-	 nV5sPWE9JSurmAE32vBpdvZP26/v2e+xxH27f6hIKtyIWjbL05GfYUsUcIMN1xn7vV
-	 lRO4uqTynYLRQW5bQrzxsqUy+LMKsUiQXM/FjYIL8jlnpPaH1vuG2c3/dhOnoSLJA7
-	 YgVfNggpEIUXB1vWY6TbUie70SrUPdph8UKPWGZIAMneXBiFNY2xCQHne9LbQesHvT
-	 DT6dTQD2DVuDQ==
+	b=Mshrpd3+GxeXid8yQwzqyaI9ns5tOsXZMqB0SmwCgCCxjhboCwiHiY3X83OacEbzn
+	 hBjfOrR+sKtjWYhJxFl0XxLYi6d1dHM8iysbDBIKfrUetJjK/adMcN1GlY+x9HxCnB
+	 Xiz36g4u3Q0I6Lz02uj7AiYvzYLCrAIZJXrh8+KD7CLFgtcaSK5Yiyy1reLAXwFNBC
+	 H/X1DVas9vnQFgrq+ATGLLI+nTdC1TfcVAQNckUBE0bfMkkCGJhKA6ZfTl2pZiWh+u
+	 k1OpuAxuzC2ZRkfkVei2dJRX1IDW/7szMUSUNx/Xo6nZ1sXKb0jcNzppKoBoF2mB9M
+	 SovevHKW4CJqw==
 From: Niklas Cassel <cassel@kernel.org>
-Date: Tue, 30 Apr 2024 14:01:03 +0200
-Subject: [PATCH v2 06/14] dt-bindings: rockchip: Add DesignWare based PCIe
- Endpoint controller
+Date: Tue, 30 Apr 2024 14:01:04 +0200
+Subject: [PATCH v2 07/14] PCI: dw-rockchip: Fix weird indentation
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240430-rockchip-pcie-ep-v1-v2-6-a0f5ee2a77b6@kernel.org>
+Message-Id: <20240430-rockchip-pcie-ep-v1-v2-7-a0f5ee2a77b6@kernel.org>
 References: <20240430-rockchip-pcie-ep-v1-v2-0-a0f5ee2a77b6@kernel.org>
 In-Reply-To: <20240430-rockchip-pcie-ep-v1-v2-0-a0f5ee2a77b6@kernel.org>
 To: Jingoo Han <jingoohan1@gmail.com>, 
@@ -70,164 +69,45 @@ To: Jingoo Han <jingoohan1@gmail.com>,
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-rockchip@lists.infradead.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5484; i=cassel@kernel.org;
- h=from:subject:message-id; bh=lzYyTB2OvdhD5k4zG4pbiEVMIEt2tbp4NUdYxqaO9x8=;
- b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIM7m4IbJ+tf/LKHblq80Mct4o0Zs1uy1TdvvmDUWBAw
- P6t1upMHaUsDGJcDLJiiiy+P1z2F3e7TzmueMcGZg4rE8gQBi5OAZjI8XaG//WXWhdLROk8nr1l
- g/vu2+/2Zh60OODUaVcsmNxn8rt8YhzD/1zXqhIlweTUxNvzfJzm2s6VEz596s1sHj0NQYU7Pmn
- 1vAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1116; i=cassel@kernel.org;
+ h=from:subject:message-id; bh=lzJ2BxKBBswxjN9lBrWUoaKYI/aG2NTtIprX120aOD4=;
+ b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNIM7m7Y9e/gD7YlVyYUJzaoewtGKy2Y0XVgy/ZFdfejV
+ 9ZN01c70VHKwiDGxSArpsji+8Nlf3G3+5TjindsYOawMoEMYeDiFICJyMQwMuzTmntRV5k3IyxS
+ ePqZk28aPObOSOhYITnjuOJE6X8Hbksy/LM30/x+r3Bqa4txlpLE9b/G6+a8vBFTHhIVua7kicb
+ lmwwA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp;
  fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 
-Document DT bindings for PCIe Endpoint controller found in Rockchip SoCs.
+Fix the indentation of rockchip_pcie_{readl,writel}_apb() parameters to
+match the opening parenthesis.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- .../bindings/pci/rockchip-dw-pcie-common.yaml      | 14 ++++
- .../bindings/pci/rockchip-dw-pcie-ep.yaml          | 95 ++++++++++++++++++++++
- 2 files changed, 109 insertions(+)
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-index ec5e6a3d048e..cc9adfc7611c 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-@@ -39,6 +39,7 @@ properties:
-       - const: ref
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index d6842141d384..1993c430b90c 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -60,14 +60,13 @@ struct rockchip_pcie {
+ 	struct irq_domain		*irq_domain;
+ };
  
-   interrupts:
-+    minItems: 5
-     items:
-       - description:
-           Combined system interrupt, which is used to signal the following
-@@ -63,14 +64,27 @@ properties:
-           interrupts - aer_rc_err, aer_rc_err_msi, rx_cpl_timeout,
-           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
-           nf_err_rx, f_err_rx, radm_qoverflow
-+      - description:
-+          eDMA write channel 0 interrupt
-+      - description:
-+          eDMA write channel 1 interrupt
-+      - description:
-+          eDMA read channel 0 interrupt
-+      - description:
-+          eDMA read channel 1 interrupt
+-static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
+-					     u32 reg)
++static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
+ {
+ 	return readl_relaxed(rockchip->apb_base + reg);
+ }
  
-   interrupt-names:
-+    minItems: 5
-     items:
-       - const: sys
-       - const: pmc
-       - const: msg
-       - const: legacy
-       - const: err
-+      - const: dma0
-+      - const: dma1
-+      - const: dma2
-+      - const: dma3
- 
-   num-lanes: true
- 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-ep.yaml
-new file mode 100644
-index 000000000000..e0c8668afc01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-ep.yaml
-@@ -0,0 +1,95 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DesignWare based PCIe Endpoint controller on Rockchip SoCs
-+
-+maintainers:
-+  - Niklas Cassel <cassel@kernel.org>
-+
-+description: |+
-+  RK3588 SoC PCIe Endpoint controller is based on the Synopsys DesignWare
-+  PCIe IP and thus inherits all the common properties defined in
-+  snps,dw-pcie-ep.yaml.
-+
-+allOf:
-+  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-+  - $ref: /schemas/pci/rockchip-dw-pcie-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3568-pcie-ep
-+      - rockchip,rk3588-pcie-ep
-+
-+  reg:
-+    items:
-+      - description: Data Bus Interface (DBI) registers
-+      - description: Data Bus Interface (DBI) shadow registers
-+      - description: Rockchip designed configuration registers
-+      - description: Memory region used to map remote RC address space
-+      - description: Address Translation Unit (ATU) registers
-+
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: dbi2
-+      - const: apb
-+      - const: addr_space
-+      - const: atu
-+
-+required:
-+  - interrupts
-+  - interrupt-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/power/rk3588-power.h>
-+    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-+
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie3x4_ep: pcie-ep@fe150000 {
-+            compatible = "rockchip,rk3588-pcie-ep";
-+            clocks = <&cru ACLK_PCIE_4L_MSTR>, <&cru ACLK_PCIE_4L_SLV>,
-+                     <&cru ACLK_PCIE_4L_DBI>, <&cru PCLK_PCIE_4L>,
-+                     <&cru CLK_PCIE_AUX0>, <&cru CLK_PCIE4L_PIPE>;
-+            clock-names = "aclk_mst", "aclk_slv",
-+                          "aclk_dbi", "pclk",
-+                          "aux", "pipe";
-+            interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH 0>,
-+                         <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH 0>;
-+            interrupt-names = "sys", "pmc", "msg", "legacy", "err",
-+                              "dma0", "dma1", "dma2", "dma3";
-+            max-link-speed = <3>;
-+            num-lanes = <4>;
-+            phys = <&pcie30phy>;
-+            phy-names = "pcie-phy";
-+            power-domains = <&power RK3588_PD_PCIE>;
-+            reg = <0xa 0x40000000 0x0 0x00100000>,
-+                  <0xa 0x40100000 0x0 0x00100000>,
-+                  <0x0 0xfe150000 0x0 0x00010000>,
-+                  <0x9 0x00000000 0x0 0x40000000>,
-+                  <0xa 0x40300000 0x0 0x00100000>;
-+            reg-names = "dbi", "dbi2", "apb", "addr_space", "atu";
-+            resets = <&cru SRST_PCIE0_POWER_UP>, <&cru SRST_P_PCIE0>;
-+            reset-names = "pwr", "pipe";
-+        };
-+    };
-+...
+-static void rockchip_pcie_writel_apb(struct rockchip_pcie *rockchip,
+-						u32 val, u32 reg)
++static void rockchip_pcie_writel_apb(struct rockchip_pcie *rockchip, u32 val,
++				     u32 reg)
+ {
+ 	writel_relaxed(val, rockchip->apb_base + reg);
+ }
 
 -- 
 2.44.0
