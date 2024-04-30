@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-6847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA4878B6CF9
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:39:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F3368B6CFD
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:40:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 65C94281AAB
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:39:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6022CB2213A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:40:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B74D51292FF;
-	Tue, 30 Apr 2024 08:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3E79129E7A;
+	Tue, 30 Apr 2024 08:39:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ei6Cc0i5"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="G0pcULHd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F61128376;
-	Tue, 30 Apr 2024 08:39:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72B31292D2;
+	Tue, 30 Apr 2024 08:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466357; cv=none; b=i4ZIJMf1MTJbPzeOS0RBnr/iOhpmbaOax0xzUK7LNpQNFSPQfhFB21c9ULg/9NO+f/V/KPspfrmw/NUbBWqaZH2Hf8UDKHWiKNmVmMg72F9NekhtR3ofOKdDh0yp1fBYuwi/AkyetjaBnDc5PR9RE2ABn573Rs2nXIA2Rz3AGlc=
+	t=1714466358; cv=none; b=FJBdOEmMznjozunfjuih9Z+NgF3D/gKsrG9W/hlqXawiyAK7rEv0ms2VcrPUSgYC7UttFzEfHbYcsUmtnq7ctxqygQGjWKtCCErCTPkZYbtIetPFnX2mk29s/L3QjDpbMmcu2TSlSYjS2Ch2kE5XVLHFtHohRIUwbmMJE7WZvoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466357; c=relaxed/simple;
-	bh=QvIZPcFIxECl5ypxatKmykPf8ABcwLk+5NAwN21I9+4=;
+	s=arc-20240116; t=1714466358; c=relaxed/simple;
+	bh=9JD6NWoGfDEIQIduEDC370roBJXlkhonyzBg+qc2pFg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cSeWZfS4gnZsMfgMa+rQoBkvubbPbXWOi6L3m3zV0j5X8f4Z34o+k6+mqS+GsES/iC3Z4bCRkDlaOhFZVY/FblhzS1VdDhAb1GoeMENVkmwf56NHCd6eG8pPxfTXbkE+ewzCtJ+Q2eCDSlY9Qi1kKLuQ2dcFveOzJgAbRaaI5DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ei6Cc0i5; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version:Content-Type; b=l/yo+jd2Wm9aiwf7voo0OTFOd29VOhVFo8F6mVqvDnRNJZ8q7mdUzKJLEjIFn0EdJCEfvBq9CaDQfnuz3Gpd/EVNHBLynl9AZi0PfahENQ8FI+qIHKxvwjbJjsw4Ub5yKzRZvw8s5zDmNNBAUB5WlXD3AAW7n0yaGfG9RuZ3N2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=G0pcULHd; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id E117B20010;
-	Tue, 30 Apr 2024 08:39:11 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 8BF0520009;
+	Tue, 30 Apr 2024 08:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714466353;
+	t=1714466355;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qxAq7qxzKoem8aXbH9fXtuWzQPqQzhAER6fvu7zb1R4=;
-	b=ei6Cc0i5Tyy6hry1zGIuvQ738sLwbRXunJcfF5AXysqct4QsgJI1HqHFs5KG5LW6qrGPX4
-	NrKBs8HIy8IYahz7V0CtSsHA14Fsb3pCZjnRfliX9knEypLMmO6mAcI6nYK2djDCI88vqP
-	edWu0zy+Y9dUbMZNcm3Cg+ZssEjU6FTHBBBEeIS4eqFixUCraHl3mFFigtomyo17bOXHWp
-	hmtGGLrlWfo+aJaB/ixdz9fq/btWAre7sYQMti3JLyJO4W5WrVSneohrBnhYJ4p+CTJJ8w
-	sRsxu8MQKxmpVLAI2VxKXfWCdKS/jwRyokyBEQ6bEU3SiJ+8NEI4yYjECkl5+g==
+	bh=yQCmnd7DbFj5IxQKgje4KI56L2MhsXyiKeIjOIac594=;
+	b=G0pcULHd1GS1Kd5ctB8CoCy+juU+WQe4NOXWHKIOPlA2HcBeyndoLZIcNdhk8IoE+wmxrZ
+	K5JEQNoVQ79/u4K3yo5AC4dhHiAFBXGI8XE7CuuDRbreLi0cRvvzKw139Wlop5I9ZHQoai
+	IjzEl8+uLGxlICtjb7W/hE805uKRG06Yk1eAM5KlzyC2YPCQG+l9jlzJZSluNa1cnct8V9
+	dGC0g+TmB1NyK10tEF2z7rocBsP1li2NHUmygMEw2gFs4C6YDiQQowZjOnJ6pkHSHZJ6FU
+	9JIzdYkyNFMMzz/uVxv9lHEYiFqLbfaBYUCr3MkuW7OTUHmPOH4Uz8q8QrIbKg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -79,9 +79,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>
-Subject: [PATCH 03/17] reset: mchp: sparx5: Release syscon when not use anymore
-Date: Tue, 30 Apr 2024 10:37:12 +0200
-Message-ID: <20240430083730.134918-4-herve.codina@bootlin.com>
+Subject: [PATCH 04/17] reset: core: add get_device()/put_device on rcdev
+Date: Tue, 30 Apr 2024 10:37:13 +0200
+Message-ID: <20240430083730.134918-5-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240430083730.134918-1-herve.codina@bootlin.com>
 References: <20240430083730.134918-1-herve.codina@bootlin.com>
@@ -97,44 +97,40 @@ X-GND-Sasl: herve.codina@bootlin.com
 
 From: Clément Léger <clement.leger@bootlin.com>
 
-The sparx5 reset controller does not release syscon when it is not used
-anymore.
-
-This reset controller is used by the LAN966x PCI device driver.
-It can be removed from the system at runtime and needs to release its
-consumed syscon on removal.
-
-Use the newly introduced devm_syscon_regmap_lookup_by_phandle() in order
-to get the syscon and automatically release it on removal.
+Since the rcdev structure is allocated by the reset controller drivers
+themselves, they need to exists as long as there is a consumer. A call to
+module_get() is already existing but that does not work when using
+device-tree overlays. In order to guarantee that the underlying reset
+controller device does not vanish while using it, add a get_device() call
+when retrieving a reset control from a reset controller device and a
+put_device() when releasing that control.
 
 Signed-off-by: Clément Léger <clement.leger@bootlin.com>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/reset/reset-microchip-sparx5.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/reset/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
-index 69915c7b4941..c4fe65291a43 100644
---- a/drivers/reset/reset-microchip-sparx5.c
-+++ b/drivers/reset/reset-microchip-sparx5.c
-@@ -65,15 +65,11 @@ static const struct reset_control_ops sparx5_reset_ops = {
- static int mchp_sparx5_map_syscon(struct platform_device *pdev, char *name,
- 				  struct regmap **target)
- {
--	struct device_node *syscon_np;
-+	struct device *dev = &pdev->dev;
- 	struct regmap *regmap;
- 	int err;
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index dba74e857be6..999c3c41cf21 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -812,6 +812,7 @@ __reset_control_get_internal(struct reset_controller_dev *rcdev,
+ 	kref_init(&rstc->refcnt);
+ 	rstc->acquired = acquired;
+ 	rstc->shared = shared;
++	get_device(rcdev->dev);
  
--	syscon_np = of_parse_phandle(pdev->dev.of_node, name, 0);
--	if (!syscon_np)
--		return -ENODEV;
--	regmap = syscon_node_to_regmap(syscon_np);
--	of_node_put(syscon_np);
-+	regmap = devm_syscon_regmap_lookup_by_phandle(dev, dev->of_node, name);
- 	if (IS_ERR(regmap)) {
- 		err = PTR_ERR(regmap);
- 		dev_err(&pdev->dev, "No '%s' map: %d\n", name, err);
+ 	return rstc;
+ }
+@@ -826,6 +827,7 @@ static void __reset_control_release(struct kref *kref)
+ 	module_put(rstc->rcdev->owner);
+ 
+ 	list_del(&rstc->list);
++	put_device(rstc->rcdev->dev);
+ 	kfree(rstc);
+ }
+ 
 -- 
 2.44.0
 
