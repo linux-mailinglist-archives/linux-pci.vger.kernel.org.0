@@ -1,48 +1,50 @@
-Return-Path: <linux-pci+bounces-6844-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6845-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC82E8B6CED
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:39:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A26E8B6CEF
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 10:39:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E5A49B20C25
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:39:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 180821F23CDA
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 08:39:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846BF1272D5;
-	Tue, 30 Apr 2024 08:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6D571272CA;
+	Tue, 30 Apr 2024 08:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OYa1XQLH"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="k8zW+xUF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B4E1272C6;
-	Tue, 30 Apr 2024 08:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB75B41C89;
+	Tue, 30 Apr 2024 08:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714466346; cv=none; b=W8bNKUR+E0+BZIBKnAb7f2WVypYVH/UfeLd+yQwc+ACeEFTRFbqiAg1ShBFAphbtHgDcplWu808sO69a/eatH0RU3suU8/W16R6McpbLd1EtnesCFGQoZKKzpUaj7vyGeUQiIjaMvMUN8q5DBkSsBJoern9x8G/ZxG9ZK4ZA/64=
+	t=1714466354; cv=none; b=YAb7Qn/mJayr4IbjjwqdpOIT9yXPwBk/6MFfCpetxumpxiU2TbYggL0DW+3ApGd9CtEWUxKt2dFFp81mTrqh7dm+D/yRaO1CQYXhgRN+1SXhtGlzwOdqpLIjTFJmCTTaVGUJbyKDCdxubopdpQWYZsjUOGpryFtj0GNfo5YJ6D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714466346; c=relaxed/simple;
-	bh=tGouIIMweCCg8lFI1k5a8Nmi7sj3tVWhoXa+yZ9Svjw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jj6VVhcz2cadv7ILySFj1cGMuFcYhBldXrvX5K4K10awAS8pqJ0e2yQUigxS8uS5KfxHirmoqt+AFr8AAxTu3onOgO8RBKA3azh38s6IwZgNqG1VRYT1XfTYx8nvhhz3A0a9oSHqWalKH2vQbN+FXV9c/ZLFlR3MDX/3BW7/TmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OYa1XQLH; arc=none smtp.client-ip=217.70.183.200
+	s=arc-20240116; t=1714466354; c=relaxed/simple;
+	bh=G1UAW0H9h1wFRSfJQIj8x5FIWwrzTgw72kS9F2yRFtE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nD/RAravCiZUKjarFus8ODdyzHe7ciwXJUunbwpT+kSDWt9sBevDTmd2XmHCC563NxVyM1/G2Q+UMwxyDSlPfstqRTodG3WQvchnNiSw+jzSDWoGWIMctXoBq2WdiojCPgv6SUMinKJtQcdHKC+uB9WYvaPwGekJqc7y8+ntkXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=k8zW+xUF; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 6105720013;
-	Tue, 30 Apr 2024 08:38:55 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id AF2AA20005;
+	Tue, 30 Apr 2024 08:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714466340;
+	t=1714466350;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1z1r8qP3wTyMtexbriJIq+WvlcDHX0KVVkOb8SF0acI=;
-	b=OYa1XQLHVHnDfDXtIRKkfKPMke4wZr/J4u5RQY/BSrxG8sI2nJ5TVTYix2l+xnjMM9nfKT
-	pUxdnTN/p7g90fsmFxCbPTezHmyDoXUwDdolMNTjhltSK2wkmedl8tOK9Rf96fdVNlX019
-	wDbq1dKt8FvjC2+O+Qff0nHwWUxnJ0NXrvCuYGLu1l+iNGv+LC0LVBkYXX7QQuwcApbFZ1
-	IZiMGwncytElcKLvDfwGr++lXQ6TGOHaCtnGokFAn145nzBS5/ezLhbZNnyHvfV10dJbmK
-	7GA0BLpt30XtoYDlxmcXZDYIIpcuHr7tLjrGwZlFlkZJ8S3vDlEuTA2DBBXaHA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TKlAO4KsYqpHiNkyQhj+YDisqgQI3Psuq2ZrhzBKVbE=;
+	b=k8zW+xUF9Ig2N46QYNzzXAZWkk9CwpQGFVoL1lcxo7Ne2Tyt12nrZm4PxjG/LH00SmaMB/
+	NPpyw/hwPz60R0x13V+NbvA3m87UJYXm3oYZDpiWInwc1xVubDenz3jCXxFx5vKahNLwDd
+	dulid62Pnia2byihDIgvvoUmmt6xXx8CoufsOP9pQHO/IJtJJYhBn11qWdqYHqB/N5NDVK
+	ceBa8baD+QBXcS+ZOXnxIvY3iTSsk1egyBCEprHswV6oJsEBUG9+BKSkf8YnAvhM3wFdgG
+	3pvdYrxeGS5er10NdS6UNmQMHiMwPMhmkPNa6qdbGjxX4HivsFkGP6yKze3U2A==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -75,11 +77,14 @@ Cc: linux-kernel@vger.kernel.org,
 	Allan Nielsen <allan.nielsen@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 00/17] Add support for the LAN966x PCI device using a DT overlay
-Date: Tue, 30 Apr 2024 10:37:09 +0200
-Message-ID: <20240430083730.134918-1-herve.codina@bootlin.com>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>
+Subject: [PATCH 01/17] mfd: syscon: Add reference counting and device managed support
+Date: Tue, 30 Apr 2024 10:37:10 +0200
+Message-ID: <20240430083730.134918-2-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240430083730.134918-1-herve.codina@bootlin.com>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,147 +95,291 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-Hi,
+From: Clément Léger <clement.leger@bootlin.com>
 
-This series adds support for the LAN966x chip when used as a PCI
-device.
+Syscon releasing is not supported.
+Without release function, unbinding a driver that uses syscon whether
+explicitly or due to a module removal left the used syscon in a in-use
+state.
 
-For reference, the LAN996x chip is a System-on-chip that integrates an
-Ethernet switch and a number of other traditional hardware blocks such
-as a GPIO controller, I2C controllers, SPI controllers, etc. The
-LAN996x can be used in two different modes:
+For instance a syscon_node_to_regmap() call from a consumer retrieve a
+syscon regmap instance. Internally, syscon_node_to_regmap() can create
+syscon instance and add it to the existing syscon list. No API is
+available to release this syscon instance, remove it from the list and
+free it when it is not used anymore.
 
-- With Linux running on its Linux built-in ARM cores.
-  This mode is already supported by the upstream Linux kernel, with the
-  LAN996x described as a standard ARM Device Tree in
-  arch/arm/boot/dts/microchip/lan966x.dtsi. Thanks to this support,
-  all hardware blocks in the LAN996x already have drivers in the
-  upstream Linux kernel.
+Introduce reference counting in syscon in order to keep track of syscon
+usage using syscon_{get,put}() and add a device managed version of
+syscon_regmap_lookup_by_phandle(), to automatically release the syscon
+instance on the consumer removal.
 
-- As a PCI device, thanks to its built-in PCI endpoint controller.
-  In this case, the LAN996x ARM cores are not used, but all peripherals
-  of the LAN996x can be accessed by the PCI host using memory-mapped
-  I/O through the PCI BARs.
+Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+---
+ drivers/mfd/syscon.c       | 145 ++++++++++++++++++++++++++++++++++---
+ include/linux/mfd/syscon.h |  18 +++++
+ 2 files changed, 154 insertions(+), 9 deletions(-)
 
-This series aims at supporting this second use-case. As all peripherals
-of the LAN996x already have drivers in the Linux kernel, our goal is to
-re-use them as-is to support this second use-case.
-
-Therefore, this patch series introduces a PCI driver that binds on the
-LAN996x PCI VID/PID, and when probed, instantiates all devices that are
-accessible through the PCI BAR. As the list and characteristics of such
-devices are non-discoverable, this PCI driver loads a Device Tree
-overlay that allows to teach the kernel about which devices are
-available, and allows to probe the relevant drivers in kernel, re-using
-all existing drivers with no change.
-
-This patch series for now adds a Device Tree overlay that describes an
-initial subset of the devices available over PCI in the LAN996x, and
-follow-up patch series will add support for more once this initial
-support has landed.
-
-In order to add this PCI driver, a number of preparation changes are
-needed:
-
- - Patches 1 to 5 allow the reset driver used for the LAN996x to be
-   built as a module. Indeed, in the case where Linux runs on the ARM
-   cores, it is common to have the reset driver built-in. However, when
-   the LAN996x is used as a PCI device, it makes sense that all its
-   drivers can be loaded as modules.
-
- - Patches 6 and 7 improve the MDIO controller driver to properly
-   handle its reset signal.
-
- - Patch 8 fixes an issue in the LAN996x switch driver.
-
- - Patches 9 to 13 introduce the internal interrupt controller used in
-   the LAN996x. It is one of the few peripherals in the LAN996x that
-   are only relevant when the LAN996x is used as a PCI device, which is
-   why this interrupt controller did not have a driver so far.
-
- - Patches 14 and 15 make some small additions to the OF core and
-   PCI/OF core to consider the PCI device as an interrupt controller.
-   This topic was previously mentioned in [1] to avoid the need of
-   phandle interrupt parents which are not available at some points.
-
- - Patches 16 and 17 introduce the LAN996x PCI driver itself, together
-   with its DT bindings.
-
-We believe all items from the above list can be merged separately, with
-no build dependencies. We expect:
-
- - Patches 1 to 5 to be taken by reset maintainers
-
- - Patches 6, 7 and 8 to be taken by network driver maintainers
-
- - Patches 9 to 13 to be taken by irqchip maintainers
-
- - Patch 14/15 to be taken by DT/PCI maintainers
-
- - Patch 16/17 by the MFD maintainers
-
-Additionally, we also believe all preparation items in this patch series
-can be taken even before there's a final agreement on the last part of
-the series (the MFD driver itself).
-
-[1] https://lore.kernel.org/all/CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com/
-
-Best regards,
-Hervé
-
-Clément Léger (5):
-  mfd: syscon: Add reference counting and device managed support
-  reset: mchp: sparx5: Remove dependencies and allow building as a
-    module
-  reset: mchp: sparx5: Release syscon when not use anymore
-  reset: core: add get_device()/put_device on rcdev
-  reset: mchp: sparx5: set the dev member of the reset controller
-
-Herve Codina (12):
-  dt-bindings: net: mscc-miim: Add resets property
-  net: mdio: mscc-miim: Handle the switch reset
-  net: lan966x: remove debugfs directory in probe() error path
-  dt-bindings: interrupt-controller: Add support for Microchip LAN966x
-    OIC
-  irqdomain: Add missing parameter descriptions in docs
-  irqdomain: Introduce irq_domain_alloc() and irq_domain_publish()
-  irqchip: Add support for LAN966x OIC
-  MAINTAINERS: Add the Microchip LAN966x OIC driver entry
-  of: dynamic: Introduce of_changeset_add_prop_bool()
-  pci: of_property: Add the interrupt-controller property in PCI device
-    nodes
-  mfd: Add support for LAN966x PCI device
-  MAINTAINERS: Add the Microchip LAN966x PCI driver entry
-
- .../microchip,lan966x-oic.yaml                |  55 ++++
- .../devicetree/bindings/net/mscc,miim.yaml    |   8 +
- MAINTAINERS                                   |  12 +
- drivers/irqchip/Kconfig                       |  12 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-lan966x-oic.c             | 301 ++++++++++++++++++
- drivers/mfd/Kconfig                           |  24 ++
- drivers/mfd/Makefile                          |   4 +
- drivers/mfd/lan966x_pci.c                     | 229 +++++++++++++
- drivers/mfd/lan966x_pci.dtso                  | 167 ++++++++++
- drivers/mfd/syscon.c                          | 145 ++++++++-
- .../ethernet/microchip/lan966x/lan966x_main.c |   6 +-
- drivers/net/mdio/mdio-mscc-miim.c             |   8 +
- drivers/of/dynamic.c                          |  25 ++
- drivers/pci/of_property.c                     |  24 ++
- drivers/pci/quirks.c                          |   1 +
- drivers/reset/Kconfig                         |   3 +-
- drivers/reset/core.c                          |   2 +
- drivers/reset/reset-microchip-sparx5.c        |  11 +-
- include/linux/irqdomain.h                     |  16 +
- include/linux/mfd/syscon.h                    |  18 ++
- include/linux/of.h                            |   3 +
- kernel/irq/irqdomain.c                        | 118 +++++--
- 23 files changed, 1149 insertions(+), 44 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
- create mode 100644 drivers/irqchip/irq-lan966x-oic.c
- create mode 100644 drivers/mfd/lan966x_pci.c
- create mode 100644 drivers/mfd/lan966x_pci.dtso
-
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index 7d0e91164cba..86898831b842 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -34,6 +34,7 @@ struct syscon {
+ 	struct regmap *regmap;
+ 	struct reset_control *reset;
+ 	struct list_head list;
++	struct kref refcount;
+ };
+ 
+ static const struct regmap_config syscon_regmap_config = {
+@@ -147,6 +148,8 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
+ 
+ 	syscon->regmap = regmap;
+ 	syscon->np = np;
++	of_node_get(syscon->np);
++	kref_init(&syscon->refcount);
+ 
+ 	spin_lock(&syscon_list_slock);
+ 	list_add_tail(&syscon->list, &syscon_list);
+@@ -168,7 +171,30 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
+ 	return ERR_PTR(ret);
+ }
+ 
+-static struct regmap *device_node_get_regmap(struct device_node *np,
++static void syscon_free(struct kref *kref)
++{
++	struct syscon *syscon = container_of(kref, struct syscon, refcount);
++
++	spin_lock(&syscon_list_slock);
++	list_del(&syscon->list);
++	spin_unlock(&syscon_list_slock);
++
++	regmap_exit(syscon->regmap);
++	of_node_put(syscon->np);
++	kfree(syscon);
++}
++
++static void syscon_get(struct syscon *syscon)
++{
++	kref_get(&syscon->refcount);
++}
++
++static void syscon_put(struct syscon *syscon)
++{
++	kref_put(&syscon->refcount, syscon_free);
++}
++
++static struct syscon *device_node_get_syscon(struct device_node *np,
+ 					     bool check_res)
+ {
+ 	struct syscon *entry, *syscon = NULL;
+@@ -183,9 +209,23 @@ static struct regmap *device_node_get_regmap(struct device_node *np,
+ 
+ 	spin_unlock(&syscon_list_slock);
+ 
+-	if (!syscon)
++	if (!syscon) {
+ 		syscon = of_syscon_register(np, check_res);
++		if (IS_ERR(syscon))
++			return ERR_CAST(syscon);
++	} else {
++		syscon_get(syscon);
++	}
++
++	return syscon;
++}
+ 
++static struct regmap *device_node_get_regmap(struct device_node *np,
++					     bool check_res)
++{
++	struct syscon *syscon;
++
++	syscon = device_node_get_syscon(np, check_res);
+ 	if (IS_ERR(syscon))
+ 		return ERR_CAST(syscon);
+ 
+@@ -198,12 +238,23 @@ struct regmap *device_node_to_regmap(struct device_node *np)
+ }
+ EXPORT_SYMBOL_GPL(device_node_to_regmap);
+ 
+-struct regmap *syscon_node_to_regmap(struct device_node *np)
++static struct syscon *syscon_node_to_syscon(struct device_node *np)
+ {
+ 	if (!of_device_is_compatible(np, "syscon"))
+ 		return ERR_PTR(-EINVAL);
+ 
+-	return device_node_get_regmap(np, true);
++	return device_node_get_syscon(np, true);
++}
++
++struct regmap *syscon_node_to_regmap(struct device_node *np)
++{
++	struct syscon *syscon;
++
++	syscon = syscon_node_to_syscon(np);
++	if (IS_ERR(syscon))
++		return ERR_CAST(syscon);
++
++	return syscon->regmap;
+ }
+ EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
+ 
+@@ -223,11 +274,11 @@ struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
+ }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_compatible);
+ 
+-struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+-					const char *property)
++static struct syscon *syscon_lookup_by_phandle(struct device_node *np,
++					       const char *property)
+ {
+ 	struct device_node *syscon_np;
+-	struct regmap *regmap;
++	struct syscon *syscon;
+ 
+ 	if (property)
+ 		syscon_np = of_parse_phandle(np, property, 0);
+@@ -237,12 +288,24 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ 	if (!syscon_np)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	regmap = syscon_node_to_regmap(syscon_np);
++	syscon = syscon_node_to_syscon(syscon_np);
+ 
+ 	if (property)
+ 		of_node_put(syscon_np);
+ 
+-	return regmap;
++	return syscon;
++}
++
++struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
++					       const char *property)
++{
++	struct syscon *syscon;
++
++	syscon = syscon_lookup_by_phandle(np, property);
++	if (IS_ERR(syscon))
++		return ERR_CAST(syscon);
++
++	return syscon->regmap;
+ }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
+ 
+@@ -293,6 +356,70 @@ struct regmap *syscon_regmap_lookup_by_phandle_optional(struct device_node *np,
+ }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_optional);
+ 
++static struct syscon *syscon_from_regmap(struct regmap *regmap)
++{
++	struct syscon *entry, *syscon = NULL;
++
++	spin_lock(&syscon_list_slock);
++
++	list_for_each_entry(entry, &syscon_list, list)
++		if (entry->regmap == regmap) {
++			syscon = entry;
++			break;
++		}
++
++	spin_unlock(&syscon_list_slock);
++
++	return syscon;
++}
++
++void syscon_put_regmap(struct regmap *regmap)
++{
++	struct syscon *syscon;
++
++	syscon = syscon_from_regmap(regmap);
++	if (!syscon)
++		return;
++
++	syscon_put(syscon);
++}
++EXPORT_SYMBOL_GPL(syscon_put_regmap);
++
++static void devm_syscon_release(struct device *dev, void *res)
++{
++	syscon_put(*(struct syscon **)res);
++}
++
++static struct regmap *__devm_syscon_get(struct device *dev,
++					struct syscon *syscon)
++{
++	struct syscon **ptr;
++
++	if (IS_ERR(syscon))
++		return ERR_CAST(syscon);
++
++	ptr = devres_alloc(devm_syscon_release, sizeof(struct syscon *), GFP_KERNEL);
++	if (!ptr) {
++		syscon_put(syscon);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	*ptr = syscon;
++	devres_add(dev, ptr);
++
++	return syscon->regmap;
++}
++
++struct regmap *devm_syscon_regmap_lookup_by_phandle(struct device *dev,
++						    struct device_node *np,
++						    const char *property)
++{
++	struct syscon *syscon = syscon_lookup_by_phandle(np, property);
++
++	return __devm_syscon_get(dev, syscon);
++}
++EXPORT_SYMBOL_GPL(devm_syscon_regmap_lookup_by_phandle);
++
+ static int syscon_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index c315903f6dab..164b9bcb49c3 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -15,6 +15,7 @@
+ #include <linux/errno.h>
+ 
+ struct device_node;
++struct device;
+ 
+ #ifdef CONFIG_MFD_SYSCON
+ struct regmap *device_node_to_regmap(struct device_node *np);
+@@ -28,6 +29,11 @@ struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
+ 						    unsigned int *out_args);
+ struct regmap *syscon_regmap_lookup_by_phandle_optional(struct device_node *np,
+ 							const char *property);
++void syscon_put_regmap(struct regmap *regmap);
++
++struct regmap *devm_syscon_regmap_lookup_by_phandle(struct device *dev,
++						    struct device_node *np,
++						    const char *property);
+ #else
+ static inline struct regmap *device_node_to_regmap(struct device_node *np)
+ {
+@@ -67,6 +73,18 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle_optional(
+ 	return NULL;
+ }
+ 
++static intline void syscon_put_regmap(struct regmap *regmap)
++{
++}
++
++static inline
++struct regmap *devm_syscon_regmap_lookup_by_phandle(struct device *dev,
++						    struct device_node *np,
++						    const char *property)
++{
++	return NULL;
++}
++
+ #endif
+ 
+ #endif /* __LINUX_MFD_SYSCON_H__ */
 -- 
 2.44.0
 
