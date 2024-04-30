@@ -1,194 +1,152 @@
-Return-Path: <linux-pci+bounces-6913-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6914-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CF798B8238
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 23:59:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86A638B8295
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 00:08:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB28B1C227EB
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 21:59:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9F401C2292C
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Apr 2024 22:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44941BED94;
-	Tue, 30 Apr 2024 21:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2691BED9F;
+	Tue, 30 Apr 2024 22:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmnQ+JW9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4a23aUH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CE71BED90
-	for <linux-pci@vger.kernel.org>; Tue, 30 Apr 2024 21:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC271BED90;
+	Tue, 30 Apr 2024 22:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714514392; cv=none; b=RPVSwumvbTXui/oFUPQ559dmAqxo8Cox8otE+MD01X+n23f0vShMSLK8BH2f+c5V88pF6dNbltyy1OqaEqZZonqBhio7OAYkxtEEG+G6nmaNicVAArZw9VmRlheVZwIEV0RhFSaC4z56cmY/Q7qyjYeYGtsoGlAvM0WTOMSgj4w=
+	t=1714514886; cv=none; b=g0fHHYiUIOgdWKyaCT1qX7gP3Vk4ahk2nmx4CWWTHZV8c317GMDtxDAoT1cnXTh80HZZhcCgwiCGIBpslIc7clII85Ddq0nuuxSYIunLz4xWkQc+/5jHjqU+L//neTP3S4jtXgEoGGPXnenbTSzVb8soDEclx45h+bLmAkzDZGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714514392; c=relaxed/simple;
-	bh=WjMKI4UZslQKccmIJplzRTJDSbleSPr2wCt6aMSDOzM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pakVePhO+5IjME8j+AFdC0dRbNci4RbZdP6YUrkWwPYEKHTpOAFoLqt/cYXq/hDLstvOIU/u/g7tJDVfGJobm+ja7x+LGVV8Lfp8auyJISUfHvdR5pDCv8SY7Y0uwJTwC4OWBpR4Nd6xtgk+kYopmwNssX5FY5VqsFNweaRj5OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AmnQ+JW9; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-de610800da0so1733707276.2
-        for <linux-pci@vger.kernel.org>; Tue, 30 Apr 2024 14:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714514389; x=1715119189; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aitWmRcAVpn7HzPwQhTVKeFU7re+mCUC33ppmlezlfs=;
-        b=AmnQ+JW9Y+6at3/PERebiBD14XIGrSas2RWW/gb6Q7I31NlM7RM6z7evFSZR03Tj5g
-         hbVKbbIk9OR8N4fHbxPpP4zdqUaGGViAJ12N1tnScolB21twraj7bdzRZY3CGGwIFWLs
-         ZW4ferFC5t656guOxx3ZwZoHhJf828/677rDtIhwtqrTXivlGfxPO1oQ8lxtNedgRAO3
-         1/+p4pBm7+rzMX+kXP3rgnRDROxzNq8MJDwTRyLtmiJHSCRgT8Qp9/yfOh3MtrxubET1
-         Ck/C+IGh2ZfXsiAv8BuvVoNSiuqw9h2ZSlYMizymqcsTIbgT5/741R1rYoZwnIP9v+/u
-         nxng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714514389; x=1715119189;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aitWmRcAVpn7HzPwQhTVKeFU7re+mCUC33ppmlezlfs=;
-        b=GPiMpu7S4ArrCynN5mI5liOwkfGcs7sSkG3mAmhZzb5Y2spcWnxOO3ZukztY3PCKsd
-         L+K/eoc9NjhO9tPsurwuzpneme425nqIF7HK2Pch7ZiYUQWbZgdH5ur2SbAuLOqGDuYU
-         A/YWqRSwRFw6ApBGsXHHqan3XL+XMx6RPiNIQ93bRiASNbGmCX5Q6I2Pjj6hxqbWt6ZQ
-         gGcp5x87U2/zuk70evg/iyxRHk7p9nE4oi+IgGr1WmfK6G6CmfQP4iJWeEE6pSPAlsHd
-         OaaiWUpa58popeyyLFFcj2L1dG/OBmW0Iwr7UK8383HTaTzyobSbPAKkc4Ia4/XAOSqz
-         DtJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNqzlKEjO9gZQ3i7UT11uualwC8QOSV3WOT3LiXgNkpYY7VGYLD9aqSTljLjpIvijupFMQkQWnJwSPJUiG1uySZSi/RDqUoBMq
-X-Gm-Message-State: AOJu0Yw1y/BBpW9OrB2cv4240OtZzUooW5ur6fg6bMo5msjlsfPP9tgM
-	FkeLadFVWac5kq/jaGQxpI7ZV/LExBgja0dqz3XeUXIYrA+gXaDguMmZn4Ye7YMgrTHRvV1vlHG
-	BKJLIXrVx7vy3Eg5XjP+5iAz0RPCTRLNZ0u9sgQ==
-X-Google-Smtp-Source: AGHT+IE1KB8yrzrfhVxOHpSzlO3DAENKkQ1zAhecye+ph9WJKSb9t/G7xbAvzC7x1FXX+/8cofgIR2G0w2AQZg8an/o=
-X-Received: by 2002:a25:907:0:b0:dcc:9e88:b15 with SMTP id 7-20020a250907000000b00dcc9e880b15mr878986ybj.41.1714514389105;
- Tue, 30 Apr 2024 14:59:49 -0700 (PDT)
+	s=arc-20240116; t=1714514886; c=relaxed/simple;
+	bh=2EjHvnib8nIL73tYT8O0yQJd84dh54YMSzAvf3H8Fns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yhd3QpwDv9K/yXeA8/WqOI67OdOhLLvruP0iCmdqSzwn3FStzQnVq9dW+RovfYjvUgHD8TZI7QezrRMazT5tpdKinj7m28o+h/JJT/W8O+4uIGfKst4bg1PReWzoqJJ1GF4J5QUqYrpIF9iczOb7wSVXgBpz26FBUqpmQrZitO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4a23aUH; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714514885; x=1746050885;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2EjHvnib8nIL73tYT8O0yQJd84dh54YMSzAvf3H8Fns=;
+  b=C4a23aUH5iNrqdD9DQRovFy9lWEcxwxXZZK6zv2QlKzNp9ijTn/8l8yj
+   2AwJ5RgSRTv+MJsStg4uZI5MxVcTLciDGw9tfs546oaEA8XtW7ejIo2iT
+   P5breemTvfD8rOQdCbYmuEUTZhiU5KcOzBFosMqF2aVfOPx+FNHw/O8Fx
+   RyX3eKOjp/znYVBqoES1GatdHT1CCGqROd3uA6YTLboNhigq3331JGmgk
+   dKqvfbTg832cdPCotHXn9AKifEkkfkEqG7H+a4NMGFq8xcJoifbC0YCpp
+   YI8gYILQWE9q2kOVZz5DtlGfETv1OgrbeicPXvtLo9RyIvKrsNM5B/P3N
+   Q==;
+X-CSE-ConnectionGUID: s6F63s9VS6SwWByOkmRnMA==
+X-CSE-MsgGUID: rPRkletIQHmUDc2v5RT82A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="27766915"
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="27766915"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 15:08:04 -0700
+X-CSE-ConnectionGUID: bF8HwEflShu++COMqEawgA==
+X-CSE-MsgGUID: OuoGHfjjTI6TiDd1H+p1vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="26692707"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 30 Apr 2024 15:07:58 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s1vdj-0008eG-1o;
+	Tue, 30 Apr 2024 22:07:55 +0000
+Date: Wed, 1 May 2024 06:07:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Herve Codina <herve.codina@bootlin.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH 01/17] mfd: syscon: Add reference counting and device
+ managed support
+Message-ID: <202405010513.GHoo4Vwg-lkp@intel.com>
+References: <20240430083730.134918-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415182052.374494-1-mr.nuke.me@gmail.com> <20240415182052.374494-7-mr.nuke.me@gmail.com>
- <CAA8EJpqY1aDZMaeqBULEOD26UeGYbLd8RsA16jZw7zXJ7_oGPQ@mail.gmail.com>
- <6726fa2b-f5fe-10fb-6aab-f76d61f0b3cd@gmail.com> <4a7b1e1d-ac68-4857-8925-f90c9e123fd1@gmail.com>
- <CAA8EJppGW=qyk2P6Z_S=dp0njsCjqZaXjw8qU4MY1HOZR-N=4A@mail.gmail.com>
- <Zi88Hdx6UgBo/gti@hu-varada-blr.qualcomm.com> <CAA8EJpq+Bbws8yH5Xq7rHyA+-=DaCcfEcgUa5RUt2+LWQW0kKg@mail.gmail.com>
- <ZjCQM24T2XIJ6GAR@hu-varada-blr.qualcomm.com> <9d9c569b-2e9c-4fd3-9a1a-50f198bd0884@gmail.com>
-In-Reply-To: <9d9c569b-2e9c-4fd3-9a1a-50f198bd0884@gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 1 May 2024 00:59:37 +0300
-Message-ID: <CAA8EJpocetzWV-xoVzeD7HxkE9s4+iGq7Q-sZz8Ue89YuptdYw@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] phy: qcom-qmp-pcie: add support for ipq9574 gen3x2 PHY
-To: mr.nuke.me@gmail.com
-Cc: Varadarajan Narayanan <quic_varada@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430083730.134918-2-herve.codina@bootlin.com>
 
-On Wed, 1 May 2024 at 00:51, <mr.nuke.me@gmail.com> wrote:
->
-> On 4/30/24 1:31 AM, Varadarajan Narayanan wrote:
-> > On Mon, Apr 29, 2024 at 01:55:32PM +0300, Dmitry Baryshkov wrote:
-> >> On Mon, 29 Apr 2024 at 09:20, Varadarajan Narayanan
-> >> <quic_varada@quicinc.com> wrote:
-> >>>
-> >>> On Wed, Apr 17, 2024 at 12:50:49AM +0300, Dmitry Baryshkov wrote:
-> >>>> On Wed, 17 Apr 2024 at 00:25, Alex G. <mr.nuke.me@gmail.com> wrote:
-> >>>>>
-> >>>>> Hi Dmitry,
-> >>>>>
-> >>>>> On 4/15/24 16:25, mr.nuke.me@gmail.com wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>> On 4/15/24 15:10, Dmitry Baryshkov wrote:
-> >>>>>>> On Mon, 15 Apr 2024 at 21:23, Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> >>>>>>> wrote:
-> >>>>>>>>
-> >>>>>>>> Add support for the gen3x2 PCIe PHY on IPQ9574, ported form downstream
-> >>>>>>>> 5.4 kernel. Only the serdes and pcs_misc tables are new, the others
-> >>>>>>>> being reused from IPQ8074 and IPQ6018 PHYs.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-> >>>>>>>> ---
-> >>>>>>>>    drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 +++++++++++++++++-
-> >>>>>>>>    .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
-> >>>>>>>>    2 files changed, 149 insertions(+), 1 deletion(-)
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>> [skipped]
-> >>>>>>>
-> >>>>>>>> @@ -2448,7 +2542,7 @@ static inline void qphy_clrbits(void __iomem
-> >>>>>>>> *base, u32 offset, u32 val)
-> >>>>>>>>
-> >>>>>>>>    /* list of clocks required by phy */
-> >>>>>>>>    static const char * const qmp_pciephy_clk_l[] = {
-> >>>>>>>> -       "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux",
-> >>>>>>>> +       "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux",
-> >>>>>>>> "anoc", "snoc"
-> >>>>>>>
-> >>>>>>> Are the NoC clocks really necessary to drive the PHY? I think they are
-> >>>>>>> usually connected to the controllers, not the PHYs.
-> >>>>>>
-> >>>>>> The system will hang if these clocks are not enabled. They are also
-> >>>>>> attached to the PHY in the QCA 5.4 downstream kernel.
-> >>>>
-> >>>> Interesting.
-> >>>> I see that Varadarajan is converting these clocks into interconnects.
-> >>>> Maybe it's better to wait for those patches to land and use
-> >>>> interconnects instead. I think it would better suit the
-> >>>> infrastructure.
-> >>>>
-> >>>> Varadarajan, could you please comment, are these interconnects
-> >>>> connected to the PHY too or just to the PCIe controller?
-> >>>
-> >>> Sorry for the late response. Missed this e-mail.
-> >>>
-> >>> These 2 clks are related to AXI port clk on Aggnoc/SNOC, not
-> >>> directly connected to PCIE wrapper, but it should be enabled to
-> >>> generate pcie traffic.
-> >>
-> >> So, are they required for the PHY or are they required for the PCIe
-> >> controller only?
-> >
-> > These 2 clks are required for PCIe controller only.
-> > PCIE controller need these clks to send/receive axi pkts.
->
-> Very interesting information, thank you!
->
-> Dmitry, In light of this information do you want me to move these clocks
-> out of the PHY and into the PCIe controller?
+Hi Herve,
 
-That's what I was thinking about.
+kernel test robot noticed the following build errors:
 
->
-> Alex
->
-> > Thanks
-> > Varada
-> >
-> >>>>> They are named "anoc_lane", and "snoc_lane" in the downstream kernel.
-> >>>>> Would you like me to use these names instead?
-> >>>>
-> >>>> I'm fine either way.
-> >>>>
-> >>
-> >>
-> >>
-> >> --
-> >> With best wishes
-> >> Dmitry
+[auto build test ERROR on tip/irq/core]
+[also build test ERROR on lee-mfd/for-mfd-next pza/reset/next linus/master v6.9-rc6 next-20240430]
+[cannot apply to lee-mfd/for-mfd-fixes pza/imx-drm/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Herve-Codina/mfd-syscon-Add-reference-counting-and-device-managed-support/20240430-164912
+base:   tip/irq/core
+patch link:    https://lore.kernel.org/r/20240430083730.134918-2-herve.codina%40bootlin.com
+patch subject: [PATCH 01/17] mfd: syscon: Add reference counting and device managed support
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20240501/202405010513.GHoo4Vwg-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240501/202405010513.GHoo4Vwg-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405010513.GHoo4Vwg-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/net/can/c_can/c_can_platform.c:36:
+>> include/linux/mfd/syscon.h:76:15: error: expected ';' before 'void'
+      76 | static intline void syscon_put_regmap(struct regmap *regmap)
+         |               ^~~~~
+         |               ;
+   include/linux/mfd/syscon.h:76:21: warning: no previous prototype for 'syscon_put_regmap' [-Wmissing-prototypes]
+      76 | static intline void syscon_put_regmap(struct regmap *regmap)
+         |                     ^~~~~~~~~~~~~~~~~
 
 
+vim +76 include/linux/mfd/syscon.h
+
+    75	
+  > 76	static intline void syscon_put_regmap(struct regmap *regmap)
+    77	{
+    78	}
+    79	
 
 -- 
-With best wishes
-Dmitry
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
