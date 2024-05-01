@@ -1,160 +1,148 @@
-Return-Path: <linux-pci+bounces-6970-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF0DA8B8F1F
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 19:38:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 475598B8F3E
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 19:54:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E765B224A2
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 17:38:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02AFC283897
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 17:54:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5906B12FF6B;
-	Wed,  1 May 2024 17:38:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75003146D53;
+	Wed,  1 May 2024 17:54:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FG482jE1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EG2moWyU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262C5D2FE;
-	Wed,  1 May 2024 17:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4953E748D;
+	Wed,  1 May 2024 17:54:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714585109; cv=none; b=hBk2z4MA3JWM4s9SPx9gD1wB+k3oOIF838svJx7zBs7ci2c0h0vzOkCe+zll1l/GZ2tndh3qjRk2MNMEfhACMp2I7kiw5zAiXZNBufq5lxZxxmqCejxKSR9T3NZxRRYYXp7vpkwjgHdIYEu0JGYW5+nsyzT6akqMdv4A3KKBOtA=
+	t=1714586093; cv=none; b=nd5ULpp5WoeEMgM37+xe/V7FAOcZBRA7ARlDCuEyT14ffJZHXToQmmWk8KIbne3662MIBc6XUsHwj+dYWLBYIMuBk15w+500GrIuYe6Xl6VVKz428hHdOHq80c231WG7bJ3TdTZ9kLJKs5H6FC05dOl122J1hnNCc7Co1kiY6GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714585109; c=relaxed/simple;
-	bh=3Rom1K33gLjGc5KMu7YOMHTB0qLyXpnfXozkAEwXuwQ=;
+	s=arc-20240116; t=1714586093; c=relaxed/simple;
+	bh=WFdaQqoj4o2t0Y5iBuDBr4d0ocjoZj27VJCeYzrFM3o=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PKd7GUJiMxZwD9EtP178mmOwafAs8acex0vuvItmIA2xOvSSHmWCXODQqCbzHtp5IdRS5hGP++HP5v2a2s/ohYHksgV9LNPzJFNql/MZhmGG/XLU66BfuIauZ+06/gfc+rRRl6eJrcL1mBD8DVOYJCnRq3l//RRNp02yaW6MSN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FG482jE1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA32C072AA;
-	Wed,  1 May 2024 17:38:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=nFIpg0jigSGscdoxZpS1B3xQBvn+rODA9x/h/KHMHJsBV/uw+OhD8sOMbajEIPXNA1cH+Kcm3QaGGoWiVL/wOm+CtwFJZeeQQbyWdXz42PhjAMEFVpufgu4jaLUikchEK0B/JLaIA7DHhH5xTkkTMADFywmU9a5pfATY6eafTs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EG2moWyU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912BAC072AA;
+	Wed,  1 May 2024 17:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714585108;
-	bh=3Rom1K33gLjGc5KMu7YOMHTB0qLyXpnfXozkAEwXuwQ=;
+	s=k20201202; t=1714586092;
+	bh=WFdaQqoj4o2t0Y5iBuDBr4d0ocjoZj27VJCeYzrFM3o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FG482jE1b23MALPQTleYDyQE1i/V2NpJTWpzv1GQrZKsSaSchZfte6XfXHrUIstsY
-	 wWdvHyKMw9fx5FUqlBzhSH8osTQZvwTaZrGrt0Xn7ftNu8Xnk9lGJlz2dzCPMB9qoz
-	 KALX3k6b91XTBT3kA1wPdPZM1m66uA/qOBn4jLCr8YaiQvQ9BXxjfR5pprRftIrhrw
-	 /9yJKII93CaytSG1/TarbiJyKVzIxg351HGh1Dn0Eh9JPrh8emJM5tohPnWbTgYddS
-	 MVvWkLicm8OIZWsV8yNLVsfkfG/AJ0uL+iysVuZKcIktl/Ty/JJRX7tSvQs9GmjmOW
-	 nh95iuzB5VEsA==
-Date: Wed, 1 May 2024 12:38:26 -0500
+	b=EG2moWyU4kRtW+h2fEn6J4OSulwoGt2Aiom3f5PdgUtIl+GWx3d1k0IYeyAUAXEXP
+	 EKXUyTl1rte6AMXwY3TT41ewi9Yoq52bfSnn2tgi9eNcdhJUDa+FaSAm3iKg57Mg3q
+	 bdeLg901Tjl5f94RnMax2z6uW4wGp6UnHNY95AW4dKh8vFBS6R64USgKgIlftHtAG+
+	 8tT8gJ9n3SsDzE839m19MItQ8E0nOZJo3f6Q1WGJKm6dkpUTczh6o9ewK8DHWbJlSZ
+	 QoykT5amHFBR1UadJ2ZDhTMrJxRxM4JUMb+75FcH7bhfS4E0VrtUVWOApz1FfcobzN
+	 y0YMFK8RK+cJg==
+Date: Wed, 1 May 2024 12:54:50 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 15/17] pci: of_property: Add the interrupt-controller
- property in PCI device nodes
-Message-ID: <20240501173826.GA808463@bhelgaas>
+To: PJ Waskiewicz <ppwaskie@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
+ failure
+Message-ID: <20240501175450.GA866742@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240430083730.134918-16-herve.codina@bootlin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f5078550384a6b9be5a6d05415ea321332c7fb96.camel@kernel.org>
 
-In subject: s/pci:/PCI:/ to match history. s/Add the/Add/ for brevity.
+On Wed, May 01, 2024 at 08:28:22AM -0700, PJ Waskiewicz wrote:
+> On Mon, 2024-04-29 at 11:35 -0700, Dan Williams wrote:
+> > Bjorn Helgaas wrote:
+> > > On Sun, Apr 28, 2024 at 10:57:13PM -0700, PJ Waskiewicz wrote:
+> > > > On Tue, 2024-04-09 at 08:22 -0500, Bjorn Helgaas wrote:
+> > > > > On Sun, Apr 07, 2024 at 02:05:26PM -0700,
+> > > > > ppwaskie@kernel.org wrote:
+> > > > > > From: PJ Waskiewicz <ppwaskie@kernel.org>
+> > > > > > 
+> > > > > > Currently, Type 3 CXL devices (CXL.mem) can train using
+> > > > > > host CXL drivers on Emerald Rapids systems.  However, on
+> > > > > > some production systems from some vendors, a buggy BIOS
+> > > > > > exists that improperly populates the ACPI => PCI mappings.
+> > > > > 
+> > > > > Can you be more specific about what this ACPI => PCI mapping
+> > > > > is?  If you already know what the problem is, I'm sure this
+> > > > > is obvious, but otherwise it's not.
+> > [..] 
+> > > It's just a buggy BIOS that doesn't supply _UID for an ACPI0016
+> > > object, so you can't locate the corresponding CEDT entry, right?
+> > 
+> > Correct, the problem is 100% contained to ACPI, and PCI is
+> > innocent.  The ACPI bug leads to failures to associate ACPI
+> > host-bridge objects with CEDT.CHBS entries.
+> 
+> Sorry for the confusion here!!  I was definitely not trying to blame
+> PCI.  :)
+>
+> > ACPI to PCI association is then typical pci_root lookup, i.e.:
+> > 
+> >         pci_root = acpi_pci_find_root(hb->handle);
+> >         bridge = pci_root->bus->bridge;
+> 
+> Yes, this here.  In my use case, I'm starting with a PCIe/CXL device.
+> In my driver, I try to discover the host bridge, and then the ACPI _UID
+> so I can look things up in the CEDT.
+> 
+> So I'm trying to do the programmatic equivalent of this:
+> 
+> Start here in my PCIe/CXL host driver:
+> 
+> /sys/devices/pci0000:37/firmware_node =>
+> ../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:02
+> 
+> Retrieve _UID (uid) from /sys/devices/pci0000:37/firmware_node/uid
+> 
+> Buggy BIOS, that above value resolves to CX02.  In fact, it *should* be
+> 49.  This is very much a bug in the ACPI arena.
+> 
+> The kernel APIs allowing me to walk this path would fail in the
+> acpi_evaluate_object() when trying to pass in the bad _UID (CX02).
+> 
+> Again, sorry for the confusion if it looked like I was trying to
+> implicate PCI in any way.  The whole intent here was to leave some
+> breadcrumbs so anyone else running into this wouldn't be left
+> scratching their heads wondering wtf was going on.
 
-On Tue, Apr 30, 2024 at 10:37:24AM +0200, Herve Codina wrote:
-> PCI devices and bridges DT nodes created during the PCI scan are created
-> with the interrupt-map property set to handle interrupts.
-> 
-> In order to set this interrupt-map property at a specific level, a
-> phandle to the parent interrupt controller is needed.
-> On systems that are not fully described by a device-tree, the parent
-> interrupt controller may be unavailable (i.e. not described by the
-> device-tree).
 
-Rewrap into one paragraph or add blank line to separate paragraphs.
+No worries, I didn't suspect a PCI issue here; I just wasn't clear on
+what ACPI=>PCI mapping was involved.  It sounds like there *is* no
+such mapping in this picture (you find the ACPI object for a PCIe/CXL
+host bridge, evaluate _UID from that object, and get a bogus value).
 
-> As mentioned in the [1], avoiding the use of the interrupt-map property
-> and considering a PCI device as an interrupt controller itself avoid the
-> use of a parent interrupt phandle.
-> 
-> In that case, the PCI device itself as an interrupt controller is
-> responsible for routing the interrupts described in the device-tree
-> world (DT overlay) to the PCI interrupts.
-> 
-> Add the 'interrupt-controller' property in the PCI device DT node.
-> 
-> [1]: https://lore.kernel.org/lkml/CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com/
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/pci/of_property.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-> index c2c7334152bc..9f8b940029ed 100644
-> --- a/drivers/pci/of_property.c
-> +++ b/drivers/pci/of_property.c
-> @@ -183,6 +183,26 @@ static int of_pci_prop_interrupts(struct pci_dev *pdev,
->  	return of_changeset_add_prop_u32(ocs, np, "interrupts", (u32)pin);
->  }
->  
-> +static int of_pci_prop_intr_ctrl(struct pci_dev *pdev, struct of_changeset *ocs,
-> +				 struct device_node *np)
-> +{
-> +	int ret;
-> +	u8 pin;
-> +
-> +	ret = pci_read_config_byte(pdev, PCI_INTERRUPT_PIN, &pin);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	if (!pin)
-> +		return 0;
-> +
-> +	ret = of_changeset_add_prop_u32(ocs, np, "#interrupt-cells", 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return of_changeset_add_prop_bool(ocs, np, "interrupt-controller");
-> +}
-> +
->  static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
->  				struct device_node *np)
->  {
-> @@ -334,6 +354,10 @@ int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
->  		ret = of_pci_prop_intr_map(pdev, ocs, np);
->  		if (ret)
->  			return ret;
-> +	} else {
-> +		ret = of_pci_prop_intr_ctrl(pdev, ocs, np);
-> +		if (ret)
-> +			return ret;
->  	}
->  
->  	ret = of_pci_prop_ranges(pdev, ocs, np);
-> -- 
-> 2.44.0
-> 
+So the commit log text:
+
+  However, on some production systems from some vendors, a buggy BIOS
+  exists that improperly populates the ACPI => PCI mappings.
+
+apparently refers to improper implementation of the _UID, which
+doesn't return anything PCI related.
+
+It also says:
+
+  This leads to the cxl_acpi driver to fail probe when it cannot find
+  the root port's _UID, in order to look up the device's CXL
+  attributes in the CEDT.
+
+I *think* strictly speaking this should refer to the *host bridge's*
+_UID, not the Root Port's, e.g., something like this:
+
+  However, on some production systems from some vendors, a buggy BIOS
+  provides a CXL host bridge _UID that doesn't match anything in the
+  CEDT.
+
+Bjorn
 
