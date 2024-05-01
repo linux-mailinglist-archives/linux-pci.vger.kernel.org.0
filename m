@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-6932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D56AD8B8880
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 12:22:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CEE98B8887
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 12:22:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A8F61F2224D
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 10:22:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F04A71F212CB
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 10:22:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1746C5337D;
-	Wed,  1 May 2024 10:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC602524DD;
+	Wed,  1 May 2024 10:22:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2wcNKzP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ty3MpEbR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB17A52F96;
-	Wed,  1 May 2024 10:21:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4FA33CD1;
+	Wed,  1 May 2024 10:22:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714558915; cv=none; b=N5P1hGG/Zf/FTxv2B/lF2AeuDSWOa4JLE/ztTDQalKlwKU4i7hL7MRg56ViLnUo2Q2ZExdXSkZhDgS9A1GvFar/eHReheM6h74N7P3yzVLvsXIQrnTlIRWi0uOQXvqUBU/OUb/JRFmFt/GYx3a5N6+mbucv3FU1VVGeMYGuENnA=
+	t=1714558971; cv=none; b=UxzcaQPvdAfNjl6y0IWXlCNWLKmJoLQu6vqO6LUAr0+lMoS5ez5HBx7B/NOZWx8dg7PTMAhGHNSmaRPsVw4Ribblf/w5+PSkgGVuqg7yOWTAroR+81c3lOZ0gS4EcHWTRjdsPDz1+JlJL+izE692riIfArAP7HdtJxX4nsYiwkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714558915; c=relaxed/simple;
-	bh=7QxCLDHI6CTcg+OWFyUgHrtlIpIC7WCE64pmgcLmLcE=;
+	s=arc-20240116; t=1714558971; c=relaxed/simple;
+	bh=h7rfDC4P2mHHyUWnZGsoBw6xnXprPlYP35xFxAJ8hkk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ga9p/Ls+7XIGOv45qUYJ3YRRkUmPFWWy1Ebzr54IdgW25D6P07DjSdLyV6PZGemLakijxfsfGEcuWX8jhhSkszUPyJW0kbWGFGupHinA2XfNeX8eb23XAhvibWC9bojXDnKgZQJ+HxDsg/lHd0LpEaXupMs4ZTwZljVf4w8HhwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2wcNKzP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D2EC113CC;
-	Wed,  1 May 2024 10:21:45 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=CBNl/qZg6f/qTWElpK9OY77vTyi/qJZX4oWybAK2XiFjA7Hg/jpq1FfR6pStklgnIgOR+GOjZ/SJfRhWh+NolyNcVGeRfxLqQirHwByNTV6PdHFtHX3AgTAGp8Z7LnovHgTmvh2Cttgt/y2GzZAAJEzJhNtHoXK4oWLQJjuPmdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ty3MpEbR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 831DCC113CC;
+	Wed,  1 May 2024 10:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714558914;
-	bh=7QxCLDHI6CTcg+OWFyUgHrtlIpIC7WCE64pmgcLmLcE=;
+	s=k20201202; t=1714558971;
+	bh=h7rfDC4P2mHHyUWnZGsoBw6xnXprPlYP35xFxAJ8hkk=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Q2wcNKzPGjNQ12XiaQZsS7xGWZ0Gdl4tgmxIKwTqH/qOsWxDX69B9zIaCbXp56Vqy
-	 EBsHHGrx7EWuvDITJ+s7FsQk3t/Jh5+m+mtg22HYqlj5ptBPnM+aVkES99xtP9Xbp8
-	 w1NaFb/d9hVAjv7izzbyIRE2kQ/mk16r6EBeJiEr+W8aHGeW1Td+yKRp5og9xVl6n3
-	 vgXGDKj/BdPiDaTmmwz4Y8dgwdgOV8dqHSgEu8HIRxYrVe/6rEiFFh52Ptm+BdO/il
-	 h9mA8idQmDBijMvT9+ZZzU47jdoSGDR6pOH2jLcVOZQqbkfVxqnWOUzEe6T5mc6Rs/
-	 7oCBVkuYYcSQA==
-Message-ID: <a973f67b-de7f-4e21-b6b4-3b85d056456d@kernel.org>
-Date: Wed, 1 May 2024 12:21:43 +0200
+	b=Ty3MpEbRpWE1yo8InyD1sxP+/W8K8RAOB9q9qKzGbDRfWxbtubKaecHB2vfahIbcZ
+	 EV30//Gu0KmugjzGGHA/B0IIEVDhnuKX80rs+p2klPpv5RZAo1gqJBz/NpQfjy3L6I
+	 vnUWGSaWST5GPW6Soo3CNvq1iFSN5TJB0iUCLbiha6c26aeopYRMpljnGPlGrJGt/S
+	 SsO5DdNpyi8oSIVs2XJ4HiyXnBqfKhJR6RF4qVeD8HnOsjHqLVuEDG/ESe4TJYVGGh
+	 rZYBfAmNEjRN7mjAPtNp2/wY/bbVZSQ3A7rNZmViYMmoVAvWfDNx3aNc2J1x/LbhLY
+	 kb48+bAtwPyqw==
+Message-ID: <ea1c925f-1696-4491-a792-1b9165447dad@kernel.org>
+Date: Wed, 1 May 2024 12:22:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 RESEND 5/8] PCI: qcom: Add support for IPQ9574
+Subject: Re: [PATCH v4 RESEND 0/8] ipq9574: Enable PCI-Express support
 To: Alexandru Gagniuc <mr.nuke.me@gmail.com>,
  Bjorn Andersson <andersson@kernel.org>,
  Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -67,7 +67,6 @@ To: Alexandru Gagniuc <mr.nuke.me@gmail.com>,
  linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
  linux-clk@vger.kernel.org
 References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
- <20240501042847.1545145-6-mr.nuke.me@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -113,32 +112,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240501042847.1545145-6-mr.nuke.me@gmail.com>
+In-Reply-To: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 01/05/2024 06:28, Alexandru Gagniuc wrote:
-> IPQ9574 has four PCIe controllers: two single-lane Gen3, and two
-> dual-lane Gen3. The controllers are identical from a software
-> perspective, with the differences appearing in the PHYs.
+> There are four PCIe ports on IPQ9574, pcie0 thru pcie3. This series
+> addresses pcie2, which is a gen3x2 port. The board I have only uses
+> pcie2, and that's the only one enabled in this series. pcie3 is added
+> as a special request, but is untested.
 > 
-> Add a compatible for the PCIe on IPQ9574.
+> I believe this makes sense as a monolithic series, as the individual
+> pieces are not that useful by themselves.
+> 
+> In v2, I've had some issues regarding the dt schema checks. For
+> transparency, I used the following test invocations to test:
+> 
+>       make dt_binding_check     DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
+>       make dtbs_check           DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
+> 
+> Changes since v3:
+>  - "const"ify .hw.init fields for the PCIE pipe clocks
+>  - Used pciephy_v5_regs_layout instead of v4 in phy-qcom-qmp-pcie.c
+>  - Included Manivannan's patch for qcom-pcie.c clocks
+>  - Dropped redundant comments in "ranges" and "interrupt-map" of pcie2.
+>  - Added pcie3 and pcie3_phy dts nodes
+>  - Moved snoc and anoc clocks to PCIe controller from PHY
+> 
 
-This is a friendly reminder during the review process.
-
-It looks like you received a tag and forgot to add it.
-
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
-
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
+Three postings within short time... Allow people to actually review your
+code. Please wait 24h before posting new version. Include entire
+feedback and all tags. Explain why you ignore/skip some tags.
 
 Best regards,
 Krzysztof
