@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-6925-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6926-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A08638B84E1
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 06:29:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54B408B84E3
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 06:29:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F7981F2388E
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 04:29:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DF8C1C22C03
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 04:29:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D50CF45020;
-	Wed,  1 May 2024 04:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7990447A62;
+	Wed,  1 May 2024 04:29:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Chz92+50"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oi+DDutj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F0A433D5;
-	Wed,  1 May 2024 04:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B734596E;
+	Wed,  1 May 2024 04:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714537741; cv=none; b=fnu7+3ooJnAjKmrG4YcEkGLqxzeYKiyMzpYPv+fnX91Yno/P7cVNfBw24+4l4ureQYgGXyRrEKjtc/QlkPRqSrwQPA14vWmqo0lpItWyfCzovze3lShwa8KbvYgSzAOzTT/5bN1gjTPjA98txvDCNgCvEdWbjlNAAispXAtUNXk=
+	t=1714537743; cv=none; b=WAtVUdOHkFptgbjhImVbBdLK6E4MExzlDzK1WcAWuBiGhl8hqCvWjK33vrfVwY5470nd8Aqg+CPAxFKZWaBt7qQ2oMWraM0kt77fxops1cmJJkYpUtRa1MQiy2izwauP7LvurQzCSb8yQ2n4g804EIbmzNMhbi1eQMCiCsCmcVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714537741; c=relaxed/simple;
-	bh=hXqcsPpRih55X6qbkKifrC4azWi5ZS32nt4esjIky/M=;
+	s=arc-20240116; t=1714537743; c=relaxed/simple;
+	bh=hTXTBAcEL8gMHMEYQjxjqOhus0GQvyCJWh1hLepjz8Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ag0SGP+Xk4rLGXimtUNB9b/5+DTDdvIs+J+4A9sbAGbnXI//UQgdPSDd4MBYTqdSzpcqlpnV1AJvmQpYPjGyQgIRlH/abfkvn2JNnvRovCXHROX7lh/jsZP8YeGIsvOajKyw8PgPs9r2/s5qA582Qcdq268khCT7nZOVywzeC/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Chz92+50; arc=none smtp.client-ip=209.85.210.48
+	 MIME-Version; b=UhqmuTOsyMhMPpEh6qM+oAjIJC/4qJXeS13LynFoqUp1PWe95xd4lKw8pLvQ0lmveeLp0Ai1EgawkB/Bb5djIZ/CImJMPlhDtgH3nT002py+gYmZoa53mEIzHvOgLM1yXb3idTqOYbXc64mBcKqvj7D2r87Fl7Ys8k0FSD6zzsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oi+DDutj; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6ee1b203f30so2105666a34.0;
-        Tue, 30 Apr 2024 21:29:00 -0700 (PDT)
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6ea156bee62so169653a34.0;
+        Tue, 30 Apr 2024 21:29:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714537739; x=1715142539; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714537741; x=1715142541; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xzHEIPYot6c8NAo7TIBriZfyyuOfBQrBEKWQMBGEIB8=;
-        b=Chz92+50j4fQJgkZDEcnJpRmG1ni086OYTTWpXA95EEJQf+jp3jzOMKyAA/wcBLgfo
-         nHXQvhKG8LFFnYMPLrEEEl3T+lNYuZ7Cr++OXUw7yzC4YQ4xvH50W0/wdj+ZZc+2x0jt
-         +UIxGkmFOJtcsBISaLtQjHQ+xVrMh8VYYoN/cFvrWiCColepv3TQaHKYEuBNcVc0krJj
-         XIuaYEygmQBBQqeE7vputb0qGLRGu10FYElZ6m6I0eb9Bc5QA9ih+UR3cJB9ogJnc6BZ
-         hO0KCxHeu0CDc6rKAe6GwEXspMiWc5pVpG5aoOpV38bWgCpYKVAEWPCyKG7BvGzamuEk
-         aADA==
+        bh=53QnHnVF7bqkRAf/NYE3eZQ50tFTHOIRODlZaYfoSVE=;
+        b=Oi+DDutjeqc01jr1Dg7FF/52Jb0TZswoSyTj93eAhOlty6jGgo5aKC+XZ+FxW12+MF
+         IPPiL6BcN6/NIJdv7Rdic/+UoVAewr5t4zAlekM+J64ohoyJB/x54frQuMbBJchccAJ9
+         qvcXvRcYdINY3cXEt11nHSOVofUkhr9tg2Fk/GgjKJt7U5P8vxq87EnUZHV9BH4WqEnI
+         B3oe+8vA/XbmmwaP9Xnv6lG7RQx6rZpGHLsGasShfX9pS+u4W4DGBaI8FIOR6tZbUTlk
+         p/OUJlugyswuqkUSYkQfxdmTlljvZbFkCPI1oxbl4Zbi8yT2Bxqxtnc20PEOth+qsK8c
+         IX/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714537739; x=1715142539;
+        d=1e100.net; s=20230601; t=1714537741; x=1715142541;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xzHEIPYot6c8NAo7TIBriZfyyuOfBQrBEKWQMBGEIB8=;
-        b=AkTfVd0ldgg1d367bCcKmdFS3yebR7nLQWDaMezg8TNYCg9gX89STx4oIyPLMcLZAW
-         Il1DX/3umnnnC9YCqCy0/WPT+PhDEOd7O9/YKxoT96VpLOPErCnxMtUGfxEqB6gcZwhV
-         IxrRoZKja4ULGpHcCJPC7WGn/UDXWKKfVNOs8+gGC8dxlW+oi69fx6QpXxqmlhK0E5zw
-         mIdejJfM0MfoI0Dd/l9Xz9OGBLSWIOkH8PxIuXBOQGcq6ozaJbXkKZaqWLqG3hYz0gK2
-         50gSUFqyuWefzc2g/QBBtQoA+xRLS0NOrh2Ppppayc8Z4iU9XDUt88h5gk1SEMFN1vT1
-         23xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDaNL9gxVayNHvXniw2gEfybA1IYUBhRG186AMcEJEw2fPpMFU36c5NODarb70ZuKmroOFGPArNRoJiidGxIpOFoY3gSMSk2Hu7VVt8SKEmt8db2Efi1mvF5JS7qaVeLpqdHuLaKRHYP3FLHKiNAj0G2xfgdxH9za72ICZUS+D/Thxb0Rj29ce+o1gIgZrrTx4WLN7DHZ1FW6nmlodZj06WTWwU7Uy5lrLzG+LNDlKoDksBv0wCfC4wy/DKVQ=
-X-Gm-Message-State: AOJu0YxoFU/IVIeEF9o8NvFUi8SmxwaPCr2kTtXg/6IHQ2Mghr4XWohw
-	QItzzXtIlUGicV6QnrpON9P4wZff1kfCXuIgVFnTpxXmasG0xyyt
-X-Google-Smtp-Source: AGHT+IEmyJf7Jwh5D7YCDTLEYHtmkrkYz3klIOpR6Wwg/J4Mm0QRdxvlC9SkbzpsjHk0Akh0G0kQ3Q==
-X-Received: by 2002:a05:6871:7409:b0:23c:ed7f:d9d5 with SMTP id nw9-20020a056871740900b0023ced7fd9d5mr1565796oac.35.1714537739302;
-        Tue, 30 Apr 2024 21:28:59 -0700 (PDT)
+        bh=53QnHnVF7bqkRAf/NYE3eZQ50tFTHOIRODlZaYfoSVE=;
+        b=pPai6TrY34jqo7RwwfDdb5rWouFHjiwmWipj2k3Xu5nbWUwqCCfG3sXyLzukhtYiEq
+         GK5xr2Wx/S7KUGuv6MmVPD568TptSXc4evipKJALfsJy5b/uSiuWF8573N1+AWzKEVM0
+         VDxiDYbmNxYo4FynPpnwy54dIDUbTuSC0chZJxeejyD851+gCShSxg7lFbS9y0pQ+cfn
+         j1PGnbutrn02pFpELhsrro3Jx2jCxHhsigsNqOOBAZaG3T9PufZD/ZWqd8ZUOeKPRRZK
+         xhxNBJs59XbJnHBrrfIRl8oJKh70TQLcIxjItQMnQgvl11nikKMPpsIx6NDYm8CAPdDJ
+         Kwew==
+X-Forwarded-Encrypted: i=1; AJvYcCVa3oyBppHwDIqUs2r9npkrWPtNb/MESlGP2eFpT7IomW4EudmnwCYRlXXn/uOmIpNWs0Q8eROtHDHZODyQGPAIbXk0Y36G1pNXOQVA+t0o3iayag174d2kwtEnq9+XrIFXkHCkxToKExezEPEI6/Todp6I5Ha/LKd5BfGiWXXtY81cK8H9UbyPH/sdZUs+B4xZWSxzCT/XKG+E8N8hk4EdI/DdJo88tvyq84+8pY0fTmheVuVRjb4WVKonO7Q=
+X-Gm-Message-State: AOJu0YzF73YbFY1UakOj3Nxj5qSk2S5CWJDDhuaDWU9636LTnq6xB0Hw
+	CwIhCT2XU8f37KIAOPAdHMAdXA7Ye1gzjvOVen0HBtYeiNHkRZWn
+X-Google-Smtp-Source: AGHT+IGZ6Bq0eAhG/carm/csp8ApgnvJNQUPq/GxvHn40hwIEdBr56IsFv4ZyhDbwV1GMjYFEXYYaQ==
+X-Received: by 2002:a9d:6e12:0:b0:6ee:1654:c391 with SMTP id e18-20020a9d6e12000000b006ee1654c391mr2064810otr.7.1714537741133;
+        Tue, 30 Apr 2024 21:29:01 -0700 (PDT)
 Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id do26-20020a0568300e1a00b006ed6dc9fd54sm2719058otb.25.2024.04.30.21.28.58
+        by smtp.gmail.com with ESMTPSA id do26-20020a0568300e1a00b006ed6dc9fd54sm2719058otb.25.2024.04.30.21.29.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 21:28:58 -0700 (PDT)
+        Tue, 30 Apr 2024 21:29:00 -0700 (PDT)
 From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -87,11 +87,10 @@ To: Bjorn Andersson <andersson@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-phy@lists.infradead.org,
 	linux-clk@vger.kernel.org
-Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v4 RESEND 2/8] clk: qcom: gcc-ipq9574: Add PCIe pipe clocks
-Date: Tue, 30 Apr 2024 23:28:41 -0500
-Message-Id: <20240501042847.1545145-3-mr.nuke.me@gmail.com>
+Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Subject: [PATCH v4 RESEND 3/8] dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
+Date: Tue, 30 Apr 2024 23:28:42 -0500
+Message-Id: <20240501042847.1545145-4-mr.nuke.me@gmail.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
 References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
@@ -103,130 +102,93 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The IPQ9574 has four PCIe "pipe" clocks. These clocks are required by
-PCIe PHYs. Port the pipe clocks from the downstream 5.4 kernel.
+IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
+The difference is that the "iface" clock is replaced by the "snoc",
+and "anoc". The "sleep" reset is replaced by an "aux" reset.
+Document these differences along with the compatible string.
 
 Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/clk/qcom/gcc-ipq9574.c | 76 ++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/clk/qcom/gcc-ipq9574.c b/drivers/clk/qcom/gcc-ipq9574.c
-index 0a3f846695b8..bc3e17f34295 100644
---- a/drivers/clk/qcom/gcc-ipq9574.c
-+++ b/drivers/clk/qcom/gcc-ipq9574.c
-@@ -1569,6 +1569,24 @@ static struct clk_regmap_phy_mux pcie0_pipe_clk_src = {
- 	},
- };
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index cf9a6910b542..ac6d2b1b8702 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -26,6 +26,7 @@ properties:
+           - qcom,pcie-ipq8064-v2
+           - qcom,pcie-ipq8074
+           - qcom,pcie-ipq8074-gen3
++          - qcom,pcie-ipq9574
+           - qcom,pcie-msm8996
+           - qcom,pcie-qcs404
+           - qcom,pcie-sdm845
+@@ -161,6 +162,7 @@ allOf:
+             enum:
+               - qcom,pcie-ipq6018
+               - qcom,pcie-ipq8074-gen3
++              - qcom,pcie-ipq9574
+     then:
+       properties:
+         reg:
+@@ -397,6 +399,39 @@ allOf:
+             - const: axi_m_sticky # AXI Master Sticky reset
+             - const: axi_s_sticky # AXI Slave Sticky reset
  
-+static struct clk_branch gcc_pcie0_pipe_clk = {
-+	.halt_reg = 0x28044,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x28044,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "gcc_pcie0_pipe_clk",
-+			.parent_hws = (const struct clk_hw *[]) {
-+				&pcie0_pipe_clk_src.clkr.hw
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-ipq9574
++    then:
++      properties:
++        clocks:
++          minItems: 4
++          maxItems: 4
++        clock-names:
++          items:
++            - const: axi_m # AXI Master clock
++            - const: axi_s # AXI Slave clock
++            - const: axi_bridge # AXI bridge clock
++            - const: anoc
++            - const: snoc
++            - const: rchng
++        resets:
++          minItems: 8
++          maxItems: 8
++        reset-names:
++          items:
++            - const: pipe # PIPE reset
++            - const: aux # AUX reset
++            - const: sticky # Core Sticky reset
++            - const: axi_m # AXI Master reset
++            - const: axi_s # AXI Slave reset
++            - const: axi_s_sticky # AXI Slave Sticky reset
++            - const: axi_m_sticky # AXI Master Sticky reset
++            - const: ahb # AHB Reset
 +
- static struct clk_regmap_phy_mux pcie1_pipe_clk_src = {
- 	.reg = 0x29064,
- 	.clkr = {
-@@ -1583,6 +1601,24 @@ static struct clk_regmap_phy_mux pcie1_pipe_clk_src = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie1_pipe_clk = {
-+	.halt_reg = 0x29044,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x29044,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "gcc_pcie1_pipe_clk",
-+			.parent_hws = (const struct clk_hw *[]) {
-+				&pcie1_pipe_clk_src.clkr.hw
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_regmap_phy_mux pcie2_pipe_clk_src = {
- 	.reg = 0x2a064,
- 	.clkr = {
-@@ -1597,6 +1633,24 @@ static struct clk_regmap_phy_mux pcie2_pipe_clk_src = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie2_pipe_clk = {
-+	.halt_reg = 0x2a044,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x2a044,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "gcc_pcie2_pipe_clk",
-+			.parent_hws = (const struct clk_hw *[]) {
-+				&pcie2_pipe_clk_src.clkr.hw
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_regmap_phy_mux pcie3_pipe_clk_src = {
- 	.reg = 0x2b064,
- 	.clkr = {
-@@ -1611,6 +1665,24 @@ static struct clk_regmap_phy_mux pcie3_pipe_clk_src = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie3_pipe_clk = {
-+	.halt_reg = 0x2b044,
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x2b044,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "gcc_pcie3_pipe_clk",
-+			.parent_hws = (const struct clk_hw *[]) {
-+				&pcie3_pipe_clk_src.clkr.hw
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static const struct freq_tbl ftbl_pcie_rchng_clk_src[] = {
- 	F(24000000, P_XO, 1, 0, 0),
- 	F(100000000, P_GPLL0, 8, 0, 0),
-@@ -4141,6 +4213,10 @@ static struct clk_regmap *gcc_ipq9574_clks[] = {
- 	[GCC_SNOC_PCIE1_1LANE_S_CLK] = &gcc_snoc_pcie1_1lane_s_clk.clkr,
- 	[GCC_SNOC_PCIE2_2LANE_S_CLK] = &gcc_snoc_pcie2_2lane_s_clk.clkr,
- 	[GCC_SNOC_PCIE3_2LANE_S_CLK] = &gcc_snoc_pcie3_2lane_s_clk.clkr,
-+	[GCC_PCIE0_PIPE_CLK] = &gcc_pcie0_pipe_clk.clkr,
-+	[GCC_PCIE1_PIPE_CLK] = &gcc_pcie1_pipe_clk.clkr,
-+	[GCC_PCIE2_PIPE_CLK] = &gcc_pcie2_pipe_clk.clkr,
-+	[GCC_PCIE3_PIPE_CLK] = &gcc_pcie3_pipe_clk.clkr,
- };
- 
- static const struct qcom_reset_map gcc_ipq9574_resets[] = {
+   - if:
+       properties:
+         compatible:
+@@ -507,6 +542,7 @@ allOf:
+                 - qcom,pcie-ipq8064v2
+                 - qcom,pcie-ipq8074
+                 - qcom,pcie-ipq8074-gen3
++                - qcom,pcie-ipq9574
+                 - qcom,pcie-qcs404
+     then:
+       required:
+@@ -566,6 +602,7 @@ allOf:
+               - qcom,pcie-ipq8064-v2
+               - qcom,pcie-ipq8074
+               - qcom,pcie-ipq8074-gen3
++              - qcom,pcie-ipq9574
+               - qcom,pcie-qcs404
+     then:
+       properties:
 -- 
 2.40.1
 
