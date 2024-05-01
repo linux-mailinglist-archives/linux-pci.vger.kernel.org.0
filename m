@@ -1,135 +1,120 @@
-Return-Path: <linux-pci+bounces-6973-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6974-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D99108B9048
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 21:55:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 325D58B9065
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 22:07:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EAFD1F211C6
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 19:55:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7B411F23AEE
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 20:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA9D916132E;
-	Wed,  1 May 2024 19:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC4D161933;
+	Wed,  1 May 2024 20:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TI9thRng"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CWQ0wY9N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94614161320
-	for <linux-pci@vger.kernel.org>; Wed,  1 May 2024 19:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D3A16191E;
+	Wed,  1 May 2024 20:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714593336; cv=none; b=cSX4oF4Pj6qwgPQ2WXRs5prt62ObwUCHIHqi9gAAI4ZKC4Wjdsf95+vjvCeoegV+RGnmVkqDgWosYxF5umqIY1eflOCMEJ7ReEcsbZNgiRRkD+FbOD0z8Ef2RFTbOC/WoQ9bfs3QbRuLhEBHO4K7IWGUs4DzBL3vYYxfM81AxNI=
+	t=1714594025; cv=none; b=CNWLoHi44dpG6kViWZs56cCEJvSh0OsN+gRvdWZBOikFjjaXZclGthpFjTp3dLa6LahZL7HHsbxmcsVaZqnAMxKGVkON/RKC09w0VEB9q/NslSrSc9iD7C7LqmZXQgmXfTqbYzJcjFQjTpDI8YOIJg4hQI3FXUFVpTx5+FCpx3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714593336; c=relaxed/simple;
-	bh=FC9MscbtrO8zMg/v6cHJnj25Gf7EGprE6jgVjqFHs3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=eTnOLVW3isgjpVvqoMPhJhrzN8WhHM6XbBCf3JPi2RyOwdFpL4vcg9B9zijyhQf7GJ9JsextKnWUklOXAv2Vn1X0j50gDmmh4IMIxne+kkHEXTQAcTg2Imozrt1nT4Op5JGREvpAgQ7IJHQBkILPwjAB8Ap2p+XYtWm1d66r2TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TI9thRng; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DFA2C072AA;
-	Wed,  1 May 2024 19:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714593336;
-	bh=FC9MscbtrO8zMg/v6cHJnj25Gf7EGprE6jgVjqFHs3I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TI9thRng02O4HWfHCt2cSdJrN2QK8hCddMBo+EONXqIuA6yQZQrB2jTM/zLD+omT8
-	 gjikfUw56KkuTKtUMT1Z2CdJEnMFFFnZh1jfl3vsn2g/APiXHws83nxwZIyhbvxPZJ
-	 bCoXBGu2oeeg0vucxM+8fLzACxhjYPlFd8kH6P3Eeru676+SQQezfJgImyN20QKaQg
-	 MsUoeya55HQRgioHWqUw/gj12vcR3tzmOrlGJRDP8TLytOvqjnhLF99e4mD58q05wY
-	 F/rlqkx6uDgwBAtobV8xEDxEeLqedgaWSvvrOlxqotp2TkHy4QQPNHvJfIfrDB1cX7
-	 gaeL242ndnORg==
-Date: Wed, 1 May 2024 14:55:34 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Keith Busch <kbusch@meta.com>
-Cc: linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-	Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
-	Peter Delevoryas <pdel@meta.com>, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] pci: fix broadcom secondary bus reset handling
-Message-ID: <20240501195534.GA853546@bhelgaas>
+	s=arc-20240116; t=1714594025; c=relaxed/simple;
+	bh=V/K9SYCQMalXsilBTuDB5HWAA77CoQ8l41FBGzMkUl4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WlwKp9eLO1KV0naZDvo/OehinpyJVXalZeXW3cR1BZDGruEGT9AYdEE+hLmE2VNKXjGyaEMnz1O+PRmVWsONbOllkYt9ryuXVZf4a2oLE2uY6Ga4JUeOGQZ5NMM/Dw5meKgpxhxTZfffROu5SjS2Hotg4i3cc7HifYdvjvj7sjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CWQ0wY9N; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714594023; x=1746130023;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=V/K9SYCQMalXsilBTuDB5HWAA77CoQ8l41FBGzMkUl4=;
+  b=CWQ0wY9NRqBzFCI/Y+pa6HFa2ycU5LaAvPUN8aiuVEbSKDc266/7FMs5
+   o6rHb17/lI0wIRRTYEQDhO0Ie8vtgl87zUuzWZ6ips7IFnqOgTNnsBmjG
+   vDA+4/SfcQNYesxud7uEYmJOOLjkXgUIQdJpQCvaQluw9Ar1WaU+UCr/S
+   iEMM9mTSLFK9E8LDAiCGsE6TQ62gTSg0UVzdXmQx8E08P5YnmdhjS6ERJ
+   VuW+wMctRFTtuegFaEhKX9wvgBgNWie0a87EkThyFoavq4aLPPWfo9UxK
+   XOEaOap/BvqNqOVgHPT9BsKhfQ83MlZyYFYrQUHlOnu3Bki1aLPUFpf1C
+   Q==;
+X-CSE-ConnectionGUID: MwFtOnWwREicsMqXajVZ6A==
+X-CSE-MsgGUID: tKeHS10mR2iMNxrX9P+4qQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="21028252"
+X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
+   d="scan'208";a="21028252"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 13:07:02 -0700
+X-CSE-ConnectionGUID: ntLDZ+aGQze2UbSSB060Mg==
+X-CSE-MsgGUID: AwZBiScgSkG2SHIqrAufvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,246,1708416000"; 
+   d="scan'208";a="31581495"
+Received: from pgateley-mobl1.amr.corp.intel.com ([10.212.209.203])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 13:07:02 -0700
+Message-ID: <e84ba9a250615de2f39600160ad0577f2d5caf94.camel@linux.intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Clarify that pcie_aspm=off means leave ASPM
+ untouched
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Vidya Sagar <vidyas@nvidia.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Maciej W . Rozycki" <macro@orcam.me.uk>, 
+ Johan Hovold <johan+linaro@kernel.org>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Ajay Agarwal <ajayagarwal@google.com>,
+ linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Date: Wed, 01 May 2024 13:07:01 -0700
+In-Reply-To: <20240429191821.691726-1-helgaas@kernel.org>
+References: <20240429191821.691726-1-helgaas@kernel.org>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501145118.2051595-1-kbusch@meta.com>
 
-[+cc Lukas since you mentioned pciehp]
+T24gTW9uLCAyMDI0LTA0LTI5IGF0IDE0OjE4IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOgo+
+IEZyb206IEJqb3JuIEhlbGdhYXMgPGJoZWxnYWFzQGdvb2dsZS5jb20+Cj4gCj4gUHJldmlvdXNs
+eSB3ZSBjbGFpbWVkICJwY2llX2FzcG09b2ZmIiBtZWFudCB0aGF0IEFTUE0gd291bGQgYmUgZGlz
+YWJsZWQsCj4gd2hpY2ggaXMgd3JvbmcuCj4gCj4gQ29ycmVjdCB0aGlzIHRvIHNheSB0aGF0IHdp
+dGggInBjaWVfYXNwbT1vZmYiLCBMaW51eCBkb2Vzbid0IHRvdWNoIGFueSBBU1BNCj4gY29uZmln
+dXJhdGlvbiBhdCBhbGwuwqAgQVNQTSBtYXkgaGF2ZSBiZWVuIGVuYWJsZWQgYnkgZmlybXdhcmUs
+IGFuZCB0aGF0Cj4gd2lsbCBiZSBsZWZ0IHVuY2hhbmdlZC7CoCBTZWUgImFzcG1fc3VwcG9ydF9l
+bmFibGVkIi4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29n
+bGUuY29tPgoKTEdUTS4KClJldmlld2VkLWJ5OiBEYXZpZCBFLiBCb3ggPGRhdmlkLmUuYm94QGxp
+bnV4LmludGVsLmNvbT4KCj4gLS0tCj4gwqBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5l
+bC1wYXJhbWV0ZXJzLnR4dCB8IDUgKysrLS0KPiDCoDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vYWRt
+aW4tZ3VpZGUva2VybmVsLXBhcmFtZXRlcnMudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1
+aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dAo+IGluZGV4IGJiODg0YzE0YjJmNi4uNGJjMjgxZDZl
+OGQzIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2VybmVsLXBhcmFt
+ZXRlcnMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1l
+dGVycy50eHQKPiBAQCAtNDU5MCw5ICs0NTkwLDEwIEBACj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBub3JpZMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBbUzM5MF0gaWdub3JlIHRoZSBS
+SUQgZmllbGQgYW5kIGZvcmNlIHVzZSBvZgo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBvbmUgUENJIGRvbWFpbiBwZXIgUENJ
+IGZ1bmN0aW9uCj4gwqAKPiAtwqDCoMKgwqDCoMKgwqBwY2llX2FzcG09wqDCoMKgwqDCoMKgW1BD
+SUVdIEZvcmNpYmx5IGVuYWJsZSBvciBkaXNhYmxlIFBDSWUgQWN0aXZlIFN0YXRlCj4gUG93ZXIK
+PiArwqDCoMKgwqDCoMKgwqBwY2llX2FzcG09wqDCoMKgwqDCoMKgW1BDSUVdIEZvcmNpYmx5IGVu
+YWJsZSBvciBpZ25vcmUgUENJZSBBY3RpdmUgU3RhdGUKPiBQb3dlcgo+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE1hbmFnZW1lbnQuCj4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoG9mZsKgwqDCoMKgwqBEaXNhYmxlIEFTUE0uCj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG9mZsKgwqDCoMKgwqBEb24ndCB0b3VjaCBBU1BNIGNv
+bmZpZ3VyYXRpb24gYXQgYWxsLsKgIExlYXZlIGFueQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29uZmlndXJhdGlvbiBkb25lIGJ5IGZpcm13YXJlIHVu
+Y2hhbmdlZC4KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGZvcmNlwqDCoMKgRW5h
+YmxlIEFTUE0gZXZlbiBvbiBkZXZpY2VzIHRoYXQgY2xhaW0gbm90IHRvIHN1cHBvcnQKPiBpdC4K
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBXQVJOSU5H
+OiBGb3JjaW5nIEFTUE0gb24gbWF5IGNhdXNlIHN5c3RlbSBsb2NrdXBzLgo+IMKgCgo=
 
-On Wed, May 01, 2024 at 07:51:18AM -0700, Keith Busch wrote:
-> From: Keith Busch <kbusch@kernel.org>
-> 
-> After a link reset, the Broadcom / LSI PEX890xx PCIe Gen 5 Switch in synth
-> mode will temporarily insert a fake place-holder device, 1000 02b2, before
-> the link is actually active for the expected downstream device. Confirm
-> the device's identifier matches what we expect before moving forward.
-> Otherwise, the pciehp driver may unmask hotplug notifications before
-> the link is actually active, which triggers an undesired device removal.
-
-Is this a Switch that doesn't conform to the PCIe spec, or is there
-something wrong with the way we're looking for a CRS completion?
-
-In the absence of a device defect, I would not expect to need a
-Broacom-specific comment in this code.
-
-> Cc: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
-> Cc: Peter Delevoryas <pdel@meta.com>
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
-> ---
->  drivers/pci/pci.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e5f243dd42884..4dc00f7411a94 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1255,6 +1255,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->  	int delay = 1;
->  	bool retrain = false;
->  	struct pci_dev *bridge;
-> +	u32 vid = dev->vendor | dev->device << 16;
->  
->  	if (pci_is_pcie(dev)) {
->  		bridge = pci_upstream_bridge(dev);
-> @@ -1268,17 +1269,22 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->  	 * responding to them with CRS completions.  The Root Port will
->  	 * generally synthesize ~0 (PCI_ERROR_RESPONSE) data to complete
->  	 * the read (except when CRS SV is enabled and the read was for the
-> -	 * Vendor ID; in that case it synthesizes 0x0001 data).
-> +	 * Vendor ID; in that case it synthesizes 0x0001 data, or if the device
-> +	 * is downstream a Broadcom switch, which syntesizes a fake device)
-
-s/syntesizes/synthesizes/
-
->  	 * Wait for the device to return a non-CRS completion.  Read the
-> -	 * Command register instead of Vendor ID so we don't have to
-> -	 * contend with the CRS SV value.
-> +	 * Command register instead of Vendor ID so we don't have to contend
-> +	 * with the CRS SV value. But, also read the Vendor and Device ID's
-> +	 * to defeat Broadcom switch's placeholder device.
-
-s/ID's/IDs/
-
->  	 */
->  	for (;;) {
-> -		u32 id;
-> +		u32 id, l;
->  
-> +		pci_read_config_dword(dev, PCI_VENDOR_ID, &l);
->  		pci_read_config_dword(dev, PCI_COMMAND, &id);
-> -		if (!PCI_POSSIBLE_ERROR(id))
-> +
-> +		if (!PCI_POSSIBLE_ERROR(id) && !PCI_POSSIBLE_ERROR(l) &&
-> +		    l == vid)
->  			break;
->  
->  		if (delay > timeout) {
-> -- 
-> 2.43.0
-> 
 
