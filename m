@@ -1,134 +1,144 @@
-Return-Path: <linux-pci+bounces-6957-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6958-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28DDE8B8CF4
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 17:28:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFB9D8B8D46
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 17:37:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5930C1C20846
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 15:28:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8F181C20C50
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 15:37:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE8854FA1;
-	Wed,  1 May 2024 15:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A096212FB03;
+	Wed,  1 May 2024 15:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONZNOUWb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgVT7UJ4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E076C2FD;
-	Wed,  1 May 2024 15:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D11212F59D;
+	Wed,  1 May 2024 15:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714577304; cv=none; b=eP0iPX0sCEflloA2SZqWejnPyWpW4UQDwDi5Dh1yNe3G0N0xx/BfJ1Xx174TCrGuJGCxzefjUwMGEVSloKoG9iwHqZ8okg04YQQyETBEGcwTLlKLrWhmfJduv32pRcz0FQEUEeX7CYUEI7dhgUP18GyCZynN7t42E3sqD3mpKOA=
+	t=1714577846; cv=none; b=boBzqf2JRJuAO8qe4Ghoxm3YntwdfnBRXRKe6s19jukBsgFkpfDy+lPhHNObyiIsx6ovptTK2n3uHzRfHxjQO83hKH1t3ypHgTYjeq1c0GyepxBE/u66k1ROKG7uldA58W069/+5SpDc1dUoTdTYdm5IcnzJP2lYJscW0t38FE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714577304; c=relaxed/simple;
-	bh=jv+X8Y1RHXOI4u8Pe4gD5ozH+iXIvKkQEoDBIMs4+Tc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gOfb62B9WXpa9WtZzsCuizBI/2tSRu6yxFxBP0HAhza9r+L4XZYuSMlLFUhun4oP32p9U4+Ih2ag7jApEpoZ/vgbTF1mwaEIef71iEif15BBcldeJqQhJUGwDbspspsYzTD9YOiGZodZGPf8EU/yM77xcaFyyOABgl1lYWwkryI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONZNOUWb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A09C072AA;
-	Wed,  1 May 2024 15:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714577304;
-	bh=jv+X8Y1RHXOI4u8Pe4gD5ozH+iXIvKkQEoDBIMs4+Tc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ONZNOUWbITC13CvnD0SHYICamRkoq/0mqmgJc7uJ54AJiOAIxiMD50gTVSL8kJ1WQ
-	 bB97CwahAdB14XYqsHcu36mI99FdQiGxqEjb62w3jGver85vXDAtRpuFTc8a39W8eF
-	 uOC0pNGig85qWzCRujlfZEcpxEDBDTLt/HHv4elxb0eitUobotcoUSjWp6a2TKfco8
-	 KRrDvXHYbU4bsh58A/kRvRKo1Xh0KiVBAjNsFmGbAYZpFqqYu9NWpeeEfdj7ALK+O1
-	 xHk6kIkdYmSicgmM1rEA5Qt/O3G7fKN/eGwP6KFwSCoO6CJwBziCNm6yIkHnQkZTXC
-	 pnvecS/d1KTVw==
-Message-ID: <f5078550384a6b9be5a6d05415ea321332c7fb96.camel@kernel.org>
-Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
- failure
-From: PJ Waskiewicz <ppwaskie@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
- <helgaas@kernel.org>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 01 May 2024 08:28:22 -0700
-In-Reply-To: <662fe860eb889_1487294e8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <ce49c67c24f57ffab166d688a1c9e3139733f412.camel@kernel.org>
-	 <20240429153138.GA681245@bhelgaas>
-	 <662fe860eb889_1487294e8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+	s=arc-20240116; t=1714577846; c=relaxed/simple;
+	bh=0ITTtdbueCZGJrgUVAPhbmZom/wxQK/QStVSF6LAPcI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fQHFcFNq3Awgzcf74f1UCY79OUJU2DbDkeBzJcwA1RQ3T54wPXe0mKyFyZ0KBo4I+3ZqYo1OiVxSHXw5s0H1LPP1vsKYSEq1oGK6jOcop1mwuoJi3YwJIRe4Q5lHhzqK8JAQsbv6pFqzYUSiE4VS3zf1GMJduze3kl5L+yNf1kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AgVT7UJ4; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-23d1ea835a5so675424fac.2;
+        Wed, 01 May 2024 08:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714577843; x=1715182643; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=34HSQZWtjbxbUcY2p0ZqE9phbqtru1lcKIiAiKLyg88=;
+        b=AgVT7UJ49zKpKZtb4b2Czf0iaqtmD0XT5b8AtI6Z0XkQ48aOC2fbSjl+g0WBbOA0wr
+         6KpTZf3xyJt26fPugjR936lmSSEjNdxfsVkKUkLaqMMcCmu1x6tS5EMLJmGfn1wV5fiO
+         Lby8TNeE+WcMPvYLiYMqhTkJjikdeYBrfc9HqcPPkZBAvu1a0SMRJ/NXYxPSLOmnYQIg
+         uREqxJ9B4OBv4tDVI9XjDt0U7Ttml115zj+QiClcc57pN7frONx3sWjlMmLYrJFOA18L
+         HyOz6jzmMP1VU1FEsrRYPd1e2fXgaRUIobB/kagQzE9HD+fv5YTt1WD+13dkSx6ulXll
+         BQRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714577843; x=1715182643;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=34HSQZWtjbxbUcY2p0ZqE9phbqtru1lcKIiAiKLyg88=;
+        b=ThkqwG726xzGKKDfvd4F8zUA6JJYIxjzp3xD+bPsVzcYLsFWMwwQVjqO+enzvbEdw5
+         RHb79zWBP/54ZbEDKMkCc1adNnlTy/CY04sY2n/148WdulsRKS6GaN0AodKcg0x/e0tA
+         soG7hybxaPxLyoiX4AtmySmaWR+1L2SJzWDgulHP5Hi4EDfYseRozaY49kinMNZDci9t
+         ZRX+8fjYYeSdA0IBmB7qg3C/vOouIzgnk+L2Dp8r4h3NGj9J7tY+t92zYbN341Hi+Wis
+         cGz9Y+t3JbVXUueCO68sbkJB+mSf14Tz4ZPxwl6JcNe/2kzc5CsXq3rq4L4yl4n7C0vD
+         wnqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRaPw2YBXSlEmxwjl9DXQNz1gpcPPXDBREOi05lgbkjyV3ZbccQOm9qfvrKPxbC2g95Ns+58YoCbDgqoso7yQJdkoN0QJEf9HS02EyFnEK+q+lUoVJO623WXFbhbp5rDrIFIZbUMd1KgdKN4Q8vkUO0A3tCT06Ezf8wmhQ0EOJneg7ANWTZISj+eN7sZNqdgUFzkEEnZy6skr4j4WIB2vEcLkF07GkZPhqdw262nWbOobdcbC/n71LVIphSn4=
+X-Gm-Message-State: AOJu0YzY++MsikVrXUCBVqGLiSO2IgM2tQQXlYs2EDU8qTt2cRnxAXKO
+	cWeXBoqPpqQGxsnB9wrYONFpPd0cX0+a5eLUID3gjFkh6fWYqWBK
+X-Google-Smtp-Source: AGHT+IHdOGltmMEfyguF/4cAMA+Sgnkaw7abyq40kS29fkMPdziQpNXQgqEnnEGTcu54RFw7h8jJWw==
+X-Received: by 2002:a05:6870:b296:b0:22e:8d62:fa75 with SMTP id c22-20020a056870b29600b0022e8d62fa75mr2938064oao.44.1714577843194;
+        Wed, 01 May 2024 08:37:23 -0700 (PDT)
+Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
+        by smtp.gmail.com with ESMTPSA id qw2-20020a0568706f0200b002397a883e7csm5033024oab.12.2024.05.01.08.37.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 May 2024 08:37:22 -0700 (PDT)
+Message-ID: <47665254-fe22-4369-8b10-087ca928e97f@gmail.com>
+Date: Wed, 1 May 2024 10:37:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 RESEND 0/8] ipq9574: Enable PCI-Express support
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-clk@vger.kernel.org
+References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
+ <ea1c925f-1696-4491-a792-1b9165447dad@kernel.org>
+Content-Language: en-US
+From: mr.nuke.me@gmail.com
+In-Reply-To: <ea1c925f-1696-4491-a792-1b9165447dad@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2024-04-29 at 11:35 -0700, Dan Williams wrote:
-> Bjorn Helgaas wrote:
-> > On Sun, Apr 28, 2024 at 10:57:13PM -0700, PJ Waskiewicz wrote:
-> > > On Tue, 2024-04-09 at 08:22 -0500, Bjorn Helgaas wrote:
-> > > > On Sun, Apr 07, 2024 at 02:05:26PM -0700,
-> > > > ppwaskie@kernel.org=C2=A0wrote:
-> > > > > From: PJ Waskiewicz <ppwaskie@kernel.org>
-> > > > >=20
-> > > > > Currently, Type 3 CXL devices (CXL.mem) can train using host
-> > > > > CXL
-> > > > > drivers on Emerald Rapids systems.=C2=A0 However, on some
-> > > > > production
-> > > > > systems from some vendors, a buggy BIOS exists that
-> > > > > improperly
-> > > > > populates the ACPI =3D> PCI mappings.
-> > > >=20
-> > > > Can you be more specific about what this ACPI =3D> PCI mapping
-> > > > is?
-> > > > If you already know what the problem is, I'm sure this is
-> > > > obvious,
-> > > > but otherwise it's not.
-> [..]=20
-> > It's just a buggy BIOS that doesn't supply _UID for an ACPI0016
-> > object, so you can't locate the corresponding CEDT entry, right?
->=20
-> Correct, the problem is 100% contained to ACPI, and PCI is innocent.
-> The
-> ACPI bug leads to failures to associate ACPI host-bridge objects with
-> CEDT.CHBS entries.
 
-Sorry for the confusion here!!  I was definitely not trying to blame
-PCI.  :)
 
->=20
-> ACPI to PCI association is then typical pci_root lookup, i.e.:
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_root =3D acpi_pci_find_roo=
-t(hb->handle);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bridge =3D pci_root->bus->brid=
-ge;
+On 5/1/24 5:22 AM, Krzysztof Kozlowski wrote:
+> On 01/05/2024 06:28, Alexandru Gagniuc wrote:
+>> There are four PCIe ports on IPQ9574, pcie0 thru pcie3. This series
+>> addresses pcie2, which is a gen3x2 port. The board I have only uses
+>> pcie2, and that's the only one enabled in this series. pcie3 is added
+>> as a special request, but is untested.
+>>
+>> I believe this makes sense as a monolithic series, as the individual
+>> pieces are not that useful by themselves.
+>>
+>> In v2, I've had some issues regarding the dt schema checks. For
+>> transparency, I used the following test invocations to test:
+>>
+>>        make dt_binding_check     DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
+>>        make dtbs_check           DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
+>>
+>> Changes since v3:
+>>   - "const"ify .hw.init fields for the PCIE pipe clocks
+>>   - Used pciephy_v5_regs_layout instead of v4 in phy-qcom-qmp-pcie.c
+>>   - Included Manivannan's patch for qcom-pcie.c clocks
+>>   - Dropped redundant comments in "ranges" and "interrupt-map" of pcie2.
+>>   - Added pcie3 and pcie3_phy dts nodes
+>>   - Moved snoc and anoc clocks to PCIe controller from PHY
+>>
+> 
+> Three postings within short time... Allow people to actually review your
+> code. Please wait 24h before posting new version. Include entire
+> feedback and all tags. Explain why you ignore/skip some tags.
+> 
+I'm sorry for the confusion. It's the same patch version, v3 being two 
+weeks old.
 
-Yes, this here.  In my use case, I'm starting with a PCIe/CXL device.
-In my driver, I try to discover the host bridge, and then the ACPI _UID
-so I can look things up in the CEDT.
+Due to a tooling failure, the first attempt to send resulted in a 
+double-posting, and missing cover letter. It was so bad that I felt I 
+needed to re-post with the RESEND tag to clarify the intent and prevent 
+further confusion.
 
-So I'm trying to do the programmatic equivalent of this:
-
-Start here in my PCIe/CXL host driver:
-
-/sys/devices/pci0000:37/firmware_node =3D>
-../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:02
-
-Retrieve _UID (uid) from /sys/devices/pci0000:37/firmware_node/uid
-
-Buggy BIOS, that above value resolves to CX02.  In fact, it *should* be
-49.  This is very much a bug in the ACPI arena.
-
-The kernel APIs allowing me to walk this path would fail in the
-acpi_evaluate_object() when trying to pass in the bad _UID (CX02).
-
-Again, sorry for the confusion if it looked like I was trying to
-implicate PCI in any way.  The whole intent here was to leave some
-breadcrumbs so anyone else running into this wouldn't be left
-scratching their heads wondering wtf was going on.
-
-Cheers,
--PJ
+Alex
+> 
 
