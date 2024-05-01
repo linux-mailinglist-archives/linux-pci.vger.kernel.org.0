@@ -1,233 +1,162 @@
-Return-Path: <linux-pci+bounces-6967-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6968-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F9558B8E51
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 18:37:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEEAF8B8E62
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 18:44:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C99F9282D62
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 16:37:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18D771C21C27
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 16:44:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88696DF49;
-	Wed,  1 May 2024 16:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D915EAF6;
+	Wed,  1 May 2024 16:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kAQ3yZw8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXRFrzgS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E011B1B59A;
-	Wed,  1 May 2024 16:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521C8DDC9;
+	Wed,  1 May 2024 16:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714581427; cv=none; b=a5wlrYCXDpUm9CLVyQeWoPLF8j6G+7TTMWfnSf8F2KUyg97X4KWoULH2wg6pDQXSzKLu8ipq+AaLQAGR/tEIdWVioXZKiwJDJnY0QoFm+UIZBPehnOdH2XnW/Y0TAP5t5JUhDqoqgcREJ3YHiVQDRhZAEMT/t7zpfLi0lFkKPvg=
+	t=1714581837; cv=none; b=tRst9nypEsM9t3qDtE6xUIJxbI0NWkTl9pd/ZxbRpUfLeNULBtvtIbt0y0a24fy8T5ttUs2gwvtFn0EYzXctIL51FI+l8O+bRVIwH0Rfi+sG6wu98KMK0lKQljZAwkI3pkA4BAhWHuo6Ageh1wVkaiE12qi8Am/MN/NU00EvBFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714581427; c=relaxed/simple;
-	bh=yF8dPiRP5cP3fXnEcgflGw4Fpd7IDI6fSilI+0JEMiA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WXGS1JgILLoIhPX6RKSZ5CkKuTClcbMHUOFse2sEWHjJ5rYBvrBXBTuVAHEbqxoFt1Iqw0d+0zY8NHf+a9yv4lEw7zwlo56wMPmfqn4f7QeE13mnuaKQinA2i+JOrNrNsTcITRGtGlzrZp8IAEGV0rTZ4A8rUCYh781SPFG771s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kAQ3yZw8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 441ER7qG027190;
-	Wed, 1 May 2024 16:36:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=cXaenI9+leuO7eYu3ig6KGqchQBjeXNHDhPjF3tdXJQ=; b=kA
-	Q3yZw8Ail239tgk1adip42HBjJ18Yx0+3KTXEuDX3YT20eppV7Mkyvy/pLrDG+ox
-	f3WjdNYBmvyl0KahWqb/UoRkLzIT91+0RSmcbcwXekEi9DZ2J+SFuPwPWkCGoVKJ
-	FKGUr5upKsEWItYjyuujYmUFruwLL2z+fAkzVnboP1AbY87ld6F8nZ25kWKfVEg3
-	ZRvwwdcg65rFqY5Mwy/tYIy+kxFneOvb/pfetBIKIpzeEYTe+zgX5dNQvzfhdzuW
-	xAVlmnB1UjBPOxzOLhIqe/MWm3E9LpvZWhRT23xUbZsl04uH7erxMZdwbKrg055P
-	EQHqnbrn3jAWXJ+rMOAQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xup5krfs7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 May 2024 16:36:48 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 441Gal6d023532
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 1 May 2024 16:36:47 GMT
-Received: from adas-linux5.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 1 May 2024 09:36:46 -0700
-From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-To: <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <manivannan.sadhasivam@linaro.org>, <andersson@kernel.org>,
-        <agross@kernel.org>, <konrad.dybcio@linaro.org>, <mani@kernel.org>
-CC: <quic_msarkar@quicinc.com>, <quic_kraravin@quicinc.com>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH v4 3/3] PCI: qcom: Add RX margining settings for 16 GT/s
-Date: Wed, 1 May 2024 09:35:34 -0700
-Message-ID: <20240501163610.8900-4-quic_schintav@quicinc.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240501163610.8900-1-quic_schintav@quicinc.com>
-References: <20240501163610.8900-1-quic_schintav@quicinc.com>
+	s=arc-20240116; t=1714581837; c=relaxed/simple;
+	bh=QWcAOLTO8HSRNQR7l2tPRwkVIRhPLH+s6spyTlBFlVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=p7qlWiM5LdDHjwSSvgGxzrZ0L0rkOvBFeddm5+GHEfbFyZSXDdxvLbOYMLhlmZS3nVYCoijhN0mVuJI0ML4iioYuD0V99BFM3s6pD8Mc2vhVMZ7/smZHSxvTKODnAmnODjVqh6G2TQ1mKBv/pQCmBJQYZ/0lou9BOjtwugGbMXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXRFrzgS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F64C072AA;
+	Wed,  1 May 2024 16:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714581837;
+	bh=QWcAOLTO8HSRNQR7l2tPRwkVIRhPLH+s6spyTlBFlVA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=QXRFrzgSeRD7793XdFLDK/nIA6hZnOkmMcSnEVzFrhE0kdCOkMEjukGK7LbugYMEE
+	 OQwsbvAcOL5EZxkkO79sGYUko7wA3iS2BGkTxDg+dtqBr/ywp0rHNpcspCzzOE/nMJ
+	 g30O3nsIsdXX/vOPv1O9aP/+bWwk5IBiGebVWcaKdXQubKMRyi0Kap1Ue3fqkH24sW
+	 DpELp/LEH3+Tn1pVFYB0I3ak0+u4eBk5sSPL+qxo+dw8z3wfk6nkp0yYeuLxH555m0
+	 prCTYTd1qQJSWdugkGhW/EabhZ55A1qh/9ealOXZ8+/YOMBT1w2SVZpfaLui8nJMGJ
+	 Qgibg52MlDJtg==
+Message-ID: <621b4545-454f-46d1-8ccb-2d1dc522e8eb@kernel.org>
+Date: Wed, 1 May 2024 18:43:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6pESSpz_z8xm8orijpm67aKzyVuUv5bZ
-X-Proofpoint-GUID: 6pESSpz_z8xm8orijpm67aKzyVuUv5bZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_16,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 clxscore=1015
- impostorscore=0 spamscore=0 mlxlogscore=930 lowpriorityscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2405010117
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 RESEND 5/8] PCI: qcom: Add support for IPQ9574
+To: mr.nuke.me@gmail.com, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-clk@vger.kernel.org
+References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
+ <20240501042847.1545145-6-mr.nuke.me@gmail.com>
+ <a973f67b-de7f-4e21-b6b4-3b85d056456d@kernel.org>
+ <f7176c82-3702-4667-b68b-a8b7e3ad8690@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <f7176c82-3702-4667-b68b-a8b7e3ad8690@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add RX lane margining settings for 16 GT/s(GEN 4) data rate. These
-settings improve link stability while operating at high date rates
-and helps to improve signal quality.
+On 01/05/2024 17:43, mr.nuke.me@gmail.com wrote:
+> On 5/1/24 5:21 AM, Krzysztof Kozlowski wrote:
+>> On 01/05/2024 06:28, Alexandru Gagniuc wrote:
+>>> IPQ9574 has four PCIe controllers: two single-lane Gen3, and two
+>>> dual-lane Gen3. The controllers are identical from a software
+>>> perspective, with the differences appearing in the PHYs.
+>>>
+>>> Add a compatible for the PCIe on IPQ9574.
+>>
+>> This is a friendly reminder during the review process.
+>>
+>> It looks like you received a tag and forgot to add it.
+>>
+>> If you do not know the process, here is a short explanation:
+>> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+>> versions, under or above your Signed-off-by tag. Tag is "received", when
+>> provided in a message replied to you on the mailing list. Tools like b4
+>> can help here. However, there's no need to repost patches *only* to add
+>> the tags. The upstream maintainer will do that for tags received on the
+>> version they apply.
+>>
+>> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+>>
+>> If a tag was not added on purpose, please state why and what changed.
+> 
+> I had an Acked-by tag from Rob for what is now patch 6/8 -- previously 
+> 5/7. Due to last-minute info from QUIC Inc, Dmitry and I decided to move 
+> the "snoc" and "anoc" clocks out of the PHY and to the PCIe controller.
+> 
+> This change resulted in a 6/8 patch that is substantially different from 
+> what Rob acked. I felt it was inappropriate to keep the tag.
 
-Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-designware.h  | 18 +++++++++++
- drivers/pci/controller/dwc/pcie-qcom-common.c | 31 +++++++++++++++++++
- drivers/pci/controller/dwc/pcie-qcom-common.h |  1 +
- drivers/pci/controller/dwc/pcie-qcom-ep.c     |  4 ++-
- drivers/pci/controller/dwc/pcie-qcom.c        |  4 ++-
- 5 files changed, 56 insertions(+), 2 deletions(-)
+So please read my message again:
+"If a tag was not added on purpose, please state why and what changed."
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ed0045043847..343450c04e05 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -203,6 +203,24 @@
- 
- #define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
- 
-+/*
-+ * 16 GT/s (GEN4) lane margining register definitions
-+ */
-+#define GEN4_LANE_MARGINING_1_OFF		0xb80
-+#define MARGINING_MAX_VOLTAGE_OFFSET		GENMASK(29, 24)
-+#define MARGINING_NUM_VOLTAGE_STEPS		GENMASK(22, 16)
-+#define MARGINING_MAX_TIMING_OFFSET		GENMASK(13, 8)
-+#define MARGINING_NUM_TIMING_STEPS		GENMASK(5, 0)
-+
-+#define GEN4_LANE_MARGINING_2_OFF		0xb84
-+#define MARGINING_IND_ERROR_SAMPLER		BIT(28)
-+#define MARGINING_SAMPLE_REPORTING_METHOD	BIT(27)
-+#define MARGINING_IND_LEFT_RIGHT_TIMING		BIT(26)
-+#define MARGINING_IND_UP_DOWN_VOLTAGE		BIT(25)
-+#define MARGINING_VOLTAGE_SUPPORTED		BIT(24)
-+#define MARGINING_MAXLANES			GENMASK(20, 16)
-+#define MARGINING_SAMPLE_RATE_TIMING		GENMASK(13, 8)
-+#define MARGINING_SAMPLE_RATE_VOLTAGE		GENMASK(5, 0)
- /*
-  * iATU Unroll-specific register definitions
-  * From 4.80 core version the address translation will be made by unroll
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
-index 16c277b2e9d4..fe6f7dde5d8c 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-common.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
-@@ -53,6 +53,37 @@ void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci)
- }
- EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_eq_settings);
- 
-+void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci)
-+{
-+	u32 reg;
-+
-+	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_1_OFF);
-+	reg &= ~(MARGINING_MAX_VOLTAGE_OFFSET |
-+		MARGINING_NUM_VOLTAGE_STEPS |
-+		MARGINING_MAX_TIMING_OFFSET |
-+		MARGINING_NUM_TIMING_STEPS);
-+	reg |= FIELD_PREP(MARGINING_MAX_VOLTAGE_OFFSET, 0x24) |
-+		FIELD_PREP(MARGINING_NUM_VOLTAGE_STEPS, 0x78) |
-+		FIELD_PREP(MARGINING_MAX_TIMING_OFFSET, 0x32) |
-+		FIELD_PREP(MARGINING_NUM_TIMING_STEPS, 0x10);
-+	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_1_OFF, reg);
-+
-+	reg = dw_pcie_readl_dbi(pci, GEN4_LANE_MARGINING_2_OFF);
-+	reg |= MARGINING_IND_ERROR_SAMPLER |
-+		MARGINING_SAMPLE_REPORTING_METHOD |
-+		MARGINING_IND_LEFT_RIGHT_TIMING |
-+		MARGINING_VOLTAGE_SUPPORTED;
-+	reg &= ~(MARGINING_IND_UP_DOWN_VOLTAGE |
-+		MARGINING_MAXLANES |
-+		MARGINING_SAMPLE_RATE_TIMING |
-+		MARGINING_SAMPLE_RATE_VOLTAGE);
-+	reg |= FIELD_PREP(MARGINING_MAXLANES, pci->num_lanes) |
-+		FIELD_PREP(MARGINING_SAMPLE_RATE_TIMING, 0x3f) |
-+		FIELD_PREP(MARGINING_SAMPLE_RATE_VOLTAGE, 0x3f);
-+	dw_pcie_writel_dbi(pci, GEN4_LANE_MARGINING_2_OFF, reg);
-+}
-+EXPORT_SYMBOL_GPL(qcom_pcie_common_set_16gt_rx_margining_settings);
-+
- struct icc_path *qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, const char *path)
- {
- 	struct icc_path *icc_mem_p;
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.h b/drivers/pci/controller/dwc/pcie-qcom-common.h
-index 5c01f6c18b3b..c7eb87aa0677 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-common.h
-+++ b/drivers/pci/controller/dwc/pcie-qcom-common.h
-@@ -11,3 +11,4 @@ struct icc_path *qcom_pcie_common_icc_get_resource(struct dw_pcie *pci, const ch
- int qcom_pcie_common_icc_init(struct dw_pcie *pci, struct icc_path *icc_mem);
- void qcom_pcie_common_icc_update(struct dw_pcie *pci, struct icc_path *icc_mem);
- void qcom_pcie_common_set_16gt_eq_settings(struct dw_pcie *pci);
-+void qcom_pcie_common_set_16gt_rx_margining_settings(struct dw_pcie *pci);
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 7940222d35f6..2aea78da9c5b 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -438,8 +438,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 		goto err_disable_resources;
- 	}
- 
--	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
-+	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT) {
- 		qcom_pcie_common_set_16gt_eq_settings(pci);
-+		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
-+	}
- 
- 	/*
- 	 * The physical address of the MMIO region which is exposed as the BAR
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 525942f2cf98..9b3d7729b34b 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -263,8 +263,10 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
- {
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
- 
--	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
-+	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT) {
- 		qcom_pcie_common_set_16gt_eq_settings(pci);
-+		qcom_pcie_common_set_16gt_rx_margining_settings(pci);
-+	}
- 
- 	/* Enable Link Training state machine */
- 	if (pcie->cfg->ops->ltssm_enable)
--- 
-2.43.2
+Your changelog for that patch should say that.
+
+
+Best regards,
+Krzysztof
 
 
