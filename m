@@ -1,143 +1,134 @@
-Return-Path: <linux-pci+bounces-6956-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6957-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 889288B8C29
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 16:52:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28DDE8B8CF4
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 17:28:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 117071F21A69
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 14:52:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5930C1C20846
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 15:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D78C338DDC;
-	Wed,  1 May 2024 14:51:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE8854FA1;
+	Wed,  1 May 2024 15:28:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="YhNGVtqZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONZNOUWb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42721758D
-	for <linux-pci@vger.kernel.org>; Wed,  1 May 2024 14:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E076C2FD;
+	Wed,  1 May 2024 15:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714575116; cv=none; b=miYcrtsz9b7lAVNUINwfWPWgNTmmWhCMMm/FDleLuYknft2f7q34SUonyMk4n0oRnf2XSBVN1FWA7ZFs5Hv72oHuqbtAEtAu6EwWUkcuuY/wPY9MQz5+v7LTxzCdrQDEKORvNDePOR9sfjyEWuyGpkkgAbGSchbr41wNiNyYAxQ=
+	t=1714577304; cv=none; b=eP0iPX0sCEflloA2SZqWejnPyWpW4UQDwDi5Dh1yNe3G0N0xx/BfJ1Xx174TCrGuJGCxzefjUwMGEVSloKoG9iwHqZ8okg04YQQyETBEGcwTLlKLrWhmfJduv32pRcz0FQEUEeX7CYUEI7dhgUP18GyCZynN7t42E3sqD3mpKOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714575116; c=relaxed/simple;
-	bh=X6Pnw2tcDN7YZyClgiEZOtBTDmCe3DkN+TIqz9S9Z9s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D3KhXOMdjSDCJs1Bt1xwYHs3tXxSkvPU6D1+a2lBU+ActDEfE6nN6LYX+9AxMtlPqASnIEDdZP3WbKcZ3l2HlCExi/eg8OmBWUnDq1kLhFabcy07x0rQqzOnqfb0jVXkeyErtTzObn0C34H6vMxf2DCdv2R4zRbG1YBF4+ZK3t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=YhNGVtqZ; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 441EpKrT017526
-	for <linux-pci@vger.kernel.org>; Wed, 1 May 2024 07:51:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=s2048-2021-q4;
- bh=0phYYRi1muT+hJTE/ugnKzt7c+BQuVKX1nJ9cxFrIEg=;
- b=YhNGVtqZtSGezro67d1+4w23YvlHMVlWxtW3FgmLcIZkq6xM+afQG9gdrbspnSCzBS/7
- yIvfXsg2pY3L52WQawcF3Lt+zQ2PNdSLA09YrFIZ4kOpWGoRzjG1yfiE/xup15YXKnO1
- ScKo4r4ggZ7idAghC6Hn5zzeG5cKbPPQp4Kz/HhhPfHIXxlKKk/8AgaOfCwwpD16NmvU
- SoDEAPPRK1HCIdY7e0B1hB6uj1YVfBctwBFUA1V9RY2T5Cn+fxcz3dCtqtEn2i3rnmNd
- rczu5Jht8iFNwNYHbeSV6UiyH3g/0C3dfmYHyP8QwLTQv0+IbJUPLb6tMbJTRbSPCRAi VA== 
-Received: from mail.thefacebook.com ([163.114.132.120])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3xuqv1802w-19
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 01 May 2024 07:51:53 -0700
-Received: from twshared10106.05.ash9.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c085:21d::8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 1 May 2024 07:51:23 -0700
-Received: by devbig032.nao3.facebook.com (Postfix, from userid 544533)
-	id 84B40214B0F2; Wed,  1 May 2024 07:51:19 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <linux-pci@vger.kernel.org>
-CC: Keith Busch <kbusch@kernel.org>,
-        Suganath Prabu S
-	<suganath-prabu.subramani@broadcom.com>,
-        Peter Delevoryas <pdel@meta.com>
-Subject: [PATCH] pci: fix broadcom secondary bus reset handling
-Date: Wed, 1 May 2024 07:51:18 -0700
-Message-ID: <20240501145118.2051595-1-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1714577304; c=relaxed/simple;
+	bh=jv+X8Y1RHXOI4u8Pe4gD5ozH+iXIvKkQEoDBIMs4+Tc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gOfb62B9WXpa9WtZzsCuizBI/2tSRu6yxFxBP0HAhza9r+L4XZYuSMlLFUhun4oP32p9U4+Ih2ag7jApEpoZ/vgbTF1mwaEIef71iEif15BBcldeJqQhJUGwDbspspsYzTD9YOiGZodZGPf8EU/yM77xcaFyyOABgl1lYWwkryI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONZNOUWb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A09C072AA;
+	Wed,  1 May 2024 15:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714577304;
+	bh=jv+X8Y1RHXOI4u8Pe4gD5ozH+iXIvKkQEoDBIMs4+Tc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ONZNOUWbITC13CvnD0SHYICamRkoq/0mqmgJc7uJ54AJiOAIxiMD50gTVSL8kJ1WQ
+	 bB97CwahAdB14XYqsHcu36mI99FdQiGxqEjb62w3jGver85vXDAtRpuFTc8a39W8eF
+	 uOC0pNGig85qWzCRujlfZEcpxEDBDTLt/HHv4elxb0eitUobotcoUSjWp6a2TKfco8
+	 KRrDvXHYbU4bsh58A/kRvRKo1Xh0KiVBAjNsFmGbAYZpFqqYu9NWpeeEfdj7ALK+O1
+	 xHk6kIkdYmSicgmM1rEA5Qt/O3G7fKN/eGwP6KFwSCoO6CJwBziCNm6yIkHnQkZTXC
+	 pnvecS/d1KTVw==
+Message-ID: <f5078550384a6b9be5a6d05415ea321332c7fb96.camel@kernel.org>
+Subject: Re: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
+ failure
+From: PJ Waskiewicz <ppwaskie@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
+ <helgaas@kernel.org>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 01 May 2024 08:28:22 -0700
+In-Reply-To: <662fe860eb889_1487294e8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <ce49c67c24f57ffab166d688a1c9e3139733f412.camel@kernel.org>
+	 <20240429153138.GA681245@bhelgaas>
+	 <662fe860eb889_1487294e8@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: x3VZMzLPdApmIewDsx65P2tJ86mE8JtE
-X-Proofpoint-ORIG-GUID: x3VZMzLPdApmIewDsx65P2tJ86mE8JtE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_14,2024-04-30_01,2023-05-22_02
 
-From: Keith Busch <kbusch@kernel.org>
+On Mon, 2024-04-29 at 11:35 -0700, Dan Williams wrote:
+> Bjorn Helgaas wrote:
+> > On Sun, Apr 28, 2024 at 10:57:13PM -0700, PJ Waskiewicz wrote:
+> > > On Tue, 2024-04-09 at 08:22 -0500, Bjorn Helgaas wrote:
+> > > > On Sun, Apr 07, 2024 at 02:05:26PM -0700,
+> > > > ppwaskie@kernel.org=C2=A0wrote:
+> > > > > From: PJ Waskiewicz <ppwaskie@kernel.org>
+> > > > >=20
+> > > > > Currently, Type 3 CXL devices (CXL.mem) can train using host
+> > > > > CXL
+> > > > > drivers on Emerald Rapids systems.=C2=A0 However, on some
+> > > > > production
+> > > > > systems from some vendors, a buggy BIOS exists that
+> > > > > improperly
+> > > > > populates the ACPI =3D> PCI mappings.
+> > > >=20
+> > > > Can you be more specific about what this ACPI =3D> PCI mapping
+> > > > is?
+> > > > If you already know what the problem is, I'm sure this is
+> > > > obvious,
+> > > > but otherwise it's not.
+> [..]=20
+> > It's just a buggy BIOS that doesn't supply _UID for an ACPI0016
+> > object, so you can't locate the corresponding CEDT entry, right?
+>=20
+> Correct, the problem is 100% contained to ACPI, and PCI is innocent.
+> The
+> ACPI bug leads to failures to associate ACPI host-bridge objects with
+> CEDT.CHBS entries.
 
-After a link reset, the Broadcom / LSI PEX890xx PCIe Gen 5 Switch in synt=
-h
-mode will temporarily insert a fake place-holder device, 1000 02b2, befor=
-e
-the link is actually active for the expected downstream device. Confirm
-the device's identifier matches what we expect before moving forward.
-Otherwise, the pciehp driver may unmask hotplug notifications before
-the link is actually active, which triggers an undesired device removal.
+Sorry for the confusion here!!  I was definitely not trying to blame
+PCI.  :)
 
-Cc: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
-Cc: Peter Delevoryas <pdel@meta.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/pci/pci.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+>=20
+> ACPI to PCI association is then typical pci_root lookup, i.e.:
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_root =3D acpi_pci_find_roo=
+t(hb->handle);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bridge =3D pci_root->bus->brid=
+ge;
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e5f243dd42884..4dc00f7411a94 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1255,6 +1255,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
-reset_type, int timeout)
- 	int delay =3D 1;
- 	bool retrain =3D false;
- 	struct pci_dev *bridge;
-+	u32 vid =3D dev->vendor | dev->device << 16;
-=20
- 	if (pci_is_pcie(dev)) {
- 		bridge =3D pci_upstream_bridge(dev);
-@@ -1268,17 +1269,22 @@ static int pci_dev_wait(struct pci_dev *dev, char=
- *reset_type, int timeout)
- 	 * responding to them with CRS completions.  The Root Port will
- 	 * generally synthesize ~0 (PCI_ERROR_RESPONSE) data to complete
- 	 * the read (except when CRS SV is enabled and the read was for the
--	 * Vendor ID; in that case it synthesizes 0x0001 data).
-+	 * Vendor ID; in that case it synthesizes 0x0001 data, or if the device
-+	 * is downstream a Broadcom switch, which syntesizes a fake device)
- 	 *
- 	 * Wait for the device to return a non-CRS completion.  Read the
--	 * Command register instead of Vendor ID so we don't have to
--	 * contend with the CRS SV value.
-+	 * Command register instead of Vendor ID so we don't have to contend
-+	 * with the CRS SV value. But, also read the Vendor and Device ID's
-+	 * to defeat Broadcom switch's placeholder device.
- 	 */
- 	for (;;) {
--		u32 id;
-+		u32 id, l;
-=20
-+		pci_read_config_dword(dev, PCI_VENDOR_ID, &l);
- 		pci_read_config_dword(dev, PCI_COMMAND, &id);
--		if (!PCI_POSSIBLE_ERROR(id))
-+
-+		if (!PCI_POSSIBLE_ERROR(id) && !PCI_POSSIBLE_ERROR(l) &&
-+		    l =3D=3D vid)
- 			break;
-=20
- 		if (delay > timeout) {
---=20
-2.43.0
+Yes, this here.  In my use case, I'm starting with a PCIe/CXL device.
+In my driver, I try to discover the host bridge, and then the ACPI _UID
+so I can look things up in the CEDT.
 
+So I'm trying to do the programmatic equivalent of this:
+
+Start here in my PCIe/CXL host driver:
+
+/sys/devices/pci0000:37/firmware_node =3D>
+../LNXSYSTM:00/LNXSYBUS:00/ACPI0016:02
+
+Retrieve _UID (uid) from /sys/devices/pci0000:37/firmware_node/uid
+
+Buggy BIOS, that above value resolves to CX02.  In fact, it *should* be
+49.  This is very much a bug in the ACPI arena.
+
+The kernel APIs allowing me to walk this path would fail in the
+acpi_evaluate_object() when trying to pass in the bad _UID (CX02).
+
+Again, sorry for the confusion if it looked like I was trying to
+implicate PCI in any way.  The whole intent here was to leave some
+breadcrumbs so anyone else running into this wouldn't be left
+scratching their heads wondering wtf was going on.
+
+Cheers,
+-PJ
 
