@@ -1,275 +1,347 @@
-Return-Path: <linux-pci+bounces-6953-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6954-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4728B8B89E6
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 14:24:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D43B8B89ED
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 14:24:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B288E1F22C01
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 12:23:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9AF311F2115C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 12:24:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3F7C130482;
-	Wed,  1 May 2024 12:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Glp0pIEB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4502054FA1;
+	Wed,  1 May 2024 12:24:36 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3685012D773
-	for <linux-pci@vger.kernel.org>; Wed,  1 May 2024 12:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A400F4F20C;
+	Wed,  1 May 2024 12:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714566017; cv=none; b=CAtQ55gfj4tmRpIrlg0Vly1u/7FbWrH2RXWcJULYnemQmCaZfuMYZ0EiWCq1wAl9fUXvmSKYLB3mwqsxaXHZkat0L88Z+TU6WTXbGgxqJepfRGAim7O6HPZTmz9Hy+PODpHIXinztd5Z+uTbgUHTq28KKAFfwrbV4/PuI1ftmww=
+	t=1714566276; cv=none; b=QdNabGahLpjALqEfMKP6Cf7979f1kFTC2RAxqG2Y4vkQz5uIyJdueSqRcZTSqrTnzL5NBbLpzjONXaBxcAZXXRvyPLmZ1+qhHqQSsiTTB/RS09RnwisvfJ/SditcRhF6+nu+ykT7hAO1qCL1zYk8TF++jlfB8ph0YRXZqtNANL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714566017; c=relaxed/simple;
-	bh=VlgCsjgHFwA68EYgPCGJqFoun4py/yY/7/kh2NDKDJI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZY3EW1/gly5aBRETyUPtj6xeSKnwEmQTv3nCmTPrsU/R+4pQ2BBhqJ8Bida8NSuTVg9a9MKJ4tRSPo2BkEjaPrAyzLI8w31E55LdRVOCe/S4dIauxcmbjuoxodAEaqnzvKnKrSoYes8A0GJ2m0cRhUsAgg1SHB2665DXrjJ8Rq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Glp0pIEB; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e5c7d087e1so57740905ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 01 May 2024 05:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1714566015; x=1715170815; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NA6fALA+ztvPArpqc5Jdn/FWi0fZsP181uxTjKG28r0=;
-        b=Glp0pIEBnVyWeZfWxXYwNzC8oBfI/wqSyuBNSK23gqbox17wl8dbxbg3SLmsFTLuBc
-         aFmZvcC5mFntdKMRgAyyLdoPUf5w10nExohVbqrACvqZfyvpmualCzeh4MeCQb33XFUN
-         TfcsYtAApQ4/CbhKCTUEqy5m2PcmhLUY0veX7jB7ec3fX5NGhc2xpvz5nr1GEcpbCwY6
-         tiWnjhdCIJICqwtQpFlohK+LmIVwmu4JKc1HIdGvTwk6OnIQEN63TYyyYEoAgYfI63QQ
-         z8wr9ovAubxPsHobyewJw+ZPDK0fOge/1KstpFBphf6a5HhU8WaIvFMwe3CQxl7oILnj
-         yL7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714566015; x=1715170815;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NA6fALA+ztvPArpqc5Jdn/FWi0fZsP181uxTjKG28r0=;
-        b=g8eCozEaiV51y1B09H9ftp0EQqc9xPlCx/cD4aWLwkeUrhT891Lb6A8LDAAAg612X1
-         aVA2hJuvbzaQ55j1Lxq9lSSVMz4utUONHl4gJ6cEE4JMUtLoTybGUQBQnT/tkGRJ2HNJ
-         RNpXRZKUkKZENpalPSNs828atZ8goQoJnq1T/CGaac8sbG1/5w3GvCe8A9D/MJw2wvOQ
-         7u8G75zH03dJKMWKwmdtdiV0vimdZqHwMF9dy+lMxNinHPj3PyAIFKN048e1fFXVAwra
-         V2oJeTl8TvkDEfPG8Ivb1DzCTHK/UTWm+eH329D/LDmCtZ7AK+gp2MU74yQvI+/Ufm9v
-         Gj/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUS4eTP3YI2kPpZNE3t299U7cvRNd+UTMC6Fvel1FoYKGLNoLnU0XYvTIY0qsTYX9CgTzYMsDDEzzY3oxU2ByJUPUN5ZcpyfFI2
-X-Gm-Message-State: AOJu0Yzwb0bw9yVWlbjZWVatmcOM86S2/Nrw3WdWadJupy3CE7CDQjBp
-	vSU8+2exY7GQN+fLSqf8KxxgCGGopEyWFa2sfWSlAdNHmCNslfF0OK78JrfDcHQ=
-X-Google-Smtp-Source: AGHT+IHYfyPObdgft5ubD0a+EdF/ZUFESa543BOMp550uRgpGcGY3JeWyQR+nmnrayByMoL+UjNZmA==
-X-Received: by 2002:a17:902:ed01:b0:1eb:494f:dc66 with SMTP id b1-20020a170902ed0100b001eb494fdc66mr2209312pld.23.1714566015601;
-        Wed, 01 May 2024 05:20:15 -0700 (PDT)
-Received: from sunil-pc.Dlink ([106.51.188.106])
-        by smtp.gmail.com with ESMTPSA id im15-20020a170902bb0f00b001ec8888b22esm1336900plb.65.2024.05.01.05.20.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 05:20:15 -0700 (PDT)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Andrei Warkentin <andrei.warkentin@intel.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [PATCH v5 17/17] serial: 8250: Add 8250_acpi driver
-Date: Wed,  1 May 2024 17:47:42 +0530
-Message-Id: <20240501121742.1215792-18-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
-References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+	s=arc-20240116; t=1714566276; c=relaxed/simple;
+	bh=qVnDhd01gJ3gZCSundBV8CKrCGWQfxZkVcoyP18X+7s=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r+QxGaFjqMUY7FHAcSKF+CrfI9rX0yP0RZcJJjJq+IZf0pK4Slb1Ftmq8E6a7A5EbhiWHqsH+enX59VYCwMB1VSYVlX0NN42xu9NXl/tWUjTrZ7i/z7/7gCvcCPGV6G6TOjh5AMPMS9aNMaSDW0x4rE8FLspD3wO24iu4HKhdDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VTx5755tPz687NT;
+	Wed,  1 May 2024 20:21:47 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6C746140B73;
+	Wed,  1 May 2024 20:24:31 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 1 May
+ 2024 13:24:30 +0100
+Date: Wed, 1 May 2024 13:24:29 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Duan, Zhenzhong" <zhenzhong.duan@intel.com>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"james.morse@arm.com" <james.morse@arm.com>, "Luck, Tony"
+	<tony.luck@intel.com>, "bp@alien8.de" <bp@alien8.de>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, "Jiang, Dave" <dave.jiang@intel.com>, "Schofield,
+ Alison" <alison.schofield@intel.com>, "Verma, Vishal L"
+	<vishal.l.verma@intel.com>, "Weiny, Ira" <ira.weiny@intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "helgaas@kernel.org"
+	<helgaas@kernel.org>, "mahesh@linux.ibm.com" <mahesh@linux.ibm.com>,
+	"oohall@gmail.com" <oohall@gmail.com>, "linmiaohe@huawei.com"
+	<linmiaohe@huawei.com>, "shiju.jose@huawei.com" <shiju.jose@huawei.com>,
+	"Preble, Adam C" <adam.c.preble@intel.com>, "leoyang.li@nxp.com"
+	<leoyang.li@nxp.com>, "lukas@wunner.de" <lukas@wunner.de>,
+	"Smita.KoralahalliChannabasappa@amd.com"
+	<Smita.KoralahalliChannabasappa@amd.com>, "rrichter@amd.com"
+	<rrichter@amd.com>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Tsaur, Erwin"
+	<erwin.tsaur@intel.com>, "Kuppuswamy, Sathyanarayanan"
+	<sathyanarayanan.kuppuswamy@intel.com>, "Williams, Dan J"
+	<dan.j.williams@intel.com>, "Wanyan, Feiting" <feiting.wanyan@intel.com>,
+	"Wang, Yudong" <yudong.wang@intel.com>, "Peng, Chao P"
+	<chao.p.peng@intel.com>, "qingshun.wang@linux.intel.com"
+	<qingshun.wang@linux.intel.com>
+Subject: Re: [PATCH v3 1/3] PCI/AER: Store UNCOR_STATUS bits that might be
+ ANFE in aer_err_info
+Message-ID: <20240501132429.00002b4a@Huawei.com>
+In-Reply-To: <SJ0PR11MB6744C3EAA6E9D738EA0D3BAC92142@SJ0PR11MB6744.namprd11.prod.outlook.com>
+References: <20240417061407.1491361-1-zhenzhong.duan@intel.com>
+	<20240417061407.1491361-2-zhenzhong.duan@intel.com>
+	<20240422171629.00005675@Huawei.com>
+	<SJ0PR11MB6744EC971D1BE6F3119EEA9992112@SJ0PR11MB6744.namprd11.prod.outlook.com>
+	<20240426171158.000024d4@Huawei.com>
+	<SJ0PR11MB6744C3EAA6E9D738EA0D3BAC92142@SJ0PR11MB6744.namprd11.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-RISC-V has non-PNP generic 16550A compatible UART which needs to be
-enumerated as ACPI platform device. Add driver support for such devices
-similar to 8250_of.
+On Sun, 28 Apr 2024 03:31:11 +0000
+"Duan, Zhenzhong" <zhenzhong.duan@intel.com> wrote:
 
-The driver is enabled when the CONFIG_SERIAL_ACPI_PLATFORM option is
-enabled. Enable this option for RISC-V.
+> Hi Jonathan,
+>=20
+> >-----Original Message-----
+> >From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> >Subject: Re: [PATCH v3 1/3] PCI/AER: Store UNCOR_STATUS bits that might
+> >be ANFE in aer_err_info
+> >
+> >On Tue, 23 Apr 2024 02:25:05 +0000
+> >"Duan, Zhenzhong" <zhenzhong.duan@intel.com> wrote:
+> > =20
+> >> >-----Original Message-----
+> >> >From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> >> >Subject: Re: [PATCH v3 1/3] PCI/AER: Store UNCOR_STATUS bits that =20
+> >might =20
+> >> >be ANFE in aer_err_info
+> >> >
+> >> >On Wed, 17 Apr 2024 14:14:05 +0800
+> >> >Zhenzhong Duan <zhenzhong.duan@intel.com> wrote:
+> >> > =20
+> >> >> In some cases the detector of a Non-Fatal Error(NFE) is not the most
+> >> >> appropriate agent to determine the type of the error. For example,
+> >> >> when software performs a configuration read from a non-existent
+> >> >> device or Function, completer will send an ERR_NONFATAL Message.
+> >> >> On some platforms, ERR_NONFATAL results in a System Error, which
+> >> >> breaks normal software probing.
+> >> >>
+> >> >> Advisory Non-Fatal Error(ANFE) is a special case that can be used
+> >> >> in above scenario. It is predominantly determined by the role of the
+> >> >> detecting agent (Requester, Completer, or Receiver) and the specific
+> >> >> error. In such cases, an agent with AER signals the NFE (if enabled)
+> >> >> by sending an ERR_COR Message as an advisory to software, instead of
+> >> >> sending ERR_NONFATAL.
+> >> >>
+> >> >> When processing an ANFE, ideally both correctable error(CE) status =
+and
+> >> >> uncorrectable error(UE) status should be cleared. However, there is=
+ no
+> >> >> way to fully identify the UE associated with ANFE. Even worse, a Fa=
+tal
+> >> >> Error(FE) or Non-Fatal Error(NFE) may set the same UE status bit as
+> >> >> ANFE. Treating an ANFE as NFE will reproduce above mentioned issue,
+> >> >> i.e., breaking softwore probing; treating NFE as ANFE will make us
+> >> >> ignoring some UEs which need active recover operation. To avoid =20
+> >clearing =20
+> >> >> UEs that are not ANFE by accident, the most conservative route is t=
+aken
+> >> >> here: If any of the FE/NFE Detected bits is set in Device Status, d=
+o not
+> >> >> touch UE status, they should be cleared later by the UE handler. =20
+> >Otherwise, =20
+> >> >> a specific set of UEs that may be raised as ANFE according to the P=
+CIe
+> >> >> specification will be cleared if their corresponding severity is No=
+n-Fatal.
+> >> >>
+> >> >> To achieve above purpose, store UNCOR_STATUS bits that might be =20
+> >ANFE =20
+> >> >> in aer_err_info.anfe_status. So that those bits could be printed and
+> >> >> processed later.
+> >> >>
+> >> >> Tested-by: Yudong Wang <yudong.wang@intel.com>
+> >> >> Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+> >> >> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+> >> >> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
+> >> >> ---
+> >> >>  drivers/pci/pci.h      |  1 +
+> >> >>  drivers/pci/pcie/aer.c | 45 =20
+> >> >++++++++++++++++++++++++++++++++++++++++++ =20
+> >> >>  2 files changed, 46 insertions(+)
+> >> >>
+> >> >> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> >> >> index 17fed1846847..3f9eb807f9fd 100644
+> >> >> --- a/drivers/pci/pci.h
+> >> >> +++ b/drivers/pci/pci.h
+> >> >> @@ -412,6 +412,7 @@ struct aer_err_info {
+> >> >>
+> >> >>  	unsigned int status;		/* COR/UNCOR Error Status */
+> >> >>  	unsigned int mask;		/* COR/UNCOR Error Mask */
+> >> >> +	unsigned int anfe_status;	/* UNCOR Error Status for ANFE */
+> >> >>  	struct pcie_tlp_log tlp;	/* TLP Header */
+> >> >>  };
+> >> >>
+> >> >> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> >> >> index ac6293c24976..27364ab4b148 100644
+> >> >> --- a/drivers/pci/pcie/aer.c
+> >> >> +++ b/drivers/pci/pcie/aer.c
+> >> >> @@ -107,6 +107,12 @@ struct aer_stats {
+> >> >>  					PCI_ERR_ROOT_MULTI_COR_RCV | =20
+> >> >	\ =20
+> >> >>  					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+> >> >>
+> >> >> +#define AER_ERR_ANFE_UNC_MASK =20
+> >> >	(PCI_ERR_UNC_POISON_TLP |	\ =20
+> >> >> +					PCI_ERR_UNC_COMP_TIME | =20
+> >> >	\ =20
+> >> >> +					PCI_ERR_UNC_COMP_ABORT | =20
+> >> >	\ =20
+> >> >> +					PCI_ERR_UNC_UNX_COMP | =20
+> >> >	\ =20
+> >> >> +					PCI_ERR_UNC_UNSUP)
+> >> >> +
+> >> >>  static int pcie_aer_disable;
+> >> >>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+> >> >>
+> >> >> @@ -1196,6 +1202,41 @@ void aer_recover_queue(int domain, =20
+> >unsigned =20
+> >> >int bus, unsigned int devfn, =20
+> >> >>  EXPORT_SYMBOL_GPL(aer_recover_queue);
+> >> >>  #endif
+> >> >>
+> >> >> +static void anfe_get_uc_status(struct pci_dev *dev, struct =20
+> >aer_err_info =20
+> >> >*info) =20
+> >> >> +{
+> >> >> +	u32 uncor_mask, uncor_status;
+> >> >> +	u16 device_status;
+> >> >> +	int aer =3D dev->aer_cap;
+> >> >> +
+> >> >> +	if (pcie_capability_read_word(dev, PCI_EXP_DEVSTA, =20
+> >> >&device_status)) =20
+> >> >> +		return;
+> >> >> +	/*
+> >> >> +	 * Take the most conservative route here. If there are
+> >> >> +	 * Non-Fatal/Fatal errors detected, do not assume any
+> >> >> +	 * bit in uncor_status is set by ANFE.
+> >> >> +	 */
+> >> >> +	if (device_status & (PCI_EXP_DEVSTA_NFED | PCI_EXP_DEVSTA_FED))
+> >> >> +		return;
+> >> >> + =20
+> >> >
+> >> >Is there not a race here?  If we happen to get either an NFED or FED
+> >> >between the read of device_status above and here we might pick up a =
+=20
+> >status =20
+> >> >that corresponds to that (and hence clear something we should not). =
+=20
+> >>
+> >> In this scenario, info->anfe_status is 0. =20
+> >
+> >OK. In that case what is the point of the check above?
+> >If the code is safe to races, it's safe to go ahead without that check
+> >on what might race. =20
+>=20
+> Good question.
+> After further digging into the spec, I just found I misunderstood it.
+> An UNCUR error raised as ANFE can be raised as NFE in different cases,
+> so info->anfe_status can be nonzero here and the race you mentioned
+> does exist, the check on PCI_EXP_DEVSTA_FED is also unnecessary.
+> Sorry for the misleading. I plan to have below change to fix the race:
+>=20
+>        unsigned int anfe_status;
+>        anfe_status =3D uncor_status & ~uncor_mask & ~info->severity &
+>                            AER_ERR_ANFE_UNC_MASK;
+>=20
+>        if (pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &device_status))
+>                return;
+>        /*
+>         * Take the most conservative route here. If there are
+>         * Non-Fatal errors detected, do not assume any
+>         * bit in uncor_status is set by ANFE.
+>         */
+>        if (device_status & PCI_EXP_DEVSTA_NFED)
+>                return;
+>         info->anfe_status =3D anfe_status;
+>=20
+> With this change, there is still a small window between reading uncor_sta=
+tus
+> and device_status to leak ANFE, but that's the best we can do and better
+> than clearing NFE. Let me know if you have better idea=F0=9F=98=8A
 
-Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
----
- arch/riscv/configs/defconfig        |  1 +
- drivers/tty/serial/8250/8250_acpi.c | 96 +++++++++++++++++++++++++++++
- drivers/tty/serial/8250/Kconfig     |  8 +++
- drivers/tty/serial/8250/Makefile    |  1 +
- 4 files changed, 106 insertions(+)
- create mode 100644 drivers/tty/serial/8250/8250_acpi.c
-
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 3cae018f9315..bea8241f52eb 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -150,6 +150,7 @@ CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_DW=y
- CONFIG_SERIAL_OF_PLATFORM=y
-+CONFIG_SERIAL_ACPI_PLATFORM=y
- CONFIG_SERIAL_SH_SCI=y
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
- CONFIG_VIRTIO_CONSOLE=y
-diff --git a/drivers/tty/serial/8250/8250_acpi.c b/drivers/tty/serial/8250/8250_acpi.c
-new file mode 100644
-index 000000000000..3682443bb69c
---- /dev/null
-+++ b/drivers/tty/serial/8250/8250_acpi.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Serial Port driver for ACPI platform devices
-+ *
-+ * This driver is for generic 16550 compatible UART enumerated via ACPI
-+ * platform bus instead of PNP bus like PNP0501. This is not a full
-+ * driver but mostly provides the ACPI wrapper and uses generic
-+ * 8250 framework for rest of the functionality.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/serial_reg.h>
-+#include <linux/serial_8250.h>
-+
-+#include "8250.h"
-+
-+struct acpi_serial_info {
-+	int	line;
-+};
-+
-+static int acpi_platform_serial_probe(struct platform_device *pdev)
-+{
-+	struct acpi_serial_info *data;
-+	struct uart_8250_port port8250;
-+	struct device *dev = &pdev->dev;
-+	struct resource *regs;
-+
-+	int ret, irq;
-+
-+	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!regs) {
-+		dev_err(dev, "no registers defined\n");
-+		return -EINVAL;
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	memset(&port8250, 0, sizeof(port8250));
-+
-+	spin_lock_init(&port8250.port.lock);
-+
-+	port8250.port.mapbase           = regs->start;
-+	port8250.port.irq               = irq;
-+	port8250.port.type              = PORT_16550A;
-+	port8250.port.flags             = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_FIXED_PORT |
-+					  UPF_IOREMAP | UPF_FIXED_TYPE;
-+	port8250.port.dev               = dev;
-+	port8250.port.mapsize           = resource_size(regs);
-+	port8250.port.iotype            = UPIO_MEM;
-+	port8250.port.irqflags          = IRQF_SHARED;
-+
-+	port8250.port.membase = devm_ioremap(dev, port8250.port.mapbase, port8250.port.mapsize);
-+	if (!port8250.port.membase)
-+		return -ENOMEM;
-+
-+	ret = uart_read_and_validate_port_properties(&port8250.port);
-+	if (ret)
-+		return -EINVAL;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->line = serial8250_register_8250_port(&port8250);
-+	if (data->line < 0)
-+		return data->line;
-+
-+	platform_set_drvdata(pdev, data);
-+	return 0;
-+}
-+
-+static void acpi_platform_serial_remove(struct platform_device *pdev)
-+{
-+	struct acpi_serial_info *data = platform_get_drvdata(pdev);
-+
-+	serial8250_unregister_port(data->line);
-+}
-+
-+static const struct acpi_device_id acpi_platform_serial_table[] = {
-+	{ "RSCV0003", 0 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(acpi, acpi_platform_serial_table);
-+
-+static struct platform_driver acpi_platform_serial_driver = {
-+	.driver = {
-+		.name			= "acpi_serial",
-+		.acpi_match_table	= ACPI_PTR(acpi_platform_serial_table),
-+	},
-+	.probe			= acpi_platform_serial_probe,
-+	.remove_new		= acpi_platform_serial_remove,
-+};
-+
-+builtin_platform_driver(acpi_platform_serial_driver);
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index 47ff50763c04..fbfe4d3501b1 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -576,3 +576,11 @@ config SERIAL_OF_PLATFORM
- 	  are probed through devicetree, including Open Firmware based
- 	  PowerPC systems and embedded systems on architectures using the
- 	  flattened device tree format.
-+
-+config SERIAL_ACPI_PLATFORM
-+	tristate "ACPI platform bus based probing for 8250 ports"
-+	depends on SERIAL_8250 && ACPI
-+	default n
-+	help
-+	  This option is used for generic 8250 compatible serial ports
-+	  that are enumerated through ACPI platform bus.
-diff --git a/drivers/tty/serial/8250/Makefile b/drivers/tty/serial/8250/Makefile
-index ea2e81f58eac..8c0ef357fc4e 100644
---- a/drivers/tty/serial/8250/Makefile
-+++ b/drivers/tty/serial/8250/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_SERIAL_8250_CONSOLE)	+= 8250_early.o
- 
- obj-$(CONFIG_SERIAL_8250_ACCENT)	+= 8250_accent.o
- obj-$(CONFIG_SERIAL_8250_ACORN)		+= 8250_acorn.o
-+obj-$(CONFIG_SERIAL_ACPI_PLATFORM)	+= 8250_acpi.o
- obj-$(CONFIG_SERIAL_8250_ASPEED_VUART)	+= 8250_aspeed_vuart.o
- obj-$(CONFIG_SERIAL_8250_BCM2835AUX)	+= 8250_bcm2835aux.o
- obj-$(CONFIG_SERIAL_8250_BCM7271)	+= 8250_bcm7271.o
--- 
-2.40.1
+Worth leaving some breadcrumbs about there being a race (so a comment)
+and explain what the side effects of hitting that race are (lost info
+on the error I think, but not a missed error)?
+>=20
+> Thanks
+> Zhenzhong
+>=20
+> > =20
+> >> =20
+> >> >
+> >> >Or am I missing that race being close somewhere? =20
+> >>
+> >> The bits leading to NFED or FED is masked out when assigning info-
+> >>anfe_status.
+> >> Bits for FED is masked out by ~info->severity,
+> >> bit for NFED is masked out by AER_ERR_ANFE_UNC_MASK.
+> >>
+> >> So we never clear status bits for NFED or FED in ANFE handler.
+> >>
+> >> See below assignment of info->anfe_status.
+> >>
+> >> Thanks
+> >> Zhenzhong
+> >> =20
+> >> > =20
+> >> >> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, =20
+> >> >&uncor_status); =20
+> >> >> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, =20
+> >> >&uncor_mask); =20
+> >> >> +	/*
+> >> >> +	 * According to PCIe Base Specification Revision 6.1,
+> >> >> +	 * Section 6.2.3.2.4, if an UNCOR error is raised as
+> >> >> +	 * Advisory Non-Fatal error, it will match the following
+> >> >> +	 * conditions:
+> >> >> +	 *	a. The severity of the error is Non-Fatal.
+> >> >> +	 *	b. The error is one of the following:
+> >> >> +	 *		1. Poisoned TLP           (Section 6.2.3.2.4.3)
+> >> >> +	 *		2. Completion Timeout     (Section 6.2.3.2.4.4)
+> >> >> +	 *		3. Completer Abort        (Section 6.2.3.2.4.1)
+> >> >> +	 *		4. Unexpected Completion  (Section 6.2.3.2.4.5)
+> >> >> +	 *		5. Unsupported Request    (Section 6.2.3.2.4.1)
+> >> >> +	 */
+> >> >> +	info->anfe_status =3D uncor_status & ~uncor_mask & ~info->severit=
+y =20
+> >> >& =20
+> >> >> +			    AER_ERR_ANFE_UNC_MASK;
+> >> >> +}
+> >> >> +
+> >> >>  /**
+> >> >>   * aer_get_device_error_info - read error status from dev and stor=
+e it =20
+> >to =20
+> >> >info =20
+> >> >>   * @dev: pointer to the device expected to have a error record
+> >> >> @@ -1213,6 +1254,7 @@ int aer_get_device_error_info(struct pci_dev =
+=20
+> >> >*dev, struct aer_err_info *info) =20
+> >> >>
+> >> >>  	/* Must reset in this function */
+> >> >>  	info->status =3D 0;
+> >> >> +	info->anfe_status =3D 0;
+> >> >>  	info->tlp_header_valid =3D 0;
+> >> >>
+> >> >>  	/* The device might not support AER */
+> >> >> @@ -1226,6 +1268,9 @@ int aer_get_device_error_info(struct pci_dev =
+=20
+> >> >*dev, struct aer_err_info *info) =20
+> >> >>  			&info->mask);
+> >> >>  		if (!(info->status & ~info->mask))
+> >> >>  			return 0;
+> >> >> +
+> >> >> +		if (info->status & PCI_ERR_COR_ADV_NFAT)
+> >> >> +			anfe_get_uc_status(dev, info);
+> >> >>  	} else if (type =3D=3D PCI_EXP_TYPE_ROOT_PORT ||
+> >> >>  		   type =3D=3D PCI_EXP_TYPE_RC_EC ||
+> >> >>  		   type =3D=3D PCI_EXP_TYPE_DOWNSTREAM || =20
+> >>
+> >> =20
+>=20
 
 
