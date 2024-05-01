@@ -1,317 +1,157 @@
-Return-Path: <linux-pci+bounces-6975-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6976-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 417CF8B90A2
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 22:33:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 888018B912A
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 23:50:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56D161C217D5
-	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 20:33:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA75A1C23173
+	for <lists+linux-pci@lfdr.de>; Wed,  1 May 2024 21:50:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B366C147C74;
-	Wed,  1 May 2024 20:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D790165FAA;
+	Wed,  1 May 2024 21:50:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SypZ/tLc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2XI3Aqr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185C31527B2;
-	Wed,  1 May 2024 20:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79294D5BF;
+	Wed,  1 May 2024 21:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714595576; cv=none; b=kDhddhhsU5j4ZfspYTFYeh8FT9ZhrlBeSjvNNMRUYIvMoaxJHGClc1GaewcTnkrHsN8jTx3k9vrOGgQHX6CnXLlJvfB9ssJPmcLRtkA/2/bTGUWfGXqLun8FlNu/RQ20ez/ah0qPncBzlCiDzjHzvt2wqjy1ROYQbng2u4z0X6A=
+	t=1714600212; cv=none; b=AU3ktb2A50CfV76tFvmDdig/NQtj2wv0+EzDt8kc9ZKGZLxfAG0UQtRisxYL2MZsAJAv9p58oF/8U6XnZ0HiKFPgZ074JTsxkFAQ5JpK+sHCJP8bW9rOl4oUPqHu7a/fxRDXRfn3x51ek7GkZF64s5/Xj63jRXLL8N2sizAF85g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714595576; c=relaxed/simple;
-	bh=kHPex7wRsRdxgybsWrTwxdR3oVX9EtULevfdnKktyQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AU7q/ml7RPhiw92YCQPRyshKVJcvDpytPH4Icu5YBWL36RZTBNPoJ64UY0ivEZEL+uVNrqxKD/xOmlH8cG595QPVnONQ1ABmwZU5b9U+TqIvcgseGOFAV8lx49TbU/FN50lGmh4pZpDiZVobLrjXO/8B35LMov4iJworMerZ6lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SypZ/tLc; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-23d39e4c0d9so739124fac.0;
-        Wed, 01 May 2024 13:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714595574; x=1715200374; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PK6bUYnjKXA3139CuZnFqKdohXzB6bNghOA877px0F0=;
-        b=SypZ/tLckei+0YnnXpuPrsPK31yfviKmoKPUfD8t0Ok/yW2Oryf1+YavXkYD/6LiCV
-         hDXkXHAbyncZSLR6IUih1rowfi3/xtMfClpoVSnnx8bCeb/GEhk+hMweFRc19z4oOIaT
-         Sif867X5o6aMxkI2Xo2y6L17RtpaJUKHTX0XCaNnmbmT6O2Nqmg4+zdq5Z+u+MXlCevE
-         gjPkhNLRb8WKm1J3kezu8NarzHThsSlDMKJibxlGvuzh46zNEA0SWTJaYI/qgJlM0KR6
-         BXhG5fNoHIw9OsBnGqFiEpPavvI6ToUBU9Af+cejUk5txMWvzxMVBiZP7Em+LX97L/3Z
-         +aVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714595574; x=1715200374;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PK6bUYnjKXA3139CuZnFqKdohXzB6bNghOA877px0F0=;
-        b=UFUkxFoSGSoI2pHQ1iToxTV7CqqERdEraojwMjBK8AgXDiJq4T7axSYcyJRCd65IOr
-         Aj7AlKW4hkpotKyQsV7uSquSV+p1ApIm/yxUOi32vte4KcdKQfDQCdggTzwv7Gj6VmkT
-         NkPhyU7yYzzbj4XFmhFWDA4yNfuoiFYPi+VeYsMVwbaDb3IvGjXL7hj5jxaHO54GVt/P
-         82f7t7kjxDL/1gWEUnIB2l7x+jxi8mIFTueZHV4vejGr+vpgSnvV/4lJmw02Cczwzz4B
-         ONecFu0DcitQ6VYjuLGeybInRwHisqCk16WWinnsprIvdyoLV9c0DrXF6fMGl2TfLzlQ
-         U5ow==
-X-Forwarded-Encrypted: i=1; AJvYcCWdKzNWpMvX0NvFJUu/SCt3mBxr9UnCEb2b33aB5ETn/b0prNJKhqnzLzHs81DaKWPwt1UDD4aSfNqhqnKGImALiCx2/3/amz7jM7EYYHlfWGyZPTOwLf6XITEhp+zsk1YU0c8RxJTqHLxdMGu1dA1QbiG2HGgZIZ0xXqq9QW8+h2kWiAN46m0qeiD3TLmD7m4grUTDzV+ZdsnR4eRKphFsWhT922PK/0e6q1qoUNHIx7iFB9r28QSKjpaBnSw=
-X-Gm-Message-State: AOJu0YyXM1T/vNmdtL7XLcyJKBqlCWm1CDrC34t/GKqPXi4HmG3CWK/1
-	Kf7nOkVI4HtChAs2o27znqHEZSfYFx4p7n2mNn94tbMOSqMZRw3/
-X-Google-Smtp-Source: AGHT+IEEi213Oim+pFQt5WqNLTilQ8NosxMtUvlAkKIuNAoYd59Y3HupxqwZGjbBQ04m8SUtsX/Msw==
-X-Received: by 2002:a05:6870:be97:b0:22f:bdb:633c with SMTP id nx23-20020a056870be9700b0022f0bdb633cmr125208oab.16.1714595574119;
-        Wed, 01 May 2024 13:32:54 -0700 (PDT)
-Received: from [192.168.7.110] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id rb11-20020a056871618b00b0023b5791f396sm2889919oab.15.2024.05.01.13.32.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 May 2024 13:32:53 -0700 (PDT)
-Message-ID: <7da9d481-1e44-4f0e-9210-fcbd95bd654f@gmail.com>
-Date: Wed, 1 May 2024 15:32:52 -0500
+	s=arc-20240116; t=1714600212; c=relaxed/simple;
+	bh=pcEtMp9KIjl5HwjSdfzFcU8G7IUQM5kmByyI59bmh78=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EZFTCbFaC+Svd6l804yczIh3IQmxm5h/5TUnGY/ealGjXEMBUS9yIALL9LB+VKW6Q7ic08jeBv2uslW9BmOWISAC63Vv+iTJcF2SOzdRR/zlnnPHZwrkGfqJvD/FZxr7emskJ6iZuX1moJ8Kwm0nW9QOBh23jNva3QR7EQ1KqKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2XI3Aqr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E9D2C072AA;
+	Wed,  1 May 2024 21:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714600211;
+	bh=pcEtMp9KIjl5HwjSdfzFcU8G7IUQM5kmByyI59bmh78=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=a2XI3AqrZE+c4PfLpNkS3DVRHX69WeR8DfKh9dfh2+rLOw4e4jgz/XiRTLn5VEXlJ
+	 p7ZYKrpnIMstghUlbT9S4HwMjGfF4ru0HB2Fx4r+FW+ZDhjN0BcLEuhCZqyKdTCDAh
+	 X1bH0zST764gXfP3Gi3CkJQHC7J+3QSFXEuc8uL94qpprjhkER3cG1yQ92kj0Fe0mS
+	 Q3D4Y1EOviK1gTKwEvb5pm1f4EW8vOFe5GzDGsvawGTp8QQHbQlUI74eSCOT2xn8gD
+	 1Wa3qDaXvn7s6k12RBZ2fwrfs78eCflFWbkyuINAmo7dFA1YYzgWHv20KX8NV0Utmi
+	 qVfDlMY4p/4Hg==
+Date: Wed, 1 May 2024 16:50:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thatchanamurthy Satish <Satish.Thatchanamurt@dell.com>
+Subject: Re: [PATCH v1] PCI/EDR: Align EDR implementation with PCI firmware
+ r3.3 spec
+Message-ID: <20240501215009.GA1497134@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 RESEND 8/8] arm64: dts: qcom: ipq9574: add PCIe2 and
- PCIe3 nodes
-To: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-clk@vger.kernel.org
-References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
- <20240501042847.1545145-9-mr.nuke.me@gmail.com>
-Content-Language: en-US
-From: "Alex G." <mr.nuke.me@gmail.com>
-In-Reply-To: <20240501042847.1545145-9-mr.nuke.me@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240501022543.1626025-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 
-
-
-On 4/30/24 23:28, Alexandru Gagniuc wrote:
-> On ipq9574, there are 4 PCIe controllers. Describe the pcie2 and pcie3
-> nodes, and their PHYs in devicetree.
+On Wed, May 01, 2024 at 02:25:43AM +0000, Kuppuswamy Sathyanarayanan wrote:
+> During the Error Disconnect Recover (EDR) spec transition from r3.2 ECN
+> to PCI firmware spec r3.3, improvements were made to definitions of
+> EDR_PORT_DPC_ENABLE_DSM (0x0C) and EDR_PORT_LOCATE_DSM(0x0D) _DSMs.
 > 
-> The pcie0 and pcie1 controllers use a gen3x1 PHY, which is not
-> currently supported. Hence, only pcie2 and pcie3 are described. Only
-> pcie2 was tested because my devboard only has conenctions to pcie2.
+> Specifically,
 > 
-> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> * EDR_PORT_DPC_ENABLE_DSM _DSM version changed from 5 to 6, and
+>   arg4 is now a package type instead of an integer in version 5.
+> * EDR_PORT_LOCATE_DSM _DSM uses BIT(31) to return the status of the
+>   operation.
+> 
+> Ensure _DSM implementation aligns with PCI firmware r3.3 spec
+> recommendation. More details about the EDR_PORT_DPC_ENABLE_DSM and
+> EDR_PORT_LOCATE_DSM _DSMs can be found in PCI firmware specification,
+> r3.3, sec 4.6.12 and sec 4.6.13.
+>
+> While at it, fix a typo in EDR_PORT_LOCATE_DSM comments.
+> 
+> Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->   arch/arm64/boot/dts/qcom/ipq9574.dtsi | 178 +++++++++++++++++++++++++-
->   1 file changed, 176 insertions(+), 2 deletions(-)
+>  drivers/pci/pcie/edr.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> index 7f2e5cbf3bbb..c391886cf9ab 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> @@ -300,8 +300,8 @@ gcc: clock-controller@1800000 {
->   				 <0>,
->   				 <0>,
->   				 <0>,
-> -				 <0>,
-> -				 <0>,
-> +				 <&pcie2_phy>,
-> +				 <&pcie3_phy>,
->   				 <0>;
->   			#clock-cells = <1>;
->   			#reset-cells = <1>;
-> @@ -745,6 +745,180 @@ frame@b128000 {
->   				status = "disabled";
->   			};
->   		};
-> +
-> +		pcie2_phy: phy@8c000 {
-> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
-> +			reg = <0x0008c000 0x14f4>;
-> +
-> +			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
-> +				 <&gcc GCC_PCIE2_AHB_CLK>,
-> +				 <&gcc GCC_PCIE2_PIPE_CLK>;
-> +			clock-names = "aux",
-> +				      "cfg_ahb",
-> +				      "pipe";
-> +
-> +			clock-output-names = "pcie_phy2_pipe_clk";
-> +			#clock-cells = <0>;
-> +			#phy-cells = <0>;
-> +
-> +			resets = <&gcc GCC_PCIE2_PHY_BCR>,
-> +				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
-> +			reset-names = "phy",
-> +				      "common";
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie3_phy: phy@f4000 {
-> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
-> +			reg = <0x000f4000 0x14f4>;
-> +
-> +			clocks = <&gcc GCC_PCIE3_AUX_CLK>,
-> +				 <&gcc GCC_PCIE3_AHB_CLK>,
-> +				 <&gcc GCC_PCIE3_PIPE_CLK>;
-> +			clock-names = "aux",
-> +				      "cfg_ahb",
-> +				      "pipe";
-> +
-> +			clock-output-names = "pcie_phy3_pipe_clk";
-> +			#clock-cells = <0>;
-> +			#phy-cells = <0>;
-> +
-> +			resets = <&gcc GCC_PCIE3_PHY_BCR>,
-> +				 <&gcc GCC_PCIE3PHY_PHY_BCR>;
-> +			reset-names = "phy",
-> +				      "common";
-> +			status = "disabled";
-> +		};
-> +
-> +		/* TODO: Populate pcie0/pcie1 when gen3x1 phy support is added. */
-> +
-> +		pcie2: pcie@20000000 {
-> +			compatible = "qcom,pcie-ipq9574";
-> +			reg = <0x20000000 0xf1d>,
-> +			      <0x20000f20 0xa8>,
-> +			      <0x20001000 0x1000>,
-> +			      <0x00088000 0x4000>,
-> +			      <0x20100000 0x1000>;
-> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
-> +
-> +			ranges = <0x81000000 0x0 0x20200000 0x20200000 0x0 0x00100000>,
-> +				 <0x82000000 0x0 0x20300000 0x20300000 0x0 0x07d00000>;
-> +
-> +			device_type = "pci";
-> +			linux,pci-domain = <3>;
-> +			bus-range = <0x00 0xff>;
-> +			num-lanes = <2>;
-> +			max-link-speed = <3>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			phys = <&pcie2_phy>;
-> +			phy-names = "pciephy";
-> +
-> +			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi";
-> +
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc 0 0 164 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 2 &intc 0 0 165 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 3 &intc 0 0 186 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 4 &intc 0 0 187 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			clocks = <&gcc GCC_PCIE2_AXI_M_CLK>,
-> +				 <&gcc GCC_PCIE2_AXI_S_CLK>,
-> +				 <&gcc GCC_PCIE2_AXI_S_BRIDGE_CLK>,
-> +				 <&gcc GCC_ANOC_PCIE2_2LANE_M_CLK>,
-> +				 <&gcc GCC_SNOC_PCIE2_2LANE_S_CLK>,
-> +				 <&gcc GCC_PCIE2_RCHNG_CLK>;
-> +			clock-names = "axi_m",
-> +				      "axi_s",
-> +				      "axi_bridge",
-> +				      "rchng";
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index 5f4914d313a1..fea098e22e3e 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -35,7 +35,7 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>  	 * Behavior when calling unsupported _DSM functions is undefined,
+>  	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+>  	 */
+> -	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> +	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 6,
+>  			    1ULL << EDR_PORT_DPC_ENABLE_DSM))
 
-There is a mistake here with the clock-names :( . Will fix it in v5.
+How confident are we that this won't break any existing platforms?
+Any idea how many platforms implement EDR_PORT_DPC_ENABLE_DSM and what
+Revision IDs they support?
 
-> +
-> +			resets = <&gcc GCC_PCIE2_PIPE_ARES>,
-> +				 <&gcc GCC_PCIE2_AUX_ARES>,
-> +				 <&gcc GCC_PCIE2_CORE_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE2_AXI_M_ARES>,
-> +				 <&gcc GCC_PCIE2_AXI_S_ARES>,
-> +				 <&gcc GCC_PCIE2_AXI_S_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE2_AXI_M_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE2_AHB_ARES>;
-> +			reset-names = "pipe",
-> +				      "aux",
-> +				      "sticky",
-> +				      "axi_m",
-> +				      "axi_s",
-> +				      "axi_s_sticky",
-> +				      "axi_m_sticky",
-> +				      "ahb";
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie3: pcie@18000000 {
-> +			compatible = "qcom,pcie-ipq9574";
-> +			reg = <0x18000000 0xf1d>,
-> +			      <0x18000f20 0xa8>,
-> +			      <0x18001000 0x1000>,
-> +			      <0x000f0000 0x4000>,
-> +			      <0x18100000 0x1000>;
-> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
-> +
-> +			ranges = <0x81000000 0x0 0x18200000 0x18200000 0x0 0x00100000>,
-> +				 <0x82000000 0x0 0x18300000 0x18300000 0x0 0x07d00000>;
-> +
-> +			device_type = "pci";
-> +			linux,pci-domain = <4>;
-> +			bus-range = <0x00 0xff>;
-> +			num-lanes = <2>;
-> +			max-link-speed = <3>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			phys = <&pcie3_phy>;
-> +			phy-names = "pciephy";
-> +
-> +			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi";
-> +
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc 0 0 189 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 2 &intc 0 0 190 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 3 &intc 0 0 192 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 4 &intc 0 0 192 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			clocks = <&gcc GCC_PCIE3_AXI_M_CLK>,
-> +				 <&gcc GCC_PCIE3_AXI_S_CLK>,
-> +				 <&gcc GCC_PCIE3_AXI_S_BRIDGE_CLK>,
-> +				 <&gcc GCC_ANOC_PCIE3_2LANE_M_CLK>,
-> +				 <&gcc GCC_SNOC_PCIE3_2LANE_S_CLK>,
-> +				 <&gcc GCC_PCIE3_RCHNG_CLK>;
-> +			clock-names = "axi_m",
-> +				      "axi_s",
-> +				      "axi_bridge",
-> +				      "anoc",
-> +				      "snoc",
-> +				      "rchng";
-> +
-> +			resets = <&gcc GCC_PCIE3_PIPE_ARES>,
-> +				 <&gcc GCC_PCIE3_AUX_ARES>,
-> +				 <&gcc GCC_PCIE3_CORE_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE3_AXI_M_ARES>,
-> +				 <&gcc GCC_PCIE3_AXI_S_ARES>,
-> +				 <&gcc GCC_PCIE3_AXI_S_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE3_AXI_M_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE3_AHB_ARES>;
-> +			reset-names = "pipe",
-> +				      "aux",
-> +				      "sticky",
-> +				      "axi_m",
-> +				      "axi_s",
-> +				      "axi_s_sticky",
-> +				      "axi_m_sticky",
-> +				      "ahb";
-> +			status = "disabled";
-> +		};
->   	};
->   
->   	thermal-zones {
+>  		return 0;
+>  
+> @@ -47,11 +47,11 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>  	argv4.package.elements = &req;
+>  
+>  	/*
+> -	 * Per Downstream Port Containment Related Enhancements ECN to PCI
+> -	 * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_DSM is
+> -	 * optional.  Return success if it's not implemented.
+> +	 * Per PCI Firmware Specification r3.3, sec 4.6.12,
+> +	 * EDR_PORT_DPC_ENABLE_DSM is optional. Return success if it's not
+> +	 * implemented.
+>  	 */
+> -	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 6,
+>  				EDR_PORT_DPC_ENABLE_DSM, &argv4);
+>  	if (!obj)
+>  		return 0;
+> @@ -86,7 +86,7 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_dev *pdev)
+>  
+>  	/*
+>  	 * Behavior when calling unsupported _DSM functions is undefined,
+> -	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+> +	 * so check whether EDR_PORT_LOCATE_DSM is supported.
+>  	 */
+>  	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+>  			    1ULL << EDR_PORT_LOCATE_DSM))
+> @@ -103,6 +103,17 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_dev *pdev)
+>  		return NULL;
+>  	}
+>  
+> +	/*
+> +	 * Per PCI Firmware Specification r3.3, sec 4.6.13, bit 31 represents
+> +	 * the success/failure of the operation. If bit 31 is set, the operation
+> +	 * is failed.
+> +	 */
+> +	if (obj->integer.value & BIT(31)) {
+> +		ACPI_FREE(obj);
+> +		pci_err(pdev, "Locate Port _DSM failed\n");
+> +		return NULL;
+> +	}
+
+This changes two _DSMs, and I think it should be two patches.
+
+Same question here: we now depend on functionality we didn't depend on
+before.  How confident are we in this?
+
+>  	/*
+>  	 * Firmware returns DPC port BDF details in following format:
+>  	 *	15:8 = bus
+> -- 
+> 2.25.1
+> 
 
