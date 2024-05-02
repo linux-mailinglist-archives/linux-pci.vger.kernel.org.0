@@ -1,84 +1,78 @@
-Return-Path: <linux-pci+bounces-7023-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7024-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EA268BA0F2
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 21:18:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 006B98BA12D
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 21:59:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 544C9282E36
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 19:18:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69BE31F21D4B
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 19:59:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CF5C179967;
-	Thu,  2 May 2024 19:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F90142AB6;
+	Thu,  2 May 2024 19:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Y41VGSyf"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VA7YyPZ7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2049.outbound.protection.outlook.com [40.107.8.49])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2053.outbound.protection.outlook.com [40.107.8.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9AC16D9C8;
-	Thu,  2 May 2024 19:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C12869D2F
+	for <linux-pci@vger.kernel.org>; Thu,  2 May 2024 19:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714677485; cv=fail; b=Tyjtn8VeTGcxWgQeAmMi1KE6o6LZnDE3tX9Di0A/AyBzGQKWvIMjXat+e9ILjCGijTDETNyvTrqMaEXyxqb8zYtY6I91dpKVH5c0rapnRCCODhUkBvGWfDLgP9Lu9DSXefNH5IJ9afBmYQjFpkszUv8YL2z0fQVGcnqvbVBjnX4=
+	t=1714679964; cv=fail; b=ByWRQVUdMTyKt8Va0udo+iLYJPny8KXDl4q7suzvdjphQekmxK+LWtvu8HASKD8T0U/EpNuVGFtGTtfGqwO2Y2ohJB8lvsdUS5wR386rqHXKMBMXYkKiE+mDs75emalteoMbKhpOb0dwWo+1whM1cq21mBHnXxeBMklc1fFAYGQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714677485; c=relaxed/simple;
-	bh=bTmMJnyLljgx3qQHzPwilSwyr+zE0UFqQYb570TE3qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=o4xPQO8YyBlItU2dYOxUXm8sqxCWI/yU/fQpGf8HU7eWNrx6ze5ZpeDyocBP+26FdTeN/+8lnomSxU11Oo68kFi0j6cqsnqy28ohNK3kMI3e5QHNAv86rkVLCe46J49C1Q6UuI7Cb7JAFG0EXKlwC3AWu6y2Z15VlNsafpZmSXo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Y41VGSyf; arc=fail smtp.client-ip=40.107.8.49
+	s=arc-20240116; t=1714679964; c=relaxed/simple;
+	bh=pstVBb8F2USD/8HQ+8WjlsxJrRD9iIWp5s1LU9mLsXQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=PMmycsB7U7i0xDM3TGyZMk9bkv57bUJg4cFy2k95W/i5g/vMiaYoD4KbtjF6pD2DionOoZDMfDZqOotrpE7IBi6gEWWzkXYZRZC+8GH2wJ6+W5p2GTiSAC58CnBuZAsorD8ak2+vdjio5j594/xAJNlFsESFwzcZeY89ErVcHR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=VA7YyPZ7; arc=fail smtp.client-ip=40.107.8.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=giwrYpfcvmAcD8oxQQxTXGCTItaur7/L4s3bdsqKsTiFHEDHYm97eslHwDr1zVJQackrqvpYEu0zTSkskbDETLeWHrbPYLW76gxq282T8TDOLviurnQUrutQJkUSjXGEXn0seDTslCd7mFWn6LnoZqNlVUxEALtdVvxmW+EbT97OypwJer/MXzv+QMG0ojK8OmRsUtJWGytSLJbUayjf+Fv/O2GxmXQSp+ppp5x+aPYNeHTSPB8cDkpR+tnIeJVApHY5gobqLBm3IM2iWiH5MWLSwideDTgFkg5R0O+EPmrqcZd9nm/KeX00/ZRmhxMtltpffzw+3dapwYpQRvuEgw==
+ b=lol7/0kdGUhtQhKhejOHFGtil1Bf1SzBPQ/r3Xdh3Y3uaw3x6H3bZqb39u8Mqf5hzEMVeWsBkl7WUQ1LncJzwC5CiH6Oj+KUdgRnlSdYTvKIw3v8BbIggwsb7S5gxD2O9jswxX7cS0KfZiU+oswUF7G7x79n4Qj36s+2mxI3HGQ5/kEgLiEC0m2RzU4CvrCluJPZVKUN4axf9aBkaCJvNy/MHdDZGslzcWlTsB/fvM11INiuVB6A1XspE6gdPPpqY5rXAivotl0lcsMABmavvGqG+Uw9HkuERfbdolkjpmdbRadBPSa5SZMPRq12sgVLXIZ5BQvCKiVYxHkrGz4JmQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XRswEMBdS+SlpM0F6Hzo1PAAdIlG57L5nWY14JJRDHs=;
- b=azmr7jguYtSp1DVO6GuKWwLp/j2uVnIMl+op2s9lhB8/sS7spTp561hcYAV5f3SJ1Tc9/JnPN1QNLyEgYAhfBfpLimsnB/aUz+XgbFVUp9/WpIGB4DT4RAP087u3RqB7xqMEVtH+qkkV4iianN6rsYC0kEzEeXZtNNCljt+tVzncLPl4cNN79jOwwu+yCIv2sl6LQN83dbSV1iCoJJ4PlCL9ETIeMZl+WbP8LODVz4DTSmvjUPbFuySRm6RQBAnl1KA+HUdycUgVScuLbMeWVxEu+Qghb9QQ3BTZREyf7ve5e5l9lP3vsRLFS2+ljAnnkPquzTgT5lfnbVvoEZg0iQ==
+ bh=YUt+HNg5YMjh/l+YI4YkaeMjiQkTXyCoVeWrHkvt5JI=;
+ b=QO5luZz3HYMH99mIAPvQ//obI5EdKkX66jCtgJjd2UAhFNItPXGsyzn4TMYq+1F1GMj6wea8uWNhY4HnAb/zfulyKF8TGtdbRAxX5XwcnYFvsy3+LNrWh83xs+qxIZzXb22uN5dXDTB7ucwzb2uAU64Aa9pWHRFVZTBgAr3s0KA8dKdAiUE+TMZDYqPn6vl/GsmtLXFeYn7DI8PrAd34YCrY5P7n2nKbGyY6cdKBSVZAm3kV02j/TIhhH7EyFN5+RbPDynYey4gYdoug8D9vHzCtwuU7jxEkoUSN2MTaZ/mn8q3IwfIrblSdiXsiyhF19w9Uov6S9/FUbbvbclMLaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XRswEMBdS+SlpM0F6Hzo1PAAdIlG57L5nWY14JJRDHs=;
- b=Y41VGSyfc3+p56vZNngBHM/LO3fIIVacrLC8UHBlTeMxpFbMsLSbW/Era0JkQLFr3X+2u4/qHRIIDl4mScQwOJOs8FSLje9eNLQTYkC2v27UMVo9/q5PW2k6pXUjWWStZz4uTzbHxXkTuM28moFc4/e7ce0kzQqsTFkhf+Fjtpo=
+ bh=YUt+HNg5YMjh/l+YI4YkaeMjiQkTXyCoVeWrHkvt5JI=;
+ b=VA7YyPZ7z/HxONJqvBveIvYHC4YDde46pTeo65PwTTwQAnEwBSao1Sb5MYzN4ssHu2yuaipRyE9Xc5bPieCZ52abUmYX5A/JBgFu7G3ItYLkuvT8f2ozW9tTObVun7aGpve6qRv1exPlOS5KPHtAY9FpOGu3suJLdiCFte5RDz8=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by AS8PR04MB8229.eurprd04.prod.outlook.com (2603:10a6:20b:3b3::11) with
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DU2PR04MB9130.eurprd04.prod.outlook.com (2603:10a6:10:2f5::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.29; Thu, 2 May
- 2024 19:17:59 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%5]) with mapi id 15.20.7519.035; Thu, 2 May 2024
- 19:17:59 +0000
-Date: Thu, 2 May 2024 15:17:50 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Subject: Re: [PATCH v8 0/5] PCI: dwc: Add common pme_turn_off message by
- using outbound iATU
-Message-ID: <ZjPm3oSQQW6B8vm1@lizhi-Precision-Tower-5810>
-References: <20240418-pme_msg-v8-0-a54265c39742@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418-pme_msg-v8-0-a54265c39742@nxp.com>
-X-ClientProxiedBy: SJ0PR05CA0149.namprd05.prod.outlook.com
- (2603:10b6:a03:33d::34) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.24; Thu, 2 May
+ 2024 19:59:18 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7544.029; Thu, 2 May 2024
+ 19:59:18 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: manivannan.sadhasivam@linaro.org,
+	imx@lists.linux.dev
+Cc: Frank.Li@nxp.com,
+	arnd@arndb.de,
+	cassel@kernel.org,
+	gregkh@linuxfoundation.org,
+	kishon@kernel.org,
+	kw@linux.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2 1/1] misc: pci_endpoint_test: Refactor dma_set_mask_and_coherent() logic
+Date: Thu,  2 May 2024 15:59:03 -0400
+Message-Id: <20240502195903.3191049-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0023.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b::28) To DB9PR04MB9626.eurprd04.prod.outlook.com
  (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -87,246 +81,125 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|AS8PR04MB8229:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb5d3846-ba4f-4d50-9722-08dc6adc945e
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB9130:EE_
+X-MS-Office365-Filtering-Correlation-Id: a40110a7-de19-4d1b-00df-08dc6ae25970
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|1800799015|376005|52116005|7416005|921011|38350700005;
+	BCL:0;ARA:13230031|1800799015|52116005|376005|366007|38350700005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Zlzgwf5bv5Kw/Vl+j0Ih/AaoFFpwWTFrsnxiFxJSETZUR2l+0EsemCmy3nNf?=
- =?us-ascii?Q?ZgrvJncE0xVE2sCNuEmZBIlojKhaGykXHLlEayVvQrEMZSFFNCV9c8/07+Gb?=
- =?us-ascii?Q?2ljAXLBnycQ6oWhoUheHVPOreGsBt9LwjeeaYTCwaBl9WyNuSiTN7JvFNbrO?=
- =?us-ascii?Q?ke3v9liJwFYFkVxzUQ0ygP3iykdSgkFkO/oOu01BrvK0zM9mUorTRkzHIFX/?=
- =?us-ascii?Q?RrB4TGwm3thEsgfV7Twc9Us/STTXxcOSM+m1qP03wp6CX5g0fwQp6fQZGdEB?=
- =?us-ascii?Q?Q8gE4aL4xaGnjndzJ8YxJYG60GH2H34ojVP23z1BLMDXDlgjc2TCV//1JKIv?=
- =?us-ascii?Q?Z0RFOxLTIiLaY1trmXrt7TfVwePn22qTxYxJeNlXVq7c7CR/jKDdSJASAZSu?=
- =?us-ascii?Q?VpD9vt9xXcxg3sGpw+fRQ3Nr4nDM4jw4XD60o3yxeZnxvRrC5ZI9lrT96bnx?=
- =?us-ascii?Q?B7W8DP6U2Il/pJcdHLUuKj2+zIr4tThI2J2sb4wAWWIZtoNB3dybC59K2FNO?=
- =?us-ascii?Q?h1HP4X4BHkQ+wtxe2e4PWNZ258pzPLdAvSb2I+24lOxn7i1YcwTx+LlMgvif?=
- =?us-ascii?Q?HodmMFDd6u2j/YWSDey4HYOECJw4wxzaRmHgXoGi6srAC/JOmuoxrV8Mhrsh?=
- =?us-ascii?Q?p0JL03WweIHL3wsgrM+OEwrT5kkY20Baj8+fKn3IlgUvYpnmr/tnRdflud4w?=
- =?us-ascii?Q?5gQF3qgb4VWu9KXwnJfPqQDEzZOhpnWAayG2rpmv/W3qrZ/4F9kcy/pSuV/3?=
- =?us-ascii?Q?78vRSA1ZrP7LJWqFfMkvfI6uGezcKnMO0LZPOtkffCrOzHBST1WGdu19FrCF?=
- =?us-ascii?Q?6+s18BqX3CjtZdZwIIjPogORlIfMt8fnLYqHcFEtJXL48LT3wmfvtrSENTfS?=
- =?us-ascii?Q?6woL/n7gfEbWTb79Smx/EWseZ/3JLtZzS04pJdLPVFl6nJJNchBgQV1az/2W?=
- =?us-ascii?Q?n/shjYMZZzsw/isui0DJjI1586Pl/yPVs/2t2LItWVUqWk/bM5GDqs20h3gA?=
- =?us-ascii?Q?IHDpKBVt2cVcCSkL7k3uK67iKh56mgk+WjfpBrE5ixnE4taecuyfkauk1GHC?=
- =?us-ascii?Q?TVhQd0B81UICp6W13eweBo3at60WRd7shux3fzMwWXDcdYuZiupEEGYUb7mo?=
- =?us-ascii?Q?oHFxPmGvafEexquFUvcG9UhPSYG6upTv82Hn/BTbz0h2QcYFUv/zm4H6Rrcp?=
- =?us-ascii?Q?wrtIhNvZp3UJmgo6aWrVYkz2LDxnmeuS6cSJSe8KwmIEwIiBi77vY5muyd3D?=
- =?us-ascii?Q?S2XjAa98H1eNJPx/WOl/q57NoC+zq/smdYt8v7K1B2BrZuaXqAhdshb34Q8I?=
- =?us-ascii?Q?2Z13ARAFeMIXdxtsizQoQxTf/stxsJJ74HrpzMYOGyrhMGohw8FmfBTKl1WD?=
- =?us-ascii?Q?mTjNp/E=3D?=
+	=?us-ascii?Q?NcO7CY5y2Xz40NQGlPZsvc9kJm2pBlGiN3cr9Hni/0+LJPkepY7sJqjS3KeI?=
+ =?us-ascii?Q?lKAF2W5i7TIV2hqS2Oy2KVrs34f5VQtN0AOAUTB+hBxmoGMF2S/NNtGZ34Dr?=
+ =?us-ascii?Q?l+WDds6/6ltMS/OUTOzUj8Xidlq1R/D0RRvrV80z+L2RHWfg4XHkb/nn3Wy3?=
+ =?us-ascii?Q?d78Mf5I8BPFDBub5HbY5H4H9aAOdCzhz7ErvTJ500Yssz/ILuyBpVctMnJE5?=
+ =?us-ascii?Q?umyNVg1yCs7W7FEohVrGEU+svV79ZLdEO+PTGUxxv+FxeVTALYdcUkfWh/gX?=
+ =?us-ascii?Q?AibWjUw2N4ylXL096U+aiFj/1Y08oBfTFil0bGxdv650Q6T24SIaIq90fC/h?=
+ =?us-ascii?Q?eqWEwG7pwMAK7KELodwSz88hS7oknnH8e1eR6SUYHEYFSg9IbX6FICKWTHvO?=
+ =?us-ascii?Q?SyW4qLWzkl+M266VB2IdvGRvYVWjJELMRSKRNg7cnQwyVxtoljWlzxLZPAvq?=
+ =?us-ascii?Q?k7SvhqTkYZDT46J4npNtFXa3cZ9J5OkDucGxWuDzvTrARb53lp6QzQ/oU0Lc?=
+ =?us-ascii?Q?eQAjJOnr2uFCijrSu+aJ4Upbq1M6xOv5lWxWof3FZebqJ+bA7g+vrM4yNuiO?=
+ =?us-ascii?Q?0mNZBHV2hWjf4a6HUXbURHevFmWKOnEFn+YLaj4Xi6a1ZN4ynf5N8TwM0IOW?=
+ =?us-ascii?Q?ERvDIBrchvDQtgp8UCkEdBfo/8TETrozHQjm/AJZbXa1vUHqCV7jRgkILEmd?=
+ =?us-ascii?Q?6TbgVgvddLQSeVaxE0I3sSdAzi03GswJdv0fKq2BMzWs6olypL5Mx30q0xnZ?=
+ =?us-ascii?Q?LzNOyDjLh618EOvHoTtdvwjzJvX9/HwL8OEPZetKB7w2cT2cnqX5CLlbzv40?=
+ =?us-ascii?Q?tC1h6J1JE7qQUIhxB337c7wsk8POQhFsbFrdQPzeP3tr/s9LxftYBk06JqEr?=
+ =?us-ascii?Q?AafmdZXUaJA4YGX6MfvboH+CXFK6OFOVmAJ4RpXUT5yk/a3NEsQOTaBOSTCr?=
+ =?us-ascii?Q?Vn2SVOxgwe7a8i40AXZFVyGR96wLO3mfRLzDMHQQH+r9ypbRS/nluIKvgrxC?=
+ =?us-ascii?Q?ujgciP8wUYNFVswOq/YnGnWjBb4mHimBOWbxm7iwtg3L3XKsBYKKZK5c+eA+?=
+ =?us-ascii?Q?1uyhFQAkcm7NDrfgZt6dNYb0jlwNSJXWHkkpRoDLDb9D9gdooHun4tVwyqte?=
+ =?us-ascii?Q?sRZhLGwu27Zmck7xxTujflwPAtm5YLjrWRxlgT92fsat6FJOMfhxVtXSHoRE?=
+ =?us-ascii?Q?JMS2MoK3+jwleKVof4WHJoidcFePhdw2EAQ3vZsOOF89gOUuLM4C3nSbgZE2?=
+ =?us-ascii?Q?Pl4B9PYbmjCtrNXzxyXzpKnPJcFJu/4+g+UwkrYoCw=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(52116005)(7416005)(921011)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(366007)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?sNHKWL7UyohbT8OsS7xQTVazFmpfYPt8H9ycGhMyQA4MjGfa+O1RFqOwpbqd?=
- =?us-ascii?Q?L8sq/a4MntAN4//oLUv9Nz7QjZrHpq+SEyrnR7TKN6vmtVIXYvMJsatoyFz1?=
- =?us-ascii?Q?3mZlOLsUVACn7OLkeQ8tSb1ajI4PneC2ddyUm78W3Tnzwfqf9rHZLFfSfEi+?=
- =?us-ascii?Q?NoC3wYzKAWVg50f0sKm5qEu2qpkCfy/QXj2g8r/ypPGoKyFi3ys+0LF7B9uJ?=
- =?us-ascii?Q?WpBoQzikLJ7fExwCr8GQ/hIFQ25HV0wr0PKNxSMWJwWeNi9E5pKMgAOav3My?=
- =?us-ascii?Q?HZKXJq1HYjAq/H+2yfrle5S+VyfxsArU2g4j0k2cN0lwDM75JmZfu2DMGp0t?=
- =?us-ascii?Q?PCiC20PBwRj24/SPwA7fQliVtxK8eT69MGthi5vqaPKgYDXnVtrbTNN2F9ec?=
- =?us-ascii?Q?PS6UnTuMpLETtVqqWlRiBptzpftmkt9b8/B8wj2kdEELhHwAwRGsEwPHwrK9?=
- =?us-ascii?Q?GgUDLXwrgdOVN4MKIv1/gl7tzZjjoGyasBE5m2gQ+txagIhZ/DYpM/IkO8wb?=
- =?us-ascii?Q?cXWR45EVUIBT063vqq2nlfvBQ3uQETGc86/uX0F7qnDjCHd5oXKNnjCfoiif?=
- =?us-ascii?Q?WCDf5Iv8SPfUrNW3s+Yk0Wlp28vFMb8IKFc3wvQOlw+1xmiD5VQsZMdF5pgO?=
- =?us-ascii?Q?12fgpAZcBr6qDo4lBjXB1VTa8uY2j/4uQeEa5TbcFikP2OjLTmphvE26lP2V?=
- =?us-ascii?Q?8tDkA9h7kbj9ozGsusRHx9JbVNCktG5rO5EnvrokOpuR6pqkud4Stf/ukXpe?=
- =?us-ascii?Q?sbvg2ATZh6h9sMuD+ri4daJW22vS8dSlgxgZTmapNZG77gARIJERb5M8U2s7?=
- =?us-ascii?Q?K9+KYRPvlxWzeeCPPH7C9+NqB85U8jcoqqL/XbYM9CXzVhR6rIiMcrPbTbob?=
- =?us-ascii?Q?Cz8uT1wCVt/f+eU+q3HTnjYD5lIuD4Dhoe6S2Lso7dvCOyiPfKbSY3hcwFWg?=
- =?us-ascii?Q?Y+6LHnV1EhC4yf/Iw8X9IhWIuNZ7FBT49BJZZLpSwkCtvOkAthGQY5LBLZbc?=
- =?us-ascii?Q?nC7MkE7sjOuocxUqvsucTArjrN5vbjxRWUJXyoO0K5YCRP1cA18axUvq1Us9?=
- =?us-ascii?Q?/1R41spHCSEn0pvCWd/xtju/ofXDE1X1kbKxn/JoHS1ze42b3ZYxSWFLrb0e?=
- =?us-ascii?Q?zZ+q/ArxutUOLaR879KznWZy++cSLsZqQvUj185V2ZwN7I6MamFTepwhXE2g?=
- =?us-ascii?Q?mXVTW+eQOqG0EN6xf8sr94Up/NJTO6obWqiQItsBvZUmi0jLd5gZUfdcFX0G?=
- =?us-ascii?Q?StkArmrkX1BRhIcQ2UbmS4BrtQV92B8mIK29nB5QVwB59c7IeFCOTpQoHun2?=
- =?us-ascii?Q?hz75pgqVigN+RjyBCUKPi/kAOKr83dS0CxShnXtNJeGbEZjBU4vnNYeBDvgf?=
- =?us-ascii?Q?XtUpiGNVjXvPbIA2NTWAueLKce6A+P12QspcAOgbKPlepNnSZygpbi5vA33K?=
- =?us-ascii?Q?PC5oXrh4HOJ6Fzob9Y6st/T9aNs/0ylfkL9OpSQWlL+MPjKcltKi8Xxbg9Iu?=
- =?us-ascii?Q?JPrHkJLbTOBYhHmKmkuCK6u5IRUzQf0JZggIm08xzPlOuLQpKq/ZcMLwwTa+?=
- =?us-ascii?Q?pMYY9pTJiUWtX8yxB80=3D?=
+	=?us-ascii?Q?1UsbSzyiI61T5SsTr36o85PBJbdabAK7ty8HfipBvqc233DwL8sNpjIovvzq?=
+ =?us-ascii?Q?D8Of/ipWPE/+nSIuXlvVjq0Uj1afYOWcRJAxGf3zVe1v7v9a2N37YQVpne7K?=
+ =?us-ascii?Q?RZ8yKvmcc4mq6HPsqDU026g0aHgvAYrYBqLW5EU1EStaOyWpT0YMw/kZ5DtM?=
+ =?us-ascii?Q?ny04jluUYvSP8ClEUGHTqo0KujD9DaCYKvPHhgDBZ8vwt8Al55pbSmNWuSYZ?=
+ =?us-ascii?Q?j6cL1s5Pikwv95HrLVLYBBo+/F9SJ1I3VOwd2Z1cEyWIgFNVPOoEMMzZHO7c?=
+ =?us-ascii?Q?Jnwwwtk9optRLiqoYxhkQL91OzbFgZtvumBqum+WxXiJ/S5U0wqTTLTCQCe5?=
+ =?us-ascii?Q?8nAvVLOFuoAjJHkEUWjudRIRs+o0iumGZBxfEEOzRWwA3oXCZB1u35oPXSHJ?=
+ =?us-ascii?Q?r61skFXvTOq5PlkeyfP9qvBi/uSprHMrc0c3qegm4piUYhZDAxmHw5VdPwJo?=
+ =?us-ascii?Q?H9zkiAHIZomtLa+ZufQkeWQe1Iif2pmXifML3b50NQqU+cHBFG9nejx374ds?=
+ =?us-ascii?Q?8aP/q00fAx7ZU2MYSdb/MA2KCT4AQ21ErmRKDLZMOZ13J0qiQKO7nZqiMjqD?=
+ =?us-ascii?Q?MNntyqWhNNLPOdJK1lF/dLYYOJiHZuD7GV8eXuzpKWUL7BuvVfBEi/7hXTC/?=
+ =?us-ascii?Q?N9Kzq6Z31faGIG5s6X3E9sMW7ZliYuvzvGM8hhE9fBMqnEx1vtScRp+H6q+v?=
+ =?us-ascii?Q?XYEfCcXTb10pmK0e6EmDV0kGcL+tLU6ZZDunASS6WtIQlICRLJvXSqAX/+2w?=
+ =?us-ascii?Q?9FX3KiHw+0Jt3dkVlyI6z5aKgRhp2FjK3/+Pi3WO/p2x6fdK7PIRQ0m7FMmh?=
+ =?us-ascii?Q?jD9kx9g4h787G2upi3y9Lku3g9jxoRFlKa6lm1SXouYG4AyReKD46kubCSCp?=
+ =?us-ascii?Q?igl6idtn918AkbuyV6EhE8aelqJevGtSbtZeO+5tSSq6aOTGFx593xwrat3S?=
+ =?us-ascii?Q?YzGzMPj0Hr9h+EVepMIZqG4jTE3t2SG4nkkBFmWcGnjo0npnkhx8yL0bwmWK?=
+ =?us-ascii?Q?79ww8fcDXLWInNkiSyE9y1+BNQbL3c8qUOZpDDNI21pbyM6bdVYND/JyXI2B?=
+ =?us-ascii?Q?gC5O5o+QwJb5zKOr4PR9uQNZ0j5yeFU2KGzXethqWz/Ym4TCfW7OBJUEWxhE?=
+ =?us-ascii?Q?vPsXKYXIHxIkQi4tuVjBSvJZ73g2C6zpMUtWvocRQCqh8X23c2zCFUyW314Z?=
+ =?us-ascii?Q?mcPRdc1AOkhPuAk2ckPuA1jN1ZodvFRLdcPc7XxwjyWdYf6teE7aGKPvUtqT?=
+ =?us-ascii?Q?rpckpo6ZuFmVJBYDSx8XKAt5g3O78owKVO0DCyWRWRyae53a/o5QHJRC5+Pf?=
+ =?us-ascii?Q?xuS/OpCoO7ng3DZxY81ciy9Cc9WOnu63TmC7/t85O7+fPlStwVFW2+DAWl9v?=
+ =?us-ascii?Q?ibcv6GMwoZfBXM7+Y0UhjT0xx/N3qPkz6FD3Mwcm7DM3g0Z3i2uwXzC4Btj6?=
+ =?us-ascii?Q?3q0y+XlWnZWCzyL95IFMy7DtOpG7xwD4xlNiKSCwcD3Xi/IgFHbvU3v2JYoB?=
+ =?us-ascii?Q?gsHKa65dalkrRzt4ehcqtkNuvDx1Y7Uas6FqtwOB8KF/41rUZETRsCvyR9Cv?=
+ =?us-ascii?Q?Vn3dwss3a3bXY5FseBA7kb8hOdq4poSSUwXOJmK6?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb5d3846-ba4f-4d50-9722-08dc6adc945e
+X-MS-Exchange-CrossTenant-Network-Message-Id: a40110a7-de19-4d1b-00df-08dc6ae25970
 X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 19:17:59.5448
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2024 19:59:18.1504
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MYQXcAilcV8lwc/mhcb0yvrHpfsk3whW9FLfl2Ab7VyKWUMBHAnyB3MGh4xKMxLAbbbx6eELuv7RE0e2y7El8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8229
+X-MS-Exchange-CrossTenant-UserPrincipalName: xLOcZXXv1NxJ7zGRBJ/v2NsLjdQl48LA7i+HUXqlrfy0GUJnyuv7c7sxNhyKvlIyetci3iD03z3WVURcUhBNrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9130
 
-On Thu, Apr 18, 2024 at 12:04:23PM -0400, Frank Li wrote:
-> Involve an new and common mathod to send pme_turn_off() message. Previously
-> pme_turn_off() implement by platform related special register to trigge    
-> it.                                                                        
->                                                                            
-> But Yoshihiro give good idea by using iATU to send out message. Previously 
-> Yoshihiro provide patches to raise INTx message by dummy write to outbound 
-> iATU.                                                                      
->                                                                            
-> Use similar mathod to send out pme_turn_off message.                       
->                                                                            
-> Previous two patches is picked from Yoshihiro' big patch serialise.        
->  PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()                 
->  PCI: Add INTx Mechanism Messages macros                                   
->                                                                            
-> PCI: Add PME_TURN_OFF message macro                                        
-> dt-bindings: PCI: dwc: Add 'msg" register region, Add "msg" region to use  
-> to map PCI msg.                                                            
->                                                                            
-> PCI: dwc: Add common pme_turn_off message method                           
-> Using common pme_turn_off() message if platform have not define their.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+dma_set_mask_and_coherent() should never fail when the mask is >= 32bit,
+unless the architecture has no DMA support. So no need check for the error
+and also no need to set dma_set_mask_and_coherent(32) as a fallback.
 
-Lorenzo:
+Even if dma_set_mask_and_coherent(48) fails due to the lack of DMA support
+(theoretically), then dma_set_mask_and_coherent(32) will also fail for the
+same reason. So the fallback doesn't make sense.
 
-	Could you please pick up these patches? All have been reviewed and
-acked by Bjorn/Mani? If you have more comments, let me know.
+Due to the above reasons, let's simplify the code by setting the streaming
+and coherent DMA mask to 48 bits.
 
-Frank
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-> ---
-> Changes in v8:
-> - Total use devm_ manage msg_res. after read devres.c code to better
-> understand release sequence. It use reverse order to release resource. So
-> it is safe for msg_res.
-> - Add Reviewed tag of Manivannan Sadhasivam in patch 4/5
-> - Link to v7: https://lore.kernel.org/r/20240417-pme_msg-v7-0-9c6208cda90f@nxp.com
-> 
-> Changes in v7:
->   patch 4/5 add
->   /* Power Management Messages; PCIe r6.0, sec 2.2.8.2 */
->   patch 1/5 change comment to
->   /* Message Routing (r[2:0]); PCIe r6.0, sec 2.2.8 */
->   /* INTx Mechanism Messages; PCIe r6.0, sec 2.2.8.1 */
-> 
->   order according to value.
->   Add Acked-by: Bjorn Helgaas <bhelgaas@google.com> in patch 4/5
-> 
->   patch 5/5
->   Apply all mani's comments.
-> 
-> - Link to v6: https://lore.kernel.org/r/20240415-pme_msg-v6-0-56dad968ad3a@nxp.com
-> 
-> Changes in v6:
-> - Move PCIE_MSG_CODE_PME_TURN_OFF ahead before INTx to keep the codes
-> sorted.
-> - Added reason why not alloc_resesource in commit messag.
-> - Change title PCI: dwc: Add generic MSG TLP support for sending
-> PME_Turn_Off when system suspend.
-> - Rework commit message
->   "Instead of relying on the vendor specific implementations to send the
-> PME_Turn_Off message, let's introduce a generic way of sending the message using
-> the MSG TLP.
-> 
-> This is achieved by reserving a region for MSG TLP of size 'pci->region_align',
-> at the end of the first IORESOURCE_MEM window of the host bridge. And then
-> sending the PME_Turn_Off message during system suspend with the help of iATU.
-> 
-> It should be noted that this generic implementation is optional for the glue
-> drivers and can be overridden by a custom 'pme_turn_off' callback.
-> 
-> - using devm_request_resource()
-> - using mani's suggest comments
-> 
-> 	/*
-> 	 * Allocate the resource for MSG TLP before programming the iATU
-> 	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-> 	 * on the value of 'region_align', this has to be done after
-> 	 * dw_pcie_iatu_detect().
-> 	 */
-> 
-> - Add comments, about use_atu_msg, need glue driver set it.
-> 
-> - m -> mem in dw_pcie_pme_turn_off()
-> 
-> - remove redundant check() if (!atu.size) in dw_pcie_pme_turn_off().
-> 
-> - The reason can't adjust windows->end
-> This windows already reported to pci system before this function. It is
-> not good to modify window-res-end. It just add child resource like below.
-> 
-> windows is root resource, which will create may child when call
-> request_resource.
->           bridge -> windows
-> 		child1 -> msg
-> 		child2 -> pci ep1
-> 		child3 -> pci_ep2.
-> 		...
-> 
-> Although you see whole bridge window, 'msg' already used and put under root
-> resource,  new pci devices will never use 'msg' resource. 
-> 
-> If change windows->res->end here, I worry about it may broken resource
-> tree.
-> 
-> Detail below thread:
-> 
-> - Link to v5: https://lore.kernel.org/r/20240319-pme_msg-v5-0-af9ffe57f432@nxp.com
-> 
-> Changes in v5:
-> - Default disable allocate TLP message memory windows. If driver need use
-> this feature, need set use_atu_msg = true before call dw_host_init().
-> 
-> - Link to v4: https://lore.kernel.org/r/20240213-pme_msg-v4-0-e2acd4d7a292@nxp.com
-> 
-> Changes in v4:
-> - Remove dt-binding patch. Needn't change any dts file and binding doc.
->   Reserve a region at end of first IORESOURCE_MEM window by call
->   request_resource(). So PCIe stack will not use this reserve region to any
-> PCIe devices.
->   I tested it by reserve at begin of IORESOURCE_MEM window. PCIe stack
-> will skip it as expection.
-> 
->   Fixed a issue, forget set iATU index when sent PME_turn_off.
-> 
-> - Link to v3: https://lore.kernel.org/r/20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com
-> 
-> Changes in v3:
-> - fix 'MSG"
-> - Add pcie spec ref in head file
-> - using function name dw_pci_pme_turn_off()
-> - Using PCIE_ prefix macro
-> - Link to v2: https://lore.kernel.org/r/20240201-pme_msg-v2-0-6767052fe6a4@nxp.com
-> 
-> Changes in v2:
->   - Add my sign off at PCI: dwc: Add outbound MSG TLPs support
->   - Add Bjorn review tag at  Add INTx Mechanism Messages macros
->   - using PME_Turn_Off match PCIe spec
->   - ref to pcie spec v6.1
->   - using section number.
-> 
-> - Link to v1: https://lore.kernel.org/r/20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com
-> 
-> ---
-> Frank Li (2):
->       PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
->       PCI: dwc: Add generic MSG TLP support for sending PME_Turn_Off when system suspend
-> 
-> Yoshihiro Shimoda (3):
->       PCI: Add INTx Mechanism Messages macros
->       PCI: dwc: Consolidate args of dw_pcie_prog_outbound_atu() into a structure
->       PCI: dwc: Add outbound MSG TLPs support
-> 
->  drivers/pci/controller/dwc/pcie-designware-ep.c   |  21 ++--
->  drivers/pci/controller/dwc/pcie-designware-host.c | 145 +++++++++++++++++++---
->  drivers/pci/controller/dwc/pcie-designware.c      |  54 ++++----
->  drivers/pci/controller/dwc/pcie-designware.h      |  22 +++-
->  drivers/pci/pci.h                                 |  21 ++++
->  5 files changed, 199 insertions(+), 64 deletions(-)
-> ---
-> base-commit: ef6a734484e939cf67bc41c45bc936a78ea210f0
-> change-id: 20240130-pme_msg-dd2d81ee9886
-> 
-> Best regards,
-> ---
-> Frank Li <Frank.Li@nxp.com>
-> 
+Notes:
+    Change from v1 to v2:
+    - Rework commit message according to mani's feedback.
+    - Not sure why set to 48bit at original patch.
+    
+    Ref: https://lore.kernel.org/linux-pci/20240328154827.809286-1-Frank.Li@nxp.com/T/#u
+    
+    for document change patch. DMA document sample code is miss leading.
+    fixed patch already accepted:
+    https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=f7ae20f2fc4e6a5e32f43c4fa2acab3281a61c81
+
+ drivers/misc/pci_endpoint_test.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index c38a6083f0a73..56ac6969a8f59 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -824,11 +824,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+ 	init_completion(&test->irq_raised);
+ 	mutex_init(&test->mutex);
+ 
+-	if ((dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48)) != 0) &&
+-	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)) != 0) {
+-		dev_err(dev, "Cannot set DMA mask\n");
+-		return -EINVAL;
+-	}
++	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48));
+ 
+ 	err = pci_enable_device(pdev);
+ 	if (err) {
+-- 
+2.34.1
+
 
