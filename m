@@ -1,53 +1,54 @@
-Return-Path: <linux-pci+bounces-7028-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7029-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78DB08BA302
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 00:08:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A2B48BA30D
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 00:18:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9A741C22B31
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 22:08:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73FCEB2372C
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 22:18:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7495257C9D;
-	Thu,  2 May 2024 22:08:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0239A57CA4;
+	Thu,  2 May 2024 22:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AdhEcvPL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bICtA7Ao"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5051657C94
-	for <linux-pci@vger.kernel.org>; Thu,  2 May 2024 22:08:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF34257C87;
+	Thu,  2 May 2024 22:18:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714687718; cv=none; b=mT1BH8T2fTWY1jiujdJR53AbcKxAjIGzdXAhGL4WqwCvfW3R/CtUZlxgEGPs3mapcipND3iY33a8yvr/+cW6a6hF+MfD+9tdrVSPXbBXFT+9Zb5cgarxl6przv3JrFg2ECNDhluztKmqMUK7ZEs7HyKkHm1u4mN2Y/6znmDOyuc=
+	t=1714688320; cv=none; b=asvP3sulsoyd/uli66NGiQFUqT8RFVqf8eaoLSstKP1AdwomXBoTM+6aE/ZOCBGeOGCiCJ4u9Nqo54qxRH07fTZdVtjdGEBVFs2x43+zvAvhWxRgiChWAtkxn/GtML/tZKME1ld/oYwSyrq10BP12D/vw1q4RcrQb0XyGJ6Ee0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714687718; c=relaxed/simple;
-	bh=sszOxg8f1FsLKLThEfF3XhSaZxctCyjdySmRuF7oG6A=;
+	s=arc-20240116; t=1714688320; c=relaxed/simple;
+	bh=PTqyU1X60PHvmFURUHoOiLjIZmosyMr4g0VIq2oIjSU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ptTXzpse4hFLicV/2zR8Uptjn/5kYI/qK+6O9Hu9lyNExUOnJha4A5fDTzrmyhWUZP5eKjoaFSEnErnXN2WVPqhM+bgKb1vSj+hE/eX0nLPSyeXjSyIRUcu076tBJYYnXKXlukgByZ3w/xHGAWnhlKhZ3Lq1MtrypY2cEkpO0/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AdhEcvPL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3755C113CC;
-	Thu,  2 May 2024 22:08:37 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=qymj6kdAgcP4usrHCC1e1jnBvX+pUBCJOoO8D6DCY0h4VX8ophPM2/LX9iqK8uZDRvT7WFvBPKxjG7SuDrL2W7rmLTvISondKJSg+Sksoo7qKDirR9J2AteJB35wmrUhSWONFYI4diOur/xJfEgMKrYEd4ybLQDimUAvOTI3Oj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bICtA7Ao; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 212A6C113CC;
+	Thu,  2 May 2024 22:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714687717;
-	bh=sszOxg8f1FsLKLThEfF3XhSaZxctCyjdySmRuF7oG6A=;
+	s=k20201202; t=1714688320;
+	bh=PTqyU1X60PHvmFURUHoOiLjIZmosyMr4g0VIq2oIjSU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=AdhEcvPLtOqgmyhpJa5gmlrQhwYlKxDaV79a1UstAKOb4fpZaUVJR0zfnIiLPR4OM
-	 /X30sPAQwKEoFHn4MW5ccw+Clr3nJ1CpeU8wYOKzZWH5dHxvIJxGz3x5C20MtN5YaK
-	 nUYGdOPralL1rJHkKt57TVmTTUJvmkCwkXeN06F5xTwtQKhxyCAu1F78jmxPH7FICX
-	 XvqgFaM07/xxQZ1vsRLRws8aojpCNgiuessfZ46siPMi94QZYwaVSAb7VAgR0WOOYh
-	 spAcO8zLiYK4XME9QSTW30BB9iJlUNAgYAuo0uBQlatAYHHjQSTnoW99YwI2oVLCTA
-	 fjxWIIiGRXYgA==
-Date: Thu, 2 May 2024 17:08:36 -0500
+	b=bICtA7AoCD5dDRhPzN+5H+MBpDnhewXyaCocV615di6ogh5b2XDVKqsiUYWkZYqt4
+	 Mtx0lujpZl7KqxDroSJ9O2+P8drd5PMwUsZBmFCkBEaUlrtrGXNKQSVzJuWZ179xNl
+	 iqk+Ynntg2h630d81Tn7WSk6BenaAo+5APFCwDIYq8De9+o9MQWn8iZpt8sS0EOaQG
+	 HVwsqmpgmcw1YbdcfsCLNJuhFtZWuINrM7DyxD7XFot/VOzEF2TEamnLhv9oPd//vJ
+	 vRXjsYkJfuAWH2HxMz+UsIudZUdd3JpGibtYPIZFZ4TW55BbYkW/8s7UuqQnHplNzn
+	 g9ku4SC/f82hQ==
+Date: Thu, 2 May 2024 17:18:38 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-Cc: linux-pci@vger.kernel.org, Nirmal Patel <nirmal.patel@linux.intel.com>
-Subject: Re: [PATCH v3] PCI: vmd: always enable host bridge hotplug support
- flags
-Message-ID: <20240502220836.GA1550644@bhelgaas>
+To: Duoming Zhou <duoming@zju.edu.cn>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, Lizhi Hou <lizhi.hou@amd.com>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] PCI: of_property: handle int_map allocation failure
+Message-ID: <20240502221838.GA1550875@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,58 +57,45 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240408183927.135-1-paul.m.stillwell.jr@intel.com>
+In-Reply-To: <20240303105729.78624-1-duoming@zju.edu.cn>
 
-On Mon, Apr 08, 2024 at 11:39:27AM -0700, Paul M Stillwell Jr wrote:
-> Commit 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features") added
-> code to copy the _OSC flags from the root bridge to the host bridge for each
-> vmd device because the AER bits were not being set correctly which was
-> causing an AER interrupt storm for certain NVMe devices.
+[+cc Lizhi (when you post a fix to a commit, please always cc the
+author of that original commit), Rob]
+
+On Sun, Mar 03, 2024 at 06:57:29PM +0800, Duoming Zhou wrote:
+> The kcalloc() in of_pci_prop_intr_map() will return null if
+> the physical memory has run out. As a result, both int_map
+> and mapp will point to the null area. If we dereference mapp,
+> the null pointer dereference bugs will happen.
 > 
-> This works fine in bare metal environments, but causes problems when the
-> vmd driver is run in a hypervisor environment. In a hypervisor all the
-> _OSC bits are 0 despite what the underlying hardware indicates. This is
-> a problem for vmd users because if vmd is enabled the user *always*
-> wants hotplug support enabled. To solve this issue the vmd driver always
-> enables the hotplug bits in the host bridge structure for each vmd.
+> Return -ENOMEM from of_pci_prop_intr_map() if kcalloc() fails
+> for int_map.
 > 
-> Fixes: 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features")
-> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> Signed-off-by: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+
+Applied to pci/of for v6.10, thanks!
+
+Lizhi and Rob, let me know if you have any objections.
+
 > ---
->  drivers/pci/controller/vmd.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  drivers/pci/of_property.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 87b7856f375a..583b10bd5eb7 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -730,8 +730,14 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
->  static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
->  				       struct pci_host_bridge *vmd_bridge)
->  {
-> -	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-> -	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-> +	/*
-> +	 * there is an issue when the vmd driver is running within a hypervisor
-> +	 * because all of the _OSC bits are 0 in that case. this disables
-> +	 * hotplug support, but users who enable VMD in their BIOS always want
-> +	 * hotplug suuport so always enable it.
-> +	 */
-> +	vmd_bridge->native_pcie_hotplug = 1;
-> +	vmd_bridge->native_shpc_hotplug = 1;
-
-Deferred for now because I think we need to figure out how to set all
-these bits the same, or at least with a better algorithm than "here's
-what we want in this environment."
-
-Extended discussion about this at
-https://lore.kernel.org/r/20240417201542.102-1-paul.m.stillwell.jr@intel.com
-
->  	vmd_bridge->native_aer = root_bridge->native_aer;
->  	vmd_bridge->native_pme = root_bridge->native_pme;
->  	vmd_bridge->native_ltr = root_bridge->native_ltr;
+> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+> index c2c7334152b..03539e50537 100644
+> --- a/drivers/pci/of_property.c
+> +++ b/drivers/pci/of_property.c
+> @@ -238,6 +238,8 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+>  		return 0;
+>  
+>  	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
+> +	if (!int_map)
+> +		return -ENOMEM;
+>  	mapp = int_map;
+>  
+>  	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
 > -- 
-> 2.39.1
+> 2.17.1
 > 
 
