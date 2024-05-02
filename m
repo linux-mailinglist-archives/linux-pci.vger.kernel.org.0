@@ -1,54 +1,53 @@
-Return-Path: <linux-pci+bounces-7029-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7030-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A2B48BA30D
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 00:18:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B134C8BA312
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 00:23:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73FCEB2372C
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 22:18:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68B5328164D
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 22:23:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0239A57CA4;
-	Thu,  2 May 2024 22:18:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4082557CA8;
+	Thu,  2 May 2024 22:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bICtA7Ao"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyxNU25I"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF34257C87;
-	Thu,  2 May 2024 22:18:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A38657CA6
+	for <linux-pci@vger.kernel.org>; Thu,  2 May 2024 22:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714688320; cv=none; b=asvP3sulsoyd/uli66NGiQFUqT8RFVqf8eaoLSstKP1AdwomXBoTM+6aE/ZOCBGeOGCiCJ4u9Nqo54qxRH07fTZdVtjdGEBVFs2x43+zvAvhWxRgiChWAtkxn/GtML/tZKME1ld/oYwSyrq10BP12D/vw1q4RcrQb0XyGJ6Ee0w=
+	t=1714688597; cv=none; b=cZc/xbke5pQTenG3JJsA4CrJi2N8uUJpQd3GgptvgaYNMccYOLTA+JjvtdOO1kFpt0oMOutQ1jLBykocGAhy9PPQh0ea/jcr9SftFTC5r7cDok9DvyMUwwJLpyOpzkx2Qs11aThhcVX5E7WmNdA3N5v3WnhxoqfVh6x9oz4/rMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714688320; c=relaxed/simple;
-	bh=PTqyU1X60PHvmFURUHoOiLjIZmosyMr4g0VIq2oIjSU=;
+	s=arc-20240116; t=1714688597; c=relaxed/simple;
+	bh=IpBFcW1jJONB0iN90VAM3TRGReE2ehMF245N2+SFLXk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qymj6kdAgcP4usrHCC1e1jnBvX+pUBCJOoO8D6DCY0h4VX8ophPM2/LX9iqK8uZDRvT7WFvBPKxjG7SuDrL2W7rmLTvISondKJSg+Sksoo7qKDirR9J2AteJB35wmrUhSWONFYI4diOur/xJfEgMKrYEd4ybLQDimUAvOTI3Oj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bICtA7Ao; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 212A6C113CC;
-	Thu,  2 May 2024 22:18:40 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=SoyMa6oUNcp3LPA/TL3k/OQDI7jwaBFlNm0zICpbLQoWZ3RP2wW49SdCdZjvLA0C26g72m9lVwu0I4CC5goqFwClQYmMBTugNlmx0PdMDGWOU8l1uInnqvTlP4pBA8tDrgsl0BHBOOpaAjmJhrQn4imQBDkekeOKJdPFqukIAl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyxNU25I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A8DC113CC;
+	Thu,  2 May 2024 22:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714688320;
-	bh=PTqyU1X60PHvmFURUHoOiLjIZmosyMr4g0VIq2oIjSU=;
+	s=k20201202; t=1714688596;
+	bh=IpBFcW1jJONB0iN90VAM3TRGReE2ehMF245N2+SFLXk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bICtA7AoCD5dDRhPzN+5H+MBpDnhewXyaCocV615di6ogh5b2XDVKqsiUYWkZYqt4
-	 Mtx0lujpZl7KqxDroSJ9O2+P8drd5PMwUsZBmFCkBEaUlrtrGXNKQSVzJuWZ179xNl
-	 iqk+Ynntg2h630d81Tn7WSk6BenaAo+5APFCwDIYq8De9+o9MQWn8iZpt8sS0EOaQG
-	 HVwsqmpgmcw1YbdcfsCLNJuhFtZWuINrM7DyxD7XFot/VOzEF2TEamnLhv9oPd//vJ
-	 vRXjsYkJfuAWH2HxMz+UsIudZUdd3JpGibtYPIZFZ4TW55BbYkW/8s7UuqQnHplNzn
-	 g9ku4SC/f82hQ==
-Date: Thu, 2 May 2024 17:18:38 -0500
+	b=NyxNU25IJfyCSFsaw467hY8F769TsuC14bRypUxs3gipGs1ckUH35oFQJDjHoltUU
+	 UdzKFcJimp0mvD2H3MacJgIJRi/Xm0A7FXFun0GmcSxwYP1WjQ+2v2UaOb6vDHiI1q
+	 yILXErECd7ywUQ5tVqbrWQ8b8C29blWpuLOj5EVtJTX2QfJMtuedEHO8aVYpfmw0ed
+	 kW1Gn1PLVEejqI36FHYYRpfSS4X/cgQkNEicXfmUBWhvXHtYE+MRsDbxuwHM3CxUTk
+	 IUA06YENl/eQp/xqHkaAFdo9gX7EnBxtHBR16q58xyDIaqiyV8X84F/TB1Tost8Czk
+	 AoIl4duEgwfxQ==
+Date: Thu, 2 May 2024 17:23:15 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Duoming Zhou <duoming@zju.edu.cn>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bhelgaas@google.com, Lizhi Hou <lizhi.hou@amd.com>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: of_property: handle int_map allocation failure
-Message-ID: <20240502221838.GA1550875@bhelgaas>
+To: Josselin Mouette <josselin.mouette@exaion.com>
+Cc: linux-pci@vger.kernel.org, Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 1/2] Revert "PCI/VPD: Allow access to valid parts of VPD
+ if some is invalid"
+Message-ID: <20240502222315.GA1551408@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,45 +56,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240303105729.78624-1-duoming@zju.edu.cn>
+In-Reply-To: <20240307223606.GA658427@bhelgaas>
 
-[+cc Lizhi (when you post a fix to a commit, please always cc the
-author of that original commit), Rob]
-
-On Sun, Mar 03, 2024 at 06:57:29PM +0800, Duoming Zhou wrote:
-> The kcalloc() in of_pci_prop_intr_map() will return null if
-> the physical memory has run out. As a result, both int_map
-> and mapp will point to the null area. If we dereference mapp,
-> the null pointer dereference bugs will happen.
+On Thu, Mar 07, 2024 at 04:36:06PM -0600, Bjorn Helgaas wrote:
+> [+cc Hannes, who did a lot of related VPD work and reviewed the
+> original posting at
+> https://lore.kernel.org/r/20210715215959.2014576-6-helgaas@kernel.org/]
 > 
-> Return -ENOMEM from of_pci_prop_intr_map() if kcalloc() fails
-> for int_map.
+> On Thu, Mar 07, 2024 at 05:09:27PM +0100, Josselin Mouette wrote:
+> > When a device returns invalid VPD data, it can be misused by other
+> > code paths in kernel space or user space, and there are instances
+> > in which this seems to cause memory corruption.
 > 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-
-Applied to pci/of for v6.10, thanks!
-
-Lizhi and Rob, let me know if you have any objections.
-
-> ---
->  drivers/pci/of_property.c | 2 ++
->  1 file changed, 2 insertions(+)
+> More of the background from Josselin at
+> https://lore.kernel.org/r/aaea0b30c35bb73b947727e4b3ec354d6b5c399c.camel@exaion.com
 > 
-> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-> index c2c7334152b..03539e50537 100644
-> --- a/drivers/pci/of_property.c
-> +++ b/drivers/pci/of_property.c
-> @@ -238,6 +238,8 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
->  		return 0;
->  
->  	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
-> +	if (!int_map)
-> +		return -ENOMEM;
->  	mapp = int_map;
->  
->  	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
-> -- 
-> 2.17.1
-> 
+> This is a regression, and obviously needs to be fixed somehow, but I'm
+> a bit hesitant to revert this until we understand the problem better.
+> If there's a memory corruption lurking and a revert hides the
+> corruption so we never fix it, I'm not sure that's an improvement
+> overall.
+
+I don't want to drop this, but we're kind of stuck here:
+
+  - I'd still like to understand the problem better.
+
+  - Trivially, I can't apply patches lacking the appropriate
+    signed-off-by; see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.6#n396
+
+> > There is no sensible reason why the kernel would provide userspace
+> > or drivers with invalid and potentially dangerous data.
+> > 
+> > This reverts commit 5fe204eab174fd474227f23fd47faee4e7a6c000.
+> > ---
+> >  drivers/pci/vpd.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > index 485a642b9304..daaa208c9d9c 100644
+> > --- a/drivers/pci/vpd.c
+> > +++ b/drivers/pci/vpd.c
+> > @@ -68,7 +68,7 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+> >                         if (pci_read_vpd_any(dev, off + 1, 2,
+> > &header[1]) != 2) {
+> >                                 pci_warn(dev, "failed VPD read at
+> > offset %zu\n",
+> >                                          off + 1);
+> > -                               return off ?: PCI_VPD_SZ_INVALID;
+> > +                               return PCI_VPD_SZ_INVALID;
+> >                         }
+> >                         size = pci_vpd_lrdt_size(header);
+> >                         if (off + size > PCI_VPD_MAX_SIZE)
+> > @@ -87,13 +87,13 @@ static size_t pci_vpd_size(struct pci_dev *dev)
+> >                                 return off;
+> >                 }
+> >         }
+> > -       return off;
+> > +       return PCI_VPD_SZ_INVALID;
+> >  
+> >  error:
+> >         pci_info(dev, "invalid VPD tag %#04x (size %zu) at offset
+> > %zu%s\n",
+> >                  header[0], size, off, off == 0 ?
+> >                  "; assume missing optional EEPROM" : "");
+> > -       return off ?: PCI_VPD_SZ_INVALID;
+> > +       return PCI_VPD_SZ_INVALID;
+> >  }
+> >  
+> >  static bool pci_vpd_available(struct pci_dev *dev, bool check_size)
+> > -- 
+> > 2.39.2
+> > 
 
