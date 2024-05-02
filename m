@@ -1,56 +1,97 @@
-Return-Path: <linux-pci+bounces-6987-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-6988-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90C4A8B96F7
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 10:56:52 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A18698B9768
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 11:18:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D5F01F22270
-	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 08:56:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3077B20A8D
+	for <lists+linux-pci@lfdr.de>; Thu,  2 May 2024 09:18:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50CF45025A;
-	Thu,  2 May 2024 08:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4573535D2;
+	Thu,  2 May 2024 09:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ex0ezDMV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kbmXp/1B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3874F895
-	for <linux-pci@vger.kernel.org>; Thu,  2 May 2024 08:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054C353365;
+	Thu,  2 May 2024 09:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714640206; cv=none; b=uOFVHhPK7Rl5TH00Q2h8r2XMPw3lWgf9ORMfADpbiD1wscR5b6G76qLfFdU43plMDlPvWDl/pk+of00cGonMVlpOSMZdyx+oAjqgpwCzgaU2oEYgT3Efx0jxc6Y7ylB+/sUtyKmmsbmbMX8qNbd1Uq4fSittz7ozeJBRX1b/QqM=
+	t=1714641505; cv=none; b=A73qrNWhkX1TjCvYciFAJoXhhCA0Fud9ZrBwoLJropFr2Z4bvk/kEN5M1Q/ualTlo8sNQixsONeKqevJHmIILKUDe0cxl1M6Cy6mh7RVCavx8kD8/gL3xTUJ/76VgpJrUifBC3w8jqM59U3zLMNnf0CHCfrvMIsT8wK5T/z6kys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714640206; c=relaxed/simple;
-	bh=H1g7kyzP/wVp5EdlOyCCF1WHmSNmHMydS3flSnjyvWU=;
+	s=arc-20240116; t=1714641505; c=relaxed/simple;
+	bh=a/QufiF272o3DvR0cKkQMFkYPKhS35DQjuKoUIBYmTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qWxAbQlx9Y2fznAvdvZ6DBeec/8nZtPdCG2PXhHghJVGFhbx60R+HGxVImtp8b38CKx5ifk5CEkY33u8L0M7IrBC96gN+cKgu0MhR5UkTokrGdUUDbgpPX6XYOdUh4V4CZq0YvAYnOMriFK9tSDf4++x45jTzwjeWneRjCpD8Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ex0ezDMV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2A8C113CC;
-	Thu,  2 May 2024 08:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714640205;
-	bh=H1g7kyzP/wVp5EdlOyCCF1WHmSNmHMydS3flSnjyvWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ex0ezDMVcxaDiKCUPAtHNFXAShGkOLjiyB78Exq8eiY4eIqbrMgQh5BLs6h1HXvDT
-	 OdBPMeDHOuIargl99FSjNkBqSiiQfGsSuuw2ZUuAKPVIwZ6ny4s4mjVTOIWb6odv4X
-	 cKjMY+rvEH+axCVDSg1mcz72BCamBlxO8ch3U5d0S5zNfncomKWpi3YWDIU3W6Q5bl
-	 TpxRn8n4gL9ckVlO9GxKwxtJlX6qKgR/TDxwjh+5k2H1wv8phhe8hTlNJq4HU1MK3e
-	 hCmU0qBbL/KzVzItwg0lztZxS16ALmxLbgWS/Pay/AePhHUT54qKhXphGc2QJsE8lR
-	 SUzWCtaKABFPw==
-Date: Thu, 2 May 2024 09:56:39 +0100
-From: Keith Busch <kbusch@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
-	Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
-	Peter Delevoryas <pdel@meta.com>
-Subject: Re: [PATCH] pci: fix broadcom secondary bus reset handling
-Message-ID: <ZjNVRzZpPjoG2p3E@kbusch-mbp.dhcp.thefacebook.com>
-References: <20240501145118.2051595-1-kbusch@meta.com>
- <ZjK5N_313fwR5YWd@wunner.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SEKEY2BM4wh8Np0eB9jza57Iv9HdGgCY2grnJRixp5zNox4IRT+j1W1R0gWrphsfD2lfLfdoZsLnJPvSoy5bq/HGgV/ICk75kmBcGNEFxIeHNy7S/1HbD1xWL7XeHke12FTtbKoLM02ey60MfPi5fXKFMT5kY96VPyx8Q12/6/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kbmXp/1B; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714641504; x=1746177504;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=a/QufiF272o3DvR0cKkQMFkYPKhS35DQjuKoUIBYmTk=;
+  b=kbmXp/1B21yUuwq+qOXE9zjQItJoxrW/2C+eEUrkEy3LQ2lH2jLxIwx+
+   AwSJZ/EJQAarnaf0qoNWS1XruUMeZOcD0Hw4/6e3/SmV462wYdArSITZR
+   uiKAHHtUJOpAgm+8qVYoRLiKG109tgbtt2vW/YKqxVSZY/OSB/0DjxIki
+   ePXmaRk8zCc1diDzeESnQdEb9NqDZx+FEHlC8yL8xX6cKfwAIr2kPzlXG
+   /PsqvqsLBIcrSFDDJ5LHdCZjG1d7XyQZGiBevTx1/u3g595JG7K27FVMy
+   lx1UZI0cnQlpl/NL3DjqXOr11cEKYayYGO4klvuv29rJgVwayr3lRxD9j
+   g==;
+X-CSE-ConnectionGUID: qO8Ei41dSN+87NW0pzD3ow==
+X-CSE-MsgGUID: srmRrpYlQcKNIfeZHPqxwQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="10274161"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10274161"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:18:10 -0700
+X-CSE-ConnectionGUID: weq2NrOvSyClDOUB0O6Igw==
+X-CSE-MsgGUID: iZzhZm4ZT9S/eDC2HeXt4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27142469"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 02:18:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s2SZk-00000003GCl-0xR0;
+	Thu, 02 May 2024 12:18:00 +0300
+Date: Thu, 2 May 2024 12:17:59 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Andrei Warkentin <andrei.warkentin@intel.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
+Subject: Re: [PATCH v5 17/17] serial: 8250: Add 8250_acpi driver
+Message-ID: <ZjNaR-YtVTm4pbP7@smile.fi.intel.com>
+References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+ <20240501121742.1215792-18-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,34 +100,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjK5N_313fwR5YWd@wunner.de>
+In-Reply-To: <20240501121742.1215792-18-sunilvl@ventanamicro.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, May 01, 2024 at 11:50:47PM +0200, Lukas Wunner wrote:
-> On Wed, May 01, 2024 at 07:51:18AM -0700, Keith Busch wrote:
-> > After a link reset, the Broadcom / LSI PEX890xx PCIe Gen 5 Switch in synth
-> > mode will temporarily insert a fake place-holder device, 1000 02b2, before
-> > the link is actually active for the expected downstream device. Confirm
-> > the device's identifier matches what we expect before moving forward.
-> > Otherwise, the pciehp driver may unmask hotplug notifications before
-> > the link is actually active, which triggers an undesired device removal.
-> 
-> This won't work if the device was hot-swapped with a different one
-> and thus correctly returns a different Vendor/Device ID.  We'd wait
-> for the device to report the previous device's Vendor/Device ID,
-> which doesn't make sense.
-> 
-> It would be possible to raise d3cold_delay in struct pci_dev for
-> children of affected Broadcom switches.  Have you considered that
-> as a potential solution?
+On Wed, May 01, 2024 at 05:47:42PM +0530, Sunil V L wrote:
+> RISC-V has non-PNP generic 16550A compatible UART which needs to be
+> enumerated as ACPI platform device. Add driver support for such devices
+> similar to 8250_of.
 
-Good point, there's more paths I need to consider here. The path this is
-addressing is through pciehp's reset_slot handling, which temporarily
-disables the link change and presence detection. In the error scenario,
-the secondary bus reset completes too quickly, which re-enables the
-pciehp events before the downstream device has settled. Once it settles,
-that triggers a Link Change/PDC event, then we lose our device.
+...
 
-I briefly considered a quirk for d3cold_delay, but I was hoping for
-something more programatic than adding an arbitrary delay. That might be
-okay though.
+> + * This driver is for generic 16550 compatible UART enumerated via ACPI
+> + * platform bus instead of PNP bus like PNP0501. This is not a full
+
+This has to be told in the commit message. Anyway, we don't need a duplication
+code, please use 8250_pnp.
+
+...
+
+> +	{ "RSCV0003", 0 },
+
+Does it have _CID to be PNP0501?
+If not, add this ID to the 8250_pnp.
+
+...
+
+P.S.
+The code you submitted has a lot of small style issues, I can comment on them
+if you want, but as I said this code is not needed at all.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
