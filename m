@@ -1,118 +1,271 @@
-Return-Path: <linux-pci+bounces-7065-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7066-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C754D8BB7D0
-	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 00:53:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF5678BB821
+	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 01:19:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83A5A28689C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 22:53:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3744C1F22531
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 23:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390FB80038;
-	Fri,  3 May 2024 22:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF15883CA6;
+	Fri,  3 May 2024 23:19:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oN1qhSjF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dk5SU/BB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1181877F08;
-	Fri,  3 May 2024 22:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A83183A1E
+	for <linux-pci@vger.kernel.org>; Fri,  3 May 2024 23:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714776788; cv=none; b=tKzJwaEmzUrxwY07b+kF3orPGxfpiFPnyD0sEwkVCJNpm4hcuVvrzmS6ELhqc4N4F1Qjw7KOVvgUoci2h07T3/wUyMvU28ntirNkzgBOS3YWZNpHD2E4B0ROEKbUfM15i5Y2MtKxiQlfEbZSjiCU7VSMlV2GWiw9/xpKxmHSJgM=
+	t=1714778345; cv=none; b=Bhqp/MMBdoJfvVODBjuSL5EEkhDkptiM2+zzpon4ccggq4rDdXRuKwWL75Q6Df16oefcAJbRc8WtCuAHOoo3hhRJi9n/iePuviOtKPSGGIy7WjLJdkKvJ8CB/xnm1m8+t5d2MbxZHE3wehC8GIe0bdUKOanBqwwtagSbxWjjKvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714776788; c=relaxed/simple;
-	bh=mXcYLMX35fPnLEPH9zrI4bMp+JPZC+O689bhhbTpo/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=fkJLHmyuo2TihCut6a3G1DZXW9EX7JuRvuLkSSX1ncGH0h5wlB7Y/TPg8x1T04mrXTJDF8+XsPxRQHcaTh+1kIWfsrwuxpuUP84iE0iIj55xQYDub61fGSQ+Ky/1EFXpLU/h7JxCT4n2KBvEMJ9VtgRg8ESeuE13bslZE6vL1Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oN1qhSjF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2293C116B1;
-	Fri,  3 May 2024 22:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714776787;
-	bh=mXcYLMX35fPnLEPH9zrI4bMp+JPZC+O689bhhbTpo/o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oN1qhSjFtfExfcxp83Bnx+pofMcdi/EXKHF/817yLrh6CgflKgvoJCwR2vGGsCl8W
-	 BH3uD1m9s+Y+lFfVKyFCLD5HmKBXBd4Cv8OTNmjN8FMXOu7vHV/ktIA32LAwkmJzpb
-	 SMEKKGVzYWgrVCP4JBFVtZ+bDAAWNE6BsWablP9gsqxQvdUqpRAqi7TCqG22Kg00Jr
-	 TJLehTP1MnHzrOFt3RrIlDmIx/739zyd/khyjVxrI+VT/LjQ9sgoQY14/G3e88rupv
-	 vnEmTJ0KBZeGyGQ7H18LOxlzu83Dc4xmNsZA+Pk979Ea1/wfmQn+bqC6qvw5vvzFk+
-	 0bFWAPvc5oMAA==
-Date: Fri, 3 May 2024 17:53:05 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 1/2] PCI: Add TLP Prefix reading into
- pcie_read_tlp_log()
-Message-ID: <20240503225305.GA1609388@bhelgaas>
+	s=arc-20240116; t=1714778345; c=relaxed/simple;
+	bh=X9ck2cnd5l3I0GZoehgfFUW/Ek8zPD0ujgK/Wb9fEhA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=HGq8e1YVKGsr68kLE4zbYVusat9nGyqEX3rxxO5fYm1rfGOu2zGaNnKxQSDe/KZYmX7K/kKLAyeEr9W4k0VmwvdSQbwSw4DryU0aZWrDM9X8dGFSd5XdgKVgZ9j2ReDiC0pCThGitJPWt7rc7cSQg7hHw5mzS9buU77PbLMjoGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dk5SU/BB; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714778344; x=1746314344;
+  h=date:from:to:cc:subject:message-id;
+  bh=X9ck2cnd5l3I0GZoehgfFUW/Ek8zPD0ujgK/Wb9fEhA=;
+  b=dk5SU/BBMaxmEvGZOKB7DmPHSt5gtqaae6m9ArPHTZCBnXwUlGtahMoZ
+   7falz0+OgrcO5+7lM27uTb115X4FQR5Dyx0GPvIOu0XKD1Ci/veHpEZnl
+   VVLaFkYeeU5gZWPK2xgtHFOL4JadSbqcKNY8jrl3mHLiPVi2Uj2GixcLH
+   DMLcR5p2IloN3dE1RMAbyOoWEgaY54uSV0Pw5fTITkjERIyYqWTfFxu18
+   VCwGEpmvsVBqD9G5FsD5a5XdVHtR+0D27sqdfRdfLYU3Fz4jemA2fdFYZ
+   LEoJ6H3Hkaf0wcCXIF6C1ee+7dHzSxn+NY7w2DWrD9SDTpqd9tVMYPouA
+   A==;
+X-CSE-ConnectionGUID: jtMn1WlNRieUc/pnldcueQ==
+X-CSE-MsgGUID: MWXNY2aERhCnsB+WNtVqtw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="21284763"
+X-IronPort-AV: E=Sophos;i="6.07,252,1708416000"; 
+   d="scan'208";a="21284763"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 16:19:03 -0700
+X-CSE-ConnectionGUID: z9de1DqoQ1ekStVWItEF2w==
+X-CSE-MsgGUID: Dqavoj6tRU+nhZdYQDOmnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,252,1708416000"; 
+   d="scan'208";a="50782688"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 03 May 2024 16:19:03 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s32B9-000CAw-2x;
+	Fri, 03 May 2024 23:18:59 +0000
+Date: Sat, 04 May 2024 07:18:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:wip/2405-ilpo-window-sizing] BUILD SUCCESS
+ f5226ebd25139320f6988561a1de7c783c0319fb
+Message-ID: <202405040721.Y74qm5t2-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240412133635.3831-2-ilpo.jarvinen@linux.intel.com>
 
-On Fri, Apr 12, 2024 at 04:36:34PM +0300, Ilpo Järvinen wrote:
-> pcie_read_tlp_log() handles only 4 TLP Header Log DWORDs but TLP Prefix
-> Log (PCIe r6.1 secs 7.8.4.12 & 7.9.14.13) may also be present.
-> 
-> Generalize pcie_read_tlp_log() and struct pcie_tlp_log to handle also
-> TLP Prefix Log. The layout of relevant registers in AER and DPC
-> Capability is not identical because the offsets of TLP Header Log and
-> TLP Prefix Log vary so the callers must pass the offsets to
-> pcie_read_tlp_log().
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git wip/2405-ilpo-window-sizing
+branch HEAD: f5226ebd25139320f6988561a1de7c783c0319fb  PCI: Relax bridge window tail sizing rules
 
-I think the layouts of the Header Log and the TLP Prefix Log *are*
-identical, but they are at different offsets in the AER Capability vs
-the DPC Capability.  Lukas and I have both stumbled over this.
+elapsed time: 1458m
 
-Similar and more comments at:
-https://lore.kernel.org/r/20240322193011.GA701027@bhelgaas
+configs tested: 178
+configs skipped: 3
 
-> Convert eetlp_prefix_path into integer called eetlp_prefix_max and
-> make is available also when CONFIG_PCI_PASID is not configured to
-> be able to determine the number of E-E Prefixes.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-s/make is/make it/
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                          axs103_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240503   gcc  
+arc                   randconfig-001-20240504   gcc  
+arc                   randconfig-002-20240503   gcc  
+arc                   randconfig-002-20240504   gcc  
+arc                           tb10x_defconfig   gcc  
+arm                               allnoconfig   clang
+arm                                 defconfig   clang
+arm                        multi_v5_defconfig   gcc  
+arm                   randconfig-004-20240503   gcc  
+arm                         s3c6400_defconfig   gcc  
+arm                           sama5_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240504   gcc  
+arm64                 randconfig-002-20240503   gcc  
+arm64                 randconfig-002-20240504   gcc  
+arm64                 randconfig-003-20240504   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240503   gcc  
+csky                  randconfig-001-20240504   gcc  
+csky                  randconfig-002-20240503   gcc  
+csky                  randconfig-002-20240504   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240503   clang
+i386         buildonly-randconfig-001-20240504   clang
+i386         buildonly-randconfig-002-20240503   clang
+i386         buildonly-randconfig-004-20240504   clang
+i386         buildonly-randconfig-005-20240504   clang
+i386         buildonly-randconfig-006-20240503   clang
+i386         buildonly-randconfig-006-20240504   clang
+i386                                defconfig   clang
+i386                  randconfig-002-20240503   clang
+i386                  randconfig-002-20240504   clang
+i386                  randconfig-003-20240503   clang
+i386                  randconfig-004-20240504   clang
+i386                  randconfig-005-20240503   clang
+i386                  randconfig-005-20240504   clang
+i386                  randconfig-006-20240503   clang
+i386                  randconfig-011-20240503   clang
+i386                  randconfig-012-20240504   clang
+i386                  randconfig-013-20240504   clang
+i386                  randconfig-016-20240503   clang
+i386                  randconfig-016-20240504   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240503   gcc  
+loongarch             randconfig-001-20240504   gcc  
+loongarch             randconfig-002-20240503   gcc  
+loongarch             randconfig-002-20240504   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240503   gcc  
+nios2                 randconfig-001-20240504   gcc  
+nios2                 randconfig-002-20240503   gcc  
+nios2                 randconfig-002-20240504   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240503   gcc  
+parisc                randconfig-001-20240504   gcc  
+parisc                randconfig-002-20240503   gcc  
+parisc                randconfig-002-20240504   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    ge_imp3a_defconfig   gcc  
+powerpc                 mpc8313_rdb_defconfig   gcc  
+powerpc               randconfig-001-20240504   gcc  
+powerpc               randconfig-002-20240504   gcc  
+powerpc               randconfig-003-20240503   gcc  
+powerpc               randconfig-003-20240504   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240503   gcc  
+riscv                 randconfig-001-20240504   gcc  
+riscv                 randconfig-002-20240503   gcc  
+riscv                 randconfig-002-20240504   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240503   gcc  
+s390                  randconfig-002-20240503   gcc  
+s390                  randconfig-002-20240504   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         apsh4a3a_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        edosk7705_defconfig   gcc  
+sh                    randconfig-001-20240503   gcc  
+sh                    randconfig-001-20240504   gcc  
+sh                    randconfig-002-20240503   gcc  
+sh                    randconfig-002-20240504   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240503   gcc  
+sparc64               randconfig-001-20240504   gcc  
+sparc64               randconfig-002-20240503   gcc  
+sparc64               randconfig-002-20240504   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240504   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-004-20240503   clang
+x86_64       buildonly-randconfig-006-20240503   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240503   clang
+x86_64                randconfig-002-20240503   clang
+x86_64                randconfig-003-20240503   clang
+x86_64                randconfig-006-20240503   clang
+x86_64                randconfig-011-20240503   clang
+x86_64                randconfig-012-20240503   clang
+x86_64                randconfig-013-20240503   clang
+x86_64                randconfig-014-20240503   clang
+x86_64                randconfig-015-20240503   clang
+x86_64                randconfig-016-20240503   clang
+x86_64                randconfig-071-20240503   clang
+x86_64                randconfig-072-20240503   clang
+x86_64                randconfig-073-20240503   clang
+x86_64                randconfig-074-20240503   clang
+x86_64                randconfig-075-20240503   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                       common_defconfig   gcc  
+xtensa                randconfig-001-20240503   gcc  
+xtensa                randconfig-001-20240504   gcc  
+xtensa                randconfig-002-20240503   gcc  
+xtensa                randconfig-002-20240504   gcc  
+xtensa                    xip_kc705_defconfig   gcc  
 
-I think this could be a separate patch.
-
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -20,6 +20,7 @@ struct pci_dev;
->  
->  struct pcie_tlp_log {
->  	u32 dw[4];
-> +	u32 prefix[4];
->  };
->  
->  struct aer_capability_regs {
-> @@ -37,7 +38,9 @@ struct aer_capability_regs {
->  	u16 uncor_err_source;
->  };
->  
-> -int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
-> +int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
-> +		      unsigned int tlp_len, struct pcie_tlp_log *log);
-> +unsigned int aer_tlp_log_len(struct pci_dev *dev);
-
-I think it was a mistake to expose pcie_read_tlp_log() outside
-drivers/pci, and I don't think we should expose aer_tlp_log_len()
-either.
-
-We might be stuck with exposing struct pcie_tlp_log since it looks
-like ras_event.h uses it.
-
-Bjorn
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
