@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-7052-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CBE18BB3E5
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 21:23:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E637E8BB3E3
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 21:23:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8823B241BE
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 19:23:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 231641C20B63
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 19:23:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B977158874;
-	Fri,  3 May 2024 19:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F37E9158849;
+	Fri,  3 May 2024 19:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DBYVdxGW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0rqJFfKw"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x3OXucSj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="egJquNjH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7AE158844;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9251F1586C2;
 	Fri,  3 May 2024 19:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714764210; cv=none; b=S/nkQf9IoduGsw2dwk4qGriVPDtk+XRKMqBYqCEWdfPOmy6UVuCmgmnRABMVlZvR7hc+P8PpLFDlLNiHTVFLsZ8mEoC36KmddK37E2U03wwvfc1bu6wwW6I69dZq7D+KVCVFFbf2zLFRGO6sLRmEQ+3LYwLNH+zbJDrzNSj6SjE=
+	t=1714764209; cv=none; b=ZoXnrQq0pDyqA093M9mp9DXT2/1a/7aXw78DU4qxvCBiwMljoJX10u4+TKpEAjKpYIx5auTN8CYWyM34wCbS5qJ3pSDOqj+3zy3V/keOB84MMu8nojSQazXVLpuESTw7EMjtx7xdUfRYX4o53oUuk71a2WEeHKVugNq6+dJrXSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714764210; c=relaxed/simple;
-	bh=JCwptbYruZjLqAtDL8TMWBeSIo+hkKvgWUdTdyJjyWw=;
+	s=arc-20240116; t=1714764209; c=relaxed/simple;
+	bh=fdxlFgTRTET902YIdVAvYcHjayn5OtsB/DYOOVfVLXQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U0gaKHnw7IJ8BbxtClb/payzvCnNbP3S0Rp4UoMTeRDWVSof64ggeVjuZz5hHQACUKIZIBQdntLDnYzNXAKE4eDZoQKjcl7/OAUs+LoiD7Al1aywZ2V88fKL3s9cenIyPhyRfhN7WX8DwzIiw4aMlMP4cShVovawORlKgeTjq90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DBYVdxGW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0rqJFfKw; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=eXSis/sbr9F/wS6D/0NNXJqE/AUtZca1wfVlbgqx0cVKJrA2slZdMrl+DY6JL2R9MnQxBuRWh6xhvoFvNUCPUvS5wJoMCT778LFRxwz0l2FK2NR+8DHwKXArLxEtL7yuuqHfwYnYHy79MM1MtrOzOZ+RC9AqhX2+TiM0yxQNaqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x3OXucSj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=egJquNjH; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: Nam Cao <namcao@linutronix.de>
@@ -39,21 +39,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fc/r1OuWuEM/vzF5SITTG0OBh6zAtXYqIGqImW4XVPw=;
-	b=DBYVdxGWNWaIJO+Zj8D+xlgfP+PZCeRi/A8087FnCrA13r3/+92+fF7V+NpSJKFUHaOGaH
-	BWgrNrlCefUGHUTzi4i5inwViqOnTidI3G+sfqU5pLWxj1u9zo/VrWu6nCDHgeF337dAVJ
-	j6DqbLPDu1l8thP9lQb3bVI5EEAHx/BmW+CMFo5dXR36/yWAlO004ClGbesJibw2y8vseK
-	eOCKXo5XC8lAw27azVWaTtrlINiza0AhZ90wSPQjZwpy8fOfdo6+eqL8hRy4N9/c0VZ/DT
-	AZIIVgDpR+JdvrCMmit7cyTT0aQxXWA0QU84EUDb/WrrPBNY+xLUDnVVUcXr+Q==
+	bh=+vorNXOmdM0ttzVHsmrotgcJ5HNUuVfx/TFGSwS7Dqc=;
+	b=x3OXucSjFFabheDOKU6WBdJiz+USprJaSXBm9/8KBAsJOyZssUPzW/J1R2fjdN8mq0NKMC
+	npiJmM9F/9Buqmr4+Bir32YMkNV2jT3KEZj2lN1S7Obxyfb2O7yb2ys1eVzpeSCXAyuw9P
+	90TVpPMKIcOGDYGHQTFBnnuO2g11U1ODP4wqBQHevPLLCtLXeamG9omuFbAYhzS+9Y1/as
+	PrAcek9oR1sfv5LrWG4jUhUCMdZ3l9Ef6lWB1kmhAjz5YZvTIDlwTywiO0t68ZdhuWKCtl
+	miHrweDKtyjGtE9fyIt/4IBac09z+X4hFKaWuHYgGysg7cntfoXbBoBkZoUzqg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1714764207;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fc/r1OuWuEM/vzF5SITTG0OBh6zAtXYqIGqImW4XVPw=;
-	b=0rqJFfKwH8JGJ97Gnij8Qy15fC1+b170+RIXO5lheI+z1l6YJMrj0wysu0NUdWtpfnfWZD
-	xghuX+hoBYZ2q/DA==
+	bh=+vorNXOmdM0ttzVHsmrotgcJ5HNUuVfx/TFGSwS7Dqc=;
+	b=egJquNjH+SeW0ams1HGH9vOqn6vFQDAJ1fvDYlw4QPJurOUxtMy7nwKjSBTY0C2livlA1E
+	9tAQ0K+qaCJ+4nDQ==
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Yinghai Lu <yinghai@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -61,9 +61,9 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 3/4] PCI: hotplug: document unchecked return value of pci_hp_add_bridge()
-Date: Fri,  3 May 2024 21:23:21 +0200
-Message-Id: <16a2442ea6ee896987a44df3ed509e4cfde44475.1714762038.git.namcao@linutronix.de>
+Subject: [PATCH 4/4] PCI: hotplug: remove TODO notes for sgi_hotplug
+Date: Fri,  3 May 2024 21:23:22 +0200
+Message-Id: <26784ee39fbb3fbd0fe96508158d74419018e6ad.1714762038.git.namcao@linutronix.de>
 In-Reply-To: <cover.1714762038.git.namcao@linutronix.de>
 References: <cover.1714762038.git.namcao@linutronix.de>
 Precedence: bulk
@@ -74,46 +74,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some hotplug drivers do not check the returned value of
-pci_hp_add_bridge(). This may be probmatic if the driver proceed while
-pci_hp_add_bridge() fails.
+Commit c7532b601e77 ("PCI/hotplug: remove the sgi_hotplug driver")
+deleted the driver.
+
+Remove the remaining TODO notes as well.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- drivers/pci/hotplug/TODO | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/hotplug/TODO | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
-index fdb8dd6ea24d..f0a1746c3c88 100644
+index f0a1746c3c88..9d428b0ea524 100644
 --- a/drivers/pci/hotplug/TODO
 +++ b/drivers/pci/hotplug/TODO
-@@ -6,6 +6,8 @@ cpcihp:
-   ->set_power callbacks in struct cpci_hp_controller_ops.  Why were they
-   introduced?  Can they be removed from the struct?
+@@ -49,14 +49,6 @@ ibmphp:
  
-+* Returned code from pci_hp_add_bridge() is not checked.
-+
- cpqphp:
+ * Returned code from pci_hp_add_bridge() is not checked.
  
- * The driver spawns a kthread cpqhp_event_thread() which is woken by the
-@@ -16,6 +18,8 @@ cpqphp:
- * A large portion of cpqphp_ctrl.c and cpqphp_pci.c concerns resource
-   management.  Doesn't this duplicate functionality in the core?
+-sgi_hotplug:
+-
+-* Several functions access the pci_slot member in struct hotplug_slot even
+-  though pci_hotplug.h declares it private.  See sn_hp_destroy() for an
+-  example.  Either the pci_slot member should no longer be declared private
+-  or sgi_hotplug should store a pointer to it in struct slot.  Probably the
+-  former.
+-
+ shpchp:
  
-+* Returned code from pci_hp_add_bridge() is not checked.
-+
- ibmphp:
- 
- * Implementations of hotplug_slot_ops callbacks such as get_adapter_present()
-@@ -43,6 +47,8 @@ ibmphp:
- * A large portion of ibmphp_res.c and ibmphp_pci.c concerns resource
-   management.  Doesn't this duplicate functionality in the core?
- 
-+* Returned code from pci_hp_add_bridge() is not checked.
-+
- sgi_hotplug:
- 
- * Several functions access the pci_slot member in struct hotplug_slot even
+ * There is only a single implementation of struct hpc_ops.  Can the struct be
 -- 
 2.39.2
 
