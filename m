@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-7058-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7059-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15C8B8BB5A0
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 23:25:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B642A8BB5B6
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 23:29:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3DD21F2463B
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 21:25:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE6C41C2261C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 21:29:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7E8C60BB6;
-	Fri,  3 May 2024 21:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 454464F88C;
+	Fri,  3 May 2024 21:29:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrjrSERt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8Xs22E9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0A154277;
-	Fri,  3 May 2024 21:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBEB364AC;
+	Fri,  3 May 2024 21:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714771423; cv=none; b=QtndpUMXsRBdYv/C3ARvo7G0TlHD2fMa5zt1elCrTbai7IF53xF/1nMHKdGuTXHDijc07YDgWmZdOqO2NdYQLse6Nd6JReMIRtcBtGuxpO+uz+3W5cCwCkyL2GRqED3ipfJ//Bdvf1uKsrmqDthgzZiZ025sen5iSyUvnt5PnXA=
+	t=1714771773; cv=none; b=SMVU8epPK9UgfE1vbEoS9y/dqmFr4QLdTqflAe95F4HdKBSxcFbfRchcaM331GBTTqUVfPCptvNK/Hza9fSnxPoFvG1HG/cbxjzIRTbABa1O1aTUEF1b7pKHdIxcquSpPiYHdDKzEe74geSOZL0FhiIbzt/4qvy13XQ/jp4QV0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714771423; c=relaxed/simple;
-	bh=WuczIjH4tQAgC9Izm+y0x4zUM7SPXPVvm0vjA/Nne4Q=;
+	s=arc-20240116; t=1714771773; c=relaxed/simple;
+	bh=JrWewF09aX2ijWD80QIE7qhm6ZU78qN80094QqAXHSA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qIQWaNGEVuY1oiMueNoLvM44f7+bTE6JLvLxyBv3DtDRODSarDGCPtEGL8nAGEwSRLD12bpOciUMYCpZdujsJ+GioJe6czWcmKGwZsI5Y+QeEk2/S142aspc9cBLkYbx+BIneSrvFrngmBnquRlLcw2lq3BKJW9AQ1EhOTzISeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrjrSERt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C981AC116B1;
-	Fri,  3 May 2024 21:23:42 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=E6mrRe69tFSy6jq5S9q4J1dUqtBxpucy8XDZ4yd+EXeu+p+rGTOE2GfZlP6YAUshJprdMB1/Rhi0ifPc2L17+CksqZ2NpE3YJGkCz7m7gvxG18FGv+T86hDiGsD3q5Byvh01yJdMlIWm4lyv2SM4HIaoMRq/g45loD+3S6CJGRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8Xs22E9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72379C116B1;
+	Fri,  3 May 2024 21:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714771423;
-	bh=WuczIjH4tQAgC9Izm+y0x4zUM7SPXPVvm0vjA/Nne4Q=;
+	s=k20201202; t=1714771772;
+	bh=JrWewF09aX2ijWD80QIE7qhm6ZU78qN80094QqAXHSA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jrjrSERtIFlnL87ivY3cR6O8rDFWw9X2Rh/Jqw50aegnY1bChtb/aEGgmiQvRDJuC
-	 hXEp+dl4bkLwpfsmsncjLgOPVh5PaY+fwfcVUp9uVUISt7rdTnS+gz4qvN5Ke2UzBh
-	 hqCuivJ1ljkbJZE/ZAhFh4zvnF2y6f/biGEIuTl6k2rGjRC4K+pUfHxrtxsIbpdVlK
-	 rUmOXRDyNJdD6oC8LdKdnNb+puOKVQSAqvvPzHGEc6sYysweXIYtHVA8KWj0jZ1ZJl
-	 IK5tIuOwVMt8ccupK5rVFxYm63BWvHmyGzLElJKPdMFuyxD9esO0BTc7UGkNLMHqsh
-	 fZghs4MkwaYdg==
-Date: Fri, 3 May 2024 16:23:41 -0500
+	b=s8Xs22E9gFYl1Gh78dc4GAhrFOO9yPPaQM/6k31Y2/49yPjDoQ186Af6rKXWhB7BE
+	 d8IBJFI/s2eSGPJXLp/5vh6zDLW0Na6RWBUaQPC9xg1x/ML7/4yavN+ivF7jBWTNCi
+	 6jEdmO+AemcwnTJa2ZagkmYbnVreUCNmO99B+M4p0g3hM7mVdiGlM0ReHnzfkMqSr/
+	 S75cludNd+CgjElPuT/okLbvR+bgrSMnJRiHyMmHX3t0tnXq6rQEPR6HBmJXpo19RM
+	 Blo55aSMlAqWjzc1C81+d0EMQOyllbUK3sYpUQvPiGBgoCh7+WJHHdincHRJi9L43L
+	 FNFHNt7JD/N1A==
+Date: Fri, 3 May 2024 16:29:30 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Nam Cao <namcao@linutronix.de>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Rajesh Shah <rajesh.shah@intel.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 2/4] PCI: pciehp: bail out if pci_hp_add_bridge() fails
-Message-ID: <20240503212341.GA1604125@bhelgaas>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] check returned value of pci_hp_add_bridge()
+Message-ID: <20240503212930.GA1605242@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,62 +58,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <401e4044e05d52e4243ca7faa65d5ec8b19526b8.1714762038.git.namcao@linutronix.de>
+In-Reply-To: <cover.1714762038.git.namcao@linutronix.de>
 
-[+cc Lukas]
+On Fri, May 03, 2024 at 09:23:18PM +0200, Nam Cao wrote:
+> ...
 
-On Fri, May 03, 2024 at 09:23:20PM +0200, Nam Cao wrote:
-> If there is no bus number available for the downstream bus of the
-> hot-plugged bridge, pci_hp_add_bridge() will fail. The driver proceeds
-> regardless, and the kernel crashes.
+> Nam Cao (4):
+>   PCI: shpchp: bail out if pci_hp_add_bridge() fails
+>   PCI: pciehp: bail out if pci_hp_add_bridge() fails
+>   PCI: hotplug: document unchecked return value of pci_hp_add_bridge()
+>   PCI: hotplug: remove TODO notes for sgi_hotplug
 > 
-> Abort if pci_hp_add_bridge() fails.
+>  drivers/pci/hotplug/TODO         | 12 +++++-------
+>  drivers/pci/hotplug/pciehp_pci.c |  9 +++++++--
+>  drivers/pci/hotplug/shpchp_pci.c |  9 +++++++--
+>  3 files changed, 19 insertions(+), 11 deletions(-)
 
-Thanks for this and for the details in the cover letter.  The cover
-letter doesn't get directly preserved and connected to the git commit,
-so please include some of the details here in the commit log.
-
-I don't think we need *everything* from the cover letter; just enough
-of the messages to show what went wrong and how the kernel crashed, so
-somebody who trips over this can connect the crash with this fix.  And
-the timestamps are not relevant, so you can strip them out.  The qemu
-repro case is useful too, thanks for that!
-
-Same for the shpchp patch.
-
-And use "git log --oneline drivers/pci/hotplug/pciehp_pci.c" and match
-the formatting (in particular, the capitalization) of your subject
-lines.
-
-> Fixes: 0eb3bcfd088e ("[PATCH] pciehp: allow bridged card hotplug")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: Rajesh Shah <rajesh.shah@intel.com>
-> Cc: <stable@vger.kernel.org>
-> ---
->  drivers/pci/hotplug/pciehp_pci.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-> index ad12515a4a12..faf4fcf2fbdf 100644
-> --- a/drivers/pci/hotplug/pciehp_pci.c
-> +++ b/drivers/pci/hotplug/pciehp_pci.c
-> @@ -58,8 +58,13 @@ int pciehp_configure_device(struct controller *ctrl)
->  		goto out;
->  	}
->  
-> -	for_each_pci_bridge(dev, parent)
-> -		pci_hp_add_bridge(dev);
-> +	for_each_pci_bridge(dev, parent) {
-> +		if (pci_hp_add_bridge(dev)) {
-> +			pci_stop_and_remove_bus_device(dev);
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +	}
->  
->  	pci_assign_unassigned_bridge_resources(bridge);
->  	pcie_bus_configure_settings(parent);
-> -- 
-> 2.39.2
-> 
+I applied the last two (the TODO updates) to pci/hotplug for v6.10,
+thanks!
 
