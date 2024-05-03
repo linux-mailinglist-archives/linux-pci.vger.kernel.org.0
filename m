@@ -1,152 +1,165 @@
-Return-Path: <linux-pci+bounces-7043-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7044-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3117B8BAE4D
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 15:59:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 104538BAEEE
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 16:24:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C50C1F23979
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 13:59:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33E291C2160B
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 14:24:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8D2154441;
-	Fri,  3 May 2024 13:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB404155303;
+	Fri,  3 May 2024 14:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="JfmkKyfa"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Z0xYgguv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF4A1DA21
-	for <linux-pci@vger.kernel.org>; Fri,  3 May 2024 13:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7641552F7;
+	Fri,  3 May 2024 14:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714744792; cv=none; b=NqxIYCyG9jpM1ZM3yb1PWMQabl0MEErFzidu6PkmLecE2G+Pgd6yxROuN4QSNDo7nprrxTa2sr/oHtd8mMQn8wxN/8fHOA0joo6UJlCXrVn0n03MoSs261nrrXUpZnqjpIAJIV/bQH9HeOCxq3dWKC23bxgtEyJVYTobL5v78JQ=
+	t=1714746120; cv=none; b=eD7fHQt+Vd9pd0um7QgeUE2hO1jTfiWtIdgPveTpkmTAbnwKikiIcrCnv5tVjFVJHNSEI/cKynp6z3i8qABTfzzXp7Qq/Y/C3ptG/afSb0uOuwWLqC4TsHWLfRVHtF4B+z13fGNo2TIS/gaiv0DD0Tjv2itBKz+rAkfLcWyVYLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714744792; c=relaxed/simple;
-	bh=9XTu69i9//N23QjLUaRVeITayCFaVH/ZcxE8frlF8/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLeJN6QYBVCZ+5chP+Oz62A09nsAJalPdOp2jmL1SyKohwmWVrm7YjA8C5GK1eXt6uKWISb1tNS19CQsuwFeE9MkuwpRijup5BTr0i7zc8RxrOqERJfTOa+MQEtv205EWpcHvaahu2E/5jad0lau1t4A/sKJlbtDk6M4T+B7KK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=JfmkKyfa; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de5a7b18acdso9077869276.3
-        for <linux-pci@vger.kernel.org>; Fri, 03 May 2024 06:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1714744789; x=1715349589; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ChPcRq4NfZHnrwL48HNhQ7iFI35ROHq79DvxMeghd44=;
-        b=JfmkKyfaJuYg5mwrmJMxqu7Eel+9ThNcdFDiYO9YqQ1kJBCkO3H/xMSHQSw6Wb9+Kg
-         05UzQEys4dw00NIr/Mlwr65do+t23F6VYKLzsFS/JuEn1Nq19druVREWyfQp09GPIMMA
-         9dU72hsdHzPZ+f02XFa0eSpBl8ubhCKk1gkfpXSjDeNsCYk/KzF6XmXKe4OlTCOEPTOa
-         KKV4x6P8fJc/wYycb4EPANAjPXBDu0IsZQYPmZ25cc/Z3uHhYS4ZxjgqtdCA4FgiUNu3
-         zmHbsv8vlZpOJ3WKrevk4/I56d3Xh3d7+zW2uVzY0KymQ8aXGh4i3907OzcyHwNGrNSW
-         VvRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714744789; x=1715349589;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ChPcRq4NfZHnrwL48HNhQ7iFI35ROHq79DvxMeghd44=;
-        b=bLCI3BPWHJ1TToj7aySqBT9IyKYhdnBe4L5IsrPA9lyechYaRyVaRVAZrP6hOM9rF6
-         bpE8A/JEqtpTDevcclw2uVwZxRF2t/qe0+nTk2V4UUS3I+YILsOEIRTqJFXXwV9JI7Qs
-         yWKRhpuKNkkY1Ept6tdRXOslmT+ee+70kasnzo8DCcPDYa4zPXpaqJYgywhYMo45J7iu
-         02yEfOLtsJ91a5aK5LAe5AmCxD8Im56u91OTPUNGSjB0BMY4bDBRV9V4reSI9BA7qiEA
-         R/Cij7YcXFhbvCEX1I7Xycd8PDsJ2kdNaBP8oH2S4m9sx13Gjvsy21XFTWsuKb/fw3SI
-         by3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUr+Y9WVyCmSHLLX/FlTGSiF9FOBOlWb9U8Lkp8X6BPrA0WdWx+raTorcgVBA8H8Qs6IMG//j1bKxQt+7eBWeIqXuLCbjNebJmW
-X-Gm-Message-State: AOJu0Yy6FSxKu3021+60eSNPVxP8YHQOtrmTuPmvJVhmP3E1zZsWBgWN
-	zom1H+uMhxvueaTt5LJijI5Lw4XZ9s/Ded+x62pd9WBy6wKgU9l7YPsDsEXyM2k=
-X-Google-Smtp-Source: AGHT+IFctvodowwbTmaaEDSmGBZj/O9adwDNYje40Gk9jTBEJueLXsMCVV/UKXpClCHAizcOHif2cQ==
-X-Received: by 2002:a05:6902:246:b0:de5:e046:6ac with SMTP id k6-20020a056902024600b00de5e04606acmr2994231ybs.5.1714744789552;
-        Fri, 03 May 2024 06:59:49 -0700 (PDT)
-Received: from sunil-laptop ([106.51.191.139])
-        by smtp.gmail.com with ESMTPSA id l14-20020a25bf8e000000b00de51b87bfefsm627782ybk.18.2024.05.03.06.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 06:59:48 -0700 (PDT)
-Date: Fri, 3 May 2024 19:29:35 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Andrei Warkentin <andrei.warkentin@intel.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Subject: Re: [PATCH v5 17/17] serial: 8250: Add 8250_acpi driver
-Message-ID: <ZjTtx88zk4GvCImk@sunil-laptop>
-References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
- <20240501121742.1215792-18-sunilvl@ventanamicro.com>
- <ZjNaR-YtVTm4pbP7@smile.fi.intel.com>
- <ZjNh0Llcx+0VHevy@sunil-laptop>
- <ZjNmdfR2J6hNnYle@smile.fi.intel.com>
- <ZjN3GQI3gegYOIgS@sunil-laptop>
- <ZjOy2G0qN5G076i0@smile.fi.intel.com>
+	s=arc-20240116; t=1714746120; c=relaxed/simple;
+	bh=bLnPfADEwEwkOX0WWN6OPsmdt+pl5f8Iuzuh935QVFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vBY1Reo0cts8a2B/OjB2UAUW7j5On9T9LdWVXFwiKhV/rms8C2at0q1exb0E2rEKi+QLPkkU0aBqo/8gYPM7cFyvYESiskVIcsdOao9qyU2WF87o+nZ7uRiqjMddK+j2WnhJgnYAIvpuJbkZA/Ij+4dhCa1qEr+WLXERxIRYzA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Z0xYgguv; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BA8B01C000C;
+	Fri,  3 May 2024 14:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714746111;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHh6D+ByoS0ChKmmLmwD9Yo2EL46j5O9IJF8s7BAGCM=;
+	b=Z0xYgguvPb0niup9/7f1RVaaaXWIlXmRSf4CLDnZw2sG2oGbBxXy04KWfQKOrTKhsVP5PI
+	Y5vjBKqArd7ea8kg6QmMWfW1ZHRi1Dd05z/hMq7IVwg+7dc54meeFYNZlovfV2HYg5qzpx
+	5JWe/vKXETX4WtXi/zRU9NnF13ipf3kIkDoTjsQ5foUmeBnkYBIk8VfI9DqFqN3NDPCRhL
+	mxCEWumgcFxzrUd5+1fNfa8LJyYR7broXXxQefbcwq0nneXfmEv9KrsottgUm4ytzg+LrT
+	kBNCefmAtTEknF1b+rdHBqy2+4HMNsiiCyoWIprA3iLE8FgrCCcS+L+DzUYTYg==
+Date: Fri, 3 May 2024 16:21:48 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor.dooley@microchip.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Saravana Kannan
+ <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
+ Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
+ <daniel.machon@microchip.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
+ Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
+ <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 06/17] dt-bindings: net: mscc-miim: Add resets property
+Message-ID: <20240503162148.1dc64b9a@bootlin.com>
+In-Reply-To: <202405021322091c565595@mail.local>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+	<20240430083730.134918-7-herve.codina@bootlin.com>
+	<5d899584-38ed-4eee-9ba5-befdedbc5734@lunn.ch>
+	<20240430174023.4d15a8a4@bootlin.com>
+	<2b01ed8a-1169-4928-952e-1645935aca2f@lunn.ch>
+	<20240502115043.37a1a33a@bootlin.com>
+	<20240502-petted-dork-20eb02e5a8e3@wendy>
+	<4f9fd16b-773d-40e7-86d8-db19e2f6da16@lunn.ch>
+	<202405021322091c565595@mail.local>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjOy2G0qN5G076i0@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Thu, May 02, 2024 at 06:35:52PM +0300, Andy Shevchenko wrote:
-> On Thu, May 02, 2024 at 04:50:57PM +0530, Sunil V L wrote:
-> > On Thu, May 02, 2024 at 01:09:57PM +0300, Andy Shevchenko wrote:
-> > > On Thu, May 02, 2024 at 03:20:08PM +0530, Sunil V L wrote:
-> > > > On Thu, May 02, 2024 at 12:17:59PM +0300, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > > This driver is not a duplicate of 8250_pnp. It just relies on UART
-> > > > enumerated as platform device instead of using PNP interfaces.
-> > > > Isn't it better and simple to have an option to enumerate as platform
-> > > > device instead of PNP? 
+Hi,
+
+On Thu, 2 May 2024 15:22:09 +0200
+Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
+
+> On 02/05/2024 14:26:36+0200, Andrew Lunn wrote:
+> > On Thu, May 02, 2024 at 11:31:00AM +0100, Conor Dooley wrote:  
+> > > On Thu, May 02, 2024 at 11:50:43AM +0200, Herve Codina wrote:  
+> > > > Hi Andrew,
+> > > > 
+> > > > On Tue, 30 Apr 2024 18:31:46 +0200
+> > > > Andrew Lunn <andrew@lunn.ch> wrote:
+> > > >   
+> > > > > > We have the same construction with the pinctrl driver used in the LAN966x
+> > > > > >   Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> > > > > > 
+> > > > > > The reset name is 'switch' in the pinctrl binding.
+> > > > > > I can use the same description here as the one present in the pinctrl binding:
+> > > > > >   description: Optional shared switch reset.
+> > > > > > and keep 'switch' as reset name here (consistent with pinctrl reset name).
+> > > > > > 
+> > > > > > What do you think about that ?    
+> > > > > 
+> > > > > It would be good to document what it is shared with. So it seems to be
+> > > > > the switch itself, pinctl and MDIO? Anything else?
+> > > > >   
+> > > > 
+> > > > To be honest, I know that the GPIO controller (microchip,sparx5-sgpio) is
+> > > > impacted but I don't know if anything else is impacted by this reset.
+> > > > I can update the description with:
+> > > >   description:
+> > > >     Optional shared switch reset.
+> > > >     This reset is shared with at least pinctrl, GPIO, MDIO and the switch
+> > > >     itself.
+> > > > 
+> > > > Does it sound better ?  
 > > > 
-> > > Ah, then extract platform driver first from 8250_core.c.
-> > > 
-> > Let me know if I understand your suggestion correctly. Do you mean call
-> > something like serial8250_acpi_init() from serial8250_init() and
-> > register the driver directly in serial8250_acpi_init()?
+> > > $dayjob hat off, bindings hat on: If you don't know, can we get someone
+> > > from Microchip (there's some and a list in CC) to figure it out?  
+> > 
+> > That is probably a good idea, there is potential for hard to find bugs
+> > here, when a device gets an unexpected reset. Change the order things
+> > probe, or an unexpected EPRODE_DEFER could be interesting.
+> >   
 > 
-> Extract the code to be 8250_platform.c and update that file.
-> I have locally the extraction of RSA code, I will see if I can help you
-> with the rest.
 > 
-Thanks!. That will be helpful. TBH, I don't understand what to do for
-extracting the platform driver code. There are already several vendor
-specific UART drivers (ex: 8250_fsl.c) which are enumerated as platform
-devices. 8250_core.c looks cleanly supporting such drivers which can
-register themselves with the core. For generic UART, DT has 8250_of.c
-and ACPI has 8250_pnp.c. But 8250_pnp.c comes with baggage of PNP
-contract. So, the driver in this patch is similar to vendor specific
-drivers to support generic uart devices which are enumerated as platform
-device. I can rename 8250_acpi.c to 8250_platform.c if that is better.
+> The datasheet states:
+> "The VCore system comprises all the blocks attached to the VCore Shared
+> Bus (SBA), including the PCIe, DDR, frame DMA, SI slave, and MIIM slave
+> blocks. The device includes all the blocks attached to the Switch Core
+> Register Bus (CSR) including the VRAP slave. For more information about
+> the VCore System blocks, see Figure 5-1."
+> 
+> However, the reset driver protects the VCORE itself by setting bit 5.
+> Everything else is going to be reset.
+> 
 
-Could you please help with a patch even if not compiled so that I can
-understand your suggestion better? 
+Right,
+I will update the reset description with:
+  description:
+    Optional shared switch reset.
+    This reset is shared with all blocks attached to the Switch Core Register
+    Bus (CSR) including VRAP slave.
 
-Thanks for your help!
-Sunil
+Is that better ?
+
+Best regards,
+Hervé
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
