@@ -1,100 +1,94 @@
-Return-Path: <linux-pci+bounces-7036-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7037-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 711938BA91F
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 10:44:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2B9F8BA921
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 10:44:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E4C32839CA
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 08:44:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82E231F21520
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 08:44:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0371A5914D;
-	Fri,  3 May 2024 08:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2516148FE2;
+	Fri,  3 May 2024 08:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wH8k20xP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w87LAoIR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2E014A084
-	for <linux-pci@vger.kernel.org>; Fri,  3 May 2024 08:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363645914D
+	for <linux-pci@vger.kernel.org>; Fri,  3 May 2024 08:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714725851; cv=none; b=liuKiUGEHUst7jaBf/x1+quaZPRWd14XjFSHpwj16Vin8/0Vmxs0e+w4NsmBVJ1pAQ1hl+rDFncyxmKwBHd45VPDCzaTE2q61LXbezOcZEobdJVveEMWeJF5Tnfc4PyLDW+EUdZODE6uCpFvP1KYyhv6ETcFbbFOtkNURx2d9Oo=
+	t=1714725875; cv=none; b=ltE5LAL5qIzvDdH9uyhFWxYgbDOn8v/KtPpqFMj24Hgr1GgDTlUNiSlfNIu7nV2RMl9Fg44et0zBynB/PnGYA0vdhYZPlEbsH7Z+ge9zYFEe9w1QgPQ80TcR1jhMNFk8RBgSLx2rsSu5L0mkrGbhkq6eQgVhRkvOn7//Qmn7KmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714725851; c=relaxed/simple;
-	bh=BKji8dql2Q7HB9ydxb8y51caf9/agXzCr0gG3HSWZek=;
+	s=arc-20240116; t=1714725875; c=relaxed/simple;
+	bh=Hf+CieslUsObgt+CsnG2v8xKLDb8RAdDAkn4XK1B5ZQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tJL9oNsPabVU9cHG6ewWC38OBGip13LaqYLDUAQanLQUyE+HuQTCeGTidNII44Dm+UET1RHwvHvLnvIWySdIR05P3g42Km0joNcJGZINGH6qrmkqAOcABjBg/Ja3iAhTEzIMaW+pIFa5r6hTJdwyjCIsAyPrq2XhLR3OmA2Xchc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wH8k20xP; arc=none smtp.client-ip=209.85.219.179
+	 To:Cc:Content-Type; b=O3sU+HiMGzbejAN4meT6qIA88fVPKd6zA9hxLVyv4LGeN3DYWgN3RR+etqLlFJluVpEYByGMAeZ3JA1BtxCIrLhtP/VmSwgjgVySuSo5kORRQ2eBuW8vkvkwj2e2H/xIdNJF7yXehI9cdGi7aOKuxaf6iTEleyLFil1IqsLwN2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w87LAoIR; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-de604ca3cfcso4973700276.3
-        for <linux-pci@vger.kernel.org>; Fri, 03 May 2024 01:44:09 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-61be674f5d1so44565797b3.2
+        for <linux-pci@vger.kernel.org>; Fri, 03 May 2024 01:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714725848; x=1715330648; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1714725873; x=1715330673; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BKji8dql2Q7HB9ydxb8y51caf9/agXzCr0gG3HSWZek=;
-        b=wH8k20xPMsXvOQCwI8eGiHhjiVmW2UZIu1AxM07J2NodowP28Zp2sjwW/eXbBK0CDx
-         Yn/XEtfbliKqyS2iTVLT00NXn5n8UP8ReV1u7udr8a3hyhZnQZjNq3cj4souaR98lTAr
-         NjWKDYX7kNso8RsRotwMA7ku7+M7QzCZX2ynHAn5fU5kEIxlyyGzTI7ORuQKsddI6ejG
-         NfAVMmlH++6p5BOQ/MYCLE+yxfvFB34Rm7EVSF+LWMSRS0Fk6dj3PngDU93gP5DD2q/w
-         Hc13IsJ9HB+8dnJ/zvXQgnVpoTqj5tX6WB07jYMhPGMYMsHj4SNzhVvtUMwM2+uuBSUF
-         QSjg==
+        bh=Hf+CieslUsObgt+CsnG2v8xKLDb8RAdDAkn4XK1B5ZQ=;
+        b=w87LAoIRYfTkcWm7xIH0he9lZ2rpok4L84Lr5//A92VRW9vo/+DpFBKvna7YyPcZhI
+         fQ4thT8DmymXW3ZMu2AZO0+nkO+aKyz6G5QrEvXyGliq5OMLtaoMHcgRG4NHP4KtMBEg
+         nllojQ/s1aMmxgn5ihHeHv+BrcMAGI1V1F/eEt68+4dEJW502At/2zx6DAQ5D/KM2s2l
+         zhgSIJvz38i5pmUP3OPbcMP+WJgPyl81fCvvagxqcGziaFxhUvlBhqLpqQeVt1/bRtHl
+         /2eXI7wcR/CMbBjM3f/oGebijdUfR5AnAYdh5SG2YMGCpIcr5zBnbj2GoAchaj6J7fYx
+         FYvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714725848; x=1715330648;
+        d=1e100.net; s=20230601; t=1714725873; x=1715330673;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BKji8dql2Q7HB9ydxb8y51caf9/agXzCr0gG3HSWZek=;
-        b=eCIX5pHmarIVXVsrGu2McZo2tla3icPcv2wgfbxHQnyOnqsDI/pbd4jh28NDGu/lLL
-         4UBv5Aqw51xAQbQf4utcQhzTa0yKO5xCz3YfclE00D6oAi2dANEk3ElxywXQUk38g13l
-         2pUaYloBlC9S2c70SkMY2C1GZmO4H8oyxlMU85gvzLpwEeSzCNvGFEKiYQOljAXvOvvl
-         24D5rKbraOIOzmPnuFwljrHQz5mtKkDmPR1CcaqNMfG7fT3tc7vIZVA7EerDk9fOAnA2
-         R33IZ425fgtBLCFFHtqcJFFK4l+abmoYTuMFUvvgBk+4P5gQe7su/Va3c9oeskTMoixT
-         ma7g==
-X-Gm-Message-State: AOJu0YxTFnHVuLVhN01VIrbQhvJZPslHkxZrINHbY5y3CKOqHw7g79IQ
-	h5dnjB61RlvRaau6f+cUDo0ngufQojMD6fvhigQWwHxfTLS8TCm3mnCi7XBknK7tTkKBRHyrmgS
-	CTpVedfaU7e4uVVLOSkU4q2CfWARhxfZSzEuW3w==
-X-Google-Smtp-Source: AGHT+IGWfFGtExQ0NqT26L1KYSVbcOPkIAddlYuzm9qz4w3y6T+dxyxo9KKnqe667MkWqy0SdR4KIs+Wq8t4EpB4aMM=
-X-Received: by 2002:a05:6902:2011:b0:dcf:2cfe:c82e with SMTP id
- dh17-20020a056902201100b00dcf2cfec82emr2421680ybb.55.1714725848634; Fri, 03
- May 2024 01:44:08 -0700 (PDT)
+        bh=Hf+CieslUsObgt+CsnG2v8xKLDb8RAdDAkn4XK1B5ZQ=;
+        b=Ndey7JX8PtRLvpOc3cQz6beyFSUWnBFgEeCnovTRqEPlc39+xGKWMGaNu4SD/amKxt
+         htOjcDUuxSBBsqoKCrIRBnJ0KzwtpN58q1DDTEyzNulbZEqGaSQVtEqwazFwcZdTDkcI
+         8+OyOIH1nvOajiBoB8HAFtOQuQudElJEo5rsANYTOUqloScX9zAQboHg20ZYDGbl6mNb
+         SHFhIBDmw7tcFeu4qPOpJHu/4E9I2NKBHtTua76moZP5Gvzd5C270okNT8lNdopVYIGt
+         th8B8RzUUMoaKEE/+WRg5H8gzD2qg+XqhFn9xkMNLyRe5tOlyDbvHdvd6rHE5JdipL4g
+         yHHw==
+X-Gm-Message-State: AOJu0YyePHGz7aVRfWtQyat3dGeddsOT7WFLC7+cm8zqRc0j/r/kd6zT
+	j0h9PoXtCr6Auu++rxMjlDS5HxUlXbf0A3Q8XPe9hdac7RXA5VCfHhCiUQrMpMVBXbvDZEUoxBK
+	qpIRKnHypMc5WaOiGZ+qVGbByJ/pmfdwqQDIexw==
+X-Google-Smtp-Source: AGHT+IFGYTpNwu9TZMXaJSiBK88u1EeOSsKzD6MeNR3gt+k+WNvbBgRYUXF8L7/juthvlyCGLR4E4/DZYS+Ms+4380k=
+X-Received: by 2002:a0d:f944:0:b0:61a:ca09:dae3 with SMTP id
+ j65-20020a0df944000000b0061aca09dae3mr1925466ywf.26.1714725873347; Fri, 03
+ May 2024 01:44:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240429104633.11060-1-ilpo.jarvinen@linux.intel.com> <20240429104633.11060-8-ilpo.jarvinen@linux.intel.com>
-In-Reply-To: <20240429104633.11060-8-ilpo.jarvinen@linux.intel.com>
+References: <20240429104633.11060-1-ilpo.jarvinen@linux.intel.com> <20240429104633.11060-11-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20240429104633.11060-11-ilpo.jarvinen@linux.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 3 May 2024 10:43:57 +0200
-Message-ID: <CACRpkdagd3W1EkJTv70pGBf-=J+yuV+osisR2YjHKuT9Oo5Caw@mail.gmail.com>
-Subject: Re: [PATCH 07/10] PCI: Replace PCI_CONF1{,_EXT}_ADDRESS() with the
- new helpers
+Date: Fri, 3 May 2024 10:44:22 +0200
+Message-ID: <CACRpkdbPhrszp9sXaZibm0P1p4cXPLsYE8o6g3YnZ1Grxr1-NQ@mail.gmail.com>
+Subject: Re: [PATCH 10/10] PCI: v3: Use generic PCI Conf Type 0/1 helpers
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
 	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>, 
 	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Sergio Paracuellos <sergio.paracuellos@gmail.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 29, 2024 at 12:47=E2=80=AFPM Ilpo J=C3=A4rvinen
+On Mon, Apr 29, 2024 at 12:48=E2=80=AFPM Ilpo J=C3=A4rvinen
 <ilpo.jarvinen@linux.intel.com> wrote:
 
-> Replace the old PCI_CONF1{,_EXT}_ADDRESS() helpers used to calculate
-> PCI Configuration Space Type 1 addresses with the new
-> pci_conf1{,_ext}_offset() helpers that are more generic and more widely
-> available.
+> Convert v3 to use pci_conf{0,1}_addr() from PCI core to calculate PCI
+> Configuration Space address for Type 0/1 access.
 >
 > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
