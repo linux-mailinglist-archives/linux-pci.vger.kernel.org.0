@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-7066-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7067-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF5678BB821
-	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 01:19:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A26E78BB822
+	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 01:19:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3744C1F22531
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 23:19:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17B781F21EFE
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 23:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF15883CA6;
-	Fri,  3 May 2024 23:19:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7D2C83CB8;
+	Fri,  3 May 2024 23:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dk5SU/BB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="khREI3OB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A83183A1E
-	for <linux-pci@vger.kernel.org>; Fri,  3 May 2024 23:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DEF83CC4
+	for <linux-pci@vger.kernel.org>; Fri,  3 May 2024 23:19:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714778345; cv=none; b=Bhqp/MMBdoJfvVODBjuSL5EEkhDkptiM2+zzpon4ccggq4rDdXRuKwWL75Q6Df16oefcAJbRc8WtCuAHOoo3hhRJi9n/iePuviOtKPSGGIy7WjLJdkKvJ8CB/xnm1m8+t5d2MbxZHE3wehC8GIe0bdUKOanBqwwtagSbxWjjKvc=
+	t=1714778347; cv=none; b=UGlRrIIdbMyEQpbwuapNUe9Zlv7R7ai/XzbdHjWIB61Dxdc7lGlp76/TCQ++LI7EqAjvIA+iYTxbmr/tpcgJIgWUYEv2jLx3hgenSjr3Ytoa0rj/YBTyD5lcpo0cmnF1ez2BtKZAuLaWixNT4nk1cJwjcF3Z8ThuGWNn4NIrOjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714778345; c=relaxed/simple;
-	bh=X9ck2cnd5l3I0GZoehgfFUW/Ek8zPD0ujgK/Wb9fEhA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=HGq8e1YVKGsr68kLE4zbYVusat9nGyqEX3rxxO5fYm1rfGOu2zGaNnKxQSDe/KZYmX7K/kKLAyeEr9W4k0VmwvdSQbwSw4DryU0aZWrDM9X8dGFSd5XdgKVgZ9j2ReDiC0pCThGitJPWt7rc7cSQg7hHw5mzS9buU77PbLMjoGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dk5SU/BB; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1714778347; c=relaxed/simple;
+	bh=TfrUxDjTj9j/2BeEBaZ83P8q8kr+Riq7UncL0tEH8ZE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=IJNHvygPl86pE+69BQJsow8j3od7eWQrli2CtSF9mc3swPi9Umnw4Z2D+lIajKMZvlpf2UnCet1PF+Hq8pJT+TjquucI+3+oTJkn5C8ru5fB0WVRo0JrawOqj4duQQuivaXBD2T0uzI6pHyV9WOahLWqge55RgXLkEzQLOTCR4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=khREI3OB; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714778344; x=1746314344;
+  t=1714778346; x=1746314346;
   h=date:from:to:cc:subject:message-id;
-  bh=X9ck2cnd5l3I0GZoehgfFUW/Ek8zPD0ujgK/Wb9fEhA=;
-  b=dk5SU/BBMaxmEvGZOKB7DmPHSt5gtqaae6m9ArPHTZCBnXwUlGtahMoZ
-   7falz0+OgrcO5+7lM27uTb115X4FQR5Dyx0GPvIOu0XKD1Ci/veHpEZnl
-   VVLaFkYeeU5gZWPK2xgtHFOL4JadSbqcKNY8jrl3mHLiPVi2Uj2GixcLH
-   DMLcR5p2IloN3dE1RMAbyOoWEgaY54uSV0Pw5fTITkjERIyYqWTfFxu18
-   VCwGEpmvsVBqD9G5FsD5a5XdVHtR+0D27sqdfRdfLYU3Fz4jemA2fdFYZ
-   LEoJ6H3Hkaf0wcCXIF6C1ee+7dHzSxn+NY7w2DWrD9SDTpqd9tVMYPouA
-   A==;
-X-CSE-ConnectionGUID: jtMn1WlNRieUc/pnldcueQ==
-X-CSE-MsgGUID: MWXNY2aERhCnsB+WNtVqtw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="21284763"
+  bh=TfrUxDjTj9j/2BeEBaZ83P8q8kr+Riq7UncL0tEH8ZE=;
+  b=khREI3OB1Lm4Q3g9HOxwDkMiTlMJind1XRNh+80hj8JmvxpksWyup/hQ
+   D6RM2UA7BlNTfnu7MelskeQvDugcO22Qj5mJm1x1lBvZez+YMwnupFt9J
+   8yWJUWDtr7ZjSRxdJ2tjGSLpHKy99OlSLIHPW7P3P4QRyBEayKvP5bQEM
+   UBc1abcBl/5rgjSbKpF5YcHSOPKlJ/9YkMyTArMZXQRnBHUSjPfYWtoem
+   +7zvFYAi8L7uHkW2RhsyZ8yTM1jFwQD+EzenWousPZ8ITeZg5T0KFG/Yu
+   nJqoSB2UwGlb8icpzCk+wn3hb+Puf+YMyqZkQNetIchEegBKQeAzRGQz7
+   Q==;
+X-CSE-ConnectionGUID: SalixPKQTeWC/v7OlhkNgw==
+X-CSE-MsgGUID: U83mA4K4SB+/9WU9plQoHA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11063"; a="21284766"
 X-IronPort-AV: E=Sophos;i="6.07,252,1708416000"; 
-   d="scan'208";a="21284763"
+   d="scan'208";a="21284766"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
   by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 16:19:03 -0700
-X-CSE-ConnectionGUID: z9de1DqoQ1ekStVWItEF2w==
-X-CSE-MsgGUID: Dqavoj6tRU+nhZdYQDOmnA==
+X-CSE-ConnectionGUID: r45g/TsWRLeSLGJ37CNfzA==
+X-CSE-MsgGUID: VAQnc+MdS+K9odYbtxDWJw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,252,1708416000"; 
-   d="scan'208";a="50782688"
+   d="scan'208";a="50782689"
 Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
   by fmviesa002.fm.intel.com with ESMTP; 03 May 2024 16:19:03 -0700
 Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1s32B9-000CAw-2x;
+	id 1s32B9-000CAu-2s;
 	Fri, 03 May 2024 23:18:59 +0000
-Date: Sat, 04 May 2024 07:18:23 +0800
+Date: Sat, 04 May 2024 07:18:29 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:wip/2405-ilpo-window-sizing] BUILD SUCCESS
- f5226ebd25139320f6988561a1de7c783c0319fb
-Message-ID: <202405040721.Y74qm5t2-lkp@intel.com>
+Subject: [pci:aspm] BUILD SUCCESS
+ dc69062a1a73f0fe33a83401e8a3b1d5d54b43af
+Message-ID: <202405040727.npZctKYe-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,13 +74,13 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git wip/2405-ilpo-window-sizing
-branch HEAD: f5226ebd25139320f6988561a1de7c783c0319fb  PCI: Relax bridge window tail sizing rules
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aspm
+branch HEAD: dc69062a1a73f0fe33a83401e8a3b1d5d54b43af  PCI/ASPM: Clean up ASPM disable/enable mask calculation
 
-elapsed time: 1458m
+elapsed time: 1459m
 
-configs tested: 178
-configs skipped: 3
+configs tested: 177
+configs skipped: 4
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -98,7 +98,6 @@ arc                   randconfig-002-20240503   gcc
 arc                   randconfig-002-20240504   gcc  
 arc                           tb10x_defconfig   gcc  
 arm                               allnoconfig   clang
-arm                                 defconfig   clang
 arm                        multi_v5_defconfig   gcc  
 arm                   randconfig-004-20240503   gcc  
 arm                         s3c6400_defconfig   gcc  
