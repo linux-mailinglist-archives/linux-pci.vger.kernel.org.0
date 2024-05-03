@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-7056-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7057-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A8CF8BB509
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 22:49:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA8978BB50C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 22:51:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 147D62830F2
-	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 20:49:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 76533282D70
+	for <lists+linux-pci@lfdr.de>; Fri,  3 May 2024 20:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1AF92C69D;
-	Fri,  3 May 2024 20:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA5752D05E;
+	Fri,  3 May 2024 20:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCLqlcw1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIys1pJf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A932E22F08;
-	Fri,  3 May 2024 20:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D0B2C694;
+	Fri,  3 May 2024 20:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714769352; cv=none; b=rb8s5zg93vqvZ9i0dmuwxjjtUc0cxs7IuWOWTDvoBbxE4KXkCZXcqZkrE4lt+TiNvWLGotE3te55RZFflAE0+0KrJuF1Yg8n2FKJDkgHgRHJN3ViAgcMW5k4U3JTJ0EAheSBPN4s31lZojA/mwgg74tWalRvMsa2Gs1i17ySGbM=
+	t=1714769467; cv=none; b=B0cseXvwtKzDKi/c9C5b8n+OdsduEDYUuQIPEIaxslgFx2OEzwVJmafTlGW16F+CaOJaB0TUUyRZGw8Kak7Xx2joSH2YimSGto18eVR01mX6XvE7gQ0HeRXXJVnyibUVFCyKlTCCrn8UtagGOlhsyYOdEcd6JFon9U4ALvJ6Vf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714769352; c=relaxed/simple;
-	bh=4z4NtWY+hIBBvVSonfOpc0dCyguz5kR/ln02LAqO7i8=;
+	s=arc-20240116; t=1714769467; c=relaxed/simple;
+	bh=gzgvy4pSOWRoA4F6feWlHdcjj1qZ8ZrQ6EZwMDRbHGc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=A4495SAP2MXuf48RkJmNyOjOSWMDRD3LSCPBcl2gb0fAWahcU5UuwrNI30gEur/hQSqQ7oRm+RD9m1ua/SNeO1badmI1gcoN3yyx4W7w8UBCx0/OIlrMgApERWS8QtlWB+5sl1Mj0i8GByBxF8L1r3EBINzYw1SsLGQH0zzadN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCLqlcw1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FF2C116B1;
-	Fri,  3 May 2024 20:49:11 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=fvVQunshnalYNXTt/e6sYRsHenk87aDiq+FedfSqWdGlUOhFRNgfmJWmpE3rq98cCr+9xF5KpUMPRQ5mSN8n6zjYrQrKs5zwCSL7EhJsLmb+3RVt8tynLrb0iCYN5BfQb9KBT4b+xFDpfQn3hnct1S0q/A21MgkHi+tpXwXoGM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIys1pJf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDA7C116B1;
+	Fri,  3 May 2024 20:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714769352;
-	bh=4z4NtWY+hIBBvVSonfOpc0dCyguz5kR/ln02LAqO7i8=;
+	s=k20201202; t=1714769467;
+	bh=gzgvy4pSOWRoA4F6feWlHdcjj1qZ8ZrQ6EZwMDRbHGc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=PCLqlcw1FWL4kOhGFRycyOYpLX+ttTyqaOE25GfI0xotfk34b3K3JfcC4/dOUGJr9
-	 ln80Mx4sfraJGJquu6Xl/WEeBLUSPm5O6s+ui8sBgaj1v9JnH8NhJdKwgZNp0Q+hmc
-	 QiQRC/t3q8WyOkVIZnJQ6D/A+Nb5O9BWJqN+msRNInnI+/KlcgR15xIXMnJCpK6edd
-	 tBx1XtZgk2TDBdu6sAiY4i00m9olO198PwOEa+88ERGStkkk/ArL1fV1jNO4OV+Wrq
-	 rFqwVBI7kbPMifmoKiA6Yy/VDbOsHn5LipANxhLX0nuf/BVYpeLZlva+8j2UvlKVlw
-	 Ca9rZBHfXiptw==
-Date: Fri, 3 May 2024 15:49:10 -0500
+	b=pIys1pJfO0xqtjzWXcq/a2BLjC2j7vUDsIr7R58ZsFD3jXo5fIaGjQXw9sXngjiwo
+	 D60HKGtfcJ5sj7vFBSCxf1g2fpz/zsxeIkDIh0jtD/W8UZV6Yjq3xmoAGaITZvABgb
+	 WM9t3WQfk6MbJEH4mk94jQU8+LcxnagfDvsxNZh2dr7MCkEZklr1i36CTbdlerV7lE
+	 zkm2INulI6Xoxtl+FfwE9j6jdUnaboQ1uIbHRLdO7VXHakpFnr4LzyjafNaUG8VJGn
+	 ZM4v0uhnIjTYd0stY+0bn+AfqanbiSfsVKNCFl1FCLkLUSSJJHveFq0LmX2EL6Bduk
+	 23KGsHrEYj9BA==
+Date: Fri, 3 May 2024 15:51:05 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
 Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
@@ -54,9 +54,9 @@ Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
 	"Rafael J . Wysocki" <rafael@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 2/7] resource: Rename find_resource() to
- find_empty_resource_slot()
-Message-ID: <20240503204910.GA1602543@bhelgaas>
+Subject: Re: [PATCH v2 3/7] resource: Document find_empty_resource_slot() and
+ resource_constraint
+Message-ID: <20240503205105.GA1602720@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,83 +66,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231228165707.3447-3-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20231228165707.3447-4-ilpo.jarvinen@linux.intel.com>
 
-On Thu, Dec 28, 2023 at 06:57:02PM +0200, Ilpo Järvinen wrote:
-> Rename find_resource() to find_empty_resource_slot() to better describe
-> what the functions does. This is a preparation for exposing it beyond
-> resource.c which is needed by PCI core. Also rename the __ variant to
-> match the names.
-
-I wonder if "find_resource_space()" or "find_available_resource()"
-would be better than "_slot"?
-
-"Slot" *is* already used a few times in kernel/resource.c, but in most
-cases I think it refers to a "resource", and find_resource() basically
-returns a filled-in struct resource.
-
-And of course "slot" suggests something entirely different in the PCI
-context.
-
+On Thu, Dec 28, 2023 at 06:57:03PM +0200, Ilpo Järvinen wrote:
+> Document find_empty_resource_slot() and the struct resource_constraint
+> as they are going to be exposed outside of resource.c.
+> 
 > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  kernel/resource.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+>  kernel/resource.c | 28 +++++++++++++++++++++++++---
+>  1 file changed, 25 insertions(+), 3 deletions(-)
 > 
 > diff --git a/kernel/resource.c b/kernel/resource.c
-> index 866ef3663a0b..94f67005e1e2 100644
+> index 94f67005e1e2..ed4bb8ad701a 100644
 > --- a/kernel/resource.c
 > +++ b/kernel/resource.c
-> @@ -574,10 +574,9 @@ static void resource_clip(struct resource *res, resource_size_t min,
->   * Find empty slot in the resource tree with the given range and
->   * alignment constraints
->   */
-> -static int __find_resource(struct resource *root, struct resource *old,
-> -			 struct resource *new,
-> -			 resource_size_t  size,
-> -			 struct resource_constraint *constraint)
-> +static int __find_empty_resource_slot(struct resource *root, struct resource *old,
-> +				      struct resource *new, resource_size_t size,
-> +				      struct resource_constraint *constraint)
->  {
->  	struct resource *this = root->child;
->  	struct resource tmp = *new, avail, alloc;
-> @@ -633,11 +632,11 @@ next:		if (!this || this->end == root->end)
->  /*
->   * Find empty slot in the resource tree given range and alignment.
->   */
-> -static int find_resource(struct resource *root, struct resource *new,
-> -			resource_size_t size,
-> -			struct resource_constraint  *constraint)
-> +static int find_empty_resource_slot(struct resource *root, struct resource *new,
-> +				    resource_size_t size,
-> +				    struct resource_constraint *constraint)
->  {
-> -	return  __find_resource(root, NULL, new, size, constraint);
-> +	return  __find_empty_resource_slot(root, NULL, new, size, constraint);
+> @@ -46,7 +46,18 @@ struct resource iomem_resource = {
+>  };
+>  EXPORT_SYMBOL(iomem_resource);
+>  
+> -/* constraints to be met while allocating resources */
+> +/**
+> + * resource_constraint - constraints to be met while searching empty resource slots
+
+Needs "struct resource_constraint", I think, to satisfy
+scripts/kernel-doc.
+
+> + * @min:		The minimum address for the memory range
+> + * @max:		The maximum address for the memory range
+> + * @align:		Alignment for the start address of the empty slot
+> + * @alignf:		Additional alignment constraints callback
+> + * @alignf_data:	Data provided for @alignf callback
+> + *
+> + * Contains the range and alignment constraints that have to be met during
+> + * find_empty_resource_slot(). @alignf can be NULL indicating no alignment
+> + * beyond @align is necessary.
+> + */
+>  struct resource_constraint {
+>  	resource_size_t min, max, align;
+>  	resource_size_t (*alignf)(void *, const struct resource *,
+> @@ -629,8 +640,19 @@ next:		if (!this || this->end == root->end)
+>  	return -EBUSY;
 >  }
->  
->  /**
-> @@ -660,7 +659,7 @@ static int reallocate_resource(struct resource *root, struct resource *old,
->  
->  	write_lock(&resource_lock);
->  
-> -	if ((err = __find_resource(root, old, &new, newsize, constraint)))
-> +	if ((err = __find_empty_resource_slot(root, old, &new, newsize, constraint)))
->  		goto out;
->  
->  	if (resource_contains(&new, old)) {
-> @@ -729,7 +728,7 @@ int allocate_resource(struct resource *root, struct resource *new,
->  	}
->  
->  	write_lock(&resource_lock);
-> -	err = find_resource(root, new, size, &constraint);
-> +	err = find_empty_resource_slot(root, new, size, &constraint);
->  	if (err >= 0 && __request_resource(root, new))
->  		err = -EBUSY;
->  	write_unlock(&resource_lock);
-> -- 
-> 2.30.2
-> 
 
