@@ -1,220 +1,82 @@
-Return-Path: <linux-pci+bounces-7074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C6748BBC75
-	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 16:35:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1E0C8BBC9B
+	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 17:02:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C81C52826D3
-	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 14:35:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B5261C20FDC
+	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 15:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13BEB1097B;
-	Sat,  4 May 2024 14:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oSJfzeQk"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CA623BBEA;
+	Sat,  4 May 2024 15:02:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB081DDC9
-	for <linux-pci@vger.kernel.org>; Sat,  4 May 2024 14:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCE222F00;
+	Sat,  4 May 2024 15:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714833300; cv=none; b=L38+O5VrFFwe0rY+Hmcc/4crbCwPkhv0PpXlKyW6ky9HgmHujsoXwzE33HOPBWqjVLB9YU+G/J/8bwacRDoKIb5jWTS/0C+Sg9NCiAsrbOdAKNDDlISTPzopCjAY2tWUuw5J7NrS4n1vwZR6ENBEWs6/5BlswX/UbAs6LSvr7P8=
+	t=1714834961; cv=none; b=Pw+rPecVMXZiTXNE+opLjDZHkSxcbE0/w28yUyCSDQp+86ta8mckdc+2JlfJ8E+82lg9sD5lKir4wwWsB8CYlUgCx0dDHMXJr/b0mOPcgYgijO3s7Fqk4KnS7sTyKtOSB6n52BXm1/r6JVbNb2t3Fp9NXtfUeC8MbpSkjTPI5NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714833300; c=relaxed/simple;
-	bh=Af0mMd94wFv/G3aroqYOBQbbfSYxV+CEPY5Q4696uPI=;
+	s=arc-20240116; t=1714834961; c=relaxed/simple;
+	bh=XZg0u3kPXV8uWQS8+jwlLEsQrGKyPRpGzYxINexgUf0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m2zunetclPOlvHJvA2p43gCsnF0Ln8xBjhFbJVaynzpiTDy3P4sEokyh3v/azOyB39O0DGWjSmMu83or6pJsj+BLxOZTT9psyrx3aN0I7ESYT688FOlQ+jbFckmrOJI8GoFFPQvtuwbUa02rEhyM5SUQymhULpos0Yvq99NcJso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oSJfzeQk; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ad8fb779d2so439647a91.0
-        for <linux-pci@vger.kernel.org>; Sat, 04 May 2024 07:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714833298; x=1715438098; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Nyy4LAyZP8KI7OlTDf5aFBKGQGzQXhfEPllp0seEmvc=;
-        b=oSJfzeQkTEZzwO6Qskj7G9bh5Fz0rFNrDaNOMC/AJ2qiu4x2j9WV01OxT3cqsni9Hs
-         Lf0acsq9AxfPqoiMvrmjnBQ9hHcois/OPaIJADkDKUfFpJkjhnu4HNVX9au4GXAUoVa+
-         n4ODCof7iEPQRWFpVqopTRGuPvd8eazJp+KPCW9s2NzTwx+RDDGNrzDD6ThFsKZkKkBZ
-         eXiExQew1ZPNqrF/wUYjaFL7i8sFJo8FUOrDowvyYriNDaATF3Ei2doG7vlV4sRSAcno
-         4xrQbZZHsF7x9IHzjEjjLFQ+q+Uegf1XEbV5CgZFqovYsBtk2msPZZHVF5CRZw4NGFLp
-         VD9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714833298; x=1715438098;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nyy4LAyZP8KI7OlTDf5aFBKGQGzQXhfEPllp0seEmvc=;
-        b=hmKqiDAeJw2NOThqFKjngFOjMEqrGK00KjEf3JviJ6M+vtDNpSjB78v+GVfeZz3STX
-         0zsJ+xFJYfqzqU9+1mVEkoteAOumlx2ksOaec2//0D21GcxEsKDnjHy/s586YNy5d8dg
-         XObx/ZQ9mYWRSEK+vYSOWyRbAwyCqyN7NbWzYu1Ot5my0Myl1DH20CVO0M5wDvmNWMxj
-         lCblOwTsrZsH7erqOg1CURdkaQpKj6NK01txT2I6BJo/KJkRCoVtTLc4mtYaCe3YQCuL
-         L8tapRP0kMGoTqW6ABepah1HmBBTM1W6FrRVC9BerianNf/vjZEze5+ccyzW3Fb06ced
-         myLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXug8O+Iij4dJE/AHOe2q0CqtDXR7lg1x43F7FNIIe6YnK2je2cUjJ35aeSg0APi9vkXW059wkj08f54pwTxPy9iInONgyFI5Dd
-X-Gm-Message-State: AOJu0YzTlCzQM8pGoNiS/bEChE37By4IWmPpCbayaQ3J7g9xgmfbnvV5
-	snmLPoX622M84x00T4XPI+TKNTCOu7BkLM+n9KqthGOZl7WwH/hr+gCTONfENQ==
-X-Google-Smtp-Source: AGHT+IFLJpkIWp664Q1AnicCGjVOM6mGx2zz2Fal7CAa1UmOK9iw/lO+qdeiT0TOpiREqZwrqDYCJA==
-X-Received: by 2002:a17:90a:db55:b0:2ac:23ec:6a57 with SMTP id u21-20020a17090adb5500b002ac23ec6a57mr4986731pjx.39.1714833297560;
-        Sat, 04 May 2024 07:34:57 -0700 (PDT)
-Received: from thinkpad ([220.158.156.193])
-        by smtp.gmail.com with ESMTPSA id st12-20020a17090b1fcc00b002a5d62a7e75sm6877476pjb.52.2024.05.04.07.34.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 May 2024 07:34:56 -0700 (PDT)
-Date: Sat, 4 May 2024 20:04:51 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lg8grW5Nn/mVmVX9eJpV9CxSQDK12F4/TZ2nHLJgWDnBYwKZqD9P8z5/KjrH5tnPTQEP7w6NLrS+gpulVwNDJ76KeA6qjePZEhP+pw3acyRtGuuB/MxYvvF9iQ92MOH6YssD8fk6U0F93emJ/YIBCAQK02DqxFmFWehD7J0Js7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 09DEE3000FF11;
+	Sat,  4 May 2024 17:02:35 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id D7D7148D184; Sat,  4 May 2024 17:02:34 +0200 (CEST)
+Date: Sat, 4 May 2024 17:02:34 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] misc: pci_endpoint_test: Use
- memcpy_toio()/memcpy_fromio() for BAR tests
-Message-ID: <20240504143451.GA4315@thinkpad>
-References: <20240322164139.678228-1-cassel@kernel.org>
+	Rajesh Shah <rajesh.shah@intel.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI: pciehp: bail out if pci_hp_add_bridge() fails
+Message-ID: <ZjZOCj4Cxizsj3iY@wunner.de>
+References: <cover.1714762038.git.namcao@linutronix.de>
+ <401e4044e05d52e4243ca7faa65d5ec8b19526b8.1714762038.git.namcao@linutronix.de>
+ <ZjX3t1NerOlGBhzw@wunner.de>
+ <20240504093529.p8pbGxuK@linutronix.de>
+ <ZjYFOrGlluGW_GzV@wunner.de>
+ <20240504105630.DPSzrgHe@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240322164139.678228-1-cassel@kernel.org>
+In-Reply-To: <20240504105630.DPSzrgHe@linutronix.de>
 
-On Fri, Mar 22, 2024 at 05:41:38PM +0100, Niklas Cassel wrote:
-> The current code uses writel()/readl(), which has an implicit memory
-> barrier for every single readl()/writel().
+On Sat, May 04, 2024 at 12:56:30PM +0200, Nam Cao wrote:
+> On Sat, May 04, 2024 at 11:51:54AM +0200, Lukas Wunner wrote:
+> > Could you reproduce with pciehp instead of shpchp please?
 > 
-> Additionally, reading 4 bytes at a time over the PCI bus is not really
-> optimal, considering that this code is running in an ioctl handler.
-> 
-> Use memcpy_toio()/memcpy_fromio() for BAR tests.
-> 
-> Before patch with a 4MB BAR:
-> $ time /usr/bin/pcitest -b 1
-> BAR1:           OKAY
-> real    0m 1.56s
-> 
-> After patch with a 4MB BAR:
-> $ time /usr/bin/pcitest -b 1
-> BAR1:           OKAY
-> real    0m 0.54s
-> 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> Same thing for pciehp below. I think the problem is because without 
+> pci_stop_and_remove_bus_device(), no one cleans up the device added in
+> pci_scan_slot(). When another device get hot-added, pci_get_slot() wrongly
+> thinks another device is already there, so the hot-plug fails.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+pciehp powers down the slot because you're returning a negative errno
+from pciehp_configure_device().  Please return 0 instead if
+pci_hp_add_bridge() fails.
 
-- Mani
+Thanks,
 
-> ---
-> Changes since v3:
-> -Use scope-based resource management __free attribute from cleanup.h to
->  avoid overly verbose gotos and labels for error handling.
-> -Added a comment related to why we allocate a buffer of max 1MB.
->  (kmalloc() default upper limit is usually 4 MB on ARM and x86.)
-> 
->  drivers/misc/pci_endpoint_test.c | 54 +++++++++++++++++++++++++-------
->  1 file changed, 42 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 705029ad8eb5..bf64d3aff7d8 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -7,6 +7,7 @@
->   */
->  
->  #include <linux/crc32.h>
-> +#include <linux/cleanup.h>
->  #include <linux/delay.h>
->  #include <linux/fs.h>
->  #include <linux/io.h>
-> @@ -272,31 +273,60 @@ static const u32 bar_test_pattern[] = {
->  	0xA5A5A5A5,
->  };
->  
-> +static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
-> +					enum pci_barno barno, int offset,
-> +					void *write_buf, void *read_buf,
-> +					int size)
-> +{
-> +	memset(write_buf, bar_test_pattern[barno], size);
-> +	memcpy_toio(test->bar[barno] + offset, write_buf, size);
-> +
-> +	memcpy_fromio(read_buf, test->bar[barno] + offset, size);
-> +
-> +	return memcmp(write_buf, read_buf, size);
-> +}
-> +
->  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
->  				  enum pci_barno barno)
->  {
-> -	int j;
-> -	u32 val;
-> -	int size;
-> +	int j, bar_size, buf_size, iters, remain;
-> +	void *write_buf __free(kfree) = NULL;
-> +	void *read_buf __free(kfree) = NULL;
->  	struct pci_dev *pdev = test->pdev;
->  
->  	if (!test->bar[barno])
->  		return false;
->  
-> -	size = pci_resource_len(pdev, barno);
-> +	bar_size = pci_resource_len(pdev, barno);
->  
->  	if (barno == test->test_reg_bar)
-> -		size = 0x4;
-> +		bar_size = 0x4;
->  
-> -	for (j = 0; j < size; j += 4)
-> -		pci_endpoint_test_bar_writel(test, barno, j,
-> -					     bar_test_pattern[barno]);
-> +	/*
-> +	 * Allocate a buffer of max size 1MB, and reuse that buffer while
-> +	 * iterating over the whole BAR size (which might be much larger).
-> +	 */
-> +	buf_size = min(SZ_1M, bar_size);
->  
-> -	for (j = 0; j < size; j += 4) {
-> -		val = pci_endpoint_test_bar_readl(test, barno, j);
-> -		if (val != bar_test_pattern[barno])
-> +	write_buf = kmalloc(buf_size, GFP_KERNEL);
-> +	if (!write_buf)
-> +		return false;
-> +
-> +	read_buf = kmalloc(buf_size, GFP_KERNEL);
-> +	if (!read_buf)
-> +		return false;
-> +
-> +	iters = bar_size / buf_size;
-> +	for (j = 0; j < iters; j++)
-> +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
-> +						 write_buf, read_buf, buf_size))
-> +			return false;
-> +
-> +	remain = bar_size % buf_size;
-> +	if (remain)
-> +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
-> +						 write_buf, read_buf, remain))
->  			return false;
-> -	}
->  
->  	return true;
->  }
-> -- 
-> 2.44.0
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Lukas
 
