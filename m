@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-7086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B28348BBD69
-	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 19:20:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3ADA8BBD70
+	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 19:21:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B606E1C20C4F
-	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 17:19:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4D241C20D2E
+	for <lists+linux-pci@lfdr.de>; Sat,  4 May 2024 17:21:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 901F45C613;
-	Sat,  4 May 2024 17:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 501225C613;
+	Sat,  4 May 2024 17:21:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EcLL5XDE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gNfFsUoC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9835A7AB
-	for <linux-pci@vger.kernel.org>; Sat,  4 May 2024 17:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169786A34F
+	for <linux-pci@vger.kernel.org>; Sat,  4 May 2024 17:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714843195; cv=none; b=i816l1072VTyb10lYiEUfvILPsK7IcY+PuYnXdD+0lafq+3L1p7w1nzGWty3wapzB9HGSryZETDG+rQtxvHVqac4mCBULkiCMskRqQz0Xzr94RmgEhHzWTl1DdhmgGZYAqfcDk9plMpOIhTMTpBgnhLY7D/8HlN3mUdI7zNQ40g=
+	t=1714843265; cv=none; b=K+0//icrBHGpVXN1VG7Uf06SXjyT/R17vSoGF3uccPYBs/d0nKcRfb2K8eNlyyH0Mwkxtcbmaxi03CAqIos2JCRiONs8lpr3DDqaIGLCPGIc+2I03QVLZuYrKpYIAW7JCiP9a7u86UNMMH4Hl5rLUnFqaSwtyGWczYpIXuQI/DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714843195; c=relaxed/simple;
-	bh=QcZecfv5O2PCXalZZt/AJoJw0w690b8cnjLjC5ZXLxw=;
+	s=arc-20240116; t=1714843265; c=relaxed/simple;
+	bh=WEzD/Jv9LH/qgyBt7ggSJY1ZRBFRdqqvx9MwD/29YuM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pT8PYR1BBYAGeocUjE+oslAyIxDOKHxEAaJoYt8QSNbGxdUYTzRzWiQeqhNj4+cZYprkwxYsXM2aFiM52cbD6VEKYCxYdn0Ie/QiLhmVTTYn1P9HvJHTm0mM+PEfDlbF7xRvwXK5QLiUiNP5IO7W+mMfQmaynqmpjYsR2sjj8h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EcLL5XDE; arc=none smtp.client-ip=209.85.210.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ir7VsMYTeAdsTwcXV3b8gd+r2E4pmjN/1ZlC8/DXkd5o6/c04vTjkRgyJg5ErdBXDuZ2YlHf/DGtGJPPG2X38ljF3hZBNEN2Q8Y5EvHEgjsOS3jCEBxynJlT7f7AcMmtBjYhlSw6NkWojVztcK1PItYj01Uga9qNzIKyFtj8jl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gNfFsUoC; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f44a2d1e3dso540972b3a.3
-        for <linux-pci@vger.kernel.org>; Sat, 04 May 2024 10:19:53 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ec41d82b8bso6249375ad.2
+        for <linux-pci@vger.kernel.org>; Sat, 04 May 2024 10:21:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714843193; x=1715447993; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1714843262; x=1715448062; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=QPT0FiQAGgPquvop9IMIOlSx0gcl6L1N8v+sEDetyx8=;
-        b=EcLL5XDEg+HRhZtmmOXtv9QGG7fpPEhv86Px0BCN6FkAnjJDoDKLKhnIBagPjWFiNn
-         89PtSChMNaSyWFKxJtvX09SB2QS0aEe4t3rBztIWXotSB5+rJMRYHRyQrc/T6Hhm1/kn
-         nX+H7N1OkcJ/BNMnqng0VuWwS988ULRdqpFvwU47fAKZ39z+8XwTFqDVaoQkZoUuIgZI
-         jHLKfv+KXOdDn+elWqb5ruw8+QW1IMyE6HZmMEq3qu1zNIUuZjtOR37x1e/uznH7EVWT
-         12mvn8zU9vqyQNIcnKcQIP8PeHFFxV9GYjYqP/lwn6kbbEnf/6zItHEP4ymytjadntzm
-         wK+A==
+        bh=9laX2V+CVuA7h00Ylv6RDCBuojEdnvBgJODYE51PhlU=;
+        b=gNfFsUoCY6bX9KWXMGjujhC//1zRH/H3u3zzyPunLI2YaslwxmvZIErtDNXa1dxefM
+         wXx0g/KizwQQ5GKYCeY7PQ7Q/cJ/UA1tKJoKWq5UqbNHkMNHBMkKhL22VbfuP1xPq+6r
+         IDVbtFGB9X59iMLNWSHWah1tqLOFi+PHN/7EWbkJq6ChMfo79S7+UfZvSpmNdu4Uudxk
+         rbHeu86Hn1UID7BZ1h6y4xOqV2lHE9s7GeL7Dp7V3XwkSbOvOn/ZCaK1O/8CXFeMqa9R
+         LKSvBNvre/jXJ67ErIyw+SE+XLmh4FoIV7jVrh/fctnp3m2dafRstjxe8Llf6w1oDCZL
+         sp7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714843193; x=1715447993;
+        d=1e100.net; s=20230601; t=1714843262; x=1715448062;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QPT0FiQAGgPquvop9IMIOlSx0gcl6L1N8v+sEDetyx8=;
-        b=YQWtVFwuaIQB7eVr/FC9ewZyDK5oz7q7yWa9iCGk1FsFpaIt9EpVnPiXiGxdc32y1x
-         xLbR0fs9wEeFcsdWhKIfAq+bF4UsHJvkylmpCinzIPVKqv4qBFlKynQ2wlQgmDuD5nSq
-         Knt/t9und5zIz/u1SQILWr/IXBEH5W343HkEODFwGfvkWie0B+kh2VoCJpUv57npmWz1
-         JZ+5zyh7TDAVTjbJTBR920+HQw1GGEpoJnQXHxe8rlBdWW6W4gF7fCt2TlyTqNVJTPWw
-         FIuhgt5jcrwhQVcXfhfQanvIn377Vm8G3b4961Cd2BhsXG+VFkxnE4sfhFWq164LzR9z
-         qFNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKY+7P3m+q6V7fZWr1zrPhfZGovDzzUn+Uisjn3xH2Cik3Eq7iQ4jUKiLkj75wOiH0dT9BMbpKK3S0zPESP8LRrFERPbay4CCL
-X-Gm-Message-State: AOJu0YwV+E5D6u3jV4797362ATWAnOXyHR+TKsZS3/hGnIWOceHkWQHA
-	N/Y3B6zSIXSyKOQGADm+/XpOGTl7vsPOgG2cCi20gSoL8Pe8N7B2d0VfIm+TjA==
-X-Google-Smtp-Source: AGHT+IGplHkYwzi+l22LCVcmkw49e67JxhbbLGaL/5wDHQNXDiHfmKQIXxi2afvNuzMmBKanrbZXWQ==
-X-Received: by 2002:a05:6a00:3a20:b0:6ec:ebf4:3e8a with SMTP id fj32-20020a056a003a2000b006ecebf43e8amr6736256pfb.15.1714843193155;
-        Sat, 04 May 2024 10:19:53 -0700 (PDT)
+        bh=9laX2V+CVuA7h00Ylv6RDCBuojEdnvBgJODYE51PhlU=;
+        b=g4RZY2yZOgmM1Zpv2CGlV1N/OjjHzcmHRu4JTl6Aao0IgLpgeAiaFZKNz+d+zSiwMZ
+         eIJfykQGqNsLjyABumpnSVkBp4ySsNJe5gKYZA8OfZKRztuuBVDPm2aIM8f80+c8UsIR
+         S5prUggvQubClfY4LfTB2waogTJMghFOxw2CKHRsx5DAqdfMkkC28XLZ6xk38YO8gyGq
+         HaENGq8LE4cqkbzHCFWaebcirHFZ4VpURW6ur2xfmuhVAmcBXPY7gCwekl0P5DWhHiyh
+         /VRZM6E9QLFDkiRPvoH/uDc2f8sVpTfk8Hpz84zRtG2FwhGoWZQPwhuy1sGtRN36qhna
+         EL8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXLcTNiXZw+8uBVBkYV5QNjle2yo1c9nFutGNtH1Ryk93Oj76jKKRXXI33y/H77m0m8Vw48FNC8T3vDfoAkf+uPrdbZ+WV0/kCF
+X-Gm-Message-State: AOJu0YxhlbYL0kyEUshyflh1JCTBoDHqPFaC8H7O2LWfjCsTUp/IN0Zh
+	2oyle0BoMD0UA40ekpkWp5BjdhlEdX2vw7uCsxIT1bZb6kglvgajgp2APfgpkg==
+X-Google-Smtp-Source: AGHT+IFyjaSOMKjB8qp6aX4zhqJKBtMXCWvr3PoileGxES65eHv6nsequF71TgXi/KdDGzd92JvURA==
+X-Received: by 2002:a17:902:d2c6:b0:1eb:b50e:3577 with SMTP id n6-20020a170902d2c600b001ebb50e3577mr7317773plc.56.1714843262260;
+        Sat, 04 May 2024 10:21:02 -0700 (PDT)
 Received: from thinkpad ([220.158.156.237])
-        by smtp.gmail.com with ESMTPSA id a5-20020aa78e85000000b006f4688c89b0sm541771pfr.120.2024.05.04.10.19.48
+        by smtp.gmail.com with ESMTPSA id p9-20020a170902780900b001ea90148816sm5356597pll.253.2024.05.04.10.20.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 May 2024 10:19:52 -0700 (PDT)
-Date: Sat, 4 May 2024 22:49:46 +0530
+        Sat, 04 May 2024 10:21:01 -0700 (PDT)
+Date: Sat, 4 May 2024 22:50:54 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
@@ -83,11 +83,11 @@ Cc: Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
 	Shawn Lin <shawn.lin@rock-chips.com>,
 	Simon Xue <xxm@rock-chips.com>, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 09/14] PCI: dw-rockchip: Refactor the driver to
- prepare for EP mode
-Message-ID: <20240504171946.GF4315@thinkpad>
+Subject: Re: [PATCH v2 10/14] PCI: dw-rockchip: Add explicit
+ rockchip,rk3588-pcie compatible
+Message-ID: <20240504172054.GG4315@thinkpad>
 References: <20240430-rockchip-pcie-ep-v1-v2-0-a0f5ee2a77b6@kernel.org>
- <20240430-rockchip-pcie-ep-v1-v2-9-a0f5ee2a77b6@kernel.org>
+ <20240430-rockchip-pcie-ep-v1-v2-10-a0f5ee2a77b6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,76 +97,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240430-rockchip-pcie-ep-v1-v2-9-a0f5ee2a77b6@kernel.org>
+In-Reply-To: <20240430-rockchip-pcie-ep-v1-v2-10-a0f5ee2a77b6@kernel.org>
 
-On Tue, Apr 30, 2024 at 02:01:06PM +0200, Niklas Cassel wrote:
-> This refactors the driver to prepare for EP mode.
-> Add of-match data to the existing compatible, and explicitly define it as
-> DW_PCIE_RC_TYPE. This way, we will be able to add EP mode in a follow-up
-> patch in a much less intrusive way, which makes the follup-up patches
-> much easier to review.
+On Tue, Apr 30, 2024 at 02:01:07PM +0200, Niklas Cassel wrote:
+> The rockchip-dw-pcie.yaml device tree binding already defines
+> rockchip,rk3588-pcie as a supported compatible string.
 > 
-
-Same comment as previous patch.
-
-> No functional change intended.
+> Add an explicit rockchip,rk3588-pcie entry to make it easier to find the
+> driver that implements this compatible string.
 > 
 > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 > ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 72 +++++++++++++++++++++------
->  1 file changed, 57 insertions(+), 15 deletions(-)
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index 4023fd86176f..f985539fb00a 100644
+> index f985539fb00a..f38d267e4e64 100644
 > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
 > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -58,6 +58,11 @@ struct rockchip_pcie {
->  	struct gpio_desc		*rst_gpio;
->  	struct regulator                *vpcie3v3;
->  	struct irq_domain		*irq_domain;
-> +	enum dw_pcie_device_mode	mode;
-> +};
-> +
-> +struct rockchip_pcie_of_data {
-> +	enum dw_pcie_device_mode mode;
->  };
->  
->  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
-> @@ -195,7 +200,6 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
->  	struct device *dev = rockchip->pci.dev;
-> -	u32 val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
->  	int irq, ret;
->  
->  	irq = of_irq_get_byname(dev->of_node, "legacy");
-> @@ -209,12 +213,6 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
->  	irq_set_chained_handler_and_data(irq, rockchip_pcie_intx_handler,
->  					 rockchip);
->  
-> -	/* LTSSM enable control mode */
-> -	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-> -
-> -	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
-> -				 PCIE_CLIENT_GENERAL_CONTROL);
-> -
->  	return 0;
->  }
->  
-> @@ -288,13 +286,41 @@ static const struct dw_pcie_ops dw_pcie_ops = {
->  	.start_link = rockchip_pcie_start_link,
->  };
->  
-> +static int rockchip_pcie_configure_rc(struct rockchip_pcie *rockchip)
-> +{
-> +	struct dw_pcie_rp *pp;
-> +	u32 val;
-> +
-> +	if (!IS_ENABLED(CONFIG_PCIE_ROCKCHIP_DW_HOST))
-> +		return -ENODEV;
+> @@ -400,6 +400,10 @@ static const struct of_device_id rockchip_pcie_of_match[] = {
+>  		.compatible = "rockchip,rk3568-pcie",
+>  		.data = &rockchip_pcie_rc_of_data,
+>  	},
+> +	{
+> +		.compatible = "rockchip,rk3588-pcie",
+> +		.data = &rockchip_pcie_rc_of_data,
 
-Right now this driver is only selected using CONFIG_PCIE_ROCKCHIP_DW_HOST. So
-this check is not valid in _this_patch.
+This is not required. In fact, it is encouraged to just use fallback compatible
+in DT and not add new entries in driver.
 
 - Mani
 
