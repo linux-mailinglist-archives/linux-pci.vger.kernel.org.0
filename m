@@ -1,59 +1,60 @@
-Return-Path: <linux-pci+bounces-7101-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7102-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B04978BC4F2
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 02:47:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A9858BC6AC
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 07:19:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 65CDA2820E9
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 00:47:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA1CFB20D7D
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 05:19:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663E28C11;
-	Mon,  6 May 2024 00:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9262045944;
+	Mon,  6 May 2024 05:19:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="UOAB8NYu"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="szvGy2CX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFA48BFA;
-	Mon,  6 May 2024 00:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1D41EEE9;
+	Mon,  6 May 2024 05:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714956418; cv=none; b=SDgf00gLKIaeoFvvNVDfyYH8evdX2OivbMajpFnrDnFwspCvjU7HHz8YdlUqrJYiX7cR1hMgUM/TBZPxZciDU3p4vZzudEhUb/t+VzQu+q/k4WCijegjDMAwAV8d5SgYvq2CUkYcoqB8RSCqBqwsjGwo2fWjPtR27n2Xa+meyPo=
+	t=1714972762; cv=none; b=iIfWXBTCaZkAPvQBjCn79/Ku9hveRD/6tfHIUc5z2iXDBw/+WvhOR5LDl45MlEozv8EreplneSWKdxhq5Kd+DfZ7CQpMzL0OSncKBCEIScgQU69GBT1+cctbZt1QzOkG+N2qQGT6rP1DmZUs5mh+mN5SKQLG9mYumIVN8jvyyQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714956418; c=relaxed/simple;
-	bh=MCWSf42J7Ydt7/06DV5oxor9m2vYQxvl2U5A48OU0b8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=raBj3Mjj7a0V0N9nXxtb3HqD4hJlY9eQ6rmTn0kad2egM8SFcGJQfdFsS/Uu6/Kn2AN5oOMQaVc+kCRsWxCcUzIZVJ2m2aPucVDZlWiL8MMZxZu8fuc/cIjSGKeKXgGdqs5wXWlCBxW+VXna/+fNGrNttzGh+YPWT1nsyNTw/0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=UOAB8NYu; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=hbpmqPehKNeC5DN8fCY+LuqViDM4iLNJexDFtFPKmY8=; b=UOAB8NYu0lXONDkd
-	oV9zpYk0rOSPw8lr3oFl9y7nli4Wg6ClBbyoVQ84Jv4SoHkF5ZHSmMdMKTcgwaSK7cFTDkUHCIvDe
-	f8z/RSHeODkQsqndhdi26KjoLi3kNmuYwv7krKFsAxhsqrxa6xSmrNW/j0hnmlgbBb4DIsjDmx5V3
-	F+KyGrWT9VpYXv6gmXuwNcVEjKsbX2bNy8YBuuIIyY+6OXdeoAUOsVYMjuplWhr079xGaxbDCPsZi
-	m5dPRli51gLJHo8qX/Lhm2sehlRHLXJ2bTNxeAqwXbeawc+0Dum7zv4yVq2URbMJJ1o5K3+KN42PY
-	y79elB7uFP1b3vnerg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1s3mVG-004piy-36;
-	Mon, 06 May 2024 00:46:50 +0000
-From: linux@treblig.org
-To: bhelgaas@google.com,
-	dave.hansen@linux.intel.com
-Cc: x86@kernel.org,
-	linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1714972762; c=relaxed/simple;
+	bh=06dEbMSkhU9EKB1BJ/UZAAMDB1nCMvvV1Dugt5xzYHM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bgkIRczWHYKEZ3TSFkJQn3zWdSrr3ElknG110sOXwDZz7PHhzUI3GsdIBWWe+5cdobkeZAhzoi6LjFtB4pKW5ICfxeGRuhqJ2vQDjLrWxPtkNtUKBxyxgbvginkM3ZBzMpIARN8b0JKVpuiYmXZaYNNEy1TwZCZkJ3O8hwsWR9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=szvGy2CX; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from localhost.localdomain (unknown [10.101.196.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 7FE463FA40;
+	Mon,  6 May 2024 05:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1714972752;
+	bh=Qnp0PiHfp/IWPOg0CPvvM5+8flE+F+e1B4j4lhgtslo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=szvGy2CXefq21TLJk28pDEqa4UKl21fkOjhZTWOh+zcKI4o/wJA6lw0z7y16r63HL
+	 p4nUbeiVNbLVSDobRQiyoAElWdh0mHDGrNOXw+qn1ScqSZgnmlVGFnnBiQBAV+kBHF
+	 dtD1xiNkhph5LDB2nOvPt14+PXVUEJYp/hdkx+RvYu8hVtIpgwlzt41fKtArPrCkDS
+	 y3KZkQwnamr+DW36U5p7nm4/9f91V2tC6JLsuMpWeAsYCKGh14v7IIlYah1ZRMxZOA
+	 zCpnS/xgLACUT1Tn2In8KxsPg4b/4UVcOnRn2Fp9C65tivX6LDK2KTJWHG0113XBfa
+	 khfxe3A+iAOaA==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] x86: ce4100: Remove unused struct 'sim_reg_op'
-Date: Mon,  6 May 2024 01:46:47 +0100
-Message-ID: <20240506004647.770666-1-linux@treblig.org>
-X-Mailer: git-send-email 2.45.0
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI/ASPM: Fix a typo in ASPM restoring logic
+Date: Mon,  6 May 2024 13:16:02 +0800
+Message-Id: <20240506051602.1990743-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,33 +63,33 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+There's a typo that makes parent device uses child LNKCTL value and vice
+versa. This causes Micron NVMe to trigger a reboot upon system resume.
 
-This doesn't look like it was ever used.
+Correct the typo to fix the issue.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Fixes: 64dbb2d70744 ("PCI/ASPM: Disable L1 before configuring L1 Substates")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- arch/x86/pci/ce4100.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/pci/pcie/aspm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
-index 87313701f069e..f5dbd25651e0f 100644
---- a/arch/x86/pci/ce4100.c
-+++ b/arch/x86/pci/ce4100.c
-@@ -35,12 +35,6 @@ struct sim_dev_reg {
- 	struct sim_reg sim_reg;
- };
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 2428d278e015..47761c7ef267 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -177,8 +177,8 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *pdev)
+ 	/* Restore L0s/L1 if they were enabled */
+ 	if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, clnkctl) ||
+ 	    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, plnkctl)) {
+-		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, clnkctl);
+-		pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, plnkctl);
++		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, plnkctl);
++		pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, clnkctl);
+ 	}
+ }
  
--struct sim_reg_op {
--	void (*init)(struct sim_dev_reg *reg);
--	void (*read)(struct sim_dev_reg *reg, u32 value);
--	void (*write)(struct sim_dev_reg *reg, u32 value);
--};
--
- #define MB (1024 * 1024)
- #define KB (1024)
- #define SIZE_TO_MASK(size) (~(size - 1))
 -- 
-2.45.0
+2.34.1
 
 
