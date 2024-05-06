@@ -1,98 +1,108 @@
-Return-Path: <linux-pci+bounces-7131-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7132-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACA9B8BD257
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 18:17:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B6308BD55B
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 21:24:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66D6F283C2E
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 16:17:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC0B61C21A6D
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 19:24:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 332DB15746E;
-	Mon,  6 May 2024 16:15:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2340158DAB;
+	Mon,  6 May 2024 19:24:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UpPf7Ox7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xk4xQxs/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1488157E94
-	for <linux-pci@vger.kernel.org>; Mon,  6 May 2024 16:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA773158DDA;
+	Mon,  6 May 2024 19:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012143; cv=none; b=GGPqZi5I2cVV4V1bSr+/AqJzQycbpTSQi3Dl0gB/R2dv3B2FWyDPk6/hlytA2ejpPHLJU2UNg1umzu0HXIoZu/KoqfVkIGn4fZLfTt/RMn6E91Tc9vd6o+q6y8I6/YF3mWVM3+phgQlqX7Ht9kPUCpxHd7LOhxd7UMfFF8o+WFs=
+	t=1715023443; cv=none; b=BiZ+R9hu+nx0lrZXkJqQI/JtM66DNYbtRsxqkgH2o6RBDeN905Rcmc3yJwbtp6mbNGBviLZGZYSmPAJuAG78JZQSalW23TsZRH2xTVjqTKGwseckolfAZOXcFbwDcr1weQpksok8D+pJdD9UGeSteg/qcnvrsTx4E4wYTTrZgjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012143; c=relaxed/simple;
-	bh=T1+Rbt7S+pNf5q3CRHOo4VcokJLF+gGx7h9sjDgMKpg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MhCQIkmjpMzTnv9ASZR4ZOZhETlfb5aM6Wi3d0qzTHll2BmRlpfJvQTnvJH62Kaoi0YWQDk9ynH6hh2qfV3VTARuySD9ZSsz+GB+mFUcnney54PeM+NXK0ks7DRQEy8uytO/KHR4osqypDcIjAtTaMYAzh12qLzH0enw8GbP1Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UpPf7Ox7; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715012140;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ck8JgZysAqiIqlF+N+8+WdMTAZK/jkIRufdhwHxvwE4=;
-	b=UpPf7Ox7SFE6/WLTzUKvDVSsuy/M5WEJuFj+ZO70agQ5WPL0K2MGVALnPQTfs09ZEJGbEd
-	HprA8xSjWt++oRwyvMRXQ7ULv9gX/siwXF8ZJJVJlLmBIpKTYbsCyhsWl7B0YtmMuNkDIM
-	yQxX3tO1Qfr0Tvl43E3cmXJ0c8Fm38U=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-pci@vger.kernel.org
-Cc: Michal Simek <michal.simek@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1715023443; c=relaxed/simple;
+	bh=eSARHEaXPlpYTPk6nnOZSW56af64LMpXvs2QgA5+byc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=i7Ipzi05sOMTEX4Oa59vB4W427s38zk3I4HtH/WT1F+wn231UEGl+4TomHC1WRrpSZEom80+X5/U7/S7bn6LKX5XpMLQFa2xmzio3qe3AJ92AyH9/Gt+TGcK1bslUdWBarFZDWFH2fIGfnGRH3lcLXLvxQUKo4U3z56w0j+ohCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xk4xQxs/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29756C116B1;
+	Mon,  6 May 2024 19:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715023443;
+	bh=eSARHEaXPlpYTPk6nnOZSW56af64LMpXvs2QgA5+byc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Xk4xQxs/H8E9uZItfebdEpXqi96lNvNDqSBJt4JEcayLkxMvfZ0icI1kB5oJ2mUGM
+	 Aq1lR3d7mYt1tuTv5oInj1rwDDHcrRh4iZ6pRX6s3+oid0P1zyg+83w6t+PBiYRJl8
+	 HHXW7RkMd94jqf3NAwPeJrRLq65fHb7HjMD0derQLvss2uFaXdqH2pL4z4/WW82ZRI
+	 aZQ7Vpuc7xCIIXPLR0jU/hqJD1aPk5230DBSxnEyUxRJk0Om5HnnfZTanuv0mJXs70
+	 /pjowm4jGPbNNTY0L08XZKev+tbv3y6ugwW7O9WcqlDtKn+KIMaG8G7lNq7knFVCaI
+	 EgvKpaK6kRRfQ==
+Date: Mon, 6 May 2024 14:24:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v2 7/7] arm64: zynqmp: Add PCIe phys
-Date: Mon,  6 May 2024 12:15:10 -0400
-Message-Id: <20240506161510.2841755-8-sean.anderson@linux.dev>
-In-Reply-To: <20240506161510.2841755-1-sean.anderson@linux.dev>
-References: <20240506161510.2841755-1-sean.anderson@linux.dev>
+	"David E . Box" <david.e.box@linux.intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Fix a typo in ASPM restoring logic
+Message-ID: <20240506192401.GA1704739@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506051602.1990743-1-kai.heng.feng@canonical.com>
 
-Add PCIe phy bindings for the ZCU102.
+[+cc David]
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-Tested-by: thippeswamy.havalige@amd.com
----
+On Mon, May 06, 2024 at 01:16:02PM +0800, Kai-Heng Feng wrote:
+> There's a typo that makes parent device uses child LNKCTL value and vice
+> versa. This causes Micron NVMe to trigger a reboot upon system resume.
+> 
+> Correct the typo to fix the issue.
+> 
+> Fixes: 64dbb2d70744 ("PCI/ASPM: Disable L1 before configuring L1 Substates")
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Changes in v2:
-- Remove phy-names
+This is something David did correctly in his original posting
+(https://lore.kernel.org/all/20240128233212.1139663-4-david.e.box@linux.intel.com/)
+and I broke it while reorganizing things
+(https://lore.kernel.org/all/20240223213733.GA115410@bhelgaas/).
+Thanks for finding this!
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 1 +
- 1 file changed, 1 insertion(+)
+Since 64dbb2d70744 was merged for v6.9-rc1, I queued this to for-linus
+for v6.9 with this subject:
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-index ad8f23a0ec67..d2175f3dd099 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-@@ -941,6 +941,7 @@ conf-pull-none {
- 
- &pcie {
- 	status = "okay";
-+	phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
- };
- 
- &psgtr {
--- 
-2.35.1.1320.gc452695387.dirty
+  PCI/ASPM: Restore parent state to parent, child state to child
 
+since it's more than just an innocuous typo.
+
+> ---
+>  drivers/pci/pcie/aspm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 2428d278e015..47761c7ef267 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -177,8 +177,8 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *pdev)
+>  	/* Restore L0s/L1 if they were enabled */
+>  	if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, clnkctl) ||
+>  	    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, plnkctl)) {
+> -		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, clnkctl);
+> -		pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, plnkctl);
+> +		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, plnkctl);
+> +		pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, clnkctl);
+>  	}
+>  }
+>  
+> -- 
+> 2.34.1
+> 
 
