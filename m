@@ -1,145 +1,119 @@
-Return-Path: <linux-pci+bounces-7110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7786C8BCDE3
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 14:26:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 029FB8BCDF9
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 14:30:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A622A1C237B7
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 12:26:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33F831C237E4
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 12:30:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66BD8143C51;
-	Mon,  6 May 2024 12:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF95CE570;
+	Mon,  6 May 2024 12:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZCvgzkq2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UsbqeFpy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238D0143C44;
-	Mon,  6 May 2024 12:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE4A79E4;
+	Mon,  6 May 2024 12:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714998368; cv=none; b=Q002/L4pmiYx997PeZVbZjPnUm/aFVmisAjm4LDa/NBpSLWrLhIJHWiHWhZSGaB5EdjqiFDGyYv+kASaFwq4d7uft63vosPuw80+BVN4W0ak0iMVzb4H1fZb3nKRvSqeDAVHOPtYCMYbA2PrG5n9NnAbSnmgg3svNWbGy72MT5s=
+	t=1714998624; cv=none; b=a1T09alsP3JazXI6RHbNz2a1aqfD69y4mWq/n41Ud7KEauDX+fIucgAeOeiHa07yngW2p+l7xm/4pM6XqlwA7EdxwVX9WZs21dz3UUpPMjfev8Wkeb/UM9TwCbHI+X29IQ5tQyEPAVzbO4W5cQcp+3c8Opd3P4tixbdl+3PgCVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714998368; c=relaxed/simple;
-	bh=yim39yRqN4bdpfi/yZPkyOfIHeiJsr3OoFhecZ7dSX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RxROAHW2OjO7yC5130xPZBiVPJ6PmvkTPpp28aDbW2AYZRTMLuzFolOZ80dJil5pij4eAQGG3mDH6Gxc4uZ8Djgi6xS8WF27BSz1Pkg/1LL6TLFxSIbdWMFLsjCFhr6pZVNxROAgN0YErn20JEM1SLIKRTITCBtumUiVANxodbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZCvgzkq2; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1714998624; c=relaxed/simple;
+	bh=c/w6oDfxGpNulUHSEeO1wtt/g7mJwXCklSr6D+lrmzE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=N5B6/6J7QkeAIBPlD9CUZBtQiu45f4zzKP+hix+3zIrIn7kiXc4O652uNzm/ijDmwBttIUE1M+MNlWZKGeHOl2AA6VDmHFltWQE/xdz6IFfEXg/ADV1aUOVcjWr97XvR40WyYmeHGhgmCJRSkUPjBBoUkZVaYXE7ufRCsusclqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UsbqeFpy; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714998366; x=1746534366;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=yim39yRqN4bdpfi/yZPkyOfIHeiJsr3OoFhecZ7dSX8=;
-  b=ZCvgzkq2FrVYthP2jVKlAfB01bIBcwCDZcUWMke/J9PPTn6+3MnqV9hO
-   zeBEoBCM0LvLVsocgxvSzx3CDR4P2JtEbBazL/Hu0RqutrTH1wrMKQyat
-   anxDzndHigUmTiiaYQCx59a0PWm6Hx36Vt1qVeZJwsUZ5CeBEIP4hkYxS
-   Q9aV/IKi2P7es8Rtx7aqWAyW4vS53IQYbkrR4dB9RHDefxmY39wVtNNGR
-   pBR2ikBAjU2vDERWBgVHryGU0LBr4SOreplQKoQ8ICLlfu9iN5oVILQvg
-   kZaitMf1A+RPr5OC9/mOM/l7YePioDeTqMU7yGU/2VWcObQTUQL7gvRhp
-   w==;
-X-CSE-ConnectionGUID: 8A2f7UADSgi9LQWnGahorA==
-X-CSE-MsgGUID: uUZbPi9UQYe73UyGMy/jXA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="21352626"
+  t=1714998623; x=1746534623;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=c/w6oDfxGpNulUHSEeO1wtt/g7mJwXCklSr6D+lrmzE=;
+  b=UsbqeFpyIcVNmZpfQxfaeQLQztG3AuEziPMSAgqr8+mGLLUXK1pd9QGC
+   dg3vUGSHF25MQC5a8B6YqW+nQ3HE/3B73AXlCFX/d35WoxQvdvOXC9/rk
+   hQ6FjsvUEjZ3VbcYWfSEiU5NFIIoMDDniSkqjEO+pO0B1WtjFafujMssj
+   39yPkyySF1FLzElNKxZXhqMvKn/CqXKvXXqFwIEwFhBGydfheIwK9+CUI
+   iE7AcBsdp8Cp08GX3RURbWX9RazBIYrfhs4kvPiWCSivV29NrHSwh4vGC
+   lJOwh324wefWbc3GPqZKtXp45j07LTLYYIeOOicwwV13BPvnRqC89GX1y
+   g==;
+X-CSE-ConnectionGUID: UcCkrZ3hS9aiLiTLwKA/rA==
+X-CSE-MsgGUID: a9IjOYdsSmGSI1afB+rAfg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10900766"
 X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="21352626"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:26:05 -0700
-X-CSE-ConnectionGUID: i/6U48ZHSka9s8R3PJyNXw==
-X-CSE-MsgGUID: UQissWGdTaOeNacEhtYQ9A==
+   d="scan'208";a="10900766"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:30:22 -0700
+X-CSE-ConnectionGUID: yq1AatXqQCW7RV9dETfBMQ==
+X-CSE-MsgGUID: E3JmPibJQDKTJVhIwIqw5g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="28116539"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:25:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s3xPl-00000004gZr-3aNZ;
-	Mon, 06 May 2024 15:25:53 +0300
-Date: Mon, 6 May 2024 15:25:53 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH v3 4/5] PCI: imx6: Convert to agnostic GPIO API
-Message-ID: <ZjjMUSj3cZTI56wE@smile.fi.intel.com>
-References: <20240429102510.2665280-1-andriy.shevchenko@linux.intel.com>
- <20240429102510.2665280-5-andriy.shevchenko@linux.intel.com>
- <CACRpkdZUsA034L5GjF_-XELX9369PwNjONfsDV-_EC564R0QWg@mail.gmail.com>
+   d="scan'208";a="65601028"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.68])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:30:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 6 May 2024 15:30:11 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+    Rob Herring <robh@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Igor Mammedov <imammedo@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    Andy Shevchenko <andriy.shevchenko@intel.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 2/7] resource: Rename find_resource() to
+ find_empty_resource_slot()
+In-Reply-To: <20240503204910.GA1602543@bhelgaas>
+Message-ID: <1dbfc6c4-eeb1-92c1-3371-1b0afa5683ad@linux.intel.com>
+References: <20240503204910.GA1602543@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-665360433-1714998611=:1111"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-665360433-1714998611=:1111
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZUsA034L5GjF_-XELX9369PwNjONfsDV-_EC564R0QWg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Mon, May 06, 2024 at 02:10:24PM +0200, Linus Walleij wrote:
-> On Mon, Apr 29, 2024 at 12:25 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > The of_gpio.h is going to be removed. In preparation of that convert
-> > the driver to the agnostic API.
-> >
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> I think there is a bug here, the code is respecting the OF property
-> "reset-gpio-active-high"
-> but the code in drivers/gpio/gpiolib-of.h actually has a quirk for
-> this so you can just
-> delete all the active high handling and rely on 1 = asserted and 0 =
-> deasserted when
-> using GPIO descriptors.
-> 
-> Just delete this thing:
-> imx6_pcie->gpio_active_high = of_property_read_bool(node,
->                                            "reset-gpio-active-high");
+On Fri, 3 May 2024, Bjorn Helgaas wrote:
 
-Good catch! Thank you, I'll update it in the next version. Can you review
-the rest meanwhile?
+> On Thu, Dec 28, 2023 at 06:57:02PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > Rename find_resource() to find_empty_resource_slot() to better describe
+> > what the functions does. This is a preparation for exposing it beyond
+> > resource.c which is needed by PCI core. Also rename the __ variant to
+> > match the names.
+>=20
+> I wonder if "find_resource_space()" or "find_available_resource()"
+> would be better than "_slot"?
+>=20
+> "Slot" *is* already used a few times in kernel/resource.c, but in most
+> cases I think it refers to a "resource", and find_resource() basically
+> returns a filled-in struct resource.
+>=20
+> And of course "slot" suggests something entirely different in the PCI
+> context.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I picked up it from the existing usage but I've no strong opinion on=20
+this so I'll just rework the series to not add more "slot" wording into=20
+there.
 
-
+--=20
+ i.
+--8323328-665360433-1714998611=:1111--
 
