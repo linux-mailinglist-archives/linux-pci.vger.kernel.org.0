@@ -1,120 +1,119 @@
-Return-Path: <linux-pci+bounces-7120-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7121-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF4958BD087
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 16:43:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8770C8BD096
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 16:45:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 792B2280E97
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 14:43:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8F891C20E6F
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 14:45:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CD01534FC;
-	Mon,  6 May 2024 14:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300B91534FC;
+	Mon,  6 May 2024 14:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="XJ36DjW9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cN6LDqTR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0843F1534F9;
-	Mon,  6 May 2024 14:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782EF153512;
+	Mon,  6 May 2024 14:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715006607; cv=none; b=AzhHf36VILARjSN50VWQMxZiQXJ77B4XSK0tGMXGu6/QKxzqCS0rmvlm6NYtHF+5MR7BjCLkcotqyIBbipZku2NC721LF4J+9Qu5QHiE4jHfW9c3Fbx23py7By6YGxM1ABrcppaZscFhWDhuf0IeCJf0xv1TEAYh4U9hC5YRo2s=
+	t=1715006723; cv=none; b=bbYL+5FIa8PYNtlLDBp/RIlIA0JHDbti4wFkdTV6QtpYXbWFlz0OhyhXa5qOyzTgmNWjPZVWUyX1uVLjDu1v/p2d70Nb6tS3cyzexQf/8sC1kmxuhExzazE2/OWz+h8LOd7tWIRx1SCIDwg2EjNQrZBY8xW2kpkhViUAX6qmKEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715006607; c=relaxed/simple;
-	bh=1PHydZMCG6eb+35vdAr+laWpupGyGqL/HZ0CYrrHWig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7fmsSeH5hMz/3dJL1Fi++U61lts240aTYDOEsMCC+ftRapixE9waZ4WiERXHHT8y98rnL4Wmgaf5n0KYhMzeeWvAqO0K0jqCEixuooWV5fmzh2NOSSeHWzqI/GqtbABPGzDO/jW9mIeOA5CS8NZd1AVR/sPzEYLkjlGkaG8cN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=XJ36DjW9; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=oIh2GEZu/cERMqozSXMHDf8vR7BHYa8ZZujCki8gVbk=; b=XJ36DjW9q95criDy
-	PfvX7l5rO3BlxBL/UnezZUjXQoMvl0iUjBorXo7yyJn+2PxjgoU+SU/LrV6HhJJQ0iGzNdUjMfNkn
-	FXO0KvFZsw3uVhZ0VmXb0cq5ReGzpugUeMv/wWiaPSfo/DIlyxkf9uQNnxsTePMF0bSUb0SnexneR
-	jNHxQzrokoh36UZBsbGd25bPCw7MpxU+oxswApvZ+JKE4HfCcP+I1VBAtj/6vxCT/lOzJle0C8YSO
-	OyOiYg/zcELM5C8lnX8U5w2ySdtqvcluY2doDzCeVnkhz32OKTYoRSInSxmCmGrBdui3xT6ZalwiD
-	gsyLaJrrBEMMd92Kcg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1s3zYm-004wdj-16;
-	Mon, 06 May 2024 14:43:20 +0000
-Date: Mon, 6 May 2024 14:43:20 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: bhelgaas@google.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: ce4100: Remove unused struct 'sim_reg_op'
-Message-ID: <ZjjsiO33y08dJLPX@gallifrey>
-References: <20240506004647.770666-1-linux@treblig.org>
- <948a3829-96da-2708-60f8-f25546683436@linux.intel.com>
+	s=arc-20240116; t=1715006723; c=relaxed/simple;
+	bh=qqPt7Wt7gYvZOnYBUvmkMGDflLZVCnnovZFb11ykGlc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mTRy1lwNnQAC+WV7IudMbjQ2Kbwq8Q6CiwTVCcfVxMBzriPoWpA1peFf2QFFUvoocsfYzfaHl0XLrL7l97W2AleXFcgO54/biQMGu6vZWSbLRpx3qxt1zwAlQz85iZunklpgYmPrTXq/TcnPGkwNel7NR5xRmYud4PutR/igulM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cN6LDqTR; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715006721; x=1746542721;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=qqPt7Wt7gYvZOnYBUvmkMGDflLZVCnnovZFb11ykGlc=;
+  b=cN6LDqTRjfASwhXbl7ZCmTVUGqdgFuVo2xfUTyouF2G4nP12DjFaAZF4
+   UZJN0o+Ey9appAXzMTdc+PHM5stBXHXFdT1nBws/eWUHd7llbXcdse0zf
+   /2aV2HwLMmOtCg+cr3rJKhgEOSgT8gw/7RoTOawvsytqd8N2/S+6ILW3B
+   8ODVIk6vS5QsJmHUqfVCjDJyAayDQMF1XDO3LwjdY7bz8SDLUR/Dhz+df
+   GSQD7Z+ZkFgV4ee3n5y+dGGaEnCwlDfvrSj580cFauYRP+YLSqpdQGCx6
+   VGMfILYpxaeFQL+qELy7LlymBdDW4B2XfWlWqXeXtp00m2QYXYjwNLZa0
+   g==;
+X-CSE-ConnectionGUID: le1S7EXtSVqElWiC0g7MrQ==
+X-CSE-MsgGUID: DuGJc6QfQpmiolRUmg6xxg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="33260549"
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="33260549"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:45:03 -0700
+X-CSE-ConnectionGUID: jPYMcEo7SUur/4ZIDivb+w==
+X-CSE-MsgGUID: G5TNy78UT2K8v2ENday/Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="28579550"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.68])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:45:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 6 May 2024 17:44:57 +0300 (EEST)
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI/ASPM: Fix a typo in ASPM restoring logic
+In-Reply-To: <20240506051602.1990743-1-kai.heng.feng@canonical.com>
+Message-ID: <c74f0256-1453-3b91-d5a7-d797a0c2da90@linux.intel.com>
+References: <20240506051602.1990743-1-kai.heng.feng@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <948a3829-96da-2708-60f8-f25546683436@linux.intel.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-17-amd64 (x86_64)
-X-Uptime: 14:42:20 up 124 days, 17:32,  1 user,  load average: 0.06, 0.03,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: multipart/mixed; boundary="8323328-470952821-1715006697=:1111"
 
-* Ilpo Järvinen (ilpo.jarvinen@linux.intel.com) wrote:
-> On Mon, 6 May 2024, linux@treblig.org wrote:
-> 
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > This doesn't look like it was ever used.
-> 
-> Don't start with "This" but spell what you're talking about out so it 
-> can be read and understood without shortlog in Subject (or looking into 
-> the code change).
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I'm of course happy to rework that if it helps you, although
-I thought the subject line was sufficient.
+--8323328-470952821-1715006697=:1111
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Dave
+On Mon, 6 May 2024, Kai-Heng Feng wrote:
 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > ---
-> >  arch/x86/pci/ce4100.c | 6 ------
-> >  1 file changed, 6 deletions(-)
-> > 
-> > diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
-> > index 87313701f069e..f5dbd25651e0f 100644
-> > --- a/arch/x86/pci/ce4100.c
-> > +++ b/arch/x86/pci/ce4100.c
-> > @@ -35,12 +35,6 @@ struct sim_dev_reg {
-> >  	struct sim_reg sim_reg;
-> >  };
-> >  
-> > -struct sim_reg_op {
-> > -	void (*init)(struct sim_dev_reg *reg);
-> > -	void (*read)(struct sim_dev_reg *reg, u32 value);
-> > -	void (*write)(struct sim_dev_reg *reg, u32 value);
-> > -};
-> > -
-> >  #define MB (1024 * 1024)
-> >  #define KB (1024)
-> >  #define SIZE_TO_MASK(size) (~(size - 1))
-> > 
-> 
-> -- 
->  i.
-> 
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+> There's a typo that makes parent device uses child LNKCTL value and vice
+> versa. This causes Micron NVMe to trigger a reboot upon system resume.
+>=20
+> Correct the typo to fix the issue.
+>=20
+> Fixes: 64dbb2d70744 ("PCI/ASPM: Disable L1 before configuring L1 Substate=
+s")
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 2428d278e015..47761c7ef267 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -177,8 +177,8 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *pdev=
+)
+>  =09/* Restore L0s/L1 if they were enabled */
+>  =09if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, clnkctl) ||
+>  =09    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, plnkctl)) {
+> -=09=09pcie_capability_write_word(parent, PCI_EXP_LNKCTL, clnkctl);
+> -=09=09pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, plnkctl);
+> +=09=09pcie_capability_write_word(parent, PCI_EXP_LNKCTL, plnkctl);
+> +=09=09pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, clnkctl);
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-470952821-1715006697=:1111--
 
