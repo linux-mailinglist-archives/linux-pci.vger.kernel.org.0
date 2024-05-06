@@ -1,83 +1,99 @@
-Return-Path: <linux-pci+bounces-7123-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7124-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92D6F8BD17C
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 17:23:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED9438BD243
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 18:15:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C201C1C218E7
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 15:23:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10B1EB2243C
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 16:15:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0344E153584;
-	Mon,  6 May 2024 15:23:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA0C156238;
+	Mon,  6 May 2024 16:15:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nm/48ljp"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Up/vr0Ji"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD02513DDC1;
-	Mon,  6 May 2024 15:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D682E15665E
+	for <linux-pci@vger.kernel.org>; Mon,  6 May 2024 16:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715008986; cv=none; b=dZq5vgIQpmg80KKVU/qkSHLl9EJDYKvgURouDLnLr0THcwEHVy41TRsi/96x/E9MoxUOsrqfoEWqp2OeBjqH2yhCD0jZuUh7QVQcfTiqNSW3jR4Q6BjoGstLO7Dn78qQfAJEvYDbKzIRFv6XxOd0S2+0BHAUega/DVZC/w4PHlE=
+	t=1715012129; cv=none; b=OD2hsIoZmmWn7jNN78WeHuCwvRPugxrGgNAINif8NoHwTOj3vJMJgnKKfyK13MIDNvx1HIsiC78PVO6fduEkxNaL9Beq1ayLFj7MNG2PQ3vhm7zbhNhRDLk5p1uQvz1UpL0PLKvleGl4TNB2rrDS1O3L/UmlXVq940Syvj3rwB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715008986; c=relaxed/simple;
-	bh=hzEBDhZ3iEk83QRqKPdffB1FKf0qTi/Yii10dU5ygm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=pwkQpPB8XmM9qf1qb99StGPHw+gHWCGN3fEQDTRFNZdzTPiWlAy27oAMdnNswCrPSJI/4q2MtFjM8OL6kLXrLMlVVbj+zE/HPpCD4fGh2Z8tK/zw94/akLvsiQunxiWdUnMFNm4UQIedLFIptncIQ/XVuXR+Fh7PM2Ue1abVTq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nm/48ljp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34FB9C116B1;
-	Mon,  6 May 2024 15:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715008986;
-	bh=hzEBDhZ3iEk83QRqKPdffB1FKf0qTi/Yii10dU5ygm4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Nm/48ljpS1NGxxtyzx0dJdPMmjCc38BE0mw27+TMiUqfpsaADQF+Vou/LqboYm7uc
-	 MHjw5/S61dAdh/K+8Uu51ZsGIT7NYOP5ggOwhkEi9/U5QpIyw3oU9nC/O81NFPWeBF
-	 yuzDELeg437VWOtnddFOeHycNR3BL9A0IMxp21VifKzsEoAQrDMx5vcXM6627JkQzF
-	 Wtto6z18VxTo8Lv5VhJhPT/RMdglZJ8tWJowj+86tRo/oVrnXYZNjHEx5CdBQVDyz8
-	 uOPV61cioV6xh9+nDmFrsPHcYL5kWmCY0pZi4r64M52K1ySzpS+SmJToupSYhD39Io
-	 sHdoRUQ0mRj6A==
-Date: Mon, 6 May 2024 10:23:04 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	bhelgaas@google.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: ce4100: Remove unused struct 'sim_reg_op'
-Message-ID: <20240506152304.GA1699729@bhelgaas>
+	s=arc-20240116; t=1715012129; c=relaxed/simple;
+	bh=x4StvqT0G3jsb6RA7+Xmo22DkQ5abGAlNLPCmO3T64w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Yz5+HrGdJ9N8UUaYIURHXzG2yu6ehrXxupkxhN3ZA5TROYLIixjm4OnJx1dNIDtRBXQgAnsbM68rcgV8zc20LJwdd3i7iDSKKadlRW8u3Vn6v1TZOQCentYB+1Us6UFZ0OKrj0qS7eErxIPhlrQUlS+/0rhcdhSmEOLFIseXaqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Up/vr0Ji; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715012125;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Zk6JjhRnqU1NmKpybqytM3aM2SwJvKpKlin+sUn82HA=;
+	b=Up/vr0JixRmFIaovyg3Kko/RsHgpjL0Xkk5vad4WFpKB55SqetiqHyaNfrINBGWK2Z0DYE
+	AfFEtTmetJEvY27yDAmEvw+MGyZmg/1uoztvJzFUuYtfBmz7ZvkM/8W6O+AD62h+4BFSqS
+	KAgzrJpPyyhhSizzVLpey17ApSvBAeY=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-pci@vger.kernel.org
+Cc: Michal Simek <michal.simek@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+	Bharat Kumar Gogada <bharatku@xilinx.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Michal Simek <michal.simek@xilinx.com>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 0/7] PCI: xilinx-nwl: Add phy support
+Date: Mon,  6 May 2024 12:15:03 -0400
+Message-Id: <20240506161510.2841755-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjjsiO33y08dJLPX@gallifrey>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 06, 2024 at 02:43:20PM +0000, Dr. David Alan Gilbert wrote:
-> * Ilpo Järvinen (ilpo.jarvinen@linux.intel.com) wrote:
-> > On Mon, 6 May 2024, linux@treblig.org wrote:
-> > 
-> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > 
-> > > This doesn't look like it was ever used.
-> > 
-> > Don't start with "This" but spell what you're talking about out so it 
-> > can be read and understood without shortlog in Subject (or looking into 
-> > the code change).
-> 
-> I'm of course happy to rework that if it helps you, although
-> I thought the subject line was sufficient.
+Add phy subsystem support for the xilinx-nwl PCIe controller. This
+series also includes several small fixes and improvements.
 
-It's a minor point, to be sure.  The way I think about this is "an
-essay title is not part of the essay itself," so the essay (commit
-log) should make sense all by itself.
+Changes in v2:
+- Remove phy-names
+- Add an example
+- Get phys by index and not by name
 
-Bjorn
+Sean Anderson (7):
+  dt-bindings: pci: xilinx-nwl: Add phys
+  PCI: xilinx-nwl: Fix off-by-one
+  PCI: xilinx-nwl: Fix register misspelling
+  PCI: xilinx-nwl: Rate-limit misc interrupt messages
+  PCI: xilinx-nwl: Clean up clock on probe failure/removal
+  PCI: xilinx-nwl: Add phy support
+  arm64: zynqmp: Add PCIe phys
+
+ .../bindings/pci/xlnx,nwl-pcie.yaml           |   6 +
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    |   1 +
+ drivers/pci/controller/pcie-xilinx-nwl.c      | 122 ++++++++++++++----
+ 3 files changed, 106 insertions(+), 23 deletions(-)
+
+-- 
+2.35.1.1320.gc452695387.dirty
+
 
