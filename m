@@ -1,238 +1,291 @@
-Return-Path: <linux-pci+bounces-7138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F6C78BD804
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 00:58:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A37678BD827
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 01:20:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5E7BDB21C38
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 22:58:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A0E72826AF
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 23:20:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F281B158DCD;
-	Mon,  6 May 2024 22:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E199F15B98F;
+	Mon,  6 May 2024 23:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O8hXXTeZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAMIomvT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7133913D2A7;
-	Mon,  6 May 2024 22:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715036318; cv=fail; b=NWokQb3AbFwD+/VdQEtonZEH46JaYzZ/9b5nMsu09J/ywzTdSwS3KpKG7mpJLQ0FCPc0xIaIdtHVzr58DwzUWqAJ1b8nkzMm7KAJsPImElQhC7UZmCovRjDIS2SukRLSbQEsyH2fwjPyYe9qQW4a+yWxkxJV67erEAJUHvj2SWQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715036318; c=relaxed/simple;
-	bh=lNwhwYpGbevHqUGLhRU261ZyhdaWIEgyKSTz3Teq5ZY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=laJ/O4Xy5JyRXlMigmO8fVrQx5c9KWZMVJcE8tfnzvdL9MzCr3I21+yXVO9UjQY47vUSa/bufgdDXGozh83nF8UNwCG3ZCjl+Itwx2/ZbufZB34SpxQT1eFaKVD9vOPX0DyLD5xL+15hCWQnsaym5OCBdQr8e8dafGGs4RtPGsg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O8hXXTeZ; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715036317; x=1746572317;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=lNwhwYpGbevHqUGLhRU261ZyhdaWIEgyKSTz3Teq5ZY=;
-  b=O8hXXTeZtnMlSP2bUaAitCViXgWCOTnGkwK2b/5BIvYQW/ULSHWD91fT
-   cKhDMo4NVCwsZk5famk15d85pnlEf4ACcBXKQYloItDQ7d1GiZhK+A5Uh
-   c1ol7Uzbftz8dpSKQFjcAReWsZyphTaUJ8TdIqyueROIw6Pc+MLVpFXP5
-   4KOdKX1cL3WZIS/tUTTkgkOSTd+ASEMPMXPCZtkacvTMO08erxMD73IA6
-   mokkxXU9nkJfrS+ZuDHf+QelhyleSWNiGDZ412jtsJGpHLp8XxglFah3u
-   oT4yI7qGTwjdK3kD0io+ymRu+/3OY78KP+5BAeeF92b4WnIITyaIi+kK9
-   g==;
-X-CSE-ConnectionGUID: /DumVEN3S3a0N5tXTlwS1Q==
-X-CSE-MsgGUID: XcU2n00tR8eQGrWmr8J9fg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="21358026"
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="21358026"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 15:58:36 -0700
-X-CSE-ConnectionGUID: D3VqXrPxRkijK+EHXlbXgQ==
-X-CSE-MsgGUID: ajXPLfY1Qn6ycJH4Wgub/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="33129436"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 May 2024 15:58:35 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 6 May 2024 15:58:35 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 6 May 2024 15:58:34 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 6 May 2024 15:58:34 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 6 May 2024 15:58:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UbvKDoU6pDBYX4VGv0mScXaffKeHEAupwSjIxhswjC6hWKpOIMGCU2Is5Q6GIf4C4Tkb7uWaaXeBaGY1/v1DQklsB+xJzhLRMnNOoFo5O+DtZFKt7BDrkv5E5Trpls3BXjEA2YNjO1pXGT90mUGLOhPduMH0v2g/1Gfj6oeLjpWWellvJ8KylsjdznCFqN5i6UiWt1Z4nPjaKBOQ0+sKGN3DCfXrt0QzDH4AF+YNhK27I+ULZxSXioJw2+81i85pItLEqeTk//hrAA6Gn5Z4D6nZIz02dee1MpRViLkXAUhrR2n/hMY/IAimRMAwltyxcMDcRP45erO3alGE2wJkDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wFsvLV5FHfdAcs6/Ds1VvFD3mv//E69EMixbC89Og+c=;
- b=l/Y84Vm838GVp1emdv9SN9VCXqJ6FS1f+snKyxz7gb8stfqsKNcX7yWKlG8pnWCQsKbKr74euB8uajBACFjRt/bfs9FWTXb08wXSWSmC/nDBCsEwNyMa5YPCgweLXy00tBqnP/BlYOy0D82UexEkdZ7p65ik9GfrWDvTeolpvnXaWZE+ECslTB4dB1/DqB1ttl9H7/mi4nhusCFOgMILP444LnL6UKpi6i8/Gj96+Ul7ereVuf5Hsow8Px2wgqIwtd8KLzSkJGN2mdUi2SI0S/EGAoGkLOvARagz6bfjLsRGsh7E+zCz1nn+2W5JndaCb4xLUWMglMu8ngajPsmRCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH8PR11MB6976.namprd11.prod.outlook.com (2603:10b6:510:223::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
- 2024 22:58:31 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7544.041; Mon, 6 May 2024
- 22:58:28 +0000
-Date: Mon, 6 May 2024 15:58:25 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, Adam Manzanares
-	<a.manzanares@samsung.com>, "lsf-pc@lists.linux-foundation.org"
-	<lsf-pc@lists.linux-foundation.org>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "jonathan.cameron@huawei.com"
-	<jonathan.cameron@huawei.com>, "dave@stgolabs.net" <dave@stgolabs.net>, "Fan
- Ni" <fan.ni@samsung.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"gourry.memverge@gmail.com" <gourry.memverge@gmail.com>, "wj28.lee@gmail.com"
-	<wj28.lee@gmail.com>, "rientjes@google.com" <rientjes@google.com>,
-	"ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>, "shradha.t@samsung.com"
-	<shradha.t@samsung.com>, "mcgrof@kernel.org" <mcgrof@kernel.org>, Jim Harris
-	<jim.harris@samsung.com>, "mhocko@suse.com" <mhocko@suse.com>
-CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
-Message-ID: <663960911a914_2f63a294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
- <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
- <3d18ae36-4dea-496a-a8fc-253b21135838@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <3d18ae36-4dea-496a-a8fc-253b21135838@intel.com>
-X-ClientProxiedBy: MW4PR03CA0225.namprd03.prod.outlook.com
- (2603:10b6:303:b9::20) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA774155756;
+	Mon,  6 May 2024 23:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715037633; cv=none; b=B+W8n2A5bm4Rmw7ZyGPixclIw85XT2enKFZ5ntyaLl4t2vsov5BSkg2HMg+tN+sJqpFFLO9/LeCjlWfFWNFCCckpTOUUprQawWELSophU46xzl1EERmwjm0bu4RkzTbHIu3qtpEz1RSMjwShL1WxF7oUkLqZRvaHohmlvDr8/zw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715037633; c=relaxed/simple;
+	bh=mGeX55CzoNaQy2PcjaqTPvV937ILIAHgC31KgXutSvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=UDiHWAv6SU/1B2XzuFHL5ek1joRVwmjSrOJh7K40aA0vMtkzzjHLOUbkcWVxaSki4RwBA8aTgaNjBPv+Pr2W4GYSkD3K6YyfwarrmsZbBWYSTt2Fn/2iIWvkOfJJdXP4DfkY4s+Khd4BsMzTPbOr0326MmWddtBRFszfmdLGLf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAMIomvT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1CEAC116B1;
+	Mon,  6 May 2024 23:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715037633;
+	bh=mGeX55CzoNaQy2PcjaqTPvV937ILIAHgC31KgXutSvk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GAMIomvTmIkZRfJqwzloh1LX74EYz/yUn/GvaIWjZE4tMRoSo2ei0kIHuWPgKruCI
+	 JGfKoxUKW8RhoLwfdfQ6aD4ZKGx9i1n2HQViXoerk6uRIM+8GSERXmLMHSB95VsaIF
+	 W4idb0a5Z2Ygf9AYNnuX8JFPq2Td1qod8V9yoirPbDlRf9KE8/3eebmH2WEoEn0nMs
+	 SlUSVNFvHvsPa8/NV91BEnQ21AvX1FRLBU+iafbRIZItBdkCyGAJ4CjXYL7NExfG/Q
+	 EPT+YjYxG2/RISNHxgqr/WOVhmSC+17g6shU5oz2+psG6E8uM6aRGrtH2dXiuyhXSe
+	 gv/kq7nLzbgyA==
+Date: Mon, 6 May 2024 18:20:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Phil Elwell <phil@raspberrypi.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 4/4] PCI: brcmstb: Configure HW CLKREQ# mode
+ appropriate for downstream device
+Message-ID: <20240506232031.GA1714174@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB6976:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3fbacab2-6d27-4d6c-9d0a-08dc6e200ae8
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|7416005|376005|921011;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?EU3bVukZB/Sz8g0xJ68utqJAT7qezaCJ062KEL681Cb5VRkPHjlRpm8nPPpU?=
- =?us-ascii?Q?rQycY4kY9WYZPBsPePGgxnFRM8ib7sWi67DTKwEkTc4eTVasMZ9jsdUYzZf7?=
- =?us-ascii?Q?CtFajhD9mlF+eNep0JeR9a2tfXe6tJuDDWUy9jozdJjyv/uyUdALfRv/BF9n?=
- =?us-ascii?Q?2vzRInfZlEbS3AxPejE3VI4K1XU7FldnduKmpSqxmy5Z9fpbPIUN/Z1I2dbA?=
- =?us-ascii?Q?Tk9xXp6h3djcFZsrHNn/a6opNdqQuvjhC4woQLg2DqH3HzraRoAmgFoRR8cv?=
- =?us-ascii?Q?ETcdubIbAPLzLMVjLveHhhQG2EXkL22TmdMpMKWLwCzVLx5SHXh+nS44TsQv?=
- =?us-ascii?Q?V4c3tvnLb+88l3xpVHHaDubQ7oso+PDATxjUWel03pDwLBZQwwQla4CMYWj7?=
- =?us-ascii?Q?C4l4r1pcLCGrpAYwW+UkojdhCqUZbd9nM6tuQIRDfaGwCVQTKltPUETc9vvG?=
- =?us-ascii?Q?K6tkky64+FHQe+1WQu0xKDi9DZy8gmL+lcThtnNWyBGUiRjyh07S5iC9WVP2?=
- =?us-ascii?Q?+vZ4nINifNDC1Gv5RXTcn2TY+b/cDyUxDflnTKPjDY4dORj1m1HF98Yv35gB?=
- =?us-ascii?Q?/k3eMOPUmCfN6u0vMUFVzKd+e/MRcn2Ng+P5MDPZuWYg7+HnvnEHAEQp6nVp?=
- =?us-ascii?Q?lZiqviKflFVR17G5ZghgfSgnbdcj0IRDDPm6uEc9/mtyQdt7DseVuAoOSJ5t?=
- =?us-ascii?Q?0ciwB71rz+yzJun4tbqcSHEhXULLp3w2BYvvb1kWQgkQ7pJmytIrmAgos5Y5?=
- =?us-ascii?Q?c3S9bBWiePkW+fe2E6axNAzomIYgs6OVg4VbXezaTylFxZcWebhh4ok/7625?=
- =?us-ascii?Q?CrNQG+CbttcAxvIV2h+Eh08Aknv/l7A9ZPztxlf+vylgjby/iBhcQyYvQFlO?=
- =?us-ascii?Q?Eqj7x+lvNIomnXGpjqtm0L6RFOcs33mgwV+tqC83PJeKi1wcBtc1t93G3xDZ?=
- =?us-ascii?Q?TWHcNhiIOAQc+ZEnZkhP51Z7WgP8cnsk+PbhT5yxEoPsFDFseNC8EpghNEBw?=
- =?us-ascii?Q?tbuoHnye/ACi3LcaBlnygA2yg0DxA5wWTH4G3G08dionjRju18MaSBUTETUs?=
- =?us-ascii?Q?7pYFa2Li5oe8AURKKBB6h0fuy+o2TRlvahCF6vu+7iKhBn/tMUh1wZz2SGsE?=
- =?us-ascii?Q?mGIMxgatT2lSwcLftdGFTDrvNDLhFKi0EHzMs/wOgADTOdLj0b6dpaLGvhqK?=
- =?us-ascii?Q?jfYSLu06vwCb5cpXu+m/I2C2uBCXhPXLOCo4Rabg4hMHdn7b4QKUOX3lZ9MH?=
- =?us-ascii?Q?B7NV+r/eFawLYEWmIPXCYacxN3Zfm/J/o1JMvtyaz8DEx+uZp4oMmrekZPAc?=
- =?us-ascii?Q?4GA6qwZDFhsRhAilIILKcuL4?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(7416005)(376005)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?y2qvkLzEksTkn4OYmCCtY5zfT/bdeHKEhNzAeDZLwTMtQNPIuWqGxB97skLG?=
- =?us-ascii?Q?WsfIODdUNwZUl1phKb41MGXpUhGBi6dbZhZzTTKm4vYH8ptr+dRywNf57O4E?=
- =?us-ascii?Q?YDDHkGal2QiBXQL1Ckf26Lsgzryid03yjqcfQW5IAMxpKnunEy17aTcrB4Xp?=
- =?us-ascii?Q?LTLUuvDInhRIaVATkWfe0rx6EPup1g2HwGMdNAy2kn5di8utcCaO9U/nZv7Z?=
- =?us-ascii?Q?QqR+cTJZQnSEUtcztvLO+2qZFMueq0BjoxRqlhdHlPtpqqTfMpjDXmD2W6p0?=
- =?us-ascii?Q?jIWdbCvXLKBpVz70Jv4WNL1f62NijlGi/pYdXz5/lnfPIxPWGmdkekI00LaI?=
- =?us-ascii?Q?xsit0JlgxDnfKla/qys3NYFJPYgvZl2IUi5SGGWQSn5PY8AlH7F6vxXSaPKA?=
- =?us-ascii?Q?DR56cYehQGZ19G7BiF3vmpZO0lvQJVkGq+M0fDK2qgeoJJVhi18Rd6fJw672?=
- =?us-ascii?Q?Ou9pvj3/EU6+JmmsXCD1/2o75Dm8PeOEXcocTOoQ+9a/4qaoOK5UW0tykMZt?=
- =?us-ascii?Q?Tbyum0FF/QzM5FuTuzUqTgX3MI+dYxLii5mHw4s0Ps5K1E6JFhfXkFIgOhlX?=
- =?us-ascii?Q?w5x7dWl2MdNYasY0OVySYUt3oBFymiUNvNhpk6RJ2vj0JG2t8Fq7XsIVsk8T?=
- =?us-ascii?Q?6+YfireETtzrx0gIuS0oLTzXUa6ibJrhfBtYgVCl6f7kN7Ce6ZUiKRiKdVvX?=
- =?us-ascii?Q?PkDZwaVWk2NAsWqxQJIFK+jf2LF3HgT4EB0u88R75Tu/uCCL6gexhUAsnXJh?=
- =?us-ascii?Q?bQWY0Pg6BieGsI8xrRR++LyP2zpH+CZEDolhM3iOx+JKfuVwcRm6mxwulNxh?=
- =?us-ascii?Q?7UkRV/hTpZ7LyQVucBz6GmhnKBnrdZ2omLFxZGhRkFZPExhHhOnb7TW81XI4?=
- =?us-ascii?Q?SVaObTftWwO1bPkxj9lbuQg68vroQocaSw+gkscVdmZImv4Tx+PalYo/1d1I?=
- =?us-ascii?Q?QkQ0JDUjlrRW387/Kt6Qvyq+5vXEPydonp2VIFw69SlzKTlqGS21/LaFs9fb?=
- =?us-ascii?Q?SilWvzTCEr7RuSRmrBzLnwgWCy82mBzVQHgZvaWm+swfyZx5Ey7Y9zvuLRTV?=
- =?us-ascii?Q?llMn/jn4LKkHWaolMv/L6sLAInZiP6LsDiXAu7+1YC66jU4BqU5yL+Ad3hcq?=
- =?us-ascii?Q?X1Zobx5wdChuLJHuGhwcZz+HSIc4kfguRG6S4gB276PucKRNLNntSYoLTKLB?=
- =?us-ascii?Q?JkbnJ3K/MLnwN2U5yJHnbqblvsrJ34mZlYtF/khnrymCQiofh5z1oEQRVw2u?=
- =?us-ascii?Q?3SVKQqf0YI2xuvEzs3DdQMNrTE2s5DvgdDkaT3rwMylha6qoqlnJcCxTa/vm?=
- =?us-ascii?Q?e8qBaxYt7FTc7flgfzqoXl0w4ZoNa2IczTnifyVOtPuZAppAKKobO1dS8KgZ?=
- =?us-ascii?Q?7zMV8mxua2usjbi413HVnHaXvmwrP2n6WQyc8ZY5YBq/lno9m2AjSfdFN9Fh?=
- =?us-ascii?Q?DpbeJ1gsdbTyoYw4xVhDCpFfBL/1wa5l7a8VKejIjjRdbJVMEfQgfRWEbdti?=
- =?us-ascii?Q?9xbF60QVwYulyhg2X5O9B49YjL8Cc+xwnWzylz3Q2OyxfVsYJXwI3xTWJ+ex?=
- =?us-ascii?Q?sUlCug0uv6Yc3fl5G3etwVvKaQb9G6bwpg9H4NO7pKDyAQkn7TQBENh6093X?=
- =?us-ascii?Q?VA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3fbacab2-6d27-4d6c-9d0a-08dc6e200ae8
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 22:58:28.2384
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Dohqj3VZCTAZQhj4L64D+MBUg83adDE9EMyEW90G4kY6SM/lsDr+wn9Berp0Yrxuu+/4Sb8XGZj/kF+wdS209GBZ7RextmhkS9Z5JqWXDto=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6976
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403213902.26391-5-james.quinlan@broadcom.com>
 
-Dave Jiang wrote:
+On Wed, Apr 03, 2024 at 05:39:01PM -0400, Jim Quinlan wrote:
+> The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, must be
+> deliberately set by the PCIe RC HW into one of three mutually exclusive
+> modes:
 > 
-> 
-> On 5/6/24 12:27 PM, Adam Manzanares wrote:
-> > Hello all,
-> > 
-> > I would like to have a discussion with the CXL development community about
-> > current outstanding issues and also invite developers interested in RAS and
-> > memory tiering to participate.
-> > 
-> > The first topic I believe we should discuss is how we can ensure as a group
-> > that we are prioritizing upstream work. On a recent upstream CXL development
-> > discussion call there was a call to review more work. I apologize for not
-> > grabbing the link, but I believe Dave Jiang is leveraging patchwork and this
-> > link should be shared with others so we can help get more reviews where needed.
-> 
-> Bundle for the potential fixes
-> https://patchwork.kernel.org/bundle/cxllinux/cxl-fixes/
-> 
-> Bundle for the next merge window
-> https://patchwork.kernel.org/bundle/cxllinux/cxl-next/
-> 
-> Just be aware patchwork only takes patches, so the bundle are
-> registered with the first patch of a series. The listing does display
-> the origin series.
+> "safe" -- No CLKREQ# expected or required, refclk is always provided.  This
+>     mode should work for all devices but is not be capable of any refclk
+>     power savings.
 
-This seems solvable with a bit of scripting.
+s/refclk is always provided/the Root Port always supplies Refclk/
 
-I went ahead and fixed up one of the series (CXL 1.1 link stattus) to
-include all the patches in the bundle. I think it is useful to have a
-one-stop shop for the queue and the state of review / testing.
+At least, I assume that's what this means?  The Root Port always
+supplies Refclk regardless of whether a downstream device deasserts
+CLKREQ#?
 
-Let me know if that makes things easier.
+The patch doesn't do anything to prevent aspm.c from setting
+PCI_EXP_LNKCTL_CLKREQ_EN, so it looks like Linux may still set the
+"Enable Clock Power Management" bit in downstream devices, but the
+Root Port just ignores the CLKREQ# signal, right?
+
+s/is not be/is not/
+
+> "no-l1ss" -- CLKREQ# is expected to be driven by the downstream device for
+>     CPM and ASPM L0s and L1.  Provides Clock Power Management, L0s, and L1,
+>     but cannot provide L1 substate (L1SS) power savings. If the downstream
+>     device connected to the RC is L1SS capable AND the OS enables L1SS, all
+>     PCIe traffic may abruptly halt, potentially hanging the system.
+
+s/CPM/Clock Power Management (CPM)/ and then you can use "CPM" for the
+*second* reference here.
+
+It *looks* like we should never see this PCIe hang because with this
+setting you don't advertise L1SS in the Root Port, so the OS should
+never enable L1SS, at least for that link.  Right?
+
+If we never enable L1SS in the case where it could cause a hang, why
+mention the possibility here?
+
+I assume that if the downstream device is a Switch, L1SS is unsafe for
+the Root Port to Switch link, but it could still be used for the link
+between the Switch and whatever is below it?
+
+> "default" -- Bidirectional CLKREQ# between the RC and downstream device.
+>     Provides ASPM L0s, L1, and L1SS, but not compliant to provide Clock
+>     Power Management; specifically, may not be able to meet the T_CLRon max
+>     timing of 400ns as specified in "Dynamic Clock Control", section
+>     3.2.5.2.2 of the PCIe Express Mini CEM 2.1 specification.  This
+>     situation is atypical and should happen only with older devices.
+
+IIUC this T_CLRon timing issue is with the STB/CM *Root Port*, but the
+last sentence refers to "older devices," which sounds like it means
+"older devices that might be plugged into the Root Port."  That would
+suggest the issue is with those devices, not iwth the STB/CM Root
+Port.
+
+Or maybe this is meant to refer to older STB/CM Root Ports?
+
+> Previously, this driver always set the mode to "no-l1ss", as almost all
+> STB/CM boards operate in this mode.  But now there is interest in
+> activating L1SS power savings from STB/CM customers, which requires
+> "default" mode.  In addition, a bug was filed for RPi4 CM platform because
+> most devices did not work in "no-l1ss" mode (see link below).
+
+I'm having a hard time reconciling "almost all STB/CM boards operate
+in 'no-l1ss' mode" with "most devices did not work in 'no-l1ss' mode."
+They sound contradictory.
+
+> Note that the mode is specified by the DT property "brcm,clkreq-mode".  If
+> this property is omitted, then "default" mode is chosen.
+
+As a user, how do I determine which setting to use?
+
+Trial and error?  If so, how do I identify the errors?
+
+Obviously "default" is the best, so I assume I would try that first.
+If something is flaky (whatever that means), I would fall back to
+"no-l1ss", which gets me Clock PM, L0s, and L1, right?  In what
+situation does "no-l1ss" fail, and how do I tell that it fails?
+
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217276
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 79 ++++++++++++++++++++++++---
+>  1 file changed, 70 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 3d08b92d5bb8..3dc8511e6f58 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -48,6 +48,9 @@
+>  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+>  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
+>  
+> +#define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
+> +#define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
+> +
+>  #define PCIE_RC_DL_MDIO_ADDR				0x1100
+>  #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
+>  #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
+> @@ -121,9 +124,12 @@
+>  
+>  #define PCIE_MISC_HARD_PCIE_HARD_DEBUG					0x4204
+>  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
+> +#define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK		0x200000
+>  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x08000000
+>  #define  PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x00800000
+> -
+> +#define  PCIE_CLKREQ_MASK \
+> +	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
+> +	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
+>  
+>  #define PCIE_INTR2_CPU_BASE		0x4300
+>  #define PCIE_MSI_INTR2_BASE		0x4500
+> @@ -1100,13 +1106,73 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static void brcm_config_clkreq(struct brcm_pcie *pcie)
+> +{
+> +	static const char err_msg[] = "invalid 'brcm,clkreq-mode' DT string\n";
+> +	const char *mode = "default";
+> +	u32 clkreq_cntl;
+> +	int ret, tmp;
+> +
+> +	ret = of_property_read_string(pcie->np, "brcm,clkreq-mode", &mode);
+> +	if (ret && ret != -EINVAL) {
+> +		dev_err(pcie->dev, err_msg);
+> +		mode = "safe";
+> +	}
+> +
+> +	/* Start out assuming safe mode (both mode bits cleared) */
+> +	clkreq_cntl = readl(pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> +	clkreq_cntl &= ~PCIE_CLKREQ_MASK;
+> +
+> +	if (strcmp(mode, "no-l1ss") == 0) {
+> +		/*
+> +		 * "no-l1ss" -- Provides Clock Power Management, L0s, and
+> +		 * L1, but cannot provide L1 substate (L1SS) power
+> +		 * savings. If the downstream device connected to the RC is
+> +		 * L1SS capable AND the OS enables L1SS, all PCIe traffic
+> +		 * may abruptly halt, potentially hanging the system.
+> +		 */
+> +		clkreq_cntl |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
+> +		/*
+> +		 * We want to un-advertise L1 substates because if the OS
+> +		 * tries to configure the controller into using L1 substate
+> +		 * power savings it may fail or hang when the RC HW is in
+> +		 * "no-l1ss" mode.
+> +		 */
+> +		tmp = readl(pcie->base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
+> +		u32p_replace_bits(&tmp, 2, PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK);
+> +		writel(tmp, pcie->base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
+> +
+> +	} else if (strcmp(mode, "default") == 0) {
+> +		/*
+> +		 * "default" -- Provides L0s, L1, and L1SS, but not
+> +		 * compliant to provide Clock Power Management;
+> +		 * specifically, may not be able to meet the Tclron max
+> +		 * timing of 400ns as specified in "Dynamic Clock Control",
+> +		 * section 3.2.5.2.2 of the PCIe spec.  This situation is
+> +		 * atypical and should happen only with older devices.
+> +		 */
+> +		clkreq_cntl |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
+> +
+> +	} else {
+> +		/*
+> +		 * "safe" -- No power savings; refclk is driven by RC
+> +		 * unconditionally.
+> +		 */
+> +		if (strcmp(mode, "safe") != 0)
+> +			dev_err(pcie->dev, err_msg);
+> +		mode = "safe";
+> +	}
+> +	writel(clkreq_cntl, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> +
+> +	dev_info(pcie->dev, "clkreq-mode set to %s\n", mode);
+> +}
+> +
+>  static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+>  	void __iomem *base = pcie->base;
+>  	u16 nlw, cls, lnksta;
+>  	bool ssc_good = false;
+> -	u32 tmp;
+>  	int ret, i;
+>  
+>  	/* Unassert the fundamental reset */
+> @@ -1138,6 +1204,8 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+>  	 */
+>  	brcm_extend_internal_bus_timeout(pcie, BRCM_LTR_MAX_NS + 1000);
+>  
+> +	brcm_config_clkreq(pcie);
+> +
+>  	if (pcie->gen)
+>  		brcm_pcie_set_gen(pcie, pcie->gen);
+>  
+> @@ -1156,13 +1224,6 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+>  		 pci_speed_string(pcie_link_speed[cls]), nlw,
+>  		 ssc_good ? "(SSC)" : "(!SSC)");
+>  
+> -	/*
+> -	 * Refclk from RC should be gated with CLKREQ# input when ASPM L0s,L1
+> -	 * is enabled => setting the CLKREQ_DEBUG_ENABLE field to 1.
+> -	 */
+> -	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> -	tmp |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
+> -	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.17.1
+> 
+
+
 
