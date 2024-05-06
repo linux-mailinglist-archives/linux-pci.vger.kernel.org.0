@@ -1,119 +1,106 @@
-Return-Path: <linux-pci+bounces-7121-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7122-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8770C8BD096
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 16:45:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EEED48BD178
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 17:20:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8F891C20E6F
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 14:45:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28C7B1C219A9
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 15:20:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300B91534FC;
-	Mon,  6 May 2024 14:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B197155311;
+	Mon,  6 May 2024 15:20:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cN6LDqTR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5pOmVyJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782EF153512;
-	Mon,  6 May 2024 14:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6766613DDC1
+	for <linux-pci@vger.kernel.org>; Mon,  6 May 2024 15:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715006723; cv=none; b=bbYL+5FIa8PYNtlLDBp/RIlIA0JHDbti4wFkdTV6QtpYXbWFlz0OhyhXa5qOyzTgmNWjPZVWUyX1uVLjDu1v/p2d70Nb6tS3cyzexQf/8sC1kmxuhExzazE2/OWz+h8LOd7tWIRx1SCIDwg2EjNQrZBY8xW2kpkhViUAX6qmKEo=
+	t=1715008834; cv=none; b=HPgkCvq4n+HMzcjLUke3I6+Ss6A+Mpsmbbjq1jRIRbBecfRnD3rBnlxMxDuSA26A2zTpv1jDmCY3E9/UxlzUFvmlgusqMYXrfxP8GWf/OgtOcgXYojlUKeUvzP/U7Y1517BKB//2MARnJeFwL0TN02T7vnMqsHdqMhHMKttMR5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715006723; c=relaxed/simple;
-	bh=qqPt7Wt7gYvZOnYBUvmkMGDflLZVCnnovZFb11ykGlc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mTRy1lwNnQAC+WV7IudMbjQ2Kbwq8Q6CiwTVCcfVxMBzriPoWpA1peFf2QFFUvoocsfYzfaHl0XLrL7l97W2AleXFcgO54/biQMGu6vZWSbLRpx3qxt1zwAlQz85iZunklpgYmPrTXq/TcnPGkwNel7NR5xRmYud4PutR/igulM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cN6LDqTR; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1715008834; c=relaxed/simple;
+	bh=omt7yE5xB59LEnIUYaGCpOR6jaRqEtKOc+2HvAGWA1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YGEtPc6pB15eLpLH/HFOTcgveRBAU8mCUGQrUII26WIjFwVQVIEoBYOaKkCelcvSNPvGz8m24JKzoXvFHzFDvDCAZuG4gCkQ6LW7YyP9iWbLICWSnDpQ0mCywnJ4DoJzXunhFaSshd2El4ixd2xH3kjRAhoUvSAWHBuLXD3ZVro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5pOmVyJ; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715006721; x=1746542721;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qqPt7Wt7gYvZOnYBUvmkMGDflLZVCnnovZFb11ykGlc=;
-  b=cN6LDqTRjfASwhXbl7ZCmTVUGqdgFuVo2xfUTyouF2G4nP12DjFaAZF4
-   UZJN0o+Ey9appAXzMTdc+PHM5stBXHXFdT1nBws/eWUHd7llbXcdse0zf
-   /2aV2HwLMmOtCg+cr3rJKhgEOSgT8gw/7RoTOawvsytqd8N2/S+6ILW3B
-   8ODVIk6vS5QsJmHUqfVCjDJyAayDQMF1XDO3LwjdY7bz8SDLUR/Dhz+df
-   GSQD7Z+ZkFgV4ee3n5y+dGGaEnCwlDfvrSj580cFauYRP+YLSqpdQGCx6
-   VGMfILYpxaeFQL+qELy7LlymBdDW4B2XfWlWqXeXtp00m2QYXYjwNLZa0
-   g==;
-X-CSE-ConnectionGUID: le1S7EXtSVqElWiC0g7MrQ==
-X-CSE-MsgGUID: DuGJc6QfQpmiolRUmg6xxg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="33260549"
+  t=1715008833; x=1746544833;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=omt7yE5xB59LEnIUYaGCpOR6jaRqEtKOc+2HvAGWA1w=;
+  b=I5pOmVyJC1Nhl/SQIaJRksWoATLnXMQyA2YUyUK3JtIenKMTVy9iVqgj
+   Sqxc7kRBsXqJiJ7hX+7md09XEammvKg0DIpdTto6MExVP8mQR+sQnHc4N
+   GxU2xhJM0+Y2PB0c5e9Rc0DfelAPDZlcO6EBHC6oW4kcHvsLdUmkyqpBv
+   F4xdmE+tFFXVTOP4o0AcRPrf8q+rb6c54muro2k27/T5ocXT6d1ga5F9h
+   dUysfY16qeCfiGG2l7pAjqjuqQ6r+u7RkDfu+0VJYI/XJ+z2wbStZ9PZG
+   qkRjkoYJ1dqHZYnsxFU11bXqUP++AlHU/E4Q/740f0B43iR4/z1xS3UHI
+   w==;
+X-CSE-ConnectionGUID: gPfQrfBWS4i02V1PtOWN3w==
+X-CSE-MsgGUID: 5vPYrvAyRhalY482uQZR6g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10914505"
 X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="33260549"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:45:03 -0700
-X-CSE-ConnectionGUID: jPYMcEo7SUur/4ZIDivb+w==
-X-CSE-MsgGUID: G5TNy78UT2K8v2ENday/Wg==
+   d="scan'208";a="10914505"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 08:20:32 -0700
+X-CSE-ConnectionGUID: TTC0y8iOSo2wfFdVMjPRtQ==
+X-CSE-MsgGUID: Wb1HwRg0SPuoi5+0uFZSww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="28579550"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.68])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:45:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 6 May 2024 17:44:57 +0300 (EEST)
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/ASPM: Fix a typo in ASPM restoring logic
-In-Reply-To: <20240506051602.1990743-1-kai.heng.feng@canonical.com>
-Message-ID: <c74f0256-1453-3b91-d5a7-d797a0c2da90@linux.intel.com>
-References: <20240506051602.1990743-1-kai.heng.feng@canonical.com>
+   d="scan'208";a="51379330"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa002.fm.intel.com with ESMTP; 06 May 2024 08:20:30 -0700
+Date: Mon, 6 May 2024 23:14:51 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, linux-coco@lists.linux.dev,
+	Wu Hao <hao.wu@intel.com>, Yilun Xu <yilun.xu@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, kevin.tian@intel.com,
+	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH v2 5/6] PCI/TSM: Authenticate devices via platform TSM
+Message-ID: <Zjjz60XvF97c+Hea@yilunxu-OptiPlex-7050>
+References: <171291190324.3532867.13480405752065082171.stgit@dwillia2-xfh.jf.intel.com>
+ <171291193308.3532867.129739584130889725.stgit@dwillia2-xfh.jf.intel.com>
+ <fc201452-080e-4942-b5a0-0c64d023ac6b@amd.com>
+ <662c69eb6dbf1_b6e0294d1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-470952821-1715006697=:1111"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <662c69eb6dbf1_b6e0294d1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+> > If (!ide_cap && tee_cap), we get here but doing the below does not make 
+> > sense for TEE (which are likely to be VFs).
+> 
+> The "!ide_cap && tee_cap" case may also be the "TSM wants to setup IDE
+> without TDISP flow".
 
---8323328-470952821-1715006697=:1111
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+IIUC, should be "TSM wants to setup TDISP without IDE flow"?
 
-On Mon, 6 May 2024, Kai-Heng Feng wrote:
+But I think aik is talking about VFs (which fit "!ide_cap && tee_cap"),
+VFs should not be rejected by the following:
 
-> There's a typo that makes parent device uses child LNKCTL value and vice
-> versa. This causes Micron NVMe to trigger a reboot upon system resume.
->=20
-> Correct the typo to fix the issue.
->=20
-> Fixes: 64dbb2d70744 ("PCI/ASPM: Disable L1 before configuring L1 Substate=
-s")
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/pci/pcie/aspm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 2428d278e015..47761c7ef267 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -177,8 +177,8 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *pdev=
-)
->  =09/* Restore L0s/L1 if they were enabled */
->  =09if (FIELD_GET(PCI_EXP_LNKCTL_ASPMC, clnkctl) ||
->  =09    FIELD_GET(PCI_EXP_LNKCTL_ASPMC, plnkctl)) {
-> -=09=09pcie_capability_write_word(parent, PCI_EXP_LNKCTL, clnkctl);
-> -=09=09pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, plnkctl);
-> +=09=09pcie_capability_write_word(parent, PCI_EXP_LNKCTL, plnkctl);
-> +=09=09pcie_capability_write_word(pdev, PCI_EXP_LNKCTL, clnkctl);
+      pci_tsm->doe_mb = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_PCI_SIG,
+                                             PCI_DOE_PROTO_CMA);
+      if (!pci_tsm->doe_mb)
+              return;
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+VF should check its PF's doe/ide/tee cap and then be added to
+pci_tsm_devs, is it?
 
---=20
- i.
-
---8323328-470952821-1715006697=:1111--
+Thanks,
+Yilun
 
