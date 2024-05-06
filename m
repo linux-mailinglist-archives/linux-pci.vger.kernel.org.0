@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-7130-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7131-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4DFA8BD255
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 18:17:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACA9B8BD257
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 18:17:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CB391F24673
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 16:17:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66D6F283C2E
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 16:17:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C87D157483;
-	Mon,  6 May 2024 16:15:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 332DB15746E;
+	Mon,  6 May 2024 16:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nAc75tKK"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UpPf7Ox7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB6E156653
-	for <linux-pci@vger.kernel.org>; Mon,  6 May 2024 16:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1488157E94
+	for <linux-pci@vger.kernel.org>; Mon,  6 May 2024 16:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012141; cv=none; b=SHQyNnFh1OSGbgj1k6XvG6jXxs8u9dvh1SAkzPKY5+z4GREIpUDIcnDBw7+1ofWejntWyhNhAAWbJSZe2aHf8r5xVwOwT0P5EPutLGjhoyZqIoZpCSVIP1hGvF2u6uH3YtqWEB14jolfBxuUDiCpcws4FvOl/CR6FYokvRvScUA=
+	t=1715012143; cv=none; b=GGPqZi5I2cVV4V1bSr+/AqJzQycbpTSQi3Dl0gB/R2dv3B2FWyDPk6/hlytA2ejpPHLJU2UNg1umzu0HXIoZu/KoqfVkIGn4fZLfTt/RMn6E91Tc9vd6o+q6y8I6/YF3mWVM3+phgQlqX7Ht9kPUCpxHd7LOhxd7UMfFF8o+WFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012141; c=relaxed/simple;
-	bh=wMWeRjhSwJ6uSpmrW8+ckHY4I9c54ZmMIivHdPuG4Lg=;
+	s=arc-20240116; t=1715012143; c=relaxed/simple;
+	bh=T1+Rbt7S+pNf5q3CRHOo4VcokJLF+gGx7h9sjDgMKpg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BWhuFfI5UlbprFzETXx/UM7m5nXFurtodaGIXGdNn+KSI+EjiqDXDwV8TfiMuyqOUsHWtBRjn6Hy+UBwdzJ13l3AoH+aFHNlgUqwory5koERmWdJWcyDyfpL/OFM0ZgH3ksksNZrOe/NTVQnY6O4MslxDOYFmJJqfQE6z4eyTlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nAc75tKK; arc=none smtp.client-ip=91.218.175.171
+	 MIME-Version:Content-Type; b=MhCQIkmjpMzTnv9ASZR4ZOZhETlfb5aM6Wi3d0qzTHll2BmRlpfJvQTnvJH62Kaoi0YWQDk9ynH6hh2qfV3VTARuySD9ZSsz+GB+mFUcnney54PeM+NXK0ks7DRQEy8uytO/KHR4osqypDcIjAtTaMYAzh12qLzH0enw8GbP1Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UpPf7Ox7; arc=none smtp.client-ip=91.218.175.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715012138;
+	t=1715012140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6i/SJ7VatesNXmh/HC9q2B25IAsAKm2+03IxNVFUYGQ=;
-	b=nAc75tKKd/wUpiy5BtEC8Nj/NNVFGHFTXCR9Mvpkjrm/3Xf2/r2KJXsSC+0mFGaXo5W9We
-	yCQX1376TIrLaq8ljEFTP/bBlHny4KTBgKcMiQtF4ExfQ8iKDka1L0BVUQ0fjnXaHQY4LW
-	12CexWMG0H50ZXw/q3EctaA0SU8bOtY=
+	bh=Ck8JgZysAqiIqlF+N+8+WdMTAZK/jkIRufdhwHxvwE4=;
+	b=UpPf7Ox7SFE6/WLTzUKvDVSsuy/M5WEJuFj+ZO70agQ5WPL0K2MGVALnPQTfs09ZEJGbEd
+	HprA8xSjWt++oRwyvMRXQ7ULv9gX/siwXF8ZJJVJlLmBIpKTYbsCyhsWl7B0YtmMuNkDIM
+	yQxX3tO1Qfr0Tvl43E3cmXJ0c8Fm38U=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -53,9 +53,9 @@ Cc: Michal Simek <michal.simek@amd.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v2 6/7] PCI: xilinx-nwl: Add phy support
-Date: Mon,  6 May 2024 12:15:09 -0400
-Message-Id: <20240506161510.2841755-7-sean.anderson@linux.dev>
+Subject: [PATCH v2 7/7] arm64: zynqmp: Add PCIe phys
+Date: Mon,  6 May 2024 12:15:10 -0400
+Message-Id: <20240506161510.2841755-8-sean.anderson@linux.dev>
 In-Reply-To: <20240506161510.2841755-1-sean.anderson@linux.dev>
 References: <20240506161510.2841755-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -64,162 +64,34 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Add support for enabling/disabling PCIe phys. We can't really do
-anything about failures in the disable/remove path, so just warn.
+Add PCIe phy bindings for the ZCU102.
 
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Tested-by: thippeswamy.havalige@amd.com
 ---
 
 Changes in v2:
-- Get phys by index and not by name
+- Remove phy-names
 
- drivers/pci/controller/pcie-xilinx-nwl.c | 68 ++++++++++++++++++++++--
- 1 file changed, 65 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 424cc5a1b4d1..d32cf4247836 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -19,6 +19,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/pci-ecam.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/irqchip/chained_irq.h>
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+index ad8f23a0ec67..d2175f3dd099 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+@@ -941,6 +941,7 @@ conf-pull-none {
  
-@@ -157,6 +158,7 @@ struct nwl_pcie {
- 	void __iomem *breg_base;
- 	void __iomem *pcireg_base;
- 	void __iomem *ecam_base;
-+	struct phy *phy[4];
- 	phys_addr_t phys_breg_base;	/* Physical Bridge Register Base */
- 	phys_addr_t phys_pcie_reg_base;	/* Physical PCIe Controller Base */
- 	phys_addr_t phys_ecam_base;	/* Physical Configuration Base */
-@@ -521,6 +523,43 @@ static int nwl_pcie_init_msi_irq_domain(struct nwl_pcie *pcie)
- 	return 0;
- }
+ &pcie {
+ 	status = "okay";
++	phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
+ };
  
-+static int nwl_pcie_phy_enable(struct nwl_pcie *pcie)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(pcie->phy); i++) {
-+		ret = phy_init(pcie->phy[i]);
-+		if (ret)
-+			goto err;
-+
-+		ret = phy_power_on(pcie->phy[i]);
-+		if (ret) {
-+			WARN_ON(phy_exit(pcie->phy[i]));
-+			goto err;
-+		}
-+	}
-+
-+	return 0;
-+
-+err:
-+	while (--i) {
-+		WARN_ON(phy_power_off(pcie->phy[i]));
-+		WARN_ON(phy_exit(pcie->phy[i]));
-+	}
-+
-+	return ret;
-+}
-+
-+static void nwl_pcie_phy_disable(struct nwl_pcie *pcie)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pcie->phy); i++) {
-+		WARN_ON(phy_power_off(pcie->phy[i]));
-+		WARN_ON(phy_exit(pcie->phy[i]));
-+	}
-+}
-+
- static int nwl_pcie_init_irq_domain(struct nwl_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -732,6 +771,7 @@ static int nwl_pcie_parse_dt(struct nwl_pcie *pcie,
- {
- 	struct device *dev = pcie->dev;
- 	struct resource *res;
-+	int i;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "breg");
- 	pcie->breg_base = devm_ioremap_resource(dev, res);
-@@ -759,6 +799,18 @@ static int nwl_pcie_parse_dt(struct nwl_pcie *pcie,
- 	irq_set_chained_handler_and_data(pcie->irq_intx,
- 					 nwl_pcie_leg_handler, pcie);
- 
-+
-+	for (i = 0; i < ARRAY_SIZE(pcie->phy); i++) {
-+		pcie->phy[i] = devm_of_phy_get_by_index(dev, dev->of_node, i);
-+		if (PTR_ERR(pcie->phy[i]) == -ENODEV) {
-+			pcie->phy[i] = NULL;
-+			break;
-+		}
-+
-+		if (IS_ERR(pcie->phy[i]))
-+			return PTR_ERR(pcie->phy[i]);
-+	}
-+
- 	return 0;
- }
- 
-@@ -799,16 +851,22 @@ static int nwl_pcie_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	err = nwl_pcie_phy_enable(pcie);
-+	if (err) {
-+		dev_err(dev, "could not enable PHYs\n");
-+		goto err_clk;
-+	}
-+
- 	err = nwl_pcie_bridge_init(pcie);
- 	if (err) {
- 		dev_err(dev, "HW Initialization failed\n");
--		goto err_clk;
-+		goto err_phy;
- 	}
- 
- 	err = nwl_pcie_init_irq_domain(pcie);
- 	if (err) {
- 		dev_err(dev, "Failed creating IRQ Domain\n");
--		goto err_clk;
-+		goto err_phy;
- 	}
- 
- 	bridge->sysdata = pcie;
-@@ -818,12 +876,15 @@ static int nwl_pcie_probe(struct platform_device *pdev)
- 		err = nwl_pcie_enable_msi(pcie);
- 		if (err < 0) {
- 			dev_err(dev, "failed to enable MSI support: %d\n", err);
--			goto err_clk;
-+			goto err_phy;
- 		}
- 	}
- 
- 	err = pci_host_probe(bridge);
- 
-+err_phy:
-+	if (err)
-+		nwl_pcie_phy_disable(pcie);
- err_clk:
- 	if (err)
- 		clk_disable_unprepare(pcie->clk);
-@@ -834,6 +895,7 @@ static void nwl_pcie_remove(struct platform_device *pdev)
- {
- 	struct nwl_pcie *pcie = platform_get_drvdata(pdev);
- 
-+	nwl_pcie_phy_disable(pcie);
- 	clk_disable_unprepare(pcie->clk);
- }
- 
+ &psgtr {
 -- 
 2.35.1.1320.gc452695387.dirty
 
