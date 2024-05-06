@@ -1,147 +1,207 @@
-Return-Path: <linux-pci+bounces-7135-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7136-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D7E78BD639
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 22:28:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2B018BD797
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 00:31:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B07D51C20D70
-	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 20:28:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F03B11C20E7B
+	for <lists+linux-pci@lfdr.de>; Mon,  6 May 2024 22:31:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7B9A15AD95;
-	Mon,  6 May 2024 20:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EAAB136E3B;
+	Mon,  6 May 2024 22:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aNQ1VEJM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIRSi6hs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A2F156C6E;
-	Mon,  6 May 2024 20:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCAE4CB58;
+	Mon,  6 May 2024 22:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715027305; cv=none; b=qaUWk1+KPcg8pH4I9pKnwyNje55OCw4iOBuOrdfyVKTg95RvKZInY+2jIp0F41C8frXINDMcG1BZ5lXBF2E6NEzBOgwEvCDa/PngbHSVE/oy3OGX1Rc/NzCkJWkGs/4L/UZqHK71iwa3JB3mU5OP8DooS7x910qYRV2B9G+Advw=
+	t=1715034713; cv=none; b=WFSkhBgJlBnrIC5j2pPs9PQfQh13yB49NQVZQYq1AS587J/n5PnBGg4cOuPsIVR7CWQgq/RQJzoGi8he2Pj2xuT23qptaXwGriRNcvz/SQlUqPTTs7L/clEUN05oYjMGeLwDVd63DgVq9tLMGgtOFjeyN0KAQcBJQqmctk9X3ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715027305; c=relaxed/simple;
-	bh=D0OobsD6K8gAqBNQ7TX2RYZyzVxpLG88EsKBKz07ibw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Eem4jFlrEy9l44Q03+sro9AWdDNrw+i5CldlZaCXBzsMiMDI2Gp0NX4XaCdOhR2b/yYh9oGt8/MDKKWLbH2mrlyvBFg5xCst2YIzmzCWluAD2duNl9ZyHzdI42WGV6QLmkknne3ax+8+m2gK2FHLcdW8sryJkCGcmKP+tX16l7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aNQ1VEJM; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715027304; x=1746563304;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=D0OobsD6K8gAqBNQ7TX2RYZyzVxpLG88EsKBKz07ibw=;
-  b=aNQ1VEJMIjiy6rv/9kzh9o5JM6mTejv3v6dCM6I3QE4DM4E3M88puBti
-   MzcvSmjz5ayspX/y/fJZAG/8W6iYpi8MSP9Iep71Ad1DOY7ANmskYG8bH
-   +anc8md0yXNT5dLUSdT5m4I94onqcJoGWFWkvOFnODnK9MkaHBcNSbjWD
-   w4sa7aUwDFl//0+pLUMCutz4yvBTsGDrEzwgHyVZxEbU8ypuCgTKw19AR
-   92/N7+tDqdReLtbv5iFVW/zs8d/w7A288c367pS/lMfRSm02YampYz7NE
-   UfjlRtIb/K8s+sFxQkU4cez54gYPWAYtSXAPffkiVPspj5uZvRjlZ+lHz
-   Q==;
-X-CSE-ConnectionGUID: 2ykffqLLQGm1XIld6+/WAQ==
-X-CSE-MsgGUID: B91AZvLiRj289dvS+41r8A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="33297033"
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="33297033"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 13:28:24 -0700
-X-CSE-ConnectionGUID: DjyiNd3sSXCtcE/QcWH6wQ==
-X-CSE-MsgGUID: qLl6V1eMSCOnYYGhS3ERIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="28242490"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.124.222.135]) ([10.124.222.135])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 13:28:22 -0700
-Message-ID: <3d18ae36-4dea-496a-a8fc-253b21135838@intel.com>
-Date: Mon, 6 May 2024 13:28:21 -0700
+	s=arc-20240116; t=1715034713; c=relaxed/simple;
+	bh=MxL9KyUQPXgpKCWFrnBl9eSSaERBnN6J7itAyM6eMes=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JTKmu0TRNS8CVj0UcPhYBrpPTMGRM7GYDtc3GIzoqhN9dqu+ldTfOc2XsLD69f9ieRxp1Wmx8vmL9yuI4jJAmwZ8UGzCf6BcYaCPyTrPwLPDEnj2dxdhGIi7YlFxsmV7Wf5u8+acux0fNcMejGeZ6AMTTJzEJK6pqpSCwD9EOY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIRSi6hs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3494BC116B1;
+	Mon,  6 May 2024 22:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715034711;
+	bh=MxL9KyUQPXgpKCWFrnBl9eSSaERBnN6J7itAyM6eMes=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=eIRSi6hscHmlNqhd4Pn3Wy3brRAg9/VVqWitd16gHerwBPJKjkCOXqeYEKi5pxrMC
+	 rQPjLX22AHmvR9Qah7bPH9D/twK37kpQdEn71ksHdBo6DmBOlfhoyHmeF+rZm4Icje
+	 1lfwURYuPQDBcwP7UO5mhGof+rXQAGHPHZwSdEmU2PctUfIc1WWaxa6XGSsRmI1mx2
+	 EL0GVFkWi5lFuRPvtwUx8IbXKRVMrRn+yS6IJCMyzXQJiZpYIo+J2cowpMyJkk5Jmn
+	 buU6xGYoNyttwHUn4+8mda4H18FG3aWmAGk2mzpv/cGdTn4om8A2+zaqOPxGGwSl08
+	 b3tKUTYcrFc9A==
+Date: Mon, 6 May 2024 17:31:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Phil Elwell <phil@raspberrypi.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 0/4] PCI: brcmstb: Configure appropriate HW CLKREQ#
+ mode
+Message-ID: <20240506223149.GA1708699@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
-To: Adam Manzanares <a.manzanares@samsung.com>,
- "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
- "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
- "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
- "dave@stgolabs.net" <dave@stgolabs.net>, Fan Ni <fan.ni@samsung.com>,
- "ira.weiny@intel.com" <ira.weiny@intel.com>,
- "alison.schofield@intel.com" <alison.schofield@intel.com>,
- "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
- "gourry.memverge@gmail.com" <gourry.memverge@gmail.com>,
- "wj28.lee@gmail.com" <wj28.lee@gmail.com>,
- "rientjes@google.com" <rientjes@google.com>,
- "ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
- "shradha.t@samsung.com" <shradha.t@samsung.com>,
- "mcgrof@kernel.org" <mcgrof@kernel.org>, Jim Harris
- <jim.harris@samsung.com>, "mhocko@suse.com" <mhocko@suse.com>
-Cc: "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
- <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNynMc7-zZ0No0Y30of+uPiz0mSL9brV3R=UGJNC6ytoxg@mail.gmail.com>
 
-
-
-On 5/6/24 12:27 PM, Adam Manzanares wrote:
-> Hello all,
+On Tue, Apr 30, 2024 at 05:02:45PM -0400, Jim Quinlan wrote:
+> On Wed, Apr 3, 2024 at 5:39 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+> >
+> > v9 -- v8 was setting an internal bus timeout to accomodate large L1 exit
+> >       latencies.  After meeting the PCIe HW team it was revealed that the
+> >       HW default timeout value was set low for the purposes of HW debugging
+> >       convenience; for nominal operation it needs to be set to a higher
+> >       value independent of this submission's purpose.  This is now a
+> >       separate commit.
 > 
-> I would like to have a discussion with the CXL development community about
-> current outstanding issues and also invite developers interested in RAS and
-> memory tiering to participate.
+> Bjorn,
 > 
-> The first topic I believe we should discuss is how we can ensure as a group
-> that we are prioritizing upstream work. On a recent upstream CXL development
-> discussion call there was a call to review more work. I apologize for not
-> grabbing the link, but I believe Dave Jiang is leveraging patchwork and this
-> link should be shared with others so we can help get more reviews where needed.
+> Did you have some time to look at this?  Do you have any comments or questions?
 
-Bundle for the potential fixes
-https://patchwork.kernel.org/bundle/cxllinux/cxl-fixes/
+Sorry, I didn't realize you were waiting on me.  I think Krzysztof W.
+will ultimately take care of these.
 
-Bundle for the next merge window
-https://patchwork.kernel.org/bundle/cxllinux/cxl-next/
+I have some minor comments but overall I'm fine with this.
 
-Just be aware patchwork only takes patches, so the bundle are registered with the first patch of a series. The listing does display the origin series.
+> >    -- With v8, Bjorne asked what was preventing a device from exceeding the
+> >       time required for the above internal bus timeout.  The answer to this
+> >       is for us to set the endpoints' max latency {no-,}snoop value to
+> >       something below this internal timeout value.  If the endpoint
+> >       respects this value as it should, it will not send an LTR request
+> >       with a larger latency value and not put itself in a situation
+> >       that requires more latency than is possible for the platform.
+> >
+> >       Typically, ACPI or FW sets these max latency values.  In most of our
+> >       systems we do not have this happening so it is up to the RC driver to
+> >       set these values in the endpoint devices.  If the endpoints already
+> >       have non-zero values that are lower than what we are setting, we let
+> >       them be, as it is possible ACPI or FW set them and knows something
+> >       that we do not.
+> >
+> >    -- The "clkreq" commit has only been changed to remove the code that was
+> >       setting the timeout value, as this code is now its own commit.
+> >
+> > v8 -- Un-advertise L1SS capability when in "no-l1ss" mode (Bjorn)
+> >    -- Squashed last two commits of v7 (Bjorn)
+> >    -- Fix DT binding description text wrapping (Bjorn)
+> >    -- Fix incorrect Spec reference (Bjorn)
+> >          s/PCIe Spec/PCIe Express Mini CEM 2.1 specification/
+> >    -- Text substitutions (Bjorn)
+> >          s/WRT/With respect to/
+> >          s/Tclron/T_CLRon/
+> >
+> > v7 -- Manivannan Sadhasivam suggested (a) making the property look like a
+> >       network phy-mode and (b) keeping the code simple (not counting clkreq
+> >       signal appearances, un-advertising capabilites, etc).  This is
+> >       what I have done.  The property is now "brcm,clkreq-mode" and
+> >       the values may be one of "safe", "default", and "no-l1ss".  The
+> >       default setting is to employ the most capable power savings mode.
+> >
+> > v6 -- No code has been changed.
+> >    -- Changed commit subject and comment in "#PERST" commit (Bjorn, Cyril)
+> >    -- Changed sign-off and author email address for all commits.
+> >       This was due to a change in Broadcom's upstreaming policy.
+> >
+> > v5 -- Remove DT property "brcm,completion-timeout-us" from
+> >       "DT bindings" commit.  Although this error may be reported
+> >       as a completion timeout, its cause was traced to an
+> >       internal bus timeout which may occur even when there is
+> >       no PCIe access being processed.  We set a timeout of four
+> >       seconds only if we are operating in "L1SS CLKREQ#" mode.
+> >    -- Correct CEM 2.0 reference provided by HW engineer,
+> >       s/3.2.5.2.5/3.2.5.2.2/ (Bjorn)
+> >    -- Add newline to dev_info() string (Stefan)
+> >    -- Change variable rval to unsigned (Stefan)
+> >    -- s/implementaion/implementation/ (Bjorn)
+> >    -- s/superpowersave/powersupersave/ (Bjorn)
+> >    -- Slightly modify message on "PERST#" commit.
+> >    -- Rebase to torvalds master
+> >
+> > v4 -- New commit that asserts PERST# for 2711/RPi SOCs at PCIe RC
+> >       driver probe() time.  This is done in Raspian Linux and its
+> >       absence may be the cause of a failing test case.
+> >    -- New commit that removes stale comment.
+> >
+> > v3 -- Rewrote commit msgs and comments refering panics if L1SS
+> >       is enabled/disabled; the code snippet that unadvertises L1SS
+> >       eliminates the panic scenario. (Bjorn)
+> >    -- Add reference for "400ns of CLKREQ# assertion" blurb (Bjorn)
+> >    -- Put binding names in DT commit Subject (Bjorn)
+> >    -- Add a verb to a commit's subject line (Bjorn)
+> >    -- s/accomodat(\w+)/accommodat$1/g (Bjorn)
+> >    -- Rewrote commit msgs and comments refering panics if L1SS
+> >       is enabled/disabled; the code snippet that unadvertises L1SS
+> >       eliminates the panic scenario. (Bjorn)
+> >
+> > v2 -- Changed binding property 'brcm,completion-timeout-msec' to
+> >       'brcm,completion-timeout-us'.  (StefanW for standard suffix).
+> >    -- Warn when clamping timeout value, and include clamped
+> >       region in message. Also add min and max in YAML. (StefanW)
+> >    -- Qualify description of "brcm,completion-timeout-us" so that
+> >       it refers to PCIe transactions. (StefanW)
+> >    -- Remvove mention of Linux specifics in binding description. (StefanW)
+> >    -- s/clkreq#/CLKREQ#/g (Bjorn)
+> >    -- Refactor completion-timeout-us code to compare max and min to
+> >       value given by the property (as opposed to the computed value).
+> >
+> > v1 -- The current driver assumes the downstream devices can
+> >       provide CLKREQ# for ASPM.  These commits accomodate devices
+> >       w/ or w/o clkreq# and also handle L1SS-capable devices.
+> >
+> >    -- The Raspian Linux folks have already been using a PCIe RC
+> >       property "brcm,enable-l1ss".  These commits use the same
+> >       property, in a backward-compatible manner, and the implementaion
+> >       adds more detail and also automatically identifies devices w/o
+> >       a clkreq# signal, i.e. most devices plugged into an RPi CM4
+> >       IO board.
+> >
+> > Jim Quinlan (4):
+> >   dt-bindings: PCI: brcmstb: Add property "brcm,clkreq-mode"
+> >   PCI: brcmstb: Set reasonable value for internal bus timeout
+> >   PCI: brcmstb: Set downstream maximum {no-}snoop LTR values
+> >   PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream
+> >     device
+> >
+> >  .../bindings/pci/brcm,stb-pcie.yaml           |  18 ++
+> >  drivers/pci/controller/pcie-brcmstb.c         | 161 +++++++++++++++++-
+> >  2 files changed, 170 insertions(+), 9 deletions(-)
+> >
+> >
+> > base-commit: 9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
+> > --
+> > 2.17.1
+> >
 
-DJ
 
-> 
-> The second topic I would like to discuss is how we integrate RAS features that
-> have similar equivalents in the kernel. A CXL device can provide info about 
-> memory media errors in a similar fashion to memory controllers that have EDAC
-> support. Discussions have been put on the list and I would like to hear thoughts
-> from the community about where this should go [1]. On the same topic CXL has 
-> port level RAS features and the PCIe DW series touched on this issue  [2]
-> 
-> The third topic I would like to discuss is how we can get a set of common
-> benchmarks for memory tiering evaluations. Our team has done some initial
-> work in this space, but we want to hear more from end users about their 
-> workloads of concern. There was a proposal related to this topic, but from what 
-> I understand no meeting has been held [3]. 
-> 
-> The last topic that I believe is worth discussion is how do we come up with
-> a baseline for testing. I am aware of 3 efforts that could be used cxl_test, 
-> qemu, and uunit testing framework [4].
-> 
-> Apologies for getting this out late, and please include anyone that may be
-> interested in joining a discussion.
-> 
-> [1] https://lore.kernel.org/linux-cxl/20240417075053.3273543-1-ruansy.fnst@fujitsu.com/
-> [2] https://lore.kernel.org/lkml/20231130115044.53512-1-shradha.t@samsung.com/
-> [3] https://lore.kernel.org/all/2b29dd3d-bb2c-6a8c-94d2-d5c2e035516a@google.com
-> [4] https://lore.kernel.org/linux-cxl/170795677066.3697776.12587812713093908173.stgit@ubuntu/
 
