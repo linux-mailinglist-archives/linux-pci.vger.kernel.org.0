@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-7156-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7157-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FF948BDFAC
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 12:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD2BE8BDFAE
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 12:27:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1AA5A287155
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 10:27:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 935AA28749B
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 10:27:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDEA31514D4;
-	Tue,  7 May 2024 10:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2AE14F12C;
+	Tue,  7 May 2024 10:26:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FK2lQARn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FLXsWMzR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7021514CE;
-	Tue,  7 May 2024 10:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87AA14F11B;
+	Tue,  7 May 2024 10:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715077592; cv=none; b=RTMn7b93YDof1SOVhk8Tg+kvuhrGIBvB54WxUchMG3mvFtM32UjrakRQw0vbMIonBNhkwvXA4ZwiGYqlfW/Y2i0LF/aY8TrS8VxWx4MAm0Ini8NzoctJmtF5pYQdfT04sjln/ldTP7cA9AV11nIW8exxeF13Lsrvh8dun0yHaf8=
+	t=1715077604; cv=none; b=FlGoRPQK3DTgNfiqtyvea2XTfsuifSFeZiuKGYlqe9TQ5dX1ofpeT82blaUbT39LPPCxXZXrkdb9LrLQuPJoLxjbXspZsjHEBmESg9QjOumIZkyu8D4tU+O2+5iYZ/5rMAEzGV8TuYshyLHgzzM1ThPqD/pHWt64GDT24dOSEWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715077592; c=relaxed/simple;
-	bh=jhrlnsAO2on72ucVzVfwXWvO+qQRZl2vqCOZJh3oiMM=;
+	s=arc-20240116; t=1715077604; c=relaxed/simple;
+	bh=OtRBI9pR8VBzzT0laOEFtAlpEA+0KVdeY8kwVqKXTZU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kl1uXRV29EdXJKvsDBqSEvUwXuwrBFiKAbwCiNlZPmrYh1YIVJM7h+YTzwnx7XXJvatz9NlUgdOYiHjatknOjoWs+yEr0a5u1LRbiBxBVX+egwcULO02TzEu12Zt4/a0zFgrGPrM+56wdx/Ln1axMbFJkYxV6YiPGbmKwryjwGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FK2lQARn; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=rIQbTcL32G0iaWpzDFrSWgNkJ9KFbhl66XrNEselEbmwkczvvVNkrrs5xVpi8MultViNfXUFQbqKRhZFTAtvE1UZiHPKkpqALYbe2FuLSsaOWzq+wNrgVIO6YeNMujFlE1hZ7lsze0SWYQ1Mri5YVY2o+gGyZLQTLX5Mc3VbpDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FLXsWMzR; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715077591; x=1746613591;
+  t=1715077603; x=1746613603;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jhrlnsAO2on72ucVzVfwXWvO+qQRZl2vqCOZJh3oiMM=;
-  b=FK2lQARn2xQ2XyzLbVldkK6h4TrsPJqgx1Ji0b3sgZugQzUitpYPz7Mg
-   JIjJYcwN8X358FMSNyIAKiTz9wZHJNHFozhLCQoY1WllnaVd4xy3oYoCC
-   e8kPUZX7CPsJALVzWm9GVYj/1sddcMifcoJ0NYPlzDcDGw7gnc0tqdrAk
-   9yaPhqErl4k8lB+XdjbIqVCQuUqnjOgt5TGJ9oacUCwKbf7Ka4RRPM08Q
-   dPKopHaixa0bnWVM7a+3Maf/ybi2dca2tfXkjRWAzt1mohu/5F/WJCV46
-   q5SJomSuV67CHm3Rthm0T874mAnAQC//nzWeD+JghXrZ6nUSWoG40FJIz
+  bh=OtRBI9pR8VBzzT0laOEFtAlpEA+0KVdeY8kwVqKXTZU=;
+  b=FLXsWMzRlSxPybEqMJ6SlBJMf5MYN38R/NNqJ7kCzhA9AQPfBCS9pTJc
+   v2klth8SWnnrUajdkbIpBG/JKRkx9hV9FBbwlzSFl1KpbWW0rLM59odCW
+   KGUys2LL14PkcGDyKPKc8IYoGZ73zb1Na7wOSMangvo6clncL6HGVIqHk
+   c+/DEiiPu4pyixp19MH8iGDOMkl6dyR4uO6CLJZwwBRKEulnPkDYs1TA/
+   tjtkKhYZBv0mlon0SShvxrdxABADeMjs3g1Futjdw/rsUrcxow1bgDcVg
+   JQWoQ+beAQUpuYf1lEWx4E5IcnS+ypLqu4Ul1HUnzhAjiXqI7pnGUV52K
    g==;
-X-CSE-ConnectionGUID: 5ZAvAdcYTCC8t+F+6lezxA==
-X-CSE-MsgGUID: CEmjIZjhRkexCOULksqFWw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10987099"
+X-CSE-ConnectionGUID: LZHkhUcIR5CYaBswXBh2eg==
+X-CSE-MsgGUID: 4/odz09lSkWz3QUk0qov5g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10729844"
 X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="10987099"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:26:31 -0700
-X-CSE-ConnectionGUID: xSn39xCiSA2h6foBR1GuKg==
-X-CSE-MsgGUID: pkjZ2lTuTfGeJVsfy8vKew==
+   d="scan'208";a="10729844"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:26:41 -0700
+X-CSE-ConnectionGUID: KoQkCv+qQsOQ9pW7bquFig==
+X-CSE-MsgGUID: d+BhI2B0Tvm4EbT1wXE6Uw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="28535561"
+   d="scan'208";a="33280265"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.74])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:26:27 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:26:36 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -73,9 +73,9 @@ To: linux-pci@vger.kernel.org,
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Lidong Wang <lidong.wang@intel.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 5/8] resource: Handle simple alignment inside __find_resource_space()
-Date: Tue,  7 May 2024 13:25:20 +0300
-Message-Id: <20240507102523.57320-6-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v3 6/8] resource: Export find_resource_space()
+Date: Tue,  7 May 2024 13:25:21 +0300
+Message-Id: <20240507102523.57320-7-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240507102523.57320-1-ilpo.jarvinen@linux.intel.com>
 References: <20240507102523.57320-1-ilpo.jarvinen@linux.intel.com>
@@ -88,79 +88,109 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-allocate_resource() accepts ->alignf() callback to perform custom
-alignment beyond constraint->align. If alignf is NULL,
-simple_align_resource() is used which only returns avail->start (no
-change).
+PCI bridge window logic needs to find out in advance to the actual
+allocation if there is an empty space big enough to fit the window.
 
-Using avail->start directly is natural and can be done with a
-conditional in __find_resource_space() instead which avoids
-unnecessarily using callback. It makes the code inside
-__find_resource_space() more obvious and removes the need for the
-caller to provide constraint->alignf unnecessarily.
-
-This is preparation for exporting find_resource_space().
+Export find_resource_space() for the purpose. Also move the struct
+resource_constraint into generic header to be able to use the new
+interface.
 
 Tested-by: Lidong Wang <lidong.wang@intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- kernel/resource.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ include/linux/ioport.h | 22 ++++++++++++++++++++++
+ kernel/resource.c      | 26 ++++----------------------
+ 2 files changed, 26 insertions(+), 22 deletions(-)
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 26ad6f223652..35c44c23b037 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -621,14 +621,6 @@ void __weak arch_remove_reservations(struct resource *avail)
- {
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 28266426e5bf..6e9fb667a1c5 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -205,6 +205,25 @@ typedef resource_size_t (*resource_alignf)(void *data,
+ 					   resource_size_t size,
+ 					   resource_size_t align);
+ 
++/**
++ * struct resource_constraint - constraints to be met while searching empty
++ *				resource space
++ * @min:		The minimum address for the memory range
++ * @max:		The maximum address for the memory range
++ * @align:		Alignment for the start address of the empty space
++ * @alignf:		Additional alignment constraints callback
++ * @alignf_data:	Data provided for @alignf callback
++ *
++ * Contains the range and alignment constraints that have to be met during
++ * find_resource_space(). @alignf can be NULL indicating no alignment beyond
++ * @align is necessary.
++ */
++struct resource_constraint {
++	resource_size_t min, max, align;
++	resource_alignf alignf;
++	void *alignf_data;
++};
++
+ /* PC/ISA/whatever - the normal PC address spaces: IO and memory */
+ extern struct resource ioport_resource;
+ extern struct resource iomem_resource;
+@@ -278,6 +297,9 @@ static inline bool resource_union(const struct resource *r1, const struct resour
+ 	return true;
  }
  
--static resource_size_t simple_align_resource(void *data,
--					     const struct resource *avail,
--					     resource_size_t size,
--					     resource_size_t align)
--{
--	return avail->start;
--}
--
- static void resource_clip(struct resource *res, resource_size_t min,
- 			  resource_size_t max)
- {
-@@ -648,6 +640,7 @@ static int __find_resource_space(struct resource *root, struct resource *old,
- {
- 	struct resource *this = root->child;
- 	struct resource tmp = *new, avail, alloc;
-+	resource_alignf alignf = constraint->alignf;
++int find_resource_space(struct resource *root, struct resource *new,
++			resource_size_t size, struct resource_constraint *constraint);
++
+ /* Convenience shorthand with allocation */
+ #define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
+ #define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 35c44c23b037..14777afb0a99 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -48,25 +48,6 @@ struct resource iomem_resource = {
+ };
+ EXPORT_SYMBOL(iomem_resource);
  
- 	tmp.start = root->start;
- 	/*
-@@ -676,8 +669,12 @@ static int __find_resource_space(struct resource *root, struct resource *old,
- 		avail.flags = new->flags & ~IORESOURCE_UNSET;
- 		if (avail.start >= tmp.start) {
- 			alloc.flags = avail.flags;
--			alloc.start = constraint->alignf(constraint->alignf_data, &avail,
--					size, constraint->align);
-+			if (alignf) {
-+				alloc.start = alignf(constraint->alignf_data,
-+						     &avail, size, constraint->align);
-+			} else {
-+				alloc.start = avail.start;
-+			}
- 			alloc.end = alloc.start + size - 1;
- 			if (alloc.start <= alloc.end &&
- 			    resource_contains(&avail, &alloc)) {
-@@ -788,9 +785,6 @@ int allocate_resource(struct resource *root, struct resource *new,
- 	int err;
- 	struct resource_constraint constraint;
- 
--	if (!alignf)
--		alignf = simple_align_resource;
+-/**
+- * struct resource_constraint - constraints to be met while searching empty
+- *				resource space
+- * @min:		The minimum address for the memory range
+- * @max:		The maximum address for the memory range
+- * @align:		Alignment for the start address of the empty space
+- * @alignf:		Additional alignment constraints callback
+- * @alignf_data:	Data provided for @alignf callback
+- *
+- * Contains the range and alignment constraints that have to be met during
+- * find_resource_space(). @alignf can be NULL indicating no alignment beyond
+- * @align is necessary.
+- */
+-struct resource_constraint {
+-	resource_size_t min, max, align;
+-	resource_alignf alignf;
+-	void *alignf_data;
+-};
 -
- 	constraint.min = min;
- 	constraint.max = max;
- 	constraint.align = align;
+ static DEFINE_RWLOCK(resource_lock);
+ 
+ static struct resource *next_resource(struct resource *p, bool skip_children)
+@@ -708,12 +689,13 @@ next:		if (!this || this->end == root->end)
+  * * %0		- if successful, @new members start, end, and flags are altered.
+  * * %-EBUSY	- if no empty space was found.
+  */
+-static int find_resource_space(struct resource *root, struct resource *new,
+-			       resource_size_t size,
+-			       struct resource_constraint *constraint)
++int find_resource_space(struct resource *root, struct resource *new,
++			resource_size_t size,
++			struct resource_constraint *constraint)
+ {
+ 	return  __find_resource_space(root, NULL, new, size, constraint);
+ }
++EXPORT_SYMBOL_GPL(find_resource_space);
+ 
+ /**
+  * reallocate_resource - allocate a slot in the resource tree given range & alignment.
 -- 
 2.39.2
 
