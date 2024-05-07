@@ -1,144 +1,166 @@
-Return-Path: <linux-pci+bounces-7173-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7174-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6249D8BE6AB
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 16:56:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D27A18BE76A
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 17:28:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 934B51C20909
-	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 14:56:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 738B61F2366F
+	for <lists+linux-pci@lfdr.de>; Tue,  7 May 2024 15:28:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF67D15FCFC;
-	Tue,  7 May 2024 14:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3431635C2;
+	Tue,  7 May 2024 15:28:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEUq8giv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueI4Ffa2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA7415FCF0;
-	Tue,  7 May 2024 14:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B671635AD;
+	Tue,  7 May 2024 15:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093759; cv=none; b=dAZTa9DOKlFyuhL06s1l8DQ1t6tcl7DyJknJSeRosuoHLb45LJItkdGO6dNKux+FmA9fl21mOoYkvVkBp1bU1ZBkEupRrZzwGx/CWSZDKrRxz0+cx67ZcFmOGXXNEd+a7ShAYJThlu686zqzSdCaM8+W4VLRre3xoYNFtaL0ID0=
+	t=1715095689; cv=none; b=Sa7GcNPwTs/IwFpJt1OG3nPd6cOr3utVJ2VYRTnExW1JEYypBx3AFeLzQOIKNfxL0m+pIkMa8d+EYwdQ/g14fZMNRUNChcQYQopKbiL1nWNC+DTdxniI01tvxT24Y/8kCyjF0SlWKnbOLQeqpsyrElv4MTXK9XZAbAWIdD+XnjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093759; c=relaxed/simple;
-	bh=hDoeAt0aCGqvaRLZUhPUSNs/Q6T/LZp1Y/m0zwy/8VA=;
+	s=arc-20240116; t=1715095689; c=relaxed/simple;
+	bh=bUcqpluJn/Rz13IlYVuaIwusJC716KhD/mfqB0Uebho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a16QLWM4Kw+jewiYEsmvgn+xeFZKHse80UmdICkCcIYugzSg7SuxmdvzOunDavYptLV6DM5K26QFQ7xNtwnd/j5600A+cC9I3zFUPVVkrkmni3SaCy9PJe0+/a61JOp9eWxI0i9CJ1rBkdE0z/enr247UrRDQgGVCJfiB5LGHaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEUq8giv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7414C2BBFC;
-	Tue,  7 May 2024 14:55:58 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=OpSvBdD1bBUACfp0tr0J3wRUGLtJIkC9dtKCvyPul1y0m+iV0zrG69csmSoQVH8B8IFGpBJMbLCI++UIgMKgnlWiI2pLcK+csoklT1FU0snQwmxD6mqf6fKB1QP3qIE6XZpjIpYXiVrkwZ+Kra7XWtmUFOYhymQcD7VoTCWp53o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueI4Ffa2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB01C2BBFC;
+	Tue,  7 May 2024 15:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715093759;
-	bh=hDoeAt0aCGqvaRLZUhPUSNs/Q6T/LZp1Y/m0zwy/8VA=;
+	s=k20201202; t=1715095688;
+	bh=bUcqpluJn/Rz13IlYVuaIwusJC716KhD/mfqB0Uebho=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QEUq8givoAZQpiA+7kCVzFHDZ7o4/uRf2Ar8D35gCBskdc8ctAAiedeU/2XcNdmDT
-	 /jJ4W9KC09jl5eJwW1gWoAcrkfDbCHuF/ztqlKUSN5B07z8NBbUEr8A/F2GuvPAsUD
-	 VzzyajXyTrylJteeF95fmW9DZRu9p88ZJe+A4v5sw67LOfTOr/KgAnubAfaJ9VZhJ+
-	 VIucFJJmVs9jM0KQ5vMNZz9383IvHLtkceQlByPzxQFXKNG+gwncdHKxoDGqs8QXbs
-	 AWNngkoj6WDB2F6S0p3I1G2z1cg9AjAkW8wYzfsuCo+i4vnruH75rqVzsiQgCLLSIt
-	 P59VCWQBxvNhQ==
-Date: Tue, 7 May 2024 09:55:57 -0500
+	b=ueI4Ffa2UP/l8ER+d2ogio+WDRRKPi8HfM/T1vAO/4bCgScbT+r9DNYauzo5C1MYL
+	 pdK6e/VzyCPDazoPTSfT1LpEialTvuMiK3CrcnqCq57AgkcPodnFTWkpJMAvVOSW/F
+	 7kqPyPZa1lv0tC3TDxcTtrs1Pt4kMUPZfRu6SM7gr6cvSShrAyaGeZEFY4V8ezGARB
+	 e+Vcd1/IgP/OcvC1dAq048A4mpqAWJL9mzXU0sGPJ9ozqZTaTHZMlkTxwFMskI+OXH
+	 259bXKgnoOYyd3YRgBSfU0A5OhiBSnKntiSjClNfnQKCjkFfClrI3CfU+Bus1iCHQs
+	 ceTCaQQUGq9wQ==
+Date: Tue, 7 May 2024 10:28:06 -0500
 From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Saravana Kannan <saravanak@google.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
 	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 10/11] dt-bindings: imx6q-pcie: Add i.MX8Q pcie
- compatible string
-Message-ID: <20240507145557.GA461201-robh@kernel.org>
-References: <20240402-pci2_upstream-v3-0-803414bdb430@nxp.com>
- <20240402-pci2_upstream-v3-10-803414bdb430@nxp.com>
- <20240429154823.GD1709920-robh@kernel.org>
- <ZjAPy05fGLqX6W1I@lizhi-Precision-Tower-5810>
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 09/17] dt-bindings: interrupt-controller: Add support for
+ Microchip LAN966x OIC
+Message-ID: <20240507152806.GA505222-robh@kernel.org>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+ <20240430083730.134918-10-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjAPy05fGLqX6W1I@lizhi-Precision-Tower-5810>
+In-Reply-To: <20240430083730.134918-10-herve.codina@bootlin.com>
 
-On Mon, Apr 29, 2024 at 05:23:23PM -0400, Frank Li wrote:
-> On Mon, Apr 29, 2024 at 10:48:23AM -0500, Rob Herring wrote:
-> > On Tue, Apr 02, 2024 at 10:33:46AM -0400, Frank Li wrote:
-> > > From: Richard Zhu <hongxing.zhu@nxp.com>
-> > > 
-> > > Add i.MX8Q PCIe "fsl,imx8q-pcie" compatible strings.
-> > > 
-> > > Add "fsl,local-address" property for i.MX8Q platforms. fsl,local-address
-> > > is address of PCIe module in high speed io (HSIO)subsystem bus fabric. HSIO
-> > > bus fabric convert the incoming address base to this local-address. Two
-> > > instances of PCI have difference local address.
-> > 
-> > This is just some intermediate bus address? We really should be able to 
-> > describe this with standard ranges properties.
+On Tue, Apr 30, 2024 at 10:37:18AM +0200, Herve Codina wrote:
+> The Microchip LAN966x outband interrupt controller (OIC) maps the
+> internal interrupt sources of the LAN966x device to an external
+> interrupt.
+> When the LAN966x device is used as a PCI device, the external interrupt
+> is routed to the PCI interrupt.
 > 
-> Yes, Maybe dwc's implement have some problem. After read below doc again
-> https://elinux.org/Device_Tree_Usage#PCI_Address_Translation
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  .../microchip,lan966x-oic.yaml                | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
 > 
->                   ┌──────┐  ┌──────────┐                                 
-> ┌────┐0x18001000  │      │  │          │                                 
-> │CPU ├───────────►│      ├──┤  Others  │                                 
-> └────┘            │      │  │          │                                 
->                   │      │  └──────────┘                                 
->                   │      │                                               
->                   │      │   ┌─────────┐                                 
->                   │      │   │         │            ┌───────────┐        
->                   │      ├──►│ HSIO    │ 0xB8001000 ├───────────┤        
->                   │      │   │ Fabric  ├───────────►│Bar0       │ TLP mem 0xB8001000   
->                   │      │   │         │            │0xB8000000 ├───────►
->                   └──────┘   └─────────┘            │           │        
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+> new file mode 100644
+> index 000000000000..b2adc7174177
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/microchip,lan966x-oic.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip LAN966x outband interrupt controller
+> +
+> +maintainers:
+> +  - Herve Codina <herve.codina@bootlin.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
+> +
+> +description: |
+> +  The Microchip LAN966x outband interrupt controller (OIC) maps the internal
+> +  interrupt sources of the LAN966x device to an external interrupt.
+> +  When the LAN966x device is used as a PCI device, the external interrupt is
+> +  routed to the PCI interrupt.
+> +
+> +properties:
+> +  compatible:
+> +    const: microchip,lan966x-oic
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#interrupt-cells'
+> +  - interrupt-controller
+> +  - interrupts
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    interrupt-controller@e00c0120 {
+> +        compatible = "microchip,lan966x-oic";
+> +        reg = <0xe00c0120 0x190>;
 
-Note the 0xB8xxxxxxx address on the right is a PCI address which could 
-be anything though folks often make it 1:1.
+Looks like this is part of some larger block?
 
->                   Main Fabric                       ├───────────┤        
->                                                     │           │        
->                                                     │           │        
->                                                     │           │        
->                                                     │           │        
->                                                     │           │        
->                                                     │           │        
->                                                     │ DWC       │        
->                                                     │ PCIe      │        
->                                                     │ Controller│        
->                                                     │           │        
->                                                     │           │        
->                                                     └───────────┘        
+> +        #interrupt-cells = <2>;
+> +        interrupt-controller;
+> +        interrupts = <0>;
+> +        interrupt-parent = <&intc>;
+> +    };
+> +...
+> -- 
+> 2.44.0
 > 
-> 
-> dts should be
-> 
-> ranges = <0x82000000 0 0xB8000000 0x18000000 0 0x07f00000>
-> 		       ^^^^
-
-And HSIO needs a node with 
-
-ranges = <0xb8000000 0x18000000 size>;
-
-Rob
-
 
