@@ -1,52 +1,59 @@
-Return-Path: <linux-pci+bounces-7209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C11B48BF43A
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 03:46:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 061BA8BF44A
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 03:59:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2EB21C22292
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 01:46:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B63DA283A4C
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 01:59:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA7C8F5D;
-	Wed,  8 May 2024 01:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C842564;
+	Wed,  8 May 2024 01:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IepalcJM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZEWofxm"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3803B8F55
-	for <linux-pci@vger.kernel.org>; Wed,  8 May 2024 01:46:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A125F947A;
+	Wed,  8 May 2024 01:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715132783; cv=none; b=imHhGTREQRfFf7flpWrWnhbidRdSpo8Bkc8MYz9Q7qZb8wPe5s55zcmPRLlLeEaTt8xZm5azDeYymKjKR2Ux+pko2+UnufdlRoTsdEnfgz7hA9qWc1mf1q4ODESwOrXYhQ5xfKhqvLtVAZ5MGr7JqAU8x5YsRMUTOgMMjkdQt2U=
+	t=1715133560; cv=none; b=DMdW9Oe7MllOqeIyn/pIvxGhtBKJ+1Bnp6f+Nn7pZkHWQ3CmBDl+3kLFzcPjqiUlTLLrQFCUMJb2KIcs1Ypr55LqhUKyl5kspsthGSed1tTVMKEYXRIPMLRVjNPeMdxJrgkizvtYEbSi3yCAGDoupoikjDAyhmbutJ/Wm6YoVOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715132783; c=relaxed/simple;
-	bh=IsoBP1NBJ49gFlpPzbsr0T4Uo2NuiBLfDdHz3RadSf8=;
+	s=arc-20240116; t=1715133560; c=relaxed/simple;
+	bh=OT5JakQt19xF8U1yLXWAVT404ZDx+aEIBvSlyMks/00=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Rzt97kNl/gGsfTYixwMSqeLT/Hd68cJqOkaA1ooWPNFbPfd69zx2NPEP9dSImxL3d7WOSwsH8L2+oo/9IgGW6NhyX0dAOrzHl6Ek+r9GD0Z4hF91PZp3xt6JUYjo/bXTCRUdV1a5+ZWh+8bYuyAiLJ/g5Na8LepgoPQ7T/UM4ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IepalcJM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94CFCC2BBFC;
-	Wed,  8 May 2024 01:46:22 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=aJOMjSb2oRjj0Y8ylqOZab5KiZlkTlSiH26jBItDpkJ1Lt8R7zKwALVKY9+B6rvWG3ItNNmCnCtzNioY/KzQTJpdRwRnNhBqi98vRArXdjSB+iUZBxIDuZJ/6pnuhsOhBBuxSo6WDu/+WsGHllPeiwZ2EJz+n7hXVMtvBmm4wd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZEWofxm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D316C2BBFC;
+	Wed,  8 May 2024 01:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715132782;
-	bh=IsoBP1NBJ49gFlpPzbsr0T4Uo2NuiBLfDdHz3RadSf8=;
+	s=k20201202; t=1715133559;
+	bh=OT5JakQt19xF8U1yLXWAVT404ZDx+aEIBvSlyMks/00=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IepalcJMG/IzIaBfrgw7bfyeqNJ7nru37JmoC4hsxd6difHwL6b4evvsZTEGsqlVY
-	 LhYFgSsrRPfsDzaQygybePnncffemx9iDlpy2sxdPOSCjjzye9R0PogRJMnR41r3HV
-	 BxpWJhTNS9apYYkivE6afHU2yVfZpMWaFMAzPFyqIqa5H0dmL/6ncON+auf4ajR7xV
-	 aCd9bTaP+px7aB+mjOK6QNMSqN1I+jcPjbpTLJMup5AU45FvIxfg0A84ljZJAS+aEE
-	 /J2WqN4KJYKzXnIn7rUHZv5ljoRhoxKiai7vFhlXwjQZecZneSNkfjky+vonSRZo42
-	 4zsO2bm2mdJFw==
-Date: Tue, 7 May 2024 20:46:21 -0500
+	b=BZEWofxm4dginQL+bIA1eqQEoyel0G+G/WB9CeXJex8G5YJVB+pMLPACIAUo/SlNL
+	 aJdcwlaaX6GYYfbEnNUrTXYE2kVEKhSbfJMpMJJX9HRQdNhSuVw25mTE4ib2vFPmIy
+	 y7NPpBh9H9bsPEnpR/tW82mSJbc2Vfyw5aGIEspgSBKkOIG9N6NuCsONhUSRRDxnlk
+	 +mT+aHE+mWgSvcUlt05qqCb5Wrql5gVyujSmVdgodBbdwT/3D7CZE8egOviz+8Fbq6
+	 vyRVb1REvqoXHwq1ukgaq2Jm7Gg6eeOFVUrgdCt9gkEspbDsx+GAZf2yLDaNuF8FZn
+	 Nsr5LZY56dJhw==
+Date: Tue, 7 May 2024 20:59:17 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: vmd: Disable MSI remap only for low MSI count
-Message-ID: <20240508014621.GA1745464@bhelgaas>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	Michal Simek <michal.simek@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>
+Subject: Re: [PATCH v2 2/7] PCI: xilinx-nwl: Fix off-by-one
+Message-ID: <20240508015917.GA1746057@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,44 +62,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240506173901.00003ec4@linux.intel.com>
+In-Reply-To: <20240506161510.2841755-3-sean.anderson@linux.dev>
 
-On Mon, May 06, 2024 at 05:39:01PM -0700, Nirmal Patel wrote:
-> On Fri, 26 Apr 2024 17:39:57 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Apr 18, 2024 at 11:31:21AM -0400, Nirmal Patel wrote:
-> ...
+Maybe the subject could include something about why this is important,
+e.g., it's IRQ-related, we mask/unmask the wrong thing, etc?
 
-> > A reference to ee81ee84f873 ("PCI: vmd: Disable MSI-X remapping when
-> > possible"), which added VMD_FEAT_CAN_BYPASS_MSI_REMAP, might be
-> > useful because it has nice context.
-> > 
-> > IIUC this will keep MSI-X remapping enabled in more cases, e.g., on
-> > new devices that support more vectors.  What is the benefit of keeping
-> > it enabled?
-> 
-> VMD MSI-X remapping was a performance bottleneck in certain
-> situations. Starting from 28c0, VMD has a capability to disable MSI-X
-> remapping and improve the I/O performance. The first iteration of 28c0
-> VMD HW had only 64 MSI-X vectors support while the newer iterations can
-> support up to 128 and VMD is no longer a bottleneck. So I thought it
-> would be a good idea to change it to MSI-X remapping default ON.
-> 
-> Also upon further testings, I noticed huge boost in performance because
-> of this CID patch:
-> https://lore.kernel.org/kvm/20240423174114.526704-5-jacob.jun.pan@linux.intel.com/T/ 
-> 
-> The performance boost we get from the CID patch as follow:
-> Kernel 6.8.8 : 1Drive: 2000, 4Drives: 2300
-> 6.9.0-rc6 + CID + MSI-X remap Disable: 1Drive: 2700, 4Drives: 6010
-> 6.9.0-rc6 + CID + MSI-X remap Enabled: 1Drive: 2700, 4Drives: 6100
-> 
-> Since there is no significant performance difference between MSI-X
-> enable and disable after addition of CID patch, I think we can drop this
-> patch for now until we see significant change in I/O performance due to
-> VMD's MSI-X remapping policy.
+On Mon, May 06, 2024 at 12:15:05PM -0400, Sean Anderson wrote:
+> IRQs start at 0, so we don't need to subtract 1.
 
-OK, great, thanks for the background and the performance testing!
+What does "IRQ" refer to here?  Something to do with INTx, I guess,
+but apparently not PCI_INTERRUPT_PIN, since 0 in that register means
+the device doesn't use INTx, and 1=INTA, 2=INTB, etc.
 
-Bjorn
+I assume this fixes a bug, e.g., we mask/unmask the wrong INTx?  What
+does this look like for a user?  Unexpected IRQs?
+
+9a181e1093af is from seven years ago.  Should we be surprised that we
+haven't tripped over this before?
+
+> Fixes: 9a181e1093af ("PCI: xilinx-nwl: Modify IRQ chip for legacy interrupts")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> ---
+> 
+> (no changes since v1)
+> 
+>  drivers/pci/controller/pcie-xilinx-nwl.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> index 0408f4d612b5..437927e3bcca 100644
+> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> @@ -371,7 +371,7 @@ static void nwl_mask_intx_irq(struct irq_data *data)
+>  	u32 mask;
+>  	u32 val;
+>  
+> -	mask = 1 << (data->hwirq - 1);
+> +	mask = 1 << data->hwirq;
+>  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
+>  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
+>  	nwl_bridge_writel(pcie, (val & (~mask)), MSGF_LEG_MASK);
+> @@ -385,7 +385,7 @@ static void nwl_unmask_intx_irq(struct irq_data *data)
+>  	u32 mask;
+>  	u32 val;
+>  
+> -	mask = 1 << (data->hwirq - 1);
+> +	mask = 1 << data->hwirq;
+>  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
+>  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
+>  	nwl_bridge_writel(pcie, (val | mask), MSGF_LEG_MASK);
+> -- 
+> 2.35.1.1320.gc452695387.dirty
+> 
 
