@@ -1,59 +1,79 @@
-Return-Path: <linux-pci+bounces-7210-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7211-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 061BA8BF44A
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 03:59:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80B338BF485
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 04:27:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B63DA283A4C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 01:59:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B23181C23320
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 02:27:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C842564;
-	Wed,  8 May 2024 01:59:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA7BD1A2C25;
+	Wed,  8 May 2024 02:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZEWofxm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J4Pdv4wP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A125F947A;
-	Wed,  8 May 2024 01:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEAA2563
+	for <linux-pci@vger.kernel.org>; Wed,  8 May 2024 02:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715133560; cv=none; b=DMdW9Oe7MllOqeIyn/pIvxGhtBKJ+1Bnp6f+Nn7pZkHWQ3CmBDl+3kLFzcPjqiUlTLLrQFCUMJb2KIcs1Ypr55LqhUKyl5kspsthGSed1tTVMKEYXRIPMLRVjNPeMdxJrgkizvtYEbSi3yCAGDoupoikjDAyhmbutJ/Wm6YoVOM=
+	t=1715135248; cv=none; b=koHjEbQvfoliK27Tc/P1gLHlhitR8WILufNutmvbyfYcpDoHhkNkb/ZNyMkwfXLuEWCiClePstm5dsQYIku9uZ1tAdLm87uRZK0L1vScn6vPnRyN8QAN9EfvT8rq6hZpPWQk/bZjhCWfPc4zGFGFRKuiTg4MtKQkl45Ki81CzGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715133560; c=relaxed/simple;
-	bh=OT5JakQt19xF8U1yLXWAVT404ZDx+aEIBvSlyMks/00=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=aJOMjSb2oRjj0Y8ylqOZab5KiZlkTlSiH26jBItDpkJ1Lt8R7zKwALVKY9+B6rvWG3ItNNmCnCtzNioY/KzQTJpdRwRnNhBqi98vRArXdjSB+iUZBxIDuZJ/6pnuhsOhBBuxSo6WDu/+WsGHllPeiwZ2EJz+n7hXVMtvBmm4wd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZEWofxm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D316C2BBFC;
-	Wed,  8 May 2024 01:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715133559;
-	bh=OT5JakQt19xF8U1yLXWAVT404ZDx+aEIBvSlyMks/00=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=BZEWofxm4dginQL+bIA1eqQEoyel0G+G/WB9CeXJex8G5YJVB+pMLPACIAUo/SlNL
-	 aJdcwlaaX6GYYfbEnNUrTXYE2kVEKhSbfJMpMJJX9HRQdNhSuVw25mTE4ib2vFPmIy
-	 y7NPpBh9H9bsPEnpR/tW82mSJbc2Vfyw5aGIEspgSBKkOIG9N6NuCsONhUSRRDxnlk
-	 +mT+aHE+mWgSvcUlt05qqCb5Wrql5gVyujSmVdgodBbdwT/3D7CZE8egOviz+8Fbq6
-	 vyRVb1REvqoXHwq1ukgaq2Jm7Gg6eeOFVUrgdCt9gkEspbDsx+GAZf2yLDaNuF8FZn
-	 Nsr5LZY56dJhw==
-Date: Tue, 7 May 2024 20:59:17 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	Michal Simek <michal.simek@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>
-Subject: Re: [PATCH v2 2/7] PCI: xilinx-nwl: Fix off-by-one
-Message-ID: <20240508015917.GA1746057@bhelgaas>
+	s=arc-20240116; t=1715135248; c=relaxed/simple;
+	bh=xU6MM4wpMg/XrlyHvzUgme/0wiRaoqcQzd07zoGlfpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hno9QfPigfa7hvCTa6Xm3/v4X2Dx3NoFSUxF6iaU1+OD/b+aC9BSwVEW6rqOR4WlL8w/k0vWQjbjS/vAbLUwsgOrAQLRPHOCTXMBd+q5ijU8li0TtSMc1e4UfEflfqusLnIzsjU1LV+zL2r7cvT3IzIn+yWZ4SOZP9GeQH8B76E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J4Pdv4wP; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715135246; x=1746671246;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xU6MM4wpMg/XrlyHvzUgme/0wiRaoqcQzd07zoGlfpU=;
+  b=J4Pdv4wPFjdfvGlbuNxhQ3xi9W7yVnlxhDq5yxZjReAfGiS0HpgNt1S+
+   Q7ebWNQABL5eTMm0AHWauVQ/fdPaoga+9zD9QErLyGg5TUVq9ISz0iHm9
+   CQb1QbkXw1cZvR+H0z+egdmvvx9OTuca+bsR1B+kiex+GGVxXvrXerDsH
+   +F7Ztp/jq6waEDwH+CcB/5ZHHua0SOojYV3ZL+6pmHXlg1gjmc7FZ241T
+   xpeDTC2t6qNV4qKeaQFuLOEiarmly4ozGQssInWLY3U0PNFGTUdsrR5AW
+   7RHWDtB9xtphEuuRnRCOOhpINUb3Gfrz9y3WfWbkiYAmPEf8LYZzyjYcX
+   Q==;
+X-CSE-ConnectionGUID: uGZST/RrS9eUFA7405SdPw==
+X-CSE-MsgGUID: 70Qx7VFrRp+dBVFKJrbewA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10838035"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="10838035"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 19:27:25 -0700
+X-CSE-ConnectionGUID: Jc9JefSKSm2LHM8AeRvDFQ==
+X-CSE-MsgGUID: ciV07w9IQSCYEZZhG2s1bA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="28701986"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa007.fm.intel.com with ESMTP; 07 May 2024 19:27:22 -0700
+Date: Wed, 8 May 2024 10:21:42 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, linux-coco@lists.linux.dev,
+	Wu Hao <hao.wu@intel.com>, Yilun Xu <yilun.xu@intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, kevin.tian@intel.com,
+	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH v2 5/6] PCI/TSM: Authenticate devices via platform TSM
+Message-ID: <Zjrhtun8IXtqOFR1@yilunxu-OptiPlex-7050>
+References: <171291190324.3532867.13480405752065082171.stgit@dwillia2-xfh.jf.intel.com>
+ <171291193308.3532867.129739584130889725.stgit@dwillia2-xfh.jf.intel.com>
+ <fc201452-080e-4942-b5a0-0c64d023ac6b@amd.com>
+ <662c69eb6dbf1_b6e0294d1@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <Zjjz60XvF97c+Hea@yilunxu-OptiPlex-7050>
+ <663a7131d47b3_354c429489@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,57 +82,86 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240506161510.2841755-3-sean.anderson@linux.dev>
+In-Reply-To: <663a7131d47b3_354c429489@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-Maybe the subject could include something about why this is important,
-e.g., it's IRQ-related, we mask/unmask the wrong thing, etc?
-
-On Mon, May 06, 2024 at 12:15:05PM -0400, Sean Anderson wrote:
-> IRQs start at 0, so we don't need to subtract 1.
-
-What does "IRQ" refer to here?  Something to do with INTx, I guess,
-but apparently not PCI_INTERRUPT_PIN, since 0 in that register means
-the device doesn't use INTx, and 1=INTA, 2=INTB, etc.
-
-I assume this fixes a bug, e.g., we mask/unmask the wrong INTx?  What
-does this look like for a user?  Unexpected IRQs?
-
-9a181e1093af is from seven years ago.  Should we be surprised that we
-haven't tripped over this before?
-
-> Fixes: 9a181e1093af ("PCI: xilinx-nwl: Modify IRQ chip for legacy interrupts")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
+On Tue, May 07, 2024 at 11:21:37AM -0700, Dan Williams wrote:
+> Xu Yilun wrote:
+> > > > If (!ide_cap && tee_cap), we get here but doing the below does not make 
+> > > > sense for TEE (which are likely to be VFs).
+> > > 
+> > > The "!ide_cap && tee_cap" case may also be the "TSM wants to setup IDE
+> > > without TDISP flow".
+> > 
+> > IIUC, should be "TSM wants to setup TDISP without IDE flow"?
 > 
-> (no changes since v1)
+> Both are possible. The TSM may need to be involved in IDE key
+> establishment even if the PF or its VFs are ever assigned as TDIs. Also,
+> as you say, it is possible for a TSM to trust that a device does not
+> need IDE established because it is has knowledge that the device is
+> integrated into the SOC without physical exposure of its links.
 > 
->  drivers/pci/controller/pcie-xilinx-nwl.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > But I think aik is talking about VFs (which fit "!ide_cap && tee_cap"),
+> > VFs should not be rejected by the following:
+> > 
+> >       pci_tsm->doe_mb = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_PCI_SIG,
+> >                                              PCI_DOE_PROTO_CMA);
+> >       if (!pci_tsm->doe_mb)
+> >               return;
+> > 
+> > VF should check its PF's doe/ide/tee cap and then be added to
+> > pci_tsm_devs, is it?
 > 
-> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> index 0408f4d612b5..437927e3bcca 100644
-> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> @@ -371,7 +371,7 @@ static void nwl_mask_intx_irq(struct irq_data *data)
->  	u32 mask;
->  	u32 val;
->  
-> -	mask = 1 << (data->hwirq - 1);
-> +	mask = 1 << data->hwirq;
->  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
->  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
->  	nwl_bridge_writel(pcie, (val & (~mask)), MSGF_LEG_MASK);
-> @@ -385,7 +385,7 @@ static void nwl_unmask_intx_irq(struct irq_data *data)
->  	u32 mask;
->  	u32 val;
->  
-> -	mask = 1 << (data->hwirq - 1);
-> +	mask = 1 << data->hwirq;
->  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
->  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
->  	nwl_bridge_writel(pcie, (val | mask), MSGF_LEG_MASK);
-> -- 
-> 2.35.1.1320.gc452695387.dirty
+> This path should probably skip VFs because the 'connect' operation is a
+> PF-only semantic. I will fix that up.
+
+Agreed. I drafted some simple changes for the idea, that we keep
+pci_dev::tsm for every TEE capable device (PF & VF) to execute tsm_ops,
+but only adds PFs to pci_tsm_devs for "connect".
+
+
+diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
+index 9c5fb2c46662..31707f0351c6 100644
+--- a/drivers/pci/tsm.c
++++ b/drivers/pci/tsm.c
+@@ -241,9 +241,14 @@ void pci_tsm_init(struct pci_dev *pdev)
+        if (!pci_tsm)
+                return;
+
+-       pci_tsm->ide_cap = ide_cap;
+        mutex_init(&pci_tsm->exec_lock);
+
++       if (pdev->is_virtfn) {
++               pdev->tsm = no_free_ptr(pci_tsm);
++               return;
++       }
++
++       pci_tsm->ide_cap = ide_cap;
+        pci_tsm->doe_mb = pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_PCI_SIG,
+                                               PCI_DOE_PROTO_CMA);
+        if (!pci_tsm->doe_mb)
+@@ -262,9 +267,14 @@ void pci_tsm_init(struct pci_dev *pdev)
+
+ void pci_tsm_destroy(struct pci_dev *pdev)
+ {
++       if (!pdev->tsm)
++               return;
++
+        guard(rwsem_write)(&pci_tsm_rwsem);
+-       pci_tsm_del(pdev);
+-       xa_erase(&pci_tsm_devs, pci_tsm_devid(pdev));
++       if (!pdev->is_virtfn) {
++               pci_tsm_del(pdev);
++               xa_erase(&pci_tsm_devs, pci_tsm_devid(pdev));
++       }
+        kfree(pdev->tsm);
+        pdev->tsm = NULL;
+ }
+
+Thanks,
+Yilun
+
 > 
+> I still think the PF needs to go through an ->add() callback because I
+> do not think we have a cross-vendor unified concept of when IDE without
+> TDISP, or TDISP without IDE is supported.
 
