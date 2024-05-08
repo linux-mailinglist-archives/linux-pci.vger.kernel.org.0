@@ -1,205 +1,129 @@
-Return-Path: <linux-pci+bounces-7273-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7274-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D8E18C074F
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 00:25:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93D068C07A9
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 01:33:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8976E1F22EDE
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 22:25:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46E7E1F22F18
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 23:33:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 631A2133285;
-	Wed,  8 May 2024 22:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D54AB8626D;
+	Wed,  8 May 2024 23:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCjR1f+6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxhTdRwk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F429130E4B;
-	Wed,  8 May 2024 22:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFF728387;
+	Wed,  8 May 2024 23:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715207104; cv=none; b=JKUrQPwOLLZ0iolFF6M40S8DMOINZHfPbcKvEADhJVY0fE6thvz+/O+ttdKPfPtFX+YLONqKPM5Q3sib5Md8WtU2NrQ/TAEF1DRC5muE2FNTUIi/wnir3Hh8lsxwmZQ9bIxIzCpzcW3yXRJ87r3rFK4ByoNNYl91uYCsg0VBWOU=
+	t=1715211184; cv=none; b=R/flGOXWLd1H+bcl36bSe2hySg2GGFSkZnF8K7NlDm5a9PCi2HLIB5DdA08idHm12e610V5JLm5ALfdAAZbTQaHOs+YRYZSSOA/GX0WcARjqVGnW5gRhuhZZp64OqDH8xQFaUb+ISZZUxSXAnaUp0H90IVIYA4OwdVT9mdsWlqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715207104; c=relaxed/simple;
-	bh=v8DQvHY+2r78tKC2XBRoOvgdQLkOP1CAvCK2xKElKmw=;
+	s=arc-20240116; t=1715211184; c=relaxed/simple;
+	bh=rymFRL9RenzD7dHMXH9iTV136lK+n6YZqLAw1D9IOc8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SrUVz9Qbx7xfOdYEn3OOaOtR3aVVbhrJeKfjI0FKqceyFVeeJShTKVSvLd3UCL2dcxTfX2DBwlwKZWXPD/f4KDX6Pk/OfbP1+H/+ZO+rQRoTYxWckPEgT3JjgA4mnI3obaFjOeAL3ksto1AssS/3Sc0AcSJbFnkyCCLci7JIYg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCjR1f+6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C7E5C113CC;
-	Wed,  8 May 2024 22:25:02 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Q8tp2p/EKI90FMk+xWyk7sbWfEd7EINrCzbcGXmnEBsXCMvorb4inypj8U1WoTkqdW7BNeVkx684Hbz/NSGj0Md7rIbRs1OqDaQSe3AzWTEuN1sfVaABjipFlx24GSoH+ESiKqWiab3KmghCJTkmDvhrWoWI0T9/RdG5GGRWv5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxhTdRwk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF799C113CC;
+	Wed,  8 May 2024 23:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715207103;
-	bh=v8DQvHY+2r78tKC2XBRoOvgdQLkOP1CAvCK2xKElKmw=;
+	s=k20201202; t=1715211184;
+	bh=rymFRL9RenzD7dHMXH9iTV136lK+n6YZqLAw1D9IOc8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fCjR1f+6ZoEAdzjfwhRhxRiNTSNrZ26+rWIfMOxL3Rs1Qn7TUEYWbOVSwKIITkbC/
-	 BVSnZxsxr1heihDdECVlpXkUHI2u6pUM+OrUCAXg4R+6vxGFsuC3/49Aa76+nXB1ta
-	 z2hIkQLVzjpI7GXUFlOD06o/fwFUXdOLbn1isLXC71gXZiYuXI/i0XD7vha0VEFzlb
-	 /8bpWSmvNcR2K8EBp1O2DrdNQIqp73+Pa6Y4DH9kP5Zcr/mC0J3BHvk4R9xjLRAqjJ
-	 ZYaub2vGZMEd2EEvPszqGlMAwY5iXAQBxwSd+fS5F1Dm4CgpZdCkzHlapBxnpwLARp
-	 hjTi3K5jb2/bg==
-Date: Wed, 8 May 2024 17:24:59 -0500
+	b=CxhTdRwkIoIHjNCan0EzKcUVMCxw2dMCjbzheFWQvigKFzGghLCSSOemAlAC6Dxud
+	 nAUdQmMOva5iragqXcCT1EAjDe/Pav1c+wCI7LgXhsMbNw4PCZZViYm11GvPQgxHQK
+	 D7qkFBVzHRof0oRjK/vPCsAJ7bKUqr6pCvTnVlKtwi86s7qOfzUcD83Er0C2omZGFT
+	 y2JQKTGOnFJr+eyZp4BFMVUmUVoCgca9SdCGzU77Dkopr+6PvgysAvQZr+++Zg2umX
+	 neNtqGlXZ/E5+JeX73T2EactCiUOM4/f7eBwAGUFtvK8LdEbPPbPI+ZYtVrIinc5v3
+	 oZ3FthdxurO3A==
+Date: Wed, 8 May 2024 18:33:02 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
-	tony.luck@intel.com, bp@alien8.de, bhelgaas@google.com,
-	robert.moore@intel.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	acpica-devel@lists.linux.dev, CobeChen@zhaoxin.com,
-	TonyWWang@zhaoxin.com, ErosZhang@zhaoxin.com, LeoLiu@zhaoxin.com
-Subject: Re: [PATCH v2 3/3] PCI/ACPI: Add pci_acpi_program_hest_aer_params()
-Message-ID: <20240508222459.GA1791619@bhelgaas>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Phil Elwell <phil@raspberrypi.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 4/4] PCI: brcmstb: Configure HW CLKREQ# mode
+ appropriate for downstream device
+Message-ID: <20240508233302.GA1792067@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231218030430.783495-4-LeoLiu-oc@zhaoxin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNxEZm=axRAeeAKwxemjEdjjmJYTUs8nThp_NDohXcV5Jg@mail.gmail.com>
 
-On Mon, Dec 18, 2023 at 11:04:30AM +0800, LeoLiu-oc wrote:
-> From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+On Wed, May 08, 2024 at 01:55:24PM -0400, Jim Quinlan wrote:
+> On Mon, May 6, 2024 at 7:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> ...
+
+> > As a user, how do I determine which setting to use?
+>
+> Using the "safe" mode will always work.  In fact I considered making
+> this the default mode.
+
+> As I said, I cannot enumerate all of the reasons why one mode works
+> and one does not for a particular device+board+connector combo.  The
+> HW folks have not really been forthcoming on the reasons as well.
 > 
-> Call the func pci_acpi_program_hest_aer_params() for every PCIe device,
-> the purpose of this function is to extract register value from HEST PCIe
-> AER structures and program them into AER Capabilities.
-> 
-> Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-> ---
->  drivers/pci/pci-acpi.c | 98 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h      |  9 ++++
->  drivers/pci/probe.c    |  1 +
->  3 files changed, 108 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 004575091596..3a183d5e20cb 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -18,6 +18,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/pm_qos.h>
->  #include <linux/rwsem.h>
-> +#include <acpi/apei.h>
->  #include "pci.h"
->  
->  /*
-> @@ -783,6 +784,103 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
->  	return -ENODEV;
->  }
->  
-> +#ifdef CONFIG_ACPI_APEI
-> +static void program_hest_aer_endpoint(struct acpi_hest_aer_common aer_endpoint,
-> +				struct pci_dev *dev, int pos)
-> +{
-> +	u32 uncor_mask;
-> +	u32 uncor_severity;
-> +	u32 cor_mask;
-> +	u32 adv_cap;
-> +
-> +	uncor_mask = aer_endpoint.uncorrectable_mask;
-> +	uncor_severity = aer_endpoint.uncorrectable_severity;
-> +	cor_mask = aer_endpoint.correctable_mask;
-> +	adv_cap = aer_endpoint.advanced_capabilities;
-> +
-> +	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, uncor_mask);
-> +	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, uncor_severity);
-> +	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, cor_mask);
-> +	pci_write_config_dword(dev, pos + PCI_ERR_CAP, adv_cap);
+> > Trial and error?  If so, how do I identify the errors?
+>
+> Either PCIe link-up is not happening, or it is happening but the
+> device driver is non-functional and boot typically  hangs.
 
-This is named for "endpoint", but it is used for Root Ports,
-Endpoints, and PCIe to PCI/PCI-X bridges.  It relies on these four
-fields being in the same place for all those HEST structures.
+What I'm hearing is that it's trial and error. 
 
-That makes good sense, but maybe should have a one-line hint about
-this and maybe even a compiletime_assert().
+If we can't tell users how to figure out which mode to use, I think we
+have to explicitly say "try the modes in this order until you find one
+that works."
 
-> +}
-> +
-> +static void program_hest_aer_root(struct acpi_hest_aer_root *aer_root, struct pci_dev *dev, int pos)
-> +{
-> +	u32 root_err_cmd;
-> +
-> +	root_err_cmd = aer_root->root_error_command;
-> +
-> +	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, root_err_cmd);
-> +}
-> +
-> +static void program_hest_aer_bridge(struct acpi_hest_aer_bridge *hest_aer_bridge,
-> +				struct pci_dev *dev, int pos)
-> +{
-> +	u32 uncor_mask2;
-> +	u32 uncor_severity2;
-> +	u32 adv_cap2;
-> +
-> +	uncor_mask2 = hest_aer_bridge->uncorrectable_mask2;
-> +	uncor_severity2 = hest_aer_bridge->uncorrectable_severity2;
-> +	adv_cap2 = hest_aer_bridge->advanced_capabilities2;
-> +
-> +	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK2, uncor_mask2);
-> +	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER2, uncor_severity2);
-> +	pci_write_config_dword(dev, pos + PCI_ERR_CAP2, adv_cap2);
-> +}
-> +
-> +static void program_hest_aer_params(struct hest_parse_aer_info info)
-> +{
-> +	struct pci_dev *dev;
-> +	int port_type;
-> +	int pos;
-> +	struct acpi_hest_aer_root *hest_aer_root;
-> +	struct acpi_hest_aer *hest_aer_endpoint;
-> +	struct acpi_hest_aer_bridge *hest_aer_bridge;
-> +
-> +	dev = info.pci_dev;
-> +	port_type = pci_pcie_type(dev);
+That sucks, but if it's all we can do, I guess we don't have much
+choice, and we should just own up to it.
 
-I'd put these two initializations up at the declarations, e.g.,
+There's no point in telling users "if your card drives CLKREQ# use X,
+but if not and it can tolerate out-of-spec T_CLRon timing, use Y"
+because nobody knows how to figure that out.
 
-  struct pci_dev *dev = info.pci_dev;
-  int port_type = pci_pcie_type(dev);
+And we can say which features are enabled in each mode so they aren't
+surprised, e.g., something like this:
 
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
-> +	if (!pos)
-> +		return;
-> +
-> +	switch (port_type) {
-> +	case PCI_EXP_TYPE_ROOT_PORT:
-> +		hest_aer_root = info.hest_aer_root_port;
-> +		program_hest_aer_endpoint(hest_aer_root->aer, dev, pos);
-> +		program_hest_aer_root(hest_aer_root, dev, pos);
-> +		break;
-> +	case PCI_EXP_TYPE_ENDPOINT:
-> +		hest_aer_endpoint = info.hest_aer_endpoint;
-> +		program_hest_aer_endpoint(hest_aer_endpoint->aer, dev, pos);
-> +		break;
-> +	case PCI_EXP_TYPE_PCI_BRIDGE:
-> +	case PCI_EXP_TYPE_PCIE_BRIDGE:
+  "default" -- The Root Port supports ASPM L0s, L1, L1 Substates, and
+    Clock Power Management.  This provides the best power savings but
+    some devices may not work correctly because the Root Port doesn't
+    comply with T_CLRon timing required for PCIe Mini Cards [1].
 
-PCI_EXP_TYPE_PCIE_BRIDGE is a PCI/PCI-X to PCIe Bridge, also known as
-a "reverse bridge".  This has a conventional PCI or PCI-X primary
-interface and a PCIe secondary interface.  It's not clear to me that
-these bridges can support AER.  
+  "no-l1ss" -- The Root Port supports ASPM L0s, L1 (but not L1
+    Substates), and Clock Power Management.  [I assume there's some
+    other Root Port defect that causes issues with some devices in
+    this mode; I dunno.  If we don't know exactly what it is, I guess
+    we can't really say anything.]
 
-For one thing, the AER Capability must be in extended config space,
-which would only be available for PCI-X Mode 2 reverse bridges.
+  "safe" -- The Root Port supports ASPM L0, L1, L1 Substates, but not
+    Clock Power Management.  All devices should work in this mode.
 
-The acpi_hest_aer_bridge certainly makes sense for
-PCI_EXP_TYPE_PCI_BRIDGE (a PCIe to PCI/PCI-X bridge), but the ACPI
-spec (r6.5, sec 18.3.2.6) is not very clear about whether it also
-applies to PCI_EXP_TYPE_PCIE_BRIDGE (a reverse bridge).
+[1] PCIe Mini CEM r2.1, sec 3.2.5.2.2
 
-Do you actually need this PCI_EXP_TYPE_PCIE_BRIDGE case?
+(I'm not sure which features are *actually* enabled in each mode, I
+just guessed.)
 
-> +		hest_aer_bridge = info.hest_aer_bridge;
-> +		program_hest_aer_endpoint(hest_aer_bridge->aer, dev, pos);
-> +		program_hest_aer_bridge(hest_aer_bridge, dev, pos);
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +}
+Bjorn
 
