@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-7244-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7245-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 768C18BFF65
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 15:49:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E43A8BFF6C
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 15:50:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BF961F2AC04
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 13:49:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7C821F2AEFE
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 13:50:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 253047E576;
-	Wed,  8 May 2024 13:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEDE486151;
+	Wed,  8 May 2024 13:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYkBkqYI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AixCk5yb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD877D3F5;
-	Wed,  8 May 2024 13:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A02684DED;
+	Wed,  8 May 2024 13:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715176125; cv=none; b=Bl8RJnWLY7p9w8nPWPK8QaMaJVMXTWbUf+rPSUe03QIdwP8QBeNjeOJyBz+stIe/7zLM75HpMaS1or09Kb67wxg2HS9AGJNXUpU1UopomIVjbodTEo1YdD1bNcvYLn/sBNvMAdlsb1ju0c9S8/uptIsNER1tM8APg25aeIvvT4A=
+	t=1715176135; cv=none; b=dPPUF7DDXTJHEwmTxq99kJ83CY/v+kHSIX/yzmhvUTQxW+HpN803eJ8/5monQs7z2grjWBrHzuCK9vs5nrw3etbW/urR2XFZrkDpdDgApDYe/euFVQ6BE3Rlz+n1K13itukT/yRyNJH7c2cr4pu7Zw9Mc5ES+KIuLloLU2ccacI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715176125; c=relaxed/simple;
-	bh=BVjR8kQOCaRR8HeUse8J/wqXd6QjtOPOLht8xEyki8E=;
+	s=arc-20240116; t=1715176135; c=relaxed/simple;
+	bh=MLkyWnj8n33ZGy6Gno0WbKv6yNMO+1Q2hL0zVj/FGa4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZqAXH/QwPlxZLHU1uhOSF8HRNGYKds3pkZXCDKZAY5dSVrkS4v1wtOzkRhuVo+6aVySSGrmk8P9+IovenusUMma4E9pcW7O2h9bmwM5uVJLyJmu+8vJR59ixJEu17j69mypyvGgHHHG4iiBvxZqpVqw64ZTDxYLH8CQzuLEzPOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYkBkqYI; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=AF3m6gVlVJTt3jSK+4otcbygw0VU7HJwzWI8kHbVx83RJYdsRtNhGh0UubauEFGGFuPC4jaT5yk/w3JuTz5ZHS2yCK5oxSRdWpU7lHgVVRC26n5eYxhTus+rmt9zkOZjbtLCVIZFWIzdLj5kZ1RvUiQ5XzaDrwtlSA6w7G/vSSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AixCk5yb; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715176124; x=1746712124;
+  t=1715176134; x=1746712134;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BVjR8kQOCaRR8HeUse8J/wqXd6QjtOPOLht8xEyki8E=;
-  b=LYkBkqYImGbz95aSARmlH07FGHUakWxsJhG57RAYeSq5PNSJepXLt9Fq
-   1Hi+bqBiMDbl2ZuuztE590ELNeGYfno3XVecknnnzmb0Q06r7d68rWpuI
-   H57WiSuU0TZ51yQmM/3443abv+rgfF16yR5Qlrb+OR/W8VrY+ABRTVdgn
-   EhKhduNgfoOGDk/6dT8nfuim+Cu83N+5mijI7qJhggvWcl6Ms+Shggfza
-   t4f7RhU0YjOb8p4AqqRBcWYPWWkj5klfMKk5foNfWMUdO5Op7cEGJIpN8
-   FDCnvFRwzqdeiFpnxsGObWP+wbgS6OKH39dMEY+b+/47D9l4cTRkG+fNj
-   w==;
-X-CSE-ConnectionGUID: W313VmFdRbKHV/U+4zGbzA==
-X-CSE-MsgGUID: mODxGbbGQTygbBJvGlN/PA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10906472"
+  bh=MLkyWnj8n33ZGy6Gno0WbKv6yNMO+1Q2hL0zVj/FGa4=;
+  b=AixCk5ybu/iHo97uTYXSvgEvdS93udOFt8eVYxax9jXYwuO559252NJn
+   jpN7roM77xPJArQNNTaj7jWmXFr6Ui7j9ezZdCfV3whQ39Y79l/fREC8W
+   1tV71Jhr/SQWxD1eFI4ZCXP8C/IS9kz1oNUWMGl4xo4z9pxczNU11AKrf
+   OnOICiYuP42k8bO7WaQmIsniuwT+MgmEBgpBBjpEIRVDOFuoZqVF/8M4+
+   eg326GY8b5g7zVNj3POH0x/yKJNZ+HZDFvLst4+giYkfhnU1HypJ574tL
+   Up/dR7vE9bqu22OcR+GTPgQkkDHQGuISlS1DpcbuA/55jkM9YnxTqp2B7
+   Q==;
+X-CSE-ConnectionGUID: 0EPLYadwSRCZecOroz/iEA==
+X-CSE-MsgGUID: XJnhH/3vRbyu1ve1V6RS5Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="28512703"
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="10906472"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 06:48:43 -0700
-X-CSE-ConnectionGUID: i4G4k7+1QrGSuJ7/+wgkyQ==
-X-CSE-MsgGUID: QuTuY6MET6ydnjbFeVpomw==
+   d="scan'208";a="28512703"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 06:48:54 -0700
+X-CSE-ConnectionGUID: iGvG/qzBTPOYPi9dRB9yWg==
+X-CSE-MsgGUID: YSi+KxecRQuYsBropfuoeA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="29474896"
+   d="scan'208";a="28983288"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.80])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 06:48:37 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 06:48:48 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -76,9 +76,9 @@ Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Zhang Rui <rui.zhang@intel.com>,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v5 3/8] PCI: Refactor pcie_update_link_speed()
-Date: Wed,  8 May 2024 16:47:39 +0300
-Message-Id: <20240508134744.52134-4-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v5 4/8] PCI/quirks: Abstract LBMS seen check into own function
+Date: Wed,  8 May 2024 16:47:40 +0300
+Message-Id: <20240508134744.52134-5-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240508134744.52134-1-ilpo.jarvinen@linux.intel.com>
 References: <20240508134744.52134-1-ilpo.jarvinen@linux.intel.com>
@@ -91,90 +91,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-pcie_update_link_speed() is passed the Link Status register but not all
-callers have that value at hand nor need the value.
+The speed quirk in pcie_failed_link_retrain() uses the presence of LBMS
+bit as one of the triggering conditions effectively monopolizing the
+use of that bit. An upcoming change will introduce a PCIe bandwidth
+controller which sets up an interrupt to track LBMS. As LBMS will be
+cleared by the interrupt handler, the speed quirk will no longer be
+able to observe LBMS directly.
 
-Refactor pcie_update_link_speed() to include reading the Link Status
-register into pcie_update_link_speed() and create
-__pcie_update_link_speed() which can be used by the hotplug code that
-has the register value at hand beforehand (and needs the value for
-other purposes).
+As a preparatory step for the change, extract the LBMS seen check into
+own function out of pcie_failed_link_retrain().
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/hotplug/pciehp_hpc.c |  2 +-
- drivers/pci/pci.h                |  7 ++++++-
- drivers/pci/probe.c              | 12 +++++++-----
- 3 files changed, 14 insertions(+), 7 deletions(-)
+ drivers/pci/quirks.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index b1d0a1b3917d..0d818110af6d 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -319,7 +319,7 @@ int pciehp_check_link_status(struct controller *ctrl)
- 		return -1;
- 	}
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 2ae06c7b1917..9be942623573 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -33,6 +33,11 @@
+ #include <linux/switchtec.h>
+ #include "pci.h"
  
--	pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status);
-+	__pcie_update_link_speed(ctrl->pcie->port->subordinate, lnk_status);
- 
- 	if (!found) {
- 		ctrl_info(ctrl, "Slot(%s): No device found\n",
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 48eae81a0a43..664191768395 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -297,7 +297,12 @@ u32 pcie_bandwidth_capable(struct pci_dev *dev, enum pci_bus_speed *speed,
- 			   enum pcie_link_width *width);
- void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
- void pcie_report_downtraining(struct pci_dev *dev);
--void pcie_update_link_speed(struct pci_bus *bus, u16 link_status);
-+
-+static inline void __pcie_update_link_speed(struct pci_bus *bus, u16 linksta)
++static bool pcie_lbms_seen(struct pci_dev *dev, u16 lnksta)
 +{
-+	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
++	return lnksta & PCI_EXP_LNKSTA_LBMS;
 +}
-+void pcie_update_link_speed(struct pci_bus *bus);
- 
- /* Single Root I/O Virtualization */
- struct pci_sriov {
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 1b08b3f16027..65413d408b3d 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -742,9 +742,13 @@ const char *pci_speed_string(enum pci_bus_speed speed)
- }
- EXPORT_SYMBOL_GPL(pci_speed_string);
- 
--void pcie_update_link_speed(struct pci_bus *bus, u16 linksta)
-+void pcie_update_link_speed(struct pci_bus *bus)
- {
--	bus->cur_bus_speed = pcie_link_speed[linksta & PCI_EXP_LNKSTA_CLS];
-+	struct pci_dev *bridge = bus->self;
-+	u16 linksta;
 +
-+	pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
-+	__pcie_update_link_speed(bus, linksta);
- }
- EXPORT_SYMBOL_GPL(pcie_update_link_speed);
+ /*
+  * Retrain the link of a downstream PCIe port by hand if necessary.
+  *
+@@ -92,8 +97,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
  
-@@ -827,15 +831,13 @@ static void pci_set_bus_speed(struct pci_bus *bus)
+ 	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+ 	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+-	if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) ==
+-	    PCI_EXP_LNKSTA_LBMS) {
++	if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) {
+ 		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
  
- 	if (pci_is_pcie(bridge)) {
- 		u32 linkcap;
--		u16 linksta;
- 
- 		pcie_capability_read_dword(bridge, PCI_EXP_LNKCAP, &linkcap);
- 		bus->max_bus_speed = pcie_link_speed[linkcap & PCI_EXP_LNKCAP_SLS];
- 		if (bus->max_bus_speed != PCI_SPEED_UNKNOWN)
- 			bus->supported_speeds = PCI_EXP_LNKCAP2_SLS_2_5GB;
- 
--		pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
--		pcie_update_link_speed(bus, linksta);
-+		pcie_update_link_speed(bus);
- 	}
- }
- 
+ 		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
 -- 
 2.39.2
 
