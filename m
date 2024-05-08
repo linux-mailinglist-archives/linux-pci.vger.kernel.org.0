@@ -1,78 +1,55 @@
-Return-Path: <linux-pci+bounces-7267-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7268-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ADDC8C0509
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 21:30:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74DD18C0566
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 22:14:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C9251C208C3
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 19:30:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACC4C1C21028
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 20:14:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E5AC12D75D;
-	Wed,  8 May 2024 19:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C7E130E2C;
+	Wed,  8 May 2024 20:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F5qR6IOK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlVzvJsU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0CFD534;
-	Wed,  8 May 2024 19:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAB412BF23;
+	Wed,  8 May 2024 20:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715196625; cv=none; b=MbSclgfZ64FUQt50UX0N61su0DBjorZb1luk+uvpmfN2wTNvZ71mq/31mzdL1lP44tzcMYP2sv09PhxX3zYfyuFAVG5G5/nvP8TxXQMHQzd1srkzebiVbLypIV7lUwMKMRIPQfnAmMrHpp246O0ukdi1g2gnhcOnpq8bSsKa38k=
+	t=1715199273; cv=none; b=NR0LI2zlaXZv3soC6vAn360pP/Gwm2VydNIqxIQ3bqS9qar2i/QlYjKB4lzWHEcKjSVASPG3glB2HjX4bzYjmUe8cpjzLpKgwwh7jBHImMREaKi2V8jLN6Y324p2iU9tR9K/6Yc1jU+LRGke1Psx4+XPjnuqzvHbZv2EY4W6rA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715196625; c=relaxed/simple;
-	bh=w5k+yxn9zC7TL2YBMW5JBZXfSMdrbXnisSZwM2mWRnI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+SZu2KcuQTKv7dd270QMwyZrxP4gSCsDjXnS62n1AVvVSuuQaddKsUKPeUkQ9dfJnI8eqXJM/cc1Nd5UOqqWAatvHqlDM/snSkaTUd8qSozbvh5O/SS+DM+AkfYSPNJ21zXV9QAQJQB0Gpwiv+Q2JTca2ROAepfQtT5WS6nIaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F5qR6IOK; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QWFSSKGbHla6mEPQaFgDSzLdUE17xeXPLekr1H3HReM=; b=F5qR6IOKs/Ad9M4W3Ci1MobTou
-	PkZ/eWYbJnPgKeKc/8oNakuG4g8yYzyh2b69xGCes0r1i3eSNdMeKAb1jCmi/PqkE/xmIPwE8zEvy
-	o0xX/OmtNr+H41aTN4xfv6DM3k/UTmx/wU91GVIO7+4bzmxO8tc5+3NCgtmuPUFFFOKXFgYiV5nTg
-	sZPYxRF7zo3KrssOHM9ALfNmk4qFYBj5ievIcn4HsQ1/5VTxeVzgeNKawBla864XsWX/tb8UyYO0U
-	MeVZU3EOfWxXKTp9cwIxWw1k4cy64rvN41s1vSZVPo5c5s9VKuS7A/vJG0AymlW5z6Be+6RjHOtNT
-	38NdCBTA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s4mzV-0000000GklA-35eN;
-	Wed, 08 May 2024 19:30:13 +0000
-Date: Wed, 8 May 2024 12:30:13 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Adam Manzanares <a.manzanares@samsung.com>, Song Liu <song@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	Fan Ni <fan.ni@samsung.com>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"gourry.memverge@gmail.com" <gourry.memverge@gmail.com>,
-	"wj28.lee@gmail.com" <wj28.lee@gmail.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
-	"shradha.t@samsung.com" <shradha.t@samsung.com>,
-	Jim Harris <jim.harris@samsung.com>,
-	"mhocko@suse.com" <mhocko@suse.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] CXL Development Discussions
-Message-ID: <ZjvSxTvu_SHWVCVK@bombadil.infradead.org>
-References: <CGME20240506192712uscas1p225316f79bb69f979b647d2a06a00a25f@uscas1p2.samsung.com>
- <9bf86b97-319f-4f58-b658-1fe3ed0b1993@nmtadam.samsung>
- <66396c1938726_2f63a29443@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <Zjp4DtkCFGOiFA6X@bombadil.infradead.org>
- <48a26545-5d41-47f4-95a6-e55395b63c66@nmtadam.samsung>
+	s=arc-20240116; t=1715199273; c=relaxed/simple;
+	bh=cSANn1r02z11GW7siTDbWe0wORQUwoGGbSwqIt0FLcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KwwWzE8+Pi+0tt59wcLxnRcWZh7vE8Ek5GOryShYZ2+kVuzuLqty9au5pUvIvdLT8Spe+CtwNGxoa33SsyVtz5XHO/UYam/8Edta8BhzZgHitwQCYTTuqlaQItlFYoxtpQAh+Tp4Ts9EcvixHX92/VmYRdeM9rbJb/SuEN9dpPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlVzvJsU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00BEC32782;
+	Wed,  8 May 2024 20:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715199272;
+	bh=cSANn1r02z11GW7siTDbWe0wORQUwoGGbSwqIt0FLcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FlVzvJsUILIQP0KBq+N5hgAJgaHSXEMjXDcyqpJy1EieK7aG4r4vxhyX+8s9lTAYe
+	 +kDKa0nFoVnCntiwWxP6gMq9KBuVU0yL8HYWytPYOeezCtn4LvInsgL65QIPKi82bH
+	 prq0oq6yOmrHQAPxBi9Hr/524Ro4hZVTVTnsB+ZRtYHlbeBtJ7HQPby697zmNUoL+X
+	 HA8bKH8Xg6cVKjGU9FbPJKH8DDnNgvT6l2oruCaKoBjidQkIhYveJuEt11ZT0OVOgE
+	 plvu/3bhbWj2hxv7fEYMcegNkHa77rPSIbIDh8YUBlAZ4a325ItEDJ4VMJmvbw8Z0m
+	 SVUXjjo0hJD0Q==
+Date: Wed, 8 May 2024 15:14:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thatchanamurthy Satish <Satish.Thatchanamurt@dell.com>
+Subject: Re: [PATCH v1] PCI/EDR: Align EDR implementation with PCI firmware
+ r3.3 spec
+Message-ID: <20240508201430.GA1785648@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,39 +58,99 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <48a26545-5d41-47f4-95a6-e55395b63c66@nmtadam.samsung>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <20240501022543.1626025-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 
-On Wed, May 08, 2024 at 06:38:36PM +0000, Adam Manzanares wrote:
-> On Tue, May 07, 2024 at 11:50:54AM -0700, Luis Chamberlain wrote:
-> > On Mon, May 06, 2024 at 04:47:37PM -0700, Dan Williams wrote:
-> > > For testing I think it is an "all of the above plus hardware testing if
-> > > possible" situation. My hope is to get to a point where CXL patchwork
-> > > lights up "S/W/F" columns with backend tests similar to NETDEV
-> > > patchwork:
-> > > 
-> > > https://patchwork.kernel.org/project/netdevbpf/list/
-> > > 
-> > > There are some initial discussions about how to do this likely we can
-> > > grab some folks to discuss more.
-> > > 
-> > > I think Paul and Song would be useful to have for this discussion.
-> > 
-> > I think everyone and their aunt wants this to happen for their subsystem,
-> > so a separate session to hear about how to get there would be nice.
+On Wed, May 01, 2024 at 02:25:43AM +0000, Kuppuswamy Sathyanarayanan wrote:
+> During the Error Disconnect Recover (EDR) spec transition from r3.2 ECN
+> to PCI firmware spec r3.3, improvements were made to definitions of
+> EDR_PORT_DPC_ENABLE_DSM (0x0C) and EDR_PORT_LOCATE_DSM(0x0D) _DSMs.
 > 
-> +1
+> Specifically,
+> 
+> * EDR_PORT_DPC_ENABLE_DSM _DSM version changed from 5 to 6, and
+>   arg4 is now a package type instead of an integer in version 5.
+> * EDR_PORT_LOCATE_DSM _DSM uses BIT(31) to return the status of the
+>   operation.
+> 
+> Ensure _DSM implementation aligns with PCI firmware r3.3 spec
+> recommendation. More details about the EDR_PORT_DPC_ENABLE_DSM and
+> EDR_PORT_LOCATE_DSM _DSMs can be found in PCI firmware specification,
+> r3.3, sec 4.6.12 and sec 4.6.13.
+> 
+> While at it, fix a typo in EDR_PORT_LOCATE_DSM comments.
+> 
+> Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Song, at last year's LSFMM you had mentioned the above work by ebpf folks
-with patchwork integration. While it is great, I am not sure if folks
-realize the amount of work required to get the above up and running and
-then to maintain it. So I was wondering if perhaps at this year's LSFMM
-if we can have a lightning talk or BoF to review just that and give
-people clarity about the effort required to do get this going and
-maintaining it. Its clear not only CXL folks would be interested, but
-also filesystems and likely block layer folks. Would you be up to help
-review that with folks with a lightning talk or BoF session? Would there
-be anyone else who can talk about that?
+I split this into two patches and applied them to pci/edr for v6.10,
+thanks!
 
-  Luis
+Take a look here:
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=edr
+and make sure I didn't mess it up (only differences are comments and
+commit logs).
+
+> ---
+>  drivers/pci/pcie/edr.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index 5f4914d313a1..fea098e22e3e 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -35,7 +35,7 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>  	 * Behavior when calling unsupported _DSM functions is undefined,
+>  	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+>  	 */
+> -	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> +	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 6,
+>  			    1ULL << EDR_PORT_DPC_ENABLE_DSM))
+>  		return 0;
+>  
+> @@ -47,11 +47,11 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>  	argv4.package.elements = &req;
+>  
+>  	/*
+> -	 * Per Downstream Port Containment Related Enhancements ECN to PCI
+> -	 * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_DSM is
+> -	 * optional.  Return success if it's not implemented.
+> +	 * Per PCI Firmware Specification r3.3, sec 4.6.12,
+> +	 * EDR_PORT_DPC_ENABLE_DSM is optional. Return success if it's not
+> +	 * implemented.
+>  	 */
+> -	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 6,
+>  				EDR_PORT_DPC_ENABLE_DSM, &argv4);
+>  	if (!obj)
+>  		return 0;
+> @@ -86,7 +86,7 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_dev *pdev)
+>  
+>  	/*
+>  	 * Behavior when calling unsupported _DSM functions is undefined,
+> -	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+> +	 * so check whether EDR_PORT_LOCATE_DSM is supported.
+>  	 */
+>  	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+>  			    1ULL << EDR_PORT_LOCATE_DSM))
+> @@ -103,6 +103,17 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_dev *pdev)
+>  		return NULL;
+>  	}
+>  
+> +	/*
+> +	 * Per PCI Firmware Specification r3.3, sec 4.6.13, bit 31 represents
+> +	 * the success/failure of the operation. If bit 31 is set, the operation
+> +	 * is failed.
+> +	 */
+> +	if (obj->integer.value & BIT(31)) {
+> +		ACPI_FREE(obj);
+> +		pci_err(pdev, "Locate Port _DSM failed\n");
+> +		return NULL;
+> +	}
+> +
+>  	/*
+>  	 * Firmware returns DPC port BDF details in following format:
+>  	 *	15:8 = bus
+> -- 
+> 2.25.1
+> 
 
