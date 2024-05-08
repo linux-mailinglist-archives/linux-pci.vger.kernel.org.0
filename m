@@ -1,186 +1,121 @@
-Return-Path: <linux-pci+bounces-7213-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7214-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 274318BF5FA
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 08:17:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E59F18BF7C8
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 09:55:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B67CBB23331
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 06:17:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93A2D28550E
+	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 07:55:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F8B17BCB;
-	Wed,  8 May 2024 06:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2340B3613C;
+	Wed,  8 May 2024 07:55:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cquS4GkG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G86IK9I3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D1717C60;
-	Wed,  8 May 2024 06:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F00228383;
+	Wed,  8 May 2024 07:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715149037; cv=none; b=POgn6OT9RByr/84NGvzL/QdhsxzBhEBaayu0kM6eSHFiKK9C9pMvnqr3tvdtdP8f2hn9vQh+lUUHthfPDB8P+11T48IW0MXV/SUi3OOixRELxRUd2fDZvyXymuxCQHi/FIphyyz8ibZ+vUDOfL4oXMBlLRrBaradbbnkGPCLBPA=
+	t=1715154917; cv=none; b=F4FOreH9Cr6PwYB2wha3byneUTfm+eIK9III7+C4JkknnI3iSBsKTapp0AIiIJ44OX3OktXN53YZmUkFrLs3ZaMe/8qlOVlYMLiYIFqK5SPmoZh8zGWeNNI+edhD50YT3dmol4zlXYu7YOsyaROqKS5sVl+Q6UCW5Wq8XoiD0vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715149037; c=relaxed/simple;
-	bh=T26SDKirdEo8SHZ8HjwDIG4EdXpl2FYVdBGtGn6knrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UlMJ1PR3QnovVyPtcpkmadW0u3V0QtFY3wynWg65mCHVUs0xVRBY/vzqLdpAat4E8LNENoblNt8XGamSJFNUR7xL0U3CJj402muI2CohRAH1Urpjj9OWIKmq55EtCe/pxhLKVr0xfQKgtyE8BN3HKw/nPhFKgBnpDLP6meafaTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cquS4GkG; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4482UVXT017982;
-	Wed, 8 May 2024 06:16:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=4ZVMtsvIKFQutqFB7Piu+yfh0WtTdxIprL8802CV5CQ=; b=cq
-	uS4GkGH/1VtQf8/4bvbKHdcC3OrR8Uq2Ic5QeMHf9EjDjknZBsc+Stk/xE6dZYK6
-	DRIoL6h1IFNT2tqV1gAJUWmyNX/aNeG9871NVqWMjTVAupbAwEm7dX6bNDkVPSVD
-	0AtBctHrTGY0yy+kiMuv4OQQbuN/AvFrkdySkn0blquWj3H2Y/cbyqn2bhA+lxXo
-	UByYJx/3PJqJoIj3lJ0X7U7L/F37v77X3ma4EtE/cntHvIcuiJzIMCmXLR7uNUH/
-	mwxYDppaI8ceSa6cbCh6tCqZMKatfjGApUYDSy6iO6hHjtxzt+AyXkEqeHSTFEs0
-	MN/K1lrsadW84A/ZtqYw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xysgc93up-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 May 2024 06:16:57 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4486Guic001987
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 8 May 2024 06:16:56 GMT
-Received: from [10.50.20.203] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 7 May 2024
- 23:16:49 -0700
-Message-ID: <569087fe-e675-41a4-b975-2d01d95b6d3c@quicinc.com>
-Date: Wed, 8 May 2024 11:46:40 +0530
+	s=arc-20240116; t=1715154917; c=relaxed/simple;
+	bh=YrROZEGTXJ5Na3vZ1OgfXZMfsvJsndhnGWoVmoGD1fE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YB68aZs39s0JU423lRJvSt74ziLjyKFPlmvgPMAU9i60aSYUzzABBbU0Z0NMBTdEk457UvQp45X1xKMXkz/OKRwirKjeqxn/1DYgUyBEp2iydhh2gr62Zk54cbEXjbK3jU/tQQxxckCM9GEXqgSbI9cBVn9PsLrxh1fOhrE3jQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G86IK9I3; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715154916; x=1746690916;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=YrROZEGTXJ5Na3vZ1OgfXZMfsvJsndhnGWoVmoGD1fE=;
+  b=G86IK9I30KZcdNT7/Yz5mvE8urgzlawIHbC15mRM4uNqrkVGcEFKs7Ka
+   FpvCofZdtHpf5wV2MpyU3p11Qw56QfJtYvqqQlO2hzYyC83FX/GQFzOdn
+   3l7APYocoXyMPd3qYZDptInnmJf10+xJLd4Zyo3DDFKiQ2ojJLdwVXmCP
+   J5foiqP5/acsgua6w932hhfCB0zJvCMiznv056IFAuiTXm0ZPIfJ3eqa0
+   Sl//EesSmJv61zUeU7joAx2xAAkgrCeTgNViSc1Bqxf6hw0PZ8TwoGls2
+   5T1okcPCBmnaoudVfh9TyW1NVKGjOR2fdotHFayTLwIs8Op3zYX3gnmVz
+   g==;
+X-CSE-ConnectionGUID: 5HeRvp3ATHKLvwfxgWGwlg==
+X-CSE-MsgGUID: 3tVgoquiSqKjAFHsu5V7zQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10867375"
+X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
+   d="scan'208";a="10867375"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 00:55:15 -0700
+X-CSE-ConnectionGUID: nIvYSU2mSQKcdsyUT5oGzw==
+X-CSE-MsgGUID: kqiuqbQCTcSp8uQkIlFagQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
+   d="scan'208";a="33494143"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.80])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 00:55:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 8 May 2024 10:55:07 +0300 (EEST)
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+cc: bhelgaas@google.com, dave.hansen@linux.intel.com, x86@kernel.org, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86: ce4100: Remove unused struct 'sim_reg_op'
+In-Reply-To: <20240507232348.46677-1-linux@treblig.org>
+Message-ID: <8a3efad2-8e65-5ba4-573c-4fb041bf675b@linux.intel.com>
+References: <20240507232348.46677-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 RESEND 0/8] ipq9574: Enable PCI-Express support
-To: Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo
- Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen
- Boyd <sboyd@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-clk@vger.kernel.org>
-References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
-Content-Language: en-US
-From: Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: H7iKy63Y87Fd912I5jpplZxuUVmXEYRT
-X-Proofpoint-ORIG-GUID: H7iKy63Y87Fd912I5jpplZxuUVmXEYRT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-08_02,2024-05-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405080045
+Content-Type: multipart/mixed; BOUNDARY="8323328-1989487649-1715154864=:3164"
+Content-ID: <cab851e2-067e-3290-0970-8adbffef36a3@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-1989487649-1715154864=:3164
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <4773f2f7-b4b1-5e0f-d133-313ae9fbffb4@linux.intel.com>
 
-On 5/1/2024 9:58 AM, Alexandru Gagniuc wrote:
-> There are four PCIe ports on IPQ9574, pcie0 thru pcie3. This series
-> addresses pcie2, which is a gen3x2 port. The board I have only uses
-> pcie2, and that's the only one enabled in this series. pcie3 is added
-> as a special request, but is untested.
-> 
-> I believe this makes sense as a monolithic series, as the individual
-> pieces are not that useful by themselves.
+On Wed, 8 May 2024, linux@treblig.org wrote:
 
-Hi Alexandru,
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>=20
+> struct 'sim_reg_op' doesn't look like it was ever used.
+> Remove it.
+>=20
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  arch/x86/pci/ce4100.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>=20
+> diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
+> index 87313701f069e..f5dbd25651e0f 100644
+> --- a/arch/x86/pci/ce4100.c
+> +++ b/arch/x86/pci/ce4100.c
+> @@ -35,12 +35,6 @@ struct sim_dev_reg {
+>  =09struct sim_reg sim_reg;
+>  };
+> =20
+> -struct sim_reg_op {
+> -=09void (*init)(struct sim_dev_reg *reg);
+> -=09void (*read)(struct sim_dev_reg *reg, u32 value);
+> -=09void (*write)(struct sim_dev_reg *reg, u32 value);
+> -};
+> -
 
-As Dmitry suggested, we are working on enabling the PCIe NOC clocks
-via Interconnect. We will be posting the PCIe series with
-Interconnect support [1] shortly.
+Thanks.
 
-[1] - 
-https://lore.kernel.org/linux-arm-msm/20240430064214.2030013-1-quic_varada@quicinc.com/
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Thanks,
-S.Devi Priya
-> 
-> In v2, I've had some issues regarding the dt schema checks. For
-> transparency, I used the following test invocations to test:
-> 
->        make dt_binding_check     DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
->        make dtbs_check           DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
-> 
-> Changes since v3:
->   - "const"ify .hw.init fields for the PCIE pipe clocks
->   - Used pciephy_v5_regs_layout instead of v4 in phy-qcom-qmp-pcie.c
->   - Included Manivannan's patch for qcom-pcie.c clocks
->   - Dropped redundant comments in "ranges" and "interrupt-map" of pcie2.
->   - Added pcie3 and pcie3_phy dts nodes
->   - Moved snoc and anoc clocks to PCIe controller from PHY
-> 
-> Changes since v2:
->   - reworked resets in qcom,pcie.yaml to resolve dt schema errors
->   - constrained "reg" in qcom,pcie.yaml
->   - reworked min/max intems in qcom,ipq8074-qmp-pcie-phy.yaml
->   - dropped msi-parent for pcie node, as it is handled by "msi" IRQ
-> 
-> Changes since v1:
->   - updated new tables in phy-qcom-qmp-pcie.c to use lowercase hex numbers
->   - reorganized qcom,ipq8074-qmp-pcie-phy.yaml to use a single list of clocks
->   - reorganized qcom,pcie.yaml to include clocks+resets per compatible
->   - Renamed "pcie2_qmp_phy" label to "pcie2_phy"
->   - moved "ranges" property of pcie@20000000 higher up
-> 
-> Alexandru Gagniuc (7):
->    dt-bindings: clock: Add PCIe pipe related clocks for IPQ9574
->    clk: qcom: gcc-ipq9574: Add PCIe pipe clocks
->    dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
->    PCI: qcom: Add support for IPQ9574
->    dt-bindings: phy: qcom,ipq8074-qmp-pcie: add ipq9574 gen3x2 PHY
->    phy: qcom-qmp-pcie: add support for ipq9574 gen3x2 PHY
->    arm64: dts: qcom: ipq9574: add PCIe2 and PCIe3 nodes
-> 
-> Manivannan Sadhasivam (1):
->    PCI: qcom: Switch to devm_clk_bulk_get_all() API to get the clocks
->      from Devicetree
-> 
->   .../devicetree/bindings/pci/qcom,pcie.yaml    |  37 ++++
->   .../phy/qcom,ipq8074-qmp-pcie-phy.yaml        |   1 +
->   arch/arm64/boot/dts/qcom/ipq9574.dtsi         | 178 +++++++++++++++++-
->   drivers/clk/qcom/gcc-ipq9574.c                |  76 ++++++++
->   drivers/pci/controller/dwc/pcie-qcom.c        | 164 +++-------------
->   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 ++++++++++++-
->   .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
->   include/dt-bindings/clock/qcom,ipq9574-gcc.h  |   4 +
->   8 files changed, 469 insertions(+), 141 deletions(-)
-> 
+--=20
+ i.
+--8323328-1989487649-1715154864=:3164--
 
