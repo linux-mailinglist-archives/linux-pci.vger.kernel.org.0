@@ -1,61 +1,60 @@
-Return-Path: <linux-pci+bounces-7302-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7303-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4A208C12F0
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 18:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 949558C12F3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 18:32:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C3542843AF
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 16:31:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B1F9283DE3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 16:32:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0576117165B;
-	Thu,  9 May 2024 16:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8830F171671;
+	Thu,  9 May 2024 16:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rdCI5zbW"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D0w3pt4N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2060.outbound.protection.outlook.com [40.107.236.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0185917083F;
-	Thu,  9 May 2024 16:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2826171E41;
+	Thu,  9 May 2024 16:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715272148; cv=fail; b=bY4Oax4p2E9nrlXA4mTCCszrSdnt9ed7krJ7GKB+HHcw9/FR/MQ0NWFAmHXiNGI9Os/Z4wea+ULLbz494AOLDMxtyy+pf4BtN3pMDay9ejim1iAr/796TUHzdzllY0CE+vWo67h+puYg0IIaheM/+NduVqa20+XSqrWAz8eap6k=
+	t=1715272160; cv=fail; b=DmMke7bjnysFQL4X6LnXbyRkNRAvxO9IwOzUpX/mq6TDdM+PLWA+tZXRDYO242hfdl/5Wl/odFuvJXlrHEdYRxe1Oij6269AvON4vRRQAGI/U2xVoFDeJixUE/OVOGGqTAx8UsS8WM5gLWgg/tPqJPxAleup1rYUwzqOrTCdoFs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715272148; c=relaxed/simple;
-	bh=Yhc9s6uYSK9X4v0SINfVpHmcW2DTUb00++1j6VTrzxA=;
+	s=arc-20240116; t=1715272160; c=relaxed/simple;
+	bh=YjLA+MbfUwCiqqWE3wLmFU1uonFtQNQ1c5U5WHkctqg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=odmoQVp9GABJ5sKgn1/1aAv1iG9f9OxvHa/2fE88UAFIb3Actr3FB5ilIwLH0ejExt7+iv1ZRCRfQY9c/x/0rgyD1IUByOW866R/gmpvom7OL2OdWE5/2BXq2GVl+U2F7L6tIs9fvpjtcJmYNUV1AXggblonb7RU7/hiC6tzQ1E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rdCI5zbW; arc=fail smtp.client-ip=40.107.223.52
+	 MIME-Version:Content-Type; b=eBuYrODJPJEwdPu6mcO0g5zi/eY/rNwasfgbilvwz9HAZU/ajxOr2pyzcSgBOKusbn/ONsgGMaRx76bDnjXqM1ArDlXub6XhTZwm1YbOJcE4Kb05VI3YLFQroVU8nIGo3PNUTJtlHOHZcqfoYniLm3Vaq7wHWo3Fbu2Czm0iFbY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D0w3pt4N; arc=fail smtp.client-ip=40.107.236.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g7wTiyLYhBlqBQZjekJtu3PYY6cT+pjHFeJ9XyBVqCQBRTHD/godQfcZP8lRC5nR9Q+gYbo36J7uB6WADiE6Sd3XzzX3toEilu/DecB1uiNWyWjlguM4PbRrFicCZh3qA5dWIpEwU6C1znIpb+mj3bEXcg/jVgM9jLsBxsmMo1pnH7lIDnQge/3xQeIH6zJMEy7dBvz00XPYG7xnNIV0wsYHWNg6LRmUnAkO0wUmTmm3NVQ4xScgQHzPT6DJKOIEQ/RvLRcR+uLeiYLxkRdgQ/+kpGwB3fvKCuxaksjGsfkyGWeNfBgLEBTreidnrl/y76dZ9WOihIo6OM2ro5SYXQ==
+ b=RaPlTbLJ91Qg3GOdZz/mHyolK7GsdahJKVnPxK2Vwxo53dReUIhjIMMESxRJ7iRA1RxNpO1cJ4IyIjboH1Hpf6IwwfBaxGTQ0EkAKxLdAhxc61KJ0g9jE8B2MuDKEI25nswF3uATyktSp0pUq6l1//f+kLIdaYFwnYne4glj43Sh6NxvVam4vJW1JIVwc8MQcIGJy7qU9HfzifRe3MS7YhCR68prl4/Zvbl+7UHgJSqMYAckspiweGOFIKIbZpPgCyN9a0GFMTLr8ZH5xa06z8JZ1Y6AIgYOxT0nxpX3g2etNknZyNlwPyDaZoCoL4okCYf7O0HM2CmrIVzSxOZ9pA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T7nzZkBmis+PVS+pZs1aLLvIsReyfZCrD8K2qr9oL6Y=;
- b=CsD0P2Kz0dcHq1J7+jAxMU30T0EenhC1d4cNfxMe7KNTLjG5fouBudRv0Bbs5DAHuEl5w8hSVfaNHunbd8NH3d+KxSDDjq+QQgBch1I58tgn53e4DTCx2IDYDwb9uSRosWxLg0pTKvSGyXA7dn7eCoUBAapjsDqfdovtU/UD7GDMmCjyE7c2889+SnrjKNJAqsYGCqwHEayavgvxFOHlgLmdfQaM00a1SstiAd4W4NYhpc1VgE3T78MoLCuxc0RhBrSciSSc2TQYBh7xBN85JU5iM4A+DSyllgmNuWDXB/jjyiOB2MxYyaCiQAraH1FnXWlT1WlCqxPSRfVA7/wNGg==
+ bh=oZz7uU7dVhO+zDM0ufsEL8QMSXOoZXkxpNkAdKIcX6s=;
+ b=KGQ71zdU/++PBuOU9qoR60rW9+PMSkCMsdwFLKi7sqZhmOIAAn12gVnvxlaR+9Ub1gaSbvDXEDKq5GcTYEoyYX+iQgsr91/6V6V3cIepUy2P1KaBzPAcYTi12vrZ8cDe/9B87oL/dew0M/Cqg9Z1QTen2Ub4WptEoW2HbPPbmPCavSG/bDVJQKDEMfiH7Y2j3szzATmjGN2W6EaHAhT5uoRO3hJaUpHhCGtEkvsm/hRMCDwtGxZu8SYomf/cEHmEfZRZkzq6cEzyL1SnPqxoEC3tn7R9zrHqW6Tbllseg2jSTKiY6GLcQ4l/1Qt7vy7v5IBVADjkFkiVf3uQupqbAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T7nzZkBmis+PVS+pZs1aLLvIsReyfZCrD8K2qr9oL6Y=;
- b=rdCI5zbWqCNoNENSNJzfhp8I6xyOQtVxHGFTZjyhA43HEAWhuSyyDVGO9Yug/WMklmnomJwt1myFm/wmxBYgivm3pdcbpKg+Ohi3I20d8Xfva0KTf7+V2EX0b0bifTlLbIKCWM7qlDb4nGTURveMbD/XErviR1LEnnq0bvp1cLU=
-Received: from CH0PR13CA0044.namprd13.prod.outlook.com (2603:10b6:610:b2::19)
- by IA1PR12MB7517.namprd12.prod.outlook.com (2603:10b6:208:41a::19) with
+ bh=oZz7uU7dVhO+zDM0ufsEL8QMSXOoZXkxpNkAdKIcX6s=;
+ b=D0w3pt4N6xOeWAZu98oJTr3j8IVgljK2AzK3Pn1ll70uet1rz4O9k9ogjAhWkIfqZv8yccxApMUb6PBS7Y+Sb5wlVcsfxLIOhNEYRV0i5Eu/UfRXPYwnEMBy7Ln/xa6m4bXtnmbC3qsen0pm2an7Txxe26rVdDC6x2oVupsUFMg=
+Received: from CH2PR16CA0019.namprd16.prod.outlook.com (2603:10b6:610:50::29)
+ by PH7PR12MB5877.namprd12.prod.outlook.com (2603:10b6:510:1d5::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.48; Thu, 9 May
- 2024 16:29:03 +0000
-Received: from CH3PEPF00000018.namprd21.prod.outlook.com
- (2603:10b6:610:b2:cafe::d7) by CH0PR13CA0044.outlook.office365.com
- (2603:10b6:610:b2::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.13 via Frontend
- Transport; Thu, 9 May 2024 16:29:03 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.46; Thu, 9 May
+ 2024 16:29:15 +0000
+Received: from CH3PEPF00000012.namprd21.prod.outlook.com (2603:10b6:610:50::4)
+ by CH2PR16CA0019.outlook.office365.com (2603:10b6:610:50::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7544.45 via Frontend Transport; Thu, 9 May 2024 16:29:14 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,13 +62,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH3PEPF00000018.mail.protection.outlook.com (10.167.244.123) with Microsoft
+ CH3PEPF00000012.mail.protection.outlook.com (10.167.244.117) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7587.0 via Frontend Transport; Thu, 9 May 2024 16:29:03 +0000
+ 15.20.7587.0 via Frontend Transport; Thu, 9 May 2024 16:29:14 +0000
 Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 9 May
- 2024 11:29:02 -0500
+ 2024 11:29:13 -0500
 From: Wei Huang <wei.huang2@amd.com>
 To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
@@ -78,9 +77,9 @@ CC: <bhelgaas@google.com>, <corbet@lwn.net>, <davem@davemloft.net>,
 	<alex.williamson@redhat.com>, <gospo@broadcom.com>,
 	<michael.chan@broadcom.com>, <ajit.khaparde@broadcom.com>,
 	<manoj.panicker2@amd.com>, <Eric.VanTassell@amd.com>, <wei.huang2@amd.com>
-Subject: [PATCH V1 6/9] PCI/TPH: Retrieve steering tag from ACPI _DSM
-Date: Thu, 9 May 2024 11:27:38 -0500
-Message-ID: <20240509162741.1937586-7-wei.huang2@amd.com>
+Subject: [PATCH V1 7/9] PCI/TPH: Add TPH documentation
+Date: Thu, 9 May 2024 11:27:39 -0500
+Message-ID: <20240509162741.1937586-8-wei.huang2@amd.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240509162741.1937586-1-wei.huang2@amd.com>
 References: <20240509162741.1937586-1-wei.huang2@amd.com>
@@ -96,230 +95,151 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000018:EE_|IA1PR12MB7517:EE_
-X-MS-Office365-Filtering-Correlation-Id: 808542cd-1255-4daf-ed67-08dc704523d1
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000012:EE_|PH7PR12MB5877:EE_
+X-MS-Office365-Filtering-Correlation-Id: e2364dce-00cd-40c6-0350-08dc70452a78
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|1800799015|376005|7416005|82310400017;
+	BCL:0;ARA:13230031|36860700004|1800799015|82310400017|7416005|376005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eSeLZ9ncmOVcjwY7tiElJr4v+LnuZFJKgy/BJk/0rfg7PqO1X6gjoEBqepUq?=
- =?us-ascii?Q?uZp2WPwrzV6I6p84i/x2WM/gNvtGJPv7zJXcGSX/yL67SFgzEBov+X8+xBye?=
- =?us-ascii?Q?OK2sa1+c9q8GXoJCISLfdhmieoqoP0JgQ8CotcvLW1UlUX3+OQKzhlNFlV2W?=
- =?us-ascii?Q?qds3nQlUp7wqh2ChefxtOSEWzcRkQjJ96otqYIvd2wF7MqcDMol4v1rL8re/?=
- =?us-ascii?Q?yn6KN46uv/4SUcs7S6fxg1Wed33QKFkDcyt0mnmYNOCk3eQ5Ecm8aI4a+4pY?=
- =?us-ascii?Q?QyTvYWCum76Z77BKJFN17il2hsZcLie/zPLHMzhnhFaxIPCXRMVdVs/nZiDf?=
- =?us-ascii?Q?h4xU2tb11Cf2wxgS/uRF5CSoPYYbkhLHU9mixJBqDNIiGt/rw6LqCQjvd7eo?=
- =?us-ascii?Q?zQLAed+6TrkIGNKUQskCvcwZtr8ytPCuHJMhvFjShbJmoQY+dVChPz+lZIYA?=
- =?us-ascii?Q?Lj8naP5Hd0Sv+3i+ecIAxfi7wSsncOg7gLpuxRyBLOaHpxO98zRj4iTJxtzR?=
- =?us-ascii?Q?oAZjujCzir81i3a72ppRF3U6nboOj/cdBRVSUh7s6o5oBYufSeHDTBZW5auN?=
- =?us-ascii?Q?QjcB9keBE1rv7BlQbgX5VMIKcG/nW53/6DNMVJg6JfRKLLexo4j7hItPPVmi?=
- =?us-ascii?Q?60iqLWprRHLW8KpKyZzAQ2dNAzmnyvXdWTsWpilimHdzbkYbakaf+R/E0SQS?=
- =?us-ascii?Q?bQOFPUPQo7YOk1p1Ly6rvIJCRh8lEkC1WXMcBtt+tCi6t1TSEnEBB8sVfSVD?=
- =?us-ascii?Q?0Y8Adpr1q2+/HTH/LJ/fi+2UbJ4XRQFKNeFHITZEqLGH1k4oQJjsFtMpMfh3?=
- =?us-ascii?Q?bwpDE/HFWMElQzOBS+YU7KB271DCrCxCuJ9fihzyzdAnv1Vnilm+ikqobhWe?=
- =?us-ascii?Q?FxZJjo5ss+K3UJDMWwxs8F7CBeatTAYC5aVBwnnxQSIFS3nRxiLYLPHrEaWs?=
- =?us-ascii?Q?XaMyyya/JzYRZVvr1l14fhPvZgHhwiiLtbSFFSzKnmOY+3SagYQdOLhfN3oh?=
- =?us-ascii?Q?2K2p13DkRX5u/DnAvHAI6JlNZhhJawMiHJPoyqHIMAFs7OsfV7g5R9b5HPOl?=
- =?us-ascii?Q?be1d2h/Fi8lzFy4oqK/hQ7KCBMPU99su2/D1Ehj3BXLEiukjCQnQvGEpiqnz?=
- =?us-ascii?Q?QpM5PLGGetq2b1s3kjDrYSK/s7mEZ83ahIWdUUGuT4QISRSS6rZjR/FiZlyy?=
- =?us-ascii?Q?yX+Ke1zBX89Nne63yeTKV+IUuPH2PeNp9B5c5bCGIV02uX8oR2PL8z4NTCy3?=
- =?us-ascii?Q?4usWcZcm3+4VgcD0McJVNRv+n+WtiZottzJbJuFAL6yP0rR/pobFOH8PulIh?=
- =?us-ascii?Q?HQNxesaZNyQ6BO7/zM0np4aR?=
+	=?us-ascii?Q?Dub8cUhe4RydH7eVov43/uV/NoEw1EmiOwjfzEky5/twtsWLMO9SA/YEfd/I?=
+ =?us-ascii?Q?6kgxcd6G/JnCBd5VwUD1yfOKrIyzY7LfMLRrZwZdFI8SrZzUHqeccoySj3oA?=
+ =?us-ascii?Q?sPFdRe3oot5fRPV9ZC7hokvzMmowaix5sFnpnperRKvuAFWPbCtXj9NTLjly?=
+ =?us-ascii?Q?TuK6ZvplTzzxc1UpGmpzEBqL96SISXYzP3wzQzUOYllLoaSL0pCqK9Kglu04?=
+ =?us-ascii?Q?lcLatguxM/CheCjkC0yx51w9w5UC1DITVSt1zG1sXQbM5MXmLzjiJK8nykzv?=
+ =?us-ascii?Q?YqN7jcJdD3F7xZt4f+cB7Xo0tMUqkCQXzmbxgqcH8QfZR+PK0Hepz+u//2bU?=
+ =?us-ascii?Q?YTR1m3UBpC23chg9LZNj0gWoc4AdRepZtr8VsstHG0BgR0J6Qc6BXGecaJ/H?=
+ =?us-ascii?Q?QyAnFCriAQZ2UQ0T1M5363/9dnVWYLLM9oxq35Wgp9ysuO8mMIQwUBWuF7Yn?=
+ =?us-ascii?Q?7ypthEA0YleZeRFiakyv0PRs3swQUvvAaF1Nvj40BONj1vPO1s4XW01XBK/h?=
+ =?us-ascii?Q?ZhF+u87T8B6Pz25paPslvRwf0nJ8QKW9fKD6e3ULPlyUERB5SD1xqguvGoHl?=
+ =?us-ascii?Q?jtokuAy/XiJ9etibXhWH68A+TzICL9JVKhNQBkz9IBtJkxuhJsXhwcBHl/La?=
+ =?us-ascii?Q?MK9IUOmUSIx7PZjiwFewZAwF/co+CkrI54eUS8YSKbE/nuxNSudU3XYPgaCa?=
+ =?us-ascii?Q?DhK3m6iKxUOhe1EeBj3n8o4ZEDmjan1FAmwy3oJmce4+YB1RLk1aW81IQtJ6?=
+ =?us-ascii?Q?36FBXkq4LGM/DML7LUWtsqtGzyzRmmTJf8zPQX7SCHiWwl7eY5n4JpeQkto9?=
+ =?us-ascii?Q?r+LIggfRIB1nwCT7JT5yG8ZYSQscdqic6WUzqW/NfSUZvicdYILN/WsAvDu3?=
+ =?us-ascii?Q?P7H09zcKzK2kJ++Hexppokl7dHmImpqybe2jziZzcCwGZwDLWvG39ZxTexq+?=
+ =?us-ascii?Q?rbq9kYLXAC3WmZ46cI6V7PA1AOmRhKHhsIiWpd0o21n1v3pGJkQDcEdckmyl?=
+ =?us-ascii?Q?MvkYvIwM7Hybj72lrmGDceJvoFthFmyW6idmn0cmSrg051NW/Uo1A4JHNRYF?=
+ =?us-ascii?Q?boE0E+STSrB6S9cqGysZlU+0YOPYwExnqRXq/dT50kSNzRUZ/B7BPUeb3Nzp?=
+ =?us-ascii?Q?6TkrU5VRi0TkW6kB0VSnGE9n4KkfuFCeBuAZJXp01JEXwrL3Zssr6es6DnP3?=
+ =?us-ascii?Q?Njxo7ihzOY6NOZ9Ojp74rWWLqs/L3sRVa2e1UIWxNvkJtZUWGXzGWTI9WMEo?=
+ =?us-ascii?Q?tNON5vbVkjHOo1YCub8cf7i+FzNkeOFt/XNr9aLe021BjHAkXZHsbFJfza7Q?=
+ =?us-ascii?Q?8uwQ3RBTRuE/ZRFLs8CdE1Pu4HcITG7fcl1gQXiyIl+uigZEnsF2wjhOXkO2?=
+ =?us-ascii?Q?IhCe+nP7G8aMPkkKVqz4OFqGbAqV?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(376005)(7416005)(82310400017);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(82310400017)(7416005)(376005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2024 16:29:03.5157
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2024 16:29:14.6236
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 808542cd-1255-4daf-ed67-08dc704523d1
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2364dce-00cd-40c6-0350-08dc70452a78
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000018.namprd21.prod.outlook.com
+	CH3PEPF00000012.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7517
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5877
 
-According to PCI SIG ECN, calling the _DSM firmware method for a given
-CPU_UID returns the steering tags for different types of memory
-(volatile, non-volatile). These tags are supposed to be used in ST
-table entry for optimal results.
+Provide a document for TPH feature, including the description of
+kernel options and driver API interface.
 
 Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
 Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
 Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
 Signed-off-by: Wei Huang <wei.huang2@amd.com>
 ---
- drivers/pci/pcie/tph.c  | 103 +++++++++++++++++++++++++++++++++++++++-
- include/linux/pci-tph.h |  34 +++++++++++++
- 2 files changed, 136 insertions(+), 1 deletion(-)
+ Documentation/PCI/index.rst          |  1 +
+ Documentation/PCI/tph.rst            | 57 ++++++++++++++++++++++++++++
+ Documentation/driver-api/pci/pci.rst |  3 ++
+ 3 files changed, 61 insertions(+)
+ create mode 100644 Documentation/PCI/tph.rst
 
-diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
-index 50451a0a32ff..b9d61e1cfd88 100644
---- a/drivers/pci/pcie/tph.c
-+++ b/drivers/pci/pcie/tph.c
-@@ -158,6 +158,98 @@ static int tph_get_table_location(struct pci_dev *dev, u8 *loc_out)
- 	return 0;
- }
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+index e73f84aebde3..5e7c4e6e726b 100644
+--- a/Documentation/PCI/index.rst
++++ b/Documentation/PCI/index.rst
+@@ -18,3 +18,4 @@ PCI Bus Subsystem
+    pcieaer-howto
+    endpoint/index
+    boot-interrupts
++   tph
+diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
+new file mode 100644
+index 000000000000..ea9c8313f3e4
+--- /dev/null
++++ b/Documentation/PCI/tph.rst
+@@ -0,0 +1,57 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===========
++TPH Support
++===========
++
++
++:Copyright: |copy| 2024 Advanced Micro Devices, Inc.
++:Authors: - Eric van Tassell <eric.vantassell@amd.com>
++          - Wei Huang <wei.huang2@amd.com>
++
++Overview
++========
++TPH (TLP Processing Hints) is a PCIe feature that allows endpoint devices
++to provide optimization hints, such as desired caching behavior, for
++requests that target memory space. These hints, in a format called steering
++tags, are provided in the requester's TLP headers and can empower the system
++hardware, including the Root Complex, to optimize the utilization of platform
++resources for the requests.
++
++User Guide
++==========
++
++Kernel Options
++--------------
++There are two kernel command line options available to control TPH feature
++
++   * "notph": TPH will be disabled for all endpoint devices.
++   * "nostmode": TPH will be enabled but the ST Mode will be forced to "No ST Mode".
++
++Device Driver API
++-----------------
++In brief, an endpoint device driver using the TPH interface to configure
++Interrupt Vector Mode will call pcie_tph_set_st() when setting up MSI-X
++interrupts as shown below:
++
++.. code-block:: c
++
++    for (i = 0, j = 0; i < nr_rings; i++) {
++        ...
++        rc = request_irq(irq->vector, irq->handler, flags, irq->name, NULL);
++        ...
++        if (!pcie_tph_set_st(pdev, i, cpumask_first(irq->cpu_mask),
++                             TPH_MEM_TYPE_VM, PCI_TPH_REQ_TPH_ONLY))
++               pr_err("Error in configuring steering tag\n");
++        ...
++    }
++
++If a device only supports TPH vendor specific mode, its driver can call
++pcie_tph_get_st() to retrieve the steering tag for a specific CPU and uses
++the tag to control TPH behavior.
++
++.. kernel-doc:: drivers/pci/pcie/tph.c
++   :export:
++
++.. kernel-doc:: drivers/pci/pcie/tph.c
++   :identifiers: pcie_tph_set_st
+diff --git a/Documentation/driver-api/pci/pci.rst b/Documentation/driver-api/pci/pci.rst
+index aa40b1cc243b..3d896b2cf16e 100644
+--- a/Documentation/driver-api/pci/pci.rst
++++ b/Documentation/driver-api/pci/pci.rst
+@@ -46,6 +46,9 @@ PCI Support Library
+ .. kernel-doc:: drivers/pci/pci-sysfs.c
+    :internal:
  
-+static u16 tph_extract_tag(enum tph_mem_type mem_type, u8 req_type,
-+			   union st_info *st_tag)
-+{
-+	switch (req_type) {
-+	case PCI_TPH_REQ_TPH_ONLY: /* 8 bit tags */
-+		switch (mem_type) {
-+		case TPH_MEM_TYPE_VM:
-+			if (st_tag->vm_st_valid)
-+				return st_tag->vm_st;
-+			break;
-+		case TPH_MEM_TYPE_PM:
-+			if (st_tag->pm_st_valid)
-+				return st_tag->pm_st;
-+			break;
-+		}
-+		break;
-+	case PCI_TPH_REQ_EXT_TPH: /* 16 bit tags */
-+		switch (mem_type) {
-+		case TPH_MEM_TYPE_VM:
-+			if (st_tag->vm_xst_valid)
-+				return st_tag->vm_xst;
-+			break;
-+		case TPH_MEM_TYPE_PM:
-+			if (st_tag->pm_xst_valid)
-+				return st_tag->pm_xst;
-+			break;
-+		}
-+		break;
-+	default:
-+		pr_err("invalid steering tag in ACPI _DSM\n");
-+		return 0;
-+	}
++.. kernel-doc:: drivers/pci/pcie/tph.c
++   :export:
 +
-+	return 0;
-+}
-+
-+#define MIN_ST_DSM_REV		7
-+#define ST_DSM_FUNC_INDEX	0xf
-+static bool invoke_dsm(acpi_handle handle, u32 cpu_uid, u8 ph,
-+		       u8 target_type, bool cache_ref_valid,
-+		       u64 cache_ref, union st_info *st_out)
-+{
-+	union acpi_object in_obj, in_buf[3], *out_obj;
-+
-+	in_buf[0].integer.type = ACPI_TYPE_INTEGER;
-+	in_buf[0].integer.value = 0; /* 0 => processor cache steering tags */
-+
-+	in_buf[1].integer.type = ACPI_TYPE_INTEGER;
-+	in_buf[1].integer.value = cpu_uid;
-+
-+	in_buf[2].integer.type = ACPI_TYPE_INTEGER;
-+	in_buf[2].integer.value = ph & 3;
-+	in_buf[2].integer.value |= (target_type & 1) << 2;
-+	in_buf[2].integer.value |= (cache_ref_valid & 1) << 3;
-+	in_buf[2].integer.value |= (cache_ref << 32);
-+
-+	in_obj.type = ACPI_TYPE_PACKAGE;
-+	in_obj.package.count = ARRAY_SIZE(in_buf);
-+	in_obj.package.elements = in_buf;
-+
-+	out_obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, MIN_ST_DSM_REV,
-+				    ST_DSM_FUNC_INDEX, &in_obj);
-+
-+	if (!out_obj)
-+		return false;
-+
-+	if (out_obj->type != ACPI_TYPE_BUFFER) {
-+		pr_err("invalid return type %d from TPH _DSM\n",
-+		       out_obj->type);
-+		ACPI_FREE(out_obj);
-+		return false;
-+	}
-+
-+	st_out->value = *((u64 *)(out_obj->buffer.pointer));
-+
-+	ACPI_FREE(out_obj);
-+
-+	return true;
-+}
-+
-+static acpi_handle root_complex_acpi_handle(struct pci_dev *dev)
-+{
-+	struct pci_dev *root_port;
-+
-+	root_port = pcie_find_root_port(dev);
-+
-+	if (!root_port || !root_port->bus || !root_port->bus->bridge)
-+		return NULL;
-+
-+	return ACPI_HANDLE(root_port->bus->bridge);
-+}
-+
- static bool msix_nr_in_bounds(struct pci_dev *dev, int msix_nr)
- {
- 	u16 tbl_sz;
-@@ -423,7 +515,16 @@ bool pcie_tph_get_st(struct pci_dev *dev, unsigned int cpu,
- 		    enum tph_mem_type mem_type, u8 req_type,
- 		    u16 *tag)
- {
--	*tag = 0;
-+	union st_info info;
-+
-+	if (!invoke_dsm(root_complex_acpi_handle(dev), cpu, 0, 0, false, 0,
-+			&info)) {
-+		*tag = 0;
-+		return false;
-+	}
-+
-+	*tag = tph_extract_tag(mem_type, req_type, &info);
-+	pr_debug("%s: cpu=%d tag=%d\n", __func__, cpu, *tag);
+ PCI Hotplug Support Library
+ ---------------------------
  
- 	return true;
- }
-diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-index 42ecd6192e69..ed5299a831cb 100644
---- a/include/linux/pci-tph.h
-+++ b/include/linux/pci-tph.h
-@@ -14,6 +14,40 @@ enum tph_mem_type {
- 	TPH_MEM_TYPE_PM		/* persistent memory type */
- };
- 
-+/*
-+ * The st_info struct defines the steering tag returned by the firmware _DSM
-+ * method defined in PCI SIG ECN. The specification is available at:
-+ * https://members.pcisig.com/wg/PCI-SIG/document/15470.
-+
-+ * @vm_st_valid:  8 bit tag for volatile memory is valid
-+ * @vm_xst_valid: 16 bit tag for volatile memory is valid
-+ * @vm_ignore:    1 => was and will be ignored, 0 => ph should be supplied
-+ * @vm_st:        8 bit steering tag for volatile mem
-+ * @vm_xst:       16 bit steering tag for volatile mem
-+ * @pm_st_valid:  8 bit tag for persistent memory is valid
-+ * @pm_xst_valid: 16 bit tag for persistent memory is valid
-+ * @pm_ignore:    1 => was and will be ignore, 0 => ph should be supplied
-+ * @pm_st:        8 bit steering tag for persistent mem
-+ * @pm_xst:       16 bit steering tag for persistent mem
-+ */
-+union st_info {
-+	struct {
-+		u64 vm_st_valid:1,
-+		vm_xst_valid:1,
-+		vm_ph_ignore:1,
-+		rsvd1:5,
-+		vm_st:8,
-+		vm_xst:16,
-+		pm_st_valid:1,
-+		pm_xst_valid:1,
-+		pm_ph_ignore:1,
-+		rsvd2:5,
-+		pm_st:8,
-+		pm_xst:16;
-+	};
-+	u64 value;
-+};
-+
- #ifdef CONFIG_PCIE_TPH
- int pcie_tph_disable(struct pci_dev *dev);
- int tph_set_dev_nostmode(struct pci_dev *dev);
 -- 
 2.44.0
 
