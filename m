@@ -1,117 +1,141 @@
-Return-Path: <linux-pci+bounces-7291-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7292-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BC8D8C0F11
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 13:59:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AEB58C0F45
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 14:08:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A83181C21258
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 11:59:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B81461F216BD
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 12:08:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39401149E0B;
-	Thu,  9 May 2024 11:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA6614AD2E;
+	Thu,  9 May 2024 12:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AB4+tWfl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E8114A90;
-	Thu,  9 May 2024 11:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEB314BF92;
+	Thu,  9 May 2024 12:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715255982; cv=none; b=qmFfW5+7X/mjV5dvrfgyVLwja8eNAdJPJL3fTeL62NG2w2Fi6g50bN16HF0T0LZ9+lYR/KUruT/N/NKrCNM+QkfQ8i0FaQMj933ItSMYLsaaXvokI4blBvhdAQPVQ1pqLjaYZ0/9ZL36pc9bGTcba3OMSD1OvJzcIOjFhpHN4e0=
+	t=1715256449; cv=none; b=cwHzmoR8NHihal9kgyoqsTgwcd+RIWNo4vP3jcNN0FjJ+4LtygfbRqj7y7kLi8SJnaBpJqdKZbUnVy2gfbsxX9LXeN1Q8Je/flmWTQaxpsVeQuXYvnm6QpL+4HP4lA7eFiPtET+ELuRds9VPigS2tDvGrPu/eZidrmKaS8i1F6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715255982; c=relaxed/simple;
-	bh=mp0XnEHDdveQrBOElZTs+sn0NECWxieR3o11rrV8l0E=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L0HTidQH4f17+G+KUkORmvf5ig5R9CuZ88R3aTBn0dLKRCc50moi49lgh4X3qArmPH1vxB0k7trEobZTry3e48b9zpev/gdrx6MffXapn+nDNT4ITNVRnXtolFoOo0xJz2avevzkdTDNhp56Eyqo5fkgnyI/JceiGfO6oTlFmNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZr8D70jmz6K6yB;
-	Thu,  9 May 2024 19:56:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A979F1400D9;
-	Thu,  9 May 2024 19:59:37 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 9 May
- 2024 12:59:37 +0100
-Date: Thu, 9 May 2024 12:59:36 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Lorenzo
- Pieralisi" <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Lukas Wunner
-	<lukas@wunner.de>, Alexandru Gagniuc <mr.nuke.me@gmail.com>, "Krishna
- chaitanya chundru" <quic_krichai@quicinc.com>, Srinivas Pandruvada
-	<srinivas.pandruvada@linux.intel.com>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, <linux-pm@vger.kernel.org>, Daniel Lezcano
-	<daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
-	<lukasz.luba@arm.com>, <linux-kernel@vger.kernel.org>, Amit Kucheria
-	<amitk@kernel.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v5 7/8] thermal: Add PCIe cooling driver
-Message-ID: <20240509125936.00004f30@Huawei.com>
-In-Reply-To: <20240508134744.52134-8-ilpo.jarvinen@linux.intel.com>
-References: <20240508134744.52134-1-ilpo.jarvinen@linux.intel.com>
-	<20240508134744.52134-8-ilpo.jarvinen@linux.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1715256449; c=relaxed/simple;
+	bh=b3Lw6QyOOe/F0A2wbbC5aMnHbGBJhpHoP64jYjfjjKA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fKrwhfOG01DriXHhOOFUJGxMzMFRHI3Ddmu8LRb8bkm0tiCXQmDwX3frvdMWDipbKYCHcDhZ8MahVaINpL0pXW+ZW9HyZAVOllIgx3BRCewj5BNIWp1HByVSK6oUKSfOh2Drjy92tiZnkwGXM6rvMZGlOkhL3bq5gcQ71zYeJpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AB4+tWfl; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 449AwH8o010769;
+	Thu, 9 May 2024 12:07:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=wB/RWoAJV2Kfx9dgeYhfSibcvHgEFIlPM4CBDF2TtHk=;
+ b=AB4+tWfl8spiWQqwneYWVcKOFIuDl7ua2n1SJa74QISK6sCl52gpfiL0C75UqSxDdxyt
+ Xjea4wpL11Tnh8N+nChF0DlaR2xoQ4bHbFo+aFas64Knuv30aG6Xe0yxFOTZUcngZlVp
+ 1psr2jPtxGTN/QUwsELFfBfCKqxuSZ040fI722yz8KgN+/HSf4qwpWs55vLyaC765JBi
+ 68+nrfGF2D8emaHwK6OuQ0rwZCLYH09MRsdcPGpGxxBMA5RHV/xh4CGCHx6ClQQ5ss1/
+ lgDmshvKYr+XqVJ9uXVYwosupxw+dcla/FFUs7Vd1FFTsQODipPPTyWl2WNiIqI4zgyI Yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0w6rg4ub-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 12:07:06 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 449C76je020859;
+	Thu, 9 May 2024 12:07:06 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0w6rg4u7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 12:07:06 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 449Bn23i009823;
+	Thu, 9 May 2024 12:07:05 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xyshutpgd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 12:07:05 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 449C70Ih57016742
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 May 2024 12:07:02 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 054E620043;
+	Thu,  9 May 2024 12:07:00 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1198120040;
+	Thu,  9 May 2024 12:06:57 +0000 (GMT)
+Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  9 May 2024 12:06:56 +0000 (GMT)
+From: Krishna Kumar <krishnak@linux.ibm.com>
+To: mpe@ellerman.id.au, npiggin@gmail.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
+        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
+        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
+        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
+        mahesh.salgaonkar@in.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
+Subject: [PATCH 0/2] PCI hotplug driver fixes
+Date: Thu,  9 May 2024 17:35:52 +0530
+Message-ID: <20240509120644.653577-1-krishnak@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: EONjMsdldPhPf2sVN8g05O0_NZS1G4S_
+X-Proofpoint-GUID: MhXk9jPgL08IGT3MtvuJymytL3kTsmxG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-09_06,2024-05-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 clxscore=1011 suspectscore=0
+ impostorscore=0 phishscore=0 malwarescore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=673 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405090080
 
-On Wed,  8 May 2024 16:47:43 +0300
-Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
+addresses below two issues.
 
-> Add a thermal cooling driver to provide path to access PCIe bandwidth
-> controller using the usual thermal interfaces.
->=20
-> A cooling device is instantiated for controllable PCIe Ports from the
-> bwctrl service driver.
->=20
-> The thermal side state 0 means no throttling, i.e., maximum supported
-> PCIe Link Speed.
->=20
-> Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org> # From the cooling device=
- interface perspective
+1. Kernel Crash during hot unplug of bridge/switch slot.
 
-> +struct thermal_cooling_device *pcie_cooling_device_register(struct pci_d=
-ev *port)
-> +{
-> +	struct thermal_cooling_device *cdev;
-> +	char *name;
-> +
-> +	name =3D kasprintf(GFP_KERNEL, COOLING_DEV_TYPE_PREFIX "%s", pci_name(p=
-ort));
-> +	if (!name)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	cdev =3D thermal_cooling_device_register(name, port, &pcie_cooling_ops);
-> +	kfree(name);
-
-__free?  Only small saving, but I think it's just about worth it to
-give you
-	return thermal_cooling_device_register()
-and drop the local cdev variable.
+2. DPC-Support Enablement - Previously, when we do a hot-unplug
+operation on a bridge slot, all the ports and devices behind the
+bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
+operation on the same bridge slot, all the ports and devices behind the
+bridge would not get hot-plugged/online. In this case, Only the first
+port of the bridge gets enabled and the remaining port/devices remain
+unplugged/offline.  After the fix, The hot-unplug and hot-plug
+operations on the slot associated with the bridge started behaving
+correctly and became in sync. Now, after the hot plug operation on the
+same slot, all the bridge ports and devices behind the bridge become
+hot-plugged/online/restored in the same manner as it was before the
+hot-unplug operation.
 
 
-> +
-> +	return cdev;
-> +}
 
-Otherwise LGTM
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Krishna Kumar (2):
+  pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
+  arch/powerpc: hotplug driver bridge support
 
+ arch/powerpc/include/asm/ppc-pci.h |  4 +++
+ arch/powerpc/kernel/pci-hotplug.c  |  5 ++--
+ arch/powerpc/kernel/pci_dn.c       | 42 ++++++++++++++++++++++++++++++
+ drivers/pci/hotplug/pnv_php.c      |  3 +--
+ 4 files changed, 49 insertions(+), 5 deletions(-)
+
+-- 
+2.44.0
 
 
