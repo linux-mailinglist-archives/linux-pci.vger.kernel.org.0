@@ -1,129 +1,95 @@
-Return-Path: <linux-pci+bounces-7274-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7275-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93D068C07A9
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 01:33:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCFEA8C0840
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 02:09:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46E7E1F22F18
-	for <lists+linux-pci@lfdr.de>; Wed,  8 May 2024 23:33:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D093B21303
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 00:09:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D54AB8626D;
-	Wed,  8 May 2024 23:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A33438C;
+	Thu,  9 May 2024 00:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxhTdRwk"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="pC4Q1ZRN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFF728387;
-	Wed,  8 May 2024 23:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42665195;
+	Thu,  9 May 2024 00:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715211184; cv=none; b=R/flGOXWLd1H+bcl36bSe2hySg2GGFSkZnF8K7NlDm5a9PCi2HLIB5DdA08idHm12e610V5JLm5ALfdAAZbTQaHOs+YRYZSSOA/GX0WcARjqVGnW5gRhuhZZp64OqDH8xQFaUb+ISZZUxSXAnaUp0H90IVIYA4OwdVT9mdsWlqQ=
+	t=1715213350; cv=none; b=Mb/iOI8rwSap3CR+f/C1v5AX1MQJ9LCOh61Ez/SzIp/ET9SFuLDCKbEx0HtRzhON9NURwg2yyz+zQAdTThu8elsCafUMd6c+68aQv0/IMBjwaFGgL3zRn+qcDh70mIs6F+WhfveYqR2+Ht7Ke9+WOXfA+GxsmjxGUfUCkMb/UBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715211184; c=relaxed/simple;
-	bh=rymFRL9RenzD7dHMXH9iTV136lK+n6YZqLAw1D9IOc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Q8tp2p/EKI90FMk+xWyk7sbWfEd7EINrCzbcGXmnEBsXCMvorb4inypj8U1WoTkqdW7BNeVkx684Hbz/NSGj0Md7rIbRs1OqDaQSe3AzWTEuN1sfVaABjipFlx24GSoH+ESiKqWiab3KmghCJTkmDvhrWoWI0T9/RdG5GGRWv5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxhTdRwk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF799C113CC;
-	Wed,  8 May 2024 23:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715211184;
-	bh=rymFRL9RenzD7dHMXH9iTV136lK+n6YZqLAw1D9IOc8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CxhTdRwkIoIHjNCan0EzKcUVMCxw2dMCjbzheFWQvigKFzGghLCSSOemAlAC6Dxud
-	 nAUdQmMOva5iragqXcCT1EAjDe/Pav1c+wCI7LgXhsMbNw4PCZZViYm11GvPQgxHQK
-	 D7qkFBVzHRof0oRjK/vPCsAJ7bKUqr6pCvTnVlKtwi86s7qOfzUcD83Er0C2omZGFT
-	 y2JQKTGOnFJr+eyZp4BFMVUmUVoCgca9SdCGzU77Dkopr+6PvgysAvQZr+++Zg2umX
-	 neNtqGlXZ/E5+JeX73T2EactCiUOM4/f7eBwAGUFtvK8LdEbPPbPI+ZYtVrIinc5v3
-	 oZ3FthdxurO3A==
-Date: Wed, 8 May 2024 18:33:02 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Phil Elwell <phil@raspberrypi.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 4/4] PCI: brcmstb: Configure HW CLKREQ# mode
- appropriate for downstream device
-Message-ID: <20240508233302.GA1792067@bhelgaas>
+	s=arc-20240116; t=1715213350; c=relaxed/simple;
+	bh=7HPx7ytB8yzsrqlvCHjViQu/yiO3QQK/0llEhSgBExQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ioA8sudvMLiUJTZIjz9A6BsBXFD4cl6e1bQShxVv6TEWOux7ssnxPUrFf3ZzZmu6mucDlPtS544cDyrqsAdd26CN4AbpM6vGmztz5PYRpePid0wdyw7S6tWRa8XDCr59fcn7sSYcTAV18sO2hbkwKhp63WbkRrxjaARbVuiDeRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=pC4Q1ZRN; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=y2dMD6eMEIJlGJUVSAMoOwfNsxSv8AwnivqVHzlW4IA=; b=pC4Q1ZRNqutcgQ1c
+	4FU1JpGaHK4PL+St4xWONQljBqRBNY80Ixt2dEwXgVhJ0VKwOy/279zbq6O5klyjoPnVa0Gwhs5Wr
+	FctNHUNk+7Wiz/Q3ZsXNhIeSVtSNAXG6J8KJbzHkJ9GFSB8YvlVgYnF9FxR88AKKtnmqqV7HaIDvz
+	NKu82Bm0gOI0d8PLaW695UWACQATwzLV4koShwr6ELuyZhvLbZMl1oQ7ErPgTZpkj2unxD7+34UaI
+	3ddpyePrVmoZtoh41pTchOlBzOPSsDkBvM/XxUSTK/3+A1WDZ3nSDcn38+AbROg+cmCbKXr+Vs5k6
+	rJ1Go/W+AKVQ50mvyg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1s4rLH-0006zp-21;
+	Thu, 09 May 2024 00:09:00 +0000
+From: linux@treblig.org
+To: bhelgaas@google.com,
+	rafael@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] ACPI: PCI: Remove unused struct 'acpi_handle_node'
+Date: Thu,  9 May 2024 01:08:58 +0100
+Message-ID: <20240509000858.204114-1-linux@treblig.org>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNxEZm=axRAeeAKwxemjEdjjmJYTUs8nThp_NDohXcV5Jg@mail.gmail.com>
 
-On Wed, May 08, 2024 at 01:55:24PM -0400, Jim Quinlan wrote:
-> On Mon, May 6, 2024 at 7:20 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> ...
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-> > As a user, how do I determine which setting to use?
->
-> Using the "safe" mode will always work.  In fact I considered making
-> this the default mode.
+'acpi_handle_node' is unused since
+Commit 63f534b8bad9 ("ACPI: PCI: Rework acpi_get_pci_dev()")
+Remove it.
 
-> As I said, I cannot enumerate all of the reasons why one mode works
-> and one does not for a particular device+board+connector combo.  The
-> HW folks have not really been forthcoming on the reasons as well.
-> 
-> > Trial and error?  If so, how do I identify the errors?
->
-> Either PCIe link-up is not happening, or it is happening but the
-> device driver is non-functional and boot typically  hangs.
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ drivers/acpi/pci_root.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-What I'm hearing is that it's trial and error. 
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 58b89b8d950ed..59e6955e24edb 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -293,11 +293,6 @@ struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
+ }
+ EXPORT_SYMBOL_GPL(acpi_pci_find_root);
+ 
+-struct acpi_handle_node {
+-	struct list_head node;
+-	acpi_handle handle;
+-};
+-
+ /**
+  * acpi_get_pci_dev - convert ACPI CA handle to struct pci_dev
+  * @handle: the handle in question
+-- 
+2.45.0
 
-If we can't tell users how to figure out which mode to use, I think we
-have to explicitly say "try the modes in this order until you find one
-that works."
-
-That sucks, but if it's all we can do, I guess we don't have much
-choice, and we should just own up to it.
-
-There's no point in telling users "if your card drives CLKREQ# use X,
-but if not and it can tolerate out-of-spec T_CLRon timing, use Y"
-because nobody knows how to figure that out.
-
-And we can say which features are enabled in each mode so they aren't
-surprised, e.g., something like this:
-
-  "default" -- The Root Port supports ASPM L0s, L1, L1 Substates, and
-    Clock Power Management.  This provides the best power savings but
-    some devices may not work correctly because the Root Port doesn't
-    comply with T_CLRon timing required for PCIe Mini Cards [1].
-
-  "no-l1ss" -- The Root Port supports ASPM L0s, L1 (but not L1
-    Substates), and Clock Power Management.  [I assume there's some
-    other Root Port defect that causes issues with some devices in
-    this mode; I dunno.  If we don't know exactly what it is, I guess
-    we can't really say anything.]
-
-  "safe" -- The Root Port supports ASPM L0, L1, L1 Substates, but not
-    Clock Power Management.  All devices should work in this mode.
-
-[1] PCIe Mini CEM r2.1, sec 3.2.5.2.2
-
-(I'm not sure which features are *actually* enabled in each mode, I
-just guessed.)
-
-Bjorn
 
