@@ -1,263 +1,192 @@
-Return-Path: <linux-pci+bounces-7310-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7311-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56EFA8C17FB
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 22:54:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A19A68C186B
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 23:34:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BDDA5B2123A
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 20:54:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40FFD1F21C3A
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 21:34:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F321329A2;
-	Thu,  9 May 2024 20:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC66D86247;
+	Thu,  9 May 2024 21:34:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jACScdxb"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZNOT+4tM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3467770EB
-	for <linux-pci@vger.kernel.org>; Thu,  9 May 2024 20:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C230C86253
+	for <linux-pci@vger.kernel.org>; Thu,  9 May 2024 21:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715288066; cv=none; b=eP6R7TvY6DbBXuzlhi4kYEg+5BCTMnIKF8O75LFmS2hahyLNzv7pXnX3PtCit2DvpgPn6R3pOrgXEoGEAODFMILS0x3WA9AX5Dqc8wJ6q8ViA7Itc6fGzQCiZjVCGyhqG7yDq0dPvP0fzYlmX8e04OSqNCNJtp1xu1jkb0M/rrM=
+	t=1715290455; cv=none; b=XlndGiawC37OtHRr/1H9CaVdpO07D7TbB+MJgyJCZnIU2xsuPOeJQ7G2MHhs7Qiecn2951CmXVky34qPKUZswhAfARD8fRtAZh0EMYXG+vqHzcFx8aXK2t3HbTp1PGZCc3BNA10mvf/6JbaIoEY6cUeq8jCzdjsUOd7J8mzj6gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715288066; c=relaxed/simple;
-	bh=U5/L9kBnrzJMlJg7XTLjFHDbP3RBksj6VWEQuWCSaUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=U9taBrka24ZxCYLgCAcxmCAMcAszc9YcuUdzza2owlRRMuT6mH7D8/iT2EqztOTxsrslNWD0C7Rk00smgPlqClucfoCV7wlsyVXBSFWomCGiprgiHsKk7KlOeqA7BQI+j8l5wi+4GkjUHIdalzRtKo64kUW6SRg9XJt8VukAtw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jACScdxb; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715288065; x=1746824065;
-  h=date:from:to:cc:subject:message-id;
-  bh=U5/L9kBnrzJMlJg7XTLjFHDbP3RBksj6VWEQuWCSaUQ=;
-  b=jACScdxbVHK7Ng8DTDmzRMtWdOFiHztZ1lT2RwtMTd6ejRY2jyf1L0P6
-   XasMCobjmrv7eQVfB0fqCq1cFmnEUNx5Y0KuHfJgJtcvn7unVYlDSEBxh
-   A84U5CC+I80Lk7p5Lvg1C/584TrDy4zRQE1QAbnlOaa7kxrNmUOlw0f3h
-   vPVX113G8JeY4NTy5+maFD+OH1ky/ViONah5KQPF2AmI1jwCz+TOerz+v
-   HAhxGQuhUodffdZzr2PkA5QtYTUIm3qydi1b0x1NCG+Ja09OYm5aRoeda
-   q7ZIMf8d8G7tY6umKYDMuL55sNiZS775714abrlCdQ8d84r6T9MIq6Bka
-   g==;
-X-CSE-ConnectionGUID: UiGg8J5xQjy0P/q1p4Hvyg==
-X-CSE-MsgGUID: eJDBLSljSI2JWqu2+NN4lA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11075923"
-X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
-   d="scan'208";a="11075923"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 13:54:24 -0700
-X-CSE-ConnectionGUID: 9D1ouISsS6KXF57F4e607A==
-X-CSE-MsgGUID: HWHIRpL3RueTtpbLJE4TWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
-   d="scan'208";a="60228992"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 09 May 2024 13:54:23 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s5AmS-0005Lz-1u;
-	Thu, 09 May 2024 20:54:20 +0000
-Date: Fri, 10 May 2024 04:53:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:edr] BUILD SUCCESS
- e2e78a294a8a863898b781dbcf90e087eda3155d
-Message-ID: <202405100427.QmV1VdHi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1715290455; c=relaxed/simple;
+	bh=dsIYCA7Gw9+kyy1UZZp5UyZsCiWcpS/kpqrtbClwnUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fLQclkF9RPQe1va1C9wl661Mw45lVgUo7W7VFuAIB2p4K53a8C9E2LpuvpVwZa3zj0aGIp1i1lC7ytiHou7FPDKgzI2RlZey8FMuubTUrcGFHBBvzT/lYT0dywV5bSAGimsszJLAOTL5Dn2SFisyjFyKuGRFDEje/H32M5LQ/zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZNOT+4tM; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <32f0a97d-ab02-40ab-b637-e2a0583a5746@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715290452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CdGTO0c0Cfcs7uqDH0QslfK8bkzGZyWFzx0EviU8asY=;
+	b=ZNOT+4tMIRW3uV6JUqKuVkAyB2/XwJ1wJGc0Qup+F1zzFzimWIpxpR80AQ4kerTB1915hW
+	k+PcBTXH6wMtmFWrLJ96VghNbSXGVAvJBXLGsa/WjNsJba12IKsKtIS/v7sxegqMSFWPuX
+	yR1Q6+AexXD0rWnxI2dmQUeZryJxgcA=
+Date: Thu, 9 May 2024 17:34:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2 2/7] PCI: xilinx-nwl: Fix off-by-one
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+ Michal Simek <michal.simek@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>
+References: <20240508015917.GA1746057@bhelgaas>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240508015917.GA1746057@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git edr
-branch HEAD: e2e78a294a8a863898b781dbcf90e087eda3155d  PCI/EDR: Align EDR_PORT_LOCATE_DSM with PCI Firmware r3.3
+On 5/7/24 21:59, Bjorn Helgaas wrote:
+> Maybe the subject could include something about why this is important,
+> e.g., it's IRQ-related, we mask/unmask the wrong thing, etc?
+> 
+> On Mon, May 06, 2024 at 12:15:05PM -0400, Sean Anderson wrote:
+>> IRQs start at 0, so we don't need to subtract 1.
+> 
+> What does "IRQ" refer to here?  Something to do with INTx, I guess,
+> but apparently not PCI_INTERRUPT_PIN, since 0 in that register means
+> the device doesn't use INTx, and 1=INTA, 2=INTB, etc.
 
-elapsed time: 1426m
+This refers to INTx. MSGF_LEG_MASK is laid out with INTA in bit 0, INTB
+in bit 1, INTC in bit 2, and INTD in bit 3. Hardware IRQ numbers start
+at 0, and we register PCI_NUM_INTX irqs. So by subtracting 1, we try to
+set the -1st bit when enabling INTA.
 
-configs tested: 170
-configs skipped: 3
+> I assume this fixes a bug, e.g., we mask/unmask the wrong INTx?  What
+> does this look like for a user?  Unexpected IRQs?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Without this patch I get the following splat:
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240509   gcc  
-arc                   randconfig-002-20240509   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   gcc  
-arm                                 defconfig   clang
-arm                          moxart_defconfig   gcc  
-arm                   randconfig-001-20240509   gcc  
-arm                         s3c6400_defconfig   gcc  
-arm                           sama5_defconfig   gcc  
-arm                       spear13xx_defconfig   gcc  
-arm                         vf610m4_defconfig   gcc  
-arm64                            alldefconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-003-20240509   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240509   gcc  
-csky                  randconfig-002-20240509   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240509   gcc  
-i386         buildonly-randconfig-002-20240509   gcc  
-i386         buildonly-randconfig-005-20240509   gcc  
-i386         buildonly-randconfig-006-20240509   gcc  
-i386                                defconfig   clang
-i386                  randconfig-004-20240509   gcc  
-i386                  randconfig-006-20240509   gcc  
-i386                  randconfig-012-20240509   gcc  
-i386                  randconfig-014-20240509   gcc  
-i386                  randconfig-015-20240509   gcc  
-i386                  randconfig-016-20240509   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240509   gcc  
-loongarch             randconfig-002-20240509   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5208evb_defconfig   gcc  
-m68k                          multi_defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                 decstation_r4k_defconfig   gcc  
-mips                           ip27_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240509   gcc  
-nios2                 randconfig-002-20240509   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                    or1ksim_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240509   gcc  
-parisc                randconfig-002-20240509   gcc  
-parisc64                         alldefconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                     rainier_defconfig   gcc  
-powerpc                  storcenter_defconfig   gcc  
-powerpc                        warp_defconfig   gcc  
-powerpc                         wii_defconfig   gcc  
-powerpc64             randconfig-002-20240509   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240509   gcc  
-riscv                 randconfig-002-20240509   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240509   gcc  
-s390                  randconfig-002-20240509   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        edosk7705_defconfig   gcc  
-sh                        edosk7760_defconfig   gcc  
-sh                     magicpanelr2_defconfig   gcc  
-sh                    randconfig-001-20240509   gcc  
-sh                    randconfig-002-20240509   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc32_defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240509   gcc  
-sparc64               randconfig-002-20240509   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-002-20240509   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240509   clang
-x86_64       buildonly-randconfig-002-20240509   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-002-20240509   clang
-x86_64                randconfig-005-20240509   clang
-x86_64                randconfig-006-20240509   clang
-x86_64                randconfig-011-20240509   clang
-x86_64                randconfig-012-20240509   clang
-x86_64                randconfig-014-20240509   clang
-x86_64                randconfig-015-20240509   clang
-x86_64                randconfig-071-20240509   clang
-x86_64                randconfig-072-20240509   clang
-x86_64                randconfig-073-20240509   clang
-x86_64                randconfig-074-20240509   clang
-x86_64                randconfig-075-20240509   clang
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  cadence_csp_defconfig   gcc  
-xtensa                       common_defconfig   gcc  
-xtensa                generic_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240509   gcc  
-xtensa                randconfig-002-20240509   gcc  
+[    5.037483] ================================================================================
+[    5.046260] UBSAN: shift-out-of-bounds in ../drivers/pci/controller/pcie-xilinx-nwl.c:389:11
+[    5.054983] shift exponent 18446744073709551615 is too large for 32-bit type 'int'
+[    5.062813] CPU: 1 PID: 61 Comm: kworker/u10:1 Not tainted 6.6.20+ #268
+[    5.070008] Hardware name: xlnx,zynqmp (DT)
+[    5.074348] Workqueue: events_unbound deferred_probe_work_func
+[    5.080410] Call trace:
+[    5.082958] dump_backtrace (arch/arm64/kernel/stacktrace.c:235) 
+[    5.086850] show_stack (arch/arm64/kernel/stacktrace.c:242) 
+[    5.090292] dump_stack_lvl (lib/dump_stack.c:107) 
+[    5.094095] dump_stack (lib/dump_stack.c:114) 
+[    5.097540] __ubsan_handle_shift_out_of_bounds (lib/ubsan.c:218 lib/ubsan.c:387) 
+[    5.103227] nwl_unmask_leg_irq (drivers/pci/controller/pcie-xilinx-nwl.c:389 (discriminator 1)) 
+[    5.107386] irq_enable (kernel/irq/internals.h:234 kernel/irq/chip.c:170 kernel/irq/chip.c:439 kernel/irq/chip.c:432 kernel/irq/chip.c:345) 
+[    5.110838] __irq_startup (kernel/irq/internals.h:239 kernel/irq/chip.c:180 kernel/irq/chip.c:250) 
+[    5.114552] irq_startup (kernel/irq/chip.c:270) 
+[    5.118266] __setup_irq (kernel/irq/manage.c:1800) 
+[    5.121982] request_threaded_irq (kernel/irq/manage.c:2206) 
+[    5.126412] pcie_pme_probe (include/linux/interrupt.h:168 drivers/pci/pcie/pme.c:348) 
+[    5.130303] pcie_port_probe_service (drivers/pci/pcie/portdrv.c:528) 
+[    5.134915] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658) 
+[    5.138720] __driver_probe_device (drivers/base/dd.c:800) 
+[    5.143236] driver_probe_device (drivers/base/dd.c:830) 
+[    5.147571] __device_attach_driver (drivers/base/dd.c:959) 
+[    5.152179] bus_for_each_drv (drivers/base/bus.c:457) 
+[    5.156163] __device_attach (drivers/base/dd.c:1032) 
+[    5.160147] device_initial_probe (drivers/base/dd.c:1080) 
+[    5.164488] bus_probe_device (drivers/base/bus.c:532) 
+[    5.168471] device_add (drivers/base/core.c:3638) 
+[    5.172098] device_register (drivers/base/core.c:3714) 
+[    5.175994] pcie_portdrv_probe (drivers/pci/pcie/portdrv.c:309 drivers/pci/pcie/portdrv.c:363 drivers/pci/pcie/portdrv.c:695) 
+[    5.180338] pci_device_probe (drivers/pci/pci-driver.c:324 drivers/pci/pci-driver.c:392 drivers/pci/pci-driver.c:417 drivers/pci/pci-driver.c:460) 
+[    5.184410] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658) 
+[    5.188213] __driver_probe_device (drivers/base/dd.c:800) 
+[    5.192729] driver_probe_device (drivers/base/dd.c:830) 
+[    5.197064] __device_attach_driver (drivers/base/dd.c:959) 
+[    5.201672] bus_for_each_drv (drivers/base/bus.c:457) 
+[    5.205657] __device_attach (drivers/base/dd.c:1032) 
+[    5.209641] device_attach (drivers/base/dd.c:1074) 
+[    5.213357] pci_bus_add_device (drivers/pci/bus.c:352) 
+[    5.217518] pci_bus_add_devices (drivers/pci/bus.c:371 (discriminator 2)) 
+[    5.221774] pci_host_probe (drivers/pci/probe.c:3099) 
+[    5.225581] nwl_pcie_probe (drivers/pci/controller/pcie-xilinx-nwl.c:938) 
+[    5.229562] platform_probe (drivers/base/platform.c:1404) 
+[    5.233367] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658) 
+[    5.237169] __driver_probe_device (drivers/base/dd.c:800) 
+[    5.241685] driver_probe_device (drivers/base/dd.c:830) 
+[    5.246020] __device_attach_driver (drivers/base/dd.c:959) 
+[    5.250628] bus_for_each_drv (drivers/base/bus.c:457) 
+[    5.254612] __device_attach (drivers/base/dd.c:1032) 
+[    5.258596] device_initial_probe (drivers/base/dd.c:1080) 
+[    5.262938] bus_probe_device (drivers/base/bus.c:532) 
+[    5.266920] deferred_probe_work_func (drivers/base/dd.c:124) 
+[    5.271619] process_one_work (arch/arm64/include/asm/jump_label.h:21 include/linux/jump_label.h:207 include/trace/events/workqueue.h:108 kernel/workqueue.c:2632) 
+[    5.275788] worker_thread (kernel/workqueue.c:2694 (discriminator 2) kernel/workqueue.c:2781 (discriminator 2)) 
+[    5.279686] kthread (kernel/kthread.c:388) 
+[    5.283048] ret_from_fork (arch/arm64/kernel/entry.S:862) 
+[    5.286765] ================================================================================
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 9a181e1093af is from seven years ago.  Should we be surprised that we
+> haven't tripped over this before?
+
+I suppose no one enables UBSAN on this platform.
+
+--Sean
+
+>> Fixes: 9a181e1093af ("PCI: xilinx-nwl: Modify IRQ chip for legacy interrupts")
+>> Cc: <stable@vger.kernel.org>
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>> (no changes since v1)
+>> 
+>>  drivers/pci/controller/pcie-xilinx-nwl.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+>> index 0408f4d612b5..437927e3bcca 100644
+>> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+>> @@ -371,7 +371,7 @@ static void nwl_mask_intx_irq(struct irq_data *data)
+>>  	u32 mask;
+>>  	u32 val;
+>>  
+>> -	mask = 1 << (data->hwirq - 1);
+>> +	mask = 1 << data->hwirq;
+>>  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
+>>  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
+>>  	nwl_bridge_writel(pcie, (val & (~mask)), MSGF_LEG_MASK);
+>> @@ -385,7 +385,7 @@ static void nwl_unmask_intx_irq(struct irq_data *data)
+>>  	u32 mask;
+>>  	u32 val;
+>>  
+>> -	mask = 1 << (data->hwirq - 1);
+>> +	mask = 1 << data->hwirq;
+>>  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
+>>  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
+>>  	nwl_bridge_writel(pcie, (val | mask), MSGF_LEG_MASK);
+>> -- 
+>> 2.35.1.1320.gc452695387.dirty
+>> 
 
