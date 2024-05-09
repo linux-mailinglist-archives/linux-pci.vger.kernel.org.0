@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-7290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49EE68C0F06
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 13:54:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BC8D8C0F11
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 13:59:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D5056B216E5
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 11:54:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A83181C21258
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 11:59:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 924DA131735;
-	Thu,  9 May 2024 11:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39401149E0B;
+	Thu,  9 May 2024 11:59:42 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D84312FF8E;
-	Thu,  9 May 2024 11:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E8114A90;
+	Thu,  9 May 2024 11:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715255646; cv=none; b=AmPMl+uTwUAF8RXqG4U10TGmM4/7v9VNPW+TypjZehstWQ9qUTyYWqWqnaUyp1MiMRPshqUWvVfscYK9lr/Q/BhJA7rEcjMR7pEWSYOYkda+VUH/wbtGbnTHUl+9iIFpgrEUfsm46Vt0iAu5Ml39lpxl1CiNN+H7PRj5r/7DmlU=
+	t=1715255982; cv=none; b=qmFfW5+7X/mjV5dvrfgyVLwja8eNAdJPJL3fTeL62NG2w2Fi6g50bN16HF0T0LZ9+lYR/KUruT/N/NKrCNM+QkfQ8i0FaQMj933ItSMYLsaaXvokI4blBvhdAQPVQ1pqLjaYZ0/9ZL36pc9bGTcba3OMSD1OvJzcIOjFhpHN4e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715255646; c=relaxed/simple;
-	bh=xO5f8wq/0P5imNfCwCvl1FvQaw5qFdKKDOFvrT8KFfw=;
+	s=arc-20240116; t=1715255982; c=relaxed/simple;
+	bh=mp0XnEHDdveQrBOElZTs+sn0NECWxieR3o11rrV8l0E=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A/CxQAM244jZmr02h42lrLq+3loMFyjt2lfNZzpObyZLmnMo/Va6gwfN4qIGGxy00d3vY5gEVQuAoeOQ6dVGmJe8FvJOjA5P9ACKBj0DBOAXwqZ9y7u+gZiuYVP5sgvHdooTOTO2uZGUByaEiishZVx6br8HTL9CySfO3RIfnqw=
+	 MIME-Version:Content-Type; b=L0HTidQH4f17+G+KUkORmvf5ig5R9CuZ88R3aTBn0dLKRCc50moi49lgh4X3qArmPH1vxB0k7trEobZTry3e48b9zpev/gdrx6MffXapn+nDNT4ITNVRnXtolFoOo0xJz2avevzkdTDNhp56Eyqo5fkgnyI/JceiGfO6oTlFmNM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZr1l70Dvz6K6vN;
-	Thu,  9 May 2024 19:50:51 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZr8D70jmz6K6yB;
+	Thu,  9 May 2024 19:56:28 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A0E39140B33;
-	Thu,  9 May 2024 19:54:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A979F1400D9;
+	Thu,  9 May 2024 19:59:37 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 9 May
- 2024 12:53:59 +0100
-Date: Thu, 9 May 2024 12:53:58 +0100
+ 2024 12:59:37 +0100
+Date: Thu, 9 May 2024 12:59:36 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 CC: <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Lorenzo
@@ -48,15 +48,15 @@ CC: <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Lorenzo
 	<lukas@wunner.de>, Alexandru Gagniuc <mr.nuke.me@gmail.com>, "Krishna
  chaitanya chundru" <quic_krichai@quicinc.com>, Srinivas Pandruvada
 	<srinivas.pandruvada@linux.intel.com>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Christophe
- JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v5 6/8] PCI/bwctrl: Add API to set PCIe Link Speed
-Message-ID: <20240509125358.00004c55@Huawei.com>
-In-Reply-To: <20240508134744.52134-7-ilpo.jarvinen@linux.intel.com>
+	<rafael@kernel.org>, <linux-pm@vger.kernel.org>, Daniel Lezcano
+	<daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
+	<lukasz.luba@arm.com>, <linux-kernel@vger.kernel.org>, Amit Kucheria
+	<amitk@kernel.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH v5 7/8] thermal: Add PCIe cooling driver
+Message-ID: <20240509125936.00004f30@Huawei.com>
+In-Reply-To: <20240508134744.52134-8-ilpo.jarvinen@linux.intel.com>
 References: <20240508134744.52134-1-ilpo.jarvinen@linux.intel.com>
-	<20240508134744.52134-7-ilpo.jarvinen@linux.intel.com>
+	<20240508134744.52134-8-ilpo.jarvinen@linux.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -70,72 +70,48 @@ Content-Transfer-Encoding: quoted-printable
 X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed,  8 May 2024 16:47:42 +0300
+On Wed,  8 May 2024 16:47:43 +0300
 Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-> Currently, PCIe Link Speeds are adjusted by custom code rather than in
-> a common function provided in PCI core. PCIe bandwidth controller
-> (bwctrl) introduces an in-kernel API to set PCIe Link Speed. Convert
-> Target Speed quirk to use the new API.
+> Add a thermal cooling driver to provide path to access PCIe bandwidth
+> controller using the usual thermal interfaces.
 >=20
-> The new API is also intended to be used in an upcoming commit that adds
-> a thermal cooling device to throttle PCIe bandwidth when thermal
-> thresholds are reached.
+> A cooling device is instantiated for controllable PCIe Ports from the
+> bwctrl service driver.
 >=20
-> The PCIe bandwidth control procedure is as follows. The highest speed
-> supported by the Port and the PCIe device which is not higher than the
-> requested speed is selected and written into the Target Link Speed in
-> the Link Control 2 Register. Then bandwidth controller retrains the
-> PCIe Link.
->=20
-> Bandwidth Notifications enable the cur_bus_speed in the struct pci_bus
-> to keep track PCIe Link Speed changes. While Bandwidth Notifications
-> should also be generated when bandwidth controller alters the PCIe Link
-> Speed, a few platforms do not deliver LMBS interrupt after Link
-> Training as expected. Thus, after changing the Link Speed, bandwidth
-> controller makes additional read for the Link Status Register to ensure
-> cur_bus_speed is consistent with the new PCIe Link Speed.
+> The thermal side state 0 means no throttling, i.e., maximum supported
+> PCIe Link Speed.
 >=20
 > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> ---
->  drivers/pci/pci.h         |  13 ++++
->  drivers/pci/pcie/Makefile |   2 +-
->  drivers/pci/pcie/bwctrl.c | 147 ++++++++++++++++++++++++++++++++++++++
->  drivers/pci/quirks.c      |  12 +---
->  include/linux/pci.h       |   3 +
->  5 files changed, 166 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 416540baf27b..324899fbad0a 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -270,6 +270,19 @@ void pci_disable_bridge_window(struct pci_dev *dev);
->  struct pci_bus *pci_bus_get(struct pci_bus *bus);
->  void pci_bus_put(struct pci_bus *bus);
-> =20
-> +#define PCIE_LNKCAP_SLS2SPEED(lnkcap)					\
-> +({									\
-> +	u32 _lnkcap =3D (lnkcap) & PCI_EXP_LNKCAP_SLS;			\
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org> # From the cooling device=
+ interface perspective
 
-Why the inconsistency wrt to PCIE_LNKCAP2_SLS2SPEED which doesn't bother wi=
-th
-this initial mask. It's not needed afterall as the bits checked are all in =
-the
-mask anyway?
-
-I don't really mind which form but they should look the same.
-
-> +									\
-> +	(_lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_64_0GB ? PCIE_SPEED_64_0GT :	\
-> +	 _lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_32_0GB ? PCIE_SPEED_32_0GT :	\
-> +	 _lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_16_0GB ? PCIE_SPEED_16_0GT :	\
-> +	 _lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_8_0GB ? PCIE_SPEED_8_0GT :	\
-> +	 _lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_5_0GB ? PCIE_SPEED_5_0GT :	\
-> +	 _lnkcap =3D=3D PCI_EXP_LNKCAP_SLS_2_5GB ? PCIE_SPEED_2_5GT :	\
-> +	 PCI_SPEED_UNKNOWN);						\
-> +})
+> +struct thermal_cooling_device *pcie_cooling_device_register(struct pci_d=
+ev *port)
+> +{
+> +	struct thermal_cooling_device *cdev;
+> +	char *name;
 > +
+> +	name =3D kasprintf(GFP_KERNEL, COOLING_DEV_TYPE_PREFIX "%s", pci_name(p=
+ort));
+> +	if (!name)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	cdev =3D thermal_cooling_device_register(name, port, &pcie_cooling_ops);
+> +	kfree(name);
 
+__free?  Only small saving, but I think it's just about worth it to
+give you
+	return thermal_cooling_device_register()
+and drop the local cdev variable.
+
+
+> +
+> +	return cdev;
+> +}
+
+Otherwise LGTM
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
 
