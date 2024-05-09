@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-7283-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7284-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6C638C0CD7
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 10:51:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F59B8C0CDB
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 10:52:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA1D91C20FDA
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 08:51:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86A4E1C218EC
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 08:52:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C56714A09F;
-	Thu,  9 May 2024 08:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1554814A4C3;
+	Thu,  9 May 2024 08:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lOJgWjLn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PM+A05IU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456F0127E1F;
-	Thu,  9 May 2024 08:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC85127E1F;
+	Thu,  9 May 2024 08:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715244693; cv=none; b=CRS5I1jEs1ZghQ4yExL2IAgNIH0QlbBO1z0VQjJLFJsxCrBywjVAoximuBq0qbeX2/l70f8f//qc2vec/d71lPKesvG1yBxaw0PeYHAj5H1g7BwVsm3OiuB3Q2UT38TNqtnfQ3cuF67O9gKk7FpIZsZYQmkCdLbfT0qQkVQJ150=
+	t=1715244701; cv=none; b=tOdpsjh/S2bZMQQAsGpkQ8JOf67JYc9rk7q1BnMRHBpjk0xus5AD+naXsUosMyMwT83cH0nBdTQjDbQulr+XM0qbMNK4e1/XUG+vsVZnKBatT8XhIrK9KFjdjZXkbgj4nWgs7ex4flVNXAt4p8Vb0KyWQXkIRRewNYBGOZN3wek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715244693; c=relaxed/simple;
-	bh=wWOLNvWn/NYnzTnKRGERN+aKnQlH6GnZnESAaBtdIKE=;
+	s=arc-20240116; t=1715244701; c=relaxed/simple;
+	bh=x4dIzXYEipKi3Isu0hz9w8cL6pi9eY1H3hezd3SqTJA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uM3Rzi14NCWp6uHh/x9dpJRjTeMkeWvfF734s+Kaze2EhsIw/Di8sY5f8x+942eTF2pCUTPQfLxFjb4grFLGSvnkV+Cn6y8FRNa/nMww+IvZanCfHRyNJtzROQbfjVsHLVib8DySpFLDfhgctQAH0manujssfhEXJr6wkzEib1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lOJgWjLn; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=NzmXskxTleW7mLamfikXv3GGkwZd2VGJ0PFJ/kJtx2fr0DK4bNpjYkOV0x0mXv/SdSBv8/qVIO9TVh7uTya5m72iXRsKpXphHARTD0rI1n93TBvLL8skeGr8ZRmnz21xynLIbd9c+VptqLUedFYq7rz/k6RH3GaWXCXHb1zFMFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PM+A05IU; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715244691; x=1746780691;
+  t=1715244699; x=1746780699;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wWOLNvWn/NYnzTnKRGERN+aKnQlH6GnZnESAaBtdIKE=;
-  b=lOJgWjLnXdznIylaDiHjQgRQSx30ff+/s6nov8kPWo49rRlYMI9u4VqI
-   7M5C4FVdRzHtXq572/hqfzAUFJ+KyHOWnYSAs/YfP6DR74jjQLMdahsmx
-   4u5pA02AjGkvZng/3tHpeq6s8AXzrfWBiJJ0zk/Qc0wGkGzyWdIvuUMuA
-   ELhsxtEHuG1sWwZf8wp2jEmQwYHKYoXGc7iIFXosdLuUazmqtfyesle0K
-   UzRhvp4sAljG4SVQfP9S4fU6OCIrmXRkUzq0UwdO7WceCSRq0mwMhTQQX
-   r4+RIZnA2a1Daj3hcA+UByWfFCXtCN29f/2812UrlOcwBiFZhOUX0RFgN
-   w==;
-X-CSE-ConnectionGUID: Zxu/jMtnSwOkJ5Mpx4CSqw==
-X-CSE-MsgGUID: W8JYoF7MQmKrBRabhbaRIg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="14103961"
+  bh=x4dIzXYEipKi3Isu0hz9w8cL6pi9eY1H3hezd3SqTJA=;
+  b=PM+A05IUxb3ELSZIDfu9MnvduH8Ru/7LTbcKTOWXgp11RJFQETCxuyv6
+   ktFwACsvohx98otuM9Q3GpDKWLYu+03a8RfUYN+Jy1ffvzvtuDchheHI7
+   4taGwmLtyJsc0Y/+ZsFMGNdlAZtrb7N8YGsDDqmGKo9jZExYGOwsTsfEM
+   DVMBtP7p/zYMbZF0/P6mytA6rpLlk9C63RkMUEF7oTHp7BOkAmsIcQUjY
+   JsKEsYGJXKelCBrYEIVAvK3iDx3qSRgfztt8OyOy+umRf7Ky2hylUeuY7
+   D9hl9g1mnyvnRs3Mp9IciEp9yOPVK8Z6WHL9JvDqKkkMlrfqBgX+XHxpp
+   g==;
+X-CSE-ConnectionGUID: 0kuOoYGlRFSIwat5+wKfXg==
+X-CSE-MsgGUID: 5vuShKEIRV6dsly5nyvOZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="14103977"
 X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
-   d="scan'208";a="14103961"
+   d="scan'208";a="14103977"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:30 -0700
-X-CSE-ConnectionGUID: bfSjVD32RCKchufsKiY1Cw==
-X-CSE-MsgGUID: uwo0H4/ATgqjzPTT4FBdVw==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:38 -0700
+X-CSE-ConnectionGUID: LmVUfqKhRPKjkUX+lp2Ygw==
+X-CSE-MsgGUID: YpL0sfrtSUGqENeVH4941g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
-   d="scan'208";a="29060797"
+   d="scan'208";a="29060917"
 Received: from unknown (HELO SPR-S2600BT.bj.intel.com) ([10.240.192.124])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:23 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:31 -0700
 From: Zhenzhong Duan <zhenzhong.duan@intel.com>
 To: linux-pci@vger.kernel.org
 Cc: linuxppc-dev@lists.ozlabs.org,
@@ -94,9 +94,9 @@ Cc: linuxppc-dev@lists.ozlabs.org,
 	chao.p.peng@intel.com,
 	qingshun.wang@linux.intel.com,
 	Zhenzhong Duan <zhenzhong.duan@intel.com>
-Subject: [PATCH v4 1/3] PCI/AER: Store UNCOR_STATUS bits that might be ANFE in aer_err_info
-Date: Thu,  9 May 2024 16:48:31 +0800
-Message-Id: <20240509084833.2147767-2-zhenzhong.duan@intel.com>
+Subject: [PATCH v4 2/3] PCI/AER: Print UNCOR_STATUS bits that might be ANFE
+Date: Thu,  9 May 2024 16:48:32 +0800
+Message-Id: <20240509084833.2147767-3-zhenzhong.duan@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
 References: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
@@ -108,143 +108,57 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In some cases the detector of a Non-Fatal Error(NFE) is not the most
-appropriate agent to determine the type of the error. For example,
-when software performs a configuration read from a non-existent
-device or Function, completer will send an ERR_NONFATAL Message.
-On some platforms, ERR_NONFATAL results in a System Error, which
-breaks normal software probing.
+When an Advisory Non-Fatal error(ANFE) triggers, both correctable error(CE)
+status and ANFE related uncorrectable error(UE) status will be printed:
 
-Advisory Non-Fatal Error(ANFE) is a special case that can be used
-in above scenario. It is predominantly determined by the role of the
-detecting agent (Requester, Completer, or Receiver) and the specific
-error. In such cases, an agent with AER signals the NFE (if enabled)
-by sending an ERR_COR Message as an advisory to software, instead of
-sending ERR_NONFATAL.
-
-When processing an ANFE, ideally both correctable error(CE) status and
-uncorrectable error(UE) status should be cleared. However, there is no
-way to fully identify the UE associated with ANFE. Even worse, Non-Fatal
-Error(NFE) may set the same UE status bit as ANFE. Treating an ANFE as
-NFE will reproduce above mentioned issue, i.e., breaking softwore probing;
-treating NFE as ANFE will make us ignoring some UEs which need active
-recover operation. To avoid clearing UEs that are not ANFE by accident,
-the most conservative route is taken here: If any of the NFE Detected
-bits is set in Device Status, do not touch UE status, they should be
-cleared later by the UE handler. Otherwise, a specific set of UEs that
-may be raised as ANFE according to the PCIe specification will be cleared
-if their corresponding severity is Non-Fatal.
-
-To achieve above purpose, store UNCOR_STATUS bits that might be ANFE
-in aer_err_info.anfe_status. So that those bits could be printed and
-processed later.
+  AER: Correctable error message received from 0000:b7:02.0
+  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
+    Uncorrectable errors that may cause Advisory Non-Fatal:
+     [18] TLP
 
 Tested-by: Yudong Wang <yudong.wang@intel.com>
 Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
 Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
 Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
 ---
- drivers/pci/pci.h      |  1 +
- drivers/pci/pcie/aer.c | 53 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+ drivers/pci/pcie/aer.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 17fed1846847..3f9eb807f9fd 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -412,6 +412,7 @@ struct aer_err_info {
- 
- 	unsigned int status;		/* COR/UNCOR Error Status */
- 	unsigned int mask;		/* COR/UNCOR Error Mask */
-+	unsigned int anfe_status;	/* UNCOR Error Status for ANFE */
- 	struct pcie_tlp_log tlp;	/* TLP Header */
- };
- 
 diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ac6293c24976..f2839b51321a 100644
+index f2839b51321a..ed435f09ac27 100644
 --- a/drivers/pci/pcie/aer.c
 +++ b/drivers/pci/pcie/aer.c
-@@ -107,6 +107,12 @@ struct aer_stats {
- 					PCI_ERR_ROOT_MULTI_COR_RCV |	\
- 					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+@@ -681,6 +681,7 @@ static void __aer_print_error(struct pci_dev *dev,
+ {
+ 	const char **strings;
+ 	unsigned long status = info->status & ~info->mask;
++	unsigned long anfe_status = info->anfe_status;
+ 	const char *level, *errmsg;
+ 	int i;
  
-+#define AER_ERR_ANFE_UNC_MASK		(PCI_ERR_UNC_POISON_TLP |	\
-+					PCI_ERR_UNC_COMP_TIME |		\
-+					PCI_ERR_UNC_COMP_ABORT |	\
-+					PCI_ERR_UNC_UNX_COMP |		\
-+					PCI_ERR_UNC_UNSUP)
+@@ -701,6 +702,20 @@ static void __aer_print_error(struct pci_dev *dev,
+ 				info->first_error == i ? " (First)" : "");
+ 	}
+ 	pci_dev_aer_stats_incr(dev, info);
 +
- static int pcie_aer_disable;
- static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
- 
-@@ -1196,6 +1202,49 @@ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- EXPORT_SYMBOL_GPL(aer_recover_queue);
- #endif
- 
-+static void anfe_get_uc_status(struct pci_dev *dev, struct aer_err_info *info)
-+{
-+	u32 uncor_mask, uncor_status, anfe_status;
-+	u16 device_status;
-+	int aer = dev->aer_cap;
-+
-+	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor_status);
-+	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &uncor_mask);
-+	/*
-+	 * According to PCIe Base Specification Revision 6.1,
-+	 * Section 6.2.3.2.4, if an UNCOR error is raised as
-+	 * Advisory Non-Fatal error, it will match the following
-+	 * conditions:
-+	 *	a. The severity of the error is Non-Fatal.
-+	 *	b. The error is one of the following:
-+	 *		1. Poisoned TLP           (Section 6.2.3.2.4.3)
-+	 *		2. Completion Timeout     (Section 6.2.3.2.4.4)
-+	 *		3. Completer Abort        (Section 6.2.3.2.4.1)
-+	 *		4. Unexpected Completion  (Section 6.2.3.2.4.5)
-+	 *		5. Unsupported Request    (Section 6.2.3.2.4.1)
-+	 */
-+	anfe_status = uncor_status & ~uncor_mask & ~info->severity &
-+		      AER_ERR_ANFE_UNC_MASK;
-+
-+	if (pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &device_status))
-+		return;
-+	/*
-+	 * Take the most conservative route here. If there are Non-Fatal errors
-+	 * detected, do not assume any bit in uncor_status is set by ANFE.
-+	 */
-+	if (device_status & PCI_EXP_DEVSTA_NFED)
++	if (!anfe_status)
 +		return;
 +
-+	/*
-+	 * If there is another ANFE between reading uncor_status and clearing
-+	 * PCI_ERR_COR_ADV_NFAT bit in cor_status register, that ANFE isn't
-+	 * recorded in info->anfe_status. It will be read out as NFE in
-+	 * following uncor_status register reading and processed by NFE
-+	 * handler.
-+	 */
-+	info->anfe_status = anfe_status;
-+}
++	strings = aer_uncorrectable_error_string;
++	pci_printk(level, dev, "Uncorrectable errors that may cause Advisory Non-Fatal:\n");
 +
- /**
-  * aer_get_device_error_info - read error status from dev and store it to info
-  * @dev: pointer to the device expected to have a error record
-@@ -1213,6 +1262,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- 
- 	/* Must reset in this function */
- 	info->status = 0;
-+	info->anfe_status = 0;
- 	info->tlp_header_valid = 0;
- 
- 	/* The device might not support AER */
-@@ -1226,6 +1276,9 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- 			&info->mask);
- 		if (!(info->status & ~info->mask))
- 			return 0;
++	for_each_set_bit(i, &anfe_status, 32) {
++		errmsg = strings[i];
++		if (!errmsg)
++			errmsg = "Unknown Error Bit";
 +
-+		if (info->status & PCI_ERR_COR_ADV_NFAT)
-+			anfe_get_uc_status(dev, info);
- 	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
- 		   type == PCI_EXP_TYPE_RC_EC ||
- 		   type == PCI_EXP_TYPE_DOWNSTREAM ||
++		pci_printk(level, dev, "   [%2d] %s\n", i, errmsg);
++	}
+ }
+ 
+ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
 -- 
 2.34.1
 
