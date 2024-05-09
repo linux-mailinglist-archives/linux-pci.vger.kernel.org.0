@@ -1,321 +1,173 @@
-Return-Path: <linux-pci+bounces-7294-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7295-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20A0E8C0F55
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 14:09:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D1818C1245
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 17:52:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAF772814A8
-	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 12:09:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B9811C20FDF
+	for <lists+linux-pci@lfdr.de>; Thu,  9 May 2024 15:52:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01FAD14BF8F;
-	Thu,  9 May 2024 12:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA81816F26D;
+	Thu,  9 May 2024 15:52:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E/XFM+pG"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OAIzkNm7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAB014AD1A;
-	Thu,  9 May 2024 12:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368363F8E2;
+	Thu,  9 May 2024 15:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715256461; cv=none; b=nl2vHzPYHAo6tqwNgEIinLx2XpYOz7EApbYQroUq6QfldMnsPvhL8k0D3eq6ulAoBEA2S6tYO+q+mxEwQdk66T+zq2WRTv1zP75R6tNSsnF3S2Lw1VL0P5PhJxAG2tOp6g/26Lvg/YhiX+MPqaUwhITw+zWqAUpocwoBJZZ+cJc=
+	t=1715269956; cv=none; b=Ju3JT7JohdqA3I2NxW9Zkw2SOCy3Ssjzl8h3QSWgUKxo/1ssdEOEiJ3wFBjCqR7pYNP6QHDCVt7NccuIZlY23LOtlN/sph5KNN3nvsnulBnxkyBIb8SC3i9q4f6oHe+yqGkN5uzprIIuHwmPRlOfXLk0lgdSSLqlOqo/DHzL6f8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715256461; c=relaxed/simple;
-	bh=Hxoh5JTKAk10iizHDe6S9ModO3gGCUjwct2VimpMtJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=loxuWY1j3a0bH5TiA6XpmzyWVbgjlN6PJcV/3ESl1Xcj6uD+7EXCbUxxkcteVDjqZma9OODjqbx1qD66zdcKTGb/j/RVZxOX7E7ugJyonH2/gAe4uWW/ouyHDe4XUJMIqNMRYwqEIEhSC/naW+QIjXxK/LHr5BO8CGDxILwFW0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=E/XFM+pG; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 449C7LT4022459;
-	Thu, 9 May 2024 12:07:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=H4tShS+NnsebvFbzHCu9hb+yI5WH8D5a3muAw7bPVtM=;
- b=E/XFM+pGHD8ygO7O9NjpsaEv8+sjDPD5LrDv3Ia/wtgJ+YRYQ449vvSfF2Fs8vGafyBx
- FV5x6mLButeUC5dMSEAIJ2SWGfdg1ZtDd58ONjnyVEZQrrP88Cr+XdH177hdirTvDoiH
- Ch/z7TfeVrp4we7saqR5KnaztZfi3tTvQzaunQCDflpeqE6TG+QWGDyV3sQkt2fTCiuB
- J55bD1QhoOl6YkNcMSMy0a35eDq+U9wYv6rMtfnmOhNSUlnkrNWZXG7+DQVstMOXhgqG
- JstENkYe7+RCFT2dpRQXT20GosB8jv9yV2HQZP2fh27F8oEEOkDgp2uoKQ26ldA3UG1X oA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0x77000u-1
+	s=arc-20240116; t=1715269956; c=relaxed/simple;
+	bh=y1b/BJ6+o2tx8onxvo2sdl0U/kfb+AndkI8eF0HOdWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YBGz6HdDpHQmqTXljyhRh7lz5BwiAhquuPIHiJJsGR24e1O5WzoMy4U/k8UMfBDGG8ltHY4Yu/hmoNuoRR5WNO/s3V+Rvzv0rFr5JsPo2RRzldsFTe88Of7awxwF/Efwu6QCHHnm84xeHU/CNk0Im4cWXhQKZHJlZGB/aHY21Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OAIzkNm7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 449DtgZU002462;
+	Thu, 9 May 2024 15:52:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=4rFYxAwYD1tKxYEP9QReednAgW30V4VYCm02iCFO++A=; b=OA
+	IzkNm7SIUvvs6gRyUaSjU9l/MSihdC9Q65De8GqFoQwogEZewIuzeWeOL7XfuVs2
+	upIwMIuYPkX1n3UPc4Jr5mRj7I2wAT8Q7z/uINyE6w1pZjQQ923KDeke0ENvwBs0
+	FqiAbP5ZXKLrpxxRQxiaA1oaNeoveVVV8nYF1iFOZ4cMNoZi4To3YHLcCY0fapBH
+	OMSGiRA2OcFrPq6nVuWFTpFPWOxOuxZruMfoOiAGrwUae3/7MB6ix9pRH4CR/Hql
+	Mk2QBD3TpVq5iD/0hNuUk99/AfDtcgzFyVCJ9lAPBBtuL9PS8YIP1MDVJ2vfo3n1
+	Bf8r1DCrXMjIPa8kCmPg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y08ne34vm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 12:07:20 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 449C7J1S022431;
-	Thu, 9 May 2024 12:07:20 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0x77000p-1
+	Thu, 09 May 2024 15:52:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 449Fq927012208
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 12:07:19 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 449BKtlS003990;
-	Thu, 9 May 2024 12:07:18 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xysgsjphs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 12:07:18 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 449C7C8a31916658
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 May 2024 12:07:15 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CDC0220063;
-	Thu,  9 May 2024 12:07:12 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8B72620040;
-	Thu,  9 May 2024 12:07:09 +0000 (GMT)
-Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  9 May 2024 12:07:09 +0000 (GMT)
-From: Krishna Kumar <krishnak@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
-        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
-        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
-        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
-        mahesh.salgaonkar@in.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
-Subject: [PATCH 2/2] arch/powerpc: hotplug driver bridge support
-Date: Thu,  9 May 2024 17:35:54 +0530
-Message-ID: <20240509120644.653577-3-krishnak@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240509120644.653577-1-krishnak@linux.ibm.com>
-References: <20240509120644.653577-1-krishnak@linux.ibm.com>
+	Thu, 9 May 2024 15:52:09 GMT
+Received: from [10.216.15.105] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 9 May 2024
+ 08:52:00 -0700
+Message-ID: <8b213eba-7ab6-ae9c-7683-937a9d6aaf08@quicinc.com>
+Date: Thu, 9 May 2024 21:21:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 69z0-lO4Yvt12ZPiaLIX6zcMzRHQZKT6
-X-Proofpoint-ORIG-GUID: kn6K2sGR7l2H9UBQrRWScwibF36WhnTf
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v12 6/6] PCI: qcom: Add OPP support to scale performance
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas
+	<bhelgaas@google.com>, <johan+linaro@kernel.org>,
+        <bmasney@redhat.com>, <djakov@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_parass@quicinc.com>, <krzysztof.kozlowski@linaro.org>
+References: <20240427-opp_support-v12-0-f6beb0a1f2fc@quicinc.com>
+ <20240427-opp_support-v12-6-f6beb0a1f2fc@quicinc.com>
+ <20240430052613.GD3301@thinkpad>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20240430052613.GD3301@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: e3kRQnlviW5VTpG8CYK6mD-swvONXwYd
+X-Proofpoint-ORIG-GUID: e3kRQnlviW5VTpG8CYK6mD-swvONXwYd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-09_06,2024-05-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
- mlxscore=0 impostorscore=0 phishscore=0 malwarescore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405090080
-
-There is an issue with the hotplug operation when it's done on the
-bridge/switch slot. The bridge-port and devices behind the bridge, which
-become offline by hot-unplug operation, don't get hot-plugged/enabled by
-doing hot-plug operation on that slot. Only the first port of the bridge
-gets enabled and the remaining port/devices remain unplugged. The hot
-plug/unplug operation is done by the hotplug driver
-(drivers/pci/hotplug/pnv_php.c).
-
-Root Cause Analysis: This behavior is due to missing code for the DPC
-switch/bridge. The existing driver depends on pci_hp_add_devices()
-function for device enablement. This function calls pci_scan_slot() on
-only one device-node/port of the bridge, not on all the siblings'
-device-node/port.
-
-The missing code needs to be added which will find all the sibling
-device-nodes/bridge-ports and will run explicit pci_scan_slot() on
-those.  A new function has been added for this purpose which gets
-invoked from pci_hp_add_devices(). This new function
-pci_traverse_sibling_nodes_and_scan_slot() gets all the sibling
-bridge-ports by traversal and explicitly invokes pci_scan_slot on them.
-
-
-Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
----
-
-Command for reproducing the issue :
-
-For hot unplug/disable - echo 0 > /sys/bus/pci/slots/C5/power
-For hot plug/enable -    echo 1 > /sys/bus/pci/slots/C5/power
-
-where C5 is slot associated with bridge.
-
-Scenario/Tests:
-Output of lspci -nn before test is given below. This snippet contains
-devices used for testing on Powernv machine.
-
-0004:02:00.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-0004:02:01.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-0004:02:02.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-0004:02:03.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-0004:08:00.0 Serial Attached SCSI controller [0107]:
-Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3 [1000:00c9] (rev 01)
-0004:09:00.0 Serial Attached SCSI controller [0107]:
-Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3 [1000:00c9] (rev 01)
-
-Output of lspci -tv before test is as follows:
-
-# lspci -tv
- +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
- |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
- |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
- |                           |               \-03.0-[0a-0e]--
- |                           \-00.1  PMC-Sierra Inc. Device 4052
-
-C5(bridge) and C6(End Point) slot address are as below:
-# cat /sys/bus/pci/slots/C5/address
-0004:02:00
-# cat /sys/bus/pci/slots/C6/address
-0004:09:00
-
-Hot-unplug operation on slot associated with bridge:
-# echo 0 > /sys/bus/pci/slots/C5/power
-# lspci -tv
- +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--
- |                           \-00.1  PMC-Sierra Inc. Device 4052
-
-From the above lspci -tv output, it can be observed that hot unplug
-operation has removed all the PMC-Sierra bridge ports like:
-00.0-[03-07], 01.0-[08], 02.0-[09], 03.0-[0a-0e] and the SAS devices
-behind the bridge-port. Without the fix, when the hot plug operation is
-done on the same slot, it adds only the first bridge port and doesn't
-restore all the bridge-ports and devices that it unplugged earlier.
-Below snippet shows this.
-
-Hot-plug operation on the bridge slot without the fix:
-# echo 1 > /sys/bus/pci/slots/C5/power
-# lspci -tv
- +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
- |                           \-00.1  PMC-Sierra Inc. Device 4052
-
-After the fix, it restores all the devices in the same manner how it
-unplugged them earlier during the hot unplug operation. The below snippet
-shows the same.
-Hot-plug operation on bridge slot with the fix:
-# echo 1 > /sys/bus/pci/slots/C5/power
-# lspci -tv
- +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
- |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
- |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
- |                           |               \-03.0-[0a-0e]--
- |                           \-00.1  PMC-Sierra Inc. Device 4052
-
-Removal of End point device behind bridge are also intact and behaving
-correctly.
-Hot-unplug operation on Endpoint device C6:
-# echo 0 > /sys/bus/pci/slots/C6/power
-# lspci -tv
- +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
- |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
- |                           |               +-02.0-[09]--
- |                           |               \-03.0-[0a-0e]--
- |                           \-00.1  PMC-Sierra Inc. Device 4052
-
-Hot-plug operation on Endpoint device C6:
-# echo 1 > /sys/bus/pci/slots/C6/power
-# lspci -tv
- +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
- |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
- |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
- |                           |               \-03.0-[0a-0e]--
- |                           \-00.1  PMC-Sierra Inc. Device 4052
+ definitions=2024-05-09_08,2024-05-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0 phishscore=0
+ adultscore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
+ definitions=main-2405090107
 
 
 
- arch/powerpc/include/asm/ppc-pci.h |  4 +++
- arch/powerpc/kernel/pci-hotplug.c  |  5 ++--
- arch/powerpc/kernel/pci_dn.c       | 42 ++++++++++++++++++++++++++++++
- 3 files changed, 48 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-index a8b7e8682f5b..a5d5ee4ff7c0 100644
---- a/arch/powerpc/include/asm/ppc-pci.h
-+++ b/arch/powerpc/include/asm/ppc-pci.h
-@@ -28,6 +28,10 @@ struct pci_dn;
- void *pci_traverse_device_nodes(struct device_node *start,
- 				void *(*fn)(struct device_node *, void *),
- 				void *data);
-+
-+void *pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start,
-+					       struct pci_bus *bus);
-+
- extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
- 
- #if defined(CONFIG_IOMMU_API) && (defined(CONFIG_PPC_PSERIES) || \
-diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-index 0fe251c6ac2c..639a3d592fe2 100644
---- a/arch/powerpc/kernel/pci-hotplug.c
-+++ b/arch/powerpc/kernel/pci-hotplug.c
-@@ -106,7 +106,7 @@ EXPORT_SYMBOL_GPL(pci_hp_remove_devices);
-  */
- void pci_hp_add_devices(struct pci_bus *bus)
- {
--	int slotno, mode, max;
-+	int mode, max;
- 	struct pci_dev *dev;
- 	struct pci_controller *phb;
- 	struct device_node *dn = pci_bus_to_OF_node(bus);
-@@ -129,8 +129,7 @@ void pci_hp_add_devices(struct pci_bus *bus)
- 		 * order for fully rescan all the way down to pick them up.
- 		 * They can have been removed during partial hotplug.
- 		 */
--		slotno = PCI_SLOT(PCI_DN(dn->child)->devfn);
--		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+		pci_traverse_sibling_nodes_and_scan_slot(dn, bus);
- 		max = bus->busn_res.start;
- 		/*
- 		 * Scan bridges that are already configured. We don't touch
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 38561d6a2079..2e202f9cec21 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -493,4 +493,46 @@ static void pci_dev_pdn_setup(struct pci_dev *pdev)
- 	pdn = pci_get_pdn(pdev);
- 	pdev->dev.archdata.pci_data = pdn;
- }
-+
-+void *pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start, struct pci_bus *bus)
-+{
-+	struct device_node *dn;
-+	struct device_node *parent;
-+	int slotno;
-+
-+	const __be32 *classp1;
-+	u32 class1 = 0;
-+
-+	classp1 = of_get_property(start->child, "class-code", NULL);
-+	if (classp1)
-+		class1 = of_read_number(classp1, 1);
-+
-+	/* Call of pci_scan_slot for non-bridge/EP case */
-+	if (!((class1 >> 8) == PCI_CLASS_BRIDGE_PCI)) {
-+		slotno = PCI_SLOT(PCI_DN(start->child)->devfn);
-+		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+		return NULL;
-+	}
-+
-+	/* Iterate all siblings */
-+	parent = start;
-+	for_each_child_of_node(parent, dn) {
-+		const __be32 *classp;
-+		u32 class = 0;
-+
-+		classp = of_get_property(dn, "class-code", NULL);
-+		if (classp)
-+			class = of_read_number(classp, 1);
-+
-+		/* Call of pci_scan_slot on each sibling-nodes/bridge-ports */
-+		if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-+			slotno = PCI_SLOT(PCI_DN(dn)->devfn);
-+			pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+		}
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(pci_traverse_sibling_nodes_and_scan_slot);
-+
- DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, pci_dev_pdn_setup);
--- 
-2.44.0
+On 4/30/2024 10:56 AM, Manivannan Sadhasivam wrote:
+> On Sat, Apr 27, 2024 at 07:22:39AM +0530, Krishna chaitanya chundru wrote:
+>> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
+>> maintains hardware state of a regulator by performing max aggregation of
+>> the requests made by all of the clients.
+>>
+>> PCIe controller can operate on different RPMh performance state of power
+>> domain based on the speed of the link. And this performance state varies
+>> from target to target, like some controllers support GEN3 in NOM (Nominal)
+>> voltage corner, while some other supports GEN3 in low SVS (static voltage
+>> scaling).
+>>
+>> The SoC can be more power efficient if we scale the performance state
+>> based on the aggregate PCIe link bandwidth.
+>>
+>> Add Operating Performance Points (OPP) support to vote for RPMh state based
+>> on the aggregate link bandwidth.
+>>
+>> OPP can handle ICC bw voting also, so move ICC bw voting through OPP
+>> framework if OPP entries are present.
+>>
+>> As we are moving ICC voting as part of OPP, don't initialize ICC if OPP
+>> is supported.
+>>
+>> Before PCIe link is initialized vote for highest OPP in the OPP table,
+>> so that we are voting for maximum voltage corner for the link to come up
+>> in maximum supported speed.
+>>
+>> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 81 ++++++++++++++++++++++++++++------
+>>   1 file changed, 67 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 465d63b4be1c..40c875c518d8 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> 
+> [...]
+> 
+>> @@ -1661,6 +1711,9 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>>   		ret = icc_disable(pcie->icc_cpu);
+>>   		if (ret)
+>>   			dev_err(dev, "Failed to disable CPU-PCIe interconnect path: %d\n", ret);
+>> +
+>> +		if (!pcie->icc_mem)
+>> +			dev_pm_opp_set_opp(pcie->pci->dev, NULL);
+> 
+> At the start of the suspend, there is a call to icc_set_bw() for PCIe-MEM path.
+> Don't you want to update it too?
+> 
+> - Mani
+>
+if opp is supported we just need to call dev_pm_opp_set_opp() only once
+which will take care for both PCIe-MEM & CPU-PCIe path.
+so we are not adding explicitly there.
+- Krishna Chaitanya.
 
 
