@@ -1,314 +1,322 @@
-Return-Path: <linux-pci+bounces-7320-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7321-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16B9D8C1DB3
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 07:26:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFB6F8C1E54
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 08:46:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81902B22DBE
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 05:26:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D1D41F213C8
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 06:46:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEDD31509B9;
-	Fri, 10 May 2024 05:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E1213BC0C;
+	Fri, 10 May 2024 06:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mu1ZJlji"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Q775EVcV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E171635B2;
-	Fri, 10 May 2024 05:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A4A1DA53
+	for <linux-pci@vger.kernel.org>; Fri, 10 May 2024 06:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715318782; cv=none; b=ZpYjIArkE1O/ng6YrLYbWGPtamI4lsIJIAuRA5RHyTM22cwbuez+8fyIa7RIXd846hZ6I7WgNQE6LaUsvWbZwfGzM6dJCGNMW0+fE6JdJpuIPAUz79t1md5ET5rx1M3uSLKK6eOBHfrmbbfNBwWoSTgu5JHTPrgjcbX2Zq7eWuA=
+	t=1715323581; cv=none; b=Uk4DHUl551akuVPxgMxfg3Wz9KrQZuXxhB7C9CF9K9tvPSJAbT0FrtWxFHx82j/dQGv2/c/OLN9zp9whCCC2yrKzSho9RjoTwhHYL0uln61Ig45wC03IbJeFbWIMCM3FXFJbnDBwMJCxoOGesa8Yman4CtcNGakG3GgT6bitUdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715318782; c=relaxed/simple;
-	bh=s7GnuaM+DAGfO01oPdNcCFYZ9nnThKfN0BTirWMJ1j4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYtoqnBhOACTlmwxf6xnVxT2ixop/7D2gtu8gWXpCo5pajY/QVJgo2B/I51AbvUtrgmBTljH2qBehYMWlHmtDK3Le/5wwYCrv1CXUvxaeChwmzHTIxVwA3Tontoyk8waAhL98kDJIxj7F5xn//XkeTcnu4KGTJhBtE1KthUyrPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mu1ZJlji; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715318781; x=1746854781;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=s7GnuaM+DAGfO01oPdNcCFYZ9nnThKfN0BTirWMJ1j4=;
-  b=Mu1ZJljiScVPDsYoHFP840lmy+h6ekAg3LB7mPyZw33EpvRAdEVKTMj0
-   t1516NwSK2GDfvVNx/HXvNHamPZzdu6VLVAg/+GBKvpcLdM4iJD+0BU1Z
-   PiRk0iJKP1RQEjaw9t7lUnbTVRqVdXhxzHp273fK1zwIdLavwxsqADjpI
-   ULQjolVhk/2KPBZpMDkayzX6zUuG0SZxkBMFXtZO+QsV1PBJkP9vJX586
-   /yXdwd5XTUU95dZnopTOMYHujVmCQBFiH2CltbiBuRkMOG6GeKf4P7Mrg
-   fIM0+8fH3ZgDaa/aN4kdZe8k11EAC/MlnCdegYoEdWkh7NLy+n6fDBfc2
-   w==;
-X-CSE-ConnectionGUID: P4H7eUIvT5qU6/MOk4u57A==
-X-CSE-MsgGUID: CUN1EvIST1OQ63cv0hluUA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="21953105"
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="21953105"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 22:26:20 -0700
-X-CSE-ConnectionGUID: bPJN/TMWR7yicxs40X0qEg==
-X-CSE-MsgGUID: RSR06L2iTJu69BRESjHIVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="66942671"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 09 May 2024 22:26:18 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 8ED5F15C; Fri, 10 May 2024 08:26:16 +0300 (EEST)
-Date: Fri, 10 May 2024 08:26:16 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Esther Shimanovich <eshimanovich@chromium.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-Message-ID: <20240510052616.GC4162345@black.fi.intel.com>
-References: <20240419044945.GR112498@black.fi.intel.com>
- <CA+Y6NJEpWpfPqHO6=Z1XFCXZDUq1+g6EFryB+Urq1=h0PhT+fg@mail.gmail.com>
- <7d68a112-0f48-46bf-9f6d-d99b88828761@amd.com>
- <20240423053312.GY112498@black.fi.intel.com>
- <7197b2ce-f815-48a1-a78e-9e139de796b7@amd.com>
- <20240424085608.GE112498@black.fi.intel.com>
- <CA+Y6NJFyi6e7ype6dTAjxsy5aC80NdVOt+Vg-a0O0y_JsfwSGg@mail.gmail.com>
- <Zi0VLrvUWH6P1_or@wunner.de>
- <CA+Y6NJE8hA+wt+auW1wJBWA6EGMc6CGpmdExr3475E_Yys-Zdw@mail.gmail.com>
- <ZjsKPSgV39SF0gdX@wunner.de>
+	s=arc-20240116; t=1715323581; c=relaxed/simple;
+	bh=BuRmL94tgErF14eatsAm4hjaw6Pwk61QkSEUEUhunoE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F9XrfgEf/Nqsdu2QGLuys+h+tY8GWMSzyckUuYs/2C7EaOBi4/AqzuX/SXSAHmda39DV3qQJJa4VIC3hTpcbzKUUQh5rPM/RYFrJSgSPgWaPyRZGSsZI+VoHqyV2CAI/m71CmW3Xwb7uA7MX2aa7gRp4kAEEVvWWJcZKQ/AkvCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Q775EVcV; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-51f2ebbd8a7so1767947e87.2
+        for <linux-pci@vger.kernel.org>; Thu, 09 May 2024 23:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1715323577; x=1715928377; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SXiDu9fHyqu4n99SnTsmyeycGZXOyLvOeHSQ/rJF36g=;
+        b=Q775EVcVXB4rIv9v/XHih08lDszS0h9QeaOW0s9JhF3xuyk1nub3rRs6Q3wktfHulZ
+         CTlmGHHU/V+pO8F4xm01A0DXNiJzHmVgN2KQmaoO+x35zYwx5El+3U7N4RC1dRcRSSRi
+         2lEub0srWhimS6rZxO3DexmXNWn32Z9mLK38gBZLmpYX2QCwAoTgXqo9ivzEzcWX88Zn
+         n+8YNdzRbnLtDOaM1WVYqNIyopCbzhu9JqUyUM6aVAGsC85NdyYED/TohhaDo9YzLAEO
+         PXeZFIh3sn6GHKePKFnOfe1yH1g8OWoUnOTPzwV3VDeCWoj0MoXgrsEnmt7ahBOd5Prx
+         IhHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715323577; x=1715928377;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SXiDu9fHyqu4n99SnTsmyeycGZXOyLvOeHSQ/rJF36g=;
+        b=SfsSpo9nCIiFPAn3wZ6KWg9BziBT5xOhqVbyroWPVXF/trpfmULSTo1P6X209wLsNB
+         tvJ1FurscoVsv495XtYmmaO5rw5DLSPmBEzt2UYtlyN8/UM1S4ifumJohBrPlU24aWwM
+         JBNNv5ubppL/KlDBfG5AizXWzT/OWublhXxhC3EJmRTgD28xKczEF8GDl7gpnMrV+xMd
+         iXiyQWSbowEUB4FMmgaGXsvN4r6eqVBh8NClR590JC/NTOD3Nc21xzEIzjBnt6G4bUhX
+         DW86sRge3IhFqr6a5sq2StnnjnHBQXpVRNFUJgR10Y+nAzM3+46/JArOlQjnh9eceCX5
+         b54Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBZZV3gRMm1ChlUuLdo9/ntFAgKbT7gWBc65rDlFDjOxJCuVHesyHOuC2jsHDypXos9ec3beDkZgTO9QONGIuJoDMWzwxMPxE5
+X-Gm-Message-State: AOJu0Yx4JY3pNN1KCQ++n9ntBgjivvhsDVeutLvZsgJy5Kr80TSKUWjV
+	cKyyeaDyohfBKMz3VUUMOBOeQ98nsBtU9AnxXQjjV4WWurzdzI2ROvaU6+iwcPA=
+X-Google-Smtp-Source: AGHT+IFqK/cSOVqRKoyq3BVFcNHdx6Uad4d+cjVO+0R0aeAeSJBQPqsxX5qu4tubXu8bA2FhNXUVRg==
+X-Received: by 2002:ac2:4437:0:b0:519:2d60:d71b with SMTP id 2adb3069b0e04-5220fb748e2mr967415e87.22.1715323577232;
+        Thu, 09 May 2024 23:46:17 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c? (p200300e5873ca5006aafb7a77c29ae5c.dip0.t-ipconnect.de. [2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bebb660sm1526751a12.36.2024.05.09.23.46.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 May 2024 23:46:16 -0700 (PDT)
+Message-ID: <79666084-fc2f-4637-8f0b-3846285601b8@suse.com>
+Date: Fri, 10 May 2024 08:46:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZjsKPSgV39SF0gdX@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC KERNEL PATCH v6 3/3] xen/privcmd: Add new syscall to get gsi
+ from irq
+To: Jiqian Chen <Jiqian.Chen@amd.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>
+Cc: xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ Huang Rui <Ray.Huang@amd.com>
+References: <20240419033616.607889-1-Jiqian.Chen@amd.com>
+ <20240419033616.607889-4-Jiqian.Chen@amd.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <20240419033616.607889-4-Jiqian.Chen@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On Wed, May 08, 2024 at 07:14:37AM +0200, Lukas Wunner wrote:
-> On Wed, May 01, 2024 at 06:23:28PM -0400, Esther Shimanovich wrote:
-> > On Sat, Apr 27, 2024 at 3:17AM Lukas Wunner <lukas@wunner.de> wrote:
-> > That is correct, when the user-visible issue occurs, no driver is
-> > bound to the NHI and XHCI. The discrete JHL chip is not permitted to
-> > attach to the external-facing root port because of the security
-> > policy, so the NHI and XHCI are not seen by the computer.
+On 19.04.24 05:36, Jiqian Chen wrote:
+> In PVH dom0, it uses the linux local interrupt mechanism,
+> when it allocs irq for a gsi, it is dynamic, and follow
+> the principle of applying first, distributing first. And
+> the irq number is alloced from small to large, but the
+> applying gsi number is not, may gsi 38 comes before gsi 28,
+> it causes the irq number is not equal with the gsi number.
+> And when passthrough a device, QEMU will use device's gsi
+> number to do pirq mapping, but the gsi number is got from
+> file /sys/bus/pci/devices/<sbdf>/irq, irq!= gsi, so it will
+> fail when mapping.
+> And in current linux codes, there is no method to translate
+> irq to gsi for userspace.
 > 
-> Could you rework your patch to only rectify the NHI's and XHCI's
-> device properties and leave the bridges untouched?
+> For above purpose, record the relationship of gsi and irq
+> when PVH dom0 do acpi_register_gsi_ioapic for devices and
+> adds a new syscall into privcmd to let userspace can get
+> that translation when they have a need.
+> 
+> Co-developed-by: Huang Rui <ray.huang@amd.com>
+> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
+> ---
+>   arch/x86/include/asm/apic.h      |  8 +++++++
+>   arch/x86/include/asm/xen/pci.h   |  5 ++++
+>   arch/x86/kernel/acpi/boot.c      |  2 +-
+>   arch/x86/pci/xen.c               | 21 +++++++++++++++++
+>   drivers/xen/events/events_base.c | 39 ++++++++++++++++++++++++++++++++
+>   drivers/xen/privcmd.c            | 19 ++++++++++++++++
+>   include/uapi/xen/privcmd.h       |  7 ++++++
+>   include/xen/events.h             |  5 ++++
+>   8 files changed, 105 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+> index 9d159b771dc8..dd4139250895 100644
+> --- a/arch/x86/include/asm/apic.h
+> +++ b/arch/x86/include/asm/apic.h
+> @@ -169,6 +169,9 @@ extern bool apic_needs_pit(void);
+>   
+>   extern void apic_send_IPI_allbutself(unsigned int vector);
+>   
+> +extern int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+> +				    int trigger, int polarity);
+> +
+>   #else /* !CONFIG_X86_LOCAL_APIC */
+>   static inline void lapic_shutdown(void) { }
+>   #define local_apic_timer_c2_ok		1
+> @@ -183,6 +186,11 @@ static inline void apic_intr_mode_init(void) { }
+>   static inline void lapic_assign_system_vectors(void) { }
+>   static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
+>   static inline bool apic_needs_pit(void) { return true; }
+> +static inline int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+> +				    int trigger, int polarity)
+> +{
+> +	return (int)gsi;
+> +}
+>   #endif /* !CONFIG_X86_LOCAL_APIC */
+>   
+>   #ifdef CONFIG_X86_X2APIC
+> diff --git a/arch/x86/include/asm/xen/pci.h b/arch/x86/include/asm/xen/pci.h
+> index 9015b888edd6..aa8ded61fc2d 100644
+> --- a/arch/x86/include/asm/xen/pci.h
+> +++ b/arch/x86/include/asm/xen/pci.h
+> @@ -5,6 +5,7 @@
+>   #if defined(CONFIG_PCI_XEN)
+>   extern int __init pci_xen_init(void);
+>   extern int __init pci_xen_hvm_init(void);
+> +extern int __init pci_xen_pvh_init(void);
+>   #define pci_xen 1
+>   #else
+>   #define pci_xen 0
+> @@ -13,6 +14,10 @@ static inline int pci_xen_hvm_init(void)
+>   {
+>   	return -1;
+>   }
+> +static inline int pci_xen_pvh_init(void)
+> +{
+> +	return -1;
+> +}
+>   #endif
+>   #ifdef CONFIG_XEN_PV_DOM0
+>   int __init pci_xen_initial_domain(void);
+> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+> index 85a3ce2a3666..72c73458c083 100644
+> --- a/arch/x86/kernel/acpi/boot.c
+> +++ b/arch/x86/kernel/acpi/boot.c
+> @@ -749,7 +749,7 @@ static int acpi_register_gsi_pic(struct device *dev, u32 gsi,
+>   }
+>   
+>   #ifdef CONFIG_X86_LOCAL_APIC
+> -static int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+> +int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
+>   				    int trigger, int polarity)
+>   {
+>   	int irq = gsi;
+> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+> index 652cd53e77f6..f056ab5c0a06 100644
+> --- a/arch/x86/pci/xen.c
+> +++ b/arch/x86/pci/xen.c
+> @@ -114,6 +114,21 @@ static int acpi_register_gsi_xen_hvm(struct device *dev, u32 gsi,
+>   				 false /* no mapping of GSI to PIRQ */);
+>   }
+>   
+> +static int acpi_register_gsi_xen_pvh(struct device *dev, u32 gsi,
+> +				    int trigger, int polarity)
+> +{
+> +	int irq;
+> +
+> +	irq = acpi_register_gsi_ioapic(dev, gsi, trigger, polarity);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	if (xen_pvh_add_gsi_irq_map(gsi, irq) == -EEXIST)
+> +		printk(KERN_INFO "Already map the GSI :%u and IRQ: %d\n", gsi, irq);
+> +
+> +	return irq;
+> +}
+> +
+>   #ifdef CONFIG_XEN_PV_DOM0
+>   static int xen_register_gsi(u32 gsi, int triggering, int polarity)
+>   {
+> @@ -558,6 +573,12 @@ int __init pci_xen_hvm_init(void)
+>   	return 0;
+>   }
+>   
+> +int __init pci_xen_pvh_init(void)
+> +{
+> +	__acpi_register_gsi = acpi_register_gsi_xen_pvh;
 
-As an alternative, I also spent some time to figure out whether there is
-a way to detect the integrated Thunderbolt PCIe Root Ports and turns out
-it is not "impossible" at least :) Basically it is a list of Ice Lake
-and Tiger Lake Thunderbolt PCIe Root Ports. Everything after this is
-using the "usb4-host-interface" device property.
+No support for unregistering the gsi again?
 
-I went a head and did a patch that, instead of relabeling, sets the
-"untrusted" and "removable" flags based on this and some heuristics (to
-figure out the discrete controller) directly on the source. I did some
-testing over the hardware I have here and it sets the flags like this:
+> +	return 0;
+> +}
+> +
+>   #ifdef CONFIG_XEN_PV_DOM0
+>   int __init pci_xen_initial_domain(void)
+>   {
+> diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+> index 27553673e46b..80d4f7faac64 100644
+> --- a/drivers/xen/events/events_base.c
+> +++ b/drivers/xen/events/events_base.c
+> @@ -953,6 +953,43 @@ int xen_irq_from_gsi(unsigned gsi)
+>   }
+>   EXPORT_SYMBOL_GPL(xen_irq_from_gsi);
+>   
+> +int xen_gsi_from_irq(unsigned irq)
+> +{
+> +	struct irq_info *info;
+> +
+> +	list_for_each_entry(info, &xen_irq_list_head, list) {
+> +		if (info->type != IRQT_PIRQ)
+> +			continue;
+> +
+> +		if (info->irq == irq)
+> +			return info->u.pirq.gsi;
+> +	}
+> +
+> +	return -1;
+> +}
+> +EXPORT_SYMBOL_GPL(xen_gsi_from_irq);
+> +
+> +int xen_pvh_add_gsi_irq_map(unsigned gsi, unsigned irq)
+> +{
+> +	int tmp_irq;
+> +	struct irq_info *info;
+> +
+> +	tmp_irq = xen_irq_from_gsi(gsi);
+> +	if (tmp_irq != -1)
+> +		return -EEXIST;
+> +
+> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
+> +	if (info == NULL)
+> +		panic("Unable to allocate metadata for GSI%d\n", gsi);
 
-  - Everything below integrated Thunderbolt/USB4 PCIe root ports are
-    marked as "untrusted" and "removable", this includes the Ice Lake
-    and Tiger Lake ones. Whereas the NHI and xHCI here are untouched.
+Please don't kill the system here, just return -ENOMEM.
 
-  - Everything below discrete Thunderbolt/USB4 host controller PCIe
-    downstream ports that are behind a PCIe Root Port with
-    "external_facing" set are marked as "untrusted" and "removable"
-    whereas endpoints are still "trusted" and "fixed".
+> +
+> +	info->type = IRQT_PIRQ;
+> +	info->irq = irq;
+> +	info->u.pirq.gsi = gsi;
+> +	list_add_tail(&info->list, &xen_irq_list_head);
 
-I'm sharing the code below. @Esther, you may use it as you like, parts
-of it or just ignore the whole thing completely.
+I think you need some kind of locking to protect changing of the list against
+concurrent accesses.
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 1325fbae2f28..38bc80c931d6 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1612,6 +1612,127 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
- 		dev->is_thunderbolt = 1;
- }
- 
-+static bool pcie_switch_directly_under(struct pci_dev *bridge,
-+				       struct pci_dev *parent,
-+				       struct pci_dev *pdev)
-+{
-+	u64 serial, upstream_serial;
-+
-+	/*
-+	 * Check the type of the device to make sure it is part of a PCIe
-+	 * switch and if it is try to match the serial numbers too with
-+	 * the assumption that they all share the same serial number.
-+	 */
-+	switch (pci_pcie_type(pdev)) {
-+	case PCI_EXP_TYPE_UPSTREAM:
-+		if (parent == bridge)
-+			return pci_get_dsn(pdev) != 0;
-+		break;
-+
-+	case PCI_EXP_TYPE_DOWNSTREAM:
-+		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
-+			upstream_serial = pci_get_dsn(parent);
-+			if (!upstream_serial)
-+				return false;
-+			serial = pci_get_dsn(pdev);
-+			if (!serial)
-+				return false;
-+			if (serial != upstream_serial)
-+				return false;
-+			parent = pci_upstream_bridge(parent);
-+			if (parent == bridge)
-+				return true;
-+		}
-+		break;
-+
-+	case PCI_EXP_TYPE_ENDPOINT:
-+		if (pci_pcie_type(parent) == PCI_EXP_TYPE_DOWNSTREAM) {
-+			serial = pci_get_dsn(parent);
-+			if (!serial)
-+				return false;
-+			parent = pci_upstream_bridge(parent);
-+			if (parent && pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
-+				upstream_serial = pci_get_dsn(parent);
-+				if (!upstream_serial)
-+					return false;
-+				if (serial != upstream_serial)
-+					return false;
-+				parent = pci_upstream_bridge(parent);
-+				if (parent == bridge)
-+					return true;
-+			}
-+		}
-+		break;
-+	}
-+
-+	return false;
-+}
-+
-+static bool pcie_has_usb4_host_interface(struct pci_dev *pdev)
-+{
-+	struct fwnode_handle *fwnode;
-+
-+	/*
-+	 * For USB4 the tunneled PCIe root or downstream ports are marked with
-+	 * the "usb4-host-interface" property so we look for that first. This
-+	 * should cover the most cases.
-+	 */
-+	fwnode = fwnode_find_reference(dev_fwnode(&pdev->dev),
-+				       "usb4-host-interface", 0);
-+	if (!IS_ERR(fwnode)) {
-+		fwnode_handle_put(fwnode);
-+		return true;
-+	}
-+
-+	/*
-+	 * Any integrated Thunderbolt 3/4 PCIe root ports from Intel
-+	 * before Alder Lake do not have the above device property so we
-+	 * use their PCI IDs instead. All these are tunneled. This list
-+	 * is not expected to grow.
-+	 */
-+	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
-+		switch (pdev->device) {
-+		/* Ice Lake Thunderbolt 3 PCIe Root Ports */
-+		case 0x8a1d:
-+		case 0x8a1f:
-+		case 0x8a21:
-+		case 0x8a23:
-+		/* Tiger Lake-LP Thunderbolt 4 PCIe Root Ports */
-+		case 0x9a23:
-+		case 0x9a25:
-+		case 0x9a27:
-+		case 0x9a29:
-+		/* Tiger Lake-H Thunderbolt 4 PCIe Root Ports */
-+		case 0x9a2b:
-+		case 0x9a2d:
-+		case 0x9a2f:
-+		case 0x9a31:
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+/* root->external_facing is true, parent != NULL */
-+static bool pcie_is_tunneled(struct pci_dev *root, struct pci_dev *parent,
-+			     struct pci_dev *pdev)
-+{
-+	/* Anything directly behind a "usb4-host-interface" is tunneled */
-+	if (pcie_has_usb4_host_interface(parent))
-+		return true;
-+
-+	/*
-+	 * Check if this is a discrete Thunderbolt/USB4 controller that is
-+	 * directly behind a PCIe Root Port marked as "ExternalFacingPort".
-+	 * These are not behind a PCIe tunnel.
-+	 */
-+	if (pcie_switch_directly_under(root, parent, pdev))
-+		return false;
-+
-+	return true;
-+}
-+
- static void set_pcie_untrusted(struct pci_dev *dev)
- {
- 	struct pci_dev *parent;
-@@ -1621,8 +1742,32 @@ static void set_pcie_untrusted(struct pci_dev *dev)
- 	 * untrusted as well.
- 	 */
- 	parent = pci_upstream_bridge(dev);
--	if (parent && (parent->untrusted || parent->external_facing))
--		dev->untrusted = true;
-+	if (parent) {
-+		struct pci_dev *root;
-+
-+		/* If parent is untrusted so are we */
-+		if (parent->untrusted) {
-+			pci_dbg(dev, "marking as untrusted\n");
-+			dev->untrusted = true;
-+			return;
-+		}
-+
-+		root = pcie_find_root_port(dev);
-+		if (root && root->external_facing) {
-+			/*
-+			 * Only PCIe root ports can be marked as
-+			 * "ExternalFacingPort", However, in case of a
-+			 * discrete Thunderbolt/USB4 controller only its
-+			 * downstream facing ports are actually
-+			 * something that are exposed to the wild so we
-+			 * only mark devices behind those as untrusted.
-+			 */
-+			if (pcie_is_tunneled(root, parent, dev)) {
-+				pci_dbg(dev, "marking as untrusted\n");
-+				dev->untrusted = true;
-+			}
-+		}
-+	}
- }
- 
- static void pci_set_removable(struct pci_dev *dev)
-@@ -1639,10 +1784,15 @@ static void pci_set_removable(struct pci_dev *dev)
- 	 * the port is marked with external_facing, such devices are less
- 	 * accessible to user / may not be removed by end user, and thus not
- 	 * exposed as "removable" to userspace.
-+	 *
-+	 * These are the same devices marked as untrusted by the above
-+	 * function. The ports and endpoints part of the discrete
-+	 * Thunderbolt/USB4 controller are not marked as removable.
- 	 */
--	if (parent &&
--	    (parent->external_facing || dev_is_removable(&parent->dev)))
-+	if (dev->untrusted || (parent && dev_is_removable(&parent->dev))) {
-+		pci_dbg(dev, "marking as removable\n");
- 		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
-+	}
- }
- 
- /**
+> +
+> +	return 0;
+> +}
+> +
+>   static void __unbind_from_irq(struct irq_info *info, unsigned int irq)
+>   {
+>   	evtchn_port_t evtchn;
+> @@ -2295,6 +2332,8 @@ void __init xen_init_IRQ(void)
+>   	xen_init_setup_upcall_vector();
+>   	xen_alloc_callback_vector();
+>   
+> +	if (xen_pvh_domain())
+> +		pci_xen_pvh_init();
+>   
+>   	if (xen_hvm_domain()) {
+>   		native_init_IRQ();
+> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> index 67dfa4778864..11feed529e1d 100644
+> --- a/drivers/xen/privcmd.c
+> +++ b/drivers/xen/privcmd.c
+> @@ -842,6 +842,21 @@ static long privcmd_ioctl_mmap_resource(struct file *file,
+>   	return rc;
+>   }
+>   
+> +static long privcmd_ioctl_gsi_from_irq(struct file *file, void __user *udata)
+> +{
+> +	struct privcmd_gsi_from_irq kdata;
+> +
+> +	if (copy_from_user(&kdata, udata, sizeof(kdata)))
+> +		return -EFAULT;
+> +
+> +	kdata.gsi = xen_gsi_from_irq(kdata.irq);
+> +
+> +	if (copy_to_user(udata, &kdata, sizeof(kdata)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+
+Shouldn't you return an error if xen_gsi_from_irq() returned -1?
+
+
+Juergen
 
