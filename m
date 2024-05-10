@@ -1,75 +1,78 @@
-Return-Path: <linux-pci+bounces-7329-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7330-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0DAD8C219C
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 12:07:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA4188C21A0
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 12:08:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 812941F22C91
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 10:07:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85FAB2845E8
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 10:08:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 515CC168AE6;
-	Fri, 10 May 2024 10:07:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC98165FC8;
+	Fri, 10 May 2024 10:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iw3ADmvS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VZMiwdgg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7337E4AEFA;
-	Fri, 10 May 2024 10:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E12165FBF;
+	Fri, 10 May 2024 10:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715335664; cv=none; b=JVvIdQBbhIthFvpspEECjwA4XNswgDNUxRNnY3p3I+uOvJkRhfZ8ihpm0gT58cRzM7nCG57aOP5mudjbcIrlNT68xXmRR4CnQcFqy8gmORM9272SUg9dWdrUpTkdoTW2dGreiryqmh/Py9sNN/P+Yr4P2GP8A9/cBYLKSfam4Ts=
+	t=1715335672; cv=none; b=FTrvvIbN/aKLpp0ZgLLnDrn+Ej3VJEQU0BtY2ak2EtgAE8hH/d0qqe4KPViufUP0mjVidmwAYGPUwY6x6Y60cjWVk+W7srHJmbr9t+AaeRPnowSoANbJcYWDt/wU6SZJCmPEzyp9ot3f6KiK7to/s5PnX/KWoZZjtdNfI0eY2x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715335664; c=relaxed/simple;
-	bh=OCWYMtnallfof9cmVRtJ1kPAbbWtnFDn34D2Owmif80=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=R4+kHNL7yJEzstgE1551vbjknicjLk7iZWLeuUzCh4BzphBObYTzZvbcZo1dQZeE2ZCvd7IEcQywLgeZ/j9PmUPpPeLglFbBlWD18LbJKYveaGMaA79HN5NjS5R8OVnlaGsgS8dHnLJ10u8+iQpRIO2gSQr5oR0GqbSE8sM1u8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iw3ADmvS; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1715335672; c=relaxed/simple;
+	bh=nDVHo/uGXMDlWtWQD47FWInWDYtBZPj5d51tV3Jx/N8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Hoy0JdHXt90v4Yi4MvMI7J8wzIRPwlPOVpNk7AqWfz4lw8P+xXRnyN2n6CJp6tWp4HNWk9VdxeLoMddKsCVKshVfdo8lmi1S97CKl4CfLNeitp1VOnLBRl+ORFVUFoij3ZzKKGpk26s2cKWgp5C52rAOY/SB3RPHY0Ba00R1Yqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VZMiwdgg; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715335663; x=1746871663;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OCWYMtnallfof9cmVRtJ1kPAbbWtnFDn34D2Owmif80=;
-  b=iw3ADmvSlN31zged0lShMKSPPp5H8SLX3KkNa2EbpDsNsirU1IKVTyWD
-   z57aYsmj4qr1KcTEvdiosOLph9RoxtSHf4UIpaQi8KRTlFUCCBpGpvQvS
-   wvyZlOtXLwonFGTJbNBSaT6RewFXStwWFb2hbiE9ZWzpm33GcMSxCs3bG
-   hpsSX6ERopzE+/L6xp+L1XHgl//1Y4wsrvqaM0oB0MFMNG9aHrUpcyDUG
-   ruK3e1hJe6VQGkLsJ3ZrxuepQzvPsjgaW7/hdHhXkpEOo0/V9tn2glSJH
-   L/R+nnb0kKyD2nECf7OYYOreeOgpr3J1SbBDYlXjZYHmmniGV/iz1rKz4
+  t=1715335672; x=1746871672;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nDVHo/uGXMDlWtWQD47FWInWDYtBZPj5d51tV3Jx/N8=;
+  b=VZMiwdgggRUq6kb/2d8FnZp8g5SSmY0gihAUf0dSlSd1y35nMidKbLjx
+   db+0Cg2qpxxDamisy5NlawNuQuACuliulm5oiX8/jOhPmQrfsPbuSQv8N
+   aO+uU70oNqiMgySNSXOUuCNhrYZDeGJ+yoIezWB7zVCKrtJjqVzh5BNy/
+   WzxL4pNFVBZfM/zKZFZUR+CuZjsD8fH6tf/Qv0KdqHFLElU4vuA8u2UYD
+   n2+ia5bnS1R6oxAO2FO4lDv0NpP0/BhVGLllX3GY916dT9bQdD1S54626
+   cqpOhPe3x/MELEt3ues6UUbqYTPJ7hgHKvAhmKbqpda6JbmU1qn2pxD9f
    A==;
-X-CSE-ConnectionGUID: PSu2ol+FSKS9xh4DVcsdiA==
-X-CSE-MsgGUID: 38UwueWPSZaXNIR03L0Ryw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11144825"
+X-CSE-ConnectionGUID: RNHkBdnDSe+9HmcrVl/znA==
+X-CSE-MsgGUID: FMG+yppzR3+kiFJTFhNcHw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11144834"
 X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="11144825"
+   d="scan'208";a="11144834"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 03:07:42 -0700
-X-CSE-ConnectionGUID: TqrY0fPERpWwBY1Kjl+aIA==
-X-CSE-MsgGUID: iZwTQAU0TY6ihNHFo1S42A==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 03:07:51 -0700
+X-CSE-ConnectionGUID: yOnt0tdzTlSsylo/hwrqwA==
+X-CSE-MsgGUID: 3R/di1/XRPKcEASqYMoq2Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="29588212"
+   d="scan'208";a="29588248"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.85])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 03:07:38 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 03:07:47 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
 	Oliver O'Halloran <oohall@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>
+	Lukas Wunner <lukas@wunner.de>,
+	linux-kernel@vger.kernel.org
 Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v4 0/7] PCI: Consolidate TLP Log reading and printing
-Date: Fri, 10 May 2024 13:07:23 +0300
-Message-Id: <20240510100730.18805-1-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v4 1/7] PCI: Don't expose pcie_read_tlp_log() outside of PCI subsystem
+Date: Fri, 10 May 2024 13:07:24 +0300
+Message-Id: <20240510100730.18805-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240510100730.18805-1-ilpo.jarvinen@linux.intel.com>
+References: <20240510100730.18805-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,53 +82,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series has the remaining patches of the AER & DPC TLP Log handling
-consolidation and now includes a few minor improvements to the earlier
-accepted TLP Logging code.
+pcie_read_tlp_log() was exposed by the commit 0a5a46a6a61b ("PCI/AER:
+Generalize TLP Header Log reading") but this is now considered a
+mistake. No drivers outside of PCI subsystem should build their own
+diagnostic logging but should rely on PCI core doing it for them.
 
-v4:
-- Added patches:
-	- Remove EXPORT of pcie_read_tlp_log()
-	- Moved code to pcie/tlp.c and build only with AER enabled
-	- Match variables in prototype and function
-	- int -> unsigned int conversion
-	- eetlp_prefix_max into own patch
-- struct pcie_tlp_log param consistently called "log" within tlp.c
-- Moved function prototypes into drivers/pci/pci.h
-- Describe AER/DPC differences more clearly in one commit message
+There's currently one driver (ixgbe) doing it independently which was
+the initial reason why the export was added but it was decided by the
+PCI maintainer that it's something that should be eliminated.
 
-v3:
-- Small rewording in a commit message
+Remove the unwanted EXPORT of pcie_read_tlp_log() and remove it from
+include/linux/aer.h.
 
-v2:
-- Don't add EXPORT()s
-- Don't include igxbe changes
-- Don't use pr_cont() as it's incompatible with pci_err() and according
-  to Andy Shevchenko should not be used in the first place
+Link: https://lore.kernel.org/all/20240322193011.GA701027@bhelgaas/
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/pci.c   | 1 -
+ drivers/pci/pci.h   | 4 ++++
+ include/linux/aer.h | 2 --
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-Ilpo Järvinen (7):
-  PCI: Don't expose pcie_read_tlp_log() outside of PCI subsystem
-  PCI: Move TLP Log handling to own file
-  PCI: Make pcie_read_tlp_log() signature same
-  PCI: Use unsigned int i in pcie_read_tlp_log()
-  PCI: Store # of supported End-End TLP Prefixes
-  PCI: Add TLP Prefix reading into pcie_read_tlp_log()
-  PCI: Create helper to print TLP Header and Prefix Log
-
- drivers/pci/ats.c             |   2 +-
- drivers/pci/pci.c             |  28 ---------
- drivers/pci/pci.h             |   9 +++
- drivers/pci/pcie/Makefile     |   2 +-
- drivers/pci/pcie/aer.c        |  14 ++---
- drivers/pci/pcie/dpc.c        |  14 ++---
- drivers/pci/pcie/tlp.c        | 107 ++++++++++++++++++++++++++++++++++
- drivers/pci/probe.c           |  14 +++--
- include/linux/aer.h           |   3 +-
- include/linux/pci.h           |   2 +-
- include/uapi/linux/pci_regs.h |   2 +
- 11 files changed, 141 insertions(+), 56 deletions(-)
- create mode 100644 drivers/pci/pcie/tlp.c
-
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e5f243dd4288..54ab1d6b8e53 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1092,7 +1092,6 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pcie_read_tlp_log);
+ 
+ /**
+  * pci_restore_bars - restore a device's BAR values (e.g. after wake-up)
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 17fed1846847..9c968df86a92 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -4,6 +4,8 @@
+ 
+ #include <linux/pci.h>
+ 
++struct pcie_tlp_log;
++
+ /* Number of possible devfns: 0.0 to 1f.7 inclusive */
+ #define MAX_NR_DEVFNS 256
+ 
+@@ -419,6 +421,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+ #endif	/* CONFIG_PCIEAER */
+ 
++int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
++
+ #ifdef CONFIG_PCIEPORTBUS
+ /* Cached RCEC Endpoint Association */
+ struct rcec_ea {
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index 4b97f38f3fcf..190a0a2061cd 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -37,8 +37,6 @@ struct aer_capability_regs {
+ 	u16 uncor_err_source;
+ };
+ 
+-int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
+-
+ #if defined(CONFIG_PCIEAER)
+ int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+ int pcie_aer_is_native(struct pci_dev *dev);
 -- 
 2.39.2
 
