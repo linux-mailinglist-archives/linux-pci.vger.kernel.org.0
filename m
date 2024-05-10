@@ -1,71 +1,71 @@
-Return-Path: <linux-pci+bounces-7346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7347-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C59B58C2328
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 13:23:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B0BE8C232C
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 13:23:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80C1F283025
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 11:23:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16C5C1F2173B
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 11:23:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76C5416F0CF;
-	Fri, 10 May 2024 11:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADBE016F915;
+	Fri, 10 May 2024 11:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OhFYWZ5L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVbgKZRJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D08C16EC1E
-	for <linux-pci@vger.kernel.org>; Fri, 10 May 2024 11:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8040316E894
+	for <linux-pci@vger.kernel.org>; Fri, 10 May 2024 11:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715340172; cv=none; b=Xw5Ue4RNYZ80qHktQNJzacZwVr5lNWIEKVNr+vAbR60uHzt+fMhiVpQYKkt/QCjE6PQHwpglyM9Ou6Sdiz3ni/zQHOAn3zeDNA36UgTOGpN2tC3cPcsT2Kgv7BEu1KG2qQX7+VLIAHJyXwTfj1syOwizuy2Mge++CFrqFDuppAQ=
+	t=1715340180; cv=none; b=GEFZPjaSsXVQo5lQFq09546Jc95+8gWgTJYtCIIIWE75scGsUYy18yCFoV+AV1CgPrINZDJ5MKicvgDXm2ySkXf3bAdERU0bWxjI+fmN2Th7RE8Kpw8cgJUfx4YBsjOHkt8TBg6cuzi8x17CA1rOJwn0+hf2CvCdMo56BjQ4hh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715340172; c=relaxed/simple;
-	bh=8CYrtseSXDwGPEvOM19TLzH04Vyyl9/8hqNONUh6OaA=;
+	s=arc-20240116; t=1715340180; c=relaxed/simple;
+	bh=oUD93JunRNJc19R+4rzQi/1dK3sVLJyG7ebgDtDSGSs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E+4W31UBax9gAQEqZV1yWiJrLr7++wnJdwKbXHE/zz69lRdMaxWRxWtLAUTb/Cl0lb0Eo3g66rdrLwYDPCTokiMEHH22pN430pBbTIN3MsROm9b+xg2UDNbSooniZxSfclmwXDRHpNREdjlTK9GyMx7GxxzqFe6A23w55QoYbb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OhFYWZ5L; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=EbLE0HSR+ZjXzro1uHrZ1wT416iN3MJav1b57OYdV1D9795PKqnIryc1QdjQvwe3Oqzpr2HktSZvd/J2U/CkNDXr3g5sUTLW+/n/4STFehIAUqU5DF0GrEtQoEKrxLeW/C5pXeQoooECclRw17nF+eDtinEd/2hz5zd6besykkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVbgKZRJ; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715340158; x=1746876158;
+  t=1715340165; x=1746876165;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8CYrtseSXDwGPEvOM19TLzH04Vyyl9/8hqNONUh6OaA=;
-  b=OhFYWZ5LG7MjDtTVHCQu4a5GYhtHxSQD6vYeYBDRdKVK/hyxK6fP1Dy5
-   lOHJcSFxegHGbbBHXGVEKxne1xFxZDbCVbXupFkhIl+Z0qYmKJniSM/11
-   uW1kQKUL4r35m/jo9Dp+VEBL0yInwL6zJgbAbW7vvzJ/UNeLxw7a8F8KD
-   vjtVBfKxg/w3Vf8JC8h5HZyXdKNgBUru42RElLwrFs/tHs2jfUvUPkooV
-   8fRdIhESO9NMu/O7hx4xlvyiFrv0g2/TOiHHHJ5mjxLp7H49cfEZ9uGwq
-   ztktB2UXUVOaFIc0yB/2cs3+EPVf5ELH+cWecdW7SDebNf1BZ52M4OIxw
-   Q==;
-X-CSE-ConnectionGUID: w0SOdSYfQqi+m9G6S/pSHg==
-X-CSE-MsgGUID: sIa0SQCCR3Wjre9UbppbOg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="21987660"
+  bh=oUD93JunRNJc19R+4rzQi/1dK3sVLJyG7ebgDtDSGSs=;
+  b=XVbgKZRJrvSLPaoEwPQ0bkAnslTNLfxwZs2DAPxUyL+w8ALVx80Bpsny
+   P2bzXVDkUC5/i9O0iMjYUUTgEr7k3hDvlQUCGtUz0z0XgkSosHT383CiS
+   3aAxXtvOqx30EC9cn6dhdI8UVgZyuRSiZ3CEO2AeHLkBid2LqZN807alf
+   veUUT+nGMWFou5US75KjcNYK4WHCVBZTI3A3affRp+Gg4NaVkRA0rgZmm
+   XBs+meJeVRcYM7bZbKR4++lHq+Az2CGPAnW0YFEzkB8xR7swYfhhlICYz
+   +yX6XNikTnBENTXX5c1IhaDjWRLMZRbH/uHw6U7/IZBKAt4Lij39KFBqn
+   A==;
+X-CSE-ConnectionGUID: 7Nttubn1R1qdDtEsFDVKrw==
+X-CSE-MsgGUID: HINIYB9zRAK1G4mZl1MW+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11442648"
 X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="21987660"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:22:37 -0700
-X-CSE-ConnectionGUID: QfWXW0JGTjG2cFM3gXW6Hw==
-X-CSE-MsgGUID: 48ZWhdQ0TMWDmi86C+mA3Q==
+   d="scan'208";a="11442648"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:22:44 -0700
+X-CSE-ConnectionGUID: v9Lb1iqLT7SagVf1eXH/7g==
+X-CSE-MsgGUID: hA+sWgX4Qp6zS0LIJy0USg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="29590343"
+   d="scan'208";a="34234923"
 Received: from ettammin-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.180])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:22:36 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:22:41 -0700
 From: Jani Nikula <jani.nikula@intel.com>
 To: intel-gfx@lists.freedesktop.org
 Cc: jani.nikula@intel.com,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org
-Subject: [PATCH 2/8] drm/i915/pciids: add INTEL_ILK_IDS(), use acronym
-Date: Fri, 10 May 2024 14:22:15 +0300
-Message-Id: <27ada56363cfa6a5b093cb31908a4b89aa912621.1715340032.git.jani.nikula@intel.com>
+Subject: [PATCH 3/8] drm/i915/pciids: add INTEL_SNB_IDS()
+Date: Fri, 10 May 2024 14:22:16 +0300
+Message-Id: <ffcb2d954ad9bca78ccd39836dc0a3dc7c6c0253.1715340032.git.jani.nikula@intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1715340032.git.jani.nikula@intel.com>
 References: <cover.1715340032.git.jani.nikula@intel.com>
@@ -78,86 +78,60 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Transfer-Encoding: 8bit
 
-Most other PCI ID macros use platform acronyms. Follow suit for ILK. Add
-INTEL_ILK_IDS() to identify all ILKs.
+Add INTEL_SNB_IDS() to identify all SNBs.
 
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org
 Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 ---
  arch/x86/kernel/early-quirks.c                      | 3 +--
- drivers/gpu/drm/i915/display/intel_display_device.c | 4 ++--
- drivers/gpu/drm/i915/i915_pci.c                     | 4 ++--
- include/drm/i915_pciids.h                           | 8 ++++++--
- 4 files changed, 11 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/i915/display/intel_display_device.c | 3 +--
+ include/drm/i915_pciids.h                           | 4 ++++
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index f50394a00fca..d8419d310091 100644
+index d8419d310091..23ded9260302 100644
 --- a/arch/x86/kernel/early-quirks.c
 +++ b/arch/x86/kernel/early-quirks.c
-@@ -533,8 +533,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
- 	INTEL_I965GM_IDS(&gen3_early_ops),
+@@ -534,8 +534,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
  	INTEL_GM45_IDS(&gen3_early_ops),
  	INTEL_G45_IDS(&gen3_early_ops),
--	INTEL_IRONLAKE_D_IDS(&gen3_early_ops),
--	INTEL_IRONLAKE_M_IDS(&gen3_early_ops),
-+	INTEL_ILK_IDS(&gen3_early_ops),
- 	INTEL_SNB_D_IDS(&gen6_early_ops),
- 	INTEL_SNB_M_IDS(&gen6_early_ops),
+ 	INTEL_ILK_IDS(&gen3_early_ops),
+-	INTEL_SNB_D_IDS(&gen6_early_ops),
+-	INTEL_SNB_M_IDS(&gen6_early_ops),
++	INTEL_SNB_IDS(&gen6_early_ops),
  	INTEL_IVB_M_IDS(&gen6_early_ops),
+ 	INTEL_IVB_D_IDS(&gen6_early_ops),
+ 	INTEL_HSW_IDS(&gen6_early_ops),
 diff --git a/drivers/gpu/drm/i915/display/intel_display_device.c b/drivers/gpu/drm/i915/display/intel_display_device.c
-index 0e0f5a36507d..052fd1c290c3 100644
+index 052fd1c290c3..c40d12ca386a 100644
 --- a/drivers/gpu/drm/i915/display/intel_display_device.c
 +++ b/drivers/gpu/drm/i915/display/intel_display_device.c
-@@ -816,8 +816,8 @@ static const struct {
- 	INTEL_GM45_IDS(&gm45_display),
- 	INTEL_G45_IDS(&g45_display),
+@@ -818,8 +818,7 @@ static const struct {
  	INTEL_PNV_IDS(&pnv_display),
--	INTEL_IRONLAKE_D_IDS(&ilk_d_display),
--	INTEL_IRONLAKE_M_IDS(&ilk_m_display),
-+	INTEL_ILK_D_IDS(&ilk_d_display),
-+	INTEL_ILK_M_IDS(&ilk_m_display),
- 	INTEL_SNB_D_IDS(&snb_display),
- 	INTEL_SNB_M_IDS(&snb_display),
+ 	INTEL_ILK_D_IDS(&ilk_d_display),
+ 	INTEL_ILK_M_IDS(&ilk_m_display),
+-	INTEL_SNB_D_IDS(&snb_display),
+-	INTEL_SNB_M_IDS(&snb_display),
++	INTEL_SNB_IDS(&snb_display),
  	INTEL_IVB_M_IDS(&ivb_display),
-diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
-index aa8593d73198..d85f023afebe 100644
---- a/drivers/gpu/drm/i915/i915_pci.c
-+++ b/drivers/gpu/drm/i915/i915_pci.c
-@@ -812,8 +812,8 @@ static const struct pci_device_id pciidlist[] = {
- 	INTEL_G45_IDS(&g45_info),
- 	INTEL_PNV_G_IDS(&pnv_g_info),
- 	INTEL_PNV_M_IDS(&pnv_m_info),
--	INTEL_IRONLAKE_D_IDS(&ilk_d_info),
--	INTEL_IRONLAKE_M_IDS(&ilk_m_info),
-+	INTEL_ILK_D_IDS(&ilk_d_info),
-+	INTEL_ILK_M_IDS(&ilk_m_info),
- 	INTEL_SNB_D_GT1_IDS(&snb_d_gt1_info),
- 	INTEL_SNB_D_GT2_IDS(&snb_d_gt2_info),
- 	INTEL_SNB_M_GT1_IDS(&snb_m_gt1_info),
+ 	INTEL_IVB_D_IDS(&ivb_display),
+ 	INTEL_HSW_IDS(&hsw_display),
 diff --git a/include/drm/i915_pciids.h b/include/drm/i915_pciids.h
-index 21942a3c823b..05f466ca8ce2 100644
+index 05f466ca8ce2..0d48c493dcce 100644
 --- a/include/drm/i915_pciids.h
 +++ b/include/drm/i915_pciids.h
-@@ -118,12 +118,16 @@
- 	INTEL_PNV_G_IDS(info), \
- 	INTEL_PNV_M_IDS(info)
+@@ -151,6 +151,10 @@
+ 	INTEL_SNB_M_GT1_IDS(info), \
+ 	INTEL_SNB_M_GT2_IDS(info)
  
--#define INTEL_IRONLAKE_D_IDS(info) \
-+#define INTEL_ILK_D_IDS(info) \
- 	INTEL_VGA_DEVICE(0x0042, info)
- 
--#define INTEL_IRONLAKE_M_IDS(info) \
-+#define INTEL_ILK_M_IDS(info) \
- 	INTEL_VGA_DEVICE(0x0046, info)
- 
-+#define INTEL_ILK_IDS(info) \
-+	INTEL_ILK_D_IDS(info), \
-+	INTEL_ILK_M_IDS(info)
++#define INTEL_SNB_IDS(info) \
++	INTEL_SNB_D_IDS(info), \
++	INTEL_SNB_M_IDS(info)
 +
- #define INTEL_SNB_D_GT1_IDS(info) \
- 	INTEL_VGA_DEVICE(0x0102, info), \
- 	INTEL_VGA_DEVICE(0x010A, info)
+ #define INTEL_IVB_M_GT1_IDS(info) \
+ 	INTEL_VGA_DEVICE(0x0156, info) /* GT1 mobile */
+ 
 -- 
 2.39.2
 
