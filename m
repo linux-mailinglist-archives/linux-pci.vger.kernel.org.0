@@ -1,158 +1,134 @@
-Return-Path: <linux-pci+bounces-7353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7354-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85E4E8C234A
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 13:26:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FB718C236F
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 13:31:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4B60283BB2
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 11:26:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE3522865D4
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 11:31:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DDD01708BF;
-	Fri, 10 May 2024 11:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2C11779B8;
+	Fri, 10 May 2024 11:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SxgeHBcO"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="esPKBCkP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F35416F828
-	for <linux-pci@vger.kernel.org>; Fri, 10 May 2024 11:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE33C172790
+	for <linux-pci@vger.kernel.org>; Fri, 10 May 2024 11:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715340300; cv=none; b=UWDxDGeoxK4ij1x7L6ObCwOFNJVkcoWfswt+T+HFI0HXIldAvs0aoFHTH0QcM7nbIzDjyPa262i+CuPpK/CaNCWDuxkKsqMk0OSEIIzgSzHkqA8szDQF/GeH68JY9Paur28BfwroBtXL1nMlnzGyCUgcKhormXWznww204VDiwk=
+	t=1715340461; cv=none; b=dma8AeVYnA5vBQnEWadoAUtPdN7OPSFl57tS2yxUBjaNrEvjk892zhvLA4eZK6/dM68F6zkhE60vLkPB+mmgjKmjH2qr1hegg3EeluWKw9SVXckMkeIe6gK65RFwkDvsWTss0WVirNofgzWPegm3CCYvpKAuClS2CPJPLojeD60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715340300; c=relaxed/simple;
-	bh=k0sopvIhiy6f6+kwNT/Kt+0l33MxuXLxebeKhFV8NrU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZuVevRiqEw71anAdSNQ55/X5DNnF9WK8ZyV5nMOIvA2xJkv00fIsOqKtLuReu8RIKpP9C2FcPIMYYrdURp6GEGTXIsi1jER45DUr1H8s6JK8w9Pjz4Wwpwo21ayOblR4ECaUN67wkAi5oLmy1D1HV4MYvMqCHfcGeSttQ6vdniA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SxgeHBcO; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715340299; x=1746876299;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=k0sopvIhiy6f6+kwNT/Kt+0l33MxuXLxebeKhFV8NrU=;
-  b=SxgeHBcOnIMNyLZFpvHe4wIg/pE4gcL5WDgmlbvRnES5UkPyhuTv1yNw
-   WIWRDllW8lk/LwK3dLMpUrBQy7vN47p/fFBVJtNJaPB3wCM3n7BEAZyMt
-   5klpiJGRbuRBnCpe40XT3rQSvf8XXvdA/J+HO7ofYASEhE7orfd3Y6yY7
-   PaaS7yOOBQesw6IMQki6tlVZgy8RfDK//JwBWwgfxkruuH2sT1BjItT9J
-   WuIG0/TtG6fvUG2uowyCUMTL0D39YS6zKSsbcnHVCLAYaGUyqP14OS1kt
-   NkVGlUIXV7EpLQnSYQKwgTrolwloDAmawR3LjhDOxYPdgz+q/A3mkcswM
-   g==;
-X-CSE-ConnectionGUID: pxX1R8uLRrmYWKrbAqiL5g==
-X-CSE-MsgGUID: c3b/Ewr1TO+ESBnalz1ZpQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="22714171"
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="22714171"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:24:58 -0700
-X-CSE-ConnectionGUID: 6UL5MSW7RfiydE2PeyzcuA==
-X-CSE-MsgGUID: dBXpu5ifTr2Swg24+9L/Fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="34028111"
-Received: from ettammin-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.180])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:24:55 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>, intel-gfx@lists.freedesktop.org,
- lucas.demarchi@intel.com, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/5] drm/i915: don't include CML PCI IDs in CFL
-In-Reply-To: <Zj34KTmYP6VNQ3CS@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1715086509.git.jani.nikula@intel.com>
- <bebbdad2decb22f3db29e6bc66746b4a05e1387b.1715086509.git.jani.nikula@intel.com>
- <Zjow5HXrXpg2cuOA@intel.com> <ZjtapMK6kadLqHCN@intel.com>
- <87o79gjznd.fsf@intel.com> <ZjtprkZVSQ-o_qch@intel.com>
- <87le4ihsmr.fsf@intel.com> <Zj34KTmYP6VNQ3CS@intel.com>
-Date: Fri, 10 May 2024 14:24:52 +0300
-Message-ID: <87ikzlj4e3.fsf@intel.com>
+	s=arc-20240116; t=1715340461; c=relaxed/simple;
+	bh=zNXwSOWeBMueOtABnUo69wqjco2rwqNtJ/nGjlKDC3g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pZlVRIRhxIGlvDHxuu8mzIp7JjTtDv8FCdQJt7Q+5ifDHiUcYVTLpHRDXtlEmulmxva0Oee8ndWf9WlJ1RosebsikIMW1bwVMMKwRy5ybJZTH30Gu34GShrn9BXjKNtHBoGIn4/qy/cITI5LzAwk58U9vMd8W28t1IYabZ6o504=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=esPKBCkP; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a5a1192c664so504873766b.2
+        for <linux-pci@vger.kernel.org>; Fri, 10 May 2024 04:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1715340458; x=1715945258; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zNXwSOWeBMueOtABnUo69wqjco2rwqNtJ/nGjlKDC3g=;
+        b=esPKBCkP7bBK7iPHa/ipNqAmhGzxdtQaZC9mLpj2zYIyTClXdxfgcBX8gRK5mRc1qt
+         xmTcu9T7Ip+xWL8I5FPoNVvnxv4bXzLfFKqqZgPG0N9L36a85vuTLAtmC5R40i3DOTk7
+         jEki5Les6qHJZlFdONe/8r7esYGgqHWrIGYIX2RSmQ22WbdEaSGIUDr2oB3kiahHowfd
+         /XsdHSb4z9s1iYf13qZK8AIPsys5NzMb/ZEPuq00sJdaeaZPbOZenJeQoK2cPw/ki+rR
+         79zGzHLpz0R0cSdOd3Eh3TOf6+YQ9droAkmB4BBubg1agX9gM7sIn/2drvoNSJQNcVw/
+         7P4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715340458; x=1715945258;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zNXwSOWeBMueOtABnUo69wqjco2rwqNtJ/nGjlKDC3g=;
+        b=i1vLCMiIkCZytuL7RCcb5vNSLc1bkXCTbNDpbH5EbAJlzBJWd4rN6m+bY2rQHVwuen
+         KI4VnV2NO8E5sOOg3gw99IGO36nfdB9LA6MD1i+cjad+Op00eVAYcdACxfZe24iDHR47
+         UuimVyOq/sFNREyrbC/TdEgc08MmM8XlkMdHUvZSVUy6RjZ1iv2dcvJuXcqClGazXyji
+         d2dER2qrkfIeyxnXeWLtuTQDWi7APBgta0wdz9rE78arQJKzGnIVUs2i5WhxYxJC7VSN
+         ei+JsPgD7sQcj/JLUVq6g4UnyDzO6RvOh0vy7q4ipHtq3GR2OwrdBg04ygOhyOZa61pX
+         UjWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrPY31TqOrH3lnBuyyyslTGXLIsxmms/exO7cyrEPShWmkLUBpSeV2YrLUEc3BOD1efmDun50PvE3yllbLQ/PSKAy3a9uXv0jg
+X-Gm-Message-State: AOJu0Ywsih7xgLwCjc6n2DrbkHodCk5rJQIh1pN6c1ngGaMip7L3bmMs
+	8LqlBHzLfmHKFpRWhFty6ETaXLfA7o41OSSTiJrGuR5WD7z4WNVYzd8woMsysAU=
+X-Google-Smtp-Source: AGHT+IGWH9NtKldOHxG5Jn85QZLrAtp/ZGMY4ac6yPg5kx3Hs4lPh9R3ZW28bnofErwGNFhMNfHAYA==
+X-Received: by 2002:a50:d583:0:b0:572:637b:c7e1 with SMTP id 4fb4d7f45d1cf-5734d5f48b1mr2421443a12.21.1715340458312;
+        Fri, 10 May 2024 04:27:38 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c? (p200300e5873ca5006aafb7a77c29ae5c.dip0.t-ipconnect.de. [2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bea651asm1706341a12.11.2024.05.10.04.27.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 May 2024 04:27:38 -0700 (PDT)
+Message-ID: <0aac68ac-cf40-4c3d-ac02-95b9a37aaa11@suse.com>
+Date: Fri, 10 May 2024 13:27:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC KERNEL PATCH v6 3/3] xen/privcmd: Add new syscall to get gsi
+ from irq
+To: "Chen, Jiqian" <Jiqian.Chen@amd.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, =?UTF-8?Q?Roger_Pau_Monn=C3=A9?=
+ <roger.pau@citrix.com>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "Huang, Ray" <Ray.Huang@amd.com>
+References: <20240419033616.607889-1-Jiqian.Chen@amd.com>
+ <20240419033616.607889-4-Jiqian.Chen@amd.com>
+ <79666084-fc2f-4637-8f0b-3846285601b8@suse.com>
+ <BL1PR12MB58493D17E23751A06FC931DDE7E72@BL1PR12MB5849.namprd12.prod.outlook.com>
+ <c30ebad2-1ad3-4b58-afaf-e6dc32c091fc@suse.com>
+ <BL1PR12MB58491D2210091DF9607A354AE7E72@BL1PR12MB5849.namprd12.prod.outlook.com>
+ <d0b5e7d5-3503-49be-9fa3-4b79c62059ca@suse.com>
+ <BL1PR12MB5849F1DE8B4A3538C79CE5D3E7E72@BL1PR12MB5849.namprd12.prod.outlook.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+In-Reply-To: <BL1PR12MB5849F1DE8B4A3538C79CE5D3E7E72@BL1PR12MB5849.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 10 May 2024, Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com=
-> wrote:
-> On Fri, May 10, 2024 at 01:24:12PM +0300, Jani Nikula wrote:
->> On Wed, 08 May 2024, Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.=
-com> wrote:
->> > On Wed, May 08, 2024 at 02:45:10PM +0300, Jani Nikula wrote:
->> >> On Wed, 08 May 2024, Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.int=
-el.com> wrote:
->> >> > On Tue, May 07, 2024 at 09:47:16AM -0400, Rodrigo Vivi wrote:
->> >> >> On Tue, May 07, 2024 at 03:56:48PM +0300, Jani Nikula wrote:
->> >> >> > It's confusing for INTEL_CFL_IDS() to include all CML PCI IDs. E=
-ven if
->> >> >> > we treat them the same in a lot of places, CML is a platform of =
-its own,
->> >> >> > and the lists of PCI IDs should not conflate them.
->>=20
->> [snip]
->>=20
->> >> >> Why only CML and not AML and WHL as well?
->> >> >
->> >> > Why do we even have CML as a separate platform? The only difference=
-=20
->> >> > I can see is is that we do allow_read_ctx_timestamp() for CML but
->> >> > not for CFL. Does that even make sense?
->> >>=20
->> >> git blame tells me:
->> >>=20
->> >> 5f4ae2704d59 ("drm/i915: Identify Cometlake platform")
->> >> dbc7e72897a4 ("drm/i915/gt: Make the CTX_TIMESTAMP readable on !rcs")
->> >
->> > Right. That explains why we need it on CML+. But is there some reason
->> > we  can't just do it on CFL as well, even if not strictly necessary?
->> > I would assume that setting FORCE_TO_NONPRIV on an already
->> > non-privileged register should be totally fine.
->>=20
->> I have absolutely no idea.
->>=20
->> I'm somewhat thinking "CML being a separate platform" is a separate
->> problem from "CFL PCI ID macros including CML".
->>=20
->> I'm starting to think the PCI ID macros should be grouped by "does the
->> platform have a name of its own",
->
-> That and/or "does bspec have a separate 'Confgurations <platform>' page?"
->
->> not by how those macros are actually
->> used by the driver. Keeping them separate at the PCI ID macro level just
->> reduces the pain in maintaining the PCI IDs, and lets us wiggle stuff
->> around in the driver how we see fit.
->
-> Aye.
->
->>=20
->> And that spins back to Rodrigo's question, "Why only CML and not AML and
->> WHL as well?". Yeah, indeed.
->>=20
->> If we decide to stop treating CML as a separate platform in the
->> *driver*, that's another matter.
->
-> Sure. Seeing it just got me wondering...
+On 10.05.24 12:32, Chen, Jiqian wrote:
+> On 2024/5/10 18:21, Jürgen Groß wrote:
+>> On 10.05.24 12:13, Chen, Jiqian wrote:
+>>> On 2024/5/10 17:53, Jürgen Groß wrote:
+>>>> On 10.05.24 11:06, Chen, Jiqian wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 2024/5/10 14:46, Jürgen Groß wrote:
+>>>>>> On 19.04.24 05:36, Jiqian Chen wrote:
+>>>>>>> +
+>>>>>>> +    info->type = IRQT_PIRQ;
+>>>>> I am considering whether I need to use a new type(like IRQT_GSI) here to distinguish with IRQT_PIRQ, because function restore_pirqs will process all IRQT_PIRQ.
+>>>>
+>>>> restore_pirqs() already considers gsi == 0 to be not GSI related. Isn't this
+>>>> enough?
+>>> No, it is not enough.
+>>> xen_pvh_add_gsi_irq_map adds the mapping of gsi and irq, but the value of gsi is not 0,
+>>> once restore_pirqs is called, it will do PHYSDEVOP_map_pirq for that gsi, but in pvh dom0, we shouldn't do PHYSDEVOP_map_pirq.
+>>
+>> Okay, then add a new flag to info->u.pirq.flags for that purpose?
+> I feel like adding "new flag to info->u.pirq.flags" is not as good as adding " new type to info->type".
+> Because in restore_pirqs, it considers " info->type != IRQT_PIRQ", if adding " new flag to info->u.pirq.flags", we need to add a new condition in restore_pirqs.
+> And actually this mapping(gsi and irq of pvh) doesn't have pirq, so it is not suitable to add to u.pirq.flags.
 
-I sent a new series with just the PCI ID macro cleanups [1]. I meant to
-Cc: you and Rodrigo, but forgot. :(
-
-BR,
-Jani.
-
-[1] https://patchwork.freedesktop.org/series/133444/
+Does this mean there is no other IRQT_PIRQ related activity relevant for those
+GSIs/IRQs? In that case I agree to add IRQT_GSI.
 
 
-
---=20
-Jani Nikula, Intel
+Juergen
 
