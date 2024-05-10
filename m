@@ -1,80 +1,81 @@
-Return-Path: <linux-pci+bounces-7318-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7319-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 824A08C1D65
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 06:21:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2D4E8C1DAB
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 07:26:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2F781F22ACD
-	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 04:21:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB8541C21349
+	for <lists+linux-pci@lfdr.de>; Fri, 10 May 2024 05:26:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 482B714C58C;
-	Fri, 10 May 2024 04:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408B515667B;
+	Fri, 10 May 2024 05:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PTh0vVQU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LjMj7h2D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FB314BF92;
-	Fri, 10 May 2024 04:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9171527A4;
+	Fri, 10 May 2024 05:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715314855; cv=none; b=QkqLSklU/Qz5PTmMAE5PquNJfjGpa/y7LXDwX9WXjQYcCkxxHlDGGNo5F3kIxpfqw7FPLv6tTN1CBMAbVhAJuy4DFJ43+wc7Fqzl9V/gXeek8CiaovFJy+PLW/RfOeM7S8T9zaLylnhkku8XPTYHDJEyF2OBKJGt0eYZnHNCjLM=
+	t=1715318756; cv=none; b=pNnO3qyhFp/OS7CADgDiE4tnbukV2ZLZRHdjBsC24YiU4yQ1tOUZi1edAiOonM8mtmT5nVoa4Tuq/cCxX2rC76knI25ex4/cvGkQarpVvTGpvF4z05D2KlvEWNsd12bEd7TyHoykSf7j0wHXtSb6x4xNYfSG7QCugnGMmfJGum4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715314855; c=relaxed/simple;
-	bh=yde+e083D+Y6dH3TaJbEx9gaVKpWNaOkIuVpOCVIpfE=;
+	s=arc-20240116; t=1715318756; c=relaxed/simple;
+	bh=ClsNQ1eiRwIl3Mkb5R4SiIbCFUc8HXmYYfmAw5kVQoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1oVQ16rH2jr5U7O6LxyK/bVkbaDORYXBOR2LQg+/dCfC3zQvObbtnfNT39fV7h3RJ0qpJFArXBwT3BFW9JaUG/vPz8NtCgdoqOvJj3FhJTBum4ov5J5yH5rzU+KhSWWSmakH2njEptYzSS9Vzoj/aqFWeE0x9A7qzxqrOkMn7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PTh0vVQU; arc=none smtp.client-ip=198.175.65.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=roM/GhtCA9qqRrQVInDz2doB6MjVGd6XRzr6706aCKQkLhgQg1VkDoIj+8kq6Lb0WsRRqaMTBKSkXvEaLm5/MscjguBxkKcVw6HlhsBnm/1bXXqAeVDhFJO8h9f21XPAc72/6TB798WnBMUJSVjyoCBwuHEpNzonu+ZGRFahT4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LjMj7h2D; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715314850; x=1746850850;
+  t=1715318753; x=1746854753;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=yde+e083D+Y6dH3TaJbEx9gaVKpWNaOkIuVpOCVIpfE=;
-  b=PTh0vVQUfCciOm6ydc1xegF/UKBYxwEUu1syEBAPTEg9MGtK1Ai/6Nyy
-   rjVRLXGnZb264WtCsHeCUSgtQcgq8GEgox7R831PrLZ8PEkxr6ogQcD/R
-   JkI8mUewpsFiroDwu63XE69+YSVwyf92xTytE6F1pavALQUuci7TDxZN/
-   j4/6aYx2oDeAo+pR24M0dxxLxiP2rOY6S8XSHWZYu2kLjOaLXr5q7Ao/9
-   w1sl4S3mcZhfT4HJAjwZZFmrHBJYNY4qJCVIXWwMIqNKKYAU8uL7hy+Oe
-   DRbeTkC38HPqyYdXEzIMM1jnwCOSUjDwuQb1Ymk84dXKaDu5HpPpHAm9p
-   g==;
-X-CSE-ConnectionGUID: Z4PbYaX7T/W0gK0t+iI7gA==
-X-CSE-MsgGUID: DEsxnRP5SxWtarVLBuNFKA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="28760848"
+  bh=ClsNQ1eiRwIl3Mkb5R4SiIbCFUc8HXmYYfmAw5kVQoA=;
+  b=LjMj7h2DBYm5f2vfP19exFHkN/WhRNwDuK9AFfkgzdlF+SukIRhj9bcC
+   5Pt5irmr+CSwsaou0e2C9sRq0oq4Q84nFpcnFvjnLCK+YeeRo+M9EXL/Z
+   iF/ZP5SWwhkrBXdjCOoKETVPJVd7setVaFsymUMbcOf2CDexj/xhNBO0F
+   xTYMwyDHfegNulXuBo+/vO0sVTg4kgvb47HVGZbgfJI/23nDVnB5ZxeXN
+   9/E2A3ohd1ayuz10j2bsZOGUvKE01pt3CMlkqY79eM70WpnX73J3UdGtW
+   yC5UGHb5AaxZMcJnwftliIz48wbZT8PtDqI/awfT7Dyyv2L/mTbeJHOyN
+   A==;
+X-CSE-ConnectionGUID: mRipuHWqRYWgMPDbjIXXKg==
+X-CSE-MsgGUID: wsESAKmiTn+aenvDjU3UXw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="15089618"
 X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="28760848"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 21:20:49 -0700
-X-CSE-ConnectionGUID: Dpc06GWPRJu0PltILmSdeg==
-X-CSE-MsgGUID: nFfoBkN2Q7GX9weKTh8MHA==
+   d="scan'208";a="15089618"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 22:25:52 -0700
+X-CSE-ConnectionGUID: l+Ey90NiTGefcRUfNjdBUw==
+X-CSE-MsgGUID: jenVY5+XS7Ox3UzOMbN+7A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="29584668"
+   d="scan'208";a="34151807"
 Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 09 May 2024 21:20:45 -0700
+  by orviesa003.jf.intel.com with ESMTP; 09 May 2024 22:25:48 -0700
 Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1s5HkQ-0005iZ-0Z;
-	Fri, 10 May 2024 04:20:42 +0000
-Date: Fri, 10 May 2024 12:20:29 +0800
+	id 1s5IlN-0005lX-0o;
+	Fri, 10 May 2024 05:25:45 +0000
+Date: Fri, 10 May 2024 13:24:49 +0800
 From: kernel test robot <lkp@intel.com>
 To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
 	netdev@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, bhelgaas@google.com, corbet@lwn.net,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.williamson@redhat.com, gospo@broadcom.com,
 	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
 	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
 	wei.huang2@amd.com
 Subject: Re: [PATCH V1 6/9] PCI/TPH: Retrieve steering tag from ACPI _DSM
-Message-ID: <202405101200.FPuliW1p-lkp@intel.com>
+Message-ID: <202405101330.7jDvJ4Jc-lkp@intel.com>
 References: <20240509162741.1937586-7-wei.huang2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -101,27 +102,117 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Huang/PCI-Introduce-P
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
 patch link:    https://lore.kernel.org/r/20240509162741.1937586-7-wei.huang2%40amd.com
 patch subject: [PATCH V1 6/9] PCI/TPH: Retrieve steering tag from ACPI _DSM
-config: parisc-randconfig-r081-20240510 (https://download.01.org/0day-ci/archive/20240510/202405101200.FPuliW1p-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240510/202405101200.FPuliW1p-lkp@intel.com/reproduce)
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20240510/202405101330.7jDvJ4Jc-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project b910bebc300dafb30569cecc3017b446ea8eafa0)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240510/202405101330.7jDvJ4Jc-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405101200.FPuliW1p-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405101330.7jDvJ4Jc-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   drivers/pci/pcie/tph.c: In function 'tph_msix_table_entry':
-   drivers/pci/pcie/tph.c:95:22: error: 'struct pci_dev' has no member named 'msix_base'; did you mean 'msix_cap'?
-      95 |         entry = dev->msix_base + msi_index * PCI_MSIX_ENTRY_SIZE;
-         |                      ^~~~~~~~~
-         |                      msix_cap
-   drivers/pci/pcie/tph.c: In function 'invoke_dsm':
->> drivers/pci/pcie/tph.c:221:46: error: 'pci_acpi_dsm_guid' undeclared (first use in this function)
+   In file included from drivers/pci/pcie/tph.c:13:
+   In file included from include/linux/acpi.h:14:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/s390/include/asm/elf.h:173:
+   In file included from arch/s390/include/asm/mmu_context.h:11:
+   In file included from arch/s390/include/asm/pgalloc.h:18:
+   In file included from include/linux/mm.h:2208:
+   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     509 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     516 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     528 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     537 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   In file included from drivers/pci/pcie/tph.c:17:
+   In file included from include/linux/msi.h:27:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/s390/include/asm/io.h:78:
+   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     547 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+         |                                                      ^
+   In file included from drivers/pci/pcie/tph.c:17:
+   In file included from include/linux/msi.h:27:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/s390/include/asm/io.h:78:
+   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+         |                                                      ^
+   In file included from drivers/pci/pcie/tph.c:17:
+   In file included from include/linux/msi.h:27:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/s390/include/asm/io.h:78:
+   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     584 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     692 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     700 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     708 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     717 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     726 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     735 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+>> drivers/pci/pcie/tph.c:221:39: error: use of undeclared identifier 'pci_acpi_dsm_guid'
      221 |         out_obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, MIN_ST_DSM_REV,
-         |                                              ^~~~~~~~~~~~~~~~~
-   drivers/pci/pcie/tph.c:221:46: note: each undeclared identifier is reported only once for each function it appears in
+         |                                              ^
+   17 warnings and 1 error generated.
 
 
 vim +/pci_acpi_dsm_guid +221 drivers/pci/pcie/tph.c
