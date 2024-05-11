@@ -1,175 +1,234 @@
-Return-Path: <linux-pci+bounces-7378-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7379-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 076AF8C2FFD
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 09:15:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5112D8C3007
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 09:27:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68ACA1F22CF0
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 07:15:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F30C22847F1
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 07:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E07F610B;
-	Sat, 11 May 2024 07:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0DF746E;
+	Sat, 11 May 2024 07:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bQ8Umm6z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7cTDm7A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0B94C65
-	for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 07:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7310525D
+	for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 07:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715411739; cv=none; b=P0wgcemsJq18tyVpEssgyz3e8hevRJULuJMvLSmND4O0vAnK28z+addPhn1Aa242sWhvCf8286oJLp18U8+DurNWPwSlKGQi72QMfZMthCgwoH3WUYkcAolZxUxJgo2azQmGyTaD5FhEWH/L54Hc5XIMLIrJeMTo5P1e+jrdWh0=
+	t=1715412416; cv=none; b=boJBtZkPaJPpVeE+uFL8qPwNtosBX6rX/R4q1vG+3r7mgxfJyy42LoPrRKzH6SSmfg4u6HG+LDJUQ3DViDLBVfVejFWzwxGc35W8C38cFyZXxadGb1jC5jdyiiqrIKb25oTHgyEvo1IzyKYflEKGFwo6huIZG1CqYZi5S6l6sqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715411739; c=relaxed/simple;
-	bh=kP1V+EtzTHOEEdN5Tn2jtj1uoNnrhiy0O47cc8AcxA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I0e43rQjw4UK/8FRIufuJfyJt4IAhLdMwYt0RcPmp4gHFlzC+bN3BnLAuc8j6wO8p4hBk1vTB+aT6fjcyhOMnLWbYI37gncW7U3lOpEq4Vk30bQqbwQxoJJrlEVVYOwPKhJkIiFO+FaJ5QPqZREmFoc7LQdE4vqjLY8CO3L73XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bQ8Umm6z; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so25170165ad.1
-        for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 00:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715411737; x=1716016537; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pN7vTSTZWouaFkH6aSeXVb/sXxzlUMYk7HqIZeYevwQ=;
-        b=bQ8Umm6zvhdZEy8vmaUvU2Iw+3U4Exz8vwTgIRHmU1+T2F04dp0en5kuEIdr+5tQzo
-         +k7bGjYcwQfTPZoIoQwrmCUzxfUwE54ypPLh4dgQhVYk48QK4F873xf5Sm6kzyHrMbqv
-         Xvrhfeuu2zU+u1viYA5UESzip+io/i7WdnsN38JPvgdV8fr5YrCJzqOJS5SguRw1843M
-         l9MTBCHS6/LZfI+Ql9sEZUvtDsJi1e8k9f5tb+R9ZdsX5s/pcFGLoLSNABEVUvClSFot
-         fbpKjfaCo6BLb9yjTEhJHdbRompR68Fx+q88r9bt3BTpcaiuPSAJfO1kteIcRVkkvWsI
-         9Jzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715411737; x=1716016537;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pN7vTSTZWouaFkH6aSeXVb/sXxzlUMYk7HqIZeYevwQ=;
-        b=OqPYdz95SnuRLDao1t1l+HwhMtPo36NcnmE2cDsvBYzj0pz531bA/ww8Foh3r0edLQ
-         sxF1AEB/V0Sx6znU/N2ai5IVs6e2wlyj4jddlIgo+bcjfr+OjdJobjeYpqK1D3uC/Wxl
-         DIBs3j14AB3iOqilrSE63QG83SMfcE5LxFmH7aSPkzyQYnPIU7LVAwDcqi5OJ95/S6QQ
-         M1wEGZSq6JOB05H/HxCBhZ3zHbhySoRKq+c1uzHE7RCWAQwfUqv0zf0LLsX2IlQH0Rk8
-         YFpk05P9CU2RnxzAMOw/cEnztxanzcXgEzEZp3Q/XLSo9gxdHx7Lfkk7PZjkDqvyhcSY
-         KByQ==
-X-Gm-Message-State: AOJu0Yydvy3BK4zAj5axNJyGBg21BCS+6v4wWWdrHXbnzEX7eayMqlyO
-	D0QYpw3ajlGXCwtbTOOmgmgc9KRHQnqubuiCqNP6BP+FJhYk+eyK6j3bw/oH2ANKhrgecdd3aZ8
-	=
-X-Google-Smtp-Source: AGHT+IEY+B1BkjgUqaJCKTMhy5yVKUSG7mNrjc92+kUQaGR7pn2oJDp9knykubItipbI04Y4Mn3Nog==
-X-Received: by 2002:a17:902:6542:b0:1eb:1240:1aea with SMTP id d9443c01a7336-1ef43d12749mr52124555ad.20.1715411736886;
-        Sat, 11 May 2024 00:15:36 -0700 (PDT)
-Received: from thinkpad ([220.158.156.38])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c0369f1sm43017055ad.185.2024.05.11.00.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 May 2024 00:15:36 -0700 (PDT)
-Date: Sat, 11 May 2024 12:45:32 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, lukas@wunner.de,
-	mika.westerberg@linux.intel.com, Bjorn Helgaas <helgaas@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v4 0/4] PCI: Allow D3Hot for PCI bridges in Devicetree
- based platforms
-Message-ID: <20240511071532.GC6672@thinkpad>
-References: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
+	s=arc-20240116; t=1715412416; c=relaxed/simple;
+	bh=J/+p+6TrmlBPcM06saZE6US0PFQ8ZuMNnUlGamwnZNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GCGtY5HOgMSxDtZLAR4cSd+Qbd1Ye6mnKAvjzZPDTRWnt0lQaQgOJxrIEvbGkFHEouTsam0oQX8GgAMYFzofxxCAcMC7hsajaIFY1TM2jppqzvKA57EsnAItfURzCBz/a3Hg87b3vq7djwnPL/AyrVSS2wy94XJ4ikoC76oZv5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e7cTDm7A; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715412415; x=1746948415;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=J/+p+6TrmlBPcM06saZE6US0PFQ8ZuMNnUlGamwnZNE=;
+  b=e7cTDm7AwO1YcW70m+s1+4GVT9hZKi8Pjz1SBenB8aF7qO2JTDilkoTN
+   AH5XUUfywU9t/wUxvw11QdNNa/cMsdTmKHh31eAELiKlpgcYKa6cycDjd
+   zB1e+6pDJ1KWCiQMnpvnFrB+MGcFYFXJmW5477wwNQY47gEq8I9TOjd/y
+   wlxlRywbGhiBe8pADp2EXgusVyBrYmlvhdtGQOZk+34iqGnywmNoj17Z0
+   bfCLncv1kWCH9kE/OIpWQThzpVwFEZp4bTlo8gvq0rsELmhq+zZ5qLvYF
+   dY8N8sg4erZsMW7teEweekBdqSP0/nNDEvbCdW6vEMuTPhL5cAtIDaPH1
+   A==;
+X-CSE-ConnectionGUID: hGg2VqRVT967qdyVZQoKrA==
+X-CSE-MsgGUID: xR9K+deSRbWBqRCjecjD+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11069"; a="11580885"
+X-IronPort-AV: E=Sophos;i="6.08,153,1712646000"; 
+   d="scan'208";a="11580885"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2024 00:26:54 -0700
+X-CSE-ConnectionGUID: 0vL1IFOQRzaQg7EdhnQlyg==
+X-CSE-MsgGUID: rPt9dR31S1SmnA97JBn7Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,153,1712646000"; 
+   d="scan'208";a="34619230"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 11 May 2024 00:26:53 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s5h86-00075C-1Z;
+	Sat, 11 May 2024 07:26:50 +0000
+Date: Sat, 11 May 2024 15:25:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ e21fd57bf0c82f58f1c4ac58e3f0e8ccf74a9317
+Message-ID: <202405111555.M70FKyki-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
+Content-Type: text/plain; charset=us-ascii
 
-On Tue, Mar 26, 2024 at 04:18:16PM +0530, Manivannan Sadhasivam wrote:
-> Hi,
-> 
-> This series allows D3Hot for PCI bridges in Devicetree based platforms.
-> Even though most of the bridges in Devicetree platforms support D3Hot, PCI
-> core will allow D3Hot only when one of the following conditions are met:
-> 
-> 1. Platform is ACPI based
-> 2. Thunderbolt controller is used
-> 3. pcie_port_pm=force passed in cmdline
-> 
-> While options 1 and 2 do not apply to most of the DT based platforms,
-> option 3 will make the life harder for distro maintainers.
-> 
-> Initially, I tried to fix this issue by using a Devicetree property [1], but
-> that was rejected by Bjorn and it was concluded that D3Hot should be allowed by
-> default for all the Devicetree based platforms.
-> 
-> During the review of v3 series, Bjorn noted several shortcomings of the
-> pci_bridge_d3_possible() API [2] and I tried to address them in this series as
-> well.
-> 
-> But please note that the patches 2 and 3 needs closer review from ACPI and x86
-> folks since I've splitted the D3Hot and D3Cold handling based on my little
-> understanding of the code.
-> 
-> Testing
-> =======
-> 
-> This series is tested on SM8450 based development board on top of [3].
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: e21fd57bf0c82f58f1c4ac58e3f0e8ccf74a9317  Documentation: PCI: pci-endpoint: Fix EPF ops list
 
-Bjorn, a gently ping on this series.
+elapsed time: 1222m
 
-- Mani
+configs tested: 139
+configs skipped: 3
 
-> - Mani
-> 
-> [1] https://lore.kernel.org/linux-pci/20240214-pcie-qcom-bridge-v3-1-3a713bbc1fd7@linaro.org/
-> [2] https://lore.kernel.org/linux-pci/20240305175107.GA539676@bhelgaas/
-> [3] https://lore.kernel.org/linux-arm-msm/20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org/
-> 
-> Changes in v4:
-> - Added pci_bridge_d3_possible() rework based on comments from Bjorn
-> - Got rid of the DT property and allowed D3Hot by default on all DT platforms
-> 
-> Changes in v3:
-> - Fixed kdoc, used of_property_present() and dev_of_node() (Lukas)
-> - Link to v2: https://lore.kernel.org/r/20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org
-> 
-> Changes in v2:
-> - Switched to DT based approach as suggested by Lukas.
-> - Link to v1: https://lore.kernel.org/r/20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> Manivannan Sadhasivam (4):
->       PCI/portdrv: Make use of pci_dev::bridge_d3 for checking the D3 possibility
->       PCI: Rename pci_bridge_d3_possible() to pci_bridge_d3_allowed()
->       PCI: Decouple D3Hot and D3Cold handling for bridges
->       PCI: Allow PCI bridges to go to D3Hot on all Devicetree based platforms
-> 
->  drivers/pci/bus.c          |  2 +-
->  drivers/pci/pci-acpi.c     |  9 ++---
->  drivers/pci/pci-sysfs.c    |  2 +-
->  drivers/pci/pci.c          | 90 ++++++++++++++++++++++++++++++++--------------
->  drivers/pci/pci.h          | 12 ++++---
->  drivers/pci/pcie/portdrv.c | 16 ++++-----
->  drivers/pci/remove.c       |  2 +-
->  include/linux/pci.h        |  3 +-
->  8 files changed, 89 insertions(+), 47 deletions(-)
-> ---
-> base-commit: 705c1da8fa4816fb0159b5602fef1df5946a3ee2
-> change-id: 20240320-pci-bridge-d3-092e2beac438
-> 
-> Best regards,
-> -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240511   gcc  
+arc                   randconfig-002-20240511   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240511   clang
+arm                   randconfig-002-20240511   clang
+arm                   randconfig-003-20240511   gcc  
+arm                   randconfig-004-20240511   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240511   gcc  
+arm64                 randconfig-002-20240511   clang
+arm64                 randconfig-003-20240511   gcc  
+arm64                 randconfig-004-20240511   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240511   gcc  
+csky                  randconfig-002-20240511   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240511   clang
+hexagon               randconfig-002-20240511   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240511   gcc  
+i386         buildonly-randconfig-002-20240511   clang
+i386         buildonly-randconfig-003-20240511   gcc  
+i386         buildonly-randconfig-004-20240511   clang
+i386         buildonly-randconfig-005-20240511   gcc  
+i386         buildonly-randconfig-006-20240511   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240511   gcc  
+i386                  randconfig-002-20240511   clang
+i386                  randconfig-003-20240511   gcc  
+i386                  randconfig-004-20240511   clang
+i386                  randconfig-005-20240511   gcc  
+i386                  randconfig-006-20240511   gcc  
+i386                  randconfig-011-20240511   clang
+i386                  randconfig-012-20240511   gcc  
+i386                  randconfig-013-20240511   clang
+i386                  randconfig-014-20240511   clang
+i386                  randconfig-015-20240511   clang
+i386                  randconfig-016-20240511   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240511   gcc  
+loongarch             randconfig-002-20240511   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240511   gcc  
+nios2                 randconfig-002-20240511   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240511   gcc  
+parisc                randconfig-002-20240511   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240511   gcc  
+powerpc               randconfig-002-20240511   clang
+powerpc               randconfig-003-20240511   gcc  
+powerpc64             randconfig-001-20240511   gcc  
+powerpc64             randconfig-002-20240511   gcc  
+powerpc64             randconfig-003-20240511   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240511   gcc  
+riscv                 randconfig-002-20240511   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240511   clang
+s390                  randconfig-002-20240511   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240511   gcc  
+sh                    randconfig-002-20240511   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240511   gcc  
+sparc64               randconfig-002-20240511   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240511   gcc  
+um                    randconfig-002-20240511   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240511   gcc  
+xtensa                randconfig-002-20240511   gcc  
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
