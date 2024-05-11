@@ -1,234 +1,184 @@
-Return-Path: <linux-pci+bounces-7379-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5112D8C3007
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 09:27:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E6648C3008
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 09:27:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F30C22847F1
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 07:26:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 402341C20D2B
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 07:27:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0DF746E;
-	Sat, 11 May 2024 07:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A381746E;
+	Sat, 11 May 2024 07:27:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7cTDm7A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2PbT+hT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7310525D
-	for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 07:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4E24A33;
+	Sat, 11 May 2024 07:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715412416; cv=none; b=boJBtZkPaJPpVeE+uFL8qPwNtosBX6rX/R4q1vG+3r7mgxfJyy42LoPrRKzH6SSmfg4u6HG+LDJUQ3DViDLBVfVejFWzwxGc35W8C38cFyZXxadGb1jC5jdyiiqrIKb25oTHgyEvo1IzyKYflEKGFwo6huIZG1CqYZi5S6l6sqg=
+	t=1715412430; cv=none; b=CXtaSgAql/fQ2pO1cDMTFQnSlUht2r6/IPMAMXogj3iD5hauslhCOyozJ5a5RQrsWR1/j4Ky6p4tE2dkQ52KaP4zizc4qPNLMz5rDFtkuf80yWM4QcJAdYjaRJTXn1ogQMJ7i6rkw9QfJhWdn4LtriNTxaokIXTcHF7RqlHfRAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715412416; c=relaxed/simple;
-	bh=J/+p+6TrmlBPcM06saZE6US0PFQ8ZuMNnUlGamwnZNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GCGtY5HOgMSxDtZLAR4cSd+Qbd1Ye6mnKAvjzZPDTRWnt0lQaQgOJxrIEvbGkFHEouTsam0oQX8GgAMYFzofxxCAcMC7hsajaIFY1TM2jppqzvKA57EsnAItfURzCBz/a3Hg87b3vq7djwnPL/AyrVSS2wy94XJ4ikoC76oZv5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e7cTDm7A; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715412415; x=1746948415;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=J/+p+6TrmlBPcM06saZE6US0PFQ8ZuMNnUlGamwnZNE=;
-  b=e7cTDm7AwO1YcW70m+s1+4GVT9hZKi8Pjz1SBenB8aF7qO2JTDilkoTN
-   AH5XUUfywU9t/wUxvw11QdNNa/cMsdTmKHh31eAELiKlpgcYKa6cycDjd
-   zB1e+6pDJ1KWCiQMnpvnFrB+MGcFYFXJmW5477wwNQY47gEq8I9TOjd/y
-   wlxlRywbGhiBe8pADp2EXgusVyBrYmlvhdtGQOZk+34iqGnywmNoj17Z0
-   bfCLncv1kWCH9kE/OIpWQThzpVwFEZp4bTlo8gvq0rsELmhq+zZ5qLvYF
-   dY8N8sg4erZsMW7teEweekBdqSP0/nNDEvbCdW6vEMuTPhL5cAtIDaPH1
-   A==;
-X-CSE-ConnectionGUID: hGg2VqRVT967qdyVZQoKrA==
-X-CSE-MsgGUID: xR9K+deSRbWBqRCjecjD+g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11069"; a="11580885"
-X-IronPort-AV: E=Sophos;i="6.08,153,1712646000"; 
-   d="scan'208";a="11580885"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2024 00:26:54 -0700
-X-CSE-ConnectionGUID: 0vL1IFOQRzaQg7EdhnQlyg==
-X-CSE-MsgGUID: rPt9dR31S1SmnA97JBn7Dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,153,1712646000"; 
-   d="scan'208";a="34619230"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 11 May 2024 00:26:53 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s5h86-00075C-1Z;
-	Sat, 11 May 2024 07:26:50 +0000
-Date: Sat, 11 May 2024 15:25:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- e21fd57bf0c82f58f1c4ac58e3f0e8ccf74a9317
-Message-ID: <202405111555.M70FKyki-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1715412430; c=relaxed/simple;
+	bh=pho0PmFfIhbXkPZtW4UZllE0y/5im6qi/bN4LGe074w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BnwxthqERjtpb+ovoQaa/0w0aPQ+QC60AsQ6Vy4mUcxy9zRCEPEW3fCVV2keevPMvQ/D/07hT5kizNFOOuawhn8au1peOcdOxHN6ueh7ZIX8yEiYxCBboJ4MNxMlYblQZmVUhcG/R33xo9OYL+Xb6FvOWe2cD6uUWj4aAMfcENw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2PbT+hT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3208DC2BD10;
+	Sat, 11 May 2024 07:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715412429;
+	bh=pho0PmFfIhbXkPZtW4UZllE0y/5im6qi/bN4LGe074w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b2PbT+hT8VgSxNsqWa/JyyLMhEnb8UwGEUbeE045CY4K2c+NLY1ZrDU1hlwv6jSPr
+	 qT/2//5zP7yE5IetJROO0eNvVce71Pro5rqgwLNRvpD89yTqsP6qBRX5+NRz8upY8i
+	 sOP2Kt8CPTKwyI/+nY20m+Mie3nqBTMQLaSbKBqgfxH0aIzNi6fWpVPaqgrW2wKWlV
+	 v7kUy8zo3byVf1k/SrFoUYJ1CehN4EXMZzmAI/JDdRpHR75WyRePhj9SzSq+UZIbKP
+	 u237q1nwXmItM1dfdnPvPSdAfae/FbQvx+gG/luqxhLLzm0bSGujw+Ih2ech4dMnbW
+	 ne+XKzWLPK1/Q==
+Date: Sat, 11 May 2024 12:57:02 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org,
+	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v7 4/7] PCI: rcar-gen4: Add rcar_gen4_pcie_drvdata
+Message-ID: <20240511072702.GD6672@thinkpad>
+References: <20240415081135.3814373-1-yoshihiro.shimoda.uh@renesas.com>
+ <20240415081135.3814373-5-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240415081135.3814373-5-yoshihiro.shimoda.uh@renesas.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: e21fd57bf0c82f58f1c4ac58e3f0e8ccf74a9317  Documentation: PCI: pci-endpoint: Fix EPF ops list
+On Mon, Apr 15, 2024 at 05:11:32PM +0900, Yoshihiro Shimoda wrote:
+> In other to support future SoCs such as r8a779g0 and r8a779h0 that
+> require different initialization settings, let's introduce SoC
+> specific driver data with the initial member being the device mode.
+> No functional change.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-elapsed time: 1222m
+One nitpick below. With that addressed,
 
-configs tested: 139
-configs skipped: 3
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ---
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 30 ++++++++++++++-------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> index 0be760ed420b..3da0a844e1b6 100644
+> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> @@ -48,11 +48,15 @@
+>  #define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
+>  #define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
+>  
+> +struct rcar_gen4_pcie_drvdata {
+> +	enum dw_pcie_device_mode mode;
+> +};
+> +
+>  struct rcar_gen4_pcie {
+>  	struct dw_pcie dw;
+>  	void __iomem *base;
+>  	struct platform_device *pdev;
+> -	enum dw_pcie_device_mode mode;
+> +	const struct rcar_gen4_pcie_drvdata *drvdata;
+>  };
+>  #define to_rcar_gen4_pcie(_dw)	container_of(_dw, struct rcar_gen4_pcie, dw)
+>  
+> @@ -137,7 +141,7 @@ static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
+>  	 * Since dw_pcie_setup_rc() sets it once, PCIe Gen2 will be trained.
+>  	 * So, this needs remaining times for up to PCIe Gen4 if RC mode.
+>  	 */
+> -	if (changes && rcar->mode == DW_PCIE_RC_TYPE)
+> +	if (changes && rcar->drvdata->mode == DW_PCIE_RC_TYPE)
+>  		changes--;
+>  
+>  	for (i = 0; i < changes; i++) {
+> @@ -172,9 +176,9 @@ static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
+>  		reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
+>  
+>  	val = readl(rcar->base + PCIEMSR0);
+> -	if (rcar->mode == DW_PCIE_RC_TYPE) {
+> +	if (rcar->drvdata->mode == DW_PCIE_RC_TYPE) {
+>  		val |= DEVICE_TYPE_RC;
+> -	} else if (rcar->mode == DW_PCIE_EP_TYPE) {
+> +	} else if (rcar->drvdata->mode == DW_PCIE_EP_TYPE) {
+>  		val |= DEVICE_TYPE_EP;
+>  	} else {
+>  		ret = -EINVAL;
+> @@ -437,9 +441,9 @@ static void rcar_gen4_remove_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
+>  /* Common */
+>  static int rcar_gen4_add_dw_pcie(struct rcar_gen4_pcie *rcar)
+>  {
+> -	rcar->mode = (uintptr_t)of_device_get_match_data(&rcar->pdev->dev);
+> +	rcar->drvdata = of_device_get_match_data(&rcar->pdev->dev);
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240511   gcc  
-arc                   randconfig-002-20240511   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240511   clang
-arm                   randconfig-002-20240511   clang
-arm                   randconfig-003-20240511   gcc  
-arm                   randconfig-004-20240511   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240511   gcc  
-arm64                 randconfig-002-20240511   clang
-arm64                 randconfig-003-20240511   gcc  
-arm64                 randconfig-004-20240511   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240511   gcc  
-csky                  randconfig-002-20240511   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240511   clang
-hexagon               randconfig-002-20240511   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240511   gcc  
-i386         buildonly-randconfig-002-20240511   clang
-i386         buildonly-randconfig-003-20240511   gcc  
-i386         buildonly-randconfig-004-20240511   clang
-i386         buildonly-randconfig-005-20240511   gcc  
-i386         buildonly-randconfig-006-20240511   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240511   gcc  
-i386                  randconfig-002-20240511   clang
-i386                  randconfig-003-20240511   gcc  
-i386                  randconfig-004-20240511   clang
-i386                  randconfig-005-20240511   gcc  
-i386                  randconfig-006-20240511   gcc  
-i386                  randconfig-011-20240511   clang
-i386                  randconfig-012-20240511   gcc  
-i386                  randconfig-013-20240511   clang
-i386                  randconfig-014-20240511   clang
-i386                  randconfig-015-20240511   clang
-i386                  randconfig-016-20240511   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240511   gcc  
-loongarch             randconfig-002-20240511   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240511   gcc  
-nios2                 randconfig-002-20240511   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240511   gcc  
-parisc                randconfig-002-20240511   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240511   gcc  
-powerpc               randconfig-002-20240511   clang
-powerpc               randconfig-003-20240511   gcc  
-powerpc64             randconfig-001-20240511   gcc  
-powerpc64             randconfig-002-20240511   gcc  
-powerpc64             randconfig-003-20240511   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240511   gcc  
-riscv                 randconfig-002-20240511   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240511   clang
-s390                  randconfig-002-20240511   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240511   gcc  
-sh                    randconfig-002-20240511   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240511   gcc  
-sparc64               randconfig-002-20240511   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240511   gcc  
-um                    randconfig-002-20240511   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240511   gcc  
-xtensa                randconfig-002-20240511   gcc  
+Even though rcar->drvdata won't be NULL, the lack of NULL check will cause
+folks to send fixup patch later. So please add a NULL check here itself.
+
+- Mani
+
+>  
+> -	switch (rcar->mode) {
+> +	switch (rcar->drvdata->mode) {
+>  	case DW_PCIE_RC_TYPE:
+>  		return rcar_gen4_add_dw_pcie_rp(rcar);
+>  	case DW_PCIE_EP_TYPE:
+> @@ -480,7 +484,7 @@ static int rcar_gen4_pcie_probe(struct platform_device *pdev)
+>  
+>  static void rcar_gen4_remove_dw_pcie(struct rcar_gen4_pcie *rcar)
+>  {
+> -	switch (rcar->mode) {
+> +	switch (rcar->drvdata->mode) {
+>  	case DW_PCIE_RC_TYPE:
+>  		rcar_gen4_remove_dw_pcie_rp(rcar);
+>  		break;
+> @@ -500,14 +504,22 @@ static void rcar_gen4_pcie_remove(struct platform_device *pdev)
+>  	rcar_gen4_pcie_unprepare(rcar);
+>  }
+>  
+> +static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie = {
+> +	.mode = DW_PCIE_RC_TYPE,
+> +};
+> +
+> +static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie_ep = {
+> +	.mode = DW_PCIE_EP_TYPE,
+> +};
+> +
+>  static const struct of_device_id rcar_gen4_pcie_of_match[] = {
+>  	{
+>  		.compatible = "renesas,rcar-gen4-pcie",
+> -		.data = (void *)DW_PCIE_RC_TYPE,
+> +		.data = &drvdata_rcar_gen4_pcie,
+>  	},
+>  	{
+>  		.compatible = "renesas,rcar-gen4-pcie-ep",
+> -		.data = (void *)DW_PCIE_EP_TYPE,
+> +		.data = &drvdata_rcar_gen4_pcie_ep,
+>  	},
+>  	{},
+>  };
+> -- 
+> 2.25.1
+> 
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
