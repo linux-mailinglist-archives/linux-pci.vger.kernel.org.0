@@ -1,315 +1,154 @@
-Return-Path: <linux-pci+bounces-7386-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7387-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DB0B8C34B5
-	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2024 01:19:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADEBB8C34C3
+	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2024 01:55:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B00B2810A4
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 23:19:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5BF91C20CCF
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 23:55:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3BC2E644;
-	Sat, 11 May 2024 23:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5469C3A1DD;
+	Sat, 11 May 2024 23:55:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q2KVVUWw"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="aLxPLrwV";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Eph8/G8I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527BA27457
-	for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 23:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8539225DD;
+	Sat, 11 May 2024 23:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715469571; cv=none; b=OImThf0StuG1vL2RMFJOUN/kvTE8l4WNC98VtakpQzESIAMmgRHHFSJrts4OqsGnR45g0nELii0Xl60ai8n1UopFS9b9N6j1eGiPUDr2yZW5r2CccMeOhtDWXA7xEBx1OmimCr8e+L4VNdlsHoU/SS/q18j+V5rNvvqiRVXvtk4=
+	t=1715471746; cv=none; b=Bj7YdA3gjwi/NotSqo9iwKvGP3cCpcqp9BdPe+5LTZxxlCRjpahQvfZe5iDXTU95oyeGnvngxiakptG6aFJq0dHudwEkDYK5gYUy1Rna5hIcHazYRpE2o5kz8+u2y9r/IesNw9llX/ggaToOZvnhIaTB7d6OvXLPXhRelep7oHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715469571; c=relaxed/simple;
-	bh=U8xcH0lwRhG+ROVtBnmkMLl2l7d7FYA2iQWqpnRKhXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fSMwlnJKO5WbchcdQyQ5t/5xbov+PTpiidl7cfhOCQBpb6lPCGcHxYXopdLWekv4tU8+FZTDyw8TCz6r13+f6rPyN8oOekLzgYXGX1U8JQSNzUWr2qIFLJOVGl11PGD1xQX6AfjvFn2ll6nlZr8yrojIqR/EzuF7uvTtweKVfCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q2KVVUWw; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715469569; x=1747005569;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=U8xcH0lwRhG+ROVtBnmkMLl2l7d7FYA2iQWqpnRKhXU=;
-  b=Q2KVVUWwk9jiYRk0p3qQNi4GA0D1TPCXP2cVxHZ9c65yQsd67Qo0Y3Y1
-   FzJ21JzlncGYruP28FWrsV2TPXD6TE01c7IhrI0BJkWHIPYetMtp21X1H
-   MhNvxWuypGbU1P80ilDCksOlKOVbTAwjgnxDjgzcK3R/FRGdyQwqGf4Z1
-   MWIw/UGcjwTEzDl6xhT94/4CxeVJzR1UMeIL0/8OfU31bT1TrTy1yZoUn
-   4kmJMZdOE+13MQdun9MPYU+OcABzkKVW/RNZwfyypnuR8F9MCRRtoWvd5
-   jlOhEPnkAxIOs7xAQLtJm41KbMWjrvWm8lDksxALuF5p5xSsmjTRxkwSU
-   w==;
-X-CSE-ConnectionGUID: M0ZsG08fQHGM1qks4ZsNRg==
-X-CSE-MsgGUID: En9qssypTaepaQV5s2YUzg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11070"; a="11595458"
-X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
-   d="scan'208";a="11595458"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2024 16:19:28 -0700
-X-CSE-ConnectionGUID: OJycCQVuT26jQM70tlsxew==
-X-CSE-MsgGUID: D5LK1acLS1CnVpvPgHi2NA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
-   d="scan'208";a="60810117"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 11 May 2024 16:19:27 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s5vzx-0007vP-14;
-	Sat, 11 May 2024 23:19:25 +0000
-Date: Sun, 12 May 2024 07:19:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:endpoint] BUILD SUCCESS
- ddc66cc4e6951f5e8bedcb0d4519fa63799dd872
-Message-ID: <202405120758.D5roUSmo-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1715471746; c=relaxed/simple;
+	bh=rVO5lZJEhHhvxcpoHjnXpZHEHvnrU5HiTLXlrFJGgWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PnyXWl+TZNvuFTHFCTQ/3xV3H6oDMJxbkFfMj/RxEOqA4bgXLVI47HML7brb7sCQenxVVXYrTKW/u1RUgX5IpwRBpo+CYuDM0d/lfhXyK/y7MwDu1E9inavkZkF3QKPZQ4Jvk9BwI+BOGO7BCsnDnk5i2Xm8Pmf5oKTerqkTQNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=aLxPLrwV; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Eph8/G8I; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VcN135T0Fz9skx;
+	Sun, 12 May 2024 01:55:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1715471735;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cXNaVFdnA5HjJO8L+nWGjE0a4+KNH79u4It+UoUubC0=;
+	b=aLxPLrwVOz6aDQmqbBBvLrNkEbk73rf/9HhfaWtQpiiUs2K3AO+NpnKe+9soVxLfLGbCX5
+	O69tvvvgPmE3ikdZo5cwSoSGMDnres+LUHzSt6OYUwDZi/N1NKw3uiFTdFJQXinDZQ3P6+
+	B9EJIhMvp5f/hyLpI8/sQ2YPKCkm+MjdQGG/c9CTEFae79cmI1I4lekDM32hOmbMsqBBTn
+	oha3iisOeBftDOtYU1Tfs5YOSMSvMWtEWHc9Yx89s+4eMnDBsBB+RBJNjwH+U4Qj0JsKvk
+	cI2LvmN4N6ufjQQsz83ZQUanrzVOEH2uecKQXCpRKBwCA9XR5GGFVOX69GOvuQ==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1715471733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cXNaVFdnA5HjJO8L+nWGjE0a4+KNH79u4It+UoUubC0=;
+	b=Eph8/G8ILNWfW9gAbEyAntnNplts8iFHPIj4zSEdVhPrQQUTiF+ZbcLF1q/WoGeN/OLWuh
+	Th7TK3s2hKZZ6vK970c27PFRTyn68MseGuEyz0Y8J9MZgAgLTfx5aP8PnGrrQMFUan4x4n
+	IR8Qf+o4vBaF7uuSMlwwWY7c3jQp1XM49wS9FY6J0DphiK0cFQ6flzSw+JBkXO755cWNtv
+	W/bT7gUmPIVwjpKJbw8/4bfxbqyXnjDmTxX1eMiIK0CDjafsh8/qoPyllmqLb64eyPbKIZ
+	4ZAPCJeXidEks2N/WFavzLST2iFWryBdajL0Cow6lDeVeG28WQ3HC/fDCUy7vA==
+To: linux-pci@vger.kernel.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH] PCI: rcar: Demote WARN() to dev_warn_ratelimited() in rcar_pcie_wakeup()
+Date: Sun, 12 May 2024 01:54:50 +0200
+Message-ID: <20240511235513.77301-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: z1jyy4rkdkn68gw39fy76cs6sdywyxw6
+X-MBO-RS-ID: 843f82a5d73b027546a
+X-Rspamd-Queue-Id: 4VcN135T0Fz9skx
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
-branch HEAD: ddc66cc4e6951f5e8bedcb0d4519fa63799dd872  PCI: endpoint: Remove unused field in struct pci_epf_group
+Avoid large backtrace, it is sufficient to warn the user that there has
+been a link problem. Either the link has failed and the system is in need
+of maintenance, or the link continues to work and user has been informed.
+The message from the warning can be looked up in the sources.
 
-elapsed time: 1070m
+This makes an actual link issue less verbose.
 
-configs tested: 220
-configs skipped: 3
+First of all, this controller has a limitation in that the controller
+driver has to assist the hardware with transition to L1 link state by
+writing L1IATN to PMCTRL register, the L1 and L0 link state switching
+is not fully automatic on this controller.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+In case of an ASMedia ASM1062 PCIe SATA controller which does not support
+ASPM, on entry to suspend or during platform pm_test, the SATA controller
+enters D3hot state and the link enters L1 state. If the SATA controller
+wakes up before rcar_pcie_wakeup() was called and returns to D0, the link
+returns to L0 before the controller driver even started its transition to
+L1 link state. At this point, the SATA controller did send an PM_ENTER_L1
+DLLP to the PCIe controller and the PCIe controller received it, and the
+PCIe controller did set PMSR PMEL1RX bit.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240511   gcc  
-arc                   randconfig-001-20240512   gcc  
-arc                   randconfig-002-20240511   gcc  
-arc                   randconfig-002-20240512   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                             mxs_defconfig   clang
-arm                            qcom_defconfig   clang
-arm                   randconfig-001-20240511   clang
-arm                   randconfig-001-20240512   gcc  
-arm                   randconfig-002-20240511   clang
-arm                   randconfig-003-20240511   gcc  
-arm                   randconfig-004-20240511   gcc  
-arm                   randconfig-004-20240512   gcc  
-arm                        spear3xx_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240511   gcc  
-arm64                 randconfig-002-20240511   clang
-arm64                 randconfig-003-20240511   gcc  
-arm64                 randconfig-004-20240511   clang
-arm64                 randconfig-004-20240512   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240511   gcc  
-csky                  randconfig-001-20240512   gcc  
-csky                  randconfig-002-20240511   gcc  
-csky                  randconfig-002-20240512   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240511   clang
-hexagon               randconfig-002-20240511   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240511   gcc  
-i386         buildonly-randconfig-001-20240512   gcc  
-i386         buildonly-randconfig-002-20240511   clang
-i386         buildonly-randconfig-003-20240511   gcc  
-i386         buildonly-randconfig-003-20240512   gcc  
-i386         buildonly-randconfig-004-20240511   clang
-i386         buildonly-randconfig-004-20240512   gcc  
-i386         buildonly-randconfig-005-20240511   gcc  
-i386         buildonly-randconfig-005-20240512   gcc  
-i386         buildonly-randconfig-006-20240511   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240511   gcc  
-i386                  randconfig-002-20240511   clang
-i386                  randconfig-003-20240511   gcc  
-i386                  randconfig-004-20240511   clang
-i386                  randconfig-004-20240512   gcc  
-i386                  randconfig-005-20240511   gcc  
-i386                  randconfig-006-20240511   gcc  
-i386                  randconfig-011-20240511   clang
-i386                  randconfig-011-20240512   gcc  
-i386                  randconfig-012-20240511   gcc  
-i386                  randconfig-013-20240511   clang
-i386                  randconfig-013-20240512   gcc  
-i386                  randconfig-014-20240511   clang
-i386                  randconfig-015-20240511   clang
-i386                  randconfig-015-20240512   gcc  
-i386                  randconfig-016-20240511   gcc  
-i386                  randconfig-016-20240512   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240511   gcc  
-loongarch             randconfig-001-20240512   gcc  
-loongarch             randconfig-002-20240511   gcc  
-loongarch             randconfig-002-20240512   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                          rb532_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240511   gcc  
-nios2                 randconfig-001-20240512   gcc  
-nios2                 randconfig-002-20240511   gcc  
-nios2                 randconfig-002-20240512   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240511   gcc  
-parisc                randconfig-001-20240512   gcc  
-parisc                randconfig-002-20240511   gcc  
-parisc                randconfig-002-20240512   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                       ebony_defconfig   clang
-powerpc                      obs600_defconfig   clang
-powerpc               randconfig-001-20240511   gcc  
-powerpc               randconfig-002-20240511   clang
-powerpc               randconfig-003-20240511   gcc  
-powerpc                     sequoia_defconfig   clang
-powerpc64             randconfig-001-20240511   gcc  
-powerpc64             randconfig-002-20240511   gcc  
-powerpc64             randconfig-003-20240511   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240511   gcc  
-riscv                 randconfig-002-20240511   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240511   clang
-s390                  randconfig-001-20240512   gcc  
-s390                  randconfig-002-20240511   gcc  
-s390                  randconfig-002-20240512   gcc  
-s390                       zfcpdump_defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240511   gcc  
-sh                    randconfig-001-20240512   gcc  
-sh                    randconfig-002-20240511   gcc  
-sh                    randconfig-002-20240512   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240511   gcc  
-sparc64               randconfig-001-20240512   gcc  
-sparc64               randconfig-002-20240511   gcc  
-sparc64               randconfig-002-20240512   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240511   gcc  
-um                    randconfig-002-20240511   gcc  
-um                    randconfig-002-20240512   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240511   gcc  
-x86_64       buildonly-randconfig-001-20240512   clang
-x86_64       buildonly-randconfig-002-20240511   gcc  
-x86_64       buildonly-randconfig-002-20240512   clang
-x86_64       buildonly-randconfig-003-20240511   gcc  
-x86_64       buildonly-randconfig-003-20240512   clang
-x86_64       buildonly-randconfig-004-20240511   gcc  
-x86_64       buildonly-randconfig-005-20240511   clang
-x86_64       buildonly-randconfig-005-20240512   clang
-x86_64       buildonly-randconfig-006-20240511   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240511   clang
-x86_64                randconfig-002-20240511   clang
-x86_64                randconfig-003-20240511   clang
-x86_64                randconfig-003-20240512   clang
-x86_64                randconfig-004-20240511   gcc  
-x86_64                randconfig-005-20240511   gcc  
-x86_64                randconfig-006-20240511   clang
-x86_64                randconfig-011-20240511   clang
-x86_64                randconfig-012-20240511   gcc  
-x86_64                randconfig-013-20240511   gcc  
-x86_64                randconfig-013-20240512   clang
-x86_64                randconfig-014-20240511   gcc  
-x86_64                randconfig-015-20240511   gcc  
-x86_64                randconfig-015-20240512   clang
-x86_64                randconfig-016-20240511   gcc  
-x86_64                randconfig-016-20240512   clang
-x86_64                randconfig-071-20240511   gcc  
-x86_64                randconfig-071-20240512   clang
-x86_64                randconfig-072-20240511   gcc  
-x86_64                randconfig-073-20240511   clang
-x86_64                randconfig-074-20240511   gcc  
-x86_64                randconfig-074-20240512   clang
-x86_64                randconfig-075-20240511   gcc  
-x86_64                randconfig-075-20240512   clang
-x86_64                randconfig-076-20240511   gcc  
-x86_64                randconfig-076-20240512   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240511   gcc  
-xtensa                randconfig-001-20240512   gcc  
-xtensa                randconfig-002-20240511   gcc  
-xtensa                randconfig-002-20240512   gcc  
+Once rcar_pcie_wakeup() is called, if the link is already back in L0 state
+and PMEL1RX bit is set, the controller driver has no way to determine if
+it should perform the link transition to L1 state, or treat the link as if
+it is in L0 state. Currently the driver attempts to perform the transition
+to L1 link state unconditionally, which in this specific case fails with a
+PMSR L1FAEG poll timeout, however the link still works as it is already
+back in L0 state.
 
+Reduce this warning verbosity. In case the link is really broken, the
+rcar_pcie_config_access() would fail, otherwise it will succeed and any
+system with this controller and ASM1062 can suspend without generating
+a backtrace.
+
+Fixes: 84b576146294 ("PCI: rcar: Finish transition to L1 state in rcar_pcie_config_access()")
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+---
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+ drivers/pci/controller/pcie-rcar-host.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index 996077ab7cfdb..c01efc6ea64f6 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -78,7 +78,11 @@ static int rcar_pcie_wakeup(struct device *pcie_dev, void __iomem *pcie_base)
+ 		writel(L1IATN, pcie_base + PMCTLR);
+ 		ret = readl_poll_timeout_atomic(pcie_base + PMSR, val,
+ 						val & L1FAEG, 10, 1000);
+-		WARN(ret, "Timeout waiting for L1 link state, ret=%d\n", ret);
++		if (ret) {
++			dev_warn_ratelimited(pcie_dev,
++					     "Timeout waiting for L1 link state, ret=%d\n",
++					     ret);
++		}
+ 		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
+ 	}
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
