@@ -1,58 +1,59 @@
-Return-Path: <linux-pci+bounces-7380-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7381-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E6648C3008
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 09:27:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D93E68C3019
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 09:38:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 402341C20D2B
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 07:27:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F655284A1A
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 07:38:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A381746E;
-	Sat, 11 May 2024 07:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E66ACDDAD;
+	Sat, 11 May 2024 07:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2PbT+hT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uq+T2DKv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4E24A33;
-	Sat, 11 May 2024 07:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F733D27D;
+	Sat, 11 May 2024 07:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715412430; cv=none; b=CXtaSgAql/fQ2pO1cDMTFQnSlUht2r6/IPMAMXogj3iD5hauslhCOyozJ5a5RQrsWR1/j4Ky6p4tE2dkQ52KaP4zizc4qPNLMz5rDFtkuf80yWM4QcJAdYjaRJTXn1ogQMJ7i6rkw9QfJhWdn4LtriNTxaokIXTcHF7RqlHfRAk=
+	t=1715413100; cv=none; b=PA7/wdvNkMVbCgPGJX+jPIbOsLAkcKp0fcnvURDg7mBOoSer3tan0cSGg1nS4NUjvjKBATUKy6ymThKssIdQ2D4g/hDwC1BO2nscWoawgvxQtLrHgTZE7BZAPSqTBYRRGS6ipvV6+U4pk/Bs1qeUrSk8cG23gyUKw3Ex8i/kcg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715412430; c=relaxed/simple;
-	bh=pho0PmFfIhbXkPZtW4UZllE0y/5im6qi/bN4LGe074w=;
+	s=arc-20240116; t=1715413100; c=relaxed/simple;
+	bh=3XqU5e2jg+oxlMFAfddy7rmL3p06MwkS0Osy+ZTGxCg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BnwxthqERjtpb+ovoQaa/0w0aPQ+QC60AsQ6Vy4mUcxy9zRCEPEW3fCVV2keevPMvQ/D/07hT5kizNFOOuawhn8au1peOcdOxHN6ueh7ZIX8yEiYxCBboJ4MNxMlYblQZmVUhcG/R33xo9OYL+Xb6FvOWe2cD6uUWj4aAMfcENw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2PbT+hT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3208DC2BD10;
-	Sat, 11 May 2024 07:27:05 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=pjnP77YQUdqTUInYveFADHffj+LBq+Io+WiD2CCLdRg2gVnAVCs/QEOK9xKNB+wxYlue/2E1brVxNOziICToui5npd7w5C29+CCpe05lEL4GEzYJpaad8gRZd8/1eYWThj303FfkeCH+Lp6vWnBHfqpuIssvDnaMHM1RUdqp6HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uq+T2DKv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFE98C2BD10;
+	Sat, 11 May 2024 07:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715412429;
-	bh=pho0PmFfIhbXkPZtW4UZllE0y/5im6qi/bN4LGe074w=;
+	s=k20201202; t=1715413100;
+	bh=3XqU5e2jg+oxlMFAfddy7rmL3p06MwkS0Osy+ZTGxCg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b2PbT+hT8VgSxNsqWa/JyyLMhEnb8UwGEUbeE045CY4K2c+NLY1ZrDU1hlwv6jSPr
-	 qT/2//5zP7yE5IetJROO0eNvVce71Pro5rqgwLNRvpD89yTqsP6qBRX5+NRz8upY8i
-	 sOP2Kt8CPTKwyI/+nY20m+Mie3nqBTMQLaSbKBqgfxH0aIzNi6fWpVPaqgrW2wKWlV
-	 v7kUy8zo3byVf1k/SrFoUYJ1CehN4EXMZzmAI/JDdRpHR75WyRePhj9SzSq+UZIbKP
-	 u237q1nwXmItM1dfdnPvPSdAfae/FbQvx+gG/luqxhLLzm0bSGujw+Ih2ech4dMnbW
-	 ne+XKzWLPK1/Q==
-Date: Sat, 11 May 2024 12:57:02 +0530
+	b=Uq+T2DKv/taQiRxDwoI36ksVvtx2rtR+G7Xy3E7pX+JUx+hb5yQyWJKifzVrCDpot
+	 hoIipBQGCLxoB3QP5vudsBk2jtqwhbYMSkpZe2GOjl+Loyl+uf6IovsPsYvdKIGiog
+	 bcp1fmZHn7WsviEYUPuP/DbmQhZocaDMlwAItUXs8UmyvCxIyCfxBbbt1ARtXT3/uh
+	 DPLGj7cl/VucFJ77KTruxCFK85vu2xg4o3jBbOUOmB1YYSqxDPWkTx6IZY79pWCfGL
+	 99wuuStdL7b+RRYDva6WT48eaosKwCRvrpoZW/vtw1Ex5LIXbQQGzuNXJiCMXL7iDs
+	 vJRl2jvrg4Efw==
+Date: Sat, 11 May 2024 13:08:12 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
 	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, jingoohan1@gmail.com, mani@kernel.org,
+	conor+dt@kernel.org, jingoohan1@gmail.com,
 	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] PCI: rcar-gen4: Add rcar_gen4_pcie_drvdata
-Message-ID: <20240511072702.GD6672@thinkpad>
+Subject: Re: [PATCH v7 5/7] PCI: rcar-gen4: Add .ltssm_enable() for other SoC
+ support
+Message-ID: <20240511073812.GE6672@thinkpad>
 References: <20240415081135.3814373-1-yoshihiro.shimoda.uh@renesas.com>
- <20240415081135.3814373-5-yoshihiro.shimoda.uh@renesas.com>
+ <20240415081135.3814373-6-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,122 +63,111 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240415081135.3814373-5-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20240415081135.3814373-6-yoshihiro.shimoda.uh@renesas.com>
 
-On Mon, Apr 15, 2024 at 05:11:32PM +0900, Yoshihiro Shimoda wrote:
-> In other to support future SoCs such as r8a779g0 and r8a779h0 that
-> require different initialization settings, let's introduce SoC
-> specific driver data with the initial member being the device mode.
-> No functional change.
+PCI: rcar-gen4: Move LTSSM handling to ltssm_control() callback
+
+On Mon, Apr 15, 2024 at 05:11:33PM +0900, Yoshihiro Shimoda wrote:
+> This driver can reuse other R-Car Gen4 SoCs support like r8a779g0 and
+> r8a779h0. However, r8a779g0 and r8a779h0 require other initializing
+> settings that differ than r8a779f0. So, add a new function pointer
+> .ltssm_enable() for it.
 > 
+> After applied this patch, probing SoCs by rcar_gen4_pcie_of_match[]
+> will be changed like below:
+> 
+> - r8a779f0 as "renesas,r8a779f0-pcie" and "renesas,r8a779f0-pcie-ep"
+> 
+> Existing dts files have the compatible above. So, no behavior changes.
+> 
+
+How about:
+
+Sequence for controlling the LTSSM state machine is going to change for SoCs
+like r8a779f0. So let's move the LTSSM code to a new callback ltssm_control()
+and populate it for each SoCs.
+
+This also warrants the addition of new compatibles for r8a779g0 and r8a779h0.
+But since they are already part of the DT binding, it won't make any difference.
+
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-One nitpick below. With that addressed,
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
 > ---
->  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 30 ++++++++++++++-------
->  1 file changed, 21 insertions(+), 9 deletions(-)
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 41 ++++++++++++++++++---
+>  1 file changed, 36 insertions(+), 5 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> index 0be760ed420b..3da0a844e1b6 100644
+> index 3da0a844e1b6..980a916933d6 100644
 > --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
 > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> @@ -48,11 +48,15 @@
+> @@ -48,7 +48,9 @@
 >  #define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
 >  #define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
 >  
-> +struct rcar_gen4_pcie_drvdata {
-> +	enum dw_pcie_device_mode mode;
-> +};
-> +
->  struct rcar_gen4_pcie {
->  	struct dw_pcie dw;
->  	void __iomem *base;
->  	struct platform_device *pdev;
-> -	enum dw_pcie_device_mode mode;
-> +	const struct rcar_gen4_pcie_drvdata *drvdata;
+> +struct rcar_gen4_pcie;
+>  struct rcar_gen4_pcie_drvdata {
+> +	int (*ltssm_enable)(struct rcar_gen4_pcie *rcar);
+
+int (*ltssm_control)(struct rcar_gen4_pcie *rcar, bool enable);
+
+>  	enum dw_pcie_device_mode mode;
 >  };
+>  
+> @@ -61,8 +63,8 @@ struct rcar_gen4_pcie {
 >  #define to_rcar_gen4_pcie(_dw)	container_of(_dw, struct rcar_gen4_pcie, dw)
 >  
-> @@ -137,7 +141,7 @@ static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
->  	 * Since dw_pcie_setup_rc() sets it once, PCIe Gen2 will be trained.
->  	 * So, this needs remaining times for up to PCIe Gen4 if RC mode.
->  	 */
-> -	if (changes && rcar->mode == DW_PCIE_RC_TYPE)
-> +	if (changes && rcar->drvdata->mode == DW_PCIE_RC_TYPE)
->  		changes--;
->  
->  	for (i = 0; i < changes; i++) {
-> @@ -172,9 +176,9 @@ static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
->  		reset_control_assert(dw->core_rsts[DW_PCIE_PWR_RST].rstc);
->  
->  	val = readl(rcar->base + PCIEMSR0);
-> -	if (rcar->mode == DW_PCIE_RC_TYPE) {
-> +	if (rcar->drvdata->mode == DW_PCIE_RC_TYPE) {
->  		val |= DEVICE_TYPE_RC;
-> -	} else if (rcar->mode == DW_PCIE_EP_TYPE) {
-> +	} else if (rcar->drvdata->mode == DW_PCIE_EP_TYPE) {
->  		val |= DEVICE_TYPE_EP;
->  	} else {
->  		ret = -EINVAL;
-> @@ -437,9 +441,9 @@ static void rcar_gen4_remove_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
 >  /* Common */
->  static int rcar_gen4_add_dw_pcie(struct rcar_gen4_pcie *rcar)
+> -static void rcar_gen4_pcie_ltssm_enable(struct rcar_gen4_pcie *rcar,
+> -					bool enable)
+> +static void rcar_gen4_pcie_ltssm_control(struct rcar_gen4_pcie *rcar,
+> +					 bool enable)
 >  {
-> -	rcar->mode = (uintptr_t)of_device_get_match_data(&rcar->pdev->dev);
-> +	rcar->drvdata = of_device_get_match_data(&rcar->pdev->dev);
-
-Even though rcar->drvdata won't be NULL, the lack of NULL check will cause
-folks to send fixup patch later. So please add a NULL check here itself.
-
-- Mani
-
+>  	u32 val;
 >  
-> -	switch (rcar->mode) {
-> +	switch (rcar->drvdata->mode) {
->  	case DW_PCIE_RC_TYPE:
->  		return rcar_gen4_add_dw_pcie_rp(rcar);
->  	case DW_PCIE_EP_TYPE:
-> @@ -480,7 +484,7 @@ static int rcar_gen4_pcie_probe(struct platform_device *pdev)
->  
->  static void rcar_gen4_remove_dw_pcie(struct rcar_gen4_pcie *rcar)
+> @@ -127,9 +129,13 @@ static int rcar_gen4_pcie_speed_change(struct dw_pcie *dw)
+>  static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
 >  {
-> -	switch (rcar->mode) {
-> +	switch (rcar->drvdata->mode) {
->  	case DW_PCIE_RC_TYPE:
->  		rcar_gen4_remove_dw_pcie_rp(rcar);
->  		break;
-> @@ -500,14 +504,22 @@ static void rcar_gen4_pcie_remove(struct platform_device *pdev)
+>  	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> -	int i, changes;
+> +	int i, changes, ret;
+>  
+> -	rcar_gen4_pcie_ltssm_enable(rcar, true);
+> +	if (rcar->drvdata->ltssm_enable) {
+> +		ret = rcar->drvdata->ltssm_enable(rcar);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	/*
+>  	 * Require direct speed change with retrying here if the link_gen is
+> @@ -157,7 +163,7 @@ static void rcar_gen4_pcie_stop_link(struct dw_pcie *dw)
+>  {
+>  	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+>  
+> -	rcar_gen4_pcie_ltssm_enable(rcar, false);
+> +	rcar_gen4_pcie_ltssm_control(rcar, false);
+
+You should use the callback here as like above.
+
+>  }
+>  
+>  static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
+> @@ -504,6 +510,23 @@ static void rcar_gen4_pcie_remove(struct platform_device *pdev)
 >  	rcar_gen4_pcie_unprepare(rcar);
 >  }
 >  
-> +static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie = {
-> +	.mode = DW_PCIE_RC_TYPE,
-> +};
+> +static int r8a779f0_pcie_ltssm_enable(struct rcar_gen4_pcie *rcar)
+> +{
+> +	rcar_gen4_pcie_ltssm_control(rcar, true);
 > +
-> +static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie_ep = {
-> +	.mode = DW_PCIE_EP_TYPE,
-> +};
+> +	return 0;
+> +}
 > +
->  static const struct of_device_id rcar_gen4_pcie_of_match[] = {
->  	{
->  		.compatible = "renesas,rcar-gen4-pcie",
-> -		.data = (void *)DW_PCIE_RC_TYPE,
-> +		.data = &drvdata_rcar_gen4_pcie,
->  	},
->  	{
->  		.compatible = "renesas,rcar-gen4-pcie-ep",
-> -		.data = (void *)DW_PCIE_EP_TYPE,
-> +		.data = &drvdata_rcar_gen4_pcie_ep,
->  	},
->  	{},
->  };
-> -- 
-> 2.25.1
-> 
-> 
+> +static struct rcar_gen4_pcie_drvdata drvdata_r8a779f0_pcie = {
+> +	.ltssm_enable = r8a779f0_pcie_ltssm_enable,
+
+Just pass rcar_gen4_pcie_ltssm_control() directly.
+
+- Mani
 
 -- 
 மணிவண்ணன் சதாசிவம்
