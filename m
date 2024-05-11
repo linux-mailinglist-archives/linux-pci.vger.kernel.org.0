@@ -1,92 +1,84 @@
-Return-Path: <linux-pci+bounces-7377-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7378-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B8188C2FE2
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 08:39:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 076AF8C2FFD
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 09:15:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2929D1F22F3A
-	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 06:39:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68ACA1F22CF0
+	for <lists+linux-pci@lfdr.de>; Sat, 11 May 2024 07:15:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06AA17F3;
-	Sat, 11 May 2024 06:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E07F610B;
+	Sat, 11 May 2024 07:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g6QWFToX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bQ8Umm6z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A97A1391
-	for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 06:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0B94C65
+	for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 07:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715409577; cv=none; b=ppmwBZ93FiCzgYaqJCh7Z6XF83IUq0tN8doti5EpZsptbCmIizB8TCE/++n/ZFO3d7D9jsMb4z9DEDESE9RKcs3MeS6VAPLIeuYb0ebmxcULkWz/G9LFxYHGjO0OdbdxBALFg+CHl4Mug/EwQ1P+4R/TvwAI9WObz5mAGh0E3ug=
+	t=1715411739; cv=none; b=P0wgcemsJq18tyVpEssgyz3e8hevRJULuJMvLSmND4O0vAnK28z+addPhn1Aa242sWhvCf8286oJLp18U8+DurNWPwSlKGQi72QMfZMthCgwoH3WUYkcAolZxUxJgo2azQmGyTaD5FhEWH/L54Hc5XIMLIrJeMTo5P1e+jrdWh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715409577; c=relaxed/simple;
-	bh=ohIU0BNbyMtZNdVZlUNr4IqV8gPhaMqQ1agVuP69fhM=;
+	s=arc-20240116; t=1715411739; c=relaxed/simple;
+	bh=kP1V+EtzTHOEEdN5Tn2jtj1uoNnrhiy0O47cc8AcxA4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gdlvwwb2CGlaEpYsLZayj0L+BwdfB3Ijw12XfP9aA03jjZO74evmT6JsCXN6+rhPNLp53SS4kIwFxMqpxrOBLj56hK1mpv0l8LT34Jg9KQ1n6zE1u2YGuBa5AoWFBxCsBOlvH6Z2GgYa6cNLVizezTLGFuN8KKZE7j6fFl4VvVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g6QWFToX; arc=none smtp.client-ip=209.85.215.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0e43rQjw4UK/8FRIufuJfyJt4IAhLdMwYt0RcPmp4gHFlzC+bN3BnLAuc8j6wO8p4hBk1vTB+aT6fjcyhOMnLWbYI37gncW7U3lOpEq4Vk30bQqbwQxoJJrlEVVYOwPKhJkIiFO+FaJ5QPqZREmFoc7LQdE4vqjLY8CO3L73XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bQ8Umm6z; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so1851896a12.0
-        for <linux-pci@vger.kernel.org>; Fri, 10 May 2024 23:39:35 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so25170165ad.1
+        for <linux-pci@vger.kernel.org>; Sat, 11 May 2024 00:15:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715409575; x=1716014375; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715411737; x=1716016537; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8ZGOyYQlPMjCo7NoBFPkuXTj+4higrK3cJrWnMzKiEg=;
-        b=g6QWFToXQok+V3jhWb2TA3WU/cfN+txc45PKhItOMk96vdRAEaANIWx+gFttgrZYl+
-         FaI0gNYJJUlNVBsU0WD281elonouHMH79bVjcJIcikEn7fIQq+1qOAg7Oyvqny8ZxMB5
-         UcM/tzNUBRzotnXfpSVPX9quL1B3mOqbutzAuG5Wrt+3AXVoayqJf6ylehJpcRzJu5fd
-         qJVZl66V3RmCFsyB3I0stWXqVJg3DXjGQyIy5APlEfcU179nQ2E5nYyP5RHRbvbKn+dW
-         EbWLXROGUq5dwKFMtKiMiVJu7m3KL6nm00/lA8Yx6c6eyL9A+Xp7pBdaZWNtUd8iCsmH
-         QoWg==
+        bh=pN7vTSTZWouaFkH6aSeXVb/sXxzlUMYk7HqIZeYevwQ=;
+        b=bQ8Umm6zvhdZEy8vmaUvU2Iw+3U4Exz8vwTgIRHmU1+T2F04dp0en5kuEIdr+5tQzo
+         +k7bGjYcwQfTPZoIoQwrmCUzxfUwE54ypPLh4dgQhVYk48QK4F873xf5Sm6kzyHrMbqv
+         Xvrhfeuu2zU+u1viYA5UESzip+io/i7WdnsN38JPvgdV8fr5YrCJzqOJS5SguRw1843M
+         l9MTBCHS6/LZfI+Ql9sEZUvtDsJi1e8k9f5tb+R9ZdsX5s/pcFGLoLSNABEVUvClSFot
+         fbpKjfaCo6BLb9yjTEhJHdbRompR68Fx+q88r9bt3BTpcaiuPSAJfO1kteIcRVkkvWsI
+         9Jzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715409575; x=1716014375;
+        d=1e100.net; s=20230601; t=1715411737; x=1716016537;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ZGOyYQlPMjCo7NoBFPkuXTj+4higrK3cJrWnMzKiEg=;
-        b=EMfnxMXBFTgggv9ItB1pLFjILr2xdgCIIxI7qfpSYgLWEdNZNEiYkRNLifj845Ctoa
-         C3vPGOiT7NfGrMwH3OKOXE0zWXF8kKyCLBdunhrHHW1Kzn71nn/8nitijU0gHoOEebOK
-         ttNSUO7ZhyqVDltLhfDYIUDWW8A3YbdrezrlXkGINNFmaYlafILXtJXU9lS539IdzEon
-         17UtVvsi3wNDXc5Vx19zzrDhhKSsYqu4ODAD69PoMFZ4TDV6a0ncxsaMl2uNj9+P5LdZ
-         iWsTKpP1x/4CwKncnv2xULGAoO6I4zXpROotmOkeQg8xgv6oDgp+nDS/Nr7Xxh4YyKoJ
-         +r9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUBtJxKDplnIoIoHniYvGwQKToUdXv+bEFsp+iHWRtCkEmmOjmYvXeBDJH67+n3/PV7WlXEsblwzO1MgqF5Qmsrw20r9ws2g4dW
-X-Gm-Message-State: AOJu0YzVxZ0c+/J7ZifAp0obkWY2Bat7ii4DcE4oq6Zv80N/QilAzRFz
-	Jct15v8NgEq7qFSDCN2SY64JACPgcdM21FbCQgC7kdfVq5cCJreRJHY7IBo6Hw==
-X-Google-Smtp-Source: AGHT+IFcPHdwaLWt2eocdN1RJhFnTd98pYEBepeLkuj7kAaEyXPW4pVze6C7JF/k2OT36e+fxjw+tA==
-X-Received: by 2002:a05:6a20:dc95:b0:1a7:60d8:a6dd with SMTP id adf61e73a8af0-1afde1df3b4mr5538644637.53.1715409575282;
-        Fri, 10 May 2024 23:39:35 -0700 (PDT)
+        bh=pN7vTSTZWouaFkH6aSeXVb/sXxzlUMYk7HqIZeYevwQ=;
+        b=OqPYdz95SnuRLDao1t1l+HwhMtPo36NcnmE2cDsvBYzj0pz531bA/ww8Foh3r0edLQ
+         sxF1AEB/V0Sx6znU/N2ai5IVs6e2wlyj4jddlIgo+bcjfr+OjdJobjeYpqK1D3uC/Wxl
+         DIBs3j14AB3iOqilrSE63QG83SMfcE5LxFmH7aSPkzyQYnPIU7LVAwDcqi5OJ95/S6QQ
+         M1wEGZSq6JOB05H/HxCBhZ3zHbhySoRKq+c1uzHE7RCWAQwfUqv0zf0LLsX2IlQH0Rk8
+         YFpk05P9CU2RnxzAMOw/cEnztxanzcXgEzEZp3Q/XLSo9gxdHx7Lfkk7PZjkDqvyhcSY
+         KByQ==
+X-Gm-Message-State: AOJu0Yydvy3BK4zAj5axNJyGBg21BCS+6v4wWWdrHXbnzEX7eayMqlyO
+	D0QYpw3ajlGXCwtbTOOmgmgc9KRHQnqubuiCqNP6BP+FJhYk+eyK6j3bw/oH2ANKhrgecdd3aZ8
+	=
+X-Google-Smtp-Source: AGHT+IEY+B1BkjgUqaJCKTMhy5yVKUSG7mNrjc92+kUQaGR7pn2oJDp9knykubItipbI04Y4Mn3Nog==
+X-Received: by 2002:a17:902:6542:b0:1eb:1240:1aea with SMTP id d9443c01a7336-1ef43d12749mr52124555ad.20.1715411736886;
+        Sat, 11 May 2024 00:15:36 -0700 (PDT)
 Received: from thinkpad ([220.158.156.38])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b671056629sm4242175a91.7.2024.05.10.23.39.30
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c0369f1sm43017055ad.185.2024.05.11.00.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 23:39:34 -0700 (PDT)
-Date: Sat, 11 May 2024 12:09:29 +0530
+        Sat, 11 May 2024 00:15:36 -0700 (PDT)
+Date: Sat, 11 May 2024 12:45:32 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 RESEND 5/8] PCI: qcom: Add support for IPQ9574
-Message-ID: <20240511063929.GB6672@thinkpad>
-References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
- <20240501042847.1545145-6-mr.nuke.me@gmail.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, lukas@wunner.de,
+	mika.westerberg@linux.intel.com, Bjorn Helgaas <helgaas@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v4 0/4] PCI: Allow D3Hot for PCI bridges in Devicetree
+ based platforms
+Message-ID: <20240511071532.GC6672@thinkpad>
+References: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,45 +88,86 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240501042847.1545145-6-mr.nuke.me@gmail.com>
+In-Reply-To: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
 
-On Tue, Apr 30, 2024 at 11:28:44PM -0500, Alexandru Gagniuc wrote:
-> IPQ9574 has four PCIe controllers: two single-lane Gen3, and two
-> dual-lane Gen3. The controllers are identical from a software
-
-You mean to say, 'identical to IPQ8074 Gen3 platform' since you are reusing the
-2_9_0 cfg?
-
-> perspective, with the differences appearing in the PHYs.
+On Tue, Mar 26, 2024 at 04:18:16PM +0530, Manivannan Sadhasivam wrote:
+> Hi,
 > 
-> Add a compatible for the PCIe on IPQ9574.
+> This series allows D3Hot for PCI bridges in Devicetree based platforms.
+> Even though most of the bridges in Devicetree platforms support D3Hot, PCI
+> core will allow D3Hot only when one of the following conditions are met:
 > 
-> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> 1. Platform is ACPI based
+> 2. Thunderbolt controller is used
+> 3. pcie_port_pm=force passed in cmdline
+> 
+> While options 1 and 2 do not apply to most of the DT based platforms,
+> option 3 will make the life harder for distro maintainers.
+> 
+> Initially, I tried to fix this issue by using a Devicetree property [1], but
+> that was rejected by Bjorn and it was concluded that D3Hot should be allowed by
+> default for all the Devicetree based platforms.
+> 
+> During the review of v3 series, Bjorn noted several shortcomings of the
+> pci_bridge_d3_possible() API [2] and I tried to address them in this series as
+> well.
+> 
+> But please note that the patches 2 and 3 needs closer review from ACPI and x86
+> folks since I've splitted the D3Hot and D3Cold handling based on my little
+> understanding of the code.
+> 
+> Testing
+> =======
+> 
+> This series is tested on SM8450 based development board on top of [3].
+> 
 
-But the change looks good to me.
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Bjorn, a gently ping on this series.
 
 - Mani
 
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
->  1 file changed, 1 insertion(+)
+> - Mani
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index ea81ff68d433..e61888e6c63d 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1551,6 +1551,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
->  	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
->  	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-> +	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_2_9_0 },
->  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
->  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
->  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+> [1] https://lore.kernel.org/linux-pci/20240214-pcie-qcom-bridge-v3-1-3a713bbc1fd7@linaro.org/
+> [2] https://lore.kernel.org/linux-pci/20240305175107.GA539676@bhelgaas/
+> [3] https://lore.kernel.org/linux-arm-msm/20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org/
+> 
+> Changes in v4:
+> - Added pci_bridge_d3_possible() rework based on comments from Bjorn
+> - Got rid of the DT property and allowed D3Hot by default on all DT platforms
+> 
+> Changes in v3:
+> - Fixed kdoc, used of_property_present() and dev_of_node() (Lukas)
+> - Link to v2: https://lore.kernel.org/r/20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org
+> 
+> Changes in v2:
+> - Switched to DT based approach as suggested by Lukas.
+> - Link to v1: https://lore.kernel.org/r/20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Manivannan Sadhasivam (4):
+>       PCI/portdrv: Make use of pci_dev::bridge_d3 for checking the D3 possibility
+>       PCI: Rename pci_bridge_d3_possible() to pci_bridge_d3_allowed()
+>       PCI: Decouple D3Hot and D3Cold handling for bridges
+>       PCI: Allow PCI bridges to go to D3Hot on all Devicetree based platforms
+> 
+>  drivers/pci/bus.c          |  2 +-
+>  drivers/pci/pci-acpi.c     |  9 ++---
+>  drivers/pci/pci-sysfs.c    |  2 +-
+>  drivers/pci/pci.c          | 90 ++++++++++++++++++++++++++++++++--------------
+>  drivers/pci/pci.h          | 12 ++++---
+>  drivers/pci/pcie/portdrv.c | 16 ++++-----
+>  drivers/pci/remove.c       |  2 +-
+>  include/linux/pci.h        |  3 +-
+>  8 files changed, 89 insertions(+), 47 deletions(-)
+> ---
+> base-commit: 705c1da8fa4816fb0159b5602fef1df5946a3ee2
+> change-id: 20240320-pci-bridge-d3-092e2beac438
+> 
+> Best regards,
 > -- 
-> 2.40.1
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
 
 -- 
