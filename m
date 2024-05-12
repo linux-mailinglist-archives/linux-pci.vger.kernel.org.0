@@ -1,211 +1,207 @@
-Return-Path: <linux-pci+bounces-7399-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7400-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 062328C35C0
-	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2024 10:36:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51CB28C3632
+	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2024 13:21:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8770C1F2139D
-	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2024 08:36:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03EEF28163A
+	for <lists+linux-pci@lfdr.de>; Sun, 12 May 2024 11:21:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E726179AE;
-	Sun, 12 May 2024 08:35:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A033B1EA91;
+	Sun, 12 May 2024 11:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="askoPFk3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PjGRZmsm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B54CA40;
-	Sun, 12 May 2024 08:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356AA1865C
+	for <linux-pci@vger.kernel.org>; Sun, 12 May 2024 11:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715502954; cv=none; b=YVUlREDDeiUQmf1Ojxj/GmOgtUwQEbM9JbzlQBBY4oqEZVasY80lD8NV01H3M9VqZGWe+6CYUCM9MvabeHmTvCBQLflxXuzpPiIPset2+K6kxFdGJ9okzYnYscOENdmlEhyQG/PDVXnZD4nPxity9OqsIvV43O2wiEI0HSjiPI8=
+	t=1715512915; cv=none; b=SyZNgVJ9uOn9mWHKA3mnMxW9Y/VpIxs4GlsaUd8lYfJdzrPayTw3dAy2wSZAUX/X11fm0DGHIUiD9CLMTvQosnYZMHeHSl+Ysn6KkWo68ptc3A9gANAIRQR2vG8PP3CZKSC1lpV1/v3mwLxZjyj2r9D6Z9w/cXAX/G3BDxA93nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715502954; c=relaxed/simple;
-	bh=AYAOGX2iykH9oRAdYbACeysu3pcN+xhSPwvPYtAF/u4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ktk4c7LYWGvDLddpahZEgMQXNUvceO0g1jg5vp64HyQ6Ax+JzX2oyV0HmVdp/tW3U2lF1EWHLLxqog2622i/34b3u1VagPO5cyl2rqUwACHCzvnue9OPCkqLmN1gFRVFSvvyuQQZIt23eDibts+qiFZoG1ckoFgC3hhNAN7d3qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=askoPFk3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44C7l93p030917;
-	Sun, 12 May 2024 08:35:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=Fofzy2llsdid6StBXTMQNjdLNqsuy2vO0XIxoDRwRQU=; b=as
-	koPFk3XB0DgMlPA3842tl2FyFadbf596uEyEaiLHR5ngGr/aASQZKrCFs05ftQ+e
-	KzbPe9I2HsPbKoR+VOZ5yDNGNFjCGkvNdmlAWsxU4aZEdC879A3sck6vU4PM+1Oi
-	0tYGF/aC0AtV1AxkrnNl3pXQuaMMvwlrQof7OlQasOhZroN5/XGMwyxMuFI8P1eT
-	uAMqk4SYI8pSTIjk2MD70BEpH+vTPzsu2rHYWkd+1/vd3YCIYQtjAJM3Z3Nx4RsM
-	vQMk08W4oeBwGZuf7jmC+swHPCj3mU5l/a6ZIZXZHguU8mq8CQcb25ZeXaTuUCm5
-	eYpPg9NlT3UmjjCh9ukA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y20rt9gyw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 12 May 2024 08:35:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44C8ZY6A015767
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 12 May 2024 08:35:34 GMT
-Received: from [10.216.17.219] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 12 May
- 2024 01:35:26 -0700
-Message-ID: <d283bf55-8b7b-4873-b2e3-aade4231dc78@quicinc.com>
-Date: Sun, 12 May 2024 14:05:18 +0530
+	s=arc-20240116; t=1715512915; c=relaxed/simple;
+	bh=HaQnJgrbrr6ozUD+U26NyWsnJeaGC3HI8pRdGwM49/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=e3dTYgykQv9x7yD+1qIXJRlALaqOAtPbejELNtIswreVVLw/rfQa99MAvtU2hW/0yBnlJgx3Lo/v1FtuTRAdoBLEASbo22XJujCNJOJo1r4isYBV12ebik7ncYVPJCaOlDc5h1VUfdgImjNywxyS1NvnEbftFTfKqQ68LkTQ2Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PjGRZmsm; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715512914; x=1747048914;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=HaQnJgrbrr6ozUD+U26NyWsnJeaGC3HI8pRdGwM49/0=;
+  b=PjGRZmsmbxUheH8KcIPNH+oXNZOI0R27K4y3kh77B9kaydl/mpfQE9nq
+   6kFgvtgKIuDcVeAygN0Q3y3F/z+EuE4yeZm79ZodUfIWlWw9vu747+EeL
+   zq0qHyeVFRS1LbW8OUBe/9tKGSlH+NoBBAwR83g3UF5I+AO8UrHxvJI2o
+   cilWyiwt5GQi2NYvyNrV3KBHueKcPuhOzTBueiOvLhzChRRv8gUEydPZz
+   RM+UCcY5BZqAelFzQacTpvI4f9XN3Oa0kLLxtP49zhq/B9edcGIFJ0+VU
+   8teiv9Yb8VkGuIKxip+LHtgT7MHaPc04gwyHyMZGtQzNlTNWzsTTv4Hva
+   g==;
+X-CSE-ConnectionGUID: Jyc0NddpTYS4KKBcKCYQdQ==
+X-CSE-MsgGUID: eQL+UXXJTjaMR4gXgtVM6g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11070"; a="33965042"
+X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
+   d="scan'208";a="33965042"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 04:21:53 -0700
+X-CSE-ConnectionGUID: MT9Mvy2bSXuGop/UI1KprQ==
+X-CSE-MsgGUID: hy+MwXbtSxC+iKb7Bk3sOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
+   d="scan'208";a="30029772"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 12 May 2024 04:21:52 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s67H3-0008XX-28;
+	Sun, 12 May 2024 11:21:49 +0000
+Date: Sun, 12 May 2024 19:21:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:dt-bindings] BUILD SUCCESS
+ 13ee3f81afab9fe4b59d5061653c31c3285c7a49
+Message-ID: <202405121908.6hznNkbW-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 RESEND 0/8] ipq9574: Enable PCI-Express support
-To: <mr.nuke.me@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Vinod Koul
-	<vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Michael
- Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-clk@vger.kernel.org>
-References: <20240501042847.1545145-1-mr.nuke.me@gmail.com>
- <569087fe-e675-41a4-b975-2d01d95b6d3c@quicinc.com>
- <c3f99ece-7f66-4c6f-a262-4d8894154ae9@gmail.com>
-Content-Language: en-US
-From: Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <c3f99ece-7f66-4c6f-a262-4d8894154ae9@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: aATPM805tWjekuvXtQyCUttm-CIsjzFz
-X-Proofpoint-GUID: aATPM805tWjekuvXtQyCUttm-CIsjzFz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-12_05,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- adultscore=0 spamscore=0 priorityscore=1501 phishscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405120064
+Content-Type: text/plain; charset=us-ascii
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
+branch HEAD: 13ee3f81afab9fe4b59d5061653c31c3285c7a49  dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4H compatible
 
+elapsed time: 1480m
 
-On 5/8/2024 10:40 PM, mr.nuke.me@gmail.com wrote:
-> On 5/8/24 1:16 AM, Devi Priya wrote:
->>
->>
->> On 5/1/2024 9:58 AM, Alexandru Gagniuc wrote:
->>> There are four PCIe ports on IPQ9574, pcie0 thru pcie3. This series
->>> addresses pcie2, which is a gen3x2 port. The board I have only uses
->>> pcie2, and that's the only one enabled in this series. pcie3 is added
->>> as a special request, but is untested.
->>>
->>> I believe this makes sense as a monolithic series, as the individual
->>> pieces are not that useful by themselves.
->>
->> Hi Alexandru,
->>
->> As Dmitry suggested, we are working on enabling the PCIe NOC clocks
->> via Interconnect. We will be posting the PCIe series with
->> Interconnect support [1] shortly.
-> 
-> I am generally very hesitant to depend on unmerged series, as this can 
-> cause undue delays. In this particular case, I considered that both 
-> series can continue to stay independent, with the ability to convert the 
-> PCIe users to the new clock scheme when the time is right.
-> 
->> [1] - 
->> https://lore.kernel.org/linux-arm-msm/20240430064214.2030013-1-quic_varada@quicinc.com/
-> 
-> What changes would be needed to this series to make use of this? How 
-> does one use the "interconnected" clocks?
-> 
-> Alex
-Hi Alex,
+configs tested: 112
+configs skipped: 4
 
-Please refer to the latest PCIe series which adds support for enabling
-the NoC clocks via interconnect.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-https://lore.kernel.org/linux-arm-msm/20240512082858.1806694-1-quic_devipriy@quicinc.com/
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240512   gcc  
+arc                   randconfig-002-20240512   gcc  
+arm                               allnoconfig   clang
+arm                     davinci_all_defconfig   clang
+arm                                 defconfig   clang
+arm                         lpc32xx_defconfig   clang
+arm                            mmp2_defconfig   gcc  
+arm                   randconfig-001-20240512   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240512   gcc  
+i386         buildonly-randconfig-002-20240512   clang
+i386         buildonly-randconfig-003-20240512   gcc  
+i386         buildonly-randconfig-004-20240512   gcc  
+i386         buildonly-randconfig-005-20240512   gcc  
+i386         buildonly-randconfig-006-20240512   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240512   clang
+i386                  randconfig-002-20240512   clang
+i386                  randconfig-003-20240512   clang
+i386                  randconfig-004-20240512   gcc  
+i386                  randconfig-005-20240512   clang
+i386                  randconfig-006-20240512   clang
+i386                  randconfig-011-20240512   gcc  
+i386                  randconfig-012-20240512   clang
+i386                  randconfig-013-20240512   gcc  
+i386                  randconfig-014-20240512   clang
+i386                  randconfig-015-20240512   gcc  
+i386                  randconfig-016-20240512   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     loongson1c_defconfig   gcc  
+mips                      pic32mzda_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                         alldefconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240512   clang
+x86_64       buildonly-randconfig-002-20240512   clang
+x86_64       buildonly-randconfig-003-20240512   clang
+x86_64       buildonly-randconfig-004-20240512   gcc  
+x86_64       buildonly-randconfig-006-20240512   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240512   gcc  
+x86_64                randconfig-002-20240512   gcc  
+x86_64                randconfig-003-20240512   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
 
-Thanks & Regards,
-S.Devi Priya
-> 
->> Thanks,
->> S.Devi Priya
->>>
->>> In v2, I've had some issues regarding the dt schema checks. For
->>> transparency, I used the following test invocations to test:
->>>
->>>        make dt_binding_check 
->>> DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
->>>        make dtbs_check 
->>> DT_SCHEMA_FILES=qcom,pcie.yaml:qcom,ipq8074-qmp-pcie-phy.yaml
->>>
->>> Changes since v3:
->>>   - "const"ify .hw.init fields for the PCIE pipe clocks
->>>   - Used pciephy_v5_regs_layout instead of v4 in phy-qcom-qmp-pcie.c
->>>   - Included Manivannan's patch for qcom-pcie.c clocks
->>>   - Dropped redundant comments in "ranges" and "interrupt-map" of pcie2.
->>>   - Added pcie3 and pcie3_phy dts nodes
->>>   - Moved snoc and anoc clocks to PCIe controller from PHY
->>>
->>> Changes since v2:
->>>   - reworked resets in qcom,pcie.yaml to resolve dt schema errors
->>>   - constrained "reg" in qcom,pcie.yaml
->>>   - reworked min/max intems in qcom,ipq8074-qmp-pcie-phy.yaml
->>>   - dropped msi-parent for pcie node, as it is handled by "msi" IRQ
->>>
->>> Changes since v1:
->>>   - updated new tables in phy-qcom-qmp-pcie.c to use lowercase hex 
->>> numbers
->>>   - reorganized qcom,ipq8074-qmp-pcie-phy.yaml to use a single list 
->>> of clocks
->>>   - reorganized qcom,pcie.yaml to include clocks+resets per compatible
->>>   - Renamed "pcie2_qmp_phy" label to "pcie2_phy"
->>>   - moved "ranges" property of pcie@20000000 higher up
->>>
->>> Alexandru Gagniuc (7):
->>>    dt-bindings: clock: Add PCIe pipe related clocks for IPQ9574
->>>    clk: qcom: gcc-ipq9574: Add PCIe pipe clocks
->>>    dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
->>>    PCI: qcom: Add support for IPQ9574
->>>    dt-bindings: phy: qcom,ipq8074-qmp-pcie: add ipq9574 gen3x2 PHY
->>>    phy: qcom-qmp-pcie: add support for ipq9574 gen3x2 PHY
->>>    arm64: dts: qcom: ipq9574: add PCIe2 and PCIe3 nodes
->>>
->>> Manivannan Sadhasivam (1):
->>>    PCI: qcom: Switch to devm_clk_bulk_get_all() API to get the clocks
->>>      from Devicetree
->>>
->>>   .../devicetree/bindings/pci/qcom,pcie.yaml    |  37 ++++
->>>   .../phy/qcom,ipq8074-qmp-pcie-phy.yaml        |   1 +
->>>   arch/arm64/boot/dts/qcom/ipq9574.dtsi         | 178 +++++++++++++++++-
->>>   drivers/clk/qcom/gcc-ipq9574.c                |  76 ++++++++
->>>   drivers/pci/controller/dwc/pcie-qcom.c        | 164 +++-------------
->>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 ++++++++++++-
->>>   .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
->>>   include/dt-bindings/clock/qcom,ipq9574-gcc.h  |   4 +
->>>   8 files changed, 469 insertions(+), 141 deletions(-)
->>>
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
