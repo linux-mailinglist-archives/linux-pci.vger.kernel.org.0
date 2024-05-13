@@ -1,380 +1,484 @@
-Return-Path: <linux-pci+bounces-7417-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7418-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA61A8C3E4F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 11:46:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E897E8C3F41
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 12:43:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61A84283053
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 09:46:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F8CF28B6C5
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 10:43:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A8C14883A;
-	Mon, 13 May 2024 09:46:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D99CF14B075;
+	Mon, 13 May 2024 10:41:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F+tuFkkH"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="QwbVZhVx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DD2219E7;
-	Mon, 13 May 2024 09:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE6914A4CA
+	for <linux-pci@vger.kernel.org>; Mon, 13 May 2024 10:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715593576; cv=none; b=BxzShF8vx6wMC3pPPZRujJJ3uQg/mRj0U9MgestIRTXomfpazqnbZWJxK/icKrMkJz/AbPc99uhhHlOmhu7wNWYgA5Cv3hHip3B+4aZiuH3ZVUrqB07TnvOMG2piBeCLmtGHIx0fhS/gzTYDh3y5LzmOtIrk3KpPGNUX2B+6/yY=
+	t=1715596865; cv=none; b=FCCE/TVDi0ohGVk53s+z2km0b13WUDv2aZwa/vbYX+w6vcIFigShXirNPBDVrYeBbav2UpSqb/hnRG22HtcNoDaVc2g51puXznW3hbZe6OVQwUSF6Tja8OAWJYT6B1f6BObEIq/bzJLcm+nNuWKo6Q2Oo31gU6i6cL49gA3TmU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715593576; c=relaxed/simple;
-	bh=2gvsABEZvXrbEFlagiTkvPD3szHjk21Buvaee2D1fv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q6yKFhGLX4Obsu6GaxRABYR/74EaZSoDgW1DnX900B5xUAcyy4mfR5dfa9cDD+6fqdkgwX5j/ejFOXDU422tG6ReAtcBrPwJ76sGIdr5qiUmMUchhym5qxk/A9q92fracm4TC4FAHXjp0fVweRyKicZSu+rcM1iBs/fs7wW7t1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F+tuFkkH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44D9T7dg031277;
-	Mon, 13 May 2024 09:45:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=12oeyf10yBLcG2B+NL7O+xvbka7IoL4DziKxVViIROg=;
- b=F+tuFkkH7XnC5blkmoAS1qeNw61BaOwQED30X6H0OrixegmnsmTGkohGqtkzH0tSMi9l
- nYIyvr+fuVMiZ+CBK3+XD4kAd1/CsjPiImGkZl08xnax14GdN57WhXQ/aaoXRW+gSWyL
- S3TK1D5Rd0279VeSfs4+cm7INbaDLPWPZm9U6AxuoPdGjaL7XPaENDXrFQ3WLt1NO9H+
- jvnBhrX/VyICIRAbwESofuwtlEqU7hONJ5K2uyxPIhqSADV+qVhbA6QrKuj3VW8Wu932
- h9iqoPDezQu+vBwyPmul9fCSju55gHgOtADsV9T0GEM2gD6VRG13y5+AHQzigVzVXSX0 7w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y3g8ur136-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 09:45:52 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44D9jpKk023595;
-	Mon, 13 May 2024 09:45:51 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y3g8ur131-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 09:45:51 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44D8TWk0029591;
-	Mon, 13 May 2024 09:45:50 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y2n7kee06-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 09:45:50 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44D9jjoL51446244
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 May 2024 09:45:47 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 47C582004D;
-	Mon, 13 May 2024 09:45:45 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC50720067;
-	Mon, 13 May 2024 09:45:40 +0000 (GMT)
-Received: from [9.43.126.63] (unknown [9.43.126.63])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 13 May 2024 09:45:40 +0000 (GMT)
-Message-ID: <581d163f-837d-401a-a50d-2305de6c8804@linux.ibm.com>
-Date: Mon, 13 May 2024 15:15:38 +0530
+	s=arc-20240116; t=1715596865; c=relaxed/simple;
+	bh=jcWHkZ+4h0/UemeChWj8Javj6dw64yaQ09G20AXq5LQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kpcirui64wTGeIslz6HbgYVf8oRDGpRN4Pgk1afV+zus4v3bD/ISttGEOaF+FgKB35dLsaAA9vHIvZt1IQc+adOXDNpTE2Homd6bVygGgotoE3p5GLEQLF3C9uJSd3NL8K0j7QXsD/sjniafPckrcTTwoob26bUMarNfA8VU1KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=QwbVZhVx; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-61e01d5ea74so43006497b3.2
+        for <linux-pci@vger.kernel.org>; Mon, 13 May 2024 03:41:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1715596862; x=1716201662; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rpn5OEPW7Xw/aeDTszRYfR0y7RQ53gJ6+nm+7uYU0a0=;
+        b=QwbVZhVxt/jP4bDQfD1vSYRPaua7qFulOfiGrJ/S76hhM66yzEQUVQ8YZuMFGqWIBc
+         OELFuluhbyz9WermoJNhgmC0zO2WATAVXdcb+yubM367LhGlsoprJWIpV2wBOrSzZ1/i
+         Oagz796Ih8/6DmwudRA8X9ia9G9003qVpAXET/xQ1VDSI20sU0A1M1lYMFU7AeDXtIMe
+         slhcZ3o37RaRJMZmOSphRw1VUFSOLmHRpTczvuDws3hV+wak9XuRTAxsfNOk/FeyYJzN
+         r2xOwJPSdlUYmLo0g3Ge3uAPrgydmG3RfMjQ9SFpnb7e4HnNp9Y3XhGnR4LxfxNbvb1U
+         ENQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715596862; x=1716201662;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rpn5OEPW7Xw/aeDTszRYfR0y7RQ53gJ6+nm+7uYU0a0=;
+        b=u5n31HeyvKmvrD5GMOQ/8HYfQKZZYZ1bJf+/UzAneHvcAUG6z0zktjIHq7RfL28ydV
+         N23lP6+Ebwz0p269MN9QcBiH0neFbZE4FpCRSODiIQvLpGMT4wKULvwnR/2BpfNS/skF
+         Xfevg8cbuXZVCpKb6taVZMktPUSatG0SQXsuKPry8VWP/OV2bcGvJx7WSTg2eIuounS3
+         BZ4Y6nG56Nn5RKZcMFMlrHXsUY2SpTm2qsJSYy1jsgdW3pJmTa9hfuMpip3IvM9ybtoh
+         LU3zBpiDFe/kLWQLWbz0zV5MGm1i7IO+lfR2kSZQ4psHE0uxZ/exCv/vDBxazjlj48v1
+         0ylg==
+X-Forwarded-Encrypted: i=1; AJvYcCUABof+oQRq348qYO8DMHSU9J6Sn9eTrm0UtQ69GWMDaVOvVX/kNkWwf2MVHoX7T/zzcvHU98RijuoegaGcMKRiZWkNY84emLCa
+X-Gm-Message-State: AOJu0YyRljpjClgKuLMKBN4hpYcWuQhBXqd/jE7u7ptBlao4FGdOF+FR
+	iqR+Dz3SxokpTY+dTVWFbfY0itt/DE9ReVSaxzjFn1U+P/XPmxu+pEj9lnusKLx4uJGZChpguYZ
+	2oBz5fZUiJJVPNcWSisYyl2qSsvAnIaBOAAvYblwNU8Yh4BTYxhI=
+X-Google-Smtp-Source: AGHT+IHQGxRzolOCahReQ7cGRUPf0/JeOtm5YvnQn9yRp4CWZUs2MFL/+7owYaL7Q+mk9jm6en4s4LkPmZHSRwWX/rI=
+X-Received: by 2002:a25:bc49:0:b0:deb:d672:db6a with SMTP id
+ 3f1490d57ef6-dee4f1ce8damr9431930276.5.1715596862191; Mon, 13 May 2024
+ 03:41:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arch/powerpc: hotplug driver bridge support
-To: Krishna Kumar <krishnak@linux.ibm.com>, mpe@ellerman.id.au,
-        npiggin@gmail.com
-Cc: nathanl@linux.ibm.com, aneesh.kumar@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gbatra@linux.ibm.com,
-        bhelgaas@google.com, tpearson@raptorengineering.com, oohall@gmail.com,
-        brking@linux.vnet.ibm.com, mahesh.salgaonkar@in.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-References: <20240509120644.653577-1-krishnak@linux.ibm.com>
- <20240509120644.653577-3-krishnak@linux.ibm.com>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20240509120644.653577-3-krishnak@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GrLXcqJNKkjllP1gpSIa_gGYGUIEG8R8
-X-Proofpoint-ORIG-GUID: zPIk0h6N3PZZf4JSDzcIzz0Jpftbof4u
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-13_06,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- bulkscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405130060
+References: <876d19b7702dc16010b56bce049e2ab60bf68e3b.camel@linux.intel.com> <20240503222803.GA1608065@bhelgaas>
+In-Reply-To: <20240503222803.GA1608065@bhelgaas>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Mon, 13 May 2024 18:40:26 +0800
+Message-ID: <CAPpJ_ef0SQiPN1U30HgHPvNLFrDHXQfinE6t+5EwHOhmf2v_Gw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] PCI/ASPM: Fix L1.2 parameters when enable link state
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "David E. Box" <david.e.box@linux.intel.com>, 
+	Nirmal Patel <nirmal.patel@linux.intel.com>, Johan Hovold <johan@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Krishna,
+Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2024=E5=B9=B45=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=886:28=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> [+cc Francisco]
+>
+> On Fri, May 03, 2024 at 12:15:49PM -0700, David E. Box wrote:
+> > On Fri, 2024-05-03 at 17:45 +0800, Jian-Hong Pan wrote:
+> > > David E. Box <david.e.box@linux.intel.com> =E6=96=BC 2024=E5=B9=B45=
+=E6=9C=881=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=882:26=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > > > On Tue, 2024-04-30 at 15:46 +0800, Jian-Hong Pan wrote:
+> > > > > David E. Box <david.e.box@linux.intel.com> =E6=96=BC 2024=E5=B9=
+=B44=E6=9C=8827=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=888:03=E5=AF=AB=
+=E9=81=93=EF=BC=9A
+> > > > > > On Wed, 2024-04-24 at 19:02 +0800, Jian-Hong Pan wrote:
+> > > > > > > Currently, when enable link's L1.2 features with
+> > > > > > > __pci_enable_link_state(),
+> > > > > > > it configs the link directly without ensuring related L1.2 pa=
+rameters,
+> > > > > > > such
+> > > > > > > as T_POWER_ON, Common_Mode_Restore_Time, and LTR_L1.2_THRESHO=
+LD have
+> > > > > > > been
+> > > > > > > programmed.
+> > > > > > >
+> > > > > > > This leads the link's L1.2 between PCIe Root Port and child d=
+evice
+> > > > > > > gets
+> > > > > > > wrong configs when a caller tries to enabled it.
+> > > > > > >
+> > > > > > > Here is a failed example on ASUS B1400CEAE with enabled VMD:
+> > > > > > >
+> > > > > > > 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Pro=
+cessor
+> > > > > > > PCIe
+> > > > > > > Controller (rev 01) (prog-if 00 [Normal decode])
+> > > > > > >     ...
+> > > > > > >     Capabilities: [200 v1] L1 PM Substates
+> > > > > > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L=
+1.1+
+> > > > > > > L1_PM_Substates+
+> > > > > > >                   PortCommonModeRestoreTime=3D45us PortTPower=
+OnTime=3D50us
+> > > > > > >         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_=
+L1.1-
+> > > > > > >                    T_CommonMode=3D45us LTR1.2_Threshold=3D101=
+376ns
+> > > > > > >         L1SubCtl2: T_PwrOn=3D50us
+> > > > > > >
+> > > > > > > 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD=
+ Blue
+> > > > > > > SN550
+> > > > > > > NVMe
+> > > > > > > SSD (rev 01) (prog-if 02 [NVM Express])
+> > > > > > >     ...
+> > > > > > >     Capabilities: [900 v1] L1 PM Substates
+> > > > > > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L=
+1.1-
+> > > > > > > L1_PM_Substates+
+> > > > > > >                   PortCommonModeRestoreTime=3D32us PortTPower=
+OnTime=3D10us
+> > > > > > >         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_=
+L1.1-
+> > > > > > >                    T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+> > > > > > >         L1SubCtl2: T_PwrOn=3D10us
+> > > > > > >
+> > > > > > > According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.=
+2 on the
+> > > > > > > PCIe
+> > > > > > > Root Port and the child NVMe, they should be programmed with =
+the same
+> > > > > > > LTR1.2_Threshold value. However, they have different values i=
+n this
+> > > > > > > case.
+> > > > > > >
+> > > > > > > Invoke aspm_calc_l12_info() to program the L1.2 parameters pr=
+operly
+> > > > > > > before
+> > > > > > > enable L1.2 bits of L1 PM Substates Control Register in
+> > > > > > > __pci_enable_link_state().
+> > > > > > >
+> > > > > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > > > > > > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > > > > > > ---
+> > > > > > > v2:
+> > > > > > > - Prepare the PCIe LTR parameters before enable L1 Substates
+> > > > > > >
+> > > > > > > v3:
+> > > > > > > - Only enable supported features for the L1 Substates part
+> > > > > > >
+> > > > > > > v4:
+> > > > > > > - Focus on fixing L1.2 parameters, instead of re-initializing=
+ whole
+> > > > > > > L1SS
+> > > > > > >
+> > > > > > > v5:
+> > > > > > > - Fix typo and commit message
+> > > > > > > - Split introducing aspm_get_l1ss_cap() to "PCI/ASPM: Introdu=
+ce
+> > > > > > >   aspm_get_l1ss_cap()"
+> > > > > > >
+> > > > > > >  drivers/pci/pcie/aspm.c | 12 ++++++++++++
+> > > > > > >  1 file changed, 12 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.=
+c
+> > > > > > > index c55ac11faa73..553327dee991 100644
+> > > > > > > --- a/drivers/pci/pcie/aspm.c
+> > > > > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > > > > @@ -1402,6 +1402,8 @@ EXPORT_SYMBOL(pci_disable_link_state);
+> > > > > > >  static int __pci_enable_link_state(struct pci_dev *pdev, int=
+ state,
+> > > > > > > bool
+> > > > > > > locked)
+> > > > > > >  {
+> > > > > > >         struct pcie_link_state *link =3D pcie_aspm_get_link(p=
+dev);
+> > > > > > > +       struct pci_dev *child =3D link->downstream, *parent =
+=3D link-
+> > > > > > > >pdev;
+> > > > > > > +       u32 parent_l1ss_cap, child_l1ss_cap;
+> > > > > > >
+> > > > > > >         if (!link)
+> > > > > > >                 return -EINVAL;
+> > > > > > > @@ -1433,6 +1435,16 @@ static int __pci_enable_link_state(str=
+uct
+> > > > > > > pci_dev
+> > > > > > > *pdev, int state, bool locked)
+> > > > > > >                 link->aspm_default |=3D ASPM_STATE_L1_1_PCIPM=
+ |
+> > > > > > > ASPM_STATE_L1;
+> > > > > > >         if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+> > > > > > >                 link->aspm_default |=3D ASPM_STATE_L1_2_PCIPM=
+ |
+> > > > > > > ASPM_STATE_L1;
+> > > > > > > +       /*
+> > > > > > > +        * Ensure L1.2 parameters: Common_Mode_Restore_Times,
+> > > > > > > T_POWER_ON
+> > > > > > > and
+> > > > > > > +        * LTR_L1.2_THRESHOLD are programmed properly before =
+enable
+> > > > > > > bits
+> > > > > > > for
+> > > > > > > +        * L1.2, per PCIe r6.0, sec 5.5.4.
+> > > > > > > +        */
+> > > > > > > +       if (state & link->aspm_capable & ASPM_STATE_L1_2_MASK=
+) {
+> > > > > >
+> > > > > > This is still mixing PCIE_LINK_STATE flags with ASPM_STATE flag=
+s.
+>
+> FWIW, Ilpo has removed the ASPM_STATE flags, so eventually this would
+> have to be updated to apply on the current pci/aspm branch.  We're at
+> rc6 already, so likely this will end up being v6.11 material so you'll
+> be able to rebase on v6.10-rc1 when it comes out.
+>
+> > > > > Thanks for your review, but I notice some description in PCIe spe=
+c,
+> > > > > 5.5.4 L1 PM Substates Configuration:
+> > > > > "Prior to setting either or both of the enable bits for L1.2, the
+> > > > > values for TPOWER_ON, Common_Mode_Restore_Time, and, if the ASPM =
+L1.2
+> > > > > Enable bit is to be Set, the LTR_L1.2_THRESHOLD (both Value and S=
+cale
+> > > > > fields) must be programmed." =3D> I think this includes both "ASP=
+M L1.2
+> > > > > Enable" and "PCI-PM L1.2 Enable" bits.
+> > > >
+> > > > That's fine. While the spec clearly calls out the ASPM L1.2 Enable =
+bit here,
+> > > > I
+> > > > see no harm in including PCI-PM L1.2 in that check. This is what th=
+e code
+> > > > already does in aspm_l1ss_init().
+> > > >
+> > > > The issue is the mixed used of two different types of flags that do=
+n't have
+> > > > the
+> > > > same meaning. 'state' contains PCIE_LINK_STATE flags which are part=
+ of the
+> > > > caller API to the pci_<enabled/disable>_link_state() functions. The
+> > > > ASPM_STATE
+> > > > flags are used internally to aspm.c to track all states and their m=
+eaningful
+> > > > combinations such as ASPM_STATE_L1_2_MASK which includes ASPM L1.2 =
+and PCI-
+> > > > PM
+> > > > L1.2. You should not do bit operations between them.
+> > > >
+> > > > Also, you should not require that the timings be calculated only if=
+ L1_2 is
+> > > > enabled. You should calculate the timings as long as it's capable. =
+This is
+> > > > also
+> > > > what aspm_l1ss_init() does.
+> > > >
+> > > > The confusion might be over the fact that you are having
+> > > > __pci_enable_link_state() call aspm_calc_l12_info(). This should ha=
+ve been
+> > > > handled during initialization of the link in aspm_l1ss_init() and I=
+'m not
+> > > > sure
+> > > > why it didn't. Maybe it's because, for VMD, ASPM default state woul=
+d have
+> > > > started out all disabled and this somehow led to aspm_l1ss_init() n=
+ot
+> > > > getting
+> > > > called. But looking through the code I don't see it. It would be gr=
+eat if
+> > > > you
+> > > > can confirm why they weren't calculated before.
+> > >
+> > > I debug it again.  If I delete the pci_reset_bus() in vmd controller =
+like:
+> > >
+> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vm=
+d.c
+> > > index 87b7856f375a..39bfda4350bf 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -930,25 +930,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd=
+,
+> > > unsigned long features)
+> > >         pci_scan_child_bus(vmd->bus);
+> > >         vmd_domain_reset(vmd);
+> > >
+> > > -       /* When Intel VMD is enabled, the OS does not discover the Ro=
+ot Ports
+> > > -        * owned by Intel VMD within the MMCFG space. pci_reset_bus()=
+ applies
+> > > -        * a reset to the parent of the PCI device supplied as argume=
+nt. This
+> > > -        * is why we pass a child device, so the reset can be trigger=
+ed at
+> > > -        * the Intel bridge level and propagated to all the children =
+in the
+> > > -        * hierarchy.
+> > > -        */
+> > > -       list_for_each_entry(child, &vmd->bus->children, node) {
+> > > -               if (!list_empty(&child->devices)) {
+> > > -                       dev =3D list_first_entry(&child->devices,
+> > > -                                              struct pci_dev, bus_li=
+st);
+> > > -                       ret =3D pci_reset_bus(dev);
+> >
+> > Hi Nirmal. It's not clear to me from the comment why there's a need to =
+do a bus
+> > reset. It looks like it is causing misconfiguration of the ASPM L1.2 ti=
+mings
+> > which would have been done above in pci_scan_child_bus(). Jian-Hong dis=
+covered
+> > that without the above reset code, the timings are correct.
+>
+> I don't understand that comment either.  If we don't enumerate the
+> Root Ports below VMD, it sounds like something is wrong, and reset
+> doesn't seem like the right fix.
+>
+> The reset was added by 0a584655ef89 ("PCI: vmd: Fix secondary bus
+> reset for Intel bridges") for guest reboots.  Maybe Francisco can shed
+> more light on it.
+>
+> > This patch recalculates the timings during the call to pci_enable_link_=
+state()
+> > which is called during pci_bus_walk() below. Originally I thought the
+> > recalculation might have been needed by all callers to pci_enabled_link=
+_state()
+> > since it changes the default BIOS configuration. But it looks like the =
+reset is
+> > the cause and only the VMD driver would need the recalculation as a res=
+ult. I
+> > don't see qcom doing a reset.
+> >
+> > Jian-Hong, given this (and assuming the reset is needed) I would not ca=
+ll
+> > aspm_calc_l12_info() from pci_enable_link_state() but instead try redoi=
+ng the
+> > whole ASPM initialization right after the resets are done, maybe by cal=
+ling
+> > pci_scan_child_bus() again. What do you think Bjorn?
+>
+> I would expect pci_reset_bus() to save and restore config space, but
+> if we don't enumerate all the devices correctly, I suppose we wouldn't
+> do that for devices we don't know about.
 
-Is "arch" in commit title really required?
+According to the discussion above, the misconfiguration of ASPM L1.2
+timings comes from pci_reset_bus() which is added by another issue
+related to VT-d pass-through:
+* 6aab5622296b ("PCI: vmd: Clean up domain before enumeration")
+* 0a584655ef89 ("PCI: vmd: Fix secondary bus reset for Intel bridges")
+However, I do not quite understand the scenario.
 
-On 09/05/24 17:35, Krishna Kumar wrote:
-> There is an issue with the hotplug operation when it's done on the
-> bridge/switch slot. The bridge-port and devices behind the bridge, which
-> become offline by hot-unplug operation, don't get hot-plugged/enabled by
-> doing hot-plug operation on that slot. Only the first port of the bridge
-> gets enabled and the remaining port/devices remain unplugged. The hot
-> plug/unplug operation is done by the hotplug driver
-> (drivers/pci/hotplug/pnv_php.c).
->
-> Root Cause Analysis: This behavior is due to missing code for the DPC
-> switch/bridge. The existing driver depends on pci_hp_add_devices()
-> function for device enablement. This function calls pci_scan_slot() on
-> only one device-node/port of the bridge, not on all the siblings'
-> device-node/port.
->
-> The missing code needs to be added which will find all the sibling
-> device-nodes/bridge-ports and will run explicit pci_scan_slot() on
-> those.  A new function has been added for this purpose which gets
-> invoked from pci_hp_add_devices(). This new function
-> pci_traverse_sibling_nodes_and_scan_slot() gets all the sibling
-> bridge-ports by traversal and explicitly invokes pci_scan_slot on them.
->
->
-> Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
-> ---
->
-> Command for reproducing the issue :
->
-> For hot unplug/disable - echo 0 > /sys/bus/pci/slots/C5/power
-> For hot plug/enable -    echo 1 > /sys/bus/pci/slots/C5/power
->
-> where C5 is slot associated with bridge.
->
-> Scenario/Tests:
-> Output of lspci -nn before test is given below. This snippet contains
-> devices used for testing on Powernv machine.
->
-> 0004:02:00.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-> 0004:02:01.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-> 0004:02:02.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-> 0004:02:03.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
-> 0004:08:00.0 Serial Attached SCSI controller [0107]:
-> Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3 [1000:00c9] (rev 01)
-> 0004:09:00.0 Serial Attached SCSI controller [0107]:
-> Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3 [1000:00c9] (rev 01)
->
-> Output of lspci -tv before test is as follows:
->
-> # lspci -tv
->   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->   |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
->   |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
->   |                           |               \-03.0-[0a-0e]--
->   |                           \-00.1  PMC-Sierra Inc. Device 4052
->
-> C5(bridge) and C6(End Point) slot address are as below:
-> # cat /sys/bus/pci/slots/C5/address
-> 0004:02:00
-> # cat /sys/bus/pci/slots/C6/address
-> 0004:09:00
->
-> Hot-unplug operation on slot associated with bridge:
-> # echo 0 > /sys/bus/pci/slots/C5/power
-> # lspci -tv
->   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--
->   |                           \-00.1  PMC-Sierra Inc. Device 4052
->
->  From the above lspci -tv output, it can be observed that hot unplug
-> operation has removed all the PMC-Sierra bridge ports like:
-> 00.0-[03-07], 01.0-[08], 02.0-[09], 03.0-[0a-0e] and the SAS devices
-> behind the bridge-port. Without the fix, when the hot plug operation is
-> done on the same slot, it adds only the first bridge port and doesn't
-> restore all the bridge-ports and devices that it unplugged earlier.
-> Below snippet shows this.
->
-> Hot-plug operation on the bridge slot without the fix:
-> # echo 1 > /sys/bus/pci/slots/C5/power
-> # lspci -tv
->   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->   |                           \-00.1  PMC-Sierra Inc. Device 4052
->
-> After the fix, it restores all the devices in the same manner how it
-> unplugged them earlier during the hot unplug operation. The below snippet
-> shows the same.
-> Hot-plug operation on bridge slot with the fix:
-> # echo 1 > /sys/bus/pci/slots/C5/power
-> # lspci -tv
->   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->   |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
->   |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
->   |                           |               \-03.0-[0a-0e]--
->   |                           \-00.1  PMC-Sierra Inc. Device 4052
->
-> Removal of End point device behind bridge are also intact and behaving
-> correctly.
-> Hot-unplug operation on Endpoint device C6:
-> # echo 0 > /sys/bus/pci/slots/C6/power
-> # lspci -tv
->   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->   |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
->   |                           |               +-02.0-[09]--
->   |                           |               \-03.0-[0a-0e]--
->   |                           \-00.1  PMC-Sierra Inc. Device 4052
->
-> Hot-plug operation on Endpoint device C6:
-> # echo 1 > /sys/bus/pci/slots/C6/power
-> # lspci -tv
->   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->   |                           |               +-01.0-[08]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
->   |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
->   |                           |               \-03.0-[0a-0e]--
->   |                           \-00.1  PMC-Sierra Inc. Device 4052
->
->
->
->   arch/powerpc/include/asm/ppc-pci.h |  4 +++
->   arch/powerpc/kernel/pci-hotplug.c  |  5 ++--
->   arch/powerpc/kernel/pci_dn.c       | 42 ++++++++++++++++++++++++++++++
->   3 files changed, 48 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-> index a8b7e8682f5b..a5d5ee4ff7c0 100644
-> --- a/arch/powerpc/include/asm/ppc-pci.h
-> +++ b/arch/powerpc/include/asm/ppc-pci.h
-> @@ -28,6 +28,10 @@ struct pci_dn;
->   void *pci_traverse_device_nodes(struct device_node *start,
->   				void *(*fn)(struct device_node *, void *),
->   				void *data);
-> +
-> +void *pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start,
-> +					       struct pci_bus *bus);
-> +
->   extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
->   
->   #if defined(CONFIG_IOMMU_API) && (defined(CONFIG_PPC_PSERIES) || \
-> diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-> index 0fe251c6ac2c..639a3d592fe2 100644
-> --- a/arch/powerpc/kernel/pci-hotplug.c
-> +++ b/arch/powerpc/kernel/pci-hotplug.c
-> @@ -106,7 +106,7 @@ EXPORT_SYMBOL_GPL(pci_hp_remove_devices);
->    */
->   void pci_hp_add_devices(struct pci_bus *bus)
->   {
-> -	int slotno, mode, max;
-> +	int mode, max;
->   	struct pci_dev *dev;
->   	struct pci_controller *phb;
->   	struct device_node *dn = pci_bus_to_OF_node(bus);
-> @@ -129,8 +129,7 @@ void pci_hp_add_devices(struct pci_bus *bus)
->   		 * order for fully rescan all the way down to pick them up.
->   		 * They can have been removed during partial hotplug.
->   		 */
-> -		slotno = PCI_SLOT(PCI_DN(dn->child)->devfn);
-> -		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-> +		pci_traverse_sibling_nodes_and_scan_slot(dn, bus);
->   		max = bus->busn_res.start;
->   		/*
->   		 * Scan bridges that are already configured. We don't touch
-> diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-> index 38561d6a2079..2e202f9cec21 100644
-> --- a/arch/powerpc/kernel/pci_dn.c
-> +++ b/arch/powerpc/kernel/pci_dn.c
-> @@ -493,4 +493,46 @@ static void pci_dev_pdn_setup(struct pci_dev *pdev)
->   	pdn = pci_get_pdn(pdev);
->   	pdev->dev.archdata.pci_data = pdn;
->   }
-> +
-> +void *pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start, struct pci_bus *bus)
+Should I drop patches "PCI/ASPM: Introduce aspm_get_l1ss_cap()" and
+"PCI/ASPM: Fix L1.2 parameters when enable link state", then only send
+"PCI: vmd: Set PCI devices to D0 before enable PCI PM's L1 substates"
+and "PCI/ASPM: Add notes about enabling PCI-PM L1SS to
+pci_enable_link_state(_locked)" first?
 
-Two things regarding the return type of the above function.
+Jian-Hong Pan
 
-1. Function only returns NULL
-2. Caller of this function doesn't take any action based on the return 
-value of this function.
-
-How about changing the return type from void * to just void?
-
-> +{
-> +	struct device_node *dn;
-> +	struct device_node *parent;
-
-parent variable is not really required.
-
-> +	int slotno;
-> +
-> +	const __be32 *classp1;
-> +	u32 class1 = 0;
-> +
-> +	classp1 = of_get_property(start->child, "class-code", NULL);
-> +	if (classp1)
-> +		class1 = of_read_number(classp1, 1);
-> +
-> +	/* Call of pci_scan_slot for non-bridge/EP case */
-> +	if (!((class1 >> 8) == PCI_CLASS_BRIDGE_PCI)) {
-> +		slotno = PCI_SLOT(PCI_DN(start->child)->devfn);
-> +		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-> +		return NULL;
-> +	}
-> +
-> +	/* Iterate all siblings */
-> +	parent = start;
-> +	for_each_child_of_node(parent, dn) {
-> +		const __be32 *classp;
-> +		u32 class = 0;
-> +
-> +		classp = of_get_property(dn, "class-code", NULL);
-> +		if (classp)
-> +			class = of_read_number(classp, 1);
-> +
-> +		/* Call of pci_scan_slot on each sibling-nodes/bridge-ports */
-> +		if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-> +			slotno = PCI_SLOT(PCI_DN(dn)->devfn);
-> +			pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-> +		}
-> +	}
-> +
-> +	return NULL;
-
-Some level of code duplication can be avoided if we push both cases
-1. Call of pci_scan_slot for non-bridge/EP case
-2. Call of pci_scan_slot for bridge port
-
-inside `for_each_child_of_node` macro.
-
-Something like this.
-
-     u32 class;
-     int slotno;
-     const __be32 *classp;
-     struct device_node *dn;
-
-     for_each_child_of_node(start, dn) {
-         class = 0;
-         classp = of_get_property(dn, "class-code", NULL);
-         if (classp)
-             class = of_read_number(classp, 1);
-
-         /* Call of pci_scan_slot for non-bridge/EP case */
-         if (!((class >> 8) == PCI_CLASS_BRIDGE_PCI) && start->child == 
-dn) {
-             slotno = PCI_SLOT(PCI_DN(dn)->devfn);
-             pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-             of_node_put(dn);
-             return;
-         }
-
-         /* Call of pci_scan_slot for bridge port */
-         if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-             slotno = PCI_SLOT(PCI_DN(dn)->devfn);
-             pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-         }
-     }
-
-
-> +}
-> +EXPORT_SYMBOL_GPL(pci_traverse_sibling_nodes_and_scan_slot);
-
-What is the need for exporting the above function?
-
-> +
->   DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, pci_dev_pdn_setup);
-
-- Sourabh Jain
+> > > -                       if (ret)
+> > > -                               pci_warn(dev, "can't reset device: %d=
+\n",
+> > > ret);
+> > > -
+> > > -                       break;
+> > > -               }
+> > > -       }
+> > > -
+> > >         pci_assign_unassigned_bus_resources(vmd->bus);
+> > >
+> > >         pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
+> > >
+> > > Although PCI-PM_L1.2 is disabled, both PCI bridge and the NVMe's
+> > > LTR1.2_Threshold are configured as 101376ns:
+> > >
+> > > 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core
+> > > Processor PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal
+> > > decode])
+> > > ...
+> > >   Capabilities: [200 v1] L1 PM Substates
+> > >   L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Sub=
+states+
+> > >     PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D50us
+> > >   L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > >      T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
+> > >   L1SubCtl2: T_PwrOn=3D50us
+> > >
+> > > 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD
+> > > Blue SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+> > > ...
+> > >   Capabilities: [900 v1] L1 PM Substates
+> > >   L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Sub=
+states+
+> > >     PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D10us
+> > >   L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > >      T_CommonMode=3D0us LTR1.2_Threshold=3D101376ns
+> > >   L1SubCtl2: T_PwrOn=3D50us
+> > >
+> > > Then, I apply the patch "PCI: vmd: Set PCI devices to D0 before enabl=
+e
+> > > PCI PM's L1 substates".  Both PCI bridge and the NVMe's PCI-PM_L1.2 i=
+s
+> > > enabled and LTR1.2_Threshold is configured as 101376ns.
+> > >
+> > > 10000:e0:06.0 PCI bridge [0604]: Intel Corporation 11th Gen Core
+> > > Processor PCIe Controller [8086:9a09] (rev 01) (prog-if 00 [Normal
+> > > decode])
+> > > ...
+> > >   Capabilities: [200 v1] L1 PM Substates
+> > >   L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Sub=
+states+
+> > >     PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D50us
+> > >   L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > >      T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
+> > >   L1SubCtl2: T_PwrOn=3D50us
+> > >
+> > > 10000:e1:00.0 Non-Volatile memory controller [0108]: Sandisk Corp WD
+> > > Blue SN550 NVMe SSD [15b7:5009] (rev 01) (prog-if 02 [NVM Express])
+> > > ...
+> > >   Capabilities: [900 v1] L1 PM Substates
+> > >   L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Sub=
+states+
+> > >     PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D10us
+> > >   L1SubCtl1: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > >      T_CommonMode=3D0us LTR1.2_Threshold=3D101376ns
+> > >   L1SubCtl2: T_PwrOn=3D50us
+> > >
+> > > I do not know VMD very much.  However, from the test result, it looks
+> > > like LTR1.2_Threshold has been configured properly originally.  But,
+> > > LTR1.2_Threshold is misconfigured by 'pci_reset_bus()'.
+> > > ...
+> > > > > > 'state' should not even matter.
+> > > > > > The timings should always be calculated and programmed as long
+> > > > > > as L1_2 is capable. That way the timings are ready even if L1_2=
+ isn't
+> > > > > > being
+> > > > > > enabled now (in case the user enables it later).
+> > > > > >
+> > > > > > > +               parent_l1ss_cap =3D aspm_get_l1ss_cap(parent)=
+;
+> > > > > > > +               child_l1ss_cap =3D aspm_get_l1ss_cap(child);
+> > > > > > > +               aspm_calc_l12_info(link, parent_l1ss_cap,
+> > > > > > > child_l1ss_cap);
+> > > > > > > +       }
+> > > > > > >         pcie_config_aspm_link(link, policy_to_aspm_state(link=
+));
+> > > > > > >
+> > > > > > >         link->clkpm_default =3D (state & PCIE_LINK_STATE_CLKP=
+M) ? 1 : 0;
+> > > > > >
+> > > >
+> >
 
