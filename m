@@ -1,134 +1,121 @@
-Return-Path: <linux-pci+bounces-7435-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7436-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2ED58C4985
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 00:12:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C82408C4A23
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 01:41:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53E2E1F2139B
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 22:12:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BF60284827
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 23:41:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC8B84A53;
-	Mon, 13 May 2024 22:12:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B0A85631;
+	Mon, 13 May 2024 23:41:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqEHOgEc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0uUs7jl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44C52C1A9;
-	Mon, 13 May 2024 22:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF614F211;
+	Mon, 13 May 2024 23:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715638365; cv=none; b=F5tPzp0XQCagnupLwNiZipNADnU87ZyrsDNrc4LYg8CRGllu1+PGLZ4pH4wypEjwIzt4DxCCW3hyRns2SjeWlo3MIzjA1sCT4qrWvrNdIKep5I2fJZ83rN9WLs5kGixVuklAlHrfU4VrhVjptTIBpQU8DCxI8fikFxJnoSuFkYo=
+	t=1715643665; cv=none; b=Omv9n/3nJwf680FSIxg6IiRS11XhHCVzvRrMdBtjsA2inFkFCwV2UD7ECvBcd9jIhhpehiqFH2o4rvGk0wqp96cQKcrqjfvui1HcQ0pK+8UnUp1e1JlmNWkZCNF7VtCXeAXcFfESZ1T3KrBwwnqUenwvuk6ou5uPXyU13UwAO28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715638365; c=relaxed/simple;
-	bh=sA2GkAzui82ivR8UWlwQO0jUVrYnIPKmWlnjf5dHsTg=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=rU4OtOwJhGykXowkzlYzGdGycprHND30zri35620UGGrlNUru7Hx1ogMzzTfJzeC4DdcrVS1p4Dy9xr0VjrCni1cmkpThn0ldarCIam0jaf5ynjMi5jATLhNSbU9Zc7Ti2NdbE+/hK1o0WWdoa8ddehXskQyo9W3bh1z9TVyDv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqEHOgEc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E7FBC113CC;
-	Mon, 13 May 2024 22:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715638364;
-	bh=sA2GkAzui82ivR8UWlwQO0jUVrYnIPKmWlnjf5dHsTg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=MqEHOgEcUb69CXqiQog9QH+6VVlTLgTEXv6JmxVuzbqPhcH+7kcWPwj4a+GjCq7na
-	 cBButhe4Lpa/Re8mJHsScIwhnNcSIwJmCpTxScnyFZEsgmF1L4086aNbEoENXB7nwe
-	 lgA50/jJmSZx/yo4hVGtVTAM03hE6st0QnXM41Ovtihj419lmDE0cW48Em6KvcA3/N
-	 RlLdM/7Z/noQ/oP2PMTFAU82V8VbL1p6LvYO2UClv1MEdBecsP14XiRk62Fl84Ug6w
-	 4g6UZz7gENVJohd0u68YAwkKOM3t/VZ+0Dd3u+wHHUcHlSslvKUkBvxv6/qJP3qSPK
-	 PpoeHYYHyy9oQ==
-Date: Mon, 13 May 2024 17:12:42 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1715643665; c=relaxed/simple;
+	bh=TfWLdkwPYDBzWbv61MXZTfFH0gQ9dE/COO8Daqvh1sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ls6PIZHhiM1ffJc17zYrfi68TgnlPclgKA+3zwRRYX0HHwPOcMMcUgbjQPSoQkBXTtKZm+9wsuJiW/Z+A1xk4gRXOIEMI2l/t8j+ceU/kk01WFhsiXdBrfhfj4X6bfvJBljuR7c5g8kMhZwWX6n4sVQ1P+L8U6sM+oIp8Ciah/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0uUs7jl; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715643663; x=1747179663;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TfWLdkwPYDBzWbv61MXZTfFH0gQ9dE/COO8Daqvh1sw=;
+  b=K0uUs7jlikB/m3oiXfEvwOkKj94rfHoZSGtKORgnGFQ/Ub8UJ9W+Jlnf
+   fP1r1L2I3PY4SZqWvk2lrJBxpmPMqVANV/4ars8sOA+ZZLde5FuBbxVJY
+   /ayGbF/YJJIzOEcbH/gYOchTdT6LYs7rmakYzKn2Xmpoeqq/PFz06W4Pg
+   xSXa5xbZUGfxuCUNyPB1nT5IA+Eb39is7mQfnlvKDvG3JsHcmaf2PeI2y
+   46jvoMsbur3HT4KkkdOnVNZJ81RlniVpxluqMJUHsAFrHBkYwEb53bps7
+   8eT2ttz9cuLD0r6qzUhNNQY7/51eXzGpfUjRYY6CQALNpphPr+kICnlIt
+   g==;
+X-CSE-ConnectionGUID: 7ivaU8XNQHqrKJZ/vEQrYA==
+X-CSE-MsgGUID: E5lz4WXCR2KOk+fPfU/5Zw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="34116208"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="34116208"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 16:41:03 -0700
+X-CSE-ConnectionGUID: wHaTGeS2S0eETsrOHyK/3w==
+X-CSE-MsgGUID: Q3sOCypySK6KFjm0/3utVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="53692072"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 13 May 2024 16:41:00 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s6fHu-000Anf-0G;
+	Mon, 13 May 2024 23:40:58 +0000
+Date: Tue, 14 May 2024 07:40:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: matthew.gerlach@linux.intel.com, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: Re: [PATCH v5] dt-bindings: PCI: altera: Convert to YAML
+Message-ID: <202405140709.5BmKZtT7-lkp@intel.com>
+References: <20240513205913.313592-1-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: matthew.gerlach@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, conor+dt@kernel.org, 
- lpieralisi@kernel.org, krzysztof.kozlowski+dt@linaro.org, kw@linux.com, 
- bhelgaas@google.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240513205913.313592-1-matthew.gerlach@linux.intel.com>
-References: <20240513205913.313592-1-matthew.gerlach@linux.intel.com>
-Message-Id: <171563836233.3319279.14962600621083837198.robh@kernel.org>
-Subject: Re: [PATCH v5] dt-bindings: PCI: altera: Convert to YAML
 
+Hi,
 
-On Mon, 13 May 2024 15:59:13 -0500, matthew.gerlach@linux.intel.com wrote:
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> 
-> Convert the device tree bindings for the Altera Root Port PCIe controller
-> from text to YAML.
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> ---
-> v5:
->  - add interrupt-conntroller #interrupt-cells to required field
->  - don't touch original example dts
-> 
-> v4:
->  - reorder reg-names to match original binding
->  - move reg and reg-names to top level with limits.
-> 
-> v3:
->  - Added years to copyright
->  - Correct order in file of allOf and unevaluatedProperties
->  - remove items: in compatible field
->  - fix reg and reg-names constraints
->  - replace deprecated pci-bus.yaml with pci-host-bridge.yaml
->  - fix entries in ranges property
->  - remove device_type from required
-> 
-> v2:
->  - Move allOf: to bottom of file, just like example-schema is showing
->  - add constraint for reg and reg-names
->  - remove unneeded device_type
->  - drop #address-cells and #size-cells
->  - change minItems to maxItems for interrupts:
->  - change msi-parent to just "msi-parent: true"
->  - cleaned up required:
->  - make subject consistent with other commits coverting to YAML
->  - s/overt/onvert/g
-> ---
->  .../devicetree/bindings/pci/altera-pcie.txt   | 50 ----------
->  .../bindings/pci/altr,pcie-root-port.yaml     | 93 +++++++++++++++++++
->  2 files changed, 93 insertions(+), 50 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> 
+kernel test robot noticed the following build warnings:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.9 next-20240513]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-yamllint warnings/errors:
+url:    https://github.com/intel-lab-lkp/linux/commits/matthew-gerlach-linux-intel-com/dt-bindings-PCI-altera-Convert-to-YAML/20240514-050049
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240513205913.313592-1-matthew.gerlach%40linux.intel.com
+patch subject: [PATCH v5] dt-bindings: PCI: altera: Convert to YAML
+reproduce: (https://download.01.org/0day-ci/archive/20240514/202405140709.5BmKZtT7-lkp@intel.com/reproduce)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/altr,pcie-root-port.example.dtb: pcie@c00000000: interrupt-map: [[0, 0, 0, 1, 2, 1, 0, 0, 0], [2, 2, 2, 0, 0, 0, 3, 2, 3], [0, 0, 0, 4, 2, 4]] is too short
-	from schema $id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405140709.5BmKZtT7-lkp@intel.com/
 
-doc reference errors (make refcheckdocs):
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pci/altera-pcie.txt
-MAINTAINERS: Documentation/devicetree/bindings/pci/altera-pcie.txt
+All warnings (new ones prefixed by >>):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240513205913.313592-1-matthew.gerlach@linux.intel.com
+   Warning: Documentation/devicetree/bindings/regulator/siliconmitus,sm5703-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/siliconmitus,sm5703.yaml
+   Warning: Documentation/devicetree/bindings/sound/fsl-asoc-card.txt references a file that doesn't exist: Documentation/devicetree/bindings/sound/fsl,asrc.txt
+   Warning: Documentation/gpu/amdgpu/display/display-contributing.rst references a file that doesn't exist: Documentation/GPU/amdgpu/display/mpo-overview.rst
+   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pci/altera-pcie.txt
+   Using alabaster theme
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
