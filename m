@@ -1,246 +1,135 @@
-Return-Path: <linux-pci+bounces-7415-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7416-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3E9E8C3CC7
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 09:59:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3133E8C3DF9
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 11:21:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D788B21035
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 07:59:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC5801F22781
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 09:21:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7831146D4E;
-	Mon, 13 May 2024 07:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KTdARBuR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24D041487D2;
+	Mon, 13 May 2024 09:21:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70C4146D4D
-	for <linux-pci@vger.kernel.org>; Mon, 13 May 2024 07:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386EF1487CC;
+	Mon, 13 May 2024 09:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715587179; cv=none; b=dYLBpoeKPYKMSRJ1sZ9UIXkeplic71gMomuU9/IsANBi9+EDQ+05gwSivFassVHzEqyxlE5k1khmpD16FSYZ2SkpAyGiIB85FWLXZurtzvAf7bUkChmYNLzfe36cKRo/PdtkRMkl5lfOpei/K3+PpowuFS2PnaSekjEdRwHY7OQ=
+	t=1715592076; cv=none; b=BwZhb2p4eRM+UYSewAtmjC+PB7sd70Ii+q6RT1SKKEqF0Zsw5wEvxNCa/LQ1jApqEo8LQAvWQQLlEjHv8S+F3JPkyyr6Pi6+/SlOAI8vBoiVmDSTLUrVFSPqNKgGViCxGQxsesTrHFut7xkk3dk2Yu02aCzzM1na49+juXm1m7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715587179; c=relaxed/simple;
-	bh=GFPwfFMhe5sT4S61UgnPsXXaA0PJ4X/HHal5OzoKZx8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i6Gk2VgoAu2Y3p0IxC8YlsB5pPfDFjMnVy6zwXvn0RrWutS1s88dH8iBWM47QERrhF9kqwz32+NAVLG4uisU470Rp0GZg8qGdbSvtfyIkTIT8/V3iYmu5SdFRnFxA9Vp00xONaMPTVjgQPJQrMNPb8Xy77sVg2PUjpPzHmubo/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KTdARBuR; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a5a552c8cbaso359955366b.2
-        for <linux-pci@vger.kernel.org>; Mon, 13 May 2024 00:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1715587175; x=1716191975; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O5smVEjR/VVS0e2yObdThJN4tCbUbbAC8XLh8Tbaot0=;
-        b=KTdARBuR4AJkUzxsvx9ava5l6GhoNdIseaOa1swFbFjBuXaGIMaYZFu7baYzBvKU/K
-         y2RzUOOJnaK0i/rSxEd4u5oMJ79wBQMlEpNaX/SRDUL4CWwiISjhthGwLMQMmD3WmAa1
-         WBY6pC4SXdxeCIZTFjr03NrZjSGl2rBnz5GNzI1NEhpVE2TN3nLStMM03JBuR68ZvdBP
-         vNYgmAk1zs2HcWYm5lUiV0U83E5GcjS/RM3WFmN1TJ5bY26BZrsOMOXWZk72KhbDr6Xy
-         Lc494kVioiz6ZtRgvnasSSM1FIDiEqYLcproSQb84sX4t8qPBU98avLviFiKZZRJbHHi
-         FiTg==
+	s=arc-20240116; t=1715592076; c=relaxed/simple;
+	bh=E9xqG6mkDnr7RNS+eZyybbXbVZxwmyX8WqjuMUIaWI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sa0a/CVgtOuC3/Mgp7eKcOnQeOGVMS1kRo9PF8yWnCVsPudbq3j379sk8mM+MV6GbpzHhg8EBVwgQem96h5Bv1fk8PJs+9eNKj+6bN4yicwsUpSDaFnePUwNasLzxnrCo6U22cKcEC0WRY6jTwadOOi+lEeVv6padouIUHXOegw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-61be674f5d1so44971527b3.2;
+        Mon, 13 May 2024 02:21:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715587175; x=1716191975;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O5smVEjR/VVS0e2yObdThJN4tCbUbbAC8XLh8Tbaot0=;
-        b=PKCWwHRSTM+Yc/5LrR07ULfEPhRl00gxly0yyrgeHsx6MXMMsarna/xxoWA40yaAZj
-         odoTvKM2ANdxE7v8TfNu3ygFdi5a6yCvrErcSMFFtF+E/vTQ/YgrEX03k0+tOf6hgX6h
-         Nq4h1M6ZNAGkDijB6Ja/GK8zAOauU1Rg13w+KD5bKSbf0nk5VlFTEhspqiQLZhlkLQgC
-         92NUQUndbj78LmI/glGeuZscDUCBGVPGTr8JKPRM0z0twFAVvwNhWdAew6laQq6+wYIy
-         9yo36tDthtiZt11F3lQTa76rK5HtC3uvCZpjsTcg2ow0hlay571El6YDE/DzlTy2E8yN
-         tR0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXw1bOnHq7SY4eD2xqiemaO6FdPkRJFWI4LxLx+jt16ZuWMVaIu2Zmpwg7j+gW66kaD6u6yj9t130M2sJRLrG9xTnZ2SIDYvkMT
-X-Gm-Message-State: AOJu0YxNb7T+05rXPi7Xi7gK5jjYVsegSEBJtfSrVDNg7ChXSfe+AW6g
-	7KZnEwlNUmdkkieKovrEAL4sp9nf8fV7xXFt10/O/GcpJK++n+5s+SKsGLsrJEg=
-X-Google-Smtp-Source: AGHT+IFPTr9tpemxyIWdG1g9bjPz3FBmkzUXW4eLPPKVth/o3VbHpxOnuWWpwypLDHy5PoSAIltx2A==
-X-Received: by 2002:a17:906:f111:b0:a5a:28cc:ff85 with SMTP id a640c23a62f3a-a5a2d58545amr563789566b.28.1715587175252;
-        Mon, 13 May 2024 00:59:35 -0700 (PDT)
-Received: from ?IPV6:2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c? (p200300e5873ca5006aafb7a77c29ae5c.dip0.t-ipconnect.de. [2003:e5:873c:a500:6aaf:b7a7:7c29:ae5c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b18110sm561472766b.225.2024.05.13.00.59.34
+        d=1e100.net; s=20230601; t=1715592073; x=1716196873;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kfqKWrhN0H2vJ7JvOGO3IefYAkTVUiwdhsHChZFz29k=;
+        b=fg5OslqSi2Fc5mX/TCHaigv3/e1dFqSRMdnnDzzILsNiHiO3zFOMJodAeAyuy7OZNX
+         mEZ0vfGZE+mv9nBwVcu4Nsx/Ndn4ZGEzA3/SU5XR9C8b8AbtxM56/t7/WHqB//+U4p+v
+         2fUw5rMpfQJSK52Ls14s9rvjFVm3THX2DNUzgPBRdl3ESKj/YuyM1qSBLwap06x+cB07
+         BY4fgxDcvGsWy34lhF27JPhNt2zMjZQxvph0m+H6vwHd7+BiK+vo84kfuaJvGyQZGmyB
+         Ssy5J9wDC4J3McwS3zL3OqNZoYMpsibkRSFKKkisA+8013OPMXajQf9JM/GZh5YoNLMQ
+         qcKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQD/b4WIjBo7g7g4KaQKqmXQ7H0GF+/oqxfj1oDn/ywSImnzafuJzEFxFmjFluRJIR0GQuWarLOG3aN2eko6OiMSpnWHRg6FlAgYdGaFCOUmCO9kChBHKMMl5E88Qush54QELZFc+ErE5TPRSmdIbWI1ZeO105d6+pfFSrCA9KCyVrrmQrjnAg
+X-Gm-Message-State: AOJu0YwcBeDM4MIRgC5+M2UarSl6RvRMHH+IsiWaG/w2ivpkxoOFkM8B
+	3OAVX1dnJwze+vMOPUwgfI9Yy1JGrDnCQWcXG3/FE4Ecyv5Q/uK8AqG+sj9H
+X-Google-Smtp-Source: AGHT+IF4bG1HoN1MNrD5loG3NJ8dCKAaU/63g1QjXGotcQgJuW3zLPRGaJyDg4K458+amDgnnvS5+A==
+X-Received: by 2002:a81:4c0d:0:b0:620:2753:96b8 with SMTP id 00721157ae682-622aff922b6mr121902537b3.12.1715592072044;
+        Mon, 13 May 2024 02:21:12 -0700 (PDT)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6209e37913asm19903747b3.105.2024.05.13.02.21.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 00:59:34 -0700 (PDT)
-Message-ID: <55bbd23b-d851-4274-9511-c5a7af938a07@suse.com>
-Date: Mon, 13 May 2024 09:59:34 +0200
+        Mon, 13 May 2024 02:21:11 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-debaa161ae3so4610527276.1;
+        Mon, 13 May 2024 02:21:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXs8Mqz4hDB0T6WufutXFd7XA6sgAKUZH0YLnOm+iNFNBPdlPaeY2EPNS5FgYJ/FLcTE0GYX2/vkkwE9kf2xS67r2aVv0Cp/QhzUYsO2OJMXPcPm5nNytLeoQyQSQEaxFHGcqqOGt0qZNqvaXONLZOmMEhHCeEod01BQpxmfIHFU6hX6TzuiqxL
+X-Received: by 2002:a25:be54:0:b0:de5:6a2f:45d3 with SMTP id
+ 3f1490d57ef6-dee4f360270mr13207618276.36.1715592069302; Mon, 13 May 2024
+ 02:21:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC KERNEL PATCH v6 3/3] xen/privcmd: Add new syscall to get gsi
- from irq
-To: "Chen, Jiqian" <Jiqian.Chen@amd.com>,
- Stefano Stabellini <sstabellini@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
- "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "Huang, Ray" <Ray.Huang@amd.com>
-References: <20240419033616.607889-1-Jiqian.Chen@amd.com>
- <20240419033616.607889-4-Jiqian.Chen@amd.com>
- <79666084-fc2f-4637-8f0b-3846285601b8@suse.com>
- <BL1PR12MB58493D17E23751A06FC931DDE7E72@BL1PR12MB5849.namprd12.prod.outlook.com>
- <BL1PR12MB5849496A5B3148D162787961E7E22@BL1PR12MB5849.namprd12.prod.outlook.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-In-Reply-To: <BL1PR12MB5849496A5B3148D162787961E7E22@BL1PR12MB5849.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240415081135.3814373-1-yoshihiro.shimoda.uh@renesas.com>
+ <20240415081135.3814373-5-yoshihiro.shimoda.uh@renesas.com> <20240511072702.GD6672@thinkpad>
+In-Reply-To: <20240511072702.GD6672@thinkpad>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 13 May 2024 11:20:56 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVTGev4GmX9LFwXx1gn+69ZJFGLB+vsaJou5eLMMa7pkw@mail.gmail.com>
+Message-ID: <CAMuHMdVTGev4GmX9LFwXx1gn+69ZJFGLB+vsaJou5eLMMa7pkw@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] PCI: rcar-gen4: Add rcar_gen4_pcie_drvdata
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, lpieralisi@kernel.org, kw@linux.com, 
+	robh@kernel.org, bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, jingoohan1@gmail.com, marek.vasut+renesas@gmail.com, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 13.05.24 09:47, Chen, Jiqian wrote:
-> Hi,
-> On 2024/5/10 17:06, Chen, Jiqian wrote:
->> Hi,
->>
->> On 2024/5/10 14:46, Jürgen Groß wrote:
->>> On 19.04.24 05:36, Jiqian Chen wrote:
->>>> In PVH dom0, it uses the linux local interrupt mechanism,
->>>> when it allocs irq for a gsi, it is dynamic, and follow
->>>> the principle of applying first, distributing first. And
->>>> the irq number is alloced from small to large, but the
->>>> applying gsi number is not, may gsi 38 comes before gsi 28,
->>>> it causes the irq number is not equal with the gsi number.
->>>> And when passthrough a device, QEMU will use device's gsi
->>>> number to do pirq mapping, but the gsi number is got from
->>>> file /sys/bus/pci/devices/<sbdf>/irq, irq!= gsi, so it will
->>>> fail when mapping.
->>>> And in current linux codes, there is no method to translate
->>>> irq to gsi for userspace.
->>>>
->>>> For above purpose, record the relationship of gsi and irq
->>>> when PVH dom0 do acpi_register_gsi_ioapic for devices and
->>>> adds a new syscall into privcmd to let userspace can get
->>>> that translation when they have a need.
->>>>
->>>> Co-developed-by: Huang Rui <ray.huang@amd.com>
->>>> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
->>>> ---
->>>>    arch/x86/include/asm/apic.h      |  8 +++++++
->>>>    arch/x86/include/asm/xen/pci.h   |  5 ++++
->>>>    arch/x86/kernel/acpi/boot.c      |  2 +-
->>>>    arch/x86/pci/xen.c               | 21 +++++++++++++++++
->>>>    drivers/xen/events/events_base.c | 39 ++++++++++++++++++++++++++++++++
->>>>    drivers/xen/privcmd.c            | 19 ++++++++++++++++
->>>>    include/uapi/xen/privcmd.h       |  7 ++++++
->>>>    include/xen/events.h             |  5 ++++
->>>>    8 files changed, 105 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
->>>> index 9d159b771dc8..dd4139250895 100644
->>>> --- a/arch/x86/include/asm/apic.h
->>>> +++ b/arch/x86/include/asm/apic.h
->>>> @@ -169,6 +169,9 @@ extern bool apic_needs_pit(void);
->>>>      extern void apic_send_IPI_allbutself(unsigned int vector);
->>>>    +extern int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
->>>> +                    int trigger, int polarity);
->>>> +
->>>>    #else /* !CONFIG_X86_LOCAL_APIC */
->>>>    static inline void lapic_shutdown(void) { }
->>>>    #define local_apic_timer_c2_ok        1
->>>> @@ -183,6 +186,11 @@ static inline void apic_intr_mode_init(void) { }
->>>>    static inline void lapic_assign_system_vectors(void) { }
->>>>    static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
->>>>    static inline bool apic_needs_pit(void) { return true; }
->>>> +static inline int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
->>>> +                    int trigger, int polarity)
->>>> +{
->>>> +    return (int)gsi;
->>>> +}
->>>>    #endif /* !CONFIG_X86_LOCAL_APIC */
->>>>      #ifdef CONFIG_X86_X2APIC
->>>> diff --git a/arch/x86/include/asm/xen/pci.h b/arch/x86/include/asm/xen/pci.h
->>>> index 9015b888edd6..aa8ded61fc2d 100644
->>>> --- a/arch/x86/include/asm/xen/pci.h
->>>> +++ b/arch/x86/include/asm/xen/pci.h
->>>> @@ -5,6 +5,7 @@
->>>>    #if defined(CONFIG_PCI_XEN)
->>>>    extern int __init pci_xen_init(void);
->>>>    extern int __init pci_xen_hvm_init(void);
->>>> +extern int __init pci_xen_pvh_init(void);
->>>>    #define pci_xen 1
->>>>    #else
->>>>    #define pci_xen 0
->>>> @@ -13,6 +14,10 @@ static inline int pci_xen_hvm_init(void)
->>>>    {
->>>>        return -1;
->>>>    }
->>>> +static inline int pci_xen_pvh_init(void)
->>>> +{
->>>> +    return -1;
->>>> +}
->>>>    #endif
->>>>    #ifdef CONFIG_XEN_PV_DOM0
->>>>    int __init pci_xen_initial_domain(void);
->>>> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
->>>> index 85a3ce2a3666..72c73458c083 100644
->>>> --- a/arch/x86/kernel/acpi/boot.c
->>>> +++ b/arch/x86/kernel/acpi/boot.c
->>>> @@ -749,7 +749,7 @@ static int acpi_register_gsi_pic(struct device *dev, u32 gsi,
->>>>    }
->>>>      #ifdef CONFIG_X86_LOCAL_APIC
->>>> -static int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
->>>> +int acpi_register_gsi_ioapic(struct device *dev, u32 gsi,
->>>>                        int trigger, int polarity)
->>>>    {
->>>>        int irq = gsi;
->>>> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
->>>> index 652cd53e77f6..f056ab5c0a06 100644
->>>> --- a/arch/x86/pci/xen.c
->>>> +++ b/arch/x86/pci/xen.c
->>>> @@ -114,6 +114,21 @@ static int acpi_register_gsi_xen_hvm(struct device *dev, u32 gsi,
->>>>                     false /* no mapping of GSI to PIRQ */);
->>>>    }
->>>>    +static int acpi_register_gsi_xen_pvh(struct device *dev, u32 gsi,
->>>> +                    int trigger, int polarity)
->>>> +{
->>>> +    int irq;
->>>> +
->>>> +    irq = acpi_register_gsi_ioapic(dev, gsi, trigger, polarity);
->>>> +    if (irq < 0)
->>>> +        return irq;
->>>> +
->>>> +    if (xen_pvh_add_gsi_irq_map(gsi, irq) == -EEXIST)
->>>> +        printk(KERN_INFO "Already map the GSI :%u and IRQ: %d\n", gsi, irq);
->>>> +
->>>> +    return irq;
->>>> +}
->>>> +
->>>>    #ifdef CONFIG_XEN_PV_DOM0
->>>>    static int xen_register_gsi(u32 gsi, int triggering, int polarity)
->>>>    {
->>>> @@ -558,6 +573,12 @@ int __init pci_xen_hvm_init(void)
->>>>        return 0;
->>>>    }
->>>>    +int __init pci_xen_pvh_init(void)
->>>> +{
->>>> +    __acpi_register_gsi = acpi_register_gsi_xen_pvh;
->>>
->>> No support for unregistering the gsi again?
->> __acpi_unregister_gsi is set in function acpi_set_irq_model_ioapic.
->> Maybe I need to use a new function to call acpi_unregister_gsi_ioapic and remove the mapping of irq and gsi from xen_irq_list_head ?
-> When I tried to support unregistering the gsi and removing the mapping during disable device,
-> I encountered that after running "xl pci-assignable-add 03:00.0", callstack pcistub_init_device->xen_pcibk_reset_device->pci_disable_device->pcibios_disable_device->acpi_pci_irq_disable->__acpi_unregister_gsi
-> removed the mapping, after that when user space called xen_gsi_from_irq to get gsi, it failed.
-> 
-> To cover above case, I want to change the implementation of xen_gsi_from_irq to pass sbdf to get the gsi instead of passing irq,
-> Because the sbdf and gsi of a device is unique and wiil not be changed even device is disabled or re-enabled.
-> 
-> Do you think this kind of change is acceptable?
+Hi Mani,
 
-Yes, I think so.
+On Sat, May 11, 2024 at 9:37=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
+org> wrote:
+> On Mon, Apr 15, 2024 at 05:11:32PM +0900, Yoshihiro Shimoda wrote:
+> > In other to support future SoCs such as r8a779g0 and r8a779h0 that
+> > require different initialization settings, let's introduce SoC
+> > specific driver data with the initial member being the device mode.
+> > No functional change.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>
+> One nitpick below. With that addressed,
+>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+> > --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
 
-Juergen
+> > @@ -437,9 +441,9 @@ static void rcar_gen4_remove_dw_pcie_ep(struct rcar=
+_gen4_pcie *rcar)
+> >  /* Common */
+> >  static int rcar_gen4_add_dw_pcie(struct rcar_gen4_pcie *rcar)
+> >  {
+> > -     rcar->mode =3D (uintptr_t)of_device_get_match_data(&rcar->pdev->d=
+ev);
+> > +     rcar->drvdata =3D of_device_get_match_data(&rcar->pdev->dev);
+>
+> Even though rcar->drvdata won't be NULL, the lack of NULL check will caus=
+e
+> folks to send fixup patch later. So please add a NULL check here itself.
+
+I tend to disagree: this can never return NULL.
+Less than half of the callers of of_device_get_match_data() check for
+a NULL pointer, and many of them do so because they are used both
+with and without DT.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
