@@ -1,78 +1,71 @@
-Return-Path: <linux-pci+bounces-7420-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7421-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7A8F8C40D9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 14:37:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 224678C4109
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 14:51:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 876B51F2299F
-	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 12:37:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52F6F1C22D01
+	for <lists+linux-pci@lfdr.de>; Mon, 13 May 2024 12:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA7314F9E5;
-	Mon, 13 May 2024 12:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8C6152180;
+	Mon, 13 May 2024 12:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HXv3Gdot"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PfvJ4kSM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27F573502;
-	Mon, 13 May 2024 12:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B4A1509B2;
+	Mon, 13 May 2024 12:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715603851; cv=none; b=M6/s0jFDfjcM7gnJ7OCJ2ypxRJ7zO/zQ77s/jRNOcLHIJMh50UYK0wVRUHtNZxqcLqL2e1dd7hMBivNzTvBlj2/08OgnkJvVohotVF0/AVdArbDufTTAq3lWDu0vwEIISNGJgtIEJd9SkPLb/vnmE9BARfuq4KQTG+IW1g5OwK0=
+	t=1715604657; cv=none; b=MB/DhgQFYt7VYbpcefEe3MNyDIgj7ZtlugVB99dbpxJi0rocvlyliJUJAJsurIOZADiZ39NoyAgnmcXt/Q22iN4hfW2DKqjc+Kh22VIwYLYX6c/5WuIFPrX9YxJNiky+mOOT+P0B4MbA+66DGRgY5n5cy9h9X0dh5rSbYItuWaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715603851; c=relaxed/simple;
-	bh=nl1DpT1BDZi8DFXU9HIaI+on9YNafC0xihrZQMTvP+Y=;
+	s=arc-20240116; t=1715604657; c=relaxed/simple;
+	bh=ibad/oLXETdJ6gFZRASre3kHqdrQdhHpfWRltMesjec=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R1A4OZBIC+1vBsbpNS8Xr2IsDt4Wqn5tTIxx+cO9oecaVZkx+5+iv8y4JY7Zba+AbaAp0hhYSYRAGtI9AbZu+8h/6/OZzFe09jPzBW7TedM1DjQAldPA3sKqZN2CgsoTnkzJy49r4GwQZwLM72ZoCnLfrEIM/g6bR3ajltAb5rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HXv3Gdot; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version:Content-Type; b=a5bgkqQs/DDmw5nJA9CmXzcTiwzlsAHRqXhqlcXlcOAmuaRqfp7qPiGKPHZjmtO3ho2xRcLCBLb1iM2VDzILajax3qEPy4KMLqGjPU7rwsCbRw5Qt+EP8djDI8ZVFzDgfuvtb6QtvSXk1O99GW8WezO5EnXscVYw6V7wBYeeVfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PfvJ4kSM; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3EEE64000F;
-	Mon, 13 May 2024 12:37:21 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0DD66FF802;
+	Mon, 13 May 2024 12:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715603845;
+	t=1715604653;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A7Y92ld/TlnX/m+7U7B7yO+h4PpB1aDrcf1Fi2kJ1+A=;
-	b=HXv3GdotVSbWET4GN1hq1ZyvMDQmZLcu45Xg3CgPRLPMvDnVo4WW7OO6bodJg3SrXuYlMz
-	izc0mDKH98w4uSZbDRP6vejT7yJC5lO33vJxbMVmlMCLuKMDMEnLUoV/X6Kwi1sPDj9Hkt
-	rKg7ZS26oHIKxUcbx5v6RzEa+HQovtNgMB1R+f0/YrfMhFyk4FwOP9EMBPs1TowUV0F6Ha
-	lNJKbFM4tj6gfvovWzZZITOFYDxHOntbmHQHSDTsrs5zFSfjqtJaNp9rwHqP8/oXRnTEIE
-	Hp14hgbGqPl+kAULT87uKZKHmQAjtINh/VbNvftb9XIPz9mJX5s+gDem/nH3uA==
-Date: Mon, 13 May 2024 14:37:20 +0200
+	bh=BCTHEqncHX7PpEXTjLxoQdryl0DYK6TWxvSfa/L8L6Q=;
+	b=PfvJ4kSMsWdc2j20yS/BOvIQFEbCf0UaU26pGEq3zLcq4cfh7I6E2XepIPqefEp7JIoS3q
+	+frr91kLTPSGDdBbWLqlB9rTxQZrHw/1NkU+teVpLo98aE/NMjQZAKTFZAf12w5Opo9lyj
+	C5Btp70PYJWoZlhmyRjNrONij0ceSrk7knM6u84j1Mp55i2iUCEEN4LvCb0FL1goTfQxMP
+	g02b39pfRFpXccgMNDb7AreOac005qT1B9SZ/HksUJQrwC9q69TCmDLYo6oiAm1qTJpeNR
+	zDDyg7AJolHp2Z4jmB3izsOiRXr3gheK1EMpsKWhfhfhkPq6uDiJsrl28nsYBw==
+Date: Mon, 13 May 2024 14:50:49 +0200
 From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lee Jones
- <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Saravana Kannan <saravanak@google.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, Lars
- Povlsen <lars.povlsen@microchip.com>, Steen Hegelund
- <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
- Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+To: <Steen.Hegelund@microchip.com>
+Cc: <tglx@linutronix.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+ <conor+dt@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+ <kuba@kernel.org>, <pabeni@redhat.com>, <lee@kernel.org>, <arnd@arndb.de>,
+ <Horatiu.Vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
+ <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+ <saravanak@google.com>, <bhelgaas@google.com>, <p.zabel@pengutronix.de>,
+ <Lars.Povlsen@microchip.com>, <Daniel.Machon@microchip.com>,
+ <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <Allan.Nielsen@microchip.com>, <luca.ceresoli@bootlin.com>,
  <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 09/17] dt-bindings: interrupt-controller: Add support
- for Microchip LAN966x OIC
-Message-ID: <20240513143720.1174306a@bootlin.com>
-In-Reply-To: <20240507152806.GA505222-robh@kernel.org>
+Subject: Re: [PATCH 12/17] irqchip: Add support for LAN966x OIC
+Message-ID: <20240513145049.25695b4a@bootlin.com>
+In-Reply-To: <D143YFK7334S.3MM7YORC0H24X@microchip.com>
 References: <20240430083730.134918-1-herve.codina@bootlin.com>
-	<20240430083730.134918-10-herve.codina@bootlin.com>
-	<20240507152806.GA505222-robh@kernel.org>
+	<20240430083730.134918-13-herve.codina@bootlin.com>
+	<D143YFK7334S.3MM7YORC0H24X@microchip.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -85,31 +78,29 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Rob,
+Hi Steen,
 
-On Tue, 7 May 2024 10:28:06 -0500
-Rob Herring <robh@kernel.org> wrote:
+On Wed, 8 May 2024 08:08:30 +0000
+<Steen.Hegelund@microchip.com> wrote:
 
 ...
-> > +examples:
-> > +  - |
-> > +    interrupt-controller@e00c0120 {
-> > +        compatible = "microchip,lan966x-oic";
-> > +        reg = <0xe00c0120 0x190>;  
+> > +/* Mapping of source to destination interrupts (_n = 0..8) */  
 > 
-> Looks like this is part of some larger block?
+> Are the indices really needed on LAN966X_OIC_DST_INTR_MAP* and _IDENT*
+> You do not appear to be using them?
 > 
+> 
+> > +#define LAN966X_OIC_DST_INTR_MAP(_n)   0x78
 
-According to the registers information document:
+Indeed, I missed them.
+These registers are defined from 0 to 8 in the document:
   https://microchip-ung.github.io/lan9662_reginfo/reginfo_LAN9662.html?select=cpu,intr
 
-The interrupt controller is mapped at offset 0x48 (offset in number of
-32bit words).
--> Address offset: 0x48 * 4 = 0x120
--> size: (0x63 + 1) *  4 = 0x190
+The code use only the indice 0.
+In the next iteration, I will keep indices and update the definition of
+registers like that:
+  #define LAN966X_OIC_DST_INTR_MAP(_n)   (0x78 + (_n) * 4)
 
-IMHO, the reg property value looks correct.
-
-Best regards,
+Best regards
 Hervé
 
