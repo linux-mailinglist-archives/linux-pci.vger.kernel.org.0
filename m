@@ -1,400 +1,177 @@
-Return-Path: <linux-pci+bounces-7455-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7456-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FF9C8C55CA
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 14:08:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5FB48C55D7
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 14:12:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8399B1F22D75
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 12:08:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 481651F213EA
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 12:12:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 907D92D60A;
-	Tue, 14 May 2024 12:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0E73B1A3;
+	Tue, 14 May 2024 12:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ej2hmhZv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RSU5IvbS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8DA320F;
-	Tue, 14 May 2024 12:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D35E1E4B1;
+	Tue, 14 May 2024 12:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715688533; cv=none; b=bZQ6imw6P+dfldto3Ug7/lP6zUMelTNcfG7lwqU7ClaI7FCIAZ/8UlyQtqqanWUO6h8oGN4oHPQTFBNTlTAn1rckcJO8dDf4y0xRDUOnwCXzG2zz2uYMojy6D3wvBFkCtmeakAulqCYOjNKvto5MS1+S+sp8t1mQHRsepvZiR8U=
+	t=1715688744; cv=none; b=m6owmcfQ1sjU+a8z0XR/PcSiZRmyk6ec4Mc++1Pzn7IGP3L0K1nUJLNHyoxIm/Omp0NPMajWcWYTaIb3/zmJsvYsm4NvDxQ4W/aq7vA3ZcD22S3Kd5PgCht7azpA8KveA0rU6K/a+xc+HopRpAvvEzlJh+pmBHJdKPOSzdQilgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715688533; c=relaxed/simple;
-	bh=VCEpHm3X2mGQsiTObD3pA+it8oca7WjVJw8ZFR5TALc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d6t+uMQvdvDhVfVMt3rvhZNW27cYE3nd/ExrUuCM3DdxeWf8U3TSzKMt4JDIF8jFJsAm/To3vFGs2tx5y6/Oqof8xMSDNbujfdl1vGY/huMGEObkjV+pumj2+BLrJ9qf14XbtYeIkGonQQrW3K6TuXCZewY5PmPmwX+P3DE0BEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ej2hmhZv; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EBpNwO007140;
-	Tue, 14 May 2024 12:08:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=S/jaGGRNl5KjdI3CpWmC0+vE/WR4/B/OKm0Gwa115tA=;
- b=Ej2hmhZvMRUUvXGiFR81o8ASHtZHlMHCpwPSEKvTFbi6KxxSH4PFtf0miDH9sF5Gv4kM
- 404TFeB7GuHb3WAjF+iC/zpBHZDuHFUpM0gLQjIDp+6ezH/TYMWdbNBHkHwPbM+RouLe
- 5/oxH+qGVS2DW9bKGXSKoEll/nORGf4ena0IzpO2Y/cKvEifez2B2voKb1bpBdM1lNYQ
- gZCu5peJStGrAMmbKsQjIZduc+rf/RTHYH9gfhFmxo+n1uTaXHf2a/2J8TxwiA7BAZh1
- 9ZPxLvixLpXu1mtAkwc3q5CdIVBqL+IR/yrpMEU6YI0H6XnzT9lNhS3idTEdG2WeWpu5 mA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y44hrrg32-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 12:08:39 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44EC762V031147;
-	Tue, 14 May 2024 12:08:39 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y44hrrg2x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 12:08:39 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44EBMt26020367;
-	Tue, 14 May 2024 12:08:38 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y2kcywd3c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 12:08:38 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EC8Z2K6226484
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 May 2024 12:08:37 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0B28058055;
-	Tue, 14 May 2024 12:08:35 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C868058066;
-	Tue, 14 May 2024 12:08:29 +0000 (GMT)
-Received: from [9.171.90.14] (unknown [9.171.90.14])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 14 May 2024 12:08:29 +0000 (GMT)
-Message-ID: <1873d93c-4325-4fba-b11c-9ba740b22202@linux.ibm.com>
-Date: Tue, 14 May 2024 17:38:28 +0530
+	s=arc-20240116; t=1715688744; c=relaxed/simple;
+	bh=yvyZt27ScHuMAxnq3bm6Nvou2bxi4i+h6DRBGE2LOE4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DsFZ0YBaDm/ujgTT1xgrMCmjCsQDexITLGnfmyis0NGLlt72dKXQBacAIeECQhTIxyIfBaHmme2pkesm/st4En6zDynb4Fjc02p+0xiVTGekNpF/BFX3Msl/9zl9aGPQHCd8YGWFIZbYfWhw75FabLTcg4pbY/9N6E1gzV+P+YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RSU5IvbS; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44ECBo3G115948;
+	Tue, 14 May 2024 07:11:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1715688710;
+	bh=OsXgZbCTz/uuKLSGsGQZvWLyWdVYSJ4fAsjKQWfCgac=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=RSU5IvbSkiCst0Z228ER9IBFdciijquqVWZfTKVGX1ee0iIlHHlsagsqJOcixTQ7D
+	 hhNHtB5B8skwhev606unk2HF9CYAzk9c0NOeKc0q/KAXdZFSk7qGSS2xNAQNMPDfJc
+	 UN6eaNPGYAJjGZQWLALBYzvrIeqKp4fexuoorAy0=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44ECBo39105112
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 14 May 2024 07:11:50 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 14
+ May 2024 07:11:50 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 14 May 2024 07:11:50 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44ECBnnY006071;
+	Tue, 14 May 2024 07:11:50 -0500
+Date: Tue, 14 May 2024 17:41:48 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <manivannan.sadhasivam@linaro.org>, <fancer.lancer@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <cassel@kernel.org>,
+        <dlemoal@kernel.org>, <yoshihiro.shimoda.uh@renesas.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+Subject: Re: [PATCH v7 2/2] PCI: keystone: Fix pci_ops for AM654x SoC
+Message-ID: <8b56604d-a2b8-4227-8a6f-c477332416b4@ti.com>
+References: <20240328085041.2916899-3-s-vadapalli@ti.com>
+ <20240513215350.GA1996021@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arch/powerpc: hotplug driver bridge support
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, mpe@ellerman.id.au,
-        npiggin@gmail.com
-Cc: nathanl@linux.ibm.com, gbatra@linux.ibm.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, aneesh.kumar@kernel.org,
-        brking@linux.vnet.ibm.com, tpearson@raptorengineering.com,
-        oohall@gmail.com, bhelgaas@google.com, mahesh.salgaonkar@in.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-References: <20240509120644.653577-1-krishnak@linux.ibm.com>
- <20240509120644.653577-3-krishnak@linux.ibm.com>
- <581d163f-837d-401a-a50d-2305de6c8804@linux.ibm.com>
-Content-Language: en-US
-From: krishna kumar <krishnak@linux.ibm.com>
-In-Reply-To: <581d163f-837d-401a-a50d-2305de6c8804@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: vhmHzLAmOVfFAIzR32zkM5YUJRdSDrZi
-X-Proofpoint-ORIG-GUID: tUVmFlBjathVarV2Rt8KfX6vNg2KFMfV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-14_06,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405140085
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240513215350.GA1996021@bhelgaas>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Thanks Sourabh for review. I have incorporated your comments and will be 
-sending my patch soon.
+On Mon, May 13, 2024 at 04:53:50PM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 28, 2024 at 02:20:41PM +0530, Siddharth Vadapalli wrote:
+> > In the process of converting .scan_bus() callbacks to .add_bus(), the
+> > ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
+> > The .scan_bus() method belonged to ks_pcie_host_ops which was specific
+> > to controller version 3.65a, while the .add_bus() method had been added
+> > to ks_pcie_ops which is shared between the controller versions 3.65a and
+> > 4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
+> > ks_pcie_v3_65_add_bus() method is applicable to the controller version
+> > 4.90a which is present in AM654x SoCs.
+> > 
+> > Thus, as a fix, remove "ks_pcie_v3_65_add_bus()" and move its contents
+> > to the .msi_init callback "ks_pcie_msi_host_init()" which is specific to
+> > the 3.65a controller.
+> > 
+> > Fixes: 6ab15b5e7057 ("PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus")
+> > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> > Suggested-by: Niklas Cassel <cassel@kernel.org>
+> > Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> 
+> Thanks for splitting this into two patches.  Krzysztof has applied
+> both to pci/controller/keystone and we hope to merge them for v6.10.
+> 
+> I *would* like the commit log to be at a little higher level if
+> possible.  Right now it's a detailed description at the level of the
+> code edits, but it doesn't say *why* we want this change.
+> 
+> I think the first cut at this was
+> https://lore.kernel.org/linux-pci/20231011123451.34827-1-s-vadapalli@ti.com/t/#u,
+> which mentioned Completion Timeouts during MSI-X configuration and 45
+> second delays during boot.
+> 
+> IIUC, prior to 6ab15b5e7057, ks_pcie_v3_65_scan_bus() initialized BAR
+> 0 and was only used for v3.65a devices.  6ab15b5e7057 renamed it to
+> ks_pcie_v3_65_add_bus() and called it for both v3.65a and v4.90a.
+> 
+> I think the problem is that in the current code, the
+> ks_pcie_ops.add_bus() method (ks_pcie_v3_65_add_bus()) is used for all
+> devices (both v3.65a and v4.90a).  So I guess doing the BAR 0 setup on
+> v4.90a broke something there?
 
-Best Regards,
+BAR0 was set to a different value on AM654x SoC which has the v4.90a
+controller, which is identical to what is set even for the v3.65a
+controller. The difference is that BAR0 is programmed to a different
+value for enabling inbound MSI writes on top of the common configuration
+performed for BAR0.
 
-Krishna
+Common configuration for BAR0:
+ks_pcie_probe
+  dw_pcie_host_init
+    dw_pcie_setup_rc
+    ...
+     /* Setup RC BARs */
+     dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
+     dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+     ...
+     dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
+    ...
 
-On 5/13/24 15:15, Sourabh Jain wrote:
-> Hello Krishna,
->
-> Is "arch" in commit title really required?
->
-> On 09/05/24 17:35, Krishna Kumar wrote:
->> There is an issue with the hotplug operation when it's done on the
->> bridge/switch slot. The bridge-port and devices behind the bridge, which
->> become offline by hot-unplug operation, don't get hot-plugged/enabled by
->> doing hot-plug operation on that slot. Only the first port of the bridge
->> gets enabled and the remaining port/devices remain unplugged. The hot
->> plug/unplug operation is done by the hotplug driver
->> (drivers/pci/hotplug/pnv_php.c).
->>
->> Root Cause Analysis: This behavior is due to missing code for the DPC
->> switch/bridge. The existing driver depends on pci_hp_add_devices()
->> function for device enablement. This function calls pci_scan_slot() on
->> only one device-node/port of the bridge, not on all the siblings'
->> device-node/port.
->>
->> The missing code needs to be added which will find all the sibling
->> device-nodes/bridge-ports and will run explicit pci_scan_slot() on
->> those.  A new function has been added for this purpose which gets
->> invoked from pci_hp_add_devices(). This new function
->> pci_traverse_sibling_nodes_and_scan_slot() gets all the sibling
->> bridge-ports by traversal and explicitly invokes pci_scan_slot on them.
->>
->>
->> Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
->> ---
->>
->> Command for reproducing the issue :
->>
->> For hot unplug/disable - echo 0 > /sys/bus/pci/slots/C5/power
->> For hot plug/enable -    echo 1 > /sys/bus/pci/slots/C5/power
->>
->> where C5 is slot associated with bridge.
->>
->> Scenario/Tests:
->> Output of lspci -nn before test is given below. This snippet contains
->> devices used for testing on Powernv machine.
->>
->> 0004:02:00.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
->> 0004:02:01.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
->> 0004:02:02.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
->> 0004:02:03.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
->> 0004:08:00.0 Serial Attached SCSI controller [0107]:
->> Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3 [1000:00c9] (rev 01)
->> 0004:09:00.0 Serial Attached SCSI controller [0107]:
->> Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3 [1000:00c9] (rev 01)
->>
->> Output of lspci -tv before test is as follows:
->>
->> # lspci -tv
->>   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->>   |                           | +-01.0-[08]----00.0  Broadcom / LSI 
->> SAS3216 PCI-Express Fusion-MPT SAS-3
->>   |                           | +-02.0-[09]----00.0  Broadcom / LSI 
->> SAS3216 PCI-Express Fusion-MPT SAS-3
->>   |                           |               \-03.0-[0a-0e]--
->>   |                           \-00.1  PMC-Sierra Inc. Device 4052
->>
->> C5(bridge) and C6(End Point) slot address are as below:
->> # cat /sys/bus/pci/slots/C5/address
->> 0004:02:00
->> # cat /sys/bus/pci/slots/C6/address
->> 0004:09:00
->>
->> Hot-unplug operation on slot associated with bridge:
->> # echo 0 > /sys/bus/pci/slots/C5/power
->> # lspci -tv
->>   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--
->>   |                           \-00.1  PMC-Sierra Inc. Device 4052
->>
->>  From the above lspci -tv output, it can be observed that hot unplug
->> operation has removed all the PMC-Sierra bridge ports like:
->> 00.0-[03-07], 01.0-[08], 02.0-[09], 03.0-[0a-0e] and the SAS devices
->> behind the bridge-port. Without the fix, when the hot plug operation is
->> done on the same slot, it adds only the first bridge port and doesn't
->> restore all the bridge-ports and devices that it unplugged earlier.
->> Below snippet shows this.
->>
->> Hot-plug operation on the bridge slot without the fix:
->> # echo 1 > /sys/bus/pci/slots/C5/power
->> # lspci -tv
->>   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->>   |                           \-00.1  PMC-Sierra Inc. Device 4052
->>
->> After the fix, it restores all the devices in the same manner how it
->> unplugged them earlier during the hot unplug operation. The below 
->> snippet
->> shows the same.
->> Hot-plug operation on bridge slot with the fix:
->> # echo 1 > /sys/bus/pci/slots/C5/power
->> # lspci -tv
->>   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->>   |                           | +-01.0-[08]----00.0  Broadcom / LSI 
->> SAS3216 PCI-Express Fusion-MPT SAS-3
->>   |                           | +-02.0-[09]----00.0  Broadcom / LSI 
->> SAS3216 PCI-Express Fusion-MPT SAS-3
->>   |                           |               \-03.0-[0a-0e]--
->>   |                           \-00.1  PMC-Sierra Inc. Device 4052
->>
->> Removal of End point device behind bridge are also intact and behaving
->> correctly.
->> Hot-unplug operation on Endpoint device C6:
->> # echo 0 > /sys/bus/pci/slots/C6/power
->> # lspci -tv
->>   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->>   |                           | +-01.0-[08]----00.0  Broadcom / LSI 
->> SAS3216 PCI-Express Fusion-MPT SAS-3
->>   |                           |               +-02.0-[09]--
->>   |                           |               \-03.0-[0a-0e]--
->>   |                           \-00.1  PMC-Sierra Inc. Device 4052
->>
->> Hot-plug operation on Endpoint device C6:
->> # echo 1 > /sys/bus/pci/slots/C6/power
->> # lspci -tv
->>   +-[0004:00]---00.0-[01-0e]--+-00.0-[02-0e]--+-00.0-[03-07]--
->>   |                           | +-01.0-[08]----00.0  Broadcom / LSI 
->> SAS3216 PCI-Express Fusion-MPT SAS-3
->>   |                           | +-02.0-[09]----00.0  Broadcom / LSI 
->> SAS3216 PCI-Express Fusion-MPT SAS-3
->>   |                           |               \-03.0-[0a-0e]--
->>   |                           \-00.1  PMC-Sierra Inc. Device 4052
->>
->>
->>
->>   arch/powerpc/include/asm/ppc-pci.h |  4 +++
->>   arch/powerpc/kernel/pci-hotplug.c  |  5 ++--
->>   arch/powerpc/kernel/pci_dn.c       | 42 ++++++++++++++++++++++++++++++
->>   3 files changed, 48 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/powerpc/include/asm/ppc-pci.h 
->> b/arch/powerpc/include/asm/ppc-pci.h
->> index a8b7e8682f5b..a5d5ee4ff7c0 100644
->> --- a/arch/powerpc/include/asm/ppc-pci.h
->> +++ b/arch/powerpc/include/asm/ppc-pci.h
->> @@ -28,6 +28,10 @@ struct pci_dn;
->>   void *pci_traverse_device_nodes(struct device_node *start,
->>                   void *(*fn)(struct device_node *, void *),
->>                   void *data);
->> +
->> +void *pci_traverse_sibling_nodes_and_scan_slot(struct device_node 
->> *start,
->> +                           struct pci_bus *bus);
->> +
->>   extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
->>     #if defined(CONFIG_IOMMU_API) && (defined(CONFIG_PPC_PSERIES) || \
->> diff --git a/arch/powerpc/kernel/pci-hotplug.c 
->> b/arch/powerpc/kernel/pci-hotplug.c
->> index 0fe251c6ac2c..639a3d592fe2 100644
->> --- a/arch/powerpc/kernel/pci-hotplug.c
->> +++ b/arch/powerpc/kernel/pci-hotplug.c
->> @@ -106,7 +106,7 @@ EXPORT_SYMBOL_GPL(pci_hp_remove_devices);
->>    */
->>   void pci_hp_add_devices(struct pci_bus *bus)
->>   {
->> -    int slotno, mode, max;
->> +    int mode, max;
->>       struct pci_dev *dev;
->>       struct pci_controller *phb;
->>       struct device_node *dn = pci_bus_to_OF_node(bus);
->> @@ -129,8 +129,7 @@ void pci_hp_add_devices(struct pci_bus *bus)
->>            * order for fully rescan all the way down to pick them up.
->>            * They can have been removed during partial hotplug.
->>            */
->> -        slotno = PCI_SLOT(PCI_DN(dn->child)->devfn);
->> -        pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
->> +        pci_traverse_sibling_nodes_and_scan_slot(dn, bus);
->>           max = bus->busn_res.start;
->>           /*
->>            * Scan bridges that are already configured. We don't touch
->> diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
->> index 38561d6a2079..2e202f9cec21 100644
->> --- a/arch/powerpc/kernel/pci_dn.c
->> +++ b/arch/powerpc/kernel/pci_dn.c
->> @@ -493,4 +493,46 @@ static void pci_dev_pdn_setup(struct pci_dev *pdev)
->>       pdn = pci_get_pdn(pdev);
->>       pdev->dev.archdata.pci_data = pdn;
->>   }
->> +
->> +void *pci_traverse_sibling_nodes_and_scan_slot(struct device_node 
->> *start, struct pci_bus *bus)
->
-> Two things regarding the return type of the above function.
->
-> 1. Function only returns NULL
-> 2. Caller of this function doesn't take any action based on the return 
-> value of this function.
->
-> How about changing the return type from void * to just void?
->
->> +{
->> +    struct device_node *dn;
->> +    struct device_node *parent;
->
-> parent variable is not really required.
->
->> +    int slotno;
->> +
->> +    const __be32 *classp1;
->> +    u32 class1 = 0;
->> +
->> +    classp1 = of_get_property(start->child, "class-code", NULL);
->> +    if (classp1)
->> +        class1 = of_read_number(classp1, 1);
->> +
->> +    /* Call of pci_scan_slot for non-bridge/EP case */
->> +    if (!((class1 >> 8) == PCI_CLASS_BRIDGE_PCI)) {
->> +        slotno = PCI_SLOT(PCI_DN(start->child)->devfn);
->> +        pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
->> +        return NULL;
->> +    }
->> +
->> +    /* Iterate all siblings */
->> +    parent = start;
->> +    for_each_child_of_node(parent, dn) {
->> +        const __be32 *classp;
->> +        u32 class = 0;
->> +
->> +        classp = of_get_property(dn, "class-code", NULL);
->> +        if (classp)
->> +            class = of_read_number(classp, 1);
->> +
->> +        /* Call of pci_scan_slot on each sibling-nodes/bridge-ports */
->> +        if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
->> +            slotno = PCI_SLOT(PCI_DN(dn)->devfn);
->> +            pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
->> +        }
->> +    }
->> +
->> +    return NULL;
->
-> Some level of code duplication can be avoided if we push both cases
-> 1. Call of pci_scan_slot for non-bridge/EP case
-> 2. Call of pci_scan_slot for bridge port
->
-> inside `for_each_child_of_node` macro.
->
-> Something like this.
->
->     u32 class;
->     int slotno;
->     const __be32 *classp;
->     struct device_node *dn;
->
->     for_each_child_of_node(start, dn) {
->         class = 0;
->         classp = of_get_property(dn, "class-code", NULL);
->         if (classp)
->             class = of_read_number(classp, 1);
->
->         /* Call of pci_scan_slot for non-bridge/EP case */
->         if (!((class >> 8) == PCI_CLASS_BRIDGE_PCI) && start->child == 
-> dn) {
->             slotno = PCI_SLOT(PCI_DN(dn)->devfn);
->             pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
->             of_node_put(dn);
->             return;
->         }
->
->         /* Call of pci_scan_slot for bridge port */
->         if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
->             slotno = PCI_SLOT(PCI_DN(dn)->devfn);
->             pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
->         }
->     }
->
->
->> +}
->> +EXPORT_SYMBOL_GPL(pci_traverse_sibling_nodes_and_scan_slot);
->
-> What is the need for exporting the above function?
->
->> +
->>   DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, pci_dev_pdn_setup);
->
-> - Sourabh Jain
+MSI specific configuration of BAR0 performed after the common
+configuration via the ks_pcie_v3_65_scan_bus() callback:
+	/* Configure and set up BAR0 */
+	ks_pcie_set_dbi_mode(ks_pcie);
+
+	/* Enable BAR0 */
+	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+
+	ks_pcie_clear_dbi_mode(ks_pcie);
+
+	 /*
+	  * For BAR0, just setting bus address for inbound writes (MSI) should
+	  * be sufficient.  Use physical address to avoid any conflicts.
+	  */
+	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+
+The above configuration of BAR0 shouldn't be performed for AM654x SoC.
+While I am not certain, the timeouts are probably a result of the BAR
+being programmed to a wrong value which results in a "no match" outcome.
+
+> 
+> I'm not quite clear on the mechanism, but it would be helpful to at
+> least know what's wrong and on what platform.  E.g., currently v4.90
+> suffers Completion Timeouts and 45 second boot delays?  And this patch
+> fixes that?
+
+Yes, the Completion Timeouts cause the 45 second boot delays and this
+patch fixes that.
+
+Regards,
+Siddharth.
 
