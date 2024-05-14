@@ -1,128 +1,139 @@
-Return-Path: <linux-pci+bounces-7459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7460-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8866E8C56F1
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 15:21:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 296C78C5765
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 15:53:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 645E0280C8E
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 13:21:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D28461F2167A
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 13:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A5EF1552EF;
-	Tue, 14 May 2024 13:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987211448EA;
+	Tue, 14 May 2024 13:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/72oiVi"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mZfwvQwv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B393154C1E;
-	Tue, 14 May 2024 13:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CB71448E4;
+	Tue, 14 May 2024 13:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715692673; cv=none; b=kFa5CDBELWpjgqJwvSXURHqSiMAip2F/UF6M8l4qy6uAuI8ns/b+JfCepUog9RzY7qGlopA2SqGOCF5nnju6BD6cul43o2UsbF1K0mhQmZt/flB4wI+vK/uE2Fak9mG7fLn6RzSrl0ipqxJ8VVNgMSmNdONXxbqeAmFEj56wKUY=
+	t=1715694805; cv=none; b=uYbSUIYo2aXx5/ukNAX0H7qPbW3eZ8dYw61MkDg1ErlSAYXvS04/lorgcz9L9DUOU0321uAffGXs3Iq48c7cAdBabOdnZHs/bEL6nZQ8a5WMa+kQYUS6wMR0hBkM1U6nQ9byIhJCpNHcDUeqbSluncpZpMMOeIs2kcFNGXgtQkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715692673; c=relaxed/simple;
-	bh=MzymZe5AeNOy0Hys7FWPDKvERmnV15f9sS+TqgjbX8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6BsVrmA3LBdWAm5WAExs5ik0Q1ilX7bs4W8ne/Xxc/y80MpbObN0ylqR6xufybtgDnRdYI38n7MO9bNJDOFQdCDyzGwuWstbZKXM3eFCbUQqw5ibSNW5e0Ti+X6uX3huMIMPjL0/xLDcHL2Igtkb+uArMzaRBFMlddWorpn8z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/72oiVi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E9D6C4AF0D;
-	Tue, 14 May 2024 13:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715692672;
-	bh=MzymZe5AeNOy0Hys7FWPDKvERmnV15f9sS+TqgjbX8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V/72oiViDqsWQvKmqmyN40qLGPky9eHG2WoE0hkT1b707HnFKH88hWVYmpJ874Z/w
-	 6xuJMVhr80CCQo3v4IgQiOORTsZg/jgb+SlShgIBPI6qVOeq65OexVc67prVVsv8MO
-	 ofdYqK1BI9jXaoYhh8AVDFqpENruOPASnQVOkFBxc4tkd7SBsMpO1vOeNpTgXTfgCY
-	 fMzXYtxOD7I0J+njh6F7JwLh47u1CebSb6FczGKlQ+droxVIZK49i+bYfqEYCPtY1k
-	 HnacziYsZZM2Re2LJNESxUpDFiv0fAvrD9cdb0CHrD+N5jErhJomMKy3FLEh6qFh4z
-	 LFs2rD7aAyGgg==
-Date: Tue, 14 May 2024 08:17:50 -0500
-From: Rob Herring <robh@kernel.org>
-To: matthew.gerlach@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, conor+dt@kernel.org,
-	lpieralisi@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5] dt-bindings: PCI: altera: Convert to YAML
-Message-ID: <20240514131750.GA1214311-robh@kernel.org>
-References: <20240513205913.313592-1-matthew.gerlach@linux.intel.com>
- <171563836233.3319279.14962600621083837198.robh@kernel.org>
+	s=arc-20240116; t=1715694805; c=relaxed/simple;
+	bh=dr9TXOrtnoHYX8KZZqpHd8BZAYxFhyNVAMV1RhuSDXc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NFz2fbnsL0YUS7YYWn6QTN/jMQ9mb4kRdsdTkfYRc+DGZL5YO1zPwmBR68SMCgZ/rExC/6ABd8cXn39r2NKuBejeTv/DMNkkCKIIfAXNoDSMFuifCVsGET8Ac/yB1RKFl6DmNNKgrohduGduldUiD14jDLXJ8FBlgfV1zTILZiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mZfwvQwv; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EDaZ0q005782;
+	Tue, 14 May 2024 13:53:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=QICXyD0cR3LQEfx/tMfWRDGF0Q6fAIZIgFy/7ObjIYc=;
+ b=mZfwvQwvDa/i7rBP1NeyFHndVsoaNa2E1BXZNHVqsagidjrvpuhXXMOREsO90LFufoIC
+ o+b284A3Yp9vVFhR2ezGH0sbcguPl4bAmgzmj1GXd7XPczoMYhLwuar2C2nCQMOLZB9F
+ 3hZ9o+eezErrJfRwn9i8sGAL3KgcptODnYeKivlk+F8IavtvjePygMyl0i46Avy7qJMa
+ ECSsFv/mjpdnOMmLPug2HiB5dr5Cak5WsJJG3qiFFn1jygbnFgziPvNTsz23x3n2IkF2
+ uI77o11V96uk2F7fn6nCVIFkV88BJh2lRxDJd9i3bX/G650nB2fUukSk3t45C8TY46e9 CQ== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y48dng4x6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 13:53:17 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44EBxvws002288;
+	Tue, 14 May 2024 13:53:16 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y2m0p5prr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 13:53:16 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EDrBSm46006560
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 May 2024 13:53:13 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E5A292004B;
+	Tue, 14 May 2024 13:53:10 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7B55820049;
+	Tue, 14 May 2024 13:53:09 +0000 (GMT)
+Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.ibm.com.com (unknown [9.171.90.14])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 14 May 2024 13:53:09 +0000 (GMT)
+From: Krishna Kumar <krishnak@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mahesh@linux.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
+Subject: [PATCH v2 0/2] PCI hotplug driver fixes
+Date: Tue, 14 May 2024 19:22:57 +0530
+Message-ID: <20240514135303.176134-1-krishnak@linux.ibm.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171563836233.3319279.14962600621083837198.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: FYRf0mz2Pwj9CUdx0_2lpbJkEnaXE9zZ
+X-Proofpoint-GUID: FYRf0mz2Pwj9CUdx0_2lpbJkEnaXE9zZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_07,2024-05-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=930 clxscore=1015
+ impostorscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405140098
 
-On Mon, May 13, 2024 at 05:12:42PM -0500, Rob Herring (Arm) wrote:
-> 
-> On Mon, 13 May 2024 15:59:13 -0500, matthew.gerlach@linux.intel.com wrote:
-> > From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> > 
-> > Convert the device tree bindings for the Altera Root Port PCIe controller
-> > from text to YAML.
-> > 
-> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> > ---
-> > v5:
-> >  - add interrupt-conntroller #interrupt-cells to required field
-> >  - don't touch original example dts
-> > 
-> > v4:
-> >  - reorder reg-names to match original binding
-> >  - move reg and reg-names to top level with limits.
-> > 
-> > v3:
-> >  - Added years to copyright
-> >  - Correct order in file of allOf and unevaluatedProperties
-> >  - remove items: in compatible field
-> >  - fix reg and reg-names constraints
-> >  - replace deprecated pci-bus.yaml with pci-host-bridge.yaml
-> >  - fix entries in ranges property
-> >  - remove device_type from required
-> > 
-> > v2:
-> >  - Move allOf: to bottom of file, just like example-schema is showing
-> >  - add constraint for reg and reg-names
-> >  - remove unneeded device_type
-> >  - drop #address-cells and #size-cells
-> >  - change minItems to maxItems for interrupts:
-> >  - change msi-parent to just "msi-parent: true"
-> >  - cleaned up required:
-> >  - make subject consistent with other commits coverting to YAML
-> >  - s/overt/onvert/g
-> > ---
-> >  .../devicetree/bindings/pci/altera-pcie.txt   | 50 ----------
-> >  .../bindings/pci/altr,pcie-root-port.yaml     | 93 +++++++++++++++++++
-> >  2 files changed, 93 insertions(+), 50 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-> > 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/altr,pcie-root-port.example.dtb: pcie@c00000000: interrupt-map: [[0, 0, 0, 1, 2, 1, 0, 0, 0], [2, 2, 2, 0, 0, 0, 3, 2, 3], [0, 0, 0, 4, 2, 4]] is too short
-> 	from schema $id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
 
-You need 3 address cells after the phandles since the interrupt parent 
-has 3 address cells. 
+The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
+addresses below two issues.
 
-What does your actual DT contain and do interrupts work because 
-interrupts never would have worked I think? Making the PCI host the 
-interrupt parent didn't even work in the kernel until somewhat recently 
-(maybe a few years now). That's why a bunch of PCI hosts have an 
-interrupt-controller child node.
+1. Kernel Crash during hot unplug of bridge/switch slot.
 
-Rob
+2. DPC-Support Enablement - Previously, when we do a hot-unplug
+operation on a bridge slot, all the ports and devices behind the
+bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
+operation on the same bridge slot, all the ports and devices behind the
+bridge would not get hot-plugged/online. In this case, Only the first
+port of the bridge gets enabled and the remaining port/devices remain
+unplugged/offline.  After the fix, The hot-unplug and hot-plug
+operations on the slot associated with the bridge started behaving
+correctly and became in sync. Now, after the hot plug operation on the
+same slot, all the bridge ports and devices behind the bridge become
+hot-plugged/online/restored in the same manner as it was before the
+hot-unplug operation.
+
+Krishna Kumar (2):
+  pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
+  powerpc: hotplug driver bridge support
+
+ arch/powerpc/include/asm/ppc-pci.h |  4 ++++
+ arch/powerpc/kernel/pci-hotplug.c  |  5 ++---
+ arch/powerpc/kernel/pci_dn.c       | 32 ++++++++++++++++++++++++++++++
+ drivers/pci/hotplug/pnv_php.c      |  3 +--
+ 4 files changed, 39 insertions(+), 5 deletions(-)
+
+Changelog:
+==========
+v2: 14 May 2024
+  - Used of_property_read_u32() in place of of_get_property() and
+    of_read_number(). [patch2]
+  - Removed some unnecessary variable and changed the function return
+    type from void* to void. [patch2]
+  - Removed the export declaration of
+    pci_traverse_sibling_nodes_and_scan_slot() as its not needed.
+    [patch2]
+-- 
+2.45.0
+
 
