@@ -1,194 +1,135 @@
-Return-Path: <linux-pci+bounces-7457-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D5CA8C5666
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 14:56:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F200A8C56B5
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 15:15:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0B2C1F2240C
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 12:56:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F6E71C21E58
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 13:15:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792827EEE1;
-	Tue, 14 May 2024 12:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB987144306;
+	Tue, 14 May 2024 13:15:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SqHcSbng"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZnqWVaoX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6605A79B;
-	Tue, 14 May 2024 12:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A3455C36;
+	Tue, 14 May 2024 13:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715691334; cv=none; b=ZVGgFFP70v07VQmhzkFIeXcfxzGyJy/AaubjpnnV0Gv734i3gQj5ogi0xAOUyt8LsOY0zkaKYbV0/j0kSx5+E7nphvBsTWzqHQT90X2dMnx7I5VjrjdJLJfQ8alBRf82EIIBU4mq4TlF5fM0uuHi1KR0NEAhGxfPl2GyHIYNZKE=
+	t=1715692542; cv=none; b=eQz6maV0HJlOgVtSC2/Li9NPbE+cLkDRVnTiT8fqe4dajDH5V4/UGWaaILcb2QFN7r+syqVWomWU5R6vepar1h5bW5NjNkONr0qdwTRTjdTs4QhP3KmjIben1sH0UDjM0l7awIx3Jg6TQdwj0aIKBPPMoKL3Lj4cZuz4ZoBdC4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715691334; c=relaxed/simple;
-	bh=ogLSvab9s/uaYk8nU1V6GvKZYCgdD8Qs2Pc34NIY5X0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=REk401ZHEAYvgdh8g52Z1C6NddsmO9qCrrMJ2qGJfTKPMX4lQfBgBVorSikqnMco0AEEwRu8kN/ZZSXPf9NRKEBgwlYNZ6uewoNuys+L9m4J7LtUQDNvOfKQMmj6d/7pbv5fS3Wkp52lMuoTO2K72q0oP7r3bQovx944Na8TGA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SqHcSbng; arc=none smtp.client-ip=217.70.183.200
+	s=arc-20240116; t=1715692542; c=relaxed/simple;
+	bh=DKXSl2fJUbIXFw2H4Ort5sM2RiJbkna9cmj1WYKqJtk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JjADsDCklrmfZWIUpbcY95MguD8jnX2hgVXSvuCN7BrYRC8sOZ8XOgvWy4SAAbkiyGwrhSMMk8hc9N0hxBGo1hjELi3ryxGN5wfLTnrEwelWEygyD94lIaXjMZQLpCI+SPCWFyAKC55ShHOHZAeAiCwfLTRFmOqxm1xW4PYLx/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZnqWVaoX; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 103CD20007;
-	Tue, 14 May 2024 12:55:18 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 46AEF1BF210;
+	Tue, 14 May 2024 13:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715691323;
+	t=1715692537;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1U1lSHyn+UBGYjOWsepzisKyKSuUqvB3hMNBkgKOiVw=;
-	b=SqHcSbngLJlpXZ3Qfg4KbR4KsZwO0iwvwjzI88o8+Tf2e/Q0DD67RsrnIP/SgrGMEJZ3hQ
-	Op8bxR6zbPwZWcXBE35qbKg9Z3diV2VFHHT+H3fyKu2MHKiNGs2FNi+dsvqmB9Id1OI8L0
-	Zcrk4xCQCpNsWLtad7RjLVLwn70oLnGzp+xvl+4UIL1PutKDvt9wCLEPbs0sRSkiIcTmXk
-	x8OVkso3DFNW+I0RFrCfQa9Y5hfPaxWMG0z9OJYQmMRGmNsXb167RC3WrZi0FrHHdbi+5H
-	hL27DJm0xrFQ4QSjQosQYjpgMA0WqCpPxwAYZRB1OAK1XvcexRfN+zuhnoMJTA==
-Date: Tue, 14 May 2024 14:55:18 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: <Steen.Hegelund@microchip.com>
-Cc: <tglx@linutronix.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
- <conor+dt@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
- <kuba@kernel.org>, <pabeni@redhat.com>, <lee@kernel.org>, <arnd@arndb.de>,
- <Horatiu.Vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
- <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
- <saravanak@google.com>, <bhelgaas@google.com>, <p.zabel@pengutronix.de>,
- <Lars.Povlsen@microchip.com>, <Daniel.Machon@microchip.com>,
- <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <Allan.Nielsen@microchip.com>, <luca.ceresoli@bootlin.com>,
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 16/17] mfd: Add support for LAN966x PCI device
-Message-ID: <20240514145518.3e989b83@bootlin.com>
-In-Reply-To: <D1447AHUWV6C.13V6FOWZ80GH@microchip.com>
-References: <20240430083730.134918-1-herve.codina@bootlin.com>
-	<20240430083730.134918-17-herve.codina@bootlin.com>
-	<D1447AHUWV6C.13V6FOWZ80GH@microchip.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	bh=Pc/gRfiTuzZ5RPyjwYBjvgMJyRnkMP8vwPGwGwzIh8Y=;
+	b=ZnqWVaoXCMXFIbdg04aEVwpQG9lCPWSBd/cUpysvbjOO6qSMVxcdWn9y8U3ll9Aw2lEaLb
+	lxnOh12VLederDvkZgQGlxfRdCTpLux3/c7rCnxXPU+eEq/wk5kA4jF+/E7UoOCRFWoLkW
+	Z285enE+GdIoP9DYsWUUnX49bSzhifHAK285WsVkwDk6Rovxcg9fYXFT2MlrqQO0bJR5B0
+	QuAQvLN8XL4IpgP28nIwy3MGPYBXW80M+pvGZB6bxJImGXS2cg9x8HLYbwzJG5o9if0HgS
+	oiWrRcXZvmq+VmYUUeCva144eM8jwi+nKiFrP6bT4Mj9xuLqGj96mee3Ey4a3A==
+Message-ID: <56b2bbcb-7181-4640-93b3-0cf3e2029367@bootlin.com>
+Date: Tue, 14 May 2024 15:15:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 05/11] PCI: cadence: Extract link setup sequence from
+ cdns_pcie_host_setup()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-5-4b8c46711ded@bootlin.com>
+ <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Hi Steen,
-
-On Wed, 8 May 2024 08:20:04 +0000
-<Steen.Hegelund@microchip.com> wrote:
-
-...
-> > +
-> > +static irqreturn_t pci_dev_irq_handler(int irq, void *data)
-> > +{
-> > +       struct pci_dev_intr_ctrl *intr_ctrl = data;
-> > +       int ret;
-> > +
-> > +       ret = generic_handle_domain_irq(intr_ctrl->irq_domain, 0);
-> > +       return ret ? IRQ_NONE : IRQ_HANDLED;
-> > +}
-> > +
-> > +static struct pci_dev_intr_ctrl *pci_dev_create_intr_ctrl(struct pci_dev *pdev)
-> > +{
-> > +       struct pci_dev_intr_ctrl *intr_ctrl;
-> > +       struct fwnode_handle *fwnode;
-> > +       int ret;
-> > +
-> > +       if (!pdev->irq)
-> > +               return ERR_PTR(-EOPNOTSUPP);
-> > +
-> > +       fwnode = dev_fwnode(&pdev->dev);
-> > +       if (!fwnode)
-> > +               return ERR_PTR(-ENODEV);
-> > +
-> > +       intr_ctrl = kmalloc(sizeof(*intr_ctrl), GFP_KERNEL);
-> > +       if (!intr_ctrl)
-> > +               return ERR_PTR(-ENOMEM);
-> > +
-> > +       intr_ctrl->pci_dev = pdev;
-> > +
-> > +       intr_ctrl->irq_domain = irq_domain_create_linear(fwnode, 1, &pci_dev_irq_domain_ops,
-> > +                                                        intr_ctrl);
-> > +       if (!intr_ctrl->irq_domain) {
-> > +               pci_err(pdev, "Failed to create irqdomain\n");
-> > +               ret = -ENOMEM;
-> > +               goto err_free_intr_ctrl;
-> > +       }
-> > +
-> > +       ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_LEGACY);
-> > +       if (ret < 0) {
-> > +               pci_err(pdev, "Unable alloc irq vector (%d)\n", ret);
-> > +               goto err_remove_domain;
-> > +       }
-> > +       intr_ctrl->irq = pci_irq_vector(pdev, 0);
-> > +       ret = request_irq(intr_ctrl->irq, pci_dev_irq_handler, IRQF_SHARED,
-> > +                         dev_name(&pdev->dev), intr_ctrl);
-> > +       if (ret) {
-> > +               pci_err(pdev, "Unable to request irq %d (%d)\n", intr_ctrl->irq, ret);
-> > +               goto err_free_irq_vector;
-> > +       }
-> > +
-> > +       return intr_ctrl;
-> > +
-> > +err_free_irq_vector:
-> > +       pci_free_irq_vectors(pdev);
-> > +err_remove_domain:
-> > +       irq_domain_remove(intr_ctrl->irq_domain);
-> > +err_free_intr_ctrl:
-> > +       kfree(intr_ctrl);
-> > +       return ERR_PTR(ret);
-> > +}
-> > +
-> > +static void pci_dev_remove_intr_ctrl(struct pci_dev_intr_ctrl *intr_ctrl)
-> > +{
-> > +       free_irq(intr_ctrl->irq, intr_ctrl);
-> > +       pci_free_irq_vectors(intr_ctrl->pci_dev);
-> > +       irq_dispose_mapping(irq_find_mapping(intr_ctrl->irq_domain, 0));
-> > +       irq_domain_remove(intr_ctrl->irq_domain);
-> > +       kfree(intr_ctrl);
-> > +}
-> > +  
+On 4/16/24 16:16, Dan Carpenter wrote:
+> On Tue, Apr 16, 2024 at 03:29:54PM +0200, Thomas Richard wrote:
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 5b14f7ee3c79..93d9922730af 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -497,6 +497,30 @@ static int cdns_pcie_host_init(struct device *dev,
+>>  	return cdns_pcie_host_init_address_translation(rc);
+>>  }
+>>  
+>> +int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+>> +{
+>> +	struct cdns_pcie *pcie = &rc->pcie;
+>> +	struct device *dev = rc->pcie.dev;
+>> +	int ret;
+>> +
+>> +	if (rc->quirk_detect_quiet_flag)
+>> +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+>> +
+>> +	cdns_pcie_host_enable_ptm_response(pcie);
+>> +
+>> +	ret = cdns_pcie_start_link(pcie);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to start link\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = cdns_pcie_host_start_link(rc);
+>> +	if (ret)
+>> +		dev_dbg(dev, "PCIe link never came up\n");
 > 
-> It looks like the two functions below (and their helper functions) are so
-> generic that they could be part of the pci driver core support.
-> Any plans for that?
+> If we're going to ignore this error the message should be a dev_err()
+> at least.
 
-Indeed, I tried to write them in a generic way.
-Right now, at least for the next iteration of this series, I don't plan to
-move them as part of the PCI code.
-This piece of code did not get any feedback and I would prefer to keep them
-here for the moment.
+Hello Dan,
 
-Of course, they could be move out of the LAN966x PCI driver later.
+In fact it could not be really an error.
+If you physically don't have a device on the PCIe bus,
+cdns_pcie_host_start_link() will not return 0.
 
-> 
-> > +static void devm_pci_dev_remove_intr_ctrl(void *data)
-> > +{
-> > +       struct pci_dev_intr_ctrl *intr_ctrl = data;
-> > +
-> > +       pci_dev_remove_intr_ctrl(intr_ctrl);
-> > +}
-> > +
-> > +static int devm_pci_dev_create_intr_ctrl(struct pci_dev *pdev)
-> > +{
-> > +       struct pci_dev_intr_ctrl *intr_ctrl;
-> > +
-> > +       intr_ctrl = pci_dev_create_intr_ctrl(pdev);
-> > +
-> > +       if (IS_ERR(intr_ctrl))
-> > +               return PTR_ERR(intr_ctrl);
-> > +
-> > +       return devm_add_action_or_reset(&pdev->dev, devm_pci_dev_remove_intr_ctrl, intr_ctrl);
-> > +}
-> > +  
-> 
+So if we use dev_err(), we will always have the error if there is no
+device on the PCIe bus.
 
-Best regards,
-Hervé
+Regards,
+
+Thomas
+
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
