@@ -1,177 +1,194 @@
-Return-Path: <linux-pci+bounces-7456-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7457-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5FB48C55D7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 14:12:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D5CA8C5666
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 14:56:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 481651F213EA
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 12:12:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0B2C1F2240C
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 12:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0E73B1A3;
-	Tue, 14 May 2024 12:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792827EEE1;
+	Tue, 14 May 2024 12:55:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RSU5IvbS"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SqHcSbng"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D35E1E4B1;
-	Tue, 14 May 2024 12:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6605A79B;
+	Tue, 14 May 2024 12:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715688744; cv=none; b=m6owmcfQ1sjU+a8z0XR/PcSiZRmyk6ec4Mc++1Pzn7IGP3L0K1nUJLNHyoxIm/Omp0NPMajWcWYTaIb3/zmJsvYsm4NvDxQ4W/aq7vA3ZcD22S3Kd5PgCht7azpA8KveA0rU6K/a+xc+HopRpAvvEzlJh+pmBHJdKPOSzdQilgQ=
+	t=1715691334; cv=none; b=ZVGgFFP70v07VQmhzkFIeXcfxzGyJy/AaubjpnnV0Gv734i3gQj5ogi0xAOUyt8LsOY0zkaKYbV0/j0kSx5+E7nphvBsTWzqHQT90X2dMnx7I5VjrjdJLJfQ8alBRf82EIIBU4mq4TlF5fM0uuHi1KR0NEAhGxfPl2GyHIYNZKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715688744; c=relaxed/simple;
-	bh=yvyZt27ScHuMAxnq3bm6Nvou2bxi4i+h6DRBGE2LOE4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DsFZ0YBaDm/ujgTT1xgrMCmjCsQDexITLGnfmyis0NGLlt72dKXQBacAIeECQhTIxyIfBaHmme2pkesm/st4En6zDynb4Fjc02p+0xiVTGekNpF/BFX3Msl/9zl9aGPQHCd8YGWFIZbYfWhw75FabLTcg4pbY/9N6E1gzV+P+YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RSU5IvbS; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44ECBo3G115948;
-	Tue, 14 May 2024 07:11:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715688710;
-	bh=OsXgZbCTz/uuKLSGsGQZvWLyWdVYSJ4fAsjKQWfCgac=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=RSU5IvbSkiCst0Z228ER9IBFdciijquqVWZfTKVGX1ee0iIlHHlsagsqJOcixTQ7D
-	 hhNHtB5B8skwhev606unk2HF9CYAzk9c0NOeKc0q/KAXdZFSk7qGSS2xNAQNMPDfJc
-	 UN6eaNPGYAJjGZQWLALBYzvrIeqKp4fexuoorAy0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44ECBo39105112
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 14 May 2024 07:11:50 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 14
- May 2024 07:11:50 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 14 May 2024 07:11:50 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44ECBnnY006071;
-	Tue, 14 May 2024 07:11:50 -0500
-Date: Tue, 14 May 2024 17:41:48 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <manivannan.sadhasivam@linaro.org>, <fancer.lancer@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <cassel@kernel.org>,
-        <dlemoal@kernel.org>, <yoshihiro.shimoda.uh@renesas.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH v7 2/2] PCI: keystone: Fix pci_ops for AM654x SoC
-Message-ID: <8b56604d-a2b8-4227-8a6f-c477332416b4@ti.com>
-References: <20240328085041.2916899-3-s-vadapalli@ti.com>
- <20240513215350.GA1996021@bhelgaas>
+	s=arc-20240116; t=1715691334; c=relaxed/simple;
+	bh=ogLSvab9s/uaYk8nU1V6GvKZYCgdD8Qs2Pc34NIY5X0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=REk401ZHEAYvgdh8g52Z1C6NddsmO9qCrrMJ2qGJfTKPMX4lQfBgBVorSikqnMco0AEEwRu8kN/ZZSXPf9NRKEBgwlYNZ6uewoNuys+L9m4J7LtUQDNvOfKQMmj6d/7pbv5fS3Wkp52lMuoTO2K72q0oP7r3bQovx944Na8TGA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SqHcSbng; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 103CD20007;
+	Tue, 14 May 2024 12:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715691323;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1U1lSHyn+UBGYjOWsepzisKyKSuUqvB3hMNBkgKOiVw=;
+	b=SqHcSbngLJlpXZ3Qfg4KbR4KsZwO0iwvwjzI88o8+Tf2e/Q0DD67RsrnIP/SgrGMEJZ3hQ
+	Op8bxR6zbPwZWcXBE35qbKg9Z3diV2VFHHT+H3fyKu2MHKiNGs2FNi+dsvqmB9Id1OI8L0
+	Zcrk4xCQCpNsWLtad7RjLVLwn70oLnGzp+xvl+4UIL1PutKDvt9wCLEPbs0sRSkiIcTmXk
+	x8OVkso3DFNW+I0RFrCfQa9Y5hfPaxWMG0z9OJYQmMRGmNsXb167RC3WrZi0FrHHdbi+5H
+	hL27DJm0xrFQ4QSjQosQYjpgMA0WqCpPxwAYZRB1OAK1XvcexRfN+zuhnoMJTA==
+Date: Tue, 14 May 2024 14:55:18 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: <Steen.Hegelund@microchip.com>
+Cc: <tglx@linutronix.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+ <conor+dt@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+ <kuba@kernel.org>, <pabeni@redhat.com>, <lee@kernel.org>, <arnd@arndb.de>,
+ <Horatiu.Vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
+ <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+ <saravanak@google.com>, <bhelgaas@google.com>, <p.zabel@pengutronix.de>,
+ <Lars.Povlsen@microchip.com>, <Daniel.Machon@microchip.com>,
+ <alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <Allan.Nielsen@microchip.com>, <luca.ceresoli@bootlin.com>,
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 16/17] mfd: Add support for LAN966x PCI device
+Message-ID: <20240514145518.3e989b83@bootlin.com>
+In-Reply-To: <D1447AHUWV6C.13V6FOWZ80GH@microchip.com>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+	<20240430083730.134918-17-herve.codina@bootlin.com>
+	<D1447AHUWV6C.13V6FOWZ80GH@microchip.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240513215350.GA1996021@bhelgaas>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Mon, May 13, 2024 at 04:53:50PM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 28, 2024 at 02:20:41PM +0530, Siddharth Vadapalli wrote:
-> > In the process of converting .scan_bus() callbacks to .add_bus(), the
-> > ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
-> > The .scan_bus() method belonged to ks_pcie_host_ops which was specific
-> > to controller version 3.65a, while the .add_bus() method had been added
-> > to ks_pcie_ops which is shared between the controller versions 3.65a and
-> > 4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
-> > ks_pcie_v3_65_add_bus() method is applicable to the controller version
-> > 4.90a which is present in AM654x SoCs.
-> > 
-> > Thus, as a fix, remove "ks_pcie_v3_65_add_bus()" and move its contents
-> > to the .msi_init callback "ks_pcie_msi_host_init()" which is specific to
-> > the 3.65a controller.
-> > 
-> > Fixes: 6ab15b5e7057 ("PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus")
-> > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> > Suggested-by: Niklas Cassel <cassel@kernel.org>
-> > Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Hi Steen,
+
+On Wed, 8 May 2024 08:20:04 +0000
+<Steen.Hegelund@microchip.com> wrote:
+
+...
+> > +
+> > +static irqreturn_t pci_dev_irq_handler(int irq, void *data)
+> > +{
+> > +       struct pci_dev_intr_ctrl *intr_ctrl = data;
+> > +       int ret;
+> > +
+> > +       ret = generic_handle_domain_irq(intr_ctrl->irq_domain, 0);
+> > +       return ret ? IRQ_NONE : IRQ_HANDLED;
+> > +}
+> > +
+> > +static struct pci_dev_intr_ctrl *pci_dev_create_intr_ctrl(struct pci_dev *pdev)
+> > +{
+> > +       struct pci_dev_intr_ctrl *intr_ctrl;
+> > +       struct fwnode_handle *fwnode;
+> > +       int ret;
+> > +
+> > +       if (!pdev->irq)
+> > +               return ERR_PTR(-EOPNOTSUPP);
+> > +
+> > +       fwnode = dev_fwnode(&pdev->dev);
+> > +       if (!fwnode)
+> > +               return ERR_PTR(-ENODEV);
+> > +
+> > +       intr_ctrl = kmalloc(sizeof(*intr_ctrl), GFP_KERNEL);
+> > +       if (!intr_ctrl)
+> > +               return ERR_PTR(-ENOMEM);
+> > +
+> > +       intr_ctrl->pci_dev = pdev;
+> > +
+> > +       intr_ctrl->irq_domain = irq_domain_create_linear(fwnode, 1, &pci_dev_irq_domain_ops,
+> > +                                                        intr_ctrl);
+> > +       if (!intr_ctrl->irq_domain) {
+> > +               pci_err(pdev, "Failed to create irqdomain\n");
+> > +               ret = -ENOMEM;
+> > +               goto err_free_intr_ctrl;
+> > +       }
+> > +
+> > +       ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_LEGACY);
+> > +       if (ret < 0) {
+> > +               pci_err(pdev, "Unable alloc irq vector (%d)\n", ret);
+> > +               goto err_remove_domain;
+> > +       }
+> > +       intr_ctrl->irq = pci_irq_vector(pdev, 0);
+> > +       ret = request_irq(intr_ctrl->irq, pci_dev_irq_handler, IRQF_SHARED,
+> > +                         dev_name(&pdev->dev), intr_ctrl);
+> > +       if (ret) {
+> > +               pci_err(pdev, "Unable to request irq %d (%d)\n", intr_ctrl->irq, ret);
+> > +               goto err_free_irq_vector;
+> > +       }
+> > +
+> > +       return intr_ctrl;
+> > +
+> > +err_free_irq_vector:
+> > +       pci_free_irq_vectors(pdev);
+> > +err_remove_domain:
+> > +       irq_domain_remove(intr_ctrl->irq_domain);
+> > +err_free_intr_ctrl:
+> > +       kfree(intr_ctrl);
+> > +       return ERR_PTR(ret);
+> > +}
+> > +
+> > +static void pci_dev_remove_intr_ctrl(struct pci_dev_intr_ctrl *intr_ctrl)
+> > +{
+> > +       free_irq(intr_ctrl->irq, intr_ctrl);
+> > +       pci_free_irq_vectors(intr_ctrl->pci_dev);
+> > +       irq_dispose_mapping(irq_find_mapping(intr_ctrl->irq_domain, 0));
+> > +       irq_domain_remove(intr_ctrl->irq_domain);
+> > +       kfree(intr_ctrl);
+> > +}
+> > +  
 > 
-> Thanks for splitting this into two patches.  Krzysztof has applied
-> both to pci/controller/keystone and we hope to merge them for v6.10.
-> 
-> I *would* like the commit log to be at a little higher level if
-> possible.  Right now it's a detailed description at the level of the
-> code edits, but it doesn't say *why* we want this change.
-> 
-> I think the first cut at this was
-> https://lore.kernel.org/linux-pci/20231011123451.34827-1-s-vadapalli@ti.com/t/#u,
-> which mentioned Completion Timeouts during MSI-X configuration and 45
-> second delays during boot.
-> 
-> IIUC, prior to 6ab15b5e7057, ks_pcie_v3_65_scan_bus() initialized BAR
-> 0 and was only used for v3.65a devices.  6ab15b5e7057 renamed it to
-> ks_pcie_v3_65_add_bus() and called it for both v3.65a and v4.90a.
-> 
-> I think the problem is that in the current code, the
-> ks_pcie_ops.add_bus() method (ks_pcie_v3_65_add_bus()) is used for all
-> devices (both v3.65a and v4.90a).  So I guess doing the BAR 0 setup on
-> v4.90a broke something there?
+> It looks like the two functions below (and their helper functions) are so
+> generic that they could be part of the pci driver core support.
+> Any plans for that?
 
-BAR0 was set to a different value on AM654x SoC which has the v4.90a
-controller, which is identical to what is set even for the v3.65a
-controller. The difference is that BAR0 is programmed to a different
-value for enabling inbound MSI writes on top of the common configuration
-performed for BAR0.
+Indeed, I tried to write them in a generic way.
+Right now, at least for the next iteration of this series, I don't plan to
+move them as part of the PCI code.
+This piece of code did not get any feedback and I would prefer to keep them
+here for the moment.
 
-Common configuration for BAR0:
-ks_pcie_probe
-  dw_pcie_host_init
-    dw_pcie_setup_rc
-    ...
-     /* Setup RC BARs */
-     dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0x00000004);
-     dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
-     ...
-     dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
-    ...
-
-MSI specific configuration of BAR0 performed after the common
-configuration via the ks_pcie_v3_65_scan_bus() callback:
-	/* Configure and set up BAR0 */
-	ks_pcie_set_dbi_mode(ks_pcie);
-
-	/* Enable BAR0 */
-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
-
-	ks_pcie_clear_dbi_mode(ks_pcie);
-
-	 /*
-	  * For BAR0, just setting bus address for inbound writes (MSI) should
-	  * be sufficient.  Use physical address to avoid any conflicts.
-	  */
-	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
-
-The above configuration of BAR0 shouldn't be performed for AM654x SoC.
-While I am not certain, the timeouts are probably a result of the BAR
-being programmed to a wrong value which results in a "no match" outcome.
+Of course, they could be move out of the LAN966x PCI driver later.
 
 > 
-> I'm not quite clear on the mechanism, but it would be helpful to at
-> least know what's wrong and on what platform.  E.g., currently v4.90
-> suffers Completion Timeouts and 45 second boot delays?  And this patch
-> fixes that?
+> > +static void devm_pci_dev_remove_intr_ctrl(void *data)
+> > +{
+> > +       struct pci_dev_intr_ctrl *intr_ctrl = data;
+> > +
+> > +       pci_dev_remove_intr_ctrl(intr_ctrl);
+> > +}
+> > +
+> > +static int devm_pci_dev_create_intr_ctrl(struct pci_dev *pdev)
+> > +{
+> > +       struct pci_dev_intr_ctrl *intr_ctrl;
+> > +
+> > +       intr_ctrl = pci_dev_create_intr_ctrl(pdev);
+> > +
+> > +       if (IS_ERR(intr_ctrl))
+> > +               return PTR_ERR(intr_ctrl);
+> > +
+> > +       return devm_add_action_or_reset(&pdev->dev, devm_pci_dev_remove_intr_ctrl, intr_ctrl);
+> > +}
+> > +  
+> 
 
-Yes, the Completion Timeouts cause the 45 second boot delays and this
-patch fixes that.
-
-Regards,
-Siddharth.
+Best regards,
+Hervé
 
