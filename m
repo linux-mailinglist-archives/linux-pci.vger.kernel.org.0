@@ -1,138 +1,225 @@
-Return-Path: <linux-pci+bounces-7460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 296C78C5765
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 15:53:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F08128C5769
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 15:53:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D28461F2167A
-	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 13:53:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4309E1F21671
+	for <lists+linux-pci@lfdr.de>; Tue, 14 May 2024 13:53:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987211448EA;
-	Tue, 14 May 2024 13:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C9381448EA;
+	Tue, 14 May 2024 13:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mZfwvQwv"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tn/p9SaD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CB71448E4;
-	Tue, 14 May 2024 13:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AAE1448C0;
+	Tue, 14 May 2024 13:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715694805; cv=none; b=uYbSUIYo2aXx5/ukNAX0H7qPbW3eZ8dYw61MkDg1ErlSAYXvS04/lorgcz9L9DUOU0321uAffGXs3Iq48c7cAdBabOdnZHs/bEL6nZQ8a5WMa+kQYUS6wMR0hBkM1U6nQ9byIhJCpNHcDUeqbSluncpZpMMOeIs2kcFNGXgtQkA=
+	t=1715694823; cv=none; b=Qgk11+fY4fyOvPlkpsJix7wIdrU/HVRVbE9vbbk7n3s9umTZz3vnrJ6acsgVtC19xf4BPmpnJjiQKB1+XcM56lxcmsP6uKrzomDxR+JzIgBGiWGYyuQqDnlJUr2F7SVnrvTSvAby9cCm8YwupvsaUrD6EZt7uyRCXmwzIWCeHic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715694805; c=relaxed/simple;
-	bh=dr9TXOrtnoHYX8KZZqpHd8BZAYxFhyNVAMV1RhuSDXc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NFz2fbnsL0YUS7YYWn6QTN/jMQ9mb4kRdsdTkfYRc+DGZL5YO1zPwmBR68SMCgZ/rExC/6ABd8cXn39r2NKuBejeTv/DMNkkCKIIfAXNoDSMFuifCVsGET8Ac/yB1RKFl6DmNNKgrohduGduldUiD14jDLXJ8FBlgfV1zTILZiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mZfwvQwv; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1715694823; c=relaxed/simple;
+	bh=L3kj9/0PS5fujmRifVfdAO/ywO4Ilr59hKUwNPLOSqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p032zYtjcsZnnjK0rTVXun105DrcPC0yzfEDxJZkLIGPTk0gnxNA6OMkl6O/Zn/RqtQ0jzZDHGqSusbXhJh3dfuvvB9k4jjzlhw2Vbwy/RWVQq6esMRLHfXx3UQnyyRhUCSDHAkBtdhhwiWbplsk+PYcLPVVw0xfFrqucNkYXic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tn/p9SaD; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EDaZ0q005782;
-	Tue, 14 May 2024 13:53:18 GMT
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44EDOrdm009536;
+	Tue, 14 May 2024 13:53:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=QICXyD0cR3LQEfx/tMfWRDGF0Q6fAIZIgFy/7ObjIYc=;
- b=mZfwvQwvDa/i7rBP1NeyFHndVsoaNa2E1BXZNHVqsagidjrvpuhXXMOREsO90LFufoIC
- o+b284A3Yp9vVFhR2ezGH0sbcguPl4bAmgzmj1GXd7XPczoMYhLwuar2C2nCQMOLZB9F
- 3hZ9o+eezErrJfRwn9i8sGAL3KgcptODnYeKivlk+F8IavtvjePygMyl0i46Avy7qJMa
- ECSsFv/mjpdnOMmLPug2HiB5dr5Cak5WsJJG3qiFFn1jygbnFgziPvNTsz23x3n2IkF2
- uI77o11V96uk2F7fn6nCVIFkV88BJh2lRxDJd9i3bX/G650nB2fUukSk3t45C8TY46e9 CQ== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y48dng4x6-1
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=1iY0s1zZhBBAfiAKp0LrIwCzbFzKqA5oCwjB82eWjYI=;
+ b=tn/p9SaD6U9JThFOUxFMCU/QUg18sjeToJY+iyTU1thf/eWX2tjN8pxtSluxWQldgYIH
+ Fx7UhZftjX10G+3cHFhC9Vz76VwTa/kKbl6lDtUPnVi71hOt2HwkZSpa/IVVgBxhfYPE
+ 22W8vVDM02SCVqZzBTJdQqYYTXu4S1U2p+hdcWHwVuuKtnN5ATC6QdSes2j21nF/X82G
+ GwOEdSupaG0ZqzsqPSz8CEmX1xgr2/4i0FOT0/L4e5Xj3UHfOo1ED9bYrdMt+TCEyx6S
+ Pi/hH3a2uORvg3BiNF41nU47v617J2Slz7+L9nxeZliL7zFm9ypmMtK8kaFnX1Rep+dU PA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y44fr0ra1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 13:53:17 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44EBxvws002288;
-	Tue, 14 May 2024 13:53:16 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y2m0p5prr-1
+	Tue, 14 May 2024 13:53:27 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44EDrR6S021012;
+	Tue, 14 May 2024 13:53:27 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y44fr0r9x-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 May 2024 13:53:16 +0000
+	Tue, 14 May 2024 13:53:27 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44ECgWM2006769;
+	Tue, 14 May 2024 13:53:26 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3y2mgmdk6f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 13:53:26 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EDrBSm46006560
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44EDrKKe56885598
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 May 2024 13:53:13 GMT
+	Tue, 14 May 2024 13:53:22 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E5A292004B;
-	Tue, 14 May 2024 13:53:10 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 1A7CA20040;
+	Tue, 14 May 2024 13:53:18 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B55820049;
-	Tue, 14 May 2024 13:53:09 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id CA51D2004D;
+	Tue, 14 May 2024 13:53:14 +0000 (GMT)
 Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.ibm.com.com (unknown [9.171.90.14])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 14 May 2024 13:53:09 +0000 (GMT)
+	Tue, 14 May 2024 13:53:14 +0000 (GMT)
 From: Krishna Kumar <krishnak@linux.ibm.com>
 To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        mahesh@linux.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
-Subject: [PATCH v2 0/2] PCI hotplug driver fixes
-Date: Tue, 14 May 2024 19:22:57 +0530
-Message-ID: <20240514135303.176134-1-krishnak@linux.ibm.com>
+        mahesh@linux.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gaurav Batra <gbatra@linux.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>
+Subject: [PATCH v2 1/2] pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
+Date: Tue, 14 May 2024 19:22:58 +0530
+Message-ID: <20240514135303.176134-2-krishnak@linux.ibm.com>
 X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240514135303.176134-1-krishnak@linux.ibm.com>
+References: <20240514135303.176134-1-krishnak@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Wa3IYBqgGVAMYRkKnq7NutEkVCdIPvp5
+X-Proofpoint-ORIG-GUID: 3C96E-da0-NLomBqUxb7B7QoJvy98ow5
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: FYRf0mz2Pwj9CUdx0_2lpbJkEnaXE9zZ
-X-Proofpoint-GUID: FYRf0mz2Pwj9CUdx0_2lpbJkEnaXE9zZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-14_07,2024-05-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=930 clxscore=1015
- impostorscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405140098
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405140098
+
+Description of the problem: The hotplug driver for powerpc
+(pci/hotplug/pnv_php.c) gives kernel crash when we try to
+hot-unplug/disable the PCIe switch/bridge from the PHB.
+
+Root Cause of Crash: The crash is due to the reason that, though the msi
+data structure has been released during disable/hot-unplug path and it
+has been assigned with NULL, still during unregistartion the code was
+again trying to explicitly disable the msi which causes the Null pointer
+dereference and kernel crash.
+
+Proposed Fix : The fix is to correct the check during unregistration path
+so that the code should not  try to invoke pci_disable_msi/msix() if its
+data structure is already freed.
+
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Gaurav Batra <gbatra@linux.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Brian King <brking@linux.vnet.ibm.com>
+
+Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
+---
+Command used for reproducing the bug:
+
+    echo 0 > /sys/bus/pci/slots/C5/power
+
+where C5 is slot associated with bridge.
+
+Snippet of Crash:
+
+ Kernel attempted to read user page (10) - exploit attempt? (uid: 0)
+ BUG: Kernel NULL pointer dereference on read at 0x00000010
+ Faulting instruction address: 0xc000000000fad7d4
+ Oops: Kernel access of bad area, sig: 11 [#1]
+ Hardware name: 5105-22E POWER9 0x4e1203 opal:v7.0-39-g4660e63a PowerNV
+ NIP [c000000000fad7d4] mutex_lock+0x34/0x88
+ LR [c000000000fad7c8] mutex_lock+0x28/0x88
+ Call Trace:
+ [c00000017075f940] [c000000000fad7c8] mutex_lock+0x28/0x88 (unreliable)
+ [c00000017075f970] [c000000000214464] msi_lock_descs+0x28/0x3c
+ [c00000017075f990] [c0000000008e8be8] pci_disable_msi+0x68/0xa8
+ [c00000017075f9c0] [c00000000090f0a4] pnv_php_disable_irq+0x2a0/0x2b0
+ [c00000017075fab0] [c00000000090f128] pnv_php_free_slot+0x74/0xc4
+ [c00000017075fb30] [c000000000912184] pnv_php_disable_slot.part.0+0x1b8/0x24c
+ [c00000017075fc00] [c000000000902df0] power_write_file+0xf8/0x18c
+ [c00000017075fc80] [c0000000008f84d8] pci_slot_attr_store+0x40/0x5c
+ [c00000017075fca0] [c0000000006b4834] sysfs_kf_write+0x64/0x78
+ [c00000017075fcc0] [c0000000006b3300] kernfs_fop_write_iter+0x1b8/0x2dc
+ [c00000017075fd10] [c0000000005b3eb0] vfs_write+0x224/0x4e8
+ [c00000017075fdc0] [c0000000005b44b0] ksys_write+0x88/0x150
+ [c00000017075fe10] [c000000000030864] system_call_exception+0x124/0x320
+ [c00000017075fe50] [c00000000000cedc] system_call_vectored_common+0x15c/0x2ec
+ --- interrupt: 3000 at 0x7fffb9748774
 
 
-The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
-addresses below two issues.
+Root-Cause: Its safe to call pci_disable_msi() if its associated data structre are
+not freed (during bailout path). But when the driver code disables the
+bridge during hot-unplug operation, its msi data structure becomes NULL
+(php_slot->pdev->dev.msi.data:0000000000000000).  This happens before
+unregistration and during disable path in function
+msi_device_data_release(). In this case, its not safe to explicitly call
+pci_disable_msi/msix() due to NULL pointer dereference. But since the
+current code does so, the crash is happening at the line
+mutex_lock(&dev->msi.data->mutex).
 
-1. Kernel Crash during hot unplug of bridge/switch slot.
 
-2. DPC-Support Enablement - Previously, when we do a hot-unplug
-operation on a bridge slot, all the ports and devices behind the
-bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
-operation on the same bridge slot, all the ports and devices behind the
-bridge would not get hot-plugged/online. In this case, Only the first
-port of the bridge gets enabled and the remaining port/devices remain
-unplugged/offline.  After the fix, The hot-unplug and hot-plug
-operations on the slot associated with the bridge started behaving
-correctly and became in sync. Now, after the hot plug operation on the
-same slot, all the bridge ports and devices behind the bridge become
-hot-plugged/online/restored in the same manner as it was before the
-hot-unplug operation.
+FIX: In the current code, there are two paths to invoke
+pci_disable_msi/msix(). In the error/bailout path, first argument of the
+check - if(disable_device || irq > 0), i.e. disable_device is true, so
+it will always invoke pci_disable_msi/msix(), it will never depend on
+second argument. In this path it's fine to call pci_disable_msi/msix().
+During the slot releasing/disable/hot-unpug path the disable_device is
+false, irq is having old value which is making the overall check true
+and causing the crash. Of course, we should not choose the old/stale
+value of irq but should choose php_slot->irq for check.  Also, since
+php_slot->irq value is always 0 before the check, so it does not matter
+if it will not be included into the check.  So, the check can be formed
+with only one argument i.e. disable_device.  Based on its value
+pci_disable_msi/msix() will be invoked and this is the fix for the
+crash. During the bailout path its value will be true and during the
+hot-unplug operation on the bridge slot, its value will be false.
 
-Krishna Kumar (2):
-  pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
-  powerpc: hotplug driver bridge support
+ drivers/pci/hotplug/pnv_php.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
- arch/powerpc/include/asm/ppc-pci.h |  4 ++++
- arch/powerpc/kernel/pci-hotplug.c  |  5 ++---
- arch/powerpc/kernel/pci_dn.c       | 32 ++++++++++++++++++++++++++++++
- drivers/pci/hotplug/pnv_php.c      |  3 +--
- 4 files changed, 39 insertions(+), 5 deletions(-)
-
-Changelog:
-==========
-v2: 14 May 2024
-  - Used of_property_read_u32() in place of of_get_property() and
-    of_read_number(). [patch2]
-  - Removed some unnecessary variable and changed the function return
-    type from void* to void. [patch2]
-  - Removed the export declaration of
-    pci_traverse_sibling_nodes_and_scan_slot() as its not needed.
-    [patch2]
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index 694349be9d0a..573a41869c15 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -40,7 +40,6 @@ static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
+ 				bool disable_device)
+ {
+ 	struct pci_dev *pdev = php_slot->pdev;
+-	int irq = php_slot->irq;
+ 	u16 ctrl;
+ 
+ 	if (php_slot->irq > 0) {
+@@ -59,7 +58,7 @@ static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
+ 		php_slot->wq = NULL;
+ 	}
+ 
+-	if (disable_device || irq > 0) {
++	if (disable_device) {
+ 		if (pdev->msix_enabled)
+ 			pci_disable_msix(pdev);
+ 		else if (pdev->msi_enabled)
 -- 
 2.45.0
 
