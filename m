@@ -1,113 +1,165 @@
-Return-Path: <linux-pci+bounces-7531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70B788C6D70
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 22:55:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 73C5B8C6D74
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 22:57:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27E591F213CE
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 20:55:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D4551F219B3
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 20:57:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EACC115ADBE;
-	Wed, 15 May 2024 20:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAD4B15ADBE;
+	Wed, 15 May 2024 20:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/U46up4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFibrt+W"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC07B3BBEA;
-	Wed, 15 May 2024 20:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F9E3BBEA
+	for <linux-pci@vger.kernel.org>; Wed, 15 May 2024 20:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715806549; cv=none; b=JSAbrrI45Kl+AN+L5x6FuaQUamuDvLA2oGDbNhTkK7eIWIutkvgJk7Wm6HEVS3nN+7ox+lKPAosmYqKaDWeFuokvpcobfLpbygurRQWBmXMEQ/hXbVpkeDsiW3kqZaDwLz0Pu1oKSmiN3EvAv/J3n1mQjVrG6c3bM6orS9v4r/U=
+	t=1715806657; cv=none; b=SEv9OiAcCK0Bqo0gvKhKwA3au/FnN9nD8DdQtyVi9I/iQ1OeAuVgzUDHV9/INzI1UVOhTSlLxtNZi8kbAWlBDSxzCa8eDP2b6npV9GH7fXq2joFb4Ojp1qohyEbcERUVyyVQxLi7hH44ukYDHWK80/wnzVAr/9+EX7b+5fEADFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715806549; c=relaxed/simple;
-	bh=AAeXwwHWMP0eHtZAb20qWMKLq5n94EYBqJos5Y7FBEA=;
+	s=arc-20240116; t=1715806657; c=relaxed/simple;
+	bh=iD1gc3+Wt14qW5hJ3ZyQXWD9Xptwr3gLAOqU2wZvQiE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tno2Y4jqDCznrRJPnLcGvto5bsDUzxIYv/o5BFMY/VbXXQAhyy9znqUTxW9kWbAv9M9BZkI1KTfDpK9xmsChinn658ahm5o2doe7mR0bMF6N0GSBm6sjYnkWbwR/wdTk1Tm+bQoXXOKVrwS3qVSH3+yQhXhZrV/Zz/yUTXKtj5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/U46up4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A379C116B1;
-	Wed, 15 May 2024 20:55:49 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hsRmSyNUrn67DBAViXq7YI6vJcqUTcMzhQ8CwpS3HlmsoFAIg66nXvqNOFWdLQXP1R1s8IzVOjBlu07jJC3v/OBjb8UtzoP7rS7C7GzvIzDUI1WmRlerV2o37P1qUYhTlNu2dPYK0qghDhfJJJr2CHKmNW/B+DONzZtonUafBx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFibrt+W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED56FC32781;
+	Wed, 15 May 2024 20:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715806549;
-	bh=AAeXwwHWMP0eHtZAb20qWMKLq5n94EYBqJos5Y7FBEA=;
+	s=k20201202; t=1715806657;
+	bh=iD1gc3+Wt14qW5hJ3ZyQXWD9Xptwr3gLAOqU2wZvQiE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=d/U46up4/1F7xAwdTRSJTYMeQ0ft+y0RZ8yEnDsVnOWx+XUXmNLq2ZaTcS0PwJi21
-	 Is92bD6XPKbod2xd710vZHuXroJBdnqCE0oG33ui/DUsPLCbd4c4Cp9PWNZl/nUcrj
-	 xm0WCopuH4JLUcRkkbgoymeB+Nh2zNH8zj0zXBRIyFtVutNG5YpWo/a4L+m1OHjdnp
-	 0t7bGloxDN3jh2OUCoQOjD+rKKaVlksAjgQH2/psvco2L3HLNQSqgCS8Wq87rUXFyI
-	 gN03XVNbAohU4I6fVzPVuWD1LJnR8QiZAITxgfqIXKJB1mPC6+y4j6dGIYyej7/+re
-	 GSDrse3kZS56g==
-Date: Wed, 15 May 2024 15:55:47 -0500
+	b=ZFibrt+WUXeF0xAks7MbCyZQTXKQhpkVvrCHmz6l/T1UFIsdkXrOMbw96g3/35xhE
+	 yQftSpa7lT6HUOxRVK83TB53MKaRmXH8tVYdyvjTUXmGKFCQ2NMarVOl8yLnoDUwfP
+	 blLqAhmx5aOlJ4nBHBzJDS6J6hdZ2LwcbEs+66tRU4wcAEsysaaDxWpEQE01WLvh1d
+	 uBIIpsSJm0sWG4E5H3/oJVDYzJEGChgYIbuZVL8PNNuR6lGuxwYhV7h9DlvKV/JVjE
+	 dKehZ/wmC7vNyXu2rHMDvdNTj1WUh+YI52Htf0gd70X2rmVfWAvwVACSX6qMh9jRPX
+	 0Q1Rv9MJ/DDJA==
+Date: Wed, 15 May 2024 15:57:35 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Cc: rick.wertenbroek@heig-vd.ch, dlemoal@kernel.org, stable@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip-ep: Remove wrong mask on subsys_vendor_id
-Message-ID: <20240515205547.GA2137633@bhelgaas>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Lei Chuanhua <lchuanhua@maxlinear.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh@kernel.org>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2] PCI: dw-rockchip: Add error messages in .probe()s
+ error paths
+Message-ID: <20240515205735.GA2137771@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240403144508.489835-1-rick.wertenbroek@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240227141256.413055-2-ukleinek@debian.org>
 
-On Wed, Apr 03, 2024 at 04:45:08PM +0200, Rick Wertenbroek wrote:
-> Remove wrong mask on subsys_vendor_id. Both the Vendor ID and Subsystem
-> Vendor ID are u16 variables and are written to a u32 register of the
-> controller. The Subsystem Vendor ID was always 0 because the u16 value
-> was masked incorrectly with GENMASK(31,16) resulting in all lower 16
-> bits being set to 0 prior to the shift.
+On Tue, Feb 27, 2024 at 03:12:54PM +0100, Uwe Kleine-König wrote:
+> Drivers that silently fail to probe provide a bad user experience and
+> make it unnecessarily hard to debug such a failure. Fix it by using
+> dev_err_probe() instead of a plain return.
 > 
-> Remove both masks as they are unnecessary and set the register correctly
-> i.e., the lower 16-bits are the Vendor ID and the upper 16-bits are the
-> Subsystem Vendor ID.
-> 
-> This is documented in the RK3399 TRM section 17.6.7.1.17
-> 
-> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
-> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> Cc: stable@vger.kernel.org
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Uwe Kleine-König <ukleinek@debian.org>
 
-Applied to pci/controller/rockchip by Krzysztof, but his outgoing mail
-queue got stuck.  I added Damien's Reviewed-by.  Trying to squeeze
-into v6.9.
+Krzysztof applied this to pci/controller/rockchip with Reviewed-by
+from Jesper and Mani, but his outgoing mail queue got stuck.  Trying
+to squeeze into v6.9.
 
 > ---
->  drivers/pci/controller/pcie-rockchip-ep.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+> Hello,
 > 
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-> index c9046e97a1d2..37d4bcb8bd5b 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -98,10 +98,9 @@ static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
+> changes since (implicit) v1, sent with Message-Id:
+> 20240227111837.395422-2-ukleinek@debian.org:
+> 
+>  - use dev instead of rockchip->pci.dev as noticed by Serge Semin.
+>  - added Reviewed-by: tag for Heiko. I assume he agrees to above
+>    improvement and adding the tag despite the change is fine.
+> 
+> Best regards
+> Uwe
+> 
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 21 ++++++++++++-------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index d6842141d384..a13ca83ce260 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -225,11 +225,15 @@ static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
 >  
->  	/* All functions share the same vendor ID with function 0 */
->  	if (fn == 0) {
-> -		u32 vid_regs = (hdr->vendorid & GENMASK(15, 0)) |
-> -			       (hdr->subsys_vendor_id & GENMASK(31, 16)) << 16;
-> -
-> -		rockchip_pcie_write(rockchip, vid_regs,
-> +		rockchip_pcie_write(rockchip,
-> +				    hdr->vendorid |
-> +				    hdr->subsys_vendor_id << 16,
->  				    PCIE_CORE_CONFIG_VENDOR);
+>  	ret = devm_clk_bulk_get_all(dev, &rockchip->clks);
+>  	if (ret < 0)
+> -		return ret;
+> +		return dev_err_probe(dev, ret, "failed to get clocks\n");
+>  
+>  	rockchip->clk_cnt = ret;
+>  
+> -	return clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
+> +	ret = clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to enable clocks\n");
+> +
+> +	return 0;
+>  }
+>  
+>  static int rockchip_pcie_resource_get(struct platform_device *pdev,
+> @@ -237,12 +241,14 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
+>  {
+>  	rockchip->apb_base = devm_platform_ioremap_resource_byname(pdev, "apb");
+>  	if (IS_ERR(rockchip->apb_base))
+> -		return PTR_ERR(rockchip->apb_base);
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->apb_base),
+> +				     "failed to map apb registers\n");
+>  
+>  	rockchip->rst_gpio = devm_gpiod_get_optional(&pdev->dev, "reset",
+>  						     GPIOD_OUT_HIGH);
+>  	if (IS_ERR(rockchip->rst_gpio))
+> -		return PTR_ERR(rockchip->rst_gpio);
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst_gpio),
+> +				     "failed to get reset gpio\n");
+>  
+>  	rockchip->rst = devm_reset_control_array_get_exclusive(&pdev->dev);
+>  	if (IS_ERR(rockchip->rst))
+> @@ -320,10 +326,9 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  		rockchip->vpcie3v3 = NULL;
+>  	} else {
+>  		ret = regulator_enable(rockchip->vpcie3v3);
+> -		if (ret) {
+> -			dev_err(dev, "failed to enable vpcie3v3 regulator\n");
+> -			return ret;
+> -		}
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "failed to enable vpcie3v3 regulator\n");
 >  	}
 >  
-> -- 
-> 2.25.1
+>  	ret = rockchip_pcie_phy_init(rockchip);
 > 
+> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> -- 
+> 2.43.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
