@@ -1,186 +1,138 @@
-Return-Path: <linux-pci+bounces-7540-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7541-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 025CE8C6E63
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 00:04:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A15078C6E75
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 00:13:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D5FE28489A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 22:04:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 594C22837AD
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 22:13:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 550B015B567;
-	Wed, 15 May 2024 22:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50AEE15B103;
+	Wed, 15 May 2024 22:13:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MQyPlHhp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3JpUwxZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966083BBEA;
-	Wed, 15 May 2024 22:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD38D25757
+	for <linux-pci@vger.kernel.org>; Wed, 15 May 2024 22:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715810662; cv=none; b=hGKd6XVfyb/Vkl8ZU35+jTr9ymJ8/5UE4ZBK8xAhEcQdYAWt3ONWt0iezHTOFTQ3EhNooi+ukd+YKdHAFnOERR7YvEbT9y1/BTaaeFZvR55EB5FEUevLJJ21BF/ldJZZ96UMJb3s53oS+59eINLGb1MDn2Rm3nbO6k+Y1EB/yd8=
+	t=1715811195; cv=none; b=hGyaT7nRMmTPGSdG3dTrYRGv0IfHmBwZJN1qa6O/Q1GK5PnUF5sElso2ypI2B+9rkyTczD2SSR+cd1Cwa2LCI5kge0r1A68Vij1KBmQ72bblEW7kuG1zhy1P6nk9DuIxCKWZJNHJqdKemQ3VSeJShqCTzofULDVtI7L7qH+sxCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715810662; c=relaxed/simple;
-	bh=A2JE1wFblMMdWw30BZhpMz3CO8n24X5cU5MY3GMBBp8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+m3TASRLOMq1VcppBfe2iiuSWVaqKnfaCG0CGIQ/Jzs8UTHBNqNVcaQvCG+53LeT7QEfAo1+O1upoH9ZRQze3pqyDWCG3EED2ol4zwQ/9nQP9tLuV6JR6QeCiWFsCk6RO1Q9hTiTr3mRRRhu2Xxy/CAO7TFZmRthtkcMvYSPs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MQyPlHhp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44FLnG3L014218;
-	Wed, 15 May 2024 22:02:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=QDBa3xO9SVZC0wA2OjFbS
-	SGVBA+x1q/1DDGJo/BLO2I=; b=MQyPlHhp1n4fCWGyt3zgw7uZYWtpd92rUGJQz
-	8lkiNoMpg9wNRG1Z4UMGpor453kwHi/95tOXEi9FnpUzhdtYoF5ZBz6MknfKWOqy
-	sRysZ0+7h509TFYw35HozsSeq8qzkZJ1CSzcgZzGBUyKRbYxcQ2/N6kBzGg8bseg
-	ws2hOTF7UNB5kTufM8+RQARntGoyzijoVFuqh5JYSxSIt2hzYUhnOEh7k9UEheLX
-	VCea4kIgNhB9hnzH9/nFRMTusHl3joiCTv5YPVJD9cQBI9BRl8okPKU9wO1/Xhc1
-	Y2G8g1X8/+Volxv+8CmSN5HhVoOEz9ImAVx2FWB6Ci2lIK3uw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y20w224dd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 22:02:56 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44FM2tBB015195
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 May 2024 22:02:55 GMT
-Received: from hu-eberman-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 15 May 2024 15:02:54 -0700
-Date: Wed, 15 May 2024 15:02:54 -0700
-From: Elliot Berman <quic_eberman@quicinc.com>
-To: Roman Kisel <romank@linux.microsoft.com>
-CC: <arnd@arndb.de>, <bhelgaas@google.com>, <bp@alien8.de>,
-        <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
-        <decui@microsoft.com>, <haiyangz@microsoft.com>, <hpa@zytor.com>,
-        <kw@linux.com>, <kys@microsoft.com>, <lenb@kernel.org>,
-        <lpieralisi@kernel.org>, <mingo@redhat.com>, <mhklinux@outlook.com>,
-        <rafael@kernel.org>, <robh@kernel.org>, <tglx@linutronix.de>,
-        <wei.liu@kernel.org>, <will@kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arch@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <x86@kernel.org>, <ssengar@microsoft.com>,
-        <sunilmut@microsoft.com>, <vdso@hexbites.dev>
-Subject: Re: [PATCH v2 1/6] arm64/hyperv: Support DeviceTree
-Message-ID: <20240515143359142-0700.eberman@hu-eberman-lv.qualcomm.com>
-References: <20240514224508.212318-1-romank@linux.microsoft.com>
- <20240514224508.212318-2-romank@linux.microsoft.com>
+	s=arc-20240116; t=1715811195; c=relaxed/simple;
+	bh=i0SbT4qBAfrgNCjZaDrWBq1hqch0ix9aAKfiAeQTQqU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GmGYmk/ULyGw+QHftwi7IDxyvJsRkU4LSZOCLnWj8/DpfWnDeFz+zbm8iFLQObSiJN+XXfv9r2aaVuXanGa5FEVn5fwbK1DgOLQDX7q/ckm0pxK7xWszWD23QfKeU6AcikGyFkGRiGjrykDQSiOd3JpoasKu1XbcZhrpCWoxdig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3JpUwxZ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715811194; x=1747347194;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i0SbT4qBAfrgNCjZaDrWBq1hqch0ix9aAKfiAeQTQqU=;
+  b=h3JpUwxZsU4RDanhB+udV1HQUJ2GSQCElPjGMh1WA+lkY2h779V+rL+F
+   7hJz1v0NVNapwE4jkRCmohq/atusPax3ue8cCj5klHnlkhtEJAJqCNNq+
+   96HEIpvY4FpTrfUkpP8d6HcNHXHcXxDVrGBDYvHcbZjQRDAxYxO5g7lhG
+   5Vcn0+DZbBAAFBymHDQLYlplLMAU67TMHVxt/24Sy8D/WbVYzBPXFIlq/
+   AgXnVkBvhdAVVr2ZQOlaGotZZkLya+ikia6mkbWvLcpcoSNr2Q8FEV0m/
+   sSPiwOl1TnbJAfdCKfdazCL6r7Hir3234i7afpYV9PsShcpb3EFcWm3yj
+   Q==;
+X-CSE-ConnectionGUID: LJhT2ahjTO2MNIKrOohRgA==
+X-CSE-MsgGUID: 9abeLuU1QXyROb1KhNeUpA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23292858"
+X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
+   d="scan'208";a="23292858"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 15:13:13 -0700
+X-CSE-ConnectionGUID: A9VWFUUsTISe7GfSg3sLfA==
+X-CSE-MsgGUID: LsnWEghHSmyN+35O9fPT1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
+   d="scan'208";a="31134668"
+Received: from rcheerla-mobl.amr.corp.intel.com (HELO [10.212.179.162]) ([10.212.179.162])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 15:13:12 -0700
+Message-ID: <ad7df133-803a-4089-8ced-bf3eaf169d43@intel.com>
+Date: Wed, 15 May 2024 15:13:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240514224508.212318-2-romank@linux.microsoft.com>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: DgLWzryxOWhF7b4rEhDpYrNv9kFCQJeQ
-X-Proofpoint-GUID: DgLWzryxOWhF7b4rEhDpYrNv9kFCQJeQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-15_14,2024-05-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
- clxscore=1011 priorityscore=1501 bulkscore=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405010000 definitions=main-2405150158
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] drm/i915/pciids: PCI ID macro cleanups
+To: Jani Nikula <jani.nikula@intel.com>, intel-gfx@lists.freedesktop.org,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+References: <cover.1715340032.git.jani.nikula@intel.com>
+ <87ikzlhiv8.fsf@intel.com> <8734qjcfu1.fsf@intel.com>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <8734qjcfu1.fsf@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 14, 2024 at 03:43:48PM -0700, Roman Kisel wrote:
-> The Virtual Trust Level platforms rely on DeviceTree, and the
-> arm64/hyperv code supports ACPI only. Update the logic to
-> support DeviceTree on boot as well as ACPI.
+On 5/15/24 07:25, Jani Nikula wrote:
+> No reply from Bjorn, Cc: the x86 maintainers and list, could I get an
+> ack from you please?
 
-Could you use Call UID query from SMCCC? KVM [1] and Gunyah [2] have
-been using this to identify if guest is running under those respective
-hypervisors. This works in both DT and ACPI cases.
+x86 is just a consumer of the drm/i915_pciids.h macros.  The name change
+is perfectly fine with me.  No objections.  But I really don't think you
+need our acks to move forward.
 
-[1]: https://lore.kernel.org/all/20210330145430.996981-2-maz@kernel.org/
-[2]: https://lore.kernel.org/all/20240222-gunyah-v17-4-1e9da6763d38@quicinc.com/
-> 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  arch/arm64/hyperv/mshyperv.c | 34 +++++++++++++++++++++++++++++-----
->  1 file changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> index b1a4de4eee29..208a3bcb9686 100644
-> --- a/arch/arm64/hyperv/mshyperv.c
-> +++ b/arch/arm64/hyperv/mshyperv.c
-> @@ -15,6 +15,9 @@
->  #include <linux/errno.h>
->  #include <linux/version.h>
->  #include <linux/cpuhotplug.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
->  #include <asm/mshyperv.h>
->  
->  static bool hyperv_initialized;
-> @@ -27,6 +30,29 @@ int hv_get_hypervisor_version(union hv_hypervisor_version_info *info)
->  	return 0;
->  }
->  
-> +static bool hyperv_detect_fdt(void)
-> +{
-> +#ifdef CONFIG_OF
-> +	const unsigned long hyp_node = of_get_flat_dt_subnode_by_name(
-> +			of_get_flat_dt_root(), "hypervisor");
-> +
-> +	return (hyp_node != -FDT_ERR_NOTFOUND) &&
-> +			of_flat_dt_is_compatible(hyp_node, "microsoft,hyperv");
-> +#else
-> +	return false;
-> +#endif
-> +}
-> +
-> +static bool hyperv_detect_acpi(void)
-> +{
-> +#ifdef CONFIG_ACPI
-> +	return !acpi_disabled &&
-> +			!strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8);
-> +#else
-> +	return false;
-> +#endif
-> +}
-> +
->  static int __init hyperv_init(void)
->  {
->  	struct hv_get_vp_registers_output	result;
-> @@ -35,13 +61,11 @@ static int __init hyperv_init(void)
->  
->  	/*
->  	 * Allow for a kernel built with CONFIG_HYPERV to be running in
-> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
-> +	 * a non-Hyper-V environment.
-> +	 *
->  	 * In such cases, do nothing and return success.
->  	 */
-> -	if (acpi_disabled)
-> -		return 0;
-> -
-> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
-> +	if (!hyperv_detect_fdt() && !hyperv_detect_acpi())
->  		return 0;
->  
->  	/* Setup the guest ID */
-> -- 
-> 2.45.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Either way:
+
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com> # for x86
 
