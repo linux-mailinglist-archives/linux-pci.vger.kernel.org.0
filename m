@@ -1,168 +1,116 @@
-Return-Path: <linux-pci+bounces-7533-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7534-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68C2D8C6D9A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 23:13:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF2CE8C6D9D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 23:14:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F84F1F224BD
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 21:13:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A822B281F98
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 21:14:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC2C15B129;
-	Wed, 15 May 2024 21:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8586715B144;
+	Wed, 15 May 2024 21:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvMHmA3T"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8BA31QH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6502315B12F
-	for <linux-pci@vger.kernel.org>; Wed, 15 May 2024 21:13:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5808A155A57;
+	Wed, 15 May 2024 21:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715807615; cv=none; b=d7shIEIWY6KUETWV9/OJcQZ35xaPyZdC2ezfTbSq8BMGUEUJEAm5BmrmvwwV5dhJUl3+DoBxe3vjjbWqNvhaXn/jqnXTJeJhvA2YZprRuhJ/i1O+V0fz83az5mOVOp7qIi81fRem/nGbrRuPxmk+z5jdv7eOTqe+c2d6MMELgBA=
+	t=1715807632; cv=none; b=LJcL4LGQyd2zhfmv6EMUJsAttA/v+3i7HB+hYCRVUtxExHGXZKofW6IrWaiMxoh0UwqBbdT7p6pDUGqBNcenDLnZH2/u6WZodPlxk0Wk4dKbY7XdceeXCP7vNc5X9VNgv5rOB3XOS8guIhfWSNSdyFpTGuDK4Taklj+EY+aUpRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715807615; c=relaxed/simple;
-	bh=rFJpsvZLu3B53+hXuHhtpjCVRgoxVKmUMLdtqsNpkeY=;
+	s=arc-20240116; t=1715807632; c=relaxed/simple;
+	bh=92Bg9W1jfudPogCMHlnwGwZOFXqjwzrhqg+gfddCvgc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lrHUsG2mO4aJJv3EbBOVMS9iPYJKNBhHbMeeKAan656743qGfdk1QzFJtWc+eBsMedfH63EQJfXM9wxE4DkBVnR+LhKeGfLAu4ob5NxXUSbwnykeOrW/Kk5GxZDqAyIKhGlxtHNM5Y/CInIuJnjjU47kCatE3X1N6xIwjaueW2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvMHmA3T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAF2EC32782;
-	Wed, 15 May 2024 21:13:34 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=fgCUxqSoF9NTkRBfO9sc3evTmZPajhqf/FDchCjO80CDX2Zx53wfr16DY8fVal+e/XgYzVIqxKRIwo6j08sekf5tnnkrs+as/PyXLxuD7eZyJgzZ9Gh891xZhBaUJHVu98CS8Ie42JJgVlMkw1VaIf5GeTHlc7U3VCHWsm9hn8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8BA31QH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 990FAC32781;
+	Wed, 15 May 2024 21:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715807615;
-	bh=rFJpsvZLu3B53+hXuHhtpjCVRgoxVKmUMLdtqsNpkeY=;
+	s=k20201202; t=1715807631;
+	bh=92Bg9W1jfudPogCMHlnwGwZOFXqjwzrhqg+gfddCvgc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=AvMHmA3TotqfOj46mJO2fXlZKTWA0V8T+/CpBsuIoL2fx426qnvSZgBZpvwDNzKL/
-	 c8cRvRLBEdk1MVuZRcA7zgwVy0koTHrNwBdJdoS5fapEPpVnCGe80FlLZlc9QqquRE
-	 zC8gYufDJ10TX1xM4d+0jADDntgXDUSX4RhvPzRh8csBw3IjediXg3kAE6S/Awyprs
-	 c4e9gRm/frv8239dUtUOuWUPRyHJjrA9oD9sRt6qJB5u+8x68HuL8m95nxNQoTKLRU
-	 CLAzMmLex4/KH5z0reLLOqX4QCDDv+g7E0HuB/HveTGp9oPWvTw+HYwbYF9JwErCnY
-	 N67D33mv2VnXg==
-Date: Wed, 15 May 2024 16:13:33 -0500
+	b=S8BA31QH7LK+QVdeB6Mu1tL7+oDDrVuB4pRkhH06CYUtwMegzUFlB095Sb4Zwbpxw
+	 VCTDALqX31X7kPYjnVtfuNvBOfAMqp4H+tFZ51c8ck9ZLD/PZJon2wzFZUaVnmgwPf
+	 VymrE+aaYcnRQ18OYFpYbHeRsJvbpYkdkY0+nSbVdVAXVDHlPcV27HTs0JBMc1e9lE
+	 Kmnw5ArBPlB1/loKB0GII383RGiB5aqWOZEhmn0bP2SaYXt6Jobj78xGr5ImNgYquk
+	 tWoxD5bSzr/EzVgKknGN1ep3dhmHUtvGcD+NiTrtSTfBHHnmmCL3IrgrobAWP4w3yG
+	 ZWxO6cM77OF/g==
+Date: Wed, 15 May 2024 16:13:50 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc: rick.wertenbroek@heig-vd.ch, dlemoal@kernel.org, stable@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Lei Chuanhua <lchuanhua@maxlinear.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh@kernel.org>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: dw-rockchip: Add error messages in .probe()s
- error paths
-Message-ID: <20240515211333.GA2139026@bhelgaas>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: rockchip-ep: Remove wrong mask on subsys_vendor_id
+Message-ID: <20240515211350.GA2139074@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240515205735.GA2137771@bhelgaas>
+In-Reply-To: <20240515205547.GA2137633@bhelgaas>
 
-On Wed, May 15, 2024 at 03:57:37PM -0500, Bjorn Helgaas wrote:
-> On Tue, Feb 27, 2024 at 03:12:54PM +0100, Uwe Kleine-König wrote:
-> > Drivers that silently fail to probe provide a bad user experience and
-> > make it unnecessarily hard to debug such a failure. Fix it by using
-> > dev_err_probe() instead of a plain return.
+On Wed, May 15, 2024 at 03:55:49PM -0500, Bjorn Helgaas wrote:
+> On Wed, Apr 03, 2024 at 04:45:08PM +0200, Rick Wertenbroek wrote:
+> > Remove wrong mask on subsys_vendor_id. Both the Vendor ID and Subsystem
+> > Vendor ID are u16 variables and are written to a u32 register of the
+> > controller. The Subsystem Vendor ID was always 0 because the u16 value
+> > was masked incorrectly with GENMASK(31,16) resulting in all lower 16
+> > bits being set to 0 prior to the shift.
 > > 
-> > Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> > Signed-off-by: Uwe Kleine-König <ukleinek@debian.org>
+> > Remove both masks as they are unnecessary and set the register correctly
+> > i.e., the lower 16-bits are the Vendor ID and the upper 16-bits are the
+> > Subsystem Vendor ID.
+> > 
+> > This is documented in the RK3399 TRM section 17.6.7.1.17
+> > 
+> > Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+> > Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> > Cc: stable@vger.kernel.org
 > 
-> Krzysztof applied this to pci/controller/rockchip with Reviewed-by
-> from Jesper and Mani, but his outgoing mail queue got stuck.  Trying
-> to squeeze into v6.9.
+> Applied to pci/controller/rockchip by Krzysztof, but his outgoing mail
+> queue got stuck.  I added Damien's Reviewed-by.  Trying to squeeze
+> into v6.9.
 
-Sorry, v6.10.  v6.9 is already done, obviously.
+Sorry, I meant v6.10.  v6.9 is already done.
 
 > > ---
-> > Hello,
+> >  drivers/pci/controller/pcie-rockchip-ep.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
 > > 
-> > changes since (implicit) v1, sent with Message-Id:
-> > 20240227111837.395422-2-ukleinek@debian.org:
-> > 
-> >  - use dev instead of rockchip->pci.dev as noticed by Serge Semin.
-> >  - added Reviewed-by: tag for Heiko. I assume he agrees to above
-> >    improvement and adding the tag despite the change is fine.
-> > 
-> > Best regards
-> > Uwe
-> > 
-> >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 21 ++++++++++++-------
-> >  1 file changed, 13 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > index d6842141d384..a13ca83ce260 100644
-> > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > @@ -225,11 +225,15 @@ static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
+> > diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> > index c9046e97a1d2..37d4bcb8bd5b 100644
+> > --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> > @@ -98,10 +98,9 @@ static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
 > >  
-> >  	ret = devm_clk_bulk_get_all(dev, &rockchip->clks);
-> >  	if (ret < 0)
-> > -		return ret;
-> > +		return dev_err_probe(dev, ret, "failed to get clocks\n");
-> >  
-> >  	rockchip->clk_cnt = ret;
-> >  
-> > -	return clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
-> > +	ret = clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
-> > +	if (ret)
-> > +		return dev_err_probe(dev, ret, "failed to enable clocks\n");
-> > +
-> > +	return 0;
-> >  }
-> >  
-> >  static int rockchip_pcie_resource_get(struct platform_device *pdev,
-> > @@ -237,12 +241,14 @@ static int rockchip_pcie_resource_get(struct platform_device *pdev,
-> >  {
-> >  	rockchip->apb_base = devm_platform_ioremap_resource_byname(pdev, "apb");
-> >  	if (IS_ERR(rockchip->apb_base))
-> > -		return PTR_ERR(rockchip->apb_base);
-> > +		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->apb_base),
-> > +				     "failed to map apb registers\n");
-> >  
-> >  	rockchip->rst_gpio = devm_gpiod_get_optional(&pdev->dev, "reset",
-> >  						     GPIOD_OUT_HIGH);
-> >  	if (IS_ERR(rockchip->rst_gpio))
-> > -		return PTR_ERR(rockchip->rst_gpio);
-> > +		return dev_err_probe(&pdev->dev, PTR_ERR(rockchip->rst_gpio),
-> > +				     "failed to get reset gpio\n");
-> >  
-> >  	rockchip->rst = devm_reset_control_array_get_exclusive(&pdev->dev);
-> >  	if (IS_ERR(rockchip->rst))
-> > @@ -320,10 +326,9 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
-> >  		rockchip->vpcie3v3 = NULL;
-> >  	} else {
-> >  		ret = regulator_enable(rockchip->vpcie3v3);
-> > -		if (ret) {
-> > -			dev_err(dev, "failed to enable vpcie3v3 regulator\n");
-> > -			return ret;
-> > -		}
-> > +		if (ret)
-> > +			return dev_err_probe(dev, ret,
-> > +					     "failed to enable vpcie3v3 regulator\n");
+> >  	/* All functions share the same vendor ID with function 0 */
+> >  	if (fn == 0) {
+> > -		u32 vid_regs = (hdr->vendorid & GENMASK(15, 0)) |
+> > -			       (hdr->subsys_vendor_id & GENMASK(31, 16)) << 16;
+> > -
+> > -		rockchip_pcie_write(rockchip, vid_regs,
+> > +		rockchip_pcie_write(rockchip,
+> > +				    hdr->vendorid |
+> > +				    hdr->subsys_vendor_id << 16,
+> >  				    PCIE_CORE_CONFIG_VENDOR);
 > >  	}
 > >  
-> >  	ret = rockchip_pcie_phy_init(rockchip);
-> > 
-> > base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
 > > -- 
-> > 2.43.0
+> > 2.25.1
 > > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
