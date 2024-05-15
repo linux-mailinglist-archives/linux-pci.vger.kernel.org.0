@@ -1,177 +1,146 @@
-Return-Path: <linux-pci+bounces-7528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7529-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A648C6D16
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 22:10:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B85FB8C6D50
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 22:35:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61DBB2830FF
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 20:10:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA20F1C22253
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 20:35:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61F615B0E0;
-	Wed, 15 May 2024 20:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="B0RN8miP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37BB415B103;
+	Wed, 15 May 2024 20:35:30 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C4615ADAC
-	for <linux-pci@vger.kernel.org>; Wed, 15 May 2024 20:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4689E6FBF;
+	Wed, 15 May 2024 20:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715803821; cv=none; b=XTBs3Ni490qc5gWTc/FoqM+sBwYa+JUIfytfpDhGoi4GqlKOezeX8HK608ncZpFnVRSZpvZxtwalcQRfzWHyN0gFP0PAyTso2TgHCVN3l6vYSkAKyHcxvFu5htwrO+B/Xxs4pSYvqgyzEVwlOCobajiFUCtqo7WUf2Q8z75TJ1o=
+	t=1715805330; cv=none; b=flyTZIVJoC9C5pqS6eVuwk7b+ZQMvdNyT64rjOvisALF49u5KBDKeYC69Mt+HbLq+J3kPnWMRMORwBjhwu1Xx35Qpg0h91Fe0Af5AhS2okIyzLafId1Gn73EvJTw+MC0XNXJSTzkgzxikfTJ39I2u3F/Okk9rC1XhoDRixo041M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715803821; c=relaxed/simple;
-	bh=s9TT8lsoEBdBtea51Akg86AkRCWiOEUvW+YMSo1GYDs=;
+	s=arc-20240116; t=1715805330; c=relaxed/simple;
+	bh=1ROaqHeKea4ES3++aMaMcby/3PQ4/hiCneLKczow8pE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kvgJBypcSkDUoTrOlrSHyQb8HrwH3uAawA5xGGj10sg8oRBaSulvt2ZybWPazgJouNekH0OKY4y0CwdqqeXTp66m4PT+etn3FgiNBQQB/bUroNFB0cxtjeUdy+t5WTScDA9Lq11wXhIJC724d9CNBHTfVeHzWSFv0LeGQamS0jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=B0RN8miP; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=8FXO
-	08frs4hL17ofURhVpLDRG7xWgW1nb8MJfzBWYkI=; b=B0RN8miPsk0F4nH2tSfi
-	lGU6g7eRdF0cZB/w1chizm282Fvx7j5wWm66d5Ty68dz5G/3XH+sMd/0MQJhOiJF
-	sHFd78LujS2BYJh3NYCy4ZKgWKEdPguQRNbP85GwhyfGGUjZZbbsiM9zReplJGLG
-	FYww1wd9mAPitw0rZczzyPIP/nxoMAvUKzZzRMDZhbExBIGRRR0MN2z8pKqBnvHm
-	Mcz6MYSeJOnCprSDfo8IWPHOyPcEG1dAuuOt+aYwdKBOQeL2jHp6NtfMXbKXJAKo
-	THeSzJx3dDaziqeJAlB8LUkqi2v+IL6TFtEbqBnyQ4u1mh+jtKF8/lju+zSizW2v
-	CQ==
-Received: (qmail 2935422 invoked from network); 15 May 2024 22:10:14 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 May 2024 22:10:14 +0200
-X-UD-Smtp-Session: l3s3148p1@8mvetIMYjIdehhtP
-Date: Wed, 15 May 2024 22:10:13 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, 
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v7 6/7] PCI: rcar-gen4: Add support for r8a779g0
-Message-ID: <53sfkav45djcaapqkzsps6ofsinf5lnxbhrjvgsevt3w6qcms6@e2vptwrj645q>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Niklas Cassel <cassel@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, 
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-References: <20240415081135.3814373-1-yoshihiro.shimoda.uh@renesas.com>
- <20240415081135.3814373-7-yoshihiro.shimoda.uh@renesas.com>
- <20240511080257.GF6672@thinkpad>
- <TYCPR01MB110409C8FC92A7C466627E0A2D8E32@TYCPR01MB11040.jpnprd01.prod.outlook.com>
- <20240515075954.GB4488@thinkpad>
- <l62l4ksr2rkxxi7kwatd3pfwmwv4ytfumhwkthjsurgla2prno@felahg5h5g7o>
- <ZkTiGWxJK4tbOF5y@ryzen.lan>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IJXz8qfN7tqUXY9E/yStxRrH9IbG/OcO+2mCxzC2UKn4NacNeB+xMW2cJQWsIZMtSgPMb3KGheGV22RrAWsRk+gElYMPhCBrKx/YNXHRPrlFyIACzOcRlqBouV0sheQbRg4B3spt/iCJ27QXemTnQIl5n851A2ZD0ucdt6cDLcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 9C66C100B04B8;
+	Wed, 15 May 2024 22:35:22 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 61E274A9A7F; Wed, 15 May 2024 22:35:22 +0200 (CEST)
+Date: Wed, 15 May 2024 22:35:22 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Esther Shimanovich <eshimanovich@chromium.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <ZkUcihZR_ZUUEsZp@wunner.de>
+References: <20240424085608.GE112498@black.fi.intel.com>
+ <CA+Y6NJFyi6e7ype6dTAjxsy5aC80NdVOt+Vg-a0O0y_JsfwSGg@mail.gmail.com>
+ <Zi0VLrvUWH6P1_or@wunner.de>
+ <CA+Y6NJE8hA+wt+auW1wJBWA6EGMc6CGpmdExr3475E_Yys-Zdw@mail.gmail.com>
+ <ZjsKPSgV39SF0gdX@wunner.de>
+ <20240510052616.GC4162345@black.fi.intel.com>
+ <CA+Y6NJF2Ex6Rwxw0a5V1aMY2OH4=MP5KTtat9x9Ge7y-JBdapw@mail.gmail.com>
+ <20240511043832.GD4162345@black.fi.intel.com>
+ <20240511054323.GE4162345@black.fi.intel.com>
+ <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bwr76ejofef5m7kw"
-Content-Disposition: inline
-In-Reply-To: <ZkTiGWxJK4tbOF5y@ryzen.lan>
-
-
---bwr76ejofef5m7kw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
 
-Hi,
+On Wed, May 15, 2024 at 02:53:54PM -0400, Esther Shimanovich wrote:
+> On Wed, May 8, 2024 at 1:23???AM Lukas Wunner <lukas@wunner.de> wrote:
+> > On Wed, May 01, 2024 at 06:23:28PM -0400, Esther Shimanovich wrote:
+> > > On Sat, Apr 27, 2024 at 3:17AM Lukas Wunner <lukas@wunner.de> wrote:
+> > > That is correct, when the user-visible issue occurs, no driver is
+> > > bound to the NHI and XHCI. The discrete JHL chip is not permitted to
+> > > attach to the external-facing root port because of the security
+> > > policy, so the NHI and XHCI are not seen by the computer.
+> >
+> > Could you rework your patch to only rectify the NHI's and XHCI's
+> > device properties and leave the bridges untouched?
+> 
+> So I tried a build with that patch, but it never reached the
+> tb_pci_fixup function
 
-> If Renesas could bother to spend the effort to be legally allowed to
-> include the firmware in linux-firmware, do we want to spend the effort
-> to maintain the support for this PCIe controller in mainline?
+That means that for some reason, the PCI devices are not associated with
+the Thunderbolt ports.  Could you add this to the command line:
 
-We (including me) have no indication if Renesas bothered or not. Maybe
-they tried but could not convince a third party. I don't know.
+  thunderbolt.dyndbg ignore_loglevel log_buf_len=10M
 
-> Is there even an example of a device driver that *requires* firmware
-> that is not in linux-firmware?
+and this to your kernel config:
 
-Sure thing!
+  CONFIG_DYNAMIC_DEBUG=y
 
-=3D=3D=3D snip here
+You should see "... is associated with ..." messages in dmesg.
+This did work for Mika during his testing with recent Thunderbolt chips.
+I amended the patches after his testing but wouldn't expect that to
+cause issues.
 
-$ cat Documentation/admin-guide/media/opera-firmware.rst
-=2E. SPDX-License-Identifier: GPL-2.0
-
-Opera firmware
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Author: Marco Gittler <g.marco@freenet.de>
-
-To extract the firmware for the Opera DVB-S1 USB-Box
-you need to copy the files:
-
-2830SCap2.sys
-2830SLoad2.sys
-
-=66rom the windriver disk into this directory.
-
-Then run:
-
-=2E. code-block:: none
-
-	scripts/get_dvb_firmware opera1
-
-and after that you have 2 files:
-
-dvb-usb-opera-01.fw
-dvb-usb-opera1-fpga-01.fw
-
-in here.
-
-Copy them into /lib/firmware/ .
-
-After that the driver can load the firmware
-(if you have enabled firmware loading
-in kernel config and have hotplug running).
-
-=3D=3D=3D snap
-
-And this is probably not the only driver where you need to get firmware
-out of a Windows driver (media drivers and webcam drivers are good
-candidates). And the redistribution of such drivers is likely to be
-limited as well.
-
-Happy hacking,
-
-   Wolfram
+@Mika, would you mind re-testing if you've got cycles to spare?
 
 
---bwr76ejofef5m7kw
-Content-Type: application/pgp-signature; name="signature.asc"
+> even when NHI and XHCI were both labeled as
+> fixed and external facing in the quirk.
 
------BEGIN PGP SIGNATURE-----
+Setting the two as fixed and trusted should be sufficient.
+The external_facing bit should not be needed on the NHI and XHCI.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZFFqEACgkQFA3kzBSg
-Kbad1A/7Bk4NUul1dwzsSaW8EpeJchgIZuXPrS43xegnTA3B1HbO6gCsdplAZ8sc
-V2X9FBEguM3p4TIFIVasgxPYYars1xVtwVPwFiTmhIO6pJSOwQaZc8zWZnPBXNEK
-2hC5SyJqC0E5paMmFXD5iEhPDaO6JimOaI3hp2fR8FyqqXngEjB21A3bkfEeBlEJ
-/2lRT30UPnlXGfu3111MipK+sM+xBUClv2ZjItFi97fAfkn6q8dERedihkAP40Kg
-9rpz2O099S9QMUnJwxqnYF4pz7v8OISBCQ6QFoyCU+nTjNkFyM85wNq4gHaYO5h0
-aB5fh8b/w5LT4fVbrWSLfOHVNOInfMsLQJKiFjzgZoZcZ/v3KsxPiFjnVbekvzFv
-sqT2lfVzxb5yfn2o4iDdkx7m1fwv8nSfSCdaIOJ6fuh8FPI5UQrvpZ4HRBIQJFQG
-FHCtRq9W9Hl55ickgZLekwv0TRjF8xtfiAarmQBxrXcCwdETODa+UZPe59EKuMCh
-BbKyRADkTkx/z7LG2fIiSdlGNCpOm6s1z2Bnl4cNk6JhA7mIfULG3NwTX9a0Dx8A
-BiCsCXDJ8k20QbWxBA9P+oe0qHJAn4nz8ox9jVGleJgPO/ghvkn5wkabwy7S+xGf
-vpQlO1tb+R1k5t95ARMWyacEHo3zQpm9eGWngzVH+JolKWeMwPU=
-=Fgq4
------END PGP SIGNATURE-----
 
---bwr76ejofef5m7kw--
+> Also, I don't see where you distinguish between an integrated
+> Thunderbolt PCIe root port and a root port with no thunderbolt
+> functionality built in. Could you point that out to me?
+
+Hm, why would I have to distinguish between the two?
+
+I distinguish between Thunderbolt PCIe Adapters on the root switch
+and ones on non-root switches.  The latter are attached Device Routers,
+the former is the Host Router.  I just set the ones on the former to
+external_facing, fixed and trusted.  Everything downstream is untrusted
+and removable.
+
+
+> I'm not sure how your patch protects against the following case
+> scenario I described earlier:
+> > Let's say we have a TigerLake CPU, which has integrated
+> > Thunderbolt/USB4 capabilities:
+> >
+> > TigerLake_ThunderboltCPU -> USB-C Port
+> > This device also has the ExternalFacingPort property in ACPI and lacks
+> > the usb4-host-interface property in the ACPI.
+> >
+> > My worry is that someone could take an Alpine Ridge Chip Thunderbolt
+> > Dock and attach it to the TigerLake CPU
+> >
+> > TigerLake_ThunderboltCPU -> USB-C Port -> AlpineRidge_Dock
+> >
+> > If that were to happen, this quirk would incorrectly label the Alpine
+> > Ridge Dock as "fixed" instead of "removable".
+
+See above, the Alpine Ridge Dock is never the root switch.
+The Tiger Lake CPU is.
+
+Thanks,
+
+Lukas
 
