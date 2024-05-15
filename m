@@ -1,123 +1,143 @@
-Return-Path: <linux-pci+bounces-7524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7525-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 765A38C6C3B
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 20:34:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E1C08C6C79
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 20:54:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC365B21789
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 18:34:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC075284B27
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 18:54:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFDC93C466;
-	Wed, 15 May 2024 18:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9221215B0ED;
+	Wed, 15 May 2024 18:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="p8SOsXVL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gdtro8IG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7714A1A2C25;
-	Wed, 15 May 2024 18:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EAD15ADB6;
+	Wed, 15 May 2024 18:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715798060; cv=none; b=eiUatLe7LRal+NzoW4s5xLfVmCUwAvFR4UPGAZfrVGXCnMd0V3Q708+6kE4y2EAwexTXeJ2/N6DetatVO25J5+fpqnkh5E9Vzk5nltMIbEicSlOHhzuMEaAPflr5HAT0bUxz95rTC5CSX0Nr5hxR7jhOoV1qpxEpp3ZTqS+jBxU=
+	t=1715799164; cv=none; b=tr65Eq+880gIHVyMZ+MUp4plhOEQIjlSbjfb1rK72DCCH3V+wz86q/eb+5m1fmCPRskJlL6V+ShjczNzu8yAM+jIoeceIYQaTuAlA8xa/jAZT8sUT+JWos0zt0kpcbyBlReDegucaAbiwuzoiSlGLV8F7kZZk/+5fYzeOGI7hLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715798060; c=relaxed/simple;
-	bh=sVFWQ3rZirwUblV0GqRO7ybwI1ENyv2jLFYloxY1tmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dyPffUBWhVknt11LaPpbF1xT4yRD2a9+H9uVf/hqmVfjPFYOqr8sW9au7jG6P22rvVHksioxWoQUt2IdDHAU+JIr+Sdfx2LfedPETgCookOU7DDyzC3VIFbLpNb3KuiMU04p0I337+2NKhKanf19ME1PTEHGZxbCg0LWOLSeovc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=p8SOsXVL; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.186.190] (unknown [131.107.159.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9D84D20BE54C;
-	Wed, 15 May 2024 11:34:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9D84D20BE54C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1715798058;
-	bh=JiwxcyFZZClm27jDeVD6FIAV+REMJpfpKthMKDFCly0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p8SOsXVLkMI2Zft0K4DraVsV0y+WEJsal72i3x0CZg20yVIxWlMoY9QnXl/e4VRfL
-	 CynzwiLkyK7flTJa5nq6tKqobEnw+ItmBztAYQmDwZwcdLuW++rDwgHKOgNWc6JI0z
-	 RmQezDUgoy2YpxvDGh75BWkF17gPGFvK66iqhepM=
-Message-ID: <a9adee06-b5d5-4b07-bfa5-68a0153699f3@linux.microsoft.com>
-Date: Wed, 15 May 2024 11:34:18 -0700
+	s=arc-20240116; t=1715799164; c=relaxed/simple;
+	bh=oXhqMtB1Q9CCQXQJ3USVFEUF5oXFqNdWxV7yheTzfmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=oyJ4KbTX4L1GMl9kmij6V6vMovZljPQpHrGO8czyEIHbTTnTaS1WEVPukCW473jT0Lt5lhmUB9ndEFa+1Sl4gMtx1OZUySZIpi503oINme/QQE9lB9JrK2tsLkgHefZ6BBYih5PYShPR7igC5ZSy2epIBTUBCYHZBaCLMOVZJN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gdtro8IG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A21DFC116B1;
+	Wed, 15 May 2024 18:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715799163;
+	bh=oXhqMtB1Q9CCQXQJ3USVFEUF5oXFqNdWxV7yheTzfmE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Gdtro8IGeuHC3mbYxSLKA/eOoXeVh3Pl94ZwCw5Fy55FkfL614rRhNtB4fWjrNolB
+	 8YVaQRmpK855pYgzJmHA8biFzXZOpdgVnWl61xSGwAnq9Y+1k8AHZwWl1my8g4We6E
+	 jql3CJ6jIGnTNgMgDFVTcosMDmaCkDmimEj2ZItZ12vKc1XGKp+jZmhOHFaG3lmio4
+	 KtIQsxUzrBwD8//aYNeYVXkeLla0qHtSKP+GnT+zwKTMcnf18sXfW+Ir6AydDwI9aD
+	 IgFu07RZLuTo5GmzXDXgMDUmHnWOFikXSpwD9vyOFF7caPRbf0WNZBR5i2QO95qsM6
+	 widVINxqKxP4w==
+Date: Wed, 15 May 2024 13:52:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	"will@kernel.org" <will@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"liviu.dudau@arm.com" <liviu.dudau@arm.com>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	Nicolin Chen <nicolinc@nvidia.com>, Ketan Patil <ketanp@nvidia.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Enable PCIe ATS for devicetree boot
+Message-ID: <20240515185241.GA2131384@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] drivers/pci/hyperv/arm64: vPCI MSI IRQ domain from
- DT
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Saurabh Singh Sengar <ssengar@linux.microsoft.com>, arnd@arndb.de,
- bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com,
- dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
- hpa@zytor.com, kw@linux.com, kys@microsoft.com, lenb@kernel.org,
- lpieralisi@kernel.org, mingo@redhat.com, mhklinux@outlook.com,
- rafael@kernel.org, robh@kernel.org, tglx@linutronix.de, wei.liu@kernel.org,
- will@kernel.org, linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
-References: <20240515181238.GA2129352@bhelgaas>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20240515181238.GA2129352@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH8PR12MB6674391D5067B469B0400C26B8EC2@PH8PR12MB6674.namprd12.prod.outlook.com>
 
+On Wed, May 15, 2024 at 06:28:15PM +0000, Vidya Sagar wrote:
+> Thanks, Jean for this series.
+> May I know the current status of it?
+> Although it was actively reviewed, I see that its current status is set to 
+> 'Handled Elsewhere' in https://patchwork.kernel.org/project/linux-pci/list/?series=848836&state=*
+> What is the plan to get this series accepted?
 
+I probably marked it "handled elsewhere" in the PCI patchwork because
+it doesn't touch PCI files (the binding has already been reviewed by
+Rob and Liviu), so I assumed the iommu folks would take the series.
+I don't know how they track patches.
 
-On 5/15/2024 11:12 AM, Bjorn Helgaas wrote:
-> On Wed, May 15, 2024 at 09:34:09AM -0700, Roman Kisel wrote:
->>
->>
->> On 5/15/2024 2:48 AM, Saurabh Singh Sengar wrote:
->>> On Tue, May 14, 2024 at 03:43:53PM -0700, Roman Kisel wrote:
->>>> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration
->>>> on arm64 thereby it won't be able to do that in the VTL mode where
->>>> only DeviceTree can be used.
->>>>
->>>> Update the hyperv-pci driver to discover interrupt configuration
->>>> via DeviceTree.
->>>
->>> Subject prefix should be "PCI: hv:"
->>>
->> Thanks!
-> 
-> "git log --oneline <file>" is a good guide in general and could be
-> used for other patches in this series as well.
-> 
-Many thanks for suggesting that :)
+The merge window is open now, so likely they would wait until the next
+cycle so it would have some time in linux-next, but that's up to them.
 
->>>> +		hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
->>>> +			fn, &hv_pci_domain_ops,
->>>> +			chip_data);
->>>
->>> Upto 100 characters per line are supported now, we can have less
->>> line breaks.
->>>
->> Fewer line breaks would make this look nicer, let me know if you had any
->> particular style in mind.
+> > -----Original Message-----
+> > From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Sent: Monday, April 29, 2024 5:10 PM
+> > To: will@kernel.org; lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > bhelgaas@google.com; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > liviu.dudau@arm.com; sudeep.holla@arm.com; joro@8bytes.org
+> > Cc: robin.murphy@arm.com; Nicolin Chen <nicolinc@nvidia.com>; Ketan Patil
+> > <ketanp@nvidia.com>; linux-pci@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; iommu@lists.linux.dev; devicetree@vger.kernel.org;
+> > Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Subject: [PATCH 0/3] Enable PCIe ATS for devicetree boot
+> > 
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > Before enabling Address Translation Support (ATS) in endpoints, the OS needs to
+> > confirm that the Root Complex supports it. Obtain this information from the
+> > firmware description since there is no architected method. ACPI provides a bit via
+> > IORT tables, so add the devicetree equivalent.
+> > 
+> > It was discussed a while ago [1], but at the time only a software model supported
+> > it. Respin it now that hardware is available [2].
+> > 
+> > To test this with the Arm RevC model, enable ATS in the endpoint and note that
+> > ATS is enabled. Address translation is transparent to the OS.
+> > 
+> >         -C pci.pcie_rc.ahci0.endpoint.ats_supported=1
+> > 
+> >     $ lspci -s 00:1f.0 -vv
+> >         Capabilities: [100 v1] Address Translation Service (ATS)
+> >                 ATSCap: Invalidate Queue Depth: 00
+> >                 ATSCtl: Enable+, Smallest Translation Unit: 00
+> > 
+> > 
+> > [1] https://lore.kernel.org/linux-iommu/20200213165049.508908-1-jean-
+> > philippe@linaro.org/
+> > [2] https://lore.kernel.org/linux-arm-kernel/ZeJP6CwrZ2FSbTYm@Asurada-
+> > Nvidia/
+> > 
+> > Jean-Philippe Brucker (3):
+> >   dt-bindings: PCI: generic: Add ats-supported property
+> >   iommu/of: Support ats-supported device-tree property
+> >   arm64: dts: fvp: Enable PCIe ATS for Base RevC FVP
+> > 
+> >  .../devicetree/bindings/pci/host-generic-pci.yaml        | 6 ++++++
+> >  drivers/iommu/of_iommu.c                                 | 9 +++++++++
+> >  arch/arm64/boot/dts/arm/fvp-base-revc.dts                | 1 +
+> >  3 files changed, 16 insertions(+)
+> > 
+> > --
+> > 2.44.0
+> > 
 > 
-> Let's not use the checkpatch "$max_line_length = 100" as a guide.
-> 
-> The pci-hyperv.c file as a whole is obviously formatted to fit in 80
-> columns with few exceptions.
-> 
-> IMO it would not be an improvement to scatter random 100-column lines
-> throughout.  That would just mean the file would look bad in an
-> 80-column terminal and there would be a lot of wasted space in a
-> 100-column terminal.
-> 
-Appreciate showing me the data-driven way of reasoning about that very much!
-
-> Bjorn
-
--- 
-Thank you,
-Roman
 
