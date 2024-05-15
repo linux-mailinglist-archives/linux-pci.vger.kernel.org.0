@@ -1,109 +1,154 @@
-Return-Path: <linux-pci+bounces-7512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E016C8C6AA5
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 18:32:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 836C18C6AB1
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 18:34:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B4BD1C218C4
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 16:32:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9FA401C21E1E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 16:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0BF55660;
-	Wed, 15 May 2024 16:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBB517C96;
+	Wed, 15 May 2024 16:34:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YYsZjvsO"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HFuwoPQ5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F01D182D2
-	for <linux-pci@vger.kernel.org>; Wed, 15 May 2024 16:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B590CA7A;
+	Wed, 15 May 2024 16:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715790732; cv=none; b=VooTdXpw5PCvDr/9433Ljdh8vhh6OakEaxw5865nsjlt3x6tt1VSIOVFwiH6xtgW8lW1u5Eo0XW8OtuHC23YXsfhi09Gs4Hjj4NHUlECIgpVQO2DHDhzXzbGbuSJ6/D0EYxEqgRnaawQhgB6GMSKaqCJzkJkcxYetLSYf0Wk9mI=
+	t=1715790851; cv=none; b=bK8RvIBWfXTMg58VXqLpF0Vx0PJagJeZAkHaU5gQnrrZiPn3v3sCyGSZJm0WRaSvix8dWgCCsXVcTIB+1LvjUtd1TDoTFwuu6PrekG9uyZXERJ6oTFghzQjZhvokhoGDDPp7xb8/3yJO3D00XQMAtxH4+30eJhzzEQTVPFIYNFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715790732; c=relaxed/simple;
-	bh=nui8g1oHbr2oB2DKqSyORL0IlshxXxbeuaYFRJIE1A4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LbmAxRjNT+GHgj24MoMbkuBWYGa7KR8pIyueN3wbN1QsS6oFCM0YSgPHHuYyRpBADdTrQ0hp+u+OuyHgBD/ZwdlVNpDL78cBfJb3B5EaSN5DSv56LkbS3SzNLi5R7vQyLRWB1eSeWQiXEt8w0Vlc0/fH07TKboKR0cN+64WuERE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YYsZjvsO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715790732; x=1747326732;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=nui8g1oHbr2oB2DKqSyORL0IlshxXxbeuaYFRJIE1A4=;
-  b=YYsZjvsOAO6eKctke4WKgJDlRy0DVI1vJllDnZzkwY0d3ISv/2ifCaZ7
-   +eG4I2bVGOFPmjKX6k/LdZtTtgkFzRY3oVDgBiYDZXD7N9IAJ8e6G705v
-   5S2c26hUAD1REcBRY2sx7UE5Ag4WXCNtyc/gg4iN/B4B7XAoJ+vbwNuxa
-   KZ/fggr+DI524cigZID0FuvXfYlfDHMc5nQntBgvhzCx9n3spbC0yz3T1
-   arAwKle097n6JBP5tKpPJ8N6jHhV7fgzlfr6c9d8AJ3Q5NAeqy3IBJZEa
-   Z6V6XNq/NfSpQTe0aPK93QnnzA8In/cQA/Ind5x7/XWSvjATSCUzAGEEg
-   w==;
-X-CSE-ConnectionGUID: WBLiyW6nSzysOEODaUnDHQ==
-X-CSE-MsgGUID: dzYLHP3RTj+oUiXjpUD9PQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="29343785"
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="29343785"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 09:32:10 -0700
-X-CSE-ConnectionGUID: Ioa1riIsT/qlPchH8XaUXA==
-X-CSE-MsgGUID: QDgzYScqRheigPyL62Ko0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,162,1712646000"; 
-   d="scan'208";a="68572648"
-Received: from mwiniars-desk2.ger.corp.intel.com (HELO localhost) ([10.245.246.141])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2024 09:32:07 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: intel-gfx@lists.freedesktop.org, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/8] drm/i915/pciids: PCI ID macro cleanups
-In-Reply-To: <20240515154505.GA2123614@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240515154505.GA2123614@bhelgaas>
-Date: Wed, 15 May 2024 19:32:03 +0300
-Message-ID: <87zfsravek.fsf@intel.com>
+	s=arc-20240116; t=1715790851; c=relaxed/simple;
+	bh=GU6KJDrwVaAZGvd4YyiDXiCH4Cu0goHSX5Qv1cNq2nY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LhizJwOV+VEHVTu5VAFZuuUNFE3nU6frdw+R1z1yEsvhBBgoBakEUg+coTkd/Egn3x5D1vZjW5pUHZYOsycsGwPoRDQ3C8PZJqfwuy+tuvGZT4lyMjWkyT3lSvhFHJCHU8WOvLFfULtRnTv5nVduhG2PN75tEFJjKfU88lF/Xr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HFuwoPQ5; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.186.190] (unknown [131.107.159.62])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9CFD120BE54C;
+	Wed, 15 May 2024 09:34:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9CFD120BE54C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1715790849;
+	bh=LgGoEoCHc+tmuUHwV72O4w5DS5evewRoGKEngQZTkQw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HFuwoPQ5g1K3tnZKOH9/B5XNG9OpwxZJVSOTlMoZAY3YUVwYJWDUpZLViiDQtOLXM
+	 RF50tZekXZrLHIHIcY3x4azhgGO118LAatJ0iiSe91sxtFWwtf5g5PwaaOCZq6vrle
+	 74Dv+Hu/xVGAnFlpZ8lOpSayuYNe/006pxfc5wM8=
+Message-ID: <ea91140a-d0df-4efd-aef8-34f00b82cf74@linux.microsoft.com>
+Date: Wed, 15 May 2024 09:34:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] drivers/pci/hyperv/arm64: vPCI MSI IRQ domain from
+ DT
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, dave.hansen@linux.intel.com, decui@microsoft.com,
+ haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com, kys@microsoft.com,
+ lenb@kernel.org, lpieralisi@kernel.org, mingo@redhat.com,
+ mhklinux@outlook.com, rafael@kernel.org, robh@kernel.org,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+References: <20240514224508.212318-1-romank@linux.microsoft.com>
+ <20240514224508.212318-7-romank@linux.microsoft.com>
+ <20240515094820.GB22844@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20240515094820.GB22844@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 15 May 2024, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> Sorry, I had ignored this because I didn't think it affected any PCI
-> stuff.  This is fine with me:
->
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Thanks, pushed to drm-intel-next.
 
-> But since you asked :), I'll gripe again about the fact that this
-> intel_early_ids[] list needs continual maintenance, which is not the
-> way things are supposed to work.  Long thread about it here:
->
-> https://lore.kernel.org/linux-pci/20201104120506.172447-1-tejaskumarx.surendrakumar.upadhyay@intel.com/t/#u
+On 5/15/2024 2:48 AM, Saurabh Singh Sengar wrote:
+> On Tue, May 14, 2024 at 03:43:53PM -0700, Roman Kisel wrote:
+>> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration
+>> on arm64 thereby it won't be able to do that in the VTL mode where
+>> only DeviceTree can be used.
+>>
+>> Update the hyperv-pci driver to discover interrupt configuration
+>> via DeviceTree.
+> 
+> Subject prefix should be "PCI: hv:"
+> 
+Thanks!
 
-Right. I was under the impression we'd cease doing this for new
-platforms, and see if we can get away with it. For example, we don't
-have Meteorlake or Lunarlake there. Fingers crossed. But we probably
-don't want to touch the old stuff.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   drivers/pci/controller/pci-hyperv.c | 13 ++++++++++---
+>>   include/linux/acpi.h                |  9 +++++++++
+>>   2 files changed, 19 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index 1eaffff40b8d..ccc2b54206f4 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -906,9 +906,16 @@ static int hv_pci_irqchip_init(void)
+>>   	 * way to ensure that all the corresponding devices are also gone and
+>>   	 * no interrupts will be generated.
+>>   	 */
+>> -	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+>> -							  fn, &hv_pci_domain_ops,
+>> -							  chip_data);
+>> +	if (acpi_disabled)
+>> +		hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
+>> +			irq_find_matching_fwnode(fn, DOMAIN_BUS_ANY),
+>> +			0, HV_PCI_MSI_SPI_NR,
+>> +			fn, &hv_pci_domain_ops,
+>> +			chip_data);
+>> +	else
+>> +		hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+>> +			fn, &hv_pci_domain_ops,
+>> +			chip_data);
+> 
+> Upto 100 characters per line are supported now, we can have less
+> line breaks.
+> 
+Fewer line breaks would make this look nicer, let me know if you had any 
+particular style in mind.
 
-Except now that I'm doing some non-functional refactoring to be able to
-better reuse the macros for something else. There's a bit more coming,
-please bear with me. :) I just tend to err on the side of getting the
-acks than pushing away.
-
-BR,
-Jani.
-
+>>   
+>>   	if (!hv_msi_gic_irq_domain) {
+>>   		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index b7165e52b3c6..498cbb2c40a1 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -1077,6 +1077,15 @@ static inline bool acpi_sleep_state_supported(u8 sleep_state)
+>>   	return false;
+>>   }
+>>   
+>> +static inline struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+>> +					     unsigned int size,
+>> +					     struct fwnode_handle *fwnode,
+>> +					     const struct irq_domain_ops *ops,
+>> +					     void *host_data)
+>> +{
+>> +	return NULL;
+>> +}
+>> +
+>>   #endif	/* !CONFIG_ACPI */
+>>   
+>>   extern void arch_post_acpi_subsys_init(void);
+>> -- 
+>> 2.45.0
+>>
 
 -- 
-Jani Nikula, Intel
+Thank you,
+Roman
 
