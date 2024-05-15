@@ -1,105 +1,185 @@
-Return-Path: <linux-pci+bounces-7510-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7511-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC5428C6A8A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 18:26:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15AF58C6AA0
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 18:31:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 654782873FD
-	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 16:26:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 433F21C22456
+	for <lists+linux-pci@lfdr.de>; Wed, 15 May 2024 16:31:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86DCD15664A;
-	Wed, 15 May 2024 16:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 127443D76;
+	Wed, 15 May 2024 16:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWIXxFWq"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jYM0jIAS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3D813EFE5;
-	Wed, 15 May 2024 16:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86365A2A;
+	Wed, 15 May 2024 16:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715790368; cv=none; b=XcGAEklhiwXE/Q2+R4VeAMtIgFAZZsbmD6HPIKGLXq9sDM6Dc4H9GyzdEvsYPa+JKdUTJm38YZjvxCwO2B7AMo2mLhGSqAujySUQ6jE2O4exu+UPssv9YREUzwuNTMlRd8CUDk8fEpWvzezllview2cXh/S/5S2L2jxXIaavjNw=
+	t=1715790711; cv=none; b=utv8/JONUZmHjBKXdbc7KeX5v+CL6UQ8EfQCLMNiO6eZcFXHnbpixBGPJiYTfKysPH6FbvCMZddMYnYS+qkpsbBMFBeM4aW4MSJIfJVbqwmY3PXxQB+10tX0DRJj1gMbB6/ztvmPPpMSXSGSlN6fLgLFnAbssEb1Vc0fBmNEvxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715790368; c=relaxed/simple;
-	bh=/QLd5pElGb+brw7GOeOIfpCMWq2XW/fJcLnL4LqLKPw=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYRIh2XVY49q4YE4cstFCGh62qJnnLzTWFrCsI0kvpsj8jxaziBfTJ4rxOhmeFB1qSDezAKIg55nexu0dhg8NMBsMCOkZRosS2QSfZiX4PaE+zR/+6h6MItg0Z27Vis2IYZHQBZTqShYU/vVINBZ+wbfzaUxnH/pGr/KV6Iz0hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWIXxFWq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0AAC116B1;
-	Wed, 15 May 2024 16:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715790367;
-	bh=/QLd5pElGb+brw7GOeOIfpCMWq2XW/fJcLnL4LqLKPw=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=tWIXxFWqe023uzxYSpP2M5OJUGckwP0jQFy+9hVbYUnYBrcjAssiG2uwzjWJRVsAX
-	 reoYlgTu8kYwmowmJjfTEm/9EkL+XbKp71uI0X1402K/DrJLhb9r4t19DJkEqP4kNH
-	 VYL6ov26m57s3p2kWELK6gUPwxkPpWUme62Zq6FYmzJb7VpVW8SVd3D/YAtFZLz7hs
-	 xqbmPgADiMhEL81p0GPGfCXFHdyA7EMkf/zMTtI1+lu/M25cQjOc05Izxa+OnGOoHW
-	 YRVvMLVF3Ia8GdTGvIzadbI9qjFa9PIGe0w2O+099/b6F65bX/1SYd8pFexLHhmhLy
-	 pUt6KikYWp2xQ==
-Date: Wed, 15 May 2024 18:26:01 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v7 6/7] PCI: rcar-gen4: Add support for r8a779g0
-Message-ID: <ZkTiGWxJK4tbOF5y@ryzen.lan>
-References: <20240415081135.3814373-1-yoshihiro.shimoda.uh@renesas.com>
- <20240415081135.3814373-7-yoshihiro.shimoda.uh@renesas.com>
- <20240511080257.GF6672@thinkpad>
- <TYCPR01MB110409C8FC92A7C466627E0A2D8E32@TYCPR01MB11040.jpnprd01.prod.outlook.com>
- <20240515075954.GB4488@thinkpad>
- <l62l4ksr2rkxxi7kwatd3pfwmwv4ytfumhwkthjsurgla2prno@felahg5h5g7o>
+	s=arc-20240116; t=1715790711; c=relaxed/simple;
+	bh=oV9BF8gsqJXZ5npFONZC3KLX75Rp4oYygO22udBsXIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uQPtiCzp16hLU6rvGRcrINu7t9ZX8P4OWS+tnX8PX8i5lL6bcFp212YHjhTE3mIbnmUTWUwAo2OMKEga/tXMysYMRF8hTMX6EW0jgfojZPdMgLV+ZhbrAJcqk3t5Auo+abeRmvXE7i1y17nlf/9nx89h50Yjib1OZXBTcV6nbwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jYM0jIAS; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.186.190] (unknown [131.107.159.62])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A2FCF20B915A;
+	Wed, 15 May 2024 09:31:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A2FCF20B915A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1715790708;
+	bh=zfT5j7bYJM4DBZSc/Ycy5/9qcDO07bVAvevEiPC83k8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jYM0jIAS40gZnVu5608YVfpID3a7+2njxvkoEidPMcsRJTvmB1BnJSa74t0o27bvo
+	 jzh+nEcM9FlOT9rA7SFJp3qAjB5iPk0rVeqT8eLK6NOW9+ZmGxHiSyReCuRVbOiJUn
+	 O8c3032PpeKyyZ1i2pceaLxfa6pwPNCFu+//afBU=
+Message-ID: <810369de-077a-412f-b524-6528317c1506@linux.microsoft.com>
+Date: Wed, 15 May 2024 09:31:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <l62l4ksr2rkxxi7kwatd3pfwmwv4ytfumhwkthjsurgla2prno@felahg5h5g7o>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from
+ DeviceTree
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, dave.hansen@linux.intel.com, decui@microsoft.com,
+ haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com, kys@microsoft.com,
+ lenb@kernel.org, lpieralisi@kernel.org, mingo@redhat.com,
+ mhklinux@outlook.com, rafael@kernel.org, robh@kernel.org,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+References: <20240514224508.212318-1-romank@linux.microsoft.com>
+ <20240514224508.212318-6-romank@linux.microsoft.com>
+ <20240515094225.GA22844@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20240515094225.GA22844@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 15, 2024 at 10:59:39AM +0200, Wolfram Sang wrote:
+
+
+On 5/15/2024 2:42 AM, Saurabh Singh Sengar wrote:
+> On Tue, May 14, 2024 at 03:43:52PM -0700, Roman Kisel wrote:
+>> The vmbus driver uses ACPI for interrupt assignment on
 > 
-> > > This is because that Renesas is not able to distribute the firmware freely.
-> > > 
-> > 
-> > Seriously? Are you saying that the user has to sign NDA to get this firmware?
+> In subject use the prefix "Drivers: hv: vmbus:".
+> It is preferred to us "VMbus/VMBus" instead of "vmbus" for all the
+> commit message and comments.
 > 
-> No, the user has to buy the SoC and will get the firmware with the
-> documentation. Renesas is not allowed to distribute the firmware to
-> non-users of the SoC. So, linux-firmware cannot be used, sadly. We all
-> wish it would be different.
+I can see "Drivers: hv: vmbus:" as a convention from the data[1], will 
+update the commit message per that.
 
-If Renesas could bother to spend the effort to be legally allowed to
-include the firmware in linux-firmware, do we want to spend the effort
-to maintain the support for this PCIe controller in mainline?
+The recent Michael Kelly's patchset where the Hyper-V documentation is 
+updated to use "VMBus" instead of the incorrect one (iiuc) "VMbus" 
+compels me to use "VMBus" out of the options you have enumerated, in the 
+commit description.
 
-Is there even an example of a device driver that *requires* firmware
-that is not in linux-firmware?
+[1]
+The data mining device was
 
-(I know of some device drivers that does not have firmware in
-linux-firmware, but in that case the firmware is *optional*,
-so the device driver still works even without loading an updated
-firmware. For this patch series, the driver seems to error out if
-request_firmware fails.)
+git log --all --grep='Drivers: hv: vmbus:'
 
+and variations thereof.
 
-Kind regards,
-Niklas
+>> arm64 hence it won't function in the VTL mode where only
+>> DeviceTree can be used.
+>>
+>> Update the vmbus driver to discover interrupt configuration
+>> via DeviceTree.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   drivers/hv/vmbus_drv.c | 37 +++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index e25223cee3ab..52f01bd1c947 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -36,6 +36,7 @@
+>>   #include <linux/syscore_ops.h>
+>>   #include <linux/dma-map-ops.h>
+>>   #include <linux/pci.h>
+>> +#include <linux/of_irq.h>
+>>   #include <clocksource/hyperv_timer.h>
+>>   #include <asm/mshyperv.h>
+>>   #include "hyperv_vmbus.h"
+>> @@ -2316,6 +2317,34 @@ static int vmbus_acpi_add(struct platform_device *pdev)
+>>   }
+>>   #endif
+>>   
+>> +static int __maybe_unused vmbus_of_set_irq(struct device_node *np)
+>> +{
+>> +	struct irq_desc *desc;
+>> +	int irq;
+>> +
+>> +	irq = of_irq_get(np, 0);
+>> +	if (irq == 0) {
+>> +		pr_err("VMBus interrupt mapping failure\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	if (irq < 0) {
+>> +		pr_err("VMBus interrupt data can't be read from DeviceTree, error %d\n", irq);
+>> +		return irq;
+>> +	}
+>> +
+>> +	desc = irq_to_desc(irq);
+>> +	if (!desc) {
+>> +		pr_err("VMBus interrupt description can't be found for virq %d\n", irq);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	vmbus_irq = irq;
+>> +	vmbus_interrupt = desc->irq_data.hwirq;
+>> +	pr_debug("VMBus virq %d, hwirq %d\n", vmbus_irq, vmbus_interrupt);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int vmbus_device_add(struct platform_device *pdev)
+>>   {
+>>   	struct resource **cur_res = &hyperv_mmio;
+>> @@ -2324,12 +2353,20 @@ static int vmbus_device_add(struct platform_device *pdev)
+>>   	struct device_node *np = pdev->dev.of_node;
+>>   	int ret;
+>>   
+>> +	pr_debug("VMBus is present in DeviceTree\n");
+>> +
+>>   	hv_dev = &pdev->dev;
+>>   
+>>   	ret = of_range_parser_init(&parser, np);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> +#ifndef HYPERVISOR_CALLBACK_VECTOR
+>> +	ret = vmbus_of_set_irq(np);
+>> +	if (ret)
+>> +		return ret;
+>> +#endif
+>> +
+>>   	for_each_of_range(&parser, &range) {
+>>   		struct resource *res;
+>>   
+>> -- 
+>> 2.45.0
+>>
+
+-- 
+Thank you,
+Roman
 
