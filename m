@@ -1,251 +1,210 @@
-Return-Path: <linux-pci+bounces-7583-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7584-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF0678C7DCC
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 22:47:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A74928C7DCE
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 22:48:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D736281DA0
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 20:47:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 201EF1F21784
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 20:48:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1197157A56;
-	Thu, 16 May 2024 20:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C24114A612;
+	Thu, 16 May 2024 20:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PKu218M/"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nbXAqneo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2067.outbound.protection.outlook.com [40.107.93.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EB815CB
-	for <linux-pci@vger.kernel.org>; Thu, 16 May 2024 20:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715892432; cv=none; b=uqVnQQ2kDhkn+rWVeSoZ3HovoJwKCy2szecndbtzl/JtAQ/4Ph5dGLEGBjMEPHix78GYLhqZb+/SeZQ8rISPCM+Ojk+JhuYDqjM4zToTuhGIOmo9CT/dcPaAVjYHXk/uxO7eN5aZusguRienMEXqK66hM80Rqcg5ongmrIHSWOk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715892432; c=relaxed/simple;
-	bh=L0GZTah8UKFCZNxz6uAaVwSFdWFuv5hIv9rELhWYQtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A88sEmGu0WLVKnL6AyD3E0Elt5JlHZjwV6C7jpk/ycDFuK9LlFq5r+PkbhKaZqo2VcWx2zhQUKzE9+3crnRZfckdgE88kEbMi7W78ShEdDp/2wMKk65nmFGIbL3KYtB12UO861E/P/4aYlbwzQVwrWhd3g3dgFklr9LnLzzVGyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PKu218M/; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715892431; x=1747428431;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=L0GZTah8UKFCZNxz6uAaVwSFdWFuv5hIv9rELhWYQtE=;
-  b=PKu218M/MK0omV3WSa0LJ2+m6MuNRq5WZYKFZWemmPY93GaTgU47bTyj
-   POqWjFo/deyC6nCb+z4m88KrBknA63/4ZF443buIL3K18u8UIsqn+KuPf
-   JVLhaO5aUAWzoEBn6g03KbB2FdqfsHbfFcaQskiEVavO4JzQQcdmoqC/n
-   fxlfGEG3Vs+xva2dmGYw10I5cGzX3EpG1kpbiS8f00IAjADiSPHBkj61h
-   NDtl587YpJeNanXfaO9Pj+sNRI9z/dSwRqTX6OsK9WLMHOA4B9FnesW7b
-   MfgXE7zgvlTLOuXHwSOW6adRB0bW6saCAhi0Pyn9GIi3n3QJMw8sd9ywa
-   g==;
-X-CSE-ConnectionGUID: 5Q1Duv8bQfenRsoFFNbjYA==
-X-CSE-MsgGUID: MuEUwNDuRLyaqfoVj7m9fA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="15868857"
-X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
-   d="scan'208";a="15868857"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 13:47:10 -0700
-X-CSE-ConnectionGUID: v7P2l3h6TEWYdntYetSxMA==
-X-CSE-MsgGUID: jnAt1queSnGqQ8Eq8zixuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
-   d="scan'208";a="32102374"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 16 May 2024 13:47:08 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s7i0I-000Em7-0I;
-	Thu, 16 May 2024 20:47:06 +0000
-Date: Fri, 17 May 2024 04:46:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:dt-bindings] BUILD SUCCESS
- 52d06636a4ae4db24ebfe23fae7a525f7e983604
-Message-ID: <202405170440.aNqGiPm0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFC915CB;
+	Thu, 16 May 2024 20:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715892484; cv=fail; b=FSVV7g5AaRlUaBDhJsjiLrcAOTxUiRorDS7lBD+EE+w3jW3FRa7lJHTfLOR4w38rV3zQUT65BD/6ByBJ+JhnS8bZAagsgi7agZANqj+pTqYWkBayTrlVg0om6lLnDJ7Pz9NjLbcXg4bfljOmhnnJJLVL7eatgzKbU+8vp/inMlQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715892484; c=relaxed/simple;
+	bh=C82fyrvn+D4OEc5UyWDvEzid7OtZjFVsOeyV45hviow=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qfjZx901cHejqVCGAuBYw1Wrx16NxhjyvDaogNS+DRbmiSX2Gkfcl9at+6fEl99lgfwOsGqyqxAaBNWMAtCFGUgS0hbzctPGCDN3i1URMXiEDDkgMYOsXDVWTY6YRr+VHZfMWWlyQavnMoZa6dSOI9PV35fgztK01IDEPjzt68Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nbXAqneo; arc=fail smtp.client-ip=40.107.93.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ocbRBdw+imcOiNGWtAzQk16wQWcAZLRna638K6bsPbmAHuRCQRH11R+8rMsPZKqmg4Msyif9XdI/dZPrILGClkFo96Oj4Ly5KTWfJAYuUhs4hNmb69qQhKRQhxRL1AHRd871KrZAdNMjznftnZECLi/p647a+DZcj4zCVh9DEOnm9OsgTjbraKmKxsPywHkeFFyGt4GsQFpD5XsHPSm7Seuc5cYvZdNZV2AdJqQn2tUNgj4lJguskP9IDyMNu9fxHskdRbCxbilDmVozYrC8yQWCFiMHBveSPOX0SsmUKrtcxsLFXayUyki/NgmyivgPd0FEBg8lpAyD4/CEAXHXvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HkmJ9RjbgrFrsLjOs3qq95zvSQPfgll6u00AZb5OAYE=;
+ b=ZHNglu8kjZWrga2JaFMuXfDgIru444onVICcu13ResC6c0MTjZoE4NtzaHa2lU1LykhbgWEFpNRiJuD1qLZwEqR7YANosBLQuFVHlwHy67shU+nZ9nDHQZYDft7BU7lsDhz2/FHIwqVCU1+wsy6KoaIZSn7QODz9t2sjz/EpqfsBOZFs8NLwZ64gwiW2mP+n31hNHpiVy2bx8F8UwHLiZ/JvTYt0EFmlnXOZwYIZF6fkXrBJHxdnCtpDeTigdU9sWxrjwWgNLDwQhfP3ESJNvOHvykXjukpf7Pn5GIcFcr7g7ErHolOooMkl4svUGfyNzNL5i906cxpLwV1msLSqYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HkmJ9RjbgrFrsLjOs3qq95zvSQPfgll6u00AZb5OAYE=;
+ b=nbXAqneoMhVB8UsvcPwT43EIUC94OH4V3Cn2ImEAs1yhOqYFb3RdblYS9fht5JXzL/WV/iEUx2K5MhZtKYLbww4AbrYgYcYy+k/9lp9pxmgzm54loQsxDpyfFO+qEDWwcbzwpl0wgmcSVEi9dtWFTSw0hpfTfAbkPhAjz4ROC9c=
+Received: from BN8PR07CA0015.namprd07.prod.outlook.com (2603:10b6:408:ac::28)
+ by CH3PR12MB8995.namprd12.prod.outlook.com (2603:10b6:610:17e::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Thu, 16 May
+ 2024 20:48:00 +0000
+Received: from BN3PEPF0000B078.namprd04.prod.outlook.com
+ (2603:10b6:408:ac:cafe::5b) by BN8PR07CA0015.outlook.office365.com
+ (2603:10b6:408:ac::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.29 via Frontend
+ Transport; Thu, 16 May 2024 20:47:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B078.mail.protection.outlook.com (10.167.243.123) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7587.21 via Frontend Transport; Thu, 16 May 2024 20:47:59 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 16 May
+ 2024 15:47:58 -0500
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Bjorn Helgaas <helgaas@kernel.org>, Mahesh J Salgaonkar
+	<mahesh@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Bowman Terry <terry.bowman@amd.com>, Hagan Billy <billy.hagan@amd.com>,
+	"Simon Guinot" <simon.guinot@seagate.com>, "Maciej W . Rozycki"
+	<macro@orcam.me.uk>, Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v2] PCI: pciehp: Clear LBMS on hot-remove to prevent link speed reduction
+Date: Thu, 16 May 2024 20:47:48 +0000
+Message-ID: <20240516204748.204992-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B078:EE_|CH3PR12MB8995:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6c8e12c6-c537-4877-e4ea-08dc75e978c5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|36860700004|376005|82310400017|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HfYeNyYSAQ7RzlJZIeNmbiRI98fCjzL/F5NtyWrlOqYDFL/4ZUP6k9zGSy9U?=
+ =?us-ascii?Q?lurbXjdh7JFSugzM44Ate1MLt+QAApkQkKyVAkGVXVcUMSLYo5HtjJHDkRz1?=
+ =?us-ascii?Q?Z0I+w+hel8q1Zb9i3ExeOPIpGsP38N/QW2alE6yDg2iO58GTx9/B+RDm3g2H?=
+ =?us-ascii?Q?uHkkt9qvNxFNauC7lQAINvEdoLavJsMYX6ifmr4CfucE62gL5XlxRSPBqLQH?=
+ =?us-ascii?Q?ZAGmDXrC3WUidXCbYTEqOf/8RCFMH4lDnqECHBO7mnN+2IZV0W2APsuDvbB5?=
+ =?us-ascii?Q?jkRYljaRb6sMPMuYD6HoPcgK0SHbfIapIddb6PiMbWgb8V/k3SL3QK6C9+pj?=
+ =?us-ascii?Q?ha+seC3jafUlpywaXKaHHGtBxJ7aknHTi0/gsrjquIV4Kbg1L4rZwQKUe/lN?=
+ =?us-ascii?Q?D7UoMEJkeZlZP4Iqb2tl3clTgDBtNTU/FjngNEPF/d3zqkEJFx6/NopYfnad?=
+ =?us-ascii?Q?NdUvXRswLP7hr2VTHSSmihw9iKrt4MPk3yb227ITRD8YJbmL1YmrpVINmDU+?=
+ =?us-ascii?Q?O49kp7gHdyiBcl91XFrB2Mi+pircUv96wAZ5n5UR4tx0mapovKVd8fzODQ8+?=
+ =?us-ascii?Q?ibqEd3Edj5K8ij01YYwCrmkLyE4gR/7ANNPMLNmLF20lZh5s0jKej5HFn2W7?=
+ =?us-ascii?Q?FhJxUG92aWEiBOXNwYHz6Xz8wFbX9WULBe0SUGZdfLjMlAYosGTH0+NCsJIC?=
+ =?us-ascii?Q?cMycjARHB0Z09UcZGz5KpXWAl6FPDZnk94mqt0yMJC9hk7MsJFzLTtO/Xegc?=
+ =?us-ascii?Q?6V9rEsDU71HWiRv3RZYUkNd7EywUPkArYFGWE1ExxndBi/Uc4p6p7XkK0yV+?=
+ =?us-ascii?Q?wiO0s8aC8nzUrPhMKwYnS50uIz3h7k/hG8pJ5ujg1HsGbgssZrn5dp4Bps/U?=
+ =?us-ascii?Q?1U6LCdnZ9xNugxMrnchuFFbJSZxU16riWywIByZ+2N9XstlmmpgTdHbazsfd?=
+ =?us-ascii?Q?wnjgiEMxYIrV/H3MswrHYrZ5GsureyTVuLA7zB1krUYAyKfN6JZE2h3jVsba?=
+ =?us-ascii?Q?Ru75SZQYSibsMcnCVsjaP3neU/v7Ax1XWtmDwoiZCQm3zyDpeCUHOrRBUlV+?=
+ =?us-ascii?Q?yvRy6xI9/IGk2307eWi1lq5zPj8e1wWCY31EQ7OqvEwqLhWD0fhBZ5o/5sQ5?=
+ =?us-ascii?Q?/8GdVLmfcbRjzwVGPgSc83emFFLfw4eYK3XF8Xm1l2Die7FH9TWuODiZT/fc?=
+ =?us-ascii?Q?cqZ2c8cBoj16WFIJoueka3MdvdiCfwNDt9jou2mv7ZHC6gUR+/1eLdmfWy41?=
+ =?us-ascii?Q?yEcs0Euw5hIHZEpRYFO1n840Svt1Gj+PVM8w2eOMmsZAP8dyEklzSDHE5w0Z?=
+ =?us-ascii?Q?FtE1pRvCZE/3PZzuNzlWZfSi2A0Xuxv9bV3GoLfl56nSAA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(82310400017)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2024 20:47:59.3363
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c8e12c6-c537-4877-e4ea-08dc75e978c5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B078.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8995
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
-branch HEAD: 52d06636a4ae4db24ebfe23fae7a525f7e983604  dt-bindings: PCI: rockchip,rk3399-pcie: Add missing maxItems to ep-gpios
+Clear Link Bandwidth Management Status (LBMS) if set, on a hot-remove
+event.
 
-elapsed time: 734m
+The hot-remove event could result in target link speed reduction if LBMS
+is set, due to a delay in Presence Detect State Change (PDSC) happening
+after a Data Link Layer State Change event (DLLSC).
 
-configs tested: 156
-configs skipped: 3
+In reality, PDSC and DLLSC events rarely come in simultaneously. Delay in
+PDSC can sometimes be too late and the slot could have already been
+powered down just by a DLLSC event. And the delayed PDSC could falsely be
+interpreted as an interrupt raised to turn the slot on. This false process
+of powering the slot on, without a link forces the kernel to retrain the
+link if LBMS is set, to a lower speed to restablish the link thereby
+bringing down the link speeds [2].
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+According to PCIe r6.2 sec 7.5.3.8 [1], it is derived that, LBMS cannot
+be set for an unconnected link and if set, it serves the purpose of
+indicating that there is actually a device down an inactive link.
+However, hardware could have already set LBMS when the device was
+connected to the port i.e when the state was DL_Up or DL_Active. Some
+hardwares would have even attempted retrain going into recovery mode,
+just before transitioning to DL_Down.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240516   gcc  
-arc                   randconfig-002-20240516   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   gcc  
-arm                                 defconfig   clang
-arm                          ixp4xx_defconfig   gcc  
-arm                      jornada720_defconfig   clang
-arm                         lpc32xx_defconfig   clang
-arm                        multi_v5_defconfig   gcc  
-arm                   randconfig-001-20240516   gcc  
-arm                   randconfig-002-20240516   clang
-arm                   randconfig-003-20240516   gcc  
-arm                   randconfig-004-20240516   clang
-arm                         s5pv210_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240516   gcc  
-arm64                 randconfig-002-20240516   clang
-arm64                 randconfig-003-20240516   clang
-arm64                 randconfig-004-20240516   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240516   gcc  
-csky                  randconfig-002-20240516   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240516   clang
-hexagon               randconfig-002-20240516   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240516   clang
-i386         buildonly-randconfig-002-20240516   clang
-i386         buildonly-randconfig-003-20240516   clang
-i386         buildonly-randconfig-004-20240516   gcc  
-i386         buildonly-randconfig-005-20240516   gcc  
-i386         buildonly-randconfig-006-20240516   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240516   gcc  
-i386                  randconfig-002-20240516   gcc  
-i386                  randconfig-003-20240516   clang
-i386                  randconfig-004-20240516   clang
-i386                  randconfig-005-20240516   clang
-i386                  randconfig-006-20240516   clang
-i386                  randconfig-011-20240516   gcc  
-i386                  randconfig-012-20240516   gcc  
-i386                  randconfig-013-20240516   clang
-i386                  randconfig-014-20240516   gcc  
-i386                  randconfig-015-20240516   gcc  
-i386                  randconfig-016-20240516   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240516   gcc  
-loongarch             randconfig-002-20240516   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5208evb_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     cu1000-neo_defconfig   gcc  
-mips                     loongson2k_defconfig   gcc  
-mips                malta_qemu_32r6_defconfig   gcc  
-mips                      pic32mzda_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240516   gcc  
-nios2                 randconfig-002-20240516   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240516   gcc  
-parisc                randconfig-002-20240516   gcc  
-parisc64                            defconfig   gcc  
-powerpc                      acadia_defconfig   clang
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                      mgcoge_defconfig   clang
-powerpc                 mpc832x_rdb_defconfig   gcc  
-powerpc                      obs600_defconfig   clang
-powerpc               randconfig-001-20240516   gcc  
-powerpc               randconfig-002-20240516   clang
-powerpc               randconfig-003-20240516   clang
-powerpc64             randconfig-001-20240516   gcc  
-powerpc64             randconfig-002-20240516   clang
-powerpc64             randconfig-003-20240516   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240516   gcc  
-riscv                 randconfig-002-20240516   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240516   gcc  
-s390                  randconfig-002-20240516   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                    randconfig-001-20240516   gcc  
-sh                    randconfig-002-20240516   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240516   gcc  
-sparc64               randconfig-002-20240516   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240516   clang
-um                    randconfig-002-20240516   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240516   gcc  
-xtensa                randconfig-002-20240516   gcc  
+Thus the set LBMS is never cleared and might force software to cause link
+speed drops when there is no link [2].
 
+Dmesg before:
+	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
+	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
+	pcieport 0000:20:01.1: broken device, retraining non-functional downstream link at 2.5GT/s
+	pcieport 0000:20:01.1: retraining failed
+	pcieport 0000:20:01.1: pciehp: Slot(59): No link
+
+Dmesg after:
+	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
+	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
+	pcieport 0000:20:01.1: pciehp: Slot(59): No link
+
+[1] PCI Express Base Specification Revision 6.2, Jan 25 2024.
+    https://members.pcisig.com/wg/PCI-SIG/document/20590
+[2] Commit a89c82249c37 ("PCI: Work around PCIe link training failures")
+
+Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+---
+Link to v1:
+https://lore.kernel.org/all/20240424033339.250385-1-Smita.KoralahalliChannabasappa@amd.com/
+
+v2:
+	Cleared LBMS unconditionally. (Ilpo)
+	Added Fixes Tag. (Lukas)
+---
+ drivers/pci/hotplug/pciehp_pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+index ad12515a4a12..dae73a8932ef 100644
+--- a/drivers/pci/hotplug/pciehp_pci.c
++++ b/drivers/pci/hotplug/pciehp_pci.c
+@@ -134,4 +134,7 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+ 	}
+ 
+ 	pci_unlock_rescan_remove();
++
++	pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
++				   PCI_EXP_LNKSTA_LBMS);
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
 
