@@ -1,333 +1,231 @@
-Return-Path: <linux-pci+bounces-7563-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7565-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B4688C73E7
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 11:35:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4092B8C7418
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 11:48:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CC26B248A0
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 09:35:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5ED4281230
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 09:48:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A17144D0B;
-	Thu, 16 May 2024 09:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97762182AF;
+	Thu, 16 May 2024 09:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SaPIrMQM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YfE7XoPj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2074.outbound.protection.outlook.com [40.107.220.74])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D0A1448CB;
-	Thu, 16 May 2024 09:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715852053; cv=fail; b=K/Qz5nm8bgdyzqZLy1srqmj3g5i0ixaOgmww+2Nb2kQGJKUYKkBVeXTw3xrQz3GAVICaqHjNFO69XoA7L/6DAnT/9IYjUVbOr6wLLrNL3Ie4Tpk89SsIexN63Z/Xke8dmCGYQi0C9dk4BkTFjvCvlLnU2HvrfZGZ2oKrXI7iSL8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715852053; c=relaxed/simple;
-	bh=pjH7lWhaoZTYGCJLu4w4YutR368Fcgi2rLFlDTMQre0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V83VfpuBPfOn38ppVPsuak+99shlfyKt2e1QVgFtqMff/VpnCgLNtsiq84S9qhRVm0bx46aHMVclMBS9YyvFUO1HbbQJA9aFGz1JglPqOdt1tyIx1urvkc5iQTSrJwkeEwuHFBQIkE23lckdm0lM3RC0kcwHHLb+eXuhTtdSag8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SaPIrMQM; arc=fail smtp.client-ip=40.107.220.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g/EoogB7lqyb5eufieMMHUG+TN0P4wcnDGGmDGmNRLJ832bEhLrEduXS/AzkQ76pjOv9OVIC4joQm+mqMwI4820nelgcpdIxTAdqOsiKE1dIZ1pq7FPbDCFO/QvCcwEMRMt8WF/cbbWfBi2eB0sh4L9JM98UXLJSugs/4djOvEVXq1thhrQq89x9o7rFWCIewowTkfbjIpIyiKuqA1B3c8UwsvchqWUnGB1Kq58AplE/GRdeQvayo3rzXZuOZ0jENdakVVhO5FUAAbMJ7HkaVAHn2K1wfPZv987BD6JaM7D9XG0rhZvb4V2f/s2L+iNq0iMKqIUUgz8FPctbuYMCBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nO8KbzV9Wlyu53SmuLGW5u9WmmJdo64UTJ1CpsyrUy0=;
- b=FSqcbDE/910NBEqSjzIRx8M195uveL2vkdiLq3/Ltc+BbCpJRQxKxLyCDp0JRkLcQI8ivZz5gow9bCrzIGPc7amHQ7ORXO5tmFYRfGV+T7sOPVzVAoqenr67WwerwTyLLEUY6TUtGsSKWkzHvNnkkwOc6/HZQfBQkroov4JQ13ejiBIFtwUeo9FTaoWxcrTQPfrBdBz4cFp7Ql4O477oBN6UuzM0Vt0ybT9H86GfdBoCD/ks7MRDX0CZRYLeIY1m1ZPJ141sSUigfYjoQwjeGC8NsfyYaVMwOzYhc8dvzA+rhTAAOuepWjDLjt3S7Y4c2HHKLEoD7SdyinVDZoy+Gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nO8KbzV9Wlyu53SmuLGW5u9WmmJdo64UTJ1CpsyrUy0=;
- b=SaPIrMQMhGRiJnzWNI5TKYQjj4z5TjIPy739z9mx/RAfi+00+T4i/I++pJMt+44piVk7j+CGh4lrmRMqVzlv0GDNjqpQ2mCyxR3W2EnwDI6OKjsHXGELzi5qNXbeob7tu22nPU9rm+9Wsip5A98WsbOIvLdR3B9LefM5Kt5o+yc=
-Received: from BL0PR1501CA0003.namprd15.prod.outlook.com
- (2603:10b6:207:17::16) by CH3PR12MB8880.namprd12.prod.outlook.com
- (2603:10b6:610:17b::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.26; Thu, 16 May
- 2024 09:34:07 +0000
-Received: from BL6PEPF00022571.namprd02.prod.outlook.com
- (2603:10b6:207:17:cafe::a0) by BL0PR1501CA0003.outlook.office365.com
- (2603:10b6:207:17::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.28 via Frontend
- Transport; Thu, 16 May 2024 09:34:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BL6PEPF00022571.mail.protection.outlook.com (10.167.249.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7587.21 via Frontend Transport; Thu, 16 May 2024 09:34:06 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 16 May
- 2024 04:34:06 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 16 May
- 2024 04:34:06 -0500
-Received: from sriov-ubuntu2204.amd.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 16 May 2024 04:34:04 -0500
-From: Lianjie Shi <Lianjie.Shi@amd.com>
-To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>
-CC: Lianjie Shi <Lianjie.Shi@amd.com>
-Subject: [PATCH 1/1] PCI: Support VF resizable BAR
-Date: Thu, 16 May 2024 17:33:34 +0800
-Message-ID: <20240516093334.2266599-2-Lianjie.Shi@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240516093334.2266599-1-Lianjie.Shi@amd.com>
-References: <20240516093334.2266599-1-Lianjie.Shi@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED30914375A
+	for <linux-pci@vger.kernel.org>; Thu, 16 May 2024 09:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715852877; cv=none; b=ciFF/2yDNCYuNpz5jdOXOOq0ImX533urM98goiyeW+CjmcOrgFakt7WZbEQgvV8RUt3YP45EknNSUsRansU1H1ttY7AIwToTjrq61zPMH2hH0QRJmQOxAPRB+iWzePE7OafvKANUXtLyn34eObiW7uzXTeGZtR06zTAVsFqonQA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715852877; c=relaxed/simple;
+	bh=qXJQtGbYZIMmmRvaLtUiEGiWhbEaUDmkLC+1h8CIdUA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Ikyt4x5yORnieORrzethRjpzv0gtj/Ot0glCJwYq1VCLDEMkzQZR2JjVd/SzC2y8kkcjQdTQJDwU3TOxD2GMJV/ImJZKFwlPNZ5CD5JTIyzJLT3nSGiQWTlSmBJIttrUICFa97UqHT7gltbBAms0qvmEJTYUlSKb1Z//tfVetg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YfE7XoPj; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715852876; x=1747388876;
+  h=date:from:to:cc:subject:message-id;
+  bh=qXJQtGbYZIMmmRvaLtUiEGiWhbEaUDmkLC+1h8CIdUA=;
+  b=YfE7XoPjSbCBuS8qcrmn2ZMwd+13QVvl2iP1XDUbGdjY3D1SnJ0F2eRn
+   jDWLX+UVc0NeyJOnqPYNGsQ5yBcNu9wHKOYPOuMqp5pYc6kxhPUd+A5SW
+   j0xfKn9CibxFx2dl3B718HISjtAwTRisIIjaUWVURph/F074l67HosCPG
+   uDxImh60NoZRmWc4spDov25aEBo9GVNcOt1Lxf1R2b6wD2AFlTscmAkwJ
+   aBH5FO5EKx7Vr1Deq9sYBMwZJ8qaDtNRd1AFApLeLGlq1gdnXSUhiPQv/
+   mvmmsfCtSPkd4lp+raMnp0KH/HOsvz594IC5Hp0ogyvX/Xw0+qJQzn27O
+   Q==;
+X-CSE-ConnectionGUID: 702zT73ASI+oG4PFYhkGug==
+X-CSE-MsgGUID: DIldGHhKT2uZU5OPXmdNKQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="12135256"
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="12135256"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:47:53 -0700
+X-CSE-ConnectionGUID: 0c1SlnLFSsumvmttvK/EtQ==
+X-CSE-MsgGUID: UPwT3I26SMOfL3X5bFL0Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="31921903"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 16 May 2024 02:47:52 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s7XiH-000E77-0c;
+	Thu, 16 May 2024 09:47:49 +0000
+Date: Thu, 16 May 2024 17:47:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/rockchip] BUILD SUCCESS
+ c3f70ecb7978e69a27ccae2cc71ab21de1519822
+Message-ID: <202405161728.161GH3m6-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00022571:EE_|CH3PR12MB8880:EE_
-X-MS-Office365-Filtering-Correlation-Id: a254521c-275d-45e2-7dc7-08dc758b550f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|82310400017|1800799015|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aev7Fyd08S0gsFynG2oF38SzrrNZko9Gcu5Rb9htfyv8euQ2yvmYng/IPdPj?=
- =?us-ascii?Q?cdKpU0n6f0nzxk5QVv7fr8Ty18Z7rgnBGka8I/2tcuhBwN1Yhp6dpCOSW7sJ?=
- =?us-ascii?Q?ULl+vMQXbqs8L1nWUaDHLpq9Tiqrz8VndbjcgnlnfrH6RcdvY5N8gFITe5QU?=
- =?us-ascii?Q?NnvobrMMjCNchMmnpI5dO+T+XULcP6hUdYOPLqr799u+8tPjEDKDm8fyZh8t?=
- =?us-ascii?Q?sZloc23agrqWQIOJwJOXYyX2FDTR41rgVXnPcMmTJEbDpug+cxantkC9GPN1?=
- =?us-ascii?Q?u79j5UCVUGT+EzGEhDN8cjWLTeOJYHK8f9g4aCSeTKy0iE/fPXYErM22RhRp?=
- =?us-ascii?Q?TE22lJCG3YCh/GIhpFv9bcqGDNr7YhzuXGTT2xdr9ldLCPUVe1QINrfEIp1c?=
- =?us-ascii?Q?0t8Jh56x+/edC0S0GNgQMe2uHKmh8eICgFOIqMnuHuosiBmpTCW5KtyJhOOt?=
- =?us-ascii?Q?R/UQDy87TstAt2mwf8cKm3d20jJ365VTYWiqGn//KZqmzTy3f+xLA+BDgIbL?=
- =?us-ascii?Q?ofeNtsV3ZZpdzhFJ78KyMkQAL1729u5k33Nt3aSV6M+bGfwiMSDvLZIh4VHc?=
- =?us-ascii?Q?jH7Xx4bsipp5S6oM7g0OIQYeRz8JJzxloQ3NvUdX3dAg+QdGg1LL70miqm5F?=
- =?us-ascii?Q?HCSq7jbw68oaFxhQOHipfBCCE9N9nPAmz/RWrTvD6Fa61z67lAYLYizsMuyN?=
- =?us-ascii?Q?95MQEF76zJVI/5aBSgIFvQGaCrlhtqJ97HNbwxBrbN42WeiARuiO9un2iwLC?=
- =?us-ascii?Q?vwXDRpGUlSqogddFgZx/E90aj//LbAlnxc3F7bi+Kz8rvUvBRyyzC5DbXtjo?=
- =?us-ascii?Q?sdOsA8urTI7BcOUqTYwY4L7w8QiexW4Se3cs+m3wRsfQG9EW6f91cNE5Jpx/?=
- =?us-ascii?Q?aoGMVY64DSt2P7ZsJma+0U1xI9A12+11BwhG8XQiKORtaC3LpUh4jqB4yHTQ?=
- =?us-ascii?Q?UEeLPPOLpX6zUig/dWbxXQoVza9qxFq2SwJRp7aF8M2kU1TpoaGOSNSYaG5A?=
- =?us-ascii?Q?toSYAJlk6mCLrsN6fxtGQQibhed+/Tv4x2A2zMTSm8IX7pmEcDBmbdsIub/o?=
- =?us-ascii?Q?W1pzTuRy3C/vTMJivtmI2b+HUX1LCsIzu52j3EHz0FzoARwgV70eETvqxx/i?=
- =?us-ascii?Q?cmfL553NsboAEZ9YDPZGy307oKfKZiOt0cyJBEAOYMAENU9bvTCG7OsTZ44N?=
- =?us-ascii?Q?PoOGcAlQKbw3H9MLCvlFhgczDGkgAFuhfTttoh/CLTrx7lm2TEw/XZ4K6qCq?=
- =?us-ascii?Q?74WkpfBN7wXsLXniViGst3tuhqQonC+GPN8zt6YUUBKiw4sIDtIQKmv3bDxN?=
- =?us-ascii?Q?74xiXx9kxIB9AG0sS5AoYNci?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400017)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2024 09:34:06.7281
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a254521c-275d-45e2-7dc7-08dc758b550f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00022571.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8880
 
-Add support for VF resizable BAR PCI extended cap.
-Similar to regular BAR, drivers can use pci_resize_resource() to
-resize an IOV BAR. For each VF, dev->sriov->barsz of the IOV BAR is
-resized, but the total resource size of the IOV resource should not
-exceed its original size upon init.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
+branch HEAD: c3f70ecb7978e69a27ccae2cc71ab21de1519822  PCI: dw-rockchip: Fix initial PERST# GPIO value
 
-Based on following patch series:
-Link: https://lore.kernel.org/lkml/YbqGplTKl5i%2F1%2FkY@rocinante/T/
+elapsed time: 730m
 
-Signed-off-by: Lianjie Shi <Lianjie.Shi@amd.com>
----
- drivers/pci/pci.c             | 44 +++++++++++++++++++++++++++++++++-
- drivers/pci/setup-res.c       | 45 +++++++++++++++++++++++++++++------
- include/uapi/linux/pci_regs.h |  1 +
- 3 files changed, 82 insertions(+), 8 deletions(-)
+configs tested: 138
+configs skipped: 3
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e5f243dd4..bb9a2f322 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1867,6 +1867,39 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
- 	}
- }
- 
-+static void pci_restore_vf_rebar_state(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_PCI_IOV
-+	unsigned int pos, nbars, i;
-+	u32 ctrl;
-+	u16 total;
-+
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_VF_REBAR);
-+	if (!pos)
-+		return;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-+
-+	for (i = 0; i < nbars; i++, pos += 8) {
-+		struct resource *res;
-+		int bar_idx, size;
-+
-+		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
-+		total = pdev->sriov->total_VFs;
-+		if (!total)
-+			return;
-+
-+		res = pdev->resource + bar_idx + PCI_IOV_RESOURCES;
-+		size = pci_rebar_bytes_to_size(resource_size(res) / total);
-+		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
-+		ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-+		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-+	}
-+#endif
-+}
-+
- /**
-  * pci_restore_state - Restore the saved state of a PCI device
-  * @dev: PCI device that we're dealing with
-@@ -1882,6 +1915,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_ats_state(dev);
- 	pci_restore_vc_state(dev);
- 	pci_restore_rebar_state(dev);
-+	pci_restore_vf_rebar_state(dev);
- 	pci_restore_dpc_state(dev);
- 	pci_restore_ptm_state(dev);
- 
-@@ -3677,10 +3711,18 @@ void pci_acs_init(struct pci_dev *dev)
-  */
- static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
- {
-+	int cap = PCI_EXT_CAP_ID_REBAR;
- 	unsigned int pos, nbars, i;
- 	u32 ctrl;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+#ifdef CONFIG_PCI_IOV
-+	if (bar >= PCI_IOV_RESOURCES) {
-+		cap = PCI_EXT_CAP_ID_VF_REBAR;
-+		bar -= PCI_IOV_RESOURCES;
-+	}
-+#endif
-+
-+	pos = pci_find_ext_capability(pdev, cap);
- 	if (!pos)
- 		return -ENOTSUPP;
- 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index c6d933ddf..d978a2ccf 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -427,13 +427,32 @@ void pci_release_resource(struct pci_dev *dev, int resno)
- }
- EXPORT_SYMBOL(pci_release_resource);
- 
-+static int pci_memory_decoding(struct pci_dev *dev, int resno)
-+{
-+	u16 cmd;
-+
-+#ifdef CONFIG_PCI_IOV
-+	if (resno >= PCI_IOV_RESOURCES) {
-+		pci_read_config_word(dev, dev->sriov->pos + PCI_SRIOV_CTRL, &cmd);
-+		if (cmd & PCI_SRIOV_CTRL_MSE)
-+			return -EBUSY;
-+		else
-+			return 0;
-+	}
-+#endif
-+	pci_read_config_word(dev, PCI_COMMAND, &cmd);
-+	if (cmd & PCI_COMMAND_MEMORY)
-+		return -EBUSY;
-+
-+	return 0;
-+}
-+
- int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- {
- 	struct resource *res = dev->resource + resno;
- 	struct pci_host_bridge *host;
- 	int old, ret;
- 	u32 sizes;
--	u16 cmd;
- 
- 	/* Check if we must preserve the firmware's resource assignment */
- 	host = pci_find_host_bridge(dev->bus);
-@@ -444,9 +463,9 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	if (!(res->flags & IORESOURCE_UNSET))
- 		return -EBUSY;
- 
--	pci_read_config_word(dev, PCI_COMMAND, &cmd);
--	if (cmd & PCI_COMMAND_MEMORY)
--		return -EBUSY;
-+	ret = pci_memory_decoding(dev, resno);
-+	if (ret)
-+		return ret;
- 
- 	sizes = pci_rebar_get_possible_sizes(dev, resno);
- 	if (!sizes)
-@@ -463,19 +482,31 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	if (ret)
- 		return ret;
- 
--	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
-+#ifdef CONFIG_PCI_IOV
-+	if (resno >= PCI_IOV_RESOURCES)
-+		dev->sriov->barsz[resno - PCI_IOV_RESOURCES] = pci_rebar_size_to_bytes(size);
-+	else
-+#endif
-+		res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
- 
- 	/* Check if the new config works by trying to assign everything. */
- 	if (dev->bus->self) {
- 		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
--		if (ret)
-+		if (ret && ret != -ENOENT)
- 			goto error_resize;
- 	}
- 	return 0;
- 
- error_resize:
- 	pci_rebar_set_size(dev, resno, old);
--	res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-+
-+#ifdef CONFIG_PCI_IOV
-+	if (resno >= PCI_IOV_RESOURCES)
-+		dev->sriov->barsz[resno - PCI_IOV_RESOURCES] = pci_rebar_size_to_bytes(old);
-+	else
-+#endif
-+		res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-+
- 	return ret;
- }
- EXPORT_SYMBOL(pci_resize_resource);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index a39193213..a66b90982 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -738,6 +738,7 @@
- #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
- #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
- #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
-+#define PCI_EXT_CAP_ID_VF_REBAR	0x24	/* VF Resizable BAR */
- #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
- #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
- #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240516   gcc  
+arc                   randconfig-002-20240516   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240516   gcc  
+arm                   randconfig-002-20240516   clang
+arm                   randconfig-003-20240516   gcc  
+arm                   randconfig-004-20240516   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240516   gcc  
+arm64                 randconfig-002-20240516   clang
+arm64                 randconfig-003-20240516   clang
+arm64                 randconfig-004-20240516   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240516   gcc  
+csky                  randconfig-002-20240516   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240516   clang
+hexagon               randconfig-002-20240516   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240516   clang
+i386         buildonly-randconfig-002-20240516   clang
+i386         buildonly-randconfig-003-20240516   clang
+i386         buildonly-randconfig-004-20240516   gcc  
+i386         buildonly-randconfig-005-20240516   gcc  
+i386         buildonly-randconfig-006-20240516   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240516   gcc  
+i386                  randconfig-002-20240516   gcc  
+i386                  randconfig-003-20240516   clang
+i386                  randconfig-004-20240516   clang
+i386                  randconfig-005-20240516   clang
+i386                  randconfig-006-20240516   clang
+i386                  randconfig-011-20240516   gcc  
+i386                  randconfig-012-20240516   gcc  
+i386                  randconfig-013-20240516   clang
+i386                  randconfig-014-20240516   gcc  
+i386                  randconfig-015-20240516   gcc  
+i386                  randconfig-016-20240516   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240516   gcc  
+loongarch             randconfig-002-20240516   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240516   gcc  
+nios2                 randconfig-002-20240516   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240516   gcc  
+parisc                randconfig-002-20240516   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240516   gcc  
+powerpc               randconfig-002-20240516   clang
+powerpc               randconfig-003-20240516   clang
+powerpc64             randconfig-001-20240516   gcc  
+powerpc64             randconfig-002-20240516   clang
+powerpc64             randconfig-003-20240516   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240516   gcc  
+riscv                 randconfig-002-20240516   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240516   gcc  
+s390                  randconfig-002-20240516   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240516   gcc  
+sh                    randconfig-002-20240516   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240516   gcc  
+sparc64               randconfig-002-20240516   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240516   clang
+um                    randconfig-002-20240516   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-002-20240516   gcc  
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
