@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-7560-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7562-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B5458C73DF
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 11:34:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DD2B8C73E4
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 11:35:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BBA61B24321
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 09:34:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 714191C232DA
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 09:35:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC38143880;
-	Thu, 16 May 2024 09:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA22914375A;
+	Thu, 16 May 2024 09:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HSmrQn0p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eU9RSQ2I"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5437182AF;
-	Thu, 16 May 2024 09:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8E1144317;
+	Thu, 16 May 2024 09:34:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715852039; cv=none; b=klTFUVlZIhQWMAsvKzgwA/jGw1G6gon6hkgBjw7G7NHw8VR9wdiLfV6zImr0wQd0qLzldwIrQhJy7Wre7zvGhQg0cWA40FNYLI+btqe1Zm0Pw1Ifz5Qyut8hjfWfQtYqxL4BDOEHVJ81j7mW7sx1GQANCWgtYhyIgeebxfji/pI=
+	t=1715852048; cv=none; b=N/8N9HklFbAzyWsYy7P51VZp6t6d6XN+JjvGxHK8YkmoNUcUJfeDSIPIjU1LOisLtV9cCyvn1fUFJQA3qXry2qRagatTWqh9MdeGG3MhsMCSou1xvJCSbtJcwqwk+GqWaDkN4P0enVMM55WfKnc42A6IU655ymwM2qmZOkHD3jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715852039; c=relaxed/simple;
-	bh=eZCyLma/Em5HCPqSF80iWFHJDAVVFQLC3YecfXAnF3k=;
+	s=arc-20240116; t=1715852048; c=relaxed/simple;
+	bh=ZzbyjOkJxa4z/Qz3gvuL/n1sfN3XgXLqmsGCeM2kmMA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jhMTxCPSPlnAOeuSwccg6PY1xB6g/ksdvDKvC38I2n4tfesFd5yazi2UTZbKrlX4lOWL2jR303cyynQBGF+eir3dasZ/FwvTVBxW/xJPWnBiddJAuhRqZL1Je+I378FwQw+nzQwdJSKBiDvDh1KRpTrU2M1RgnIFSJqiqwVmtwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HSmrQn0p; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=AkGsCqeqKmdtJP/zzQCOZcmgP5XolPQ/BrHcNa3ztkRzf+Cm+hBixZuPD5azApBbyPS9HaBFqOMhhHpXUVgkp22NxQRpKMrmVcHiJ2YD0y1/p0Y9q26a/XybR6sG9yE/C+SESUYhF+BLFpDNkyHTHs0xrnu0hdHumxAV7e2IKUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eU9RSQ2I; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715852038; x=1747388038;
+  t=1715852047; x=1747388047;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eZCyLma/Em5HCPqSF80iWFHJDAVVFQLC3YecfXAnF3k=;
-  b=HSmrQn0pTiGQsh4Jxl6L3pqAzOJ0FquBmriA3ewKZNyAKAPuKr6IU9+7
-   euiBjFC+BVzAjbwIsnSnm7TROyWqtaeTA6J3U9WEKrhaN1MSh8edzt6X6
-   WbF5Eb1XbxN/BJ4hZ1oAfMQ+hPcOI92wAJjS3JvzSOud7mpLwnLjMkysx
-   Cm6s9rDnvoODT8BmflpviOkQI5vyFrzTHgzE6hC0MtJxoyMBIyD/9d8nf
-   tprQ057YhX1pRIgTmuYaQ5XoteEweZzXAyKBeSoZ1+TZSLFa6zVveVPd0
-   smhS6WCGL5CKNhCExiUanhVEJHan05BsjI0u6rfwyruHMLToJOvKMBXha
+  bh=ZzbyjOkJxa4z/Qz3gvuL/n1sfN3XgXLqmsGCeM2kmMA=;
+  b=eU9RSQ2InCOPXzKEcHhcJ6DPtQUEER2KQhZI9inA7nj8Hs59Vv1bsQ5/
+   5PBAHeKl8+xYdUpZisSMYL3UowhOYPTzmL9xxY9Hj/WHMwy0KUlgyxMx8
+   7AiFJoC6vePC1+TS0Xvh39duYEo8g29tW2phVDhur18F9YmtIy+rGML21
+   UyX3sMhGr5iG6RVCoca5yEfdmzwC3ji+NienZqVROS7aJoA27EcDCRbAa
+   lbBLBduF0c22FzlCwMSEF/TYP4+3pdf64bEZ+oXUok7Ju+KtNsWrPl32M
+   /WGp5H+BkWxPu5uBKokctDKDbNT2h4WnVntpLNQtTb3wBjog0JWXcZxzb
    g==;
-X-CSE-ConnectionGUID: 6WcqJ6Z2ThWp0nsW2gn6UQ==
-X-CSE-MsgGUID: ElNN62+8RmaAVweHqLoKNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23355018"
+X-CSE-ConnectionGUID: 2sUCxSqgTk2uaMaCRdto8w==
+X-CSE-MsgGUID: ZUMqAZXbQcKyd1bWNsC1rQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="23355048"
 X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="23355018"
+   d="scan'208";a="23355048"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:33:56 -0700
-X-CSE-ConnectionGUID: uOXlKOfJSeSw5Gi27AB9JQ==
-X-CSE-MsgGUID: RiTczmm5SI6t9RvQ4Geyqw==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:34:06 -0700
+X-CSE-ConnectionGUID: Kmjrx8OOTOq3nPI0Raxxmw==
+X-CSE-MsgGUID: FWOAUXICTqyh4+ctSk8Tgg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="31372494"
+   d="scan'208";a="31372502"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.108])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:33:51 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:34:01 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -73,14 +73,16 @@ To: linux-pci@vger.kernel.org,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-pm@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Zhang Rui <rui.zhang@intel.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v6 6/8] PCI/bwctrl: Add API to set PCIe Link Speed
-Date: Thu, 16 May 2024 12:32:20 +0300
-Message-Id: <20240516093222.1684-7-ilpo.jarvinen@linux.intel.com>
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-kernel@vger.kernel.org
+Cc: Amit Kucheria <amitk@kernel.org>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v6 7/8] thermal: Add PCIe cooling driver
+Date: Thu, 16 May 2024 12:32:21 +0300
+Message-Id: <20240516093222.1684-8-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240516093222.1684-1-ilpo.jarvinen@linux.intel.com>
 References: <20240516093222.1684-1-ilpo.jarvinen@linux.intel.com>
@@ -93,317 +95,248 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Currently, PCIe Link Speeds are adjusted by custom code rather than in
-a common function provided in PCI core. PCIe bandwidth controller
-(bwctrl) introduces an in-kernel API to set PCIe Link Speed. Convert
-Target Speed quirk to use the new API.
+Add a thermal cooling driver to provide path to access PCIe bandwidth
+controller using the usual thermal interfaces.
 
-The new API is also intended to be used in an upcoming commit that adds
-a thermal cooling device to throttle PCIe bandwidth when thermal
-thresholds are reached.
+A cooling device is instantiated for controllable PCIe Ports from the
+bwctrl service driver.
 
-The PCIe bandwidth control procedure is as follows. The highest speed
-supported by the Port and the PCIe device which is not higher than the
-requested speed is selected and written into the Target Link Speed in
-the Link Control 2 Register. Then bandwidth controller retrains the
-PCIe Link.
+If registering the cooling device fails, allow bwctrl's probe to
+succeed regardless. As cdev in that case contains IS_ERR() pseudo
+"pointer", clean that up inside the probe function so the remove side
+doesn't need to suddenly make an odd looking IS_ERR() check.
 
-Bandwidth Notifications enable the cur_bus_speed in the struct pci_bus
-to keep track PCIe Link Speed changes. While Bandwidth Notifications
-should also be generated when bandwidth controller alters the PCIe Link
-Speed, a few platforms do not deliver LMBS interrupt after Link
-Training as expected. Thus, after changing the Link Speed, bandwidth
-controller makes additional read for the Link Status Register to ensure
-cur_bus_speed is consistent with the new PCIe Link Speed.
+The thermal side state 0 means no throttling, i.e., maximum supported
+PCIe Link Speed.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Rafael J. Wysocki <rafael@kernel.org> # From the cooling device interface perspective
 ---
- drivers/pci/pci.h         |  11 +++
- drivers/pci/pcie/Makefile |   2 +-
- drivers/pci/pcie/bwctrl.c | 147 ++++++++++++++++++++++++++++++++++++++
- drivers/pci/quirks.c      |  12 +---
- include/linux/pci.h       |   3 +
- 5 files changed, 164 insertions(+), 11 deletions(-)
+ MAINTAINERS                    |  2 +
+ drivers/pci/pcie/bwctrl.c      | 11 +++++
+ drivers/thermal/Kconfig        | 10 +++++
+ drivers/thermal/Makefile       |  2 +
+ drivers/thermal/pcie_cooling.c | 80 ++++++++++++++++++++++++++++++++++
+ include/linux/pci-bwctrl.h     | 28 ++++++++++++
+ 6 files changed, 133 insertions(+)
+ create mode 100644 drivers/thermal/pcie_cooling.c
+ create mode 100644 include/linux/pci-bwctrl.h
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 416540baf27b..f95e0fedb35c 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -270,6 +270,17 @@ void pci_disable_bridge_window(struct pci_dev *dev);
- struct pci_bus *pci_bus_get(struct pci_bus *bus);
- void pci_bus_put(struct pci_bus *bus);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bd420cb09821..3a94ae81b13f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17104,6 +17104,8 @@ M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Supported
+ F:	drivers/pci/pcie/bwctrl.c
++F:	drivers/thermal/pcie_cooling.c
++F:	include/linux/pci-bwctrl.h
  
-+#define PCIE_LNKCAP_SLS2SPEED(lnkcap)					\
-+({									\
-+	(lnkcap == PCI_EXP_LNKCAP_SLS_64_0GB ? PCIE_SPEED_64_0GT :	\
-+	 lnkcap == PCI_EXP_LNKCAP_SLS_32_0GB ? PCIE_SPEED_32_0GT :	\
-+	 lnkcap == PCI_EXP_LNKCAP_SLS_16_0GB ? PCIE_SPEED_16_0GT :	\
-+	 lnkcap == PCI_EXP_LNKCAP_SLS_8_0GB ? PCIE_SPEED_8_0GT :	\
-+	 lnkcap == PCI_EXP_LNKCAP_SLS_5_0GB ? PCIE_SPEED_5_0GT :	\
-+	 lnkcap == PCI_EXP_LNKCAP_SLS_2_5GB ? PCIE_SPEED_2_5GT :	\
-+	 PCI_SPEED_UNKNOWN);						\
-+})
-+
- /* PCIe link information from Link Capabilities 2 */
- #define PCIE_LNKCAP2_SLS2SPEED(lnkcap2) \
- 	((lnkcap2) & PCI_EXP_LNKCAP2_SLS_64_0GB ? PCIE_SPEED_64_0GT : \
-diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-index 6357bc219632..e8cf58a0fa3f 100644
---- a/drivers/pci/pcie/Makefile
-+++ b/drivers/pci/pcie/Makefile
-@@ -12,5 +12,5 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
- obj-$(CONFIG_PCIE_PME)		+= pme.o
- obj-$(CONFIG_PCIE_DPC)		+= dpc.o
- obj-$(CONFIG_PCIE_PTM)		+= ptm.o
--obj-$(CONFIG_PCIE_BWCTRL)	+= bwctrl.o
-+obj-y				+= bwctrl.o
- obj-$(CONFIG_PCIE_EDR)		+= edr.o
+ PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+ M:	Jonathan Chocron <jonnyc@amazon.com>
 diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-index 048a9cffc531..c44da36ef81a 100644
+index c44da36ef81a..c1d0ccbcc3ab 100644
 --- a/drivers/pci/pcie/bwctrl.c
 +++ b/drivers/pci/pcie/bwctrl.c
-@@ -7,6 +7,11 @@
-  * Copyright (C) 2019 Dell Inc
-  * Copyright (C) 2023-2024 Intel Corporation
-  *
-+ * The PCIe bandwidth controller provides a way to alter PCIe Link Speeds
-+ * and notify the operating system when the Link Width or Speed changes. The
-+ * notification capability is required for all Root Ports and Downstream
-+ * Ports supporting Link Width wider than x1 and/or multiple Link Speeds.
-+ *
-  * This service port driver hooks into the Bandwidth Notification interrupt
-  * watching for changes or links becoming degraded in operation. It updates
-  * the cached Current Link Speed that is exposed to user space through sysfs.
-@@ -15,9 +20,12 @@
- #define dev_fmt(fmt) "bwctrl: " fmt
- 
- #include <linux/atomic.h>
-+#include <linux/bitops.h>
-+#include <linux/bits.h>
- #include <linux/cleanup.h>
- #include <linux/errno.h>
+@@ -27,6 +27,7 @@
  #include <linux/interrupt.h>
-+#include <linux/mutex.h>
+ #include <linux/mutex.h>
  #include <linux/pci.h>
++#include <linux/pci-bwctrl.h>
  #include <linux/rwsem.h>
  #include <linux/slab.h>
-@@ -28,15 +36,151 @@
- 
- /**
+ #include <linux/types.h>
+@@ -38,10 +39,12 @@
   * struct pcie_bwctrl_data - PCIe bandwidth controller
-+ * @set_speed_mutex:	Serializes link speed changes
+  * @set_speed_mutex:	Serializes link speed changes
   * @lbms_count:		Count for LBMS (since last reset)
++ * @cdev:		thermal cooling device associated with the port
   */
  struct pcie_bwctrl_data {
-+	struct mutex set_speed_mutex;
+ 	struct mutex set_speed_mutex;
  	atomic_t lbms_count;
++	struct thermal_cooling_device *cdev;
  };
  
-+static bool pcie_valid_speed(enum pci_bus_speed speed)
-+{
-+	return (speed >= PCIE_SPEED_2_5GT) && (speed <= PCIE_SPEED_64_0GT);
-+}
+ static bool pcie_valid_speed(enum pci_bus_speed speed)
+@@ -290,6 +293,11 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+ 
+ 	pci_dbg(port, "enabled with IRQ %d\n", srv->irq);
+ 
++	/* Don't fail on errors. Don't leave IS_ERR() "pointer" into ->cdev */
++	port->link_bwctrl->cdev = pcie_cooling_device_register(port);
++	if (IS_ERR(port->link_bwctrl->cdev))
++		port->link_bwctrl->cdev = NULL;
 +
-+static u16 pci_bus_speed2lnkctl2(enum pci_bus_speed speed)
-+{
-+	static const u8 speed_conv[] = {
-+		[PCIE_SPEED_2_5GT] = PCI_EXP_LNKCTL2_TLS_2_5GT,
-+		[PCIE_SPEED_5_0GT] = PCI_EXP_LNKCTL2_TLS_5_0GT,
-+		[PCIE_SPEED_8_0GT] = PCI_EXP_LNKCTL2_TLS_8_0GT,
-+		[PCIE_SPEED_16_0GT] = PCI_EXP_LNKCTL2_TLS_16_0GT,
-+		[PCIE_SPEED_32_0GT] = PCI_EXP_LNKCTL2_TLS_32_0GT,
-+		[PCIE_SPEED_64_0GT] = PCI_EXP_LNKCTL2_TLS_64_0GT,
-+	};
+ 	return 0;
+ }
+ 
+@@ -297,6 +305,9 @@ static void pcie_bwnotif_remove(struct pcie_device *srv)
+ {
+ 	struct pcie_bwctrl_data *data = get_service_data(srv);
+ 
++	if (data->cdev)
++		pcie_cooling_device_unregister(data->cdev);
 +
-+	if (WARN_ON_ONCE(!pcie_valid_speed(speed)))
-+		return 0;
+ 	pcie_bwnotif_disable(srv->port);
+ 	scoped_guard(rwsem_write, &pcie_bwctrl_remove_rwsem)
+ 		srv->port->link_bwctrl = NULL;
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 204ed89a3ec9..7ddc44be4701 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -211,6 +211,16 @@ config DEVFREQ_THERMAL
+ 
+ 	  If you want this support, you should say Y here.
+ 
++config PCIE_THERMAL
++	bool "PCIe cooling support"
++	depends on PCIEPORTBUS
++	select PCIE_BWCTRL
++	help
++	  This implements PCIe cooling mechanism through bandwidth reduction
++	  for PCIe devices.
 +
-+	return speed_conv[speed];
-+}
++	  If you want this support, you should say Y here.
 +
-+static inline u16 pcie_supported_speeds2target_speed(u8 supported_speeds)
-+{
-+	return __fls(supported_speeds);
-+}
+ config THERMAL_EMULATION
+ 	bool "Thermal emulation mode support"
+ 	help
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 5cdf7d68687f..5b9bf8e80eb6 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -31,6 +31,8 @@ thermal_sys-$(CONFIG_CPU_IDLE_THERMAL)	+= cpuidle_cooling.o
+ # devfreq cooling
+ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+ 
++thermal_sys-$(CONFIG_PCIE_THERMAL) += pcie_cooling.o
 +
-+/**
-+ * pcie_bwctrl_select_speed - Select Target Link Speed
-+ * @port:	PCIe Port
-+ * @speed_req:	requested PCIe Link Speed
+ obj-$(CONFIG_K3_THERMAL)	+= k3_bandgap.o k3_j72xx_bandgap.o
+ # platform thermal drivers
+ obj-y				+= broadcom/
+diff --git a/drivers/thermal/pcie_cooling.c b/drivers/thermal/pcie_cooling.c
+new file mode 100644
+index 000000000000..a876d64f1582
+--- /dev/null
++++ b/drivers/thermal/pcie_cooling.c
+@@ -0,0 +1,80 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * PCIe cooling device
 + *
-+ * Select Target Link Speed by take into account Supported Link Speeds of
-+ * both the Root Port and the Endpoint.
-+ *
-+ * Return: Target Link Speed (1=2.5GT/s, 2=5GT/s, 3=8GT/s, etc.)
++ * Copyright (C) 2023-2024 Intel Corporation
 + */
-+static u16 pcie_bwctrl_select_speed(struct pci_dev *port, enum pci_bus_speed speed_req)
++
++#include <linux/build_bug.h>
++#include <linux/cleanup.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pci-bwctrl.h>
++#include <linux/slab.h>
++#include <linux/sprintf.h>
++#include <linux/thermal.h>
++
++#define COOLING_DEV_TYPE_PREFIX		"PCIe_Port_Link_Speed_"
++
++static int pcie_cooling_get_max_level(struct thermal_cooling_device *cdev, unsigned long *state)
 +{
-+	struct pci_bus *bus = port->subordinate;
-+	u8 desired_speeds;
++	struct pci_dev *port = cdev->devdata;
 +
-+	if (WARN_ON_ONCE(!bus->supported_speeds))
-+		return PCI_EXP_LNKCAP2_SLS_2_5GB;
-+
-+	desired_speeds = GENMASK(pci_bus_speed2lnkctl2(speed_req),
-+				 __fls(PCI_EXP_LNKCAP2_SLS_2_5GB));
-+
-+	return pcie_supported_speeds2target_speed(bus->supported_speeds & desired_speeds);
-+}
-+
-+static int pcie_bwctrl_change_speed(struct pci_dev *port, u16 target_speed, bool use_lt)
-+{
-+	int ret;
-+
-+	ret = pcie_capability_clear_and_set_word(port, PCI_EXP_LNKCTL2,
-+						 PCI_EXP_LNKCTL2_TLS, target_speed);
-+	if (ret != PCIBIOS_SUCCESSFUL)
-+		return pcibios_err_to_errno(ret);
-+
-+	ret = pcie_retrain_link(port, use_lt);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Ensure link speed updates also with platforms that have problems
-+	 * with notifications.
-+	 */
-+	pcie_update_link_speed(port->subordinate);
++	/* cooling state 0 is same as the maximum PCIe speed */
++	*state = port->subordinate->max_bus_speed - PCIE_SPEED_2_5GT;
 +
 +	return 0;
 +}
 +
-+#ifdef CONFIG_PCIE_BWCTRL
- /* Prevents port removal during link speed changes and LBMS count accessors */
- static DECLARE_RWSEM(pcie_bwctrl_remove_rwsem);
- 
-+static int __pcie_set_target_speed(struct pci_dev *port, u16 target_speed, bool use_lt)
++static int pcie_cooling_get_cur_level(struct thermal_cooling_device *cdev, unsigned long *state)
 +{
-+	struct pcie_bwctrl_data *data = NULL;
++	struct pci_dev *port = cdev->devdata;
 +
-+	guard(rwsem_read)(&pcie_bwctrl_remove_rwsem);
-+	data = port->link_bwctrl;
-+	if (!data)
-+		return -ENODEV;
++	/* cooling state 0 is same as the maximum PCIe speed */
++	*state = cdev->max_state - (port->subordinate->cur_bus_speed - PCIE_SPEED_2_5GT);
 +
-+	guard(mutex)(&data->set_speed_mutex);
-+
-+	return pcie_bwctrl_change_speed(port, target_speed, use_lt);
++	return 0;
 +}
-+#else
-+static int __pcie_set_target_speed(struct pci_dev *port, u16 target_speed, bool use_lt)
++
++static int pcie_cooling_set_cur_level(struct thermal_cooling_device *cdev, unsigned long state)
 +{
-+	return pcie_bwctrl_change_speed(port, target_speed, use_lt);
++	struct pci_dev *port = cdev->devdata;
++	enum pci_bus_speed speed;
++
++	/* cooling state 0 is same as the maximum PCIe speed */
++	speed = (cdev->max_state - state) + PCIE_SPEED_2_5GT;
++
++	return pcie_set_target_speed(port, speed, true);
++}
++
++static struct thermal_cooling_device_ops pcie_cooling_ops = {
++	.get_max_state = pcie_cooling_get_max_level,
++	.get_cur_state = pcie_cooling_get_cur_level,
++	.set_cur_state = pcie_cooling_set_cur_level,
++};
++
++struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port)
++{
++	char *name __free(kfree) =
++		kasprintf(GFP_KERNEL, COOLING_DEV_TYPE_PREFIX "%s", pci_name(port));
++	if (!name)
++		return ERR_PTR(-ENOMEM);
++
++	return thermal_cooling_device_register(name, port, &pcie_cooling_ops);
++}
++
++void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev)
++{
++	thermal_cooling_device_unregister(cdev);
++}
++
++/* For bus_speed <-> state arithmetic */
++static_assert(PCIE_SPEED_2_5GT + 1 == PCIE_SPEED_5_0GT);
++static_assert(PCIE_SPEED_5_0GT + 1 == PCIE_SPEED_8_0GT);
++static_assert(PCIE_SPEED_8_0GT + 1 == PCIE_SPEED_16_0GT);
++static_assert(PCIE_SPEED_16_0GT + 1 == PCIE_SPEED_32_0GT);
++static_assert(PCIE_SPEED_32_0GT + 1 == PCIE_SPEED_64_0GT);
++
++MODULE_AUTHOR("Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>");
++MODULE_DESCRIPTION("PCIe cooling driver");
+diff --git a/include/linux/pci-bwctrl.h b/include/linux/pci-bwctrl.h
+new file mode 100644
+index 000000000000..cee07127455b
+--- /dev/null
++++ b/include/linux/pci-bwctrl.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * PCIe bandwidth controller
++ *
++ * Copyright (C) 2023-2024 Intel Corporation
++ */
++
++#ifndef LINUX_PCI_BWCTRL_H
++#define LINUX_PCI_BWCTRL_H
++
++#include <linux/pci.h>
++
++struct thermal_cooling_device;
++
++#ifdef CONFIG_PCIE_THERMAL
++struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port);
++void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev);
++#else
++static inline struct thermal_cooling_device *pcie_cooling_device_register(struct pci_dev *port)
++{
++	return NULL;
++}
++static inline void pcie_cooling_device_unregister(struct thermal_cooling_device *cdev)
++{
 +}
 +#endif
 +
-+/**
-+ * pcie_set_target_speed - Set downstream Link Speed for PCIe Port
-+ * @port:	PCIe Port
-+ * @speed_req:	requested PCIe Link Speed
-+ * @use_lt:	Wait for the LT or DLLLA bit to detect the end of link training
-+ *
-+ * Attempts to set PCIe Port Link Speed to @speed_req. @speed_req may be
-+ * adjusted downwards to the best speed supported by both the Port and PCIe
-+ * Device underneath it.
-+ *
-+ * Return:
-+ * * 0		- on success
-+ * * -EINVAL	- @speed_req is not a PCIe Link Speed
-+ * * -ENODEV	- @port is not controllable
-+ * * -ETIMEDOUT	- changing Link Speed took too long
-+ * * -EAGAIN	- Link Speed was changed but @speed_req was not achieved
-+ */
-+int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
-+			  bool use_lt)
-+{
-+	u16 target_speed;
-+	int ret;
-+
-+	if (WARN_ON_ONCE(!pcie_valid_speed(speed_req)))
-+		return -EINVAL;
-+
-+	if (port->subordinate->cur_bus_speed == speed_req)
-+		return 0;
-+
-+	target_speed = pcie_bwctrl_select_speed(port, speed_req);
-+
-+	ret = __pcie_set_target_speed(port, target_speed, use_lt);
-+	if (!ret && port->subordinate->cur_bus_speed != speed_req)
-+		ret = -EAGAIN;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pcie_set_target_speed);
-+
-+#ifdef CONFIG_PCIE_BWCTRL
- static void pcie_bwnotif_enable(struct pcie_device *srv)
- {
- 	struct pcie_bwctrl_data *data = get_service_data(srv);
-@@ -133,6 +277,7 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
- 	if (!data)
- 		return -ENOMEM;
- 
-+	mutex_init(&data->set_speed_mutex);
- 	set_service_data(srv, data);
- 
- 	ret = request_threaded_irq(srv->irq, NULL, pcie_bwnotif_irq_thread,
-@@ -157,6 +302,7 @@ static void pcie_bwnotif_remove(struct pcie_device *srv)
- 		srv->port->link_bwctrl = NULL;
- 
- 	free_irq(srv->irq, srv);
-+	mutex_destroy(&data->set_speed_mutex);
- 	kfree(data);
- }
- 
-@@ -186,3 +332,4 @@ int __init pcie_bwctrl_init(void)
- {
- 	return pcie_port_service_register(&pcie_bwctrl_driver);
- }
-+#endif	/* CONFIG_PCIE_BWCTRL */
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 85e6624ba3b9..783494f04789 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -105,11 +105,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
- 	if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) {
- 		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
- 
--		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
--		lnkctl2 |= PCI_EXP_LNKCTL2_TLS_2_5GT;
--		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
--
--		ret = pcie_retrain_link(dev, false);
-+		ret = pcie_set_target_speed(dev, PCIE_SPEED_2_5GT, false);
- 		if (ret) {
- 			pci_info(dev, "retraining failed\n");
- 			return ret;
-@@ -125,11 +121,7 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
- 
- 		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
- 		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
--		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
--		lnkctl2 |= lnkcap & PCI_EXP_LNKCAP_SLS;
--		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
--
--		ret = pcie_retrain_link(dev, false);
-+		ret = pcie_set_target_speed(dev, PCIE_LNKCAP_SLS2SPEED(lnkcap), false);
- 		if (ret) {
- 			pci_info(dev, "retraining failed\n");
- 			return ret;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 406ed87fb0aa..b43bbd61c437 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1876,6 +1876,9 @@ bool pci_aer_available(void);
- static inline bool pci_aer_available(void) { return false; }
- #endif
- 
-+int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
-+			  bool use_lt);
-+
- bool pci_ats_disabled(void);
- 
- #ifdef CONFIG_PCIE_PTM
++#endif
 -- 
 2.39.2
 
