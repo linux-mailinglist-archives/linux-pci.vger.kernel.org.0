@@ -1,125 +1,106 @@
-Return-Path: <linux-pci+bounces-7549-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7550-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A4828C7218
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 09:35:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63AAF8C72AD
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 10:20:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12835B20C7B
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 07:35:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F009281421
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 08:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2560F3D967;
-	Thu, 16 May 2024 07:35:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B8B976023;
+	Thu, 16 May 2024 08:20:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AC/g7Ror"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HBThG/+h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7974328DD1
-	for <linux-pci@vger.kernel.org>; Thu, 16 May 2024 07:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287F35477A
+	for <linux-pci@vger.kernel.org>; Thu, 16 May 2024 08:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715844905; cv=none; b=dQoi5sk9fZRxgLokW7PoWL7VN9z5Cv91uussSE4lrgC14vvmEwsu6e9Qskf8sIQGyBhnU6lW+Hgee9bdroAW5mokQh6I7wHS9B/XXDK7MuNGJH1S+RM0n+RLKryAJZlOBalq1oi3oh0HWowgSRmgud/qcbEozNhUJTdYqc4zVnE=
+	t=1715847648; cv=none; b=uIUEdpgfB4hc7jlW4ijtlTciNzcYIrYD5hSpyEZcrCe2/oYyCWvEAoLZCyyhvm86yvh+XZGb6AKjTW1if4ci56cN1SjAdIG+V1LtWSQGNcVE5OL2mAEy4dM9vzkFegww/ex18X26G5UXPTO+fgMxan/tOcyAV8o87QUxJakwKM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715844905; c=relaxed/simple;
-	bh=ZMACuTR3vRKSoU4pHT19THsZk5hrQ3AyoJYvIvgJUUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oeb5ix9nuNpNH45rMqxGQMV5NxxKPEtc+jkyLV1gyD5BjV9jqKNOJiy40hSP6Be8ZIz9HUQ3haGiYmQaPtRAPbTEVaBJdm5/ZiMTXQJPqxJzY7tndyIXHvFwD+vylHUzFOjKw8Vp/CYMmo6JajqdzftYFHyuXEnte0g3U2DxI60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AC/g7Ror; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-351d309bbecso736134f8f.2
-        for <linux-pci@vger.kernel.org>; Thu, 16 May 2024 00:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715844902; x=1716449702; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RosNd3B/hfPPJgEd8do/IrHkaPKjQ1tjjKxBt5s2vzw=;
-        b=AC/g7RorFPd04Pl/gyEXV+Rljc9/h+JehxgabfwoadJwDtDdNw6Z2Ue5GgE70HauPv
-         OyineWSiFfGBtCbQDJdMRno6zfC8rg/KCzzApEm87A7N/jhAjkPLliOy2/XzFdiOU7d7
-         UPsL87v2DQ75ASG1cCsELAk7kNtkez+xydX5wJqQDKsd2ZekFJ9AUO/rZo5yw/b1rRzT
-         D1989pV60JQI5w4Opms5yJlwiaVuq2ricM6m003AJATOiZUz4ndsnrbbEUqE2OR3Y9KQ
-         Ewvu2ke2k3+8TE8yfJgljF2Qc2EbjhfCW3F3fTyXCi3E1Ppvy9/XhsLPesOWgm8RhfpY
-         Jy5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715844902; x=1716449702;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RosNd3B/hfPPJgEd8do/IrHkaPKjQ1tjjKxBt5s2vzw=;
-        b=F3VzkKBksB1BJoPeFPEIBBhxJ+gqRaXgQGFm2SBvLOv06mRpOrOkjyuZWHeglfLXFN
-         HqQscC8pyTwj8AVKXNGUCIoWs+0svOI4ZLEgJMMZLNIRwtl/i27AKg3zBnIoWIPysxN7
-         RVdSr4kFzdiJnYLjvnjcC0q3NxnP5+yn7WezOzf4XKUwlun1pZ+UZ8qQRpQnrSS2iaQE
-         7s1dPsq8gPdOpW/05rJ2fLdTxwpMsTZt7ZHwjFqkX4YaTedfNx9l8d9561Qb0xES1ZKR
-         UohVFY199KK4UhTxCcJV0bJhzCvvNQ2+twkBs7P83fugYx7pbZwM7NNgOlAOesRQiV/d
-         aTtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTWRfHFg6BUUetwauwVIGreRbYFWT+KbnHfpiLws9M7eMYZ6Xu+VZyYpw2EdiAW9otKYIME0AkvQJXQlUeyjN4g3QUCREFITLO
-X-Gm-Message-State: AOJu0YwahdiTmUy8BY9zWm23iR5UcQtgvLV9OpP5c5d6YcYoX1IQDTa8
-	mkC/W8f/IXqBd1PDzIj4ri6STs48yxV0l+jM9c2BB/tqWHbiCmO3DRiBoFakAf8=
-X-Google-Smtp-Source: AGHT+IFyT+2cX3CUvKGm2EXv4WIaX+r6Q5SkjvFFmDYOtCk8+G42oZ2PPreRy/IsRw9tSFPb0TzkOw==
-X-Received: by 2002:a05:6000:a88:b0:34c:e62a:db70 with SMTP id ffacd0b85a97d-3504aa63447mr17873757f8f.67.1715844901762;
-        Thu, 16 May 2024 00:35:01 -0700 (PDT)
-Received: from myrica ([2.221.137.100])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fe004eae9sm244071795e9.1.2024.05.16.00.35.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 May 2024 00:35:01 -0700 (PDT)
-Date: Thu, 16 May 2024 08:35:00 +0100
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Vidya Sagar <vidyas@nvidia.com>, "will@kernel.org" <will@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"liviu.dudau@arm.com" <liviu.dudau@arm.com>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	Nicolin Chen <nicolinc@nvidia.com>, Ketan Patil <ketanp@nvidia.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 0/3] Enable PCIe ATS for devicetree boot
-Message-ID: <20240516073500.GA3563602@myrica>
-References: <PH8PR12MB6674391D5067B469B0400C26B8EC2@PH8PR12MB6674.namprd12.prod.outlook.com>
- <20240515185241.GA2131384@bhelgaas>
+	s=arc-20240116; t=1715847648; c=relaxed/simple;
+	bh=yTHJOz52a1/t0VjBwQJGAfDY+kbzziMgZaW5Id/Try4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kVxenGxEvgmguxZLVdmKAfiKK0Y5sFTCUJJ7lywfOkYNL4EadLRNQalqbMjOC8dMNzwrBMaw1y2gHtd0H6hVtWRL+Lgpt5tIiLtjjSflJqptad+UnQS+hftLhVImC+AZsXaxaWuJ0k/cS1OoxTe2qPTf4oTan2xX9LMt4orf7A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HBThG/+h; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715847646; x=1747383646;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=yTHJOz52a1/t0VjBwQJGAfDY+kbzziMgZaW5Id/Try4=;
+  b=HBThG/+h31dH7Vin/CBok1ZXINHFp5pmdJ/QB5jU0re9+sVnXy9MJeZn
+   ukkksMJin3+bPhZkOpsaOH5WU+/XxhrXac2g5BRBF7t6lt8LPEtlqYqn5
+   Ls11OpfgzmPJmVDaj5zZU7FKaLkqXPBYp5KsuqzLI3b1GMZYB/o58S0Tw
+   /DYf4yekdfbOpVOs2r0daeHWEQIBOoeLLzI9fI1TUGjJYP06U7CyV8gqe
+   hBvzBSpriA7dPLExqKWGFnKaQjeaxaoVYx7Re4zVZO5nMHbpUTGO6k/oT
+   bPygzra7lzi3z3PIMxM2AYFnydqBBTs7KdW54QuB5SEvh4eru/uhtOTZQ
+   w==;
+X-CSE-ConnectionGUID: JK4NRpanT468VeZuLQ5x2A==
+X-CSE-MsgGUID: ovck2mGARqaC5bvphi/Gbg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="29441931"
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="29441931"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 01:20:46 -0700
+X-CSE-ConnectionGUID: hTXuMvTDRA2JNRN2pMnizg==
+X-CSE-MsgGUID: 16lx1j+5TJmyCeZoaQZB2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
+   d="scan'208";a="36082653"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.208])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 01:20:43 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Dave Hansen <dave.hansen@intel.com>, intel-gfx@lists.freedesktop.org,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Subject: Re: [PATCH 0/8] drm/i915/pciids: PCI ID macro cleanups
+In-Reply-To: <ad7df133-803a-4089-8ced-bf3eaf169d43@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1715340032.git.jani.nikula@intel.com>
+ <87ikzlhiv8.fsf@intel.com> <8734qjcfu1.fsf@intel.com>
+ <ad7df133-803a-4089-8ced-bf3eaf169d43@intel.com>
+Date: Thu, 16 May 2024 11:20:37 +0300
+Message-ID: <87pltmb222.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240515185241.GA2131384@bhelgaas>
+Content-Type: text/plain
 
-Hi,
+On Wed, 15 May 2024, Dave Hansen <dave.hansen@intel.com> wrote:
+> On 5/15/24 07:25, Jani Nikula wrote:
+>> No reply from Bjorn, Cc: the x86 maintainers and list, could I get an
+>> ack from you please?
+>
+> x86 is just a consumer of the drm/i915_pciids.h macros.  The name change
+> is perfectly fine with me.  No objections.  But I really don't think you
+> need our acks to move forward.
+>
+> Either way:
+>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com> # for x86
 
-On Wed, May 15, 2024 at 01:52:41PM -0500, Bjorn Helgaas wrote:
-> On Wed, May 15, 2024 at 06:28:15PM +0000, Vidya Sagar wrote:
-> > Thanks, Jean for this series.
-> > May I know the current status of it?
-> > Although it was actively reviewed, I see that its current status is set to 
-> > 'Handled Elsewhere' in https://patchwork.kernel.org/project/linux-pci/list/?series=848836&state=*
-> > What is the plan to get this series accepted?
-> 
-> I probably marked it "handled elsewhere" in the PCI patchwork because
-> it doesn't touch PCI files (the binding has already been reviewed by
-> Rob and Liviu), so I assumed the iommu folks would take the series.
-> I don't know how they track patches.
+Thanks, I know the changes are benign, but it's just that I tend to err
+on the side of getting the acks rather than stepping on anyone's
+toes. :)
 
-Yes I think this can go through the IOMMU tree. Since patch 3 is still
-missing an Ack, I'm resendng the series next cycle.
+BR,
+Jani.
 
-Thanks,
-Jean
 
-> 
-> The merge window is open now, so likely they would wait until the next
-> cycle so it would have some time in linux-next, but that's up to them.
+-- 
+Jani Nikula, Intel
 
