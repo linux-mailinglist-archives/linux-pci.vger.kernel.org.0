@@ -1,158 +1,97 @@
-Return-Path: <linux-pci+bounces-7566-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7567-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 598258C7451
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 12:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A3908C74B9
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 12:41:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89DD11C218F4
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 10:03:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3AC5F1C23E47
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 10:41:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D030143884;
-	Thu, 16 May 2024 10:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UG72apak"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5841145334;
+	Thu, 16 May 2024 10:41:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF68143883;
-	Thu, 16 May 2024 10:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 752DE143C4D;
+	Thu, 16 May 2024 10:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715853801; cv=none; b=u5EbAPtLJx/b1r36JyquhJKvBvgf94lUvqjPRkXDf5GTbOJIkrhl7GbCNqEE9NNBNCDBLVGRztVd4fi9gDSLMGvFIGc10rZQM30o4TaO0ZiJZULBMIkYNUt43dWS2RjpbhDU74kYqup1Ap9YR2Im54s/8Ux/mrhMWY4NRGUww64=
+	t=1715856094; cv=none; b=F4At5BUxFa3/V0et4nK/ANChSb2K01jC0jjRB6wYhH+Vnnflc+LLGUeD67/eZ41vW+NL+w3SrEWTVGT6PrGr2v4MrTbJ3GHhrPW8PIegEP865coPgT2jMBP/251lYo6zUC4wXbyNRuJ9bpg44b8HAljScdgbNd2xI+4B4c7cGZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715853801; c=relaxed/simple;
-	bh=r1RHPwjyAgK2tGzBnhNg6KelUvF/Lg5CeAK7qt4ClQw=;
+	s=arc-20240116; t=1715856094; c=relaxed/simple;
+	bh=1zBY8GdvqnuiFGTAx8ikTNvk5ZnfO/lIvciqAzyr5b0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bFQcmmszaASgQlJ2gGXHbqsgRTgHtLqsy8G4fW1mEkYkeBtPfGFsUoR37MD5imv2vDHY9koahMb4dqYYptESm3etLQ50cRgNqYs3ClGh5Cy4NFn/8nwaU5H4sbfal+BegikMRKi92jYqeGqIcIwiQcoVSPk5eSXxoGpX8IEWKlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UG72apak; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715853800; x=1747389800;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r1RHPwjyAgK2tGzBnhNg6KelUvF/Lg5CeAK7qt4ClQw=;
-  b=UG72apakARQ3MKOfaPBl0tNsUsCKAygMVbfPErovaDPQEyr7o5p/9zoo
-   nIisflh03kPO0zoupvhBcFneLQA58efHDOnkYOSukVRazFXArYoKqbYsd
-   BvbBU32MGCRRkwFiBpVXO3ScsL7SyvwyLZZz6NIWhwycyFr3F8JzG2WL6
-   iPzsiwdCaoPj/EqRZkngRjjRRS2hIYMbaTeRwE630/9mW4uXGszJEglgN
-   EOkstG/Fd50F9kt1l0zg2jQDF/zSNetbdNnH/tv0+lniHBdo9EmF/Q55W
-   ETYETqF4bjEidPM7m9pkBqOPNtsssdwsf6vXbDUUGPnPPOQ41vKYnCAxz
-   g==;
-X-CSE-ConnectionGUID: dFU9DBb+T2yGAY92tbcpXg==
-X-CSE-MsgGUID: mHEJaAoPQnq+4D6YqO98Fw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11764064"
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="11764064"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 03:03:19 -0700
-X-CSE-ConnectionGUID: g0V9RiB1SOWq1ESDSqoWdQ==
-X-CSE-MsgGUID: pNZHGDq9SeSoRLGhGP/4eQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="62215168"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 16 May 2024 03:03:17 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 63ABB9F6; Thu, 16 May 2024 13:03:15 +0300 (EEST)
-Date: Thu, 16 May 2024 13:03:15 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Esther Shimanovich <eshimanovich@chromium.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-Message-ID: <20240516100315.GC1421138@black.fi.intel.com>
-References: <Zi0VLrvUWH6P1_or@wunner.de>
- <CA+Y6NJE8hA+wt+auW1wJBWA6EGMc6CGpmdExr3475E_Yys-Zdw@mail.gmail.com>
- <ZjsKPSgV39SF0gdX@wunner.de>
- <20240510052616.GC4162345@black.fi.intel.com>
- <CA+Y6NJF2Ex6Rwxw0a5V1aMY2OH4=MP5KTtat9x9Ge7y-JBdapw@mail.gmail.com>
- <20240511043832.GD4162345@black.fi.intel.com>
- <20240511054323.GE4162345@black.fi.intel.com>
- <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
- <ZkUcihZR_ZUUEsZp@wunner.de>
- <20240516083017.GA1421138@black.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XPZuunWuVm/4UGIJbHisSe+xW8jYdlFIYxLFvU7JvpwRodd5iuu3l+yYGjgX8/ATtw1kiAQyNkiay+pUSeqbdFVW61Hdf71AqP4FVDHi/+X5fFKugp8hOLPOTpSnGp8n+RW1CHKDCiXvqtEzrHrXrgEIEZB2DIWCdY5Gd4DAux8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FB51DA7;
+	Thu, 16 May 2024 03:41:57 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9ED253F762;
+	Thu, 16 May 2024 03:41:30 -0700 (PDT)
+Date: Thu, 16 May 2024 11:41:28 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"liviu.dudau@arm.com" <liviu.dudau@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	Nicolin Chen <nicolinc@nvidia.com>, Ketan Patil <ketanp@nvidia.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Enable PCIe ATS for devicetree boot
+Message-ID: <ZkXi2LCy9ZZkupjM@bogus>
+References: <PH8PR12MB6674391D5067B469B0400C26B8EC2@PH8PR12MB6674.namprd12.prod.outlook.com>
+ <20240515185241.GA2131384@bhelgaas>
+ <20240516073500.GA3563602@myrica>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240516083017.GA1421138@black.fi.intel.com>
+In-Reply-To: <20240516073500.GA3563602@myrica>
 
-On Thu, May 16, 2024 at 11:30:17AM +0300, Mika Westerberg wrote:
+On Thu, May 16, 2024 at 08:35:00AM +0100, Jean-Philippe Brucker wrote:
 > Hi,
 > 
-> On Wed, May 15, 2024 at 10:35:22PM +0200, Lukas Wunner wrote:
-> > On Wed, May 15, 2024 at 02:53:54PM -0400, Esther Shimanovich wrote:
-> > > On Wed, May 8, 2024 at 1:23???AM Lukas Wunner <lukas@wunner.de> wrote:
-> > > > On Wed, May 01, 2024 at 06:23:28PM -0400, Esther Shimanovich wrote:
-> > > > > On Sat, Apr 27, 2024 at 3:17AM Lukas Wunner <lukas@wunner.de> wrote:
-> > > > > That is correct, when the user-visible issue occurs, no driver is
-> > > > > bound to the NHI and XHCI. The discrete JHL chip is not permitted to
-> > > > > attach to the external-facing root port because of the security
-> > > > > policy, so the NHI and XHCI are not seen by the computer.
-> > > >
-> > > > Could you rework your patch to only rectify the NHI's and XHCI's
-> > > > device properties and leave the bridges untouched?
-> > > 
-> > > So I tried a build with that patch, but it never reached the
-> > > tb_pci_fixup function
+> On Wed, May 15, 2024 at 01:52:41PM -0500, Bjorn Helgaas wrote:
+> > On Wed, May 15, 2024 at 06:28:15PM +0000, Vidya Sagar wrote:
+> > > Thanks, Jean for this series.
+> > > May I know the current status of it?
+> > > Although it was actively reviewed, I see that its current status is set to 
+> > > 'Handled Elsewhere' in https://patchwork.kernel.org/project/linux-pci/list/?series=848836&state=*
+> > > What is the plan to get this series accepted?
 > > 
-> > That means that for some reason, the PCI devices are not associated with
-> > the Thunderbolt ports.  Could you add this to the command line:
-> > 
-> >   thunderbolt.dyndbg ignore_loglevel log_buf_len=10M
-> > 
-> > and this to your kernel config:
-> > 
-> >   CONFIG_DYNAMIC_DEBUG=y
-> > 
-> > You should see "... is associated with ..." messages in dmesg.
-> > This did work for Mika during his testing with recent Thunderbolt chips.
-> > I amended the patches after his testing but wouldn't expect that to
-> > cause issues.
-> > 
-> > @Mika, would you mind re-testing if you've got cycles to spare?
+> > I probably marked it "handled elsewhere" in the PCI patchwork because
+> > it doesn't touch PCI files (the binding has already been reviewed by
+> > Rob and Liviu), so I assumed the iommu folks would take the series.
+> > I don't know how they track patches.
 > 
-> Sure, I'll try this today and update.
+> Yes I think this can go through the IOMMU tree. Since patch 3 is still
+> missing an Ack, I'm resendng the series next cycle.
+> 
 
-Okay now tried with your latest branch on Meteor Lake-P (integrated
-Thunderbolt). I do get these:
+Extremely sorry for that, since I saw Liviu on the thread, I assumed he
+would have acked/reviewed 3/3 as well but now I see that is not the case.
+That said, you must not delay the change just for the DTS file changes.
+Anyways I will ack it now.
 
-[   12.911728] thunderbolt 0000:00:0d.2: 0:8: associated with 0000:00:07.0
-[   12.911732] thunderbolt 0000:00:0d.2: 0:9: associated with 0000:00:07.1
-...
-[   13.250242] thunderbolt 0000:00:0d.3: 0:8: associated with 0000:00:07.2
-[   13.250245] thunderbolt 0000:00:0d.3: 0:9: associated with 0000:00:07.3
-
-The adapters 8 and 9 are PCIe as expected
-
-# tbadapters -r 0 -a 8 -a 9
- 8: PCIe Down                     Disabled  
- 9: PCIe Down                     Disabled  
-
-# tbadapters -d1 -r 0 -a 8 -a 9
- 8: PCIe Down                     Disabled  
- 9: PCIe Down                     Disabled  
-
-And the 07.[0-3] are the PCIe Thunderbolt Root Ports:
-
-# lspci
-...
-00:07.0 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #0 (rev 10)
-00:07.1 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #1 (rev 10)
-00:07.2 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #2 (rev 10)
-00:07.3 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #3 (rev 10)
-...
+--
+Regards,
+Sudeep
 
