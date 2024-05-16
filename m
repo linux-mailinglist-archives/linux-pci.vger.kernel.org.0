@@ -1,340 +1,251 @@
-Return-Path: <linux-pci+bounces-7582-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7583-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDF348C7DB1
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 22:30:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF0678C7DCC
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 22:47:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E0371C2138E
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 20:30:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D736281DA0
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 20:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A731415749C;
-	Thu, 16 May 2024 20:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1197157A56;
+	Thu, 16 May 2024 20:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJUXM0vz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PKu218M/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77713282E1;
-	Thu, 16 May 2024 20:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EB815CB
+	for <linux-pci@vger.kernel.org>; Thu, 16 May 2024 20:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715891401; cv=none; b=qONNk87KemEmRm7t8nO8u7045BmYFn7FAAvdyTH9RcqfGUAMi1/61CTilb+Qje5aE1gUAaLU06Un0bhFOzE0kF04cYOt1AFV3ID7vP7gFjtqeckNEiu1zCPAzIrz+VehIHoCXj6q0EZuwscSsoKTu/nyV6gbVyMR0s63THP32fE=
+	t=1715892432; cv=none; b=uqVnQQ2kDhkn+rWVeSoZ3HovoJwKCy2szecndbtzl/JtAQ/4Ph5dGLEGBjMEPHix78GYLhqZb+/SeZQ8rISPCM+Ojk+JhuYDqjM4zToTuhGIOmo9CT/dcPaAVjYHXk/uxO7eN5aZusguRienMEXqK66hM80Rqcg5ongmrIHSWOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715891401; c=relaxed/simple;
-	bh=L6qDb7RoyyQ5xN5zU57yiUI3gcioSC+go1Mb4ZijJrI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=G8khP7zk5VW10PwKyAXIHbhSmvKQWjUleTqUqj10S9LHvFRaeGV0UQr/saMKoEHhKf6xtEMp8nX0mWSvMTPQjKhbUAtyJDXHyaRLhpayJLUFA16lLzX2E9mRBwdXwJE/8NHi9TzDPR6wJjTSl823xeYLU/BovgJfSjqaltlWh0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJUXM0vz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D4F1C113CC;
-	Thu, 16 May 2024 20:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715891401;
-	bh=L6qDb7RoyyQ5xN5zU57yiUI3gcioSC+go1Mb4ZijJrI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=KJUXM0vzrZPLc6p437NziW5Yk7eq5iEHIK+sjVtzFT4rK56q5IZ8obZkgLd2mtkYN
-	 fdeAJHDYSCG9jdTTJDbr66RCXMsXKXIvfKlx2hN3AEEgz/nwOQQ0D8Xonbh4YsJK8p
-	 EXmAc8w4Z0w6daWYRndieZL+t859t2fIw6C4ef41UnCpGtpx7xeG71FQZzjtS0QNE9
-	 y97yqv6iFI+ceKgitBkvmBsj0ntBdcW6DUUoS0g0/EYunDJN/FEDLauW6eC6V/TiOw
-	 5vMLM5O6emQBdRfxDxhOpbmwX/AcpkdBTXwap1v+/0xg3iSqEb9dL3g5KXOBdrT/ww
-	 CdAI33djG0qfQ==
-Date: Thu, 16 May 2024 13:29:57 -0700 (PDT)
-From: Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To: "Chen, Jiqian" <Jiqian.Chen@amd.com>
-cc: Stefano Stabellini <sstabellini@kernel.org>, 
-    Juergen Gross <jgross@suse.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>, 
-    "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, 
-    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-    "Huang, Ray" <Ray.Huang@amd.com>
-Subject: Re: [RFC KERNEL PATCH v7 2/2] xen/privcmd: Add new syscall to get
- gsi from dev
-In-Reply-To: <BL1PR12MB584969F16D93CC4A5C8E1F0FE7ED2@BL1PR12MB5849.namprd12.prod.outlook.com>
-Message-ID: <alpine.DEB.2.22.394.2405161329330.2544314@ubuntu-linux-20-04-desktop>
-References: <20240515065011.13797-1-Jiqian.Chen@amd.com> <20240515065011.13797-3-Jiqian.Chen@amd.com> <alpine.DEB.2.22.394.2405151537430.2544314@ubuntu-linux-20-04-desktop> <BL1PR12MB584969F16D93CC4A5C8E1F0FE7ED2@BL1PR12MB5849.namprd12.prod.outlook.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	s=arc-20240116; t=1715892432; c=relaxed/simple;
+	bh=L0GZTah8UKFCZNxz6uAaVwSFdWFuv5hIv9rELhWYQtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A88sEmGu0WLVKnL6AyD3E0Elt5JlHZjwV6C7jpk/ycDFuK9LlFq5r+PkbhKaZqo2VcWx2zhQUKzE9+3crnRZfckdgE88kEbMi7W78ShEdDp/2wMKk65nmFGIbL3KYtB12UO861E/P/4aYlbwzQVwrWhd3g3dgFklr9LnLzzVGyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PKu218M/; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715892431; x=1747428431;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=L0GZTah8UKFCZNxz6uAaVwSFdWFuv5hIv9rELhWYQtE=;
+  b=PKu218M/MK0omV3WSa0LJ2+m6MuNRq5WZYKFZWemmPY93GaTgU47bTyj
+   POqWjFo/deyC6nCb+z4m88KrBknA63/4ZF443buIL3K18u8UIsqn+KuPf
+   JVLhaO5aUAWzoEBn6g03KbB2FdqfsHbfFcaQskiEVavO4JzQQcdmoqC/n
+   fxlfGEG3Vs+xva2dmGYw10I5cGzX3EpG1kpbiS8f00IAjADiSPHBkj61h
+   NDtl587YpJeNanXfaO9Pj+sNRI9z/dSwRqTX6OsK9WLMHOA4B9FnesW7b
+   MfgXE7zgvlTLOuXHwSOW6adRB0bW6saCAhi0Pyn9GIi3n3QJMw8sd9ywa
+   g==;
+X-CSE-ConnectionGUID: 5Q1Duv8bQfenRsoFFNbjYA==
+X-CSE-MsgGUID: MuEUwNDuRLyaqfoVj7m9fA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="15868857"
+X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
+   d="scan'208";a="15868857"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 13:47:10 -0700
+X-CSE-ConnectionGUID: v7P2l3h6TEWYdntYetSxMA==
+X-CSE-MsgGUID: jnAt1queSnGqQ8Eq8zixuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,165,1712646000"; 
+   d="scan'208";a="32102374"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 16 May 2024 13:47:08 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s7i0I-000Em7-0I;
+	Thu, 16 May 2024 20:47:06 +0000
+Date: Fri, 17 May 2024 04:46:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:dt-bindings] BUILD SUCCESS
+ 52d06636a4ae4db24ebfe23fae7a525f7e983604
+Message-ID: <202405170440.aNqGiPm0-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 
-On Thu, 16 May 2024, Chen, Jiqian wrote:
-> On 2024/5/16 06:42, Stefano Stabellini wrote:
-> > On Wed, 15 May 2024, Jiqian Chen wrote:
-> >> In PVH dom0, it uses the linux local interrupt mechanism,
-> >> when it allocs irq for a gsi, it is dynamic, and follow
-> >> the principle of applying first, distributing first. And
-> >> the irq number is alloced from small to large, but the
-> >> applying gsi number is not, may gsi 38 comes before gsi 28,
-> >> it causes the irq number is not equal with the gsi number.
-> >> And when passthrough a device, QEMU will use device's gsi
-> >> number to do pirq mapping, but the gsi number is got from
-> >> file /sys/bus/pci/devices/<sbdf>/irq, irq!= gsi, so it will
-> >> fail when mapping.
-> >> And in current linux codes, there is no method to get gsi
-> >> for userspace.
-> >>
-> >> For above purpose, record gsi of pcistub devices when init
-> >> pcistub and add a new syscall into privcmd to let userspace
-> >> can get gsi when they have a need.
-> >>
-> >> Co-developed-by: Huang Rui <ray.huang@amd.com>
-> >> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
-> >> ---
-> >>  drivers/xen/privcmd.c              | 28 ++++++++++++++++++++++
-> >>  drivers/xen/xen-pciback/pci_stub.c | 38 +++++++++++++++++++++++++++---
-> >>  include/uapi/xen/privcmd.h         |  7 ++++++
-> >>  include/xen/acpi.h                 |  2 ++
-> >>  4 files changed, 72 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-> >> index 67dfa4778864..5953a03b5cb0 100644
-> >> --- a/drivers/xen/privcmd.c
-> >> +++ b/drivers/xen/privcmd.c
-> >> @@ -45,6 +45,9 @@
-> >>  #include <xen/page.h>
-> >>  #include <xen/xen-ops.h>
-> >>  #include <xen/balloon.h>
-> >> +#ifdef CONFIG_ACPI
-> >> +#include <xen/acpi.h>
-> >> +#endif
-> >>  
-> >>  #include "privcmd.h"
-> >>  
-> >> @@ -842,6 +845,27 @@ static long privcmd_ioctl_mmap_resource(struct file *file,
-> >>  	return rc;
-> >>  }
-> >>  
-> >> +static long privcmd_ioctl_gsi_from_dev(struct file *file, void __user *udata)
-> >> +{
-> >> +	struct privcmd_gsi_from_dev kdata;
-> >> +
-> >> +	if (copy_from_user(&kdata, udata, sizeof(kdata)))
-> >> +		return -EFAULT;
-> >> +
-> >> +#ifdef CONFIG_ACPI
-> >> +	kdata.gsi = pcistub_get_gsi_from_sbdf(kdata.sbdf);
-> >> +	if (kdata.gsi == -1)
-> >> +		return -EINVAL;
-> >> +#else
-> >> +	kdata.gsi = -1;
-> > 
-> > Should we return an error instead, like -EINVAL, to make the behavior
-> > more similar to the CONFIG_ACPI case?
-> OK, will return -EINVAL if not config acpi.
-> Like:
-> static long privcmd_ioctl_gsi_from_dev(struct file *file, void __user *udata)
-> {
-> #ifdef CONFIG_ACPI
-> 	struct privcmd_gsi_from_dev kdata;
-> 
-> 	if (copy_from_user(&kdata, udata, sizeof(kdata)))
-> 		return -EFAULT;
-> 
-> 	kdata.gsi = pcistub_get_gsi_from_sbdf(kdata.sbdf);
-> 	if (kdata.gsi == -1)
-> 		return -EINVAL;
-> 
-> 	if (copy_to_user(udata, &kdata, sizeof(kdata)))
-> 		return -EFAULT;
-> 
-> 	return 0;
-> #else
-> 	return -EINVAL;
-> #endif
-> }
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
+branch HEAD: 52d06636a4ae4db24ebfe23fae7a525f7e983604  dt-bindings: PCI: rockchip,rk3399-pcie: Add missing maxItems to ep-gpios
 
+elapsed time: 734m
 
-Yep that's fine
+configs tested: 156
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240516   gcc  
+arc                   randconfig-002-20240516   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                          collie_defconfig   gcc  
+arm                                 defconfig   clang
+arm                          ixp4xx_defconfig   gcc  
+arm                      jornada720_defconfig   clang
+arm                         lpc32xx_defconfig   clang
+arm                        multi_v5_defconfig   gcc  
+arm                   randconfig-001-20240516   gcc  
+arm                   randconfig-002-20240516   clang
+arm                   randconfig-003-20240516   gcc  
+arm                   randconfig-004-20240516   clang
+arm                         s5pv210_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240516   gcc  
+arm64                 randconfig-002-20240516   clang
+arm64                 randconfig-003-20240516   clang
+arm64                 randconfig-004-20240516   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240516   gcc  
+csky                  randconfig-002-20240516   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240516   clang
+hexagon               randconfig-002-20240516   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240516   clang
+i386         buildonly-randconfig-002-20240516   clang
+i386         buildonly-randconfig-003-20240516   clang
+i386         buildonly-randconfig-004-20240516   gcc  
+i386         buildonly-randconfig-005-20240516   gcc  
+i386         buildonly-randconfig-006-20240516   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240516   gcc  
+i386                  randconfig-002-20240516   gcc  
+i386                  randconfig-003-20240516   clang
+i386                  randconfig-004-20240516   clang
+i386                  randconfig-005-20240516   clang
+i386                  randconfig-006-20240516   clang
+i386                  randconfig-011-20240516   gcc  
+i386                  randconfig-012-20240516   gcc  
+i386                  randconfig-013-20240516   clang
+i386                  randconfig-014-20240516   gcc  
+i386                  randconfig-015-20240516   gcc  
+i386                  randconfig-016-20240516   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240516   gcc  
+loongarch             randconfig-002-20240516   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5208evb_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     cu1000-neo_defconfig   gcc  
+mips                     loongson2k_defconfig   gcc  
+mips                malta_qemu_32r6_defconfig   gcc  
+mips                      pic32mzda_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240516   gcc  
+nios2                 randconfig-002-20240516   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240516   gcc  
+parisc                randconfig-002-20240516   gcc  
+parisc64                            defconfig   gcc  
+powerpc                      acadia_defconfig   clang
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      ep88xc_defconfig   gcc  
+powerpc                      mgcoge_defconfig   clang
+powerpc                 mpc832x_rdb_defconfig   gcc  
+powerpc                      obs600_defconfig   clang
+powerpc               randconfig-001-20240516   gcc  
+powerpc               randconfig-002-20240516   clang
+powerpc               randconfig-003-20240516   clang
+powerpc64             randconfig-001-20240516   gcc  
+powerpc64             randconfig-002-20240516   clang
+powerpc64             randconfig-003-20240516   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240516   gcc  
+riscv                 randconfig-002-20240516   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240516   gcc  
+s390                  randconfig-002-20240516   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                               j2_defconfig   gcc  
+sh                    randconfig-001-20240516   gcc  
+sh                    randconfig-002-20240516   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240516   gcc  
+sparc64               randconfig-002-20240516   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240516   clang
+um                    randconfig-002-20240516   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240516   gcc  
+xtensa                randconfig-002-20240516   gcc  
 
-> >> +#endif
-> >> +
-> >> +	if (copy_to_user(udata, &kdata, sizeof(kdata)))
-> >> +		return -EFAULT;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >>  #ifdef CONFIG_XEN_PRIVCMD_EVENTFD
-> >>  /* Irqfd support */
-> >>  static struct workqueue_struct *irqfd_cleanup_wq;
-> >> @@ -1529,6 +1553,10 @@ static long privcmd_ioctl(struct file *file,
-> >>  		ret = privcmd_ioctl_ioeventfd(file, udata);
-> >>  		break;
-> >>  
-> >> +	case IOCTL_PRIVCMD_GSI_FROM_DEV:
-> >> +		ret = privcmd_ioctl_gsi_from_dev(file, udata);
-> >> +		break;
-> >> +
-> >>  	default:
-> >>  		break;
-> >>  	}
-> >> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-> >> index 2b90d832d0a7..4b62b4d377a9 100644
-> >> --- a/drivers/xen/xen-pciback/pci_stub.c
-> >> +++ b/drivers/xen/xen-pciback/pci_stub.c
-> >> @@ -56,6 +56,9 @@ struct pcistub_device {
-> >>  
-> >>  	struct pci_dev *dev;
-> >>  	struct xen_pcibk_device *pdev;/* non-NULL if struct pci_dev is in use */
-> >> +#ifdef CONFIG_ACPI
-> >> +	int gsi;
-> >> +#endif
-> >>  };
-> >>  
-> >>  /* Access to pcistub_devices & seized_devices lists and the initialize_devices
-> >> @@ -88,6 +91,9 @@ static struct pcistub_device *pcistub_device_alloc(struct pci_dev *dev)
-> >>  
-> >>  	kref_init(&psdev->kref);
-> >>  	spin_lock_init(&psdev->lock);
-> >> +#ifdef CONFIG_ACPI
-> >> +	psdev->gsi = -1;
-> >> +#endif
-> >>  
-> >>  	return psdev;
-> >>  }
-> >> @@ -220,6 +226,25 @@ static struct pci_dev *pcistub_device_get_pci_dev(struct xen_pcibk_device *pdev,
-> >>  	return pci_dev;
-> >>  }
-> >>  
-> >> +#ifdef CONFIG_ACPI
-> >> +int pcistub_get_gsi_from_sbdf(unsigned int sbdf)
-> >> +{
-> >> +	struct pcistub_device *psdev;
-> >> +	int domain = sbdf >> 16;
-> >> +	int bus = (sbdf >> 8) & 0xff;
-> >> +	int slot = (sbdf >> 3) & 0x1f;
-> >> +	int func = sbdf & 0x7;
-> > 
-> > you can use PCI_DEVFN PCI_SLOT PCI_FUNC pci_domain_nr instead of open
-> > coding.
-> Thanks, will change to use these in next version.
-> But pci_domain_nr requires passing in pci_dev.
-> Will change like:
-> 	int domain = (sbdf >> 16) & 0xffff;
-> 	int bus = PCI_BUS_NUM(sbdf);
-> 	int slot = PCI_SLOT(sbdf);
-> 	int func = PCI_FUNC(sbdf);
-
-That's fine
-
-
- 
-> >> +
-> >> +	psdev = pcistub_device_find(domain, bus, slot, func);
-> >> +
-> >> +	if (!psdev)
-> >> +		return -1;
-> >> +
-> >> +	return psdev->gsi;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(pcistub_get_gsi_from_sbdf);
-> >> +#endif
-> >> +
-> >>  struct pci_dev *pcistub_get_pci_dev_by_slot(struct xen_pcibk_device *pdev,
-> >>  					    int domain, int bus,
-> >>  					    int slot, int func)
-> >> @@ -367,14 +392,20 @@ static int pcistub_match(struct pci_dev *dev)
-> >>  	return found;
-> >>  }
-> >>  
-> >> -static int pcistub_init_device(struct pci_dev *dev)
-> >> +static int pcistub_init_device(struct pcistub_device *psdev)
-> >>  {
-> >>  	struct xen_pcibk_dev_data *dev_data;
-> >> +	struct pci_dev *dev;
-> >>  #ifdef CONFIG_ACPI
-> >>  	int gsi, trigger, polarity;
-> >>  #endif
-> >>  	int err = 0;
-> >>  
-> >> +	if (!psdev)
-> >> +		return -EINVAL;
-> >> +
-> >> +	dev = psdev->dev;
-> >> +
-> >>  	dev_dbg(&dev->dev, "initializing...\n");
-> >>  
-> >>  	/* The PCI backend is not intended to be a module (or to work with
-> >> @@ -448,6 +479,7 @@ static int pcistub_init_device(struct pci_dev *dev)
-> >>  		dev_err(&dev->dev, "Fail to get gsi info!\n");
-> >>  		goto config_release;
-> >>  	}
-> >> +	psdev->gsi = gsi;
-> >>  
-> >>  	if (xen_initial_domain() && xen_pvh_domain()) {
-> >>  		err = xen_pvh_setup_gsi(gsi, trigger, polarity);
-> >> @@ -495,7 +527,7 @@ static int __init pcistub_init_devices_late(void)
-> >>  
-> >>  		spin_unlock_irqrestore(&pcistub_devices_lock, flags);
-> >>  
-> >> -		err = pcistub_init_device(psdev->dev);
-> >> +		err = pcistub_init_device(psdev);
-> >>  		if (err) {
-> >>  			dev_err(&psdev->dev->dev,
-> >>  				"error %d initializing device\n", err);
-> >> @@ -565,7 +597,7 @@ static int pcistub_seize(struct pci_dev *dev,
-> >>  		spin_unlock_irqrestore(&pcistub_devices_lock, flags);
-> >>  
-> >>  		/* don't want irqs disabled when calling pcistub_init_device */
-> >> -		err = pcistub_init_device(psdev->dev);
-> >> +		err = pcistub_init_device(psdev);
-> >>  
-> >>  		spin_lock_irqsave(&pcistub_devices_lock, flags);
-> >>  
-> >> diff --git a/include/uapi/xen/privcmd.h b/include/uapi/xen/privcmd.h
-> >> index 8b8c5d1420fe..220e7670a113 100644
-> >> --- a/include/uapi/xen/privcmd.h
-> >> +++ b/include/uapi/xen/privcmd.h
-> >> @@ -126,6 +126,11 @@ struct privcmd_ioeventfd {
-> >>  	__u8 pad[2];
-> >>  };
-> >>  
-> >> +struct privcmd_gsi_from_dev {
-> >> +	__u32 sbdf;
-> >> +	int gsi;
-> >> +};
-> >> +
-> >>  /*
-> >>   * @cmd: IOCTL_PRIVCMD_HYPERCALL
-> >>   * @arg: &privcmd_hypercall_t
-> >> @@ -157,5 +162,7 @@ struct privcmd_ioeventfd {
-> >>  	_IOW('P', 8, struct privcmd_irqfd)
-> >>  #define IOCTL_PRIVCMD_IOEVENTFD					\
-> >>  	_IOW('P', 9, struct privcmd_ioeventfd)
-> >> +#define IOCTL_PRIVCMD_GSI_FROM_DEV				\
-> >> +	_IOC(_IOC_NONE, 'P', 10, sizeof(struct privcmd_gsi_from_dev))
-> >>  
-> >>  #endif /* __LINUX_PUBLIC_PRIVCMD_H__ */
-> >> diff --git a/include/xen/acpi.h b/include/xen/acpi.h
-> >> index 9b50027113f3..0bf5f4884456 100644
-> >> --- a/include/xen/acpi.h
-> >> +++ b/include/xen/acpi.h
-> >> @@ -83,4 +83,6 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
-> >>  						  int *gsi_out,
-> >>  						  int *trigger_out,
-> >>  						  int *polarity_out);
-> >> +
-> >> +int pcistub_get_gsi_from_sbdf(unsigned int sbdf);
-> >>  #endif	/* _XEN_ACPI_H */
-> >> -- 
-> >> 2.34.1
-> >>
-> 
-> -- 
-> Best regards,
-> Jiqian Chen.
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
