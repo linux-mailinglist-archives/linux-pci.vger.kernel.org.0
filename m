@@ -1,231 +1,158 @@
-Return-Path: <linux-pci+bounces-7565-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7566-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4092B8C7418
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 11:48:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 598258C7451
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 12:03:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5ED4281230
-	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 09:48:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89DD11C218F4
+	for <lists+linux-pci@lfdr.de>; Thu, 16 May 2024 10:03:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97762182AF;
-	Thu, 16 May 2024 09:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D030143884;
+	Thu, 16 May 2024 10:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YfE7XoPj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UG72apak"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED30914375A
-	for <linux-pci@vger.kernel.org>; Thu, 16 May 2024 09:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF68143883;
+	Thu, 16 May 2024 10:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715852877; cv=none; b=ciFF/2yDNCYuNpz5jdOXOOq0ImX533urM98goiyeW+CjmcOrgFakt7WZbEQgvV8RUt3YP45EknNSUsRansU1H1ttY7AIwToTjrq61zPMH2hH0QRJmQOxAPRB+iWzePE7OafvKANUXtLyn34eObiW7uzXTeGZtR06zTAVsFqonQA=
+	t=1715853801; cv=none; b=u5EbAPtLJx/b1r36JyquhJKvBvgf94lUvqjPRkXDf5GTbOJIkrhl7GbCNqEE9NNBNCDBLVGRztVd4fi9gDSLMGvFIGc10rZQM30o4TaO0ZiJZULBMIkYNUt43dWS2RjpbhDU74kYqup1Ap9YR2Im54s/8Ux/mrhMWY4NRGUww64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715852877; c=relaxed/simple;
-	bh=qXJQtGbYZIMmmRvaLtUiEGiWhbEaUDmkLC+1h8CIdUA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Ikyt4x5yORnieORrzethRjpzv0gtj/Ot0glCJwYq1VCLDEMkzQZR2JjVd/SzC2y8kkcjQdTQJDwU3TOxD2GMJV/ImJZKFwlPNZ5CD5JTIyzJLT3nSGiQWTlSmBJIttrUICFa97UqHT7gltbBAms0qvmEJTYUlSKb1Z//tfVetg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YfE7XoPj; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715853801; c=relaxed/simple;
+	bh=r1RHPwjyAgK2tGzBnhNg6KelUvF/Lg5CeAK7qt4ClQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bFQcmmszaASgQlJ2gGXHbqsgRTgHtLqsy8G4fW1mEkYkeBtPfGFsUoR37MD5imv2vDHY9koahMb4dqYYptESm3etLQ50cRgNqYs3ClGh5Cy4NFn/8nwaU5H4sbfal+BegikMRKi92jYqeGqIcIwiQcoVSPk5eSXxoGpX8IEWKlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UG72apak; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715852876; x=1747388876;
-  h=date:from:to:cc:subject:message-id;
-  bh=qXJQtGbYZIMmmRvaLtUiEGiWhbEaUDmkLC+1h8CIdUA=;
-  b=YfE7XoPjSbCBuS8qcrmn2ZMwd+13QVvl2iP1XDUbGdjY3D1SnJ0F2eRn
-   jDWLX+UVc0NeyJOnqPYNGsQ5yBcNu9wHKOYPOuMqp5pYc6kxhPUd+A5SW
-   j0xfKn9CibxFx2dl3B718HISjtAwTRisIIjaUWVURph/F074l67HosCPG
-   uDxImh60NoZRmWc4spDov25aEBo9GVNcOt1Lxf1R2b6wD2AFlTscmAkwJ
-   aBH5FO5EKx7Vr1Deq9sYBMwZJ8qaDtNRd1AFApLeLGlq1gdnXSUhiPQv/
-   mvmmsfCtSPkd4lp+raMnp0KH/HOsvz594IC5Hp0ogyvX/Xw0+qJQzn27O
-   Q==;
-X-CSE-ConnectionGUID: 702zT73ASI+oG4PFYhkGug==
-X-CSE-MsgGUID: DIldGHhKT2uZU5OPXmdNKQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="12135256"
+  t=1715853800; x=1747389800;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r1RHPwjyAgK2tGzBnhNg6KelUvF/Lg5CeAK7qt4ClQw=;
+  b=UG72apakARQ3MKOfaPBl0tNsUsCKAygMVbfPErovaDPQEyr7o5p/9zoo
+   nIisflh03kPO0zoupvhBcFneLQA58efHDOnkYOSukVRazFXArYoKqbYsd
+   BvbBU32MGCRRkwFiBpVXO3ScsL7SyvwyLZZz6NIWhwycyFr3F8JzG2WL6
+   iPzsiwdCaoPj/EqRZkngRjjRRS2hIYMbaTeRwE630/9mW4uXGszJEglgN
+   EOkstG/Fd50F9kt1l0zg2jQDF/zSNetbdNnH/tv0+lniHBdo9EmF/Q55W
+   ETYETqF4bjEidPM7m9pkBqOPNtsssdwsf6vXbDUUGPnPPOQ41vKYnCAxz
+   g==;
+X-CSE-ConnectionGUID: dFU9DBb+T2yGAY92tbcpXg==
+X-CSE-MsgGUID: mHEJaAoPQnq+4D6YqO98Fw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11074"; a="11764064"
 X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="12135256"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 02:47:53 -0700
-X-CSE-ConnectionGUID: 0c1SlnLFSsumvmttvK/EtQ==
-X-CSE-MsgGUID: UPwT3I26SMOfL3X5bFL0Tw==
+   d="scan'208";a="11764064"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2024 03:03:19 -0700
+X-CSE-ConnectionGUID: g0V9RiB1SOWq1ESDSqoWdQ==
+X-CSE-MsgGUID: pNZHGDq9SeSoRLGhGP/4eQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,164,1712646000"; 
-   d="scan'208";a="31921903"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 16 May 2024 02:47:52 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s7XiH-000E77-0c;
-	Thu, 16 May 2024 09:47:49 +0000
-Date: Thu, 16 May 2024 17:47:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/rockchip] BUILD SUCCESS
- c3f70ecb7978e69a27ccae2cc71ab21de1519822
-Message-ID: <202405161728.161GH3m6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="62215168"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 16 May 2024 03:03:17 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 63ABB9F6; Thu, 16 May 2024 13:03:15 +0300 (EEST)
+Date: Thu, 16 May 2024 13:03:15 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <20240516100315.GC1421138@black.fi.intel.com>
+References: <Zi0VLrvUWH6P1_or@wunner.de>
+ <CA+Y6NJE8hA+wt+auW1wJBWA6EGMc6CGpmdExr3475E_Yys-Zdw@mail.gmail.com>
+ <ZjsKPSgV39SF0gdX@wunner.de>
+ <20240510052616.GC4162345@black.fi.intel.com>
+ <CA+Y6NJF2Ex6Rwxw0a5V1aMY2OH4=MP5KTtat9x9Ge7y-JBdapw@mail.gmail.com>
+ <20240511043832.GD4162345@black.fi.intel.com>
+ <20240511054323.GE4162345@black.fi.intel.com>
+ <CA+Y6NJF+sJs_zQEF7se5QVMBAhoXJR3Y7x0PHfnBQZyCBbbrQg@mail.gmail.com>
+ <ZkUcihZR_ZUUEsZp@wunner.de>
+ <20240516083017.GA1421138@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240516083017.GA1421138@black.fi.intel.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
-branch HEAD: c3f70ecb7978e69a27ccae2cc71ab21de1519822  PCI: dw-rockchip: Fix initial PERST# GPIO value
+On Thu, May 16, 2024 at 11:30:17AM +0300, Mika Westerberg wrote:
+> Hi,
+> 
+> On Wed, May 15, 2024 at 10:35:22PM +0200, Lukas Wunner wrote:
+> > On Wed, May 15, 2024 at 02:53:54PM -0400, Esther Shimanovich wrote:
+> > > On Wed, May 8, 2024 at 1:23???AM Lukas Wunner <lukas@wunner.de> wrote:
+> > > > On Wed, May 01, 2024 at 06:23:28PM -0400, Esther Shimanovich wrote:
+> > > > > On Sat, Apr 27, 2024 at 3:17AM Lukas Wunner <lukas@wunner.de> wrote:
+> > > > > That is correct, when the user-visible issue occurs, no driver is
+> > > > > bound to the NHI and XHCI. The discrete JHL chip is not permitted to
+> > > > > attach to the external-facing root port because of the security
+> > > > > policy, so the NHI and XHCI are not seen by the computer.
+> > > >
+> > > > Could you rework your patch to only rectify the NHI's and XHCI's
+> > > > device properties and leave the bridges untouched?
+> > > 
+> > > So I tried a build with that patch, but it never reached the
+> > > tb_pci_fixup function
+> > 
+> > That means that for some reason, the PCI devices are not associated with
+> > the Thunderbolt ports.  Could you add this to the command line:
+> > 
+> >   thunderbolt.dyndbg ignore_loglevel log_buf_len=10M
+> > 
+> > and this to your kernel config:
+> > 
+> >   CONFIG_DYNAMIC_DEBUG=y
+> > 
+> > You should see "... is associated with ..." messages in dmesg.
+> > This did work for Mika during his testing with recent Thunderbolt chips.
+> > I amended the patches after his testing but wouldn't expect that to
+> > cause issues.
+> > 
+> > @Mika, would you mind re-testing if you've got cycles to spare?
+> 
+> Sure, I'll try this today and update.
 
-elapsed time: 730m
+Okay now tried with your latest branch on Meteor Lake-P (integrated
+Thunderbolt). I do get these:
 
-configs tested: 138
-configs skipped: 3
+[   12.911728] thunderbolt 0000:00:0d.2: 0:8: associated with 0000:00:07.0
+[   12.911732] thunderbolt 0000:00:0d.2: 0:9: associated with 0000:00:07.1
+...
+[   13.250242] thunderbolt 0000:00:0d.3: 0:8: associated with 0000:00:07.2
+[   13.250245] thunderbolt 0000:00:0d.3: 0:9: associated with 0000:00:07.3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The adapters 8 and 9 are PCIe as expected
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240516   gcc  
-arc                   randconfig-002-20240516   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240516   gcc  
-arm                   randconfig-002-20240516   clang
-arm                   randconfig-003-20240516   gcc  
-arm                   randconfig-004-20240516   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240516   gcc  
-arm64                 randconfig-002-20240516   clang
-arm64                 randconfig-003-20240516   clang
-arm64                 randconfig-004-20240516   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240516   gcc  
-csky                  randconfig-002-20240516   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240516   clang
-hexagon               randconfig-002-20240516   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240516   clang
-i386         buildonly-randconfig-002-20240516   clang
-i386         buildonly-randconfig-003-20240516   clang
-i386         buildonly-randconfig-004-20240516   gcc  
-i386         buildonly-randconfig-005-20240516   gcc  
-i386         buildonly-randconfig-006-20240516   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240516   gcc  
-i386                  randconfig-002-20240516   gcc  
-i386                  randconfig-003-20240516   clang
-i386                  randconfig-004-20240516   clang
-i386                  randconfig-005-20240516   clang
-i386                  randconfig-006-20240516   clang
-i386                  randconfig-011-20240516   gcc  
-i386                  randconfig-012-20240516   gcc  
-i386                  randconfig-013-20240516   clang
-i386                  randconfig-014-20240516   gcc  
-i386                  randconfig-015-20240516   gcc  
-i386                  randconfig-016-20240516   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240516   gcc  
-loongarch             randconfig-002-20240516   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240516   gcc  
-nios2                 randconfig-002-20240516   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240516   gcc  
-parisc                randconfig-002-20240516   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240516   gcc  
-powerpc               randconfig-002-20240516   clang
-powerpc               randconfig-003-20240516   clang
-powerpc64             randconfig-001-20240516   gcc  
-powerpc64             randconfig-002-20240516   clang
-powerpc64             randconfig-003-20240516   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240516   gcc  
-riscv                 randconfig-002-20240516   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240516   gcc  
-s390                  randconfig-002-20240516   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240516   gcc  
-sh                    randconfig-002-20240516   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240516   gcc  
-sparc64               randconfig-002-20240516   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240516   clang
-um                    randconfig-002-20240516   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-002-20240516   gcc  
+# tbadapters -r 0 -a 8 -a 9
+ 8: PCIe Down                     Disabled  
+ 9: PCIe Down                     Disabled  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+# tbadapters -d1 -r 0 -a 8 -a 9
+ 8: PCIe Down                     Disabled  
+ 9: PCIe Down                     Disabled  
+
+And the 07.[0-3] are the PCIe Thunderbolt Root Ports:
+
+# lspci
+...
+00:07.0 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #0 (rev 10)
+00:07.1 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #1 (rev 10)
+00:07.2 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #2 (rev 10)
+00:07.3 PCI bridge: Intel Corporation Meteor Lake-P Thunderbolt 4 PCI Express Root Port #3 (rev 10)
+...
 
