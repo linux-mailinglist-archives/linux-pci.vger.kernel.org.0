@@ -1,73 +1,72 @@
-Return-Path: <linux-pci+bounces-7604-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7605-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2858A8C8535
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 13:05:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E11308C853A
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 13:06:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D70922832FF
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 11:05:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BDC52829C6
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 11:06:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DC623CF58;
-	Fri, 17 May 2024 11:05:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C8DE3B1AE;
+	Fri, 17 May 2024 11:06:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDC11DA23;
-	Fri, 17 May 2024 11:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2489D3BB20;
+	Fri, 17 May 2024 11:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715943938; cv=none; b=cL16z7HeYwALSenrSq7f8l4E8EZZIaboE9lpPRTANCyYxROuSnU+ccGXyHCAI8OIChDKa9wEijMBSZvQnlMJnPxdXaiWB0Y87ka34ZtP7gOCgaEd9Wu1f3sFNom0kdwEYzhN0beYvGxawIaNNh77eIMPbQB3yY6q9eMQG41mUFc=
+	t=1715944003; cv=none; b=TaKy0S6jQntza95fYCaGHK6RZRxAQYoOS2zfWUc4qDNBb5Rcay/cbTkGRJU5lLNdjd7Mxkoev3uS1nTUCQmizE6DDJbj0dxmpgEVkCgghW0BBESptsFfuDxSf96N/g6PBmxNTR8DVsc/RxfUuhpHTSuC3J/F2yi98OLxDpFLCeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715943938; c=relaxed/simple;
-	bh=joiLGwoaKTuni3oVmgyg7NhIzlp5h0zbna1gE4Ju7BM=;
+	s=arc-20240116; t=1715944003; c=relaxed/simple;
+	bh=6YKYu+nwgoHIhxuCcyfKEm/0MyLgoLFDAQc26AajwQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/sGqFSf6qZ7C1WBvZZsXHWGmPAvYV9vFKWnmZBJygqhA7B4R1WZ0VYoyNF5e879qVnfs9JjUgbhYkQ9Q5qmjZU00/59dizT0McXcdsJf+SvkZ4Ikamx3Y6EW3dcBnW7RiU+g0XcccwQ14D5GXPB2ptACAqj4XaLmtn5TyaLg00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2V3I376Sf/h9gGx2OJebqpgbrT83nzqpIPVlGIvLpyH1zmQFkivkqCDbLguLqMGiZPGo5aEfER9d9cpNSFFvSpr0Y+EmJ3uRTX9aYylGZOf9rkpJqzG/d34yUCNe1iXq+nOm0abi01hnl7qwqMtDujxAhktf4e0bVkl/iSPG5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ed835f3c3cso5280995ad.3;
-        Fri, 17 May 2024 04:05:36 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1ec92e355bfso5152785ad.3;
+        Fri, 17 May 2024 04:06:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715943936; x=1716548736;
+        d=1e100.net; s=20230601; t=1715944001; x=1716548801;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9C2Iabb3KviDiU9pcCXgYKqv3XsqyMThgxMVc/vM2p4=;
-        b=l7TPVuhAxQhXsprfVy10u6UOPcYg6srOOUyzyDkuMQlfLV8Kt5eQ3frS0UFzmvnQry
-         VpcSkvirJXSn2FE7L+Gmi/sgSX93t3cq/e1nXctH7GwEwzfodjlKLVJbGuGzuWmMcRqw
-         0wiW4IhceECrQu33kFYwpEJ2ZsoU92xk+XbWAuH+GjGKiUdCT3OTXkuPxMzHlFghioZV
-         siKrR5BGrzMOJHuTxCWNWFDkgdb3l1P3mCRwnaOWNo4QdkgXYWm6OH0FlObuggptqQIg
-         3Ul8lIETwyB61g9s+Fxfkzu5D3sjzz1cqoaAdKzvwFRprAhB91fXoRbGMleSfZmJSLF6
-         OdRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUClWl43oX5cyQYBDOa64oIaW5HzVTC/K5MN/v9dWNzXgm5S3kXiDBLsk3L3l62JIwetQzNtboUy5rhWKriKhfDoaA92BE1D3bdihwfrwdnhiTlJv2jlUUioakTWY0iZWBq6rbLBhs/t/0ggy0qwgpcMqzETq/3u6Gurl1y42NoB0cPzA==
-X-Gm-Message-State: AOJu0YzjZnuIBzHyhcvhZrV4xBEOq7cpYNoP9W3naeholxG1g0g/+mYK
-	Ehc8Vppja0xuD8Y3XoQcydFBg161KsVyKkpkG+hGwAFZWZEHDju6
-X-Google-Smtp-Source: AGHT+IFVZdoYJON530fO2X5rbONRy5CjwQQ+lZEF08uQn3U+A5Sjp3qY7qXlWDjUU4wnnrZPzKSgXg==
-X-Received: by 2002:a17:902:74c8:b0:1ea:cc:b59e with SMTP id d9443c01a7336-1ef43d2e3ccmr209410165ad.19.1715943935982;
-        Fri, 17 May 2024 04:05:35 -0700 (PDT)
+        bh=p83S38X1HgQAB74fAqntKRjS6xpoQ6Z5CQG1AzBL1YY=;
+        b=i6T93F2DR7pGHiicUazUWdhTLVoCwexdqKHzhGr1PR3+ZOLWrL+loyAVXR3xbmnf5P
+         AyCpF8bJezXhO3tI9f6QWvMGaPUfggrSNLlKabjYEeOY/ZcMPBz9Wjk6CYHu33x49iim
+         RjP2QN3uNckOqkfI9kMrxgmK+uTeMVMMg3PFdwqJ0e3IXItwjIWcrTEJjPau4Tgstsir
+         yYWShxqjmG3+/OAgpqqCzQFWpBTv4jmQNJoal9U1HjGztGzCWaeL4W1ITzsiFif8qK+j
+         IwrvlamI3f8uFa+3qTe1W5aTZgI2nzyMjZ96oUmC3RJ7bHzkuciFCX1jyqAsHdvrAsCm
+         j84g==
+X-Forwarded-Encrypted: i=1; AJvYcCWbNaNRH06MEt0N6J1T6DGtjrOFFyY0mK4nRlQGvpx3I3QVAQiA51b4fWHZsZo4KCQVeY9pr9OJS33JPoiN6O09EuNsAgLsgxzI7G9GEeVr5t3Nl5CdMyRvVpliBZXFFDWoqBN6Cqji
+X-Gm-Message-State: AOJu0Yx/C1KXD9UKFxSXU0K3wHlqNJV3t12DMt7a2prREZV/Opl+2zCt
+	92mk9kpWt9M5vtt3inhBIlXixFLE6wEGYteQMv4ZFFYyY4Dn/9io
+X-Google-Smtp-Source: AGHT+IEszwTbkdrCv4IxKsGy4hC7XFyuCqVlF7lLlDq2IPmKr14GiWBtDXkUNI3atfnXUf/nb6k/Qg==
+X-Received: by 2002:a17:903:2d1:b0:1f2:e14b:3d91 with SMTP id d9443c01a7336-1f2e14b3fc6mr19558985ad.59.1715944001348;
+        Fri, 17 May 2024 04:06:41 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bad7dc1sm154334805ad.89.2024.05.17.04.05.34
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f09363ac7dsm50255295ad.93.2024.05.17.04.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 04:05:35 -0700 (PDT)
-Date: Fri, 17 May 2024 20:05:33 +0900
+        Fri, 17 May 2024 04:06:40 -0700 (PDT)
+Date: Fri, 17 May 2024 20:06:38 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml
- file
-Message-ID: <20240517110533.GL202520@rocinante>
-References: <20240207231550.2663689-1-Frank.Li@nxp.com>
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Niklas Cassel <cassel@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH v2 1/2] PCI: endpoint: pci-epf-test: Make use of cached
+ 'epc_features' in pci_epf_test_core_init()
+Message-ID: <20240517110638.GM202520@rocinante>
+References: <20240418-pci-epf-test-fix-v2-0-eacd54831444@linaro.org>
+ <20240418-pci-epf-test-fix-v2-1-eacd54831444@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,14 +75,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240207231550.2663689-1-Frank.Li@nxp.com>
+In-Reply-To: <20240418-pci-epf-test-fix-v2-1-eacd54831444@linaro.org>
 
-> Convert layerscape pcie bind document to yaml file.
+Hello,
 
-Applied to dt-bindings, thank you!
+> Instead of getting the epc_features from pci_epc_get_features() API, use
+> the cached pci_epf_test::epc_features value to avoid the NULL check. Since
+> the NULL check is already performed in pci_epf_test_bind(), having one more
+> check in pci_epf_test_core_init() is redundant and it is not possible to
+> hit the NULL pointer dereference.
+> 
+> Also with commit a01e7214bef9 ("PCI: endpoint: Remove "core_init_notifier"
+> flag"), 'epc_features' got dereferenced without the NULL check, leading to
+> the following false positive smatch warning:
+> 
+> drivers/pci/endpoint/functions/pci-epf-test.c:784 pci_epf_test_core_init()
+> error: we previously assumed 'epc_features' could be null (see line 747)
+> 
+> So let's remove the redundant NULL check and also use the epc_features::
+> {msix_capable/msi_capable} flags directly to avoid local variables.
 
-[1/1] dt-bindings: PCI: layerscape-pci: Convert to YAML format
-      https://git.kernel.org/pci/pci/c/24cd7ecb3886
+Applied to endpoint, thank you!
+
+[01/02] PCI: endpoint: pci-epf-test: Make use of cached 'epc_features' in pci_epf_test_core_init()
+        https://git.kernel.org/pci/pci/c/3acb072c2433
+[02/02] PCI: endpoint: pci-epf-test: Use 'msix_capable' flag directly in pci_epf_test_alloc_space()
+        https://git.kernel.org/pci/pci/c/e79d1b1eb626
 
 	Krzysztof
 
