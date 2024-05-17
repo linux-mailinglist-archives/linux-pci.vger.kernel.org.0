@@ -1,69 +1,78 @@
-Return-Path: <linux-pci+bounces-7594-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7595-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 465E88C849C
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 12:14:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B9468C84AD
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 12:22:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2949B23787
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 10:14:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46671283EF5
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 10:22:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C8A2E40F;
-	Fri, 17 May 2024 10:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E5F5364AB;
+	Fri, 17 May 2024 10:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JS25gVTo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2722E62C;
-	Fri, 17 May 2024 10:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DA72C848;
+	Fri, 17 May 2024 10:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715940836; cv=none; b=ZZp6LfbiAVJ3FTR29PKyAlvjSoYQluc/ehFY8g6KD9xbTinyh1D1pBRYT2WuffFD5dh0GpUrSXxbtDZOoZLx63taUUNFvKV8TqbOoByvVonstOWVplo60QCb5tXwmodnvW2TSrP/5XAQqZhuZHpGs80b64UEc01YaMB5C+okjeU=
+	t=1715941356; cv=none; b=iPT6cr8ITTsmOZsr4rNV7OS+jg3nzBHg7x4QbtO0oQY+F3ktSDR2J1w5QDdDyOgd6OrYUeRjuQNCDmSIrjS6+7DdrhbvhCT5IYaJHFUnB4Feg4o/+R4MoJVUfpDDO2HWPfGy/HX+JPcPA/FcANmtRoWqDe5FT8/3mqy65eyihzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715940836; c=relaxed/simple;
-	bh=3eS4A6sBBete3+3nwqBVB9lVdGi0DqXxA3+ObVoYmKc=;
+	s=arc-20240116; t=1715941356; c=relaxed/simple;
+	bh=Siin2KDdrw9IZXPxUcVfzq/13heNRE814alBNBZNmm0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C5FGhScNUHsc77NcYvBO7eGCM4tOiEKS3S9h6fdE4UpHrI+t66XG+Ayuncmza/UPGS2am35/vsVaq27lk0hLpI5AhGgIGkLUgRZV9e2m15KWKfLZy9n3WDJNGRi0ReXIIbUZ3Jeq+1LhdSKWHNKUUek1ncfKdSWNtwxIhqviw08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f453d2c5a1so1139970b3a.2;
-        Fri, 17 May 2024 03:13:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715940834; x=1716545634;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6winQhTaiaX3qtpQtT67k6lYj7ciZqa7ndc5/SwCEuA=;
-        b=i9+4OoW2a1P/roslGyb5ilZrreyRvb2zySHKzCrnrIDS65Wzro41DauLTZr715duCU
-         5bsAETIMTEI+pQqvvV7+iV9cjqrh/yTZRAio8r17I14VFPWdpl2+aWTgyWmfIA4/9E/8
-         mOw3fFnddTBlDpffijelFbudMI4g4kuXizkBPg4XWRQjliuWHromDMn2Zl14aPD6vx8o
-         pvd6YN4dji2CeGWz853LNGrkokhg7mZlJM1S97Y+BR8Dj/rBhzOjremqHCgGPSTOmlZI
-         xLT0+vC25Gymx1pgDE4SwA9nwj+V1QOu7YVdQUgmgzkkO0se6+jy2oUnSKu0U0i8YUip
-         w4WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtSaMpR0dkPdQxYBafewAV+Yfpqu++w4GxR141Pa0TaC31CuQSaeEBNUsiyeVqKaDMGy/W+YJFs704HYMI9bI4DFgkUdFOUWCCYyy8n6qed0wQr9q073P5Qva5lR1hv6GyplU7W/mh2RKRfUVEsyNNCyW/MwhAJ9Zes/1yWj6Z
-X-Gm-Message-State: AOJu0Yw4kI43o2wVs8Ex4ZwLPvhBa6gwfJWFzK1Q8+UqlqBZen5NbkKK
-	tkiPQCXOwyKBjW5eFohPI7vwBDb4msjn4+GKcdZdvT3qBKfjxZfm
-X-Google-Smtp-Source: AGHT+IG9P8DIxQ8nLaNW5D9C+GvuVUP0c3EKFA8sgKAW6lF1YQHb78ZqQuJdMoV41TSUncZYR6YNVA==
-X-Received: by 2002:a05:6a00:845:b0:6f3:368d:6f64 with SMTP id d2e1a72fcca58-6f4e026b863mr28976797b3a.2.1715940833974;
-        Fri, 17 May 2024 03:13:53 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f6688ed547sm6734600b3a.165.2024.05.17.03.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 03:13:53 -0700 (PDT)
-Date: Fri, 17 May 2024 19:13:52 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Ajit Khaparde <ajit.khaparde@broadcom.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	andrew.gospodarek@broadcom.com, michael.chan@broadcom.com,
-	kuba@kernel.org, davem@davemloft.net,
-	Andy Gospodarek <gospo@broadcom.com>
-Subject: Re: [PATCH] pci: Add ACS quirk for Broadcom BCM5760X NIC
-Message-ID: <20240517101352.GD202520@rocinante>
-References: <20240510204228.73435-1-ajit.khaparde@broadcom.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=a4Z9L4jgda0x5wigbTN+Fdfi4KvFQ/8ZVTKRz0DhOK0MZWfpDi3NpK/sdplXP3oS53+gBoc/Ho0q7+9Mr4sIVrJBtG2OpxzbGJZ58pvflWgLA46RGiIoRwxhZ81fN/wUieXnD/GQOMwE2tpxDU3cjJ1BysELcdKtgqy4ZzDuTSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JS25gVTo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B174C2BD10;
+	Fri, 17 May 2024 10:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715941356;
+	bh=Siin2KDdrw9IZXPxUcVfzq/13heNRE814alBNBZNmm0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JS25gVToNhvMMNg7hxuTZL0tG/HBKNKC/y60z1180iBSmkkiAF93gz8IahYLICpPR
+	 dD1+BEZrCmEKnkC5poMsAVMb7azHUcJlbh6I/eYx0PbexCe7SzuCwDZcIo8GM0NuOK
+	 2zEaUbHpY/T5Xr5iUZl/JnXGgHjK9EnqS3ofKZchWLgEiup7M4RCempgYeRsm+CF9T
+	 YScRQXb5iBIlzjUx+Z91JS8yRRDzn8SM2kvgnEuQKFoMun9ZO6vcKuU3CsT9csKK9C
+	 TGUgJSrW+N27RSEIGXFCe6+/LNwj9cNO9fHoLPEtsBw0tPIrDu1Nu83x25aXj2QGIW
+	 FkUWzfs0Qm5lg==
+Date: Fri, 17 May 2024 19:22:34 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>, linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Xiaowei Song <songxiaowei@hisilicon.com>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 0/5] PCI: controller: Move to agnostic GPIO API
+Message-ID: <20240517102234.GA333779@rocinante>
+References: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,23 +81,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240510204228.73435-1-ajit.khaparde@broadcom.com>
+In-Reply-To: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com>
 
 Hello,
 
-> The Broadcom BCM5760X NIC may be a multi-function device.
-> While it does not advertise an ACS capability, peer-to-peer
-> transactions are not possible between the individual functions.
-> So it is ok to treat them as fully isolated.
-> 
-> Add an ACS quirk for this device so the functions can be in independent
-> IOMMU groups and attached individually to userspace applications using
-> VFIO.
+> While at it, remove of_gpio.h leftover from some of the drivers.
 
-Applied to acs, thank you!
+Applied to gpio, thank you!
 
-[1/1] PCI: Add ACS quirk for Broadcom BCM5760X NIC
-      https://git.kernel.org/pci/pci/c/694b705cdbf7
+[01/05] PCI: dra7xx: Add missing chained IRQ header inclusion
+        https://git.kernel.org/pci/pci/c/1d1efd131cc1
+[02/05] PCI: aardvark: Remove unused of_gpio.h inclusion
+        https://git.kernel.org/pci/pci/c/83bf80dc8e2f
+[03/05] PCI: dwc: Remove unused of_gpio.h inclusion
+        https://git.kernel.org/pci/pci/c/8f69a807234b
+[04/05] PCI: imx6: Convert to use agnostic GPIO API
+        https://git.kernel.org/pci/pci/c/7dfa559abc93
+[05/05] PCI: kirin: Convert to use agnostic GPIO API
+        https://git.kernel.org/pci/pci/c/7ca698ff686c
 
 	Krzysztof
 
