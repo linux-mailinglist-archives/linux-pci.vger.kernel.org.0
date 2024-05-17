@@ -1,114 +1,97 @@
-Return-Path: <linux-pci+bounces-7633-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7634-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 102ED8C8AB2
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 19:15:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDB048C8AB6
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 19:15:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A33BCB2356E
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 17:15:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73DF02867C7
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 17:15:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6F513DB8D;
-	Fri, 17 May 2024 17:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L26Qd1ky"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E7C13DB98;
+	Fri, 17 May 2024 17:15:42 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C112F5A3;
-	Fri, 17 May 2024 17:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FD312F5A3;
+	Fri, 17 May 2024 17:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966114; cv=none; b=aGA750FvHdSlEyDjd3uH8C8i1gvrF/ihhJIWF7+2oZbV4nkVRgar9s+l7o5CRFTkq1SoBXd3L20zGNa74C3z4aSIiKXSCxLLRwUjrpB2nqwgMGVTgvEHkuXgUlnYj/y/8R6/ag5GHwMJPmIk6uqVtx5o+HsWBy3+1/ejbHVYiUc=
+	t=1715966142; cv=none; b=aPs68Oqg406vSX7FOy+S2QK3Yam2kJj/+uBPTEebG/Pp1Y40qqX3dvsCY3y5pia8ly+09wNfIQN1hVNaWp1a+MqceO70KXNNYwrJBLqAIwCJ1JpsBA6Wq5tl3xBQeUJp+qCkbGEJDmSlIIigfzyrWEHT6My2NRzEDqo/pl/1ruc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966114; c=relaxed/simple;
-	bh=8niseAwEvm4eufhgATrW3AOhRGKDVc/i+YYWQsWeM7Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rX0FNicvKj/HaOgvbn55cMEfbqtfK/wdz7GtiPd40huNnE2/cIJWcEfOmnkrwjgV/oZiEqnOJHAltlLB/WEjju5ou3DfQ9RRY9kBaP52AVvKWWzP+cwfC5rT3Io4aa0sGWRNCdUHOYzH9P0yBP/cNCn5XYm9ZPmJrUtcd9DcNy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L26Qd1ky; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB656C4AF0E;
-	Fri, 17 May 2024 17:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715966113;
-	bh=8niseAwEvm4eufhgATrW3AOhRGKDVc/i+YYWQsWeM7Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=L26Qd1kyalzbhAN7I58oIXCoMGliFeN10tRbJywsR7G7832jC/g5AmuXZ3OYaRuav
-	 KNaOX5qBPGdgXrS/dcYCW4tC9ZFk/O4U1MyTnqAHcASLOQ3IsdnWaFLJMzVeSoxnFH
-	 JWTZoUmBiC/OrYwutQ0Qdbsf/qI+hAmoUcAiv7AolTnjhqaoDXLbT0j/c52VLqfXOS
-	 j0bRAd6LC+/NE7+SiINnnT85UxoaPJlx1ssny0OQqZgKzh47ykuVNsyUV0D9EFI3HM
-	 /KUjfoheuJp849m7k8FCDXkgTFDRYNSZifMnH15EtZFtCrrLJrYUxoMMCZM8SmChAJ
-	 Ss6/MOR9E/FSA==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-523b017a5c6so3459100e87.1;
-        Fri, 17 May 2024 10:15:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV4UBHDUxpkVDomeboGU6nj4NyznefjpK1+cH1Mz6sTXAGQjdMcCWVgwbmkDlB+GozE/z1YhlqDBQyA+0MsqVeRGdNvBBp2sqGcC+rIc5ngXwF0zxJ2DMH6W6ggqwZvnxHiqiJxuPjqW9P63cDyKl9QcVixuNZbpb5UZIkmq1PgRgLD2nnF+QmqLuJlQmw2I6QonNxRprk0jDVbALLb2eKJ1wJn+o/d3x8YUkgVYp3K8RwNSXuP06fiCgiVYxw=
-X-Gm-Message-State: AOJu0Yz9AHyjP/UJiViRFYYCOqLT33Ds/y4gzGd/qq+JMbrhEOhNwWwU
-	GoLCAXdWLc8KRqa+DFXMv1Gus+iH0MaRVNxG6QDT6QQWY5xJsPuMR5QS6LIiAutWG8TF1bJJbGV
-	b0xDzGdBgcckQiMHQXI7svRDd3w==
-X-Google-Smtp-Source: AGHT+IGUUWb0QqBy4GPMsKWcCTpt3kRDK3vukBnYnUPOMugpsBxrcXJSiRK62s1g28Bx/g92dGHcLhVZALfpiK1lJOw=
-X-Received: by 2002:ac2:4643:0:b0:523:ae99:b333 with SMTP id
- 2adb3069b0e04-523ae99b3c5mr5613808e87.64.1715966112010; Fri, 17 May 2024
- 10:15:12 -0700 (PDT)
+	s=arc-20240116; t=1715966142; c=relaxed/simple;
+	bh=CeNQAngPAHskc9myqiu7dhF2+9gR+EP96fzENpUqBwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hSTxKn+Lzwb2XAfy9FvEYZN7UhmhwcZUQgfexP0s9DfLct5Vf+ANjCzz4koQTlpQ/Uue8i+9a/QE0NYUP+s7gB3Szl7EwhJmLTHPkSOP9zRr9MNIkbPPIW51aeicFyA0erapvlIjfBJRO9D9ur3Mzq2lHxaXg+pPubmtpH8aKlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ecd3867556so17527895ad.0;
+        Fri, 17 May 2024 10:15:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715966140; x=1716570940;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bELmLAMwPChhwLt0fHSO/AP39ozUSBeKENIPKuRogpE=;
+        b=hXWYVEKOe9qBKY8FsDla0xRMG0CsVdubwueyu9IR+jwtW5xaKgxyshLTAEkHTrDp4m
+         Z2hVXHGNXUbZ4FsuMn7QbF24hUhmVO8zed9sA+H7zL/1BcYD9MPY3/xGQv2+iKwE+T4B
+         Uet/DvvfbcbOPlnT6cwilRW/5fyUBwDagrpw4sMUgfwmI1SPnBinjr7dj0J5ey5jQnak
+         uHPwE1e2fBBO0dwTPzGUwmEkvQcdxWCnqXsQBC20StmMc9nP/lnkt1JSuA83fNmIeDFE
+         g2ZxwJoIyT+gUnP3+e9XsY/B6kzpYThf+RJ/emyhc6vFATOLRTOVnwyOXMHNONsuITCz
+         X9Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkIhqqdVQItTj2IhvAVqjTX6S7KZI9/MJNnaJWZ0mSpma9F7JiyvdJqClCj8+9SyrW2VjJRP8fyDbtZ4gTP6VGj2IMdq0AuxD1Y2FaUwKuGnVYL5Eq/b2ykEJ/49Vc2+QWLwjHMfl91n8TwExPrpCII5Dux/4jZhqnIlA/Bg8FNrmB6RUEuCElB6WOumRu5NSQkNUBLR5qghCciz8UEwdpQbE=
+X-Gm-Message-State: AOJu0YxkH8FT2u9+M3jqNdsD6902vS84UUWtZLjw3OmQYQarOf/GdH0a
+	nux9/iC644pt/A9pnB2KnWkvro4xuRPNNkH2C+PD1lnt9MOyfWwx
+X-Google-Smtp-Source: AGHT+IHGCM/h+xvLunc+rCf8ukVrTOO0DqmQdWNqa/FarJjsqTTQzbE+Bq+Ve1YFvSZHrnzAVOQ2Ow==
+X-Received: by 2002:a05:6a21:2d0a:b0:1af:f50f:cbe9 with SMTP id adf61e73a8af0-1aff50fcc78mr18516149637.44.1715966140433;
+        Fri, 17 May 2024 10:15:40 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-65c33343c2fsm2625572a12.41.2024.05.17.10.15.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 10:15:39 -0700 (PDT)
+Date: Sat, 18 May 2024 02:15:38 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, konrad.dybcio@linaro.org,
+	manivannan.sadhasivam@linaro.org, quic_shazhuss@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_schintav@quicinc.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 0/3] arm64: qcom: sa8775p: add support for EP PCIe
+Message-ID: <20240517171538.GH1947919@rocinante>
+References: <1714492540-15419-1-git-send-email-quic_msarkar@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240514224508.212318-1-romank@linux.microsoft.com> <20240514224508.212318-6-romank@linux.microsoft.com>
-In-Reply-To: <20240514224508.212318-6-romank@linux.microsoft.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 17 May 2024 12:14:58 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
-Message-ID: <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from DeviceTree
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
-	dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, 
-	hpa@zytor.com, kw@linux.com, kys@microsoft.com, lenb@kernel.org, 
-	lpieralisi@kernel.org, mingo@redhat.com, mhklinux@outlook.com, 
-	rafael@kernel.org, tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
-	ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1714492540-15419-1-git-send-email-quic_msarkar@quicinc.com>
 
-On Tue, May 14, 2024 at 5:45=E2=80=AFPM Roman Kisel <romank@linux.microsoft=
-.com> wrote:
->
-> The vmbus driver uses ACPI for interrupt assignment on
-> arm64 hence it won't function in the VTL mode where only
-> DeviceTree can be used.
->
-> Update the vmbus driver to discover interrupt configuration
-> via DeviceTree.
->
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index e25223cee3ab..52f01bd1c947 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -36,6 +36,7 @@
->  #include <linux/syscore_ops.h>
->  #include <linux/dma-map-ops.h>
->  #include <linux/pci.h>
-> +#include <linux/of_irq.h>
+Hello,
 
-If you are using this header in a driver, you are doing it wrong. We
-have common functions which work on both ACPI or DT, so use them if
-you have a need to support both.
+> This series adds the relavent DT bindings, new compatible string,
+> and add EP PCIe node in dtsi file for ep pcie0 controller.
 
-Though my first question on a binding will be the same as on every
-'hypervisor binding'.  Why can't you make your hypervisor interfaces
-discoverable? It's all s/w, not some h/w device which is fixed.
+Applied to qcom, thank you!
 
-Rob
+[01/02] dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+        https://git.kernel.org/pci/pci/c/6baf8302442b
+[02/02] PCI: qcom-ep: Add support for SA8775P SOC
+        https://git.kernel.org/pci/pci/c/a8c1b13ba036
+
+	Krzysztof
 
