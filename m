@@ -1,76 +1,59 @@
-Return-Path: <linux-pci+bounces-7636-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7637-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 224DF8C8AD3
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 19:21:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 748268C8D1C
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 21:56:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D23B6285ED0
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 17:21:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 135121F25549
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 19:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2B1813DBBC;
-	Fri, 17 May 2024 17:21:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32561140E2F;
+	Fri, 17 May 2024 19:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZWM6OZe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A75813DB83;
-	Fri, 17 May 2024 17:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B0513DDA7;
+	Fri, 17 May 2024 19:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966462; cv=none; b=pTUrc2tWjw6tbCJVQcBGKZkLr4m1kbQbPevk9Q35HmuLTTXUe91TszNdP47zbVV9/LZFcFs3gkTFlOHP3gavdFfklToFmyboJ3zJbIskGPhmNknZLf37aw4yjZN/x6eYvQJWhbSDUqlkxEpMR5PxplNAlNlB5cp8n/T//mPSnsM=
+	t=1715975781; cv=none; b=KLla4/lcOZl4X1O8eKfD3CNIbyFtF+FgPN73dCO7+dmAN59VIydBu+5Gjl5H6+RZYpb0NGeTNZ4oTXl+EHNNr9DueRXAnCKOrOtNbkks+4kS+79ohFQP6rzCCoby2/i61Pujrj6utaDtGmkYm6F8u31CjkxtemHYN9tsG9A5gfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966462; c=relaxed/simple;
-	bh=fMjJ5ykGwjuj+QrcfpHGXIV9gMb7nPlUVQoNTDn4zeQ=;
+	s=arc-20240116; t=1715975781; c=relaxed/simple;
+	bh=UaEwLNDI/F1sBxJ3RwcgRvRUx7I1X5xXKiEo/tzV6VM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MWo8nOV1LaqsplhFwFsiWtzjrnl3WfJ+Htmv/IxMuNd1+KDIWruFRDcPEsrW0NYce7TZol1t8wr7t80R12JmkGewe5NHKzHFsK81kyaYxXrRpkolqsn5/pAEmAV0JgkUhRMIj9k/H76EGfd/mMz+xI7oisqBkIqjkkKFbipsgTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f08442b7bcso16339295ad.1;
-        Fri, 17 May 2024 10:21:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715966461; x=1716571261;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hcxp65px+yMhJZwfEsL9d70Gww0JahltMqAcpNPCl20=;
-        b=MTvZ8IUYbivKZCaoHp7VRyxb5NXvmGq5GPC3qPdPoYAvDHTJuo6Iso68yqnpT3Bm8Y
-         p26UajLCEheb5/gOlUpvBWcv7eR1eH+cAPK9xDFu4WdtJjXJEE6xbHeviIEMnhablyYY
-         /28exEV80+T27jKtwI2q7nGT6NpYNdbgOizjdGb6mi19rt5HDP+pZmuLPNLonoQcB1ip
-         6yIs5kc34Cxc/P3TaXJe7/hEGBhTi2Vhl75JzkXWiljZ9OhX71Ew+JqrntTXrAYdbzwz
-         Yj41R/YvHaRKk6HB+iPP9J+S7fXsPROOB01LztD+2Gs62Z8UVEfvAGFVH30JW5L1cvtF
-         52Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCV90pV9XLAASQDd9pVeDZiNMdGjPChS5OyUHc86AMQWTPzLkNh3+/8v2ICKb0r0c6dLyra8Q88AF3qkRgzD5SMgwDMfVONhmQqU3aVcRXjJOc+y4eiV4OFMrXojoMKvXZrrNazFiN1OiBAaG5q5hUwocU5LATO0ozF1DC2RGSMIqvK9Re6Jx57OBG/3OlAyWzV/AcJISx56UuUWfHAWyRRreLg=
-X-Gm-Message-State: AOJu0YxDnZn0KJV966GX5Awl4xwArNUUecOrWSprb1FUv9sr7gKOXV3N
-	aB29ad8j3Jjs82M4om/ytwZzxhSRdP+RkQdAHNuEswzsLbF+tyGV
-X-Google-Smtp-Source: AGHT+IHcZjQGzBsaB72mWx+DZGIw9V125r2LT1HI6JyhdqM0v7pzKz5CQXzZh5f1PtBDVk2RrEipRA==
-X-Received: by 2002:a17:90a:cf90:b0:2b3:2a3b:e4a0 with SMTP id 98e67ed59e1d1-2b6ccc730f9mr21761839a91.32.1715966460782;
-        Fri, 17 May 2024 10:21:00 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bc9bce16d6sm3062061a91.19.2024.05.17.10.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 10:21:00 -0700 (PDT)
-Date: Sat, 18 May 2024 02:20:58 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, konrad.dybcio@linaro.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
-	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-	quic_schintav@quicinc.com,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 0/3] arm64: qcom: sa8775p: add cache coherency support
- for SA8775P
-Message-ID: <20240517172058.GJ1947919@rocinante>
-References: <1710166298-27144-1-git-send-email-quic_msarkar@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmYsskwpf7ro60BnYbg9YLbDExJLActwrUMH31bcgWIt7mw/+EIPeCJizB6IqF6LOlTqkQuNolCbNEjCo9RzNy/MVKTPxWKhdPpPX7mq9H16TxjWdgxMC9cjbdkLljXzh/KL6UkLw1z551fi+bDkgQWH5c5yoCVfFpwrhGBiCFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZWM6OZe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54F4FC2BD10;
+	Fri, 17 May 2024 19:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715975780;
+	bh=UaEwLNDI/F1sBxJ3RwcgRvRUx7I1X5xXKiEo/tzV6VM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZWM6OZeNDHjyVVepDhp8KznJhQYj2Uvtk0jSAobwd2cNW7rfxMsWruuqiPq04ZmJ
+	 yYjVXho7bVxguyzTDqh/O04WtPcbXb0fqn/TealYaXPgG4zM9DiU02/VV3JC69W/v5
+	 xGF7MKv5DuJP/zLUAoPT2Qm4+r+a47F3v/+SeMtMdWYA1egsGvmULBGqud1qlVEqj9
+	 VMNYu2+zgLNNyVJfm8Rl5zo6AjGJ1Y0p2XfKQpCdrbADQ/pyzVb1bghtz203NCgEm7
+	 lk05leXVDbLEjjuKyft0pBXd2GeLuuT6zMRKvJ7K2Om8gZNGFSB5UhdchbuEA/eFtZ
+	 /rRAvGV+/3y4A==
+Date: Fri, 17 May 2024 14:56:19 -0500
+From: Rob Herring <robh@kernel.org>
+To: matthew.gerlach@linux.intel.com
+Cc: linux-kernel@vger.kernel.org, conor+dt@kernel.org,
+	lpieralisi@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v5] dt-bindings: PCI: altera: Convert to YAML
+Message-ID: <20240517195619.GA2851135-robh@kernel.org>
+References: <20240513205913.313592-1-matthew.gerlach@linux.intel.com>
+ <171563836233.3319279.14962600621083837198.robh@kernel.org>
+ <20240514131750.GA1214311-robh@kernel.org>
+ <alpine.DEB.2.22.394.2405141044470.540832@sj-4150-psse-sw-opae-dev2>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,43 +62,44 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1710166298-27144-1-git-send-email-quic_msarkar@quicinc.com>
+In-Reply-To: <alpine.DEB.2.22.394.2405141044470.540832@sj-4150-psse-sw-opae-dev2>
 
-Hello,
+On Tue, May 14, 2024 at 11:30:05AM -0700, matthew.gerlach@linux.intel.com wrote:
+> 
+> 
+> On Tue, 14 May 2024, Rob Herring wrote:
+> 
+> > > > 
+> > > 
+> > > My bot found errors running 'make dt_binding_check' on your patch:
+> > > 
+> > > yamllint warnings/errors:
+> > > 
+> > > dtschema/dtc warnings/errors:
+> > > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/altr,pcie-root-port.example.dtb: pcie@c00000000: interrupt-map: [[0, 0, 0, 1, 2, 1, 0, 0, 0], [2, 2, 2, 0, 0, 0, 3, 2, 3], [0, 0, 0, 4, 2, 4]] is too short
+> > > 	from schema $id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
+> > 
+> > You need 3 address cells after the phandles since the interrupt parent
+> > has 3 address cells.
+> 
+> Thanks for the extra explanation. Adding 3 address cells of 0 made the
+> warning go away.
+> 
+> > 
+> > What does your actual DT contain and do interrupts work because
+> > interrupts never would have worked I think? Making the PCI host the
+> > interrupt parent didn't even work in the kernel until somewhat recently
+> > (maybe a few years now). That's why a bunch of PCI hosts have an
+> > interrupt-controller child node.
+> 
+> The following DT snippet comes from
+> https://www.rocketboards.org/foswiki/Projects/Stratix10PCIeRootPortWithMSI
+> 
+> The Linux kernel version is 4.14.130-ltsi. Would the use of the msi-parent
+> node make everything work?
 
-> Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
-> in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
-> the requester is indicating that no cache coherency issues exist for
-> the addressed memory on the host i.e., memory is not cached. But in
-> reality, requester cannot assume this unless there is a complete
-> control/visibility over the addressed memory on the host.
-> 
-> And worst case, if the memory is cached on the host, it may lead to
-> memory corruption issues. It should be noted that the caching of memory
-> on the host is not solely dependent on the NO_SNOOP attribute in TLP.
-> 
-> So to avoid the corruption, this patch overrides the NO_SNOOP attribute
-> by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
-> needed for other upstream supported platforms since they do not set
-> NO_SNOOP attribute by default.
-> 
-> This series is to enable cache snooping logic in both RC and EP driver
-> and add the "dma-coherent" property in dtsi to support cache coherency
-> in SA8775P platform.
-> 
-> Dependency
-> ----------
-> 
-> Depends on:
-> https://lore.kernel.org/all/1701432377-16899-1-git-send-email-quic_msarkar@quicinc.com/
-> https://lore.kernel.org/all/20240306-dw-hdma-v4-4-9fed506e95be@linaro.org/ [1]
+Possibly? I would think MSIs are preferred and almost anything should 
+support MSIs now.
 
-Applied to qcom, thank you!
-
-[01/02] PCI: qcom: Override NO_SNOOP attribute for SA8775P RC
-        https://git.kernel.org/pci/pci/c/a51da87be9db
-[02/02] PCI: qcom-ep: Override NO_SNOOP attribute for SA8775P EP
-        https://git.kernel.org/pci/pci/c/ce38ead6a0ed
-
-	Krzysztof
+Rob
 
