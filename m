@@ -1,96 +1,114 @@
-Return-Path: <linux-pci+bounces-7632-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7633-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44BFB8C8AAB
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 19:14:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 102ED8C8AB2
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 19:15:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA4C81F25D97
-	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 17:14:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A33BCB2356E
+	for <lists+linux-pci@lfdr.de>; Fri, 17 May 2024 17:15:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 420BA13DB8D;
-	Fri, 17 May 2024 17:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6F513DB8D;
+	Fri, 17 May 2024 17:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L26Qd1ky"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E8312F5A3;
-	Fri, 17 May 2024 17:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C112F5A3;
+	Fri, 17 May 2024 17:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715966082; cv=none; b=Uf2fdw2FtmoWgjQhtktw9WZ9EP+AC6vleaLAFVjk6lVKpctj950Opjuzawq9Xk5df0q+E77Gy7VOatns7iAHNq+rA2IdtScLXMeD7mfKsdde5mKK69a+hk6nBYaSwUfgumgy9EO+/kZu1l+Vj7SrEOcLh6TlwW120wlv4YC3az4=
+	t=1715966114; cv=none; b=aGA750FvHdSlEyDjd3uH8C8i1gvrF/ihhJIWF7+2oZbV4nkVRgar9s+l7o5CRFTkq1SoBXd3L20zGNa74C3z4aSIiKXSCxLLRwUjrpB2nqwgMGVTgvEHkuXgUlnYj/y/8R6/ag5GHwMJPmIk6uqVtx5o+HsWBy3+1/ejbHVYiUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715966082; c=relaxed/simple;
-	bh=McAr598mn0hhm7/C7g/vi1fiDdRj9I8cf4gcjgVYjpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wc3liFoXI+VY87pdAWvBiNqDzIFwhKWMl67rBRWBtd8IOMyZIHX3N606c/RdNnpkJE7EEo5M+pJMi0YBNKVH0PzYgT7oNHtKCg9q3F5UC5Pyt1F9NrseqT+yowt41tuX4Dsp4g0lgGHsJyerXYbkVyN0eRMPZIW1cPefTbxxWrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1ec69e3dbcfso16958705ad.0;
-        Fri, 17 May 2024 10:14:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715966080; x=1716570880;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rdOPXK0KqzS8hVyL/a2vhjNm4BpbHyq09+x4bOdJ3dk=;
-        b=QAuInwW49p+W9R6p1xzc4uGZUapwEUJGmxaCQz5AREDJEw34//7Jo36sw2NeRXgjyz
-         9SzBFki0yXa+iPF9uYutrK9d/ONDIlRBrYdkE3fQcS/mcTJCLdK7pc1ghKiU33nctLTt
-         f9FblbZzT9bd/BdXUjIw/2ZlY8l3H5vmDlWtk3xDWQRJQLGfqAvkmt9pToc+ozQyy7s2
-         coZcu5KXwgObfncjWj+4xV9PJMcIGo0GAsKdPSxcQk7ZnveG0IE7ve5CAKDAYd0DlU/G
-         XcpSzJuTSpYtHH+xGIHvv0zjmKJ8Xb7WY58YXkFw3iHpA6ZO1r8PAFwgClz3v23zh9ZP
-         uuVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAnIqVqCaSxFP4nZIfI3Wx4fk8ROoATt0+Wuq/7llNnv8cBiRfgEtdE1f2rut0kxPa/xow/2LTrPZFzYKBV00HHo2itQnmLVpnWC8+40vAJWUO39wX0oQCX6l4pCmiisE9H/LPj+PMDnU7B6oJ2XeYhZHw/iwXLLOPs5kge9L51uWclV3iMA==
-X-Gm-Message-State: AOJu0YxCCmmKDTv9TyAlhd86QC49P4/G5dYs15AimJX8iK761Zq5Dq4K
-	l78aaxEH8ozb+1uIMqobrPw1MHM1mO0UjpNYw2Sc/wFu8H/FQz9H
-X-Google-Smtp-Source: AGHT+IFF0YjwAFmHHUK9zdHO3gPr5Dkp4N6sZ3Pd0lPUJeOAdRsJz9QQdcDSwPSMspRLNfUHnFWbFQ==
-X-Received: by 2002:a17:902:cf06:b0:1eb:74c7:3eaa with SMTP id d9443c01a7336-1ef43d1709fmr302309145ad.23.1715966080237;
-        Fri, 17 May 2024 10:14:40 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c03633csm159134395ad.207.2024.05.17.10.14.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 May 2024 10:14:39 -0700 (PDT)
-Date: Sat, 18 May 2024 02:14:38 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Switch to devm_clk_bulk_get_all() API to get
- the clocks from Devicetree
-Message-ID: <20240517171438.GG1947919@rocinante>
-References: <20240417-pci-qcom-clk-bulk-v1-1-52ca19b3d6b2@linaro.org>
+	s=arc-20240116; t=1715966114; c=relaxed/simple;
+	bh=8niseAwEvm4eufhgATrW3AOhRGKDVc/i+YYWQsWeM7Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rX0FNicvKj/HaOgvbn55cMEfbqtfK/wdz7GtiPd40huNnE2/cIJWcEfOmnkrwjgV/oZiEqnOJHAltlLB/WEjju5ou3DfQ9RRY9kBaP52AVvKWWzP+cwfC5rT3Io4aa0sGWRNCdUHOYzH9P0yBP/cNCn5XYm9ZPmJrUtcd9DcNy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L26Qd1ky; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB656C4AF0E;
+	Fri, 17 May 2024 17:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715966113;
+	bh=8niseAwEvm4eufhgATrW3AOhRGKDVc/i+YYWQsWeM7Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L26Qd1kyalzbhAN7I58oIXCoMGliFeN10tRbJywsR7G7832jC/g5AmuXZ3OYaRuav
+	 KNaOX5qBPGdgXrS/dcYCW4tC9ZFk/O4U1MyTnqAHcASLOQ3IsdnWaFLJMzVeSoxnFH
+	 JWTZoUmBiC/OrYwutQ0Qdbsf/qI+hAmoUcAiv7AolTnjhqaoDXLbT0j/c52VLqfXOS
+	 j0bRAd6LC+/NE7+SiINnnT85UxoaPJlx1ssny0OQqZgKzh47ykuVNsyUV0D9EFI3HM
+	 /KUjfoheuJp849m7k8FCDXkgTFDRYNSZifMnH15EtZFtCrrLJrYUxoMMCZM8SmChAJ
+	 Ss6/MOR9E/FSA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-523b017a5c6so3459100e87.1;
+        Fri, 17 May 2024 10:15:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV4UBHDUxpkVDomeboGU6nj4NyznefjpK1+cH1Mz6sTXAGQjdMcCWVgwbmkDlB+GozE/z1YhlqDBQyA+0MsqVeRGdNvBBp2sqGcC+rIc5ngXwF0zxJ2DMH6W6ggqwZvnxHiqiJxuPjqW9P63cDyKl9QcVixuNZbpb5UZIkmq1PgRgLD2nnF+QmqLuJlQmw2I6QonNxRprk0jDVbALLb2eKJ1wJn+o/d3x8YUkgVYp3K8RwNSXuP06fiCgiVYxw=
+X-Gm-Message-State: AOJu0Yz9AHyjP/UJiViRFYYCOqLT33Ds/y4gzGd/qq+JMbrhEOhNwWwU
+	GoLCAXdWLc8KRqa+DFXMv1Gus+iH0MaRVNxG6QDT6QQWY5xJsPuMR5QS6LIiAutWG8TF1bJJbGV
+	b0xDzGdBgcckQiMHQXI7svRDd3w==
+X-Google-Smtp-Source: AGHT+IGUUWb0QqBy4GPMsKWcCTpt3kRDK3vukBnYnUPOMugpsBxrcXJSiRK62s1g28Bx/g92dGHcLhVZALfpiK1lJOw=
+X-Received: by 2002:ac2:4643:0:b0:523:ae99:b333 with SMTP id
+ 2adb3069b0e04-523ae99b3c5mr5613808e87.64.1715966112010; Fri, 17 May 2024
+ 10:15:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240417-pci-qcom-clk-bulk-v1-1-52ca19b3d6b2@linaro.org>
+References: <20240514224508.212318-1-romank@linux.microsoft.com> <20240514224508.212318-6-romank@linux.microsoft.com>
+In-Reply-To: <20240514224508.212318-6-romank@linux.microsoft.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 17 May 2024 12:14:58 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
+Message-ID: <CAL_JsqKXejxzixzwQO4U_00WAaV_iaEh8Mndf6R5BhLQsgVwLQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] drivers/hv/vmbus: Get the irq number from DeviceTree
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
+	dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com, 
+	hpa@zytor.com, kw@linux.com, kys@microsoft.com, lenb@kernel.org, 
+	lpieralisi@kernel.org, mingo@redhat.com, mhklinux@outlook.com, 
+	rafael@kernel.org, tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
+	ssengar@microsoft.com, sunilmut@microsoft.com, vdso@hexbites.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, May 14, 2024 at 5:45=E2=80=AFPM Roman Kisel <romank@linux.microsoft=
+.com> wrote:
+>
+> The vmbus driver uses ACPI for interrupt assignment on
+> arm64 hence it won't function in the VTL mode where only
+> DeviceTree can be used.
+>
+> Update the vmbus driver to discover interrupt configuration
+> via DeviceTree.
+>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index e25223cee3ab..52f01bd1c947 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/syscore_ops.h>
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/pci.h>
+> +#include <linux/of_irq.h>
 
-> There is no need for the device drivers to validate the clocks defined in
-> Devicetree. The validation should be performed by the DT schema and the
-> drivers should just get all the clocks from DT. Right now the driver
-> hardcodes the clock info and validates them against DT which is redundant.
-> 
-> So use devm_clk_bulk_get_all() that just gets all the clocks defined in DT
-> and get rid of all static clocks info from the driver. This simplifies the
-> driver.
+If you are using this header in a driver, you are doing it wrong. We
+have common functions which work on both ACPI or DT, so use them if
+you have a need to support both.
 
-Applied to qcom, thank you!
+Though my first question on a binding will be the same as on every
+'hypervisor binding'.  Why can't you make your hypervisor interfaces
+discoverable? It's all s/w, not some h/w device which is fixed.
 
-[1/1] PCI: qcom: Switch to devm_clk_bulk_get_all() API to get the clocks from Devicetree
-      https://git.kernel.org/pci/pci/c/6720cef2df22
-
-	Krzysztof
+Rob
 
