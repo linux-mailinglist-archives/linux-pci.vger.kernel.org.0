@@ -1,148 +1,147 @@
-Return-Path: <linux-pci+bounces-7638-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7639-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 024A88C8F4F
-	for <lists+linux-pci@lfdr.de>; Sat, 18 May 2024 04:07:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96BAF8C9016
+	for <lists+linux-pci@lfdr.de>; Sat, 18 May 2024 11:09:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F6601F21C2C
-	for <lists+linux-pci@lfdr.de>; Sat, 18 May 2024 02:07:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 284CE282579
+	for <lists+linux-pci@lfdr.de>; Sat, 18 May 2024 09:09:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996FA3D64;
-	Sat, 18 May 2024 02:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD7DC125CC;
+	Sat, 18 May 2024 09:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lnMTP/g7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="JIXWx0jc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B42D6FB1;
-	Sat, 18 May 2024 02:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58337C8D1;
+	Sat, 18 May 2024 09:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715998054; cv=none; b=tCFASL+AqOHTZxzsdj5yXdij3m3Y3kFzbj+oAI1/lQavXtqcXTzjgiY9h5r7JETmKEcKolfbmaVcUBGLIMR04J+ywSdp+Mn+vB0GVmyrR23k2frnm5YZguOXvpFtZqd9KnksGBRsa+ES4uRLSMddVJln7BYOzTwz6uQyFw3BH64=
+	t=1716023334; cv=none; b=Mf3ugzPE8j8UldbYwNSdm/4Eqq9n/tXVOt7ZkbgIbnpUwgZjWVsTP24mT/1UNuI1++6gc2w+dEoD7ykgS5tSaZ/rvYgTZpM+nS8eetV/PddhIGJ6f2KayAatSgFKF+6HJuRYVVENP1NM6qI1vw8nR6REot0fRe1KN0QC09Y3F2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715998054; c=relaxed/simple;
-	bh=Oh7sF9OjA0BSp6JAbwwufKhQSAjtCl7i1HcOwVLPdjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=re4jeVd1z44C+tE/FWGxyEr9wSiLDsDIoqRWEFnyK0laZzNLUdZHeNkQN7QLcn6bNAf4nZvCHji1C67jfYLsWvLUNKd7Md9emtYdJxNnf9D6fEDQ0D2aQYD5cI3Tx3KkU2qcc7PYC2DrcXBtbIBXZ7h/1OqcqKEerBlLy5+OyC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lnMTP/g7; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715998053; x=1747534053;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Oh7sF9OjA0BSp6JAbwwufKhQSAjtCl7i1HcOwVLPdjs=;
-  b=lnMTP/g77rbkGHZWVIAvZ6yrsGkkf69uNjAEHFI8BxMVIeIKU2dmjIKo
-   pkI9Jo7eC3dNpGzg91UcOkznESn2K7xUAMIxQKU/ptaC8FlOZdRDQ8z5/
-   6CbvcY723ZcvQcd30z9dAJGoivTajS0YLDYsLZeCuDPb+eAUSMTvdIL7M
-   NW7A3pj5PDP5GOIq+wYxF/tx6ohw6g11oz0CGBMzawov2V2Eq2Me8ylki
-   nBWajxJu4YhD5UKztABvHhWMBG2/N2TK1oUFTNQe6BD6NQa5R1/0IGaLO
-   Drsd2pJ2DBuI7Zz16wid3WO0wcIwxnMBp/HH2XyRjCzs+G5fD1G5MY21k
-   A==;
-X-CSE-ConnectionGUID: Yk2PxUllSsquWEWnhoqEOg==
-X-CSE-MsgGUID: +ExhwQoiQ3a5bFJgHshy3w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="12049162"
-X-IronPort-AV: E=Sophos;i="6.08,169,1712646000"; 
-   d="scan'208";a="12049162"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 19:07:32 -0700
-X-CSE-ConnectionGUID: OB8/0o0zRWyy9XvXY8ofvA==
-X-CSE-MsgGUID: nqKV49kyRam4/ngQRirs2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,169,1712646000"; 
-   d="scan'208";a="32129202"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 17 May 2024 19:07:31 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s89Ts-0001Wu-0d;
-	Sat, 18 May 2024 02:07:28 +0000
-Date: Sat, 18 May 2024 10:06:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lianjie Shi <Lianjie.Shi@amd.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Lianjie Shi <Lianjie.Shi@amd.com>
-Subject: Re: [PATCH 1/1] PCI: Support VF resizable BAR
-Message-ID: <202405180954.pffoQtM9-lkp@intel.com>
-References: <20240516093334.2266599-2-Lianjie.Shi@amd.com>
+	s=arc-20240116; t=1716023334; c=relaxed/simple;
+	bh=bVysb/cwrM9Pn6QGUWbl+Ro5RzhkM5yqNN7jrETzyyA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hzi8UEq1HgrIRhFvMWjJJEhZGpAggC1EABncXm70uas0u6kgENz6mvwS+kksvCBfHtDGeWSWGdmPeF5mcYjZP8l8/ULYI241RUD79bMps69JGWhaOVvdNfUFBdCk0dXSN9C08cXePOpsmk1mW01+R36jXKt3gxQBxF7X3082B9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=JIXWx0jc; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=1a0C79DkdyNfWuSIhpXXfpQISUKfKWxaR+an4LJg0Cw=; t=1716023330; x=1716628130; 
+	b=JIXWx0jctZvXnqcErr+3sSV5apKLlSgTQjonmBZVS45oZcpMNbwEebER5UZJBEzSMGhZDCP7PJN
+	h5jiab7J2xtO7IWJdAdJ1aBJr82y6tZpQ8r7xy+H5ViKn9mzObyFUNO/F9FgWOGFMOhRz2gR0vVr5
+	0/zNv4s2F8amm03ZFsrEnj/EfmsVG+ExiraqgiYRrKam9IKGg+UCC0i2EQDexL4Qz77kXbesE6eUx
+	itj9aMYp28rMvdB7y5sbfMwyGk4kMm6XSyjPdpG9H8EhFTS66NPvRGkOA2beiqLBDPiFkqLGgBQsI
+	L4gAr4tS2+2d1U/BI1N6cAKfkJZU1xRUxXMQ==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1s8G3N-00000002L83-1Dc1; Sat, 18 May 2024 11:08:33 +0200
+Received: from dynamic-077-188-054-221.77.188.pool.telefonica.de ([77.188.54.221] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1s8G3M-00000003h1e-3i5d; Sat, 18 May 2024 11:08:33 +0200
+Message-ID: <455e40c03314294f9c2e64480aa69f8261a3f2d5.camel@physik.fu-berlin.de>
+Subject: Re: [RESEND v7 00/37] Device Tree support for SH7751 based board
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org
+Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, David Airlie
+ <airlied@gmail.com>,  Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner
+ <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo
+ Pieralisi <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>,  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri
+ Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,  Daniel
+ Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, Lee
+ Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, Heiko Stuebner
+ <heiko.stuebner@cherry.de>, Shawn Guo <shawnguo@kernel.org>,  Sebastian
+ Reichel <sre@kernel.org>, Chris Morgan <macromorgan@hotmail.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, David
+ Rientjes <rientjes@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell
+ <sfr@canb.auug.org.au>,  Javier Martinez Canillas <javierm@redhat.com>, Guo
+ Ren <guoren@kernel.org>, Azeem Shaikh <azeemshaikh38@gmail.com>, Max
+ Filippov <jcmvbkbc@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Jacky
+ Huang <ychuang3@nuvoton.com>, Herve Codina <herve.codina@bootlin.com>,
+ Manikanta Guntupalli <manikanta.guntupalli@amd.com>,  Anup Patel
+ <apatel@ventanamicro.com>, Biju Das <biju.das.jz@bp.renesas.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Sam
+ Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, Laurent
+ Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+ linux-ide@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-fbdev@vger.kernel.org
+Date: Sat, 18 May 2024 11:08:30 +0200
+In-Reply-To: <cover.1712205900.git.ysato@users.sourceforge.jp>
+References: <cover.1712205900.git.ysato@users.sourceforge.jp>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516093334.2266599-2-Lianjie.Shi@amd.com>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-Hi Lianjie,
+Hi Yoshinori,
 
-kernel test robot noticed the following build errors:
+On Thu, 2024-04-04 at 14:14 +0900, Yoshinori Sato wrote:
+> Sorry. previus mail is thread broken.
+>=20
+> This is an updated version of something I wrote about 7 years ago.
+> Minimum support for R2D-plus and LANDISK.
+> I think R2D-1 will work if you add AX88796 to dts.
+> And board-specific functions and SCI's SPI functions are not supported.
+>=20
+> You can get it working with qemu found here.
+> https://gitlab.com/yoshinori.sato/qemu/-/tree/landisk
+>=20
+> v7 changes.
+> - sh/kernel/setup.c: fix kernel parameter handling.
+> - clk-sh7750.c: cleanup.
+> - sh_tmu.c: cleanup.
+> - irq-renesas-sh7751.c: IPR definition move to code.
+> - irq-renesas-sh7751irl.c: update register definition.
+> - pci-sh7751.c: Register initialization fix.=20
+> - sm501 and sm501fb: Re-design Device Tree properties.
 
-[auto build test ERROR on cf87f46fd34d6c19283d9625a7822f20d90b64a4]
+Could you push your v7 version to your Gitlab [1] repository so I can fetch
+it from there?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lianjie-Shi/PCI-Support-VF-resizable-BAR/20240516-173624
-base:   cf87f46fd34d6c19283d9625a7822f20d90b64a4
-patch link:    https://lore.kernel.org/r/20240516093334.2266599-2-Lianjie.Shi%40amd.com
-patch subject: [PATCH 1/1] PCI: Support VF resizable BAR
-config: i386-randconfig-014-20240518 (https://download.01.org/0day-ci/archive/20240518/202405180954.pffoQtM9-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240518/202405180954.pffoQtM9-lkp@intel.com/reproduce)
+Thanks,
+Adrian
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405180954.pffoQtM9-lkp@intel.com/
+> [1] https://gitlab.com/yoshinori.sato/linux
 
-All errors (new ones prefixed by >>):
-
-   ld: drivers/pci/pci.o: in function `pci_restore_vf_rebar_state':
->> drivers/pci/pci.c:1895:(.text+0x3bff): undefined reference to `__udivdi3'
-
-
-vim +1895 drivers/pci/pci.c
-
-  1869	
-  1870	static void pci_restore_vf_rebar_state(struct pci_dev *pdev)
-  1871	{
-  1872	#ifdef CONFIG_PCI_IOV
-  1873		unsigned int pos, nbars, i;
-  1874		u32 ctrl;
-  1875		u16 total;
-  1876	
-  1877		pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_VF_REBAR);
-  1878		if (!pos)
-  1879			return;
-  1880	
-  1881		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-  1882		nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-  1883	
-  1884		for (i = 0; i < nbars; i++, pos += 8) {
-  1885			struct resource *res;
-  1886			int bar_idx, size;
-  1887	
-  1888			pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-  1889			bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
-  1890			total = pdev->sriov->total_VFs;
-  1891			if (!total)
-  1892				return;
-  1893	
-  1894			res = pdev->resource + bar_idx + PCI_IOV_RESOURCES;
-> 1895			size = pci_rebar_bytes_to_size(resource_size(res) / total);
-  1896			ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
-  1897			ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-  1898			pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-  1899		}
-  1900	#endif
-  1901	}
-  1902	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
 
