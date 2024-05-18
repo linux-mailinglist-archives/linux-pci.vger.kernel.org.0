@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-7644-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7645-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7E58C985E
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 05:34:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A9238C9861
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 05:35:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80A6A1C21394
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 03:34:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D9FB1C21386
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 03:35:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E54B212E6A;
-	Mon, 20 May 2024 03:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF6C134B2;
+	Mon, 20 May 2024 03:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fi7ihtsU"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BWxOOGIJ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6641C6B5;
-	Mon, 20 May 2024 03:33:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6238D2032D;
+	Mon, 20 May 2024 03:33:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716176019; cv=none; b=uSESwm26VQqEXjrGMAkb1QCQ9rPafye8fXMSSvR7kTSDmdrWRhGexEdHa45EFI4LFWi/Kcm4v0xywBgiluO1pQHF46bwVXw7/sYKn03WZXnYQM0nPZuTiQKdJeUoHPhfuQEoCgIxZpuAPtXWXUxDn575CiC8T8v/RdjlgkrRS9A=
+	t=1716176029; cv=none; b=mUdobgq/uXf5wHPUpT+lY2UBLMoZN1gt+i4x1BPznhIqGdLaF7EPE5A7tbtnm8RnQObC5B6N4LlOgCO8akJpdES9Q77wfTAy4h8Lyccs0CyhdpIwUujtavmuPd+7kM24S5Qj99Z7wh161uJQl6DX8DF9vUtMGaVl0XgQsptSSDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716176019; c=relaxed/simple;
-	bh=wVO/WTS2BpIMcr2Lhbp3edMXCnSTqOBuvM683JpAm9k=;
+	s=arc-20240116; t=1716176029; c=relaxed/simple;
+	bh=C8I6H8q1CsCEilGm6xZcUAtD7gbeIhxcNcTyYkuj3Vo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=L84FfV1r8Q7s9WvO6UJNyc9IzklhmCqWUYg6D0DpOmWQHcy2JvBflYfvvQR0e45rKtMBRXPrZ4p9+7OvQS6IdMvrWTjnNTmBURNdtYntBTFARoIsyMZD4DEMT8b8p7WHCKVczgUDGfTz7JjO8SSZuLkBbxB/5Y0gum5a2jprMTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fi7ihtsU; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=nK2JLUFQOMbE1NqCx5hN/fDTaHqgDqSUBEKO5lu1gWt02mA/vNe1rUCAHMh05MBBqfSR9ZeUbTcyFqhcIWJYEdI9e86v2R4SQew/mtHKHIM+btj912QTOHvXtYNmKRu5uucOJRtIPGC0i2QZ6DWkZmadg+qEYAaOAwzDjkZMTPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BWxOOGIJ; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44JNgLsY005035;
-	Mon, 20 May 2024 03:33:30 GMT
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44K0A23F014675;
+	Mon, 20 May 2024 03:33:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=BgsIcopzHfkUgr/RderJeQnQv5QySCTk4RUuCp2kW/0
-	=; b=fi7ihtsUc+UYdSPltpfWN3/wmwPtQiOFds18joNEQ1bJ/NmVojUHpAlET86
-	eBEDNZEBJx3K07lvzAeUHbu09qUHkflZelPBgd6B36MJg7TO1QWh2WbnELcEiHO/
-	Jd/XvNzIkijiVXY3WSCTmq+AqUJyG0BAW6E5cUREOFdvGLKMiTanfTe3K0nP/Rsh
-	IbZQjoFJEsed4sYBg7u/ACYhx6230AXnoVUDN42VA6dFim2MFWfQKoPRFHMsd35l
-	1tfgFR9pyA4ZgONTU10TeNBfSAgvAJxdGOF3bgcXrb45FwpkoibK3So/jPut5nQJ
-	+UmGVOuG78oEhrFf38n5O2pLiWQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pr2j889-1
+	:cc; s=qcppdkim1; bh=xC+Wq2NeguQc2WvQitBOxzmrCHOw8Xh3tDYQPVO/dHc
+	=; b=BWxOOGIJGsF+cdZEVmTPxub9OGYoE7Y8JXfDIQw50oPjuyLB9VjfQ50aGkH
+	6Qmw5bMCFYT/ZVqLe3Db8MNXA+IhEbrOQNjDWgqIJNgmyjWWSHOpRjLyyg6+1nSs
+	35q2Wa5IklSNTl1eJWqYNSOOfNhr+KUOfh7RT4yYkmBGXMIOtTYKQvb7x60Wysh8
+	qK/TS5zU3VTr81PgsA/J2HErL5f9IBjWlWc4dvAJO2Kry+8PV+CMVYM3EAIUVelu
+	Mxvt7D5LH99xGyB3k5KHNH9bivzaax9TssDtqThaRtYB2vJdeaDUz4UF7qiFjZGP
+	A+O7vZLhQRLQocIQgj7chopQ3sA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6pqc277j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 May 2024 03:33:30 +0000 (GMT)
+	Mon, 20 May 2024 03:33:36 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44K3XTiF002416
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44K3Xag2016170
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 May 2024 03:33:29 GMT
+	Mon, 20 May 2024 03:33:36 GMT
 Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 19 May 2024 20:33:23 -0700
+ 15.2.1544.9; Sun, 19 May 2024 20:33:29 -0700
 From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Sat, 18 May 2024 19:01:45 +0530
-Subject: [PATCH v13 4/6] arm64: dts: qcom: sm8450: Add OPP table support to
- PCIe
+Date: Sat, 18 May 2024 19:01:46 +0530
+Subject: [PATCH v13 5/6] PCI: Bring the PCIe speed to MBps logic to new
+ pcie_link_speed_to_mbps()
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240518-opp_support-v13-4-78c73edf50de@quicinc.com>
+Message-ID: <20240518-opp_support-v13-5-78c73edf50de@quicinc.com>
 References: <20240518-opp_support-v13-0-78c73edf50de@quicinc.com>
 In-Reply-To: <20240518-opp_support-v13-0-78c73edf50de@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -94,142 +94,103 @@ CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
         <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716175976; l=3219;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716175976; l=2081;
  i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=wVO/WTS2BpIMcr2Lhbp3edMXCnSTqOBuvM683JpAm9k=;
- b=DCZRgzAzr7iD9hIk8LHnHyA45LPAam3XQZQpt6yZxgL+flv3qoWYWMXc6WmAwJP9vftugvCrK
- +3IHFzztX5ED6M2RUrL+ALcWyXPEE7vTThUte819ESjWcv1gPZZiK0I
+ bh=C8I6H8q1CsCEilGm6xZcUAtD7gbeIhxcNcTyYkuj3Vo=;
+ b=TzDOXFnr3OyWX3ibUPSSkBr2a1dxv5NLvdNeZFWAmDsrpnVIsRAjpRm54Rihj37x7Do5PFGAt
+ WTR/Z4EqoH5BKn9qnwbamDNsCjNzwMeHJi9rJZYeHrnxG06xg4aR4nZ
 X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
  pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uqN57S7x-sDr9C8oGqBq3IqWNq7MlJaN
-X-Proofpoint-GUID: uqN57S7x-sDr9C8oGqBq3IqWNq7MlJaN
+X-Proofpoint-ORIG-GUID: Swf4rlPZxZSrxP1MUtbGRQC9URFNuVZi
+X-Proofpoint-GUID: Swf4rlPZxZSrxP1MUtbGRQC9URFNuVZi
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-20_02,2024-05-17_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=900 bulkscore=0
- malwarescore=0 spamscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ mlxlogscore=850 impostorscore=0 adultscore=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 suspectscore=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405010000 definitions=main-2405200028
 
-PCIe host controller driver needs to choose the appropriate performance
-state of RPMh power domain and interconnect bandwidth based on the PCIe
-data rate.
+Bring the switch case in pcie_link_speed_mbps() to new function to
+the header file so that it can be used in other places like
+in controller driver.
 
-Hence, add the OPP table support to specify RPMh performance states and
-interconnect peak bandwidth.
-
-It should be noted that the different link configurations may share the
-same aggregate bandwidth, e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1
-link have the same bandwidth and share the same OPP entry.
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- arch/arm64/boot/dts/qcom/sm8450.dtsi | 77 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+ drivers/pci/pci.c | 19 +------------------
+ drivers/pci/pci.h | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-index 615296e13c43..2e047aba220b 100644
---- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-@@ -1855,7 +1855,35 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pcie0_default_state>;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e5f243dd4288..40487b86a75e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5922,24 +5922,7 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
+ 	if (err)
+ 		return err;
  
-+			operating-points-v2 = <&pcie0_opp_table>;
-+
- 			status = "disabled";
-+
-+			pcie0_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				/* GEN 1 x1 */
-+				opp-2500000 {
-+					opp-hz = /bits/ 64 <2500000>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <250000 1>;
-+				};
-+
-+				/* GEN 2 x1 */
-+				opp-5000000 {
-+					opp-hz = /bits/ 64 <5000000>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <500000 1>;
-+				};
-+
-+				/* GEN 3 x1 */
-+				opp-8000000 {
-+					opp-hz = /bits/ 64 <8000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+					opp-peak-kBps = <984500 1>;
-+				};
-+			};
-+
- 		};
+-	switch (to_pcie_link_speed(lnksta)) {
+-	case PCIE_SPEED_2_5GT:
+-		return 2500;
+-	case PCIE_SPEED_5_0GT:
+-		return 5000;
+-	case PCIE_SPEED_8_0GT:
+-		return 8000;
+-	case PCIE_SPEED_16_0GT:
+-		return 16000;
+-	case PCIE_SPEED_32_0GT:
+-		return 32000;
+-	case PCIE_SPEED_64_0GT:
+-		return 64000;
+-	default:
+-		break;
+-	}
+-
+-	return -EINVAL;
++	return pcie_link_speed_to_mbps(to_pcie_link_speed(lnksta));
+ }
+ EXPORT_SYMBOL(pcie_link_speed_mbps);
  
- 		pcie0_phy: phy@1c06000 {
-@@ -1982,7 +2010,56 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pcie1_default_state>;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 17fed1846847..4de10087523e 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -290,6 +290,28 @@ void pci_bus_put(struct pci_bus *bus);
+ 	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
+ 	 0)
  
-+			operating-points-v2 = <&pcie1_opp_table>;
++static inline int pcie_link_speed_to_mbps(enum pci_bus_speed speed)
++{
++	switch (speed) {
++	case PCIE_SPEED_2_5GT:
++		return 2500;
++	case PCIE_SPEED_5_0GT:
++		return 5000;
++	case PCIE_SPEED_8_0GT:
++		return 8000;
++	case PCIE_SPEED_16_0GT:
++		return 16000;
++	case PCIE_SPEED_32_0GT:
++		return 32000;
++	case PCIE_SPEED_64_0GT:
++		return 64000;
++	default:
++		break;
++	}
 +
- 			status = "disabled";
++	return -EINVAL;
++}
 +
-+			pcie1_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				/* GEN 1 x1 */
-+				opp-2500000 {
-+					opp-hz = /bits/ 64 <2500000>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <250000 1>;
-+				};
-+
-+				/* GEN 1 x2 and GEN 2 x1 */
-+				opp-5000000 {
-+					opp-hz = /bits/ 64 <5000000>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <500000 1>;
-+				};
-+
-+				/* GEN 2 x2 */
-+				opp-10000000 {
-+					opp-hz = /bits/ 64 <10000000>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <1000000 1>;
-+				};
-+
-+				/* GEN 3 x1 */
-+				opp-8000000 {
-+					opp-hz = /bits/ 64 <8000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+					opp-peak-kBps = <984500 1>;
-+				};
-+
-+				/* GEN 3 x2 and GEN 4 x1 */
-+				opp-16000000 {
-+					opp-hz = /bits/ 64 <16000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+					opp-peak-kBps = <1969000 1>;
-+				};
-+
-+				/* GEN 4 x2 */
-+				opp-32000000 {
-+					opp-hz = /bits/ 64 <32000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+					opp-peak-kBps = <3938000 1>;
-+				};
-+			};
-+
- 		};
- 
- 		pcie1_phy: phy@1c0e000 {
+ const char *pci_speed_string(enum pci_bus_speed speed);
+ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
 
 -- 
 2.42.0
