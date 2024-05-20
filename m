@@ -1,153 +1,122 @@
-Return-Path: <linux-pci+bounces-7658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C9668C9E11
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 15:23:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C12218C9F0A
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 16:54:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D304B21276
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 13:23:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F17D91C21B4F
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 14:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30135134407;
-	Mon, 20 May 2024 13:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E80E1369B1;
+	Mon, 20 May 2024 14:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GaDaAFm2"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kW7+iekB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E3613398E
-	for <linux-pci@vger.kernel.org>; Mon, 20 May 2024 13:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B88136673
+	for <linux-pci@vger.kernel.org>; Mon, 20 May 2024 14:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716211385; cv=none; b=U5GhuybxEUSD9jUsJjplc8+0Tmfxo4H1KS/Mt9SUHi6NQpPqd4klqdulQqzXlC8xmJxBuGxw5GTA6fJ1ooZE4SvBuwEULPQ/P6omVVllXWVUztndCTAqpJhEz3gc277t4aUq0Cf2zhOhdFoacf7wqS5MgSHduWfiE96nQXkrNNg=
+	t=1716216857; cv=none; b=YbMqJ199poRHrnGSYlNXSCVaknquH5jrsvvIyYo+cYyKAWE4CXI1RlZwYLDvEcC4RHfPnTuFMqzMj4qqcDeuRYDi80Udm1VIp2ZF7TK11lHOVwuFZ7EjDXZNT5jXzDt6Q5ispw2djrDI4KZArpV5zhfAnW4qfYjXnf8vTxnvAnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716211385; c=relaxed/simple;
-	bh=VtzriDnmPJgFVcPERMtIx+lichjMLk1jaHjkRVNmgr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UOVBvGEa2LDrTNzOc+MWi4G2Xp8yKMdzUbxQg3S6zGitEwNzxh1v+vQwjLJ7rMqn6o9F/azX/kfCTL7E5+mVlypxFgI8vF4CX/pSAs4q8UVh8VBEuUnjyOFN92Nga3YFV1jI9l9n8yOMOJxRgH6fdHpW+zKb0UVJmVp4IVTPzRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GaDaAFm2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716211382;
+	s=arc-20240116; t=1716216857; c=relaxed/simple;
+	bh=IGoXuzhEewN0WiDN4wZvChE7YzHTsgmvn+wDiFNDyig=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nRVXeXUA5Fq9Nm/4cp5YmGWSITVnFzXRjl792beE0I26smK8jxJ3B80SOcHt8+C4m4q70/7UVEmJw9UlIgy4AL9MqwYjn+x99pkttC6Xf+ZDwtCtncNPsrcraQIfo+/270wCMIOQrTQRDyRLL6GUDAi7dsG2JyhQNhj/qiZv/hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kW7+iekB; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: lpieralisi@kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1716216852;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M8c4UCZlVP1N9HFMkZD0c7EJUI94ZrVHCqdtZ52aP+0=;
-	b=GaDaAFm2DmmMgqZwfODhw0msXJ3FCcHWL//mB/yzHAa23OkfEpuELdiEvuluT0Cun/tXGA
-	P23a2cyQPeeGo2zTcwPQLf7+Worf8qlVgz8JsqcAOGb3f7Gz0G6sfuYJ54Exe5WOWhfoIq
-	VkAzYOGqRnUPb4FA9CngSZwGkHzTrnE=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-646-uBHpAHKuPoSZAm6LqCGGmg-1; Mon, 20 May 2024 09:23:01 -0400
-X-MC-Unique: uBHpAHKuPoSZAm6LqCGGmg-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-354c964f74aso487680f8f.0
-        for <linux-pci@vger.kernel.org>; Mon, 20 May 2024 06:23:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716211379; x=1716816179;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M8c4UCZlVP1N9HFMkZD0c7EJUI94ZrVHCqdtZ52aP+0=;
-        b=M/vGLiu5zHjGxV+buTPDUhZIccWl1WBlbWnj6NxanjOR0qadV4KXIRy09FsRWaeBT9
-         /A8cIl3uHvOxhNRu6jN1BbkAuGg+FUJs5RI2VzeCSRNO7l9dF6n2e8aJCYZa/RcvEYd8
-         GD1U/Knh4pOSLnAFuF1zDzlocsUzREMapTMaa7ryAWz4/PXnlYNsF4FtOti0qEfJXVbh
-         NsI8ZNsNBl8wC6aIQBltw1nWQhU25JKom78EqmNtZy8uJcPpQSbSowLqxp5pSAf23ekr
-         lZ3i7lEmvW/C603zThFCP6Nu5hakhJl2SIF6J0JrrocCZVNg3w7y9QpsCzsnCVAW7rdC
-         lITQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOzU01uQjY8k9rH6BKGvfBkNtDuBKMETb2IotXpmUFU2rPtfYMHhZO2MNYjcgD5tf6Ozbiv3Yb4NXpeDDxLxWeiBZ/+v4uujOH
-X-Gm-Message-State: AOJu0YwAgt15DxWvlG2KaslW0tWFua5UZ9Jn18bpfne2U8xRSSyMWnnT
-	1xoIMDr6+c8g9ugJLvlkADVzFLCHf0DkiKXNxTt4YWkaMa1MqXq+XeOv0bw4S1vhb4jCELKiF2g
-	wkvDrl9jRRggnsKuoUftOwpZBdTk5t9HYTLx6vvyTci9+8gG3i6S5G8i6pDm0rMSX0g==
-X-Received: by 2002:adf:e586:0:b0:34c:b2df:6f01 with SMTP id ffacd0b85a97d-3504a737f13mr20902220f8f.21.1716211379552;
-        Mon, 20 May 2024 06:22:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHvYYkoaNDOEOiv6UGBH49UdkV0uZVjDLOJ6mISaM0QTUkwRoAiGrdAfBIOdnKoXAedrbzI6Q==
-X-Received: by 2002:adf:e586:0:b0:34c:b2df:6f01 with SMTP id ffacd0b85a97d-3504a737f13mr20902203f8f.21.1716211378979;
-        Mon, 20 May 2024 06:22:58 -0700 (PDT)
-Received: from redhat.com ([2a02:14f:177:b718:2429:1dc5:dc6b:7d42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8a7748sm29370373f8f.49.2024.05.20.06.22.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 06:22:58 -0700 (PDT)
-Date: Mon, 20 May 2024 09:22:54 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Shunsuke Mie <mie@igel.co.jp>, linux-pci@vger.kernel.org,
-	virtualization@lists.linux.dev, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [RFC] Legacy Virtio Driver with Device Has Limited Memory Access
-Message-ID: <20240520090809-mutt-send-email-mst@kernel.org>
-References: <CANXvt5r00Y5VGKSFXFnwbvGF+fhh2uNvU5VBGwECA9yabK4=Uw@mail.gmail.com>
- <20240516125913.GC11261@thinkpad>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w1h/xR/QccO1Eert9Isb8A9fPFsSylLSp7IZB8Olt3o=;
+	b=kW7+iekB97Kle4UEBLetMFA3K+gkpRyBCG/sZ/6cu0q/OnlA1xFFy5rWIkbPl1IDdHw+jt
+	4gcGqSKezSkT+0Ao9p5SdkoXYwBk7oAWfsLOjJuxVxKwuZSOCqy14v+P+OP6ETqR90cyqB
+	0s7adWTxfurczQZ3O+2hPPePUZAy39w=
+X-Envelope-To: kw@linux.com
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: linux-pci@vger.kernel.org
+X-Envelope-To: michal.simek@amd.com
+X-Envelope-To: thippeswamy.havalige@amd.com
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: bhelgaas@google.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: sean.anderson@linux.dev
+X-Envelope-To: bharat.kumar.gogada@xilinx.com
+X-Envelope-To: bharatku@xilinx.com
+X-Envelope-To: helgaas@kernel.org
+X-Envelope-To: conor+dt@kernel.org
+X-Envelope-To: krzysztof.kozlowski+dt@linaro.org
+X-Envelope-To: lorenzo.pieralisi@arm.com
+X-Envelope-To: michal.simek@xilinx.com
+X-Envelope-To: devicetree@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-pci@vger.kernel.org
+Cc: Michal Simek <michal.simek@amd.com>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+	Bharat Kumar Gogada <bharatku@xilinx.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Michal Simek <michal.simek@xilinx.com>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 0/7] PCI: xilinx-nwl: Add phy support
+Date: Mon, 20 May 2024 10:53:55 -0400
+Message-Id: <20240520145402.2526481-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240516125913.GC11261@thinkpad>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 16, 2024 at 02:59:13PM +0200, Manivannan Sadhasivam wrote:
-> On Thu, May 16, 2024 at 01:38:40PM +0900, Shunsuke Mie wrote:
-> > Hi virtio folks,
-> > 
-> 
-> You forgot to CC the actual Virtio folks. I've CCed them now.
-> 
-> > I'm writing to discuss finding a workaround with Virtio drivers and legacy
-> > devices with limited memory access.
-> > 
-> > # Background
-> > The Virtio specification defines a feature (VIRTIO_F_ACCESS_PLATFORM) to
-> > indicate devices requiring restricted memory access or IOMMU translation. This
-> > feature bit resides at position 33 in the 64-bit Features register on modern
-> > interfaces. When the linux virtio driver finds the flag, the driver uses DMA
-> > API that handles to use of appropriate memory.
-> > 
-> > # Problem
-> > However, legacy devices only have a 32-bit register for the features bits.
-> > Consequently, these devices cannot represent the ACCESS_PLATFORM bit. As a
-> > result, legacy devices with restricted memory access cannot function
-> > properly[1]. This is a legacy spec issue, but I'd like to find a workaround.
-> > 
-> > # Proposed Solutions
-> > I know these are not ideal, but I propose the following solution.
-> > Driver-side:
-> >     - Implement special handling similar to xen_domain.
-> > In xen_domain, linux virtio driver enables to use the DMA API.
-> >     - Introduce a CONFIG option to adjust the DMA API behavior.
-> > Device-side:
-> > Due to indistinguishability from the guest's perspective, a device-side
-> > solution might be difficult.
-> > 
-> > I'm open to any comments or suggestions you may have on this issue or
-> > alternative approaches.
-> > 
-> > [1] virtio-net PCI endpoint function using PCIe Endpoint Framework,
-> > https://lore.kernel.org/lkml/54ee46c3-c845-3df3-8ba0-0ee79a2acab1@igel.co.jp/t/
-> > The Linux PCIe endpoint framework is used to implement the virtio-net device on
-> > a legacy interface. This is necessary because of the framework and hardware
-> > limitation.
-> > 
-> 
-> We can fix the endpoint framework limitation, but the problem lies with some
-> platforms where we cannot write to vendor capability registers and still have
-> IOMMU.
-> 
-> - Mani
+Add phy subsystem support for the xilinx-nwl PCIe controller. This
+series also includes several small fixes and improvements.
 
-What are vendor capability registers and what do they have to do
-with the IOMMU?
+Changes in v3:
+- Document phys property
+- Expand off-by-one commit message
 
+Changes in v2:
+- Remove phy-names
+- Add an example
+- Get phys by index and not by name
 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+Sean Anderson (7):
+  dt-bindings: pci: xilinx-nwl: Add phys
+  PCI: xilinx-nwl: Fix off-by-one in IRQ handler
+  PCI: xilinx-nwl: Fix register misspelling
+  PCI: xilinx-nwl: Rate-limit misc interrupt messages
+  PCI: xilinx-nwl: Clean up clock on probe failure/removal
+  PCI: xilinx-nwl: Add phy support
+  arm64: zynqmp: Add PCIe phys
+
+ .../bindings/pci/xlnx,nwl-pcie.yaml           |   7 +
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    |   1 +
+ drivers/pci/controller/pcie-xilinx-nwl.c      | 122 ++++++++++++++----
+ 3 files changed, 107 insertions(+), 23 deletions(-)
+
+-- 
+2.35.1.1320.gc452695387.dirty
 
 
