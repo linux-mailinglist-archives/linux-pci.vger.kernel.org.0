@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-7681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71BFE8CA163
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 19:30:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 289EC8CA168
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 19:30:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 280BE282287
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 17:30:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D242B281DD6
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 17:30:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EECDF13AA5F;
-	Mon, 20 May 2024 17:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24D31386AA;
+	Mon, 20 May 2024 17:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEY0UYzJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLzz7ZDg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A1B13AA54
-	for <linux-pci@vger.kernel.org>; Mon, 20 May 2024 17:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23541386C0
+	for <linux-pci@vger.kernel.org>; Mon, 20 May 2024 17:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716226058; cv=none; b=Oow7hIYq3kr00RqQYBxKvoly0oBhIoFXPL4wrD4eN2aH0qp3izHaIIUwlBQJyAdciUAydQdhVHEZZqTeMabqARC9Zxt7nFWRDySaSsspMwXCa1tf6ir7zROi1l0gQ1YJ7mPZ0Owe0aMFxfEw7SXdfES8uvIUIJME6GV5oJF3MlY=
+	t=1716226064; cv=none; b=bu8fd82TzmtkY02lT4kCl3AHweECuRP28oEw/4I4XX/JLkw6Q0hClZAYVhUXr1l6zqppwyvIwtkmjIjqTrcIcudSsygrMRVVOkcZ8k7/KGajHZf4+EzDo40+ngxGmt+kLXtFM796pkhego9C+AmvozuX+KtpmL3FG1OFFQqECmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716226058; c=relaxed/simple;
-	bh=ByeqkzM2jzSrDGnfHWAPGFr2QDs6pyQQOFnYXBVMUb0=;
+	s=arc-20240116; t=1716226064; c=relaxed/simple;
+	bh=YZfg+yFUJvGKf66LKiZJyB7z2AoSnnfdsff2xWWMZwY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=az9R83WeSmYJg5whqJKbI5jBUmel6lBbDeFpaBo23xiaTIr4d4KUsE8s/uMzHMMwsLfTgmG0+F9tJ11TinYHosJYYflFjk33mPxL6+jTpX3fs4VzqrtK0CyDXp5A5UHl+neHTZpMFypKodP9FdNJHmG9NNF7qIHQKfu7Xlbymso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TEY0UYzJ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=QF945G7JavT3qoi7muGMQMxNRqdhShuscGlV/2syl3FIfZNLnSNVZXI0yeApe/hFXIYDxsiHO3EirKeP5wsnK9u1RWbYf9hAimx3Ir+Ui3bbFmJt5OpW28MBnrhj8vI3Z8dXVeE4RdVc8VG6MxfK26S7j7KVOTbk5OeI9xtho9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KLzz7ZDg; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716226056;
+	s=mimecast20190719; t=1716226061;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=q+KTbXYumAmw16h3rTz/Xv/htYjuUG13nuBarwTBt2A=;
-	b=TEY0UYzJ6TIs6wVxhJ+xBpd92VnDrqcllEDmysz3qSLu0ySSC3+s5//HOBPj6q7ORveuqu
-	t+R7ws+0wXs59UuMAj/j9sExtqTiBa+0wpVe8PzAJJDBOJJOZ8UTQESlLESMYo37kNedh2
-	H+d4RTfjz3ZrVmM6aInTck+7V0cJ/JU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=V3g+oeQpArsYWOlDSausMXlW95ZfMKvIKOo6W5/n3oc=;
+	b=KLzz7ZDgqn0J7XZX960fRcn+mXV9zLG4zdJGhf5MEn+4LEKYRSu0FQD9RZrFxcEpvkzflJ
+	46Dk/YIw753rJgefscAOqBR5NIZ1FBtzSbQ5OdojiYinFrMmR5dxPugs4ZWnl9W4wMyFWj
+	EXsaCddAwh0qSdj49RJJxDH+/BqDfTE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-49-TYO6iMh7OymeUC5O7D4RMg-1; Mon, 20 May 2024 13:27:34 -0400
-X-MC-Unique: TYO6iMh7OymeUC5O7D4RMg-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-34e01a857a6so6390212f8f.2
-        for <linux-pci@vger.kernel.org>; Mon, 20 May 2024 10:27:34 -0700 (PDT)
+ us-mta-695-jxYG_8uiPOq_FfMSZjCYYQ-1; Mon, 20 May 2024 13:27:38 -0400
+X-MC-Unique: jxYG_8uiPOq_FfMSZjCYYQ-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34f10f6b3aeso8002088f8f.3
+        for <linux-pci@vger.kernel.org>; Mon, 20 May 2024 10:27:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716226053; x=1716830853;
+        d=1e100.net; s=20230601; t=1716226057; x=1716830857;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q+KTbXYumAmw16h3rTz/Xv/htYjuUG13nuBarwTBt2A=;
-        b=F1+f8IiSfPNSubQisEKTSWpIEfbnKa1+YRj7MiC9RAuHGJzsDI2sOg6CHFUtCC1cel
-         ZDr+RusqY7X6e2OS6ETGSJVBXzaP2xvYuGUz4N7SK3NXHDk115yJWAxqXsxVx55nGSGr
-         NVawJG7F/vK4FZuFhzi1SS3BvlBCNVYdTmOgRqCdEoJTFClIbM0N/G1wpuNTT8GPOH9t
-         D1wU0K9x6iTyEXbI4SX6xE/Nul1cKE2upNmC7tWunoibF0W6HG7CqJJT6iXBCzEbCA9h
-         9KaSVWVD2WcjngGfks7hDCtyHRmDY2zy8jCM7YpA541D935OArBx1qMPn9JomXyY16+m
-         VC3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWabm+Bz6/5rPToEv9/4sOjGDc3rdg7rb5MQ+h4kDf1Ci856Yq9lyhF+skmVig2ZhO43RdclGXOWAHS7GWtZZFuiYM/vBWpiN0N
-X-Gm-Message-State: AOJu0YwiIaLQ8+DWP2VjUD3AyKiEjPrTz/kdO28eqaAn01VSf9Y96az7
-	pYq3Fh5ku3XEFHAkNB/rOJ0gdKMxH0mprhoYxbnwnoJS2Cnoti7fhVmdphXQvoIqmQUcYtrZmYt
-	tPgpiXFA08OlTLJpdks4dDH4/0+U+FXVwW1A370G1jk2vCyr0KRaGeDkAkw==
-X-Received: by 2002:a5d:4801:0:b0:34d:a5fd:977b with SMTP id ffacd0b85a97d-3504a969ffcmr20289213f8f.60.1716226053146;
-        Mon, 20 May 2024 10:27:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFa/Dnd6VAJ4Gwv9ggHRXIUtmNL29Xn1V3x1XOit8dv4TaIg0ybWQ9BXCbBKMeVj5eQB/k2Pw==
-X-Received: by 2002:a5d:4801:0:b0:34d:a5fd:977b with SMTP id ffacd0b85a97d-3504a969ffcmr20289201f8f.60.1716226052819;
-        Mon, 20 May 2024 10:27:32 -0700 (PDT)
+        bh=V3g+oeQpArsYWOlDSausMXlW95ZfMKvIKOo6W5/n3oc=;
+        b=CJ1ENB0BYQbvWoTbdrCLS85lkDarV8sIy6epA1efVpRD8xhfBa9Fq3fvWMZn8GsVd3
+         OEg8XA6P7fiI4y/VvGnzXFCkwSlt3o71B+p4GdsNyl/Jo4Dzq0HvsLvKTY7nzhiB1Gml
+         2PBPd6ftfsiAPhSVleyx3HVXlL4LZCPDze4zpSlj067w9EdgVzxIWd+V6UO4M3ZJKcVA
+         P0P7rVWiLZOHfHvavQwKT/y0/HviV4SyT0HVjroM3WttCBIJIc6NGiBD49MedzLRApbz
+         sxcNixx0sFkGNJSEg5nAfb/6jYNUqnMli15QR+g13AwbW56BIIgFMUBmpEwxwIYvZRJw
+         cuUA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSFPWy/AbJgw3xRUV6FdbN2iqYYGw++xKsbky35nhyWl6UDkmALKHpQPM40SuXl2V1+QwOXjLtmSnmqg+I+Ejk8Ls9lfgshZ39
+X-Gm-Message-State: AOJu0YyY+oCHiuWVE4D28HFdoWaNvIIXn4vwLisAfSai46mN9OaZLB1H
+	SrfB9S4cNKl95se6i+2pV5/e58/T83LVwZDBJXibzPtMLfTfSuEvGcFDax13ExRHH/QWxqJ3H/t
+	gQmRal1JZyNdO+mLcutEfbkVVnP3CxdJolx5o0UYblm8L0eeBdOE0gZ7ogQ==
+X-Received: by 2002:adf:ab1a:0:b0:351:4e42:c5f0 with SMTP id ffacd0b85a97d-3514e42c73emr20272331f8f.52.1716226057085;
+        Mon, 20 May 2024 10:27:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGu7wi4ZLZ2yvRdkdYrPpzRkpeebcFzF47KqCnjyY1JeHk/jzOQJr9+KzuhFk2uiAX8OmXa2g==
+X-Received: by 2002:adf:ab1a:0:b0:351:4e42:c5f0 with SMTP id ffacd0b85a97d-3514e42c73emr20272302f8f.52.1716226056700;
+        Mon, 20 May 2024 10:27:36 -0700 (PDT)
 Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351d7d0f3absm12506111f8f.73.2024.05.20.10.27.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-352f264c7f1sm9827066f8f.42.2024.05.20.10.27.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 10:27:32 -0700 (PDT)
+        Mon, 20 May 2024 10:27:36 -0700 (PDT)
 From: Danilo Krummrich <dakr@redhat.com>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -96,9 +96,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Danilo Krummrich <dakr@redhat.com>
-Subject: [RFC PATCH 10/11] rust: add basic abstractions for iomem operations
-Date: Mon, 20 May 2024 19:25:47 +0200
-Message-ID: <20240520172554.182094-11-dakr@redhat.com>
+Subject: [RFC PATCH 11/11] rust: PCI: add BAR request and ioremap
+Date: Mon, 20 May 2024 19:25:48 +0200
+Message-ID: <20240520172554.182094-12-dakr@redhat.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240520172554.182094-1-dakr@redhat.com>
 References: <20240520172554.182094-1-dakr@redhat.com>
@@ -112,364 +112,213 @@ Content-Transfer-Encoding: 8bit
 
 From: Philipp Stanner <pstanner@redhat.com>
 
-Access to the kernel's IO-functions (e.g., readb()) is needed by almost
-all drivers. Currently, there are no abstractions for those functions.
+This commit implements a basic mechanism for requesting and IO-mapping
+PCI BARs.
 
-Since iomem is so widely used, it's necessary to provide a generic
-interface that all subsystems providing IO memory can use. The existing
-C implementations of such subsystems typically provide their own
-wrappers around functions like ioremap() which take care of respecting
-resource boundaries etc. It is, therefore, desirable to use these
-wrappers because using ioremap() and iounmap() directly would
-effectively result in parts of those subsystems being reimplemented in
-Rust.
+To perform IO on PCI devices it is necessary to have memory mapped PCI
+BARs. Before mapping those, a region request should be performed so that
+collisions with other drivers can be avoided.
 
-As most if not all device drivers should be fully satisfied regarding
-their iomem demands by the existing subsystem interfaces, Rust
-abstractions as congruent as possible with the existing infrastructure
-shall use the existing subsystem (e.g., PCI) interfaces for creating
-IO mappings, while simultaneously wrapping those mappings in Rust
-containers whose Drop() traits ensure that the resources are released
-again.
+Since all the logic necessary to obtain the aforementioned resources are
+already implemented in C, Rust abstractions should use these interfaces.
+Hereby, the Rust implementation has to ensure that all resources are
+released again latest when the driver's remove() callback gets invoked,
+or earlier if the driver drop()s the PCI resource.
 
-The process for mapping iomem would consequently look as follows:
+This can be achieved through the Devres container, which uses devres
+callbacks combined with Revocable to block access to the resource - in
+this case, the PCI BAR and its IoMem.
 
-  1. The subsystem abstraction (e.g., PCI) requests and ioremaps the
-     memory through the corresponding C functions.
-  2. The subsystem uses resources obtained in step #1 to create a Rust
-     IoMem data structure that implements the IO functionality such as
-     readb() for the iomem.
-  3. The subsystem code wrapps IoMem into additional containers that
-     ensure, e.g., thread safety, prevent UAF etc. Additionally, the
-     subsystem ensures that access to IoMem is revoked latest when the
-     driver's remove() callback is invoked.
+A pci::Bar's Drop() trait shall deregister the memory region request and
+iounmap() the mapping. In case remove() is invoked before such a Bar is
+drop()ed, the Devres container shall ensure that access to the Bar is
+revoke()d (through Revocable) so that no UAFs can occur.
 
-Hereby, the subsystem data structure obtains ownership over the iomem.
-Release of the iomem and, possibly, other subsystem associated data is
-then handled through the Drop() trait of the subsystem data structure.
+Implement 'Bar', a container for requested and ioremapped PCI BARs.
 
-IO memory can become invalid during runtime (for example because the
-driver's remove() callback was invoked, revoking access to the driver's
-resources). However, in parallel executing routines might still be
-active. Consequently, the subsytem should also guard the iomem in some
-way.
+Implement the Drop() trait such that the memory request and IO-mapping
+get freed if Bar goes out of scope.
 
-One way to do this is the Devres implementation, which provides a
-container that is capable of revoking access to its payload when
-the driver's remove() callback is invoked.
+Implement Deref() so that the container is transparent.
 
-The figure illustrates what usage of IoMem through subsystems might look
-like:
-               Devres
-  *------------------------------*
-  |                              |
-  |   subsystem data structure   |
-  |   *----------------------*   |
-  |   |        IoMem         |   |
-  |   | *------------------* |   |
-  |   | |  io_addr = 0x42, | |   |
-  |   | |  io_len = 9001,  | |   |
-  |   | |                  | |   |
-  |   | |  readb(),        | |   |
-  |   | |  writeb(),       | |   |
-  |   | |  ...             | |   |
-  |   | *------------------* |   |
-  |   |   deref(),           |   |
-  |   |   drop(),            |   |
-  |   |   ...                |   |
-  |   *----------------------*   |
-  |    deref(),                  |
-  |    drop(),                   |
-  *------------------------------*
-
-For additional convenience, subsystem abstractions can implement the
-Deref() trait for their data structures so that access he iomem can be
-fully transparent.
-
-In summary, IoMem would just serve as a container providing the IO
-functions, and the subsystem, which knows about the memory layout,
-request mechanisms etc, shall create and guard IoMem and ensure that its
-resources are released latest at remove() (through Devres) or earlier
-through its Drop() implementation.
-
-Add 'IoMem', a struct holding an IO-Pointer and a length parameter,
-which both shall be initialized validly by the subsystem.
-
-Add Rust abstractions for basic IO memory operations on IoMem.
+Implement iomap_region() to create a Bar and have the result returned
+through a Devres container, ensuring that the resources are latest freed
+in the driver's remove() callback and access to the Bar is revoke()d for
+outstanding users.
 
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Co-developed-by: Danilo Krummrich <dakr@redhat.com>
 Signed-off-by: Danilo Krummrich <dakr@redhat.com>
 ---
- rust/helpers.c       | 106 +++++++++++++++++++++++++++++++++
- rust/kernel/iomem.rs | 135 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 241 insertions(+)
- create mode 100644 rust/kernel/iomem.rs
+ rust/kernel/lib.rs |   1 +
+ rust/kernel/pci.rs | 123 ++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 123 insertions(+), 1 deletion(-)
 
-diff --git a/rust/helpers.c b/rust/helpers.c
-index c3d80301185c..dc2405772b1a 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -34,6 +34,7 @@
- #include <linux/wait.h>
- #include <linux/workqueue.h>
- #include <linux/pci.h>
-+#include <linux/io.h>
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 606391cbff83..15730deca822 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -54,6 +54,7 @@
  
- __noreturn void rust_helper_BUG(void)
- {
-@@ -179,6 +180,111 @@ int rust_helper_devm_add_action(struct device *dev, void (*action)(void *), void
- 	return devm_add_action(dev, action, data);
+ #[doc(hidden)]
+ pub use bindings;
++mod iomem;
+ pub use macros;
+ #[cfg(all(CONFIG_PCI, CONFIG_PCI_MSI))]
+ pub mod pci;
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 323aea565d84..403a1f53eb25 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -5,12 +5,17 @@
+ //! C header: [`include/linux/pci.h`](../../../../include/linux/pci.h)
+ 
+ use crate::{
+-    bindings, container_of, device, driver,
++    alloc::flags::*,
++    bindings, container_of, device,
++    devres::Devres,
++    driver,
+     error::{to_result, Result},
++    iomem::IoMem,
+     str::CStr,
+     types::{ARef, ForeignOwnable},
+     ThisModule,
+ };
++use core::ops::Deref;
+ use kernel::prelude::*; // for pinned_drop
+ 
+ /// An adapter for the registration of PCI drivers.
+@@ -287,6 +292,104 @@ pub trait Driver {
+ #[derive(Clone)]
+ pub struct Device(ARef<device::Device>);
+ 
++/// A PCI BAR to perform IO-Operations on.
++pub struct Bar {
++    pdev: Device,
++    iomem: IoMem,
++    num: u8,
++}
++
++impl Bar {
++    fn new(pdev: Device, num: u8, name: &CStr) -> Result<Self> {
++        let barnr = num as i32;
++
++        let barlen = pdev.resource_len(num)?;
++        if barlen == 0 {
++            return Err(ENOMEM);
++        }
++
++        // SAFETY:
++        // `pdev` is always valid.
++        // `barnr` is checked for validity at the top of the function.
++        // `name` is always valid.
++        let ret = unsafe { bindings::pci_request_region(pdev.as_raw(), barnr, name.as_char_ptr()) };
++        if ret != 0 {
++            return Err(EBUSY);
++        }
++
++        // SAFETY:
++        // `pdev` is always valid.
++        // `barnr` is checked for validity at the top of the function.
++        // `name` is always valid.
++        let ioptr: usize = unsafe { bindings::pci_iomap(pdev.as_raw(), barnr, 0) } as usize;
++        if ioptr == 0 {
++            // SAFETY:
++            // `pdev` is always valid.
++            // `barnr` is checked for validity at the top of the function.
++            unsafe { bindings::pci_release_region(pdev.as_raw(), barnr) };
++            return Err(ENOMEM);
++        }
++
++        let iomem = match IoMem::new(ioptr, barlen as usize) {
++            Ok(iomem) => iomem,
++            Err(err) => {
++                // SAFETY:
++                // `pdev` is always valid.
++                // `ioptr` was created above, and `num` was checked at the top of the function.
++                unsafe { Self::do_release(&pdev, ioptr, num) };
++                return Err(err);
++            }
++        };
++
++        Ok(Bar { pdev, iomem, num })
++    }
++
++    fn index_is_valid(i: u8) -> bool {
++        // A pci_dev on the C side owns an array of resources with at most
++        // PCI_NUM_RESOURCES entries.
++        if i as i32 >= bindings::PCI_NUM_RESOURCES as i32 {
++            return false;
++        }
++
++        true
++    }
++
++    // SAFETY: The caller should ensure that `ioptr` is valid.
++    unsafe fn do_release(pdev: &Device, ioptr: usize, num: u8) {
++        // SAFETY:
++        // `pdev` is Rust data and guaranteed to be valid.
++        // A valid `ioptr` should be provided by the caller, but an invalid one
++        // does not cause faults on the C side.
++        // `num` is checked for validity above.
++        unsafe {
++            bindings::pci_iounmap(pdev.as_raw(), ioptr as _);
++            bindings::pci_release_region(pdev.as_raw(), num as i32);
++        }
++    }
++
++    fn release(&self) {
++        // SAFETY:
++        // Safe because `self` always contains a refcounted device that belongs
++        // to a pci::Device.
++        // `ioptr` and `num` are always valid because the Bar was created successfully.
++        unsafe { Self::do_release(&self.pdev, self.iomem.ioptr, self.num) };
++    }
++}
++
++impl Drop for Bar {
++    fn drop(&mut self) {
++        self.release();
++    }
++}
++
++impl Deref for Bar {
++    type Target = IoMem;
++
++    fn deref(&self) -> &Self::Target {
++        &self.iomem
++    }
++}
++
+ impl Device {
+     /// Create a PCI Device instance from an existing `device::Device`.
+     ///
+@@ -319,6 +422,24 @@ pub fn set_master(&self) {
+         // SAFETY: By the type invariants, we know that `self.ptr` is non-null and valid.
+         unsafe { bindings::pci_set_master(self.as_raw()) };
+     }
++
++    /// Returns the size of the given PCI bar resource.
++    pub fn resource_len(&self, bar: u8) -> Result<bindings::resource_size_t> {
++        if !Bar::index_is_valid(bar) {
++            return Err(EINVAL);
++        }
++
++        // SAFETY: Safe as by the type invariant.
++        Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.into()) })
++    }
++
++    /// Mapps an entire PCI-BAR after performing a region-request on it.
++    pub fn iomap_region(&mut self, barnr: u8, name: &CStr) -> Result<Devres<Bar>> {
++        let bar = Bar::new(self.clone(), barnr, name)?;
++        let devres = Devres::new(self.0.clone(), bar, GFP_KERNEL)?;
++
++        Ok(devres)
++    }
  }
  
-+/* io.h */
-+u8 rust_helper_readb(const volatile void __iomem *addr)
-+{
-+	return readb(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readb);
-+
-+u16 rust_helper_readw(const volatile void __iomem *addr)
-+{
-+	return readw(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readw);
-+
-+u32 rust_helper_readl(const volatile void __iomem *addr)
-+{
-+	return readl(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readl);
-+
-+#ifdef CONFIG_64BIT
-+u64 rust_helper_readq(const volatile void __iomem *addr)
-+{
-+	return readq(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readq);
-+#endif
-+
-+void rust_helper_writeb(u8 value, volatile void __iomem *addr)
-+{
-+	writeb(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeb);
-+
-+void rust_helper_writew(u16 value, volatile void __iomem *addr)
-+{
-+	writew(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writew);
-+
-+void rust_helper_writel(u32 value, volatile void __iomem *addr)
-+{
-+	writel(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writel);
-+
-+#ifdef CONFIG_64BIT
-+void rust_helper_writeq(u64 value, volatile void __iomem *addr)
-+{
-+	writeq(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeq);
-+#endif
-+
-+u8 rust_helper_readb_relaxed(const volatile void __iomem *addr)
-+{
-+	return readb_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readb_relaxed);
-+
-+u16 rust_helper_readw_relaxed(const volatile void __iomem *addr)
-+{
-+	return readw_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readw_relaxed);
-+
-+u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
-+{
-+	return readl_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readl_relaxed);
-+
-+#ifdef CONFIG_64BIT
-+u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
-+{
-+	return readq_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readq_relaxed);
-+#endif
-+
-+void rust_helper_writeb_relaxed(u8 value, volatile void __iomem *addr)
-+{
-+	writeb_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeb_relaxed);
-+
-+void rust_helper_writew_relaxed(u16 value, volatile void __iomem *addr)
-+{
-+	writew_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writew_relaxed);
-+
-+void rust_helper_writel_relaxed(u32 value, volatile void __iomem *addr)
-+{
-+	writel_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writel_relaxed);
-+
-+#ifdef CONFIG_64BIT
-+void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
-+{
-+	writeq_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeq_relaxed);
-+#endif
-+
- void rust_helper_pci_set_drvdata(struct pci_dev *pdev, void *data)
- {
- 	pci_set_drvdata(pdev, data);
-diff --git a/rust/kernel/iomem.rs b/rust/kernel/iomem.rs
-new file mode 100644
-index 000000000000..efb6cd0829b4
---- /dev/null
-+++ b/rust/kernel/iomem.rs
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+use crate::bindings;
-+use crate::error::{code::EINVAL, Result};
-+
-+/// IO-mapped memory, starting at the base pointer @ioptr and spanning @malxen bytes.
-+///
-+/// The creator (usually a subsystem such as PCI) is responsible for creating the
-+/// mapping, performing an additional region request etc.
-+pub struct IoMem {
-+    pub ioptr: usize,
-+    maxlen: usize,
-+}
-+
-+impl IoMem {
-+    pub(crate) fn new(ioptr: usize, maxlen: usize) -> Result<Self> {
-+        if ioptr == 0 || maxlen == 0 {
-+            return Err(EINVAL);
-+        }
-+
-+        Ok(Self { ioptr, maxlen })
-+    }
-+
-+    fn get_io_addr(&self, offset: usize, len: usize) -> Result<usize> {
-+        if offset + len > self.maxlen {
-+            return Err(EINVAL);
-+        }
-+
-+        Ok(self.ioptr + offset)
-+    }
-+
-+    pub fn readb(&self, offset: usize) -> Result<u8> {
-+        let ioptr: usize = self.get_io_addr(offset, 1)?;
-+
-+        Ok(unsafe { bindings::readb(ioptr as _) })
-+    }
-+
-+    pub fn readw(&self, offset: usize) -> Result<u16> {
-+        let ioptr: usize = self.get_io_addr(offset, 2)?;
-+
-+        Ok(unsafe { bindings::readw(ioptr as _) })
-+    }
-+
-+    pub fn readl(&self, offset: usize) -> Result<u32> {
-+        let ioptr: usize = self.get_io_addr(offset, 4)?;
-+
-+        Ok(unsafe { bindings::readl(ioptr as _) })
-+    }
-+
-+    pub fn readq(&self, offset: usize) -> Result<u64> {
-+        let ioptr: usize = self.get_io_addr(offset, 8)?;
-+
-+        Ok(unsafe { bindings::readq(ioptr as _) })
-+    }
-+
-+    pub fn readb_relaxed(&self, offset: usize) -> Result<u8> {
-+        let ioptr: usize = self.get_io_addr(offset, 1)?;
-+
-+        Ok(unsafe { bindings::readb_relaxed(ioptr as _) })
-+    }
-+
-+    pub fn readw_relaxed(&self, offset: usize) -> Result<u16> {
-+        let ioptr: usize = self.get_io_addr(offset, 2)?;
-+
-+        Ok(unsafe { bindings::readw_relaxed(ioptr as _) })
-+    }
-+
-+    pub fn readl_relaxed(&self, offset: usize) -> Result<u32> {
-+        let ioptr: usize = self.get_io_addr(offset, 4)?;
-+
-+        Ok(unsafe { bindings::readl_relaxed(ioptr as _) })
-+    }
-+
-+    pub fn readq_relaxed(&self, offset: usize) -> Result<u64> {
-+        let ioptr: usize = self.get_io_addr(offset, 8)?;
-+
-+        Ok(unsafe { bindings::readq_relaxed(ioptr as _) })
-+    }
-+
-+    pub fn writeb(&self, byte: u8, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 1)?;
-+
-+        unsafe { bindings::writeb(byte, ioptr as _) }
-+        Ok(())
-+    }
-+
-+    pub fn writew(&self, word: u16, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 2)?;
-+
-+        unsafe { bindings::writew(word, ioptr as _) }
-+        Ok(())
-+    }
-+
-+    pub fn writel(&self, lword: u32, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 4)?;
-+
-+        unsafe { bindings::writel(lword, ioptr as _) }
-+        Ok(())
-+    }
-+
-+    pub fn writeq(&self, qword: u64, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 8)?;
-+
-+        unsafe { bindings::writeq(qword, ioptr as _) }
-+        Ok(())
-+    }
-+
-+    pub fn writeb_relaxed(&self, byte: u8, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 1)?;
-+
-+        unsafe { bindings::writeb_relaxed(byte, ioptr as _) }
-+        Ok(())
-+    }
-+
-+    pub fn writew_relaxed(&self, word: u16, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 2)?;
-+
-+        unsafe { bindings::writew_relaxed(word, ioptr as _) }
-+        Ok(())
-+    }
-+
-+    pub fn writel_relaxed(&self, lword: u32, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 4)?;
-+
-+        unsafe { bindings::writel_relaxed(lword, ioptr as _) }
-+        Ok(())
-+    }
-+
-+    pub fn writeq_relaxed(&self, qword: u64, offset: usize) -> Result {
-+        let ioptr: usize = self.get_io_addr(offset, 8)?;
-+
-+        unsafe { bindings::writeq_relaxed(qword, ioptr as _) }
-+        Ok(())
-+    }
-+}
+ impl AsRef<device::Device> for Device {
 -- 
 2.45.1
 
