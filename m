@@ -1,37 +1,38 @@
-Return-Path: <linux-pci+bounces-7649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F18E88C9984
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 09:48:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5696C8C9980
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 09:48:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FD0E281A2A
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 07:48:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 886331C21027
+	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 07:48:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E64391BC2F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E06D618E1F;
 	Mon, 20 May 2024 07:48:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE7E417571;
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B634D17BB7;
 	Mon, 20 May 2024 07:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716191295; cv=none; b=iEYaPlYXlJJYFwrrpc6FwIpy/BC8lXIh73n/29Q7iMWQx7QLxUn1na9l1atLbZbvNzKTMrXldR/KK18vscGIfJGL2CantGYda2rzP0qHyRM+3TwuGlp86r5WKM7OoKnxmZ16EsZRoZtuoucEJCwDnO0M7Oi0olbe3JYyOrsiVos=
+	t=1716191295; cv=none; b=civd4ru2md5Z0rRd4jrP3Z5o8zKJLWwp4MBxgwJ1Cye0M7N4R3fR2UFpGKX1u6TuUrVaB9arWyTb70I16yqPsp1hlJXYv5ycS2mEdzZI39kstq8khYuEwartwclLakJPNBY/HfLCTsJDIc3GoJ2Mz4JscIJxqEDSSz2BpffGvYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716191295; c=relaxed/simple;
-	bh=nKYMb9MH88kUDM/yP4kqpwL4jNSboQTFv3v0Xzl0esk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SjWnLNgQ8ywnLO9tLtYjck8RcTndIfzWFk698T10KFKjxf52qE9UBRoTzTGzkXDJSFEO2iP0oGN7gvN2pWUnrsHeDPkE14qQnr57fwxJmSy22Cj1GwCTWHcRvZNPokURaDv5Rd175iBvNWfNwSBxeAU1U8WKfYc7ms4hDpyLEoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+	bh=Wus5ztxg2Fes61KWp+gSdjO9QTU7mb8kYvG/fmzgTVc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NcKmml46eZeef3ly8q/Wl50SCCIrvlKAkLIZc/RlOrQxPt7pFkVRLcvs6bLB2X9wMSafj1BiY1HeOgV5Xm+KwD5OOs1UpGEGrGp3WuBNLVUYhMXckMz9829JU0cGC38s3/jRgbyBOUdllW7wx3tL/NtaMNZFdh0Ik7H3+qpa7ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 X-IronPort-AV: E=Sophos;i="6.08,174,1712588400"; 
-   d="scan'208";a="209031609"
+   d="scan'208";a="205072511"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 20 May 2024 16:43:04 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 20 May 2024 16:43:04 +0900
 Received: from localhost.localdomain (unknown [10.166.13.99])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 61D574005658;
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7CB0C4005658;
 	Mon, 20 May 2024 16:43:04 +0900 (JST)
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To: lpieralisi@kernel.org,
@@ -46,11 +47,14 @@ Cc: marek.vasut+renesas@gmail.com,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v8 0/5] PCI: rcar-gen4: Add R-Car V4H support
-Date: Mon, 20 May 2024 16:42:55 +0900
-Message-Id: <20240520074300.125969-1-yoshihiro.shimoda.uh@renesas.com>
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v8 1/5] PCI: dwc: Add PCIE_PORT_{FORCE,LANE_SKEW} macros
+Date: Mon, 20 May 2024 16:42:56 +0900
+Message-Id: <20240520074300.125969-2-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240520074300.125969-1-yoshihiro.shimoda.uh@renesas.com>
+References: <20240520074300.125969-1-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,65 +63,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The pcie-rcar-gen4 driver can reuse other R-Car Gen4 support like
-r8a779g0 (R-Car V4H) and r8a779h0 (R-Car V4M). However, some
-initializing settings differ between R-Car S4-8 (r8a779f0) and
-others. The R-Car S4-8 will be minority about the setting way. So,
-R-Car V4H will be majority and this is generic initialization way
-as "renesas,rcar-gen4-pcie{-ep}" compatible.
+R-Car Gen4 PCIe controller needs to use the Synopsys-specific PCIe
+configuration registers. So, add the macros.
 
-About the firmware binary, please refer to the following patch
-descirption:
-  PCI: rcar-gen4: Add support for r8a779g0
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-designware.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-For now, I tested both R-Car S4-8 and R-Car V4H on this driver.
-I'll support one more other SoC (R-Car V4M) in the future.
-
-Changes from v7:
-https://lore.kernel.org/linux-pci/20240415081135.3814373-1-yoshihiro.shimoda.uh@renesas.com/
-- Since the following patches are merged into pci.git / dt-bindings branch,
-  drop them from this patch series:
-   dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H compatible
-   dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4H compatible
-- Add Reviewed-by in the patch [25]/5.
-- Add a condition to avoid automated tools report in the patch 2/5.
-- Change the new function which adds an "enable" flag in the patch 3/5.
-  So, change the commit description and move some functions' places.
-- Revise the commit description and add firmware information in detail in
-  the patch 4/5.
-- Use the offset directly instead of definitions in the patch 4/5.
-- Add comments for some magical offsets/values in the patch 4/5.
-- Change error message when request_firmware() failed in the patch 4/5.
-
-Changes from v6:
-https://lore.kernel.org/linux-pci/20240410004832.3726922-1-yoshihiro.shimoda.uh@renesas.com/
-- Add Manivannan's Reviewed-by in patch [37]/7.
-- Rename a struct from "platdata" to "drvdata" in patch [4/7].
-- Revise the commit descriptions in patch [456]/7.
-- Rename some functions in patch 6/7.
-- Fix the return value of an error path in patch 6/7.
-
-Changes from v5:
-https://lore.kernel.org/linux-pci/20240408012458.3717977-1-yoshihiro.shimoda.uh@renesas.com/
-- Drop "dwc: " prefixes from the subjects in patch [0456]/7.
-
-Changes from v4:
-https://lore.kernel.org/linux-pci/20240403053304.3695096-1-yoshihiro.shimoda.uh@renesas.com/
-- Fix compatible string for renesas,r8a779f0-pcie-ep which was described
-  accidentally from v3...
-
-Yoshihiro Shimoda (5):
-  PCI: dwc: Add PCIE_PORT_{FORCE,LANE_SKEW} macros
-  PCI: rcar-gen4: Add rcar_gen4_pcie_drvdata
-  PCI: rcar-gen4: Add .ltssm_control() for other SoC support
-  PCI: rcar-gen4: Add support for r8a779g0
-  misc: pci_endpoint_test: Document a policy about adding pci_device_id
-
- drivers/misc/pci_endpoint_test.c             |   1 +
- drivers/pci/controller/dwc/pcie-designware.h |   6 +
- drivers/pci/controller/dwc/pcie-rcar-gen4.c  | 300 ++++++++++++++++---
- 3 files changed, 273 insertions(+), 34 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 26dae4837462..aa4db6eaf02a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -71,6 +71,9 @@
+ #define LINK_WAIT_IATU			9
+ 
+ /* Synopsys-specific PCIe configuration registers */
++#define PCIE_PORT_FORCE			0x708
++#define PORT_FORCE_DO_DESKEW_FOR_SRIS	BIT(23)
++
+ #define PCIE_PORT_AFR			0x70C
+ #define PORT_AFR_N_FTS_MASK		GENMASK(15, 8)
+ #define PORT_AFR_N_FTS(n)		FIELD_PREP(PORT_AFR_N_FTS_MASK, n)
+@@ -92,6 +95,9 @@
+ #define PORT_LINK_MODE_4_LANES		PORT_LINK_MODE(0x7)
+ #define PORT_LINK_MODE_8_LANES		PORT_LINK_MODE(0xf)
+ 
++#define PCIE_PORT_LANE_SKEW		0x714
++#define PORT_LANE_SKEW_INSERT_MASK	GENMASK(23, 0)
++
+ #define PCIE_PORT_DEBUG0		0x728
+ #define PORT_LOGIC_LTSSM_STATE_MASK	0x1f
+ #define PORT_LOGIC_LTSSM_STATE_L0	0x11
 -- 
 2.25.1
 
