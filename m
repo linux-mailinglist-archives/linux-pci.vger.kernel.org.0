@@ -1,139 +1,201 @@
-Return-Path: <linux-pci+bounces-7702-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7703-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2C858CA8D0
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 09:19:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA1AB8CA904
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 09:36:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2189E1C2124C
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 07:19:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53E7E1F21CD5
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 07:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AE424F88A;
-	Tue, 21 May 2024 07:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C56950267;
+	Tue, 21 May 2024 07:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="haNj1TsH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343684E1CB;
-	Tue, 21 May 2024 07:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742764AEEA
+	for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 07:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716275993; cv=none; b=cNjToW0I4BI16KjNYHq+liD91EW9Sf5jovfyI3Xvn83pY6FA9y98aokll29C0aYr8PGI9e5kLc6hDD4NhFAhDe5czHRULjTDKIgMAeMAg80cD4swA2SCXtUNi82EHnISK2edE0GZ9y8GSpZmpP4vQXu1lfUwICL0fLToOmnG8Xw=
+	t=1716276969; cv=none; b=tVeWIuMFIn0I75APy+S6469r4WjhUXqe9TjjQeqYOPbfqtNbK7NH5ZEqdHpEtRiQwU4jsAFSVIFcp8m5eAV2JFlxN5F8XBDeFLnOnxqnP3dGrWsYoZx0e//WMVRZBqqW36h+sJ0dHyGSXABNnaHupo7Ww7swrBoj+waDcOIIpRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716275993; c=relaxed/simple;
-	bh=kZyvE9UDLl6WTYeDxRjwfmu4Q8LQcZJTjhT/YcTyaQw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CxFOBB3MMZAaKjjB6z27UtEHJkO8R2YAvQRuJwHchiEUF5kkTm6i+bVxy51jxK28gB4wkRAQrsXDWyxRIInGDf774dRBA9Y3r/ZZHsOnQyFoqdcP7WSEJaAAsFmjU7x1PK43+tv/XcNNJMQIsrltsBLNJsgFBKxtSJ+tNR2WSaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-debaa161ae3so3297561276.1;
-        Tue, 21 May 2024 00:19:50 -0700 (PDT)
+	s=arc-20240116; t=1716276969; c=relaxed/simple;
+	bh=XdN+2zttHQ0MjCqkV/rL3F/G1MvLNe2WB7xdOgF7Tr0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C5TcxfR9IDjmQDmz3pTxOMY+cBPZ9LOp9FvF1/czG2eTdbk0YX2ubLOCuWQkbNLmc1o8kdW9CRPu7kVNPBA+aIXlaHs2CIQyCJiXSP23G+piFObKRuHJV85Oq2MQZbmLvwdqBvOgQezjeAbUJmNZs/0yjhMD3OsRiOst22VWqf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=haNj1TsH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716276967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XdN+2zttHQ0MjCqkV/rL3F/G1MvLNe2WB7xdOgF7Tr0=;
+	b=haNj1TsHJxeqbSvX/zr1v+Fjirkmj2KgyV/eg5aCSkxjZKfhH6RSeo1K1itY5vDalDSaKe
+	uB5fVvb1i6FpYqfAnu5T1f9s/cYH4nAWpMIIHtEGTe33P+8OSrnIQEMW2xUBr+gXA9RDsU
+	SBoES5bzCnxPKgBA9C9kqenoMAtOzT8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-dI3umFsxOAChhaOBNcmaBA-1; Tue, 21 May 2024 03:36:05 -0400
+X-MC-Unique: dI3umFsxOAChhaOBNcmaBA-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-574ec74fb6bso685922a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 00:36:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716275990; x=1716880790;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1KTzn0hU9Z4UN/kHuOvflOdET5gWXbcBejm7dn9vrh4=;
-        b=b1QTzLIt9xpLobs7DRSKJLkhNER37gVfP1GNedtU/Qq5IIfhtECds5wFSQX5gBEDDA
-         BM3ogB0OHT3sVV1P0ovDAsqBSLgu0jD9I7IFBXF+ygz6trc3ZRxiNI6zKqnCqLKDanQQ
-         0sYOyNGJi9KrATO7rjeed4Tn7/4iDAvA5nfca/MJX3M/Zb7SnXZzGm3l/SrP1DesqKSX
-         LTULJJ3oVZPi4QsGxjCqOQMGQLrbJKdKbkJTDN9dhl4LOIlDm8MPCh3NcZMcCC7ZSNcd
-         KCNUfUDOgYs7WkxtNYsGPGjEMSoCSl9NLOGyJejpZWdUZ3utlZVHIFpgb5vW+GukPYtp
-         8YwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+aWS18QjTItQyG4mhfGQg+0EEWDVlRIY+00Cif46nKIVrfF/47nYigOaTxZvVqRD20Ggx2NKXksxqtP4LoLbFHbTjWlbLxleNGRsRhSYPBVjkQi3EmX2gUtOSuqmRS4wPOLSMN2Bri66GsJvtfB2mFWpwVd7neBNJLUEDbB31ZyAsAwV+VxozgRh0tpdNnGJlw7dnSe3yRS8LSJaBs4X3nWzcfdhBg/7TDRey1Ou3+0uqNSURQC7Kjazy/DO7a5i2qtuE/iFU6RPbB1tOs3L5hgcT4ZJYta5KHducCERaKFe+yL+OCDNED6dmZzCK5I/7mu7ZkLR5wMr6Cig6zlB9PYvrtdnckN3lS6IqZvFgBLH7IsyDhKJlptMFnWwtAlzJ+o446YQ2B8CROCcSZ9D05Q==
-X-Gm-Message-State: AOJu0YzgqkI4XkbThQJK49Ioza1gVOWfHJs9CurXN8ggASOm46wsR5pP
-	AyOuf97pqsP2UVO7Pu16uhYb42ur9f8eQmpV0bhZXeHIMvkC8ByB1pCXXBXo
-X-Google-Smtp-Source: AGHT+IGEirqxTOMzWTamq9P57yxkEVKAurn6q9zbUNC7MEGZU4SMG3Vx0ppIBEhtkbjR13HGWAUNTA==
-X-Received: by 2002:a25:a2c6:0:b0:de6:fe6:68a2 with SMTP id 3f1490d57ef6-dee4f33732bmr41516330276.23.1716275989735;
-        Tue, 21 May 2024 00:19:49 -0700 (PDT)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-debd374406asm5367730276.29.2024.05.21.00.19.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 00:19:48 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6209e8a0386so27044307b3.0;
-        Tue, 21 May 2024 00:19:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV/AXipcXvNAzeXLV41yIXTwgiuy/Nj00R7q0HAh81YDdhdTHWw/66LBl792bKRzje/D/E4hdy7IPKn9ZtWp1owSFDG/c78+RMs9+iJrhUyVvJpn8hhYgIRxkSra90nGOrVAnsUjJMCyJT+zW7HtUcCJMJI0DxvK7TlN51H7dWgj3g0EPBzGo4JAiVc0XAmGzl2JjnggrJmQih7P4HnLZBqWP0wQFz77+iNMXz3Aj0rUlN2WMWed8G6jIwx9cQ2QKXXxisIlIVE9gnqrox1fwjJOmAo74ZdoG9u5Z3+lWc8rc/SvYl5Y1kgzV5E6eqMLytFeGnIIWk1QfTqq9BAF+zCsqxOTM7sz5fRYJ4YAtWOnIk27If4ePpYj3zA4/J8ipKPft+hdEy7XcPkxGArCJXDew==
-X-Received: by 2002:a81:ae5f:0:b0:61d:fd3e:8e8f with SMTP id
- 00721157ae682-622affa8b29mr418170827b3.25.1716275988366; Tue, 21 May 2024
- 00:19:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716276964; x=1716881764;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XdN+2zttHQ0MjCqkV/rL3F/G1MvLNe2WB7xdOgF7Tr0=;
+        b=oyiQoi7yHH8+nfPd7b3C8Dz7L6wzPX5yXLqsBYVrb4jE8y8E9nMxjzsZVNQktW+PaV
+         m1BWwaSCw+7Cr8oNI0w2rMGRX/fU96RjANJ5LUtdi4oKTaQ6ZEChf6Kp69/HMpAbSSk4
+         zkoanA1jZ9tTW//sK3ZB5cH0Ypw+VWQNfVzY0nhgdF4BftPSQWBNBwGnfcKbKoaJonPT
+         AvD80NZ/d2RynQOExmS7lfhulEEbYskKHHtvO/BYyW/qhVttF0mrNS90MVUiapPMonPm
+         VCyYWEULLCmfe6jibgHJhNb6p4ScwwxiN8GKXZkdLNiW02amdFjC7g0GPOKX3Nnr6u6G
+         E8FA==
+X-Forwarded-Encrypted: i=1; AJvYcCUk8gPWM5hkLUUNiqirpKE7eDiv+KjQI+qjKqnTLCMjHfKsporGdp4Cd/e0qMsLBovLSCIHxiYRDvfzy5aWlo+7+AL+vR6iQ7GI
+X-Gm-Message-State: AOJu0YwKF2ylgfZCI5GaNhMjXvgnS0hVNWN3h9iPgdDsG9Mohyt3WeAU
+	zgD/tp1pCdzYQfC7HqNWaMnw9sq02u32w5sfHcxK7UzeKmSyuSELDZX80lmJnRPTh3RAGm2Znbz
+	cH/RFDc3gKAKBVe98klSAO38x1PsBylzOzrYqcFXRAfnQtkqLC7KRBsU8Bg==
+X-Received: by 2002:a17:907:986:b0:a59:bce9:8454 with SMTP id a640c23a62f3a-a5a2d55347bmr2891345966b.1.1716276964231;
+        Tue, 21 May 2024 00:36:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF6X/1XcE2E6yjKqIiqCpzGiiQ6iBNuEwXlVNXHnfjn+aSwnJU50wIIah1qpk9DeBlBs9Y+Mg==
+X-Received: by 2002:a17:907:986:b0:a59:bce9:8454 with SMTP id a640c23a62f3a-a5a2d55347bmr2891343466b.1.1716276963771;
+        Tue, 21 May 2024 00:36:03 -0700 (PDT)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a3c65d06fsm1409594266b.52.2024.05.21.00.36.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 00:36:03 -0700 (PDT)
+Message-ID: <cf89c02d45545b67272aba933fbc8a8a0df83358.camel@redhat.com>
+Subject: Re: [RFC PATCH 10/11] rust: add basic abstractions for iomem
+ operations
+From: Philipp Stanner <pstanner@redhat.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich
+	 <dakr@redhat.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
+ ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+ boqun.feng@gmail.com,  gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me,  a.hindborg@samsung.com, aliceryhl@google.com,
+ airlied@gmail.com,  fujita.tomonori@gmail.com, lina@asahilina.net,
+ ajanulgu@redhat.com,  lyude@redhat.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org
+Date: Tue, 21 May 2024 09:36:02 +0200
+In-Reply-To: <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com>
+References: <20240520172554.182094-1-dakr@redhat.com>
+	 <20240520172554.182094-11-dakr@redhat.com>
+	 <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1712205900.git.ysato@users.sourceforge.jp>
- <455e40c03314294f9c2e64480aa69f8261a3f2d5.camel@physik.fu-berlin.de>
- <87fruc8wg4.wl-ysato@users.sourceforge.jp> <46c11cf9f837416470c50fa678df0ddb94a0a22e.camel@physik.fu-berlin.de>
-In-Reply-To: <46c11cf9f837416470c50fa678df0ddb94a0a22e.camel@physik.fu-berlin.de>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 21 May 2024 09:19:35 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWwhoWzeS78JKVJzxZ9B4-TTOSH8rX4eyYTdpYgaepjzQ@mail.gmail.com>
-Message-ID: <CAMuHMdWwhoWzeS78JKVJzxZ9B4-TTOSH8rX4eyYTdpYgaepjzQ@mail.gmail.com>
-Subject: Re: [RESEND v7 00/37] Device Tree support for SH7751 based board
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org, 
-	Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Rich Felker <dalias@libc.org>, Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Heiko Stuebner <heiko.stuebner@cherry.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Chris Morgan <macromorgan@hotmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	David Rientjes <rientjes@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Guo Ren <guoren@kernel.org>, 
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Herve Codina <herve.codina@bootlin.com>, 
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>, Anup Patel <apatel@ventanamicro.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 20, 2024 at 5:25=E2=80=AFPM John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
-> On Mon, 2024-05-20 at 22:06 +0900, Yoshinori Sato wrote:
-> > I'll be posting v8 soon.
+On Tue, 2024-05-21 at 00:32 +0200, Miguel Ojeda wrote:
+> On Mon, May 20, 2024 at 7:27=E2=80=AFPM Danilo Krummrich <dakr@redhat.com=
 >
-> Sounds good! Maybe we can start merging the patches that contain fixes on=
-ly
-> and that have already been reviewed. This way, we can reduce the overall =
-size
-> of the series a bit.
+> wrote:
+> >=20
+> > through its Drop() implementation.
+>=20
+> Nit: `Drop`, `Deref` and so on are traits -- what do the `()` mean
+> here? I guess you may be referring to their method, but those are
+> lowercase.
 
-+1
+ACK
 
-Gr{oetje,eeting}s,
+>=20
+> > +/// IO-mapped memory, starting at the base pointer @ioptr and
+> > spanning @malxen bytes.
+>=20
+> Please use Markdown code spans instead (and intra-doc links where
+> possible) -- we don't use the `@` notation. There is a typo on the
+> variable name too.
+>=20
+> > +pub struct IoMem {
+> > +=C2=A0=C2=A0=C2=A0 pub ioptr: usize,
+>=20
+> This field is public, which raises some questions...
 
-                        Geert
+Justified questions =E2=80=93 it is public because the Drop implementation =
+for
+pci::Bar requires the ioptr to pass it to pci_iounmap().
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+The alternative would be to give pci::Bar a copy of ioptr (it's just an
+integer after all), but that would also not be exactly beautiful.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+The subsystem (as PCI does here) shall not make an instance of IoMem
+mutable, so the driver programmer couldn't modify ioptr.
+
+I'm very open for ideas for alternatives, though. See also the other
+mail where Danilo brainstorms about making IoMem a trait.
+
+>=20
+> > +=C2=A0=C2=A0=C2=A0 pub fn readb(&self, offset: usize) -> Result<u8> {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 let ioptr: usize =3D self.g=
+et_io_addr(offset, 1)?;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Ok(unsafe { bindings::readb=
+(ioptr as _) })
+> > +=C2=A0=C2=A0=C2=A0 }
+>=20
+> These methods are unsound, since `ioptr` may end up being anything
+> here, given `self.ioptr` it is controlled by the caller.=C2=A0
+
+Only if IoMem is mutable, correct?
+
+The commit message states (btw this file would get more extensive
+comments soonish) that with this design its the subsystem that is
+responsible for creating IoMem validly, because the subsystem is the
+one who knows about the memory regions and lengths and stuff.
+
+The driver should only ever take an IoMem through a subsystem, so that
+would be safe.
+
+> One could
+> also trigger an overflow in `get_io_addr`.
+
+Yes, if the addition violates the capacity of a usize. But that would
+then be a bug we really want to notice, wouldn't we?
+
+Only alternative I can think of would be to do a wrapping_add(), but
+that would be even worse UB.
+
+Ideas?
+
+>=20
+> Wedson wrote a similar abstraction in the past
+> (`rust/kernel/io_mem.rs` in the old `rust` branch), with a
+> compile-time `SIZE` -- it is probably worth taking a look.
+
+Yes, we're aware of that one. We also did some experiments with it.
+Will discuss it in the other thread where Dave and Wedson mention it.
+
+>=20
+> Also, there are missing `// SAFETY:` comments here. Documentation and
+> examples would also be nice to have.
+
+Oh yes, ACK, will do
+
+
+Thx for the review!
+
+
+>=20
+> Thanks!
+>=20
+> Cheers,
+> Miguel
+>=20
+
 
