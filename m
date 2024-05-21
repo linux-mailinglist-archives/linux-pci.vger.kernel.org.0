@@ -1,154 +1,135 @@
-Return-Path: <linux-pci+bounces-7717-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7718-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD4308CADCF
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 14:01:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B60DE8CB027
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 16:14:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D09CB21234
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 12:01:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 558611F25696
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 14:14:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 517F3757E3;
-	Tue, 21 May 2024 12:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C957F7C3;
+	Tue, 21 May 2024 14:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8osWtei"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtLLmbNU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0A955C29
-	for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 12:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964A67F7C1;
+	Tue, 21 May 2024 14:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716292876; cv=none; b=GjAAF4MiRh4YLL6s3wVvfpdC44a095vEtUj/NtXTcNLkbyjMa/G3yOGXSdaeyYIDyxPcixSYLmJjy8/nsTwoUlHFauHtFN0rWaFBgjvsNWRvLU7szuocJyGNdbp88jVw41962t8NKztU6BswzoYw4wt56x4f3Fu/HLcUHtZeNCs=
+	t=1716300874; cv=none; b=TxbmjBbuW/l2XH7/IjXy5QdWvqs5ylbHWAnsMwhBR62yx4VtJ4yWDn2C4P28yyTxyMA92ZCODjyu42C9EnD23mPXPC1F+EY5fklwp/bWw8s9AoManAnxNopb3ocwo5JWRqB6jmSn+UoDKPrC/SGHmNhqWgjRwb0lQWUwearGzn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716292876; c=relaxed/simple;
-	bh=5zWWMpzNmFYgn31na2G/Lr9+d+AS37F1YH7AF5iGG10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GVO/EfcNCB0jU3ZnUWr7GFM98vwREyUiJES0D7F/+6kcLYY6vxe8UdRNG9TXOTvEKBfhu8BavDaXGzwCmbC4WTRUbm19zHbOHYsDbsyPC7kcDfzQcWHLVNuIuGHnvSVTvb/7KhQCLXZ6mC/2Lfo2+P7mMn2CxWvoaloNTXi8WAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8osWtei; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C907C2BD11;
-	Tue, 21 May 2024 12:01:13 +0000 (UTC)
+	s=arc-20240116; t=1716300874; c=relaxed/simple;
+	bh=AY9z2jOOOiWR4ihFpXH0l9LYmrbHOhfxQ20WcMzm54U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=BrHiCoKdTwlugHcka0qTDTYr3+VaWXwgC0hrVGh1OFgHBFW+iVoozExzXTH2/4ATYSTwh28xPXJ7Dn1i6ccO+ZFSZMNdtfeqqs+caBeMWVR/zTPzrDWsv0fH/wI7xgysaPI67PM1uLuuVOiW87zOLy+Iyc6poOd1d0+cggz27n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtLLmbNU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6AA5C2BD11;
+	Tue, 21 May 2024 14:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716292875;
-	bh=5zWWMpzNmFYgn31na2G/Lr9+d+AS37F1YH7AF5iGG10=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T8osWteiMiJRQMNTqKhqQHnw9Eqb5MOhugUTNx+IV6xAIjyh1SgMy5gWZ+3wtWBje
-	 MpdZLVSzYaQY/XOcuKSuEOsNAgJ1ZvgdBjJiKMMD64jZkAI7LDXJPMh4x2H6NYC+oG
-	 6sPbKejwdU4xN1ZTLq379gSf5+e6RpL+5Z5OqlyhDOf83vb6mN0yFB/e0SOcYCyRoK
-	 Ek/BjEOO5QKpSiAHHSn/A4HL7Oduv6rI3fESDfAgWnFjPr6blxJ7Cqdw4j9Amsxfuk
-	 OlOhhBgZWRRdyjxAs9pvuTlWKgI4nJXKNMKOVwyoUH1B6XrUNZdx7gHJnMjDUuZEJZ
-	 V5dilVRKSP0CA==
-Date: Tue, 21 May 2024 14:01:10 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shradha Todi <shradha.t@samsung.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v2 7/9] PCI: cadence: Set a 64-bit BAR if requested
-Message-ID: <ZkyNBpnEWkMN6Cnf@ryzen.lan>
-References: <20240312105152.3457899-8-cassel@kernel.org>
- <20240516204907.GA2253008@bhelgaas>
+	s=k20201202; t=1716300874;
+	bh=AY9z2jOOOiWR4ihFpXH0l9LYmrbHOhfxQ20WcMzm54U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UtLLmbNUJPJuLX2G+rdPKrRs7Ld64KuKOmLlxZ2dTcolrqBtoDWoaKqStL+aY95ve
+	 WIkYNwO7nZeBFPRPVSQuyf6byue/iEs0+gIxT86alE5gxzb9BJewOmkgt0faX4Ht/A
+	 d2Dc56JmsOUM1mDwqRDsuN40nf27LcmEKNLQHMr/NUS8Ay+te6wDx47kht6jMDdLr0
+	 y9UpyW/ZwIeNxJ3nDTZ9cmSrlpWAp67K9fItN0K6vW0Rm/QEWkmPe7Oi9YcNoUFkL6
+	 pcm5XQ2zyXLRQnZMLVX1p+XWn0NfMK1EuQCFwl6e4jX5quZjTuH7U1XZkZ/Cb5fmjp
+	 H5k1enDRV9Q4A==
+Date: Tue, 21 May 2024 09:14:31 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	bhelgaas@google.com, mani@kernel.org, Frank Li <Frank.Li@nxp.com>,
+	imx@lists.linux.dev, jdmason@kudzu.us, jingoohan1@gmail.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org, robh@kernel.org, dlemoal@kernel.org
+Subject: Re: [PATCH v4 1/1] PCI: dwc: Fix index 0 incorrectly being
+ interpreted as a free ATU slot
+Message-ID: <20240521141431.GA25673@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240516204907.GA2253008@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zkx0lzP76bmp4K0r@ryzen.lan>
 
-Hello Bjorn,
-
-On Thu, May 16, 2024 at 03:49:07PM -0500, Bjorn Helgaas wrote:
-> [+cc Shawn for Rockchip question]
+On Tue, May 21, 2024 at 12:16:55PM +0200, Niklas Cassel wrote:
+> On Sat, May 18, 2024 at 02:06:50AM +0900, Krzysztof Wilczyński wrote:
+> > Hello,
+> > 
+> > > When PERST# assert and deassert happens on the PERST# supported platforms,
+> > > the both iATU0 and iATU6 will map inbound window to BAR0. DMA will access
+> > > to the area that was previously allocated (iATU0) for BAR0, instead of the
+> > > new area (iATU6) for BAR0.
+> > > 
+> > > Right now, we dodge the bullet because both iATU0 and iATU6 should
+> > > currently translate inbound accesses to BAR0 to the same allocated memory
+> > > area. However, having two separate inbound mappings for the same BAR is a
+> > > disaster waiting to happen.
+> > > 
+> > > The mapping between PCI BAR and iATU inbound window are maintained in the
+> > > dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for
+> > > a BAR, dw_pcie_ep_inbound_atu() API will first check for the availability
+> > > of the existing mapping in the array and if it is not found (i.e., value in
+> > > the array indexed by the BAR is found to be 0), then it will allocate a new
+> > > map value using find_first_zero_bit().
+> > > 
+> > > The issue here is, the existing logic failed to consider the fact that the
+> > > map value '0' is a valid value for BAR0. Because, find_first_zero_bit()
+> > > will return '0' as the map value for BAR0 (note that it returns the first
+> > > zero bit position).
+> > > 
+> > > Due to this, when PERST# assert + deassert happens on the PERST# supported
+> > > platforms, the inbound window allocation restarts from BAR0 and the
+> > > existing logic to find the BAR mapping will return '6' for BAR0 instead of
+> > > '0' due to the fact that it considers '0' as an invalid map value.
+> > > 
+> > > So fix this issue by always incrementing the map value before assigning to
+> > > bar_to_atu[] array and then decrementing it while fetching. This will make
+> > > sure that the map value '0' always represents the invalid mapping."
+> > 
+> > Applied to controller/dwc, thank you!
+> > 
+> > [1/1] PCI: dwc: Fix index 0 incorrectly being interpreted as a free ATU slot
+> >       https://git.kernel.org/pci/pci/c/cd3c2f0fff46
+> > 
+> > 	Krzysztof
 > 
-> On Tue, Mar 12, 2024 at 11:51:47AM +0100, Niklas Cassel wrote:
-> > Ever since commit f25b5fae29d4 ("PCI: endpoint: Setting a BAR size > 4 GB
-> > is invalid if 64-bit flag is not set") it has been impossible to get the
-> > .set_bar() callback with a BAR size > 4 GB, if the BAR was also not
-> > requested to be configured as a 64-bit BAR.
-> > 
-> > Thus, forcing setting the 64-bit flag for BARs larger than 4 GB in the
-> > lower level driver is dead code and can be removed.
-> > 
-> > It is however possible that an EPF driver configures a BAR as 64-bit,
-> > even if the requested size is < 4 GB.
-> > 
-> > Respect the requested BAR configuration, just like how it is already
-> > repected with regards to the prefetchable bit.
-> > 
-> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> > ---
-> >  drivers/pci/controller/cadence/pcie-cadence-ep.c | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > index 2d0a8d78bffb..de10e5edd1b0 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > @@ -99,14 +99,11 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
-> >  		ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS;
-> >  	} else {
-> >  		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
-> > -		bool is_64bits = sz > SZ_2G;
-> > +		bool is_64bits = !!(flags & PCI_BASE_ADDRESS_MEM_TYPE_64);
-> >  
-> >  		if (is_64bits && (bar & 1))
-> >  			return -EINVAL;
+> Hello PCI maintainers,
 > 
-> Not relevant to *this* patch, but it looks like this code assumes that
-> a 64-bit BAR must consist of an even-numbered DWORD followed by an
-> odd-numbered one, e.g., it could be BAR 0 and BAR 1, but not BAR 1 and
-> BAR 2.
+> There was a message sent out that this patch was applied, yet the patch does
+> not appear to be part of the pull request that was sent out yesterday:
+> https://lore.kernel.org/linux-pci/20240520222943.GA7973@bhelgaas/T/#u
 > 
-> I don't think the PCIe spec requires that.  Does the Cadence hardware
-> require this?
-
-The PCIe spec does not seems to require this:
-
-"A Type 0 Configuration Space Header has six DWORD locations allocated for
-Base Address registers starting at offset 10h in Configuration Space. [...]
-A Function may use any of the locations to implement Base Address registers.
-An implemented 64-bit Base Address register consumes two consecutive DWORD
-locations."
-
-
-> What about Rockchip, which has similar code in
-> rockchip_pcie_ep_set_bar()?
+> In fact, there seems to be many PCI patches that have been reviewed and ready
+> to be included (some of them for months) that is not part of the pull request.
 > 
-> FWIW, dw_pcie_ep_set_bar() doesn't enforce this restriction.
+> Looking at pci/next, these patches do not appear there either, so I assume
+> that these patches will also not be included in a follow-up pull request.
+> 
+> Some of these patches are actual fixes, like the patch in $subject, and do not
+> appear to depend on any other patches, so what is the reason for not including
+> them in the PCI pull request?
 
-The Synopsys PCIe controller does have this limitation:
+The problem was that we didn't get these applied soon enough for them
+to get any time in linux-next before the merge window opened.  I don't
+like to add non-trivial things during the merge window, so I deferred
+most of these.  I plan to get them in linux-next as soon as v6.10-rc1
+is tagged.
 
-From the DWC databook:
+If we can make a case for post-merge window fixes, e.g., to fix a
+regression in the pull request or other serious issue, that's always a
+possibility.
 
-3.5.7.1.1 Overview
-
-Base Address Registers (Offset: 0x100x24)
-
-The controller provides three pairs of 32-bit BARs for each implemented
-function. Each pair (BARs 0 and 1, BARs 2 and 3, BARs 4 and 5) can be
-configured as follows:
--One 64-bit BAR: For example, BARs 0 and 1 are combined to form a single
- 64-bit BAR.
--Two 32-bit BARs: For example, BARs 0 and 1 are two independent 32-bit BARs.
--One 32-bit BAR: For example, BAR0 is a 32-bit BAR and BAR1 is either
- disabled or removed from the controller altogether to reduce gate count.
-
-So dw_pcie_ep_set_bar() should probably be fixed to enforce this requirement.
-
-(PCI patches for DWC appear to have a tendency to be redirected to /dev/null,
-so personally I'm not planning on sending out a patch to enforce this.)
-
-
-Kind regards,
-Niklas
+Bjorn
 
