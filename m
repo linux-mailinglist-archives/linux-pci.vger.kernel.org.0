@@ -1,191 +1,103 @@
-Return-Path: <linux-pci+bounces-7695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EA018CA500
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 01:27:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73A488CA60C
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 04:07:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 300201F217BC
-	for <lists+linux-pci@lfdr.de>; Mon, 20 May 2024 23:27:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D70B282428
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 02:07:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26F92487B0;
-	Mon, 20 May 2024 23:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9BFB6FDC;
+	Tue, 21 May 2024 02:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FpD+Y3cl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOOTuSvw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B925E4502D;
-	Mon, 20 May 2024 23:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332C928FA;
+	Tue, 21 May 2024 02:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716247658; cv=none; b=Nqz7gqhQkNbCCXI3I/0BhZkyqtuxkrD8JmeKmBfxKC8oMr1GLroB6kkQeG0QXrx80y4Wi52K/ETl1D4Jrdyse7DUKZDafTAcUqVa2rhvkOTNJE8t75ji4WiHLiJCM1V9/e+nARdfwuYSKwt4FBeph/celTodv3xPpS2vMfh8mVI=
+	t=1716257272; cv=none; b=ng1bfk4LSGgCRWuvBOUtheZqxWUPK5r1o0Hiwx14lJ/hQo1usi8F8CSBFkwK7aXD5c09gnoifygY+Aoz77NzjGZiNhQJidq2mspQZOv9FxxSupbY9FPA9nc04+BKi7Hewl9cnljiQTnc4VsXqJ65fIJlRje49SNZ4vrissHyu0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716247658; c=relaxed/simple;
-	bh=8QqgZxVf0288aHf9DZD/0Jyi87hO0+ha9iYcdXrU1lI=;
+	s=arc-20240116; t=1716257272; c=relaxed/simple;
+	bh=JnXg8pfJMHBGNLoBzZhpD7GAXHPrm5AeRP3V4PN1C7Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lf2iufG0H/r5P0i739xmBuyE2viK1lumNP6OC83jJ/q6enE09tHeKkIykXf3L/OxGJu3Y2URXKSjl0+9GJFaSLKKZtDIEL+2pKoDzPBwYaxecfNaccE8zR+n2a+cLflf9Rna4piTi0TCQoVe6OWcTR6DX+7ueNT/LGEDS8PWjd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FpD+Y3cl; arc=none smtp.client-ip=209.85.214.179
+	 To:Cc:Content-Type; b=VVbx2n+iKZDWnLjwHq1WqI19SAfZJLmLT+zH8vCVuNp3ZK6BBVqTH6yv3NfSZefh3Kz5JK7eIFAOeDDEdm8H5a2/Vu1lsdkNqvP50k4+l7LKa0/XfMA9S7bzL8e5fW38oJoojY69N5YYwhQnRT9bMBmP1SEtlp3UnNr7hMQjDgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KOOTuSvw; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1ee12baa01cso98294615ad.0;
-        Mon, 20 May 2024 16:27:36 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a5a2d0d8644so685949266b.1;
+        Mon, 20 May 2024 19:07:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716247656; x=1716852456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2XXQ+fW79Tox5jnZShvFqsN/aIVjF4mLnyQ2RqxwCuE=;
-        b=FpD+Y3clwm0+wmaQ6zzG1pvW+qC05Uc5e+1aGYr5+wiazeJWTQ2K3T7NER04LrTXpR
-         BxFpMkceuPWF/O1VNUtaAiQQKJedbgq22mnfO7grO4+rqJFy6g5IOMpGknWhl1mQf1KT
-         bqLvQvB4l+tB8p2DufnhcRaUmmm8WKoTj5hjstpWg9YdQaT7shHj7GLUJw9KzXi6BKxP
-         XDqfa8nDme6EPPQo2BwxNYU4eO9BYJeh6ZzhztexJ0dZCwTrCbq2e+t/pjgBuMsML3Ya
-         1jB8Xpd7vXVmd6v5fSdiwE6p+4bUO+wz2cjskm4EsLB0O3Ku/l6fVAR+W2SUFuFlJiWL
-         DtlA==
+        d=gmail.com; s=20230601; t=1716257269; x=1716862069; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JnXg8pfJMHBGNLoBzZhpD7GAXHPrm5AeRP3V4PN1C7Y=;
+        b=KOOTuSvwIKh9FdFEdnDY/sNhfIr8LxEnZvq54+kSVPcIEG8aiiSqbmN1oTC90XHDyY
+         5lD3B4ZQozFNg5js+1x5wTWnGhVaYvONC5dQLOHR6Ev9zI4kfmuUeAniEmWGAUKtIqMp
+         03ePNYoXAXBVPFIZSXlkM3m/8rtA8hal+RlfYXc/m3SEOTczlS2BVojzjAVI3jdLBOU3
+         +Br5MNgO+Fa2U7B8zwrEP4bmfSGV/gyOp77P8D8/sy2qEzlOEtke8DaxzLREI2MgcvzS
+         BhuuH+N/N2lCJDjAig2V1mIrpYH7r8E6/q17iMsRWO6D9yNLXIg8/Cxy3bMvXkpGvTk6
+         IW/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716247656; x=1716852456;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2XXQ+fW79Tox5jnZShvFqsN/aIVjF4mLnyQ2RqxwCuE=;
-        b=WgzocNp/ol4zGCyckaM2VhFWg/w5e2eo58Ys4vcfzVfKjmRuFGqO/9z5qO0Tp0ruG8
-         +PVUWHTho8vDTF54abdokifm+OAA8O6hu2mPhGk+f7BlUprjNj1j/AtBXbDpeLeAbZQ1
-         UAkfewVgqFjMFK4SdeNX88nhDDoA6k+ebZDAWsSQCVDwnAUWGU75GZP5kcbzER6UkSCX
-         gAZJ8bGP2eOVGSCVREWD8haR0BrYT1PL+dvbiSse74Vvfl59StO6S7TM2xyrFl9SLLw6
-         yj+euvms6kUgV+JctG5cqi9ma4Ax0Nmy+sMrUgr+Dr/ulIVnaRaaL+Ide55tRsfeIoh2
-         r3nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCCEqRpZU8cHxhQEBOZMEtXWSFYhHFAYbKpfVkNmfW5Qf+II+GZrX6kKb8hEO5KNnlLL1/c4xRpm6yjGxn05dKrUMY7e/6j/YdO3M99TV8J3gOA31XdxBTJj6F4IlonSTqVdbYiIlKeDPzpzzPUVaM0oxSsRwcwKYFYr8eHNNQ7lu5jy305NU=
-X-Gm-Message-State: AOJu0YyOsH0kIxEsMwy50MsQGhICVJWQfDXj7athLEztx6wlT1DCxoG9
-	4wNmuXjyfu3QC8+X2Lyfy8s4kAPRM94pSs17LTETrCfZjYEQnuY2oHJMOTEIUNVtnlxzaRaEFIk
-	t5qLNTry4fw09wyIUC4OG0T29FLg=
-X-Google-Smtp-Source: AGHT+IHHIgAAdRine/mHLO7k00sK/oImuclvCKPExA5xMVPtP+YugBCGaRo4B3DZZlCCYxf9oBS8H6lz+9iXaduvCeM=
-X-Received: by 2002:a17:90a:c401:b0:2ac:40c8:1f00 with SMTP id
- 98e67ed59e1d1-2b6cc566d69mr25208745a91.4.1716247655910; Mon, 20 May 2024
- 16:27:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716257269; x=1716862069;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JnXg8pfJMHBGNLoBzZhpD7GAXHPrm5AeRP3V4PN1C7Y=;
+        b=TxkBnxXp06nxOxG1WZXYHpYn5ViK2q7dbb7zEtFkGh4bmJlw+6U1UUDNNsQncBolxl
+         OPaFAJyfdIokOKgPZd4nAFunWWt5brWgiOrwkfyk/il5bnzpN8RnEvwNCiTEzwyTWCB6
+         qd1b+70gO4r1Lk9seoOw3e32IGTMQgUvmPujP9GL/cEM0lahs400nDy7A9DxqA2V3Kql
+         yS+f59c/pFSsjKXHZoDbj/pgXJLn0XVKy5+HlaWKurmbdE4deb0UA7XAJQf6SULM3FOm
+         uCF7exakcuuldkrIBLZOWIAwHBXEuu1N3Gj7IToZjP+4f2k93Zx8ZvmKZEnFL3INYMUx
+         aAyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNbHUlGadPavN4PQBvkWuODFFRPSSi1nTzosUifSSIPJI/o6w5NomB6JrYbcNQKPW2Y1M8xfol+yNrfBQNu0utnzjxxxPJiR1y667twxun3aIIebRh1u7I/lIdpqb4R6ZmVSDS4Rh2Q6jpN1sDvcfELbmXUoKpGcw3++FuRjCnt4UfCjeaxRQ=
+X-Gm-Message-State: AOJu0YzvWplndX5w//fj6Q+0Hh10cejBPoMZ7RiMn04oFCNEAo+KRjAw
+	UOx0qB98y7xeTP14Bzp61SJJbyPjzrxDYi7QX5X33hTf8RyMIYQlaXye6mvpIO7d8wq+TrjblbD
+	q5rQtZS8mjsqbJAsIHdhdoD8PsgI=
+X-Google-Smtp-Source: AGHT+IEyaMlILGyj7b0QHHzQlhhrCIkJsgRr1o1ajs3mU8NpocESmuaeBvr/PGAxj6/AYqqDBCVaHxKYQ34DBG/DPfM=
+X-Received: by 2002:a17:906:37d4:b0:a59:c28a:7eb6 with SMTP id
+ a640c23a62f3a-a5a2d5c8bd8mr2104986666b.24.1716257269327; Mon, 20 May 2024
+ 19:07:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-12-dakr@redhat.com>
-In-Reply-To: <20240520172554.182094-12-dakr@redhat.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 21 May 2024 01:27:23 +0200
-Message-ID: <CANiq72kObXP7-YtcXnWQXJpEQ=N+RtcSeM6A+scBK00VkFj5JA@mail.gmail.com>
-Subject: Re: [RFC PATCH 11/11] rust: PCI: add BAR request and ioremap
-To: pstanner@redhat.com, Danilo Krummrich <dakr@redhat.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
-	ajanulgu@redhat.com, lyude@redhat.com, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-11-dakr@redhat.com>
+ <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com>
+In-Reply-To: <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Tue, 21 May 2024 12:07:36 +1000
+Message-ID: <CAPM=9txb5STBo05xiTy9+wF7=mMO=X2==BP4JVORPFAtX=nS0g@mail.gmail.com>
+Subject: Re: [RFC PATCH 10/11] rust: add basic abstractions for iomem operations
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Danilo Krummrich <dakr@redhat.com>, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com, 
+	aliceryhl@google.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Philipp,
-
-A few quick nits I noticed for this one...
-
-On Mon, May 20, 2024 at 7:27=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
-wrote:
 >
-> +/// A PCI BAR to perform IO-Operations on.
+> Wedson wrote a similar abstraction in the past
+> (`rust/kernel/io_mem.rs` in the old `rust` branch), with a
+> compile-time `SIZE` -- it is probably worth taking a look.
+>
 
-Some more documentation, examples, and/or references would be nice.
+Just on this point, we can't know in advance what size the IO BARs are
+at compile time.
 
-> +pub struct Bar {
-> +    pdev: Device,
-> +    iomem: IoMem,
-> +    num: u8,
-> +}
-> +
-> +impl Bar {
-> +    fn new(pdev: Device, num: u8, name: &CStr) -> Result<Self> {
-> +        let barnr =3D num as i32;
+The old method just isn't useful for real devices with runtime IO BAR sizes.
 
-Would it make sense to use newtypes for `num`/`barnr`, perhaps?
-
-> +        let barlen =3D pdev.resource_len(num)?;
-> +        if barlen =3D=3D 0 {
-> +            return Err(ENOMEM);
-> +        }
-> +
-> +        // SAFETY:
-> +        // `pdev` is always valid.
-
-Please explain why it is always valid -- the point of a `SAFETY`
-comment is not to say something is OK, but why it is so.
-
-> +        // `barnr` is checked for validity at the top of the function.
-
-Where was it checked? I may be missing something, but I only see a
-widening cast.
-
-> +        // SAFETY:
-> +        // `pdev` is always valid.
-> +        // `barnr` is checked for validity at the top of the function.
-> +        // `name` is always valid.
-
-Please use the convention we have elsewhere for this kind of lists,
-i.e. use a list with the `-` bullet list marker.
-
-> +        let ioptr: usize =3D unsafe { bindings::pci_iomap(pdev.as_raw(),=
- barnr, 0) } as usize;
-
-Is the type needed, since there is an explicit cast?
-
-> +        if ioptr =3D=3D 0 {
-> +            // SAFETY:
-> +            // `pdev` is always valid.
-> +            // `barnr` is checked for validity at the top of the functio=
-n.
-> +            unsafe { bindings::pci_release_region(pdev.as_raw(), barnr) =
-};
-> +            return Err(ENOMEM);
-> +        }
-
-Should the region be managed in a RAII type instead?
-
-> +    fn index_is_valid(i: u8) -> bool {
-> +        // A pci_dev on the C side owns an array of resources with at mo=
-st
-> +        // PCI_NUM_RESOURCES entries.
-
-Missing Markdown. There are other instances as well.
-
-> +        if i as i32 >=3D bindings::PCI_NUM_RESOURCES as i32 {
-> +            return false;
-> +        }
-> +
-> +        true
-
-The body of the function could just be `... < ...`, i.e. no `if` needed.
-
-> +    // SAFETY: The caller should ensure that `ioptr` is valid.
-> +    unsafe fn do_release(pdev: &Device, ioptr: usize, num: u8) {
-
-This should not be a comment but documentation, and it should be a `#
-Safety` section, not a `// SAFETY:` comment.
-
-> +    /// Returns the size of the given PCI bar resource.
-> +    pub fn resource_len(&self, bar: u8) -> Result<bindings::resource_siz=
-e_t> {
-
-Sometimes `bindings::` in signatures of public methods may be
-justified -- is it the case here? Or should a newtype or similar be
-provided instead? I only see this function being called inside the
-module, anyway.
-
-> +    /// Mapps an entire PCI-BAR after performing a region-request on it.
-
-Typo.
-
-Cheers,
-Miguel
+Dave.
 
