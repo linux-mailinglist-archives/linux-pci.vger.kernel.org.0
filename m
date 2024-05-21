@@ -1,131 +1,147 @@
-Return-Path: <linux-pci+bounces-7707-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7708-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF1648CA9C7
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 10:12:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 254748CAA97
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 11:18:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F038C1C20EEC
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 08:12:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 945631F2274D
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 09:18:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 383E254277;
-	Tue, 21 May 2024 08:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62F755C29;
+	Tue, 21 May 2024 09:18:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zdiv.net header.i=@zdiv.net header.b="L2TJo5Sy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FsFmmGOE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zdiv.net (xvm-107-148.dc0.ghst.net [46.226.107.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7115466C
-	for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 08:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.226.107.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D542EB1D;
+	Tue, 21 May 2024 09:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716279157; cv=none; b=X2x6LDSoeTVSllZYQ9nQnjQORCF4P9au8/NlgpNQDuBPHQCU0DeSiYdfUSCTQ58nKo3c/z410YC2CDEBhcgWuJTPEkEKpfVtbbknZm3XKRE+zRSTA0KXOCDieRI3X6d6NxvpNCTbhl0/Vzi6xtx+CTtGf7Z/eoPjeuDYy0xMnmM=
+	t=1716283099; cv=none; b=PZSKkf5WH/FnEamiU7oIR3IU9/xYo3FBOfwxWpH2BSh+R7PGNnyFw3z85HkpztU6m4bosZUbbPt/ay138L8wzABHJpVG9Yn1bSE5EY95IL/FuWEyNuZVFma5mROu42qPn62zPmQ2Zpmv29gVnqjRlId8cEyMWM7WCl+J5RcLMtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716279157; c=relaxed/simple;
-	bh=NC2zd3zZ/ZMq8iGRkKb9PG4VAcRkLw072Zwh3HBuoVw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QtpkkhO8GXKq5qNGW3IAMIG1UCp7ndfBwZTVvmEFiCWr44W9sSkCHYq1cjzLujC0KcLmDKefa7aLlK4RYOTPn+21JIhbAjtpT2XhsWsb8jfSahN6uslrfH8CceJ+qMsPgwbK6lRBVAnE6gzfCFb3yLfz6x+2N2x1bK709AjBPc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zdiv.net; spf=pass smtp.mailfrom=zdiv.net; dkim=pass (2048-bit key) header.d=zdiv.net header.i=@zdiv.net header.b=L2TJo5Sy; arc=none smtp.client-ip=46.226.107.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zdiv.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zdiv.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zdiv.net; s=23;
-	t=1716278753;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tW+pqP2qc+8ucfOdj6XxpJno7Db4XjyR+FosIfHdcoY=;
-	b=L2TJo5SyDSB5vK9RFZc8puNyIWY/9fJWnz662XmKAlEGV5E6c6JDfGeEX2Q5Up88EadzRA
-	VDdxkiHI9VHcEdd9aCDG9CaUIoCKdduJYkGLCvN4uVOkj4ppjNzIEBdlPp8+bcvKodDyYf
-	10O2L0OyLAqI8mfguiKBcPYTm1VQnNJjt6sBxAHecMb0nP3FI779WiHJUEKuBxgsaV8AkH
-	hnsZ14bfLcUzBB3IO6uxTSN7YXK2pZI8P1GyNQRyF4oogTagsmjCxJ+VNMVB0OGMIjayQB
-	ezm8TVecH/rBi+sqm9yZAJreW7GlFOXfdY8PxIs6/1Thmw3GXcPyx8+zWGVA/g==
-Received: from mini.my.domain (91-160-75-97.subs.proxad.net [91.160.75.97])
-	by zdiv.net (OpenSMTPD) with ESMTPSA id 617baff8 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 21 May 2024 08:05:53 +0000 (UTC)
-From: Jules Maselbas <jmaselbas@zdiv.net>
-To: linux-pci@vger.kernel.org
-Cc: =?UTF-8?q?Martin=20Mare=C5=A1?= <mj@ucw.cz>,
-	Jules Maselbas <jmaselbas@zdiv.net>
-Subject: [RESEND PATCH] libpci: sysfs: Fix segmentation fault by including libgen.h
-Date: Tue, 21 May 2024 10:05:19 +0200
-Message-ID: <20240521080519.7833-1-jmaselbas@zdiv.net>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1716283099; c=relaxed/simple;
+	bh=evIKBeDjrjIyrHQrE6yLoAQSN9K9vIdfXRpSaiKjBgE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lo24sDu/byA9YSvJsJwpM4vrhZCg64aaL9I8NFchZkQkCq99crRJjFtJLYCXNwJPSSUx3PM9M36/ScwfbJXT9yyN/ieVtmXpXZtjECnkSo8phj7i8Zl6BEdWbkAws9tcinlOdsRlI4SL5CFr01KAwPtzV7AyXpdxc2Mtt23qm8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FsFmmGOE; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so106299215ad.1;
+        Tue, 21 May 2024 02:18:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716283097; x=1716887897; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=evIKBeDjrjIyrHQrE6yLoAQSN9K9vIdfXRpSaiKjBgE=;
+        b=FsFmmGOEC/VhY0UUXUWBNpzNjtvFmEfMl3npl973KK7v+92QY7xSWH8phaAOQeZd1r
+         1o4m/wncg2yy6V1dBctSYohnyOBOMZGcoFIn3HmbfuZCz0UWQfrKaO1GtYBwtspe0ws7
+         Q/aEPMM20YB58OffunAPcoVJjRnxIc2H5E9k4k8UND8dURoD0+4FcDBWB0nmA1DE9ZXS
+         uzNfssLVprmuxh2tElgkRbYr/RrEZaDM63ArcEYsMT/tAMb0djl1EnlKXbh2Bprsnac4
+         bEucmxJS9bR09XK0yfjEOcdOHVQxJ7fFTJhpK0wG8IBQvuVoSbKn1eQYk6aRlLuVYKz3
+         sF/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716283097; x=1716887897;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=evIKBeDjrjIyrHQrE6yLoAQSN9K9vIdfXRpSaiKjBgE=;
+        b=AosQKbJ4XKolCiyW9z3X5/aulE+WV6E/4DOUHhtWgve0jsKdx/G+W7YfglRmqtmtSj
+         ojrjq+ROZnyy2xiZQF+aiIYgRsId2lbrVZzFPciW8QBYMyi2cyscDMwTmEGhkndPeL4R
+         HxknI6dBEvWDjSvib8wzmEmbu41oe0HNj/UKsnD6/f7sC5nS5SXm837Hz6zEAOGDxVj9
+         7ijh+lUM9OoCZCTfFS5APAaHe7+o9ZEpSOqxDGXX3FMUUfduCNfFi4trRJ+l/cn6sF70
+         sY2dHB8/OJdOack7YqXp9Uz3qFqrP6OnsT6kQKh59T9VjCpNWFqLcmJKbV7895xEGb2C
+         4UAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUV5aVN8sUq6a/QOmkHHgPU+xNUZh2Yj9oPvdNY3bBj/hye+tDjZZgvl78fkoteMo3splLuB/mAlE+Maxj9ZFW+Qs/gF3Gx3AekBn5m08eqireICG/aeYjkNCve4MBePZgaB+krDbtTSBxA56c/cL17lPXVYbkwStDtsFjv8o2exRYSu61FgRk=
+X-Gm-Message-State: AOJu0YxRdCn7E16TDRNIG1zem0kobVUI+Cogv+RDdq1G8oCAuNMurVgu
+	jEKviECqyYFdZEW3uvWUT1E6CjgUEJUDuaChdf9M9Wm968397MbtMs1XcrxxJd5chUW9aXvQdIj
+	YzamfY2vvnUYtY6haCyN2yoFSOis=
+X-Google-Smtp-Source: AGHT+IFieXXoG+hRo4v8ZQFVy0FPx0LzOZqLI2NQxeJ8z3p0jf0pXavFZ5ZiMD9/R71xHVho3OeDGCXPVB6CXwJTom4=
+X-Received: by 2002:a17:90b:100d:b0:2b6:2ef4:e2aa with SMTP id
+ 98e67ed59e1d1-2b6cc780466mr24891904a91.25.1716283097622; Tue, 21 May 2024
+ 02:18:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-11-dakr@redhat.com>
+ <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com> <cf89c02d45545b67272aba933fbc8a8a0df83358.camel@redhat.com>
+In-Reply-To: <cf89c02d45545b67272aba933fbc8a8a0df83358.camel@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 21 May 2024 11:18:04 +0200
+Message-ID: <CANiq72k7H3Y0ksdquVsrAbRtj_5CqMCYfo79UrhSVcK5VwfG5Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 10/11] rust: add basic abstractions for iomem operations
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Danilo Krummrich <dakr@redhat.com>, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com, 
+	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com, 
+	lina@asahilina.net, ajanulgu@redhat.com, lyude@redhat.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On a musl-based system (Alpine-linux) the basename(3) function is not defined
-by including string.h with _GNU_SOURCE defined. However basename(3) could be
-defined by including libgen.h.
+On Tue, May 21, 2024 at 9:36=E2=80=AFAM Philipp Stanner <pstanner@redhat.co=
+m> wrote:
+>
+> Justified questions =E2=80=93 it is public because the Drop implementatio=
+n for
+> pci::Bar requires the ioptr to pass it to pci_iounmap().
+>
+> The alternative would be to give pci::Bar a copy of ioptr (it's just an
+> integer after all), but that would also not be exactly beautiful.
 
-On musl this is a problem than can lead to a segmentation fault, as I have
-experienced. This issue is caused by basename(3) function being implicitly
-declared and thus having, implicitly, a return type of int. Which in my case
-caused an erroneous sign extension of a pointer leading to a segmentation
-fault.
+If by copy you mean keeping an actual copy elsewhere, then you could
+provide an access method instead.
 
-Adding an include for libgen.h sound to me like a proper solution.
-Also by doing so the `_GNU_SOURCE` defined is no longer needed.
+If you meant the access method, it may not be "beautiful" (Why? What
+do you mean?), but it is way more important to be sound.
 
+> The commit message states (btw this file would get more extensive
+> comments soonish) that with this design its the subsystem that is
+> responsible for creating IoMem validly, because the subsystem is the
+> one who knows about the memory regions and lengths and stuff.
+>
+> The driver should only ever take an IoMem through a subsystem, so that
+> would be safe.
 
-You can find below details on the issue, on alpine linux (x86_64) running:
-    $ lspci -s 00:01.0 -v
-    00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Family 17h-19h PCIe Dummy Host Bridge (rev 01)
-    Segmentation fault
+The Rust safety boundary is normally the module -- you want that
+subsystems cannot make mistakes either when using the `iomem` module,
+not just drivers when using the subsystem APIs.
 
-After debugging, the fault is indirectly caused by this compilation warning:
-    sysfs.c: In function 'sysfs_fill_info':
-    sysfs.c:457:53: warning: implicit declaration of function 'basename' [-Wimplicit-function-declaration]
-      457 |           pci_set_property(d, PCI_FILL_IOMMU_GROUP, basename(group_link));
-          |                                                     ^~~~~~~~
-    sysfs.c:457:53: warning: passing argument 3 of 'pci_set_property' makes pointer from integer without a cast [-Wint-conversion]
-      457 |           pci_set_property(d, PCI_FILL_IOMMU_GROUP, basename(group_link));
-          |                                                     ^~~~~~~~~~~~~~~~~~~~ int
+So you can't rely on a user, even if it is a subsystem, to "validly
+create" objects and also hope that they do not modify the fields later
+etc. If you need to ask subsystems for that, then you need to require
+`unsafe` somewhere, e.g. the constructor (and make the field private,
+and add an invariant to the type, and add `INVARIANT:` comments).
 
-Here is the relevant assembly, dump from gdb:
-    0x7ffff7f4f072  call   *0x5db8(%rip)  # call to basename
-    0x7ffff7f4f078  mov    %rbx,%rdi
-    0x7ffff7f4f07b  mov    $0x4000,%esi   # PCI_FILL_IOMM_GROUP
-    0x7ffff7f4f080  movslq %eax,%rdx      # return value of basename is signed extended from 32bit (eax) to 64bit (rdx)
-    0x7ffff7f4f083  call   0x7ffff7f4831b # call to pci_set_property
+Think about it this way: if we were to write all the code like that
+(e.g. with all structs using public fields), then essentially we would
+be back at C, since we would be trusting everybody not to touch what
+they shouldn't, and not to put values that could later lead something
+else into UB, and we would not even have the documentation/invariants
+to verify those either, etc.
 
-And how the address becomes invalid:
-    (gdb) x/s 0x7ffff7ffed20 # argument of basename
-    0x7ffff7ffed20: "/sys/kernel/iommu_groups/0"
-    (gdb) x/s 0x7ffff7ffed39 # result from basename
-    0x7ffff7ffed39: "0"
-    (gdb) x/s 0xfffffffff7ffed39 # after sign extension
-    0xfffffffff7ffed39:     <error: Cannot access memory at address 0xfffffffff7ffed39>
+> Yes, if the addition violates the capacity of a usize. But that would
+> then be a bug we really want to notice, wouldn't we?
 
-Signed-off-by: Jules Maselbas <jmaselbas@zdiv.net>
----
- lib/sysfs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Definitely, but what I wanted is that you consider whether it is
+reasonable to have the panic possibility there, since it depends on a
+value that others control. For instance, would it make sense to make
+it a fallible operation instead? Should the panic be documented
+otherwise? Could it be prevented somehow? etc.
 
-diff --git a/lib/sysfs.c b/lib/sysfs.c
-index 0e763dc..1644e51 100644
---- a/lib/sysfs.c
-+++ b/lib/sysfs.c
-@@ -9,11 +9,10 @@
-  *	SPDX-License-Identifier: GPL-2.0-or-later
-  */
- 
--#define _GNU_SOURCE
--
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <libgen.h>
- #include <stdarg.h>
- #include <unistd.h>
- #include <errno.h>
--- 
-2.44.0
+Please check Wedson's `io_mem` in the old `rust` branch for some ideas too.
 
+Cheers,
+Miguel
 
