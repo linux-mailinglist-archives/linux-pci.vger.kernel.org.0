@@ -1,95 +1,95 @@
-Return-Path: <linux-pci+bounces-7733-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7734-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16B9F8CB5F1
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 00:22:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 497968CB618
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 00:42:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D4BB1F22568
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 22:22:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A389528280B
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 22:42:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6194F149E09;
-	Tue, 21 May 2024 22:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65DA4149C5D;
+	Tue, 21 May 2024 22:42:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LhPQj1US"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BolJ7D3h"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3F51865A
-	for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 22:22:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D0F3BB21
+	for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 22:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716330124; cv=none; b=gypFMmtlbJU0z4fzhZWYu+Cr0xi0f3C7ryrM1FqFGQsj7BqReb4TDcUqnHUtVCW+Aux/CriBrom9+JDRsaVpJST7zpAqJjYdhcc4Qi7yUuQtlK5fGcTRkc6GYWxfl+ZgO6l1/poLVlEqHJAvmYruQlBI2+EbyDlPLHxhFHgbZZE=
+	t=1716331347; cv=none; b=kLpCWLcEjEFEbxdkiRZuq/fnwNjg7HIxjfGh33/nxWYjNEo5+iqCYzXgKhsyTAPzo/YQlhNBkcOYQuX2LWfO7TzdSmv/lQ7/d3AVv+gIqWDIFlX4P5j/DRdSUhPI/3eeF6Tz3PGgUHFf73CMpO46PwOk9MVtR9eFS5UAEgJiYe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716330124; c=relaxed/simple;
-	bh=B33NpZj7A4Jpnd3WPtDCjbiFKg0xjZhWM678GrOmcVc=;
+	s=arc-20240116; t=1716331347; c=relaxed/simple;
+	bh=OJ/n3Nwq0IGG2aTR4c672eUcOjkp5NiiDnsZTh7a9fw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+WGqHu0vuULprA3TzCaGl7mR8+neZ9jppaF3J7jdbSTty0VjwL+PsGKgbIhNzaZqvFMMOaW5gU0VgmmI2Gjl9oLMy+CQoeQDd75tbiWuMbBk2Z263Z/VlZV5NIieHPVh3omQmrt+7434l3gb4K8Nh0S8b+1Kb5o+NHw1+TL9C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LhPQj1US; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=sRhh4PIfsSlDuALEw35Hdc3NxPDfNxGEhEkC+YIctUvZ2SC2UdiQmEAIPZ74eagiqB3oLNE/vXnxh3h36zmkMWxJUm/zjTU55USzyVIm7Wdngoef3kUs7G/mb+CPeH8kBFO9LjlhSF6iXAe8JKB0WUu7gghs5xq1AsBDI5Ky5sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BolJ7D3h; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716330121;
+	s=mimecast20190719; t=1716331344;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G9lGCV9DynKL+l6IUBXO0rFNHS3xcMsObVT0GprfTKc=;
-	b=LhPQj1USx+jYguqdEVMpc1fEzLxAqwaclhTtyacUnkirS8L/Ow1Wu8+cZbnapcNDELJz66
-	oIHZy70tDYeomGJmH6Y9H3PZDiBEr7IQOwuR5+Db7OH/yytpfdArlqSCBku3k0gG25Bbvc
-	QXhuLgiN36eFK6NhGTtSdkmMPUL6M9U=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=UdILj1+CAfXNDXQiF2SaXQicjA4y52rdP1la0OIfEn4=;
+	b=BolJ7D3hk3qOnNi6xjANrP/hzk7+LH5i5OefH4GYpVsQHQGyeIkOZXuPgRAyQsCryRAQm4
+	a5mQ/kiFJwMHkR6Pp1RceB8aRJ0Av7r3y0bKzdnSmlXb0T36KYDQSNpJQY13L7TG5qMgLa
+	7v/b3KReIt8/O5zhIIDMKaXQbWoBNhE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-BpROti--ObeC2VTqO8qXTg-1; Tue, 21 May 2024 18:21:59 -0400
-X-MC-Unique: BpROti--ObeC2VTqO8qXTg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34dc66313b3so7994637f8f.2
-        for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 15:21:58 -0700 (PDT)
+ us-mta-94-BGnAH-VVPruq3_0QS9ittA-1; Tue, 21 May 2024 18:42:22 -0400
+X-MC-Unique: BGnAH-VVPruq3_0QS9ittA-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41ffa918455so63806675e9.3
+        for <linux-pci@vger.kernel.org>; Tue, 21 May 2024 15:42:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716330117; x=1716934917;
+        d=1e100.net; s=20230601; t=1716331341; x=1716936141;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G9lGCV9DynKL+l6IUBXO0rFNHS3xcMsObVT0GprfTKc=;
-        b=Jbo40aCSw6pMOAlLcA0+sNy8Yj8DVjgXq6ZDUfIcvVssSkPVFTSTP94a13SHr9Kh+E
-         ML5nqHevElhmO7YoLkXMVA7wh9NRr6TeZEwTuN7cpzSytifR0qH2LCAUPn5fWRE7gfOn
-         0C5qUFntjdSyuoKEnu+u5Cc/RHGTQ3IMpTKU5OVPsrO8ftbOSXds28WAuziZvtXayzIh
-         V/84zjQQOTMQerSjKnsDXd3I070gp5LH11R+X2Do30y4P+ZNTr7WLyRuoIQgc2Jfi2Dk
-         WYFHDoylYo7XsyJzVW5wGdcoS9r3F9bg0vXP7/Dydd1Dkfyj3cE4DS2guzwuDvKn7OnX
-         38iA==
-X-Forwarded-Encrypted: i=1; AJvYcCXD3yXgBxsJ968fdQAInUMdoPcfN3VMYL7KXbw7txfXGwad1cQIRr4aR3yeKPg8T2F1or1L+qsSl2h/EWqlFvFqgOaY9FKFNO85
-X-Gm-Message-State: AOJu0YyhPxwT5Gdd69p/0W5Ty69j1UKjF+tgxQFjiyvFJfzxBqCnZSJj
-	jsSMyj9i6D/yvWAMZCY97Yyn0zr7W1F85s+NBgZMgQ/TahaZh5HA+tMOtwExM+TcMoc/AFjIJ/K
-	ydAIa21igPcLqzGDLwZN4WPXtT5RKnupHOyP4MLg/EOnm9NpeBvOBg+6jDQ==
-X-Received: by 2002:adf:ead0:0:b0:34d:7def:a2 with SMTP id ffacd0b85a97d-354d8db77e6mr173941f8f.68.1716330117128;
-        Tue, 21 May 2024 15:21:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFtZ1m13WUzqUDB16RLcCkc2sUVtqW+/WkwZM1+nlNzIlERHgmd0D35igSK/PtSUitNk7azXw==
-X-Received: by 2002:adf:ead0:0:b0:34d:7def:a2 with SMTP id ffacd0b85a97d-354d8db77e6mr173918f8f.68.1716330116546;
-        Tue, 21 May 2024 15:21:56 -0700 (PDT)
+        bh=UdILj1+CAfXNDXQiF2SaXQicjA4y52rdP1la0OIfEn4=;
+        b=dFcgYdOtESLfe+1MVEI+QS0UUMS0H3kx++Pof0XmdQr/X0WSz/i/TBbd0geYt2bPB1
+         vVdXFE/92p6hX9BQeldqCS8WpRGVATpntgYvzHWAlgVaM4NGzlN056SMDFeirwJoInEh
+         FU074qvWa0UMclqRLwmMgMnrRxlj5bvCAI10H4FLKy8FUmMFqIsvLjBs46GPPIJgpWoa
+         +CBsNnqYIrlcC7p/Tfgqdqa3vQt0neAuI07e0bdMbxYC7N7BbPbwlSU5JqUWu51fAnSM
+         NbKZBrIFkIInvJ9ey6Lmp85/QSYDJKRKxj6qg+kXf7JLFIfEYlifhdn3+zpwe7YAwygr
+         KTUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlmzdnMM96mGu3qKwln3Su0pqv3HpoQO61V5n9Fz1Ry2ThLay/gyr3+vSe/x+5FnTB89wgGUHhy/rsvtuLEJs2uIjers7a0zMv
+X-Gm-Message-State: AOJu0YxwOdH5qb3apk8y7tjYPyNLIBoNkWn+8F+l37mRFBftnY80RBw0
+	HrBaZPWX900awjo9/qD//P0Ih5pglvuwaKgVcnoraaQIXV0WDfgjJgdoHybM1fRkb607hir+yao
+	Rayx+NfXBBErq9CA7N6tJwkSSTsCbxU6hqegr6XdRworhyVSLcoNMEOrI6A==
+X-Received: by 2002:a05:600c:5105:b0:41b:cc7d:1207 with SMTP id 5b1f17b1804b1-420fd31e112mr2346835e9.19.1716331341392;
+        Tue, 21 May 2024 15:42:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEj5jQF7saocgVMmn/UnJx0qEXNpx4tJs4cVdA8SCl1kwfj6jg4DgH272S/TC1WRWDajkPX0g==
+X-Received: by 2002:a05:600c:5105:b0:41b:cc7d:1207 with SMTP id 5b1f17b1804b1-420fd31e112mr2346755e9.19.1716331340945;
+        Tue, 21 May 2024 15:42:20 -0700 (PDT)
 Received: from pollux ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b896ab0sm33075121f8f.41.2024.05.21.15.21.55
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42009eda143sm410317585e9.14.2024.05.21.15.42.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 15:21:55 -0700 (PDT)
-Date: Wed, 22 May 2024 00:21:53 +0200
+        Tue, 21 May 2024 15:42:20 -0700 (PDT)
+Date: Wed, 22 May 2024 00:42:17 +0200
 From: Danilo Krummrich <dakr@redhat.com>
 To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com,
+Cc: Dave Airlie <airlied@gmail.com>, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@samsung.com,
+	aliceryhl@google.com, fujita.tomonori@gmail.com, lina@asahilina.net,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
 	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
 Subject: Re: [RFC PATCH 02/11] rust: add driver abstraction
-Message-ID: <Zk0egew_AxvNpUG-@pollux>
+Message-ID: <Zk0jSV9aVfeI_ul-@pollux>
 References: <20240520172554.182094-1-dakr@redhat.com>
  <20240520172554.182094-3-dakr@redhat.com>
  <2024052045-lived-retiree-d8b9@gregkh>
- <ZkvPDbAQLo2/7acY@pollux.localdomain>
- <2024052155-pulverize-feeble-49bb@gregkh>
+ <CAPM=9txQPmYU593MAR97yyCoHaQR3o+E_N1D2mJjP23Gevzddw@mail.gmail.com>
+ <2024052125-vagueness-tackiness-826b@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,18 +98,19 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024052155-pulverize-feeble-49bb@gregkh>
+In-Reply-To: <2024052125-vagueness-tackiness-826b@gregkh>
 
-On Tue, May 21, 2024 at 11:35:43AM +0200, Greg KH wrote:
-> On Tue, May 21, 2024 at 12:30:37AM +0200, Danilo Krummrich wrote:
-> > On Mon, May 20, 2024 at 08:14:18PM +0200, Greg KH wrote:
+On Tue, May 21, 2024 at 10:04:02AM +0200, Greg KH wrote:
+> On Tue, May 21, 2024 at 03:42:50PM +1000, Dave Airlie wrote:
+> > On Tue, 21 May 2024 at 04:14, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
 > > > On Mon, May 20, 2024 at 07:25:39PM +0200, Danilo Krummrich wrote:
 > > > > From: Wedson Almeida Filho <wedsonaf@gmail.com>
-> > > > 
+> > > >
 > > > > This defines general functionality related to registering drivers with
 > > > > their respective subsystems, and registering modules that implement
 > > > > drivers.
-> > > > 
+> > > >
 > > > > Co-developed-by: Asahi Lina <lina@asahilina.net>
 > > > > Signed-off-by: Asahi Lina <lina@asahilina.net>
 > > > > Co-developed-by: Andreas Hindborg <a.hindborg@samsung.com>
@@ -124,7 +125,7 @@ On Tue, May 21, 2024 at 11:35:43AM +0200, Greg KH wrote:
 > > > >  samples/rust/rust_print.rs   |   2 +-
 > > > >  5 files changed, 498 insertions(+), 4 deletions(-)
 > > > >  create mode 100644 rust/kernel/driver.rs
-> > > > 
+> > > >
 > > > > diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
 > > > > new file mode 100644
 > > > > index 000000000000..e0cfc36d47ff
@@ -137,161 +138,123 @@ On Tue, May 21, 2024 at 11:35:43AM +0200, Greg KH wrote:
 > > > > +//!
 > > > > +//! Each bus/subsystem is expected to implement [`DriverOps`], which allows drivers to register
 > > > > +//! using the [`Registration`] class.
-> > > 
+> > >
 > > > Why are you creating new "names" here?  "DriverOps" is part of a 'struct
 > > > device_driver' why are you separating it out here?  And what is
-> > 
-> > DriverOps is a trait which abstracts a subsystems register() and unregister()
-> > functions to (un)register drivers. It exists such that a generic Registration
-> > implementation calls the correct one for the subsystem.
-> > 
-> > For instance, PCI would implement DriverOps::register() by calling into
-> > bindings::__pci_register_driver().
-> > 
-> > We can discuss whether DriverOps is a good name for the trait, but it's not a
-> > (different) name for something that already exists and already has a name.
-> 
-> It's a name we don't have in the C code as the design of the driver core
-> does not need or provide it.  It's just the section of 'struct
-> device_driver' that provides function callbacks, why does it need to be
-> separate at all?
-
-I'm confused by the relationship to `struct device_driver` you seem to imply.
-How is it related?
-
-Again, this is just a trait for subsystems to provide their corresponding
-register and unregister implementation, e.g. pci_register_driver() and
-pci_unregister_driver(), such that they can be called from the generic
-Registration code below.
-
-See [1] for an example implementation in PCI.
-
-Please also consider that some structures might be a 1:1 representation of C
-structures, some C structures are not required at the Rust side at all, and
-then there might be additional structures and traits that abstract things C has
-no data structure for.
-
-This is due to the fact that 1. we're not replicating the functionality on the C
-side, but only make use of it, and 2. we're trying to abstract existing code to
-make it work with a conceptually different language. Which means, if you find
-something that's not on the C side, it doesn't (necessarily) mean we're making
-something up that should either not exist or be on the C side as well.
-
-I'm not saying don't question it, I appreciate that, and it's even the whole
-reason for sending this RFC, but I ask you to consider this fact. :)
-
-[1] https://lore.kernel.org/rust-for-linux/20240520172554.182094-10-dakr@redhat.com/
-
-> 
 > > > 'Registration'?  That's a bus/class thing, not a driver thing.
-> > 
-> > A Registration is an object representation of the driver's registered state.
-> 
-> And that representation should not ever need to be tracked by the
-> driver, that's up to the driver core to track that.
-
-The driver doesn't need it, the Registration abstraction does need it. Please
-see my comments below.
-
-> 
-> > Having an object representation for that is basically the Rust way to manage the
-> > lifetime of this state.
-> 
-> This all should be a static chunk of read-only memory that should never
-> have a lifetime, why does it need to be managed at all?
-
-What I meant here is that if a driver was registered, we need to make sure it's
-going to be unregistered eventually, e.g. when the module is removed or when
-something fails after registration and we need to unwind.
-
-When the Registration structure goes out of scope, which would happen in both
-the cases above, it will automatically unregister the driver, due to the
-automatic call to `drop()`.
-
-> 
-> > Once the Registration is dropped, the driver is
-> > unregistered. For instance, a PCI driver Registration can be bound to a module,
-> > such that the PCI driver is unregistered when the module is unloaded (the
-> > Registration is dropped in the module_exit() callback).
-> 
-> Ok, that's fine, but note that your module_exit() function will never be
-> called if your module_init() callback fails, so why do you need to track
-> this state?  Again, C drivers never need to track this state, why is
-> rust requiring more logic here for something that is NOT a dynamic chunk
-> of memory (or should not be a dynamic chunk of memory, let's get it
-> correct from the start and not require us to change things later on to
-> make it more secure).
-
-That's fine, if module_init() would fail, the Registration would be dropped as
-well.
-
-As for why doesn't C need this is a good example of what I wrote above. Because
-it is useful for Rust, but not for C.
-
-In Rust we get drop() automatically called when a structure is destroyed. This
-means that if we let drivers put the Registration structure (e.g. representing
-that a PCI driver was registered) into its `Module` representation structure
-(already upstream) then this Registration is automatically destroyed once the
-module representation is destroyed (which happens on module_exit()). This leads
-to `drop()` of the `Registration` structure being called, which unregisteres the
-(e.g. PCI) driver.
-
-This way the driver does not need to take care of unregistering the PCI driver
-explicitly. The driver can also place multiple registrations into the `Module`
-structure. All of them would be unregistered automatically in module_exit().
-
-> 
+> > >
 > > > And be very careful of the use of the word 'class' here, remember, there
 > > > is 'struct class' as part of the driver model :)
+> > >
+> > > > +use crate::{
+> > > > +    alloc::{box_ext::BoxExt, flags::*},
+> > > > +    error::code::*,
+> > > > +    error::Result,
+> > > > +    str::CStr,
+> > > > +    sync::Arc,
+> > > > +    ThisModule,
+> > > > +};
+> > > > +use alloc::boxed::Box;
+> > > > +use core::{cell::UnsafeCell, marker::PhantomData, ops::Deref, pin::Pin};
+> > > > +
+> > > > +/// A subsystem (e.g., PCI, Platform, Amba, etc.) that allows drivers to be written for it.
+> > > > +pub trait DriverOps {
+> > >
+> > > Again, why is this not called DeviceDriver?
 > > 
-> > I think in this context "class" might be meant as something like "struct with
-> > methods", not sure what would be the best term to describe this.
+> > This is not the same as the C device_driver, it might mildly align in
+> > concept with it, but I'm not sure it shares enough to align it name
+> > wise with the C one.
 > 
-> "struct with methods" is nice :)
+> Why not use the same terms and design decisions that the C code has?  To
+> differ needs to have a good reason, otherwise it's just going to cause
+> us all confusion as we have to learn two different terms for the same
+> thing.
 
-Great, I will change that.
+Please see my reply [1] for that one. Let's continue this in the other thread.
+
+[1] https://lore.kernel.org/rust-for-linux/Zk0egew_AxvNpUG-@pollux/
 
 > 
-> Again, 'class' means something different here in the driver model, so be
-> careful with terms, language matters, especially when many of our
-> developers do not have English as their native language.
-> 
+> > > > +    /// The type that holds information about the registration. This is typically a struct defined
+> > > > +    /// by the C portion of the kernel.
+> > > > +    type RegType: Default;
+> > > > +
+> > > > +    /// Registers a driver.
+> > > > +    ///
+> > > > +    /// # Safety
+> > > > +    ///
+> > > > +    /// `reg` must point to valid, initialised, and writable memory. It may be modified by this
+> > > > +    /// function to hold registration state.
+> > > > +    ///
+> > > > +    /// On success, `reg` must remain pinned and valid until the matching call to
+> > > > +    /// [`DriverOps::unregister`].
+> > > > +    unsafe fn register(
+> > > > +        reg: *mut Self::RegType,
+> > > > +        name: &'static CStr,
+> > > > +        module: &'static ThisModule,
+> > > > +    ) -> Result;
+> > > > +
+> > > > +    /// Unregisters a driver previously registered with [`DriverOps::register`].
+> > > > +    ///
+> > > > +    /// # Safety
+> > > > +    ///
+> > > > +    /// `reg` must point to valid writable memory, initialised by a previous successful call to
+> > > > +    /// [`DriverOps::register`].
+> > > > +    unsafe fn unregister(reg: *mut Self::RegType);
+> > > > +}
+> > > > +
 > > > > +/// The registration of a driver.
 > > > > +pub struct Registration<T: DriverOps> {
 > > > > +    is_registered: bool,
-> > > 
+> > >
 > > > Why does a driver need to know if it is registered or not?  Only the
 > > > driver core cares about that, please do not expose that, it's racy and
 > > > should not be relied on.
 > > 
-> > We need it to ensure we do not try to register the same thing twice
+> > >From the C side this does look unusual because on the C side something
+> > like struct pci_driver is statically allocated everywhere.
+> > In this rust abstraction, these are allocated dynamically, so instead
+> > of just it always being safe to just call register/unregister
+> > with static memory, a flag is kept around to say if the unregister
+> > should happen at all, as the memory may have
+> > been allocated but never registered. This is all the Registration is
+> > for, it's tracking the bus _driver structure allocation, and
+> > whether the bus register/unregister have been called since the object
+> > was allocated.
+> > 
+> > I'm not sure it makes sense (or if you can at all), have a static like
+> > pci_driver object here to match how C does things.
 > 
-> Your logic in your code is wrong if you attempt to register it twice,
-> AND the driver core will return an error if you do so, so a driver
-> should not need to care about this.
+> Wait, why can't you have a static "rust_driver" type thing?  Having it
+> be in ram feels like a waste of memory.  We are working hard to move
+> more and more of these driver model structures into read-only memory for
+> good reasons (security, reduce bugs, etc.), moving backwards to having
+> them all be dynamically created/copied around feels wrong.
 
-We want it to be safe, if the driver logic is wrong and registers it twice, we
-don't want it to blow up.
+I think this would be possible, though it might cause some inconvenience and a
+and maybe a few trade offs to do that on the Rust side.
 
-The driver core takes care, but I think there are subsystems that do
-initializations that could make things blow up when registering the driver
-twice.
+However, I agree that we should explore how to do it in a static way. I will dig
+in a bit more on the options we have.
 
 > 
-> > , some subsystems might just catch fire otherwise.
+> We are one stage away from being able to mark all 'driver_*()' calls as
+> using a const * to struct driver, please don't make that work pointless
+> if you want to write a driver in rust instead.
 > 
-> Which ones?
+> And again, a driver should never know/care/wonder if it has been
+> registered or not, that is up to the driver core to handle, not the rust
+> code, as it is the only thing that can know this, and the only thing
+> that should need to know it.  A driver structure should not have any
+> dynamic memory associated with it to require knowing its "state" in the
+> system, so let's not move backwards here to require that just because we
+> are using Rust.
 
-Let's take the one we provide abstractons for, PCI.
+I answered on this in [1], let's continue there. This also accounts for all
+points below I don't address. :)
 
-In __pci_register_driver() we call spin_lock_init() and INIT_LIST_HEAD() before
-driver_register() could bail out [1].
-
-What if this driver is already registered and in use and we're randomly altering
-the list pointers or call spin_lock_init() on a spin lock that's currently being
-held?
-
-[1] https://elixir.bootlin.com/linux/latest/source/drivers/pci/pci-driver.c#L1447
+[1] https://lore.kernel.org/rust-for-linux/Zk0egew_AxvNpUG-@pollux/
 
 > 
 > > > > +impl<T: DriverOps> Drop for Registration<T> {
@@ -300,40 +263,16 @@ held?
 > > > > +            // SAFETY: This path only runs if a previous call to `T::register` completed
 > > > > +            // successfully.
 > > > > +            unsafe { T::unregister(self.concrete_reg.get()) };
-> > > 
+> > >
 > > > Can't the rust code ensure that this isn't run if register didn't
 > > > succeed?  Having a boolean feels really wrong here (can't that race?)
 > > 
-> > No, we want to automatically unregister once this object is destroyed, but not
-> > if it was never registered in the first place.
-> > 
-> > This shouldn't be racy, we only ever (un)register things in places like probe()
-> > / remove() or module_init() / module_exit().
+> > There might be a way of using Option<> here but I don't think it adds
+> > anything over and above using an explicit bool.
 > 
-> probe/remove never calls driver_register/unregister on itself, so that's
-> not an issue.  module_init/exit() does not race with itself and again,
-> module_exit() is not called if module_init() fails.
-
-That's clear, I should mention that we can use the Registration abstraction also
-for things that are typically registered in probe(), a DRM device for instance.
-
-As mentioned above I'm aware that module_exit() is not called when module_init()
-fails, in this case the Registration structure is dropped in module_init(),
-hence it's fine.
-
+> Again, this should not be needed.  If so, something is designed
+> incorrectly with the bindings.
 > 
-> Again, you are adding logic here that is not needed.  Or if it really is
-> needed, please explain why the C code does not need this today and let's
-> work to fix that.
-
-Please see above, where I start with "As for why doesn't C need this..".
-
-> 
-> > > > +        }
-> > > > +    }
-> > > > +}
-> > > > +
-> > > > +/// Conversion from a device id to a raw device id.
 > > > > +///
 > > > > +/// This is meant to be implemented by buses/subsystems so that they can use [`IdTable`] to
 > > > > +/// guarantee (at compile-time) zero-termination of device id tables provided by drivers.
@@ -359,34 +298,102 @@ Please see above, where I start with "As for why doesn't C need this..".
 > > > > +    /// Id tables created from [`Self`] use [`Self::ZERO`] as the sentinel to indicate the end of
 > > > > +    /// the table.
 > > > > +    const ZERO: Self::RawType;
-> > > 
+> > >
 > > > All busses have their own way of creating "ids" and that is limited to
 > > > the bus code itself, why is any of this in the rust side?  What needs
 > > > this?  A bus will create the id for the devices it manages, and can use
 > > > it as part of the name it gives the device (but not required), so all of
 > > > this belongs to the bus, NOT to a driver, or a device.
 > > 
-> > This is just a generalized interface which can be used by subsystems to
-> > implement the subsystem / bus specific ID type.
+> > Consider this a base class (Trait) for bus specific IDs.
 > 
-> Please move this all to a different file as it has nothing to do with
-> the driver core bindings with the include/device/driver.h api.
+> Then all of that should be in a separate file as they belong to a "bus"
+> not a driver, as each and every bus will have a different way of
+> expressing the list of devices a driver can bind to.
+> 
+> And again, the core "struct device_driver" does not have a list of ids,
+> and neither should the rust bindings, that belongs to the bus logic.
+> 
+> > > > +/// Custom code within device removal.
+> > >
+> > > You better define the heck out of "device removal" as specified last
+> > > time this all came up.  From what I can see here, this is totally wrong
+> > > and confusing and will be a mess.
+> > >
+> > > Do it right, name it properly.
+> > >
+> > > I'm not reviewingn beyond here, sorry.  It's the merge window and I
+> > > shouldn't have even looked at this until next week anyway.
+> > >
+> > > But I was hoping that the whole long rant I gave last time would be
+> > > addressed at least a little bit.  I don't see that it has :(
+> > 
+> > I won't comment too much on the specifics here, but you've twice got
+> > to this stage, said something is wrong, change it, and given no
+> > actionable feedback on what is wrong, or what to change.
+> > 
+> > I've looked at this code for a few hours today with the device docs
+> > and core code and can't spot what you are seeing that is wrong here,
+> > which means I don't expect anyone else is going to unless you can help
+> > educate us more.
+> 
+> A lifecycle of a device is:
+> 	device create by the bus
+> 	device register with driver core
+> 	device bind to a driver (i.e. probe() callback in the driver)
+> 	device unbind from a driver (i.e. remove() callback in the driver, can be triggered many ways)
+> 	device destroy by the bus
+> 
+> "remove" can happen for a driver where it needs to clean up everything
+> it has done for a specific device, but that does not mean the device is
+> actually gone from the system, that's up to the bus to decide, as it
+> owns the device lifecycle and gets to decide when it thinks it is really
+> gone.  And then, when the bus tells the driver core that it wants to
+> mark the device as "destroyed", it's up to the driver core to eventually
+> call back into the bus to really clean that device up from the system at
+> some later point in time.
 
-I don't think driver.rs in an unreasonable place for a generic device ID
-representation that is required by every driver structure.
+That matches at least my understanding and I don't see how the name of the
+`DeviceRemoval` trait for instance is contradictive to that.
 
-But I'm also not overly resistant to move it out. What do you think would be a
-good name?
+Again, the C side uses the exact same terminology in struct device_driver and
+struct pci_driver, e.g. [1][2].
 
-Please consider that this name will also be the namespace for this trait.
-Currently you can reference it with `kernel::driver::RawDeviceId`. If you move
-it to foo.rs, it'd be `kernel::foo::RawDeviceId`.
+If it's wrong there as well, how would you phrase it differently? I'm happy to
+fix those places as well.
+
+If it's correct there, why is it wrong here? Where is the difference? May I ask
+you for a proposal on how to name the `DeviceRemoval` trait instead? Maybe
+something like `DeviceUnbind`?
+
+Again, I'm not generally resisting to change it, but I think we should clarify
+the above.
+
+[1] https://elixir.bootlin.com/linux/latest/source/include/linux/device/driver.h#L71
+[2] https://elixir.bootlin.com/linux/latest/source/include/linux/pci.h#L905
 
 > 
-> Let's keep it simple and obvious please, and separate out things into
-> logical chunks, hopefully in the same way that the C apis are separated
-> out into.  That way we can properly review, understand, and most
-> importantly for all of us, maintain the code over the next 40+ years.
+> Try splitting this file out into driver and bus and device logic, like
+> the driver core has, and see if that helps in explaining and making all
+> of this more understandable, and to keep with the names/design of the
+> model we currently have.
+> 
+> Note, all of this is my biggest worry about writing a driver in rust,
+> getting the lifecycle of the driver core and it's logic of how it
+> handles memory manged in C, to align up with how rust is going to access
+> it with its different rules and requirements, is not going to be simple
+> as you have two different models intersecting at the same place.  I've
+> been working over the past year to make the rust side happen easier by
+> marking more and more of the C structures as "not mutable", i.e. const
+> *, so that the Rust side doesn't have to worry that the driver core
+> really will change things it passes to the C side, but there is more to
+> be done (see above about making struct device_driver * const).
+> 
+> I want to see this happen, but it's going to be a hard slog due to the
+> different expectations of these two systems.  Keeping naming identical
+> where possible is one way to make it simpler for everyone involved, as
+> would splitting the logic out the same way and not mixing it all up into
+> one big hairy file that combines different things into a single chunk.
 > 
 > thanks,
 > 
