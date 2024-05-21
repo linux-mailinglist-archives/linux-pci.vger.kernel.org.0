@@ -1,366 +1,1986 @@
-Return-Path: <linux-pci+bounces-7699-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7700-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E726A8CA7B4
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 07:43:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D67DD8CA7EE
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 08:18:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7302B22556
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 05:43:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 86B47282467
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 06:18:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 678E640BF5;
-	Tue, 21 May 2024 05:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7C34643A;
+	Tue, 21 May 2024 06:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LtYpIcUe"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IiMYcg2I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423783D963;
-	Tue, 21 May 2024 05:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2550946433;
+	Tue, 21 May 2024 06:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716270186; cv=none; b=A8D2C0h4Co0ocvLc8wLhA+1Br02tm13fVYNESlibLVyWMVDZTDXHEj9jp4uCmAcLwdyUaXfEVCWz5tfz3sEK3fyT+VRmii6gK1WreS7u3yKA9/TJc18VLnELIBjjhirVSWtSxi3MooTVZ5LQOGiqCdmZvgiUWjp7ZQB26ibARew=
+	t=1716272285; cv=none; b=YvZaIS0IxjIAm00Exdny9QbuTwkEUJKTi50gupLkTK98ldK2Hy/Ga1GztzGG6hG95bdGJeX9UdZ+Vau2gU22FA+2688pIBAkSoZc47vziB8K7jOdjTbz9Uy2F2Rm6sVcJO7fFSE8CIMHQR991tLeCxEeY3T1z/Db/PLwiWaWSIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716270186; c=relaxed/simple;
-	bh=WXDULDhlS+P1LFJpdyb14ettr8QU9Kdr6GqCzoSRiXw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RVm6m9SH5hinMFDePetDq9eGvuxmlh4zJuy+S8oRehUx2dcYFhvto9C0zX6EjPLMMnMyF+7emCSklpwBR3+uUccLAHJdH0j1ai3pNqAq3Xos88/wsJPVcW/bHlmshk0DVO/LTqoS9RW9UxhBQ770GT6WQHqvZNr4CQHiePgtYJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LtYpIcUe; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59a387fbc9so822584166b.1;
-        Mon, 20 May 2024 22:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716270182; x=1716874982; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eN6lzfF0TF9YL/tL1ueWEL5A+JkIp+mxATt/0iGA22A=;
-        b=LtYpIcUekMeIrppMl4CDd9sNGNIyx8I6V8fu123NeLFK+l/YZqRf1Dt4/L2SKPIXnG
-         L0jAmMXF/su82yWi05pckVfLxr9Do9O5hczTWaJ1LKmBmtvi7g4+I/KlEdz6NB/tapcs
-         gyC0+NB1t4CwX5RA4UK4idKUtVm72qbY/rz32npu/5TY2dIv3DpXDTZDYO+GhOtrnC0V
-         4qq5c8vkStH52M7Nyw9q7mMx8ka+b0Q5EZxHV0qWDclcP+uf083z7ZdTJ5KZyinW5hGB
-         A938zbf0tEvJBgU6CwMUTYj0X1nocbsRGZwiKkpbIto4oKcJzl8jgvuT8ZXvXXSl+ASJ
-         KkkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716270182; x=1716874982;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eN6lzfF0TF9YL/tL1ueWEL5A+JkIp+mxATt/0iGA22A=;
-        b=WRMqH19+lgIhKx0Sf9m6C1WleaXagbfExwPoTnbRd0yN7pdby/BTTAqHQjKStb0s2Q
-         cD8iDjRMGCRa6wlMddnNI+RnZ1fUge3pVW724CsoyciDaHIex8RVZSP05XdF9s/gTLuE
-         saGCFhdCFTVRCWCqBwOcVAQHT1aU+j4vWWtzm01AT9NIlREmkobx+SELc7ZpPZ4B1Tx5
-         IJYGOnMUkqeQ4GCVvuxkFyCQxFwGdyGfywgF45UIJ8hIibUiE8sieHqTGvYG/g4P/ELX
-         9X+uFZAq1tQHqFKjZdVrCCBBLko1hR4HSs7UwXALIUG7ARCPJUzIYPGd7QldSa64QLGL
-         sf1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCPgNixZwK0uwSKp90ijzF/BAdZPC0+GatK2hpoqqdFy6VMxVQDr+TVjf5oJaXyKmAI9PuYhazPnvAM3XYWXHzSSB5ebogg1FWC7/1IKuRivg5JuJne2GvoZBwOzsGALR5gu1YA+NXR73XmjAquFZCKYdLXCv3/ABRmQu3yRqETtBVbK52m4k=
-X-Gm-Message-State: AOJu0YzZiWPt4/jDHQoxW6JRIMwzHjQITDhvaR7/DBWL/rPPV29ea/ot
-	7tKcSm9tfRDIatB07XqdnmTQ24dVSmHULKPAxStMCokC1Zsv+um4ksioftbTlfDM3BElENYIBlz
-	OUToHoUp3nCnddjKq/F1yX8oGNqo=
-X-Google-Smtp-Source: AGHT+IFWv44tk0TgIYASqqilojZdgUrZpLjalRFnNy7WwtNlAq63N3NzPaLK6F2nKTP8D27Er9z/+gTMYINFHxSyuyM=
-X-Received: by 2002:a17:906:9a8f:b0:a62:7ef:ca4a with SMTP id
- a640c23a62f3a-a6207efcb29mr162655266b.70.1716270182130; Mon, 20 May 2024
- 22:43:02 -0700 (PDT)
+	s=arc-20240116; t=1716272285; c=relaxed/simple;
+	bh=vHJja9G7bei3XXjVLwtqAuh/nXuw7ba87gB6SsuicdM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=nwzbggHkyzD/cS04CyTHGDI1PeRnjWC0RzSGXgbJLLLwu6C3g6P4a19++ouk7c5iHoy2nPLBYuW4oHiPWi9S8Kr7l/D/DfoGXwz285p96Nvc+ZsUBcLd2B7yttf9Tu7Pkc1fd0agTFoTpYYxkRJPIPcd+eYgH63T5KLo1vXOLsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=IiMYcg2I; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240521061757epoutp0226af95287935fb4db54fc6de0fa17b7e~RbIsgs0um2068420684epoutp02B;
+	Tue, 21 May 2024 06:17:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240521061757epoutp0226af95287935fb4db54fc6de0fa17b7e~RbIsgs0um2068420684epoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1716272277;
+	bh=StMt8Sp8bSgme8ZpTNjyKGRPUo4IQcydUhc0PpcnO+Y=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=IiMYcg2IEZwbWBBoFt5Vtu11oT1E7gX4UM+9kUhXea+uu9LNQ7TSPEex2/FQczF3k
+	 EMzYLFv7uxXl0oEwDZQMjrHKEpjb4yFHFeHQUHKUEVsj6hSYpyymu69vXKtGq/tWBe
+	 8SNU+vO5zk+IuAJgwFmm2haukqn6eNy+QnyGP21s=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240521061757epcas5p14ce1250727234374d675898e75d6a459~RbIsC3nBt1880618806epcas5p18;
+	Tue, 21 May 2024 06:17:57 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	85.99.09688.49C3C466; Tue, 21 May 2024 15:17:56 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240521061553epcas5p1c7db70b37a70f599face675bc4dedda9~RbG4oeAcu0956609566epcas5p1C;
+	Tue, 21 May 2024 06:15:53 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240521061553epsmtrp213a7926713b9c41bad924cef8a4bfbcf~RbG4mfq2f1852018520epsmtrp2G;
+	Tue, 21 May 2024 06:15:53 +0000 (GMT)
+X-AuditID: b6c32a4a-837fa700000025d8-c8-664c3c94b8f5
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	25.AA.19234.81C3C466; Tue, 21 May 2024 15:15:53 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.109.224.44]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240521061539epsmtip230fa5c8b44778d8c615896d5d86a52cc~RbGrbh7dr1141011410epsmtip2M;
+	Tue, 21 May 2024 06:15:38 +0000 (GMT)
+From: Onkarnarth <onkarnath.1@samsung.com>
+To: bhelgaas@google.com, helgaas@kernel.org, vigneshr@ti.com,
+	s-vadapalli@ti.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	yue.wang@Amlogic.com, neil.armstrong@linaro.org, khilman@baylibre.com,
+	jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+	thomas.petazzoni@bootlin.com, shawn.guo@linaro.org, lchuanhua@maxlinear.com,
+	srikanth.thokala@intel.com, songxiaowei@hisilicon.com,
+	wangbinghui@hisilicon.com, manivannan.sadhasivam@linaro.org,
+	thierry.reding@gmail.com, jonathanh@nvidia.com,
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org, pali@kernel.org,
+	toan@os.amperecomputing.com, daire.mcnamara@microchip.com,
+	conor.dooley@microchip.com, marek.vasut+renesas@gmail.com,
+	shawn.lin@rock-chips.com, heiko@sntech.de, nirmal.patel@linux.intel.com,
+	jonathan.derrick@linux.dev, kishon@kernel.org, jdmason@kudzu.us,
+	dave.jiang@intel.com, rafael@kernel.org, lenb@kernel.org,
+	mahesh@linux.ibm.com, oohall@gmail.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org, r.thapliyal@samsung.com, Onkarnath
+	<onkarnath.1@samsung.com>, Maninder Singh <maninder1.s@samsung.com>
+Subject: [PATCH v2 1/1] PCI : Refactoring error log prints for better
+ readability
+Date: Tue, 21 May 2024 11:45:28 +0530
+Message-Id: <20240521061528.3559751-1-onkarnath.1@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-3-dakr@redhat.com>
- <2024052045-lived-retiree-d8b9@gregkh>
-In-Reply-To: <2024052045-lived-retiree-d8b9@gregkh>
-From: Dave Airlie <airlied@gmail.com>
-Date: Tue, 21 May 2024 15:42:50 +1000
-Message-ID: <CAPM=9txQPmYU593MAR97yyCoHaQR3o+E_N1D2mJjP23Gevzddw@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/11] rust: add driver abstraction
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Danilo Krummrich <dakr@redhat.com>, rafael@kernel.org, bhelgaas@google.com, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com, 
-	ajanulgu@redhat.com, lyude@redhat.com, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te1BUdRTud+/de1eM5rLo9AtEJoImGEXJHH81ZE3mdIWGsQSbgQo3WB7x
+	jIUS0wBZCBgwGtmARWBhaUjiEQsSC7uAPOQhqCjILu2isLshbyY2E1bbWnYp//vO951zvu/8
+	cdg4J4dyYEfGJvISYrnRLqQN0dLj7rG3wPv9sP11moOo6nwEKpC2UqhzZQ5DA6o0EvUozwNk
+	mllgofnhOhItzvTiqPZ2JokuC6ZxJBBVEmj922YM9WWYcJSaa2ShR0UqgGTTSyQSl2xHUu1d
+	Fvq+c4RCd9oukaik6jsCjZT1kyjbICKR4LGAQBe66ijUU55JII0gm4WmL18i0LXKQQJJql9G
+	K7JJgO5U7EE/5a6y0MTkA4DE8uskapyKQqUGIY5M8n/zyoVdONLXV+FIrWtgocUNJY6EMiOF
+	1tvKCJS9uEyhscl6AplGVil0M6MIR1fbD7ztxfTW/gyYFWUGxZTVfs3IRBqKEUuTGH3+RYrR
+	ljZSjEQ+hzHSmmySETfoWIz6rpxkdGOFGFORKsSZ/MouwJQNfsA0VaUcdwi08Q7lRUd+yUvY
+	d/iUTYRYqaXijQLidJN4mkoFynI8B2xjQ/o1qHoywcoBNmwO3Q7gWN2vhKX4A0DDbDfrv+Jv
+	SR65NaLtKgUWQQbgemG6tTAAOG66RZi7SNoDFqm7MLOwg5ZTcKU9CzMLOD2MwbXeIzmAzban
+	T8DRe7vNNEG7QVNL7uasLX0YDugmMIubMyy+/Rdl4e3gYLGOsKxxhulXSnDzfkjLbKCidRxY
+	Bt6FhYNqK7aH8/3NlAU7wLVlhfWEOCgoEeHmDJA+C8f1bhb6LagbrWCZaZx2hw1t+yy0ExQO
+	1VvTPwfzjDprNFvYWraF3eBGgZCwYEd4z1hqdWJg7lTLZg+H/gSKh5uwfOAseuoa0VPXiP53
+	FgO8BrzAi+fHhPP4B+NfjeV95cnnxvCTYsM9Q+JipGDzXTx8WsH0/VXPboCxQTeAbNxlh620
+	+VgYxzaUm3yGlxAXnJAUzeN3A0c24fK87UJGaSiHDucm8qJ4vHhewpaKsbc5pGIflrsFN36e
+	NrQTe3j0z8cpRSFj6cbE9dcdnY67ip0bj579zKnqGZWvceaEOuXMqQOdy4pkZ23NySsbNwaw
+	95ya/JfSXun/5c1Hrt/4DZiygiIrPsodjHtSqX3gU9r/Q4ePVrKrwy+yOMn+kI/v74zG+1nH
+	4Km2ev1FTaY+cvbh1G+SwoXqoaigifnK2WPaC0dOnysODOoItNvZe3MpQ6PY+5L/7PLJ4U93
+	v4Mr5m7tklQq5wMU1855TnYk+2b5pexJn8/M3N/XDG701rj3qby2h6ljvTSBP/ov67/4ODTA
+	EGK3ps0W5bGzvZLWA9aqD8VDmSragMfdbx5daLvu8oYt5+rIi64uBD+C6+WBJ/C5/wCtRN+A
+	nQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTdxTG+d97e+8F1+VaGLuAGwGDUcI6GCw52YgzS+auRozwaVGndHAp
+	RFq6VpZN3UQouDKm6FaF8lagjIK8jPKidVU6YEMizEwI1I5CWmpAh9YwRBBHx0uW+O15nt9z
+	cs6HQ+OiFkEwnSE/zivlksxw0o/o6g0PfSsofl9a9PluBIbcdPjRdI2Cbs8DDG7dO0NCry0X
+	gdf1twAeDjaTMOvqw6HpbgEJDWonDmpdDQFLZzsw+C3fi0NO0bIAFkvuITA7H5GgL9sEpqlR
+	AVzoHqJg+Ho5CWWG8wQMVfaToJnXkaB+oSbgnLWZgt6qAgIcao0AnA3lBPxeM0BAbf028Jjt
+	CIaro8BY9EQAY/YZBHrLbRLaJo5BxbwWB69l9V6L1orD/RYDDuPuVgHMPrfhoDUvU7B0vZIA
+	zexjCkbsLQR4h55QcCe/BIdff4ndFcP1NV1BnMeWT3GVTSc5s85BcXpTNne/+AeKm6poo7ha
+	ywOMMzVqSE7f6hZw46MWknOPXMa46hwtzhXXWBFXOZDItRtOHwg+6BefymdmfMEr396Z7Jeu
+	t01RimU18WW73knlIFsVXoh8aZaJY6esFagQ+dEi5ipi1ZY+tAFC2LnhcmpD+7MNK9PURmkO
+	sVqzYR2QTCRbMm7F1kAAM0uxhXeGBWsGZ0Yx9uHzulVD0/5MIttcoFgbIJgI1ttVRKxpIbOT
+	veUewzY2hLKld59RG/lmdqDUvd7BV/O8zjK8GL2qewnpXkJ6hDWi13iFSiaVpShixCqJTJUt
+	l4pTsmQmtP5SkUnX0E+t/4p7EEajHsTSeHiA0NSxJ00kTJV8dYJXZh1VZmfyqh4UQhPhrwu3
+	ZmpSRYxUcpw/xvMKXvk/xWjf4BwsLnr00ntX6nijmYp2tRd5+uX7980N5JZH7Y79wy55950k
+	15+HZCm+QRP9n1R9V3rRJn8zOtlW6TmV9+JGnf0mzKhoxhwx4zq8uD1vU+M/W8Z3fTCfuH3L
+	uYAW51JtQYLDUTFYL37aQEx2lhviarMO/rW1Tf91oMf32chN3UcfBxonx9L8ohIc1I73w3x8
+	dgT+/Pj0yqnduUbw7hVRt6/GfnMy4cOONPeKcChoAVt02wYnPs2un07SvXFY0nrk89Bef7so
+	LII4G/yoc8K/h5WNPF2u9s4Vh13MJI8Yvz26/8Kl7330sqi9J8SfSUP2TGdoLvd1nfFdSH4l
+	O066OSB+IWfyRjihSpfEROJKleQ/t6vt9MEDAAA=
+X-CMS-MailID: 20240521061553epcas5p1c7db70b37a70f599face675bc4dedda9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20240521061553epcas5p1c7db70b37a70f599face675bc4dedda9
+References: <CGME20240521061553epcas5p1c7db70b37a70f599face675bc4dedda9@epcas5p1.samsung.com>
 
-On Tue, 21 May 2024 at 04:14, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Mon, May 20, 2024 at 07:25:39PM +0200, Danilo Krummrich wrote:
-> > From: Wedson Almeida Filho <wedsonaf@gmail.com>
-> >
-> > This defines general functionality related to registering drivers with
-> > their respective subsystems, and registering modules that implement
-> > drivers.
-> >
-> > Co-developed-by: Asahi Lina <lina@asahilina.net>
-> > Signed-off-by: Asahi Lina <lina@asahilina.net>
-> > Co-developed-by: Andreas Hindborg <a.hindborg@samsung.com>
-> > Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
-> > Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> > Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-> > ---
-> >  rust/kernel/driver.rs        | 492 +++++++++++++++++++++++++++++++++++
-> >  rust/kernel/lib.rs           |   4 +-
-> >  rust/macros/module.rs        |   2 +-
-> >  samples/rust/rust_minimal.rs |   2 +-
-> >  samples/rust/rust_print.rs   |   2 +-
-> >  5 files changed, 498 insertions(+), 4 deletions(-)
-> >  create mode 100644 rust/kernel/driver.rs
-> >
-> > diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-> > new file mode 100644
-> > index 000000000000..e0cfc36d47ff
-> > --- /dev/null
-> > +++ b/rust/kernel/driver.rs
-> > @@ -0,0 +1,492 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +//! Generic support for drivers of different buses (e.g., PCI, Platform, Amba, etc.).
-> > +//!
-> > +//! Each bus/subsystem is expected to implement [`DriverOps`], which allows drivers to register
-> > +//! using the [`Registration`] class.
->
-> Why are you creating new "names" here?  "DriverOps" is part of a 'struct
-> device_driver' why are you separating it out here?  And what is
-> 'Registration'?  That's a bus/class thing, not a driver thing.
->
-> And be very careful of the use of the word 'class' here, remember, there
-> is 'struct class' as part of the driver model :)
->
-> > +use crate::{
-> > +    alloc::{box_ext::BoxExt, flags::*},
-> > +    error::code::*,
-> > +    error::Result,
-> > +    str::CStr,
-> > +    sync::Arc,
-> > +    ThisModule,
-> > +};
-> > +use alloc::boxed::Box;
-> > +use core::{cell::UnsafeCell, marker::PhantomData, ops::Deref, pin::Pin};
-> > +
-> > +/// A subsystem (e.g., PCI, Platform, Amba, etc.) that allows drivers to be written for it.
-> > +pub trait DriverOps {
->
-> Again, why is this not called DeviceDriver?
+From: Onkarnath <onkarnath.1@samsung.com>
 
-This is not the same as the C device_driver, it might mildly align in
-concept with it, but I'm not sure it shares enough to align it name
-wise with the C one.
+As %pe is already introduced, it's better to use it in place of (%ld) or
+(%d) for printing error in logs. It will enhance readability of logs.
 
-> > +    /// The type that holds information about the registration. This is typically a struct defined
-> > +    /// by the C portion of the kernel.
-> > +    type RegType: Default;
-> > +
-> > +    /// Registers a driver.
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// `reg` must point to valid, initialised, and writable memory. It may be modified by this
-> > +    /// function to hold registration state.
-> > +    ///
-> > +    /// On success, `reg` must remain pinned and valid until the matching call to
-> > +    /// [`DriverOps::unregister`].
-> > +    unsafe fn register(
-> > +        reg: *mut Self::RegType,
-> > +        name: &'static CStr,
-> > +        module: &'static ThisModule,
-> > +    ) -> Result;
-> > +
-> > +    /// Unregisters a driver previously registered with [`DriverOps::register`].
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// `reg` must point to valid writable memory, initialised by a previous successful call to
-> > +    /// [`DriverOps::register`].
-> > +    unsafe fn unregister(reg: *mut Self::RegType);
-> > +}
-> > +
-> > +/// The registration of a driver.
-> > +pub struct Registration<T: DriverOps> {
-> > +    is_registered: bool,
->
-> Why does a driver need to know if it is registered or not?  Only the
-> driver core cares about that, please do not expose that, it's racy and
-> should not be relied on.
+Error print style is more consistent now.
 
-From the C side this does look unusual because on the C side something
-like struct pci_driver is statically allocated everywhere.
-In this rust abstraction, these are allocated dynamically, so instead
-of just it always being safe to just call register/unregister
-with static memory, a flag is kept around to say if the unregister
-should happen at all, as the memory may have
-been allocated but never registered. This is all the Registration is
-for, it's tracking the bus _driver structure allocation, and
-whether the bus register/unregister have been called since the object
-was allocated.
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Co-developed-by: Maninder Singh <maninder1.s@samsung.com>
+Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
+---
+Suggested by Bjorn Helgaas in below discussion
+https://patchwork.kernel.org/comment/25712288/
 
-I'm not sure it makes sense (or if you can at all), have a static like
-pci_driver object here to match how C does things.
+v1 -> v2: Added suggested by tag
 
-> > +impl<T: DriverOps> Drop for Registration<T> {
-> > +    fn drop(&mut self) {
-> > +        if self.is_registered {
-> > +            // SAFETY: This path only runs if a previous call to `T::register` completed
-> > +            // successfully.
-> > +            unsafe { T::unregister(self.concrete_reg.get()) };
->
-> Can't the rust code ensure that this isn't run if register didn't
-> succeed?  Having a boolean feels really wrong here (can't that race?)
+ drivers/pci/bus.c                             |   2 +-
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
+ drivers/pci/controller/dwc/pci-meson.c        |  16 +--
+ drivers/pci/controller/dwc/pcie-armada8k.c    |   4 +-
+ drivers/pci/controller/dwc/pcie-histb.c       |   6 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c    |  10 +-
+ drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
+ drivers/pci/controller/dwc/pcie-kirin.c       |   6 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |  18 +--
+ drivers/pci/controller/dwc/pcie-qcom.c        |  18 +--
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 132 +++++++++---------
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c |   2 +-
+ drivers/pci/controller/pci-aardvark.c         |   6 +-
+ drivers/pci/controller/pci-ftpci100.c         |   2 +-
+ drivers/pci/controller/pci-tegra.c            |  86 ++++++------
+ drivers/pci/controller/pci-xgene.c            |   4 +-
+ drivers/pci/controller/pcie-microchip-host.c  |   2 +-
+ drivers/pci/controller/pcie-rcar-host.c       |  14 +-
+ drivers/pci/controller/pcie-rockchip.c        |  34 ++---
+ drivers/pci/controller/vmd.c                  |   2 +-
+ drivers/pci/doe.c                             |   4 +-
+ drivers/pci/endpoint/functions/pci-epf-mhi.c  |   8 +-
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  |   2 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c |   4 +-
+ drivers/pci/endpoint/functions/pci-epf-vntb.c |   2 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |  12 +-
+ drivers/pci/endpoint/pci-epf-core.c           |  16 +--
+ drivers/pci/hotplug/acpiphp_core.c            |   2 +-
+ drivers/pci/hotplug/pciehp_core.c             |   8 +-
+ drivers/pci/hotplug/shpchp_core.c             |   4 +-
+ drivers/pci/of.c                              |   6 +-
+ drivers/pci/pci-driver.c                      |   4 +-
+ drivers/pci/pcie/dpc.c                        |   4 +-
+ drivers/pci/quirks.c                          |   2 +-
+ drivers/pci/setup-bus.c                       |   2 +-
+ drivers/pci/slot.c                            |   4 +-
+ drivers/pci/vgaarb.c                          |   2 +-
+ 37 files changed, 227 insertions(+), 227 deletions(-)
 
-There might be a way of using Option<> here but I don't think it adds
-anything over and above using an explicit bool.
+diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+index 826b5016a101..dbc16cf5a246 100644
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -351,7 +351,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+ 	dev->match_driver = !dn || of_device_is_available(dn);
+ 	retval = device_attach(&dev->dev);
+ 	if (retval < 0 && retval != -EPROBE_DEFER)
+-		pci_warn(dev, "device attach failed (%d)\n", retval);
++		pci_warn(dev, "device attach failed: %pe\n", ERR_PTR(retval));
+ 
+ 	pci_dev_assign_added(dev, true);
+ }
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index d2d17d37d3e0..79b6cc7f0287 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -801,7 +801,7 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+ 	reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
+ 	if (IS_ERR(reset)) {
+ 		ret = PTR_ERR(reset);
+-		dev_err(&pdev->dev, "gpio request failed, ret %d\n", ret);
++		dev_err(&pdev->dev, "gpio request failed: %pe\n", ERR_PTR(ret));
+ 		goto err_gpio;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 6477c83262c2..c449d7af9d5b 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -183,7 +183,7 @@ static inline struct clk *meson_pcie_probe_clock(struct device *dev,
+ 	if (rate) {
+ 		ret = clk_set_rate(clk, rate);
+ 		if (ret) {
+-			dev_err(dev, "set clk rate failed, ret = %d\n", ret);
++			dev_err(dev, "set clk rate failed: %pe\n", ERR_PTR(ret));
+ 			return ERR_PTR(ret);
+ 		}
+ 	}
+@@ -416,7 +416,7 @@ static int meson_pcie_probe(struct platform_device *pdev)
+ 
+ 	mp->phy = devm_phy_get(dev, "pcie");
+ 	if (IS_ERR(mp->phy)) {
+-		dev_err(dev, "get phy failed, %ld\n", PTR_ERR(mp->phy));
++		dev_err(dev, "get phy failed: %pe\n", mp->phy);
+ 		return PTR_ERR(mp->phy);
+ 	}
+ 
+@@ -428,31 +428,31 @@ static int meson_pcie_probe(struct platform_device *pdev)
+ 
+ 	ret = meson_pcie_get_resets(mp);
+ 	if (ret) {
+-		dev_err(dev, "get reset resource failed, %d\n", ret);
++		dev_err(dev, "get reset resource failed: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = meson_pcie_get_mems(pdev, mp);
+ 	if (ret) {
+-		dev_err(dev, "get memory resource failed, %d\n", ret);
++		dev_err(dev, "get memory resource failed: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = meson_pcie_power_on(mp);
+ 	if (ret) {
+-		dev_err(dev, "phy power on failed, %d\n", ret);
++		dev_err(dev, "phy power on failed: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = meson_pcie_reset(mp);
+ 	if (ret) {
+-		dev_err(dev, "reset failed, %d\n", ret);
++		dev_err(dev, "reset failed: %pe\n", ERR_PTR(ret));
+ 		goto err_phy;
+ 	}
+ 
+ 	ret = meson_pcie_probe_clocks(mp);
+ 	if (ret) {
+-		dev_err(dev, "init clock resources failed, %d\n", ret);
++		dev_err(dev, "init clock resources failed: %pe\n", ERR_PTR(ret));
+ 		goto err_phy;
+ 	}
+ 
+@@ -460,7 +460,7 @@ static int meson_pcie_probe(struct platform_device *pdev)
+ 
+ 	ret = dw_pcie_host_init(&pci->pp);
+ 	if (ret < 0) {
+-		dev_err(dev, "Add PCIe port failed, %d\n", ret);
++		dev_err(dev, "Add PCIe port failed: %pe\n", ERR_PTR(ret));
+ 		goto err_phy;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+index b5c599ccaacf..581ed3e44d3b 100644
+--- a/drivers/pci/controller/dwc/pcie-armada8k.c
++++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+@@ -134,7 +134,7 @@ static int armada8k_pcie_setup_phys(struct armada8k_pcie *pcie)
+ 
+ 	ret = armada8k_pcie_enable_phys(pcie);
+ 	if (ret)
+-		dev_err(dev, "Failed to initialize PHY(s) (%d)\n", ret);
++		dev_err(dev, "Failed to initialize PHY(s): %pe\n", ERR_PTR(ret));
+ 
+ 	return ret;
+ }
+@@ -251,7 +251,7 @@ static int armada8k_add_pcie_port(struct armada8k_pcie *pcie,
+ 
+ 	ret = dw_pcie_host_init(pp);
+ 	if (ret) {
+-		dev_err(dev, "failed to initialize host: %d\n", ret);
++		dev_err(dev, "failed to initialize host: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+index 7a11c618b9d9..4dde61f79024 100644
+--- a/drivers/pci/controller/dwc/pcie-histb.c
++++ b/drivers/pci/controller/dwc/pcie-histb.c
+@@ -230,7 +230,7 @@ static int histb_pcie_host_enable(struct dw_pcie_rp *pp)
+ 	if (hipcie->vpcie) {
+ 		ret = regulator_enable(hipcie->vpcie);
+ 		if (ret) {
+-			dev_err(dev, "failed to enable regulator: %d\n", ret);
++			dev_err(dev, "failed to enable regulator: %pe\n", ERR_PTR(ret));
+ 			return ret;
+ 		}
+ 	}
+@@ -337,14 +337,14 @@ static int histb_pcie_probe(struct platform_device *pdev)
+ 						     GPIOD_OUT_HIGH);
+ 	ret = PTR_ERR_OR_ZERO(hipcie->reset_gpio);
+ 	if (ret) {
+-		dev_err(dev, "unable to request reset gpio: %d\n", ret);
++		dev_err(dev, "unable to request reset gpio: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = gpiod_set_consumer_name(hipcie->reset_gpio,
+ 				      "PCIe device power control");
+ 	if (ret) {
+-		dev_err(dev, "unable to set reset gpio name: %d\n", ret);
++		dev_err(dev, "unable to set reset gpio name: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+index acbe4f6d3291..3a94feed4fbf 100644
+--- a/drivers/pci/controller/dwc/pcie-intel-gw.c
++++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+@@ -155,7 +155,7 @@ static int intel_pcie_ep_rst_init(struct intel_pcie *pcie)
+ 	if (IS_ERR(pcie->reset_gpio)) {
+ 		ret = PTR_ERR(pcie->reset_gpio);
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to request PCIe GPIO: %d\n", ret);
++			dev_err(dev, "Failed to request PCIe GPIO: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -214,7 +214,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
+ 	if (IS_ERR(pcie->core_clk)) {
+ 		ret = PTR_ERR(pcie->core_clk);
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get clks: %d\n", ret);
++			dev_err(dev, "Failed to get clks: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -222,7 +222,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
+ 	if (IS_ERR(pcie->core_rst)) {
+ 		ret = PTR_ERR(pcie->core_rst);
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get resets: %d\n", ret);
++			dev_err(dev, "Failed to get resets: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -239,7 +239,7 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
+ 	if (IS_ERR(pcie->phy)) {
+ 		ret = PTR_ERR(pcie->phy);
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Couldn't get pcie-phy: %d\n", ret);
++			dev_err(dev, "Couldn't get pcie-phy: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -295,7 +295,7 @@ static int intel_pcie_host_setup(struct intel_pcie *pcie)
+ 
+ 	ret = clk_prepare_enable(pcie->core_clk);
+ 	if (ret) {
+-		dev_err(pcie->pci.dev, "Core clock enable failed: %d\n", ret);
++		dev_err(pcie->pci.dev, "Core clock enable failed: %pe\n", ERR_PTR(ret));
+ 		goto clk_err;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
+index 98bbc83182b4..6b406d2e6e5d 100644
+--- a/drivers/pci/controller/dwc/pcie-keembay.c
++++ b/drivers/pci/controller/dwc/pcie-keembay.c
+@@ -377,7 +377,7 @@ static int keembay_pcie_add_pcie_port(struct keembay_pcie *pcie,
+ 	ret = dw_pcie_host_init(pp);
+ 	if (ret) {
+ 		keembay_ep_reset_assert(pcie);
+-		dev_err(dev, "Failed to initialize host: %d\n", ret);
++		dev_err(dev, "Failed to initialize host: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+index d5523f302102..cb0ab71b2fc7 100644
+--- a/drivers/pci/controller/dwc/pcie-kirin.c
++++ b/drivers/pci/controller/dwc/pcie-kirin.c
+@@ -421,7 +421,7 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
+ 
+ 			ret = of_pci_get_devfn(child);
+ 			if (ret < 0) {
+-				dev_err(dev, "failed to parse devfn: %d\n", ret);
++				dev_err(dev, "failed to parse devfn: %pe\n", ERR_PTR(ret));
+ 				goto put_node;
+ 			}
+ 
+@@ -555,8 +555,8 @@ static int kirin_pcie_add_bus(struct pci_bus *bus)
+ 	for (i = 0; i < kirin_pcie->num_slots; i++) {
+ 		ret = gpio_direction_output(kirin_pcie->gpio_id_reset[i], 1);
+ 		if (ret) {
+-			dev_err(pci->dev, "PERST# %s error: %d\n",
+-				kirin_pcie->reset_names[i], ret);
++			dev_err(pci->dev, "PERST# %s error: %pe\n",
++				kirin_pcie->reset_names[i], ERR_PTR(ret));
+ 		}
+ 	}
+ 	usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 2fb8c15e7a91..be31a60bc693 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -296,8 +296,8 @@ static void qcom_pcie_ep_icc_update(struct qcom_pcie_ep *pcie_ep)
+ 
+ 	ret = icc_set_bw(pcie_ep->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+ 	if (ret)
+-		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+-			ret);
++		dev_err(pci->dev, "failed to set interconnect bandwidth: %pe\n",
++			ERR_PTR(ret));
+ }
+ 
+ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
+@@ -334,8 +334,8 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
+ 	 */
+ 	ret = icc_set_bw(pcie_ep->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+ 	if (ret) {
+-		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+-			ret);
++		dev_err(pci->dev, "failed to set interconnect bandwidth: %pe\n",
++			ERR_PTR(ret));
+ 		goto err_phy_off;
+ 	}
+ 
+@@ -368,7 +368,7 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+ 
+ 	ret = qcom_pcie_enable_resources(pcie_ep);
+ 	if (ret) {
+-		dev_err(dev, "Failed to enable resources: %d\n", ret);
++		dev_err(dev, "Failed to enable resources: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -465,7 +465,7 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+ 
+ 	ret = dw_pcie_ep_init_registers(&pcie_ep->pci.ep);
+ 	if (ret) {
+-		dev_err(dev, "Failed to complete initialization: %d\n", ret);
++		dev_err(dev, "Failed to complete initialization: %pe\n", ERR_PTR(ret));
+ 		goto err_disable_resources;
+ 	}
+ 
+@@ -591,7 +591,7 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
+ 
+ 	ret = qcom_pcie_ep_get_io_resources(pdev, pcie_ep);
+ 	if (ret) {
+-		dev_err(dev, "Failed to get io resources %d\n", ret);
++		dev_err(dev, "Failed to get io resources: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -824,13 +824,13 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
+ 
+ 	ret = qcom_pcie_enable_resources(pcie_ep);
+ 	if (ret) {
+-		dev_err(dev, "Failed to enable resources: %d\n", ret);
++		dev_err(dev, "Failed to enable resources: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = dw_pcie_ep_init(&pcie_ep->pci.ep);
+ 	if (ret) {
+-		dev_err(dev, "Failed to initialize endpoint: %d\n", ret);
++		dev_err(dev, "Failed to initialize endpoint: %pe\n", ERR_PTR(ret));
+ 		goto err_disable_resources;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 14772edcf0d3..9aa78672f64d 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -931,7 +931,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 
+ 	ret = reset_control_assert(res->rst);
+ 	if (ret) {
+-		dev_err(dev, "reset assert failed (%d)\n", ret);
++		dev_err(dev, "reset assert failed: %pe\n", ERR_PTR(ret));
+ 		goto err_disable_clocks;
+ 	}
+ 
+@@ -939,7 +939,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 
+ 	ret = reset_control_deassert(res->rst);
+ 	if (ret) {
+-		dev_err(dev, "reset deassert failed (%d)\n", ret);
++		dev_err(dev, "reset deassert failed: %pe\n", ERR_PTR(ret));
+ 		goto err_disable_clocks;
+ 	}
+ 
+@@ -1135,7 +1135,7 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+ 
+ 	ret = reset_control_assert(res->rst);
+ 	if (ret) {
+-		dev_err(dev, "reset assert failed (%d)\n", ret);
++		dev_err(dev, "reset assert failed: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -1147,7 +1147,7 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+ 
+ 	ret = reset_control_deassert(res->rst);
+ 	if (ret) {
+-		dev_err(dev, "reset deassert failed (%d)\n", ret);
++		dev_err(dev, "reset deassert failed: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -1418,8 +1418,8 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+ 	 */
+ 	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+ 	if (ret) {
+-		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+-			ret);
++		dev_err(pci->dev, "failed to set interconnect bandwidth: %pe\n",
++			ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -1448,8 +1448,8 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+ 
+ 	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+ 	if (ret) {
+-		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+-			ret);
++		dev_err(pci->dev, "failed to set interconnect bandwidth: %pe\n",
++			ERR_PTR(ret));
+ 	}
+ }
+ 
+@@ -1610,7 +1610,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+ 	 */
+ 	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
+ 	if (ret) {
+-		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
++		dev_err(dev, "Failed to set interconnect bandwidth: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 93f5433c5c55..3c93bb11e068 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1114,38 +1114,38 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
+ 
+ 	ret = of_property_read_u32(np, "nvidia,aspm-cmrt-us", &pcie->aspm_cmrt);
+ 	if (ret < 0) {
+-		dev_info(pcie->dev, "Failed to read ASPM T_cmrt: %d\n", ret);
++		dev_info(pcie->dev, "Failed to read ASPM T_cmrt: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = of_property_read_u32(np, "nvidia,aspm-pwr-on-t-us",
+ 				   &pcie->aspm_pwr_on_t);
+ 	if (ret < 0)
+-		dev_info(pcie->dev, "Failed to read ASPM Power On time: %d\n",
+-			 ret);
++		dev_info(pcie->dev, "Failed to read ASPM Power On time: %pe\n",
++			 ERR_PTR(ret));
+ 
+ 	ret = of_property_read_u32(np, "nvidia,aspm-l0s-entrance-latency-us",
+ 				   &pcie->aspm_l0s_enter_lat);
+ 	if (ret < 0)
+ 		dev_info(pcie->dev,
+-			 "Failed to read ASPM L0s Entrance latency: %d\n", ret);
++			 "Failed to read ASPM L0s Entrance latency: %pe\n", ERR_PTR(ret));
+ 
+ 	ret = of_property_read_u32(np, "num-lanes", &pcie->num_lanes);
+ 	if (ret < 0) {
+-		dev_err(pcie->dev, "Failed to read num-lanes: %d\n", ret);
++		dev_err(pcie->dev, "Failed to read num-lanes: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = of_property_read_u32_index(np, "nvidia,bpmp", 1, &pcie->cid);
+ 	if (ret) {
+-		dev_err(pcie->dev, "Failed to read Controller-ID: %d\n", ret);
++		dev_err(pcie->dev, "Failed to read Controller-ID: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = of_property_count_strings(np, "phy-names");
+ 	if (ret < 0) {
+-		dev_err(pcie->dev, "Failed to find PHY entries: %d\n",
+-			ret);
++		dev_err(pcie->dev, "Failed to find PHY entries: %pe\n",
++			ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 	pcie->phy_count = ret;
+@@ -1186,8 +1186,8 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
+ 			level = KERN_DEBUG;
+ 
+ 		dev_printk(level, pcie->dev,
+-			   dev_fmt("Failed to get PERST GPIO: %d\n"),
+-			   err);
++			   dev_fmt("Failed to get PERST GPIO: %pe\n"),
++			   ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+@@ -1202,8 +1202,8 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
+ 			level = KERN_DEBUG;
+ 
+ 		dev_printk(level, pcie->dev,
+-			   dev_fmt("Failed to get REFCLK select GPIOs: %d\n"),
+-			   err);
++			   dev_fmt("Failed to get REFCLK select GPIOs: %pe\n"),
++			   ERR_PTR(err));
+ 		pcie->pex_refclk_sel_gpiod = NULL;
+ 	}
+ 
+@@ -1336,7 +1336,7 @@ static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+ 		ret = regulator_enable(pcie->slot_ctl_3v3);
+ 		if (ret < 0) {
+ 			dev_err(pcie->dev,
+-				"Failed to enable 3.3V slot supply: %d\n", ret);
++				"Failed to enable 3.3V slot supply: %pe\n", ERR_PTR(ret));
+ 			return ret;
+ 		}
+ 	}
+@@ -1345,7 +1345,7 @@ static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+ 		ret = regulator_enable(pcie->slot_ctl_12v);
+ 		if (ret < 0) {
+ 			dev_err(pcie->dev,
+-				"Failed to enable 12V slot supply: %d\n", ret);
++				"Failed to enable 12V slot supply: %pe\n", ERR_PTR(ret));
+ 			goto fail_12v_enable;
+ 		}
+ 	}
+@@ -1383,14 +1383,14 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+ 	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, true);
+ 	if (ret) {
+ 		dev_err(pcie->dev,
+-			"Failed to enable controller %u: %d\n", pcie->cid, ret);
++			"Failed to enable controller %u: %pe\n", pcie->cid, ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	if (pcie->enable_ext_refclk) {
+ 		ret = tegra_pcie_bpmp_set_pll_state(pcie, true);
+ 		if (ret) {
+-			dev_err(pcie->dev, "Failed to init UPHY: %d\n", ret);
++			dev_err(pcie->dev, "Failed to init UPHY: %pe\n", ERR_PTR(ret));
+ 			goto fail_pll_init;
+ 		}
+ 	}
+@@ -1401,20 +1401,20 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+ 
+ 	ret = regulator_enable(pcie->pex_ctl_supply);
+ 	if (ret < 0) {
+-		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
++		dev_err(pcie->dev, "Failed to enable regulator: %pe\n", ERR_PTR(ret));
+ 		goto fail_reg_en;
+ 	}
+ 
+ 	ret = clk_prepare_enable(pcie->core_clk);
+ 	if (ret) {
+-		dev_err(pcie->dev, "Failed to enable core clock: %d\n", ret);
++		dev_err(pcie->dev, "Failed to enable core clock: %pe\n", ERR_PTR(ret));
+ 		goto fail_core_clk;
+ 	}
+ 
+ 	ret = reset_control_deassert(pcie->core_apb_rst);
+ 	if (ret) {
+-		dev_err(pcie->dev, "Failed to deassert core APB reset: %d\n",
+-			ret);
++		dev_err(pcie->dev, "Failed to deassert core APB reset: %pe\n",
++			ERR_PTR(ret));
+ 		goto fail_core_apb_rst;
+ 	}
+ 
+@@ -1431,7 +1431,7 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+ 
+ 	ret = tegra_pcie_enable_phy(pcie);
+ 	if (ret) {
+-		dev_err(pcie->dev, "Failed to enable PHY: %d\n", ret);
++		dev_err(pcie->dev, "Failed to enable PHY: %pe\n", ERR_PTR(ret));
+ 		goto fail_phy;
+ 	}
+ 
+@@ -1503,32 +1503,32 @@ static void tegra_pcie_unconfig_controller(struct tegra_pcie_dw *pcie)
+ 
+ 	ret = reset_control_assert(pcie->core_rst);
+ 	if (ret)
+-		dev_err(pcie->dev, "Failed to assert \"core\" reset: %d\n", ret);
++		dev_err(pcie->dev, "Failed to assert \"core\" reset: %pe\n", ERR_PTR(ret));
+ 
+ 	tegra_pcie_disable_phy(pcie);
+ 
+ 	ret = reset_control_assert(pcie->core_apb_rst);
+ 	if (ret)
+-		dev_err(pcie->dev, "Failed to assert APB reset: %d\n", ret);
++		dev_err(pcie->dev, "Failed to assert APB reset: %pe\n", ERR_PTR(ret));
+ 
+ 	clk_disable_unprepare(pcie->core_clk);
+ 
+ 	ret = regulator_disable(pcie->pex_ctl_supply);
+ 	if (ret)
+-		dev_err(pcie->dev, "Failed to disable regulator: %d\n", ret);
++		dev_err(pcie->dev, "Failed to disable regulator: %pe\n", ERR_PTR(ret));
+ 
+ 	tegra_pcie_disable_slot_regulators(pcie);
+ 
+ 	if (pcie->enable_ext_refclk) {
+ 		ret = tegra_pcie_bpmp_set_pll_state(pcie, false);
+ 		if (ret)
+-			dev_err(pcie->dev, "Failed to deinit UPHY: %d\n", ret);
++			dev_err(pcie->dev, "Failed to deinit UPHY: %pe\n", ERR_PTR(ret));
+ 	}
+ 
+ 	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+ 	if (ret)
+-		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+-			pcie->cid, ret);
++		dev_err(pcie->dev, "Failed to disable controller %d: %pe\n",
++			pcie->cid, ERR_PTR(ret));
+ }
+ 
+ static int tegra_pcie_init_controller(struct tegra_pcie_dw *pcie)
+@@ -1545,7 +1545,7 @@ static int tegra_pcie_init_controller(struct tegra_pcie_dw *pcie)
+ 
+ 	ret = dw_pcie_host_init(pp);
+ 	if (ret < 0) {
+-		dev_err(pcie->dev, "Failed to add PCIe port: %d\n", ret);
++		dev_err(pcie->dev, "Failed to add PCIe port: %pe\n", ERR_PTR(ret));
+ 		goto fail_host_init;
+ 	}
+ 
+@@ -1652,20 +1652,20 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+ 
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
+-			ret);
++		dev_err(dev, "Failed to get runtime sync for PCIe dev: %pe\n",
++			ERR_PTR(ret));
+ 		goto fail_pm_get_sync;
+ 	}
+ 
+ 	ret = pinctrl_pm_select_default_state(dev);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
++		dev_err(dev, "Failed to configure sideband pins: %pe\n", ERR_PTR(ret));
+ 		goto fail_pm_get_sync;
+ 	}
+ 
+ 	ret = tegra_pcie_init_controller(pcie);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to initialize controller: %d\n", ret);
++		dev_err(dev, "Failed to initialize controller: %pe\n", ERR_PTR(ret));
+ 		goto fail_pm_get_sync;
+ 	}
+ 
+@@ -1713,7 +1713,7 @@ static void pex_ep_event_pex_rst_assert(struct tegra_pcie_dw *pcie)
+ 				 LTSSM_STATE_PRE_DETECT,
+ 				 1, LTSSM_TIMEOUT);
+ 	if (ret)
+-		dev_err(pcie->dev, "Failed to go Detect state: %d\n", ret);
++		dev_err(pcie->dev, "Failed to go Detect state: %pe\n", ERR_PTR(ret));
+ 
+ 	dw_pcie_ep_cleanup(&pcie->pci.ep);
+ 
+@@ -1730,13 +1730,13 @@ static void pex_ep_event_pex_rst_assert(struct tegra_pcie_dw *pcie)
+ 	if (pcie->enable_ext_refclk) {
+ 		ret = tegra_pcie_bpmp_set_pll_state(pcie, false);
+ 		if (ret)
+-			dev_err(pcie->dev, "Failed to turn off UPHY: %d\n",
+-				ret);
++			dev_err(pcie->dev, "Failed to turn off UPHY: %pe\n",
++				ERR_PTR(ret));
+ 	}
+ 
+ 	ret = tegra_pcie_bpmp_set_pll_state(pcie, false);
+ 	if (ret)
+-		dev_err(pcie->dev, "Failed to turn off UPHY: %d\n", ret);
++		dev_err(pcie->dev, "Failed to turn off UPHY: %pe\n", ERR_PTR(ret));
+ 
+ 	pcie->ep_state = EP_STATE_DISABLED;
+ 	dev_dbg(pcie->dev, "Uninitialization of endpoint is completed\n");
+@@ -1756,42 +1756,42 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+ 
+ 	ret = pm_runtime_resume_and_get(dev);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
+-			ret);
++		dev_err(dev, "Failed to get runtime sync for PCIe dev: %pe\n",
++			ERR_PTR(ret));
+ 		return;
+ 	}
+ 
+ 	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, true);
+ 	if (ret) {
+-		dev_err(pcie->dev, "Failed to enable controller %u: %d\n",
+-			pcie->cid, ret);
++		dev_err(pcie->dev, "Failed to enable controller %u: %pe\n",
++			pcie->cid, ERR_PTR(ret));
+ 		goto fail_set_ctrl_state;
+ 	}
+ 
+ 	if (pcie->enable_ext_refclk) {
+ 		ret = tegra_pcie_bpmp_set_pll_state(pcie, true);
+ 		if (ret) {
+-			dev_err(dev, "Failed to init UPHY for PCIe EP: %d\n",
+-				ret);
++			dev_err(dev, "Failed to init UPHY for PCIe EP: %pe\n",
++				ERR_PTR(ret));
+ 			goto fail_pll_init;
+ 		}
+ 	}
+ 
+ 	ret = clk_prepare_enable(pcie->core_clk);
+ 	if (ret) {
+-		dev_err(dev, "Failed to enable core clock: %d\n", ret);
++		dev_err(dev, "Failed to enable core clock: %pe\n", ERR_PTR(ret));
+ 		goto fail_core_clk_enable;
+ 	}
+ 
+ 	ret = reset_control_deassert(pcie->core_apb_rst);
+ 	if (ret) {
+-		dev_err(dev, "Failed to deassert core APB reset: %d\n", ret);
++		dev_err(dev, "Failed to deassert core APB reset: %pe\n", ERR_PTR(ret));
+ 		goto fail_core_apb_rst;
+ 	}
+ 
+ 	ret = tegra_pcie_enable_phy(pcie);
+ 	if (ret) {
+-		dev_err(dev, "Failed to enable PHY: %d\n", ret);
++		dev_err(dev, "Failed to enable PHY: %pe\n", ERR_PTR(ret));
+ 		goto fail_phy;
+ 	}
+ 
+@@ -1899,7 +1899,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+ 
+ 	ret = dw_pcie_ep_init_registers(ep);
+ 	if (ret) {
+-		dev_err(dev, "Failed to complete initialization: %d\n", ret);
++		dev_err(dev, "Failed to complete initialization: %pe\n", ERR_PTR(ret));
+ 		goto fail_init_complete;
+ 	}
+ 
+@@ -2044,14 +2044,14 @@ static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
+ 
+ 	ret = gpiod_set_debounce(pcie->pex_rst_gpiod, PERST_DEBOUNCE_TIME);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to set PERST GPIO debounce time: %d\n",
+-			ret);
++		dev_err(dev, "Failed to set PERST GPIO debounce time: %pe\n",
++			ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = gpiod_to_irq(pcie->pex_rst_gpiod);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to get IRQ for PERST GPIO: %d\n", ret);
++		dev_err(dev, "Failed to get IRQ for PERST GPIO: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 	pcie->pex_rst_irq = (unsigned int)ret;
+@@ -2073,7 +2073,7 @@ static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
+ 					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+ 					name, (void *)pcie);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to request IRQ for PERST: %d\n", ret);
++		dev_err(dev, "Failed to request IRQ for PERST: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -2081,8 +2081,8 @@ static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
+ 
+ 	ret = dw_pcie_ep_init(ep);
+ 	if (ret) {
+-		dev_err(dev, "Failed to initialize DWC Endpoint subsystem: %d\n",
+-			ret);
++		dev_err(dev, "Failed to initialize DWC Endpoint subsystem: %pe\n",
++			ERR_PTR(ret));
+ 		pm_runtime_disable(dev);
+ 		return ret;
+ 	}
+@@ -2152,15 +2152,15 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pcie->pex_ctl_supply)) {
+ 		ret = PTR_ERR(pcie->pex_ctl_supply);
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get regulator: %ld\n",
+-				PTR_ERR(pcie->pex_ctl_supply));
++			dev_err(dev, "Failed to get regulator: %pe\n",
++				pcie->pex_ctl_supply);
+ 		return ret;
+ 	}
+ 
+ 	pcie->core_clk = devm_clk_get(dev, "core");
+ 	if (IS_ERR(pcie->core_clk)) {
+-		dev_err(dev, "Failed to get core clock: %ld\n",
+-			PTR_ERR(pcie->core_clk));
++		dev_err(dev, "Failed to get core clock: %pe\n",
++			pcie->core_clk);
+ 		return PTR_ERR(pcie->core_clk);
+ 	}
+ 
+@@ -2177,8 +2177,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 
+ 	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
+ 	if (IS_ERR(pcie->core_apb_rst)) {
+-		dev_err(dev, "Failed to get APB reset: %ld\n",
+-			PTR_ERR(pcie->core_apb_rst));
++		dev_err(dev, "Failed to get APB reset: %pe\n",
++			pcie->core_apb_rst);
+ 		return PTR_ERR(pcie->core_apb_rst);
+ 	}
+ 
+@@ -2197,7 +2197,7 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 		if (IS_ERR(phys[i])) {
+ 			ret = PTR_ERR(phys[i]);
+ 			if (ret != -EPROBE_DEFER)
+-				dev_err(dev, "Failed to get PHY: %d\n", ret);
++				dev_err(dev, "Failed to get PHY: %pe\n", ERR_PTR(ret));
+ 			return ret;
+ 		}
+ 	}
+@@ -2219,8 +2219,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 
+ 	pcie->core_rst = devm_reset_control_get(dev, "core");
+ 	if (IS_ERR(pcie->core_rst)) {
+-		dev_err(dev, "Failed to get core reset: %ld\n",
+-			PTR_ERR(pcie->core_rst));
++		dev_err(dev, "Failed to get core reset: %pe\n",
++			pcie->core_rst);
+ 		return PTR_ERR(pcie->core_rst);
+ 	}
+ 
+@@ -2247,8 +2247,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 		ret = devm_request_irq(dev, pp->irq, tegra_pcie_rp_irq_handler,
+ 				       IRQF_SHARED, "tegra-pcie-intr", pcie);
+ 		if (ret) {
+-			dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq,
+-				ret);
++			dev_err(dev, "Failed to request IRQ %d: %pe\n", pp->irq,
++				ERR_PTR(ret));
+ 			goto fail;
+ 		}
+ 
+@@ -2266,8 +2266,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 						IRQF_SHARED | IRQF_ONESHOT,
+ 						"tegra-pcie-ep-intr", pcie);
+ 		if (ret) {
+-			dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq,
+-				ret);
++			dev_err(dev, "Failed to request IRQ %d: %pe\n", pp->irq,
++				ERR_PTR(ret));
+ 			goto fail;
+ 		}
+ 
+@@ -2364,7 +2364,7 @@ static int tegra_pcie_dw_resume_noirq(struct device *dev)
+ 
+ 	ret = tegra_pcie_dw_host_init(&pcie->pci.pp);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to init host: %d\n", ret);
++		dev_err(dev, "Failed to init host: %pe\n", ERR_PTR(ret));
+ 		goto fail_host_init;
+ 	}
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+index a2b844268e28..9a3d5445f181 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+@@ -388,7 +388,7 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+ 	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+ 	if (IS_ERR(priv->phy)) {
+ 		ret = PTR_ERR(priv->phy);
+-		dev_err(dev, "Failed to get phy (%d)\n", ret);
++		dev_err(dev, "Failed to get phy: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 71ecd7ddcc8a..f34e0e163642 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -1743,14 +1743,14 @@ static int advk_pcie_setup_phy(struct advk_pcie *pcie)
+ 
+ 	/* Old bindings miss the PHY handle */
+ 	if (IS_ERR(pcie->phy)) {
+-		dev_warn(dev, "PHY unavailable (%ld)\n", PTR_ERR(pcie->phy));
++		dev_warn(dev, "PHY unavailable: %pe\n", pcie->phy);
+ 		pcie->phy = NULL;
+ 		return 0;
+ 	}
+ 
+ 	ret = advk_pcie_enable_phy(pcie);
+ 	if (ret)
+-		dev_err(dev, "Failed to initialize PHY (%d)\n", ret);
++		dev_err(dev, "Failed to initialize PHY: %pe\n", ERR_PTR(ret));
+ 
+ 	return ret;
+ }
+@@ -1863,7 +1863,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
+ 	if (ret) {
+ 		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get reset-gpio: %i\n", ret);
++			dev_err(dev, "Failed to get reset-gpio: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+index ffdeed25e961..b5127dbdd313 100644
+--- a/drivers/pci/controller/pci-ftpci100.c
++++ b/drivers/pci/controller/pci-ftpci100.c
+@@ -502,7 +502,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
+ 
+ 	ret = pci_scan_root_bus_bridge(host);
+ 	if (ret) {
+-		dev_err(dev, "failed to scan host: %d\n", ret);
++		dev_err(dev, "failed to scan host: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 	p->bus = host->bus;
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 038d974a318e..ead171db29b7 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -946,7 +946,7 @@ static int tegra_pcie_phy_enable(struct tegra_pcie *pcie)
+ 	/* wait for the PLL to lock */
+ 	err = tegra_pcie_pll_wait(pcie, 500);
+ 	if (err < 0) {
+-		dev_err(dev, "PLL failed to lock: %d\n", err);
++		dev_err(dev, "PLL failed to lock: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+@@ -997,7 +997,7 @@ static int tegra_pcie_port_phy_power_on(struct tegra_pcie_port *port)
+ 	for (i = 0; i < port->lanes; i++) {
+ 		err = phy_power_on(port->phys[i]);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to power on PHY#%u: %d\n", i, err);
++			dev_err(dev, "failed to power on PHY#%u: %pe\n", i, ERR_PTR(err));
+ 			return err;
+ 		}
+ 	}
+@@ -1014,8 +1014,8 @@ static int tegra_pcie_port_phy_power_off(struct tegra_pcie_port *port)
+ 	for (i = 0; i < port->lanes; i++) {
+ 		err = phy_power_off(port->phys[i]);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to power off PHY#%u: %d\n", i,
+-				err);
++			dev_err(dev, "failed to power off PHY#%u: %pe\n", i,
++				ERR_PTR(err));
+ 			return err;
+ 		}
+ 	}
+@@ -1036,7 +1036,7 @@ static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
+ 			err = tegra_pcie_phy_enable(pcie);
+ 
+ 		if (err < 0)
+-			dev_err(dev, "failed to power on PHY: %d\n", err);
++			dev_err(dev, "failed to power on PHY: %pe\n", ERR_PTR(err));
+ 
+ 		return err;
+ 	}
+@@ -1045,8 +1045,8 @@ static int tegra_pcie_phy_power_on(struct tegra_pcie *pcie)
+ 		err = tegra_pcie_port_phy_power_on(port);
+ 		if (err < 0) {
+ 			dev_err(dev,
+-				"failed to power on PCIe port %u PHY: %d\n",
+-				port->index, err);
++				"failed to power on PCIe port %u PHY: %pe\n",
++				port->index, ERR_PTR(err));
+ 			return err;
+ 		}
+ 	}
+@@ -1067,7 +1067,7 @@ static int tegra_pcie_phy_power_off(struct tegra_pcie *pcie)
+ 			err = tegra_pcie_phy_disable(pcie);
+ 
+ 		if (err < 0)
+-			dev_err(dev, "failed to power off PHY: %d\n", err);
++			dev_err(dev, "failed to power off PHY: %pe\n", ERR_PTR(err));
+ 
+ 		return err;
+ 	}
+@@ -1076,8 +1076,8 @@ static int tegra_pcie_phy_power_off(struct tegra_pcie *pcie)
+ 		err = tegra_pcie_port_phy_power_off(port);
+ 		if (err < 0) {
+ 			dev_err(dev,
+-				"failed to power off PCIe port %u PHY: %d\n",
+-				port->index, err);
++				"failed to power off PCIe port %u PHY: %pe\n",
++				port->index, ERR_PTR(err));
+ 			return err;
+ 		}
+ 	}
+@@ -1167,7 +1167,7 @@ static void tegra_pcie_power_off(struct tegra_pcie *pcie)
+ 
+ 	err = regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
+ 	if (err < 0)
+-		dev_warn(dev, "failed to disable regulators: %d\n", err);
++		dev_warn(dev, "failed to disable regulators: %pe\n", ERR_PTR(err));
+ }
+ 
+ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
+@@ -1186,38 +1186,38 @@ static int tegra_pcie_power_on(struct tegra_pcie *pcie)
+ 	/* enable regulators */
+ 	err = regulator_bulk_enable(pcie->num_supplies, pcie->supplies);
+ 	if (err < 0)
+-		dev_err(dev, "failed to enable regulators: %d\n", err);
++		dev_err(dev, "failed to enable regulators: %pe\n", ERR_PTR(err));
+ 
+ 	if (!dev->pm_domain) {
+ 		err = tegra_powergate_power_on(TEGRA_POWERGATE_PCIE);
+ 		if (err) {
+-			dev_err(dev, "failed to power ungate: %d\n", err);
++			dev_err(dev, "failed to power ungate: %pe\n", ERR_PTR(err));
+ 			goto regulator_disable;
+ 		}
+ 		err = tegra_powergate_remove_clamping(TEGRA_POWERGATE_PCIE);
+ 		if (err) {
+-			dev_err(dev, "failed to remove clamp: %d\n", err);
++			dev_err(dev, "failed to remove clamp: %pe\n", ERR_PTR(err));
+ 			goto powergate;
+ 		}
+ 	}
+ 
+ 	err = clk_prepare_enable(pcie->afi_clk);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to enable AFI clock: %d\n", err);
++		dev_err(dev, "failed to enable AFI clock: %pe\n", ERR_PTR(err));
+ 		goto powergate;
+ 	}
+ 
+ 	if (soc->has_cml_clk) {
+ 		err = clk_prepare_enable(pcie->cml_clk);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to enable CML clock: %d\n", err);
++			dev_err(dev, "failed to enable CML clock: %pe\n", ERR_PTR(err));
+ 			goto disable_afi_clk;
+ 		}
+ 	}
+ 
+ 	err = clk_prepare_enable(pcie->pll_e);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to enable PLLE clock: %d\n", err);
++		dev_err(dev, "failed to enable PLLE clock: %pe\n", ERR_PTR(err));
+ 		goto disable_cml_clk;
+ 	}
+ 
+@@ -1303,13 +1303,13 @@ static int tegra_pcie_phys_get_legacy(struct tegra_pcie *pcie)
+ 	pcie->phy = devm_phy_optional_get(dev, "pcie");
+ 	if (IS_ERR(pcie->phy)) {
+ 		err = PTR_ERR(pcie->phy);
+-		dev_err(dev, "failed to get PHY: %d\n", err);
++		dev_err(dev, "failed to get PHY: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	err = phy_init(pcie->phy);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to initialize PHY: %d\n", err);
++		dev_err(dev, "failed to initialize PHY: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+@@ -1350,15 +1350,15 @@ static int tegra_pcie_port_get_phys(struct tegra_pcie_port *port)
+ 	for (i = 0; i < port->lanes; i++) {
+ 		phy = devm_of_phy_optional_get_index(dev, port->np, "pcie", i);
+ 		if (IS_ERR(phy)) {
+-			dev_err(dev, "failed to get PHY#%u: %ld\n", i,
+-				PTR_ERR(phy));
++			dev_err(dev, "failed to get PHY#%u: %pe\n", i,
++				phy);
+ 			return PTR_ERR(phy);
+ 		}
+ 
+ 		err = phy_init(phy);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to initialize PHY#%u: %d\n", i,
+-				err);
++			dev_err(dev, "failed to initialize PHY#%u: %pe\n", i,
++				ERR_PTR(err));
+ 			return err;
+ 		}
+ 
+@@ -1396,7 +1396,7 @@ static void tegra_pcie_phys_put(struct tegra_pcie *pcie)
+ 	if (pcie->legacy_phy) {
+ 		err = phy_exit(pcie->phy);
+ 		if (err < 0)
+-			dev_err(dev, "failed to teardown PHY: %d\n", err);
++			dev_err(dev, "failed to teardown PHY: %pe\n", ERR_PTR(err));
+ 		return;
+ 	}
+ 
+@@ -1404,8 +1404,8 @@ static void tegra_pcie_phys_put(struct tegra_pcie *pcie)
+ 		for (i = 0; i < port->lanes; i++) {
+ 			err = phy_exit(port->phys[i]);
+ 			if (err < 0)
+-				dev_err(dev, "failed to teardown PHY#%u: %d\n",
+-					i, err);
++				dev_err(dev, "failed to teardown PHY#%u: %pe\n",
++					i, ERR_PTR(err));
+ 		}
+ 	}
+ }
+@@ -1420,20 +1420,20 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+ 
+ 	err = tegra_pcie_clocks_get(pcie);
+ 	if (err) {
+-		dev_err(dev, "failed to get clocks: %d\n", err);
++		dev_err(dev, "failed to get clocks: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	err = tegra_pcie_resets_get(pcie);
+ 	if (err) {
+-		dev_err(dev, "failed to get resets: %d\n", err);
++		dev_err(dev, "failed to get resets: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	if (soc->program_uphy) {
+ 		err = tegra_pcie_phys_get(pcie);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to get PHYs: %d\n", err);
++			dev_err(dev, "failed to get PHYs: %pe\n", ERR_PTR(err));
+ 			return err;
+ 		}
+ 	}
+@@ -1477,7 +1477,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+ 
+ 	err = request_irq(pcie->irq, tegra_pcie_isr, IRQF_SHARED, "PCIE", pcie);
+ 	if (err) {
+-		dev_err(dev, "failed to register IRQ: %d\n", err);
++		dev_err(dev, "failed to register IRQ: %pe\n", ERR_PTR(err));
+ 		goto phys_put;
+ 	}
+ 
+@@ -2127,7 +2127,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 
+ 		err = of_pci_get_devfn(port);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to parse address: %d\n", err);
++			dev_err(dev, "failed to parse address: %pe\n", ERR_PTR(err));
+ 			goto err_node_put;
+ 		}
+ 
+@@ -2143,8 +2143,8 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 
+ 		err = of_property_read_u32(port, "nvidia,num-lanes", &value);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to parse # of lanes: %d\n",
+-				err);
++			dev_err(dev, "failed to parse # of lanes: %pe\n",
++				ERR_PTR(err));
+ 			goto err_node_put;
+ 		}
+ 
+@@ -2172,7 +2172,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 
+ 		err = of_address_to_resource(port, 0, &rp->regs);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to parse address: %d\n", err);
++			dev_err(dev, "failed to parse address: %pe\n", ERR_PTR(err));
+ 			goto err_node_put;
+ 		}
+ 
+@@ -2640,20 +2640,20 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 
+ 	err = tegra_pcie_get_resources(pcie);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to request resources: %d\n", err);
++		dev_err(dev, "failed to request resources: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	err = tegra_pcie_msi_setup(pcie);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to enable MSI support: %d\n", err);
++		dev_err(dev, "failed to enable MSI support: %pe\n", ERR_PTR(err));
+ 		goto put_resources;
+ 	}
+ 
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err < 0) {
+-		dev_err(dev, "fail to enable pcie controller: %d\n", err);
++		dev_err(dev, "fail to enable pcie controller: %pe\n", ERR_PTR(err));
+ 		goto pm_runtime_put;
+ 	}
+ 
+@@ -2662,7 +2662,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 
+ 	err = pci_host_probe(host);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to register host: %d\n", err);
++		dev_err(dev, "failed to register host: %pe\n", ERR_PTR(err));
+ 		goto pm_runtime_put;
+ 	}
+ 
+@@ -2723,7 +2723,7 @@ static int tegra_pcie_pm_suspend(struct device *dev)
+ 	if (pcie->soc->program_uphy) {
+ 		err = tegra_pcie_phy_power_off(pcie);
+ 		if (err < 0)
+-			dev_err(dev, "failed to power off PHY(s): %d\n", err);
++			dev_err(dev, "failed to power off PHY(s): %pe\n", ERR_PTR(err));
+ 	}
+ 
+ 	reset_control_assert(pcie->pex_rst);
+@@ -2745,13 +2745,13 @@ static int tegra_pcie_pm_resume(struct device *dev)
+ 
+ 	err = tegra_pcie_power_on(pcie);
+ 	if (err) {
+-		dev_err(dev, "tegra pcie power on fail: %d\n", err);
++		dev_err(dev, "tegra pcie power on fail: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	err = pinctrl_pm_select_default_state(dev);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to disable PCIe IO DPD: %d\n", err);
++		dev_err(dev, "failed to disable PCIe IO DPD: %pe\n", ERR_PTR(err));
+ 		goto poweroff;
+ 	}
+ 
+@@ -2763,7 +2763,7 @@ static int tegra_pcie_pm_resume(struct device *dev)
+ 
+ 	err = clk_prepare_enable(pcie->pex_clk);
+ 	if (err) {
+-		dev_err(dev, "failed to enable PEX clock: %d\n", err);
++		dev_err(dev, "failed to enable PEX clock: %pe\n", ERR_PTR(err));
+ 		goto pex_dpd_enable;
+ 	}
+ 
+@@ -2772,7 +2772,7 @@ static int tegra_pcie_pm_resume(struct device *dev)
+ 	if (pcie->soc->program_uphy) {
+ 		err = tegra_pcie_phy_power_on(pcie);
+ 		if (err < 0) {
+-			dev_err(dev, "failed to power on PHY(s): %d\n", err);
++			dev_err(dev, "failed to power on PHY(s): %pe\n", ERR_PTR(err));
+ 			goto disable_pex_clk;
+ 		}
+ 	}
+diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+index 8e457fa450a2..9cdc0b24e00d 100644
+--- a/drivers/pci/controller/pci-xgene.c
++++ b/drivers/pci/controller/pci-xgene.c
+@@ -206,8 +206,8 @@ static int xgene_get_csr_resource(struct acpi_device *adev,
+ 				     acpi_dev_filter_resource_type_cb,
+ 				     (void *) flags);
+ 	if (ret < 0) {
+-		dev_err(dev, "failed to parse _CRS method, error code %d\n",
+-			ret);
++		dev_err(dev, "failed to parse _CRS method, error code %pe\n",
++			ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+index 137fb8570ba2..9670a31a02c8 100644
+--- a/drivers/pci/controller/pcie-microchip-host.c
++++ b/drivers/pci/controller/pcie-microchip-host.c
+@@ -1175,7 +1175,7 @@ static int mc_host_probe(struct platform_device *pdev)
+ 
+ 	ret = mc_pcie_init_clks(dev);
+ 	if (ret) {
+-		dev_err(dev, "failed to get clock resources, error %d\n", ret);
++		dev_err(dev, "failed to get clock resources, error: %pe\n", ERR_PTR(ret));
+ 		return -ENODEV;
+ 	}
+ 
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index 996077ab7cfd..3dfe6729e3ed 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -78,7 +78,7 @@ static int rcar_pcie_wakeup(struct device *pcie_dev, void __iomem *pcie_base)
+ 		writel(L1IATN, pcie_base + PMCTLR);
+ 		ret = readl_poll_timeout_atomic(pcie_base + PMSR, val,
+ 						val & L1FAEG, 10, 1000);
+-		WARN(ret, "Timeout waiting for L1 link state, ret=%d\n", ret);
++		WARN(ret, "Timeout waiting for L1 link state, ret=%pe\n", ERR_PTR(ret));
+ 		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
+ 	}
+ 
+@@ -782,7 +782,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+ 			       IRQF_SHARED | IRQF_NO_THREAD,
+ 			       rcar_msi_bottom_chip.name, host);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to request IRQ: %d\n", err);
++		dev_err(dev, "failed to request IRQ: %pe\n", ERR_PTR(err));
+ 		goto err;
+ 	}
+ 
+@@ -790,7 +790,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+ 			       IRQF_SHARED | IRQF_NO_THREAD,
+ 			       rcar_msi_bottom_chip.name, host);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to request IRQ: %d\n", err);
++		dev_err(dev, "failed to request IRQ: %pe\n", ERR_PTR(err));
+ 		goto err;
+ 	}
+ 
+@@ -996,13 +996,13 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 
+ 	err = rcar_pcie_get_resources(host);
+ 	if (err < 0) {
+-		dev_err(dev, "failed to request resources: %d\n", err);
++		dev_err(dev, "failed to request resources: %pe\n", ERR_PTR(err));
+ 		goto err_pm_put;
+ 	}
+ 
+ 	err = clk_prepare_enable(host->bus_clk);
+ 	if (err) {
+-		dev_err(dev, "failed to enable bus clock: %d\n", err);
++		dev_err(dev, "failed to enable bus clock: %pe\n", ERR_PTR(err));
+ 		goto err_unmap_msi_irqs;
+ 	}
+ 
+@@ -1031,8 +1031,8 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 		err = rcar_pcie_enable_msi(host);
+ 		if (err < 0) {
+ 			dev_err(dev,
+-				"failed to enable MSI support: %d\n",
+-				err);
++				"failed to enable MSI support: %pe\n",
++				ERR_PTR(err));
+ 			goto err_phy_shutdown;
+ 		}
+ 	}
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+index 0ef2e622d36e..10bd6aec67bd 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/pcie-rockchip.c
+@@ -169,51 +169,51 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 
+ 	err = reset_control_assert(rockchip->aclk_rst);
+ 	if (err) {
+-		dev_err(dev, "assert aclk_rst err %d\n", err);
++		dev_err(dev, "assert aclk_rst err: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	err = reset_control_assert(rockchip->pclk_rst);
+ 	if (err) {
+-		dev_err(dev, "assert pclk_rst err %d\n", err);
++		dev_err(dev, "assert pclk_rst err: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	err = reset_control_assert(rockchip->pm_rst);
+ 	if (err) {
+-		dev_err(dev, "assert pm_rst err %d\n", err);
++		dev_err(dev, "assert pm_rst err: %pe\n", ERR_PTR(err));
+ 		return err;
+ 	}
+ 
+ 	for (i = 0; i < MAX_LANE_NUM; i++) {
+ 		err = phy_init(rockchip->phys[i]);
+ 		if (err) {
+-			dev_err(dev, "init phy%d err %d\n", i, err);
++			dev_err(dev, "init phy%d err: %pe\n", i, ERR_PTR(err));
+ 			goto err_exit_phy;
+ 		}
+ 	}
+ 
+ 	err = reset_control_assert(rockchip->core_rst);
+ 	if (err) {
+-		dev_err(dev, "assert core_rst err %d\n", err);
++		dev_err(dev, "assert core_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_exit_phy;
+ 	}
+ 
+ 	err = reset_control_assert(rockchip->mgmt_rst);
+ 	if (err) {
+-		dev_err(dev, "assert mgmt_rst err %d\n", err);
++		dev_err(dev, "assert mgmt_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_exit_phy;
+ 	}
+ 
+ 	err = reset_control_assert(rockchip->mgmt_sticky_rst);
+ 	if (err) {
+-		dev_err(dev, "assert mgmt_sticky_rst err %d\n", err);
++		dev_err(dev, "assert mgmt_sticky_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_exit_phy;
+ 	}
+ 
+ 	err = reset_control_assert(rockchip->pipe_rst);
+ 	if (err) {
+-		dev_err(dev, "assert pipe_rst err %d\n", err);
++		dev_err(dev, "assert pipe_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_exit_phy;
+ 	}
+ 
+@@ -221,19 +221,19 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 
+ 	err = reset_control_deassert(rockchip->pm_rst);
+ 	if (err) {
+-		dev_err(dev, "deassert pm_rst err %d\n", err);
++		dev_err(dev, "deassert pm_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_exit_phy;
+ 	}
+ 
+ 	err = reset_control_deassert(rockchip->aclk_rst);
+ 	if (err) {
+-		dev_err(dev, "deassert aclk_rst err %d\n", err);
++		dev_err(dev, "deassert aclk_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_exit_phy;
+ 	}
+ 
+ 	err = reset_control_deassert(rockchip->pclk_rst);
+ 	if (err) {
+-		dev_err(dev, "deassert pclk_rst err %d\n", err);
++		dev_err(dev, "deassert pclk_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_exit_phy;
+ 	}
+ 
+@@ -257,7 +257,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 	for (i = 0; i < MAX_LANE_NUM; i++) {
+ 		err = phy_power_on(rockchip->phys[i]);
+ 		if (err) {
+-			dev_err(dev, "power on phy%d err %d\n", i, err);
++			dev_err(dev, "power on phy%d err: %pe\n", i, ERR_PTR(err));
+ 			goto err_power_off_phy;
+ 		}
+ 	}
+@@ -268,7 +268,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 				 RK_PHY_PLL_LOCK_SLEEP_US,
+ 				 RK_PHY_PLL_LOCK_TIMEOUT_US);
+ 	if (err) {
+-		dev_err(dev, "PHY PLLs could not lock, %d\n", err);
++		dev_err(dev, "PHY PLLs could not lock: %pe\n", ERR_PTR(err));
+ 		goto err_power_off_phy;
+ 	}
+ 
+@@ -278,25 +278,25 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 	 */
+ 	err = reset_control_deassert(rockchip->mgmt_sticky_rst);
+ 	if (err) {
+-		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
++		dev_err(dev, "deassert mgmt_sticky_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_power_off_phy;
+ 	}
+ 
+ 	err = reset_control_deassert(rockchip->core_rst);
+ 	if (err) {
+-		dev_err(dev, "deassert core_rst err %d\n", err);
++		dev_err(dev, "deassert core_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_power_off_phy;
+ 	}
+ 
+ 	err = reset_control_deassert(rockchip->mgmt_rst);
+ 	if (err) {
+-		dev_err(dev, "deassert mgmt_rst err %d\n", err);
++		dev_err(dev, "deassert mgmt_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_power_off_phy;
+ 	}
+ 
+ 	err = reset_control_deassert(rockchip->pipe_rst);
+ 	if (err) {
+-		dev_err(dev, "deassert pipe_rst err %d\n", err);
++		dev_err(dev, "deassert pipe_rst err: %pe\n", ERR_PTR(err));
+ 		goto err_power_off_phy;
+ 	}
+ 
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 87b7856f375a..7bc123865b1f 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -943,7 +943,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 					       struct pci_dev, bus_list);
+ 			ret = pci_reset_bus(dev);
+ 			if (ret)
+-				pci_warn(dev, "can't reset device: %d\n", ret);
++				pci_warn(dev, "can't reset device: %pe\n", ERR_PTR(ret));
+ 
+ 			break;
+ 		}
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 652d63df9d22..8019a7140028 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -512,8 +512,8 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 	 */
+ 	rc = pci_doe_cache_protocols(doe_mb);
+ 	if (rc) {
+-		pci_err(pdev, "[%x] failed to cache protocols : %d\n",
+-			doe_mb->cap_offset, rc);
++		pci_err(pdev, "[%x] failed to cache protocols : %pe\n",
++			doe_mb->cap_offset, ERR_PTR(rc));
+ 		goto err_cancel;
+ 	}
+ 
+diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+index 2c54d80107cf..78d64eecfa04 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
++++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+@@ -738,14 +738,14 @@ static int pci_epf_mhi_core_init(struct pci_epf *epf)
+ 	ret = pci_epc_set_msi(epc, epf->func_no, epf->vfunc_no,
+ 			      order_base_2(info->msi_count));
+ 	if (ret) {
+-		dev_err(dev, "Failed to set MSI configuration: %d\n", ret);
++		dev_err(dev, "Failed to set MSI configuration: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+ 	ret = pci_epc_write_header(epc, epf->func_no, epf->vfunc_no,
+ 				   epf->header);
+ 	if (ret) {
+-		dev_err(dev, "Failed to set Configuration header: %d\n", ret);
++		dev_err(dev, "Failed to set Configuration header: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+@@ -768,7 +768,7 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
+ 	if (info->flags & MHI_EPF_USE_DMA) {
+ 		ret = pci_epf_mhi_dma_init(epf_mhi);
+ 		if (ret) {
+-			dev_err(dev, "Failed to initialize DMA: %d\n", ret);
++			dev_err(dev, "Failed to initialize DMA: %pe\n", ERR_PTR(ret));
+ 			return ret;
+ 		}
+ 	}
+@@ -794,7 +794,7 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
+ 	/* Register the MHI EP controller */
+ 	ret = mhi_ep_register_controller(mhi_cntrl, info->config);
+ 	if (ret) {
+-		dev_err(dev, "Failed to register MHI EP controller: %d\n", ret);
++		dev_err(dev, "Failed to register MHI EP controller: %pe\n", ERR_PTR(ret));
+ 		if (info->flags & MHI_EPF_USE_DMA)
+ 			pci_epf_mhi_dma_deinit(epf_mhi);
+ 		return ret;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+index e01a98e74d21..d807b0329805 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+@@ -2129,7 +2129,7 @@ static int __init epf_ntb_init(void)
+ 	ret = pci_epf_register_driver(&epf_ntb_driver);
+ 	if (ret) {
+ 		destroy_workqueue(kpcintb_workqueue);
+-		pr_err("Failed to register pci epf ntb driver --> %d\n", ret);
++		pr_err("Failed to register pci epf ntb driver: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 977fb79c1567..15e745dcdc40 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -167,7 +167,7 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+ 
+ 	ret = dma_submit_error(epf_test->transfer_cookie);
+ 	if (ret) {
+-		dev_err(dev, "Failed to do DMA tx_submit %d\n", ret);
++		dev_err(dev, "Failed to do DMA tx_submit: %pe\n", ERR_PTR(ret));
+ 		goto terminate;
+ 	}
+ 
+@@ -949,7 +949,7 @@ static int __init pci_epf_test_init(void)
+ 	ret = pci_epf_register_driver(&test_driver);
+ 	if (ret) {
+ 		destroy_workqueue(kpcitest_workqueue);
+-		pr_err("Failed to register pci epf test driver --> %d\n", ret);
++		pr_err("Failed to register pci epf test driver: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index 8e779eecd62d..de52f0613078 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1430,7 +1430,7 @@ static int __init epf_ntb_init(void)
+ 	ret = pci_epf_register_driver(&epf_ntb_driver);
+ 	if (ret) {
+ 		destroy_workqueue(kpcintb_workqueue);
+-		pr_err("Failed to register pci epf ntb driver --> %d\n", ret);
++		pr_err("Failed to register pci epf ntb driver: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index 3b21e28f9b59..a44437aaa4bc 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -727,8 +727,8 @@ static int __init pci_ep_cfs_init(void)
+ 
+ 	ret = configfs_register_subsystem(&pci_ep_cfs_subsys);
+ 	if (ret) {
+-		pr_err("Error %d while registering subsystem %s\n",
+-		       ret, root->cg_item.ci_namebuf);
++		pr_err("Error while registering subsystem %s: %pe\n",
++		       root->cg_item.ci_namebuf, ERR_PTR(ret));
+ 		goto err;
+ 	}
+ 
+@@ -736,8 +736,8 @@ static int __init pci_ep_cfs_init(void)
+ 							  &pci_functions_type);
+ 	if (IS_ERR(functions_group)) {
+ 		ret = PTR_ERR(functions_group);
+-		pr_err("Error %d while registering functions group\n",
+-		       ret);
++		pr_err("Error while registering functions group: %pe\n",
++		       ERR_PTR(ret));
+ 		goto err_functions_group;
+ 	}
+ 
+@@ -746,8 +746,8 @@ static int __init pci_ep_cfs_init(void)
+ 						&pci_controllers_type);
+ 	if (IS_ERR(controllers_group)) {
+ 		ret = PTR_ERR(controllers_group);
+-		pr_err("Error %d while registering controllers group\n",
+-		       ret);
++		pr_err("Error while registering controllers group: %pe\n",
++		       ERR_PTR(ret));
+ 		goto err_controllers_group;
+ 	}
+ 
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 323f2a60ab16..08146b5c5d01 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -77,8 +77,8 @@ int pci_epf_bind(struct pci_epf *epf)
+ 		vfunc_no = epf_vf->vfunc_no;
+ 
+ 		if (vfunc_no < 1) {
+-			dev_err(dev, "Invalid virtual function number\n");
+ 			ret = -EINVAL;
++			dev_err(dev, "Invalid virtual function number: %pe\n", ERR_PTR(ret));
+ 			goto ret;
+ 		}
+ 
+@@ -86,15 +86,15 @@ int pci_epf_bind(struct pci_epf *epf)
+ 		func_no = epf->func_no;
+ 		if (!IS_ERR_OR_NULL(epc)) {
+ 			if (!epc->max_vfs) {
+-				dev_err(dev, "No support for virt function\n");
+ 				ret = -EINVAL;
++				dev_err(dev, "No support for virt function: %pe\n", ERR_PTR(ret));
+ 				goto ret;
+ 			}
+ 
+ 			if (vfunc_no > epc->max_vfs[func_no]) {
+-				dev_err(dev, "PF%d: Exceeds max vfunc number\n",
+-					func_no);
+ 				ret = -EINVAL;
++				dev_err(dev, "PF%d: Exceeds max vfunc number: %pe\n",
++					func_no, ERR_PTR(ret));
+ 				goto ret;
+ 			}
+ 		}
+@@ -103,15 +103,15 @@ int pci_epf_bind(struct pci_epf *epf)
+ 		func_no = epf->sec_epc_func_no;
+ 		if (!IS_ERR_OR_NULL(epc)) {
+ 			if (!epc->max_vfs) {
+-				dev_err(dev, "No support for virt function\n");
+ 				ret = -EINVAL;
++				dev_err(dev, "No support for virt function: %pe\n", ERR_PTR(ret));
+ 				goto ret;
+ 			}
+ 
+ 			if (vfunc_no > epc->max_vfs[func_no]) {
+-				dev_err(dev, "PF%d: Exceeds max vfunc number\n",
+-					func_no);
+ 				ret = -EINVAL;
++				dev_err(dev, "PF%d: Exceeds max vfunc number: %pe\n",
++					func_no, ERR_PTR(ret));
+ 				goto ret;
+ 			}
+ 		}
+@@ -535,7 +535,7 @@ static int __init pci_epf_init(void)
+ 
+ 	ret = bus_register(&pci_epf_bus_type);
+ 	if (ret) {
+-		pr_err("failed to register pci epf bus --> %d\n", ret);
++		pr_err("failed to register pci epf bus: %pe\n", ERR_PTR(ret));
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/pci/hotplug/acpiphp_core.c b/drivers/pci/hotplug/acpiphp_core.c
+index 9dad14e80bcf..0f5523666e85 100644
+--- a/drivers/pci/hotplug/acpiphp_core.c
++++ b/drivers/pci/hotplug/acpiphp_core.c
+@@ -277,7 +277,7 @@ int acpiphp_register_hotplug_slot(struct acpiphp_slot *acpiphp_slot,
+ 	if (retval == -EBUSY)
+ 		goto error_slot;
+ 	if (retval) {
+-		pr_err("pci_hp_register failed with error %d\n", retval);
++		pr_err("pci_hp_register failed with error: %pe\n", ERR_PTR(retval));
+ 		goto error_slot;
+ 	}
+ 
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index ddd55ad97a58..c1ccff9c282e 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -81,7 +81,7 @@ static int init_slot(struct controller *ctrl)
+ 	retval = pci_hp_initialize(&ctrl->hotplug_slot,
+ 				   ctrl->pcie->port->subordinate, 0, name);
+ 	if (retval) {
+-		ctrl_err(ctrl, "pci_hp_initialize failed: error %d\n", retval);
++		ctrl_err(ctrl, "pci_hp_initialize failed with error: %pe\n", ERR_PTR(retval));
+ 		kfree(ops);
+ 	}
+ 	return retval;
+@@ -210,21 +210,21 @@ static int pciehp_probe(struct pcie_device *dev)
+ 		if (rc == -EBUSY)
+ 			ctrl_warn(ctrl, "Slot already registered by another hotplug driver\n");
+ 		else
+-			ctrl_err(ctrl, "Slot initialization failed (%d)\n", rc);
++			ctrl_err(ctrl, "Slot initialization failed: %pe\n", ERR_PTR(rc));
+ 		goto err_out_release_ctlr;
+ 	}
+ 
+ 	/* Enable events after we have setup the data structures */
+ 	rc = pcie_init_notification(ctrl);
+ 	if (rc) {
+-		ctrl_err(ctrl, "Notification initialization failed (%d)\n", rc);
++		ctrl_err(ctrl, "Notification initialization failed: %d\n", rc);
+ 		goto err_out_free_ctrl_slot;
+ 	}
+ 
+ 	/* Publish to user space */
+ 	rc = pci_hp_add(&ctrl->hotplug_slot);
+ 	if (rc) {
+-		ctrl_err(ctrl, "Publication to user space failed (%d)\n", rc);
++		ctrl_err(ctrl, "Publication to user space failed: %pe\n", ERR_PTR(rc));
+ 		goto err_out_shutdown_notification;
+ 	}
+ 
+diff --git a/drivers/pci/hotplug/shpchp_core.c b/drivers/pci/hotplug/shpchp_core.c
+index 56c7795ed890..b4e3cef70bf6 100644
+--- a/drivers/pci/hotplug/shpchp_core.c
++++ b/drivers/pci/hotplug/shpchp_core.c
+@@ -104,8 +104,8 @@ static int init_slots(struct controller *ctrl)
+ 		retval = pci_hp_register(hotplug_slot,
+ 				ctrl->pci_dev->subordinate, slot->device, name);
+ 		if (retval) {
+-			ctrl_err(ctrl, "pci_hp_register failed with error %d\n",
+-				 retval);
++			ctrl_err(ctrl, "pci_hp_register failed with error: %pe\n",
++				 ERR_PTR(retval));
+ 			goto error_slotwq;
+ 		}
+ 
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 51e3dd0ea5ab..2163ee1eda46 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -518,7 +518,7 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
+ 		pr_warn_once("%s: possibly some PCI slots don't have level triggered interrupts capability\n",
+ 			__func__);
+ 	} else {
+-		dev_err(&pdev->dev, "%s: failed with rc=%d\n", __func__, rc);
++		dev_err(&pdev->dev, "%s: failed with rc=%pe\n", __func__, ERR_PTR(rc));
+ 	}
+ 	return rc;
+ }
+@@ -573,8 +573,8 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+ 		case IORESOURCE_IO:
+ 			err = devm_pci_remap_iospace(dev, res, iobase);
+ 			if (err) {
+-				dev_warn(dev, "error %d: failed to map resource %pR\n",
+-					 err, res);
++				dev_warn(dev, "failed to map resource %pR with error: %pe\n",
++					 res, ERR_PTR(err));
+ 				resource_list_destroy_entry(win);
+ 			}
+ 			break;
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index af2996d0d17f..bbe409ce5d97 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1313,8 +1313,8 @@ static int pci_pm_runtime_suspend(struct device *dev)
+ 				pm->runtime_suspend, error);
+ 			return error;
+ 		} else if (error) {
+-			pci_err(pci_dev, "can't suspend (%ps returned %d)\n",
+-				pm->runtime_suspend, error);
++			pci_err(pci_dev, "can't suspend: %ps returned %pe)\n",
++				pm->runtime_suspend, ERR_PTR(error));
+ 			return error;
+ 		}
+ 	}
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a668820696dc..789c44d33b1b 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -427,8 +427,8 @@ static int dpc_probe(struct pcie_device *dev)
+ 					   dpc_handler, IRQF_SHARED,
+ 					   "pcie-dpc", pdev);
+ 	if (status) {
+-		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
+-			 status);
++		pci_warn(pdev, "request IRQ%d failed: %pe\n", dev->irq,
++			 ERR_PTR(status));
+ 		return status;
+ 	}
+ 
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 568410e64ce6..cd856a42801e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6019,7 +6019,7 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ 		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
+ 		ret = pci_reset_bus(pdev);
+ 		if (ret < 0)
+-			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
++			pci_err(pdev, "Failed to reset GPU: %pe\n", ERR_PTR(ret));
+ 	}
+ 
+ 	iounmap(map);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 909e6a7c3cc3..75fdfdbadeef 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -2221,7 +2221,7 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+ enable_all:
+ 	retval = pci_reenable_device(bridge);
+ 	if (retval)
+-		pci_err(bridge, "Error reenabling bridge (%d)\n", retval);
++		pci_err(bridge, "Error reenabling bridge: %pe\n", ERR_PTR(retval));
+ 	pci_set_master(bridge);
+ }
+ EXPORT_SYMBOL_GPL(pci_assign_unassigned_bridge_resources);
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index 0f87cade10f7..638b5130215d 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -343,8 +343,8 @@ void pci_hp_create_module_link(struct pci_slot *pci_slot)
+ 		return;
+ 	ret = sysfs_create_link(&pci_slot->kobj, kobj, "module");
+ 	if (ret)
+-		dev_err(&pci_slot->bus->dev, "Error creating sysfs link (%d)\n",
+-			ret);
++		dev_err(&pci_slot->bus->dev, "Error creating sysfs link: %pe\n",
++			ERR_PTR(ret));
+ 	kobject_put(kobj);
+ }
+ EXPORT_SYMBOL_GPL(pci_hp_create_module_link);
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 78748e8d2dba..4e3daf243cb5 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -1542,7 +1542,7 @@ static int __init vga_arb_device_init(void)
+ 
+ 	rc = misc_register(&vga_arb_device);
+ 	if (rc < 0)
+-		pr_err("error %d registering device\n", rc);
++		pr_err("error registering device: %pe\n", ERR_PTR(rc));
+ 
+ 	bus_register_notifier(&pci_bus_type, &pci_notifier);
+ 
+-- 
+2.25.1
 
-> > +///
-> > +/// This is meant to be implemented by buses/subsystems so that they can use [`IdTable`] to
-> > +/// guarantee (at compile-time) zero-termination of device id tables provided by drivers.
-> > +///
-> > +/// Originally, RawDeviceId was implemented as a const trait. However, this unstable feature is
-> > +/// broken/gone in 1.73. To work around this, turn IdArray::new() into a macro such that it can use
-> > +/// concrete types (which can still have const associated functions) instead of a trait.
-> > +///
-> > +/// # Safety
-> > +///
-> > +/// Implementers must ensure that:
-> > +///   - [`RawDeviceId::ZERO`] is actually a zeroed-out version of the raw device id.
-> > +///   - [`RawDeviceId::to_rawid`] stores `offset` in the context/data field of the raw device id so
-> > +///     that buses can recover the pointer to the data.
-> > +pub unsafe trait RawDeviceId {
-> > +    /// The raw type that holds the device id.
-> > +    ///
-> > +    /// Id tables created from [`Self`] are going to hold this type in its zero-terminated array.
-> > +    type RawType: Copy;
-> > +
-> > +    /// A zeroed-out representation of the raw device id.
-> > +    ///
-> > +    /// Id tables created from [`Self`] use [`Self::ZERO`] as the sentinel to indicate the end of
-> > +    /// the table.
-> > +    const ZERO: Self::RawType;
->
-> All busses have their own way of creating "ids" and that is limited to
-> the bus code itself, why is any of this in the rust side?  What needs
-> this?  A bus will create the id for the devices it manages, and can use
-> it as part of the name it gives the device (but not required), so all of
-> this belongs to the bus, NOT to a driver, or a device.
-
-Consider this a base class (Trait) for bus specific IDs.
-
-> > +}
-> > +
-> > +// Creates a new ID array. This is a macro so it can take as a parameter the concrete ID type in
-> > +// order to call to_rawid() on it, and still remain const. This is necessary until a new
-> > +// const_trait_impl implementation lands, since the existing implementation was removed in Rust
-> > +// 1.73.
->
-> Again, what are these id lists for?  Busses work on individual ids that
-> they create dynamically.
->
-> You aren't thinking this is an id that could be used to match devices to
-> drivers, are you?  That's VERY bus specific, and also specified already
-> in .c code for those busses and passed to userspace.  That doesn't
-> belong here.
->
-> If this isn't that list, what exactly is this?
-
-Rust traits have to be specified somewhere, a RawDeviceId is the basis
-for other DeviceId Traits to be implemented on top off, those then
-talk to the C side ones.
-
-All the pci and nova code is posted as well for you to work this out,
-like you asked for. The use cases are all there to be reviewed, and
-should help answer these sorts of questions.
-
-
->
-> > +#[macro_export]
-> > +#[doc(hidden)]
-> > +macro_rules! _new_id_array {
-> > +    (($($args:tt)*), $id_type:ty) => {{
-> > +        /// Creates a new instance of the array.
-> > +        ///
-> > +        /// The contents are derived from the given identifiers and context information.
-> > +        const fn new< U, const N: usize>(ids: [$id_type; N], infos: [Option<U>; N])
-> > +            -> $crate::driver::IdArray<$id_type, U, N>
-> > +        where
-> > +            $id_type: $crate::driver::RawDeviceId + Copy,
-> > +            <$id_type as $crate::driver::RawDeviceId>::RawType: Copy + Clone,
-> > +        {
-> > +            let mut raw_ids =
-> > +                [<$id_type as $crate::driver::RawDeviceId>::ZERO; N];
-> > +            let mut i = 0usize;
-> > +            while i < N {
-> > +                let offset: isize = $crate::driver::IdArray::<$id_type, U, N>::get_offset(i);
-> > +                raw_ids[i] = ids[i].to_rawid(offset);
-> > +                i += 1;
-> > +            }
-> > +
-> > +            // SAFETY: We are passing valid arguments computed with the correct offsets.
-> > +            unsafe {
-> > +                $crate::driver::IdArray::<$id_type, U, N>::new(raw_ids, infos)
-> > +            }
-> > +       }
-> > +
-> > +        new($($args)*)
-> > +    }}
-> > +}
-> > +
-> > +/// A device id table.
-> > +///
-> > +/// The table is guaranteed to be zero-terminated and to be followed by an array of context data of
-> > +/// type `Option<U>`.
-> > +pub struct IdTable<'a, T: RawDeviceId, U> {
-> > +    first: &'a T::RawType,
-> > +    _p: PhantomData<&'a U>,
-> > +}
->
-> All busses have different ways of matching drivers to devices, and they
-> might be called a "device id table" and it might not.  The driver core
-> doesn't care, and neither should this rust code.  That's all
-> bus-specific and unique to each and every one of them.  None of this
-> should be needed here at all.
-
-This is just a base Trait, for the bus specifics to implement.
-Consider it a bunch of C macros or a bunch of C++ vfuncs, whatever
-mental model helps more.
-
-> Shouldn't this go in some common header somewhere?  Why is this here?
-
-Again to reiterate what Danilo said, rust has no header files. Things
-that in C we would put in header files (macros, struct definitions,
-inlines) go into rust code and other rust code references it.
-
-Now there might be some sense in splitting things further into
-separate rust files if this concept is going to confuse people, and
-what is "core" device code, and what is "template" device code. But
-I'm not sure how much sense that makes really.
-
-Maybe the device table stuff should be in a separate file?
-
-> > +/// Custom code within device removal.
->
-> You better define the heck out of "device removal" as specified last
-> time this all came up.  From what I can see here, this is totally wrong
-> and confusing and will be a mess.
->
-> Do it right, name it properly.
->
-> I'm not reviewingn beyond here, sorry.  It's the merge window and I
-> shouldn't have even looked at this until next week anyway.
->
-> But I was hoping that the whole long rant I gave last time would be
-> addressed at least a little bit.  I don't see that it has :(
-
-I won't comment too much on the specifics here, but you've twice got
-to this stage, said something is wrong, change it, and given no
-actionable feedback on what is wrong, or what to change.
-
-I've looked at this code for a few hours today with the device docs
-and core code and can't spot what you are seeing that is wrong here,
-which means I don't expect anyone else is going to unless you can help
-educate us more.
-
-Dave.
 
