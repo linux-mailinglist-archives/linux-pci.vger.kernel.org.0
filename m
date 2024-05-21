@@ -1,147 +1,108 @@
-Return-Path: <linux-pci+bounces-7722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7724-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48F7C8CB19E
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 17:46:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BF578CB2EE
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 19:35:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A5971C20F01
-	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 15:46:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C78011C2196A
+	for <lists+linux-pci@lfdr.de>; Tue, 21 May 2024 17:35:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60EFB1D52B;
-	Tue, 21 May 2024 15:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EFCF147C94;
+	Tue, 21 May 2024 17:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pn39ud18"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBVc69XY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C831FBB;
-	Tue, 21 May 2024 15:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9649C12F58F;
+	Tue, 21 May 2024 17:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716306367; cv=none; b=LQngton6/Wy9yLvaLuf4JuQQJaFEJtFkiUscIOgAMYYVIw9Du9dEyfu/KN4v7HYpDfDWvSL/RqYUpB93LovrHt2WGAA6lpv9Aw7mK85bSk0V7FuuOHW8RuDhozDJRLSWOrjOXykhGN7klUA/bUrF1QAM619nPS1rpsEO7a9OzRk=
+	t=1716312896; cv=none; b=b62AbPVYJKIcxsTY1JsXcHdm6qe1mIcg9VFH9u3kchf5LHbonk0ssMsQYjTRqsNLakaS7bMybwXPRi4VtzI5p0Wl2VfiFqRs/ZLhB4FoKdvC5Pffn4NvE6uGm3GMovt9oSFiOeotJ996MYA/qV8XoZ+Y5ZoE5xU7y0UC9G5BAl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716306367; c=relaxed/simple;
-	bh=MOYqpIyTHcQhEowSXCmF5d6zPRCuQIn/+Gsq0JSaqfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CMoyORLubVmtZTjUyMttxc3qYbEWvGtg5kCXppvgIUhCYUmu2eibmJu/63JCv3fEkd84eMgj1DHqtpf7PJ/DN16ZsOQt//uJdHwo7x/P6YYkF0jo/KJV67k1bhbfR3PVtD7pnYDRqUBETYjKhNFBH+gD5qQ3S6/uBKzpKdly9gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pn39ud18; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716306363; x=1747842363;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MOYqpIyTHcQhEowSXCmF5d6zPRCuQIn/+Gsq0JSaqfI=;
-  b=Pn39ud188BRP0FsKIF2nLa9SIIEWQ/UDjZwRaV0aI3CncpubvLHvQDa2
-   XYS6ZedRtY/TpuxY4g9lTfD8UgQsFNjiDEWttitqmR0PVdFjwM6z8s58j
-   t7whGvTgzUWdjntAD8FqMiCrgd+3NKPe3AjBoyZzo/1N1ZYLEqPTItjsM
-   U/m2Ah1uHMQDT/Nvcq1j8CPGSSHBrsFK/NuTQ5luHBjlnaQnwKz9gck5b
-   ifjBYBXL314dVGyKhQRbAezU8CkKzP0WQ5ov7Hf4q4J2J4wK2znVbrkBO
-   eWSL9fAUXMk66pZ/0lgL4FyStqXaM1a8hPDtQgjZqaBe6fQ03jQIMIlss
-   A==;
-X-CSE-ConnectionGUID: gEJXe1QEREeQ0xe7hzU2lw==
-X-CSE-MsgGUID: Ldfq0+gKTp2wF0qgwMU1PQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="15459798"
-X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="15459798"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 08:46:02 -0700
-X-CSE-ConnectionGUID: NDMP6qFGSFq7XsAgJ6OJ3g==
-X-CSE-MsgGUID: Ldro2/GCQ6mYjf2suJvVkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="63793459"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 21 May 2024 08:45:57 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s9RgY-0000UQ-1Q;
-	Tue, 21 May 2024 15:45:54 +0000
-Date: Tue, 21 May 2024 23:44:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vidya Sagar <vidyas@nvidia.com>, corbet@lwn.net, bhelgaas@google.com,
-	galshalom@nvidia.com, leonro@nvidia.com, jgg@nvidia.com,
-	treding@nvidia.com, jonathanh@nvidia.com
-Cc: oe-kbuild-all@lists.linux.dev, mmoshrefjava@nvidia.com,
-	shahafs@nvidia.com, vsethi@nvidia.com, sdonthineni@nvidia.com,
-	jan@nvidia.com, tdave@nvidia.com, linux-doc@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V2] PCI: Extend ACS configurability
-Message-ID: <202405212300.S6fsze09-lkp@intel.com>
-References: <20240521110925.3876786-1-vidyas@nvidia.com>
+	s=arc-20240116; t=1716312896; c=relaxed/simple;
+	bh=c2kHZM/T9HIIiKdVJZ1uKyZ5IQfEUIzPgC9/2aeKNBY=;
+	h=From:Content-Type:Mime-Version:Subject:Date:Message-Id:Cc:To; b=hrPuEcfgsISot+MFttshaPgQHuymynYIistQjMwdHgJKLuMF+WXCdf/lgGeBeeWnRYwXF/HaOmHTFVHk12cc328fBbIOi3/HBUO7enYWJZZl5dQI3hR+zORe7gqH2pu5oYELSJZqhu2uocvjQs5Bf4+kR9liYbrC0elVTTaUbQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FBVc69XY; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6f12ed79fdfso1920360a34.0;
+        Tue, 21 May 2024 10:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716312894; x=1716917694; darn=vger.kernel.org;
+        h=to:cc:message-id:date:subject:mime-version:reply-to
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=atIYRDSM21wXH5p/I8X6KQp3p9fC4TApzoZBDsjakTA=;
+        b=FBVc69XYqzA++XLVz3iHSgpuDIpxNKBC/bn/yXOfAFq8ZF1dDgWcIBYUAhknQApD2y
+         YKu++cOfnseNETm8RdR7GCkiA28yaPAipBQuDQjEFx3KEyvsqcTR4f0L3rvotCZGsMs0
+         srGmkjyCQfhR7FDyv4u8yQotzjHck0ufwPwkM0WuuI4prrdRm4jgZBQsUxDl/BbZEZ+G
+         6CUSDE9nbAVrlckDnja5aJDa0cbKZ1XANCvztNdC/4nVJOeTmUeivJCLFEKOgFbSDjOK
+         Z+iRiYgwoGjkLufI3wy0mK3lci2O5wSIpydBavkPh0mRY/xCtSmJ7RP1I0D86oPfm8Tr
+         1ZXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716312894; x=1716917694;
+        h=to:cc:message-id:date:subject:mime-version:reply-to
+         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=atIYRDSM21wXH5p/I8X6KQp3p9fC4TApzoZBDsjakTA=;
+        b=CFRFAOXn1NndVNd3Jl7QgqSIZr5LvZILNDhHtB6v6+iLRo2eXcYvOVsdS7KPPVokcR
+         KbElF2bCr54+k+0A50H7+Tll3oE2aKwjbOyBkghINRNrc/je/rp3DO+vJ3udkFcbgFFX
+         hVImoKZ6CGANSW9BRzkI1tXEPaiW1bSVDvUuD7FoesTzn8sJ+GDy+KJ03BFWD/sSyIHb
+         7QbbZO5iOvrBCM1EpNvwoMv/nwtlPqo9CaWPwEWQAD4YnEu2uoSRZrXorThK5TiXeN8b
+         S2tKPODc/yXKyHj/4EhoSh8SL2uG3IxJva7vpcjz/p9dPB2SI5rZ7XCtD86B1iakWQdf
+         LTPg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5eP6DL2F2QBVBzmYRMHA6TYfK+Q5upnIZ4ll7FwnS43L1DuU1zjBBzZf+OskFjSQRbZ6ySOmK6eRACRJ5ARKeH2ZYhpH7tRXmvf9adgQNQlAzv1wkhvB4SOjdXtm/9PJQR2dP
+X-Gm-Message-State: AOJu0YwtUCalNJ9J7LlTw0vMAaK4jQfyfxI56H/uZWzqTFPUELY5O1K6
+	J0efKRq8D3cD4qspTzp1Xz9X7Tv4pEOqyhRH9+gsAYfMzY/H2G7P
+X-Google-Smtp-Source: AGHT+IFPexkjdG+xCYyOCQgEKVngyuytyilUlEOA53NHqJcCo6Mk2b95BY97THETx7qwEZZnfhWyiA==
+X-Received: by 2002:a05:6871:215:b0:229:929a:b127 with SMTP id 586e51a60fabf-24172bdf8bamr40140060fac.37.1716312893110;
+        Tue, 21 May 2024 10:34:53 -0700 (PDT)
+Received: from smtpclient.apple ([12.97.180.36])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-24c62b40970sm81826fac.22.2024.05.21.10.34.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2024 10:34:52 -0700 (PDT)
+From: Vishal Aslot <os.vaslot@gmail.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Reply-To: 20240325235914.1897647-3-dave.jiang@intel.com
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240521110925.3876786-1-vidyas@nvidia.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH v2 2/3] PCI: Create new reset method to force SBR for CXL
+Date: Tue, 21 May 2024 12:34:40 -0500
+Message-Id: <E1AAAE3F-E059-4C57-BC23-6B436A39430A@gmail.com>
+Cc: Jonathan.Cameron@huawei.com,
+ alison.schofield@intel.com,
+ bhelgaas@google.com,
+ dan.j.williams@intel.com,
+ dave@stgolabs.net,
+ ira.weiny@intel.com,
+ linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org,
+ lukas@wunner.de,
+ vishal.l.verma@intel.com,
+ Vikram Sethi <vikramsethi@gmail.com>
+To: dave.jiang@intel.com
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-Hi Vidya,
+Hi,
+       For T2 and T3 persistent memory devices, wouldn=E2=80=99t we also =
+need a way to trigger device cache flush and then disable out of =
+cxl_reest_bus_function()?
+       CXL Spec 3.1 (Aug =E2=80=9923), Section 9.3 which refers to =
+system reset flow has RESETPREP VDMs to trigger device cache flush, put =
+memory in safe state, etc. These devices would benefit from this in case =
+of SBR as well, but it is root port specific so may be an ACPI method =
+could be involved out of cxl_reset_bus_function()?
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.9 next-20240521]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vidya-Sagar/PCI-Extend-ACS-configurability/20240521-191317
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240521110925.3876786-1-vidyas%40nvidia.com
-patch subject: [PATCH V2] PCI: Extend ACS configurability
-config: parisc-defconfig (https://download.01.org/0day-ci/archive/20240521/202405212300.S6fsze09-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240521/202405212300.S6fsze09-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405212300.S6fsze09-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pci/pci.c:1044: warning: Function parameter or struct member 'caps' not described in 'pci_std_enable_acs'
-
-
-vim +1044 drivers/pci/pci.c
-
-cbe420361f92a31 Rajat Jain      2020-07-07  1038  
-cbe420361f92a31 Rajat Jain      2020-07-07  1039  /**
-cbe420361f92a31 Rajat Jain      2020-07-07  1040   * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
-cbe420361f92a31 Rajat Jain      2020-07-07  1041   * @dev: the PCI device
-cbe420361f92a31 Rajat Jain      2020-07-07  1042   */
-a0bcc944f0e307a Vidya Sagar     2024-05-21  1043  static void pci_std_enable_acs(struct pci_dev *dev, struct pci_acs *caps)
-cbe420361f92a31 Rajat Jain      2020-07-07 @1044  {
-cbe420361f92a31 Rajat Jain      2020-07-07  1045  	/* Source Validation */
-a0bcc944f0e307a Vidya Sagar     2024-05-21  1046  	caps->ctrl |= (caps->cap & PCI_ACS_SV);
-cbe420361f92a31 Rajat Jain      2020-07-07  1047  
-cbe420361f92a31 Rajat Jain      2020-07-07  1048  	/* P2P Request Redirect */
-a0bcc944f0e307a Vidya Sagar     2024-05-21  1049  	caps->ctrl |= (caps->cap & PCI_ACS_RR);
-cbe420361f92a31 Rajat Jain      2020-07-07  1050  
-cbe420361f92a31 Rajat Jain      2020-07-07  1051  	/* P2P Completion Redirect */
-a0bcc944f0e307a Vidya Sagar     2024-05-21  1052  	caps->ctrl |= (caps->cap & PCI_ACS_CR);
-cbe420361f92a31 Rajat Jain      2020-07-07  1053  
-cbe420361f92a31 Rajat Jain      2020-07-07  1054  	/* Upstream Forwarding */
-a0bcc944f0e307a Vidya Sagar     2024-05-21  1055  	caps->ctrl |= (caps->cap & PCI_ACS_UF);
-cbe420361f92a31 Rajat Jain      2020-07-07  1056  
-7cae7849fccee81 Alex Williamson 2021-06-18  1057  	/* Enable Translation Blocking for external devices and noats */
-7cae7849fccee81 Alex Williamson 2021-06-18  1058  	if (pci_ats_disabled() || dev->external_facing || dev->untrusted)
-a0bcc944f0e307a Vidya Sagar     2024-05-21  1059  		caps->ctrl |= (caps->cap & PCI_ACS_TB);
-cbe420361f92a31 Rajat Jain      2020-07-07  1060  }
-cbe420361f92a31 Rajat Jain      2020-07-07  1061  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-Vishal=
 
