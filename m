@@ -1,80 +1,63 @@
-Return-Path: <linux-pci+bounces-7747-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7748-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD9028CC32D
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 16:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B54AD8CC379
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 16:46:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCD761C23222
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 14:24:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E73221C20E45
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 14:46:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD8E1411FA;
-	Wed, 22 May 2024 14:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC8DDDBD;
+	Wed, 22 May 2024 14:46:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dv2LkrXL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ug8dRJXp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFD81411CA;
-	Wed, 22 May 2024 14:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9E11AACB;
+	Wed, 22 May 2024 14:46:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716387851; cv=none; b=ZsSWhM9mBjBO9m2OlPlChSGAym5xZzBRIwIcN1XIW0tW5Rv3bVa2tsxpyUklq4FQiIbm6FBdhcSiriWHf2kzh0o0dlD6nRzfVqCH8IfpEPDAVng8BcD2HM8re/b7zASSK4p11tTBfB63Ii4iEjpe5xi2U6xtOnjXTXxltAJmvdE=
+	t=1716389190; cv=none; b=ZpzbAPbCg/I+HBB54cm6ZJyAjnM0hpDvq5anyWpkEQ1Aw943I15b9eS0qfVyVy1/OGGOObtIRwiYh94YC2JNyxkSKkxu6hdbG1hJlbvtK0Ply7fWYR54gnsW7hXwfcQ1HDuBdVXOBxLVoScFt2i+QtHypFLyb7Yi1HXEaQ4Iq1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716387851; c=relaxed/simple;
-	bh=hzLC77vGkl4FctqkHWbXtIKuE74mwnfPPg5UFrTyRQ4=;
+	s=arc-20240116; t=1716389190; c=relaxed/simple;
+	bh=dy7gr88adDgKpasKwsud6U16sjxUVBOaxRknrNm6xkU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fs5EYYUct4ng+jszLoSFrmNUn9A7G8j9cfZp1IIzQhkijz88VvoyibeCta76M/EOTnyT9Ds8+C7DKz4TDCR3x1woX7mi/OrLLiLMUCpf8bpLlSchBGyc9QcMuPsqpxI5AO0faJGbBUDWYLR/E83U0rh6s5PDDfF9HFfxmGItEnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dv2LkrXL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 424CCC2BBFC;
-	Wed, 22 May 2024 14:24:10 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=b36j9oT3e5n6yYOSDVbryElg4G13uzjxt1q1wsgY6Pb4Eu8P3Id+Clqox85s0OScTdh+ip3XXxZRHc46feRm9hjLojnKg2XTsZyzAvt0aF/UPereSgl55ZIM8O2QevJYaI6LyBsqaLR7Y8I/22gNLGVzCGvJm0zNOvqg3gemZnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ug8dRJXp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 076A3C2BBFC;
+	Wed, 22 May 2024 14:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716387850;
-	bh=hzLC77vGkl4FctqkHWbXtIKuE74mwnfPPg5UFrTyRQ4=;
+	s=k20201202; t=1716389190;
+	bh=dy7gr88adDgKpasKwsud6U16sjxUVBOaxRknrNm6xkU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dv2LkrXLNDZSCQhHTyPf/MTF5oJ580HsuWU4Xfd3cUhVT+MOou+G0hM1q7UzqqXCg
-	 XCMprz0GuUBE8N73oCx3fqSPYpREYXZulTts068qsUZPUmqzxqrGTLCMgSSnNpfDGz
-	 jx0eDiqy0gzDyXWtxiFf1K2PT6hhBTFm8qHC8evePXj2zr9kdlAIf6K8EW16S4WmNf
-	 bnKN+7cEjCzsvIZLXJhW7mQ76CjlvN1UCy+dKaQbgF2WgPk8/Sx6DWpvY5B4i9Xp4Y
-	 XiOzbjOUAlogktu9i/bYaVqjWA6nbZCg9X6Qloi5p61Olr6h6SpUBeqHEGGLIhYYmG
-	 f8V8onoGcibYg==
-Date: Wed, 22 May 2024 09:24:09 -0500
+	b=ug8dRJXpVEckHEassENbn9ROMPkaAby/LMVqPorfy17UISPuh3VHELsvyxKDZCPYL
+	 6W2m7UcOd66aR3hjGgOPXU6pFz5k7+ToOkDGXFHVTri4cnoi+34ngXqynrTvk29Oiz
+	 FE0QVYfKqarUkcWeHrlArhIusHiCfLEb+f5cyrpez/UCIf74y6wlyygSPG00gpp2zE
+	 u+Ou46NhRd1FnBO1W4uK0TdIEzWoHd8Cqwff25bM+8WHiK1CW/jl8KV3/VcCOzYxgI
+	 J2MZ+xQy9XvhJtxDQoss7cuALRSx5lXn8K4eip0IT1IzjSgfYFT3Sfs+WaB1I3VL9a
+	 syOaONQek/pCw==
+Date: Wed, 22 May 2024 09:46:29 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: UNGLinuxDriver@microchip.com,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	devicetree@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-pci@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	linux-arm-kernel@lists.infradead.org,
+	Michal Simek <michal.simek@amd.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-	netdev@vger.kernel.org, Lars Povlsen <lars.povlsen@microchip.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH 09/17] dt-bindings: interrupt-controller: Add support for
- Microchip LAN966x OIC
-Message-ID: <171638784589.3244704.2938848620402694008.robh@kernel.org>
-References: <20240430083730.134918-1-herve.codina@bootlin.com>
- <20240430083730.134918-10-herve.codina@bootlin.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] dt-bindings: pci: xilinx-nwl: Add phys
+Message-ID: <171638918647.3276613.2909691160973849874.robh@kernel.org>
+References: <20240520145402.2526481-1-sean.anderson@linux.dev>
+ <20240520145402.2526481-2-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,21 +66,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240430083730.134918-10-herve.codina@bootlin.com>
+In-Reply-To: <20240520145402.2526481-2-sean.anderson@linux.dev>
 
 
-On Tue, 30 Apr 2024 10:37:18 +0200, Herve Codina wrote:
-> The Microchip LAN966x outband interrupt controller (OIC) maps the
-> internal interrupt sources of the LAN966x device to an external
-> interrupt.
-> When the LAN966x device is used as a PCI device, the external interrupt
-> is routed to the PCI interrupt.
+On Mon, 20 May 2024 10:53:56 -0400, Sean Anderson wrote:
+> Add phys properties so Linux can power-on/configure the GTR
+> transcievers.
 > 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 > ---
->  .../microchip,lan966x-oic.yaml                | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+> 
+> Changes in v3:
+> - Document phys property
+> 
+> Changes in v2:
+> - Remove phy-names
+> - Add an example
+> 
+>  Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
