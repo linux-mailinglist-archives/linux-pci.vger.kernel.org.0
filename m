@@ -1,66 +1,63 @@
-Return-Path: <linux-pci+bounces-7752-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7753-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C30848CC4A3
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 18:07:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 181F78CC4A5
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 18:08:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B14CB220BA
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 16:07:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B5A228320B
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 16:08:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4899F1E517;
-	Wed, 22 May 2024 16:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C69024B2A;
+	Wed, 22 May 2024 16:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="c7FWYryq";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="XD0TdhFQ"
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="GB0uvdVQ";
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="xQr9SDC6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD63139B
-	for <linux-pci@vger.kernel.org>; Wed, 22 May 2024 16:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0E21E517
+	for <linux-pci@vger.kernel.org>; Wed, 22 May 2024 16:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716394069; cv=none; b=ZGsJgDambD7njaNJPkEo9YdP/cglBxDrhbvdPzr/zsQdJdY6tps/5dDzc6RJb0Liv9XuOgjN8X48WRdGfgV/pzuwjL6kPSrGncL8bJM5bRA2xGjhXxtyCYdEQiMChTPj3BV+uwQuBEnKqAO9aYbpkmrvwBwzC/Afbvzwu3N76AY=
+	t=1716394119; cv=none; b=b4Bld1CQxCutNkgYWJFlNzoeKaTLDY09xnNOHUZmrbyr03aSX+72D7f0cSmqScv0MaWgjjb8U117NxKwSKqpxLNhX6rEUIqgAcy7ESyWPof1ho3Nn7FqQlSO7DshPOne0wEWYMl03E5Bo3xg7yq2F3zCUlX0aN7Y2xATdMnQEDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716394069; c=relaxed/simple;
-	bh=HzY6f3iUJ24wgnbI0vrAbRTn2REESZKtC2FIuUgeknA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=POf/Jn0pA14akp1WR1jrqMQaJnsmokhvZsd6k/5k9U+t7fl/ZVm0Dv59V86GYMyN3lNlDz7a2et0iPIqe8QcaabspRh1qs1MSPwmIc9VqTUvZSkk9rwUcxph3z75WRYpx3P7DooOBzOwN2hDrXBrRbNrTJn7RryZjZbYuFaXYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=c7FWYryq; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=XD0TdhFQ; arc=none smtp.client-ip=89.207.88.248
+	s=arc-20240116; t=1716394119; c=relaxed/simple;
+	bh=umnt3XSDlUzNgS0WguWp5Fbj2FWoMCEvEWWIyaJNhrE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bvG4hMDzsASctnuP97gB9tmyW4mJd7d5YFCrs3kfkn2zWdCEohSOX2LoVEX2QIjhIb9CZbpnsdmPTJYy7A/ZTBWgLaLwZRVYsktjAXw2b1gz9fC/haR9ner0+DnD0JLF5KPlGQtZ5MHbkKzoQ9DiPZuaeNarwhil4gR4zcg/ZV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=GB0uvdVQ; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=xQr9SDC6; arc=none smtp.client-ip=89.207.88.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 5BEAFC0002
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 77EF4C0002
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1716394064; bh=jWWwDnMW62IXvIk8a/CHEuRMWiiYVXoCwUzJF54YzYg=;
+	t=1716394115; bh=9jAd/2vaDoZODrJMIjtCRAoZu+ws3Ap6s05qRYDaIO8=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=c7FWYryqQjHPmQkK8ImNylzr/dcHPGcyZoYjPqBUsbl4kQ/xsyugpb+MKS86+CPQo
-	 MFINKIcXkJIZ42Lmn8b1wuLhaOxybB7SEyorlhtF9FAj1QEfrmH+Oxm8QW2r88ev7W
-	 M1FE3sl/6HNo89iQ7bRZO078cNWQv6oIYeFGLx6UELOix7ZhiiCplxBcX+HDIsUUrK
-	 wtADbTRZcN4AIdL3W5690j8KB8VHBiC6dHPb/MmKmMpoIVX6SNhYWnyuH7R8tn7X/M
-	 X3WGUU0fRZFvHIAWTwI+ocwtQW/sP601VzxSMro67USfcn95aR6PDzJG/WWdVvNVIV
-	 Rc33EmCR7IW3w==
+	b=GB0uvdVQ4Tfc7UU98ot8xSyVmBxbg7EJGwK/nHbgVksxwu63EzKTmJm2qMvYYa5sx
+	 FInLSMQlzouUrK5TMQgwPb97nArsCHERQBH/KkC8NH/bYKra++7kt9tdUtCxIJ4SoJ
+	 RYr/zc7uuBh7aX0x/Yv/KEuSxwDbzbXDJY754C/Mx5yQV5UiXpzOGBjaTSQn7C9uFY
+	 FWylzduOfCCxD+GjCCf3zokVJXGSzCDaz6Jm6u6Q3BF0Qk1szENWO432TfO2948gI4
+	 rKgSGD4bcRwV+o1wyZrFwbcHqeen/EAk9xLH/ITj5I719eGqwx/xaBEJhIF/9H+Epi
+	 514QtsBeJZw4Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1716394064; bh=jWWwDnMW62IXvIk8a/CHEuRMWiiYVXoCwUzJF54YzYg=;
+	t=1716394115; bh=9jAd/2vaDoZODrJMIjtCRAoZu+ws3Ap6s05qRYDaIO8=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=XD0TdhFQQ5kCotDdpdawB4fFdW4MuVeYdcj44CElzPSmtLcySEHDd9Yt7bEMbN3x1
-	 tx193lfMNwKSuA14RDBN70XmVTZCwFF2t9R7FPjRkNxAOWMuvhzWiWgxLmYJ9Gwf8x
-	 YtcOXvDJ1VmIN0xGR3us1yf5gR6c8DAtoRF1uDDWJNE+DvcXZue06xLTFQFS7+csyZ
-	 A0iXa5jdL2kRZcriYFbk9sDKnCG7l8MkRvyfSCLtb5J4VnsJTUnjaH6zrCZI84wKL0
-	 s21HB1o06aZiGFv07VgU8CXjXTD10LoxNKZJ007Y6t/2x3OBbq0Al/EMT1IYVzQlH3
-	 nUppAVgsazxGg==
+	b=xQr9SDC6/CzXc1UMYIQqmh5sLRqCJkP0fazmkw2zybuQTCf86SPoq+0us0+Qvw16y
+	 9nxkrusisXfyiq4i7gjGfyFaHr0RydBbgJf9Js9HDQaG0I/mQfZIBb6ad7eTb/JrCY
+	 GXphpcRFxTYybv045uL/BglSDWwnLnRTI4IFJcZeF0EOs7iT54Azyzu5lLzS7umaej
+	 Pl9La550G29sVZ5ZZFwmIH/pbjjXWB8EjbPIvLoMqlb+PpgUVf0C9tUTZFoFX4RIHI
+	 VpA88RO8Xz6s21vBWRW0uG4AbPhNoWZOgytaRY92wOtxtDxg5Pz/z/+7IdhyAikKXP
+	 yzQmWgDHTJRew==
 From: Nikita Proshkin <n.proshkin@yadro.com>
 To: <linux-pci@vger.kernel.org>, Martin Mares <mj@ucw.cz>
 CC: <linux@yadro.com>, Sergei Miroshnichenko <s.miroshnichenko@yadro.com>,
 	Nikita Proshkin <n.proshkin@yadro.com>
-Subject: [PATCH pciutils 6/6] pcilmr: Update usage and man: new arguments format and grading
-Date: Wed, 22 May 2024 19:06:34 +0300
-Message-ID: <20240522160634.29831-7-n.proshkin@yadro.com>
+Subject: [PATCH pciutils] pcilmr: Fix margining for ports with Lane reversal
+Date: Wed, 22 May 2024 19:08:19 +0300
+Message-ID: <20240522160819.30208-1-n.proshkin@yadro.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240522160634.29831-1-n.proshkin@yadro.com>
-References: <20240522160634.29831-1-n.proshkin@yadro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,271 +66,130 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: T-EXCH-08.corp.yadro.com (172.17.11.58) To
+X-ClientProxiedBy: T-EXCH-07.corp.yadro.com (172.17.11.57) To
  S-Exch-02.corp.yadro.com (10.78.5.239)
+
+Current implementation interacts only with first Negotiated Link Width
+lanes even when Maximum Link Width for the port is bigger than that and
+Lane reversal is used. Utility in such situation may try to margin lane
+which is not used right now and erroneously fail with
+'Error during caps reading' message. Fix that behaviour.
 
 Signed-off-by: Nikita Proshkin <n.proshkin@yadro.com>
 ---
- lmr/margin_args.c |  39 ++++---------
- pcilmr.man        | 138 ++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 120 insertions(+), 57 deletions(-)
+ lmr/lmr.h        |  5 +++--
+ lmr/margin.c     |  8 ++++----
+ lmr/margin_hw.c  | 20 +++++++++++---------
+ lmr/margin_log.c |  2 +-
+ 4 files changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/lmr/margin_args.c b/lmr/margin_args.c
-index 8a6345f..57a1d0a 100644
---- a/lmr/margin_args.c
-+++ b/lmr/margin_args.c
-@@ -16,44 +16,25 @@
+diff --git a/lmr/lmr.h b/lmr/lmr.h
+index 7375c33..2e5da7c 100644
+--- a/lmr/lmr.h
++++ b/lmr/lmr.h
+@@ -27,7 +27,8 @@ enum margin_hw { MARGIN_HW_DEFAULT, MARGIN_ICE_LAKE_RC };
+ struct margin_dev {
+   struct pci_dev *dev;
+   int lmr_cap_addr;
+-  u8 width;
++  u8 neg_width;
++  u8 max_width;
+   u8 retimers_n;
+   u8 link_speed;
  
- const char *usage
-   = "! Utility requires preliminary preparation of the system. Refer to the pcilmr man page !\n\n"
--    "Usage:\n"
--    "pcilmr [--margin] [<margining options>] <downstream component> ...\n"
--    "pcilmr --full [<margining options>]\n"
-+    "Brief usage (see man for all options):\n"
-+    "pcilmr [--margin] [<common options>] <link port> [<link options>] [<link port> [<link "
-+    "options>] ...]\n"
-+    "pcilmr --full [<common options>]\n"
-     "pcilmr --scan\n\n"
--    "Device Specifier:\n"
-+    "You can specify Downstream or Upstream Port of the Link.\nPort Specifier:\n"
-     "<device/component>:\t[<domain>:]<bus>:<dev>.<func>\n\n"
-     "Modes:\n"
-     "--margin\t\tMargin selected Links\n"
-     "--full\t\t\tMargin all ready for testing Links in the system (one by one)\n"
-     "--scan\t\t\tScan for Links available for margining\n\n"
--    "Margining options:\n\n"
--    "Margining Test settings:\n"
--    "-c\t\t\tPrint Device Lane Margining Capabilities only. Do not run margining.\n"
--    "-l <lane>[,<lane>...]\tSpecify lanes for margining. Default: all link lanes.\n"
--    "\t\t\tRemember that Device may use Lane Reversal for Lane numbering.\n"
--    "\t\t\tHowever, utility uses logical lane numbers in arguments and for logging.\n"
--    "\t\t\tUtility will automatically determine Lane Reversal and tune its calls.\n"
--    "-e <errors>\t\tSpecify Error Count Limit for margining. Default: 4.\n"
-+    "Margining options (see man for all options):\n\n"
-+    "Common (for all specified links) options:\n"
-+    "-c\t\t\tPrint Device Lane Margining Capabilities only. Do not run margining.\n\n"
-+    "Link specific options:\n"
-     "-r <recvn>[,<recvn>...]\tSpecify Receivers to select margining targets.\n"
-     "\t\t\tDefault: all available Receivers (including Retimers).\n"
--    "-p <parallel_lanes>\tSpecify number of lanes to margin simultaneously.\n"
--    "\t\t\tDefault: 1.\n"
--    "\t\t\tAccording to spec it's possible for Receiver to margin up\n"
--    "\t\t\tto MaxLanes + 1 lanes simultaneously, but usually this works\n"
--    "\t\t\tbad, so this option is for experiments mostly.\n"
--    "-T\t\t\tTime Margining will continue until the Error Count is no more\n"
--    "\t\t\tthan an Error Count Limit. Use this option to find Link limit.\n"
--    "-V\t\t\tSame as -T option, but for Voltage.\n"
-     "-t <steps>\t\tSpecify maximum number of steps for Time Margining.\n"
--    "-v <steps>\t\tSpecify maximum number of steps for Voltage Margining.\n"
--    "Use only one of -T/-t options at the same time (same for -V/-v).\n"
--    "Without these options utility will use MaxSteps from Device\n"
--    "capabilities as test limit.\n\n"
--    "Margining Log settings:\n"
--    "-o <directory>\t\tSave margining results in csv form into the\n"
--    "\t\t\tspecified directory. Utility will generate file with the\n"
--    "\t\t\tname in form of 'lmr_<downstream component>_Rx#_<timestamp>.csv'\n"
--    "\t\t\tfor each successfully tested receiver.\n";
-+    "-v <steps>\t\tSpecify maximum number of steps for Voltage Margining.\n";
+@@ -202,7 +203,7 @@ void margin_log(char *format, ...);
+ /* b:d.f -> b:d.f */
+ void margin_log_bdfs(struct pci_dev *down_port, struct pci_dev *up_port);
  
- static struct pci_dev *
- dev_for_filter(struct pci_access *pacc, char *filter)
-diff --git a/pcilmr.man b/pcilmr.man
-index 673262f..3f4140c 100644
---- a/pcilmr.man
-+++ b/pcilmr.man
-@@ -4,10 +4,10 @@ pcilmr \- margin PCIe Links
- .SH SYNOPSIS
- .B pcilmr
- .RB [ "--margin" ]
--.RI [ "<margining options>" ] " <downstream component> ..."
-+.RI [ "<common options>" ] " <link port> " [ "<link options>" "] [" "<link port> " [ "<link options>" ] " ..." ]
- .br
- .B pcilmr --full
--.RI [ "<margining options>" ]
-+.RI [ "<common options>" ]
- .br
- .B pcilmr --scan
- .SH CONFIGURATION
-@@ -64,26 +64,81 @@ Utility allows to get an approximation of the eye margin diagram in the form of
- links without a hardware debugger and without the need to stop the target system. Utility
- can be useful to debug link issues due to receiver margins.
+-/* Print Link header (bdfs, width, speed) */
++/* Print Link header (bdfs, neg_width, speed) */
+ void margin_log_link(struct margin_link *link);
  
--However, the utility results may be not particularly accurate and, as it was found out during
--testing, specific devices provide rather dubious capability support and the reliability of
--the information they provide is questionable. The PCIe specification provides reference values
--for the eye diagram, which are also used by the
-+.B pcilmr
-+requires root privileges (to access Extended Configuration Space), but during our testing
-+there were no problems with the devices and they successfully returned to their normal initial
-+state after the end of testing.
-+
-+.SH RESULTS GRADING
-+The PCIe specification provides reference values for the eye diagram, which are also used by the
- .B pcilmr
- to evaluate the results, but it seems that it makes sense to contact the
- manufacturer of a particular device for references.
+ void margin_log_params(struct margin_params *params);
+diff --git a/lmr/margin.c b/lmr/margin.c
+index a8c6571..a432f68 100644
+--- a/lmr/margin.c
++++ b/lmr/margin.c
+@@ -161,7 +161,7 @@ read_params_internal(struct margin_dev *dev, u8 recvn, bool lane_reversal,
+                      struct margin_params *params)
+ {
+   margin_cmd resp;
+-  u8 lane = lane_reversal ? dev->width - 1 : 0;
++  u8 lane = lane_reversal ? dev->max_width - 1 : 0;
+   margin_set_cmd(dev, lane, NO_COMMAND);
+   bool status = margin_report_cmd(dev, lane, REPORT_CAPS(recvn), &resp);
+   if (status)
+@@ -361,7 +361,7 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_args *args,
+   for (int i = 0; i < lanes_n; i++)
+     {
+       results->lanes[i].lane
+-        = recv.lane_reversal ? dev->width - lanes_to_margin[i] - 1 : lanes_to_margin[i];
++        = recv.lane_reversal ? dev->max_width - lanes_to_margin[i] - 1 : lanes_to_margin[i];
+     }
  
--The PCIe Base Specification Revision 5.0 sets allowed range for Timing Margin from 20%\~UI to 50%\~UI and
--for Voltage Margin from 50\~mV to 500\~mV. Utility uses 30%\~UI as the recommended
--value for Timing - taken from NVIDIA presentation ("PCIe 4.0 Mass Electrical Margins Data
--Collection").
-+The utility uses values set in PCIe Base Spec Rev. 5.0 Section 8.4.2 as the default eye width and height
-+minimum references. Recommended values were taken from 
-+the PCIe Architecture PHY Test Spec Rev 5.0 (Transmitter Electrical Compliance).
-+
-+Reference grading values currently used by the utility are presented in the table below:
-+
-+.TS
-+box tab(:);
-+C | Cb S | Cb S
-+C | Cb | Cb | Cb | Cb
-+Lb | C | C | C | C.
-+\&:16 GT/s (Gen 4):32 GT/s (Gen 5)
-+\&:EW:EH:EW:EH
-+_
-+Min:T{
-+18.75 ps
-+.br
-+30% UI
-+T}:15 mV:T{
-+9.375 ps
-+.br
-+30% UI
-+T}:15 mV
-+_
-+Rec:T{
-+23.75 ps
-+.br
-+38% UI
-+T}:21 mV:T{
-+10.157 ps
-+.br
-+33% UI
-+T}:19.75 mV
-+.TE
+   if (args->run_margin)
+@@ -524,7 +524,7 @@ margin_process_args(struct margin_dev *dev, struct margin_args *args)
  
- .B pcilmr
--requires root privileges (to access Extended Configuration Space), but during our testing
--there were no problems with the devices and they successfully returned to their normal initial
--state after the end of testing.
-+uses full eye width and height values to grade lanes. However, it is possible that
-+device supports only one side margining. In such cases by default utility will
-+calculate EW or EH as a double one side result.
-+
-+If info for specific device is available, you can configure grading criteria
-+and tweak utility behavior in one-side only cases for your device using 
-+.I -g
-+link specific option (see below).
-+
-+.SH HARDWARE QUIRKS SUPPORT
-+
-+Thanks to testing or directly from the manufacturer's documentation, we know that
-+some devices require special treatment during the margining. 
-+Utility detects such devices based on their Vendor ID - Device ID pair.
-+Right now the list of special devices is hardcoded in
-+.I margin_hw
-+file. For such devices utility can automatically adjust port margining parameters
-+or grading options.
-+
-+For example, for Ice Lake CPUs RC ports
-+.B pcilmr
-+will change device MaxVoltageOffset value and will force the use of
-+.RI ' "one side is the whole" "' grading mode."
+   if (!args->lanes_n)
+     {
+-      args->lanes_n = dev->width;
++      args->lanes_n = dev->neg_width;
+       for (int i = 0; i < args->lanes_n; i++)
+         args->lanes[i] = i;
+     }
+@@ -532,7 +532,7 @@ margin_process_args(struct margin_dev *dev, struct margin_args *args)
+     {
+       for (int i = 0; i < args->lanes_n; i++)
+         {
+-          if (args->lanes[i] >= dev->width)
++          if (args->lanes[i] >= dev->neg_width)
+             {
+               return MARGIN_TEST_ARGS_LANES;
+             }
+diff --git a/lmr/margin_hw.c b/lmr/margin_hw.c
+index fc427c8..9ef8f1a 100644
+--- a/lmr/margin_hw.c
++++ b/lmr/margin_hw.c
+@@ -70,15 +70,17 @@ static struct margin_dev
+ fill_dev_wrapper(struct pci_dev *dev)
+ {
+   struct pci_cap *cap = pci_find_cap(dev, PCI_CAP_ID_EXP, PCI_CAP_NORMAL);
+-  struct margin_dev res
+-    = { .dev = dev,
+-        .lmr_cap_addr = pci_find_cap(dev, PCI_EXT_CAP_ID_LMR, PCI_CAP_EXTENDED)->addr,
+-        .width = GET_REG_MASK(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA), PCI_EXP_LNKSTA_WIDTH),
+-        .retimers_n
+-        = (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_RETIMER))
+-          + (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_2RETIMERS)),
+-        .link_speed = (pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA) & PCI_EXP_LNKSTA_SPEED),
+-        .hw = detect_unique_hw(dev) };
++  struct margin_dev res = {
++    .dev = dev,
++    .lmr_cap_addr = pci_find_cap(dev, PCI_EXT_CAP_ID_LMR, PCI_CAP_EXTENDED)->addr,
++    .neg_width = GET_REG_MASK(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA), PCI_EXP_LNKSTA_WIDTH),
++    .max_width = GET_REG_MASK(pci_read_long(dev, cap->addr + PCI_EXP_LNKCAP), PCI_EXP_LNKCAP_WIDTH),
++    .retimers_n
++    = (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_RETIMER))
++      + (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_2RETIMERS)),
++    .link_speed = (pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA) & PCI_EXP_LNKSTA_SPEED),
++    .hw = detect_unique_hw(dev)
++  };
+   return res;
+ }
  
- .SH OPTIONS
- .SS Device Specifier
-+.B "You can specify Downstream or Upstream Port of the Link."
-+.TP
- .B "<device/component>" \t
- .RI [ "<domain>" :] <bus> : <dev> . <func>
- (see
-@@ -102,13 +157,29 @@ option) Links in the system (one by one).
- Scan for Links with negotiated speed 16 GT/s or higher. Mark "Ready" those of them
- in which at least one of the Link sides have Margining Ready bit set meaning that
- these Links are ready for testing and you can run utility on them.
--.SS Margining Test options
--.TP
-+.SS Margining Common (for all specified links) options
- .B -c
- Print Device Lane Margining Capabilities only. Do not run margining.
- .TP
-+.BI -e " <errors>"
-+Specify Error Count Limit for margining.
-+.br
-+Default: 4.
-+.TP
-+.BI -o " <directory>"
-+Save margining results in csv form into the specified directory. Utility
-+will generate file with the name in form of
-+.RI "\[dq]lmr_" "<port>" "_Rx" # _ <timestamp> ".csv\[dq]"
-+for each successfully tested receiver.
-+.TP
-+.BI -d " <time>"
-+Specify dwell time in seconds for the margining step. 
-+.br
-+Default: 1 s
-+.SS Margining Link specific options
-+.TP
- \fB\-l\fI <lane>\fP[\fI,<lane>...\fP]
--Specify lanes for margining.
-+.R Specify lanes for margining.
- .br
- Remember that Device may use Lane Reversal for Lane numbering. However, utility
- uses logical lane numbers in arguments and for logging. Utility will automatically
-@@ -116,11 +187,6 @@ determine Lane Reversal and tune its calls.
- .br
- Default: all link lanes.
- .TP
--.BI -e " <errors>"
--Specify Error Count Limit for margining.
--.br
--Default: 4.
--.TP
- \fB-r\fI <recvn>\fP[\fI,<recvn>...\fP]
- Specify Receivers to select margining targets.
- .br
-@@ -157,18 +223,34 @@ option, but for Voltage.
- .TP
- .BI -v " <steps>"
- Specify maximum number of steps for Voltage Margining.
--.SS Margining Log options
- .TP
--.BI -o " <directory>"
--Save margining results in csv form into the specified directory. Utility
--will generate file with the name in form of
--.RI "\[dq]lmr_" "<downstream component>" "_Rx" # _ <timestamp> ".csv\[dq]"
--for each successfully tested receiver.
-+\fB-g\fI <recvn>\fPt=\fI<criteria>\fP{%|ps}[,f]
-+.TP
-+.IB "   <recvn>" t=f[, "<criteria>" "{%|ps}]"
-+.TP
-+.IB "   <recvn>" v= "<criteria>" "[,f]"
-+.TP
-+.IB "   <recvn>" v=f[, "<criteria>" ]
-+Specify pass/fail grading criteria for eye width (timing - t) or height
-+(voltage - v) for one of the link receivers. For EW you must choose one of the
-+units (% UI or ps), for EH mV is used.
-+.br
-+Additional flag
-+.I f
-+is for situations when port doesn't support two side independent
-+margining. In such cases by default utility will calculate EW or EH as a
-+double one side result. You can add 
-+.I f
-+flag for
-+.I -g
-+option to tell the utility that the result in one direction is actually the
-+measurement of the full eye and it does not need to be multiplied. This is so called
-+.RI ' "one side is the whole" "' grading mode."
- 
- .SH EXAMPLES
- Utility syntax example:
- .RS
--.BI "pcilmr -l" " 0,1 " "-r" " 1,6 " "-TV" " ab:0.0 52:0.0"
-+.BI "pcilmr -o " "csv ab:0.0 " "-r " "1,6 " "-g " "1t=20% " "-g " "1v=f,30 52:0.0 " "-l " "0,1,2 " "-TV"
- .RE
- 
- .UR https://gist.github.com/bombanya/f2b15263712757ffba1a11eea011c419
+diff --git a/lmr/margin_log.c b/lmr/margin_log.c
+index b3c4bd5..b03d2b8 100644
+--- a/lmr/margin_log.c
++++ b/lmr/margin_log.c
+@@ -42,7 +42,7 @@ margin_log_link(struct margin_link *link)
+ {
+   margin_log("Link ");
+   margin_log_bdfs(link->down_port.dev, link->up_port.dev);
+-  margin_log("\nNegotiated Link Width: %d\n", link->down_port.width);
++  margin_log("\nNegotiated Link Width: %d\n", link->down_port.neg_width);
+   margin_log("Link Speed: %d.0 GT/s = Gen %d\n", (link->down_port.link_speed - 3) * 16,
+              link->down_port.link_speed);
+   margin_log("Available receivers: ");
 -- 
 2.34.1
 
