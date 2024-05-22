@@ -1,131 +1,108 @@
-Return-Path: <linux-pci+bounces-7740-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7741-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DF1A8CBBD3
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 09:17:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BFBB8CBE45
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 11:43:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E34CE1F2237F
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 07:17:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE41BB21B52
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 09:43:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1830077F2D;
-	Wed, 22 May 2024 07:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D0B7F489;
+	Wed, 22 May 2024 09:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="r0lo/d7x"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dSNvxMqb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875EE2233A;
-	Wed, 22 May 2024 07:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B2C54720
+	for <linux-pci@vger.kernel.org>; Wed, 22 May 2024 09:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716362267; cv=none; b=dSG4KXC1P5JE5q6oT4iz+DcuE8by1RMiAw59bCa3JyRo7WPFJQekflY21u1mK/Wndrnv4YOaW8J+W3rASOpcFF+RorR8hav/1BjG72rySQiwbcm2CY39J5G+MwU+lxcPrNRzGCWXji8QpV4tTi7M7UIBEEDqnao1Pmohs1ZNHHw=
+	t=1716371013; cv=none; b=jSfuRGiG1VHXgQ36qkuFpUc7s/VISP5zB34Qo3pnsWeuJVztw3kHcKr1M5OjiAG+7ucBkaYYCRdZ9BjMZbwbbaOh5GKXfRe4pxZoUb7fma4aX0JDIjlmu/aExBTzjXileZDKNs6lVKyIbHOgNTZF75G4/qt7jZ4oFqfLIV2/uYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716362267; c=relaxed/simple;
-	bh=S4+VlRYjbyjOZgdhFha9p34kKt6KjBudlxAU/clKD14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GZgLzHmGW/adhZg2Qy3gvtSjsbcoBAmSX30WQu0b52cnqB+UbWdP1N610I2Ew+cvp/byweMNldYQpkAk7NOO9jZCl/dNz6hzUHOjUsFJHHSAYSAwBMi8yzykOorw4BUfnwkpGTgmjVuxBi1GayFRAvwxP/L3Gcp/w2uPZQvWe+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=r0lo/d7x; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1716362263;
-	bh=S4+VlRYjbyjOZgdhFha9p34kKt6KjBudlxAU/clKD14=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r0lo/d7x0JyE1O8oKfIQPef1AKCZ3GUtCkMvX9SiMYkyKn3gWAw1kXgN6VLtr5w/f
-	 RLmnOZDgjU7Ft4ig9dhZZbkqKoRNB5Y1XWn13lH365hIcAMFuOlmm2nAsoSHJJop+F
-	 GJvSO3TISL8WrBO9aUf80A/ncF5LPBsSQxGeHpJo/hbD7xkQCVhue8/rOQGEV0omqF
-	 sOGj4Z69669yMBPHi6x9JzWMwMpYr8Mv7myfMEqdTL3QgiD7W+UP2c6uLGGHcceAuv
-	 Vxs9DAIX/IVBw4zhXIFOePlkmism1/706nAgHRu3sXDeuf9f0uYkP0ct4yPaUbAe+h
-	 F6Sg/wXiaTh8A==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2E5CE378214D;
-	Wed, 22 May 2024 07:17:43 +0000 (UTC)
-Message-ID: <e856dbde-c712-473f-a761-cd29d6e8d8b5@collabora.com>
-Date: Wed, 22 May 2024 09:17:42 +0200
+	s=arc-20240116; t=1716371013; c=relaxed/simple;
+	bh=mjMI5jn7GDB1KOVdd12Y1631VJlZG67v4e1IULzb7Hs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eBM7jigKPM1f5ai/eq1e6ptafSJmh1Ti1x1kWUxSn9DveEoyAFR6nz+RP8H2V8yI/Q+Zm2yAzzMqty/UPz50UUr/Khxuq/VUi+mOmrKvu2UEOfNihLcpAg0PcPzLrU0Das79j5m9z0Im4F9jrYyUYAMoshzubkABXuy23RqBU44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dSNvxMqb; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716371012; x=1747907012;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=mjMI5jn7GDB1KOVdd12Y1631VJlZG67v4e1IULzb7Hs=;
+  b=dSNvxMqbfioH3vLMNoofVuSQ1+OqY2iI5Ns0Vu3NMXAyJJO+zk1/79Dg
+   Y0MrMHX7D/LHvLML8dRcz4QsG4SFnXPSn34X3BX/jEBkNvPPGyyVed2u4
+   9vMeC4cgOodk18EDaEGLGy89RZCED/K1SSlXucpmH6KoOiFZxg99ki0kj
+   3Gegi+8f/dOqVGeoENdO1mQGPyTmRzqNnb3wM5WrSEzmmBzdaiZGSLkfH
+   LtT7Ry1eTWxUnT4biYq7vqo8+B6vQcTbCf9sdZPSVmcucMdiuLpJ2Jaeg
+   BzU4YXUiePJyNVvayWhpTB5pu8ZFg+CIexneQMSbLPLqlM6gcIw9G9Uvg
+   g==;
+X-CSE-ConnectionGUID: xoTbUi6bTDKl8ztYpLg8mg==
+X-CSE-MsgGUID: H+XFxmqMTHaWmpPGoShGIQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12728099"
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="12728099"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 02:43:31 -0700
+X-CSE-ConnectionGUID: iHs1xWFuStKABTrq10synQ==
+X-CSE-MsgGUID: zcFovMXvTq2IQ/WHrvl6/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
+   d="scan'208";a="33284685"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.230])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 02:43:29 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: intel-gfx@lists.freedesktop.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Lucas De
+ Marchi <lucas.demarchi@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: Re: [PATCH 1/2] drm/i915/pciids: switch to xe driver style PCI ID
+ macros
+In-Reply-To: <87y184sm72.fsf@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240515165651.1230465-1-jani.nikula@intel.com>
+ <87y184sm72.fsf@intel.com>
+Date: Wed, 22 May 2024 12:43:26 +0300
+Message-ID: <87ed9uqj0h.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: PCI: mediatek,mt7621-pcie: add PCIe host
- topology ascii graph
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- devicetree@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, krzk+dt@kernel.org, robh@kernel.org,
- kw@linux.com, lpieralisi@kernel.org, bhelgaas@google.com,
- conor+dt@kernel.org, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzk@kernel.org>
-References: <20240522044321.3205160-1-sergio.paracuellos@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240522044321.3205160-1-sergio.paracuellos@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Il 22/05/24 06:43, Sergio Paracuellos ha scritto:
-> MediaTek MT7621 PCIe subsys supports a single Root Complex (RC) with 3 Root
-> Ports. Add PCIe host topology ascii graph to the binding for completeness.
-> 
-> Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+On Mon, 20 May 2024, Jani Nikula <jani.nikula@intel.com> wrote:
+> On Wed, 15 May 2024, Jani Nikula <jani.nikula@intel.com> wrote:
+>> The PCI ID macros in xe_pciids.h allow passing in the macro to operate
+>> on each PCI ID, making it more flexible. Convert i915_pciids.h to the
+>> same pattern.
+>>
+>> INTEL_IVB_Q_IDS() for Quanta transcode remains a special case, and
+>> unconditionally uses INTEL_QUANTA_VGA_DEVICE().
+>>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: linux-pci@vger.kernel.org
+>
+> Bjorn, since I asked for acks on the last ones, I probably should here
+> too. :)
+>
+> I'm hoping to stop mucking with the macros after this.
 
-Lovely.
+Okay, well, I pushed this to drm-intel-next, since this doesn't really
+change x86 functionally, and you weren't all that interested the last
+time. Hope it's fine. :)
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+BR,
+Jani.
 
-> ---
->   .../bindings/pci/mediatek,mt7621-pcie.yaml    | 29 +++++++++++++++++++
->   1 file changed, 29 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-> index 6fba42156db6..c41608863d6c 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-> @@ -13,6 +13,35 @@ description: |+
->     MediaTek MT7621 PCIe subsys supports a single Root Complex (RC)
->     with 3 Root Ports. Each Root Port supports a Gen1 1-lane Link
->   
-> +                          MT7621 PCIe HOST Topology
-> +
-> +                                   .-------.
-> +                                   |       |
-> +                                   |  CPU  |
-> +                                   |       |
-> +                                   '-------'
-> +                                       |
-> +                                       |
-> +                                       |
-> +                                       v
-> +                              .------------------.
-> +                  .-----------|  HOST/PCI Bridge |------------.
-> +                  |           '------------------'            | Type1
-> +             BUS0 |                     |                     | Access
-> +                  v                     v                     v On Bus0
-> +          .-------------.        .-------------.       .-------------.
-> +          | VIRTUAL P2P |        | VIRTUAL P2P |       | VIRTUAL P2P |
-> +          |    BUS0     |        |    BUS0     |       |    BUS0     |
-> +          |    DEV0     |        |    DEV1     |       |    DEV2     |
-> +          '-------------'        '-------------'       '-------------'
-> +    Type0        |          Type0       |         Type0       |
-> +   Access   BUS1 |         Access   BUS2|        Access   BUS3|
-> +   On Bus1       v         On Bus2      v        On Bus3      v
-> +           .----------.           .----------.          .----------.
-> +           | Device 0 |           | Device 0 |          | Device 0 |
-> +           |  Func 0  |           |  Func 0  |          |  Func 0  |
-> +           '----------'           '----------'          '----------'
-> +
->   allOf:
->     - $ref: /schemas/pci/pci-host-bridge.yaml#
->   
 
+-- 
+Jani Nikula, Intel
 
