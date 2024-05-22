@@ -1,189 +1,105 @@
-Return-Path: <linux-pci+bounces-7746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8645E8CC2B9
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 16:01:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD9028CC32D
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 16:24:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B70D281DDF
-	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 14:01:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCD761C23222
+	for <lists+linux-pci@lfdr.de>; Wed, 22 May 2024 14:24:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E9CAD2D;
-	Wed, 22 May 2024 14:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD8E1411FA;
+	Wed, 22 May 2024 14:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5x2Liu3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dv2LkrXL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9FC6AB9
-	for <linux-pci@vger.kernel.org>; Wed, 22 May 2024 14:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFD81411CA;
+	Wed, 22 May 2024 14:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716386502; cv=none; b=MyHEm5NLJCcSvw6k/dCQYBN3hzUuJetZvadxXwcUh54u5MKzSmsRDMdSfY36ULTTz47ghIKDvTKLzwks95zysqfZj/nosoyaycV9gBVmkv3PMXKjY71yuwUC2rZK7B7FOaDtn+EbBO9nLBV2R4N0D0IE3CffarAiKe7O/WhAb1U=
+	t=1716387851; cv=none; b=ZsSWhM9mBjBO9m2OlPlChSGAym5xZzBRIwIcN1XIW0tW5Rv3bVa2tsxpyUklq4FQiIbm6FBdhcSiriWHf2kzh0o0dlD6nRzfVqCH8IfpEPDAVng8BcD2HM8re/b7zASSK4p11tTBfB63Ii4iEjpe5xi2U6xtOnjXTXxltAJmvdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716386502; c=relaxed/simple;
-	bh=zhrKFH70tanWXZyOdzRD8sS3w4ncffbj6iKAlDURHzA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=QGwNnt29zk3KT7EB3fKAjLq8CRV8N4FxXydjbms7f+ABEO49wzFVUBK0HjiWtbIMJTXIlQWsdfzEVyH0L3bkYDz67PsVeosJvvL9xxMigjv8J/F1sTgicM8VD1fTUaHM55NrZ04ql3dKZrdSuzrCvR09OGHA4mNYMr7zhHESra4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5x2Liu3; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716386500; x=1747922500;
-  h=date:from:to:cc:subject:message-id;
-  bh=zhrKFH70tanWXZyOdzRD8sS3w4ncffbj6iKAlDURHzA=;
-  b=X5x2Liu3dYuGvJGSFEGPyvTRx/9mit/Bdcytff3kXn5UtlEQDYK5CA8C
-   21GP7sPfxk1OkTN5bCMCBoXj+OEAOTMXz77n9RqsNFm8YJSWwdV0OrurC
-   Wt8oxtfPxYo3JL2C83UzrlE6re0mI2xzbHZ736kE7xy6uYNwyK5A5+kwt
-   VDAmVokuxmYaAGBU4qQw0g2DBfkHxgXzSDrHcC58xaxu1vC/kV9EYXp/R
-   HuNnSUY/f0c2GN59z5r+CYMPcU/R/PCn/cOSP0jtt7EJkuoEDiGcGTzHO
-   EsI/v505XKcPSphD/mCCW9KLOOpTEqOK/UYyYpkbhk6VV3X5eWEtvfQEK
-   g==;
-X-CSE-ConnectionGUID: +WpH1aR+R5eOOjFjKf5UiQ==
-X-CSE-MsgGUID: Pzru3wBcSueeYMcUCxfyyw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11079"; a="12870476"
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="12870476"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 07:01:40 -0700
-X-CSE-ConnectionGUID: vt9/hBxdRrK5Ph8EefeFDQ==
-X-CSE-MsgGUID: Sdgl0daCRPerav5DUak0QQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,179,1712646000"; 
-   d="scan'208";a="37691370"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 22 May 2024 07:01:39 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s9mX7-0001cY-0c;
-	Wed, 22 May 2024 14:01:34 +0000
-Date: Wed, 22 May 2024 22:01:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:defer/resource] BUILD SUCCESS
- 7dfb342736c447eeb602642e57bbaf907fc1b465
-Message-ID: <202405222203.wkfsEyC6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1716387851; c=relaxed/simple;
+	bh=hzLC77vGkl4FctqkHWbXtIKuE74mwnfPPg5UFrTyRQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fs5EYYUct4ng+jszLoSFrmNUn9A7G8j9cfZp1IIzQhkijz88VvoyibeCta76M/EOTnyT9Ds8+C7DKz4TDCR3x1woX7mi/OrLLiLMUCpf8bpLlSchBGyc9QcMuPsqpxI5AO0faJGbBUDWYLR/E83U0rh6s5PDDfF9HFfxmGItEnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dv2LkrXL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 424CCC2BBFC;
+	Wed, 22 May 2024 14:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716387850;
+	bh=hzLC77vGkl4FctqkHWbXtIKuE74mwnfPPg5UFrTyRQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dv2LkrXLNDZSCQhHTyPf/MTF5oJ580HsuWU4Xfd3cUhVT+MOou+G0hM1q7UzqqXCg
+	 XCMprz0GuUBE8N73oCx3fqSPYpREYXZulTts068qsUZPUmqzxqrGTLCMgSSnNpfDGz
+	 jx0eDiqy0gzDyXWtxiFf1K2PT6hhBTFm8qHC8evePXj2zr9kdlAIf6K8EW16S4WmNf
+	 bnKN+7cEjCzsvIZLXJhW7mQ76CjlvN1UCy+dKaQbgF2WgPk8/Sx6DWpvY5B4i9Xp4Y
+	 XiOzbjOUAlogktu9i/bYaVqjWA6nbZCg9X6Qloi5p61Olr6h6SpUBeqHEGGLIhYYmG
+	 f8V8onoGcibYg==
+Date: Wed, 22 May 2024 09:24:09 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: UNGLinuxDriver@microchip.com,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	devicetree@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-pci@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-arm-kernel@lists.infradead.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+	netdev@vger.kernel.org, Lars Povlsen <lars.povlsen@microchip.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH 09/17] dt-bindings: interrupt-controller: Add support for
+ Microchip LAN966x OIC
+Message-ID: <171638784589.3244704.2938848620402694008.robh@kernel.org>
+References: <20240430083730.134918-1-herve.codina@bootlin.com>
+ <20240430083730.134918-10-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430083730.134918-10-herve.codina@bootlin.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git defer/resource
-branch HEAD: 7dfb342736c447eeb602642e57bbaf907fc1b465  PCI: Relax bridge window tail sizing rules
 
-elapsed time: 1039m
+On Tue, 30 Apr 2024 10:37:18 +0200, Herve Codina wrote:
+> The Microchip LAN966x outband interrupt controller (OIC) maps the
+> internal interrupt sources of the LAN966x device to an external
+> interrupt.
+> When the LAN966x device is used as a PCI device, the external interrupt
+> is routed to the PCI interrupt.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  .../microchip,lan966x-oic.yaml                | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+> 
 
-configs tested: 96
-configs skipped: 3
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                                defconfig   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240522   clang
-x86_64       buildonly-randconfig-003-20240522   clang
-x86_64       buildonly-randconfig-005-20240522   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-002-20240522   clang
-x86_64                randconfig-006-20240522   clang
-x86_64                randconfig-012-20240522   clang
-x86_64                randconfig-014-20240522   clang
-x86_64                randconfig-071-20240522   clang
-x86_64                randconfig-072-20240522   clang
-x86_64                randconfig-074-20240522   clang
-x86_64                randconfig-075-20240522   clang
-x86_64                randconfig-076-20240522   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
