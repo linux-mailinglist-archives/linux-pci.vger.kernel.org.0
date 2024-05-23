@@ -1,200 +1,142 @@
-Return-Path: <linux-pci+bounces-7766-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7767-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E93C8CCAC6
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 04:35:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05ADD8CCB63
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 06:30:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3D381C20C74
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 02:35:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC2E6283154
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 04:30:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E29A13A402;
-	Thu, 23 May 2024 02:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C282C13A3E3;
+	Thu, 23 May 2024 04:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LNO9S6KF"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RPTYm7jl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C78A3FD4;
-	Thu, 23 May 2024 02:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165B653363;
+	Thu, 23 May 2024 04:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716431753; cv=none; b=Z1t4ervQvBY367fbkGkZqgT4O54dvtFSjcedB/PdRF20wkYDNhlP370BTOBGX28JF7cyLhVDYnkmAIyTkm/O+5OvSlZZ1Y0uhD7M7GT0iklLK9GGTHQCr23H3jUy/2ZtThPftsanKgJMC74rXnNz25LXwXwqX4esaBxL3bEI1bc=
+	t=1716438602; cv=none; b=LpkOYmjI3xxnB8utuHeIz4nvIpSeveSQG0LFgXiw8040uxcpduY6G4IEa6ENTowNwkzzw6kHl0Om5+sHX5WO6SqdN7kO5l5e2prwjc7YONvl2M9fOMOHkAwQCQGdVx/bpQJOLr6DTNuOi4kHQtU70Ca94wasbY73PC3EtHmj1g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716431753; c=relaxed/simple;
-	bh=zhQmBBMVvVCkundq1HInPxU/OC6UeXZbEC1QHoq4MM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=VR6R4twHhQKP1EuPiWFlTrwYAYMmb2oIJnNaZI2jZgasViwGlG8VgOJfvvOUNeRmwSU3PFJ1UvIEDpoV8OlbE4O1xOU8Irezp+VlEuYZ3n7FuA8cDbyTYwlPZT5poY2W/nD1QjDaGH31vRn6eIG7xxg3+ckuVZkRfho0jC9uKrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LNO9S6KF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D00BC2BBFC;
-	Thu, 23 May 2024 02:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716431751;
-	bh=zhQmBBMVvVCkundq1HInPxU/OC6UeXZbEC1QHoq4MM0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=LNO9S6KF9l4oOc3kcBGJfxz5pKwqRYXEmJYz3V9pgrdttmlESBaQm/hoMx3+KOaY7
-	 FkxP5yzzbYHruF0zmZtpP7ykzAho52khy2ht7lVarOnqDTFfdQc0sLPbGKqhXl5laB
-	 qliAvxnzrW0rtc9YgYifg+6mjCWp3SbIHe2VHel9IfIliZxIyP7MprmwiTFjG3TMvt
-	 epw8JG0eE9GbqmpgalCCTjmpRMF2fLummkTK/6uS2ZHtw7h0MeUg8YwI9cHzsC5bgM
-	 w6EVMARW4sQXbpDIWWukIP+I/uCHwCB9gFNNL5BLK0YK6l7IrUkvr1RJFx5OyhyjgW
-	 0hjOf2wQ/B4UA==
-Date: Wed, 22 May 2024 21:35:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Minda Chen <minda.chen@starfivetech.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v16 08/22] PCI: microchip: Change the argument of
- plda_pcie_setup_iomems()
-Message-ID: <20240523023549.GA105928@bhelgaas>
+	s=arc-20240116; t=1716438602; c=relaxed/simple;
+	bh=yoojRH4ide105GN6ojTQqE2X18u3pw9SmuGlClZ1oQk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=eAse0XBY5fdsJa+6WP02wlgB2B04jWzjQe2m3y4Kz4AJl8DSxi7PtmMgp1VaFzhvx0zp5SVCvrUxCsNOMd2QVvrQC1q5TxO4o4SSu/bD4Iju2nZwFrvDN18BjbaawV+qrnaEcaHJwnoUNO12+uqfAs6mNQHArRZIykrWpvUNfqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RPTYm7jl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44N4TmWW014104;
+	Thu, 23 May 2024 04:29:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=j4Kb6l8HeqhXUxmTOgLT085k+1NuizCjW5HVIpNYDFA=; b=RP
+	TYm7jlmHPZ118QjGvaa6ZkbvXs2MqYZszFimvyDYcCk83jCcJk/BiW2UnEZN7j+2
+	Af6B1Ilv3Cd3Rpa/0OA9KQWGDIPLchAXbmNQdJ5MABd/l1/pL+2Pam1c2igPrXXS
+	bnY0+dffY4tFSdU1Qz2HJaCMKTV6qgo8IA7u1gzfi88lpUV8+4/WBTeh+tv/ttsz
+	t/z9jGzZMb0lYxm41T4MDJ7TXPdpL24o+fbqqyHzI8YOYSSoeAPRC2wWNEsUhLMm
+	fhAZJIAJtGE+jgvVieYrzyQWDKu6MDFz3VaWD06i6rOfdRCrW+Y42YZkNX48eKWE
+	NBhlvO7jcYkwUIFX84wA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y6n4gjq80-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 04:29:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44N4TZeJ015724
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 May 2024 04:29:35 GMT
+Received: from [10.50.38.127] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 22 May
+ 2024 21:29:29 -0700
+Message-ID: <03f7c498-775d-43a1-a8b1-8c340ef6a81f@quicinc.com>
+Date: Thu, 23 May 2024 09:59:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SHXPR01MB086345C911E227889E3A4211E6F42@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 3/6] dt-bindings: PCI: qcom: Document the IPQ9574 PCIe
+ controller.
+To: Krzysztof Kozlowski <krzk@kernel.org>, <bhelgaas@google.com>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <manivannan.sadhasivam@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+References: <20240512082858.1806694-1-quic_devipriy@quicinc.com>
+ <20240512082858.1806694-4-quic_devipriy@quicinc.com>
+ <b3199f40-0983-4185-bd0c-2e2d45d690ad@kernel.org>
+Content-Language: en-US
+From: Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <b3199f40-0983-4185-bd0c-2e2d45d690ad@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qQ3oEreRA_vKjHSeGu3EQ_pH0qeAcnWF
+X-Proofpoint-ORIG-GUID: qQ3oEreRA_vKjHSeGu3EQ_pH0qeAcnWF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-23_02,2024-05-22_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=969
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405230029
 
-On Thu, May 23, 2024 at 01:09:58AM +0000, Minda Chen wrote:
-> > On Wed, May 22, 2024 at 01:50:57AM +0000, Minda Chen wrote:
-> > > > The patch is OK, but the subject line is not very informative.  It
-> > > > should be useful all by itself even without the commit log.
-> > > > "Change the argument of X" doesn't say anything about why we would
-> > > > want to do that.
-> > > >
-> > > > On Thu, Mar 28, 2024 at 05:18:21PM +0800, Minda Chen wrote:
-> > > > > If other vendor do not select PCI_HOST_COMMON, the driver data is
-> > > > > not struct pci_host_bridge.
-> > > >
-> > > > Also, I don't think this is the real problem.  Your
-> > > > PCIE_MICROCHIP_HOST Kconfig selects PCI_HOST_COMMON, and the
-> > driver
-> > > > calls pci_host_common_probe(), so the driver wouldn't even build
-> > > > without PCI_HOST_COMMON.
-> > > >
-> > > > This patch is already applied and ready to go, but if you can tell
-> > > > us what's really going on here, I'd like to update the commit log.
-> > > >
-> > > It is modified for Starfive code. Starfive JH7110 PCIe do not select
-> > > PCI_HOST_COMMON
-> > > plda_pcie_setup_iomems() will be changed to common plda code.
-> > >
-> > > I think I can modify the title and commit log like this.
-> > >
-> > > Title:
-> > > PCI: microchip: Get struct pci_host_bridge pointer from platform code
-> > >
-> > > Since plda_pcie_setup_iomems() will be a common PLDA core driver
-> > > function, but the argument0 is a struct platform_device pointer.
-> > > plda_pcie_setup_iomems() actually using struct pci_host_bridge pointer
-> > > other than platform_device pointer. Further more if a new PLDA core
-> > > PCIe driver do not select PCI_HOST_COMMON, the platform driver data is
-> > > not struct pci_host_bridge pointer. So get struct pci_host_bridge
-> > > pointer from platform code function
-> > > mc_platform_init() and make it to be an argument of
-> > > plda_pcie_setup_iomems().
-> > 
-> > OK, I see what you're doing.  This actually has nothing to do with whether
-> > PCI_HOST_COMMON is *enabled*.  It has to do with whether drivers use
-> > pci_host_common_probe().  Here's what I propose:
-> > 
-> >   PCI: plda: Pass pci_host_bridge to plda_pcie_setup_iomems()
-> > 
-> >   plda_pcie_setup_iomems() needs the bridge->windows list from struct
-> >   pci_host_bridge and is currently used only by pcie-microchip-host.c.  This
-> >   driver uses pci_host_common_probe(), which sets a pci_host_bridge as the
-> >   drvdata, so plda_pcie_setup_iomems() used platform_get_drvdata() to find
-> >   the pci_host_bridge.
-> > 
-> >   But we also want to use plda_pcie_setup_iomems() in the new pcie-starfive.c
-> >   driver, which does not use pci_host_common_probe() and will have struct
-> >   starfive_jh7110_pcie as its drvdata, so pass the pci_host_bridge directly
-> >   to plda_pcie_setup_iomems() so it doesn't need platform_get_drvdata() to
-> >   find it.
-> > 
-> OK, Thanks. 
+
+
+On 5/13/2024 12:18 PM, Krzysztof Kozlowski wrote:
+> On 12/05/2024 10:28, devi priya wrote:
 > 
-> I see PCIe 6.10 changed have been merged to main line. 
-> Should I resend this patch set base on 6.10-rc1? 
+>>   
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,pcie-ipq9574
+>> +    then:
+>> +      properties:
+>> +        clocks:
+>> +          minItems: 6
+>> +          maxItems: 6
+>> +        clock-names:
+>> +          items:
+>> +            - const: ahb  # AHB clock
+>> +            - const: aux  # Auxiliary clock
+>> +            - const: axi_m # AXI Master clock
+>> +            - const: axi_s # AXI Slave clock
+>> +            - const: axi_bridge # AXI bridge clock
+>> +            - const: rchng
+> 
+> That's introducing one more order of clocks... Please keep it
+> consistent. The only existing case with ahb has it at after axi_m and
+> others. Why making things everytime differently?
+> 
+> I also to propose to finally drop the obvious comments, like "AHB
+> clock". It cannot be anything else. AXI Master / slave are descriptive,
+> so should stay.
+Sure okay, will update this in next spin.
 
-No need, I rebased it to f0bae243b2bc ("Merge tag 'pci-v6.10-changes'
-of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci") already and
-it will be a trivial rebase to v6.10-rc1 next week.
-
-The current pci/controller/microchip branch is at:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=ed261441e224
-Let me know if anything is missing from there.  I can't merge it into
-linux-next until v6.10-rc1 is tagged, but as soon as it is, I'll put
-it in linux-next.
-
-> > > > > Move calling platform_get_drvdata() to mc_platform_init().
-> > > > >
-> > > > > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> > > > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > > > > ---
-> > > > >  drivers/pci/controller/plda/pcie-microchip-host.c | 6 +++---
-> > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > > b/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > > index 9b367927cd32..805870aed61d 100644
-> > > > > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > > @@ -876,11 +876,10 @@ static void plda_pcie_setup_window(void
-> > > > > __iomem
-> > > > *bridge_base_addr, u32 index,
-> > > > >  	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);  }
-> > > > >
-> > > > > -static int plda_pcie_setup_iomems(struct platform_device *pdev,
-> > > > > +static int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
-> > > > >  				  struct plda_pcie_rp *port)
-> > > > >  {
-> > > > >  	void __iomem *bridge_base_addr = port->bridge_addr;
-> > > > > -	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
-> > > > >  	struct resource_entry *entry;
-> > > > >  	u64 pci_addr;
-> > > > >  	u32 index = 1;
-> > > > > @@ -1018,6 +1017,7 @@ static int mc_platform_init(struct
-> > > > > pci_config_window *cfg)  {
-> > > > >  	struct device *dev = cfg->parent;
-> > > > >  	struct platform_device *pdev = to_platform_device(dev);
-> > > > > +	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
-> > > > >  	void __iomem *bridge_base_addr =
-> > > > >  		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> > > > >  	int ret;
-> > > > > @@ -1031,7 +1031,7 @@ static int mc_platform_init(struct
-> > > > pci_config_window *cfg)
-> > > > >  	mc_pcie_enable_msi(port, cfg->win);
-> > > > >
-> > > > >  	/* Configure non-config space outbound ranges */
-> > > > > -	ret = plda_pcie_setup_iomems(pdev, &port->plda);
-> > > > > +	ret = plda_pcie_setup_iomems(bridge, &port->plda);
-> > > > >  	if (ret)
-> > > > >  		return ret;
-> > > > >
-> > > > > --
-> > > > > 2.17.1
-> > > > >
+Thanks,
+Devi Priya
+> 
+> Best regards,
+> Krzysztof
+> 
 
