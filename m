@@ -1,335 +1,250 @@
-Return-Path: <linux-pci+bounces-7771-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7772-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54DA18CCD93
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 10:00:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C16028CCF68
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 11:37:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09C92283102
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 08:00:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C4BA1F21CE5
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 09:37:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8EFC13CF9F;
-	Thu, 23 May 2024 07:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="egzq9hJU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4DE013D26E;
+	Thu, 23 May 2024 09:37:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2063.outbound.protection.outlook.com [40.107.243.63])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2092.outbound.protection.partner.outlook.cn [139.219.146.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2727D13CAA4;
-	Thu, 23 May 2024 07:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B2F13D260;
+	Thu, 23 May 2024 09:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716451128; cv=fail; b=EIbNEnPttEFT90r3whwEXQ8On5wyr3QojjxuS5eyzoBlK37RXt1Fz3pLIy5+PQkCN11BgqgG7uKA1FPFvy56OOjRtZ17UuT5f85SXWloTie41AfUIVUZxog4k0j6Nr6dh0wSoXBcNArHAe9kpfE/3oBAX6m4l7vVLTrrrhSAnyI=
+	t=1716457044; cv=fail; b=ENs5G4oDm8VaV82bqpuuIHidNEfu4/8+Bn6SG8D/mZjI/Qlpa2GxG1f4XDK1/H4hohfu74YBxx4RvyjwdFtIu0Kr4O6DSeyvtmfCivjoLN3M0OT1aG81/xkwDfJHmsk03vprGu5/RzGbsvfjlKpe6Let4YmzPJWTDKm8C92d5Gc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716451128; c=relaxed/simple;
-	bh=8DvQRcXgNZ9vKxuQx3yVU8Z9Lx492kxWSfPkF6fVG/o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SJ9IggAKFVtPibHy7VZ+eWAojWYuVzQi+fcISfXkihbuDXxlo45R9wOG7yIGXu5xH16PfREaKgqq9o/zq80KDDCvzerAjNJgAs6LZbjMlepHEDEqvSs73kgmDT4TRlL2aLr+LgesTvh/UWdGjZjJqz2GCdBo/6AOD+bdLb7tYjY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=egzq9hJU; arc=fail smtp.client-ip=40.107.243.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1716457044; c=relaxed/simple;
+	bh=bPnyvYF0GKCZgvvZwdIrXE9NRro3X5t4MXQLgnygeaM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fBRC5xNKWtbO/ZrzvTaqK5NjAxh9HBlgpQNcWeXyUgHdaWb1obdTiVmbHk382qQzLPZKqW4r9tRSzoD7RavzN/MGpVHr9Iyj3LE7ipo+EkdKi/ThL649hHu7hNXAyFizZ2rJRiFZPhoFyJ/alQx1bNGYpggIuslOmYuwvjhiSaA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jcT/6REMN2n+4uQUb04hr/ldtuPuqJ/TOKSVyqFNtWqo9No1z3IqJuJBnitOjJSl2GZbbuqAy/ZBJWjWDxrPkcilovNZKjsRJyr+Q4hRhT8hS7ArGeGm+/IBXZow6uD1q5SbVMJB4uAhK/zzmEUdnx7Sd/Fmb4/0aFkSTBlfgVheMVa15lJd4Q8hEuGz4KrZnx01jIecoPQeF2bgzwpS/HnIgLZqRwIsyS7x+2B1+dO1I5i7FsycV94qdwKuKU8WMQXT1AlRFxoN2NJOnrW4vH421phG4Ljj5Uht6J4IBxHVZ44MaNqpMKm5N21rKSw26dksbho9nFXkx5KMoY255Q==
+ b=MR91Ed9tZ/3Xa4Pt3uZOJUKowIjqazvC9TgtKp6oy3Jm+N1biFCQ+P4WXQR/LHyjF0+51GVCDmk61yslIi1UUpQVwGDNpFkRfk612QcTj9Mm89qYT9YpkxieO34wcgOmyPdgHc4wrWf4r9iM6MwkejyIkj9htgrg0X5tNeFOlBIVzTu5HiTyDmk6SaMizM17CJ/cTmPI5d2mwM1hAiaA7XbMf2c8BKTVHxgjUlpzSDEdDzfzh1Nb+VFT9HLwEJiqlIvPADEr2lG03uvBIhAhX0A8zEp93M7a0T7yUeWEbWqqsvS/Sr/0p9tTKzXxlIocP2mzeG6ZxdHU1foPbmoQvQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=37ld/qa0yyFk2uQWcIG0Wym/rJ6+yOYPOgxR8FOOtrE=;
- b=eWaP3u/5vpx81PnBXCzlgw/o6MB9cGxTyUDL9LquxsGAsZc6EMCwItZjWRSMVgx88cExOddLGHdxC46DJCqdjAdNfLynMPCBl8/C+D7iizt5PEE9k7FxNQlT/qXG53P8kgVZZD5aH5Nh89ixmF/OivGuCwBuymi3SgLEZ+mLVOHr8LggA2chF6EE6qI8/QZq8Nn/6t6i/zUqFaHJoq6C0QdBAJQkVmOobkNub3hddhMrjsafQIY2NF5uqh2CW8JHQvoQjqiltN8XBYhEnTQBgGGk9LixWn0vrZtcbMk6mNJqUIFutrWVcn+phC3EBJelh2zvnHDngSF4iRtcDtj/kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=37ld/qa0yyFk2uQWcIG0Wym/rJ6+yOYPOgxR8FOOtrE=;
- b=egzq9hJUMVXSWfTfFvXFbcKUBl4+O3bYjXFkulYq3i3MtqeISB7zgvAqh2nYIRH4lnXtdygBcuyFz8x9n1DtLfkKPEgC0QV3RdlQeSvpGLTvG9FM9Lb7d0uFeyFDHynLwSXPPtNSQA4hdpfnVz4b5kKi1nefzL/thB4+f0yiSwI=
-Received: from DM5PR07CA0050.namprd07.prod.outlook.com (2603:10b6:4:ad::15) by
- PH7PR12MB8156.namprd12.prod.outlook.com (2603:10b6:510:2b5::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Thu, 23 May
- 2024 07:58:30 +0000
-Received: from DS1PEPF00017099.namprd05.prod.outlook.com
- (2603:10b6:4:ad:cafe::4d) by DM5PR07CA0050.outlook.office365.com
- (2603:10b6:4:ad::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22 via Frontend
- Transport; Thu, 23 May 2024 07:58:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017099.mail.protection.outlook.com (10.167.18.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7611.14 via Frontend Transport; Thu, 23 May 2024 07:58:30 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 23 May
- 2024 02:58:29 -0500
-Received: from sriov-ubuntu2204.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Thu, 23 May 2024 02:58:27 -0500
-From: Lianjie Shi <Lianjie.Shi@amd.com>
-To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>
-CC: HaiJun Chang <HaiJun.Chang@amd.com>, Jerry Jiang <Jerry.Jiang@amd.com>,
-	Andy Zhang <Andy.Zhang@amd.com>, Lianjie Shi <Lianjie.Shi@amd.com>
-Subject: [PATCH 1/1][v2] PCI: Support VF resizable BAR
-Date: Thu, 23 May 2024 15:11:14 +0800
-Message-ID: <20240523071114.2930804-2-Lianjie.Shi@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240523071114.2930804-1-Lianjie.Shi@amd.com>
-References: <20240523071114.2930804-1-Lianjie.Shi@amd.com>
+ bh=+czhaeOqLL41rzappT2dmFnTHWRhb37Eo+B4UnWDewQ=;
+ b=KW//4sDqIm6zQIGNDgVbnmSf1aJGuwqOnYMaEft8REHC8qBLNDleuGgQWIPVRoxEfwMz2a63FvCcUNa7tdqPj/K3op1vOE6tsNy7yBPLuq75dEwKtpi2fsuSvsBW4ViOqacVgzef+smjhcA5IY/lH4CkW95Au/NJhbOqL2INw3Fik2YYO+bDdyaKO0AL9f1Q5DovJ9I8I3bs8oGNtDf++MS5LFtHZ8op94Kmo9LY5nYLPi/OOA719eV6+uE0BjWrj3A3dHILuX7v8UbNOLskp0YQCqBKSsINMYTy6cZlo+cMQ26UDtmWSY0o2FXYWxu5EdtlgaZ09Us0EJ8Q4u8Zig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) by SHXPR01MB0878.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1e::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.37; Thu, 23 May
+ 2024 09:22:02 +0000
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ ([fe80::358e:d57d:439f:4e8a]) by
+ SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::358e:d57d:439f:4e8a%7])
+ with mapi id 15.20.7587.035; Thu, 23 May 2024 09:22:02 +0000
+From: Minda Chen <minda.chen@starfivetech.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>, Conor Dooley
+	<conor@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>, Kevin Xie
+	<kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v16 08/22] PCI: microchip: Change the argument of
+ plda_pcie_setup_iomems()
+Thread-Topic: [PATCH v16 08/22] PCI: microchip: Change the argument of
+ plda_pcie_setup_iomems()
+Thread-Index: AQHarK3uyefc+SM1B0in6DqZmUwbsLGkGnyAgABxfVA=
+Date: Thu, 23 May 2024 09:22:01 +0000
+Message-ID:
+ <SHXPR01MB08637281B32AEE455F030081E6F42@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+References:
+ <SHXPR01MB086345C911E227889E3A4211E6F42@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+ <20240523023549.GA105928@bhelgaas>
+In-Reply-To: <20240523023549.GA105928@bhelgaas>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SHXPR01MB0863:EE_|SHXPR01MB0878:EE_
+x-ms-office365-filtering-correlation-id: fb9e2045-4517-47f1-d722-08dc7b09cdf3
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|41320700004|1800799015|7416005|366007|38070700009;
+x-microsoft-antispam-message-info:
+ u3XERaeYc1o8E5dgmXPYoMl+tWocZb0sLzPXqJ7y8c2y5hsyPmiURkwbNzWYVpgkUsYFQqlN0O42UGqEQ0HNgdAH3ca2A6TNpAufUXS7DBk4s9gJ22SK23g3ft8d9hZQYBwU7yv3cqNJhseD3jzNy+yEF2FtASzKAEBGOb45s3ctIxQy9YnkQa50CqgWe38mpD3tNyWG3oINqPx8yYijN+k1i3Yiqe+5RIkmq95l+936PgrZBdHz0vn+ZfecBhBBqudlVKj5UwOn1GG9icO+kSBxf4GkidpNulZGTXOmpP6Na+ChWeepss1v9ayj2t/J1LSoOOAQGe0R+lWzofY5v0YLboG6H62FIqjEeDbwPRyBmpD5cTbuvBz2t74o0tv4j80vKrHJG/31dtUZrK45Y2GDycLrenFBa6R6XDvi62vw2a4d5wH0y3vBFOuY+GHTGIrQX+UBpMJqUuUYNT5l799lsaBOk/Yry9iGZkjIYh3/PtB2fRZGbVcNQxGXI9Dz7thOYRvgBTRRvWLB67AE0wSdFORXC7GeLWb3pNhzKb9X8Qi5rE9zm7ckAb0bvX7i9Oz2YzC5Rm+6tBnyviWqspkVWiq4uBv+w5S0DbYkzpzN1LahGBpLEpF/rta9jTHe
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(7416005)(366007)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?DyxLPI6S+Hfl1x284rvlXQiMdNn05Nq0hh9BGusm6+HRvoXiTBXv4yuD/W?=
+ =?iso-8859-2?Q?sJ0bNJx10llWwCUqHxDJXHDJBNGRObm3soyV/SShMooZ9TA0DcxKXmQZ0D?=
+ =?iso-8859-2?Q?W1Oc/26GhVeUICBjkkwEsqWcfx6iU87OxP4eMidH8L6V6vO5FWYzDr4epj?=
+ =?iso-8859-2?Q?/OWDvGDmisbFpEKpSda+Q1AHf7RPIupAlA2R3KzG+TCf6B1Ou+Py2RTHbh?=
+ =?iso-8859-2?Q?ICc/rfSdn0658rBs4yiV2j1vd+ISD9zRdT+o1zclMa+MR9ya+DeTERzMNn?=
+ =?iso-8859-2?Q?gahYrW4O8Lfe1gyCSirejCq+FPM8hXzQ+pXd1jO1bY5a+dZE519xoUnATS?=
+ =?iso-8859-2?Q?1bn1zRGLv8Jryz+PcAhsq6TAWRKMwD+Q9K7V6rYJi5J6oxNtjd4rDJE6mW?=
+ =?iso-8859-2?Q?m9LAI5XfRdnzR0CZN8Gl+N9ABHguGALh5yhvQFdK83CLnTpScogKuH9ojK?=
+ =?iso-8859-2?Q?sB8bvEqEntbtPvBD9TgQzlCaaNHG1xcaS8fqZ9dS3xKWxm0ZfKt9EL3oWC?=
+ =?iso-8859-2?Q?3jm2jg+ngBaFlFDR3kp80wAEYCmRoWVrWg4Y8AdQNIA9Vy7A3PxxCHvxnc?=
+ =?iso-8859-2?Q?wiZBRAmb8QBH7WzVhMKnP8catQl9/0SG71UnfsAVZQjJgiu4C8y4+Z8bY7?=
+ =?iso-8859-2?Q?T5cjvicg+6m/76ZjP++KLDHEU5T+W2TZOO4C8ElaH1v0L1H3tEcOY07M8P?=
+ =?iso-8859-2?Q?JnnZLmtSSoF6qMIYBZ3id68Jy4/++IAB2Zy+kR3U4wrWeLK71FES9tohbK?=
+ =?iso-8859-2?Q?b71U/npTlnx9zxLcep84yTs+65Xq32kqTLCLWe3L4y2yCRsyMxYVyeawxF?=
+ =?iso-8859-2?Q?qd0AWQQ4aloNsDf8pTRo0y50msNJtnCsWep19faMCxAjwz2xpCeYThucsT?=
+ =?iso-8859-2?Q?Tp5fzKDiivPOBem7AA5zzeKK5jw8/todsZzkWEsbz7NB68FuqOtPnP428t?=
+ =?iso-8859-2?Q?/3d3U6GW4auLK59iYoAVm/bezdN/UVnfqeaE+2BoA0tP41vboMDrUfJo4q?=
+ =?iso-8859-2?Q?cfpqOHkHBHLQmqq9YR4V2HnLpFFZXzvNNXOConIT3+3/BzEYD4/vA+jrYH?=
+ =?iso-8859-2?Q?08tuYED9KwhA8Pyg62A7rsNTrRh5fcFtMdF4EgH5WMG0SO0i2ghfbb6h3+?=
+ =?iso-8859-2?Q?nKcoM9Ru1Vho8eDL43vTwLnWuAv3V5LldEyi+bNuof8+NciVE5SCx4cQ/F?=
+ =?iso-8859-2?Q?icPsb6iolEdjsL559XIt2HjcQbOLc3qrzpYKvf8XhNoUBUye5XjuNSLYVp?=
+ =?iso-8859-2?Q?RTSe3iepVP3MPOzuVv1GxFnbur9HVRi/ct2NgD0ehmrck6E/zU/wv0AqCa?=
+ =?iso-8859-2?Q?qp1IvDGMp7JwDZUuMuqHIEd+cc5ZArIPvy9Fyik/It+YTuqg1wvUEFv1dx?=
+ =?iso-8859-2?Q?6fr4Gg+bNPONP2FHd+tRHtkjoXSMcTF4bRZCMmkpNoQa3RxWuZY8iNaoOc?=
+ =?iso-8859-2?Q?Uk8QB/ytnJrONZedkyHpvX4u+wtwZTO6b9nEO7KxtwfHlDvRLxfY+NJZwQ?=
+ =?iso-8859-2?Q?evvJwNfsNtcqsiBw7uxzEgffpv9fvxeJ9maz56KlRtHb5x6wuRfG45kFLz?=
+ =?iso-8859-2?Q?doiPpjQsIXw/aO8CTboEAiFnYTkCkf3D2rRDGnXyIGcrRIgwEFHhsAB4y0?=
+ =?iso-8859-2?Q?9VtMq0XVxP2ddJeYfcz5ddAMcxHxd+0TMcfUhKgjw4tYi/xaFRrpASIQ?=
+ =?iso-8859-2?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: Lianjie.Shi@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017099:EE_|PH7PR12MB8156:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0689b4d-365a-4ab7-c512-08dc7afe22b8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|376005|1800799015|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9WftnAzCjvwHFy5GYVH0BfW7zCw/c6F5lnAtdajYVrIceYkLzWN3s/mxxXu6?=
- =?us-ascii?Q?0JZ7N2ZeWU6Ocw8t8AhwuiMtabTS/8jzp3yfgZrC9thRFgUEYxODEMw/ukWo?=
- =?us-ascii?Q?enaeOkHNh7xynQOKg19G2U2NWyxCvmKy3BipHAHtKZZ5orF7/6u3JRHlj6i3?=
- =?us-ascii?Q?Llc6D9vxNUxTMEQg70p7R6g1VNwoxGXOT1GFOBGEPNjH85dmkLfKbPrviNMu?=
- =?us-ascii?Q?wX8Hz4pKulfVXBBKbR6xAgX46HYMgClXCBKlhBbq1zYpxAnXroZU1FBQnvw3?=
- =?us-ascii?Q?mZmCBQ3nQ/SV6+EhfqwDL0dkMa25cbueHOILXoesrpsIqknN5UrnK2cRqG1t?=
- =?us-ascii?Q?I4XMl+5iVGvpRJqbtlRByCVSMrQ+C2qiZN32tsGoYKCb1XyjVS/jSfyd2prU?=
- =?us-ascii?Q?RICMPpHW7/pc4RALV7buaA2xP8j5piXtDBFbfoImQ9mzkxWrzbO6yENuozVa?=
- =?us-ascii?Q?spwMFClwiyeKc+khrAoop0PC5xy0r7oynGHdtUqESgwaiFyx7EWBr+2aTz1Y?=
- =?us-ascii?Q?UgLV39los/tOKkBnT3DoXHwTyGw7dIbKnjea6+E1YKQoLLUP56Ps5Lm2Z4G2?=
- =?us-ascii?Q?9fZo0jKD33KFKOqbw/C+BKMwlv0kWOP2xSoK8/Bi+190aTL47VR4xRV1XrHm?=
- =?us-ascii?Q?QbMRNBUekyNRS0Iz+htz/nrZNkI8yTljL8oAVjq1A4Cqkp/kIcfK+kJVxlhl?=
- =?us-ascii?Q?eqqPUhued3K6unx9XHQfv3yS0isCpcT6+Qba0pxESFoj4GEW0HmCKKx+igOU?=
- =?us-ascii?Q?ABru0xSKLYCYpg8tDCLyZp1izCcb+z254xxeNY/6YdxhRqu+uD2M9qHGhWpp?=
- =?us-ascii?Q?ZqcqfXYNWqNyP4m+/VpwgJlOYficVslcAXLEnJPnqVq/QT8jJl+ebNnodnpj?=
- =?us-ascii?Q?AYEfYDjvigm940pU/Dd28FT7C8IziTcJQWhrYCS8MzAJajdfF5IjoevJfBW9?=
- =?us-ascii?Q?T7uJsMVU0kkHM3gZwSKpjL71sEHIx+IjUB/qzFuclY/XbEjsP7cpBuTXwZKM?=
- =?us-ascii?Q?yYTBsuNVbYVooOfNhGm0CNX7jjyExRJxtUY01lrK77+u5AYNBsjkMRkuz98y?=
- =?us-ascii?Q?Es5tP6CAHdvDKulGL+ASkou3PLQjQ713pyWw1kA7akQv7mddJxBam++CTOie?=
- =?us-ascii?Q?qa+WQsRWwP+caMkG7gXgoG1a1IEitkDU8vmIXmUxqIx6ejmTT8zgW7tmmBAu?=
- =?us-ascii?Q?9xbnWLxWJT73xFiBfqncv81dU1Jy968rW/ulfwAb1HhinfQ7dTN2GNoQs30p?=
- =?us-ascii?Q?/AsPQA6l3v3RuRs2/+cDRZ9AQrPLKshEJPyjKkILPBb58cKqAtxMlJ8XSyI+?=
- =?us-ascii?Q?A/UIQ4zpopODEy3JVZ85F6nK?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2024 07:58:30.1646
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb9e2045-4517-47f1-d722-08dc7b09cdf3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2024 09:22:01.9941
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0689b4d-365a-4ab7-c512-08dc7afe22b8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017099.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8156
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ca3koo2UIrASq0azkKHdn3dt7eiaaWMgRZUNqa0zcuQpkowl5FBk+98QgRW8ZVkKvU9ALNelEA3tdmIG74I179vkj4GwRcLoyQQ/18S2D8M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0878
 
-Add support for VF resizable BAR PCI extended cap.
-Similar to regular BAR, drivers can use pci_resize_resource() to
-resize an IOV BAR. For each VF, dev->sriov->barsz of the IOV BAR is
-resized, but the total resource size of the IOV resource should not
-exceed its original size upon init.
 
-Based on following patch series:
-Link: https://lore.kernel.org/lkml/YbqGplTKl5i%2F1%2FkY@rocinante/T/
 
-Signed-off-by: Lianjie Shi <Lianjie.Shi@amd.com>
----
- drivers/pci/pci.c             | 47 ++++++++++++++++++++++++++++++++++-
- drivers/pci/setup-res.c       | 45 +++++++++++++++++++++++++++------
- include/uapi/linux/pci_regs.h |  1 +
- 3 files changed, 85 insertions(+), 8 deletions(-)
+>=20
+> On Thu, May 23, 2024 at 01:09:58AM +0000, Minda Chen wrote:
+> > > On Wed, May 22, 2024 at 01:50:57AM +0000, Minda Chen wrote:
+> > > > > The patch is OK, but the subject line is not very informative.
+> > > > > It should be useful all by itself even without the commit log.
+> > > > > "Change the argument of X" doesn't say anything about why we
+> > > > > would want to do that.
+> > > > >
+> > > > > On Thu, Mar 28, 2024 at 05:18:21PM +0800, Minda Chen wrote:
+> > > > > > If other vendor do not select PCI_HOST_COMMON, the driver data
+> > > > > > is not struct pci_host_bridge.
+> > > > >
+> > > > > Also, I don't think this is the real problem.  Your
+> > > > > PCIE_MICROCHIP_HOST Kconfig selects PCI_HOST_COMMON, and the
+> > > driver
+> > > > > calls pci_host_common_probe(), so the driver wouldn't even build
+> > > > > without PCI_HOST_COMMON.
+> > > > >
+> > > > > This patch is already applied and ready to go, but if you can
+> > > > > tell us what's really going on here, I'd like to update the commi=
+t log.
+> > > > >
+> > > > It is modified for Starfive code. Starfive JH7110 PCIe do not
+> > > > select PCI_HOST_COMMON
+> > > > plda_pcie_setup_iomems() will be changed to common plda code.
+> > > >
+> > > > I think I can modify the title and commit log like this.
+> > > >
+> > > > Title:
+> > > > PCI: microchip: Get struct pci_host_bridge pointer from platform
+> > > > code
+> > > >
+> > > > Since plda_pcie_setup_iomems() will be a common PLDA core driver
+> > > > function, but the argument0 is a struct platform_device pointer.
+> > > > plda_pcie_setup_iomems() actually using struct pci_host_bridge
+> > > > pointer other than platform_device pointer. Further more if a new
+> > > > PLDA core PCIe driver do not select PCI_HOST_COMMON, the platform
+> > > > driver data is not struct pci_host_bridge pointer. So get struct
+> > > > pci_host_bridge pointer from platform code function
+> > > > mc_platform_init() and make it to be an argument of
+> > > > plda_pcie_setup_iomems().
+> > >
+> > > OK, I see what you're doing.  This actually has nothing to do with
+> > > whether PCI_HOST_COMMON is *enabled*.  It has to do with whether
+> > > drivers use pci_host_common_probe().  Here's what I propose:
+> > >
+> > >   PCI: plda: Pass pci_host_bridge to plda_pcie_setup_iomems()
+> > >
+> > >   plda_pcie_setup_iomems() needs the bridge->windows list from struct
+> > >   pci_host_bridge and is currently used only by pcie-microchip-host.c=
+.
+> This
+> > >   driver uses pci_host_common_probe(), which sets a pci_host_bridge a=
+s
+> the
+> > >   drvdata, so plda_pcie_setup_iomems() used platform_get_drvdata() to
+> find
+> > >   the pci_host_bridge.
+> > >
+> > >   But we also want to use plda_pcie_setup_iomems() in the new
+> pcie-starfive.c
+> > >   driver, which does not use pci_host_common_probe() and will have st=
+ruct
+> > >   starfive_jh7110_pcie as its drvdata, so pass the pci_host_bridge di=
+rectly
+> > >   to plda_pcie_setup_iomems() so it doesn't need platform_get_drvdata=
+()
+> to
+> > >   find it.
+> > >
+> > OK, Thanks.
+> >
+> > I see PCIe 6.10 changed have been merged to main line.
+> > Should I resend this patch set base on 6.10-rc1?
+>=20
+> No need, I rebased it to f0bae243b2bc ("Merge tag 'pci-v6.10-changes'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci") already and it=
+ will be a
+> trivial rebase to v6.10-rc1 next week.
+>=20
+> The current pci/controller/microchip branch is at:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=3Ded26=
+1441e22
+> 4
+> Let me know if anything is missing from there.  I can't merge it into lin=
+ux-next
+> until v6.10-rc1 is tagged, but as soon as it is, I'll put it in linux-nex=
+t.
+>=20
+I have checked the code and tested it with Starfive VisionFive v2 board, PC=
+Ie can work.
+All are Okay. Thanks for correct the commit message. It is more elegant.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e5f243dd4..12f86e00a 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1867,6 +1867,42 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
- 	}
- }
- 
-+static void pci_restore_vf_rebar_state(struct pci_dev *pdev)
-+{
-+#ifdef CONFIG_PCI_IOV
-+	unsigned int pos, nbars, i;
-+	u32 ctrl;
-+	u16 total;
-+
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_VF_REBAR);
-+	if (!pos)
-+		return;
-+
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-+
-+	for (i = 0; i < nbars; i++, pos += 8) {
-+		struct resource *res;
-+		int bar_idx, size;
-+		u64 tmp;
-+
-+		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
-+		total = pdev->sriov->total_VFs;
-+		if (!total)
-+			return;
-+
-+		res = pdev->resource + bar_idx + PCI_IOV_RESOURCES;
-+		tmp = resource_size(res);
-+		do_div(tmp, total);
-+		size = pci_rebar_bytes_to_size(tmp);
-+		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
-+		ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-+		pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-+	}
-+#endif
-+}
-+
- /**
-  * pci_restore_state - Restore the saved state of a PCI device
-  * @dev: PCI device that we're dealing with
-@@ -1882,6 +1918,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_ats_state(dev);
- 	pci_restore_vc_state(dev);
- 	pci_restore_rebar_state(dev);
-+	pci_restore_vf_rebar_state(dev);
- 	pci_restore_dpc_state(dev);
- 	pci_restore_ptm_state(dev);
- 
-@@ -3677,10 +3714,18 @@ void pci_acs_init(struct pci_dev *dev)
-  */
- static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
- {
-+	int cap = PCI_EXT_CAP_ID_REBAR;
- 	unsigned int pos, nbars, i;
- 	u32 ctrl;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+#ifdef CONFIG_PCI_IOV
-+	if (bar >= PCI_IOV_RESOURCES) {
-+		cap = PCI_EXT_CAP_ID_VF_REBAR;
-+		bar -= PCI_IOV_RESOURCES;
-+	}
-+#endif
-+
-+	pos = pci_find_ext_capability(pdev, cap);
- 	if (!pos)
- 		return -ENOTSUPP;
- 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index c6d933ddf..d978a2ccf 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -427,13 +427,32 @@ void pci_release_resource(struct pci_dev *dev, int resno)
- }
- EXPORT_SYMBOL(pci_release_resource);
- 
-+static int pci_memory_decoding(struct pci_dev *dev, int resno)
-+{
-+	u16 cmd;
-+
-+#ifdef CONFIG_PCI_IOV
-+	if (resno >= PCI_IOV_RESOURCES) {
-+		pci_read_config_word(dev, dev->sriov->pos + PCI_SRIOV_CTRL, &cmd);
-+		if (cmd & PCI_SRIOV_CTRL_MSE)
-+			return -EBUSY;
-+		else
-+			return 0;
-+	}
-+#endif
-+	pci_read_config_word(dev, PCI_COMMAND, &cmd);
-+	if (cmd & PCI_COMMAND_MEMORY)
-+		return -EBUSY;
-+
-+	return 0;
-+}
-+
- int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- {
- 	struct resource *res = dev->resource + resno;
- 	struct pci_host_bridge *host;
- 	int old, ret;
- 	u32 sizes;
--	u16 cmd;
- 
- 	/* Check if we must preserve the firmware's resource assignment */
- 	host = pci_find_host_bridge(dev->bus);
-@@ -444,9 +463,9 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	if (!(res->flags & IORESOURCE_UNSET))
- 		return -EBUSY;
- 
--	pci_read_config_word(dev, PCI_COMMAND, &cmd);
--	if (cmd & PCI_COMMAND_MEMORY)
--		return -EBUSY;
-+	ret = pci_memory_decoding(dev, resno);
-+	if (ret)
-+		return ret;
- 
- 	sizes = pci_rebar_get_possible_sizes(dev, resno);
- 	if (!sizes)
-@@ -463,19 +482,31 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	if (ret)
- 		return ret;
- 
--	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
-+#ifdef CONFIG_PCI_IOV
-+	if (resno >= PCI_IOV_RESOURCES)
-+		dev->sriov->barsz[resno - PCI_IOV_RESOURCES] = pci_rebar_size_to_bytes(size);
-+	else
-+#endif
-+		res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
- 
- 	/* Check if the new config works by trying to assign everything. */
- 	if (dev->bus->self) {
- 		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
--		if (ret)
-+		if (ret && ret != -ENOENT)
- 			goto error_resize;
- 	}
- 	return 0;
- 
- error_resize:
- 	pci_rebar_set_size(dev, resno, old);
--	res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-+
-+#ifdef CONFIG_PCI_IOV
-+	if (resno >= PCI_IOV_RESOURCES)
-+		dev->sriov->barsz[resno - PCI_IOV_RESOURCES] = pci_rebar_size_to_bytes(old);
-+	else
-+#endif
-+		res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-+
- 	return ret;
- }
- EXPORT_SYMBOL(pci_resize_resource);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index a39193213..a66b90982 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -738,6 +738,7 @@
- #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
- #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
- #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
-+#define PCI_EXT_CAP_ID_VF_REBAR	0x24	/* VF Resizable BAR */
- #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
- #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
- #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
--- 
-2.34.1
+This is precious experience of developing refactor code. Thank all!
+
+Hi Conor
+   Thanks for help us for this patch set !
+   I see mars dts have been merged to mainline, this version dts patch can =
+not be merged
+   I will resend the dts patch on v6.10-rc1.
+
 
 
