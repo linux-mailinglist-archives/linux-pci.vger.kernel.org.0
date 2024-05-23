@@ -1,208 +1,305 @@
-Return-Path: <linux-pci+bounces-7802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7803-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C1F28CDC37
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 23:39:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 554B78CDC4B
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 23:47:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5787285DDB
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 21:39:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C30C287974
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 21:47:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5097107A8;
-	Thu, 23 May 2024 21:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 447CD84DF2;
+	Thu, 23 May 2024 21:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7sKBiYa"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="031Z2ztT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uPxNlIt2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B426E128363
-	for <linux-pci@vger.kernel.org>; Thu, 23 May 2024 21:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4AE83CD6;
+	Thu, 23 May 2024 21:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716500327; cv=none; b=ZAHpUuWgekoapzuhGsFWi3+5hHxcRQnONX5x3QhXj/heTSLCQqb3GbOIfYsUyh/rVV8JcBqrdQDJCOKVJfw2JoHm6bQ2eLJE6h6cbjWhbIaCEPXfikcWAP5AeyLbXAV1WmsQKkJ6gA2+6+m+E6XKOf4Lm/RJEqfmuOjTR9wyNRc=
+	t=1716500836; cv=none; b=C146J2JKsaVo2wELNAsjjcQjm+f8+9mgkmYPB/G1G4KIVA6O+ZCrEReoFywR2T5LAMroSJSt0cpr1k7fY7YN1vfKWaYEAkyW0FJlokFalD2eHYoWweemDEgsmcEVIYucNBdqa14PNmkdDoh1H82NGsnKbyXzsH/5uyf5nIKch7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716500327; c=relaxed/simple;
-	bh=Q+c2YMjmO8vdN8QLrUTZXTqHR1EGai+s5B4KneGQlB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GPYQ/Kh0SDFCc/U62loshVvwsD5roqTn6fDyQqYH6/R6lR5J6hfXlYqlaAV8GLrS7dlcWS51GfkEFtqHFOtGClgj1vWd/Rd0w49y9h/JmVXKSKFrJW9mrYp28GWTg5cUOY/NG9C4M5IHP7Vz8e/1jRWBWHe5RTu4+xmPM83UJIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W7sKBiYa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716500324;
+	s=arc-20240116; t=1716500836; c=relaxed/simple;
+	bh=AIHTysb/p3mDj8tuOHpdkYeIE9mgzI5yyx/JhVGsGoY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uaP20Zuf8jJgxbm+FT85pO+aDts9C9PyV7F6NEAq+N734vUJyn+mNBlnTC7Nv3KbsBYNcNOkOYdGsA6sXF7WMi9U5W1rPgAqJ28nO/oPPHc4DLftihhU98EhS5ATgymZljfkjfewBjIA4TxDzhayCSaEyAcuLfjX0qNwfX4iBdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=031Z2ztT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uPxNlIt2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1716500826;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9o5HP+0MqX2z44qSHTea3mYaXCgoy62GX3CuvevhGFI=;
-	b=W7sKBiYajFbEUcmU1p/qJx2wtp7zK3PuuBORU7naEul6Q3eYoh9FBt7RdfHWNXc3vowB75
-	MNq/Hf61Y1kO4/iDXvEg4f7n7jSZGNvk/FiVv34y6Cx67CZ7q/M6UuOKiEn4vFMX2LCLoZ
-	rfkOWcLZZxodjwJAAhDtzt3l2wOytp0=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-101-DXfUfNDEO8yefLRtXcQJdw-1; Thu, 23 May 2024 17:38:43 -0400
-X-MC-Unique: DXfUfNDEO8yefLRtXcQJdw-1
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7e6ff0120a5so223380039f.1
-        for <linux-pci@vger.kernel.org>; Thu, 23 May 2024 14:38:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716500323; x=1717105123;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9o5HP+0MqX2z44qSHTea3mYaXCgoy62GX3CuvevhGFI=;
-        b=XNU4Ssc5ukt5R+l0rhde/qREOklHToAHY3ZKucgGXKueX3pTDPF7883cyXLtKdwZZ3
-         xKUhRj2atQ9/6f0ib/Yu2hpbgYcoVh2u/fjcH2+Uo/6zJ4oFnCA3tEjWyezrR2jixZ+S
-         Cf/MJvf3gJni7hQLSXvqk2TVnI3cCZysvV37YinRhUgkD5n+bw4Z1O8BOEZjaEcyo2pj
-         +UDtKs6safRbEr0uRI8ne4MQf6Ub/2b02hQNotidl8NghPjt12a9QVIhCLoK5tdt6nbq
-         Jd+7KXzX8hq3Ci1tlxz3DZIYL3PVUTQpxZBNIjv0WhabqTJHpS9O6UpSmMQQHsJg9hTv
-         wjxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVXqzb70c647Hp1vzkxXbl5MVUNnXXpK5Lw53QpdB3k95gBy93LZWd7oNCW6JzQwVe3AW4FlwVoYlQh3e4DBd6iMduvgorZVkA
-X-Gm-Message-State: AOJu0Yy6ID2bW/Me3RbYCOfO3e9c+ck5Zwiw6ifWhqGWHaFJSEs5f6Oj
-	e5j5PeF0bZegAwfex+RBHocxLETqtR0LR7O1go+kCn6+CHwXAU8P6v6hHCgjcgx8rxnLcu7T6Kv
-	0yVtoWsaOGajRBx9yUOt0RJdc1TDzxAjvkxW3qmn23RoFaABv56LnAMaMzA==
-X-Received: by 2002:a6b:7e43:0:b0:7da:4135:89be with SMTP id ca18e2360f4ac-7e8c6c183aamr76819739f.17.1716500322687;
-        Thu, 23 May 2024 14:38:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGifk9d+MfD2AFHnMnI801S7v/LhgxyOOXqYOMCa4unB24dBRc47U2Lkk9AateT6dg+Xjo3Eg==
-X-Received: by 2002:a6b:7e43:0:b0:7da:4135:89be with SMTP id ca18e2360f4ac-7e8c6c183aamr76817639f.17.1716500322062;
-        Thu, 23 May 2024 14:38:42 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b03e8281b1sm66737173.13.2024.05.23.14.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 May 2024 14:38:41 -0700 (PDT)
-Date: Thu, 23 May 2024 15:38:39 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <ira.weiny@intel.com>,
- <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
- <Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <bhelgaas@google.com>,
- <lukas@wunner.de>
-Subject: Re: [PATCH v6 2/5] PCI: Add locking of upstream bridge for
- pci_reset_function()
-Message-ID: <20240523153839.16102e26.alex.williamson@redhat.com>
-In-Reply-To: <664fb286639ed_195e29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240502165851.1948523-1-dave.jiang@intel.com>
-	<20240502165851.1948523-3-dave.jiang@intel.com>
-	<20240523131005.5578e3de.alex.williamson@redhat.com>
-	<664fb286639ed_195e29416@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	bh=HfSWMIeSro48ZWRAqUv8vmWmiMIU3qQetnBBw4e5rJU=;
+	b=031Z2ztTxyuFXWApXykB4FQ6WaX9zYH0aXVpcqWQB5qgDssiFxcYkRuP1BHwBoJ0as9q/P
+	EXzT6AwP1f0MokxzuLUtGHnd/YRw6WlyeA3HqslxGXNKpX5tBLVchRJXUxPP3ciz07FdXC
+	P/IsavOejg3ADUlytLFev1n1x38CxXmCTeOmlrGUgy+dVEu2JXXP76YK3Y74Q43LLU+rpx
+	4e818JFQXHcoX9MRoZIv+/tG6baHUjQO/AN6kVInuwH6xJm8KrDuozEyKCeBwJtzdUm4LO
+	/OP+ayf6aZztWmSr9kpUB6ABm2jqlch7+LGwc3L8WMXS9E/1Qi0N2qxEpt8xdQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1716500826;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HfSWMIeSro48ZWRAqUv8vmWmiMIU3qQetnBBw4e5rJU=;
+	b=uPxNlIt2bLb0MzrZ7XtUuIjHV0iT2joAzZuN1nk4jaICo6I8QMAAOXKwoGUFFYbIa7H/D7
+	NeqcFf+VNhZB4jBA==
+To: Sunil V L <sunilvl@ventanamicro.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+ acpica-devel@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, "Rafael J . Wysocki" <rafael@kernel.org>, Len
+ Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Anup Patel
+ <anup@brainfault.org>, Samuel Holland <samuel.holland@sifive.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Robert Moore <robert.moore@intel.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Atish
+ Kumar Patra <atishp@rivosinc.com>, Andrei Warkentin
+ <andrei.warkentin@intel.com>, Haibo1 Xu <haibo1.xu@intel.com>,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>
+Subject: Re: [PATCH v5 13/17] irqchip/riscv-intc: Add ACPI support for AIA
+In-Reply-To: <20240501121742.1215792-14-sunilvl@ventanamicro.com>
+References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
+ <20240501121742.1215792-14-sunilvl@ventanamicro.com>
+Date: Thu, 23 May 2024 23:47:06 +0200
+Message-ID: <874jaofbfp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Thu, 23 May 2024 14:17:58 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Alex Williamson wrote:
-> > On Thu,  2 May 2024 09:57:31 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> > > Fix a long standing locking gap for missing pci_cfg_access_lock() while
-> > > manipulating bridge reset registers and configuration during
-> > > pci_reset_bus_function(). Add calling of pci_dev_lock() against the
-> > > bridge device before locking the device. The locking is conditional
-> > > depending on whether the trigger device has an upstream bridge. If
-> > > the device is a root port then there would be no upstream bridge and
-> > > thus the locking of the bridge is unnecessary. As part of calling
-> > > pci_dev_lock(), pci_cfg_access_lock() happens and blocks the writing
-> > > of PCI config space by user space.
-> > > 
-> > > Add lockdep assertion via pci_dev->cfg_access_lock in order to verify
-> > > pci_dev->block_cfg_access is set.
-> > > 
-> > > Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > ---  
-> [..]
-> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> > > index 6449056b57dd..36f10c7f9ef5 100644
-> > > --- a/drivers/pci/access.c
-> > > +++ b/drivers/pci/access.c
-> > > @@ -275,6 +275,8 @@ void pci_cfg_access_lock(struct pci_dev *dev)
-> > >  {
-> > >  	might_sleep();
-> > >  
-> > > +	lock_map_acquire(&dev->cfg_access_lock);
-> > > +
-> > >  	raw_spin_lock_irq(&pci_lock);
-> > >  	if (dev->block_cfg_access)
-> > >  		pci_wait_cfg(dev);
-> > > @@ -329,6 +331,8 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
-> > >  	raw_spin_unlock_irqrestore(&pci_lock, flags);
-> > >  
-> > >  	wake_up_all(&pci_cfg_wait);
-> > > +
-> > > +	lock_map_release(&dev->cfg_access_lock);  
-> > 
-> > 
-> > This doesn't account for config access locks acquired via
-> > pci_cfg_access_trylock(), such as the pci_dev_trylock() through
-> > pci_try_reset_function() resulting in a new lockdep warning for
-> > vfio-pci when we try to release a lock that was never acquired.
-> > Thanks,  
-> 
-> Hey Alex, sorry about that, does this fix it up for you? Note I move the
-> lock_map_acquire() relative to the global pci_lock just for symmetry
-> purposes.
-
-Thanks, Dan!  Yes, this fixes it.  Please feel free to add
-Reported/Tested-by tags when you post it.  Thanks!
-
-Alex
-
-> -- >8 --  
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 30f031de9cfe..3595130ff719 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -289,11 +289,10 @@ void pci_cfg_access_lock(struct pci_dev *dev)
->  {
->  	might_sleep();
+On Wed, May 01 2024 at 17:47, Sunil V L wrote:
+> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+> index 9e71c4428814..af7a2f78f0ee 100644
+> --- a/drivers/irqchip/irq-riscv-intc.c
+> +++ b/drivers/irqchip/irq-riscv-intc.c
+> @@ -249,14 +249,105 @@ IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
+>  IRQCHIP_DECLARE(andes, "andestech,cpu-intc", riscv_intc_init);
 >  
-> -	lock_map_acquire(&dev->cfg_access_lock);
-> -
->  	raw_spin_lock_irq(&pci_lock);
->  	if (dev->block_cfg_access)
->  		pci_wait_cfg(dev);
-> +	lock_map_acquire(&dev->cfg_access_lock);
->  	dev->block_cfg_access = 1;
->  	raw_spin_unlock_irq(&pci_lock);
->  }
-> @@ -315,8 +314,10 @@ bool pci_cfg_access_trylock(struct pci_dev *dev)
->  	raw_spin_lock_irqsave(&pci_lock, flags);
->  	if (dev->block_cfg_access)
->  		locked = false;
-> -	else
-> +	else {
-> +		lock_map_acquire(&dev->cfg_access_lock);
->  		dev->block_cfg_access = 1;
+>  #ifdef CONFIG_ACPI
+> +struct rintc_data {
+> +	u32 ext_intc_id;
+> +	unsigned long hart_id;
+> +	u64 imsic_addr;
+> +	u32 imsic_size;
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct-declarations-and-initializers
+
+> +};
+> +
+> +static u32 nr_rintc;
+> +static struct rintc_data *rintc_acpi_data[NR_CPUS];
+> +
+> +int acpi_get_intc_index_hartid(u32 index, unsigned long *hartid)
+
+Why int? All of these functions have strictly boolean return values:
+success = true, fail = false, no?
+
+Either bool or get rid of the pointer and let the function return
+either the real hart id or an invalid one.
+
+> +{
+> +	if (index >= nr_rintc)
+> +		return -1;
+> +
+> +	*hartid = rintc_acpi_data[index]->hart_id;
+> +	return 0;
+
+I.e.
+
+	return index >= nr_rintc ? rintc_acpi_data[index]->hart_id : INVALID_HART_ID;
+
+> +int acpi_get_ext_intc_parent_hartid(u8 id, u32 idx, unsigned long *hartid)
+> +{
+> +	int i, j = 0;
+> +
+> +	for (i = 0; i < nr_rintc; i++) {
+> +		if (APLIC_PLIC_ID(rintc_acpi_data[i]->ext_intc_id) == id) {
+> +			if (idx == j) {
+> +				*hartid = rintc_acpi_data[i]->hart_id;
+> +				return 0;
+> +			}
+> +			j++;
+> +		}
 > +	}
->  	raw_spin_unlock_irqrestore(&pci_lock, flags);
->  
->  	return locked;
-> @@ -342,11 +343,10 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
->  	WARN_ON(!dev->block_cfg_access);
->  
->  	dev->block_cfg_access = 0;
-> +	lock_map_release(&dev->cfg_access_lock);
->  	raw_spin_unlock_irqrestore(&pci_lock, flags);
->  
->  	wake_up_all(&pci_cfg_wait);
-> -
-> -	lock_map_release(&dev->cfg_access_lock);
->  }
->  EXPORT_SYMBOL_GPL(pci_cfg_access_unlock);
->  
-> 
+> +
+> +	return -1;
+> +}
+> +
+> +void acpi_get_plic_nr_contexts(u8 id, int *nr_contexts)
+> +{
+> +	int i, j = 0;
+> +
+> +	for (i = 0; i < nr_rintc; i++) {
+> +		if (APLIC_PLIC_ID(rintc_acpi_data[i]->ext_intc_id) == id)
+> +			j++;
+> +	}
+> +
+> +	*nr_contexts = j;
+> +}
+> +
+> +int acpi_get_plic_context(u8 id, u32 idx, int *context_id)
+> +{
+> +	int i, j = 0;
+> +
+> +	for (i = 0; i < nr_rintc; i++) {
+> +		if (APLIC_PLIC_ID(rintc_acpi_data[i]->ext_intc_id) == id) {
+> +			if (idx == j) {
+> +				*context_id = IDC_CONTEXT_ID(rintc_acpi_data[i]->ext_intc_id);
+> +				return 0;
+> +			}
+> +
+> +			j++;
+> +		}
+> +	}
 
+So that's the third incarnation of the same loop with the truly self
+explaining variable and argument names.
+
+    j is actually the index of the context which is associated to a
+    given PLIC ID.
+
+    idx is the context index to search for
+
+Right? So why can't these things be named in a way which makes the
+intent of the code clear?
+
+Also why are all the arguments u8/u32? There is no hardware
+involved. Simple 'unsigned int' is just fine and the u8/u32 is not bying
+you anything here.
+
+Aside of that these ugly macros can be completely avoided and the code
+can be written without a copy & pasta orgy.
+
+struct rintc_data {
+	union {
+		u32		ext_intc_id;
+                struct {
+                	u32	context_id	: 16,
+                        			:  8,
+                        	aplic_plic_id	:  8;
+                }
+        };
+	unsigned long		hart_id;
+	u64			imsic_addr;
+	u32			imsic_size;
+};
+
+#define for_each_matching_plic(_plic, _plic_id)				\
+	for (_plic = 0; _plic < nr_rintc; _plict++)			\
+        	if (rintc_acpi_data[_plic]->aplic_plic_id != _plic_id)	\
+                	continue;					\
+                else
+
+unsigned int acpi_get_plic_nr_contexts(unsigned int plic_id)
+{
+	unsigned int nctx = 0;
+
+	for_each_matching_plic(plic, plic_id)
+		nctx++;
+
+	return nctx;
+}
+
+static struct rintc_data *get_plic_context(unsigned int plic_id, unsigned int ctxt_idx)
+{
+	unsigned int ctxt = 0;
+
+	for_each_matching_plic(plic, plic_id) {
+        	if (ctxt == ctxt_idx)
+                	return rintc_acpi_data + plic;
+        }
+        return NULL;
+}
+
+unsigned long acpi_get_ext_intc_parent_hartid(unsigned int plic_id, unsigned int ctxt_idx)
+{
+        struct rintc_data *data = get_plic_context(plic_id, ctxt_idx);
+
+        return data ? data->hart_id : INVALID_HART_ID;
+}
+
+unsigned int acpi_get_plic_context(unsigned int plic_id, unsigned int ctxt_idx)
+{
+        struct rintc_data *data = get_plic_context(plic_id, ctxt_idx);
+
+        return data ? data->context_id : INVALID_CONTEXT;
+}
+
+Or something like that. Hmm?
+
+> +int acpi_get_imsic_mmio_info(u32 index, struct resource *res)
+> +{
+> +	if (index >= nr_rintc)
+> +		return -1;
+> +
+> +	res->start = rintc_acpi_data[index]->imsic_addr;
+> +	res->end = res->start + rintc_acpi_data[index]->imsic_size - 1;
+> +	res->flags = IORESOURCE_MEM;
+> +	return 0;
+> +}
+> +
+> +static struct fwnode_handle *ext_entc_get_gsi_domain_id(u32 gsi)
+> +{
+> +	return riscv_acpi_get_gsi_domain_id(gsi);
+> +}
+
+This wrapper is required because using riscv_acpi_get_gsi_domain_id()
+directly is too obvious, right?
+
+>  static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+>  				       const unsigned long end)
+>  {
+> -	struct fwnode_handle *fn;
+>  	struct acpi_madt_rintc *rintc;
+> +	struct fwnode_handle *fn;
+> +	int rc;
+>  
+>  	rintc = (struct acpi_madt_rintc *)header;
+> +	rintc_acpi_data[nr_rintc] = kzalloc(sizeof(*rintc_acpi_data[0]), GFP_KERNEL);
+> +	if (!rintc_acpi_data[nr_rintc])
+> +		return -ENOMEM;
+> +
+> +	rintc_acpi_data[nr_rintc]->ext_intc_id = rintc->ext_intc_id;
+> +	rintc_acpi_data[nr_rintc]->hart_id = rintc->hart_id;
+> +	rintc_acpi_data[nr_rintc]->imsic_addr = rintc->imsic_addr;
+> +	rintc_acpi_data[nr_rintc]->imsic_size = rintc->imsic_size;
+> +	nr_rintc++;
+>  
+>  	/*
+>  	 * The ACPI MADT will have one INTC for each CPU (or HART)
+> @@ -273,7 +364,14 @@ static int __init riscv_intc_acpi_init(union acpi_subtable_headers *header,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	return riscv_intc_init_common(fn, &riscv_intc_chip);
+> +	rc = riscv_intc_init_common(fn, &riscv_intc_chip);
+> +	if (rc) {
+> +		irq_domain_free_fwnode(fn);
+> +		return rc;
+> +	}
+
+This looks like a completely unrelated bug fix. Please don't mix functional
+changes and fixes.
+
+Thanks,
+
+        tglx
 
