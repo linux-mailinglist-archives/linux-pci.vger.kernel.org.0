@@ -1,105 +1,194 @@
-Return-Path: <linux-pci+bounces-7775-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7776-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C56F38CD0CE
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 13:02:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED6FC8CD12C
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 13:23:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0165A1C20CB0
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 11:02:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A49552830BA
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 11:23:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4075B80628;
-	Thu, 23 May 2024 11:02:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4C131474A8;
+	Thu, 23 May 2024 11:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SyrCxKxO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D546C3BB21;
-	Thu, 23 May 2024 11:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421572746F
+	for <linux-pci@vger.kernel.org>; Thu, 23 May 2024 11:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716462161; cv=none; b=oMhwCP43UC3FbzdjdmPZr1YQ6uLyJcXMZOuHWL3Jv8V++IZ2jGHiCpthVzVAMD2bvcIB8HDx4x/zZxrl+KmrIAXx1+jzoRXRQNFm6tYeAbUW+1x0TI8mEhIVLX4MW2FBxfjr6kGJTB0+VIY51tJ3cG97MdmKQr3vGn2JNHBePlc=
+	t=1716463413; cv=none; b=B2cm5nxA5aSW9TbxbHar/JO7YFEUP3lNxQijpvXjVFwCtG0HOa/K+0c3h1tUfi6j0W96t+kgmGdPSZUAla+5MnIk7C7mYVeJEDPNFL5R7N/UF4bul6072WBpkTq4LDq9H6fM2xZXkYI1MPsSEkXUH9wvS5Oxu1vJVRS3npCbHh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716462161; c=relaxed/simple;
-	bh=Y++RLciD3ipTi4wP81sYlEWtvFzfWcwijReeMZc3xZ8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IRtxJFm8kbmPiLFWgB4bB4zYEAEzNLOMBRmwwqQkBo+xGq+GWooCb9elNNl2ZqhyoG1FZJHAEIZRQHWWHBdSuWcbwZ/7Hxj/u73IXvBWOPV15bj/2P0av57uOTyJWonYPwejoTSX32pZ/LGox3S2si+TxHSOl5GkjxroVhJwAvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VlQGW4561z6K9NH;
-	Thu, 23 May 2024 19:01:39 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id D118F140B2A;
-	Thu, 23 May 2024 19:02:30 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 23 May
- 2024 12:02:29 +0100
-Date: Thu, 23 May 2024 12:02:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alistair Francis <alistair23@gmail.com>
-CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
-	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
-	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
-	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
-	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v10 2/4] PCI/DOE: Rename Discovery Response Data Object
- Contents to type
-Message-ID: <20240523120226.0000781b@Huawei.com>
-In-Reply-To: <20240522101142.559733-2-alistair.francis@wdc.com>
-References: <20240522101142.559733-1-alistair.francis@wdc.com>
-	<20240522101142.559733-2-alistair.francis@wdc.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1716463413; c=relaxed/simple;
+	bh=VRI64+IDW413MGamrsZtmhZhSrMYc/GkowddaWPOags=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=tqCuzAC3kcQz2ER7MuuY7Pim/IjwnRy9S9Z+3URZ0NKLpu4zag7y6MtkpklNtE1U8peYASj0F0/9MfecXzJkPxjX/pcBOC3wpNsbwkSAZrvEAteY58BGZK0Musr8i8tb5LNC0CdlW1GBDOHkLEWjbc6w/8IirQSAIYNuRZue7wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SyrCxKxO; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716463412; x=1747999412;
+  h=date:from:to:cc:subject:message-id;
+  bh=VRI64+IDW413MGamrsZtmhZhSrMYc/GkowddaWPOags=;
+  b=SyrCxKxOdaI8Aiy/ssqIKdqyFr3n68tZnK5ftJ4OOIwR8E/ko64vKrd6
+   xPATK+ykQiCK5UuA4Tl3WUmu7yrjNRxcaJk/ivjsnw7zN0y3QEqVH0frK
+   lxO5NL5A08eXlNIL4qgJhtA7ky9nObRnoHHhI33jIb+JpnMwsTg+k3YAH
+   Ov/MlR1h7g99fMHCdXLjb5T5CbxdOvdjtbd09QFPC4q57kwH9m0daISZz
+   410taBx9HCPtJIpD7QrUReIUjScunJdKpux694BQnTWPFo7T5mo0fmC+l
+   7GewPIYtwxxNhQJ4FzB//usCxHrLtnfb5QFuX/TzelGcIyoLqfIhNyrsX
+   A==;
+X-CSE-ConnectionGUID: ZaWE8f6EQ9Wr/mq2UEClSQ==
+X-CSE-MsgGUID: nmhSZIBjRtuVYJZnvq2Wjw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12953968"
+X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
+   d="scan'208";a="12953968"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 04:23:31 -0700
+X-CSE-ConnectionGUID: RI3ozEKURreONY5uUubD5A==
+X-CSE-MsgGUID: Pkv8TBDcTimHjniIeUdKpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,182,1712646000"; 
+   d="scan'208";a="34242591"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 23 May 2024 04:23:29 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sA6Xf-0002mb-2w;
+	Thu, 23 May 2024 11:23:27 +0000
+Date: Thu, 23 May 2024 19:22:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/qcom] BUILD SUCCESS
+ e4c3cdd90e7a29edbbd4eee9667cfcc0f63f3b66
+Message-ID: <202405231927.uwMihnuU-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 22 May 2024 20:11:40 +1000
-Alistair Francis <alistair23@gmail.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
+branch HEAD: e4c3cdd90e7a29edbbd4eee9667cfcc0f63f3b66  PCI: qcom-ep: Disable resources unconditionally during PERST# assert
 
-> PCIe r6.1 (which was published July 24) describes a "Vendor ID", a
-> "Data Object Type" and "Next Index" as the fields in the DOE
-> Discovery Response Data Object. The DOE driver currently uses
-> both the terms type and prot for the second element.
-> 
-> This patch renames all uses of the DOE Discovery Response Data Object
-> to use type as the second element of the object header, instead of
-> type/prot as it currently is.
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+elapsed time: 747m
 
-Other than the below query on it being a potentially breaking change
-for userspace code this looks fine to me.
+configs tested: 101
+configs skipped: 3
 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 94c00996e633..4fa1ec622177 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1146,7 +1146,7 @@
->  #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
->  #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_VER		0x0000ff00
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
-> -#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
-> +#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE		0x00ff0000
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Safe to change a userspace header?  I've no idea if any external project
-is using this define but probably shouldn't make this change or should
-leave a compatibility define in place.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240523   clang
+i386         buildonly-randconfig-002-20240523   gcc  
+i386         buildonly-randconfig-003-20240523   clang
+i386         buildonly-randconfig-004-20240523   clang
+i386         buildonly-randconfig-005-20240523   clang
+i386         buildonly-randconfig-006-20240523   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240523   gcc  
+i386                  randconfig-002-20240523   clang
+i386                  randconfig-003-20240523   clang
+i386                  randconfig-004-20240523   clang
+i386                  randconfig-005-20240523   gcc  
+i386                  randconfig-006-20240523   clang
+i386                  randconfig-011-20240523   gcc  
+i386                  randconfig-012-20240523   clang
+i386                  randconfig-013-20240523   clang
+i386                  randconfig-014-20240523   gcc  
+i386                  randconfig-015-20240523   gcc  
+i386                  randconfig-016-20240523   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
 
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
->  
->  /* Compute Express Link (CXL r3.1, sec 8.1.5) */
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
