@@ -1,201 +1,236 @@
-Return-Path: <linux-pci+bounces-7805-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7806-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 369FE8CDC89
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 00:00:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63BE98CDD95
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 01:21:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 545B21C239EA
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 22:00:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B0862880E7
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 23:20:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03CBF127E3A;
-	Thu, 23 May 2024 22:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0C4128362;
+	Thu, 23 May 2024 23:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AbYeiDrh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hG7nVsQd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VL67jKab"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F38784A4E;
-	Thu, 23 May 2024 22:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB09A2628D
+	for <linux-pci@vger.kernel.org>; Thu, 23 May 2024 23:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716501624; cv=none; b=lVmlH+tqNbbfpPy1HlCiVipnecqM+jEklsr0X5X1LeicfAXQL2eHi39U4pn7lgieJhFR1iO3/EqGRTQRal4uxxvb3xmCmcPKvKppVdct1oAqhtAkvRafEr1c9GGl02ygBOcsBz67nWrHagSpKwSgzErXQwuJqCGPHv6EJx1qy2Q=
+	t=1716506456; cv=none; b=Hd2CHfWwjKtcgB6rQYXuOW0eJn0ClzkZwCYFsF5i7OBCuI0Ax+5j00cBsRFh1tispF4jUg5PEGrkjfg3C53dsOYLjNLPgsl6tfsh2agns+tkizMXLTXBL6eV24LWm5XrtDUJFNqaZrp6kDj51l2682L7GhYlTb8W9C0+1bLAHCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716501624; c=relaxed/simple;
-	bh=U3zNsDx6nW/dLYh1FM2TrjCHAPkf8MnEIVyZTcNJdnY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mTW3CpJRGXwR8ZuUrnMF/o3lTJj+R1Q46Um8bM5x0QTBZBrfCMCDlUvQIxYAzdHl88fHLyTndBgkYHhA5l3rZW12ycXBR40XfoGmVNKIIvUwhYLAtmteeTYjhcGmPw+IPSIt9FcUka3mf+Uh848EetcGfmOxdko3pzIAwGMLjsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AbYeiDrh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hG7nVsQd; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716501621;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=18bFCkDiE5Sbgi4NXueQ8erF60YbZu7PrN26lvvIIBA=;
-	b=AbYeiDrhr7a8f7DpLWT7jPVQsX5p8BYnloO9JHGWZo1jwWM2TNA1GkS+RXgQQZ4kwveXJA
-	uO2F3wxgENt5+tKqVIgI6LKhXREauGP4TyVSnMEjWlqAQaaQOAFEqtPs/deTAO0TFZJ7Ty
-	XF8dZT5GJXGueFBS1ZHnF05S7WpTqg0DfkUciatQMe2lVzrH9N7yj6h8ufGhwlj3MNvTIQ
-	EyaFwwIde5NjZXu/+dN8DnAO4TXG/44owA2GfGZdyYXZKje8Uxr03QDeKC3OlmZc4fjhmF
-	yOl2dALXgw8lwL0coqnq1DwlyJLRFqb5paIzqkr2HPPs4pBa2EKFPyuWxO8WYg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716501621;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=18bFCkDiE5Sbgi4NXueQ8erF60YbZu7PrN26lvvIIBA=;
-	b=hG7nVsQdEZxaAwZk4oZt4Q8Vn66oqj4h5KlI8OqVC3M2q2XO0TFXx9+UzcEfwt+sQD2dkW
-	Gavtq8THOFkIrzAw==
-To: Sunil V L <sunilvl@ventanamicro.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
- acpica-devel@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou
- <aou@eecs.berkeley.edu>, "Rafael J . Wysocki" <rafael@kernel.org>, Len
- Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Anup Patel
- <anup@brainfault.org>, Samuel Holland <samuel.holland@sifive.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Robert Moore <robert.moore@intel.com>, Conor
- Dooley <conor.dooley@microchip.com>, Andrew Jones
- <ajones@ventanamicro.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Atish
- Kumar Patra <atishp@rivosinc.com>, Andrei Warkentin
- <andrei.warkentin@intel.com>, Haibo1 Xu <haibo1.xu@intel.com>,
- =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>
-Subject: Re: [PATCH v5 14/17] irqchip/riscv-imsic: Add ACPI support
-In-Reply-To: <20240501121742.1215792-15-sunilvl@ventanamicro.com>
-References: <20240501121742.1215792-1-sunilvl@ventanamicro.com>
- <20240501121742.1215792-15-sunilvl@ventanamicro.com>
-Date: Fri, 24 May 2024 00:00:21 +0200
-Message-ID: <871q5sfatm.ffs@tglx>
+	s=arc-20240116; t=1716506456; c=relaxed/simple;
+	bh=7effkUXJYReUkUJrj0GYDVd30UVKJxZYLubPfW3A324=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=l9csqErDiIMKznyZ8ZmAtw6H7CaxP6FwJpw0R+4yFH+SsilXqVsRv5OPmo6SReTr9RSe3clMCWqkeACwZVjXiI8BhARDUS0djfiQly6IJniW1la/Dcvu+FS/Fyrs4FWMx+CP28s8sMtLeYEV/E97hERU/7xiTMzJn6aughtm0+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VL67jKab; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716506455; x=1748042455;
+  h=date:from:to:cc:subject:message-id;
+  bh=7effkUXJYReUkUJrj0GYDVd30UVKJxZYLubPfW3A324=;
+  b=VL67jKabHJG09drNKk1yewkbZrHac6oQ2AFLe2MXnMH4nT93Pqk1phfG
+   tpvQ/WBlHaF7ILzPvHiO+QTPsRXziBWJPfPWIRFNv2+J5t9CGmAviiT8t
+   vYa4bgpvypMdIdD3xGnPnVPXYm7w6y6wTgvMEy3Zfy+8RK9a9tThFFKKh
+   S9y3DqCmLlnrGyY9sA8T9MJJKadmxkNWUQ2U08PZO3szEqRep9ekqop2/
+   xq+U7FDtIEkO4O6JlhGHh9aHBO69G4JyyUInZRd91v07RTVOfl1R8ahYj
+   ZvdncIPBrw2AqsxGlzjFQYI6XGyf8jUv+u7+rwvAIruTez601sYOpjeIk
+   w==;
+X-CSE-ConnectionGUID: KMJn6JfXTl2Jmury0UY6xA==
+X-CSE-MsgGUID: XxVBkQ/zT/uYXdC7C6786g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="12712402"
+X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
+   d="scan'208";a="12712402"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 16:20:55 -0700
+X-CSE-ConnectionGUID: DZls55+OSEyPv/JwGedZUA==
+X-CSE-MsgGUID: Sco5+qrCQrK5OkAaurRJyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
+   d="scan'208";a="38400607"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 23 May 2024 16:20:53 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sAHjv-0003c2-0M;
+	Thu, 23 May 2024 23:20:51 +0000
+Date: Fri, 24 May 2024 07:20:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/exynos] BUILD SUCCESS
+ 5e6f0158b62259cd63dbc6e00c02ac7912ffe7a4
+Message-ID: <202405240705.DlZhtUJH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Wed, May 01 2024 at 17:47, Sunil V L wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/exynos
+branch HEAD: 5e6f0158b62259cd63dbc6e00c02ac7912ffe7a4  PCI: exynos: Adapt to use bulk clock APIs
 
-> RISC-V IMSIC interrupt controller provides IPI and MSI support.
-> Currently, DT based drivers setup the IPI feature early during boot but
-> defer setting up the MSI functionality. However, in ACPI systems, ACPI,
-> both IPI and MSI features need to be initialized early itself.
+elapsed time: 1465m
 
-Why?
+configs tested: 143
+configs skipped: 3
 
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static struct fwnode_handle *imsic_acpi_fwnode;
-> +
-> +struct fwnode_handle *imsic_acpi_get_fwnode(struct device *dev)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Why is this function global? It's only used in the very same file and
-under the same CONFIG_ACPI #ifdef, no?
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240524   gcc  
+arc                   randconfig-002-20240524   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240524   clang
+arm                   randconfig-002-20240524   gcc  
+arm                   randconfig-003-20240524   gcc  
+arm                   randconfig-004-20240524   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240524   clang
+arm64                 randconfig-002-20240524   clang
+arm64                 randconfig-003-20240524   gcc  
+arm64                 randconfig-004-20240524   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240524   gcc  
+csky                  randconfig-002-20240524   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240524   clang
+hexagon               randconfig-002-20240524   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240523   clang
+i386         buildonly-randconfig-002-20240523   gcc  
+i386         buildonly-randconfig-003-20240523   clang
+i386         buildonly-randconfig-004-20240523   clang
+i386         buildonly-randconfig-005-20240523   clang
+i386         buildonly-randconfig-006-20240523   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240523   gcc  
+i386                  randconfig-002-20240523   clang
+i386                  randconfig-003-20240523   clang
+i386                  randconfig-004-20240523   clang
+i386                  randconfig-005-20240523   gcc  
+i386                  randconfig-006-20240523   clang
+i386                  randconfig-011-20240523   gcc  
+i386                  randconfig-012-20240523   clang
+i386                  randconfig-013-20240523   clang
+i386                  randconfig-014-20240523   gcc  
+i386                  randconfig-015-20240523   gcc  
+i386                  randconfig-016-20240523   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240524   gcc  
+loongarch             randconfig-002-20240524   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240524   gcc  
+nios2                 randconfig-002-20240524   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240524   gcc  
+parisc                randconfig-002-20240524   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc               randconfig-001-20240524   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240524   gcc  
+x86_64       buildonly-randconfig-002-20240524   gcc  
+x86_64       buildonly-randconfig-003-20240524   clang
+x86_64       buildonly-randconfig-004-20240524   gcc  
+x86_64       buildonly-randconfig-005-20240524   gcc  
+x86_64       buildonly-randconfig-006-20240524   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240524   gcc  
+x86_64                randconfig-002-20240524   clang
+x86_64                randconfig-003-20240524   clang
+x86_64                randconfig-004-20240524   clang
+x86_64                randconfig-005-20240524   clang
+x86_64                randconfig-006-20240524   gcc  
+x86_64                randconfig-011-20240524   gcc  
+x86_64                randconfig-012-20240524   clang
+x86_64                randconfig-013-20240524   clang
+x86_64                randconfig-014-20240524   gcc  
+x86_64                randconfig-015-20240524   gcc  
+x86_64                randconfig-016-20240524   clang
+x86_64                randconfig-071-20240524   gcc  
+x86_64                randconfig-072-20240524   clang
+x86_64                randconfig-073-20240524   gcc  
+x86_64                randconfig-074-20240524   gcc  
+x86_64                randconfig-075-20240524   clang
+x86_64                randconfig-076-20240524   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
 
-> +{
-> +	return imsic_acpi_fwnode;
-> +}
-> +
-> +static int __init imsic_early_acpi_init(union acpi_subtable_headers *header,
-> +					const unsigned long end)
-> +{
-> +	struct acpi_madt_imsic *imsic = (struct acpi_madt_imsic *)header;
-> +	int rc;
-> +
-> +	imsic_acpi_fwnode = irq_domain_alloc_named_fwnode("imsic");
-> +	if (!imsic_acpi_fwnode) {
-> +		pr_err("unable to allocate IMSIC FW node\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* Setup IMSIC state */
-> +	rc = imsic_setup_state(imsic_acpi_fwnode, (void *)imsic);
-
-Pointless (void *) cast.
-
-> +	if (rc) {
-> +		pr_err("%pfwP: failed to setup state (error %d)\n", imsic_acpi_fwnode, rc);
-> +		return rc;
-> +	}
-> +
-> +	/* Do early setup of IMSIC state and IPIs */
-> +	rc = imsic_early_probe(imsic_acpi_fwnode);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = imsic_platform_acpi_probe(imsic_acpi_fwnode);
-> +
-> +#ifdef CONFIG_PCI
-> +	if (!rc)
-> +		pci_msi_register_fwnode_provider(&imsic_acpi_get_fwnode);
-> +#endif
-> +
-> +	return rc;
-
-Any error return in this function leaks the firmware node and probably
-some more stuff.
-
-> +}
-> +
-> +IRQCHIP_ACPI_DECLARE(riscv_imsic, ACPI_MADT_TYPE_IMSIC, NULL,
-> +		     1, imsic_early_acpi_init);
-> +#endif
-
-...
-
-> -	/* Find number of interrupt identities */
-> -	rc = of_property_read_u32(to_of_node(fwnode), "riscv,num-ids",
-> -				  &global->nr_ids);
-> -	if (rc) {
-> -		pr_err("%pfwP: number of interrupt identities not found\n", fwnode);
-> -		return rc;
-> +		/* Find number of guest interrupt identities */
-> +		rc = of_property_read_u32(to_of_node(fwnode), "riscv,num-guest-ids",
-> +					  &global->nr_guest_ids);
-> +		if (rc)
-> +			global->nr_guest_ids = global->nr_ids;
-> +	} else {
-> +		global->guest_index_bits = imsic->guest_index_bits;
-> +		global->hart_index_bits = imsic->hart_index_bits;
-> +		global->group_index_bits = imsic->group_index_bits;
-> +		global->group_index_shift = imsic->group_index_shift;
-> +		global->nr_ids = imsic->num_ids;
-> +		global->nr_guest_ids = imsic->num_guest_ids;
->  	}
-
-Seriously?
-
-Why can't you just split out the existing DT code into a separate
-function in an initial patch which avoulds all of this unreviewable
-churn of making the DT stuff indented ?
-
-> +#ifdef CONFIG_ACPI
-> +int imsic_platform_acpi_probe(struct fwnode_handle *fwnode);
-> +struct fwnode_handle *imsic_acpi_get_fwnode(struct device *dev);
-> +#else
-> +static inline struct fwnode_handle *imsic_acpi_get_fwnode(struct device *dev)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-
-Oh well.
-
->  #endif
-
-Thanks,
-
-        tglx
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
