@@ -1,104 +1,116 @@
-Return-Path: <linux-pci+bounces-7785-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7786-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 645FC8CD698
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 17:03:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BFFD8CD6BE
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 17:10:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F28991F21A42
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 15:03:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4786528148F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 15:10:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 787B2B645;
-	Thu, 23 May 2024 15:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FF5CB658;
+	Thu, 23 May 2024 15:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gW2U8MdR"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="YoCSnA2R"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457C76AAD;
-	Thu, 23 May 2024 15:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830A31170F;
+	Thu, 23 May 2024 15:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716476631; cv=none; b=qsxJTUyZs3lEQK8VE3QCJyQ8t9g5YrSnxLRBsvw4iKd3Ys3/ClgjKIvN0Kmi2w7M+EpC34xVCMTW50zdYo90xaEAE22iNWVVyCMLtveI+wn2gZfCgnxFj3TIX5cAvHBhJglxE5+yZcm1EqJ9TP8yeZeOHpWw/Q05Y8oMGINCh3s=
+	t=1716477019; cv=none; b=luC/FCgmM7tuz1lVwAMiwSEvg3hv9dcI1OGTpmtr3VztH+4M0jfOiv/qvhyTRbxoqXzVHZiafjNq4CT87bHkFepRAxDq9NOT7NzDgtjchP94FlF6REXI1vQ2TmRqkFRmJ+gA/86abUFoeA+LBHb00olmH0E1pEylPRXBOosptdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716476631; c=relaxed/simple;
-	bh=N9nB2TabRE0ILucieRrFr8EiEb/dKAQ/M2yQBgPFKY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Z87W8GHpVK5Vb9Qt8nD3q0GLVRLtWqgqKRCBpUqTjDUHPBl8VSp0THVKN+dYURbbjst5AlPp6vLUcGHZUFEuDRUWeG75eflg6j/fqFCfmXbGyAPvmigdkbiRQQLLcSVM+jLcUM4bKC0ZA3hCW/NSPxWDwS7dMLCYyRcalUcojHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gW2U8MdR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92849C32786;
-	Thu, 23 May 2024 15:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716476630;
-	bh=N9nB2TabRE0ILucieRrFr8EiEb/dKAQ/M2yQBgPFKY4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gW2U8MdRupSPlhuIc29ggUoj8CTuq45vPyAXx5ABrUNtyXvTUbQSRF2zpB4eQouNp
-	 GlkNuZ4aBBLWujz1PHNOnhrFaNmZ1Fd69hmHs5ULylOlusqbVi46htoPXgEv1Ytkvc
-	 u6KwMlvcPJk6UfrvRuemSoDHsSYaSs8aTo2y2WN1qNXZtVmojFSlDKmMueuCquFvRn
-	 KtgmZg4QYYUunhZqmq8VDcs/KDde/9YVdwTkSDzEQE1PH7K/GKViOkcFT6Q88rL01g
-	 vtC+SRY9iD3M5CS8wx678JB2jCL4LcGYaSADnP3xUlM2M1jFQAAK9QWtqm+E07sqWc
-	 5p82lad0gqy9Q==
-Date: Thu, 23 May 2024 10:03:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: devi priya <quic_devipriy@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
-	mturquette@baylibre.com, sboyd@kernel.org,
-	manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH V5 1/6] Add PCIe pipe clock definitions for IPQ9574 SoC.
-Message-ID: <20240523150349.GA118633@bhelgaas>
+	s=arc-20240116; t=1716477019; c=relaxed/simple;
+	bh=Gkdr0xJJMLFNvdvcWADbMhaYVTxlrzgLesPt6pnCC4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WhI6MnWGH1McuRGi/pW+wL7vfLOzRYQ2XDkPnjG0MqqJO1ANBOgKE16TVLMoocuM8HxjMIrxSfyxdVO8Cmru+mBkffaZaihG4RdTSB3derB/VfegYywjD8wUu8EvmQgrVzzSdP7l3dpnMnr+Uw0hsiDkjDxRSL8MXbUhkBOFyv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=YoCSnA2R; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=VKYtOUQIklTbI09gSSmqwJj42+AhQw4Yicy/NLUXnzs=; b=YoCSnA2RFj/4ROon
+	bPfV7469Btft13YOZleJG6i3GOvmXQa5XDHesXVcM2WdXrb4FBCpcJckmofOFaCeMt6MmdtOKaNab
+	/2uo2X73uPdbtZdR9PRR82QZo54VsQoNaVV1rRfl3JGz5HsdsFtVPL64HHAfXu4UC5DgV5F5wMius
+	7AT9ddsiJk4pgoFcIaWEgLWellbZLUWUxaTXzouQLXzLN7cuW1T44KyRHz+fMb5g2M5Ou/RQRrLSJ
+	VRYjafelzWkspFVCdhuzQhKuNUt6Dk04EHkjoHja27Lcs6Fq/7/QB82XlKcow9xSyd8ypHM7fDSq0
+	WulPOcA/SOcuwpz/ng==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1sAA4z-002FMq-2W;
+	Thu, 23 May 2024 15:10:05 +0000
+Date: Thu, 23 May 2024 15:10:05 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: bhelgaas@google.com, rafael@kernel.org, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ACPI: PCI: Remove unused struct 'acpi_handle_node'
+Message-ID: <Zk9cTVvPoyzM4hYm@gallifrey>
+References: <20240509000858.204114-1-linux@treblig.org>
+ <20240509115750.000078ad@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240512082858.1806694-2-quic_devipriy@quicinc.com>
+In-Reply-To: <20240509115750.000078ad@Huawei.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 15:09:50 up 15 days,  2:23,  1 user,  load average: 0.02, 0.01, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Sun, May 12, 2024 at 01:58:53PM +0530, devi priya wrote:
-
-Please run "git log --oneline include/dt-bindings/clock/qcom,ipq9574-gcc.h"
-and follow the subject line style there:
-
-  - prefix "dt-bindings: clock: "
-  - no trailing period
-  - perhaps add commit log text if there's anything else useful to put
-    there
-
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
-> ---
->  Changes in V5:
-> 	- No changes
+* Jonathan Cameron (Jonathan.Cameron@Huawei.com) wrote:
+> On Thu,  9 May 2024 01:08:58 +0100
+> linux@treblig.org wrote:
 > 
->  include/dt-bindings/clock/qcom,ipq9574-gcc.h | 4 ++++
->  1 file changed, 4 insertions(+)
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > 
+> > 'acpi_handle_node' is unused since
+> > Commit 63f534b8bad9 ("ACPI: PCI: Rework acpi_get_pci_dev()")
+> > Remove it.
+> > 
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 > 
-> diff --git a/include/dt-bindings/clock/qcom,ipq9574-gcc.h b/include/dt-bindings/clock/qcom,ipq9574-gcc.h
-> index 08fd3a37acaa..52123c5a09fa 100644
-> --- a/include/dt-bindings/clock/qcom,ipq9574-gcc.h
-> +++ b/include/dt-bindings/clock/qcom,ipq9574-gcc.h
-> @@ -216,4 +216,8 @@
->  #define GCC_CRYPTO_AHB_CLK				207
->  #define GCC_USB0_PIPE_CLK				208
->  #define GCC_USB0_SLEEP_CLK				209
-> +#define GCC_PCIE0_PIPE_CLK				210
-> +#define GCC_PCIE1_PIPE_CLK				211
-> +#define GCC_PCIE2_PIPE_CLK				212
-> +#define GCC_PCIE3_PIPE_CLK				213
->  #endif
-> -- 
-> 2.34.1
+> FWIW, indeed unused.
 > 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks; any idea who would pick this up?
+
+Dave
+
+> > ---
+> >  drivers/acpi/pci_root.c | 5 -----
+> >  1 file changed, 5 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> > index 58b89b8d950ed..59e6955e24edb 100644
+> > --- a/drivers/acpi/pci_root.c
+> > +++ b/drivers/acpi/pci_root.c
+> > @@ -293,11 +293,6 @@ struct acpi_pci_root *acpi_pci_find_root(acpi_handle handle)
+> >  }
+> >  EXPORT_SYMBOL_GPL(acpi_pci_find_root);
+> >  
+> > -struct acpi_handle_node {
+> > -	struct list_head node;
+> > -	acpi_handle handle;
+> > -};
+> > -
+> >  /**
+> >   * acpi_get_pci_dev - convert ACPI CA handle to struct pci_dev
+> >   * @handle: the handle in question
+> 
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
 
