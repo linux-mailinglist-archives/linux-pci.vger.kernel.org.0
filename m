@@ -1,130 +1,192 @@
-Return-Path: <linux-pci+bounces-7790-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7791-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DD0D8CD705
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 17:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 43D758CD7CB
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 17:54:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 284E8283A94
-	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 15:27:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED233286758
+	for <lists+linux-pci@lfdr.de>; Thu, 23 May 2024 15:54:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE1F10A0A;
-	Thu, 23 May 2024 15:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A455E12E55;
+	Thu, 23 May 2024 15:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOdsXZ1+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PZvxIsJd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C74101CA;
-	Thu, 23 May 2024 15:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F1C125DE
+	for <linux-pci@vger.kernel.org>; Thu, 23 May 2024 15:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716478025; cv=none; b=AAv9XXneCyXc06Kc+0hYMWWGCjsepVnZNyykoSJJj50XA09UTptVc4J9/r1P7PKUBrkiKzgMK1DgyiXMHKYjPn3AxC3NZ95NY8iD7hEE5DdxLRDNFquZ7JM7InJA5ZX8egeQf2uK8CdGwgx0jCXa8aZ0F1hc8qE7OT7n8/pR6ZQ=
+	t=1716479681; cv=none; b=bszmDk41fp/ZbBJObciNQYLb4Ljsp2oAk0Nmt7eMFTInxSTLFh/EIykAGVOydDQttb0oySFgmTpz8Ue7EdULOI5Sh6wKidlitQSykEEBXSQ3PK3ftvpPT2XdlOr1l9bRoAdU0yss36Z7Qu+F3SeYu7tYb/EwHgrMKS4tVDH8da0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716478025; c=relaxed/simple;
-	bh=NZIAADL48S28HX9Sw3C6Ue42pIMIpL17ADa3oygMCE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YjA1cZk0KxxCLq2LszIptI+LX2zIYgazcvHR/5mBWuOHBYnwWQ8KN6LakVAU+f/TRNoW+R6+8wMzxH+cHWpLeHizCU6vGzf36HEHfCf3PtaCdmjhYppbwpVacLiJTlNohiqa3gFI+JDpAQYvuvda37fzqSVBXNZtSRxCqaQB7T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOdsXZ1+; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1716479681; c=relaxed/simple;
+	bh=LE2q/jNqZ2dCecIpi9sGJ/cD8osXlFpMwuBEd9+HOF4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Sn7DruSSircXoopAbQbkxDzknfxXmttDifESwtKex8H3Iamr91StH9gxxFBrOtZ8rFr/LM7AQdHiZNQduYB/Y1BC9HVVlX1dd9MPcjeDFcRw7rSPOg7tG/qoMhbPtxdxEndyLXYIfF0bppYrvzR/FS74flL2WmAcyBIeFcQAIyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PZvxIsJd; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716478024; x=1748014024;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NZIAADL48S28HX9Sw3C6Ue42pIMIpL17ADa3oygMCE4=;
-  b=MOdsXZ1+VhRjmiH4AmwXPErb3ZLUSU3cSi97TU78LJE019T1Furkvuqq
-   HxOEpPVof5uEtkv+brvCqnJE54az8cQm3c5LL0PQS0/eHsDrcfFkgzriX
-   sDh4pniLpRDsMD1SkkfdqlYmkPC3eDHXfQyp28mEc2pyMPMCKevIBS/M0
-   4rEfJQqL4nQto5JFuez3blxDy+jWaQG7uRAJ8gLyDY4/ifhkGxwShmCEM
-   cxnXSbHxLQIjc56t2QJ0oWmJ7Ohp1TS5LvxgRQSXoN9WRRIQZvXBTbfl8
-   El5Z9JvTs6xEOd9RwVeFZQiZZ4QPL2i1ZOHk5gToj+jtpk3fz/w7OhKHH
-   Q==;
-X-CSE-ConnectionGUID: v1jKVdXnQWuO0JOHIevt5A==
-X-CSE-MsgGUID: YqHFWQCGSn6XJ1jeCTUafg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="23376920"
+  t=1716479680; x=1748015680;
+  h=date:from:to:cc:subject:message-id;
+  bh=LE2q/jNqZ2dCecIpi9sGJ/cD8osXlFpMwuBEd9+HOF4=;
+  b=PZvxIsJdo/aSRfVFNqBZb+mvx5chvqEE889rRkHGdWkTCNCLKnDnMuNZ
+   Ja6tiIzWAVCrGQVRu4ENH3Vv4TbD+bVxncKWYFfeWMPN3fL9N5n1zmF10
+   ZXEkLzzwIs6L3uTtqVYAd3jP5JY/XmEbhOCy0DScPbzkSeOPKsK1OPfMv
+   WPpw7v9nDlKQDBKiSey/STRSXBbog5TjRwkYPcyhDch5D0bLFw2v8yVzi
+   0OEwv/QC3D3eVbYVSxI9ZqBrehamQG1lGbwN0TvazpZe6rTiCXEdZzfoi
+   2QjhOCVJywfhgnVVpksxa/062PflJHluaK6E4GsVsUZYgtPaQ7gm0S8rI
+   w==;
+X-CSE-ConnectionGUID: QdcwnlrrTm+JyAIRg1VqPg==
+X-CSE-MsgGUID: 39L5KK8YT3SQ9GfURlEDRQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="12682703"
 X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
-   d="scan'208";a="23376920"
+   d="scan'208";a="12682703"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 08:27:03 -0700
-X-CSE-ConnectionGUID: x/v4x+V/S7iFT1q2gBqK8Q==
-X-CSE-MsgGUID: gNM+u2JyQAWvBQR8C+ocjg==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 08:54:39 -0700
+X-CSE-ConnectionGUID: HSojYwCCRGaTJXBLt5fv8A==
+X-CSE-MsgGUID: C1YdJnAaQbaAsnXoFjFP3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,183,1712646000"; 
-   d="scan'208";a="64910341"
+   d="scan'208";a="64920631"
 Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 23 May 2024 08:26:59 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 23 May 2024 08:54:38 -0700
 Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sAALI-00030n-2I;
-	Thu, 23 May 2024 15:26:56 +0000
-Date: Thu, 23 May 2024 23:26:00 +0800
+	id 1sAAm3-00032x-37;
+	Thu, 23 May 2024 15:54:35 +0000
+Date: Thu, 23 May 2024 23:52:23 +0800
 From: kernel test robot <lkp@intel.com>
-To: Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
-	lukas@wunner.de
-Cc: oe-kbuild-all@lists.linux.dev, alex.williamson@redhat.com,
-	christian.koenig@amd.com, kch@nvidia.com,
-	gregkh@linuxfoundation.org, logang@deltatee.com,
-	linux-kernel@vger.kernel.org, alistair23@gmail.com,
-	chaitanyak@nvidia.com, rdunlap@infradead.org,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v10 3/4] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <202405232329.5RfYqVrs-lkp@intel.com>
-References: <20240522101142.559733-3-alistair.francis@wdc.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/keystone] BUILD SUCCESS
+ 610a035d4d567963bb27bbd0cd1d19f8efd058b4
+Message-ID: <202405232321.UZc6mGv4-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240522101142.559733-3-alistair.francis@wdc.com>
 
-Hi Alistair,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/keystone
+branch HEAD: 610a035d4d567963bb27bbd0cd1d19f8efd058b4  PCI: keystone: Don't enable BAR 0 for AM654x
 
-kernel test robot noticed the following build warnings:
+elapsed time: 1017m
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master next-20240523]
-[cannot apply to v6.9]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 101
+configs skipped: 3
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alistair-Francis/PCI-DOE-Rename-Discovery-Response-Data-Object-Contents-to-type/20240522-181416
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240522101142.559733-3-alistair.francis%40wdc.com
-patch subject: [PATCH v10 3/4] PCI/DOE: Expose the DOE features via sysfs
-config: x86_64-randconfig-123-20240523 (https://download.01.org/0day-ci/archive/20240523/202405232329.5RfYqVrs-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240523/202405232329.5RfYqVrs-lkp@intel.com/reproduce)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405232329.5RfYqVrs-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/doe.c:107:1: sparse: sparse: symbol 'dev_attr_doe_discovery' was not declared. Should it be static?
-
-vim +/dev_attr_doe_discovery +107 drivers/pci/doe.c
-
-    99	
-   100	#ifdef CONFIG_SYSFS
-   101	static ssize_t doe_discovery_show(struct device *dev,
-   102					  struct device_attribute *attr,
-   103					  char *buf)
-   104	{
-   105		return sysfs_emit(buf, "0001:00\n");
-   106	}
- > 107	DEVICE_ATTR_RO(doe_discovery);
-   108	
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240523   clang
+i386         buildonly-randconfig-002-20240523   gcc  
+i386         buildonly-randconfig-003-20240523   clang
+i386         buildonly-randconfig-004-20240523   clang
+i386         buildonly-randconfig-005-20240523   clang
+i386         buildonly-randconfig-006-20240523   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240523   gcc  
+i386                  randconfig-002-20240523   clang
+i386                  randconfig-003-20240523   clang
+i386                  randconfig-004-20240523   clang
+i386                  randconfig-005-20240523   gcc  
+i386                  randconfig-006-20240523   clang
+i386                  randconfig-011-20240523   gcc  
+i386                  randconfig-012-20240523   clang
+i386                  randconfig-013-20240523   clang
+i386                  randconfig-014-20240523   gcc  
+i386                  randconfig-015-20240523   gcc  
+i386                  randconfig-016-20240523   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
