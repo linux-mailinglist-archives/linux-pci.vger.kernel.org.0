@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-7811-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C91D8CE485
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 12:58:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C13078CE489
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 12:58:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D7FCB21410
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 10:58:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F21E01C20C8C
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 10:58:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C312F8614D;
-	Fri, 24 May 2024 10:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8728C85C69;
+	Fri, 24 May 2024 10:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vBaWWvlq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A9+BSXlB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FD785C6A;
-	Fri, 24 May 2024 10:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A7785C58;
+	Fri, 24 May 2024 10:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716548270; cv=none; b=YKMDbwcatpQ9EYjhuCfUke8QjCsNmBMMJk4EDVSkjjYoeANevA5S+B9w1BjHz9eUvVVMHrDDXaV/kIm56y8PI0N2ajDn/2IX3ryhuYKNehTZPBlzrYLc2y90hu9Xr/oLQOoJJHbykmmD3EUklEsBz9Spjh/Lh9IaZQbj4uWr7ZM=
+	t=1716548281; cv=none; b=gsZpA1MI5wWvUGp/gB+Rm6IMmdEZJAjsq8tDPX/0FnVYLSHasB5ax4XVgj7AwHIUZkOeVWXsjf0OO2vXHsYEs4NYxPVpl1sJbnBjs+Iiu44YqbgTDPGwxMhhktJ594g/WhK4nVvEbsaVNWwVDF3tDTnjB/tHTWeee04FAzYHyE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716548270; c=relaxed/simple;
-	bh=Vn0zeGLzZS52gTkwm0qFtIpYRyVjwcLLAAjfXZqKVmo=;
+	s=arc-20240116; t=1716548281; c=relaxed/simple;
+	bh=+tGHaaXA/o+PcEWpkVJfOIRNHuU+e2wPnmxnU44WR5s=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k512QMw6CYaoGF5+zFs5bRyo4U0I7qg6tPySXlaKJpU8JWENLgD3b7+loGlYOeZJMJrhgpjQDqi15TvZa1ufbL8DQ1uBwwV85QYoQEdRcC2s5T7DhusHerfyNiKpiq68SUdykOPtgYGkvfZQ0N+0CgmLLtxZOms4Vqfg+9Q5Wxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vBaWWvlq; arc=none smtp.client-ip=198.47.23.249
+	 MIME-Version:Content-Type; b=Zo+Q3gxzTky33UZGlf2WXdY1DqraGtJo1UXjbpsm0rTj1C2RlVXG9UHoOKiZhxQT0uED1piD6yLvTr/MY+tckWcwelWurUeYarpneep5FwNZfIsZVfIQPHckiqJVgDg3qcPMQojzgug6SbWlk19RvLtOHt8+d5vIoaTt3z+B4dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=A9+BSXlB; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44OAvPNi028558;
-	Fri, 24 May 2024 05:57:25 -0500
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44OAvTFY056814;
+	Fri, 24 May 2024 05:57:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1716548245;
-	bh=Mqo/yUaUfbqua5wM0i9He7Mecv4ALw4lJn4cQAMllsY=;
+	s=ti-com-17Q1; t=1716548249;
+	bh=oAxDy7HRzkzyrAajDGbOIZ7VyO0W++qJINz2lTGFPco=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=vBaWWvlq2WPGhCb54YveM71vVWp5Ljfy4GOkQ4+B+cJx6pPNLFRSKl4nN81KxytSw
-	 WbvddOTsLNm9Rl5nJp+R4A9Cy/aTZqyiDy/jYiNBkxzyR5Xpr1lIfsxVDfVT2ZUVaS
-	 ZLJ/CtHpSmpC3LBkuBAWmOk7jgynGQzX3cFTkdJU=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44OAvPi9037393
+	b=A9+BSXlBOhx1TAmOU96P2XHek96O/xk+nOzNEpSNTep++dnl6X1t3n6KatGRqv6bi
+	 rloF0zLQxtkSMuCaHh/OCw7gXgJBAk7w8JBzcLpbRf2zn+p7OAlT8QFbZIHisKiPrZ
+	 qtZvZwyocV54FIk80sVYPr8Chc+BfAHRDJSzVEQI=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44OAvTVZ037425
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 24 May 2024 05:57:25 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 24 May 2024 05:57:29 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
- May 2024 05:57:24 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 05:57:29 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 24 May 2024 05:57:24 -0500
+ Frontend Transport; Fri, 24 May 2024 05:57:29 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44OAvFvE049802;
-	Fri, 24 May 2024 05:57:20 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44OAvFvF049802;
+	Fri, 24 May 2024 05:57:25 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
         <bhelgaas@google.com>, <manivannan.sadhasivam@linaro.org>,
@@ -65,9 +65,9 @@ To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
 CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
         <s-vadapalli@ti.com>
-Subject: [PATCH v2 1/2] PCI: keystone: Set mode as RootComplex for "ti,keystone-pcie" compatible
-Date: Fri, 24 May 2024 16:27:13 +0530
-Message-ID: <20240524105714.191642-2-s-vadapalli@ti.com>
+Subject: [PATCH v2 2/2] PCI: keystone: Add link up check in ks_child_pcie_ops.map_bus()
+Date: Fri, 24 May 2024 16:27:14 +0530
+Message-ID: <20240524105714.191642-3-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240524105714.191642-1-s-vadapalli@ti.com>
 References: <20240524105714.191642-1-s-vadapalli@ti.com>
@@ -83,31 +83,42 @@ X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 23284ad677a9 ("PCI: keystone: Add support for PCIe EP in AM654x
-Platforms") introduced configuring "enum dw_pcie_device_mode" as part of
-device data ("struct ks_pcie_of_data"). However it failed to set mode
-for "ti,keystone-pcie" compatible. Set mode as RootComplex for
-"ti,keystone-pcie" compatible here.
+K2G forwards the error triggered by a link-down state (e.g., no connected
+endpoint device) on the system bus for PCI configuration transactions;
+these errors are reported as an SError at system level, which is fatal and
+hangs the system. So fix it similar to how it was done in designware core
+driver commit 15b23906347c ("PCI: dwc: Add link up check in
+dw_child_pcie_ops.map_bus()")
 
-Fixes: 23284ad677a9 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
+Fixes: 10a797c6e54a ("PCI: dwc: keystone: Use pci_ops for config space accessors")
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pci-keystone.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index d3a7d14ee685..3184546ba3b6 100644
+index 3184546ba3b6..ca476fa584e7 100644
 --- a/drivers/pci/controller/dwc/pci-keystone.c
 +++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -1064,6 +1064,7 @@ static int ks_pcie_am654_set_mode(struct device *dev,
+@@ -430,6 +430,17 @@ static void __iomem *ks_pcie_other_map_bus(struct pci_bus *bus,
+ 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+ 	u32 reg;
  
- static const struct ks_pcie_of_data ks_pcie_rc_of_data = {
- 	.host_ops = &ks_pcie_host_ops,
-+	.mode = DW_PCIE_RC_TYPE,
- 	.version = DW_PCIE_VER_365A,
- };
- 
++	/*
++	 * Checking whether the link is up here is a last line of defense
++	 * against platforms that forward errors on the system bus as
++	 * SError upon PCI configuration transactions issued when the link
++	 * is down. This check is racy by definition and does not stop
++	 * the system from triggering an SError if the link goes down
++	 * after this check is performed.
++	 */
++	if (!dw_pcie_link_up(pci))
++		return NULL;
++
+ 	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
+ 		CFG_FUNC(PCI_FUNC(devfn));
+ 	if (!pci_is_root_bus(bus->parent))
 -- 
 2.40.1
 
