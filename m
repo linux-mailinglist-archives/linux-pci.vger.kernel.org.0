@@ -1,148 +1,161 @@
-Return-Path: <linux-pci+bounces-7819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 114FF8CE829
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 17:37:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9F0E8CED09
+	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 01:52:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53BD9B22A10
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 15:37:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27BD91F218AC
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 23:52:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6404E12C558;
-	Fri, 24 May 2024 15:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824DA5C5F3;
+	Fri, 24 May 2024 23:51:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="n7IxgBTS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CfZMWSpy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A7012C462;
-	Fri, 24 May 2024 15:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A3F57CB8
+	for <linux-pci@vger.kernel.org>; Fri, 24 May 2024 23:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716564999; cv=none; b=F1RCM7z5x68yc+ig0vRhYRyDCvnVeYOhsZ8M0FCUWM12u/lSvBGVv3uyNLWe/9ofND1m+YKgfGBNwLntC+c8zGtZGrdxstAtML5VsEoV+iuK7RD4HaLvolMgOH4lHx0y3PGJUL8K9QRhmeKevPMyU5j+T2GFxrJMU77P8mrmxmw=
+	t=1716594716; cv=none; b=j4/YZ/rdRASfSkhNtcdKoBm7bQt991AQ1JzCikMml3tFyLOLmJRXNggIWnouZIwpY+yicZGUIJq7mi8GsINiWnMClfO3IP+E20jRjRe31WZ87SxuVt3PjmpnXMaGOVsw60e+C99pGHKNNyos9fuTt7sZO+8gMyn3eBawUwlRoCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716564999; c=relaxed/simple;
-	bh=BTkrqG5m/TTiVu6LqJP5g2aggKorDUogMn333Zc5T6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KIyJxzGppw4ZY1zryckQ9uGnjc8RHNuxf20KbeOqvwvmi5egO1Oeb3mJRCs8/OlZuHbjsKjHLW+J3U57UJ8FTa7QlOlzaJBoYdvQvGAZza+U8IbyHYdXCjfRaa982Gu3AwrRU05LUwvfnCXvxGqzdBcmcQcF8XvrTKChXXvWDVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=n7IxgBTS; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716564943; x=1717169743; i=markus.elfring@web.de;
-	bh=EgHVt4XXKFDHUxcOb8J/XG57mTgDTrmuiUOaJp+R4ME=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=n7IxgBTSf+tr3P1HeACzL6MdWey6JSwkcy5D6it6Q2xFqxxwcLpRKsjgCnmYII4E
-	 tmHvAjw4gJ4XvozXycpkuCK8/q5+Y+sAs0hKRnr5Z4ssTCTeO7bainwf0a2eFUCZI
-	 tfMhwBDDW/Wh/xdGebO1ip3mdB92S88Bn8f4VZMuZ8lIekZ49mxVjO6S6A9wEk+Yu
-	 c8CFvQb9ON2i2TBaD8o2ja1qfccUuPJvkLPgwkhogU0Fa/VQnMWz0IugpCyIG2y1g
-	 y/rprAMxO3eLAncHAoyodzINV+EUimmLEafBhPNApptqBAYmBiiA42r07L9rq16v0
-	 uftn/l8SdO3+GIODbg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MRW2R-1rpxfe2uAP-00NRSf; Fri, 24
- May 2024 17:35:43 +0200
-Message-ID: <986ff09f-212c-4905-ab06-35f85e20e9cf@web.de>
-Date: Fri, 24 May 2024 17:35:42 +0200
+	s=arc-20240116; t=1716594716; c=relaxed/simple;
+	bh=slUGVXzE8eGH+1xOAEIRndp11Y6yAeI8Oi2pMQd6DhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BCY15lL32EepqSVbRGurAcsffKLofMRPvorlPZqoXtDaMbQjXDFkrXHVPE47f0k9EwbOe9suMWhmYDtunUuzVYQcBjs4NywWN/mc5Sn/TGC9qWZkyiCg26AW6zscUKK0WXmQJCh3y9D3fifx1XzRUMxKb3eb/sHxalrN/hsSI7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CfZMWSpy; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716594714; x=1748130714;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=slUGVXzE8eGH+1xOAEIRndp11Y6yAeI8Oi2pMQd6DhI=;
+  b=CfZMWSpyQXCXADsKxTCLWncgkhhXTLR6A76grdiTz8Ki6/46PjRSFgo9
+   dH4or2m+bVi2eKl+EzDO+4CQD1Wu1/ThGvNEE6zMOBsILcQNsPXLfXMDn
+   MoWoUFTjWLy+cQ0lHyZnFKKvYC8pcTGD+iLoCBh00YYlq4uJsRpvtPfT9
+   vZPelfUhjXRWDqbakzgqGivvUnGWdyWBNfllC+Y3ywpbftZ6S2kl09/+j
+   Rq+doy178p5Ilsxx36JmNkDaXc+N3MeRfwgoQg3OzOl2bADzG3lXLwYso
+   xLOu3nZTGwHO/lRjnRInA767Qf7RXISWB0oWepORARNtPs4Z5c+JQftNw
+   A==;
+X-CSE-ConnectionGUID: 05iZNXZ1Tp22qejxP/rkdA==
+X-CSE-MsgGUID: Tr+LATJ9SsecIRKjYpMCfw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="12771340"
+X-IronPort-AV: E=Sophos;i="6.08,186,1712646000"; 
+   d="scan'208";a="12771340"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 16:51:54 -0700
+X-CSE-ConnectionGUID: wcLjbRtxQaWqbk/SYb3nMQ==
+X-CSE-MsgGUID: ZttNLpEUQCiWcM3EV/ZxSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,186,1712646000"; 
+   d="scan'208";a="71581863"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 24 May 2024 16:51:53 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sAehP-000623-1P;
+	Fri, 24 May 2024 23:51:48 +0000
+Date: Sat, 25 May 2024 07:51:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [pci:controller/qcom 12/12]
+ drivers/pci/controller/dwc/pcie-qcom-ep.c:658:17: error: implicit
+ declaration of function 'dw_pcie_ep_linkdown'; did you mean
+ 'dw_pcie_ep_linkup'?
+Message-ID: <202405250716.lpmrTGyQ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] PCI: xilinx-nwl: Add phy support
-To: Sean Anderson <sean.anderson@linux.dev>,
- linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- kernel-janitors@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Michal Simek <michal.simek@amd.com>, Michal Simek <michal.simek@xilinx.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-References: <20240520145402.2526481-7-sean.anderson@linux.dev>
- <89d6acd5-5008-4db3-927c-d267be7b9302@web.de>
- <ad8da38a-5e3d-4f79-8744-66acf73703af@linux.dev>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <ad8da38a-5e3d-4f79-8744-66acf73703af@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gJUJXEMKQUFiGMbz3M0ULlfnyt+9fEzK7WHHYjcz9PovLiekA76
- 3fzZ94GZ7nQqGyDmFujanLgy9qs89MbW4Os4YDoKEN00r5QVjF90AxH1vrQnuohvhK1fK7u
- pWMeSZdqsoN/S4ufLdKyUAaVcOg7mpGxr7aVW+eVoxb6DABUNfd2Rjavhepc6lfYBzOCdUB
- qZ+VoW4fGZxSFkH28HPww==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MffDudX7RIU=;LNJIor3P3ZYNHqEcGfIy6j9Lgy6
- 0ofHhn7tENA9tLTqn5f0/ErUO2saZZAXoqkaUVV2vMXi9g614R+lzhHND5AlbkWRQ5P+XffbM
- LPqvQdqUuvpr+7ThPrU03huvlxdt/lzBxHGUIsEqKoUTEZaW0MEuJCwqrgnO8AnqugT0toa8N
- K/pQ/b2nMNH5MTUvg6URusq+HGAmAVSijgS4lAcqGpanTAzxQgIG6k5+P6EK54Cm097x36fTM
- Jrm/Tz07jXCg6BAG4mTamJEkXL59La8c61pCrANqdFHzIe+KatTb5KUL4qcNfcUTxB4uJThu3
- o5st+PwGb9sKVYJYi1TRb7Nm+GuRXpGbZK61sY/7b44cy2TuTP3S3o5IMJ31aQ4N2jn9u8kDT
- s49f7AT1Fdz/WQ92/7ktxlGornX9FwHV8+OZS2zXbweDoCWd1qfy1vmff5QCsV9peTTt6Of1z
- aHGerICR3unzQbW0Ni8S6JfBBTiPtZJIqw6DvCpLJ3QReoggZqc3QvyBDJPqE9Ez3pQEHnfio
- Gwwfpc1asFqPfsUywG0aN5mAwieHazvvmclqmRJaKTxXmNZWZvXhrrLFeKf0VrnyZa5YlLCkJ
- ojIxClLIlECffR5lGba9gi2T46dKk7anjNOsgIicHL6n5JutVaWGCd4p4246+/yy9Y8azy3M/
- 8jY90GG0ZV0tEFboR0EaOszFd0Mldfi5ZRE1ozu672KL/X7Sn5R5RDZT9kU7su/T2akSXs2HQ
- MFbnICx8g9x8bzwYA3vfN0ncYxLVLWRiifIROUw9uYaSuEj7YuizJxUNs0EXvXjcJQEfL2yp9
- EynXqyShjC90/zScnvTJUGKTLPVv1qGNFun7EKSamaJdU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> =E2=80=A6
->>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
->> =E2=80=A6
->>> @@ -818,12 +876,15 @@ static int nwl_pcie_probe(struct platform_device=
- *pdev)
->>>  		err =3D nwl_pcie_enable_msi(pcie);
->>>  		if (err < 0) {
->>>  			dev_err(dev, "failed to enable MSI support: %d\n", err);
->>> -			goto err_clk;
->>> +			goto err_phy;
->>>  		}
->>>  	}
->>>
->>>  	err =3D pci_host_probe(bridge);
->>>
->>> +err_phy:
->>> +	if (err)
->>> +		nwl_pcie_phy_disable(pcie);
->>>  err_clk:
->>>  	if (err)
->>>  		clk_disable_unprepare(pcie->clk);
->>
->> I got the impression that some source code adjustments should be perfor=
-med
->> in another separate update step for this function implementation.
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/submitting-patches.rst?h=3Dv6.9#n81
->>
->> You propose to extend the exception handling here.
->> Does such information indicate a need for another tag =E2=80=9CFixes=E2=
-=80=9D?
->
-> Huh? I am only disabling what I enabled...
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
+head:   1b36cee89f5f82bd04538b231e4261ed517ae174
+commit: 1b36cee89f5f82bd04538b231e4261ed517ae174 [12/12] PCI: qcom-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240525/202405250716.lpmrTGyQ-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240525/202405250716.lpmrTGyQ-lkp@intel.com/reproduce)
 
-* Was a resource deactivation accidentally missing in a previous release
-  of this software component?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405250716.lpmrTGyQ-lkp@intel.com/
 
-* Can repeated checks be avoided a bit more by a design approach which we =
-tried
-  to clarify for the update step =E2=80=9C[PATCH v3 5/7] PCI: xilinx-nwl: =
-Clean up clock
-  on probe failure/removal=E2=80=9D?
-  https://lore.kernel.org/lkml/bb9e239f-902b-4f52-a5e9-98c29b360418@linux.=
-dev/
+All errors (new ones prefixed by >>):
+
+   drivers/pci/controller/dwc/pcie-qcom-ep.c: In function 'qcom_pcie_ep_global_irq_thread':
+>> drivers/pci/controller/dwc/pcie-qcom-ep.c:658:17: error: implicit declaration of function 'dw_pcie_ep_linkdown'; did you mean 'dw_pcie_ep_linkup'? [-Werror=implicit-function-declaration]
+     658 |                 dw_pcie_ep_linkdown(&pci->ep);
+         |                 ^~~~~~~~~~~~~~~~~~~
+         |                 dw_pcie_ep_linkup
+   cc1: some warnings being treated as errors
 
 
-Regards,
-Markus
+vim +658 drivers/pci/controller/dwc/pcie-qcom-ep.c
+
+   641	
+   642	/* TODO: Notify clients about PCIe state change */
+   643	static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+   644	{
+   645		struct qcom_pcie_ep *pcie_ep = data;
+   646		struct dw_pcie *pci = &pcie_ep->pci;
+   647		struct device *dev = pci->dev;
+   648		u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
+   649		u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
+   650		u32 dstate, val;
+   651	
+   652		writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
+   653		status &= mask;
+   654	
+   655		if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
+   656			dev_dbg(dev, "Received Linkdown event\n");
+   657			pcie_ep->link_status = QCOM_PCIE_EP_LINK_DOWN;
+ > 658			dw_pcie_ep_linkdown(&pci->ep);
+   659		} else if (FIELD_GET(PARF_INT_ALL_BME, status)) {
+   660			dev_dbg(dev, "Received BME event. Link is enabled!\n");
+   661			pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
+   662			qcom_pcie_ep_icc_update(pcie_ep);
+   663			pci_epc_bme_notify(pci->ep.epc);
+   664		} else if (FIELD_GET(PARF_INT_ALL_PM_TURNOFF, status)) {
+   665			dev_dbg(dev, "Received PM Turn-off event! Entering L23\n");
+   666			val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+   667			val |= PARF_PM_CTRL_READY_ENTR_L23;
+   668			writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+   669		} else if (FIELD_GET(PARF_INT_ALL_DSTATE_CHANGE, status)) {
+   670			dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
+   671						   DBI_CON_STATUS_POWER_STATE_MASK;
+   672			dev_dbg(dev, "Received D%d state event\n", dstate);
+   673			if (dstate == 3) {
+   674				val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+   675				val |= PARF_PM_CTRL_REQ_EXIT_L1;
+   676				writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+   677			}
+   678		} else if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+   679			dev_dbg(dev, "Received Linkup event. Enumeration complete!\n");
+   680			dw_pcie_ep_linkup(&pci->ep);
+   681			pcie_ep->link_status = QCOM_PCIE_EP_LINK_UP;
+   682		} else {
+   683			dev_err(dev, "Received unknown event: %d\n", status);
+   684		}
+   685	
+   686		return IRQ_HANDLED;
+   687	}
+   688	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
