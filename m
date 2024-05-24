@@ -1,125 +1,148 @@
-Return-Path: <linux-pci+bounces-7818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC2C98CE7CF
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 17:25:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 114FF8CE829
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 17:37:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B6AF1F21213
-	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 15:25:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53BD9B22A10
+	for <lists+linux-pci@lfdr.de>; Fri, 24 May 2024 15:37:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C464712C49D;
-	Fri, 24 May 2024 15:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6404E12C558;
+	Fri, 24 May 2024 15:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a0sGCF2r"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="n7IxgBTS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12531EC7
-	for <linux-pci@vger.kernel.org>; Fri, 24 May 2024 15:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A7012C462;
+	Fri, 24 May 2024 15:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716564298; cv=none; b=oMR4QZUWBlpYvEJYIghr4dmao7CMPIoku+pzKA64mL0X4jNHfRPMTQZoz3mhiRs5ZsU9fQV7SMqQSFaTbh/ssyj+DuKzZMZzm4/Uo1c5V0BhKiBbtKPqysiH+YQZtJjZ9xkToi2koV7JIt6kOkrFWSZTfBA0GLHcA+bJMUySOdk=
+	t=1716564999; cv=none; b=F1RCM7z5x68yc+ig0vRhYRyDCvnVeYOhsZ8M0FCUWM12u/lSvBGVv3uyNLWe/9ofND1m+YKgfGBNwLntC+c8zGtZGrdxstAtML5VsEoV+iuK7RD4HaLvolMgOH4lHx0y3PGJUL8K9QRhmeKevPMyU5j+T2GFxrJMU77P8mrmxmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716564298; c=relaxed/simple;
-	bh=BeMaca235xewFPAx0PvO35sjrAhkdYkAuY4wkzJRxUs=;
+	s=arc-20240116; t=1716564999; c=relaxed/simple;
+	bh=BTkrqG5m/TTiVu6LqJP5g2aggKorDUogMn333Zc5T6M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YD3Yp8NkJkSytrDEqpkMguNBhdrS62czh0CxdbDYEbDq4UwXKgSPMNMx/iVVvutJXOB2fx8HqaPLfJIFr8b6Om7yoL2LJuuEbz838J8tO/GSCSuOwaLlf/AKftnbW6osEGDLguCog7+TB7xIRA1nAAbLUJIQb5+rT0lgUh+RNJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a0sGCF2r; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: dan.carpenter@linaro.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716564295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YppIzif2hxqccFPGz5Hh9YVI07X4BAYIHIW3FdSSYI8=;
-	b=a0sGCF2rK1ld2MDtZzDa0eIKGoJkLuPxHmZEW2SSnIbBPw8eK6JFMoJiX8h6mafiQ/Oflq
-	oKgLX3IlrBobG6P83hn6nuigck86TTtz5nKK1KbcEt4KbQp5BJTZvREzFCHZY6rIQgfBF2
-	v5zc63X24LZypUwGBDrJdQnrhcQqC8E=
-X-Envelope-To: lpieralisi@kernel.org
-X-Envelope-To: kw@linux.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: linux-pci@vger.kernel.org
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: thippeswamy.havalige@amd.com
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: bhelgaas@google.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-Message-ID: <d58dafb1-fce5-478a-bf05-1a80256f2df6@linux.dev>
-Date: Fri, 24 May 2024 11:24:50 -0400
+	 In-Reply-To:Content-Type; b=KIyJxzGppw4ZY1zryckQ9uGnjc8RHNuxf20KbeOqvwvmi5egO1Oeb3mJRCs8/OlZuHbjsKjHLW+J3U57UJ8FTa7QlOlzaJBoYdvQvGAZza+U8IbyHYdXCjfRaa982Gu3AwrRU05LUwvfnCXvxGqzdBcmcQcF8XvrTKChXXvWDVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=n7IxgBTS; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716564943; x=1717169743; i=markus.elfring@web.de;
+	bh=EgHVt4XXKFDHUxcOb8J/XG57mTgDTrmuiUOaJp+R4ME=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=n7IxgBTSf+tr3P1HeACzL6MdWey6JSwkcy5D6it6Q2xFqxxwcLpRKsjgCnmYII4E
+	 tmHvAjw4gJ4XvozXycpkuCK8/q5+Y+sAs0hKRnr5Z4ssTCTeO7bainwf0a2eFUCZI
+	 tfMhwBDDW/Wh/xdGebO1ip3mdB92S88Bn8f4VZMuZ8lIekZ49mxVjO6S6A9wEk+Yu
+	 c8CFvQb9ON2i2TBaD8o2ja1qfccUuPJvkLPgwkhogU0Fa/VQnMWz0IugpCyIG2y1g
+	 y/rprAMxO3eLAncHAoyodzINV+EUimmLEafBhPNApptqBAYmBiiA42r07L9rq16v0
+	 uftn/l8SdO3+GIODbg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MRW2R-1rpxfe2uAP-00NRSf; Fri, 24
+ May 2024 17:35:43 +0200
+Message-ID: <986ff09f-212c-4905-ab06-35f85e20e9cf@web.de>
+Date: Fri, 24 May 2024 17:35:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 6/7] PCI: xilinx-nwl: Add phy support
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
- Michal Simek <michal.simek@amd.com>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- linux-arm-kernel@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
- linux-kernel@vger.kernel.org
-References: <20240520145402.2526481-1-sean.anderson@linux.dev>
- <20240520145402.2526481-7-sean.anderson@linux.dev>
- <41d89132-f6bb-4feb-af1d-412206a85afa@moroto.mountain>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <41d89132-f6bb-4feb-af1d-412206a85afa@moroto.mountain>
+To: Sean Anderson <sean.anderson@linux.dev>,
+ linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Rob Herring <robh@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Michal Simek <michal.simek@amd.com>, Michal Simek <michal.simek@xilinx.com>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+References: <20240520145402.2526481-7-sean.anderson@linux.dev>
+ <89d6acd5-5008-4db3-927c-d267be7b9302@web.de>
+ <ad8da38a-5e3d-4f79-8744-66acf73703af@linux.dev>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <ad8da38a-5e3d-4f79-8744-66acf73703af@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gJUJXEMKQUFiGMbz3M0ULlfnyt+9fEzK7WHHYjcz9PovLiekA76
+ 3fzZ94GZ7nQqGyDmFujanLgy9qs89MbW4Os4YDoKEN00r5QVjF90AxH1vrQnuohvhK1fK7u
+ pWMeSZdqsoN/S4ufLdKyUAaVcOg7mpGxr7aVW+eVoxb6DABUNfd2Rjavhepc6lfYBzOCdUB
+ qZ+VoW4fGZxSFkH28HPww==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:MffDudX7RIU=;LNJIor3P3ZYNHqEcGfIy6j9Lgy6
+ 0ofHhn7tENA9tLTqn5f0/ErUO2saZZAXoqkaUVV2vMXi9g614R+lzhHND5AlbkWRQ5P+XffbM
+ LPqvQdqUuvpr+7ThPrU03huvlxdt/lzBxHGUIsEqKoUTEZaW0MEuJCwqrgnO8AnqugT0toa8N
+ K/pQ/b2nMNH5MTUvg6URusq+HGAmAVSijgS4lAcqGpanTAzxQgIG6k5+P6EK54Cm097x36fTM
+ Jrm/Tz07jXCg6BAG4mTamJEkXL59La8c61pCrANqdFHzIe+KatTb5KUL4qcNfcUTxB4uJThu3
+ o5st+PwGb9sKVYJYi1TRb7Nm+GuRXpGbZK61sY/7b44cy2TuTP3S3o5IMJ31aQ4N2jn9u8kDT
+ s49f7AT1Fdz/WQ92/7ktxlGornX9FwHV8+OZS2zXbweDoCWd1qfy1vmff5QCsV9peTTt6Of1z
+ aHGerICR3unzQbW0Ni8S6JfBBTiPtZJIqw6DvCpLJ3QReoggZqc3QvyBDJPqE9Ez3pQEHnfio
+ Gwwfpc1asFqPfsUywG0aN5mAwieHazvvmclqmRJaKTxXmNZWZvXhrrLFeKf0VrnyZa5YlLCkJ
+ ojIxClLIlECffR5lGba9gi2T46dKk7anjNOsgIicHL6n5JutVaWGCd4p4246+/yy9Y8azy3M/
+ 8jY90GG0ZV0tEFboR0EaOszFd0Mldfi5ZRE1ozu672KL/X7Sn5R5RDZT9kU7su/T2akSXs2HQ
+ MFbnICx8g9x8bzwYA3vfN0ncYxLVLWRiifIROUw9uYaSuEj7YuizJxUNs0EXvXjcJQEfL2yp9
+ EynXqyShjC90/zScnvTJUGKTLPVv1qGNFun7EKSamaJdU=
 
-On 5/24/24 10:59, Dan Carpenter wrote:
-> On Mon, May 20, 2024 at 10:54:01AM -0400, Sean Anderson wrote:
->> +static int nwl_pcie_phy_enable(struct nwl_pcie *pcie)
->> +{
->> +	int i, ret;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(pcie->phy); i++) {
->> +		ret = phy_init(pcie->phy[i]);
->> +		if (ret)
->> +			goto err;
->> +
->> +		ret = phy_power_on(pcie->phy[i]);
->> +		if (ret) {
->> +			WARN_ON(phy_exit(pcie->phy[i]));
->> +			goto err;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +
->> +err:
->> +	while (--i) {
-> 
-> This doesn't work.  If we fail on the first iteration, then it will
-> lead to an array underflow.  It should be while (--i >= 0) or
-> while (i--).  I prefer the first, but the second format works for people
-> who use unsigned iterators.
+>> =E2=80=A6
+>>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+>> =E2=80=A6
+>>> @@ -818,12 +876,15 @@ static int nwl_pcie_probe(struct platform_device=
+ *pdev)
+>>>  		err =3D nwl_pcie_enable_msi(pcie);
+>>>  		if (err < 0) {
+>>>  			dev_err(dev, "failed to enable MSI support: %d\n", err);
+>>> -			goto err_clk;
+>>> +			goto err_phy;
+>>>  		}
+>>>  	}
+>>>
+>>>  	err =3D pci_host_probe(bridge);
+>>>
+>>> +err_phy:
+>>> +	if (err)
+>>> +		nwl_pcie_phy_disable(pcie);
+>>>  err_clk:
+>>>  	if (err)
+>>>  		clk_disable_unprepare(pcie->clk);
+>>
+>> I got the impression that some source code adjustments should be perfor=
+med
+>> in another separate update step for this function implementation.
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/submitting-patches.rst?h=3Dv6.9#n81
+>>
+>> You propose to extend the exception handling here.
+>> Does such information indicate a need for another tag =E2=80=9CFixes=E2=
+=80=9D?
+>
+> Huh? I am only disabling what I enabled...
 
-Thanks, will fix.
+* Was a resource deactivation accidentally missing in a previous release
+  of this software component?
 
---Sean
+* Can repeated checks be avoided a bit more by a design approach which we =
+tried
+  to clarify for the update step =E2=80=9C[PATCH v3 5/7] PCI: xilinx-nwl: =
+Clean up clock
+  on probe failure/removal=E2=80=9D?
+  https://lore.kernel.org/lkml/bb9e239f-902b-4f52-a5e9-98c29b360418@linux.=
+dev/
 
->> +		WARN_ON(phy_power_off(pcie->phy[i]));
->> +		WARN_ON(phy_exit(pcie->phy[i]));
->> +	}
->> +
->> +	return ret;
->> +}
-> 
-> regards,
-> dan carpenter
-> 
 
+Regards,
+Markus
 
