@@ -1,159 +1,250 @@
-Return-Path: <linux-pci+bounces-7828-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7829-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D8578CF119
-	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 21:24:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83A498CF168
+	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 23:13:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20AE11C2093D
-	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 19:24:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 185AA1F213A3
+	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 21:13:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B2D68627B;
-	Sat, 25 May 2024 19:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E8056A032;
+	Sat, 25 May 2024 21:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuD8TY5b"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jkISJjJl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9543F9F8;
-	Sat, 25 May 2024 19:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B57756B7A
+	for <linux-pci@vger.kernel.org>; Sat, 25 May 2024 21:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716665069; cv=none; b=hkznR8KqLlXhfzN7ZdRB9/RPT7lP2JOZFJj2oCdyVV+Iz1W2IRrpONIPDHJCMeFPhjQPxB62vBYvvDv7TqbBgLweMvGMwsGdB78DaOxs7OZjiB5MiFTSEjpRevZOq64riNx69DNTMaqs+cqyK20jDRGN6JxpVy+UeUuygFc1fvI=
+	t=1716671584; cv=none; b=WS+rdZFFtY3C2yQcT9Mnz2t1oYBJVuZr/8eb1PST6jgZgyv8BI/o02xoB3VGu4QQpTJ0cD0lYimauaFowo5rWcF4nSpE2HmWP+ENLCpAKIxjWuOgZgMAKBz4fxYeqT6y/jG9Frd7/TqGYU49jv7UOgAXbXhR+aXVrCHaE7XRplo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716665069; c=relaxed/simple;
-	bh=+kizM5lnYMs/tn9mhyuETjoPV0xSyPntJIHtU75whkw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z4DBmmFPLd0L42BAJDr8f3f2jMlm6yoNTt+f0QChi6sq53c5ZbgFbljLoh7IuSOYYvX1gu2WnQ6VTo9SGKhruzoSKv9yW/piLUatUhYs2OOXVUbN/Ocnz3TzWt2jIJcXAvtCwbHoYVnqweCoG66zI0T6AfFA9iDDmCji+Fk55mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QuD8TY5b; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-62a2424ec39so2877547b3.1;
-        Sat, 25 May 2024 12:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716665067; x=1717269867; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+kizM5lnYMs/tn9mhyuETjoPV0xSyPntJIHtU75whkw=;
-        b=QuD8TY5byoAdfnvDG9eXUeCwiP/Lb0+AC9Vl0VJ9qyn6hRyHizV9crwZJzqzGfBLAo
-         7RJDa/ZBDVYNPfMzR1jTK2pQNl8NYnDOxoLfE0Xqy5ttu1ta0QHMMPcPbrPtOXyUNYj1
-         n3Z6odHagI1wxajqTXy58dCYDvPBIeAZftqVSCgqMp8rQz02mpzx77QuNCZfx48SmVb2
-         gxuPJxMeLvSgTrLcra92jBbBIStUbV1Cpakbud5IHwK1DfNGand8dooTjLbIcCgU+HDa
-         EM4KLNT/O4R4a9boeszoN6ocRkW8oGa/PbMfDCmFpgVs7VuVH6C0N+MHzgx1/WsxIxos
-         7BOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716665067; x=1717269867;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+kizM5lnYMs/tn9mhyuETjoPV0xSyPntJIHtU75whkw=;
-        b=fWxHFOpCNmRPZwkw0fUOdY8mUo9ccp5WeJMueJUq8VeyCIj9feI2aV+XVWG5PxApMt
-         eArAnd3XkpgKfHfM52ZI9FWmDUHXjntFgzgnDKIa6fAfdAwUwo9NGJKcnXWwDfT50i8U
-         cDJcH3qHMGHEUmyHhbsgJ2KZmKq2obFNlQKcnueM7Gf48y8cy+D9RQCLZ+01x2k8XRhU
-         pXiqbg39XAZcPUJp/1yNpF1mdW9Q2vHuxCeK5i2tR2XEdvd3jLhktBFFrbPEIwIW3e3o
-         fcMAkKXx1GxargxDe8DXhWqEZTLf94Jg+aqqHpfRZ3YTF9GWBxYjlzLWufiMfPjPBV8I
-         8GSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPFjTfgBNtLqrCK9q7xJbd4p/TVaW90UO0CJpHDRJqCyBiiCr0kLdq0pBgqHrPtJdUU4M8PAh6AEyU53vNlrhVKG4Zl4hDXI2E9VdJySB2I+Li9MhChemL/ghHJWtYUJWzaRWGBHlYQgnhlpg4X5xSUETQoxIMLO25dyLKyXnpgcFjCZgpkCE=
-X-Gm-Message-State: AOJu0YxdGPTcdOGgOX2lL3/x7faLnN2a+GpWm+aULRvn6LemPTm6qULm
-	xo+IILdwQ85nDa6pVFXCn9X0mONh2K6YfROGDWINEySX/rA9LH+7y3Fn4KHWgi364uDiuEIX+bh
-	p12BD2t/QY7yI4txJrMmt7w/kDeg=
-X-Google-Smtp-Source: AGHT+IHCdpyV3KxmP7sGntNXImivmdG6WMeeujjPbe1bccBlcrbU9AdpiYvRbyyH9n6/nm/QpNZ/+APhIVz8K8AisOA=
-X-Received: by 2002:a81:4ece:0:b0:627:ddf1:1497 with SMTP id
- 00721157ae682-62a08f3a28fmr51030727b3.45.1716665066545; Sat, 25 May 2024
- 12:24:26 -0700 (PDT)
+	s=arc-20240116; t=1716671584; c=relaxed/simple;
+	bh=slOTS5u6Mx6KA3iMBOfnJ9KL6RbEm8HPLIGqklp3glA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=E2iZJ9EgxGwdr0qcjvgxlD0JQjQRKkfD+yZdC93ZmQ0BDqyTeJovkVBaCVFPgctjHA5DkrTUIYSjPyzJ/Xvburf2K+RrixpF/iwmVrWcE6S5ushy5d8aeVokbH95axSxooHRMS66Z9SXeswDOXtMBY3qf0yBuY4mGVcByoKxQHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jkISJjJl; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716671583; x=1748207583;
+  h=date:from:to:cc:subject:message-id;
+  bh=slOTS5u6Mx6KA3iMBOfnJ9KL6RbEm8HPLIGqklp3glA=;
+  b=jkISJjJl7m3j9fG/BdABNi+7t0HjWSuMwTgtRRzfpKcJMxn6FTDtHdpa
+   04aCK5/UCdI1mPNyZcjLFJgSt4mPIdgeed8D0yQbIpUWDHi7+FC1pQaI+
+   8WMeEPc/+iPZyxtL/g8z1N65V9qlhICjKaaOkh5bzXAFr61xNDhdKY8lZ
+   IoBaksY+JJVHxUORsYmF37z6RgRdB/fvQWIbc9O4YBcUYzk/A9Qjn4pks
+   fCyAu4CAQUko43a3a+VJxMkT6TqQPjpsF2LUk0gnviClbkTnRapNFWRo+
+   O0AiLgQ3qxmvI+fbQ8ij9F0ElABgre4hg/8mjuz/pcwzp0r0g4zUA/+95
+   g==;
+X-CSE-ConnectionGUID: lkK/GhuzRw6y1GmdmeleWg==
+X-CSE-MsgGUID: thiqIRfSR2WiIOMdJ6RoLw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11083"; a="12866203"
+X-IronPort-AV: E=Sophos;i="6.08,189,1712646000"; 
+   d="scan'208";a="12866203"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2024 14:13:02 -0700
+X-CSE-ConnectionGUID: 9YE3+ib3R2qZ5g08+TvOcg==
+X-CSE-MsgGUID: 04yJ/CDkTp2kQH9kY7TRow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,189,1712646000"; 
+   d="scan'208";a="34269857"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 25 May 2024 14:13:00 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sAyhG-0007Q6-2C;
+	Sat, 25 May 2024 21:12:58 +0000
+Date: Sun, 26 May 2024 05:12:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dwc] BUILD SUCCESS
+ 8656c76608ab0d87bdef64f6f06331b63fb6f849
+Message-ID: <202405260506.gOBVCV4Y-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240520172554.182094-1-dakr@redhat.com> <20240520172554.182094-11-dakr@redhat.com>
- <CANiq72kHrgOVrdw7rB9KpHvOMy244TgmEzAcL=v5O9rchs8T1g@mail.gmail.com>
- <CAPM=9txb5STBo05xiTy9+wF7=mMO=X2==BP4JVORPFAtX=nS0g@mail.gmail.com>
- <CANeycqpNeHFUu-RwSc6Ewa3r5TMhYYFDC6bO+sj3OZ398JfJ1A@mail.gmail.com> <1c8bb8044bc1943ad8d19cd6fc84a2d886004163.camel@redhat.com>
-In-Reply-To: <1c8bb8044bc1943ad8d19cd6fc84a2d886004163.camel@redhat.com>
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
-Date: Sat, 25 May 2024 16:24:18 -0300
-Message-ID: <CANeycqoWVygXBO_Kzq6QaLDjp3W+66YrOi7_dK8zRVpDONJ=AA@mail.gmail.com>
-Subject: Re: [RFC PATCH 10/11] rust: add basic abstractions for iomem operations
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Dave Airlie <airlied@gmail.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Danilo Krummrich <dakr@redhat.com>, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
-	fujita.tomonori@gmail.com, lina@asahilina.net, ajanulgu@redhat.com, 
-	lyude@redhat.com, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 21 May 2024 at 05:03, Philipp Stanner <pstanner@redhat.com> wrote:
->
-> On Tue, 2024-05-21 at 00:01 -0300, Wedson Almeida Filho wrote:
-> > On Mon, 20 May 2024 at 23:07, Dave Airlie <airlied@gmail.com> wrote:
-> > >
-> > > >
-> > > > Wedson wrote a similar abstraction in the past
-> > > > (`rust/kernel/io_mem.rs` in the old `rust` branch), with a
-> > > > compile-time `SIZE` -- it is probably worth taking a look.
-> > > >
-> > >
-> > > Just on this point, we can't know in advance what size the IO BARs
-> > > are
-> > > at compile time.
-> > >
-> > > The old method just isn't useful for real devices with runtime IO
-> > > BAR sizes.
-> >
-> > The compile-time `SIZE` in my implementation is a minimum size.
-> >
-> > Attempts to read/write with constants within that size (offset +
-> > size)
-> > were checked at compile time, that is, they would have zero
-> > additional
-> > runtime cost when compared to C. Reads/writes beyond the minimum
-> > would
-> > have to be checked at runtime.
-> >
->
-> We looked at this implementation
->
-> Its disadvantage is that it moves the responsibility for setting that
-> minimum size to the driver programmer. Andreas Hindborg is using that
-> currently for rnvme [1].
->
-> I believe that the driver programmer in Rust should not be responsible
-> for controlling such sensitive parameters (one could far more easily
-> provide invalid values), but the subsystem (e.g. PCI) should do it,
-> because it knows about the exact resource lengths.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+branch HEAD: 8656c76608ab0d87bdef64f6f06331b63fb6f849  PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown() API to handle Link Down event
 
-There is no responsibility being moved. The bus is still that one that
-knows about the resources attached to the device.
+elapsed time: 1449m
 
-The driver, however, can say for example: I need at least 4 registers
-of 32 bits starting at offset X, which results in a minimum size of X
-+ 16. If at runtime a device compatible with this driver appears and
-has an io mem of at least that size, then the driver can drive it
-without any additional runtime checks. I did this in the gpio driver
-here: https://lwn.net/Articles/863459/
+configs tested: 157
+configs skipped: 5
 
-Note that in addition to not having to check offset at runtime, the
-reads/writes are also infallible because all failures are caught at
-compile time.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Obviously not all drivers can benefit from this, but it is
-considerable simplification for the ones that can.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                   randconfig-001-20240525   gcc  
+arc                   randconfig-002-20240525   gcc  
+arc                    vdk_hs38_smp_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240525   gcc  
+arm                   randconfig-002-20240525   gcc  
+arm                   randconfig-003-20240525   clang
+arm                   randconfig-004-20240525   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240525   gcc  
+arm64                 randconfig-002-20240525   clang
+arm64                 randconfig-003-20240525   gcc  
+arm64                 randconfig-004-20240525   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240525   gcc  
+csky                  randconfig-002-20240525   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240525   clang
+hexagon               randconfig-002-20240525   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240525   gcc  
+i386         buildonly-randconfig-002-20240525   gcc  
+i386         buildonly-randconfig-003-20240525   gcc  
+i386         buildonly-randconfig-004-20240525   clang
+i386         buildonly-randconfig-005-20240525   gcc  
+i386         buildonly-randconfig-006-20240525   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240525   clang
+i386                  randconfig-002-20240525   gcc  
+i386                  randconfig-003-20240525   clang
+i386                  randconfig-004-20240525   clang
+i386                  randconfig-005-20240525   gcc  
+i386                  randconfig-006-20240525   gcc  
+i386                  randconfig-011-20240525   clang
+i386                  randconfig-012-20240525   clang
+i386                  randconfig-013-20240525   clang
+i386                  randconfig-014-20240525   gcc  
+i386                  randconfig-015-20240525   clang
+i386                  randconfig-016-20240525   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240525   gcc  
+loongarch             randconfig-002-20240525   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240525   gcc  
+nios2                 randconfig-002-20240525   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                       virt_defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240525   gcc  
+parisc                randconfig-002-20240525   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240525   gcc  
+powerpc               randconfig-002-20240525   gcc  
+powerpc               randconfig-003-20240525   gcc  
+powerpc64             randconfig-001-20240525   clang
+powerpc64             randconfig-002-20240525   gcc  
+powerpc64             randconfig-003-20240525   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240525   gcc  
+riscv                 randconfig-002-20240525   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240525   clang
+s390                  randconfig-002-20240525   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                             espt_defconfig   gcc  
+sh                          lboxre2_defconfig   gcc  
+sh                    randconfig-001-20240525   gcc  
+sh                    randconfig-002-20240525   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240525   gcc  
+sparc64               randconfig-002-20240525   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240525   gcc  
+um                    randconfig-002-20240525   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240525   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240525   clang
+x86_64                randconfig-002-20240525   clang
+x86_64                randconfig-003-20240525   clang
+x86_64                randconfig-004-20240525   clang
+x86_64                randconfig-005-20240525   clang
+x86_64                randconfig-006-20240525   clang
+x86_64                randconfig-011-20240525   clang
+x86_64                randconfig-012-20240525   clang
+x86_64                randconfig-014-20240525   clang
+x86_64                randconfig-016-20240525   clang
+x86_64                randconfig-072-20240525   clang
+x86_64                randconfig-073-20240525   clang
+x86_64                randconfig-076-20240525   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240525   gcc  
 
-> The only way to set the actual, real value is through subsystem code.
-> But when we (i.e., currently, the driver programmer) have to use that
-> anyways, we can just use it from the very beginning and have the exact
-> valid parameters.
-
-Yes, only the bus knows. But to reiterate: if the driver declares and
-checks a minimum size at attach time, it obviates the needs to check
-again throughout the lifetime of the driver, which is more performant
-and eliminates error paths.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
