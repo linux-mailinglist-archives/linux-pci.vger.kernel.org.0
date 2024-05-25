@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-7824-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D275D8CEFEE
-	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 17:50:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFAA78CF024
+	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 18:42:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6016F1F21944
-	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 15:50:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E675281546
+	for <lists+linux-pci@lfdr.de>; Sat, 25 May 2024 16:42:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E142BAE5;
-	Sat, 25 May 2024 15:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB424487A5;
+	Sat, 25 May 2024 16:42:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TqAvPl5K"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ha/YmtPC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00CC4BAA6
-	for <linux-pci@vger.kernel.org>; Sat, 25 May 2024 15:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A480086120
+	for <linux-pci@vger.kernel.org>; Sat, 25 May 2024 16:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716652238; cv=none; b=GJynAl4Ip8GMRSZCLOTBlF7Yib5MzOS7Qg6bI18hgjOPSfgqYAaRnTUyC+OHv11cRnAebeRIweZaHRs2vmKlwN0aMHv5zOcefenPOCT2HhHo23GW+iIFq1MhXp2TqndzRsZl/lXNVBXfnT0B/lrnZ7rj1yGdq901kwWXWfqX9xI=
+	t=1716655360; cv=none; b=ZeECDG+2vAJg4fYNhGkenKCso13s0koKaM6nbeixfsZXT9rG/AaKYBRIXp4qHA3V9gs1eoWfihxOai10aZmga6RBkqTDoQDzY5X/TmeFjN09j8OjdJECTYvUHd/ShFcVwNfZGxXk4PJIOSzFOiCnIvA1IK3ACKm1qLe7MHgzIUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716652238; c=relaxed/simple;
-	bh=k+1MtkWiKHN98dG5tZVaPPL9xSZBJM3y0ufiemD1tcY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=mewy+4uyu8q5ybc+voztEzUaahQLE1OdLlfDvYLZhrtlmHEnmJLCH2gbnyrZ1ww2w48Ex/TZUENmNx3ZidXF66FhsTi5pZ+kGZcZkmmfHWEzDr2t26tAgcjoofPl9mQzoIiYhKbWIZfOl2gz5ntMbd15a4T6OEzpFymvjLxBYPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TqAvPl5K; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1716655360; c=relaxed/simple;
+	bh=uLxK9xyqHlVSkRI2FNtqlbjJbhDzKnvsunBJRG0CP30=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=NXWkCnpKw/TmWbpi7bMybWyyp0dVlezzte4/zkReZcQIRI+9FYD7x+yd6O5sz5vntvPI2kkeMBnTkefHrRSgiaLtEIm8LYtfJ/EQjbsLRkpNOO9LyckLQMvNsfEZ+COQgDBUhfOryHoqnInV7bCs+I1IPu0xF6zUYm1LOLPbJ1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ha/YmtPC; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716652236; x=1748188236;
+  t=1716655359; x=1748191359;
   h=date:from:to:cc:subject:message-id;
-  bh=k+1MtkWiKHN98dG5tZVaPPL9xSZBJM3y0ufiemD1tcY=;
-  b=TqAvPl5KdvmusE6ZYyJINVBPq2KgWHWb2cn10El4Qe+V7jP7jJbGhJja
-   M0b2AxYUS+e1DMA3Ar/6RYGJTGb9xsb+uaCEW4Rc38I59gbc+S6CemuDn
-   VrzgogKxb/7ughVY7p9hdZvfmTXRgYZQgxp4JxeOQtNXERZDxUcNRz4f2
-   cfSfzXpjUtBWaN/+acUXdsJcQOL3G+u5Rn47Q67o9YYfhvs0vC4fOcA8/
-   i+4mA3BS4rjYCl9SyX6jkCC1Kj+WpoRFDrtnNErafX9xw2jCrcw3o1kDO
-   9uV84c2Kdqke76HhW972THANhm2j56F5+41SkNLiyBIPsNSGq7ShE6IOc
-   A==;
-X-CSE-ConnectionGUID: 68UCwE6HTTeYoQGUHwjulA==
-X-CSE-MsgGUID: 0px4Sd6LRY60Iko7e5xkTw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11083"; a="13138512"
+  bh=uLxK9xyqHlVSkRI2FNtqlbjJbhDzKnvsunBJRG0CP30=;
+  b=Ha/YmtPCSng9bAF6dvX9tCnZBeR11MaQ9WMAewsj3CezpVCncg8SsMd+
+   BVTTBRg+hkee9HQ+4qpCbq31ap8gC2y/uRxYVLP6ody72UXOyN+S7LHTP
+   2ug7c+QNpLM+xqvpbvDY2aB0IRVlQA8L05tVBG9Ij/9lPudJSo2s4I7qv
+   a310PpMQMuXxbCihxadLEhFWzJndVxqjGu3FZN6WyMqDO2VL1bz9EhLXy
+   GGUwQVEhaLSOHwzG+HOrrl0Q5sxHc450ECVHIgFAWJO71CfAkehm4ylbu
+   8krtZz8PXujzp6i5UxOZcsYuP2L15s2rYpkDX+Oml0p3xSr8VQjyOYQRX
+   Q==;
+X-CSE-ConnectionGUID: 3RD6kelPTauFDka37lVKig==
+X-CSE-MsgGUID: wAKFvK+7RLKClCP+N+oMeg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11083"; a="13243580"
 X-IronPort-AV: E=Sophos;i="6.08,188,1712646000"; 
-   d="scan'208";a="13138512"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2024 08:50:36 -0700
-X-CSE-ConnectionGUID: TA9NdKewQy2/kZaPK1I5ng==
-X-CSE-MsgGUID: 6YEMn9VoRwOFmHZ3AhS93w==
+   d="scan'208";a="13243580"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2024 09:42:38 -0700
+X-CSE-ConnectionGUID: BZiYEqQZShy7rQEq/VbEWQ==
+X-CSE-MsgGUID: X/9RwkzkQeWsPHpSEO9T/w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,188,1712646000"; 
-   d="scan'208";a="34910654"
+   d="scan'208";a="34825916"
 Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 25 May 2024 08:50:34 -0700
+  by orviesa006.jf.intel.com with ESMTP; 25 May 2024 09:42:37 -0700
 Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sAtfE-00077s-0E;
-	Sat, 25 May 2024 15:50:32 +0000
-Date: Sat, 25 May 2024 23:49:59 +0800
+	id 1sAuTa-0007C9-0i;
+	Sat, 25 May 2024 16:42:34 +0000
+Date: Sun, 26 May 2024 00:42:13 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:endpoint] BUILD SUCCESS
- 5c172f7afc887f2cd383a125cc7fd98d921fe10f
-Message-ID: <202405252357.UT2bBzi5-lkp@intel.com>
+Subject: [pci:controller/qcom] BUILD REGRESSION
+ 1b36cee89f5f82bd04538b231e4261ed517ae174
+Message-ID: <202405260009.1Y0RHqOJ-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,16 +74,91 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
-branch HEAD: 5c172f7afc887f2cd383a125cc7fd98d921fe10f  Documentation: PCI: pci-endpoint: Fix EPF ops list
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
+branch HEAD: 1b36cee89f5f82bd04538b231e4261ed517ae174  PCI: qcom-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
 
-elapsed time: 1127m
+Error/Warning reports:
 
-configs tested: 147
+https://lore.kernel.org/oe-kbuild-all/202405250716.lpmrTGyQ-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+drivers/pci/controller/dwc/pcie-qcom-ep.c:658:17: error: implicit declaration of function 'dw_pcie_ep_linkdown'; did you mean 'dw_pcie_ep_linkup'? [-Werror=implicit-function-declaration]
+drivers/pci/controller/dwc/pcie-qcom-ep.c:658:3: error: call to undeclared function 'dw_pcie_ep_linkdown'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- arc-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- arc-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- arm-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- arm-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- arm64-randconfig-001-20240525
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- arm64-randconfig-004-20240525
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- csky-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- csky-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- i386-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- i386-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- loongarch-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- microblaze-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- microblaze-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- mips-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- openrisc-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- parisc-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- parisc-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- powerpc-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- powerpc-randconfig-001-20240525
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- s390-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- sparc-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- sparc64-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- sparc64-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+|-- um-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+`-- x86_64-buildonly-randconfig-004-20240525
+    `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:implicit-declaration-of-function-dw_pcie_ep_linkdown
+clang_recent_errors
+|-- arm64-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:call-to-undeclared-function-dw_pcie_ep_linkdown-ISO-C99-and-later-do-not-support-implicit-function-declarations
+|-- powerpc-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:call-to-undeclared-function-dw_pcie_ep_linkdown-ISO-C99-and-later-do-not-support-implicit-function-declarations
+|-- riscv-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:call-to-undeclared-function-dw_pcie_ep_linkdown-ISO-C99-and-later-do-not-support-implicit-function-declarations
+|-- riscv-allyesconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:call-to-undeclared-function-dw_pcie_ep_linkdown-ISO-C99-and-later-do-not-support-implicit-function-declarations
+|-- s390-allmodconfig
+|   `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:call-to-undeclared-function-dw_pcie_ep_linkdown-ISO-C99-and-later-do-not-support-implicit-function-declarations
+`-- x86_64-allyesconfig
+    `-- drivers-pci-controller-dwc-pcie-qcom-ep.c:error:call-to-undeclared-function-dw_pcie_ep_linkdown-ISO-C99-and-later-do-not-support-implicit-function-declarations
+
+elapsed time: 1179m
+
+configs tested: 163
 configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
 tested configs:
 alpha                             allnoconfig   gcc  
@@ -201,21 +276,31 @@ sh                                allnoconfig   gcc
 sh                               allyesconfig   gcc  
 sh                                  defconfig   gcc  
 sh                    randconfig-001-20240525   gcc  
+sh                    randconfig-002-20240525   gcc  
 sparc                            allmodconfig   gcc  
 sparc                             allnoconfig   gcc  
 sparc                               defconfig   gcc  
 sparc64                          allmodconfig   gcc  
 sparc64                          allyesconfig   gcc  
 sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240525   gcc  
+sparc64               randconfig-002-20240525   gcc  
 um                               allmodconfig   clang
 um                                allnoconfig   clang
 um                               allyesconfig   gcc  
 um                                  defconfig   clang
 um                             i386_defconfig   gcc  
+um                    randconfig-001-20240525   gcc  
+um                    randconfig-002-20240525   gcc  
 um                           x86_64_defconfig   clang
 x86_64                            allnoconfig   clang
 x86_64                           allyesconfig   clang
 x86_64       buildonly-randconfig-001-20240525   clang
+x86_64       buildonly-randconfig-002-20240525   gcc  
+x86_64       buildonly-randconfig-003-20240525   gcc  
+x86_64       buildonly-randconfig-004-20240525   gcc  
+x86_64       buildonly-randconfig-005-20240525   gcc  
+x86_64       buildonly-randconfig-006-20240525   gcc  
 x86_64                              defconfig   gcc  
 x86_64                randconfig-001-20240525   clang
 x86_64                randconfig-002-20240525   clang
@@ -225,14 +310,20 @@ x86_64                randconfig-005-20240525   clang
 x86_64                randconfig-006-20240525   clang
 x86_64                randconfig-011-20240525   clang
 x86_64                randconfig-012-20240525   clang
+x86_64                randconfig-013-20240525   gcc  
 x86_64                randconfig-014-20240525   clang
+x86_64                randconfig-015-20240525   gcc  
 x86_64                randconfig-016-20240525   clang
+x86_64                randconfig-071-20240525   gcc  
 x86_64                randconfig-072-20240525   clang
 x86_64                randconfig-073-20240525   clang
+x86_64                randconfig-074-20240525   gcc  
+x86_64                randconfig-075-20240525   gcc  
 x86_64                randconfig-076-20240525   clang
 x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
 xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240525   gcc  
+xtensa                randconfig-002-20240525   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
