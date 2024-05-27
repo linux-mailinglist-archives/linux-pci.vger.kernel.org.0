@@ -1,32 +1,32 @@
-Return-Path: <linux-pci+bounces-7837-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7838-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12D2C8CFC31
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 10:51:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0122D8CFC95
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 11:16:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3A271F22C5E
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 08:51:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0FB0282B26
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 09:16:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6911260DCF;
-	Mon, 27 May 2024 08:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09411DFE4;
+	Mon, 27 May 2024 09:16:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D64200A9;
-	Mon, 27 May 2024 08:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AE1139D19;
+	Mon, 27 May 2024 09:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716799860; cv=none; b=sJ1Bd0FLg72Hjf3ERwvMUaFWL6crWeMiLX1WzFYTWLybZJBJ01S4AbZ93szxAtShX+kj3mTGbNJI8XLL+FeNZ2huVCXRjtYXntxZRFffXhceK6Q8S2Ky3QR2VOmp/TrtG8Zl5PmGx8RSyt+V9V5cbiKr05yFZ/EP0QWPUknqbBw=
+	t=1716801366; cv=none; b=s05GTmtsBFxQG6031gcZBfN3QaX5H46ZxUI6KUZe9BqEA2LthGg8clpekryN2m5H8zSaK28gd70tIKtFGuthvMLQKjKV5VUIUJJVT2LY2GqIMvqTcsh8vj2sb8+wHRtj28jTn84d/GyvLdfHyZNX+QGv/Pu7dAZV3r+AiMkWfRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716799860; c=relaxed/simple;
-	bh=qXqUDFPMgEqJdlRNZ8WO6HftsW7XpxjeTbHSU5QdQeE=;
+	s=arc-20240116; t=1716801366; c=relaxed/simple;
+	bh=d3uQngngBfNufpxglkK1GJu8oc6gX6vT4+Q0gAUGrYw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BAURNfnaFvWXEfsPYDg7/pHX3Jd7lSwWqS+CEOq9uPcserc2w0fDqyPPTqPK9DtfR6xewJyqcnDtt2x0vhaFN1H62+PFmTQEwnuPrjeOygtgu6BK/T9Cs9bRifVf1uKP3liqUunp9FLXNvjUGSuP8JTEQJclFp/CScA7dIIQisE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+	 Content-Type:Content-Disposition:In-Reply-To; b=aw3f2/rQ9sXK7f5ffEYR0q6XKnevQaKcAwVxQjNE7kdxLIPCMjHKOJygG6u/tdreqPCzph6uBN1DBep7E4WB2dLPbvyXvBF4i3+RtB4BjVFDcy0oDtfInTsDpXCpqvbKSX/1MKv1IFigeAmDOL+SRegtJEPq8/AkFQeHDoR55l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
@@ -34,21 +34,28 @@ Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4B04E100DE9DE;
-	Mon, 27 May 2024 10:50:48 +0200 (CEST)
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6D22D3000A383;
+	Mon, 27 May 2024 11:15:55 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 196C65194CF; Mon, 27 May 2024 10:50:48 +0200 (CEST)
-Date: Mon, 27 May 2024 10:50:48 +0200
+	id 55F962F5E1; Mon, 27 May 2024 11:15:55 +0200 (CEST)
+Date: Mon, 27 May 2024 11:15:55 +0200
 From: Lukas Wunner <lukas@wunner.de>
-To: yaoma <yaoma@linux.alibaba.com>
-Cc: bhelgaas@google.com, weirongguang@kylinos.cn, kanie@linux.alibaba.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: pciehp: Use appropriate conditions to check the
- hotplug controller status
-Message-ID: <ZlRJaEEGEMsyxXqm@wunner.de>
-References: <20240524063023.77148-1-yaoma@linux.alibaba.com>
- <ZlBHjbmjjSEnXCMp@wunner.de>
- <7855600C-4BB6-417B-8F91-24F4F7E0820E@linux.alibaba.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Abort hot-plug if
+ pci_hp_add_bridge() fails
+Message-ID: <ZlRPS9TCYjccpNLr@wunner.de>
+References: <cover.1714838173.git.namcao@linutronix.de>
+ <f3db713f4a737756782be6e94fcea3eda352e39f.1714838173.git.namcao@linutronix.de>
+ <Zjcc6Suf5HmmZVM9@wunner.de>
+ <20240505071451.df3l6mdK@linutronix.de>
+ <20240506083701.NZNifFGn@linutronix.de>
+ <ZjkxTGaAc48jPzqC@wunner.de>
+ <20240507142738.wyj19VVh@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,68 +64,43 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7855600C-4BB6-417B-8F91-24F4F7E0820E@linux.alibaba.com>
+In-Reply-To: <20240507142738.wyj19VVh@linutronix.de>
 
-On Sun, May 26, 2024 at 10:45:36PM +0800, yaoma wrote:
-> > 2024 5 24 15:53 Lukas Wunner <lukas@wunner.de>
-> > On Fri, May 24, 2024 at 02:30:23PM +0800, Bitao Hu wrote:
-> > > The values of 'present' and 'link_active' have similar meanings:
-> > > the value is %1 if the status is ready, and %0 if it is not. If the
-> > > hotplug controller itself is not available, the value should be
-> > > %-ENODEV. However, both %1 and %-ENODEV are considered true, which
-> > > obviously does not meet expectations. 'Slot(xx): Card present' and
-> > > 'Slot(xx): Link Up' should only be output when the value is %1.
-> > [...]
-> > > --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> > > +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> > > @@ -276,10 +276,10 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
-> > > 	case OFF_STATE:
-> > > 		ctrl->state = POWERON_STATE;
-> > > 		mutex_unlock(&ctrl->state_lock);
-> > > -		if (present)
-> > > +		if (present > 0)
-> > > 			ctrl_info(ctrl, "Slot(%s): Card present\n",
-> > > 				  slot_name(ctrl));
-> > > -		if (link_active)
-> > > +		if (link_active > 0)
-> > > 			ctrl_info(ctrl, "Slot(%s): Link Up\n",
-> > > 				  slot_name(ctrl));
-> > > 		ctrl->request_result = pciehp_enable_slot(ctrl);
+On Tue, May 07, 2024 at 04:27:38PM +0200, Nam Cao wrote:
+> On Mon, May 06, 2024 at 09:36:44PM +0200, Lukas Wunner wrote:
+> > Remind me, how exactly does the NULL pointer deref occur?  I think it's
+> > because no struct pci_bus was allocated for the subordinate bus of the
+> > hot-plugged bridge, right?  Because AFAICS that would happen in
 > > 
-> > We already handle the "<= 0" case immediately above this code excerpt:
+> > pci_hp_add_bridge()
+> >   pci_can_bridge_extend()
+> >     pci_add_new_bus()
+> >       pci_alloc_child_bus()
 > > 
-> > 	if (present <= 0 && link_active <= 0) {
-> > 	...
-> > 	}
+> > but we never get that far because pci_hp_add_bridge() bails out with -1.
+> > So the subordinate pointer remains a NULL pointer.
 > 
-> I'm not sure if the following scenarios would occur in actual production
-> environment, but from the code level, there is the possibility of
-> "present <= 0 && link_active > 0" or "present > 0 && link_active <= 0".
-> In these cases, the "<= 0" conditions will not be properly handled,
-> and "ctrl_info" will output incorrect prompt messages.
+> This is correct. NULL deference happens due to subordinate pointer being
+> NULL.
+> 
+> > Or check for a NULL subordinate pointer instead of crashing.
+> 
+> I think this is a possible solution, but it is a bit complicated: all usage
+> of subordinate pointers will need to be looked at.
 
-I see, that makes sense.
+We already check for a NULL subordinate pointer in various places.
+See e.g. commit 62e4492c3063 ("PCI: Prevent NULL dereference during
+pciehp probe").
 
-"present" and "link_active" can be -ENODEV if reading the config space
-of the hotplug port failed.  That's typically the case if the hotplug
-port itself was hot-removed, which happens all the time with
-Thunderbolt/USB4.
+If we're missing such checks, I'd suggest to add those.
 
-E.g. pciehp_card_present() may return 1 and pciehp_check_link_active()
-may return -ENODEV because the hotplug port was hot-removed in-between
-the two function calls.  In that case we'll emit both "Card present"
-*and* "Link Up".  The latter is uncalled for and is supressed by your
-patch.
+If you believe having a NULL subordinate pointer is wrong and the
+bridge should be de-enumerated altogether, I think you would have
+to remove these NULL pointer checks as they'd otherwise become
+pointless with your change.
 
-So your code change is
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
-
-...but it would be good if you could respin the patch and explain the
-rationale of the code change in the commit message more clearly.
-Basically summarize what you and I have explained above.
-
-Also, the percent sign % in front of 0, 1, -ENODEV is unnecessary in
-commit messages. It only has special meaning in kernel-doc.
+Just adding missing NULL pointer checks seems to be the most
+straightforward solution to me.
 
 Thanks,
 
