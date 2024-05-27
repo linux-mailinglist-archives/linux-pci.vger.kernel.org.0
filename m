@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-7866-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7867-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28AEA8D081D
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:22:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B40D8D0822
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:22:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A6991C2283C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:22:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99DB01C22838
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:22:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CBE8168C30;
-	Mon, 27 May 2024 16:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9533416938C;
+	Mon, 27 May 2024 16:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VSglVmn7"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HGpU54Uz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB929167DA2;
-	Mon, 27 May 2024 16:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668E2168C1B;
+	Mon, 27 May 2024 16:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826510; cv=none; b=JVFeQeWGpXmGfqHdcnuAK9sfn1C6xaPBqmh7p5iueqbOh3F9KO56d+saY3PRm7hbmLXbeNqyUEIrvUbiehFEmiJimaywd0XaQGIvrtIqvtKDdlAzF1bpm+Hfc/Aab2XaCajSTvoJJUNf8i5r5Gk0sNFjVMeybMW6CO11ogOEfF0=
+	t=1716826512; cv=none; b=L6bq3vcR+4ub2en3aHW6aB2W5olJuBPqewLtKuOpOjE0HyGcn+EKcCoXdhteoSeSX9nwqrA+ztDGpWKRBoIQweGNTzzBIbvqO+xTEYgd4Po2SeAz1KO4dna5oH55+/ay2x19U52C6vih8VYVnIPydc28cz8cvF+FTl3uWhmw9Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826510; c=relaxed/simple;
-	bh=nhPkf7wgseJDhZAtkhb42G6JXubPm9Ki2AQx9/jbUDc=;
+	s=arc-20240116; t=1716826512; c=relaxed/simple;
+	bh=8rQevD0p2EIlB6l1UzGKlfOUztYoACQa5oVZsG20auo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jGJIaDnWaMcUm6SkZsC7JYkPdb+gLDY/TMLGvmCbdAQWCRm+EdTocjwbFvvLRA5nz5Z9GIrSDRkfnHwMTGZpGla3fu5Y9W2xgmV7L08LrkkkDpYPY6RRXnKl8b/q/lZkKfwRDKYizI+cj0lOB/LT/5MqQjNZfSWEpjkWH0vgur8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VSglVmn7; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=jFLPU5vlkZlHg2MRVf5iDXkySf9wxgwqE2gagt/qqPPMelaY9jypWOAOuxdjOfiQllePxzl5cFWJVC8kGCdkkSEYDqgBsLFzRZwY3MC2z4eMHMorowE1zjlyhDjXTyptBuza7BFD+E6yUCSU7FIZXNOXMhRcTlzAGy66vN9+TLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HGpU54Uz; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 93DE4FF806;
-	Mon, 27 May 2024 16:15:05 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 4BE5EFF80E;
+	Mon, 27 May 2024 16:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716826507;
+	t=1716826508;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9I+0v1qx7CVrOS1djilPmB0cdboViIJolbKDdwWOXOM=;
-	b=VSglVmn7Gn5q7PaPZMeEM6bfECigH6tLaVL8NUWhNemTLBGEvNVJLcDc6T9YvDDkvlxpjA
-	fV//LwGH4SIqSRUZ8fchGyyAHLCwUO1EXWoBMtPB1RhydP/9eFwQUrOesXwA9gH1yQ2vPA
-	MxSsABRZAWuMDHGtmrnTinbeyNYmMuf8wWfsxPBZoTz1/F7TDv8kUPOt0kvB+y3R60Pz+b
-	1exgfqi4TxCVfhyIXuojkmJ7CZntnwnOOcOhTi9FW/p/2rypSK+b4fEZc0WdCEbaG6glRc
-	yF0LCz3RVqU1Oyk/3So6CSacY7kNkZH1rF5iDA2YzcJMkU4McNqY44TRBLP7iA==
+	bh=zWQ4pALLF6bGmnAFbKQRjFHNe+9gr/WCo0qJyEdw0yk=;
+	b=HGpU54UzdbtSbUfc2EUxjmVB0KjJahFF3GnvKVAEiGK87T93BSwa7FlnqITkjQiiOfYsNQ
+	0Gk7FKigATJDlt3kWJwQ6eNKB3sWxnuH2ynoxHKaNvexx+ZwGf6MUhnXtjmmAFQiJo3YXW
+	wcBhp7lJmxo5kGgZMS/8ncSj5/BIADqLWOWJiySSXxQTwZRdlr77CAU8EPxr7BJ1UdhKgo
+	dTitdHIaZ1jy9T8HD4nYngff4qatZseMmIQeSnw9k7dII4cv7jIFPZYSB+QRACjzGBi8TD
+	eSaGk0t5ZTyzEKmOi5cZr7lwpgHMD7cvpzruT8DT4YcVyC4U0OQNAMjDys2yHA==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
@@ -79,11 +79,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Allan Nielsen <allan.nielsen@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>
-Subject: [PATCH v2 05/19] reset: mchp: sparx5: set the dev member of the reset controller
-Date: Mon, 27 May 2024 18:14:32 +0200
-Message-ID: <20240527161450.326615-6-herve.codina@bootlin.com>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v2 06/19] dt-bindings: net: mscc-miim: Add resets property
+Date: Mon, 27 May 2024 18:14:33 +0200
+Message-ID: <20240527161450.326615-7-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240527161450.326615-1-herve.codina@bootlin.com>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
@@ -93,33 +92,40 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-From: Clément Léger <clement.leger@bootlin.com>
+Add the (optional) resets property.
+The mscc-miim device is impacted by the switch reset especially when the
+mscc-miim device is used as part of the LAN966x PCI device.
 
-In order to guarantee the device will not be deleted by the reset
-controller consumer, set the dev member of the reset controller.
-
-Signed-off-by: Clément Léger <clement.leger@bootlin.com>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/reset/reset-microchip-sparx5.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/net/mscc,miim.yaml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
-index c4fe65291a43..1ef2aa1602e3 100644
---- a/drivers/reset/reset-microchip-sparx5.c
-+++ b/drivers/reset/reset-microchip-sparx5.c
-@@ -117,6 +117,7 @@ static int mchp_sparx5_reset_probe(struct platform_device *pdev)
- 		return err;
+diff --git a/Documentation/devicetree/bindings/net/mscc,miim.yaml b/Documentation/devicetree/bindings/net/mscc,miim.yaml
+index 5b292e7c9e46..c67e8caa36cf 100644
+--- a/Documentation/devicetree/bindings/net/mscc,miim.yaml
++++ b/Documentation/devicetree/bindings/net/mscc,miim.yaml
+@@ -38,6 +38,17 @@ properties:
  
- 	ctx->rcdev.owner = THIS_MODULE;
-+	ctx->rcdev.dev = &pdev->dev;
- 	ctx->rcdev.nr_resets = 1;
- 	ctx->rcdev.ops = &sparx5_reset_ops;
- 	ctx->rcdev.of_node = dn;
+   clock-frequency: true
+ 
++  resets:
++    items:
++      - description:
++          Optional shared switch reset.
++          This reset is shared with all blocks attached to the Switch Core
++          Register Bus (CSR) including VRAP slave.
++
++  reset-names:
++    items:
++      - const: switch
++
+ required:
+   - compatible
+   - reg
 -- 
 2.45.0
 
