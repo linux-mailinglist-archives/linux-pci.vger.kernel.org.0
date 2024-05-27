@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-7870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7871-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C1638D082E
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:23:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CF018D0832
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:23:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6C1F28B825
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:23:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33BBA28B2C5
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:23:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4417F16C438;
-	Mon, 27 May 2024 16:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F22216C6B6;
+	Mon, 27 May 2024 16:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QLQ/luKn"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jPHjua9W"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA88416078F;
-	Mon, 27 May 2024 16:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42EC16B751;
+	Mon, 27 May 2024 16:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826518; cv=none; b=RV59xGQYAIlxlwWZoMarXwfgco+vUfx+GKzRaD8L6F5craUEvNp+QWREFSrT+10LoSlY1jyU/mN53TpQBddwzYiJquwElIub5i6vvIToBx7MeauqhVmZsgxtuz8ZBscBqUtBW4KtlUlTng5ZJg3wmjIGRg0PqaEGkX1uqBh56CQ=
+	t=1716826520; cv=none; b=O73C2/DIeIPdgPDRu9nVE3eV8I6ML3rNlmRIgWwQ8hVtjNHiTP+jEoTdf8dNcZ6UWHMjPNftiM5XZXiPrOx/L0si1bYgplBCOaLwrrRNLkhpnfJGYSsESJUvmfDbonmsw+VOYY7PLjuwtRRJMISOJ/zvG1USvOemBPHhBngrtr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826518; c=relaxed/simple;
-	bh=SWk5vonVG5e7P8hVz9wxahmL3ihBK/v20lKtBj8oZs4=;
+	s=arc-20240116; t=1716826520; c=relaxed/simple;
+	bh=C/7pxn/zvd0ZkrMu2JxCU9aLE6K8DlE8/+ktjuIqF+0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B2uRC5ov3mRUDIqsecFZcg92oUQLV8TUld73WaCG22mjM6Y/e+AomFEAYYHc9pfuYIU+aUX0Bsw5Ddvlmy6dWoGQo8HKSfniLGpKijnmoUL1BKDVmV0henk1oLXQkL07x5Ff0B9D/XvhM4LcbkNat3BDxpEMn6yM68Vn4ulErcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QLQ/luKn; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=otMJenDNqVYOR38B7HL+/SigtRFHpR9hy6dBxUwncXSVxcr2prrAQ3h3t6pLQeORH0ebFT5cVaUzGzJb6Eqcg4V1rQKM7kC5tWRYE9k2XYzMYof88mo+yRVK+NWxHbzqDx35Ct4Aq+MlQuiBxRRfdK09Oc95th1wn5LujwayfZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jPHjua9W; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id D7790FF812;
-	Mon, 27 May 2024 16:15:12 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id A25BCFF80D;
+	Mon, 27 May 2024 16:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716826514;
+	t=1716826516;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cHznhiXiwWKJVWaiiQdYYwLlbRzFssggqMn3mMXWlQs=;
-	b=QLQ/luKn4+ghM6v9/p8DpdWBEA3GwVIQLBiLX7mC0xBsAGC+kFA/Na9ucOwoyKROROd+Lr
-	16cLBhXSYGv0GG0JVVSWT94LuoTJxfswQ17QnWycK2Afpjd7TxQHaeOW9haF+r5AXTVDMS
-	zHxJ6fSDj3ZOKRT+SW5Uc8zrHcGMcsJC7r59mmwJDO8CNyxzPWGlX37RalyfCdMnfa81cG
-	hbfSprCnq1crc7gNcJneranGveI/WVMhQLiESWm6ktrlaDD46VemSHoM+v7j3Twffznuum
-	J4M6XtZ0cAiwM4hxVKtekaWam8Hq4l+foq1bxe791CUNmChG5bseU8LW5xKK8g==
+	bh=Mi3oj3KqfvDzq+/15bPMcWypI2LWK0r10UEBjijnOtc=;
+	b=jPHjua9WxG50yVIdqMNDLvOGQkQ6iB4QYm/1BGyxgTb8OooPHLqIJLy60UGGZXbIaxDabh
+	pPwkbWZxBGOXlZV1InZfo4OhQlP68xHlK+trSLZ43n7dfRalP7Sbu0nRxGRb4Zchwpp2af
+	LeGKWTAEnleyERDMXp34zfuDP8pzZDx22iB0CHstGcAwBtpK48FI1m5zkI/J4kq1c/MQmG
+	kTftzwBFldi7v+VE0xn3HBxR8Jku6AQ3puEOoTRhmEHrVYtSkmYNZAx1SGktc5is99y3ii
+	Mm4FGQ3Wo2H18jkER+EKHkcMdMh7L1ALa6QmzwRTfI9Jx8aiq6vdAP8rBBQmXg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
@@ -80,9 +80,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 09/19] irqdomain: Add missing parameter descriptions in docs
-Date: Mon, 27 May 2024 18:14:36 +0200
-Message-ID: <20240527161450.326615-10-herve.codina@bootlin.com>
+Subject: [PATCH v2 10/19] irqdomain: Introduce irq_domain_alloc() and irq_domain_publish()
+Date: Mon, 27 May 2024 18:14:37 +0200
+Message-ID: <20240527161450.326615-11-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240527161450.326615-1-herve.codina@bootlin.com>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
@@ -95,89 +95,187 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-During compilation, several warning of the following form were raised:
-  Function parameter or struct member 'x' not described in 'yyy'
+The irq_domain_add_*() family functions create an irq_domain and also
+publish this newly created to domain. Once an irq_domain is published,
+consumers can request IRQ in order to use them.
 
-Add the missing function parameter descriptions.
+Some interrupt controller drivers have to perform some more operations
+with the created irq_domain in order to have it ready to be used.
+For instance:
+  - Allocate generic irq chips with irq_alloc_domain_generic_chips()
+  - Retrieve the generic irq chips with irq_get_domain_generic_chip()
+  - Initialize retrieved chips: set register base address and offsets,
+    set several hooks such as irq_mask, irq_unmask, ...
+
+To avoid a window where the domain is published but not yet ready to be
+used, introduce irq_domain_alloc_*() family functions to create the
+irq_domain and irq_domain_publish() to publish the irq_domain.
+With this new functions, any additional initialisation can then be done
+between the call creating the irq_domain and the call publishing it.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- kernel/irq/irqdomain.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ include/linux/irqdomain.h | 16 +++++++
+ kernel/irq/irqdomain.c    | 91 ++++++++++++++++++++++++++++-----------
+ 2 files changed, 82 insertions(+), 25 deletions(-)
 
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 21ecf582a0fe..86203e7e6659 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -257,6 +257,22 @@ static inline struct fwnode_handle *irq_domain_alloc_fwnode(phys_addr_t *pa)
+ }
+ 
+ void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
++struct irq_domain *irq_domain_alloc(struct fwnode_handle *fwnode, unsigned int size,
++				    irq_hw_number_t hwirq_max, int direct_max,
++				    const struct irq_domain_ops *ops,
++				    void *host_data);
++
++static inline struct irq_domain *irq_domain_alloc_linear(struct fwnode_handle *fwnode,
++							 unsigned int size,
++							 const struct irq_domain_ops *ops,
++							 void *host_data)
++{
++	return irq_domain_alloc(fwnode, size, size, 0, ops, host_data);
++}
++
++void irq_domain_free(struct irq_domain *domain);
++void irq_domain_publish(struct irq_domain *domain);
++void irq_domain_unpublish(struct irq_domain *domain);
+ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int size,
+ 				    irq_hw_number_t hwirq_max, int direct_max,
+ 				    const struct irq_domain_ops *ops,
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index aadc8891cc16..86f8b91b0d3a 100644
+index 86f8b91b0d3a..06c3e1b03a1d 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -111,6 +111,7 @@ EXPORT_SYMBOL_GPL(__irq_domain_alloc_fwnode);
+@@ -231,7 +231,38 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
+ 	return domain;
+ }
+ 
+-static void __irq_domain_publish(struct irq_domain *domain)
++struct irq_domain *irq_domain_alloc(struct fwnode_handle *fwnode, unsigned int size,
++				    irq_hw_number_t hwirq_max, int direct_max,
++				    const struct irq_domain_ops *ops,
++				    void *host_data)
++{
++	return __irq_domain_create(fwnode, size, hwirq_max, direct_max, ops,
++				   host_data);
++}
++EXPORT_SYMBOL_GPL(irq_domain_alloc);
++
++/**
++ * irq_domain_free() - Free an irq domain.
++ * @domain: domain to free
++ *
++ * This routine is used to free an irq domain. The caller must ensure
++ * that the domain is not published.
++ */
++void irq_domain_free(struct irq_domain *domain)
++{
++	fwnode_dev_initialized(domain->fwnode, false);
++	fwnode_handle_put(domain->fwnode);
++	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
++		kfree(domain->name);
++	kfree(domain);
++}
++EXPORT_SYMBOL_GPL(irq_domain_free);
++
++/**
++ * irq_domain_publish() - Publish an irq domain.
++ * @domain: domain to publish
++ */
++void irq_domain_publish(struct irq_domain *domain)
+ {
+ 	mutex_lock(&irq_domain_mutex);
+ 	debugfs_add_domain_dir(domain);
+@@ -240,6 +271,36 @@ static void __irq_domain_publish(struct irq_domain *domain)
+ 
+ 	pr_debug("Added domain %s\n", domain->name);
+ }
++EXPORT_SYMBOL_GPL(irq_domain_publish);
++
++/**
++ * irq_domain_unpublish() - Unpublish an irq domain.
++ * @domain: domain to unpublish
++ *
++ * This routine is used to unpublish an irq domain. The caller must ensure
++ * that all mappings within the domain have been disposed of prior to
++ * use, depending on the revmap type.
++ */
++void irq_domain_unpublish(struct irq_domain *domain)
++{
++	mutex_lock(&irq_domain_mutex);
++	debugfs_remove_domain_dir(domain);
++
++	WARN_ON(!radix_tree_empty(&domain->revmap_tree));
++
++	list_del(&domain->link);
++
++	/*
++	 * If the going away domain is the default one, reset it.
++	 */
++	if (unlikely(irq_default_domain == domain))
++		irq_set_default_host(NULL);
++
++	mutex_unlock(&irq_domain_mutex);
++
++	pr_debug("Removed domain %s\n", domain->name);
++}
++EXPORT_SYMBOL_GPL(irq_domain_unpublish);
  
  /**
-  * irq_domain_free_fwnode - Free a non-OF-backed fwnode_handle
-+ * @fwnode: fwnode_handle to free
-  *
-  * Free a fwnode_handle allocated with irq_domain_alloc_fwnode.
+  * __irq_domain_add() - Allocate a new irq_domain data structure
+@@ -264,7 +325,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, unsigned int s
+ 	domain = __irq_domain_create(fwnode, size, hwirq_max, direct_max,
+ 				     ops, host_data);
+ 	if (domain)
+-		__irq_domain_publish(domain);
++		irq_domain_publish(domain);
+ 
+ 	return domain;
+ }
+@@ -280,28 +341,8 @@ EXPORT_SYMBOL_GPL(__irq_domain_add);
   */
-@@ -982,6 +983,12 @@ EXPORT_SYMBOL_GPL(__irq_resolve_mapping);
+ void irq_domain_remove(struct irq_domain *domain)
+ {
+-	mutex_lock(&irq_domain_mutex);
+-	debugfs_remove_domain_dir(domain);
+-
+-	WARN_ON(!radix_tree_empty(&domain->revmap_tree));
+-
+-	list_del(&domain->link);
+-
+-	/*
+-	 * If the going away domain is the default one, reset it.
+-	 */
+-	if (unlikely(irq_default_domain == domain))
+-		irq_set_default_host(NULL);
+-
+-	mutex_unlock(&irq_domain_mutex);
+-
+-	pr_debug("Removed domain %s\n", domain->name);
+-
+-	fwnode_dev_initialized(domain->fwnode, false);
+-	fwnode_handle_put(domain->fwnode);
+-	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
+-		kfree(domain->name);
+-	kfree(domain);
++	irq_domain_unpublish(domain);
++	irq_domain_free(domain);
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_remove);
  
- /**
-  * irq_domain_xlate_onecell() - Generic xlate for direct one cell bindings
-+ * @d:		Interrupt domain involved in the translation
-+ * @ctrlr:	The device tree node for the device whose interrupt is translated
-+ * @intspec:	The interrupt specifier data from the device tree
-+ * @intsize:	The number of entries in @intspec
-+ * @out_hwirq:	Pointer to storage for the hardware interrupt number
-+ * @out_type:	Pointer to storage for the interrupt type
-  *
-  * Device Tree IRQ specifier translation function which works with one cell
-  * bindings where the cell value maps directly to the hwirq number.
-@@ -1000,6 +1007,12 @@ EXPORT_SYMBOL_GPL(irq_domain_xlate_onecell);
+@@ -1184,7 +1225,7 @@ struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+ 		domain->parent = parent;
+ 		domain->flags |= flags;
  
- /**
-  * irq_domain_xlate_twocell() - Generic xlate for direct two cell bindings
-+ * @d:		Interrupt domain involved in the translation
-+ * @ctrlr:	The device tree node for the device whose interrupt is translated
-+ * @intspec:	The interrupt specifier data from the device tree
-+ * @intsize:	The number of entries in @intspec
-+ * @out_hwirq:	Pointer to storage for the hardware interrupt number
-+ * @out_type:	Pointer to storage for the interrupt type
-  *
-  * Device Tree IRQ specifier translation function which works with two cell
-  * bindings where the cell values map directly to the hwirq number
-@@ -1018,6 +1031,12 @@ EXPORT_SYMBOL_GPL(irq_domain_xlate_twocell);
+-		__irq_domain_publish(domain);
++		irq_domain_publish(domain);
+ 	}
  
- /**
-  * irq_domain_xlate_onetwocell() - Generic xlate for one or two cell bindings
-+ * @d:		Interrupt domain involved in the translation
-+ * @ctrlr:	The device tree node for the device whose interrupt is translated
-+ * @intspec:	The interrupt specifier data from the device tree
-+ * @intsize:	The number of entries in @intspec
-+ * @out_hwirq:	Pointer to storage for the hardware interrupt number
-+ * @out_type:	Pointer to storage for the interrupt type
-  *
-  * Device Tree IRQ specifier translation function which works with either one
-  * or two cell bindings where the cell values map directly to the hwirq number
-@@ -1051,6 +1070,10 @@ EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
- /**
-  * irq_domain_translate_onecell() - Generic translate for direct one cell
-  * bindings
-+ * @d:		Interrupt domain involved in the translation
-+ * @fwspec:	The firmware interrupt specifier to translate
-+ * @out_hwirq:	Pointer to storage for the hardware interrupt number
-+ * @out_type:	Pointer to storage for the interrupt type
-  */
- int irq_domain_translate_onecell(struct irq_domain *d,
- 				 struct irq_fwspec *fwspec,
-@@ -1068,6 +1091,10 @@ EXPORT_SYMBOL_GPL(irq_domain_translate_onecell);
- /**
-  * irq_domain_translate_twocell() - Generic translate for direct two cell
-  * bindings
-+ * @d:		Interrupt domain involved in the translation
-+ * @fwspec:	The firmware interrupt specifier to translate
-+ * @out_hwirq:	Pointer to storage for the hardware interrupt number
-+ * @out_type:	Pointer to storage for the interrupt type
-  *
-  * Device Tree IRQ specifier translation function which works with two cell
-  * bindings where the cell values map directly to the hwirq number
+ 	return domain;
 -- 
 2.45.0
 
