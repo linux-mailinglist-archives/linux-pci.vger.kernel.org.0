@@ -1,96 +1,90 @@
-Return-Path: <linux-pci+bounces-7846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 407CD8D002A
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 14:37:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468A38D002C
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 14:38:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0DF0284D1C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 12:37:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D86E51F235DB
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 12:38:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149CB15DBD1;
-	Mon, 27 May 2024 12:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D0115DBCA;
+	Mon, 27 May 2024 12:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zdiv.net header.i=@zdiv.net header.b="MlXMRPwp"
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="SxlGbZ5N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zdiv.net (xvm-107-148.dc0.ghst.net [46.226.107.148])
+Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2B538FA6
-	for <linux-pci@vger.kernel.org>; Mon, 27 May 2024 12:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.226.107.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E041838FA6
+	for <linux-pci@vger.kernel.org>; Mon, 27 May 2024 12:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716813434; cv=none; b=uj8mjrijhqMwH8z+LMkrqTCDcBj1zI+9gL4isoS9YjWhJc2ggGJZbW4obspAVmqHt6q5PJkkUGP6JyM25Cj9XD7AeqtHVtuKrx9dBB8OX6BSuTW68WINqPLdNUiOfQKAD0B8KaHTOAjFV7/rPDRXPKPNZoUVrzZ+nN3eEHYff9Q=
+	t=1716813510; cv=none; b=T1huT83DCkj3Bk4pRcDbjx8Pmfa3kZ7WHoCqPDylXHccV8ArmOJ0fAn9wjl6Qe3GoVa/vvmLC7HwOg5P3iPxreEWHglU0w5eob7aMxZUOI7N4kLzNvV4ue7LQJZZxiKGZiJ04H1A9OVhMoIq5tJme1fjJjZ3s878XXA2VQ306Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716813434; c=relaxed/simple;
-	bh=2oGplsf2j9Qi60KB66pKQtRSwnhBU/HHCa7ji9plR9c=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Au5jTnjYYLcERYMxP9aoNhCrSj/XP67SSzwPxFxMuTFcgf4Bk2C75aY3UfXq3EA36kKvcrdIgD4gWiBGgSYFhpXFucuFBh+hMt8+hQifOVyl7PlIEFJYF9GNM0Z5ZDQLeIXpE3OL+nzb56bnZIjLI9KExrPu3wFIooZw//4jJ2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zdiv.net; spf=pass smtp.mailfrom=zdiv.net; dkim=pass (2048-bit key) header.d=zdiv.net header.i=@zdiv.net header.b=MlXMRPwp; arc=none smtp.client-ip=46.226.107.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zdiv.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zdiv.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zdiv.net; s=23;
-	t=1716813423;
+	s=arc-20240116; t=1716813510; c=relaxed/simple;
+	bh=8ck6E6QJP6R2qOdqM+z6mzcga9oTF90+2wV0vt55Fto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s8lsySIzd+PjUU1fAUGq2c3zE+zVf5HB9kn/dvsLruTkzlasoL1Dfb+MmyN/diZ6VmnY8+Uj6K0GHPJifCewwLnuxJuRxS+D/ZSqLdiP3Nh6X77nc7BD4NqKNoho6r4TDwq3Tc3Rc/GrErryekln7UPR82+u7jhA9GwyrV4RY1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=SxlGbZ5N; arc=none smtp.client-ip=195.113.20.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
+	id E18A32873A0; Mon, 27 May 2024 14:38:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1716813503;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2oGplsf2j9Qi60KB66pKQtRSwnhBU/HHCa7ji9plR9c=;
-	b=MlXMRPwpBGJ8ZkJMP4XTTjKnExzMlDuWM5NasHpHCKN1SWS0vxJ2zwzpQyS/vYCvVtgedG
-	AGWHA8L/w1z9mpToR7JgjlVqVkFtjbnfWkHbmQArEyuG65/0zd+SoxFMNAXgPW3o3EsaIH
-	bU+nCB9+23VsOxx+fHvgg2M+D8X1VOmZH+bD1oHDMSbOxnO7djLWieCpjx+lzZbRr0FWFh
-	ZCBI9ypJngi9PwogrBgsbPrLFZr6wDi3gaq1Rjv6+pSPmFwjHNr2XOfxnewbgPrpGJ2YAl
-	FpWwZXPP1CKnWu2r5j7MCEeAqEYt3REJn2MBNFVLhYxPWVFIt0YWq0n3N6lJ/A==
-Received: from localhost (91-160-75-97.subs.proxad.net [91.160.75.97])
-	by zdiv.net (OpenSMTPD) with ESMTPSA id c6c9c188 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 27 May 2024 12:37:03 +0000 (UTC)
+	bh=CfUMb7fd6SNCpSYIvghbKwGqcbg+FX8CiYypi3W4xO8=;
+	b=SxlGbZ5Ncv3grBVgkCV2XyvPE2UurwkMWbE91PhjLSR/kVShwwH6bWO8yq3Kc/gv7YPwAM
+	Eb+8VHcZtnQABoPLqvBv/IXD1caMNa95s3o2RKCrg35H6AAqnCJA4laiUk0hxEeBQuqJCu
+	kVJJNiPLAA42leR1rWmKaAUYmv4iK7g=
+Date: Mon, 27 May 2024 14:38:23 +0200
+From: Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
+To: Nikita Proshkin <n.proshkin@yadro.com>
+Cc: linux-pci@vger.kernel.org, linux@yadro.com,
+	Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+Subject: Re: [PATCH pciutils 0/6] pcilmr: Improve grading of the margining
+ results
+Message-ID: <mj+md-20240527.123808.16578.nikam@ucw.cz>
+References: <20240522160634.29831-1-n.proshkin@yadro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 27 May 2024 14:37:03 +0200
-Message-Id: <D1KFKEQO39IZ.2N51TG9E9X0N@zdiv.net>
-Cc: <linux-pci@vger.kernel.org>
-Subject: Re: [RESEND PATCH] libpci: sysfs: Fix segmentation fault by
- including libgen.h
-From: "Jules Maselbas" <jmaselbas@zdiv.net>
-To: =?utf-8?q?Martin_Mare=C5=A1?= <mj@ucw.cz>
-X-Mailer: aerc 0.17.0
-References: <20240521080519.7833-1-jmaselbas@zdiv.net>
- <mj+md-20240527.123235.12093.nikam@ucw.cz>
-In-Reply-To: <mj+md-20240527.123235.12093.nikam@ucw.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522160634.29831-1-n.proshkin@yadro.com>
 
-On Mon May 27, 2024 at 2:33 PM CEST, Martin Mare=C5=A1 wrote:
-> Hello!
->
-> > On a musl-based system (Alpine-linux) the basename(3) function is not d=
-efined
-> > by including string.h with _GNU_SOURCE defined. However basename(3) cou=
-ld be
-> > defined by including libgen.h.
-> >=20
-> > On musl this is a problem than can lead to a segmentation fault, as I h=
-ave
-> > experienced. This issue is caused by basename(3) function being implici=
-tly
-> > declared and thus having, implicitly, a return type of int. Which in my=
- case
-> > caused an erroneous sign extension of a pointer leading to a segmentati=
-on
-> > fault.
-> >=20
-> > Adding an include for libgen.h sound to me like a proper solution.
-> > Also by doing so the `_GNU_SOURCE` defined is no longer needed.
->
-> It should be fixed by commit 89cb2ae87236604b0e8ededd0fd7d9425c2d8cb6.
->
-> Could you please check if it works for you?
-Yes, it does work.
+Hi!
 
+> Original version of the pcilmr utility used values from the Table 8-11 of
+> the PCIe Base Spec Rev 5.0 to evaluate lanes. But it seems that these
+> values relate only to the margining equipment and are not relevant to
+> evaluating the quality of connections.
+> 
+> Patch set improves grading from two sides:
+> * The PCIe Base Spec Rev 5.0 sets the minimum values for the eye in the
+>   section 8.4.2. Change default grading values in the utility according to
+>   this section. Keep in mind that the Spec uses full eye width and height
+>   terms and that reference values depend on the current Link speed;
+> * Manufacturers can provide criteria for their devices that
+>   differ from the standard ones. Usually this information falls under the
+>   NDA, so add an option to the utility that will allow the user to set
+>   necessary criteria for evaluating the quality of lanes.
+> 
+> At the same time, fix the known limitations associated with arguments
+> parsing.
+> 
+> With the new changes made, the logic responsible for arguments parsing has
+> become too large, so put it in a separate file.
+
+Thanks, applied.
+
+				Martin
 
