@@ -1,120 +1,128 @@
-Return-Path: <linux-pci+bounces-7854-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7855-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B81C8D01E1
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 15:40:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E907D8D0545
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 17:06:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DC3B1C219CA
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 13:40:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D7A2282B56
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 15:06:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885EC15F405;
-	Mon, 27 May 2024 13:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7D816DED8;
+	Mon, 27 May 2024 14:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eCgZ0cWU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BMc07xs9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2082115F3F3
-	for <linux-pci@vger.kernel.org>; Mon, 27 May 2024 13:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E5716DED5;
+	Mon, 27 May 2024 14:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716817079; cv=none; b=qSKkzqafu987iqcyvLezeonJYZtN2yOWOdXMfOETnwOrkWICxmLpfRYVWpF3fG2YIbxQDOxXYH69SgSITeG2VmAMpcuwDW4aorUDlmt4Q3Sa5/ECyu1hVbA0hzAppy/6iolVWp0qSvIWgJPQIP0pC8BVg7amvSZCUlYqkSv067A=
+	t=1716821055; cv=none; b=Yg7c/19JgtpB03dBjZsTP3wtaIhjyUd34aFw1jd0GPGQOWLkAfzdpiUkTgwvkcsDp+7f/gyay3BX6YR/DtbVf34EiwgJ3SqRuX6KiLlG3VHBq62vpQ8U7D4J/CIb/+Bj8BNIrNZ93n4fbYq3F/veQvUtjco/ykdsayy0VqTHlzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716817079; c=relaxed/simple;
-	bh=sI4D4Go0OgKRyqVQduA3nP4L7zQphhNOPs9Kzw8Cmf0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jhxGuxAv0U7pgGExHTv2wB4qj7FQwePw+37Z1X3TZvV7BbVv4wrw5oE1BJYga7EttNC5BtfdWedxAo5Y1ut0RvLrc0aaH5Pbra7AvYQ6vgVrK1CbZlPROio12wugJ4B+a0snmjf8EnJ6WCgHGYvmOfeMMK4J+WOgxk/QXlb+8GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eCgZ0cWU; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-df771b45e13so3033433276.2
-        for <linux-pci@vger.kernel.org>; Mon, 27 May 2024 06:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716817076; x=1717421876; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sI4D4Go0OgKRyqVQduA3nP4L7zQphhNOPs9Kzw8Cmf0=;
-        b=eCgZ0cWU8XvjJ+3rIdwk38GQ85ioZedXr/yh5C1PXCUy8eujLIBsVkzmEo+lI6I5Cy
-         9aVz0PgLjw27AN8C7BzX2tlR/2aQ/SvKOJIXp/oZdMPBHWAtYDPvGY9PryXGRjqGlilR
-         6dR8+zzCiiJECAVS1G6fGl90VA69XEArGBpcHxiCUkGUsUejtZIGnJ9UdTZ8RpYa3lYq
-         RLBpEPtzijIS89HWplQnqZs9P1HnOUeXr//TGnLnrikEfqO4gdrbNYJoLP/RwS36U6Dr
-         eUQs1y9hPRUIUCoRmoAWpCkce22ZPFdBeklMPj1+0fhp+KdMBNo6TVQOmOAPU5yUTNUh
-         RvmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716817076; x=1717421876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sI4D4Go0OgKRyqVQduA3nP4L7zQphhNOPs9Kzw8Cmf0=;
-        b=L+jVmccKle0ifwCTTka4W+VUngQmAHJ2yosyU6M7GM1YxjseWnD5pf311fuqLUqw6B
-         TrKJv0o+5yWq4ATrBeWGIVflhd8pAKx+/mf3xBNLCQOF4xbt252I3G9pU5z6o4+3hlK2
-         8O89dPHPuhcLSM+2Jw930fg6/ixvX13XxWAYGez8VJEhzdb3kuvQAP4R7jvS9K5qqOFl
-         Yo1fG+NqPjx+7z8HIyVeibKBj+WNCFQlKrApxidxaEI2hrdBC3URPy8ulxisEN/7Yb8W
-         Lf2AB68aNJKwNs01rKMz1QFBSR1wdFjz2fFs+lQjyOdYAcylGdmnCgBaViI2T0kdVV9X
-         XdMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMAayEO/ynTEKn2xJzoLqUg2+K3bx2/C8C81Fmjkgl3l0rpqjF1+EgWsgT9xy1qaO542oe2EW1qg3IafP5No7HGuI3yb72ai0e
-X-Gm-Message-State: AOJu0YyHLnMMhE+MWL48NyUqlSBgPoxj9eIBTPNqY22orTpGiKRAOniN
-	DdkEEf3iD3AkLU8IAugkSrBGI0i1eBVR/fuX7wnHJ+mgHpgXtaHnwDDqv2lMIBCYCs+ZfgrqSDB
-	/PbjoyUEUJ4bul595NR3A6hrKmulfe2Pd7PBxNF45Bh0nhQlvJPgJ0bTB
-X-Google-Smtp-Source: AGHT+IG3ODce9dNV390Ozs9wlqpcGCT+NP7kvAR3YSrx49G8pypddGGuh8zJs0qLVCnoqGn9N6DYCNxnN4AlbhGb3Ao=
-X-Received: by 2002:a25:d610:0:b0:de5:9d13:591b with SMTP id
- 3f1490d57ef6-df7721c660emr8663079276.32.1716817076072; Mon, 27 May 2024
- 06:37:56 -0700 (PDT)
+	s=arc-20240116; t=1716821055; c=relaxed/simple;
+	bh=N2BkBEfMjIfRh7g1dfIjn0MfLhYtzu3BShYG5yFIizg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=elpcgPIfv5DifaKLR+oFtak8ZTbIEctD+ebl7Zal+F85XHYh9EGTMvXk9YA7sr8sV3T2hVq2SBUJ3L2tqFxO8Xv1uUbna+Z2ezxMM6AaaKJlUI8CJfUoHvUEm0uph39a/yAUC1O+kHU9/CHx/4RYMuycQHC9vkOqa5sf1uUCx7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BMc07xs9; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716821054; x=1748357054;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=N2BkBEfMjIfRh7g1dfIjn0MfLhYtzu3BShYG5yFIizg=;
+  b=BMc07xs9fWBvYLj1oBlPak5DdUH5Q9KHPix8OVZDlCbXI4USga4VPUsr
+   caS0F1WSRhAIzw7/R8/Tg9nakOMbwf5JAyFQlq/490xBznFlMazHoMTUv
+   aWFWh7OdMiOIUrcAV9jqoyxfNzbyvCQ8D+7tkSl2A+jYHR6VjyNJ1QaJN
+   ZGioPMM3eG04Cbqor5JOahXem0teFvbJyt1ZrhTPHoJO/Y4VkEVO/wcw4
+   pvMmtnnbqBnuK2PBWDr7vW9kKLZIJcGEH2cpUc/nIvjZ1JyaXqRSoRDrs
+   +AdrMJtkCjw5GmKfn7CVUWhDZRTs50R6+RVyPi5jsEy1IFeg2/ZQIIJS5
+   g==;
+X-CSE-ConnectionGUID: WNaqFvGqSKqxbFgHYlUGIg==
+X-CSE-MsgGUID: RLae22qHSGWcJjojIvUOag==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13269742"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="13269742"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:13 -0700
+X-CSE-ConnectionGUID: Y71KIk33R0SQTM5KxhYC5w==
+X-CSE-MsgGUID: R+PV6+o1R+Oqcy6DJptl2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="35279780"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.246.214])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:09 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-pci@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>,
+	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [PATCH 0/2] Make ELOG log and trace consistently with GHES
+Date: Mon, 27 May 2024 16:43:39 +0200
+Message-ID: <20240527144356.246220-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com> <20240506142142.4042810-5-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240506142142.4042810-5-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 May 2024 15:37:45 +0200
-Message-ID: <CACRpkdZFfjCitNiGVe=F4Jd_M36fqdG0ixD7396xEVbvqZUdyA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] PCI: imx6: Convert to agnostic GPIO API
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Li <Frank.Li@nxp.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Yue Wang <yue.wang@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Xiaowei Song <songxiaowei@hisilicon.com>, Binghui Wang <wangbinghui@hisilicon.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 6, 2024 at 4:21=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+When Firmware First is enabled, BIOS handles errors first and then it
+makes them available to the kernel via the Common Platform Error Record
+(CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
+via one of two similar paths, either ELOG or GHES.
 
-> The of_gpio.h is going to be removed. In preparation of that convert
-> the driver to the agnostic API.
->
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Currently, ELOG and GHES show some inconsistencies in how they print to
+the kernel log as well as in how they report to userspace via trace
+events.
 
-Would maybe mention in the commit that the quirk to gpiolib
-is already in place (people are already confused by it) but no big
-deal.
+Make the two mentioned paths act similarly for what relates to logging
+and tracing.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+--- Changes for v1 ---
 
-Yours,
-Linus Walleij
+	- Drop the RFC prefix and restart from PATCH v1
+	- Drop patch 3/3 because a discussion on it has not yet been
+	  settled
+	- Drop namespacing in export of pci_print_aer while() (Dan)
+	- Don't use '#ifdef' in *.c files (Dan)
+	- Drop a reference on pdev after operation is complete (Dan)
+	- Don't log an error message if pdev is NULL (Dan)
+
+--- Changes for RFC v2 ---
+	
+	- 0/3: rework the subject line and the letter.
+        - 1/3: no changes.
+        - 2/3: trace CPER PCIe Section only if CONFIG_ACPI_APEI_PCIEAER
+          is defined; the kernel test robot reported the use of two
+          undefined symbols because the test for the config option was
+          missing; rewrite the subject line and part of commit message.
+        - 3/3: no changes.
+
+Fabio M. De Francesco (2):
+  ACPI: extlog: Trace CPER Non-standard Section Body
+  ACPI: extlog: Trace CPER PCI Express Error Section
+
+ drivers/acpi/acpi_extlog.c | 35 +++++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/aer.c     |  2 +-
+ include/linux/aer.h        |  9 ++++++---
+ 3 files changed, 42 insertions(+), 4 deletions(-)
+
+-- 
+2.45.1
+
 
