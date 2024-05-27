@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-7862-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7863-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9031D8D0812
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:20:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61F6B8D0817
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:20:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEB5C1C227F2
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:20:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A677283600
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:20:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C2C917D2;
-	Mon, 27 May 2024 16:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 856AB167277;
+	Mon, 27 May 2024 16:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UbbkYHxY"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pFkYcNiU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B4C15F30A;
-	Mon, 27 May 2024 16:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBFA16078E;
+	Mon, 27 May 2024 16:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826505; cv=none; b=cgpw1J/EYqFzZk0J3mzLu0g+aV/pgtuiIMPE/eTvWJtm1gIXJdDAgKzlvzntofusJqyXty3kUoEX5ddjPmQZzuXVVr5iR7bYS7W8XkqPVubjSVJjtAloeSs71enpDPsmpvvHT2642HPyRfBTkgPFF8IFXKGXMae2fqs/C/PDTjo=
+	t=1716826506; cv=none; b=ajiB0L4U92AFVnT35+Lzeftr1Aclcd8OwSPfutVNKG2LaRMuSIsceO/qpBPa+gFwGkeRcO24axMv8bpEZnemkmSRS+u56JKQnin7bQIpwCdIWDFNeOYphEJwYHvOPyDfRBF44drWI0q5lgP5E1Q3cqHSiuXRXzAh49XAhflr7GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826505; c=relaxed/simple;
-	bh=0M1Hns7CDOYJ2aLM9KSawz/vJcM90IBbHl4CqMegdlE=;
+	s=arc-20240116; t=1716826506; c=relaxed/simple;
+	bh=hAw7ZrH4qArosZb3h9cuJr1chXNE9U8thrKG8CX9MuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dsa9AiA6NrSyZLTYAyhddrLRg8uJigHZ6cBBrX8P+nC9ZAZNbFKRPsJNtGyiImDxuxojGaReH4V2N8yl+U/0ABOENGgbXV7oc6pcKsp+EY51eFjL/tPqzkykR6I3dV8AZWoZlNsng4O0VV7zna5ufnvRbJpRWtZHC7qLs87t/kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UbbkYHxY; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version:Content-Type; b=HhwBH+1GWkDrhiO3CxoVejoiNmmAQqk2+BectqjQ/l52808JxNwKINsr2naIRvVDQ5kStq8G3A164Z9AlZOMlPVDX7wA+xeIV9HY1XdSdP7LPE2rWHdsSTefY6sNOn9WsGmgFViiQFQzhZWDL2pUKXg6UvuFO+SMnhUzRG8ihFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pFkYcNiU; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 6E42AFF811;
-	Mon, 27 May 2024 16:14:58 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 4D9ECFF812;
+	Mon, 27 May 2024 16:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716826500;
+	t=1716826502;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W9+p1hma003opriOOEox9fT6iYMjtITIcW1ZIQ2QLNo=;
-	b=UbbkYHxYIA3ApPt5oZI7rO4HRwWoAo+RNwHf495UokGST04QM/XPmwZtNfGcvXqNkTLLfv
-	zPUvOe+3SPZsP9KT2IJxAesVe4FI9LV4C2BZTsojIVpNNUeFoesg2zWL8OJEA8+nRMAOHN
-	K+llDN/wjyKrld3B3chDtl9+p+esUWB+dB8aE9FtPOBBFiQg0um64VbuBdlxOWQtqvk3OM
-	W0JAOMp5UrAlcivoZaqFJ2Ggh8DZV8bwlkDnUzSnTShUs503r9tGo7Of+ahmFZI3fGyWJG
-	U5aa5lsr0s8+nuyELHEYKPojqVP9Am8/bPDFC0Q/FPlAZ32lf/kjwEoYKm4y8A==
+	bh=8S9HiRmD7ovcxff043VP95jHFoFGaOl6oxz7Gv5SNN4=;
+	b=pFkYcNiUq3y/4YP7LiY9gtczT6m+41iaptEO7DywyrCqHENh/tAErsMFgPSmcHqWvdKuLz
+	bJ/LNVBq5QBDDzZOhMO22/bEwf8kvqA7N3Tsx7XwRZw7J20cGs1UgugTBMYb+R0UjZTPyy
+	yAHcT6sr0v6rkTLx5CXukbDnHEWhmZJ3nWK868twACWXKwBisuQzsy8+wVSeGdQOhnKstv
+	3GetjKWZCUiQ3RoTcUeHJgHuakL/AH/O4jTb4gxlrjM8rDmBuh5BDkbAC+hyclfbXAHmbg
+	+3sXw57ZjX4sbs5wkJ1JQGPoB+FEtMtxqjO0gnHcFYOkH+4dUocmU7uc++H+Nw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
@@ -81,9 +81,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>
-Subject: [PATCH v2 01/19] mfd: syscon: Add reference counting and device managed support
-Date: Mon, 27 May 2024 18:14:28 +0200
-Message-ID: <20240527161450.326615-2-herve.codina@bootlin.com>
+Subject: [PATCH v2 02/19] reset: mchp: sparx5: Remove dependencies and allow building as a module
+Date: Mon, 27 May 2024 18:14:29 +0200
+Message-ID: <20240527161450.326615-3-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240527161450.326615-1-herve.codina@bootlin.com>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
@@ -99,289 +99,53 @@ X-GND-Sasl: herve.codina@bootlin.com
 
 From: Clément Léger <clement.leger@bootlin.com>
 
-Syscon releasing is not supported.
-Without release function, unbinding a driver that uses syscon whether
-explicitly or due to a module removal left the used syscon in a in-use
-state.
+The sparx5 reset controller depends on the SPARX5 architecture or the
+LAN966x SoC.
 
-For instance a syscon_node_to_regmap() call from a consumer retrieve a
-syscon regmap instance. Internally, syscon_node_to_regmap() can create
-syscon instance and add it to the existing syscon list. No API is
-available to release this syscon instance, remove it from the list and
-free it when it is not used anymore.
-
-Introduce reference counting in syscon in order to keep track of syscon
-usage using syscon_{get,put}() and add a device managed version of
-syscon_regmap_lookup_by_phandle(), to automatically release the syscon
-instance on the consumer removal.
+This reset controller can be used by the LAN966x PCI device and so it
+needs to be available on all architectures.
+Also the LAN966x PCI device driver can be built as a module and this
+reset controller driver has no reason to be a builtin driver in that
+case.
 
 Signed-off-by: Clément Léger <clement.leger@bootlin.com>
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/mfd/syscon.c       | 145 ++++++++++++++++++++++++++++++++++---
- include/linux/mfd/syscon.h |  18 +++++
- 2 files changed, 154 insertions(+), 9 deletions(-)
+ drivers/reset/Kconfig                  | 3 +--
+ drivers/reset/reset-microchip-sparx5.c | 2 ++
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 7d0e91164cba..86898831b842 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -34,6 +34,7 @@ struct syscon {
- 	struct regmap *regmap;
- 	struct reset_control *reset;
- 	struct list_head list;
-+	struct kref refcount;
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 7112f5932609..fb9005e2f5b5 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -124,8 +124,7 @@ config RESET_LPC18XX
+ 	  This enables the reset controller driver for NXP LPC18xx/43xx SoCs.
+ 
+ config RESET_MCHP_SPARX5
+-	bool "Microchip Sparx5 reset driver"
+-	depends on ARCH_SPARX5 || SOC_LAN966 || COMPILE_TEST
++	tristate "Microchip Sparx5 reset driver"
+ 	default y if SPARX5_SWITCH
+ 	select MFD_SYSCON
+ 	help
+diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
+index 636e85c388b0..69915c7b4941 100644
+--- a/drivers/reset/reset-microchip-sparx5.c
++++ b/drivers/reset/reset-microchip-sparx5.c
+@@ -158,6 +158,7 @@ static const struct of_device_id mchp_sparx5_reset_of_match[] = {
+ 	},
+ 	{ }
  };
++MODULE_DEVICE_TABLE(of, mchp_sparx5_reset_of_match);
  
- static const struct regmap_config syscon_regmap_config = {
-@@ -147,6 +148,8 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
+ static struct platform_driver mchp_sparx5_reset_driver = {
+ 	.probe = mchp_sparx5_reset_probe,
+@@ -180,3 +181,4 @@ postcore_initcall(mchp_sparx5_reset_init);
  
- 	syscon->regmap = regmap;
- 	syscon->np = np;
-+	of_node_get(syscon->np);
-+	kref_init(&syscon->refcount);
- 
- 	spin_lock(&syscon_list_slock);
- 	list_add_tail(&syscon->list, &syscon_list);
-@@ -168,7 +171,30 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_res)
- 	return ERR_PTR(ret);
- }
- 
--static struct regmap *device_node_get_regmap(struct device_node *np,
-+static void syscon_free(struct kref *kref)
-+{
-+	struct syscon *syscon = container_of(kref, struct syscon, refcount);
-+
-+	spin_lock(&syscon_list_slock);
-+	list_del(&syscon->list);
-+	spin_unlock(&syscon_list_slock);
-+
-+	regmap_exit(syscon->regmap);
-+	of_node_put(syscon->np);
-+	kfree(syscon);
-+}
-+
-+static void syscon_get(struct syscon *syscon)
-+{
-+	kref_get(&syscon->refcount);
-+}
-+
-+static void syscon_put(struct syscon *syscon)
-+{
-+	kref_put(&syscon->refcount, syscon_free);
-+}
-+
-+static struct syscon *device_node_get_syscon(struct device_node *np,
- 					     bool check_res)
- {
- 	struct syscon *entry, *syscon = NULL;
-@@ -183,9 +209,23 @@ static struct regmap *device_node_get_regmap(struct device_node *np,
- 
- 	spin_unlock(&syscon_list_slock);
- 
--	if (!syscon)
-+	if (!syscon) {
- 		syscon = of_syscon_register(np, check_res);
-+		if (IS_ERR(syscon))
-+			return ERR_CAST(syscon);
-+	} else {
-+		syscon_get(syscon);
-+	}
-+
-+	return syscon;
-+}
- 
-+static struct regmap *device_node_get_regmap(struct device_node *np,
-+					     bool check_res)
-+{
-+	struct syscon *syscon;
-+
-+	syscon = device_node_get_syscon(np, check_res);
- 	if (IS_ERR(syscon))
- 		return ERR_CAST(syscon);
- 
-@@ -198,12 +238,23 @@ struct regmap *device_node_to_regmap(struct device_node *np)
- }
- EXPORT_SYMBOL_GPL(device_node_to_regmap);
- 
--struct regmap *syscon_node_to_regmap(struct device_node *np)
-+static struct syscon *syscon_node_to_syscon(struct device_node *np)
- {
- 	if (!of_device_is_compatible(np, "syscon"))
- 		return ERR_PTR(-EINVAL);
- 
--	return device_node_get_regmap(np, true);
-+	return device_node_get_syscon(np, true);
-+}
-+
-+struct regmap *syscon_node_to_regmap(struct device_node *np)
-+{
-+	struct syscon *syscon;
-+
-+	syscon = syscon_node_to_syscon(np);
-+	if (IS_ERR(syscon))
-+		return ERR_CAST(syscon);
-+
-+	return syscon->regmap;
- }
- EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
- 
-@@ -223,11 +274,11 @@ struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
- }
- EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_compatible);
- 
--struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
--					const char *property)
-+static struct syscon *syscon_lookup_by_phandle(struct device_node *np,
-+					       const char *property)
- {
- 	struct device_node *syscon_np;
--	struct regmap *regmap;
-+	struct syscon *syscon;
- 
- 	if (property)
- 		syscon_np = of_parse_phandle(np, property, 0);
-@@ -237,12 +288,24 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- 	if (!syscon_np)
- 		return ERR_PTR(-ENODEV);
- 
--	regmap = syscon_node_to_regmap(syscon_np);
-+	syscon = syscon_node_to_syscon(syscon_np);
- 
- 	if (property)
- 		of_node_put(syscon_np);
- 
--	return regmap;
-+	return syscon;
-+}
-+
-+struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
-+					       const char *property)
-+{
-+	struct syscon *syscon;
-+
-+	syscon = syscon_lookup_by_phandle(np, property);
-+	if (IS_ERR(syscon))
-+		return ERR_CAST(syscon);
-+
-+	return syscon->regmap;
- }
- EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
- 
-@@ -293,6 +356,70 @@ struct regmap *syscon_regmap_lookup_by_phandle_optional(struct device_node *np,
- }
- EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_optional);
- 
-+static struct syscon *syscon_from_regmap(struct regmap *regmap)
-+{
-+	struct syscon *entry, *syscon = NULL;
-+
-+	spin_lock(&syscon_list_slock);
-+
-+	list_for_each_entry(entry, &syscon_list, list)
-+		if (entry->regmap == regmap) {
-+			syscon = entry;
-+			break;
-+		}
-+
-+	spin_unlock(&syscon_list_slock);
-+
-+	return syscon;
-+}
-+
-+void syscon_put_regmap(struct regmap *regmap)
-+{
-+	struct syscon *syscon;
-+
-+	syscon = syscon_from_regmap(regmap);
-+	if (!syscon)
-+		return;
-+
-+	syscon_put(syscon);
-+}
-+EXPORT_SYMBOL_GPL(syscon_put_regmap);
-+
-+static void devm_syscon_release(struct device *dev, void *res)
-+{
-+	syscon_put(*(struct syscon **)res);
-+}
-+
-+static struct regmap *__devm_syscon_get(struct device *dev,
-+					struct syscon *syscon)
-+{
-+	struct syscon **ptr;
-+
-+	if (IS_ERR(syscon))
-+		return ERR_CAST(syscon);
-+
-+	ptr = devres_alloc(devm_syscon_release, sizeof(struct syscon *), GFP_KERNEL);
-+	if (!ptr) {
-+		syscon_put(syscon);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	*ptr = syscon;
-+	devres_add(dev, ptr);
-+
-+	return syscon->regmap;
-+}
-+
-+struct regmap *devm_syscon_regmap_lookup_by_phandle(struct device *dev,
-+						    struct device_node *np,
-+						    const char *property)
-+{
-+	struct syscon *syscon = syscon_lookup_by_phandle(np, property);
-+
-+	return __devm_syscon_get(dev, syscon);
-+}
-+EXPORT_SYMBOL_GPL(devm_syscon_regmap_lookup_by_phandle);
-+
- static int syscon_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-index c315903f6dab..f742d865a37a 100644
---- a/include/linux/mfd/syscon.h
-+++ b/include/linux/mfd/syscon.h
-@@ -15,6 +15,7 @@
- #include <linux/errno.h>
- 
- struct device_node;
-+struct device;
- 
- #ifdef CONFIG_MFD_SYSCON
- struct regmap *device_node_to_regmap(struct device_node *np);
-@@ -28,6 +29,11 @@ struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
- 						    unsigned int *out_args);
- struct regmap *syscon_regmap_lookup_by_phandle_optional(struct device_node *np,
- 							const char *property);
-+void syscon_put_regmap(struct regmap *regmap);
-+
-+struct regmap *devm_syscon_regmap_lookup_by_phandle(struct device *dev,
-+						    struct device_node *np,
-+						    const char *property);
- #else
- static inline struct regmap *device_node_to_regmap(struct device_node *np)
- {
-@@ -67,6 +73,18 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle_optional(
- 	return NULL;
- }
- 
-+static inline void syscon_put_regmap(struct regmap *regmap)
-+{
-+}
-+
-+static inline
-+struct regmap *devm_syscon_regmap_lookup_by_phandle(struct device *dev,
-+						    struct device_node *np,
-+						    const char *property)
-+{
-+	return NULL;
-+}
-+
- #endif
- 
- #endif /* __LINUX_MFD_SYSCON_H__ */
+ MODULE_DESCRIPTION("Microchip Sparx5 switch reset driver");
+ MODULE_AUTHOR("Steen Hegelund <steen.hegelund@microchip.com>");
++MODULE_LICENSE("GPL");
 -- 
 2.45.0
 
