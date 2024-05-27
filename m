@@ -1,538 +1,151 @@
-Return-Path: <linux-pci+bounces-7842-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7843-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48C488CFD2E
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 11:39:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E6F98CFD5A
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 11:43:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C4231C203E4
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 09:39:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1881A284562
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 09:43:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EB5D13B5B5;
-	Mon, 27 May 2024 09:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C2B13AA4E;
+	Mon, 27 May 2024 09:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lN3KUduL"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HhAdJh5E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7FE13AD23;
-	Mon, 27 May 2024 09:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D00213A41F;
+	Mon, 27 May 2024 09:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716802701; cv=none; b=VMBEiKg55sQckQTDAxoXIb0DnSjj7etLEfSgDJ2xyNNQYSmZLdWa4sc4ty3b3qV9JgeyZ+cXSZQE+VGSjWcRQ9yOQsJXmVSn6EuSHVrArKLgjraw1L8ulHd9R3pAMqeK6dJqD6Cd2HFf2fkCQ2JGjgJ2R3o/8OdPq2fZLV5E0mU=
+	t=1716803017; cv=none; b=VFbTy/zfc8SLASX81TMz8nwoJvsTEwklnaETLki2C/GaVGD1aMScdTcjGbPNnV+tDOVzFubkogtVIJxdwjkRzgsJopSQixdzC2wsdv34alwjBd8zagv34v9gqFuzZIEsk8X0f7kURprTt2zaAGoL8j5BxtG8SKx+FrEqBP6ybMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716802701; c=relaxed/simple;
-	bh=tviduVlcaxrYLgexyKWdtD9PZs+smQS6ds+rfZf2XZk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bai+T+d3Wl/bLZu6cZvcZMnquLlXrc/PXLTFe8kz3kHOHEHLRyDyq+nNh2r+xc+BRpxhWL7osB/AKsWZv1sH/oVzSw0Qj2JAPMzcNB7F7DxAaajEQ9uQwK/ROR6CjU1GXdlxnheuxrdMpzv4ybLqsITRnVvBmZvy3PUbHIgiO4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=lN3KUduL; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1716802699; x=1748338699;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tviduVlcaxrYLgexyKWdtD9PZs+smQS6ds+rfZf2XZk=;
-  b=lN3KUduL3rW/f3fWV+Z9IS4y1TJ/HHh1LS7DUUsDjDRhxXxC6wSPf4l3
-   xcAuIZkbEh1q1a3NZNM4KY73nOcdSDiiH0w6xh+FSktLNCQ/qCaJXvOOL
-   qr98fazVLEqlFJJMzncIlGfSfGK2h+1u3AT0tI1pLqyOi/mezSWW5XwIR
-   aYVbwgQONnAo+ouR+xGxKpSz5/+5XGFXRmgLO3y/ip6xg57hvpFVoCPGc
-   SzUSTsSABcNO87tFYeG+40745skobVoOA8cfZyVrYU4YE9W+p1IADl7Az
-   zAKijoMrvMMw7tLbUOjr1PJQmqaz7cSI/NtjOLrr8QQ1xXxLQp+8ch5qf
-   Q==;
-X-CSE-ConnectionGUID: 0MQx8BaLTiaigGjXkGNiwA==
-X-CSE-MsgGUID: oEif23RBRA2eHPTYQ4v6BA==
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="26379611"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 May 2024 02:38:18 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 27 May 2024 02:37:59 -0700
-Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Mon, 27 May 2024 02:37:57 -0700
-From: Conor Dooley <conor.dooley@microchip.com>
-To:
-CC: <conor@kernel.org>, <conor.dooley@microchip.com>, Daire McNamara
-	<daire.mcnamara@microchip.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v1 2/2] PCI: microchip: rework reg region handing
-Date: Mon, 27 May 2024 10:37:17 +0100
-Message-ID: <20240527-flint-whacky-4fb21c38476b@wendy>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240527-slather-backfire-db4605ae7cd7@wendy>
-References: <20240527-slather-backfire-db4605ae7cd7@wendy>
+	s=arc-20240116; t=1716803017; c=relaxed/simple;
+	bh=fR/7T0+UMrJxQIZjcCXXJxLYwy8xIHBULjjM6TiMdVc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=j75TQJ9QiUxHvflHEEolvSx8sUztu3X2HTWSBrtyga0C+WyGDmBdTCf+5Jez3y8yfwj7O/1JoAwfqT1wafaf9HrkBoTqjt8vW68RqbdKBt2akFXLbHdmyFh6WegFLVrfRPQmlDLMk152xu06e9EmRBNlf51TLo7pUeNxipvU4sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HhAdJh5E; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1716803011; h=Content-Type:Mime-Version:Subject:From:Date:Message-Id:To;
+	bh=7W1h1ik6qEQ2iCv0XMWvvUeCypjHJwVIOEdS4xSBGuU=;
+	b=HhAdJh5E1WJm1KUgUaK8y699Wc1SyVdfkxFG3428pt0r0b8KjQGeRgJ+pwzTaLpdZihdhrDDSDjmDcQbW2wd4IhlQJ6xNPMX7rvHFCHoFOAT5OxsF/ylpAu5mAbwyCDHGxYcqZpF/dto3R6sY355jyZl0xQc03fr87ZiaE40KbQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W7J2E4N_1716803009;
+Received: from smtpclient.apple(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W7J2E4N_1716803009)
+          by smtp.aliyun-inc.com;
+          Mon, 27 May 2024 17:43:31 +0800
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=17087; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=tviduVlcaxrYLgexyKWdtD9PZs+smQS6ds+rfZf2XZk=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGkhId6/pi0/cTuBZ83V6ARP7VUuzsL2Cp83zE3nWLAhc+3Z BxIBHaUsDGIcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZjI9qeMDFv26iQ/5UxdbCp15H9i3d 6djT9WKyn8TLs102nW+Uju6jpGhk0zONpPvHlqMWt+8c6JM46mfzv+X0S1PWHTZHEb75c3BVgB
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH] PCI: pciehp: Use appropriate conditions to check the
+ hotplug controller status
+From: yaoma <yaoma@linux.alibaba.com>
+In-Reply-To: <ZlRJaEEGEMsyxXqm@wunner.de>
+Date: Mon, 27 May 2024 17:43:29 +0800
+Cc: yaoma <yaoma@linux.alibaba.com>,
+ bhelgaas@google.com,
+ weirongguang@kylinos.cn,
+ kanie@linux.alibaba.com,
+ linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D917498A-BF19-42EF-8E15-CDB25B96254D@linux.alibaba.com>
+References: <20240524063023.77148-1-yaoma@linux.alibaba.com>
+ <ZlBHjbmjjSEnXCMp@wunner.de>
+ <7855600C-4BB6-417B-8F91-24F4F7E0820E@linux.alibaba.com>
+ <ZlRJaEEGEMsyxXqm@wunner.de>
+To: Lukas Wunner <lukas@wunner.de>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
 
-The PCI host controller on PolarFire SoC has multiple "instances", each
-with their own bridge and ctrl address spaces. The original binding has
-an "apb" register region, and it is expected to be set to the base
-address of the host controllers register space. Defines in the driver
-were used to compute the addresses of the bridge and ctrl address ranges
-corresponding to instance1. Some customers want to use instance0 however
-and that requires changing the defines in the driver, which is clearly
-not a portable solution.
+Hi,
 
-The binding has been changed from a single register region to a pair,
-corresponding to the bridge and ctrl regions respectively, so modify the
-driver to read these regions directly from the devicetree rather than
-compute them from the base address of the abp region.
+> 2024=E5=B9=B45=E6=9C=8827=E6=97=A5 16:50=EF=BC=8CLukas Wunner =
+<lukas@wunner.de> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On Sun, May 26, 2024 at 10:45:36PM +0800, yaoma wrote:
+>>> 2024 5 24 15:53 Lukas Wunner <lukas@wunner.de>
+>>> On Fri, May 24, 2024 at 02:30:23PM +0800, Bitao Hu wrote:
+>>>> The values of 'present' and 'link_active' have similar meanings:
+>>>> the value is %1 if the status is ready, and %0 if it is not. If the
+>>>> hotplug controller itself is not available, the value should be
+>>>> %-ENODEV. However, both %1 and %-ENODEV are considered true, which
+>>>> obviously does not meet expectations. 'Slot(xx): Card present' and
+>>>> 'Slot(xx): Link Up' should only be output when the value is %1.
+>>> [...]
+>>>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> @@ -276,10 +276,10 @@ void =
+pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 =
+events)
+>>>> 	case OFF_STATE:
+>>>> 		ctrl->state =3D POWERON_STATE;
+>>>> 		mutex_unlock(&ctrl->state_lock);
+>>>> -		if (present)
+>>>> +		if (present > 0)
+>>>> 			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>>>> 				  slot_name(ctrl));
+>>>> -		if (link_active)
+>>>> +		if (link_active > 0)
+>>>> 			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>>>> 				  slot_name(ctrl));
+>>>> 		ctrl->request_result =3D pciehp_enable_slot(ctrl);
+>>>=20
+>>> We already handle the "<=3D 0" case immediately above this code =
+excerpt:
+>>>=20
+>>> 	if (present <=3D 0 && link_active <=3D 0) {
+>>> 	...
+>>> 	}
+>>=20
+>> I'm not sure if the following scenarios would occur in actual =
+production
+>> environment, but from the code level, there is the possibility of
+>> "present <=3D 0 && link_active > 0" or "present > 0 && link_active <=3D=
+ 0".
+>> In these cases, the "<=3D 0" conditions will not be properly handled,
+>> and "ctrl_info" will output incorrect prompt messages.
+>=20
+> I see, that makes sense.
+>=20
+> "present" and "link_active" can be -ENODEV if reading the config space
+> of the hotplug port failed.  That's typically the case if the hotplug
+> port itself was hot-removed, which happens all the time with
+> Thunderbolt/USB4.
+>=20
+> E.g. pciehp_card_present() may return 1 and pciehp_check_link_active()
+> may return -ENODEV because the hotplug port was hot-removed in-between
+> the two function calls.  In that case we'll emit both "Card present"
+> *and* "Link Up".  The latter is uncalled for and is supressed by your
+> patch.
+>=20
+> So your code change is
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>=20
+> ...but it would be good if you could respin the patch and explain the
+> rationale of the code change in the commit message more clearly.
+> Basically summarize what you and I have explained above.
+>=20
+> Also, the percent sign % in front of 0, 1, -ENODEV is unnecessary in
+> commit messages. It only has special meaning in kernel-doc.
+>=20
 
-To maintain backwards compatibility with the existing binding, the
-driver retains code to handle the "abp" reg and computes the base
-address of the bridge and ctrl regions using the defines if it is
-present. reg-names has always been a required property, so this is
-safe to do.
+Thanks for your analysis. I will make the the rationale of the code =
+change
+more clearly in next patch.
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- drivers/pci/controller/pcie-microchip-host.c | 159 +++++++++----------
- 1 file changed, 77 insertions(+), 82 deletions(-)
+Best Regards,
 
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 137fb8570ba26..3767be3096f07 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -27,9 +27,6 @@
- #define MC_PCIE1_BRIDGE_ADDR			0x00008000u
- #define MC_PCIE1_CTRL_ADDR			0x0000a000u
- 
--#define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
--#define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
--
- /* PCIe Bridge Phy Regs */
- #define PCIE_PCI_IRQ_DW0			0xa8
- #define  MSIX_CAP_MASK				BIT(31)
-@@ -207,7 +204,6 @@
- 	[EVENT_LOCAL_ ## x] = { __stringify(x), s }
- 
- #define PCIE_EVENT(x) \
--	.base = MC_PCIE_CTRL_ADDR, \
- 	.offset = PCIE_EVENT_INT, \
- 	.mask_offset = PCIE_EVENT_INT, \
- 	.mask_high = 1, \
-@@ -215,7 +211,6 @@
- 	.enb_mask = PCIE_EVENT_INT_ENB_MASK
- 
- #define SEC_EVENT(x) \
--	.base = MC_PCIE_CTRL_ADDR, \
- 	.offset = SEC_ERROR_INT, \
- 	.mask_offset = SEC_ERROR_INT_MASK, \
- 	.mask = SEC_ERROR_INT_ ## x ## _INT, \
-@@ -223,7 +218,6 @@
- 	.enb_mask = 0
- 
- #define DED_EVENT(x) \
--	.base = MC_PCIE_CTRL_ADDR, \
- 	.offset = DED_ERROR_INT, \
- 	.mask_offset = DED_ERROR_INT_MASK, \
- 	.mask_high = 1, \
-@@ -231,7 +225,6 @@
- 	.enb_mask = 0
- 
- #define LOCAL_EVENT(x) \
--	.base = MC_PCIE_BRIDGE_ADDR, \
- 	.offset = ISTATUS_LOCAL, \
- 	.mask_offset = IMASK_LOCAL, \
- 	.mask_high = 0, \
-@@ -265,7 +258,8 @@ struct mc_msi {
- };
- 
- struct mc_pcie {
--	void __iomem *axi_base_addr;
-+	void __iomem *bridge_base_addr;
-+	void __iomem *ctrl_base_addr;
- 	struct device *dev;
- 	struct irq_domain *intx_domain;
- 	struct irq_domain *event_domain;
-@@ -344,7 +338,6 @@ static struct event_map local_status_to_event[] = {
- };
- 
- static struct {
--	u32 base;
- 	u32 offset;
- 	u32 mask;
- 	u32 shift;
-@@ -415,18 +408,17 @@ static void mc_handle_msi(struct irq_desc *desc)
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct device *dev = port->dev;
- 	struct mc_msi *msi = &port->msi;
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	unsigned long status;
- 	u32 bit;
- 	int ret;
- 
- 	chained_irq_enter(chip, desc);
- 
--	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
-+	status = readl_relaxed(port->bridge_base_addr + ISTATUS_LOCAL);
- 	if (status & PM_MSI_INT_MSI_MASK) {
--		writel_relaxed(status & PM_MSI_INT_MSI_MASK, bridge_base_addr + ISTATUS_LOCAL);
--		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
-+		writel_relaxed(status & PM_MSI_INT_MSI_MASK,
-+			       port->bridge_base_addr + ISTATUS_LOCAL);
-+		status = readl_relaxed(port->bridge_base_addr + ISTATUS_MSI);
- 		for_each_set_bit(bit, &status, msi->num_vectors) {
- 			ret = generic_handle_domain_irq(msi->dev_domain, bit);
- 			if (ret)
-@@ -441,11 +433,9 @@ static void mc_handle_msi(struct irq_desc *desc)
- static void mc_msi_bottom_irq_ack(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	u32 bitpos = data->hwirq;
- 
--	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
-+	writel_relaxed(BIT(bitpos), port->bridge_base_addr + ISTATUS_MSI);
- }
- 
- static void mc_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-@@ -564,15 +554,13 @@ static void mc_handle_intx(struct irq_desc *desc)
- 	struct mc_pcie *port = irq_desc_get_handler_data(desc);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct device *dev = port->dev;
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	unsigned long status;
- 	u32 bit;
- 	int ret;
- 
- 	chained_irq_enter(chip, desc);
- 
--	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
-+	status = readl_relaxed(port->bridge_base_addr + ISTATUS_LOCAL);
- 	if (status & PM_MSI_INT_INTX_MASK) {
- 		status &= PM_MSI_INT_INTX_MASK;
- 		status >>= PM_MSI_INT_INTX_SHIFT;
-@@ -590,42 +578,36 @@ static void mc_handle_intx(struct irq_desc *desc)
- static void mc_ack_intx_irq(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
- 
--	writel_relaxed(mask, bridge_base_addr + ISTATUS_LOCAL);
-+	writel_relaxed(mask, port->bridge_base_addr + ISTATUS_LOCAL);
- }
- 
- static void mc_mask_intx_irq(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	unsigned long flags;
- 	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
- 	u32 val;
- 
- 	raw_spin_lock_irqsave(&port->lock, flags);
--	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
-+	val = readl_relaxed(port->bridge_base_addr + IMASK_LOCAL);
- 	val &= ~mask;
--	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
-+	writel_relaxed(val, port->bridge_base_addr + IMASK_LOCAL);
- 	raw_spin_unlock_irqrestore(&port->lock, flags);
- }
- 
- static void mc_unmask_intx_irq(struct irq_data *data)
- {
- 	struct mc_pcie *port = irq_data_get_irq_chip_data(data);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	unsigned long flags;
- 	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
- 	u32 val;
- 
- 	raw_spin_lock_irqsave(&port->lock, flags);
--	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
-+	val = readl_relaxed(port->bridge_base_addr + IMASK_LOCAL);
- 	val |= mask;
--	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
-+	writel_relaxed(val, port->bridge_base_addr + IMASK_LOCAL);
- 	raw_spin_unlock_irqrestore(&port->lock, flags);
- }
- 
-@@ -656,8 +638,7 @@ static inline u32 reg_to_event(u32 reg, struct event_map field)
- 
- static u32 pcie_events(struct mc_pcie *port)
- {
--	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
--	u32 reg = readl_relaxed(ctrl_base_addr + PCIE_EVENT_INT);
-+	u32 reg = readl_relaxed(port->ctrl_base_addr + PCIE_EVENT_INT);
- 	u32 val = 0;
- 	int i;
- 
-@@ -669,8 +650,7 @@ static u32 pcie_events(struct mc_pcie *port)
- 
- static u32 sec_errors(struct mc_pcie *port)
- {
--	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
--	u32 reg = readl_relaxed(ctrl_base_addr + SEC_ERROR_INT);
-+	u32 reg = readl_relaxed(port->ctrl_base_addr + SEC_ERROR_INT);
- 	u32 val = 0;
- 	int i;
- 
-@@ -682,8 +662,7 @@ static u32 sec_errors(struct mc_pcie *port)
- 
- static u32 ded_errors(struct mc_pcie *port)
- {
--	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
--	u32 reg = readl_relaxed(ctrl_base_addr + DED_ERROR_INT);
-+	u32 reg = readl_relaxed(port->ctrl_base_addr + DED_ERROR_INT);
- 	u32 val = 0;
- 	int i;
- 
-@@ -695,8 +674,7 @@ static u32 ded_errors(struct mc_pcie *port)
- 
- static u32 local_events(struct mc_pcie *port)
- {
--	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
--	u32 reg = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
-+	u32 reg = readl_relaxed(port->bridge_base_addr + ISTATUS_LOCAL);
- 	u32 val = 0;
- 	int i;
- 
-@@ -758,8 +736,12 @@ static void mc_ack_event_irq(struct irq_data *data)
- 	void __iomem *addr;
- 	u32 mask;
- 
--	addr = port->axi_base_addr + event_descs[event].base +
--		event_descs[event].offset;
-+	if (event_descs[event].offset == ISTATUS_LOCAL)
-+		addr = port->bridge_base_addr;
-+	else
-+		addr = port->ctrl_base_addr;
-+
-+	addr += event_descs[event].offset;
- 	mask = event_descs[event].mask;
- 	mask |= event_descs[event].enb_mask;
- 
-@@ -774,8 +756,12 @@ static void mc_mask_event_irq(struct irq_data *data)
- 	u32 mask;
- 	u32 val;
- 
--	addr = port->axi_base_addr + event_descs[event].base +
--		event_descs[event].mask_offset;
-+	if (event_descs[event].offset == ISTATUS_LOCAL)
-+		addr = port->bridge_base_addr;
-+	else
-+		addr = port->ctrl_base_addr;
-+
-+	addr += event_descs[event].mask_offset;
- 	mask = event_descs[event].mask;
- 	if (event_descs[event].enb_mask) {
- 		mask <<= PCIE_EVENT_INT_ENB_SHIFT;
-@@ -804,8 +790,12 @@ static void mc_unmask_event_irq(struct irq_data *data)
- 	u32 mask;
- 	u32 val;
- 
--	addr = port->axi_base_addr + event_descs[event].base +
--		event_descs[event].mask_offset;
-+	if (event_descs[event].offset == ISTATUS_LOCAL)
-+		addr = port->bridge_base_addr;
-+	else
-+		addr = port->ctrl_base_addr;
-+
-+	addr += event_descs[event].mask_offset;
- 	mask = event_descs[event].mask;
- 
- 	if (event_descs[event].enb_mask)
-@@ -972,8 +962,6 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- static int mc_pcie_setup_windows(struct platform_device *pdev,
- 				 struct mc_pcie *port)
- {
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
- 	struct resource_entry *entry;
- 	u64 pci_addr;
-@@ -982,7 +970,7 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
- 	resource_list_for_each_entry(entry, &bridge->windows) {
- 		if (resource_type(entry->res) == IORESOURCE_MEM) {
- 			pci_addr = entry->res->start - entry->offset;
--			mc_pcie_setup_window(bridge_base_addr, index,
-+			mc_pcie_setup_window(port->bridge_base_addr, index,
- 					     entry->res->start, pci_addr,
- 					     resource_size(entry->res));
- 			index++;
-@@ -994,26 +982,20 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
- 
- static inline void mc_clear_secs(struct mc_pcie *port)
- {
--	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
--
--	writel_relaxed(SEC_ERROR_INT_ALL_RAM_SEC_ERR_INT, ctrl_base_addr +
-+	writel_relaxed(SEC_ERROR_INT_ALL_RAM_SEC_ERR_INT, port->ctrl_base_addr +
- 		       SEC_ERROR_INT);
--	writel_relaxed(0, ctrl_base_addr + SEC_ERROR_EVENT_CNT);
-+	writel_relaxed(0, port->ctrl_base_addr + SEC_ERROR_EVENT_CNT);
- }
- 
- static inline void mc_clear_deds(struct mc_pcie *port)
- {
--	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
--
--	writel_relaxed(DED_ERROR_INT_ALL_RAM_DED_ERR_INT, ctrl_base_addr +
-+	writel_relaxed(DED_ERROR_INT_ALL_RAM_DED_ERR_INT, port->ctrl_base_addr +
- 		       DED_ERROR_INT);
--	writel_relaxed(0, ctrl_base_addr + DED_ERROR_EVENT_CNT);
-+	writel_relaxed(0, port->ctrl_base_addr + DED_ERROR_EVENT_CNT);
- }
- 
- static void mc_disable_interrupts(struct mc_pcie *port)
- {
--	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
--	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
- 	u32 val;
- 
- 	/* Ensure ECC bypass is enabled */
-@@ -1021,22 +1003,22 @@ static void mc_disable_interrupts(struct mc_pcie *port)
- 	      ECC_CONTROL_RX_RAM_ECC_BYPASS |
- 	      ECC_CONTROL_PCIE2AXI_RAM_ECC_BYPASS |
- 	      ECC_CONTROL_AXI2PCIE_RAM_ECC_BYPASS;
--	writel_relaxed(val, ctrl_base_addr + ECC_CONTROL);
-+	writel_relaxed(val, port->ctrl_base_addr + ECC_CONTROL);
- 
- 	/* Disable SEC errors and clear any outstanding */
--	writel_relaxed(SEC_ERROR_INT_ALL_RAM_SEC_ERR_INT, ctrl_base_addr +
-+	writel_relaxed(SEC_ERROR_INT_ALL_RAM_SEC_ERR_INT, port->ctrl_base_addr +
- 		       SEC_ERROR_INT_MASK);
- 	mc_clear_secs(port);
- 
- 	/* Disable DED errors and clear any outstanding */
--	writel_relaxed(DED_ERROR_INT_ALL_RAM_DED_ERR_INT, ctrl_base_addr +
-+	writel_relaxed(DED_ERROR_INT_ALL_RAM_DED_ERR_INT, port->ctrl_base_addr +
- 		       DED_ERROR_INT_MASK);
- 	mc_clear_deds(port);
- 
- 	/* Disable local interrupts and clear any outstanding */
--	writel_relaxed(0, bridge_base_addr + IMASK_LOCAL);
--	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_LOCAL);
--	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_MSI);
-+	writel_relaxed(0, port->bridge_base_addr + IMASK_LOCAL);
-+	writel_relaxed(GENMASK(31, 0), port->bridge_base_addr + ISTATUS_LOCAL);
-+	writel_relaxed(GENMASK(31, 0), port->bridge_base_addr + ISTATUS_MSI);
- 
- 	/* Disable PCIe events and clear any outstanding */
- 	val = PCIE_EVENT_INT_L2_EXIT_INT |
-@@ -1045,11 +1027,11 @@ static void mc_disable_interrupts(struct mc_pcie *port)
- 	      PCIE_EVENT_INT_L2_EXIT_INT_MASK |
- 	      PCIE_EVENT_INT_HOTRST_EXIT_INT_MASK |
- 	      PCIE_EVENT_INT_DLUP_EXIT_INT_MASK;
--	writel_relaxed(val, ctrl_base_addr + PCIE_EVENT_INT);
-+	writel_relaxed(val, port->ctrl_base_addr + PCIE_EVENT_INT);
- 
- 	/* Disable host interrupts and clear any outstanding */
--	writel_relaxed(0, bridge_base_addr + IMASK_HOST);
--	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_HOST);
-+	writel_relaxed(0, port->bridge_base_addr + IMASK_HOST);
-+	writel_relaxed(GENMASK(31, 0), port->bridge_base_addr + ISTATUS_HOST);
- }
- 
- static int mc_init_interrupts(struct platform_device *pdev, struct mc_pcie *port)
-@@ -1112,14 +1094,11 @@ static int mc_platform_init(struct pci_config_window *cfg)
- {
- 	struct device *dev = cfg->parent;
- 	struct platform_device *pdev = to_platform_device(dev);
--	void __iomem *bridge_base_addr =
--		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	int ret;
- 
- 	/* Configure address translation table 0 for PCIe config space */
--	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
--			     cfg->res.start,
--			     resource_size(&cfg->res));
-+	mc_pcie_setup_window(port->bridge_base_addr, 0, cfg->res.start,
-+			     cfg->res.start, resource_size(&cfg->res));
- 
- 	/* Need some fixups in config space */
- 	mc_pcie_enable_msi(port, cfg->win);
-@@ -1140,7 +1119,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
- static int mc_host_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	void __iomem *bridge_base_addr;
-+	void __iomem *axi_base_addr;
- 	int ret;
- 	u32 val;
- 
-@@ -1150,28 +1129,44 @@ static int mc_host_probe(struct platform_device *pdev)
- 
- 	port->dev = dev;
- 
--	port->axi_base_addr = devm_platform_ioremap_resource(pdev, 1);
--	if (IS_ERR(port->axi_base_addr))
--		return PTR_ERR(port->axi_base_addr);
-+	/*
-+	 * The original, incorrect, binding that lumped the control and
-+	 * bridge addresses together still needs to be handled by the driver.
-+	 */
-+	axi_base_addr = devm_platform_ioremap_resource_byname(pdev, "apb");
-+	if (!IS_ERR(axi_base_addr)) {
-+		port->bridge_base_addr = axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
-+		port->ctrl_base_addr = axi_base_addr + MC_PCIE1_CTRL_ADDR;
-+		goto addrs_set;
-+	}
- 
-+	port->bridge_base_addr = devm_platform_ioremap_resource_byname(pdev, "bridge");
-+	if (IS_ERR(port->bridge_base_addr))
-+		return dev_err_probe(dev, PTR_ERR(port->bridge_base_addr),
-+				     "legacy apb register and bridge region missing");
-+
-+	port->ctrl_base_addr = devm_platform_ioremap_resource_byname(pdev, "ctrl");
-+	if (IS_ERR(port->ctrl_base_addr))
-+		return dev_err_probe(dev, PTR_ERR(port->ctrl_base_addr),
-+				     "legacy apb register and ctrl region missing");
-+
-+addrs_set:
- 	mc_disable_interrupts(port);
- 
--	bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
--
- 	/* Allow enabling MSI by disabling MSI-X */
--	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
-+	val = readl(port->bridge_base_addr + PCIE_PCI_IRQ_DW0);
- 	val &= ~MSIX_CAP_MASK;
--	writel(val, bridge_base_addr + PCIE_PCI_IRQ_DW0);
-+	writel(val, port->bridge_base_addr + PCIE_PCI_IRQ_DW0);
- 
- 	/* Pick num vectors from bitfile programmed onto FPGA fabric */
--	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
-+	val = readl(port->bridge_base_addr + PCIE_PCI_IRQ_DW0);
- 	val &= NUM_MSI_MSGS_MASK;
- 	val >>= NUM_MSI_MSGS_SHIFT;
- 
- 	port->msi.num_vectors = 1 << val;
- 
- 	/* Pick vector address from design */
--	port->msi.vector_phy = readl_relaxed(bridge_base_addr + IMSI_ADDR);
-+	port->msi.vector_phy = readl_relaxed(port->bridge_base_addr + IMSI_ADDR);
- 
- 	ret = mc_pcie_init_clks(dev);
- 	if (ret) {
--- 
-2.43.2
+	Bitao Hu
 
 
