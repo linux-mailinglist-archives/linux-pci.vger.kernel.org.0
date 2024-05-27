@@ -1,81 +1,63 @@
-Return-Path: <linux-pci+bounces-7857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CD9B8D05AD
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 17:15:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C12988D060B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 17:25:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 43A19B2DF70
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 15:06:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C89B41C20834
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 15:25:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC8F17B508;
-	Mon, 27 May 2024 14:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D33C17E8E8;
+	Mon, 27 May 2024 15:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpmKBUOR"
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="LnAdn2Vg";
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="auVf7NRp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CCC17BB0A;
-	Mon, 27 May 2024 14:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679D61EB3E
+	for <linux-pci@vger.kernel.org>; Mon, 27 May 2024 15:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716821063; cv=none; b=qBKJOW4JysZN3YSteQZ7MPztKly3wzL6EVfTR6mUsVV4WFJuTkgB+H1wP6NBNimP/2q7qrBYKHj9K4+oLZEi2YoGPRLGxT2he/PlsBM47/5Inrt0Edo0m/DxL1xALrgnU3x8Pmc+L0zFocNto02yoGrtwa4uW8u8LxtCoW+53+M=
+	t=1716823416; cv=none; b=ASZemAEE2QdHuNemkITT30rB5koUzmoT4j1Ro/YF5tMsvdG9UX5cKkoKzz6fAEBUbTYQtlMyNbPjrO1LzNk91+g5iXEthZdufooCGgFTYBuvRkOvTinKSWY2kGAMYvLX6Q4rb6gpnyKErccXmg5KD06vG0p95ebOtylP1XmEEvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716821063; c=relaxed/simple;
-	bh=IXQy/KWuSXcucpOdFBz5dgMWJsMiQUwKZC+1vOSlerM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dQol1s9+U1d4tySCb7p1IkxVz0TLwJZAKomqGdD097N/Nscw8Lqa/Lvs8sKXgV1gUek7BCjTgmodueqYCQp5P7x+mf9XnFZIgC+E8P6IEv3wwIkFer5swKrUiKI2BMjlcUOlroM+MNyn/SceUEisOWBVfsh0M7mm6JQkRbTxJrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpmKBUOR; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716821062; x=1748357062;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=IXQy/KWuSXcucpOdFBz5dgMWJsMiQUwKZC+1vOSlerM=;
-  b=IpmKBUOR44jZBSZF+upHdf6C3a5SoFnUx0FHEBMOmVi4MFgh6ryedYe7
-   CFMtibam7rKVZoM4y+xVBGQmAix8kuyt4qjPdKvrCC8WybqetxpODDSXG
-   tTVz47gMkSQhKbhATVrLNELQ5xGP734OgeBMFC28fexgPOVibfSE7mE++
-   /wLnQrCiBqbOgW33G6GLxsf6iYRrzF+CGRDwYFggIrk9kGfv1o1e1WxrD
-   Kq0HLWAh1ZDMTofwuO64rtClBdKT2AtK+IpK291T4F7hzlllJGfnV+PT9
-   8pO/0fY7rfDWDPqG5RnRNCY8GlP6A64q6LMoJCPDCWheLu/X+hyHNg4GX
-   Q==;
-X-CSE-ConnectionGUID: UFHMTjbLR1OOH/NWUUFwXw==
-X-CSE-MsgGUID: VvXJXk6sSp+Zdy9hf4Dtjw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13269766"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="13269766"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:22 -0700
-X-CSE-ConnectionGUID: GtWvV7ORS/qh9CPqqni7Jg==
-X-CSE-MsgGUID: s5kI9NZRS9OyA+a/ogKfhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="35279810"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.246.214])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:44:18 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH 2/2] ACPI: extlog: Trace CPER PCI Express Error Section
-Date: Mon, 27 May 2024 16:43:41 +0200
-Message-ID: <20240527144356.246220-3-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240527144356.246220-1-fabio.m.de.francesco@linux.intel.com>
-References: <20240527144356.246220-1-fabio.m.de.francesco@linux.intel.com>
+	s=arc-20240116; t=1716823416; c=relaxed/simple;
+	bh=QK/HzbPMoUP+VEeLB5axEF713Im5/pscaUT5lEFOez0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lMgtGa3IdM+gFniJYAzbRWJ9YTjgZcIJszdQ/TZY+qJpD4qZAn8lP6Z2TYvTv9x4DxPerRh979pukBMHnYa5gCWd8uWq8oRyUJydW1i7awMgm5ulMwc0kPXOw3+cE5Q++7djLJFWG8tdSRc8fTJYunsARDPgexznIfG+LBQzQrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=LnAdn2Vg; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=auVf7NRp; arc=none smtp.client-ip=89.207.88.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 4C644C0010
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
+	t=1716823403; bh=k3dCAVjVsQUP+TKbxCRzvllaKPxalnrHRipAElDQaiQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=LnAdn2VgEoTP+/84EyzyhKasUoaZIVPOIeAyVMyR/2yzBnKlpKJcqroHHWYCSOlh2
+	 tuiUQnxhzrVaDtDYu2xBZRBONlE/HkjK0mBYB6ho2vYwy7fp9t1TCiyrZVL/hl4luS
+	 ydqEzYhNjA5jt2T77uG3RjbcopvblvAMd8SnL4PcfWUVf081UFwVfb965Um7iRxcwi
+	 nGa92/UKpyTJOwmVlJms7y116AKyok56wdgdfP2zdUMGS+erl1PyEjuUXSNAT6kz4j
+	 aZBeh7S6QAMe6FSsSFUehZXuIWqOIJ+6Xts0hndUM6HHnU9G1RwWEDWJe32IRJCNe2
+	 zlDzorbR/98vA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
+	t=1716823403; bh=k3dCAVjVsQUP+TKbxCRzvllaKPxalnrHRipAElDQaiQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=auVf7NRpcbzPbE5mTAOnBga9jT0FM26Xeho5dq0vgcmp1ZOlgQI+sziEPd764/+6h
+	 wFPK6J0aYBSdIuP6fAPWFnCntEdbHEdjWgTxwhPYXwfyas244FoG5Pf/4ZTBit1d5Q
+	 /LXssllFGczGZcqbyFtqNAvGGXpOhEvMkTbI/LwytsgHZT+pPH+LfwUoJdvx68EPd6
+	 dAmsc9r7ZTMrJ16XRdMIDlaChace2515vAt3awUwrEMgw0H+dPxBqhSdFixAF4yLK6
+	 lj0xobAA74TD1dPXu+cUKjfPidx0whPFS78qqSimKPx9I695t7atCL9LN1hWyIYRVS
+	 11oCumY39qE/g==
+From: Nikita Proshkin <n.proshkin@yadro.com>
+To: <linux-pci@vger.kernel.org>, Martin Mares <mj@ucw.cz>
+CC: <linux@yadro.com>, Sergei Miroshnichenko <s.miroshnichenko@yadro.com>,
+	Nikita Proshkin <n.proshkin@yadro.com>
+Subject: [PATCH pciutils v2 rediff] pcilmr: Fix margining for ports with Lane reversal
+Date: Mon, 27 May 2024 18:22:55 +0300
+Message-ID: <20240527152255.35571-1-n.proshkin@yadro.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,119 +65,132 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: T-EXCH-10.corp.yadro.com (172.17.11.60) To
+ S-Exch-02.corp.yadro.com (10.78.5.239)
 
-Currently, extlog_print() (ELOG) only reports CPER PCIe section (UEFI
-v2.10, Appendix N.2.7) to the kernel log via print_extlog_rcd(). Instead,
-the similar ghes_do_proc() (GHES) prints to kernel log and calls
-pci_print_aer() to report via the ftrace infrastructure.
+Current implementation interacts only with first Negotiated Link Width
+lanes even when Maximum Link Width for the port is bigger than that and
+Lane reversal is used. Utility in such situation may try to margin lane
+which is not used right now and erroneously fail with
+'Error during caps reading' message. Fix that behaviour.
 
-Add support to report the CPER PCIe Error section also via the ftrace
-infrastructure by calling pci_print_aer() to make ELOG act consistently
-with GHES.
-
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+Signed-off-by: Nikita Proshkin <n.proshkin@yadro.com>
 ---
- drivers/acpi/acpi_extlog.c | 30 ++++++++++++++++++++++++++++++
- drivers/pci/pcie/aer.c     |  2 +-
- include/linux/aer.h        | 13 +++++++++++--
- 3 files changed, 42 insertions(+), 3 deletions(-)
+ lmr/lmr.h        |  5 +++--
+ lmr/margin.c     |  8 ++++----
+ lmr/margin_hw.c  | 20 +++++++++++---------
+ lmr/margin_log.c |  2 +-
+ 4 files changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index e025ae390737..007ce96f8672 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -131,6 +131,32 @@ static int print_extlog_rcd(const char *pfx,
- 	return 1;
- }
+diff --git a/lmr/lmr.h b/lmr/lmr.h
+index f070309..98df17a 100644
+--- a/lmr/lmr.h
++++ b/lmr/lmr.h
+@@ -24,7 +24,8 @@ static const double margin_ui[] = { 62.5, 31.25 };
+ struct margin_dev {
+   struct pci_dev *dev;
+   int lmr_cap_addr;
+-  u8 width;
++  u8 neg_width;
++  u8 max_width;
+   u8 retimers_n;
+   u8 link_speed;
  
-+static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
-+			      int severity)
-+{
-+	struct aer_capability_regs *aer;
-+	struct pci_dev *pdev;
-+	unsigned int devfn;
-+	unsigned int bus;
-+	int aer_severity;
-+	int domain;
-+
-+	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
-+	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
-+		aer_severity = cper_severity_to_aer(severity);
-+		aer = (struct aer_capability_regs *)pcie_err->aer_info;
-+		domain = pcie_err->device_id.segment;
-+		bus = pcie_err->device_id.bus;
-+		devfn = PCI_DEVFN(pcie_err->device_id.device,
-+				  pcie_err->device_id.function);
-+		pdev = pci_get_domain_bus_and_slot(domain, bus, devfn);
-+		if (!pdev)
-+			return;
-+		pci_print_aer(pdev, aer_severity, aer);
-+		pci_dev_put(pdev);
-+	}
-+}
-+
- static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			void *data)
+@@ -234,7 +235,7 @@ void margin_log(char *format, ...);
+ void margin_log_bdfs(struct pci_dev *down_port, struct pci_dev *up_port);
+ void margin_gen_bdfs(struct pci_dev *down_port, struct pci_dev *up_port, char *dest, size_t maxlen);
+ 
+-/* Print Link header (bdfs, width, speed) */
++/* Print Link header (bdfs, neg_width, speed) */
+ void margin_log_link(struct margin_link *link);
+ 
+ void margin_log_params(struct margin_params *params);
+diff --git a/lmr/margin.c b/lmr/margin.c
+index d05bb59..4d68031 100644
+--- a/lmr/margin.c
++++ b/lmr/margin.c
+@@ -165,7 +165,7 @@ read_params_internal(struct margin_dev *dev, u8 recvn, bool lane_reversal,
+                      struct margin_params *params)
  {
-@@ -179,6 +205,10 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 			if (gdata->error_data_length >= sizeof(*mem))
- 				trace_extlog_mem_event(mem, err_seq, fru_id, fru_text,
- 						       (u8)gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
-+			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
-+
-+			extlog_print_pcie(pcie_err, gdata->error_severity);
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
+   margin_cmd resp;
+-  u8 lane = lane_reversal ? dev->width - 1 : 0;
++  u8 lane = lane_reversal ? dev->max_width - 1 : 0;
+   margin_set_cmd(dev, lane, NO_COMMAND);
+   bool status = margin_report_cmd(dev, lane, REPORT_CAPS(recvn), &resp);
+   if (status)
+@@ -366,7 +366,7 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_link_args *
+   for (int i = 0; i < lanes_n; i++)
+     {
+       results->lanes[i].lane
+-        = recv.lane_reversal ? dev->width - lanes_to_margin[i] - 1 : lanes_to_margin[i];
++        = recv.lane_reversal ? dev->max_width - lanes_to_margin[i] - 1 : lanes_to_margin[i];
+     }
  
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ac6293c24976..794aa15527ba 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -801,7 +801,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
- 			aer_severity, tlp_header_valid, &aer->header_log);
- }
--EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
-+EXPORT_SYMBOL_GPL(pci_print_aer);
+   if (args->common->run_margin)
+@@ -510,7 +510,7 @@ margin_process_args(struct margin_link *link)
  
- /**
-  * add_error_device - list device to be handled
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 4b97f38f3fcf..fbc82206045c 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -42,17 +42,26 @@ int pcie_read_tlp_log(struct pci_dev *dev, int where, struct pcie_tlp_log *log);
- #if defined(CONFIG_PCIEAER)
- int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
- int pcie_aer_is_native(struct pci_dev *dev);
-+void pci_print_aer(struct pci_dev *dev, int aer_severity,
-+		   struct aer_capability_regs *aer);
- #else
- static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+   if (!args->lanes_n)
+     {
+-      args->lanes_n = dev->width;
++      args->lanes_n = dev->neg_width;
+       for (int i = 0; i < args->lanes_n; i++)
+         args->lanes[i] = i;
+     }
+@@ -518,7 +518,7 @@ margin_process_args(struct margin_link *link)
+     {
+       for (int i = 0; i < args->lanes_n; i++)
+         {
+-          if (args->lanes[i] >= dev->width)
++          if (args->lanes[i] >= dev->neg_width)
+             {
+               return MARGIN_TEST_ARGS_LANES;
+             }
+diff --git a/lmr/margin_hw.c b/lmr/margin_hw.c
+index 2585ca1..c376549 100644
+--- a/lmr/margin_hw.c
++++ b/lmr/margin_hw.c
+@@ -112,15 +112,17 @@ static struct margin_dev
+ fill_dev_wrapper(struct pci_dev *dev)
  {
- 	return -EINVAL;
+   struct pci_cap *cap = pci_find_cap(dev, PCI_CAP_ID_EXP, PCI_CAP_NORMAL);
+-  struct margin_dev res
+-    = { .dev = dev,
+-        .lmr_cap_addr = pci_find_cap(dev, PCI_EXT_CAP_ID_LMR, PCI_CAP_EXTENDED)->addr,
+-        .width = GET_REG_MASK(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA), PCI_EXP_LNKSTA_WIDTH),
+-        .retimers_n
+-        = (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_RETIMER))
+-          + (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_2RETIMERS)),
+-        .link_speed = (pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA) & PCI_EXP_LNKSTA_SPEED),
+-        .hw = detect_unique_hw(dev) };
++  struct margin_dev res = {
++    .dev = dev,
++    .lmr_cap_addr = pci_find_cap(dev, PCI_EXT_CAP_ID_LMR, PCI_CAP_EXTENDED)->addr,
++    .neg_width = GET_REG_MASK(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA), PCI_EXP_LNKSTA_WIDTH),
++    .max_width = GET_REG_MASK(pci_read_long(dev, cap->addr + PCI_EXP_LNKCAP), PCI_EXP_LNKCAP_WIDTH),
++    .retimers_n
++    = (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_RETIMER))
++      + (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_2RETIMERS)),
++    .link_speed = (pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA) & PCI_EXP_LNKSTA_SPEED),
++    .hw = detect_unique_hw(dev)
++  };
+   return res;
  }
-+
- static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-+static inline void pci_print_aer(struct pci_dev *dev, int aer_severity,
-+				 struct aer_capability_regs *aer)
-+{ }
- #endif
  
--void pci_print_aer(struct pci_dev *dev, int aer_severity,
--		    struct aer_capability_regs *aer);
-+#if defined(CONFIG_ACPI_APEI_PCIEAER)
- int cper_severity_to_aer(int cper_severity);
-+#else
-+static inline int cper_severity_to_aer(int cper_severity) { return 0; }
-+#endif
-+
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		       int severity, struct aer_capability_regs *aer_regs);
- #endif //_AER_H_
+diff --git a/lmr/margin_log.c b/lmr/margin_log.c
+index 60c135d..2cb01c8 100644
+--- a/lmr/margin_log.c
++++ b/lmr/margin_log.c
+@@ -53,7 +53,7 @@ margin_log_link(struct margin_link *link)
+ {
+   margin_log("Link ");
+   margin_log_bdfs(link->down_port.dev, link->up_port.dev);
+-  margin_log("\nNegotiated Link Width: %d\n", link->down_port.width);
++  margin_log("\nNegotiated Link Width: %d\n", link->down_port.neg_width);
+   margin_log("Link Speed: %d.0 GT/s = Gen %d\n", (link->down_port.link_speed - 3) * 16,
+              link->down_port.link_speed);
+   margin_log("Available receivers: ");
 -- 
-2.45.1
+2.34.1
 
 
