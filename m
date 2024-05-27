@@ -1,248 +1,141 @@
-Return-Path: <linux-pci+bounces-7844-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7845-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1FCA8CFF6C
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 13:55:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C4088CFFF5
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 14:25:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88EC2284D25
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 11:55:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 99C67B24834
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 12:25:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578AD15DBCC;
-	Mon, 27 May 2024 11:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AAD615E5BF;
+	Mon, 27 May 2024 12:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PRWCaEMR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE2815E5D2
-	for <linux-pci@vger.kernel.org>; Mon, 27 May 2024 11:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE321581E2;
+	Mon, 27 May 2024 12:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810889; cv=none; b=PlDIcsfH5W0aXhGcNvCfmU7z8FjolLNHzvYLnJJgqrPooLevK0Lh65nYLNHItun0Wz7bpmA5YzuWbmdDVo2Una/2f+5EdZGp+41zjaa1giAhcsCPeBD7i38tUm77h9CrcxLeEBLLCl9VvxLLEQ5ZtObPra/LqIx9Z2FbBRC8X7I=
+	t=1716812688; cv=none; b=C/W6OtGYDdBf44D+dptZui4LYC2bAUF4Z+VOUYAsc2XkGxbPS/QbCOD0LP5Up43uv3nYyEwbIADs3c8qTWYA3l/MyIRGHupkG9gLaEps+N5BIHa4X4qx4+Z9azFvJUIyRRNH3zS+Sa9/PGh4f5sYVs8wbD9pKNWLDw0BLIVIfOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810889; c=relaxed/simple;
-	bh=wAhHm1Hjr5KQc8bdFVrC224SdUc8Nnr8q2wVPYjM8Xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dlhacrA4OUlozJiWmqLXWuPF6NM4iziizQT7QhA4TD0lTPfCxAk2iyJqVtf4DVEvs55sI/bB9nqULImPGTFe2M0TJZZe8gX5WGY/PC1rGGDVgKRIYwBbaqIJRoH7mKDGAA+CGBvcJGFCx2w41o+Fepfpi13kmd1sjZTD49d92i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id E2A9210195B86;
-	Mon, 27 May 2024 13:54:42 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id B0A5B87C7BD; Mon, 27 May 2024 13:54:42 +0200 (CEST)
-Date: Mon, 27 May 2024 13:54:42 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Ricky WU <ricky_wu@realtek.com>
-Cc: "scott@spiteful.org" <scott@spiteful.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"kbusch@kernel.org" <kbusch@kernel.org>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [bug report] nvme not re-recognize when changed M.2 SSD in S3
- mode
-Message-ID: <ZlR0grWLqO9nch8Q@wunner.de>
-References: <a608b5930d0a48f092f717c0e137454b@realtek.com>
- <ZhZk7MMt_dm6avBJ@wunner.de>
- <ZhapFF3393xuIHwM@wunner.de>
- <8c3d00850e7449c184e4c45a3c9b9dfa@realtek.com>
+	s=arc-20240116; t=1716812688; c=relaxed/simple;
+	bh=Q//0HsM9HclPdFtHaPPFFpwPR11i2osKYxrbE3qDEo4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sadm0ezpaAVK3/X7+h3N1q1+T2cnGAldNETQ6+7Jm1Coe/Gzj70q9M9y6l07geCFnTbJYqwkIeBwCPeSy4VLZG2Yw+F479qPrAwrfHHYrW+yaOkbU141C6stvHN62HNRVKfUCIgJAvK8BAt4EAzDuqxq19QPY9N8eK62LFt2e50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PRWCaEMR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9351EC32781;
+	Mon, 27 May 2024 12:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716812687;
+	bh=Q//0HsM9HclPdFtHaPPFFpwPR11i2osKYxrbE3qDEo4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PRWCaEMRJCgr16OqZApaF7V8fRE3rQtmTZ3GAfsoogJ8PRY1mLaiNIvka+Ec4EJB/
+	 hHMFzM9kXrPiqOgs8g6mmMIveoNKKTGEn25X4yXDwhwDQEBBM+6HvlV7NIjqzza1kU
+	 ksdN4bGnj8BT59GqK0k8cbAABx7FSlJ0FqR6Q/CEhiRs7OdJnBiT0TrDukBw9+A94R
+	 FMq/gOCg5vpps5pv/k20bFLXI1ILOQH3LeIgx89OWf/7rMmrkWbWYE6XDfiiQt+qdp
+	 eiDARloefjp6yRoBOSK+oZvtIC9NDrXgqWd+gOrPNbmtB9fBZPhGknwxmMPglS25YO
+	 1aZWefvFAzXfQ==
+Message-ID: <037c503b-39dd-4fd1-bc67-0b817c9103ce@kernel.org>
+Date: Mon, 27 May 2024 14:24:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c3d00850e7449c184e4c45a3c9b9dfa@realtek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: PCI: microchip,pcie-host: fix reg
+ properties
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: conor@kernel.org, Daire McNamara <daire.mcnamara@microchip.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20240527-slather-backfire-db4605ae7cd7@wendy>
+ <20240527-algebra-pencil-c12962d62468@wendy>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240527-algebra-pencil-c12962d62468@wendy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 25, 2024 at 06:02:36AM +0000, Ricky WU wrote:
-> I tested this patch and the result looks good, but if the two SSD
-> has same VID, PID and capacity it still has problem.
-> So I think add S/N to compare is necessary if it can do
+On 27/05/2024 11:37, Conor Dooley wrote:
+> The PCI host controller on PolarFire SoC has multiple "instances", each
+> with their own bridge and ctrl address spaces. The original binding has
+> an "apb" register region, and it is expected to be set to the base
+> address of the host controllers register space. Some defines in the
+> Linux driver were used to compute the addresses of the bridge and ctrl
+> address ranges corresponding to instance1. Some customers want to use
+> instance2 however and that requires changing the defines in the driver,
+> which is clearly not a portable solution.
 > 
-> And I also tested SD7.0 card the result is same with M.2 SSD
+> Remove this "apb" register region from the binding and add "bridge" &
+> "ctrl" regions instead, that will directly communicate the address of
+> these regions
+> 
+> Fixes: 6ee6c89aac35 ("dt-bindings: PCI: microchip: Add Microchip PolarFire host binding")
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../devicetree/bindings/pci/microchip,pcie-host.yaml   | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
 
-Below please find a reworked patch which checks the Device Serial
-Number in addition to various other device identity information
-in config space.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I've moved the check for a replaced device to the ->resume_noirq
-phase, i.e. before the device driver's first access to the device.
-I'm also marking the device removed to prevent the driver from
-accessing it.
-
-Does this fix the issue for you?
-
-If it does reliably detect a replaced device, could you also
-double-check the opposite case, i.e. if the device is *not*
-replaced during system sleep?
-
-I think this is about as much as we can do at the PCI layer to
-detect a replaced device.  Drivers may have additional ways
-to identify a device (such as reading a WWID from some register)
-and we could consider providing a library function which drivers
-could call if they detect a replaced device on resume.
-
-If you set CONFIG_DYNAMIC_DEBUG=y and add the following to the
-command line...
-
-pciehp.pciehp_debug=1 dyndbg="file pciehp* +p" log_buf_len=10M ignore_loglevel
-
-...you should see "device replaced during system sleep" messages
-on resume if a replaced device is detected.
-
--- >8 --
-
-From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH] PCI: pciehp: Detect device replacement during system sleep
-
-Ricky reports that replacing a device in a hotplug slot during ACPI
-sleep state S3 does not cause re-enumeration on resume, as one would
-expect.  Instead, the new device is treated as if it was the old one.
-
-There is no bulletproof way to detect device replacement, but as a
-heuristic, check whether the device identity in config space matches
-cached data in struct pci_dev (Vendor ID, Device ID, Class Code,
-Revision ID, Subsystem Vendor ID, Subsystem ID).  Additionally, cache
-and compare the Device Serial Number (PCIe r6.2 sec 7.9.3).  If a
-mismatch is detected, mark the old device disconnected (to prevent its
-driver from accessing the new device) and synthesize a Presence Detect
-Changed event.
-
-Reported-by: Ricky Wu <ricky_wu@realtek.com>
-Closes: https://lore.kernel.org/r/a608b5930d0a48f092f717c0e137454b@realtek.com
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/pci/hotplug/pciehp.h      |  4 ++++
- drivers/pci/hotplug/pciehp_core.c | 42 ++++++++++++++++++++++++++++++++++++++-
- drivers/pci/hotplug/pciehp_hpc.c  |  5 +++++
- drivers/pci/hotplug/pciehp_pci.c  |  4 ++++
- 4 files changed, 54 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index e0a614a..273dd8c 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -46,6 +46,9 @@
- /**
-  * struct controller - PCIe hotplug controller
-  * @pcie: pointer to the controller's PCIe port service device
-+ * @dsn: cached copy of Device Serial Number of Function 0 in the hotplug slot
-+ *	(PCIe r6.2 sec 7.9.3); used to determine whether a hotplugged device
-+ *	was replaced with a different one during system sleep
-  * @slot_cap: cached copy of the Slot Capabilities register
-  * @inband_presence_disabled: In-Band Presence Detect Disable supported by
-  *	controller and disabled per spec recommendation (PCIe r5.0, appendix I
-@@ -87,6 +90,7 @@
-  */
- struct controller {
- 	struct pcie_device *pcie;
-+	u64 dsn;
- 
- 	u32 slot_cap;				/* capabilities and quirks */
- 	unsigned int inband_presence_disabled:1;
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index ddd55ad..ff458e6 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -284,6 +284,32 @@ static int pciehp_suspend(struct pcie_device *dev)
- 	return 0;
- }
- 
-+static bool pciehp_device_replaced(struct controller *ctrl)
-+{
-+	struct pci_dev *pdev __free(pci_dev_put);
-+	u32 reg;
-+
-+	pdev = pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0, 0));
-+	if (!pdev)
-+		return true;
-+
-+	if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
-+	    reg != (pdev->vendor | (pdev->device << 16)) ||
-+	    pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
-+	    reg != (pdev->revision | (pdev->class << 8)))
-+		return true;
-+
-+	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
-+	    (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) ||
-+	     reg != (pdev->subsystem_vendor | (pdev->subsystem_device << 16))))
-+		return true;
-+
-+	if (pci_get_dsn(pdev) != ctrl->dsn)
-+		return true;
-+
-+	return false;
-+}
-+
- static int pciehp_resume_noirq(struct pcie_device *dev)
- {
- 	struct controller *ctrl = get_service_data(dev);
-@@ -293,9 +319,23 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
- 	ctrl->cmd_busy = true;
- 
- 	/* clear spurious events from rediscovery of inserted card */
--	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE)
-+	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE) {
- 		pcie_clear_hotplug_events(ctrl);
- 
-+		/*
-+		 * If hotplugged device was replaced with a different one
-+		 * during system sleep, mark the old device disconnected
-+		 * (to prevent its driver from accessing the new device)
-+		 * and synthesize a Presence Detect Changed event.
-+		 */
-+		if (pciehp_device_replaced(ctrl)) {
-+			ctrl_dbg(ctrl, "device replaced during system sleep\n");
-+			pci_walk_bus(ctrl->pcie->port->subordinate,
-+				     pci_dev_set_disconnected, NULL);
-+			pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
-+		}
-+	}
-+
- 	return 0;
- }
- #endif
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index b1d0a1b3..061f01f 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -1055,6 +1055,11 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		}
- 	}
- 
-+	pdev = pci_get_slot(subordinate, PCI_DEVFN(0, 0));
-+	if (pdev)
-+		ctrl->dsn = pci_get_dsn(pdev);
-+	pci_dev_put(pdev);
-+
- 	return ctrl;
- }
- 
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-index ad12515..65e50be 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -72,6 +72,10 @@ int pciehp_configure_device(struct controller *ctrl)
- 	pci_bus_add_devices(parent);
- 	down_read_nested(&ctrl->reset_lock, ctrl->depth);
- 
-+	dev = pci_get_slot(parent, PCI_DEVFN(0, 0));
-+	ctrl->dsn = pci_get_dsn(dev);
-+	pci_dev_put(dev);
-+
-  out:
- 	pci_unlock_rescan_remove();
- 	return ret;
--- 
-2.43.0
+Best regards,
+Krzysztof
 
 
