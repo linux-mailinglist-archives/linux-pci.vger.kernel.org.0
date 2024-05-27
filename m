@@ -1,133 +1,120 @@
-Return-Path: <linux-pci+bounces-7839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 864CB8CFCBB
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 11:23:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6760F8CFD24
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 11:38:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1814D1F21074
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 09:23:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DDE71F25CC2
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 09:38:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A431139D18;
-	Mon, 27 May 2024 09:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D225713A877;
+	Mon, 27 May 2024 09:38:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rqxftRC1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MudiAr7B"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="r5nxq332"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E230B139D1A;
-	Mon, 27 May 2024 09:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBD813A24D;
+	Mon, 27 May 2024 09:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716801810; cv=none; b=gyZZ9GwZbugAcqip97zM7M4X65+eP/Cvw/agji5GivjdnyAczJf2Inxhbhph77kGOBQC0WfW+vWPNgqzk+lmuSOmirUdIDnmMPOs4NIw4MjIgq26oQ6nd7dPzbAxWEwZo6bbeD678+7qd3gKgHlPdKEJwNqfSBQ0YEzRYOcY0GA=
+	t=1716802684; cv=none; b=n3SNFjE0498MAQwehr9LaVTWPH2U9+D+5SK8bUvK5NgrjJrUNamqlXlE9MhhBAJuJKga1NWy90fBPb0JaJWo4GnhTgd+bcH4Fs9Wh9b/evWeoPfrtphyHjC0NFZ9JYwUUzbgA1OgKKSFMwktXFsLdALymln4pcEUXHU1hfSLU7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716801810; c=relaxed/simple;
-	bh=Q5gLcnKgDuIZzTn3G2COwGwQPZzpH83qoE+C9QBEXyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=spIoo4qd9te1Nr2cPXZj5w0aIaQbFTGhb4QyRmBDt3AncC0G+45SLE6YRrffk5QqLJcU9aderaBRqP6fpU7sa6x6qgt4iVJxnVCh/KbMS6Fc3P+dFA2pahkdgNUD7otxBLF2NVe/2wqWdaE7PK1ex/d5kRkSjnWtmfYnGdWGmCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rqxftRC1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MudiAr7B; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Mon, 27 May 2024 11:23:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1716801807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DynqLe7rrfT6pDcjUFZu3h+ra6dcsErZ0u0TiuBUA/E=;
-	b=rqxftRC1+gRCqRjRFM8vNUN5MlWthAPkNopghaSQtcNFTHgQkaNTU5VRUXyPlCEYNulzkn
-	DFKpw6rDokRkRlllruxLtbd96W+TrNgzPP7UWyOEvcUB/phcpd6zhxstra0LaHxEJbZI2y
-	2ax2LC5jGHTewt2MG1uKvVv5xUJXb9/K8zsuWNNvlc99x/OvIUVhGyTIb2W7VNs4qvznnK
-	P2LHmfSqV3xyybIHbbVDq6RILj9n/MlQRntxAElZqDZlvOf7SRIf1eFQ+R3RrH5u5Ye7EU
-	xmTL9hUAkK/y/lOovSLm2OJF/rlJ3P3sv0Sx2r9TBNk03vyWBwteIv+fclwiRQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1716801807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DynqLe7rrfT6pDcjUFZu3h+ra6dcsErZ0u0TiuBUA/E=;
-	b=MudiAr7B2Nydgwl8BdU1iOO6KZUx+yn6iHOrk5hBq1jplEu317nZDfjTq/BuuWIyXO0oSn
-	ZyORJ/Ot5q6KxXBA==
-From: Nam Cao <namcao@linutronix.de>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] PCI: pciehp: Abort hot-plug if
- pci_hp_add_bridge() fails
-Message-ID: <20240527092322.N8nbxYAL@linutronix.de>
-References: <cover.1714838173.git.namcao@linutronix.de>
- <f3db713f4a737756782be6e94fcea3eda352e39f.1714838173.git.namcao@linutronix.de>
- <Zjcc6Suf5HmmZVM9@wunner.de>
- <20240505071451.df3l6mdK@linutronix.de>
- <20240506083701.NZNifFGn@linutronix.de>
- <ZjkxTGaAc48jPzqC@wunner.de>
- <20240507142738.wyj19VVh@linutronix.de>
- <ZlRPS9TCYjccpNLr@wunner.de>
+	s=arc-20240116; t=1716802684; c=relaxed/simple;
+	bh=XBN7++Zvn6jUh1suRjCaio6HybTeWQjWEhslD6Yd0b8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LlTkreMWik8ZKBgBlyua1sIK9NblD4SwFhrFSB9oMinRqS+o/Dpd2tD4Tz9eGL62PmOcbFrKJ5w5gs57rh4NRcvgwc6tfJgXc0u4sbL3Kq0LcJvQc+xeWAFt89dpGX0DGBno6Bawo4ejX655E34TAr6wjZsqsOBDN1gcO8QzYzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=r5nxq332; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1716802682; x=1748338682;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XBN7++Zvn6jUh1suRjCaio6HybTeWQjWEhslD6Yd0b8=;
+  b=r5nxq332giUC8OABvwXqZPb0wMgL5doOep7cWgFcYPWi3VFOclXeTjXw
+   TxIrTMty7hGsOkr9dZYoz2ToDjktK7piKxh1SkfVazU44lv0cuDK5PkTy
+   N3B6pVWX5tJGHR5Ju4/BVps7Llqv/PIAOwOEBeBg6vETEnX8NIUs3Kk5w
+   gkjE61azd770U9uQ2ucXhDv8XeLQuY+XbZh1vN5pUFBwLTVfWSVpFS8xE
+   218PRZOc/jpPefcvtmgNS/NZZop+0dS+2q+Jhcem00bSVrCYFPhBnEYLp
+   0TAJY0vmSPabJglTiI6rlUaYwi/kQ76Zafhgeu68MLZMuA1EvXCdFdvAM
+   A==;
+X-CSE-ConnectionGUID: AcSvwgxcR7OHBHrk8NTkiw==
+X-CSE-MsgGUID: 9VeZiux7QCa+8v7K5kzo2A==
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="193774875"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 May 2024 02:37:55 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 27 May 2024 02:37:36 -0700
+Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 27 May 2024 02:37:34 -0700
+From: Conor Dooley <conor.dooley@microchip.com>
+To:
+CC: <conor@kernel.org>, <conor.dooley@microchip.com>, Daire McNamara
+	<daire.mcnamara@microchip.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	<linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+Subject: [PATCH v1 0/2] PCI: microchip: support using either instance 1 or 2
+Date: Mon, 27 May 2024 10:37:13 +0100
+Message-ID: <20240527-slather-backfire-db4605ae7cd7@wendy>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZlRPS9TCYjccpNLr@wunner.de>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1393; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=XBN7++Zvn6jUh1suRjCaio6HybTeWQjWEhslD6Yd0b8=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGkhIV5Hb7ekJjy5yn61vjp/YpvsgyCxNZrvRef79E9Z3+6W 8uFhRykLgxgHg6yYIkvi7b4WqfV/XHY497yFmcPKBDKEgYtTACaiMpHhr5DDG46y3Zencpk4fFrxyy f147+COPmrgR+W7Www+D5dI56R4amTOremdfZq2zc19WvYBFssG2QYkieJsHKvE0pImxrIDQA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 11:15:55AM +0200, Lukas Wunner wrote:
-> On Tue, May 07, 2024 at 04:27:38PM +0200, Nam Cao wrote:
-> > On Mon, May 06, 2024 at 09:36:44PM +0200, Lukas Wunner wrote:
-> > > Remind me, how exactly does the NULL pointer deref occur?  I think it's
-> > > because no struct pci_bus was allocated for the subordinate bus of the
-> > > hot-plugged bridge, right?  Because AFAICS that would happen in
-> > > 
-> > > pci_hp_add_bridge()
-> > >   pci_can_bridge_extend()
-> > >     pci_add_new_bus()
-> > >       pci_alloc_child_bus()
-> > > 
-> > > but we never get that far because pci_hp_add_bridge() bails out with -1.
-> > > So the subordinate pointer remains a NULL pointer.
-> > 
-> > This is correct. NULL deference happens due to subordinate pointer being
-> > NULL.
-> > 
-> > > Or check for a NULL subordinate pointer instead of crashing.
-> > 
-> > I think this is a possible solution, but it is a bit complicated: all usage
-> > of subordinate pointers will need to be looked at.
-> 
-> We already check for a NULL subordinate pointer in various places.
-> See e.g. commit 62e4492c3063 ("PCI: Prevent NULL dereference during
-> pciehp probe").
+The current driver and binding for PolarFire SoC's PCI controller assume
+that the root port instance in use is instance 1. The second reg
+property constitutes the region encompassing both "control" and "bridge"
+registers for both instances. In the driver, a fixed offset is applied to
+find the base addresses for instance 1's "control" and "bridge"
+registers. The BeagleV Fire uses root port instance 2, so something must
+be done so that software can differentiate. This series splits the
+second reg property in two, with dedicated "control" and "bridge"
+entries so that either instance can be used.
 
-Ah, so bridge without subordinate bus is allowed in the kernel.
+Cheers,
+Conor.
 
-> If we're missing such checks, I'd suggest to add those.
-> 
-> If you believe having a NULL subordinate pointer is wrong and the
-> bridge should be de-enumerated altogether, I think you would have
-> to remove these NULL pointer checks as they'd otherwise become
-> pointless with your change.
-> 
-> Just adding missing NULL pointer checks seems to be the most
-> straightforward solution to me.
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Krzysztof Wilczyński <kw@linux.com>
+CC: Rob Herring <robh@kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: Conor Dooley <conor+dt@kernel.org>
+CC: linux-pci@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-riscv@lists.infradead.org
 
-If the kernel do permits bridges without subordinate bus number, I am
-happy to go this direction. I expect going this way will require many more
-patches, I will dig into it and come back later.
+Conor Dooley (2):
+  dt-bindings: PCI: microchip,pcie-host: fix reg properties
+  PCI: microchip: rework reg region handing
 
-Thanks for your patience providing me advices & information.
+ .../bindings/pci/microchip,pcie-host.yaml     |  10 +-
+ drivers/pci/controller/pcie-microchip-host.c  | 159 +++++++++---------
+ 2 files changed, 83 insertions(+), 86 deletions(-)
 
-Best regards,
-Nam
-
-
+-- 
+2.43.2
 
 
