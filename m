@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-7868-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7869-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB4EB8D0828
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:22:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6481E8D082B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 18:23:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6681D28A437
-	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:22:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E2A21C22A05
+	for <lists+linux-pci@lfdr.de>; Mon, 27 May 2024 16:23:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA42E169AE6;
-	Mon, 27 May 2024 16:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0621516B757;
+	Mon, 27 May 2024 16:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nRG74e6A"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E8RHx6bg"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E949169387;
-	Mon, 27 May 2024 16:15:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436C2169380;
+	Mon, 27 May 2024 16:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826514; cv=none; b=HBHQcKCHVy+myPxVSFxWOqLJBAHJu8SPWPToPtzNs0msFWcpwgxosZNj7gE7FLSarL5a9hcZndQjJamQvv0T7WjovTHTY3nEjp7dERd05gudVOf2fFNVylbIKnDdi13YUpn4q+4bDxo0AqoIesiriJBTuS6oRFpVu2xd1HlxCrA=
+	t=1716826517; cv=none; b=ieiG4MeiaJBlifaiaermQZQvFIoIWoZdtwhZrmKPK/oFHI0Jt+Clffahydjv6zRDkqK8Rl8d1piiJDEe0HbyHo05G695FHPrLpF5Me1XQej4PWY5U7b23cjJLbULqnrYZTi1BnS/HLDHaK2dwG20PYP5AnI90GtkOuvHGudddso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826514; c=relaxed/simple;
-	bh=7biFMyr8CXy0R1UVAUiDgnLTqYU6ZUjkIFA6XHx8ITY=;
+	s=arc-20240116; t=1716826517; c=relaxed/simple;
+	bh=/RI6whJcmrvhiRO7t2XvDhnsZ9qXtW9I/fr2BpEIl5U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V8VJ5NYpgaCl8t3tUoHktzoGSHWdzjG83vWiqzrBPq2woHxDSo6vWUZxPqnEjsStIt7oWXyhuohe9YOGU7mJ5noL1nUgfFE+eZ1cf7VQmrZoAZEl+MQxHr5gxlEQ69rkfu1QtGrOsvTMx7hvwlen6d6w/zQnT9FfnvmNAL09uXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nRG74e6A; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=PhaVydLQEfWGLHpDNDoNaRcneuNbvo2PUXZoKRKJfmv4m56KP/tBMCLq0Ug8MhLSa1CfBXThL7Wb7rAaALcs14CSbeq5qpQGrpsZ1iXoadVmb+9oz1p5lBtAV/mpeZnrVMYTIzQPKmvtnly0xeTgJyeCHAbTek+yXSC1WTe3+jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E8RHx6bg; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id E9899FF80C;
-	Mon, 27 May 2024 16:15:08 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 3B155FF813;
+	Mon, 27 May 2024 16:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1716826511;
+	t=1716826512;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C0FElzUrrqTg+6Zrh4rlEJ/rv8Dcx7Vbub0Y2cEk6FE=;
-	b=nRG74e6ADGPIgwQsZuZBPe2LcWBuaXAzegAM7AbrhXlZhxCR880uyAgg/LWEAxtQpaMRmE
-	AQqGHgGFzWjTc6p2gKF1Iaz1tIPSpYJjQDvQDTa08KCTB82evOwKwFxsQhGn2LHimY6Pot
-	dWuga1MB+Dc00u7OKeXCacQQOqOOLOYWWKs1uwwDD6w7GMynB9tFljHGdHiWZFKa0XZ2gK
-	pqAvbGL59bvXUHBIH4bxYe2sm+fj3RpXGgZaZ6frFHlmaxkw4gOqSYbKsjJuz1hQbOUX6p
-	178Afcvx1Hz6ie/kn6DykBmZQBr+6SFaxhSHJB45DFaZCXgHrD4ZpzafnzJovA==
+	bh=1poOcFigCzvNGw/WIJa8uOgiTHrPvQYSCIrCvjonocA=;
+	b=E8RHx6bg0cF5LcM53jS29vWdjSIUAfGgiMFIQZrgsLMstByXtH7NJXiQJ6+bi6+R8fMCEb
+	3rxCEVmRomYWYdekf/v32aXiE/9kFgvfZZep3JjemaR2oc9Oi9fbofn7AQ2icmXBD8eHBa
+	GC0pb1A6DKk57ByjVD/13ZXC7MlTMtl4vacsij06M/vPt9WX1seXrUsX1Rc2QM2ixdJKyr
+	6APNKUol5ce/eZgE+gC8RriHVrTplJbCdCwowrgln8PDOmiFvzysRxa0EuWW5QEXI66ahi
+	p3CmuamZHy+oEF510shOM2HKhNsX52WKDSYZGEQrVioInDz5S2hjQ8+m5Se/2Q==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
@@ -80,9 +80,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 07/19] net: mdio: mscc-miim: Handle the switch reset
-Date: Mon, 27 May 2024 18:14:34 +0200
-Message-ID: <20240527161450.326615-8-herve.codina@bootlin.com>
+Subject: [PATCH v2 08/19] dt-bindings: interrupt-controller: Add support for Microchip LAN966x OIC
+Date: Mon, 27 May 2024 18:14:35 +0200
+Message-ID: <20240527161450.326615-9-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240527161450.326615-1-herve.codina@bootlin.com>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
@@ -95,46 +95,80 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-The mscc-miim device can be impacted by the switch reset, at least when
-this device is part of the LAN966x PCI device.
-
-Handle this newly added (optional) resets property.
+The Microchip LAN966x outband interrupt controller (OIC) maps the
+internal interrupt sources of the LAN966x device to an external
+interrupt.
+When the LAN966x device is used as a PCI device, the external interrupt
+is routed to the PCI interrupt.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/net/mdio/mdio-mscc-miim.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../microchip,lan966x-oic.yaml                | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
 
-diff --git a/drivers/net/mdio/mdio-mscc-miim.c b/drivers/net/mdio/mdio-mscc-miim.c
-index c29377c85307..62c47e0dd142 100644
---- a/drivers/net/mdio/mdio-mscc-miim.c
-+++ b/drivers/net/mdio/mdio-mscc-miim.c
-@@ -19,6 +19,7 @@
- #include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- 
- #define MSCC_MIIM_REG_STATUS		0x0
- #define		MSCC_MIIM_STATUS_STAT_PENDING	BIT(2)
-@@ -271,10 +272,17 @@ static int mscc_miim_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct regmap *mii_regmap, *phy_regmap;
- 	struct device *dev = &pdev->dev;
-+	struct reset_control *reset;
- 	struct mscc_miim_dev *miim;
- 	struct mii_bus *bus;
- 	int ret;
- 
-+	reset = devm_reset_control_get_optional_shared(dev, "switch");
-+	if (IS_ERR(reset))
-+		return dev_err_probe(dev, PTR_ERR(reset), "Failed to get reset\n");
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+new file mode 100644
+index 000000000000..b2adc7174177
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,lan966x-oic.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/microchip,lan966x-oic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	reset_control_reset(reset);
++title: Microchip LAN966x outband interrupt controller
 +
- 	mii_regmap = ocelot_regmap_from_resource(pdev, 0,
- 						 &mscc_miim_regmap_config);
- 	if (IS_ERR(mii_regmap))
++maintainers:
++  - Herve Codina <herve.codina@bootlin.com>
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++
++description: |
++  The Microchip LAN966x outband interrupt controller (OIC) maps the internal
++  interrupt sources of the LAN966x device to an external interrupt.
++  When the LAN966x device is used as a PCI device, the external interrupt is
++  routed to the PCI interrupt.
++
++properties:
++  compatible:
++    const: microchip,lan966x-oic
++
++  '#interrupt-cells':
++    const: 2
++
++  interrupt-controller: true
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - '#interrupt-cells'
++  - interrupt-controller
++  - interrupts
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller@e00c0120 {
++        compatible = "microchip,lan966x-oic";
++        reg = <0xe00c0120 0x190>;
++        #interrupt-cells = <2>;
++        interrupt-controller;
++        interrupts = <0>;
++        interrupt-parent = <&intc>;
++    };
++...
 -- 
 2.45.0
 
