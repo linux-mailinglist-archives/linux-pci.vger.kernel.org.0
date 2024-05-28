@@ -1,76 +1,76 @@
-Return-Path: <linux-pci+bounces-7913-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7914-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAB958D23DE
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 21:06:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5826A8D23E6
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 21:06:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 31B15B237F6
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 19:06:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3EA7286D98
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 19:06:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B36817A93E;
-	Tue, 28 May 2024 19:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC5B17B43A;
+	Tue, 28 May 2024 19:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GD6cdrQ5"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VRhjGJrE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA40178390
-	for <linux-pci@vger.kernel.org>; Tue, 28 May 2024 19:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3104917967C
+	for <linux-pci@vger.kernel.org>; Tue, 28 May 2024 19:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716923035; cv=none; b=pVuPJ5tM2PGIkW7Y6GIUYizxC8b+OJkSgIt/JEY4e/J9txrJq9Y7/DGRN9wvqKkytBPXTcz+6X5R5CdBMB0IIFjILFOFuQXUvsFgbSLWqZHi6fxHMfC426RGaQ+RsejjhB6pxndOl9bVdoxivvff10UKtmQXOjRFrwSlKjyH4eA=
+	t=1716923037; cv=none; b=DEHKFtv/WxLbp33boaR9QkmX4XSARH2Km58JG6NoG6XNSa8Hz309cDV9lF47uXXtSrBXQuEy7if1FUTY0pDx4CNmSy0tOtgkBv23mg+9nsXmv6PyHwyXKviAKj/gyBxISs4Vse4z9J9gPzumU0giI3mvS0OWMeJGM0H3gBa+0Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716923035; c=relaxed/simple;
-	bh=oRemnPOX+Y4y6DXbFK5HOZntLeOPfGF7GbKdePpA9zM=;
+	s=arc-20240116; t=1716923037; c=relaxed/simple;
+	bh=6z/qJnjZFNUbmAlLhny56elZj9ozwT+lQ2sCSVhGFpE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qD0vjbfCvJAPkr2Yv1tW2qzqnDSjvurmin/K3ha9cd78uIxNwD7t4tUeDvrbuSoHnIthds1NHWU96kXtp+4S0uN6zf2w7X0YceYZgD45ghoL5gyAFfZP6NNK2jmkAxb64Jh04iPCZwCOhJzF2kxu+IExSQYNnlIZ4jPJfnW8NVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GD6cdrQ5; arc=none smtp.client-ip=209.85.128.53
+	 In-Reply-To:To:Cc; b=m7inrtG9JpLqcRLwU7XnZNhyo8yRXlPwtCe/jR9ukHGW5Ag9lUaP+tM2+WiwY1kaT/jnx9PnGHcpYQ00pOpIWviXfxIE22n8I8ezBF3wzHmumyrqHrtgPWSE432lz0UkNriX3OM4vswh/tXlg4WquvmWavLHREju/v4Uj5ZGkeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VRhjGJrE; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4210aa012e5so10900935e9.0
-        for <linux-pci@vger.kernel.org>; Tue, 28 May 2024 12:03:53 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5238b7d0494so1548196e87.3
+        for <linux-pci@vger.kernel.org>; Tue, 28 May 2024 12:03:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716923031; x=1717527831; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716923033; x=1717527833; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PcKhaZF/3m76T8k+V6gAZs7oJGtFN6fcRMmIkblBf4U=;
-        b=GD6cdrQ5pjCcjQJqedR3bws6y9/Dy5jGuQLY9Io1enNIIDjVnd1qs1qwxAsqJPYLvT
-         mPfdsSXNVz34tM1J7ET9s0tIztkzOaGmhspf8caS62NeQ3SHuaUl0iVBtSl7KcvYnUMS
-         rqBAcm/8wzQQD5NWi6POtW+Q11kUrqcXK4KNzqXu/ZVlNLTLnjFtnWixQ3lbw2cA4NkO
-         C9vu1lWSzr3jM0zNZkpxjX1bua/FVRWYG+5aLSMR87UAOEdWjQg7SUtBENZZNiHGUgb0
-         pHT87nZbEZqzwMJXh1mdq1RnnxkVnzPUgFnNTA+oiLVOWgTxMtkNkJDzzcDRzHMlS5YP
-         2dEw==
+        bh=huLiadmUz+IKovUjcSJbnzDkoK16xIfjWSoucG+1C78=;
+        b=VRhjGJrEQ4c6ui95u4MjV1KZfQr2ZqloPTAyoyPRE0wswNjsCBdkDjRY1t51msMO5k
+         +ciLIUgXBkCRqnP5sSb8tjBC4bgAwy3RRuPvB/3tR95W+ttWJX+UyVmwPvjKaOF2v0FN
+         GRSxnRtVd0aYnRzW1bGQYyDOSSbKmmC9Y9s2+WQ1Z4JITMRX+R6HnK1ayDMIsZsC+prD
+         md0Xs94Ni+3odVcBvgzR2yJ5F/cvRs2vyQ2y3tWyrt0bm2UXwJFaPbmDtOCB9pheJrik
+         gKASDFradg3RomXicH5aLFYqIFhJyXK5qp58MYEqY5LLzKwr0kr7FaS9Jr4t75+Rc/Lh
+         A1rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716923031; x=1717527831;
+        d=1e100.net; s=20230601; t=1716923033; x=1717527833;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PcKhaZF/3m76T8k+V6gAZs7oJGtFN6fcRMmIkblBf4U=;
-        b=X2TSvZTq9lzyvWUdUEVfQOnrOIuayIA2i1X/mQayJBoXVhSUe5NNXDbmt81sOFBT92
-         VCBTFkvABpxep4Vxl4mprKEEJaVVYIM1EuI5/kvJpElg4zDBEJapBXNHTKR8z5pACLaR
-         SHXxcTYKNdunI+q7aRZ0XTYIB281DUNMm842iT77LGS+iriqhA5TC+0QdesPB5bA6N/2
-         hhPbnqZbdGRwcwhntHxyjYftOOiWHhdxYoA18xnR4RVMHf8GzylOxPhtRLAJja0m5aI4
-         aDVfWqk0nM3QJFzMLVlRSdetp2xqmc6TuQ1G+vEJ1fkIiH4wr3BgW3grpFHUEIaG1Imn
-         +KIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVp4z3DJP0O/91Uef4WOVfGf/W2Xfye0ph48lM2ynLhBzM4RukDpJ++zQn62cbZYPs3FyFlDohEd/zUDgGsDL/TpAQzFhNGdSzD
-X-Gm-Message-State: AOJu0YzvOHXU6j2jjN2FDyDuES3wRXgyC2tWr3nkfRZukeSGIZQiGFc8
-	AfGa6+CGS1QWOzJrEZoIfNmtFOBxWb/Y2ezRI/TBaS91H0yflD+ho030dO+c0d8=
-X-Google-Smtp-Source: AGHT+IF/dKVBXTZg7FRNE2nApY7BnYC/zWCFxSOBmiuzEJpp4OoVNhdMhJz26eWOi6yugTJBEg9vIQ==
-X-Received: by 2002:a05:600c:1381:b0:41f:b0e7:f299 with SMTP id 5b1f17b1804b1-42108a59292mr87164795e9.9.1716923031568;
-        Tue, 28 May 2024 12:03:51 -0700 (PDT)
+        bh=huLiadmUz+IKovUjcSJbnzDkoK16xIfjWSoucG+1C78=;
+        b=QQ0FJXG9bwI2ico+ROdEZPin+bLyiwVrVZuK+6akiVBjDIPpFHxovwT+5//pynE3eF
+         UklEWvXWdnYbe0MjUSpVnfnDkMTR7Qgs09GIv97ed/8iVO+MCWqZ0MT52PL/fZfrtcTF
+         6UjLvZ2eDt240xgaV3OxPM8pArgm8oRv8697UokgiK0ommBi2ROIcVxEVTHaelJuz/wb
+         rbQk3EEf4HaPlqXkhZGBRx+NE4aX+htOYfgvKvjR2h+ak31X43Zkh1Qj7s7LOuMS3nNn
+         A12595C5Kjy0mtmT2qeUrRLpqF9p/pHOzsylwhN7Sr7CyWj9XAVQgPRgVJXTxxQrPsmz
+         qecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXt/es8HjQ+4WKL5fhK7wQMqT8AF0m+nIswB7K81Zk+PYP72aBZaj+iilGraMNf8k5WjLqTZC9v4H5pDDx4EBg83ZgWYZn4G60F
+X-Gm-Message-State: AOJu0YybofDJDtlLC7+coaKMyg9MxkMfPYKmZ9OfpiwyqEvI6FbU29Ki
+	8gMeKe7lK+LuFvKb4FfMkuymvkPhwOBLcGkNuliu4eWYWHdDqQo+hyazK2m+hbw=
+X-Google-Smtp-Source: AGHT+IGFGGk0GMudsEze7kMtpyQJ8IBvfOB3ee+pM19AIHFnbjGqUee/tlRtalt4CsxR0dQKz7CsVA==
+X-Received: by 2002:a19:f017:0:b0:51b:4df3:540e with SMTP id 2adb3069b0e04-52967465414mr10858521e87.65.1716923032974;
+        Tue, 28 May 2024 12:03:52 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:93eb:927a:e851:8a2f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee954bsm183895415e9.4.2024.05.28.12.03.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100ee954bsm183895415e9.4.2024.05.28.12.03.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 12:03:51 -0700 (PDT)
+        Tue, 28 May 2024 12:03:52 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 28 May 2024 21:03:11 +0200
-Subject: [PATCH v8 03/17] dt-bindings: net: bluetooth: qualcomm: describe
- regulators for QCA6390
+Date: Tue, 28 May 2024 21:03:12 +0200
+Subject: [PATCH v8 04/17] dt-bindings: net: wireless: qcom,ath11k: describe
+ the ath11k on QCA6390
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,7 +79,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240528-pwrseq-v8-3-d354d52b763c@linaro.org>
+Message-Id: <20240528-pwrseq-v8-4-d354d52b763c@linaro.org>
 References: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
 In-Reply-To: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -108,71 +108,103 @@ Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel@quicinc.com, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1539;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2252;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=hux33j/WCCoK4y0/gy30fq+au9a8XJPG6iF4mQD3wuY=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmViqMAIW27hbwtUHKtDlPKtGzwQfx8XB4FdKGP
- UwHo+RxVieJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlYqjAAKCRARpy6gFHHX
- cqJ6EACvM49sa2TtM8BCIBqDJ8xsKyv9TAVs0UGYuVEvXoITLzjg3SFZmBLQipM4vrsnINwSrp0
- ggtbDdNjk/cV5MtOkioi25AkPss61r6G8TLGZbbweugEKxzAkgzuqIOUF46FKVjcuIDh9/WDZNg
- f9SzmUHw0TtIxRR+Yigj/atgNMCxESXAUegJ/IIcIWwGR4tUBE5bPbH9epEblv400NMIFqf/X4Q
- oR+X7Gg9Hf0cWY00tODNlEckxN/9DRl0EsA3ZNPFjBmkedks65/F48uX3nfAj3HpSiZ0RDm2cKm
- sXLxqXP4b61rPKTcf9SQ5eqEP1bOWY0jJOEoIc6y/SjH+o0Btx9pKO8cCvL69Eapx7Fzs9D8Pr+
- NdLfzvmslXYNfc8PGPFXGDs/Pb8qcBjr2p6nqL/wRSAEyRaS2MPjmZ6sTtMTlAl8iQXW9yHUcTz
- fnRWy4apTTWT9HFN8K5B0Lrpi41cNiXWFYWDtU4SEV0uRsOw3ydCA3rd1ernAkCRVWHjaCqTO8s
- jwSUpAKYUVSnvNrcAAsyLN2EtxpfdOXBDLejdFtuiVZYow1zb+wGnLGV3vbbUfTy4FSfkY/pfcC
- qCnjp9eTFegybj3kI/PfnfBTRgUnC0dgsYw9aF0W9bcxZhVGyAGQONdqntO90LRZa40f4yhwpEK
- 50NWrd07iIfsQkg==
+ bh=pd2tdTUrKzxnMcTe6bYRN1TYgIvngJc2eLHs9UA91ec=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmViqN+kfChui5js4evaxmA30HWm4lKFUb+3rJ2
+ Yb+lm7qdqeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlYqjQAKCRARpy6gFHHX
+ cuhRD/4laLPrXaMS8hVWtDgWhYJYFOorDw9gabUO1iP0fRSOx7T+NRx7JAG8R0dmDflPmpm9lCz
+ nYYQtKqqc4GHl1szH5GAemRFwnZhPLkn34Y8dNBt/puruKuDEAgVFnQhsugClW9kytmY9xut0aF
+ nSbanQgQjgLSlumQr/lVE+xi36pVpg7h3p9cNbUMyIbOxHb8AWptNw1jzp6E2DUJ6s2Sh3CNUWC
+ gwE2YEppiAUcHNdfPv8HJNciTJr2Rpw3F91K/ZqwzPKi/TB4N7aTwjYizPoK/R9owVtBq6cfl3G
+ JplasZ3EhcP6sKcxBBxsYs2VYbPeue4f6/oYHBBa2QtgUkkqEBRJ8x2iuZwS7/nRIPj/EZ8l0ob
+ Vgl7spB52PHoGQOqjq9hjOSz9Z/D62D62pJgBPFMbwVdBrBdpDq9jryH9JI9PX8t7uBu7nxyyiy
+ CC1q99TenfPStNBerx70x3TW4vnd6LYewxyPukvGVGk7FPqlyqsTyoP9a5g5r5dULN3kuZZWZ4m
+ LckKHfbaBj9e+YO1DsF0MSF8DiKjQt2kQTuSx8sryZO0W816+/8ul6v8IyR+Kd7TpXhi4uFhzzZ
+ /CQrRYrYMMwSdL3R9u1l9zJV5qh5d4AzfkSpnG8UIHgPWmjiMpkPd5kElyqWK/fi9/F1crbZERS
+ YtG7I7WjbIuzAXA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-QCA6390 has a compatible listed in the bindings but is missing the
-regulators description. Add the missing supply property and list the
-required ones in the allOf section.
+Add a PCI compatible for the ATH11K module on QCA6390 and describe the
+power inputs from the PMU that it consumes.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- .../bindings/net/bluetooth/qualcomm-bluetooth.yaml      | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ .../bindings/net/wireless/qcom,ath11k-pci.yaml     | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml b/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
-index 055a3351880b..48ac9f10ef05 100644
---- a/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
-+++ b/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
-@@ -62,6 +62,9 @@ properties:
-   vdddig-supply:
-     description: VDD_DIG supply regulator handle
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
+index 41d023797d7d..8675d7d0215c 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k-pci.yaml
+@@ -17,6 +17,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - pci17cb,1101  # QCA6390
+       - pci17cb,1103  # WCN6855
  
-+  vddbtcmx-supply:
-+    description: VDD_BT_CMX supply regulator handle
+   reg:
+@@ -28,10 +29,55 @@ properties:
+       string to uniquely identify variant of the calibration data for designs
+       with colliding bus and device ids
+ 
++  vddrfacmn-supply:
++    description: VDD_RFA_CMN supply regulator handle
 +
-   vddbtcxmx-supply:
-     description: VDD_BT_CXMX supply regulator handle
++  vddaon-supply:
++    description: VDD_AON supply regulator handle
++
++  vddwlcx-supply:
++    description: VDD_WL_CX supply regulator handle
++
++  vddwlmx-supply:
++    description: VDD_WL_MX supply regulator handle
++
++  vddrfa0p8-supply:
++    description: VDD_RFA_0P8 supply regulator handle
++
++  vddrfa1p2-supply:
++    description: VDD_RFA_1P2 supply regulator handle
++
++  vddrfa1p7-supply:
++    description: VDD_RFA_1P7 supply regulator handle
++
++  vddpcie0p9-supply:
++    description: VDD_PCIE_0P9 supply regulator handle
++
++  vddpcie1p8-supply:
++    description: VDD_PCIE_1P8 supply regulator handle
++
+ required:
+   - compatible
+   - reg
  
-@@ -184,6 +187,20 @@ allOf:
-         - vddrfa0p8-supply
-         - vddrfa1p2-supply
-         - vddrfa1p9-supply
++allOf:
 +  - if:
 +      properties:
 +        compatible:
 +          contains:
-+            enum:
-+              - qcom,qca6390-bt
++            const: pci17cb,1101
 +    then:
 +      required:
 +        - vddrfacmn-supply
 +        - vddaon-supply
-+        - vddbtcmx-supply
++        - vddwlcx-supply
++        - vddwlmx-supply
 +        - vddrfa0p8-supply
 +        - vddrfa1p2-supply
 +        - vddrfa1p7-supply
++        - vddpcie0p9-supply
++        - vddpcie1p8-supply
++
+ additionalProperties: false
  
  examples:
-   - |
 
 -- 
 2.43.0
