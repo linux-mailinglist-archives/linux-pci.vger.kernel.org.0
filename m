@@ -1,143 +1,141 @@
-Return-Path: <linux-pci+bounces-7889-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7890-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1665A8D18FA
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 12:54:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 350F08D1A70
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 13:58:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3EC0FB26485
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 10:54:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBF881F24069
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 11:58:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4F2F16C458;
-	Tue, 28 May 2024 10:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B69216C84C;
+	Tue, 28 May 2024 11:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PYEomHgR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LI/XBhMM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31C516C455;
-	Tue, 28 May 2024 10:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076BA4C97;
+	Tue, 28 May 2024 11:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716893650; cv=none; b=PzTbpYuISXGD55SiArdUB3gx0cN/6VRXM0jGu4H6U4nFLIYSgvsvmCatBuBsi0QLb9Q323KJzBeB+w9m2q/uscTYhMGkppTXw7E5we/p6JIhK+3bJv3D/Ltn15OtlJ1XyPIOGMpdkR5qWGO/+EKG2xqcIwFHWXSNKIPXS/1kQd4=
+	t=1716897479; cv=none; b=rIqu+rBugC2t9eM7hApaOetIsJNUS4wd/TNSBagLzfjagJMISB+RQcomsMkJNsujtyy83jqLv502kcD9FYJJalkyAYTXab6ln+JuvrifQvJtYvrHh4Mq2avCEz5+sqFICfgCqPet3w8lYDr6UWqi97u4kZjlRZ26NsYzqqrA5Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716893650; c=relaxed/simple;
-	bh=hY2IyF5VkKUnCRNoEiTmp1zbBUsXZq3aH2g9Jh6R51Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tsdGaAZhQcls/+NsVpnI05QTfVwg7oVRI+UCsXK6c6/kpXG4woTU/uxFguOWYo4kzUEinGE8NVPXTMwkILOlcb2EtPnRNbzgnB+56g2ioZSZUJI6ZKEzzNmU4L9AFZ+m0ox2PqsygGgKQbzdrQfpRCQUD4am015vM5SW7K/J5DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PYEomHgR; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716893649; x=1748429649;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=hY2IyF5VkKUnCRNoEiTmp1zbBUsXZq3aH2g9Jh6R51Q=;
-  b=PYEomHgRHsNgh1SljttYL7HVV0yZfDQf/P0KH2mrZ6yW6RJyNvLUI0P3
-   EptQnq64CfcV0/dftx20yWTDVuEf4onKxNeUd+6GsGaRNK6JX83x/rgFJ
-   QFITkZ5IdHhLg1v2tiXFUbLRGndpluRjvUjdQYAh1XGvBFVYr0lBobwhY
-   uPFZHie0Iw8DZD2aE3tcfn4dGEcyaBScu5NfazJCi4GcORdDf3xvL0ZAj
-   WeimUJvO5Ox9iwBhC9mzhg6O5ZcfyP3WJNL0VTetBSENnHkQyfTBGg4SW
-   W878hYv9klLUy3PTIvVLeaj8se6YuYGbjUyR2WiUB6oP+H948dnl96Gfc
-   w==;
-X-CSE-ConnectionGUID: H0x1fhldS5m+ZiKvdJ8Cww==
-X-CSE-MsgGUID: jzRfvlc/RieaKOgk0OG3DQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13002696"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="13002696"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 03:54:08 -0700
-X-CSE-ConnectionGUID: UNCRf7SlSyaz0Q8mmkl4CQ==
-X-CSE-MsgGUID: KjNuWBEBSz+0OXvc+v0qUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="39473828"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.144])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 03:54:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 28 May 2024 13:54:01 +0300 (EEST)
-To: Bitao Hu <yaoma@linux.alibaba.com>
-cc: Lukas Wunner <lukas@wunner.de>, bhelgaas@google.com, 
-    weirongguang@kylinos.cn, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, kanie@linux.alibaba.com
-Subject: Re: [PATCHv2] PCI: pciehp: Use appropriate conditions to check the
- hotplug controller status
-In-Reply-To: <20240528064200.87762-1-yaoma@linux.alibaba.com>
-Message-ID: <d9529e4c-05eb-d6eb-c8b7-248fd21338d1@linux.intel.com>
-References: <20240524063023.77148-1-yaoma@linux.alibaba.com> <20240528064200.87762-1-yaoma@linux.alibaba.com>
+	s=arc-20240116; t=1716897479; c=relaxed/simple;
+	bh=1lYQK5mXOyUpa175X1Sy96vhJCVsXrfaSlYdbye/ge8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G0guna3hVbZ1UKgssT7/lhvzIvE+WFJ/8nlOBSKdJxscI/Zsg6Jg6Bv4OXIY7KPNY89Vs14F/Rb45j3WXw99p+hbwi/nFoUiYuM3KhAdgjjRyKgB11HcgLu/S5t1OWFMVHsAafO28lsOgsfu0At/Xllgxe15DqdjSbV92Wj3smk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LI/XBhMM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9DDC3277B;
+	Tue, 28 May 2024 11:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716897478;
+	bh=1lYQK5mXOyUpa175X1Sy96vhJCVsXrfaSlYdbye/ge8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LI/XBhMMNJFFMWherkusHeRzK7+ig9lgB76uzLfVZp6mhu+jz6rvYccIm0xFBmnKI
+	 qdIp+dgugEptH32RE3YLTOitOBMYIkW2ueYGAhLeAMPyxUOVCSOta9cjGgW1C4zOwq
+	 NPG4ouUTyBKglYbxJy43bFGuKim5CphIm3SzdPGjIbeMsjvBwRhxSag7ZF37u6JI7v
+	 slfoiaO2tH4JIOhF6hiISFnV6FP+EPXBqSnwoLRHUdXfAxWjd9PoxOVOTWUtwxR3zb
+	 PQ7jbqxiTd1NKwpJEwNtDkY8ZihuVAt9Nv59Uwgr6NKwU4MDZdrVCRFvdWakdI1uFC
+	 MK1nXmNHqjmyw==
+Date: Tue, 28 May 2024 12:57:53 +0100
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 5/5] riscv: dts: microchip: add an initial devicetree
+ for the BeagleV Fire
+Message-ID: <20240528-movable-chlorine-cc5ebabb8abf@spud>
+References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+ <20240327-hurry-escapable-e3212bf3cdd8@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1602990161-1716893227=:5869"
-Content-ID: <6bf27e0d-15c0-dfee-137d-3a1869110431@linux.intel.com>
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1602990161-1716893227=:5869
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <c828c09a-3bf8-6b1b-92bc-35225c1f25c7@linux.intel.com>
-
-On Tue, 28 May 2024, Bitao Hu wrote:
-
-> "present" and "link_active" can be 1 if the status is ready, and 0 if
-> it is not. Both of them can be -ENODEV if reading the config space
-> of the hotplug port failed. That's typically the case if the hotplug
-> port itself was hot-removed. Therefore, this situation can occur:
-> pciehp_card_present() may return 1 and pciehp_check_link_active()
-> may return -ENODEV because the hotplug port was hot-removed in-between
-> the two function calls. In that case we'll emit both "Card present"
-> *and* "Link Up" since both 1 and -ENODEV are considered "true". This
-> is not the expected behavior. Those messages should be emited when
-> "present" and "link_active" are positive.
->=20
-> Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-
-Thanks for updaring the description.
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="z79wW9aJnFNbzgAR"
+Content-Disposition: inline
+In-Reply-To: <20240327-hurry-escapable-e3212bf3cdd8@spud>
 
 
-> ---
-> v1 -> v2:
-> 1. Explain the rationale of the code change in the commit message
-> more clearly.
-> 2. Add the "Reviewed-by" tag of Lukas.
-> ---
->  drivers/pci/hotplug/pciehp_ctrl.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pcie=
-hp_ctrl.c
-> index dcdbfcf404dd..6adfdbb70150 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -276,10 +276,10 @@ void pciehp_handle_presence_or_link_change(struct c=
-ontroller *ctrl, u32 events)
->  =09case OFF_STATE:
->  =09=09ctrl->state =3D POWERON_STATE;
->  =09=09mutex_unlock(&ctrl->state_lock);
-> -=09=09if (present)
-> +=09=09if (present > 0)
->  =09=09=09ctrl_info(ctrl, "Slot(%s): Card present\n",
->  =09=09=09=09  slot_name(ctrl));
-> -=09=09if (link_active)
-> +=09=09if (link_active > 0)
->  =09=09=09ctrl_info(ctrl, "Slot(%s): Link Up\n",
->  =09=09=09=09  slot_name(ctrl));
->  =09=09ctrl->request_result =3D pciehp_enable_slot(ctrl);
->=20
---8323328-1602990161-1716893227=:5869--
+--z79wW9aJnFNbzgAR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Mar 27, 2024 at 12:24:40PM +0000, Conor Dooley wrote:
+
+> +	fabric-pcie-bus@3000000000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges = <0x0 0x40000000 0x0 0x40000000 0x0 0x20000000>,
+> +			 <0x30 0x0 0x30 0x0 0x10 0x0>;
+> +
+> +		pcie: pcie@3000000000 {
+> +			compatible = "microchip,pcie-host-1.0";
+> +			#address-cells = <0x3>;
+> +			#interrupt-cells = <0x1>;
+> +			#size-cells = <0x2>;
+> +			device_type = "pci";
+> +			reg = <0x30 0x0 0x0 0x8000000>,
+> +			      <0x0 0x43000000 0x0 0x10000>;
+
+So this ain't right, I sent some patches yesterday to sort out accessing
+instance 2:
+https://lore.kernel.org/all/20240527-slather-backfire-db4605ae7cd7@wendy/
+
+> +			reg-names = "cfg", "apb";
+> +			bus-range = <0x0 0x7f>;
+> +			interrupt-parent = <&plic>;
+> +			interrupts = <119>;
+> +			interrupt-map = <0 0 0 1 &pcie_intc 0>,
+> +					<0 0 0 2 &pcie_intc 1>,
+> +					<0 0 0 3 &pcie_intc 2>,
+> +					<0 0 0 4 &pcie_intc 3>;
+> +			interrupt-map-mask = <0 0 0 7>;
+> +			clocks = <&ccc_nw CLK_CCC_PLL0_OUT1>,
+> +				 <&ccc_nw CLK_CCC_PLL0_OUT3>;
+> +			clock-names = "fic1", "fic3";
+> +			ranges = <0x43000000 0x0 0x9000000 0x30 0x9000000 0x0 0xf000000>,
+> +				 <0x1000000 0x0 0x8000000 0x30 0x8000000 0x0 0x1000000>,
+> +				 <0x3000000 0x0 0x18000000 0x30 0x18000000 0x0 0x70000000>;
+> +			msi-parent = <&pcie>;
+> +			msi-controller;
+> +			status = "disabled";
+> +
+> +			pcie_intc: interrupt-controller {
+> +				#address-cells = <0>;
+> +				#interrupt-cells = <1>;
+> +				interrupt-controller;
+> +			};
+> +		};
+> +	};
+
+--z79wW9aJnFNbzgAR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZlXGwQAKCRB4tDGHoIJi
+0oeuAQCripgxkKIvfMVj9OYaqpJnxghyOymmY6JCpmywHPYZ3gD+JxPnKPy7CEG/
+pxHE90yC5iB1AQRd+jHpUhskYg101gg=
+=Au0t
+-----END PGP SIGNATURE-----
+
+--z79wW9aJnFNbzgAR--
 
