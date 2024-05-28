@@ -1,148 +1,141 @@
-Return-Path: <linux-pci+bounces-7906-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7907-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2670F8D207E
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 17:35:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 506508D20E0
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 17:55:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACC211F2418C
-	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 15:35:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E767D1F214C2
+	for <lists+linux-pci@lfdr.de>; Tue, 28 May 2024 15:55:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8585517083A;
-	Tue, 28 May 2024 15:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9934A17166D;
+	Tue, 28 May 2024 15:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1euXU2n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAtHRuRy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC3317107A;
-	Tue, 28 May 2024 15:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7565B171656
+	for <linux-pci@vger.kernel.org>; Tue, 28 May 2024 15:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716910512; cv=none; b=Oh7f9b0PuIUma0vVpYcURzWnzu+5hovOtcbw4jpGMu/DSVe5417OxqYYKPFT9XlIkzrwbFKMOPnko5DiePoZpVE7y+TMsU8iq1cyqUJrwbQK3Y300Gm2mAUwWk/ADm2CqmIXHW+a4npcsTOuCoP0M8Vop7KhHRJXwep/ZZU8YMQ=
+	t=1716911736; cv=none; b=Em0nbZ6MPX+8NpLRbtcJ2GEwubx9Wm/FM3+f284Fsy8YidIIJTsAM6OqzEscc5IStRmwBlzm3ES6EGVHjn+0hcloZF2JsWz6gcC9gbYZzokNK5lTO/0+HpjK6UZ1PUANEtIBhyfUY+ouw+a3H5oUXv5sHSqcAdXy0iuypTfW9zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716910512; c=relaxed/simple;
-	bh=tEA7hAUQDhyFEnbCwwjaP6WnZphF2rQRAKuyq9ZxMyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VcXQfC8FitoEYA/iKtp9ww1nlgphzKja1G/vxm7hMDe544IMq3+77HDDasNkjzXDTYi6CD/Mz7izkyWblFAX/LEJE0BZ710HK9XgGPnODPfH4wGnCbrQiZL7xLSSEEd6OYy24PAnBsu9sBmfRoO/Casac0ZrpieQwBHl9JwMZNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1euXU2n; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716910510; x=1748446510;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tEA7hAUQDhyFEnbCwwjaP6WnZphF2rQRAKuyq9ZxMyI=;
-  b=Y1euXU2n/dt96kKRG1QA6AoOuPGQzpvspy0XR/jsCmGajhlMO580gjaT
-   p+KR1UOnFG1lvD2+XlmszxGZZcN+jdVx2ktXQiVQEzTpFgNsuGeGA7g66
-   Cl6xmzUpnxZqtF7lofI9FD7LGL+kdK3Q1GIlW0MoiXxAoLMbMM9frRxYL
-   tmPY8JAadWCEZqVihDLTN9u8wlhBPsbgX8uz2xnWqog76N2ec+Xbsyx3Q
-   /E1b52s5wO31a6ZSUlsUbrmqxMWA4OhTpDc3eiu4FHrWrHM1Y7B15HGk1
-   /QRlvMY5gavZOSKFyVGa/ew3U8IIqI3Xuo8yzUPENFqAefvZiZNyDhV5D
-   A==;
-X-CSE-ConnectionGUID: Poyqw94dS+6WQYp278J3Hg==
-X-CSE-MsgGUID: xo3dQ09ER/WFULj8UfKy+A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="35781185"
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="35781185"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 08:35:09 -0700
-X-CSE-ConnectionGUID: 3V6Q+ii3Q0iNb9omPc/5Sw==
-X-CSE-MsgGUID: wEIXtmCnTtmBKhPcaPEk6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,195,1712646000"; 
-   d="scan'208";a="39934100"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.111.9]) ([10.125.111.9])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 08:35:09 -0700
-Message-ID: <da90b57e-748a-4311-9f89-531c5b65e937@intel.com>
-Date: Tue, 28 May 2024 08:35:00 -0700
+	s=arc-20240116; t=1716911736; c=relaxed/simple;
+	bh=BlC/m/6GBSaDP1AWkkyy4l224exPE/TauRvRz2K1KQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=sIJbk1fRQspSkbeGoZLhfnmVnUJWnAZN7LiyvF+kvqf4ueh0MZ4k+QtIkSWSRtznuh357lBJsupIw11rAg3O/6vS3PX2WOFYMdjKTa7ZzrVs9LDwhtbOrRd5rDIfgmc/Uf7wfZr5lySvwdQjqftFhLOrGfPYhfWtQmqIaZhN604=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAtHRuRy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3468C3277B;
+	Tue, 28 May 2024 15:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716911736;
+	bh=BlC/m/6GBSaDP1AWkkyy4l224exPE/TauRvRz2K1KQ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mAtHRuRyUXSplryVNDJb2T23mWNYaC7zHn8z/Rm+onfbCxJI5f/W/HNqLQQnA2LjB
+	 eRhiZNYOq5DcwTPHiiCRLeZ0m3SvNLfRuAbVEZe5cxn75UiJV2a2FIjYhwcfqeel7Q
+	 LqmVI8lHCJe9TWPvArv043okmJtNBBPd0PcYvQURKEdJ2JgPQMz+REhHox1FpWY30D
+	 Ei/XN1KodHKkJslAVKXvjptll0UHPJNmahJ70zlYIssuoLDNMBV08iTK3Xi29NgUXK
+	 06jMJUXhccctOPYxUyIe5PSbaIrOx2N8KVR1fAP8cCGHZLbYG8NUcmTF1/swaJ8gIh
+	 +Xvnmb+ZeMLjg==
+Date: Tue, 28 May 2024 10:55:34 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: dwc: ep: Add dw_pcie_ep_deinit_notify()
+Message-ID: <20240528155534.GA312623@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Fix missing lockdep annotation for
- pci_cfg_access_trylock()
-To: Dan Williams <dan.j.williams@intel.com>, bhelgaas@google.com
-Cc: Alex Williamson <alex.williamson@redhat.com>, linux-pci@vger.kernel.org,
- linux-cxl@vger.kernel.org
-References: <171659995361.845588.6664390911348526329.stgit@dwillia2-xfh.jf.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <171659995361.845588.6664390911348526329.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528130035.1472871-6-cassel@kernel.org>
 
-
-
-On 5/24/24 6:19 PM, Dan Williams wrote:
-> Alex reports a new vfio-pci lockdep warning resulting from the
-> cfg_access_lock lock_map added recently.
+On Tue, May 28, 2024 at 03:00:37PM +0200, Niklas Cassel wrote:
+> Add a DWC specific wrapper function (dw_pcie_ep_deinit_notify()) around
+> pci_epc_deinit_notify(), similar to how we have a wrapper function
+> (dw_pcie_ep_init_notify()) around pci_epc_init_notify().
 > 
-> Add the missing annotation to pci_cfg_access_trylock() and adjust the
-> lock_map acquisition to be symmetrical relative to pci_lock.
+> This will allow the DWC glue drivers to use the same API layer for init
+> and deinit notification.
 > 
-> Fixes: 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
-> Reported-by: Alex Williamson <alex.williamson@redhat.com>
-> Closes: http://lore.kernel.org/r/20240523131005.5578e3de.alex.williamson@redhat.com
-> Tested-by: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
 > ---
->  drivers/pci/access.c |   10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 13 +++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h    |  5 +++++
+>  2 files changed, 18 insertions(+)
 > 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 30f031de9cfe..3595130ff719 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -289,11 +289,10 @@ void pci_cfg_access_lock(struct pci_dev *dev)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 2063cf2049e5..3c9079651dff 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -39,6 +39,19 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
+>  
+> +/**
+> + * dw_pcie_ep_deinit_notify - Notify EPF drivers about EPC deinitialization
+> + *			      complete
+> + * @ep: DWC EP device
+> + */
+> +void dw_pcie_ep_deinit_notify(struct dw_pcie_ep *ep)
+> +{
+> +	struct pci_epc *epc = ep->epc;
+> +
+> +	pci_epc_deinit_notify(epc);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_ep_deinit_notify);
+
+What is the value of this wrapper?  
+
+I see that dw_pcie_ep_deinit_notify() would be parallel to
+dw_pcie_ep_init_notify() and dw_pcie_ep_linkup(), but none of these
+has any DWC-specific content other than the fact that
+pcie-designware.h provides stubs for the non-CONFIG_PCIE_DW_EP case.
+
+What if we added stubs to pci-epc.h pci_epc_init_notify(),
+pci_epc_deinit_notify(), pci_epc_linkup(), and pci_epc_linkdown() for
+the non-CONFIG_PCI_ENDPOINT case instead?  Then we might be able to
+drop all these DWC-specific wrappers.
+
+>  /**
+>   * dw_pcie_ep_get_func_from_ep - Get the struct dw_pcie_ep_func corresponding to
+>   *				 the endpoint function
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index f8e5431a207b..dc63f764b8ba 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -672,6 +672,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+>  int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep);
+>  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
+>  void dw_pcie_ep_deinit(struct dw_pcie_ep *ep);
+> +void dw_pcie_ep_deinit_notify(struct dw_pcie_ep *ep);
+>  void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep);
+>  int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no);
+>  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> @@ -706,6 +707,10 @@ static inline void dw_pcie_ep_deinit(struct dw_pcie_ep *ep)
 >  {
->  	might_sleep();
->  
-> -	lock_map_acquire(&dev->cfg_access_lock);
-> -
->  	raw_spin_lock_irq(&pci_lock);
->  	if (dev->block_cfg_access)
->  		pci_wait_cfg(dev);
-> +	lock_map_acquire(&dev->cfg_access_lock);
->  	dev->block_cfg_access = 1;
->  	raw_spin_unlock_irq(&pci_lock);
 >  }
-> @@ -315,8 +314,10 @@ bool pci_cfg_access_trylock(struct pci_dev *dev)
->  	raw_spin_lock_irqsave(&pci_lock, flags);
->  	if (dev->block_cfg_access)
->  		locked = false;
-> -	else
-> +	else {
-> +		lock_map_acquire(&dev->cfg_access_lock);
->  		dev->block_cfg_access = 1;
-> +	}
->  	raw_spin_unlock_irqrestore(&pci_lock, flags);
 >  
->  	return locked;
-> @@ -342,11 +343,10 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
->  	WARN_ON(!dev->block_cfg_access);
->  
->  	dev->block_cfg_access = 0;
-> +	lock_map_release(&dev->cfg_access_lock);
->  	raw_spin_unlock_irqrestore(&pci_lock, flags);
->  
->  	wake_up_all(&pci_cfg_wait);
-> -
-> -	lock_map_release(&dev->cfg_access_lock);
+> +static inline void dw_pcie_ep_deinit_notify(struct dw_pcie_ep *ep)
+> +{
+> +}
+> +
+>  static inline void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
+>  {
 >  }
->  EXPORT_SYMBOL_GPL(pci_cfg_access_unlock);
->  
+> -- 
+> 2.45.1
 > 
 
