@@ -1,116 +1,105 @@
-Return-Path: <linux-pci+bounces-7950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7951-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCF3E8D292D
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 02:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 983568D2A72
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 04:04:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 192651C23737
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 00:00:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C89871C24F46
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 02:04:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7C2140374;
-	Wed, 29 May 2024 00:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01C2416130D;
+	Wed, 29 May 2024 02:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PqravWHR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QyCVRHXo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFBB13FD92;
-	Wed, 29 May 2024 00:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DD715FD1A;
+	Wed, 29 May 2024 02:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716940805; cv=none; b=e8D+5lUxvFRinvxhfZVbbbCbMq8CPxrvG0azxyhbinHx9hXnIV1+OcZgokohtAwli8MLuBQAmTIpTjxPsle9Ay/yEd0mc+5sBL/YiHQ5Qc7j/iJQFVRuoLTOAm9ZmUL1ClmeYoRpif/ld4JNrNeSmB6syw80ptQrDzOF80RUwlk=
+	t=1716948145; cv=none; b=q07Rg/UyJ/yLJEGWnbN2Y+2jLRaifoMxfjcuho0gM9jIr4hHgIosAKbAXS+OU5zPgkBASpYLeQR8WneInUZns4eZCnxZHj1embsodjh4jnRRDg0bLWHxUViqzp18AGJzqLG70ioN3MTswDne7rGj8mmu9gZiTVXLwAup0ChnV58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716940805; c=relaxed/simple;
-	bh=aM+phMkkluGc/O/MwbayhMFcLAIXn4h8FEOvJEC3LAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DudkoUZYOcgDXjIFUBqBJ+cxSFWBSpt7VBwFTUWP8Xo9bJ4pZMWAgB+SNTIILDqNKV5gMnTIpiYFlFrVuX8buCHky/vd0wmjP+VdbRGU6jtAurdkln8AYXeW1KkHwwKI3yXDtwVo7F1I2jXiA9mn8hYQ43WRHYToZLi27YEi2q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PqravWHR; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716940804; x=1748476804;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aM+phMkkluGc/O/MwbayhMFcLAIXn4h8FEOvJEC3LAI=;
-  b=PqravWHRiNBL/134gU3UrYzmcERWY/x79armXGvf11nT3mBXxZaJo9Lv
-   exvPP+5C36xkooBrYVGovWpQNhaxwQY/36Zo1A3dF74boAxTDkeFLWKwW
-   P/XxfmitryseVSyuJe4x/zW4nfqtN3oiJOcOChyU8WFJcrFtw7OrMM5EM
-   FC+oEPY+LiODL/3+6yVwoUo0oxWz8jYPcrCvgbtpA3l297cWjkF60+cdG
-   nrITQ3JA8Z+Y8B5mnkf9SBOrv04mP/TyIL3uoqHYkRfupdaWvbyEeraku
-   +l7y32bT+YaV3Fur3JwESJzmTfgW9SbqcUEZhLYkGJr8f2kIQQprCl8w3
-   Q==;
-X-CSE-ConnectionGUID: rHYFi5juSn2AJtNPrcpksA==
-X-CSE-MsgGUID: 9lLnACUrS2Sf6PKe/J6N9Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="13139003"
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="13139003"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 17:00:04 -0700
-X-CSE-ConnectionGUID: YnTbqMd0TIaFwuGkUzwptQ==
-X-CSE-MsgGUID: 7tOAxpo+TBq5k2P+HKHGhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,196,1712646000"; 
-   d="scan'208";a="35261842"
-Received: from gtryonx-mobl.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.99.237])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 17:00:03 -0700
-Date: Tue, 28 May 2024 17:00:01 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: bhelgaas@google.com, Jani Saarinen <jani.saarinen@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Make PCI cfg_access_lock lockdep key a singleton
-Message-ID: <ZlZwATgdPtw1tr6G@aschofie-mobl2>
-References: <171693842964.1298616.14265420982007939967.stgit@dwillia2-xfh.jf.intel.com>
+	s=arc-20240116; t=1716948145; c=relaxed/simple;
+	bh=8ZfvQgO3/QzprRBXweHb5KB1W9EIv7sdnc6kqUIcHKo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ETQ7wOGpKI+PU9TWaHGnwWDKeqkuk6ZXqahOTWN1j6bv/N9OXHP4YMj5W6e9KkQLSsXu6uI+mz4H3mWdo6rCMhcQkY+llTvtv/9k4hpGc0R+0a//Dw6lwumXHKc4RY5A46QbGhUPWzS8HsloNo2Cyiqw3JbFGNtso8f+E9FsV7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QyCVRHXo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428E4C4AF07;
+	Wed, 29 May 2024 02:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716948145;
+	bh=8ZfvQgO3/QzprRBXweHb5KB1W9EIv7sdnc6kqUIcHKo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QyCVRHXob0Yzd928wqA+n3n19zyhyTPO8N3wtkoefn9Lebo9rR+UCm55izY+Fn+Hc
+	 +qumB4byelFzWsQSsZXSbGlCR+YMqDr7MRZ0o6kAjG5cTFkJheyT1RZ0UezXxJt2cI
+	 483ExWXjLNdSowfUFKsR3q7A7D3Ikz9XZGcge9AtecyXjW8HX6wVzML+E4XD/xSpXV
+	 gAkbFmuCgYr2ZIIsq8I1XXRqVUD7dJzWUE28xj5aBB7oEC2V61HkifWd3/oucfC/Y5
+	 vuIES/tVH09I9uTYA4dY3SBlY/XzN8NZ8hhugEhMqdQZO1jbUShvcKav6OMsEt+KcM
+	 6OV4bdeLQsxHg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	johan+linaro@kernel.org,
+	bmasney@redhat.com,
+	djakov@kernel.org,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	vireshk@kernel.org,
+	quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com,
+	quic_nitegupt@quicinc.com,
+	quic_parass@quicinc.com,
+	krzysztof.kozlowski@linaro.org,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: (subset) [PATCH v13 0/6] PCI: qcom: Add support for OPP
+Date: Tue, 28 May 2024 21:01:59 -0500
+Message-ID: <171694812089.574781.16754676047820223092.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240518-opp_support-v13-0-78c73edf50de@quicinc.com>
+References: <20240518-opp_support-v13-0-78c73edf50de@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171693842964.1298616.14265420982007939967.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 28, 2024 at 04:22:59PM -0700, Dan Williams wrote:
-> The new lockdep annotation for cfg_access_lock naively registered a new
-> key per device. This is overkill and leads to warnings on hash
-> collisions at dynamic registration time:
-> 
->  WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:1226 lockdep_register_key+0xb0/0x240
->  RIP: 0010:lockdep_register_key+0xb0/0x240
->  [..]
->  Call Trace:
->   <TASK>
->   ? __warn+0x8c/0x190
->   ? lockdep_register_key+0xb0/0x240
->   ? report_bug+0x1f8/0x200
->   ? handle_bug+0x3c/0x70
->   ? exc_invalid_op+0x18/0x70
->   ? asm_exc_invalid_op+0x1a/0x20
->   ? lockdep_register_key+0xb0/0x240
->   pci_device_add+0x14b/0x560
->   ? pci_setup_device+0x42e/0x6a0
->   pci_scan_single_device+0xa7/0xd0
->   p2sb_scan_and_cache_devfn+0xc/0x90
->   p2sb_fs_init+0x15f/0x170
-> 
-> Switch to a shared static key for all instances.
-> 
-> Fixes: 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
-> Reported-by: Jani Saarinen <jani.saarinen@intel.com>
-> Closes: https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_14834/bat-apl-1/boot0.txt
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
+On Sat, 18 May 2024 19:01:41 +0530, Krishna chaitanya chundru wrote:
+> This patch adds support for OPP to vote for the performance state of RPMH
+> power domain based upon PCIe speed it got enumerated.
 > 
+> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
+> maintains hardware state of a regulator by performing max aggregation of
+> the requests made by all of the processors.
+> 
+> [...]
+
+Applied, thanks!
+
+[1/6] arm64: dts: qcom: sm8450: Add interconnect path to PCIe node
+      commit: 42870599f9441fc96f99050637d2dce6f8b52597
+[4/6] arm64: dts: qcom: sm8450: Add OPP table support to PCIe
+      commit: 628388982c1303283b220a47e69906f0924e4031
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
