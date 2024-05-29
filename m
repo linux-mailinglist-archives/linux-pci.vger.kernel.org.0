@@ -1,205 +1,108 @@
-Return-Path: <linux-pci+bounces-8030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8032-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 822448D3944
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:32:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2904B8D39F5
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:53:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20C0A287FCE
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 14:32:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8C9A28A65E
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 14:52:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF63158DCE;
-	Wed, 29 May 2024 14:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4B91581E8;
+	Wed, 29 May 2024 14:51:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC3F54669
-	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 14:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA13917B404
+	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 14:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716993140; cv=none; b=MS6JIjP3VPKEr+SWM4FpMZW/FIl3rEFscaUTpA4VuKM9SLoVnIyh2gu5LsdkOFxXfom9vgxM6ASNN2xehOwBmRGATnSKE6wXZAVnVMD/aFmVuj1aq2H8+JkE4UpJspLdutKWGsznqf9ec69Q0jMEv4Surf8SDVWlZnoU77JdoSU=
+	t=1716994284; cv=none; b=lDO9nvxR8/HeZitJ5OEsvUM9+Hb/CHmwviJGOixfawlaugxdTd6yaTeiqeVXIRZIH7v+5BL9/Ns5OgCWTdgAvmk2ivcZ/edxDZrYbtIkAa7/XGmRpWqPp/muRv1jP4HyHjYS/Q6NBbK/VdVYVWyJ5ZTdyglYEqR3q2xd3MX3YZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716993140; c=relaxed/simple;
-	bh=/N/z6qcOhas0MX07CoXscaTO03/MW6B7t4d0caCZpMs=;
-	h=Message-Id:From:Date:Subject:To:Cc; b=pI3ApeilaYs6KBOR92ErhB3GLQDuhYCGRsVO8vscEMmn+vY0p2g1+3PmjfKk7CjniJQmX8ZgrRUU5esG2qvKJ7l+aDkfOdHuo6E9lfLWtY8P93hFy2mvVJ7kASpgLxlrshiTqYQZrKdXrxfmO2GMsI6bqnsuqa0m0vSiYTfU050=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.62
+	s=arc-20240116; t=1716994284; c=relaxed/simple;
+	bh=87tgenCcbkDkT1v056+Rrow6+rvKb6ED20JwCzwCEBo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qgxj0JcGK/2nFbCTJ8Vk56M4Hr6JzqDAtQL538+t4s3V5lCQme0Usxux8s2do6Y2n6cefV1ZH2eS2ckdQ3DubnfrNBJ8axDyO+MF28o47mr40CPJehwQYFdtXqXnklVkv4ACOrTHschBuXe1NoVqJfzUjy1q+4Yvzf6L7YBBwTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 39E2D10195455;
-	Wed, 29 May 2024 16:32:09 +0200 (CEST)
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id C5EC530000D14;
+	Wed, 29 May 2024 16:43:51 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E4FC6230885; Wed, 29 May 2024 16:32:08 +0200 (CEST)
-Message-Id: <a1afaa12f341d146ecbea27c1743661c71683833.1716992815.git.lukas@wunner.de>
+	id B0FAA230885; Wed, 29 May 2024 16:43:51 +0200 (CEST)
+Date: Wed, 29 May 2024 16:43:51 +0200
 From: Lukas Wunner <lukas@wunner.de>
-Date: Wed, 29 May 2024 16:32:09 +0200
-Subject: [PATCH] PCI: pciehp: Detect device replacement during system sleep
-To: Bjorn Helgaas <helgaas@kernel.org>, Ricky Wu <ricky_wu@realtek.com>
-Cc: Scott Murray <scott@spiteful.org>, Keith Busch <kbusch@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aapo Vienamo <aapo.vienamo@linux.intel.com>, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
+To: Ricky WU <ricky_wu@realtek.com>
+Cc: "scott@spiteful.org" <scott@spiteful.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"kbusch@kernel.org" <kbusch@kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [bug report] nvme not re-recognize when changed M.2 SSD in S3
+ mode
+Message-ID: <Zlc_J2386nAAhn1s@wunner.de>
+References: <a608b5930d0a48f092f717c0e137454b@realtek.com>
+ <ZhZk7MMt_dm6avBJ@wunner.de>
+ <ZhapFF3393xuIHwM@wunner.de>
+ <8c3d00850e7449c184e4c45a3c9b9dfa@realtek.com>
+ <ZlR0grWLqO9nch8Q@wunner.de>
+ <94918684e6a84122a6373ef45b3c117c@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94918684e6a84122a6373ef45b3c117c@realtek.com>
 
-Ricky reports that replacing a device in a hotplug slot during ACPI
-sleep state S3 does not cause re-enumeration on resume, as one would
-expect.  Instead, the new device is treated as if it was the old one.
+On Wed, May 29, 2024 at 07:47:13AM +0000, Ricky WU wrote:
+> We tried this patch as below situation: 
+> 1.keep the SDEX card enter S3 then resume ->PASS 
+> 2. on S3 mode insert the SDEX card then resume -> PASS
+> 3.on S3 mode remove the SDEX card then resume -> PASS
+> 4.replace card on S3 mode (different brand) ->PASS
+> 5.replace card on S3 mode (same brand and same capacity) ->FAIL
+> Can not see the msg "device replace during system sleep"
+> 
+> Against 5 we found a issue, most card not declare capability
+> "PCI_EXT_CAP_ID_DSN", even if there is the capability the config space
+> value are 0, cause pci_get_dsn() return 0 normally.
+> However these cards can show the SN on CrystalDiskInfo.
 
-There is no bulletproof way to detect device replacement, but as a
-heuristic, check whether the device identity in config space matches
-cached data in struct pci_dev (Vendor ID, Device ID, Class Code,
-Revision ID, Subsystem Vendor ID, Subsystem ID).  Additionally, cache
-and compare the Device Serial Number (PCIe r6.2 sec 7.9.3).  If a
-mismatch is detected, mark the old device disconnected (to prevent its
-driver from accessing the new device) and synthesize a Presence Detect
-Changed event.
+Thanks for testing.  That's the expected behavior so I went ahead and
+submitted the patch:
 
-The device identity in config space which is compared here is the same
-as the one included in the signed Subject Alternative Name per PCIe r6.1
-sec 6.31.3.  Thus, the present commit prevents attacks where a valid
-device is replaced with a malicious device during system sleep and the
-valid device's driver obliviously accesses the malicious device.
+https://lore.kernel.org/all/a1afaa12f341d146ecbea27c1743661c71683833.1716992815.git.lukas@wunner.de/
 
-This is about as much as can be done at the PCI layer.  Drivers may have
-additional ways to identify devices (such as reading a WWID from some
-register) and may trigger re-enumeration when detecting an identity
-change on resume.
+If vendors neglect to populate the Device Serial Number in config space,
+it's zero and we cannot use it to detect device replacement.
 
-Reported-by: Ricky Wu <ricky_wu@realtek.com>
-Closes: https://lore.kernel.org/r/a608b5930d0a48f092f717c0e137454b@realtek.com
-Tested-by: Ricky Wu <ricky_wu@realtek.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/pci/hotplug/pciehp.h      |  4 ++++
- drivers/pci/hotplug/pciehp_core.c | 42 ++++++++++++++++++++++++++++++++++++++-
- drivers/pci/hotplug/pciehp_hpc.c  |  5 +++++
- drivers/pci/hotplug/pciehp_pci.c  |  4 ++++
- 4 files changed, 54 insertions(+), 1 deletion(-)
+A DSN of "all zeroes" is a reserved value:
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index e0a614a..273dd8c 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -46,6 +46,9 @@
- /**
-  * struct controller - PCIe hotplug controller
-  * @pcie: pointer to the controller's PCIe port service device
-+ * @dsn: cached copy of Device Serial Number of Function 0 in the hotplug slot
-+ *	(PCIe r6.2 sec 7.9.3); used to determine whether a hotplugged device
-+ *	was replaced with a different one during system sleep
-  * @slot_cap: cached copy of the Slot Capabilities register
-  * @inband_presence_disabled: In-Band Presence Detect Disable supported by
-  *	controller and disabled per spec recommendation (PCIe r5.0, appendix I
-@@ -87,6 +90,7 @@
-  */
- struct controller {
- 	struct pcie_device *pcie;
-+	u64 dsn;
- 
- 	u32 slot_cap;				/* capabilities and quirks */
- 	unsigned int inband_presence_disabled:1;
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index ddd55ad..ff458e6 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -284,6 +284,32 @@ static int pciehp_suspend(struct pcie_device *dev)
- 	return 0;
- }
- 
-+static bool pciehp_device_replaced(struct controller *ctrl)
-+{
-+	struct pci_dev *pdev __free(pci_dev_put);
-+	u32 reg;
-+
-+	pdev = pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0, 0));
-+	if (!pdev)
-+		return true;
-+
-+	if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
-+	    reg != (pdev->vendor | (pdev->device << 16)) ||
-+	    pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
-+	    reg != (pdev->revision | (pdev->class << 8)))
-+		return true;
-+
-+	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
-+	    (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) ||
-+	     reg != (pdev->subsystem_vendor | (pdev->subsystem_device << 16))))
-+		return true;
-+
-+	if (pci_get_dsn(pdev) != ctrl->dsn)
-+		return true;
-+
-+	return false;
-+}
-+
- static int pciehp_resume_noirq(struct pcie_device *dev)
- {
- 	struct controller *ctrl = get_service_data(dev);
-@@ -293,9 +319,23 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
- 	ctrl->cmd_busy = true;
- 
- 	/* clear spurious events from rediscovery of inserted card */
--	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE)
-+	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE) {
- 		pcie_clear_hotplug_events(ctrl);
- 
-+		/*
-+		 * If hotplugged device was replaced with a different one
-+		 * during system sleep, mark the old device disconnected
-+		 * (to prevent its driver from accessing the new device)
-+		 * and synthesize a Presence Detect Changed event.
-+		 */
-+		if (pciehp_device_replaced(ctrl)) {
-+			ctrl_dbg(ctrl, "device replaced during system sleep\n");
-+			pci_walk_bus(ctrl->pcie->port->subordinate,
-+				     pci_dev_set_disconnected, NULL);
-+			pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
-+		}
-+	}
-+
- 	return 0;
- }
- #endif
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index b1d0a1b3..061f01f 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -1055,6 +1055,11 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		}
- 	}
- 
-+	pdev = pci_get_slot(subordinate, PCI_DEVFN(0, 0));
-+	if (pdev)
-+		ctrl->dsn = pci_get_dsn(pdev);
-+	pci_dev_put(pdev);
-+
- 	return ctrl;
- }
- 
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-index ad12515..65e50be 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -72,6 +72,10 @@ int pciehp_configure_device(struct controller *ctrl)
- 	pci_bus_add_devices(parent);
- 	down_read_nested(&ctrl->reset_lock, ctrl->depth);
- 
-+	dev = pci_get_slot(parent, PCI_DEVFN(0, 0));
-+	ctrl->dsn = pci_get_dsn(dev);
-+	pci_dev_put(dev);
-+
-  out:
- 	pci_unlock_rescan_remove();
- 	return ret;
--- 
-2.43.0
+   "The all-zeros EUI-48 value (00-00-00-00-00-00) and EUI-64 value
+    (00-00-00-00-00-00-00-00), though assigned to an organization,
+    have not been and will not be used by that assignee as an EUI.
+    (They can be considered as assigned to the IEEE Registration Authority.)"
 
+    https://standards-support.ieee.org/hc/en-us/articles/4888705676564-Guidelines-for-Use-of-Extended-Unique-Identifier-EUI-Organizationally-Unique-Identifier-OUI-and-Company-ID-CID
+
+The serial numbers of block devices shown by lsblk are not PCI
+serial numbers, but specific to the NVME or SCSI or ATA layer.
+I'll look into adding a PCI helper which those layers can call
+on resume if they detect a change in device identity, but that's
+independent from the patch I just submitted.
+
+Thanks,
+
+Lukas
 
