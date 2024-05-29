@@ -1,175 +1,139 @@
-Return-Path: <linux-pci+bounces-8010-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8011-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DA628D318F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:36:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBE3B8D3331
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 11:38:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F3EF1C23E68
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:36:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EB9D1F26949
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 09:38:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DBF416D9C0;
-	Wed, 29 May 2024 08:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBw9VvBc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DAB616A36F;
+	Wed, 29 May 2024 09:38:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345C416D9BE;
-	Wed, 29 May 2024 08:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E609716DEB1
+	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 09:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716971408; cv=none; b=prhEPXWLklTZwtI/WQc/P3LbagF931Pvklo+QzhAdt4WFsM9qC1RHXXQYRiDnM4D519cTIU2K3GV8GB3Be6wMmBsKCeT01iE5z6omXA1wejwShxANT2DMk0tMwWldVZ9oWMrmYbG+iZbjqWIb9bVvRjkKzW1R4H97Kvoajn1fyQ=
+	t=1716975504; cv=none; b=hsqGvruCLXV1rxDqUMt9KceIvbb7FPwBgFzhdEVgEkZZynBgJS7rdY5WlRzncfrWlMdA0oQhrvTpUHEduRqHb8FdOaHVVCLbndj2oYDJskAvkYWyKOH/mZo97qGNPRZFPBENVmR7Lc9EwVUBspKeW27tY8k7OCH5fUOig1ZocWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716971408; c=relaxed/simple;
-	bh=LO909Qkb49dF2RDbiXWZUtB58HFe23RYE1wbMe1vcLI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Sm12zpm78SlPo/13vptBVmwHCdkUMf+rBGTtw/KuP9wFRP2Uc4366K1DyIoG9NQF2rmxUUU9f+Ns5q8bZao+Y5e5/c+bQHNjjY0Zd/s1GbMo2BfPLd6Tkvv6ZXLTDgn74PbCqncflIDJRWf2H7ZXDztPiVmy+VGaNe6H3bl/gGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBw9VvBc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AF23C2BD10;
-	Wed, 29 May 2024 08:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716971407;
-	bh=LO909Qkb49dF2RDbiXWZUtB58HFe23RYE1wbMe1vcLI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=cBw9VvBcV1o5536nQZc+jpLoTRiQB5iWrsAWafOAX/+iRPbfpmCEevODeAijFiVFH
-	 is94eFUQkngtapUPj33iBBOa5dG2GDrM1ZYUZhfwcQNC1iNlypwGCDSfba9zyf6v/f
-	 VflaC03AdPaIXD5guCFfFF6r4R/lS4SmKBR5K7gDmlAbbFXI0faWNyOlCk5hLjK0ts
-	 2Sz1W2GoYhQ5tDvG7HiV5gNSY+eatigFxHD0dymvuXdWxVR5i15ATFCW2GEGJGxYQH
-	 bd+jUUuHvqzy997jyv8GBc5ua68u8vZItG87JMaSd76wVBg5lTeY1HqWmj98LFDaeY
-	 JtcVMqaAeAirw==
-From: Niklas Cassel <cassel@kernel.org>
-Date: Wed, 29 May 2024 10:29:07 +0200
-Subject: [PATCH v4 13/13] arm64: dts: rockchip: Add rock5b overlays for
- PCIe endpoint mode
+	s=arc-20240116; t=1716975504; c=relaxed/simple;
+	bh=4XJJgGtWpKIBlEPyJagbdvOUmbd+0hW1lFDdf6ixBtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JW0nCyoMn3x0yHXj0pRZHbyEE/ZuzX8AjnVg3tS4e80Wp4DzrJTDoc7Dx79Xsy8t7qW4peF/Rd0Yd18ifytW8b6j8icybKfsuZQ9w+2hgBG6H0aNmuKziICLA65KYm4NOqhg1dKxaAw9MG67MRRQjzrCqwb9KD+KeswpRXD6j+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 8DE6D2800C983;
+	Wed, 29 May 2024 11:38:12 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 5F7E770E9C8; Wed, 29 May 2024 11:38:12 +0200 (CEST)
+Date: Wed, 29 May 2024 11:38:12 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
+	Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: Re: [PATCH v2 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+Message-ID: <Zlb3hGR45SWJ1KuL@wunner.de>
+References: <20240528131940.16924-1-mariusz.tkaczyk@linux.intel.com>
+ <20240528131940.16924-3-mariusz.tkaczyk@linux.intel.com>
+ <6656bb4654a65_16687294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-rockchip-pcie-ep-v1-v4-13-3dc00fe21a78@kernel.org>
-References: <20240529-rockchip-pcie-ep-v1-v4-0-3dc00fe21a78@kernel.org>
-In-Reply-To: <20240529-rockchip-pcie-ep-v1-v4-0-3dc00fe21a78@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Niklas Cassel <cassel@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Damien Le Moal <dlemoal@kernel.org>, Jon Lin <jon.lin@rock-chips.com>, 
- Shawn Lin <shawn.lin@rock-chips.com>, Simon Xue <xxm@rock-chips.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-rockchip@lists.infradead.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3452; i=cassel@kernel.org;
- h=from:subject:message-id; bh=LO909Qkb49dF2RDbiXWZUtB58HFe23RYE1wbMe1vcLI=;
- b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLCnoc2R3GI9XocrK5x5whJLLWw3H6w5YDYHdaFQpxun
- 56EfJvWUcrCIMbFICumyOL7w2V/cbf7lOOKd2xg5rAygQxh4OIUgIm4ljEybMjbMmMnU1Hikoyu
- dfqWC2K+fnv3mn8uVwKTp4Og13cZc0aGX7pr+0xiU+/LxKzf6pSs/m/RX28+Dln7dr+yfw6L+K7
- zAgA=
-X-Developer-Key: i=cassel@kernel.org; a=openpgp;
- fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6656bb4654a65_16687294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-Add rock5b overlays for PCIe endpoint mode support.
+On Tue, May 28, 2024 at 10:21:10PM -0700, Dan Williams wrote:
+> Mariusz Tkaczyk wrote:
+> > +config PCI_NPEM
+> > +	bool "Native PCIe Enclosure Management"
+> > +	depends on LEDS_CLASS=y
+> 
+> I would have expected
+> 
+>     depends on NEW_LEDS
+>     select LEDS_CLASS
 
-If using the rock5b as an endpoint against a normal PC, only the
-rk3588-rock-5b-pcie-ep.dtbo needs to be applied.
+Hm, a quick "git grep -C 2 'depends on NEW_LEDS'" shows that noone else
+does that.  Everyone else either selects both NEW_LEDS and LEDS_CLASS
+or depends on both or depends on just LEDS_CLASS.
 
-If using two rock5b:s, with one board as EP and the other board as RC,
-rk3588-rock-5b-pcie-ep.dtbo and rk3588-rock-5b-pcie-srns.dtbo has to
-be applied to the respective boards.
+(Since LEDS_CLASS is constrained to "if NEW_LEDS", depending on both
+seems pointless, so I'm not sure why some people do that.)
 
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
----
- arch/arm64/boot/dts/rockchip/Makefile              |  5 +++++
- .../boot/dts/rockchip/rk3588-rock-5b-pcie-ep.dtso  | 25 ++++++++++++++++++++++
- .../dts/rockchip/rk3588-rock-5b-pcie-srns.dtso     | 16 ++++++++++++++
- 3 files changed, 46 insertions(+)
+I guess it would be good to get guidance from leds maintainers what
+the preferred modus operandi is.
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index f42fa62b4064..df7f5103b018 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -124,6 +124,8 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-ok3588-c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-orangepi-5-plus.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-quartzpro64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-ep.dtbo
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-rock-5b-pcie-srns.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-tiger-haikou.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-toybrick-x0.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588-turing-rk1.dtb
-@@ -134,3 +136,6 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-nanopi-r6s.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-nanopi-r6c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5.dtb
-+
-+# Enable support for device-tree overlays
-+DTC_FLAGS_rk3588-rock-5b += -@
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-ep.dtso b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-ep.dtso
-new file mode 100644
-index 000000000000..672d748fcc67
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-ep.dtso
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * DT-overlay to run the PCIe3_4L Dual Mode controller in Endpoint mode
-+ * in the SRNS (Separate Reference Clock No Spread) configuration.
-+ *
-+ * NOTE: If using a setup with two ROCK 5B:s, with one board running in
-+ * RC mode and the other board running in EP mode, see also the device
-+ * tree overlay: rk3588-rock-5b-pcie-srns.dtso.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&pcie30phy {
-+	rockchip,rx-common-refclk-mode = <0 0 0 0>;
-+};
-+
-+&pcie3x4 {
-+	status = "disabled";
-+};
-+
-+&pcie3x4_ep {
-+	vpcie3v3-supply = <&vcc3v3_pcie30>;
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-srns.dtso b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-srns.dtso
-new file mode 100644
-index 000000000000..1a0f1af65c43
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-pcie-srns.dtso
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * DT-overlay to run the PCIe3_4L Dual Mode controller in Root Complex
-+ * mode in the SRNS (Separate Reference Clock No Spread) configuration.
-+ *
-+ * This device tree overlay is only needed (on the RC side) when running
-+ * a setup with two ROCK 5B:s, with one board running in RC mode and the
-+ * other board running in EP mode.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&pcie30phy {
-+	rockchip,rx-common-refclk-mode = <0 0 0 0>;
-+};
 
--- 
-2.45.1
+> > +#define for_each_indication(ind, inds) \
+> > +	for (ind = inds; ind->bit; ind++)
+> > +
+> > +/* To avoid confusion, do not keep any special bits in indications */
+> 
+> I am confused by this comment. What "special bits" is this referring to?
 
+I think it's referring to bit 0 in the Status and Control register,
+which is a master "NPEM Capable" and "NPEM Enable" bit.
+
+
+> > +struct npem_ops {
+> > +	const struct indication *inds;
+> 
+> @inds is not an operation, it feels like something that belongs as
+> another member in 'struct npem'. What drove this data to join 'struct
+> npem_ops'?
+
+The native NPEM register interface supports enclosure-specific indications
+which the DSM interface does not support.  So those indications are
+present in the native npem_ops->inds and not present in the DSM
+npem_ops->inds.
+
+
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+[...]
+> > +#define  PCI_NPEM_IND_SPEC_0		0x00800000
+> > +#define  PCI_NPEM_IND_SPEC_1		0x01000000
+> > +#define  PCI_NPEM_IND_SPEC_2		0x02000000
+> > +#define  PCI_NPEM_IND_SPEC_3		0x04000000
+> > +#define  PCI_NPEM_IND_SPEC_4		0x08000000
+> > +#define  PCI_NPEM_IND_SPEC_5		0x10000000
+> > +#define  PCI_NPEM_IND_SPEC_6		0x20000000
+> > +#define  PCI_NPEM_IND_SPEC_7		0x40000000
+> 
+> Given no other driver needs this, I would define them locally in
+> drivers/pci/npem.c.
+
+This is a uapi header, so could be used not just by other drivers
+but by user space.
+
+It's common to add spec-defined register bits to this header file
+even if they're only used by a single source file in the kernel.
+
+Thanks,
+
+Lukas
 
