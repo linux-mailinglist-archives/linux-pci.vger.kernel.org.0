@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-8049-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D99AD8D3D0A
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 18:43:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F17448D3D0D
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 18:44:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 068E11C20AAC
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:43:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7164281DF9
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:44:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B1E6181D06;
-	Wed, 29 May 2024 16:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D781181D06;
+	Wed, 29 May 2024 16:44:12 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782E2181BA7;
-	Wed, 29 May 2024 16:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E0E1836CE;
+	Wed, 29 May 2024 16:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717001022; cv=none; b=eWyeNzUkL7+spmyr6UMDtTb7mbHO+tdmJJrCBvH0ALeqaGdNbFokDncUWw66UGmiq0947dSyicEHcaSpq8TEjcTmMi1t/ozY0c06a65j0Hvb2KOX2yEPP2nmo/1fBygtKlpimtkcVIg6G5aVZ2hWDaZm7Ne1no7zEYWgFYk3GnY=
+	t=1717001052; cv=none; b=N9IbuiKbP51yEQIRGyCSAerQ+WS5p+d+AGGBQ+ePkBHQUhbnOMjoeJtN1oFGGqBVQh7l67EekMOmEFrUkePKuo1FFtGrpdXWxVdKwWL9pBdkUABX2zXOz0HcYpJ11vzlAVhkP5lX9ebq9FWdtWGQvlGniiKjTyMeSx95o5yu/S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717001022; c=relaxed/simple;
-	bh=jIeGdYFx30PYF6XG4P8ur737aTM5Kur2xUWLRLVoQ84=;
+	s=arc-20240116; t=1717001052; c=relaxed/simple;
+	bh=wrm5GeYkst4lwVJAHdOczrKLGYE1ebDvPZ1eFKGYzWY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ao5fAAfuyvlL4B0lRPiOT1oUOhhxaXxgCRh/SCGerWSVgLxqeDmjg2W1uWYC2/RNBJomNTgJtj3XnsQRoo+iGYxUgCdKXQQAevc9vhICKpSFSAzhHhwFQGCtuKsBJCLbzZ+jFkktcaZq7ObqyhLgJbu8OjesDNHzlmkgnbIwk1Y=
+	 MIME-Version:Content-Type; b=qvfN/oAVdT+IZ+xvhXwdVnCmhnsnM8EUtT7gRzha8a1ul/XL0OcV3emu8mmVg98062OiQlewT6wQcJgUfbUw9OARIw1oHTOAKKXq3t4lVajI0/uYoYnDqi6SyFU0rDb/IdyqLj0GxqbbrsFM/dkwkg2tgvbAeFuTaeYZzLDbjAA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VqFY85w1Vz6K9Jr;
-	Thu, 30 May 2024 00:42:36 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VqFV24Z0Rz6K5sQ;
+	Thu, 30 May 2024 00:39:54 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id B79EF140CF4;
-	Thu, 30 May 2024 00:43:37 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D0A97140B2A;
+	Thu, 30 May 2024 00:44:08 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 29 May 2024 17:43:37 +0100
+ 15.1.2507.39; Wed, 29 May 2024 17:44:08 +0100
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Bjorn Helgaas
 	<bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
@@ -51,9 +51,9 @@ CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
 	<linuxarm@huawei.com>, <terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
 	<sathyanarayanan.kuppuswamy@linux.intel.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [RFC PATCH 5/9] pci: pcie: portdrv: Add a auxiliary_bus
-Date: Wed, 29 May 2024 17:40:59 +0100
-Message-ID: <20240529164103.31671-6-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH 6/9] cxl: Move CPMU register definitions to header
+Date: Wed, 29 May 2024 17:41:00 +0100
+Message-ID: <20240529164103.31671-7-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
 References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
@@ -68,287 +68,144 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Nothing registered on this bus yet, but it will provide an extensible
-means to register child devices that may use drivers that are present
-at portdrv probe time, or due to other dependencies only become present
-later.  The existing pci_express sysfs bus is not suitable for cases
-like the CXL PMU where there may be 0-N independent instances on each
-port.
-
-Note that the portdrv must know how to query any msi/msix interrupt
-numbers so that it can enable sufficient vectors before the
-auxiliary devices are added that make use fo these interrupts.
+To do probing for maximum interrupt, the PCIe port driver needs
+to access a few of these. Keep them all together by moving htem
+all to driver/cxl/pmu.h.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/pci/pcie/Kconfig   |   1 +
- drivers/pci/pcie/portdrv.c | 118 +++++++++++++++++++++++++++++++++++--
- drivers/pci/pcie/portdrv.h |  13 ++++
- 3 files changed, 127 insertions(+), 5 deletions(-)
+ drivers/cxl/pmu.h      | 54 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/perf/cxl_pmu.c | 54 ------------------------------------------
+ 2 files changed, 54 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-index 17919b99fa66..840f87eb4b28 100644
---- a/drivers/pci/pcie/Kconfig
-+++ b/drivers/pci/pcie/Kconfig
-@@ -4,6 +4,7 @@
- #
- config PCIEPORTBUS
- 	bool "PCI Express Port Bus support"
-+	select AUXILIARY_BUS
- 	default y if USB4
- 	help
- 	  This enables PCI Express Port Bus support. Users can then enable
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 7f053bab7745..6314da76de9f 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -6,12 +6,14 @@
-  * Copyright (C) Tom Long Nguyen (tom.l.nguyen@intel.com)
-  */
+diff --git a/drivers/cxl/pmu.h b/drivers/cxl/pmu.h
+index b1e9bcd9f28c..a69ac6facad6 100644
+--- a/drivers/cxl/pmu.h
++++ b/drivers/cxl/pmu.h
+@@ -25,4 +25,58 @@ struct cxl_pmu_regs;
+ int devm_cxl_pmu_add(struct device *parent, struct cxl_pmu_regs *regs,
+ 		     int assoc_id, int idx, enum cxl_pmu_type type);
  
-+#include <linux/auxiliary_bus.h>
- #include <linux/bitfield.h>
- #include <linux/dmi.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/kernel.h>
-+#include <linux/list.h>
- #include <linux/errno.h>
- #include <linux/pm.h>
- #include <linux/pm_runtime.h>
-@@ -208,6 +210,7 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
- /**
-  * get_port_device_capability - discover capabilities of a PCI Express port
-  * @dev: PCI Express port to examine
-+ * @aux_dev_list: Auxiliary devices to create after interrupt vectors resoved.
-  *
-  * The capabilities are read from the port's PCI Express configuration registers
-  * as described in PCI Express Base Specification 1.0a sections 7.8.2, 7.8.9 and
-@@ -215,7 +218,8 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
-  *
-  * Return value: Bitmask of discovered port capabilities
-  */
--static int get_port_device_capability(struct pci_dev *dev)
-+static int get_port_device_capability(struct pci_dev *dev,
-+				      struct list_head *aux_dev_list)
- {
- 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
- 	int services = 0;
-@@ -317,6 +321,20 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
- 	return 0;
- }
- 
-+static void pcie_port_auxdev_delete(void *p_ad)
-+{
-+	struct pcie_port_aux_dev *pcie_adev = p_ad;
++#define CXL_PMU_CAP_REG			0x0
++#define   CXL_PMU_CAP_NUM_COUNTERS_MSK			GENMASK_ULL(5, 0)
++#define   CXL_PMU_CAP_COUNTER_WIDTH_MSK			GENMASK_ULL(15, 8)
++#define   CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK		GENMASK_ULL(24, 20)
++#define   CXL_PMU_CAP_FILTERS_SUP_MSK			GENMASK_ULL(39, 32)
++#define     CXL_PMU_FILTER_HDM				BIT(0)
++#define     CXL_PMU_FILTER_CHAN_RANK_BANK		BIT(1)
++#define   CXL_PMU_CAP_MSI_N_MSK				GENMASK_ULL(47, 44)
++#define   CXL_PMU_CAP_WRITEABLE_WHEN_FROZEN		BIT_ULL(48)
++#define   CXL_PMU_CAP_FREEZE				BIT_ULL(49)
++#define   CXL_PMU_CAP_INT				BIT_ULL(50)
++#define   CXL_PMU_CAP_VERSION_MSK			GENMASK_ULL(63, 60)
 +
-+	auxiliary_device_delete(&pcie_adev->adev);
-+}
++#define CXL_PMU_OVERFLOW_REG		0x10
++#define CXL_PMU_FREEZE_REG		0x18
++#define CXL_PMU_EVENT_CAP_REG(n)	(0x100 + 8 * (n))
++#define   CXL_PMU_EVENT_CAP_SUPPORTED_EVENTS_MSK	GENMASK_ULL(31, 0)
++#define   CXL_PMU_EVENT_CAP_GROUP_ID_MSK		GENMASK_ULL(47, 32)
++#define   CXL_PMU_EVENT_CAP_VENDOR_ID_MSK		GENMASK_ULL(63, 48)
 +
-+static void pcie_port_auxdev_uninit(void *p_ad)
-+{
-+	struct pcie_port_aux_dev *pcie_adev = p_ad;
++#define CXL_PMU_COUNTER_CFG_REG(n)	(0x200 + 8 * (n))
++#define   CXL_PMU_COUNTER_CFG_TYPE_MSK			GENMASK_ULL(1, 0)
++#define     CXL_PMU_COUNTER_CFG_TYPE_FREE_RUN		0
++#define     CXL_PMU_COUNTER_CFG_TYPE_FIXED_FUN		1
++#define     CXL_PMU_COUNTER_CFG_TYPE_CONFIGURABLE	2
++#define   CXL_PMU_COUNTER_CFG_ENABLE			BIT_ULL(8)
++#define   CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW		BIT_ULL(9)
++#define   CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW		BIT_ULL(10)
++#define   CXL_PMU_COUNTER_CFG_EDGE			BIT_ULL(11)
++#define   CXL_PMU_COUNTER_CFG_INVERT			BIT_ULL(12)
++#define   CXL_PMU_COUNTER_CFG_THRESHOLD_MSK		GENMASK_ULL(23, 16)
++#define   CXL_PMU_COUNTER_CFG_EVENTS_MSK		GENMASK_ULL(55, 24)
++#define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
 +
-+	auxiliary_device_uninit(&pcie_adev->adev);
-+}
++#define CXL_PMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
++#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(31, 0)
 +
- static int remove_iter(struct device *dev, void *data)
- {
- 	if (dev->bus == &pcie_port_bus_type)
-@@ -324,6 +342,15 @@ static int remove_iter(struct device *dev, void *data)
- 	return 0;
- }
- 
-+static int aux_remove_iter(struct device *dev, void *data)
-+{
-+	if (dev->bus == &auxiliary_bus_type) {
-+		auxiliary_device_delete(to_auxiliary_dev(dev));
-+		auxiliary_device_uninit(to_auxiliary_dev(dev));
-+	}
-+	return 0;
-+}
++#define CXL_PMU_COUNTER_REG(n)		(0xc00 + 8 * (n))
 +
- /**
-  * pcie_port_device_remove - unregister PCI Express port service devices
-  * @d: PCI Express port the service devices to unregister are associated with
-@@ -338,6 +365,20 @@ static void pcie_port_device_remove(void *d)
- 	device_for_each_child(&dev->dev, NULL, remove_iter);
- }
- 
-+/* Should be called when device created to ensure resource cleanup */
-+int devm_pcie_port_aux_dev_init(struct device *dev,
-+				struct pcie_port_aux_dev *pcie_adev)
-+{
-+	int status;
++/* CXL rev 3.0 Table 13-5 Events under CXL Vendor ID */
++#define CXL_PMU_GID_CLOCK_TICKS		0x00
++#define CXL_PMU_GID_D2H_REQ		0x0010
++#define CXL_PMU_GID_D2H_RSP		0x0011
++#define CXL_PMU_GID_H2D_REQ		0x0012
++#define CXL_PMU_GID_H2D_RSP		0x0013
++#define CXL_PMU_GID_CACHE_DATA		0x0014
++#define CXL_PMU_GID_M2S_REQ		0x0020
++#define CXL_PMU_GID_M2S_RWD		0x0021
++#define CXL_PMU_GID_M2S_BIRSP		0x0022
++#define CXL_PMU_GID_S2M_BISNP		0x0023
++#define CXL_PMU_GID_S2M_NDR		0x0024
++#define CXL_PMU_GID_S2M_DRS		0x0025
++#define CXL_PMU_GID_DDR			0x8000
 +
-+	status = auxiliary_device_init(&pcie_adev->adev);
-+	if (status)
-+		return status;
-+
-+	return devm_add_action_or_reset(dev, pcie_port_auxdev_uninit,
-+					pcie_adev);
-+}
-+
- /**
-  * pcie_port_device_register - register PCI Express port
-  * @dev: PCI Express port to register
-@@ -349,6 +390,8 @@ static int pcie_port_device_register(struct pci_dev *dev)
- {
- 	int status, capabilities, i, nr_service;
- 	int irqs[PCIE_PORT_DEVICE_MAXSERVICES];
-+	struct pcie_port_aux_dev *pcie_adev;
-+	LIST_HEAD(aux_dev_list);
- 
- 	/* Enable PCI Express port device */
- 	status = pcim_enable_device(dev);
-@@ -356,8 +399,8 @@ static int pcie_port_device_register(struct pci_dev *dev)
- 		return status;
- 
- 	/* Get and check PCI Express port services */
--	capabilities = get_port_device_capability(dev);
--	if (!capabilities)
-+	capabilities = get_port_device_capability(dev, &aux_dev_list);
-+	if (!capabilities && list_empty(&aux_dev_list))
- 		return 0;
- 
- 	pci_set_master(dev);
-@@ -385,6 +428,33 @@ static int pcie_port_device_register(struct pci_dev *dev)
- 		if (!pcie_device_init(dev, service, irqs[i]))
- 			nr_service++;
- 	}
-+
-+	/*
-+	 * Register auxiliary bus device found earlier.
-+	 * This is done after PCI irq vectors have been requested
-+	 * so the indidividual drivers may use their IRQs immediately.
-+	 */
-+	list_for_each_entry(pcie_adev, &aux_dev_list, node) {
-+		status = auxiliary_device_add(&pcie_adev->adev);
-+		if (status)
-+			return status;
-+
-+		status = devm_add_action_or_reset(&dev->dev,
-+						pcie_port_auxdev_delete,
-+						pcie_adev);
-+		if (status)
-+			return status;
-+
-+		if (pcie_adev->optional) {
-+			nr_service++; /* Need to register even if no one is ready yet */
-+		} else {
-+			device_lock(&pcie_adev->adev.dev);
-+			if (pcie_adev->adev.dev.driver)
-+				nr_service++;
-+			device_unlock(&pcie_adev->adev.dev);
-+		}
-+	}
-+
- 	if (!nr_service)
- 		return -ENODEV; /* Why carry on if nothing supported? */
- 
-@@ -408,6 +478,31 @@ static int pcie_port_device_iter(struct device *dev, void *data)
- 	return 0;
- }
- 
-+static int pcie_port_adev_resume_iter(struct device *dev, void *data)
-+{
-+	if ((dev->bus == &auxiliary_bus_type) && dev->driver) {
-+		struct auxiliary_driver *adrv = to_auxiliary_drv(dev->driver);
-+		struct auxiliary_device *adev = to_auxiliary_dev(dev);
-+
-+		if (adrv->resume)
-+			adrv->resume(adev);
-+	}
-+	return 0;
-+}
-+
-+static int pcie_port_adev_suspend_iter(struct device *dev, void *data)
-+{
-+	if ((dev->bus == &auxiliary_bus_type) && dev->driver) {
-+		struct auxiliary_driver *adrv = to_auxiliary_drv(dev->driver);
-+		struct auxiliary_device *adev = to_auxiliary_dev(dev);
-+		pm_message_t pm = {};
-+
-+		if (adrv->suspend)
-+			adrv->suspend(adev, pm);
-+	}
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- /**
-  * pcie_port_device_suspend - suspend port services associated with a PCIe port
-@@ -415,8 +510,13 @@ static int pcie_port_device_iter(struct device *dev, void *data)
-  */
- static int pcie_port_device_suspend(struct device *dev)
- {
-+	int ret;
- 	size_t off = offsetof(struct pcie_port_service_driver, suspend);
--	return device_for_each_child(dev, &off, pcie_port_device_iter);
-+	ret = device_for_each_child(dev, &off, pcie_port_device_iter);
-+	if (ret)
-+		return ret;
-+
-+	return device_for_each_child(dev, NULL, pcie_port_adev_suspend_iter);
- }
- 
- static int pcie_port_device_resume_noirq(struct device *dev)
-@@ -431,7 +531,14 @@ static int pcie_port_device_resume_noirq(struct device *dev)
-  */
- static int pcie_port_device_resume(struct device *dev)
- {
--	size_t off = offsetof(struct pcie_port_service_driver, resume);
-+	int ret;
-+	size_t off;
-+
-+	ret = device_for_each_child(dev, NULL, pcie_port_adev_resume_iter);
-+	if (ret)
-+		return ret;
-+
-+	off = offsetof(struct pcie_port_service_driver, resume);
- 	return device_for_each_child(dev, &off, pcie_port_device_iter);
- }
- 
-@@ -732,6 +839,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
- static void pcie_portdrv_shutdown(struct pci_dev *dev)
- {
- 	pcie_portdrv_runtime_pm_disable(dev);
-+	device_for_each_child(&dev->dev, NULL, aux_remove_iter);
- 	pcie_port_device_remove(dev);
- 	pci_free_irq_vectors(dev);
- }
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index ea320fb026e6..243a6c9e9bf1 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -9,6 +9,7 @@
- #ifndef _PORTDRV_H_
- #define _PORTDRV_H_
- 
-+#include <linux/auxiliary_bus.h>
- #include <linux/compiler.h>
- 
- /* Service Type */
-@@ -51,6 +52,18 @@ int pcie_dpc_init(void);
- static inline int pcie_dpc_init(void) { return 0; }
  #endif
+diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+index 1f93a66eff5b..65a8437ee236 100644
+--- a/drivers/perf/cxl_pmu.c
++++ b/drivers/perf/cxl_pmu.c
+@@ -24,60 +24,6 @@
+ #include "../cxl/cxl.h"
+ #include "../cxl/pmu.h"
  
-+struct pcie_port_aux_dev {
-+	struct auxiliary_device adev;
-+	u64 addr;
-+	struct list_head node;
-+	bool optional; /* Drivers may not yet be available */
-+};
-+#define to_pcie_port_aux_dev(adev)\
-+	container_of(adev, struct pcie_port_aux_dev, adev)
-+
-+int devm_pcie_port_aux_dev_init(struct device *dev,
-+				struct pcie_port_aux_dev *pcie_adev);
-+
- struct pcie_device {
- 	int		irq;	    /* Service IRQ/MSI/MSI-X Vector */
- 	struct pci_dev *port;	    /* Root/Upstream/Downstream Port */
+-#define CXL_PMU_CAP_REG			0x0
+-#define   CXL_PMU_CAP_NUM_COUNTERS_MSK			GENMASK_ULL(5, 0)
+-#define   CXL_PMU_CAP_COUNTER_WIDTH_MSK			GENMASK_ULL(15, 8)
+-#define   CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK		GENMASK_ULL(24, 20)
+-#define   CXL_PMU_CAP_FILTERS_SUP_MSK			GENMASK_ULL(39, 32)
+-#define     CXL_PMU_FILTER_HDM				BIT(0)
+-#define     CXL_PMU_FILTER_CHAN_RANK_BANK		BIT(1)
+-#define   CXL_PMU_CAP_MSI_N_MSK				GENMASK_ULL(47, 44)
+-#define   CXL_PMU_CAP_WRITEABLE_WHEN_FROZEN		BIT_ULL(48)
+-#define   CXL_PMU_CAP_FREEZE				BIT_ULL(49)
+-#define   CXL_PMU_CAP_INT				BIT_ULL(50)
+-#define   CXL_PMU_CAP_VERSION_MSK			GENMASK_ULL(63, 60)
+-
+-#define CXL_PMU_OVERFLOW_REG		0x10
+-#define CXL_PMU_FREEZE_REG		0x18
+-#define CXL_PMU_EVENT_CAP_REG(n)	(0x100 + 8 * (n))
+-#define   CXL_PMU_EVENT_CAP_SUPPORTED_EVENTS_MSK	GENMASK_ULL(31, 0)
+-#define   CXL_PMU_EVENT_CAP_GROUP_ID_MSK		GENMASK_ULL(47, 32)
+-#define   CXL_PMU_EVENT_CAP_VENDOR_ID_MSK		GENMASK_ULL(63, 48)
+-
+-#define CXL_PMU_COUNTER_CFG_REG(n)	(0x200 + 8 * (n))
+-#define   CXL_PMU_COUNTER_CFG_TYPE_MSK			GENMASK_ULL(1, 0)
+-#define     CXL_PMU_COUNTER_CFG_TYPE_FREE_RUN		0
+-#define     CXL_PMU_COUNTER_CFG_TYPE_FIXED_FUN		1
+-#define     CXL_PMU_COUNTER_CFG_TYPE_CONFIGURABLE	2
+-#define   CXL_PMU_COUNTER_CFG_ENABLE			BIT_ULL(8)
+-#define   CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW		BIT_ULL(9)
+-#define   CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW		BIT_ULL(10)
+-#define   CXL_PMU_COUNTER_CFG_EDGE			BIT_ULL(11)
+-#define   CXL_PMU_COUNTER_CFG_INVERT			BIT_ULL(12)
+-#define   CXL_PMU_COUNTER_CFG_THRESHOLD_MSK		GENMASK_ULL(23, 16)
+-#define   CXL_PMU_COUNTER_CFG_EVENTS_MSK		GENMASK_ULL(55, 24)
+-#define   CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
+-
+-#define CXL_PMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
+-#define   CXL_PMU_FILTER_CFG_VALUE_MSK			GENMASK(31, 0)
+-
+-#define CXL_PMU_COUNTER_REG(n)		(0xc00 + 8 * (n))
+-
+-/* CXL rev 3.0 Table 13-5 Events under CXL Vendor ID */
+-#define CXL_PMU_GID_CLOCK_TICKS		0x00
+-#define CXL_PMU_GID_D2H_REQ		0x0010
+-#define CXL_PMU_GID_D2H_RSP		0x0011
+-#define CXL_PMU_GID_H2D_REQ		0x0012
+-#define CXL_PMU_GID_H2D_RSP		0x0013
+-#define CXL_PMU_GID_CACHE_DATA		0x0014
+-#define CXL_PMU_GID_M2S_REQ		0x0020
+-#define CXL_PMU_GID_M2S_RWD		0x0021
+-#define CXL_PMU_GID_M2S_BIRSP		0x0022
+-#define CXL_PMU_GID_S2M_BISNP		0x0023
+-#define CXL_PMU_GID_S2M_NDR		0x0024
+-#define CXL_PMU_GID_S2M_DRS		0x0025
+-#define CXL_PMU_GID_DDR			0x8000
+-
+ static int cxl_pmu_cpuhp_state_num;
+ 
+ struct cxl_pmu_ev_cap {
 -- 
 2.39.2
 
