@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-7980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90A5D8D2FFC
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:08:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E6C08D3004
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:09:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B4F6289673
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:08:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3A6A28CDF3
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:09:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E79181CFD;
-	Wed, 29 May 2024 08:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC6BB181BBA;
+	Wed, 29 May 2024 08:02:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0421C181BBA;
-	Wed, 29 May 2024 08:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EEEA181D17;
+	Wed, 29 May 2024 08:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969738; cv=none; b=UNv2Qbhw833b4T4sGgHeE3OLy+ihie8pMuCdmmyOSRBb2iEtFXfg1PjiBFVHI4pM6tH74WLaAmbw3Y8oHDcFC6puuRZ9HWpOpPjfvBXdvQzSl+YSOmtE61X2UDmvlXH1830OM39nOYYksGL8ngdIG79SlFPPOW7OPIThf+R5GRU=
+	t=1716969740; cv=none; b=qme2R8jzZHxv1zHzaRZy59H8CfEWUfj4AgOPcVZa5sVusKhErJUabAcsQBlJI4L7tnEWUyUclYB6G6jPSfKHM/JH35OlTF3EDJYr+pox+rzySUwax3DThT/TCt52KnWOl+3bUR8iy3UJmANVAV7GVr8cYmnXcJGTHQ8ejxu05aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969738; c=relaxed/simple;
-	bh=ujRB9umra6Ow9vggObeyKeVFpIbOKfySaVYNfAnwi94=;
+	s=arc-20240116; t=1716969740; c=relaxed/simple;
+	bh=tftChP13Mwv1+5nkdI9CdaqsXXlLOZYKyN7MlcgKRqY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DMdYSsgtkN+QbB/qSbdykb/HVGSZjNaLu0KuyoTXXvO28KAn4gX0AgK75qlgdIfEx5J4X15Ol8+OtjSP68yU7/zWE3amVpcAvUe2/CajPwS8NlSbY5WGy/nbYN/fFLj7D1AzTkqaeiphaE6FFH534SsD3TNbtrgh8IPjBFNiXNw=
+	 MIME-Version; b=kqa76o3E+gMws6PMJ72GQ5q/PRDdV9wC8cDSMYFmI1TFpD0bMvPJkB3mibugtVQkHYTkKda1M1e/7E9tbfD0b0KL2H7I/OciJThshkZAhkBWD6t2eaGb/NyK+nPerWNSlItQwHrmFj6NdY8ZH0polAeSIaXxuJFjmrVjGH/Nv2o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id D3D6E1C1017;
-	Wed, 29 May 2024 17:02:14 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id C05391C101A;
+	Wed, 29 May 2024 17:02:16 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -96,9 +96,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v8 26/36] dt-bindings: ata: ata-generic: Add new targets
-Date: Wed, 29 May 2024 17:01:12 +0900
-Message-Id: <8ff46a90c7be5eea45984f60b9b0db99219c82e6.1716965617.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v8 27/36] dt-bindings: soc: renesas: sh: Add SH7751 based target
+Date: Wed, 29 May 2024 17:01:13 +0900
+Message-Id: <11fc72e4417e0cc655153349037dcdeb3e0aea70.1716965617.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
 References: <cover.1716965617.git.ysato@users.sourceforge.jp>
@@ -110,30 +110,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Added new ata-generic target.
-- iodata,usl-5p-ata
-- renesas,rts7751r2d-ata
-
-Each boards have simple IDE Interface. Use ATA generic driver.
-
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/ata/ata-generic.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/soc/renesas/sh.yaml   | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/renesas/sh.yaml
 
-diff --git a/Documentation/devicetree/bindings/ata/ata-generic.yaml b/Documentation/devicetree/bindings/ata/ata-generic.yaml
-index 0697927f3d7e..1025b3b351d0 100644
---- a/Documentation/devicetree/bindings/ata/ata-generic.yaml
-+++ b/Documentation/devicetree/bindings/ata/ata-generic.yaml
-@@ -18,6 +18,8 @@ properties:
-       - enum:
-           - arm,vexpress-cf
-           - fsl,mpc8349emitx-pata
-+          - iodata,usl-5p-ata
-+          - renesas,rts7751r2d-ata
-       - const: ata-generic
- 
-   reg:
+diff --git a/Documentation/devicetree/bindings/soc/renesas/sh.yaml b/Documentation/devicetree/bindings/soc/renesas/sh.yaml
+new file mode 100644
+index 000000000000..9e0f69a8ee6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/renesas/sh.yaml
+@@ -0,0 +1,27 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/renesas/sh.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas SuperH Platform
++
++maintainers:
++  - Yoshinori Sato <ysato@users.sourceforge.jp>
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: SH7751R based platform
++        items:
++          - enum:
++              - renesas,rts7751r2d      # Renesas SH4 2D graphics board
++              - iodata,landisk          # LANDISK HDL-U
++              - iodata,usl-5p           # USL-5P
++          - const: renesas,sh7751r
++
++additionalProperties: true
++
++...
 -- 
 2.39.2
 
