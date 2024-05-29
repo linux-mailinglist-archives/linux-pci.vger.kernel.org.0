@@ -1,265 +1,100 @@
-Return-Path: <linux-pci+bounces-8016-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8017-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6440A8D352F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 13:11:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1B258D355A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 13:20:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E04DE1F2646C
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 11:11:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E6822899F8
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 11:20:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA5E16937A;
-	Wed, 29 May 2024 11:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="TzP8QQu6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C67F916DECF;
+	Wed, 29 May 2024 11:19:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2044.outbound.protection.outlook.com [40.107.15.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A01C17B50F;
-	Wed, 29 May 2024 11:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716981068; cv=fail; b=Sc+Xwrnh+vhBmQGsISvcs644euemEVvFN5T75fDzwaV2JG6Kl7abdRy/LzeXc5KwXZ0c8E+JFiR2AEGqwnbhEkI9cUH3b2ZmsBPv7ydo8ASQHgtQx+m61L6uiKQjjG+qOaUv/oVPHCoLMPdDJpvPJ02QADolXfjq+LIiJs+cVKQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716981068; c=relaxed/simple;
-	bh=hEIDRc2zaEYXFEK+zWn06OYxPqqG+2TBmSxYWQRAETw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=INhfYxgVS+Du7D0jJyg0Ul5toyB+AUDgwfHsMJMo04Rasd4Xbbg/dOkFC1beHoevMrP6N1FqIADjBrYFfswifmTh3CxYArxskbT1Itvv+1N/Ik79pQVhwVnz4XUs2bVwFfH59ZfDEBcsI41Ijpk9HKTWDIzebTMb9MelhCIKYg4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=TzP8QQu6; arc=fail smtp.client-ip=40.107.15.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZmuHpJ5HI2G48eD2L06QQcJuOpiJzhdPQqWARxdYyADYST6/c0bq2FdeQ+F0LBZupnWv7IeMVeibDeI7l853JgeNM+N8IXq32mmVLAUz8503b7MTi0AH345u+LfhJn0+pc2xycA66iLwjRZcGrShSL1ooeLvyBBndfbS1ZHJKr8WAHIxx62CKXgt/h3KNg74vzs4aaaox5dh4Gi0yXrerC6zVIUGK6ucHFzGwEtjyKZsgD82gFMH3qHrnUvazuhwqYVwK0AKc6rU0y19qRMIh+/Ts0zKcVGLdrWWBVR4kmYuP+T5nG+YorV8iyQE70FDcvmj9OpG9EA0d1P+2+XD/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5xAPXtHYC1yMhS3SpRUDyNtqgGF/jX1ztYHZQt69tNI=;
- b=TALUTjccpJQ9y1Wi1bBalMOXokd9QoaemVqrPHUmJDntkpLvjGnnb3oDx8bAZ8/maVjmVHypOhIuGC1nkHYet6Ps/HPzDNKDYewOxjBhP5EFp5/Bcsoiz95ufRW64hGO4/jr5jDU0uBluHdaWmzzGfHc34tTRNApQAIPZGa3P6k97bi1JejmqY+Bo0ecY7mIZKYSXQa12rmT3jLX8YxxWRSp0YjPnqC7G+/e5mu6lyNacU+dHJ8PLug0IIxhRjuel9kS5OnA4WQoNmzugG0Y5mJI/dyipVKt4y3Zam6/nWi1+exHSwC3oCPUrbs8dZZFLiV0OqGIQi8rghWsfgXIIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.206) smtp.rcpttodomain=redhat.com smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5xAPXtHYC1yMhS3SpRUDyNtqgGF/jX1ztYHZQt69tNI=;
- b=TzP8QQu6wGsE33KJ/kRcvnQXUigWcjZREhHkklDEcqdeW9HM7KdNdzBMr1T4LFY6okdRIB3FDebU05FL2mKcKlZhDwp0VyokjDI5AABzuPHTI0bq2Tx2L4teo+tYGPQuBvmBm9QtLLMG/7YUJHLWITi0p/halq6duNqC0z1MFCHGHcy0tcKDg1wpSpjVcYtJSKvwAL6BCE/ZNeuwyb5wT5vS4OaMyI2f/+gWh7WLHCD5ymSgIAIXFNTw2tOSUWnqSfbx2JMetfRvgFkTSWC/rG3uszlvowSQIfMYSUyMJnln4WBb4159ULMsO4VluFAERjXM4YkbX2NionwaFljilw==
-Received: from DU7PR01CA0037.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:50e::27) by AS2PR10MB6998.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:59a::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30; Wed, 29 May
- 2024 11:11:03 +0000
-Received: from DU6PEPF0000A7E2.eurprd02.prod.outlook.com
- (2603:10a6:10:50e:cafe::f4) by DU7PR01CA0037.outlook.office365.com
- (2603:10a6:10:50e::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30 via Frontend
- Transport; Wed, 29 May 2024 11:11:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.206) by
- DU6PEPF0000A7E2.mail.protection.outlook.com (10.167.8.42) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7633.15 via Frontend Transport; Wed, 29 May 2024 11:11:02 +0000
-Received: from SI-EXCAS2001.de.bosch.com (10.139.217.202) by eop.bosch-org.com
- (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 29 May
- 2024 13:10:57 +0200
-Received: from [10.34.222.178] (10.139.217.196) by SI-EXCAS2001.de.bosch.com
- (10.139.217.202) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 29 May
- 2024 13:10:56 +0200
-Message-ID: <6dd51d6a-7ad7-40ed-8afa-85a97a808476@de.bosch.com>
-Date: Wed, 29 May 2024 13:10:50 +0200
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C87A13DDB2;
+	Wed, 29 May 2024 11:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716981595; cv=none; b=ibkuHZ0rp//L2P9aadcr13nk15MjjkE17tE798ZTDb+muZO+eG5XkN3snsPG8k6hT85+DZ1BTp7vIkzvD9/b1p6yWvd4/Tp1VpwXxDH6Oh3IG2EuTtnGlzNswSGJUiFal4Lv0ZNKACqlGdYtzJ27HsnN9ExrT4rHtEP+cK6CyYs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716981595; c=relaxed/simple;
+	bh=cTpW4h0esAKGMKfykiWz6wsPp/48KJ+ilI1XLm2O+rw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sgMDVzmDDUXWUyE0roODwpNSf6JDgfs2rkG4caDr1PoNXPJoPdl/jWP+drrxQpbzb5jmYBZiWXISr5/t70+VP42K5XLYjCyNflDi8YO/As8L2ITIH1YnG1hWVgKEtLweuqeqSjTJvsL+mnrY2jcAYU35dtfe/wNlb9QY+eH+NjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.180.133.93])
+	by gateway (Coremail) with SMTP id _____8AxW+pWD1dmRB4BAA--.4656S3;
+	Wed, 29 May 2024 19:19:50 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.133.93])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfcdVD1dmDewMAA--.34229S2;
+	Wed, 29 May 2024 19:19:50 +0800 (CST)
+From: Hongchen Zhang <zhanghongchen@loongson.cn>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Hongchen Zhang <zhanghongchen@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] PCI: use local_pci_probe when best selected cpu is offline
+Date: Wed, 29 May 2024 19:19:47 +0800
+Message-Id: <20240529111947.1549556-1-zhanghongchen@loongson.cn>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 02/11] rust: add driver abstraction
-To: Danilo Krummrich <dakr@redhat.com>, <gregkh@linuxfoundation.org>,
-	<rafael@kernel.org>, <bhelgaas@google.com>, <ojeda@kernel.org>,
-	<alex.gaynor@gmail.com>, <wedsonaf@gmail.com>, <boqun.feng@gmail.com>,
-	<gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
-	<a.hindborg@samsung.com>, <aliceryhl@google.com>, <airlied@gmail.com>,
-	<fujita.tomonori@gmail.com>, <lina@asahilina.net>, <pstanner@redhat.com>,
-	<ajanulgu@redhat.com>, <lyude@redhat.com>
-CC: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>
-References: <20240520172554.182094-1-dakr@redhat.com>
- <20240520172554.182094-3-dakr@redhat.com>
-Content-Language: en-US
-From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20240520172554.182094-3-dakr@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU6PEPF0000A7E2:EE_|AS2PR10MB6998:EE_
-X-MS-Office365-Filtering-Correlation-Id: 16325231-5b7e-4048-49aa-08dc7fd00720
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|7416005|36860700004|82310400017|921011;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WXAxVUpRalh2VVZOZnlleVRFbk9vZ3A5Z2tnNlV0SUZ5QkhSbldSdVh2SFN0?=
- =?utf-8?B?eWNMWTBXSDZGbTNabmhJT2NlRE9LTDArdDFRcFV5MWVvZ09lY0x0cVpTeEFa?=
- =?utf-8?B?dU5PNTg0d29wZzFhaGlrOUhHSVgwNTV4Uzl1bG5vTjJwVkhNK05YbXIvNHg5?=
- =?utf-8?B?cWxLS3NZeDdOUU02MEdxbm02V3U1Rkd4TElwVkxOUC9SRGwyT05IMlRzM2ow?=
- =?utf-8?B?bHBBRmZlV3owUy84eFFwZWplOWhmRTRUbXh2ZXNIbjNRamlMSkRXejN2SWhC?=
- =?utf-8?B?Zm5yMTFqTFhxWXovcktJTFh0TTJOWC9hN2VnZzRKdUszaEtGbW5HTy8wOWhN?=
- =?utf-8?B?dEZoY09HN3RuSTE2UjRMMnNFTTFNOFJrc2FMNys2UnhUZjczSGN6eDJaTEwr?=
- =?utf-8?B?ZU9YVW8vSW16SlRKZUwvWjFDbUtlaFlrWS9QRDVJUkI1WCtxcVlvOGZlUmVa?=
- =?utf-8?B?UjdjMjdhUnF2RFVmb24xWnBVbU1ZcGpJTUZWTlRBOXFKTmc3UUJmRlRYbXZ3?=
- =?utf-8?B?NUhjMTREN2MydDNtVkdTMFFpM2ZHalErS21MWUdhRW1rZUNMblpzUnB1UmVJ?=
- =?utf-8?B?NnNpaWF3bFMweE9sRFZNWnl1MnlGMDdSclRoWjhMU2ladVFFVHRKaktQeEVi?=
- =?utf-8?B?ejZucWNzOTJ1SUhBYzVNRzRiZ1Jib3dXM0k2V3BFODcyejFDMEs2b0VSQzFL?=
- =?utf-8?B?UU1mNG9PZm50Q05FSktFSktjZjFuR0Zic3FsejFsaW1PZUhaNUVkQm9ZdjdN?=
- =?utf-8?B?Q1hOUnZCbWp5Rk5zSmxBK05rR1FwOU5yQy9Zd1AvWlpOeHVISER3eVlFOTlr?=
- =?utf-8?B?RlRVd0h3S1REc3pibkh5Y01tc3FDTk9LclRIa2xHRWFhVGtCWXpnUThVYVRO?=
- =?utf-8?B?WTNCMlNmeFh4aEdxa09BdWx6Yy9lK09hOGVWeU8wU0FQMGVqbmUzY3Rla3c5?=
- =?utf-8?B?ZVFvUEFMWHowckpBQTRXWTY5YjliYytEN2ZxNWt2bDFhL2VKeXc5K2NRR3Q1?=
- =?utf-8?B?eGUvYmtScmhlcmlDUlBPQ1R1SmpLRUZZOHVHSjNGTkQvdE5EZ0dhbXhzV3N0?=
- =?utf-8?B?MG9yVkVZWTRtang5a2MvdGVFYnF3OXVKd0U0eWJFTlQ2bmtaU2pFajEySUxY?=
- =?utf-8?B?VG9QMFY4TFA0VU5OZWJlQVNzeGtPS3poVCtrT2NGQWtVZ3ZuZzlNYVVQR01W?=
- =?utf-8?B?NGVjWWRWK01sa3I0TzdVVXVyVGd3Qko2eTNEQkRiQjZqdDZ0cFkrMVMvUUl4?=
- =?utf-8?B?UGR1ellJb2UySy9heDRoTDlMeHo2bkQvYmxaTG1pYjNsc2M1M1R5eCtoamdY?=
- =?utf-8?B?ZlAvdTZGUitic1FWV0FUVlg5Mno3TWFZLzVZelppRHRPVWRMU2VocTFBVTNu?=
- =?utf-8?B?VmRqdTlFZVF5Vis2ZGFPc014djZLQ21QUHk0WDVzdld0RUtwMHdEOUpacFBu?=
- =?utf-8?B?ODlMNVVGb1NCZVIzQmdJMmJYQjBCdkw3K3d5d3d4R09YMDArVUZRamN1NnlT?=
- =?utf-8?B?R2J3cmNzVS81S0dYS2kxSGVxczhFSldmSmRFb2h1Mm82NWVodG5oZ2QvRGl5?=
- =?utf-8?B?NWU0M2REdmRBdGVzQVVhNzN1SGUwMkc1TlNzQ2s2dHRLcFJKdDlZOVlYcDlz?=
- =?utf-8?B?d0J1U0xkZ294Q3l1K05JWE8rU0RxNlVyYUNwZW1uNk43UVd0bXo2by9QVTE4?=
- =?utf-8?B?aEJUaTQwK1c0d1M1Tnk5VUdmNUtXcWZaODlrZGhjZE1XcGxHenJVVnBtNFlC?=
- =?utf-8?B?V2pmK1pqQ00wY0F6N1pGcU1pcFNHZ2RWZHgzTngzcjFKWTYyQkpacmYrbnBK?=
- =?utf-8?B?Q0VxZnBmUktVQWh2c1VXdz09?=
-X-Forefront-Antispam-Report:
-	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(36860700004)(82310400017)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 11:11:02.8155
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16325231-5b7e-4048-49aa-08dc7fd00720
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU6PEPF0000A7E2.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR10MB6998
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxfcdVD1dmDewMAA--.34229S2
+X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQAMB2ZWihIEpwAnsm
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZF1rXr18WryfXw1UZr1UJwc_yoWfAFX_ua
+	48Wrs7Wr4UCr10k3s09r1fZrZak3WjvFs2gF4xKa4rZa42yr4UtasrZry5Jr1ru3y5JF9F
+	yr1UXF1rZr17JosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
-On 20.05.2024 19:25, Danilo Krummrich wrote:
-> From: Wedson Almeida Filho <wedsonaf@gmail.com>
-> 
-> This defines general functionality related to registering drivers with
-> their respective subsystems, and registering modules that implement
-> drivers.
-> 
-> Co-developed-by: Asahi Lina <lina@asahilina.net>
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> Co-developed-by: Andreas Hindborg <a.hindborg@samsung.com>
-> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
-> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-> ---
->   rust/kernel/driver.rs        | 492 +++++++++++++++++++++++++++++++++++
->   rust/kernel/lib.rs           |   4 +-
->   rust/macros/module.rs        |   2 +-
->   samples/rust/rust_minimal.rs |   2 +-
->   samples/rust/rust_print.rs   |   2 +-
->   5 files changed, 498 insertions(+), 4 deletions(-)
->   create mode 100644 rust/kernel/driver.rs
-> 
-> diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-> new file mode 100644
-> index 000000000000..e0cfc36d47ff
-> --- /dev/null
-> +++ b/rust/kernel/driver.rs
-> @@ -0,0 +1,492 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Generic support for drivers of different buses (e.g., PCI, Platform, Amba, etc.).
-> +//!
-> +//! Each bus/subsystem is expected to implement [`DriverOps`], which allows drivers to register
-> +//! using the [`Registration`] class.
-> +
-> +use crate::{
-> +    alloc::{box_ext::BoxExt, flags::*},
-> +    error::code::*,
-> +    error::Result,
-> +    str::CStr,
-> +    sync::Arc,
-> +    ThisModule,
-> +};
-> +use alloc::boxed::Box;
-> +use core::{cell::UnsafeCell, marker::PhantomData, ops::Deref, pin::Pin};
-> +
-> +/// A subsystem (e.g., PCI, Platform, Amba, etc.) that allows drivers to be written for it.
-> +pub trait DriverOps {
-> +    /// The type that holds information about the registration. This is typically a struct defined
-> +    /// by the C portion of the kernel.
-> +    type RegType: Default;
-> +
-> +    /// Registers a driver.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// `reg` must point to valid, initialised, and writable memory. It may be modified by this
-> +    /// function to hold registration state.
-> +    ///
-> +    /// On success, `reg` must remain pinned and valid until the matching call to
-> +    /// [`DriverOps::unregister`].
-> +    unsafe fn register(
-> +        reg: *mut Self::RegType,
-> +        name: &'static CStr,
-> +        module: &'static ThisModule,
-> +    ) -> Result;
-> +
-> +    /// Unregisters a driver previously registered with [`DriverOps::register`].
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// `reg` must point to valid writable memory, initialised by a previous successful call to
-> +    /// [`DriverOps::register`].
-> +    unsafe fn unregister(reg: *mut Self::RegType);
-> +}
-> +
-> +/// The registration of a driver.
-> +pub struct Registration<T: DriverOps> {
-> +    is_registered: bool,
-> +    concrete_reg: UnsafeCell<T::RegType>,
-> +}
-> +
-> +// SAFETY: `Registration` has no fields or methods accessible via `&Registration`, so it is safe to
-> +// share references to it with multiple threads as nothing can be done.
-> +unsafe impl<T: DriverOps> Sync for Registration<T> {}
+When the best selected cpu is offline, work_on_cpu will stuck
+forever. Therefore, in this case, we should call
+local_pci_probe instead of work_on_cpu.
 
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+---
+ drivers/pci/pci-driver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You might want to check if we additionally need 'Send' due to
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=323617f649c0966ad5e741e47e27e06d3a680d8f
-
-here?
-
-+ unsafe impl<T: DriverOps> Send for Registration<T> {}
-
-This was found re-basing
-
-https://github.com/Rust-for-Linux/linux/commits/staging/rust-device/
-
-to v6.10-rc1.
-
-Sorry if I missed anything ;)
-
-Best regards
-
-Dirk
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index af2996d0d17f..32a99828e6a3 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
+ 		free_cpumask_var(wq_domain_mask);
+ 	}
+ 
+-	if (cpu < nr_cpu_ids)
++	if ((cpu < nr_cpu_ids) && cpu_online(cpu))
+ 		error = work_on_cpu(cpu, local_pci_probe, &ddi);
+ 	else
+ 		error = local_pci_probe(&ddi);
+-- 
+2.33.0
 
 
