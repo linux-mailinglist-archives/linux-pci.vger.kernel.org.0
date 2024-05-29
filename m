@@ -1,174 +1,260 @@
-Return-Path: <linux-pci+bounces-8054-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8055-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA71E8D3D18
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 18:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53B4D8D3D42
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 19:17:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97A91284783
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:51:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB17C2894EB
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 17:17:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 936181836D1;
-	Wed, 29 May 2024 16:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B9A1B810;
+	Wed, 29 May 2024 17:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZLMIkLb6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LVlvBt/H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E97156978
-	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 16:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6184ED52E
+	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 17:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717001500; cv=none; b=dAREw7BjnhazbCQNz0jcvnVdst8Cg73q4LBk6g736GKURs5ba6Y7/zjiPOZpPKDz7pAhaN6CyXxs/3WMAdEzO4D8H55jho3EhiP8YG8TkWNRS2X/ohGEaLNSZwjVBrYzJ2uXOgJZjhVDZN0sh9dAVA4Srj1t1gBVhEUiTY2X5ZI=
+	t=1717003019; cv=none; b=f/G7XbNV7W8aGkBlYFoIpcIhkd+Dan7tFK0DTPO0Rz0AlNl8lJEsI1E37MY+3pHQktvuZd8/XgHw2mr6TDvcU0X1PsvPPRbMBeQP8qgOTNwEsII1jEgeson29zxu81FtqkOirQ+kdYC573/eC67Ld1bL5Us2oy9zt6byORpZzO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717001500; c=relaxed/simple;
-	bh=/5hlxRuwXt8HgF+iJor5GR5ly7JaVMXw+7q7oBHupso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HHDagm9pqqT69nVTirEC5tZ7XzTCCU7TLM1GcEVI+KG85xy16DUN77tO6XwYEPPo0uTdyES7A2rO5L+3tivw1/WVFBXWn4XUzroUp8q5t7+UrvcI6NeqwsxZs9QcPAPo+oGI8CPkAVW5seY2B8JtjRrkfFHpHsex2uMp5KEGBsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZLMIkLb6; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1717003019; c=relaxed/simple;
+	bh=ediIOxDXKjKDWwGBkutNgaAqY/pexGTudxGElRaELGA=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=QpLYLdw7tNiXsd+jio3ryGccOAKgfGgi4OYNeM7IXMYlBmciRVL2H6vcr171U96CczfvAt21qkjl8tluJQIlHRt9VRcNW9omrYov8ZvpNPzyC3jZSGJTri6dDuMT5PNgrO15GBjFOxdi3osu5IBOXgauLtamXc1zR+57A97cj6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LVlvBt/H; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717001499; x=1748537499;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=/5hlxRuwXt8HgF+iJor5GR5ly7JaVMXw+7q7oBHupso=;
-  b=ZLMIkLb6DaV08r7AXRcdXwanFFPOx5Fyv1x4E0CHGrenPKvwkWGDOvGO
-   AFwfls5m4RBV4dULAh5fPVpjEf9KpYAuCIYgaPt5w0BEyZJS/6PeFgfRu
-   Pgb7XpQdrjdc1Q8ouLThcgtBuxExA+5g2CSiyKKwnlAtbrVAWg0GJRzi/
-   8ShF2JumTeNvGM/OfRwx8VlDbYESzrrYzk8R2/2s9PMTx94BCxrGPaXge
-   A2MvVGfMyjZ2TAZGEHGuSt7Es8FDGUAuLrgnvbSaIec/vJsWHj5Sk4H4L
-   1kE54s5YEo/TO+IBcu+s9e6BqCjd1MnTV5VWuY6g3S0P74n1LoA5O5Qkk
-   w==;
-X-CSE-ConnectionGUID: +9Ms8HeYR/CXO/EaL5Yogg==
-X-CSE-MsgGUID: Prx+cGkmTx2GgO7agCvsSw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="24553054"
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="24553054"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 09:51:32 -0700
-X-CSE-ConnectionGUID: jST4o/xKSn+4HzF8w2tRQw==
-X-CSE-MsgGUID: 6WYra3KORvuiO1dTg7l7Nw==
+  t=1717003017; x=1748539017;
+  h=date:from:to:cc:subject:message-id;
+  bh=ediIOxDXKjKDWwGBkutNgaAqY/pexGTudxGElRaELGA=;
+  b=LVlvBt/H7huC5D+zzCYSz9SlHG64pvWVn/EOQTDhaqc/Xih2ZI089xhm
+   DHvVIpNK95V/NgL848YUIoBMO45SGj0IqBc1dB9gKn2NF6HMRIrPy6j0b
+   R1lOYADfVnGd8VvWaFPS6NZfMvitYSbJ7LKR3/oNGOshZptXBijA1nyvg
+   sawrpb0V0k5QqianJGf3v3RXqxhCqSnJN5KftGO3QQ/BFh6FFHOGKVQW6
+   6+FWYivRm6XmOaUx2EyWQAh+q3dFeNZ87Biye3SnHw9PcE8lU9Y/F3i63
+   ATD7Ah7+tfGxQ2moP9BUUFQZ32QPRzyOjLP7OgqVrihdSeCwwmrBF+uuq
+   A==;
+X-CSE-ConnectionGUID: nWG3KchpTNKuM0z9O5IrOg==
+X-CSE-MsgGUID: jdFhMFdIQXuX9td2ASnI3A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="24079015"
+X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
+   d="scan'208";a="24079015"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 10:16:57 -0700
+X-CSE-ConnectionGUID: +3+dfrfsRBi3l92tQAaqaA==
+X-CSE-MsgGUID: iTAfYyI1QY+eSxjFD9Agsw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="35964438"
-Received: from ideak-desk.fi.intel.com ([10.237.72.78])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 09:51:29 -0700
-Date: Wed, 29 May 2024 19:51:34 +0300
-From: Imre Deak <imre.deak@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: "Saarinen, Jani" <jani.saarinen@intel.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	=?utf-8?B?5p2OLCDmmJ/ovok=?= <korantli@tencent.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
-Subject: Re: Lockdep annotation introduced warn in VMD driver
-Message-ID: <ZlddFhB0ZiFpcCUH@ideak-desk.fi.intel.com>
-Reply-To: imre.deak@intel.com
-References: <ZlXP5oTnSApiDbD1@ideak-desk.fi.intel.com>
- <20240528155228.00005850@linux.intel.com>
- <877cfdkpom.fsf@intel.com>
- <DM8PR11MB565579189DD400BACDF5493CE0F22@DM8PR11MB5655.namprd11.prod.outlook.com>
- <DM8PR11MB5655FA22F73644AD0520EC16E0F22@DM8PR11MB5655.namprd11.prod.outlook.com>
- <5fbf60dd-4ad1-43f1-a3e5-451e9481883e@intel.com>
+X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
+   d="scan'208";a="36129045"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 29 May 2024 10:16:55 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sCMuy-000DzD-37;
+	Wed, 29 May 2024 17:16:52 +0000
+Date: Thu, 30 May 2024 01:16:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dra7xx] BUILD SUCCESS
+ 045fda253511681d73c6f7d3e793655a816fe219
+Message-ID: <202405300104.cm4tg0Bk-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5fbf60dd-4ad1-43f1-a3e5-451e9481883e@intel.com>
 
-On Wed, May 29, 2024 at 09:08:33AM -0700, Dave Jiang wrote:
-> 
-> 
-> On 5/29/24 8:36 AM, Saarinen, Jani wrote:
-> > Hi, 
-> >> -----Original Message-----
-> >> From: Saarinen, Jani
-> >> Sent: Wednesday, 29 May 2024 16.49
-> >> To: Jani Nikula <jani.nikula@linux.intel.com>; Nirmal Patel
-> >> <nirmal.patel@linux.intel.com>; Deak, Imre <imre.deak@intel.com>; Jiang,
-> >> Dave <dave.jiang@intel.com>
-> >> Cc: 李, 星辉 <korantli@tencent.com>; Jonathan Derrick
-> >> <jonathan.derrick@linux.dev>; Bjorn Helgaas <bhelgaas@google.com>; linux-
-> >> pci@vger.kernel.org; intel-gfx@lists.freedesktop.org
-> >> Subject: RE: Lockdep annotation introduced warn in VMD driver
-> >>
-> >> Hi,
-> >>
-> >>> -----Original Message-----
-> >>> From: Intel-gfx <intel-gfx-bounces@lists.freedesktop.org> On Behalf Of Jani
-> >>> Nikula
-> >>> Sent: Wednesday, 29 May 2024 11.06
-> >>> To: Nirmal Patel <nirmal.patel@linux.intel.com>; Deak, Imre
-> >>> <imre.deak@intel.com>
-> >>> Cc: Jiang, Dave <dave.jiang@intel.com>; 李, 星辉 <korantli@tencent.com>;
-> >>> Jonathan Derrick <jonathan.derrick@linux.dev>; Bjorn Helgaas
-> >>> <bhelgaas@google.com>; linux-pci@vger.kernel.org; intel-
-> >>> gfx@lists.freedesktop.org
-> >>> Subject: Re: Lockdep annotation introduced warn in VMD driver
-> >>>
-> >>> On Tue, 28 May 2024, Nirmal Patel <nirmal.patel@linux.intel.com> wrote:
-> >>>> On Tue, 28 May 2024 15:36:54 +0300
-> >>>> Imre Deak <imre.deak@intel.com> wrote:
-> >>>>
-> >>>>> Hi,
-> >>>>>
-> >>>>> commit 7e89efc6e9e402839643cb297bab14055c547f07
-> >>>>> Author: Dave Jiang <dave.jiang@intel.com>
-> >>>>> Date:   Thu May 2 09:57:31 2024 -0700
-> >>>>>
-> >>>>>     PCI: Lock upstream bridge for pci_reset_function()
-> >>>>>
-> >>>>> introduced the WARN below in the VMD driver, see [1] for the full log.
-> >>>>> Not sure if the annotation is incorrect or the VMD driver is missing
-> >>>>> the lock, CC'ing VMD folks.
-> >>>>>
-> >>>>> --Imre
-> >>>> Can you please provide repro steps and some background on the setup?
-> >>>
-> >>> Hardware name: Intel Corporation Alder Lake Client Platform/AlderLake-P
-> >>> LP5 RVP.
-> >>>
-> >>> Kconfig: https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_14842/kconfig.txt
-> >>>
-> >>> Just booting with the above commit is enough.
-> >> It seems fix do not fix as seen on
-> >> https://patchwork.freedesktop.org/series/134183/
-> >> => https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_134183v1/index.html?
-> >> See those red not where both are red stil and also both dmesg (boot.log) look
-> >> still identical.
-> >> So eg:
-> >> base build:   https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_14846/bat-dg2-13/boot0.txt
-> >> pw patches: https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_134183v1/bat-dg2-13/boot0.txt
-> >>
-> >> Dave, thoughts?
-> > Also Imre tried with 2 PCI patches together https://patchwork.freedesktop.org/series/134193/ 
-> > And still not good for those 4 systems (mtlp-9, bat-dg2-13/14 and bat-adlp-11) :
-> > https://intel-gfx-ci.01.org/tree/drm-tip/Trybot_134193v1/index.html? 
-> > Dave, Dan, thoughts? 
-> 
-> Can you provide the dmesg from the failure system with the 2 patches applied please?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dra7xx
+branch HEAD: 045fda253511681d73c6f7d3e793655a816fe219  PCI: dra7xx: Fix dra7xx_pcie_cpu_addr_fixup() parameter name
 
-For the above 4 machines, mtlp-9 not having the originally reported WARN
-(at pci.c:4886) only some other lockdep issue, while the other 3
-machines having both the originally reported one and the other lockdep
-issue:
+elapsed time: 1454m
 
-https://intel-gfx-ci.01.org/tree/drm-tip/Trybot_134193v1/bat-mtlp-9/boot0.txt
-https://intel-gfx-ci.01.org/tree/drm-tip/Trybot_134193v1/bat-dg2-13/boot0.txt
-https://intel-gfx-ci.01.org/tree/drm-tip/Trybot_134193v1/bat-dg2-14/boot0.txt
-https://intel-gfx-ci.01.org/tree/drm-tip/Trybot_134193v1/bat-adlp-11/boot0.txt
+configs tested: 167
+configs skipped: 6
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                        nsim_700_defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
+arc                   randconfig-001-20240529   gcc  
+arc                   randconfig-002-20240529   gcc  
+arc                           tb10x_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240529   gcc  
+arm                   randconfig-002-20240529   gcc  
+arm                   randconfig-003-20240529   gcc  
+arm                   randconfig-004-20240529   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240529   clang
+arm64                 randconfig-002-20240529   clang
+arm64                 randconfig-003-20240529   gcc  
+arm64                 randconfig-004-20240529   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240529   gcc  
+csky                  randconfig-002-20240529   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240529   clang
+hexagon               randconfig-002-20240529   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240529   clang
+i386         buildonly-randconfig-002-20240529   gcc  
+i386         buildonly-randconfig-003-20240529   gcc  
+i386         buildonly-randconfig-004-20240529   clang
+i386         buildonly-randconfig-005-20240529   gcc  
+i386         buildonly-randconfig-006-20240529   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240529   clang
+i386                  randconfig-002-20240529   gcc  
+i386                  randconfig-003-20240529   gcc  
+i386                  randconfig-004-20240529   gcc  
+i386                  randconfig-005-20240529   clang
+i386                  randconfig-006-20240529   clang
+i386                  randconfig-011-20240529   clang
+i386                  randconfig-012-20240529   clang
+i386                  randconfig-013-20240529   clang
+i386                  randconfig-014-20240529   gcc  
+i386                  randconfig-015-20240529   clang
+i386                  randconfig-016-20240529   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240529   gcc  
+loongarch             randconfig-002-20240529   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240529   gcc  
+nios2                 randconfig-002-20240529   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240529   gcc  
+parisc                randconfig-002-20240529   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240529   clang
+powerpc               randconfig-002-20240529   clang
+powerpc               randconfig-003-20240529   clang
+powerpc64             randconfig-001-20240529   gcc  
+powerpc64             randconfig-002-20240529   clang
+powerpc64             randconfig-003-20240529   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240529   gcc  
+riscv                 randconfig-002-20240529   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240529   clang
+s390                  randconfig-002-20240529   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240529   gcc  
+sh                    randconfig-002-20240529   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240529   gcc  
+sparc64               randconfig-002-20240529   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240529   clang
+um                    randconfig-002-20240529   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240529   gcc  
+x86_64       buildonly-randconfig-002-20240529   clang
+x86_64       buildonly-randconfig-003-20240529   clang
+x86_64       buildonly-randconfig-004-20240529   gcc  
+x86_64       buildonly-randconfig-005-20240529   clang
+x86_64       buildonly-randconfig-006-20240529   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240529   gcc  
+x86_64                randconfig-002-20240529   clang
+x86_64                randconfig-003-20240529   clang
+x86_64                randconfig-004-20240529   clang
+x86_64                randconfig-005-20240529   gcc  
+x86_64                randconfig-006-20240529   gcc  
+x86_64                randconfig-011-20240529   gcc  
+x86_64                randconfig-012-20240529   gcc  
+x86_64                randconfig-013-20240529   clang
+x86_64                randconfig-014-20240529   gcc  
+x86_64                randconfig-015-20240529   gcc  
+x86_64                randconfig-016-20240529   clang
+x86_64                randconfig-071-20240529   clang
+x86_64                randconfig-072-20240529   gcc  
+x86_64                randconfig-073-20240529   gcc  
+x86_64                randconfig-074-20240529   clang
+x86_64                randconfig-075-20240529   clang
+x86_64                randconfig-076-20240529   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240529   gcc  
+xtensa                randconfig-002-20240529   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
