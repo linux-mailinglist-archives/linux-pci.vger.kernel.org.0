@@ -1,273 +1,297 @@
-Return-Path: <linux-pci+bounces-8043-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8044-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ED108D3CED
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 18:39:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1BEA8D3D00
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 18:41:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9D9128953F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:39:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D46CC1C211B5
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:41:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22DF7184124;
-	Wed, 29 May 2024 16:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QjJO5985"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA0461836E5;
+	Wed, 29 May 2024 16:41:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEF61836D1
-	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 16:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663388BFF;
+	Wed, 29 May 2024 16:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717000474; cv=none; b=ccR02V2RO78Sie/WGN1kAvDZc0gC+O687Y07mStzFkMENdQA1EiJEfMOKmtaSyLTm29JkfnL3ic1dCjy4diGI4siPthzrSqmiTtqu5C68vQW510EHH6tOIYqupVGcPb48nir8Bx1dkSKMgkjVmvS1sDaPV7c9AZyzIvMhvkId8o=
+	t=1717000868; cv=none; b=BZhSIngvinu/XHHHraDz80Yb1bEx8hTpkaXitlMc7+uczoTQZef27GOyGmONfkWgZD5Fr7qyBQMCoBHstJ45P4MCgzuPM1ZnPRBxNs3MOwjRgDD5v1eysXU4zFAtDNTYDyPKhKklzA9JDMosKhQGU9rAnITinGXdP/gjYzuLPeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717000474; c=relaxed/simple;
-	bh=4tZ1so8gwbNEASG23gO+QTbUjK9pIQwFgaWkrwlTUwA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=aETlAbUpZ52II5Qz5GXJM59ryItOjlNIZGhqKWddxEjpF9kL1TiuDsfwaHa9BuNLNvZ+gfKpcaa/ke2xGQ80D09CwClwBVs+/+DOaNC+oDQ8YYDQewQCwqXa/wwN+9r5rcdoHDgtDbJ7hALzszRQxKaC7F8eiNFnJevhsqZedLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QjJO5985; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717000472; x=1748536472;
-  h=date:from:to:cc:subject:message-id;
-  bh=4tZ1so8gwbNEASG23gO+QTbUjK9pIQwFgaWkrwlTUwA=;
-  b=QjJO5985AEAC4QoImJb7FIUrl/LlnIqvYUtFwd99B2Im5UzixD5u/rOi
-   cvWL9GSRgVUVshBqgge52tWO68ywVesX53heatHRiCUvutB6SotVHE07C
-   XwlR9KpTsujukFR277K3X10SmwWkeJ2FEz/Qhd8uELiYDiMhJhGMLDKPV
-   YmKpjjzjoXQ/3D0x9Yw/DJAYBCquZkQs1kKLek575vhsId4rND0lzS5KK
-   EQ6IsJcUKan3VW9mxRYHDU/ldXVRTEm0hzQGsVF6EnFPDykhKiir8xQ4R
-   w6rfOTTZKJQ1nANqHPJ8L4ECL22dvuoQ6gH1tAQWpJF2TF7A+3Q5vZGap
-   g==;
-X-CSE-ConnectionGUID: et2Sr7BoS6Cyujsg8tXBEg==
-X-CSE-MsgGUID: LWGeRNbtSDa8CklqjSStOw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13192353"
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="13192353"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 09:34:30 -0700
-X-CSE-ConnectionGUID: OUDwC/vER4i7SB3Ln9JR8Q==
-X-CSE-MsgGUID: mPIvsTJRSg6E7A9iVS8ZFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="36110533"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 29 May 2024 09:34:29 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCMFu-000Dwa-0r;
-	Wed, 29 May 2024 16:34:26 +0000
-Date: Thu, 30 May 2024 00:34:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/dwc] BUILD SUCCESS
- 813c83de4ac051371781333099db220a88f89692
-Message-ID: <202405300004.Ky7dMTeH-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1717000868; c=relaxed/simple;
+	bh=jfcXkJGLtt1htSvgBRQJrWooMWWHCAH6z5xRmj9DOzs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r2I3peCudDc+NFgTnfT8Yzqbu3WjvPaPWU0eFpG26kH7GxLp91zK1WK6F21hNgzNO403z+zhms0PWBwtboZ8lWGPDLUMNE+zw1pNnDL5rH23KtkfdxSK0UtMQVhGvjnjyZSbQLpJrgSW077KMwUxj7C6VPZZgV4+z/a3vWWuALM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VqFVB5PBvz67l0C;
+	Thu, 30 May 2024 00:40:02 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 973A6140B33;
+	Thu, 30 May 2024 00:41:03 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 29 May 2024 17:41:03 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	<linuxarm@huawei.com>, <terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register CXL PMUs (and aer)
+Date: Wed, 29 May 2024 17:40:54 +0100
+Message-ID: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
-branch HEAD: 813c83de4ac051371781333099db220a88f89692  PCI: qcom-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
+Focus of this RFC is CXL Performance Monitoring Units in CXL Root Ports +
+Switch USP and DSPs.
 
-elapsed time: 1412m
+The final patch moving AER to the aux bus is in the category of 'why
+not try this' rather than something I feel is a particularly good idea.
+I would like to get opinions on the various ways to avoid the double bus
+situation introduced here. Some comments on other options for those existing
+'pci_express' bus devices at the end of this cover letter.
 
-configs tested: 180
-configs skipped: 3
+The primary problem this RFC tries to solve is providing a means to
+register the CXL PMUs found in devices which will be bound to the
+PCIe portdrv. The proposed solution is to avoid the limitations of
+the existing pcie service driver approach by bolting on support
+for devices registered on the auxiliary_bus.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Background
+==========
 
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240529   gcc  
-arc                   randconfig-002-20240529   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   gcc  
-arm                                 defconfig   clang
-arm                       netwinder_defconfig   gcc  
-arm                            qcom_defconfig   clang
-arm                   randconfig-001-20240529   gcc  
-arm                   randconfig-002-20240529   gcc  
-arm                   randconfig-003-20240529   gcc  
-arm                   randconfig-004-20240529   gcc  
-arm                        spear3xx_defconfig   clang
-arm                           spitz_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240529   clang
-arm64                 randconfig-002-20240529   clang
-arm64                 randconfig-003-20240529   gcc  
-arm64                 randconfig-004-20240529   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240529   gcc  
-csky                  randconfig-002-20240529   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240529   clang
-hexagon               randconfig-002-20240529   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240529   clang
-i386         buildonly-randconfig-002-20240529   gcc  
-i386         buildonly-randconfig-003-20240529   gcc  
-i386         buildonly-randconfig-004-20240529   clang
-i386         buildonly-randconfig-005-20240529   gcc  
-i386         buildonly-randconfig-006-20240529   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240529   clang
-i386                  randconfig-002-20240529   gcc  
-i386                  randconfig-003-20240529   gcc  
-i386                  randconfig-004-20240529   gcc  
-i386                  randconfig-005-20240529   clang
-i386                  randconfig-006-20240529   clang
-i386                  randconfig-011-20240529   clang
-i386                  randconfig-012-20240529   clang
-i386                  randconfig-013-20240529   clang
-i386                  randconfig-014-20240529   gcc  
-i386                  randconfig-015-20240529   clang
-i386                  randconfig-016-20240529   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240529   gcc  
-loongarch             randconfig-002-20240529   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
-m68k                          sun3x_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm63xx_defconfig   clang
-mips                      bmips_stb_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240529   gcc  
-nios2                 randconfig-002-20240529   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240529   gcc  
-parisc                randconfig-002-20240529   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                 mpc837x_rdb_defconfig   gcc  
-powerpc               randconfig-001-20240529   clang
-powerpc               randconfig-002-20240529   clang
-powerpc               randconfig-003-20240529   clang
-powerpc                     redwood_defconfig   clang
-powerpc                    sam440ep_defconfig   gcc  
-powerpc                     tqm5200_defconfig   gcc  
-powerpc64             randconfig-001-20240529   gcc  
-powerpc64             randconfig-002-20240529   clang
-powerpc64             randconfig-003-20240529   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240529   gcc  
-riscv                 randconfig-002-20240529   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240529   clang
-s390                  randconfig-002-20240529   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                             espt_defconfig   gcc  
-sh                    randconfig-001-20240529   gcc  
-sh                    randconfig-002-20240529   gcc  
-sh                     sh7710voipgw_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240529   gcc  
-sparc64               randconfig-002-20240529   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240529   clang
-um                    randconfig-002-20240529   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240529   gcc  
-x86_64       buildonly-randconfig-002-20240529   clang
-x86_64       buildonly-randconfig-003-20240529   clang
-x86_64       buildonly-randconfig-004-20240529   gcc  
-x86_64       buildonly-randconfig-005-20240529   clang
-x86_64       buildonly-randconfig-006-20240529   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240529   gcc  
-x86_64                randconfig-002-20240529   clang
-x86_64                randconfig-003-20240529   clang
-x86_64                randconfig-004-20240529   clang
-x86_64                randconfig-005-20240529   gcc  
-x86_64                randconfig-006-20240529   gcc  
-x86_64                randconfig-011-20240529   gcc  
-x86_64                randconfig-012-20240529   gcc  
-x86_64                randconfig-013-20240529   clang
-x86_64                randconfig-014-20240529   gcc  
-x86_64                randconfig-015-20240529   gcc  
-x86_64                randconfig-016-20240529   clang
-x86_64                randconfig-071-20240529   clang
-x86_64                randconfig-072-20240529   gcc  
-x86_64                randconfig-073-20240529   gcc  
-x86_64                randconfig-074-20240529   clang
-x86_64                randconfig-075-20240529   clang
-x86_64                randconfig-076-20240529   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240529   gcc  
-xtensa                randconfig-002-20240529   gcc  
+When the CXL PMU driver was added, only the instances found in CXL type 3
+memory devices (end points) were supported. These PMUs also occur in CXL
+root ports, and CXL switch upstream and downstream ports.  Adding
+support for these was deliberately left for future work because theses
+ports are all bound to the pcie portdrv via the appropriate PCI class
+code.  Whilst some CXL support of functionality on RP and Switch Ports
+is handled by the CXL port driver, that is not bound to the PCIe device,
+is only instantiated as part of enumerating endpoints, and cannot use
+interrupts because those are in control of the PCIe portdrv. A PMU with
+out interrupts would be unfortunate so a different solution is needed.
+
+Requirements
+============
+
+- Register multiple CXL PMUs (CPMUs) per portdrv instance.
+- portdrv binds to the PCIe class code for PCI_CLASS_BRIDGE_PCI_NORMAL which
+  covers any PCI-Express port.
+- PCI MSI / MSIX message based interrupts must be registered by one driver -
+  in this case it's the portdrv.
+- portdrv goes through a dance to discover the minimal number of irq vectors
+  required, and as part of this it needs to find out the highest vector number
+  used.
+- CXL PMUs store the interrupt message number (the one needed to find the
+  above number of vectors registered) in a register in a BAR.  That
+  BAR + offset of the register block is discovered from the CXL
+  Register Locator DVSEC.  As such finding the maximum interrupt message
+  number used by any CPMU requires checking all CXL PMU register blocks
+  in the CXL Register Locator DVSEC, briefly mapping their register space
+  and checking that one register.  This is safe to do because the rest
+  of the CXL stack doesn't map this section of the BAR and the CXL PMU
+  device is not added until after we have unmapped it again.
+
+Dependency fun.
+- The existing CXL_PMU driver registers the device on the CXL_BUS.
+- portdrv is not modular.
+- CONFIG_CXL_BUS is potentially modular (i.e. not available until the
+  core CXL module is loaded).
+- The portdrv can't be dependent on CONFIG_CXL_BUS directly without
+  forcing CXL to be built in.
+
+There are various ways to solve this dependency issue an meet the above
+requirements.
+
+1. Add an intermediate glue device that has a driver that can depend on
+   CONFIG_CXL_BUS and hence ensure that is loaded before doing a full
+   enumeration of the CXL PMU instances and registering  appropriate
+   devices. To allow for simple tear down, device managed interfaces are
+   used against the platform driver, so that when it goes away it removes
+   the CPMU device instances cleanly. The parents are set one level higher
+   however, so that path can be used to get to the underlying PCI Device
+   (which can't go away without tearing everything down as it's the
+    grandparent device).
+
+                                                             On CXL BUS    
+ _____________ __            ________________ __           ________ __________
+|  Port       |  | creates  |                |  | creates |        |          |
+|  PCI Dev    |  |--------->| PCIE CPMU GLUE |  |-------->| CPMU A |          |
+|_____________|  |          | Platform Device|  |         |________|          |
+|pordrv binds    |          |________________|  |         | perf/cxlpmu binds |
+|________________|          |cxlpmu_glue binds  |         |___________________|
+                            | enumerates CPMUs  |          ________ __________
+                      Deps /|___________________|-------->|        |          |
+                          /                               | CPMU B |          |
+                    cxl_core.ko                           |________|          |
+		    /  providing CXL_BUS                  | perf/cxlpmu binds | 
+               Deps/                                      |___________________|
+ _____________ __ /
+|  Type 3     |  | creates                                 ________ _________
+|  PCI Dev    |  |--------------------------------------->|        |         |
+|_____________|  |                                        | CPMU C |         |
+| cxl_pci binds  |                                        |________|         |
+|________________|                                        | perf/cxpmu binds |
+                                                          |__________________|
+
+2. Make the CXL_PMU driver handle multiple buses. This will look similar
+   to a sensor driver with I2C and SPI drivers but in this case register as a
+   driver for devices on the CXL_BUS and one for another 'new' bus (e.g.
+   the auxiliary bus which exists to enable this sort of hybrid driver)
+   Register auxiliary devices directly from portdrv. This has to be done
+   in multiple steps so enough interrupt vectors are allocated before the
+   CPMU device is added and that driver might probe.
+
+                                On auxiliary bus, children of the portdrv.
+ _____________ __            ________ __________
+|  Port       |  | creates  |        |          |
+|  PCI Dev    |  |--------->| CPMU A |          |
+|_____________|  |          |________|          |
+|pordrv binds    |          | perf/cxlpmu binds |
+|________________|          |___________________|
+                 \         
+                  \
+                   \         ________ __________
+                    \       |        |          |
+                     ------>| CPMU A |          |    
+                            |________|          |
+                            | perf/cxlpmu binds |
+                            |___________________|
+ AND
+ 
+                     cxl_core.ko           
+		    /  providing CXL_BUS   
+               Deps/                                         On CXL BUS
+ _____________ __ /
+|  Type 3     |  | creates                                 ________ _________
+|  PCI Dev    |  |--------------------------------------->|        |         |
+|_____________|  |                                        | CPMU C |         |
+| cxl_pci binds  |                                        |________|         |
+|________________|                                        | perf/cxpmu binds |
+                                                          |__________________|                  
+
+I have code for both and on balance option 2 is cleaner as no magic glue
+devices are registered so that's what is presented in this RFC
+
+AER experiment
+==============
+
+Note that this discussion oddly enough doesn't apply to the the CXL
+PMU because we need a bus structure of some type to solve the
+registration dependency problems.  The existing portdrv subdrivers
+(or at least those I've looked at in detail) are much simpler.
+
+Having two different types of bus under a portdrv instance is far
+from ideal. Given I'm adding an auxbus and I wanted to poke some of
+the corners + I have suitable CXL error injection support in QEMU
+that lets me exercise the AER flows I decided to play a bit with that.
+Note that there is some power management support in this patch set
+and I hacked in callbacks to the AER driver to test that but it is
+infrastructure that AER itself doesn't need.
+
+In previous discussions various approaches have been proposed.
+
+1) Auxiliary bus as done here.  It works, but is messy and there
+   is realtively little point if the AER driver is always forced
+   to be built in and load immediately anyway. Is there any interest
+   in making the service drivers modular?
+
+2) Turning the service drivers into straight forward library
+   function calls.  This basically means providing some storage
+   for their state and calling the bits of probe and remove
+   not related to the struct device (which will no longer exist)
+   directly.
+
+I'm happy to look at either, but keen that if possible we don't
+gate the CPMU support on that.  There have been discusisons around
+the need for vendor specific telemetry solutions on CXL switches
+and to try and encourage the upstream approach, I'd like to ensure
+we have good support the facilities in the CXL specification.
+
+Side question.  Does anyone care if /sys/bus/pci_express goes away?
+- in theory it's ABI, but in practice it provides very little
+  actual ABI.
+
+If we do need to maintain that, refactoring this code gets much
+harder and I suspect our only way forwards is a cut and paste
+version of the auxiliary_bus that gives the flexibility needed
+but would still provide that /sys/bus/pci_express.
+Not nice if we can avoid it!
+
+Other misc questions / comments.
+- Can we duplicate the irq discovery into the auxiliary_bus drivers?
+  They do need to be discovered in pordrv to work out how many
+  vectors to request, but the current multipass approach of
+  (1. Discovery, 2. IRQ pass one, 3. Store the IRQs) means
+  auxiliary devices can only be created in an additional pass 4
+  unless we don't pass them the irqs and allow the child device
+  drivers to query it directly when they load.  Note this also
+  avoids the theoretical possiblity that they move when portdrv
+  reduces the requested vectors (to avoid waste).
+- Additional callbacks for auxiliary_driver needed for runtime pm.
+  For now I've just done suspend and resume, but we need the
+  noirq variant and runtime_suspend / runtime_resume callbacks
+  to support all the existing pcie_driver handled subdevices.
+- Worth moving any of the drivers that register in parallel
+  with the pcie portdrv over to this new approach (the Designware
+  PMU for example?)
+  
+Jonathan Cameron (9):
+  pci: pcie: Drop priv_data from struct pcie_device and use
+    dev_get/set_drvdata() instead.
+  pci: portdrv: Drop driver field for port type.
+  pci: pcie: portdrv: Use managed device handling to simplify error and
+    remove flows.
+  auxiliary_bus: expose auxiliary_bus_type
+  pci: pcie: portdrv: Add a auxiliary_bus
+  cxl: Move CPMU register definitions to header
+  pci: pcie/cxl: Register an auxiliary device for each CPMU instance
+  perf: cxl: Make the cpmu driver also work with auxiliary_devices
+  pci: pcie: portdrv: aer: Switch to auxiliary_bus
+
+ drivers/base/auxiliary.c          |   2 +-
+ drivers/cxl/pmu.h                 |  54 +++++++
+ drivers/pci/hotplug/pciehp_core.c |  13 +-
+ drivers/pci/hotplug/pciehp_hpc.c  |   2 +-
+ drivers/pci/pci-driver.c          |   4 -
+ drivers/pci/pcie/Kconfig          |  10 ++
+ drivers/pci/pcie/Makefile         |   1 +
+ drivers/pci/pcie/aer.c            |  68 +++++---
+ drivers/pci/pcie/cxlpmu.c         | 129 +++++++++++++++
+ drivers/pci/pcie/dpc.c            |   1 -
+ drivers/pci/pcie/pme.c            |  14 +-
+ drivers/pci/pcie/portdrv.c        | 254 +++++++++++++++++++++++-------
+ drivers/pci/pcie/portdrv.h        |  37 +++--
+ drivers/perf/Kconfig              |   1 +
+ drivers/perf/cxl_pmu.c            | 153 ++++++++++--------
+ include/linux/auxiliary_bus.h     |   1 +
+ 16 files changed, 558 insertions(+), 186 deletions(-)
+ create mode 100644 drivers/pci/pcie/cxlpmu.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
 
