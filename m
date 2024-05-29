@@ -1,266 +1,205 @@
-Return-Path: <linux-pci+bounces-8029-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8030-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2A0F8D3927
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:27:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 822448D3944
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:32:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BDD21F25C10
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 14:27:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20C0A287FCE
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 14:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756AC158209;
-	Wed, 29 May 2024 14:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SZ1zo1yg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF63158DCE;
+	Wed, 29 May 2024 14:32:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD1E157E9E
-	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 14:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC3F54669
+	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 14:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992838; cv=none; b=is2KdJtXyoKnvuAPnjVTDamY9F3G75YD8s/MYIotG8OZM+N84rJFTQkFGQXLdSQVEylJ4Igr1JMEZYm3ZrPo1BMcv+gmOTW+cSgYcZ13ZgM57aintyhais10HpSN8m3je91lGWqUEFckC6L/xBtovOpSPRwasKfzCT1frN5TrYk=
+	t=1716993140; cv=none; b=MS6JIjP3VPKEr+SWM4FpMZW/FIl3rEFscaUTpA4VuKM9SLoVnIyh2gu5LsdkOFxXfom9vgxM6ASNN2xehOwBmRGATnSKE6wXZAVnVMD/aFmVuj1aq2H8+JkE4UpJspLdutKWGsznqf9ec69Q0jMEv4Surf8SDVWlZnoU77JdoSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992838; c=relaxed/simple;
-	bh=bEyH0VxB6m9bGLENkpRG7xJWfit/4so21ClzUD9TSUw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=JIAzps3pwfA9W2W/9O3de0uzxGqvl+jzk90S1apjMxATcRdEy6ayuaWuOFUKycSFm66jSWZJ6cnpFbz/7PVUz8bic3hlkiivabrXRweBc3w4M3+cvofQiPiFu5KAY5qGBAT/zxiuoRjamT1H7iubgdiQw239OTafxBsgSei1aTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SZ1zo1yg; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716992837; x=1748528837;
-  h=date:from:to:cc:subject:message-id;
-  bh=bEyH0VxB6m9bGLENkpRG7xJWfit/4so21ClzUD9TSUw=;
-  b=SZ1zo1ygRseC1mmoYHtqlLhGnkctTH6mW2gRErOJIZj702rGBkCpTkGs
-   6pJz4/S2kDeAaq2+qqEwCEWkuSPNXOZVe+7Dzs2vqAtpvbIcKwlN7BtmK
-   QgQqUqK/2N4St66/FziAaVv3aidcQX4amR2vGFE+6hr7ViETy5CEWcREB
-   cCpf29ltXUf+J9kxWqix1zQ269JU7whxjW/aD91NULRysyG8dspJVZHWD
-   B13DG7qj+ZOt3UltrtERp6zwFOiySR3grtZkNO26D2VnHO6xi8NJgDLfW
-   6+8XFSMXd3zYF7NDS+go1jvslhXX3sSTcHKQ65ZacRCsm4aobqIEGXzZn
-   A==;
-X-CSE-ConnectionGUID: H80eN+q3RY+rXld2R7mhOw==
-X-CSE-MsgGUID: 89nUqQSPSneLCi02So65Uw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="38783218"
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="38783218"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 07:27:08 -0700
-X-CSE-ConnectionGUID: xSkUnLWYS52EeavWyXRtnQ==
-X-CSE-MsgGUID: gi8yR3UcRiuUPf6R5NXn+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="40313699"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 29 May 2024 07:27:08 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCKGe-000DmY-2o;
-	Wed, 29 May 2024 14:27:04 +0000
-Date: Wed, 29 May 2024 22:27:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:resource] BUILD SUCCESS
- 4a1df6cb97c42a8476dc63a4d658e551c160b3ff
-Message-ID: <202405292201.pffKHctD-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1716993140; c=relaxed/simple;
+	bh=/N/z6qcOhas0MX07CoXscaTO03/MW6B7t4d0caCZpMs=;
+	h=Message-Id:From:Date:Subject:To:Cc; b=pI3ApeilaYs6KBOR92ErhB3GLQDuhYCGRsVO8vscEMmn+vY0p2g1+3PmjfKk7CjniJQmX8ZgrRUU5esG2qvKJ7l+aDkfOdHuo6E9lfLWtY8P93hFy2mvVJ7kASpgLxlrshiTqYQZrKdXrxfmO2GMsI6bqnsuqa0m0vSiYTfU050=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 39E2D10195455;
+	Wed, 29 May 2024 16:32:09 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E4FC6230885; Wed, 29 May 2024 16:32:08 +0200 (CEST)
+Message-Id: <a1afaa12f341d146ecbea27c1743661c71683833.1716992815.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Wed, 29 May 2024 16:32:09 +0200
+Subject: [PATCH] PCI: pciehp: Detect device replacement during system sleep
+To: Bjorn Helgaas <helgaas@kernel.org>, Ricky Wu <ricky_wu@realtek.com>
+Cc: Scott Murray <scott@spiteful.org>, Keith Busch <kbusch@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aapo Vienamo <aapo.vienamo@linux.intel.com>, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git resource
-branch HEAD: 4a1df6cb97c42a8476dc63a4d658e551c160b3ff  PCI: Relax bridge window tail sizing rules
+Ricky reports that replacing a device in a hotplug slot during ACPI
+sleep state S3 does not cause re-enumeration on resume, as one would
+expect.  Instead, the new device is treated as if it was the old one.
 
-elapsed time: 1285m
+There is no bulletproof way to detect device replacement, but as a
+heuristic, check whether the device identity in config space matches
+cached data in struct pci_dev (Vendor ID, Device ID, Class Code,
+Revision ID, Subsystem Vendor ID, Subsystem ID).  Additionally, cache
+and compare the Device Serial Number (PCIe r6.2 sec 7.9.3).  If a
+mismatch is detected, mark the old device disconnected (to prevent its
+driver from accessing the new device) and synthesize a Presence Detect
+Changed event.
 
-configs tested: 173
-configs skipped: 3
+The device identity in config space which is compared here is the same
+as the one included in the signed Subject Alternative Name per PCIe r6.1
+sec 6.31.3.  Thus, the present commit prevents attacks where a valid
+device is replaced with a malicious device during system sleep and the
+valid device's driver obliviously accesses the malicious device.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This is about as much as can be done at the PCI layer.  Drivers may have
+additional ways to identify devices (such as reading a WWID from some
+register) and may trigger re-enumeration when detecting an identity
+change on resume.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240529   gcc  
-arc                   randconfig-002-20240529   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   milbeaut_m10v_defconfig   clang
-arm                            mmp2_defconfig   gcc  
-arm                          pxa168_defconfig   clang
-arm                   randconfig-001-20240529   gcc  
-arm                   randconfig-002-20240529   gcc  
-arm                   randconfig-003-20240529   gcc  
-arm                   randconfig-004-20240529   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240529   clang
-arm64                 randconfig-002-20240529   clang
-arm64                 randconfig-003-20240529   gcc  
-arm64                 randconfig-004-20240529   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240529   gcc  
-csky                  randconfig-002-20240529   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240529   clang
-hexagon               randconfig-002-20240529   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240529   clang
-i386         buildonly-randconfig-002-20240529   gcc  
-i386         buildonly-randconfig-003-20240529   gcc  
-i386         buildonly-randconfig-004-20240529   clang
-i386         buildonly-randconfig-005-20240529   gcc  
-i386         buildonly-randconfig-006-20240529   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240529   clang
-i386                  randconfig-002-20240529   gcc  
-i386                  randconfig-003-20240529   gcc  
-i386                  randconfig-004-20240529   gcc  
-i386                  randconfig-005-20240529   clang
-i386                  randconfig-006-20240529   clang
-i386                  randconfig-011-20240529   clang
-i386                  randconfig-012-20240529   clang
-i386                  randconfig-013-20240529   clang
-i386                  randconfig-014-20240529   gcc  
-i386                  randconfig-015-20240529   clang
-i386                  randconfig-016-20240529   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240529   gcc  
-loongarch             randconfig-002-20240529   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                           sun3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         cobalt_defconfig   gcc  
-mips                           rs90_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240529   gcc  
-nios2                 randconfig-002-20240529   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           alldefconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240529   gcc  
-parisc                randconfig-002-20240529   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      mgcoge_defconfig   clang
-powerpc               randconfig-001-20240529   clang
-powerpc               randconfig-002-20240529   clang
-powerpc               randconfig-003-20240529   clang
-powerpc                    sam440ep_defconfig   gcc  
-powerpc64             randconfig-001-20240529   gcc  
-powerpc64             randconfig-002-20240529   clang
-powerpc64             randconfig-003-20240529   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240529   gcc  
-riscv                 randconfig-002-20240529   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240529   clang
-s390                  randconfig-002-20240529   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240529   gcc  
-sh                    randconfig-002-20240529   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240529   gcc  
-sparc64               randconfig-002-20240529   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240529   clang
-um                    randconfig-002-20240529   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240529   gcc  
-x86_64       buildonly-randconfig-002-20240529   clang
-x86_64       buildonly-randconfig-003-20240529   clang
-x86_64       buildonly-randconfig-004-20240529   gcc  
-x86_64       buildonly-randconfig-005-20240529   clang
-x86_64       buildonly-randconfig-006-20240529   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240529   gcc  
-x86_64                randconfig-002-20240529   clang
-x86_64                randconfig-003-20240529   clang
-x86_64                randconfig-004-20240529   clang
-x86_64                randconfig-005-20240529   gcc  
-x86_64                randconfig-006-20240529   gcc  
-x86_64                randconfig-011-20240529   gcc  
-x86_64                randconfig-012-20240529   gcc  
-x86_64                randconfig-013-20240529   clang
-x86_64                randconfig-014-20240529   gcc  
-x86_64                randconfig-015-20240529   gcc  
-x86_64                randconfig-016-20240529   clang
-x86_64                randconfig-071-20240529   clang
-x86_64                randconfig-072-20240529   gcc  
-x86_64                randconfig-073-20240529   gcc  
-x86_64                randconfig-074-20240529   clang
-x86_64                randconfig-075-20240529   clang
-x86_64                randconfig-076-20240529   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240529   gcc  
-xtensa                randconfig-002-20240529   gcc  
+Reported-by: Ricky Wu <ricky_wu@realtek.com>
+Closes: https://lore.kernel.org/r/a608b5930d0a48f092f717c0e137454b@realtek.com
+Tested-by: Ricky Wu <ricky_wu@realtek.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/pci/hotplug/pciehp.h      |  4 ++++
+ drivers/pci/hotplug/pciehp_core.c | 42 ++++++++++++++++++++++++++++++++++++++-
+ drivers/pci/hotplug/pciehp_hpc.c  |  5 +++++
+ drivers/pci/hotplug/pciehp_pci.c  |  4 ++++
+ 4 files changed, 54 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index e0a614a..273dd8c 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -46,6 +46,9 @@
+ /**
+  * struct controller - PCIe hotplug controller
+  * @pcie: pointer to the controller's PCIe port service device
++ * @dsn: cached copy of Device Serial Number of Function 0 in the hotplug slot
++ *	(PCIe r6.2 sec 7.9.3); used to determine whether a hotplugged device
++ *	was replaced with a different one during system sleep
+  * @slot_cap: cached copy of the Slot Capabilities register
+  * @inband_presence_disabled: In-Band Presence Detect Disable supported by
+  *	controller and disabled per spec recommendation (PCIe r5.0, appendix I
+@@ -87,6 +90,7 @@
+  */
+ struct controller {
+ 	struct pcie_device *pcie;
++	u64 dsn;
+ 
+ 	u32 slot_cap;				/* capabilities and quirks */
+ 	unsigned int inband_presence_disabled:1;
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index ddd55ad..ff458e6 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -284,6 +284,32 @@ static int pciehp_suspend(struct pcie_device *dev)
+ 	return 0;
+ }
+ 
++static bool pciehp_device_replaced(struct controller *ctrl)
++{
++	struct pci_dev *pdev __free(pci_dev_put);
++	u32 reg;
++
++	pdev = pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0, 0));
++	if (!pdev)
++		return true;
++
++	if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
++	    reg != (pdev->vendor | (pdev->device << 16)) ||
++	    pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
++	    reg != (pdev->revision | (pdev->class << 8)))
++		return true;
++
++	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
++	    (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) ||
++	     reg != (pdev->subsystem_vendor | (pdev->subsystem_device << 16))))
++		return true;
++
++	if (pci_get_dsn(pdev) != ctrl->dsn)
++		return true;
++
++	return false;
++}
++
+ static int pciehp_resume_noirq(struct pcie_device *dev)
+ {
+ 	struct controller *ctrl = get_service_data(dev);
+@@ -293,9 +319,23 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+ 	ctrl->cmd_busy = true;
+ 
+ 	/* clear spurious events from rediscovery of inserted card */
+-	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE)
++	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE) {
+ 		pcie_clear_hotplug_events(ctrl);
+ 
++		/*
++		 * If hotplugged device was replaced with a different one
++		 * during system sleep, mark the old device disconnected
++		 * (to prevent its driver from accessing the new device)
++		 * and synthesize a Presence Detect Changed event.
++		 */
++		if (pciehp_device_replaced(ctrl)) {
++			ctrl_dbg(ctrl, "device replaced during system sleep\n");
++			pci_walk_bus(ctrl->pcie->port->subordinate,
++				     pci_dev_set_disconnected, NULL);
++			pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
++		}
++	}
++
+ 	return 0;
+ }
+ #endif
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index b1d0a1b3..061f01f 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -1055,6 +1055,11 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 		}
+ 	}
+ 
++	pdev = pci_get_slot(subordinate, PCI_DEVFN(0, 0));
++	if (pdev)
++		ctrl->dsn = pci_get_dsn(pdev);
++	pci_dev_put(pdev);
++
+ 	return ctrl;
+ }
+ 
+diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+index ad12515..65e50be 100644
+--- a/drivers/pci/hotplug/pciehp_pci.c
++++ b/drivers/pci/hotplug/pciehp_pci.c
+@@ -72,6 +72,10 @@ int pciehp_configure_device(struct controller *ctrl)
+ 	pci_bus_add_devices(parent);
+ 	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+ 
++	dev = pci_get_slot(parent, PCI_DEVFN(0, 0));
++	ctrl->dsn = pci_get_dsn(dev);
++	pci_dev_put(dev);
++
+  out:
+ 	pci_unlock_rescan_remove();
+ 	return ret;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
