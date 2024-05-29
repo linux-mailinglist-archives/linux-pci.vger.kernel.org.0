@@ -1,209 +1,159 @@
-Return-Path: <linux-pci+bounces-8020-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8021-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C99448D36DB
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 14:56:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB1B38D3719
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 15:07:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E800A1C22921
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 12:56:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 676DF1F258C8
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 13:07:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C4156FC6;
-	Wed, 29 May 2024 12:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KVTQ3Yk8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92D9417991;
+	Wed, 29 May 2024 13:06:54 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EA610A03;
-	Wed, 29 May 2024 12:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0C014AA9;
+	Wed, 29 May 2024 13:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716987376; cv=none; b=q+8YcJ+cPGttXCf5trwTid44wvv3en2q3uxT1l1tR/iwsaH7assjczmQA+S5nTSF30X/G4lkTL8CEQ+63oOx+/YPVtKGENv9ZDZoNVMmffhplct1mpaNvzzoZ5RhX7IOZvwjbWwFsSX1XkkGHQOOQzK6vVt2hJenYO6euBROuJI=
+	t=1716988014; cv=none; b=lt9WJjYIPNF8ZNu4S5I3VpsDLL0ho7oO473IkLAsF/N9LBJbTK0u77lkKQ8WIe2HNbKg/1Z16Rp2TF7v4LdTvhyh/VTiH3Lqb6+ugSuSeyqe8GrLAf3VUqyKJMB/a9LTMUOmN2VfIEltWQ7A2ZgerN+M879H6zAMncKtdBbUAUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716987376; c=relaxed/simple;
-	bh=gz8z8N5bHTtjf1WXKP3VLR7zy+2ou75tSdQdUmX2Vx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DUb0B9xOXxoMuH01AVMLxEZlGBXuUrooLiiQuc3cCnPj37fNkeTH+RZ8w3JBtwsyy4aMfLmnvoqbQcEwAVREWF/YUiEcDl+QfZQTute1igQWYb9dfvT504BD/qHemH7O4xpcQ6EjybLqcAuA+FwHIX8kH7tFEZcRmxtOC9Kun5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KVTQ3Yk8; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716987375; x=1748523375;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gz8z8N5bHTtjf1WXKP3VLR7zy+2ou75tSdQdUmX2Vx4=;
-  b=KVTQ3Yk8L6lLF0SlKKAnpEMyUVPKkDcnDzC9DQYWKx+Ee0D/j5wS8jWj
-   aFE+70oEJD0vC9u1uUJTx/ampL9Tphh3THlJyyPS8Ukn4kn18vvVUsK8c
-   4s9mGPkKa1XoMOK/7X+qmVpTAseosXptqqlj7jbPtCoyc8I4jDU5KSXBV
-   ZHmZgTGM5Q+ATf42JFns4GxYgQrNbEb9+5wFl2g4Q6y/E4ErrTyoJrPj7
-   8E8hN6wW4BQGj/jW3HIXeINSUo4GBUqncw1erGowPuuHp5DyryA0S1unS
-   xhT7kAM7DoFzyHUDZK4LhEkHaj0jz1lqSUiNcammTvzyVDIKVtG8yVu1P
-   g==;
-X-CSE-ConnectionGUID: BSG6Xos3Sp+uL1jtf0ROkw==
-X-CSE-MsgGUID: M3losH2pRy2/1+utwYVpyw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13618479"
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="13618479"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 05:56:13 -0700
-X-CSE-ConnectionGUID: H5QcdFF9TbONM172UGdoGg==
-X-CSE-MsgGUID: zqE6bIAkQpSvlFOcfBHkJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="35963852"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 05:56:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sCIqP-0000000BnVT-2SiK;
-	Wed, 29 May 2024 15:55:53 +0300
-Date: Wed, 29 May 2024 15:55:53 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v8 08/36] clocksource: sh_tmu: CLOCKSOURCE support.
-Message-ID: <Zlcl2QxRDDrGh7Ru@smile.fi.intel.com>
-References: <cover.1716965617.git.ysato@users.sourceforge.jp>
- <f40e91e3f010880b0cf7a1c3a18d0c57bb55d93a.1716965617.git.ysato@users.sourceforge.jp>
+	s=arc-20240116; t=1716988014; c=relaxed/simple;
+	bh=Gydwrm8d+mV9pgzpyR75u2RXMfJN81LViSApnAgE098=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QjGxEjre8HAncQY/BwRI0kKXb2uujyQbrQItyA2UFw9l7w3zNRgAvlURB22L9opvbwL+Llj5Zx4b76xt4kaxNclX+VnghEITybnCjixU6yL1bG/apLAcf7mqqWijVT40Uxiiz97/LNclHpZF3DJyirU3BVt5pJLvslo8aKYNo1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a2424ecdaso21226727b3.1;
+        Wed, 29 May 2024 06:06:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716988011; x=1717592811;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xVFbPQ9StvkoNrq/0lKZWIQ4ZOA4XJTj64cZbKmwivY=;
+        b=JGGSK+QdZF1tXfN7HWaizV9lCegpQN2zxXCF1VmtX/yvXJnhDhAWWlwVsXnZlokmji
+         SSNp1XJQuV0+2JGyU2yoV5HswGN33ydHIdYb6sLGGdql3wSQDunxUHaLIrz/ZPqtFsaA
+         KNuRRh0gzXaxlBIVUiUwFMJ5lzoYvRZTXFZHCh0H1zSX4M3STo07gydHB3jwWxSsCpID
+         Z9VCrEwAz2oaTdUo6wZQJGH0tAHWorvoqksik8aO/KUgmhCByWi5375pcfA38IsWESLX
+         P3RKSoDOI4o8ibqk8lyu05pZEUzoy4F//w3c7NUsKZa/SzR7VhrEFfZoEP8KNULFi3ld
+         JIkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuOsYbYY50fLN+9TGuZlsLc2uiXKJTJMl0rg2saFwkp+94Xvt/Mw9+pUVmU5CbDXfEbWRe0+qjPbqZDHak0qmZE+rldpFKDw2CKQ1lqLedKFGdGkA3drftjqHD77qfQH+CrKYGWIRR+ovzMtzDrSQXR9+59utqs1HPafJvOE+i/stTrGGuGo+SacM0FvwblIWuQsHpcW0cfUPjLaN0rQj9DwS/C2eZnZi9Mgv+duBmQLx2Czctupy4SrbDzu8gh+hB83yNIZ0FfYqclUwiXVLDjECq0PQ/tfu4ccRBl8EY0z7KM+CLOczAg2m/Vwj/TOsEgLy+UlCJUQAmWSQ8eUpzRjzRHzHtPdOVHvQVl7ywwP9D5iRSxEI=
+X-Gm-Message-State: AOJu0YyxSbWgAjFpzVnuqi8DYbxfz6Lap6OhBhZ1e9KfYqVyw+sG2Wm1
+	KmVeOq2kdWbB+HgpJGDC7vUUjtFvJVNLarQbGHCWO6CJkUddaclVT9T+0PshNRE=
+X-Google-Smtp-Source: AGHT+IFZbNxrq1Y2GcpogkFIJxEEueLh2Pk3k4cqJqns+GErJM+NsuI+yxGgvad9/NZwUzuAxwqHqg==
+X-Received: by 2002:a81:6d01:0:b0:61b:1e81:4eb8 with SMTP id 00721157ae682-62a08d74106mr138719307b3.9.1716988010153;
+        Wed, 29 May 2024 06:06:50 -0700 (PDT)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a56c166sm23852597b3.142.2024.05.29.06.06.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 06:06:49 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dfa4ad7f6dfso587358276.1;
+        Wed, 29 May 2024 06:06:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3pDuDzRbDY+9yUA5NOXzVQwOp/xs7J2mlpVeZogS4DlAaO2iiIpdUmTxE1NVcHGdjY2rDo/eAmjNhn7Op1n/HTwJJc/xVBQkmofGgkMGQZWYbzA61vikHK5vopMzpJcJtYJsQNIgHvfzB/tIjWQeWGjI35ZW4fOFdNs0LzQfyJtzz++aolL7Tn4Ot+L96du9DQ1iKzxkU9pU40MjMg13tcbrakZBCKqZWVpAN3c3gafErgRWyHt0REkoYPEMoB1uukMkZgm4zkJaZx6ZK4ZO4xG+P4wD+/eZOKqeqyKYnt6OT2BgIx4Y8t/5TQ+ILeAU4+gNAeHdETDL1xzvzZPq6RP+yH8tyOUcv/u9noPa8EmE4B24/U/U=
+X-Received: by 2002:a25:a565:0:b0:dfa:48ec:c4b2 with SMTP id
+ 3f1490d57ef6-dfa48ecc64cmr1707039276.22.1716988008813; Wed, 29 May 2024
+ 06:06:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f40e91e3f010880b0cf7a1c3a18d0c57bb55d93a.1716965617.git.ysato@users.sourceforge.jp>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1716965617.git.ysato@users.sourceforge.jp> <b1fc49269919c7d6c2e5c607ae29d1a6f2ab40d2.1716965617.git.ysato@users.sourceforge.jp>
+In-Reply-To: <b1fc49269919c7d6c2e5c607ae29d1a6f2ab40d2.1716965617.git.ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 29 May 2024 15:06:36 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWdR=SfNBFdABXRqdng8b=68mP_BnnXfpQcUvjCmvOmVA@mail.gmail.com>
+Message-ID: <CAMuHMdWdR=SfNBFdABXRqdng8b=68mP_BnnXfpQcUvjCmvOmVA@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v8 13/36] dt-bindings: clock: sh7750-cpg: Add
+ renesas,sh7750-cpg header.
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, 
+	Heiko Stuebner <heiko.stuebner@cherry.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Chris Morgan <macromorgan@hotmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Herve Codina <herve.codina@bootlin.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Anup Patel <apatel@ventanamicro.com>, 
+	Jacky Huang <ychuang3@nuvoton.com>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Sam Ravnborg <sam@ravnborg.org>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 05:00:54PM +0900, Yoshinori Sato wrote:
-> Allows initialization as CLOCKSOURCE.
+Hi Sato-san,
 
-...
+Thanks for the update!
 
-> -	dev_info(&ch->tmu->pdev->dev, "ch%u: used for %s clock events\n",
-> -		 ch->index, periodic ? "periodic" : "oneshot");
-> +	pr_info("%s ch%u: used for %s clock events\n",
-> +		ch->tmu->name, ch->index, periodic ? "periodic" : "oneshot");
+On Wed, May 29, 2024 at 10:01=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> SH7750 CPG Clock output define.
 
-This is a step back change. We should use dev_*() if we have a device
-available. And I believe this is the case (at least for the previous boards),
-no?
+(from my comments on v6 and v7) Please improve the patch description.
 
-...
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-> -	ch->irq = platform_get_irq(tmu->pdev, index);
-> +	if (tmu->np)
-> +		ch->irq = of_irq_get(tmu->np, index);
-> +	else if (tmu->pdev)
-> +		ch->irq = platform_get_irq(tmu->pdev, index);
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,sh7750-cpg.yaml
+> @@ -0,0 +1,107 @@
 
-I found these changes counterproductive. Instead better to have up to three
-files to cover:
-- the common code (library)
-- the platform device support
-- the pure OF support.
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/sh7750-cpg.h>
+> +    cpg: clock-controller@ffc00000 {
+> +        compatible =3D "renesas,sh7751r-cpg";
+> +        reg =3D <0xffc00000 20>, <0xfe0a0000 16>;
+> +        reg-names =3D "FRQCR", "CLKSTP00";
+> +        clocks =3D <&extal>;
+> +        clock-names =3D "extal";
+> +        renesas,mode =3D <0>;
 
-...
+Nit: please move "renesas,mode" last.
 
-> -	res = platform_get_resource(tmu->pdev, IORESOURCE_MEM, 0);
-> -	if (!res) {
-> -		dev_err(&tmu->pdev->dev, "failed to get I/O memory\n");
-> -		return -ENXIO;
-> +	if (tmu->pdev) {
-> +		res = platform_get_resource(tmu->pdev, IORESOURCE_MEM, 0);
-> +		if (!res) {
-> +			pr_err("sh_tmu failed to get I/O memory\n");
-> +			return -ENXIO;
-> +		}
-> +
-> +		tmu->mapbase = ioremap(res->start, resource_size(res));
+> +        #clock-cells =3D <1>;
+> +        #power-domain-cells =3D <0>;
+> +    };
 
-devm_platform_ioremap_resource() should be good to have.
-Again, consider proper splitting.
+Gr{oetje,eeting}s,
 
->  	}
-> +	if (tmu->np)
-> +		tmu->mapbase = of_iomap(tmu->np, 0);
+                        Geert
 
-So, how many boards are non-OF compatible? Maybe makes sense to move them to OF
-and drop these platform code entirely from everywhere?
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-...
-
-> +	tmu->name = dev_name(&pdev->dev);
-> +	tmu->clk = clk_get(&tmu->pdev->dev, "fck");
-
-devm_ approach can help a lot in case of platform device code.
-
-> +	if (IS_ERR(tmu->clk)) {
-> +		dev_err(&tmu->pdev->dev, "cannot get clock\n");
-> +		return PTR_ERR(tmu->clk);
-
-		return dev_err_probe() ?
-
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
