@@ -1,139 +1,139 @@
-Return-Path: <linux-pci+bounces-8011-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8012-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBE3B8D3331
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 11:38:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46C098D34CA
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 12:44:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EB9D1F26949
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 09:38:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1BF32886E7
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:44:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DAB616A36F;
-	Wed, 29 May 2024 09:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0390217DE07;
+	Wed, 29 May 2024 10:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="np0pjepo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E609716DEB1
-	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 09:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A720117B4FD;
+	Wed, 29 May 2024 10:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716975504; cv=none; b=hsqGvruCLXV1rxDqUMt9KceIvbb7FPwBgFzhdEVgEkZZynBgJS7rdY5WlRzncfrWlMdA0oQhrvTpUHEduRqHb8FdOaHVVCLbndj2oYDJskAvkYWyKOH/mZo97qGNPRZFPBENVmR7Lc9EwVUBspKeW27tY8k7OCH5fUOig1ZocWs=
+	t=1716979475; cv=none; b=dg/etXkMioJ1G2wvihSQX2DiDk2nSqPrJxJI+VoSZvg8/KvkFig50ODURGgXrzmLvjp/U3ZsmS8Jx7IOd9ZgXZkyQm8rnfSUKomdGi43FAg/PK7+yv8Ae1aoT/UnKaC++sLW1diSQDiPpkDJ7k7X0UaAVC3cPT1IbIPF+41qsE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716975504; c=relaxed/simple;
-	bh=4XJJgGtWpKIBlEPyJagbdvOUmbd+0hW1lFDdf6ixBtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JW0nCyoMn3x0yHXj0pRZHbyEE/ZuzX8AjnVg3tS4e80Wp4DzrJTDoc7Dx79Xsy8t7qW4peF/Rd0Yd18ifytW8b6j8icybKfsuZQ9w+2hgBG6H0aNmuKziICLA65KYm4NOqhg1dKxaAw9MG67MRRQjzrCqwb9KD+KeswpRXD6j+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 8DE6D2800C983;
-	Wed, 29 May 2024 11:38:12 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 5F7E770E9C8; Wed, 29 May 2024 11:38:12 +0200 (CEST)
-Date: Wed, 29 May 2024 11:38:12 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-	linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
-	Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: Re: [PATCH v2 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-Message-ID: <Zlb3hGR45SWJ1KuL@wunner.de>
-References: <20240528131940.16924-1-mariusz.tkaczyk@linux.intel.com>
- <20240528131940.16924-3-mariusz.tkaczyk@linux.intel.com>
- <6656bb4654a65_16687294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	s=arc-20240116; t=1716979475; c=relaxed/simple;
+	bh=w2NUtcqQzhKZrCNj5AHZJLY6Ii4aW3hyDn3AwcSEkNk=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=QpXft65zK9FVAyRXvZsnMSi0BgygIxz2T1KGpbEnAd7qaW0No0ykDDeOA6ic6PCRRXCimwQmY+Ro3vXTke6X5QFNTCiY80edWdYu1NnTbajBynSm64hLeQiwUhyounAfSZCfF9n2Sl86vjjwViN8R9ygvoBEnM7em7wsN3lysnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=np0pjepo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07607C32781;
+	Wed, 29 May 2024 10:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716979475;
+	bh=w2NUtcqQzhKZrCNj5AHZJLY6Ii4aW3hyDn3AwcSEkNk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=np0pjepoSGg+tfmnkzQQQpy493Qf1VV2AL6xy/dHgphxXVYYYXe0eAHbGZmRs0wN+
+	 R1pG03TKfT13mCgnEfGR0W9D+abVpRhZNwJ/ebD3x6wMuoW4xNDqXVVVOgv04v4Ly8
+	 g6Gm7sxj+ao6znk0JoniHcRG9K6XWfNe8N6ri85nFajDUxVb1Y30g9c6M6tJlCPm5n
+	 bvLn2Dol8agheHA5c/GhNvm+F7X73Rwh5BXpHONBEWMzM4HZ2Qm8xa0Iz9AfAlOady
+	 y/vvIn/OGYic0xYR3CpV/3e0ZCgkKK+oxOoqxGtjD4Q7WsKdTrBkuEhg2TZHzLiR/z
+	 OAqoUUfGI46gA==
+Date: Wed, 29 May 2024 05:44:34 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6656bb4654a65_16687294c0@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Anup Patel <apatel@ventanamicro.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Guo Ren <guoren@kernel.org>, 
+ Kefeng Wang <wangkefeng.wang@huawei.com>, 
+ Maxime Ripard <mripard@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Max Filippov <jcmvbkbc@gmail.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Daniel Vetter <daniel@ffwll.ch>, linux-renesas-soc@vger.kernel.org, 
+ Herve Codina <herve.codina@bootlin.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Rich Felker <dalias@libc.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+ linux-clk@vger.kernel.org, Jacky Huang <ychuang3@nuvoton.com>, 
+ devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Masahiro Yamada <masahiroy@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ linux-fbdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ Stephen Boyd <sboyd@kernel.org>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+ Jiri Slaby <jirislaby@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Javier Martinez Canillas <javierm@redhat.com>, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Heiko Stuebner <heiko.stuebner@cherry.de>, linux-serial@vger.kernel.org, 
+ Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org, 
+ Thomas Gleixner <tglx@linutronix.de>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, linux-sh@vger.kernel.org, 
+ Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, 
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+ Chris Morgan <macromorgan@hotmail.com>, linux-pci@vger.kernel.org, 
+ David Airlie <airlied@gmail.com>, Damien Le Moal <dlemoal@kernel.org>, 
+ Niklas Cassel <cassel@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+ Baoquan He <bhe@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Helge Deller <deller@gmx.de>
+In-Reply-To: <2fb214e148e74fb0acc202543dca8dd8a170a6e6.1716965617.git.ysato@users.sourceforge.jp>
+References: <cover.1716965617.git.ysato@users.sourceforge.jp>
+ <2fb214e148e74fb0acc202543dca8dd8a170a6e6.1716965617.git.ysato@users.sourceforge.jp>
+Message-Id: <171697947326.1106773.218175911484134371.robh@kernel.org>
+Subject: Re: [DO NOT MERGE v8 22/36] dt-bindings: display: smi,sm501: SMI
+ SM501 binding json-schema
 
-On Tue, May 28, 2024 at 10:21:10PM -0700, Dan Williams wrote:
-> Mariusz Tkaczyk wrote:
-> > +config PCI_NPEM
-> > +	bool "Native PCIe Enclosure Management"
-> > +	depends on LEDS_CLASS=y
+
+On Wed, 29 May 2024 17:01:08 +0900, Yoshinori Sato wrote:
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+>  .../bindings/display/smi,sm501.yaml           | 443 ++++++++++++++++++
+>  1 file changed, 443 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/smi,sm501.yaml
 > 
-> I would have expected
-> 
->     depends on NEW_LEDS
->     select LEDS_CLASS
 
-Hm, a quick "git grep -C 2 'depends on NEW_LEDS'" shows that noone else
-does that.  Everyone else either selects both NEW_LEDS and LEDS_CLASS
-or depends on both or depends on just LEDS_CLASS.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-(Since LEDS_CLASS is constrained to "if NEW_LEDS", depending on both
-seems pointless, so I'm not sure why some people do that.)
+yamllint warnings/errors:
 
-I guess it would be good to get guidance from leds maintainers what
-the preferred modus operandi is.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/smi,sm501.yaml: crt: Missing additionalProperties/unevaluatedProperties constraint
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/smi,sm501.yaml: panel: Missing additionalProperties/unevaluatedProperties constraint
 
+doc reference errors (make refcheckdocs):
 
-> > +#define for_each_indication(ind, inds) \
-> > +	for (ind = inds; ind->bit; ind++)
-> > +
-> > +/* To avoid confusion, do not keep any special bits in indications */
-> 
-> I am confused by this comment. What "special bits" is this referring to?
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/2fb214e148e74fb0acc202543dca8dd8a170a6e6.1716965617.git.ysato@users.sourceforge.jp
 
-I think it's referring to bit 0 in the Status and Control register,
-which is a master "NPEM Capable" and "NPEM Enable" bit.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-> > +struct npem_ops {
-> > +	const struct indication *inds;
-> 
-> @inds is not an operation, it feels like something that belongs as
-> another member in 'struct npem'. What drove this data to join 'struct
-> npem_ops'?
+pip3 install dtschema --upgrade
 
-The native NPEM register interface supports enclosure-specific indications
-which the DSM interface does not support.  So those indications are
-present in the native npem_ops->inds and not present in the DSM
-npem_ops->inds.
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
-
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-[...]
-> > +#define  PCI_NPEM_IND_SPEC_0		0x00800000
-> > +#define  PCI_NPEM_IND_SPEC_1		0x01000000
-> > +#define  PCI_NPEM_IND_SPEC_2		0x02000000
-> > +#define  PCI_NPEM_IND_SPEC_3		0x04000000
-> > +#define  PCI_NPEM_IND_SPEC_4		0x08000000
-> > +#define  PCI_NPEM_IND_SPEC_5		0x10000000
-> > +#define  PCI_NPEM_IND_SPEC_6		0x20000000
-> > +#define  PCI_NPEM_IND_SPEC_7		0x40000000
-> 
-> Given no other driver needs this, I would define them locally in
-> drivers/pci/npem.c.
-
-This is a uapi header, so could be used not just by other drivers
-but by user space.
-
-It's common to add spec-defined register bits to this header file
-even if they're only used by a single source file in the kernel.
-
-Thanks,
-
-Lukas
 
