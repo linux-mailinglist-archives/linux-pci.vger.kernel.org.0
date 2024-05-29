@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-7959-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7960-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B97F8D2F1F
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:02:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A84E58D2F2A
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:02:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EC411C22FFD
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:02:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D4E31F22D8D
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:02:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AED8F16936C;
-	Wed, 29 May 2024 08:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25320169ACA;
+	Wed, 29 May 2024 08:01:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABBF374F6;
-	Wed, 29 May 2024 08:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6562F37;
+	Wed, 29 May 2024 08:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969701; cv=none; b=nnyVuGIDE9LNde5NqknEGwX3kGujWiAUTN+3OcQsb6scS9YkqEPxL3yL3OCDfcYzNgvSt6Cejjg814JBDHeQg1likKpzx94QFZCdGIYd0+7Lhuh27Eg9/JsL75oedwf/eWUvUTrez8b6gYXQl9xw8KB1GOWZ6mdPQ579ZTKU9Tk=
+	t=1716969703; cv=none; b=g87uWSnns+reruLL2xkPnoz/mvVqOBEfXvSWE/M0l8hjQcmN1D4dbwte7uDwDZ41nS8KtlPbYl+Fc9Xb9X6ot7fmaK5Rn7X5bqjn+62F+R1iq0OE4ggnL3iE0bysDp+dSZu3ttyGkXcrSFXvGDyVBFmUH3V98asjM6oY74oYZ4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969701; c=relaxed/simple;
-	bh=2Ln8/beSX9+5TT32ruO4321U5//ekhXDgwV6jyytobg=;
+	s=arc-20240116; t=1716969703; c=relaxed/simple;
+	bh=LQRqo2R5KpFisxDuNYQDVzcbcyFMytNT9GqRgFmxwEg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Iei59jqm7V6rhSxh0TT/MQd8/w0ZRxhxFb5jEhsqAMnadWCZJdVymprPKhbKrCeOEwfw8Efxa0QNcSDLChxxhAej6LtokPfvJNC3wIjO7ETvPkTcGbGd0z7QAo/BZzmvDrFg6o2vPWLzXIpeP0PsU+L74M0SsnPlGLcdoZVAcMM=
+	 MIME-Version; b=SORMFTgm3eLi5COPV7efIJx1GZcjc7teO3o9thmgG/sGRiRwGmysA+ho6VBNW8Q+mpQuHA0K2HKMkH8k1olcg6o5kK+7cmG97Hglurfwh2Zdf/UO5b9yxI5gXdStoix7cXSXP/kW1Fvb/eEVsbGWPIH5uCxertTBSfwxylx0hF4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id EC6C11C0594;
-	Wed, 29 May 2024 17:01:36 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id B1C6F1C05A7;
+	Wed, 29 May 2024 17:01:38 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -96,9 +96,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v8 05/36] sh: GENERIC_IRQ_CHIP support for CONFIG_OF=y
-Date: Wed, 29 May 2024 17:00:51 +0900
-Message-Id: <adbcde9034d752dcdbf90e995aaa14f85c33c9c3.1716965617.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v8 06/36] sh: kernel/setup Update DT support.
+Date: Wed, 29 May 2024 17:00:52 +0900
+Message-Id: <d294851372d1003573439d81fb3ed22ace103304.1716965617.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
 References: <cover.1716965617.git.ysato@users.sourceforge.jp>
@@ -110,123 +110,96 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove unused function prototype.
-Add helper update_sr_imask. use for SH7751 irq driver.
-Add stub intc_finalize.
+Fix extrnal fdt initialize and bootargs.
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/include/asm/io.h       |  2 ++
- arch/sh/include/asm/irq.h      | 10 ++++++++--
- arch/sh/kernel/cpu/Makefile    |  5 +----
- arch/sh/kernel/cpu/irq/imask.c | 17 +++++++++++++++++
- include/linux/sh_intc.h        |  7 ++++++-
- 5 files changed, 34 insertions(+), 7 deletions(-)
+ arch/sh/Kconfig        |  1 -
+ arch/sh/kernel/setup.c | 31 ++++++++++++++++++++-----------
+ 2 files changed, 20 insertions(+), 12 deletions(-)
 
-diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
-index cf5eab840d57..5c544cf5201b 100644
---- a/arch/sh/include/asm/io.h
-+++ b/arch/sh/include/asm/io.h
-@@ -121,7 +121,9 @@ __BUILD_MEMORY_STRING(__raw_, q, u64)
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 91c7c72bc0db..5c9b50884995 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -712,7 +712,6 @@ config ROMIMAGE_MMCIF
+ choice
+ 	prompt "Kernel command line"
+ 	default CMDLINE_OVERWRITE
+-	depends on !OF || USE_BUILTIN_DTB
+ 	help
+ 	  Setting this option allows the kernel command line arguments
+ 	  to be set.
+diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
+index 620e5cf8ae1e..03ec6f7a1153 100644
+--- a/arch/sh/kernel/setup.c
++++ b/arch/sh/kernel/setup.c
+@@ -30,6 +30,7 @@
+ #include <linux/memblock.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
++#include <linux/libfdt.h>
+ #include <linux/uaccess.h>
+ #include <uapi/linux/mount.h>
+ #include <asm/io.h>
+@@ -269,8 +270,22 @@ void __ref sh_fdt_init(phys_addr_t dt_phys)
  
- #define ioport_map ioport_map
- #define ioport_unmap ioport_unmap
-+#ifndef CONFIG_SH_DEVICE_TREE
- #define pci_iounmap pci_iounmap
-+#endif
- 
- #define ioread8 ioread8
- #define ioread16 ioread16
-diff --git a/arch/sh/include/asm/irq.h b/arch/sh/include/asm/irq.h
-index 0f384b1f45ca..3d897229dcc4 100644
---- a/arch/sh/include/asm/irq.h
-+++ b/arch/sh/include/asm/irq.h
-@@ -16,8 +16,8 @@
- /*
-  * Simple Mask Register Support
-  */
--extern void make_maskreg_irq(unsigned int irq);
--extern unsigned short *irq_mask_register;
-+
-+void update_sr_imask(unsigned int irq, bool enable);
- 
- /*
-  * PINT IRQs
-@@ -54,4 +54,10 @@ extern void irq_finish(unsigned int irq);
- 
- #include <asm-generic/irq.h>
- 
-+/* SH3/4 INTC stuff */
-+/* IRL level 0 - 15 */
-+#define NR_IRL 15
-+/* IRL0 -> IRQ16 */
-+#define IRL_BASE_IRQ	16
-+
- #endif /* __ASM_SH_IRQ_H */
-diff --git a/arch/sh/kernel/cpu/Makefile b/arch/sh/kernel/cpu/Makefile
-index e00ebf134985..ad12807fae9c 100644
---- a/arch/sh/kernel/cpu/Makefile
-+++ b/arch/sh/kernel/cpu/Makefile
-@@ -20,7 +20,4 @@ ifndef CONFIG_COMMON_CLK
- obj-y += clock.o
- obj-$(CONFIG_SH_CLK_CPG_LEGACY)	+= clock-cpg.o
- endif
--ifndef CONFIG_GENERIC_IRQ_CHIP
--obj-y	+= irq/
--endif
--obj-y	+= init.o fpu.o pfc.o proc.o
-+obj-y	+= init.o fpu.o pfc.o proc.o irq/
-diff --git a/arch/sh/kernel/cpu/irq/imask.c b/arch/sh/kernel/cpu/irq/imask.c
-index 572585c3f2fd..7589ca7c506c 100644
---- a/arch/sh/kernel/cpu/irq/imask.c
-+++ b/arch/sh/kernel/cpu/irq/imask.c
-@@ -51,6 +51,7 @@ static inline void set_interrupt_registers(int ip)
- 		     : "t");
- }
- 
-+#ifndef CONFIG_GENERIC_IRQ_CHIP
- static void mask_imask_irq(struct irq_data *data)
+ void __init setup_arch(char **cmdline_p)
  {
- 	unsigned int irq = data->irq;
-@@ -83,3 +84,19 @@ void make_imask_irq(unsigned int irq)
- 	irq_set_chip_and_handler_name(irq, &imask_irq_chip, handle_level_irq,
- 				      "level");
- }
-+#else
-+void update_sr_imask(unsigned int irq, bool enable)
-+{
-+	if (enable) {
-+		set_bit(irq, imask_mask);
-+		interrupt_priority = IMASK_PRIORITY -
-+		  find_first_bit(imask_mask, IMASK_PRIORITY);
-+	} else {
-+		clear_bit(irq, imask_mask);
-+		if (interrupt_priority < IMASK_PRIORITY - irq)
-+			interrupt_priority = IMASK_PRIORITY - irq;
++#if defined(CONFIG_OF) && defined(CONFIG_OF_EARLY_FLATTREE)
++	if (IS_ENABLED(CONFIG_USE_BUILTIN_DTB)) {
++		/* Relocate Embedded DTB */
++		unflatten_and_copy_device_tree();
++	} else if (initial_boot_params) {
++		/* Reserve external DTB area */
++		memblock_reserve(__pa(initial_boot_params),
++				 fdt_totalsize(initial_boot_params));
++		unflatten_device_tree();
 +	}
-+	set_interrupt_registers(interrupt_priority);
-+}
-+EXPORT_SYMBOL(update_sr_imask);
++	/* copy from /chosen/bootargs */
++	strscpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
 +#endif
-diff --git a/include/linux/sh_intc.h b/include/linux/sh_intc.h
-index 27ae79191bdc..994b5b05a0d7 100644
---- a/include/linux/sh_intc.h
-+++ b/include/linux/sh_intc.h
-@@ -139,8 +139,13 @@ struct intc_desc symbol __initdata = {					\
- int register_intc_controller(struct intc_desc *desc);
- int intc_set_priority(unsigned int irq, unsigned int prio);
- int intc_irq_lookup(const char *chipname, intc_enum enum_id);
-+#ifndef CONFIG_SH_DEVICE_TREE
- void intc_finalize(void);
+ 	enable_mmu();
+ 
++#ifndef CONFIG_OF
+ 	ROOT_DEV = old_decode_dev(ORIG_ROOT_DEV);
+ 
+ 	printk(KERN_NOTICE "Boot params:\n"
+@@ -299,14 +314,16 @@ void __init setup_arch(char **cmdline_p)
+ 	bss_resource.start = virt_to_phys(__bss_start);
+ 	bss_resource.end = virt_to_phys(__bss_stop)-1;
+ 
++#endif
+ #ifdef CONFIG_CMDLINE_OVERWRITE
+ 	strscpy(command_line, CONFIG_CMDLINE, sizeof(command_line));
+-#else
+-	strscpy(command_line, COMMAND_LINE, sizeof(command_line));
++#elif !defined(CONFIG_OF) || defined(CONFIG_USE_BUILTIN_DTB)
++	if (*COMMAND_LINE)
++		strscpy(command_line, COMMAND_LINE, sizeof(command_line));
++#endif
+ #ifdef CONFIG_CMDLINE_EXTEND
+ 	strlcat(command_line, " ", sizeof(command_line));
+ 	strlcat(command_line, CONFIG_CMDLINE, sizeof(command_line));
+-#endif
+ #endif
+ 
+ 	/* Save unparsed command line copy for /proc/cmdline */
+@@ -322,14 +339,6 @@ void __init setup_arch(char **cmdline_p)
+ 	/* Let earlyprintk output early console messages */
+ 	sh_early_platform_driver_probe("earlyprintk", 1, 1);
+ 
+-#ifdef CONFIG_OF_EARLY_FLATTREE
+-#ifdef CONFIG_USE_BUILTIN_DTB
+-	unflatten_and_copy_device_tree();
+-#else
+-	unflatten_device_tree();
+-#endif
+-#endif
 -
-+#else
-+static inline void intc_finalize(void)
-+{
-+}
-+#endif
- #ifdef CONFIG_INTC_USERIMASK
- int register_intc_userimask(unsigned long addr);
- #else
+ 	paging_init();
+ 
+ 	/* Perform the machine specific initialisation */
 -- 
 2.39.2
 
