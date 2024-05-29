@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-7983-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF9DC8D3018
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:09:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 819978D3020
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:09:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7397028D291
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:09:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB9531C25E2C
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:09:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A21184124;
-	Wed, 29 May 2024 08:02:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3208218732A;
+	Wed, 29 May 2024 08:02:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 182CD184107;
-	Wed, 29 May 2024 08:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828DE184119;
+	Wed, 29 May 2024 08:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969744; cv=none; b=hZtIYHUrHNf+bf+ZTAqJHGsaDGOpEqEz8O5aCyAB23ZrZ0ucqhD8m64Ea5z5FNvTSwsfPNnglG5/IfnruLdnHdC8rPLFZ2OXD0PjersYLyT0K05dJ6pw9TtX177c+H4sScFz/lyJPaoMk1XjxtkriftgZiXqX8/r2wMwtNqMECE=
+	t=1716969746; cv=none; b=Mf6Tpl3doEzBOqeTCFmxVpiXnXkM7nPbHGabRTnE6ZbEbenSc2gwPMG7swOzAeI8Yef4gTjejrImQdPEAk720QD5xiPiOLz313RNY1Hc0yow4ctK4b2DrYMCZHPvCiOxQiTh+JOWhSN0LPcigtJpRRXH6d099ddpsefx2RUfZi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969744; c=relaxed/simple;
-	bh=/moUhDcvk/6NS6nQt9FvQJ4ohnBnDYA9KJpwphYrJsE=;
+	s=arc-20240116; t=1716969746; c=relaxed/simple;
+	bh=kt9MVUVLoRjG4UUyYQiJw6Pi6MQWcJLl9nI+3iP/ezI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WFYu0A3defvDw91KOEAgCr1LfewAVknAgRGbGcYp+muQ4EKcDwFUW5llFJb9TtDvv8FcSfPt2f4aVHYuEx9hHEby+VBFWK6GvhRrZzf9h6ZmMKzZRC62FWfrEIweosNOwL7ABvkhYdpgyn3GbtAu4u6n3fbl0zqx1TReavIiKK0=
+	 MIME-Version; b=IG/bNGUXMEY4zHwRkXMUsre7wP1T7rxXP1xQr+cwcGHhtzfsMe6DRK2DGVuh/WlxRhURA/nBKGK6PD1c33cEbVSuYDdfWg8LPEDYFLPbuNgyEUeX5eBmEkw9YUFBus8G0yXc9ZwyYGh5WLqLza9E+NHCxyelc8s576IjN5bn5lA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 790D21C1018;
-	Wed, 29 May 2024 17:02:20 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id 3C24B1C103A;
+	Wed, 29 May 2024 17:02:22 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -96,9 +96,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v8 29/36] sh: add RTS7751R2D Plus DTS
-Date: Wed, 29 May 2024 17:01:15 +0900
-Message-Id: <1138980db95fbf8d59540d19428be51df0bd60e0.1716965617.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v8 30/36] sh: Add IO DATA LANDISK dts
+Date: Wed, 29 May 2024 17:01:16 +0900
+Message-Id: <ffded7fc0fb4d1d8cc0191dee1a8c780f65a1fdd.1716965617.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
 References: <cover.1716965617.git.ysato@users.sourceforge.jp>
@@ -110,40 +110,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Renesas RTS7751R2D Plus devicetree.
+IO DATA DEVICE Inc. LANDISK HDL-U devicetree.
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/boot/dts/rts7751r2dplus.dts | 172 ++++++++++++++++++++++++++++
- 1 file changed, 172 insertions(+)
- create mode 100644 arch/sh/boot/dts/rts7751r2dplus.dts
+ arch/sh/boot/dts/landisk.dts | 77 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 arch/sh/boot/dts/landisk.dts
 
-diff --git a/arch/sh/boot/dts/rts7751r2dplus.dts b/arch/sh/boot/dts/rts7751r2dplus.dts
+diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
 new file mode 100644
-index 000000000000..a67bd50cc80a
+index 000000000000..1ac1f532947b
 --- /dev/null
-+++ b/arch/sh/boot/dts/rts7751r2dplus.dts
-@@ -0,0 +1,172 @@
++++ b/arch/sh/boot/dts/landisk.dts
+@@ -0,0 +1,77 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Device Tree Source for the Renesas RTS7751R2D Plus
++ * Device Tree Source for the IO DATA DEVICE LANDISK
 + */
 +
 +/dts-v1/;
 +
-+#include <dt-bindings/gpio/gpio.h>
 +#include "sh7751r.dtsi"
 +
 +/ {
-+	model = "Renesas RTS7715R2D Plus";
-+	compatible = "renesas,rts7751r2d", "renesas,sh7751r";
++	model = "IO DATA Device LANDISK";
++	compatible = "iodata,landisk", "renesas,sh7751r";
 +
 +	aliases {
 +		serial0 = &scif1;
 +	};
 +
 +	chosen {
-+		stdout-path = "serial0:115200n8";
++		stdout-path = "serial0:9600n8";
 +	};
 +
 +	memory@c000000 {
@@ -151,115 +150,22 @@ index 000000000000..a67bd50cc80a
 +		reg = <0x0c000000 0x4000000>;
 +	};
 +
-+	r2dintc: interrupt-controller@a4000000 {
++	julianintc: interrupt-controller@b0000005 {
 +		compatible = "renesas,sh7751-irl-ext";
-+		reg = <0xa4000000 0x02>;
++		reg = <0xb0000005 0x01>;
 +		interrupt-controller;
-+		#address-cells = <0>;
 +		#interrupt-cells = <2>;
 +		/*
-+		 * b15: 12 - TP
-+		 * b14:  9 - PCI INTA
-+		 * b13: 10 - PCI INTB
-+		 * b12:  3 - PCI INTC
-+		 * b11:  0 - PCI INTD
-+		 * b10:  4 - SM501
-+		 * b9:   1 - CF IDE
-+		 * b8:   2 - CF CD
-+		 * b7:   8 - SDCARD
-+		 * b6:   5 - KEY
-+		 * b5:   6 - RTC ALARM
-+		 * b4:   7 - RTC T
-+		 * b3: unassigned
-+		 * b2: unassigned
-+		 * b1: unassigned
-+		 * b0:  11  -EXT
++		 * b7: Not assigned
++		 * b6: Power switch
++		 * b5: Not assigned
++		 * b4: Not assigned
++		 * b3: PCI-INTD
++		 * b2: PCI-INTC
++		 * b1: PCI-INTB
++		 * b0: PCI-INTA
 +		 */
-+		renesas,enable-reg = <12 9 10 3 0 4 1 2 8 5 6 7 15 15 15 11>;
-+	};
-+
-+	sm501: display@10000000 {
-+		compatible = "smi,sm501";
-+		reg = <0x10000000 0x03e00000
-+		       0x13e00000 0x00200000>;
-+		interrupt-parent = <&r2dintc>;
-+		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
-+		mode = "640x480-16@60";
-+		smi,little-endian;
-+		smi,devices = "usb-host", "uart0";
-+		smi,swap-fb-endian;
-+		#gpio-cells = <2>;
-+		edid = [00 ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00
-+			00 00 01 04 00 00 00 00 00 00 00 00 00 00 00 00
-+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+			00 00 00 00 00 00 f0 0a 80 fb 20 e0 25 10 32 60
-+			02 00 00 00 00 00 00 06 00 00 00 00 00 00 00 00
-+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 bd];
-+
-+		smi,misc-timing-ex = "16";
-+		smi,misc-timing-xc = "internal-pll";
-+		smi,misc-timing-usb-current = "disable";
-+		smi,misc-control-pad = "24";
-+		smi,misc-control-usbclk = "xtal";
-+		smi,misc-control-sh = "active-low";
-+
-+		gpio {
-+			pin-0 = "ioport";
-+			pin-1 = "function";
-+		};
-+
-+		crt {
-+			smi,flags = "use-init-done",
-+				    "disable-at-exit",
-+				    "use-hwcursor",
-+				    "use-hwaccel";
-+		};
-+
-+		panel {
-+			bpp = <16>;
-+			smi,flags = "use-init-done",
-+				    "disable-at-exit",
-+				    "use-hwcursor",
-+				    "use-hwaccel";
-+		};
-+	};
-+
-+	compact-flash@b4001000 {
-+		compatible = "renesas,rts7751r2d-ata", "ata-generic";
-+		reg = <0xb4001000 0x0e>, <0xb400080c 2>;
-+		reg-shift = <1>;
-+		interrupt-parent = <&r2dintc>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	flash@0 {
-+		compatible = "cfi-flash";
-+		reg = <0x00000000 0x02000000>;
-+		device-width = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "U-Boot";
-+			reg = <0x00000000 0x00040000>;
-+		};
-+
-+		partition@1 {
-+			label = "Environemt";
-+			reg = <0x00040000 0x00040000>;
-+		};
-+
-+		partition@2 {
-+			label = "Kernel";
-+			reg = <0x00080000 0x001c0000>;
-+		};
-+
-+		partition@3 {
-+			label = "Flash_FS";
-+			reg = <0x00240000 0x00dc0000>;
-+		};
++		renesas,enable-reg = <15 11 15 15 8 7 6 5>;
 +	};
 +};
 +
@@ -278,21 +184,20 @@ index 000000000000..a67bd50cc80a
 +&pcic {
 +	ranges = <0x02000000 0 0xfd000000 0xfd000000 0 0x01000000>,
 +		 <0x01000000 0 0x00000000 0xfe240000 0 0x00040000>;
-+	dma-ranges = <0x03000000 0 0xab000000 0xab000000 0 0x00000004>,
-+		     <0x02000000 0 0x0c000000 0x0c000000 0 0x04000000>,
++	dma-ranges = <0x02000000 0 0x0c000000 0x0c000000 0 0x04000000>,
 +		     <0x02000000 0 0xd0000000 0xd0000000 0 0x00000004>;
-+	interrupt-map = <0x0000 0 0 1 &r2dintc 9  IRQ_TYPE_LEVEL_LOW>,
-+			<0x0000 0 0 2 &r2dintc 10 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0000 0 0 3 &r2dintc 3  IRQ_TYPE_LEVEL_LOW>,
-+			<0x0000 0 0 4 &r2dintc 0  IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 1 &r2dintc 10 IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 2 &r2dintc 3  IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 3 &r2dintc 0  IRQ_TYPE_LEVEL_LOW>,
-+			<0x0800 0 0 4 &r2dintc 9  IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 1 &r2dintc 3  IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 2 &r2dintc 0  IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 3 &r2dintc 9  IRQ_TYPE_LEVEL_LOW>,
-+			<0x1000 0 0 4 &r2dintc 10 IRQ_TYPE_LEVEL_LOW>;
++	interrupt-map = <0x0000 0 0 1 &julianintc 5 IRQ_TYPE_LEVEL_LOW>,
++			<0x0000 0 0 2 &julianintc 6 IRQ_TYPE_LEVEL_LOW>,
++			<0x0000 0 0 3 &julianintc 7 IRQ_TYPE_LEVEL_LOW>,
++			<0x0000 0 0 4 &julianintc 8 IRQ_TYPE_LEVEL_LOW>,
++			<0x0800 0 0 1 &julianintc 6 IRQ_TYPE_LEVEL_LOW>,
++			<0x0800 0 0 2 &julianintc 7 IRQ_TYPE_LEVEL_LOW>,
++			<0x0800 0 0 3 &julianintc 8 IRQ_TYPE_LEVEL_LOW>,
++			<0x0800 0 0 4 &julianintc 5 IRQ_TYPE_LEVEL_LOW>,
++			<0x1000 0 0 1 &julianintc 7 IRQ_TYPE_LEVEL_LOW>,
++			<0x1000 0 0 2 &julianintc 8 IRQ_TYPE_LEVEL_LOW>,
++			<0x1000 0 0 3 &julianintc 5 IRQ_TYPE_LEVEL_LOW>,
++			<0x1000 0 0 4 &julianintc 6 IRQ_TYPE_LEVEL_LOW>;
 +	interrupt-map-mask = <0x1800 0 0 7>;
 +	status = "okay";
 +};
