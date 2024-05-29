@@ -1,108 +1,242 @@
-Return-Path: <linux-pci+bounces-8032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2904B8D39F5
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:53:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F088D39F3
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 16:52:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8C9A28A65E
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 14:52:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9F334B21FF2
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 14:52:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4B91581E8;
-	Wed, 29 May 2024 14:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B5EF16D325;
+	Wed, 29 May 2024 14:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kLJn5UM5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA13917B404
-	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 14:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D8E2581
+	for <linux-pci@vger.kernel.org>; Wed, 29 May 2024 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716994284; cv=none; b=lDO9nvxR8/HeZitJ5OEsvUM9+Hb/CHmwviJGOixfawlaugxdTd6yaTeiqeVXIRZIH7v+5BL9/Ns5OgCWTdgAvmk2ivcZ/edxDZrYbtIkAa7/XGmRpWqPp/muRv1jP4HyHjYS/Q6NBbK/VdVYVWyJ5ZTdyglYEqR3q2xd3MX3YZk=
+	t=1716994211; cv=none; b=NP0MJobv+dYhn0HtBOvKb2M4HtE/ukQvn8G8+PjWemEfxJc9tW1a5Tf1eYJ4k0s1WxmRzCTdtGzQyQoSR3CW4T5ZV8osrxCiEvC5YfTiVUHPab7JmPlM6qUpGTR62hrhPTmZSIli5xRh/DFIdkvNhfWhrVEHXqMuECDBkRUMtTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716994284; c=relaxed/simple;
-	bh=87tgenCcbkDkT1v056+Rrow6+rvKb6ED20JwCzwCEBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qgxj0JcGK/2nFbCTJ8Vk56M4Hr6JzqDAtQL538+t4s3V5lCQme0Usxux8s2do6Y2n6cefV1ZH2eS2ckdQ3DubnfrNBJ8axDyO+MF28o47mr40CPJehwQYFdtXqXnklVkv4ACOrTHschBuXe1NoVqJfzUjy1q+4Yvzf6L7YBBwTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id C5EC530000D14;
-	Wed, 29 May 2024 16:43:51 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id B0FAA230885; Wed, 29 May 2024 16:43:51 +0200 (CEST)
-Date: Wed, 29 May 2024 16:43:51 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Ricky WU <ricky_wu@realtek.com>
-Cc: "scott@spiteful.org" <scott@spiteful.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"kbusch@kernel.org" <kbusch@kernel.org>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [bug report] nvme not re-recognize when changed M.2 SSD in S3
- mode
-Message-ID: <Zlc_J2386nAAhn1s@wunner.de>
-References: <a608b5930d0a48f092f717c0e137454b@realtek.com>
- <ZhZk7MMt_dm6avBJ@wunner.de>
- <ZhapFF3393xuIHwM@wunner.de>
- <8c3d00850e7449c184e4c45a3c9b9dfa@realtek.com>
- <ZlR0grWLqO9nch8Q@wunner.de>
- <94918684e6a84122a6373ef45b3c117c@realtek.com>
+	s=arc-20240116; t=1716994211; c=relaxed/simple;
+	bh=W9pfXuhMOzAmmBGFGwWBZRHnA/JZs2NjRGk0shOKeEY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Wwzo85ujZGLTJdcu84rNI6/7ljFvumaPxismo3bXw6VIvLrhTCWUpFRG3t5ZCHH9luZiyzGmHBaZ5OP3TN9LziROaiVedEcghxn1+LG8tAvrTZta/4Rg0UxU9pvLl0pv+IE4QjcMSPHjjCSOdJRlysqSQ9X3m6HF1a0xZkwTv7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kLJn5UM5; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716994210; x=1748530210;
+  h=date:from:to:cc:subject:message-id;
+  bh=W9pfXuhMOzAmmBGFGwWBZRHnA/JZs2NjRGk0shOKeEY=;
+  b=kLJn5UM5/ElCEMKfK7YQM7swKpwkaPzFemTOhaXa6ZFfAn8WdniBnxk8
+   Luhj/C6rxiSZei7mywe1kcHQutBrXuYs9bK8UEU43QQmf4xHRcFdal8tL
+   3qsd+FV75qtNP3+/Sz9r/hgK5c2DUnqSQYDJNTrjthtN94j2vKPU6PjWC
+   BEnlfXQmxPp+7WVmqvOylUKHIcSco3Cyww4Pqey+tXCjIY1tJ32vjnHQb
+   k55Wd+8gq1Ufq2QT+yBdm/N7pP3JFadcXItjQy8s/ujCWOYbqHGIU9LTB
+   3z2NQ3in9SfxPNhOVSUC690m22fJLYr6sa8A+1Uxof2qVoRurByL8c5o7
+   A==;
+X-CSE-ConnectionGUID: X6BiKTWgRWykU3EYeoxEvQ==
+X-CSE-MsgGUID: zYCw5LDySNaqKvffS5s3QQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13251773"
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="13251773"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 07:50:09 -0700
+X-CSE-ConnectionGUID: 4RBkYWv8T5KTv4OBnrSwYg==
+X-CSE-MsgGUID: BDXEtN0DRjyV4KgTJ72KrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="40316956"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 29 May 2024 07:50:08 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sCKcv-000Dnx-1u;
+	Wed, 29 May 2024 14:50:05 +0000
+Date: Wed, 29 May 2024 22:49:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:endpoint] BUILD SUCCESS
+ 7d96527bc16e46545739c6fe0ab6e4c915e9910e
+Message-ID: <202405292206.3vJTAgFu-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94918684e6a84122a6373ef45b3c117c@realtek.com>
 
-On Wed, May 29, 2024 at 07:47:13AM +0000, Ricky WU wrote:
-> We tried this patch as below situation: 
-> 1.keep the SDEX card enter S3 then resume ->PASS 
-> 2. on S3 mode insert the SDEX card then resume -> PASS
-> 3.on S3 mode remove the SDEX card then resume -> PASS
-> 4.replace card on S3 mode (different brand) ->PASS
-> 5.replace card on S3 mode (same brand and same capacity) ->FAIL
-> Can not see the msg "device replace during system sleep"
-> 
-> Against 5 we found a issue, most card not declare capability
-> "PCI_EXT_CAP_ID_DSN", even if there is the capability the config space
-> value are 0, cause pci_get_dsn() return 0 normally.
-> However these cards can show the SN on CrystalDiskInfo.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
+branch HEAD: 7d96527bc16e46545739c6fe0ab6e4c915e9910e  Documentation: PCI: pci-endpoint: Fix EPF ops list
 
-Thanks for testing.  That's the expected behavior so I went ahead and
-submitted the patch:
+elapsed time: 1235m
 
-https://lore.kernel.org/all/a1afaa12f341d146ecbea27c1743661c71683833.1716992815.git.lukas@wunner.de/
+configs tested: 149
+configs skipped: 3
 
-If vendors neglect to populate the Device Serial Number in config space,
-it's zero and we cannot use it to detect device replacement.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-A DSN of "all zeroes" is a reserved value:
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240529   gcc  
+arc                   randconfig-002-20240529   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                        clps711x_defconfig   clang
+arm                                 defconfig   clang
+arm                            hisi_defconfig   gcc  
+arm                             mxs_defconfig   clang
+arm                   randconfig-001-20240529   gcc  
+arm                   randconfig-002-20240529   gcc  
+arm                   randconfig-003-20240529   gcc  
+arm                   randconfig-004-20240529   gcc  
+arm                           sama7_defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-003-20240529   gcc  
+arm64                 randconfig-004-20240529   gcc  
+csky                             alldefconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240529   gcc  
+csky                  randconfig-002-20240529   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-002-20240529   gcc  
+i386         buildonly-randconfig-003-20240529   gcc  
+i386         buildonly-randconfig-005-20240529   gcc  
+i386                                defconfig   clang
+i386                  randconfig-002-20240529   gcc  
+i386                  randconfig-003-20240529   gcc  
+i386                  randconfig-004-20240529   gcc  
+i386                  randconfig-014-20240529   gcc  
+i386                  randconfig-016-20240529   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240529   gcc  
+loongarch             randconfig-002-20240529   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme147_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          malta_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240529   gcc  
+nios2                 randconfig-002-20240529   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240529   gcc  
+parisc                randconfig-002-20240529   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      ep88xc_defconfig   gcc  
+powerpc                      katmai_defconfig   clang
+powerpc                     kmeter1_defconfig   gcc  
+powerpc                 linkstation_defconfig   clang
+powerpc                       ppc64_defconfig   clang
+powerpc64             randconfig-001-20240529   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                    nommu_k210_defconfig   clang
+riscv                 randconfig-001-20240529   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-002-20240529   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         apsh4a3a_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                ecovec24-romimage_defconfig   gcc  
+sh                          polaris_defconfig   gcc  
+sh                    randconfig-001-20240529   gcc  
+sh                    randconfig-002-20240529   gcc  
+sh                  sh7785lcr_32bit_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240529   gcc  
+sparc64               randconfig-002-20240529   gcc  
+um                               alldefconfig   clang
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-002-20240529   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-002-20240529   clang
+x86_64       buildonly-randconfig-003-20240529   clang
+x86_64       buildonly-randconfig-005-20240529   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-002-20240529   clang
+x86_64                randconfig-003-20240529   clang
+x86_64                randconfig-004-20240529   clang
+x86_64                randconfig-013-20240529   clang
+x86_64                randconfig-016-20240529   clang
+x86_64                randconfig-071-20240529   clang
+x86_64                randconfig-074-20240529   clang
+x86_64                randconfig-075-20240529   clang
+x86_64                randconfig-076-20240529   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240529   gcc  
+xtensa                randconfig-002-20240529   gcc  
 
-   "The all-zeros EUI-48 value (00-00-00-00-00-00) and EUI-64 value
-    (00-00-00-00-00-00-00-00), though assigned to an organization,
-    have not been and will not be used by that assignee as an EUI.
-    (They can be considered as assigned to the IEEE Registration Authority.)"
-
-    https://standards-support.ieee.org/hc/en-us/articles/4888705676564-Guidelines-for-Use-of-Extended-Unique-Identifier-EUI-Organizationally-Unique-Identifier-OUI-and-Company-ID-CID
-
-The serial numbers of block devices shown by lsblk are not PCI
-serial numbers, but specific to the NVME or SCSI or ATA layer.
-I'll look into adding a PCI helper which those layers can call
-on resume if they detect a change in device identity, but that's
-independent from the patch I just submitted.
-
-Thanks,
-
-Lukas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
