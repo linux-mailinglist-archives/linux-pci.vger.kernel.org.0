@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-7978-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7979-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C4C38D2FEB
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:08:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0BEF8D2FF5
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:08:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45CC928BE12
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:08:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C56A91C259C6
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:08:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B546181314;
-	Wed, 29 May 2024 08:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCFCF181BA3;
+	Wed, 29 May 2024 08:02:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5250316936F;
-	Wed, 29 May 2024 08:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1085A181313;
+	Wed, 29 May 2024 08:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969735; cv=none; b=uqu+YlHWtfOPxINyqZCip5PXiWnCinjS/10/Pg+o5WZJHcx4S1S1TLbzJ3INZPBV91eDyWXtjoR3a5cVhDmky5kzHgNF1qQ+sjvuF7avHCqQdCoQSLH1VLeVmlfAn51htPkVw+UIW9xQzoEqhuTFiEQZuqX/Sq5Yj+4HsdkiJOs=
+	t=1716969736; cv=none; b=E+XmWZZjUBUskhBp45+/KSzOgPNm25f8ESdxB0AQOBdP4RqThBzQ4NbxVAy1xYUflY5ZubJtuFlD8gntSktgRiiBQ49LsPWtAldFz/moyJzAg9OebnqNrVm0uovmxuiRiCH2Dj2UE6JPTktbNuEIR3oNWuso84cIhBhWcUVK0eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969735; c=relaxed/simple;
-	bh=80R/ltRudm5eoBviP7xSOoebOAWCzvwYc6/Eti+oCcY=;
+	s=arc-20240116; t=1716969736; c=relaxed/simple;
+	bh=XaFc6Ady5SEqytDRlx5D6IQtVxwVuHeqvAy21iHPJO4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TI8e44tpGt9JvRMWKF0IyDNyaXsCgsGk/ixwe12nuxFlCUo6emvqBiNiFu1z3Lj9IgMYTgtcitEOuNTRQt5yQGhc9B4ZDewz093UywwfNBQtpOiR9sOuR/rqquDOIsoNNCsXS6dVY5poKT3t8WlF98rRsWXnqXQk99YBKseBpb8=
+	 MIME-Version; b=N84VW7Ou0xivm5RHhGDyZ0ILOzJ9/PlyFHDYUYIQsRkRdsQ6bDo43XIGk/mHmPLBIqYioGJG31t3scradbKZnpoKZowYup0xgWwyn49Z0VXYYKuxUhMRilQzNxIm75o5LCP9QdkiEjxrKRFjyGEjzfFyni9I/JnY7J3fNs4gko0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 5613B1C0FF4;
-	Wed, 29 May 2024 17:02:11 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id 182051C0FFA;
+	Wed, 29 May 2024 17:02:13 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -96,9 +96,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v8 24/36] dt-binding: sh: cpus: Add SH CPUs json-schema
-Date: Wed, 29 May 2024 17:01:10 +0900
-Message-Id: <d54cb668f3f19221fdbf34a70a9123fb3a6b4004.1716965617.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v8 25/36] dt-bindings: vendor-prefixes: Add iodata
+Date: Wed, 29 May 2024 17:01:11 +0900
+Message-Id: <a84653d4c369a57a00011c8c86447096026a0330.1716965617.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
 References: <cover.1716965617.git.ysato@users.sourceforge.jp>
@@ -110,83 +110,28 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Renesas SH series and compatible ISA CPUs.
+Add IO DATA DEVICE INC.
+https://www.iodata.com/
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- .../devicetree/bindings/sh/cpus.yaml          | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sh/cpus.yaml
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sh/cpus.yaml b/Documentation/devicetree/bindings/sh/cpus.yaml
-new file mode 100644
-index 000000000000..e652b8414ae8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sh/cpus.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sh/cpus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas SuperH CPUs
-+
-+maintainers:
-+  - Yoshinori Sato <ysato@users.sourceforge.jp>
-+
-+description: |+
-+  Definition of CPU core with Renesas SuperH and compatible instruction set.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,sh2a
-+              - renesas,sh3
-+              - renesas,sh4
-+              - renesas,sh4a
-+              - jcore,j2
-+          - const: renesas,sh2
-+      - const: renesas,sh2
-+
-+  clocks:
-+    maxItems: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  device_type:
-+    const: cpu
-+
-+required:
-+  - compatible
-+  - reg
-+  - device_type
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sh7750-cpg.h>
-+    cpus {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cpu: cpu@0 {
-+            compatible = "renesas,sh4", "renesas,sh2";
-+            device_type = "cpu";
-+            reg = <0>;
-+            clocks = <&cpg SH7750_CPG_ICK>;
-+            clock-names = "ick";
-+            icache-size = <16384>;
-+            icache-line-size = <32>;
-+            dcache-size = <32768>;
-+            dcache-line-size = <32>;
-+        };
-+    };
-+...
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index fbf47f0bacf1..66cf68139f07 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -716,6 +716,8 @@ patternProperties:
+     description: Inventec
+   "^inversepath,.*":
+     description: Inverse Path
++  "^iodata,.*":
++    description: IO DATA DEVICE Inc.
+   "^iom,.*":
+     description: Iomega Corporation
+   "^irondevice,.*":
 -- 
 2.39.2
 
