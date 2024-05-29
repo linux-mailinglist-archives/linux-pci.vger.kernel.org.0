@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-7979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0BEF8D2FF5
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:08:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90A5D8D2FFC
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:08:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C56A91C259C6
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:08:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B4F6289673
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:08:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCFCF181BA3;
-	Wed, 29 May 2024 08:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E79181CFD;
+	Wed, 29 May 2024 08:02:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1085A181313;
-	Wed, 29 May 2024 08:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0421C181BBA;
+	Wed, 29 May 2024 08:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716969736; cv=none; b=E+XmWZZjUBUskhBp45+/KSzOgPNm25f8ESdxB0AQOBdP4RqThBzQ4NbxVAy1xYUflY5ZubJtuFlD8gntSktgRiiBQ49LsPWtAldFz/moyJzAg9OebnqNrVm0uovmxuiRiCH2Dj2UE6JPTktbNuEIR3oNWuso84cIhBhWcUVK0eA=
+	t=1716969738; cv=none; b=UNv2Qbhw833b4T4sGgHeE3OLy+ihie8pMuCdmmyOSRBb2iEtFXfg1PjiBFVHI4pM6tH74WLaAmbw3Y8oHDcFC6puuRZ9HWpOpPjfvBXdvQzSl+YSOmtE61X2UDmvlXH1830OM39nOYYksGL8ngdIG79SlFPPOW7OPIThf+R5GRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716969736; c=relaxed/simple;
-	bh=XaFc6Ady5SEqytDRlx5D6IQtVxwVuHeqvAy21iHPJO4=;
+	s=arc-20240116; t=1716969738; c=relaxed/simple;
+	bh=ujRB9umra6Ow9vggObeyKeVFpIbOKfySaVYNfAnwi94=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N84VW7Ou0xivm5RHhGDyZ0ILOzJ9/PlyFHDYUYIQsRkRdsQ6bDo43XIGk/mHmPLBIqYioGJG31t3scradbKZnpoKZowYup0xgWwyn49Z0VXYYKuxUhMRilQzNxIm75o5LCP9QdkiEjxrKRFjyGEjzfFyni9I/JnY7J3fNs4gko0=
+	 MIME-Version; b=DMdYSsgtkN+QbB/qSbdykb/HVGSZjNaLu0KuyoTXXvO28KAn4gX0AgK75qlgdIfEx5J4X15Ol8+OtjSP68yU7/zWE3amVpcAvUe2/CajPwS8NlSbY5WGy/nbYN/fFLj7D1AzTkqaeiphaE6FFH534SsD3TNbtrgh8IPjBFNiXNw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 182051C0FFA;
-	Wed, 29 May 2024 17:02:13 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id D3D6E1C1017;
+	Wed, 29 May 2024 17:02:14 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -96,9 +96,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v8 25/36] dt-bindings: vendor-prefixes: Add iodata
-Date: Wed, 29 May 2024 17:01:11 +0900
-Message-Id: <a84653d4c369a57a00011c8c86447096026a0330.1716965617.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v8 26/36] dt-bindings: ata: ata-generic: Add new targets
+Date: Wed, 29 May 2024 17:01:12 +0900
+Message-Id: <8ff46a90c7be5eea45984f60b9b0db99219c82e6.1716965617.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
 References: <cover.1716965617.git.ysato@users.sourceforge.jp>
@@ -110,28 +110,30 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add IO DATA DEVICE INC.
-https://www.iodata.com/
+Added new ata-generic target.
+- iodata,usl-5p-ata
+- renesas,rts7751r2d-ata
+
+Each boards have simple IDE Interface. Use ATA generic driver.
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ Documentation/devicetree/bindings/ata/ata-generic.yaml | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index fbf47f0bacf1..66cf68139f07 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -716,6 +716,8 @@ patternProperties:
-     description: Inventec
-   "^inversepath,.*":
-     description: Inverse Path
-+  "^iodata,.*":
-+    description: IO DATA DEVICE Inc.
-   "^iom,.*":
-     description: Iomega Corporation
-   "^irondevice,.*":
+diff --git a/Documentation/devicetree/bindings/ata/ata-generic.yaml b/Documentation/devicetree/bindings/ata/ata-generic.yaml
+index 0697927f3d7e..1025b3b351d0 100644
+--- a/Documentation/devicetree/bindings/ata/ata-generic.yaml
++++ b/Documentation/devicetree/bindings/ata/ata-generic.yaml
+@@ -18,6 +18,8 @@ properties:
+       - enum:
+           - arm,vexpress-cf
+           - fsl,mpc8349emitx-pata
++          - iodata,usl-5p-ata
++          - renesas,rts7751r2d-ata
+       - const: ata-generic
+ 
+   reg:
 -- 
 2.39.2
 
