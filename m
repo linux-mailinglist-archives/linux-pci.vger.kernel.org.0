@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-7994-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-7996-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92F2A8D30A0
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:15:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F35B8D30B7
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 10:16:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6A2C1C229C4
-	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:15:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 908B31C24421
+	for <lists+linux-pci@lfdr.de>; Wed, 29 May 2024 08:16:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E3117F369;
-	Wed, 29 May 2024 08:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC0ED1802DF;
+	Wed, 29 May 2024 08:07:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1978317BB37;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0B9C17BB2A;
 	Wed, 29 May 2024 08:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716970054; cv=none; b=rhuczeuyS4REpVT0839DHmiiQYLw7C+Q9XFJ2iLVIs7diH+8uexWwYifTpEF5dqrEYjUOVLvMXUYul6pn8Pi1Ern3dzrJpd3F1quYRNLa3BwuJK0sRHFkw301MoxK0LJ88Wiocw6QnZCNG6VyW4qEQU7FsqQFwUlaYrRAKyo6Os=
+	t=1716970055; cv=none; b=HXwA1wLEjo0gGY6EoTJevIcOC5EVt37UGATxrdFXebW5CSVkTcIGnBAemmBnccB+31eTNJ9akCEQUZMOl9BC7SAvQqB7S2QP6Ne5xttK3t4IPHEfJjaaydeF+i5eDfp/uk7Npnns5hIRDYOw0IeNQbhHb1Jqkic/0NHSgJNinNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716970054; c=relaxed/simple;
-	bh=X5xhUmYdUi/YHxJqfjY+z9LAkIgLaCslllhJ8YzjKP4=;
+	s=arc-20240116; t=1716970055; c=relaxed/simple;
+	bh=ZOXJqoNpfJi51Vl3FuxgTIPEhYkHwt3DigpPUVNGTDo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vg/D+iTrrbCFPb+dM55r1dySD5/1uG3G/8hwwVZieHgLyIDC+Jl8zNIOSnHKABjNyDAauI5OiPGDS2j4PGu6S4AL8SqJo0SQ5leYqL5W+IgYPlxiXigYMcc4Ci0z5bvE/RXCWmsOgfiYy4kb6WVDTGIzX82ZbmLqCwvK6rhPFJo=
+	 MIME-Version; b=BCWCHRJTCG4lSLGzxeCVJBNz6fJ51QT5IeMhHE2ltLOMfvK/rGyklXpgWSio9Szv8dWujwEnrQkPgSWZMXt+qzZBf0iofkj5dmD4D1EPky9eBD/QEwjxZflYWNykycHDQMlh7t/k/Bwpyyh3Tbf0dzuOggcabt2NCOiS/zpTLS4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id AFD791C00A2;
-	Wed, 29 May 2024 17:01:29 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id 85A111C032B;
+	Wed, 29 May 2024 17:01:31 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -96,9 +96,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v8 01/36] sh: passing FDT address to kernel startup.
-Date: Wed, 29 May 2024 17:00:47 +0900
-Message-Id: <f77649c921180a3b8c3c3a29058ab782b499a3bd.1716965617.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v8 02/36] sh: Kconfig unified OF supported targets.
+Date: Wed, 29 May 2024 17:00:48 +0900
+Message-Id: <5226282870c6ea790cc4af2c723bae46658d4611.1716965617.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
 References: <cover.1716965617.git.ysato@users.sourceforge.jp>
@@ -110,38 +110,74 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-R4 is caller saved in SH ABI.
-Save it so it doesn't get corrupted until it's needed for initialization.
+Targets that support OF should be treated as one board.
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/sh/boot/compressed/head_32.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/sh/Kconfig        |  1 +
+ arch/sh/boards/Kconfig | 23 +++++++++++++----------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/arch/sh/boot/compressed/head_32.S b/arch/sh/boot/compressed/head_32.S
-index 7bb168133dbb..6be59851122e 100644
---- a/arch/sh/boot/compressed/head_32.S
-+++ b/arch/sh/boot/compressed/head_32.S
-@@ -15,7 +15,8 @@ startup:
- 	/* Load initial status register */
- 	mov.l   init_sr, r1
- 	ldc     r1, sr
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 5e6a3ead51fb..d6704c57f9dc 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -711,6 +711,7 @@ config ROMIMAGE_MMCIF
+ choice
+ 	prompt "Kernel command line"
+ 	default CMDLINE_OVERWRITE
++	depends on !OF || USE_BUILTIN_DTB
+ 	help
+ 	  Setting this option allows the kernel command line arguments
+ 	  to be set.
+diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
+index 109bec4dad94..46387fd040ad 100644
+--- a/arch/sh/boards/Kconfig
++++ b/arch/sh/boards/Kconfig
+@@ -19,16 +19,9 @@ config SH_DEVICE_TREE
+ 	select TIMER_OF
+ 	select COMMON_CLK
+ 	select GENERIC_CALIBRATE_DELAY
 -
-+	/* Save FDT address */
-+	mov	r4, r13
- 	/* Move myself to proper location if necessary */
- 	mova	1f, r0
- 	mov.l	1f, r2
-@@ -84,7 +85,7 @@ l1:
- 	/* Jump to the start of the decompressed kernel */
- 	mov.l	kernel_start_addr, r0
- 	jmp	@r0
--	nop
-+	 mov	r13, r4
- 	
- 	.align	2
- bss_start_addr:
+-config SH_JCORE_SOC
+-	bool "J-Core SoC"
+-	select SH_DEVICE_TREE
+-	select CLKSRC_JCORE_PIT
+-	select JCORE_AIC
+-	depends on CPU_J2
+-	help
+-	  Select this option to include drivers core components of the
+-	  J-Core SoC, including interrupt controllers and timers.
++	select GENERIC_IRQ_CHIP
++	select SYS_SUPPORTS_PCI
++	select GENERIC_PCI_IOMAP if PCI
+ 
+ config SH_SOLUTION_ENGINE
+ 	bool "SolutionEngine"
+@@ -293,6 +286,7 @@ config SH_LANDISK
+ 	bool "LANDISK"
+ 	depends on CPU_SUBTYPE_SH7751R
+ 	select HAVE_PCI
++	select SYS_SUPPORTS_PCI
+ 	help
+ 	  I-O DATA DEVICE, INC. "LANDISK Series" support.
+ 
+@@ -369,6 +363,15 @@ config SH_APSH4AD0A
+ 	help
+ 	  Select AP-SH4AD-0A if configuring for an ALPHAPROJECT AP-SH4AD-0A.
+ 
++config SH_OF_BOARD
++	bool "General Open Firmware boards"
++	select SH_DEVICE_TREE
++	select CLKSRC_JCORE_PIT if CPU_J2
++	select JCORE_AIC if CPU_J2
++	select HAVE_PCI if CPU_SUBTYPE_SH7751R
++	help
++	  This board means general OF supported targets.
++
+ source "arch/sh/boards/mach-r2d/Kconfig"
+ source "arch/sh/boards/mach-highlander/Kconfig"
+ source "arch/sh/boards/mach-sdk7780/Kconfig"
 -- 
 2.39.2
 
