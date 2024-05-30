@@ -1,139 +1,93 @@
-Return-Path: <linux-pci+bounces-8068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B05B8D45A3
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 08:53:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF7C08D45EA
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 09:18:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 915301F2297F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 06:53:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67ADCB20CAF
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 07:18:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3FC115A86F;
-	Thu, 30 May 2024 06:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E41F1C2A3;
+	Thu, 30 May 2024 07:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1w9TYqL"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ubpzFVbU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0CA3207;
-	Thu, 30 May 2024 06:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D28A7F;
+	Thu, 30 May 2024 07:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717052012; cv=none; b=F0UMp9WQBysl75EdcaAM0SCKY/nIUMCs9qfOZ83ppafl/7xU9MY+EV6+q0k9Af/+s/RG+lJdaCkWEcBJzTR5oC47H3gsSpWF43fkG7QjiCVIaFcwyjlzM1wEt2YbpoyfPy3FBCZgBG1eRovoBWVBtnI1en6yfoTLemcPA0c40fY=
+	t=1717053527; cv=none; b=pTIqEvD5VQCHgdcPaAUnhIvjqllE+LlTxe0DSjDNDtWIJX7tJBSdW6zbG1MrZrMGGl12ehaaoHU6epcu8kuh2xp/RESTue+k1531hMWT6GTzjUJFCRgiu0HVcTM29pt4tELfgGkytgWXt2onWFyQHV0xz6uxVLg7cY0r0/qtLfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717052012; c=relaxed/simple;
-	bh=YivRkEe7rYoBFKl0+BZR93LLEk9IpGONpZAKzglbHXs=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=Cf34nNYBDLjNA3BnutkTTYtH+2epcV4pgB0+TeNVbpR3nm4pmsmLYWILTsmRkBzcK31pWC79rsgxWnFjHFnwYs6paeTtx5wQIQAHLwStXMhfTMnOLSxuOQOf0FiUKUCVbkwgLErLEbAfC33SjK//3P655td74D+FNUFgjLNVIs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1w9TYqL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11ACBC32782;
-	Thu, 30 May 2024 06:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717052012;
-	bh=YivRkEe7rYoBFKl0+BZR93LLEk9IpGONpZAKzglbHXs=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=h1w9TYqLc+EMav3BOhfGxWUcC9ah2ZK/gIrpZw7dlayxFXTfzLiAs7mB7mojy82Wy
-	 +JjpG8pjv/s9Qjfo9WkxaiDLVkg6lFKdSc1exbqRKXtLB9TEeUPsQR4WIzkAMKXbK4
-	 hW2+I7t9G2SeXmL9aIAo46aiZpLeuhx/GlkIPfnCkgN924TRZSdAiK3JL9L/8Hhipt
-	 JyYGtcSm0YEUgMEbmePfHq/IigYiEwH7O5y2Lb9RX4uBrFahCrkjb24Vzv6cKgYZtC
-	 oFgA3k+KYvHpxTLQ0hbpimm43aoByP+sxqOFX28mqwn90h9dssQ0MR/mtjY+3v7J+J
-	 W3c3rbzZ5ck4Q==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-wireless@vger.kernel.org,  ath11k@lists.infradead.org,
-  regressions@lists.linux.dev,  Jeff Johnson <quic_jjohnson@quicinc.com>,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
-Date: Thu, 30 May 2024 09:53:28 +0300
-In-Reply-To: <87wmncwqxf.fsf@kernel.org> (Kalle Valo's message of "Wed, 29 May
-	2024 18:58:36 +0300")
-Message-ID: <87sexzx02f.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1717053527; c=relaxed/simple;
+	bh=Jlffi05sG7E24hiKq4xvGXSdBs5C7tsCEr5WRiQxi/c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=npx5pHMXTyClEULZSvS8uMXPOZv083Za4+tRQlHltGFHZ0Zdb55CHZAFiIOaLgshYgxkmu0oTEnlA3vTubxlBkCxcxNBtIn99qJCp36Vq1C3P5bpIJgYxd7vtdshf0Zv4DNIhrTKPwGYvIMZJgUw+fQxPXvFBt6c55hclPZ7qXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ubpzFVbU; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=Jlffi05sG7E24hiKq4xvGXSdBs5C7tsCEr5WRiQxi/c=;
+	t=1717053526; x=1717485526; b=ubpzFVbU9shmwG4mtL1MyPqZX2tS8pemsxo7n9sESOb2wXL
+	GkBH1iOPiH+LMKktyJHNdOO8pR0sq4FluNepXJYRyWrKF9k9FXIbKBnr3SfxCLBrADYorgG0rdgO3
+	nFmMgEwurW4ji+hFcEa/CNkcXiy1l7I6VEQb2hGgi2j4LCo+JAP5gYijpKEolKv+J4PSWUGbD4/Ex
+	WBy7igAKKyI8Jm6EsajMGX8+OyKIkUDMWWjdENtcA0dz1LUDbqTUY8+77cARjz7QZCGv+le5PdkvZ
+	55x4BGV0PeTqeY5BuSsOEwoeyTJJFLfV5GH918o/dWjEHnS/1RKQ2JJIVUXldXxA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sCa3Y-0007Lh-V1; Thu, 30 May 2024 09:18:37 +0200
+Message-ID: <93e4a06b-731d-4fe8-8ceb-e3b56d5ba2bd@leemhuis.info>
+Date: Thu, 30 May 2024 09:18:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+To: Kalle Valo <kvalo@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ regressions@lists.linux.dev, Jeff Johnson <quic_jjohnson@quicinc.com>,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
+ <87sexzx02f.fsf@kernel.org>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87sexzx02f.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717053526;689211b9;
+X-HE-SMSGID: 1sCa3Y-0007Lh-V1
 
-Kalle Valo <kvalo@kernel.org> writes:
-
+On 30.05.24 08:53, Kalle Valo wrote:
 > Kalle Valo <kvalo@kernel.org> writes:
->
->> Yesterday I run our ath11k regression tests with v6.10-rc1 and our
->> simple ath11k module reload stress started failing reliably with various
->> KASAN errors. The test removes and inserts ath11k and other wireless
->> modules in a loop. Usually I run it at least 100 times, some times even
->> more, and no issues until yesterday.
->>
->> I have verified that the last wireless-next pull request (tag
->> wireless-next-2024-05-08) works without issues and v6.10-rc1 fails
->> always, usually within 50 module reload loops. From this I'm _guessing_
->> that we have a regression outside wireless, most probably introduced
->> between v6.9 and v6.10-rc1. But of course I cannot be sure of anything
->> yet.
->>
->> I see different KASAN warnings and lockdep seems to be always visible in
->> the stack traces. I think I can reproduce the issue within 15 minutes or
->> so. Before I start bisecting has anyone else seen anything similar? Or
->> any suggestions how to debug this further?
->>
->> I have included some crash logs below, they are retrieved using
->> netconsole. Here's a summary of the errors:
->>
->> [ 159.970765] KASAN: maybe wild-memory-access in range
->> [0xbbbbbbbbbbbbbbb8-0xbbbbbbbbbbbbbbbf]
->> [  700.017632] BUG: KASAN: use-after-free in lockdep_register_key+0x755/0x8f0
->> [  224.695821] BUG: KASAN: slab-out-of-bounds in lockdep_register_key+0x755/0x8f0
->> [  259.666542] BUG: KASAN: slab-use-after-free in lockdep_register_key+0x755/0x8f0
->
-> I did a bisect and got this:
->
-> cf29111d3e4a9ebe1cbe2b431274718506d69f10 is the first bad commit
-> commit cf29111d3e4a9ebe1cbe2b431274718506d69f10
-> Merge: ed11a28cb709 e6f7d27df5d2
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Thu May 16 18:14:11 2024 -0500
->
->     Merge branch 'pci/of'
->     
->     - Check for kcalloc() failure and handle it gracefully (Duoming Zhou)
->     
->     * pci/of:
->       PCI: of_property: Return error for int_map allocation failure
->
->  drivers/pci/of_property.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> But that doesn't make any sense to me, I don't even have
-> CONFIG_PCI_DYNAMIC_OF_NODES enabled in my .config. I guess I did a
-> mistake during bisect, I'm now testing the parents (e6f7d27df5d2 and
-> ed11a28cb709) and trying to pinpoint where I did it wrong.
+>> Kalle Valo <kvalo@kernel.org> writes:
 
-I found my mistake and was able to finish the bisect. This seems to be
-the commit causing my problems:
+> I found my mistake and was able to finish the bisect. This seems to be
+> the commit causing my problems:
+> # first bad commit: [7e89efc6e9e402839643cb297bab14055c547f07] PCI: Lock upstream bridge for pci_reset_function()
 
-# first bad commit: [7e89efc6e9e402839643cb297bab14055c547f07] PCI: Lock upstream bridge for pci_reset_function()
+FWIW in case you missed that: there are a few other discussions related
+to that commit already:
+https://lore.kernel.org/all/?q=7e89efc6e*
 
-I verified by reverting that commit on top of v6.10-rc1 and I have not
-seen any crashes so far, normally I would have seen it by now. But I
-will continue testing the revert just to be sure.
+And a patch with a Fixes: tag for that commit, too:
+https://lore.kernel.org/all/171659995361.845588.6664390911348526329.stgit@dwillia2-xfh.jf.intel.com/
 
-Adding people and lists involved with that commit. Here is my original
-report:
-
-https://lore.kernel.org/all/87v82y6wvi.fsf@kernel.org/
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Ciao, Thorsten
 
