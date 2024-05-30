@@ -1,106 +1,57 @@
-Return-Path: <linux-pci+bounces-8089-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75D248D50C1
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 19:15:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D73868D50DF
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 19:19:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AABE2815A0
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 17:15:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 498551F21CA7
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 17:19:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F04847781;
-	Thu, 30 May 2024 17:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1164501B;
+	Thu, 30 May 2024 17:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+fVHIQp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YnbZy+D5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABED46B83;
-	Thu, 30 May 2024 17:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EC144C8F
+	for <linux-pci@vger.kernel.org>; Thu, 30 May 2024 17:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717089307; cv=none; b=O9PuDTxAynvSCMvCASyaYo1I3RecJtwTgVkpc1WmGIn52TdB8+JAU+wIF44SrGb+qE7zc93+E+boOwjL9uzO4/MMUhEIVcO4l4/yjMsMOwj4J5BNjbFTbXxnhmNfVL6VJ//ZuUT4Ifhxtr8sZ/Eu80ucEUqJ12Xk5s0t4Qt1kT8=
+	t=1717089554; cv=none; b=F32x1cw0dngyJysDi04JGV6EdGcx64Q2tAjRbmkUzN6zvk5Z1Q/XSZn6Zof26zz+qz3NYWfqxFrToDewsBbkIQfxLrPBOpNhFTflkkYVkZLfQi7dSlGPmccWrMGIdzacLiAmHYE9ugVet+6SSzn7ZNZ3b0EwnfuaATJoxNRRx2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717089307; c=relaxed/simple;
-	bh=URqPQnPy5FP44S2DmmqfTAsVuS00f5pQbyJiST5YKkM=;
+	s=arc-20240116; t=1717089554; c=relaxed/simple;
+	bh=LwjVNxRt17uivAZmnV0QPDf6umgqSn9p4kRd+nlUQfQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=r1JkxNiOKNdJKCu1HHPrc48g0xt8DByT/2s2sk8nE8PMwKSPg/9BShmVGoB9XdtKkeqi2milVLBGy55aYG6PEu+bPSipYu2XBKLMgXmkVWMhatz3kUJoGouJN5rys4EinJkzfQLY3KIoJDjmYo6FmlLeWj5n8dZOPQK2lEbtjjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+fVHIQp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8289C32782;
-	Thu, 30 May 2024 17:15:05 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=GDXi85E/1zZMosTQYmhNBmQzaDK0y+1H52W0RS8f6QntsL/3Lj3okM5uGHLy8+oVItwG67WqI67vsAxSwiSl4VNoo8ZpEV5EK5Wf8lnMhgcJbDRpdDIvyJkdqWlGznLOfsbOlpQjyxIY0P06Ij3jpfPzYFj+nbktPiWCMHqKi68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YnbZy+D5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F1A1C2BBFC;
+	Thu, 30 May 2024 17:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717089306;
-	bh=URqPQnPy5FP44S2DmmqfTAsVuS00f5pQbyJiST5YKkM=;
+	s=k20201202; t=1717089554;
+	bh=LwjVNxRt17uivAZmnV0QPDf6umgqSn9p4kRd+nlUQfQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=M+fVHIQpg0T/3eHcd7tocoywDYwP17uK8cfkJ9zDeNZG04tV2jk609zvJsgA4Hw5k
-	 JWHPG8Rl9ABZDwBSelkCaspwJo+IzT70B44yyNeUkgNAcbfkvtnET3NeL2SpjlSA1F
-	 hHBHeenJ3skGKNDm2yi5jpgB37DFn2OOSXSyx5TQy8VZIEfoVo195wBfpt5pQKaklJ
-	 HWffN+mjUuHC0vpZiAQsmgeW2cNOaLYDhsqv0Gl3kRlhQ75j5lF3kjyN0p+zZ2LykL
-	 8JZbuS9JYpvHpH2Ms4zZSpwAOi2BnRmi0dEEztlj2vh8seGJcK1FRaLwKJspFOkLwL
-	 5ATVzGSbzf5sA==
-Date: Thu, 30 May 2024 12:15:03 -0500
+	b=YnbZy+D5DfuqcVeg5aEI9+K3t2YGEgCp5PMR/m+dcoSoBySJJgm7Hpie6n2RRKliU
+	 0cxqnOLjdtr49z5rXY+1/3RSIFTmgiau/oS0qioBJVtOqDHK+zAXcZUrmg17h8tG7M
+	 GWTgIFoiQkXZfADB6Az8eC0Vg8THclQb6IwK8umR7gbdAXh7ADih60xHRg8HaYW/TC
+	 HtVBCqGqLMweWBboyNBlPacyH1R9+PPTd5g3TQGb25Tat4pEDg8mSO2IDdjo+WFC8O
+	 p+sqrv6ERnhWGmiPFUL/1/QjoqcgHJRvfWBKiMkWSKgoVxGJoNxz7IxUQGIw0K8RiT
+	 Kx9Ba30moy99Q==
+Date: Thu, 30 May 2024 12:19:12 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v8 00/36] Device Tree support for SH7751 based
- board
-Message-ID: <20240530171503.GA551834@bhelgaas>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Ricky Wu <ricky_wu@realtek.com>, Scott Murray <scott@spiteful.org>,
+	Keith Busch <kbusch@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Aapo Vienamo <aapo.vienamo@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH] PCI: pciehp: Detect device replacement during system
+ sleep
+Message-ID: <20240530171912.GA552281@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -109,20 +60,163 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
+In-Reply-To: <a1afaa12f341d146ecbea27c1743661c71683833.1716992815.git.lukas@wunner.de>
 
-On Wed, May 29, 2024 at 05:00:46PM +0900, Yoshinori Sato wrote:
-> This is an updated version of something I wrote about 7 years ago.
-> Minimum support for R2D-plus and LANDISK.
-> I think R2D-1 will work if you add AX88796 to dts.
-> And board-specific functions and SCI's SPI functions are not supported.
+On Wed, May 29, 2024 at 04:32:09PM +0200, Lukas Wunner wrote:
+> Ricky reports that replacing a device in a hotplug slot during ACPI
+> sleep state S3 does not cause re-enumeration on resume, as one would
+> expect.  Instead, the new device is treated as if it was the old one.
+> 
+> There is no bulletproof way to detect device replacement, but as a
+> heuristic, check whether the device identity in config space matches
+> cached data in struct pci_dev (Vendor ID, Device ID, Class Code,
+> Revision ID, Subsystem Vendor ID, Subsystem ID).  Additionally, cache
+> and compare the Device Serial Number (PCIe r6.2 sec 7.9.3).  If a
+> mismatch is detected, mark the old device disconnected (to prevent its
+> driver from accessing the new device) and synthesize a Presence Detect
+> Changed event.
+> 
+> The device identity in config space which is compared here is the same
+> as the one included in the signed Subject Alternative Name per PCIe r6.1
+> sec 6.31.3.  Thus, the present commit prevents attacks where a valid
+> device is replaced with a malicious device during system sleep and the
+> valid device's driver obliviously accesses the malicious device.
+> 
+> This is about as much as can be done at the PCI layer.  Drivers may have
+> additional ways to identify devices (such as reading a WWID from some
+> register) and may trigger re-enumeration when detecting an identity
+> change on resume.
+> 
+> Reported-by: Ricky Wu <ricky_wu@realtek.com>
+> Closes: https://lore.kernel.org/r/a608b5930d0a48f092f717c0e137454b@realtek.com
+> Tested-by: Ricky Wu <ricky_wu@realtek.com>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-I don't understand the point of this.  It's marked "DO NOT MERGE", so
-what do you want me to do?  I've posted comments several times and
-they've never been addressed, so I don't think there's any point in
-looking at this again:
+Applied to pci/hotplug for v6.11, thanks, Lukas!
 
-  https://lore.kernel.org/r/20240404134652.GA1910402@bhelgaas
-
-Bjorn
+> ---
+>  drivers/pci/hotplug/pciehp.h      |  4 ++++
+>  drivers/pci/hotplug/pciehp_core.c | 42 ++++++++++++++++++++++++++++++++++++++-
+>  drivers/pci/hotplug/pciehp_hpc.c  |  5 +++++
+>  drivers/pci/hotplug/pciehp_pci.c  |  4 ++++
+>  4 files changed, 54 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+> index e0a614a..273dd8c 100644
+> --- a/drivers/pci/hotplug/pciehp.h
+> +++ b/drivers/pci/hotplug/pciehp.h
+> @@ -46,6 +46,9 @@
+>  /**
+>   * struct controller - PCIe hotplug controller
+>   * @pcie: pointer to the controller's PCIe port service device
+> + * @dsn: cached copy of Device Serial Number of Function 0 in the hotplug slot
+> + *	(PCIe r6.2 sec 7.9.3); used to determine whether a hotplugged device
+> + *	was replaced with a different one during system sleep
+>   * @slot_cap: cached copy of the Slot Capabilities register
+>   * @inband_presence_disabled: In-Band Presence Detect Disable supported by
+>   *	controller and disabled per spec recommendation (PCIe r5.0, appendix I
+> @@ -87,6 +90,7 @@
+>   */
+>  struct controller {
+>  	struct pcie_device *pcie;
+> +	u64 dsn;
+>  
+>  	u32 slot_cap;				/* capabilities and quirks */
+>  	unsigned int inband_presence_disabled:1;
+> diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+> index ddd55ad..ff458e6 100644
+> --- a/drivers/pci/hotplug/pciehp_core.c
+> +++ b/drivers/pci/hotplug/pciehp_core.c
+> @@ -284,6 +284,32 @@ static int pciehp_suspend(struct pcie_device *dev)
+>  	return 0;
+>  }
+>  
+> +static bool pciehp_device_replaced(struct controller *ctrl)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put);
+> +	u32 reg;
+> +
+> +	pdev = pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0, 0));
+> +	if (!pdev)
+> +		return true;
+> +
+> +	if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
+> +	    reg != (pdev->vendor | (pdev->device << 16)) ||
+> +	    pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
+> +	    reg != (pdev->revision | (pdev->class << 8)))
+> +		return true;
+> +
+> +	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
+> +	    (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) ||
+> +	     reg != (pdev->subsystem_vendor | (pdev->subsystem_device << 16))))
+> +		return true;
+> +
+> +	if (pci_get_dsn(pdev) != ctrl->dsn)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static int pciehp_resume_noirq(struct pcie_device *dev)
+>  {
+>  	struct controller *ctrl = get_service_data(dev);
+> @@ -293,9 +319,23 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+>  	ctrl->cmd_busy = true;
+>  
+>  	/* clear spurious events from rediscovery of inserted card */
+> -	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE)
+> +	if (ctrl->state == ON_STATE || ctrl->state == BLINKINGOFF_STATE) {
+>  		pcie_clear_hotplug_events(ctrl);
+>  
+> +		/*
+> +		 * If hotplugged device was replaced with a different one
+> +		 * during system sleep, mark the old device disconnected
+> +		 * (to prevent its driver from accessing the new device)
+> +		 * and synthesize a Presence Detect Changed event.
+> +		 */
+> +		if (pciehp_device_replaced(ctrl)) {
+> +			ctrl_dbg(ctrl, "device replaced during system sleep\n");
+> +			pci_walk_bus(ctrl->pcie->port->subordinate,
+> +				     pci_dev_set_disconnected, NULL);
+> +			pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  #endif
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> index b1d0a1b3..061f01f 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -1055,6 +1055,11 @@ struct controller *pcie_init(struct pcie_device *dev)
+>  		}
+>  	}
+>  
+> +	pdev = pci_get_slot(subordinate, PCI_DEVFN(0, 0));
+> +	if (pdev)
+> +		ctrl->dsn = pci_get_dsn(pdev);
+> +	pci_dev_put(pdev);
+> +
+>  	return ctrl;
+>  }
+>  
+> diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+> index ad12515..65e50be 100644
+> --- a/drivers/pci/hotplug/pciehp_pci.c
+> +++ b/drivers/pci/hotplug/pciehp_pci.c
+> @@ -72,6 +72,10 @@ int pciehp_configure_device(struct controller *ctrl)
+>  	pci_bus_add_devices(parent);
+>  	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+>  
+> +	dev = pci_get_slot(parent, PCI_DEVFN(0, 0));
+> +	ctrl->dsn = pci_get_dsn(dev);
+> +	pci_dev_put(dev);
+> +
+>   out:
+>  	pci_unlock_rescan_remove();
+>  	return ret;
+> -- 
+> 2.43.0
+> 
 
