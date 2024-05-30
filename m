@@ -1,58 +1,106 @@
-Return-Path: <linux-pci+bounces-8088-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBD178D50A2
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 19:11:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75D248D50C1
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 19:15:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6EC18B24666
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 17:11:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2AABE2815A0
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 17:15:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3934746556;
-	Thu, 30 May 2024 17:11:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F04847781;
+	Thu, 30 May 2024 17:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtWM+qef"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+fVHIQp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048A546435;
-	Thu, 30 May 2024 17:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABED46B83;
+	Thu, 30 May 2024 17:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717089079; cv=none; b=ppH/iiMhgvzsTHKxcisjGaV+WeNdsGUvGFU3tDKoMQ3gDcV7BnqKyuxfBTzfBOojpyvs/Pm96k5dyTKSiOdzJXkIE6CcvH4EIv/GkukAUG2+2cs1YM1M5/YJGhBXoLuY8s2KhciS4t4b+t5dTTGuAXT9xQprVI60scALRtwSkQo=
+	t=1717089307; cv=none; b=O9PuDTxAynvSCMvCASyaYo1I3RecJtwTgVkpc1WmGIn52TdB8+JAU+wIF44SrGb+qE7zc93+E+boOwjL9uzO4/MMUhEIVcO4l4/yjMsMOwj4J5BNjbFTbXxnhmNfVL6VJ//ZuUT4Ifhxtr8sZ/Eu80ucEUqJ12Xk5s0t4Qt1kT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717089079; c=relaxed/simple;
-	bh=iGoKvNnQ+YdL4/1r3sPYk9sQQvMBHfX0Xry1ufnrd68=;
+	s=arc-20240116; t=1717089307; c=relaxed/simple;
+	bh=URqPQnPy5FP44S2DmmqfTAsVuS00f5pQbyJiST5YKkM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Zb+q0fd0AttJg8sbaY5aw/RGbMTB6Y2FLQ2uZ4VDCZDzd5d3sjXVLhXgwaeBCR3OFx80Uh2jwliCQ680+Erj+5CHeEYmoj598xviE5J6y9RSlnKzotmbyzSbwXp0YFqFhyq0uWP9413rkcN29aGAYECVxzPBjkH+MhluUm7ttPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtWM+qef; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FB5C32781;
-	Thu, 30 May 2024 17:11:18 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=r1JkxNiOKNdJKCu1HHPrc48g0xt8DByT/2s2sk8nE8PMwKSPg/9BShmVGoB9XdtKkeqi2milVLBGy55aYG6PEu+bPSipYu2XBKLMgXmkVWMhatz3kUJoGouJN5rys4EinJkzfQLY3KIoJDjmYo6FmlLeWj5n8dZOPQK2lEbtjjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+fVHIQp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8289C32782;
+	Thu, 30 May 2024 17:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717089078;
-	bh=iGoKvNnQ+YdL4/1r3sPYk9sQQvMBHfX0Xry1ufnrd68=;
+	s=k20201202; t=1717089306;
+	bh=URqPQnPy5FP44S2DmmqfTAsVuS00f5pQbyJiST5YKkM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RtWM+qefsV3TB89kDCxjJfEgUdPE3oWEdnyu7kFtZPHC7wNeHx+A42A1/fEtbIySp
-	 dB4khKL+W4SAytw/vjJaTei2kvEn4O9QHLC3jSTH1+lghFWKk55ztrjDslSwsHKs4u
-	 jSLKYAcxzXkCEzQDrDA2u2+WczR5SreygM5cftnYkpkx4IM7+XFhXFFtUGZP+ySwYN
-	 rdPH0b0trQ6tvEmCWWG2NhWOhz8du3xeL310LjaMBrZZuJJhRdufuAc4pML/gQxSkS
-	 80DdAGja0IALTVGznnvulS4+YhCO0msT0xYnjfD+DaBhdHOf8g8csIC0R4fTmn3Kbs
-	 NQ8aha0eYHO0Q==
-Date: Thu, 30 May 2024 12:11:16 -0500
+	b=M+fVHIQpg0T/3eHcd7tocoywDYwP17uK8cfkJ9zDeNZG04tV2jk609zvJsgA4Hw5k
+	 JWHPG8Rl9ABZDwBSelkCaspwJo+IzT70B44yyNeUkgNAcbfkvtnET3NeL2SpjlSA1F
+	 hHBHeenJ3skGKNDm2yi5jpgB37DFn2OOSXSyx5TQy8VZIEfoVo195wBfpt5pQKaklJ
+	 HWffN+mjUuHC0vpZiAQsmgeW2cNOaLYDhsqv0Gl3kRlhQ75j5lF3kjyN0p+zZ2LykL
+	 8JZbuS9JYpvHpH2Ms4zZSpwAOi2BnRmi0dEEztlj2vh8seGJcK1FRaLwKJspFOkLwL
+	 5ATVzGSbzf5sA==
+Date: Thu, 30 May 2024 12:15:03 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: devi priya <quic_devipriy@quicinc.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
-	mturquette@baylibre.com, sboyd@kernel.org,
-	manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH V5 6/6] PCI: qcom: Add support for IPQ9574
-Message-ID: <20240530171116.GA551131@bhelgaas>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: Re: [DO NOT MERGE v8 00/36] Device Tree support for SH7751 based
+ board
+Message-ID: <20240530171503.GA551834@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,43 +109,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240512082858.1806694-7-quic_devipriy@quicinc.com>
+In-Reply-To: <cover.1716965617.git.ysato@users.sourceforge.jp>
 
-On Sun, May 12, 2024 at 01:58:58PM +0530, devi priya wrote:
-> The IPQ9574 platform has 4 Gen3 PCIe controllers:
-> two single-lane and two dual-lane based on SNPS core 5.70a
+On Wed, May 29, 2024 at 05:00:46PM +0900, Yoshinori Sato wrote:
+> This is an updated version of something I wrote about 7 years ago.
+> Minimum support for R2D-plus and LANDISK.
+> I think R2D-1 will work if you add AX88796 to dts.
+> And board-specific functions and SCI's SPI functions are not supported.
 
-s/4/four/ to match "two"
+I don't understand the point of this.  It's marked "DO NOT MERGE", so
+what do you want me to do?  I've posted comments several times and
+they've never been addressed, so I don't think there's any point in
+looking at this again:
 
-> The Qcom IP rev is 1.27.0 and Synopsys IP rev is 5.80a
-> Added a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
+  https://lore.kernel.org/r/20240404134652.GA1910402@bhelgaas
 
-s/Added/Add/ (use imperative mood:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.9#n94)
-
-> which reuses all the members of 'ops_2_9_0' except for the post_init
-> as the SLV_ADDR_SPACE_SIZE configuration differs between 2_9_0
-> and 1_27_0.
-
-Add periods at end of sentences.  Rewrap to fill 75 columns.
-
-> +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-> +{
-> +	writel(SLV_ADDR_SPACE_SZ_1_27_0,
-> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-
-Fits on one line.
-
-> +	return qcom_pcie_post_init(pcie);
-> +}
-> +
-> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +	writel(SLV_ADDR_SPACE_SZ,
-> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-
-Fits on one line.
-
-> +	return qcom_pcie_post_init(pcie);
-> +}
+Bjorn
 
