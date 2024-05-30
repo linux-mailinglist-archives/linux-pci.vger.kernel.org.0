@@ -1,65 +1,58 @@
-Return-Path: <linux-pci+bounces-8079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8080-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 129598D4E05
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 16:33:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D39C38D4E1A
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 16:36:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1323281FFC
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 14:33:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D41E61C209D0
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 14:36:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB08817625C;
-	Thu, 30 May 2024 14:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 202D0186E5F;
+	Thu, 30 May 2024 14:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieQgh+8J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8beDHN2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0A116EC1E;
-	Thu, 30 May 2024 14:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F072A186E57
+	for <linux-pci@vger.kernel.org>; Thu, 30 May 2024 14:36:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717079584; cv=none; b=Ze2afb8/b0QhwU8kLRfrRSh4EeFxK03G1BC2wLw7phGCWMsQFL4u5X702Fgt6G6SKRbLnHHEeBuy+3EabhHtPFRCltsPpYQKx75xgV7llVXqjRNgvQwcvRVjWTjd5gSvFQIJsdhklRZ6WYEwkgI38H1p3iLZYC3BzOahIVqXamw=
+	t=1717079771; cv=none; b=cpSt1pWbuoMVn4kZ3KfjnReTWAdNKfOm6pTECPPixY3lBtydj2nILHOCuvy2HngQns9EGA2Bnj5/DSKWWPeU9lwhbGd/yQrqRdqjnFWiIUZG1H+i8dg32wA8m7R2OGSlkIHSjjvZ3zbCbDDaDnFGmF+/oO86dgOQSdXeqba1Cj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717079584; c=relaxed/simple;
-	bh=FgNZ6UjOzMWytcVycdPrNhtaXn45l9qWzklpNQ44q/g=;
+	s=arc-20240116; t=1717079771; c=relaxed/simple;
+	bh=lPoPj2GhX9Na4IPC0TIM0L/bhl/DgFWSIZqyMO59Tq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gjtl3G8F65D+IAF96jpJFiQ8VW+lrHARAK6+o3m9xBx+IksS1Z8+Fp8vkigdS6aMVPVSlp3tpbSrlhHIF9WCWZURbE3kt8n05h3UoBicWrndf83iAdr9qboGgpaM11RPswaeKCruCHVwX1ntsYoSlCuNdo7CQHkfjcjS7HDOqhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieQgh+8J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E047C2BBFC;
-	Thu, 30 May 2024 14:32:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=qa8iGCRJBVrHkM1oRUFoWPd+5z/gg0pWQZ0AzQCvXOSN/W0ArLG9VBx3fPhNn3q8/BzORAd9YikbaRTJaDhg8GEh2ZNjsCkFaoPx1D1Q9EUdi3lAeZEidYDeF9bhFwX+nFajhPskG+ZRZSTQgKhxwJb34xX89M2dHlh8xlicJ00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8beDHN2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5167C2BBFC;
+	Thu, 30 May 2024 14:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717079584;
-	bh=FgNZ6UjOzMWytcVycdPrNhtaXn45l9qWzklpNQ44q/g=;
+	s=k20201202; t=1717079769;
+	bh=lPoPj2GhX9Na4IPC0TIM0L/bhl/DgFWSIZqyMO59Tq8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ieQgh+8J1zMd+M7lZKkSMAAW+nBzU7iyminVY9mOzC4OvUHf76yVw0iUFzkm7v6Cz
-	 H9OtSrjVMLk8g4rAZAqChoL4sADAT2SLccwSJwgZure+lRUweRMgkccCh6v6JiKPif
-	 2SzjvDkobOkdS2uQf1dpAyNAf0hlQyYbpcfg/KpXu4Ah5a4up2e0n3W97oBbklQwrb
-	 pVTBRLlgyHeh3B20/aJu+0wjKFMm1PT3HZFgmneyGZBvNvaWycAQjZItGv8rx2QEnz
-	 sN1fr7Rm4cmUus6x1WYwpoULzIOeES1gLQYNwCaGtIP+fLIVDJiM009oWCV5UsFznr
-	 DxiyTi/Ls9Eig==
-Date: Thu, 30 May 2024 20:02:54 +0530
+	b=W8beDHN2AzqAJesyt47JFSJ3w/NTfuTJHLCzB/Mdc1Damty3z5U0Iy5R9VCrn4224
+	 hi9u9U8zHtNSHUQjqaT3tAw8V+6gphDyfryCKGW6aybz8jIIObYVE/pHJ8AtlZgiCt
+	 bFjJwmehuYHtAhrTkyYSJ3qR9IEOuoUrWLM5Smd9QPZ9i2wHgN+qwjcz2lscGgKhq9
+	 7K4vvOxTIREmuiDrIgq+4yvk97sSg8IH/wBT+nXcfIIkzMhvmMPsDghNnRe5mCKAQ5
+	 uKogjqQCpPqcLeNqr8SjcBf/vKzVWEaKzDt575xGBOU+3FGyP+WrO10rwsE/lND1UP
+	 NitB43XDz+aOw==
+Date: Thu, 30 May 2024 20:06:03 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-	manivannan.sadhasivam@linaro.org, andersson@kernel.org,
-	agross@kernel.org, konrad.dybcio@linaro.org,
-	quic_msarkar@quicinc.com, quic_kraravin@quicinc.com,
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] pci: qcom: Add 16GT/s equalization and margining
- settings
-Message-ID: <20240530143254.GE2770@thinkpad>
-References: <20240501163610.8900-1-quic_schintav@quicinc.com>
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: ep: Enforce DWC specific 64-bit BAR limitiation
+Message-ID: <20240530143603.GF2770@thinkpad>
+References: <20240528134839.8817-2-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,60 +62,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240501163610.8900-1-quic_schintav@quicinc.com>
+In-Reply-To: <20240528134839.8817-2-cassel@kernel.org>
 
-On Wed, May 01, 2024 at 09:35:31AM -0700, Shashank Babu Chinta Venkata wrote:
-> Add 16GT/s specific equalization and rx lane margining settings. These
-> settings are inline with respective PHY settings for 16GT/s 
-> operation. 
+On Tue, May 28, 2024 at 03:48:40PM +0200, Niklas Cassel wrote:
+> From the DWC EP databook 5.96a, section "3.5.7.1.4 General Rules for BAR
+> Setup (Fixed Mask or Programmable Mask Schemes Only)":
 > 
-> In addition, current QCOM EP and RC drivers do not share common
-> codebase which would result in code duplication. Hence, adding
-> common files for code reusability among RC and EP drivers.
+> "Any pair (for example BARs 0 and 1) can be configured as one 64-bit BAR,
+> two 32-bit BARs, or one 32-bit BAR."
 > 
+> "BAR pairs cannot overlap to form a 64-bit BAR. For example, you cannot
+> combine BARs 1 and 2 to form a 64-bit BAR."
+> 
+> While this limitation does exist in some other PCI endpoint controllers,
+> e.g. cdns_pcie_ep_set_bar(), the limitation does not appear to be defined
+> in the PCIe specification itself, thus add an explicit check for this in
+> dw_pcie_ep_set_bar() (rather than pci_epc_set_bar()).
+> 
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
-For the next revision, please rebase on top of [1].
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-[1] https://lore.kernel.org/linux-pci/20240518-opp_support-v13-2-78c73edf50de@quicinc.com/
-
-> v3 -> v4:
-> - Addressed review comments from Mani and Konrad.
-> - Preceded subject line with pci: qcom: tags
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> v2 -> v3:
-> - Replaced FIELD_GET/FIELD_PREP macros for bit operations.
-> - Renamed cmn to common.
-> - Avoided unnecessary argument validations.
-> - Addressed review comments from Konrad and Mani.
-> 
-> v1 -> v2:
-> - Capitilized commit message to be inline with history 
-> - Dropped stubs from header file.
-> - Moved Designware specific register offsets and masks to
->   pcie-designware.h header file.
-> - Applied settings based on bus data rate rather than link generation.
-> - Addressed review comments from Bjorn and Frank.
-> 
-> Shashank Babu Chinta Venkata (3):
->   PCI: qcom: Refactor common code
->   PCI: qcom: Add equalization settings for 16 GT/s
->   PCI: qcom: Add RX margining settings for 16 GT/s
-> 
->  drivers/pci/controller/dwc/Kconfig            |   5 +
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-designware.h  |  30 ++++
->  drivers/pci/controller/dwc/pcie-qcom-common.c | 144 ++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-qcom-common.h |  14 ++
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     |  44 ++----
->  drivers/pci/controller/dwc/pcie-qcom.c        |  74 ++-------
->  7 files changed, 218 insertions(+), 94 deletions(-)
->  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-common.c
->  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-common.h
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index f22252699548..42db3c3bbe96 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -227,6 +227,13 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	int ret, type;
+>  	u32 reg;
+>  
+> +	/*
+> +	 * DWC does not allow BAR pairs to overlap, e.g. you cannot combine BARs
+> +	 * 1 and 2 to form a 64-bit BAR.
+> +	 */
+> +	if ((flags & PCI_BASE_ADDRESS_MEM_TYPE_64) && (bar & 1))
+> +		return -EINVAL;
+> +
+>  	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+>  
+>  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
 > -- 
-> 2.43.2
+> 2.45.1
 > 
 
 -- 
