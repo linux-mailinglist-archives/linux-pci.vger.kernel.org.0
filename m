@@ -1,126 +1,120 @@
-Return-Path: <linux-pci+bounces-8072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 880748D46E0
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 10:18:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 515D08D4788
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 10:53:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39211283FA2
-	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 08:18:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 99A9CB23B7A
+	for <lists+linux-pci@lfdr.de>; Thu, 30 May 2024 08:53:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED5814B967;
-	Thu, 30 May 2024 08:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67BA16F305;
+	Thu, 30 May 2024 08:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfU1jynA"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="lHmUVFpd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBB914A615;
-	Thu, 30 May 2024 08:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208816F2F1;
+	Thu, 30 May 2024 08:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717057096; cv=none; b=S2PZgwuRRbbnWirqlW1l26BSdrVTk/tkjs/CjpKuM8WXMMzMuQxuc6fNpMXLu90Y53mhOkzyrgrV8AjZx0dN0qD403GGbYJfRLItlexTxkLaXrsyG/gnyf3PcuwulT64TOMr/s/nzSNWQRmsQDOSfN4o2BdUUVosi36bUBldoD8=
+	t=1717059182; cv=none; b=qBj0py0L8UGOe8t76Optf7590mCy1qn0ojmKOhAfUBRXQXMA1dmHwOdknUD5Md8u3y1S2RgtyZ9sN1GVqZ2XLUkRz89nkJW1j7VMmQnPrICOvof6ZFuq9DmPL/x8lpcC0pGLF1BXcqs9g+U/+iu4dLpCkQJOg0d/RYDGzgG5iQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717057096; c=relaxed/simple;
-	bh=LLoCHtazLklqSTo51kZD1rOstdZdBmD8nkBBghMcTi4=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=CJU5yYlQjHoDGEQxR8gl2py1CD9d3aVI95StekMcd84uE73nL0wbcb5csfN7iLrjUQbCUAjLDHLAWdxqKshh5t1ZB8yBnXv2J00Pz4E7D/h5eVXJpgpDX/TihdNx5vZSBeHgAgUUcAkdVJ6vT9Erh9ra2FuoyrUHLR2cnTpVEBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfU1jynA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1FEC2BBFC;
-	Thu, 30 May 2024 08:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717057096;
-	bh=LLoCHtazLklqSTo51kZD1rOstdZdBmD8nkBBghMcTi4=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=BfU1jynABdejcfPhHA29dQ+oPfGqOdMCRhwsYiCuOTSAI57JG6/7ULl25M79r3U2I
-	 E8P7k8piRx5OYN2BMivUHzX80VgYR4fASP2JFI7GYBPbZkmQnXA/OFrCtS4lZpfCTa
-	 oGV/SOVfbmyZe6Rgdm/ZfhW78oSeWxEEvUSEB9KadvOEMMsTH9xrt82Nu4MZl+/aEQ
-	 VLJCqrdKRyx+ZZGP7oLhuIBGlQVAj4jINQ/ghGJwTgwD7y9KNL48MMANpHyV6pOpom
-	 BfjikRWj9tXRbCykmUSeEQMIyhsAAsFeOEzozOdzgB8d3qPxCvStsIxt0TmdWaqihx
-	 60pJTNBqYkwlw==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  <linux-wireless@vger.kernel.org>,  <ath11k@lists.infradead.org>,
-  <regressions@lists.linux.dev>,  Jeff Johnson <quic_jjohnson@quicinc.com>,
-  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
-  <linux-pci@vger.kernel.org>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
-	<87sexzx02f.fsf@kernel.org>
-	<66582bee45da8_6ec329496@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<87jzjbwxin.fsf@kernel.org>
-Date: Thu, 30 May 2024 11:18:12 +0300
-In-Reply-To: <87jzjbwxin.fsf@kernel.org> (Kalle Valo's message of "Thu, 30 May
-	2024 10:48:32 +0300")
-Message-ID: <87frtzww57.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1717059182; c=relaxed/simple;
+	bh=3owwtopJBW27l7XF9REOmZ/I2S3ZXl+g+EoVFffOiKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y7NbSZILfy78a8vmqSeP2Usn16YT0cJXUKJESwfC/WLK0bDRnosbzHNXLi4JRktdyYjH03zoRu35PMQb/vqMYE6ucKDmnrYSsNNjibXHquqG9CfD/MdHz7ifWuZbw0e++VJd1iuV0DcpOYbyqWWu7n5cfMq58uVKE0eY3V9yH4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=lHmUVFpd; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from localhost.localdomain (1.general.khfeng.us.vpn [10.172.68.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 12EA83F2EC;
+	Thu, 30 May 2024 08:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1717059177;
+	bh=Tpe+gbzS1kOJ94iIq6BFHuIaYZPa70nw/0E6K7KjDPE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=lHmUVFpdxuGlwzSOUKDLcRdFurA+k4cyVgQiBhpd6mJaVhGTRBsco6Ldp0ks3lnJP
+	 qugM2VVpkx0Ki3JOuX0O5YhzfQMn9045eMH2gTY6cJDIlCu74YO5++OODW5g471lHD
+	 IlxI0+v8ATzoHs568WWR+av2sODkOOspilQPEZRQQ6PZCqdQwP2vl4khP+7hH8Pz+9
+	 JbD9MPgOICwIRanxFrJ3IzBIGscIW+k72Wwvb9IqWJ4bLeafWQaNnk/KAdAv62BL8d
+	 Swh6Ci1utEpk1FZ8TvX9FFnrZNYRqQkv0wtpL+vrVg7UkPH+raqeEIuPWUTpOE+cdC
+	 sbntk1M5/G4EQ==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nirmal.patel@linux.intel.com,
+	jonathan.derrick@linux.dev,
+	ilpo.jarvinen@linux.intel.com,
+	david.e.box@linux.intel.com,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 1/2] PCI: ASPM: Allow OS to configure ASPM where BIOS is incapable of
+Date: Thu, 30 May 2024 16:52:26 +0800
+Message-ID: <20240530085227.91168-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Kalle Valo <kvalo@kernel.org> writes:
+Since commit f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM
+and LTR"), ASPM is configured for NVMe devices enabled in VMD domain.
 
-> Dan Williams <dan.j.williams@intel.com> writes:
->
->> Kalle Valo wrote:
->>
->>> Kalle Valo <kvalo@kernel.org> writes:
->>> 
->>> > Kalle Valo <kvalo@kernel.org> writes:
->>> >
->>> >> Yesterday I run our ath11k regression tests with v6.10-rc1 and our
->>> >> simple ath11k module reload stress started failing reliably with various
->>> >> KASAN errors. The test removes and inserts ath11k and other wireless
->>> >> modules in a loop. Usually I run it at least 100 times, some times even
->>> >> more, and no issues until yesterday.
->>> >>
->>> >> I have verified that the last wireless-next pull request (tag
->>> >> wireless-next-2024-05-08) works without issues and v6.10-rc1 fails
->>> >> always, usually within 50 module reload loops. From this I'm _guessing_
->>> >> that we have a regression outside wireless, most probably introduced
->>> >> between v6.9 and v6.10-rc1. But of course I cannot be sure of anything
->>> >> yet.
->>> >>
->>> >> I see different KASAN warnings and lockdep seems to be always visible in
->>> >> the stack traces. I think I can reproduce the issue within 15 minutes or
->>> >> so. Before I start bisecting has anyone else seen anything similar? Or
->>> >> any suggestions how to debug this further?
->>> >>
->>> >> I have included some crash logs below, they are retrieved using
->>> >> netconsole. Here's a summary of the errors:
->>> >>
->>> >> [ 159.970765] KASAN: maybe wild-memory-access in range
->>> >> [0xbbbbbbbbbbbbbbb8-0xbbbbbbbbbbbbbbbf]
->>> >> [  700.017632] BUG: KASAN: use-after-free in lockdep_register_key+0x755/0x8f0
->>> >> [ 224.695821] BUG: KASAN: slab-out-of-bounds in
->>> >> lockdep_register_key+0x755/0x8f0
->>> >> [ 259.666542] BUG: KASAN: slab-use-after-free in
->>> >> lockdep_register_key+0x755/0x8f0
->>
->> The proposed fix for that is here:
->>
->> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
->
-> I get "Not Found" from that link, is there a typo?
+However, that doesn't cover the case when FADT has ACPI_FADT_NO_ASPM
+set.
 
-I found this fix from for-linus branch:
+So add a new attribute to bypass aspm_disabled so OS can configure ASPM.
 
-# PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
+Fixes: f492edb40b54 ("PCI: vmd: Add quirk to configure PCIe ASPM and LTR")
+Link: https://lore.kernel.org/linux-pm/218aa81f-9c6-5929-578d-8dc15f83dd48@panix.com/
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pcie/aspm.c | 8 ++++++--
+ include/linux/pci.h     | 1 +
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-But at least that doesn't fix my crash.
-
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index cee2365e54b8..e719605857b1 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1416,8 +1416,12 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+ 	 * the _OSC method), we can't honor that request.
+ 	 */
+ 	if (aspm_disabled) {
+-		pci_warn(pdev, "can't override BIOS ASPM; OS doesn't have ASPM control\n");
+-		return -EPERM;
++		if (aspm_support_enabled && pdev->aspm_os_control)
++			pci_info(pdev, "BIOS can't program ASPM, let OS control it\n");
++		else {
++			pci_warn(pdev, "can't override BIOS ASPM; OS doesn't have ASPM control\n");
++			return -EPERM;
++		}
+ 	}
+ 
+ 	if (!locked)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index fb004fd4e889..58cbd4bea320 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -467,6 +467,7 @@ struct pci_dev {
+ 	unsigned int	no_command_memory:1;	/* No PCI_COMMAND_MEMORY */
+ 	unsigned int	rom_bar_overlap:1;	/* ROM BAR disable broken */
+ 	unsigned int	rom_attr_enabled:1;	/* Display of ROM attribute enabled? */
++	unsigned int	aspm_os_control:1;	/* Display of ROM attribute enabled? */
+ 	pci_dev_flags_t dev_flags;
+ 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+ 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.43.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
