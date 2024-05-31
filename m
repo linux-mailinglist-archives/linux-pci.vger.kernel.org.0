@@ -1,104 +1,105 @@
-Return-Path: <linux-pci+bounces-8133-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8134-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50B618D6737
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 18:48:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A66ED8D6774
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 18:55:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CD1B1C24FC5
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 16:48:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3069B28357B
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 16:55:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DBA17C7B4;
-	Fri, 31 May 2024 16:47:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3F3171644;
+	Fri, 31 May 2024 16:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RMZmCS90"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jCTyzD5S"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40E4158204;
-	Fri, 31 May 2024 16:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38D45381A;
+	Fri, 31 May 2024 16:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717174057; cv=none; b=ne1wMzS226Zx4oqivCo3Di86pqM5yOr6auee0skVWgPGrFHeyw5kZA3gCzcl0bNW/plQ5K0ryd6Sl6cdLOnOXEit4wgzLHIMLd+QkunceafTBXFNdCCdvmmgjvjUaqBE+aJ4/y4BlAQCzrCqf6b3I+yFiU3FnqESDfUd2QzvAtM=
+	t=1717174518; cv=none; b=DyGbV6HQgssJacOIWTpyyuOD0YlYAIGOzKS0KyVaRM35QspJdWkgw2x1g/bVz3BryKftJ+hUEj4PknLxLJFC4Dvi3IzchyYOPeEt5c6+qG2T/pC6Rm6T/ZA1lfwO8BHvXL05RiEgdaUHtBDiOQNKU7oEekWySlSfmfLJvZaiiKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717174057; c=relaxed/simple;
-	bh=oqcC5FJvmRrpt+Q4bwnChJ2q35ucR7vYxjPB38IK/vk=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=FrpcuavoZwwWJWwMen1sJQbxuk959IkiUMHXT6UGeaY9OJ9s/uxBuPZtww/gGgZthITMwzgJVe3nz1FruXjF4y88rwALiZT5HpiBDDomsUliH84/bBDCZuS78uYqYFxq/HQ8GczE/OKvCizCYpD5inYQltDwXf1tGYiO9VUHVow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RMZmCS90; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BF6C116B1;
-	Fri, 31 May 2024 16:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717174056;
-	bh=oqcC5FJvmRrpt+Q4bwnChJ2q35ucR7vYxjPB38IK/vk=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=RMZmCS90hvuAyg69z06WDbLwF228fxxOaWP0skxxUNsRpSZB9dwE7y4Dudwk9FYwk
-	 gJyqQUGxNWCRvl9VIOoeGQDfALTKGloW3V94GTEtPUitX3Npki6BuZ0WF8xH8eN0zJ
-	 9lX9AQbxRApKCdkRneS9NjCrGstD679r3O8b/5ygm2qPM6WOsTe6KjkPO93BtFhTu2
-	 Bd6+BI/6RVeoMdCCN9nGCJ0MDDHSuZnhmwoldG0u+3iQvWsSYVLX7G7zKBQWfw9uaJ
-	 h1qU9jOBj5zlPOdKnFoWc09uooaj4qj+285mcZ+yhLL42LIs4OKqllYoBiMzEkkpEU
-	 +fp30/koV94Uw==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  <linux-wireless@vger.kernel.org>,  <ath11k@lists.infradead.org>,
-  <regressions@lists.linux.dev>,  Jeff Johnson <quic_jjohnson@quicinc.com>,
-  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
-  <linux-pci@vger.kernel.org>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
-	<87sexzx02f.fsf@kernel.org>
-	<66582bee45da8_6ec329496@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<87jzjbwxin.fsf@kernel.org> <87frtzww57.fsf@kernel.org>
-	<6659ee8b8dfd_166872941c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Date: Fri, 31 May 2024 19:47:32 +0300
-In-Reply-To: <6659ee8b8dfd_166872941c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	(Dan Williams's message of "Fri, 31 May 2024 08:36:43 -0700")
-Message-ID: <87y17qudwb.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1717174518; c=relaxed/simple;
+	bh=wwDkFQlCmYaBWNt+sIQJ30LdSolr6sdRGekCzcglKQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E7XVvZQkyZ4opPLwjFVWGNleCeQOUewe4BM7v8f+vpjuNvYdZkn9Go+ZLP/cJbijicQPm2aJYW1uFwR8UDLa12OwChLrZSIFbW/I6iAkM0q9YtyhGQWKckS51tkMRxmXYcizNQi555mg3a+7wXBNjFzGjtMBQEhiuloEseJ3m3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jCTyzD5S; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0525240002;
+	Fri, 31 May 2024 16:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717174508;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eCyP3NsB6+TrwW+rJ92fdE1KqnkQyffJu7CwUmKcvjg=;
+	b=jCTyzD5S5jiQ2h1XLSSXcBzegACpsb4kPK6kpHDjYa3qU4eZXeg/54l25IVRE9oH5iXokx
+	mBXTvWrErcaFW9G+iqcTxPIxuxLLnBXFa8JPa76Ge+gtinBsSlpDKZWseUHYKIJX/3x2y5
+	PrztJFUE32LBoRTF7QLK4TZhci2PHa3kMydGuloEO0PBk/23fyGmGN8bfWqF/htKXPwGU2
+	8e2SbyVWMa/e3BPdfSKC4VitKht+H8g+8nQEg0cGFEYDM+BACQT3TUK00wrwR/IwPP1rsT
+	+qpW4eTTnAGSW5LeBvBsy7BXdEZvQ2EirMdjJusqh5+TAk8lVffyuhd+Zc/IPw==
+Message-ID: <42affba4-4600-4c44-ad88-926597cc2225@bootlin.com>
+Date: Fri, 31 May 2024 18:55:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/12] Add suspend to ram support for PCIe on J7200
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ gregory.clement@bootlin.com, theo.lebrun@bootlin.com,
+ thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>
+References: <20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On 5/15/24 12:01, Thomas Richard wrote:
+> This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
+> 
 
-> Kalle Valo wrote:
-> [..]
->> >> The proposed fix for that is here:
->> >>
->> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
->> >
->> > I get "Not Found" from that link, is there a typo?
->> 
->> I found this fix from for-linus branch:
->> 
->> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
->> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
->> 
->> But at least that doesn't fix my crash.
->
-> Sorry for the broken link I mistakenly used a message-id from an
-> internal thread with the intel.com reporter. However, it is moot now
-> because the new direction is to revert the lockdep infrastructure:
->
-> https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
->
-> (that link works...)
+Hello,
 
-Thanks, that links works :) I did a quick test with the three patches
-and I didn't see any crashes anymore. But to be confident I need to run
-overnight tests, I'll provide my Tested-by after that.
+Gentle ping.
+No merge conflict with 6.10-rc1.
+I know the patch for the gpio-pca953x driver causes a regression for one
+other platform.
+But most of the patches could be applied.
+
+Best Regards,
+
+Thomas
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
