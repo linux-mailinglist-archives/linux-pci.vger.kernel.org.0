@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-8117-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8118-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 125178D607E
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 13:19:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E5C78D6082
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 13:19:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3B24282BCB
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 11:19:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D5081C21527
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 11:19:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D8AC15746A;
-	Fri, 31 May 2024 11:19:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03F72157488;
+	Fri, 31 May 2024 11:19:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I+tCTTr4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mumtj6s+"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HAsPEDLs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XRgLpBmX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA56155A53;
-	Fri, 31 May 2024 11:19:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF27156F5B;
+	Fri, 31 May 2024 11:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717154352; cv=none; b=OM1f7VXOKqHvy/QRUoFDkJTsisoz5QFjuZnNS5CzjQD2myXhs39POKD64236FO1wAGml/tP7wjR8mFtOK4y8DOa6eq9iqezpSzw0lZRKY5iy3rUzw0Br12+8tz6lGIYOoZ1W6N0Byf4zzNKhC1PbhpCuGVZJT83neu1GrDX8ckk=
+	t=1717154352; cv=none; b=rz9xoCxQFiYRh3h4uUp/JjgSoGqrlGDUV8eFvWyxMT0O5gXOCMomsdaeq7oo0kA/zxrSazcZmJUdGZvZie52DOtEPUby4ZPXF57Sl/8WHAcW8Op+wiojGfqtjiilbOFQtmxSQPEHpPeBh+XGdx8h1Y/wsAU1hUaKn53NKq1uLEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717154352; c=relaxed/simple;
-	bh=pSNqZXR3ptCr47hJi4y3sx1XE5Az6hVVaKrTUaPrsvY=;
+	bh=Q/k0ZuJgDxU64Fg7EXSjwr3Af/BGVhb3gFxOmobhEZY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LIO4L6mkzFXf2517fGBDR3ieBzZlrBEATGJ/+nuvBoK2tlX9jjtjdCB0TjNgE6bjciq6p1JPGiJJDvtszDPmJGTpbwubaiSsWqygO6tikvYq5Hn/CykjHddq7lxNRdFLXlnt4uQFjNoEAczLSeAuc0XFnKUyPgNJCueyEvuhyWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I+tCTTr4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mumtj6s+; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Xqo86MTy7x0nadnIl2KtobHJtMw3O2hSmdkJcw0IOII7fuxVLirrfWy6UAiuRQvJgGnN1jLFDmE7oHbCfA6m6hQoM1NBbwDmlnkK741WUWPL3upMKOkDYrrPymsLMFICzASprclpozUlRWoRnAbzHE7skrSL8XO71KS2Oeqh938=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HAsPEDLs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XRgLpBmX; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 From: Nam Cao <namcao@linutronix.de>
@@ -39,21 +39,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FhOFxtuZRW6McJk35fxGo8aJBPM+ac6u4rfcns9YsC0=;
-	b=I+tCTTr4HQPtlV84niLSe6Dp9NKksAbEBTfLcnh0VKoOXbIIcXbByC52ItsfVS0GzjunjK
-	xtumrU9+05MR7A4jKoJc2Og9s6Vwyx6kEI9B9ujOJS6rhHvqxmO7SZoo/OGbyjdXkCdEAB
-	4li/rPTQrYLJIkqkolYM7cxWgPKlfeTQKk5FqrxKQSibdrQs7kmaS/8pfij8kr3x5ZJuhf
-	RNrk7Tk0+NOmV/dpjDe5UQUOSemE8BzHBX5Etj3E2RmAUV0g2Dr0UV+expUF0rm704JYsN
-	XeKxyIWJJkP52w0b+TAoB8Ll+0LK558yZ2EWzS1Pl+d4nu5B6fo94pxEa3FkAw==
+	bh=kaI3CFwEe6RD74mHpEKGILiAvt58PIOSoSNwjACCcVc=;
+	b=HAsPEDLsyQ6bOu4ZuP/CmWhMQTJp+F+P8iX5d3ZgKBjfO2jt/goXI1G1L6t0k1uPH8Y1Pr
+	+9YjzxNc6NsNZL+W7T1XabiFHZY74hn9teFhfU5v0ug/mXeB8eHpUZJJV5sPZnVLD6/C86
+	klkNa3qstqzvLjHXZHqZTlknALpJa/vcyNBakUHPTW/IyIwcfmk8aj/5t4uGSp8ExgUs8+
+	7rLxCKrQYs0jAlh0leV/jz4Kz+X8gpawrCdBksYGT/KKEEwM+BdITe1BDqGTj48PGCgbyb
+	RCvYSybNz5zoWHp9trR4v8wqNfufHh04bN/CoGi92YdL7zz+F12f7kOEHrCa8g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1717154349;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FhOFxtuZRW6McJk35fxGo8aJBPM+ac6u4rfcns9YsC0=;
-	b=mumtj6s+40M2wsO/GPb2nw1ItxedxrOOkOmRMLcFyGCYym89akvhLxB60gPcApMNnrKi3M
-	i/iNFp0OIA6rWcAA==
+	bh=kaI3CFwEe6RD74mHpEKGILiAvt58PIOSoSNwjACCcVc=;
+	b=XRgLpBmXmSQF7EgKpoWN14dFoPzhYEM7IklIj+SAeJxShIvWMcV1sUWtHaBW3UufgQfep7
+	W9wJogk9URdh7ZDQ==
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Rob Herring <robh@kernel.org>,
 	Lizhi Hou <lizhi.hou@amd.com>,
@@ -62,9 +62,9 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 Cc: Lukas Wunner <lukas@wunner.de>,
 	Nam Cao <namcao@linutronix.de>,
 	stable@vger.kernel.org
-Subject: [PATCH 1/2] PCI: of_property: Fix NULL pointer defererence in of_pci_prop_bus_range()
-Date: Fri, 31 May 2024 13:18:59 +0200
-Message-Id: <18ae685b655c6c9334cb80bb32e6b4a1b423b0ae.1717154083.git.namcao@linutronix.de>
+Subject: [PATCH 2/2] PCI: of_property: Fix NULL pointer defererence in of_pci_prop_intr_map()
+Date: Fri, 31 May 2024 13:19:00 +0200
+Message-Id: <52dd5a634cb6b490c6a49170abdde4f1070c2ad6.1717154083.git.namcao@linutronix.de>
 In-Reply-To: <cover.1717154083.git.namcao@linutronix.de>
 References: <cover.1717154083.git.namcao@linutronix.de>
 Precedence: bulk
@@ -76,7 +76,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 The subordinate pointer can be null if we are out of bus number. The
-function of_pci_prop_bus_range() deferences this pointer without checking
+function of_pci_prop_intr_map() deferences this pointer without checking
 and may crashes the kernel.
 
 This crash can be reproduced by starting a QEMU instance:
@@ -93,9 +93,10 @@ Then hot-add a bridge with
     device_add pci-bridge,id=br2,bus=br1,chassis_nr=1,addr=1
 
 Then the kernel crashes:
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
     [snip]
-[<ffffffff804db234>] of_pci_add_properties+0x34c/0x3c6
+[<ffffffff804dac82>] of_pci_prop_intr_map+0x104/0x362
+[<ffffffff804db262>] of_pci_add_properties+0x382/0x3ca
 [<ffffffff804c8228>] of_pci_make_dev_node+0xb6/0x116
 [<ffffffff804a6b72>] pci_bus_add_device+0xa8/0xaa
 [<ffffffff804a6ba4>] pci_bus_add_devices+0x30/0x6a
@@ -114,19 +115,19 @@ Cc: stable@vger.kernel.org
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-index c2c7334152bc..5fb516807ba2 100644
+index 5fb516807ba2..c405978a0b7e 100644
 --- a/drivers/pci/of_property.c
 +++ b/drivers/pci/of_property.c
-@@ -91,6 +91,9 @@ static int of_pci_prop_bus_range(struct pci_dev *pdev,
- 				 struct of_changeset *ocs,
- 				 struct device_node *np)
- {
+@@ -199,6 +199,9 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+ 	int ret;
+ 	u8 pin;
+ 
 +	if (!pdev->subordinate)
 +		return 0;
 +
- 	u32 bus_range[] = { pdev->subordinate->busn_res.start,
- 			    pdev->subordinate->busn_res.end };
- 
+ 	pnode = pci_device_to_OF_node(pdev->bus->self);
+ 	if (!pnode)
+ 		pnode = pci_bus_to_OF_node(pdev->bus);
 -- 
 2.39.2
 
