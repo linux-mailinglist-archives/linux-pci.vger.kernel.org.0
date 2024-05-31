@@ -1,154 +1,215 @@
-Return-Path: <linux-pci+bounces-8121-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8122-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1FB08D650C
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 16:59:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F134C8D65DF
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 17:36:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68B2028C923
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 14:59:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A410228A5D5
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 15:36:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C94456BB5B;
-	Fri, 31 May 2024 14:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 771EA7710B;
+	Fri, 31 May 2024 15:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kVtjnQup"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EF466F2EB;
-	Fri, 31 May 2024 14:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717167539; cv=none; b=Ls45+0T4OchJM9U3l5UUcYpV6WHdg0KOEizmpnNXO3BACEpBhy5bB3kICNpQoluajGQFyrlimx+uGFo6sersfmc9W4gRsKPUfTlWgrUnidxBIgujkmGcUiSpKuwlbwDyQ2Sd9aLu6pJN5FEWL9fl0+Hg5INJFizpHw//zM3nbv8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717167539; c=relaxed/simple;
-	bh=G/b7RyaoGodqjPBF0FsWhLwSns9WaG79sqo1CfgHyUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T5k1zqrQxl4O/40wlCUqyxMu44QfW7iwCZVqjbOYtHwUjAlZP8C7/zxzyRBKSAJrcetMSoRlw7efCKByHXpqiyGqXb6B7WoNQ0P55Fs1hXGrHUK59tYs6TywGighL0QXehqs2lW6OJNWn70UFyQsRrSkeoI86kl9XhVUOYAEUBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6911F1424;
-	Fri, 31 May 2024 07:59:21 -0700 (PDT)
-Received: from [10.57.69.119] (unknown [10.57.69.119])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D57253F641;
-	Fri, 31 May 2024 07:58:51 -0700 (PDT)
-Message-ID: <974f1d23-aba8-432e-85b5-0e4b1c2005e7@arm.com>
-Date: Fri, 31 May 2024 15:58:49 +0100
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B9B1C687;
+	Fri, 31 May 2024 15:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717169811; cv=fail; b=iXM8JrbRH9Y7UDM+KybdghVxXrM3ns133qH9JtRtcAbHCEux55zVluRh2EkqK+tnldVVlCYc5teyc7et4sP4PlhFSXjo/Um5tX8kauEGSEddLMU4pjiZeC806adVvCwktn/pa39vuhmrMp3wc+SvX0uAlkr5ubpizLVbg3vhNzg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717169811; c=relaxed/simple;
+	bh=OpRvW8oRJ+mJy1ltRWSv8M6fq3pXvCYN06Tn+TfcepI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YKlnWwNB9Alv9aLkOm7ulqNzS3MkjWzxf++hzgFxYEZMGR2sudlKNJ+p0A39JORvjM3TPxOt+CvIcriAK68F3HyIhXPX/YtaELzZDP2S/sRyzvAEtnBOooRxoKWItWKxBqzTGFk+IKijcBVyx/SNjSG6Ua08Sb+aB7IZ09uNf3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kVtjnQup; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717169811; x=1748705811;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=OpRvW8oRJ+mJy1ltRWSv8M6fq3pXvCYN06Tn+TfcepI=;
+  b=kVtjnQupFtKM10biwNxI9CEURRK+BJP3IdpfUN0lAtO/GDCvf+sAYRZz
+   YFjw5J/Y3SevzliTn8sI48R4K7DQJ+kyNWWJ6GZsTilhrrj6V9vsWeycQ
+   7Cg6jPWXwFhK/DW9FIewYGOntaIhFpMgRjvpBvPLWmOR6nqjPeBKeyYk5
+   2k2tQCA2au4QTJKeh1dpu6pn8lvhaEk4Hj+mqqkQTMNkcK3r3KJ/gMRPA
+   CVAdwtqQY2qey6ktjFlIk5K6SrEIX8i+7ZHi2wgOb4wHBGGEyiJcRpZuZ
+   qUzGgfxChSkKljPqBIH+OK9I0LoNCGgOayGuNx2umkjfllheX/oY8PlAZ
+   g==;
+X-CSE-ConnectionGUID: AHf3QnBzSIWEef4SU+9meg==
+X-CSE-MsgGUID: Cz9JlamwQfavXpbGwZ2OGQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13668094"
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="13668094"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 08:36:50 -0700
+X-CSE-ConnectionGUID: mKxxDjoERPqsnyV5NwNCug==
+X-CSE-MsgGUID: RjAOV88lQe2m9wxcPhSWoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="67395014"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 31 May 2024 08:36:49 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 31 May 2024 08:36:48 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 31 May 2024 08:36:48 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 31 May 2024 08:36:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hN2eEMahdhB3oP4zBEkPYyJiyeAM0KG7KtfUbbnX9YmsFVURIwCdOfc8mjhngt0gRYAi8Ly/gBfcYp9M4emzzsGuy8KBCrjFe/e7TeACBoTsasVCAT/lVbuKJKQaU+WkZrNZCrvWbfhzvruVufH0XqOA3KXVDsOxe6v33BxIWRR9IaXi9ubqNT6w4qfa94gvMvNx29AsP2Qb0GDZdwDnWDH1HmVmF2WcGwoMeeIzQn0ZJz4shi4MagcalNRaJaVl5Ubzyy8+SpdCLBlt7Q76EeZZsygNf/cs9d72ragbguxjCjMNs6ThIktB8RGH/+bhQZ/uykAd9Lk893sbzvnDPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aN6aIHuBMtzloYLNR/lsOmwfU4iScRxRXKyiOhLu3Bw=;
+ b=Dus5K2qOIYLw0FewV5ipPzqsWajUE34TuRB/+iJpLAcX0gAIX8LMwYMb2QWxM16cUyvZkoo14YB4e3iNWkAbfjjQvhqyifIhPVGu+dZatvhu3c9HLlX6/M+GVOcvTwAOUg6aOkkyt3ILmct0iXVYvaMdHLJ3r8qPvkrR0UpC1dCWYltvNqVLPkd6dTFSMhEEVQZq2qmyWKzHLVHpUcfJ5FGA0w+hM8E8wVp3JHxkgW5i4E0UMBd8zKorQY6rYqcV78numi3KVV9LDLsfdYrijttP7FazCBVHgkpcbfNIuhYE5kzJNrGij4TYPYajcQwKVHITp7yxNZq9utbOWMYHOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ0PR11MB5006.namprd11.prod.outlook.com (2603:10b6:a03:2db::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.20; Fri, 31 May
+ 2024 15:36:45 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7611.025; Fri, 31 May 2024
+ 15:36:45 +0000
+Date: Fri, 31 May 2024 08:36:43 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Kalle Valo <kvalo@kernel.org>, Dan Williams <dan.j.williams@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	<linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
+	<regressions@lists.linux.dev>, Jeff Johnson <quic_jjohnson@quicinc.com>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+Message-ID: <6659ee8b8dfd_166872941c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <87v82y6wvi.fsf@kernel.org>
+ <87wmncwqxf.fsf@kernel.org>
+ <87sexzx02f.fsf@kernel.org>
+ <66582bee45da8_6ec329496@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <87jzjbwxin.fsf@kernel.org>
+ <87frtzww57.fsf@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87frtzww57.fsf@kernel.org>
+X-ClientProxiedBy: MW4PR03CA0058.namprd03.prod.outlook.com
+ (2603:10b6:303:8e::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
- MSI ITS and IOMMU for i.MX95
-To: Bjorn Helgaas <helgaas@kernel.org>, Frank Li <Frank.Li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
- Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>
-References: <20240530230832.GA474962@bhelgaas>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240530230832.GA474962@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5006:EE_
+X-MS-Office365-Filtering-Correlation-Id: d31ad289-4be7-4eb9-7812-08dc81877a88
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?H+nsTYPZ4a7HS3vMmMGKEZul+F5gFxiPs0dbN0ysD6cMHjwaMxX6ah1m9gT7?=
+ =?us-ascii?Q?j4TnUOQVJkBa0BwjlKfk5PT6gISPFzkNRtqrinaMxsBPNuK/MEtYFSOSW+Vd?=
+ =?us-ascii?Q?6A0ooYAGGvsNu7FFydqSDhHOV+sjoC5fnl+WeZyx+VCHukIB1dMW480mxlAm?=
+ =?us-ascii?Q?/phMWTrioQjHg5U5Cnh21CQWK++/71h+eTaZLNu8V5Zp31SER6ccVZjkkWq0?=
+ =?us-ascii?Q?dpRpgdZth6F7VqtZyBSVgEaPaQzK00BLvBCl6GdHNjnMW1aODPXSjJBB5Q5j?=
+ =?us-ascii?Q?ykKtBr4m8pFX147WSi6+2SoyBDSt7iOUi70jXA/4my/EWr7EpjJK4EoddQ0f?=
+ =?us-ascii?Q?ihkREzsn9OfQoNFk9H39fXoL7aj3d4nSu3cWp2k8/K4mklfPurupPMVeaeZG?=
+ =?us-ascii?Q?2PGLczGH4FmjugMiVS14zXkrmlPMi2DzMU6j6BStXDYVMAUOC8F5A8/oWJ2l?=
+ =?us-ascii?Q?2BM20EGOpKstMPTxYEsTT79hebKb0OUfe+QyPPpqt311OzYh7jM1hCgJhtg0?=
+ =?us-ascii?Q?nXgVOt8EoiX5+wQzrVSPUTIysdsll34AJgt1ipnH0CfPHKPIHaxI8bKqr356?=
+ =?us-ascii?Q?nJYWf1JbwSOLocgvgRYCqsM4WFxR4vNgfjwo/6jh0xWTg+dHJk1e7w7eEQ6H?=
+ =?us-ascii?Q?BL7L2Yq89hr9ottKBC5HeK1WSoHAcxjCTz9WW7852qJmGNBFTPJJ+Sm6Uo0x?=
+ =?us-ascii?Q?ckPZFpM8rHrOkP1w8oIg6bgTpl2vZnXnf2crujfN+ucupL4foOW5jhVkHmSo?=
+ =?us-ascii?Q?Qo4cFE/wshZcqxv+vfn/rGEK8hHm1WrHaZ3tsPjwoU+zyehtZIF8yMGJNg1T?=
+ =?us-ascii?Q?dAWlNmAsrpZgcEQNw85qR09KUQYZRMLnvJVmJMZ0G/pEOrdYm1RCYVPSXeEa?=
+ =?us-ascii?Q?HecfOwsqPglEAUbF5OPqdGlZLtWwSkc7T/q1j/gvfvtDko8SjcZ9zNjCdWXA?=
+ =?us-ascii?Q?3cMMBMsGV9Rl00XH4QHK07Xf/wHazJHLRbZVXE02q6MAOc+sfQEDrzBSpT6C?=
+ =?us-ascii?Q?mYTTp8x+9Ft9/vGqOiIagj6cfnS5ANuuqMM0RNouCY1UpOhryKMaeyYdEAAP?=
+ =?us-ascii?Q?SLwpx8PbMABu8nm0L9w47ftZ/9VZA309j0tnSPQJdEAUsLTvkvi5vogI5Jx2?=
+ =?us-ascii?Q?2qIUmJwFdTTgOd3CFyXf3jRZUui1lc3uNGF7E1gq8N1K1GU1Lv8A6yaywK7c?=
+ =?us-ascii?Q?KHqmjcQhfKSOeijO5gG4doHX1175hPzErL+oH8HOCsBqfIWSanHezR5Qbjo?=
+ =?us-ascii?Q?=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?a2k8ugtMistCSnacYxfVXRD/MW5AtknUrS3fURJ1htsIcWDAWG3gQtPMLzC3?=
+ =?us-ascii?Q?JBXXklg+98iBMVRyfRG2/mavaK1qg4Fz+OpMLoykGWq218N6Nl78XqBmfJD5?=
+ =?us-ascii?Q?SWYmu5H3XCIdNpjS7hJ65d+iGhs4Sx/rcmfUV/9e5DchRhCPoT2CT0bqR/4/?=
+ =?us-ascii?Q?26AKqKg81LeNhw8LnnfVu5sUszl12HyuEU5GD8jv3OMaeSsG4w2fCNpBMhG8?=
+ =?us-ascii?Q?Ti61TniYqlHsqQ1wDmI8NKymYbf2vAgz8E7jgjfw7E/dqW9TO7kl7N6xwhXC?=
+ =?us-ascii?Q?9+dbOCvdBgikJOqOV8BCSo1v9ZJZA3dFIw94/YPr8YgPc79ax/EQfMddGTGH?=
+ =?us-ascii?Q?OnbBX6kdjc+mNfjlLfEMaBrSqeFeOP9eJJ57Jsx+q71ED3dQI69QgsXWbQbd?=
+ =?us-ascii?Q?Op0IVhUzDIhKx2ErXZ14YMqnH4s0mDiGwccVoQPHXiND0ESFD3B9u8xcH9mW?=
+ =?us-ascii?Q?4V0wGqX09X/zYp71LYmeO8bcNTxMWXY27nxLGdcQv1XVaayih/0l1ddWt7fL?=
+ =?us-ascii?Q?aun8fddpd2AbMliElY+UcUCyt5riz/kFqpslLOxqau5YVWCNiutUhElr0utg?=
+ =?us-ascii?Q?hMq/8oAVbiJvTKI+IwnNn/ifmBk7no8xIwFqoamTHuPt3mhw/cUoj6mSPAyu?=
+ =?us-ascii?Q?eu6Q8RRqFNHJHRFqIM9YABH5CcBi33GDUVczf3ugJPPW+OpcBKGexnZv1lBl?=
+ =?us-ascii?Q?k4VoLKCJVCw5AXHH+GKc4VkmYbiCjwpH+yQ11KrI5U8ZNTlAzs34CaO1OAOQ?=
+ =?us-ascii?Q?ZVL96MW4XGuArFzA5Jd1NwpjKs6lXsJCmz5WHQjISrWzwEmD6XpBW59jgp8A?=
+ =?us-ascii?Q?+FgKrs5wQFd4UaCn4qcfCFCZsOufkdvZUgKHCTVkYyePT25rj5RxaYKzyGV8?=
+ =?us-ascii?Q?yGqHPdxo0FdMIaezOi9ebcm5X0we2iiyNsKkb8rSKfLxdmQBNrvBPwZR1+bt?=
+ =?us-ascii?Q?9pAgg/boMJNMHBr+6K6W7AkhurAwFmuvvalua0K6dhywjlQKMYkiYJJ08Y9l?=
+ =?us-ascii?Q?82QzhYlsN/lduo9Ir4Da1LXYWYL4vHI86G9oJfIjqoVL5/K/Q4VWVkRPVyTD?=
+ =?us-ascii?Q?wShC0DN96X3ogw6kaKG7WyxVbKhfvSFx/+2hOxl1y0Kzl7Ghyuw96fj/RQ+S?=
+ =?us-ascii?Q?o20BdBl4B8lXiHxuCYshYswpWDliocbxmZYtMzqkF6yNd0CHCs2YjcZg1CUd?=
+ =?us-ascii?Q?oikF2hzST3SDDXLTbhaboFy9R9EADLNXq8wMH7VD3ok5pxS6ATPh7v0wZRPM?=
+ =?us-ascii?Q?rN+VQAOSkvkPL1O7UsVvvtavLzFqR8tumz0yVBbVl/xs+9+/ke0iKI2uZ2iq?=
+ =?us-ascii?Q?NGRQKQOjUKA9GgFozosNrgCUQ/WwsgG4zUqwkNYME/+uu25NBRsI1IjjzqHv?=
+ =?us-ascii?Q?3sbu3GzXUcceAMXiWTvXvj5XRYSnmcbqvCJWbenQS4R04MQIPU+UrZvaYeeq?=
+ =?us-ascii?Q?FtUwQCavsTt+1ZFOjkrFo64zSb/HQaAmQOUy62rXDkg19o1ZurceHLjKnH6v?=
+ =?us-ascii?Q?RdNKHGklTkz8K5yrufz8V6Bflp1F27J1Savw9Xn/El4/ct6cl0js53z5Ugl9?=
+ =?us-ascii?Q?3fukjThPbgsKw0TSAev6X3vIsqxE4B5cX0cdebFLCbkMYBMX1TRr4qTTUqIn?=
+ =?us-ascii?Q?JA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d31ad289-4be7-4eb9-7812-08dc81877a88
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 15:36:45.7355
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hc+5G/VQjnoqFbpdiKo+7fHJztMQkzNHqiOXhxfDDxyJ06OdDeb2yc/X2KhVhRjcM/YXVHb2xW/bVYQ1wSX90HejR0+1OPmAllaQBDE3mQk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5006
+X-OriginatorOrg: intel.com
 
-On 2024-05-31 12:08 am, Bjorn Helgaas wrote:
-> [+cc IOMMU and pcie-apple.c folks for comment]
+Kalle Valo wrote:
+[..]
+> >> The proposed fix for that is here:
+> >>
+> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
+> >
+> > I get "Not Found" from that link, is there a typo?
 > 
-> On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
->> For the i.MX95, configuration of a LUT is necessary to convert Bus Device
->> Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
->> This involves examining the msi-map and smmu-map to ensure consistent
->> mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
->> registers are configured. In the absence of an msi-map, the built-in MSI
->> controller is utilized as a fallback.
->>
->> Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
->> upon the appearance of a new PCI device and when the bus is an iMX6 PCI
->> controller. This function configures the correct LUT based on Device Tree
->> Settings (DTS).
+> I found this fix from for-linus branch:
 > 
-> This scheme is pretty similar to apple_pcie_bus_notifier().  If we
-> have to do this, I wish it were *more* similar, i.e., copy the
-> function names, bitmap tracking, code structure, etc.
+> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
 > 
-> I don't really know how stream IDs work, but I assume they are used on
-> most or all arm64 platforms, so I'm a little surprised that of all the
-> PCI host drivers used on arm64, only pcie-apple.c and pci-imx6.c need
-> this notifier.
+> But at least that doesn't fix my crash.
 
-This is one of those things that's mostly at the mercy of the PCIe root 
-complex implementation. Typically the SMMU StreamID and/or GIC ITS 
-DeviceID is derived directly from the PCI RID, sometimes with additional 
-high-order bits hard-wired to disambiguate PCI segments. I believe this 
-RID-translation LUT is a particular feature of the the Synopsys IP - I 
-know there's also one on the NXP Layerscape platforms, but on those it's 
-programmed by the bootloader, which also generates the appropriate 
-"msi-map" and "iommu-map" properties to match. Ideally that's what i.MX 
-should do as well, but hey.
+Sorry for the broken link I mistakenly used a message-id from an
+internal thread with the intel.com reporter. However, it is moot now
+because the new direction is to revert the lockdep infrastructure:
 
-> There's this path, which is pretty generic and does at least the
-> of_map_id() part of what you're doing in imx_pcie_add_device():
-> 
->      __driver_probe_device
->        really_probe
->          pci_dma_configure                       # pci_bus_type.dma_configure
->            of_dma_configure
->              of_dma_configure_id
->                of_iommu_configure
->                  of_pci_iommu_init
->                    of_iommu_configure_dev_id
->                      of_map_id
->                      of_iommu_xlate
->                        ops = iommu_ops_from_fwnode
->                        iommu_fwspec_init
->                        ops->of_xlate(dev, iommu_spec)
-> 
-> Maybe this needs to be extended somehow with a hook to do the
-> device-specific work like updating the LUT?  Just speculating here,
-> the IOMMU folks will know how this is expected to work.
+https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
 
-Note that that particular code path has fundamental issues and much of 
-it needs to go away (I'm working on it, but it's a rich ~8-year-old pile 
-of technical debt...). IOMMU configuration needs to be happening at 
-device_add() time via the IOMMU layer's own bus notifier.
-
-If it's really necessary to do this programming from Linux, then there's 
-still no point in it being dynamic - the mappings cannot ever change, 
-since the rest of the kernel believes that what the DT said at boot time 
-was already a property of the hardware. It would be a lot more logical, 
-and likely simpler, for the driver to just read the relevant map 
-property and program the entire LUT to match, all in one go at 
-controller probe time. Rather like what's already commonly done with the 
-parsing of "dma-ranges" to program address-translation LUTs for inbound 
-windows.
-
-Plus that would also give a chance of safely dealing with bad DTs 
-specifying invalid ID mappings (by refusing to probe at all). As it is, 
-returning an error from a child's BUS_NOTIFY_ADD_DEVICE does nothing 
-except prevent any further notifiers from running at that point - the 
-device will still be added, allowed to bind a driver, and able to start 
-sending DMA/MSI traffic without the controller being correctly 
-programmed, which at best won't work and at worst may break the whole 
-system.
-
-Thanks,
-Robin.
+(that link works...)
 
