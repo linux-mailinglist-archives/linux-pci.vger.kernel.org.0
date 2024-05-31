@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-8125-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8126-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57F0A8D667A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 18:14:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F37BC8D667D
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 18:14:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB326B21A62
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 16:14:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD70628C9C2
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 16:14:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D957415B12C;
-	Fri, 31 May 2024 16:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C8C1779BD;
+	Fri, 31 May 2024 16:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w2FIGB0I"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z6sCcpOq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B49172793
-	for <linux-pci@vger.kernel.org>; Fri, 31 May 2024 16:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AA3176ABD
+	for <linux-pci@vger.kernel.org>; Fri, 31 May 2024 16:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717172035; cv=none; b=OtAEkHF2NhC3L1hY1nVktAQjK40GNLuDwVx4MvK1S+2oudlTX6SN2GoKCWPF7RbjRxg+kc/Xovh8X+qR+LsdJUCg5ijVdevI3v4Yt5AiahaEiRODywA3sORiKB4L6oRzBC6NU1s4NzDa5IKj4sBqRHyT5FAnO3UpPc7mTuiEuhc=
+	t=1717172038; cv=none; b=BCLRTjqRvYP75wdK22XOgxHVtJ/aw6X0XKYYTbCOhn8ivMHVfgPLSdO+6ErTg23t+07UGxQBVQTSVxCfJnutGMS0jgSvzIt6316Gi1fAboze/nGoBe9hkXWGHnTT4s+AqqjssE2Z4YqbWXk0i5TYUMve419QL4OEJtyxlRv71Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717172035; c=relaxed/simple;
-	bh=XYS6GElq0yArJgxoxvyHPMS3W4BDecfj/Oq019zf3Gc=;
+	s=arc-20240116; t=1717172038; c=relaxed/simple;
+	bh=R6C/JcAy4XUIj+2mid0YFJ1dW39G3VQ8kRlz1b3tSQ8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XI3YFij5/Pq0Espc3zKELNalRsLdtKBb0b92uo3M8buJUX8xTvKkUW8nzPxQVqrwztY8Hx1u6AoIuK8zPdz8oT9suvIJSfko/k/qnzb/Q+xInYEOiDhQhlavmObhAvxJMLTx560bYK3Xy/5iM9PV766AzO8pJGhkcQwf+qpCCtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w2FIGB0I; arc=none smtp.client-ip=91.218.175.179
+	 MIME-Version; b=c+bnFlZ80sibFpjsJ3eSNx9iO0oEbH0BedcvAtfxk27QpTvZ1aHAaXXpbgDsFyqi91f5U5mY3me/ySRs0o3uahkmgBlSBQlc9edAy0Gx/j0Bzn1jO4oPEi3RVGGhcJ+EObvsA1p34WGN0zLLbkHgchr1Zo14xP0SOGK3xgmN5uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z6sCcpOq; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 X-Envelope-To: lpieralisi@kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717172032;
+	t=1717172034;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Qaf7wlJcbuaI5XLr7jlnJohIFPCzjuNsqqKvlQY7mnY=;
-	b=w2FIGB0INIhu6VVvsFM5KwIGw4z7lIFwD8CKxzGHIC739QzQmk2STRcVji1Ca84PW+sl91
-	0zp2Uiw5YUmH0jFB5Hf4777v2LPsoFbDiYlQJbIEr0B+3F2pr+gOPfQ+usbw2psr2x9opw
-	uMROgDK+ucm0Dla8+Dj4+FOVc5xZXvQ=
+	bh=h+uuIXz4xj0FsFVOIz/Umf+nSIXJTEGtc5WA6Ask/xo=;
+	b=Z6sCcpOqzSVcuaGASWHHmXpSMSd9vPee84mF4IxSp48Qle9k7CqVtiNfpvlPwj6sJpbOUH
+	XvEYmeBxv4GHnX1PjkmNXkfyHEbBySMUy/jULaJZnSDAEGcMFKTSfksDj9ME6V3P1m1k8D
+	ZtinJguMIHjeVd/XiXklQ65iZ8tlmA0=
 X-Envelope-To: kw@linux.com
 X-Envelope-To: robh@kernel.org
 X-Envelope-To: linux-pci@vger.kernel.org
@@ -53,9 +53,6 @@ X-Envelope-To: linux-kernel@vger.kernel.org
 X-Envelope-To: bhelgaas@google.com
 X-Envelope-To: michal.simek@amd.com
 X-Envelope-To: sean.anderson@linux.dev
-X-Envelope-To: stable@vger.kernel.org
-X-Envelope-To: bharatku@xilinx.com
-X-Envelope-To: helgaas@kernel.org
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Sean Anderson <sean.anderson@linux.dev>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -69,13 +66,10 @@ Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
 	linux-kernel@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Michal Simek <michal.simek@amd.com>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	stable@vger.kernel.org,
-	Bharat Kumar Gogada <bharatku@xilinx.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH v4 2/7] PCI: xilinx-nwl: Fix off-by-one in IRQ handler
-Date: Fri, 31 May 2024 12:13:32 -0400
-Message-Id: <20240531161337.864994-3-sean.anderson@linux.dev>
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH v4 3/7] PCI: xilinx-nwl: Fix register misspelling
+Date: Fri, 31 May 2024 12:13:33 -0400
+Message-Id: <20240531161337.864994-4-sean.anderson@linux.dev>
 In-Reply-To: <20240531161337.864994-1-sean.anderson@linux.dev>
 References: <20240531161337.864994-1-sean.anderson@linux.dev>
 Precedence: bulk
@@ -87,73 +81,56 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-MSGF_LEG_MASK is laid out with INTA in bit 0, INTB in bit 1, INTC in bit
-2, and INTD in bit 3. Hardware IRQ numbers start at 0, and we register
-PCI_NUM_INTX irqs. So to enable INTA (aka hwirq 0) we should set bit 0.
-Remove the subtraction of one.
+MSIC -> MISC
 
-This bug would cause legacy interrupts not to be delivered, as enabling
-INTB would actually enable INTA, and enabling INTA wouldn't enable
-anything at all. It is likely that this got overlooked for so long since
-most PCIe hardware uses MSIs. This fixes the following UBSAN error:
-
-UBSAN: shift-out-of-bounds in ../drivers/pci/controller/pcie-xilinx-nwl.c:389:11
-shift exponent 18446744073709551615 is too large for 32-bit type 'int'
-CPU: 1 PID: 61 Comm: kworker/u10:1 Not tainted 6.6.20+ #268
-Hardware name: xlnx,zynqmp (DT)
-Workqueue: events_unbound deferred_probe_work_func
-Call trace:
-dump_backtrace (arch/arm64/kernel/stacktrace.c:235)
-show_stack (arch/arm64/kernel/stacktrace.c:242)
-dump_stack_lvl (lib/dump_stack.c:107)
-dump_stack (lib/dump_stack.c:114)
-__ubsan_handle_shift_out_of_bounds (lib/ubsan.c:218 lib/ubsan.c:387)
-nwl_unmask_leg_irq (drivers/pci/controller/pcie-xilinx-nwl.c:389 (discriminator 1))
-irq_enable (kernel/irq/internals.h:234 kernel/irq/chip.c:170 kernel/irq/chip.c:439 kernel/irq/chip.c:432 kernel/irq/chip.c:345)
-__irq_startup (kernel/irq/internals.h:239 kernel/irq/chip.c:180 kernel/irq/chip.c:250)
-irq_startup (kernel/irq/chip.c:270)
-__setup_irq (kernel/irq/manage.c:1800)
-request_threaded_irq (kernel/irq/manage.c:2206)
-pcie_pme_probe (include/linux/interrupt.h:168 drivers/pci/pcie/pme.c:348)
-<snip>
-
-Fixes: 9a181e1093af ("PCI: xilinx-nwl: Modify IRQ chip for legacy interrupts")
-Cc: <stable@vger.kernel.org>
+Fixes: c2a7ff18edcd ("PCI: xilinx-nwl: Expand error logging")
 Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
 ---
 
-Changes in v4:
-- Explain likely effects of the off-by-one error
-- Trim down UBSAN backtrace
+(no changes since v1)
 
-Changes in v3:
-- Expand commit message
-
- drivers/pci/controller/pcie-xilinx-nwl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-xilinx-nwl.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 0408f4d612b5..437927e3bcca 100644
+index 437927e3bcca..ce881baac6d8 100644
 --- a/drivers/pci/controller/pcie-xilinx-nwl.c
 +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -371,7 +371,7 @@ static void nwl_mask_intx_irq(struct irq_data *data)
- 	u32 mask;
- 	u32 val;
+@@ -80,8 +80,8 @@
+ #define MSGF_MISC_SR_NON_FATAL_DEV	BIT(22)
+ #define MSGF_MISC_SR_FATAL_DEV		BIT(23)
+ #define MSGF_MISC_SR_LINK_DOWN		BIT(24)
+-#define MSGF_MSIC_SR_LINK_AUTO_BWIDTH	BIT(25)
+-#define MSGF_MSIC_SR_LINK_BWIDTH	BIT(26)
++#define MSGF_MISC_SR_LINK_AUTO_BWIDTH	BIT(25)
++#define MSGF_MISC_SR_LINK_BWIDTH	BIT(26)
  
--	mask = 1 << (data->hwirq - 1);
-+	mask = 1 << data->hwirq;
- 	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
- 	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
- 	nwl_bridge_writel(pcie, (val & (~mask)), MSGF_LEG_MASK);
-@@ -385,7 +385,7 @@ static void nwl_unmask_intx_irq(struct irq_data *data)
- 	u32 mask;
- 	u32 val;
+ #define MSGF_MISC_SR_MASKALL		(MSGF_MISC_SR_RXMSG_AVAIL | \
+ 					MSGF_MISC_SR_RXMSG_OVER | \
+@@ -96,8 +96,8 @@
+ 					MSGF_MISC_SR_NON_FATAL_DEV | \
+ 					MSGF_MISC_SR_FATAL_DEV | \
+ 					MSGF_MISC_SR_LINK_DOWN | \
+-					MSGF_MSIC_SR_LINK_AUTO_BWIDTH | \
+-					MSGF_MSIC_SR_LINK_BWIDTH)
++					MSGF_MISC_SR_LINK_AUTO_BWIDTH | \
++					MSGF_MISC_SR_LINK_BWIDTH)
  
--	mask = 1 << (data->hwirq - 1);
-+	mask = 1 << data->hwirq;
- 	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
- 	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
- 	nwl_bridge_writel(pcie, (val | mask), MSGF_LEG_MASK);
+ /* Legacy interrupt status mask bits */
+ #define MSGF_LEG_SR_INTA		BIT(0)
+@@ -299,10 +299,10 @@ static irqreturn_t nwl_pcie_misc_handler(int irq, void *data)
+ 	if (misc_stat & MSGF_MISC_SR_FATAL_DEV)
+ 		dev_err(dev, "Fatal Error Detected\n");
+ 
+-	if (misc_stat & MSGF_MSIC_SR_LINK_AUTO_BWIDTH)
++	if (misc_stat & MSGF_MISC_SR_LINK_AUTO_BWIDTH)
+ 		dev_info(dev, "Link Autonomous Bandwidth Management Status bit set\n");
+ 
+-	if (misc_stat & MSGF_MSIC_SR_LINK_BWIDTH)
++	if (misc_stat & MSGF_MISC_SR_LINK_BWIDTH)
+ 		dev_info(dev, "Link Bandwidth Management Status bit set\n");
+ 
+ 	/* Clear misc interrupt status */
 -- 
 2.35.1.1320.gc452695387.dirty
 
