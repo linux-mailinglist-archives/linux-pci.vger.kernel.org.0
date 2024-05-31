@@ -1,247 +1,434 @@
-Return-Path: <linux-pci+bounces-8112-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8113-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6799E8D5EFB
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 11:57:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67D128D5FDB
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 12:44:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2DE91F236B3
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 09:57:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EEA01C231E8
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 10:44:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8E551420A8;
-	Fri, 31 May 2024 09:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10309156241;
+	Fri, 31 May 2024 10:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hu5bMmVB"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IHDAyar2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3CF1CD35;
-	Fri, 31 May 2024 09:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D8A155CBF;
+	Fri, 31 May 2024 10:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717149425; cv=none; b=G3XdTga2krT/U3hOn7davQ/wxbcVaccYs1RIR6zOWy/ymL1O18Uxk2TnmpfKewfBaXHgCVy6YGkBnowmQg99yLuNZdQvRU0Fph2w6xYo/pYgjNns2IQUEB3btyerL+v/4VCirNJQiQ6aZcQu34S2YtjEacbmSYGTZXKlYIyLGww=
+	t=1717152292; cv=none; b=rkeaWIbF0P8IVOhAxbo5xCBgU/05GK5lY3bXDA3zdUtdzQ9y6Xe33SOzQtftlCQA/CGqd3ML/cXYelsrcv6TsoIzitCR0OT9ZQdz5+1Mfc6AWcAcDqL0kqmAdN5MM7n6WT57F4hetL/H1URbG1/bZf9eqTalDNTcc+27kEA/P/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717149425; c=relaxed/simple;
-	bh=pG1FuJNpg4iD5VvuUxyaJG1TPUBzdsFzeembK8i33cE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QSooPByyUkRjkWzBjLh9BoUUR0xWLdDPQmL7VUmXupIGXM6npxUaaZ4ppyNso7km0sJopNLEs4TVdEg5IgahXYmSWpUKq5934p0e6xDaSUltaW92PinNGwqv020vsZa3iIBGASytf3rySiuJNqEWwmCnncAqwLZ6wB96oRCi8RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hu5bMmVB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A56C116B1;
-	Fri, 31 May 2024 09:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717149424;
-	bh=pG1FuJNpg4iD5VvuUxyaJG1TPUBzdsFzeembK8i33cE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hu5bMmVBc986akPDt9Ge9tIAY28LTFO3zwiOt/Joe+hTEGWcqkK1uspvfXfUgXXxe
-	 37xIAg+mkLYdlb3Hs9WdiXpCF1VeQrUhl78CihP1szlXYNSBa15MdkJ/xVV25GxxSe
-	 GoFHLTigYu0YGr12LUzpQPJDP6vTnVpL49ILbXi3zxAMPLAoxFNkYdK1EVTmNJFn7f
-	 CA1vM3tFKh3BQ8+a2Mrj8F6+o+ltODCoNMa/d4HHrTNiLP+FE/f+tft+dne1biNKt8
-	 EM2SBRlBln82aT4Aeemi64mL4//CHv+Iem7UQVhtCKN9l9VGh3B5qbmCfUa1q0Ty4h
-	 r2ZCGXufem1Qw==
-Date: Fri, 31 May 2024 10:56:50 +0100
-From: Lee Jones <lee@kernel.org>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Helge Deller <deller@gmx.de>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v8 23/36] mfd: sm501: Convert platform_data to OF
- property
-Message-ID: <20240531095650.GD8682@google.com>
-References: <cover.1716965617.git.ysato@users.sourceforge.jp>
- <c139d3a42c61d978296aa2e513de073c643e4fbe.1716965617.git.ysato@users.sourceforge.jp>
+	s=arc-20240116; t=1717152292; c=relaxed/simple;
+	bh=hq7gYO45nay0AdXL8vn4EYPw2rnwSb+oMYkezoEp6Vo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Q5VDZE4aSU8rIExFsBhhxvlj/3ifk1w8rVWfhzlEoU3kJH/r4fQYC29dn2PQZ8/cCr0P/SKV2470w/4LwB5YdFLTOdP70EM+d+7nKmizhvb7+eievLs30aJTjsFJn8MWnO7jviZhccrK50vA6l/pN1mGAgJfxX5KRBVtNIOLgw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IHDAyar2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44VAf8o4004209;
+	Fri, 31 May 2024 10:44:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=hq7gYO45nay0AdXL8vn4EYPw2rnwSb+oMYkezoEp6Vo=;
+ b=IHDAyar2HnDfAj/PA5SSD34sv8NawAOmRVh9ej6AxUIfSTCWdvFIY4dnHOGz7gbpJjBa
+ EBAdX7j70b6L3HPUCHhwRvWGvCEY8qc3iQmwlAVeAQ0rJyvQ6Pxik8c7wazcNpiAfPVm
+ CmU9brKqHQv9uGTpTQYIMLXwOgr4k7aXylVJe8Hr/so6J0fDnedgE0jAKtyna19QvI3t
+ xDD+GEe9K+RgUxNEB7Vi5bMsvHJvVOHcrCptolp27mi6g3UmxbzwVnvRm98E9CpilvPs
+ Vwnc+OMRly32eEclVPaNAQ4y5UkhMX53o12Xbr+veh8P0pZiZ6YfdZCoMDgkWWjEJmfN Sw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yfcr0r1g4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 10:44:41 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44VAieMN009269;
+	Fri, 31 May 2024 10:44:40 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yfcr0r1fy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 10:44:40 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44V9AdMf002322;
+	Fri, 31 May 2024 10:44:39 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ydpb0yeca-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 10:44:39 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44VAiYFp27525502
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 May 2024 10:44:36 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0DABF20043;
+	Fri, 31 May 2024 10:44:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7AF4D20040;
+	Fri, 31 May 2024 10:44:31 +0000 (GMT)
+Received: from [9.109.241.85] (unknown [9.109.241.85])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 May 2024 10:44:31 +0000 (GMT)
+Message-ID: <e5db1fdc-166b-441f-a35c-707850b9b43d@ibm.com>
+Date: Fri, 31 May 2024 16:14:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] powerpc: hotplug driver bridge support
+From: Krishna Kumar <krishna.kumar11@ibm.com>
+To: "Oliver O'Halloran" <oohall@gmail.com>,
+        krishna kumar <krishnak@linux.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>, mahesh@linux.ibm.com,
+        Gaurav Batra <gbatra@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Brian King <brking@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+References: <20240514135303.176134-1-krishnak@linux.ibm.com>
+ <20240514135303.176134-3-krishnak@linux.ibm.com>
+ <CAOSf1CFDCTMdmrjoSRdP09rJgtzPVDnCPXpfS-S+J7XKHzKRCw@mail.gmail.com>
+ <fd0e22ab-5998-4b57-828e-224dda6bf490@linux.ibm.com>
+ <CAOSf1CE2r4Gju-BkGVzuAyWoiFZ+9csNMj=v+KkQMmixUAHH6w@mail.gmail.com>
+ <66572ca5-88aa-4495-b926-5a3bfe6ae1da@ibm.com>
+Content-Language: en-US
+In-Reply-To: <66572ca5-88aa-4495-b926-5a3bfe6ae1da@ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c139d3a42c61d978296aa2e513de073c643e4fbe.1716965617.git.ysato@users.sourceforge.jp>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fbLCRSyjOZypEgQKsT7XYFlFTqK0zvtq
+X-Proofpoint-ORIG-GUID: 12Nt6OIwI24x0kWkbD9z5mFHen5yBLFd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-31_07,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2405010000 definitions=main-2405310079
 
-On Wed, 29 May 2024, Yoshinori Sato wrote:
 
-> Various parameters of SM501 can be set using platform_data,
-> so parameters cannot be passed in the DeviceTree target.
-> Expands the parameters set in platform_data so that they can be
-> specified using DeviceTree properties.
-> 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  drivers/mfd/sm501.c           | 238 ++++++++++++++++++++++++++++++++++
->  drivers/video/fbdev/sm501fb.c |  87 +++++++++++++
->  2 files changed, 325 insertions(+)
-> 
-> diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
-> index b3592982a83b..d373aded0c3b 100644
-> --- a/drivers/mfd/sm501.c
-> +++ b/drivers/mfd/sm501.c
-> @@ -20,6 +20,7 @@
->  #include <linux/gpio/driver.h>
->  #include <linux/gpio/machine.h>
->  #include <linux/slab.h>
-> +#include <linux/clk.h>
->  
->  #include <linux/sm501.h>
->  #include <linux/sm501-regs.h>
-> @@ -82,6 +83,16 @@ struct sm501_devdata {
->  	unsigned int			 rev;
->  };
->  
-> +struct sm501_config_props_uint {
-> +	char *name;
-> +	u32 shift;
-> +};
-> +
-> +struct sm501_config_props_flag {
-> +	char *clr_name;
-> +	char *set_name;
-> +	u32 bit;
-> +};
->  
->  #define MHZ (1000 * 1000)
->  
-> @@ -1370,6 +1381,227 @@ static int sm501_init_dev(struct sm501_devdata *sm)
->  	return 0;
->  }
->  
-> +#define FIELD_WIDTH 4
-> +struct dt_values {
-> +	char *name;
-> +	unsigned int offset;
-> +	unsigned int width;
-> +	char *val[(1 << FIELD_WIDTH) + 1];
-> +};
-> +
-> +#define fld(_name, _offset, _width, ...)	\
-> +	{ \
-> +		.name = _name, \
-> +		.offset = _offset, \
-> +		.width = _width,	\
-> +		.val = { __VA_ARGS__, NULL},	\
-> +	}
-> +
-> +static const struct dt_values misc_timing[] = {
-> +	fld("ex", 28, 4,
-> +	    "none", "16", "32", "48", "64", "80", "96", "112",
-> +	    "128", "144", "160", "176", "192", "208", "224", "240"),
-> +	fld("xc", 24, 2, "internal-pll", "hclk", "gpio30"),
-> +	fld("us", 23, 1, "disable", "enable"),
-> +	fld("ssm1", 20, 1, "288", "divider"),
-> +	fld("sm1", 16, 4,
-> +	    "1", "2", "4", "8", "16", "32", "64", "128",
-> +	    "3", "6", "12", "24", "48", "96", "192", "384"),
-> +	fld("ssm0", 12, 1, "288", "divider"),
-> +	fld("sm0", 8, 4,
-> +	    "1", "2", "4", "8", "16", "32", "64", "128",
-> +	    "3", "6", "12", "24", "48", "96", "192", "384"),
-> +	fld("deb", 7, 1, "input-reference", "output"),
-> +	fld("a", 6, 1, "no-acpi", "acpi"),
-> +	fld("divider", 4, 2, "336", "288", "240", "192"),
-> +	fld("u", 3, 1, "normal", "simulation"),
-> +	fld("delay", 0, 3, "none", "0.5", "1.0", "1.5", "2.0", "2.5"),
-> +	{ .name = NULL },
-> +};
-> +
-> +static const struct dt_values misc_control[] = {
-> +	fld("pad", 30, 2, "24", "12", "8"),
-> +	fld("usbclk", 28, 2, "xtal", "96", "48"),
-> +	fld("ssp", 27, 1, "uart1", "ssp1"),
-> +	fld("lat", 26, 1, "disable", "enable"),
-> +	fld("fp", 25, 1, "18", "24"),
-> +	fld("freq", 24, 1, "24", "12"),
-> +	fld("refresh", 21, 2, "8", "16", "32", "64"),
-> +	fld("hold", 18, 3, "fifo-empty", "8", "16", "24", "32"),
-> +	fld("sh", 17, 1, "active-low", "active-high"),
-> +	fld("ii", 16, 1, "normal", "inverted"),
-> +	fld("pll", 15, 1, "disable", "enable"),
-> +	fld("gap", 13, 2, "0"),
-> +	fld("dac", 12, 1, "enable", "disable"),
-> +	fld("mc", 11, 1, "cpu", "8051"),
-> +	fld("bl", 10, 8, "1"),
-> +	fld("usb", 9, 1, "master", "slave"),
-> +	fld("vr", 4, 1, "0x1e00000", "0x3e00000"),
-> +	{ .name = NULL },
-> +};
+On 5/23/24 20:22, Krishna Kumar wrote:
+>
+>
+> Hi Oliver,
+>
+> Thanks for your suggestions. Pls find my response:
+>
+> On 5/20/24 20:29, Oliver O'Halloran wrote:
+>> On Fri, May 17, 2024 at 9:15 PM krishna kumar <krishnak@linux.ibm.com> wrote:
+>>>> Uh, if I'm reading this right it looks like your "slot" C5 is actually
+>>>> the PCIe switch's internal bus which is definitely not hot pluggable.
+>>> It's a hotplug slot. Please see the snippet below:
+>>>
+>>> :~$ sudo lspci -vvv -s 0004:02:00.0 | grep --color HotPlug
+>>>           SltCap:    AttnBtn- PwrCtrl+ MRL- AttnInd- PwrInd- HotPlug+ Surprise-
+>>> :~$
+>>>
+>>> :~$ sudo lspci -vvv -s 0004:02:01.0 | grep --color HotPlug
+>>>          SltCap:    AttnBtn- PwrCtrl+ MRL- AttnInd- PwrInd- HotPlug+ Surprise-
+>>> :~$
+>>>
+>>> :~$ sudo lspci -vvv -s 0004:02:02.0 | grep --color HotPlug
+>>>          SltCap:    AttnBtn- PwrCtrl+ MRL- AttnInd- PwrInd- HotPlug+ Surprise-
+>>> :~$
+>>>
+>>> :~$ sudo lspci -vvv -s 0004:02:03.0 | grep --color HotPlug
+>>>          SltCap:    AttnBtn- PwrCtrl+ MRL- AttnInd- PwrInd- HotPlug+ Surprise-
+>>> :~$
+>> All this is showing is that the switch downstream ports on bus 0004:02
+>> have a slot capability. I already know that (see what I said
+>> previously about physical links). The fact the downstream ports have a
+>> slot capability also has absolutely nothing to do with anything I was
+>> saying. Look at the lspci output for 0004:01:00.0 which is the
+>> switch's upstream port. The upstream port device will not have a slot
+>> capability because it's a bridge into the virtual PCI bus that is
+>> internal to the switch.
+>
+> Let me try to understand your suggestion and what needs to be done now:
+>
+> lspci -nn snippet in current scenario:
+>
+> 0004:01:00.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
+> 0004:01:00.1 Memory controller [0580]: PMC-Sierra Inc. Device [11f8:4052]
+> 0004:02:00.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
+> 0004:02:01.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
+> 0004:02:02.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
+> 0004:02:03.0 PCI bridge [0604]: PMC-Sierra Inc. Device [11f8:4052]
+>
+> lspci -tv snippet in current scenario:
+>
+> +-[0001:00]---00.0-[01-0a]--+-00.0-[02-0a]--+-00.0-[03-07]--
+>  |                           |               +-01.0-[08]--+-00.0  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+>  |                           |               |            +-00.1  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+>  |                           |               |            +-00.2  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+>  |                           |               |            \-00.3  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+>  |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
+>  |                           |               \-03.0-[0a]----00.0  IBM PCI-E IPR SAS Adapter (ASIC)
+>  |                           \-00.1  PMC-Sierra Inc. Device 4052
+>
+> C5 bus address:
+>
+> [root@ltczzess2-lp1 ~]# cat /sys/bus/pci/slots/C5/address
+> 0004:02:00
+> [root@ltczzess2-lp1 ~]#
+>
+> 0004:01:00.0 doesn't have hotplug capability but 0004:02:00.0 does
+> have this capability. Below snippet tells about this:
+>
+> [root@ltczzess2-lp1 ~]# sudo lspci -vvv -s 0004:01:00.0 | grep --color HotPlug
+> [root@ltczzess2-lp1 ~]#
+> [root@ltczzess2-lp1 ~]# sudo lspci -vvv -s 0004:02:00.0 | grep --color HotPlug
+>         SltCap:    AttnBtn- PwrCtrl+ MRL- AttnInd- PwrInd- HotPlug+ Surprise-
+> [root@ltczzess2-lp1 ~]#
+>
+> In Function -  pnv_php_register_one() is responsible for slot creation from
+> hotplug capable device node:
+>
+> Below is the current code that does check the device node for hot plug
+> capability and takes the decision
+>
+>  /* Check if it's hotpluggable slot */
+>         ret = of_property_read_u32(dn, "ibm,slot-pluggable", &prop32);
+>         if (ret || !prop32){
+>                 return -ENXIO;
+>         }
+>
+> Its obvious that 0004:01:00.0 does not get above criteria fulfilled but
+> 0004:02:00.0 does, so is the current behavior (Upstream port is not became
+> C5 slot but downstream port became C5 slot).
+>
+> I am summarizing your suggested changes. Please let
+> me know if I've got it right:
+>
+> 1. Do you want me to modify the code so that the C5
+> device-bdf and bus-address become 0004:01:00/0004:01
+> instead of 0004:02:00/0004:01?
+>
+> 2. When performing a hot-unplug operation on C5,
+> should all devices from 0004:01 be removed? And
+> should all devices from 0004:02 also be removed?
+> I think the answer is yes, but please confirm.
+>
+> 3. When performing a hot-plug operation on C5,
+> should all the devices removed earlier from 0004:01
+>  and 0004:02 be re-attached?
+>
+> 4. Will there be any PCIe topology changes in this workflow?
+>
+> Once you confirm the above requirements, we can discuss
+> how to proceed further.
+> I have some follow up questions from your last mail and I am
+> putting these questions in below paragraphs as inline statements.
+> It will confirm me if we should do above things or not.
+>
+>
+>>> It seems like your explanation about the missing 0004:01:00.0 may be
+>>> correct and could be due to a firmware bug. However, the scope of this
+>>> patch does not relate to this issue. Additionally, if it starts with
+>>> 0004:01:00.0 to 0004:01:03.0, the behavior of hot-unplug and hot-plug
+>>> operations will remain inconsistent. This patch aims to address the
+>>> inconsistent behavior of hot-unplug and hot-plug.
+>>>
+>>> *snip*
+>>>
+>>>> It might be worth adding some logic to pnv_php to verify the PCI
+>>>> bridge upstream of the slot actually has the PCIe slot capability to
+>>>> guard against this problem.
+>>> We can have a look at this problem in another patch.
+>> The point of this series is to fix the behaviour of pnv_php, is it
+>> not?
+>
+> Yes and we will do necessary things.
+>
+>> Powering off a PCI(e) slot is supposed to render it safe to
+>> remove the card  in that slot.
+>
+> Do you mean physical-removal of the device after power-off ?
+>
+>>   Currently if you "power off" C5, the
+>> kernel is still going to have active references to the switch's
+>> upstream port device (at 0004:01:00.0) and the switch management
+>> function (at 0004:01:00.1).
+>
+> Yes, since we are only operating on the downstream port of C5,
+> upstream ports' reference to the kernel will remain the same.
+>
+>> If the kernel has active references to PCI
+>> devices physically located in the slot we supposedly powered off, then
+>> the hotplug driver isn't doing its job.
+>
+> We have only powered off the downstream ports, not the upstream port.
+> The upstream port will remain powered on. Do you mean to say that it
+> will cause a problem if we physically remove the device while the
+> upstream port is powered on and the downstream port is powered off?
+> Will it cause a kernel crash? Is this the reason for designating the
+> upstream port as a C5 slot and performing a hot-plug operation on it?
+> Is it correct to select a device port that is not hot-pluggable,
+> designate it as a C5 slot, and perform a hot-plug operation on it?
+>
+>
+>> The asymmetry between hot add
+>> and removal that you're trying to fix here is a side effect of the
+>> fact that pnv_php is advertising the wrong thing as a slot.
+>
+> Pnv-php is displaying the information, what it receives from the
+> device node property. We will attempt to modify the code
+> path that is responsible for this. I am not sure yet what
+> additional code is needed for this, but I will figure it
+> out. Is it okay to change this code?
+>
+>>   I think
+>> you should stop pnv_php from advertising something as a slot when it's
+>> not actually a slot because that's the root of all your problems.
+>
+> Okay, I am aligned but need some more clarification. Currently,
+> we are observing this behavior with the PMC-Sierra bridge.
+> Will this behavior occur with all bridges? In other words,
+> will the upstream port capability not be hot-pluggable for
+> all bridges and switches, and therefore not be considered
+> for slot selection?
+>
+> In a previous email, you mentioned that this problem is due
+> to a firmware bug, causing the driver to behave incorrectly
+> and advertise the wrong port as a slot. Assuming the firmware
+> bug is not present, what will be the behavior? Will there be
+> any expected PCI-topology changes in the above "lspci -tv"
+> command? Also, if the firmware bug is not present, do we still
+> need to make changes to the driver code?
+>
+>
+> Best Regards,
+> Krishna
 
-I've been avoiding this set for a while now!
 
-I appreciate the amount of work that you've put into this, but this is a
-bit of a disaster.  It's a hell of lot of over-complex infrastructure
-just to pull out some values from DT.
+While I am still waiting for a response on the above points,
+I would like to add a few more points here:
 
-Forgive me if I have this wrong, but it looks like you're defining
-various structs then populating static versions with hard-coded offsets
-into DT arrays!  Then you have a bunch of hoop-jumpy functions to
-firstly parse the offset-structs, then conduct look-ups to pull the
-final value which in turn gets shifted into an encoded variable ready
-for to write out to the registers.  Bonkers.
+1. The connection between the upstream and downstream
+ports is vendor-specific, and we cannot control this.
 
-What does 'timing' even mean in this context?  Clocks?
+2. When running "lspci -vvv" on the upstream port, it neither
+shows its a slot nor a hotplug slot. This is the reason pnv_php
+does not advertise the upstream port as a slot. I have observed
+similar behavior for upstream and downstream ports on other
+architectures and with other switches as well.
 
-What other devices require this kind of handling?  Why is this device so
-different from all other supported devices to date?  Instead of
-attempting to shoehorn this into a 20 year old driver, why not reshape
-it to bring it into alignment with how we do things today?
 
-E.g. handle all clocking from the clock driver, all display settings
-(including timing?) from the display driver, etc.
+Snippet for Upstream Port, showing it is neither a slot nor a hotplug
+slot.
 
--- 
-Lee Jones [李琼斯]
+# lspci -vvv -s 0004:01:00.0 | grep -i slot
+            ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ SlotPowerLimit 0.000W
+            TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+[root@ltczzess2-lp1 ~]#
+
+# lspci -vvv -s 0004:01:00.0 | grep -i Upstream
+    Capabilities: [40] Express (v2) Upstream Port, MSI 00
+             Retimer- 2Retimers- CrosslinkRes: Upstream Port
+        ACSCap:    SrcValid- TransBlk- ReqRedir+ CmpltRedir+ UpstreamFwd- EgressCtrl- DirectTrans+
+        ACSCtl:    SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
+#
+
+Downstream Port snippet : Its a slot and hotplug slot too.
+
+#
+# lspci -vvv -s 0004:02:00.0 | grep -i slot
+    Physical Slot: C5
+    Capabilities: [40] Express (v2) Downstream Port (Slot+), MSI 00
+            TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+            Slot #1, PowerLimit 0.000W; Interlock- NoCompl+
+#
+
+# lspci -vvv -s 0004:02:00.0 | grep -i hot
+        SltCap:    AttnBtn- PwrCtrl+ MRL- AttnInd- PwrInd- HotPlug+ Surprise-
+        Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+#
+
+3. The devices are connected to the downstream port, and hotplug
+operations should only occur on these ports, not on the upstream port.
+
+4. The upstream port and downstream port remain on different buses.
+I have observed this behavior with other architectures and switches too.
+
+5. Performing a poweroff operation on different ports of the bridge
+and the devices behind them does not cause any problems for the
+available upstream port. I have not encountered any tests/scenarios
+where this could create a problem.
+
+Taking all of the above points into consideration, I do not see any need
+for further code changes in the pnv_php driver regarding this matter.
+
+
+
+>
+>>> We wanted to handle the more generic case and did not want to be confined to
+>>> only one device assumption. We want to fix the current inconsistent behavior
+>>> more generically.
+>> Right, as I said above I don't think handing the more generic case is
+>> actually required if pnv_php is doing its job properly. It doesn't
+>> hurt though.
+>>
+>>> Regarding the fix, the fix is obvious:
+>> really?
+>>
+>>> We have to traverse
+>>> and find the bridge ports from DT and invoke  pci_scan_slot() on them. This will
+>>> discover and create the entry for bridge ports (0004:02:00.0 to 0004:02:00.3 on
+>>> the given bus- 0004:02). There is already an existing function, pci_scan_bridge()
+>>> which is doing invocation of pci_scan_slot () for the devices behind the bridge,
+>>> in this case for  SAS device. So eventually, we are doing a scan of all the entities
+>>> behind the slot.
+>> I already read your patch so I'm not sure why you feel the need to
+>> re-describe it in tedious detail.
+>>
+>>> Would you like me to combine the non-bridge and bridge cases into one? I can attempt
+>>> to do this. Hopefully, if we incorporate the iterate sibling logic case correctly,
+>>> we may not need to maintain these two separate cases for bridge and non-bridge. I
+>>> will attempt this, and if it works, I will include it in the next patch. Thanks.
+>> Yes, do that.
+
+A single call of pci_scan_slot is sufficient to power on the devices in the scenario
+with multiple ports on the same card. However, it is not enough for a switch
+containing multiple ports. If the check is removed and we rely on the logic to
+traverse all the sibling device nodes and invoke pci_scan_slot() on each, in
+this case, device initialization of NIC ports (represented below) in terms of bar region
+and so will occur multiple times. Although this is not a problem and it works fine, we
+have to make a choice whether to proceed with or without the check.
+
+
+Snippet showing multiple port from a single card. This is not on bridge but on same
+card.
+
++-[0001:00]---00.0-[01-0a]--+-00.0-[02-0a]--+-00.0-[03-07]--
+ |                           |               +-01.0-[08]--+-00.0  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+ |                           |               |                    +-00.1  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+ |                           |               |                    +-00.2  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+ |                           |               |                     \-00.3  Broadcom Inc. and subsidiaries NetXtreme BCM5719 Gigabit Ethernet PCIe
+ |                           |               +-02.0-[09]----00.0  Broadcom / LSI SAS3216 PCI-Express Fusion-MPT SAS-3
+ |                           |               \-03.0-[0a]----00.0  IBM PCI-E IPR SAS Adapter (ASIC)
+ |                           \-00.1  PMC-Sierra Inc. Device 4052
+
+
+Best regards,
+Krishna
+
+
+>> Also, do not post HTML emails to linux development lists. It breaks
+>> plain text inline quoting which makes your messages annoying to reply
+>> to. Some linux development lists will also silently drop HTML emails.
+>> Please talk to the other LTC engineers about how to set up your mail
+>> client to send plain text emails to avoid these problems in the
+>> future.
+>>
+>> Oliver
 
