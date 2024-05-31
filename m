@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-8110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 114218D5D37
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 10:54:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 234098D5D39
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 10:54:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 425641C21E01
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 08:54:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B669B2170D
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 08:54:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C3A4155C94;
-	Fri, 31 May 2024 08:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33DD5155CBA;
+	Fri, 31 May 2024 08:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FombdEQO"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aF8IS/I7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449B215575A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FB0155A47;
 	Fri, 31 May 2024 08:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717145664; cv=none; b=oqMx1djMiHcdYYB0sm7VgqG3CGSHJpX/tDl8gARary9QxXy7ptURfLBWfRx2/U9tpgpM7Hk6l9ExwdUK2pVIJw3VnnGDZ6WIN66oSLShJtgDFpgyejUKIJIp9qyurXnqTCQNyXlQpB8rKqLFOvUylqs57QRNgg4HIlYlikYjif8=
+	t=1717145665; cv=none; b=pnd+q0PtzzHywE722q6GMRXlameCu9i11+3QJpssCMciiOyFbD/gXw88e4nQu4rqDfJ4yKL8rxfhTfWpoDrdWlGIWXy2yPJIbDZSnPOz+Fyz9u7nli/p0HVXWluRJ/W/yOfaeJjEb4rwyQ4ldBH2m3pAxiXB68QjX2ai+ax8M2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717145664; c=relaxed/simple;
-	bh=Oo6bxxOy97R0LewTp0VK1yx3l148GkL3pKqSia9JUdA=;
+	s=arc-20240116; t=1717145665; c=relaxed/simple;
+	bh=KScAjbC3/N4XqPhpvZ4fxFgXP2QfN9P2zjaYB9sejkQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g+GpnnSQb9k/tp9tHrH+s25+RgE6fK9f6HqX68rF1mR7lKutEro6+ENG4GbkIGM4vJYTUOPhPREDsIEopUE3xSSvAtTWg4N/yHpmUbeI/sVqazj9Eg3ZjHDBR3yNLX4/HzouhTIKa7fkwyBEV9KeVRLDeMFtxcQ0xhmTTyx6dOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=FombdEQO; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=suSsL1kX71Csob1U7oiwvl9H7z6RBtwXRSNs5ngLOkzEYm7fjkQXAyXJz3xT7y8dJNhZB73sENReK8B40D5C86V2rb/9hmWpO3fPNRk4lNhJV8czo7Dp6lGxoLp4pNPmYL+EVYxtBy43cehynzaEaqhIoXQR/8aLD22pE0B92E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=aF8IS/I7; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1717145662; x=1748681662;
+  t=1717145663; x=1748681663;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Oo6bxxOy97R0LewTp0VK1yx3l148GkL3pKqSia9JUdA=;
-  b=FombdEQOWgr36mzF8T/rdRy2ZoNUyYYxgGGq2g1xCYc2KCvmP9dhW7/w
-   kZIrqEr9QWOHr86KfDTL/h5xjcBw0pc+SGSWoNd/O5qlTkScvxSYgH8oL
-   lnOyblJLrE/lfrrzNv2St2gKdyOlpJjGsrdE58C1t/7qxNw2UP8XDleHs
-   CtsaTbZz2/3BW5WylcTfhD3a46afrt3M3LjFudCpM8sBOc1/Uv2aUHs0g
-   aBbnEPcLOKOwNaM9loB1zgYRgSCRPE1pxC18UFjOZJVdvEZirjzHW60ao
-   JlL27FpnVm7+GXJufemQXobgXyh+O0U5c7gyamQl8uetOui8sxXdcCK4s
-   w==;
+  bh=KScAjbC3/N4XqPhpvZ4fxFgXP2QfN9P2zjaYB9sejkQ=;
+  b=aF8IS/I7XdO6x2gQfqJMa65QYr/HrMLiFu6mqYAiYqk0HXXzyLv2WQ9X
+   WpieHhequGYu4ZFRljCtGqX6SfkCBSCopZNCbtZDl9NsXkH07US5nCBUf
+   0qIjVn7kiDT9m5SBWyjWF8FEnrKkUouNYWdyQoT2zk4e/xlScXugGiLGy
+   VLJOte0ejxKQYgkiBxtHRwTdvOCOv68spQseTNbxqFbfknJgP5v30OrqL
+   mT3NVKTN61606KhEYUDzCVwF1+FiVw36y+97byj55rITozKNtP2gbF5tv
+   a3KSp8Ai1fWubsbyYPRwc1OiqPdQMJd4cWGsEKdtY1gc77t2bm4ZV9XSh
+   A==;
 X-CSE-ConnectionGUID: l/lpyU7jQm+PQYj0dIm0ag==
-X-CSE-MsgGUID: qmmgSkVxTHeMUclhTpfFRw==
+X-CSE-MsgGUID: 2euRoBfQQnajzmqfAz1L6A==
 X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="194194715"
+   d="scan'208";a="194194718"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 31 May 2024 01:54:19 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 31 May 2024 01:54:00 -0700
+ 15.1.2507.35; Fri, 31 May 2024 01:54:03 -0700
 Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex03.mchp-main.com
  (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Fri, 31 May 2024 01:53:58 -0700
+ Transport; Fri, 31 May 2024 01:54:02 -0700
 From: Daire McNamara <daire.mcnamara@microchip.com>
 To: <linux-pci@vger.kernel.org>
 CC: Conor Dooley <conor.dooley@microchip.com>, Lorenzo Pieralisi
@@ -66,9 +66,9 @@ CC: Conor Dooley <conor.dooley@microchip.com>, Lorenzo Pieralisi
 	<bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
 	<linux-riscv@lists.infradead.org>, Daire McNamara
 	<daire.mcnamara@microchip.com>
-Subject: [PATCH 1/2] PCI: microchip: Fix outbound address translation tables
-Date: Fri, 31 May 2024 09:53:32 +0100
-Message-ID: <20240531085333.2501399-2-daire.mcnamara@microchip.com>
+Subject: [PATCH 2/2] PCI: microchip: Fix inbound address translation tables
+Date: Fri, 31 May 2024 09:53:33 +0100
+Message-ID: <20240531085333.2501399-3-daire.mcnamara@microchip.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240531085333.2501399-1-daire.mcnamara@microchip.com>
 References: <20240531085333.2501399-1-daire.mcnamara@microchip.com>
@@ -81,49 +81,167 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind one of
-three general-purpose Fabric Interface Controller (FIC) buses that
-encapsulate an AXI-M interface. That FIC is responsible for managing
-the translations of the upper 32-bits of the AXI-M address. On MPFS,
-the Root Port driver needs to take account of that outbound address
-translation done by the parent FIC bus before setting up its own
-outbound address translation tables.  In all cases on MPFS,
-the remaining outbound address translation tables are 32-bit only.
+On Microchip PolarFire SoC the PCIe Root Port can be behind one of three
+general purpose Fabric Interface Controller (FIC) buses that encapsulates
+an AXI-S bus. Depending on which FIC(s) the Root Port is connected
+through to CPU space, and what address translation is done by that FIC,
+the Root Port driver's inbound address translation may vary.
 
-Limit the outbound address translation tables to 32-bit only.
+For all current supported designs and all future expected designs,
+inbound address translation done by a FIC on PolarFire SoC varies
+depending on whether PolarFire SoC in operating in dma-coherent mode or
+dma-noncoherent mode.
+
+The setup of the outbound address translation tables in the root port
+driver only needs to handle these two cases.
+
+Setup the inbound address translation tables to one of two address
+translations, depending on whether the rootport is marked as dma-coherent or
+dma-noncoherent.
 
 Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe controller driver")
 
 Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 ---
- drivers/pci/controller/pcie-microchip-host.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-microchip-host.c | 97 +++++++++++++++++++-
+ 1 file changed, 92 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 137fb8570ba2..0795cd122a4a 100644
+index 0795cd122a4a..3042e00cc44e 100644
 --- a/drivers/pci/controller/pcie-microchip-host.c
 +++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -983,7 +983,8 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
- 		if (resource_type(entry->res) == IORESOURCE_MEM) {
- 			pci_addr = entry->res->start - entry->offset;
- 			mc_pcie_setup_window(bridge_base_addr, index,
--					     entry->res->start, pci_addr,
-+					     entry->res->start & 0xffffffff,
-+					     pci_addr & 0xffffffff,
- 					     resource_size(entry->res));
- 			index++;
- 		}
-@@ -1117,8 +1118,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	int ret;
+@@ -30,6 +30,9 @@
+ #define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
+ #define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
  
- 	/* Configure address translation table 0 for PCIe config space */
--	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
--			     cfg->res.start,
-+	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff,
-+			     cfg->res.start & 0xffffffff,
- 			     resource_size(&cfg->res));
++#define MC_MAX_NUM_INBOUND_WINDOWS		8
++#define MPFS_NC_BOUNCE_ADDR			0x80000000
++
+ /* PCIe Bridge Phy Regs */
+ #define PCIE_PCI_IRQ_DW0			0xa8
+ #define  MSIX_CAP_MASK				BIT(31)
+@@ -105,6 +108,7 @@
+ #define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
+ #define  PCIE_TX_RX_INTERFACE			0x00000000u
+ #define  PCIE_CONFIG_INTERFACE			0x00000001u
++#define  TRSL_ID_AXI4_MASTER_0			0x00000004u
  
- 	/* Need some fixups in config space */
+ #define ATR_ENTRY_SIZE				32
+ 
+@@ -931,6 +935,89 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
+ 	return mc_allocate_msi_domains(port);
+ }
+ 
++static void mc_pcie_setup_inbound_atr(int window_index, u64 axi_addr, u64 pcie_addr, size_t size)
++{
++	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
++	u32 table_offset = window_index * ATR_ENTRY_SIZE;
++	u32 atr_sz;
++	u32 val;
++
++	atr_sz = ilog2(size) - 1;
++	atr_sz &= GENMASK(5, 0);
++
++	val = lower_32_bits(pcie_addr) & GENMASK(31, 12);
++	val |= (atr_sz << ATR_SIZE_SHIFT);
++	val |= ATR_IMPL_ENABLE;
++	writel(val, bridge_base_addr + table_offset + ATR0_PCIE_WIN0_SRCADDR_PARAM);
++
++	writel(upper_32_bits(pcie_addr), bridge_base_addr + table_offset +
++	       ATR0_PCIE_WIN0_SRC_ADDR);
++
++	writel(lower_32_bits(axi_addr), bridge_base_addr + table_offset +
++	       ATR0_PCIE_WIN0_TRSL_ADDR_LSB);
++	writel(upper_32_bits(axi_addr), bridge_base_addr + table_offset +
++	       ATR0_PCIE_WIN0_TRSL_ADDR_UDW);
++
++	writel(TRSL_ID_AXI4_MASTER_0, bridge_base_addr + table_offset +
++	       ATR0_PCIE_WIN0_TRSL_PARAM);
++}
++
++static int mc_pcie_setup_inbound_ranges(struct platform_device *pdev, struct mc_pcie *port)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *dn = dev->of_node;
++	struct of_range_parser parser;
++	struct of_range range;
++	int atr_index = 0;
++
++	/*
++	 * MPFS PCIe root port is 32-bit only, behind a Fabric Interface
++	 * Controller FPGA logic block which contains the AXI-S interface.
++	 *
++	 * From the point of view of the PCIe root port, There are only
++	 * two supported Root Port configurations
++	 *
++	 * Configuration 1: for use with fully coherent designs; supports a
++	 * window from 0x0 (CPU space) to specified PCIe space.
++	 *
++	 * Configuration 2: for use with non-coherent designs; supports two
++	 * 1 Gb wide windows to CPU space; one mapping cpu space 0 to pcie
++	 * space 0x80000000 and mapping cpu space 0x40000000 to pcie
++	 * space 0xc0000000. This cfg needs two windows because of how
++	 * the MSI space is allocated in the AXI-S range on MPFS.
++	 *
++	 * The FIC interface outside the PCIe block *must* complete the inbound
++	 * address translation as per MCHP MPFS FPGA design guidelines.
++	 */
++	if (device_property_read_bool(dev, "dma-noncoherent")) {
++		/*
++		 * Always need same two tables in this case.  Need two tables
++		 * due to hardware interactions between address and size.
++		 */
++		mc_pcie_setup_inbound_atr(0, 0, MPFS_NC_BOUNCE_ADDR, SZ_1G);
++		mc_pcie_setup_inbound_atr(1, SZ_1G, MPFS_NC_BOUNCE_ADDR + SZ_1G, SZ_1G);
++	} else {
++		/* Find any dma-ranges */
++		if (of_pci_dma_range_parser_init(&parser, dn)) {
++			/* No dma-range property - setup default */
++			mc_pcie_setup_inbound_atr(0, 0, 0, SZ_4G);
++			return 0;
++		}
++
++		for_each_of_range(&parser, &range) {
++			if (atr_index >= MC_MAX_NUM_INBOUND_WINDOWS) {
++				dev_err(dev, "too many inbound ranges; %d available tables\n",
++					MC_MAX_NUM_INBOUND_WINDOWS);
++				return -EINVAL;
++			}
++			mc_pcie_setup_inbound_atr(atr_index, 0, range.pci_addr, range.size);
++			atr_index++;
++		}
++	}
++
++	return 0;
++}
++
+ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+ 				 phys_addr_t axi_addr, phys_addr_t pci_addr,
+ 				 size_t size)
+@@ -962,11 +1049,6 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+ 	val = upper_32_bits(pci_addr);
+ 	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
+ 	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
+-
+-	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
+-	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
+-	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
+-	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
+ }
+ 
+ static int mc_pcie_setup_windows(struct platform_device *pdev,
+@@ -1130,6 +1212,11 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Configure inbound translation tables */
++	ret = mc_pcie_setup_inbound_ranges(pdev, port);
++	if (ret)
++		return ret;
++
+ 	/* Address translation is up; safe to enable interrupts */
+ 	ret = mc_init_interrupts(pdev, port);
+ 	if (ret)
 -- 
 2.34.1
 
