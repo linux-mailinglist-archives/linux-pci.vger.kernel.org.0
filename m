@@ -1,374 +1,242 @@
-Return-Path: <linux-pci+bounces-8107-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 883648D594A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 06:26:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 283CB8D5CD5
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 10:36:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B4DCB1C2302D
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 04:26:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9363C1F22241
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 08:36:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7850428DC9;
-	Fri, 31 May 2024 04:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8BC01514E3;
+	Fri, 31 May 2024 08:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3UzHQyYp"
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="sKIM6G6W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2045.outbound.protection.outlook.com [40.107.220.45])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2053.outbound.protection.outlook.com [40.107.7.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EF244384;
-	Fri, 31 May 2024 04:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D083814F9F9;
+	Fri, 31 May 2024 08:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717129592; cv=fail; b=COiQAjDa8BNaXBf6yJtU/BNbOSD5ONgtIL8jbSsJg7PhOE9eo32Vtvs1zLn7CzTtf1QNqbw9qURjyJaVQ4ip4M3y3uLsdeK5zgQky5hSFiqqlErwcIFhDwNS+KsnkIsGaqQtjZA9YGRKmBAeGxguM2l3ALuZxlK4pmQu4zWSBLA=
+	t=1717144563; cv=fail; b=dANZHARqG8kMa1nHH7p4hZ3imf2ejr3GTUvgTsdLvAI+iHMDxBTth65mOvkG1YswZxMa1foBGekM0/R+pTqPgsgZucbOgvrm5H+/SIKOvXw2j3xYEOG70gwfbWXIqheZbF6jm8dGEra0jtbaS+QlVCgezmSqHQNZ+mqN3vYaxYw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717129592; c=relaxed/simple;
-	bh=eZUkk+3ym9gOMmQfSDzbu9qjKQDyr+sM8Fijzqv3PKQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Cc/Tr1H6UEEhWGu9tDCc58D64ZJ+KvBijXICo2rvwZMWBvsgf0Vx3Y4/zyT7TODcxJn4k+pkqAGXaGfqwn2iDB52u9k6ZAPqTBZuB/JEFaHTyjBnQWj0lellr+N+9C20zKwtHEOQjPxGdqyuWJkDaPQxQ3/FHM+pDGdIORWeJ0c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3UzHQyYp; arc=fail smtp.client-ip=40.107.220.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1717144563; c=relaxed/simple;
+	bh=KklarpOiiIqqDhsmxtmSJPZNqcSKrY2BgIpQpqgWZig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LsXdvNq+yrhDXi0qr83BaFJxFyv8ciF8Bw6/g+0JnpicMcwKdGwVGOGJMLSEbUL1I+aY8Mz9o6jsokHx4JW0Qwtb307uvWe7pMLNqEfvPFmCHx4702XLIZtabil63Yz/EyzyjpsU4mMbZuSCy4/ouPsZWc41mwkOqoU1M9ot1FY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=sKIM6G6W; arc=fail smtp.client-ip=40.107.7.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oY+25o2MwqD4nSvbgXmCCW3SREVjBEaJTUGB7OtJqXri3vYaGaeggD0CWDyDghsxUCQVrafHdq10t7BownerLESXYrDSbo+AL4Awp7MGy6JKc7L/YcDMvvil52714pyF/z6tmQ3TWfqTQlwwhXpevqM64dQCPOfS+fSzZo67fydO7Vi1vVkJYRyGWL5hXliuCVRElEpWyoumuVUNoop0MNlXdXqpSrTMaqoKqPwSdjbjhZ8qAEwy854GJTP2tf1YkC6pxf4p5ze1QR1N4F3gpPa0zwahl7XZ0dkPVjZztpdhUufcCkIrdnGIxtox6EjM8U7qyaFbFjmvox9uud6HIw==
+ b=f7gJnVz0XrRgFQEsB3RKCjKHAF/2nvDwpqLVt81sBo0RRYXnzNfBb2g6kS2NxdO0Io4NR3Wo1zsqMcKimWONYZGE4J2ZNfS15lu1FIW3bAM1TKKQXtj1hmFRW1QJg6Wa44ZRC/Tjz3JzrU3EgqW0RKDz0FdTXKWNQbGph/Hg4VAhU17wx6Mk7wLARqtWCUODKZf5UvzCxwb0L5kSEOcjCQnvB9yAC13xm2vqIDsjkuiDvWT839hn5JM9IxKP2VgIXeRVF6oNmfW1oB0vPbzed7fSW8SmwiYh5rouVHAXZSt5GNuxBHjtSRwjSqtne2+Tjwos4uVox4i94RctaisYxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ecm3IxR2VHpVYVxiXWjNFPmSiHkI+bfSDNHLUis0Zw=;
- b=XZOcCcEwC/71dsn2oB66BSERBuEM0/NiyZV4LusBoOIlDGPLD7V1zEJ8X4geYFmlt44m5pzUMLeRJRtiifq61HgQ8s3KBj2K3VMRphIrVQ9AJK3kC3Fr/mIsvtKHK9D1wFpKTsxtHnAGnBkIwx4N33IvPE6vnfWB/VTnZeAFMYdb+BIiMoO1WtvHYqKoUHEZrCBCn22eYfB4j//nm3Btm4Va5KQmXYUtXJ6NePesVwCTYBJyCImF2aVZrjpZ4Jm+S1l0U+qE3qOyRoCucS+4dEt+jybW7bepf6SBCPvYo4CHkV4VHBHjW6rUKiEJFWDEiopZ88RRp38jDv+18/AVaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=xmS+E6WGFfUm0ZLVmaJK08+yN75qeoY93Jm0IrhoaWc=;
+ b=Sm08FMqGcbCzB3ldIRHguOFo8VxbypjTgUS0DpSWh5RLxzbqtrI9A0YqaWCn0i42VS669FlUuCbQd2ZBc8dDlNuiLrlgSJKkupdUog0B0AHZRKg+9mBjruLKI0MidczPf8ctV2ygdB0Wv7rfE+/rStLitZfAlcAFCn3Zg04MBjHXITybrJP06m8dbwEXQCEt+/yQw1M//GVoPxYV2V3DoeHkbjHBOHQnjDUrJ11aiEbSu3ooF0Jzoo4qoaObq69VssjKUOVaBi3KiDep32GsSsUDrmVVBqb3+ELoj5vWnNghT0znESlskCSCdikYUYzWc5GBwJv5TabABf7TINeCZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.205) smtp.rcpttodomain=redhat.com smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ecm3IxR2VHpVYVxiXWjNFPmSiHkI+bfSDNHLUis0Zw=;
- b=3UzHQyYp2BP4yTm8cNuJWgPh1Mhd9TpSmanq9GmkdLrXlifuz1NoZ9LtQZUTIkjJO4YQtxt8yH6FZSWk0yqujAu1KkYnCGNDcUzWx1fzLneO+qLhz/gd+mE1KlzqcwF71fIpI4KM1nQnfPaUKYUarSCaloxCXecUZKxufXMdmCA=
-Received: from DM6PR12MB4958.namprd12.prod.outlook.com (2603:10b6:5:20a::8) by
- DS0PR12MB8069.namprd12.prod.outlook.com (2603:10b6:8:f0::7) with Microsoft
+ bh=xmS+E6WGFfUm0ZLVmaJK08+yN75qeoY93Jm0IrhoaWc=;
+ b=sKIM6G6WO9dsg/ZMVYQQ9SCbOx5ZVWXiXBzfGR4XN+GGx80OHDuoBAoIXCsaCbUj/UNS+hbbaTx1qxpIL5soGB9/KLStyp3BP7YU32WzbmzEh4/odRAv903emXIfDHadihpL0UbnIbiV7FzgfiTL61bddbIqL0/QNbBuZghhzEBuKDoPFRdqspONrJkOXngr/JqAT8TeFW0KMFCGCPTBJTRfA1ev/NZYZLex+67INlOk46ZoEX1fv8AYRlL8VVOsjDKLwUyOB9nSVLSaEyOgJ9fluBTtjrMNRfmTP+SRVIJT6jljnlorks7m96sPbTuJBQjSPFJg2GX6qvx//aKmqg==
+Received: from AS9P251CA0011.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:50f::13)
+ by GV1PR10MB8027.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:a1::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Fri, 31 May
+ 2024 08:35:55 +0000
+Received: from AM1PEPF000252DD.eurprd07.prod.outlook.com
+ (2603:10a6:20b:50f:cafe::b2) by AS9P251CA0011.outlook.office365.com
+ (2603:10a6:20b:50f::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24 via Frontend
+ Transport; Fri, 31 May 2024 08:35:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.205)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.205 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.205; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.205) by
+ AM1PEPF000252DD.mail.protection.outlook.com (10.167.16.55) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7633.21; Fri, 31 May 2024 04:26:28 +0000
-Received: from DM6PR12MB4958.namprd12.prod.outlook.com
- ([fe80::bfe4:f407:e431:d81f]) by DM6PR12MB4958.namprd12.prod.outlook.com
- ([fe80::bfe4:f407:e431:d81f%4]) with mapi id 15.20.7633.021; Fri, 31 May 2024
- 04:26:28 +0000
-From: "Chang, HaiJun" <HaiJun.Chang@amd.com>
-To: "Shi, Lianjie" <Lianjie.Shi@amd.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-CC: "Jiang, Jerry (SW)" <Jerry.Jiang@amd.com>, "Zhang, Andy"
-	<Andy.Zhang@amd.com>, "Shi, Lianjie" <Lianjie.Shi@amd.com>
-Subject: RE: [PATCH 1/1][v2] PCI: Support VF resizable BAR
-Thread-Topic: [PATCH 1/1][v2] PCI: Support VF resizable BAR
-Thread-Index: AQHarOcBtJrIjaBLckq6krqO8/wYQbGwyqug
-Date: Fri, 31 May 2024 04:26:27 +0000
-Message-ID:
- <DM6PR12MB49588A7576D6DBE281A4340F81FC2@DM6PR12MB4958.namprd12.prod.outlook.com>
-References: <20240523071114.2930804-1-Lianjie.Shi@amd.com>
- <20240523071114.2930804-2-Lianjie.Shi@amd.com>
-In-Reply-To: <20240523071114.2930804-2-Lianjie.Shi@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=ee765cb3-d738-44a1-859e-4f5a2733d7ec;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2024-05-31T04:23:06Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR12MB4958:EE_|DS0PR12MB8069:EE_
-x-ms-office365-filtering-correlation-id: d0810ff5-bafa-40d9-dfb3-08dc8129d6c3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|376005|366007|38070700009;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?/7j65yb51V/faUHzr3bsBD3KEIMMZtlwaB+WgNtbRdfxSXO1pYtswaVaw4tT?=
- =?us-ascii?Q?Da7NWcEFFoill1TMAyGrSj/qXGggmzzjc8jdw5Q5xYOLzMqfdxENxLhwLu9O?=
- =?us-ascii?Q?Qd02LkCp6WdDjMr1iVYRTfNw6dis9PJtV0m7hj4uFzYeYjy1YF8LdvF+z3yb?=
- =?us-ascii?Q?a596zLmbgHCimV6Q6wuRkWIDlbnpjz90cwuI9O+uWCvE89pO1obluekgJONL?=
- =?us-ascii?Q?P+ZnhOTI9eji3GLesx7EU/2ktEi4N7SSDTgJTNwS/tizqRMtc//q2tURsfKQ?=
- =?us-ascii?Q?PVel6SVnLdl1WmgOMcm35zOp8zUbz/6jw8zvPV1fGR2Iscjfjr/BkwsSsRd3?=
- =?us-ascii?Q?+U0RhEJ+XbPfBMGJXs++S6vh4L6WT5fhxCg53traEwNjie679j9EqGahbDue?=
- =?us-ascii?Q?jgfqS/82bsWLHLW+HE9t/ZKUtx70Rd3FvIDVhGrX3nBSlxOhxsxUwD1GI1vg?=
- =?us-ascii?Q?DTyfK6vK3BgsuYU8xgm48YyiyR3n4hSiJSB1wyXSzCbP6YgdmC+OwWzYuiSU?=
- =?us-ascii?Q?Z+QdOxGvU941ZrAUbTt3pbeXs/DEMn385d486Fy6PXS1R9DCYXZEM2wJtB+U?=
- =?us-ascii?Q?m3kXwPqmLNzXwo00msDJDu4/wZPRDB1b2GHZlp32HhDKTMMrl3HSSTFoU19S?=
- =?us-ascii?Q?dMrXltzYX8rW0O8fqhOqzMpcuNqNLbM+xL+56oLSchBtrlxDWmLIYIKINPMA?=
- =?us-ascii?Q?FcmMow1plVzKZik2F7rlbZVwqGXjIBEPhAETicYYPyj1TKyFVQPvk1ydzPEU?=
- =?us-ascii?Q?rfqMEnxCgdEYQnnAhE65wmV9MmXDGrxc7BuBq8dvaPs/4nN8Lpz2mxrNbCLY?=
- =?us-ascii?Q?J5OhLhssF09YmUv6PZ62tqH4LjZUhq5Z0Cp3for7f8HvjDoqbVbNE4fugmmL?=
- =?us-ascii?Q?YBLmDYVAtOCVfvSzWH9XQPtSogjaINkXvCfP0z5vd5dF2HH0taM2Po766BmQ?=
- =?us-ascii?Q?EA1Ialj63B6ZE8JLAJFpuEM07GckLCGmILGRczqBCCt0Iwoegc2827VnytQc?=
- =?us-ascii?Q?xKlsEqOgZ3Asah3OMu7mmHjmOUCUr6STsr66dj3/BgD/QWR4mRWPOzDjkx5Q?=
- =?us-ascii?Q?TZzpkU0TmuE6wWyTOTWcs/+aGe+K/44iEC9E12x946jbBHuLkJevw4e2MeB7?=
- =?us-ascii?Q?KvohjRqto54Plz4QUMjEd5mVd6K7w1Nt9AlHucLA8o1+W8D6lMC0HLJaBsJ0?=
- =?us-ascii?Q?ZaggeG+9wp3nDPVciLpEb32R2sZG2MyKq/Q8zmjA9pwWAU6Gnq+hNuytdXKt?=
- =?us-ascii?Q?Ox8dXj8Er/Ao6zvpTLmzT16Ptv5hiMfJviX8t+IHpA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4958.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?k77o2fXpnfF746G6pnUMz/tEirbyO6saIvLq2IVK8Y4y1EdHPgUBLHKnPguR?=
- =?us-ascii?Q?SYX9RE9KITBl5PrtNXlSVCM7FBU+Eg9foiBhxeMn08TiBJOxguqtU4n3XP4K?=
- =?us-ascii?Q?6Z9XFewweL4FwEw+BouVUz5k5eEqqE/8p/Ue08CimesKYOiOTrWBI1v8KJBS?=
- =?us-ascii?Q?MLsskSrKCtzn739ntvEWQzmO8MRt1+AlTu6HsKHRuGz8OmgHhjIAjinPOv9g?=
- =?us-ascii?Q?lkP5+13bEUlxJm+WoiwS3OUJ8isFiOP5nzzqv9XEVtVRnwrk0knz7PDW2fCX?=
- =?us-ascii?Q?hYvEbpheNYbi8384JMZlS+j0zsi+zX+5SK+voipEnl4XPfPiqtkPlxmtYGQk?=
- =?us-ascii?Q?rh9AMZomp+0hTJazkI243JZsv+6GL6v91s4k9u3aubo3OgOPaaqrn+JPw578?=
- =?us-ascii?Q?vceLHG2gjqDc2wgKiZnCnNd0jy08RvwgLOe0HatGeKPI1EYXsZ3x4zrLWx0x?=
- =?us-ascii?Q?EdqMeLn7HtW2QMZ925gCONIYh12GirVWJQMpVClP4Tf83c+/1/bnGO7sAcw/?=
- =?us-ascii?Q?PUHTk/pzfn2OzkD+9+i+xMXwKnq3SlmqQVT/Rjoo23SiL9dL3rQv2bHLEYY5?=
- =?us-ascii?Q?zBhNyAk0huK0qr1ZsipqIl8JZMUsDwzRtEVexvBr/EXf+nQCIN1IiCNbdjPY?=
- =?us-ascii?Q?cF4+s0P7nj5zcRivJRIj9zh4yTOulAKR7aYhbV67EcPyTSrg4scPXhs8BMA9?=
- =?us-ascii?Q?wG5n5nob96QKXx+LejMupkL5YQ/HjztL6ucDuOxro3rQLLOcSn/Q/Q+tT8K6?=
- =?us-ascii?Q?FHlnN7C4D9of7nP9B8QGKnRY0vzqARKr2ASeGdyi5Jwj7DFK2WPsbiBcBqFA?=
- =?us-ascii?Q?dPewmqQG/K+DUKY8ssamUzeQ0mXsJ/FxupAywEi170TiAzAbRbbhe0wYYkJm?=
- =?us-ascii?Q?D++HQSjxeKoIl3ClbCeCwWfi4/RHS/NISR4TjTPIBEQes5qx9ZmVmKJ7Fc2e?=
- =?us-ascii?Q?dk5TamFz/xZKaOWUxebqe+CRWF+libvPZcgGZJyPIxLJ2PBdBWMAeOF/8ueX?=
- =?us-ascii?Q?gVIiQaSlxnZBv9ngxAKWPA1vZLFiQ71XED6sG6BbbIY+w4Hfk0Ckb8Qmzeqr?=
- =?us-ascii?Q?xLNTVp466yk2T/Ruvb7TJQeyKoMJZEYIl1XWk0eYy9whu4uZEiiTOYwEe2Du?=
- =?us-ascii?Q?csZe+sc1WzSCCSJLIQGPXB7mUD7JdwEEQiq1pbgyEysAg2TKCroDK5cwbKni?=
- =?us-ascii?Q?a0gaK1uin8nVZSM/sGQIMPBmPIvlggP+fROUi90+MWVgQstzHWGSJH+lz2Xx?=
- =?us-ascii?Q?vpF1ycw9zgcbqO7Xg6ssc1mOBRHHLLS248aaVWzwB9LyLjYSapkhQ5oxoyNl?=
- =?us-ascii?Q?bBMmJ97ZAVROmRjSvYI599GSl3xq0ucGEFuBOzqk0wk7ofw5KafmXKNV3ocq?=
- =?us-ascii?Q?KyvGe6t69J3UtcNdQggzNpP+GVen07cfyozQ84cBd0CnSdYR9KKL12Y3j4MQ?=
- =?us-ascii?Q?kjJ04RzITmzy2HuqcJVExnz3BM7hr/Y5H5JcRJ3Q4PDWu8KBaklixi/StNwI?=
- =?us-ascii?Q?R/qBcI4qs5VnOW32PrYUGsbyEtOtkEVZAw8lIS850Wkbei/VsIThudIlG16V?=
- =?us-ascii?Q?pX6yBSGGTzmm6P3QOF8=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ 15.20.7633.15 via Frontend Transport; Fri, 31 May 2024 08:35:54 +0000
+Received: from SI-EXCAS2001.de.bosch.com (10.139.217.202) by eop.bosch-org.com
+ (139.15.153.205) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 31 May
+ 2024 10:35:46 +0200
+Received: from [10.34.222.178] (10.139.217.196) by SI-EXCAS2001.de.bosch.com
+ (10.139.217.202) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 31 May
+ 2024 10:35:46 +0200
+Message-ID: <f397640b-23ed-412a-a1ac-59b7c56e5110@de.bosch.com>
+Date: Fri, 31 May 2024 10:35:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4958.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0810ff5-bafa-40d9-dfb3-08dc8129d6c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2024 04:26:27.6047
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 05/11] rust: add revocable objects
+To: Danilo Krummrich <dakr@redhat.com>, <gregkh@linuxfoundation.org>,
+	<rafael@kernel.org>, <bhelgaas@google.com>, <ojeda@kernel.org>,
+	<alex.gaynor@gmail.com>, <wedsonaf@gmail.com>, <boqun.feng@gmail.com>,
+	<gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+	<a.hindborg@samsung.com>, <aliceryhl@google.com>, <airlied@gmail.com>,
+	<fujita.tomonori@gmail.com>, <lina@asahilina.net>, <pstanner@redhat.com>,
+	<ajanulgu@redhat.com>, <lyude@redhat.com>
+CC: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+References: <20240520172554.182094-1-dakr@redhat.com>
+ <20240520172554.182094-6-dakr@redhat.com>
+Content-Language: en-US
+From: Dirk Behme <dirk.behme@de.bosch.com>
+In-Reply-To: <20240520172554.182094-6-dakr@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM1PEPF000252DD:EE_|GV1PR10MB8027:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb294c52-74b4-42f7-d3d3-08dc814cafd9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|36860700004|7416005|1800799015|82310400017|921011;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WFArelh1K1daSlNMZlZPTW04UWNtOENTdTJYa21mTW9GN3gwWkE1UDFiakFT?=
+ =?utf-8?B?QVJjTE90aDQwZjU4UUVvZWlPaDltVVBGZUFGTFJZRVQxMGlBQVI2NTVnSHNT?=
+ =?utf-8?B?RHB2N2RNQ2dPa3I2L1hYSnc2ajR2OFZ5Qk5maXYzL1Z1ekJ0UTJOR0g5dWRn?=
+ =?utf-8?B?VU1EYWR2bVVaZWJSSk1OcGsxTTRrRzFTRksrZDByTzMzMVJUazZ5SW1QWFo2?=
+ =?utf-8?B?a2RUQUxGRmI5V1FjNW5seHhZa2F5YmJrSC9OVWJ6ZzZ0ajF4dzdrQnNiMFFP?=
+ =?utf-8?B?R3U1bTBCYVhiYzdpc0hjYlVLRjVXYWxjVloxVU0wN1M3WTJyNlpub1MrYWlB?=
+ =?utf-8?B?TU9SeElRZWhlMGZKZ2JucS95YWFBZUVmaEw0YVgyWW1PYjk2R3llUEgxd0ZR?=
+ =?utf-8?B?ZUlIeEtOWitJckR4N3NmbGkzMFE5QlpGdEVRWnRDY21YTnc0TnZRSFMrWmU3?=
+ =?utf-8?B?TmR2L2hKQ2RRSWFxNlBzWEpuNHJIODBveUZSbys4cENJbFd3VWNBUHRFZnlo?=
+ =?utf-8?B?NVFHWXBPZ2tkQ3loL3R1ZElBWVlPckxzdFVjZFZMNzliakV2Q28zamQ0YTMr?=
+ =?utf-8?B?OFNCckxmZ1pEUGdJRTA4MWRWZHJtVDRLcEdXdkRmSmhrVWdaY3YxUHFXSldZ?=
+ =?utf-8?B?eGl5ZStuSzI3M1Y0MnVKWFlvdjBkeXRXQXlCMzB6ek8yR2hvb3F2ZEdRK1RG?=
+ =?utf-8?B?RVovRkQrTDNnSjBWc01HQ25QQ3dPOXdSK29ZTFBPVVJKbUx1Z2dLRW5LY1Jv?=
+ =?utf-8?B?OHNUREthL2ZUcCs1WDVDWFI1akdsc09VMnVyOUNWczhUMVptYmI1aG1uMlRX?=
+ =?utf-8?B?R1VVQkFUaUJrRi9janZYM3Q0ajVHYmFpUG90cXY5R05zN1VCK2txSDg0d0JT?=
+ =?utf-8?B?N0EvaExlL0hENzVyeFcxTEJXRWRMNENvaHdaTnZQbGt3WHdLRUgveDBhNUtC?=
+ =?utf-8?B?ait4NFpsaHo3U1NCdnFzeWNZWmNKZGtnc0VkR1RaR2VLNmxOVXQzTk82ZnRO?=
+ =?utf-8?B?UGJMcDFRSFhNSHczRExNUktiaHNpVDVBK1kyRTRDc29KT0RZTVpRUGcwbDNx?=
+ =?utf-8?B?OE9ub0RvaU0xcSszUUprZEk3VTk0R2hqN2x1Uzh5endHeXN1TWM5WEUzN3Vh?=
+ =?utf-8?B?OWd4K3p3Zng5UHlLTE4xRGlubTZlbjAvZXdOSFpWL3FUcEMza1RzVzI1UThF?=
+ =?utf-8?B?dUFqUHhQNWJNMTRpK1dqd2JUUUVneC9qVm85dVB1dTNnT0EvR3JRM2ZEaDdP?=
+ =?utf-8?B?TFVXRjgrN09xalNkbVhuKzNNY3hIOFFBenVMSjdHeFMrT3NwQXBDUkxHTFJ4?=
+ =?utf-8?B?VFJiaXhUYjJNMGRrWUhiRHhZRlduYkZkRVlPYXBFNGMzTkVsamxZN2FtWlhj?=
+ =?utf-8?B?eUhybm9QYVJsdk9GVXRhRGdvQWltRXhZSzRQa2VtMXgxY0taOENzaFFQVWFG?=
+ =?utf-8?B?MG0zS2xXOXZQald6aG4rekt4VXNmMHQ4NVdPRk9sZ3V5ald1SFQvbUowaWVK?=
+ =?utf-8?B?M015ak9rMVZmeFVzWGNGaCtJTDF3NFlWVytMQmZrWTVDVG1PNTdweXlnUXg5?=
+ =?utf-8?B?VkUxUVFOY0dlUXZZUmhhbWlBRDlsdFZSQkRtOHA2QjNlUnpPdVlEQ3F4N0ZU?=
+ =?utf-8?B?QkZmUXMzUnoyMlM5VGtmejdHRGF4dHRxMEJwQ2NDQlQ5eGlscGZBSllyUnIv?=
+ =?utf-8?B?dWw1WTJQLzUrSmJvVGJkSFZmbDhnU1A1Y0VDWEpmcldyS3A0R0FFSGpKUm9S?=
+ =?utf-8?B?dmtNcU1vV3BxNEMrdENweVZwOWZ0dER1VWMvbUdqcFBwcG1jWEc4S3kzaVRn?=
+ =?utf-8?B?QUpTM3pPNmpLbHFibnhWeDlBWGovWkVqOG02UFhjY08vWnA5K2liVWFya3c5?=
+ =?utf-8?Q?EK2jZf0QBX83S?=
+X-Forefront-Antispam-Report:
+	CIP:139.15.153.205;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(7416005)(1800799015)(82310400017)(921011);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 08:35:54.6928
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: s4H+4g8FyeAktKueqdWSdd1Mmes8ejmqq3MkwJBBdn1sVaIrdEVWA1v9Vamu6IDF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8069
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb294c52-74b4-42f7-d3d3-08dc814cafd9
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.205];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM1PEPF000252DD.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR10MB8027
 
-[AMD Official Use Only - AMD Internal Distribution Only]
+On 20.05.2024 19:25, Danilo Krummrich wrote:
+> From: Wedson Almeida Filho <wedsonaf@gmail.com>
+> 
+> This implements the Revocable and AsyncRevocable types.
+> 
+> Revocable allows access to objects to be safely revoked at run time.
+> 
+> This is useful, for example, for resources allocated during device probe;
+> when the device is removed, the driver should stop accessing the device
+> resources even if other state is kept in memory due to existing
+> references (i.e., device context data is ref-counted and has a non-zero
+> refcount after removal of the device).
+> 
+> AsyncRevocable allows access to objects to be revoked without having to
+> wait for existing users to complete. This will be used to drop futures
+> in tasks when executors are being torn down.
+> 
+> Co-developed-by: Andreas Hindborg <a.hindborg@samsung.com>
+> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+> Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
+> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> ---
+>   rust/kernel/lib.rs       |   1 +
+>   rust/kernel/revocable.rs | 441 +++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 442 insertions(+)
+>   create mode 100644 rust/kernel/revocable.rs
+> 
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 698121c925f3..d7d415429517 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -40,6 +40,7 @@
+>   pub mod net;
+>   pub mod prelude;
+>   pub mod print;
+> +pub mod revocable;
+>   mod static_assert;
+>   #[doc(hidden)]
+>   pub mod std_vendor;
+> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
+> new file mode 100644
+> index 000000000000..71408039a117
+> --- /dev/null
+> +++ b/rust/kernel/revocable.rs
+> @@ -0,0 +1,441 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Revocable objects.
+> +//!
+> +//! The [`Revocable`] type wraps other types and allows access to them to be revoked. The existence
+> +//! of a [`RevocableGuard`] ensures that objects remain valid.
+> +
+> +use crate::{
+> +    bindings,
+> +    init::{self},
+> +    prelude::*,
+> +    sync::rcu,
+> +};
+> +use core::{
+> +    cell::UnsafeCell,
+> +    marker::PhantomData,
+> +    mem::MaybeUninit,
+> +    ops::Deref,
+> +    ptr::drop_in_place,
+> +    sync::atomic::{fence, AtomicBool, AtomicU32, Ordering},
+> +};
+> +
+> +/// An object that can become inaccessible at runtime.
+> +///
+> +/// Once access is revoked and all concurrent users complete (i.e., all existing instances of
+> +/// [`RevocableGuard`] are dropped), the wrapped object is also dropped.
+> +///
+> +/// # Examples
 
-Hi, Bjorn and pci driver maintainers
+You might want to enable the doctest and check if the Examples are at 
+least compiling ;) Here and in devres as well.
 
-Could you review the VF resizable BAR patch?
+Best regards
 
-Thanks,
-HaiJun
+Dirk
 
------Original Message-----
-From: Lianjie Shi <Lianjie.Shi@amd.com>
-Sent: Thursday, May 23, 2024 3:11 PM
-To: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Bjorn Helgaas =
-<bhelgaas@google.com>
-Cc: Chang, HaiJun <HaiJun.Chang@amd.com>; Jiang, Jerry (SW) <Jerry.Jiang@am=
-d.com>; Zhang, Andy <Andy.Zhang@amd.com>; Shi, Lianjie <Lianjie.Shi@amd.com=
->
-Subject: [PATCH 1/1][v2] PCI: Support VF resizable BAR
 
-Add support for VF resizable BAR PCI extended cap.
-Similar to regular BAR, drivers can use pci_resize_resource() to resize an =
-IOV BAR. For each VF, dev->sriov->barsz of the IOV BAR is resized, but the =
-total resource size of the IOV resource should not exceed its original size=
- upon init.
-
-Based on following patch series:
-Link: https://lore.kernel.org/lkml/YbqGplTKl5i%2F1%2FkY@rocinante/T/
-
-Signed-off-by: Lianjie Shi <Lianjie.Shi@amd.com>
----
- drivers/pci/pci.c             | 47 ++++++++++++++++++++++++++++++++++-
- drivers/pci/setup-res.c       | 45 +++++++++++++++++++++++++++------
- include/uapi/linux/pci_regs.h |  1 +
- 3 files changed, 85 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index e5f243dd4..12f86e0=
-0a 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1867,6 +1867,42 @@ static void pci_restore_rebar_state(struct pci_dev *=
-pdev)
-        }
- }
-
-+static void pci_restore_vf_rebar_state(struct pci_dev *pdev) { #ifdef
-+CONFIG_PCI_IOV
-+       unsigned int pos, nbars, i;
-+       u32 ctrl;
-+       u16 total;
-+
-+       pos =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_VF_REBAR);
-+       if (!pos)
-+               return;
-+
-+       pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+       nbars =3D FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-+
-+       for (i =3D 0; i < nbars; i++, pos +=3D 8) {
-+               struct resource *res;
-+               int bar_idx, size;
-+               u64 tmp;
-+
-+               pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-+               bar_idx =3D ctrl & PCI_REBAR_CTRL_BAR_IDX;
-+               total =3D pdev->sriov->total_VFs;
-+               if (!total)
-+                       return;
-+
-+               res =3D pdev->resource + bar_idx + PCI_IOV_RESOURCES;
-+               tmp =3D resource_size(res);
-+               do_div(tmp, total);
-+               size =3D pci_rebar_bytes_to_size(tmp);
-+               ctrl &=3D ~PCI_REBAR_CTRL_BAR_SIZE;
-+               ctrl |=3D FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-+               pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-+       }
-+#endif
-+}
-+
- /**
-  * pci_restore_state - Restore the saved state of a PCI device
-  * @dev: PCI device that we're dealing with @@ -1882,6 +1918,7 @@ void pci=
-_restore_state(struct pci_dev *dev)
-        pci_restore_ats_state(dev);
-        pci_restore_vc_state(dev);
-        pci_restore_rebar_state(dev);
-+       pci_restore_vf_rebar_state(dev);
-        pci_restore_dpc_state(dev);
-        pci_restore_ptm_state(dev);
-
-@@ -3677,10 +3714,18 @@ void pci_acs_init(struct pci_dev *dev)
-  */
- static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)  {
-+       int cap =3D PCI_EXT_CAP_ID_REBAR;
-        unsigned int pos, nbars, i;
-        u32 ctrl;
-
--       pos =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+#ifdef CONFIG_PCI_IOV
-+       if (bar >=3D PCI_IOV_RESOURCES) {
-+               cap =3D PCI_EXT_CAP_ID_VF_REBAR;
-+               bar -=3D PCI_IOV_RESOURCES;
-+       }
-+#endif
-+
-+       pos =3D pci_find_ext_capability(pdev, cap);
-        if (!pos)
-                return -ENOTSUPP;
-
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c index c6d933=
-ddf..d978a2ccf 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -427,13 +427,32 @@ void pci_release_resource(struct pci_dev *dev, int re=
-sno)  }  EXPORT_SYMBOL(pci_release_resource);
-
-+static int pci_memory_decoding(struct pci_dev *dev, int resno) {
-+       u16 cmd;
-+
-+#ifdef CONFIG_PCI_IOV
-+       if (resno >=3D PCI_IOV_RESOURCES) {
-+               pci_read_config_word(dev, dev->sriov->pos + PCI_SRIOV_CTRL,=
- &cmd);
-+               if (cmd & PCI_SRIOV_CTRL_MSE)
-+                       return -EBUSY;
-+               else
-+                       return 0;
-+       }
-+#endif
-+       pci_read_config_word(dev, PCI_COMMAND, &cmd);
-+       if (cmd & PCI_COMMAND_MEMORY)
-+               return -EBUSY;
-+
-+       return 0;
-+}
-+
- int pci_resize_resource(struct pci_dev *dev, int resno, int size)  {
-        struct resource *res =3D dev->resource + resno;
-        struct pci_host_bridge *host;
-        int old, ret;
-        u32 sizes;
--       u16 cmd;
-
-        /* Check if we must preserve the firmware's resource assignment */
-        host =3D pci_find_host_bridge(dev->bus); @@ -444,9 +463,9 @@ int pc=
-i_resize_resource(struct pci_dev *dev, int resno, int size)
-        if (!(res->flags & IORESOURCE_UNSET))
-                return -EBUSY;
-
--       pci_read_config_word(dev, PCI_COMMAND, &cmd);
--       if (cmd & PCI_COMMAND_MEMORY)
--               return -EBUSY;
-+       ret =3D pci_memory_decoding(dev, resno);
-+       if (ret)
-+               return ret;
-
-        sizes =3D pci_rebar_get_possible_sizes(dev, resno);
-        if (!sizes)
-@@ -463,19 +482,31 @@ int pci_resize_resource(struct pci_dev *dev, int resn=
-o, int size)
-        if (ret)
-                return ret;
-
--       res->end =3D res->start + pci_rebar_size_to_bytes(size) - 1;
-+#ifdef CONFIG_PCI_IOV
-+       if (resno >=3D PCI_IOV_RESOURCES)
-+               dev->sriov->barsz[resno - PCI_IOV_RESOURCES] =3D pci_rebar_=
-size_to_bytes(size);
-+       else
-+#endif
-+               res->end =3D res->start + pci_rebar_size_to_bytes(size) - 1=
-;
-
-        /* Check if the new config works by trying to assign everything. */
-        if (dev->bus->self) {
-                ret =3D pci_reassign_bridge_resources(dev->bus->self, res->=
-flags);
--               if (ret)
-+               if (ret && ret !=3D -ENOENT)
-                        goto error_resize;
-        }
-        return 0;
-
- error_resize:
-        pci_rebar_set_size(dev, resno, old);
--       res->end =3D res->start + pci_rebar_size_to_bytes(old) - 1;
-+
-+#ifdef CONFIG_PCI_IOV
-+       if (resno >=3D PCI_IOV_RESOURCES)
-+               dev->sriov->barsz[resno - PCI_IOV_RESOURCES] =3D pci_rebar_=
-size_to_bytes(old);
-+       else
-+#endif
-+               res->end =3D res->start + pci_rebar_size_to_bytes(old) - 1;
-+
-        return ret;
- }
- EXPORT_SYMBOL(pci_resize_resource);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h =
-index a39193213..a66b90982 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -738,6 +738,7 @@
- #define PCI_EXT_CAP_ID_L1SS    0x1E    /* L1 PM Substates */
- #define PCI_EXT_CAP_ID_PTM     0x1F    /* Precision Time Measurement */
- #define PCI_EXT_CAP_ID_DVSEC   0x23    /* Designated Vendor-Specific */
-+#define PCI_EXT_CAP_ID_VF_REBAR        0x24    /* VF Resizable BAR */
- #define PCI_EXT_CAP_ID_DLF     0x25    /* Data Link Feature */
- #define PCI_EXT_CAP_ID_PL_16GT 0x26    /* Physical Layer 16.0 GT/s */
- #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
---
-2.34.1
 
 
