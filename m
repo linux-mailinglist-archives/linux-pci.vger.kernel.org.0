@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-8137-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8138-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 118958D68AF
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 20:06:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9E088D68B8
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 20:07:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 428791C2187D
-	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 18:06:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2BF51C255CE
+	for <lists+linux-pci@lfdr.de>; Fri, 31 May 2024 18:07:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF6B17BB01;
-	Fri, 31 May 2024 18:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65179158D9C;
+	Fri, 31 May 2024 18:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DS1iYW3E"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PrBC/8N+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632202E63B;
-	Fri, 31 May 2024 18:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADE517CA04;
+	Fri, 31 May 2024 18:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717178772; cv=none; b=C7dZfSReod1C6TKn7jQahOUSUE9B3ugjInTrwX+BuIn8xU3nTG+C72Y7x7FQusX96VY0Ai4B5AkA8A3B7p/BXsq8qi6A+VaoOYC2ooP/u6KHf7WLSv+Kq6CNfW90mE39lbwF1oP3xhwmnDotqIxcRyzwleAr5X0Ly0vM1YweQG8=
+	t=1717178862; cv=none; b=k8zTNFNj5GXx/nXtQe3IortW7A/IeqW8pdQ3xWHPN2Ial6LmFh7Ww7E2qf6P0uTbpDQhoWS/og0doKmeBQF6BxihuxUPtLzLalQjP67vr38qyXHB52u/hyeg5SIT2rco4OMdn7Asl+rsEnPDYSHcsAiZRwjS49hgKCxuVrSxsM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717178772; c=relaxed/simple;
-	bh=lZCtvF8bQRqrwqhWq8+XPFYIlYNhxCEhkjGaOrFVAbQ=;
+	s=arc-20240116; t=1717178862; c=relaxed/simple;
+	bh=5xBLIokhSdTKQTltXH3IaiwsASfULEXDoz8Q/jlaLrA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U0vj5x/wiAGHr4TxNM7ae70o0LBL9DfJqUZ+leglLpAR8wobEtOD4vS1+8PdsVO0v/ZcDl14JbP7EsFR71IsDNZzwWyNG/nir8nDnjjd5IAIZIdLWq6sd3nPoulDI5FXpGzOssfsEq4j3az3s66OjDpStMwgfkHAqOLkMjlaG4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DS1iYW3E; arc=none smtp.client-ip=192.198.163.17
+	 In-Reply-To:Content-Type; b=s6ooPASySKobH94X6Dymu+RSraSoYZj2tseCavAe7u+IWbgRz0stQOMWScW2pffsAyKIXT4kOMUGJFSz0RJYANLiT2FgTnyJ6aOpt5Hnufuuf0TJQOQdJafZX/aorVHCfbyjM02mDEykEHnhpo7ObJ41V/KHvl0hfKoHwEMhkrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PrBC/8N+; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717178771; x=1748714771;
+  t=1717178861; x=1748714861;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=lZCtvF8bQRqrwqhWq8+XPFYIlYNhxCEhkjGaOrFVAbQ=;
-  b=DS1iYW3EoLxKbzs7i0rnC8J7jxG8DktSlx9vhKvXvsl7gxa7amy1Gd7j
-   0f4xps24Mk/5vx8Gu95aUZ9E6RdcA22kD2RI8q3ZWJpAy2KB31VeX0o9Q
-   s6PAGZtlWfp7Ip6A7om9TAxfvlyvIzzRnBvDBCV8HNscM98et+g5Sjgxi
-   lBq+vZwOTL5mu2I4lLaEsaootYPbeZpVJtxKMXUmKGw1a2Mdckx8lEGhg
-   9Km86yfhQwIZEXzHat9ZQJPFuGoGt24S7JKiidz6DDKAMXF/hHyVJ774E
-   5V0zFkLFts3YLl/DU/xm1P4LNtzsrHj6uc57VwzVyn1Zzn7nysqxcAHbN
-   g==;
-X-CSE-ConnectionGUID: qrZ8NPYiT12F1Rz6IDJhQw==
-X-CSE-MsgGUID: AU3Z+MnLQ1+5oEKul2LcQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13603282"
+  bh=5xBLIokhSdTKQTltXH3IaiwsASfULEXDoz8Q/jlaLrA=;
+  b=PrBC/8N+vunYADKURg77BBdtlovZqjp6LYgDsYCqSDxfVrWcb15XiGCh
+   Y22Pmx+DXKHJ0YYzxZKoM1WmXAbfHOqYvMMNM9TId6Z14e/AyuFvj2/WJ
+   BeJJYjxzsKA8mSL1R5bww+zV70BKombbZCULVG6hFocVpA7cQzp5kGVCh
+   bLrbuTgTRakbI8TjO6WvAV9tLBf7ZDfpD6qiW3V15PMlGhuHZDkYYwLyL
+   D3WDeDby+fSUCRjOJe42lN/kiHyENIGtq9aXwCp09TTwEllEc1xXYVFKP
+   umMtPJ0yOtoYfQpR5SwDkDufc3U+9gypABh9AIhZ/3TA22JQ+IGW6uOjI
+   A==;
+X-CSE-ConnectionGUID: HF4s9UbQTg2D/55ROKK+fQ==
+X-CSE-MsgGUID: i+p+OBrjSzeqBIkKa1JdiQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="24310557"
 X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="13603282"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 11:06:10 -0700
-X-CSE-ConnectionGUID: nu6jDm+xQ1OD17Mz7pfHcA==
-X-CSE-MsgGUID: J+uyWzaORDG7TpdBgnmCRQ==
+   d="scan'208";a="24310557"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 11:07:40 -0700
+X-CSE-ConnectionGUID: ft8fCrh4Sb6tcu2/Ff8bdA==
+X-CSE-MsgGUID: ALSPyTDRTuCYtm8kXaYPyw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="36181617"
+   d="scan'208";a="67077254"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.108.72]) ([10.125.108.72])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 11:06:10 -0700
-Message-ID: <5de124d1-8c53-45c7-ab4b-17282c56d1b1@intel.com>
-Date: Fri, 31 May 2024 11:06:08 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 11:07:40 -0700
+Message-ID: <b07b57e5-eb7b-4e56-b241-7433616edf11@intel.com>
+Date: Fri, 31 May 2024 11:07:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,56 +67,99 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] PCI: Warn on missing cfg_access_lock during
- secondary bus reset
+Subject: Re: [PATCH v2 3/3] PCI: Add missing bridge lock to pci_bus_lock()
 To: Dan Williams <dan.j.williams@intel.com>, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc: Imre Deak <imre.deak@intel.com>, linux-pci@vger.kernel.org,
+ linux-cxl@vger.kernel.org
 References: <171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com>
- <171711746953.1628941.4692125082286867825.stgit@dwillia2-xfh.jf.intel.com>
+ <171711747501.1628941.15217746952476635316.stgit@dwillia2-xfh.jf.intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <171711746953.1628941.4692125082286867825.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <171711747501.1628941.15217746952476635316.stgit@dwillia2-xfh.jf.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 5/30/24 6:04 PM, Dan Williams wrote:
-> The recent adventure with adding lockdep tracking for cfg_access_lock,
-> while it yielded many false positives [1], it did catch a true positive in
-> the pci_reset_bus() path [2].
+> One of the true positives that the cfg_access_lock lockdep effort
+> identified is this sequence:
 > 
-> So, while lockdep is difficult to deploy, open coding a check that
-> cfg_access_lock is held during the reset is feasible.
+>  WARNING: CPU: 14 PID: 1 at drivers/pci/pci.c:4886 pci_bridge_secondary_bus_reset+0x5d/0x70
+>  RIP: 0010:pci_bridge_secondary_bus_reset+0x5d/0x70
+>  Call Trace:
+>   <TASK>
+>   ? __warn+0x8c/0x190
+>   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+>   ? report_bug+0x1f8/0x200
+>   ? handle_bug+0x3c/0x70
+>   ? exc_invalid_op+0x18/0x70
+>   ? asm_exc_invalid_op+0x1a/0x20
+>   ? pci_bridge_secondary_bus_reset+0x5d/0x70
+>   pci_reset_bus+0x1d8/0x270
+>   vmd_probe+0x778/0xa10
+>   pci_device_probe+0x95/0x120
 > 
-> While this does not offer a full backtrace, it should be sufficient to
-> implicate the caller of pci_bridge_secondary_bus_reset() as a path that
-> needs investigation.
+> Where pci_reset_bus() users are triggering unlocked secondary bus
+> resets. Ironically pci_bus_reset(), several calls down from
+> pci_reset_bus(), uses pci_bus_lock() before issuing the reset which
+> locks everything *but* the bridge itself.
 > 
-> Link: https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_134186v1/shard-dg2-1/igt@device_reset@unbind-reset-rebind.html [1]
-> Link: http://lore.kernel.org/r/cfb50601-5d2a-4676-a958-1bd3f1b06654@intel.com [2]
+> For the same motivation as adding:
+> 
+>     bridge = pci_upstream_bridge(dev);
+>     if (bridge)
+>             pci_dev_lock(bridge);
+> 
+> ...to pci_reset_function() for the "bus" and "cxl_bus" reset cases, add
+> pci_dev_lock() for @bus->self to pci_bus_lock().
+> 
+> Reported-by: Imre Deak <imre.deak@intel.com>
+> Closes: http://lore.kernel.org/r/6657833b3b5ae_14984b29437@dwillia2-xfh.jf.intel.com.notmuch
 > Cc: Dave Jiang <dave.jiang@intel.com>
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 > ---
->  drivers/pci/pci.c |    3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/pci/pci.c |    4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 35fb1f17a589..8df32a3a0979 100644
+> index 8df32a3a0979..aac5daad3188 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -4883,6 +4883,9 @@ void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
->   */
->  int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+> @@ -5444,6 +5444,7 @@ static void pci_bus_lock(struct pci_bus *bus)
 >  {
-> +	if (!dev->block_cfg_access)
-> +		pci_warn_once(dev, "unlocked secondary bus reset via: %pS\n",
-> +			      __builtin_return_address(0));
->  	pcibios_reset_secondary_bus(dev);
+>  	struct pci_dev *dev;
 >  
->  	return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
+> +	pci_dev_lock(bus->self);
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+>  		pci_dev_lock(dev);
+>  		if (dev->subordinate)
+> @@ -5461,6 +5462,7 @@ static void pci_bus_unlock(struct pci_bus *bus)
+>  			pci_bus_unlock(dev->subordinate);
+>  		pci_dev_unlock(dev);
+>  	}
+> +	pci_dev_unlock(bus->self);
+>  }
+>  
+>  /* Return 1 on successful lock, 0 on contention */
+> @@ -5468,6 +5470,7 @@ static int pci_bus_trylock(struct pci_bus *bus)
+>  {
+>  	struct pci_dev *dev;
+>  
+> +	pci_dev_lock(bus->self);
+>  	list_for_each_entry(dev, &bus->devices, bus_list) {
+>  		if (!pci_dev_trylock(dev))
+>  			goto unlock;
+> @@ -5486,6 +5489,7 @@ static int pci_bus_trylock(struct pci_bus *bus)
+>  			pci_bus_unlock(dev->subordinate);
+>  		pci_dev_unlock(dev);
+>  	}
+> +	pci_dev_unlock(bus->self);
+>  	return 0;
+>  }
+>  
 > 
 
