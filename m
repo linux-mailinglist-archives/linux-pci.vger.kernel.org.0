@@ -1,111 +1,110 @@
-Return-Path: <linux-pci+bounces-8155-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8156-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50288D6EEB
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Jun 2024 10:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94C418D6FF5
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Jun 2024 15:11:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B5E71F23551
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Jun 2024 08:39:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 358571F21C75
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Jun 2024 13:11:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13F121CF8D;
-	Sat,  1 Jun 2024 08:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 746971509AC;
+	Sat,  1 Jun 2024 13:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmu1TjfA"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="gkR1vG4P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A3A111AD;
-	Sat,  1 Jun 2024 08:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF841509A1;
+	Sat,  1 Jun 2024 13:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717231148; cv=none; b=cQY6NzaupyTE6Q/UjB/DmXe4Sxv38WCU/DmjJPHDzzwMCtX53JNKjyshkgrq6erx8IIkv5eCSHUsWZecIAEFE5Zh0q7ZwXHBHvvu8ZkPIt9o6WJJRsOA1EY4E4TXVLjgI/fODzZLK9NJqNPIkYzg9KIdcKna4rVOpxXSItvg0pE=
+	t=1717247493; cv=none; b=YNC7DkyT5teHESq5mPiPNqZMg1P/hmPpyLgRKGFhU7AdZbb5QfComtK/vU5ewZ78nXWzZpodytb6sJPhN5UQWaNvLQGB6cprQi4ZeQ3Ll3KzPEOTz6pxnUebW0stsFUuimxwrrUNAXIaHMZ/mk4oOXOLirh+VHcoJL0B66/bSGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717231148; c=relaxed/simple;
-	bh=O/cdpqT7qQihzPF3SYw3ffdjHn+vpQtcKKcbKkl2pXA=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=kPMjfVF7AfmyANxGiWWWBMdLV9cjXmhgIoK0JUwEqx214EJHFhvY80nbhsQPd+NaaEGzN2fR9Mc5VNHqq06p3KYwjGa9+w3dCF1H/OULDoKLqux4rFSPhpipuCC3K9Aw+NVq4QA7Gu9VEIWVCF0qL3upoRA/6BzqlqQxD4UjSBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmu1TjfA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288E7C116B1;
-	Sat,  1 Jun 2024 08:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717231147;
-	bh=O/cdpqT7qQihzPF3SYw3ffdjHn+vpQtcKKcbKkl2pXA=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=lmu1TjfAQQoBYhj/5tR7GS0uOuhgynxe5b8eTTxihKbYlFz9EB9BuMaGLeDxzIuQa
-	 mPL1IUU24/j5KmRP7KUBe0uI7vvIS6NVX7i9Q3YerbU/Z3NPTj8MbRbneAyrTD41Ns
-	 +xyUGP2pdDwyiS94iYPHYOSWOYwFHr7xM9UMtWUFO20gz1EReopk8uHvol1NzPcobS
-	 lXYgd7nVOP7X8rb7cioKPkC2YQf1lIqdQPk4zPN5OLa/2Lr1c36cwTmNHFEp2BQ09M
-	 Y6twVXL/tNg4qPu0VP9NjAWJCRtariHmDydaylbZd8zwK+h2jqVm/2nG+pUQt5shpx
-	 JDfaxnwZkCo2g==
-From: Kalle Valo <kvalo@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,  Bjorn Helgaas <bhelgaas@google.com>,
-  <linux-wireless@vger.kernel.org>,  <ath11k@lists.infradead.org>,
-  <regressions@lists.linux.dev>,  Jeff Johnson <quic_jjohnson@quicinc.com>,
-  <linux-kernel@vger.kernel.org>,  <linux-cxl@vger.kernel.org>,
-  <linux-pci@vger.kernel.org>
-Subject: Re: [regression] BUG: KASAN: use-after-free in
- lockdep_register_key+0x755/0x8f0
-References: <87v82y6wvi.fsf@kernel.org> <87wmncwqxf.fsf@kernel.org>
-	<87sexzx02f.fsf@kernel.org>
-	<66582bee45da8_6ec329496@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<87jzjbwxin.fsf@kernel.org> <87frtzww57.fsf@kernel.org>
-	<6659ee8b8dfd_166872941c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<87y17qudwb.fsf@kernel.org>
-Date: Sat, 01 Jun 2024 11:39:03 +0300
-In-Reply-To: <87y17qudwb.fsf@kernel.org> (Kalle Valo's message of "Fri, 31 May
-	2024 19:47:32 +0300")
-Message-ID: <87a5k5ukew.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1717247493; c=relaxed/simple;
+	bh=1azJbmKafXYpI7cPrs4sh/5oeftQgPo4X4g1HEFMTDI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pmUJs/aW/EzHkHC/LRHwuUUn/5XCAq8rt5F9a8z4Lmtb5ZaIK1WoSD9+wp0YqIliejxkn+ehrSe6zer3sgnPjC8s2B+6kNGs4E1/EHaEXubKmAf9YlZ7bCwutmxekU91KasyrcwJHR/3s4lXnyOK/Ba83U41VHh/ZqpiwH06U1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=gkR1vG4P; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1717247440; x=1717852240; i=markus.elfring@web.de;
+	bh=1azJbmKafXYpI7cPrs4sh/5oeftQgPo4X4g1HEFMTDI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=gkR1vG4PWxoV0wY+ljRZqKsbe8ownQbLIekqm0gF/RdpoxNT7ZPf0PMj74VXYCkV
+	 WoBnYOowP8AEsvKwIXx0EFA5n1FwefIyiiSh2UhsTmkqy9I+x7x0tMTZgT28youFM
+	 mPQnFv2EfcYWykUCRMXbYTy26/qgqtRCafT40qdArO9iZyzCj9VzN2ki0mg7bu0mK
+	 qAwhPljOHpt42F7VA3rQJ5OlpP4wFXiuojnCvjiOnDOVtanQV9Dri6cysZESU7QMJ
+	 DR1F38tES2ivM9n2b3TnpbhMHaSIkg2KJAhfc4dcLtKGs4ywduOB5CRDqrvjWetQc
+	 CYxxpyCA8IVLvMTFPg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M8T7K-1s8yeW1qYC-009vic; Sat, 01
+ Jun 2024 15:10:40 +0200
+Message-ID: <e4e9a26f-720a-4648-a099-be9193af1734@web.de>
+Date: Sat, 1 Jun 2024 15:10:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/7] PCI: xilinx-nwl: Add phy support
+To: Sean Anderson <sean.anderson@linux.dev>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Michal Simek
+ <michal.simek@amd.com>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+References: <20240531161337.864994-1-sean.anderson@linux.dev>
+ <20240531161337.864994-7-sean.anderson@linux.dev>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240531161337.864994-7-sean.anderson@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rr0oyNIhZsSYRmKnkOucR9Hnu5e7lA1H5g6+bgs5JjeJyKuLq0b
+ gfn+X2lblMLkvd1RN6itUqIcqLUJwWcrcKx1TlJMfYtpeR2mBz0DeCdoxpOEXRCBTv5i/gG
+ bMiulP3G/MO/ora81oPn2M3noj4QrQjrRGuYvK5gvn2RPbhnJjkMLwaubArX2DSPv2gEFkY
+ fn5kg+YVa3D9hu+VmBYKw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zmel7gxYK9M=;CsezFhwRd1YgwkDWyl9LkM6gLr3
+ y7Ltp5b/BFj82tGPE7dpM7Ig10am/QTbVDxOQVlqrKQeVkzSTRKiuGOVvHzCaW2piTZF6hMb5
+ 8kzWVUwdFodYkbrhxswldnpMokKLkJkhZ/M2x5r3JpZ8oixxJ8rPxU/5/3W4b5LuxntS/Lph2
+ XH/kYKdMU4Xfs9scU7YDmU+FbaqLXVwedllqd0/3NvrobDgOpZLbh3eJltqNSWvaSzlvvvywK
+ /omG1LnxbCxe8Vt0FOgSakA9c/IaZv1wvS5JCXDjJYRheOgWq90ZqetRsXh9h2IF5n32rJhG8
+ j7+I/uivkmFY8iL1I/Ap/xYe8ieXC563DKFqqIpxxuq0cr9Z3MFdXv5uyE0vbmMASCASZDE+v
+ U7TkkuwVLnYAzBcq1VjmXF+pffV1Im+mxX0vsll8Wrhw884LoYGYQOj/mwTyQgs8PNhiUuz/f
+ DoBSgWk8rJM981Mu7WjKobo0NeQGPGlZwsIUQIQxY3L4CHRptzFoE5/B2jJ3OUUoiXiW7wd5c
+ 0YfU61UnaCscPK/pfu5qMo8LCMvKfgKdpL18j5JQGWM2JLKTSzKvI0tqmvhEtEtE3EQ292u1d
+ Ll/wR97QZ4hbcaGrx0hNo4zadgzcMWZz4OXrdn8yThcgLOjQhzycF0mko7l0r3qJeaUMDjQSx
+ EPi8Vx+BGd7NTT6yLJ615Ehy+JN3xeiZvChFzMrHYXtLMBzfI1cHx/eRKrJN8Yt4LwTe/qVKR
+ giHVSacz/SVXEOQqML6eyV1IdDDbbh0uNgLj19kKx/wYeIUhoLsu1eojJfFl8aM37HlbcUKkr
+ 27/mdZf03Z8KxcztQp0hyriCscZ/YVMXrlEZNq82LHsoU=
 
-Kalle Valo <kvalo@kernel.org> writes:
+> Add support for enabling/disabling PCIe phys. We can't really do
+> anything about failures in the disable/remove path, so just print an
+> error.
 
-> Dan Williams <dan.j.williams@intel.com> writes:
->
->> Kalle Valo wrote:
->> [..]
->>> >> The proposed fix for that is here:
->>> >>
->>> >> http://lore.kernel.org/r/66560aa9dbedb_195e294b0@dwillia2-mobl3.amr.corp.intel.com.notmuch
->>> >
->>> > I get "Not Found" from that link, is there a typo?
->>> 
->>> I found this fix from for-linus branch:
->>> 
->>> # PCI: Fix missing lockdep annotation for pci_cfg_access_trylock()for-linus
->>> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=for-linus&id=f941b9182c54a885a9d5d4cfd97af66873c98560
->>> 
->>> But at least that doesn't fix my crash.
->>
->> Sorry for the broken link I mistakenly used a message-id from an
->> internal thread with the intel.com reporter. However, it is moot now
->> because the new direction is to revert the lockdep infrastructure:
->>
->> https://lore.kernel.org/r/171711745834.1628941.5259278474013108507.stgit@dwillia2-xfh.jf.intel.com
->>
->> (that link works...)
->
-> Thanks, that links works :) I did a quick test with the three patches
-> and I didn't see any crashes anymore. But to be confident I need to run
-> overnight tests, I'll provide my Tested-by after that.
+You propose to extend the exception handling.
+Does such information indicate a need for another tag =E2=80=9CFixes=E2=80=
+=9D?
 
-Ok, I'm now quite confident that the issues I saw are solved so:
 
-Tested-by: Kalle Valo <kvalo@kernel.org>
+Would you become more interested in the application of scope-based resourc=
+e management?
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Regards,
+Markus
 
