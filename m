@@ -1,108 +1,105 @@
-Return-Path: <linux-pci+bounces-8186-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8187-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8B178D86A4
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 17:55:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A46028D86AE
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 17:55:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FFB228168D
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 15:55:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BED5B24272
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 15:55:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11AA0132127;
-	Mon,  3 Jun 2024 15:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ACAD132124;
+	Mon,  3 Jun 2024 15:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKCKUK+6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TW4lU+On"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC06131182;
-	Mon,  3 Jun 2024 15:54:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFC7131736;
+	Mon,  3 Jun 2024 15:55:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717430089; cv=none; b=d8idxIkEnsMeCpYHwkr7SrWAztcbcSHcl0PffJkyU5n7Nbri4kaDh7MvtE7MRTDHfXYT74oK35unDupsIQLfyNfPi3kbyRwKwXy9RNQdNP2T5TkY0rgsCXHuUcy9+b64Oa9LdquwuAKySyNaQTUN+ymFYDeIVALiXX0cfs3ILDM=
+	t=1717430112; cv=none; b=OGACf7maD/fXtTj/O/9U8i4572FHHRLHqn0GG1a1A2QLIfrpHpoBhNJK8rVxu3RBP+hmRI1UCjqLWgBZToZ/nxlVM89TsjRkdTPPo9AFlTQhhP4I3pAp7Oi/Wtmw8JDUtqm3aIT8jJdiy9CJK/ihFE3xQhCRB4r1U3eiNkL/F6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717430089; c=relaxed/simple;
-	bh=/mqwg4w9jJOykMYUTyLRSt9g531pR70Ydsxqn4u/d+o=;
+	s=arc-20240116; t=1717430112; c=relaxed/simple;
+	bh=ReQXmTcvg08RqCaBOPd0ceRbHCmA79vsnPwpqNQ/OWs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T0OGUMOEjNw+VmgXurlJuA7BDLIHJjGx+81Qaox/AB37XGuRu4IH7GxMQ/QkAFBbucC/DKNKZ6yirTLmNUgABknqC3ZNMq3621a3xWSqQdZjhtsBXoE3sJDboTNS9mxIJh7BJjVKX9mqxb7HQzhW+g6SYmv7XixV+oZpMKanF6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKCKUK+6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B30C2BD10;
-	Mon,  3 Jun 2024 15:54:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJ998Exgzww4610rs8iJERsllNiZvrxaW+r0ng3PYB18v7gDZcXsT3nc0vRVY/60NISsEiG0mGl2Nom08Xb+Tn1z9vGGPDHBxd0HQtoFBocSdunw0in3p8+YPnKQvdI1r/MHv+NVzg4MVi1qTb6uTVJy8j2u6XbI+qBfwel+Sng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TW4lU+On; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6ACBC2BD10;
+	Mon,  3 Jun 2024 15:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717430088;
-	bh=/mqwg4w9jJOykMYUTyLRSt9g531pR70Ydsxqn4u/d+o=;
+	s=k20201202; t=1717430111;
+	bh=ReQXmTcvg08RqCaBOPd0ceRbHCmA79vsnPwpqNQ/OWs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SKCKUK+6SCKeWy0UyNbLs+BB50UwRzhJv4efMVYn6OgVCU8qKZOoOpikzAgyrDe1O
-	 c4yv7tSWwpos/H3uofzMHk3UaF+4OmLwFpp1u5SQZwX++JqcvFKzrN05AwuXi8pwiv
-	 l3OcNKpTom+E1RJSLQlmWM821dK+GFMnMb3xAiZ0CgSOXYuEjCMHNczULBEfDw6rFU
-	 6gL3Bl5JsihcjAqCZXhoGKU3e8X27voOnp9v0TqxQX3FKdnFAthexAWnpBGY29zyKJ
-	 GBUKCdxh3msMwIIQB/IY/VIEyArSMLRvKmyPeHrKA3Nmh3jHArbXt61pSR6XGaMBej
-	 70tQt7QWPZM7A==
-Date: Mon, 3 Jun 2024 10:54:45 -0500
-From: Rob Herring <robh@kernel.org>
+	b=TW4lU+OnMLar1IkIptx6eovxmB4sv5QKfLrew2PGPPZ+6BD0EIZZZmfgPtlTXcJtA
+	 UbSb4lL4Kh4+KTQIRL4yL2m+v4o9lEQ5iHqLr68Ko3fxznlnn+qHpDi3MYmyxEhi4Z
+	 UFVf3ZGpzDBYi/mI+pDoizSK2aUiFzrF2XrTNLOWkNp2Yc02tBrOe3E7wrHs4joDzs
+	 Wsre3VN1F+4IQsCowKmGcRC3ke3K+kQrU2by149l+IwTvXMiNfyPwvM5Y+GExAKKFT
+	 xAL+dlm6hLv7BQAjEN/qVtl1hWLWqoc9J7cNH1urPkOPIW/mFGU1ZZyakOjZIlYU31
+	 miadAsHe6IvzQ==
+Date: Mon, 3 Jun 2024 10:55:08 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren <guoren@kernel.org>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
 	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sam Ravnborg <sam@ravnborg.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rich Felker <dalias@libc.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Javier Martinez Canillas <javierm@redhat.com>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	linux-renesas-soc@vger.kernel.org,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-fbdev@vger.kernel.org,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Jiri Slaby <jirislaby@kernel.org>, Baoquan He <bhe@redhat.com>,
+	Helge Deller <deller@gmx.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Guo Ren <guoren@kernel.org>, linux-pci@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>, linux-ide@vger.kernel.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, linux-serial@vger.kernel.org,
+	Sergey Shtylyov <s.shtylyov@omp.ru>, devicetree@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Guenter Roeck <linux@roeck-us.net>, linux-sh@vger.kernel.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
 	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v8 19/36] dt-bindings: interrupt-controller:
- renesas,sh7751-irl-ext: Add json-schema
-Message-ID: <20240603155445.GA501876-robh@kernel.org>
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	Lee Jones <lee@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-clk@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [DO NOT MERGE v8 21/36] dt-bindings: serial: renesas,scif: Add
+ scif-sh7751.
+Message-ID: <171743010672.507323.12704296584097795619.robh@kernel.org>
 References: <cover.1716965617.git.ysato@users.sourceforge.jp>
- <e35aa188e5176544c6884f2d1d7aa1b242a51acf.1716965617.git.ysato@users.sourceforge.jp>
+ <76fffb1383820a701e0c787dcb3a25da52f6e8b7.1716965617.git.ysato@users.sourceforge.jp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -111,91 +108,19 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e35aa188e5176544c6884f2d1d7aa1b242a51acf.1716965617.git.ysato@users.sourceforge.jp>
+In-Reply-To: <76fffb1383820a701e0c787dcb3a25da52f6e8b7.1716965617.git.ysato@users.sourceforge.jp>
 
-On Wed, May 29, 2024 at 05:01:05PM +0900, Yoshinori Sato wrote:
-> Renesas SH7751 external interrupt encoder json-schema.
+
+On Wed, 29 May 2024 17:01:07 +0900, Yoshinori Sato wrote:
+> Add Renesas SH7751 SCIF.
 > 
 > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  .../renesas,sh7751-irl-ext.yaml               | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
+>  Documentation/devicetree/bindings/serial/renesas,scif.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
-> new file mode 100644
-> index 000000000000..ff70d57b86cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/renesas,sh7751-irl-ext.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas SH7751 external interrupt encoder with enable regs.
-> +
-> +maintainers:
-> +  - Yoshinori Sato <ysato@users.sourceforge.jp>
-> +
-> +description:
-> +  This is the generally used external interrupt encoder on SH7751 based boards.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: renesas,sh7751-irl-ext
-> +
-> +  reg: true
 
-Needs to define how many and what they are.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  '#address-cells':
-> +    const: 0
-> +
-> +  renesas,set-to-disable:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: Invert enable registers. Setting the bit to 0 enables interrupts.
-> +
-> +  renesas,enable-reg:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-
-Don't need '|'.
-
-> +      IRQ enable register bit mapping
-
-This needs a better description and constraints? Number of entries in 
-the array or values of the entries.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - renesas,enable-reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    r2dintc: interrupt-controller@a4000000 {
-> +        compatible = "renesas,sh7751-irl-ext";
-> +        reg = <0xa4000000 0x02>;
-> +        interrupt-controller;
-> +        #address-cells = <0>;
-> +        #interrupt-cells = <2>;
-> +        renesas,enable-reg = <12 9 10 3 0 4 1 2 8 5 6 7 15 15 15 11>;
-> +    };
-> -- 
-> 2.39.2
-> 
 
