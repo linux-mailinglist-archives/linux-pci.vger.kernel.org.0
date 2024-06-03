@@ -1,124 +1,152 @@
-Return-Path: <linux-pci+bounces-8183-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8184-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 654618D7D65
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 10:34:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 458A88D8490
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 16:04:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16FE91F23031
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 08:34:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9A28B226C7
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 14:04:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FE875E091;
-	Mon,  3 Jun 2024 08:34:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFEF312CD9D;
+	Mon,  3 Jun 2024 14:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GRmfC4BF"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="blspyjEN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6F0111AD
-	for <linux-pci@vger.kernel.org>; Mon,  3 Jun 2024 08:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D25115C3;
+	Mon,  3 Jun 2024 14:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717403644; cv=none; b=pNeGeQYrRRENLDXkoTyUrgnlSL57yYNR3be8yawj10tZKiGHkPBtSWp1mYGIfSi3lIzBekYClrnxlHYZoDe1x45Ccs1hePYkpgoyWmBxW9FYTjQhtQyxWWYCbbosebli/FdQeQlRCOSHl0aXQ20DwqGA3kvo1xRQChlvrZxVkLE=
+	t=1717423471; cv=none; b=U9zNJzMO93wpg9xtNDFgSo+10BQI/RbxoL+xmG9kbIA5zAKbfCi2y35xpDfiveuiELNkaO6YHNsetJYUsEd7vNVLVDAn1BLJfOPjL+sROmFAstcMdEFUGrRmeLON9oXBPreJKohCFYffHwwW36pxltLeuguxbJygEJVAx12bJgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717403644; c=relaxed/simple;
-	bh=Ikj/DBN/g9Zt5L5G7xLVPzrxbxEC+dxcwFUKg868Muk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KxRTMD2Zj6CjW9qDGHi5sA7+BR9ic9ohmRUq261R2v9+CO3EI9UFPxJXrxZae1Tgs8PEXnsezzGqgkVUeDIWAAz4IWTDst1Co3hR+l31hY5Z9htkb1YtSd+hhNKlMzubadZRq8m7+P64ZpjB4+Wr7dD5EPkbScJVE5bX8SBW7r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GRmfC4BF; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso8723261fa.3
-        for <linux-pci@vger.kernel.org>; Mon, 03 Jun 2024 01:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717403641; x=1718008441; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ikj/DBN/g9Zt5L5G7xLVPzrxbxEC+dxcwFUKg868Muk=;
-        b=GRmfC4BFA9yPv9NPmjaK/C9/ocYPvfmpmbB45hSEzr5AGRs7MKe6K3Pjo3ZBJ1687K
-         ekxBHa6FlJbTzHEyKZyqbSlq2eKpXlQbUlIkHShatQ7O9KUJHWVhbcnfd1irbrAQmbAs
-         aFVdLCWajN533bhkvgyt2AaDjpCzLXF0zX2iEf3mlDb/PHKO3sOd/BkBGV8tmWu4IWQ7
-         l9amNU1RqLiycPPsNgoPsMVM9JRdppH1VyJbeRsb4HkzXYzo1OhHv4QayN/4/w4MlrD1
-         D6Uy76cocWqlS3NaYSRydnNVNRnFW+x6LUSYhGU7SkFghcOizgN1dfBwjvU3MmsQbt/F
-         01dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717403641; x=1718008441;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ikj/DBN/g9Zt5L5G7xLVPzrxbxEC+dxcwFUKg868Muk=;
-        b=XRYjlWuXkrSN9wVNv3+13ECamSfUq3umbrxhrd4jSfOym3vh2JD8Z/kY1bdkHxqa2z
-         knfjpR6CAfN2RIJ63qfphsseRcOG8i5tX+wcXgTaDX5x2BHymePY83E2W4O+t34eLHr3
-         Ln7LKeuAIO5uLoV9gr4ZUOEr2dVcxLQXLSoUjoWIo8BHtTxT/3QchVvPka3SC+5QDluF
-         kLguOnfCjF+cVByNXv+LK3hTJVZFGdCj6ZxqDYRd0rHLltHARYuszpbJS+f+JxfXkxGQ
-         SM9shSyEkAa7ay2aA+I67jHnQbFUqNAkxOfT4jLkyAWZ7QI4xBcQqEV/GofGxM0FAboN
-         eu3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXiprqz5e/8KcGz9PWhXaGxCOEEAd6kXDNbx7q/BozZgmqY1CLqrTct41dDa2eQoXHS9TCPKJh+NvUw9quXic0TXceD49uWLNK5
-X-Gm-Message-State: AOJu0YxSolrYQhQ8U1LTxalVARJq6UpsBtQq3w7LR6ipbePQpSn9dsBP
-	wNMC0kU7HfghMBrwDatNMOScWsp7xcgynZQaZxVnQJ4d54BQOFVcUix5hW16IK+YsBUAvEsXl0I
-	QN56RiIbrg5ClgIwykQMau//uzYjYwaz6jZmtNw==
-X-Google-Smtp-Source: AGHT+IGnNHHMISpzPygIalsotaJP07IzKe4++9Y4RTlc22DVE2oCaNXkvhBDC8IiyrnfA9GfomhAV8qL4SXbYv7PEQM=
-X-Received: by 2002:a2e:9141:0:b0:2e5:1dae:1789 with SMTP id
- 38308e7fff4ca-2ea9512f6d0mr59194391fa.22.1717403641151; Mon, 03 Jun 2024
- 01:34:01 -0700 (PDT)
+	s=arc-20240116; t=1717423471; c=relaxed/simple;
+	bh=Xoq1p+b3eBnSukSfe9FWye+UT3Hp7+xp0/RNktg5xCg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ja8aFUebqZMiU71jPWvOrXjjLyYiNaZrcGBIiKKeX7kZMFz85sxtqlmVGCvRefPwLj6FjVyCN/Q3au9NpDD7qucT81NTqrAx/892pLeDsz+jDA0TDxXt9BLeH7WN8fXhwTVbOWEXN7uPrmoF3GoHeOCYZhbuu03cREaLb5gMPAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=blspyjEN; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=iXigc
+	K1/rNJxXW9WTe11+jDAKyiolDNuGVVDMYRGuUs=; b=blspyjEN/rpWEKJ0FJsqo
+	DuWO8ccEWGP56E3Ld1s6yAGjV6mqCWqrysW42U3RBzmA2ULMctHjQ2ODGKfWyaDR
+	U9E7iduQQaDSox1li7vuZit+EBXrRPrWqOuqPS/v+ZNRLyLN/d+Mktyd1UKH44wo
+	2xXFpfwqgf8YEBpALnewYs=
+Received: from localhost.localdomain (unknown [120.244.62.148])
+	by gzga-smtp-mta-g3-4 (Coremail) with SMTP id _____wDHr3IzzV1mhWbsCQ--.60420S2;
+	Mon, 03 Jun 2024 22:03:32 +0800 (CST)
+From: Jiwei Sun <sjiwei@163.com>
+To: nirmal.patel@linux.intel.com,
+	jonathan.derrick@linux.dev
+Cc: lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sunjw10@lenovo.com,
+	sjiwei@163.com,
+	ahuang12@lenovo.com
+Subject: [PATCH] PCI: vmd: Create domain symlink before pci_bus_add_devices
+Date: Mon,  3 Jun 2024 22:03:29 +0800
+Message-Id: <20240603140329.7222-1-sjiwei@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com> <42affba4-4600-4c44-ad88-926597cc2225@bootlin.com>
-In-Reply-To: <42affba4-4600-4c44-ad88-926597cc2225@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 3 Jun 2024 10:33:50 +0200
-Message-ID: <CAMRc=MftX7Sk5OknNhGrZuT1f+w496+jD3pX4LN014L_ojUtqg@mail.gmail.com>
-Subject: Re: [PATCH v6 00/12] Add suspend to ram support for PCIe on J7200
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHr3IzzV1mhWbsCQ--.60420S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGr13Kr45urW3GF4ruF1DAwb_yoW5AFyrpF
+	4rWay2yr9rGw4fXayDA348X34Yva1qv345J3s8K3429r9xAFyF9rW09rZ8AFWqyF4qka4a
+	vwsrXF1S93Z8KaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piX_-PUUUUU=
+X-CM-SenderInfo: 5vml4vrl6rljoofrz/1tbiWxzymWV4JPg6sQABsn
 
-On Fri, May 31, 2024 at 6:55=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> On 5/15/24 12:01, Thomas Richard wrote:
-> > This adds suspend to ram support for the PCIe (RC mode) on J7200 platfo=
-rm.
-> >
->
-> Hello,
->
-> Gentle ping.
-> No merge conflict with 6.10-rc1.
-> I know the patch for the gpio-pca953x driver causes a regression for one
-> other platform.
-> But most of the patches could be applied.
->
-> Best Regards,
->
-> Thomas
->
+From: Jiwei Sun <sunjw10@lenovo.com>
 
-If the patches targeting different subsystems don't depend on each
-other then you'd have more chance of getting them picked up by
-splitting the series up and sending individual bits and pieces to
-appropriate maintainers separately.
+During booting into the kernel, the following error message appears:
 
-Bart
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+  (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+
+This symptom prevents the OS from booting successfully.
+
+After a NVMe disk is probed/added by the nvme driver, the udevd executes
+some rule scripts by invoking mdadm command to detect if there is a
+mdraid associated with this NVMe disk. The mdadm determines if one
+NVMe devce is connected to a particular VMD domain by checking the
+domain symlink. Here is the root cause:
+
+Thread A                   Thread B             Thread mdadm
+vmd_enable_domain
+  pci_bus_add_devices
+    __driver_probe_device
+     ...
+     work_on_cpu
+       schedule_work_on
+       : wakeup Thread B
+                           nvme_probe
+                           : wakeup scan_work
+                             to scan nvme disk
+                             and add nvme disk
+                             then wakeup udevd
+                                                : udevd executes
+                                                  mdadm command
+       flush_work                               main
+       : wait for nvme_probe done                ...
+    __driver_probe_device                        find_driver_devices
+    : probe next nvme device                     : 1) Detect the domain
+    ...                                            symlink; 2) Find the
+    ...                                            domain symlink from
+    ...                                            vmd sysfs; 3) The
+    ...                                            domain symlink is not
+    ...                                            created yet, failed
+  sysfs_create_link
+  : create domain symlink
+
+sysfs_create_link is invoked at the end of vmd_enable_domain. However,
+this implementation introduces a timing issue, where mdadm might fail
+to retrieve the vmd symlink path because the symlink has not been
+created yet.
+
+Fix the issue by creating VMD domain symlinks before invoking
+pci_bus_add_devices.
+
+Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+Suggested-by: Adrian Huang <ahuang12@lenovo.com>
+---
+ drivers/pci/controller/vmd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 87b7856f375a..3f208c5f9ec9 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -961,12 +961,12 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	list_for_each_entry(child, &vmd->bus->children, node)
+ 		pcie_bus_configure_settings(child);
+ 
++	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
++			       "domain"), "Can't create symlink to domain\n");
++
+ 	pci_bus_add_devices(vmd->bus);
+ 
+ 	vmd_acpi_end();
+-
+-	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+-			       "domain"), "Can't create symlink to domain\n");
+ 	return 0;
+ }
+ 
+-- 
+2.27.0
+
 
