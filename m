@@ -1,181 +1,201 @@
-Return-Path: <linux-pci+bounces-8195-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8196-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA3698D890E
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 20:56:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AB678D89C4
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 21:16:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93E212831CE
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 18:56:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7191BB20150
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 19:16:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C803139CFE;
-	Mon,  3 Jun 2024 18:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC77137748;
+	Mon,  3 Jun 2024 19:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFOI3/OU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T7NbjmLf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C57139568;
-	Mon,  3 Jun 2024 18:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717440990; cv=none; b=ri0mX0RRVy4vzOgDWr+tFwIx3q3XpuXT8/vgPiXmIqCbZ6dxYrGHcHJvCJC3HQM6iBW/YVhRnY2t1HqfNUBUJJ5a59zaPcGYrd106K9cN7TtdMi+7nJ73WeBLc03+kTRatWVM79NPuKvLq9ShE7oofUVKx7ygmQnWQxBDx7RacI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717440990; c=relaxed/simple;
-	bh=mQUeynsA1hCoLIuqXaZMidYcSSx7+hiPX4gB4B5Gzxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BeJyBNVe+GZUVYbpCTikK+vDc01rPJrPEo9ZPPfYh/wzb375w0swd36izf3JBL494Uthx8nCuPTgJPTMWcyPCYGJgzghoK/mtNYwCTpEnucylelh5gjtCLccgas477zHPd+mkVKli0R7Eq1AgsAbOjF04xwq3ps/STOyuFjPW98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFOI3/OU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40310C2BD10;
-	Mon,  3 Jun 2024 18:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717440989;
-	bh=mQUeynsA1hCoLIuqXaZMidYcSSx7+hiPX4gB4B5Gzxc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IFOI3/OUiur+QsHtc/r94fWKtsR/eV5g7H6lneT+e8Q6UGHWjG7VzprEPHZwzw0zF
-	 ww0VmfJoWXQfc6FCQMeTeeyrsfuTvJhEsFuOPL6p35jzp0IgEPJEV4qm73aaUrOpGx
-	 fC1l6Dyj0AEc+YWWIsdgr4g2fGCi12XJS3Vf6hT6ULEkLMjaZUrmdabaF72vyKoZxU
-	 yi04hMmPlrrkle2UK1PzKO9oV/2V8Y1db8hfz5iyOs579XcJnO0Zajp4rA/5nbJ8tK
-	 UjYE/igET+Aw+ZEvxuGwjh5CKP9IxavCTk1E9q+TBGo5rHkXbM3kpDLKucKndBwV8a
-	 w3eo8Q99kG26w==
-Date: Mon, 3 Jun 2024 13:56:27 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
- MSI ITS and IOMMU for i.MX95
-Message-ID: <20240603185627.GA687746@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C992D3A268;
+	Mon,  3 Jun 2024 19:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717442109; cv=fail; b=oImBfuWJ7dHWEt4BIoZ5RUXUR0DQb6dQyR8YQ+hBy90G4BFbpRKT3CP6qLTzwSXLqRQsuhqxDLTp5/ooT2T4HsvCX5Vhg3+Ko7J2LcWRWiJKqIZc4rjbJ8wMiu/5vo2/RWtqdbHpje0KrJxf2MRMghPL60uDbefJLLY2LADTnd4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717442109; c=relaxed/simple;
+	bh=KDF8NPFhBYh4v1qTxVX0qBG4dWY+XeqUGFU5g8fstCo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dfBNpikhJFJMqUxJUdHU/fHOV/vfmKZxEBELE1hcW6WilXFZMX/wJwD7cWaGYUiUn2rmoEuFpgk8wnzIZhBpxp6cO95tzFURd74HlnVKrqUPMguQw9doSzLBPYvVPqWonSHPbtL+Q5swzJ4ydeP7P0+L4g7NYPAjcG+uy7Ypi/E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T7NbjmLf; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717442107; x=1748978107;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=KDF8NPFhBYh4v1qTxVX0qBG4dWY+XeqUGFU5g8fstCo=;
+  b=T7NbjmLfr4p33BjfYMvuJl9ipOI29uxl6/vxrzKtX/du2a5/w3uMVTbN
+   pBezBfzYGpHTcQmKiAgEeHKEFXaN89pdhD+yWm2b6IcC1IzzLBaVXn5wn
+   baOcSnqXhme1tBcvfzd8xBZMqUfoIiCso8LK/TViKMDn54tFkyZ089W8N
+   OuivwI3aEBCAKvGHL8pnS5MfxSQCAE4drrL2d3/IVDAHBo6Vksq8e4LlB
+   TKUdWnoVfw1BoZ0Q2+VMa8mV4YP7qP38/7o2atYpLpMlFRuzSv1auUxTv
+   9EnhzTN8Osv9qF1cHPLQwFrNPWmSKObX7bU9XyRk7ofbpoTWko9s/C9uA
+   Q==;
+X-CSE-ConnectionGUID: hY05C/zBRqyfFZYyptEf1w==
+X-CSE-MsgGUID: wP0Y8ea0TNyTC4ROP4S5zQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="13703506"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="13703506"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 12:15:06 -0700
+X-CSE-ConnectionGUID: ET9/LhSySs2tQhU+FgcxLg==
+X-CSE-MsgGUID: Rw5P3g2UT0elnqAWcNzEzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="41901994"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jun 2024 12:15:06 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 3 Jun 2024 12:14:59 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 3 Jun 2024 12:14:59 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 3 Jun 2024 12:14:59 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lV5Sz28uQj5ZpPoOyB5t+F72itf4+csq43zIv7OS3Fqa386xXAm027JJ27ct8Gmat+HqOHDJ3ltTPXeDZA64Os+ShHk9kDSvYFWhvwesaxBZP2b/Nu/Ej4Zsnji7ELWbn47QhwDRQdFrjMYmXwpS2NEjG2bQFgWnAvr8Agv8/gJwnhG8V4J5TP727OQK6L85PaGppSCSGv0ub+H8/GFgh5bjSidsX9FbfUIa63n9yxabGJAvNMhDDdLO+ac4ORbSoG93cyY8/Z1i7RkyY9e7cvMVtiBatDptI+7arTmk2u1ku71jMX7e9OU8YGBh5qj7ZG2sdrLf+nHtyF3RZVRa/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IgoVXb02gh8WWv4P8QXjX42mmRDIlLJlsAy0k+VioXs=;
+ b=j48JqgsrAXGdgfHwTDuJ4RXyMPLP31yJQdTgB/ClgCslwO58wzGoBgs7u1AvvDsOsM1BoBRFv7mUeh9i4xY03AqExyfIiQJlN7evZYyti5iYG1leh4D85G7+QZbgdowJSZNzUYvNpMq2wM98DfJIyIa//758iI1P6UOJdt2tbuEBLbmO5Wvk33sEPo5+dorXTVHy9X/Zp8onDRIa0kRzTK3+89K4xRNXjAz/BnLnUoBWxcQZMshFaEfrFPsr2o5PrFCN2Fdpc21WXRkKN0bOuzzB9uHRpWt8A+jd2wjqgvkSsA/+SMZLPk2ivYNu4K5FEFshrD4ZaxXrmXJoDLBoZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA1PR11MB6219.namprd11.prod.outlook.com (2603:10b6:208:3e9::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17; Mon, 3 Jun
+ 2024 19:14:57 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.7611.025; Mon, 3 Jun 2024
+ 19:14:57 +0000
+Date: Mon, 3 Jun 2024 12:14:54 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Kalle Valo <kvalo@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+CC: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	<linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
+	<regressions@lists.linux.dev>, Jeff Johnson <quic_jjohnson@quicinc.com>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+Message-ID: <665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240603165342.GA685076@bhelgaas>
+ <87wmn5ubfo.fsf@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87wmn5ubfo.fsf@kernel.org>
+X-ClientProxiedBy: MW4PR02CA0014.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zl4OpTfcfqMHELiX@lizhi-Precision-Tower-5810>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB6219:EE_
+X-MS-Office365-Filtering-Correlation-Id: e90c5c52-3f94-4b56-68f5-08dc8401750c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|7416005|366007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?q1KPP6OfOMrz3BENRG4lJ/l9vrqq/1Oo62kLrivPnfOwE3ZrkqP8G7bDpSV2?=
+ =?us-ascii?Q?Z8icRzQOPR4IRY9elewOYUEMVnasxew7WvMMs7OjdNnF0YuxpvohqFiNQ4Da?=
+ =?us-ascii?Q?WzaeGWJB0SzGm/i2nqAnN6FFv/C/oLu6BcKij9MU3xZKIJYKZTMxCuA9e+vA?=
+ =?us-ascii?Q?SnPkSPvh223/jWLZ4oRO7tBI6b4WfLngYeAZdr7ehk+hzjPOoYy5QXBbiXQ1?=
+ =?us-ascii?Q?dHmxXwhDXe54m3VlUvZIbSLty7LiRdb3RzsR0DDu+9rLVR9yQHv+h35QKHlb?=
+ =?us-ascii?Q?jZsVbC6K9MGnrafk3/wD7M0pXdyRMPXdomLLOAqQNE3rdJp667CzUYMXtXXs?=
+ =?us-ascii?Q?ngmFM983+2G88oYErYSD4zNgRTi2fcpBzQE0TEKT11P+xB/0A2gVxRbBV7MS?=
+ =?us-ascii?Q?7CcQD6rGb84yQvDCT5mG5p17YHVO2eKf1oPFqNXdEr2LuPM+kzfGKIUiGX67?=
+ =?us-ascii?Q?vS8yHCzSo/pSmG9CueDzQb/z65vyd/PsS6vOC2FP0qaWPEgwlinJdzgBwh9s?=
+ =?us-ascii?Q?Disygzh0p8LH3JiDEc/NZjSNNcwIULQNV4TWdO+MHLnyFIzoKfpfKVir+6TJ?=
+ =?us-ascii?Q?qqgkH1tME8IsiiO17kWvMZXD/lNgPVW7/0/ty1CnfpaigQ4L4KoMkiMbUeJe?=
+ =?us-ascii?Q?U9EMYrxZ3jzDzbvJwK4ZAacmQxus+QAk61+VgchdrpqJEw8p7SskSvxudwCX?=
+ =?us-ascii?Q?+gGepm1pGTeBRgWZouXsj2H5/FhDRFIHwdA9WJJdFruLkiE/DPvcWf21m1+Y?=
+ =?us-ascii?Q?YPJUx1UcxvZdcSYlVq91xqFJ16tQpvu3q7VLKbSN7eGELT0pffM4RyCPLGXN?=
+ =?us-ascii?Q?87m7osccUNqvNjGFpuNYz/DJuUPyJIlpaz8w3w8Z7/marJTkmirftOc9oXyF?=
+ =?us-ascii?Q?PWk2S0S7TuNC/LjBKHzqKVe0WogGxpH5O5mLsJQ/rD7vtOkqH+WsKHznvqYp?=
+ =?us-ascii?Q?FgtY5qRw54N8tp+3Ddf9FYOqnDFgmMtXTDVs5F/X7F1P2zVKtfhuCs63+Y8b?=
+ =?us-ascii?Q?vDrfHoxNEQns5ImINp+/2eJAjyheoCMZNiA/5ZwNVioNdAwT/9Sv/2nePDpv?=
+ =?us-ascii?Q?0pIrw8gWXsVw/6L9aDNBsPJJD5a9xz6A9/hsvMyFknWHXI2hNDd25ZD8GFb4?=
+ =?us-ascii?Q?h7elZLGxpGbqSOqbMOaoxgN6YIl2LiTU+3j4GUQNwjJz6LMZhlR+8iUh7TpN?=
+ =?us-ascii?Q?GSFbMIShPArMqipLKiw4GqscQXEZXC+SnSqPmf4s+aiIcir+6xU8TUhnEv/y?=
+ =?us-ascii?Q?tjgoTJM3brmcea5gVJNskkdOmTQfuhfr8xE9O559uQ=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?IImEXUR+TluzgLIQ7/55bP0LEFtJ1URok6sXyyXrYsP/Hm3QHA9FBFXUaRlF?=
+ =?us-ascii?Q?lCOa8DJ7K+myK/dm3/xZs+WMJ5ayTjP4+06/Yns2RbTKShQfJEaFkUWfHUba?=
+ =?us-ascii?Q?qWgIgYKibAnd+E/zqINcZptrMHba8KYXcPV8TMlYGEmxZCqVj9BU4urJZLSi?=
+ =?us-ascii?Q?3UnW5OKEbxlN0FBUP9fNy8/7pZdrQrz4MtFTGSiG5oyzyiCZ6pMI/YrLhwHN?=
+ =?us-ascii?Q?jTaYKjiH9skjSp+4YzKT7f80fDhNL/LoMMlEESOIpSNXxzLNfdGNeKvH12mO?=
+ =?us-ascii?Q?A9g1/eiXM0j/53hh7JBkd4Ee1I7+L9jAbo1VpXDKBLgtYQb0wkNnvtoDubtS?=
+ =?us-ascii?Q?O0x5QIcG6X1Rg4wZAgwWx6dyk3peH+rCTIqlC4e8c7rbwytnwo2FMGMgNiHM?=
+ =?us-ascii?Q?XnJGgqXa4LV2K0LmDzFgUVCcjygMnS/9oYntjijZkpb1wdQCwqQwAFAYCYcv?=
+ =?us-ascii?Q?1XHuWIszlB0qPXeoye2cibaqSLjmGwBsNTEcXN65sOhfudhjD3uCuWyBgS+t?=
+ =?us-ascii?Q?K4jBHTs0tSjcRnsNRm6Kw5qM95tBdMrBmQ2YP4f7IgNAU8jnJIxTOcu92rF/?=
+ =?us-ascii?Q?keNR8OZZzFsNExjNYlmvLbnhFe1NQ8CXH75/tu0W4sRxNEVoQ3N+LeLj82kr?=
+ =?us-ascii?Q?ECg+DF1YYEi+8wvUREAxtjA+KIU2H2kWLvMoK60iryadvPuBPIAEwnGUrU0k?=
+ =?us-ascii?Q?ovxgLDdwGr4/Vbb8K+HNUpov2DTDVZop0VQwHo/nkDZbxf1DpQ+TnjTBl2Ud?=
+ =?us-ascii?Q?kbKbRKM59mCgB/1Ex8tEcNLHR90LvDJjBH4NadgAVvi9/wsEDnOwQk+MW1iv?=
+ =?us-ascii?Q?njxM2y2OzBOfnAH4prz1JwL3lTb0+Vm/AZIOpQI/1ZPmCCBBxfsfVoa6YrMn?=
+ =?us-ascii?Q?dAFhUBFZguXz0ZTZqt+6INw62iWfUycg6RfgTs5DP1vdw6nuzQp131OSsF1j?=
+ =?us-ascii?Q?HsIWNcijODUSNN3e4JTkcfalVZMelHnqc1iuw+1dxe4nleBN9R8g/uO6lkkp?=
+ =?us-ascii?Q?74IYs2EcygM+riiH1e469PZzenIPBTeDBaOKVCCuc6q9fDkMKINistNdaHx1?=
+ =?us-ascii?Q?/v2F+SPqEwOCn2p5U/OxfDZzD6/0LvW8zQ8z5Q3kaFx9YRhqxJpGMQTKKc/c?=
+ =?us-ascii?Q?ZiEB8D+Pa/CvRozcMIgq97/HkEC/DUIb8gKDr8/zj6I62Tb6W2iOVAmMhtuB?=
+ =?us-ascii?Q?8yM3VELhuKUvzr6/nKID0ClGAI4LHB306D9tYVbTB+mDdGwc7iFft2YKNofr?=
+ =?us-ascii?Q?ZTMw9HQ2h9E/EBg8x37B/MXg7OlBgSG+D7E5ampE6RkOdo1KX9rq+FYLJ9MQ?=
+ =?us-ascii?Q?4LAS2wdH/yZjoDF7VqGgkmNY27bidoP6OskEJUohce+nYON+vp+NE+06KR39?=
+ =?us-ascii?Q?G6sewZxrlLFmvmYvPvkTiiDTnLHKO/LtOZCPCNAfqx3YhcvusWhYDWw7vrP8?=
+ =?us-ascii?Q?D6uZO8DDvOJ1oRSK/497+4emenG9YCiFvozHY2Wxs8N8HYHpIiVx0g9mhqFA?=
+ =?us-ascii?Q?fvS9Ir4AdiBULndUjbtRbRZfMVCzDT3INKxzcdd1TxZ08eViegl4p2wl81Ir?=
+ =?us-ascii?Q?PX/MNk/8IS/LQIvL8mFwRp2kdBzsC8bMiHMv0rQaiRb2QY8cm6DlNkkgvRfY?=
+ =?us-ascii?Q?9Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e90c5c52-3f94-4b56-68f5-08dc8401750c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 19:14:57.4479
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5O7I7j2geDc3oXzypZnr7qfM1xygkDfxyZzWa6WolWcoIAiscfRD8vMlWjMjUEJ5+pkhLcZ5BihZrxjqapA+4QekTYQAWzoZRRBFg3cvuC4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6219
+X-OriginatorOrg: intel.com
 
-On Mon, Jun 03, 2024 at 02:42:45PM -0400, Frank Li wrote:
-> On Mon, Jun 03, 2024 at 12:19:21PM -0500, Bjorn Helgaas wrote:
-> > On Fri, May 31, 2024 at 03:58:49PM +0100, Robin Murphy wrote:
-> > > On 2024-05-31 12:08 am, Bjorn Helgaas wrote:
-> > > > [+cc IOMMU and pcie-apple.c folks for comment]
-> > > > 
-> > > > On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
-> > > > > For the i.MX95, configuration of a LUT is necessary to convert Bus Device
-> > > > > Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
-> > > > > This involves examining the msi-map and smmu-map to ensure consistent
-> > > > > mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
-> > > > > registers are configured. In the absence of an msi-map, the built-in MSI
-> > > > > controller is utilized as a fallback.
-> > > > > 
-> > > > > Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
-> > > > > upon the appearance of a new PCI device and when the bus is an iMX6 PCI
-> > > > > controller. This function configures the correct LUT based on Device Tree
-> > > > > Settings (DTS).
-> > > > 
-> > > > This scheme is pretty similar to apple_pcie_bus_notifier().  If we
-> > > > have to do this, I wish it were *more* similar, i.e., copy the
-> > > > function names, bitmap tracking, code structure, etc.
-> > > > 
-> > > > I don't really know how stream IDs work, but I assume they are used on
-> > > > most or all arm64 platforms, so I'm a little surprised that of all the
-> > > > PCI host drivers used on arm64, only pcie-apple.c and pci-imx6.c need
-> > > > this notifier.
-> > > 
-> > > This is one of those things that's mostly at the mercy of the PCIe root
-> > > complex implementation. Typically the SMMU StreamID and/or GIC ITS DeviceID
-> > > is derived directly from the PCI RID, sometimes with additional high-order
-> > > bits hard-wired to disambiguate PCI segments. I believe this RID-translation
-> > > LUT is a particular feature of the the Synopsys IP - I know there's also one
-> > > on the NXP Layerscape platforms, but on those it's programmed by the
-> > > bootloader, which also generates the appropriate "msi-map" and "iommu-map"
-> > > properties to match. Ideally that's what i.MX should do as well, but hey.
-> > 
-> > Maybe this RID-translation is a feature of i.MX, not of Synopsys?  I
-> > see that the LUT CSR accesses use IMX95_* definitions.
+Kalle Valo wrote:
+[..]
+> > Thanks for reporting the issue and testing the fix!  Can you please
+> > respond with your Tested-by to the actual patch(es) you tested?
 > 
-> Yes, it convert 16bit RID to 6bit stream id.
+> Not easily as I'm not subscribed to linux-pci list and I haven't
+> researched how to import mbox files to my mailer :) So feel free to
+> ignore my Tested-by tag in this case.
 
-IIUC, you're saying this is not a Synopsys feature, it's an i.MX
-feature.
-
-> > > If it's really necessary to do this programming from Linux, then there's
-> > > still no point in it being dynamic - the mappings cannot ever change, since
-> > > the rest of the kernel believes that what the DT said at boot time was
-> > > already a property of the hardware. It would be a lot more logical, and
-> > > likely simpler, for the driver to just read the relevant map property and
-> > > program the entire LUT to match, all in one go at controller probe time.
-> > > Rather like what's already commonly done with the parsing of "dma-ranges" to
-> > > program address-translation LUTs for inbound windows.
-> > > 
-> > > Plus that would also give a chance of safely dealing with bad DTs specifying
-> > > invalid ID mappings (by refusing to probe at all). As it is, returning an
-> > > error from a child's BUS_NOTIFY_ADD_DEVICE does nothing except prevent any
-> > > further notifiers from running at that point - the device will still be
-> > > added, allowed to bind a driver, and able to start sending DMA/MSI traffic
-> > > without the controller being correctly programmed, which at best won't work
-> > > and at worst may break the whole system.
-> > 
-> > Frank, could the imx LUT be programmed once at boot-time instead of at
-> > device-add time?  I'm guessing maybe not because apparently there is a
-> > risk of running out of LUT entries?
-> 
-> It is not good idea to depend on boot loader so much.
-
-I meant "could this be programmed once when the Linux imx host
-controller driver is probed?"  But from the below, it sounds like
-that's not possible in general because you don't have enough stream
-IDs to do that.
-
-> Some hot plug devics
-> (SD7.0) may plug after system boot. Two PCIe instances shared one set
-> of 6bits stream id (total 64). Assume total 16 assign to two PCIe
-> controllers. each have 8 stream id. If use uboot assign it static, each
-> PCIe controller have below 8 devices.  It will be failrue one controller
-> connect 7, another connect 9. but if dynamtic alloc when devices add, both
-> controller can work.
-> 
-> Although we have not so much devices now,  this way give us possility to
-> improve it in future.
-> 
-> > It sounds like the consequences of running out of LUT entries are
-> > catastrophic, e.g., memory corruption from mis-directed DMA?  If
-> > that's possible, I think we need to figure out how to prevent the
-> > device from being used, not just dev_warn() about it.
-> 
-> Yes, but so far, we have not met such problem now. We can improve it when
-> we really face such problem.
-
-If this controller can only support DMA from a limited number of
-endpoints below it, I think we should figure out how to enforce that
-directly.  Maybe we can prevent drivers from enabling bus mastering or
-something.  I'm not happy with the idea of waiting for and debugging a
-report of data corruption.
-
-Bjorn
+I have had success with "b4 mbox" and importing that into Evolution, but
+your mileage may vary with your mailer setup.
 
