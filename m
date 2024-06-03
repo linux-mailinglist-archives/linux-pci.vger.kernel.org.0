@@ -1,84 +1,87 @@
-Return-Path: <linux-pci+bounces-8180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8181-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CD288D7CC4
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 09:51:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C4E18D7CD7
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 09:53:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07FB8B211D3
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 07:51:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE0D12811D4
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jun 2024 07:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2282D4CB5B;
-	Mon,  3 Jun 2024 07:51:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B974EB30;
+	Mon,  3 Jun 2024 07:53:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oOlLGBK5"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MjH12fu8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2072.outbound.protection.outlook.com [40.107.243.72])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1034AEF2;
-	Mon,  3 Jun 2024 07:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730C76BB4E;
+	Mon,  3 Jun 2024 07:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717401066; cv=fail; b=K+gdncRbJYJFZ0omzNiEyFgUkJvrzmrTq0z72UF8kTofygghKi8kTuFyXi1fHSOrcHgvamhY66/xWsDK7H6yeHZ7XzBzUHT/tNL1ey61dKBYEkib00MSrKE3jddiohHU6FEcmCTf1zR52zaG86tpwYTkT4A8t8seGBFa9b0mutM=
+	t=1717401183; cv=fail; b=scXa6NFETKPWsicjk7MmalGRMM+TRYSmyX7vE70uwM4SRNxlH09LB93LacC9OiwtIOUel0SxjOH/wWpPRWetQj+iWeMgkgJ4/dGy5V30ZShH8WkwfvZoGrYec1++YUqpU79yfVuLvTnRxW/0Yf/KJ1SC9k4wKg/tMSaWMepOh84=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717401066; c=relaxed/simple;
-	bh=lfyDCCcHer3KClTAJU9v+KR/iqF6PHVCKUTCAB45HMQ=;
+	s=arc-20240116; t=1717401183; c=relaxed/simple;
+	bh=s9c8o07BOeQzgsdd+8w/4cFojNUt++pEWrTBO53fpZE=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=H8s1JBp5LXVV0V/F5hPvV5EHG/24Ee3qSxLS18jupFj5WOhDYBpxuaUP5szud6/iC5RX/yHNNOlNc7O9wYm9+cVtKX1Bgw0vlK7bdIJPl1AikSt6jcloEjC2wRPmCFzfPGzQzbXvWpoXmTA7l0s2PoMkiTkw/BiBUIpm+ENmsMA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oOlLGBK5; arc=fail smtp.client-ip=40.107.243.72
+	 Content-Type:MIME-Version; b=tbT8f/0bT2KbQ555r/vMZQMwoZhOqVtY1t/OfVPSBcyq46G0FTZVyaK6ouMbRelAgKHgOtO3gaCzABTM099W5glYKZbFGfXpzsyGlDXgtv8J4DKZwHb4gcw5BOjj13sepqwlo5sSJ+KgE47slA+oqZ33ojyXWHy7cgV05E4cFyg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MjH12fu8; arc=fail smtp.client-ip=40.107.243.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hgxw08C+hX98j1mr6hoY4i9guF3ClE+Dnz9hubZiTrNwVXPsLLIK8c+n5UY8nCpK9DMdSeDu1Na+ITwr/84G/wPdkqVwWNNc0Qo0HuhniM7BsN7mmRXT2MNnMUcLZsrWlagSXwkFqNPB/MSERxK/04AEISZNZKdkSd7QELJ5pcoHL6PHpGI56ypKdLctqQ2MwQoGoqwXnGGVDcVzQWM9u7ghXuttplCj1sNu7SKxkTMJQb+doL8+I5580WWpBgdc4URmFPsGbOHHpYMVKVQXpE9U9iPcEILO1870hKxJNLU+fS9cLb4SObM8F6jtuX/ztFVXH+rREfn4FDpD8cP1Dg==
+ b=MW7kjG5dBaH9FTCg9CBtr8RsZeo37R2tXOZmysVpAzDHLZm7llCZgsGk+v1WJSHsgUgaGi7wjRthH0VESecrzrXrtXMcBPigq6aXVBKOjUlxlGLdxJ2K7yH9+//cNHWMJV1Mc/bRpdhLS+hfhlmxwyPF6MLYzmMsbdMmgZpufYoqeFPcURzlcyx71rNhxCUFcsV8XbQEASnOQd6FdWwA/76t+ZRaCPC9VjgArKfTjCLQ2ODPovwMzoL3WIwZ1jjnqe+JflJ21AOGAIcUvgIqS3QSbN/9yZxZDdkQ13zOMkjyeOSQdC9R4j7ZoUQIfrs0zoead1CXXw7St+9qR+e2Dw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B/4zBSW1/4+Biu1Wh5nF2ssQIO9Tu2xH3n6YIvIR8D8=;
- b=hCh3NIlxkjh8DWFH83Cmd0IN9+zExXdBaJAXPQMbOwd1tPl+Hz9RwgftoL9TgSj7KIQTYyQAVXYDJZB5syLg4u8JAakDH5Fia22aJP7CWwjJrdllvQlZnQ4wxbz6BIlKtirE870hCUrloCXi20iJ0k4XGdfX5C9yEOxWMGs6MrlQ445WjIzZdpjR+CUd3DUQ9IrNCN4bRGtoMO/KgyknZgbViz/UHzYOTNNSEFivUhgojA3ia9ZuRWhaCIWXaCgyq+KpAUY5EoX2enYRPLcpBxYMt/WLt2uFRMvkY3VAhIaojRaAs+UDHTKhYHbzmqTG8iNP1IomHNo2Yw7ikhe5UQ==
+ bh=hGSPdTuE87TTSvIOBV26ElmtH7B+kkWNajplHI+HIpU=;
+ b=LydB/PHl9Uig5CzrXeSMZs0xPL7LkloRDRlhvwcYO6sWB3CjaGCeDj3OfZ0izpuKta4HpOPX2CmiUWloe3eCVtQy+11jXYXBpYFC1haFIySnQMJrQlE+4ZqS2oG66yMCUQKVFG4f+XddCjVU2JG0fJ3mn5umEQUAgnQasYFRdMs2ZqtrMIvZ0oNQWOQttUx2z/su3vYrSlqtUCWSfHafwKBTxxtPJxA68IrdulGAKWSWihLTrYh4W97LsRYutHP759oVakDDakpbb5RPkWpiyuclbmrR9xAbFGlL1VEFTVT24sl43RFxwdthwfkFTqI34JbptIbSaS317grcRYg4iQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B/4zBSW1/4+Biu1Wh5nF2ssQIO9Tu2xH3n6YIvIR8D8=;
- b=oOlLGBK5HALRdSamTueoAhQO4hP+2rS+yLjK9ozivlsDcS8E7z1hcKNWQjkMOhU3OXwr7laTk/WpqgtuPG7l6yQIQ83+1QcPcNjZgw5KaDx4uIstjiNK7c5FWLx3gxYAjc5uOcXQE6/FhAUjpxA3dxrfEthVGWL3gzs0oaLAfQWRqlQe1iWvZQqwzjBxFCoBrdGLE/lehF605oOqJ++eyigPKZJU20aeckLAxdtfaQDxeQuQqKK2TaWu2RAuNYtXmBab2oqggckVe7Dd91oanCF01eqLz2zK7VQwOeRpgXgMbz2vdPhOFckAC88hG/IzAeI0h/11tM1neVTbfXwJrg==
+ bh=hGSPdTuE87TTSvIOBV26ElmtH7B+kkWNajplHI+HIpU=;
+ b=MjH12fu8jQdZYlKvn1fZZA9wspzqtGAmVzctlV65bKV2tiCszQRFlPlQaiwHrY/EGds1hWMbi3eYIzD/rIe4Vb+5OKM8q4SRye3HXOfrTsjevs1Atnz653Pz1PcwcvHSfuKfBlQNDpvuRO1z7Y2tmWHyudGUk6V7CZxU2SC29HNnEMK79EB5sm0yYc8KbOoVaK+BM8qilqqSsTfXUJkJ9UBSf/QIHy4Yy7/ziQAJr7XG5AYLnaiuU6qjBhC2XRpV0bzVjgF01pRnNyAl01dNDNk1yS5GAn3ymYBZq3ADMrTJHNZc0+zc0cEoPSY3uqN6WYDNu4GbVKich4KT8UVr/g==
 Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
  by SA0PR12MB4432.namprd12.prod.outlook.com (2603:10b6:806:98::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Mon, 3 Jun
- 2024 07:51:00 +0000
+ 2024 07:52:58 +0000
 Received: from PH8PR12MB6674.namprd12.prod.outlook.com
  ([fe80::780:77f6:e0af:5b5c]) by PH8PR12MB6674.namprd12.prod.outlook.com
  ([fe80::780:77f6:e0af:5b5c%5]) with mapi id 15.20.7611.025; Mon, 3 Jun 2024
- 07:51:00 +0000
+ 07:52:58 +0000
 From: Vidya Sagar <vidyas@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, Bjorn Helgaas <helgaas@kernel.org>
-CC: "corbet@lwn.net" <corbet@lwn.net>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, Gal Shalom <galshalom@nvidia.com>, Leon Romanovsky
-	<leonro@nvidia.com>, Thierry Reding <treding@nvidia.com>, Jon Hunter
-	<jonathanh@nvidia.com>, Masoud Moshref Javadi <mmoshrefjava@nvidia.com>,
-	Shahaf Shuler <shahafs@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>, Jiandi An <jan@nvidia.com>, Tushar Dave
-	<tdave@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krishna Thota
-	<kthota@nvidia.com>, Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-	"sagar.tv@gmail.com" <sagar.tv@gmail.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: RE: [PATCH V3] PCI: Extend ACS configurability
-Thread-Topic: [PATCH V3] PCI: Extend ACS configurability
-Thread-Index: AQHarNt+aNbsAVmh9EuxtikUDxoII7Gk6fAAgAAEm4CAEMzwAA==
-Date: Mon, 3 Jun 2024 07:50:59 +0000
+To: Vidya Sagar <vidyas@nvidia.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "will@kernel.org" <will@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, "frowand.list@gmail.com"
+	<frowand.list@gmail.com>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, Jon Hunter
+	<jonathanh@nvidia.com>, Krishna Thota <kthota@nvidia.com>, Manikanta
+ Maddireddy <mmaddireddy@nvidia.com>, "sagar.tv@gmail.com"
+	<sagar.tv@gmail.com>
+Subject: RE: [PATCH V7 0/4] PCI: Add support for preserving boot configuration
+Thread-Topic: [PATCH V7 0/4] PCI: Add support for preserving boot
+ configuration
+Thread-Index: AQHaoW8O6T9QgBu4DUGMsjcflgWlrrGa9G9ggBrenNA=
+Date: Mon, 3 Jun 2024 07:52:58 +0000
 Message-ID:
- <PH8PR12MB667431B8552D271F906F8F4BB8FF2@PH8PR12MB6674.namprd12.prod.outlook.com>
-References: <20240523063528.199908-1-vidyas@nvidia.com>
- <20240523145936.GA118272@bhelgaas> <20240523151605.GP20229@nvidia.com>
-In-Reply-To: <20240523151605.GP20229@nvidia.com>
+ <PH8PR12MB66741EEDF5CEF80F44973A02B8FF2@PH8PR12MB6674.namprd12.prod.outlook.com>
+References: <20240508174138.3630283-1-vidyas@nvidia.com>
+ <PH8PR12MB667485001077FF106E728320B8EE2@PH8PR12MB6674.namprd12.prod.outlook.com>
+In-Reply-To:
+ <PH8PR12MB667485001077FF106E728320B8EE2@PH8PR12MB6674.namprd12.prod.outlook.com>
 Accept-Language: en-US, en-IN
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -87,66 +90,66 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: PH8PR12MB6674:EE_|SA0PR12MB4432:EE_
-x-ms-office365-filtering-correlation-id: b2d75e41-8784-40ec-3669-08dc83a1e8d8
+x-ms-office365-filtering-correlation-id: a395bde8-a53f-4616-287f-08dc83a22fa5
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
  BCL:0;ARA:13230031|366007|1800799015|7416005|376005|38070700009;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?YO1SgsvFXOgHtiPQdxMDr2k5HF/Jb+Hspt7rimnCv7AsCEw5oNl9+HZCw8zo?=
- =?us-ascii?Q?gyWHa7VgIenuBIEnT/IrHfOdjfX5s6+n3Ue0RkaO7+GAsecjC/H8e+aV2YGl?=
- =?us-ascii?Q?zt7rt1H4TmZ+tHQ8wL/HxNReX005bcVMlkIJWZGfYR4qDFf93u6em93jnEmr?=
- =?us-ascii?Q?yqbHmoJY9YNiCyYZ174L6vkxCGMntRkF0Quqcfun92tSy3fjJ13Nfmeg1WNW?=
- =?us-ascii?Q?I80DJ0d3hqwqNJKwy/5npLuAKgwXCGF9fvP6QGj+8a8ND9197SJzoky5+wGz?=
- =?us-ascii?Q?zh11FnRKo/SIONw9vFnGH2X22i+1anJq53+0RfuzrhvutnCfkvU8ST0IzwbR?=
- =?us-ascii?Q?fS3O6iAH6oAvR1U6sXDlAN1GW/orTEaO6/bEyhsvPGX1jLh6JFH3z3sqNEfA?=
- =?us-ascii?Q?m4IYNZi8BgfE9ZV42XLJG/afu5eWOvQE5aN0QWoyJ/e977lfWwYC/CYXp2a+?=
- =?us-ascii?Q?gjYtyMaHzdrCmNxTCBT0U/Idvri+ZZ+ha0MXgoFP0DPdyWWLKVLbueKnqL55?=
- =?us-ascii?Q?HkHEcfU4569tpLYXLkSj8+V2gWHHP0uc/M1YyVqRSa5lXT3ZSY38OiZZL+rV?=
- =?us-ascii?Q?TFXuSeVjQu/+UzjT3ve1OelW/4jmxV8dTuaFM1NJcJiYdPpmtEE9fct+lpUB?=
- =?us-ascii?Q?UB6lsip+uTjgmO+w+MCzW70I95f/9pfQBrqg/g1b8r1Fynh32ECxWzS4gvEU?=
- =?us-ascii?Q?AFYmnRAq7tt4czJH5+Npgst7F5bq9jJA2PrZw2VgFBT8LRJvDeod8Dkfshes?=
- =?us-ascii?Q?HSyi/fIHLRgyP2/3D1a0n/TRDFa00A+Uudz/DnnmhNKeG5Pmbxg79UtYHzAa?=
- =?us-ascii?Q?4FOPtmmTNY7so0xvS6AsaGnegzqVwowX4MooJLr9M2RlyciztiL3Klnx98tt?=
- =?us-ascii?Q?2LVdIIChbDBLCdANkhdcu2sLVL00WQW6LBECGIgMpcDDe2BIbsOPqHrCxwvl?=
- =?us-ascii?Q?/BGflRbnO02LDOWgwJ/UInYwDbdTcH3BNS7gLgb42uH8NXWrFsiEH/nTPruP?=
- =?us-ascii?Q?yaxv+zfx230IDmKKUpXjprAf4JU4Ry5PEf4oIOXpIyZ1EC3u0I8K4NdMeNOq?=
- =?us-ascii?Q?rIFfGerBbpQ0Tcs/RwNQ9ErAGH9Dd/VnBgM2Tk0JexRToLmbXgK9cqOYKcVr?=
- =?us-ascii?Q?2k7yf7DpPAVup88jLnJc9lFGMaz7PZ/PLnUeocaAU1G+WQVmeYmRSthp+l30?=
- =?us-ascii?Q?fROcAq0HjO0wi58/SUY+3RauoFMv4BwuiLf0DXNL2h+j169nMP3GZw4PFK0H?=
- =?us-ascii?Q?eyDL7E/aOvF+75Pfk7zf+mzdxFSpK/A0p+kobYudvy0peEwRlOd8FW5t6K5p?=
- =?us-ascii?Q?mGsKerK1UDfoRmX63WukTCa1ose0lQb1eUVnHLIdpfLiig=3D=3D?=
+ =?us-ascii?Q?UpNxaTrtPvMrC8y6nFg7NpYEUFm8tpVhUxTdIVSIpsS82KkbeviiR6VeFDad?=
+ =?us-ascii?Q?4QLBz+JE2nbC8+2XYQQtVCtMe3e08wrhubOq5QhqTlFFFMncY0JiBv5fFrZx?=
+ =?us-ascii?Q?MXoF7GDnkLq9a+4nNA4iZH6NwrIkLv75y3jRYuaXtCG9TYg9vdSY2GDilewT?=
+ =?us-ascii?Q?jUBr/Lh30Tsg5ruyZ6rj+0qM+Rozh8lrK2OsFgyZsnwM850JE9jx6GaXS0aQ?=
+ =?us-ascii?Q?cFpMRaHYSpuegNzuDYfx7/fbL7aw9yV2WwqSUyV2iHYwsnCdQhWx70iMxBDK?=
+ =?us-ascii?Q?Hg613weAaBmxM3ATV7uCwdCPn72GHV6DZgZ5oR2VDGoDGWufOW/2NZtWjsRp?=
+ =?us-ascii?Q?ZLeBk/hvB+G3Zy5enZCIf1TL4ER3z43U/7JT01GV4Qj/DkxUrdvrXFtwh+Qm?=
+ =?us-ascii?Q?bIV8TiQ8ii4EVnRTbNqKqct2bZUvL162MeNfsE7qGXrLr7pd9ztu0M/NWS28?=
+ =?us-ascii?Q?pCFppTtVtaUFVQgQuzCO7BlHi4mzBXkHFEe2kfmo4thb5C9lUy91MTBPnwbg?=
+ =?us-ascii?Q?1WNhrriT7Zpvf0hU79TbGPnjA3h+gpP8Db8T7wdX/jP/zXhvXKLexwv0DPW4?=
+ =?us-ascii?Q?/hcPn6i4Qa4Ws1RUiUiFjWNfR5pnSqxJXXJw88LjVGYwPs3gbEDHSY8ry1MR?=
+ =?us-ascii?Q?wvo7l3LmQuOtOBt9e4dZ/BZetoHdttEZg1+8JYNzPTpZx2pPE3MKg27FfxtX?=
+ =?us-ascii?Q?wyYvB4xs2H3FEBKV+hJZFXJoReMk4C2KQ/9owx9vpPYoyuIcC3F9MenGJ/Re?=
+ =?us-ascii?Q?zOzssBksWq4RIlW4HJ0mHVfRbVsBosUNxNtJydKNQB4XiABKTiuKsSBQwRxi?=
+ =?us-ascii?Q?M76XLtPHj3x/RIDqwp1/W4RKKSz2DBW3VPRCXhMlY8u6TdyXUWRJ5SSQMaRg?=
+ =?us-ascii?Q?phhYd4Hu6NWShfhAUw5WOxcTMUmFnLsPyIOtMyUFFGGkU06ClrhLE6GM3Ava?=
+ =?us-ascii?Q?VwMci+Wkbv1gL08xoTvHSqMs7QOLGpZeF8J9fOToO8TRRz5uJIEEsllebN61?=
+ =?us-ascii?Q?XE8qxvTmkG+TKZEOFSdRg0hDXMrmRFOArzx0jIrUSrw6uHdg9ojynoTfStvc?=
+ =?us-ascii?Q?bO6MmOGZx7jNQ/MrAMePQ2Oo3cS2KpNgRmEXyd8lMWA+LymT7XywGRcrkQcC?=
+ =?us-ascii?Q?JmHFq4bosiS3TIYZIO8Xnt6HJH+Zgnq9ALDial5fvV4ntE9PTU6iqROiKazt?=
+ =?us-ascii?Q?KZ9PdfVpiWL60YyFlTiKPmTIQ5cmMmGHghJ6lF2LL2tr2CnwVi3DzxCwKlQa?=
+ =?us-ascii?Q?jsQUzjauybsd9RArNfoB+cBTOT5qJYLys5iJPvrVLi0yd8ioEdiKR2lkUu5g?=
+ =?us-ascii?Q?CUEUzUN068heQCP7cwx+7Xu39B++9IEBUnv+MMrKbhaV7w=3D=3D?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?HctwYmh1LrQAa19T8KyuBdbATa96hfN3zTh0leHPZfPQ61NXxw7BbrP4GEy9?=
- =?us-ascii?Q?+GrlfVLfMxZJrAtAMdRZ2oqJ9qhMnP5a+7r1ZdArQNO7Mhm2+AAmEFrY2N44?=
- =?us-ascii?Q?5e82PzgqW8xknZ/8xYW/ubRpfUeMxZ434d1Z6kgY0jGdYj1J7FQGi3AN6vyK?=
- =?us-ascii?Q?gL8qbR9YCWAV0OAs3JjpWPqfgjJfIVhzlDPH4CwYS4Or5q48J4On6U1MsQN1?=
- =?us-ascii?Q?IbMzH50bK/h2/bnuS4VR9kXNLGzvhTslN6wo04XkpBmu1g4rKZ8i1SKBgDLX?=
- =?us-ascii?Q?Ulu3UaSjwW3hwJVXOTVh1+l7qVSF81AJGWKZYqOxLT1jxev5pummyyZTyLcW?=
- =?us-ascii?Q?/r609ZoHJHNpbpuUVLL9egADk3ViZMLrsPPJHm5O8H0Oj4rCo4DImZEHyszn?=
- =?us-ascii?Q?GoWGRxoq/YIDdikEVjDnJLxUTBM2CVrZe6QkhVVbdiYOBxzYgvygYdQxgwN3?=
- =?us-ascii?Q?uc0jTjJLoBA1y7lKsxKE6vMwy12/9KdqtqB8sLsO3QwbUzOw5El4wOQJRLyg?=
- =?us-ascii?Q?1C1DnWMGwmHnHhqjGRbJPwlp9W4o6UK0qALGyVASmnt1F79gAlqI0aNlyzN3?=
- =?us-ascii?Q?gLXpKgCzMuwG4oI3cJx3Hc2m5adjShdSbujJjArdNV1MR0ad9tDfh1n0Oo9J?=
- =?us-ascii?Q?YBDX0/gfmDyqJTJ8Ycvpz+gIKoo8VZ00TjOBUWhPhRuZER0OSeV/MIoFSOge?=
- =?us-ascii?Q?K3ihmSNvVLPgcQeoCMY7+CY0d+hbByIWg82KsJkPt1avwjxmEmPVl5dZ8tjI?=
- =?us-ascii?Q?f0FfCqrAMCOcgDyJ8Z6gVK+9c29C8zG+lR6IwlaSwu22GxzNqagrhEp6PrY5?=
- =?us-ascii?Q?Ic2ZGLBpSVGDj90jyFJwyZ8zRcY1TbyIfmhsmHM7HWYDDukzJm206NGoZ7xU?=
- =?us-ascii?Q?16XJbvT/FDeTzR4hd0XW7D/6w26IyCcsgTv3IIN09CwTT4ZuDbz/73URDHoy?=
- =?us-ascii?Q?E/tQQ20Msf4rNntKayHv9qS31ityl5Gx1r2du8xX+A+VnmWaREOd3yFvcpHe?=
- =?us-ascii?Q?Lyf4czjLkUBobdEPqM64+bhsHDrP1a306MWvk9wHYva6mvS5jD3PdVB/peJn?=
- =?us-ascii?Q?anXh/kExFKdCZ6U9Jb5AT5wU9TLN58IdCdgfuuXX04D2tLT6Yv5dvu/tocoK?=
- =?us-ascii?Q?3s/TjWmnNb2l5VkPTp3dv9lXSkgACfeKSq3Poed79L0IW/a0TqQ4xlVpCVcO?=
- =?us-ascii?Q?TVSGnWbx7cXQrKbklg8JdvScujERq0B3sr0ql986/p+5H/QxtKUKIl+NKeJ4?=
- =?us-ascii?Q?vRmGGPfArJ9F/RVE1kTIkDvyjQTsd0WJZLxzBjnJJAWvNV7n/OTYvojncBPJ?=
- =?us-ascii?Q?ODyg2l98HiBTyU16MrEH+gE7vdldDvZ5HEV3bw02jbLbfIziNGv5BDAiKq4l?=
- =?us-ascii?Q?/FphU3EziAGmXHTlXWj5XrJjw7WlaClUq8BvjUjpgHgEvFrk9ozUxj36AsRx?=
- =?us-ascii?Q?zgsG/2ewnUh6uulI+6irPuhQbXehtGCKjn1VM3//3OgNccTNpfZ98ycDB2Ym?=
- =?us-ascii?Q?BZ7D9HbVl/gDYsdNaJnZp40oa0KPtxEeqsp8O1VjAG5yGjI3Q5eM4h92N1IR?=
- =?us-ascii?Q?8VQViJVh5a0Hc+L1qH0=3D?=
+ =?us-ascii?Q?lekQr3ysjubWA3u1rcYq3ySn3DCFPsO7Gh0KGauDRtJQI1WEjAqa6RqBfj/e?=
+ =?us-ascii?Q?KyzEItWNi4+u/ixFFoxMz90Chpq/iAVCGlAmbr0AFRYjsBUjargQYC160uEz?=
+ =?us-ascii?Q?vKIsZcFU1FBL7BqMQ9MVTdYRDIZ7ynvvteSxRUqJB7OuMbDp+99wqUiA8Oqt?=
+ =?us-ascii?Q?uddE+QrozEkJPN8rnGmN8NdL2Ml/1SrKDb4rENIi7TmjNkOFnc1aYQlb0XQj?=
+ =?us-ascii?Q?rTj49oy6yN58iqd94J0nIXMWFH73Q6fnCbU3PW/OvOPpvo4BUabo+ObdjlyF?=
+ =?us-ascii?Q?f46USfsM5i6ehZ0oOz5qQI8CSQIU4iZT2xIgSkY+Xcu72Qv8yBFYYDoWWAHy?=
+ =?us-ascii?Q?WPTr2Gag6hIiZ+6qN2SN3Ax6wE4oLgQoFZwmFaS2eUz1Fu9X6y/wG5ZGAnfp?=
+ =?us-ascii?Q?HvDGspVI9YHaQX/HtdtzaXCrPdItlhPBVVfchl3JXhDDPeCJ4PEPLYPthulq?=
+ =?us-ascii?Q?I3YybouJNnESF6kl5VNds7PRNF5rIaNFBucoDuNb0Cx3wmBifShHZ57mnMFK?=
+ =?us-ascii?Q?XT24yclhwIXIKdzCMNUeNM3J9IUYM91hoWUV2dhV3so+TAUSx1L0F75oUxf0?=
+ =?us-ascii?Q?HLxozKd8rkRjfQ6FKBqpVdbC7Tr3ns+by0Kr3PpOh1U6H1kFZNalpT//Yt9k?=
+ =?us-ascii?Q?Tig1kSaMYE3XYaPOi3MzmBIWBiLs6TWuTgYgMU7oxqySiIAsjNfduCQDepuB?=
+ =?us-ascii?Q?B9Q4WIUezVh9bVAWP10gAeiBRRKVnCTlNYKFJKbxd/xGgngmS9whpSeVvOKW?=
+ =?us-ascii?Q?I/9fJN+k+2rKr3zjLcJa0In1TBU3Q9c6VtxrIedD8fRhQqOYMNSNxoW/jZQd?=
+ =?us-ascii?Q?23f2c5ObFIM3Knf5j5zM8bEC2HWiSaP0yvS2h+m+XZj1cH9c+6b+qSkTHDdd?=
+ =?us-ascii?Q?afJeQbjs3TFuRudfWw4/dsK5Qy69WACuItvHRJCOWlFoH/GnA8FHFF1Cia48?=
+ =?us-ascii?Q?eAtHoP0AWzZMRabnNJ6g6y5T0ewRabaq44JiwVSDX+zG7h1myG8jlJLSf+ip?=
+ =?us-ascii?Q?105r+jISwkevDujgxgMkYREm0tBkH6HdAW9Sx2hA4dt6hGqMK7teCtr1VLN+?=
+ =?us-ascii?Q?NohvnpDI7XIgH2ekkrOl6/t23kPD74PfWiOcytMZ+DYQkWXPPorV7ARyZc28?=
+ =?us-ascii?Q?RBpg91glX34xnkQe+0iygDx0xOutZ23pGXhp9Co7Fvlc1xXcjC4ZcNiTYGFV?=
+ =?us-ascii?Q?+QHhwbhblmBlyKlEmW8n8BJk5hzUgynTXFTU+Dg26DQwZbgCQyAmXx+k7Z9s?=
+ =?us-ascii?Q?HXNrawm7mGFHN/FGllnOCfWuylhvDKCV9MzmOo8bPkgbnFosQjtWhqtolOl9?=
+ =?us-ascii?Q?Poeybh2j9jas7C4b+S8JYcH5uhYaxWexxRq4jum2/3swp7GHscXBHOG80uQH?=
+ =?us-ascii?Q?wN15fWIzc65GcklZyeT0LuzhVU14zDn2rk071gYSysJdYVC3pAMgiKgwtMCf?=
+ =?us-ascii?Q?h088V1V0svCdx1p6ja6XIKFOnzLBQ9zwD33nFGDk3wUaESP+W0IX+Xjm7yUr?=
+ =?us-ascii?Q?wMlh5IHtYmr4ICE3M9ksXw/pmwshEV6i93PPCSLxeBGph4nM8nx96aXLFUi1?=
+ =?us-ascii?Q?YxMkPmuy6i4Ls8fGoqE=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -158,105 +161,92 @@ MIME-Version: 1.0
 X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2d75e41-8784-40ec-3669-08dc83a1e8d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2024 07:50:59.8680
+X-MS-Exchange-CrossTenant-Network-Message-Id: a395bde8-a53f-4616-287f-08dc83a22fa5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2024 07:52:58.6617
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: flK1psFOIiRhrqJ/TxO1PI0epzwrJCywBfU7/sZGCrljGG8i6FssMPFACNeI1DeVhLrMutg1zr3CRABmjgBNzg==
+X-MS-Exchange-CrossTenant-userprincipalname: CaoCJCkFTDgBRhmdbMIaBlEyySBemH0+Q76jSvfBwpMdkkRbrFWKWsJXgQQ44zaTlKXR4T3k6xIG8cGf0j8gww==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4432
 
 Hi Bjorn,
-Could you let me know if Jason's reply answers your question?
-Please let me know if you are looking for any more information.
+Sorry to bug you.
+Please let me know if you need more information for this series.
 
 Thanks,
 Vidya Sagar
 
 > -----Original Message-----
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> Sent: Thursday, May 23, 2024 8:46 PM
-> To: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: Vidya Sagar <vidyas@nvidia.com>; corbet@lwn.net; bhelgaas@google.com;=
- Gal
-> Shalom <galshalom@nvidia.com>; Leon Romanovsky <leonro@nvidia.com>; Thier=
-ry
-> Reding <treding@nvidia.com>; Jon Hunter <jonathanh@nvidia.com>; Masoud
-> Moshref Javadi <mmoshrefjava@nvidia.com>; Shahaf Shuler <shahafs@nvidia.c=
-om>;
-> Vikram Sethi <vsethi@nvidia.com>; Shanker Donthineni <sdonthineni@nvidia.=
-com>;
-> Jiandi An <jan@nvidia.com>; Tushar Dave <tdave@nvidia.com>; linux-
-> doc@vger.kernel.org; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.=
+> From: Vidya Sagar <vidyas@nvidia.com>
+> Sent: Friday, May 17, 2024 11:05 AM
+> To: bhelgaas@google.com; rafael@kernel.org; lenb@kernel.org; will@kernel.=
 org;
-> Krishna Thota <kthota@nvidia.com>; Manikanta Maddireddy
-> <mmaddireddy@nvidia.com>; sagar.tv@gmail.com; Joerg Roedel <joro@8bytes.o=
-rg>;
-> Will Deacon <will@kernel.org>; Robin Murphy <robin.murphy@arm.com>;
-> iommu@lists.linux.dev
-> Subject: Re: [PATCH V3] PCI: Extend ACS configurability
+> lpieralisi@kernel.org; kw@linux.com; robh@kernel.org; frowand.list@gmail.=
+com
+> Cc: linux-pci@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; Thierry Reding <treding@nvidia.com>; Jon Hunt=
+er
+> <jonathanh@nvidia.com>; Krishna Thota <kthota@nvidia.com>; Manikanta
+> Maddireddy <mmaddireddy@nvidia.com>; sagar.tv@gmail.com
+> Subject: RE: [PATCH V7 0/4] PCI: Add support for preserving boot configur=
+ation
 >=20
-> On Thu, May 23, 2024 at 09:59:36AM -0500, Bjorn Helgaas wrote:
-> > [+cc iommu folks]
-> >
-> > On Thu, May 23, 2024 at 12:05:28PM +0530, Vidya Sagar wrote:
-> > > For iommu_groups to form correctly, the ACS settings in the PCIe
-> > > fabric need to be setup early in the boot process, either via the
-> > > BIOS or via the kernel disable_acs_redir parameter.
-> >
-> > Can you point to the iommu code that is involved here?  It sounds like
-> > the iommu_groups are built at boot time and are immutable after that?
+> External email: Use caution opening links or attachments
 >=20
-> They are created when the struct device is plugged in. pci_device_group()=
- does the
-> logic.
 >=20
-> Notably groups can't/don't change if details like ACS change after the gr=
-oups are
-> setup.
->=20
-> There are alot of instructions out there telling people to boot their ser=
-vers and then
-> manually change the ACS flags with set_pci or something, and these are no=
-t good
-> instructions since it defeats the VFIO group based security mechanisms.
->=20
-> > If we need per-device ACS config that depends on the workload, it
-> > seems kind of problematic to only be able to specify this at boot
-> > time.  I guess we would need to reboot if we want to run a workload
-> > that needs a different config?
->=20
-> Basically. The main difference I'd see is if the server is a VM host or r=
-unning bare
-> metal apps. You can get more efficicenty if you change things for the bar=
-e metal case,
-> and often bare metal will want to turn the iommu off while a VM host ofte=
-n wants
-> more of it turned on.
->=20
-> > Is this the iommu usage model we want in the long term?
->=20
-> There is some path to more dynamic behavior here, but it would require se=
-parating
-> groups into two components - devices that are together because they are p=
-hysically
-> sharing translation (aliases and things) from devices that are together b=
-ecause they
-> share a security boundary (ACS).
->=20
-> It is more believable we could dynamically change security group assigmen=
-ts for VFIO
-> than translation group assignment. I don't know anyone interested in this=
- right now -
-> Alex and I have only talked about it as a possibility a while back.
->=20
-> FWIW I don't view patch as excluding more dynamisism in the future, but i=
-t is the best
-> way to work with the current state of affairs, and definitely better than=
- set_pci
-> instructions.
+> Hi Bjorn,
+> Thanks for reviewing and refactoring V6 patch.
+> Could you please review this V7 series as well?
 >=20
 > Thanks,
-> Jason
+> Vidya Sagar
+>=20
+> > -----Original Message-----
+> > From: Vidya Sagar <vidyas@nvidia.com>
+> > Sent: Wednesday, May 8, 2024 11:12 PM
+> > To: bhelgaas@google.com; rafael@kernel.org; lenb@kernel.org;
+> > will@kernel.org; lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > frowand.list@gmail.com
+> > Cc: linux-pci@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; Thierry Reding <treding@nvidia.com>; Jon
+> > Hunter <jonathanh@nvidia.com>; Krishna Thota <kthota@nvidia.com>;
+> > Manikanta Maddireddy <mmaddireddy@nvidia.com>; Vidya Sagar
+> > <vidyas@nvidia.com>; sagar.tv@gmail.com
+> > Subject: [PATCH V7 0/4] PCI: Add support for preserving boot
+> > configuration
+> >
+> > Add support for preserving the boot configuration done by the platform
+> > firmware per host bridge basis, based on the presence of
+> > 'linux,pci-probe-only' property in the respective PCI host bridge
+> > device-tree node. It also unifies the ACPI and DT based boot flows in t=
+his regard.
+> >
+> > This patch series is a complete version of the incomplete series (
+> > https://lore.kernel.org/linux-pci/20240421190914.374399-1-
+> > helgaas@kernel.org/ ) posted by Bjorn which in turn was an attempted
+> > split work of the single V6 patch ( https://lore.kernel.org/linux-
+> > pci/20240418174043.3750240-1-vidyas@nvidia.com/ ) posted by me.
+> >
+> > Vidya Sagar (4):
+> >   PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to
+> >     pci_register_host_bridge()
+> >   PCI: of: Add of_pci_preserve_config() for per-host bridge support
+> >   PCI: Unify ACPI and DT 'preserve config' support
+> >   PCI: Use preserve_config in place of pci_flags
+> >
+> >  drivers/acpi/pci_root.c                  | 12 ------
+> >  drivers/pci/controller/pci-host-common.c |  4 --
+> >  drivers/pci/of.c                         | 54 +++++++++++++++++++-----
+> >  drivers/pci/pci-acpi.c                   | 22 ++++++++++
+> >  drivers/pci/pci.h                        | 12 ++++++
+> >  drivers/pci/probe.c                      | 34 ++++++++++-----
+> >  6 files changed, 101 insertions(+), 37 deletions(-)
+> >
+> > --
+> > 2.25.1
+>=20
+
 
