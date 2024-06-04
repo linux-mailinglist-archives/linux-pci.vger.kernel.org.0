@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-8258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDA618FBAD4
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 19:46:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 727D68FBAF9
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 19:53:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9799B28511E
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 17:46:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28DEA1F2201A
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 17:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7915E14A601;
-	Tue,  4 Jun 2024 17:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AFD8149C4D;
+	Tue,  4 Jun 2024 17:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGAt4/9M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pv7WYyK7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FAE14A082;
-	Tue,  4 Jun 2024 17:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDFC13D52C;
+	Tue,  4 Jun 2024 17:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717523009; cv=none; b=uysd7rM8CTwB5JheoT1djvHx/oamTQY4rwekXQhiGKcTCEnZIs6m9F+lwp/o2I+fCpxB3FWfZ9ZzSQa08zeLdGBNsZ27S6vrUUkkLMyqoCG+yaU8FvL4VgvtbD/a64Djnf1xuCaWa9v9LGtOcfoqHeIKitvnUSNRZGfPwrw442w=
+	t=1717523576; cv=none; b=MK3gX1VTn04uXJJ1/NXCFzb0BvtYAc7k1mGMk6kOmF4pbUFBsh/C1QY74jKZnUwi+3gyUQlssP32FimX+o9tMmhrLjwkrAx02zxQyM/gJjQGt1HaCzuPUjQix3cP9XeHZ088ioccet7cWHU0A9add7Q4FOTQYMgNNiin2dsk6yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717523009; c=relaxed/simple;
-	bh=JcC1v5BWR3/aIlXbMvxiyykfLTUcQNGVWF3/jh+S9iI=;
+	s=arc-20240116; t=1717523576; c=relaxed/simple;
+	bh=Hqqr9yw/DX0Mf6mIuq2bE9GcOEl92STqqaD9QVg7U3M=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=reBy1ebViOMaQljM7KHIgraI0U8rZEo7UwwC151M66REqhmmwGOfA9Nw0nwBE9hIWHCx1cLV02a2DvwOMN4YcAjr54G2l2WasVqjRlxESsSbhrfzGJVI5qPw7u2dqLLEuRb6wJCa9XP0FxGhmAF6VhE9L8zSx8MmQqMLlZB2+78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGAt4/9M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E4DC2BBFC;
-	Tue,  4 Jun 2024 17:43:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=WcxR/63Jj2RB1JvjVjvWV+5JkijtFtPIBg5L70STfPsDEGoNFQ1pf/EkHpAFqjNi8Vr/KE67jxWQjwYdDIRHW4/D2XjzZs4ziHm3wv9n9v4K358KT/OC2xJ0eDBi3VmIEYKCUPA67oFgPbyqGqM9uVYcoZURAz3NG8zWqnB/P78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pv7WYyK7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DFAC2BBFC;
+	Tue,  4 Jun 2024 17:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717523008;
-	bh=JcC1v5BWR3/aIlXbMvxiyykfLTUcQNGVWF3/jh+S9iI=;
+	s=k20201202; t=1717523576;
+	bh=Hqqr9yw/DX0Mf6mIuq2bE9GcOEl92STqqaD9QVg7U3M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NGAt4/9MoQ3AADgy57S1dDGgOpgjl4uVWGIzgaNz5ReBofop0ijw73bFpo5gR98qF
-	 CvPSGCEku+NrJ+LAoiFaG3umsj7ojAuPmVV9mvyMvd53uEtYP6HBT21e034WKZzZo1
-	 pT7k7x8Q28EiSk9xj2BxDfduF22g4hjx88kWNxTUUglSMDL5InDtwWdQOZnYfloWlq
-	 0MLrrd+8tANmZZXjTPifJU2FtawybtBxhLc5weSA/2jWj1BJtYS65AOYOPutl0u6wy
-	 eZ6VEz77CkW+huywzLbt78kvUoDMiDPOQn8Uo7d+X5F/rfFmDMBI+aweIJgWuoo/kw
-	 IB2qtzrohV9Kw==
-Date: Tue, 4 Jun 2024 12:43:26 -0500
+	b=Pv7WYyK7Hiq+yltDhy7NyOgEtjKRjY5Ej2YyO02NzMaZOtQRZQpA7vFcOXpQimV9I
+	 F9aOGaZLP5RX+2C1osztVl33qlRA2Ji5DTxA8vZ2/aLutg2fMuE0ISpEANn5R/aDox
+	 alnSOFX4Vnt1BIVb0GJD1ICdnJYQKzSl1YSA9Bb5tSsh349vXSupVQFPggj3oHCAkr
+	 EOXKkMAQwPht04HvLVa6Xt0tW9QMWXLKGmKN46xJ1JLEmisA3NxfxWFb3lkyd52KaA
+	 Jb9quboEAhH9pThmE/C1yYV6hshYQBD27cnnWIZ0UfjecuG4NtGJjC6x2iyMitct0E
+	 10JusfzF1w0Ow==
+Date: Tue, 4 Jun 2024 12:52:54 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
@@ -73,8 +73,9 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 	linux-pci@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	kernel@quicinc.com, Amit Pundir <amit.pundir@linaro.org>
-Subject: Re: [PATCH v8 10/17] power: sequencing: implement the pwrseq core
-Message-ID: <20240604174326.GA733165@bhelgaas>
+Subject: Re: [PATCH v8 11/17] power: pwrseq: add a driver for the PMU module
+ on the QCom WCN chipsets
+Message-ID: <20240604175254.GA733438@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,37 +84,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528-pwrseq-v8-10-d354d52b763c@linaro.org>
+In-Reply-To: <20240528-pwrseq-v8-11-d354d52b763c@linaro.org>
 
-On Tue, May 28, 2024 at 09:03:18PM +0200, Bartosz Golaszewski wrote:
+On Tue, May 28, 2024 at 09:03:19PM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Implement the power sequencing subsystem allowing devices to share
-> complex powering-up and down procedures. It's split into the consumer
-> and provider parts but does not implement any new DT bindings so that
-> the actual power sequencing is never revealed in the DT representation.
+> This adds the power sequencing driver for the PMU modules present on the
+> Qualcomm WCN Bluetooth and Wifi chipsets. It uses the pwrseq subsystem
+> and knows how to match the sequencer to the consumer device by verifying
+> the relevant properties and DT layout.
 
-> +++ b/drivers/power/sequencing/core.c
+> +config POWER_SEQUENCING_QCOM_WCN
+> +	tristate "Qualcomm WCN family PMU driver"
+> +	default m if ARCH_QCOM
+> +	help
+> +	  Say Y here to enable the power sequencing driver for Qualcomm
+> +	  WCN Bluetooth/WLAN chipsets.
+> +
+> +	  Typically, a package from the Qualcomm WCN family contains the BT
+> +	  and WLAN modules whose power is controlled by the PMU module. As the
+> +	  former two share the power-up sequence which is executed by the PMU,
+> +	  this driver is needed for correct power control.
 
-> + * Unit - a unit is a discreet chunk of a power sequence. For instance one unit
+"needed for correct power control" suggests that this fixes an
+existing problem, and I assume everybody with this kind of device
+wants this, and they will see some benefit from enabling it.  But it's
+not clear what that user-visible benefit is.  Could be useful both
+here and in commit log.
 
-s/discreet/discrete/
+> +struct pwrseq_qcom_wcn_pdata {
+> +	const char *const *vregs;
+> +	size_t num_vregs;
+> +	unsigned int pwup_delay_msec;
+> +	unsigned int gpio_enable_delay;
 
-> +static struct pwrseq_unit *pwrseq_unit_incref(struct pwrseq_unit *unit)
+Seems like it'd be nice to have a hint about the units of
+gpio_enable_delay (apparently ms) and last_gpio_enable (apparently
+jiffies)?  Maybe even use the same units for both, but I'm sure you
+have a reason for this.
+
+> +static int pwrseq_qcom_wcn_match(struct pwrseq_device *pwrseq,
+> +				 struct device *dev)
 > +{
-> +	kref_get(&unit->ref);
+> +	struct pwrseq_qcom_wcn_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
+> +	struct device_node *dev_node = dev->of_node;
 > +
-> +	return unit;
-> +}
-> +
-> +static void pwrseq_unit_release(struct kref *ref);
-> +
-> +static void pwrseq_unit_decref(struct pwrseq_unit *unit)
-> +{
-> +	kref_put(&unit->ref, pwrseq_unit_release);
-> +}
+> +	/*
+> +	 * The PMU supplies power to the Bluetooth and WLAN modules. both
 
-No existing callers of kref_get() and kref_put() use names that
-include "incref" or "decref".  Many include "get" and "put", so maybe
-there would be some value in using that pattern?
+s/both/Both/
 
