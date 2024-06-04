@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-8255-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8256-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7239C8FBA26
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 19:20:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C93FE8FBA68
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 19:30:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 137AA1F20B53
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 17:20:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83F07288294
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 17:30:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AFCD14388D;
-	Tue,  4 Jun 2024 17:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 321D5149C6E;
+	Tue,  4 Jun 2024 17:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXk7AHJQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6kbkbry"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B39013DDAA;
-	Tue,  4 Jun 2024 17:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CF013C9C7;
+	Tue,  4 Jun 2024 17:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717521593; cv=none; b=sCjs5HO4bjbBGnzU/gMRTiUlbXh0/Y4kqZwoA0us+l10iEYLm/WZQx/BXTU667Ty+jm+e6bttaefQ3dJI0/7vaT16+wVXgJFRoEqZZY00qoKw11IleK1x4BIYVfhKoH/xFWy+28dfNnkqMDXAY8OHKuTUiSpUoXIEFW8JTmbquw=
+	t=1717522224; cv=none; b=HjDBNWwekx5O79QheQ2WKRFLUs+A7xvCk/l2yGsqFzLJmXe+6lvViEevF5XnNDyucmxyt/mi00bI0UcB2sNOZzfAwxUYGD+W2s9ALuqjbwA5IBWW9Kb2im1KXgyAoj6WfWbSCBnjeU0xpeiNnfcuIP0twJ7KftzrBK1Cfb9uL/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717521593; c=relaxed/simple;
-	bh=ahgtXc4qQiXa8mwemiBOfb1WhBE5WcSDQDlT80ff1yw=;
+	s=arc-20240116; t=1717522224; c=relaxed/simple;
+	bh=kqXj1o9Fsay7aIOaaJ/crMyXrglXA8LEVq/ukbMHfR4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=a0O9KQWvSgTD12/LAQFLXILCKhScMxX16fVHAWra6BVyikiuVNOTHU+MJ1owirKi9zoXwnZJpZjWeTAueS3V13zfsq0IwIOQtQu+2KNKomicnCm/kmgHSqAl95EzMy0XZHozGj6a8CrVligvNITnxV+LX+08ny9jwopo3icc0o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXk7AHJQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5358DC2BBFC;
-	Tue,  4 Jun 2024 17:19:52 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=dQDb0IA6Hs3wS/8LeSJerVBXhgenNp9c3sIdPz80DqvxJwSlP2LFXECIj6Jm/R+ADr2m4GTvEuTmUxTyJDizIa3QdMtH9/8wIPHClSSwwRz33tZzCNWODDbkeD4f3/YSGe2yPOaZOfSpczR9Ue1JT/GkvaP9y22lU923+esHL2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6kbkbry; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2066AC2BBFC;
+	Tue,  4 Jun 2024 17:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717521592;
-	bh=ahgtXc4qQiXa8mwemiBOfb1WhBE5WcSDQDlT80ff1yw=;
+	s=k20201202; t=1717522223;
+	bh=kqXj1o9Fsay7aIOaaJ/crMyXrglXA8LEVq/ukbMHfR4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=BXk7AHJQZhWMGA5FR5N42VZ4YfP1FBB4v/UHDo/4Q2sz1BqFhtW9bOeDkoS7kyLjH
-	 RETUQsjJOPfZvJdgRglyAIUsdlwJRJGWB9leiecxMdfJp4QNKGQ/YxwEnru5aV421G
-	 OTHjZHQwph9R/p4Rt8KXAeI4/vjvIj/nHGfcalXJg0eG36v54xh0bx5HCNf+OGbldW
-	 w4djORfUXitP26HFUAa2Fp5HDu4Px3SXAjoTSMcRgXl3nKAcDGy1hc6DxDSQBP1/UA
-	 3VH9EXdVJL8B7uw7ZQQHBXO1hvWfi2DAwah0DrDoLQhxDHipKevtC/mAkKAEXA7u33
-	 98SvIYye8ALng==
-Date: Tue, 4 Jun 2024 12:19:50 -0500
+	b=F6kbkbrya+2QdXaJJxhMiNJEmPq6RWdGsdKv5Wt8MKfQPpRWECv0VxJIXccPoTR9K
+	 JBP4aE+hxN7XKqav4/IiGnpp8KCM5EJVVVBq9b/OovAlL62hMnzOBnNDerMmKONKcy
+	 45i9TGTWAO2jQ4cKDpSLbIlaiNIC1JLFgvUV4aZ9jOyh/xBQmRvMaXEqmF5m3yIyDJ
+	 oE2X/FaMRR0V8QHBtM/DxaLSeFdn1lMIj6ckCem+zUxamxNWjVNe0jEmdnj3ETnWDL
+	 ddlBOn4kunY2LkQjfLUOTc8cE42hWGoap49ZsdowxT92uOERhNiWaFrQgkTpuaYljK
+	 +SJVeajyY0vSA==
+Date: Tue, 4 Jun 2024 12:30:21 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
@@ -73,11 +73,10 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 	linux-pci@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	kernel@quicinc.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Amit Pundir <amit.pundir@linaro.org>
-Subject: Re: [PATCH v8 00/17] power: sequencing: implement the subsystem and
- add first users
-Message-ID: <20240604171950.GA731649@bhelgaas>
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v8 01/17] regulator: dt-bindings: describe the PMU module
+ of the QCA6390 package
+Message-ID: <20240604173021.GA732838@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,28 +85,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
+In-Reply-To: <20240528-pwrseq-v8-1-d354d52b763c@linaro.org>
 
-On Tue, May 28, 2024 at 09:03:08PM +0200, Bartosz Golaszewski wrote:
-> Note: I am resending this series in its entirety once more for
-> discussions and reviews. If there won't be any major objections, I'll
-> then start sending individual bits and pieces to appropriate trees.
+On Tue, May 28, 2024 at 09:03:09PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Merging strategy: The DT binding and DTS changes are a no-brainer, they
-> can go through the wireless, regulator and arm-msm trees separately. The
-> bluetooth and PCI changes have a build-time dependency on the power
-> sequencing code. The bluetooth changes also have a run-time dependency on
-> the PCI pwrctl part. In order to get it into next I plan to pick up the
-> power sequencing code into my own tree and maintain it. I can then
-> provide an immutable tag for the BT and PCI trees to pull. I wouldn't
-> stress about the BT runtime dependency as it will be fixed once all
-> changes are in next.
-> ...
+> The QCA6390 package contains discreet modules for WLAN and Bluetooth. They
 
-> ---
-> base-commit: 6dc544b66971c7f9909ff038b62149105272d26a
-> change-id: 20240527-pwrseq-76fc025248a2
+s/discreet/discrete/
 
-What does this apply to?  I don't know what 6dc544b66971 is; it
-doesn't seem to be in upstream or linux-next.
+> are powered by the Power Management Unit (PMU) that takes inputs from the
+> host and provides LDO outputs. This document describes this module.
+
+LDO?  Again below, but maybe this is obvious to everybody.
+
+"This document describes this module" seems possibly unnecessary.
+
+> +description:
+> +  The QCA6390 package contains discreet modules for WLAN and Bluetooth. They
+
+s/discreet/discrete/
+
+> +  are powered by the Power Management Unit (PMU) that takes inputs from the
+> +  host and provides LDO outputs. This document describes this module.
+
+> +  vddpcie1p3-supply:
+> +    description: VDD_PCIE_1P3 supply regulator handle<S-Del>
+
+s/<S-Del>// ?
 
