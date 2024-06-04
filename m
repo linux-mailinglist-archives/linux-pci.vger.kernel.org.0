@@ -1,314 +1,219 @@
-Return-Path: <linux-pci+bounces-8224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 771E08FA9C0
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 07:14:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5067A8FAB05
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 08:44:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02CEF28E2D0
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 05:14:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9896CB23840
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 06:44:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50AA9143755;
-	Tue,  4 Jun 2024 05:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2C013FD6D;
+	Tue,  4 Jun 2024 06:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgWKX8v6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3Bnsh4/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859513DBAA;
-	Tue,  4 Jun 2024 05:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A1B12E1F9;
+	Tue,  4 Jun 2024 06:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717477854; cv=none; b=NKYiN2BvM9dYR9OxO+vrZx/p9gpXhRFMXP7tUJk10fmpiSyYJvyf1TC8pOITXj8oJDmFyb0Jxi7gCr4ETRp3a94EsjXnpXLmoMa2QkCvnnpliJujloWHR8XSEFPR92vUGI9kI3ifHnNZkypScBrMfuN9CGjFAHcg8A4zzPfraAI=
+	t=1717483445; cv=none; b=dW0QPcvy6moppI33UV1T4+KgXXlxlBSaHhc4t4qh3OqDZCoNqgo3b3qJvQAODwNQyr2qIXasyqCgJj0PzUtZJqCvEtGi9XnASmAVs3Ap+GzN9hWHeTC++toE4SwT3brMQaCT3GnepYsPe1TLzXDRzM5QcqZ52m1gdw2Dlkz7V1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717477854; c=relaxed/simple;
-	bh=yD6QlTva6OVI3xK1DDtiQ1txjxXIzA1gAMGkk74myI4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IZJWxbiEBDOEPOHZXPrrDAm/SRE2jhBrm390K7YGaNkAAa7bdqoS+au6LLmhxhHCkh2qyN223IJJdpgb7X0ttYD44nbDd2+/GmzlJG1qC+bjXu32wFBFVXUR5tUJOFTjtRJLYEAkWZemyTwFrHGOeKw7dkRFR8FndIycjB8Zobw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgWKX8v6; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7025ca8bebcso1997746b3a.3;
-        Mon, 03 Jun 2024 22:10:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717477852; x=1718082652; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UqE8PqDSTScf2ssH6F4PbWUoO9g+WHgsI4Glih1KQPg=;
-        b=NgWKX8v61be7LwLmyuKYqzvXSqjJnLUVlS0uiVB0qYhd5KQnTRShItJOXGREtEZh4L
-         kqMMezuE9b1uyVntAnmfONuWXxpZiiAcNyIHGS9gsgOgPvYPVuAY7s8md8bTsCGpBcY2
-         gtCf+9Ey7ccFqN7XLBFHNhpbD9clOBVH4dOB2cVlAe2e5fUAVh57PkJXXANdqrySF6nh
-         gC1FLafi1NYNxMe7lBK2ggghZ6jrxi/b7Sff1cHnyNwYXZ9x37/2RmQKsFSfUmADAy6x
-         TTGSQCQJ7WnHGJpftDEIep30EhrlmtaFdwuRLPyMjN6C+eNamVV+C+MSBlyEwV5r0urj
-         kNuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717477852; x=1718082652;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UqE8PqDSTScf2ssH6F4PbWUoO9g+WHgsI4Glih1KQPg=;
-        b=wLfKc4tRGd1dbBQl7ZpncSVBeTW17sZ2GKvvbzjRX9C2DhOFBkpI8vBItmqtHTYhXS
-         BskRt4MaGauTfo9HMolZ97nZbmZj8Z8OJuCTM9g3sffv6qdbocs9v2t8C/dlQdQRhvPN
-         vaaaKK3JISkTNlytkAZH2qfbLyJxnCVucPeJEdIoR+WZcfrm/eJpgfk7M2wkp4zNyjBJ
-         qMXPLJi7FsHwgl/sXI78P1ySc9qztZ6J9IGNHvbIXkU3dhUgxYTLi1gYz0b6MewBjM3M
-         YUHhVsMHD9GznMWASY3zUxMnVDUhlQ0ToW60qIgqvi9CaaHmuawcFWQbMl0Pl4u2th8S
-         aznA==
-X-Forwarded-Encrypted: i=1; AJvYcCUndx/mfGrforncp5/nJzVvf6kW1bgxbszSrvd7vxDiye6X7s8sJbcw48G9Pv5YrGFuKbaEdfTNrn6adQKyhjl/uxTlbjlE0Dg7jBoDprv6zj3D+sNROXf8WrCB6+i103YjKMJF9LMpfZ1dD1plipiGySVWqBmvZWrcz3e7rQLDStML025fGynR3GwMcyYTpSbiB/REvgcPp2Ic/TM9TDURey2hyuwvJ00ox8d2wiNHNx45TABbNX/mBf3D2Aw=
-X-Gm-Message-State: AOJu0YzkbCR6PFflAlnxIh3oLdP/3OoNjoN8qtxokRtd/4Ji6JLHCKfL
-	Q2Vt7UkwAYvS90R3LjGPmV+2w6q19TzyHpuVxcvE8D2Z/TRLJ3xu
-X-Google-Smtp-Source: AGHT+IHQeTJUGPqk9fJQ3bYqVezOkQwad17MvaE3G/i0Wg6Qa5p2Z3v+Yzuh/jC062uvo4bGBB7jUw==
-X-Received: by 2002:a05:6a00:847:b0:6e9:38d0:5019 with SMTP id d2e1a72fcca58-70247664028mr13199794b3a.0.1717477851685;
-        Mon, 03 Jun 2024 22:10:51 -0700 (PDT)
-Received: from localhost.localdomain (c-67-161-114-176.hsd1.wa.comcast.net. [67.161.114.176])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242c270c7sm6298153b3a.220.2024.06.03.22.10.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 22:10:51 -0700 (PDT)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	arnd@arndb.de,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Cc: maz@kernel.org,
-	den@valinux.co.jp,
-	jgowans@amazon.com,
-	dawei.li@shingroup.cn
-Subject: [RFC 12/12] Drivers: hv: vmbus: Ensure IRQ affinity isn't set to a CPU going offline
-Date: Mon,  3 Jun 2024 22:09:40 -0700
-Message-Id: <20240604050940.859909-13-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240604050940.859909-1-mhklinux@outlook.com>
-References: <20240604050940.859909-1-mhklinux@outlook.com>
-Reply-To: mhklinux@outlook.com
+	s=arc-20240116; t=1717483445; c=relaxed/simple;
+	bh=0b2B21EDLznmxz0+PWaGRMUp9XLDYqlFaMbkmYh70KU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GMXdiYJbEtZvSzSmVwxhCXGpUjwk4sHACb4FbMRCet0ulSUxuD93Vta1r/KH7dfcJyW81Cj808dSSRxhnWVb5Y0P1l4+NwOJFnJHNLyJnUff7u2MsO+ZPfYODnpcbUm9wm32r1pkE0VumL52s+wKFHzYsvvNbr7pJI4Sho0HUy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3Bnsh4/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE40C2BBFC;
+	Tue,  4 Jun 2024 06:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717483444;
+	bh=0b2B21EDLznmxz0+PWaGRMUp9XLDYqlFaMbkmYh70KU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=N3Bnsh4/tGU8oGO2cyjLj6gwijbDQqjQqTW5Tg/DmHdTVa26xfvhgUduiUEpWgRMJ
+	 jaeytFwbW0xoivR5RT/pTnNOSj5zJCz1gRI5uHTyT23hKQaEPMg6zYZNAYLSVrm+cF
+	 dgtT6Ckdr0n7pQPkMZfSOYfG4dbSrh4eCdGcQSZqGLBkhMtMzlutm6bOFIcoAV1FZe
+	 9+EEQixoc3BG4phFKrga/REGqRRoaGpUMtJZl8B1M8iUMVe2WYDBm1ZLCQyqhB9Aaq
+	 FIJcQ95prB9DQQ/heINrJ6uwiWuSaSLO60BeDil3P6g6e+XxFflXroV097o5ECrDeb
+	 TDd+kVE/p/o6g==
+Message-ID: <0ea564fa-5405-444a-befb-ca4372817e33@kernel.org>
+Date: Tue, 4 Jun 2024 08:42:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
+ sysfs_match_string()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Corey Minyard <minyard@acm.org>, Allen Pais <apais@linux.microsoft.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Perry Yuan <perry.yuan@amd.com>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Nuno Sa <nuno.sa@analog.com>,
+ Guenter Roeck <linux@roeck-us.net>, Randy Dunlap <rdunlap@infradead.org>,
+ Andi Shyti <andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Lee Jones <lee@kernel.org>, Samuel Holland <samuel@sholland.org>,
+ Elad Nachman <enachman@marvell.com>,
+ Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Gregory Greenman <gregory.greenman@intel.com>,
+ Benjamin Berg <benjamin.berg@intel.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>,
+ Vinod Koul <vkoul@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Hans de Goede
+ <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Nikita Kravets <teackot@gmail.com>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Stanley Chang <stanley_chang@realtek.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Abdel Alkuor <abdelalkuor@geotab.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Eric Biggers <ebiggers@google.com>, Kees Cook <keescook@chromium.org>,
+ Ingo Molnar <mingo@kernel.org>, "Steven Rostedt (Google)"
+ <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Hugh Dickins <hughd@google.com>, Abel Wu <wuyun.abel@bytedance.com>,
+ John Johansen <john.johansen@canonical.com>, Mimi Zohar
+ <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, Takashi Iwai <tiwai@suse.de>,
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ Mark Brown <broonie@kernel.org>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, linux-clk@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-pm@vger.kernel.org, qat-linux@intel.com,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+ linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ David Howells <dhowells@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Daniel Scally <djrscally@gmail.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>,
+ Peter De Schrijver <pdeschrijver@nvidia.com>,
+ Prashant Gaikwad <pgaikwad@nvidia.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Huang Rui <ray.huang@amd.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>,
+ Jean Delvare <jdelvare@suse.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Tony Lindgren <tony@atomide.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Kalle Valo <kvalo@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ JC Kuo <jckuo@nvidia.com>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>,
+ Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>,
+ Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Michael Kelley <mhklinux@outlook.com>
+On 6/2/24 17:57, Andy Shevchenko wrote:
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index a8e28f9b9271..7bed499effd3 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+> @@ -2230,9 +2230,9 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
+>  		enable = false;
+>  	}
+>  
+> -	option = match_string(osnoise_options_str, OSN_MAX, option_str);
+> +	option = match_string(osnoise_options_str, option_str);
+>  	if (option < 0)
+> -		return -EINVAL;
+> +		return option;
+>  
+>  	/*
+>  	 * trace_types_lock is taken to avoid concurrency on start/stop.
 
-hv_synic_cleanup() currently prevents a CPU from going offline if any
-VMBus channel IRQs are targeted at that CPU. However, current code has a
-race in that an IRQ could be affinitized to the CPU after the check in
-hv_synic_cleanup() and before the CPU is removed from cpu_online_mask.
-Any channel interrupts could be lost and the channel would hang.
+Acked-by: Daniel Bristot de Oliveira <bristot@kernel.org>
 
-Fix this by adding a flag for each CPU indicating if the synic is online.
-Filter the new affinity with these flags so that vmbus_irq_set_affinity()
-doesn't pick a CPU where the synic is already offline.
-
-Also add a spin lock so that vmbus_irq_set_affinity() changing the
-channel target_cpu and sending the MODIFYCHANNEL message to Hyper-V
-are atomic with respect to the checks made in hv_synic_cleanup().
-hv_synic_cleanup() needs these operations to be atomic so that it
-can correctly count the MODIFYCHANNEL messages that need to be
-ack'ed by Hyper-V.
-
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- drivers/hv/connection.c   |  1 +
- drivers/hv/hv.c           | 22 ++++++++++++++++++++--
- drivers/hv/hyperv_vmbus.h |  2 ++
- drivers/hv/vmbus_drv.c    | 34 ++++++++++++++++++++++++++++------
- 4 files changed, 51 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index a105eecdeec2..b44ce3d39135 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -213,6 +213,7 @@ int vmbus_connect(void)
- 
- 	INIT_LIST_HEAD(&vmbus_connection.chn_list);
- 	mutex_init(&vmbus_connection.channel_mutex);
-+	spin_lock_init(&vmbus_connection.set_affinity_lock);
- 
- 	/*
- 	 * Setup the vmbus event connection for channel interrupt
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index 76658dfc5008..89e491219129 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -338,6 +338,8 @@ int hv_synic_init(unsigned int cpu)
- {
- 	hv_synic_enable_regs(cpu);
- 
-+	cpumask_set_cpu(cpu, &vmbus_connection.synic_online);
-+
- 	hv_stimer_legacy_init(cpu, VMBUS_MESSAGE_SINT);
- 
- 	return 0;
-@@ -513,6 +515,17 @@ int hv_synic_cleanup(unsigned int cpu)
- 	 * TODO: Re-bind the channels to different CPUs.
- 	 */
- 	mutex_lock(&vmbus_connection.channel_mutex);
-+	spin_lock(&vmbus_connection.set_affinity_lock);
-+
-+	/*
-+	 * Once the check for channels assigned to this CPU is complete, we
-+	 * must not allow a channel to be assigned to this CPU. So mark
-+	 * the synic as no longer online. This cpumask is checked in
-+	 * vmbus_irq_set_affinity() to prevent setting the affinity of
-+	 * an IRQ to such a CPU.
-+	 */
-+	cpumask_clear_cpu(cpu, &vmbus_connection.synic_online);
-+
- 	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
- 		if (channel->target_cpu == cpu) {
- 			channel_found = true;
-@@ -527,10 +540,11 @@ int hv_synic_cleanup(unsigned int cpu)
- 		if (channel_found)
- 			break;
- 	}
-+	spin_unlock(&vmbus_connection.set_affinity_lock);
- 	mutex_unlock(&vmbus_connection.channel_mutex);
- 
- 	if (channel_found)
--		return -EBUSY;
-+		goto set_online;
- 
- 	/*
- 	 * channel_found == false means that any channels that were previously
-@@ -547,7 +561,7 @@ int hv_synic_cleanup(unsigned int cpu)
- 		if (hv_synic_event_pending()) {
- 			pr_err("Events pending when trying to offline CPU %d\n",
- 					cpu);
--			return -EBUSY;
-+			goto set_online;
- 		}
- 	}
- 
-@@ -557,4 +571,8 @@ int hv_synic_cleanup(unsigned int cpu)
- 	hv_synic_disable_regs(cpu);
- 
- 	return 0;
-+
-+set_online:
-+	cpumask_set_cpu(cpu, &vmbus_connection.synic_online);
-+	return -EBUSY;
- }
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 571b2955b38e..92ae5af10778 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -263,6 +263,8 @@ struct vmbus_connection {
- 	struct fwnode_handle *vmbus_fwnode;
- 	struct irq_domain *vmbus_irq_domain;
- 	struct irq_chip	vmbus_irq_chip;
-+	cpumask_t synic_online;
-+	spinlock_t set_affinity_lock;
- 
- 	/*
- 	 * VM-wide counts of MODIFYCHANNEL messages sent and completed.
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 87f2f3436136..3430ad42d7ba 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1351,6 +1351,14 @@ int vmbus_irq_set_affinity(struct irq_data *data,
- 		return -EINVAL;
- 	}
- 
-+	/*
-+	 * The spin lock must be held so that checking synic_online, sending
-+	 * the MODIFYCHANNEL message, and setting channel->target_cpu are
-+	 * atomic with respect to hv_synic_cleanup() clearing the CPU in
-+	 * synic_online and doing the search.
-+	 */
-+	spin_lock(&vmbus_connection.set_affinity_lock);
-+
- 	/* Don't consider CPUs that are isolated */
- 	if (housekeeping_enabled(HK_TYPE_MANAGED_IRQ))
- 		cpumask_and(&tempmask, dest,
-@@ -1367,30 +1375,39 @@ int vmbus_irq_set_affinity(struct irq_data *data,
- 	origin_cpu = channel->target_cpu;
- 	if (cpumask_test_cpu(origin_cpu, &tempmask)) {
- 		target_cpu = origin_cpu;
-+		spin_unlock(&vmbus_connection.set_affinity_lock);
- 		goto update_effective;
- 	}
- 
- 	/*
- 	 * Pick a CPU from the new affinity mask. As a simple heuristic to
- 	 * spread out the selection when the mask contains multiple CPUs,
--	 * start with whatever CPU was last selected.
-+	 * start with whatever CPU was last selected. Also filter out any
-+	 * CPUs where synic_online isn't set -- these CPUs are in the process
-+	 * of going offline and must not have channel interrupts assigned
-+	 * to them.
- 	 */
-+	cpumask_and(&tempmask, &tempmask, &vmbus_connection.synic_online);
- 	target_cpu = cpumask_next_wrap(next_cpu, &tempmask, nr_cpu_ids, false);
--	if (target_cpu >= nr_cpu_ids)
--		return -EINVAL;
-+	if (target_cpu >= nr_cpu_ids) {
-+		ret = -EINVAL;
-+		goto unlock;
-+	}
- 	next_cpu = target_cpu;
- 
- 	/*
- 	 * Hyper-V will ignore MODIFYCHANNEL messages for "non-open" channels;
- 	 * avoid sending the message and fail here for such channels.
- 	 */
--	if (channel->state != CHANNEL_OPENED_STATE)
--		return -EIO;
-+	if (channel->state != CHANNEL_OPENED_STATE) {
-+		ret = -EIO;
-+		goto unlock;
-+	}
- 
- 	ret = vmbus_send_modifychannel(channel,
- 				     hv_cpu_number_to_vp_number(target_cpu));
- 	if (ret)
--		return ret;
-+		goto unlock;
- 
- 	/*
- 	 * Warning.  At this point, there is *no* guarantee that the host will
-@@ -1408,6 +1425,7 @@ int vmbus_irq_set_affinity(struct irq_data *data,
- 	 */
- 
- 	channel->target_cpu = target_cpu;
-+	spin_unlock(&vmbus_connection.set_affinity_lock);
- 
- 	/* See init_vp_index(). */
- 	if (hv_is_perf_channel(channel))
-@@ -1422,6 +1440,10 @@ int vmbus_irq_set_affinity(struct irq_data *data,
- update_effective:
- 	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
- 	return IRQ_SET_MASK_OK;
-+
-+unlock:
-+	spin_unlock(&vmbus_connection.set_affinity_lock);
-+	return ret;
- }
- 
- /*
--- 
-2.25.1
-
+Thanks!
+-- Daniel
 
