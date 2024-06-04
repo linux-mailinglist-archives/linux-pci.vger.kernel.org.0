@@ -1,56 +1,83 @@
-Return-Path: <linux-pci+bounces-8254-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8255-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3658FBA0E
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 19:11:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7239C8FBA26
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 19:20:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C40271C211DA
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 17:11:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 137AA1F20B53
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 17:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 230AA148300;
-	Tue,  4 Jun 2024 17:11:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AFCD14388D;
+	Tue,  4 Jun 2024 17:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnS+rlV3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BXk7AHJQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F108A146D6E;
-	Tue,  4 Jun 2024 17:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B39013DDAA;
+	Tue,  4 Jun 2024 17:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717521084; cv=none; b=lVjNHVA2zEDeWQRwvHVRBZ4znhmOopVIeFj2Vej2ScOt1oHFqCNCTqRxAVr0/XBtc2RG+NIsat+jceWuRbcLBd7JomuXQAWo9vDWvKhLRLI4iJ5tqNUwbDp1SY4388FoTqSp3oEf2+pYGRNmkHFxcLrZth5bjyGJC7m+SfWptf8=
+	t=1717521593; cv=none; b=sCjs5HO4bjbBGnzU/gMRTiUlbXh0/Y4kqZwoA0us+l10iEYLm/WZQx/BXTU667Ty+jm+e6bttaefQ3dJI0/7vaT16+wVXgJFRoEqZZY00qoKw11IleK1x4BIYVfhKoH/xFWy+28dfNnkqMDXAY8OHKuTUiSpUoXIEFW8JTmbquw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717521084; c=relaxed/simple;
-	bh=QVWrmiQLsUU0GWwAK+Bb9M4f7QwhTLEcAJ5AgSI4RXA=;
+	s=arc-20240116; t=1717521593; c=relaxed/simple;
+	bh=ahgtXc4qQiXa8mwemiBOfb1WhBE5WcSDQDlT80ff1yw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=s1NBUuYVAjWaxxFOOVVppJy4+plghK66aPSQfl4U0V/Emhqf2Mm7HiMdr2dK/TsDH23S8ZwsOkEDnqelBj6Aja6YQJUL3jo+TEojfVE16W95GxOuXx2bmlwBfMgsg9KuBM3r0o5NK0QbUWKMyJXuCK5eid+WKeAu4vQ+MGVVkkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnS+rlV3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D18C2BBFC;
-	Tue,  4 Jun 2024 17:11:23 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=a0O9KQWvSgTD12/LAQFLXILCKhScMxX16fVHAWra6BVyikiuVNOTHU+MJ1owirKi9zoXwnZJpZjWeTAueS3V13zfsq0IwIOQtQu+2KNKomicnCm/kmgHSqAl95EzMy0XZHozGj6a8CrVligvNITnxV+LX+08ny9jwopo3icc0o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BXk7AHJQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5358DC2BBFC;
+	Tue,  4 Jun 2024 17:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717521083;
-	bh=QVWrmiQLsUU0GWwAK+Bb9M4f7QwhTLEcAJ5AgSI4RXA=;
+	s=k20201202; t=1717521592;
+	bh=ahgtXc4qQiXa8mwemiBOfb1WhBE5WcSDQDlT80ff1yw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HnS+rlV37+gbi2r1Nn6pm/iDG98s5oB8Jx3PNZAUFBszOsUmTBdCwkK4H0sVNW5GQ
-	 I+Z5KS55q9k/OmgZ9vp9R8oyGxkfFuOpqsEXLjjPeLHuPBaYFctSb6n79BqlEIdeqO
-	 4dVCQBcdu24cp5F70jcP8l0DKHJhQH1dX+k0Am2IyobBVgQf66J95ckrd258XEQFRP
-	 TY0f5RrLIS0AP/WOmUxLHYo5fyxJgM5wr/S+yZWxu+Sc51w7UyIakxgb/oei5RS4x5
-	 3cG25VOKav9nFlO4C6R3xBwN6bXWCfCkkDcE8aRFmbzfowtM7DG7w/yGXKY9LIDRNH
-	 X+l8dFSj3cVQw==
-Date: Tue, 4 Jun 2024 12:11:21 -0500
+	b=BXk7AHJQZhWMGA5FR5N42VZ4YfP1FBB4v/UHDo/4Q2sz1BqFhtW9bOeDkoS7kyLjH
+	 RETUQsjJOPfZvJdgRglyAIUsdlwJRJGWB9leiecxMdfJp4QNKGQ/YxwEnru5aV421G
+	 OTHjZHQwph9R/p4Rt8KXAeI4/vjvIj/nHGfcalXJg0eG36v54xh0bx5HCNf+OGbldW
+	 w4djORfUXitP26HFUAa2Fp5HDu4Px3SXAjoTSMcRgXl3nKAcDGy1hc6DxDSQBP1/UA
+	 3VH9EXdVJL8B7uw7ZQQHBXO1hvWfi2DAwah0DrDoLQhxDHipKevtC/mAkKAEXA7u33
+	 98SvIYye8ALng==
+Date: Tue, 4 Jun 2024 12:19:50 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, bhelgaas@google.com,
-	Imre Deak <imre.deak@intel.com>,
-	Jani Saarinen <jani.saarinen@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-pci@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI: Revert the cfg_access_lock lockdep mechanism
-Message-ID: <20240604171121.GA730808@bhelgaas>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
+	Rocky Liao <quic_rjliao@quicinc.com>, Kalle Valo <kvalo@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Elliot Berman <quic_eberman@quicinc.com>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Alex Elder <elder@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	ath12k@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	kernel@quicinc.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Amit Pundir <amit.pundir@linaro.org>
+Subject: Re: [PATCH v8 00/17] power: sequencing: implement the subsystem and
+ add first users
+Message-ID: <20240604171950.GA731649@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,47 +86,28 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h6e9t9qt.fsf@kernel.org>
+In-Reply-To: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
 
-On Tue, Jun 04, 2024 at 11:03:54AM +0300, Kalle Valo wrote:
-> Dan Williams <dan.j.williams@intel.com> writes:
+On Tue, May 28, 2024 at 09:03:08PM +0200, Bartosz Golaszewski wrote:
+> Note: I am resending this series in its entirety once more for
+> discussions and reviews. If there won't be any major objections, I'll
+> then start sending individual bits and pieces to appropriate trees.
 > 
-> > While the experiment did reveal that there are additional places that
-> > are missing the lock during secondary bus reset, one of the places that
-> > needs to take cfg_access_lock (pci_bus_lock()) is not prepared for
-> > lockdep annotation.
-> >
-> > Specifically, pci_bus_lock() takes pci_dev_lock() recursively and is
-> > currently dependent on the fact that the device_lock() is marked
-> > lockdep_set_novalidate_class(&dev->mutex). Otherwise, without that
-> > annotation, pci_bus_lock() would need to use something like a new
-> > pci_dev_lock_nested() helper, a scheme to track a PCI device's depth in
-> > the topology, and a hope that the depth of a PCI tree never exceeds the
-> > max value for a lockdep subclass.
-> >
-> > The alternative to ripping out the lockdep coverage would be to deploy a
-> > dynamic lock key for every PCI device. Unfortunately, there is evidence
-> > that increasing the number of keys that lockdep needs to track to be
-> > per-PCI-device is prohibitively expensive for something like the
-> > cfg_access_lock.
-> >
-> > The main motivation for adding the annotation in the first place was to
-> > catch unlocked secondary bus resets, not necessarily catch lock ordering
-> > problems between cfg_access_lock and other locks. Solve that narrower
-> > problem with follow-on patches, and just due to targeted revert for now.
-> >
-> > Fixes: 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
-> > Reported-by: Imre Deak <imre.deak@intel.com>
-> > Closes: https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_134186v1/shard-dg2-1/igt@device_reset@unbind-reset-rebind.html
-> > Cc: Jani Saarinen <jani.saarinen@intel.com>
-> > Cc: Dave Jiang <dave.jiang@intel.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> 
-> In our ath11k test box commit 7e89efc6e9e4 was causing random kernel
-> crashes. I tested patches 1-3 and did not see anymore crashes so:
-> 
-> Tested-by: Kalle Valo <kvalo@kernel.org>
+> Merging strategy: The DT binding and DTS changes are a no-brainer, they
+> can go through the wireless, regulator and arm-msm trees separately. The
+> bluetooth and PCI changes have a build-time dependency on the power
+> sequencing code. The bluetooth changes also have a run-time dependency on
+> the PCI pwrctl part. In order to get it into next I plan to pick up the
+> power sequencing code into my own tree and maintain it. I can then
+> provide an immutable tag for the BT and PCI trees to pull. I wouldn't
+> stress about the BT runtime dependency as it will be fixed once all
+> changes are in next.
+> ...
 
-Added to commit logs, thank you!
+> ---
+> base-commit: 6dc544b66971c7f9909ff038b62149105272d26a
+> change-id: 20240527-pwrseq-76fc025248a2
+
+What does this apply to?  I don't know what 6dc544b66971 is; it
+doesn't seem to be in upstream or linux-next.
 
