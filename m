@@ -1,211 +1,286 @@
-Return-Path: <linux-pci+bounces-8269-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8270-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6D2B8FBF86
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 01:03:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C74F68FBF90
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 01:05:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA3831C22891
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 23:03:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 27C43B27552
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jun 2024 23:05:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA1A814BFA8;
-	Tue,  4 Jun 2024 23:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4293B14D42C;
+	Tue,  4 Jun 2024 23:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="FPd8n2ie"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MSm98BHz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2088.outbound.protection.outlook.com [40.92.21.88])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED15A1411EB;
-	Tue,  4 Jun 2024 23:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717542212; cv=fail; b=szxcglHDH66ArHFsZw2gqej0UZ283X9axWZfcJ4+eTtaLV7KKC/uAnQ+lb4K0TnF1SXGUf1BR3XXqw3cf+BVbNFwBiARoXCKkHhcznv++GKp2bhrR6Xu88ElZlWvZD6BDaNVyvabN5qG/D8kWWGkRbnHpt1T68Raew4s536Syi8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717542212; c=relaxed/simple;
-	bh=4u/o1Vts+nbND6lbMVzDMz8NUsR/XbZY/5kXwuhzW+Y=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YuUUQRnbe289kvF7n6rAAcV7OUM2CStfrmNIPsriW7W+rxi++cmK06EvbyJ0JJyvkpytpSXSkSXz1hhI1WibRwPYrVlm2zcUMxX7CoMqc5qI2sBXVLBOf9yrKjxgO9zafXHwd8w+jj/T/BrzTdJyCMLD6MaWXb3WJ8QtN8GCMWg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=FPd8n2ie; arc=fail smtp.client-ip=40.92.21.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OaKYgobl7udEgGYF/paue7xVFbNoxzLaENhWSFv6EJIcm4ZT6nI5mIzckzcS/IbeO7oo5iV/3h4rjbT52dy4YDz2JZfgvzxxfHUQ72mfhykxfJkE9SjCg3Jn6VpNPyFx113A2IuwMIIKoOF8hlPywrfNwlZu7OCloAmWE+m+m6m4djP1H/PBHpLlYr0HiLkVFBH8SZDVgyI43dhpBwutDGEDj/X5lyX3AM57ARGc/WuTm3VUp4VZZavBl+uHn2UeFMTZStOTSkLaGcDKIX7JhLmQ3YAIiAO15gkiupSzQOGLiifEmOzPD5YU45DHNBKyEjTkT5cLui6EiFBqpC67ZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i3s41lGxCLQMkgfS9DMUrly/lJZUhNNPUsLcGM3Tysk=;
- b=dUDq+RY0DGzFN6D/VbRR2tpcdj1cTKCGj+HXYaTYLNCri8I7Vi8fTcQNh8LzfsBAwpRg0/tHsKiglCRcXYa5ibLXgONmqljBSmXV1uP6ffZO+MI+mLUKm8ll5O2bbaN2IoEZKRANt3lGkH0OiUmqftsGnwR3j5lkpb7SVS25KI+m61DSlnrEIbxiJr9WHpqVzf8obO2h7Ui3RxgYCsxpBh6x4noyDKcBcwGrhTscdH+N2p3FXXvR3h9mUgW3zcXg0nJJc3jCNF59MncGltXcBOO5k9c1lKS3P9QG8q4tHYV02EFJLsz5b/q0K1dN3j/VyCa6kmfEb9MftrwzI4cf1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i3s41lGxCLQMkgfS9DMUrly/lJZUhNNPUsLcGM3Tysk=;
- b=FPd8n2ieM+Hi36huroahhUtsPQi8jJPQHmRL2YD9HPlIolD8H4DHhxQMO2if8huAME7myMuEJFC/5owkrKFYaYO6LsHBDV9YN0v+fCKMYy7LvBPnq1diKNFWx9ybZ/4+9yml3BCb+/7hMLyCOiZd+kluDVtpxlTgk0R8a7lTszJTJxQlisRK5viGyBhrLewo8fVwXmCVmBObfN8LG6/SCMRJfHgYpv0hziHIKixHwk7UjeCGrJezaBP/+y6Ie0SksrXP3mcgWTNTMWgt2dFaPtic0vlTrsmIJQdI6tCOVp0XYD/UrpbNgiEZe6QlVccFj9Iy8LnsdkUxFHYrJx56qg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA0PR02MB7305.namprd02.prod.outlook.com (2603:10b6:806:e1::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Tue, 4 Jun
- 2024 23:03:28 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
- 23:03:28 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Thomas Gleixner <tglx@linutronix.de>, "kys@microsoft.com"
-	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
-	<decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
-	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
-	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "James.Bottomley@HansenPartnership.com"
-	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-CC: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
-	<den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
-	"dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
-Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional IRQ
- stats
-Thread-Topic: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
- IRQ stats
-Thread-Index: AQHatj3dxfDAEhKlmk6xJJhdAubqnrG36WaAgAAakqA=
-Date: Tue, 4 Jun 2024 23:03:27 +0000
-Message-ID:
- <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240604050940.859909-1-mhklinux@outlook.com>
- <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
-In-Reply-To: <87h6e860f8.ffs@tglx>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [TzkLggcP4FUY+p2DXFdqqGDD7x3eEtGy]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA0PR02MB7305:EE_
-x-ms-office365-filtering-correlation-id: a864ab32-a865-4faa-85f8-08dc84ea8b9c
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199019|440099019|3412199016|102099023;
-x-microsoft-antispam-message-info:
- r+0piGp8TDQBw/V5mGAliOdPzLWj8/Ou04wQ65eApWTUhoSNEbTuuRWywn3RNJ2MC7gboZHzNc0SI/SDPbqBShjuprAI+lf0V965fUvBKno3OfMCDFSCoT9QFDnm7B1wQdC5C//AXaCBp5bh3xcI4E7OOpVOpX5g4e1W7bWaCsJ4g91sUgavHZmuUb5yJysEToEBzxHl3MoclDPPkU+W6ZMM8ZtHVTOjYYF7YYlCnDWVhaFlzxKCm02bYlVY2xc8H8vuWIVM9itTJIUIsZKoYK0w4xeP0tuV6YZnqqT3Z4lypjznEOIA6juWPTGXFuQZMIBnYqyd+vcKm1Mf33tCtgCGQX9jpBjrd2m2cTKRqUn8I96s8PTwfV48SQjz/uJf85QBddCrkOyaiOrdZ+UOLsVuiFMe0+ugq6bik6qgWd8x1JF3e7MEuJx34xVPZJZzWMIOjEDQ4gy4Rgt4AX6lTjdQI+k4wHi4Vu0EIx5b4cAJrrRA3/CbusIzysG7X5ct5zWgDTnUfKCMbPj4tzy4qgA8eFIrMwQ7Zmmrs4IY2EO+frHgInHznUqifU2C9iLZ
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7uaBgRBxuEYxKYF/dTcbRD6OHZ5b4h2bRZWxIADOTUCSJ8LU9hgca8criqSf?=
- =?us-ascii?Q?viSanDcRiksbT9moiBKL7zjb0nDeXisBRdpLRNtUuLesAc+3laNSybzd1cSk?=
- =?us-ascii?Q?neDDS770wgQ1vZL5UZGJbo2rGmTKvj/VXKzCj9rSx/asatn6JE8nC+BaxsoW?=
- =?us-ascii?Q?f6oT6qNrwZ10wvevSeZxeKdCUO6Dk4GFyqRSR9gtOV07OGu6VvgIAOS9uvUM?=
- =?us-ascii?Q?e3bkCR6WCbMoHTmxx02k4eAudSIXAzSE/kY59zZj9Rcqbi08MHo2FlkB0nOw?=
- =?us-ascii?Q?4gED85a0EWjlYISt82kykjz60DfCgY1sFxF6BacwrmBJnkWvQVPkkO+/Ulub?=
- =?us-ascii?Q?F7Jhi2dwkpKd35c1DJqTkINz3FMumqzjTkHpA88Ip1alyMgxqV2J6sU748W1?=
- =?us-ascii?Q?2ltlnn0TDCyDb2VTBI/h5j3/kNlDUG3ro72EQMT3jAcofYMkXiDKrEXJuoRU?=
- =?us-ascii?Q?6Fx/ch4sVP4GjTN4nrzMJ004DUYXrXE6uyjYWN0JnSINfSdsznyHBRL4IrC1?=
- =?us-ascii?Q?mv60exDDf17yoP0J+kZZeAbC7o6acJ0lyHoeXbdYXlB29ZGOMyKbLOMg3fNc?=
- =?us-ascii?Q?Isgi9GbjoZitBALiKCuzklyWD+NxSCbvWTrAHeR7i6LU267LJoJPAb3pH1BD?=
- =?us-ascii?Q?LTdTVwhwU3LAyp7gk4Wx3D7o6UB2ZIVmytpXVvRDMYJ2iR9FBC2dnDl1XVIG?=
- =?us-ascii?Q?r/nl26tpiqt+t+vbjzzvnBaRVzsfMHTAP7kfpE4woeLr8ipSU4VCYHEPKUoE?=
- =?us-ascii?Q?VHB8lNDqvt+8mfRzWr9EDP0yxVyrdgbT6w6aGGzNdNUgBfoBdFwHPEC+jaBg?=
- =?us-ascii?Q?yRNP9Qf5LjzcP3yaIxxNjDRAzSWfinVZwzzkJjfhiZNtHO6X8OKNaCSBUGQ4?=
- =?us-ascii?Q?6QRwIkJ6RsEQDiLgRjVJhrP0o5WceRO3zEoMVBc+sLhAyxL6Y9MMu8DDLPt/?=
- =?us-ascii?Q?6MlsiMowBOiRW2VdtRXvo6XbOgUNUX3RXLSJBbzND7xxklPYc8bNU0KXtpBE?=
- =?us-ascii?Q?C70XMCTgoYdtUmDGKEecDAKEQxa2+Hb9kh6F1//fji9v7U3ptXs9Tm+kj789?=
- =?us-ascii?Q?M3GrGfPEWGMXNpSKv0G6/dc6mRz9mX278x+pkCIY39kWBPsSpAOI8bgaOfBG?=
- =?us-ascii?Q?AioUrh7CNPSEnwGv3akddvEI/q5ZU1ZJAzhpNhJ7J3JciNCWDoLixWD1uney?=
- =?us-ascii?Q?cMx746moGKx/w3qkzPFe4tWoW/WBT6LgYChx7Lu5znHPz1Y0cwdWRyqHQA0?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E47143872
+	for <linux-pci@vger.kernel.org>; Tue,  4 Jun 2024 23:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717542329; cv=none; b=iwwttXFPeDEtPd8uNgydawBE6aUmqajwueeBnIMpHcyvyTiICBqjsN6LI05O4sQJtnHTAMWaEMD7y45Sus+00WW+jyO8UdB1iql7EOXsbTClMDFI4KY7mgeLQn+ARN2uzWv/ZVtM9IrWOdAXAnDdHOjRhXQ2HyK2VAx0DJKaIHg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717542329; c=relaxed/simple;
+	bh=arjeDdS+2W9Bza0++P0LrRQ4y6a/khuLIwZuMy6OByY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Vxdk96+a+Lb2iG3kokYVS+4TK0WYzdW8j3NF+JIgzXh8dJ7s1nxpaZPYlUGnAHO5Llf/hLUNWMESakkbE1qFATn4fVvT1mJ1ixjtosH5YVW3J0OJkzNWZkYUxLW9bsZ2xUBPnvOoZzu7r3xxiybrf5rKQpo9pEEDlucnsxZNoRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MSm98BHz; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717542327; x=1749078327;
+  h=date:from:to:cc:subject:message-id;
+  bh=arjeDdS+2W9Bza0++P0LrRQ4y6a/khuLIwZuMy6OByY=;
+  b=MSm98BHz4ld4+kLBD8D3bLjQD9t5+8actn7cKEAktbX582Oc/HqBfufQ
+   bXcmU/WyWqErOQmUAj7THyZhNQa67YnaNB2t+oRf83/lwF34IXepF8ilD
+   ul/4nb6pDNzDEAS50VkcW6jRIF0xkRil58ThSteWw5d2buFZ9sJIhSMyf
+   bP2urhJzNs7uLCcKgEE3IDgHDpDBFDJJANMHLFKlBNgrn8W3R0eJMphrE
+   0yyWpid6Mw36BvIm3w1xVkECR3LisWGUShPcG3zfzuUqh79OGGxcNmYpa
+   p+N586OUnIxOTEC/5ebKR9/yLPDlx7S7pcNJMizb8gq15ZJ1XOK+MpyDV
+   g==;
+X-CSE-ConnectionGUID: 5tCgHRXtS7a+QHmS3GjtBA==
+X-CSE-MsgGUID: Of7RwFn1SyWhmkNk46tdDg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="24751128"
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="24751128"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 16:05:27 -0700
+X-CSE-ConnectionGUID: IKp0O+b9T9GSvjDqIeRlqg==
+X-CSE-MsgGUID: u9MkRY9dTGGmZFlrrXfuTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="37959602"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 04 Jun 2024 16:05:26 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sEdDX-0000eB-0W;
+	Tue, 04 Jun 2024 23:05:23 +0000
+Date: Wed, 05 Jun 2024 07:05:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD SUCCESS
+ 7246a4520b4bf1494d7d030166a11b5226f6d508
+Message-ID: <202406050710.Vg9FPcmc-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a864ab32-a865-4faa-85f8-08dc84ea8b9c
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2024 23:03:27.9074
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR02MB7305
 
-From: Thomas Gleixner <tglx@linutronix.de> Sent: Tuesday, June 4, 2024 11:1=
-4 AM
->=20
-> Michael!
->=20
-> On Mon, Jun 03 2024 at 22:09, mhkelley58@gmail.com wrote:
-> > Hyper-V VMBus devices generate interrupts that are multiplexed
-> > onto a single per-CPU architectural interrupt. The top-level VMBus
-> > driver ISR demultiplexes these interrupts and invokes per-device
-> > handlers. Currently, these per-device handlers are not modeled as
-> > Linux IRQs, so /proc/interrupts shows all VMBus interrupts as accounted
-> > to the top level architectural interrupt. Visibility into per-device
-> > interrupt stats requires accessing VMBus-specific entries in sysfs.
-> > The top-level VMBus driver ISR also handles management-related
-> > interrupts that are not attributable to a particular VMBus device.
-> >
-> > As part of changing VMBus to model VMBus per-device handlers as
-> > normal Linux IRQs, the top-level VMBus driver needs to conditionally
-> > account for interrupts. If it passes the interrupt off to a
-> > device-specific IRQ, the interrupt stats are done by that IRQ
-> > handler, and accounting for the interrupt at the top level
-> > is duplicative. But if it handles a management-related interrupt
-> > itself, then it should account for the interrupt itself.
-> >
-> > Introduce a new flow handler that provides this functionality.
-> > The new handler parallels handle_percpu_irq(), but does stats
-> > only if the ISR returns other than IRQ_NONE. The existing
-> > handle_untracked_irq() can't be used because it doesn't work for
-> > per-cpu IRQs, and it doesn't provide conditional stats.
->=20
-> There is a two other options to solve this:
->=20
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: 7246a4520b4bf1494d7d030166a11b5226f6d508  PCI: Use preserve_config in place of pci_flags
 
-Thanks for taking a look.  Unfortunately, unless I'm missing something,
-both options you suggest have downsides.
+elapsed time: 1481m
 
->    1) Move the inner workings of handle_percpu_irq() out into
->       a static function which returns the 'handled' value and
->       share it between the two handler functions.
+configs tested: 193
+configs skipped: 3
 
-The "inner workings" aren't quite the same in the two cases.
-handle_percpu_irq() uses handle_irq_event_percpu() while
-handle_percpu_demux_irq() uses __handle_irq_event_percpu().
-The latter doesn't do add_interrupt_randomness() because the
-demultiplexed IRQ handler will do it.  Doing add_interrupt_randomness()
-twice doesn't break anything, but it's more overhead in the hard irq
-path, which I'm trying to avoid.  The extra functionality in the
-non-double-underscore version could be hoisted up to
-handle_percpu_irq(), but that offsets gains from sharing the
-inner workings.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->=20
->    2) Allocate a proper interrupt for the management mode and invoke it
->       via generic_handle_irq() just as any other demultiplex interrupt.
->       That spares all the special casing in the core code and just
->       works.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                          axs101_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240604   gcc  
+arc                   randconfig-001-20240605   gcc  
+arc                   randconfig-002-20240604   gcc  
+arc                   randconfig-002-20240605   gcc  
+arm                               allnoconfig   clang
+arm                                 defconfig   clang
+arm                   randconfig-002-20240604   gcc  
+arm                   randconfig-004-20240604   gcc  
+arm                   randconfig-004-20240605   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240605   gcc  
+arm64                 randconfig-002-20240604   gcc  
+arm64                 randconfig-003-20240604   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240604   gcc  
+csky                  randconfig-001-20240605   gcc  
+csky                  randconfig-002-20240604   gcc  
+csky                  randconfig-002-20240605   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-002-20240604   clang
+i386         buildonly-randconfig-003-20240604   clang
+i386         buildonly-randconfig-005-20240604   clang
+i386         buildonly-randconfig-006-20240604   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240604   clang
+i386                  randconfig-002-20240604   clang
+i386                  randconfig-003-20240604   clang
+i386                  randconfig-004-20240604   clang
+i386                  randconfig-011-20240604   clang
+i386                  randconfig-014-20240604   clang
+i386                  randconfig-015-20240604   clang
+i386                  randconfig-016-20240604   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240604   gcc  
+loongarch             randconfig-001-20240605   gcc  
+loongarch             randconfig-002-20240604   gcc  
+loongarch             randconfig-002-20240605   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                       bmips_be_defconfig   gcc  
+mips                  decstation_64_defconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+mips                    maltaup_xpa_defconfig   gcc  
+mips                           rs90_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240604   gcc  
+nios2                 randconfig-001-20240605   gcc  
+nios2                 randconfig-002-20240604   gcc  
+nios2                 randconfig-002-20240605   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                randconfig-001-20240604   gcc  
+parisc                randconfig-001-20240605   gcc  
+parisc                randconfig-002-20240604   gcc  
+parisc                randconfig-002-20240605   gcc  
+parisc64                         alldefconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240604   gcc  
+powerpc               randconfig-001-20240605   gcc  
+powerpc               randconfig-002-20240604   gcc  
+powerpc               randconfig-002-20240605   gcc  
+powerpc               randconfig-003-20240604   gcc  
+powerpc               randconfig-003-20240605   gcc  
+powerpc64             randconfig-001-20240604   gcc  
+powerpc64             randconfig-001-20240605   gcc  
+powerpc64             randconfig-002-20240604   gcc  
+powerpc64             randconfig-003-20240605   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240605   gcc  
+riscv                 randconfig-002-20240604   gcc  
+riscv                 randconfig-002-20240605   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240605   gcc  
+s390                  randconfig-002-20240604   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          kfr2r09_defconfig   gcc  
+sh                    randconfig-001-20240604   gcc  
+sh                    randconfig-001-20240605   gcc  
+sh                    randconfig-002-20240604   gcc  
+sh                    randconfig-002-20240605   gcc  
+sh                           se7724_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sh                  sh7785lcr_32bit_defconfig   gcc  
+sh                        sh7785lcr_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240604   gcc  
+sparc64               randconfig-001-20240605   gcc  
+sparc64               randconfig-002-20240604   gcc  
+sparc64               randconfig-002-20240605   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240605   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240604   clang
+x86_64       buildonly-randconfig-001-20240605   gcc  
+x86_64       buildonly-randconfig-002-20240604   clang
+x86_64       buildonly-randconfig-002-20240605   gcc  
+x86_64       buildonly-randconfig-003-20240605   gcc  
+x86_64       buildonly-randconfig-004-20240604   clang
+x86_64       buildonly-randconfig-006-20240604   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240604   clang
+x86_64                randconfig-003-20240605   gcc  
+x86_64                randconfig-006-20240605   gcc  
+x86_64                randconfig-011-20240604   clang
+x86_64                randconfig-012-20240604   clang
+x86_64                randconfig-012-20240605   gcc  
+x86_64                randconfig-013-20240604   clang
+x86_64                randconfig-014-20240604   clang
+x86_64                randconfig-014-20240605   gcc  
+x86_64                randconfig-015-20240604   clang
+x86_64                randconfig-016-20240604   clang
+x86_64                randconfig-016-20240605   gcc  
+x86_64                randconfig-071-20240604   clang
+x86_64                randconfig-071-20240605   gcc  
+x86_64                randconfig-073-20240605   gcc  
+x86_64                randconfig-074-20240604   clang
+x86_64                randconfig-074-20240605   gcc  
+x86_64                randconfig-075-20240604   clang
+x86_64                randconfig-075-20240605   gcc  
+x86_64                randconfig-076-20240604   clang
+x86_64                randconfig-076-20240605   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240604   gcc  
+xtensa                randconfig-001-20240605   gcc  
+xtensa                randconfig-002-20240604   gcc  
+xtensa                randconfig-002-20240605   gcc  
 
-Yes, this would work on x86, as the top-level interrupt isn't a Linux IRQ,
-and the interrupt counting is done in Hyper-V specific code that could be
-removed.  The demux'ed interrupt does the counting.
-
-But on arm64 the top-level interrupt *is* a Linux IRQ, so each
-interrupt will get double-counted, which is a problem.  Having to add
-handle_percpu_demux_irq() to handle arm64 correctly isn't as clean
-as I wish it could be.  But I couldn't find a better approach.
-
-Michael
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
