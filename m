@@ -1,80 +1,65 @@
-Return-Path: <linux-pci+bounces-8348-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8349-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C43918FD482
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 19:58:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09BF78FD55A
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 20:10:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 778F81F22E94
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 17:58:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9FA81C21599
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 18:10:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB6619538D;
-	Wed,  5 Jun 2024 17:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2B5D3D6D;
+	Wed,  5 Jun 2024 18:04:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hd1mkKZU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ej0ZsfT+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFCE194AFC;
-	Wed,  5 Jun 2024 17:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886AD15572C;
+	Wed,  5 Jun 2024 18:04:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610280; cv=none; b=GLvsdviSoEyb8ytTqkTCEDBLvAyeWt+/p9TbRx6uLZ/17UlL5cJPuLM4Yemne2s4FdoFXTkvqWeUFrW2ASbBIAauYK7aS2C3404vESZ4rxlddD875oHJU+IIKyQSlt9lLF/AQCNxwsUaX5oIuA99RyfIaxYv8rv8Q/mRnZNvA2I=
+	t=1717610651; cv=none; b=FBbPJu/3elS/6lIIOkbkJM6HTBAQyx9tun506yt7032MU+ixycPhIn7iHNMGyw62ZszFbRBFFAJ+tiZaoTUbHAYLVeD0RktWAUilDxElKMN//Yxm97X0wyXnIMahwOykqppQig3KSZov1+quA7Vvu61X1MWWZevpZxtSxTBz9DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610280; c=relaxed/simple;
-	bh=7651KFw0eV+sZCBg3Xgw24WdzXcHIYOFgb2Cy9igrRI=;
+	s=arc-20240116; t=1717610651; c=relaxed/simple;
+	bh=rYEy0zN2GwpAksIeMEyKNAQAsNKFJ1o2vMiJlZN6j/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=YIaFdSluSpJaGSiqVimeNPBF+CTq5/vvZRlsGxv5j/U7otp7ZZ/NrN/Ga7BjeudNGvgutNHNR0GZ4bTJHeZMbfpliSNqSAMY3NbMJLc2TOj7aLW1jm+UEGZzESKbIHdZLNbUjIK0DGQVZVaIER9IEaxGxYqcUwn37VEmnJBrMlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hd1mkKZU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65200C32782;
-	Wed,  5 Jun 2024 17:57:59 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Wm8BYjyMp7LIOBNyF3LR6JxTPOk9KBUvvkoZ6GHT2diRZCJSdvnNY6Ey/5YKzqu584yuAVzuElPdYso2t+hLxo/gqj524rettvx0Yzse1rjIuOfrKCi7sZ+b260Fn0gZkXlf9jEMF4f8xVxn5Fgjw0gXeKyMx1BokQmbK6g8fq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ej0ZsfT+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54BDC2BD11;
+	Wed,  5 Jun 2024 18:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717610279;
-	bh=7651KFw0eV+sZCBg3Xgw24WdzXcHIYOFgb2Cy9igrRI=;
+	s=k20201202; t=1717610651;
+	bh=rYEy0zN2GwpAksIeMEyKNAQAsNKFJ1o2vMiJlZN6j/c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hd1mkKZUhqQqGSBxCm4GPev0yQ2EhyJ/hnZS0yvgyGtNfBS8om6Bq1RE4ifOd6gI5
-	 D8VetdPBrhbibxq/5zOvS8onnXu1R6FCGyyoHUAXd3cSpnu85JqX7ckJNf2pyzbUzY
-	 MjxiEshiMdJkwl+wJpE22c15NY/CKktbPbdboJBMrgBWeTJiL9h8JinLCNuaox9GSo
-	 GtwR57MNbDomombf3jMBJI8juBUZct7vfnfRdKjGTgIv6mmyHFEsR4tVai8f8qe9p8
-	 EV670UDpwwOhsKCdGYgA+ho+/AM5EFh1w+wIiD5pu1QB2ephfYREjVAwQiUgGBsrXl
-	 G4RSCtSn6mpuA==
-Date: Wed, 5 Jun 2024 12:57:57 -0500
+	b=Ej0ZsfT+/YDqfM/ehjuBw86B6/BSHAXVKss7JRAC+kYCGbNb+TN/rWdjbIvjsJruK
+	 rmZuNOTJQHyYN4FkGuJ8MEkuvj8K1EFGfOSeiMfOnCCOXCv26f2MCYaLpxUnNn0xVo
+	 spliaFNDLFmjaZ/j7z984sC8DThlmV741bZK7GH84Idcjh5K8XY0EEuSzOCAZUIzPG
+	 rSZJQfC0ddF541SIY9UI6PRD0YaR0Cg/F/ElA7MAhEPhYZ1ucstToD7fU0/fMzXxA+
+	 /7TQHEzyKQ0VUR8wd0WAH3RNgXH2DHc5zT2qwnq4kEKV00rdaJASmDbKjZavU4WP2+
+	 EYEvWxRj04f1g==
+Date: Wed, 5 Jun 2024 13:04:09 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-	Rocky Liao <quic_rjliao@quicinc.com>, Kalle Valo <kvalo@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Alex Elder <elder@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	ath12k@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel@quicinc.com, Amit Pundir <amit.pundir@linaro.org>
-Subject: Re: [PATCH v8 15/17] PCI/pwrctl: add PCI power control core code
-Message-ID: <20240605175757.GA733809@bhelgaas>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, linuxarm@huawei.com,
+	terry.bowman@amd.com,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register CXL
+ PMUs (and aer)
+Message-ID: <20240605180409.GA520888@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,25 +68,74 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528-pwrseq-v8-15-d354d52b763c@linaro.org>
+In-Reply-To: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
 
-On Tue, May 28, 2024 at 09:03:23PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, May 29, 2024 at 05:40:54PM +0100, Jonathan Cameron wrote:
+> Focus of this RFC is CXL Performance Monitoring Units in CXL Root Ports +
+> Switch USP and DSPs.
 > 
-> Some PCI devices must be powered-on before they can be detected on the
-> bus. Introduce a simple framework reusing the existing PCI OF
-> infrastructure.
+> The final patch moving AER to the aux bus is in the category of 'why
+> not try this' rather than something I feel is a particularly good idea.
+> I would like to get opinions on the various ways to avoid the double bus
+> situation introduced here. Some comments on other options for those existing
+> 'pci_express' bus devices at the end of this cover letter.
 > 
-> The way this works is: a DT node representing a PCI device connected to
-> the port can be matched against its power control platform driver. If
-> the match succeeds, the driver is responsible for powering-up the device
-> and calling pcie_pwrctl_device_set_ready() which will trigger a PCI bus
+> The primary problem this RFC tries to solve is providing a means to
+> register the CXL PMUs found in devices which will be bound to the
+> PCIe portdrv. The proposed solution is to avoid the limitations of
+> the existing pcie service driver approach by bolting on support
+> for devices registered on the auxiliary_bus.
+> 
+> Background
+> ==========
+> 
+> When the CXL PMU driver was added, only the instances found in CXL type 3
+> memory devices (end points) were supported. These PMUs also occur in CXL
+> root ports, and CXL switch upstream and downstream ports.  Adding
+> support for these was deliberately left for future work because theses
+> ports are all bound to the pcie portdrv via the appropriate PCI class
+> code.  Whilst some CXL support of functionality on RP and Switch Ports
+> is handled by the CXL port driver, that is not bound to the PCIe device,
+> is only instantiated as part of enumerating endpoints, and cannot use
+> interrupts because those are in control of the PCIe portdrv. A PMU with
+> out interrupts would be unfortunate so a different solution is needed.
+> 
+> Requirements
+> ============
+> 
+> - Register multiple CXL PMUs (CPMUs) per portdrv instance.
 
-s/pcie_pwrctl_device_set_ready/pci_pwrctl_device_set_ready/
+What resources do CPMUs use?  BARs?  Config space registers in PCI
+Capabilities?  Interrupts?  Are any of these resources
+device-specific, or are they all defined by the CXL specs?
 
-> rescan as well as subscribe to PCI bus notifications.
-> 
-> When the device is detected and created, we'll make it consume the same
-> DT node that the platform device did. When the device is bound, we'll
-> create a device link between it and the parent power control device.
+The "device" is a nice way to package those up and manage ownership
+since there are often interdependencies.
+
+I wish portdrv was directly implemented as part of the PCI core,
+without binding to the device as a "driver".  We handle some other
+pieces of functionality that way, e.g., the PCIe Capability itself,
+PM, VPD, MSI/MSI-X, 
+
+> - portdrv binds to the PCIe class code for PCI_CLASS_BRIDGE_PCI_NORMAL which
+>   covers any PCI-Express port.
+> - PCI MSI / MSIX message based interrupts must be registered by one driver -
+>   in this case it's the portdrv.
+
+The fact that AER/DPC/hotplug/etc (the portdrv services) use MSI/MSI-X
+is a really annoying part of PCIe because bridges may have a BAR or
+two and are allowed to have device-specific endpoint-like behavior, so
+we may have to figure out how to share those interrupts between the
+PCIe-architected stuff and the device-specific stuff.  I guess that's
+messy no matter whether portdrv is its own separate driver or it's
+integrated into the core.
+
+> Side question.  Does anyone care if /sys/bus/pci_express goes away?
+> - in theory it's ABI, but in practice it provides very little
+>   actual ABI.
+
+I would *love* to get rid of /sys/bus/pci_express, but I don't know
+what, if anything, would break if we removed it.
+
+Bjorn
 
