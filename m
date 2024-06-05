@@ -1,66 +1,55 @@
-Return-Path: <linux-pci+bounces-8373-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8374-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C2AD8FD95C
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 23:45:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A9818FD96B
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 23:58:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE1061F24F83
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 21:45:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7FC6B23106
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 21:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC8E515FCFB;
-	Wed,  5 Jun 2024 21:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 957771581E2;
+	Wed,  5 Jun 2024 21:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FT8g+35C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jynu4bSk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0FF15FA6B;
-	Wed,  5 Jun 2024 21:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8E03C062;
+	Wed,  5 Jun 2024 21:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717623902; cv=none; b=UXhw/42YTobchWnxjJYycDbXz+E/bDhRTV6SVGBybnqWjT8nLHpIcG5lka9GX+2btT4sSts1b2GUIqyF8czTNAQ7Oot3HMA9MStOp378FXrqDIsgZ4k7+twz0Nze3KqDoYt50bd+63zf8O+S/Pb08+Iagusrg/qGKC2TWn509Kk=
+	t=1717624730; cv=none; b=P/h2P/aSoPKXlGzmTZe/17o6XRH1WjWSDVn0pt1DvAzpkyq/Nk3RVxuFAX6bVnoOsxZfsqNswr+68KUfg2l91ILI4Ct1wwM4eqTjxj1z/qnnsj36WWLh+as9IeBO2u9bL92Tb+9UMSJWMQAe5PoWr3Of75/h2a7pXUmoLcTPO28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717623902; c=relaxed/simple;
-	bh=CVFMj08n3jx14fA4p4rVO8oNP2YJkFvLHwp+4lE/nJk=;
+	s=arc-20240116; t=1717624730; c=relaxed/simple;
+	bh=LWOLMGrH5N2gPZ93B8pHBq6TnKvAfq2vS3ahIjsTjdw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=pfxxyhCIkrw+8BMIKo6M7h30BwHMZKABbaqg4UddbxSWxoKoPvLqdKup1kfo5n73u0I5Q9ARndY39Hu29fsZkUzgZRzNGkjmpmjAMYP3KenIVMGVdBPB24CP+eBuLKW6CFiTeWHrYDf6MbzIxU6/hNw8bvv9qYZ/26V+XbofXM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FT8g+35C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD9E4C2BD11;
-	Wed,  5 Jun 2024 21:45:01 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=pPb/OF/0QhVmf0XefwZ9nbRRL5+N3qZwl9fjHDDB4vXUzfbKRRgoD9Lx8Squ6FZjfKNfMwgfKczLmeHZocvFMAaLtMftc4OU4eqpw9heYu7kyn+X1sVBth+fwTlyWAP8lMqe96zk+gyNBGFah6fIijL63JmZpWVPungfC/RkS4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jynu4bSk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E600C2BD11;
+	Wed,  5 Jun 2024 21:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717623902;
-	bh=CVFMj08n3jx14fA4p4rVO8oNP2YJkFvLHwp+4lE/nJk=;
+	s=k20201202; t=1717624730;
+	bh=LWOLMGrH5N2gPZ93B8pHBq6TnKvAfq2vS3ahIjsTjdw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FT8g+35CiFMlqdW45S1xvzcyh6rKx+CgS1WwjYzIADHjLKkvfngN74AXw7nrcOHNp
-	 W/jTuM7rBD2tO/ss+up8NPfPp1AZQpaG6whs2KMNyRsFLFZoMjqPTlGQ8t4hrwJeZS
-	 E3EtLD1WTLPWUouYrWzY9FwX38uX5LzwsPYcp/IX8m8T3Iq98c2VnukCiS/L/hYZu0
-	 v2nuSygn69PZ4lUFigqffS3vhHrMngjxVJ2n5iSti6Z547E4IC7e5FBpyPYiW6XEFn
-	 7jEBrGrhmjFYUkOwaoHkYJ1FLJD67eL3hatO1/UBa1dmULLixBRhE9em/5wFOtPZ4f
-	 ocIB2a3M5WPmw==
-Date: Wed, 5 Jun 2024 16:45:00 -0500
+	b=Jynu4bSkImO8IqHtm+3jiN9qiAD9ewBiRk0PE0yEZ+zElWILWk216XorAPgNDBENd
+	 NK0xjtf8ROxwO028OP0/6en3xTOGj2EWTsNueN93OMfgH/nX30yWQpfMwg8FJgJtOw
+	 PJJrsJ9uXVvTgWBO//SpM5MC9J3JF972AnDW2oKLutRHzj2o0zBip0u3fk4v6N41tm
+	 muYZGCs//ESgvmeT84OzXxo3M8eQ+ea8ndE4mprl5Crie5PiA//dlMK+4SILrxQLcn
+	 ksgT3rYoRj5moB9fkqk7UYLWqo4WQXSqu3JPaHgd5PSf7HpFL9qv4+CbblaY68VoFr
+	 NJX9AO/b3s7SA==
+Date: Wed, 5 Jun 2024 16:58:48 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Martin Oliveira <martin.oliveira@eideticom.com>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tejun Heo <tj@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Marciniszyn <mike.marciniszyn@intel.com>,
-	Michael Guralnik <michaelgur@nvidia.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Valentine Sinitsyn <valesini@yandex-team.ru>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 3/6] PCI/P2PDMA: create VMA without page_mkwrite()
- operator
-Message-ID: <20240605214500.GA781636@bhelgaas>
+To: Abhinav Jain <jain.abhinav177@gmail.com>
+Cc: bhelgaas@google.com, javier.carrasco.cruz@gmail.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com,
+	oohall@gmail.com, skhan@linuxfoundation.org
+Subject: Re: [PATCH v2] PCI/AER: Print error message as per the TODO
+Message-ID: <20240605215848.GA782210@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,42 +58,61 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240605192934.742369-4-martin.oliveira@eideticom.com>
+In-Reply-To: <20240605212344.21808-1-jain.abhinav177@gmail.com>
 
-On Wed, Jun 05, 2024 at 01:29:31PM -0600, Martin Oliveira wrote:
-> The P2PDMA code does not need (or want) a page_mkwrite() operator on its
-> VMA.
+On Wed, Jun 05, 2024 at 09:23:44PM +0000, Abhinav Jain wrote:
+> Print the add device error in find_device_iter()
 > 
-> Furthermore, having the page_mkwrite() operator causes
-> writable_file_mapping_allowed() to fail due to
-> vma_needs_dirty_tracking() on the gup flow, which is a pre-requisite for
-> enabling P2PDMA with FOLL_LONGTERM use cases.
+> Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
 > 
-> Co-developed-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Martin Oliveira <martin.oliveira@eideticom.com>
-
-Fine with me, but please s/create/Create/ in the subject to match
-history of the file.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
+> PATCH v1 link : https://lore.kernel.org/all/20240415161055.8316-1-jain.abhinav177@gmail.com/
+> 
+> Changes since v1:
+>  - Replaced pr_err() with pr_notice()
+>  - Removed unncessary whitespaces
 > ---
->  drivers/pci/p2pdma.c | 1 +
->  1 file changed, 1 insertion(+)
+
+Thanks for looking at this.
+
+  - It doesn't apply to -rc1 (the TODO message is missing).  In PCI,
+    we normally apply patches on topic branches based on -rc1.
+
+  - The subject should be more specific so it makes sense all by
+    itself, e.g., "Log note if we find too many devices with errors"
+
+  - Add period at end of sentence in commit log.
+
+  - Move historical notes (v1 URL, changes since v1) below the "---"
+    line so they don't get included in the commit log.
+
+  - __func__ is not relevant here -- that's generally a debugging
+    thing.  We can find the function by searching for the message
+    text.  In cases like this, I'd rather have something that helps
+    identify a *device* that's related to the message, e.g., the
+    pci_dev in this case.  So I'd suggest pci_err(dev, "...") here.
+
+  - I'd keep pci_err() instead of switching to pr_notice().  If we get
+    this message, we should re-think the way we collect this
+    information, so I want to hear about it.
+
+>  drivers/pci/pcie/aer.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 4f47a13cb500..ac07053abfea 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -171,6 +171,7 @@ static struct bin_attribute p2pmem_alloc_attr = {
->  	 * to be very large.
->  	 */
->  	.size = SZ_1T,
-> +	.mmap_allocates = true,
->  };
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 0e1ad2998116..8b820a74dd6b 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -885,8 +885,8 @@ static int find_device_iter(struct pci_dev *dev, void *data)
+>  		/* List this device */
+>  		if (add_error_device(e_info, dev)) {
+>  			/* We cannot handle more... Stop iteration */
+> -			pr_err("find_device_iter: Cannot handle more devices.
+> -					Stopping iteration");
+> +			pr_notice("%s: Cannot handle more devices - iteration stopped\n",
+> +					__func__);
+>  			return 1;
+>  		}
 >  
->  static struct attribute *p2pmem_attrs[] = {
 > -- 
 > 2.34.1
 > 
