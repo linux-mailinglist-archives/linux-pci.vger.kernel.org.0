@@ -1,45 +1,44 @@
-Return-Path: <linux-pci+bounces-8367-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8368-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D4E18FD755
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 22:14:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68D6F8FD774
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 22:25:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A01621F25F7D
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 20:14:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2A3F285C4E
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jun 2024 20:24:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F11415886E;
-	Wed,  5 Jun 2024 20:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7796C15ECD1;
+	Wed,  5 Jun 2024 20:24:49 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F451514F9
-	for <linux-pci@vger.kernel.org>; Wed,  5 Jun 2024 20:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B7115ECC4
+	for <linux-pci@vger.kernel.org>; Wed,  5 Jun 2024 20:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717618465; cv=none; b=ZpLa4SvpX5EQoUrgCJ33SCqvDlB0+jU1jLysn5nRotXGCFfDEotvqDnrPcHGD9kGr5wsX4akwXqrkD9cpcBglxD4TMQH+JeOm9YdNuROqENWcgiyDVtC95WtW/3JjJojbgIL60SQSAghX3lw/EDffEf/hntawOqK5RP1GtAN34E=
+	t=1717619089; cv=none; b=JWmr2m3Y4J8/t+H2zcFhQ+93H1tywwjx3lxExdHeNuC+e4iLK/dFoAq1Al0OfMpu8yNksl3GTmblzpsUsM+rBEWm9Z8cgVJX5w6Li28oc0/XlN0Wj3Tdl1aWBoOMpSt4RhpvWFsCPXzhik7cse/mZ/ru3TBYELCZMr13yq1v/FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717618465; c=relaxed/simple;
-	bh=5ikd2Wl8Mt4PURlz0CKwt6V4jaq9p2pUPjHsY9KDFlw=;
+	s=arc-20240116; t=1717619089; c=relaxed/simple;
+	bh=dJT0IXIjAoLuqegKrl7wJhhJCx7h7wib/TJUPpQllBA=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XGHrh0WR7a8X1lBANwpiLIzJDz05sPYRKJ7RqGe0AGLlxJOWSumahxsdKxGmVLfyLrN/2cBGXtRSbIAZzywXfEWtqgsszOsbbfpiLrEbH6mh9x7oaURqM9Dsaa0JBpFcUmAsOLyo48u1BwFz8NHCYXzYEHT4BJHILyHCaXudyRw=
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQZn8TtNQAaXNzh0huY2QXM1gl1C2lwcHSGB4AeXrqcHfX4IEg9LadHColNf8pj6btZyuMweydmWITLUWMSGBiackaCvczjG8B1OW+a/GYVejVjIigYAE+F6+QNCTDOCIpTg001OwgbG36QQq0x8QnNV4kx6bE0zbjUECPQpw7Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 31968b91-2378-11ef-80de-005056bdfda7;
-	Wed, 05 Jun 2024 23:14:20 +0300 (EEST)
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id a4ad9dfa-2379-11ef-8e41-005056bdf889;
+	Wed, 05 Jun 2024 23:24:45 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 5 Jun 2024 23:14:20 +0300
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
+Date: Wed, 5 Jun 2024 23:24:43 +0300
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Simon Horman <horms@kernel.org>,
 	Sai Krishna Gajula <saikrishnag@marvell.com>,
-	Rob Herring <robh@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -63,11 +62,10 @@ Cc: Herve Codina <herve.codina@bootlin.com>,
 	Allan Nielsen <allan.nielsen@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 11/19] irqchip: Add support for LAN966x OIC
-Message-ID: <ZmDHHFF-qD2UBkMT@surfacebook.localdomain>
+Subject: Re: [PATCH v2 18/19] mfd: Add support for LAN966x PCI device
+Message-ID: <ZmDJi__Ilp7zd-yJ@surfacebook.localdomain>
 References: <20240527161450.326615-1-herve.codina@bootlin.com>
- <20240527161450.326615-12-herve.codina@bootlin.com>
- <87frtr4goe.ffs@tglx>
+ <20240527161450.326615-19-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,128 +74,180 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87frtr4goe.ffs@tglx>
+In-Reply-To: <20240527161450.326615-19-herve.codina@bootlin.com>
 
-Wed, Jun 05, 2024 at 04:17:53PM +0200, Thomas Gleixner kirjoitti:
-> On Mon, May 27 2024 at 18:14, Herve Codina wrote:
+Mon, May 27, 2024 at 06:14:45PM +0200, Herve Codina kirjoitti:
+> Add a PCI driver that handles the LAN966x PCI device using a device-tree
+> overlay. This overlay is applied to the PCI device DT node and allows to
+> describe components that are present in the device.
+> 
+> The memory from the device-tree is remapped to the BAR memory thanks to
+> "ranges" properties computed at runtime by the PCI core during the PCI
+> enumeration.
+> The PCI device itself acts as an interrupt controller and is used as the
+> parent of the internal LAN966x interrupt controller to route the
+> interrupts to the assigned PCI INTx interrupt.
 
 ...
 
-> > +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.disable);
-> 
-> ~0U
->   
-> > +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.ack);
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+
+> +#include <linux/kernel.h>
+
+Why do you need this?
+
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pci.h>
+> +#include <linux/slab.h>
+
+General comment to the headers (in all your patches), try to follow IWYU
+principle, i.e. include what you use explicitly and don't use "proxy" headers
+such as kernel.h which basically shouldn't be used at all in the drivers.
 
 ...
 
-Below just to annoy people a bit :)
-
-(Yes, I understand that this is a prototype, it's just a pre-review in case one
-want to blindly copy'n'paste it).
-
-Other than that, I like the result!
-
-> I just did a quick conversion to the template approach. Unsurprisingly
-> it removes 30 lines of boiler plate code:
-> 
-> +static void lan966x_oic_chip_init(struct irq_chip_generic *gc)
+> +static irqreturn_t pci_dev_irq_handler(int irq, void *data)
 > +{
-> +	struct lan966x_oic_data *lan966x_oic = gc->domain->host_data;
-> +	struct lan966x_oic_chip_regs *chip_regs;
+> +	struct pci_dev_intr_ctrl *intr_ctrl = data;
+> +	int ret;
 > +
-> +	gc->reg_base = lan966x_oic->regs;
-> +
-> +	chip_regs = lan966x_oic_chip_regs + gc->irq_base / 32;
-> +	gc->chip_types[0].regs.enable = chip_regs->reg_off_ena_set;
-> +	gc->chip_types[0].regs.disable = chip_regs->reg_off_ena_clr;
-> +	gc->chip_types[0].regs.ack = chip_regs->reg_off_sticky;
-> +
-> +	gc->chip_types[0].chip.irq_startup = lan966x_oic_irq_startup;
-> +	gc->chip_types[0].chip.irq_shutdown = lan966x_oic_irq_shutdown;
-> +	gc->chip_types[0].chip.irq_set_type = lan966x_oic_irq_set_type;
-> +	gc->chip_types[0].chip.irq_mask = irq_gc_mask_disable_reg;
-> +	gc->chip_types[0].chip.irq_unmask = irq_gc_unmask_enable_reg;
-> +	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
-> +	gc->private = chip_regs;
-> +
-> +	/* Disable all interrupts handled by this chip */
-> +	irq_reg_writel(gc, ~0, chip_regs->reg_off_ena_clr);
-> +}
-> +
-> +static void lan966x_oic_chip_exit(struct irq_chip_generic *gc)
-> +{
-> +	/* Disable and ack all interrupts handled by this chip */
-> +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.disable);
-> +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.ack);
+> +	ret = generic_handle_domain_irq(intr_ctrl->irq_domain, 0);
+> +	return ret ? IRQ_NONE : IRQ_HANDLED;
 
-~0U :-)
-
-But I, for example, think that GENMASK() even better as it shows exactly what
-bits we set for the HW writes.
+There is a macro for that IRQ_RETVAL() IIRC.
 
 > +}
-> +
-> +static void lan966x_oic_domain_init(struct irq_domain *d)
+
+...
+
+> +static int devm_pci_dev_create_intr_ctrl(struct pci_dev *pdev)
 > +{
-> +	struct lan966x_oic_data *lan966x_oic = d->host_data;
+> +	struct pci_dev_intr_ctrl *intr_ctrl;
 > +
-> +	irq_set_chained_handler_and_data(lan966x_oic->irq, lan966x_oic_irq_handler, d);
+> +	intr_ctrl = pci_dev_create_intr_ctrl(pdev);
+
+> +
+
+Redundant blank line.
+
+> +	if (IS_ERR(intr_ctrl))
+> +		return PTR_ERR(intr_ctrl);
+> +
+> +	return devm_add_action_or_reset(&pdev->dev, devm_pci_dev_remove_intr_ctrl, intr_ctrl);
 > +}
-> +
-> +static int lan966x_oic_probe(struct platform_device *pdev)
+
+...
+
+> +static int lan966x_pci_load_overlay(struct lan966x_pci *data)
 > +{
-> +	struct irq_domain_chip_generic_info gc_info = {
-> +		.irqs_per_chip		= 32,
-> +		.num_chips		= 1,
-> +		.name			= "lan966x-oic"
-> +		.handler		= handle_level_irq,
-> +		.init			= lan966x_oic_chip_init,
-> +		.destroy		= lan966x_oic_chip_exit,
-> +	};
+> +	u32 dtbo_size = __dtbo_lan966x_pci_end - __dtbo_lan966x_pci_begin;
+> +	void *dtbo_start = __dtbo_lan966x_pci_begin;
+> +	int ret;
 > +
-> +	struct irq_domain_info info = {
+> +	ret = of_overlay_fdt_apply(dtbo_start, dtbo_size, &data->ovcs_id, data->dev->of_node);
 
-> +		.fwnode			= of_node_to_fwnode(pdev->dev.of_node),
+dev_of_node() ?
 
-It's as simple as dev_fwnode()
-
-> +		.size			= LAN966X_OIC_NR_IRQ,
-> +		.hwirq_max		= LAN966X_OIC_NR_IRQ,
-> +		.ops			= &irq_generic_chip_ops,
-> +		.gc_info		= &gc_info,
-> +		.init			= lan966x_oic_domain_init,
-> +	};
-> +	struct lan966x_oic_data *lan966x_oic;
-> +	struct device *dev = &pdev->dev;
+> +	if (ret)
+> +		return ret;
 > +
-> +	lan966x_oic = devm_kmalloc(dev, sizeof(*lan966x_oic), GFP_KERNEL);
-> +	if (!lan966x_oic)
-> +		return -ENOMEM;
-> +
-> +	lan966x_oic->regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(lan966x_oic->regs))
-> +		return dev_err_probe(dev, PTR_ERR(lan966x_oic->regs), "failed to map resource\n");
-> +
-> +	lan966x_oic->irq = platform_get_irq(pdev, 0);
-> +	if (lan966x_oic->irq < 0)
-> +		return dev_err_probe(dev, lan966x_oic->irq, "failed to get the IRQ\n");
-> +
-> +	lan966x_oic->domain = irq_domain_instantiate(&info);
-> +	if (!lan966x_oic->domain)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, lan966x_oic);
 > +	return 0;
 > +}
-> +
-> +static void lan966x_oic_remove(struct platform_device *pdev)
+
+...
+
+> +static int lan966x_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 > +{
-> +	struct lan966x_oic_data *lan966x_oic = platform_get_drvdata(pdev);
+> +	struct device *dev = &pdev->dev;
+> +	struct lan966x_pci *data;
+> +	int ret;
+
+> +	if (!dev->of_node) {
+> +		dev_err(dev, "Missing of_node for device\n");
+> +		return -EINVAL;
+> +	}
+
+Why do you need this? The code you have in _create_intr_ctrl() will take care
+already for this case.
+
+> +	/* Need to be done before devm_pci_dev_create_intr_ctrl.
+> +	 * It allocates an IRQ and so pdev->irq is updated
+
+Missing period at the end.
+
+> +	 */
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret)
+> +		return ret;
 > +
-> +	irq_set_chained_handler_and_data(lan966x_oic->irq, NULL, NULL);
-> +	irq_domain_remove(lan966x_oic->domain);
+> +	ret = devm_pci_dev_create_intr_ctrl(pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(dev, data);
+> +	data->dev = dev;
+> +	data->pci_dev = pdev;
+> +
+> +	ret = lan966x_pci_load_overlay(data);
+> +	if (ret)
+> +		return ret;
+
+> +	pci_set_master(pdev);
+
+You don't use MSI, what is this for?
+
+> +	ret = of_platform_default_populate(dev->of_node, NULL, dev);
+
+dev_of_node()
+
+> +	if (ret)
+> +		goto err_unload_overlay;
+> +
+> +	return 0;
+> +
+> +err_unload_overlay:
+> +	lan966x_pci_unload_overlay(data);
+> +	return ret;
 > +}
+
+...
+
+> +static void lan966x_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct lan966x_pci *data = dev_get_drvdata(dev);
+
+platform_get_drvdata()
+
+> +	of_platform_depopulate(dev);
+> +
+> +	lan966x_pci_unload_overlay(data);
+
+> +	pci_clear_master(pdev);
+
+No need to call this excplicitly when pcim_enable_device() was called.
+
+> +}
+
+...
+
+> +static struct pci_device_id lan966x_pci_ids[] = {
+> +	{ PCI_DEVICE(0x1055, 0x9660) },
+
+Don't you have VENDOR_ID defined somewhere?
+
+> +	{ 0, }
+
+Unneeded ' 0, ' part
+
+> +};
 
 -- 
 With Best Regards,
