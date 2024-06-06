@@ -1,103 +1,94 @@
-Return-Path: <linux-pci+bounces-8416-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8417-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C74568FF67D
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 23:10:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D08148FF6D8
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 23:30:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39CBD1F2576B
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 21:10:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 257AA283142
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 21:30:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7377173473;
-	Thu,  6 Jun 2024 21:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28040146580;
+	Thu,  6 Jun 2024 21:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DUUoGUVc"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NnIcilgh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2058.outbound.protection.outlook.com [40.107.241.58])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2078.outbound.protection.outlook.com [40.107.241.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7261BDEF;
-	Thu,  6 Jun 2024 21:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0DC13BC02;
+	Thu,  6 Jun 2024 21:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717708249; cv=fail; b=iC9cP7QgNfwrxNx9dTeDKQLi5c9Tc2FN5Rvd5C/W59wdSYjlA4/O98xDuud5zr9AJsTulO4UfQc+jbYFVSLGg8/U/me4d6AXATUu9IC7a2lR3H3C2Gi17JLi2XnVYF4N6AYMikrKm5Bt+s9psTmwLcGAqzcc8nIpVrQGTW7D+bs=
+	t=1717709115; cv=fail; b=K5Od5S10PhtKyuGySdYU6DD62DHTKARw/wTxZhK67tUh+zu7swRqARmnKBMlFyRi6GUbJ0tPZ/e7ceKkvvZReCWSi6C+4HkO7ChCNOEKqMzzfi6SovEKAg3KLtb/40E4wumuJBBipxIumug5OY7KqiCd6gzRHYC+afwFje51U6k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717708249; c=relaxed/simple;
-	bh=sc/W3ZGLU6emYBsb8gg7QIEFeBry2xuOgQ0hqq4aaT0=;
+	s=arc-20240116; t=1717709115; c=relaxed/simple;
+	bh=HmfdxGopgWDB60wy2mjFdkdQovhRBY2kxpfNvHUqe4w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=D9oXu48UsB5CpkPOoCMcZr+Kke9Fe5Rh3cKiKgRKEsp1ACf4lpHE4Jzs6o/RWGC7StFBBI7V5T/8FpoexcR+2zyM2qa9w/5/ePBqFRPiZTnC/EiMQvAOs3XjifGfeVC55ETvHn2wdxOLo3AasooMDQ22HFLwpXXx7slbv5VkDo8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=DUUoGUVc; arc=fail smtp.client-ip=40.107.241.58
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lZVIRKnqAIo1G4Y/RFONBUy7MMcrrRRE6BGf5rA/jNm2hP/5YR3OsYV46Rf2g56ye6yR99AFJr15mEEBfIRKhYaHC1MhoZUbhxfMrUD6nys8AnHPX+WAUdDLhiLpWJPwXJwAu5KR3gPd3kaarcjdlx9eL3T7oVzlA2OeMf1OQXk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=NnIcilgh; arc=fail smtp.client-ip=40.107.241.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CbKyAYUzLjzd81SlrjO9K2Fm/VqOHuH+5aN3GLdAgz14rVHnPHEPs3dRI7vhNVV3Nox3fo5HaQvb7V12Ls0zBqp9DCvXreTzG7tXrlIxKk+X8L4sZ/RYgp9OF8Vz7pqRzCE/zHZQtbHrbstcUZ9lYW4LFZckLKrFDrHY+9Y+GGGtHEMeQI4hykF7DGY5ctVHgMF3In2TVgWiyprOZu6io7H8YjqDdbfIWfWSJBM01mExkAZ1fK/yxMFVwRllPbVJZiqd1j+BoxP5CAb0UvuSN+hrozMDmnloeTAg9tDIDSCgsgd35ZibCzwfjd/YebSLCMQWI0ZGLow5p4pSibr5/g==
+ b=IrQILZc303gVNM4AOXs8lHafeFeYwtag/09x+BTWcCylhLU/bHtqxsvu1dPRTtAbKcBUy/YrvFinDtKmlF7SirRj0r5TNSOHN2leDc8oPuj22vMICYwCZFVB0Yaz2WwUYYIzI7PoIlJmmnRdXSJAqAItofyA4xVkV9adq5KJNlTsUXkNBKKvCkLI0SMphQ5AK+/9tIt0KUgNqsFSLzLGnIvRHlFDEpzO7lVpTo82RF6hnbyKoMzd4dyRfkyLPm21cWohcHkYvgzmAjfLcvuoqTXuIVntM5Bgy6fjnapSGm+lm7F1phpM1A1PEegIfHBjmrmqlORG65SJ+iskCUfLgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pLjwML3+LJqJe0egmg4+SzXghL6iZlUrjvqiCwPG3WM=;
- b=XBpEc3nfuIpPYBqr4FXAym+0h4wi6fWETK9Z2nSiut0xAJolWLPG8JTHThNmV1zntJl3xcVTPzAUgsIqwdSOSZ7E8CRokdruc4LVM+uJ8ZSqCsTTPczdmwMcYd9zWiJQwYGKxOoY6ZdB6YZhenoIO/kZv0MWz0nyTyyL79+V58hoCowSTl01mwPvu9DcC9mLBjHZi6+4bEy+ywbYcxbe6lUwx3T2xAqeTSw3exO7TbY8YdqDVhlzEPxkzsCvTE+HhIyI4oC2zKeEBMpPNeBlKOO4gQ2FEVoN/gs0eRAKaJkHCFYSzmo3YgUlVF3haMI9cvWy7a9z7JyTtZ4CnwmI8w==
+ bh=Ym67aj83xOqAGGtJMxPJEvtdQTLXLGaJyzz1q5CNVPs=;
+ b=D3AwgDcp7ruQP96bP4RN7C11OdyBigBvNzQmoc0q8qLgyo4CBL5KUm03Xvcj3u1kVmpPsij6k88gsdUQ82/wiULDSBw1bHnNUtZgj2gZc9aEtijxoXWBUHcSxjXNA3uQaI+VeM9rgPyIgRjt5hpaigxjsuC9q27j/ymVowxpnHwck5yZG7rSCnLwKjTvL+TYPC/yu5KixzjUsWf2Oc2l08dlBeNuf3/ad7CJ8Ed3x0Y/cGWwePXORKaCUxvgEpx2F2s98H6vuBWCOogYWH/ITxrjZyuvht1S0v3mzQw5R2IW+xzohmglkzo2UVpeNPpC1++yWStYAmswApkp3emOdg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pLjwML3+LJqJe0egmg4+SzXghL6iZlUrjvqiCwPG3WM=;
- b=DUUoGUVcYK4bjDs4WFZ/CBM+4l//Yl9hNUvk7wXYQENMWU+UtgAMhtUc3vaCcFwwFSmLME0a3v8Wbboi4UT8TDt96WV7T83Osez9lteRwzNVCj1d+HSFh0E11Q14ZzU2JiNRlapo1vym68c1rOSjBoh+emvEAC5sxcV81/2fDo4=
+ bh=Ym67aj83xOqAGGtJMxPJEvtdQTLXLGaJyzz1q5CNVPs=;
+ b=NnIcilghv73LKWZDT2XvR7wVcad4jdrtdcbgDowXEEeiItIAB39FKmscESF1izlezdQgOLvwSoZvFnDtOTgKErIzenGuwNYyTuLy9Q5lpGgkQ1scNay4UY8XSl0Zhc52ndsO7sMn2KJjw4GM8G0MNplyrjWp68XwY781lFnSyvI=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA1PR04MB10208.eurprd04.prod.outlook.com (2603:10a6:102:454::8) with
+ by PAXPR04MB9092.eurprd04.prod.outlook.com (2603:10a6:102:22a::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Thu, 6 Jun
- 2024 21:10:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.34; Thu, 6 Jun
+ 2024 21:25:09 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.021; Thu, 6 Jun 2024
- 21:10:42 +0000
-Date: Thu, 6 Jun 2024 17:10:29 -0400
+ 21:25:09 +0000
+Date: Thu, 6 Jun 2024 17:24:59 -0400
 From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
+To: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Fabio Estevam <festevam@gmail.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pci@vger.kernel.org, imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-	mhi@lists.linux.dev, Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH 2/5] PCI: endpoint: Introduce 'epc_deinit' event and
- notify the EPF drivers
-Message-ID: <ZmIlxSQ8ffDk4Dau@lizhi-Precision-Tower-5810>
-References: <20240606-pci-deinit-v1-0-4395534520dc@linaro.org>
- <20240606-pci-deinit-v1-2-4395534520dc@linaro.org>
-Content-Type: text/plain; charset=us-ascii
+	bpf@vger.kernel.org, devicetree@vger.kernel.org,
+	Jason Liu <jason.hui.liu@nxp.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v5 00/12] PCI: imx6: Fix\rename\clean up and add lut
+ information for imx95
+Message-ID: <ZmIpK4l6fdZ9BZu/@lizhi-Precision-Tower-5810>
+References: <20240528-pci2_upstream-v5-0-750aa7edb8e2@nxp.com>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240606-pci-deinit-v1-2-4395534520dc@linaro.org>
-X-ClientProxiedBy: SJ0PR13CA0188.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::13) To PAXPR04MB9642.eurprd04.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240528-pci2_upstream-v5-0-750aa7edb8e2@nxp.com>
+X-ClientProxiedBy: BYAPR06CA0018.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::31) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -106,328 +97,217 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10208:EE_
-X-MS-Office365-Filtering-Correlation-Id: f9585b62-22e6-40bb-3067-08dc866d1fcc
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB9092:EE_
+X-MS-Office365-Filtering-Correlation-Id: fb8154de-c5e9-4168-150c-08dc866f2490
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|7416005|52116005|376005|1800799015|38350700005;
+	BCL:0;ARA:13230031|366007|52116005|1800799015|7416005|376005|921011|38350700005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?imY6PnzkWIsks1J2DWujzNdheRbLCnZNtaA0GHhRbzyeV+aUfUF4T+Pa4gWq?=
- =?us-ascii?Q?KX9m/nzGUg/JF+LaxnOd0YZcVrCMILs1b3XBWZBBzSc8KKgyXtTGZv/JAq4W?=
- =?us-ascii?Q?B5po1zMoNMUDhL0uwYPi8M52kXDVe2UxNG+zircP+YZyy1EHg+gZS/UPxQJY?=
- =?us-ascii?Q?8cZiFDF+QKUohec47oEHo6NQSxQJKBoowgfiWk6apVlEQGFUb/3vSI5mACsV?=
- =?us-ascii?Q?tsg2vWiAYTyFJwgW2rCz1jyTPbB9KfrgvZhTxQ2SRfywgsC9hBz0/qYS3V1W?=
- =?us-ascii?Q?IzNqQjC/beOARM8PU92VpdlT0SleYDfWSLCHf/ASBwXz9N/1GtrRmoDmcg/U?=
- =?us-ascii?Q?1hIp/Sbkxl0P+X6F30Js46nKvBNTDTCr1/4HfeXuMnjD3rAgnAg5Lwx5yf78?=
- =?us-ascii?Q?f8mm/y2b+a8TQ+zzjTZbjy3Ti6dEnsS6wOSxIFGPr7BRTAOZXvaxVcklKwWS?=
- =?us-ascii?Q?v3WGE6ApVaf5WvNUOqAJkaPCnNmvKPEDyf127rGD6h8TIzg4+Q8SzCN4lqzY?=
- =?us-ascii?Q?8PMDy2XGdtFwha+V3ga9ex7a6nAqEJZ0SIxAMjkIZfi7TrJgwemo/h8SWdEU?=
- =?us-ascii?Q?67w1I9h/7qvjRBQ7gTq3Rghr3NNvTAgJp3LEnYmyNrSY+jNJubcCi5/66IZe?=
- =?us-ascii?Q?bxcXBxVcJMO4E4V4BQNi9dXAJdqDimif7maKlfju+CplyzlMm6WyWcCUyxbM?=
- =?us-ascii?Q?AGiAd4C3suNsw4C9i3VWZYe1OfJ0eUxTVcQpGjvK6Yf3y0CZRAUJg8ZvMAHJ?=
- =?us-ascii?Q?/clxzj/xxS56GfQFkyqSIRb816PJt5/MF1lboVIiyBLprg9v1SaJJXZWXiCv?=
- =?us-ascii?Q?Eoki1ufdvXCcN1w32cEvsdQ8aci8XmkOV5PoyO7iGmMIatv8WSL4JXtiAk7z?=
- =?us-ascii?Q?SsgNlH+ILgkYzDUwXrZx3itRcmGyTxovpZEuoKRuCp3DIvYJx7dEz4RSpc4A?=
- =?us-ascii?Q?ERwpOxAEdUZFwFGxHSvPrRVrJ8JxjS6py4rcaBSmfpEH2o7aNHEdcpI45o2M?=
- =?us-ascii?Q?zhOuJa8qJiRkMbh5VOsmmZNU2mUo8Q8SSJbatoxxxJk6vLly6ocx1qjb11Ni?=
- =?us-ascii?Q?fBv3bsFb78XvQ7Be59MEd2uj9YAoTKMsJDlREmaiWZhaa7n4LH1Ur9O/N9iw?=
- =?us-ascii?Q?0YbHrNwYzRlxvG5lp10l/37+62xLfkvj0EwwKO+fhnlAMv9Ld0Aakx5ewXzp?=
- =?us-ascii?Q?454KrLrpFVkTMzIKIF35xjNiTU+jxFdwtp1lTJZYoKCs4OZaqEwb+e1MKVf4?=
- =?us-ascii?Q?I//K2Go8TZglvcCi+31a+Yl2LWifA1KmZn8if5R/3xUy6QdDH3qT7xNfbRBN?=
- =?us-ascii?Q?kpaKO5WfKIuqAlljL3o9SYY+BBjsbfxW65KnxtaUe7p+Ik8jw2+iYbPnSt2c?=
- =?us-ascii?Q?/szKkbo=3D?=
+	=?utf-8?B?Q0hCckxha3dISmYyUldXNnhhZlhpNkVuRDE3dERyaGF4M0pGcXEyaFloTUtV?=
+ =?utf-8?B?TEJ4ZnhSaDhqM1N3MFZBb294L05xbjQwQTh6dlZDK2tLT083OC8rSTNNaFlk?=
+ =?utf-8?B?RS8xOSswaURmc091dHRTcWY0RExQR1BTSGE5M0ZGTHN2QXg0eWtpR2MwYnUx?=
+ =?utf-8?B?K3FqV1c5cGlMcGU5RjVGTTN4bnZCbWpKUzdnN3U5WWVNdGdQZEJxdkg4YkRy?=
+ =?utf-8?B?K3ZmTXZLLzlvQ3RDM3pCenZReElQMG5QRTNDamtDdXNIOE1wMS9ZREV0WjRj?=
+ =?utf-8?B?T1hPc1JpVEFNMnRHTGEyK1haSGRibUV3b29oc0NuaWlaRFRQTkZWZnRjYXkr?=
+ =?utf-8?B?Yms2cHZ3QUtDdVUrNGl2V3Q4czkvSWtUUWRrd1VuYjJCOGJzWGJVREMzK3BW?=
+ =?utf-8?B?TVZUWCtJalQ0ODV6SFpYTmpQVnpjTW9YcVpvcERKR0oxWFdvc1pWbDFXcjAv?=
+ =?utf-8?B?ek1vTEJseDVUVnJ1WnBGWXBWd3pZaU4rcnRUV0h6bFlmeFBEK3pVWEF5ckdr?=
+ =?utf-8?B?RDAxdll5dWNrME02Znhocm00N0M0SkxBWllRS0NGdkg5MDFOSnhNSlZLQlpi?=
+ =?utf-8?B?b3JSd2xpNjNaT3laZ2YzODBFZmRiU09PMFVtT2tyeGtHcW82cWZyaC9WczJ1?=
+ =?utf-8?B?ajJVRDU3V2FrTVJ4TCtRWm1FWnBWUnVPTXZDQ0lucTR2OE12L1RTQlRlQVNJ?=
+ =?utf-8?B?dG1VRWgyTGIwVUVMNFAyY1k1TnFOUmFPQ3pEdnZyK0U0RWg5clpzb3A4Ulho?=
+ =?utf-8?B?UGJxeHAwYzkyRlRLbzArMmI1QkRZZVNSYlB6UElTSGJybisrRzFEZEpTeGgy?=
+ =?utf-8?B?NXFuYzlLRXFyNzFCY1duT3A1eEY0NndVSENUQmdwNzdpYzdXckcrbDVnVVht?=
+ =?utf-8?B?WFJrODFFYy9kTUN3L3ByUk1nbStkUU9TVS9XQUhaNVQ2ZlBKT3JFditJMEc1?=
+ =?utf-8?B?NWE0c0N6ZTdnOE1LQU9lNHhFZ2JFV0hwVGVJMEJpT2M0NFFKZnBVTTVpeHZN?=
+ =?utf-8?B?NmNJaUR0bW1wSDh2S0t6clo5Skc2OVYzNXNsS1dsY3NzK3NYVUJuT3o1clZW?=
+ =?utf-8?B?VzBVQ0dWc0kwVDA4Zk5tUFBRNUs4RGd0c1ljTGhaWUtDZmczcWJrcWpxdGNl?=
+ =?utf-8?B?ZVdnV1VSZFRQSFZzNWVCOEJFWDdzMkRoVXFvczVLUXBSbE5JZW93RUliQjdF?=
+ =?utf-8?B?dGkzSUxwZEJPV3hSYzF2RXJnZFdsRHhoYThBSmlIaFYzTFBWOXJRYklpbDJv?=
+ =?utf-8?B?WXVaUUJTWjAyMS9Rekdkd3FpOVU0bzhwZVJzdU9iL281TU1nbEMwV1JxNmVC?=
+ =?utf-8?B?SkVKSmZRbEdJcS9ZNitxQlk4T0FoeFZUT2JoamJHR1hXQkY2MVFLVEpKS25R?=
+ =?utf-8?B?UTlnZmhGYit3d1lLamhXV2hPUzlBY2JLQ2tyanYzbGJxWTBUTVlQRW5haHha?=
+ =?utf-8?B?Q0RVdzhSdDlFM1A2TnprKzFha3dUWi8wSjNWbTRVQms1VGJhK2NmTlU1cFBV?=
+ =?utf-8?B?bU8zRTErd20xeWNqSDZVSDlqNzhKdlI4K0tYVjBwdCtLV2xpQllNQ0RtOGw2?=
+ =?utf-8?B?RER3bnhBUUdlNm9PVVpDNi8xWUs2ZGZUcmUxWnp3bnRWLzFIRUNzTjdRODJB?=
+ =?utf-8?B?MXBFclRmbzBwdEIvWjZxUVFLanRPNkIrejJqT2VXODhKb29NYWVudHRPVkRk?=
+ =?utf-8?B?eUpxS0VESXZJOEdPQnhvNDJwSU56a3ZTU001WHlEREhKL0NRTU1URC9sbDZN?=
+ =?utf-8?B?QUtVVmZ2NVVXS0VxeGVaKzJLS1d1dEFIaWdUc2FlVjRsUERoaTEzSGh6aStj?=
+ =?utf-8?B?R2pnT0VSSVFqVzl4OGY1VkxRekQ0ZDlDcDd4ZWQxM2N3QXFsait4M1YyQ1VJ?=
+ =?utf-8?Q?hH1cQBUnrB57S?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(52116005)(376005)(1800799015)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(1800799015)(7416005)(376005)(921011)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?pDhM/hW/FbWSQ/bthLswklRDmLtj9asDyCQRpqHu6xHbcB3rlad+rwPSSLjB?=
- =?us-ascii?Q?k2baVqoLi3N+6Xon2JY8JhLACI8u1k8S2Feso46u517OMSwgHGNjs3QKEhlY?=
- =?us-ascii?Q?4mNVO30fVacJt1SSw2sfYu+VSnGN6QTpaNkX+aeLChAosm26xWKyH2WJxcVT?=
- =?us-ascii?Q?i1cCp73pgbKq17eMYKIyOqr5MSIBufWstW7DpKvVsfZjl7tCVVd2MlGRe2JU?=
- =?us-ascii?Q?F+kYnoYhEW+ITd6Jrj7dL5TtBwkum9fQeRT0MugihGzk7J5r2J7Re23zDCNm?=
- =?us-ascii?Q?iFe6hcl+CP/E1cXGIlJz7UmA0m3GykmZXVAFp4BEyZxKh6+kmsmW5hOPFtYB?=
- =?us-ascii?Q?kKZQUnHnf1z9NEKfX0lIHtJsmqYvbUqaCqh5L4+76eNGtIKt8a3Bh4my7Fuk?=
- =?us-ascii?Q?udZRnGeyVbs8/VmzilmqHSsTGgiHBt2FT1K1nHC3DeX417pvi0S6Yf8H7WDI?=
- =?us-ascii?Q?f1eAXpNnYGpuhC21VH6JY5FSoTOaWBNTPannhahxKKAqfEalHBQ6gfglBJGY?=
- =?us-ascii?Q?4feaEfxlPTluy7ME5L+e+RfSqmNS4i3VM5d4gccLedGj6EQDoQxq5zGkEzDj?=
- =?us-ascii?Q?Xqqf2OhoBXH7O2Z+FvvKHBlpuMoWiEtOtH5xy3K55qgeN72EFKw6LDi25t3L?=
- =?us-ascii?Q?s7hiQRm9OC/+TKjAH0Vucvsb/zZTx8obcWRITSaTu075XJD1uJWCpgTQW4ol?=
- =?us-ascii?Q?VQXedHjhEophE2hyuECoBLS/AjDOsAyyQeI30L/Zv9AAZC+Oq9PR7xVTsQSj?=
- =?us-ascii?Q?oyW4fA37X5YPl5N5mWZ0LCL/ijPUxnmpP0lwvohESy+ZJLKXZw5jjXmOUrs2?=
- =?us-ascii?Q?X0X919m+Z/HpltIug6hzFxF62uboIccCxRaRKcXemmsx4mHFkVwH+DOV53za?=
- =?us-ascii?Q?Ts5Jb/wa93sUTNzwvk/OCH7Na54uJCZF8LWqaJ941UN9wo240kjVeOrRndov?=
- =?us-ascii?Q?FLk+1VAZ6mxFHDI8aYDXfy28Nxf79+2ylAjBunrSNoCciOpeyWjz8/REoNRu?=
- =?us-ascii?Q?o6TlU2FYCw/5GBi8m8pNPjXpBsInj8PMv3ubcsY/Fq5iiqlfGZRFkv52lEkm?=
- =?us-ascii?Q?q7+kVheByxmQxbCiEQEU7qE1zGplTCkckIs9lVKmejNLdk/9lOBGMKtmY141?=
- =?us-ascii?Q?R98plPBA4jShbbVDTVLUO/z3QOFVIZ+lgtVT4tZssNopUIgDp86GWePDphTr?=
- =?us-ascii?Q?+61CavN00T0er3r7hJcLLpGyrnBFLKT907nLi4BtmhHUxXdW2hVacZsdfWEE?=
- =?us-ascii?Q?7ENRPM5AjWYny/LYjqIG4qSiJqA1aUTnZXsWrbE1HXXxFwpA7wJ/y8d6p4GZ?=
- =?us-ascii?Q?MSt+CBL7HGmaRTIFtUpIj8gMpwxFltjEDNeHTkdAcm/0Hqj/j8exwFR0uPAv?=
- =?us-ascii?Q?WpQj6FocuVlVhcellWSpP3/0t2bDiv1HswN1X5tc7wjTmucFynpCCSVEnJx0?=
- =?us-ascii?Q?vXslR+lUaSG4MmPE/JPrRzNiVOidUIdECKxSWBejJ9H0nJ7x2s1qohRcP6XN?=
- =?us-ascii?Q?zjDyRVfkFFtmLgFC327IoXEEpvCwh/MsgXhNlicLnKXIIoXriTwSKCy8nB1c?=
- =?us-ascii?Q?jpKcPp09j3iVRU01TG4=3D?=
+	=?utf-8?B?anFWcThVeXJpd2ZGNVFOeHZVTnZRUEgza1gzc0RVVDVVWVUxOG5ZbkpleVpj?=
+ =?utf-8?B?WVRmWlBHU2oxR2JIMFlzeDRhMHp0aGhqWnFiOUhIRExodGNlV1NTYkZwRHRK?=
+ =?utf-8?B?N3NmbFduUURSYUlvTFRqeFN4RExDYlB5T3NWSFMySUE2TkRycERJRGwxOGlT?=
+ =?utf-8?B?MllrRXVOQjR2UHNxTVJlSEhCbkVZVDNlZStubjhWWTVwNGFoRzlESUVuYjB2?=
+ =?utf-8?B?Q0NybDlpcmpuZExqVmtTYkxMNXdmSUlSS0h4Y3JYQzBBNzl2UC8vTnF4S0Fs?=
+ =?utf-8?B?VVNQTzVBV0JybnV3UTNGK0twbHhrVEMxZ3UrUjFNUHI1eTNLdFB2RWFxa1pN?=
+ =?utf-8?B?ZkQyMVdMNDJIYVdEbDVaTkxQWnJsTHZtbjBXc25VY3NmUDk2Ulk3RG5hMFVM?=
+ =?utf-8?B?ZG5BSUJVK2tmRXJwQ2c2aHd3cHl3UTg1anNHeUt5dWE4Wnd2R1RXUWF5SytS?=
+ =?utf-8?B?RU9hSnJJaTU0NExLK2gyR0UxTEx0YTJpbXE4bVFoaTRHMWkwd3oxc3c1Nitt?=
+ =?utf-8?B?RFV3b3huem1kNkZ5L2JzbTN6TXVPcm1ieTd6VVUrN2RodW5sV0FZc3VFeTdN?=
+ =?utf-8?B?U2pPM20vclNzTDAxUlM2bEp4alpVUHVrWTlFekJIbWdLTHJqeTI4ZStJdU5S?=
+ =?utf-8?B?ZFdHeFhISjJyQnhpa2wrKzJXN050ck4waEp6ZkRyNWpLcFV6Nkk4bk14WXdx?=
+ =?utf-8?B?ZWFvVGFxZ1JnN3czdnQ1SDdicm9OT1NOQlYvQ2V5TVBTcW5uMjdsWGljRVJI?=
+ =?utf-8?B?dEJSWDFvOWNzbENibTdyMmIyUkhZTWZ6VzB2bnBTdVdremgyRHJjQXFQQ0xl?=
+ =?utf-8?B?cWlTZzhjYXRlc09ydXJaVmQxNFZvdTloZ1NJVEJyaytaOVh6TVNkT1A3R2FQ?=
+ =?utf-8?B?YlorWjhYc2NyWGx2WDJaOGxQREFjZmFlUGk0THpnTkV3Qmwza2t3cFA4bkpF?=
+ =?utf-8?B?OEJvMTJycmwrTTB1c3AxNzh3ZjZ1U3JFT29MWkl5TjVncld4SU1Pb2VMMHho?=
+ =?utf-8?B?RGs1bmJDWi9KLy9OU3hTZjVoejdNa210RWwvSXBSQ096bVgrVHZpZVNPWDV4?=
+ =?utf-8?B?RlVkOEdRcFhZTktIdkpzNjZOQlNhYlpDeFBRL0tIc3FiY3NuRVlnYnRDbVJz?=
+ =?utf-8?B?dHNybmtEeStlYUdqdDFDZXZJV2RVRU9mMWxKRk40QzVzM2czM2ZvU2RIUmdi?=
+ =?utf-8?B?cVFUVUJQdFNERlpFZFlQaXF3RitTZWJSOGtJdUUzZWd4MVd4ZjBDQmJtY3Mz?=
+ =?utf-8?B?OE1Ka3l4aWFLaVc1enR2S3B5TFEyemY2dHRiQ3c2cG1DQ1lVK0ZGUllnbVdk?=
+ =?utf-8?B?QUlidmkwQTl0NzdRWEIrWlJPZzZiM1NVNElHU241UnNCc1pQMjhrUnJlNGRC?=
+ =?utf-8?B?TnY5WFp1U09nbkRMQ2hlblNFdFI2cnpUdnJIemtZTzdKT2ljRW0yeVZiSVFX?=
+ =?utf-8?B?T2JYQXQ4QlFSTk1VQkFLc1JVSFFMZFZOTHpxSExCekh2ZlZyb3BVQllxS2lL?=
+ =?utf-8?B?SXJTQ01tRHlneXdId3QzS1Ntbk5jamhTanZGaHNNcHZPbGRHZHcrbnZ5NFAv?=
+ =?utf-8?B?VFZqS2tsNjFEYjVYdVQzN1psSldCR2U1V0VtZXdQQ2Y5OXVWOTYvbUhPOU8y?=
+ =?utf-8?B?SGJicnBXRzZOQ2lHK25iR0ZxTUtJZE82Vzc4djlYZUh4SzVzcFFhL0tncUdq?=
+ =?utf-8?B?cVpIODRjTFdMT3NSYUFxMmIyeGNNMDlyNysrQmJDZ3BMOGo4dWI4WDNnbzR3?=
+ =?utf-8?B?RFB3SmlxYmVkQ1IyNG5aQ0lVRGxtdFkySWhaRUxCT2M3TzdMZHRhZGllNld2?=
+ =?utf-8?B?ekx0TVZrZmlwemlnNUc3QXYxQlo3UUE0a0czR0VoUzF1MllianNlWStvc3U1?=
+ =?utf-8?B?Ti9rTW9obFNrVUIvNWViY0h1bTFxS3FBQmkvSG5ZNFlUS0ZqMjJKTW1jQ3dC?=
+ =?utf-8?B?b0F4TWUwQ01JRm5jWlRYc2pOSm1mWXFJTFUvcHdoMGhLM1FvK2VEbkpyOHlD?=
+ =?utf-8?B?WXBOZW1JcUtjeElDSFpjcTRXN05oWjZmdmJ6Mm0xSjVGYXYzdmlMVUJ2NFVC?=
+ =?utf-8?B?aUJiOS9tOFFNWVNzN1pPZHBsVzh1S0ZaVXI0enl5YllqY2Z5Y1U4NEZYQWhv?=
+ =?utf-8?Q?NTPw=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9585b62-22e6-40bb-3067-08dc866d1fcc
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb8154de-c5e9-4168-150c-08dc866f2490
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 21:10:42.3718
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 21:25:09.3740
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L7bt6Tm2qzfEz4k3+o+nNFIX6XnQrhsskUdRmtbHritonSUiDhaN0OPH9ZC9LbtnJHu8YLFpHuFA1ZuTtdI6eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10208
+X-MS-Exchange-CrossTenant-UserPrincipalName: iim0MBHXov983LWy7iAYq2FN2kvtJNAmVHbDirH+HMlAUnsVjIkaL8I1Eo/CLzmaDQa+cS/aDw8YyZ/1Oeatbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9092
 
-On Thu, Jun 06, 2024 at 12:56:35PM +0530, Manivannan Sadhasivam wrote:
-> As like the 'epc_init' event, that is used to signal the EPF drivers about
-> the EPC initialization, let's introduce 'epc_deinit' event that is used to
-> signal EPC deinitialization.
-> 
-> The EPC deinitialization applies only when any sort of fundamental reset
-> is supported by the endpoint controller as per the PCIe spec.
-> 
-> Reference: PCIe Base spec v5.0, sections 4.2.4.9.1 and 6.6.1.
-> 
-> Currently, some EPC drivers like pcie-qcom-ep and pcie-tegra194 support
-> PERST# as the fundamental reset. So the 'deinit' event will be notified to
-> the EPF drivers when PERST# assert happens in the above mentioned EPC
-> drivers.
-> 
-> The EPF drivers, on receiving the event through the epc_deinit() callback
-> should reset the EPF state machine and also cleanup any configuration that
-> got affected by the fundamental reset like BAR, DMA etc...
-> 
-> This change also warrants skipping the cleanups in unbind() if already done
-> in epc_deinit().
-> 
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Tue, May 28, 2024 at 03:39:13PM -0400, Frank Li wrote:
+> Fixed 8mp EP mode problem.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
+hi Manivannan:
+
+	Do you have any additional comments except for the patch
+Config look up table(LUT) to support MSI ITS and IOMMU for i.MX95?
+
+
+Frank Li
+
+> 
+> imx6 actaully for all imx chips (imx6*, imx7*, imx8*, imx9*). To avoid     
+> confuse, rename all imx6_* to imx_*, IMX6_* to IMX_*. pci-imx6.c to        
+> pci-imx.c to avoid confuse.                                                
+> 
+> Using callback to reduce switch case for core reset and refclk.            
+> 
+> Add imx95 iommux and its stream id information.                            
+> 
+> Base on linux-pci/controller/imx
+> 
+> To: Richard Zhu <hongxing.zhu@nxp.com>
+> To: Lucas Stach <l.stach@pengutronix.de>
+> To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> To: Krzysztof Wilczyński <kw@linux.com>
+> To: Rob Herring <robh@kernel.org>
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> To: Shawn Guo <shawnguo@kernel.org>
+> To: Sascha Hauer <s.hauer@pengutronix.de>
+> To: Pengutronix Kernel Team <kernel@pengutronix.de>
+> To: Fabio Estevam <festevam@gmail.com>
+> To: NXP Linux Team <linux-imx@nxp.com>
+> To: Philipp Zabel <p.zabel@pengutronix.de>
+> To: Liam Girdwood <lgirdwood@gmail.com>
+> To: Mark Brown <broonie@kernel.org>
+> To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> To: Conor Dooley <conor+dt@kernel.org>
+> Cc: linux-pci@vger.kernel.org
+> Cc: imx@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: bpf@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> 
+> Changes in v5:                                                             
+> - Rebase to linux-pci next. fix conflict with gpiod change                    
+> - Add rob and cornor's review tag                         
+> - Link to v4: https://lore.kernel.org/r/20240507-pci2_upstream-v4-0-e8c80d874057@nxp.com
+> 
+> Changes in v4:                                                             
+> - Improve comment message for patch 1 and 2.
+> - Rework commit message for patch 3 and add mani's review tag
+> - Remove file rename patch and update maintainer patch
+> - [PATCH v3 06/11] PCI: imx: Simplify switch-case logic by involve set_ref_clk callback
+> 	remove extra space.
+> 	keep original comments format (wrap at 80 column width)
+> 	update error message "'Failed to enable PCIe REFCLK'"
+> - PATCH v3 07/11] PCI: imx: Simplify switch-case logic by involve core_reset callback
+> 	keep exact the logic as original code
+> - Add patch to update comment about workaround ERR010728
+> - Add patch about help function imx_pcie_match_device()
+> - Using bus device notify to update LUT information for imx95 to avoid
+> parse iommu-map and msi-map in driver code.  Bus notify will better and
+> only update lut when device added.
+> - split patch call PHY interface function.
+> - Improve commit message for imx8q. remove local-address dts proptery. and
+> use standard "range" to convert cpu address to bus address.             
+> - Check entry in cpu_fix function is too late. Check it at probe
+> - Link to v3: https://lore.kernel.org/r/20240402-pci2_upstream-v3-0-803414bdb430@nxp.com
+> 
+> Changes in v3:
+> - Add an EP fixed patch
+>   PCI: imx6: Fix PCIe link down when i.MX8MM and i.MX8MP PCIe is EP mode
+>   PCI: imx6: Fix i.MX8MP PCIe EP can not trigger MSI
+> - Add 8qxp rc support
+> dt-bing yaml pass binding check
+> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,imx6q-pcie.yaml
+>   LINT    Documentation/devicetree/bindings
+>   DTEX    Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dts
+>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   DTC_CHK Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dtb
+> 
+> - Link to v2: https://lore.kernel.org/r/20240304-pci2_upstream-v2-0-ad07c5eb6d67@nxp.com
+> 
+> Changes in v2:
+> - remove file to 'pcie-imx.c'
+> - keep CONFIG unchange.
+> - Link to v1: https://lore.kernel.org/r/20240227-pci2_upstream-v1-0-b952f8333606@nxp.com
+> 
 > ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c |  1 -
->  drivers/pci/controller/dwc/pcie-qcom-ep.c       |  1 +
->  drivers/pci/controller/dwc/pcie-tegra194.c      |  1 +
->  drivers/pci/endpoint/functions/pci-epf-mhi.c    | 19 +++++++++++++++++++
->  drivers/pci/endpoint/functions/pci-epf-test.c   | 17 +++++++++++++++--
->  drivers/pci/endpoint/pci-epc-core.c             | 25 +++++++++++++++++++++++++
->  include/linux/pci-epc.h                         | 13 +++++++++++++
->  include/linux/pci-epf.h                         |  2 ++
->  8 files changed, 76 insertions(+), 3 deletions(-)
+> Frank Li (8):
+>       PCI: imx6: Rename imx6_* with imx_*
+>       PCI: imx6: Introduce SoC specific callbacks for controlling REFCLK
+>       PCI: imx6: Simplify switch-case logic by involve core_reset callback
+>       PCI: imx6: Improve comment for workaround ERR010728
+>       PCI: imx6: Add help function imx_pcie_match_device()
+>       PCI: imx6: Config look up table(LUT) to support MSI ITS and IOMMU for i.MX95
+>       PCI: imx6: Consolidate redundant if-checks
+>       PCI: imx6: Call: Common PHY API to set mode, speed, and submode
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 2e69f81baf99..78d5fc72c9cb 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -620,7 +620,6 @@ void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  
->  	dw_pcie_edma_remove(pci);
-> -	ep->epc->init_complete = false;
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_ep_cleanup);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 4d2d7457dcb3..2324e56c9bfc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -507,6 +507,7 @@ static void qcom_pcie_perst_assert(struct dw_pcie *pci)
->  		return;
->  	}
->  
-> +	pci_epc_deinit_notify(pci->ep.epc);
->  	dw_pcie_ep_cleanup(&pci->ep);
->  	qcom_pcie_disable_resources(pcie_ep);
->  	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 432ed9d9a463..4ca7404246a3 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1715,6 +1715,7 @@ static void pex_ep_event_pex_rst_assert(struct tegra_pcie_dw *pcie)
->  	if (ret)
->  		dev_err(pcie->dev, "Failed to go Detect state: %d\n", ret);
->  
-> +	pci_epc_deinit_notify(pcie->pci.ep.epc);
->  	dw_pcie_ep_cleanup(&pcie->pci.ep);
->  
->  	reset_control_assert(pcie->core_rst);
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index 205c02953f25..5832989e55e8 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -764,6 +764,24 @@ static int pci_epf_mhi_epc_init(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static void pci_epf_mhi_epc_deinit(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> +	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> +	struct pci_epf_bar *epf_bar = &epf->bar[info->bar_num];
-> +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> +	struct pci_epc *epc = epf->epc;
-> +
-> +	if (mhi_cntrl->mhi_dev) {
-> +		mhi_ep_power_down(mhi_cntrl);
-> +		if (info->flags & MHI_EPF_USE_DMA)
-> +			pci_epf_mhi_dma_deinit(epf_mhi);
-> +		mhi_ep_unregister_controller(mhi_cntrl);
-> +	}
-> +
-> +	pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no, epf_bar);
-> +}
-> +
->  static int pci_epf_mhi_link_up(struct pci_epf *epf)
->  {
->  	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> @@ -898,6 +916,7 @@ static void pci_epf_mhi_unbind(struct pci_epf *epf)
->  
->  static const struct pci_epc_event_ops pci_epf_mhi_event_ops = {
->  	.epc_init = pci_epf_mhi_epc_init,
-> +	.epc_deinit = pci_epf_mhi_epc_deinit,
->  	.link_up = pci_epf_mhi_link_up,
->  	.link_down = pci_epf_mhi_link_down,
->  	.bus_master_enable = pci_epf_mhi_bus_master_enable,
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index e771be7512a1..7c2ed6eae53a 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -782,6 +782,15 @@ static int pci_epf_test_epc_init(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static void pci_epf_test_epc_deinit(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +
-> +	cancel_delayed_work(&epf_test->cmd_handler);
-> +	pci_epf_test_clean_dma_chan(epf_test);
-> +	pci_epf_test_clear_bar(epf);
-> +}
-> +
->  static int pci_epf_test_link_up(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -803,6 +812,7 @@ static int pci_epf_test_link_down(struct pci_epf *epf)
->  
->  static const struct pci_epc_event_ops pci_epf_test_event_ops = {
->  	.epc_init = pci_epf_test_epc_init,
-> +	.epc_deinit = pci_epf_test_epc_deinit,
->  	.link_up = pci_epf_test_link_up,
->  	.link_down = pci_epf_test_link_down,
->  };
-> @@ -905,10 +915,13 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->  static void pci_epf_test_unbind(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	struct pci_epc *epc = epf->epc;
->  
->  	cancel_delayed_work(&epf_test->cmd_handler);
-> -	pci_epf_test_clean_dma_chan(epf_test);
-> -	pci_epf_test_clear_bar(epf);
-> +	if (epc->init_complete) {
-> +		pci_epf_test_clean_dma_chan(epf_test);
-> +		pci_epf_test_clear_bar(epf);
-> +	}
->  	pci_epf_test_free_space(epf);
->  }
->  
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 56b60330355d..47a91dcb07d7 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -774,6 +774,31 @@ void pci_epc_notify_pending_init(struct pci_epc *epc, struct pci_epf *epf)
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_notify_pending_init);
->  
-> +/**
-> + * pci_epc_deinit_notify() - Notify the EPF device about EPC deinitialization
-> + * @epc: the EPC device whose deinitialization is completed
-> + *
-> + * Invoke to notify the EPF device that the EPC deinitialization is completed.
-> + */
-> +void pci_epc_deinit_notify(struct pci_epc *epc)
-> +{
-> +	struct pci_epf *epf;
-> +
-> +	if (IS_ERR_OR_NULL(epc))
-> +		return;
-> +
-> +	mutex_lock(&epc->list_lock);
-> +	list_for_each_entry(epf, &epc->pci_epf, list) {
-> +		mutex_lock(&epf->lock);
-> +		if (epf->event_ops && epf->event_ops->epc_deinit)
-> +			epf->event_ops->epc_deinit(epf);
-> +		mutex_unlock(&epf->lock);
-> +	}
-> +	epc->init_complete = false;
-> +	mutex_unlock(&epc->list_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_epc_deinit_notify);
-> +
->  /**
->   * pci_epc_bus_master_enable_notify() - Notify the EPF device that the EPC
->   *					device has received the Bus Master
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 11115cd0fe5b..85bdf2adb760 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -197,6 +197,8 @@ struct pci_epc_features {
->  
->  #define to_pci_epc(device) container_of((device), struct pci_epc, dev)
->  
-> +#ifdef CONFIG_PCI_ENDPOINT
-> +
->  #define pci_epc_create(dev, ops)    \
->  		__pci_epc_create((dev), (ops), THIS_MODULE)
->  #define devm_pci_epc_create(dev, ops)    \
-> @@ -226,6 +228,7 @@ void pci_epc_linkup(struct pci_epc *epc);
->  void pci_epc_linkdown(struct pci_epc *epc);
->  void pci_epc_init_notify(struct pci_epc *epc);
->  void pci_epc_notify_pending_init(struct pci_epc *epc, struct pci_epf *epf);
-> +void pci_epc_deinit_notify(struct pci_epc *epc);
->  void pci_epc_bus_master_enable_notify(struct pci_epc *epc);
->  void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
->  			enum pci_epc_interface_type type);
-> @@ -272,4 +275,14 @@ void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size);
->  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->  			   void __iomem *virt_addr, size_t size);
-> +
-> +#else
-> +static inline void pci_epc_init_notify(struct pci_epc *epc)
-> +{
-> +}
-> +
-> +static inline void pci_epc_deinit_notify(struct pci_epc *epc)
-> +{
-> +}
-> +#endif /* CONFIG_PCI_ENDPOINT */
->  #endif /* __LINUX_PCI_EPC_H */
-> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> index dc759eb7157c..0639d4dc8986 100644
-> --- a/include/linux/pci-epf.h
-> +++ b/include/linux/pci-epf.h
-> @@ -71,12 +71,14 @@ struct pci_epf_ops {
->  /**
->   * struct pci_epc_event_ops - Callbacks for capturing the EPC events
->   * @epc_init: Callback for the EPC initialization complete event
-> + * @epc_deinit: Callback for the EPC deinitialization event
->   * @link_up: Callback for the EPC link up event
->   * @link_down: Callback for the EPC link down event
->   * @bus_master_enable: Callback for the EPC Bus Master Enable event
->   */
->  struct pci_epc_event_ops {
->  	int (*epc_init)(struct pci_epf *epf);
-> +	void (*epc_deinit)(struct pci_epf *epf);
->  	int (*link_up)(struct pci_epf *epf);
->  	int (*link_down)(struct pci_epf *epf);
->  	int (*bus_master_enable)(struct pci_epf *epf);
+> Richard Zhu (4):
+>       PCI: imx6: Fix establish link failure in EP mode for iMX8MM and iMX8MP
+>       PCI: imx6: Fix i.MX8MP PCIe EP's occasional failure to trigger MSI
+>       dt-bindings: imx6q-pcie: Add i.MX8Q pcie compatible string
+>       PCI: imx6: Add i.MX8Q PCIe root complex (RC) support
 > 
-> -- 
-> 2.25.1
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   16 +
+>  drivers/pci/controller/dwc/pci-imx6.c              | 1181 ++++++++++++--------
+>  2 files changed, 730 insertions(+), 467 deletions(-)
+> ---
+> base-commit: 50d96936b7b1be01bcc7b9ff898191214ee72697
+> change-id: 20240227-pci2_upstream-0cdd19a15163
+> 
+> Best regards,
+> ---
+> Frank Li <Frank.Li@nxp.com>
 > 
 
