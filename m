@@ -1,133 +1,79 @@
-Return-Path: <linux-pci+bounces-8419-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8420-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8F778FF6EE
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 23:33:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3236D8FF703
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 23:47:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 348671F2159A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 21:33:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 581F01C221E7
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 21:47:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 254577175B;
-	Thu,  6 Jun 2024 21:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26CC271B4C;
+	Thu,  6 Jun 2024 21:47:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="VafrFhSD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYR6Z/Jl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80162FC02;
-	Thu,  6 Jun 2024 21:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4211219E1;
+	Thu,  6 Jun 2024 21:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717709591; cv=none; b=l4eAoZ9q/Ev7ME5Y35HXthve6rB4Q+fUsB9GfIuZt2sDplVKBbiRLzryW5II/rMh1u7TTF/vr/bDCbkjDbdF6CVOQQQN8URtsP3i8cU79KkaGFbrdsC4jFwUzgAO6/svdkecOR+Pwljj3TpJd+m5whPdVnopcvxVrmRts/+6thI=
+	t=1717710457; cv=none; b=bLVxt5Om9WoSbTPYW2njhNyjasryi4T4zRGkpA6DwyPWcw1eGHr8ZPXPhwmDs2hN/5sTRo8Ft9twegO0aBVO4IgLij6gltmPr3pw46eYJgKFNG84yaI/iSl6/oQW+KQnG8iDTLHyQJepeNkuraI/DVwN5EDIVQHQodGrlobJi2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717709591; c=relaxed/simple;
-	bh=c4VPquM25/aAzWc+PWoefzik+kfteGxmC9v6FNbyTbM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=IoYcP12aQBzVufc6VYmCaoFcYI95EAvBJY06TghI61u1pQFGX6VlPvcUbYvBqmdeu53cuqZvzXNR4vxI4Hnz7McDuWHuFy0qbAaOGw+lgW5yEIL9M/D4eUMsLxq36uBLgRhFNFZN6Uvao2qD79v1ZwFZblWoqzlFdBMChA7MqtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=VafrFhSD; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=GFEw8cAaOIMPPjcIH/t2swdVfYuU+9OBnbnvT/Z34FA=; b=VafrFhSDZTiuTQ8+eqghWgRF/6
-	LbImSkv5LzDfHOSEpw5N5S4ulsNiiv1TzeiftXjYmAxXH9xYRxXqV6ScNt6jpoZhUoMjpLgULTY4c
-	RxEqaFL5TsOFZvWBW6uee5L1CXJlmgb8ZmEQb3c/zrxeclsuynN+yXuixJpTovirhWS9QmVDgv2Ka
-	zCh7bRny2nQzn/GF+eMTU8MtnBT27kGc17jRdSPb5CgAukSJ+fhCiWh1HUL/v2CPuqd9Kw4wF00zx
-	rokY8xTE011F43W7U8oQ0olgR2h94vh+ngSqC+weHVt2qqA6FxLwSBLt7mMgxdELA9RdCtvo2WLM9
-	NfcCF6PQ==;
-Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1sFKj7-002BN1-1U;
-	Thu, 06 Jun 2024 15:33:00 -0600
-Message-ID: <bb2e5a8d-797d-406c-acc6-60e83b302ede@deltatee.com>
-Date: Thu, 6 Jun 2024 15:32:39 -0600
+	s=arc-20240116; t=1717710457; c=relaxed/simple;
+	bh=dFn3yhVpa+oQpm7LH+q+Fv7OwlwNnf8gBKcAQhVyqqA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=mOOeCkOn0mt4JkKMWvbwnOBY5ZnNv9Etm8ZrDQ3ScnfAWPjz2bIvpODFYFRBehIyavDsDuSGLmfPOwEtsZ2EQC57h3N3vNCKOVgwHrq5DlbpSEkWXNU4DlGVUdxpu4EZfyDRkGNbOSJFlYKKpk63OnAo3z8yZEObHeIB1EVYM/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYR6Z/Jl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BE172C2BD10;
+	Thu,  6 Jun 2024 21:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717710456;
+	bh=dFn3yhVpa+oQpm7LH+q+Fv7OwlwNnf8gBKcAQhVyqqA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=CYR6Z/JlB6ftpHdY7pBeCJAp4gZTDi3eqSV4B89/DhwjrnA6WW+qKK9ppPHeH2JeN
+	 BjJViAjCo8PPH4zTWpxAI354KV9UXVT4xquY0gg4XPry7q+WZx5dq86YkPDhjazdwV
+	 MiYly/JQzH/ycRxBvv1njwbwm2Z4ti12vSnx15nW4Aj8Man8HPw81l5sCGj9x9uj7/
+	 tOi0qtw36O+UdpRzCY3U3RvEKo+gNAMhdD/Uhv3AWggQ4pml80WoQb2BLcQJkESn6J
+	 L5W0LEXgN98GRMG+KbavMcTU8plhs+o2XHgAhv8bZZaUXYTIylG4xGFfNQODCnakGl
+	 HHDGa0xFNqHig==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B3302D2039D;
+	Thu,  6 Jun 2024 21:47:36 +0000 (UTC)
+Subject: Re: [GIT PULL] PCI fixes for v6.10
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240606185925.GA810710@bhelgaas>
+References: <20240606185925.GA810710@bhelgaas>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240606185925.GA810710@bhelgaas>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.10-fixes-1
+X-PR-Tracked-Commit-Id: c9d52fb313d3719d69a040f4ca78a3e2e95fba21
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d91e656262aeef16f6a296a2b6c8b0f7243f408a
+Message-Id: <171771045672.14151.4527047493477849116.pr-tracker-bot@kernel.org>
+Date: Thu, 06 Jun 2024 21:47:36 +0000
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Dan Williams <dan.j.williams@intel.com>, Imre Deak <imre.deak@intel.com>, Hans de Goede <hdegoede@redhat.com>, Kalle Valo <kvalo@kernel.org>, Dave Jiang <dave.jiang@intel.com>, Jani Saarinen <jani.saarinen@intel.com>, Leon Romanovsky <leonro@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Martin Oliveira <martin.oliveira@eideticom.com>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-mm@kvack.org, Jason Gunthorpe
- <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Tejun Heo <tj@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Mike Marciniszyn <mike.marciniszyn@intel.com>,
- Michael Guralnik <michaelgur@nvidia.com>,
- Dan Williams <dan.j.williams@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
- Valentine Sinitsyn <valesini@yandex-team.ru>, Lukas Wunner <lukas@wunner.de>
-References: <20240605192934.742369-1-martin.oliveira@eideticom.com>
- <20240605192934.742369-2-martin.oliveira@eideticom.com>
- <2024060658-ember-unblessed-4c74@gregkh>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <2024060658-ember-unblessed-4c74@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 104.157.31.28
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, martin.oliveira@eideticom.com, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, jgg@ziepe.ca, leon@kernel.org, bhelgaas@google.com, tj@kernel.org, rafael@kernel.org, akpm@linux-foundation.org, mike.marciniszyn@intel.com, michaelgur@nvidia.com, dan.j.williams@intel.com, ardb@kernel.org, valesini@yandex-team.ru, lukas@wunner.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 1/6] kernfs: create vm_operations_struct without
- page_mkwrite()
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-Hi Greg,
+The pull request you sent on Thu, 6 Jun 2024 13:59:25 -0500:
 
-On 2024-06-06 14:54, Greg Kroah-Hartman wrote:
-> On Wed, Jun 05, 2024 at 01:29:29PM -0600, Martin Oliveira wrote:
->> The standard kernfs vm_ops installs a page_mkwrite() operator which
->> modifies the file update time on write.
->>
->> This not always required (or makes sense), such as in the P2PDMA, which
->> uses the sysfs file as an allocator from userspace.
-> 
-> That's not a good idea, please don't do that.  sysfs binary files are
-> "pass through", why would you want to use this as an allocator?
+> git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.10-fixes-1
 
-The P2PDMA code already creates a binary attribute which is used to
-allocate P2PDMA memory into userspace[1]. It was done this way a couple
-of years ago at the suggestion of Christoph[2]. Using a sysfs attribute
-made the code substantially simpler and got rid of a bunch of pseudofs
-mess that was required when mmaping a char device. The attribute already
-exists and is used by userspace so it's not something we can change at
-this point.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d91e656262aeef16f6a296a2b6c8b0f7243f408a
 
-The attribute has worked well for what was needed until we wanted to use
-P2PDMA memory with FOLL_LONGTERM and GUP. That path specifically denies
-FOLL_LONGTERM pins when the underlying VMA has a .page_mkwrite operator,
-which sysfs/kernfs forces on us. P2PDMA doesn't benefit from this
-operator in any way so the simplest thing is to remove it for this use case.
+Thank you!
 
->> Furthermore, having the page_mkwrite() operator causes
->> writable_file_mapping_allowed() to fail due to
->> vma_needs_dirty_tracking() on the gup flow, which is a pre-requisite for
->> enabling P2PDMA over RDMA.
->>
->> Fix this by adding a new boolean on kernfs_ops to differentiate between
->> the different behaviours.
-> 
-> This isn't going to work well.
-
-What about it are you worried won't work well? We're open to other
-suggestions.
-
-Thanks,
-
-Logan
-
-[1] https://elixir.bootlin.com/linux/latest/source/drivers/pci/p2pdma.c#L164
-[2] https://lore.kernel.org/all/20220705075108.GB17451@lst.de/
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
