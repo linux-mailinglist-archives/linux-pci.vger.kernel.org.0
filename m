@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-8380-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8381-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 591688FDEBA
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 08:28:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10B5D8FDEC5
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 08:31:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31C601C244AD
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 06:28:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F2261C24606
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 06:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C5C213A415;
-	Thu,  6 Jun 2024 06:27:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B727ACA6F;
+	Thu,  6 Jun 2024 06:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8OBtjMZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxSzwmt+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84EC13A3F3;
-	Thu,  6 Jun 2024 06:27:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864754A2D;
+	Thu,  6 Jun 2024 06:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717655255; cv=none; b=Zt1RyQnu+3jWKk5hCJ5GQvsyGBvoZyNmIHm5CtYlvXPY2rm63lr+cg/l7RoWO9IIl5qOlnvsJIqb1jNIhT8sBB4ln5Osrqg9Oh15o0rA1seWmk4GkUbhxQd2esrb/vtz9IJOwccOAUgCd+7+tGorG6Grf7DQMu8kgYmEV190uNY=
+	t=1717655502; cv=none; b=nuFJ45gYDqUU0KYZQv4tKyOXNFWC/uyeau89982stE/p9W1iwtnT6U/eDBd7j6Hvolc/e6xyNWP0YLucGtRG9t8j/1m0tHZuClXyyJxQ3g/38RHg2udtXb+KS2zB0RNGv+W+jsKYni5YuNayXfvTOYTarxayKI95MtEVqvDzXhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717655255; c=relaxed/simple;
-	bh=/keuf3dCVugAEdTMAjTPla8xo+au+QS7B3jnvFRay+4=;
+	s=arc-20240116; t=1717655502; c=relaxed/simple;
+	bh=VRtXL1+yFAh+3qRiidKMeUXDfuQoZVR1nUUH5Tsu92k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bako4M9mVTAiybkJ8DZNff5iJOLQyRFDWq16LhjyTBm15q2/i1yCH9YSGutl9d9PgV+/QgufU4nlIWs/Pgf/O9pXUakfb470D3R31fF1DOMlVSLhmDfh432hai+UlLyYND4lbmdO8Bh6zBI6ngfHhKVUPtZBg7SStyyOL24c8VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8OBtjMZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDB1C2BD10;
-	Thu,  6 Jun 2024 06:27:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jhJuIq/Ou8DYc6Fjzs+n2lG9RHV07bo12Qno0zGPoXVnh4aaRoTo82AL44zg15xBphjicOisi213clMAilgaVtCaY/NZE3RQjJQ/yaRIq4yfVbyRnMm0mqr+gxgrG5XjhDzqHNxPAQ/me7/FMXWDUK/Wfh0lvN5zTxeO2khhDRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxSzwmt+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3315DC3277B;
+	Thu,  6 Jun 2024 06:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717655254;
-	bh=/keuf3dCVugAEdTMAjTPla8xo+au+QS7B3jnvFRay+4=;
+	s=k20201202; t=1717655501;
+	bh=VRtXL1+yFAh+3qRiidKMeUXDfuQoZVR1nUUH5Tsu92k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B8OBtjMZQ9zqWvnO92ecqm1YB3+k3fZnbc2UGOW3j2MonYFrXFMO72E1ksdpxVXqG
-	 eI/zq5X4D+EvJU9/AOSG4hiqAKz5TMLf965wPG6sh1qstN1cY1ag3M98QjKfWebeCd
-	 YfER2U+eKamuB6a+ZnlZ0U0mkgK9McKHZRh7iDm5+mOiPgx8EZRFrnXYaCfEAbrNQx
-	 2q67Nql6oujxuRiCMBq04v0Z6bwqo5cjiGjsM10Ctl7WGUmA4reIiqfbGCt4zll6Ov
-	 NCGkOVDSl0knhxIb6OETPPoRpGqWdxPcv6QzKE+qFm2H76n5xalChKl20LM28fWmZH
-	 woNmAsitiX6eg==
-Date: Thu, 6 Jun 2024 11:57:18 +0530
+	b=uxSzwmt+plkudMsXgytRr2ofBddy6anfRT1rMoyst5HqMf/NhYIGHIQAAghFzvXEF
+	 EV1dBQ7lRq5w1ducKNsc6vjKQJlBRJ1/KYbSbP5DbMr8mlH7dOo/L+r+Esf7aEODY4
+	 U/mNI4WU3OyOIOWcj2Kdt1smxbYKDhlUo+AQBY8SxQNBxSzDNfSbW2/zOCIkP0YoMt
+	 5Xu4lol9Wc7kLdbqoQY1K2GbAa9hnkqdFYS9syNTwbstqYRJQh2vYCXvqXYr0vM91G
+	 DkUw6LHShzZyOIadUUDvVtjNOkVHS4nKlJB7UMI5q29nXK6DPisew1xdCYMXle08eN
+	 0LRcDJUulXz2A==
+Date: Thu, 6 Jun 2024 12:01:28 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
@@ -59,13 +59,12 @@ Cc: Jingoo Han <jingoohan1@gmail.com>,
 	Shawn Lin <shawn.lin@rock-chips.com>,
 	Simon Xue <xxm@rock-chips.com>, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 09/13] PCI: dw-rockchip: Refactor the driver to
- prepare for EP mode
-Message-ID: <20240606062718.GB4441@thinkpad>
+Subject: Re: [PATCH v4 10/13] PCI: dw-rockchip: Add endpoint mode support
+Message-ID: <20240606063128.GC4441@thinkpad>
 References: <20240529-rockchip-pcie-ep-v1-v4-0-3dc00fe21a78@kernel.org>
- <20240529-rockchip-pcie-ep-v1-v4-9-3dc00fe21a78@kernel.org>
- <20240605080640.GJ5085@thinkpad>
- <ZmCm-Lt3yZpE84EG@ryzen.lan>
+ <20240529-rockchip-pcie-ep-v1-v4-10-3dc00fe21a78@kernel.org>
+ <20240605081753.GK5085@thinkpad>
+ <ZmC1PihX_URtZkiA@ryzen.lan>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,71 +74,97 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZmCm-Lt3yZpE84EG@ryzen.lan>
+In-Reply-To: <ZmC1PihX_URtZkiA@ryzen.lan>
 
-On Wed, Jun 05, 2024 at 07:57:12PM +0200, Niklas Cassel wrote:
-> On Wed, Jun 05, 2024 at 01:36:40PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, May 29, 2024 at 10:29:03AM +0200, Niklas Cassel wrote:
-> > > This refactors the driver to prepare for EP mode.
-> > > Add of-match data to the existing compatible, and explicitly define it as
-> > > DW_PCIE_RC_TYPE. This way, we will be able to add EP mode in a follow-up
-> > > commit in a much less intrusive way, which makes the follup-up commit much
-> > > easier to review.
+On Wed, Jun 05, 2024 at 08:58:06PM +0200, Niklas Cassel wrote:
+> On Wed, Jun 05, 2024 at 01:47:53PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, May 29, 2024 at 10:29:04AM +0200, Niklas Cassel wrote:
+> > > The PCIe controller in rk3568 and rk3588 can operate in endpoint mode.
+> > > This endpoint mode support heavily leverages the existing code in
+> > > pcie-designware-ep.c.
 > > > 
-> > > No functional change intended.
+> > > Add support for endpoint mode to the existing pcie-dw-rockchip glue
+> > > driver.
 > > > 
 > > > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 > > 
-> > Few nitpicks below. With those addressed,
+> > Couple of comments below. With those addressed,
 > > 
 > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > 
 > > > ---
-> 
-> (snip)
-> 
-> > > @@ -294,13 +292,35 @@ static const struct dw_pcie_ops dw_pcie_ops = {
-> > >  	.start_link = rockchip_pcie_start_link,
-> > >  };
+> > >  drivers/pci/controller/dwc/Kconfig            |  17 ++-
+> > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 210 ++++++++++++++++++++++++++
+> > >  2 files changed, 224 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > > index 8afacc90c63b..9fae0d977271 100644
+> > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > @@ -311,16 +311,27 @@ config PCIE_RCAR_GEN4_EP
+> > >  	  SoCs. To compile this driver as a module, choose M here: the module
+> > >  	  will be called pcie-rcar-gen4.ko. This uses the DesignWare core.
 > > >  
-> > > +static int rockchip_pcie_configure_rc(struct rockchip_pcie *rockchip)
-> > > +{
-> > > +	struct dw_pcie_rp *pp;
-> > > +	u32 val;
-> > > +
-> > > +	/* LTSSM enable control mode */
-> > > +	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-> > > +	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-> > > +
-> > > +	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
-> > > +				 PCIE_CLIENT_GENERAL_CONTROL);
-> > > +
-> > > +	pp = &rockchip->pci.pp;
-> > > +	pp->ops = &rockchip_pcie_host_ops;
-> > > +
-> > > +	return dw_pcie_host_init(pp);
-> > > +}
-> > > +
-> > >  static int rockchip_pcie_probe(struct platform_device *pdev)
-> > >  {
-> > >  	struct device *dev = &pdev->dev;
-> > >  	struct rockchip_pcie *rockchip;
-> > > -	struct dw_pcie_rp *pp;
-> > > +	const struct rockchip_pcie_of_data *data;
-> > >  	int ret;
-> > >  
-> > > +	data = of_device_get_match_data(dev);
-> > > +	if (!data)
-> > > +		return -EINVAL;
+> > > +config PCIE_ROCKCHIP_DW
+> > > +	bool
 > > 
-> > -ENODATA?
+> > Where is this symbol used?
 > 
-> -EINVAL seems to be most common:
-> $ git grep -A 5 of_device_get_match_data drivers/pci/
+> It is supposed to be used by
+> drivers/pci/controller/dwc/Makefile
+> 
+> such that the driver is compiled if either _EP or _HOST is selected, just
+> like how it is done for other drivers that support both in the same driver.
+> Looks like I missed to update Makefile...
+> Good catch, thank you!
+> 
+> 
+> > > +static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+> > > +{
+> > > +	struct rockchip_pcie *rockchip = arg;
+> > > +	struct dw_pcie *pci = &rockchip->pci;
+> > > +	struct device *dev = pci->dev;
+> > > +	u32 reg, val;
+> > > +
+> > > +	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
+> > > +
+> > > +	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
+> > > +	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
+> > > +
+> > > +	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
+> > > +		dev_dbg(dev, "hot reset or link-down reset\n");
+> > > +		dw_pcie_ep_linkdown(&pci->ep);
+> > > +	}
+> > > +
+> > > +	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+> > > +		val = rockchip_pcie_get_ltssm(rockchip);
+> > > +		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
+> > > +			dev_dbg(dev, "link up\n");
+> > > +			dw_pcie_ep_linkup(&pci->ep);
+> > > +		}
+> > > +	}
+> > > +
+> > > +	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
+> > 
+> > It is recommended to clear the IRQs at the start of the handler (after status
+> > read).
+> 
+> Can you quote a reference in the databook to back this recommendation?
 > 
 
-Yeah, but we abused -EINVAL a lot ;) Nowadays, I prefer to use more apt error
-codes.
+It is just a general recommendation.
+
+> Otherwise I would lean towards keeping it like it is, since this is how
+> it looks in the downstream driver (that *should* be well proven), and it
+> also matches how it's done in dra7xx.
+> 
+> (And since you ack only the events you read, you can not accidentally
+> clear another type of event.)
+> 
+
+I haven't read the TRM, but if the IRQ line is level triggered, then if you do
+not clear the IRQs immediately, you will miss some events. So I always suggest
+to clear the IRQs at the start of the handler for all the platforms.
 
 - Mani
 
