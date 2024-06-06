@@ -1,165 +1,112 @@
-Return-Path: <linux-pci+bounces-8393-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8394-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 891B38FE2F2
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 11:34:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E5B88FE403
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 12:16:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 914131C21D0A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 09:34:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5C60AB224CB
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 10:04:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27366152539;
-	Thu,  6 Jun 2024 09:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E7E187334;
+	Thu,  6 Jun 2024 10:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MATPO10Q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YGCAIQIF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xupm3txB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D1713C676;
-	Thu,  6 Jun 2024 09:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA46186E59;
+	Thu,  6 Jun 2024 10:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717666447; cv=none; b=tfca36MbpJusgtPj1q2UWuGBEvbB3BGcy2JnOUZ7oJ5s9/BrOEbb8wuYRj6jJ4qaXxmgdCYrczgCUQeyt/KKlV9CLdRboY6KHXTxeWMmxD4JIBPsWmF4RIPIPOYG1+9VwE4FtXYA7OzyoloiCRE9HDYyoFAbdEjWAgQ16O0b9MY=
+	t=1717668264; cv=none; b=FA2yYhIOHuRXYv4JocTxf4wnaXB0flYH/+bi5l5UqvMQS5N7cqSLq5RWxdddIjbpg/e7TrbWFmD6ry3GQygdLT7+KFHOCKL2kkQ3ezIkVlUs0zPBYuG7Hi0lhwm0mFrgJKqVsymPhOuouo9RZvrcOnpHUrsa9o+rVaO0SN8Jcic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717666447; c=relaxed/simple;
-	bh=7CsufZK2miEU5UnmC5oGSmYNS+ai0Uwb0uhJhcKAtRo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ywfjb1WfPRLuVCJ2YD6JL3W/P6Klq9n7Z5PfqRmHf0Tb3G8ejpyRfVBjaaTj8OJ95atp8h6j2xxWhlEQJ9j2oayYkcT/RALcvZ35dVN1atHRUH1M6OikLlrHGDLGQZX+CZChzkhaoFXG4MDFd6Gc+3irt7YgXb0eniT7KI1SKVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MATPO10Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YGCAIQIF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717666443;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GI0Ast9VZDly/xi6jCxjuQpHUZTGPm46ngg6M3zfBXs=;
-	b=MATPO10QOHKv4k4VQnrpfoCLSbqRmbY7gqT/F7T0Lc/2E7Du63oB8161P4q5JWozu3fZnB
-	V9RDyzJh7XWLYDycTqRoUWo2plgch3aRjBVw4XZSkNQNjZvqWHAT9K73qLd8nN0rKfCezR
-	Bp18ybroip0aRG4RB4z2CLeZ5dBwCqJ129sBCgauC9Ok0NyqMbHNvXlLWaGPfMJDdgC1aW
-	1SCPm4PXh9MoYg0TniyHUitOsT2qoJgTjF2aFxkh2/JlM+j4ONJmcdKHivsjP+Q4SU/D6g
-	cfGOJyLnD7ell8quwLO5W77UB0wdhQtYpvI8JHvTB8xeEEA7ZtyGSV72RTe36Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717666443;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GI0Ast9VZDly/xi6jCxjuQpHUZTGPm46ngg6M3zfBXs=;
-	b=YGCAIQIFH0BDyKRWYSb4HAgVmuTgJ2BKHKaHx9TT01zEtsSvWNKJWbqK6SEyypSe+CHCDb
-	ASnT1HJAMDuvaFBA==
-To: Michael Kelley <mhklinux@outlook.com>, "kys@microsoft.com"
- <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
- <decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
- <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
- "hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
- <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
- <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
- "James.Bottomley@HansenPartnership.com"
- <James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
- <martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Cc: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
- <den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
- "dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
-Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
- IRQ stats
-In-Reply-To: <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240604050940.859909-1-mhklinux@outlook.com>
- <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
- <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87zfrz4jce.ffs@tglx>
- <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87cyov4glm.ffs@tglx>
- <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Date: Thu, 06 Jun 2024 11:34:03 +0200
-Message-ID: <87le3i2z5g.ffs@tglx>
+	s=arc-20240116; t=1717668264; c=relaxed/simple;
+	bh=u5hYPflaRr/VormFnPr2FfIJnLZmHcgxMUj0SUYPgTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcBuyXOdGWyTWvTqoNUCmr01KpqTscEN/m+tAkMjoMiZuN9gV645kgVrEtJ+KimlU5MpK/wdU/FCzLHaNo8MklEM60gu8Ai+XZ0S39Acl06FKcIQGhGXnI3yPtT0sAEnXXh3y4H3tn5AxqxMAz7GCEBZT/xQwPuo8re2Vaq83HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xupm3txB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B139EC2BD10;
+	Thu,  6 Jun 2024 10:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717668263;
+	bh=u5hYPflaRr/VormFnPr2FfIJnLZmHcgxMUj0SUYPgTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xupm3txB0/S56c2R9F9476VcX7Etz7PCGA1GMbO/ezEpEUF61xt2dBsGVwk2qkwXO
+	 5xYmrECKnHcp9vkrL3D0Nph14c8NfP+Vn2behKODGy9qcKBT2zxD2ZjW7UbJx9/Rlg
+	 ku7wO8mkPq0LLgKGYrOwGdBch1/FjcrblefGO5UcmR+ZDCQSd7cSa929q7R4HyEEHN
+	 NKxgkuQ3YPqc23MLRPJch+c8fNQA+dgMK7eboo4cqwK3zPhwWlaQLzZ+CmwMiWCixB
+	 SNtky9Q5yDB9fR8qDDv0bkp/zFI0ggjoquYfKVlLlpsJuTBkxQZCtPMB2vyHYAnzse
+	 ZvmIYLJyOYqHw==
+Date: Thu, 6 Jun 2024 13:04:18 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+	bhelgaas@google.com, Imre Deak <imre.deak@intel.com>,
+	Jani Saarinen <jani.saarinen@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: Revert the cfg_access_lock lockdep mechanism
+Message-ID: <20240606100418.GD13732@unreal>
+References: <87h6e9t9qt.fsf@kernel.org>
+ <20240604171121.GA730808@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604171121.GA730808@bhelgaas>
 
-On Thu, Jun 06 2024 at 03:14, Michael Kelley wrote:
-> From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 7:20 AM
->> 
->> On Wed, Jun 05 2024 at 13:45, Michael Kelley wrote:
->> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 6:20 AM
->> >
->> > In /proc/interrupts, the double-counting isn't a problem, and is
->> > potentially helpful as you say. But /proc/stat, for example, shows a total
->> > interrupt count, which will be roughly double what it was before. That
->> > /proc/stat value then shows up in user space in vmstat, for example.
->> > That's what I was concerned about, though it's not a huge problem in
->> > the grand scheme of things.
->> 
->> That's trivial to solve. We can mark interrupts to be excluded from
->> /proc/stat accounting.
->> 
->
-> OK.  On x86, some simple #ifdef'ery in arch_irq_stat_cpu() can filter
-> out the HYP interrupts. But what do you envision on arm64, where
-> there is no arch_irq_stat_cpu()?  On arm64, the top-level interrupt is a
-> normal Linux IRQ, and its count is included in the "kstat.irqs_sum" field
-> with no breakout by IRQ. Identifying the right IRQ and subtracting it
-> out later looks a lot uglier than the conditional stats accounting.
-
-Sure. There are two ways to solve that:
-
-1) Introduce a IRQ_NO_PER_CPU_STATS flag, mark the interrupt
-   accordingly and make the stats increment conditional on it.
-   The downside is that the conditional affects every interrupt.
-
-2) Do something like this:
-
-static inline
-void __handle_percpu_irq(struct irq_desc *desc, irqreturn_t (*handle)(struct irq_desc *))
-{
-	struct irq_chip *chip = irq_desc_get_chip(desc);
-
-	if (chip->irq_ack)
-		chip->irq_ack(&desc->irq_data);
-
-	handle(desc);
-
-	if (chip->irq_eoi)
-		chip->irq_eoi(&desc->irq_data);
-}
-
-void handle_percpu_irq(struct irq_desc *desc)
-{
-	/*
-	 * PER CPU interrupts are not serialized. Do not touch
-	 * desc->tot_count.
-	 */
-	__kstat_incr_irqs_this_cpu(desc);
-	__handle_percpu_irq(desc, handle_irq_event_percpu);
-}
-
-void handle_percpu_irq_nostat(struct irq_desc *desc)
-{
-	__this_cpu_inc(desc->kstat_irqs->cnt);
-	__handle_percpu_irq(desc, __handle_irq_event_percpu);
-}
- 
-So that keeps the interrupt accounted for in /proc/interrupts. If you
-don't want that remove the __this_cpu_inc() and mark the interrupt with
-irq_set_status_flags(irq, IRQ_HIDDEN). That will exclude it from
-/proc/interrupts too.
+On Tue, Jun 04, 2024 at 12:11:21PM -0500, Bjorn Helgaas wrote:
+> On Tue, Jun 04, 2024 at 11:03:54AM +0300, Kalle Valo wrote:
+> > Dan Williams <dan.j.williams@intel.com> writes:
+> > 
+> > > While the experiment did reveal that there are additional places that
+> > > are missing the lock during secondary bus reset, one of the places that
+> > > needs to take cfg_access_lock (pci_bus_lock()) is not prepared for
+> > > lockdep annotation.
+> > >
+> > > Specifically, pci_bus_lock() takes pci_dev_lock() recursively and is
+> > > currently dependent on the fact that the device_lock() is marked
+> > > lockdep_set_novalidate_class(&dev->mutex). Otherwise, without that
+> > > annotation, pci_bus_lock() would need to use something like a new
+> > > pci_dev_lock_nested() helper, a scheme to track a PCI device's depth in
+> > > the topology, and a hope that the depth of a PCI tree never exceeds the
+> > > max value for a lockdep subclass.
+> > >
+> > > The alternative to ripping out the lockdep coverage would be to deploy a
+> > > dynamic lock key for every PCI device. Unfortunately, there is evidence
+> > > that increasing the number of keys that lockdep needs to track to be
+> > > per-PCI-device is prohibitively expensive for something like the
+> > > cfg_access_lock.
+> > >
+> > > The main motivation for adding the annotation in the first place was to
+> > > catch unlocked secondary bus resets, not necessarily catch lock ordering
+> > > problems between cfg_access_lock and other locks. Solve that narrower
+> > > problem with follow-on patches, and just due to targeted revert for now.
+> > >
+> > > Fixes: 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
+> > > Reported-by: Imre Deak <imre.deak@intel.com>
+> > > Closes: https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_134186v1/shard-dg2-1/igt@device_reset@unbind-reset-rebind.html
+> > > Cc: Jani Saarinen <jani.saarinen@intel.com>
+> > > Cc: Dave Jiang <dave.jiang@intel.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > 
+> > In our ath11k test box commit 7e89efc6e9e4 was causing random kernel
+> > crashes. I tested patches 1-3 and did not see anymore crashes so:
+> > 
+> > Tested-by: Kalle Valo <kvalo@kernel.org>
+> 
+> Added to commit logs, thank you!
+> 
 
 Thanks,
-
-        tglx
+Tested-by: Leon Romanovsky <leonro@nvidia.com>
 
