@@ -1,249 +1,178 @@
-Return-Path: <linux-pci+bounces-8377-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8378-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5257B8FDCE2
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 04:40:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B57F8FDD3A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 05:15:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 04041284626
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 02:40:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAC432865F3
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 03:15:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA1501B964;
-	Thu,  6 Jun 2024 02:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72F981E87F;
+	Thu,  6 Jun 2024 03:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rrWvsm9e"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EfN7d4RT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2040.outbound.protection.outlook.com [40.92.42.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F15618C38
-	for <linux-pci@vger.kernel.org>; Thu,  6 Jun 2024 02:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717641608; cv=none; b=Va/rCYpSV00eLUMKKKpnAjoTwHrEdvMAJ1FjdPmf5JVfqlc4SNIyBk67xr6rKy0EK+kUJQnv/MlUt4lG2asiKZRNwztZ5k98q9kfpQojb9SKtxyVpCpqjcdqW6HSLQ/etjSiR6lsdrr1OY1sYWeIxigcxBnZ5sVLL9Q0//EqkIk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717641608; c=relaxed/simple;
-	bh=+HVwrDUz1uIzC6eAqeuTCk2d0+1EGuGOkn8/Ej3k6j0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jy5N/LLILnVgAJOLmfG8VsRLyhg7ibK10TirHfs3iwU96YmDi1qnRA93nT5S+PKUgxkhO+MUPdecpcwOrlrxPLaI8/3Tq1sru0N7y93tP9Y2VYadE/yMa6wQrJKAz9Jrp9JH74w2eTv29UA5OghOWA6pFmPuU+Xsdk5//i+/S+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rrWvsm9e; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7025b84c0daso379547b3a.2
-        for <linux-pci@vger.kernel.org>; Wed, 05 Jun 2024 19:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717641606; x=1718246406; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=E7RsRy0RZ6BPhd0zOzb8Dzo505oEPiS2g4HyLE25t+8=;
-        b=rrWvsm9esRY2JpCe2zBKQj/kFwVbN3hhCP4f0559wA48nA4TjPWb10ma9AoRzgvdpt
-         66ayRrE7+EpIZcJ1e5OB/8P+4sHRob+QTZFflSWVG7ja3NoeWPr0HKiTmbNF7mjevVjW
-         YZk8AScKO1Q0S4l09sIhHRhfKgqv7+0nh7PxoL2l/Thbi3b2R2oi4l0yL9R1jCf1KZeS
-         t5k/F+YN8YW2MMhNaw+9JEaD5HkWLV3CcbSzXO5IPNqmS3jhDsLONdhc2Eh/V6MiF50F
-         rW20/NVItBS758H1AZq2j1wT7QC5eHKCNaR7fNa7ct8N5GqcVTMflBmAZT1/kwsjluXN
-         dP0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717641606; x=1718246406;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E7RsRy0RZ6BPhd0zOzb8Dzo505oEPiS2g4HyLE25t+8=;
-        b=Kh1s9WZlSIj7l8LNAdc++srvGSRVexiuRba/V12e1P3cHfWuFbyDayuEaE4doV1HTl
-         LKFLrQH52IMYGudH1aIWzbRZlLOWkzro9+FovGHyP1tcNTt/T9XqhZ69fEPPMU+o1hP6
-         8s8rnn0ovPgRvSWS5bogSaTxjCp3tpL6luMOraBz8sMx6fEHCIxnr0r1i8xJ+bs41e0r
-         bb7Docvj1OGTS46eCMPz65XeSGuzVpB48/YvCvBtCl1Axc7Fp9PzG+GzIWWXtEIa2RZ5
-         F6CkbrDDnGlNag02fPYK3mjPB7Y5amw3ODdr+GKb1JzFsp6swRcldG5s5g2Lz+XSSTQv
-         BFAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ0oSKpAeHzom46Gxb+4tbJ0x7iY8buDEnvT/DEfq99pF1kpmcNq5P9sqxOsOfFr75heMjqIiTgvn4ApmGfly11OJJf/A5NDBf
-X-Gm-Message-State: AOJu0YzHZbRMgdzZwpMlneh9KdQGFXVhWUj4Ft9CHewFoCxmRjgW2my6
-	vQOL9GWCvlzuIU6JabkFrBwXDj83dlj77nJggzhDg2suuOgWmkLbgbFE60r76g==
-X-Google-Smtp-Source: AGHT+IGpA/kk+BeFkPHH5bGzof1Qpi5uD41m75ShLL7asfGu6mBRHGaA8afzEPWZEG/p1xL2UzRqYg==
-X-Received: by 2002:a05:6a20:3d87:b0:1af:e624:b9b2 with SMTP id adf61e73a8af0-1b2b6f3d0e9mr5552460637.19.1717641606234;
-        Wed, 05 Jun 2024 19:40:06 -0700 (PDT)
-Received: from thinkpad ([120.60.142.92])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd770c4bsm2518535ad.88.2024.06.05.19.40.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 19:40:05 -0700 (PDT)
-Date: Thu, 6 Jun 2024 08:09:52 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Mayank Rana <quic_mrana@quicinc.com>
-Cc: Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, quic_ramkri@quicinc.com,
-	quic_nkela@quicinc.com, quic_shazhuss@quicinc.com,
-	quic_msarkar@quicinc.com, quic_nitegupt@quicinc.com
-Subject: Re: [RFC PATCH 2/2] PCI: Add Qualcomm PCIe ECAM root complex driver
-Message-ID: <20240606023952.GA3481@thinkpad>
-References: <1712257884-23841-1-git-send-email-quic_mrana@quicinc.com>
- <1712257884-23841-3-git-send-email-quic_mrana@quicinc.com>
- <20240405052918.GA2953@thinkpad>
- <e2ff3031-bd71-4df7-a3a4-cec9c2339eaa@quicinc.com>
- <20240406041717.GD2678@thinkpad>
- <0b738556-0042-43ab-80f2-d78ed3b432f7@quicinc.com>
- <20240410165829.GA418382-robh@kernel.org>
- <c623951e-1b47-4e0b-bfa4-338672a5eeb9@quicinc.com>
- <ee4c0b2b-7a3b-43d1-90b6-369be2194a65@quicinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AAE1DFEF;
+	Thu,  6 Jun 2024 03:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717643703; cv=fail; b=FOfwo+PMeNLmDaSlDtyn6JxEeM1RZiIq1nQ16RsuOTd4wtPxpf1wCX5HKAOFkd37HVcnn77LZNtlPDZPYpNdGwZ3XZfj3RgtjK4ycxl+n4amvFsccS52JRSt27qmAJlRzEaikNdUnBUx8scs+O48KoL2iOAMKoN8O/6e77ccGQM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717643703; c=relaxed/simple;
+	bh=VPvya+bdm9FoOUMHvPnj45GoMumopElFch20SvE9bd8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=E6edzq7y6VNH7sCobi/tPr4Z2BsqbiThqodlfUQ33GjCZD9QMKsyg8grUbNisU1AaJk1V7CooV+tO31X5nhSlIfi5UgqzFr1elNMg4Ny2c/HvDAgT+iDGzKGkmq627yOrRDkXR5wgYca9byCwr7AoQ1l/QD1nsSlCHINn3DNEXQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EfN7d4RT; arc=fail smtp.client-ip=40.92.42.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MdgnU2xiGUi2LDDJIdYb7zcUEPCJTqxHITkd66VjtNPNeHrK+isUE5gWegYKDinufZ70EmINleuZYRUt5ma26lbNTV9Neo8YkLJBd+5c5S2nxH7wFb/mMqGUX/aXjES1y9Tt+t+uaGwg5hWwbJynL1y+A162C0VhHaBbakhY0pjPI7aY8py2P68ObMPrRHpmDh8idltMXVr8Vc8pT3/AS7CwvybYPoRJLcEY5ZS8+xJ0CEthuWSJ7DKmOUcqMGTZVAdCk+l0rpFgCPCIi4uTcoIeIoSvSzjqEgAtxjmys3bIO0ZqdTUNy/tkZ3cbpCEmZ5NkvqMma0Dgi+w0Y/chcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FqeV680hIbiq6OnRQW8I6vFqzxRJ+spYsX2U+FmkdFY=;
+ b=hZn9MKOzhPaOWlX70+NII0NyTxXgtcQLQ5rw69SEXuyc7Fo3oRlUwD2XFU5ceWCCps24HgJ4HOswm4VdKM2oomsQPAt7E839WR+idYL2PPU54lsmClwwSs63AXHFwlDCStb6rkqCkIq2hdJrHibc/uzT2xqzKSEB4zzda7D5D6Ds8c5c+jR2oFvTzDFVetFPnCp/NvxpksEIExdpBmonfThVWjLRN7TWCAUbuxmvRMwc7a72227WELFqXWramr0j15rcAAdsCk9zI9/ndnOjAbxwathaXT6K44tjCZ3radNJHC4pArjU/z0R1yo7UMY6JqP8lLoU7rrHbwQcleQBSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FqeV680hIbiq6OnRQW8I6vFqzxRJ+spYsX2U+FmkdFY=;
+ b=EfN7d4RT2qJ2eF618b9EGMPf/ij0RX/QJ/RrFrHtL11ShWuScqoJT6HQ07ug9jBq/UWBuKw/Eo4FeZsnMQSkROVrERUmyiYCWBZT7ePBK49rqKzcBcgTqaMclUo2W2ouFR3RQQP9PPEep6gyDJgzK7LxB9EW+QFUy8C0cvP3KD/x4ZpuJlZD+FThkZoGlLxFM+1H5i9l9KUZJK3z4wVDLp0Oqvt0VyptAFwQ7YVafzdEjFjo75XYLUYXDB6bc4q87Q2H2B4PBvjCxOJD/M0iJ6Kff6lsfij3qkx11Gw/vbubLvybFJ8ekjRiFDj9kyiaRvivsQPPhHjjNTMtLNvumQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by BN0PR02MB8063.namprd02.prod.outlook.com (2603:10b6:408:163::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Thu, 6 Jun
+ 2024 03:14:56 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7633.033; Thu, 6 Jun 2024
+ 03:14:56 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Thomas Gleixner <tglx@linutronix.de>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+CC: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
+	<den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
+	"dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
+Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional IRQ
+ stats
+Thread-Topic: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
+ IRQ stats
+Thread-Index:
+ AQHatj3dxfDAEhKlmk6xJJhdAubqnrG36WaAgAAakqCAASXCgIAAA1YQgAANOoCAANYaUA==
+Date: Thu, 6 Jun 2024 03:14:55 +0000
+Message-ID:
+ <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240604050940.859909-1-mhklinux@outlook.com>
+ <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
+ <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87zfrz4jce.ffs@tglx>
+ <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87cyov4glm.ffs@tglx>
+In-Reply-To: <87cyov4glm.ffs@tglx>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [ELYwmNtWSkPSewCdjv9foDeprDCKWuSG]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BN0PR02MB8063:EE_
+x-ms-office365-filtering-correlation-id: 83167f07-7914-49cc-b829-08dc85d6d704
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199019|102099023|3412199016|440099019;
+x-microsoft-antispam-message-info:
+ W/6HmkJea+dfJB08OZTsOBTFLlIyUk0HODlZ+RJv5y21V/2InznUTAcSdmkYjyX064fpV6QYTcOWMKyoMkyhmRetnb8JJ2Ue5Atw+nw/JKyUsKePOayF2sbMStCF3qjqP9n7/smjdq8my6H2uAznEL4sRM3XoDg+uigAxfdcHkqc7cbskHJwA6BcKJaFHJ3nLkeXXrJkogTbTxq1WS7NabmMJakCLRxTMb11K6gEqBKW4QRvCXtwPwDjZLi2JKLrnV/3DTnuMytBdotVuhvJw1JzpocAxxLA7RhtOxRB74CfvxmgBeGN+PcBYeVtv/Rka8GD0UA4z4H2vaO+Mka0ZtX8bynTwY/jCeLXBfX9FR5j8fKVLREFcKFP5SHjwOi1PXoVecvQqKIgE4q/uyScTFR5j821CqnIuNmWeePyO3lrwsNTstLjixdUE1RIwAdTsFJZMuvtQBDlISDicnYltjYzzMt7+AwzXMT4jGmLF4q/Kx4sCSxFk6OxT/1a4snrSy9fq3t/93gQ42J1G/0ZA8Rj2+tceaYma+b6tegp9v84Kbe+VEfxvvvaSd5IQZys
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?MeXDoziSiubnvCQwq/o9JKLOHPjy325GBSu5kzpwCIbVX+OSb+lQrQlZJNkc?=
+ =?us-ascii?Q?rm1B/T0vNg9x/42nrdc75By7jyzVofTs6F/ZnXBedHguJHX0K1PUJjaHZTgA?=
+ =?us-ascii?Q?SbqcAFIUPf8UwsTcG38FKx2xJAryiFreAo8Onq36wkWFlt8kVIeTA8WL9G30?=
+ =?us-ascii?Q?AbKTG59tRKdInaiVYZLNn3o0e/9nigwrUTfvbx6c6Oz/z4kwmnRVGIkA3fuk?=
+ =?us-ascii?Q?++dda5GxNf9WDprWnnAyTDyzB7gu7dY4y8RNOSTHF6zMdDdK0sGzaz+UViLE?=
+ =?us-ascii?Q?eZxQNgONeoNZhX7EP1Dac1HQPs9bhWHyjPwCTtXuo1M/W4AfAjSbTakE9Y/P?=
+ =?us-ascii?Q?HyVg5nV69h8t60zBJ+9cuEu3koZqEzpiZK0+ihj0O/wxVG6Y/WJYe15LX0ZM?=
+ =?us-ascii?Q?k44nd2dLCjRrX195myDzGfUax6+L0gvUt3/7qV8hCkRKsW+TwIF+eApQR7Yo?=
+ =?us-ascii?Q?TvmwXfT9Z6HnMbFcrwCgydjAPwQQ0cnOhHdzgGE374GdXgHvkJKprzFVLk4k?=
+ =?us-ascii?Q?RCliG2FiY8KegYKy/Q6ImV86JB1iEU0PXLKM0PNAVCfNFN5u3C8mXIypst6C?=
+ =?us-ascii?Q?oKFIdKdIfCLWDYyhKZm34VCKh4jRBCnTZT/yd4gjB/3Zwvx/8JEecYcFqiP/?=
+ =?us-ascii?Q?IaqoZp7TYdaA2MgU8v+j9t9nJGg0ZyYKsr/AzUydCD01io0Oy+Zb1K6wj5Pe?=
+ =?us-ascii?Q?zCMLeKP+BiDtXQOFGnEwokKKlzyi86ynnuPa8M6wT5igZCnKQPYdK1NPQR5j?=
+ =?us-ascii?Q?6a6jOCTyd384caMXo25+SglmHSyqyWlm4HxdaYSgg/JNbBw3vO8ENmx2cR+N?=
+ =?us-ascii?Q?5qJGqANEkcxv2Wm4IupvwSY7RnJhb+dmRx+8xaA7n8ICBQy/2nAe0VVp3m/7?=
+ =?us-ascii?Q?NDJmlTZIjwMAKSQgWtqWNCFoq9s4gBa+G6TeaeGLxwDb/fEdb5q/kVW0sFjg?=
+ =?us-ascii?Q?sEyZEsRTrOfdcnbc5RDm9K+1zLBLXxmVP02+7J6XYSYPd2GW3nz9laUljdlp?=
+ =?us-ascii?Q?6skEbLdRw4WQ+TuFF6tKlTGQmM3MJ0fXe+NwApBzQD6dioJEGcbE+hf/bJlk?=
+ =?us-ascii?Q?qgRFT6wexyluZ+O342hfwuXdOShhxWMzzIqBXrk2yE8+Tr4qc3mNLxeV4Hhj?=
+ =?us-ascii?Q?1y/SojeV6ReOhU00SURV6WlbdXKCAURJj7mamOmpMmcbYYQh7nAy398J1XdA?=
+ =?us-ascii?Q?Fci8SuaCBuhGKqQ6qlImSXLHhchy049QNarwZ8v7s0TE6F0vheZoYPO+37k?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ee4c0b2b-7a3b-43d1-90b6-369be2194a65@quicinc.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83167f07-7914-49cc-b829-08dc85d6d704
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2024 03:14:55.6609
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR02MB8063
 
-On Fri, May 31, 2024 at 03:47:24PM -0700, Mayank Rana wrote:
-> Hi Rob / Mani
-> 
-> On 4/15/2024 4:30 PM, Mayank Rana wrote:
-> > Hi Rob
-> > 
-> > Excuse me for late response on this (was OOO).
-> > On 4/10/2024 9:58 AM, Rob Herring wrote:
-> > > On Mon, Apr 08, 2024 at 11:57:58AM -0700, Mayank Rana wrote:
-> > > > Hi Mani
-> > > > 
-> > > > On 4/5/2024 9:17 PM, Manivannan Sadhasivam wrote:
-> > > > > On Fri, Apr 05, 2024 at 10:41:15AM -0700, Mayank Rana wrote:
-> > > > > > Hi Mani
-> > > > > > 
-> > > > > > On 4/4/2024 10:30 PM, Manivannan Sadhasivam wrote:
-> > > > > > > On Thu, Apr 04, 2024 at 12:11:24PM -0700, Mayank Rana wrote:
-> > > > > > > > On some of Qualcomm platform, firmware
-> > > > > > > > configures PCIe controller into
-> > > > > > > > ECAM mode allowing static memory allocation for
-> > > > > > > > configuration space of
-> > > > > > > > supported bus range. Firmware also takes care of
-> > > > > > > > bringing up PCIe PHY
-> > > > > > > > and performing required operation to bring PCIe
-> > > > > > > > link into D0. Firmware
-> > > > > > > > also manages system resources (e.g.
-> > > > > > > > clocks/regulators/resets/ bus voting).
-> > > > > > > > Hence add Qualcomm PCIe ECAM root complex driver
-> > > > > > > > which enumerates PCIe
-> > > > > > > > root complex and connected PCIe devices.
-> > > > > > > > Firmware won't be enumerating
-> > > > > > > > or powering up PCIe root complex until this
-> > > > > > > > driver invokes power domain
-> > > > > > > > based notification to bring PCIe link into D0/D3cold mode.
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > Is this an in-house PCIe IP of Qualcomm or the same
-> > > > > > > DWC IP that is used in other
-> > > > > > > SoCs?
-> > > > > > > 
-> > > > > > > - Mani
-> > > > > > Driver is validated on SA8775p-ride platform using PCIe DWC IP for
-> > > > > > now.Although this driver doesn't need to know used PCIe
-> > > > > > controller and PHY
-> > > > > > IP as well programming sequence as that would be taken
-> > > > > > care by firmware.
-> > > > > > 
-> > > > > 
-> > > > > Ok, so it is the same IP but firmware is controlling the
-> > > > > resources now. This
-> > > > > information should be present in the commit message.
-> > > > > 
-> > > > > Btw, there is an existing generic ECAM host controller driver:
-> > > > > drivers/pci/controller/pci-host-generic.c
-> > > > > 
-> > > > > This driver is already being used by several vendors as
-> > > > > well. So we should try
-> > > > > to extend it for Qcom usecase also.
-> > > 
-> > > I would take it a bit further and say if you need your own driver, then
-> > > just use the default QCom driver. Perhaps extend it to support ECAM.
-> > > Better yet, copy your firmware setup and always configure the QCom h/w
-> > > to use ECAM.
-> > Good suggestion. Although here we are having 2 set of requirements:
-> > 1. ECAM configuration
-> > 2. Managing PCIe controller and PHY resources and programming from
-> > firmware as well
-> > Hence it is not feasible to use default QCOM driver.
-> > > If you want to extend the generic driver, that's fine, but we don't need
-> > > a 3rd.
-> > I did consider this part before coming up with new driver. Although I
-> > felt that
-> > below mentioned functionality may not look more generic to be part of
-> > pci-host-generic.c driver.
-> > > > I did review pci-host-generic.c driver for usage. although there
-> > > > are more
-> > > > functionalityneeded for use case purpose as below:
-> > > > 1. MSI functionality
-> > > 
-> > > Pretty sure the generic driver already supports that.
-> > I don't find any MSI support with pci-host-generic.c driver.
-> > > > 2. Suspend/Resume
-> > > 
-> > > Others might want that to work as well.
-> > Others firmware won't have way to handle D3cold and D0 functionality
-> > handling as
-> > needed here for supporting suspend/resume as I don't find any interface
-> > for pci-host-generic.c driver to notify firmware. here we are having way
-> > to talk to firmware using GenPD based power domain usage to communicate
-> > with firmware.
-> > 
-> > > > 3. Wakeup Functionality (not part of current change, but would be added
-> > > > later)
-> > > 
-> > > Others might want that to work as well.
-> > possible if suspend/resume support is available or used.
-> > > > 4. Here this driver provides way to virtualized PCIe controller.
-> > > > So VMs only
-> > > > talk to a generic ECAM whereas HW is only directed accessed by
-> > > > service VM.
-> > > 
-> > > That's the existing driver. If if doesn't work for a VM, fix the VM.
-> > Correct.
-> > > > 5. Adding more Auto based safety use cases related implementation
-> > > 
-> > > Now that's just hand waving.
-> > Here I am trying to provide new set of changes plan to be added as part
-> > of required functionality.
-> > 
-> > > > Hence keeping pci-host-generic.c as generic driver where above
-> > > > functionality
-> > > > may not be needed.
-> > > 
-> > > Duplicating things to avoid touching existing drivers is not how kernel
-> > > development works.
-> > I shall try your suggestion and see how it looks in terms of code
-> > changes. Perhaps then we can have more clarity in terms of adding more
-> > functionality into generic or having separate driver.
-> I just learnt that previously dwc related PCIe ECAM driver and MSI
-> controller driver tried out as:
-> 
-> https://lore.kernel.org/linux-pci/20170821192907.8695-1-ard.biesheuvel@linaro.org/
-> 
-> Although there were few concerns at that time. Due to that having dwc
-> specific MSI functionality based driver was dropped, and pci-host-generic.c
-> driver is being updated using with dwc/snps specific ECAM operation.
-> 
-> In current discussion, it seems that we are discussing to have identical
-> approach here.
-> 
-> Atleast on Qualcomm SA8775p platform, I don't have any other way to support
-> MSI functionality i.e. extended SPI or ITS/LPI based MSI or using GICv2m
-> functionality are not supported.
-> 
-> I don't see any other approach other than MSI based implementation within
-> pci-host-generic.c driver for dwc/snps based MSI controller.
-> 
-> Do you have any suggestion on this ?
-> 
+From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 7:=
+20 AM
+>=20
+> On Wed, Jun 05 2024 at 13:45, Michael Kelley wrote:
+> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 202=
+4 6:20 AM
+> >
+> > In /proc/interrupts, the double-counting isn't a problem, and is
+> > potentially helpful as you say. But /proc/stat, for example, shows a to=
+tal
+> > interrupt count, which will be roughly double what it was before. That
+> > /proc/stat value then shows up in user space in vmstat, for example.
+> > That's what I was concerned about, though it's not a huge problem in
+> > the grand scheme of things.
+>=20
+> That's trivial to solve. We can mark interrupts to be excluded from
+> /proc/stat accounting.
+>=20
 
-Since this ECAM driver is going to be used in newer Qcom SoCs, why can't you use
-GICv3 for MSI handling?
+OK.  On x86, some simple #ifdef'ery in arch_irq_stat_cpu() can filter
+out the HYP interrupts. But what do you envision on arm64, where
+there is no arch_irq_stat_cpu()?  On arm64, the top-level interrupt is a
+normal Linux IRQ, and its count is included in the "kstat.irqs_sum" field
+with no breakout by IRQ. Identifying the right IRQ and subtracting it
+out later looks a lot uglier than the conditional stats accounting.
 
-- Mani
+Or if there's some other approach I'm missing, please enlighten me!
 
--- 
-மணிவண்ணன் சதாசிவம்
+Michael
 
