@@ -1,178 +1,147 @@
-Return-Path: <linux-pci+bounces-8378-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8379-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B57F8FDD3A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 05:15:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 883DF8FDEAD
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 08:26:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAC432865F3
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 03:15:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD1F41C223BE
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 06:26:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72F981E87F;
-	Thu,  6 Jun 2024 03:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EfN7d4RT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F43745E1;
+	Thu,  6 Jun 2024 06:25:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2040.outbound.protection.outlook.com [40.92.42.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AAE1DFEF;
-	Thu,  6 Jun 2024 03:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717643703; cv=fail; b=FOfwo+PMeNLmDaSlDtyn6JxEeM1RZiIq1nQ16RsuOTd4wtPxpf1wCX5HKAOFkd37HVcnn77LZNtlPDZPYpNdGwZ3XZfj3RgtjK4ycxl+n4amvFsccS52JRSt27qmAJlRzEaikNdUnBUx8scs+O48KoL2iOAMKoN8O/6e77ccGQM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717643703; c=relaxed/simple;
-	bh=VPvya+bdm9FoOUMHvPnj45GoMumopElFch20SvE9bd8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=E6edzq7y6VNH7sCobi/tPr4Z2BsqbiThqodlfUQ33GjCZD9QMKsyg8grUbNisU1AaJk1V7CooV+tO31X5nhSlIfi5UgqzFr1elNMg4Ny2c/HvDAgT+iDGzKGkmq627yOrRDkXR5wgYca9byCwr7AoQ1l/QD1nsSlCHINn3DNEXQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EfN7d4RT; arc=fail smtp.client-ip=40.92.42.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MdgnU2xiGUi2LDDJIdYb7zcUEPCJTqxHITkd66VjtNPNeHrK+isUE5gWegYKDinufZ70EmINleuZYRUt5ma26lbNTV9Neo8YkLJBd+5c5S2nxH7wFb/mMqGUX/aXjES1y9Tt+t+uaGwg5hWwbJynL1y+A162C0VhHaBbakhY0pjPI7aY8py2P68ObMPrRHpmDh8idltMXVr8Vc8pT3/AS7CwvybYPoRJLcEY5ZS8+xJ0CEthuWSJ7DKmOUcqMGTZVAdCk+l0rpFgCPCIi4uTcoIeIoSvSzjqEgAtxjmys3bIO0ZqdTUNy/tkZ3cbpCEmZ5NkvqMma0Dgi+w0Y/chcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FqeV680hIbiq6OnRQW8I6vFqzxRJ+spYsX2U+FmkdFY=;
- b=hZn9MKOzhPaOWlX70+NII0NyTxXgtcQLQ5rw69SEXuyc7Fo3oRlUwD2XFU5ceWCCps24HgJ4HOswm4VdKM2oomsQPAt7E839WR+idYL2PPU54lsmClwwSs63AXHFwlDCStb6rkqCkIq2hdJrHibc/uzT2xqzKSEB4zzda7D5D6Ds8c5c+jR2oFvTzDFVetFPnCp/NvxpksEIExdpBmonfThVWjLRN7TWCAUbuxmvRMwc7a72227WELFqXWramr0j15rcAAdsCk9zI9/ndnOjAbxwathaXT6K44tjCZ3radNJHC4pArjU/z0R1yo7UMY6JqP8lLoU7rrHbwQcleQBSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FqeV680hIbiq6OnRQW8I6vFqzxRJ+spYsX2U+FmkdFY=;
- b=EfN7d4RT2qJ2eF618b9EGMPf/ij0RX/QJ/RrFrHtL11ShWuScqoJT6HQ07ug9jBq/UWBuKw/Eo4FeZsnMQSkROVrERUmyiYCWBZT7ePBK49rqKzcBcgTqaMclUo2W2ouFR3RQQP9PPEep6gyDJgzK7LxB9EW+QFUy8C0cvP3KD/x4ZpuJlZD+FThkZoGlLxFM+1H5i9l9KUZJK3z4wVDLp0Oqvt0VyptAFwQ7YVafzdEjFjo75XYLUYXDB6bc4q87Q2H2B4PBvjCxOJD/M0iJ6Kff6lsfij3qkx11Gw/vbubLvybFJ8ekjRiFDj9kyiaRvivsQPPhHjjNTMtLNvumQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by BN0PR02MB8063.namprd02.prod.outlook.com (2603:10b6:408:163::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Thu, 6 Jun
- 2024 03:14:56 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7633.033; Thu, 6 Jun 2024
- 03:14:56 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Thomas Gleixner <tglx@linutronix.de>, "kys@microsoft.com"
-	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
-	<decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
-	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
-	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "James.Bottomley@HansenPartnership.com"
-	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
-	<martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-CC: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
-	<den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
-	"dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
-Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional IRQ
- stats
-Thread-Topic: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
- IRQ stats
-Thread-Index:
- AQHatj3dxfDAEhKlmk6xJJhdAubqnrG36WaAgAAakqCAASXCgIAAA1YQgAANOoCAANYaUA==
-Date: Thu, 6 Jun 2024 03:14:55 +0000
-Message-ID:
- <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240604050940.859909-1-mhklinux@outlook.com>
- <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
- <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87zfrz4jce.ffs@tglx>
- <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
- <87cyov4glm.ffs@tglx>
-In-Reply-To: <87cyov4glm.ffs@tglx>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [ELYwmNtWSkPSewCdjv9foDeprDCKWuSG]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BN0PR02MB8063:EE_
-x-ms-office365-filtering-correlation-id: 83167f07-7914-49cc-b829-08dc85d6d704
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199019|102099023|3412199016|440099019;
-x-microsoft-antispam-message-info:
- W/6HmkJea+dfJB08OZTsOBTFLlIyUk0HODlZ+RJv5y21V/2InznUTAcSdmkYjyX064fpV6QYTcOWMKyoMkyhmRetnb8JJ2Ue5Atw+nw/JKyUsKePOayF2sbMStCF3qjqP9n7/smjdq8my6H2uAznEL4sRM3XoDg+uigAxfdcHkqc7cbskHJwA6BcKJaFHJ3nLkeXXrJkogTbTxq1WS7NabmMJakCLRxTMb11K6gEqBKW4QRvCXtwPwDjZLi2JKLrnV/3DTnuMytBdotVuhvJw1JzpocAxxLA7RhtOxRB74CfvxmgBeGN+PcBYeVtv/Rka8GD0UA4z4H2vaO+Mka0ZtX8bynTwY/jCeLXBfX9FR5j8fKVLREFcKFP5SHjwOi1PXoVecvQqKIgE4q/uyScTFR5j821CqnIuNmWeePyO3lrwsNTstLjixdUE1RIwAdTsFJZMuvtQBDlISDicnYltjYzzMt7+AwzXMT4jGmLF4q/Kx4sCSxFk6OxT/1a4snrSy9fq3t/93gQ42J1G/0ZA8Rj2+tceaYma+b6tegp9v84Kbe+VEfxvvvaSd5IQZys
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?MeXDoziSiubnvCQwq/o9JKLOHPjy325GBSu5kzpwCIbVX+OSb+lQrQlZJNkc?=
- =?us-ascii?Q?rm1B/T0vNg9x/42nrdc75By7jyzVofTs6F/ZnXBedHguJHX0K1PUJjaHZTgA?=
- =?us-ascii?Q?SbqcAFIUPf8UwsTcG38FKx2xJAryiFreAo8Onq36wkWFlt8kVIeTA8WL9G30?=
- =?us-ascii?Q?AbKTG59tRKdInaiVYZLNn3o0e/9nigwrUTfvbx6c6Oz/z4kwmnRVGIkA3fuk?=
- =?us-ascii?Q?++dda5GxNf9WDprWnnAyTDyzB7gu7dY4y8RNOSTHF6zMdDdK0sGzaz+UViLE?=
- =?us-ascii?Q?eZxQNgONeoNZhX7EP1Dac1HQPs9bhWHyjPwCTtXuo1M/W4AfAjSbTakE9Y/P?=
- =?us-ascii?Q?HyVg5nV69h8t60zBJ+9cuEu3koZqEzpiZK0+ihj0O/wxVG6Y/WJYe15LX0ZM?=
- =?us-ascii?Q?k44nd2dLCjRrX195myDzGfUax6+L0gvUt3/7qV8hCkRKsW+TwIF+eApQR7Yo?=
- =?us-ascii?Q?TvmwXfT9Z6HnMbFcrwCgydjAPwQQ0cnOhHdzgGE374GdXgHvkJKprzFVLk4k?=
- =?us-ascii?Q?RCliG2FiY8KegYKy/Q6ImV86JB1iEU0PXLKM0PNAVCfNFN5u3C8mXIypst6C?=
- =?us-ascii?Q?oKFIdKdIfCLWDYyhKZm34VCKh4jRBCnTZT/yd4gjB/3Zwvx/8JEecYcFqiP/?=
- =?us-ascii?Q?IaqoZp7TYdaA2MgU8v+j9t9nJGg0ZyYKsr/AzUydCD01io0Oy+Zb1K6wj5Pe?=
- =?us-ascii?Q?zCMLeKP+BiDtXQOFGnEwokKKlzyi86ynnuPa8M6wT5igZCnKQPYdK1NPQR5j?=
- =?us-ascii?Q?6a6jOCTyd384caMXo25+SglmHSyqyWlm4HxdaYSgg/JNbBw3vO8ENmx2cR+N?=
- =?us-ascii?Q?5qJGqANEkcxv2Wm4IupvwSY7RnJhb+dmRx+8xaA7n8ICBQy/2nAe0VVp3m/7?=
- =?us-ascii?Q?NDJmlTZIjwMAKSQgWtqWNCFoq9s4gBa+G6TeaeGLxwDb/fEdb5q/kVW0sFjg?=
- =?us-ascii?Q?sEyZEsRTrOfdcnbc5RDm9K+1zLBLXxmVP02+7J6XYSYPd2GW3nz9laUljdlp?=
- =?us-ascii?Q?6skEbLdRw4WQ+TuFF6tKlTGQmM3MJ0fXe+NwApBzQD6dioJEGcbE+hf/bJlk?=
- =?us-ascii?Q?qgRFT6wexyluZ+O342hfwuXdOShhxWMzzIqBXrk2yE8+Tr4qc3mNLxeV4Hhj?=
- =?us-ascii?Q?1y/SojeV6ReOhU00SURV6WlbdXKCAURJj7mamOmpMmcbYYQh7nAy398J1XdA?=
- =?us-ascii?Q?Fci8SuaCBuhGKqQ6qlImSXLHhchy049QNarwZ8v7s0TE6F0vheZoYPO+37k?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B877273537;
+	Thu,  6 Jun 2024 06:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717655157; cv=none; b=Y/4K5PalMFAeif6NpRvL0jKPFXViPcLeVBGsahSk1iI+PzYaIFXxp0WUdzHgW+Xt/lh9/JuIhgZClA7FGw0ImRtlXg0Y6lKTrEHfIZh6YMup4G50v6bNPCqDvBt8d4b2czbZLPCAGa8IoilZ32uFfJa+J0frSW+OV8eCPyYSS6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717655157; c=relaxed/simple;
+	bh=fUMpR2seN1mrKu7VsMhqq95JP3CQ+LxDFtWLQHh/jpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcATTHj7hjH0Rq2GEsUJeXevLvP0xazXVmJFQUU5WHPzwNbMf3MIk81sbYla7RQVhDM6XQHxDsgKuumAfzEmlH4UACJ6zXtTY3M1sfw9Izguh59tgI+yieYi0bMNauKUmg1sOenKxazzWi8mbsWQwXWOgjtfSp+Oo8ka28lcklw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB9B8C3277B;
+	Thu,  6 Jun 2024 06:25:50 +0000 (UTC)
+Date: Thu, 6 Jun 2024 11:55:38 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Damien Le Moal <dlemoal@kernel.org>,
+	Jon Lin <jon.lin@rock-chips.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v4 03/13] dt-bindings: PCI: snps,dw-pcie-ep: Add
+ tx_int{a,b,c,d} legacy irqs
+Message-ID: <20240606062538.GA4441@thinkpad>
+References: <20240529-rockchip-pcie-ep-v1-v4-0-3dc00fe21a78@kernel.org>
+ <20240529-rockchip-pcie-ep-v1-v4-3-3dc00fe21a78@kernel.org>
+ <20240605073402.GE5085@thinkpad>
+ <ZmCQak-m7RWRxiix@ryzen.lan>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83167f07-7914-49cc-b829-08dc85d6d704
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2024 03:14:55.6609
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR02MB8063
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZmCQak-m7RWRxiix@ryzen.lan>
 
-From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 7:=
-20 AM
->=20
-> On Wed, Jun 05 2024 at 13:45, Michael Kelley wrote:
-> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 202=
-4 6:20 AM
+On Wed, Jun 05, 2024 at 06:20:58PM +0200, Niklas Cassel wrote:
+> On Wed, Jun 05, 2024 at 01:04:02PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, May 29, 2024 at 10:28:57AM +0200, Niklas Cassel wrote:
+> > > The DWC core has four interrupt signals: tx_inta, tx_intb, tx_intc, tx_intd
+> > > that are triggered when the PCIe controller (when running in Endpoint mode)
+> > > has sent an Assert_INTA Message to the upstream device.
+> > >
+> > > Some DWC controllers have these interrupt in a combined interrupt signal.
+> > >
+> > > Add the description of these interrupts to the device tree binding.
+> > >
+> > > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 > >
-> > In /proc/interrupts, the double-counting isn't a problem, and is
-> > potentially helpful as you say. But /proc/stat, for example, shows a to=
-tal
-> > interrupt count, which will be roughly double what it was before. That
-> > /proc/stat value then shows up in user space in vmstat, for example.
-> > That's what I was concerned about, though it's not a huge problem in
-> > the grand scheme of things.
->=20
-> That's trivial to solve. We can mark interrupts to be excluded from
-> /proc/stat accounting.
->=20
+> > Nit: We recently changed the driver instances of 'LEGACY' to 'INTX'. But the
+> > binding it still using 'legacy'. Considering that the 'legacy' IRQ added to the
+> > RC binding recently (ebce9f6623a7), should we rename it?
+> >
+> > This will force the driver to support both 'legacy' and 'intx' for backwards
+> > compatibility.
+> 
+> I don't think this is true.
+> 
+> 
+> Look at snps,dw-pcie.yaml in 6.10-rc2:
+> 
+> The individual interrupts are called:
+>             Legacy A/B/C/D interrupt signal. Basically it's triggered by
+>             receiving a Assert_INT{A,B,C,D}/Desassert_INT{A,B,C,D} message
+>             from the downstream device.
+>           pattern: "^int(a|b|c|d)$"
+> 
+> The combined interrupt is called:
+>             Combined Legacy A/B/C/D interrupt signal. See "^int(a|b|c|d)$" for
+>             details.
+>           const: legacy
+> 
+> So you use 'inta', 'intb', 'intc', 'intd' if your SoC has a dedicated
+> interrupt line for each of these irqs.
+> 
+> If the SoC simply has a single combined interrupt line for these irqs,
+> then you use 'legacy'
+> 
+> 
+> This patch simply adds:
+> 'tx_inta', 'tx_intb', 'tx_intc', 'tx_intd' as individual interrupts
+> and the combined interrupt 'legacy' to snps,dw-pcie-ep.yaml.
+> 
+> 
+> Patch ebce9f6623a7 simply allowed the combined interrupt line 'legacy'
+> to be used by the rockchip-dw-pcie.yaml binding.
+> This is because the way that device tree is designed. You need to specify
+> something both in the generic binding (which specifies everything),
+> and in the glue driver binding, to specify the subset that is allowed by
+> the glue driver.
+> 
+> 
+> Since a controller cannot run in both EP and RC mode at the same time,
+> I think that it is fine that this patch reuses the name 'legacy' for the
+> combined interrupt.
+> 
+> And as you can see in patch 5 in this series, rk3588 actually uses a single
+> combined IRQ (called legacy) for 'inta', 'intb', 'intc', 'intd', 'tx_inta',
+> 'tx_intb', 'tx_intc', 'tx_intd'.
+> 
 
-OK.  On x86, some simple #ifdef'ery in arch_irq_stat_cpu() can filter
-out the HYP interrupts. But what do you envision on arm64, where
-there is no arch_irq_stat_cpu()?  On arm64, the top-level interrupt is a
-normal Linux IRQ, and its count is included in the "kstat.irqs_sum" field
-with no breakout by IRQ. Identifying the right IRQ and subtracting it
-out later looks a lot uglier than the conditional stats accounting.
+I think you misunderstood what I was asking. I was just asking if we still want
+to keep the term 'legacy' for INTx IRQs in DT binding or not, since we recently
+got rid of that terminology in PCI drivers.
 
-Or if there's some other approach I'm missing, please enlighten me!
+But if the rockchip TRM defines it as 'legacy' then it should be called as is in
+the rockchip binding. But I don't think DWC Spec also defines it that way (I
+haven't checked).
 
-Michael
+It is a question for Rob and Bjorn.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
