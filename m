@@ -1,161 +1,165 @@
-Return-Path: <linux-pci+bounces-8392-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8393-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CB718FE1B3
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 10:55:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 891B38FE2F2
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 11:34:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0162B1F20F25
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 08:55:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 914131C21D0A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 09:34:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF04C13E3FD;
-	Thu,  6 Jun 2024 08:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27366152539;
+	Thu,  6 Jun 2024 09:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+bCtIN6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MATPO10Q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YGCAIQIF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1623013C674;
-	Thu,  6 Jun 2024 08:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D1713C676;
+	Thu,  6 Jun 2024 09:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717664038; cv=none; b=YLmEo2TA0tDkpl08042yjYjpjS5oOtFoNa6ddxZQ5Uh7yGUkUNJWmCWlQmSy3SNU6SSBpsuoVGFOly3e6zYqlRfJfOerzVkr4cAB4q99BlVKMOBog81PQ+zQK2b3bulKalnvalpl5I7Gje3bP61AsE87EL7jUvelOzPOYTLQXkA=
+	t=1717666447; cv=none; b=tfca36MbpJusgtPj1q2UWuGBEvbB3BGcy2JnOUZ7oJ5s9/BrOEbb8wuYRj6jJ4qaXxmgdCYrczgCUQeyt/KKlV9CLdRboY6KHXTxeWMmxD4JIBPsWmF4RIPIPOYG1+9VwE4FtXYA7OzyoloiCRE9HDYyoFAbdEjWAgQ16O0b9MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717664038; c=relaxed/simple;
-	bh=76YSZcCdZ764lD0h45CLCNioTRewzDtJVZ99GEVCvUY=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tK1ys6Z7s4Tv2adyHzhdDixL6pO68U6qnxXyuzBQW5Ccu81qsLGJsSIB6W/rTD2+8FxV7U5r2ykZffIx8tabTJk2/k4xgH+IfpBTQi8S+cDrLbtJGnTDAeokWh5snvMNFqHkjRRcwzPNuBGUp/Qq9JhGHH3VrlpUAOsTvJ2ZID8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+bCtIN6; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4212b4eea2eso7696205e9.2;
-        Thu, 06 Jun 2024 01:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717664035; x=1718268835; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6VqKhsb7zNsKsO0Rwy1Ho9vMPyDMj69wLB9DOnaMWfE=;
-        b=Q+bCtIN6bi9XfwL0qmBs0v9dKZsqw53A8TgSZ16m/YgidQiQ7+rgyJoEa/CoFVElyE
-         3SGIYeURS9vH8BWAfZh7wATx/VVUOdJ/fEaBKsROXhFw5LqSy+Gb8bLVcLsIV6cvBq8M
-         oIiIi3m12Isz2dRSwvgTfZ3QqUFYAc7Ig6il9keQuLaaSPBIfeu9NnU5z5ZAqk7Zw8u1
-         pOWVRJ5I9XJHkouByCQTAH+iOpga39Cu18UNEIcJM2ELr/xKnZxVvGPGCzu61AthCTbc
-         zYFSQT4ljbQkai24Wy6onfbC4evy7n7rNgVqTGC2edU8WzYdeMNCxC6U0zg+BciqkukM
-         Effg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717664035; x=1718268835;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6VqKhsb7zNsKsO0Rwy1Ho9vMPyDMj69wLB9DOnaMWfE=;
-        b=J8VNxgVOiZcSOePWVtaNtpfNrGDXc54aoKs7cY9WM3gnExUCTuNkXHXj3YtCjRKeGB
-         jtf0PmuMy2ns6KYsh8jHLJcNl7VgOBZ+VCSGHTDc0oYVdkZGWkNJlaixnnYceP1FkGqW
-         to5joNByVtLJ7F0GPJvIEUqnf+nI441kbddcI1xNNnJjaDkJYhJPw7x/7KfbPtlzGx8G
-         E9wfV3p605ect8Mj3cHAg1DmLEj3wUmtCUYxLXEdqeAGjXY6y/HFfwKkcYhOtD5aBjmY
-         e101noZyDCTo9red+HUv09jdiHyfx+Gu1OLcHxYG35wbqFXMtKcYzdj58r8oEQMXm8Y6
-         xd1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVKkrNbW02AR6gst+Uh72Hf4E8O/EVUCmEJHHWG8TRTbfCFUNEFf/K/USfiCEph0//gnQFU8tklj1vYYEvz4Qf8huJywap+LD5TMQr8GIyJlDtapBvUM0ZKy14+wy0AoLwY4zjg4dazdq9lGcqCrokUyPJPVG8s9XBphqzu6ib/wnbeQg==
-X-Gm-Message-State: AOJu0YyDTfxTC2rKnBSs1XsAUJFGty3LScIl7n9PhL+1bWKfBSNM3c2H
-	6gAwx1k4UFsjxM6GPU3NcC1ATxFOc59h2i6RaeWb56ZRngTum0mA
-X-Google-Smtp-Source: AGHT+IEYxPKC2k/qAgc09dTYL+ijHyJ1hOhPMH9D51cPSwf9aJhwmRtpen34WhDJZuIh5e9CdV1zsQ==
-X-Received: by 2002:a05:600c:45d2:b0:421:2168:8336 with SMTP id 5b1f17b1804b1-421562ef91cmr38175795e9.16.1717664035118;
-        Thu, 06 Jun 2024 01:53:55 -0700 (PDT)
-Received: from [10.16.124.60] ([212.227.34.98])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215814e7bfsm48107375e9.40.2024.06.06.01.53.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 01:53:53 -0700 (PDT)
-From: Zhu Yanjun <zyjzyj2000@gmail.com>
-X-Google-Original-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-Message-ID: <285e6cdb-f765-4969-ab16-abc53ad66a95@linux.dev>
-Date: Thu, 6 Jun 2024 10:53:52 +0200
+	s=arc-20240116; t=1717666447; c=relaxed/simple;
+	bh=7CsufZK2miEU5UnmC5oGSmYNS+ai0Uwb0uhJhcKAtRo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ywfjb1WfPRLuVCJ2YD6JL3W/P6Klq9n7Z5PfqRmHf0Tb3G8ejpyRfVBjaaTj8OJ95atp8h6j2xxWhlEQJ9j2oayYkcT/RALcvZ35dVN1atHRUH1M6OikLlrHGDLGQZX+CZChzkhaoFXG4MDFd6Gc+3irt7YgXb0eniT7KI1SKVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MATPO10Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YGCAIQIF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717666443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GI0Ast9VZDly/xi6jCxjuQpHUZTGPm46ngg6M3zfBXs=;
+	b=MATPO10QOHKv4k4VQnrpfoCLSbqRmbY7gqT/F7T0Lc/2E7Du63oB8161P4q5JWozu3fZnB
+	V9RDyzJh7XWLYDycTqRoUWo2plgch3aRjBVw4XZSkNQNjZvqWHAT9K73qLd8nN0rKfCezR
+	Bp18ybroip0aRG4RB4z2CLeZ5dBwCqJ129sBCgauC9Ok0NyqMbHNvXlLWaGPfMJDdgC1aW
+	1SCPm4PXh9MoYg0TniyHUitOsT2qoJgTjF2aFxkh2/JlM+j4ONJmcdKHivsjP+Q4SU/D6g
+	cfGOJyLnD7ell8quwLO5W77UB0wdhQtYpvI8JHvTB8xeEEA7ZtyGSV72RTe36Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717666443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GI0Ast9VZDly/xi6jCxjuQpHUZTGPm46ngg6M3zfBXs=;
+	b=YGCAIQIFH0BDyKRWYSb4HAgVmuTgJ2BKHKaHx9TT01zEtsSvWNKJWbqK6SEyypSe+CHCDb
+	ASnT1HJAMDuvaFBA==
+To: Michael Kelley <mhklinux@outlook.com>, "kys@microsoft.com"
+ <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+ <decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
+ "hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
+ <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
+ <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+ "James.Bottomley@HansenPartnership.com"
+ <James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+ <martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Cc: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
+ <den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
+ "dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
+Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
+ IRQ stats
+In-Reply-To: <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240604050940.859909-1-mhklinux@outlook.com>
+ <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
+ <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87zfrz4jce.ffs@tglx>
+ <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87cyov4glm.ffs@tglx>
+ <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Date: Thu, 06 Jun 2024 11:34:03 +0200
+Message-ID: <87le3i2z5g.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] Enable P2PDMA in Userspace RDMA
-To: Martin Oliveira <martin.oliveira@eideticom.com>,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-mm@kvack.org
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Mike Marciniszyn <mike.marciniszyn@intel.com>,
- Michael Guralnik <michaelgur@nvidia.com>,
- Dan Williams <dan.j.williams@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
- Valentine Sinitsyn <valesini@yandex-team.ru>, Lukas Wunner <lukas@wunner.de>
-References: <20240605192934.742369-1-martin.oliveira@eideticom.com>
-Content-Language: en-US
-In-Reply-To: <20240605192934.742369-1-martin.oliveira@eideticom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 05.06.24 21:29, Martin Oliveira wrote:
-> This patch series enables P2PDMA memory to be used in userspace RDMA
-> transfers. With this series, P2PDMA memory mmaped into userspace (ie.
-> only NVMe CMBs, at the moment) can then be used with ibv_reg_mr() (or
-> similar) interfaces. This can be tested by passing a sysfs p2pmem
-> allocator to the --mmap flag of the perftest tools.
+On Thu, Jun 06 2024 at 03:14, Michael Kelley wrote:
+> From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 7:20 AM
+>> 
+>> On Wed, Jun 05 2024 at 13:45, Michael Kelley wrote:
+>> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 6:20 AM
+>> >
+>> > In /proc/interrupts, the double-counting isn't a problem, and is
+>> > potentially helpful as you say. But /proc/stat, for example, shows a total
+>> > interrupt count, which will be roughly double what it was before. That
+>> > /proc/stat value then shows up in user space in vmstat, for example.
+>> > That's what I was concerned about, though it's not a huge problem in
+>> > the grand scheme of things.
+>> 
+>> That's trivial to solve. We can mark interrupts to be excluded from
+>> /proc/stat accounting.
+>> 
+>
+> OK.  On x86, some simple #ifdef'ery in arch_irq_stat_cpu() can filter
+> out the HYP interrupts. But what do you envision on arm64, where
+> there is no arch_irq_stat_cpu()?  On arm64, the top-level interrupt is a
+> normal Linux IRQ, and its count is included in the "kstat.irqs_sum" field
+> with no breakout by IRQ. Identifying the right IRQ and subtracting it
+> out later looks a lot uglier than the conditional stats accounting.
 
-Do you mean the following --mmap flag?
-"
---mmap=file  Use an mmap'd file as the buffer for testing P2P transfers.
-"
-I am interested in this. Can you provide the full steps to make tests 
-with this patch series?
+Sure. There are two ways to solve that:
 
-Thanks a lot.
-Zhu Yanjun
+1) Introduce a IRQ_NO_PER_CPU_STATS flag, mark the interrupt
+   accordingly and make the stats increment conditional on it.
+   The downside is that the conditional affects every interrupt.
 
-> 
-> This requires addressing three issues:
-> 
-> * Stop exporting the P2PDMA VMAs with page_mkwrite which is incompatible
-> with FOLL_LONGTERM
-> 
-> * Fix folio_fast_pin_allowed() path to take into account ZONE_DEVICE pages.
-> 
-> * Remove the restriction on FOLL_LONGTREM with FOLL_PCI_P2PDMA which was
-> initially put in place due to excessive caution with assuming P2PDMA
-> would have similar problems to fsdax with unmap_mapping_range(). Seeing
-> P2PDMA only uses unmap_mapping_range() on device unbind and immediately
-> waits for all page reference counts to go to zero after calling it, it
-> is actually believed to be safe from reuse and user access faults. See
-> [1] for more discussion.
-> 
-> This was tested using a Mellanox ConnectX-6 SmartNIC (MT28908 Family),
-> using the mlx5_core driver, as well as an NVMe CMB.
-> 
-> Thanks,
-> Martin
-> 
-> [1]: https://lore.kernel.org/linux-mm/87cypuvh2i.fsf@nvdebian.thelocal/T/
-> 
-> Martin Oliveira (6):
->    kernfs: create vm_operations_struct without page_mkwrite()
->    sysfs: add mmap_allocates parameter to struct bin_attribute
->    PCI/P2PDMA: create VMA without page_mkwrite() operator
->    mm/gup: handle ZONE_DEVICE pages in folio_fast_pin_allowed()
->    mm/gup: allow FOLL_LONGTERM & FOLL_PCI_P2PDMA
->    RDMA/umem: add support for P2P RDMA
-> 
->   drivers/infiniband/core/umem.c |  3 +++
->   drivers/pci/p2pdma.c           |  1 +
->   fs/kernfs/file.c               | 15 ++++++++++++++-
->   fs/sysfs/file.c                | 25 +++++++++++++++++++------
->   include/linux/kernfs.h         |  7 +++++++
->   include/linux/sysfs.h          |  1 +
->   mm/gup.c                       |  9 ++++-----
->   7 files changed, 49 insertions(+), 12 deletions(-)
-> 
-> 
-> base-commit: c3f38fa61af77b49866b006939479069cd451173
+2) Do something like this:
 
+static inline
+void __handle_percpu_irq(struct irq_desc *desc, irqreturn_t (*handle)(struct irq_desc *))
+{
+	struct irq_chip *chip = irq_desc_get_chip(desc);
+
+	if (chip->irq_ack)
+		chip->irq_ack(&desc->irq_data);
+
+	handle(desc);
+
+	if (chip->irq_eoi)
+		chip->irq_eoi(&desc->irq_data);
+}
+
+void handle_percpu_irq(struct irq_desc *desc)
+{
+	/*
+	 * PER CPU interrupts are not serialized. Do not touch
+	 * desc->tot_count.
+	 */
+	__kstat_incr_irqs_this_cpu(desc);
+	__handle_percpu_irq(desc, handle_irq_event_percpu);
+}
+
+void handle_percpu_irq_nostat(struct irq_desc *desc)
+{
+	__this_cpu_inc(desc->kstat_irqs->cnt);
+	__handle_percpu_irq(desc, __handle_irq_event_percpu);
+}
+ 
+So that keeps the interrupt accounted for in /proc/interrupts. If you
+don't want that remove the __this_cpu_inc() and mark the interrupt with
+irq_set_status_flags(irq, IRQ_HIDDEN). That will exclude it from
+/proc/interrupts too.
+
+Thanks,
+
+        tglx
 
