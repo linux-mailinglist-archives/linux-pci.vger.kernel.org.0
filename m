@@ -1,127 +1,181 @@
-Return-Path: <linux-pci+bounces-8444-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8445-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FD04900157
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 12:58:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 336AC900169
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 13:01:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B48B1C2285C
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 10:58:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFF482844FC
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 11:01:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86833186E56;
-	Fri,  7 Jun 2024 10:58:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62A41862BF;
+	Fri,  7 Jun 2024 11:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBS/bdXt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWX2WR2H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD44E1862BF
-	for <linux-pci@vger.kernel.org>; Fri,  7 Jun 2024 10:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B13D187326;
+	Fri,  7 Jun 2024 11:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717757899; cv=none; b=h6kE7E4cuavDhE/Abk5iIYPLlKGhBNFDFI9VRXDO1H0uGE3KTdyzQUq3erxr/X4GJtnWCpuOKB4PMTfqx3ktTh6Z1tM2V3qTodCL0D8/zmXBVPR6x+kLyFEXLNsQ+U3YE/yHHa7J86gRwb11rPZbpucJxr0FUmFVFdlqFy+1uXE=
+	t=1717758073; cv=none; b=R3LN6NXaHjpAP2FMGUxEOmP86YjjkxT1r9do54rrDgI6d6kKRo0IWemQcW6EaMYYKkCWDVlsngb1YGyuvwaIeGN1yEUom9YP7nhrP8QcM6jOvcX9zyFCGwAMGOPXeJa6vu5oOLiz/1hFBYNbImAEklw2W4paxhVoRirfyTUnf/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717757899; c=relaxed/simple;
-	bh=O41O/1MskzYdTSPlRhjh40nzcnbFdwsOlCE890eRNOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LdQGaSMDDZ4phSFfCHpKOJ25wv8iT0NSKr4j0zSBEuoJEE5Y+qsZKGIs1yiEH6ckI4Xy8GbA4OGWQ+y431babJmBzo/ojQfbS7Ckz5UXPPd4g2jhkRiQLiapZH5Peg++g6o5YgfAec/V0yBK0eu6MswSvgH5xMdRVhlJF6l7RG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MBS/bdXt; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-35e573c0334so1796249f8f.1
-        for <linux-pci@vger.kernel.org>; Fri, 07 Jun 2024 03:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717757896; x=1718362696; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bjEqBh5QuB3m0cSYJF5Sevhh+bm02dLUsdiKcr4Stbk=;
-        b=MBS/bdXtlEAlqZv9G5/y4Fs48irk8t1uVoqz7pB4ukvt4JAFTGA3cMY9rv3wUesGYj
-         OoODXtkDiT/sF8M6Rz98mblL8QUtQC9fYq5TJ8mPafbuxVXxWWOBXJW9rKKWXyV7ce2d
-         VTlgpqdhGAcv9gsJW3hWiDP0hkW6bAlNi1x2osLDngltsesVBhbzjfsNojK9yJA+HQSt
-         DR6qIo5wAyFUcsk2tsjjOtZJ2zBKWaM4ugczjv55KjHSGzIhfFtXZeXqjkvNXs9s1prZ
-         kCnldbHuohzC5dmgfo3LbJgX1uhfulFoBKDMLlUaaMYFL7Q4yQXJ8iANdGVPGrlIGWdO
-         o4kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717757896; x=1718362696;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bjEqBh5QuB3m0cSYJF5Sevhh+bm02dLUsdiKcr4Stbk=;
-        b=nHbtMAiWlZheuw4J8nvxcFJMWuRVh3GEDDy/9a1IVITWs9lWKgOqiIWltX3h1dP2Ux
-         doqg6VxNqdg5iXDB9cogQVLkTW79SA7/kYyKHtLuX2YeOc0THutzdITn+rxkXPsvoN6w
-         Fty7GpgRmrau4zef7D47HGOfx2zcEP44iCEKIsIIH+5xt6qZ5SSnIK039iY+oVjCtB4M
-         3A98iNq+vCXmn3Zci3NORWRtzErD7SvvM5+CUdlnZ6WTOxe9roLr+g9FmjzO9L+6CPAd
-         xiciJ3IJHYjEJWTf5zWi1EZxglcZQ7C2PxN3Fu7VMnphWOQkRbz4BnNcEL7PxMwcX5Vo
-         yEgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhCcESfC7WnX9duEh6oKquFu7dqANfJeDsKWXxy3XK4R6MjhfcYcaA5giFxaU/36RGExP/Iq4XThUcD54bqR8YxdAK5PbtTE5Y
-X-Gm-Message-State: AOJu0YwyqadB+0ef6jx2zqyd0R2KheOYRlYdqpuOBuxJPrCHUyNJJ2c/
-	60qbET/ix3hdaGHdeeoOFn+zSxxP3ODOoE5//HcVcVDTWkP71C06hUgs4ZtWYf4=
-X-Google-Smtp-Source: AGHT+IFX4FLgpNJ8GaYxoZxGPgBzPu85Hq8iJpZp9pD83eICpSj6uwNOOa6+5UgHkLP9J9gGJbKS8w==
-X-Received: by 2002:a5d:5090:0:b0:35e:ec8f:cb3d with SMTP id ffacd0b85a97d-35ef0926828mr4809560f8f.0.1717757896329;
-        Fri, 07 Jun 2024 03:58:16 -0700 (PDT)
-Received: from localhost.localdomain ([2.221.137.100])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5fd1c5fsm3739485f8f.113.2024.06.07.03.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 03:58:16 -0700 (PDT)
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-To: will@kernel.org,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	liviu.dudau@arm.com,
-	sudeep.holla@arm.com,
-	joro@8bytes.org
-Cc: robin.murphy@arm.com,
-	nicolinc@nvidia.com,
-	ketanp@nvidia.com,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v2 3/3] arm64: dts: fvp: Enable PCIe ATS for Base RevC FVP
-Date: Fri,  7 Jun 2024 11:54:16 +0100
-Message-ID: <20240607105415.2501934-5-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240607105415.2501934-2-jean-philippe@linaro.org>
-References: <20240607105415.2501934-2-jean-philippe@linaro.org>
+	s=arc-20240116; t=1717758073; c=relaxed/simple;
+	bh=mtUu/Do/GLFHawm+/M8nMC7SPdHfBpSjez+ss4kMKsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HeEgIvLlfC6sCGPeYFBqQ0SCM1cLqO9QuOrlEVYhvhV02BCvIA/s9/ZpPbvlr3PJeI9mNQTSa+iljPD+xBtPekOryeAqOPoUoCBJxB71LREOmeBfy3+iKTBlrJN1gUdBpyhr4K4MRl5WyDcjzhQW28sqLNT16vBiV9AAA3JR88w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWX2WR2H; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28329C32781;
+	Fri,  7 Jun 2024 11:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717758073;
+	bh=mtUu/Do/GLFHawm+/M8nMC7SPdHfBpSjez+ss4kMKsU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RWX2WR2HyLq3+UnPfPsnprPOtIaGzcPc1bsnV3duitv/Bf6mCReB5QJQvbQadEPEc
+	 iKETSHuQKnY+eo2jADupxpJMgxzbTWoXNji08JTXAIy9E7r8Is/yuqxpYZPJjxy3z3
+	 Rbk0zriDNPXJudyRc7WhjrjSUanOnDvVfn8GFQeA5LxnGgkcCKpGy59iE2rM9PO7lS
+	 yJrN5hb4wgV3KPzMkKCkWsD/nyx2WxfsgGGTX8AEDqp2kfZw722eLixAzwxwEOh3QF
+	 f33GQedooaDeqwMRceIHZLlxhbwXDo5r1wYWn9l9DBKVR+Jyv+BTgKyi7Dv1Qh9f3P
+	 nYOzC0lEjv4GQ==
+Date: Fri, 7 Jun 2024 13:01:06 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Damien Le Moal <dlemoal@kernel.org>,
+	Jon Lin <jon.lin@rock-chips.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v4 10/13] PCI: dw-rockchip: Add endpoint mode support
+Message-ID: <ZmLocvA9HwomzrED@ryzen.lan>
+References: <20240529-rockchip-pcie-ep-v1-v4-0-3dc00fe21a78@kernel.org>
+ <20240529-rockchip-pcie-ep-v1-v4-10-3dc00fe21a78@kernel.org>
+ <20240605081753.GK5085@thinkpad>
+ <ZmC1PihX_URtZkiA@ryzen.lan>
+ <20240606063128.GC4441@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606063128.GC4441@thinkpad>
 
-Declare that the host controller supports ATS, so the OS can enable it
-for ATS-capable PCIe endpoints.
+On Thu, Jun 06, 2024 at 12:01:28PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Jun 05, 2024 at 08:58:06PM +0200, Niklas Cassel wrote:
+> > On Wed, Jun 05, 2024 at 01:47:53PM +0530, Manivannan Sadhasivam wrote:
+> > > On Wed, May 29, 2024 at 10:29:04AM +0200, Niklas Cassel wrote:
+> > > > The PCIe controller in rk3568 and rk3588 can operate in endpoint mode.
+> > > > This endpoint mode support heavily leverages the existing code in
+> > > > pcie-designware-ep.c.
+> > > > 
+> > > > Add support for endpoint mode to the existing pcie-dw-rockchip glue
+> > > > driver.
+> > > > 
+> > > > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> > > 
+> > > Couple of comments below. With those addressed,
+> > > 
+> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
+> > > > ---
+> > > >  drivers/pci/controller/dwc/Kconfig            |  17 ++-
+> > > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 210 ++++++++++++++++++++++++++
+> > > >  2 files changed, 224 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > > > index 8afacc90c63b..9fae0d977271 100644
+> > > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > > @@ -311,16 +311,27 @@ config PCIE_RCAR_GEN4_EP
+> > > >  	  SoCs. To compile this driver as a module, choose M here: the module
+> > > >  	  will be called pcie-rcar-gen4.ko. This uses the DesignWare core.
+> > > >  
+> > > > +config PCIE_ROCKCHIP_DW
+> > > > +	bool
+> > > 
+> > > Where is this symbol used?
+> > 
+> > It is supposed to be used by
+> > drivers/pci/controller/dwc/Makefile
+> > 
+> > such that the driver is compiled if either _EP or _HOST is selected, just
+> > like how it is done for other drivers that support both in the same driver.
+> > Looks like I missed to update Makefile...
+> > Good catch, thank you!
+> > 
+> > 
+> > > > +static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+> > > > +{
+> > > > +	struct rockchip_pcie *rockchip = arg;
+> > > > +	struct dw_pcie *pci = &rockchip->pci;
+> > > > +	struct device *dev = pci->dev;
+> > > > +	u32 reg, val;
+> > > > +
+> > > > +	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
+> > > > +
+> > > > +	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
+> > > > +	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
+> > > > +
+> > > > +	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
+> > > > +		dev_dbg(dev, "hot reset or link-down reset\n");
+> > > > +		dw_pcie_ep_linkdown(&pci->ep);
+> > > > +	}
+> > > > +
+> > > > +	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+> > > > +		val = rockchip_pcie_get_ltssm(rockchip);
+> > > > +		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
+> > > > +			dev_dbg(dev, "link up\n");
+> > > > +			dw_pcie_ep_linkup(&pci->ep);
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
+> > > 
+> > > It is recommended to clear the IRQs at the start of the handler (after status
+> > > read).
+> > 
+> > Can you quote a reference in the databook to back this recommendation?
+> > 
+> 
+> It is just a general recommendation.
+> 
+> > Otherwise I would lean towards keeping it like it is, since this is how
+> > it looks in the downstream driver (that *should* be well proven), and it
+> > also matches how it's done in dra7xx.
+> > 
+> > (And since you ack only the events you read, you can not accidentally
+> > clear another type of event.)
+> > 
+> 
+> I haven't read the TRM, but if the IRQ line is level triggered, then if you do
+> not clear the IRQs immediately, you will miss some events. So I always suggest
+> to clear the IRQs at the start of the handler for all the platforms.
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
- arch/arm64/boot/dts/arm/fvp-base-revc.dts | 1 +
- 1 file changed, 1 insertion(+)
+They are level triggered.
+In this specific case, what could happen is that we fail to trigger an IRQ
+if we get two succeeding hot/link-down resets, or two succeding link ups.
 
-diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-index 60472d65a3557..85f1c15cc65d0 100644
---- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-+++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-@@ -243,6 +243,7 @@ pci: pci@40000000 {
- 		iommu-map = <0x0 &smmu 0x0 0x10000>;
- 
- 		dma-coherent;
-+		ats-supported;
- 	};
- 
- 	smmu: iommu@2b400000 {
--- 
-2.45.2
+In neither case is this a serious case (compared to e.g. a host driver
+missing a MSI irq), but I have incorporated your suggestion for v5,
+thank you!
 
+
+Kind regards,
+Niklas
 
