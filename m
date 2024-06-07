@@ -1,143 +1,96 @@
-Return-Path: <linux-pci+bounces-8426-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8427-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6E1B8FF849
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 01:46:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D70C8FFB23
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 07:03:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 509A01F23104
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jun 2024 23:46:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 235A7B21B14
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 05:03:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164D013AD30;
-	Thu,  6 Jun 2024 23:46:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A8C1C33;
+	Fri,  7 Jun 2024 05:03:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ByL86Psd"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3L5H+p8b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E157482F6;
-	Thu,  6 Jun 2024 23:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43D2D2FE;
+	Fri,  7 Jun 2024 05:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717717583; cv=none; b=IZjbtKpoyIMeieoMc54svkORjqBWuxWxpF3ChwPZ7BZ7voVpm9dAzVLAHPatTb8pomSZ/5ALQ1O5hSf9C7LSjjKloNlM1LACYJ4lJtfBPITWQVT7si4KxJDBRWOS5L6IGG70ypDzB6sja5uFxG+tEeX3RykzK2/uKkUNRR9mIJw=
+	t=1717736622; cv=none; b=gZn922jk8o8w0w8wHE/yJxU2qETna5sDJI6HlQTSksS37SsGxcc+OqOWK4gZXe9PeDuuOo1ifOQShSONc2451R/fWP7DYXKV+vvjEUUPHv5Ma8zh8aYbNlhe7oawKtdrgjroDVNXi0Ur4MYq8eYZWXmLlDNllYpwMVu8xwWMTVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717717583; c=relaxed/simple;
-	bh=d3lVr7y+iFHv8wwedctZB9AFZ1krdSdNt0KrBO603Rc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KkIlzeI1/kMb36odX50YiiG8ftUPhCM8rBc5sksjQ0he//Lt883bJYrbRRE4pD5VlCSPM7mn63hqNDwGctNCXSzFRg896mn7K/Iv7Z/wZqkQTXne49muyvWW8cQ1FfZcGMCiso0DbRqWZzQ5ux7dy+voezMSc5Z6RVDtFPDzvkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ByL86Psd; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717717582; x=1749253582;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=d3lVr7y+iFHv8wwedctZB9AFZ1krdSdNt0KrBO603Rc=;
-  b=ByL86PsdxLABemAqrGsf+o31XahU07dab3oWs3VBVdhSlcEvxBHHRUU7
-   OEPvZbYtzi6H2jCMUIhDZUHlGpFUatcFD77+EobOeYAH2g9JBMfdU18k5
-   xDK19ydx+A/fSf8DwB9w5IXLuBGStJ3MZ7aWVbYsApuKCv7xpQrsVCsq7
-   NL04rKjPIZpZt90XpL9dnqZH5XxQudl+AiuYmfXTFIcwh5O/P2y0jzQDp
-   GhV1ZCP8tFyqFugAQysK2zxISNToCDzZcQ0SyoOZ5rtwPoSkNV45q+eB3
-   BReLxQlzaWlqLdm42BIrrJ0b/tIWFnh+rLxXv4ZzXVHvPkqO9qmbVgTcF
-   g==;
-X-CSE-ConnectionGUID: unR5wXaHSNikJfYtMMcPtA==
-X-CSE-MsgGUID: FuueyUQlTKqIlfQ/HxPhPg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="17351362"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="17351362"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 16:46:14 -0700
-X-CSE-ConnectionGUID: vT73BeJ2Su2LvR8DQ6qrlw==
-X-CSE-MsgGUID: NcwCCXvoSiGb/thggIeTFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="38587055"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.168]) ([10.125.109.168])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 16:46:14 -0700
-Message-ID: <2bb3d5e1-c31f-4a34-b925-1309ae20111d@intel.com>
-Date: Thu, 6 Jun 2024 16:46:12 -0700
+	s=arc-20240116; t=1717736622; c=relaxed/simple;
+	bh=aUYzpSZGY3TaaFu5m3ql2sMizBS7fvFJugEmGfXg2LY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g1Brzz9ly295CuVBQUNQo6KVTwRSWEmRKlsFjEu+WAXCGuIVNNeGp+OKb0zhFd8m2/y/9sIxzRg+RKX+T7Ru20V1C34280NM8BqiUcUx8ka9N4E3fXda97V5XCaYhbP4cwmefHq9XG3+ANOwfLUxCC6c1fSL1WftK5tTw92I6l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3L5H+p8b; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=t6XUBFY7DDkBX59kO/X1i0VzKzPBvUpCW3krMAMbCqE=; b=3L5H+p8bNwtH1Ds4X1s1esi8GI
+	F/XbLP4MsCreTAAhfI1hnYE6tr1kAnKVhAJH3v9xHdRaOTqLAC2AgleKeLdayCk7oiGO1nCSgYh/g
+	5LMj+BpUXSTJK2vFAGtGERXfFjDjmAt00JyB82SuOKKAngugkqC9oyPSMhcDPuqdtNvFB8ZWoQE6Y
+	KvnYe/NF3uJe77mJ7MbDCc3IYOUpmBc9+h8Bw65NlGCVZXn/Yj5KW4VTwRySfqdoV9NyZvtspuyim
+	qT+rLyKuU498q/EkXwr/cm4fsa4t+9nArSeb0c652PWps5lUeS/nO1677S8Rrz6rIgYqO3Od6jmDQ
+	9XoXG+0Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sFRlF-0000000CRj6-36hl;
+	Fri, 07 Jun 2024 05:03:33 +0000
+Date: Thu, 6 Jun 2024 22:03:33 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Martin Oliveira <martin.oliveira@eideticom.com>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-mm@kvack.org,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>, Tejun Heo <tj@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Marciniszyn <mike.marciniszyn@intel.com>,
+	Michael Guralnik <michaelgur@nvidia.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Valentine Sinitsyn <valesini@yandex-team.ru>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 1/6] kernfs: create vm_operations_struct without
+ page_mkwrite()
+Message-ID: <ZmKUpXQmMLpH8vf5@infradead.org>
+References: <20240605192934.742369-1-martin.oliveira@eideticom.com>
+ <20240605192934.742369-2-martin.oliveira@eideticom.com>
+ <2024060658-ember-unblessed-4c74@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] cxl: Region bandwidth calculation for targets with
- shared upstream link
-From: Dave Jiang <dave.jiang@intel.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- Jonathan.Cameron@huawei.com, dave@stgolabs.net
-References: <20240529214357.1193417-1-dave.jiang@intel.com>
- <ZmCwrk5MGnnHxmKV@aschofie-mobl2>
- <bdbabe95-6a2c-4069-b6af-eafbaa770400@intel.com>
-Content-Language: en-US
-In-Reply-To: <bdbabe95-6a2c-4069-b6af-eafbaa770400@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024060658-ember-unblessed-4c74@gregkh>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+On Thu, Jun 06, 2024 at 10:54:06PM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jun 05, 2024 at 01:29:29PM -0600, Martin Oliveira wrote:
+> > The standard kernfs vm_ops installs a page_mkwrite() operator which
+> > modifies the file update time on write.
+> > 
+> > This not always required (or makes sense), such as in the P2PDMA, which
+> > uses the sysfs file as an allocator from userspace.
+> 
+> That's not a good idea, please don't do that.  sysfs binary files are
+> "pass through", why would you want to use this as an allocator?
 
-
-On 6/6/24 4:27 PM, Dave Jiang wrote:
-> 
-> 
-> On 6/5/24 11:38 AM, Alison Schofield wrote:
->> On Wed, May 29, 2024 at 02:38:56PM -0700, Dave Jiang wrote:
->>> This series provides recalculation of the CXL region bandwidth when the targets have
->>> shared upstream link by walking the toplogy from bottom up and clamp the bandwdith
->>> as the code trasverses up the tree. An example topology:
->>>
->>>  An example topology from Jonathan:
->>>
->>>                  CFMWS 0
->>>                    |
->>>           _________|_________
->>>          |                   |
->>>    GP0/HB0/ACPI0017-0  GP1/HB1/ACPI0017-1
->>>      |          |        |           |
->>>     RP0        RP1      RP2         RP3
->>>      |          |        |           |
->>>    SW 0       SW 1     SW 2        SW 3
->>>    |   |      |   |    |   |       |   |
->>>   EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
->>
->> Are the ACPI0017 labels a typo?
->> Expected host bridges to be labelled as ACPI0016's.
->>
->> That's all, just did a drive-by on the art today.
-> 
-> It would be something like below in this case:
->         GP0/ACPI0017-0
->         HB0/ACPI0016-0
->            |     |
->           RP0   RP1
-
-Actually it should be:
-	ACPI0017-0
-    HB0/GP0/ACPI0016-0
-	|	|
-       RP0     RP1
-
-Generic Port is identified by device handle that is off of ACPI0016 HID. 
-
-> 
-> or
-> 
->         GP0/ACPI0017-0
-> HB0/ACPI0016-0  HB1/ACPI0016-1
->       |               |
->      RP0             RP1
-> 
-> 
-> 
-> 
->>
->> -- Alison
-> 
+I think the real question is why sysfs binary files implement
+page_mkwrite by default.  page_mkwrite is needed for file systems that
+need to allocate space from a free space pool, which seems odd for
+sysfs.
 
