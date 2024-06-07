@@ -1,68 +1,71 @@
-Return-Path: <linux-pci+bounces-8478-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8479-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C32B900C64
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 21:18:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA7B1900C79
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 21:31:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F3AABB2487D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:18:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BCE7285BD6
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:31:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B9B614B07B;
-	Fri,  7 Jun 2024 19:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7174313A412;
+	Fri,  7 Jun 2024 19:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jYrXTcVt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nt8k8nv/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D387C139588;
-	Fri,  7 Jun 2024 19:18:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED32DDC9;
+	Fri,  7 Jun 2024 19:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717787886; cv=none; b=itrrWQ03OYdY3ckAzalCB7zV7/xaYUQqrJBWnbpxbRnIGMWmKtaGCxkQR6Hve1Fn4/i7rYJlaEkC1/CfPiLS7fEKh/CnqZPh1D/yXLBjK1BC8XQqvAH1nGhJ86rYEvrkbDiGhKhXePiozSstA0c2r52JnYVNHA61MLntvWEHUyE=
+	t=1717788659; cv=none; b=jI+3SQg7yHfWQDJwcAA52/JDN1kZaeNsV4NffZDZ8mQ3QhUypaK2NCvfk/6w5bOey7AofzR+SwZ9NgT5FtozYPIpggwXwRsSXA1Y34ccW6iHoBgdlH3AswmmwOrJg38rJc/hkaHpR8IPxra8KG5R8DyV7J54D+o9zBSVX3JWKKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717787886; c=relaxed/simple;
-	bh=l2TuVuG5EfkG98JENqnCwFuIerVqcUyCRo5aD5PVxpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n/sn/4e2wqt1SIvnOm8BllnkY3WgLVwjbXgw0jFtQhFcH4uynMtf3tbALOBSILdc3TIsy1UJD7PLGZyOxy2sTMrtdvt6eAf7WDo3K/4y+iQ0qFLOFKFPIIAwjZcAhh3bgCe2Yx9cIu0NnCANBR8YCqdu2zpHjc4JHGJPx1qhBlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jYrXTcVt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE86C2BBFC;
-	Fri,  7 Jun 2024 19:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1717787886;
-	bh=l2TuVuG5EfkG98JENqnCwFuIerVqcUyCRo5aD5PVxpw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jYrXTcVtp+1UVrzguQzrm278C0/EpbOO3MlDJqNv1hK0Bedkt7ZbaWgfHzWaHoi3D
-	 /9V4Kd7tpSIK/SWejp6BOcYOVyjvSjQWT1wycjFkeubwHKddtzBkQQ2Po4ruKLmdTx
-	 YwULqF186a190ebh5hC/cFAZqwgjgrjtkja6MvaA=
-Date: Fri, 7 Jun 2024 21:18:04 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Martin Oliveira <martin.oliveira@eideticom.com>,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Tejun Heo <tj@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Marciniszyn <mike.marciniszyn@intel.com>,
-	Michael Guralnik <michaelgur@nvidia.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Valentine Sinitsyn <valesini@yandex-team.ru>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 1/6] kernfs: create vm_operations_struct without
- page_mkwrite()
-Message-ID: <2024060755-stimuli-unworthy-61a8@gregkh>
-References: <20240605192934.742369-1-martin.oliveira@eideticom.com>
- <20240605192934.742369-2-martin.oliveira@eideticom.com>
- <2024060658-ember-unblessed-4c74@gregkh>
- <ZmKUpXQmMLpH8vf5@infradead.org>
- <69dc6610-e70a-46ca-a6e9-7ca183eb055c@deltatee.com>
+	s=arc-20240116; t=1717788659; c=relaxed/simple;
+	bh=D3j+/yjnNIGv7J2RoQZW6oh/+NmHkvPnpEUbKX+xt1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Q7MLo0EDRgC+PhM95geJzIb0LKDUYg/WeuJxoLfviHFywdsFEmUuwmm4uY4M96VZXB9LVXdVtU2/SR92GQctVd1pBRI6WAoKhxgRkwwzKeEZriPfuKrcxyrsF9ZQpBd3pleCzdRcKiODtxFBm/If/RF36gD5BXofYYa+vM74uWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nt8k8nv/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B38BC2BBFC;
+	Fri,  7 Jun 2024 19:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717788658;
+	bh=D3j+/yjnNIGv7J2RoQZW6oh/+NmHkvPnpEUbKX+xt1I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nt8k8nv/j9c0E53eFscg2s+72y2p8Z1M1saOXCrq5RBsOHkjTDdtObZlW5ALXU/Gt
+	 4ShFkTj4ji1MM06yyw3B2Sn2lUlfsVi5VxNXKJLPv1pKO9t/IwPUZh1Q4OPq4gWlw2
+	 TJQb9KxS1YrQwhBzH0GfcjYiNWH5N1rDv9mxqEa9YrLZyphVdtFEP7M95b3b6BEIbM
+	 cVy4tFEVCOfyKRFRR6/8WxTVkK8zc4aYgL/9eJutTEuv0U2wXj3R7N9MA/F7M1kvGV
+	 gL6xkER04J7inUbibhVa87LWNucBGnRkGIB4a4mgx7PhdiDJlZ+SPrVKgKxSWDtlJf
+	 xjve7Ue/M7LCQ==
+Date: Fri, 7 Jun 2024 14:30:55 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	Gal Shalom <galshalom@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Masoud Moshref Javadi <mmoshrefjava@nvidia.com>,
+	Shahaf Shuler <shahafs@nvidia.com>,
+	Vikram Sethi <vsethi@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Jiandi An <jan@nvidia.com>, Tushar Dave <tdave@nvidia.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Krishna Thota <kthota@nvidia.com>,
+	Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+	"sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH V3] PCI: Extend ACS configurability
+Message-ID: <20240607193055.GA855605@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,36 +74,92 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <69dc6610-e70a-46ca-a6e9-7ca183eb055c@deltatee.com>
+In-Reply-To: <PH8PR12MB667431B8552D271F906F8F4BB8FF2@PH8PR12MB6674.namprd12.prod.outlook.com>
 
-On Fri, Jun 07, 2024 at 10:16:58AM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2024-06-06 23:03, Christoph Hellwig wrote:
-> > On Thu, Jun 06, 2024 at 10:54:06PM +0200, Greg Kroah-Hartman wrote:
-> >> On Wed, Jun 05, 2024 at 01:29:29PM -0600, Martin Oliveira wrote:
-> >>> The standard kernfs vm_ops installs a page_mkwrite() operator which
-> >>> modifies the file update time on write.
-> >>>
-> >>> This not always required (or makes sense), such as in the P2PDMA, which
-> >>> uses the sysfs file as an allocator from userspace.
-> >>
-> >> That's not a good idea, please don't do that.  sysfs binary files are
-> >> "pass through", why would you want to use this as an allocator?
+On Mon, Jun 03, 2024 at 07:50:59AM +0000, Vidya Sagar wrote:
+> Hi Bjorn,
+> Could you let me know if Jason's reply answers your question?
+> Please let me know if you are looking for any more information.
+
+I think we should add some of that content to the commit log.  It
+needs:
+
+  - Subject line that advertises some good thing.
+
+  - A description of why users want this.  I have no idea what the
+    actual benefit is, but I'm looking for something at the level of
+    "The default ACS settings put A and B in different IOMMU groups,
+    preventing P2PDMA between them.  If we disable ACS X, A and B will
+    be put in the same group and P2PDMA will work".
+
+  - A primer on how users can affect IOMMU groups by enabling/
+    disabling ACS settings so they can use this without just blind
+    trial and error.  A note that this is immutable except at boot
+    time.
+
+  - A pointer to the code that determines IOMMU groups based on the
+    ACS settings.  Similar to the above, but more useful for
+    developers.
+
+If we assert "for iommu_groups to form correctly ...", a hint about
+why/where this is so would be helpful.
+
+"Correctly" is not quite the right word here; it's just a fact that
+the ACS settings determined at boot time result in certain IOMMU
+groups.  If the user desires different groups, it's not that something
+is "incorrect"; it's just that the user may have to accept less
+isolation to get the desired IOMMU groups.
+
+> > -----Original Message-----
+> > From: Jason Gunthorpe <jgg@nvidia.com>
+> > ...
 > > 
-> > I think the real question is why sysfs binary files implement
-> > page_mkwrite by default.  page_mkwrite is needed for file systems that
-> > need to allocate space from a free space pool, which seems odd for
-> > sysfs.
-> 
-> The default page_mkwrite in kernfs just calls file_update_time() but, as
-> I understand it, the fault code should call file_update_time() if
-> page_mkwrite isn't set. So perhaps the easiest thing is to simply not
-> add a page_mkwrite unless the vm_ops adds one.
-> 
-> It's not the easiest thing to trace, but as best as I can tell there are
-> no kernfs binary attributes that use page_mkwrite. So alternatively,
-> perhaps we could just disallow page_mkwrite in kernfs entirely?
-
-Sure, let's do that.
+> > On Thu, May 23, 2024 at 09:59:36AM -0500, Bjorn Helgaas wrote:
+> > > [+cc iommu folks]
+> > >
+> > > On Thu, May 23, 2024 at 12:05:28PM +0530, Vidya Sagar wrote:
+> > > > For iommu_groups to form correctly, the ACS settings in the PCIe
+> > > > fabric need to be setup early in the boot process, either via the
+> > > > BIOS or via the kernel disable_acs_redir parameter.
+> > >
+> > > Can you point to the iommu code that is involved here?  It sounds like
+> > > the iommu_groups are built at boot time and are immutable after that?
+> > 
+> > They are created when the struct device is plugged in. pci_device_group() does the
+> > logic.
+> > 
+> > Notably groups can't/don't change if details like ACS change after the groups are
+> > setup.
+> > 
+> > There are alot of instructions out there telling people to boot their servers and then
+> > manually change the ACS flags with set_pci or something, and these are not good
+> > instructions since it defeats the VFIO group based security mechanisms.
+> > 
+> > > If we need per-device ACS config that depends on the workload, it
+> > > seems kind of problematic to only be able to specify this at boot
+> > > time.  I guess we would need to reboot if we want to run a workload
+> > > that needs a different config?
+> > 
+> > Basically. The main difference I'd see is if the server is a VM host or running bare
+> > metal apps. You can get more efficicenty if you change things for the bare metal case,
+> > and often bare metal will want to turn the iommu off while a VM host often wants
+> > more of it turned on.
+> > 
+> > > Is this the iommu usage model we want in the long term?
+> > 
+> > There is some path to more dynamic behavior here, but it would require separating
+> > groups into two components - devices that are together because they are physically
+> > sharing translation (aliases and things) from devices that are together because they
+> > share a security boundary (ACS).
+> > 
+> > It is more believable we could dynamically change security group assigments for VFIO
+> > than translation group assignment. I don't know anyone interested in this right now -
+> > Alex and I have only talked about it as a possibility a while back.
+> > 
+> > FWIW I don't view patch as excluding more dynamisism in the future, but it is the best
+> > way to work with the current state of affairs, and definitely better than set_pci
+> > instructions.
+> > 
+> > Thanks,
+> > Jason
 
