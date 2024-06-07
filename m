@@ -1,125 +1,95 @@
-Return-Path: <linux-pci+bounces-8469-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8470-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 552D1900A85
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 18:35:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05AC3900A9C
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 18:42:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0811B1F23FD9
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 16:35:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 142F11F2117F
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 16:42:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D57EB197501;
-	Fri,  7 Jun 2024 16:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 402DF195804;
+	Fri,  7 Jun 2024 16:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EDGgMQ62"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AB217C73;
-	Fri,  7 Jun 2024 16:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8E66D1B9;
+	Fri,  7 Jun 2024 16:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717777976; cv=none; b=nISM3ZAvWDGklnanBEu1shIeOYcdHyOKRRXuUBfq+rogT6fUKVJp1+yfNyL1XYcigKt1nBTDJyuceJYpF7Rg5DKkXqcQwlFYzG4HbgGSUIE9HTYW7pY0mnjUQB8QF7mtoG6lWPARDT1hepr8PyMalWxVUSr4ck/zLv/yWYOzyfc=
+	t=1717778535; cv=none; b=aHRaDAKs/Wok+GGT6OHX1S1yOZNFvyd+B6MLXwjPhZ7X/9hMLPoaMBivEQmRFAC+8rwQuM5gLunNt/QLKMjK1D0HP+Pouwszy3pTO5mI/zAqGLgIOv/X9YcpsRsdjiyfkwGbUtXSNYpY+++6sdLqAiuS5ZvIpSMv93C8OaKetXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717777976; c=relaxed/simple;
-	bh=xjv1zFkmCPNQYjWEzOpbV3VX1wRuOu9jH2q93dMSu1I=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RfF2AWoFwWrKfq5JfI7G4DKP8Y11AHWvBb3xmXtOJvYTHUfV/SelShLogeBXPr8hZwGmV8eM4sX0gWy/GftqatkMbWKnVRI0k5euE4VhSV3GEkmd0VjjE2DSRNTfXKqFjPFdgiGuWBIIZQ1cQsiy2/pFf0QIIFDWwbKxCsRZUsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VwmpJ5cDFz67RyC;
-	Sat,  8 Jun 2024 00:28:08 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A9CAE140A70;
-	Sat,  8 Jun 2024 00:32:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 17:32:51 +0100
-Date: Fri, 7 Jun 2024 17:32:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+	s=arc-20240116; t=1717778535; c=relaxed/simple;
+	bh=17Rm0c56+lqAAAeOiSXB/h23mSa17FdYfWjscUEGqcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EG925sQ010dSbh/S/uGWwViCg9P0E+CWxyTjz46EY3e3QCdvxM0WMwQmDGvkrrEpspyvWnz8gIP+R0RnsXEtfLRFx4IvLq81g+GPdZo5VFyya8zreJlY1iRNBWBSXt8lcNfZBiw24LebQJJCf9pR4o0gE4/cSmDcljW91pzYJWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EDGgMQ62; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE08C2BBFC;
+	Fri,  7 Jun 2024 16:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717778534;
+	bh=17Rm0c56+lqAAAeOiSXB/h23mSa17FdYfWjscUEGqcE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=EDGgMQ62bpIql3FU15A/tEqWLIIPML4B4w3AC2fWSjpVnGspn8jj9Js11rnE0kbce
+	 UZIXLzBJR+sSv/0qxeqfZvQNAQInBtwCKEpK4ckDKUXsdI83FNK+Yx34X+YGZMNC2I
+	 4VU6NNT5L2lKwGhp2m/oWrr5i9ACfm8+LmeoMHlHePUywEqHx2NHMNR69KSoZEn5rI
+	 J247YJXE5f360bADMtm8mWW5OkCcyxZojmYDCZJ0jrC/+kRMi6Co0tdrPa7ZS3endQ
+	 rKKXO44/FcuPNJDaeC3FdiBcCaWzKdFwRBZCR4ngbp5UqO0TU578oyqmtxfGooVH7s
+	 4zZULefLB1siw==
+Date: Fri, 7 Jun 2024 11:42:12 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
 To: Wei Huang <wei.huang2@amd.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>, <bhelgaas@google.com>,
-	<corbet@lwn.net>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <alex.williamson@redhat.com>,
-	<gospo@broadcom.com>, <michael.chan@broadcom.com>,
-	<ajit.khaparde@broadcom.com>, <somnath.kotur@broadcom.com>,
-	<andrew.gospodarek@broadcom.com>, <manoj.panicker2@amd.com>,
-	<Eric.VanTassell@amd.com>, <vadim.fedorenko@linux.dev>, <horms@kernel.org>,
-	<bagasdotme@gmail.com>
-Subject: Re: [PATCH V2 4/9] PCI/TPH: Implement a command line option to
- force No ST Mode
-Message-ID: <20240607173250.000065d7@Huawei.com>
-In-Reply-To: <20240531213841.3246055-5-wei.huang2@amd.com>
-References: <20240531213841.3246055-1-wei.huang2@amd.com>
-	<20240531213841.3246055-5-wei.huang2@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+	bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.williamson@redhat.com, gospo@broadcom.com,
+	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
+	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com
+Subject: Re: [PATCH V2 2/9] PCI: Add TPH related register definition
+Message-ID: <20240607164212.GA850739@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531213841.3246055-3-wei.huang2@amd.com>
 
-On Fri, 31 May 2024 16:38:36 -0500
-Wei Huang <wei.huang2@amd.com> wrote:
+On Fri, May 31, 2024 at 04:38:34PM -0500, Wei Huang wrote:
+> Linux has some basic, but incomplete, definition for the TPH Requester
+> capability registers. Also the control registers of TPH Requester and
+> the TPH Completer are missing. This patch adds all required definitions
+> to support TPH enablement.
 
-> When "No ST mode" is enabled, end-point devices can generate TPH headers
-> but with all steering tags treated as zero. A steering tag of zero is
-> interpreted as "using the default policy" by the root complex. This is
-> essential to quantify the benefit of steering tags for some given
-> workloads.
+s/This patch adds/Add/
 
-This is a good explanation. Need similar in the previous patch to
-justify the disable TPH entirely.
+> +#define PCI_EXP_DEVCAP2_TPH_COMP_SHIFT		12
+> +#define PCI_EXP_DEVCAP2_TPH_COMP_NONE		0x0 /* None */
+> +#define PCI_EXP_DEVCAP2_TPH_COMP_TPH_ONLY	0x1 /* TPH only */
+> +#define PCI_EXP_DEVCAP2_TPH_COMP_TPH_AND_EXT	0x3 /* TPH and Extended TPH */
 
-> diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
-> index 5dc533b89a33..d5f7309fdf52 100644
-> --- a/drivers/pci/pcie/tph.c
-> +++ b/drivers/pci/pcie/tph.c
-> @@ -43,6 +43,27 @@ static int tph_set_reg_field_u32(struct pci_dev *dev, u8 offset, u32 mask,
->  	return ret;
->  }
->  
-> +int tph_set_dev_nostmode(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +
-> +	/* set ST Mode Select to "No ST Mode" */
-> +	ret = tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
-> +				    PCI_TPH_CTRL_MODE_SEL_MASK,
-> +				    PCI_TPH_CTRL_MODE_SEL_SHIFT,
-> +				    PCI_TPH_NO_ST_MODE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set "TPH Requester Enable" to "TPH only" */
-> +	ret = tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
-> +				    PCI_TPH_CTRL_REQ_EN_MASK,
-> +				    PCI_TPH_CTRL_REQ_EN_SHIFT,
-> +				    PCI_TPH_REQ_TPH_ONLY);
+Drop the _SHIFT definitions and use FIELD_GET() and FIELD_PREP()
+instead.
 
-Unless these have to be two RMW operations. (if they do add a spec reference)
-then this is a good example of why a field update function may not be
-the right option.  We probably want to RMW once.
+>  /* TPH Requester */
+>  #define PCI_TPH_CAP		4	/* capability register */
+> +#define  PCI_TPH_CAP_NO_ST	0x1	/* no ST mode supported */
+> +#define  PCI_TPH_CAP_NO_ST_SHIFT	0x0	/* no ST mode supported shift */
 
-return tph_set_reg_field_u32()
+Drop _SHIFT and show full register width for PCI_TPH_CAP_NO_ST, e.g.,
 
-> +
-> +	return ret;
-> +}
-> +
->  int pcie_tph_disable(struct pci_dev *dev)
->  {
->  	return  tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
+  #define  PCI_TPH_CAP_NO_ST 0x00000001
 
+The existing PCI_TPH_CAP_* definitions don't follow that convention,
+but the rest of the file does, and this should match.
 
