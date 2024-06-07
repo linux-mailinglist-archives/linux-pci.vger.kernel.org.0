@@ -1,507 +1,302 @@
-Return-Path: <linux-pci+bounces-8428-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8429-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA4A28FFB4D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 07:30:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CD148FFD7F
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 09:51:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E32C91C24E22
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 05:30:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEBD61F233A9
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 07:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58A681CAAD;
-	Fri,  7 Jun 2024 05:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA8315A872;
+	Fri,  7 Jun 2024 07:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1HxqtJ7"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ETVl+EvC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD2B1CAB5;
-	Fri,  7 Jun 2024 05:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717738205; cv=none; b=EZAMlpSXHKcj8soOb/VNSchJ+9EVinDff8jbMEfD8FLYxONYEyZWZBgh/BjbhOv7WxHU1NUn3bGyyOmVKau+tMVuGwN5Y1txuLzUElBRsITS08Wv7X+tKTUej/2Aun3X4F/KjwxjzrHJQg+lqXDYLm5jkCKNsrc3NMaQBTjnxoE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717738205; c=relaxed/simple;
-	bh=JNsYg7IgY/rGtWW1IdUtrLdC0SGymdQEPNHvabe0qBw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bpmwjm4WYwH+zfDFmcA8spP+GZOu7WoCfQszmPHjDlQBvvR4j3lHKm/mZFsdTVx2qTi4xdqZZaJQ4w1ZA/eVmmS5zulwECyMrZJpLnk6ouO1GtEhTgAsONH32Uxj/w2Xx/lLQRMmSyU6ApLVwcyEgMumB2xYByUPYeXGuQ/2MWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c1HxqtJ7; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-48bdcecf6efso620958137.3;
-        Thu, 06 Jun 2024 22:30:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717738202; x=1718343002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n4dokQkRuIX28srFwm2T3xaISBHBgBdWh4n8GgTWxnE=;
-        b=c1HxqtJ77qyqIkSML21sCQKuwu8GbhudCHPAhH85SJKlb9wdr8SFjfUAHdZzQv4hHY
-         JgeERqx3wl55iLRETzoRoNaxov1PJqpBxEtazY+awz9U7dDSlLc+qOjI5qV81eWvHMib
-         XZ6Q/kroODCiE3H9aXrB7l0NLg5QzR1kT+CY1lhafsYBPOTIG8qSfF1uqBsgtaJk6qSj
-         B8l+duvTp4mPlQ4K+BziizUFrwEwF5qqPCWC2UFMbuqglsvACPDKCx3VV3ThpBB53W4l
-         qUFJcHINYTn2zLcmJeRtIuCV/U8lcWCQLICkkjWVBkl4yriYSkcOjU+nDDtaSjQrw5jm
-         uLEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717738202; x=1718343002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n4dokQkRuIX28srFwm2T3xaISBHBgBdWh4n8GgTWxnE=;
-        b=beDkOjdcyYo7dnjhs8eAgI5iU6/Jgls3Z0wEh6DtMuNBPmpsJQggg2ZG0B62kEVrst
-         YvXnzTCysqiRRhs+N6KzZbaDADUx99YuUypoJKGoWVxfJPyS6jidMxu+bjF2M+2ISAbR
-         C6TiXCrc9JDrq1BCtpMt0sn9u/zGQdlDBcPb2aSyCYPNXsJ7cKsbQwJtK/YpE90sGYz5
-         koodAtxbPghfVWCUqqne60POrJs6Fuvk62JI20sn42uwU0gRmBmpeE2LiX8esANqYDSB
-         LpNj5+1YxetJDzhQ9L7uHivApzSy00+VgRmpAGKMMIT0r9QN+YXACCculvRQ4chAsb0h
-         YM3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVK+0aTOwI1Kqp/SAhLLE1TTLqJKfz68KO6jm8jGTcTRgMO75KW5gBqUD4UVmw1MvjCby5XNbVaoPOJago78xPLNZvjfUFlsSfyhK6+jtsCeONwtDnB2kl6u1rtbK7LEaQ/tt87HRZ0
-X-Gm-Message-State: AOJu0YypmqzhczG4ZGDYb+OtnG6xl4DkcV06aaqfZxkxhS2E8G6IgRh9
-	ZsR1slklE3PjpDGZQ1ht2vhTWikCIYRFJd8mLUASFZveMicEnSgq1uvXcStnIbK8JJxEGZHVvBQ
-	DUmTOeJ1ENhiZ5O7CCWXNhW3tuI8=
-X-Google-Smtp-Source: AGHT+IHX0st7rknp+WdI2lIpnKYcXMs5BTOOEXlhPEVIa4If6gQMRsX78xwjT4hMwvv6UXDOlQ2zY/8ZXqbruhDi4SE=
-X-Received: by 2002:a05:6102:2135:b0:48b:f61b:75ac with SMTP id
- ada2fe7eead31-48c275519afmr1358365137.11.1717738202016; Thu, 06 Jun 2024
- 22:30:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B145715A86E;
+	Fri,  7 Jun 2024 07:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717746692; cv=fail; b=IWDQNgyPW7FmC3kY57D2cLbfpArjadYWumxZcuAdakH5E3Z3xBhLT1QJ3of81tS54LfNiwkyIhVJesBD76AvXoTwC3mXJFGB/5A1I7XwN+9rbvSgl8V6m9P7XBbjCwqJvyL+9XgOERw83OcSjuNuu7Xf1GOBuJ2jTIXZKWuEncQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717746692; c=relaxed/simple;
+	bh=9535yUrCJ/2F9Dw7R7wyym8KIFyh042E1U9r212USY4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TpVXYj6s+cOGPwfVgPoDbuh+0Ds+8O/kCE4qJlg3AaxPSh1eknadFyHxj7Ca8dfyzRejQiA616dIgw48HQl4KymySzNiUOPTDYUuJJQoJZ9vKVk9/wcWpqxtlLsZdIbc/OzsNV3XwR9rdV1eGrkpBA5ZqWG2PpNVv6ouu2vJOmE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ETVl+EvC; arc=fail smtp.client-ip=40.107.236.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MMX4/znEupsgzpoFMvMV/WPDPPQ2UBL/cFEjzdhWkcQgDnodewZpgAMW7MwKFi4mVi6gngIRXT2w65wHM+Y6991C3HZf6yLwUAwOBllp3WAmPAcHpKKIrBBUpk80KG0+qvpYjYtCGQqxwPiLnlfO8sKpNpXVQSbZsGpo2Coc8kszFWUrpfIJCB/2NMOz2oqERuX+/LiOGgQXgaeQ+dat1X4JpoeeBquaccQGp2OySIlbE3Ti39P9lkZBzc9GS6IV/DObff/kVl5syNsmbPrwxhKZy5nJ6kE5OHDQcBUdkwGHWlUhgVPUMl880sn5LuLPDHx8NfDhs7RwswVkF7ITgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P0rNKlh4YHIIL4TR9dCsbVJChfs3QK+5ViLp0qK0wcg=;
+ b=ODdt8svolw8jb5WBoXe/Re5p7BfK6hdvSNhQ6ARJFbj/I9y/OE5Stci9WtHlvDG5pWH979p4WE0p90YSPru7oy+nMNJ2pt302CMElJR5kRDFJmKitYDCDzdj7BnBJ3igfXh5/nbbiRLUjtrXg4XVS0avD4PrfuOuonnA7ePiyk5SD3XO5clXyU4dnL7Psg1gKGloKtz/4SsK7P7OUzvzCAzNL726uvC3cUJFChTHwnaJNWzNeWlY4wUUr6hObR4hG5OSstyq+Fe1JQIZzjBKPvmV3NDKl9yYR7lC4zQyhLvtyjrENSOfCFL86Zv2Xfa6OW7yYCrVgSO9ct1F7m37Iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P0rNKlh4YHIIL4TR9dCsbVJChfs3QK+5ViLp0qK0wcg=;
+ b=ETVl+EvCzNjfMzQj7tvapRQ5dhS98bL/5SZyeixjbRfDTmK03/XjFUQK1oWUFV1XwIlIc1QvpNhEo+WiiIKr53EI2lQFDUR7KMyLVDeN9PQIInCnOee8RK5h/9Q+NGTVj7I6dzrILBl6BYgKhM41xAKyBfJ8yfs85cZ87M9FhRA=
+Received: from BN1PR13CA0023.namprd13.prod.outlook.com (2603:10b6:408:e2::28)
+ by SA3PR12MB7860.namprd12.prod.outlook.com (2603:10b6:806:307::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Fri, 7 Jun
+ 2024 07:51:27 +0000
+Received: from BN3PEPF0000B36F.namprd21.prod.outlook.com
+ (2603:10b6:408:e2:cafe::41) by BN1PR13CA0023.outlook.office365.com
+ (2603:10b6:408:e2::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.13 via Frontend
+ Transport; Fri, 7 Jun 2024 07:51:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B36F.mail.protection.outlook.com (10.167.243.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.0 via Frontend Transport; Fri, 7 Jun 2024 07:51:26 +0000
+Received: from cjq-desktop.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 7 Jun
+ 2024 02:51:23 -0500
+From: Jiqian Chen <Jiqian.Chen@amd.com>
+To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J .
+ Wysocki" <rafael@kernel.org>, =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?=
+	<roger.pau@citrix.com>
+CC: <xen-devel@lists.xenproject.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>, Huang Rui
+	<Ray.Huang@amd.com>, Jiqian Chen <Jiqian.Chen@amd.com>
+Subject: [RFC KERNEL PATCH v8 0/2] Support device passthrough when dom0 is PVH on Xen
+Date: Fri, 7 Jun 2024 15:51:06 +0800
+Message-ID: <20240607075109.126277-1-Jiqian.Chen@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522101142.559733-1-alistair.francis@wdc.com>
- <20240522101142.559733-3-alistair.francis@wdc.com> <20240523122448.0000799f@Huawei.com>
-In-Reply-To: <20240523122448.0000799f@Huawei.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Fri, 7 Jun 2024 15:29:35 +1000
-Message-ID: <CAKmqyKOorOx71y5T-O6HcZWP-CpU=9=0QkRUq5VLa+FqZpaEOA@mail.gmail.com>
-Subject: Re: [PATCH v10 3/4] PCI/DOE: Expose the DOE features via sysfs
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de, 
-	alex.williamson@redhat.com, christian.koenig@amd.com, kch@nvidia.com, 
-	gregkh@linuxfoundation.org, logang@deltatee.com, linux-kernel@vger.kernel.org, 
-	chaitanyak@nvidia.com, rdunlap@infradead.org, 
-	Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36F:EE_|SA3PR12MB7860:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79878ae9-8039-442d-e60f-08dc86c6a289
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|82310400017|376005|36860700004|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8TvU9vdS00BOx6p+248e3Htxc6+U902JaIcSj8sjITpBSuRtoykDkGympfnI?=
+ =?us-ascii?Q?z0Het+eipdV1h8LBKXI9b8DQFnKncZmTnmfv2GcceDP5ij/z+GF2UaWzk+s+?=
+ =?us-ascii?Q?iIVTygvekYcCuRSSUppszxPX9MJm7kNiC3sa8ZDw9ZZVDhJ1OPCLa9XYV0Dy?=
+ =?us-ascii?Q?V0rSFJvLddl0xaX0kodKE2ysPZYSYNkchYFbjZfl5eeBfyjmAwFljNka32mg?=
+ =?us-ascii?Q?RcBHtVxpvu32UNGkDbnOgCp9y0l9QocIElbhkCeowCNKb3P3ZbCeXeqNGp4j?=
+ =?us-ascii?Q?vElMXDnVo5vF33B0uvtu5cn/e8zWHKn7RNBHnjZzY6yB76EPofNFYWMPNJ+F?=
+ =?us-ascii?Q?32NF/dx4NI2LeoexDaFl8YPZwtcDOZmF8CpEJlSO2hLs/mmVOcC6UZO6JGFT?=
+ =?us-ascii?Q?iKrlsxm0H0TkyYf6IVtP52wwGRVjva63wJk77zHENpXc9dasFa9kw3E7fRN0?=
+ =?us-ascii?Q?AFtddfa/jlf4e0m+9tTysGt56oS8Rgt0KYKKoBuzYCuUeoHKk2PAv1zyyF5L?=
+ =?us-ascii?Q?DlZduqlFUCECSfs5vWq5Gq0LLVC5+iDSsADUS5EBvAd/Wrm+hRetNjc55qYW?=
+ =?us-ascii?Q?+efKKcau1e/iBKwGDeN/9VSTIpAGz2dtAQC+CsNh1y/O+Qqup6DfdRewLnC8?=
+ =?us-ascii?Q?tDviS4nkx2p4GUPQtXZT4VuGi35OfhRM79XvWC/rZZMLs/oRZ4JMND/Q8joQ?=
+ =?us-ascii?Q?ZTRxAuQ51eXLD9kvy8NUNHbCA9NHBRlH6KsMaunYdu5yLedJY2hS1Wt+vdkA?=
+ =?us-ascii?Q?DeuURXVehJrMt9Xn0JmOYbGZsA7iPn79m3uTP3BTObS/ChrOPLMaALllvimr?=
+ =?us-ascii?Q?d1q987htENKt2f4x3jf4+vHLUnj2FeIiFhUqqvCJlh4Uzft1B39J+65lOtGK?=
+ =?us-ascii?Q?CpgmL4aYazzGDb0CYwyAw3Fu59/t7mL+NP+DCj6Ysq817pplDHhWI6LAAV2e?=
+ =?us-ascii?Q?lzFFFpZSAjhyRlK3B4iWalQYEocgiRUAnAAuL4Pa4xI7nkii+JYhVNUhqMBa?=
+ =?us-ascii?Q?KzKaRKef2rHa9bQdqqs2mhts2KtS9H4xBb0JNK6BsKGvyj8gYf74vC19CJ87?=
+ =?us-ascii?Q?2vn+hdAfkQjyYcAcIBky9StbobyHBEb7RBoSVM+STBlOZR1bRJNW4/pLr+Ls?=
+ =?us-ascii?Q?8ATb/Zn/TcUKEqHmAM2hskXTUKtPnQ3uGXbNbeFyx717NIZ/tOFYCdHQaD+E?=
+ =?us-ascii?Q?n85VQ4Lrna0oqWB8kKx/Pq+5Sk5UxEKFrH4y4MU8y7gah3m7oOojrl2ZISvL?=
+ =?us-ascii?Q?JClbPFa7vEs5NjaKTJFMuPZ6NCxig6NLl1IgfV0KeMnPrFdSXrF63M9zw+p0?=
+ =?us-ascii?Q?brXzCbPk78pn5rc8p+BkV6g6SuwTpKE+8LwJBxUchkuz/qA4K6Cqq0SDt+KI?=
+ =?us-ascii?Q?5rPKVs5J1K5cCTVkntQB8bU5TOyrBxbSO45iy0zuoVMZNXDprUU6NmGz/VMz?=
+ =?us-ascii?Q?WyaGZWo66aI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(376005)(36860700004)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 07:51:26.7579
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79878ae9-8039-442d-e60f-08dc86c6a289
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B36F.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7860
 
-On Thu, May 23, 2024 at 9:24=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Wed, 22 May 2024 20:11:41 +1000
-> Alistair Francis <alistair23@gmail.com> wrote:
->
-> > The PCIe 6 specification added support for the Data Object
-> > Exchange (DOE).
-> > When DOE is supported the DOE Discovery Feature must be implemented per
-> > PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-> > information about the other DOE features supported by the device.
-> >
-> > The kernel is already querying the DOE features supported and cacheing
-> > the values. Expose the values in sysfs to allow user space to
-> > determine which DOE features are supported by the PCIe device.
-> >
-> > By exposing the information to userspace tools like lspci can relay the
-> > information to users. By listing all of the supported features we can
-> > allow userspace to parse the list, which might include
-> > vendor specific features as well as yet to be supported features.
-> >
-> > As the DOE Discovery feature must always be supported we treat it as a
-> > special named attribute case. This allows the usual PCI attribute_group
-> > handling to correctly create the doe_features directory when registerin=
-g
-> > pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
-> > will seg fault).
-> >
-> > After this patch is supported you can see something like this when
-> > attaching a DOE device
-> >
-> > $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-> > 0001:01        0001:02        doe_discovery
-> >
-> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
->
-> What happens if multiple DOE which support the same protocol?
-> (IIRC that's allowed).  You probably need to paper over repeat
-> sysfs attributes and make sure they don't get double freed etc.
+Hi All,
+This is v8 series to support passthrough on Xen when dom0 is PVH.
+v7->v8 change:
+* patch#1: This is the patch#1 of v6, because it is reverted from the staging branch due to the API changes on Xen side.
+           Add pci_device_state_reset_type_t to distinguish the reset types.
+* patch#2: is the patch#1 of v7. Use CONFIG_XEN_ACPI instead of CONFIG_ACPI to wrap codes.
+* patch#3: is the patch#2 of v7. In function privcmd_ioctl_gsi_from_dev, return -EINVAL when not confige CONFIG_XEN_ACPI.
+           use PCI_BUS_NUM PCI_SLOT PCI_FUNC instead of open coding.
 
-Fair point. I changed pci_doe_sysfs_feature_populate() to not fall
-over if the entry already exists, we just skip adding it.
 
-pci_doe_sysfs_feature_remove() should already handle double entries
-with the attrs[i].show check.
+Best regards,
+Jiqian Chen
 
->
-> Otherwise some minor things inline.
->
-> Jonathan
->
->
-> > ---
-> > v10:
-> >  - Rebase to use DEFINE_SYSFS_GROUP_VISIBLE and remove
-> >    special setup function
-> > v9:
-> >  - Add a teardown function
-> >  - Rename functions to be clearer
-> >  - Tidy up the commit message
-> >  - Remove #ifdef from header
-> > v8:
-> >  - Inlucde an example in the docs
-> >  - Fixup removing a file that wasn't added
-> >  - Remove a blank line
-> > v7:
-> >  - Fixup the #ifdefs to keep the test robot happy
-> > v6:
-> >  - Use "feature" instead of protocol
-> >  - Don't use any devm_* functions
-> >  - Add two more patches to the series
-> > v5:
-> >  - Return the file name as the file contents
-> >  - Code cleanups and simplifications
-> > v4:
-> >  - Fixup typos in the documentation
-> >  - Make it clear that the file names contain the information
-> >  - Small code cleanups
-> >  - Remove most #ifdefs
-> >  - Remove extra NULL assignment
-> > v3:
-> >  - Expose each DOE feature as a separate file
-> > v2:
-> >  - Add documentation
-> >  - Code cleanups
-> >
-> >  Documentation/ABI/testing/sysfs-bus-pci |  28 ++++
-> >  drivers/pci/doe.c                       | 175 ++++++++++++++++++++++++
-> >  drivers/pci/pci-sysfs.c                 |  13 ++
-> >  drivers/pci/pci.h                       |  10 ++
-> >  4 files changed, 226 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/AB=
-I/testing/sysfs-bus-pci
-> > index ecf47559f495..65a3238ab701 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > @@ -500,3 +500,31 @@ Description:
-> >               console drivers from the device.  Raw users of pci-sysfs
-> >               resourceN attributes must be terminated prior to resizing=
-.
-> >               Success of the resizing operation is not guaranteed.
-> > +
-> > +What:                /sys/bus/pci/devices/.../doe_features
-> > +Date:                May 2024
-> > +Contact:     Linux PCI developers <linux-pci@vger.kernel.org>
-> > +Description:
-> > +             This directory contains a list of the supported
-> > +             Data Object Exchange (DOE) features. The features are
-> > +             the file name. The contents of each file is the raw vendo=
-r id and
-> > +             data object feature values.
-> > +
-> > +             The value comes from the device and specifies the vendor =
-and
-> > +             data object type supported. The lower (RHS of the colon) =
-is
-> > +             the data object type in hex. The upper (LHS of the colon)
-> > +             is the vendor ID.
-> > +
-> > +             As all DOE devices must support the DOE discovery protoco=
-l, if
-> > +             DOE is supported you will at least see the doe_discovery =
-file, with
-> > +             this contents
-> > +
-> > +             # cat doe_features/doe_discovery
-> > +             0001:00
-> > +
-> > +             If the device supports other protocols you will see other=
- files
-> > +             as well. For example is CMA/SPDM and secure CMA/SPDM are =
-supported
-> > +             the doe_features directory will look like this
-> > +
-> > +             # ls doe_features
-> > +             0001:01        0001:02        doe_discovery
-> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > index defc4be81bd4..7a20a257df5a 100644
-> > --- a/drivers/pci/doe.c
-> > +++ b/drivers/pci/doe.c
-> > @@ -47,6 +47,7 @@
-> >   * @wq: Wait queue for work item
-> >   * @work_queue: Queue of pci_doe_work items
-> >   * @flags: Bit array of PCI_DOE_FLAG_* flags
-> > + * @sysfs_attrs: Array of sysfs device attributes
-> >   */
-> >  struct pci_doe_mb {
-> >       struct pci_dev *pdev;
-> > @@ -56,6 +57,10 @@ struct pci_doe_mb {
-> >       wait_queue_head_t wq;
-> >       struct workqueue_struct *work_queue;
-> >       unsigned long flags;
-> > +
-> > +#ifdef CONFIG_SYSFS
-> > +     struct device_attribute *sysfs_attrs;
-> > +#endif
-> >  };
-> >
-> >  struct pci_doe_feature {
-> > @@ -92,6 +97,176 @@ struct pci_doe_task {
-> >       struct pci_doe_mb *doe_mb;
-> >  };
-> >
-> > +#ifdef CONFIG_SYSFS
-> > +static ssize_t doe_discovery_show(struct device *dev,
-> > +                               struct device_attribute *attr,
-> > +                               char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "0001:00\n");
-> > +}
-> > +DEVICE_ATTR_RO(doe_discovery);
-> > +
-> > +static struct attribute *pci_doe_sysfs_feature_attrs[] =3D {
-> > +     &dev_attr_doe_discovery.attr,
-> > +     NULL,
->
-> No comma needed on the null terminator as we'll never add anything after
-> it.
->
-> > +};
-> > +
-> > +static umode_t pci_doe_sysfs_attr_visible(struct kobject *kobj,
-> > +                                       struct attribute *a, int n)
-> > +{
-> > +     struct pci_dev *pdev =3D to_pci_dev(kobj_to_dev(kobj));
-> > +     struct pci_doe_mb *doe_mb;
-> > +     unsigned long index, j;
-> > +     unsigned long vid, type;
-> > +     void *entry;
-> > +
-> > +     xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> > +             xa_for_each(&doe_mb->feats, j, entry) {
-> > +                     vid =3D xa_to_value(entry) >> 8;
-> > +                     type =3D xa_to_value(entry) & 0xFF;
-> > +
-> > +                     if (vid =3D=3D 0x01 && type =3D=3D 0x00) {
-> > +                             /* This is the DOE discovery protocol
-> local comment syntax is the
->                                 /*
->                                  * This is the
-> form so stick to that.
->
->
-> Shouldn't this also return a->mode for any case where the particular attr=
-ibute
-> matches?  I guess is_visible() isn't called for late registered sysfs att=
-ributes
-> though I think it probably should be!
 
-The is_visible is only called for the original doe_features attribute,
-I will update the names of the functions to make this clear.
 
->
-> > +                              * Every DOE instance must support this, =
-so we
-> > +                              * give it a useful name.
-> > +                              */
-> > +                             return a->mode;
-> > +                     }
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static bool pci_doe_sysfs_group_visible(struct kobject *kobj)
-> > +{
-> > +     struct pci_dev *pdev =3D to_pci_dev(kobj_to_dev(kobj));
-> > +     struct pci_doe_mb *doe_mb;
-> > +     unsigned long index, j;
-> > +     void *entry;
-> > +
-> > +     xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> > +             xa_for_each(&doe_mb->feats, j, entry)
-> Is this simpler as
->                 if (!xa_empty(&doe_mb->feats))
->                         return true;
+v6->v7 change:
+* the first patch of v6 was already merged into branch linux_next.
+* patch#1: is the patch#2 of v6. move the implementation of function xen_acpi_get_gsi_info to
+           file drivers/xen/acpi.c, that modification is more convenient for the subsequent
+           patch to obtain gsi.
+* patch#2: is the patch#3 of v6. add a new parameter "gsi" to struct pcistub_device and set
+           gsi when pcistub initialize device. Then when userspace wants to get gsi by passing
+           sbdf, we can return that gsi.
 
-Fine with me
 
->
-> > +                     return true;
-> > +     }
-> > +
-> > +     return false;
-> > +}
-> > +DEFINE_SYSFS_GROUP_VISIBLE(pci_doe_sysfs)
-> > +
-> > +const struct attribute_group pci_doe_sysfs_group =3D {
-> > +     .name       =3D "doe_features",
-> > +     .attrs      =3D pci_doe_sysfs_feature_attrs,
-> > +     .is_visible =3D SYSFS_GROUP_VISIBLE(pci_doe_sysfs),
-> > +};
-> > +
-> > +static ssize_t pci_doe_sysfs_feature_show(struct device *dev,
-> > +                                       struct device_attribute *attr,
-> > +                                       char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n", attr->attr.name);
-> > +}
-> > +
-> > +static void pci_doe_sysfs_feature_remove(struct pci_dev *pdev,
-> > +                                      struct pci_doe_mb *doe_mb)
-> > +{
-> > +     struct device_attribute *attrs =3D doe_mb->sysfs_attrs;
-> > +     struct device *dev =3D &pdev->dev;
-> > +     unsigned long i;
-> > +     void *entry;
-> > +
-> > +     if (!attrs)
-> > +             return;
-> > +
-> > +     doe_mb->sysfs_attrs =3D NULL;
-> > +     xa_for_each(&doe_mb->feats, i, entry) {
->
-> I'm not particularly keen on using an index over the xa
-> just to get the number of elements for the loop limit.
-> Maybe just store that when you allocate attrs?
+v5->v6 change:
+* patch#3: change to add a new syscall to translate irq to gsi, instead adding a new gsi sysfs.
 
-Is that really any better? Then we have another value to keep track
-of. Plus this gets trickier if we skip a duplicate entry.
 
->
-> > +             if (attrs[i].show)
-> > +                     sysfs_remove_file_from_group(&dev->kobj, &attrs[i=
-].attr,
-> > +                                                  pci_doe_sysfs_group.=
-name);
-> > +             kfree(attrs[i].attr.name);
-> > +     }
-> > +     kfree(attrs);
-> > +}
-> > +
-> > +static int pci_doe_sysfs_feature_populate(struct pci_dev *pdev,
-> > +                                       struct pci_doe_mb *doe_mb)
-> > +{
-> > +     struct device *dev =3D &pdev->dev;
-> > +     struct device_attribute *attrs;
-> > +     unsigned long num_features =3D 0;
-> > +     unsigned long vid, type;
-> > +     unsigned long i;
-> > +     void *entry;
-> > +     int ret;
-> > +
-> > +     xa_for_each(&doe_mb->feats, i, entry)
-> > +             num_features++;
-> > +
-> > +     attrs =3D kcalloc(num_features, sizeof(*attrs), GFP_KERNEL);
-> > +     if (!attrs)
-> > +             return -ENOMEM;
-> > +
-> > +     doe_mb->sysfs_attrs =3D attrs;
-> > +     xa_for_each(&doe_mb->feats, i, entry) {
-> > +             sysfs_attr_init(&attrs[i].attr);
-> > +             vid =3D xa_to_value(entry) >> 8;
-> > +             type =3D xa_to_value(entry) & 0xFF;
-> > +
-> > +             if (vid =3D=3D 0x01 && type =3D=3D 0x00) {
-> > +                     // DOE Discovery, manually displayed by `dev_attr=
-_doe_discovery`
->
-> /* */ syntax.
->
-> > +                     continue;
-> > +             }
-> > +
-> > +             attrs[i].attr.name =3D kasprintf(GFP_KERNEL,
-> > +                                            "%04lx:%02lx", vid, type);
-> > +             if (!attrs[i].attr.name) {
-> > +                     ret =3D -ENOMEM;
-> > +                     goto fail;
-> > +             }
-> > +
-> > +             attrs[i].attr.mode =3D 0444;
-> > +             attrs[i].show =3D pci_doe_sysfs_feature_show;
-> > +
-> > +             ret =3D sysfs_add_file_to_group(&dev->kobj, &attrs[i].att=
-r,
-> > +                                           pci_doe_sysfs_group.name);
-> > +             if (ret) {
-> > +                     attrs[i].show =3D NULL;
-> > +                     goto fail;
->
-> Repeated DOE 'features' on different DOE instances may cause this to fail=
-.
+v4->v5 changes:
+* patch#1: Add Reviewed-by Stefano
+* patch#2: Add Reviewed-by Stefano
+* patch#3: No changes
 
-We just skip that case then
 
-Alistair
+v3->v4 changes:
+* patch#1: change the comment of PHYSDEVOP_pci_device_state_reset; use a new function
+           pcistub_reset_device_state to wrap __pci_reset_function_locked and xen_reset_device_state,
+           and call pcistub_reset_device_state in pci_stub.c
+* patch#2: remove map_pirq from xen_pvh_passthrough_gsi
 
->
->
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +fail:
-> > +     pci_doe_sysfs_feature_remove(pdev, doe_mb);
-> > +     return ret;
-> > +}
->
-> >  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeo=
-ut)
-> >  {
-> >       if (wait_event_timeout(doe_mb->wq,
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 40cfa716392f..b5db191cb29f 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/pci-doe.h>
-> >  #include <linux/stat.h>
-> >  #include <linux/export.h>
-> >  #include <linux/topology.h>
-> > @@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_=
-dev *pdev)
-> >  {
-> >       int i;
-> >
-> > +     if (IS_ENABLED(CONFIG_PCI_DOE))
-> > +             pci_doe_sysfs_teardown(pdev);
-> > +
-> >       for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
-> >               struct bin_attribute *res_attr;
-> >
-> > @@ -1227,6 +1231,12 @@ static int pci_create_resource_files(struct pci_=
-dev *pdev)
-> >       int i;
-> >       int retval;
-> >
-> > +     if (IS_ENABLED(CONFIG_PCI_DOE)) {
-> > +             retval =3D pci_doe_sysfs_init(pdev);
-> > +             if (retval)
-> > +                     return retval;
-> > +     }
-> > +
-> >       /* Expose the PCI resources from this device as files */
-> >       for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
-> >
-> > @@ -1661,6 +1671,9 @@ const struct attribute_group *pci_dev_attr_groups=
-[] =3D {
-> >  #endif
-> >  #ifdef CONFIG_PCIEASPM
-> >       &aspm_ctrl_attr_group,
-> > +#endif
-> > +#ifdef CONFIG_PCI_DOE
-> > +     &pci_doe_sysfs_group,
-> >  #endif
-> >       NULL,
-> >  };
->
->
+
+v2->v3 changes:
+* patch#1: add condition to limit do xen_reset_device_state for no-pv domain in pcistub_init_device.
+* patch#2: Abandoning previous implementations that call unmask_irq. To setup gsi and map pirq for
+           passthrough device in pcistub_init_device.
+* patch#3: Abandoning previous implementations that adds new syscall to get gsi from irq. To add a new
+           sysfs for gsi, then userspace can get gsi number from sysfs.
+
+
+Below is the description of v2 cover letter:
+This series of patches are the v2 of the implementation of passthrough when dom0 is PVH on Xen.
+We sent the v1 to upstream before, but the v1 had so many problems and we got lots of suggestions.
+I will introduce all issues that these patches try to fix and the differences between v1 and v2.
+
+Issues we encountered:
+1. pci_stub failed to write bar for a passthrough device.
+Problem: when we run \u201csudo xl pci-assignable-add <sbdf>\u201d to assign a device, pci_stub will
+call \u201cpcistub_init_device() -> pci_restore_state() -> pci_restore_config_space() ->
+pci_restore_config_space_range() -> pci_restore_config_dword() -> pci_write_config_dword(), the pci
+config write will trigger an io interrupt to bar_write() in the xen, but the bar->enabled was set before,
+the write is not allowed now, and then when bar->Qemu config the passthrough device in xen_pt_realize(),
+it gets invalid bar values.
+
+Reason: the reason is that we don't tell vPCI that the device has been reset, so the current cached state
+in pdev->vpci is all out of date and is different from the real device state.
+
+Solution: to solve this problem, the first patch of kernel(xen/pci: Add xen_reset_device_state
+function) and the fist patch of xen(xen/vpci: Clear all vpci status of device) add a new hypercall to
+reset the state stored in vPCI when the state of real device has changed.
+Thank Roger for the suggestion of this v2, and it is different from v1
+(https://lore.kernel.org/xen-devel/20230312075455.450187-3-ray.huang@amd.com/), v1 simply allow domU to
+write pci bar, it does not comply with the design principles of vPCI.
+
+2. failed to do PHYSDEVOP_map_pirq when dom0 is PVH
+Problem: HVM domU will do PHYSDEVOP_map_pirq for a passthrough device by using gsi. See
+xen_pt_realize->xc_physdev_map_pirq and pci_add_dm_done->xc_physdev_map_pirq. Then xc_physdev_map_pirq
+will call into Xen, but in hvm_physdev_op(), PHYSDEVOP_map_pirq is not allowed.
+
+Reason: In hvm_physdev_op(), the variable "currd" is PVH dom0 and PVH has no X86_EMU_USE_PIRQ flag, it
+will fail at has_pirq check.
+
+Solution: I think we may need to allow PHYSDEVOP_map_pirq when "currd" is dom0 (at present dom0 is PVH).
+The second patch of xen(x86/pvh: Open PHYSDEVOP_map_pirq for PVH dom0) allow PVH dom0 do
+PHYSDEVOP_map_pirq. This v2 patch is better than v1, v1 simply remove the has_pirq check
+(xen https://lore.kernel.org/xen-devel/20230312075455.450187-4-ray.huang@amd.com/).
+
+3. the gsi of a passthrough device doesn't be unmasked
+ 3.1 failed to check the permission of pirq
+ 3.2 the gsi of passthrough device was not registered in PVH dom0
+
+Problem:
+3.1 callback function pci_add_dm_done() will be called when qemu config a passthrough device for domU.
+This function will call xc_domain_irq_permission()-> pirq_access_permitted() to check if the gsi has
+corresponding mappings in dom0. But it didn\u2019t, so failed. See
+XEN_DOMCTL_irq_permission->pirq_access_permitted, "current" is PVH dom0 and it return irq is 0.
+3.2 it's possible for a gsi (iow: vIO-APIC pin) to never get registered on PVH dom0, because the
+devices of PVH are using MSI(-X) interrupts. However, the IO-APIC pin must be configured for it to be
+able to be mapped into a domU.
+
+Reason: After searching codes, I find "map_pirq" and "register_gsi" will be done in function
+vioapic_write_redirent->vioapic_hwdom_map_gsi when the gsi(aka ioapic's pin) is unmasked in PVH dom0.
+So the two problems can be concluded to that the gsi of a passthrough device doesn't be unmasked.
+
+Solution: to solve these problems, the second patch of kernel(xen/pvh: Unmask irq for passthrough device
+in PVH dom0) call the unmask_irq() when we assign a device to be passthrough. So that passthrough devices
+can have the mapping of gsi on PVH dom0 and gsi can be registered. This v2 patch is different from the
+v1( kernel https://lore.kernel.org/xen-devel/20230312120157.452859-5-ray.huang@amd.com/,
+kernel https://lore.kernel.org/xen-devel/20230312120157.452859-5-ray.huang@amd.com/ and
+xen https://lore.kernel.org/xen-devel/20230312075455.450187-5-ray.huang@amd.com/),
+v1 performed "map_pirq" and "register_gsi" on all pci devices on PVH dom0, which is unnecessary and may
+cause multiple registration.
+
+4. failed to map pirq for gsi
+Problem: qemu will call xc_physdev_map_pirq() to map a passthrough device\u2019s gsi to pirq in function
+xen_pt_realize(). But failed.
+
+Reason: According to the implement of xc_physdev_map_pirq(), it needs gsi instead of irq, but qemu pass
+irq to it and treat irq as gsi, it is got from file /sys/bus/pci/devices/xxxx:xx:xx.x/irq in function
+xen_host_pci_device_get(). But actually the gsi number is not equal with irq. On PVH dom0, when it
+allocates irq for a gsi in function acpi_register_gsi_ioapic(), allocation is dynamic, and follow the
+principle of applying first, distributing first. And if you debug the kernel codes(see
+function __irq_alloc_descs), you will find the irq number is allocated from small to large by order, but
+the applying gsi number is not, gsi 38 may come before gsi 28, that causes gsi 38 get a smaller irq number
+than gsi 28, and then gsi != irq.
+
+Solution: we can record the relation between gsi and irq, then when userspace(qemu) want to use gsi, we
+can do a translation. The third patch of kernel(xen/privcmd: Add new syscall to get gsi from irq) records
+all the relations in acpi_register_gsi_xen_pvh() when dom0 initialize pci devices, and provide a syscall
+for userspace to get the gsi from irq. The third patch of xen(tools: Add new function to get gsi from irq)
+add a new function xc_physdev_gsi_from_irq() to call the new syscall added on kernel side.
+And then userspace can use that function to get gsi. Then xc_physdev_map_pirq() will success. This v2 patch
+is the same as v1( kernel https://lore.kernel.org/xen-devel/20230312120157.452859-6-ray.huang@amd.com/ and
+xen https://lore.kernel.org/xen-devel/20230312075455.450187-6-ray.huang@amd.com/)
+
+About the v2 patch of qemu, just change an included head file, other are similar to the v1 (
+qemu https://lore.kernel.org/xen-devel/20230312092244.451465-19-ray.huang@amd.com/), just call
+xc_physdev_gsi_from_irq() to get gsi from irq.
+
+Jiqian Chen (3):
+  xen/pci: Add xen_reset_device_function_state
+  xen/pvh: Setup gsi for passthrough device
+  xen/privcmd: Add new syscall to get gsi from dev
+
+ arch/x86/xen/enlighten_pvh.c       | 23 +++++++++
+ drivers/acpi/pci_irq.c             |  2 +-
+ drivers/xen/acpi.c                 | 50 +++++++++++++++++++
+ drivers/xen/pci.c                  | 25 ++++++++++
+ drivers/xen/privcmd.c              | 28 +++++++++++
+ drivers/xen/xen-pciback/pci_stub.c | 77 +++++++++++++++++++++++++++---
+ include/linux/acpi.h               |  1 +
+ include/uapi/xen/privcmd.h         |  7 +++
+ include/xen/acpi.h                 | 19 ++++++++
+ include/xen/interface/physdev.h    |  7 +++
+ include/xen/pci.h                  |  6 +++
+ 11 files changed, 238 insertions(+), 7 deletions(-)
+
+-- 
+2.34.1
+
 
