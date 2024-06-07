@@ -1,282 +1,257 @@
-Return-Path: <linux-pci+bounces-8484-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8485-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7D37900D18
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 22:40:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE93D900D1D
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 22:44:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 055A4B2234D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 20:40:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 203EAB22C9B
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 20:44:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32F51514FF;
-	Fri,  7 Jun 2024 20:40:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7762814373C;
+	Fri,  7 Jun 2024 20:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3L4Kaov"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WI7uTdHj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB1B79DC;
-	Fri,  7 Jun 2024 20:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649AA1411F1
+	for <linux-pci@vger.kernel.org>; Fri,  7 Jun 2024 20:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717792826; cv=none; b=IbpTk1JEAWSyEiJgrh24q449vriiNE+KW6EP4/I+/bVj/LFwBXUox7OD5pnEcaWN7wJKjYOJFXt0UOamtb0CTSvwa+1qxal6S+YN5a0g+ze6Yt9WD/eQDGLzVd5l4kP+MqA/RsqW3uUebHns6JIlxpNSmSI6sQ2O5PNNO4VqNe0=
+	t=1717793074; cv=none; b=n7+qQYvtKHnLusTYo6KREFZvnHyKS5ceHB1asF7sPGx+YIK4tACaoW+xRUszWxqv58zN9t16YzO5XHa9fmcQ4/PV5PV0d1cLxGNHMWu78Qg8BDEm7Sb7SlEzmRow6auoggWdS9rI2P24hu60qx/oTxgQDKL84MMuCWJnG7Adgi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717792826; c=relaxed/simple;
-	bh=XeoWkt/dwGPkQzvcMCPV2Pd0GrlZ7gIO32Q8vbwjPtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AI7Wl7qggJFHDHiTguWYe7zwZB+LkkiBMfGVgLEmlmPwXWU27Vh7IgxkEXkSkqAjl/bgb9eGIujSpJ5YJWDgfrwnVslJ+C3v0PvyAqUsW8yOnMsV3c3hCZhwahKduKBwiD2ywPYB0SSg5UNDc/nCNk7A66C6bHuXG9RuwBHdN+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3L4Kaov; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE656C2BBFC;
-	Fri,  7 Jun 2024 20:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717792826;
-	bh=XeoWkt/dwGPkQzvcMCPV2Pd0GrlZ7gIO32Q8vbwjPtU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=d3L4Kaovye0xni8XzhgkFqY01ECG48vvZcbRboOMV1xYm0T4U43xLcKGFDlZesRc6
-	 nDg/5wJJkR/WLz0N3yFTBUIgrJ6gewwxkXFYg9lgpbkmkO8tsod0DUsvZ2H7TxvF5H
-	 ZpQ+BjtXALNeMXazMELnCB+I6G+hZrfnIW2xp2LtvQbzEl6QExBlQCKMRS7yw8C89V
-	 h2XCr2Ez0wpw3+cDgQ6G9eVosjyWSPyftSK08A+iEeIRODEdAqhm5bTI1yhhpVSa34
-	 6y3GY3ZK4ZpC3dAa0vJlElPGWMHilED0wxRZ1V65e7mY0pYhKVPoPYRV2TRnXZ9VsF
-	 oenyZiWuUB0ig==
-Date: Fri, 7 Jun 2024 15:40:24 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: "Chang, HaiJun" <HaiJun.Chang@amd.com>,
-	"Shi, Lianjie" <Lianjie.Shi@amd.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Jiang, Jerry (SW)" <Jerry.Jiang@amd.com>,
-	"Zhang, Andy" <Andy.Zhang@amd.com>
-Subject: Re: [PATCH 1/1][v2] PCI: Support VF resizable BAR
-Message-ID: <20240607204024.GA859719@bhelgaas>
+	s=arc-20240116; t=1717793074; c=relaxed/simple;
+	bh=L5DP6ctDhQUsA/qoa9qOLqxlcRsf3EE4G8oaRWuRdfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gmczi2NujrciFGNBBw+p6IelbS76jYcqBl976i0mAbs2f0EaXAtQFSo+qBrYqeOyNno+0FDLutia99vFlqbR60dLZBLnv+4jMH+9IFXBNK9ASUaaYvIwVNaaqrjek/HcB0QicFmqIAKIGdOa4DCMBI13KQyjOR3alUf3TgOXfIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WI7uTdHj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717793071;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tqJs0lOyJZJnAr3j3IhuY+Y1uSQ1pJxmvCGi7gWbLjA=;
+	b=WI7uTdHjo2GZo7Upho9Cg0HIPf5IWT0eFDoxk6ED7I0wQIhIeAG5pbtrrdQIkSYrTtS0Cl
+	TlWPoz1UKOxCk9FMMExBNZ1Ud8BsUR6hp2D+HQ85eY1wEx0f9pE9X1GRvaE4oDUEBPps+b
+	wiacn1TU7NBRYULDZ9Ya8JW9uDjek4U=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-88-BHZ3Q8LfPvWGDs3r_lgIzw-1; Fri, 07 Jun 2024 16:44:29 -0400
+X-MC-Unique: BHZ3Q8LfPvWGDs3r_lgIzw-1
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-6f965175208so524826a34.1
+        for <linux-pci@vger.kernel.org>; Fri, 07 Jun 2024 13:44:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717793069; x=1718397869;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tqJs0lOyJZJnAr3j3IhuY+Y1uSQ1pJxmvCGi7gWbLjA=;
+        b=QmL+oZbAecZI5l2XaH2oGHB5zmWuH6PCbAaIJ6fG+2l1sbQZDwWWIlFTFvu9WnD6c1
+         gid8ltSuSRgK/sWXVLQlSltIUKKBVl8B7RjovCnTkgnvmHgq7X0c41foVeMZDrOEYQTF
+         yD7eVkqs2BleCmvyKxOh1LPwEPvbndjn+RSjRDH/GVSRbF2eu3aaieKfpjte5/z5QW8g
+         TZNdRBctwcKk308Bvdm8ffyBjyWsQ5DzfETupWiyOf/5XwnwBsfOG3oGWKQnAlgD2JLN
+         xRrtlTJ0vXd3a1OFAfaLA3hYSoKOIYcuJVlfPVJHgJaTgUjwiyy/Mn1xBD2c/Mf2WYx2
+         1Ang==
+X-Forwarded-Encrypted: i=1; AJvYcCXSLZ1At0wLQm/Gzdc75BHOiv5wthEdw6pzprV4I6TzTXC+ZBRjEGBdaAH5vVc+N3SBhHxoPHQlaBc48GauIeH6NbLDGk08sQSp
+X-Gm-Message-State: AOJu0YybBI/56YR/ASyqA4PFW2VZxQ+ZKkFf8RMSIeZeIh5Vns/uDhUh
+	GE+Tfy8duyqxkyn2JjJph6/xhCyQ9+dIa7fPCpLDlS+wbl/mkNdy1XFC/u0ogzwrLJKU0Q2c30E
+	bmbvgc5/GAanpgO5Yl5tyVU7cR5TnTMVreR9uMj0JYqGOOHlsWfVWYtuUVw==
+X-Received: by 2002:a05:6830:1bd6:b0:6f0:e55b:132 with SMTP id 46e09a7af769-6f957304a6amr3505046a34.29.1717793068821;
+        Fri, 07 Jun 2024 13:44:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFkSQe0f61Gb/qi9uc4f5Bkao6z9EV8gWNpIRbd/RPdksTnFIbZcIPphY/TvdkcZWrNxb0Q/Q==
+X-Received: by 2002:a05:6830:1bd6:b0:6f0:e55b:132 with SMTP id 46e09a7af769-6f957304a6amr3505023a34.29.1717793068369;
+        Fri, 07 Jun 2024 13:44:28 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f94dc9de04sm827696a34.39.2024.06.07.13.44.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 13:44:27 -0700 (PDT)
+Date: Fri, 7 Jun 2024 14:44:26 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: bhelgaas@google.com, linux-pci@vger.kernel.org
+Cc: geoff@hostfission.com, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH] PCI: Release unused bridge resources during resize
+Message-ID: <20240607144426.72d9a662.alex.williamson@redhat.com>
+In-Reply-To: <20240507213125.804474-1-alex.williamson@redhat.com>
+References: <20240507213125.804474-1-alex.williamson@redhat.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <432d2df8-3686-4f87-af1a-a9a172d662b9@amd.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 07, 2024 at 01:37:21PM +0200, Christian König wrote:
-> I need the original set of patches, e.g. directly use git send-email with my
-> mail address.
 
-This worked for me:
+Ping.  Any further thoughts on this approach or suggestions for
+something different?  Thanks,
 
-  $ git checkout -b wip/2406-lianjie-vf-rebar-v2 v6.10-rc1
-  $ b4 am https://lore.kernel.org/r/20240523071114.2930804-2-Lianjie.Shi@amd.com
-  $ git am ./v2_20240523_lianjie_shi_pci_vf_resizable_bar.mbx
+Alex
 
-> Am 07.06.24 um 10:42 schrieb Chang, HaiJun:
-> > [AMD Official Use Only - AMD Internal Distribution Only]
-> > 
-> > + Christian to review the VF resizable BAR patch.
-> > 
-> > -----Original Message-----
-> > From: Chang, HaiJun
-> > Sent: Friday, May 31, 2024 12:26 PM
-> > To: Lianjie Shi <Lianjie.Shi@amd.com>; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Jiang, Jerry (SW) <Jerry.Jiang@amd.com>; Zhang, Andy <Andy.Zhang@amd.com>; Shi, Lianjie <Lianjie.Shi@amd.com>
-> > Subject: RE: [PATCH 1/1][v2] PCI: Support VF resizable BAR
-> > 
-> > Hi, Bjorn and pci driver maintainers
-> > 
-> > Could you review the VF resizable BAR patch?
-> > 
-> > Thanks,
-> > HaiJun
-> > 
-> > -----Original Message-----
-> > From: Lianjie Shi <Lianjie.Shi@amd.com>
-> > Sent: Thursday, May 23, 2024 3:11 PM
-> > To: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Chang, HaiJun <HaiJun.Chang@amd.com>; Jiang, Jerry (SW) <Jerry.Jiang@amd.com>; Zhang, Andy <Andy.Zhang@amd.com>; Shi, Lianjie <Lianjie.Shi@amd.com>
-> > Subject: [PATCH 1/1][v2] PCI: Support VF resizable BAR
-> > 
-> > Add support for VF resizable BAR PCI extended cap.
-> > Similar to regular BAR, drivers can use pci_resize_resource() to resize an IOV BAR. For each VF, dev->sriov->barsz of the IOV BAR is resized, but the total resource size of the IOV resource should not exceed its original size upon init.
-> > 
-> > Based on following patch series:
-> > Link: https://lore.kernel.org/lkml/YbqGplTKl5i%2F1%2FkY@rocinante/T/
-> > 
-> > Signed-off-by: Lianjie Shi <Lianjie.Shi@amd.com>
-> > ---
-> >   drivers/pci/pci.c             | 47 ++++++++++++++++++++++++++++++++++-
-> >   drivers/pci/setup-res.c       | 45 +++++++++++++++++++++++++++------
-> >   include/uapi/linux/pci_regs.h |  1 +
-> >   3 files changed, 85 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index e5f243dd4..12f86e00a 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -1867,6 +1867,42 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
-> >          }
-> >   }
-> > 
-> > +static void pci_restore_vf_rebar_state(struct pci_dev *pdev) { #ifdef
-> > +CONFIG_PCI_IOV
-> > +       unsigned int pos, nbars, i;
-> > +       u32 ctrl;
-> > +       u16 total;
-> > +
-> > +       pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_VF_REBAR);
-> > +       if (!pos)
-> > +               return;
-> > +
-> > +       pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-> > +       nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
-> > +
-> > +       for (i = 0; i < nbars; i++, pos += 8) {
-> > +               struct resource *res;
-> > +               int bar_idx, size;
-> > +               u64 tmp;
-> > +
-> > +               pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
-> > +               bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
-> > +               total = pdev->sriov->total_VFs;
-> > +               if (!total)
-> > +                       return;
-> > +
-> > +               res = pdev->resource + bar_idx + PCI_IOV_RESOURCES;
-> > +               tmp = resource_size(res);
-> > +               do_div(tmp, total);
-> > +               size = pci_rebar_bytes_to_size(tmp);
-> > +               ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
-> > +               ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-> > +               pci_write_config_dword(pdev, pos + PCI_REBAR_CTRL, ctrl);
-> > +       }
-> > +#endif
-> > +}
-> > +
-> >   /**
-> >    * pci_restore_state - Restore the saved state of a PCI device
-> >    * @dev: PCI device that we're dealing with @@ -1882,6 +1918,7 @@ void pci_restore_state(struct pci_dev *dev)
-> >          pci_restore_ats_state(dev);
-> >          pci_restore_vc_state(dev);
-> >          pci_restore_rebar_state(dev);
-> > +       pci_restore_vf_rebar_state(dev);
-> >          pci_restore_dpc_state(dev);
-> >          pci_restore_ptm_state(dev);
-> > 
-> > @@ -3677,10 +3714,18 @@ void pci_acs_init(struct pci_dev *dev)
-> >    */
-> >   static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)  {
-> > +       int cap = PCI_EXT_CAP_ID_REBAR;
-> >          unsigned int pos, nbars, i;
-> >          u32 ctrl;
-> > 
-> > -       pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-> > +#ifdef CONFIG_PCI_IOV
-> > +       if (bar >= PCI_IOV_RESOURCES) {
-> > +               cap = PCI_EXT_CAP_ID_VF_REBAR;
-> > +               bar -= PCI_IOV_RESOURCES;
-> > +       }
-> > +#endif
-> > +
-> > +       pos = pci_find_ext_capability(pdev, cap);
-> >          if (!pos)
-> >                  return -ENOTSUPP;
-> > 
-> > diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c index c6d933ddf..d978a2ccf 100644
-> > --- a/drivers/pci/setup-res.c
-> > +++ b/drivers/pci/setup-res.c
-> > @@ -427,13 +427,32 @@ void pci_release_resource(struct pci_dev *dev, int resno)  }  EXPORT_SYMBOL(pci_release_resource);
-> > 
-> > +static int pci_memory_decoding(struct pci_dev *dev, int resno) {
-> > +       u16 cmd;
-> > +
-> > +#ifdef CONFIG_PCI_IOV
-> > +       if (resno >= PCI_IOV_RESOURCES) {
-> > +               pci_read_config_word(dev, dev->sriov->pos + PCI_SRIOV_CTRL, &cmd);
-> > +               if (cmd & PCI_SRIOV_CTRL_MSE)
-> > +                       return -EBUSY;
-> > +               else
-> > +                       return 0;
-> > +       }
-> > +#endif
-> > +       pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> > +       if (cmd & PCI_COMMAND_MEMORY)
-> > +               return -EBUSY;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >   int pci_resize_resource(struct pci_dev *dev, int resno, int size)  {
-> >          struct resource *res = dev->resource + resno;
-> >          struct pci_host_bridge *host;
-> >          int old, ret;
-> >          u32 sizes;
-> > -       u16 cmd;
-> > 
-> >          /* Check if we must preserve the firmware's resource assignment */
-> >          host = pci_find_host_bridge(dev->bus); @@ -444,9 +463,9 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
-> >          if (!(res->flags & IORESOURCE_UNSET))
-> >                  return -EBUSY;
-> > 
-> > -       pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> > -       if (cmd & PCI_COMMAND_MEMORY)
-> > -               return -EBUSY;
-> > +       ret = pci_memory_decoding(dev, resno);
-> > +       if (ret)
-> > +               return ret;
-> > 
-> >          sizes = pci_rebar_get_possible_sizes(dev, resno);
-> >          if (!sizes)
-> > @@ -463,19 +482,31 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
-> >          if (ret)
-> >                  return ret;
-> > 
-> > -       res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
-> > +#ifdef CONFIG_PCI_IOV
-> > +       if (resno >= PCI_IOV_RESOURCES)
-> > +               dev->sriov->barsz[resno - PCI_IOV_RESOURCES] = pci_rebar_size_to_bytes(size);
-> > +       else
-> > +#endif
-> > +               res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
-> > 
-> >          /* Check if the new config works by trying to assign everything. */
-> >          if (dev->bus->self) {
-> >                  ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
-> > -               if (ret)
-> > +               if (ret && ret != -ENOENT)
-> >                          goto error_resize;
-> >          }
-> >          return 0;
-> > 
-> >   error_resize:
-> >          pci_rebar_set_size(dev, resno, old);
-> > -       res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-> > +
-> > +#ifdef CONFIG_PCI_IOV
-> > +       if (resno >= PCI_IOV_RESOURCES)
-> > +               dev->sriov->barsz[resno - PCI_IOV_RESOURCES] = pci_rebar_size_to_bytes(old);
-> > +       else
-> > +#endif
-> > +               res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-> > +
-> >          return ret;
-> >   }
-> >   EXPORT_SYMBOL(pci_resize_resource);
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h index a39193213..a66b90982 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -738,6 +738,7 @@
-> >   #define PCI_EXT_CAP_ID_L1SS    0x1E    /* L1 PM Substates */
-> >   #define PCI_EXT_CAP_ID_PTM     0x1F    /* Precision Time Measurement */
-> >   #define PCI_EXT_CAP_ID_DVSEC   0x23    /* Designated Vendor-Specific */
-> > +#define PCI_EXT_CAP_ID_VF_REBAR        0x24    /* VF Resizable BAR */
-> >   #define PCI_EXT_CAP_ID_DLF     0x25    /* Data Link Feature */
-> >   #define PCI_EXT_CAP_ID_PL_16GT 0x26    /* Physical Layer 16.0 GT/s */
-> >   #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
-> > --
-> > 2.34.1
-> > 
+On Tue,  7 May 2024 15:31:23 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
+
+> Resizing BARs can be blocked when a device in the bridge hierarchy
+> itself consumes resources from the resized range.  This scenario is
+> common with Intel Arc DG2 GPUs where the following is a typical
+> topology:
 > 
+>  +-[0000:5d]-+-00.0-[5e-61]----00.0-[5f-61]--+-01.0-[60]----00.0  Intel Corporation DG2 [Arc A380]
+>                                              \-04.0-[61]----00.0  Intel Corporation DG2 Audio Controller
+> 
+> Here the system BIOS has provided a large 64bit, prefetchable window:
+> 
+> pci_bus 0000:5d: root bus resource [mem 0xb000000000-0xbfffffffff window]
+> 
+> But only a small portion is programmed into the root port aperture:
+> 
+> pci 0000:5d:00.0:   bridge window [mem 0xbfe0000000-0xbff07fffff 64bit pref]
+> 
+> The upstream port then provides the following aperture:
+> 
+> pci 0000:5e:00.0:   bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]
+> 
+> With the missing range found to be consumed by the switch port itself:
+> 
+> pci 0000:5e:00.0: BAR 0 [mem 0xbff0000000-0xbff07fffff 64bit pref]
+> 
+> The downstream port above the GPU provides the same aperture as upstream:
+> 
+> pci 0000:5f:01.0:   bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]
+> 
+> Which is entirely consumed by the GPU:
+> 
+> pci 0000:60:00.0: BAR 2 [mem 0xbfe0000000-0xbfefffffff 64bit pref]
+> 
+> In summary, iomem reports the following:
+> 
+> b000000000-bfffffffff : PCI Bus 0000:5d
+>   bfe0000000-bff07fffff : PCI Bus 0000:5e
+>     bfe0000000-bfefffffff : PCI Bus 0000:5f
+>       bfe0000000-bfefffffff : PCI Bus 0000:60
+>         bfe0000000-bfefffffff : 0000:60:00.0
+>     bff0000000-bff07fffff : 0000:5e:00.0
+> 
+> The GPU at 0000:60:00.0 supports a Resizable BAR:
+> 
+> 	Capabilities: [420 v1] Physical Resizable BAR
+> 		BAR 2: current size: 256MB, supported: 256MB 512MB 1GB 2GB 4GB 8GB
+> 
+> However when attempting a resize we get -ENOSPC:
+> 
+> pci 0000:60:00.0: BAR 2 [mem 0xbfe0000000-0xbfefffffff 64bit pref]: releasing
+> pcieport 0000:5f:01.0: bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]: releasing
+> pcieport 0000:5e:00.0: bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]: releasing
+> pcieport 0000:5e:00.0: bridge window [mem size 0x200000000 64bit pref]: can't assign; no space
+> pcieport 0000:5e:00.0: bridge window [mem size 0x200000000 64bit pref]: failed to assign
+> pcieport 0000:5f:01.0: bridge window [mem size 0x200000000 64bit pref]: can't assign; no space
+> pcieport 0000:5f:01.0: bridge window [mem size 0x200000000 64bit pref]: failed to assign
+> pci 0000:60:00.0: BAR 2 [mem size 0x200000000 64bit pref]: can't assign; no space
+> pci 0000:60:00.0: BAR 2 [mem size 0x200000000 64bit pref]: failed to assign
+> pcieport 0000:5d:00.0: PCI bridge to [bus 5e-61]
+> pcieport 0000:5d:00.0:   bridge window [mem 0xb9000000-0xba0fffff]
+> pcieport 0000:5d:00.0:   bridge window [mem 0xbfe0000000-0xbff07fffff 64bit pref]
+> pcieport 0000:5e:00.0: PCI bridge to [bus 5f-61]
+> pcieport 0000:5e:00.0:   bridge window [mem 0xb9000000-0xba0fffff]
+> pcieport 0000:5e:00.0:   bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]
+> pcieport 0000:5f:01.0: PCI bridge to [bus 60]
+> pcieport 0000:5f:01.0:   bridge window [mem 0xb9000000-0xb9ffffff]
+> pcieport 0000:5f:01.0:   bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]
+> pci 0000:60:00.0: BAR 2 [mem 0xbfe0000000-0xbfefffffff 64bit pref]: assigned
+> 
+> In this example we need to resize all the way up to the root port
+> aperture, but we refuse to change the root port aperture while resources
+> are allocated for the upstream port BAR.
+> 
+> The solution proposed here builds on the idea in commit 91fa127794ac
+> ("PCI: Expose PCIe Resizable BAR support via sysfs") where the BAR can
+> be resized while there is no driver attached.  In this case, when there
+> is no driver bound to the upstream switch port we'll release resources
+> of the bridge which match the reallocation.  Therefore we can achieve
+> the below successful resize operation by unbinding 0000:5e:00.0 from the
+> pcieport driver before invoking the resource2_resize interface on the
+> GPU at 0000:60:00.0.
+> 
+> pci 0000:60:00.0: BAR 2 [mem 0xbfe0000000-0xbfefffffff 64bit pref]: releasing
+> pcieport 0000:5f:01.0: bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]: releasing
+> pci 0000:5e:00.0: bridge window [mem 0xbfe0000000-0xbfefffffff 64bit pref]: releasing
+> pci 0000:5e:00.0: BAR 0 [mem 0xbff0000000-0xbff07fffff 64bit pref]: releasing
+> pcieport 0000:5d:00.0: bridge window [mem 0xbfe0000000-0xbff07fffff 64bit pref]: releasing
+> pcieport 0000:5d:00.0: bridge window [mem 0xb000000000-0xb2ffffffff 64bit pref]: assigned
+> pci 0000:5e:00.0: bridge window [mem 0xb000000000-0xb1ffffffff 64bit pref]: assigned
+> pci 0000:5e:00.0: BAR 0 [mem 0xb200000000-0xb2007fffff 64bit pref]: assigned
+> pcieport 0000:5f:01.0: bridge window [mem 0xb000000000-0xb1ffffffff 64bit pref]: assigned
+> pci 0000:60:00.0: BAR 2 [mem 0xb000000000-0xb1ffffffff 64bit pref]: assigned
+> pci 0000:5e:00.0: PCI bridge to [bus 5f-61]
+> pci 0000:5e:00.0:   bridge window [mem 0xb9000000-0xba0fffff]
+> pci 0000:5e:00.0:   bridge window [mem 0xb000000000-0xb1ffffffff 64bit pref]
+> pcieport 0000:5d:00.0: PCI bridge to [bus 5e-61]
+> pcieport 0000:5d:00.0:   bridge window [mem 0xb9000000-0xba0fffff]
+> pcieport 0000:5d:00.0:   bridge window [mem 0xb000000000-0xb2ffffffff 64bit pref]
+> pci 0000:5e:00.0: PCI bridge to [bus 5f-61]
+> pci 0000:5e:00.0:   bridge window [mem 0xb9000000-0xba0fffff]
+> pci 0000:5e:00.0:   bridge window [mem 0xb000000000-0xb1ffffffff 64bit pref]
+> pcieport 0000:5f:01.0: PCI bridge to [bus 60]
+> pcieport 0000:5f:01.0:   bridge window [mem 0xb9000000-0xb9ffffff]
+> pcieport 0000:5f:01.0:   bridge window [mem 0xb000000000-0xb1ffffffff 64bit pref]
+> 
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/pci/setup-bus.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 909e6a7c3cc3..15fc8e4e84c9 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -2226,6 +2226,26 @@ void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_assign_unassigned_bridge_resources);
+>  
+> +static void pci_release_resource_type(struct pci_dev *pdev, unsigned long type)
+> +{
+> +	int i;
+> +
+> +	if (!device_trylock(&pdev->dev))
+> +		return;
+> +
+> +	if (pdev->dev.driver)
+> +		goto unlock;
+> +
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		if (pci_resource_len(pdev, i) &&
+> +		    !((pci_resource_flags(pdev, i) ^ type) & PCI_RES_TYPE_MASK))
+> +			pci_release_resource(pdev, i);
+> +	}
+> +
+> +unlock:
+> +	device_unlock(&pdev->dev);
+> +}
+> +
+>  int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+>  {
+>  	struct pci_dev_resource *dev_res;
+> @@ -2260,8 +2280,10 @@ int pci_reassign_bridge_resources(struct pci_dev *bridge, unsigned long type)
+>  
+>  			pci_info(bridge, "%s %pR: releasing\n", res_name, res);
+>  
+> -			if (res->parent)
+> +			if (res->parent) {
+>  				release_resource(res);
+> +				pci_release_resource_type(bridge, type);
+> +			}
+>  			res->start = 0;
+>  			res->end = 0;
+>  			break;
+
 
