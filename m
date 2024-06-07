@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-8465-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8467-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 772A2900A24
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 18:17:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90E7F900A3E
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 18:27:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B26F1C2221D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 16:17:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B1AE28A275
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 16:27:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A2A190668;
-	Fri,  7 Jun 2024 16:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EFB219A2BE;
+	Fri,  7 Jun 2024 16:27:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9647612E47;
-	Fri,  7 Jun 2024 16:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B81D19007A;
+	Fri,  7 Jun 2024 16:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717777047; cv=none; b=tjYstTbLjtIe+b0MSj0J2mzVkN84nzIEtXC7fUOaBh3XCZnIihjs1ZptfGbFMZjZkoHlQL483ii74R6JHowS3jdRWAKwp4EIlPaFkoozE/hgybRnmd+wX0MUKtaeJBShwgPQXrp3Xmzw2cKjx5R4NnNkbMySaGoePeA7S/cLM1g=
+	t=1717777628; cv=none; b=kdnwS9KeOlkrB0I8bew6EluHkNRat4elkfGXGAh9ZlblSCv+XXR+XEYuFAJ4KkP6TH/I8g3CWPvaucyGSJ+kGXnwJ73UTMMu+qYpVcI2YN2Mv+7XQ0BM6ZhUAJiTBGXx3vO/hX1YpLGh8jKobunFeLx2qY+Bbl+PN+z8WlwEqgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717777047; c=relaxed/simple;
-	bh=6NpbI6cVT/qBF0SqsyJAoESRZcL7nfvEkvqXgsuhiz4=;
+	s=arc-20240116; t=1717777628; c=relaxed/simple;
+	bh=4Q10J8kr9vNr8phtfffRz/SvOstz+NEUvY6qN2pdO3k=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uWtLTNoO4hnwSdkHEKMKUBW7/LwqD9y+1k+xY55cH6kh2d9MxKj49Oag77btny/Iqaji4qOisXo03yhdYFeDKD0wnZgEMHDy1ixpL/HuZYW62GnsAvGCqw1EDZsVWVSrQpJP1roEk53AhCpV92FvU2pnGk0pGlcEdbaIR38/iqA=
+	 MIME-Version:Content-Type; b=HHuoUK7Rd7i0+kjU7wbcMOwmqLUQwypIG0+sYd8YJ3TgS7FZ17F3wmetTX6LIjsBwWkXCtdN7um+WumY0tcSWvPGrsILPcIt8JuGbtvkhgepfC78Ze/K9Y1DZIJRRBXUQSgG0tTrkfg4QmOV8TxBZVjvnoatolcvBPX0CzVUv+s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VwmSj6Nqmz680ZP;
-	Sat,  8 Jun 2024 00:12:53 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwmld2snFz67Lqc;
+	Sat,  8 Jun 2024 00:25:49 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5F3FB140A36;
-	Sat,  8 Jun 2024 00:17:18 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 846D81408FE;
+	Sat,  8 Jun 2024 00:27:03 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 17:17:17 +0100
-Date: Fri, 7 Jun 2024 17:17:16 +0100
+ 2024 17:27:02 +0100
+Date: Fri, 7 Jun 2024 17:27:01 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: Wei Huang <wei.huang2@amd.com>
 CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -51,11 +51,12 @@ CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<andrew.gospodarek@broadcom.com>, <manoj.panicker2@amd.com>,
 	<Eric.VanTassell@amd.com>, <vadim.fedorenko@linux.dev>, <horms@kernel.org>,
 	<bagasdotme@gmail.com>
-Subject: Re: [PATCH V2 2/9] PCI: Add TPH related register definition
-Message-ID: <20240607171716.0000216d@Huawei.com>
-In-Reply-To: <20240531213841.3246055-3-wei.huang2@amd.com>
+Subject: Re: [PATCH V2 3/9] PCI/TPH: Implement a command line option to
+ disable TPH
+Message-ID: <20240607172701.00006ae1@Huawei.com>
+In-Reply-To: <20240531213841.3246055-4-wei.huang2@amd.com>
 References: <20240531213841.3246055-1-wei.huang2@amd.com>
-	<20240531213841.3246055-3-wei.huang2@amd.com>
+	<20240531213841.3246055-4-wei.huang2@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -69,13 +70,14 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 31 May 2024 16:38:34 -0500
+On Fri, 31 May 2024 16:38:35 -0500
 Wei Huang <wei.huang2@amd.com> wrote:
 
-> Linux has some basic, but incomplete, definition for the TPH Requester
-> capability registers. Also the control registers of TPH Requester and
-> the TPH Completer are missing. This patch adds all required definitions
-> to support TPH enablement.
+> Provide a kernel option, with related helper functions, to completely
+> disable TPH so that no TPH headers are generated.
+
+Why would someone use this option?
+
 > 
 > Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
 > Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
@@ -83,104 +85,149 @@ Wei Huang <wei.huang2@amd.com> wrote:
 > Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
 > Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com> 
 > Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-
-As below, you can't modify uapi headers because we have no idea what
-userspace code is already using them.
-Also, (annoyingly) the field contents in this header tend (or maybe always are)
-in the shifted form.
-
 > ---
->  drivers/vfio/pci/vfio_pci_config.c |  7 +++---
->  include/uapi/linux/pci_regs.h      | 35 ++++++++++++++++++++++++++----
->  2 files changed, 35 insertions(+), 7 deletions(-)
+>  .../admin-guide/kernel-parameters.txt         |  1 +
+>  drivers/pci/pci-driver.c                      |  7 ++++-
+>  drivers/pci/pci.c                             | 12 ++++++++
+>  drivers/pci/pcie/tph.c                        | 30 +++++++++++++++++++
+>  include/linux/pci-tph.h                       | 19 ++++++++++++
+>  include/linux/pci.h                           |  1 +
+>  6 files changed, 69 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/pci-tph.h
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index 97422aafaa7b..de622cdfc2a4 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -1434,14 +1434,15 @@ static int vfio_ext_cap_len(struct vfio_pci_core_device *vdev, u16 ecap, u16 epo
->  		if (ret)
->  			return pcibios_err_to_errno(ret);
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 500cfa776225..fedcc69e35c1 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4623,6 +4623,7 @@
+>  		nomio		[S390] Do not use MIO instructions.
+>  		norid		[S390] ignore the RID field and force use of
+>  				one PCI domain per PCI function
+> +		notph		[PCIE] Do not use PCIe TPH
 >  
-> -		if ((dword & PCI_TPH_CAP_LOC_MASK) == PCI_TPH_LOC_CAP) {
-> +		if (((dword & PCI_TPH_CAP_LOC_MASK) >> PCI_TPH_CAP_LOC_SHIFT)
-> +			== PCI_TPH_LOC_CAP) {
->  			int sts;
+>  	pcie_aspm=	[PCIE] Forcibly enable or ignore PCIe Active State Power
+>  			Management.
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index af2996d0d17f..9722d070c0ca 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/iommu.h>
+> +#include <linux/pci-tph.h>
+>  #include "pci.h"
+>  #include "pcie/portdrv.h"
 >  
->  			sts = dword & PCI_TPH_CAP_ST_MASK;
->  			sts >>= PCI_TPH_CAP_ST_SHIFT;
-> -			return PCI_TPH_BASE_SIZEOF + (sts * 2) + 2;
-> +			return PCI_TPH_ST_TABLE + (sts * 2) + 2;
->  		}
-> -		return PCI_TPH_BASE_SIZEOF;
-> +		return PCI_TPH_ST_TABLE;
->  	case PCI_EXT_CAP_ID_DVSEC:
->  		ret = pci_read_config_dword(pdev, epos + PCI_DVSEC_HEADER1, &dword);
->  		if (ret)
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 94c00996e633..ae1cf048b04a 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -657,6 +657,7 @@
->  #define  PCI_EXP_DEVCAP2_ATOMIC_COMP64	0x00000100 /* 64b AtomicOp completion */
->  #define  PCI_EXP_DEVCAP2_ATOMIC_COMP128	0x00000200 /* 128b AtomicOp completion */
->  #define  PCI_EXP_DEVCAP2_LTR		0x00000800 /* Latency tolerance reporting */
-> +#define  PCI_EXP_DEVCAP2_TPH_COMP	0x00003000 /* TPH completer support */
->  #define  PCI_EXP_DEVCAP2_OBFF_MASK	0x000c0000 /* OBFF support mechanism */
->  #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
->  #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
-> @@ -1020,15 +1021,41 @@
->  #define  PCI_DPA_CAP_SUBSTATE_MASK	0x1F	/* # substates - 1 */
->  #define PCI_DPA_BASE_SIZEOF	16	/* size with 0 substates */
->  
-> +/* TPH Completer Support */
-> +#define PCI_EXP_DEVCAP2_TPH_COMP_SHIFT		12
-> +#define PCI_EXP_DEVCAP2_TPH_COMP_NONE		0x0 /* None */
-> +#define PCI_EXP_DEVCAP2_TPH_COMP_TPH_ONLY	0x1 /* TPH only */
-> +#define PCI_EXP_DEVCAP2_TPH_COMP_TPH_AND_EXT	0x3 /* TPH and Extended TPH */
+> @@ -322,8 +323,12 @@ static long local_pci_probe(void *_ddi)
+>  	pm_runtime_get_sync(dev);
+>  	pci_dev->driver = pci_drv;
+>  	rc = pci_drv->probe(pci_dev, ddi->id);
+> -	if (!rc)
+> +	if (!rc) {
+> +		if (pci_tph_disabled())
+> +			pcie_tph_disable(pci_dev);
 > +
->  /* TPH Requester */
->  #define PCI_TPH_CAP		4	/* capability register */
-> +#define  PCI_TPH_CAP_NO_ST	0x1	/* no ST mode supported */
-> +#define  PCI_TPH_CAP_NO_ST_SHIFT	0x0	/* no ST mode supported shift */
-> +#define  PCI_TPH_CAP_INT_VEC	0x2	/* interrupt vector mode supported */
-> +#define  PCI_TPH_CAP_INT_VEC_SHIFT	0x1	/* interrupt vector mode supported shift */
-> +#define  PCI_TPH_CAP_DS		0x4	/* device specific mode supported */
-> +#define  PCI_TPH_CAP_DS_SHIFT	0x4	/* device specific mode supported shift */
->  #define  PCI_TPH_CAP_LOC_MASK	0x600	/* location mask */
-> -#define   PCI_TPH_LOC_NONE	0x000	/* no location */
-> -#define   PCI_TPH_LOC_CAP	0x200	/* in capability */
-> -#define   PCI_TPH_LOC_MSIX	0x400	/* in MSI-X */
-
-It's a userspace header, relatively unlikely to be safe to change it...
-This would also be inconsistent with how some other registers are defined in here.
-
-I'd love it if we could tidy this up, but we are stuck by this being
-in uapi.
-
-> +#define  PCI_TPH_CAP_LOC_SHIFT	9	/* location shift */
-> +#define   PCI_TPH_LOC_NONE	0x0	/*  no ST Table */
-> +#define   PCI_TPH_LOC_CAP	0x1	/*  ST Table in extended capability */
-> +#define   PCI_TPH_LOC_MSIX	0x2	/*  ST table in MSI-X table */
->  #define PCI_TPH_CAP_ST_MASK	0x07FF0000	/* ST table mask */
->  #define PCI_TPH_CAP_ST_SHIFT	16	/* ST table shift */
-> -#define PCI_TPH_BASE_SIZEOF	0xc	/* size with no ST table */
-> +
-> +#define PCI_TPH_CTRL		0x8	/* control register */
-> +#define  PCI_TPH_CTRL_MODE_SEL_MASK	0x7	/* ST Model Select mask */
-> +#define  PCI_TPH_CTRL_MODE_SEL_SHIFT	0x0	/* ST Model Select shift */
-> +#define   PCI_TPH_NO_ST_MODE		0x0	/*  No ST Mode */
-> +#define   PCI_TPH_INT_VEC_MODE		0x1	/*  Interrupt Vector Mode */
-> +#define   PCI_TPH_DEV_SPEC_MODE		0x2	/*  Device Specific Mode */
-> +#define  PCI_TPH_CTRL_REQ_EN_MASK	0x300	/* TPH Requester mask */
-> +#define  PCI_TPH_CTRL_REQ_EN_SHIFT	8	/* TPH Requester shift */
-> +#define   PCI_TPH_REQ_DISABLE		0x0	/*  No TPH request allowed */
-> +#define   PCI_TPH_REQ_TPH_ONLY		0x1	/*  8-bit TPH tags allowed */
-> +#define   PCI_TPH_REQ_EXT_TPH		0x3	/*  16-bit TPH tags allowed */
-> +
-> +#define PCI_TPH_ST_TABLE	0xc	/* base of ST table */
+>  		return rc;
+> +	}
+>  	if (rc < 0) {
+>  		pci_dev->driver = NULL;
+>  		pm_runtime_put_sync(dev);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 59e0949fb079..31c443504ce9 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -157,6 +157,9 @@ static bool pcie_ari_disabled;
+>  /* If set, the PCIe ATS capability will not be used. */
+>  static bool pcie_ats_disabled;
 >  
->  /* Downstream Port Containment */
->  #define PCI_EXP_DPC_CAP			0x04	/* DPC Capability */
+> +/* If set, the PCIe TPH capability will not be used. */
+> +static bool pcie_tph_disabled;
+> +
+>  /* If set, the PCI config space of each device is printed during boot. */
+>  bool pci_early_dump;
+>  
+> @@ -166,6 +169,12 @@ bool pci_ats_disabled(void)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_ats_disabled);
+>  
+> +bool pci_tph_disabled(void)
+> +{
+> +	return pcie_tph_disabled;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_tph_disabled);
+> +
+>  /* Disable bridge_d3 for all PCIe ports */
+>  static bool pci_bridge_d3_disable;
+>  /* Force bridge_d3 for all PCIe ports */
+> @@ -6806,6 +6815,9 @@ static int __init pci_setup(char *str)
+>  				pci_no_domains();
+>  			} else if (!strncmp(str, "noari", 5)) {
+>  				pcie_ari_disabled = true;
+> +			} else if (!strcmp(str, "notph")) {
+> +				pr_info("PCIe: TPH is disabled\n");
+> +				pcie_tph_disabled = true;
+>  			} else if (!strncmp(str, "cbiosize=", 9)) {
+>  				pci_cardbus_io_size = memparse(str + 9, &str);
+>  			} else if (!strncmp(str, "cbmemsize=", 10)) {
+> diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
+> index 5f0cc06b74bb..5dc533b89a33 100644
+> --- a/drivers/pci/pcie/tph.c
+> +++ b/drivers/pci/pcie/tph.c
+> @@ -16,11 +16,41 @@
+>  #include <linux/errno.h>
+>  #include <linux/msi.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-tph.h>
+>  #include <linux/msi.h>
+>  #include <linux/pci-acpi.h>
+>  
+>  #include "../pci.h"
+>  
+> +static int tph_set_reg_field_u32(struct pci_dev *dev, u8 offset, u32 mask,
+> +				 u8 shift, u32 field)
+
+I'm unconvinced this helper makes sense.  Do we do similar for other
+PCI capabilities?
+
+If it does make sense to have a field update, then provide
+one alongside pci_read_config_dword() etc.
+
+> +{
+> +	u32 reg_val;
+> +	int ret;
+> +
+> +	if (!dev->tph_cap)
+> +		return -EINVAL;
+> +
+> +	ret = pci_read_config_dword(dev, dev->tph_cap + offset, &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	reg_val &= ~mask;
+> +	reg_val |= (field << shift) & mask;
+> +
+> +	ret = pci_write_config_dword(dev, dev->tph_cap + offset, reg_val);
+> +
+> +	return ret;
+
+	return pci_write_config_dword();
+
+> +}
+> +
+> +int pcie_tph_disable(struct pci_dev *dev)
+> +{
+> +	return  tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
+
+extra space after return
+
+> +				      PCI_TPH_CTRL_REQ_EN_MASK,
+> +				      PCI_TPH_CTRL_REQ_EN_SHIFT,
+> +				      PCI_TPH_REQ_DISABLE);
+> +}
+> +
+>  void pcie_tph_init(struct pci_dev *dev)
+>  {
+>  	dev->tph_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_TPH);
 
 
