@@ -1,174 +1,132 @@
-Return-Path: <linux-pci+bounces-8475-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8476-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFB33900B7A
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:45:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE0A2900BA2
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:58:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38CC028C12A
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 17:45:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F11FF1C2220D
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 17:58:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A7E719AA5B;
-	Fri,  7 Jun 2024 17:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xv4tADCc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7111019AD90;
+	Fri,  7 Jun 2024 17:58:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B57C190672;
-	Fri,  7 Jun 2024 17:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D27A19ADAE;
+	Fri,  7 Jun 2024 17:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782344; cv=none; b=t+HQUi4IMXaSSOg7HGHnmkYnyczVAGh/KBbWdmb1WUTw79L+8N+l9c9ejRny0zeI3VeUh6CWqpLQs++fSJwjOlM0AKa9oH8xLS/S7Xb5rQaRmNQ7h2AlfHAJm7Zy2AH7U74cBCiKDvAfJJyiu9wJdLX7Ff68MTaYCSjDRH2NBj8=
+	t=1717783091; cv=none; b=vCc/tP6qosSQw0W1uMtP15KhHDHwEwil8k5B5t54QipN9v1fIvDtihLV93Rx6qvLwFNjWjRl3QXWqaRHFMMf6ZiL/vPH4mfa3tRDwud+O+NmZPG2R1mvpMITcw9mf4n/8FRiwyUuD7oNnUkKJ8fh2/oOtLumGKBRdzhlucVXYxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782344; c=relaxed/simple;
-	bh=zCG8FQxsaI/w6vMFJhp8K3xWTo7Bswlks8CEu7zqit0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NljP3LWWRNg9l7I3NDx+z69x+JYTD2l1jPw9gYnLW2JS0LVbWn9d6RpYrzb1bFJMZ/25FIKrvTw4tcHVbOX5bRHNgdJ6qj6ZlXi6FN3ZBy2I5equsm8HTQM5gtK1/Q7CZ0RiH8X1Pf+27LIPq7Tf8MS4o9aEmsHek05elYkKe34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xv4tADCc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA6B4C2BBFC;
-	Fri,  7 Jun 2024 17:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717782344;
-	bh=zCG8FQxsaI/w6vMFJhp8K3xWTo7Bswlks8CEu7zqit0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Xv4tADCcOcuqv6Lb0hkMlr6KfY8ZZAVX1NweUPXXrwO/A9LSokeflWwf5Z0CzmHZu
-	 umJynmWvTAhFDM55M84wu6wrXEpR8YwceWFTT30lGjCu3PSVSSZlhrhAoj+C9zX6Nn
-	 CRFWZF4xCvQF2jacp2/buepX4wL+H69iBxq/R3lqdiWPD6/KUfiyzCF7XvRFe3iZB/
-	 TLzCzcUtAESSSGP49tHVLU+/LJV20h+isLVpIooqd4nEHHg8nnqxmdLtASDvtkQysV
-	 7GhvJOyrbJZCb/mz+biBsFEz4ciyXk7QgVJ1xX1bQChbltDDuoH96Lf6GjTW41cKeA
-	 YsKyjLOKoo4VQ==
-Date: Fri, 7 Jun 2024 12:45:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wei Huang <wei.huang2@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-	bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	alex.williamson@redhat.com, gospo@broadcom.com,
-	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
-	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
-	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
-	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com
-Subject: Re: [PATCH V2 5/9] PCI/TPH: Introduce API functions to manage
- steering tags
-Message-ID: <20240607174542.GA853103@bhelgaas>
+	s=arc-20240116; t=1717783091; c=relaxed/simple;
+	bh=djLVwRYADCRsn6mXlpC3+LTYBS/XLkzLolWphDFBK9g=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bqU9pZEjz3ZmCqAdPoLaZ7YNPganP42ersAwL2dC+yeijD5njoqb9Kk2fKtg0Cclu9hxaDXTutEUoUjJNJyekTj8rTkA1N4DW/RJd4SH7kDJrajjIkg8PKQUrWGRE4YLW+i6kaDkGafFhR1ExvQkAThk1285CONj0jgXcvAgRbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwpj16yFGz6J9dh;
+	Sat,  8 Jun 2024 01:53:41 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id A53A7140A70;
+	Sat,  8 Jun 2024 01:58:06 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
+ 2024 18:58:06 +0100
+Date: Fri, 7 Jun 2024 18:58:05 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v3 2/2] cxl: Calculate region bandwidth of targets with
+ shared upstream link
+Message-ID: <20240607185805.00007872@Huawei.com>
+In-Reply-To: <92744829-dbb8-4681-914d-c36797518e3c@intel.com>
+References: <20240529214357.1193417-1-dave.jiang@intel.com>
+	<20240529214357.1193417-3-dave.jiang@intel.com>
+	<20240605151936.000031df@Huawei.com>
+	<c5e2b730-8274-48d0-9553-4c1b8cf4945a@intel.com>
+	<20240607153042.000046c9@Huawei.com>
+	<92744829-dbb8-4681-914d-c36797518e3c@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531213841.3246055-6-wei.huang2@amd.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, May 31, 2024 at 04:38:37PM -0500, Wei Huang wrote:
-> This patch introduces three API functions, pcie_tph_intr_vec_supported(),
-> pcie_tph_get_st() and pcie_tph_set_st(), for a driver to query, retrieve
-> or configure device's steering tags. There are two possible locations for
-> steering tag table and the code automatically figure out the right
-> location to set the tags if pcie_tph_set_st() is called. Note the tag
-> value is always zero currently and will be extended in the follow-up
-> patches.
+On Fri, 7 Jun 2024 09:12:31 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> +static int tph_get_reg_field_u32(struct pci_dev *dev, u8 offset, u32 mask,
-> +				 u8 shift, u32 *field)
-> +{
-> +	u32 reg_val;
-> +	int ret;
-> +
-> +	if (!dev->tph_cap)
-> +		return -EINVAL;
-> +
-> +	ret = pci_read_config_dword(dev, dev->tph_cap + offset, &reg_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*field = (reg_val & mask) >> shift;
-> +
-> +	return 0;
-> +}
-> +
-> +static int tph_get_table_size(struct pci_dev *dev, u16 *size_out)
-> +{
-> +	int ret;
-> +	u32 tmp;
-> +
-> +	ret = tph_get_reg_field_u32(dev, PCI_TPH_CAP,
-> +				    PCI_TPH_CAP_ST_MASK,
-> +				    PCI_TPH_CAP_ST_SHIFT, &tmp);
+> On 6/7/24 7:30 AM, Jonathan Cameron wrote:
+> >   
+> >>>> +		if (is_cxl_root(parent_port)) {
+> >>>> +			ctx->port = parent_port;
+> >>>> +			cxl_coordinates_combine(ctx->coord, ctx->coord,
+> >>>> +						dport->coord);    
+> >>>
+> >>> I'm a bit lost in all the levels of iteration so may have missed it.
+> >>>
+> >>> Do we assume that GP BW (which is the root bridge) is shared across multiple root
+> >>> ports on that host bridge if they are both part of the interleave set?    
+> >>
+> >> Do we need to count the number of RPs under a HB and do min(aggregated_RPs_BW, (GP_BW / no of RPs) * affiliated_RPs_in_region)?  
+> > 
+> > I'm not 100% sure I understand the question.
+> > 
+> > Taking this again and expanding it another level.
+> > 
+> > 
+> > 
+> >       Host CPU
+> > ______________________________________
+> >         |                           |
+> >         |                           |
+> >         | 3 from GP/HMAT            | 3 from GP/HMAT
+> >    _____|_____               _______|______
+> >   RP         RP             RP            RP
+> >   2|          |2           2|             |2
+> >  __|__     ___|__         __|___        __|____
+> > |1    |1  1|     |1      |1     |1     |1      |1
+> > EP   EP    EP    EP     EP     EP      EP     EP
+> > 
+> > Then your maths
+> > 
+> > aggregated RPs BW is 8
+> > (GP_BW/no of RPS) * affliated RPS in region.
+> > = (3/2 * 4)
+> > = 6  
+> 
+> While the result is the same, the math would be this below right?
+> min((3/2 * 2), 4) + min((3/2 * 2), 4)
 
-Just use FIELD_GET() instead.
+That's better, but I thought your thing above was about RPs in a HB vs
+RPs across the whole thing.  Hence was trying to align with that.
 
-> +	if (ret)
-> +		return ret;
-> +
-> +	*size_out = (u16)tmp;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * For a given device, return a pointer to the MSI table entry at msi_index.
+I'm lost and it's end of Friday.  Lets work this out with code.
 
-s/MSI/MSI-X/ to avoid any possible confusion.
+Jonathan
+> 
+> > Which is correct. So yes, I think that works if we assume everything is balanced.
+> > I'm fine with that assumption as that should be the common case.
+> > 
+> > 
+> > Jonathan
+> > 
+> >   
+> 
 
-> +static void __iomem *tph_msix_table_entry(struct pci_dev *dev,
-> +					  u16 msi_index)
-
-> +	ret = pcie_capability_read_dword(rp, PCI_EXP_DEVCAP2, &val);
-> +	if (ret) {
-> +		pr_err("cannot read device capabilities 2 of %s\n",
-> +		       dev_name(&dev->dev));
-
-Never use pr_err() when you can use pci_err() instead.  Obviously no
-dev_name() needed with pci_err().  Other instances below.
-
-> +	val &= PCI_EXP_DEVCAP2_TPH_COMP;
-> +
-> +	return val >> PCI_EXP_DEVCAP2_TPH_COMP_SHIFT;
-
-FIELD_GET()
-
-> + * The PCI Specification version 5.0 requires the "No ST Mode" mode
-> + * be supported by any compatible device.
-
-Cite r6.0 or newer and include section number.
-
-> +	/* clear the mode select and enable fields and set new values*/
-
-Space before closing */
-
-> +	ctrl_reg &= ~(PCI_TPH_CTRL_REQ_EN_MASK);
-> +	ctrl_reg |= (((u32)req_type << PCI_TPH_CTRL_REQ_EN_SHIFT) &
-> +			PCI_TPH_CTRL_REQ_EN_MASK);
-
-FIELD_GET()/FIELD_PREP()
-
-> +static bool pcie_tph_write_st(struct pci_dev *dev, unsigned int msix_nr,
-> +			      u8 req_type, u16 tag)
-
-This function is not a predicate and testing for true/false gives no
-indication of the sense.
-
-For typical functions that do read/write/etc, returning 0 means
-success and -errno means failure.  This is the opposite.
-
-> +	/*
-> +	 * disable TPH before updating the tag to avoid potential instability
-> +	 * as cautioned about in the "ST Table Programming" of PCI-E spec
-
-s/disable/Disable/
-
-"PCIe r6.0, sec ..."
-
-> +bool pcie_tph_set_st(struct pci_dev *dev, unsigned int msix_nr,
-> +		     unsigned int cpu, enum tph_mem_type mem_type,
-> +		     u8 req_type)
-
-Should return 0 or -errno.
 
