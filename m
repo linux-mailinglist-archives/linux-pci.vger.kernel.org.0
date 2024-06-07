@@ -1,156 +1,96 @@
-Return-Path: <linux-pci+bounces-8481-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8482-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 917B4900C99
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 21:47:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6332900CA3
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 21:55:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B713B286988
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:47:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EE9E1F22B2A
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7116913DBB6;
-	Fri,  7 Jun 2024 19:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DEF514EC4C;
+	Fri,  7 Jun 2024 19:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXupJrvx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NETPHZm7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAC01CAB5;
-	Fri,  7 Jun 2024 19:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B36A50263;
+	Fri,  7 Jun 2024 19:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717789665; cv=none; b=f5L5QWS5baqPRi/C9MUF4F+0w8WvktxL99V0SqwryXF2VRUZ6oXnNB4otsqgp8FPzU67JjNvhbQRjWWEhgGhTQKHDaD4W2F9rqMD+re+al6WwBz3b4SofOH/BSyRWOLR9G48c0GcqwgValf0lZ56nmAw0RXjzZmP01tHzqUwFbk=
+	t=1717790104; cv=none; b=Mwy1BrKI1wFJxNIhgUva1QeKg0cvK63dRE1sMCIoYhOTfvh6Ydxe0cB8TuCNdGUELHZYjb5roq2/k+tib0TFCw8an5t0gcBaRMpVC1HV/E6o70KdloZFP27rkfzsw8c4IMkWxDw8VB8Sk+xdhyUCMiQGuTLAaMF8kErgd/k3Yp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717789665; c=relaxed/simple;
-	bh=NTZmlXTtPqo/64yJt8pRksmMIHacjeI8YFNmvRh9tBg=;
+	s=arc-20240116; t=1717790104; c=relaxed/simple;
+	bh=56EznWOcTzBf8BvoIJw9+sktcRe3Ewf5qCLugsw5GDA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=X70pssvsfKA3CAAL/RIwv0pJsTG1PBD2WNh6PaNVcf0oyJouo0VgsIZdc9iDkpWIJj2kYio1YdqCBBlYl5Uwq3DfK0SgncwcvFPhrAnGP/D6vyLsIuHNEAZcBQ4yqhPx7xw0nA9S5KrGDBSP9owvqnobrn/ubGcx82Q9dz0OQbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXupJrvx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F5CFC2BBFC;
-	Fri,  7 Jun 2024 19:47:44 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=hjiKMAlETdMDWbiCMCZosjrapapaHLxFM3bzoHD9wl5tPJByONarCWmMnuSovLcC6VeYPIDQPfX+F/uWEDYMGLNvnUe8wjAE+8vSRmn2qOcW3FiUlM/Kv34rq+MtK8TFdFU5Tc5mqP6qqQjIK0WxkWp9lbRK6s/rH1JkkXADJZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NETPHZm7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE48C2BBFC;
+	Fri,  7 Jun 2024 19:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717789664;
-	bh=NTZmlXTtPqo/64yJt8pRksmMIHacjeI8YFNmvRh9tBg=;
+	s=k20201202; t=1717790103;
+	bh=56EznWOcTzBf8BvoIJw9+sktcRe3Ewf5qCLugsw5GDA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=WXupJrvxbx3FZTRQhsGfqh/xmfTxBf9mrGx8YB/ibh3OmXe1PmwVh6KKbV/8LV3X/
-	 S92NJ0dyXi8YRevQjpWcXy7hLSx0yltvssvX6qeZA0B/3gWbuLOe6080OUEYw5oKi/
-	 oiIL//yla/akXVLbI34EQjy9XOHxOmE1OyjqVithNTbv7ddlCVwDM0YIvhz4azB6iw
-	 qC+WBjz8Sb7iKhK4FGCxWNkK2bpRqwX8oUTMFu14wOCmcPQu5expC9D/B3+l9QtIaG
-	 SfdNc8y1GY06leQEuK4et0skSVtbWHpKgXj454CvuxG0itWz3bq7FZMxLr0tIyXvmW
-	 UJDMRsBx+OCng==
-Date: Fri, 7 Jun 2024 14:47:42 -0500
+	b=NETPHZm70yDZDAggk+X9Y3lyR50VhHmwYq0to80tbj6yxNOpIQtkd/HHO1NbSP6uh
+	 rjj4rMBcouFf0euj7SIJmVVsN1vkkwOK65I1H5LioiVegBnwB8f8DCFfq1k9p/JsZ7
+	 sqDvYXm/pCudZ/PYZ5iCXtvIAqizPCH5/UbydNtg2vt+4cENuRic6LlQXZE28yh6dQ
+	 kGJsGP4YTKEto/95SvGbzqTslRwI41vR2816UsZecDWu76fzAWZrCJY37KaHALQlIe
+	 fAPX0mtRSMhKGP8NoeZRfkq7E+8biGHyRKX8NCzNuKct/7zpFBT8DWPttOKY7pUnIO
+	 sK6P8eb4Zxdzw==
+Date: Fri, 7 Jun 2024 14:55:01 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Alex Shi <alexs@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Pawel Laszczak <pawell@cadence.com>,
-	Yanteng Si <siyanteng@loongson.cn>, linux-doc@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH] PCI: use array for .id_table consistently
-Message-ID: <20240607194742.GA857985@bhelgaas>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: Saurabh Singh Sengar <ssengar@linux.microsoft.com>, arnd@arndb.de,
+	bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	haiyangz@microsoft.com, hpa@zytor.com, kw@linux.com,
+	kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+	mingo@redhat.com, mhklinux@outlook.com, rafael@kernel.org,
+	robh@kernel.org, tglx@linutronix.de, wei.liu@kernel.org,
+	will@kernel.org, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, x86@kernel.org, ssengar@microsoft.com,
+	sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH v2 6/6] drivers/pci/hyperv/arm64: vPCI MSI IRQ domain
+ from DT
+Message-ID: <20240607195501.GA858122@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240517120458.1260489-1-masahiroy@kernel.org>
+In-Reply-To: <20240515181238.GA2129352@bhelgaas>
 
-On Fri, May 17, 2024 at 09:04:58PM +0900, Masahiro Yamada wrote:
-> While 'x' and '&x[0]' are equivalent, most of the PCI drivers use the
-> former form for the .id_table.
-> 
-> Update some drivers and documentation for consistency.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+On Wed, May 15, 2024 at 01:12:38PM -0500, Bjorn Helgaas wrote:
+> On Wed, May 15, 2024 at 09:34:09AM -0700, Roman Kisel wrote:
+> > 
+> > 
+> > On 5/15/2024 2:48 AM, Saurabh Singh Sengar wrote:
+> > > On Tue, May 14, 2024 at 03:43:53PM -0700, Roman Kisel wrote:
+> > > > The hyperv-pci driver uses ACPI for MSI IRQ domain configuration
+> > > > on arm64 thereby it won't be able to do that in the VTL mode where
+> > > > only DeviceTree can be used.
+> > > > 
+> > > > Update the hyperv-pci driver to discover interrupt configuration
+> > > > via DeviceTree.
+> > > 
+> > > Subject prefix should be "PCI: hv:"
 
-Applied to pci/misc for v6.11, thanks!
+I forgot to also suggest that the subject line begin with a verb,
+e.g., "Get vPCI MSI IRQ domain from DT" or similar, again so it reads
+consistently with previous commits.
 
-USB folks, let me know if you'd rather that I drop your parts.
+Oh, I see patch 5/6, "Get the irq number from DeviceTree" is also very
+similar.  It would be nice if they matched, e.g., both used "IRQ" and
+"DT".
 
-> ---
-> 
->  Documentation/PCI/pciebus-howto.rst                    | 2 +-
->  Documentation/translations/zh_CN/PCI/pciebus-howto.rst | 2 +-
->  drivers/pci/pcie/portdrv.c                             | 2 +-
->  drivers/usb/cdns3/cdnsp-pci.c                          | 2 +-
->  drivers/usb/gadget/udc/cdns2/cdns2-pci.c               | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/PCI/pciebus-howto.rst b/Documentation/PCI/pciebus-howto.rst
-> index a0027e8fb0d0..f344452651e1 100644
-> --- a/Documentation/PCI/pciebus-howto.rst
-> +++ b/Documentation/PCI/pciebus-howto.rst
-> @@ -139,7 +139,7 @@ driver data structure.
->  
->    static struct pcie_port_service_driver root_aerdrv = {
->      .name		= (char *)device_name,
-> -    .id_table	= &service_id[0],
-> +    .id_table	= service_id,
->  
->      .probe		= aerdrv_load,
->      .remove		= aerdrv_unload,
-> diff --git a/Documentation/translations/zh_CN/PCI/pciebus-howto.rst b/Documentation/translations/zh_CN/PCI/pciebus-howto.rst
-> index 65c4301f12cd..c6ffda62af21 100644
-> --- a/Documentation/translations/zh_CN/PCI/pciebus-howto.rst
-> +++ b/Documentation/translations/zh_CN/PCI/pciebus-howto.rst
-> @@ -124,7 +124,7 @@ pcie_port_service_unregister取代了Linux驱动模型的pci_unregister_driver
->  
->    static struct pcie_port_service_driver root_aerdrv = {
->      .name		= (char *)device_name,
-> -    .id_table	= &service_id[0],
-> +    .id_table	= service_id,
->  
->      .probe		= aerdrv_load,
->      .remove		= aerdrv_unload,
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 14a4b89a3b83..2faca06ff67c 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -786,7 +786,7 @@ static const struct pci_error_handlers pcie_portdrv_err_handler = {
->  
->  static struct pci_driver pcie_portdriver = {
->  	.name		= "pcieport",
-> -	.id_table	= &port_pci_ids[0],
-> +	.id_table	= port_pci_ids,
->  
->  	.probe		= pcie_portdrv_probe,
->  	.remove		= pcie_portdrv_remove,
-> diff --git a/drivers/usb/cdns3/cdnsp-pci.c b/drivers/usb/cdns3/cdnsp-pci.c
-> index 0725668ffea4..225540fc81ba 100644
-> --- a/drivers/usb/cdns3/cdnsp-pci.c
-> +++ b/drivers/usb/cdns3/cdnsp-pci.c
-> @@ -231,7 +231,7 @@ static const struct pci_device_id cdnsp_pci_ids[] = {
->  
->  static struct pci_driver cdnsp_pci_driver = {
->  	.name = "cdnsp-pci",
-> -	.id_table = &cdnsp_pci_ids[0],
-> +	.id_table = cdnsp_pci_ids,
->  	.probe = cdnsp_pci_probe,
->  	.remove = cdnsp_pci_remove,
->  	.driver = {
-> diff --git a/drivers/usb/gadget/udc/cdns2/cdns2-pci.c b/drivers/usb/gadget/udc/cdns2/cdns2-pci.c
-> index 1691541c9413..50c3d0974d9b 100644
-> --- a/drivers/usb/gadget/udc/cdns2/cdns2-pci.c
-> +++ b/drivers/usb/gadget/udc/cdns2/cdns2-pci.c
-> @@ -121,7 +121,7 @@ static const struct pci_device_id cdns2_pci_ids[] = {
->  
->  static struct pci_driver cdns2_pci_driver = {
->  	.name = "cdns2-pci",
-> -	.id_table = &cdns2_pci_ids[0],
-> +	.id_table = cdns2_pci_ids,
->  	.probe = cdns2_pci_probe,
->  	.remove = cdns2_pci_remove,
->  	.driver = {
-> -- 
-> 2.40.1
-> 
+Bjorn
 
