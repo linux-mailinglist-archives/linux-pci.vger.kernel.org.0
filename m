@@ -1,49 +1,50 @@
-Return-Path: <linux-pci+bounces-8456-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8457-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 202EB9001CB
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 13:15:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C6E49001CD
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 13:15:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A7641C21F3D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 11:15:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DDD61C219CF
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 11:15:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78602187346;
-	Fri,  7 Jun 2024 11:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD06E187350;
+	Fri,  7 Jun 2024 11:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8LApsXl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+N4HHkz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5031F14F11B;
-	Fri,  7 Jun 2024 11:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9249D187321;
+	Fri,  7 Jun 2024 11:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717758914; cv=none; b=IC3bK+40ohJiJCiBR1WRbU81x7alSTJycAunLwJyLEgKCBFGtIqnFnNJXzckD5PeNb826Sh55tDHK//rfFKJ7pWgtTzofin6vTR0OQDl3+5terA7rMCtDXe5zxwpnz7LOOVJmq8RfOJCMAKX2ORfhFxB+aRdkW4rF50bNprZ6Fo=
+	t=1717758918; cv=none; b=M24DtMmTAfN6K+YV4xoK9hMJDN9r1YEAR9uizPRqg+rcFz7r8hOP9TSGTIZeZMg08NhQ1vbq/pQLokoJFFIG7ZGep1m0k/BqmZ4naCDTsEvO8TiW5JgfVK2VWosJnTfJDXZWEt9vYAz4s1bkLfl44Kt9Y1TtQohMlJNCB1CcGos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717758914; c=relaxed/simple;
-	bh=9jDJlEfoL0ZhQwes4OQ+ED0VPqS/88G8V7CnmKAjyRk=;
+	s=arc-20240116; t=1717758918; c=relaxed/simple;
+	bh=Cb+IZjxUuiBUUuqEqVnW1efYvSKdElT1+c7InFSo4vo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cf7qX0Px5zRehlYqEz6rK5WRjlJMy372erQRYYPDtrssrBzdMFQDmR+NZ0uOG2VvD6BazjJ7QLS3n/W/H4yPbte8CeZckrMXBSgI1mEr7Oo6BNM6t6PJyxj38WWiYtR0kYxsC2SIgAFpjBx/mOlqw+glvct8CnP5OYgmxJ9GkW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8LApsXl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE5DC2BBFC;
-	Fri,  7 Jun 2024 11:15:09 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=M+RtYKjZCDX5l8GMXerFeTkBOHg/IK28Q/e/bgav8thzIvx5k6md9Tx4Bt16gg+cmIGLjgukBK9BzDzRtOTrko6GD1fB5uK1ikaB5bbXjOABeG4z3GY/VVry+vWyIpOIGzmD7dbKzVoFLTaNfroP/NQmmk5J5OAajIdCf+Ym1cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+N4HHkz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D67C32781;
+	Fri,  7 Jun 2024 11:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717758913;
-	bh=9jDJlEfoL0ZhQwes4OQ+ED0VPqS/88G8V7CnmKAjyRk=;
+	s=k20201202; t=1717758918;
+	bh=Cb+IZjxUuiBUUuqEqVnW1efYvSKdElT1+c7InFSo4vo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Q8LApsXllRLb6gOJOxiiaHt8QswALM6nFoM6tIxciyviStSR7YMgDvsbbA+frhlUZ
-	 FTQV0Rkcb328WZf1NAWqZ/7Pmv9D38U4kHB3MEzO81XcvKxnyYpZD92BXn6DJXvmNo
-	 +nd76s1/B6jSWna0rdRN2410b7ZIcNUXrlTmpPDCBY/e4+fk844PaDl/n+xZnN3Jky
-	 k6FqLQq77olVwpZ1kr0e+lHgQF+Rhz/pnpkvvXmbwcoHSWx1s4VcASE2L+tlQ0lWQK
-	 zIHLWLzZWHB9hT0o5x0NiajItIGp2/OPTCJn7ee+RflIVXaj0SFkiWrriaNuxM+MmY
-	 Vs6nLG7ZkKB/A==
+	b=g+N4HHkztH2EG/YyTvsb5WQoMIq4iOdtVTr7jj9a7xShS5qWdfv0Ov7g+XrIKGeN7
+	 HdsAYn6XqzjHvcDzp13HNMxc8krCUeB8O7bfLGs95O1h+7kSqKPv7FVpYjlTYNeYFB
+	 CLgMSeNwIr284pH6bJsXoayxa0TKhHrD7UqF12JttlzLRleHXdEgERyb5vSChnT9kg
+	 4BEVPkZvJeFvrgAMIrXLi5hTAWCWeePLk2hGLR09JPVmrPSUUpnTpi3QfJV91j+cce
+	 yp3VWvbedbUS28TdrCF2LqOn76CXTfyS/usMbamm98QaWtMDMvx11Z8eMlHKRpfNkW
+	 H3WS3re76HOXA==
 From: Niklas Cassel <cassel@kernel.org>
-Date: Fri, 07 Jun 2024 13:14:30 +0200
-Subject: [PATCH v5 10/13] PCI: dw-rockchip: Add endpoint mode support
+Date: Fri, 07 Jun 2024 13:14:31 +0200
+Subject: [PATCH v5 11/13] misc: pci_endpoint_test: Add support for rockchip
+ rk3588
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240607-rockchip-pcie-ep-v1-v5-10-0a042d6b0049@kernel.org>
+Message-Id: <20240607-rockchip-pcie-ep-v1-v5-11-0a042d6b0049@kernel.org>
 References: <20240607-rockchip-pcie-ep-v1-v5-0-0a042d6b0049@kernel.org>
 In-Reply-To: <20240607-rockchip-pcie-ep-v1-v5-0-0a042d6b0049@kernel.org>
 To: Jingoo Han <jingoohan1@gmail.com>, 
@@ -69,373 +70,73 @@ To: Jingoo Han <jingoohan1@gmail.com>,
 Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-rockchip@lists.infradead.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12173; i=cassel@kernel.org;
- h=from:subject:message-id; bh=9jDJlEfoL0ZhQwes4OQ+ED0VPqS/88G8V7CnmKAjyRk=;
- b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNKSXk8KNXBXYnrSrJXl8O2LQK/CpHN1ew7n6G66YmcV5
- bXaQv1LRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACYi8IKRoTfk5J71alt16q4m
- +jrszJkmdGqF4tK/n9tX5txoLNrydzXD//JTmSzrg06vkWI+FXxqleA2rVvPnefqv93MbTzpm8k
- tHiYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2359; i=cassel@kernel.org;
+ h=from:subject:message-id; bh=Cb+IZjxUuiBUUuqEqVnW1efYvSKdElT1+c7InFSo4vo=;
+ b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNKSXk9SX7jY6YvoVK8tb/dOv8o001fwl8e6A6dNO9akN
+ X5dZOL6o6OUhUGMi0FWTJHF94fL/uJu9ynHFe/YwMxhZQIZwsDFKQATKb3B8M/W27Qw4/I7jrs5
+ BZJ2Okq3M6dM3HhD7+vjA5oe14vjftUxMpx6d41Ta9Oxz+5qhbdmCqfe2sJ1N1TF70h0+JkIdbZ
+ fUawA
 X-Developer-Key: i=cassel@kernel.org; a=openpgp;
  fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 
-The PCIe controller in rk3568 and rk3588 can operate in endpoint mode.
-This endpoint mode support heavily leverages the existing code in
-pcie-designware-ep.c.
+Rockchip rk3588 requires 64k alignment.
+While there is an existing device_id:vendor_id in the driver with 64k
+alignment, that device_id:vendor_id is am654, which uses BAR2 instead of
+BAR0 as the test_reg_bar, and also has special is_am654_pci_dev() checks
+in the driver to disallow BAR0. In order to allow testing all BARs, add a
+new rk3588 entry in the driver.
 
-Add support for endpoint mode to the existing pcie-dw-rockchip glue
-driver.
+We intentionally do not add the vendor id to pci_ids.h, since the policy
+for that file is that the vendor id has to be used by multiple drivers.
+
+Hopefully, this new entry will be short-lived, as there is a series on the
+mailing list which intends to move the address alignment restrictions from
+this driver to the endpoint side.
+
+Add a new entry for rk3588 in order to allow us to test all BARs.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/Kconfig            |  21 ++-
- drivers/pci/controller/dwc/Makefile           |   2 +-
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 209 ++++++++++++++++++++++++++
- 3 files changed, 227 insertions(+), 5 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 8afacc90c63b..9c4fb8ba7573 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -311,16 +311,29 @@ config PCIE_RCAR_GEN4_EP
- 	  SoCs. To compile this driver as a module, choose M here: the module
- 	  will be called pcie-rcar-gen4.ko. This uses the DesignWare core.
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 4f3ec1f2ba9f..0ffc8e02b863 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -85,6 +85,9 @@
+ #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
+ #define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
  
-+config PCIE_ROCKCHIP_DW
-+	bool
++#define PCI_VENDOR_ID_ROCKCHIP			0x1d87
++#define PCI_DEVICE_ID_ROCKCHIP_RK3588		0x3588
 +
- config PCIE_ROCKCHIP_DW_HOST
--	bool "Rockchip DesignWare PCIe controller"
--	select PCIE_DW
--	select PCIE_DW_HOST
-+	bool "Rockchip DesignWare PCIe controller (host mode)"
- 	depends on PCI_MSI
- 	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	depends on OF
-+	select PCIE_DW_HOST
-+	select PCIE_ROCKCHIP_DW
-+	help
-+	  Enables support for the DesignWare PCIe controller in the
-+	  Rockchip SoC (except RK3399) to work in host mode.
-+
-+config PCIE_ROCKCHIP_DW_EP
-+	bool "Rockchip DesignWare PCIe controller (endpoint mode)"
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
-+	depends on OF
-+	select PCIE_DW_EP
-+	select PCIE_ROCKCHIP_DW
- 	help
- 	  Enables support for the DesignWare PCIe controller in the
--	  Rockchip SoC except RK3399.
-+	  Rockchip SoC (except RK3399) to work in endpoint mode.
+ static DEFINE_IDA(pci_endpoint_test_ida);
  
- config PCI_EXYNOS
- 	tristate "Samsung Exynos PCIe controller"
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index bac103faa523..ec215b3d6191 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -16,7 +16,7 @@ obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_QCOM_EP) += pcie-qcom-ep.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
--obj-$(CONFIG_PCIE_ROCKCHIP_DW_HOST) += pcie-dw-rockchip.o
-+obj-$(CONFIG_PCIE_ROCKCHIP_DW) += pcie-dw-rockchip.o
- obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
- obj-$(CONFIG_PCIE_KEEMBAY) += pcie-keembay.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index bd35620b1a96..0a0fdfc66b91 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -34,10 +34,16 @@
- #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
- 
- #define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-+#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
- #define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-+#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
-+#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
-+#define PCIE_CLIENT_INTR_MASK_MISC	0x24
- #define PCIE_SMLH_LINKUP		BIT(16)
- #define PCIE_RDLH_LINKUP		BIT(17)
- #define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-+#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
-+#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
- #define PCIE_L0S_ENTRY			0x11
- #define PCIE_CLIENT_GENERAL_CONTROL	0x0
- #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
-@@ -63,6 +69,7 @@ struct rockchip_pcie {
- 
- struct rockchip_pcie_of_data {
- 	enum dw_pcie_device_mode mode;
-+	const struct pci_epc_features *epc_features;
+ #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
+@@ -1006,6 +1009,11 @@ static const struct pci_endpoint_test_data j721e_data = {
+ 	.irq_type = IRQ_TYPE_MSI,
  };
  
- static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
-@@ -159,6 +166,12 @@ static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
- 				 PCIE_CLIENT_GENERAL_CONTROL);
- }
- 
-+static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
-+{
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
-+				 PCIE_CLIENT_GENERAL_CONTROL);
-+}
-+
- static int rockchip_pcie_link_up(struct dw_pcie *pci)
- {
- 	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-@@ -195,6 +208,13 @@ static int rockchip_pcie_start_link(struct dw_pcie *pci)
- 	return 0;
- }
- 
-+static void rockchip_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+
-+	rockchip_pcie_disable_ltssm(rockchip);
-+}
-+
- static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -220,6 +240,82 @@ static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
- 	.init = rockchip_pcie_host_init,
- };
- 
-+static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	enum pci_barno bar;
-+
-+	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
-+		dw_pcie_ep_reset_bar(pci, bar);
++static const struct pci_endpoint_test_data rk3588_data = {
++	.alignment = SZ_64K,
++	.irq_type = IRQ_TYPE_MSI,
 +};
 +
-+static int rockchip_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-+				   unsigned int type, u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+
-+	switch (type) {
-+	case PCI_IRQ_INTX:
-+		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-+	case PCI_IRQ_MSI:
-+		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-+	case PCI_IRQ_MSIX:
-+		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-+	default:
-+		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pci_epc_features rockchip_pcie_epc_features_rk3568 = {
-+	.linkup_notifier = true,
-+	.msi_capable = true,
-+	.msix_capable = true,
-+	.align = SZ_64K,
-+	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_2] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_3] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_5] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+};
-+
-+/*
-+ * BAR4 on rk3588 exposes the ATU Port Logic Structure to the host regardless of
-+ * iATU settings for BAR4. This means that BAR4 cannot be used by an EPF driver,
-+ * so mark it as RESERVED. (rockchip_pcie_ep_init() will disable all BARs by
-+ * default.) If the host could write to BAR4, the iATU settings (for all other
-+ * BARs) would be overwritten, resulting in (all other BARs) no longer working.
-+ */
-+static const struct pci_epc_features rockchip_pcie_epc_features_rk3588 = {
-+	.linkup_notifier = true,
-+	.msi_capable = true,
-+	.msix_capable = true,
-+	.align = SZ_64K,
-+	.bar[BAR_0] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_2] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_3] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+	.bar[BAR_4] = { .type = BAR_RESERVED, },
-+	.bar[BAR_5] = { .type = BAR_FIXED, .fixed_size = SZ_1M, },
-+};
-+
-+static const struct pci_epc_features *
-+rockchip_pcie_get_features(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+
-+	return rockchip->data->epc_features;
-+}
-+
-+static const struct dw_pcie_ep_ops rockchip_pcie_ep_ops = {
-+	.init = rockchip_pcie_ep_init,
-+	.raise_irq = rockchip_pcie_raise_irq,
-+	.get_features = rockchip_pcie_get_features,
-+};
-+
- static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
- {
- 	struct device *dev = rockchip->pci.dev;
-@@ -290,13 +386,46 @@ static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = rockchip_pcie_link_up,
- 	.start_link = rockchip_pcie_start_link,
-+	.stop_link = rockchip_pcie_stop_link,
- };
- 
-+static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
-+{
-+	struct rockchip_pcie *rockchip = arg;
-+	struct dw_pcie *pci = &rockchip->pci;
-+	struct device *dev = pci->dev;
-+	u32 reg, val;
-+
-+	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
-+	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
-+
-+	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
-+	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
-+
-+	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
-+		dev_dbg(dev, "hot reset or link-down reset\n");
-+		dw_pcie_ep_linkdown(&pci->ep);
-+	}
-+
-+	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
-+		val = rockchip_pcie_get_ltssm(rockchip);
-+		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
-+			dev_dbg(dev, "link up\n");
-+			dw_pcie_ep_linkup(&pci->ep);
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int rockchip_pcie_configure_rc(struct rockchip_pcie *rockchip)
- {
- 	struct dw_pcie_rp *pp;
- 	u32 val;
- 
-+	if (!IS_ENABLED(CONFIG_PCIE_ROCKCHIP_DW_HOST))
-+		return -ENODEV;
-+
- 	/* LTSSM enable control mode */
- 	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
- 	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-@@ -310,6 +439,63 @@ static int rockchip_pcie_configure_rc(struct rockchip_pcie *rockchip)
- 	return dw_pcie_host_init(pp);
- }
- 
-+static int rockchip_pcie_configure_ep(struct platform_device *pdev,
-+				      struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = &pdev->dev;
-+	int irq, ret;
-+	u32 val;
-+
-+	if (!IS_ENABLED(CONFIG_PCIE_ROCKCHIP_DW_EP))
-+		return -ENODEV;
-+
-+	irq = platform_get_irq_byname(pdev, "sys");
-+	if (irq < 0) {
-+		dev_err(dev, "missing sys IRQ resource\n");
-+		return irq;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, irq, NULL,
-+					rockchip_pcie_ep_sys_irq_thread,
-+					IRQF_ONESHOT, "pcie-sys", rockchip);
-+	if (ret) {
-+		dev_err(dev, "failed to request PCIe sys IRQ\n");
-+		return ret;
-+	}
-+
-+	/* LTSSM enable control mode */
-+	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-+	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-+
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_EP_MODE,
-+				 PCIE_CLIENT_GENERAL_CONTROL);
-+
-+	rockchip->pci.ep.ops = &rockchip_pcie_ep_ops;
-+	rockchip->pci.ep.page_size = SZ_64K;
-+
-+	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+
-+	ret = dw_pcie_ep_init(&rockchip->pci.ep);
-+	if (ret) {
-+		dev_err(dev, "failed to initialize endpoint\n");
-+		return ret;
-+	}
-+
-+	ret = dw_pcie_ep_init_registers(&rockchip->pci.ep);
-+	if (ret) {
-+		dev_err(dev, "failed to initialize DWC endpoint registers\n");
-+		dw_pcie_ep_deinit(&rockchip->pci.ep);
-+		return ret;
-+	}
-+
-+	dw_pcie_ep_init_notify(&rockchip->pci.ep);
-+
-+	/* unmask DLL up/down indicator and hot reset/link-down reset */
-+	rockchip_pcie_writel_apb(rockchip, 0x60000, PCIE_CLIENT_INTR_MASK_MISC);
-+
-+	return ret;
-+}
-+
- static int rockchip_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -371,6 +557,11 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 		if (ret)
- 			goto deinit_clk;
- 		break;
-+	case DW_PCIE_EP_TYPE:
-+		ret = rockchip_pcie_configure_ep(pdev, rockchip);
-+		if (ret)
-+			goto deinit_clk;
-+		break;
- 	default:
- 		dev_err(dev, "INVALID device type %d\n", data->mode);
- 		ret = -EINVAL;
-@@ -394,11 +585,29 @@ static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk3568 = {
- 	.mode = DW_PCIE_RC_TYPE,
- };
- 
-+static const struct rockchip_pcie_of_data rockchip_pcie_ep_of_data_rk3568 = {
-+	.mode = DW_PCIE_EP_TYPE,
-+	.epc_features = &rockchip_pcie_epc_features_rk3568,
-+};
-+
-+static const struct rockchip_pcie_of_data rockchip_pcie_ep_of_data_rk3588 = {
-+	.mode = DW_PCIE_EP_TYPE,
-+	.epc_features = &rockchip_pcie_epc_features_rk3588,
-+};
-+
- static const struct of_device_id rockchip_pcie_of_match[] = {
- 	{
- 		.compatible = "rockchip,rk3568-pcie",
- 		.data = &rockchip_pcie_rc_of_data_rk3568,
+ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x),
+ 	  .driver_data = (kernel_ulong_t)&default_data,
+@@ -1043,6 +1051,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721S2),
+ 	  .driver_data = (kernel_ulong_t)&j721e_data,
  	},
-+	{
-+		.compatible = "rockchip,rk3568-pcie-ep",
-+		.data = &rockchip_pcie_ep_of_data_rk3568,
++	{ PCI_DEVICE(PCI_VENDOR_ID_ROCKCHIP, PCI_DEVICE_ID_ROCKCHIP_RK3588),
++	  .driver_data = (kernel_ulong_t)&rk3588_data,
 +	},
-+	{
-+		.compatible = "rockchip,rk3588-pcie-ep",
-+		.data = &rockchip_pcie_ep_of_data_rk3588,
-+	},
- 	{},
+ 	{ }
  };
- 
+ MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
 
 -- 
 2.45.2
