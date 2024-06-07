@@ -1,182 +1,174 @@
-Return-Path: <linux-pci+bounces-8474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5885900B73
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:43:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFB33900B7A
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:45:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13EBC28B6F0
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 17:43:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38CC028C12A
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 17:45:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94FFE19ADAD;
-	Fri,  7 Jun 2024 17:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A7E719AA5B;
+	Fri,  7 Jun 2024 17:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xv4tADCc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E71119AD56;
-	Fri,  7 Jun 2024 17:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B57C190672;
+	Fri,  7 Jun 2024 17:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782217; cv=none; b=Tv1w921oDj6QZrnPMFN3++coHTiqPITjSNQ/oFLeHZwZWFHzDS0T/rOEHMRvyuWbOm/cldZnQheC3qkSo/0rKOsrsWL7NQ7eRYtZXRJvsBYB+E1r/6rxDZ7F7cauoAHhfsuzLSDNAmTyZh0umCWahuw2PNFkGHJ5cLgEbrjp10E=
+	t=1717782344; cv=none; b=t+HQUi4IMXaSSOg7HGHnmkYnyczVAGh/KBbWdmb1WUTw79L+8N+l9c9ejRny0zeI3VeUh6CWqpLQs++fSJwjOlM0AKa9oH8xLS/S7Xb5rQaRmNQ7h2AlfHAJm7Zy2AH7U74cBCiKDvAfJJyiu9wJdLX7Ff68MTaYCSjDRH2NBj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782217; c=relaxed/simple;
-	bh=fqvbyEdkiheu3Y3sbPvhK1sNPqECpIq6Z0OC2KEKcNA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TMG3H+V1/0ZMWs6yCJVy0PRkN+QRdS2vpIaAp0ZbmLLxC3FynOE6RcAfhNjjCmx9ca7R5ALTP9uxtqbhDUIayEMl/KZQpfO/yMr19bDEt+8wlvVfhzh4qXYb74KkZRHI+goHNKF8p83mW3g0mHociCxxwj6BpsQNYxSCvPMQGDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VwpND3DRkz6J9dh;
-	Sat,  8 Jun 2024 01:39:08 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1D2601402CB;
-	Sat,  8 Jun 2024 01:43:33 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 18:43:32 +0100
-Date: Fri, 7 Jun 2024 18:43:31 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+	s=arc-20240116; t=1717782344; c=relaxed/simple;
+	bh=zCG8FQxsaI/w6vMFJhp8K3xWTo7Bswlks8CEu7zqit0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NljP3LWWRNg9l7I3NDx+z69x+JYTD2l1jPw9gYnLW2JS0LVbWn9d6RpYrzb1bFJMZ/25FIKrvTw4tcHVbOX5bRHNgdJ6qj6ZlXi6FN3ZBy2I5equsm8HTQM5gtK1/Q7CZ0RiH8X1Pf+27LIPq7Tf8MS4o9aEmsHek05elYkKe34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xv4tADCc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA6B4C2BBFC;
+	Fri,  7 Jun 2024 17:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717782344;
+	bh=zCG8FQxsaI/w6vMFJhp8K3xWTo7Bswlks8CEu7zqit0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Xv4tADCcOcuqv6Lb0hkMlr6KfY8ZZAVX1NweUPXXrwO/A9LSokeflWwf5Z0CzmHZu
+	 umJynmWvTAhFDM55M84wu6wrXEpR8YwceWFTT30lGjCu3PSVSSZlhrhAoj+C9zX6Nn
+	 CRFWZF4xCvQF2jacp2/buepX4wL+H69iBxq/R3lqdiWPD6/KUfiyzCF7XvRFe3iZB/
+	 TLzCzcUtAESSSGP49tHVLU+/LJV20h+isLVpIooqd4nEHHg8nnqxmdLtASDvtkQysV
+	 7GhvJOyrbJZCb/mz+biBsFEz4ciyXk7QgVJ1xX1bQChbltDDuoH96Lf6GjTW41cKeA
+	 YsKyjLOKoo4VQ==
+Date: Fri, 7 Jun 2024 12:45:42 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
 To: Wei Huang <wei.huang2@amd.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>, <bhelgaas@google.com>,
-	<corbet@lwn.net>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <alex.williamson@redhat.com>,
-	<gospo@broadcom.com>, <michael.chan@broadcom.com>,
-	<ajit.khaparde@broadcom.com>, <somnath.kotur@broadcom.com>,
-	<andrew.gospodarek@broadcom.com>, <manoj.panicker2@amd.com>,
-	<Eric.VanTassell@amd.com>, <vadim.fedorenko@linux.dev>, <horms@kernel.org>,
-	<bagasdotme@gmail.com>
-Subject: Re: [PATCH V2 7/9] PCI/TPH: Add TPH documentation
-Message-ID: <20240607184331.00000fa0@Huawei.com>
-In-Reply-To: <20240531213841.3246055-8-wei.huang2@amd.com>
-References: <20240531213841.3246055-1-wei.huang2@amd.com>
-	<20240531213841.3246055-8-wei.huang2@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+	bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.williamson@redhat.com, gospo@broadcom.com,
+	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
+	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com
+Subject: Re: [PATCH V2 5/9] PCI/TPH: Introduce API functions to manage
+ steering tags
+Message-ID: <20240607174542.GA853103@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531213841.3246055-6-wei.huang2@amd.com>
 
-On Fri, 31 May 2024 16:38:39 -0500
-Wei Huang <wei.huang2@amd.com> wrote:
+On Fri, May 31, 2024 at 04:38:37PM -0500, Wei Huang wrote:
+> This patch introduces three API functions, pcie_tph_intr_vec_supported(),
+> pcie_tph_get_st() and pcie_tph_set_st(), for a driver to query, retrieve
+> or configure device's steering tags. There are two possible locations for
+> steering tag table and the code automatically figure out the right
+> location to set the tags if pcie_tph_set_st() is called. Note the tag
+> value is always zero currently and will be extended in the follow-up
+> patches.
 
-> Provide a document for TPH feature, including the description of
-> kernel options and driver API interface.
-> 
-> Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
-> Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
-> Signed-off-by: Wei Huang <wei.huang2@amd.com>
-> Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-> Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com> 
-> Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-Sort and sweet.
+> +static int tph_get_reg_field_u32(struct pci_dev *dev, u8 offset, u32 mask,
+> +				 u8 shift, u32 *field)
+> +{
+> +	u32 reg_val;
+> +	int ret;
+> +
+> +	if (!dev->tph_cap)
+> +		return -EINVAL;
+> +
+> +	ret = pci_read_config_dword(dev, dev->tph_cap + offset, &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*field = (reg_val & mask) >> shift;
+> +
+> +	return 0;
+> +}
+> +
+> +static int tph_get_table_size(struct pci_dev *dev, u16 *size_out)
+> +{
+> +	int ret;
+> +	u32 tmp;
+> +
+> +	ret = tph_get_reg_field_u32(dev, PCI_TPH_CAP,
+> +				    PCI_TPH_CAP_ST_MASK,
+> +				    PCI_TPH_CAP_ST_SHIFT, &tmp);
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Just use FIELD_GET() instead.
 
-> ---
->  Documentation/PCI/index.rst          |  1 +
->  Documentation/PCI/tph.rst            | 57 ++++++++++++++++++++++++++++
->  Documentation/driver-api/pci/pci.rst |  3 ++
->  3 files changed, 61 insertions(+)
->  create mode 100644 Documentation/PCI/tph.rst
-> 
-> diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
-> index e73f84aebde3..5e7c4e6e726b 100644
-> --- a/Documentation/PCI/index.rst
-> +++ b/Documentation/PCI/index.rst
-> @@ -18,3 +18,4 @@ PCI Bus Subsystem
->     pcieaer-howto
->     endpoint/index
->     boot-interrupts
-> +   tph
-> diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
-> new file mode 100644
-> index 000000000000..ea9c8313f3e4
-> --- /dev/null
-> +++ b/Documentation/PCI/tph.rst
-> @@ -0,0 +1,57 @@
-> +.. SPDX-License-Identifier: GPL-2.0
+> +	if (ret)
+> +		return ret;
 > +
-> +===========
-> +TPH Support
-> +===========
+> +	*size_out = (u16)tmp;
 > +
+> +	return 0;
+> +}
 > +
-> +:Copyright: 2024 Advanced Micro Devices, Inc.
-> +:Authors: - Eric van Tassell <eric.vantassell@amd.com>
-> +          - Wei Huang <wei.huang2@amd.com>
-> +
-> +Overview
-> +========
-> +TPH (TLP Processing Hints) is a PCIe feature that allows endpoint devices
-> +to provide optimization hints, such as desired caching behavior, for
-> +requests that target memory space. These hints, in a format called steering
-> +tags, are provided in the requester's TLP headers and can empower the system
-> +hardware, including the Root Complex, to optimize the utilization of platform
-> +resources for the requests.
-> +
-> +User Guide
-> +==========
-> +
-> +Kernel Options
-> +--------------
-> +There are two kernel command line options available to control TPH feature
-> +
-> +   * "notph": TPH will be disabled for all endpoint devices.
-> +   * "nostmode": TPH will be enabled but the ST Mode will be forced to "No ST Mode".
-> +
-> +Device Driver API
-> +-----------------
-> +In brief, an endpoint device driver using the TPH interface to configure
-> +Interrupt Vector Mode will call pcie_tph_set_st() when setting up MSI-X
-> +interrupts as shown below:
-> +
-> +.. code-block:: c
-> +
-> +    for (i = 0, j = 0; i < nr_rings; i++) {
-> +        ...
-> +        rc = request_irq(irq->vector, irq->handler, flags, irq->name, NULL);
-> +        ...
-> +        if (!pcie_tph_set_st(pdev, i, cpumask_first(irq->cpu_mask),
-> +                             TPH_MEM_TYPE_VM, PCI_TPH_REQ_TPH_ONLY))
-> +               pr_err("Error in configuring steering tag\n");
-> +        ...
-> +    }
-> +
-> +If a device only supports TPH vendor specific mode, its driver can call
-> +pcie_tph_get_st() to retrieve the steering tag for a specific CPU and uses
-> +the tag to control TPH behavior.
-> +
-> +.. kernel-doc:: drivers/pci/pcie/tph.c
-> +   :export:
-> +
-> +.. kernel-doc:: drivers/pci/pcie/tph.c
-> +   :identifiers: pcie_tph_set_st
-> diff --git a/Documentation/driver-api/pci/pci.rst b/Documentation/driver-api/pci/pci.rst
-> index aa40b1cc243b..3d896b2cf16e 100644
-> --- a/Documentation/driver-api/pci/pci.rst
-> +++ b/Documentation/driver-api/pci/pci.rst
-> @@ -46,6 +46,9 @@ PCI Support Library
->  .. kernel-doc:: drivers/pci/pci-sysfs.c
->     :internal:
->  
-> +.. kernel-doc:: drivers/pci/pcie/tph.c
-> +   :export:
-> +
->  PCI Hotplug Support Library
->  ---------------------------
->  
+> +/*
+> + * For a given device, return a pointer to the MSI table entry at msi_index.
 
+s/MSI/MSI-X/ to avoid any possible confusion.
+
+> +static void __iomem *tph_msix_table_entry(struct pci_dev *dev,
+> +					  u16 msi_index)
+
+> +	ret = pcie_capability_read_dword(rp, PCI_EXP_DEVCAP2, &val);
+> +	if (ret) {
+> +		pr_err("cannot read device capabilities 2 of %s\n",
+> +		       dev_name(&dev->dev));
+
+Never use pr_err() when you can use pci_err() instead.  Obviously no
+dev_name() needed with pci_err().  Other instances below.
+
+> +	val &= PCI_EXP_DEVCAP2_TPH_COMP;
+> +
+> +	return val >> PCI_EXP_DEVCAP2_TPH_COMP_SHIFT;
+
+FIELD_GET()
+
+> + * The PCI Specification version 5.0 requires the "No ST Mode" mode
+> + * be supported by any compatible device.
+
+Cite r6.0 or newer and include section number.
+
+> +	/* clear the mode select and enable fields and set new values*/
+
+Space before closing */
+
+> +	ctrl_reg &= ~(PCI_TPH_CTRL_REQ_EN_MASK);
+> +	ctrl_reg |= (((u32)req_type << PCI_TPH_CTRL_REQ_EN_SHIFT) &
+> +			PCI_TPH_CTRL_REQ_EN_MASK);
+
+FIELD_GET()/FIELD_PREP()
+
+> +static bool pcie_tph_write_st(struct pci_dev *dev, unsigned int msix_nr,
+> +			      u8 req_type, u16 tag)
+
+This function is not a predicate and testing for true/false gives no
+indication of the sense.
+
+For typical functions that do read/write/etc, returning 0 means
+success and -errno means failure.  This is the opposite.
+
+> +	/*
+> +	 * disable TPH before updating the tag to avoid potential instability
+> +	 * as cautioned about in the "ST Table Programming" of PCI-E spec
+
+s/disable/Disable/
+
+"PCIe r6.0, sec ..."
+
+> +bool pcie_tph_set_st(struct pci_dev *dev, unsigned int msix_nr,
+> +		     unsigned int cpu, enum tph_mem_type mem_type,
+> +		     u8 req_type)
+
+Should return 0 or -errno.
 
