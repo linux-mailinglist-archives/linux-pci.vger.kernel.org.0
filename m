@@ -1,132 +1,138 @@
-Return-Path: <linux-pci+bounces-8476-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8477-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE0A2900BA2
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 19:58:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64446900BFB
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 20:43:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F11FF1C2220D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 17:58:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54E1C1C21614
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 18:43:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7111019AD90;
-	Fri,  7 Jun 2024 17:58:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46DBC13F440;
+	Fri,  7 Jun 2024 18:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvClyOjf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D27A19ADAE;
-	Fri,  7 Jun 2024 17:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117CA1CD02;
+	Fri,  7 Jun 2024 18:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717783091; cv=none; b=vCc/tP6qosSQw0W1uMtP15KhHDHwEwil8k5B5t54QipN9v1fIvDtihLV93Rx6qvLwFNjWjRl3QXWqaRHFMMf6ZiL/vPH4mfa3tRDwud+O+NmZPG2R1mvpMITcw9mf4n/8FRiwyUuD7oNnUkKJ8fh2/oOtLumGKBRdzhlucVXYxg=
+	t=1717785804; cv=none; b=DmC4Zp0G5fs0h1wSHLM0fbObLtG6ztOS+69UzSORrP+QM4gXKZp5hW9o5oId7yyH4720ZqUDuriDZTjXFtd6hG3v9+MvUzJJJAssN8fqkhTbapVk52YjA+nIyOUoWe/ceSQpcrN0+ci2PwMOvK1HnADHTlqK3cOMtf7SwQUEUGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717783091; c=relaxed/simple;
-	bh=djLVwRYADCRsn6mXlpC3+LTYBS/XLkzLolWphDFBK9g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bqU9pZEjz3ZmCqAdPoLaZ7YNPganP42ersAwL2dC+yeijD5njoqb9Kk2fKtg0Cclu9hxaDXTutEUoUjJNJyekTj8rTkA1N4DW/RJd4SH7kDJrajjIkg8PKQUrWGRE4YLW+i6kaDkGafFhR1ExvQkAThk1285CONj0jgXcvAgRbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwpj16yFGz6J9dh;
-	Sat,  8 Jun 2024 01:53:41 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A53A7140A70;
-	Sat,  8 Jun 2024 01:58:06 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 18:58:06 +0100
-Date: Fri, 7 Jun 2024 18:58:05 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v3 2/2] cxl: Calculate region bandwidth of targets with
- shared upstream link
-Message-ID: <20240607185805.00007872@Huawei.com>
-In-Reply-To: <92744829-dbb8-4681-914d-c36797518e3c@intel.com>
-References: <20240529214357.1193417-1-dave.jiang@intel.com>
-	<20240529214357.1193417-3-dave.jiang@intel.com>
-	<20240605151936.000031df@Huawei.com>
-	<c5e2b730-8274-48d0-9553-4c1b8cf4945a@intel.com>
-	<20240607153042.000046c9@Huawei.com>
-	<92744829-dbb8-4681-914d-c36797518e3c@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1717785804; c=relaxed/simple;
+	bh=OCTLuk/DIpZjCuMdEwXD4ZYH2rU5XWljSDnPfquC+XQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=A3cODvTYj5se672LrLHBqRByxqbI9jDql5JxpDuZE55g97YucYTta71OIxGuuMZ6FhBUMezFy0QXvF+7leSailW+ZpICwsxomtm621MWTxRID0bb+cZhG+A3kw/TskSi++NIUxxvmiFuTT6SPfS49kBwQE9o5FhLi/EirwHMTQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvClyOjf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482B5C2BBFC;
+	Fri,  7 Jun 2024 18:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717785803;
+	bh=OCTLuk/DIpZjCuMdEwXD4ZYH2rU5XWljSDnPfquC+XQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lvClyOjfiMvMLVUxa9M8Ra8v/0slconYbv+YKmVtK3DEaJ+0XlVZ1a5ZNQbMhHrV/
+	 zUkvlgZvjmAmvvNSKaLHuWsCmi+pIUZx/wj33h+5ulghxjxjhg2xwhgntLWGFRcQqs
+	 G0rqi3F5z8MCKS8h4laqhVbFRgZQaNHSGIMpUhZlmKUWXYTvFKtfzinZ/EuIHxMA/A
+	 fX4IwZmlBp1ZXPBM7HPFLb9MoOTUKH5zBcp9xH7ghMEiaqA1ejvioVeozxUZKIQKZb
+	 94pUicfCZMhWv8y/ln/FTP5v1WENEIgF9IP3kZ24kcj9yDWk30AKZOGH9DNs9R014x
+	 MWxhjTgsSMHCQ==
+Date: Fri, 7 Jun 2024 13:43:20 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Wei Huang <wei.huang2@amd.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
+	bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	alex.williamson@redhat.com, gospo@broadcom.com,
+	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
+	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com
+Subject: Re: [PATCH V2 6/9] PCI/TPH: Retrieve steering tag from ACPI _DSM
+Message-ID: <20240607184320.GA853474@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531213841.3246055-7-wei.huang2@amd.com>
 
-On Fri, 7 Jun 2024 09:12:31 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Fri, May 31, 2024 at 04:38:38PM -0500, Wei Huang wrote:
+> According to PCI SIG ECN, calling the _DSM firmware method for a given
+> CPU_UID returns the steering tags for different types of memory
+> (volatile, non-volatile). These tags are supposed to be used in ST
+> table entry for optimal results.
 
-> On 6/7/24 7:30 AM, Jonathan Cameron wrote:
-> >   
-> >>>> +		if (is_cxl_root(parent_port)) {
-> >>>> +			ctx->port = parent_port;
-> >>>> +			cxl_coordinates_combine(ctx->coord, ctx->coord,
-> >>>> +						dport->coord);    
-> >>>
-> >>> I'm a bit lost in all the levels of iteration so may have missed it.
-> >>>
-> >>> Do we assume that GP BW (which is the root bridge) is shared across multiple root
-> >>> ports on that host bridge if they are both part of the interleave set?    
-> >>
-> >> Do we need to count the number of RPs under a HB and do min(aggregated_RPs_BW, (GP_BW / no of RPs) * affiliated_RPs_in_region)?  
-> > 
-> > I'm not 100% sure I understand the question.
-> > 
-> > Taking this again and expanding it another level.
-> > 
-> > 
-> > 
-> >       Host CPU
-> > ______________________________________
-> >         |                           |
-> >         |                           |
-> >         | 3 from GP/HMAT            | 3 from GP/HMAT
-> >    _____|_____               _______|______
-> >   RP         RP             RP            RP
-> >   2|          |2           2|             |2
-> >  __|__     ___|__         __|___        __|____
-> > |1    |1  1|     |1      |1     |1     |1      |1
-> > EP   EP    EP    EP     EP     EP      EP     EP
-> > 
-> > Then your maths
-> > 
-> > aggregated RPs BW is 8
-> > (GP_BW/no of RPS) * affliated RPS in region.
-> > = (3/2 * 4)
-> > = 6  
-> 
-> While the result is the same, the math would be this below right?
-> min((3/2 * 2), 4) + min((3/2 * 2), 4)
+Cite PCI Firmware spec if possible.  If it hasn't been incorporated
+yet, at least include the exact name of the ECN and the date it was
+approved.
 
-That's better, but I thought your thing above was about RPs in a HB vs
-RPs across the whole thing.  Hence was trying to align with that.
+Say what the patch does in the commit log (in addition to the subject
+line).
 
-I'm lost and it's end of Friday.  Lets work this out with code.
+> +#define MIN_ST_DSM_REV		7
 
-Jonathan
-> 
-> > Which is correct. So yes, I think that works if we assume everything is balanced.
-> > I'm fine with that assumption as that should be the common case.
-> > 
-> > 
-> > Jonathan
-> > 
-> >   
-> 
+No useful value in this #define.  If the value ever changes, code
+changes will be required too.
 
+> +#define ST_DSM_FUNC_INDEX	0xf
+
+Move to the list in pci-acpi.h with name similar to others.
+
+> +static bool invoke_dsm(acpi_handle handle, u32 cpu_uid, u8 ph,
+> +		       u8 target_type, bool cache_ref_valid,
+> +		       u64 cache_ref, union st_info *st_out)
+> +{
+
+Return 0 or -errno.  "invoke_dsm" is not a predicate with an obvious
+true/false meaning.
+
+> +	union acpi_object in_obj, in_buf[3], *out_obj;
+> +
+> +	in_buf[0].integer.type = ACPI_TYPE_INTEGER;
+> +	in_buf[0].integer.value = 0; /* 0 => processor cache steering tags */
+> +
+> +	in_buf[1].integer.type = ACPI_TYPE_INTEGER;
+> +	in_buf[1].integer.value = cpu_uid;
+> +
+> +	in_buf[2].integer.type = ACPI_TYPE_INTEGER;
+> +	in_buf[2].integer.value = ph & 3;
+> +	in_buf[2].integer.value |= (target_type & 1) << 2;
+> +	in_buf[2].integer.value |= (cache_ref_valid & 1) << 3;
+> +	in_buf[2].integer.value |= (cache_ref << 32);
+> +
+> +	in_obj.type = ACPI_TYPE_PACKAGE;
+> +	in_obj.package.count = ARRAY_SIZE(in_buf);
+> +	in_obj.package.elements = in_buf;
+
+Must check whether this _DSM function is implemented first, e.g., see
+acpi_enable_dpc().
+
+> +	out_obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, MIN_ST_DSM_REV,
+> +				    ST_DSM_FUNC_INDEX, &in_obj);
+> +
+> +	if (!out_obj)
+> +		return false;
+> +
+> +	if (out_obj->type != ACPI_TYPE_BUFFER) {
+> +		pr_err("invalid return type %d from TPH _DSM\n",
+> +		       out_obj->type);
+> +		ACPI_FREE(out_obj);
+> +		return false;
+> +	}
+> +
+> +	st_out->value = *((u64 *)(out_obj->buffer.pointer));
+> +
+> +	ACPI_FREE(out_obj);
+> +
+> +	return true;
+> +}
 
