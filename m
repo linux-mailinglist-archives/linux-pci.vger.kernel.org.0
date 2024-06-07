@@ -1,117 +1,123 @@
-Return-Path: <linux-pci+bounces-8440-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8441-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E02798FFFDF
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 11:50:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C10C900150
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 12:58:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E605E1C2241F
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 09:50:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D216283FBA
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jun 2024 10:58:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C76F73468;
-	Fri,  7 Jun 2024 09:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502B615748C;
+	Fri,  7 Jun 2024 10:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJz999IF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NoDbbT+p"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22773200A0;
-	Fri,  7 Jun 2024 09:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64041581F2
+	for <linux-pci@vger.kernel.org>; Fri,  7 Jun 2024 10:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717753805; cv=none; b=t0MagDAm8hp+Vl4HiJTktdvI8CAy+mGyaq0IFBAhCOG0f9bJrYjlkmBz+GfsrlRgb6xf9I9m1/2SJ5TkrtXsPzN96c3e3HJnYO//fzNswLd+953O2d7l6gkDLHQe3O8CcQAzQpA3RvnBWOoaVIL1VDVERsq+a0IAWfyZNrOIxG0=
+	t=1717757896; cv=none; b=iyA9Vq5ssXs1BpAFMVHH8alNxPZytyxEjSD/te5yzAVN01tAiYuceDCxQVkSA3WLX8SfonAMulR4PSYtoAP3CydFNUd2bQAoLHkVitUCjG7OeMxiNDw1EQO+tp4yfcvUiPg0xxUzWZYupvnA7lgOxTN3899HzHr/NvlA7+gntyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717753805; c=relaxed/simple;
-	bh=akjruwrkh3WPGkPm5XOY0XEKEarFR0VOfCvlpit9/ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JrGcHlgx3t8oi25RmD6wdV2kdQJ3YLqHLC8I2E/nRGbCSKsR3B8PDhiRlsDL6XSX0wooesHfBLgGqTGo96mEJsbjBwLtGTJw2o9tGBldY8X0GVh3/NfZbv2IuWPsVLzcAePBCxSYK15Pfhl5VpKAJczxVLiGgAG3/yzr+Tj9jhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJz999IF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82E0CC2BBFC;
-	Fri,  7 Jun 2024 09:50:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717753804;
-	bh=akjruwrkh3WPGkPm5XOY0XEKEarFR0VOfCvlpit9/ek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJz999IFl1R2Wv1WpGcamcd26uiBC8bgKjv2D0/k3c/2dxRb6z9gvkUv9sZ427y15
-	 hM4bpYCEJOAeaY8H15myrOiJ72h2GW9lgce1l9cvek3Ax5TubupbgSCfTS0oHPXKkb
-	 DtYCP+8q+sXRCl/SsUbj5bpvzVfOMUrCzHRPuME9D+nClgE7XQ5oqQYBx2502mexB4
-	 jQ+GsienBD+TirjkdCuz+oC3CxeksciiMp5qYcyaBntQ8iFhCKaym8zjzWvWpVuryU
-	 CiQsjtNzICfCKWNcOnelZDglN3I9A2fh9C/3Zy9eK/+YY9B5vQeB5XHajdhSQDeHzO
-	 doy3fofa+ItFQ==
-Date: Fri, 7 Jun 2024 11:49:57 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Damien Le Moal <dlemoal@kernel.org>,
-	Jon Lin <jon.lin@rock-chips.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 03/13] dt-bindings: PCI: snps,dw-pcie-ep: Add
- tx_int{a,b,c,d} legacy irqs
-Message-ID: <ZmLXxUa_6WTde7OC@ryzen.lan>
-References: <20240529-rockchip-pcie-ep-v1-v4-0-3dc00fe21a78@kernel.org>
- <20240529-rockchip-pcie-ep-v1-v4-3-3dc00fe21a78@kernel.org>
- <20240605073402.GE5085@thinkpad>
- <ZmCQak-m7RWRxiix@ryzen.lan>
- <20240606062538.GA4441@thinkpad>
+	s=arc-20240116; t=1717757896; c=relaxed/simple;
+	bh=ycQv3nbAr7OcSxmuMzMW9XRFydQt5R7zli+aLK774Fc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mYNmtHOQajG1Bb6Nt8SwAIz9gHP3U+IsRjA0Rs5V3PSYU0QecrPZDB8lsHnxcpwym1ojgfPeEiM1Uo3tjkqJ19/rVP2Yvy9iyVhTVKZ1ugMu+dc67dZKjbSje/vEwrbJEIbaCBkKdH+0XZ5wBiS50ZRAu2V/kInFmcG8uRzWaN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NoDbbT+p; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42163fa630aso9515535e9.3
+        for <linux-pci@vger.kernel.org>; Fri, 07 Jun 2024 03:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717757893; x=1718362693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AGKUPLlaqu34zNkRMuwZus3nvKRpkYIBrcHRGCQDW/8=;
+        b=NoDbbT+pdNil8HYGtuzjvYWi5sFvib3a4zU7ByWToY5/9QZXFuMZ1kYiJspovsmshc
+         7yC11cj4dTmQXDZQ3TIG2TAFYp22T094IP3gsFlR3ylORJDJAal5su/EN29fQLoul+Hf
+         ysx2UZmbA6ihfWhZOx4W9JS6kh5HTU0Z3OoM1P70uJ6ye2BZGhJcugxmAGKSXBNv/tTy
+         m2Ek5gf8Wqt8hnXZdDgOhkCmFlB7hjQpEQwCTB4fUdnUtylrGiiTOwpROqo7807ZFNS+
+         QFKp+OJcGmQcb7ogpz60KnTMkfRTtMDeXhFa1ns2HZALzRBzYqPgZ3M1+KfhZKdPgq+R
+         QeHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717757893; x=1718362693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AGKUPLlaqu34zNkRMuwZus3nvKRpkYIBrcHRGCQDW/8=;
+        b=Er1yufxD5LwgSR8afhmPNdClBq6zgu2+L0PyetfQKhzXBphyPKiu7u0YU+3w+SGckb
+         FkiHXDs0lSgPbMAlBTHQ0H4ijSES5Xj5YHpuuq3vh/TVOrxI5Od9PtGd86fFpz9cdm1r
+         kITHjtfNQGcFDtsW2RPFJY7+yknZzyCz1Ka8wQVg6YWYJ6dlxqiJm3Hvcz4Z4kcCw/9I
+         0y0k5pBPzlIWUuUnfuwVYx3XDDbsxMgLvkkpQb2+XPLQyhrlO7v6ihj5FJBIvkGFMQNX
+         Uh2NFJGX309lsiyEt3V4hjcfMz8DZNMO0O4GeowSBShDAogaGO9Sz6AnDFHBVedOAsRa
+         vydA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtfB6GvfxQzmTPGka/aOmoJCcspmfZpAyfcVH5iZJDA3IO0bksam+/5mNs8ziAVvYZ/GlV45l2ZYttGJ/oyDXPAxWevWVp7Ghe
+X-Gm-Message-State: AOJu0YyMOfm5l6YCXxhKI2nJIoysfBRuVMp6O12lZvaunnrmCR0+rBpT
+	Mta6cbiJyXR37SNVzNZAkxHTiGIWTPD1vh2kTUEKaNIWUDvbvcWvjYQlJCsVhSQ=
+X-Google-Smtp-Source: AGHT+IEq05dxkoUz5lyUwdXJILrFcWqbbvwqZompyFbB5WoQMQiG2JPbouhAI/2QDSQs2s1tVNVLaA==
+X-Received: by 2002:a5d:4bd0:0:b0:35e:7dc9:49d5 with SMTP id ffacd0b85a97d-35efedf2a1emr1381990f8f.43.1717757892978;
+        Fri, 07 Jun 2024 03:58:12 -0700 (PDT)
+Received: from localhost.localdomain ([2.221.137.100])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5fd1c5fsm3739485f8f.113.2024.06.07.03.58.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 03:58:12 -0700 (PDT)
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+To: will@kernel.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	liviu.dudau@arm.com,
+	sudeep.holla@arm.com,
+	joro@8bytes.org
+Cc: robin.murphy@arm.com,
+	nicolinc@nvidia.com,
+	ketanp@nvidia.com,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v2 0/3] Enable PCIe ATS for devicetree boot
+Date: Fri,  7 Jun 2024 11:54:13 +0100
+Message-ID: <20240607105415.2501934-2-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606062538.GA4441@thinkpad>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 06, 2024 at 11:55:38AM +0530, Manivannan Sadhasivam wrote:
-> 
-> I think you misunderstood what I was asking. I was just asking if we still want
-> to keep the term 'legacy' for INTx IRQs in DT binding or not, since we recently
-> got rid of that terminology in PCI drivers.
+Before enabling Address Translation Support (ATS) in endpoints, the OS
+needs to confirm that the Root Complex supports it. Obtain this
+information from the firmware description since there is no architected
+method. ACPI provides a bit via IORT tables, so add the devicetree
+equivalent.
 
-I still don't think that I understand :)
+Since v1 [1] I added the review and ack tags, thanks all. This should be
+ready to go via the IOMMU tree.
 
-In snps,dw-pcie.yaml we currently (6.10-rc2) have:
+[1] https://lore.kernel.org/all/20240429113938.192706-2-jean-philippe@linaro.org/
 
-const: legacy
-(for the combined IRQ)
+Jean-Philippe Brucker (3):
+  dt-bindings: PCI: generic: Add ats-supported property
+  iommu/of: Support ats-supported device-tree property
+  arm64: dts: fvp: Enable PCIe ATS for Base RevC FVP
 
-pattern: "^int(a|b|c|d)$"
-(for the individual IRQs)
+ .../devicetree/bindings/pci/host-generic-pci.yaml        | 6 ++++++
+ drivers/iommu/of_iommu.c                                 | 9 +++++++++
+ arch/arm64/boot/dts/arm/fvp-base-revc.dts                | 1 +
+ 3 files changed, 16 insertions(+)
 
-So we will need to support these indefinitely.
+-- 
+2.45.2
 
-What is it that you would want to rename?
-
-the combined irq?
-
-Doesn't sound like a good idea to me, as we would need to support two
-(perhaps that is what you meant).
-
-But even if you wanted to rename it, it would be hard to come up with
-a name. Perhaps intx, but that would be super confusing since we already
-have inta, intb, intc, intd.
-
-I think it is best just to not touch the binding.
-
-In kernel macros could (that have already been renamed from legacy to intx)
-doesn't really have anything to do with the DT binding IMO.
-
-
-Kind regards,
-Niklas
 
