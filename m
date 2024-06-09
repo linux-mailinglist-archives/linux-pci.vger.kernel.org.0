@@ -1,196 +1,108 @@
-Return-Path: <linux-pci+bounces-8502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8503-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 874F49015C6
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Jun 2024 12:56:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C1B7901618
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Jun 2024 14:32:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D03FBB210C9
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Jun 2024 10:56:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E0201C20B0D
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Jun 2024 12:32:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87BA52374C;
-	Sun,  9 Jun 2024 10:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790D135894;
+	Sun,  9 Jun 2024 12:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOlOidA7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1SUlV46"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C957AAD23;
-	Sun,  9 Jun 2024 10:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E2DA3F;
+	Sun,  9 Jun 2024 12:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717930581; cv=none; b=E5aJNymhTxXUmHEzQgby0PZT5PF3Fy2FKDD2IRQ0Ux7wVOJkGUsoxqXi8o3a/41Srn+aFhcv8ItKBfm3OW9YkLnR/YEHEXiajGdbwRR/nWqk9ZaWeM4GEEHnmydGt4JATmwpIKEvaw6EqfUbOVtjN7q54joN6arV6/xTvx+lMbY=
+	t=1717936362; cv=none; b=TJdKuc/pKs93O/rGfaoEi6E6JHWwc5ByaUKYm96bU2zZCTclcqvwPRyIo3qSBCPrbmYbh8zBTwJuo7kLJBGNyJzBpaQqVkb1lOMLWOxBz5FirzXWWsLzBGX1lHFhkXrHYm0zNj3s1IgCyAwoRn3jK0xNFjJVdqFBDYF/7ei6PCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717930581; c=relaxed/simple;
-	bh=G2hg/LZavyIG1ablJTpUBbyufDXTz4RIOIjygW/UaMI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jZDCKcQlyeBiHAM8v6cmlKxVIDdWuF+x3y4ZEcAEg6lvyXdVcVlgGQ8eYwWnSNbqOD3YpKsvDUZCy9BEYkVdvZTtsjyzQ9G97vk1KKykwHi1bRi1EisBKjShH0f0yP5biXYyYJ9hjKLLLMSjv/R2gMWlzSOXAe9zGJRXUcDS2z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bOlOidA7; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57c6d3e6606so1384213a12.0;
-        Sun, 09 Jun 2024 03:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717930578; x=1718535378; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3voIYlOeB5mX7nvtdxB8Eo8oV2RJtvlVRRCS4qN4heM=;
-        b=bOlOidA7eEa6ehlGJ+Aokoek03JgneOOmB39sIO8dh5c3wopT05cN/XLC9Rv5czesq
-         e5H+64/DErx7dd3Bt1Wd+NAAgeEMb0lp6BV1KcPyuXzxo5tG4syjStKi0HlQC1aADeG4
-         LlsfZRWxEumZiBDHE1TtNPxkzAi6MuUvdEr0D7Uqywk64bEFjo+W2aGVwR/zeFwUOh9o
-         f5ZnStawwK2QuadospjsAdGT4uixKrKb2OdWbiGF6AGxXdbhXL+hTO0v5L1hmQ/OHGk0
-         VLhVZOI2+aLtBTxUUYhsn/HL5jN9qWkv5ehI8O+S01q10xeTfhBY8Tmrje07cSyaZQWZ
-         Bb6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717930578; x=1718535378;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3voIYlOeB5mX7nvtdxB8Eo8oV2RJtvlVRRCS4qN4heM=;
-        b=SCCsSDe5KSdFbhMoPjebpk+29Es/PypNhJBVcg9r4iZt9cYLL8fd8iUVCeFeVO/Yzk
-         Rw9tV4unMkiKyVRlXfdeQXre/2HPtjhtbbZmIryVVBjR7C/MhsKP0OMcbrbpEfipG0K+
-         S34p9z1Mg3nP2LWawWxgMMebd5m/gHoZ//nSwujqLIZH6nOy6S7ZhWGhwqt9WRXU5SF0
-         JNGxVBh48ChNlw/X+qat6/5ooyFzs4SeQKf8jjNCiyXRK4HQ2R5KCDarT1BNJaNugkvu
-         oqfLVkM5r6BuioqYrJTM9oXqdehpgeN4AQMD15wV9cYDF+a+M+mNzZkgy3wYrmlwsmGq
-         Z8ug==
-X-Forwarded-Encrypted: i=1; AJvYcCU/bklpCoTkuwh3eidrHc0So+aZHfhY/+o2o01UOQuYDyK8ViBLjoQfOOfOLHJNFTtRvNVOJinG3eCISoPszMgeNeRg/TU2aZXMRkLoD8zGrw6UdlreOBD+fC/ZXIpK9qLx/3MLPNLH
-X-Gm-Message-State: AOJu0YxIcyR/e51x3MNwywrAUPhuBvw5AXF+qRF70Inz2JUVju64z+55
-	yOpc50bI8i+n7F85LvZT7hvFgKbNTVI4xQHHTyHWa/st0mtjK2cI8n1rdGkh
-X-Google-Smtp-Source: AGHT+IELzm18zyq4qhBV75a1rqArcHYbNYokUk+XmpYTl0v52J/I42rnvlVqNi/AIYndB2LgF5LtEg==
-X-Received: by 2002:a17:906:d157:b0:a6f:1f67:9816 with SMTP id a640c23a62f3a-a6f1f67988cmr168666b.22.1717930577461;
-        Sun, 09 Jun 2024 03:56:17 -0700 (PDT)
-Received: from [127.0.1.1] (2a02-8389-41cf-e200-920c-9ce8-de2d-a8c4.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:920c:9ce8:de2d:a8c4])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6ef83ac0c4sm265066466b.74.2024.06.09.03.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 03:56:17 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Sun, 09 Jun 2024 12:56:14 +0200
-Subject: [PATCH] PCI: kirin: fix memory leak in kirin_pcie_parse_port()
+	s=arc-20240116; t=1717936362; c=relaxed/simple;
+	bh=gfageaVpPs5ry5xzWB7cccoG0GS182Wtm9HpTExW198=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=at4mnhDumS0tYYRoplprPiKrlNC8cx9M+47wuj//Tq1bHHc+7Khf7vWaauqtqIBQK6klHzEJlc+YHmOIm7RIH3MXfVJSSmu2SM2eA/6xzpk2I0Ymp+lZhrDTqxvgTPGWBBGvJspX7aDOcuNf/JZsE35uM0WYwN8P27NNYTvWaLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1SUlV46; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9AAFC2BD10;
+	Sun,  9 Jun 2024 12:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717936361;
+	bh=gfageaVpPs5ry5xzWB7cccoG0GS182Wtm9HpTExW198=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c1SUlV46y1QW7hzJho8wZS2A0M4LByF1N4p2SZaHAX0Ol+cj9rIw12osuerjHfxTD
+	 XPSa0rgG/o7BLlTed8gNqA5lUUFGEPnjKUtGja2IArtozwzScXQmBD9iAxNlywX1PW
+	 Fz/7WBxQjc0CTSjqPNrI1ZF6JnxFrprlXxhSx07/iKW7Ri2qvmD1euHiKJ9j0RFvOz
+	 9pvNbYEsJGSpwsylYgVP3KOQBh8mz2BQzJaRbHAxeZdzZ1IO41JXW3bEg8dO7iUKyd
+	 b5hJ4ZIhw1bfdTo2qC9fyuzo5xnZDPs/m944aAE+rFsKhwDWbeHzjU81dL7d1jf1T8
+	 9Tjy8KBqAlDZg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sGHix-002715-Di;
+	Sun, 09 Jun 2024 13:32:39 +0100
+Date: Sun, 09 Jun 2024 13:32:38 +0100
+Message-ID: <864ja2l2jd.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Jianjun Wang <jianjun.wang@mediatek.com>,	Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>,	Rob Herring <robh@kernel.org>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,	Ryder
+ Lee <ryder.lee@mediatek.com>,	linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	jieyy.yang@mediatek.com,
+	chuanjia.liu@mediatek.com,	qizhong.cheng@mediatek.com,
+	jian.yang@mediatek.com,	jianguo.zhang@mediatek.com
+Subject: Re: [PATCH v2 1/3] PCI: mediatek: Allocate MSI address with dmam_alloc_coherent()
+In-Reply-To: <20240608090152.GB3282@thinkpad>
+References: <20231211085256.31292-1-jianjun.wang@mediatek.com>
+	<20231211085256.31292-2-jianjun.wang@mediatek.com>
+	<20240608090152.GB3282@thinkpad>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAE2KZWYC/x3MQQqAIBBA0avErBtwMqK6SrQQm2owLRQiCO+et
- HyL/19IHIUTjNULkW9JcoYCqiuwuwkboyzF0KimVZ0a8LLC6CRKQM/+YOOQettro2khIijhFXm
- V559Oc84f/5jGc2QAAAA=
-To: Xiaowei Song <songxiaowei@hisilicon.com>, 
- Binghui Wang <wangbinghui@hisilicon.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717930575; l=3241;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=G2hg/LZavyIG1ablJTpUBbyufDXTz4RIOIjygW/UaMI=;
- b=c3Buu8bg1iHrzkibMddFmjoGudOBKupj0yF2OvphWiI0D/tc9U+3hfHjevgKSLj7GALrBAK0H
- teL1tPLgOKqD7uDeH4I8T+bSnPjZ+sA1JCqeRxZSbexz2Kx12JK9cqe
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: mani@kernel.org, jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, ryder.lee@mediatek.com, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jieyy.yang@mediatek.com, chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com, jian.yang@mediatek.com, jianguo.zhang@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The conversion of this file to use the agnostic GPIO API has introduced
-a new early return where the refcounts of two device nodes (parent and
-child) are not decremented.
+On Sat, 08 Jun 2024 10:01:52 +0100,
+Manivannan Sadhasivam <mani@kernel.org> wrote:
+> 
+> On Mon, Dec 11, 2023 at 04:52:54PM +0800, Jianjun Wang wrote:
+> > Use dmam_alloc_coherent() to allocate the MSI address, instead of using
+> > virt_to_phys().
+> > 
+> 
+> What is the reason for this change? So now PCIE_MSI_VECTOR becomes unused?
 
-Given that the device nodes are not required outside the loops where
-they are used, and to avoid potential bugs every time a new error path
-is introduced to the loop, the _scoped() versions of the macros have
-been applied. The bug was introduced recently, and the fix is not
-relevant for old stable kernels that might not support the scoped()
-variant.
+More importantly, this is yet another example of the DW reference
+driver nonsense, where memory is allocated for *MSI*, while the whole
+point of MSIs is that it is a write that doesn't target memory, making
+any form of RAM allocation absolutely pointless.
 
-Fixes: 1d38f9d89f85 ("PCI: kirin: Convert to use agnostic GPIO API")
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
-This bug was found while analyzing the code and I don't have hardware to
-validate it beyond compilation and static analysis. Any test with real
-hardware to make sure there are no regressions is always welcome.
+This silly approach has been cargo-culted for years, and while I
+caught a few in my time, you can't beat copy-paste.
 
-The dev_err() messages have not been converted into dev_err_probe() to
-keep the current format, but I am open to convert them if preferred.
----
- drivers/pci/controller/dwc/pcie-kirin.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+IMO, this patch is only making things worse instead of fixing things.
 
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index d1f54f188e71..0a29136491b8 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -403,11 +403,10 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
- 				 struct device_node *node)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *parent, *child;
- 	int ret, slot, i;
- 
--	for_each_available_child_of_node(node, parent) {
--		for_each_available_child_of_node(parent, child) {
-+	for_each_available_child_of_node_scoped(node, parent) {
-+		for_each_available_child_of_node_scoped(parent, child) {
- 			i = pcie->num_slots;
- 
- 			pcie->id_reset_gpio[i] = devm_fwnode_gpiod_get_index(dev,
-@@ -424,14 +423,13 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
- 			pcie->num_slots++;
- 			if (pcie->num_slots > MAX_PCI_SLOTS) {
- 				dev_err(dev, "Too many PCI slots!\n");
--				ret = -EINVAL;
--				goto put_node;
-+				return -EINVAL;
- 			}
- 
- 			ret = of_pci_get_devfn(child);
- 			if (ret < 0) {
- 				dev_err(dev, "failed to parse devfn: %d\n", ret);
--				goto put_node;
-+				return ret;
- 			}
- 
- 			slot = PCI_SLOT(ret);
-@@ -439,10 +437,8 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
- 			pcie->reset_names[i] = devm_kasprintf(dev, GFP_KERNEL,
- 							      "pcie_perst_%d",
- 							      slot);
--			if (!pcie->reset_names[i]) {
--				ret = -ENOMEM;
--				goto put_node;
--			}
-+			if (!pcie->reset_names[i])
-+				return -ENOMEM;
- 
- 			gpiod_set_consumer_name(pcie->id_reset_gpio[i],
- 						pcie->reset_names[i]);
-@@ -450,11 +446,6 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
- 	}
- 
- 	return 0;
--
--put_node:
--	of_node_put(child);
--	of_node_put(parent);
--	return ret;
- }
- 
- static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+	M.
 
----
-base-commit: d35b2284e966c0bef3e2182a5c5ea02177dd32e4
-change-id: 20240609-pcie-kirin-memleak-18c83a31d111
-
-Best regards,
 -- 
-Javier Carrasco <javier.carrasco.cruz@gmail.com>
-
+Without deviation from the norm, progress is not possible.
 
