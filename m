@@ -1,119 +1,108 @@
-Return-Path: <linux-pci+bounces-8559-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8562-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99211902AB0
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 23:37:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7627F902B4B
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 00:04:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 424401F22AE1
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 21:37:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10582B263E8
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 22:04:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED49A143886;
-	Mon, 10 Jun 2024 21:37:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DDC37143;
+	Mon, 10 Jun 2024 22:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK7GeKlS"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="epq6f6lR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB5A6F31F;
-	Mon, 10 Jun 2024 21:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DCD14D6FF
+	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 22:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718055456; cv=none; b=j/jCdumX0gK+sxw8ooFh51hNEVyAJkKl0PBjfNw+RrFAPV1Qakfcq3pil6ueKiWY4iAHrmBYWuIEwn9A1u3uil6x9VqvK+i7GVQXNxppkzXYED5quxMDYC/ZInTJovZ3QuyAiM8vZqDPC9hvsBNLLjCMZQpFpcgSt412ZeEdAIg=
+	t=1718057035; cv=none; b=Y+N/4A0lEv7xhlbiflLKQairtN0W3R51AJHO1HVnQuZ+twiOQg6eJvIUCHNL+upnCUQQ3RJxj4f+abNUm3MesSxwi+jtqnty5JGxO2Ucpl8WpFnUJCuPgAGv4Su6/3EylHL8aMpB/RwpQc6sr7naNL7my3zfl3FSTEJq53/I0y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718055456; c=relaxed/simple;
-	bh=Hu+ZYAxQIeqrj2N96pQMniXoSv97DArchied9P7Vm1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dr05P9TvSCXDQz4pjuvaTpTdudzWVN6Qi0qG7kQ/wq+b1x4J+7HeD9ekV8PslpCJ2hHkOD2qH3myDrKHTsTjx+BIOZm4iaOEfo2uX2UdWSwWuIYw451FvMB1Yt6KOLclyhk0OEfPrgvkFKpqA+BV688AN9rorM9+15v0wgsS7Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK7GeKlS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12DF7C4AF50;
-	Mon, 10 Jun 2024 21:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718055456;
-	bh=Hu+ZYAxQIeqrj2N96pQMniXoSv97DArchied9P7Vm1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eK7GeKlSJb8Ckg8qzh4cf2ZYk8nis9CGFj3j4T3Q4QfgbeOCCm0FV/6SFblR3J7si
-	 pxfoNeGyWC4xbIiuoMVSdGD+JZvpzwxpW7z/gnBc9Z0pgeMWs1fVZ7MIjrS/WEXRCv
-	 h61wr6uzmBp9FtmoJiwoVXPupCCZew8yrOKV5e895AMnBVJQM/eejzhmspRrRRnie6
-	 jTv4Q78kVKB+O64bYc6jWMI/KQ5kUBVgzKZoTZT6ugNUUEmpVElHOVLtKIJfalEVXQ
-	 raIKCmtKVsjBCrb0AVnlpkB3kj6MGqvWDfiYNQorQelmaTYWDxymZSm44Hmo5gxcEW
-	 JEZh2WqqKsCLQ==
-Date: Mon, 10 Jun 2024 15:37:35 -0600
-From: Rob Herring <robh@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Sai Krishna Gajula <saikrishnag@marvell.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 17/19] PCI: of_property: Add interrupt-controller
- property in PCI device nodes
-Message-ID: <20240610213735.GA3112053-robh@kernel.org>
-References: <20240527161450.326615-18-herve.codina@bootlin.com>
- <20240606192612.GA814032@bhelgaas>
+	s=arc-20240116; t=1718057035; c=relaxed/simple;
+	bh=19kpE4LJ7lwqGa6y00OBrOrFXe93CbZPXrxtzyUyUfc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=maky0Fd71misx0RbRcoo5j+Mjh7fPRKWBHlBcR3k489dBCvEpTZGQdFBFiD3ZTNMyDMZv6ns89oW9usCHbatHPScK7JM8ozkJfG+9MivlBhXo+MiNtzgkB/OzA0No2OCOBIM5klAPzw/l893ky3s6HoprEvFqmLDqe+S7M3KGkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=epq6f6lR; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+	by m0001303.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 45AL1KGC013339
+	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 15:03:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc :
+ content-transfer-encoding : content-type : date : from : message-id :
+ mime-version : subject : to; s=s2048-2021-q4;
+ bh=MdtkHIS7AhW0BixCc+/9jsteQY5oGSj+ScyLRqZ0M48=;
+ b=epq6f6lRYrtGOXaj2GyXFaehC4OPh4pqiNOolfG7+oQq0Bcd8xWBvhmRNfiIcwE3DVyh
+ b5YzM0xnyLKggySssqFibjcBZLcqZZXhOy2bjhJEkeaTmEIZwv0jueRVHDLf2so329hF
+ mJ2FIUxvCmpU1fQ+PvkdgTEVJq132eeZq0RAnbqg5CHldujT88CwGQuHmjCtHxaFwCPT
+ Lj8cepJKJE0c2NCOpjQMhw8nGYnLiBxCedawrLCjgdUT18Z41IG48wFDL1/e/LqrG0uP
+ PbloSl0wjy7pMWqM3X0fr0kLc5YmlqKk/Og33NXOO91MH7m454wTtR9y6iyW9r4diCGr jg== 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+	by m0001303.ppops.net (PPS) with ESMTPS id 3ymjywc43c-18
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 15:03:53 -0700
+Received: from twshared19013.17.frc2.facebook.com (2620:10d:c0a8:1b::30) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Mon, 10 Jun 2024 22:03:51 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id BEF52F4E2352; Mon, 10 Jun 2024 15:03:34 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-pci@vger.kernel.org>, <lukas@wunner.de>, <bhelgaas@google.com>
+CC: Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 0/2] pcie hotplug and error fixes
+Date: Mon, 10 Jun 2024 15:03:01 -0700
+Message-ID: <20240610220304.3162895-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606192612.GA814032@bhelgaas>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: 14oX6s4fG0ndD8Ub4QOGV5hQYoBeuKTv
+X-Proofpoint-ORIG-GUID: 14oX6s4fG0ndD8Ub4QOGV5hQYoBeuKTv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_06,2024-06-10_01,2024-05-17_01
 
-On Thu, Jun 06, 2024 at 02:26:12PM -0500, Bjorn Helgaas wrote:
-> On Mon, May 27, 2024 at 06:14:44PM +0200, Herve Codina wrote:
-> > PCI devices and bridges DT nodes created during the PCI scan are created
-> > with the interrupt-map property set to handle interrupts.
-> > 
-> > In order to set this interrupt-map property at a specific level, a
-> > phandle to the parent interrupt controller is needed. On systems that
-> > are not fully described by a device-tree, the parent interrupt
-> > controller may be unavailable (i.e. not described by the device-tree).
-> > 
-> > As mentioned in the [1], avoiding the use of the interrupt-map property
-> > and considering a PCI device as an interrupt controller itself avoid the
-> > use of a parent interrupt phandle.
-> > 
-> > In that case, the PCI device itself as an interrupt controller is
-> > responsible for routing the interrupts described in the device-tree
-> > world (DT overlay) to the PCI interrupts.
-> > 
-> > Add the 'interrupt-controller' property in the PCI device DT node.
-> > 
-> > [1]: https://lore.kernel.org/lkml/CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com/
-> > 
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> 
-> No objection from me, but I'd like an ack/review from Rob.
+From: Keith Busch <kbusch@kernel.org>
 
-Given it is more DT patches in the series, how about I take them and 
-this one with your ack instead?
+I am working with larger pcie topologies again, and we're seeing some
+failures when dealing with certain overlapping pcie events.
 
-Rob
+The topology is essentially this:
+
+  [Root Port] <-> [UpStream Port] <-> [DownStream Port] <-> [End Device]
+
+An error between the DSP and ED triggers DPC. There's only inband
+presence detection so it also triggers hotplug. Before the error
+handling is completed, though, another error seen by the RP triggers its
+own DPC handling.
+
+The concurrent event handling reveals some interesting races, and this
+small patchset tries to address these in the low invasive way.
+
+Keith Busch (2):
+  PCI: pciehp: fix concurrent sub-tree removal deadlock
+  PCI: err: ensure stable topology during handling
+
+ drivers/pci/hotplug/pciehp_pci.c | 12 +++++++++---
+ drivers/pci/pci.h                |  1 +
+ drivers/pci/pcie/err.c           |  8 +++++++-
+ drivers/pci/probe.c              | 24 ++++++++++++++++++++++++
+ include/linux/pci.h              |  2 ++
+ 5 files changed, 43 insertions(+), 4 deletions(-)
+
+--=20
+2.43.0
+
 
