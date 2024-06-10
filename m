@@ -1,144 +1,187 @@
-Return-Path: <linux-pci+bounces-8507-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8508-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1BB6901A5B
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 07:47:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20B99901B64
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 08:53:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D949A1C20FED
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 05:47:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 80E0CB21175
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 06:53:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25DE5107B3;
-	Mon, 10 Jun 2024 05:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5A61B5A4;
+	Mon, 10 Jun 2024 06:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k7eUvGal"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qPj5C8aw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E8D17F6;
-	Mon, 10 Jun 2024 05:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA4D1865B
+	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 06:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717998453; cv=none; b=RzAOJH4PgvypkPILgPHoG4lga8/MrbKNJMYid3HsBpoRWt5AJl+AzuoTpCUGYv3LCckUFBKTdLfJ2IXYoF1VTugN1lGlYeGpOiYztxWGHt/Kj0mfn+wBtmQv9wC2gIdiraKjlRES2myVvhBSqpO8SBT9iw/ucg8xFFKpIX/cX94=
+	t=1718002416; cv=none; b=Vg34towG22Wkzom2GNorlhXF4Pg7S2aBT3DL5/bWRZF9NwsIt9AXXjRk7x//I5ARz+E171jlUs8MSw8g5DW9gsAWWTf1BzOlRWwSy5ZFVlVDZjgBoBy9NsodtDyruXd57lknjmwkXMeOW8V5W99roTU/mGqXuNP6A6Gj3rMW/iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717998453; c=relaxed/simple;
-	bh=rPZUnmp8Y/gQg+BfsdhZPJbSD2TpXw4r6sGsyRhKDcc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eC9p4+QOSyN9BMVjaiNKDZD4SZopA5Nvkz8mHvmivn8AYGsdVAFVOdHwsvwxAqobkDjQz1XxOcoiVkrICLPqbBD27v7UavzEYg7hZ2y4Jq2tpG1j6nDUyaSXENUoQg97/XQ9lGec8181huog7uqnh1GpGXbc+pUV4RFcWsoAcZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k7eUvGal; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45A0UKq2021412;
-	Mon, 10 Jun 2024 05:47:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+8hc+GJRw5bYKA1HZbG0gEfYcd9szFBSrHA7WvS9Vvc=; b=k7eUvGal4RbGv/pK
-	t+OcZSOqB3Q4jWrlh0i4RTGubAH2vqSGUtyzhhoIBZmEM7FW4g07xw53nhYgAKNB
-	Hlw5eekChw9hFRuqRA28It/egxx555IQJjRtyRWx1vZjwHxJterKhCry8qTpymUn
-	63REKQ9r1ATueJ6qIGul+9DNGusnKPmU09kqERtnV7Q2/iOs/kMQgRY44u3NWPQ/
-	gFi4na/p5VrZX4+aXMUcMvU9H3//MYET6sDvAl54B0e26QFEqp0cCI0Ic0LLq94L
-	MuEai8MQiP21YQBgEoRDgtJP5YxckpIUyGaHyG0YYudlWdy6IAVLmyuh9qNTskjO
-	bHPjsg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymgk8tsps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 05:47:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45A5l4rH025863
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 05:47:04 GMT
-Received: from [10.50.54.237] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 9 Jun 2024
- 22:46:58 -0700
-Message-ID: <fea90522-dec4-4bba-be57-3a1be9e6b59c@quicinc.com>
-Date: Mon, 10 Jun 2024 11:16:55 +0530
+	s=arc-20240116; t=1718002416; c=relaxed/simple;
+	bh=mRZh5+OagwrYksdm05IvR/+1yNl8KYHz8Qj7URz+FVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHS621mBCCcarUjfVwf8B76Dhqz8pHjPTNksVes4m0fHE2yLnBfZtuBntduLVIuURaM5kHjyf0Jfp2NLla0peILWHzhS8hBEMvlO+U730aVSN2Bbn3QzityWI5MJAOtzEt1Zw6wLdLYMQzYLHoaRMdReXqW0r1sg8mCmtbdUfO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qPj5C8aw; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2c2c9199568so1879851a91.0
+        for <linux-pci@vger.kernel.org>; Sun, 09 Jun 2024 23:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718002415; x=1718607215; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Q79+Rla3cX6Hmnq2eCF4cwSxfS8g2qeMA5niTT4AJrk=;
+        b=qPj5C8awILJqh3c/ngE7eXKXeYZ0SQOicLTFq5jZzuiL9aHGzEYvh25QB2h713dsMt
+         3c+MYas5fDMuGrH8mO4sx57ojueo6ftuPopnJa8wRmTz/AM8UYoXfiKFHSX5FXJbANil
+         FXb2sSUzmTcDjagabFJSpcd5Sf6WY1j3W5R9gjYUHCNy7BL30CnnEcV8NFyanyR2uSUr
+         s6qJy1tSl33o4XhZyubNBuquojl/ZVvDXJCp+1zIsYAwS8gjZi9sQv0ENu8wSMRglpwD
+         pPYl6Kd2rlSRWDZPNjBVzziIsusmJ9rwKqw4ylTnOAzRRRRUP7wdfPSva9Qt1AESroYZ
+         Mh4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718002415; x=1718607215;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q79+Rla3cX6Hmnq2eCF4cwSxfS8g2qeMA5niTT4AJrk=;
+        b=pyg9KzVZnl1R93fb9Ls0ycaPAYH5124Ub9JP0qAWvs2zRtUFPabMXKU3r7C77rP1Ix
+         cwjJCwwaDaPgLhY+PSz2F+oFVcO/OG5b0z5vnQ6p4MvFxctWzRN2Np1smYsIkch3TWxa
+         57tlCHTIq3LshnPj9+HOCFb0cXhjseg9VfgmXH9i4DIOhHCFhfVaoz2GxD67eOUBfzFx
+         2jolXKqjfbyw2boYKCFTLk+GRiigGvX7cSVtIuO6993EEwMj+1SwnsvieXRpHT/rQOgS
+         lUntMiq4M2suPTKmUMkuEXFb4RLkWW5mYahV59OOOnTbVueUARPWeSo+ZxfVjpu/+1cw
+         fLMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOQV3Z0I+2TmqQLB1ggtS3SqYotyKixJCx9LkF1XJMAqrEWiI6rw9WlaVIHDAKNTyFkKkilMBncOr6xiTRh2pCxCM96x1N6UMA
+X-Gm-Message-State: AOJu0YzqrScAW2oFHw+nnWejUdAiVsyf1G86gU+SGc1euH8TlZQrGXWf
+	nCuLPpqYFqNSoVxUpoc2bHv7cBh7Ekko0frW33Rcjhkw3Kgyq3uN4DpqSSKbpg==
+X-Google-Smtp-Source: AGHT+IGiQnfID/w2ovEqOtXmdaUmHolv4W8npj5rXP4hlu3K/zYS4n6pz5nKcO0YwT4Ao+fhHzZlGg==
+X-Received: by 2002:a17:90b:b12:b0:2c2:c3fb:b13c with SMTP id 98e67ed59e1d1-2c2c3fbb277mr5727406a91.44.1718002414578;
+        Sun, 09 Jun 2024 23:53:34 -0700 (PDT)
+Received: from thinkpad ([220.158.156.236])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c3094cfe3dsm1355898a91.15.2024.06.09.23.53.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jun 2024 23:53:34 -0700 (PDT)
+Date: Mon, 10 Jun 2024 12:23:24 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+	mhi@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 0/5] PCI: endpoint: Add EPC 'deinit' event and
+ dw_pcie_ep_linkdown() API
+Message-ID: <20240610065324.GA7660@thinkpad>
+References: <20240606-pci-deinit-v1-0-4395534520dc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 6/6] PCI: qcom: Add support for IPQ9574
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20240530171116.GA551131@bhelgaas>
-Content-Language: en-US
-From: Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <20240530171116.GA551131@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: oQ2GERKZl0yI3W1TvAS-KbQJpS9sLzcB
-X-Proofpoint-ORIG-GUID: oQ2GERKZl0yI3W1TvAS-KbQJpS9sLzcB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 clxscore=1011
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406100043
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240606-pci-deinit-v1-0-4395534520dc@linaro.org>
 
+On Thu, Jun 06, 2024 at 12:56:33PM +0530, Manivannan Sadhasivam wrote:
+> Hi,
+> 
+> This series includes patches that were left over from previous series [1] for
+> making the host reboot handling robust in endpoint framework.
+> 
+> When the above mentioned series got merged to pci/endpoint, we got a bug report
+> from LKP bot [2] and due to that the offending patches were dropped.
+> 
+> This series addressed the issue reported by the bot by adding the stub APIs in
+> include/pci/pci-epc.h and also removed the unused dwc wrapper as concluded in
+> [3].
+> 
+> Testing
+> =======
+> 
+> This series is tested on Qcom SM8450 based development board with 2 SM8450 SoCs
+> connected over PCIe.
+> 
+> - Mani
+> 
 
+Applied patch 2/5 to pci/endpoint! Krzysztof, please apply patches 1/5 and 5/5
+to controller/dwc (patches 3/5 and 4/5 are already applied by you).
 
-On 5/30/2024 10:41 PM, Bjorn Helgaas wrote:
-> On Sun, May 12, 2024 at 01:58:58PM +0530, devi priya wrote:
->> The IPQ9574 platform has 4 Gen3 PCIe controllers:
->> two single-lane and two dual-lane based on SNPS core 5.70a
+- Mani
+
+> [1] https://lore.kernel.org/linux-pci/20240430-pci-epf-rework-v4-0-22832d0d456f@linaro.org/
+> [2] https://lore.kernel.org/linux-pci/202405130815.BwBrIepL-lkp@intel.com/
+> [3] https://lore.kernel.org/linux-pci/20240529141614.GA3293@thinkpad/
 > 
-> s/4/four/ to match "two"
-okay
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Manivannan Sadhasivam (5):
+>       PCI: dwc: ep: Remove dw_pcie_ep_init_notify() wrapper
+>       PCI: endpoint: Introduce 'epc_deinit' event and notify the EPF drivers
+>       PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown() API to handle Link Down event
+>       PCI: qcom-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
+>       PCI: layerscape-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
 > 
->> The Qcom IP rev is 1.27.0 and Synopsys IP rev is 5.80a
->> Added a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
+>  drivers/pci/controller/dwc/pci-dra7xx.c           |   2 +-
+>  drivers/pci/controller/dwc/pci-imx6.c             |   2 +-
+>  drivers/pci/controller/dwc/pci-keystone.c         |   2 +-
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c    |   4 +-
+>  drivers/pci/controller/dwc/pcie-artpec6.c         |   2 +-
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   | 116 +++++++++++++---------
+>  drivers/pci/controller/dwc/pcie-designware-plat.c |   2 +-
+>  drivers/pci/controller/dwc/pcie-designware.h      |  10 +-
+>  drivers/pci/controller/dwc/pcie-keembay.c         |   2 +-
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c         |   5 +-
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c       |   2 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c        |   3 +-
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c     |   2 +-
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c      |  19 ++++
+>  drivers/pci/endpoint/functions/pci-epf-test.c     |  17 +++-
+>  drivers/pci/endpoint/pci-epc-core.c               |  25 +++++
+>  include/linux/pci-epc.h                           |  13 +++
+>  include/linux/pci-epf.h                           |   2 +
+>  18 files changed, 162 insertions(+), 68 deletions(-)
+> ---
+> base-commit: 7d96527bc16e46545739c6fe0ab6e4c915e9910e
+> change-id: 20240606-pci-deinit-2e6cdf1bd69f
 > 
-> s/Added/Add/ (use imperative mood:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.9#n94)
+> Best regards,
+> -- 
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
->> which reuses all the members of 'ops_2_9_0' except for the post_init
->> as the SLV_ADDR_SPACE_SIZE configuration differs between 2_9_0
->> and 1_27_0.
-> 
-> Add periods at end of sentences.  Rewrap to fill 75 columns.
-okay
-> 
->> +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
->> +{
->> +	writel(SLV_ADDR_SPACE_SZ_1_27_0,
->> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> 
-> Fits on one line.
-sure
-> 
->> +	return qcom_pcie_post_init(pcie);
->> +}
->> +
->> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
->> +{
->> +	writel(SLV_ADDR_SPACE_SZ,
->> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> 
-> Fits on one line.
-okay
-> 
->> +	return qcom_pcie_post_init(pcie);
->> +}
-Thanks,
-Devi priya
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
