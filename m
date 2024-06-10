@@ -1,64 +1,64 @@
-Return-Path: <linux-pci+bounces-8561-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8560-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66CF7902B4A
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 00:03:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43724902B49
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 00:03:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D7181C21EC2
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 22:03:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CA77281E6C
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 22:03:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 581DA149C43;
-	Mon, 10 Jun 2024 22:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C607E12F5B6;
+	Mon, 10 Jun 2024 22:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="XGvjy9qa"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="Li+mCgYS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C7F37143
-	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 22:03:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0023837143
+	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 22:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718057032; cv=none; b=H8Ia3H4mqGSQdxqVIz65Y+4ARJ8NiA+OeqWq5YMuEYhemF1+dPicfiqhwsur+fGPIVaTkS/vcTd7tgnWhJE+qVWG9iokKGvbrGTDOE1rX9i4RTDbai35gtKk95EvFN0GkVe33Eg5BzWb5Xk2lIqLf+O4L04hfY8ePRrxwYTfTrs=
+	t=1718057027; cv=none; b=ebO2g9uwArfzGJVhZ/8x5YYZ6Bb7v3AcfFUeu6B/h0Q7C6DztvkZECY2gVWFZpQCh2RIxS40SHZcIbf5l5VTZD5N5Hdt0bvOWg2YJ2tb/u/TjT9Khga7myuKSB4VFirkS7PjMoc1mUFT0UIx0UfDFqRjReJIrFosXSWWOMKKfng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718057032; c=relaxed/simple;
-	bh=upJWzB5y+WwBoXyBVEkDp5NU5/ekpj+NnSoaraLFK5s=;
+	s=arc-20240116; t=1718057027; c=relaxed/simple;
+	bh=L+zZKuCcGwI32IOPSDMsMsLvX5Gv5ZU2g6RQvbK5xNA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hojn5ysN5IYt9rMxDS3lMWGHLXUMid5nKG5x0Nptsbn2gLAbpXmlQG8eFn4Pdv5SxcSExZkCf7dku9Fq1GgDdWNQ93jlYYz3wmxMr9DsXl4Kr9X7Psx8BWJZ5ARvQotKhBedevo6yleOUl/TbnfGbDvWuO05T7ZeFUVHU4yP5Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=XGvjy9qa; arc=none smtp.client-ip=67.231.153.30
+	 MIME-Version:Content-Type; b=XONa08TGrdwGb/U9QOK/s3o00v75PWXuf5LXmZ+tohXudkODDCmyh5eaSoqkUlPcPWYvWpPvRAUJ2aGEgnc4JNZ9JtsHSNqwxG+zysgCgYOdhWyRv+rR3gxsBSKfhLyRR+Se+lI/k6Gb9i5U6kCvmqlbQISALgGYONMV6M88/e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=Li+mCgYS; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 45AL1L5m032183
-	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 15:03:49 -0700
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+	by m0001303.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 45AL1KG7013339
+	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 15:03:45 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc :
  content-transfer-encoding : content-type : date : from : in-reply-to :
  message-id : mime-version : references : subject : to; s=s2048-2021-q4;
- bh=mVgzOYxy6HjgSL+ugaATrT8DTpKtRfESGqL9N3M6AHY=;
- b=XGvjy9qaPvkLXAPXrltz1c/XYlMfCgMcma4YHg74YnE+kFaWG1+y/gKPthMgXk1WQ/7v
- xY0AviavvGaTbxa3z/YiIeROjVM4qhHnbfYoHUX0pmgnbQvN80P6sB6ULFwBojfOp2em
- bhJ/9aNYQgANHwNU5xdjsvy3hX3vfk24TGCG7oG6egY4anxTimVt+UrIIqT2FiDBEDOF
- M9HDM41D7zAysf3lRbDqZ5j/o0wQYwa9YrFlOXqNirk5UI8qYhkyE7seoJQ7ZBKXS3z7
- 9VNRlD3GiMxxNoSzWCZF5rCzs1UO/zOhqFzB4qOD2fXrAa4+9p8r/XL5YrtWBoVyiVZM WQ== 
-Received: from mail.thefacebook.com ([163.114.134.6])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3ymn203uqm-4
+ bh=nzEdwbAUCrgMS0glMB2xoeRxisYbMfVjm+Hv5a2Efdk=;
+ b=Li+mCgYSntTQYUECs1Vh0xky2gKmKIt2z2eo74HWIToSJQE6BypJHd9w+0AX7HeYL3mg
+ OWeAg09S+UcceWBLHWu2PzPjSf+athqdWu4PV0/rWmphTW+EffhrZYKlcbvEh1nwhBiW
+ oGN7pQ9ZDf6MQYF7irPD8bofbDDSRihK9rRRJBb3EBEckJKhNWZud2s268vYXQKD0ILn
+ 3aBHq6umTXfQ+tbn7+icPa7NOEj34TEIc/OayWe0elN/yccewg9pO6zU7ybB44A1RxQP
+ ouIUghe68tC0Z368VFrSXGENMyfGft9B+uapSkOThsJGDZVWYWAGfrnc3zyUXYxc6V5/ yg== 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+	by m0001303.ppops.net (PPS) with ESMTPS id 3ymjywc43c-13
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 15:03:49 -0700
-Received: from twshared56507.03.ash8.facebook.com (2620:10d:c085:108::150d) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+	for <linux-pci@vger.kernel.org>; Mon, 10 Jun 2024 15:03:44 -0700
+Received: from twshared3549.07.ash9.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Mon, 10 Jun 2024 22:03:46 +0000
+ 15.2.1544.11; Mon, 10 Jun 2024 22:03:43 +0000
 Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id C62F0F4E2354; Mon, 10 Jun 2024 15:03:34 -0700 (PDT)
+	id D88CDF4E2359; Mon, 10 Jun 2024 15:03:34 -0700 (PDT)
 From: Keith Busch <kbusch@meta.com>
 To: <linux-pci@vger.kernel.org>, <lukas@wunner.de>, <bhelgaas@google.com>
 CC: Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 1/2] PCI: pciehp: fix concurrent sub-tree removal deadlock
-Date: Mon, 10 Jun 2024 15:03:02 -0700
-Message-ID: <20240610220304.3162895-2-kbusch@meta.com>
+Subject: [PATCH 2/2] PCI: err: ensure stable topology during handling
+Date: Mon, 10 Jun 2024 15:03:03 -0700
+Message-ID: <20240610220304.3162895-3-kbusch@meta.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240610220304.3162895-1-kbusch@meta.com>
 References: <20240610220304.3162895-1-kbusch@meta.com>
@@ -71,185 +71,118 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: o_IdoxEA0iuTViV1vv2sdl-SjV0M1Qms
-X-Proofpoint-GUID: o_IdoxEA0iuTViV1vv2sdl-SjV0M1Qms
+X-Proofpoint-GUID: deFEw8G4Jk-MwWdkfCfzEwRyG1avKw5f
+X-Proofpoint-ORIG-GUID: deFEw8G4Jk-MwWdkfCfzEwRyG1avKw5f
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-10_06,2024-06-10_01,2024-05-17_01
 
 From: Keith Busch <kbusch@kernel.org>
 
-PCIe hotplug events modify the topology in their IRQ thread once it can
-acquire the global pci_rescan_remove_lock.
+DPC and AER handling access their subordinate bus devices. If pciehp shou=
+ld
+happen to also trigger during this handling, it will remove all the subor=
+dinate
+buses, then dereferecing any children may be a use-after-free. That may l=
+ead to
+kernel panics like the below.
 
-If a different removal event happens to acquire that lock first, and
-that removal event is for the parent device of the bridge processing the
-other hotplug event, then we are deadlocked: the parent removal will
-wait indefinitely on the child's IRQ thread because the parent is
-holding the global lock the child thread needs to make forward progress.
-
-Introduce a new locking function that aborts if the device is being
-removed. The following are stack traces of the deadlock:
-
-Task A:
-
-  pciehp_unconfigure_device+0x41/0x120
-  pciehp_disable_slot+0x3c/0xc0
-  pciehp_handle_presence_or_link_change+0x28f/0x3e0
-  pciehp_ist+0xc3/0x210
+ BUG: unable to handle page fault for address: 00000000091400c0
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] SMP
+ CPU: 15 PID: 2464 Comm: irq/53-pcie-dpc Kdump: loaded Tainted: G        =
+    E      6.9.0-0_fbk0_rc10_871_g4e98bf884071 #1
+ RIP: 0010:pci_bus_read_config_dword+0x17/0x50
+ Code: e9 0e 00 00 00 c7 01 ff ff ff ff b8 86 00 00 00 c3 cc cc 0f 1f 44 =
+00 00 53 50 c7 44 24 04 00 00 00 00 f6 c2 03 75 27 48 89 cb <48> 8b 87 c0=
+ 00 00 00 4c 8d 44 24 04 b9 04 00 00 00 ff 50 18 85 c0
+ RSP: 0018:ffffc90039113d60 EFLAGS: 00010246
+ RAX: 0000000009140000 RBX: ffffc90039113d7c RCX: ffffc90039113d7c
+ RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000009140000
+ RBP: 0000000000000100 R08: 0000000000000000 R09: 0000000000000001
+ R10: 0000000000000000 R11: 0000001f975c6971 R12: 000000000000e9fc
+ R13: ffff88811b5b4000 R14: ffffc90039113d7c R15: 0000000000000000
+ FS:  0000000000000000(0000) GS:ffff899f7d3c0000(0000) knlGS:000000000000=
+0000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00000000091400c0 CR3: 00000243fb00f002 CR4: 0000000000770ef0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  ? __die+0x78/0xc0
+  ? page_fault_oops+0x2a8/0x3a0
+  ? sched_clock+0x5/0x10
+  ? psi_task_switch+0x39/0xc90
+  ? __switch_to+0x131/0x530
+  ? exc_page_fault+0x63/0x130
+  ? asm_exc_page_fault+0x22/0x30
+  ? pci_bus_read_config_dword+0x17/0x50
+  pci_dev_wait+0x107/0x190
+  ? dpc_completed+0x50/0x50
+  dpc_reset_link+0x4e/0xd0
+  pcie_do_recovery+0xb2/0x2d0
+  ? irq_forced_thread_fn+0x60/0x60
+  dpc_handler+0x107/0x130
   irq_thread_fn+0x19/0x40
-
-Task B:
-
-  __synchronize_irq+0x5b/0x90
-  free_irq+0x192/0x2e0
-  pcie_shutdown_notification+0x3b/0x40
-  pciehp_remove+0x23/0x50
-  pcie_port_remove_service+0x2c/0x40
-  device_release_driver_internal+0x11f/0x180
-  bus_remove_device+0xc5/0x110
-  device_del+0x126/0x340
-  device_unregister+0x13/0x50
-  remove_iter+0x17/0x20
-  device_for_each_child+0x4a/0x70
-  pcie_portdrv_remove+0x23/0x40
-  pci_device_remove+0x24/0x60
-  device_release_driver_internal+0x11f/0x180
-  pci_stop_bus_device+0x57/0x80
-  pci_stop_bus_device+0x2c/0x80
-  pci_stop_and_remove_bus_device+0xe/0x20
-  pciehp_unconfigure_device+0x76/0x120
-  pciehp_disable_slot+0x3c/0xc0
-  pciehp_handle_presence_or_link_change+0x28f/0x3e0
-  pciehp_ist+0xc3/0x210
-  irq_thread_fn+0x19/0x40
+  irq_thread+0x120/0x1e0
+  ? irq_thread_fn+0x40/0x40
+  ? irq_forced_secondary_handler+0x20/0x20
+  kthread+0xae/0xe0
+  ? file_tty_write+0x360/0x360
+  ret_from_fork+0x2f/0x40
+  ? file_tty_write+0x360/0x360
+  ret_from_fork_asm+0x11/0x20
+  </TASK>
 
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
- drivers/pci/hotplug/pciehp_pci.c | 12 +++++++++---
- drivers/pci/pci.h                |  1 +
- drivers/pci/probe.c              | 24 ++++++++++++++++++++++++
- include/linux/pci.h              |  2 ++
- 4 files changed, 36 insertions(+), 3 deletions(-)
+ drivers/pci/pcie/err.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pcieh=
-p_pci.c
-index ad12515a4a121..ca6237b0732c8 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -34,9 +34,12 @@ int pciehp_configure_device(struct controller *ctrl)
- 	struct pci_dev *dev;
- 	struct pci_dev *bridge =3D ctrl->pcie->port;
- 	struct pci_bus *parent =3D bridge->subordinate;
--	int num, ret =3D 0;
-+	int num, ret;
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 31090770fffcc..5355fc0fbf910 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -192,7 +192,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev=
+,
+ 		pci_channel_state_t state,
+ 		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+ {
+-	int type =3D pci_pcie_type(dev);
++	int type =3D pci_pcie_type(dev), ret;
+ 	struct pci_dev *bridge;
+ 	pci_ers_result_t status =3D PCI_ERS_RESULT_CAN_RECOVER;
+ 	struct pci_host_bridge *host =3D pci_find_host_bridge(dev->bus);
+@@ -214,6 +214,10 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *de=
+v,
+ 	else
+ 		bridge =3D pci_upstream_bridge(dev);
 =20
--	pci_lock_rescan_remove();
++
 +	ret =3D pci_trylock_rescan_remove(bridge);
 +	if (!ret)
-+		return -ENODEV;
-+	ret =3D 0;
++		return PCI_ERS_RESULT_DISCONNECT;
+ 	pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
 =20
- 	dev =3D pci_get_slot(parent, PCI_DEVFN(0, 0));
- 	if (dev) {
-@@ -93,6 +96,7 @@ void pciehp_unconfigure_device(struct controller *ctrl,=
- bool presence)
- 	struct pci_dev *dev, *temp;
- 	struct pci_bus *parent =3D ctrl->pcie->port->subordinate;
- 	u16 command;
-+	int ret;
+ 	pci_dbg(bridge, "broadcast error_detected message\n");
+@@ -262,12 +266,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *d=
+ev,
+ 	}
 =20
- 	ctrl_dbg(ctrl, "%s: domain:bus:dev =3D %04x:%02x:00\n",
- 		 __func__, pci_domain_nr(parent), parent->number);
-@@ -100,7 +104,9 @@ void pciehp_unconfigure_device(struct controller *ctr=
-l, bool presence)
- 	if (!presence)
- 		pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
+ 	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
++	pci_unlock_rescan_remove();
 =20
--	pci_lock_rescan_remove();
-+	ret =3D pci_trylock_rescan_remove(parent->self);
-+	if (!ret)
-+		return;
+ 	pci_info(bridge, "device recovery successful\n");
+ 	return status;
 =20
- 	/*
- 	 * Stopping an SR-IOV PF device removes all the associated VFs,
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index fd44565c47562..f525490a02122 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -370,6 +370,7 @@ static inline int pci_dev_set_disconnected(struct pci=
-_dev *dev, void *unused)
- {
- 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
- 	pci_doe_disconnected(dev);
-+	pci_notify_disconnected();
+ failed:
+ 	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
++	pci_unlock_rescan_remove();
 =20
- 	return 0;
- }
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 5fbabb4e3425f..d2e19a1d1a45b 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -3302,6 +3302,7 @@ EXPORT_SYMBOL_GPL(pci_rescan_bus);
-  * routines should always be executed under this mutex.
-  */
- static DEFINE_MUTEX(pci_rescan_remove_lock);
-+static DECLARE_WAIT_QUEUE_HEAD(pci_lock_wq);
+ 	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
 =20
- void pci_lock_rescan_remove(void)
- {
-@@ -3309,12 +3310,35 @@ void pci_lock_rescan_remove(void)
- }
- EXPORT_SYMBOL_GPL(pci_lock_rescan_remove);
-=20
-+/*
-+ * pci_trylock_rescan_remove() - keep trying to take the lock until succ=
-essful
-+ *				 or notified the device is disconnected
-+ *
-+ * Returns 1 if the lock was successfully taken, 0 otherwise.
-+ */
-+bool pci_trylock_rescan_remove(struct pci_dev *dev)
-+{
-+	int ret;
-+
-+	wait_event(pci_lock_wq,
-+		   (ret =3D mutex_trylock(&pci_rescan_remove_lock)) =3D=3D 1 ||
-+		   pci_dev_is_disconnected(dev));
-+
-+	return ret;
-+}
-+
- void pci_unlock_rescan_remove(void)
- {
- 	mutex_unlock(&pci_rescan_remove_lock);
-+	wake_up_all(&pci_lock_wq);
- }
- EXPORT_SYMBOL_GPL(pci_unlock_rescan_remove);
-=20
-+void pci_notify_disconnected(void)
-+{
-+	wake_up_all(&pci_lock_wq);
-+}
-+
- static int __init pci_sort_bf_cmp(const struct device *d_a,
- 				  const struct device *d_b)
- {
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index cafc5ab1cbcb4..b05aaf9aac6c8 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1442,7 +1442,9 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev);
- unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
- unsigned int pci_rescan_bus(struct pci_bus *bus);
- void pci_lock_rescan_remove(void);
-+bool pci_trylock_rescan_remove(struct pci_dev *dev);
- void pci_unlock_rescan_remove(void);
-+void pci_notify_disconnected(void);
-=20
- /* Vital Product Data routines */
- ssize_t pci_read_vpd(struct pci_dev *dev, loff_t pos, size_t count, void=
- *buf);
 --=20
 2.43.0
 
