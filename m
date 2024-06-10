@@ -1,54 +1,56 @@
-Return-Path: <linux-pci+bounces-8510-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8511-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DACE901CD0
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 10:20:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FEFF901CD4
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 10:21:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE933B2479E
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 08:20:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC9E81C20E9B
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jun 2024 08:21:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13DCE61FDD;
-	Mon, 10 Jun 2024 08:20:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2F158210;
+	Mon, 10 Jun 2024 08:20:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pj7IFzhJ"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DR36WAKj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C8B5FBB1;
-	Mon, 10 Jun 2024 08:20:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D9B57CA2;
+	Mon, 10 Jun 2024 08:20:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718007617; cv=none; b=gP9HgN1bgb0b48mqP8pIIWDwejTU1DgK0wf64XEXC9IaHvyansvdKHgUE1wPocFH1QXn9Z6Xd+l5abfjt2cd1RIEaw//sI60tOq71SnfnEuezghIHfwphkQz/6wcHpL7PLUTuHkYqP2T4F/5HAQYvFkr8BZYhp0BvltqqxEFoPI=
+	t=1718007658; cv=none; b=gTpXkPwu5cf9rScKmrNG0KpwdmSVMENlby9V+yImG5oh9TXcBIPsHHS1JBTaVQmSRCxsSudTUIs3ULbW8bgBqanjXpEntdooivJnwE9Yne8GzPGn4qP2K3wwCE6QIgT1tcK8Vkg/shNHvjANL1QcTiEetxHAHNVvwoBHEeNpdBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718007617; c=relaxed/simple;
-	bh=5VmHzrPdC/CIGGKylU0d9hH6o72bK54XNQDQJIirotE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JVXLVyqbafXeH23AI5DRkILi67Tn1m0YTSF/Nvq9zHtzopnXtaouwx1iQFHyUXxh06NGolEsJjt/WabNurHGBogyT7lrdIgmAl2DBXissFxv48ngcALk10Kolye2zxEr0POrVj/YHe7NGrLP6j7cvkfQvoK4VYcCeGFRz4akkYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pj7IFzhJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1DAC2BBFC;
-	Mon, 10 Jun 2024 08:20:15 +0000 (UTC)
+	s=arc-20240116; t=1718007658; c=relaxed/simple;
+	bh=CAiZ3SVovdoincgpGx3yjmnj9eAa3sknXt7flqN/34E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r32Te9YyBNpWFKv4lVQK5vCZsCFZRYLbMEzSe2V9UWvnH0PvYRh+dhMPVWL9e3gIpHqEts+Ny48botQgTsRvTGHynlZzlYmCZE6TIFUbeUrVwPr6FugHnsFbQv7q0Di3AszQffQKvQhI7xGaG271wa0L08VLXYkmmebVoWgWN14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DR36WAKj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB34C4AF1C;
+	Mon, 10 Jun 2024 08:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718007616;
-	bh=5VmHzrPdC/CIGGKylU0d9hH6o72bK54XNQDQJIirotE=;
+	s=korg; t=1718007657;
+	bh=CAiZ3SVovdoincgpGx3yjmnj9eAa3sknXt7flqN/34E=;
 	h=From:To:Cc:Subject:Date:From;
-	b=pj7IFzhJOdf4S5BJSMuPtAAJdqLMuLQ4mVKIBMBOMlsyZwnKzF20RX97zqRiGxWAF
-	 qBNVSCWgN8d+nei52/EI/LCCZJTexkJfSdXphhuhFd0h9EOGYhg5EKa6ekC699urnM
-	 CwOTYFlBZOrVn33Kfap1yd1xJ9H4Cu5CGtSTnnr8=
+	b=DR36WAKj0OoO6zEjepBa0BCBBBnZa9iPb1PzgKYmT/DIDimlQqYNgiUkMox0KCWe7
+	 /TfRZFyLj7mX+lq/kT8LlBIeavN+C9q5v0qjAxKhN3mUBJn61PbXBDcryrpkVbVD/B
+	 +ONZ22+sYH9qZG6wQTk2sqjukqF1n1AnEd/lU5QM=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-pci@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: endpoint: make pci_epc_class constant
-Date: Mon, 10 Jun 2024 10:20:12 +0200
-Message-ID: <2024061011-citable-herbicide-1095@gregkh>
+	Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	ntb@lists.linux.dev
+Subject: [PATCH] PCI: switchtec: make switchtec_class constant
+Date: Mon, 10 Jun 2024 10:20:53 +0200
+Message-ID: <2024061053-online-unwound-b173@gregkh>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -56,9 +58,8 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Lines: 74
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2396; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=5VmHzrPdC/CIGGKylU0d9hH6o72bK54XNQDQJIirotE=; b=owGbwMvMwCRo6H6F97bub03G02pJDGlp2633nuvS1ktzDV3P/1xjbfihlLY9OqH+cyPLrq2p5 z/66OObjlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZjIN36GBVMM+/O8X/jduvG6 aGEE15IOzbRNDxkWbC6dGXn0oGizK9NmFYVmA8+SusQvAA==
+Lines: 103
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3586; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=CAiZ3SVovdoincgpGx3yjmnj9eAa3sknXt7flqN/34E=; b=owGbwMvMwCRo6H6F97bub03G02pJDGlp21P5bQ5tWScq+3jdjYSCa743+6ZJTljT0FOq3MI34 dPvhBM8HbEsDIJMDLJiiixftvEc3V9xSNHL0PY0zBxWJpAhDFycAjCRsByGBcdMJ5r9NunUs9Zm WnDUfq8Wg3pdIsOCjVdkZ1rY380Oqso4+/bQmy+vUjxuAwA=
 X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
 
@@ -67,73 +68,102 @@ memory, we should make all 'class' structures declared at build time
 placing them into read-only memory, instead of having to be dynamically
 allocated at runtime.
 
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Jon Mason <jdmason@kudzu.us>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Allen Hubbe <allenbh@gmail.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org
+Cc: ntb@lists.linux.dev
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c |  2 +-
+ drivers/pci/switch/switchtec.c         | 16 ++++++++--------
+ include/linux/switchtec.h              |  2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 47d27ec7439d..ed038dd77f83 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -14,7 +14,9 @@
- #include <linux/pci-epf.h>
- #include <linux/pci-ep-cfs.h>
+diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+index d6bbcc7b5b90..31946387badf 100644
+--- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
++++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+@@ -1565,7 +1565,7 @@ static struct class_interface switchtec_interface  = {
  
--static struct class *pci_epc_class;
-+static const struct class pci_epc_class = {
-+	.name = "pci_epc",
+ static int __init switchtec_ntb_init(void)
+ {
+-	switchtec_interface.class = switchtec_class;
++	switchtec_interface.class = &switchtec_class;
+ 	return class_interface_register(&switchtec_interface);
+ }
+ module_init(switchtec_ntb_init);
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 5a4adf6c04cf..c7e1089ffdaf 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -37,7 +37,9 @@ MODULE_PARM_DESC(nirqs, "number of interrupts to allocate (more may be useful fo
+ static dev_t switchtec_devt;
+ static DEFINE_IDA(switchtec_minor_ida);
+ 
+-struct class *switchtec_class;
++const struct class switchtec_class = {
++	.name = "switchtec",
 +};
+ EXPORT_SYMBOL_GPL(switchtec_class);
  
- static void devm_pci_epc_release(struct device *dev, void *res)
- {
-@@ -60,7 +62,7 @@ struct pci_epc *pci_epc_get(const char *epc_name)
- 	struct device *dev;
- 	struct class_dev_iter iter;
+ enum mrpc_state {
+@@ -1363,7 +1365,7 @@ static struct switchtec_dev *stdev_create(struct pci_dev *pdev)
  
--	class_dev_iter_init(&iter, pci_epc_class, NULL, NULL);
-+	class_dev_iter_init(&iter, &pci_epc_class, NULL, NULL);
- 	while ((dev = class_dev_iter_next(&iter))) {
- 		if (strcmp(epc_name, dev_name(dev)))
- 			continue;
-@@ -867,7 +869,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 	INIT_LIST_HEAD(&epc->pci_epf);
+ 	dev = &stdev->dev;
+ 	device_initialize(dev);
+-	dev->class = switchtec_class;
++	dev->class = &switchtec_class;
+ 	dev->parent = &pdev->dev;
+ 	dev->groups = switchtec_device_groups;
+ 	dev->release = stdev_release;
+@@ -1851,11 +1853,9 @@ static int __init switchtec_init(void)
+ 	if (rc)
+ 		return rc;
  
- 	device_initialize(&epc->dev);
--	epc->dev.class = pci_epc_class;
-+	epc->dev.class = &pci_epc_class;
- 	epc->dev.parent = dev;
- 	epc->dev.release = pci_epc_release;
- 	epc->ops = ops;
-@@ -927,20 +929,13 @@ EXPORT_SYMBOL_GPL(__devm_pci_epc_create);
- 
- static int __init pci_epc_init(void)
- {
--	pci_epc_class = class_create("pci_epc");
--	if (IS_ERR(pci_epc_class)) {
--		pr_err("failed to create pci epc class --> %ld\n",
--		       PTR_ERR(pci_epc_class));
--		return PTR_ERR(pci_epc_class);
+-	switchtec_class = class_create("switchtec");
+-	if (IS_ERR(switchtec_class)) {
+-		rc = PTR_ERR(switchtec_class);
++	rc = class_register(&switchtec_class);
++	if (rc)
+ 		goto err_create_class;
 -	}
--
--	return 0;
-+	return class_register(&pci_epc_class);
- }
- module_init(pci_epc_init);
  
- static void __exit pci_epc_exit(void)
+ 	rc = pci_register_driver(&switchtec_pci_driver);
+ 	if (rc)
+@@ -1866,7 +1866,7 @@ static int __init switchtec_init(void)
+ 	return 0;
+ 
+ err_pci_register:
+-	class_destroy(switchtec_class);
++	class_unregister(&switchtec_class);
+ 
+ err_create_class:
+ 	unregister_chrdev_region(switchtec_devt, max_devices);
+@@ -1878,7 +1878,7 @@ module_init(switchtec_init);
+ static void __exit switchtec_exit(void)
  {
--	class_destroy(pci_epc_class);
-+	class_unregister(&pci_epc_class);
- }
- module_exit(pci_epc_exit);
+ 	pci_unregister_driver(&switchtec_pci_driver);
+-	class_destroy(switchtec_class);
++	class_unregister(&switchtec_class);
+ 	unregister_chrdev_region(switchtec_devt, max_devices);
+ 	ida_destroy(&switchtec_minor_ida);
  
+diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
+index 8d8fac1626bd..cdb58d61c152 100644
+--- a/include/linux/switchtec.h
++++ b/include/linux/switchtec.h
+@@ -521,6 +521,6 @@ static inline struct switchtec_dev *to_stdev(struct device *dev)
+ 	return container_of(dev, struct switchtec_dev, dev);
+ }
+ 
+-extern struct class *switchtec_class;
++extern const struct class switchtec_class;
+ 
+ #endif
 -- 
 2.45.2
 
