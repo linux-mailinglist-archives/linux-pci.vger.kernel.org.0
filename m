@@ -1,60 +1,60 @@
-Return-Path: <linux-pci+bounces-8575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18E9390376F
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 11:06:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59B16903776
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 11:08:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C03B1C219E8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 09:06:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0322C287413
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 09:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE1A117622E;
-	Tue, 11 Jun 2024 09:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A51017622E;
+	Tue, 11 Jun 2024 09:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="n2+EhWRk"
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="dVygd0CA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2086.outbound.protection.outlook.com [40.107.113.86])
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2059.outbound.protection.outlook.com [40.107.113.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309C479C8;
-	Tue, 11 Jun 2024 09:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.113.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC3B79C8;
+	Tue, 11 Jun 2024 09:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.113.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718096784; cv=fail; b=gb/IohqwaZ2hLG0hQW9XfY9LoFIOWYgHLIY3bdQegfkhxuZvErQ6qpqa8hFqpJKqU10mX4PMwhriDxzgFrggEOPANJPM8jwQLdxjZkHV9+aEaXKRjKB9/X7nR2Jy5NT3Gv848unzzmaWSv9PIBFuDgxwifTnqC71EbGWx1aELMo=
+	t=1718096884; cv=fail; b=LFYL8uSR46M/619ukjlPlmFbRrwlZKTt3dVlpxxNds2rtJu9eE/d1ZOZCR1DlQkAHiK5ejuz53RlMxt1sojbQXCPYcu1ksHqfvMd55o5KftjABNmImr715deXQ3aIs+FFECwpU/awCSkC0TN6S8oQol2LqfSloSStLpkl9a/PRQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718096784; c=relaxed/simple;
-	bh=9ScAw0WsCUKhNcVwgPUWqAjEqVi7yhJtNI3trvAsW5w=;
+	s=arc-20240116; t=1718096884; c=relaxed/simple;
+	bh=xhXsitQEwsRVDgAi7+PT1Qto5EY6Y1lbban6OzJ+ifo=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OM6/PFtBn5coc7so9lK5dmvQznvP5yUze7TVJcjH6ocantSFL8W2i65jwkH9dDvixEBkka8MR7E9hyXh4AhYR7QMS4w+cJVf7hv2yQitcwMHDvuQrGcvMkrmGmZw17kRrIEE3L3LBX8xzoElU8fCw6iC3KdcI7ZUToAfSOut+YE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=n2+EhWRk; arc=fail smtp.client-ip=40.107.113.86
+	 Content-Type:MIME-Version; b=PDiz5f+/XLF842cU6JwXj+tMV5aOvsHWo6QUumjBU5RGYDK60altcrG7Zl500YfCwJY925NrWo1DD20nUkOW2iLeZkDYqq0CNCZSoApHztu0iakzrUbi+n3gi8VhWQpglCTwSmFbwCjTdYScHsQCt6Z7P9b9C6QKjTlZy6BXQY8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=dVygd0CA; arc=fail smtp.client-ip=40.107.113.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a51Yyhpom15BOBn/xW6BPZGlG4f+xzoGYiQcRKcWsL7QirPbU/XI8ImigkE+mFt22JGM50nhyCARVjC3arTZWmusR2HufWF73h+OkfijYHsu/vO70kcuLjKzfSwOKNZLX1fWf/GNrIpJxn3/gMi6RvHontH76cVYapaHWxx608mfs3kQu3NTwLB7g24+rn2JpthkzHSE+7uSiKg7UgFfaY8aBGgo4qPmNHMCQyG0s4a+sUMmiODVC3g9HTHXmHtlcZqSr6zbpv+FgFeSnHIU62C0+76cS1Gj1SX1AqsiaaAXhenp1WbfqJdF6E3stH6L31xluvvcrbo3hsU5M5DXUw==
+ b=UD+kxKN8KHBF9/NyG06/7ahkNDAGqMJ64xmQL38E4iyaEwS7dY4Y6IjHnP5DEiPx9AqdGrz96DjuDrLMLNcifaHf/PfgwRsmJ4KYe1g9TR921rXCBnbDwDECMUfNhJF9xbx+el/erYZbtYblgYrgjwgvSGrAbaBgOuflt2/8PE6gwEtA93HhzKwVAedXUTwuMkdiJXHxwuBy3eV5qNHe0qGKxSnIdgYiD98rb+WI42eBtjlwHNBwqD+jUb7ru2K09y65TEXT1GHxEX96ESpFRYe+CFzjJEtBa0H1ifjGKN0ETGzVjXSNRG8m/pFbRxkD7GWjlhyv4iryWyMfQ55iyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rpRI0hx3mpR5yWxKfXVFMU99r3HxZF/JLuCsUYgR6i8=;
- b=Cf1YeeyUZXQ7gvLxf3xtC4RCWEsXSSAKqkpSIAwWSvuT7Wpq/HUpeWwlqrGH5Db6/o640+MhzYfD/swka/SrrtreSxao0Yp7OvkfO2UTU3ZdXl4/G5ii4sYetf0lmqKJXtyInmsBwEXzOCjS5wbQwDNF8TMl1+8nmaD8xWX9WBQMz00DUu+31cp3nlDr5d7ilkSNb+C+yfZhx0R8rulxbxCBpYuNZLaepfEZHEnL3QG5YifHOIhAe4+6fkAE5upoRhmsk6KBws/ZlFWB+qOExT6+gVDZV0D5ZKzl5prWd0h7HCbipiUBB+198iKT1oAisEekPhxuJ94eIJxGFU3k9w==
+ bh=Fxt5YTh26YhSU6rfkRwwNi5zyI2cyIY/HHLNY4Ybtck=;
+ b=KEFKkreSY+Hk+N6Pc6kgSuu9kvqJgpEs5RcZy7xpni/3fT2G0bSmH4U7F9N06defkx434Haxa8k/6ewvKdCT6cx0HhLXCoMS0jNoQ+CCS+yXbNHDRaab0dP8kmjamyukttKC0MGNg3h0zNSRB0EqTMwxkoauEC3DjElogxO8In3+/Rouxx0UKL4JaNLMAnoUvFig+AS6CIE9XERf19VIdR+aZnBMV5rszHHOrLrX65KNePBcO3D7QDjSJyZ9pakaoBwBvp60qtgM3aX+5WpL7JtilShg7K6kIFQgIhHb15RQnSCVMIedIdYTEFb1IE4+49iQS4fdiuxqsLVUmvFGNg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
  dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rpRI0hx3mpR5yWxKfXVFMU99r3HxZF/JLuCsUYgR6i8=;
- b=n2+EhWRk6Z0HwcPOZlxg7F4onQ+NOU4raYXqnYchRwvMM1r9awIWIp5o9opbtatRj5rIpOkKkfsxoGB28WQ02uqWtA4jroxsSZ1UO9Lydb2bRI4jwcdwA7iNnL91ozKHgwFR3PcM8epurpZsxbNx7L8pQJ00SStrGqzaOBR4sd4=
+ bh=Fxt5YTh26YhSU6rfkRwwNi5zyI2cyIY/HHLNY4Ybtck=;
+ b=dVygd0CAoSG5+Ny9UBc6MOU+KxFWwlIDxo+gV6JXsEhgPBfGhFMlq6yHUPTsAXHQkEF6LDnN4cy1JjncuG0SMrdhAZvrSfnT+RRj+Pwkw9dITCwGhoqh9jvN5+yeGEKBKYfqYkZIRbi98SalaKTmo0hsVLk/J605SCw2RG34RbY=
 Received: from TYCPR01MB11040.jpnprd01.prod.outlook.com (2603:1096:400:3a7::6)
  by TYCPR01MB11787.jpnprd01.prod.outlook.com (2603:1096:400:38c::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
- 2024 09:06:17 +0000
+ 2024 09:07:59 +0000
 Received: from TYCPR01MB11040.jpnprd01.prod.outlook.com
  ([fe80::b183:a30f:c95f:a155]) by TYCPR01MB11040.jpnprd01.prod.outlook.com
  ([fe80::b183:a30f:c95f:a155%4]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
- 09:06:17 +0000
+ 09:07:59 +0000
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
@@ -66,19 +66,18 @@ CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
 	<marek.vasut+renesas@gmail.com>, "linux-pci@vger.kernel.org"
 	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
 	<devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>, Frank Li <Frank.Li@nxp.com>
-Subject: RE: [PATCH v8 5/5] misc: pci_endpoint_test: Document a policy about
- adding pci_device_id
-Thread-Topic: [PATCH v8 5/5] misc: pci_endpoint_test: Document a policy about
- adding pci_device_id
-Thread-Index: AQHaqolaUZI8fEBh9ki8NwmNOflRprG5hl2AgAjhhJA=
-Date: Tue, 11 Jun 2024 09:06:17 +0000
+	<linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v8 3/5] PCI: rcar-gen4: Add .ltssm_control() for other SoC
+ support
+Thread-Topic: [PATCH v8 3/5] PCI: rcar-gen4: Add .ltssm_control() for other
+ SoC support
+Thread-Index: AQHaqolaZJN7yqdefUqofjJpUVNnwrG5hrOAgAjhipA=
+Date: Tue, 11 Jun 2024 09:07:59 +0000
 Message-ID:
- <TYCPR01MB11040921AE68844725D81E0FCD8C72@TYCPR01MB11040.jpnprd01.prod.outlook.com>
-References: <20240520074300.125969-6-yoshihiro.shimoda.uh@renesas.com>
- <20240605172803.GA766828@bhelgaas>
-In-Reply-To: <20240605172803.GA766828@bhelgaas>
+ <TYCPR01MB110409511B70B1092B5D27F31D8C72@TYCPR01MB11040.jpnprd01.prod.outlook.com>
+References: <20240520074300.125969-4-yoshihiro.shimoda.uh@renesas.com>
+ <20240605172915.GA767034@bhelgaas>
+In-Reply-To: <20240605172915.GA767034@bhelgaas>
 Accept-Language: ja-JP, en-US
 Content-Language: ja-JP
 X-MS-Has-Attach:
@@ -87,69 +86,69 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=renesas.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: TYCPR01MB11040:EE_|TYCPR01MB11787:EE_
-x-ms-office365-filtering-correlation-id: ecd905c2-fb0c-4335-da45-08dc89f5c0f1
+x-ms-office365-filtering-correlation-id: 386ba05d-f0db-4477-e34c-08dc89f5fd76
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
  BCL:0;ARA:13230031|7416005|376005|1800799015|366007|38070700009;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?NGaHcpPgNKzbKzjbZpmW5MAh+NLx5js27dXjdtYSRaZovPIqobvQsr6aLxlK?=
- =?us-ascii?Q?zddwBxd6nqnMgPFmntlrhxbNKGeckhECxQkArTDYgtk79FAyRaJqGzn8jZZc?=
- =?us-ascii?Q?LXzxIqUyGsXVja+CZws5+2CpopLdpPElnJibax1C7DyVzj39y6vgknHIZXWN?=
- =?us-ascii?Q?gDrvf3UGVm/RXKt3+G8jxPKN9z5n+zwJGcJW3gI7o+7p0RpoXvShuPFlXp1c?=
- =?us-ascii?Q?Lc/WCXTcUiNmBa+0pmzbNhujpv+y1uZUopPyBjfGR6FxWuplCM12rtUtco2V?=
- =?us-ascii?Q?Ztso7kOEGLL7ThZKgs+gzutEuJbYfaYsGoSxcLF7t84hOwK/Xky+obuC9WCq?=
- =?us-ascii?Q?AS+pNA5+Hluliz+1m4zuSsSxG7xvwBq9G1pU/hcqshw53Xub8W3CRXeat6tr?=
- =?us-ascii?Q?0qcvLOnd1C+Sf8xWx0QA//w5HJvh8e5pUf8odhOZ9SR/XI6TJYVkvHRl0Xn4?=
- =?us-ascii?Q?sYRvVz+uNclxYp+mBGjIyNh8sPcFZ5hfEPhrTPbs8eYXIMovT4odXv13MJmM?=
- =?us-ascii?Q?nBXfouQLH9mBuwCdJrvPen/EEahASEUNAcC77jd2veDXZl/BZHM3jl8cY1cU?=
- =?us-ascii?Q?MxQZi1Iq+iI5W+XUtb6laFzshynQQNmnl6yWyNZYkvmwzwE0chniVp8xbZT+?=
- =?us-ascii?Q?Yi9HEgKm1JvW5Tb//KKZ4gO4qayISNRbtbdFFNYo3NhNP7RxoyxHU2c0Lfen?=
- =?us-ascii?Q?gC/XsBqi7qc4mRtx5XRkDb0JnINwP1oEfDFA38Z5J+OgiAl1Fah29pdQCtTt?=
- =?us-ascii?Q?kDnW9rnnExZlUHXmkMIXRxj3pBDLSFwIU+FeGqkhp1w/Fqh5Ql/oN5mvGSEX?=
- =?us-ascii?Q?hbVyXu+CGHqKpBWID9GLpidnQcpX8oJ9kyDjlOWJnbrwnHQb9H2GwmR3d2jZ?=
- =?us-ascii?Q?hjlLvxbjHt//jkptdv/+MB7rKmM6WfMWEAnS9NzI6P0gcYcHv0xUzunv53eM?=
- =?us-ascii?Q?1z2EzrgZ5PgVF37KKKu6aITViZgaKqCik1c0OV82ksDVkYPmZgAHd1BHE6oB?=
- =?us-ascii?Q?wRd4ghGm6IP6bZMvCqEyZ1d9PntC0AM6dneaToNRlRSHu2RkKxL18xqs9B2R?=
- =?us-ascii?Q?MH1T1xgZEczfRk6UtIKxZi+AaAelS1Rn4SZJ8TrDZqCIQDGjgkWB7hIAmGBA?=
- =?us-ascii?Q?yCRi/PS919gvz09ck5nBA3o5Tyc+JO84jO5NpMJxDPSjcZiArt2nZTVxtwv0?=
- =?us-ascii?Q?hFufo6Efoic33vRribkff4r4Sw2Ut0kHVOrkgGrNiHSrXXhFsLyXjt5kpC+O?=
- =?us-ascii?Q?XP+pW3vnGhNgW0/zS3GPhos2YHCXVLTUGkqlElokF5fSArrWCEIp2ep89MaH?=
- =?us-ascii?Q?/ZvN/IFZvvVV/xeAefHB+GPIsx347XoN0c1Qc/NCAz7VsbmdCE6Eb+1FZOq6?=
- =?us-ascii?Q?zEKf+F4=3D?=
+ =?us-ascii?Q?mtXlyDuJ9ZwfzFikk1tiFvrX9rqUCTPHbw/fRlaBfXi9iqG/16fZgvny+NPn?=
+ =?us-ascii?Q?V4/1Odxn0GYRxlOPCLHhlSpYPAeFNZatqhAUfR/eft3H0e+ZAQ51M+VK4uI0?=
+ =?us-ascii?Q?yj5OPcoY1DXpq+F5Ptg3jLfg5L4auWFOJkLyazp8GvMOe4WxbQ+4cf+/T9oY?=
+ =?us-ascii?Q?PFd7XBsVcjGn/H6Dy7CatsAVpWeyAcAyhvnUneAQSrxhLCxie3liwtxD9blr?=
+ =?us-ascii?Q?ihmloOpH3V7TiWm1A2LirVC/NAfJJ5l7KUyDpTz1ygLJblxOu9ciSpQTDC2Q?=
+ =?us-ascii?Q?SYvrXtAaBsdD08aksGbAkpnNqXNeqAkmedaO93NpQgoevr8OiYVE7e8UeFX9?=
+ =?us-ascii?Q?JsUNAgmioO0W0QsuNqwWLJKyN3BQDLqK4fO8BQzYaRXeDvk2e+MEt4xURq6v?=
+ =?us-ascii?Q?sPL0w1h9nYoG7sDNw7IZzU/JAs+7xsOcetGQIwDXwQO/Zzauuu4wYguNAh6n?=
+ =?us-ascii?Q?0b+y/CZj+pQ9H7Q6HihjZWtdcdJO5fMPqb3JG5nBetp2TNNpjEUzv0ffxt4F?=
+ =?us-ascii?Q?GRYuYMIMsoiG80LB+n8PF5UYS4F1u4Cjc5LCM8fVH9vDh4fhjkJFs33nl9i/?=
+ =?us-ascii?Q?UL0rp6anAnMTf6+dsxN8yE3rk7AcQHG8hO1aci6zvYysDGIT2hWiD2d3eHte?=
+ =?us-ascii?Q?H2FIFVBAKENGFQLfMRvh9adql398N+YpekeYgZ2eP29HSwrYepcsyNJMbbP/?=
+ =?us-ascii?Q?OlOG4B8xzY5Gx5z9WqDAUgGI8EJdPZtqKSUwduFtQlcfAxJ0g3XKfuo0cKkf?=
+ =?us-ascii?Q?nMzmqoA7ih1+JVldSTLWRb6NzYQXb0r6qJ+sDASC9TQDPIywBX0MMASGQE/X?=
+ =?us-ascii?Q?VCKoX5bwJcZctaT5KOrtzZvYVVOv2RIxpayhpalyyTRRXJtlaFj6X72Lr4Yx?=
+ =?us-ascii?Q?3Wi5VJSodNWJLHhKRsS5Fl2yYzfEKrwsn681vkUfV8xn11B0jKv0olJj53Xk?=
+ =?us-ascii?Q?LWgOTadCQkyU6TjihOuobJc5T3S8UUN8RbjkSX0jQZTkijZh6A42aSXB/oE7?=
+ =?us-ascii?Q?GvYugQBBIfuQVjlJPh3ZkuxwDOqZBSLcbZB5XQ5lCCr2eglxdBTJaA31/xNH?=
+ =?us-ascii?Q?touI+l3HYuodzv3lurkUvqzWCu3FJcSscf1lZ5D/W9pm+NbhwRQ+lRv66206?=
+ =?us-ascii?Q?Cm73H1Qw+psB3ECMXiQGUnHbN9JnjUv5SHF6V6EZ8nwV2/9XAGFvdZEfgi9J?=
+ =?us-ascii?Q?3M0jkvCv/Aem4DktFaXIqhXbJAjaLMtJT76/dTF3YyvY8LW/DTSgTD6dPdiZ?=
+ =?us-ascii?Q?Dfx08oPnit+l7FtBbxplmosllSilHfc8BTUhfiKYmZkjOrpUO+0jICD8tsR3?=
+ =?us-ascii?Q?vaewHVQ51n8UdGzyOSqPBEcGwtJsNWgIKc5aHgRa4c4k2NEow/VJwaMXtH2/?=
+ =?us-ascii?Q?sEbTU64=3D?=
 x-forefront-antispam-report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11040.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?wZIN8cCyhVbvd+3UAm9D1hgunZutiwt3djZtzxdGu4mjZO2/0cEbZipGEUQ1?=
- =?us-ascii?Q?mMyi7wELJJcKk7+FlvBsaFjVR2qFwwBqeto0hqVo+29uuBn/+amNPR5Cn8Xf?=
- =?us-ascii?Q?M0g/4cWLRw33Vr1tFcMm8Hx+Hk4MQC2yzx4SXDQqt37o0UKgDXReF61BzhUE?=
- =?us-ascii?Q?hZXs98ZjeBIeROFLxjYS50UxVPKloyhpyoWe7r54BTojwlupW7MhSzFngD6T?=
- =?us-ascii?Q?9eA7pNnitX0gT2L29YfOvnYXIAxhqwycYqrpETPOAd28yb0zKJ2X4wo1Fk0Z?=
- =?us-ascii?Q?Hon82vDs3SM4zbHTCcHMItRBmxguDDdkPlSvkmFjkiCPjKY2D1+69V3LTeeV?=
- =?us-ascii?Q?QHSvur/xkFBN+aGZO7DtaibJ27/iwD4hyHHHKq08HRQz/u8S/lN12johID7p?=
- =?us-ascii?Q?bEc78id4BekXRGGhjUT5+BjTDBHY+e7Sk5bfyk3HYza+oHmGoiPnNVCnJxiR?=
- =?us-ascii?Q?Wh97Ds03baDuX0VzwDXrXZBMwHsNNhz7pJgXkHfsqmdrQH5KxOZC9cgN/yde?=
- =?us-ascii?Q?brgYu7qsZd+6R/TYJAgK3UGpy9CcM/g2+tLXYI2VdHeSQU+zGj+chnuz/yQN?=
- =?us-ascii?Q?WBonNRdxMhCOQPHaFhLH/PAQnmM2pKd8gPB/QZMyKUByqk7BZu1Lya/SSluy?=
- =?us-ascii?Q?Rz5s0OXuYHwJxQwLgrrxD8VOk1d7N0OiV6AcKIsMM3NKBMn5V8AzV0NCCjya?=
- =?us-ascii?Q?FLnOHoevXjF51TMvOIKRA6MohuAkYtc1ZhvGAgBOV9Z2MbhmyGDtLIi14T4u?=
- =?us-ascii?Q?IqPkNt63ETqoVV4rQJoTYDbPW0y9Df2be5AH5EIB/hTVbrdSN8GOobsh8iRp?=
- =?us-ascii?Q?+eu95GS+v6WwZ/mg72Qwyu7EwiQ2OuVBiaz4ScV4jbgUjWiQ/37H1/ZG+k3W?=
- =?us-ascii?Q?Ex02iE3bVb9RWdRlwBFf5rknTJCl5U0PSyqyr9+Q1qhlPBw9bwWdqKx9tFTd?=
- =?us-ascii?Q?lcCiRuumNRc7CWF4Dr1EAMVAeLkZTLAayYNXP9jPcECDmKsdgXZvaDKOvbH5?=
- =?us-ascii?Q?sM33Fgni+1QIYqTP4TknpTsvmwOg4eGxwcdlugNk4QHIOWRbKXu6RpjaY6uf?=
- =?us-ascii?Q?NIGUDBk7APMtZgTWMApA43zlTceqHvv4btTQs0pD4wHcQwWapNjZfEXejqiP?=
- =?us-ascii?Q?WKJv8z+mmwv3v1trjpwhzNA5e2d3vkBYBHYwEFnFpqAAiDeAMXzZ1LDExqxI?=
- =?us-ascii?Q?r+38h8xesnH4ljwdt7BM5XiCi3O09DP/4p68E3SZizAFMTOhj57OaIplbgVl?=
- =?us-ascii?Q?+80NmucrhZE/jthHKWxoVC2GgwLq5f8WeWVRiNJa488GMRRY7NUxUiYkmk9t?=
- =?us-ascii?Q?YhqC4Be+waqg1TqQ1I1+ZNEo3+PWZrbGRnbQh73M3d4p+SOw4l5eNfHzgkDW?=
- =?us-ascii?Q?C/TYKp9p4SI6RsL0CpSbppPkLhsh0GwT5Q6bIrH/7uf/FQ+kuF2a0BgG1Ewk?=
- =?us-ascii?Q?0CVI6oahNp1ZbcJU1ZnBJTSYVuFA33Wc5lQijBwBEJnLocCXdtu4+lN2mifk?=
- =?us-ascii?Q?v1nAy4IASRkBfmgNwxVl4CJzXfnDcihhAfDTQPykWdvDAW8AgEnsSZy8lHUv?=
- =?us-ascii?Q?KwDWPJ1Z9JZNt/tl+dAkz+qz8mut7ZdBzjFVilJSdqc2C67QIZhamQtV0gaj?=
- =?us-ascii?Q?z4V7YWkgm1hUOOPlAPDiz7CWPxnncPycvSteq9+tvRKMuf5q4GMQhLumWHlB?=
- =?us-ascii?Q?9F4KFA=3D=3D?=
+ =?us-ascii?Q?3ZcRqItp66ZM8r0Jql4mUkYeilbmVPdNaDr18Wh175JnSs8sBP8UV3A/52Vg?=
+ =?us-ascii?Q?ncmcVViF4dheuwL2xShIg6gl9i+9leneopRLwwxwTg3a63lSpW3ErXQ4P28F?=
+ =?us-ascii?Q?El7wj+s0fwssBTVgDiIWuOBEdxftgVQxbom9CMR94iTNydnqPzM5K1iwTz2X?=
+ =?us-ascii?Q?mDUAaHqLqCNAGzf0BbldlSCT6HpyAFB7sRlsSrWLJRfXgdhiA0jB4CUUwfsw?=
+ =?us-ascii?Q?pt9fnwQrEn9/rKAzQKPA6xsUsdWon9VKio2N4AytrCutUCtpJf2lL7atsUH3?=
+ =?us-ascii?Q?4kXsi/ypD8r2v9HHR11R/TaFslybBS6AnSCxdbcDKX8PtHX9Y0ldrCsuIFXn?=
+ =?us-ascii?Q?WkzL1NQT77gD7g7b/flRFLGndTLwxCyK3UcFK3Q1ZJMpzObpe5GWlbr9FYNP?=
+ =?us-ascii?Q?nQOkSxU6cuP/wGsQg+qrZvdlgJzMJrDP3bXzduwpZ5miPnQ83anz4DvfQwar?=
+ =?us-ascii?Q?srdGLEWZbJRD8e2Kl78fl/Mql0kyP2hv9nJQmiUxgryreTHsng2FOIrfvJ78?=
+ =?us-ascii?Q?b9WYOHcZmvjniUHAB8UjezZYAjpDOkauaRV6KTtX1mOAqQSjOFqWJJGPGz7f?=
+ =?us-ascii?Q?Ln+eDSCXoPyl0fwIDnu5zW9Cn3BASes/aaSJvFVK84+PIENBngRf+hCWD31D?=
+ =?us-ascii?Q?rQzbPVwQa/iLAG4/Qi59aFKIMBnigLJSzYsz6Def08BI7Zi4dMhkzHJX2akn?=
+ =?us-ascii?Q?RfH1dCmyqZLcBJiu3wnOdQ8rlwVMp0DHaSwW/pvHbXbCZpERwGhjNlKcQluS?=
+ =?us-ascii?Q?u1tREzBz8tK4Z42wts7GCSc/0SyBANEbklq0KwLfdi4pBAXpgHG/UqfOpYW2?=
+ =?us-ascii?Q?apF7EGZpek4mrb3+oIgHQOEg0rm9QWaVlUMYYfm5kuuLFZJpVk/rPZWifEEw?=
+ =?us-ascii?Q?KPMnx0PquigHDDO+uWl7SHFJaK8U3b5MeyG0PXbpLpeUJ8tLxxArREuea15B?=
+ =?us-ascii?Q?M79NUcPkGgtiic1Qg1iQISqsX/ijWfWsr+1/iPM0IH0/GNHn8e/2LbECBbz3?=
+ =?us-ascii?Q?ZPqCy39xHgeVi2MA/oD7qG/kOGEEgE7G8qSC7eRWgf/23igkEDWYduEyujVf?=
+ =?us-ascii?Q?HJBsnuJiWyUjYFHTRv5F14TKRxwAhLpR8tnj3HlG3HHvIJLZcHJ5rQ6WnmnM?=
+ =?us-ascii?Q?SpWIuAw7LKBfkARK2a1dVGDekUPn+aLXmaAC7i3tVB7CFjIfgCvRcKwF1WKv?=
+ =?us-ascii?Q?A6h46tNY2whKjOIF//W+PlKedW9OCLRqEIXUZHOHxXzjwJi16yivZvb9sq/O?=
+ =?us-ascii?Q?ruS1OoPfsFe2jlhfETgbsgnLUW/rr5cErOXboYsN+9ZIVX3aN3HF74d99SiX?=
+ =?us-ascii?Q?zEKquWKSWcEyHDmzTomNUgqCuJRVzCC7P++y/VYqXt0yWz/TVQYl5i4aHWTc?=
+ =?us-ascii?Q?Sqnc41ta+UWVyJCkh/ZQ4cd3rcu1cfbWphQ+kr82mCjFkwbwVBzR3xGqnRx1?=
+ =?us-ascii?Q?YpknXlPiKefRJv3+ifUKivSIv8AmFm7H7ajkiZJ8cdWKUfxXmDLZNcbcnXDt?=
+ =?us-ascii?Q?g4GVXDjWOBI5ymg7DW/9CsW6IUyUhOSQ90pCtlT8gqlS0elDdgeTgyhTFCrY?=
+ =?us-ascii?Q?65SH88DaQyzDrZM6bp+jM+flOcpbTcS8nmyZYzamdenVsCjk9G2oOgaL+zo6?=
+ =?us-ascii?Q?gzo7DnwKbdLz2eWwdyU+kkB1RPttynkhx81KKHrd801bzFv7yxUHHV99Av1+?=
+ =?us-ascii?Q?Dpf39g=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -161,67 +160,172 @@ MIME-Version: 1.0
 X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11040.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecd905c2-fb0c-4335-da45-08dc89f5c0f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2024 09:06:17.6788
+X-MS-Exchange-CrossTenant-Network-Message-Id: 386ba05d-f0db-4477-e34c-08dc89f5fd76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2024 09:07:59.1790
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7R2852pzd4PXujhGDiWW7yEwlJP8wZua8RMrgoeT3xpXKlLEhUx2p4F8lpjAU88y6rAzAtKt+3DGqFYgQdLELlq6kCpXpeKjW6/rpgfl05Z3FuREeWKt54P7ZjtF99ED
+X-MS-Exchange-CrossTenant-userprincipalname: pDqy3FTgf6kHSrafjUBL2fzWeYqQkwo5oHregiXO4lqCYcCOKiWHa2HssiPpvTWWtyIAzmQrd4ze27lerBd9gdSxZdAmJy5YX28pbjtK8Wfy/AwdrvvbaKlMvDzrYm+G
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB11787
 
 Hi Bjorn,
 
-> From: Bjorn Helgaas, Sent: Thursday, June 6, 2024 2:28 AM
+> From: Bjorn Helgaas, Sent: Thursday, June 6, 2024 2:29 AM
 >=20
-> On Mon, May 20, 2024 at 04:43:00PM +0900, Yoshihiro Shimoda wrote:
-> > To avoid becoming struct pci_device_id pci_endpoint_test_tbl longer
-> > and longer, document a policy. For example, if PCIe endpoint controller
-> > can configure vendor id and/or product id, you can reuse one of
-> > existing entries to test.
+> On Mon, May 20, 2024 at 04:42:58PM +0900, Yoshihiro Shimoda wrote:
+> > Sequence for controlling the LTSSM state machine is going to change
+> > for SoCs like r8a779f0. So let's move the LTSSM code to a new callback
+> > ltssm_control() and populate it for each SoCs.
 >=20
-> Possible text:
+> s/So let's move/Move/
 >=20
->   Add a comment suggesting that if the endpoint controller Vendor and
->   Device ID are programmable, an existing entry might be usable for
->   testing without having to add an entry to pci_endpoint_test_tbl[].
+> No need to repost for this, whoever applies it can tweak it.
 
-Thank you for the suggestion. I'll fix the description.
-
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >  drivers/misc/pci_endpoint_test.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoi=
-nt_test.c
-> > index c38a6083f0a7..727db13b6450 100644
-> > --- a/drivers/misc/pci_endpoint_test.c
-> > +++ b/drivers/misc/pci_endpoint_test.c
-> > @@ -980,6 +980,7 @@ static const struct pci_endpoint_test_data j721e_da=
-ta =3D {
-> >  	.irq_type =3D IRQ_TYPE_MSI,
-> >  };
-> >
-> > +/* Do not add a new entry if the controller can use existing VID:PID c=
-ombinations */
->=20
->   /*
->    * If the controller's Vendor/Device ID are programmable, you may be
->    * able to use one of the existing entries for testing instead of
->    * adding a new one.
->    */
-
-I'll write this on v9.
+I need to post v9 patches for Manivannan's feedback, so I'll fix the descri=
+ption on v9.
 
 Best regards,
 Yoshihiro Shimoda
 
-> >  static const struct pci_device_id pci_endpoint_test_tbl[] =3D {
-> >  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x),
-> >  	  .driver_data =3D (kernel_ulong_t)&default_data,
+> > This also warrants the addition of new compatibles for r8a779g0 and
+> > r8a779h0. But since they are already part of the DT binding, it won't
+> > make any difference.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 74 ++++++++++++++-------
+> >  1 file changed, 50 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/=
+controller/dwc/pcie-rcar-gen4.c
+> > index b11e09505b0b..bcbf0a52890d 100644
+> > --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > @@ -48,7 +48,9 @@
+> >  #define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
+> >  #define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
+> >
+> > +struct rcar_gen4_pcie;
+> >  struct rcar_gen4_pcie_drvdata {
+> > +	int (*ltssm_control)(struct rcar_gen4_pcie *rcar, bool enable);
+> >  	enum dw_pcie_device_mode mode;
+> >  };
+> >
+> > @@ -61,27 +63,6 @@ struct rcar_gen4_pcie {
+> >  #define to_rcar_gen4_pcie(_dw)	container_of(_dw, struct rcar_gen4_pcie=
+, dw)
+> >
+> >  /* Common */
+> > -static void rcar_gen4_pcie_ltssm_enable(struct rcar_gen4_pcie *rcar,
+> > -					bool enable)
+> > -{
+> > -	u32 val;
+> > -
+> > -	val =3D readl(rcar->base + PCIERSTCTRL1);
+> > -	if (enable) {
+> > -		val |=3D APP_LTSSM_ENABLE;
+> > -		val &=3D ~APP_HOLD_PHY_RST;
+> > -	} else {
+> > -		/*
+> > -		 * Since the datasheet of R-Car doesn't mention how to assert
+> > -		 * the APP_HOLD_PHY_RST, don't assert it again. Otherwise,
+> > -		 * hang-up issue happened in the dw_edma_core_off() when
+> > -		 * the controller didn't detect a PCI device.
+> > -		 */
+> > -		val &=3D ~APP_LTSSM_ENABLE;
+> > -	}
+> > -	writel(val, rcar->base + PCIERSTCTRL1);
+> > -}
+> > -
+> >  static int rcar_gen4_pcie_link_up(struct dw_pcie *dw)
+> >  {
+> >  	struct rcar_gen4_pcie *rcar =3D to_rcar_gen4_pcie(dw);
+> > @@ -127,9 +108,13 @@ static int rcar_gen4_pcie_speed_change(struct dw_p=
+cie *dw)
+> >  static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
+> >  {
+> >  	struct rcar_gen4_pcie *rcar =3D to_rcar_gen4_pcie(dw);
+> > -	int i, changes;
+> > +	int i, changes, ret;
+> >
+> > -	rcar_gen4_pcie_ltssm_enable(rcar, true);
+> > +	if (rcar->drvdata->ltssm_control) {
+> > +		ret =3D rcar->drvdata->ltssm_control(rcar, true);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> >
+> >  	/*
+> >  	 * Require direct speed change with retrying here if the link_gen is
+> > @@ -157,7 +142,8 @@ static void rcar_gen4_pcie_stop_link(struct dw_pcie=
+ *dw)
+> >  {
+> >  	struct rcar_gen4_pcie *rcar =3D to_rcar_gen4_pcie(dw);
+> >
+> > -	rcar_gen4_pcie_ltssm_enable(rcar, false);
+> > +	if (rcar->drvdata->ltssm_control)
+> > +		rcar->drvdata->ltssm_control(rcar, false);
+> >  }
+> >
+> >  static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
+> > @@ -506,6 +492,38 @@ static void rcar_gen4_pcie_remove(struct platform_=
+device *pdev)
+> >  	rcar_gen4_pcie_unprepare(rcar);
+> >  }
+> >
+> > +static int r8a779f0_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, bo=
+ol enable)
+> > +{
+> > +	u32 val;
+> > +
+> > +	val =3D readl(rcar->base + PCIERSTCTRL1);
+> > +	if (enable) {
+> > +		val |=3D APP_LTSSM_ENABLE;
+> > +		val &=3D ~APP_HOLD_PHY_RST;
+> > +	} else {
+> > +		/*
+> > +		 * Since the datasheet of R-Car doesn't mention how to assert
+> > +		 * the APP_HOLD_PHY_RST, don't assert it again. Otherwise,
+> > +		 * hang-up issue happened in the dw_edma_core_off() when
+> > +		 * the controller didn't detect a PCI device.
+> > +		 */
+> > +		val &=3D ~APP_LTSSM_ENABLE;
+> > +	}
+> > +	writel(val, rcar->base + PCIERSTCTRL1);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct rcar_gen4_pcie_drvdata drvdata_r8a779f0_pcie =3D {
+> > +	.ltssm_control =3D r8a779f0_pcie_ltssm_control,
+> > +	.mode =3D DW_PCIE_RC_TYPE,
+> > +};
+> > +
+> > +static struct rcar_gen4_pcie_drvdata drvdata_r8a779f0_pcie_ep =3D {
+> > +	.ltssm_control =3D r8a779f0_pcie_ltssm_control,
+> > +	.mode =3D DW_PCIE_EP_TYPE,
+> > +};
+> > +
+> >  static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie =3D {
+> >  	.mode =3D DW_PCIE_RC_TYPE,
+> >  };
+> > @@ -515,6 +533,14 @@ static struct rcar_gen4_pcie_drvdata drvdata_rcar_=
+gen4_pcie_ep =3D {
+> >  };
+> >
+> >  static const struct of_device_id rcar_gen4_pcie_of_match[] =3D {
+> > +	{
+> > +		.compatible =3D "renesas,r8a779f0-pcie",
+> > +		.data =3D &drvdata_r8a779f0_pcie,
+> > +	},
+> > +	{
+> > +		.compatible =3D "renesas,r8a779f0-pcie-ep",
+> > +		.data =3D &drvdata_r8a779f0_pcie_ep,
+> > +	},
+> >  	{
+> >  		.compatible =3D "renesas,rcar-gen4-pcie",
+> >  		.data =3D &drvdata_rcar_gen4_pcie,
 > > --
 > > 2.25.1
 > >
