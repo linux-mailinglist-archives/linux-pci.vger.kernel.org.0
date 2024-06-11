@@ -1,55 +1,56 @@
-Return-Path: <linux-pci+bounces-8598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68BC5904219
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 19:04:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87C2990421C
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 19:04:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFDBE1F238C5
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 17:04:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17854288FB9
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 17:04:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40E4540861;
-	Tue, 11 Jun 2024 17:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E286F42058;
+	Tue, 11 Jun 2024 17:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdyZk8sc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0rYQTa/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F75B3FB83;
-	Tue, 11 Jun 2024 17:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78503FB83;
+	Tue, 11 Jun 2024 17:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718125453; cv=none; b=TUf5/DpDaiFCnQAcTrw0EaQOJHqz8Qid1uD58Qnsf9IffkcpsBMIbOXnqNJZvt+cbFJMqVFQ9olsoQCnoedyxmliLS3cGm7w2HPkyrBHVtSfKfmnt9FzP4xisw4P9RtM0WUY6bwVyWey/qcq22+/a+jBNKdTC1dWlb9cMcZmJxk=
+	t=1718125479; cv=none; b=DxcSsI9y1qBA2aruFY/s5wADJXlEn7wxEsbA9xR7OeYF9M1Y/cN0TI++looVwZR3mE04Qczv7lkxli/DN/Z1Q7ExAvESqW5jhcrloEMj7Eu9LmSEGkHRrvgAYOtA5fWMDmjAcEcHgEov0/AU+zwcRo8R8os4MkXQpPFjJxXar9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718125453; c=relaxed/simple;
-	bh=D7nsRPRmxIs0jY7N1vqy4P7tamwNORJta5X6eAl1P1E=;
+	s=arc-20240116; t=1718125479; c=relaxed/simple;
+	bh=lqJhX3hH76dmmFicVO/WpvcL89wI/1+jJfKME2NrxwY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Bc5tk1+zklMFl5r/KRP/Hbrwuhp1kTjU1sL7p4joXZiyZ7koBM45EFj4SS9oIB0GqpKWyoKeO2BWM5wIwOKxNO4IJsREaO1lxePAaUX11v1VoHvP8VJFSmiqK2Xrl1MBwBhu7u5zZqu/qwrVtddLI/kstqQKfPTpJaXKfkPe6vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdyZk8sc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62977C2BD10;
-	Tue, 11 Jun 2024 17:04:12 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=KqYfGPvAtpXfc9+fOgK+6xJIXqw441W8/Vhx/Of31p2Fp8nV6iJgJnz1YE1P1lDQAD1x/VPxAP9/nKzPNGSwoBuslI2QacYMNDgucZFaRZgaUroBxXt8EEwIPuMMcBOYFoVTCmQcM2VdWyuQ4Z2bBA/DInySxWpKvR6DI9uIPCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0rYQTa/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1179AC2BD10;
+	Tue, 11 Jun 2024 17:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718125452;
-	bh=D7nsRPRmxIs0jY7N1vqy4P7tamwNORJta5X6eAl1P1E=;
+	s=k20201202; t=1718125479;
+	bh=lqJhX3hH76dmmFicVO/WpvcL89wI/1+jJfKME2NrxwY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pdyZk8scEe3XbhVlanhkDHhDlGCT6hFwwfx2X7Z/YREiPn2gXlWFWnWxVHg+wKQ5W
-	 3ZVwmblInsG8/Tdaf4L+u9azaV1zjmjATCizQqPiEfTjdE4aVTejjigcISknSy8xoU
-	 gWSf4jTZIYypzX7WSw5I+wlK+PLB11jA6qcy1+4FlrJULQ5BHlJch79iH9WzBdUjR5
-	 FygURBx42o293b5CIdfVWcdXZY5wqX58HgIqWxvuawbTXwVUaRVj1HIe33VG5nKcn6
-	 psvsAxLoiAql6T8/lKqhu2N/7oK/We7jmC8ZzTdHtFr+lYZJ34nh1549FW04+r+lrR
-	 X/PylG3G4OfUw==
-Date: Tue, 11 Jun 2024 12:04:10 -0500
+	b=t0rYQTa/LRnLznXbAnC8DdbHVFObu+ZoSZRHAQJ5Ug1eaRgslX2Wjc2eYKwylXfhz
+	 2oGVqjTFxRL99WAndDKNEcoNavx0Fss2XtS8jsCAqgcfLYRlXB8l37cNRKmRDxDG4X
+	 Ya/qU12w7G6Uo1zQlAf11YUPG0qWJS1Ozb1jAOTmqlQ3qhodAa2Jt4RHTm1VOFh4nW
+	 1IvAUFCeVQlKMLZl/8EZq+yCGn5kfODAqHlVriMp5Qk/1477eW7SLznjkZMVGM5Whx
+	 78vL5EDdRI96G+ijFSXRrcWJiDdLc5tGoPYcAGvaR6ur1j0ZLFBCBfYNT3RyKmihL4
+	 zeZrWieix19xw==
+Date: Tue, 11 Jun 2024 12:04:37 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: matthew.gerlach@linux.intel.com
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] PCI: altera: support dt binding update
-Message-ID: <20240611170410.GA989554@bhelgaas>
+To: linux-pci@vger.kernel.org
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] CREDITS: Add Synopsys DesignWare eDMA driver for Gustavo
+ Pimentel
+Message-ID: <20240611170437.GA989843@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,56 +59,34 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240611163525.4156688-2-matthew.gerlach@linux.intel.com>
+In-Reply-To: <20240611153059.983667-1-helgaas@kernel.org>
 
-On Tue, Jun 11, 2024 at 11:35:25AM -0500, matthew.gerlach@linux.intel.com wrote:
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+On Tue, Jun 11, 2024 at 10:30:59AM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Add support for the device tree binding update. As part of
-> converting the binding document from text to yaml, with schema
-> validation, a device tree subnode was added to properly map
-> legacy interrupts. Maintain backward compatibility with previous binding.
+> Add the Synopsys DesignWare eDMA driver to CREDITS for Gustavo.  See
+> 7e4b8a4fbe2c ("dmaengine: Add Synopsys eDMA IP version 0 support").
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-If something was *added* to the binding, I think it would be helpful
-to split that into two patches: (1) convert to YAML with zero
-functional changes, (2) add the new stuff.  Adding something at the
-same time as changing the format makes it hard to review.
+Added to pci/for-linus for v6.10.
 
-Then we could have a more specific subject and commit log for *this*
-patch.
-
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 > ---
->  drivers/pci/controller/pcie-altera.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+>  CREDITS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index a9536dc4bf96..88511fa2f078 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
-> @@ -667,11 +667,20 @@ static void altera_pcie_isr(struct irq_desc *desc)
->  static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
->  {
->  	struct device *dev = &pcie->pdev->dev;
-> -	struct device_node *node = dev->of_node;
-> +	struct device_node *node, *child;
+> diff --git a/CREDITS b/CREDITS
+> index 3a331f5fcd7a..8446e60cb78a 100644
+> --- a/CREDITS
+> +++ b/CREDITS
+> @@ -3149,6 +3149,7 @@ S: Germany
+>  N: Gustavo Pimentel
+>  E: gustavo.pimentel@synopsys.com
+>  D: PCI driver for Synopsys DesignWare
+> +D: Synopsys DesignWare eDMA driver
+>  D: Synopsys DesignWare xData traffic generator
 >  
->  	/* Setup INTx */
-> +	child = of_get_next_child(dev->of_node, NULL);
-> +	if (child)
-> +		node = child;
-> +	else
-> +		node = dev->of_node;
-> +
->  	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> -					&intx_domain_ops, pcie);
-> +						 &intx_domain_ops, pcie);
-> +	if (child)
-> +		of_node_put(child);
-> +
->  	if (!pcie->irq_domain) {
->  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
->  		return -ENOMEM;
+>  N: Emanuel Pirker
 > -- 
 > 2.34.1
 > 
