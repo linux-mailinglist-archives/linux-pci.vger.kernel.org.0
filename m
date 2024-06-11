@@ -1,194 +1,206 @@
-Return-Path: <linux-pci+bounces-8567-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8568-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0E14902EE4
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 05:05:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A732F902FAB
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 06:53:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 682202867B9
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 03:05:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51991284F9D
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 04:53:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A077E782;
-	Tue, 11 Jun 2024 03:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 389E0282E2;
+	Tue, 11 Jun 2024 04:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZblmMN/q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B6941A84
-	for <linux-pci@vger.kernel.org>; Tue, 11 Jun 2024 03:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACECE140E30;
+	Tue, 11 Jun 2024 04:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718075144; cv=none; b=frlJeMrvKUhsLOpuNOAWFcWeMXkHFzagiAnGLzyeRikyQMi7KFzGGmshwzC7z+/POdxaj2pcAbLTkz7edx24D+f6iA39CorICRw6rKUD90gMtAkhJCwSOKF/z8/RirXJZV6Ee3lsy0UBBJdi0POPClH6T4hVRlsiGYtuy6E6lZM=
+	t=1718081630; cv=none; b=R1rB8wpk4Y6u5RGzkoLMv/QkBwEGwYPoALMxUsRzSpA8NV/tqFbF9napj+ZWkn6nFaDaPVfEUXSD8Gc1M+VDIcpl5+8nK9yWSR8XPsrF8qGKm6TZJdCEueHgLymIwsPeGfrpcmujxjV5YuBX8rRH02U0CZ/PGpjLB2SQ5yo91so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718075144; c=relaxed/simple;
-	bh=95hJrx3dajoFavyeCRBlJFU6iB1CmHmeseoxgTArd2k=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YbreVdppeFpouIvJ9WxXkPWt0FXNzC4awu5aeqxNpnDtYI6EYhbdouuPCwn8M4a4UR16nayoHulYDkyMIn14hElAcRjlrZIKFRsiWR1B+V/Lc19GoeGq//jiwI8xVkHIWW1VsIyHMUKdo85lN9dkRLwvCJE4WPK+7Q9ZrRF1bcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Vytkb6hngz1yt8w;
-	Tue, 11 Jun 2024 11:02:15 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2400614022E;
-	Tue, 11 Jun 2024 11:05:39 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemf200006.china.huawei.com
- (7.185.36.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 11 Jun
- 2024 11:05:38 +0800
-Subject: Re: Linux warns `Unknown NUMA node; performance will be reduced`
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Bjorn Helgaas <helgaas@kernel.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
-References: <20240610194236.GA954050@bhelgaas>
- <4dcdc648-e09d-4f43-a53c-bcb4f54ef476@molgen.mpg.de>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <70cf7d8f-63f1-d54a-63f3-7564cdf46ede@huawei.com>
-Date: Tue, 11 Jun 2024 11:05:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1718081630; c=relaxed/simple;
+	bh=1r/KZPJK7SnWqcEGiuRZWkZvSqQTaNiTQOLOtBD77Tw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wj+p5YvVNTB6dBjvkksQWP5VSYHwMtp1+VEKBc0h2YSQmoqmV52IjpU5Puy2r0Kkukj6MO6msUAxYghae81C2hGZ7LQmWg95aam8ZA+5Ta9MDgIZOSGo+iIiqDo2cR2e5X+o4FuP/5wKUGxDdYkyVaLAUJDL+sZ97XHnHItxA1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZblmMN/q; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-6c386a3ac43so409764a12.0;
+        Mon, 10 Jun 2024 21:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718081628; x=1718686428; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tkYvwHUb1vxYE4FRpnnovzeM3NUFslIev6dcv32PViU=;
+        b=ZblmMN/qLUKk7GxHsZ4KgI+3I0w+ux/ZJpr/41xWZKLo1Nc29Yh6QimiwIZvbX3PxJ
+         Zx5+nvvDFM94TPR0ul6j7ukT8q24/HBECBlaft3z5wTVKVwGsb9v+FD3JbcuDfoyZ6ht
+         fVFHK2uq8KqKISYY4SffjzHcH7R7aukexTSpd44ioWbG7yzqg+RdYLO7JCo7WVFOuJf1
+         NTuxuSrqEJBL9Gocg8L2h5AJR/fVuKx8u7q1sJcR2Pehu+Nl+P9imjvGssCoNSk44Zv7
+         ZW2zrzSRbU6nMpEIMo3PsZVQMfyGFoVZbh+7EMC5pz6M1s10h3I4X2oXP2EXKOvARXEn
+         EE8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718081628; x=1718686428;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tkYvwHUb1vxYE4FRpnnovzeM3NUFslIev6dcv32PViU=;
+        b=TiEGyOYy2/DfnCoEEvPHR+NI8gCE3+Pi9mAqHiSlfeyQNxQSKcnMgiIkQLihg76vCk
+         OvP80aplcFH7Aid5wqmOBD49EPsjEK9PFMkq3DGYSy1YIL6kXFm+8C8wLOpGifT2/Db6
+         tz4Nb6ztipS3VX7BT8n1UpgIToiMhpRP3wxpRHBWD2RkFVnFuY3uqIh2jWOoS5dCEScv
+         5ORO3xVZ4Zc7A3H9g+2abNnDL43CQ/hz4oHeS90aNZdUHiANy9slZmJLiPX1GVO0pjUI
+         dSN+UMTuZVFVx1DAiTKod3DlvOKlHOryG9Hs1lIsBqFQby+rX+O1nRoAFI9EpqnlbnlT
+         W1nw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUuHsTud5hQLyWlIt+RQmFLL4pBZYuLlqxeZtCcr7UQoS0Sg0qJ8un8/rfdmDFyYVKImrBSuqaKJgzHoIGy/ImjBT7P2xiVbXG
+X-Gm-Message-State: AOJu0YxMOjpImotVga5F4xQPiIrWIrIzmz32x11dtsRycLReIeXeIzE6
+	OB03mSBWAcIrwrFAvvpV1Kw2BAHSkde10drWVkDE0Z55iQTG1LQ8Uz40yv27
+X-Google-Smtp-Source: AGHT+IH0996eFFPs8rJllAfF6Ru2kQBs0zi4X0C+0CCdgKMqDUrYI1grs7VNdAPfCnuTM5xEw1GHyQ==
+X-Received: by 2002:a17:90b:2b44:b0:2c2:c967:3e56 with SMTP id 98e67ed59e1d1-2c2c9677558mr10426910a91.4.1718081627514;
+        Mon, 10 Jun 2024 21:53:47 -0700 (PDT)
+Received: from rpi.. (p5261226-ipxg23801hodogaya.kanagawa.ocn.ne.jp. [180.15.241.226])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c31bb3c141sm1967277a91.10.2024.06.10.21.53.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 21:53:47 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: netdev@vger.kernel.org
+Cc: andrew@lunn.ch,
+	horms@kernel.org,
+	kuba@kernel.org,
+	jiri@resnulli.us,
+	pabeni@redhat.com,
+	linux@armlinux.org.uk,
+	hfdevel@gmx.net,
+	naveenm@marvell.com,
+	jdamato@fastly.com,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH net-next v10 0/7] add ethernet driver for Tehuti Networks TN40xx chips
+Date: Tue, 11 Jun 2024 13:52:10 +0900
+Message-Id: <20240611045217.78529-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4dcdc648-e09d-4f43-a53c-bcb4f54ef476@molgen.mpg.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemf200006.china.huawei.com (7.185.36.61)
 
-On 2024/6/11 4:27, Paul Menzel wrote:
-> Dear Bjorn,
-> 
-> 
-> Am 10.06.24 um 21:42 schrieb Bjorn Helgaas:
->> [+cc Yunsheng, thread at
->> https://lore.kernel.org/r/a154f694-c48b-4b3b-809f-4b74ec86a924@molgen.mpg.de]
+This patchset adds a new 10G ethernet driver for Tehuti Networks
+TN40xx chips. Note in mainline, there is a driver for Tehuti Networks
+(drivers/net/ethernet/tehuti/tehuti.[hc]), which supports TN30xx
+chips.
 
-Thanks for cc'ing.
+Multiple vendors (DLink, Asus, Edimax, QNAP, etc) developed adapters
+based on TN40xx chips. Tehuti Networks went out of business but the
+drivers are still distributed under GPL2 with some of the hardware
+(and also available on some sites). With some changes, I try to
+upstream this driver with a new PHY driver in Rust.
 
->>
->> Thanks very much for this report!
-> 
-> Thank you for the quick reply.
-> 
->> On Sun, Jun 09, 2024 at 10:31:05AM +0200, Paul Menzel wrote:
->>> On the servers below Linux warns:
->>>
->>>       Unknown NUMA node; performance will be reduced
->>
->> This warning was added by ad5086108b9f ("PCI: Warn if no host bridge
->> NUMA node info"), which appeared in v5.5, so I assume this isn't new.
->>
->> That commit log says:
->>
->>    In pci_call_probe(), we try to run driver probe functions on the node where
->>    the device is attached.  If we don't know which node the device is attached
->>    to, the driver will likely run on the wrong node.  This will still work,
->>    but performance will not be as good as it could be.
->>
->>    On NUMA systems, warn if we don't know which node a PCI host bridge is
->>    attached to.  This is likely an indication that ACPI didn't supply a _PXM
->>    method or the DT didn't supply a "numa-node-id" property.
->>
->> I assume these are all ACPI systems, so likely missing _PXM.  An
->> acpidump could confirm this.
-> 
-> I created an issue in the Linux Kernel Bugzilla [1] and attached the output of `acpidump` on a Dell PowerEdge T630 there. The DSDT contains:
-> 
->         Device (PCI1)
->         {
->         […]
->             Method (_PXM, 0, NotSerialized)  // _PXM: Device Proximity
->             {
->                 If ((CLOD == 0x00))
->                 {
->                     Return (0x01)
->                 }
->                 Else
->                 {
->                     Return (0x02)
->                 }
->             }
->         […]
->         }
-> 
->> I think the devices on buses 7f and ff are Intel chipset devices, and
->> I doubt we have drivers for any of them.  They have vendor/device IDs
->> of 8086:6fXX, and I didn't see any reference to them:
->>
->>    $ git grep -i \<0x6f..\>
->>    $
-> 
-> Interesting. Any ideas, what these chipset devices do?
-> 
->> If we *did* have drivers, they would certainly benefit from having
->> _PXM, but since there are no probe methods, I don't think it matters
->> that we don't know where they should run.
->>
->> Maybe the message should be downgraded from "dev_warn" to "dev_info"
->> since there's no functional problem, and the user can't really do
->> anything about it.
->>
->> We could also consider moving it to the actual probe path, so we don't
->> emit a message unless there is an affected driver.
+The major change is replacing the PHY abstraction layer in the original
+driver with phylink. TN40xx chips are used with various PHY hardware
+(AMCC QT2025, TI TLK10232, Aqrate AQR105, and Marvell MV88X3120,
+MV88X3310, and MV88E2010).
 
-The problem seems to be how we decide if there is an affected driver?
-do we care about the out-of-tree driver? doesn't the out-of-tree driver
-suffer from the similar problem if BIOS is not providing the correct
-numa info?
+I've also been working on a new PHY driver for QT2025 in Rust [1]. For
+now, I enable only adapters using QT2025 PHY in the PCI ID table of
+this driver. I've tested this driver and the QT2025 PHY driver with
+Edimax EN-9320 10G adapter and 10G-SR SFP+. In mainline, there are PHY
+drivers for AQR105 and Marvell PHYs, which could work for some TN40xx
+adapters with this driver.
 
-The 'Unknown NUMA node; performance will be reduced' warning seems to
-be added to give the vendor some pressure to fix the BIOS as fast as
-possible, downgrading from "dev_warn" to "dev_info" or moving it to
-the actual probe path does not seems to fix the problem, just alliviate
-the pressure for vendor to fix the BIOS?
+To make reviewing easier, this patchset has only basic functions. Once
+merged, I'll submit features like ethtool support.
+
+v10:
+- Add Edimax Vendor ID to pci_ids.h (cleanup for wireless drivers later)
+- rename functions for mdio (use _c45 suffix for read/write and mdio_wait_nobusy)
+- clean up some tn40_rxdb_ functions
+- use unsinged int for static, nelem, and top in tn40_rxdb struct instead of int
+- return -ENODEV instead of -1 when PHY isn't found
+- remove the function to re-setting mdio speec to 1MHZ in tn40_priv_init()
+- cleanup tn40_mdio_set_speed()
+v9: https://lore.kernel.org/netdev/20240605232608.65471-1-fujita.tomonori@gmail.com/
+- move phylink_connect_phy() to simplify the ndo_open callback
+v8: https://lore.kernel.org/netdev/20240603064955.58327-1-fujita.tomonori@gmail.com/
+- remove phylink_mac_change() call
+- fix phylink_start() usage (call it after the driver is ready to operate).
+- simplify the way to get the private struct from phylink_config pointer
+- fix netif_stop_queue usage in mac_link_down callback
+- remove MLO_AN_PHY usage
+v7: https://lore.kernel.org/netdev/20240527203928.38206-7-fujita.tomonori@gmail.com/
+- use page pool API for rx allocation
+- fix NAPI API misuse
+- fix error checking of mdio write
+v6: https://lore.kernel.org/netdev/20240512085611.79747-2-fujita.tomonori@gmail.com/
+- use the firmware for TN30xx chips
+- move link up/down code to phylink's mac_link_up/mac_link_down callbacks
+- clean up mdio access code
+v5: https://lore.kernel.org/netdev/20240508113947.68530-1-fujita.tomonori@gmail.com/
+- remove dma_set_mask_and_coherent fallback
+- count tx_dropped
+- use ndo_get_stats64 instead of ndo_get_stats
+- remove unnecessary __packed attribute
+- fix NAPI API usage
+- rename tn40_recycle_skb to tn40_recycle_rx_buffer
+- avoid high order page allocation (the maximum is order-1 now)
+v4: https://lore.kernel.org/netdev/20240501230552.53185-1-fujita.tomonori@gmail.com/
+- fix warning on 32bit build
+- fix inline warnings
+- fix header file inclusion
+- fix TN40_NDEV_TXQ_LEN
+- remove 'select PHYLIB' in Kconfig
+- fix access to phydev
+- clean up readx_poll_timeout_atomic usage
+v3: https://lore.kernel.org/netdev/20240429043827.44407-1-fujita.tomonori@gmail.com/
+- remove driver version
+- use prefixes tn40_/TN40_ for all function, struct and define names
+v2: https://lore.kernel.org/netdev/20240425010354.32605-1-fujita.tomonori@gmail.com/
+- split mdio patch into mdio and phy support
+- add phylink support
+- clean up mdio read/write
+- use the standard bit operation macros
+- use upper_32/lower_32_bits macro
+- use tn40_ prefix instead of bdx_
+- fix Sparse errors
+- fix compiler warnings
+- fix style issues
+v1: https://lore.kernel.org/netdev/20240415104352.4685-1-fujita.tomonori@gmail.com/
+
+[1] https://lore.kernel.org/netdev/20240415104701.4772-1-fujita.tomonori@gmail.com/
+
+FUJITA Tomonori (7):
+  PCI: add Edimax Vendor ID to pci_ids.h
+  net: tn40xx: add pci driver for Tehuti Networks TN40xx chips
+  net: tn40xx: add register defines
+  net: tn40xx: add basic Tx handling
+  net: tn40xx: add basic Rx handling
+  net: tn40xx: add mdio bus support
+  net: tn40xx: add phylink support
+
+MAINTAINERS                             |    8 +-
+ drivers/net/ethernet/tehuti/Kconfig     |   15 +
+ drivers/net/ethernet/tehuti/Makefile    |    3 +
+ drivers/net/ethernet/tehuti/tn40.c      | 1768 +++++++++++++++++++++++
+ drivers/net/ethernet/tehuti/tn40.h      |  231 +++
+ drivers/net/ethernet/tehuti/tn40_mdio.c |  142 ++
+ drivers/net/ethernet/tehuti/tn40_phy.c  |   76 +
+ drivers/net/ethernet/tehuti/tn40_regs.h |  245 ++++
+ include/linux/pci_ids.h                 |    2 +
+ 9 files changed, 2489 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/tehuti/tn40.c
+ create mode 100644 drivers/net/ethernet/tehuti/tn40.h
+ create mode 100644 drivers/net/ethernet/tehuti/tn40_mdio.c
+ create mode 100644 drivers/net/ethernet/tehuti/tn40_phy.c
+ create mode 100644 drivers/net/ethernet/tehuti/tn40_regs.h
 
 
-> 
-> Both ideas sound good, but I do not know the code at all.
-> 
->>> 1.  [    0.000000] DMI: Dell Inc. PowerEdge R730/0H21J3, BIOS 2.13.0 05/14/2021
->>> 2.  [    0.000000] DMI: Dell Inc. PowerEdge R730/0H21J3, BIOS 2.2.5 09/06/2016
->>> 3.  [    0.000000] DMI: Dell Inc. PowerEdge R730xd/0WCJNT, BIOS 2.3.4 11/08/2016
->>> 4.  [    0.000000] DMI: Dell Inc. PowerEdge R910/0KYD3D, BIOS 2.10.0 08/29/2013
->>> 5.  [    0.000000] DMI: Dell Inc. PowerEdge R930/0T55KM, BIOS 2.8.1 01/02/2020
->>> 6.  [    0.000000] DMI: Dell Inc. PowerEdge T630/0NT78X, BIOS 2.5.4 08/17/2017
->>> 7.  [    0.000000] DMI: Dell Inc. PowerEdge T630/0W9WXC, BIOS 1.5.4 10/04/2015
->>> 8.  [    0.000000] DMI: Dell Inc. PowerEdge T630/0W9WXC, BIOS 2.11.0 12/23/2019
->>> 9.  [    0.000000] DMI: Dell Inc. PowerEdge T630/0W9WXC, BIOS 2.1.5 04/13/2016
->>> 10. [    0.000000] DMI: Supermicro Super Server/X13SAE, BIOS 2.0 10/17/2022
->>> ...
->>
->>> 7f:08.0 System peripheral [0880]: Intel Corporation Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D QPI Link 0 [8086:6f80] (rev 01)
->>> 7f:08.2 Performance counters [1101]: Intel Corporation Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D QPI Link 0 [8086:6f32] (rev 01)
->>> ...
->>
->>> ff:08.0 System peripheral [0880]: Intel Corporation Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D QPI Link 0 [8086:6f80] (rev 01)
->>> ff:08.2 Performance counters [1101]: Intel Corporation Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D QPI Link 0 [8086:6f32] (rev 01)
->>> ...
->>
->>
->>> [    0.000000] DMI: Dell Inc. PowerEdge T630/0NT78X, BIOS 2.4.2 01/09/2017
->>> ...
->>> [    4.398627] ACPI: PCI Root Bridge [UNC1] (domain 0000 [bus ff])
->>> [    4.437865] pci_bus 0000:ff: Unknown NUMA node; performance will be reduced
->>> ...
->>> [    4.901021] ACPI: PCI Root Bridge [UNC0] (domain 0000 [bus 7f])
->>> [    4.940865] pci_bus 0000:7f: Unknown NUMA node; performance will be reduced
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218951
-> .
-> 
+base-commit: 2ebb87f45b3c6adc97b29291102ecb97274f913f
+-- 
+2.34.1
+
 
