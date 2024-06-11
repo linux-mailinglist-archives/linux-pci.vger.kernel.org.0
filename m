@@ -1,105 +1,118 @@
-Return-Path: <linux-pci+bounces-8579-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8581-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 440E39038D3
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 12:27:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E015903C32
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 14:51:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2165B20CDD
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 10:27:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CA16284F6C
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 12:51:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27ED214F9F5;
-	Tue, 11 Jun 2024 10:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T1wzQjsn"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1241E86F;
+	Tue, 11 Jun 2024 12:51:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877FD54750;
-	Tue, 11 Jun 2024 10:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61EC717C20C;
+	Tue, 11 Jun 2024 12:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718101630; cv=none; b=E7wnskbiykMLbhdp3RrlGHE/1J92edCTm4sdRFCzRWcN4oXuIKcjDx90lcduWGpuPybA0xXpx6SllEusz3dxoAMouUmAscIQho5I92ypBsV187kjW/Cx/KrMRWIZJ5yiAczKf1Eoq+pTgsWnC9mjpxjspRGFuOLcraDjyn666qI=
+	t=1718110270; cv=none; b=fNIcOQmGTaXAIPKvRTfLs1szIjD4VJB8HEH2kPjx5uuunKRKSHFEFStysPGbOwAUKMDNgTkF1dzXltk0cmX6sG+bXuYvnBiSaPsFtLvJ1GTEHG4WLT+eTXIPzKgEs/t/YEh2Ve+f3W45c7VXyoYi3T4v2ZAqYtipspKaE8ltdk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718101630; c=relaxed/simple;
-	bh=YjCgBc+r+06nJ6IVpW13RFBeFFzWdG5LhXvUogE3Vjo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CT6oQbADF0EHrAbdcxlYjQFZVQkFm1t/87ZlMl4VT8QjLtEkgB0mYF0KfHLVapYz3sLdewTjKArt4rIkcvYJeX7q6uFc2s3YEcLKd8nabg1XFBwhNROC6WgxdicQX2RbvDFhv853w3eSj0OcDb/QZFfqxoxfaYtF5oKT0NJnUc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T1wzQjsn; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718101626;
-	bh=YjCgBc+r+06nJ6IVpW13RFBeFFzWdG5LhXvUogE3Vjo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T1wzQjsnI/PhpuS+7t5fBwGZr6+q2ZAxBqLXqQMriXE7BFH57QT/sDcseACk0hDbf
-	 mHUK99ISk7TYaw9IvJz4Xm7/Msho3y10Pk6CMVUBQYEqCG+1Ej59FukA/UQ5wJFC8I
-	 oVoWIgnJte49b4dtn9P85C2PivUVwZocQfrRDJ97i8rroBx750ogE3mmEFdPUBqUjJ
-	 i/LBCZuyz+fTPYHH1Ff1dXDOYKvtyP418oMSiCapdk2sHf7eX/KpklshnpPfaOlRlU
-	 C8MdxapQvg9t/dnqMlIFQZwAoQOn2tna9za2GKGJjRbmIruV1oX/VQrIVf6Pc9G1yr
-	 T45pI9gg3cHSA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D799237804C6;
-	Tue, 11 Jun 2024 10:27:04 +0000 (UTC)
-Message-ID: <6d4173cd-ffe1-427d-ac04-bb9374b4b8d8@collabora.com>
-Date: Tue, 11 Jun 2024 12:27:04 +0200
+	s=arc-20240116; t=1718110270; c=relaxed/simple;
+	bh=U/Ie7iZqgHKR8zcfnLGW1zlv0d/KYGgoe1QRnrRuN5w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cWsXmUQakq6rvG2EWbjn2suO0+rtEWwyrD/q6UIkp9TVD0VLd+ZBLEIBft5ELNrgvZH5fgjYbNw2+i6LOO6LfkT0Ru6QXgGa/mlGIN9biO1QmBHhCeiubz82B0G90oiIudOxI+aYvpD86C5jCZfRADe+vzr2y9G94yhR2W/YiUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-IronPort-AV: E=Sophos;i="6.08,230,1712588400"; 
+   d="scan'208";a="211455257"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 11 Jun 2024 21:51:05 +0900
+Received: from localhost.localdomain (unknown [10.166.13.99])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id BE3A740104EA;
+	Tue, 11 Jun 2024 21:51:05 +0900 (JST)
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	mani@kernel.org
+Cc: marek.vasut+renesas@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v9 0/5] PCI: rcar-gen4: Add R-Car V4H support
+Date: Tue, 11 Jun 2024 21:50:52 +0900
+Message-Id: <20240611125057.1232873-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: controller: add missing MODULE_DESCRIPTION() macros
-To: Jeff Johnson <quic_jjohnson@quicinc.com>,
- Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk@kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, Will Deacon <will@kernel.org>,
- Joyce Ooi <joyce.ooi@intel.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Marc Zyngier <maz@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
- Jianjun Wang <jianjun.wang@mediatek.com>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Nirmal Patel <nirmal.patel@linux.intel.com>,
- Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
-References: <20240610-md-drivers-pci-controller-v1-1-b998c242df55@quicinc.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240610-md-drivers-pci-controller-v1-1-b998c242df55@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 11/06/24 03:04, Jeff Johnson ha scritto:
-> When ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/dwc/pci-exynos.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pci-host-generic.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera-msi.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mediatek.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mediatek-gen3.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/vmd.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-apple.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mt7621.o
-> 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+The pcie-rcar-gen4 driver can reuse other R-Car Gen4 support like
+r8a779g0 (R-Car V4H) and r8a779h0 (R-Car V4M). However, some
+initializing settings differ between R-Car S4-8 (r8a779f0) and
+others. The R-Car S4-8 will be minority about the setting way. So,
+R-Car V4H will be majority and this is generic initialization way
+as "renesas,rcar-gen4-pcie{-ep}" compatible.
 
-For MediaTek
+About the firmware binary, please refer to the following patch
+descirption:
+  PCI: rcar-gen4: Add support for r8a779g0
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+For now, I tested both R-Car S4-8 and R-Car V4H on this driver.
+I'll support one more other SoC (R-Car V4M) in the future.
 
+Changes from v8:
+https://lore.kernel.org/linux-pci/20240520074300.125969-1-yoshihiro.shimoda.uh@renesas.com/
+- Add Reviewed-by in the patch 3/5.
+- Revise commit description in the patch [2345]/5.
+- Some minor updates of the code in the patch 4/5.
+
+Changes from v7:
+https://lore.kernel.org/linux-pci/20240415081135.3814373-1-yoshihiro.shimoda.uh@renesas.com/
+- Since the following patches are merged into pci.git / dt-bindings branch,
+  drop them from this patch series:
+   dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H compatible
+   dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4H compatible
+- Add Reviewed-by in the patch [25]/5.
+- Add a condition to avoid automated tools report in the patch 2/5.
+- Change the new function which adds an "enable" flag in the patch 3/5.
+  So, change the commit description and move some functions' places.
+- Revise the commit description and add firmware information in detail in
+  the patch 4/5.
+- Use the offset directly instead of definitions in the patch 4/5.
+- Add comments for some magical offsets/values in the patch 4/5.
+- Change error message when request_firmware() failed in the patch 4/5.
+
+Changes from v6:
+https://lore.kernel.org/linux-pci/20240410004832.3726922-1-yoshihiro.shimoda.uh@renesas.com/
+- Add Manivannan's Reviewed-by in patch [37]/7.
+- Rename a struct from "platdata" to "drvdata" in patch [4/7].
+- Revise the commit descriptions in patch [456]/7.
+- Rename some functions in patch 6/7.
+- Fix the return value of an error path in patch 6/7.
+
+Yoshihiro Shimoda (5):
+  PCI: dwc: Add PCIE_PORT_{FORCE,LANE_SKEW} macros
+  PCI: rcar-gen4: Add rcar_gen4_pcie_drvdata
+  PCI: rcar-gen4: Add .ltssm_control() for other SoC support
+  PCI: rcar-gen4: Add support for r8a779g0
+  misc: pci_endpoint_test: Document a policy about adding pci_device_id
+
+ drivers/misc/pci_endpoint_test.c             |   4 +
+ drivers/pci/controller/dwc/pcie-designware.h |   6 +
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c  | 313 +++++++++++++++++--
+ 3 files changed, 289 insertions(+), 34 deletions(-)
+
+-- 
+2.25.1
 
 
