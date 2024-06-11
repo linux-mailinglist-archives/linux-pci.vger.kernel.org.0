@@ -1,59 +1,79 @@
-Return-Path: <linux-pci+bounces-8600-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8601-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8426290422B
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 19:11:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C88B904233
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 19:13:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 043BDB245C1
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 17:11:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F374FB232D9
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 17:13:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 095D443AAE;
-	Tue, 11 Jun 2024 17:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 975CC4502B;
+	Tue, 11 Jun 2024 17:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrKsbTQu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYJSgajD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9311D556;
-	Tue, 11 Jun 2024 17:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A5C4207A;
+	Tue, 11 Jun 2024 17:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718125856; cv=none; b=UFPCflXEi4dFFABun9kl+QQU5EJisJ46bSqK49GaAIK691Fb2cRdP5vEWbNIGYznzNuoVuQn8P9gGQDFPhYRhQbLiA4dMwaAzoFRvkziUubqVkqQTVPLD4GAvjJptCEykMFJ3+gBUuBg/9jHbOxfIrxol2y0KcBzx5reIfre3P0=
+	t=1718125982; cv=none; b=gfZ011fhHXxIN2Q0244ubZx+qf5BV8dy/Q4NQUQACCw5UNqHtXEYv08+98Dv+TXBgxPtw/CcXsA2k+NoKeS71tDjuWeQhKD7E228zzENCyE8VzZvBBaIV927/MBKtyRMlz+sQBNIDKnhll2/emMPrrlj394h6X5YVNnseYNbbTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718125856; c=relaxed/simple;
-	bh=gFYHyJOp+GLvLO8caFrC+bAJxiiQYs3SDuhR95Pp0qo=;
+	s=arc-20240116; t=1718125982; c=relaxed/simple;
+	bh=VPJiEyN1LjxU1D7rLJKPD/845LAmaZGNHNFrrRwhQ2Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mc9JQ2KWoJEfQeC+nYGulwXzZhAlfhXkCHxOhPbLjBXsDN5YhM5qzlWrqex2jJi/O5R7/QrHYYPiwU6qGNe69EWAiYgSwXlSjruZWKbUfi+507gxXVxD/YqE/KOYDNU920BCJ+bul/EU+z3/WHSZTrFhxZd/51gyT+JMGWrPyFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrKsbTQu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9CBC2BD10;
-	Tue, 11 Jun 2024 17:10:55 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Rp4eC+paGV9lMqqhVdyHypTbDVngyesJ6KjpU9KcP7hv56BWVixk9tba0HD489cf1s6zUk2GiYzqvE0uRLIF8eK2FpXy54Mkt0cS61qvl3Kkc87JxmZsMEr4GNFSZNZe9c33nWBzyuknHzqtjQl+yheqPoMYDA0zBltIaLLisR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYJSgajD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE42C2BD10;
+	Tue, 11 Jun 2024 17:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718125856;
-	bh=gFYHyJOp+GLvLO8caFrC+bAJxiiQYs3SDuhR95Pp0qo=;
+	s=k20201202; t=1718125981;
+	bh=VPJiEyN1LjxU1D7rLJKPD/845LAmaZGNHNFrrRwhQ2Y=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rrKsbTQu+g8sy3y1sNoL/1cLUJzwsI+jSnaeJF/MUDr9qBxDOXI6yVew9zke6UlYs
-	 Niwyn9lfbTuT9Cr+QujfSQQaieXHLWYZh8rj7ssbarEupC2Bv9YsZPcMBG8kEBJPd/
-	 rkjLST5yzg4X8QJWMXnjfCELmLrrgbuPsFerKYAYDP2FBD5vq9FJW4/rSVDGwLTN6x
-	 QzCcItvo6D4CYccoG8wXEpusNaq9STs0AOH6kH5KHTJm/5rmKxbH9ZN6UYu9MuQcMJ
-	 URp2sqtJbHh5fD7Xt5Ks4nOMQ7g3u4aGSYpsXvt5xO+iMbHTGBJDxXbI6vifW1gyAI
-	 U/Slc4E54/X0g==
-Date: Tue, 11 Jun 2024 12:10:54 -0500
+	b=YYJSgajDnEwTI9UWwe+OfG3g4ifsQqHnPYOEk/a5k078qBJvllVmjvPZqyXJMYttu
+	 NzqjT0YViP/tvdgTVpnUYtKbAgLI+DzzVg6PjJ88iELDdgdZfMwXjAE1TzzwvaTI82
+	 4IFdoQBAdDPLzHighuW3XgN1+IL8MBr0ZGTTsfcW2JloXY7AFProGh18NIZGeTLvz6
+	 VvyTIxb7JubsQhcQOSaqoKBH+IQZG0vX+C1UBJkVIh5SnB7lOP0vqSPx8D3jg0dlmt
+	 2Fcc0mN9ZIsfmHmGQneiIjejDxwnEZ8kENbGn/ex+jQigrQabi04W3a/f65I+f/jNn
+	 duZZGW7RwJ5Mw==
+Date: Tue, 11 Jun 2024 12:13:00 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: conor@kernel.org, Daire McNamara <daire.mcnamara@microchip.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+To: Rob Herring <robh@kernel.org>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Sai Krishna Gajula <saikrishnag@marvell.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v1 2/2] PCI: microchip: rework reg region handing
-Message-ID: <20240611171054.GA989979@bhelgaas>
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 17/19] PCI: of_property: Add interrupt-controller
+ property in PCI device nodes
+Message-ID: <20240611171300.GA990134@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,35 +82,40 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240527-flint-whacky-4fb21c38476b@wendy>
+In-Reply-To: <20240610213735.GA3112053-robh@kernel.org>
 
-On Mon, May 27, 2024 at 10:37:17AM +0100, Conor Dooley wrote:
-> The PCI host controller on PolarFire SoC has multiple "instances", each
-> with their own bridge and ctrl address spaces. The original binding has
-> an "apb" register region, and it is expected to be set to the base
-> address of the host controllers register space. Defines in the driver
-> were used to compute the addresses of the bridge and ctrl address ranges
-> corresponding to instance1. Some customers want to use instance0 however
-> and that requires changing the defines in the driver, which is clearly
-> not a portable solution.
+On Mon, Jun 10, 2024 at 03:37:35PM -0600, Rob Herring wrote:
+> On Thu, Jun 06, 2024 at 02:26:12PM -0500, Bjorn Helgaas wrote:
+> > On Mon, May 27, 2024 at 06:14:44PM +0200, Herve Codina wrote:
+> > > PCI devices and bridges DT nodes created during the PCI scan are created
+> > > with the interrupt-map property set to handle interrupts.
+> > > 
+> > > In order to set this interrupt-map property at a specific level, a
+> > > phandle to the parent interrupt controller is needed. On systems that
+> > > are not fully described by a device-tree, the parent interrupt
+> > > controller may be unavailable (i.e. not described by the device-tree).
+> > > 
+> > > As mentioned in the [1], avoiding the use of the interrupt-map property
+> > > and considering a PCI device as an interrupt controller itself avoid the
+> > > use of a parent interrupt phandle.
+> > > 
+> > > In that case, the PCI device itself as an interrupt controller is
+> > > responsible for routing the interrupts described in the device-tree
+> > > world (DT overlay) to the PCI interrupts.
+> > > 
+> > > Add the 'interrupt-controller' property in the PCI device DT node.
+> > > 
+> > > [1]: https://lore.kernel.org/lkml/CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com/
+> > > 
+> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > 
+> > No objection from me, but I'd like an ack/review from Rob.
 > 
-> The binding has been changed from a single register region to a pair,
-> corresponding to the bridge and ctrl regions respectively, so modify the
-> driver to read these regions directly from the devicetree rather than
-> compute them from the base address of the abp region.
-> 
-> To maintain backwards compatibility with the existing binding, the
-> driver retains code to handle the "abp" reg and computes the base
-> address of the bridge and ctrl regions using the defines if it is
-> present. reg-names has always been a required property, so this is
-> safe to do.
+> Given it is more DT patches in the series, how about I take them and 
+> this one with your ack instead?
 
-When you update this, can you add something about the objective to the
-subject line?  "rework reg region handling" just says "we did
-something", but not why or what the benefit is.
+Sure.  There's very little PCI content here, so I didn't plan to take
+them; I just thought this needed at least your ack :)
 
-The cover letter ("support using either instance 1 or 2") has good
-information that could be part of this.
-
-Bjorn
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
