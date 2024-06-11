@@ -1,141 +1,164 @@
-Return-Path: <linux-pci+bounces-8592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8593-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9523A903FC8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 17:11:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F066903FD0
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 17:15:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 94DC41C2313A
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 15:11:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6D662819C0
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 15:15:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C9F18EB1;
-	Tue, 11 Jun 2024 15:11:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65F562033E;
+	Tue, 11 Jun 2024 15:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zx52t0bj"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Y1vUCLIV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2053.outbound.protection.outlook.com [40.92.99.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DEB1BF53
-	for <linux-pci@vger.kernel.org>; Tue, 11 Jun 2024 15:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118664; cv=none; b=G7Nmh74oDIZ+T3OUK2poPag1++TjKZqTyd/yJI3TUL68LMYwo62d2O5OPZXH61Bf+myHEhMCYIUJLjWD6cZsRkodwHxkjjxjaEdxLWomTa+JdgdNoFJeC4Rz9JQARiKxsZ7yf2Rf2LJjUM5JQee5rmWRAYVPY8301BbTOJom5sE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118664; c=relaxed/simple;
-	bh=1NZJRWQ9ztiFyKhofnjpQUeXbFE1VF+39EKByfjc6Js=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tMIsgKw0exqPIBKSg+HcY3zlOPUSpoTmb0PO+GPAf2oENcavNoUdASWFu23l3ZuCrjwiQ97GM1oy5CbT6UhY2MtTv/CA8o+r+eiEsRh36SKFTPc087j5a0vM28c1bYU8oncftz0RT/fe0bsLGgUxAEMcuua0KUmBvZWSEMX3kJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zx52t0bj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A1BC2BD10;
-	Tue, 11 Jun 2024 15:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718118664;
-	bh=1NZJRWQ9ztiFyKhofnjpQUeXbFE1VF+39EKByfjc6Js=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Zx52t0bj159hG7xUPopUtv14sPnavw5NaztCisFG0qneB/BpaESxogivYUjgWYt+f
-	 +WAAYXdZpwjiCJp9IMaIHYg142v5vsbmA2C1MAAAW15S4nZxcxiN4o+ou41ielEzYt
-	 /4ZoquvatKK/pZDIW0rRxwLsIaSGrG4wC7VOutYx0IiuXHS2LPuk+/8Uko2z8Wu2zL
-	 xilQmp21louw3GhiXKCQ3VY9/8bCCenms/DYxgeJSAmq1bbQRKxaStqqp62oTuRrO0
-	 j+4UW0mS24RiNo68gNTSQvgl5CgjALjpm3dQ3c6MkuQpKFa9o8CPtrcRDuozk35OCk
-	 8K3MYAplF0yAA==
-Date: Tue, 11 Jun 2024 10:11:02 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Yunsheng Lin <linyunsheng@huawei.com>
-Subject: Re: Linux warns `Unknown NUMA node; performance will be reduced`
-Message-ID: <20240611151102.GA963259@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE5D208AF;
+	Tue, 11 Jun 2024 15:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718118918; cv=fail; b=WzWIiPw6ra2LdQCH138dSH64Te/Si5W8/wz164RtBbLeR1l08+lz6lXsPHTPaaQ6IvhDMxjvgRI5KR6iHz5n/OrwozYh/y+5iSAtoqIWgh/OPTCAoDJqRpkMG6OHRCuqvzpkMLCLPUOwNrY7LlH16abYK9u0naJA2KaKIReHXus=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718118918; c=relaxed/simple;
+	bh=XjmCnlEmups1C/BK6ofmZnqRslE6x3og/15LRM/buuE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FKevJXCVz1Kmr4HO/0J0PRAE/UYlhM+vhmsdbxlqqL8TK/U957v4FOxNjIjtmdN/1of/V0Lb126iTEbWg/xBaKSPCAk6xbT+tIsjkuRYbVxikVmJ3xBwxLVyBPPbHcvTxuZCapvZ4v8Ydu4JT9Xi1wStup1R+eC0DQxXouuecY4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Y1vUCLIV; arc=fail smtp.client-ip=40.92.99.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FsxVqdwsIwK90ArAKVTmS1QX7rMaU5xQFpV+i023mh7oZQoBqSz3Oe9cJUjYAiyZ5KuCMX/VWm94d6HLqhOzXaHslyhMi7t6LGFkRx24U+xLl5a53ZyqSB2e53O/W190xhUiTRniybdAPGVI2bUjHZYWDOJuTPBzf91rCFGWmN8kKVwpoA50vYOAhSu6Y37BZvkUj819XYXz3KW1dbvC1lt7e7fZGn+PxOA4lc3dZzCDh1o7XUxTlhSm0J2KpH3pSeYjGt0M+jc7FrZKEiBHQ0aQ+60lttPz00iRavqRywb/rgsb/gb2RKhQHwcg+mzQLzVXALq7bhgEjcNZC5Z+Cg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kp6Y5ufRUTb+7MfPkPn++q/ZCsZ7nIaUf11ZPO5EhaM=;
+ b=Dw1FMFvzHYBQtQy7qyJlyNOOix38VFms0NCELvER7q3DHy+sfj17EAXOq3i076ZQMFnfCRNu3XE0rJtCBHMAGDys7/ia2fvICpXNFQS0SqUpFwXLLlyHGdE4vey/twLF2eQmcYH5HO9EccbmDVrqI9lNSVTH6m67XKOZJMGk4ySF5g5zvP1STPok+F5mS9S+lsAzZlkPb7kC003Jyr/qrIz7u7NM4JD9EILDLbpA+em5A7OEhxVmQpffTiozH8uOoXK+702JDUkr42aQhQb08VdHPs8+4mdSLXzovs7pWcZK+zn+qwJElayyvBNi86LmfGs7Qw6xpJmGGlP/N/RVaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kp6Y5ufRUTb+7MfPkPn++q/ZCsZ7nIaUf11ZPO5EhaM=;
+ b=Y1vUCLIVSWoo5//ounJPQF7EQRN/X49iDv16RBZ5SGEPOLDE5J76kn9rG1mXki1CHgPUJT+d97F7KcUCCaOc4gSo2KKqD8BnCwTSxZHxCU6/wqYkWZXK7PXJpiBH0oAqZN9GUiQ1p97RoaPWF0r8lond/AmWXfzKEVqYk8fGtvmrcd8pDUY+a5GJkaZEcgyIwDyirXI7HcbNrnQsF7LtC4k0Ib9BlKAWKS0wqZPn6AUG+Z38lI69QtZeUTyKosOBnxEVK6+CW7MLFcFkXE1uv/wiUPYBDQhy1BfMpkheMKhU4971rfFiKMv05yswuoF3vHccROPBMn3fkN7nZLzZxQ==
+Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:256::8)
+ by TYWP286MB2793.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:23c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
+ 2024 15:15:14 +0000
+Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::670b:45a6:4c30:d899]) by TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::670b:45a6:4c30:d899%4]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
+ 15:15:14 +0000
+From: Songyang Li <leesongyang@outlook.com>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	leesongyang@outlook.com
+Subject: [PATCH]  PCI: Cancel compilation restrictions on function pcie_clear_device_status
+Date: Tue, 11 Jun 2024 23:15:10 +0800
+Message-ID:
+ <TY3P286MB2754E7F2E61B266F610E8876B4C72@TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [M8xuqOfIJF+zDNOmnPgMpZ4aJB1JSCus]
+X-ClientProxiedBy: TY2PR0101CA0002.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:92::14) To TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:256::8)
+X-Microsoft-Original-Message-ID:
+ <20240611151510.40927-1-leesongyang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4dcdc648-e09d-4f43-a53c-bcb4f54ef476@molgen.mpg.de>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY3P286MB2754:EE_|TYWP286MB2793:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4f948171-3d21-4d0b-f47c-08dc8a294b22
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199020|440099020|3412199017|3430499026|1710799020;
+X-Microsoft-Antispam-Message-Info:
+	L+yVTZ0xO0VhKYXrEqd7Abe1yJTXowXpdU56Spt0Hm/xRbW2awHbZUrPV93SsgqxybBjfJIW/tx8c/O6bkm6oyFgj9jjkYlKSlhy2Ko0mudpNqM0mLh5ymXOJrusQi4tJsn+ilu1lgNbeqjP/KxdyK4guNNdf70zGkcrJZkFjneLLh6p5ubEjJZDzjTK+M33yaGerC7T+nsJLur4AP89vdj2CESqBBqVwhlaIyz5ctqbGrVorqj7Ve0i7WypGop00BiJtbrSYDcCC8/L2GYaqtep/HjlXrp2sfWd3ism2RajpwKrDc2Xs37XQ0kZVBMr5ngzcmco7wF2qsqY0ssZTqf+vAGT7Dvfauc5Z1uxgIOczA4bgAhnn5IQExQ8pyudPpo8Z401wO6oq+/ox2ZfEISLnwDESQ5tUPYDY8+bMl8q7g3uCIzUynrmSzWOLpWfjJAs4q8S/LvV887IqOHFWds5J4w+yS/HRdbS+b+fy21ljTm0MQQdsVuwdAnFrTqNBeYXK+gSoQqRjt4tzzwIDA8NJEsMWmFyM43mY1/iXm6E74kjcehHIQiGI4Y+84WQwTR6831M3dUtGAClFlQwcpSrKMiTS54AOgIRDwYdXkuNDlOHjNnzJV96wUcYj06l
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7K9dZxueJJZ2DGtccbVEl7iXgeVSrxjy2vfxgykM3OsHmp0ruGVY5x/dqPty?=
+ =?us-ascii?Q?Y85vDS+am6BBCalvZwpuNKPSADXWpxLltTEMzDM1UM25e9VbRUlDSXqQRbba?=
+ =?us-ascii?Q?taVUn8l1Ih7hP0SFqvzWL+WiUiPFOyJnhSeZanzN1jI0LSnPJPbfR22KlPQy?=
+ =?us-ascii?Q?NHCcOMyDtnV5EU10Iepmc7TVtcRqjIWWAqeiuFdp8bHetMgwkzdiNAfA2ypU?=
+ =?us-ascii?Q?duwfMElxc/1NOP2AssNY1HAbHJb3UHHqtBrlUCF/WQ1EwF1NnIDx4fKKokI4?=
+ =?us-ascii?Q?CzwK6ekovvdAh4lO+hrtbOqSq3h/3JtISDANuwb8R3rhE/TU5q441H4J0yDs?=
+ =?us-ascii?Q?uQk2kdkGN8nPISYVfJbFMF1sGd69qt6hnBxyNO2YzPzY5WxBS+1QFwHTK5Fn?=
+ =?us-ascii?Q?90HF1XpipBC84PFw2vRig3yD0jTVXOyJPNrzGBEg0n7g3/kbFZ1AzBaF0Xe8?=
+ =?us-ascii?Q?dNkQGL4FRUH9UgPni9KVAf5LhWuP8MXPn0j9MJAyn89vpKYI24KtBzVUR24D?=
+ =?us-ascii?Q?3cw1O8zCKS/1+LXx99y4rT0i73fcXeBl9wkec20Eu1i9pFxfRFBi8XLeB6h5?=
+ =?us-ascii?Q?M7AarrLNA808iQLN6BDArg+6xJQFwXibz/KQPtE0rwT0r/rc1/QJW/fDhwar?=
+ =?us-ascii?Q?PPOd21ozMZdsGYVt1kOA6kMHxpBiZ3xOSCZXIezVYsapyLS6REWKqeCmRb6Q?=
+ =?us-ascii?Q?VPoBNpuokTgz3blOXnpaghdRBk4DZ2cgL0FPWvfJAia8fH5SSk6u38ARGw/K?=
+ =?us-ascii?Q?y0OQPk2vdgrJ4Rr2xu9M8/9yMEDXONTVf+1OzOsko1ZbbcYCSszy8B5gcryc?=
+ =?us-ascii?Q?M5dYDA/AnvgW5pmLgsX383f/XE4R+2DZGInOaxIcwv1Maf1h22UFlcUFUmFE?=
+ =?us-ascii?Q?waY5cnGObzfn/aIeKk0L1F0J6j2AfFSVW/S+fPeXp4jgz/JseGV6WZrVHeVs?=
+ =?us-ascii?Q?ZIceKem55mZtI51iGTM1uN1ILpni/zaa4PgNUVh1FM9Udf/UEd4tJ8CrvETX?=
+ =?us-ascii?Q?JAlXttH1iw2eAFNxAa5JbuVsGMzpupVFr0Jn6cllFyrcy7s0Oz9DehAVomyt?=
+ =?us-ascii?Q?VcSB94YfkeaZhJBeMbWFpp9v3bYlrUm/FhLZMCoipqS4ap6lV1wK3ajnqG+S?=
+ =?us-ascii?Q?W9ffkccxAYnT404VqmhGOVDfOYMqkkAPEjyfr/7d2himdt/YZsF4T+uvcMFk?=
+ =?us-ascii?Q?5LeQL+kclX814PnGj6o935DoSGQ/ETdsVCAlRk1z5pVkttC3DD0BQv6u2OU?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f948171-3d21-4d0b-f47c-08dc8a294b22
+X-MS-Exchange-CrossTenant-AuthSource: TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 15:15:14.0105
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWP286MB2793
 
-On Mon, Jun 10, 2024 at 10:27:37PM +0200, Paul Menzel wrote:
-> Am 10.06.24 um 21:42 schrieb Bjorn Helgaas:
-> > On Sun, Jun 09, 2024 at 10:31:05AM +0200, Paul Menzel wrote:
-> > > On the servers below Linux warns:
-> > > 
-> > >       Unknown NUMA node; performance will be reduced
-> > 
-> > This warning was added by ad5086108b9f ("PCI: Warn if no host bridge
-> > NUMA node info"), which appeared in v5.5, so I assume this isn't new.
-> > 
-> > That commit log says:
-> > 
-> >    In pci_call_probe(), we try to run driver probe functions on the node where
-> >    the device is attached.  If we don't know which node the device is attached
-> >    to, the driver will likely run on the wrong node.  This will still work,
-> >    but performance will not be as good as it could be.
-> > 
-> >    On NUMA systems, warn if we don't know which node a PCI host bridge is
-> >    attached to.  This is likely an indication that ACPI didn't supply a _PXM
-> >    method or the DT didn't supply a "numa-node-id" property.
-> > 
-> > I assume these are all ACPI systems, so likely missing _PXM.  An
-> > acpidump could confirm this.
-> 
-> I created an issue in the Linux Kernel Bugzilla [1] and attached the output
-> of `acpidump` on a Dell PowerEdge T630 there. The DSDT contains:
-> 
->         Device (PCI1)
->         {
->         […]
->             Method (_PXM, 0, NotSerialized)  // _PXM: Device Proximity
->             {
->                 If ((CLOD == 0x00))
->                 {
->                     Return (0x01)
->                 }
->                 Else
->                 {
->                     Return (0x02)
->                 }
->             }
->         […]
->         }
+    Some PCIe devices do not have AER capabilities, but they have device
+    status registers.
 
-This machine (the T630, from your first message) has several PCI host
-bridges:
+    Signed-off-by: Songyang Li <leesongyang@outlook.com>
+---
+ drivers/pci/pci.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+ mode change 100644 => 100755 drivers/pci/pci.c
 
-  ACPI: PCI Root Bridge [UNC1] (domain 0000 [bus ff])
-  pci_bus 0000:ff: root bus resource [bus ff]
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+old mode 100644
+new mode 100755
+index 35fb1f17a589..e6de55be4c45
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2263,7 +2263,12 @@ int pci_set_pcie_reset_state(struct pci_dev *dev, enum pcie_reset_state state)
+ }
+ EXPORT_SYMBOL_GPL(pci_set_pcie_reset_state);
+ 
+-#ifdef CONFIG_PCIEAER
++/**
++ * pcie_clear_device_status - Clear device status.
++ * @dev: the PCI device.
++ *
++ * Clear the device status for the PCI device.
++ */
+ void pcie_clear_device_status(struct pci_dev *dev)
+ {
+ 	u16 sta;
+@@ -2271,7 +2276,6 @@ void pcie_clear_device_status(struct pci_dev *dev)
+ 	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &sta);
+ 	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
+ }
+-#endif
+ 
+ /**
+  * pcie_clear_root_pme_status - Clear root port PME interrupt status.
+-- 
+2.34.1
 
-  ACPI: PCI Root Bridge [UNC0] (domain 0000 [bus 7f])
-  pci_bus 0000:7f: root bus resource [bus 7f]
-
-  ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-7e])
-  pci_bus 0000:00: root bus resource [io  0x0000-0x03bb window]
-  pci_bus 0000:00: root bus resource [io  0x03bc-0x03df window]
-  pci_bus 0000:00: root bus resource [io  0x03e0-0x0cf7 window]
-  pci_bus 0000:00: root bus resource [io  0x1000-0x7fff window]
-  pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-  pci_bus 0000:00: root bus resource [mem 0x90000000-0xc7ffbfff window]
-  pci_bus 0000:00: root bus resource [mem 0x38000000000-0x3bfffffffff window]
-  pci_bus 0000:00: root bus resource [bus 00-7e]
-
-  ACPI: PCI Root Bridge [PCI1] (domain 0000 [bus 80-fe])
-  pci_bus 0000:80: root bus resource [io  0x8000-0xffff window]
-  pci_bus 0000:80: root bus resource [mem 0xc8000000-0xfbffbfff window]
-  pci_bus 0000:80: root bus resource [mem 0x3c000000000-0x3ffffffffff window]
-  pci_bus 0000:80: root bus resource [bus 80-fe]
-
-PCI0 and PCI1 lead to all your normal PCI devices, they both
-implement _PXM, and they have all the usual apertures for PCI I/O and
-MMIO space where device BARs live.
-
-UNC0 and UNC1 lead to these special chipset devices, they don't
-implement _PXM, and they don't have any resources except the bus
-number.  The devices on bus 7f and ff can only be used via config
-space accesses, and I have no idea what they are used for.
-
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218951
 
