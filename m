@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-8614-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8615-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79891904739
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 00:54:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C39F904744
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 00:55:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DC001C20DB3
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 22:54:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40F0A1C2333F
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 22:55:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69BA415573E;
-	Tue, 11 Jun 2024 22:54:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48A60155A2B;
+	Tue, 11 Jun 2024 22:55:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghY50bs0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7pxdhgD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAAD9475;
-	Tue, 11 Jun 2024 22:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A61F171C4;
+	Tue, 11 Jun 2024 22:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718146471; cv=none; b=FQ+jQDXu25vjg9NlBRPHhoD8RVhujZ991EPaQuILWfX/PfBqo1dYh3FUEQKJxR7M8XJMVhmJ6Mn3Ci7j9IFszoT74DzlKrMdcxP6xgbBRjgSrPYdXgASXsdSSk9eQL2j0IsXT6fBPXzhowFZGw8B4vXPPG9iFjd+3Ub3SOfPm3w=
+	t=1718146544; cv=none; b=BUVN0ROzsELCuT9FhLmJb8NptcehOoVn6dpJusOM+y476dZGlMuQVGWxdsCjCYgLTjxMSY42eTSo1CsODSFoGUJJ7f8OuhEIXSvn3nuhf3zOP1X8bcBxKq46Kk6N71ter0UPDDri75aYHyERtVRixN2qEzDNRNd8DYW+LITYOFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718146471; c=relaxed/simple;
-	bh=Qk1xtp+Y0CsC+cGSX2bvsS9KRtEFezREYHk2nrDR1VA=;
+	s=arc-20240116; t=1718146544; c=relaxed/simple;
+	bh=tfmwzXhu9BMvZdNucjHAIFq8O+nZOSTOqKttExZG0P0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jnZaeujYSo+BM7lBTaFeI7x+/qLaz+1xkry4NJMZ8Va7ujeNXUB1CPKuW/ES5D3WB/h+1HcwTqoqN/RKyHgfiKNxeFw+lQsLldoxk58cO6PGzUUtXklADTRCdcqGAaHDvSxAXlWGdcB017pEwHTW9BWxoZshyu9z6Ok7ntgiZoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghY50bs0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6207EC3277B;
-	Tue, 11 Jun 2024 22:54:30 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=GafEwndMNLMGAIERlCul4GZymuSrdE6pnn6aIrayIMYqHSXFKNKlPMGh1gR+hrXdDC8mbH8samgjqjDkei6L/qsx+D4OLTezmUFaFK7EFNFx72QZQfR46+vajCVytz5KOdNoByawh0oONNuWULD61uuLiN3j2gQNHOOQ45y11hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7pxdhgD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0C9C2BD10;
+	Tue, 11 Jun 2024 22:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718146470;
-	bh=Qk1xtp+Y0CsC+cGSX2bvsS9KRtEFezREYHk2nrDR1VA=;
+	s=k20201202; t=1718146543;
+	bh=tfmwzXhu9BMvZdNucjHAIFq8O+nZOSTOqKttExZG0P0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ghY50bs0RlmiaNDSZwjEm0OI3iVK0UG5GkXzkYk8Z2fu2SwC23ID3ccJ7KaxqUc7Z
-	 J3MCwzZZrcfHEsyzWIanidlCVT1T7Yu6Ur/Uhrls66GtuXhEdWkHV63z0Ho8HXRJo5
-	 ZhyK1sdLS17ioINSFHQnMZAjfnS5XKlxRUgEsAfGzOpaa+k2Za4sPHbYho0cpJBNWc
-	 LbWRItPHXJHKW0fcccqgY/fcov1umU2R9sNliNvFCHK1eFi+hholPLR0aTYcR9xETD
-	 oW0pnaqqFoYbZjge1UzN6manRXLNxrYbrtjRk851t0ENdwsZUdmcCp4nGCWVaiymqM
-	 kV4e15f3vqfdw==
-Date: Tue, 11 Jun 2024 17:54:28 -0500
+	b=A7pxdhgDNwl0CRAVasMm9Q18XFML4ebWwMMtwSRB078ntHxIYEfNrp+4t38McKEym
+	 9Mbu/3WwIfhYbMrZlqu3YigWp9p6tLAcrQ8t8fNDVsrNom4keCoxM5P2uaoc3BisfH
+	 Tv1NvrM/CehSzwVFu7gHEYo1MtWv8/9ofoqWcwm7ZwZWCaMHSTgriGAA44d3oC9/l7
+	 xfGAWXlG8hZSKHlh+CZUcvtc3MgVBnyhPwXZyg9L3FuzoLkKbLX0T6yyh1Iyx8D2xA
+	 1r/7dxQE3RbzF2CaEURzoqsdakZBbpuAmP7pxyBtCIwFhtSV5lL1BUgyKr8wESuNwO
+	 493hSgD34nxaw==
+Date: Tue, 11 Jun 2024 17:55:41 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
@@ -72,12 +72,10 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 	ath12k@lists.infradead.org, linux-pm@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel@quicinc.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Amit Pundir <amit.pundir@linaro.org>
-Subject: Re: [PATCH v8 00/17] power: sequencing: implement the subsystem and
- add first users
-Message-ID: <20240611225428.GA1005695@bhelgaas>
+	kernel@quicinc.com, Amit Pundir <amit.pundir@linaro.org>
+Subject: Re: [PATCH v8 12/17] PCI: hold the rescan mutex when scanning for
+ the first time
+Message-ID: <20240611225541.GA1005771@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,24 +84,43 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org>
+In-Reply-To: <20240528-pwrseq-v8-12-d354d52b763c@linaro.org>
 
-On Tue, May 28, 2024 at 09:03:08PM +0200, Bartosz Golaszewski wrote:
-> Note: I am resending this series in its entirety once more for
-> discussions and reviews. If there won't be any major objections, I'll
-> then start sending individual bits and pieces to appropriate trees.
+On Tue, May 28, 2024 at 09:03:20PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Merging strategy: The DT binding and DTS changes are a no-brainer, they
-> can go through the wireless, regulator and arm-msm trees separately. The
-> bluetooth and PCI changes have a build-time dependency on the power
-> sequencing code. The bluetooth changes also have a run-time dependency on
-> the PCI pwrctl part. In order to get it into next I plan to pick up the
-> power sequencing code into my own tree and maintain it. I can then
-> provide an immutable tag for the BT and PCI trees to pull. I wouldn't
-> stress about the BT runtime dependency as it will be fixed once all
-> changes are in next.
+> With the introduction of PCI device power control drivers that will be
+> able to trigger the port rescan when probing, we need to hold the rescan
+> mutex during the initial pci_host_probe() too or the two could get in
+> each other's way.
+> 
+> Tested-by: Amit Pundir <amit.pundir@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The PCI changes are very self-contained and any conflicts will be
-trivial, so rather than messing with an immutable tag, how about if I
-just ack them and you can include them in your tree directly?
+With s/hold the/Hold the/ in subject to match history,
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  drivers/pci/probe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 8e696e547565..604fc96b1098 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -3072,7 +3072,9 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+>  	struct pci_bus *bus, *child;
+>  	int ret;
+>  
+> +	pci_lock_rescan_remove();
+>  	ret = pci_scan_root_bus_bridge(bridge);
+> +	pci_unlock_rescan_remove();
+>  	if (ret < 0) {
+>  		dev_err(bridge->dev.parent, "Scanning root bridge failed");
+>  		return ret;
+> 
+> -- 
+> 2.43.0
+> 
 
