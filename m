@@ -1,236 +1,105 @@
-Return-Path: <linux-pci+bounces-8619-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8620-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F9B9904769
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 00:58:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38AAE904788
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 01:12:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D04C1B245A8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 22:58:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFA711F23DF9
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 23:12:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65DEE156F4B;
-	Tue, 11 Jun 2024 22:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16490155CA0;
+	Tue, 11 Jun 2024 23:12:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jC/lBgZD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iy0yqy9D"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BA77D3FA;
-	Tue, 11 Jun 2024 22:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDC01553B5;
+	Tue, 11 Jun 2024 23:12:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718146605; cv=none; b=jl6Wog2WKVPFVebTUjEDfuLOCep4ZO8zPPA+rf8m9dqfd/G4liAHhToG8AFhJp8s1HSPsP66zMbFkG2fUrIBdbmxyitzlD5fscmfvU6qhR+yfSxvti1sq0ylVDBML2ACUo0K9LCea3SHWNySuWzb7zI0R1EoMtjl5i3N9ha4+UQ=
+	t=1718147529; cv=none; b=ImuSUcnuFkywJaAFXM05A8mxrz53Dx2FpBNK00BBwFRxkAyfwasmx0PLp9xcrbe5ksKppsqRd4BQsKiaTsAPA/Z89zDPc+On9blM+67pFh+bfcCy+Fe6hxcP60gm6t9pA4sPdSlapfAqDbQQDDhjtbpPz3JNXy39ytONTPvZ0z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718146605; c=relaxed/simple;
-	bh=4jBM6mXHjYlJoMIZWueS89ZlNO+AUiWEJRKWxa04gKk=;
+	s=arc-20240116; t=1718147529; c=relaxed/simple;
+	bh=MACc46yuSjIiQa17hk+zIT1nViet/Ev+PmPT+idd+dE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rKOimdtNyca/DoKvpEkzL/vcAYcRQ+fOWgjNoQKrRFqGl2/DcA4RSEOktHiIIZJmZt5qSMSpW8AwDm5Aek1m5ZS5t3S8wWl5Aj/M6qNYrRSj1spaXKzKW9Iorsb53c3zCVnXLDe2NueUUczZ7t7FiOKR29DpRo5VPdSfIyemf5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jC/lBgZD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61873C2BD10;
-	Tue, 11 Jun 2024 22:56:44 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=FMRrITetq52zLkdy/YUxCGx/viCSRFqREFZX8PbgP7WL6+zq65o0kQUg5NXxt+bfzNEciJVZmoZeQLppR8BTBilVswKab+nbeLKMFIjcKrl0P2vfuA2xbrkf+ux6Cat8R2jwRHAbq0M9iRDOcUAMtVwgrgxM6KjNYprut8y3+4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iy0yqy9D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B77EC2BD10;
+	Tue, 11 Jun 2024 23:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718146604;
-	bh=4jBM6mXHjYlJoMIZWueS89ZlNO+AUiWEJRKWxa04gKk=;
+	s=k20201202; t=1718147528;
+	bh=MACc46yuSjIiQa17hk+zIT1nViet/Ev+PmPT+idd+dE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jC/lBgZD6SkKl7787/66Mot1OAxtctUITyf4UXOQ2JVSa8o2lpp+iWq8ogS7UENCo
-	 yqzTumDF8tEtMA5L412KbnAWTlEICUYUaB6WQxi/iZq3KK051i9I3hdCqNPejgIY4h
-	 Ke9p24cUfRX+tKJ4QPj74HGoZDGWa82+//qPfAT/wSsLNiBhD00oQF6em+0sTCo9Ey
-	 T00111RDYHGIANzLOKvQl9jG1tiRKNY+avJse/GePnxuyh/FbgNapR/wc4e5yK42i4
-	 A9QSPKjwn8ZsN2uOR8Yxm/hvF/Rk0wTUKHu9VUqckeSElV62zzJn/RrNGm/MKg0ARp
-	 fgy3tmBrEJCJw==
-Date: Tue, 11 Jun 2024 17:56:43 -0500
+	b=Iy0yqy9DyGnisUUjUH+UOSBpIIhLTFzOcxoZ4E41BcskLZw0BuZU3BgymOMl9Ep3v
+	 GHkD3qETu7yZ9W40XsL1huICkgC6nXfJeZoXa891zCc1sJfDxOCnSUkpdINkBYkmqw
+	 plBW4H8fsmNfVKtfurzpGMiTxwa/palH5zTeFbZEvvBJ67alCgaLLH7l8/RKKv7YRX
+	 X+qiNYWOUx1jN2jRU5TxiXd8m9XufEArHBNpGr3WBU1MlrIxg3h0vAoor7rvhKsfwx
+	 QbFIvwr7QYpi259XT+Ak7iJI8jRQUmfxjLIKpcgCnx3XgLb3cvBfJbiEr6Vft4VAUv
+	 1QlTvFuVz7ybA==
+Date: Tue, 11 Jun 2024 18:12:06 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>,
-	Rocky Liao <quic_rjliao@quicinc.com>, Kalle Valo <kvalo@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Alex Elder <elder@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	ath12k@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel@quicinc.com, Amit Pundir <amit.pundir@linaro.org>
-Subject: Re: [PATCH v8 16/17] PCI/pwrctl: add a PCI power control driver for
- power sequenced devices
-Message-ID: <20240611225643.GA1005995@bhelgaas>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Igor Mammedov <imammedo@redhat.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/8] PCI: Solve two bridge window sizing issues
+Message-ID: <20240611231206.GA1006467@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240528-pwrseq-v8-16-d354d52b763c@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <253622e9-378c-4699-886e-2240216eef59@linux.intel.com>
 
-On Tue, May 28, 2024 at 09:03:24PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, May 28, 2024 at 04:10:48PM +0300, Ilpo Järvinen wrote:
+> On Tue, 7 May 2024, Ilpo Järvinen wrote:
 > 
-> Add a PCI power control driver that's capable of correctly powering up
-> devices using the power sequencing subsystem. The first users of this
-> driver are the ath11k module on QCA6390 and ath12k on WCN7850.
+> > Hi all,
+> > 
+> > Here's a series that contains two fixes to PCI bridge window sizing
+> > algorithm. Together, they should enable remove & rescan cycle to work
+> > for a PCI bus that has PCI devices with optional resources and/or
+> > disparity in BAR sizes.
+> > 
+> > For the second fix, I chose to expose find_resource_space() from
+> > kernel/resource.c because it should increase accuracy of the cannot-fit
+> > decision (currently that function is called find_resource()). In order
+> > to do that sensibly, a few improvements seemed in order to make its
+> > interface and name of the function sane before exposing it. Thus, the
+> > few extra patches on resource side.
+> > 
+> > v3:
 > 
-> Tested-by: Amit Pundir <amit.pundir@linaro.org>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Hi Bjorn,
+> 
+> It's a bit unclear to me what is your view about the status of this 
+> series? I see you placed these first into some wip branches and then into 
+> resource branch but the state of the patches in patchwork is still marked 
+> as "New" nor have you sent any notice they'd have been "applied".
+> 
+> I'm thinking this from the perspective of whether I should send v4 with 
+> those minor comments from Andy addressed or not? I could also send those
+> minor things as separate patches on top of the series if that's 
+> easier/better for you.
 
-With s/add/Add/ in subject,
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  drivers/pci/pwrctl/Kconfig             |  9 ++++
->  drivers/pci/pwrctl/Makefile            |  2 +
->  drivers/pci/pwrctl/pci-pwrctl-pwrseq.c | 89 ++++++++++++++++++++++++++++++++++
->  3 files changed, 100 insertions(+)
-> 
-> diff --git a/drivers/pci/pwrctl/Kconfig b/drivers/pci/pwrctl/Kconfig
-> index 96195395af69..f1b824955d4b 100644
-> --- a/drivers/pci/pwrctl/Kconfig
-> +++ b/drivers/pci/pwrctl/Kconfig
-> @@ -5,4 +5,13 @@ menu "PCI Power control drivers"
->  config PCI_PWRCTL
->  	tristate
->  
-> +config PCI_PWRCTL_PWRSEQ
-> +	tristate "PCI Power Control driver using the Power Sequencing subsystem"
-> +	select POWER_SEQUENCING
-> +	select PCI_PWRCTL
-> +	default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
-> +	help
-> +	  Enable support for the PCI power control driver for device
-> +	  drivers using the Power Sequencing subsystem.
-> +
->  endmenu
-> diff --git a/drivers/pci/pwrctl/Makefile b/drivers/pci/pwrctl/Makefile
-> index 52ae0640ef7b..d308aae4800c 100644
-> --- a/drivers/pci/pwrctl/Makefile
-> +++ b/drivers/pci/pwrctl/Makefile
-> @@ -2,3 +2,5 @@
->  
->  obj-$(CONFIG_PCI_PWRCTL)		+= pci-pwrctl-core.o
->  pci-pwrctl-core-y			:= core.o
-> +
-> +obj-$(CONFIG_PCI_PWRCTL_PWRSEQ)		+= pci-pwrctl-pwrseq.o
-> diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-> new file mode 100644
-> index 000000000000..c7a113a76c0c
-> --- /dev/null
-> +++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2024 Linaro Ltd.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/pci-pwrctl.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwrseq/consumer.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +struct pci_pwrctl_pwrseq_data {
-> +	struct pci_pwrctl ctx;
-> +	struct pwrseq_desc *pwrseq;
-> +};
-> +
-> +static void devm_pci_pwrctl_pwrseq_power_off(void *data)
-> +{
-> +	struct pwrseq_desc *pwrseq = data;
-> +
-> +	pwrseq_power_off(pwrseq);
-> +}
-> +
-> +static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
-> +{
-> +	struct pci_pwrctl_pwrseq_data *data;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->pwrseq = devm_pwrseq_get(dev, of_device_get_match_data(dev));
-> +	if (IS_ERR(data->pwrseq))
-> +		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
-> +				     "Failed to get the power sequencer\n");
-> +
-> +	ret = pwrseq_power_on(data->pwrseq);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Failed to power-on the device\n");
-> +
-> +	ret = devm_add_action_or_reset(dev, devm_pci_pwrctl_pwrseq_power_off,
-> +				       data->pwrseq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data->ctx.dev = dev;
-> +
-> +	ret = devm_pci_pwrctl_device_set_ready(dev, &data->ctx);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Failed to register the pwrctl wrapper\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id pci_pwrctl_pwrseq_of_match[] = {
-> +	{
-> +		/* ATH11K in QCA6390 package. */
-> +		.compatible = "pci17cb,1101",
-> +		.data = "wlan",
-> +	},
-> +	{
-> +		/* ATH12K in WCN7850 package. */
-> +		.compatible = "pci17cb,1107",
-> +		.data = "wlan",
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pci_pwrctl_pwrseq_of_match);
-> +
-> +static struct platform_driver pci_pwrctl_pwrseq_driver = {
-> +	.driver = {
-> +		.name = "pci-pwrctl-pwrseq",
-> +		.of_match_table = pci_pwrctl_pwrseq_of_match,
-> +	},
-> +	.probe = pci_pwrctl_pwrseq_probe,
-> +};
-> +module_platform_driver(pci_pwrctl_pwrseq_driver);
-> +
-> +MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-> +MODULE_DESCRIPTION("Generic PCI Power Control module for power sequenced devices");
-> +MODULE_LICENSE("GPL");
-> 
-> -- 
-> 2.43.0
-> 
+Sorry, I dropped the ball in the middle here.  The pci/resource branch
+has been in linux-next since May 29, but I forgot to send a note.  If
+you want to tweak for Andy's comments, send an incremental patch and
+I'll be happy to squash it/them in.
 
