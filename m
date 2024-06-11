@@ -1,111 +1,185 @@
-Return-Path: <linux-pci+bounces-8608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8609-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 741BE9045A0
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 22:14:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 060169045D3
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 22:36:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24FE9282661
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 20:14:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C6F01C23031
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 20:36:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD7815218C;
-	Tue, 11 Jun 2024 20:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A07601411ED;
+	Tue, 11 Jun 2024 20:36:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="APCG1fyL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKgvtp1B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7CC14AD3F;
-	Tue, 11 Jun 2024 20:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0113412E61
+	for <linux-pci@vger.kernel.org>; Tue, 11 Jun 2024 20:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718136784; cv=none; b=DFR6tehXGeK5DO3OPF75Fq5/kYO7UOyDgJYTCEcWecOcIXWOEC+miiWwAsvRpBuTND/oE7lK6n5h6GhC9PYk5IDTK+uEGMj5cbum3kCtj09IrS8H86EBRNTXoAAHwuM6740VYq7xmVodE0TPJL3utfyNL7PDJbKvAwrzTbTl2Rk=
+	t=1718138167; cv=none; b=skFi3MMDUu9dgBMK8achl/g6PY7zmVO3uYYdtuWMAEKIix9VxFdzbAHCQWPMt+Sy+H0ozJoqyAFDqNZKBQ4AybS+AsZ4oor38B7UW2t4hv6qZmn+AIzG7dakMDfm43njMECu1V20mUO2DwSSLFDUpgDdVGdG22T9ne7RnHz55uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718136784; c=relaxed/simple;
-	bh=N3W/a4Lfz3f8B3FxigKAG79YiP/qLpQxtg00dXAXt08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KQRuN3LiftcwDhYCtGm8Yuceb1I+Anw4oBMpy0g5bXLoIno3k6BrZnrsA+Mm2SX7FGYOHo9cF0jZGev4kkBm3iduB4xOkL+iRxUYYBzpaFZcUsV+YAhpAO0KXkrdYN9C3Z7X5E1rvyYQSEOtDaW7UwZs14KljskfQ5/Qx4BjOjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=APCG1fyL; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kHAoa/OJkPqP/DFn6fqwfpyDNzhM8R9ekFcSQK7Rigg=; b=APCG1fyLIzuIMJ28F/4ZogT/Ru
-	kOr3vmBpRa6ef0QB73z87iuA6sx5qCC8ZWSfhHYIsu8JkfIB9d4MfJzcOwmxNabgH7S6wAHSqlTNS
-	K0ti0luqp568pq8jnF+i4ZHuu0eYNrUw6XTAirNwFYV6fHECzxtKZk4Rs11j9H9fcICs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sH7rI-00HQBb-VF; Tue, 11 Jun 2024 22:12:44 +0200
-Date: Tue, 11 Jun 2024 22:12:44 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Lizhi Hou <lizhi.hou@amd.com>, clement.leger@bootlin.com,
-	Jeremy Linton <jeremy.linton@arm.com>
-Subject: Re: Raspberry Pi5 - RP1 driver - RFC
-Message-ID: <73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch>
-References: <ZmhvqwnOIdpi7EhA@apocalypse>
- <ba8cdf39-3ba3-4abc-98f5-d394d6867f95@gmx.net>
+	s=arc-20240116; t=1718138167; c=relaxed/simple;
+	bh=O5R2NEvkxa8ljBcPpDi7qelNjFAc9SSPH+xvps7wZfg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rMvrbtGeQPjkJH8CFZf7kegDowq6LRW6611mA6FvSEixHX8ODMW9EA3FvNUi55znNsmTzvNUr7wBgJ2CAGZ0fJOKyRAVZnJom+19whuBXEixgCmiVbn2ldU+9iCmCUO1+pjUsoACq6V2h+Kz8nxXp7d+pzIA1IVHotgUL/BDA/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKgvtp1B; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718138166; x=1749674166;
+  h=date:from:to:cc:subject:message-id;
+  bh=O5R2NEvkxa8ljBcPpDi7qelNjFAc9SSPH+xvps7wZfg=;
+  b=JKgvtp1BGxO5H/FWnnVtu+UO4QYGwH489mbrV8cMePrHZ+na+IBtz1KM
+   N1GWIOTX56aYjiy8KaDzwtk6Y9MQMPTAnCdOH0rKUT0l9xPUT4KGCjCKo
+   XHqPQCk9jmjXFlnQ9ZzMxdipxj9YqMxQDUeclf1Q8tRW1HTL+yU53NsVH
+   uDA9vSCbNj4TULyQ0LxjRxCjW9+cutfJp7nMeRsGJz8mMQgtVP49ZDGOL
+   cEhsWwshFoWBfJGTPPbcWnnTc8rrDn2zJ7fRHc1x5VlwS6CJLPzJSsS/h
+   YWrYYStcxqj1ZoSL/OfePrI1MdViUHqMT2WvwvEhx9ta3d5A/Yt9lEHBt
+   Q==;
+X-CSE-ConnectionGUID: SA+L1sE4RyayYjE+dAtnPg==
+X-CSE-MsgGUID: oXizJToHSDih+4ZwedE5hg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="12027494"
+X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
+   d="scan'208";a="12027494"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 13:36:05 -0700
+X-CSE-ConnectionGUID: Q+jXeROVR0mwAk+eLuCLxQ==
+X-CSE-MsgGUID: kx6dObZ/QfKC2R/8rUF6+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
+   d="scan'208";a="70352419"
+Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 11 Jun 2024 13:36:04 -0700
+Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sH8Dp-0000sI-38;
+	Tue, 11 Jun 2024 20:36:02 +0000
+Date: Wed, 12 Jun 2024 04:35:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:switchtec] BUILD SUCCESS
+ 8a74e4eaa72c14f997df6d820effb6aac400d470
+Message-ID: <202406120441.fnFm7l8a-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba8cdf39-3ba3-4abc-98f5-d394d6867f95@gmx.net>
 
-On Tue, Jun 11, 2024 at 09:05:24PM +0200, Stefan Wahren wrote:
-> Hi Andrea,
-> 
-> i added Jeremy, because AFAIK he was deeply involved in ACPI
-> implementation of the RPi 4.
-> 
-> Am 11.06.24 um 17:39 schrieb Andrea della Porta:
-> > Hi,
-> > I'm on the verge of reworking the RP1 driver from downstream in order for it to be
-> > in good shape for upstream inclusion.
-> > RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting a pletora
-> > of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM, etc.) whose registers
-> > are all reachable starting from an offset from the BAR address.
-> > The main point here is that while the RP1 as an endpoint itself is discoverable via
-> > usual PCI enumeraiton, the devices it contains are not discoverable and must be
-> > declared e.g. via the devicetree. This is an RFC about the correct approach to use
-> > in integrating the driver and registering the subdevices.
-> > 
-> I cannot provide much input into the technical discussion, but i would
-> prefer an approach which works good with DT and ACPI.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git switchtec
+branch HEAD: 8a74e4eaa72c14f997df6d820effb6aac400d470  PCI: switchtec: Make switchtec_class constant
 
-There is a small and slowly growing interest in using DT overlays on
-ACPI systems. It makes a lot of sense when you have an already working
-set of drivers based on DT, and then need to make them work on ACPI
-systems.
+elapsed time: 1453m
 
-The Microchip LAN996x is an ARM SoC with lots of peripherals and an
-Ethernet switch. There is a full DT description of it and
-drivers. However, it also has a PCIe interface which allows access to
-all the peripherals and the Ethernet switch. Bootlin are adding
-patches to allow any host with a PCIe bus use all the existing drivers
-and a DT overlay to glue it all together.
+configs tested: 92
+configs skipped: 4
 
-https://patchwork.kernel.org/project/linux-pci/cover/20240527161450.326615-1-herve.codina@bootlin.com/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-ACPI and DT should not be considered mutually exclusive.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc  
+alpha                            allyesconfig   gcc-13.2.0
+alpha                               defconfig   gcc  
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc  
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc  
+arc                                 defconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc-13.2.0
+arm                                 defconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc  
+arm64                               defconfig   gcc-13.2.0
+csky                              allnoconfig   gcc  
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc  
+csky                                defconfig   gcc-13.2.0
+hexagon                          allmodconfig   clang-19
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang-19
+hexagon                             defconfig   clang
+i386         buildonly-randconfig-003-20240611   clang
+i386                  randconfig-001-20240611   clang
+i386                  randconfig-004-20240611   clang
+i386                  randconfig-006-20240611   clang
+i386                  randconfig-011-20240611   clang
+i386                  randconfig-013-20240611   clang
+i386                  randconfig-015-20240611   clang
+i386                  randconfig-016-20240611   clang
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc  
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc  
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc-13.2.0
+nios2                            allmodconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc-13.2.0
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                            defconfig   gcc  
+openrisc                            defconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc  
+parisc                            allnoconfig   gcc-13.2.0
+parisc                              defconfig   gcc  
+parisc                              defconfig   gcc-13.2.0
+parisc64                            defconfig   gcc  
+parisc64                            defconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc  
+powerpc                           allnoconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc  
+riscv                             allnoconfig   gcc-13.2.0
+riscv                               defconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc-13.2.0
+s390                                defconfig   clang
+sh                               allmodconfig   gcc-13.2.0
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc-13.2.0
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc-13.2.0
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc-13.2.0
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang-19
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                               allyesconfig   gcc-13
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang-18
+x86_64                              defconfig   gcc-13
+xtensa                            allnoconfig   gcc  
 
-     Andrew
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
