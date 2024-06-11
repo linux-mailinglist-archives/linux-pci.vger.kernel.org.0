@@ -1,241 +1,144 @@
-Return-Path: <linux-pci+bounces-8570-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67151902FAF
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 06:54:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D40390325A
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 08:20:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62DBC1C23037
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 04:54:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 028E9285A23
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jun 2024 06:20:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A8616FF4E;
-	Tue, 11 Jun 2024 04:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA8B17164D;
+	Tue, 11 Jun 2024 06:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6RaaXoG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIQRIZVm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923E2140E30;
-	Tue, 11 Jun 2024 04:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C1F171083
+	for <linux-pci@vger.kernel.org>; Tue, 11 Jun 2024 06:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718081636; cv=none; b=EMBKtpCG+8egvneL3FTD5CTA+lZnRMuXlH6cE54DgfXC4IWR8AJijKxut9yH16vLgq5OK+wwM1Dcng7y7nmWsPZ8T7AS+2Ob7ZQH7s/ILm6NObmGD6xjr4dEVzvwgKSv1baqcpbKtefCn8e6kazzu++70WUL8H7mYuBWKcikncU=
+	t=1718086800; cv=none; b=EXKB4M6iUeBTx/pUExA8vKTqH+F7rVZKiTCdoaTdQqDKh28NrpdqRwdSAq9q1AYSOhvF3p0LxPdtkgU1fQWD2RTUvBw629744fu7qUHBxv5+hHpPx561tQErw6qPkTV9OtBkSzfXx+oSpHJfKmyb1EAiO73oJU2CTonLMzq9kt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718081636; c=relaxed/simple;
-	bh=lzUuMsC0hDi35gO/XT2gOUyHThQaK3xjaSaCHrDN14M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ttg7ofy7hFukS19QBsxedt6v1y+v2LoTzpUEh7bPOEHn0w5GmiFMB0yV7nefSPSWEUrZGCe/mbhh4aGo2QvJ839Feu7T9xYdyGtVP2tZsYiX6T/WiXV5tI9ZHW9xG47Snu0cKDIG6yqmykfHMYA5afbsRZDNDq/+b0ZdAP40p88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6RaaXoG; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2c2cb6750fcso583603a91.1;
-        Mon, 10 Jun 2024 21:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718081633; x=1718686433; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k0ry5v2vYLIuxqgnekdqJjBLVdWfPxh72pMUHkFG2k4=;
-        b=G6RaaXoGtSU2OMjCEExOI4arQ5FnTRAXD95RTfZi7ZNYb3pCKtbR0pM17JMzI/NhOV
-         2q69rl7jUGED9xR7RZaMaUskq9vFKk2NDLKEu3/ue5nVYIpvOkAnnko1/6Cft/58x7Me
-         2i9A3/IGTgUstmufXWurTOgAtBc9C7WarDLc9qkmixQkG9wzF3BCnCk0L8+mPkus5I4q
-         S7ryjIR9FhytTfTbs/eq9Ywa9Fahwi56UaWj0ReQV01/55Dmb2zgw8EoWgI1Wc8W8MRd
-         NPw7pM7TrBX24N10khHuIhfWJSr6zDgJN2h4YmPBlBFr660IMkXjEzXbNuTb5QJE1zs1
-         gZKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718081633; x=1718686433;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k0ry5v2vYLIuxqgnekdqJjBLVdWfPxh72pMUHkFG2k4=;
-        b=gtwvIrNPtpdNiFe9K9OCfjUlLI8FP/F21oYzK69RNQ+BWEgs9x0c8nXhrEuAPFY5EX
-         1D2N97XHiwh6uMoktaKpDY+M0NdySQjyr0ldIi3tDDV2wIbwhLedND+KB2nldweQM3MH
-         QClJ1nTH6D7EHQvYtvlc8PGItU5LWmSbKn1LU/zdnUDIxLsYP/l7+o+rtrZ2dl7Ct0AO
-         aHjzxttT60ripa6JJDtJNvQDNbENWTdkuPFOrXJshW3dHs0ZqDQDVMfwXOOcF3XZD2ta
-         GJwxuAVAYbQu8OBZxEDIDqij4cFyz1m6duMP3Zrrmn6MnXAEPJm2ujFcUMFIMcUmB4Wc
-         tnEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVi4Vm/KGB4UOrooYHU2GL7TSNe3LopLeSE5DouOwp3TkNXKVz5nfQRrUEXb664nFjlVdE98zd2ED8qfwjJ+o26HSN49Ac5BvND
-X-Gm-Message-State: AOJu0Yz1jqLokdHqRv3dCZXUpS9vIkNZB4ADDBzK+0YCVJLkypdu+E7c
-	nHw2IUoXw7ZQhSIqVXkrgrsyfZzAhi5VLR677B0S4q7+gRJ0NpgfwUP1ghqL
-X-Google-Smtp-Source: AGHT+IHjrY0dZ3Jhljr9qE59CDqvXTYEQH7epQTclxlpvmeI2wAJ25lx1Pd7V/DrPem2LGLy149ZKQ==
-X-Received: by 2002:a17:90a:4591:b0:2bf:eddc:590b with SMTP id 98e67ed59e1d1-2c2bcad64d2mr11129295a91.1.1718081633485;
-        Mon, 10 Jun 2024 21:53:53 -0700 (PDT)
-Received: from rpi.. (p5261226-ipxg23801hodogaya.kanagawa.ocn.ne.jp. [180.15.241.226])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c31bb3c141sm1967277a91.10.2024.06.10.21.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 21:53:53 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: netdev@vger.kernel.org
-Cc: andrew@lunn.ch,
-	horms@kernel.org,
-	kuba@kernel.org,
-	jiri@resnulli.us,
-	pabeni@redhat.com,
-	linux@armlinux.org.uk,
-	hfdevel@gmx.net,
-	naveenm@marvell.com,
-	jdamato@fastly.com,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH net-next v10 2/7] net: tn40xx: add pci driver for Tehuti Networks TN40xx chips
-Date: Tue, 11 Jun 2024 13:52:12 +0900
-Message-Id: <20240611045217.78529-3-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240611045217.78529-1-fujita.tomonori@gmail.com>
-References: <20240611045217.78529-1-fujita.tomonori@gmail.com>
+	s=arc-20240116; t=1718086800; c=relaxed/simple;
+	bh=T0yjSh1L3Pl6VYqTlAxp8N83pGQKtxK1OjahAu0RNjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2scSOJcSuy26+jMlPwCUIycOLo1kRfXjsicsx6tQ9JRK7mnepUdyJJ2dkHoXei7AmT0ekjZeylgmLnMHCLFiddvbTd7e2+L9IiTokvu/gFBDrJwWD6xnol/OG4g0qK4FizR36GNgXU8pZM4Qe8sHL8MiaIgzwQgpnmxGjjo6TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIQRIZVm; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718086797; x=1749622797;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T0yjSh1L3Pl6VYqTlAxp8N83pGQKtxK1OjahAu0RNjA=;
+  b=kIQRIZVmUJWt8X/E7ujvZWXKDMpW0sYEiYs7kxbRcrsm/fVdMZpOGyxA
+   zHnD+eGkPcQWxDeTbGht1PvxBlUdp5p1YSq7VQWNiljZBof/PYrqrOcbR
+   nhIOc6UHgbizvZnYXSNNvkGPcrf7ZNH5orMTSq2IPy1GgZHjZIGsZsjJP
+   mME3lQJjffz88mVbvieLNPyjZjDMZgcc2M4LvFAGW16zmi1LTUsBjv2qF
+   G3KLID9a8y+r6i7QmdNd58g5rQEWkj63u+GAHJDeS3QngGdHDqbTUThPG
+   xqlmeMBIIfKA8KeCcW4klizhQgYbJPQdsvyZAUqX2qAMK5XxsQgekgf66
+   w==;
+X-CSE-ConnectionGUID: fidhsS92RkqSpUEoa/oYlA==
+X-CSE-MsgGUID: pcbPy8SiShuwJIXPja40OA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="12012056"
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="12012056"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 23:19:55 -0700
+X-CSE-ConnectionGUID: v2PAWd+KRzuIeAFyDi1G9w==
+X-CSE-MsgGUID: q12bnFuST6mZ2NQT33xPqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="39769422"
+Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 10 Jun 2024 23:19:53 -0700
+Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sGurH-000076-0l;
+	Tue, 11 Jun 2024 06:19:51 +0000
+Date: Tue, 11 Jun 2024 14:19:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Keith Busch <kbusch@meta.com>, linux-pci@vger.kernel.org,
+	lukas@wunner.de, bhelgaas@google.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Keith Busch <kbusch@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: pciehp: fix concurrent sub-tree removal deadlock
+Message-ID: <202406111313.UuWo45kC-lkp@intel.com>
+References: <20240610220304.3162895-2-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610220304.3162895-2-kbusch@meta.com>
 
-This just adds the scaffolding for an ethernet driver for Tehuti
-Networks TN40xx chips.
+Hi Keith,
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- MAINTAINERS                          |  8 +++-
- drivers/net/ethernet/tehuti/Kconfig  | 12 ++++++
- drivers/net/ethernet/tehuti/Makefile |  3 ++
- drivers/net/ethernet/tehuti/tn40.c   | 55 ++++++++++++++++++++++++++++
- drivers/net/ethernet/tehuti/tn40.h   |  9 +++++
- 5 files changed, 86 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/tehuti/tn40.c
- create mode 100644 drivers/net/ethernet/tehuti/tn40.h
+kernel test robot noticed the following build errors:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cd3277a98cfe..8dc47317f4ae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22138,7 +22138,13 @@ TEHUTI ETHERNET DRIVER
- M:	Andy Gospodarek <andy@greyhouse.net>
- L:	netdev@vger.kernel.org
- S:	Supported
--F:	drivers/net/ethernet/tehuti/*
-+F:	drivers/net/ethernet/tehuti/tehuti.*
-+
-+TEHUTI TN40XX ETHERNET DRIVER
-+M:	FUJITA Tomonori <fujita.tomonori@gmail.com>
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+F:	drivers/net/ethernet/tehuti/tn40*
- 
- TELECOM CLOCK DRIVER FOR MCPL0010
- M:	Mark Gross <markgross@kernel.org>
-diff --git a/drivers/net/ethernet/tehuti/Kconfig b/drivers/net/ethernet/tehuti/Kconfig
-index 8735633765a1..849e3b4a71c1 100644
---- a/drivers/net/ethernet/tehuti/Kconfig
-+++ b/drivers/net/ethernet/tehuti/Kconfig
-@@ -23,4 +23,16 @@ config TEHUTI
- 	help
- 	  Tehuti Networks 10G Ethernet NIC
- 
-+config TEHUTI_TN40
-+	tristate "Tehuti Networks TN40xx 10G Ethernet adapters"
-+	depends on PCI
-+	help
-+	  This driver supports 10G Ethernet adapters using Tehuti Networks
-+	  TN40xx chips. Currently, adapters with Applied Micro Circuits
-+	  Corporation QT2025 are supported; Tehuti Networks TN9310,
-+	  DLink DXE-810S, ASUS XG-C100F, and Edimax EN-9320.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called tn40xx.
-+
- endif # NET_VENDOR_TEHUTI
-diff --git a/drivers/net/ethernet/tehuti/Makefile b/drivers/net/ethernet/tehuti/Makefile
-index 13a0ddd62088..1c468d99e476 100644
---- a/drivers/net/ethernet/tehuti/Makefile
-+++ b/drivers/net/ethernet/tehuti/Makefile
-@@ -4,3 +4,6 @@
- #
- 
- obj-$(CONFIG_TEHUTI) += tehuti.o
-+
-+tn40xx-y := tn40.o
-+obj-$(CONFIG_TEHUTI_TN40) += tn40xx.o
-diff --git a/drivers/net/ethernet/tehuti/tn40.c b/drivers/net/ethernet/tehuti/tn40.c
-new file mode 100644
-index 000000000000..6ec436120d18
---- /dev/null
-+++ b/drivers/net/ethernet/tehuti/tn40.c
-@@ -0,0 +1,55 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* Copyright (c) Tehuti Networks Ltd. */
-+
-+#include <linux/pci.h>
-+
-+#include "tn40.h"
-+
-+static int tn40_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-+{
-+	int ret;
-+
-+	ret = pci_enable_device(pdev);
-+	if (ret)
-+		return ret;
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to set DMA mask.\n");
-+		goto err_disable_device;
-+	}
-+	return 0;
-+err_disable_device:
-+	pci_disable_device(pdev);
-+	return ret;
-+}
-+
-+static void tn40_remove(struct pci_dev *pdev)
-+{
-+	pci_disable_device(pdev);
-+}
-+
-+static const struct pci_device_id tn40_id_table[] = {
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_TEHUTI, 0x4022,
-+			 PCI_VENDOR_ID_TEHUTI, 0x3015) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_TEHUTI, 0x4022,
-+			 PCI_VENDOR_ID_DLINK, 0x4d00) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_TEHUTI, 0x4022,
-+			 PCI_VENDOR_ID_ASUSTEK, 0x8709) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_TEHUTI, 0x4022,
-+			 PCI_VENDOR_ID_EDIMAX, 0x8103) },
-+	{ }
-+};
-+
-+static struct pci_driver tn40_driver = {
-+	.name = TN40_DRV_NAME,
-+	.id_table = tn40_id_table,
-+	.probe = tn40_probe,
-+	.remove = tn40_remove,
-+};
-+
-+module_pci_driver(tn40_driver);
-+
-+MODULE_DEVICE_TABLE(pci, tn40_id_table);
-+MODULE_AUTHOR("Tehuti networks");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Tehuti Network TN40xx Driver");
-diff --git a/drivers/net/ethernet/tehuti/tn40.h b/drivers/net/ethernet/tehuti/tn40.h
-new file mode 100644
-index 000000000000..b45a2eef2850
---- /dev/null
-+++ b/drivers/net/ethernet/tehuti/tn40.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/* Copyright (c) Tehuti Networks Ltd. */
-+
-+#ifndef _TN40_H_
-+#define _TN40_H_
-+
-+#define TN40_DRV_NAME "tn40xx"
-+
-+#endif /* _TN40XX_H */
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.10-rc3 next-20240607]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Keith-Busch/PCI-pciehp-fix-concurrent-sub-tree-removal-deadlock/20240611-060555
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240610220304.3162895-2-kbusch%40meta.com
+patch subject: [PATCH 1/2] PCI: pciehp: fix concurrent sub-tree removal deadlock
+config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20240611/202406111313.UuWo45kC-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 4403cdbaf01379de96f8d0d6ea4f51a085e37766)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240611/202406111313.UuWo45kC-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406111313.UuWo45kC-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pci/of.c:11:
+   In file included from include/linux/pci.h:2672:
+   In file included from include/linux/dma-mapping.h:11:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2253:
+   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   In file included from drivers/pci/of.c:16:
+>> drivers/pci/pci.h:416:2: error: call to undeclared function 'pci_notify_disconnected'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     416 |         pci_notify_disconnected();
+         |         ^
+   drivers/pci/pci.h:416:2: note: did you mean 'pci_doe_disconnected'?
+   drivers/pci/pci.h:376:20: note: 'pci_doe_disconnected' declared here
+     376 | static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+         |                    ^
+   1 warning and 1 error generated.
+
+
+vim +/pci_notify_disconnected +416 drivers/pci/pci.h
+
+   411	
+   412	static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+   413	{
+   414		pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+   415		pci_doe_disconnected(dev);
+ > 416		pci_notify_disconnected();
+   417	
+   418		return 0;
+   419	}
+   420	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
