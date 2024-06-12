@@ -1,77 +1,76 @@
-Return-Path: <linux-pci+bounces-8634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 605F5904C2D
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 08:59:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A7E9C904C2F
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 08:59:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 00D55B22D0D
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:59:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05D71B24C9F
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:59:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E073212D75F;
-	Wed, 12 Jun 2024 06:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB40129A77;
+	Wed, 12 Jun 2024 06:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="myVRaExB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lzWX/Qxj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685DC13CFB0
-	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 06:59:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F6433FE
+	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 06:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718175568; cv=none; b=sS54P8ZVZPMWm+Cu1ex7CsRahPmPr1RepqqH3s/aYwa1nzHRdwytT81tPJPN9krWjeU4Gm8ytkHrLHRcszr5HpMtPxBOM2eAgsO7sLgEUujgBe7RAQYFBYUW7+1gx1wYx/Q7rlIhJpBQKGmYw6X/60Z6BNNqOfMZ1kEiBZoa9Q8=
+	t=1718175571; cv=none; b=FBrhwocKOjwr5Q5pjpXOwD8OcB+/3vBkSxU2+tsJ3GMm95mJRUkkiCymOC5rOqCaraNCeswNiF7wdv/tc+l9ymkt82vd+3mRv7kizswdo/kDO16TPCCRWbs0f+CWRzoBydYzDMm6/+a9OFyjNLKTFYdb5Hm93Ndqj8gmz59flcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718175568; c=relaxed/simple;
-	bh=crewVMHSfJKgeI4smrQVHU61rtSFJP+uy4uxd/EJzag=;
+	s=arc-20240116; t=1718175571; c=relaxed/simple;
+	bh=TFp9KTxFH8YkiPBoejjkkcdXXFeSeaXuTbZHmIoFrOs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GSrFxpKLZ93iBKQ10rmm6rAegP0x45R1uL2qn8BOR4BpbbgkEpmWuQ8QD4RrZrBtPELp7iHUMfYNFXLtn4AJw5IHYQqAjfZp1ca9c9tzktAIUXa9cq+FU+azyN0CiNydvRNorP49oArlrTVLbXOALDtWH9DZufd+bJ7g4eb1sQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=myVRaExB; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=uU/7m3POm8Ijyzm+QRhZ9f2+qVHSQcsB3AZe5xOd3Zep6lR+iTlcaQv3SrBT1NTMmdIhXeXOoeX4in7Qkgc+fn5PaHp/UIVOV9Zf+z0m2kWszFJS99Hh9O9d8GRasAhQggNPdUcMjMe/Z/CpqyTf6XRbZIGnQ2Q0dhcc5QIFWBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lzWX/Qxj; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718175567; x=1749711567;
+  t=1718175570; x=1749711570;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=crewVMHSfJKgeI4smrQVHU61rtSFJP+uy4uxd/EJzag=;
-  b=myVRaExB7ntcbJ2p9w00rsKzXBnHrlN+KVgP565FZrqW7uWqbS36HD42
-   IUsSHEqEatdXsg7jDj4S21d+QqCbhfhCG95Fp02JYxPNkxDKYExv/7Zn6
-   C0ewdllU0f8VKjQNiUkBOgdllKgxmhvjjF9qIHQW5+ifwjqz0quQSyBe0
-   UBPNdQZAE2Q7wLhtEWrBuyEeYCasTjnaZFbxhzLXW7aW5oH7S6MAhwMWu
-   ie+5RpPeDRknjU4c27XLAGBs4zXw0J+7Tvs6OkS0F609ofAX6jVXO5AKo
-   3fJm2TWfpWFLuSptqkuqDsGu6a8IW2UzcN3H9qtr1Gy9k4MgqFX5kgMNY
-   g==;
-X-CSE-ConnectionGUID: 6dYIC3jkQzqCefz02WSv/Q==
-X-CSE-MsgGUID: iB4rwsoKRKOMp/3MCN2VCw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="15147423"
+  bh=TFp9KTxFH8YkiPBoejjkkcdXXFeSeaXuTbZHmIoFrOs=;
+  b=lzWX/QxjD+YwtPD8vESdMNEUN2W/wa3evTq2DDDdQJ8Y6eHkg5sK/7zE
+   6HMTBQx73Zf9fWmfqec6onGKbVnV8kUxD+EeGzfRmZlQuk7Nks4CipFf9
+   Fpv2m+tb4gwORmhHkd4qJ7SHfNoRp6vzyzW9VfbpML/q7bkymJ5hsxHKt
+   TGj5LDWIY9geVkINgHWAiBKHR7/DanjjLLlSUNnMcFo0KsN/pTBH80R0h
+   1Xa7t957EWvXkR6g1lxwMSnFFfv4rhjEwNNnBZCTmzZEWWO+0AUlVHFxn
+   gVKskLpJNAMfSIk5NQ04FEGylhWUxZ80RmQhEOkAiOPgdI/R+rdUqPjVv
+   w==;
+X-CSE-ConnectionGUID: QQwh0Ul6QaGpgSwfOuF+6w==
+X-CSE-MsgGUID: CEMu4RVBT7aApX9O9yyxjw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="15147432"
 X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="15147423"
+   d="scan'208";a="15147432"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:59:27 -0700
-X-CSE-ConnectionGUID: /tB3R0R4SZ2p05eNkahrNA==
-X-CSE-MsgGUID: iExHUtZWQaawL98siFUsHA==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:59:30 -0700
+X-CSE-ConnectionGUID: Mz6UrC/hT7WThJ2nmfiMmg==
+X-CSE-MsgGUID: ErhqHidsQHu8hAHB/9fMMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="70486853"
+   d="scan'208";a="70486878"
 Received: from iklimasz-mobl1.ger.corp.intel.com (HELO pbossart-mobl6.intel.com) ([10.245.246.56])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:59:24 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:59:28 -0700
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To: alsa-devel@alsa-project.org
 Cc: tiwai@suse.de,
 	broonie@kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
-	Fred Oh <fred.oh@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH 1/5] ASoC: SOF: Intel: add PTL specific power control register
-Date: Wed, 12 Jun 2024 08:58:54 +0200
-Message-ID: <20240612065858.53041-2-pierre-louis.bossart@linux.intel.com>
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>
+Subject: [PATCH 2/5] ASoC: SOF: Intel: add initial support for PTL
+Date: Wed, 12 Jun 2024 08:58:55 +0200
+Message-ID: <20240612065858.53041-3-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240612065858.53041-1-pierre-louis.bossart@linux.intel.com>
 References: <20240612065858.53041-1-pierre-louis.bossart@linux.intel.com>
@@ -84,77 +83,236 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Fred Oh <fred.oh@linux.intel.com>
+Clone LNL for now.
 
-PTL has some differences from MTL/LNL. Need to use different register
-to power up.
-
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Signed-off-by: Fred Oh <fred.oh@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- sound/soc/sof/intel/mtl.c | 16 ++++++++++++++--
- sound/soc/sof/intel/mtl.h |  2 ++
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ sound/soc/sof/intel/Kconfig   | 17 ++++++++
+ sound/soc/sof/intel/Makefile  |  2 +
+ sound/soc/sof/intel/hda-dsp.c |  1 +
+ sound/soc/sof/intel/hda.h     |  1 +
+ sound/soc/sof/intel/lnl.c     | 27 ++++++++++++
+ sound/soc/sof/intel/pci-ptl.c | 77 +++++++++++++++++++++++++++++++++++
+ sound/soc/sof/intel/shim.h    |  1 +
+ 7 files changed, 126 insertions(+)
+ create mode 100644 sound/soc/sof/intel/pci-ptl.c
 
-diff --git a/sound/soc/sof/intel/mtl.c b/sound/soc/sof/intel/mtl.c
-index 1bf274509ee6..2b9d22ccf345 100644
---- a/sound/soc/sof/intel/mtl.c
-+++ b/sound/soc/sof/intel/mtl.c
-@@ -245,6 +245,18 @@ int mtl_dsp_pre_fw_run(struct snd_sof_dev *sdev)
- 	u32 cpa;
- 	u32 pgs;
- 	int ret;
-+	u32 dsppwrctl;
-+	u32 dsppwrsts;
-+	const struct sof_intel_dsp_desc *chip;
+diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
+index 3396bd46b778..2c43558d96b9 100644
+--- a/sound/soc/sof/intel/Kconfig
++++ b/sound/soc/sof/intel/Kconfig
+@@ -281,6 +281,23 @@ config SND_SOC_SOF_LUNARLAKE
+ 	  Say Y if you have such a device.
+ 	  If unsure select "N".
+ 
++config SND_SOC_SOF_INTEL_PTL
++	tristate
++	select SND_SOC_SOF_HDA_COMMON
++	select SND_SOC_SOF_INTEL_SOUNDWIRE_LINK_BASELINE
++	select SND_SOC_SOF_IPC4
++	select SND_SOC_SOF_INTEL_LNL
 +
-+	chip = get_chip_info(sdev->pdata);
-+	if (chip->hw_ip_version > SOF_INTEL_ACE_2_0) {
-+		dsppwrctl = PTL_HFPWRCTL2;
-+		dsppwrsts = PTL_HFPWRSTS2;
-+	} else {
-+		dsppwrctl = MTL_HFPWRCTL;
-+		dsppwrsts = MTL_HFPWRSTS;
-+	}
++config SND_SOC_SOF_PANTHERLAKE
++	tristate "SOF support for Pantherlake"
++	default SND_SOC_SOF_PCI
++	select SND_SOC_SOF_INTEL_PTL
++	help
++	  This adds support for Sound Open Firmware for Intel(R) platforms
++	  using the Pantherlake processors.
++	  Say Y if you have such a device.
++	  If unsure select "N".
++
+ config SND_SOC_SOF_HDA_COMMON
+ 	tristate
  
- 	/* Set the DSP subsystem power on */
- 	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_HFDSSCS,
-@@ -264,14 +276,14 @@ int mtl_dsp_pre_fw_run(struct snd_sof_dev *sdev)
- 	}
+diff --git a/sound/soc/sof/intel/Makefile b/sound/soc/sof/intel/Makefile
+index b56fa5530b8b..f40daa616803 100644
+--- a/sound/soc/sof/intel/Makefile
++++ b/sound/soc/sof/intel/Makefile
+@@ -34,6 +34,7 @@ snd-sof-pci-intel-icl-y := pci-icl.o icl.o
+ snd-sof-pci-intel-tgl-y := pci-tgl.o tgl.o
+ snd-sof-pci-intel-mtl-y := pci-mtl.o mtl.o
+ snd-sof-pci-intel-lnl-y := pci-lnl.o lnl.o
++snd-sof-pci-intel-ptl-y := pci-ptl.o
  
- 	/* Power up gated-DSP-0 domain in order to access the DSP shim register block. */
--	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, MTL_HFPWRCTL,
-+	snd_sof_dsp_update_bits(sdev, HDA_DSP_BAR, dsppwrctl,
- 				MTL_HFPWRCTL_WPDSPHPXPG, MTL_HFPWRCTL_WPDSPHPXPG);
+ obj-$(CONFIG_SND_SOC_SOF_MERRIFIELD) += snd-sof-pci-intel-tng.o
+ obj-$(CONFIG_SND_SOC_SOF_INTEL_SKL) += snd-sof-pci-intel-skl.o
+@@ -43,3 +44,4 @@ obj-$(CONFIG_SND_SOC_SOF_INTEL_ICL) += snd-sof-pci-intel-icl.o
+ obj-$(CONFIG_SND_SOC_SOF_INTEL_TGL) += snd-sof-pci-intel-tgl.o
+ obj-$(CONFIG_SND_SOC_SOF_INTEL_MTL) += snd-sof-pci-intel-mtl.o
+ obj-$(CONFIG_SND_SOC_SOF_INTEL_LNL) += snd-sof-pci-intel-lnl.o
++obj-$(CONFIG_SND_SOC_SOF_INTEL_PTL) += snd-sof-pci-intel-ptl.o
+diff --git a/sound/soc/sof/intel/hda-dsp.c b/sound/soc/sof/intel/hda-dsp.c
+index 1315f5bc3e31..4c88522d4048 100644
+--- a/sound/soc/sof/intel/hda-dsp.c
++++ b/sound/soc/sof/intel/hda-dsp.c
+@@ -69,6 +69,7 @@ static void hda_get_interfaces(struct snd_sof_dev *sdev, u32 *interface_mask)
+ 		interface_mask[SOF_DAI_HOST_ACCESS] = BIT(SOF_DAI_INTEL_HDA);
+ 		break;
+ 	case SOF_INTEL_ACE_2_0:
++	case SOF_INTEL_ACE_3_0:
+ 		interface_mask[SOF_DAI_DSP_ACCESS] =
+ 			BIT(SOF_DAI_INTEL_SSP) | BIT(SOF_DAI_INTEL_DMIC) |
+ 			BIT(SOF_DAI_INTEL_HDA) | BIT(SOF_DAI_INTEL_ALH);
+diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
+index 3c9e1d59e1ab..b74a472435b5 100644
+--- a/sound/soc/sof/intel/hda.h
++++ b/sound/soc/sof/intel/hda.h
+@@ -920,6 +920,7 @@ extern const struct sof_intel_dsp_desc adls_chip_info;
+ extern const struct sof_intel_dsp_desc mtl_chip_info;
+ extern const struct sof_intel_dsp_desc arl_s_chip_info;
+ extern const struct sof_intel_dsp_desc lnl_chip_info;
++extern const struct sof_intel_dsp_desc ptl_chip_info;
  
- 	usleep_range(1000, 1010);
+ /* Probes support */
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA_PROBES)
+diff --git a/sound/soc/sof/intel/lnl.c b/sound/soc/sof/intel/lnl.c
+index 4b5665f82170..3d5a1f8b17e5 100644
+--- a/sound/soc/sof/intel/lnl.c
++++ b/sound/soc/sof/intel/lnl.c
+@@ -22,6 +22,7 @@
  
- 	/* poll with timeout to check if operation successful */
- 	pgs = MTL_HFPWRSTS_DSPHPXPGS_MASK;
--	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, MTL_HFPWRSTS, dsphfpwrsts,
-+	ret = snd_sof_dsp_read_poll_timeout(sdev, HDA_DSP_BAR, dsppwrsts, dsphfpwrsts,
- 					    (dsphfpwrsts & pgs) == pgs,
- 					    HDA_DSP_REG_POLL_INTERVAL_US,
- 					    HDA_DSP_RESET_TIMEOUT_US);
-diff --git a/sound/soc/sof/intel/mtl.h b/sound/soc/sof/intel/mtl.h
-index 7acaa7e724f4..9ab4b21c960e 100644
---- a/sound/soc/sof/intel/mtl.h
-+++ b/sound/soc/sof/intel/mtl.h
-@@ -12,9 +12,11 @@
- #define MTL_HFDSSCS_CPA_MASK		BIT(24)
- #define MTL_HFSNDWIE			0x114C
- #define MTL_HFPWRCTL			0x1D18
-+#define PTL_HFPWRCTL2			0x1D20
- #define MTL_HfPWRCTL_WPIOXPG(x)		BIT((x) + 8)
- #define MTL_HFPWRCTL_WPDSPHPXPG		BIT(0)
- #define MTL_HFPWRSTS			0x1D1C
-+#define PTL_HFPWRSTS2			0x1D24
- #define MTL_HFPWRSTS_DSPHPXPGS_MASK	BIT(0)
- #define MTL_HFINTIPPTR			0x1108
- #define MTL_IRQ_INTEN_L_HOST_IPC_MASK	BIT(0)
+ /* LunarLake ops */
+ struct snd_sof_dsp_ops sof_lnl_ops;
++EXPORT_SYMBOL_NS(sof_lnl_ops, SND_SOC_SOF_INTEL_LNL);
+ 
+ static const struct snd_sof_debugfs_map lnl_dsp_debugfs[] = {
+ 	{"hda", HDA_DSP_HDA_BAR, 0, 0x4000, SOF_DEBUGFS_ACCESS_ALWAYS},
+@@ -181,6 +182,7 @@ int sof_lnl_ops_init(struct snd_sof_dev *sdev)
+ 
+ 	return 0;
+ };
++EXPORT_SYMBOL_NS(sof_lnl_ops_init, SND_SOC_SOF_INTEL_LNL);
+ 
+ /* Check if an SDW IRQ occurred */
+ static bool lnl_dsp_check_sdw_irq(struct snd_sof_dev *sdev)
+@@ -245,3 +247,28 @@ const struct sof_intel_dsp_desc lnl_chip_info = {
+ 	.disable_interrupts = lnl_dsp_disable_interrupts,
+ 	.hw_ip_version = SOF_INTEL_ACE_2_0,
+ };
++
++const struct sof_intel_dsp_desc ptl_chip_info = {
++	.cores_num = 5,
++	.init_core_mask = BIT(0),
++	.host_managed_cores_mask = BIT(0),
++	.ipc_req = MTL_DSP_REG_HFIPCXIDR,
++	.ipc_req_mask = MTL_DSP_REG_HFIPCXIDR_BUSY,
++	.ipc_ack = MTL_DSP_REG_HFIPCXIDA,
++	.ipc_ack_mask = MTL_DSP_REG_HFIPCXIDA_DONE,
++	.ipc_ctl = MTL_DSP_REG_HFIPCXCTL,
++	.rom_status_reg = LNL_DSP_REG_HFDSC,
++	.rom_init_timeout = 300,
++	.ssp_count = MTL_SSP_COUNT,
++	.d0i3_offset = MTL_HDA_VS_D0I3C,
++	.read_sdw_lcount =  hda_sdw_check_lcount_ext,
++	.enable_sdw_irq = lnl_enable_sdw_irq,
++	.check_sdw_irq = lnl_dsp_check_sdw_irq,
++	.check_sdw_wakeen_irq = lnl_sdw_check_wakeen_irq,
++	.check_ipc_irq = mtl_dsp_check_ipc_irq,
++	.cl_init = mtl_dsp_cl_init,
++	.power_down_dsp = mtl_power_down_dsp,
++	.disable_interrupts = lnl_dsp_disable_interrupts,
++	.hw_ip_version = SOF_INTEL_ACE_3_0,
++};
++EXPORT_SYMBOL_NS(ptl_chip_info, SND_SOC_SOF_INTEL_LNL);
+diff --git a/sound/soc/sof/intel/pci-ptl.c b/sound/soc/sof/intel/pci-ptl.c
+new file mode 100644
+index 000000000000..69195b5e7b1a
+--- /dev/null
++++ b/sound/soc/sof/intel/pci-ptl.c
+@@ -0,0 +1,77 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
++//
++// This file is provided under a dual BSD/GPLv2 license.  When using or
++// redistributing this file, you may do so under either license.
++//
++// Copyright(c) 2024 Intel Corporation.
++//
++
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <sound/soc-acpi.h>
++#include <sound/soc-acpi-intel-match.h>
++#include <sound/sof.h>
++#include "../ops.h"
++#include "../sof-pci-dev.h"
++
++/* platform specific devices */
++#include "hda.h"
++#include "mtl.h"
++
++static const struct sof_dev_desc ptl_desc = {
++	.use_acpi_target_states	= true,
++	.machines               = snd_soc_acpi_intel_ptl_machines,
++	.alt_machines		= snd_soc_acpi_intel_ptl_sdw_machines,
++	.resindex_lpe_base      = 0,
++	.resindex_pcicfg_base   = -1,
++	.resindex_imr_base      = -1,
++	.irqindex_host_ipc      = -1,
++	.chip_info		= &ptl_chip_info,
++	.ipc_supported_mask	= BIT(SOF_IPC_TYPE_4),
++	.ipc_default		= SOF_IPC_TYPE_4,
++	.dspless_mode_supported	= true,
++	.default_fw_path = {
++		[SOF_IPC_TYPE_4] = "intel/sof-ipc4/ptl",
++	},
++	.default_lib_path = {
++		[SOF_IPC_TYPE_4] = "intel/sof-ipc4-lib/ptl",
++	},
++	.default_tplg_path = {
++		[SOF_IPC_TYPE_4] = "intel/sof-ipc4-tplg",
++	},
++	.default_fw_filename = {
++		[SOF_IPC_TYPE_4] = "sof-ptl.ri",
++	},
++	.nocodec_tplg_filename = "sof-ptl-nocodec.tplg",
++	.ops = &sof_lnl_ops,
++	.ops_init = sof_lnl_ops_init,
++};
++
++/* PCI IDs */
++static const struct pci_device_id sof_pci_ids[] = {
++	{ PCI_DEVICE_DATA(INTEL, HDA_PTL, &ptl_desc) }, /* PTL */
++	{ 0, }
++};
++MODULE_DEVICE_TABLE(pci, sof_pci_ids);
++
++/* pci_driver definition */
++static struct pci_driver snd_sof_pci_intel_ptl_driver = {
++	.name = "sof-audio-pci-intel-ptl",
++	.id_table = sof_pci_ids,
++	.probe = hda_pci_intel_probe,
++	.remove = sof_pci_remove,
++	.shutdown = sof_pci_shutdown,
++	.driver = {
++		.pm = &sof_pci_pm,
++	},
++};
++module_pci_driver(snd_sof_pci_intel_ptl_driver);
++
++MODULE_LICENSE("Dual BSD/GPL");
++MODULE_DESCRIPTION("SOF support for PantherLake platforms");
++MODULE_IMPORT_NS(SND_SOC_SOF_INTEL_HDA_GENERIC);
++MODULE_IMPORT_NS(SND_SOC_SOF_INTEL_HDA_COMMON);
++MODULE_IMPORT_NS(SND_SOC_SOF_INTEL_LNL);
++MODULE_IMPORT_NS(SND_SOC_SOF_INTEL_MTL);
++MODULE_IMPORT_NS(SND_SOC_SOF_HDA_MLINK);
++MODULE_IMPORT_NS(SND_SOC_SOF_PCI_DEV);
+diff --git a/sound/soc/sof/intel/shim.h b/sound/soc/sof/intel/shim.h
+index 9328d2bbfd03..8709b750a11e 100644
+--- a/sound/soc/sof/intel/shim.h
++++ b/sound/soc/sof/intel/shim.h
+@@ -22,6 +22,7 @@ enum sof_intel_hw_ip_version {
+ 	SOF_INTEL_CAVS_2_5,	/* TigerLake, AlderLake */
+ 	SOF_INTEL_ACE_1_0,	/* MeteorLake */
+ 	SOF_INTEL_ACE_2_0,	/* LunarLake */
++	SOF_INTEL_ACE_3_0,	/* PantherLake */
+ };
+ 
+ /*
 -- 
 2.43.0
 
