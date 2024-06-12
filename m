@@ -1,119 +1,94 @@
-Return-Path: <linux-pci+bounces-8631-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8632-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8773904BDC
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 08:47:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29BD7904BFD
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 08:53:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 353C6B236F6
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:47:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 330D91C22101
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:53:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1159D167DB1;
-	Wed, 12 Jun 2024 06:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9VkT5MM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E5FD16C448;
+	Wed, 12 Jun 2024 06:53:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C325167DA4
-	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 06:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C049169376;
+	Wed, 12 Jun 2024 06:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718174866; cv=none; b=cIkINrwwjaEZXp5njAemTMIpMEJ2kO0ZAatDmyjQE/Yfehm9AKYY0Me8EtzDOM5t3v2g73euEFhOidDssXnYsRpjgVgqg6TfD98lZb23hoVnzkfTE/YG8vjoF7N4droHWo8oVxACndD2wwOMm4wKKXsK6VwiaaverR6tmDuHV0A=
+	t=1718175223; cv=none; b=cIry5AATkHW6zHvCz7kIOUH8phg2zbnRgFD41n38C9JjQEszSxMFxUo9GDqK4PXxBkv2D3QpfFFb13nTEtIgfTYMODm9Pk9K7RS7sePc7eGn1cyF8VdvYCToJSH4opF58P6eJDuEwAlSlviSQ0VtEJMdhetCCZRHlQapLQ2gvb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718174866; c=relaxed/simple;
-	bh=IzSgx2C25j7P87Yss79wU23sCxQ9oZ4wST9PV3CCwTw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bAnX1783GbAwZMySopViJRxzp3iU4OAResWydpu5+jCKBx6qIfrVPBN+W8ZLgbBixBbCHmTMWtzXE87vVNiCTd4pB5EJ2M704vO0NCwJVd+SG8q8pn3r41A3CT5VW06yZQ6oc+vPr4/umn00HDeiN27bB7vUDFrcVJjsFx4P3nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9VkT5MM; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718174865; x=1749710865;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IzSgx2C25j7P87Yss79wU23sCxQ9oZ4wST9PV3CCwTw=;
-  b=f9VkT5MMBomrlYiKbAbmT/510oUqJ2/1JqdfCPAfvn86BsxMp/bDjhzu
-   8AEwH7JoqcIMxgGYnCoWauwoRLUSQMY91Y1AJ16g+2VrQUJ+XCRdJbOvd
-   MdFGDtW+l4gXW5hnSk7FBof6hNE9GtGr+90uovxx/9Mudzkykb833ZFDr
-   4vx6azO9TnIYViVMLsqk9iorQpiFYFMpD6xMH7/EtS5sXruUvjh+IbwSX
-   GK1yRBE7a0Gb7sM1m3Ep4LFpWgv9PtBE6+4MfjIATBu89judHDxQfXl2D
-   J2c6bVTuNnLrNvzaneTe5MvHw3I/uhGOqYbIoorUf40IsQrOn6qS1cw8v
-   g==;
-X-CSE-ConnectionGUID: uwebuCpkRySc2BJJWiHFLQ==
-X-CSE-MsgGUID: I9QSXEZrQ+WYJNRfo6JPcg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="15145911"
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="15145911"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:47:45 -0700
-X-CSE-ConnectionGUID: x6KdkC32Qb+Bl0LoDPrViA==
-X-CSE-MsgGUID: UxuUA5PyS6Oo3mafkVf2/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="39751287"
-Received: from iklimasz-mobl1.ger.corp.intel.com (HELO pbossart-mobl6.intel.com) ([10.245.246.56])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:47:42 -0700
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To: alsa-devel@alsa-project.org
-Cc: tiwai@suse.de,
-	broonie@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
+	s=arc-20240116; t=1718175223; c=relaxed/simple;
+	bh=hiCdjT7POcrsS7iqSGVKiD1ma4BKsH9HOhCpk4IO1tM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UyYKdUTWMXOjZoMdUkZdHcdr+UKftKunmhNfpeRqZ5npU0whdE/OuhNVPsmlaxqxS04izHi+Tr/3TegfFnjc+Ger2FJHzDAHgQZqt+sAnPeYNNV3qx5yKRyGLLY8Ly4LDTkvPIJn/WwpZxIFdo1l+VkvaGBG5C6h3g7qEVMfdKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38ED2C4AF51;
+	Wed, 12 Jun 2024 06:53:40 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>
+Cc: loongarch@lists.linux.dev,
 	linux-pci@vger.kernel.org,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>
-Subject: [PATCH 3/3] ALSA: hda: intel-dsp-config: Add PTL support
-Date: Wed, 12 Jun 2024 08:47:09 +0200
-Message-ID: <20240612064709.51141-4-pierre-louis.bossart@linux.intel.com>
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Sheng Wu <wusheng@loongson.cn>
+Subject: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
+Date: Wed, 12 Jun 2024 14:53:15 +0800
+Message-ID: <20240612065315.2048110-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240612064709.51141-1-pierre-louis.bossart@linux.intel.com>
-References: <20240612064709.51141-1-pierre-louis.bossart@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Same recipes as LNL
+LS7A chipset can be used as a downstream bridge which connected to a
+high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is used as the
+upward port. We should always enable MSI caps of this port, otherwise
+downstream devices cannot use MSI.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sheng Wu <wusheng@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- sound/hda/intel-dsp-config.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/pci/controller/pci-loongson.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/sound/hda/intel-dsp-config.c b/sound/hda/intel-dsp-config.c
-index 537863447358..a7419d2e912e 100644
---- a/sound/hda/intel-dsp-config.c
-+++ b/sound/hda/intel-dsp-config.c
-@@ -543,6 +543,15 @@ static const struct config_entry config_table[] = {
- 		.device = PCI_DEVICE_ID_INTEL_HDA_LNL_P,
- 	},
- #endif
-+
-+	/* Panther Lake */
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_PANTHERLAKE)
-+	{
-+		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_PTL,
-+	},
-+#endif
-+
- };
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 8b34ccff073a..ffc581605834 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -163,6 +163,18 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_LS7A_HDMI, loongson_pci_pin_quirk);
  
- static const struct config_entry *snd_intel_dsp_find_config
++static void loongson_pci_msi_quirk(struct pci_dev *dev)
++{
++	u16 val, class = dev->class >> 8;
++
++	if (class == PCI_CLASS_BRIDGE_HOST) {
++		pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &val);
++		val |= PCI_MSI_FLAGS_ENABLE;
++		pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, val);
++	}
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
++
+ static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+ {
+ 	struct pci_config_window *cfg;
 -- 
 2.43.0
 
