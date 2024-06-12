@@ -1,201 +1,120 @@
-Return-Path: <linux-pci+bounces-8624-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8625-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EB11904A1F
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:41:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55254904A4B
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:52:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7AC8BB21A8C
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 04:41:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65A3BB21BB2
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 04:52:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9104D22092;
-	Wed, 12 Jun 2024 04:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A95C5282F1;
+	Wed, 12 Jun 2024 04:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ap3df75/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7IRrFqw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7529179B7
-	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 04:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B61225605;
+	Wed, 12 Jun 2024 04:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718167257; cv=none; b=RCss6wRrbhZTApksq/QT2Rfv3yCyJu/9sV4TVo9caNC5FNZXjclrf7jg0MUndG27wWQUy4BkWNKGRLodYGScO2F31INIbd2YhR7NOkOEaReUy5wm28+lqSxd4rp1mklr8i3K9208gH8oBri2sXpukbxwT329NzXeg+gZ0F7/0ww=
+	t=1718167929; cv=none; b=BpQ3eU1ukxvK/D46qOGkVLfjKFpMIQYtqHk8Qa7hA/f6XnUK4HlhZMsEftFB5D5D2l5poIZRQX+Pgp+tvOOp0pY9NOL4n65eFzBsEbHumfRzJsZCRjZNGysphVwaElNKgHxjGetmsoYGS8V1tAHKoixLY1OuNMO0Mqigv4Ymjas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718167257; c=relaxed/simple;
-	bh=1gLwKb9OxHOVAk7+EmjyO/V2qkvJVd8cvMeHIOPMXRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dOka7lbOtBNXAV1qj5PKMcStt8M4T9PK/PwSIU5bcd/n/ECC1i1UzQhTOvAdrLXk3vbUjDno1rxmdKgwJherDYnYJKaZxp/eQw9SNoyj4JyOg8R4c+F1RycT9Q07rP05V17FKAEvfRVA6Gx1vXs/MidwS7Rz010q1RL4kRjxbIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ap3df75/; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6e57506bb2dso1451474a12.0
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jun 2024 21:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718167255; x=1718772055; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AGgkSoW1xRk7TfsRGt2QaxlKvCEt9TPGalxUOEqx2iw=;
-        b=ap3df75/wCXHU8qY0th7cbYD8vX89MLozR6Jnx63zmSY4pBM2FmlqKDnJTzBtyGTZr
-         LC4geehH3tM8YbltezthqKLxZJTEuot/ZnrsjBiFoC/hgpivtPNJOIHW2+bB7QewMI8W
-         qRTQw4dvEM5NdiRStba1wiNO7Pz9CrA5VhvrXPzerWqFMReXKPDuUGqkrlRNx7RZxuog
-         TYvOMvN5jmnqvd2BSY4mWJZKanlpfveXskXpJ0GpUk0mMHo+mMaQfy1w5F28NhAJV+v8
-         qrvtFslvuqZFUobC6ENOdfv29V+AWmfpFdEYgAGErDjeiZEoProFKA90MQwyf+s36NkA
-         BwOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718167255; x=1718772055;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AGgkSoW1xRk7TfsRGt2QaxlKvCEt9TPGalxUOEqx2iw=;
-        b=PTsV78YEQlFTHH3FWrmEGAvXXg5nDCt4anJApmkZRdQ79uPEH9seI+jimyUa6FHOsu
-         ftuf+HwfBoR9Uu1SoBypLitWONAS7pjB8XmFWkfLGTt82RReaXsr7MEGIVm1Pj6BN/Nw
-         gAlqH6s5GZc0eIXdg+maONaAaed7lliDIm7r1ihaqLI4YtS2x+JCZ18AUwm0UrktVvZf
-         JBHMoXA6syz69Gy0J9eZDXpHZifXn5WF0ynn2JX6GlYfKNGlWp8sONRhWNLUMeZ65bEu
-         5q00deiv7WLiyhJgTG9dn7Aakzg+uxIY/SGRLM+yj9HOOAHcvuiueMVu9cwGXAHNu1BS
-         lkDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrgbtz+HrPpvoRbwOhpiM6GwSGQHhpKouw7uqmIc4PA/cHG/cDVnsPn015T9HdWzncZU7O2vTtbZ/aO9r51VnLSXOWk2y8qU/y
-X-Gm-Message-State: AOJu0Yxzlur2mdgStoAI1W4fruE7H3cvPwOqmhc1sKKJyyu/nO+Ke2fr
-	+g4K+PMVH+JmqXwFiboqQFc5PX978BCnq3OQJUzmgqwO2XEaoh7KlOUL5rlzUQ==
-X-Google-Smtp-Source: AGHT+IHjmwXkPl2CoS61MVk4s0QUMvhfjSBZVGN5YFxLjxkMoDt0N5w7V28ODjcUkdbko4OD0lbEsQ==
-X-Received: by 2002:a05:6a20:8417:b0:1b5:d143:72e7 with SMTP id adf61e73a8af0-1b8a9b8c091mr959952637.32.1718167254831;
-        Tue, 11 Jun 2024 21:40:54 -0700 (PDT)
-Received: from thinkpad ([120.60.129.29])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4a9c2fa34sm481444a91.38.2024.06.11.21.40.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 21:40:54 -0700 (PDT)
-Date: Wed, 12 Jun 2024 10:10:47 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: kirin: fix memory leak in kirin_pcie_parse_port()
-Message-ID: <20240612044047.GD2645@thinkpad>
-References: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
+	s=arc-20240116; t=1718167929; c=relaxed/simple;
+	bh=nruark1B8eb2OhgQvZff82JhFN78K2Md0UA5EQhbk50=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bjBoLY0NUyfMrDVKwX7c2DXtw14htIl6vVw/2ob0/RhFfgS9S/zfWxcJgmoJnJtNKAZQpaM+nY/vzJ4kBpvHfSPHZnS+2+uoqxnLh9Dbxum6nDzyv/Ik6X0wtSEv8XpoCYrKqH0AgQkqHukJCmAxdCz9bYoRXizKnKl0mrX8sfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7IRrFqw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE53C4AF49;
+	Wed, 12 Jun 2024 04:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718167929;
+	bh=nruark1B8eb2OhgQvZff82JhFN78K2Md0UA5EQhbk50=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V7IRrFqw0vhujpKJDtVvKy/JReetTM2vUKY8lFwSBdLERP26LrljRT7sIUxnryLMS
+	 PtF5NJONsUCKOD1fAsIa07+ST83Cw1LR99MSbvtuFbPK4lBbG3JY4YqfUXxfX98CON
+	 imTXIpJEjCIu8HJXvIk7XWPm7J3oM3t9UA4aGwk132kot/ZP9XqCjmnK1nfWO7UTAI
+	 zBMozZl8qxcKbh6Sa118tdpYL4owEzcMy0wHunJIlycHt4It1q7l7VuGBSOgaNfjTa
+	 Q3jDUa4tAwbTZMI1R0cmwU0lLBqotdjxi+J8j+Qf2baFEJvhnNQi5gpLvgZhRD6Zsa
+	 2fJj7kXXsTfbQ==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a68b41ef3f6so722332666b.1;
+        Tue, 11 Jun 2024 21:52:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXaziy4HKAD78jNBt5FPSj8E2U9WYmY/PhupRdInU1r3Yno38JAR5m4R1uJUkQEbB24LZEnNvdNEcuLkmM/hXy51WIcIHyeNueJwhHym7FAMgwdMvqyG4AwQGYEZ4P2AWxMD50E9tzPnyE2/oH0fVgtj1QgsX6OyP+SA2DQUjQF
+X-Gm-Message-State: AOJu0YyxBV1Jl0QJHUBbnIr0hcknfzJmApkMp/E1AeAS1QkxBqstdIpR
+	l6i+8dsnbljTdUrzBcERTUvCLX73nhjHQNMDNwNdeQVVXyDBZYbNPz5iACcPdVB7rrvZ5X+OXDo
+	FREg3bvuGnFHgbdg33mDVXvMgCFw=
+X-Google-Smtp-Source: AGHT+IHFivSjvIbnYSVPMTEzbltjhXBgE/Sw7akDiWaje007gDxL4ef1RyuKjpql8Ck29Kk5g0Vq1mt95AktB7YQxqw=
+X-Received: by 2002:a17:906:489:b0:a6e:7e1f:2eae with SMTP id
+ a640c23a62f3a-a6f4800b167mr32026166b.74.1718167927547; Tue, 11 Jun 2024
+ 21:52:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
+References: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
+In-Reply-To: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 12 Jun 2024 12:51:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5+47ZMFQGiirSxgF9NoJjng4dL2huPXdiw1ydbbAk0ug@mail.gmail.com>
+Message-ID: <CAAhV-H5+47ZMFQGiirSxgF9NoJjng4dL2huPXdiw1ydbbAk0ug@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: use local_pci_probe when best selected cpu is offline
+To: Hongchen Zhang <zhanghongchen@loongson.cn>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 09, 2024 at 12:56:14PM +0200, Javier Carrasco wrote:
-> The conversion of this file to use the agnostic GPIO API has introduced
-> a new early return where the refcounts of two device nodes (parent and
-> child) are not decremented.
-> 
-> Given that the device nodes are not required outside the loops where
-> they are used, and to avoid potential bugs every time a new error path
-> is introduced to the loop, the _scoped() versions of the macros have
-> been applied. The bug was introduced recently, and the fix is not
-> relevant for old stable kernels that might not support the scoped()
-> variant.
-> 
-> Fixes: 1d38f9d89f85 ("PCI: kirin: Convert to use agnostic GPIO API")
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Hi, Hongchen,
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+It seems you forgot to update the title which I have pointed out. :)
 
+And Bjorn,
+
+Could you please take some time to review this patch? Thank you.
+
+Huacai
+
+On Wed, Jun 5, 2024 at 3:54=E2=80=AFPM Hongchen Zhang <zhanghongchen@loongs=
+on.cn> wrote:
+>
+> When the best selected CPU is offline, work_on_cpu() will stuck forever.
+> This can be happen if a node is online while all its CPUs are offline
+> (we can use "maxcpus=3D1" without "nr_cpus=3D1" to reproduce it), Therefo=
+re,
+> in this case, we should call local_pci_probe() instead of work_on_cpu().
+>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
 > ---
-> This bug was found while analyzing the code and I don't have hardware to
-> validate it beyond compilation and static analysis. Any test with real
-> hardware to make sure there are no regressions is always welcome.
-> 
-> The dev_err() messages have not been converted into dev_err_probe() to
-> keep the current format, but I am open to convert them if preferred.
-
-Sure, please do it in a separate patch.
-
-- Mani
-
+> v1 -> v2 Added the method to reproduce this issue
 > ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 21 ++++++---------------
->  1 file changed, 6 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index d1f54f188e71..0a29136491b8 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -403,11 +403,10 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  				 struct device_node *node)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct device_node *parent, *child;
->  	int ret, slot, i;
->  
-> -	for_each_available_child_of_node(node, parent) {
-> -		for_each_available_child_of_node(parent, child) {
-> +	for_each_available_child_of_node_scoped(node, parent) {
-> +		for_each_available_child_of_node_scoped(parent, child) {
->  			i = pcie->num_slots;
->  
->  			pcie->id_reset_gpio[i] = devm_fwnode_gpiod_get_index(dev,
-> @@ -424,14 +423,13 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  			pcie->num_slots++;
->  			if (pcie->num_slots > MAX_PCI_SLOTS) {
->  				dev_err(dev, "Too many PCI slots!\n");
-> -				ret = -EINVAL;
-> -				goto put_node;
-> +				return -EINVAL;
->  			}
->  
->  			ret = of_pci_get_devfn(child);
->  			if (ret < 0) {
->  				dev_err(dev, "failed to parse devfn: %d\n", ret);
-> -				goto put_node;
-> +				return ret;
->  			}
->  
->  			slot = PCI_SLOT(ret);
-> @@ -439,10 +437,8 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  			pcie->reset_names[i] = devm_kasprintf(dev, GFP_KERNEL,
->  							      "pcie_perst_%d",
->  							      slot);
-> -			if (!pcie->reset_names[i]) {
-> -				ret = -ENOMEM;
-> -				goto put_node;
-> -			}
-> +			if (!pcie->reset_names[i])
-> +				return -ENOMEM;
->  
->  			gpiod_set_consumer_name(pcie->id_reset_gpio[i],
->  						pcie->reset_names[i]);
-> @@ -450,11 +446,6 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->  	}
->  
->  	return 0;
-> -
-> -put_node:
-> -	of_node_put(child);
-> -	of_node_put(parent);
-> -	return ret;
->  }
->  
->  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-> 
-> ---
-> base-commit: d35b2284e966c0bef3e2182a5c5ea02177dd32e4
-> change-id: 20240609-pcie-kirin-memleak-18c83a31d111
-> 
-> Best regards,
-> -- 
-> Javier Carrasco <javier.carrasco.cruz@gmail.com>
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+>  drivers/pci/pci-driver.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index af2996d0d17f..32a99828e6a3 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, str=
+uct pci_dev *dev,
+>                 free_cpumask_var(wq_domain_mask);
+>         }
+>
+> -       if (cpu < nr_cpu_ids)
+> +       if ((cpu < nr_cpu_ids) && cpu_online(cpu))
+>                 error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
+>         else
+>                 error =3D local_pci_probe(&ddi);
+> --
+> 2.33.0
+>
+>
 
