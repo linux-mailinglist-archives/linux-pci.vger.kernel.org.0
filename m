@@ -1,56 +1,54 @@
-Return-Path: <linux-pci+bounces-8688-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8689-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B580B905C49
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 21:48:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07B9B905C50
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 21:51:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B5F291C2136E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 19:48:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADED71F225F6
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 19:51:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2D038F83;
-	Wed, 12 Jun 2024 19:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4C935464A;
+	Wed, 12 Jun 2024 19:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBz2Lywz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FB8741tv"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EAF381C4
-	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 19:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBFC381C4;
+	Wed, 12 Jun 2024 19:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718221717; cv=none; b=hPf7TeLXEh0/Td71+znTdkxTPUH92sQcatDtioTyu8Z9QtqmnXKdMggO6k5+cS1RWWuv5cQLNUzXSqQBjGbs9t3p6p5WvNlLSFND0c6bRLzkzijfqtyBInL2Lh78NQ6m3OgjIkXKz+NLPMqUjc1PXKwIMrRXcBTgZjII7awfwy8=
+	t=1718221914; cv=none; b=TMr/cY45xCSAFRdjnIrc9Nq26xwAGS1o5Bh49QDLBLywLDBpWxCzGkMeBYpvETYUVq29bQSHx9kNseLRdF5bYUwzQCPV2NONX99MGJc5BUDqbP7mtMxC6Zorsenqab+gtIDPkN5PGP9772c5iVJlq10qxfT91VnnlvIq0hG6VL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718221717; c=relaxed/simple;
-	bh=w9Rt34g1NAf/lnKTJg1QsLQtDqnhENK4/kBjulfr7rY=;
+	s=arc-20240116; t=1718221914; c=relaxed/simple;
+	bh=3DSoDGc2KpPo6PasfSy8FmR0m4FIDYDP5J4c9c8bcJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=OBtxShrLvDGDbK8jzb6nM+xEpOFzIUIKqk+A3O/Fjl7QrPsAodpHbckKiMWryoOIFDGXjxr5S1QQu6OyDHKNebzrfr3+ucnZ4EB3nh+hq2hsZnTZeoJddxff1U6mEWNhRL5jLG/eaXIswuCGUzRzd7tlUiUwCNvb41GHxJHar4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBz2Lywz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2CBC116B1;
-	Wed, 12 Jun 2024 19:48:36 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=gxhcRpdlsa2C1KzEWnyevPUQ8EtlOSzGfr4AcvBpxH87JZIonwp194A0cHlyMwvC86zDDfNExU89j1OCeMqU93UiCJeBo7BqnGG1IfD5p2rUrGPFWCQJlbXpRYaQKNroSwNB014+pqf9E93OtdRlvq6fzFJueYkJuVBCh6EvJNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FB8741tv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F06C116B1;
+	Wed, 12 Jun 2024 19:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718221717;
-	bh=w9Rt34g1NAf/lnKTJg1QsLQtDqnhENK4/kBjulfr7rY=;
+	s=k20201202; t=1718221914;
+	bh=3DSoDGc2KpPo6PasfSy8FmR0m4FIDYDP5J4c9c8bcJA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UBz2LywzLFDOZ7FwxFb/8JQqDuxFgpSB2MSF8QkfdmYyzSk/kBHZcZcUU0kMc/hsI
-	 KwhQnhPUH1TirCyo2cWZdbv6aqXM12U/6I6bz5iPY16pD4U4dm61Q+aPgDdxG7adsQ
-	 ZYJaLYXQnZX6aN1EsKzBXq9Ua+6UF6tcGTDlVA3Z8H+nIHx3BiP1eQiuqMRt4i0/b6
-	 HErYT7A0SUYyN0LkUqgEYJrB2q71YKPKYzR9L/nu5Rul4oItu5eeC350qwMBJAh6y1
-	 hlzyZb97ABGU8sUwcboQASjG8vyZ7wEYqfebX+DQE1aH6fXZQN2qUPyAa7v4RxJ9yz
-	 XQ1cPLLoBonTg==
-Date: Wed, 12 Jun 2024 14:48:34 -0500
+	b=FB8741tvIVXF3sOGHRQHVQuTM3uM9Gdxv4ZhM34fVOklCuocM6TRtmcNHV3VXvpuk
+	 9KzHSMOgIsb5Z8FRyW+QWHBo/v+RQ+5TBxzEf3kZkyWbacImn+hLGXsmocXX4X8+Bd
+	 B6y0iiKeBjBUAuV29CeTxQSQXUymxibct9N4j6Ixi8ECFDACp5hZfB8lLD+stmbi3Q
+	 DfMVo16/kL0xLQ//Wxvm8snTKL2VMCFSnFc4aEOISPpYF9UsCPTwKQcaSaUuPqsQlI
+	 64Anee6HpCLrBSzPs1+LM63/CT8QNCNMzZD9Taz+wVh3mL56TZZdJJkolf99L7r7/o
+	 5bukcL5fZG8fQ==
+Date: Wed, 12 Jun 2024 14:51:52 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	=?utf-8?B?UMOpdGVy?= Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>
-Subject: Re: [PATCH 1/3] PCI: pci_ids: add INTEL_HDA_PTL
-Message-ID: <20240612194834.GA1034127@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: Remove extra parenthesis from
+ calculate_mem_align()
+Message-ID: <20240612195152.GA1034721@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,44 +58,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240612064709.51141-2-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20240612093250.17544-1-ilpo.jarvinen@linux.intel.com>
 
-On Wed, Jun 12, 2024 at 08:47:07AM +0200, Pierre-Louis Bossart wrote:
-> More PCI ids for Intel audio.
+On Wed, Jun 12, 2024 at 12:32:49PM +0300, Ilpo Järvinen wrote:
+> RHS of <<= does not need parenthesis so remove them.
 > 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
-> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Change subject to match history:
-
-  PCI: Add INTEL_HDA_PTL to pci_ids.h
-
-It's helpful mention the places where this will be used in the commit
-log because we only add things here when they're used in more than one
-place.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Squashed, thanks!
 
 > ---
->  include/linux/pci_ids.h | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 942a587bb97e..0168c6a60148 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3112,6 +3112,7 @@
->  #define PCI_DEVICE_ID_INTEL_HDA_LNL_P	0xa828
->  #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
->  #define PCI_DEVICE_ID_INTEL_HDA_BMG	0xe2f7
-> +#define PCI_DEVICE_ID_INTEL_HDA_PTL	0xe428
->  #define PCI_DEVICE_ID_INTEL_HDA_CML_R	0xf0c8
->  #define PCI_DEVICE_ID_INTEL_HDA_RKL_S	0xf1c8
+> This patch can be folded into the commit 658bf5d36dc5 ("PCI: Make
+> minimum bridge window alignment reference more obvious") in
+> pci/resource if so desired.
+> ---
+>  drivers/pci/setup-bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 11ee60b9ca71..23082bc0ca37 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -960,7 +960,7 @@ static inline resource_size_t calculate_mem_align(resource_size_t *aligns,
+>  	for (order = 0; order <= max_order; order++) {
+>  		resource_size_t align1 = 1;
 >  
+> -		align1 <<= (order + __ffs(SZ_1M));
+> +		align1 <<= order + __ffs(SZ_1M);
+>  
+>  		if (!align)
+>  			min_align = align1;
 > -- 
-> 2.43.0
+> 2.39.2
 > 
 
