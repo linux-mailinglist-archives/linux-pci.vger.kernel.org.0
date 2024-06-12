@@ -1,120 +1,195 @@
-Return-Path: <linux-pci+bounces-8625-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8626-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55254904A4B
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:52:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D63D904B57
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 08:08:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65A3BB21BB2
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 04:52:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDAC81C237BA
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 06:08:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A95C5282F1;
-	Wed, 12 Jun 2024 04:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E00913C68C;
+	Wed, 12 Jun 2024 06:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7IRrFqw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N2Z8aUp2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B61225605;
-	Wed, 12 Jun 2024 04:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D5B127B56
+	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 06:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718167929; cv=none; b=BpQ3eU1ukxvK/D46qOGkVLfjKFpMIQYtqHk8Qa7hA/f6XnUK4HlhZMsEftFB5D5D2l5poIZRQX+Pgp+tvOOp0pY9NOL4n65eFzBsEbHumfRzJsZCRjZNGysphVwaElNKgHxjGetmsoYGS8V1tAHKoixLY1OuNMO0Mqigv4Ymjas=
+	t=1718172477; cv=none; b=GHHoIpruAp+Im1lGijtPow7EgaJhSst4Uu1yZLSgE95gLBDpXNgBrrAH/OzhCxHwaWfBOe1vjoxJMvFTCc1DjQKf4HrrKDU8n4JyTN6WlSJHKbX83V9qrfiGuBQwsi3pkexXOvMWsAsaK8bPepvdS3AVnCPAS4h0NBORqwexX24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718167929; c=relaxed/simple;
-	bh=nruark1B8eb2OhgQvZff82JhFN78K2Md0UA5EQhbk50=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bjBoLY0NUyfMrDVKwX7c2DXtw14htIl6vVw/2ob0/RhFfgS9S/zfWxcJgmoJnJtNKAZQpaM+nY/vzJ4kBpvHfSPHZnS+2+uoqxnLh9Dbxum6nDzyv/Ik6X0wtSEv8XpoCYrKqH0AgQkqHukJCmAxdCz9bYoRXizKnKl0mrX8sfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7IRrFqw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE53C4AF49;
-	Wed, 12 Jun 2024 04:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718167929;
-	bh=nruark1B8eb2OhgQvZff82JhFN78K2Md0UA5EQhbk50=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=V7IRrFqw0vhujpKJDtVvKy/JReetTM2vUKY8lFwSBdLERP26LrljRT7sIUxnryLMS
-	 PtF5NJONsUCKOD1fAsIa07+ST83Cw1LR99MSbvtuFbPK4lBbG3JY4YqfUXxfX98CON
-	 imTXIpJEjCIu8HJXvIk7XWPm7J3oM3t9UA4aGwk132kot/ZP9XqCjmnK1nfWO7UTAI
-	 zBMozZl8qxcKbh6Sa118tdpYL4owEzcMy0wHunJIlycHt4It1q7l7VuGBSOgaNfjTa
-	 Q3jDUa4tAwbTZMI1R0cmwU0lLBqotdjxi+J8j+Qf2baFEJvhnNQi5gpLvgZhRD6Zsa
-	 2fJj7kXXsTfbQ==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a68b41ef3f6so722332666b.1;
-        Tue, 11 Jun 2024 21:52:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXaziy4HKAD78jNBt5FPSj8E2U9WYmY/PhupRdInU1r3Yno38JAR5m4R1uJUkQEbB24LZEnNvdNEcuLkmM/hXy51WIcIHyeNueJwhHym7FAMgwdMvqyG4AwQGYEZ4P2AWxMD50E9tzPnyE2/oH0fVgtj1QgsX6OyP+SA2DQUjQF
-X-Gm-Message-State: AOJu0YyxBV1Jl0QJHUBbnIr0hcknfzJmApkMp/E1AeAS1QkxBqstdIpR
-	l6i+8dsnbljTdUrzBcERTUvCLX73nhjHQNMDNwNdeQVVXyDBZYbNPz5iACcPdVB7rrvZ5X+OXDo
-	FREg3bvuGnFHgbdg33mDVXvMgCFw=
-X-Google-Smtp-Source: AGHT+IHFivSjvIbnYSVPMTEzbltjhXBgE/Sw7akDiWaje007gDxL4ef1RyuKjpql8Ck29Kk5g0Vq1mt95AktB7YQxqw=
-X-Received: by 2002:a17:906:489:b0:a6e:7e1f:2eae with SMTP id
- a640c23a62f3a-a6f4800b167mr32026166b.74.1718167927547; Tue, 11 Jun 2024
- 21:52:07 -0700 (PDT)
+	s=arc-20240116; t=1718172477; c=relaxed/simple;
+	bh=p3V+r4eTX+b17LbIYAZ33TI24TABi5QRAEjkylSHESQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ez7kqgKwus3QlUhau+0ZeyvDvJajlgbKdon6hhQQTNB0eTxkwJY6Ft6AZ+I9baPXWtCA8iQ6i9dVUW0WEj8mJCJud/NxKFkxH497hYcN/YltMjxdYTPnFMEX6rQYKt+gxmcHD0I7T8evDr/jYmIzcjW23EdUN1htlWnC3FDmJT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N2Z8aUp2; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-704261a1f67so2021446b3a.3
+        for <linux-pci@vger.kernel.org>; Tue, 11 Jun 2024 23:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718172475; x=1718777275; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gBmOsw1bfVsNjSsKCMK3J3k3M8ekr9N9VL8ewqUbACY=;
+        b=N2Z8aUp2DOdS9cZVjAzmACMrKxMBtvVBQj7Y73riSRmccEGW8cPhXfjOaNNy37Uxw7
+         omfiTd1w0h5K8+l8p12uF8bBbIJqmvCdW2HT7jjN4/hF1ENn+cGQdZFnHiqFDJ7r8p3p
+         jGTHc0qwac5jAYzT5aEOVB8p7+uwglyx9lCDReF5L16bbfA1t/1sydYCCLyJYwCvFi9a
+         15Um6ejKcW7WImdgXpmpaaXS99xx5GppPw1K4gYiO1fbGgBAUkty1n3TU/IM02x/9A3X
+         k014monFDY6YyoQ6OFelzlE+sqHFado6+s7QRcVwed3+/LSemm36RRT3qVGcZv7ZjYEr
+         ca6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718172475; x=1718777275;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gBmOsw1bfVsNjSsKCMK3J3k3M8ekr9N9VL8ewqUbACY=;
+        b=AkxFMPDR6LvyMBICCH4dUHpWIiaxI5qwNJAmjM5p+kH7O3Te1uyjn0avEGaASimuTj
+         C+h2XAYZMFFD1weFP0zTvf/pPXmwQtllhzZTDr+nv3YOXLi5xOIJGQrBH76GjesX+2jc
+         boEku5R0IJ87PCK4L4nB8+b+n3Wp/WPK/DQfLgrNImfD7nXr+VIp/9KDJqo3K76hpYzo
+         CDxtVrn4fbFSUeANHhGSfX4FsbI1dCv4yDlEVbr4xVU7ZBJJofFGuQAukBvGe4NdoWTP
+         cN/TSYs9egwVOS6UTyqq4kf5jiVOf3ZycQThjzky+EN18kjx7+TaV94cZVCPXIY1H3Bv
+         TOBg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Cm99HWXAn8HDPDbSLAaOmPWUdGvxvuGWUPNu8Uli7ff18lOOlxkPFVK3e5WMRcnFi/cwkTQzixB2N9vKeJWESItR9urWxHBQ
+X-Gm-Message-State: AOJu0YzLgrSOEx9HgDcLPF2vj279pCzTeZPfM1hJIdtafyhRrgY46keU
+	JSpPasjpZRGd94Ji71LENfqFmPGJEzEt4wEAc2IC7Vrf4Qqm842iX6GVPOSbHw==
+X-Google-Smtp-Source: AGHT+IEJqwSDFWnHoCDgwjtRI4fQuwpzPLDFyM+BHqr+Eca6LJXLhmW+9jq8EqZUoMuW7EHmdA8d7Q==
+X-Received: by 2002:a05:6a20:9144:b0:1b2:cf6c:d5a4 with SMTP id adf61e73a8af0-1b8a9c510a2mr1011052637.61.1718172474686;
+        Tue, 11 Jun 2024 23:07:54 -0700 (PDT)
+Received: from thinkpad ([120.60.129.29])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd372bb6sm9511608b3a.20.2024.06.11.23.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 23:07:54 -0700 (PDT)
+Date: Wed, 12 Jun 2024 11:37:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Shyam Saini <shyamsaini@linux.microsoft.com>
+Cc: jingoohan1@gmail.com, Sergey.Semin@baikalelectronics.ru,
+	fancer.lancer@gmail.com, robh@kernel.org, linux-pci@vger.kernel.org,
+	code@tyhicks.com, apais@linux.microsoft.com,
+	bboscaccy@linux.microsoft.com, okaya@kernel.org,
+	srivatsa@csail.mit.edu, tballasi@linux.microsoft.com,
+	vijayb@linux.microsoft.com
+Subject: Re: [PATCH V2] drivers: pci: dwc: configure multiple atu regions
+Message-ID: <20240612060743.GE2645@thinkpad>
+References: <20240610235048.319266-1-shyamsaini@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
-In-Reply-To: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 12 Jun 2024 12:51:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5+47ZMFQGiirSxgF9NoJjng4dL2huPXdiw1ydbbAk0ug@mail.gmail.com>
-Message-ID: <CAAhV-H5+47ZMFQGiirSxgF9NoJjng4dL2huPXdiw1ydbbAk0ug@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: use local_pci_probe when best selected cpu is offline
-To: Hongchen Zhang <zhanghongchen@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	stable@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240610235048.319266-1-shyamsaini@linux.microsoft.com>
 
-Hi, Hongchen,
+On Mon, Jun 10, 2024 at 04:50:48PM -0700, Shyam Saini wrote:
 
-It seems you forgot to update the title which I have pointed out. :)
+Subject should be 'PCI: dwc: ...'
 
-And Bjorn,
+> Before this change, the dwc PCIe driver configures only 1 ATU region,
+> which is sufficient for the devices with PCIe memory <= 4GB. However,
+> the driver probe fails when device uses more than 4GB of pcie memory.
+> 
 
-Could you please take some time to review this patch? Thank you.
+Something is not clear... This commit message implies that the driver used to
+work on your hardware (you haven't mentioned which one it is) and broken by the
+commit from Sergey.
 
-Huacai
+As per Sergey's commit, we auto detect the dw_pcie::region_limit. If the IP is <
+4.60, then the limit is 4G, otherwise depends on CX_ATU_MAX_REGION_SIZE set in
+hw.
 
-On Wed, Jun 5, 2024 at 3:54=E2=80=AFPM Hongchen Zhang <zhanghongchen@loongs=
-on.cn> wrote:
->
-> When the best selected CPU is offline, work_on_cpu() will stuck forever.
-> This can be happen if a node is online while all its CPUs are offline
-> (we can use "maxcpus=3D1" without "nr_cpus=3D1" to reproduce it), Therefo=
-re,
-> in this case, we should call local_pci_probe() instead of work_on_cpu().
->
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+So if your IP is < 4.60, you cannot map > 4GB of outbound memory anyway. But if
+it is > 4.60, you shouldn't see the failure that you reported for > 4G space
+(well you can see the failure if the limit is less than the region size). In the
+previous thread you mentioned that dw_pcie::region_limit is set to 4G. So how
+come your driver was working previously?
+
+PS: When reporting issue like this, please add info about your hardware also
+(platform, controller driver used etc...).
+
+- Mani
+
+> Fix this by configuring multiple ATU regions for the devices which
+> use more than 4GB of PCIe memory.
+> 
+> Given each 4GB block of memory requires a new ATU region, the total
+> number of ATU regions are calculated using the size of PCIe device
+> tree node's MEM64 pref range size.
+> 
+> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
 > ---
-> v1 -> v2 Added the method to reproduce this issue
-> ---
->  drivers/pci/pci-driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index af2996d0d17f..32a99828e6a3 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, str=
-uct pci_dev *dev,
->                 free_cpumask_var(wq_domain_mask);
->         }
->
-> -       if (cpu < nr_cpu_ids)
-> +       if ((cpu < nr_cpu_ids) && cpu_online(cpu))
->                 error =3D work_on_cpu(cpu, local_pci_probe, &ddi);
->         else
->                 error =3D local_pci_probe(&ddi);
-> --
-> 2.33.0
->
->
+>  .../pci/controller/dwc/pcie-designware-host.c | 38 +++++++++++++++++--
+>  1 file changed, 34 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index d15a5c2d5b48..bed0b189b6ad 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -652,6 +652,33 @@ static struct pci_ops dw_pcie_ops = {
+>  	.write = pci_generic_config_write,
+>  };
+>  
+> +static int dw_pcie_num_atu_regions(struct resource_entry *entry)
+> +{
+> +	return DIV_ROUND_UP(resource_size(entry->res), SZ_4G);
+> +}
+> +
+> +static int dw_pcie_prog_outbound_atu_multi(struct dw_pcie *pci, int type,
+> +						struct resource_entry *entry)
+> +{
+> +	int idx, ret, num_regions;
+> +
+> +	num_regions = dw_pcie_num_atu_regions(entry);
+> +
+> +	for (idx = 0; idx < num_regions; idx++) {
+> +		dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, idx);
+> +		ret = dw_pcie_prog_outbound_atu(pci, idx, PCIE_ATU_TYPE_MEM,
+> +						entry->res->start,
+> +						entry->res->start - entry->offset,
+> +						resource_size(entry->res)/4);
+> +
+> +		if (ret)
+> +			goto err;
+> +	}
+> +
+> +err:
+> +	return ret;
+> +}
+> +
+>  static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -682,10 +709,13 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>  		if (pci->num_ob_windows <= ++i)
+>  			break;
+>  
+> -		ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_MEM,
+> -						entry->res->start,
+> -						entry->res->start - entry->offset,
+> -						resource_size(entry->res));
+> +		if (resource_size(entry->res) > SZ_4G)
+> +			ret = dw_pcie_prog_outbound_atu_multi(pci, PCIE_ATU_TYPE_MEM, entry);
+> +		else
+> +			ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_MEM,
+> +							entry->res->start,
+> +							entry->res->start - entry->offset,
+> +							resource_size(entry->res));
+>  		if (ret) {
+>  			dev_err(pci->dev, "Failed to set MEM range %pr\n",
+>  				entry->res);
+> -- 
+> 2.34.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
