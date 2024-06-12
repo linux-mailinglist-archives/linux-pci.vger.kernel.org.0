@@ -1,115 +1,108 @@
-Return-Path: <linux-pci+bounces-8680-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8681-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 199A8905A5A
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 20:08:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1C45905A71
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 20:10:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 559B1B20DB3
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 18:08:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B250F1C21ADF
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 18:10:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 632681822F3;
-	Wed, 12 Jun 2024 18:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DD8D1822E4;
+	Wed, 12 Jun 2024 18:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="vGmSgnE7"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="HfTDW8az"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B620117DE0F;
-	Wed, 12 Jun 2024 18:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C766E16E895
+	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 18:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718215704; cv=none; b=EIGQe55hQ2VDLlwGWX2lMhVWAwZuOANmnUGbCxix7GsnupQcfdubKV6RUEkBWJ+NgPCOcw0ib2yKRC2YPh7WSVbJHfNtMSB+Q34msyoUa1U/6Ykdx1oHJCWEJpxTHDwbQH+kR1s5fIv2cz7rp25cA1An2tvTjJ6p9MlF9C5htOk=
+	t=1718215841; cv=none; b=Zs8CSRAp6jC+Y0HLs0aieVaI44NSqsGvdaYeG240RM4GVG12UL2oTaxqxKv0dV3KMXSSB0RmXgdJDBGw9QHwFJejopbgWOXbpsSL9D+kS4xwnWdDvgVpU04PZeJP8rzFfKs9BUAvlLVHHn6t+kzvFHGXReLLz6JQiOeTXsqW9ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718215704; c=relaxed/simple;
-	bh=+upB2qwjfiYh/h4iqILkWX9TtN2BUxazXbJYqgaJFwU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=rXF33auCbRBG0flsVP3tw/lw3F8BoimfYIgvw4MwBUZje95S6wSVrvIEYx6I1HjhRu57V+uYh6tD5ZbXUeT5ooVg8r+BpcUJSpgthev/XucBxgcGIrnWWoRUZZ80+RLZX0ruynSI6lEjB8IXvcivp5rMFVKhkjIhv7xJUu9Mk40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=vGmSgnE7; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718215688; x=1718820488; i=markus.elfring@web.de;
-	bh=vR1DLMpeZId+aNSKRhK1IPZHvpJqGmjpsDvOr4TyoSw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=vGmSgnE7KNFaaX50dHu4QgjuTFa1UNZKTJ73DLJVwXQqNTBvKW3QWPrkrehohXaw
-	 qSWCOXbzw0BKaoC3MGuH8hUZ0UJmIDxHoEpaB6zrfHemuARQDJpq2zsbZsNQxW89z
-	 MH8vV+QuM/N/xjn8JvJ33g9FkryJr5SF1Xk9zwVWw0YMKEkXARHxVqmILoPoOMMxM
-	 8qREhN6s/WfN35OLt6wts5zXzufGvDycT6gTCNW7xMy2PqQXg8dWKH77SDOvoARc0
-	 gfWGNegVeYSHLPZuJ6aPmcEALmom/Ua8ApffhaO18xfhsazbPXIihDWwRgrIhGP+n
-	 bo11IHtBlwqeBSa/6w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N0Zo6-1seMZA0zSO-012ymy; Wed, 12
- Jun 2024 20:08:08 +0200
-Message-ID: <9bf241c5-68af-4471-a159-1c673243d80d@web.de>
-Date: Wed, 12 Jun 2024 20:08:04 +0200
+	s=arc-20240116; t=1718215841; c=relaxed/simple;
+	bh=19kpE4LJ7lwqGa6y00OBrOrFXe93CbZPXrxtzyUyUfc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=psiieHLpmcQXz1IrQl1AneDCEkDxh+bRpvvr16kH9/sj+0cHlG0Z5UFpAsar6kZKqJN1gEKRU6bElvD6piBNnEf7J8fiq8Bni02Z4gERHuJv7Tf/PpvbY5crWNMWE2aFcloDtiJfYfkYgpSSAMfH8HrSEioZToOeFC5X83Z6ggk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=HfTDW8az; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 45CHv3HZ021809
+	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 11:10:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc :
+ content-transfer-encoding : content-type : date : from : message-id :
+ mime-version : subject : to; s=s2048-2021-q4;
+ bh=MdtkHIS7AhW0BixCc+/9jsteQY5oGSj+ScyLRqZ0M48=;
+ b=HfTDW8azZ60VQzbknMmf3qGCwzAK/ELaiDg1w0sAC/4M+TzcgoUcxHME3gjjCnk4GmBM
+ uQbrmDwci93LFZ6qguCCfLEyqQhbVKwLb4RMa5C7KUwC7YV/PvD8Gw4fFMRKbA/2tKu0
+ gncoXysbsru//u4HhN1PLboTTta846wUJpkWVCPcU5XwoZKSN4J70MZbDW7WSSc39icZ
+ MOM4AIL5juR9Fe3lXHLQT/RsVRL+NpPJN4BwgiKX1pt3AFN6PHg6vH5PUrvNQ+IOeilB
+ 8kZ3HOXcb4kh2lW20Y0/bkmaZ5ELivNMPtt7ZWCOATmPjQSLpd7GLdyl5pV6DJmIl3LI ag== 
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3ypm8wu0qj-8
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 12 Jun 2024 11:10:38 -0700
+Received: from twshared53332.38.frc1.facebook.com (2620:10d:c085:208::7cb7) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Wed, 12 Jun 2024 18:10:37 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id E9917F5FBC40; Wed, 12 Jun 2024 11:10:25 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-pci@vger.kernel.org>, <lukas@wunner.de>, <bhelgaas@google.com>
+CC: Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 0/2] pcie hotplug and error fixes
+Date: Wed, 12 Jun 2024 11:10:22 -0700
+Message-ID: <20240612181024.3577119-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Hongchen Zhang <zhanghongchen@loongson.cn>,
- Huacai Chen <chenhuacai@loongson.cn>, linux-pci@vger.kernel.org,
- loongarch@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
-Subject: Re: [PATCH v2] PCI: use local_pci_probe when best selected cpu is
- offline
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240605075419.3973256-1-zhanghongchen@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:k9f//JL/SkQ4XCesVEpYNO1oXTOIW7yIhuBMzW/ZwJiC5PbBIHZ
- jGaK1lryYCkyWlbYdR/H9NQiYKJ0rWYdQS2r7F2pdSxJluAmVmfg5+CwljOecKDXyHG3ZD/
- rwLRIDRJd7iTv2CMk9rrdX/r+yzM34yWTSZezzo2tnubf/rk5F+CTfkF/lShTX0TetNFuTs
- nWULOH+YX1KshtFg1X0rA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VzkNTr5/WFk=;Neu03KRfGdmlYDdTwUZUknHgAxm
- yBHsmeapQ9/PZx9CLdBka0+SdAFM3QBDDn64NJ29blxmy/Sb+I5qHlQpMb7c5xehkKup0VzDF
- AseCGQVa1YHeK11Dgj2pJ9kZof4AH9WBtDMNLZBMA057yGO8Z5bBdh+H9ME7qXmbs0h+iCnS6
- LzO4BhFbF6ftjidhy1YXVsfOf5cx+eb4XJcpjt+aJ0r2TX29l2msAovwIfIBspdgfwUrM4f97
- 82+scXnURXjVm8aPWJgINS5w+oe7EFCIXFTbe1qULVodV/rDIjs+ZSpR5AeVLjizS0BJrQXV0
- 9AUefSfvLXXWJiLguZgBS7K4jCP7d5HFx0NZzd9zTCUKpwPvx6zWZZp7rXHddMzH+h530XPTV
- R8V3ltV3baiGqdRc32WMqC5hh3adcwMwCKZ9h+TVoBeU9sfGLyqgRC04fyciNGtEMbMWfwlyh
- tyJ2DzmV6/+Ggxnd9mbefGPgw+38DW2NV/zywTlEZEB4xM4EXM2WQgnINHcVS7YuoflTq2JwX
- sqaDzwVGJvY5kSSrwCWf/BThhEjXooKwDUzsCgZ2/QGKOvZifudPUGx6TJYElfN3HkuXYBcFe
- /mvseqKvUguVJjBf8qKcHGxVi0UI6oeP406ntbwwtJyZlOp6SMzIqqzFL31vaDuHt059MS7OB
- r7e+beZEzJLoHqYMjO5D/H7PRSqur4kKO2oVWl2wsiImZaCklHMOBvY+xnsRExjgWsalxNB6v
- JMQLX6Pr6bDLU9xDE6NfpnED33IG0T6LuCf6jeVhP1pZIH23mvb3ZTb56QcDBu5m+hvm6TzV+
- i9Q1jDT1EOqPxm+xE2e63u1J4hnliR45Fy7CZSz8yH99s=
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: rA4fWx4drcsb9OKr-lnAetL278c85E_S
+X-Proofpoint-ORIG-GUID: rA4fWx4drcsb9OKr-lnAetL278c85E_S
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_09,2024-06-12_02,2024-05-17_01
 
-=E2=80=A6
-> This can be happen if a node is online while all its CPUs are offline
-> (we can use "maxcpus=3D1" without "nr_cpus=3D1" to reproduce it), Theref=
-ore,
-> in this case, we should call local_pci_probe() instead of work_on_cpu().
+From: Keith Busch <kbusch@kernel.org>
 
-* Please take text layout concerns a bit better into account also accordin=
-g to
-  the usage of paragraphs.
-  https://elixir.bootlin.com/linux/v6.10-rc3/source/Documentation/process/=
-maintainer-tip.rst#L128
+I am working with larger pcie topologies again, and we're seeing some
+failures when dealing with certain overlapping pcie events.
 
-* Please improve the change description with an imperative wording.
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/process/submitting-patches.rst?h=3Dv6.10-rc3#n94
+The topology is essentially this:
 
-* Would you like to add the tag =E2=80=9CFixes=E2=80=9D accordingly?
+  [Root Port] <-> [UpStream Port] <-> [DownStream Port] <-> [End Device]
 
-* How do you think about to specify the name of the affected function
-  in the summary phrase?
+An error between the DSP and ED triggers DPC. There's only inband
+presence detection so it also triggers hotplug. Before the error
+handling is completed, though, another error seen by the RP triggers its
+own DPC handling.
 
+The concurrent event handling reveals some interesting races, and this
+small patchset tries to address these in the low invasive way.
 
-Regards,
-Markus
+Keith Busch (2):
+  PCI: pciehp: fix concurrent sub-tree removal deadlock
+  PCI: err: ensure stable topology during handling
+
+ drivers/pci/hotplug/pciehp_pci.c | 12 +++++++++---
+ drivers/pci/pci.h                |  1 +
+ drivers/pci/pcie/err.c           |  8 +++++++-
+ drivers/pci/probe.c              | 24 ++++++++++++++++++++++++
+ include/linux/pci.h              |  2 ++
+ 5 files changed, 43 insertions(+), 4 deletions(-)
+
+--=20
+2.43.0
+
 
