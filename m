@@ -1,136 +1,153 @@
-Return-Path: <linux-pci+bounces-8671-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8672-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB507905609
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 17:00:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47EA890568E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 17:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 487CA287134
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 15:00:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0D2328377D
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jun 2024 15:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C3C817F4E8;
-	Wed, 12 Jun 2024 14:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6CA517FAA2;
+	Wed, 12 Jun 2024 15:12:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPP5HYTw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U9xbURPo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDBD17E908;
-	Wed, 12 Jun 2024 14:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FAD15444E;
+	Wed, 12 Jun 2024 15:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718204390; cv=none; b=r3zmAO3A7j8NswgI4ighBC9/Bpek6d1QsFEd9ZUUi/inC3yUk/qZz1043TFBlBOztwqyZZF+DQfQB4oD0LyJ7EChcSZADYmVZIaw1yT4/MROFUGukbA3QxhOFNjlnyPBJkRffHAETpXghoInp8arV2mmTqAQQg9GBcR3PtMLajw=
+	t=1718205136; cv=none; b=kNRQY+avigFzvelUyFj/V3GJAyYGhEU+F+Q9/aznje9SeIL8eIOxhBBcvCn4R+9MoQtmkB1D4j9Lh1l6MzdRBP18JPusDoNqZfebfHEJHpzpjLQ6D/0Ze+upUEtP/cZ0J+/xaS5uJQcT8PS7mIeQjXF4s8pI+sMd1ps2hkvXkPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718204390; c=relaxed/simple;
-	bh=xjUBwltqpAe6aYRnfriue1Gh2w11fmbRUGTxTQAXaYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WY8nN6xezMkfFsQQhFjlnaQ94nqDJojco1hRTZjYrZfqKIYhhHHohwMdg4fcBVjFTrupoUoSIhp/fx3vT3Ujh9QH2r6UyyWYS9jmgS8FX2QejhuHOq/Vwz9vnwUhy3Ts84T88q5CDAWZyYHwdH3MTLMtb5dx8zWPV799A2LKf/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPP5HYTw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A70C4AF1A;
-	Wed, 12 Jun 2024 14:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718204389;
-	bh=xjUBwltqpAe6aYRnfriue1Gh2w11fmbRUGTxTQAXaYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tPP5HYTwgbOgZecxq8aShvk9LnNbGElMzF2+hLVKYBiH0im11j6KEK+BXzjdF9XXA
-	 snF7aFCimfCsZmCl6+ialg8qrZpsKH2AD2/LnWQrcjmS+9Eh5Kph3FmiElC2KmXwAo
-	 H7ROI58qlZBRlVq2FJQRyhYvmx3LniZ3cS1Z3PO3/wpfPIjS7bNREgMH4HiL5NQYe1
-	 xsPWQr/Oe9u3oHRXRSpkW3JsEpL2Ic2amMftS5oiVft0H7s9MdycMUVhMj7M8TPCNN
-	 GvjGRtTk+bgWnkoE0MSWuqPERUFOS9wSm/dk/cck5Ju5mHAP9Kc7aThLydsiERXWm/
-	 YoMZI/lSV65qA==
-Date: Wed, 12 Jun 2024 20:29:33 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v8 4/5] PCI: rcar-gen4: Add support for r8a779g0
-Message-ID: <20240612145933.GC58302@thinkpad>
-References: <20240520074300.125969-1-yoshihiro.shimoda.uh@renesas.com>
- <20240520074300.125969-5-yoshihiro.shimoda.uh@renesas.com>
- <20240608082455.GA3282@thinkpad>
- <TYCPR01MB11040691A48BD866E9F387D78D8C72@TYCPR01MB11040.jpnprd01.prod.outlook.com>
- <CAMuHMdXStQGDNP8c79Bc46kM7BMkbxi=2aVKnLrupWj9Ytn7Ug@mail.gmail.com>
+	s=arc-20240116; t=1718205136; c=relaxed/simple;
+	bh=WjhyEVrS4YOsT148Yx89pL+UkzPas9bEKkZhjJS5Oho=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kIzghlzF12PdQ41E0muJiE9yYbpNXwAQc051GDxHa8/1qq5ZBfvJopaLANWLbArl687rr+V5Iue6LiO0b7QHHW35NHEiJ1D5p9ieCldPMBqEHP43gNi0to43u5ei7BomTEe0nSBSm9IQ1M+HN2tLE4wZ22l1MwZ8CImVtNmmLCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U9xbURPo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718205135; x=1749741135;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=WjhyEVrS4YOsT148Yx89pL+UkzPas9bEKkZhjJS5Oho=;
+  b=U9xbURPov/qbSTaDL2rVhzPlBZA1eEKoNe7JYU7QJAoHllyDOH8Ni/D1
+   D0AV/v8d4itHREp6ExyoIrt37Yg291TG6mPWCmrysitaLOXjSLkZsWwJf
+   e6YX9nTzv+1qSYTnwAfeliLx+jAkxIVzxrzLKDRMhCcanP3IUSHLUb+8u
+   OZX1Dk41J8pweO3SjM08znDaGmGpjLF3MI6w3HqxCwfMCENdQYa6hC1RJ
+   5vQssUnn8OQGiEXYeMZp9IgV/HekZkbhGc1D0OzGn0rdcIM06bA1/L+gu
+   gB1dvkx2TdnjDAt0lbfKyFx1g5UTxk2R+OXSXOkYEFZhFtSfLAE/Ar/+X
+   g==;
+X-CSE-ConnectionGUID: Ltfxjm6yRc+LAV03ZV4Scw==
+X-CSE-MsgGUID: /TS8zCxARyeE/2h67+oLvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="26394319"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="26394319"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 08:12:14 -0700
+X-CSE-ConnectionGUID: kwDaRzc1TQiY9jarYnCxdg==
+X-CSE-MsgGUID: 5Rrxm+96Skqw7TKKe3UrOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="40295494"
+Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 08:12:14 -0700
+Date: Wed, 12 Jun 2024 08:12:05 -0700 (PDT)
+From: matthew.gerlach@linux.intel.com
+X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+    krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+    joyce.ooi@intel.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] PCI: altera: support dt binding update
+In-Reply-To: <20240611170410.GA989554@bhelgaas>
+Message-ID: <alpine.DEB.2.22.394.2406120744350.662691@sj-4150-psse-sw-opae-dev2>
+References: <20240611170410.GA989554@bhelgaas>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdXStQGDNP8c79Bc46kM7BMkbxi=2aVKnLrupWj9Ytn7Ug@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, Jun 11, 2024 at 12:10:22PM +0200, Geert Uytterhoeven wrote:
-> On Tue, Jun 11, 2024 at 11:21 AM Yoshihiro Shimoda
-> <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > From: Manivannan Sadhasivam, Sent: Saturday, June 8, 2024 5:25 PM
-> > > On Mon, May 20, 2024 at 04:42:59PM +0900, Yoshihiro Shimoda wrote:
-> > > > +static void rcar_gen4_pcie_phy_reg_update_bits(struct rcar_gen4_pcie *rcar,
-> > > > +                                          u32 offset, u32 mask, u32 val)
-> > > > +{
-> > > > +   u32 tmp;
-> > > > +
-> > > > +   tmp = readl(rcar->phy_base + offset);
-> > > > +   tmp &= ~mask;
-> > > > +   tmp |= val;
-> > >
-> > > Use FIELD_* macros to avoid using the shift value.
-> >
-> > According to the bitfield.h,
-> > ---
-> > * FIELD_{GET,PREP} macros take as first parameter shifted mask
-> >  * from which they extract the base mask and shift amount.
-> >  * Mask must be a compilation time constant.
-> > ---
-> > So, since the mask is a variable here, we cannot use FIELD_* macros for this function.
-> 
-> Indeed.
-> 
 
-I just can't keep the constant factor in mind for some reason.
 
-> I tried introducing non-constant field_{prep,get}() helpers[1] in series
-> [2], but there were some pushbacks.
-> 
-> Feel free to up-vote ;-)
-> 
+On Tue, 11 Jun 2024, Bjorn Helgaas wrote:
 
-For sure! This will be very useful, thanks.
+> On Tue, Jun 11, 2024 at 11:35:25AM -0500, matthew.gerlach@linux.intel.com wrote:
+>> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>
+>> Add support for the device tree binding update. As part of
+>> converting the binding document from text to yaml, with schema
+>> validation, a device tree subnode was added to properly map
+>> legacy interrupts. Maintain backward compatibility with previous binding.
+>
+> If something was *added* to the binding, I think it would be helpful
+> to split that into two patches: (1) convert to YAML with zero
+> functional changes, (2) add the new stuff.  Adding something at the
+> same time as changing the format makes it hard to review.
 
-- Mani
+Thanks for feedback. It was during the conversion to YAML that a problem 
+with the original binding was discovered. As Rob Herring pointed out in
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240513205913.313592-1-matthew.gerlach@linux.intel.com/
 
-> [1] "[PATCH 01/17] bitfield: Add non-constant field_{prep,get}() helpers"
-> https://lore.kernel.org/all/3a54a6703879d10f08cf0275a2a69297ebd2b1d4.1637592133.git.geert+renesas@glider.be/
-> 
-> [2] "[PATCH 00/17] Non-const bitfield helper conversions"
-> https://lore.kernel.org/all/cover.1637592133.git.geert+renesas@glider.be/
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+"Making the PCI host the interrupt parent didn't even work in the kernel
+  until somewhat recently (maybe a few years now). That's why a bunch of PCI
+  hosts have an interrupt-controller child node."
 
--- 
-மணிவண்ணன் சதாசிவம்
+This was an attempt to fix the problem. I can resubmit a conversion to YAML 
+with zero functional changes.
+
+Matthew Gerlach
+
+
+>
+> Then we could have a more specific subject and commit log for *this*
+> patch.
+>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>>  drivers/pci/controller/pcie-altera.c | 13 +++++++++++--
+>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+>> index a9536dc4bf96..88511fa2f078 100644
+>> --- a/drivers/pci/controller/pcie-altera.c
+>> +++ b/drivers/pci/controller/pcie-altera.c
+>> @@ -667,11 +667,20 @@ static void altera_pcie_isr(struct irq_desc *desc)
+>>  static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+>>  {
+>>  	struct device *dev = &pcie->pdev->dev;
+>> -	struct device_node *node = dev->of_node;
+>> +	struct device_node *node, *child;
+>>
+>>  	/* Setup INTx */
+>> +	child = of_get_next_child(dev->of_node, NULL);
+>> +	if (child)
+>> +		node = child;
+>> +	else
+>> +		node = dev->of_node;
+>> +
+>>  	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+>> -					&intx_domain_ops, pcie);
+>> +						 &intx_domain_ops, pcie);
+>> +	if (child)
+>> +		of_node_put(child);
+>> +
+>>  	if (!pcie->irq_domain) {
+>>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>>  		return -ENOMEM;
+>> --
+>> 2.34.1
+>>
+>
 
