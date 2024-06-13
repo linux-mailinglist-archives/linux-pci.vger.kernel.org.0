@@ -1,179 +1,137 @@
-Return-Path: <linux-pci+bounces-8739-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8740-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 755C1907518
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 16:22:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5085907768
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 17:48:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 677861C20433
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 14:22:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D04F28964C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 15:48:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 810FC142E73;
-	Thu, 13 Jun 2024 14:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DB9814A4DE;
+	Thu, 13 Jun 2024 15:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J4+9ZXzd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EbPV+//L";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J4+9ZXzd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="EbPV+//L"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="LNJUEzSR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2611DFFC
-	for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2024 14:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B455912DDA5;
+	Thu, 13 Jun 2024 15:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718288532; cv=none; b=jSfUzxqD+VPq/PiQ19mN5/FadvqDbiBuHbli6y2XGTQliS/vwrgf5EYKM/j8odfkzanPF9HgdgYh0qQAlXtHFe+zEUoCmAo6NWyQW/ysXlKEDIhwZZz7VnU8vqWehon2Epv0ucaq+A8CZRCqf9UGStfHBHd5PRVvdWiYDFgfs6c=
+	t=1718293406; cv=none; b=I1kun8vfRtM1dN54STzywkmqJVTLBDXqr5fwL22p+lPYAfD6Nn6BcGkRQNE48FjLkoMSO+NufQ85Gl/M/r+C/cY0mzCWvBu3+LSP3GGR35E/8/U7JiZJhu6koXjPbkA0R77FKCNS2i++C6+3ir+BkPL5XYnr/P94Mvf/v5A76iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718288532; c=relaxed/simple;
-	bh=sKuuZmyqqYeC6HEUHACWutcdl3zzlBnpPCFbb0N07vQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YYvdJZpPyiv3G3j1e8o106ZEdtYJYZPhBNTPoff50m61o21B3PyWK4txm8IunURfCiF4lwmxT/2NmjBWWfZlWKxDG5FEhser4awQaliLlXeGH93jR9WniG5m4UbjeqFellJcXFJqNoVQSCPq+hyfXb7KqJAEtwiytGo0gPRJ6vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=J4+9ZXzd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EbPV+//L; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=J4+9ZXzd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=EbPV+//L; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B04D237287;
-	Thu, 13 Jun 2024 14:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718288528; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3cBqruwSNJ1bqtPFj/6DT+8SGZYtXxl0Ds4dcQq2/Dw=;
-	b=J4+9ZXzdwRtWghE0qwJnbZLOTy+brvzC3MxyHfxgCiBFg/jaHuxtgdIVDIbEokq49JqXLq
-	X5hrAZwiPdQ+2ygWbOSK9BpAa+nTKwKp/803IbrY083i9EngUifNH9/iid9Bogx4DwTdCP
-	2tdD94iAihp8U6wTTuquLBSJAh8QPuM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718288528;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3cBqruwSNJ1bqtPFj/6DT+8SGZYtXxl0Ds4dcQq2/Dw=;
-	b=EbPV+//LdfhaDgOboAM+4ElPS+H6zcmT/dMA2mc0MfSEz2Y0n58npYm0tFjaFS5JFXn13s
-	WO+kgDDKAj+2YgCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=J4+9ZXzd;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="EbPV+//L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718288528; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3cBqruwSNJ1bqtPFj/6DT+8SGZYtXxl0Ds4dcQq2/Dw=;
-	b=J4+9ZXzdwRtWghE0qwJnbZLOTy+brvzC3MxyHfxgCiBFg/jaHuxtgdIVDIbEokq49JqXLq
-	X5hrAZwiPdQ+2ygWbOSK9BpAa+nTKwKp/803IbrY083i9EngUifNH9/iid9Bogx4DwTdCP
-	2tdD94iAihp8U6wTTuquLBSJAh8QPuM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718288528;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3cBqruwSNJ1bqtPFj/6DT+8SGZYtXxl0Ds4dcQq2/Dw=;
-	b=EbPV+//LdfhaDgOboAM+4ElPS+H6zcmT/dMA2mc0MfSEz2Y0n58npYm0tFjaFS5JFXn13s
-	WO+kgDDKAj+2YgCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8675813A7F;
-	Thu, 13 Jun 2024 14:22:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YiCOH5AAa2b8TAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 13 Jun 2024 14:22:08 +0000
-Date: Thu, 13 Jun 2024 16:22:32 +0200
-Message-ID: <871q50orbr.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: alsa-devel@alsa-project.org,
-	broonie@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/3] ALSA/PCI: add PantherLake audio support
-In-Reply-To: <d7d06d90-d714-4fe6-a191-57c641cff01c@linux.intel.com>
-References: <20240612064709.51141-1-pierre-louis.bossart@linux.intel.com>
-	<878qz9nih2.wl-tiwai@suse.de>
-	<d7d06d90-d714-4fe6-a191-57c641cff01c@linux.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1718293406; c=relaxed/simple;
+	bh=wuuRkupuSyLIHDwx1qrL9wK/w/CgUGVdFcSsUcJNGkQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Lpet4EW6gdfIFQDk7vDydkS6wG6HfoviHnNEII1htcWrJsMVgytC1+E6eMN78Ha/6a90qglw6ReppMKV70iWRIYcsrxk7w1hKPKyng4ufP+vmYS+tdoi45/aeGhf4jHMlWI63dm4bZ5cC6+Q9VeOp6e4yizfko1yXNpFZ9zWmow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=LNJUEzSR; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718293354; x=1718898154; i=markus.elfring@web.de;
+	bh=7fcDu+jAjKTUeYUTcm6nT/VKOpL7/vLs7dIgrQeJffo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=LNJUEzSRtJ4s9iQHbH54cTGy1ouN6On874yZ2npBiEOFY80pZZFA5tks18EqHG01
+	 wpyeWVebam83eYtPIbbhzsqU4M0oxyPeFJgk3wHCrlejS+gA5I4d2Y1i7sfV5o10V
+	 XlYRG4zqLm9rdcnQK9P2axqomSmoMu+D/zj3o0yfGLp8ILJ+ZbAOdzdwK4C9ZGuL2
+	 AtqncLRaSFxzliD9iTwV3tyZw+nwz6jOO07W//sYkqmT45mSJ+ZMQMIo6a8u5zfrX
+	 GdMOYSuWxiB7YGYH1AFdkvXoTVJwk1dZFNHi3fpgV5CwxEf+O0E1Nvpz/00sChr6y
+	 KvUj8oSD0htlRKLcfQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MlbHE-1shnjs0jC6-00gPUD; Thu, 13
+ Jun 2024 17:42:34 +0200
+Message-ID: <531fdbbb-486d-4207-b9a9-3db23935d583@web.de>
+Date: Thu, 13 Jun 2024 17:42:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: B04D237287
-X-Spam-Score: -3.49
-X-Spam-Level: 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-arm-kernel@axis.com, linux-arm-kernel@lists.infradead.org,
+ imx@lists.linux.dev, mhi@lists.linux.dev, Bjorn Helgaas
+ <bhelgaas@google.com>, Fabio Estevam <festevam@gmail.com>,
+ Jesper Nilsson <jesper.nilsson@axis.com>, Jingoo Han <jingoohan1@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Lucas Stach <l.stach@pengutronix.de>,
+ Marek Vasut <marek.vasut+renesas@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Minghuan Lian
+ <minghuan.Lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+ Niklas Cassel <cassel@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+ Rob Herring <robh@kernel.org>, Roy Zang <roy.zang@nxp.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Srikanth Thokala <srikanth.thokala@intel.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+References: <20240606-pci-deinit-v1-2-4395534520dc@linaro.org>
+Subject: Re: [PATCH 2/5] PCI: endpoint: Introduce 'epc_deinit' event and
+ notify the EPF drivers
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240606-pci-deinit-v1-2-4395534520dc@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jXSJJJkAI8hN72kU1CJg3ufojWOHI1sFKaf7Q+GXWoK5SHvixA/
+ yrxpcO7iG26yVIJ6a+gDgi7IQ7X4UOlJm7doH6z6KQ09CoTZ4UXvjGVgP4qYQDw1TnsDnm+
+ QVgctN2V24QtpAjdxg0dM1CAxHvdlatDjFFXPjenuaogsqXyOG9yQTvPPKq9AalAtAN4qQW
+ hD6x4vYrIAaZEEVGxiS5w==
 X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.49 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.18)[-0.875];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+UI-OutboundReport: notjunk:1;M01:P0:PH53anvoYOY=;1/zV0cxQ7tZhIjrtlZ44ElZLM8Q
+ i/dBiizYx2JrGEKiG8sYkKHnGA384j5aU9TmG7r2D/cFkSPs/yZ0hmPDsuuelZSGCyHWZiRN/
+ oNO+wiyJAPxbMYILm8U3DhPAYJNZL7tChzi/zsp8B0Ib4ehYO2iwpmrdONugRbU5TIwAWBAtt
+ O9Cd1boR1HzXoKsuicQTXIRq42M0q+eeFrw4gHvF7+yVAWOODfM1RkDrMF04xo8/hIKWasMLk
+ GLOKEfJgm5NxvmR+h5J9rmAG2o7PdDilFFAtM4F5qG6niMNgdlmc8tMSNXWrTs5X7cNbolLND
+ GdfeoqXQhgszfzzgCYEC62hZsCKBPBLGFLk9gcEhQVWbhP/v2X6XcVwAwDTXagzQG1eRcaHvn
+ XWChBhxQIPWZJTDfcqUXc/ReGClUJqfuh9a3fj2HR3cYwKXHsMAM/0++GKDTGB3YK076k1DP0
+ 016ihg2akVY+zAqRjQdKi3POQKULjiiULpUCYLnenqi1xkm9viAf2ME6hMmoNZdCrIW2eUD/L
+ rEUUeKzuOB8gGXnQRywfc80Ounpdk42bjy4Spto3HpGg4b7ifudicAAzYTyfh+SXJQCUvKj2t
+ a7wk5vPHw5S0wj9yOnCqxHesNBoirF69BTsUr66isiVPFDNjClzWomn1oCL303/nqyRZNFdnv
+ UgbgIsRlXrUrB/UeMXpqN7c5K00XBixFRFBL5uLnpnFMlrZhtjCrFqooazZL0Of9zEvxbrkj3
+ vDLGyltl4po3ybGUSKAFLDQ4jpbUG/r51SqZRAar3YCVovQArVWZ6ze02zV+bOiJXSkPd5VUW
+ WMUlYtj68L5PQjuICaBMLKaGnwzPX9n/SgmiEdAohcyH0=
 
-On Thu, 13 Jun 2024 16:16:33 +0200,
-Pierre-Louis Bossart wrote:
-> 
-> 
-> 
-> On 6/13/24 14:19, Takashi Iwai wrote:
-> > On Wed, 12 Jun 2024 08:47:06 +0200,
-> > Pierre-Louis Bossart wrote:
-> >>
-> >> Add the PCI ID for PantherLake.
-> >>
-> >> Since there's a follow-up patchset for ASoC, these 3 patches could be
-> >> applied to the ASoC tree. Otherwise an immutable branch would be
-> >> needed.
-> >>
-> >> Pierre-Louis Bossart (3):
-> >>   PCI: pci_ids: add INTEL_HDA_PTL
-> >>   ALSA: hda: hda-intel: add PantherLake support
-> >>   ALSA: hda: intel-dsp-config: Add PTL support
-> > 
-> > Applied now to for-next branch.
-> > 
-> > There were duplicated Reviewed-by tags by Peter as checkpatch
-> > complained, so I removed the one. 
-> 
-> Thanks Takashi, how do we proceed to get those changes into AsoC?
-> 
-> the first patch is a dependency for the patchset "[PATCH v2 0/5]
-> ASoC/SOF/PCI/Intel: add PantherLake support"
+=E2=80=A6
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+=E2=80=A6
+> +void pci_epc_deinit_notify(struct pci_epc *epc)
+> +{
+=E2=80=A6
+> +	mutex_lock(&epc->list_lock);
+> +	list_for_each_entry(epf, &epc->pci_epf, list) {
+> +		mutex_lock(&epf->lock);
+> +		if (epf->event_ops && epf->event_ops->epc_deinit)
+> +			epf->event_ops->epc_deinit(epf);
+> +		mutex_unlock(&epf->lock);
+> +	}
+> +	epc->init_complete =3D false;
+> +	mutex_unlock(&epc->list_lock);
+> +}
+=E2=80=A6
 
-ASoC tree needs to merge for-next branch from my sound.git tree.
-Or vice versa, Mark sends a PR to sync the content.  (It should be
-done more often, not only once per cycle, IMHO.)
+Would you become interested to apply lock guards?
+https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/mutex.h#L1=
+96
 
-
-thanks,
-
-Takashi
+Regards,
+Markus
 
