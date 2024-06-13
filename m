@@ -1,130 +1,319 @@
-Return-Path: <linux-pci+bounces-8745-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8746-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEA7E90788F
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 18:45:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59A3B9078D7
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 18:55:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6E22B21B14
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 16:45:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFAA61F21D26
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 16:55:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B6B1494AB;
-	Thu, 13 Jun 2024 16:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85D7D1487DF;
+	Thu, 13 Jun 2024 16:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UpXgMwNi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FBGCYp+2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEFB12F386;
-	Thu, 13 Jun 2024 16:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A022149C5B;
+	Thu, 13 Jun 2024 16:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718297092; cv=none; b=ckpawPa113kicHXl5PisOa3RxK+/h2AtV6HYfwMWlvqfagOtwXcdVbKkVO4hIXc78YVLuVrNmzukn0Ov9iMarKGgOR7NFj2TBBLmrmt9slSU3TKa74vOOVjtcShmbw/cFhlSP7v6NeyvUoQyawoW9aJ+olCtsJzWBVWQWBKOf+s=
+	t=1718297689; cv=none; b=WmG1iskhUGMIoJxTfXcfbNxezXKZTRyGqjYyZHhUb8rpIcmCR/FvLPzPZcIg27ASqxH/wXNhTMwTzY3hYMsBDH3aNs7wrJOa+zZvWM571vWRKEy7D1UyvCx3a9STyDH35eaSDl0VTm7fdpMTMDnqCU/xptpxmuWPj30IpZWCRUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718297092; c=relaxed/simple;
-	bh=XritPzwaYxeYxC5f9JxbIYb9KuNoPNbdU//mOZmejCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UvvxEVouE5pfG8nMGFxZ41H2QQH7Sx3dPMsaUo/QUp4D2jlmO2w4Vb5i1PO7uMCv2Y1SpTpPS2T0XfslZH92NJYtIqxYAyuRcnWWE0A+d9LiEtTdUmPhhLsBvzijPXyY6BTa7FCYEod1vdWl9QZhpYkGR6jdzH2mGJ3cdhCUoWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UpXgMwNi; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52bc3130ae6so1460709e87.3;
-        Thu, 13 Jun 2024 09:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718297089; x=1718901889; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XritPzwaYxeYxC5f9JxbIYb9KuNoPNbdU//mOZmejCg=;
-        b=UpXgMwNi5Tcq1RXZfh2MVAI6Fom9W8o5Pl1q5hUolYlioscklMkTvzJ2NhNUara67E
-         hzIYIwPhZ/q9E2/cURN0q58uEr+99pQnHLdGhG2fD2f0SX4eflhWJQS9d1FNNug3pRcX
-         etOJZw2VWvY2hiGdfNp3IxF6f9cfrQHfmu071xXiR3JHdvSAL6FTWQSVF1StZ8lkPtLe
-         Im1ptO82XRq6ylP5yQNw4PBUmKOX1I1sCXrd2sa0B6RAWoAwawsKkfkx4Is+qfJr9PE3
-         pV//F18hATbKhBTrGExrsQcIJEKqBP5M/H/Q3MJgsvUj2F1t4HY5xDmRRfArAeVVSGOd
-         cIkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718297089; x=1718901889;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XritPzwaYxeYxC5f9JxbIYb9KuNoPNbdU//mOZmejCg=;
-        b=ClxgIv/4AekjHo5th7OZpy/+RplnVbEwNa2To+Fv32Gzlq3Osa8/t2FnaKb0UxbICI
-         Sopl5412L/g9aj+6Lkb1YESli3GKGyfBR24VNvsbU1LZCMQNtLXTqcp+dO6h6T8XoMC0
-         2KHUtLMz95fuFlp+W2IgFYZpfFNpDE5HKViafNOnoVhXpzRS1j0o7tIydDcUhCEW8Vg2
-         KBcoaBl7bUU5GtFw1XSkG0LXH838l1blZ72MTQrOXOq6PBbeNs0/iVJ7Pkv+8KwL9k7X
-         pW2j2jeSqlQURrI9+oflBBRD/xpuw6IM4PWk8372zgRwC2FwRfWa+3uHUPIWGvBp+gSO
-         4EQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB+rXnMk/5VRGQ7XxYEuXTy1fgjUiR8o1Ofk9S5BpL4Bszqirlc1XRrZ70CL4wVbTcVx2s+YG0Eg9swCZgThWRJCqYYGMauHajcqvX
-X-Gm-Message-State: AOJu0Yybbyg1DmxAiCn+0YXaH9trjIAxDdmurAdzmPsWilSTmuJHndDB
-	EHunfoh42QS8P1ibArsK0MW+zH9qr/e2ZaHwowbYk4BtNkCR4mi/i3Y43urGcBHuquzAgZb5dkk
-	PR0ADFRoB7AKJdnMzRm3c8WdpbDc=
-X-Google-Smtp-Source: AGHT+IFVgmbe/tBoklkDRijH/gjK5r0xcpaKid7FUWjBb3PNSWjsBdpQo56ITJorAjETY0Jlv/aBMuV2ngbUe2rSAq8=
-X-Received: by 2002:a2e:9e59:0:b0:2ea:e26d:c9b9 with SMTP id
- 38308e7fff4ca-2ec0e5b5142mr2856361fa.10.1718297088682; Thu, 13 Jun 2024
- 09:44:48 -0700 (PDT)
+	s=arc-20240116; t=1718297689; c=relaxed/simple;
+	bh=sYo6CLQpNd3oyOaLOKtkTCnu2wQNyDqzPkAA6LWmf+Q=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ea/iD0MWZY7jPfZLIkgGCXl0Mtb3Nk3G9CXBF1BO+LUyWbt+46onZM9c8BBMs86zfVT2ym6KuqGBKYcREzy+1lWBancp5HeUkBO/syV1X9Llh1A9u7ZkOwlNwALvPMtuqyka0OAObvmkmLVB6Ise50POf8AcEzBoXvnXTyza4p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FBGCYp+2; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718297687; x=1749833687;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=sYo6CLQpNd3oyOaLOKtkTCnu2wQNyDqzPkAA6LWmf+Q=;
+  b=FBGCYp+2KapaQiUlYlSD02OsUA6S4oFAzvNgLOLjch3RbdV+HzYAOBi6
+   3joW4Ll5sbo/E7Q42TO9gFLy1C0lNmwtM8TJ4WmrquMI9ywriM+C6TCDk
+   vmsqY/1HiS8PyTehhDhsJWKds9TwNRtWdkpnfQ/N5EiW6BDClYr64C3vx
+   0TYr7aSDCX6SoxLG+fTooQ7xUBfJgaFQSpVC5GTI+bec9+5rRWQ4aujc7
+   1Gb4ebIo0BGonsrH5uqPbharVHhN8habixU/+GI3Q62Gn8btbPaPfREe8
+   hX89ZjhI+LPMELSFuHJgN+QEImWOdrz652tEJLtcp2I5sFsAnfYLjEpbq
+   w==;
+X-CSE-ConnectionGUID: dmMM99tGSgOfdNFfTIfHOQ==
+X-CSE-MsgGUID: imuxdsg8TwSzvQ6N37RaUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="37661660"
+X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
+   d="scan'208";a="37661660"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 09:54:47 -0700
+X-CSE-ConnectionGUID: DYmygLxuTaCi88bc17INcA==
+X-CSE-MsgGUID: F2upfiHKSzSIAhIc0QOaew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
+   d="scan'208";a="44585157"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.209])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 09:54:42 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 13 Jun 2024 19:54:38 +0300 (EEST)
+To: Philipp Stanner <pstanner@redhat.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, 
+    Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 03/13] PCI: Reimplement plural devres functions
+In-Reply-To: <20240605081605.18769-5-pstanner@redhat.com>
+Message-ID: <aa4e5dd8-2ac4-ae58-2b1b-8d05115ac769@linux.intel.com>
+References: <20240605081605.18769-2-pstanner@redhat.com> <20240605081605.18769-5-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613082449.197397-1-ubizjak@gmail.com> <20240613155134.GA1062951@bhelgaas>
-In-Reply-To: <20240613155134.GA1062951@bhelgaas>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Thu, 13 Jun 2024 18:44:36 +0200
-Message-ID: <CAFULd4YmckrG1RBzSnhtNCWmmLmU4JhXOxwBGOLdrOu=FWLOuA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: hotplug: Use atomic_{fetch_}andnot() where appropriate
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Jun 13, 2024 at 5:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> [+cc Lukas, Ilpo]
->
-> On Thu, Jun 13, 2024 at 10:24:24AM +0200, Uros Bizjak wrote:
-> > Use atomic_{fetch_}andnot(i, v) instead of atomic_{fetch_}and(~i, v).
->
-> If the purpose is to improve readability, let's mention that here.
-> Since this only touches pciehp, make the subject line "PCI: pciehp:
-> ..." as was done in the past.
->
-> It looks like every use of atomic_and() uses a ~value and is hence a
-> candidate for a similar change, but I'm not sure that converting to
-> "andnot" and removing the explicit bitwise NOT is really a readability
-> benefit.
->
-> If it were named something like "atomic_clear_bits", I'd be totally in
-> favor since that's a little higher-level description, but that ship
-> has long since sailed.
+On Wed, 5 Jun 2024, Philipp Stanner wrote:
 
-FYI, the set of atomic primitives and their corresponding names have
-quite a long history. These are based on IA-64 psABI [1, section 7.4]
-when this particular primitive was named
-__sync_nand_and_fetch/__sync_fetch_and_nand. Even GCC got the and-not
-part wrong (it implemented it as not-and in some ancient version), so
-luckily the kernel named it atomic_{fetch_}andnot.
+> When the original PCI devres API was implemented, priority was given to
+> the creation of a set of "plural functions" such as
+> pcim_request_regions(). These functions have bit masks as parameters to
+> specify which BARs shall get mapped. Most users, however, only use those
+> to map 1-3 BARs.
+> 
+> A complete set of "singular functions" does not exist.
+> 
+> As functions mapping / requesting multiple BARs at once have (almost) no
+> mechanism in C to return the resources to the caller of the plural
+> function, the PCI devres API utilizes the iomap-table administrated by the
+> function pcim_iomap_table().
+> 
+> The entire PCI devres API was strongly tied to that table
+> which only allows for mapping whole, complete BARs, as the BAR's index
+> is used as table index. Consequently, it's not possible to, e.g., have a
+> pcim_iomap_range() function with that mechanism.
+> 
+> An additional problem is hat the PCI devres API has been ipmlemented in
+> a sort of "hybrid-mode": Some unmanaged functions have managed
+> counterparts (e.g.: pci_iomap() <-> pcim_iomap()), making their managed
+> nature obvious to the programmer. However, the region-request functions
+> in pci.c, prefixed with pci_, behave either managed or unmanaged,
+> depending on whether pci_enable_device() or pcim_enable_device() has
+> been called in advance.
+> 
+> This hybrid API is confusing and should be more cleanly separated by
+> providing always-managed functions prefixed with pcim_.
+> 
+> Thus, the existing PCI devres API is not desirable because:
+>   a) The vast majority of the users of the plural functions only ever
+>      sets a single bit in the bit mask, consequently making them singular
+>      functions anyways.
+>   b) There is no mechanism to request / iomap only part of a BAR.
+>   c) The iomap-table mechanism is over-engineered and complicated. Even
+>      worse, some users index over the table administration function
+>      directly:
+>      void __iomem *mapping = pcim_iomap_table(pdev)[my_index];
+>      This can not perform bounds checks; an invalid index won't cause
+>      return of -EINVAL or even NULL, resulting in undefined behavior.
+>   d) region-request functions being sometimes managed and sometimes not
+>      is bug-provoking.
+> 
+> Implement a set of internal helper functions that don't have the problem
+> of a hybrid nature that their counter parts in pci.c have. Write those
+> helpers in a generic manner so that they can easily be extended to,
+> e.g., ranged mappings and requests.
+> 
+> Implement a set of singular functions that use devres as it's intended
+> and use those singular functions to reimplement the plural functions.
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 
-As far as the patch is concerned, some architectures emit atomic
-andnot instruction. In the proposed patch, we have a constant argument
-to atomic_and, and the compiler is smart enough to apply the bitwise
-not to the argument and emits an inverted constant argument. So, in
-reality, the same code is produced.
+>  /*
+> - * PCI iomap devres
+> + * On the state of PCI's devres implementation:
+> + *
+> + * The older devres API for PCI has two significant problems:
+> + *
+> + * 1. It is very strongly tied to the statically allocated mapping table in
+> + *    struct pcim_iomap_devres below. This is mostly solved in the sense of the
+> + *    pcim_ functions in this file providing things like ranged mapping by
+> + *    bypassing this table, wheras the functions that were present in the old
+> + *    API still enter the mapping addresses into the table for users of the old
+> + *    API.
+> + * 2. The region-request-functions in pci.c do become managed IF the device has
+> + *    been enabled with pcim_enable_device() instead of pci_enable_device().
+> + *    This resulted in the API becoming inconsistent: Some functions have an
+> + *    obviously managed counter-part (e.g., pci_iomap() <-> pcim_iomap()),
+> + *    whereas some don't and are never managed, while others don't and are
+> + *    _sometimes_ managed (e.g. pci_request_region()).
+> + *    Consequently, in the new API, region requests performed by the pcim_
+> + *    functions are automatically cleaned up through the devres callback
+> + *    pcim_addr_resource_release(), while requests performed by
+> + *    pcim_enable_device() + pci_*region*() are automatically cleaned up
+> + *    through the for-loop in pcim_release().
+> + *
+> + * TODO 1:
+> + * Remove the legacy table entirely once all calls to pcim_iomap_table() in
+> + * the kernel have been removed.
+> + *
+> + * TODO 2:
+> + * Port everyone calling pcim_enable_device() + pci_*region*() to using the
+> + * pcim_ functions. Then, remove all devres functionality from pci_*region*()
+> + * functions and remove the associated cleanups described above in point #2.
+>   */
+> -#define PCIM_IOMAP_MAX	PCI_STD_NUM_BARS
+>  
+> +/*
+> + * Legacy struct storing addresses to whole mapped BARs.
+> + */
+>  struct pcim_iomap_devres {
+> -	void __iomem *table[PCIM_IOMAP_MAX];
+> +	void __iomem *table[PCI_STD_NUM_BARS];
+> +};
 
-x86 with BMI1 ISA extension provides ANDN instruction, but it can't be
-used with LOCK prefix.
+> +/**
+> + * __pcim_request_region_range - Request a ranged region
+> + * @pdev: PCI device the region belongs to
+> + * @bar: The BAR the region is within
+> + * @offset: offset from the BAR's start address
+> + * @maxlen: length in bytes, beginning at @offset
+> + * @name: name associated with the request
+> + * @req_flags: flags for the request. For example for kernel-exclusive requests.
+> + *
+> + * Returns: 0 on success, a negative error code on failure.
+> + *
+> + * Request a ranged region within a device's PCI BAR. This function performs
+> + * sanity checks on the input.
+> + */
+> +static int __pcim_request_region_range(struct pci_dev *pdev, int bar,
+> +		unsigned long offset, unsigned long maxlen,
+> +		const char *name, int req_flags)
+> +{
+> +	resource_size_t start = pci_resource_start(pdev, bar);
+> +	resource_size_t len = pci_resource_len(pdev, bar);
+> +	unsigned long dev_flags = pci_resource_flags(pdev, bar);
+> +
+> +	if (start == 0 || len == 0) /* That's an unused BAR. */
+> +		return 0;
+> +	if (len <= offset)
+> +		return  -EINVAL;
 
-So, if there is no readability benefit, it is OK with me to drop the patch.
+Extra space.
 
-[1] https://refspecs.linuxfoundation.org/elf/IA64-SysV-psABI.pdf
+> +
+> +	start += offset;
+> +	len -= offset;
+> +
+> +	if (len > maxlen && maxlen != 0)
+> +		len = maxlen;
+> +
+> +	if (dev_flags & IORESOURCE_IO) {
+> +		if (!request_region(start, len, name))
+> +			return -EBUSY;
+> +	} else if (dev_flags & IORESOURCE_MEM) {
+> +		if (!__request_mem_region(start, len, name, req_flags))
+> +			return -EBUSY;
+> +	} else {
+> +		/* That's not a device we can request anything on. */
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void __pcim_release_region_range(struct pci_dev *pdev, int bar,
+> +		unsigned long offset, unsigned long maxlen)
+> +{
+> +	resource_size_t start = pci_resource_start(pdev, bar);
+> +	resource_size_t len = pci_resource_len(pdev, bar);
+> +	unsigned long flags = pci_resource_flags(pdev, bar);
+> +
+> +	if (len <= offset || start == 0)
+> +		return;
+> +
+> +	if (len == 0 || maxlen == 0) /* This an unused BAR. Do nothing. */
+> +		return;
+> +
+> +	start += offset;
+> +	len -= offset;
+> +
+> +	if (len > maxlen)
+> +		len = maxlen;
+> +
+> +	if (flags & IORESOURCE_IO)
+> +		release_region(start, len);
+> +	else if (flags & IORESOURCE_MEM)
+> +		release_mem_region(start, len);
+> +}
 
-Thanks,
-Uros.
+> @@ -473,19 +945,14 @@ EXPORT_SYMBOL(pcim_iomap_regions_request_all);
+>   */
+>  void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
+>  {
+> -	void __iomem * const *iomap;
+> -	int i;
+> -
+> -	iomap = pcim_iomap_table(pdev);
+> -	if (!iomap)
+> -		return;
+> +	short bar;
+
+The current best practice is to use unsigned for loop vars that will never 
+be negative.
+
+I don't entirely follow what is reasoning behind making it short instead 
+of unsigned int?
+
+> -	for (i = 0; i < PCIM_IOMAP_MAX; i++) {
+> -		if (!mask_contains_bar(mask, i))
+> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+
+Is this change minimal if it contains variable renames like this?
+Was "i" not "bar" even if it was given as a parameter to 
+mask_contains_bar()?
+
+-- 
+ i.
+
+> +		if (!mask_contains_bar(mask, bar))
+>  			continue;
+>  
+> -		pcim_iounmap(pdev, iomap[i]);
+> -		pci_release_region(pdev, i);
+> +		pcim_iounmap_region(pdev, bar);
+> +		pcim_remove_bar_from_legacy_table(pdev, bar);
+>  	}
+>  }
+>  EXPORT_SYMBOL(pcim_iounmap_regions);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e5f243dd4288..b5d21d8207d6 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3880,6 +3880,16 @@ void pci_release_region(struct pci_dev *pdev, int bar)
+>  		release_mem_region(pci_resource_start(pdev, bar),
+>  				pci_resource_len(pdev, bar));
+>  
+> +	/*
+> +	 * This devres utility makes this function sometimes managed
+> +	 * (when pcim_enable_device() has been called before).
+> +	 * This is bad because it conflicts with the pcim_ functions being
+> +	 * exclusively responsible for managed pci. Its "sometimes yes, sometimes
+> +	 * no" nature can cause bugs.
+> +	 *
+> +	 * TODO: Remove this once all users that use pcim_enable_device() PLUS
+> +	 * a region request function have been ported to using pcim_ functions.
+> +	 */
+>  	dr = find_pci_dr(pdev);
+>  	if (dr)
+>  		dr->region_mask &= ~(1 << bar);
+
+
 
