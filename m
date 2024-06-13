@@ -1,169 +1,103 @@
-Return-Path: <linux-pci+bounces-8750-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8751-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19229907A31
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 19:46:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D48907A3D
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 19:51:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C16791F25BFD
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 17:46:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A1823B20C7C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 17:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 613EC14B097;
-	Thu, 13 Jun 2024 17:46:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BAF11428EF;
+	Thu, 13 Jun 2024 17:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XgRAMawy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOA86mQv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDC714B07C
-	for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2024 17:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3516F06A;
+	Thu, 13 Jun 2024 17:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718300772; cv=none; b=hHM2K2IkqKgMdXlbq+T+Jug8sHk7G6W4ZlEMMmgQvbyR6BPcs9pBNBZ0Uu7Z68l1/JpLmIgdshSa3ZbhRF1nKxXrvjuUkc16i1Dsl9J552rvDv9I2lM9sKRawFZZlW+QwODbRBhtV20j8kpK37hHlVqkC6/gmgAnbRo+j7W4yao=
+	t=1718301093; cv=none; b=FSCeN9bA5pdmkABwmKfFz2yissGmjHWIuS2IQwoeaksOjp6xlJtK/o0ETZAxIbsyTDO5rvHILxPJwV5zqxOukwErIB2fobKA8TVQm8hAx8U6HLlS/xykTB2kQdZhQMxREogQboTcph1u6dYPdxcOdI2WoE0R0Aho+X4JC0XZXi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718300772; c=relaxed/simple;
-	bh=86WctQm4RkuiNoE2tg+Qx2YnoD8//NWiC/vrgffgKW4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Ky9U+lWeBgA1QzSS5CrDJExZFQnnnJQwhBbV+eGoFyn725Yd5wKXkMLR7qaCA9RGZSM4D4NEV9FF7nNCNp5P2zMlN6wTntTRaW4BQo0KvvyxyJ0eHGbQUQu4YGadhFlP2frGaii9QD8cPxxB4htV7XFvn1dECdHfSiOD352caUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XgRAMawy; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718300770; x=1749836770;
-  h=date:from:to:cc:subject:message-id;
-  bh=86WctQm4RkuiNoE2tg+Qx2YnoD8//NWiC/vrgffgKW4=;
-  b=XgRAMawy1SO6Vg1liIQrhOwvNy5GEp0X88Fvus4OyiPgnp2MABsSzf80
-   sMmnCe7XSApipSA1qrAP2znMxkHRroXENfNCvXgLU/jL/AaE7043PpgjD
-   2eSe7VPBOIXBeWaPYK3WOzwqGXBch+ma3g0nqrEzb6pLe23mwzNwuQ8Lh
-   l99hkX13/WaUryraIM2JkIbgYrXJ5ccab8jYn4CIiJhh8rGYIN0G1eyR4
-   g+PBXzQcmrwiSRmf8MpVxjL33w1SPElFzfgaAKL9ic18ZWq0+NNksKAit
-   arG8uy4EtoU3T4NVZNUJ97GbbDNsHykERPdMmfoSY603FRu7NUmpYuuN+
-   Q==;
-X-CSE-ConnectionGUID: qRAr1PVlQnWaTPeiWoEoJw==
-X-CSE-MsgGUID: Ce4Q17b1QwikCiLnA8wEpA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="37672347"
-X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
-   d="scan'208";a="37672347"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 10:46:10 -0700
-X-CSE-ConnectionGUID: 2K7iwTFJRJ2QHFRFIyjPBw==
-X-CSE-MsgGUID: 6H7RBdT+TOukwtdGm+8MyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,235,1712646000"; 
-   d="scan'208";a="45143753"
-Received: from lkp-server01.sh.intel.com (HELO 9e3ee4e9e062) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 13 Jun 2024 10:46:09 -0700
-Received: from kbuild by 9e3ee4e9e062 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sHoWU-0000Ga-2F;
-	Thu, 13 Jun 2024 17:46:06 +0000
-Date: Fri, 14 Jun 2024 01:45:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- d5debddce5b637820825b82d2a5b9ed83e1a1e98
-Message-ID: <202406140118.h793Ya64-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1718301093; c=relaxed/simple;
+	bh=dpzc2Mg4UDlix6hhecAybuhuyjOozyNL1r16dty6Svc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kwHTMKDgYdFqRLPdjRUuoGhZzOpP0GlaZ+CQmAlsOH9KDboMcFQ6oHde17f4YAXgH8ZBagt00NGofXK8UN8sWx2deowCQHueFvcqrcLME4pZHAZYC6119on2oOkmD4YVF1PFTHXzQdeQpYsdIfajtXhuWYQWp7+geA9o1Ypq71c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOA86mQv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05956C2BBFC;
+	Thu, 13 Jun 2024 17:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718301093;
+	bh=dpzc2Mg4UDlix6hhecAybuhuyjOozyNL1r16dty6Svc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JOA86mQviTY+2IFDcqJXhpG/d91NUuIsexZRRn+MfSZI4w1sSfJHMLjJThJBrPxMu
+	 ewfcpAV8a/CG8m2pgYVVgboRNL866Bv3faG2DA2XsiIsPy7VRz+rALcDo0bumaEKwQ
+	 j9vaNzlmdv+6ii/ZBBEvg0XKFZhhbQdRajs1PkqbHvEhMjD9a6rTxHBpokD/L6/Ruo
+	 3j8q+yPe/kIngwv8O8FXIoe4xPoXQ0Kd70b3o6KuTXXI2006L8I5pllOaJq7KN9348
+	 s98l0m6kqjY3bhxvRM8l6n/tE3s4UTpT6gn/aeMdPV56N+QDB5egSw486KR9uibtOn
+	 5Gkb2vMe1+gHw==
+Date: Thu, 13 Jun 2024 11:51:31 -0600
+From: Rob Herring <robh@kernel.org>
+To: matthew.gerlach@linux.intel.com
+Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, kw@linux.com,
+	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] PCI: altera: support dt binding update
+Message-ID: <20240613175131.GA2070202-robh@kernel.org>
+References: <20240611170410.GA989554@bhelgaas>
+ <alpine.DEB.2.22.394.2406120744350.662691@sj-4150-psse-sw-opae-dev2>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2406120744350.662691@sj-4150-psse-sw-opae-dev2>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: d5debddce5b637820825b82d2a5b9ed83e1a1e98  PCI/PM: Switch to new Intel CPU model defines
+On Wed, Jun 12, 2024 at 08:12:05AM -0700, matthew.gerlach@linux.intel.com wrote:
+> 
+> 
+> On Tue, 11 Jun 2024, Bjorn Helgaas wrote:
+> 
+> > On Tue, Jun 11, 2024 at 11:35:25AM -0500, matthew.gerlach@linux.intel.com wrote:
+> > > From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > > 
+> > > Add support for the device tree binding update. As part of
+> > > converting the binding document from text to yaml, with schema
+> > > validation, a device tree subnode was added to properly map
+> > > legacy interrupts. Maintain backward compatibility with previous binding.
+> > 
+> > If something was *added* to the binding, I think it would be helpful
+> > to split that into two patches: (1) convert to YAML with zero
+> > functional changes, (2) add the new stuff.  Adding something at the
+> > same time as changing the format makes it hard to review.
 
-elapsed time: 2560m
+The policy for conversions is changes to match reality are fine, just 
+need to be noted in the commit message. That generally implies no driver 
+or dts changes which is not the case here. 
 
-configs tested: 76
-configs skipped: 3
+> Thanks for feedback. It was during the conversion to YAML that a problem
+> with the original binding was discovered. As Rob Herring pointed out in
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240513205913.313592-1-matthew.gerlach@linux.intel.com/
+> 
+> "Making the PCI host the interrupt parent didn't even work in the kernel
+>  until somewhat recently (maybe a few years now). That's why a bunch of PCI
+>  hosts have an interrupt-controller child node."
+> 
+> This was an attempt to fix the problem. I can resubmit a conversion to YAML
+> with zero functional changes.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I wasn't suggesting you fix it. Just something I noticed looking at 
+the other issue. If no one noticed or cared, why bother? It should work 
+fine for recent kernels.
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.2.0
-alpha                               defconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arm                               allnoconfig   clang-19
-arm                                 defconfig   clang-14
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-hexagon                          allmodconfig   clang-19
-hexagon                           allnoconfig   clang-19
-hexagon                          allyesconfig   clang-19
-hexagon                             defconfig   clang-19
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   gcc-13
-i386                                defconfig   clang-18
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                             allyesconfig   gcc-13.2.0
-nios2                            allmodconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                            allyesconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                         allyesconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                           allmodconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                           allyesconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                          allyesconfig   clang-19
-riscv                            allmodconfig   clang-19
-riscv                             allnoconfig   gcc-13.2.0
-riscv                            allyesconfig   clang-19
-riscv                               defconfig   clang-19
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                             allyesconfig   gcc-13.2.0
-s390                                defconfig   clang-19
-sh                               allmodconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sparc                            allmodconfig   gcc-13.2.0
-sparc                             allnoconfig   gcc-13.2.0
-sparc                               defconfig   gcc-13.2.0
-sparc64                          allmodconfig   gcc-13.2.0
-sparc64                          allyesconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-um                               allmodconfig   clang-19
-um                                allnoconfig   clang-17
-um                               allyesconfig   gcc-13
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                           x86_64_defconfig   clang-15
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
 
