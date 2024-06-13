@@ -1,54 +1,79 @@
-Return-Path: <linux-pci+bounces-8715-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8716-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1A17906574
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 09:43:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4A349066A2
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 10:28:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECBAA1C2345D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 07:43:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 243A6B24833
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 08:28:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CF4B13C3EE;
-	Thu, 13 Jun 2024 07:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292BB13D52C;
+	Thu, 13 Jun 2024 08:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTQMvkIp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A3213C9D5;
-	Thu, 13 Jun 2024 07:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7DC13E3F4;
+	Thu, 13 Jun 2024 08:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718264592; cv=none; b=mvYbzmnx5qwnW7iuGu6nUpeE93EhQ+4plKltEoU30fkhKNzBYpqkYqjh80QMvoJq6KReqJOlB9xZF/4f/G9emvedvip9nQqPGchFEjLEanIJTC2DUSqY1Sdn+lqlHONLZwhTcCh46rE8PfSoOGG4hxbKvwfoC2RTTxzEQ0RdDjs=
+	t=1718267096; cv=none; b=gRbpLbGwfmmoS32itB+d1L5N10bPG4HKaeFm1AKBxpmfiilXu9o7RpVC5jQEg7sSaExKsYfwMlYeyq1U6lkYdB6lTQ203EpOhpr0U64OaSJkAFvnEm1wQV4Rh/y75LTpQi5rWjY9eiiu6nnm34XDbPRk56dk+mwj7L/sQSO8iKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718264592; c=relaxed/simple;
-	bh=YehfgFC2fciO3pRMzakftx9BA51/qmvAe+pwvzKRskQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=guCLtaW+5LIKrn9ftAsFlv9qHCyU/+gUy1ExaY/8nZhFfX7Y0ymdZuUqqzRAKTiZIFX6JARp+rkMpVJ5pacWCmwoWIbg0ddKGKnJv7bUminZOEFa+hBSlMvcy7DCMOiZUdy3E0m8e8ekKk3gM814vW987dk8wqPFrEVDubCDPsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.180.133.93])
-	by gateway (Coremail) with SMTP id _____8Cxe+oLo2pmEW0GAA--.26167S3;
-	Thu, 13 Jun 2024 15:43:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.133.93])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxusYKo2pmd2AeAA--.9308S2;
-	Thu, 13 Jun 2024 15:43:06 +0800 (CST)
-From: Hongchen Zhang <zhanghongchen@loongson.cn>
-To: Markus Elfring <Markus.Elfring@web.de>,
+	s=arc-20240116; t=1718267096; c=relaxed/simple;
+	bh=x2UOnZVpw5W6JMJEDnZM+FeWtuTLMmgaXmPFsBI9q/A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WjrOCAXxTJaBJsOJfnvY/mDG0+RNVhBnh8oXdo8e74IbPiDDRmy9bM1BLk0zv+PPQsKppbromlxXEU1bRA6bG+LOD31f5tH9YofJvS8s6S/Kx87T7EfzLxLDK++lmj6BIarCl1sYkmlc/4HTY89n95I5FsTEDeR70mCa1f4Pzb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZTQMvkIp; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-35f1c209893so874705f8f.2;
+        Thu, 13 Jun 2024 01:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718267092; x=1718871892; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tAEMR4VJ1zjdBk5zvtR3Vo5e9vJ3KQrS8U0kuWsRUbE=;
+        b=ZTQMvkIp7P32lSu2Z118klmmVxS0kEOG8SMcJoumWS9wnV3XaiVMsOn88KMGP5UEmm
+         nizt5E7ht1JrCqcZjoiUj4hVoXCnSqbq/VbsNO0ZUdr0/KZvHfcBzzIdKcb3w+yvRiKA
+         ZFksF3qn0XCb9g+NU/jF85Uaxqg0iATgXWNdci28n5lRu69ARnkYyUGwYRfk1zD3Jw5+
+         9/0Sgm/SdLT1kx8RW6tiki2dXDU63bSwuLanROzNzNVim8WNoB4jIE7omgAmxUKrMpQS
+         LLOr+02crKVZ2F7bn+1qgNmcqXGnvm7KRWdd2b9be1ieC51WAamqT/p/4zRiCvtsaaFH
+         eWYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718267092; x=1718871892;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tAEMR4VJ1zjdBk5zvtR3Vo5e9vJ3KQrS8U0kuWsRUbE=;
+        b=fA1od3+e7HgOR6hSqllEJk8w1nwOYbv4o4Z0TKhX9Nz8pTzU/QWiiaqsw7i6CBOkLF
+         XZIjmHAtuKXj+EA/m/PIRct9ayiSJxslfAP+HUeyAK/AI4qTLR+dvYxVF+Sp7obaRDRn
+         IlYTBBFtyfqWueuE874k7mNh6r5I6fnvi/B3eODd/G6qsps7034/M9H/MRrGCt4mmTuV
+         XRuyy6dr86o+GXfoGPK4hL67yfP/H6kXRyINlc9YUGLNultlKeGEncKk8cd3v4niBr1c
+         MMWmuiauD0tyoPsCBUSteWpJxAH8IW2cyXcKPypCjEcPrdr2x8h7j4LtmdofSaD/doyv
+         trag==
+X-Forwarded-Encrypted: i=1; AJvYcCWiuU/WG1BtmJ85p606tYHA6YHd/kuCnWEt/ETraVgJhGJEnYTC8oa6Oa0QI5VT2fQ5RLjk0RoAcWxYsOfP2yQNNz9l3+62NUhbjKvt
+X-Gm-Message-State: AOJu0YwPKT6OZyRgjRctW0DmcW6Ept9m0KucDZFHyulL806Hu00rVaMP
+	IXG2lkId4vlKH1Nh5QwA29TRK2maj2ex096szFChmVKppO2gCGOEVWh0yDuC
+X-Google-Smtp-Source: AGHT+IHRU12lKUJDZ7+uzD6ICezfP1hdb3au7EU3UKrkS4itnPhZuLj9tRikL+iqIxgCyUWkKoKYjg==
+X-Received: by 2002:a05:6000:401f:b0:360:6e2f:b77 with SMTP id ffacd0b85a97d-3606e2f0c60mr3835288f8f.55.1718267091850;
+        Thu, 13 Jun 2024 01:24:51 -0700 (PDT)
+Received: from fedora.iskraemeco.si ([193.77.86.250])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075093615sm981462f8f.6.2024.06.13.01.24.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 01:24:51 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
 	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Belits <abelits@marvell.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Nitesh Narayan Lal <nitesh@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Hongchen Zhang <zhanghongchen@loongson.cn>,
-	stable@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v3] PCI: pci_call_probe: call local_pci_probe() when selected cpu is offline
-Date: Thu, 13 Jun 2024 15:42:58 +0800
-Message-Id: <20240613074258.4124603-1-zhanghongchen@loongson.cn>
-X-Mailer: git-send-email 2.33.0
+Subject: [PATCH] PCI: hotplug: Use atomic_{fetch_}andnot() where appropriate
+Date: Thu, 13 Jun 2024 10:24:24 +0200
+Message-ID: <20240613082449.197397-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,60 +81,67 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxusYKo2pmd2AeAA--.9308S2
-X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQAHB2ZqUJQEggACsN
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZF1DKryktr1ktw1rJrWfXrc_yoW8Gr1fpF
-	ZrG34Skr4kJF4UG3Wqqay8uFyFganrJa429a1xCwnxZFZxAF10y3Z7ArW3Jr1UWrWkZr1a
-	v3WDAryUGFWUArbCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-Call work_on_cpu(cpu, fn, arg) in pci_call_probe() while the argument
-@cpu is a offline cpu would cause system stuck forever.
+Use atomic_{fetch_}andnot(i, v) instead of atomic_{fetch_}and(~i, v).
 
-This can be happen if a node is online while all its CPUs are
-offline (We can use "maxcpus=1" without "nr_cpus=1" to reproduce it).
+No functional changes intended.
 
-So, in the above case, let pci_call_probe() call local_pci_probe()
-instead of work_on_cpu() when the best selected cpu is offline.
-
-Fixes: 69a18b18699b ("PCI: Restrict probe functions to housekeeping CPUs")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 ---
-v2 -> v3: Modify commit message according to Markus's suggestion
-v1 -> v2: Add a method to reproduce the problem
----
- drivers/pci/pci-driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/hotplug/pciehp_ctrl.c | 4 ++--
+ drivers/pci/hotplug/pciehp_hpc.c  | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index af2996d0d17f..32a99828e6a3 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -386,7 +386,7 @@ static int pci_call_probe(struct pci_driver *drv, struct pci_dev *dev,
- 		free_cpumask_var(wq_domain_mask);
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index dcdbfcf404dd..7c775d9a6599 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -121,8 +121,8 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
+ 		msleep(1000);
+ 
+ 		/* Ignore link or presence changes caused by power off */
+-		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
+-			   &ctrl->pending_events);
++		atomic_andnot(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC,
++			      &ctrl->pending_events);
  	}
  
--	if (cpu < nr_cpu_ids)
-+	if ((cpu < nr_cpu_ids) && cpu_online(cpu))
- 		error = work_on_cpu(cpu, local_pci_probe, &ddi);
- 	else
- 		error = local_pci_probe(&ddi);
+ 	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index b1d0a1b3917d..6d192f64ea19 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -307,8 +307,8 @@ int pciehp_check_link_status(struct controller *ctrl)
+ 
+ 	/* ignore link or presence changes up to this point */
+ 	if (found)
+-		atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
+-			   &ctrl->pending_events);
++		atomic_andnot(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC,
++			      &ctrl->pending_events);
+ 
+ 	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
+ 	ctrl_dbg(ctrl, "%s: lnk_status = %x\n", __func__, lnk_status);
+@@ -568,7 +568,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
+ 	 * Could be several if DPC triggered multiple times consecutively.
+ 	 */
+ 	synchronize_hardirq(irq);
+-	atomic_and(~PCI_EXP_SLTSTA_DLLSC, &ctrl->pending_events);
++	atomic_andnot(PCI_EXP_SLTSTA_DLLSC, &ctrl->pending_events);
+ 	if (pciehp_poll_mode)
+ 		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
+ 					   PCI_EXP_SLTSTA_DLLSC);
+@@ -702,7 +702,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	pci_config_pm_runtime_get(pdev);
+ 
+ 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
+-	if (atomic_fetch_and(~RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
++	if (atomic_fetch_andnot(RERUN_ISR, &ctrl->pending_events) & RERUN_ISR) {
+ 		ret = pciehp_isr(irq, dev_id);
+ 		enable_irq(irq);
+ 		if (ret != IRQ_WAKE_THREAD)
 -- 
-2.33.0
+2.45.2
 
 
