@@ -1,119 +1,122 @@
-Return-Path: <linux-pci+bounces-8706-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8707-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2785B906396
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 07:45:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6941A90642B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 08:37:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B946A283D22
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 05:45:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 067C8B2174A
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 06:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003681304AA;
-	Thu, 13 Jun 2024 05:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71323137753;
+	Thu, 13 Jun 2024 06:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jnt91ElF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="irhoQ9gv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A09A18622;
-	Thu, 13 Jun 2024 05:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B3412C7E3;
+	Thu, 13 Jun 2024 06:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718257534; cv=none; b=bNkcrAue5AuAEwg2N4lXEq6ikaRzq8NqMXcUKdyZ5pS13ZJsgrXGDreu3lg+fznPNXbitSK7FxWpV3vNJYkCSyYv7hEx691uhFzh56tE5Qp3dTMkX/GJtjOSA52OUuTpLpFq50vizRsOAbHB3KEDkKYhTCEA8bLuUlAvyBLbZ+w=
+	t=1718260666; cv=none; b=j431q3TSea+Q/VBOYdlhLwLiV9e3oDEEFdWVa5FbE8nCZE60Tnt8BP6poXbf3LwSS/6AM8/E6VbxHEDZ7cMBcX3AirGOS/sWDwJKQLAk6I88pgyx7MMbEOleGaNu9+QOu7mg/mH4rcpwHptxeGUSn1PLZLoksw6j8EYgddXA1J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718257534; c=relaxed/simple;
-	bh=KsBXxwYITcXSdlkMS6rL3MY1wyPo+d0h2FTlBf/5jvk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=rjeVqLLNiyvC11E9IjfRyZzHfqI9ZgfhHwHgY1xBdWzK0yge4Dtk6Jax8tKAgaIBTLcNGN3E/Bz020z++auYZSOt7GqaIMlQEKafCq38L87K8iVS7Q1tVpE6/8Gkl4Tt65JdWhju9UQs7YNtqnNrCOX4gitdaEqNfn9DAmaCjm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jnt91ElF; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CKn6oZ018799;
-	Thu, 13 Jun 2024 05:45:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=PUfH8gcBQoVjuIp6zSr1uO
-	GHiSZo5qY1U/hx6A6Gfhg=; b=jnt91ElFiT7JCIYLK6tGLz/P9VXnz4Kb1q6h/J
-	HYq5jJ33OfeDQ5NQCJcCR0C7cTeEEgk1P4VNjc8px803cvadjfW0Qb44mQwHa1sq
-	KTXXhf5sUAVXmm67GbpU8KfqO3Ht1RrlqcXYLZwYhBNe7729oGK9LIXQbtsUZtJ9
-	mUWGjZr3+ilFQ5LRDEiKlJVGFMBLmiAux/Y9oQAPcI8RCUYernpiav2QUdK2Yt4f
-	gh7tRRtLpf4u1W6xeQm3DAbdPdl/O9mHUMuHyogYal+VrbJnhVRCCffj14hss9Ee
-	RyHwUhkK9yGVm6uZ2PsUiE49fdgIQhahDH5MHliFKFyGsMgQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yqbfq9pfy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 05:45:27 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45D5jQAw001163
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Jun 2024 05:45:26 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
- 2024 22:45:26 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 12 Jun 2024 22:45:23 -0700
-Subject: [PATCH] PCI: hotplug: add missing MODULE_DESCRIPTION() macro
+	s=arc-20240116; t=1718260666; c=relaxed/simple;
+	bh=ONxqZUwSB91wyQpYjEvWjtZBUsrSB8OmWi61DcHx7HM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nY0OZYygChmlXkaoofOE2qY52XTHfsCyS2TyMstQrxl6R4XsWpcBywABg0C5JlkZ52mweL695MnFNiiAgHgbsbm68r2d5ZoyANfMfwwzCPNsW14+UnfCzuP6pMe9EcKJgnrmoOabX5kCM/vsbkd5vKe0IhcUDa4w6eBxLqmnDa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=irhoQ9gv; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718260665; x=1749796665;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ONxqZUwSB91wyQpYjEvWjtZBUsrSB8OmWi61DcHx7HM=;
+  b=irhoQ9gvI6EwbxujdQqNCrB83Md4LPhPG1LuSeyEHbHYCXRRzKS/FI0L
+   tc3oyTi8YugYDsAiybSXblj6CVFhXMCEDFoEEpacShY9EniHriKhyKsKL
+   sg1ri6bA4+A/HKOrdkPJ44drqYnZpUosWd6S4h5wCbIX0ygo1CcdwiAKi
+   3Z2pNp6wd+uGxlMlIIxyeN8Ko9BgkwtZ58guFaNDdLoOL5tK08A5jco2A
+   lZGa9wVggzKLuaGaTJ2HnJqzBILv8rmAtwA3Z4LrbXLfe8XMLCEorSjvl
+   Du6g53e+xjIKG9isBXHzv/LvA5EBv94irNhYo+IOrNdBaBjRGDvprgoCu
+   Q==;
+X-CSE-ConnectionGUID: FlgUGFWDTv642z9ahqXEuQ==
+X-CSE-MsgGUID: I9gFUk6RQcamB4ILl8Dr9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25736594"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="25736594"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:37:45 -0700
+X-CSE-ConnectionGUID: M4T4MqXfQKOVirQ5sYmTSg==
+X-CSE-MsgGUID: Ql1aBbx/RrOwqmStiHjiSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="39960898"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO pbossart-mobl6.intel.com) ([10.245.246.108])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 23:37:42 -0700
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To: linux-sound@vger.kernel.org
+Cc: alsa-devel@alsa-project.org,
+	tiwai@suse.de,
+	broonie@kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 0/5] ASoC/SOF/PCI/Intel: add PantherLake support
+Date: Thu, 13 Jun 2024 08:37:27 +0200
+Message-ID: <20240613063732.241157-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240612-md-drivers-pci-hotplug-v1-1-2b30d14d783d@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAHOHamYC/x3MQQqDMBBA0avIrDuQhBJsr1K6iMnUDGgMMyqCe
- PemXb7F/ycoCZPCsztBaGflpTTYWwcxhzIScmoGZ9zdeOtwTpiEdxLFGhnzstZpG9G74Olhe7K
- 9gRZXoQ8f//Hr3TwEJRwklJh/u4nLduAcdCWB6/oCiawra4cAAAA=
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: nXFxAKxtMNZO2108Dfncd7t5Tyu9lZ13
-X-Proofpoint-ORIG-GUID: nXFxAKxtMNZO2108Dfncd7t5Tyu9lZ13
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_12,2024-06-13_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- spamscore=0 phishscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406130038
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-With ARCH=arm64, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/hotplug/acpiphp_ampere_altra.o
+Add initial support for the PantherLake platform, and initial ACPI
+configurations.
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+This patchset depends on the first patch of "[PATCH 0/3] ALSA/PCI: add
+PantherLake audio support"
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/pci/hotplug/acpiphp_ampere_altra.c | 1 +
- 1 file changed, 1 insertion(+)
+v2: changed order of patches to fix git bisect error reported by Intel
+kbuild bot
+https://lore.kernel.org/oe-kbuild-all/202406131144.L6gW0I47-lkp@intel.com/
 
-diff --git a/drivers/pci/hotplug/acpiphp_ampere_altra.c b/drivers/pci/hotplug/acpiphp_ampere_altra.c
-index 3fddd04851b6..f5c9e741c1d4 100644
---- a/drivers/pci/hotplug/acpiphp_ampere_altra.c
-+++ b/drivers/pci/hotplug/acpiphp_ampere_altra.c
-@@ -124,4 +124,5 @@ static struct platform_driver altra_led_driver = {
- module_platform_driver(altra_led_driver);
- 
- MODULE_AUTHOR("D Scott Phillips <scott@os.amperecomputing.com>");
-+MODULE_DESCRIPTION("ACPI PCI Hot Plug Extension for Ampere Altra");
- MODULE_LICENSE("GPL");
 
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240612-md-drivers-pci-hotplug-62a6e918e180
+Bard Liao (2):
+  ASoC: Intel: soc-acpi-intel-ptl-match: add rt711-sdca table
+  ASoC: Intel: soc-acpi-intel-ptl-match: Add rt722 support
+
+Fred Oh (1):
+  ASoC: SOF: Intel: add PTL specific power control register
+
+Pierre-Louis Bossart (2):
+  ASoC: Intel: soc-acpi: add PTL match tables
+  ASoC: SOF: Intel: add initial support for PTL
+
+ include/sound/soc-acpi-intel-match.h          |   2 +
+ sound/soc/intel/common/Makefile               |   1 +
+ .../intel/common/soc-acpi-intel-ptl-match.c   | 121 ++++++++++++++++++
+ sound/soc/sof/intel/Kconfig                   |  17 +++
+ sound/soc/sof/intel/Makefile                  |   2 +
+ sound/soc/sof/intel/hda-dsp.c                 |   1 +
+ sound/soc/sof/intel/hda.h                     |   1 +
+ sound/soc/sof/intel/lnl.c                     |  27 ++++
+ sound/soc/sof/intel/mtl.c                     |  16 ++-
+ sound/soc/sof/intel/mtl.h                     |   2 +
+ sound/soc/sof/intel/pci-ptl.c                 |  77 +++++++++++
+ sound/soc/sof/intel/shim.h                    |   1 +
+ 12 files changed, 266 insertions(+), 2 deletions(-)
+ create mode 100644 sound/soc/intel/common/soc-acpi-intel-ptl-match.c
+ create mode 100644 sound/soc/sof/intel/pci-ptl.c
+
+-- 
+2.43.0
 
 
