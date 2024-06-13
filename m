@@ -1,164 +1,175 @@
-Return-Path: <linux-pci+bounces-8729-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8731-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2657906CEC
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 13:56:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B6EA906F61
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 14:19:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC9821C2242A
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 11:56:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B85381F21F98
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 12:19:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99ECB149E0A;
-	Thu, 13 Jun 2024 11:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFCAD145B3C;
+	Thu, 13 Jun 2024 12:16:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L3muyuzt"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UZKaN0Dy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xNI6Zz7O";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UZKaN0Dy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xNI6Zz7O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4256149C4C
-	for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2024 11:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7E7145B20
+	for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2024 12:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718279464; cv=none; b=Evl91H5pu/sGc7e8MPjImf826WVCNILJflc9oCzXnyB0vfsnXFObup3W0npUEYQoLJvAiADyvGF7mN3PGi1hZbvE2pQq1Y5kPT1UBqb27GXfy4YLnLk4WVlTEJeD2GofEjcdDYvE4HxY5M7AprpclR3FCJoE/J7e2yjMByM++hk=
+	t=1718281004; cv=none; b=SVAoH5JW0jmsgRnVbWI84yAyEXlFe8WX8zaSsaG+hRyl8HzWGzR5sOFHBpdNTesBrRWqtAb8zkfVSVnAysB5EyvIS2w8MwtAlmLso9EuThQR1FdV5ZJ9RFraONdsUYwywpRKRxaAxm37JaJE1YUzhsdFMMC4tNoFNmoQuWd+9Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718279464; c=relaxed/simple;
-	bh=iGO9d2tDV8jgMXAb9ljo4BmxYhAXls7ncq8pchC9GTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n8vmr/dnBK3qiBveU1jV/fUqDdUczZlFjNgfOIQgMBmeUUrByw/z8GSXFG+v7+9udrgEYwjM5cZjt5NOQ8tJn5cEr1bJmnxjfB9K8OQSD4ydmVUP8nNlzvy246ocUQ9OD6WA48Jo/EwFTDaXa1+Aydl0JFGg5hKA9lpPG87QYeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L3muyuzt; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718279462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	s=arc-20240116; t=1718281004; c=relaxed/simple;
+	bh=chaH5PEQuEBXO945nkro375PKs5kAc/lgz+rLka12Rg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e/Rphx5gwQ5qRnFIHTs+nFZtx6t/Gcgdp1JIrOvpB+h7ICOJrOzLf9XYIBnH9Ca7TKVva5tTy7qINnORbu43aYv25et+lGqMc+Wz9QyMzOyTg3ON817E/tQVwdV0VHbgLYR7td1ZOGa9lyWNJFIvIgs8KdoMLbShaHCK4QuP+Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UZKaN0Dy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xNI6Zz7O; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UZKaN0Dy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xNI6Zz7O; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 31366353CB;
+	Thu, 13 Jun 2024 12:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718281001; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
-	b=L3muyuztZ6LOEQvWQlHONgETqgjo3k/aAc7Hkw51QCOKMQRB6xTYwJBeYOPUK6MEZ6KPTu
-	WfpkBc7PLblzJFlRiIro7q6s5FL9MZzzvKWQNOJfLWy40Yb0zOltrxBgC6a7h7YoEpAeiX
-	l7alLtbMrwvA79dPWIvtuQ2ECHo/ozQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-456-zf97ePQ4O_K6OOp-MG8BGQ-1; Thu, 13 Jun 2024 07:51:00 -0400
-X-MC-Unique: zf97ePQ4O_K6OOp-MG8BGQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-35f184b67ceso79928f8f.2
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jun 2024 04:51:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718279459; x=1718884259;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
-        b=oewnUPWyQNOdHaCaXTBWtBvzUoBKjtsJq0Zlg4UI8JjKd2vLKnFMxfgKqfqEQH5CKH
-         DoUeA4iaTBwyRqexUoMZwgCL7+flK8dn11cfmtWwPdVG2ryyojsluKP2QfePP5YuJH1A
-         dnOdffiMZY2sFFgnb/0yvlJ8m5YijIF6VGZXvF1p2cQSj5xjZFdqgIaG1EekktM1mNcm
-         WJmyQOISrEwHi7VLzUQPYojUq8Ig54mkEvsYNVIWQSJc5XlZMT7/ZQIDuSL0d1NHvfcQ
-         3zooN9XAk7/NvmyY24ERdIed6hCuFOm+s37KSMHjQw4GDYGuJfwy1TjVpQT799Jimqv2
-         RXhg==
-X-Forwarded-Encrypted: i=1; AJvYcCXf1RZPhPHI1Od9mYng8W87MBDeRj0iujYGg41KrmU2f3uFVQPVUtfm4TQYKWeB2epKJcbWywqA4YQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzro1yRs7ta/wx/p4QccyLIrR+Z0DP5wPqIoPBS19TFZA+EWsPW
-	P5LpqVRbj97CP3xh2h0EI3D2T9Br83nopyjoH01a7IZhVmwnUjmrAFwZPwjq5SPxDNjBzR6jAoH
-	X1WWGm3zwkHrsxACZAS5AHXjS6K3H83gWDysqpyPDorNVWrKYM7U9oDU9/Q==
-X-Received: by 2002:a5d:6da4:0:b0:35f:2584:7714 with SMTP id ffacd0b85a97d-36079a55d96mr164403f8f.5.1718279459402;
-        Thu, 13 Jun 2024 04:50:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElWKl4RSn/FE/WxBDl2/l3vU5Ab6FM43jl4nz2rwpq5A2nGMHBM+4ko0mCUeuR7gvoXMoyQA==
-X-Received: by 2002:a5d:6da4:0:b0:35f:2584:7714 with SMTP id ffacd0b85a97d-36079a55d96mr164394f8f.5.1718279459138;
-        Thu, 13 Jun 2024 04:50:59 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3607509c883sm1510620f8f.29.2024.06.13.04.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 04:50:58 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	dakr@redhat.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v9 13/13] drm/vboxvideo: fix mapping leaks
-Date: Thu, 13 Jun 2024 13:50:26 +0200
-Message-ID: <20240613115032.29098-14-pstanner@redhat.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240613115032.29098-1-pstanner@redhat.com>
-References: <20240613115032.29098-1-pstanner@redhat.com>
+	bh=zTH7af/O3+tTOb2Qwr9Ce/F6lFIljG3Q0wfAwcsVTeQ=;
+	b=UZKaN0Dy3ckg3jb4dqXD1gsEGqSHzqQGpIyWvLHExU6DM+XXdOIJc92Xy4zT2RzPOlRGzb
+	HJ1u2xh6eRdexKLLUtQIK+FLdZhJFzdk3Gbz5zvc0SXUY+XXlRJkUaG4WDi6jlkUsZPaDG
+	Vx5R5elkoqwSGHTCsLVhvg4BLlHZ7N8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718281001;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zTH7af/O3+tTOb2Qwr9Ce/F6lFIljG3Q0wfAwcsVTeQ=;
+	b=xNI6Zz7OE46nCYt+AakUrak8jL1+ZIqNGmIMUaPiBRdhE4L78mI/yJBGmXvsCr8kalUg37
+	iFx2BU1+xe8XTdBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UZKaN0Dy;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xNI6Zz7O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718281001; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zTH7af/O3+tTOb2Qwr9Ce/F6lFIljG3Q0wfAwcsVTeQ=;
+	b=UZKaN0Dy3ckg3jb4dqXD1gsEGqSHzqQGpIyWvLHExU6DM+XXdOIJc92Xy4zT2RzPOlRGzb
+	HJ1u2xh6eRdexKLLUtQIK+FLdZhJFzdk3Gbz5zvc0SXUY+XXlRJkUaG4WDi6jlkUsZPaDG
+	Vx5R5elkoqwSGHTCsLVhvg4BLlHZ7N8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718281001;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zTH7af/O3+tTOb2Qwr9Ce/F6lFIljG3Q0wfAwcsVTeQ=;
+	b=xNI6Zz7OE46nCYt+AakUrak8jL1+ZIqNGmIMUaPiBRdhE4L78mI/yJBGmXvsCr8kalUg37
+	iFx2BU1+xe8XTdBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D83A813A7F;
+	Thu, 13 Jun 2024 12:16:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +wmGMyjjamaBJAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 13 Jun 2024 12:16:40 +0000
+Date: Thu, 13 Jun 2024 14:17:04 +0200
+Message-ID: <87a5jpnikf.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	alsa-devel@alsa-project.org,	broonie@kernel.org,	Bjorn Helgaas
+ <bhelgaas@google.com>,	linux-pci@vger.kernel.org,	=?ISO-8859-1?Q?P=E9ter?=
+ Ujfalusi <peter.ujfalusi@linux.intel.com>,	Ranjani Sridharan
+ <ranjani.sridharan@linux.intel.com>,	Bard Liao
+ <yung-chuan.liao@linux.intel.com>
+Subject: Re: [PATCH 1/3] PCI: pci_ids: add INTEL_HDA_PTL
+In-Reply-To: <20240612194834.GA1034127@bhelgaas>
+References: <20240612064709.51141-2-pierre-louis.bossart@linux.intel.com>
+	<20240612194834.GA1034127@bhelgaas>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,intel.com:email];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 31366353CB
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
+X-Spam-Level: 
 
-When the PCI devres API was introduced to this driver, it was wrongly
-assumed that initializing the device with pcim_enable_device() instead
-of pci_enable_device() will make all PCI functions managed.
+On Wed, 12 Jun 2024 21:48:34 +0200,
+Bjorn Helgaas wrote:
+> 
+> On Wed, Jun 12, 2024 at 08:47:07AM +0200, Pierre-Louis Bossart wrote:
+> > More PCI ids for Intel audio.
+> > 
+> > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> > Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> > Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> > Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> 
+> Change subject to match history:
+> 
+>   PCI: Add INTEL_HDA_PTL to pci_ids.h
+> 
+> It's helpful mention the places where this will be used in the commit
+> log because we only add things here when they're used in more than one
+> place.
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-This is wrong and was caused by the quite confusing PCI devres API in
-which some, but not all, functions become managed that way.
+OK, I corrected the subject at applying.
 
-The function pci_iomap_range() is never managed.
 
-Replace pci_iomap_range() with the actually managed function
-pcim_iomap_range().
+thanks,
 
-Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-index 42c2d8a99509..d4ade9325401 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-@@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
- 	/* Take a command buffer for each screen from the end of usable VRAM. */
- 	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
- 
--	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
--					     vbox->available_vram_size,
--					     vbox->num_crtcs *
--					     VBVA_MIN_BUFFER_SIZE);
--	if (!vbox->vbva_buffers)
--		return -ENOMEM;
-+	vbox->vbva_buffers = pcim_iomap_range(
-+			pdev, 0, vbox->available_vram_size,
-+			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
-+	if (IS_ERR(vbox->vbva_buffers))
-+		return PTR_ERR(vbox->vbva_buffers);
- 
- 	for (i = 0; i < vbox->num_crtcs; ++i) {
- 		vbva_setup_buffer_context(&vbox->vbva_info[i],
-@@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
- 	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
- 
- 	/* Map guest-heap at end of vram */
--	vbox->guest_heap =
--	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
--			    GUEST_HEAP_SIZE);
--	if (!vbox->guest_heap)
--		return -ENOMEM;
-+	vbox->guest_heap = pcim_iomap_range(pdev, 0,
-+			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
-+	if (IS_ERR(vbox->guest_heap))
-+		return PTR_ERR(vbox->guest_heap);
- 
- 	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
- 	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
--- 
-2.45.0
-
+Takashi
 
