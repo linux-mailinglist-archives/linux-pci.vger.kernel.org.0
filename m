@@ -1,107 +1,133 @@
-Return-Path: <linux-pci+bounces-8850-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8851-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D2AD90910D
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 19:08:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FEE0909271
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 20:41:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 301AD288209
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 17:08:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DB9228DA83
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 18:41:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5022019ADA6;
-	Fri, 14 Jun 2024 17:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D563419E7E9;
+	Fri, 14 Jun 2024 18:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdoRubii"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD225190477;
-	Fri, 14 Jun 2024 17:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A410A19ADB3;
+	Fri, 14 Jun 2024 18:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718384836; cv=none; b=hggx5W+oQQgorIOqYi5FoyStpZEJFHd8ymyzaLPFP0ngkpApZitV9dfDH9Zn3i9zcZTe+NVZG7QvlwBX1u1BnWahsbqp5Rn1WxyNZWh3S0+F5ssaJ8Zd+bDLd6H9yTjqi0w9pJNf+5glWpp8m9FEq6j8YowCigT6N0qX/F9wsfg=
+	t=1718390482; cv=none; b=Qud8rzLRbJ0DFPMgo4xZPy0ZWvMkItSIhzsrwQaktIMdR2lXUeMOWA7H6P55d6GBrxVAuWva9OEEF3foXlOZFa2TzHuMZybKFXqd9EVTJq4PqNS56YuGj8hE3uvc09Z8DbYVGt+kkpXMm5GHgCdD9HRKtrEzZKodm+FxsX1RovQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718384836; c=relaxed/simple;
-	bh=Q6U/TdZ2CTp4sXiVMsx5KpxiGQwk2iooiwW5HAl94pM=;
+	s=arc-20240116; t=1718390482; c=relaxed/simple;
+	bh=P07/BQZkPkF9FnxI2OX1PtX5RC9VyYSc7T71VMYgMcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aZUCXKNpS7ctDLeZm7Rd5Qa21LjjBZ8toWo1NrXP1TBeU3PhBhrpNXJiWWP2FjD7P5n9ylzP/QyyMhsx2krybQbhe3XXEr+1RV2U4mQlJvgujll6Te1v4E1MyZo/210usiroXVX1Lg/JIkk90G59HE7OQ09qgnpb3NxB782ai+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-6e9f52e99c2so1828521a12.1;
-        Fri, 14 Jun 2024 10:07:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718384834; x=1718989634;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GIflfkviGH+bFJjeADGjhBwgRHGZW0prdlPc1tZ3sB4=;
-        b=lvNFCF9PfSJPvbAUxH1mtEu6Nqy/24RaJCQx4LHFIpf0Ecb+QJecoKTn66VdGHHfgT
-         o4pWnYRK3Kvc3v+4JDcAAFgucirpSYGNnBDIdwbF1hvbMvM0CT2Yn/++GpQkr0CdEPzV
-         OULUthwXikosDL2L3o/CvNHD89PsCqO4LZR81EG+0QEZAeVRb8Jeavatl1Mq6hzo/Vtl
-         96YTJTHme9NSzOhUldmAkKVU5pGPKmg0a/QkP1FvqQgKDIXcHI2Glkd8iklOSs8xYtBl
-         7pMlR4vhxbDqhgE+iXCsqkAA6NxWu39OAS1T+6wU6VYtqYD358Wwj/vTl1b/YzmgprdE
-         KYWA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+xtEry3hEgHm7//2/6QrZG+CVRVO+NBrZ7pDXKzfvKei8OY4AiKHcAkG/e/thgCcZ3Z+h0oapEU22RECsyez+GGFX
-X-Gm-Message-State: AOJu0YzgPaVidhP09hGa9bQE2t1sa13yzuXGL1Fp9K6npTSdU57qmylz
-	dXHfV/WY02eMfN+B/B5H+Xc45KmBZVgncTA8y/mPdvX5bWUnRJoMANHq8U3f
-X-Google-Smtp-Source: AGHT+IHkKzAS1OVpoDPONGBYFKBJxXpBXklCrLiSJ/OEEAJOTdRGDyQUz2ZqCb5TSjox76It/J/lkQ==
-X-Received: by 2002:a17:90b:692:b0:2c4:af82:32af with SMTP id 98e67ed59e1d1-2c4db449cd3mr3149185a91.22.1718384833367;
-        Fri, 14 Jun 2024 10:07:13 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fedd21591csm2817902a12.14.2024.06.14.10.07.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 10:07:12 -0700 (PDT)
-Date: Sat, 15 Jun 2024 02:07:10 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Linux PCI <linux-pci@vger.kernel.org>,
-	Linux IOMMU <iommu@lists.linux.dev>,
-	Linux KVM <kvm@vger.kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?B?SsO2cmc=?= Roedel <jroedel@suse.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: The VFIO/IOMMU/PCI MC at LPC 2024 - Call for Papers
-Message-ID: <20240614170710.GA1796784@rocinante>
+	 Content-Disposition:In-Reply-To; b=OH2uI5hForYbX9TANndk4asfqnUBDEe3cXGkKpV9MWSQHMSNseAS9AH2FiY2JMQJwr5SDQWJV9w17vbJxwwgUnR1LRFLVDgPgv6SXGaLJbFfFws/c50K+Mx7aw2nUkVk7gwbkg5zj2WnxCd6oTh1l1AbmxTWoWZnzOzjd/3w1CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdoRubii; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0A7C2BD10;
+	Fri, 14 Jun 2024 18:41:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718390482;
+	bh=P07/BQZkPkF9FnxI2OX1PtX5RC9VyYSc7T71VMYgMcY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=BdoRubiiBTPh3kWCbiUfJTealstQfX+M3ros81e9pRS4bWcO1u4UH5oJkQoueNjAk
+	 UIZBn+eHPrP1aZwRJiRZc2w986CW3lIE+V8Db9VyIiwKhLR8M8gxpER/TPPsTnq6S+
+	 dlPc//PQq5/SdiwK+UThju0jWRSWv8BWBd6lZ/aOLRkjEJ8D4aRcvfkPXE9gYOCUFl
+	 KmOavAwFesaD6ieQ0QizHInuU417KLSFiAZ9v04aJNHkkrgoNDIv2vKiMZ27RKOUED
+	 ZxoTU+C6/sYNf/fqRZdduQfOEeW31dyF/VBML+xWgifSrmmtcNTOGxIkzxc2/J79F5
+	 bGQ2Em5i8J6pg==
+Date: Fri, 14 Jun 2024 13:41:20 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Bitao Hu <yaoma@linux.alibaba.com>
+Cc: lukas@wunner.de, bhelgaas@google.com, weirongguang@kylinos.cn,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kanie@linux.alibaba.com,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCHv2] PCI: pciehp: Use appropriate conditions to check the
+ hotplug controller status
+Message-ID: <20240614184120.GA1121063@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240528064200.87762-1-yaoma@linux.alibaba.com>
 
-Hello everyone!
+[+cc Ilpo]
 
-The Linux Plumbers Conference returns this year and will take place in
-September in Vienna, Austria.  The conference registration is open, and if
-you plan to attend, make sure to book attendance as soon as possible to
-secure a spot for yourself.
+On Tue, May 28, 2024 at 02:42:00PM +0800, Bitao Hu wrote:
+> "present" and "link_active" can be 1 if the status is ready, and 0 if
+> it is not. Both of them can be -ENODEV if reading the config space
+> of the hotplug port failed. That's typically the case if the hotplug
+> port itself was hot-removed. Therefore, this situation can occur:
+> pciehp_card_present() may return 1 and pciehp_check_link_active()
+> may return -ENODEV because the hotplug port was hot-removed in-between
+> the two function calls. In that case we'll emit both "Card present"
+> *and* "Link Up" since both 1 and -ENODEV are considered "true". This
+> is not the expected behavior. Those messages should be emited when
+> "present" and "link_active" are positive.
+> 
+> Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> ---
+> v1 -> v2:
+> 1. Explain the rationale of the code change in the commit message
+> more clearly.
+> 2. Add the "Reviewed-by" tag of Lukas.
+> ---
+>  drivers/pci/hotplug/pciehp_ctrl.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index dcdbfcf404dd..6adfdbb70150 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -276,10 +276,10 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	case OFF_STATE:
+>  		ctrl->state = POWERON_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+> -		if (present)
+> +		if (present > 0)
 
-More details are available at https://lpc.events.
+I completely agree that this is a problem and this patch addresses it.
+But ...
 
-As it has been a tradition for almost half a decade, the VFIO/IOMMU/PCI
-micro-conference will return to this year's Linux Plumbers Conference!
+It seems a little bit weird to me that we even get to this switch
+statement if we got -ENODEV from either pciehp_card_present() or
+pciehp_check_link_active().  If that happens, a config read failed,
+but we're going to go ahead and call pciehp_enable_slot(), which is
+going to do a bunch more config accesses, potentially try to power up
+the slot, etc.
 
-That said, I am thrilled to announce that the Call for Papers (CfP) is open!
+If a config read failed, it seems like we might want to avoid doing
+some of this stuff.
 
-If you would like to submit a talk for the MC, please follow the process at
-https://lpc.events/event/18/abstracts, selecting "VFIO/IOMMU/PCI MC" from
-the list of available tracks.
+>  			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>  				  slot_name(ctrl));
+> -		if (link_active)
+> +		if (link_active > 0)
+>  			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>  				  slot_name(ctrl));
 
-The deadline for talk proposal submission is mid-July (15th to be more
-precise), so only a few weeks are left!  Remember: you can submit the
-proposal early and refine it later; there will be time.  So, don't
-hesitate!
+These are cases where we misinterpreted -ENODEV as "device is present"
+or "link is active".
 
-You can find the complete MC proposal at:
+pciehp_ignore_dpc_link_change() and pciehp_slot_reset() also call
+pciehp_check_link_active(), and I think they also interpret -ENODEV as
+"link is active".
 
-  https://drive.google.com/file/d/1-1bJHnWCQOLSjhzTU9_bLLLMhX3Tj4hG
+Do we need similar changes there?
 
-Thank you for your help, and see you at the LPC 2024!
-
-	Alex, Bjorn, Jörg, Lorenzo and Krzysztof
+>  		ctrl->request_result = pciehp_enable_slot(ctrl);
+> -- 
+> 2.37.1 (Apple Git-137.1)
+> 
 
