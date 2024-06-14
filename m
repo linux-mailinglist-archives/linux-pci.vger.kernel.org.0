@@ -1,124 +1,120 @@
-Return-Path: <linux-pci+bounces-8837-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD194908D0C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 16:13:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DFCF908DE5
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 16:54:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D04861C20F38
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 14:13:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8BD71C228E7
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 14:54:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F916FB1;
-	Fri, 14 Jun 2024 14:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318AFC132;
+	Fri, 14 Jun 2024 14:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A1xHxBI8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDU4D1ca"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C8019D896
-	for <linux-pci@vger.kernel.org>; Fri, 14 Jun 2024 14:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9D64C96;
+	Fri, 14 Jun 2024 14:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718374416; cv=none; b=RowTEef2nBKInUUBfPrkZfzzH4I5Md8/tW8fIdbZ0+eAFnqp9awYappXV+0M6M6AuI9k+fkeoLQK7PJPv3fqYb7/Q8y80iwaa+ANd5nMZqtb++6Ns8cg06HKUnBC2fgmc1OZtdDCJ129WPWIp+sw8FcXIrhg9pUh/fhhJwf6FkI=
+	t=1718376880; cv=none; b=ovj+TT/xbKt9EJFdmgAmXQK4EbSlf1XzK+eMsEmLYo663sNbNaiCsgjAriUzxgG7m/RWIHP7vQ3whZS6hiPORqpF6/Z9cMr5slqrtTE850tSelR6+DxrBPC2ggZsgWVAP4SrVIodv7F5Wprju+kiGAp0AjRL1Hmsq8TVsixGvyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718374416; c=relaxed/simple;
-	bh=N3nM3MWzkTu9eoy3cM1MTNcLlASRRoQPREP36J/HGew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qqwctEFkCJnuuM9arGgOYp26QjGWC9ULM8gGNdKJ+mWBnLRcLINwO68VmArQTXK+e9Wdnyy5+B6nd/VN7GfVYQ6iqvH7ardL2S0VgSDJKbM8RfmqhQfNRG+XpeeJiTbea9RlB0BoL97QlsRmHyMgv7hjGeRonuW2TNpuTUiWbvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=A1xHxBI8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28342C2BD10;
-	Fri, 14 Jun 2024 14:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718374415;
-	bh=N3nM3MWzkTu9eoy3cM1MTNcLlASRRoQPREP36J/HGew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A1xHxBI8eAxy1sksbVgBp8xKruSkqsgJqIKTiIaM2oKAaLIgrSWAqJTHz2g6FLiHa
-	 DJwpbhfyl56z7RAIq1v2pylJQcByoXYWc0X6iudSHZt5pPNkDjbJqBbtgzycOp49AA
-	 qqHJvhrZUO+2/wkeZ0v0wA5ZZ11qfi2WrxFdYVgk=
-Date: Fri, 14 Jun 2024 16:13:27 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-	linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
-	Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: Re: [PATCH v2 1/3] leds: Init leds class earlier
-Message-ID: <2024061429-handiness-waggle-d87a@gregkh>
-References: <20240528131940.16924-1-mariusz.tkaczyk@linux.intel.com>
- <20240528131940.16924-2-mariusz.tkaczyk@linux.intel.com>
- <6656ad7ed677d_16687294bb@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <ZmxO8AaISgnw9ehP@wunner.de>
+	s=arc-20240116; t=1718376880; c=relaxed/simple;
+	bh=OzFYerauOBqolouxgkZVxe0lW7TOcqR6/DYM51DUUMo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=AzQfkfWaX2ahNHp6im6qnGuFe+Av1KzQY5eM0CDe1/akiK68RUUXPyefivBP2Q/RdSYaXoJcNe97UceDkFe/1CP81Q8mViUJ3zzdyCagCxeGevbfC5/anrIjlsBF8mxGbnGgRQcG2oeDD05lzMPnsFfAqiCzK+WQPlMd2PMq1UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eDU4D1ca; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718376879; x=1749912879;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OzFYerauOBqolouxgkZVxe0lW7TOcqR6/DYM51DUUMo=;
+  b=eDU4D1caGHUBMAtXm+zvBgM1Vq7PPFTR3SFgHDDrBnVjpcRBQoKIGrEJ
+   EeN6QzwLWc/nFf+0I6G8CyTu2HdAVBYe/nQDJdNfPEadVWy+ttXH31wuJ
+   sDGT7rB5HXqcz97RtfOwCK8z5yZ0D2A0iPVc0MRKQzwS6HUHlRHfdQUxS
+   PXi+c2ASyNzSpAAHEu4oOk7MCCEkF7asJUmDw4uwNaJDn5xEwphDdWsay
+   IH+AsakVfo0zMW4Mz/fpK4xpgqy1pKj4goKXshBHMYH7QArGuEoBby/sb
+   QJf3OjmY1fZpD1CKvEaG+5+91jrjd34PIEhq4sd7nVidpBVxL+hkb78Qi
+   g==;
+X-CSE-ConnectionGUID: VIBWGouGRuKMyKNfwSIgtg==
+X-CSE-MsgGUID: xS3bVmX9TWWH4m8FuMSe2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="14997210"
+X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
+   d="scan'208";a="14997210"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 07:54:38 -0700
+X-CSE-ConnectionGUID: +PcahY8mTLKwdfa1YAsVXw==
+X-CSE-MsgGUID: Wz+fHa1oRq2VAKHfFneYkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
+   d="scan'208";a="78002414"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.222])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 07:54:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 14 Jun 2024 17:54:30 +0300 (EEST)
+To: Li zeming <zeming@nfschina.com>
+cc: jgross@suse.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, 
+    bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+    xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: =?ISO-8859-7?Q?Re=3A_=5BPATCH=5D_x86=3A_pci=3A_xen=3A_Remove_?=
+ =?ISO-8859-7?Q?unnecessary_=A10=A2_values_from_ret?=
+In-Reply-To: <20240612092406.39007-1-zeming@nfschina.com>
+Message-ID: <b1c91d7e-9701-c93c-d336-3729be33f67e@linux.intel.com>
+References: <20240612092406.39007-1-zeming@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmxO8AaISgnw9ehP@wunner.de>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Jun 14, 2024 at 04:08:48PM +0200, Lukas Wunner wrote:
-> On Tue, May 28, 2024 at 09:22:22PM -0700, Dan Williams wrote:
-> > Mariusz Tkaczyk wrote:
-> > > PCI subsystem is registered on subsys_initcall() same as leds class.
-> > > NPEM driver will require leds class, there is race possibility.
-> > > Register led class on arch_initcall() to avoid it.
-> > 
-> > Another way to solve this without changing initcall levels is to just
-> > make sure that the leds subsys initcall happens first, i.e.:
-> > 
-> > diff --git a/drivers/Makefile b/drivers/Makefile
-> > index fe9ceb0d2288..d47b4186108a 100644
-> > --- a/drivers/Makefile
-> > +++ b/drivers/Makefile
-> > @@ -16,6 +16,7 @@ obj-$(CONFIG_GENERIC_PHY)     += phy/
-> >  obj-$(CONFIG_PINCTRL)          += pinctrl/
-> >  obj-$(CONFIG_GPIOLIB)          += gpio/
-> >  obj-y                          += pwm/
-> > +obj-y                          += leds/
-> >  
-> >  obj-y                          += pci/
-> >  
-> > @@ -130,7 +131,6 @@ obj-$(CONFIG_CPU_IDLE)              += cpuidle/
-> >  obj-y                          += mmc/
-> >  obj-y                          += ufs/
-> >  obj-$(CONFIG_MEMSTICK)         += memstick/
-> > -obj-y                          += leds/
-> >  obj-$(CONFIG_INFINIBAND)       += infiniband/
-> >  obj-y                          += firmware/
-> >  obj-$(CONFIG_CRYPTO)           += crypto/
+On Wed, 12 Jun 2024, Li zeming wrote:
+
+> ret is assigned first, so it does not need to initialize the assignment.
+
+While the patch seems fine, this description and the shortlog are
+confusing.
+
+-- 
+ i.
+
+> Signed-off-by: Li zeming <zeming@nfschina.com>
+> ---
+>  arch/x86/pci/xen.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> To me, this seems more fragile than changing the initcall level.
+> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+> index 652cd53e77f6..67cb9dc9b2e7 100644
+> --- a/arch/x86/pci/xen.c
+> +++ b/arch/x86/pci/xen.c
+> @@ -267,7 +267,7 @@ static bool __read_mostly pci_seg_supported = true;
+>  
+>  static int xen_initdom_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+>  {
+> -	int ret = 0;
+> +	int ret;
+>  	struct msi_desc *msidesc;
+>  
+>  	msi_for_each_desc(msidesc, &dev->dev, MSI_DESC_NOTASSOCIATED) {
+> @@ -353,7 +353,7 @@ static int xen_initdom_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+>  
+>  bool xen_initdom_restore_msi(struct pci_dev *dev)
+>  {
+> -	int ret = 0;
+> +	int ret;
+>  
+>  	if (!xen_initial_domain())
+>  		return true;
 > 
-> The risk I see is that someone comes along and rearranges the Makefile in,
-> say, alphabetic order because "why not?" and unwittingly breaks NPEM.
 
-If they do that, then we have worse problems as many of us "know" that
-the order here matters a LOT.
-
-> Changing initcall levels at least explicitly sets the order in stone.
-
-For a while, until they change :)
-
-> However, perhaps a code comment is helpful to tell the casual
-> code reader why this particular initcall level is needed.
-> 
-> Something like...
-> 
-> /* LEDs may already be registered in subsys initcall level */
-
-That would be good to have.
-
-thanks,
-
-greg k-h
 
