@@ -1,251 +1,151 @@
-Return-Path: <linux-pci+bounces-8829-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8830-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0785A908BED
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 14:43:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95ABC908C20
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 14:58:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DC181C223E0
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 12:43:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13891288663
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 12:58:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D96919AA7A;
-	Fri, 14 Jun 2024 12:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9057199E90;
+	Fri, 14 Jun 2024 12:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UmpqYJaT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m3wNiDHn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC3E19752F;
-	Fri, 14 Jun 2024 12:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2DA19A29B;
+	Fri, 14 Jun 2024 12:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718368954; cv=none; b=Y7SM3VXxhi58WVj6D09FVEDORYJNlBf7mWEJwzj+Rr55LeDWs5G/RxPPD+Q/7leyz+sL70URiZhTH5LB4FfFDNjbEiHkM/QZzULLDiKktYjf2w6Eru/apn9KSJxgspRcQEEdxwxBO1xTCNMpYPG1dK6hxdkDEsIq27Fu31WiCcs=
+	t=1718369879; cv=none; b=dzrxjmkvU7wroek6ksB2/rWZRHproOCbMncsvusDVn5IC5QXY3hG0wyHHSyJZiBMkKuWc9hGuWTF5YeueMboF0MHxN42gqyleSSg/JABlzSCkPl5xnl4m4Z8UNUuI7CAms+8oVvIG/RVA0uHvXx5wdSCaHINymwigltZxqMkifM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718368954; c=relaxed/simple;
-	bh=WeBN0VZbib2KKwbwVhRG6ocqVa7whAD2cctLyv+c7Hc=;
+	s=arc-20240116; t=1718369879; c=relaxed/simple;
+	bh=HCRovoAa1zGmgG0Pz8GJKQKP/C/f+F6NWJoVTm3RPws=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cv47OdDiIUHP6lHb/Nnnqr+nIky6BC3JeIyTrHEuvEvwd3bNJiWApxiREDGnpeK7whfdFOlhXNfG7Tgaofxs3NhUtxa960VvQCO3Z7xBFRpimvEIDXalatQcH12ItX5FitQV6sqe5JO+ACTO8/kBadKjvdxNLGd9HzBCUtZDlYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UmpqYJaT; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version:Content-Type; b=QOCSi3wnHcej3V44+xzSocQRbgsqyVVWHsJFvuyOferLXema36U7Q5LRNAlL7ETwnAjZ1MmmXSG4/Xs8JNLojtUBMNgbg8qL3bWhjh/CW3T+SjIAa5FMrpa3l+AYMJdng+2y86+I9wBRvMX7BDyqY46FsHJEw+rRI1bjI+QNYbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m3wNiDHn; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718368952; x=1749904952;
+  t=1718369878; x=1749905878;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=WeBN0VZbib2KKwbwVhRG6ocqVa7whAD2cctLyv+c7Hc=;
-  b=UmpqYJaTr5cOoJYvPZ3UdJXH5eVPBdD6Ayd/5R+P6qaeefPtAHcFG9eC
-   qVDQSuanMW2Nb5rV0bXTDfrv2IM78TqcWIi0ahypZBwgvVE7JTBgsyWIb
-   LXh4Odinrl5sOGFU4FScFcAmn7yJDcR2pwCEHQfFhU3+xp79nDARO6w/l
-   oNC6rqwt1cpo6dPFDWOtxJOe/+LfGb7qvzl9mu+2HEK3lAkov5cHzP/MJ
-   Fjw79hbU8TXTujGW50E24TWJz09gVgxU3m+Itn/st0Lqs0cPdnDI4fdmU
-   iBu1aRYxrrTShG11ssJVm0+DW3S/NaeY64K7M+MmOLULH/ulDP3u2H64n
-   g==;
-X-CSE-ConnectionGUID: dMykDZ6QTp+Mu598AFc8hQ==
-X-CSE-MsgGUID: vRWKSrXuSFuoS1XIqFk6fA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="25927167"
+  bh=HCRovoAa1zGmgG0Pz8GJKQKP/C/f+F6NWJoVTm3RPws=;
+  b=m3wNiDHnFbzkBn9QSdiwK3s4gouMFcaGrQcdl4ICjta5YAbjg1Ddx2Qr
+   /METDPss+PZQ7RxlnptGBRAVM6G8VF/3VvnQi961zlHRS7sxxM2peeOLK
+   E3HvJv+9+AXYYGKMP7aTIe0X3OQyKWRuiYiAUsKyp8SfuFpBVidYG91qw
+   cr/OLrWyv0CjK20h7iC++biqNZYGT9oDpJv5txjHKDRqvUIzenGLtdM+7
+   aIExSTvfZNm2ZawS1F/QlHcLQta4wmVBx41MS6uoBA+qLEb6jA2en4DOE
+   thjcQ4ocLS/os3TioWmEkjU+ZYKHJHG2nrr4m1YZmFA9nJnCVsJDUtxg1
+   Q==;
+X-CSE-ConnectionGUID: ID2t8JSIQXaKMGmhmiLXMA==
+X-CSE-MsgGUID: +VILcGYWTwmpUbPMJM0+5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="26649479"
 X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="25927167"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 05:42:31 -0700
-X-CSE-ConnectionGUID: N88e8vZ2TPiCe6N6J4VNAA==
-X-CSE-MsgGUID: 9fL4jmExReaq/x4XC/0lkw==
+   d="scan'208";a="26649479"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 05:57:57 -0700
+X-CSE-ConnectionGUID: ND41G8VNRSCad+rFwIws0w==
+X-CSE-MsgGUID: +4i6ZaJFStGPQ2N0NBMx5g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
-   d="scan'208";a="44861288"
+   d="scan'208";a="40456270"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.222])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 05:42:24 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 05:57:53 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 14 Jun 2024 15:42:20 +0300 (EEST)
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-cc: Bjorn Andersson <andersson@kernel.org>, 
-    Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
+Date: Fri, 14 Jun 2024 15:57:49 +0300 (EEST)
+To: Dan Carpenter <dan.carpenter@linaro.org>
+cc: Frank Li <Frank.Li@nxp.com>, Jon Mason <jdmason@kudzu.us>, 
+    Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, 
     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
     =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org, 
-    bmasney@redhat.com, djakov@kernel.org, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
-    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pci@vger.kernel.org, vireshk@kernel.org, quic_vbadigan@quicinc.com, 
-    quic_skananth@quicinc.com, quic_nitegupt@quicinc.com, 
-    quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org
-Subject: Re: [PATCH v14 4/4] PCI: qcom: Add OPP support to scale
- performance
-In-Reply-To: <20240609-opp_support-v14-4-801cff862b5a@quicinc.com>
-Message-ID: <04e7e509-9911-d5b2-619c-e7b87ed0ef50@linux.intel.com>
-References: <20240609-opp_support-v14-0-801cff862b5a@quicinc.com> <20240609-opp_support-v14-4-801cff862b5a@quicinc.com>
+    Kishon Vijay Abraham I <kishon@kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, ntb@lists.linux.dev, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: endpoint: Clean up error handling in
+ vpci_scan_bus()
+In-Reply-To: <68e0f6a4-fd57-45d0-945b-0876f2c8cb86@moroto.mountain>
+Message-ID: <d8f510d1-db05-66a8-b379-464fdc817143@linux.intel.com>
+References: <68e0f6a4-fd57-45d0-945b-0876f2c8cb86@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1335945687-1718369869=:1013"
 
-On Sun, 9 Jun 2024, Krishna chaitanya chundru wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> maintains hardware state of a regulator by performing max aggregation of
-> the requests made by all of the clients.
-> 
-> PCIe controller can operate on different RPMh performance state of power
-> domain based on the speed of the link. And this performance state varies
-> from target to target, like some controllers support GEN3 in NOM (Nominal)
-> voltage corner, while some other supports GEN3 in low SVS (static voltage
-> scaling).
-> 
-> The SoC can be more power efficient if we scale the performance state
-> based on the aggregate PCIe link bandwidth.
-> 
-> Add Operating Performance Points (OPP) support to vote for RPMh state based
-> on the aggregate link bandwidth.
-> 
-> OPP can handle ICC bw voting also, so move ICC bw voting through OPP
-> framework if OPP entries are present.
-> 
-> As we are moving ICC voting as part of OPP, don't initialize ICC if OPP
-> is supported.
-> 
-> Before PCIe link is initialized vote for highest OPP in the OPP table,
-> so that we are voting for maximum voltage corner for the link to come up
-> in maximum supported speed.
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+--8323328-1335945687-1718369869=:1013
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 10 Jun 2024, Dan Carpenter wrote:
+
+> Smatch complains about inconsistent NULL checking in vpci_scan_bus():
+>=20
+>     drivers/pci/endpoint/functions/pci-epf-vntb.c:1024 vpci_scan_bus()
+>     error: we previously assumed 'vpci_bus' could be null (see line 1021)
+>=20
+> Instead of printing an error message and then crashing we should return
+> an error code and clean up.  Also the NULL check is reversed so it
+> prints an error for success instead of failure.
+>=20
+> Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and =
+EP")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 93 +++++++++++++++++++++++++++-------
->  1 file changed, 75 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index ff1d891c8b9a..296e2d5036f6 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -21,6 +21,7 @@
->  #include <linux/init.h>
->  #include <linux/of.h>
->  #include <linux/pci.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/pcie.h>
-> @@ -1404,15 +1405,13 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	return 0;
->  }
->  
-> -static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
-> +static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  {
-> +	int speed, width, ret, freq_mbps;
->  	struct dw_pcie *pci = pcie->pci;
-> +	unsigned long freq_kbps;
-> +	struct dev_pm_opp *opp;
->  	u32 offset, status;
-> -	int speed, width;
-> -	int ret;
-> -
-> -	if (!pcie->icc_mem)
-> -		return;
->  
->  	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-> @@ -1424,10 +1423,26 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
->  	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
->  	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
->  
-> -	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-> -	if (ret) {
-> -		dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
-> -			ret);
-> +	if (pcie->icc_mem) {
-> +		ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-> +		if (ret) {
-> +			dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
-> +				ret);
-> +		}
-> +	} else {
-> +		freq_mbps = pcie_link_speed_to_mbps(pcie_link_speed[speed]);
-> +		if (freq_mbps < 0)
-> +			return;
-> +
-> +		freq_kbps = freq_mbps * 1000;
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/=
+endpoint/functions/pci-epf-vntb.c
+> index 8e779eecd62d..7f05a44e9a9f 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -1018,8 +1018,10 @@ static int vpci_scan_bus(void *sysdata)
+>  =09struct epf_ntb *ndev =3D sysdata;
+> =20
+>  =09vpci_bus =3D pci_scan_bus(ndev->vbus_number, &vpci_ops, sysdata);
+> -=09if (vpci_bus)
+> -=09=09pr_err("create pci bus\n");
+> +=09if (!vpci_bus) {
+> +=09=09pr_err("create pci bus failed\n");
+> +=09=09return -EINVAL;
+> +=09}
+> =20
+>  =09pci_bus_add_devices(vpci_bus);
+> =20
+> @@ -1338,10 +1340,14 @@ static int epf_ntb_bind(struct pci_epf *epf)
+>  =09=09goto err_bar_alloc;
+>  =09}
+> =20
+> -=09vpci_scan_bus(ntb);
+> +=09ret =3D vpci_scan_bus(ntb);
+> +=09if (ret)
+> +=09=09goto err_unregister;
+> =20
+>  =09return 0;
+> =20
+> +err_unregister:
+> +=09pci_unregister_driver(&vntb_pci_driver);
+>  err_bar_alloc:
+>  =09epf_ntb_config_spad_bar_free(ntb);
 
-Use define from units.h instead of literal.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-> +		opp = dev_pm_opp_find_freq_exact(pci->dev, freq_kbps * width, true);
-> +		if (!IS_ERR(opp)) {
-> +			ret = dev_pm_opp_set_opp(pci->dev, opp);
-> +			if (ret)
-> +				dev_err(pci->dev, "Failed to set OPP for freq (%ld): %d\n",
-> +					freq_kbps * width, ret);
 
-Make width unsigned and use %lu ?
-
--- 
+--=20
  i.
 
-> +		}
-> +		dev_pm_opp_put(opp);
->  	}
->  }
->  
-> @@ -1471,7 +1486,9 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
->  static int qcom_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct qcom_pcie_cfg *pcie_cfg;
-> +	unsigned long max_freq = INT_MAX;
-
-Why isn't this ULONG_MAX ?
-
-You should also include <linux/limits.h>.
-
->  	struct device *dev = &pdev->dev;
-> +	struct dev_pm_opp *opp;
->  	struct qcom_pcie *pcie;
->  	struct dw_pcie_rp *pp;
->  	struct resource *res;
-> @@ -1539,9 +1556,42 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> -	ret = qcom_pcie_icc_init(pcie);
-> -	if (ret)
-> +	/* OPP table is optional */
-> +	ret = devm_pm_opp_of_add_table(dev);
-> +	if (ret && ret != -ENODEV) {
-> +		dev_err_probe(dev, ret, "Failed to add OPP table\n");
->  		goto err_pm_runtime_put;
-> +	}
-> +
-> +	/*
-> +	 * Before PCIe link is initialized vote for highest OPP in the OPP table,
-> +	 * so that we are voting for maximum voltage corner for the link to come up
-> +	 * in maximum supported speed. At the end of the probe(), OPP will be
-> +	 * updated using qcom_pcie_icc_opp_update().
-> +	 */
-> +	if (!ret) {
-> +		opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
-> +		if (IS_ERR(opp)) {
-> +			dev_err_probe(pci->dev, PTR_ERR(opp),
-> +				      "Unable to find max freq OPP\n");
-> +			goto err_pm_runtime_put;
-> +		} else {
-> +			ret = dev_pm_opp_set_opp(dev, opp);
-> +		}
-> +
-> +		dev_pm_opp_put(opp);
-> +		if (ret) {
-> +			dev_err_probe(pci->dev, ret,
-> +				      "Failed to set OPP for freq %ld\n",
-> +				      max_freq);
-
-It's unsigned so use %lu.
-
--- 
- i.
+--8323328-1335945687-1718369869=:1013--
 
