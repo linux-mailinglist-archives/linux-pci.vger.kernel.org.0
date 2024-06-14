@@ -1,89 +1,207 @@
-Return-Path: <linux-pci+bounces-8779-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8780-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64174908028
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 02:25:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3485D9081B3
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 04:33:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E14C1C21099
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 00:25:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B0CB1C218F8
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 02:33:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B557C383;
-	Fri, 14 Jun 2024 00:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA0CA954;
+	Fri, 14 Jun 2024 02:33:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7XM9BcA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JIcGLKIq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A05881F;
-	Fri, 14 Jun 2024 00:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B4D1822FA
+	for <linux-pci@vger.kernel.org>; Fri, 14 Jun 2024 02:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718324724; cv=none; b=RgoskZLbJkbYX4f3QZTAuB3cISyBlWm69DSAA0mjT+oOdTMDO//auXL3VVkQpaFMFD2AaGdXSCBsVLlEKVImv8/sB1ovb0NeNPBDRia+qv2sS76TnUbf121TAFzexadNZrDtwvv4Dmmz7ifdkWjamdc4lS8f0B42ESVYMbiPzeE=
+	t=1718332411; cv=none; b=OGdcFOYNAV5Vm9KlsfN1LrZDMuA4ZaYf5r55hR2OdtfSBCSQqXrF3SqVJd/YLjgfq2x1PyLF96i7WUD408koo94ie+E1fxDv5kDZOOC3eXTp00noBUxsw9dYW3ucZmVo2PdceY4dg9rjPz/m5O+eunqHRTWobF5GpFWob19QeJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718324724; c=relaxed/simple;
-	bh=MqKN/lTc5FFRSAKb3EksxP9cFnRll3A3BzfK2biNUAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XIlm550i/jmQIuRTMagJb5Q/XtoK3IFnHbgi2D5rX36oHokP0t3PCo57ewCruZ3msjjW+DDe9Q3TilNZw5PYRzebEb8KCsjyCI7G3Kr1dgS3+cPdS1xjJZISriwFQtrP5n0I41bjvYfUmpS+qpicDH/OTOZX8ZCVHuowi0FjEHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7XM9BcA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67C5FC2BBFC;
-	Fri, 14 Jun 2024 00:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718324724;
-	bh=MqKN/lTc5FFRSAKb3EksxP9cFnRll3A3BzfK2biNUAY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I7XM9BcA5h/hTnxIcRlIogW6z9g9dX4jSE1J3yK9hgalW8HKxrrPOTj5G8JzR2Xgy
-	 TS++W9NgDgVkVYEBBPJWo9m/xiKpDBCGLpQ45WwyTaQNSm1eNVmgHS0oedGI1WQC4Z
-	 bXh0FLaCuGm3S7tN0NNvLZIYETIQN9uAIjBiaIlHyofoiygyxY0G8h6pSkSPAD5SvP
-	 pGB81KoDMLQgI0h+5/Kl7tXKoucCOSgwbUeBqCdKooVeE9M+WaM76HyHy1YmvLTDY3
-	 zxjuUfrujYjgC7+LMEYWurxPOgGPlgFniN7eHkEiSLZ7DQSwTYV+w3CzpVp9NLU7DD
-	 CBEpYQ8kX9k+g==
-Date: Thu, 13 Jun 2024 17:25:22 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, horms@kernel.org,
- jiri@resnulli.us, pabeni@redhat.com, linux@armlinux.org.uk,
- hfdevel@gmx.net, naveenm@marvell.com, jdamato@fastly.com,
- bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH net-next v10 2/7] net: tn40xx: add pci driver for Tehuti
- Networks TN40xx chips
-Message-ID: <20240613172522.2535254d@kernel.org>
-In-Reply-To: <20240611045217.78529-3-fujita.tomonori@gmail.com>
-References: <20240611045217.78529-1-fujita.tomonori@gmail.com>
-	<20240611045217.78529-3-fujita.tomonori@gmail.com>
+	s=arc-20240116; t=1718332411; c=relaxed/simple;
+	bh=Vrt/DUnuMrKoNGJCqigcoOhPMI5t3QUYZYVQ/s9FSC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=phL7RC4owownmGIfAlPbK+xUl1N/U71JXRa0iYSI7x53+a+ov5tyS8rFrtRHIhdKz6y9zK3aMZ+5kvisiUfH1EL50/lVS79ow/F4LSVfvUc/+m+GXYftSyS1PSuk3jOYdB002cDB8QWwcOzFKiVQsULyKJYXx1preCY8KQfvQXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JIcGLKIq; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718332410; x=1749868410;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Vrt/DUnuMrKoNGJCqigcoOhPMI5t3QUYZYVQ/s9FSC0=;
+  b=JIcGLKIqQo+EtbDXbJYa7c6k4wNw27mSX9y39fPgZvoTfqbL1GWIvW0L
+   pKWY2YbDCTyTyQYqnpRXJhIYZQowMA5AX6YfJwmXLll4q7lBIkaJyENMQ
+   8VIeyAR1pwdRxNDh88YZf24QWZ5uBH+33k9u5e7ZeNTCgesv4zcd5P1uM
+   3B54vHwXJ/KwK4R6lbW57wGY/CMdyFqDDCKOZtARUA8OMc1cx7U7lSWHT
+   02Yrg8rpYddHC0ca33oohvOocLs8D/vrRhybd5lxEP+BnFVzmLaO6G0jB
+   P7K63vFbDwHp95kpuGcFmGdXwhapQq1e5+YibEXfsCDkVpnhLYy/mc3Nv
+   A==;
+X-CSE-ConnectionGUID: vzOxVNbbS+qTgmyBxZjfyA==
+X-CSE-MsgGUID: ADg/qcJPTF6zRtm3gakNXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="15432997"
+X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
+   d="scan'208";a="15432997"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 19:33:29 -0700
+X-CSE-ConnectionGUID: Z17An+ciQVyVpiv+88YUQg==
+X-CSE-MsgGUID: CMnwY0UySsSnoNmK38birg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,236,1712646000"; 
+   d="scan'208";a="44782715"
+Received: from lkp-server01.sh.intel.com (HELO 9e3ee4e9e062) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 13 Jun 2024 19:33:28 -0700
+Received: from kbuild by 9e3ee4e9e062 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sHwko-0000hv-0c;
+	Fri, 14 Jun 2024 02:33:26 +0000
+Date: Fri, 14 Jun 2024 10:32:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:endpoint] BUILD REGRESSION
+ 1b2ccd0341a6124d964211bae2ec378fafd0c8b2
+Message-ID: <202406141054.rqus0osg-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 
-On Tue, 11 Jun 2024 13:52:12 +0900 FUJITA Tomonori wrote:
-> This just adds the scaffolding for an ethernet driver for Tehuti
-> Networks TN40xx chips.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
+branch HEAD: 1b2ccd0341a6124d964211bae2ec378fafd0c8b2  PCI: endpoint: Make pci_epc_class struct constant
 
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Error/Warning ids grouped by kconfigs:
 
-Minor notes below
+gcc_recent_errors
+`-- sparc-randconfig-002-20240614
+    `-- (.head.text):relocation-truncated-to-fit:R_SPARC_WDISP22-against-init.text
 
-> +TEHUTI TN40XX ETHERNET DRIVER
-> +M:	FUJITA Tomonori <fujita.tomonori@gmail.com>
-> +L:	netdev@vger.kernel.org
-> +S:	Supported
+elapsed time: 1692m
 
-Keep in mind that Supported will soon mean you gotta run a test farm ;)
-https://netdev.bots.linux.dev/devices.html
+configs tested: 109
+configs skipped: 3
 
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240614   gcc-13.2.0
+arc                   randconfig-002-20240614   gcc-13.2.0
+arm                               allnoconfig   clang-19
+arm                                 defconfig   clang-14
+arm                   randconfig-001-20240614   gcc-13.2.0
+arm                   randconfig-002-20240614   gcc-13.2.0
+arm                   randconfig-003-20240614   gcc-13.2.0
+arm                   randconfig-004-20240614   clang-19
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240614   gcc-13.2.0
+arm64                 randconfig-002-20240614   clang-19
+arm64                 randconfig-003-20240614   gcc-13.2.0
+arm64                 randconfig-004-20240614   clang-19
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240614   gcc-13.2.0
+csky                  randconfig-002-20240614   gcc-13.2.0
+hexagon                          allmodconfig   clang-19
+hexagon                           allnoconfig   clang-19
+hexagon                          allyesconfig   clang-19
+hexagon                             defconfig   clang-19
+hexagon               randconfig-001-20240614   clang-19
+hexagon               randconfig-002-20240614   clang-19
+i386         buildonly-randconfig-001-20240613   gcc-9
+i386         buildonly-randconfig-002-20240613   clang-18
+i386         buildonly-randconfig-003-20240613   clang-18
+i386         buildonly-randconfig-004-20240613   clang-18
+i386         buildonly-randconfig-005-20240613   gcc-7
+i386         buildonly-randconfig-006-20240613   clang-18
+i386                  randconfig-001-20240613   gcc-7
+i386                  randconfig-002-20240613   gcc-11
+i386                  randconfig-003-20240613   gcc-13
+i386                  randconfig-004-20240613   clang-18
+i386                  randconfig-005-20240613   gcc-13
+i386                  randconfig-006-20240613   gcc-13
+i386                  randconfig-011-20240613   gcc-13
+i386                  randconfig-012-20240613   clang-18
+i386                  randconfig-013-20240613   clang-18
+i386                  randconfig-014-20240613   gcc-12
+i386                  randconfig-015-20240613   gcc-8
+i386                  randconfig-016-20240613   gcc-13
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240614   gcc-13.2.0
+loongarch             randconfig-002-20240614   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240614   gcc-13.2.0
+nios2                 randconfig-002-20240614   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc                randconfig-001-20240614   gcc-13.2.0
+parisc                randconfig-002-20240614   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc               randconfig-001-20240614   gcc-13.2.0
+powerpc               randconfig-002-20240614   clang-19
+powerpc               randconfig-003-20240614   gcc-13.2.0
+powerpc64             randconfig-001-20240614   clang-19
+powerpc64             randconfig-002-20240614   gcc-13.2.0
+powerpc64             randconfig-003-20240614   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                               defconfig   clang-19
+riscv                 randconfig-001-20240614   gcc-13.2.0
+riscv                 randconfig-002-20240614   clang-19
+s390                              allnoconfig   clang-19
+s390                                defconfig   clang-19
+s390                  randconfig-001-20240614   gcc-13.2.0
+s390                  randconfig-002-20240614   clang-19
+sh                               allmodconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                    randconfig-001-20240614   gcc-13.2.0
+sh                    randconfig-002-20240614   gcc-13.2.0
+sparc                             allnoconfig   gcc-13.2.0
+sparc                               defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+sparc64               randconfig-001-20240614   gcc-13.2.0
+sparc64               randconfig-002-20240614   gcc-13.2.0
+um                               allmodconfig   clang-19
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-13
+um                                  defconfig   clang-19
+um                             i386_defconfig   gcc-13
+um                    randconfig-001-20240614   gcc-13
+um                    randconfig-002-20240614   gcc-13
+um                           x86_64_defconfig   clang-15
+x86_64       buildonly-randconfig-001-20240614   clang-18
+x86_64       buildonly-randconfig-002-20240614   gcc-8
+x86_64       buildonly-randconfig-003-20240614   clang-18
+x86_64       buildonly-randconfig-004-20240614   gcc-8
+x86_64       buildonly-randconfig-005-20240614   gcc-10
+x86_64       buildonly-randconfig-006-20240614   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240614   gcc-13.2.0
+xtensa                randconfig-002-20240614   gcc-13.2.0
 
-> +MODULE_DEVICE_TABLE(pci, tn40_id_table);
-> +MODULE_AUTHOR("Tehuti networks");
-
-I don't see sign-offs from anyone else, so you can either put yourself
-as the author or just leave it out. People write code, not corporations.
-IOW authorship != copyright.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
