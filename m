@@ -1,120 +1,117 @@
-Return-Path: <linux-pci+bounces-8839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DFCF908DE5
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 16:54:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A05BA908E5B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 17:13:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8BD71C228E7
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 14:54:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A0A528B456
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 15:13:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318AFC132;
-	Fri, 14 Jun 2024 14:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3BE415FA8F;
+	Fri, 14 Jun 2024 15:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDU4D1ca"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KbMQZhWp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9D64C96;
-	Fri, 14 Jun 2024 14:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD524155392;
+	Fri, 14 Jun 2024 15:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718376880; cv=none; b=ovj+TT/xbKt9EJFdmgAmXQK4EbSlf1XzK+eMsEmLYo663sNbNaiCsgjAriUzxgG7m/RWIHP7vQ3whZS6hiPORqpF6/Z9cMr5slqrtTE850tSelR6+DxrBPC2ggZsgWVAP4SrVIodv7F5Wprju+kiGAp0AjRL1Hmsq8TVsixGvyc=
+	t=1718377802; cv=none; b=EQ7z8Ldlhqs3Yh8p5dlBcFHHmB7MwD3qbfnI3yUz0ltCQghT07bdmnfvAORsaSFK/XL4XAcCkQrFJmep4FuLomilCLYdupEdOmz378gDzNYc57VJ/wd1/XcUkQX3CIzV2qkw3BBbDNWohVXhOSmFpzu4FmCOO2S9zUDXBDWs/5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718376880; c=relaxed/simple;
-	bh=OzFYerauOBqolouxgkZVxe0lW7TOcqR6/DYM51DUUMo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AzQfkfWaX2ahNHp6im6qnGuFe+Av1KzQY5eM0CDe1/akiK68RUUXPyefivBP2Q/RdSYaXoJcNe97UceDkFe/1CP81Q8mViUJ3zzdyCagCxeGevbfC5/anrIjlsBF8mxGbnGgRQcG2oeDD05lzMPnsFfAqiCzK+WQPlMd2PMq1UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eDU4D1ca; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1718377802; c=relaxed/simple;
+	bh=lNdCgsrxUfgCEbccTO7z4wHAU6PNz++tfaBMuUB6zXI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=eSu1hEoFhZPrG7yM58XaqJ3LRhG532r6Mm14XkV0orqo8vVTsVbdQqDUOvrvuZQigdKRcOUzv12ZcqGkx4oC81tvmpk8Gfuconp6s/aYqNC6n7669l6XFCVU7uOgRLdGmmtWzY1B74rgqV2794CmbyzJyydBpc1eLkxTWr9yxsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KbMQZhWp; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718376879; x=1749912879;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OzFYerauOBqolouxgkZVxe0lW7TOcqR6/DYM51DUUMo=;
-  b=eDU4D1caGHUBMAtXm+zvBgM1Vq7PPFTR3SFgHDDrBnVjpcRBQoKIGrEJ
-   EeN6QzwLWc/nFf+0I6G8CyTu2HdAVBYe/nQDJdNfPEadVWy+ttXH31wuJ
-   sDGT7rB5HXqcz97RtfOwCK8z5yZ0D2A0iPVc0MRKQzwS6HUHlRHfdQUxS
-   PXi+c2ASyNzSpAAHEu4oOk7MCCEkF7asJUmDw4uwNaJDn5xEwphDdWsay
-   IH+AsakVfo0zMW4Mz/fpK4xpgqy1pKj4goKXshBHMYH7QArGuEoBby/sb
-   QJf3OjmY1fZpD1CKvEaG+5+91jrjd34PIEhq4sd7nVidpBVxL+hkb78Qi
-   g==;
-X-CSE-ConnectionGUID: VIBWGouGRuKMyKNfwSIgtg==
-X-CSE-MsgGUID: xS3bVmX9TWWH4m8FuMSe2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="14997210"
+  t=1718377801; x=1749913801;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lNdCgsrxUfgCEbccTO7z4wHAU6PNz++tfaBMuUB6zXI=;
+  b=KbMQZhWpc4V6KMQTBxZU40prP4aVA64ZLCI8v0qYwHcT8gWXyUAbtwPu
+   MvHU5Z41XNyMAl2dmKZnw52Lc1w66ZH0cIEnJQKGHqCViZ2uS9boFym8D
+   /1MDQHrFaLpZDykK9M8nJ8x/mNxFB9C2ZfHEIGj5lFP9NL8bFnebqOyNr
+   nQ28DT8QGCR6iNsrVk5eyRuwSG1p6CYMuxp1GgqFgzr2GputzlzmiIOUY
+   3HuIE8q754jbfeELj7M4SszCVoLKBTosWr4yI3jmF8aphzyyDJygIyWVk
+   gl4/oYoc8EnK3n33NIYKqU7cgPGJ+hpf0luAIPWx1nIss7voVIFTpa30L
+   w==;
+X-CSE-ConnectionGUID: t6E99RXTSaOBp4mv/t0MEw==
+X-CSE-MsgGUID: h5d5Qq3VSM6LXC5m7fMQkA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="19089270"
 X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="14997210"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 07:54:38 -0700
-X-CSE-ConnectionGUID: +PcahY8mTLKwdfa1YAsVXw==
-X-CSE-MsgGUID: Wz+fHa1oRq2VAKHfFneYkQ==
+   d="scan'208";a="19089270"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 08:10:00 -0700
+X-CSE-ConnectionGUID: DZYqpDulRLKzAfrTJovpHg==
+X-CSE-MsgGUID: WRT7o6jHTCSIhcHhpMI8GQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,238,1712646000"; 
-   d="scan'208";a="78002414"
+   d="scan'208";a="40629089"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.222])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 07:54:34 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 08:09:56 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 14 Jun 2024 17:54:30 +0300 (EEST)
-To: Li zeming <zeming@nfschina.com>
-cc: jgross@suse.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, 
-    bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-    xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: =?ISO-8859-7?Q?Re=3A_=5BPATCH=5D_x86=3A_pci=3A_xen=3A_Remove_?=
- =?ISO-8859-7?Q?unnecessary_=A10=A2_values_from_ret?=
-In-Reply-To: <20240612092406.39007-1-zeming@nfschina.com>
-Message-ID: <b1c91d7e-9701-c93c-d336-3729be33f67e@linux.intel.com>
-References: <20240612092406.39007-1-zeming@nfschina.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>
+Cc: Borislav Petkov <bp@alien8.de>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Tony Luck <tony.luck@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 0/3] PCI: Add support for logging Flit Mode TLPs (PCIe6)
+Date: Fri, 14 Jun 2024 18:09:18 +0300
+Message-Id: <20240614150921.29724-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Jun 2024, Li zeming wrote:
+This series adds support for Flit Mode (PCIe6). The series is built on
+top of the TLP Logging refactoring series:
 
-> ret is assigned first, so it does not need to initialize the assignment.
+  https://lore.kernel.org/linux-pci/20240514113109.6690-1-ilpo.jarvinen@linux.intel.com/
 
-While the patch seems fine, this description and the shortlog are
-confusing.
+Important note to maintainer: The series carries
+pcie_update_link_speed() refactoring change that is almost identical
+with a patch in the PCIe BW controller series. The patch itself is
+basically the same but the context has minor difference. This will need
+to be considered if applying both series within the same kernel cycle.
+
+Ilpo Järvinen (3):
+  PCI: Refactor pcie_update_link_speed()
+  PCI: Track Flit Mode Status & print it with link status
+  PCI: Handle TLP Log in Flit mode
+
+ drivers/pci/hotplug/pciehp_hpc.c |  5 +--
+ drivers/pci/pci.c                | 12 ++++---
+ drivers/pci/pci.h                | 13 ++++++--
+ drivers/pci/pcie/aer.c           |  4 ++-
+ drivers/pci/pcie/dpc.c           | 23 ++++++++++---
+ drivers/pci/pcie/tlp.c           | 57 ++++++++++++++++++++++----------
+ drivers/pci/probe.c              | 13 +++++---
+ include/linux/aer.h              | 13 ++++++--
+ include/linux/pci.h              |  1 +
+ include/ras/ras_event.h          | 12 +++----
+ include/uapi/linux/pci_regs.h    |  6 +++-
+ 11 files changed, 112 insertions(+), 47 deletions(-)
 
 -- 
- i.
-
-> Signed-off-by: Li zeming <zeming@nfschina.com>
-> ---
->  arch/x86/pci/xen.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-> index 652cd53e77f6..67cb9dc9b2e7 100644
-> --- a/arch/x86/pci/xen.c
-> +++ b/arch/x86/pci/xen.c
-> @@ -267,7 +267,7 @@ static bool __read_mostly pci_seg_supported = true;
->  
->  static int xen_initdom_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
->  {
-> -	int ret = 0;
-> +	int ret;
->  	struct msi_desc *msidesc;
->  
->  	msi_for_each_desc(msidesc, &dev->dev, MSI_DESC_NOTASSOCIATED) {
-> @@ -353,7 +353,7 @@ static int xen_initdom_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
->  
->  bool xen_initdom_restore_msi(struct pci_dev *dev)
->  {
-> -	int ret = 0;
-> +	int ret;
->  
->  	if (!xen_initial_domain())
->  		return true;
-> 
+2.39.2
 
 
