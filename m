@@ -1,188 +1,393 @@
-Return-Path: <linux-pci+bounces-8774-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF1D8907F8C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 01:36:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8572890800E
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 02:13:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3E591C214A7
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jun 2024 23:36:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B5599284269
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 00:13:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2787314C5A7;
-	Thu, 13 Jun 2024 23:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F78372;
+	Fri, 14 Jun 2024 00:13:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="S4be/DiC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhUmrf2u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2AF14375B;
-	Thu, 13 Jun 2024 23:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718321776; cv=fail; b=UpwJyr4WVIfnf095rUZmuearCXFg4Y6CQzzZhYkZcD6vNc3Bu7+/Ep1ilnxmMylg9CSDJVrc+WLi2qNR39pofZicQ6rjtJ6p8ohBGLyEOkXiXGnEH33+LbO2BMGqCZzhqS9d8LfVnfoiEIdwCWO8aeOT4HyWqVdC6IqFo7Eiy9U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718321776; c=relaxed/simple;
-	bh=vwBQRE6TO/jFDbFbux/Go3FcjmZEdHOJimCPn3c7AcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pV6owWG8R3nyTJ4QyAefi44q3S0nHdxQYip/U/Oz8IVEr110mHJDR+/0pYXo2oTsYKKPdFlzBTPwlB0qpVn2W2BPQhS0q12lyfzxYjxVl3kePVxHXgwx0mlYJ6URgwqe444YC4mRVKSnQDiFNZKqFvbRKHK3XLvbEJWQ1qeUVfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=S4be/DiC; arc=fail smtp.client-ip=40.107.92.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ePLCyjucdhBk0kOTOZfEUZ5OeZAfALQR8Y5oCLNc+sgfqHS4fjOD/B9X+KewNTnRH+QtDx6xhfahoXf8m/EE8/koJfUK1IvjvLJUSpkiGwTSaUYcP0KPqggmVtna5Kkux5nnVLXcGltJzPApMhnOvTFiggylTzYQwUuU+y0NEZANAslBY7In6CdiuKFEgBE+Cn1rq0aYXb4vnxhN/eoS5D8BMRPBRq5JqXwpl72lfZherCeJd+/Kt1vo7Mm9ODG4nqekiSoPefPmAu9tvF6Xl9LRZn/Y3/ofr9fMyVSytICOBjC9BJp1EWQ3h8bWhYwuzttdphKmSEfJ9H8BienpBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r0YeTOdOXsVvNXuzErwCMoT8c62jUQ32TEyZHd46ZuA=;
- b=VhwE5lxBAs+I9yw0NxX5FLKbpPpuDgiAmeHJkdwxELQkqcE8HL9nrpo3hCbaOH9HW7m6s2uhiydtqNlocmeVovzQ2A1X9qU04JNoWgLoS6AD/6sgWGqZk6fYkjz1cnBKT13lPkXHbG0C5KNKf7cQlnpM7xCvggQpL0+9OwoY/jtPCNBBrpW3LgfSBzBaYda2FUKJ6ygfKT0Qnm+WNu5rLg6PSNVYDDe5r1nNId+S6SaZnefxjavXuU+v1eV+oYIzGHyrq5IYypC6cz/ntSOVSVQsYZANxCdfcHjRqUB9WNyH29ymT4oAwxxR53SxCGj7j2RiOmYKikrqNuIR4MvYuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r0YeTOdOXsVvNXuzErwCMoT8c62jUQ32TEyZHd46ZuA=;
- b=S4be/DiCuMTqh9hZLioDj5pCCgM0LjCJIs/xkEh4pE19g7bTJ59OEym1E/akddvIOhNUBM0s8H0scvPqL6d3b8eUUBvmylF+xCDfmiyklFomGrwO+aca/ZC0RVSbkJEoQVzLYGfWbpx6d94mqzeviA8uYmvta6vFnrcouhanTb9ey3l27qxBzXX+unXcUzp994PCe0H+E99qTdkhnqU2XnzgZbktotN4QWEhhh5oaQRUgzpGLY7vkTd/fGmm+PNzzvAaVieqZfWsTwh7LBj1SdikgXTo12lkIiWTQV7UOciZ5smE+vaaEIXCnM/7yPb4uugM5GcEYtLfGj3LDf32ag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by PH0PR12MB5646.namprd12.prod.outlook.com (2603:10b6:510:143::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.25; Thu, 13 Jun
- 2024 23:36:08 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7677.024; Thu, 13 Jun 2024
- 23:36:07 +0000
-Date: Thu, 13 Jun 2024 20:36:05 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Vidya Sagar <vidyas@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	Gal Shalom <galshalom@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Masoud Moshref Javadi <mmoshrefjava@nvidia.com>,
-	Shahaf Shuler <shahafs@nvidia.com>,
-	Vikram Sethi <vsethi@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Jiandi An <jan@nvidia.com>, Tushar Dave <tdave@nvidia.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Krishna Thota <kthota@nvidia.com>,
-	Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-	"sagar.tv@gmail.com" <sagar.tv@gmail.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH V3] PCI: Extend ACS configurability
-Message-ID: <20240613233605.GG19897@nvidia.com>
-References: <20240612232301.GB19897@nvidia.com>
- <20240613220520.GA1085981@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613220520.GA1085981@bhelgaas>
-X-ClientProxiedBy: MN2PR20CA0042.namprd20.prod.outlook.com
- (2603:10b6:208:235::11) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997B336C;
+	Fri, 14 Jun 2024 00:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718323993; cv=none; b=cIz/vZb4VoSb1jP+SOnrsVZ/eIFfF/tTaESEDlNVvD88iNBfX9JVf3avlHoT8+QtHbZhDZnbPQxI1SpX4gFDrLOnb/c52bfESquqxaIbt8QfbK0nzFk9AcXmtJq2K3mUKXgH1AmaOXxE/BozFVWCL44xm86iwCu5iaFWQu9kur4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718323993; c=relaxed/simple;
+	bh=g+kfubZa0QL1jQv6Yp3EumJP8RhE3ZsQyyTDLHD/034=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DpkrhQAsZXJ0C077ZrMszLGBtZ9hEDZSWDfLi37BgHK4BX3pdJ+yUekz1Q6JZaMwE18Zos6iDaIdRr//e7QxP313vQYYlwq459VOCKcowbp/znKsrnB8Vn3tCdTbifbzcK5Yu4iqvv584fppZ77USWxVuDXt5uwf6Ne/ohYkM3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhUmrf2u; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f4c7b022f8so15247655ad.1;
+        Thu, 13 Jun 2024 17:13:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718323991; x=1718928791; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n3JPRMIU+XK8LooUGwfNvslifed+KiS4bWr30P86t6w=;
+        b=UhUmrf2uNeUztKAoLgFnKSFtaatbsCAPs4Fl0T/OBXWLa1J/xw1XrZ/HIIH6ufbJXB
+         RbWdVrzCm4Z7QUDruFEjucfxjroQ4Bp/l2d4c24K73foJJ0TEa0b1qAejnwF2hVfMBdY
+         +amBit6cn0yKIO/Tc4XsOZjexw7aFi1rCklXJlQm70SYMs8ysFyEwWc9AYYX3m1AX1l9
+         VEeBpP+8bXwNewBz64irZpVUHOpkR5ThUKBdeMTYQ2fVYjHG+7PLIw4WqmK0WzL0y49f
+         rj8p/JcmR+k6WqVU7WUM4KtxYcJ6THNCIy/accumL0Py18V9OfhAnp9snCx48Y5LuB7A
+         nKhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718323991; x=1718928791;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n3JPRMIU+XK8LooUGwfNvslifed+KiS4bWr30P86t6w=;
+        b=SmkT0MQSx0u4a9qK971WVCJcteOsK/TPjNn1eEAbCCXJrz0NBkW94GAbExmcFi8tOg
+         RFIWmuNhHj4USigIZuP9vZCazTaUMWcbr601YZwaxdbUg9a3q7gwh20tQCEwVfVWk5BT
+         Ad1YduCrkLZ1dS8/n0B+x4ufVkek0t0mb2WInyxE31aqE+w5V65glHOjMFGmhHyrsXnb
+         kS173+vzHIusVDoFaiaT4lUuTOJgDP1aRh2Wny3EjkRnGSv5JcjLmBb/VemJlCCCM6th
+         ZVrwr1MFu0Fm5dkMHycSzXVIxVItLyTGdciedX2wP3VPl1p51eJsj58lBuGgze3qXvlk
+         wxnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU96oqk+WyIqzBe0OhzP3Chq8GLJ/ftX6hbOGarG3CrM0kNZhMKYr714ooYkFhoMeenKfpn0FGm4mMymHCIX4vtfoy4yeShNvsiGQlnZuoB57YnjPzZp2S0XclvBfhf10trsmiR06pL
+X-Gm-Message-State: AOJu0YzVI8Z/WMEMXs6jkxaZZL7irbSjlwntvvg41gXaHbwcMSWrfn6g
+	sUlDjWZx21W2+Flg62AWE9NtONPN+G0PoUiVbCAsZIB02YKK52z6
+X-Google-Smtp-Source: AGHT+IFENtV+RPvwOvndghnfq+xLOxaF+8XbLnPd/48SNQsDi5MJnCgUm0PQFACwUTJs229DjbhhUw==
+X-Received: by 2002:a17:903:234f:b0:1f7:1b08:dda9 with SMTP id d9443c01a7336-1f8625d4acemr14908685ad.8.1718323990727;
+        Thu, 13 Jun 2024 17:13:10 -0700 (PDT)
+Received: from toolbox.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55decsm20181815ad.40.2024.06.13.17.13.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 17:13:10 -0700 (PDT)
+From: Alistair Francis <alistair23@gmail.com>
+X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
+To: bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	Jonathan.Cameron@huawei.com,
+	lukas@wunner.de
+Cc: alex.williamson@redhat.com,
+	christian.koenig@amd.com,
+	kch@nvidia.com,
+	gregkh@linuxfoundation.org,
+	logang@deltatee.com,
+	linux-kernel@vger.kernel.org,
+	alistair23@gmail.com,
+	chaitanyak@nvidia.com,
+	rdunlap@infradead.org,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH v11 1/4] PCI/DOE: Rename DOE protocol to feature
+Date: Fri, 14 Jun 2024 10:12:41 +1000
+Message-ID: <20240614001244.925401-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|PH0PR12MB5646:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3ef3e29-6c6c-436b-224e-08dc8c019936
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230035|1800799019|366011|7416009|376009;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wmyVB2lWrAxsGJ6VNt/t9Y4rPaTTGhfziii6ovWHHo1c+aQIcV0D1P0ZwKUh?=
- =?us-ascii?Q?2aVCciw49M4Jn0JbpgMbN0Rciw8g7urz43l4MOt5efZb3kDmwHVhsLveYnY7?=
- =?us-ascii?Q?pRlwDHsQ5yYKbqK3F4hRl1v7Y3KT8GoylsD6Q8DPTmWKJiCBkkdI+CWjMtjc?=
- =?us-ascii?Q?bXRL3DvXU1BIBA/TmGCJjSKDqPquNiwqFtNqHMdrwVEYTYjSu0iE5OaUJKAk?=
- =?us-ascii?Q?zCdu8l0a1uSp5nWgzsU+WBzV8aCIsZKAclkOjwDnvs9LSkjQtyVnZHhFLnRi?=
- =?us-ascii?Q?RZjxGW50o9KXce0y42hE71QYj3dND/b4dP+7p1yT4Xdipzm3Enmndm75aMkE?=
- =?us-ascii?Q?cNiYN27ApRWyDxnnxxgAfwyHmfUWMGUXZIkWNEu9s/eUVWG74xodqLzgeTSY?=
- =?us-ascii?Q?tPGcAMPpJ+26Gr/sO4B7gSivzUifba1KRPW7e6d8je7BEdJBwnyXdlXCeKUz?=
- =?us-ascii?Q?mG5M6iAe6NnaVPEEy1iN2Q++W5O45FLq0JKBISDPcCH31VrMCKUFNfKsjb56?=
- =?us-ascii?Q?Vm0ozAzPX2JB7/Vu9BQ2EIK6R4WCyWlzhtoUrnKIYAoAKtlwDi8hnfCqQpWP?=
- =?us-ascii?Q?4FNOHMjuKgIv57QR/SAtyphAmqQ87BcbjzRZljsbCAn9a9IjDKejJLTY8GdH?=
- =?us-ascii?Q?pD/Wh+LTqIBI0lNwtjHzh1GTO1zT+97MSHK54pbXkchnYs1SQ+gz0iO8zu0h?=
- =?us-ascii?Q?o3KEage5tvYgf/ENqdnhnU3J+QsWyKyLP2x4POX7+g+ylqAkpK6m8+f+9uh5?=
- =?us-ascii?Q?Z9sVSo8Gj9DibPiKreeKP5R5tcihpjXcacisktKMgdHEgcdjtbbcwKhfsQ/Z?=
- =?us-ascii?Q?h05LOLBszDKWKUJ5bz3t0zLvlm5GEgrfz7ocpV5tWie0RinmDBnKXqjD2XAo?=
- =?us-ascii?Q?0/+gEU3swQhj27T6mhc+PioRzpxfNlG5gfBQZm7PvfQBaxPFcLJ30q467YFZ?=
- =?us-ascii?Q?VMS8ICO/HwGTDXa/rERssIGDYZJmq+XRgzCp0pvgOHWe85KtohKPGAL9PNip?=
- =?us-ascii?Q?gk2Mjt7w9OOXER9mAv7daQZyoUoMFP/Mb8i7YcnysvMbOxGtV65qeHcGVEez?=
- =?us-ascii?Q?fVtjcV3JL9YIB/Ep7siy0mBnZMdTRdgC/YAkVkPMHIsxAaFNR1n+ejCNvkul?=
- =?us-ascii?Q?wQTS3OuozAtZopK1xfy2UCbPTnxc8u11O9cJrgHYtw3ZsVogsrUiz46s7uam?=
- =?us-ascii?Q?T7wknNytR9Fqm4yNrZVnysyrj5h10OvQxBaXs1iWxD7CrehqaSQ+pE/rp1J5?=
- =?us-ascii?Q?16UJXMcV25m7+aGXyBJ/RNbp2vofhNcimHwaYxdj2W2XB7hgm8opBXUKOCRW?=
- =?us-ascii?Q?k+4Mh6u9RZHeEHugeMTbwwMz?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230035)(1800799019)(366011)(7416009)(376009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0dPeEdq7lu/kTBYkFaqprEjfI5acMmBSyRiBL6sT19SSpQKjArtIwjAtn1Hw?=
- =?us-ascii?Q?VdmzMdpWVy1UvZ6q8R1slsJG7lhnzyR0GbTT1nLQQxYTEJFgYQqAyW1dwyqf?=
- =?us-ascii?Q?54c86R2QPX+cuNm59RwUrhDtpQ2r4qGkYvtOWE93QSSXOqP/IysEuj9n4mRy?=
- =?us-ascii?Q?f8SudeTwnrSHMeMqLOhsLlbcN4l/9opuIrLFYnV4A/6qOpkNxUpsk62v1IOD?=
- =?us-ascii?Q?Yq8GnzrgMsyktjs4CILUYq4YAiUWcCiHHntAqdcvEFKNLZC8zDFLS8yv6RpZ?=
- =?us-ascii?Q?YvwkMaFONo8xAUNlhVpA8de+t5lb/I3mGzeKOCaM9LEzZ+brU0RssIJlBEoF?=
- =?us-ascii?Q?w5QMvXfhXP1kPb+cq/GhC6R0E5vg/RQwOZTiAN39GclMjmvumPcU2L+Lr3i6?=
- =?us-ascii?Q?oOleaU4stYq3N6cvS/bcxtJZqu0uZopkkI/kWZnvvXEOJ60y2O4alIjSUY4A?=
- =?us-ascii?Q?WoiBjtdLpQETadZuMI108QKB5US573mmcb57LfdTLpBxMWDp8mCXKQacGbYM?=
- =?us-ascii?Q?HPqKANGcX3GCRV6gs/eDjGg8+XkyIMtYgCt9tpR1o5Q27kyn7O+P4uTlDOL9?=
- =?us-ascii?Q?Q/FVq2INzC3gOyNyCO8PKRdxdn+FcHU0/s0Q0D1RK4/YbLxfD+zemeqWGj7K?=
- =?us-ascii?Q?jx1I/0rzd888hFKZRK0AjmPN3UUyOdsRoeN2fKX+AOZrHFdxcWMyNg/gIE8i?=
- =?us-ascii?Q?snjI2E4iUDKk/egLMwhRXrbUZomCkkLVf0UhKvjwB52bH3J08YND7zdtKonO?=
- =?us-ascii?Q?PPxlaVOJgt7f6XjQGdsBzjoMq6XW5sqEfiHI1QzujHNLgnl4JA1kZ/h+M67y?=
- =?us-ascii?Q?HgzW8qBwD7rbX/P1vVVFHzWy6Ailx1JxfXit5DM+s9ZzlA/bkEIIEnblj59y?=
- =?us-ascii?Q?YOVnpSnq9rkH/4T6bjktz8DlZWB3aq7QTCN0e+Dl3E43+EUCg+fCLG0jifyX?=
- =?us-ascii?Q?SnSZ809RdS2XBPrz8yh1bNff05e1WW9Yfk6VphcBB7/v4ykvbEszKqQAaC3H?=
- =?us-ascii?Q?VrV4fKjrI9E3uXv/tyu7nPAsJlrMYzN7+N+jAIo6a1xCsuQPkcxP8MlCRjgQ?=
- =?us-ascii?Q?yNgssgAQi1XorMwbKp3R6RBoLhLc9lWsj8ELAkIoyAqQnG7MZvbpz0x7EImF?=
- =?us-ascii?Q?ImC7b24fPCkKeAm23aiqifatwRkMKZhVWATMQ/f5Pye1dG5cAKNcQ12VVuHM?=
- =?us-ascii?Q?+396ePGsQ4GfvMIAxZeYYXVZZddtP/D3cFkMVdwX0WwCM+B9w0XOcZvw1uhM?=
- =?us-ascii?Q?2zD6XmWy2FtrlxuE4ZqSLc+UY+pI4PYmE6d7lqC1c8QHzyvuo9bgB6pTYh6R?=
- =?us-ascii?Q?yRCwZH8u/IDm4MyXAOTZZx+DBvMrkeAmE1l0AmNdtIftaFn6MaAjB7YQx8ev?=
- =?us-ascii?Q?vTRoUbwBiHJVmOGVCDWcubO5Af/j+ver9FuqtNzwFPTV06sn66Im2WKVvsYx?=
- =?us-ascii?Q?KH/C+O3V0pAuRZljPTLcdmNmpwLBrUbqP6pVaNmqpffo1A1JsEDJ2xOZBZce?=
- =?us-ascii?Q?H34R/OBRjquHYZBnCewuLwkM5pEHN47r8oeA0VCCqbNzIYkm7klqXDaehPDn?=
- =?us-ascii?Q?H+Z1wPpxLiglfjSiHSW6keQgU1/lrG4omjO+ktxy?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3ef3e29-6c6c-436b-224e-08dc8c019936
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2024 23:36:07.4867
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2ZY/cU1Tlsnr2m0nXSJBHqJYYNz0k5IoWCl8n3G8i+lqIawYNm5PjmKXF0ECul0E
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5646
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 05:05:20PM -0500, Bjorn Helgaas wrote:
+DOE r1.1 replaced all occurrences of "protocol" with the term "feature"
+or "Data Object Type".
 
-> It's unfortunate that this requires so much expert knowledge to use,
-> but I guess we don't really have a good alternative.  The only way I
-> can think of to help would be some kind of white paper or examples in
-> Documentation/PCI/.
+PCIe r6.1 (which was published July 24) incorporated that change.
 
-So far I am seeing the system supplier supply the appropriate
-instructions.. It is already this way for set_pci, and yes, it is a
-huge PITA.
+Rename the existing terms protocol with feature.
 
-At one point Steven Bates was talking about some ACPI tables to give
-the OS more information but I don't think that went anywhere..
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+---
+v11:
+ - No changes
+v10:
+ - Split original patch into two
+v9:
+ - Rename two more DOE macros
+v8:
+ - Rename prot to feat as well
+v7:
+ - Initial patch
 
-Jason
+ drivers/pci/doe.c | 88 +++++++++++++++++++++++------------------------
+ 1 file changed, 44 insertions(+), 44 deletions(-)
+
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 652d63df9d22..f776f5304a3e 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -22,7 +22,7 @@
+ 
+ #include "pci.h"
+ 
+-#define PCI_DOE_PROTOCOL_DISCOVERY 0
++#define PCI_DOE_FEATURE_DISCOVERY 0
+ 
+ /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
+ #define PCI_DOE_TIMEOUT HZ
+@@ -43,7 +43,7 @@
+  *
+  * @pdev: PCI device this mailbox belongs to
+  * @cap_offset: Capability offset
+- * @prots: Array of protocols supported (encoded as long values)
++ * @feats: Array of features supported (encoded as long values)
+  * @wq: Wait queue for work item
+  * @work_queue: Queue of pci_doe_work items
+  * @flags: Bit array of PCI_DOE_FLAG_* flags
+@@ -51,14 +51,14 @@
+ struct pci_doe_mb {
+ 	struct pci_dev *pdev;
+ 	u16 cap_offset;
+-	struct xarray prots;
++	struct xarray feats;
+ 
+ 	wait_queue_head_t wq;
+ 	struct workqueue_struct *work_queue;
+ 	unsigned long flags;
+ };
+ 
+-struct pci_doe_protocol {
++struct pci_doe_feature {
+ 	u16 vid;
+ 	u8 type;
+ };
+@@ -66,7 +66,7 @@ struct pci_doe_protocol {
+ /**
+  * struct pci_doe_task - represents a single query/response
+  *
+- * @prot: DOE Protocol
++ * @feat: DOE Feature
+  * @request_pl: The request payload
+  * @request_pl_sz: Size of the request payload (bytes)
+  * @response_pl: The response payload
+@@ -78,7 +78,7 @@ struct pci_doe_protocol {
+  * @doe_mb: Used internally by the mailbox
+  */
+ struct pci_doe_task {
+-	struct pci_doe_protocol prot;
++	struct pci_doe_feature feat;
+ 	const __le32 *request_pl;
+ 	size_t request_pl_sz;
+ 	__le32 *response_pl;
+@@ -171,8 +171,8 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+ 		length = 0;
+ 
+ 	/* Write DOE Header */
+-	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->prot.vid) |
+-		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
++	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->feat.vid) |
++		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->feat.type);
+ 	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
+ 	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+ 			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
+@@ -217,12 +217,12 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
+ 	int i = 0;
+ 	u32 val;
+ 
+-	/* Read the first dword to get the protocol */
++	/* Read the first dword to get the feature */
+ 	pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
+-	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != task->prot.vid) ||
+-	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != task->prot.type)) {
+-		dev_err_ratelimited(&pdev->dev, "[%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
+-				    doe_mb->cap_offset, task->prot.vid, task->prot.type,
++	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != task->feat.vid) ||
++	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != task->feat.type)) {
++		dev_err_ratelimited(&pdev->dev, "[%x] expected [VID, Feature] = [%04x, %02x], got [%04x, %02x]\n",
++				    doe_mb->cap_offset, task->feat.vid, task->feat.type,
+ 				    FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
+ 				    FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
+ 		return -EIO;
+@@ -384,7 +384,7 @@ static void pci_doe_task_complete(struct pci_doe_task *task)
+ }
+ 
+ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
+-			     u8 *protocol)
++			     u8 *feature)
+ {
+ 	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
+ 				    *index) |
+@@ -395,7 +395,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 	u32 response_pl;
+ 	int rc;
+ 
+-	rc = pci_doe(doe_mb, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_PROTOCOL_DISCOVERY,
++	rc = pci_doe(doe_mb, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_FEATURE_DISCOVERY,
+ 		     &request_pl_le, sizeof(request_pl_le),
+ 		     &response_pl_le, sizeof(response_pl_le));
+ 	if (rc < 0)
+@@ -406,7 +406,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 
+ 	response_pl = le32_to_cpu(response_pl_le);
+ 	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
+-	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
++	*feature = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
+ 			      response_pl);
+ 	*index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX,
+ 			   response_pl);
+@@ -414,12 +414,12 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 	return 0;
+ }
+ 
+-static void *pci_doe_xa_prot_entry(u16 vid, u8 prot)
++static void *pci_doe_xa_feat_entry(u16 vid, u8 prot)
+ {
+ 	return xa_mk_value((vid << 8) | prot);
+ }
+ 
+-static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
++static int pci_doe_cache_features(struct pci_doe_mb *doe_mb)
+ {
+ 	u8 index = 0;
+ 	u8 xa_idx = 0;
+@@ -438,11 +438,11 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
+ 			return rc;
+ 
+ 		pci_dbg(doe_mb->pdev,
+-			"[%x] Found protocol %d vid: %x prot: %x\n",
++			"[%x] Found feature %d vid: %x prot: %x\n",
+ 			doe_mb->cap_offset, xa_idx, vid, prot);
+ 
+-		rc = xa_insert(&doe_mb->prots, xa_idx++,
+-			       pci_doe_xa_prot_entry(vid, prot), GFP_KERNEL);
++		rc = xa_insert(&doe_mb->feats, xa_idx++,
++			       pci_doe_xa_feat_entry(vid, prot), GFP_KERNEL);
+ 		if (rc)
+ 			return rc;
+ 	} while (index);
+@@ -466,7 +466,7 @@ static void pci_doe_cancel_tasks(struct pci_doe_mb *doe_mb)
+  * @pdev: PCI device to create the DOE mailbox for
+  * @cap_offset: Offset of the DOE mailbox
+  *
+- * Create a single mailbox object to manage the mailbox protocol at the
++ * Create a single mailbox object to manage the mailbox feature at the
+  * cap_offset specified.
+  *
+  * RETURNS: created mailbox object on success
+@@ -485,7 +485,7 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 	doe_mb->pdev = pdev;
+ 	doe_mb->cap_offset = cap_offset;
+ 	init_waitqueue_head(&doe_mb->wq);
+-	xa_init(&doe_mb->prots);
++	xa_init(&doe_mb->feats);
+ 
+ 	doe_mb->work_queue = alloc_ordered_workqueue("%s %s DOE [%x]", 0,
+ 						dev_bus_name(&pdev->dev),
+@@ -508,11 +508,11 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 
+ 	/*
+ 	 * The state machine and the mailbox should be in sync now;
+-	 * Use the mailbox to query protocols.
++	 * Use the mailbox to query features.
+ 	 */
+-	rc = pci_doe_cache_protocols(doe_mb);
++	rc = pci_doe_cache_features(doe_mb);
+ 	if (rc) {
+-		pci_err(pdev, "[%x] failed to cache protocols : %d\n",
++		pci_err(pdev, "[%x] failed to cache features : %d\n",
+ 			doe_mb->cap_offset, rc);
+ 		goto err_cancel;
+ 	}
+@@ -521,7 +521,7 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 
+ err_cancel:
+ 	pci_doe_cancel_tasks(doe_mb);
+-	xa_destroy(&doe_mb->prots);
++	xa_destroy(&doe_mb->feats);
+ err_destroy_wq:
+ 	destroy_workqueue(doe_mb->work_queue);
+ err_free:
+@@ -539,31 +539,31 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ static void pci_doe_destroy_mb(struct pci_doe_mb *doe_mb)
+ {
+ 	pci_doe_cancel_tasks(doe_mb);
+-	xa_destroy(&doe_mb->prots);
++	xa_destroy(&doe_mb->feats);
+ 	destroy_workqueue(doe_mb->work_queue);
+ 	kfree(doe_mb);
+ }
+ 
+ /**
+- * pci_doe_supports_prot() - Return if the DOE instance supports the given
+- *			     protocol
++ * pci_doe_supports_feat() - Return if the DOE instance supports the given
++ *			     feature
+  * @doe_mb: DOE mailbox capability to query
+- * @vid: Protocol Vendor ID
+- * @type: Protocol type
++ * @vid: Feature Vendor ID
++ * @type: Feature type
+  *
+- * RETURNS: True if the DOE mailbox supports the protocol specified
++ * RETURNS: True if the DOE mailbox supports the feature specified
+  */
+-static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
++static bool pci_doe_supports_feat(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+ {
+ 	unsigned long index;
+ 	void *entry;
+ 
+-	/* The discovery protocol must always be supported */
+-	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_PROTOCOL_DISCOVERY)
++	/* The discovery feature must always be supported */
++	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_FEATURE_DISCOVERY)
+ 		return true;
+ 
+-	xa_for_each(&doe_mb->prots, index, entry)
+-		if (entry == pci_doe_xa_prot_entry(vid, type))
++	xa_for_each(&doe_mb->feats, index, entry)
++		if (entry == pci_doe_xa_feat_entry(vid, type))
+ 			return true;
+ 
+ 	return false;
+@@ -591,7 +591,7 @@ static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+ static int pci_doe_submit_task(struct pci_doe_mb *doe_mb,
+ 			       struct pci_doe_task *task)
+ {
+-	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
++	if (!pci_doe_supports_feat(doe_mb, task->feat.vid, task->feat.type))
+ 		return -EINVAL;
+ 
+ 	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
+@@ -637,8 +637,8 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ {
+ 	DECLARE_COMPLETION_ONSTACK(c);
+ 	struct pci_doe_task task = {
+-		.prot.vid = vendor,
+-		.prot.type = type,
++		.feat.vid = vendor,
++		.feat.type = type,
+ 		.request_pl = request,
+ 		.request_pl_sz = request_sz,
+ 		.response_pl = response,
+@@ -663,9 +663,9 @@ EXPORT_SYMBOL_GPL(pci_doe);
+  *
+  * @pdev: PCI device
+  * @vendor: Vendor ID
+- * @type: Data Object Type
++ * @prot: Data Object Type
+  *
+- * Find first DOE mailbox of a PCI device which supports the given protocol.
++ * Find first DOE mailbox of a PCI device which supports the given feature.
+  *
+  * RETURNS: Pointer to the DOE mailbox or NULL if none was found.
+  */
+@@ -676,7 +676,7 @@ struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
+ 	unsigned long index;
+ 
+ 	xa_for_each(&pdev->doe_mbs, index, doe_mb)
+-		if (pci_doe_supports_prot(doe_mb, vendor, type))
++		if (pci_doe_supports_feat(doe_mb, vendor, type))
+ 			return doe_mb;
+ 
+ 	return NULL;
+-- 
+2.45.2
+
 
