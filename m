@@ -1,140 +1,121 @@
-Return-Path: <linux-pci+bounces-8793-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8794-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D879088C7
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 11:57:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1283590894A
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 12:07:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA8881F253A3
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 09:57:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE0D71F2BC13
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 10:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285D41974EA;
-	Fri, 14 Jun 2024 09:50:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7671C193067;
+	Fri, 14 Jun 2024 10:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOpV7I5Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iayTsd34"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3298192B76;
-	Fri, 14 Jun 2024 09:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8636148319;
+	Fri, 14 Jun 2024 10:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718358645; cv=none; b=JKmJNYfwriQT03uZ4XrB15FBbWUtWb3HpI5QxZqN1FBMHv8dxgY2PCJaPrX/2Oc5yr9vIJQvJReIgmu+ozKWUSzsT3OTT9KssX6iq7uKONIjSSoRJCJ4xofk5aUlKdIFGysokD865DBiUd4ykCr9Dp6InwbgtIrv3T13f3PJNnU=
+	t=1718359581; cv=none; b=kyHQFZ08F9eGoPnWBccgrFmBlV6upF93qBIQ0TdqPcN63qXrPNui706iXPARmCDHn0e74HStsw01rSUleqA205fciCnTjX0BJa4OeQkqQs9JGIBvhYOpm/yMw0VG7F1MEMpG5z0i00DZUrENQh2DBTfc/eQeSHktHiCmJ77KtU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718358645; c=relaxed/simple;
-	bh=x9NmFD5BR5AR0igvB+EXG1z215tMp28uQNymF9ZCJEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HE44MxFve2NOKoEozVXFrmM54OMazukPV/0ZnCDIK4ZTPTKS4xgMZrA+TeSRcWoN23oFeYvP8MOX8yf5KTSEBfS7W6v1frmB8SGEdz760KTLN0wBcaPfcgfHeDW9q1II8d1ZUgUqeXS3lNmXzEeJ2HZAoizZsHBkPLmVn4le/1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOpV7I5Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1224DC2BD10;
-	Fri, 14 Jun 2024 09:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718358644;
-	bh=x9NmFD5BR5AR0igvB+EXG1z215tMp28uQNymF9ZCJEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QOpV7I5Zo+huIZCjPQTbO2ya/lAE2ITFDrsYj9F342X62O0VoId/WSbjAYpSPrBQF
-	 nF1e37SM+C2w6B2exnbxkiIo+rTy4p9IPH1qTV4JhM2SOQTdAtntamEvjK5D+v8l/Q
-	 ngmdRqjZHlRNs1hTTBw8OCIsUhtJJR+kf64V+PprMf0S3HfkGhzucUZbeJ9sTI/sGM
-	 nWRPr+tdgrY502SttoSzO57jUhvTpWYB1gjfuZnYhzHGt7DjchVvd0tgN0zeEDNYul
-	 GBMjVOBAcHdKnWJjyCirMYmIwZIh0Yw/IOFeFBWkWjDlpaKKE6EH2cN/LKSfg8lkDM
-	 t7TZmqd8TWW6Q==
-Date: Fri, 14 Jun 2024 15:20:33 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Shunsuke Mie <mie@igel.co.jp>,
-	linux-pci@vger.kernel.org, virtualization@lists.linux.dev,
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com
-Subject: Re: [RFC] Legacy Virtio Driver with Device Has Limited Memory Access
-Message-ID: <20240614095033.GA59574@thinkpad>
-References: <CANXvt5r00Y5VGKSFXFnwbvGF+fhh2uNvU5VBGwECA9yabK4=Uw@mail.gmail.com>
- <20240516125913.GC11261@thinkpad>
- <20240520090809-mutt-send-email-mst@kernel.org>
+	s=arc-20240116; t=1718359581; c=relaxed/simple;
+	bh=M+wudfRew0zZ0o2jEhGKUvusyJLRH89lvhLCPTPKDJc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jdAYE9vjqhtGx51YLDic+6gXif9YSVLfzP+ftu91XuC4/OIrqNE+L00XcRmYpAcbx9LHlUPe2yKj6msQS9U3JwiQ8SKwqC31QsUhasfGcf5PR5ck0Dq6V5CvFmRjbm969VwCuW3orw56LQjk3F8hHV+GkDommj8xD5FLvv+Qt7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iayTsd34; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718359580; x=1749895580;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=M+wudfRew0zZ0o2jEhGKUvusyJLRH89lvhLCPTPKDJc=;
+  b=iayTsd348RioBTVogaMcGVtwRvwKQ6zbb5ZY0+VfC4yUFROfPVnN4oB7
+   NlSVfMUQFkCUTu9DHcDfUXjAgYeXx9TXgHgIK5EEzUE1tq9hbcEeqUkqr
+   vGBGvMPdF+unkysdNgZ4Iu4XAYfBeMOlNbF0mlfu6qk8SqmSdw2hSUq7J
+   6dsSOhdX9034V8Z0nCELKCrM4K8gMsMtPG2xBuzrbTWak3Sb3uJazWIF3
+   AIrg4qtD2GDGpz8YhPAuG8cwRTLyawoJKl8jnbJh+0WjJ1NS+vOH3BPDR
+   sTlA/46g3p9URsyeIYSmwOf/yf5pXQyXW7l1etj6PQbflCPoDFNQ2ZxAS
+   g==;
+X-CSE-ConnectionGUID: Dfyh1Pw4RFWffGyXK7JNuw==
+X-CSE-MsgGUID: ECsfw+lMSTChVR3HS+si3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="32715804"
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="32715804"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 03:06:19 -0700
+X-CSE-ConnectionGUID: Swo5ctbJQEaxpmynKRoqug==
+X-CSE-MsgGUID: GnEecZIsRhGB7Xm97YsUMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="45575859"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.222])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 03:06:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc: linux-kernel@vger.kernel.org,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-tegra@vger.kernel.org,
+	Robert Richter <rric@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 0/4] PCI: Resource helper improvements
+Date: Fri, 14 Jun 2024 13:06:02 +0300
+Message-Id: <20240614100606.15830-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240520090809-mutt-send-email-mst@kernel.org>
 
-On Mon, May 20, 2024 at 09:22:54AM -0400, Michael S. Tsirkin wrote:
-> On Thu, May 16, 2024 at 02:59:13PM +0200, Manivannan Sadhasivam wrote:
-> > On Thu, May 16, 2024 at 01:38:40PM +0900, Shunsuke Mie wrote:
-> > > Hi virtio folks,
-> > > 
-> > 
-> > You forgot to CC the actual Virtio folks. I've CCed them now.
-> > 
-> > > I'm writing to discuss finding a workaround with Virtio drivers and legacy
-> > > devices with limited memory access.
-> > > 
-> > > # Background
-> > > The Virtio specification defines a feature (VIRTIO_F_ACCESS_PLATFORM) to
-> > > indicate devices requiring restricted memory access or IOMMU translation. This
-> > > feature bit resides at position 33 in the 64-bit Features register on modern
-> > > interfaces. When the linux virtio driver finds the flag, the driver uses DMA
-> > > API that handles to use of appropriate memory.
-> > > 
-> > > # Problem
-> > > However, legacy devices only have a 32-bit register for the features bits.
-> > > Consequently, these devices cannot represent the ACCESS_PLATFORM bit. As a
-> > > result, legacy devices with restricted memory access cannot function
-> > > properly[1]. This is a legacy spec issue, but I'd like to find a workaround.
-> > > 
-> > > # Proposed Solutions
-> > > I know these are not ideal, but I propose the following solution.
-> > > Driver-side:
-> > >     - Implement special handling similar to xen_domain.
-> > > In xen_domain, linux virtio driver enables to use the DMA API.
-> > >     - Introduce a CONFIG option to adjust the DMA API behavior.
-> > > Device-side:
-> > > Due to indistinguishability from the guest's perspective, a device-side
-> > > solution might be difficult.
-> > > 
-> > > I'm open to any comments or suggestions you may have on this issue or
-> > > alternative approaches.
-> > > 
-> > > [1] virtio-net PCI endpoint function using PCIe Endpoint Framework,
-> > > https://lore.kernel.org/lkml/54ee46c3-c845-3df3-8ba0-0ee79a2acab1@igel.co.jp/t/
-> > > The Linux PCIe endpoint framework is used to implement the virtio-net device on
-> > > a legacy interface. This is necessary because of the framework and hardware
-> > > limitation.
-> > > 
-> > 
-> > We can fix the endpoint framework limitation, but the problem lies with some
-> > platforms where we cannot write to vendor capability registers and still have
-> > IOMMU.
-> > 
-> > - Mani
-> 
-> What are vendor capability registers and what do they have to do
-> with the IOMMU?
-> 
+This series introduces resource_set_{range,size}() helpers to replace
+often repeated code fragments to set resource start and end addresses.
+The last two patches clean up nearby code.
 
-Virtio spec v1.2, sec 4.1.4 says,
+For now, this series only converts PCI subsystem. There are plenty of
+resource start/end setting code elsewhere in the kernel but those can
+be converted once the helpers reach Linus' tree.
 
-"Each structure can be mapped by a Base Address register (BAR) belonging to the
-function, or accessed via the special VIRTIO_PCI_CAP_PCI_CFG field in the PCI
-configuration space.
+--
+v2:
+- Improved commit message
+- Added patch to introduce ALIGN_DOWN_IF_NONZERO()
 
-The location of each structure is specified using a vendor-specific PCI
-capability located on the capability list in PCI configuration space of the
-device."
+Ilpo Järvinen (4):
+  resource: Add resource set range and size helpers
+  PCI: Use resource_set_{range,size}() helpers
+  PCI: Use align and resource helpers, and SZ_* in quirk_s3_64M()
+  PCI: Introduce ALIGN_DOWN_IF_NONZERO() helper locally
 
-So this means the device has to expose the virtio structures through vendor
-specific capability isn't it?
-
-And only in that case, it can expose VIRTIO_F_ACCESS_PLATFORM bit for making
-use of IOMMU translation.
-
-- Mani
+ drivers/pci/controller/pci-tegra.c       |  2 +-
+ drivers/pci/controller/pci-thunder-pem.c |  4 +--
+ drivers/pci/ecam.c                       |  2 +-
+ drivers/pci/iov.c                        |  6 ++--
+ drivers/pci/pci.c                        |  3 +-
+ drivers/pci/quirks.c                     | 23 +++++++---------
+ drivers/pci/setup-bus.c                  | 35 ++++++++++--------------
+ drivers/pci/setup-res.c                  |  7 ++---
+ include/linux/ioport.h                   | 32 ++++++++++++++++++++++
+ 9 files changed, 68 insertions(+), 46 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.39.2
+
 
