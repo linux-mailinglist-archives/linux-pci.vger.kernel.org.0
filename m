@@ -1,219 +1,182 @@
-Return-Path: <linux-pci+bounces-8827-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8828-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80E25908B9F
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 14:26:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89FDC908BB7
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 14:32:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B9361F21231
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 12:26:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B08C91C20E35
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 12:32:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B98D13BAC8;
-	Fri, 14 Jun 2024 12:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6BA194AC5;
+	Fri, 14 Jun 2024 12:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNDSYXdk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nopoLBWV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1B27E574
-	for <linux-pci@vger.kernel.org>; Fri, 14 Jun 2024 12:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A802312D74D;
+	Fri, 14 Jun 2024 12:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718367994; cv=none; b=rXZGRObjDXyQE0GPjem3ZGImlTrQ59tzVNK3mRGYX52jIGOeQzrTdB3e4MY+FQfFsq+kdyb25HI3C2XAvJuVIM2698q8HkGoYJnegAsoHSqY0/sGsy00Yzh8Q2guRzR+E/kVeTnu7Sml6AWZeBFngFhUSDoPIUIaV8DUuWBvgN0=
+	t=1718368334; cv=none; b=dWMUsrhVdMHqog/9lV20iqcrAbav2B7D+/j1lqiAmWW9SpaktICbTFYI7vP1ml3LgrsbQit20CMOO+xFkwVyxKcdIlVP6XMAvjCU+OwoHxWjyd/LTNiYEJGxAkpFhjGn7MKIL+PjApb5S/qH/dQ6O1S98fvs077wLC5x6pyHpmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718367994; c=relaxed/simple;
-	bh=J19t/DZdFPUrn1wDChEnYaslyX9pEn8ByZByC/uIDhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oM7wcZRnSLWD/E+CK5E/tpTzyitqpYSH63GfHTAycRf8U2eFladUT2r9V/5IWx8BCTd3tUh4AmTqTTEWcAyuM0oiTrc7XB7soIn6bttZhxT+mniPa9WW4s6OQJZBDVSDJ5wC5Dm/W1+xu2o2zQ+ebmYRhQ6kAHJui2T6A9E3hI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LNDSYXdk; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ebe6495aedso19278671fa.0
-        for <linux-pci@vger.kernel.org>; Fri, 14 Jun 2024 05:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718367990; x=1718972790; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXrbNG2PlyKIQ2QE7DTZFRVkvh+DgqP6stJonJ6MK/8=;
-        b=LNDSYXdk2QGhzXLxWWjSS6DcgNZ2Jhp8KA3O8Atplhq7rLpef9OmfHrF4yDmBNKU5q
-         nTzfGrxaq5Ld7ZgdUIw/MWPdL+DyJbS5/kSxFv23KYAZ5rh4rpYgdmluNq1EQS3DSsRM
-         y7QCKdRRgXT6XaJ/eKDgs3qrRBD9RFxvNNslIoOLWVtXNnyRSAzHOQU7GHCVKSKL+UeM
-         lba7woMAq0ART6DHGFlceHGuEkrRzHX5TSik0Cxzf5sSpKO2jKktiRn4cSx37GEARp1C
-         bs+fbRytq5sr8MlCu8XfUKCizcIWEXfxOp52zGASEwAvjQWNOTpswRj9nrP/ZyEK1cg8
-         Yzcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718367990; x=1718972790;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JXrbNG2PlyKIQ2QE7DTZFRVkvh+DgqP6stJonJ6MK/8=;
-        b=IKCgkdW65cuWLis7cl8Oen0qGvxCCbnxyfHS04HEgVjjO1NuHSTq/Zyacoyk2C1OtV
-         +warHefOhD/92oiRAk2bRIZqg3DiTtw566DVK8uKWrGRiy2eHdG5XUKPTJlMb59hnOGp
-         RIvbiTLk8ablRP+Sx2CYUqVaardxmjp3WhI20nY+nmzRGBA2plWuM3iX/SfEdBvlLUuU
-         ZXdyiAk95zQjBLNGp4wYyYHYPJQJoLS5ESlOLdkkvAxi4Yvd9mhejyvuAD7+U/TJlSin
-         V1sMi1JdqabgMWt1gTDUe95W9qi2092KGBH+VJT1OTnio7GbPJNnZ/avLU0DaQ8Ohg8G
-         5uHA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8vc1I4anYkA+2wBgm1xDDY/R6z6M+wD3hwGYfHJzGDNvaNbX9stJ6bQ0ZpdVl5iAWKyM8Kvr3u4ef9QjKG5v0u3tJa3+LAXxE
-X-Gm-Message-State: AOJu0YwhL7UlK7Krp8l7ZwPIcDoZuNyhEFZzE/Xxm2Rbs/Z13q8jjrgY
-	dcF7xZPFVjvGUKESxE8x1M774rTKOFzluu2kdJinIBWim2WvN9Zr
-X-Google-Smtp-Source: AGHT+IHG11Ol7zqmVQRdjZuS8agnosesvN+USsxN6c4ByWYeWMsZrDV4HPQpCuDpKZmaaqiKwq7Z/A==
-X-Received: by 2002:a2e:9c05:0:b0:2ec:1ad3:fb0a with SMTP id 38308e7fff4ca-2ec1ad3fc06mr7394631fa.43.1718367990098;
-        Fri, 14 Jun 2024 05:26:30 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec079379casm4805751fa.124.2024.06.14.05.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 05:26:29 -0700 (PDT)
-Date: Fri, 14 Jun 2024 15:26:26 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Shyam Saini <shyamsaini@linux.microsoft.com>
-Cc: jingoohan1@gmail.com, Sergey.Semin@baikalelectronics.ru, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, linux-pci@vger.kernel.org, code@tyhicks.com, 
-	apais@linux.microsoft.com, bboscaccy@linux.microsoft.com, okaya@kernel.org, 
-	srivatsa@csail.mit.edu, tballasi@linux.microsoft.com, vijayb@linux.microsoft.com
-Subject: Re: [PATCH V2] drivers: pci: dwc: configure multiple atu regions
-Message-ID: <rki6koi6mk4fjg7d37qidvcftrea4djaywswtsu3oop2sok4n7@ekhp4eid6jqg>
-References: <20240610235048.319266-1-shyamsaini@linux.microsoft.com>
+	s=arc-20240116; t=1718368334; c=relaxed/simple;
+	bh=d4Bv2ZzuYu1QopJr82AZ6xrYRfuX0NoNXCgdGIEC8Nc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=HHVZ8apKioEiOszJsF+u4OX3hTdFxLTW8GU8H67pNQp8YLAcHOpIf3TVnnF+zY1xc85KBPr3J2DblNG/YsbNZh+E/vm07k1Jl65FBnfY3EykP9bEoREhof4qlz+TmKEhwSuZyPpm4GNgpfF+4X4GGQKt5lNymEUCtJsNfzOpIaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nopoLBWV; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718368333; x=1749904333;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=d4Bv2ZzuYu1QopJr82AZ6xrYRfuX0NoNXCgdGIEC8Nc=;
+  b=nopoLBWVgSFSExTMBwO/aW4kMJIYsMsdyNQsT72/1dXDRK0NDOW7e2Ri
+   ceuEArmNwdkhMVMd+CN9SiFjRFtSgjkYD6ZA55/XNE48UAEuLU3pjmTif
+   s/M49bCv5Kra3GinF/wHpe3i2Mx9WMMN9yEXRhbofrKv/6XRang1O96Yh
+   FAd6DBoLOAgGWYd5ykOyR9V1jijDYBnyA0S6IBRSQf1L7Wz4ToKz4veHd
+   F7Uu4Veuqa2gnT4s/a9QQGVEButySgp/xXDIdRWqfk3qL8qQKqLXF9WHE
+   VkvljUzRrgdwYCo6suW+yUzPlY/2V14RgaBAUsCHDCouk3JI7alnFOR9r
+   Q==;
+X-CSE-ConnectionGUID: c4nys7iCQhSEjg28/63XYw==
+X-CSE-MsgGUID: knrB/t/5TE6ckMB8gDY8sA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11103"; a="26366574"
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="26366574"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 05:32:12 -0700
+X-CSE-ConnectionGUID: tdkimbqMR1mmScCfKZcLzg==
+X-CSE-MsgGUID: KkhV+DFFQ7q2xccIm4rZzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="40414794"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.222])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 05:32:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 14 Jun 2024 15:32:01 +0300 (EEST)
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+cc: Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+    Conor Dooley <conor+dt@kernel.org>, 
+    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org, 
+    bmasney@redhat.com, djakov@kernel.org, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org, vireshk@kernel.org, quic_vbadigan@quicinc.com, 
+    quic_skananth@quicinc.com, quic_nitegupt@quicinc.com, 
+    quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org
+Subject: Re: [PATCH v14 3/4] PCI: Bring the PCIe speed to MBps logic to new
+ pcie_link_speed_to_mbps()
+In-Reply-To: <20240609-opp_support-v14-3-801cff862b5a@quicinc.com>
+Message-ID: <c76624fa-1c07-1bb4-dff0-e35fe072f176@linux.intel.com>
+References: <20240609-opp_support-v14-0-801cff862b5a@quicinc.com> <20240609-opp_support-v14-3-801cff862b5a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610235048.319266-1-shyamsaini@linux.microsoft.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Jun 10, 2024 at 04:50:48PM -0700, Shyam Saini wrote:
-> Before this change, the dwc PCIe driver configures only 1 ATU region,
-> which is sufficient for the devices with PCIe memory <= 4GB. However,
-> the driver probe fails when device uses more than 4GB of pcie memory.
+On Sun, 9 Jun 2024, Krishna chaitanya chundru wrote:
+
+> Bring the switch case in pcie_link_speed_mbps() to new function to
+> the header file so that it can be used in other places like
+> in controller driver.
 > 
-> Fix this by configuring multiple ATU regions for the devices which
-> use more than 4GB of PCIe memory.
-> 
-> Given each 4GB block of memory requires a new ATU region, the total
-> number of ATU regions are calculated using the size of PCIe device
-> tree node's MEM64 pref range size.
-> 
-> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  .../pci/controller/dwc/pcie-designware-host.c | 38 +++++++++++++++++--
->  1 file changed, 34 insertions(+), 4 deletions(-)
+>  drivers/pci/pci.c | 19 +------------------
+>  drivers/pci/pci.h | 22 ++++++++++++++++++++++
+>  2 files changed, 23 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d15a5c2d5b48..bed0b189b6ad 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -652,6 +652,33 @@ static struct pci_ops dw_pcie_ops = {
->  	.write = pci_generic_config_write,
->  };
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d2c388761ba9..6e50fa89b913 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6027,24 +6027,7 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
+>  	if (err)
+>  		return err;
 >  
-> +static int dw_pcie_num_atu_regions(struct resource_entry *entry)
+> -	switch (to_pcie_link_speed(lnksta)) {
+> -	case PCIE_SPEED_2_5GT:
+> -		return 2500;
+> -	case PCIE_SPEED_5_0GT:
+> -		return 5000;
+> -	case PCIE_SPEED_8_0GT:
+> -		return 8000;
+> -	case PCIE_SPEED_16_0GT:
+> -		return 16000;
+> -	case PCIE_SPEED_32_0GT:
+> -		return 32000;
+> -	case PCIE_SPEED_64_0GT:
+> -		return 64000;
+> -	default:
+> -		break;
+> -	}
+> -
+> -	return -EINVAL;
+> +	return pcie_link_speed_to_mbps(to_pcie_link_speed(lnksta));
+
+pcie_link_speed_mbps() calls pcie_link_speed_to_mbps(), seems quite 
+confusing to me. Perhaps renaming one to pcie_dev_speed_mbps() would help
+against the almost identical naming.
+
+In general, I don't like moving that code into a header file, did you 
+check how large footprint the new function is (when it's not inlined)?
+
+Unrelated to this patch, it would be nice if LNKSTA register read would 
+not be needed at all here but since cur_bus_speed is what it is currently, 
+it's just wishful thinking.
+
+>  }
+>  EXPORT_SYMBOL(pcie_link_speed_mbps);
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 1b021579f26a..391a5cd388bd 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -333,6 +333,28 @@ void pci_bus_put(struct pci_bus *bus);
+>  	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
+>  	 0)
+>  
+> +static inline int pcie_link_speed_to_mbps(enum pci_bus_speed speed)
 > +{
-> +	return DIV_ROUND_UP(resource_size(entry->res), SZ_4G);
-> +}
-> +
-> +static int dw_pcie_prog_outbound_atu_multi(struct dw_pcie *pci, int type,
-> +						struct resource_entry *entry)
-> +{
-> +	int idx, ret, num_regions;
-> +
-> +	num_regions = dw_pcie_num_atu_regions(entry);
-> +
-> +	for (idx = 0; idx < num_regions; idx++) {
-> +		dw_pcie_writel_dbi(pci, PCIE_ATU_VIEWPORT, idx);
-> +		ret = dw_pcie_prog_outbound_atu(pci, idx, PCIE_ATU_TYPE_MEM,
-> +						entry->res->start,
-> +						entry->res->start - entry->offset,
-> +						resource_size(entry->res)/4);
-> +
-> +		if (ret)
-> +			goto err;
+> +	switch (speed) {
+> +	case PCIE_SPEED_2_5GT:
+> +		return 2500;
+> +	case PCIE_SPEED_5_0GT:
+> +		return 5000;
+> +	case PCIE_SPEED_8_0GT:
+> +		return 8000;
+> +	case PCIE_SPEED_16_0GT:
+> +		return 16000;
+> +	case PCIE_SPEED_32_0GT:
+> +		return 32000;
+> +	case PCIE_SPEED_64_0GT:
+> +		return 64000;
+> +	default:
+> +		break;
 > +	}
 > +
-> +err:
-> +	return ret;
+> +	return -EINVAL;
 > +}
-> +
->  static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> @@ -682,10 +709,13 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  		if (pci->num_ob_windows <= ++i)
->  			break;
->  
-> -		ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_MEM,
-> -						entry->res->start,
-> -						entry->res->start - entry->offset,
-> -						resource_size(entry->res));
-> +		if (resource_size(entry->res) > SZ_4G)
-> +			ret = dw_pcie_prog_outbound_atu_multi(pci, PCIE_ATU_TYPE_MEM, entry);
-> +		else
-> +			ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_MEM,
-> +							entry->res->start,
-> +							entry->res->start - entry->offset,
-> +							resource_size(entry->res));
 
-Sorry, but the change doesn't look correct.
 
-First of all, you suggest to split up _all_ the PCIe ranges greater
-than 4GB. As I already mentioned several times the DW PCIe controller
-of v4.60a and younger may have the maximum limit address greater than
-4GB. So the change is wrong for the modern IP-core which have the
-CX_ATU_MAX_REGION_SIZE synthesis parameter set with a number greater
-than 4GB.
 
-Secondly the dw_pcie_iatu_setup() method is looping around all the
-PCIe memory ranges and allocates the iATU regions one after another.
-So should the dw_pcie_prog_outbound_atu_multi() allocated more than
-one region, the second, third, etc iATU regions setup will be
-overwritten with the subsequent PCIe memory ranges data.
+-- 
+ i.
 
-Thirdly your dw_pcie_prog_outbound_atu_multi() initializes the iATU
-regions starting from zero each time it's called. So each next call
-will override the initialization performed in the framework of the
-previous one.
-
-AFAICS it's not that easy as it seemed at the first glance. One of the
-possible solution is to fix the __dw_pcie_prog_outbound_atu() method
-in a way so instead of failing on the
-((limit_addr & ~pci->region_limit) != (pci_addr & ~pci->region_limit))
-conditional statement the method would initialize the requested region from
-cpu_addr
-up to
-limit_addr = clamp(limit_addr, cpu_addr, cpu_addr | pci->region_limit)
-and returned (limit_addr - cpu_addr + 1) from __dw_pcie_prog_outbound_atu().
-
-The dw_pcie_prog_outbound_atu() caller shall check the returned value.
-If it's negative then error happened. If the size is the same as the
-requested one, then the memory window region was successfully
-initialized. If the returned value is smaller than the requested one,
-then the memory window only partly covers the requested region and the
-next free outbound iATU region needs to be allocated and initialized.
-
-Note 1. The suggested semantics need to be propagated to all the
-dw_pcie_prog_outbound_atu() and dw_pcie_prog_ep_outbound_atu()
-callers.
-
-Note 2. The same procedure can be implemented for the inbound iATU
-regions initialization procedure in dw_pcie_prog_inbound_atu(). The
-difference is only in the untranslated address argument. In
-dw_pcie_prog_inbound_atu() it's pci_addr. So the initialization would
-be based on the PCI-address space from
-pci_addr
-up to
-limit_addr = clamp(limit_addr, pci_addr, pci_addr | pci->region_limit)
-with returning (limit_addr - pci_addr + 1).
-
--Serge(y)
-
->  		if (ret) {
->  			dev_err(pci->dev, "Failed to set MEM range %pr\n",
->  				entry->res);
-> -- 
-> 2.34.1
-> 
 
