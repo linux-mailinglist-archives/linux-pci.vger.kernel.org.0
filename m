@@ -1,139 +1,153 @@
-Return-Path: <linux-pci+bounces-8854-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8855-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1B29909400
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2024 00:03:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FFB99095D0
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2024 05:13:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CC431C20F7C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jun 2024 22:03:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D95E1C21957
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Jun 2024 03:13:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED55514883B;
-	Fri, 14 Jun 2024 22:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 148E93D60;
+	Sat, 15 Jun 2024 03:13:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsXI2jcW"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="i4uZNcIs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2030.outbound.protection.outlook.com [40.92.99.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4147149C44;
-	Fri, 14 Jun 2024 22:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718402609; cv=none; b=JxIYA1yO1B4Nn2+GqWQm1xOmMtkxBQP1H7U2xRs7ANdURT4ewQXC8LF+1VRc6MTz8R/ptqmO+o9wxocjcoz4QO+0JbeuyaPt51Jj0U05hf+oilgAdC+JG6uraXq4QDTp/9xQ1zvPfD6im3SYXpawkbXwKyYf4Ct+YTzm4qjJYdw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718402609; c=relaxed/simple;
-	bh=pnfRKVMJtcMvTZXgsbnPkluvMLxhMc1SMF0VOt5BoRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=oMelfj6f0YT7nTFaO1Kst0Fu3CbUkTvpOM9VfL2NeGhy0uEercbgwVfbEf1LT+C2bEhZNeRERQzNs6X/PmpiGlZ69UjOCfSOaSxvn/uqC/ASWpGvenAFlKJhM/nu1o5xzo2wFb3+5LiIroVctmWTvlS/8CAXvgmZLSUf6uacGdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsXI2jcW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28C8BC2BD10;
-	Fri, 14 Jun 2024 22:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718402609;
-	bh=pnfRKVMJtcMvTZXgsbnPkluvMLxhMc1SMF0VOt5BoRQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OsXI2jcWYpgFuwwLeo3viE6MZZ5Zr3ulI4P+WzFGbdHbLKa0zpoT6JTwFrU3KbgdB
-	 3NXjVaJ3ux4D5H/h8r1RofiY/h5d7dFmHm8JtkLRscEqqUmQC9vX/YDkI/NL9BDcK/
-	 1cFoaIKi6V7CoKgfIOZ3HkKlxA/nMx6rZ+zhSWElHPOOc1Q+bkiTI5l78ZgbrFkQa+
-	 3DhoZP9u6Pkq9RbL9t6NISOtaPmnDbnDfiHxwlBSAA8wz6iTDBQxlA/k+9ztyAFZH6
-	 BWBqDtJ4VdCs8a14yyjjzbVT5ZYXpWoLHjVjW2tggzNOi+pC2BfAsz95LJBdEUx9/D
-	 9qT2hecRbIMCA==
-Date: Fri, 14 Jun 2024 17:03:27 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bitao Hu <yaoma@linux.alibaba.com>, bhelgaas@google.com,
-	weirongguang@kylinos.cn, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kanie@linux.alibaba.com,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCHv2] PCI: pciehp: Use appropriate conditions to check the
- hotplug controller status
-Message-ID: <20240614220327.GA1125489@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0469A6FD0;
+	Sat, 15 Jun 2024 03:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718421195; cv=fail; b=uXz0CMtnAepHh8YhZJ+MwONmzZHweKFniJ1QdU1VT7mJl9XFeCDwijr1XciRJpNO9k/lJ4Be5OsQcuUBYfU/7y37eJz6n5wGlds/fwZKaqX9/FdEixSdkVF1nNFgtfulCpLYga3PHB+BC7291cRn7Ik7tiTEDt+MS0FTkyyZfZw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718421195; c=relaxed/simple;
+	bh=dPXx9v5aYHfjuRE7IYHZfnpZSIYLJHkJxbn4uuy6OTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BH7w7agnrQj+0Hawr351igZlJZiaHmi3MDNX1Uf6gOCRg5EIxoql2hyuNA2NR52vm36kykefZtcUOF8zXgzRas153OiWYSnp9hdaDLQEjoM9/k9LU3QT/+F1bTIiHb7NnmX9a4sjo5XRg9ZOPJYMRWYWWxMG/WoFSZh7/XOLzZQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=i4uZNcIs; arc=fail smtp.client-ip=40.92.99.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e4EOaJHQXo2d6QtMl7qX6qbCcsuuc1sVhJ9Pf8uGUkrCxsGMPv74C7A54IoQQ9rCoOgGnG8s7xC6t8YiZM26FeRwMBkt4XlV+cFrKbWY4866ivohL2LjMkqKQ4Z5t3neqf+lwX6b2vqjW67gpFWXBjbLdPPQ30GtTpSttgFVjwrxCBAel9dMt6cV8rMn/DZhZLNn0eo+MSqhgKh9Lo1MsSl4m22FGbpJfOSy2r8Bu4vSVmPL5QNqiG2CU/rvNaGd9elwvzU+kqYFLA16zOk1enHpEjUsMu9HYBKjHSc2DdrKqjlWrQYuJPcbptC6qwcztvlQ2J3gQC6kJJ1/g/cspQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yUihXdBwNp+ktrTnCV0KFthO5/HbpupPFA8Wiy8tHSQ=;
+ b=VY/U4N2VLF5wdxzYF0nZ9kZQ5hGc3yLK+d0xxzfiFfvIg0d6KvSmuOZt/C5Bu3NlHLXEN+XvlX+fFyVgRafCUf1mwWV5K39l02S8YGn+TDUVhnsye3REx1g65x6vCNYC+u6dzomxbrxCgV+RqSRY3C3B9mK6f0QlKA4I1BEY7DrMo9N12GUXpUzMdRFauUrmQmu2iuTBPtrLsDK/2GaQnnEypbGRvz15L/poEC7zGWy3Zw4gS47zmM5qrBSlcY9v3tEpv47bzmyt3hfmKJgmjQe9TidflS0B0Y3PKp/6Tamog0v+HXjwt8JVlnurTb+C3nOEpuBVSHCAmzjjuH/rHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yUihXdBwNp+ktrTnCV0KFthO5/HbpupPFA8Wiy8tHSQ=;
+ b=i4uZNcIssxcoyCER826exvBatQKZbY1qJHtmoptBZVlCruhG6Vf7qqOw1jFM6LeZwwRJdPNmyx+ZfHXbMefoTAQeM73Qg8IS+qKbmIRpr4A1fnTKfl6oqFWbLjOF9pN7G9cWUmREphz0fFmxCxng5KWUj4eFgAx31d7uCCTqGmuPfAR+HYpRu+bvEabKa/Nzygq6poSsJg+nUpTPuJBAo/ed/yq9o4mcNZ9OSSsbVa/L3Q7HIcAqIkoYdVJVFj1RIoJMPhuI1GOGmMJWinGIh6vDlYTFzo66pK/4Q8K+Mh74oPt3xZul6JmeLkXcaYUKB4855uKYf4Wxr+618GYx9g==
+Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:256::8)
+ by OS9P286MB4462.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:2c2::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.27; Sat, 15 Jun
+ 2024 03:13:10 +0000
+Received: from TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::670b:45a6:4c30:d899]) by TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::670b:45a6:4c30:d899%4]) with mapi id 15.20.7677.027; Sat, 15 Jun 2024
+ 03:13:10 +0000
+From: Songyang Li <leesongyang@outlook.com>
+To: helgaas@kernel.org
+Cc: bhelgaas@google.com,
+	leesongyang@outlook.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Cancel compilation restrictions on function pcie_clear_device_status
+Date: Sat, 15 Jun 2024 11:13:07 +0800
+Message-ID:
+ <TY3P286MB2754862E7F9F4DE1B25BF357B4C32@TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240612201432.GA1035119@bhelgaas>
+References: <20240612201432.GA1035119@bhelgaas>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [ghXvNqOFAWTYymXLKRZCzvVHOn0ssogF]
+X-ClientProxiedBy: OS0PR01CA0052.jpnprd01.prod.outlook.com
+ (2603:1096:604:98::23) To TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:256::8)
+X-Microsoft-Original-Message-ID:
+ <20240615031307.25441-1-leesongyang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zmyb2WMhhNc7zQ2i@wunner.de>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY3P286MB2754:EE_|OS9P286MB4462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 879f642c-ed1f-41f2-fcda-08dc8ce915c8
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199025|440099025|3412199022|1710799023;
+X-Microsoft-Antispam-Message-Info:
+	Zd9DsCvYqLdiUcQAK2UA30M7cULXXSz43o/wlHuJMuxLdgJgHbiRuyuEIEV2ib4JcY3ovSL5qfwftQBOiRTWWJ6KSFux9PDFeyoPwDay9aw5q4Ki7yMuFm19h+JevhTYYFfWEtLEdZLWLz5UXP02iuLLjJ2fOyBz2ipH/1Sm4UaYW8LmgOfTjeFHLbuykfaq/elYlSRz1DXCb+IzMdBfJZWKPQEU0xm6mChgB8g6NDolxiO+AHMYzQCFxKaLsM6lWLGAkDP/fp1NvJJ5INysn0OEvOHZU8w/Z0CGx9PU/JnJ8I4U8zg/dQ2rxgibtGzvcAHVfYqG9gA3EMEFZ1xa9rJ5BdsOdTBalcjffIQSaB+0oOSd9ce3y5FspK0XDDTLL7CROMshnzfrGbJWEpk5Ar2TzKlfucOSgJ9wD/q1Azi3ibMXRN8pDTJkrxgK7OSquRl3aGTxZqkGpswNUYuAzqRyP70mz0J+aGe9K34kDleJBgir+/pz1e733mKrUDJ3SVaYJvwUECjSRjDbMOF3ms1yP6boANIUGx5AYD+hIQDSEqGSLkE/0JD8tD0hGDoOqZiQWk6AvWk0dZs07PuALDQDaGtoU/scP0qUQVP4wTYbpZTdhZs9hevcsLQ0WDbJ
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8SAf7ipvy00NiELX2Dg7LFHbnrgG0MtbfcoBCiACAMytcidfORNjoaYGKKMX?=
+ =?us-ascii?Q?CRY3NonF3uKLTQsVMC2dUFR9enH81KYPkrYbcBoUkDn3Bmsa7w0SvprtZJbm?=
+ =?us-ascii?Q?jCojFSXjlcpQnm6d54GTz+UTHgPU9Ee9q6+6d+ZbY4caYlngzlnj7xhMW+qu?=
+ =?us-ascii?Q?LRPz4aVkVoQUwzFOUOmOgXyXsPb9ml93v0hANQp/VSbwhJEBgVU8psmBhz6M?=
+ =?us-ascii?Q?I4gVIGnqcyDenuAUfae+CH8pxItda2dCm0FCC1fIqB7iXpyGz+6L+E3YZDV9?=
+ =?us-ascii?Q?dZlZsLDFAY3ymJ8Lb7YNWxnyfhLGTdKV4VxBkx7ma7ICYwBlgefCg0a4sGfD?=
+ =?us-ascii?Q?uwbF4rBZK5UADLc3gmJg+QdFAD4PBYtLo/d5JKBekVmidAhdK6OMs2725124?=
+ =?us-ascii?Q?uR+OrJUfeTW8/OvHOlkYdR4g/w73O9raZnLKIfSZNgs0R//beP/UTxPQvWy8?=
+ =?us-ascii?Q?ISaoJ9+u09Ps6r8ks5DFJ9WHqMEYAldWAB8+8wI7IqXcfQQWZOioEhQMbQ9L?=
+ =?us-ascii?Q?EyXZZDXeuSp/TbuRaYkpt14937AX1ZAFe2bO10wPSWZDRx3SS98VZVIJtT42?=
+ =?us-ascii?Q?BMMwn1BlwJ/bXXg3eIhbDe0NPAG4qd/kAbi60KIX0+uZlhHcglUpEu4gnnew?=
+ =?us-ascii?Q?Dc5sRM8qSZEcziipEu6vyTOpv20aNgQnnZTvvEJq7nvl8ZIG/wzLq3Vl79m8?=
+ =?us-ascii?Q?kvslqzK4pZI7qubDrHTKMA94dkL1sAvk50TI4Ej+njxKMycoQ1aGFSccNLC2?=
+ =?us-ascii?Q?q5o0sXnzF/s78GYUzOIz5fAquFSHSAFBxg8xuJR6hg64NXGeOS+KWduwfgL0?=
+ =?us-ascii?Q?p2BMc9DzhV9+/uNCn43vj1yCViCVJRjr0jGcUMME3M3GncYY6uxfblQaRIun?=
+ =?us-ascii?Q?28RgPtPE9tpKvzd0koEbUdU6S+Kjkcq+20W1FMP6CnjzRgRg1svAbqGBV6yE?=
+ =?us-ascii?Q?pgCrxhJClWVmumu+dOc+a+r16oHn75nhpZyG6CvZ8sVCxk7ejwy+aByPP0Gj?=
+ =?us-ascii?Q?gIrH4Jh3il6Sx1hiTgxSeDA9qpna8XUsLgRvUWTkbVWdwPYPEhiBEeBk9k9M?=
+ =?us-ascii?Q?FbzrRdr4BSt99F8dChNRIoqNI3lfDqzeykQG6MS1dcvKXmLKvPeBQRlULUVy?=
+ =?us-ascii?Q?K2E3Qe7bOa8vuZo0SC7DYjo4yCRUsvCFxFT3mK3e/H1jvuIWp61bq0S1f/Ek?=
+ =?us-ascii?Q?JF4P0/+R8097PPeyxile5AmUKlPNUd7M+MEP8ypo+zOgFprokqConb/t7NE?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 879f642c-ed1f-41f2-fcda-08dc8ce915c8
+X-MS-Exchange-CrossTenant-AuthSource: TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2024 03:13:10.2689
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS9P286MB4462
 
-On Fri, Jun 14, 2024 at 09:36:57PM +0200, Lukas Wunner wrote:
-> On Fri, Jun 14, 2024 at 01:41:20PM -0500, Bjorn Helgaas wrote:
-> > On Tue, May 28, 2024 at 02:42:00PM +0800, Bitao Hu wrote:
-> > > "present" and "link_active" can be 1 if the status is ready, and 0 if
-> > > it is not. Both of them can be -ENODEV if reading the config space
-> > > of the hotplug port failed. That's typically the case if the hotplug
-> > > port itself was hot-removed. Therefore, this situation can occur:
-> > > pciehp_card_present() may return 1 and pciehp_check_link_active()
-> > > may return -ENODEV because the hotplug port was hot-removed in-between
-> > > the two function calls. In that case we'll emit both "Card present"
-> > > *and* "Link Up" since both 1 and -ENODEV are considered "true". This
-> > > is not the expected behavior. Those messages should be emited when
-> > > "present" and "link_active" are positive.
-> [...]
-> > > --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> > > +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> > > @@ -276,10 +276,10 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
-> > >  	case OFF_STATE:
-> > >  		ctrl->state = POWERON_STATE;
-> > >  		mutex_unlock(&ctrl->state_lock);
-> > > -		if (present)
-> > > +		if (present > 0)
-> > 
-> > I completely agree that this is a problem and this patch addresses it.
-> > But ...
-> > 
-> > It seems a little bit weird to me that we even get to this switch
-> > statement if we got -ENODEV from either pciehp_card_present() or
-> > pciehp_check_link_active().  If that happens, a config read failed,
-> > but we're going to go ahead and call pciehp_enable_slot(), which is
-> > going to do a bunch more config accesses, potentially try to power up
-> > the slot, etc.
-> > 
-> > If a config read failed, it seems like we might want to avoid doing
-> > some of this stuff.
+On Wed, 12 Jun 2024 15:14:32 -0500, Bjorn Helgaas wrote:
+> I think all current any callers of pcie_clear_device_status() are also
+> under CONFIG_PCIEAER, so I don't think this fixes a current problem.
 > 
-> Hm, good point.  I guess we should change the logical expression instead:
+> As you point out, it might make sense to use
+> pcie_clear_device_status() even without AER, but I think we should
+> include this change at the time when we add such a use.
 > 
-> -	if (present <= 0 && link_active <= 0) {
-> +	if (present < 0 || link_active < 0 || (!present && !link_active)) {
+> If I'm missing a use with the current kernel, let me know.
 
-It gets to be a fairly complicated expression, and I'm not 100% sure
-we should handle the config read failure the same as the "!present &&
-!link_active" case.  The config read failure probably means the
-Downstream Port is gone, the other case means the device *below* that
-port is gone.  
 
-We likely want to cancel the delayed work in both cases, but what
-about the indicators?  If the Downstream Port is gone, we're not going
-to be able to change them.  Do we want the same message for both?
+As far as I know, some PCIe device drivers, for example,
+[net/ethernet/broadcom/tg3.c],[net/ethernet/atheros/atl1c/atl1c_main.c],
+which use the following code to clear the device status register,
+pcie_capability_write_word(tp->pdev, PCI_EXP_DEVSTA,
+                PCI_EXP_DEVSTA_CED |
+                PCI_EXP_DEVSTA_NFED |
+                PCI_EXP_DEVSTA_FED |
+                PCI_EXP_DEVSTA_URD);
+I think it may be more suitable to export the pcie_clear_device_status()
+for use in the driver code.
+Thanks,
 
-Maybe we should handle the config failures separately first?  These
-error conditions make everything so ugly.
+Songyang Li
 
-> > > -		if (link_active)
-> > > +		if (link_active > 0)
-> > >  			ctrl_info(ctrl, "Slot(%s): Link Up\n",
-> > >  				  slot_name(ctrl));
-> > 
-> > These are cases where we misinterpreted -ENODEV as "device is present"
-> > or "link is active".
-> > 
-> > pciehp_ignore_dpc_link_change() and pciehp_slot_reset() also call
-> > pciehp_check_link_active(), and I think they also interpret -ENODEV as
-> > "link is active".
-> > 
-> > Do we need similar changes there?
-> 
-> Another good observation, both need to check for <= 0 instead of == 0.
-> Do you want to fix that yourself or would you prefer me (or someone else)
-> to submit a patch?
-
-It'd be great if you or somebody else could do that.
-
-Bjorn
 
