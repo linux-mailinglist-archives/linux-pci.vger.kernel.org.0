@@ -1,54 +1,61 @@
-Return-Path: <linux-pci+bounces-8875-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8876-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF62390B665
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2024 18:31:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F92790B6EC
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2024 18:47:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50C682817A0
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2024 16:31:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBFEA283C13
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2024 16:47:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A49E315B10E;
-	Mon, 17 Jun 2024 16:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D3E166312;
+	Mon, 17 Jun 2024 16:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxkp14kQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUYl9lUh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA7715B0F0;
-	Mon, 17 Jun 2024 16:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC0F1662F7;
+	Mon, 17 Jun 2024 16:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718641868; cv=none; b=Zp7RYtPoTMNcBmpn+jGq9oLbvn+1jn+XLtG2yQZ/tNpeLQul8isqzzIJUdhnWBB33lrEcmqwHX3LrdgAqbLxpAAy3SKP9XhhGgClmZxgCrpChl2Bd2p4yvUtbmtCKRU86XQz3KyxcIjAKe/m1oq770A4Skn56srbPDA2S/rDyhg=
+	t=1718642767; cv=none; b=UQFF9/afnvP8hLoOoOLfpndqXbgD59S311R5XlTNmLSJXZJHEWWW3mZvQnkNgHBh9I4E49VszBITXjU8R8QB66EwBiDGs6UTSTXapXYNIgkWVLDBpK05lluku5dvCNQz4FeS09Krmz0dwLcHik6WBeoyMfF2f3gufHwqaKxaHJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718641868; c=relaxed/simple;
-	bh=v/fzNDpfj3nv+7kRqz8+Sg+gzfCBtYUHAc4Cqg1q6aY=;
+	s=arc-20240116; t=1718642767; c=relaxed/simple;
+	bh=xO8XChDFPCNzZpffI0GKMk7UAMqF5tKfD7aEDZU04+0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BfC5ELp7/LEoCOHtJQZe9/11TjEdtyxxnpf223MnolmDanW2L2dpTpGfADEmXF+KTKVD1H7+KnDZFjdkClPNv69Hu4QuDWZY5wAVfYZ4gwGJayNWYvFVJwv5qyvsBGgzdK9HjsDCvTExPoOOvPXAanEi8NAM+jxyMl4mb36/k9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxkp14kQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D37F8C2BD10;
-	Mon, 17 Jun 2024 16:31:07 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=DfvVD9njF7UDR0dy3CVVs//Eret6QWsx62E/3BuC0QjAgNsamHHB3nFksF9QRwQcOFV+iqPU1V/If6OPfXYOTItoq8Xknn/oRnLFm9DM4qBNHPLSw67k1F+OkAS+q8hBOeTsJ89riBYYv5czURopq4L0IZ3mYD9vIrlqiiXuDKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUYl9lUh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E4AC3277B;
+	Mon, 17 Jun 2024 16:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718641868;
-	bh=v/fzNDpfj3nv+7kRqz8+Sg+gzfCBtYUHAc4Cqg1q6aY=;
+	s=k20201202; t=1718642766;
+	bh=xO8XChDFPCNzZpffI0GKMk7UAMqF5tKfD7aEDZU04+0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rxkp14kQ/i1c8KhTzvR2UePzPqgAD6t1pRCpkzySgEZW2z+JabhOQHpR77mUNUkCR
-	 UBQLT9nIZ76S/wOVUn8VbCSwi3RwSMuQMCsvgoRzOGFM2A6F33GEG9PZC6gixAG1Jm
-	 15KMs4A5IfC1Gchj8X2POOMZMtYjDO+dWSnaZG7tgVikVepTvZeKk5+4Z3q2JuCdKh
-	 Tb0tKgn0CtDGtFfUAFUVDDZPFp0/cWz01ds2VQzRQtALXXqMc3N3GXSS28W9wIpS0Z
-	 HUE5UPzA43aEaA49o8yB+2V2hSx4iIR+WlqkWCqthcdCqn1gTRiNwzat5S/7/TYeIy
-	 Fa7g07USdKmRA==
-Date: Mon, 17 Jun 2024 11:31:06 -0500
+	b=YUYl9lUhjz94BZhQz9/gYarQ4pOP/8GbvmV5pbrZTc53wcOzF6VDfcg6f3DVoi1XT
+	 x8/z6mIHV4rBgEd8BjjcFZfKc1JEf01iWfbWijJ6YAJOwcodXaA4WVU6CoKAHAGYhr
+	 m7NDyCRTKNMrAPVNySrfPeVCYQf7ENQK19yJNOYXsgBfGE+AVK5PXLb7+eZA30szCJ
+	 OhIyGseEwn/ZWqEn2QTNpNkBX005hHX5oZkzXqtuPW8eNr33jGRaY05q6SlX2gCR+E
+	 zLi65gBwLERJiF0ogsYdBKnRdtTOlvGk00YuX0weMynueY98RQthvNC40kBra3JjiO
+	 VldAMGaR8udNw==
+Date: Mon, 17 Jun 2024 11:46:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Songyang Li <leesongyang@outlook.com>
-Cc: bhelgaas@google.com, linux-kernel@vger.kernel.org,
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Cancel compilation restrictions on function
- pcie_clear_device_status
-Message-ID: <20240617163106.GA1217016@bhelgaas>
+Subject: Re: [PATCH v9 10/13] PCI: Give pci_intx() its own devres callback
+Message-ID: <20240617164604.GA1217529@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,47 +64,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TY3P286MB2754F489000B7FA6F9CF19D8B4CD2@TY3P286MB2754.JPNP286.PROD.OUTLOOK.COM>
+In-Reply-To: <bdfd5c582e7b858d3f32428000d2268228beef5f.camel@redhat.com>
 
-On Mon, Jun 17, 2024 at 09:35:20PM +0800, Songyang Li wrote:
-> On Sat, 15 Jun 2024 16:26:03 -0500, Bjorn Helgaas wrote:
-> > > On Wed, 12 Jun 2024 15:14:32 -0500, Bjorn Helgaas wrote:
-> > > > I think all current any callers of pcie_clear_device_status() are also
-> > > > under CONFIG_PCIEAER, so I don't think this fixes a current problem.
-> > > > 
-> > > > As you point out, it might make sense to use
-> > > > pcie_clear_device_status() even without AER, but I think we should
-> > > > include this change at the time when we add such a use.
-> > > > 
-> > > > If I'm missing a use with the current kernel, let me know.
-> > > 
-> > > As far as I know, some PCIe device drivers, for example,
-> > > [net/ethernet/broadcom/tg3.c],[net/ethernet/atheros/atl1c/atl1c_main.c],
-> > > which use the following code to clear the device status register,
-> > > pcie_capability_write_word(tp->pdev, PCI_EXP_DEVSTA,
-> > >                 PCI_EXP_DEVSTA_CED |
-> > >                 PCI_EXP_DEVSTA_NFED |
-> > >                 PCI_EXP_DEVSTA_FED |
-> > >                 PCI_EXP_DEVSTA_URD);
-> > > I think it may be more suitable to export the pcie_clear_device_status()
-> > > for use in the driver code.
+On Mon, Jun 17, 2024 at 10:21:10AM +0200, Philipp Stanner wrote:
+> On Fri, 2024-06-14 at 11:14 -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 14, 2024 at 10:09:46AM +0200, Philipp Stanner wrote:
+> ...
+
+> > > Apparently INTx is "old IRQ management" and should be done through
+> > > pci_alloc_irq_vectors() nowadays.
 > > 
-> > If we want to use this from drivers, it would make sense to do
-> > something like this patch, and this patch could be part of a series to
-> > call it from the drivers.
-> > 
-> > But at the same time, we should ask whether drivers should be clearing
-> > this status themselves, or whether it should be done by the PCI core.
+> > Do we have pcim_ support for pci_alloc_irq_vectors()?
 > 
-> After careful consideration, I agree with your point of view.
-> I hold a viewpoint that it should be done by the PCI core,
-> rather than pcie drivers. I give up this patch, and then I have
-> gained a profound understanding of PCIe Core from this communication.
+> Nope.
 
-I tend to think this should be done by the PCI core, but I haven't
-looked at it enough to know how or where.  If you pursue it, I'd love
-to see your ideas!
+Should we?  Or is IRQ support not amenable to devm?
 
-Thanks,
-  Bjorn
+Happened to see this new driver:
+https://lore.kernel.org/all/20240617100359.2550541-3-Basavaraj.Natikar@amd.com/
+that uses devm and the only PCI-related part of .remove() is cleaning
+up the IRQs.
 
