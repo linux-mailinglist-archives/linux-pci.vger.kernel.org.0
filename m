@@ -1,248 +1,224 @@
-Return-Path: <linux-pci+bounces-8897-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8898-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD23B90BFBB
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 01:18:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AEBB90BFD7
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 01:41:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67C09282349
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2024 23:18:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EFAA281578
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jun 2024 23:41:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF935194C94;
-	Mon, 17 Jun 2024 23:18:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C51E71991CA;
+	Mon, 17 Jun 2024 23:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmHCl3qr"
+	dkim=pass (2048-bit key) header.d=igel-co-jp.20230601.gappssmtp.com header.i=@igel-co-jp.20230601.gappssmtp.com header.b="i4h8a0/j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80D6163A97;
-	Mon, 17 Jun 2024 23:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE86DDA6
+	for <linux-pci@vger.kernel.org>; Mon, 17 Jun 2024 23:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718666323; cv=none; b=MiCVo+lKY4yEz/DMRlUqHlCwu1sg/uUJkZvNpsFf8AI7AVjxyhyhJKjgbkhISMGnCFoF2dl6yE1OjckIATo/tmMElwaVl5lwQSaUiMmFx2548tfzImcpWp+qUdatSynaanqPUXorxuFTiO9GBQeGn9tAggoUjhT4mRUZ+g5Fjlk=
+	t=1718667683; cv=none; b=U0AZb8ZNE7erNyN4GPEC2GoCt64gqwiR06sw0qM3Osa9vczkUVab4c/OfoMPMHa58qBo42QA0JsWeuZlH7xuk5i9YXXRS0ZM/72H7+c1ebt5I+toLO7Jph3HE/wlKSGRbk9mjXQIbitWSdu0LeWnEjFWN2p9PnOTNxZ2mY5KV0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718666323; c=relaxed/simple;
-	bh=OP+bYZ7lqGXeuYHiHDI8bcK2qAwONZp4ir5STUjqMVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tKLe2153Pn1xmCTp46VVB6wTsER2L2/FIeLRa31RDKED9nIFBS9nB4ZaHcUD/X7vJgJqL9+brXQgf/gj9yke4ZLKHRrRLT97jBni4SOroKvg1V3IeOYDn51lw1yBg85rKzOrb6fNYmh8f2O/1mV1PTPiHksakbjNzuLMwiV7Bo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmHCl3qr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 106E3C2BD10;
-	Mon, 17 Jun 2024 23:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718666323;
-	bh=OP+bYZ7lqGXeuYHiHDI8bcK2qAwONZp4ir5STUjqMVk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nmHCl3qrAZcW2t9eK7zvS6mq4UTdtfPninSLKL+XNI6oeLLyWd2jn0oWN6EVSAj6c
-	 O7+vHwlBpmsv3dwTsnjd7LtFq9Jfu07yw6SohgJAT6dUKrrvlwmkT4qNTOVCcOpBAt
-	 SCN+l/kFcGPCSH/mREW3UisnAInjzwTZGywtVa3Sc5h+evdbM5iWm2D/BOy6WHd7x+
-	 XcKCdtySJoAROV61pZVinYe23Tmg8WH0Bzx/HmtgugKmVabRkEZu8yETek10OtfF7g
-	 sF8FwkUKUQU1CTd134yyQDqsWFGjTZCdruW0RegxWQuh9h0vEK/PHQxjD9waWhCoq2
-	 jZUCKDJUn+6BQ==
-Date: Mon, 17 Jun 2024 18:18:41 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Bowman Terry <terry.bowman@amd.com>,
-	Hagan Billy <billy.hagan@amd.com>,
-	Simon Guinot <simon.guinot@seagate.com>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v2] PCI: pciehp: Clear LBMS on hot-remove to prevent link
- speed reduction
-Message-ID: <20240617231841.GA1232294@bhelgaas>
+	s=arc-20240116; t=1718667683; c=relaxed/simple;
+	bh=EGhZKCLc8GCsyFE0K97AbCX92rQpazxSUjuv0Ul1A0o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JO4ye6J0FhfqPw2+Pb/5AKQSreU489yrjn02QViybvY35xlL2yL0jZbGtiq6RmR8b0pRxuLIKoWyAJTvmWHvMmBYoFL/nL5VgZxs3ASxEUCPtIKIIMt5UdcPJJVlv/8C3dmPMJD+0UV36k6lZXONin5YjKami/qbCpxsKxENkoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igel.co.jp; spf=pass smtp.mailfrom=igel.co.jp; dkim=pass (2048-bit key) header.d=igel-co-jp.20230601.gappssmtp.com header.i=@igel-co-jp.20230601.gappssmtp.com header.b=i4h8a0/j; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igel.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igel.co.jp
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-80b7699abcaso1368713241.3
+        for <linux-pci@vger.kernel.org>; Mon, 17 Jun 2024 16:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20230601.gappssmtp.com; s=20230601; t=1718667680; x=1719272480; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ezjr4vOTDpa5tlXOg2IPrvZ97jwXmLsTTeegkWPsjjE=;
+        b=i4h8a0/jTlSqm5BygRdNK4uLt1zvm86178dj2O3hhtJb9exu6YBlHiA7TNcruDfzBP
+         Vg+tyXAOklGzGewv3rpgxD0faUgPY+DEZU7yqGwTzS1jQSyafQOh/z+MQRoFjL3bGo3J
+         46RNzJ3RYd9w6NucDzmx5yPPQIF0nYbG65hh2MQkRg8MEDvJzgqe5laVhjjhbkxVgQ1K
+         C9+xXpfaedT0WR7cyHz0zynrmQObQXYABY2/NFNmu9Ozaw5jEoFUSi/rG59ZZKfPRYnX
+         r9vW/Bq9aB2+EzeSsADJdEKFq9yPmg1NXk82R2an9QWqceTCdQq18Ltjxo4HmJdmRXDQ
+         9Gxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718667680; x=1719272480;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ezjr4vOTDpa5tlXOg2IPrvZ97jwXmLsTTeegkWPsjjE=;
+        b=lsPdmg70m9/sANtkXO1k1IIPtyiJLZYzrcRCqZBT/Om6lX4HSuoCOp1NnWh9+exnRE
+         4xP1je3RRBru5ZN/zU+XTZ6YHNv2OBsNyWFwErbtxi+6vYgtgeyVXHvrsqAPO/5iLZGN
+         W0UTmwREG445e7cLiUAD0NJGTgUFabgOhDgiNNqcNe8SWaX711Uq0t4JF6p8o5FvLeGC
+         XCN9NNh16Jg8KMEWCz5HqDqv2REbYWiB7J2cI3NNwuznGOSFNvo5LilcBUoXXRLDb7e9
+         izaYHr0KP552wrk5Nh3qDr1P3AiNZY3YDvFXVbs01Q5akQmLPM42bK1UdOM32RGlArjT
+         ypOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjRMc6+aSgS3tJbAG0Qk3DgwSsKJuc8vNtAmlZC1WTmIitSdm3F5Yd/FX1TL55sBFllAfTPPzJ9291eRR7ytfLMFdum9cYTllq
+X-Gm-Message-State: AOJu0Yw4UDuOTdcMFtrL0WDpko8dZYjD1ZTewxv+WIM7KPoDb5hLRUJj
+	Z70OQUcw/4qKqUfMD2liFswcD6ex6oKa24m8eSJQz/tRFmKWw0DJ2SNlT+ur+djWUWE0Mi+cu0U
+	agH0ZeuuelN8fH6dSB/vq5FeXzjIUa7Q1m15e5w==
+X-Google-Smtp-Source: AGHT+IGCgko3dsG3RDOkEu9eXynGhaJ1dXjxNzPfiQTSWcQAxhegQKdCUwWdN5c+CVRDaodxxBKvr7orivmk/rM0Jac=
+X-Received: by 2002:a67:cf89:0:b0:48c:55b9:e9f with SMTP id
+ ada2fe7eead31-48dae3e2d13mr10931067137.33.1718667680251; Mon, 17 Jun 2024
+ 16:41:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4241291f-7e83-c878-6bff-59649d630410@amd.com>
+References: <CANXvt5r00Y5VGKSFXFnwbvGF+fhh2uNvU5VBGwECA9yabK4=Uw@mail.gmail.com>
+ <20240516125913.GC11261@thinkpad> <20240520090809-mutt-send-email-mst@kernel.org>
+ <20240614095033.GA59574@thinkpad>
+In-Reply-To: <20240614095033.GA59574@thinkpad>
+From: Shunsuke Mie <mie@igel.co.jp>
+Date: Tue, 18 Jun 2024 08:41:09 +0900
+Message-ID: <CANXvt5ojosFbt60Gcfym1DX96W7SiX4X15dMGdSCVEPhUTpk=w@mail.gmail.com>
+Subject: Re: [RFC] Legacy Virtio Driver with Device Has Limited Memory Access
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, linux-pci@vger.kernel.org, 
+	virtualization@lists.linux.dev, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 17, 2024 at 03:51:57PM -0700, Smita Koralahalli wrote:
-> Hi Bjorn,
-> 
-> On 6/17/2024 1:09 PM, Bjorn Helgaas wrote:
-> > On Thu, May 16, 2024 at 08:47:48PM +0000, Smita Koralahalli wrote:
-> > > Clear Link Bandwidth Management Status (LBMS) if set, on a hot-remove
-> > > event.
-> > > 
-> > > The hot-remove event could result in target link speed reduction if LBMS
-> > > is set, due to a delay in Presence Detect State Change (PDSC) happening
-> > > after a Data Link Layer State Change event (DLLSC).
-> > > 
-> > > In reality, PDSC and DLLSC events rarely come in simultaneously. Delay in
-> > > PDSC can sometimes be too late and the slot could have already been
-> > > powered down just by a DLLSC event. And the delayed PDSC could falsely be
-> > > interpreted as an interrupt raised to turn the slot on. This false process
-> > > of powering the slot on, without a link forces the kernel to retrain the
-> > > link if LBMS is set, to a lower speed to restablish the link thereby
-> > > bringing down the link speeds [2].
-> > 
-> > Not sure we need PDSC and DLLSC details to justify clearing LBMS if it
-> > has no meaning for an empty slot?
-> 
-> I'm trying to also answer your below question here..
-> 
-> >I guess the slot is empty, so retraining
-> > is meaningless and will always fail.  Maybe avoiding it avoids a
-> > delay?  Is the benefit that we get rid of the message and a delay?"
-> 
-> The benefit of this patch is to "avoid link speed drops" on a hot remove
-> event if LBMS is set and DLLLA is clear. But I'm not trying to solve delay
-> issues here..
-> 
-> I included the PDSC and DLLSC details as they are the cause for link speed
-> drops on a remove event. On an empty slot, DLLLA is cleared and LBMS may or
-> may not be set. And, we see cases of link speed drops here, if PDSC happens
-> on an empty slot.
-> 
-> We know for the fact that slot becomes empty if either of the events PDSC or
-> DLLSC occur. Also, either of them do not wait for the other to bring down
-> the device and mark the slot as "empty". That is the reason I was also
-> thinking of waiting on both events PDSC and DLLSC to bring down the device
-> as I mentioned in my comments in V1. We could eliminate link speed drops by
-> taking this approach as well. But then we had to address cases where PDSC is
-> hardwired to zero.
-> 
-> On our AMD systems, we expect to see both events on an hot-remove event.
-> But, mostly we see DLLSC happening first, which does the job of marking the
-> slot empty. Now, if the PDSC event is delayed way too much and if it occurs
-> after the slot becomes empty, kernel misinterprets PDSC as the signal to
-> re-initialize the slot and this is the sequence of steps the kernel takes:
-> 
-> pciehp_handle_presence_or_link_change()
->   pciehp_enable_slot()
->     __pciehp_enable_slot()
->         board_added
->           pciehp_check_link_status()
->             pcie_wait_for_link()
->               pcie_wait_for_link_delay()
->                 pcie_failed_link_retrain()
-> 
-> while doing so, it hits the case of DLLLA clear and LBMS set and brings down
-> the speeds.
+Let's clarify the situation.
 
-So I guess LBMS currently remains set after a device has been removed,
-so the slot is empty, and later when a device is hot-added, *that*
-device sees a lower-than expected link speed?
+The Virtio device and driver are not working properly due to a
+combination of the following reasons:
 
-> The issue of PDSC and DLLSC never occurring simultaneously was a known thing
-> from before and it wasn't breaking anything functionally as the kernel would
-> just exit with the message: "No link" at pciehp_check_link_status().
-> 
-> However, Commit a89c82249c37 ("PCI: Work around PCIe link training
-> failures") introduced link speed downgrades to re-establish links if LBMS is
-> set, and DLLLA is clear. This caused the devices to operate at 2.5GT/s after
-> they were plugged-in which were previously operating at higher speeds before
-> hot-remove.
-> 
-> > > According to PCIe r6.2 sec 7.5.3.8 [1], it is derived that, LBMS cannot
-> > > be set for an unconnected link and if set, it serves the purpose of
-> > > indicating that there is actually a device down an inactive link.
-> > 
-> > I see that r6.2 added an implementation note about DLLSC, but I'm not
-> > a hardware person and can't follow the implication about a device
-> > present down an inactive link.
-> > 
-> > I guess it must be related to the fact that LBMS indicates either
-> > completion of link retraining or a change in link speed or width
-> > (which would imply presence of a downstream device).  But in both
-> > cases I assume the link would be active.
-> > 
-> > But IIUC LBMS is set by hardware but never cleared by hardware, so if
-> > we remove a device and power off the slot, it doesn't seem like LBMS
-> > could be telling us anything useful (what could we do in response to
-> > LBMS when the slot is empty?), so it makes sense to me to clear it.
-> > 
-> > It seems like pciehp_unconfigure_device() does sort of PCI core and
-> > driver-related things and possibly could be something shared by all
-> > hotplug drivers, while remove_board() does things more specific to the
-> > hotplug model (pciehp, shpchp, etc).
-> > 
-> >  From that perspective, clearing LBMS might fit better in
-> > remove_board().  In that case, I wonder whether it should be done
-> > after turning off slot power?  This patch clears is *before* turning
-> > off the power, so I wonder if hardware could possibly set it again
-> > before the poweroff?
-> 
-> Yeah by talking to HW people I realized that HW could interfere possibly
-> anytime to set LBMS when the slot power is on. Will change it to include in
-> remove_board().
-> 
-> > > However, hardware could have already set LBMS when the device was
-> > > connected to the port i.e when the state was DL_Up or DL_Active. Some
-> > > hardwares would have even attempted retrain going into recovery mode,
-> > > just before transitioning to DL_Down.
-> > > 
-> > > Thus the set LBMS is never cleared and might force software to cause link
-> > > speed drops when there is no link [2].
-> > > 
-> > > Dmesg before:
-> > > 	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> > > 	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> > > 	pcieport 0000:20:01.1: broken device, retraining non-functional downstream link at 2.5GT/s
-> > > 	pcieport 0000:20:01.1: retraining failed
-> > > 	pcieport 0000:20:01.1: pciehp: Slot(59): No link
-> > > 
-> > > Dmesg after:
-> > > 	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
-> > > 	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
-> > > 	pcieport 0000:20:01.1: pciehp: Slot(59): No link
-> > 
-> > I'm a little confused about the problem being solved here.  Obviously
-> > the message is extraneous.  I guess the slot is empty, so retraining
-> > is meaningless and will always fail.  Maybe avoiding it avoids a
-> > delay?  Is the benefit that we get rid of the message and a delay?
-> > 
-> > > [1] PCI Express Base Specification Revision 6.2, Jan 25 2024.
-> > >      https://members.pcisig.com/wg/PCI-SIG/document/20590
-> > > [2] Commit a89c82249c37 ("PCI: Work around PCIe link training failures")
-> > > 
-> > > Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
-> > 
-> > Lukas asked about this; did you confirm that it is related?  Asking
-> > because the Fixes tag may cause this to be backported along with
-> > a89c82249c37.
-> 
-> Yeah, without this patch we won't see link speed drops.
-> 
-> Thanks,
-> Smita
-> 
-> > 
-> > > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> > > ---
-> > > Link to v1:
-> > > https://lore.kernel.org/all/20240424033339.250385-1-Smita.KoralahalliChannabasappa@amd.com/
-> > > 
-> > > v2:
-> > > 	Cleared LBMS unconditionally. (Ilpo)
-> > > 	Added Fixes Tag. (Lukas)
-> > > ---
-> > >   drivers/pci/hotplug/pciehp_pci.c | 3 +++
-> > >   1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-> > > index ad12515a4a12..dae73a8932ef 100644
-> > > --- a/drivers/pci/hotplug/pciehp_pci.c
-> > > +++ b/drivers/pci/hotplug/pciehp_pci.c
-> > > @@ -134,4 +134,7 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
-> > >   	}
-> > >   	pci_unlock_rescan_remove();
-> > > +
-> > > +	pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
-> > > +				   PCI_EXP_LNKSTA_LBMS);
-> > >   }
-> > > -- 
-> > > 2.17.1
-> > > 
+1. Regarding VIRTIO_F_ACCESS_PLATFORM:
+- The modern spec includes VIRTIO_F_ACCESS_PLATFORM, which allows
+Physical DMAC to be used.
+- This feature is not available in the legacy spec.
+
+2. Regarding Virtio PCIe Capability:
+- The modern spec requires Virtio PCIe Capability.
+- In some environments, Virtio PCIe Capability cannot be provided.
+
+Ideas to solve this problem:
+1. Introduce an ACCESS_PLATFORM-like flag in the legacy spec:
+There are some unused bits, but it may be difficult to make changes to
+the legacy spec at this stage.
+
+2. Mani's Idea:
+I think it is best to add support for modern virtio PCI device to make
+use of IOMMU. Legacy devices can continue to use physical address.
+
+The meaning of "Legacy devices can continue to use physical address"
+is not fully understood. @mani Could you explain more?
+
+3. Wait until the HW supports the modern spec:
+This depends on the chip vendor.
+
+Option 3 is essentially doing nothing, so it would be preferable to
+consider other ideas.
+
+Best,
+Shunsuke
+
+2024=E5=B9=B46=E6=9C=8814=E6=97=A5(=E9=87=91) 18:50 Manivannan Sadhasivam <=
+mani@kernel.org>:
+>
+> On Mon, May 20, 2024 at 09:22:54AM -0400, Michael S. Tsirkin wrote:
+> > On Thu, May 16, 2024 at 02:59:13PM +0200, Manivannan Sadhasivam wrote:
+> > > On Thu, May 16, 2024 at 01:38:40PM +0900, Shunsuke Mie wrote:
+> > > > Hi virtio folks,
+> > > >
+> > >
+> > > You forgot to CC the actual Virtio folks. I've CCed them now.
+> > >
+> > > > I'm writing to discuss finding a workaround with Virtio drivers and=
+ legacy
+> > > > devices with limited memory access.
+> > > >
+> > > > # Background
+> > > > The Virtio specification defines a feature (VIRTIO_F_ACCESS_PLATFOR=
+M) to
+> > > > indicate devices requiring restricted memory access or IOMMU transl=
+ation. This
+> > > > feature bit resides at position 33 in the 64-bit Features register =
+on modern
+> > > > interfaces. When the linux virtio driver finds the flag, the driver=
+ uses DMA
+> > > > API that handles to use of appropriate memory.
+> > > >
+> > > > # Problem
+> > > > However, legacy devices only have a 32-bit register for the feature=
+s bits.
+> > > > Consequently, these devices cannot represent the ACCESS_PLATFORM bi=
+t. As a
+> > > > result, legacy devices with restricted memory access cannot functio=
+n
+> > > > properly[1]. This is a legacy spec issue, but I'd like to find a wo=
+rkaround.
+> > > >
+> > > > # Proposed Solutions
+> > > > I know these are not ideal, but I propose the following solution.
+> > > > Driver-side:
+> > > >     - Implement special handling similar to xen_domain.
+> > > > In xen_domain, linux virtio driver enables to use the DMA API.
+> > > >     - Introduce a CONFIG option to adjust the DMA API behavior.
+> > > > Device-side:
+> > > > Due to indistinguishability from the guest's perspective, a device-=
+side
+> > > > solution might be difficult.
+> > > >
+> > > > I'm open to any comments or suggestions you may have on this issue =
+or
+> > > > alternative approaches.
+> > > >
+> > > > [1] virtio-net PCI endpoint function using PCIe Endpoint Framework,
+> > > > https://lore.kernel.org/lkml/54ee46c3-c845-3df3-8ba0-0ee79a2acab1@i=
+gel.co.jp/t/
+> > > > The Linux PCIe endpoint framework is used to implement the virtio-n=
+et device on
+> > > > a legacy interface. This is necessary because of the framework and =
+hardware
+> > > > limitation.
+> > > >
+> > >
+> > > We can fix the endpoint framework limitation, but the problem lies wi=
+th some
+> > > platforms where we cannot write to vendor capability registers and st=
+ill have
+> > > IOMMU.
+> > >
+> > > - Mani
+> >
+> > What are vendor capability registers and what do they have to do
+> > with the IOMMU?
+> >
+>
+> Virtio spec v1.2, sec 4.1.4 says,
+>
+> "Each structure can be mapped by a Base Address register (BAR) belonging =
+to the
+> function, or accessed via the special VIRTIO_PCI_CAP_PCI_CFG field in the=
+ PCI
+> configuration space.
+>
+> The location of each structure is specified using a vendor-specific PCI
+> capability located on the capability list in PCI configuration space of t=
+he
+> device."
+>
+> So this means the device has to expose the virtio structures through vend=
+or
+> specific capability isn't it?
+>
+> And only in that case, it can expose VIRTIO_F_ACCESS_PLATFORM bit for mak=
+ing
+> use of IOMMU translation.
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
