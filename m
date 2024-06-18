@@ -1,60 +1,57 @@
-Return-Path: <linux-pci+bounces-8899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8900-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAE7490C43A
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 09:19:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9013790C466
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 09:33:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 91AC11C20FE4
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 07:19:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80F8A1C20ACD
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 07:33:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3C0A13AD06;
-	Tue, 18 Jun 2024 06:55:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7F0770F9;
+	Tue, 18 Jun 2024 07:09:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSfN8njx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9NYB4Tj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E5D13AD05;
-	Tue, 18 Jun 2024 06:55:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304AF73440;
+	Tue, 18 Jun 2024 07:09:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718693708; cv=none; b=L+JgwCxQBQVRhcHO4Oytv19a5tP1aks/C67TH8jApngKNIyTAIc0cIa3t3JMmS16AGaN0NvgJH4rMinJ48TGYkjxW+e3qcx/AHJRzqJ0U5tfUF/VxIhAUlKPVqimS8+VdTXutapaMk/w+6ShnXhm7IJD1Gjj13pmFxe/OribsiY=
+	t=1718694577; cv=none; b=fVvgaYqh17sGIFcmCZrE6BEHuXZaLzR794XAfCMIG8bYrFptPTsmaCAaYty21pF3gpWVxkPKBfrIr3uFAaitA005+YewXLrUBE3zEOuy22nry2y7qeXbX4EqD8+23p4qFDyW9Jhro58mEWNtFWLYVYiiGGMU9gNWT2j24N2TczY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718693708; c=relaxed/simple;
-	bh=BEa2B+TH/CvjjfcsXbgnjJkN3ogctMFgaz1/QbYTplw=;
+	s=arc-20240116; t=1718694577; c=relaxed/simple;
+	bh=e6XzdJg33xWRVNzNhUgA1l17Hz8JCuFvsGbY8RSFHzE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SHvBsag+tuKvIYU19UgnZyDPoEh2BXkytQiV92YD0dfYH965l49wBHMFdUEHkf2am4T9uBlnCqA8uHxbwRqffngoZh0XW9HSaClD9cNNzxrrrHPTOT3+GXAITC9kD3MQY9LPGnCeDcZ7sBEgOUUFwEr4gNoqa644EKBxeVyOOVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSfN8njx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5772C3277B;
-	Tue, 18 Jun 2024 06:55:05 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PHxefL0ihDnWEG/shQyvel+aqc4fSUkr8STjUXrIN64iij9ERhjwzOYYdg3tpgU5W53pM58EwnAg4rPHk+/H3ylqcX5CejvVpweUhihdYqiP2BAclporKS81kbFRFgT04sF+OT4poJRVG1KeWGPjI0OagBwDvDl1Bc3cEIME3cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9NYB4Tj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DBC0C3277B;
+	Tue, 18 Jun 2024 07:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718693708;
-	bh=BEa2B+TH/CvjjfcsXbgnjJkN3ogctMFgaz1/QbYTplw=;
+	s=k20201202; t=1718694577;
+	bh=e6XzdJg33xWRVNzNhUgA1l17Hz8JCuFvsGbY8RSFHzE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qSfN8njxfR0BYAVMLhx3dzs04nA6AZGEIlSJzhkW/yyMUyWoG1XJ21OjTQNdiTQuw
-	 ie+64LEwsOX9P2kbqOsj3u5U5g2VYy85ZAkN7ScXNo4pt3aKc5zrie2obDPmPhxUdV
-	 7xNKpk87RbNdfENbUPSFo9RZES9Y2o6hmGOBo4ivMZNUc/9I8xFHba0A4n0aGNHRYQ
-	 3c+SNtHaRWgsDT0JKUEQJYJI+1cdN0urSiY4hwIAhf5bFAKfIbSzWLw0tHQP3mIwxs
-	 7SKtAg5+sFLkfV5DvO6tBmk4w25Lq08CHowOeLedK0nyPKXNDZn51/C+7C41QSArnR
-	 j3UjXmNYDbzBw==
-Date: Tue, 18 Jun 2024 12:24:57 +0530
+	b=N9NYB4TjMFmhgTdHjD1Cd6/wrVJFfDkjK6O8jZ64o3jse5CrgnJozCb0735mnIObJ
+	 4ZareHDMYJScAbYLQoayzTqw7DGYUzlDxMmHyH1k5mokGXSJA0KpROnDBPmTehRE2p
+	 ilWtMyUmAUJLzzgkSm5faFSqVa9MbYVErOPQrZjwe7pDJwpRNtm/AqGRqOmjdqIO8J
+	 vawEhaTFyTVgkL+esm8P5C4zQKQSZQxRjIMIaB1cdRzjZgMDRmLCkb86sXUYoVlAYI
+	 Y6fPUykV4n0Ans35o4LZKwoUO5wNMkQhBq4+mb7LGX4wWMTdb2WbhR/bCx8tLIptlW
+	 s5+sfUXVhKhhQ==
+Date: Tue, 18 Jun 2024 12:39:25 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Shunsuke Mie <mie@igel.co.jp>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>, linux-pci@vger.kernel.org,
-	virtualization@lists.linux.dev, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com
-Subject: Re: [RFC] Legacy Virtio Driver with Device Has Limited Memory Access
-Message-ID: <20240618065457.GA5485@thinkpad>
-References: <CANXvt5r00Y5VGKSFXFnwbvGF+fhh2uNvU5VBGwECA9yabK4=Uw@mail.gmail.com>
- <20240516125913.GC11261@thinkpad>
- <20240520090809-mutt-send-email-mst@kernel.org>
- <20240614095033.GA59574@thinkpad>
- <CANXvt5ojosFbt60Gcfym1DX96W7SiX4X15dMGdSCVEPhUTpk=w@mail.gmail.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v9 4/5] PCI: rcar-gen4: Add support for r8a779g0
+Message-ID: <20240618070925.GB5485@thinkpad>
+References: <20240611125057.1232873-1-yoshihiro.shimoda.uh@renesas.com>
+ <20240611125057.1232873-5-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,137 +61,332 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANXvt5ojosFbt60Gcfym1DX96W7SiX4X15dMGdSCVEPhUTpk=w@mail.gmail.com>
+In-Reply-To: <20240611125057.1232873-5-yoshihiro.shimoda.uh@renesas.com>
 
-On Tue, Jun 18, 2024 at 08:41:09AM +0900, Shunsuke Mie wrote:
-> Let's clarify the situation.
+On Tue, Jun 11, 2024 at 09:50:56PM +0900, Yoshihiro Shimoda wrote:
+> Add support for r8a779g0 (R-Car V4H).
 > 
-> The Virtio device and driver are not working properly due to a
-> combination of the following reasons:
+> This driver previously supported r8a779f0 (R-Car S4-8). PCIe features
+> of both r8a779f0 and r8a779g0 are almost all the same. For example:
+>  - PCI Express Base Specification Revision 4.0
+>  - Root complex mode and endpoint mode are supported
+> However, r8a779g0 requires specific firmware downloading, to
+> initialize the PHY. Otherwise, the PCIe controller cannot work.
 > 
-> 1. Regarding VIRTIO_F_ACCESS_PLATFORM:
-> - The modern spec includes VIRTIO_F_ACCESS_PLATFORM, which allows
-> Physical DMAC to be used.
-> - This feature is not available in the legacy spec.
+> The attached firmware file "104_PCIe_fw_addr_data_ver1.05.txt" in
+> the datasheet is a text file. But, Renesas is not able to distribute
+> the firmware freely. So, we require converting the text file
+> to a binary before the driver runs by using the following script:
 > 
-> 2. Regarding Virtio PCIe Capability:
-> - The modern spec requires Virtio PCIe Capability.
-> - In some environments, Virtio PCIe Capability cannot be provided.
+>  $ awk '/^\s*0x[0-9A-Fa-f]{4}\s+0x[0-9A-Fa-f]{4}/ \
+>    { print substr($2,5,2) substr($2,3,2) }' \
+>    104_PCIe_fw_addr_data_ver1.05.txt | xxd -p -r > \
+>    rcar_gen4_pcie.bin
+>  $ sha1sum rcar_gen4_pcie.bin
+>    1d0bd4b189b4eb009f5d564b1f93a79112994945  rcar_gen4_pcie.bin
 > 
-> Ideas to solve this problem:
-> 1. Introduce an ACCESS_PLATFORM-like flag in the legacy spec:
-> There are some unused bits, but it may be difficult to make changes to
-> the legacy spec at this stage.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 207 +++++++++++++++++++-
+>  1 file changed, 206 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> index dac78388975d..c67097e718d3 100644
+> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> @@ -5,8 +5,10 @@
+>   */
+>  
+>  #include <linux/delay.h>
+> +#include <linux/firmware.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/pci.h>
+> @@ -20,9 +22,10 @@
+>  /* Renesas-specific */
+>  /* PCIe Mode Setting Register 0 */
+>  #define PCIEMSR0		0x0000
+> -#define BIFUR_MOD_SET_ON	BIT(0)
+> +#define APP_SRIS_MODE		BIT(6)
+>  #define DEVICE_TYPE_EP		0
+>  #define DEVICE_TYPE_RC		BIT(4)
+> +#define BIFUR_MOD_SET_ON	BIT(0)
+>  
+>  /* PCIe Interrupt Status 0 */
+>  #define PCIEINTSTS0		0x0084
+> @@ -37,19 +40,48 @@
+>  #define PCIEDMAINTSTSEN		0x0314
+>  #define PCIEDMAINTSTSEN_INIT	GENMASK(15, 0)
+>  
+> +/* Port Logic Registers 89 */
+> +#define PRTLGC89		0x0b70
+> +
+> +/* Port Logic Registers 90 */
+> +#define PRTLGC90		0x0b74
+> +
+>  /* PCIe Reset Control Register 1 */
+>  #define PCIERSTCTRL1		0x0014
+>  #define APP_HOLD_PHY_RST	BIT(16)
+>  #define APP_LTSSM_ENABLE	BIT(0)
+>  
+> +/* PCIe Power Management Control */
+> +#define PCIEPWRMNGCTRL		0x0070
+> +#define APP_CLK_REQ_N		BIT(11)
+> +#define APP_CLK_PM_EN		BIT(10)
+> +
+>  #define RCAR_NUM_SPEED_CHANGE_RETRIES	10
+>  #define RCAR_MAX_LINK_SPEED		4
+>  
+>  #define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
+>  #define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
+>  
+> +/*
+> + * The attached firmware file "104_PCIe_fw_addr_data_ver1.05.txt" in
+> + * the datasheet is a text file. But, Renesas is not able to distribute
+> + * the firmware freely. So, we require converting the text file
+> + * to a binary before the driver runs by using the following script:
+> + *
+> + * $ awk '/^\s*0x[0-9A-Fa-f]{4}\s+0x[0-9A-Fa-f]{4}/ \
+> + *      { print substr($2,5,2) substr($2,3,2) }' \
+> + *      104_PCIe_fw_addr_data_ver1.05.txt | xxd -p -r > \
+> + *      rcar_gen4_pcie.bin
+> + *    $ sha1sum rcar_gen4_pcie.bin
+> + *      1d0bd4b189b4eb009f5d564b1f93a79112994945  rcar_gen4_pcie.bin
+> + */
+> +#define RCAR_GEN4_PCIE_FIRMWARE_NAME		"rcar_gen4_pcie.bin"
+> +#define RCAR_GEN4_PCIE_FIRMWARE_BASE_ADDR	0xc000
+> +MODULE_FIRMWARE(RCAR_GEN4_PCIE_FIRMWARE_NAME);
+> +
+>  struct rcar_gen4_pcie;
+>  struct rcar_gen4_pcie_drvdata {
+> +	void (*additional_common_init)(struct rcar_gen4_pcie *rcar);
+>  	int (*ltssm_control)(struct rcar_gen4_pcie *rcar, bool enable);
+>  	enum dw_pcie_device_mode mode;
+>  };
+> @@ -57,6 +89,7 @@ struct rcar_gen4_pcie_drvdata {
+>  struct rcar_gen4_pcie {
+>  	struct dw_pcie dw;
+>  	void __iomem *base;
+> +	void __iomem *phy_base;
+>  	struct platform_device *pdev;
+>  	const struct rcar_gen4_pcie_drvdata *drvdata;
+>  };
+> @@ -180,6 +213,9 @@ static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
+>  	if (ret)
+>  		goto err_unprepare;
+>  
+> +	if (rcar->drvdata->additional_common_init)
+> +		rcar->drvdata->additional_common_init(rcar);
+> +
+>  	return 0;
+>  
+>  err_unprepare:
+> @@ -221,6 +257,10 @@ static void rcar_gen4_pcie_unprepare(struct rcar_gen4_pcie *rcar)
+>  
+>  static int rcar_gen4_pcie_get_resources(struct rcar_gen4_pcie *rcar)
+>  {
+> +	rcar->phy_base = devm_platform_ioremap_resource_byname(rcar->pdev, "phy");
+> +	if (IS_ERR(rcar->phy_base))
+> +		return PTR_ERR(rcar->phy_base);
+> +
 
-For sure this is a no-go based on the response from Michael. But if Linux Virtio
-maintainers were willing to add some flexibility for legacy devices to use DMA
-APIs as like xen-domain (I haven't checked in detail) you previously mentioned,
-then it can be helpful.
-
-> 2. Mani's Idea:
-> I think it is best to add support for modern virtio PCI device to make
-> use of IOMMU. Legacy devices can continue to use physical address.
-> 
-
-It is same as option 3. Legacy devices will continue to use physical address and
-once we add support for modern virtio device, it can use IOMMU translation.
-
-So the conclusion is, if the platform has IOMMU and doesn't allow configuring
-the vendor specific capability, then it cannot be supported as is in upstream
-Linux Endpoint framework (unless some changes happens in the Linux virtio
-stack).
+I failed to spot this in earlier reviews. Since this 'phy' region is only
+applicable for r8a779g0, wouldn't this fail on other platforms?
 
 - Mani
 
-> The meaning of "Legacy devices can continue to use physical address"
-> is not fully understood. @mani Could you explain more?
+>  	/* Renesas-specific registers */
+>  	rcar->base = devm_platform_ioremap_resource_byname(rcar->pdev, "app");
+>  
+> @@ -528,6 +568,167 @@ static int r8a779f0_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, bool enable)
+>  	return 0;
+>  }
+>  
+> +static void rcar_gen4_pcie_additional_common_init(struct rcar_gen4_pcie *rcar)
+> +{
+> +	struct dw_pcie *dw = &rcar->dw;
+> +	u32 val;
+> +
+> +	val = dw_pcie_readl_dbi(dw, PCIE_PORT_LANE_SKEW);
+> +	val &= ~PORT_LANE_SKEW_INSERT_MASK;
+> +	if (dw->num_lanes < 4)
+> +		val |= BIT(6);
+> +	dw_pcie_writel_dbi(dw, PCIE_PORT_LANE_SKEW, val);
+> +
+> +	val = readl(rcar->base + PCIEPWRMNGCTRL);
+> +	val |= APP_CLK_REQ_N | APP_CLK_PM_EN;
+> +	writel(val, rcar->base + PCIEPWRMNGCTRL);
+> +}
+> +
+> +static void rcar_gen4_pcie_phy_reg_update_bits(struct rcar_gen4_pcie *rcar,
+> +					       u32 offset, u32 mask, u32 val)
+> +{
+> +	u32 tmp;
+> +
+> +	tmp = readl(rcar->phy_base + offset);
+> +	tmp &= ~mask;
+> +	tmp |= val;
+> +	writel(tmp, rcar->phy_base + offset);
+> +}
+> +
+> +/*
+> + * SoC datasheet suggests checking port logic register bits during firmware
+> + * write. If read returns non-zero value, then this function returns -EAGAIN
+> + * indicating that the write needs to be done again. If read returns zero,
+> + * then return 0 to indicate success.
+> + */
+> +static int rcar_gen4_pcie_reg_test_bit(struct rcar_gen4_pcie *rcar,
+> +				       u32 offset, u32 mask)
+> +{
+> +	struct dw_pcie *dw = &rcar->dw;
+> +
+> +	if (dw_pcie_readl_dbi(dw, offset) & mask)
+> +		return -EAGAIN;
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_gen4_pcie_download_phy_firmware(struct rcar_gen4_pcie *rcar)
+> +{
+> +	/* The check_addr values are magical numbers in the datasheet */
+> +	const u32 check_addr[] = { 0x00101018, 0x00101118, 0x00101021, 0x00101121};
+> +	struct dw_pcie *dw = &rcar->dw;
+> +	const struct firmware *fw;
+> +	unsigned int i, timeout;
+> +	u32 data;
+> +	int ret;
+> +
+> +	ret = request_firmware(&fw, RCAR_GEN4_PCIE_FIRMWARE_NAME, dw->dev);
+> +	if (ret) {
+> +		dev_err(dw->dev, "Failed to load firmware (%s): %d\n",
+> +			RCAR_GEN4_PCIE_FIRMWARE_NAME, ret);
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < (fw->size / 2); i++) {
+> +		data = fw->data[(i * 2) + 1] << 8 | fw->data[i * 2];
+> +		timeout = 100;
+> +		do {
+> +			dw_pcie_writel_dbi(dw, PRTLGC89, RCAR_GEN4_PCIE_FIRMWARE_BASE_ADDR + i);
+> +			dw_pcie_writel_dbi(dw, PRTLGC90, data);
+> +			if (!rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC89, BIT(30)))
+> +				break;
+> +			if (!(--timeout)) {
+> +				ret = -ETIMEDOUT;
+> +				goto exit;
+> +			}
+> +			usleep_range(100, 200);
+> +		} while (1);
+> +	}
+> +
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x0f8, BIT(17), BIT(17));
+> +
+> +	for (i = 0; i < ARRAY_SIZE(check_addr); i++) {
+> +		timeout = 100;
+> +		do {
+> +			dw_pcie_writel_dbi(dw, PRTLGC89, check_addr[i]);
+> +			ret = rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC89, BIT(30));
+> +			ret |= rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC90, BIT(0));
+> +			if (!ret)
+> +				break;
+> +			if (!(--timeout)) {
+> +				ret = -ETIMEDOUT;
+> +				goto exit;
+> +			}
+> +			usleep_range(100, 200);
+> +		} while (1);
+> +	}
+> +
+> +exit:
+> +	release_firmware(fw);
+> +
+> +	return ret;
+> +}
+> +
+> +static int rcar_gen4_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, bool enable)
+> +{
+> +	struct dw_pcie *dw = &rcar->dw;
+> +	u32 val;
+> +	int ret;
+> +
+> +	if (!enable) {
+> +		val = readl(rcar->base + PCIERSTCTRL1);
+> +		val &= ~APP_LTSSM_ENABLE;
+> +		writel(val, rcar->base + PCIERSTCTRL1);
+> +
+> +		return 0;
+> +	}
+> +
+> +	val = dw_pcie_readl_dbi(dw, PCIE_PORT_FORCE);
+> +	val |= PORT_FORCE_DO_DESKEW_FOR_SRIS;
+> +	dw_pcie_writel_dbi(dw, PCIE_PORT_FORCE, val);
+> +
+> +	val = readl(rcar->base + PCIEMSR0);
+> +	val |= APP_SRIS_MODE;
+> +	writel(val, rcar->base + PCIEMSR0);
+> +
+> +	/*
+> +	 * The R-Car Gen4 datasheet doesn't describe the PHY registers' name.
+> +	 * But, the initialization procedure describes these offsets. So,
+> +	 * this driver has magical offset numbers.
+> +	 */
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(28), 0);
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(20), 0);
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(12), 0);
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(4), 0);
+> +
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(23, 22), BIT(22));
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(18, 16), GENMASK(17, 16));
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(7, 6), BIT(6));
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(2, 0), GENMASK(11, 0));
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x1d4, GENMASK(16, 15), GENMASK(16, 15));
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x514, BIT(26), BIT(26));
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x0f8, BIT(16), 0);
+> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x0f8, BIT(19), BIT(19));
+> +
+> +	val = readl(rcar->base + PCIERSTCTRL1);
+> +	val &= ~APP_HOLD_PHY_RST;
+> +	writel(val, rcar->base + PCIERSTCTRL1);
+> +
+> +	ret = readl_poll_timeout(rcar->phy_base + 0x0f8, val, !(val & BIT(18)), 100, 10000);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = rcar_gen4_pcie_download_phy_firmware(rcar);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = readl(rcar->base + PCIERSTCTRL1);
+> +	val |= APP_LTSSM_ENABLE;
+> +	writel(val, rcar->base + PCIERSTCTRL1);
+> +
+> +	return 0;
+> +}
+> +
+>  static struct rcar_gen4_pcie_drvdata drvdata_r8a779f0_pcie = {
+>  	.ltssm_control = r8a779f0_pcie_ltssm_control,
+>  	.mode = DW_PCIE_RC_TYPE,
+> @@ -539,10 +740,14 @@ static struct rcar_gen4_pcie_drvdata drvdata_r8a779f0_pcie_ep = {
+>  };
+>  
+>  static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie = {
+> +	.additional_common_init = rcar_gen4_pcie_additional_common_init,
+> +	.ltssm_control = rcar_gen4_pcie_ltssm_control,
+>  	.mode = DW_PCIE_RC_TYPE,
+>  };
+>  
+>  static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie_ep = {
+> +	.additional_common_init = rcar_gen4_pcie_additional_common_init,
+> +	.ltssm_control = rcar_gen4_pcie_ltssm_control,
+>  	.mode = DW_PCIE_EP_TYPE,
+>  };
+>  
+> -- 
+> 2.25.1
 > 
-> 3. Wait until the HW supports the modern spec:
-> This depends on the chip vendor.
-> 
-> Option 3 is essentially doing nothing, so it would be preferable to
-> consider other ideas.
-> 
-> Best,
-> Shunsuke
-> 
-> 2024年6月14日(金) 18:50 Manivannan Sadhasivam <mani@kernel.org>:
-> >
-> > On Mon, May 20, 2024 at 09:22:54AM -0400, Michael S. Tsirkin wrote:
-> > > On Thu, May 16, 2024 at 02:59:13PM +0200, Manivannan Sadhasivam wrote:
-> > > > On Thu, May 16, 2024 at 01:38:40PM +0900, Shunsuke Mie wrote:
-> > > > > Hi virtio folks,
-> > > > >
-> > > >
-> > > > You forgot to CC the actual Virtio folks. I've CCed them now.
-> > > >
-> > > > > I'm writing to discuss finding a workaround with Virtio drivers and legacy
-> > > > > devices with limited memory access.
-> > > > >
-> > > > > # Background
-> > > > > The Virtio specification defines a feature (VIRTIO_F_ACCESS_PLATFORM) to
-> > > > > indicate devices requiring restricted memory access or IOMMU translation. This
-> > > > > feature bit resides at position 33 in the 64-bit Features register on modern
-> > > > > interfaces. When the linux virtio driver finds the flag, the driver uses DMA
-> > > > > API that handles to use of appropriate memory.
-> > > > >
-> > > > > # Problem
-> > > > > However, legacy devices only have a 32-bit register for the features bits.
-> > > > > Consequently, these devices cannot represent the ACCESS_PLATFORM bit. As a
-> > > > > result, legacy devices with restricted memory access cannot function
-> > > > > properly[1]. This is a legacy spec issue, but I'd like to find a workaround.
-> > > > >
-> > > > > # Proposed Solutions
-> > > > > I know these are not ideal, but I propose the following solution.
-> > > > > Driver-side:
-> > > > >     - Implement special handling similar to xen_domain.
-> > > > > In xen_domain, linux virtio driver enables to use the DMA API.
-> > > > >     - Introduce a CONFIG option to adjust the DMA API behavior.
-> > > > > Device-side:
-> > > > > Due to indistinguishability from the guest's perspective, a device-side
-> > > > > solution might be difficult.
-> > > > >
-> > > > > I'm open to any comments or suggestions you may have on this issue or
-> > > > > alternative approaches.
-> > > > >
-> > > > > [1] virtio-net PCI endpoint function using PCIe Endpoint Framework,
-> > > > > https://lore.kernel.org/lkml/54ee46c3-c845-3df3-8ba0-0ee79a2acab1@igel.co.jp/t/
-> > > > > The Linux PCIe endpoint framework is used to implement the virtio-net device on
-> > > > > a legacy interface. This is necessary because of the framework and hardware
-> > > > > limitation.
-> > > > >
-> > > >
-> > > > We can fix the endpoint framework limitation, but the problem lies with some
-> > > > platforms where we cannot write to vendor capability registers and still have
-> > > > IOMMU.
-> > > >
-> > > > - Mani
-> > >
-> > > What are vendor capability registers and what do they have to do
-> > > with the IOMMU?
-> > >
-> >
-> > Virtio spec v1.2, sec 4.1.4 says,
-> >
-> > "Each structure can be mapped by a Base Address register (BAR) belonging to the
-> > function, or accessed via the special VIRTIO_PCI_CAP_PCI_CFG field in the PCI
-> > configuration space.
-> >
-> > The location of each structure is specified using a vendor-specific PCI
-> > capability located on the capability list in PCI configuration space of the
-> > device."
-> >
-> > So this means the device has to expose the virtio structures through vendor
-> > specific capability isn't it?
-> >
-> > And only in that case, it can expose VIRTIO_F_ACCESS_PLATFORM bit for making
-> > use of IOMMU translation.
-> >
-> > - Mani
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
 
 -- 
 மணிவண்ணன் சதாசிவம்
