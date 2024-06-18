@@ -1,200 +1,169 @@
-Return-Path: <linux-pci+bounces-8903-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8904-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 455EE90C6D7
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 12:27:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E810890C77B
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 12:45:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49D8A1C21CF9
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 10:27:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 77383B20394
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 10:45:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D5581459E9;
-	Tue, 18 Jun 2024 08:10:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E6F91534E4;
+	Tue, 18 Jun 2024 08:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="RldBv+5X"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNwtrJ/X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2044.outbound.protection.outlook.com [40.107.114.44])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0BF13DB90;
-	Tue, 18 Jun 2024 08:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718698250; cv=fail; b=iTdXL5zDBF0O9K6reW8QktB8MzSHZRBwkH8goiIu981jZ1j/Za9bsp757h7ufWdb8F+Iw/CtTGTO2AtRYvwJIWpyTD2hvT0jLMuzg1tQDAL69GrcVoD/6cYKdgk5rtFJjzZU9kuvsyQtOZrBXxw6be8dcsKlm+kwM0EX6jXtFzc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718698250; c=relaxed/simple;
-	bh=MwIhN7nB+XtFVkE9BVFeDNlYznCpNEzJdWfAea71wPY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=agGsaDtX1RQ5OGcfjHUHK1bN70q6t7mfwvj2YOuB39+i82IJPdk9RTWxKQnNfDVEd0zT16408J0trs8Vg0fAStoteiT03cbH1GTU5MdP0A5CSzrpolp8ZEIHuIT+FlPg40A9XccrqUtg2sK+zQM/GxZlBAVAOSI/EFnKUCrsj+A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=RldBv+5X; arc=fail smtp.client-ip=40.107.114.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b62ji+d8HVkf/i+3AfhA9iipgb5W8+fMTwSSyu/10cfFrOeIhUpKL6N2rCRf2s+ZEkujasjIn378wBFRzHpJhpt7Ykt3H9eoyoGaskL5aoOS6U0mHnJBIsxWEU4Bx9KXbz6UnSzINBpqTMMtFSdq14zgJiexnLCXPziBCLp20tplTxLvy1EHCDh5r6UVq6Ls3AyvOVvU7yGqCz5KKUGstU5QImg2U10MZCjDbqWFFcWVFQUhg3bRvJCB5MO3Vb33ZPY+TKOhpdavmInb+CXoTIxhou2FgijBDQun/lU+npZGbBSxagI15XnPbjGEBJga2KmnhVeEU+zpj8zEjvDWNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MwIhN7nB+XtFVkE9BVFeDNlYznCpNEzJdWfAea71wPY=;
- b=UKAdUeHPtOFRsoKVeVXyfp9VI31xvRMeY/p4Wn6qZl3ELi7fQNs3nR3i/8EbzKltYyYYbBE9hOzViwRVthJR1WDjPf3kazREbCZiHh2xx3q5cW3sAgUi7TOFNKhEurZmyU3urfWuOgMUcJsCE6X4E0d9hXDx8WpkInN15lN0XJI2T8Eg70boyO9Ucx2N+9F5fNOJxudiUxn0G0wPxCwar60Wl03FAu5w09SHuoTcyjW5sEGJT06mqq0lmb6UqmBLXfyw4DCAbEF/Ej4v4Sd4DPGxn/OOFnoiZw/KQMAH1l1IzzzOa3aczmeqbKJQQSkfo3dKY/xkSswCHIQMgj9p/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MwIhN7nB+XtFVkE9BVFeDNlYznCpNEzJdWfAea71wPY=;
- b=RldBv+5XYt4Vdpk5Yoaa3WU+OVe1+jjz61ajoZ9w4shhZuVy3rDhtQllZBIzEeBiNtOuekl9LvFbtaPrzWQXE1EXVMtu3VZ0DwmxvK98PdjlXCUZv1/I8V5j63l8QJeoVlEUx4Q9ewys5hZove94tZ6cmGqSJi5+sW0bLXK3Atc=
-Received: from TYCPR01MB11040.jpnprd01.prod.outlook.com (2603:1096:400:3a7::6)
- by TYCPR01MB11622.jpnprd01.prod.outlook.com (2603:1096:400:378::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Tue, 18 Jun
- 2024 08:10:43 +0000
-Received: from TYCPR01MB11040.jpnprd01.prod.outlook.com
- ([fe80::b183:a30f:c95f:a155]) by TYCPR01MB11040.jpnprd01.prod.outlook.com
- ([fe80::b183:a30f:c95f:a155%4]) with mapi id 15.20.7677.030; Tue, 18 Jun 2024
- 08:10:43 +0000
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
-	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v9 4/5] PCI: rcar-gen4: Add support for r8a779g0
-Thread-Topic: [PATCH v9 4/5] PCI: rcar-gen4: Add support for r8a779g0
-Thread-Index: AQHau/4H2Ue+Yvqse06eFL/aaE81cLHNJOqAgAAPBLA=
-Date: Tue, 18 Jun 2024 08:10:43 +0000
-Message-ID:
- <TYCPR01MB11040C48B321E9418D274B6D4D8CE2@TYCPR01MB11040.jpnprd01.prod.outlook.com>
-References: <20240611125057.1232873-1-yoshihiro.shimoda.uh@renesas.com>
- <20240611125057.1232873-5-yoshihiro.shimoda.uh@renesas.com>
- <20240618070925.GB5485@thinkpad>
-In-Reply-To: <20240618070925.GB5485@thinkpad>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB11040:EE_|TYCPR01MB11622:EE_
-x-ms-office365-filtering-correlation-id: ff7a4d0a-45cb-4ca1-3e8f-08dc8f6e2696
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230037|376011|366013|1800799021|38070700015;
-x-microsoft-antispam-message-info:
- =?utf-8?B?bThzOHE2WG50OUVSNlltTVhGTGhUMFhndmcrNlV3REZpMWRRcTNMbTZBY3NT?=
- =?utf-8?B?VUV3Sm96YWFZTTduSy81eUl1dUlFUjkzeGVFSHo0ZVJGcTNVYXFQNnM0ODdm?=
- =?utf-8?B?UmxKcmpFaDBtdmRmMlVkcVFCWWxYYUIrOCtuMHg4cjZGM1d6bjkwajM1WnZG?=
- =?utf-8?B?b2FJTVlpdFVNSFRPZnJJbFNpQ1JmUlcxeW8zZVc4dU9yY1V5OWE2bjc4RzFK?=
- =?utf-8?B?cm5tL0NtNkgrc1BCa2IrUW9qejNxdDc5NXdBZThQcytKV3Jad0swdzJzQTdL?=
- =?utf-8?B?YmROY21PaGJPZHlWWFArK3ZqVVpFTDNhUWxqOHY3aVlxYThTVk5MZ2gzT2tR?=
- =?utf-8?B?NEdoaGZMRDZnU0Mzb1ZLSHo0NG56cDJTL1ZSV1RKV1VVazJIRzNFMVhIN1JI?=
- =?utf-8?B?KzI0MGZva0M2ZFhsNnJmSVZyaU9CalhSSDE5bVpodCszTTVCbkIvZ3lEQ1Ru?=
- =?utf-8?B?Y1ZjQzdoNGorSUgrdGNjeGltb3lHZ3dSQVhrN3lEbW9WdXYxMFBaM2hTQVdt?=
- =?utf-8?B?cFVLc2c4WG0rbU9NaVBRbU51cFQzR1l3bkg1d2F1VWlzdHoxQmkwUEdOR3JW?=
- =?utf-8?B?VVI1SUFTZnBXRyt4MUZvNHZRa0Z1Q1pJN1k4bEJneDZJSEs3ajBDcUhDNHhX?=
- =?utf-8?B?M3lrbkZYMkNNaFRBYTdONnd1Tk40YU1WYS9KVTRnRUxxblErTlZEaWd1bzI5?=
- =?utf-8?B?Z2Qxc0NVNDRKRWZiOHVtNXZYS2drRWcyRVNBZ3RTMEhzM1FMZTJHSXNPT0kv?=
- =?utf-8?B?VlFTS2VmSStCbHRRRytrYlp3TnNMWVU0WkVUMDdRQlhUdUxHOGE4ZDZoTzZI?=
- =?utf-8?B?azdxNllDOXlRMlJqTVNYa2I4WEVzQStkOHJvcXFIRi9mTnVqV2JoZWFNRkU0?=
- =?utf-8?B?ekpjZFRzL28zRGtWbzVWNE9BbWM0UWpCTGdVRExibFdseGx2NGozUmJnUE5X?=
- =?utf-8?B?MzlRWEdvRHkyZk54YWJWekJMSVVNK2x6T2N3aVV5bzg4dlJKYVYxN2N2WDRz?=
- =?utf-8?B?cWxyTk04NE5LRm15TGdHUEpxclYrUi9XRVI0VDJNaDJZa1ptcHVHbHZaWEV1?=
- =?utf-8?B?NklwZEJSQXptRGNoc3huRkg3QjZqVElzcHd3UC96c2hRSWZYYWxYMUdSUXJh?=
- =?utf-8?B?RU9lMzdSa3FGSytaZTJ1M2QzNnlGOTRMZnhGWkxXRUtYOUpSdDNxbldRY2NJ?=
- =?utf-8?B?ckV5R2ptY2lQb0plcThWSWpLMGJ6R3JJdEdzTXZBTmhxZ1JXTUphNlh5WVdo?=
- =?utf-8?B?YjNqRnN3UEF4allwNEVIRHcyc3BUcVBOTDl0a1I4SnpxSk5Vdm0vWlh4SGF4?=
- =?utf-8?B?TXpmbUhrNklMRDMyWEludHhVOGxwM2FyTVE4dGhLRXE2TDBZZSs0YTdKYzhu?=
- =?utf-8?B?UU5KdUM4R1JxT3hWL0ltZEdRVFlFWXdKOThFYjhPRk9meThjd1BYUmRESHoy?=
- =?utf-8?B?MHk5KzFJNlArQ2s5M21mOVNhQ1RMa1FraEF1dFNic0tXbVVXcEtJbUhua1lB?=
- =?utf-8?B?R0lPSC93SG9jNUJMUmhZeXlRbmI3U295aDVnUkh4d3NCM1o4WVpVMlEzUWpN?=
- =?utf-8?B?RmNLcWlvaldSU3pmRFBTYVBlTTVZQTNWeEwzUDZYVVcrUDQ0TXlTVG5XM2dF?=
- =?utf-8?B?amxnS2V6WHF3d0JseEhFM25EQmlkMnViZGlOVUkrbS9IL2JVMnNVaG5pNUVU?=
- =?utf-8?B?ZE9Qdnh5cmlqdFYvNGtFN3VxZTNQNy9lQkxSS041a0l2MTN6U2ZqK3F2ZW5D?=
- =?utf-8?Q?QPK24cboVtzfDwI/62MnQZb/hZX1v6DypBZ/uvD?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11040.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(366013)(1800799021)(38070700015);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?RDY0VlpvS0hRZFdEaU40WGwzSnlIZHUzV1IrYUZJSTFkeUhQV00zM2JqVjJO?=
- =?utf-8?B?RzFZdUdGUXViSVJET0s4T0pBVy9nRFQrSWJoUzNkY1NXanlFdzZhbjhqQ1NO?=
- =?utf-8?B?NFRvVi9jeERjV2JBL2haTnVycVUrYWxMZjZKV1l6dXhTSVA1Uzg0bHN0aDNB?=
- =?utf-8?B?MUtydUdyYXo5R3pSUjh3UlV1eFFDYVVrcmQybXVvZ05oMkYvSkIxTEZxZDIr?=
- =?utf-8?B?OWs1YlJJVldlRzJqVFcxbW9rRlVzZGdzLzh0RVhzRnU0c3RWREhQdDQ4Tm5o?=
- =?utf-8?B?WTlvY2xSTisySzVGQi9TUmtpeFJBWDg1YzF6RTkrQzRpU2I1WDcvZTVmNjU2?=
- =?utf-8?B?S3c3QVQ5WENFUEpqV0xHNytXVzExWVFiekhXK3pha2RFRWpHb3RUTVg0MFdW?=
- =?utf-8?B?cWI0N2tzajlEaEtZbWFRWVVEU1QyWkt3MEZSb2tuc1RyekNpd3lhNDJIcmUx?=
- =?utf-8?B?WDh4eE44OEJTb0xrMitUQldpVkJiZkpHcW5SbXd3L2JBcTJ0OGJENXhtR1B6?=
- =?utf-8?B?MmNSeFNOcGxOVnZUV3lreTh5dmF5b1ZrSDBodDQyLzd4a2VYZ3FsNldJbHFW?=
- =?utf-8?B?NkFvTFZBY0NadzUyLzZCRDAzdCtFTUZUckRQamFOeTQ3Y2l4SjRMWVR6Mi9m?=
- =?utf-8?B?S0NMWlBya09ZK1RsM1drRms5c0djTEdPVDBvZVRybWgyN1hwOGlNOUg0WTc2?=
- =?utf-8?B?cjVUZ3k3TTRwUzdyTWZ2QUxCenF0L2pMbjlITTFXRDdLVlZ5Y3BRRmhXREgw?=
- =?utf-8?B?M2swemNWS2swbGtJcEE5UU5zMmJwbUt3U3lKMkJjalZHbElROFNPazRkN0py?=
- =?utf-8?B?S1ZFdTc5N2JCZm5hQm04OERkWnNnSGUya3BDT0EwODczT1B3dXBQaVI2U2pw?=
- =?utf-8?B?UHJkSjJjSFBjcnNZelQ0OWpabnE4ZE1wcE9RWDY4Y21kbmI4eXp6czh4V3l0?=
- =?utf-8?B?ck55MTEyMTFhWGJmMnlDVmNVazhRRHYraEhoTUZNWmF1cVVFem53WmJRR1Ry?=
- =?utf-8?B?TFNrTjl0MGpZOTlVWFlSd2NtUm8rU2hjelQ5U0w3TkNMbEVlUERWWVoyL0wz?=
- =?utf-8?B?SjJ0blJyK1RCaE9lZlRRb00zWDUybkVURXYvZmw5TFd5bzMyZXZsUFFLTldi?=
- =?utf-8?B?TFRBUWtKZS9ydnVod05BaG9tS2tLMTFSUGxXNzZLN05pVDdZbnVjZ1o0bVlP?=
- =?utf-8?B?S0RJenJ6N2xtZ09EY1RsdXp6RHFQeUZMUlhxWndLTTRMb2hZdExTNUhlcnE1?=
- =?utf-8?B?TEUvYW0yZHVTcDNZcDR5RFZBcU1QWkxLRHhDaDJEc05rbkxKU0pOcTlnNXh1?=
- =?utf-8?B?a29XS080blV2dXNCeG1qNnBHMFQrTDM1TEdBQU5PR3RETFNnRTVERGxtNGNU?=
- =?utf-8?B?NFcyTk0rc0NaOXJ5V3cxV3pad0NsTFJzQnRsNnJxZUlGbE1lL1Rsa3BBVkF4?=
- =?utf-8?B?RkFmd29EZU9jSGw4Y1UvOG9rSXBjM3c4MCtNcGdRMlJ2TGE5azQvM2wxN0kx?=
- =?utf-8?B?M2QzS1pHZHQyY0w5NTRJUk5aYmg5dXVOS2tKUHpKRnNaRGdYYk1BRUp5eDNv?=
- =?utf-8?B?Y3NJVERmak1USGJWcXlwbUFxdUdxdlVxckJQWkYzalA1cFdFR0hSc3Vuc1dJ?=
- =?utf-8?B?eDE3Z2tlYVBnZ2RoYzAvZGo1SmE4VDdkV3MxR1JTcGtWa0RiMDg5K0kvYVNy?=
- =?utf-8?B?L0JLQWJzSHZGZUMyTzNVT2thUzA3ZVlycDdZaTJSeTJGYTZYbzFKUDNTM0Jq?=
- =?utf-8?B?c1BiQUFSRzlEeGNHS3RQNjBNUVhFNzJtUm9pcDIyZlBGNjFLclZkOExBREZq?=
- =?utf-8?B?dE53MVRiQlBUaElCSmw4a3FOaStrTHZzMkZxQXVxcGpoUGdnem1BM0NPVXJM?=
- =?utf-8?B?KzZCRUlOS2o3WG5VWjdoZ0JtQWxHR0ljREtxa0orNFNaeWRoNmluazJEd2pD?=
- =?utf-8?B?K1pPNXdrdHJBck9VenRMei9uMlFlK2FsM3NsMjgzTGlLaStKR00zbEozeXZz?=
- =?utf-8?B?WnJJR3pSR2Fzb1Z5LzBEVUQ1ZDJ1S0ZiQm5pSlJJK0lOeTRJb3ZocGJwUlhX?=
- =?utf-8?B?VkNaMlhLQlBtci9ndGhrbnY2WEhwcGs3a3hZdnlzMDVXRFQ3SDZuenFCNVNo?=
- =?utf-8?B?UmF2VnZRTitxQ3V6eDV0UlpFOUpEYVBsUkt3eG9kN05rcDNzZlk0V3VrSnRz?=
- =?utf-8?B?MndEL2Jqa3hJYzBjVmpOVTNXWHR4K3RvTzc1NnE2ZUNtOXNxend4eUYzdzRa?=
- =?utf-8?B?TWVXT3Nod2VTRi91QVBKbGh6TFpRPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3FA153BFB
+	for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 08:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718701024; cv=none; b=V9P+FUELLu6u9tpQ8Qcaz39pSFe4bnofogE87UMptIJJXtQ1zth631K3HTTv9vF67/W20ZSiP0ZBuvuFafE2MNbLqC2iKEcZfsdE789ltsi2+udY3opVCZ33SRkFVhqlU+Q5qkuw3Bi4iHM4Cxitn8wEVvS4bXwAYXZdUn76xfM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718701024; c=relaxed/simple;
+	bh=2le2VbkRqGJ0xcRUbHRRQNjN+hr3MieC5BZ3ant8a+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pP3kFjTEgp2JurobzYjOh7DuSta5YMe+DZjxfsI/mNzmIqVp1l7Kh1Jqyr88rk1t+6BJVY/utLb/0JA1b2bTInNphMmgrzok/zyjownd9etXG6CfxoAz6TBsLxFHykaRxB2UtiZig+RNApm8b+YKveHPuBgbBJtEJqRTBLUbiqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNwtrJ/X; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718701023; x=1750237023;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=2le2VbkRqGJ0xcRUbHRRQNjN+hr3MieC5BZ3ant8a+E=;
+  b=hNwtrJ/Xi4SoUY1neQz586M8peveNC2oBnH4chF75tkarOKRHeRiXIgB
+   qqsuJciZAnuGLN16JY6IXlSLpKeW7JaltXFUfxv33zv/XaCQLFNwCRLWq
+   oWHbFk+rRuJRE4S2qRZ25VA0Po196oQh5Po5NyJOymu78Xj03L+pASiJt
+   JiDmgZj2Y2oAxapBk/rcM0pdVyk5l9zMwgvtcCVeEPgVxH15rjqRIOFql
+   /bhBa7VaMB30JP2Toer+hbv5Zcv9Z5UmePfV69pR+3At9eBvVqH40DrZa
+   8I5XBAiOlPw2x876qtQTWeLPc3+q4EKKNiRZsLitdidU/vrr/vL17psVQ
+   w==;
+X-CSE-ConnectionGUID: iQHYTwwUSXaUlpO7E54UzQ==
+X-CSE-MsgGUID: OpKCTxqVSLep9jAHUDzuCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15687974"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="15687974"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 01:57:02 -0700
+X-CSE-ConnectionGUID: LbOAcPj4QK+Y57ZVsQRpvg==
+X-CSE-MsgGUID: Gzzcp+YSTimkDECjiIkvqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="41592109"
+Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.246.1.223])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 01:56:59 -0700
+Date: Tue, 18 Jun 2024 10:56:53 +0200
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: stuart hayes <stuart.w.hayes@gmail.com>, linux-pci@vger.kernel.org, Arnd
+ Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Dan Williams
+ <dan.j.williams@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Ilpo Jarvinen
+ <ilpo.jarvinen@linux.intel.com>, Keith Busch <kbusch@kernel.org>, Marek
+ Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap
+ <rdunlap@infradead.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+Message-ID: <20240618105653.0000796d@linux.intel.com>
+In-Reply-To: <Zm1uCa_l98yFXYqf@wunner.de>
+References: <20240528131940.16924-1-mariusz.tkaczyk@linux.intel.com>
+	<20240528131940.16924-3-mariusz.tkaczyk@linux.intel.com>
+	<05455f36-7027-4fd6-8af7-4fe8e483f25c@gmail.com>
+	<Zm1uCa_l98yFXYqf@wunner.de>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11040.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff7a4d0a-45cb-4ca1-3e8f-08dc8f6e2696
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2024 08:10:43.6094
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8J6fzgARLpjsWK2HWVhBE5mULDmKznW5otIXFLYA4si3poZhlr250RYoo12OcQp9liY+BIWJKymWDkJ0L62o6qa3pw+/Sy6Dd0WQinCGoZndIx/QUWQAZ5ENdyq+fPJw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB11622
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-SGVsbG8gTWFuaXZhbm5hbiwNCg0KVGhhbmsgeW91IGZvciB5b3VyIHJldmlldyENCg0KPiBGcm9t
-OiBNYW5pdmFubmFuIFNhZGhhc2l2YW0sIFNlbnQ6IFR1ZXNkYXksIEp1bmUgMTgsIDIwMjQgNDow
-OSBQTQ0KPiANCj4gT24gVHVlLCBKdW4gMTEsIDIwMjQgYXQgMDk6NTA6NTZQTSArMDkwMCwgWW9z
-aGloaXJvIFNoaW1vZGEgd3JvdGU6DQo8c25pcD4NCj4gPiBAQCAtMjIxLDYgKzI1NywxMCBAQCBz
-dGF0aWMgdm9pZCByY2FyX2dlbjRfcGNpZV91bnByZXBhcmUoc3RydWN0IHJjYXJfZ2VuNF9wY2ll
-ICpyY2FyKQ0KPiA+DQo+ID4gIHN0YXRpYyBpbnQgcmNhcl9nZW40X3BjaWVfZ2V0X3Jlc291cmNl
-cyhzdHJ1Y3QgcmNhcl9nZW40X3BjaWUgKnJjYXIpDQo+ID4gIHsNCj4gPiArCXJjYXItPnBoeV9i
-YXNlID0gZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlX2J5bmFtZShyY2FyLT5wZGV2LCAi
-cGh5Iik7DQo+ID4gKwlpZiAoSVNfRVJSKHJjYXItPnBoeV9iYXNlKSkNCj4gPiArCQlyZXR1cm4g
-UFRSX0VSUihyY2FyLT5waHlfYmFzZSk7DQo+ID4gKw0KPiANCj4gSSBmYWlsZWQgdG8gc3BvdCB0
-aGlzIGluIGVhcmxpZXIgcmV2aWV3cy4gU2luY2UgdGhpcyAncGh5JyByZWdpb24gaXMgb25seQ0K
-PiBhcHBsaWNhYmxlIGZvciByOGE3NzlnMCwgd291bGRuJ3QgdGhpcyBmYWlsIG9uIG90aGVyIHBs
-YXRmb3Jtcz8NCg0KVGhpcyB3aWxsIG5vdCBmYWlsIG9uIG90aGVyIHBsYXRmb3JtcyBiZWNhdXNl
-IHRoZSBkdHNpIGZpbGUgb2YgdGhlIG90aGVyIHBsYXRmb3JtIChyOGE3NzlmMC5kdHNpKQ0KYWxy
-ZWFkeSBoYXMgdGhlICdwaHknIHJlZ2lvbiBpbiB0aGUgZmlyc3QgY29tbWl0IHdoaWNoIEkgYWRk
-ZWQgUENJZSBub2RlczoNCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJu
-ZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvYXJjaC9hcm02NC9ib290L2R0cy9yZW5l
-c2FzL3I4YTc3OWYwLmR0c2k/aD12Ni4xMC1yYzQmaWQ9MTgzYTcwOWQzNzE5ZTVjOTkxOWE2ZjEy
-Yzg2YzBhM2UwODhiNzEyZA0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo=
+On Sat, 15 Jun 2024 12:33:45 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
+
+> On Fri, Jun 14, 2024 at 04:06:14PM -0500, stuart hayes wrote:
+> > On 5/28/2024 8:19 AM, Mariusz Tkaczyk wrote:  
+> > > +static int pci_npem_init(struct pci_dev *dev, const struct npem_ops *ops,
+> > > +			 int pos, u32 caps)
+> > > +{  
+> [...]
+> > > +	ret = ops->get_active_indications(npem, &active);
+> > > +	if (ret) {
+> > > +		npem_free(npem);
+> > > +		return -EACCES;
+> > > +	}  
+> > 
+> > Failing pci_npem_init() if this ops->get_active_indications() fails
+> > will keep this from working on most (all?) Dell servers, because the
+> > _DSM get/set functions use an IPMI operation region to get/set the
+> > active LEDs, and this is getting run before the IPMI drivers and
+> > acpi_ipmi module (which provides ACPI access to IPMI operation
+> > regions) get loaded.  (GET_SUPPORTED_STATES works without IPMI.)  
+> 
+> CONFIG_ACPI_IPMI is tristate.  Even if it's built-in, the
+> module_initcall() becomes a device_initcall().
+> 
+> PCI enumeration happens from a subsys_initcall(), way earlier
+> than device_initcall().
+> 
+> If you set CONFIG_ACPI_IPMI=y and change the module_initcall() in
+> drivers/acpi/acpi_ipmi.c to arch_initcall(), does the issue go away?
+
+That seems to be the best option. Please test Lukas proposal and let me know.
+Shouldn't I make a dependency to ACPI_IPMI in Kconfig (with optional comment
+about initcall)?
+
++config PCI_NPEM
++	bool "Native PCIe Enclosure Management"
++	depends on LEDS_CLASS=y
++	depends on ACPI_IPMI=y
+
+> 
+> 
+> > (2) providing a mechanism to trigger this driver to rescan a PCI
+> >     device later from user space  
+> 
+> If this was a regular device driver and -EPROBE_DEFER was returned if
+> IPMI drivers aren't loaded yet, then this would be easy to solve.
+> But neither is the case here.
+> 
+> Of course it's possible to exercise the "remove" and "rescan" attributes
+> in sysfs to re-enumerate the device but that's not a great solution.
+
+We cannot expect from users to know and do that. If we cannot configure driver,
+we should not register it. We have to guarantee that IMPI commands are
+available at the point we are using them.
+
+There is not better place to add _DSM device than its enumeration and I have a
+feeling than sooner or later someone else will reach this problem so it would
+be better for community to solve it now.
+
+> 
+> 
+> > (3) don't cache the active LEDs--just get the active states using
+> >     NPEM/DSM when brightness is read, and do a get/modify/set when
+> >     setting the brightness... then get_active_indications() wouldn't
+> >     need to be called during init.  
+> 
+> Not good.  The LEDs are published in sysfs from a subsys_initcall().
+> Brightness changes through sysfs could in theory immediately happen
+> once they're published.  If acpi_ipmi is a module and gets loaded way
+> later, we'd still have to cope with Set State or Get State DSMs going
+> nowhere.
+> 
+
+Agree. I can do it and it should be safe but it is not addressing the issue.
+We would limit time race window but we will not close it.
+
+Thanks,
+Mariusz
 
