@@ -1,57 +1,98 @@
-Return-Path: <linux-pci+bounces-8900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9013790C466
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 09:33:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BC8D90C4DD
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 10:23:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80F8A1C20ACD
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 07:33:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 613E91C20E4C
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 08:23:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7F0770F9;
-	Tue, 18 Jun 2024 07:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B971514ED;
+	Tue, 18 Jun 2024 07:22:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9NYB4Tj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TMxkDlbH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304AF73440;
-	Tue, 18 Jun 2024 07:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25CC14F11B
+	for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 07:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718694577; cv=none; b=fVvgaYqh17sGIFcmCZrE6BEHuXZaLzR794XAfCMIG8bYrFptPTsmaCAaYty21pF3gpWVxkPKBfrIr3uFAaitA005+YewXLrUBE3zEOuy22nry2y7qeXbX4EqD8+23p4qFDyW9Jhro58mEWNtFWLYVYiiGGMU9gNWT2j24N2TczY=
+	t=1718695357; cv=none; b=IovTXq1H1uVjhcYfXE7PZyo5f/40ONh69hDshIhKBxoSVrlotnvyLO83eDzp5H+jbtKZoSnf/KnTmXjuozBjBkqc+yRHayCEvDOeP/9V6jwxqVJP1OfzbLBOK7xIZkY8/wubsTOC7V5nJGU/z4SS5xa7IyMEUoW/+z7qTRi2pIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718694577; c=relaxed/simple;
-	bh=e6XzdJg33xWRVNzNhUgA1l17Hz8JCuFvsGbY8RSFHzE=;
+	s=arc-20240116; t=1718695357; c=relaxed/simple;
+	bh=L4wf4x2dBZQvEnpkKvLPORNBkAK3TS9LwI2recHxqhI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PHxefL0ihDnWEG/shQyvel+aqc4fSUkr8STjUXrIN64iij9ERhjwzOYYdg3tpgU5W53pM58EwnAg4rPHk+/H3ylqcX5CejvVpweUhihdYqiP2BAclporKS81kbFRFgT04sF+OT4poJRVG1KeWGPjI0OagBwDvDl1Bc3cEIME3cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9NYB4Tj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DBC0C3277B;
-	Tue, 18 Jun 2024 07:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718694577;
-	bh=e6XzdJg33xWRVNzNhUgA1l17Hz8JCuFvsGbY8RSFHzE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9NYB4TjMFmhgTdHjD1Cd6/wrVJFfDkjK6O8jZ64o3jse5CrgnJozCb0735mnIObJ
-	 4ZareHDMYJScAbYLQoayzTqw7DGYUzlDxMmHyH1k5mokGXSJA0KpROnDBPmTehRE2p
-	 ilWtMyUmAUJLzzgkSm5faFSqVa9MbYVErOPQrZjwe7pDJwpRNtm/AqGRqOmjdqIO8J
-	 vawEhaTFyTVgkL+esm8P5C4zQKQSZQxRjIMIaB1cdRzjZgMDRmLCkb86sXUYoVlAYI
-	 Y6fPUykV4n0Ans35o4LZKwoUO5wNMkQhBq4+mb7LGX4wWMTdb2WbhR/bCx8tLIptlW
-	 s5+sfUXVhKhhQ==
-Date: Tue, 18 Jun 2024 12:39:25 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v9 4/5] PCI: rcar-gen4: Add support for r8a779g0
-Message-ID: <20240618070925.GB5485@thinkpad>
-References: <20240611125057.1232873-1-yoshihiro.shimoda.uh@renesas.com>
- <20240611125057.1232873-5-yoshihiro.shimoda.uh@renesas.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HV/zqPQQim/eC6k3IeCw2tmX1aor9xNp5BYYzzES1jV08uw28IXjYLFPPV8N/xoZvJZ5nrXPG5VNQAJFudYugSyp2a/eyGXSq4QQruQFaauvSjLGfM/hfoFIkNteYWYWLq9fgFVt1QOfyjx7BWqJ9RTp5u1oPH4sZIq+BZG3Gs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TMxkDlbH; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-705fff50de2so1244889b3a.1
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 00:22:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718695354; x=1719300154; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Q8tUv88VFJag+gHbNp32GqIa0FEWnLAl/tXMaE0LKQE=;
+        b=TMxkDlbH4c5urzf0yhxuPNvFMuRp81/pyouYNyen7BPTYwfZSVqdE80zl8j05lDmh3
+         +3YIL86M/MRLRIEvc1y0HqVU3dUAnjeHqTi/EMmjmJadxGvd3CeoevXPhgJiBHyapk11
+         Gxh2O7HTWisu+SDKYgXCOl1OIRrPQwjL3pzBiyRwRXS66MLu1tnocWBND6w+6A3TZiq+
+         u+AZbMBdBiS86RuJpKPULrM4qbmeW4AUGPM3kUHy4Wvs/6bse2Q+ihRCGyxS8T5A4cmW
+         SvVeZ7vq+TdF2B6mn9jsZb8WJn70Ym8dK0ZUm43O1zhRoNrqrqs+i9L9Tdurumk0bEeq
+         NVMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718695354; x=1719300154;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8tUv88VFJag+gHbNp32GqIa0FEWnLAl/tXMaE0LKQE=;
+        b=v+XoBtKUwPrqC4EpWqdg6eSADKGCR5/ngQFzs7zEZwTi7biilMwoD7GvqLvT4Sq96m
+         SC1+qX8UEGI5wVToeGrFQ2hp0l6SKp26YRNiZ8g9ZKFKbNwUzbXGDpAhgJ7BZk4Bxl/G
+         k5cXiy6XsZzhOt7Q/03E2fuWpajR/kDCP5O3bhtgnOH31EA56OiHkOR/Uu+kb4SVolzJ
+         bEANGlX58GaxLQ+SiyU2Jy5rLeD2Ci0QeCda/NdoZmITkyMTAXYA5Sew1/BNVw5dV/uK
+         aqIOJiKTXAVUHevj7WrkzF4OmyD9UBS08PF39vY59LMFE16jw6Xw5NP7/hEB5+D1KQno
+         fBmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWT59E6PMXXxXvxC90cEByA3fmpO8J13harNl2aCYOcDxgq8Vj36V8XaiX1CWUL0MlWQAqez7Qau8+uLBX6OxL3MD3uPGhkU54y
+X-Gm-Message-State: AOJu0Yw5Xa0qe5ldsLrNJONiVhm3/JTlosImerhHnhjqfjI4rDYScYjx
+	R8orlNGEU8vqr8DxcC+qUawpkukQxbDFcnfF0+XIeQY6JGr5WtO3wCPDV7qpXA==
+X-Google-Smtp-Source: AGHT+IHZA/cvn9bGNm1TUpflHmsdUDHSxPPQlxV8VE5MQB+zfjE1Wi5tnhZ8CkLkeliOfy7yjei59g==
+X-Received: by 2002:a05:6a00:2d95:b0:704:229e:54bd with SMTP id d2e1a72fcca58-7061aba4f70mr3085370b3a.8.1718695354052;
+        Tue, 18 Jun 2024 00:22:34 -0700 (PDT)
+Received: from thinkpad ([120.60.129.117])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3bf7esm8386242b3a.114.2024.06.18.00.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 00:22:33 -0700 (PDT)
+Date: Tue, 18 Jun 2024 12:52:22 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org,
+	bmasney@redhat.com, djakov@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v14 1/4] PCI: qcom: Add ICC bandwidth vote for CPU to
+ PCIe path
+Message-ID: <20240618072222.GC5485@thinkpad>
+References: <20240609-opp_support-v14-0-801cff862b5a@quicinc.com>
+ <20240609-opp_support-v14-1-801cff862b5a@quicinc.com>
+ <1b5f11a6-52e3-55ca-8c80-dca8f7e0c7c7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,332 +102,150 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240611125057.1232873-5-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1b5f11a6-52e3-55ca-8c80-dca8f7e0c7c7@linux.intel.com>
 
-On Tue, Jun 11, 2024 at 09:50:56PM +0900, Yoshihiro Shimoda wrote:
-> Add support for r8a779g0 (R-Car V4H).
+On Fri, Jun 14, 2024 at 03:14:10PM +0300, Ilpo Järvinen wrote:
+> On Sun, 9 Jun 2024, Krishna chaitanya chundru wrote:
 > 
-> This driver previously supported r8a779f0 (R-Car S4-8). PCIe features
-> of both r8a779f0 and r8a779g0 are almost all the same. For example:
->  - PCI Express Base Specification Revision 4.0
->  - Root complex mode and endpoint mode are supported
-> However, r8a779g0 requires specific firmware downloading, to
-> initialize the PHY. Otherwise, the PCIe controller cannot work.
+> > To access the host controller registers of the host controller and the
+> > endpoint BAR/config space, the CPU-PCIe ICC (interconnect) path should
+> > be voted otherwise it may lead to NoC (Network on chip) timeout.
+> > We are surviving because of other driver voting for this path.
+> > 
+> > As there is less access on this path compared to PCIe to mem path
+> > add minimum vote i.e 1KBps bandwidth always which is sufficient enough
+> > to keep the path active and is recommended by HW team.
+> > 
+> > During S2RAM (Suspend-to-RAM), the DBI access can happen very late (while
+> > disabling the boot CPU). So do not disable the CPU-PCIe interconnect path
+> > during S2RAM as that may lead to NoC error.
+> > 
+> > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 45 +++++++++++++++++++++++++++++++---
+> >  1 file changed, 41 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 5f9f0ff19baa..ff1d891c8b9a 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -253,6 +253,7 @@ struct qcom_pcie {
+> >  	struct phy *phy;
+> >  	struct gpio_desc *reset;
+> >  	struct icc_path *icc_mem;
+> > +	struct icc_path *icc_cpu;
+> >  	const struct qcom_pcie_cfg *cfg;
+> >  	struct dentry *debugfs;
+> >  	bool suspended;
+> > @@ -1369,6 +1370,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+> >  	if (IS_ERR(pcie->icc_mem))
+> >  		return PTR_ERR(pcie->icc_mem);
+> >  
+> > +	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
+> > +	if (IS_ERR(pcie->icc_cpu))
+> > +		return PTR_ERR(pcie->icc_cpu);
+> >  	/*
+> >  	 * Some Qualcomm platforms require interconnect bandwidth constraints
+> >  	 * to be set before enabling interconnect clocks.
+> > @@ -1378,11 +1382,25 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+> >  	 */
+> >  	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+> >  	if (ret) {
+> > -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+> > +		dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
+> >  			ret);
 > 
-> The attached firmware file "104_PCIe_fw_addr_data_ver1.05.txt" in
-> the datasheet is a text file. But, Renesas is not able to distribute
-> the firmware freely. So, we require converting the text file
-> to a binary before the driver runs by using the following script:
+> I think it would be better to separate these message clarifications into a 
+> separate patch. It would make both patches more into the point.
 > 
->  $ awk '/^\s*0x[0-9A-Fa-f]{4}\s+0x[0-9A-Fa-f]{4}/ \
->    { print substr($2,5,2) substr($2,3,2) }' \
->    104_PCIe_fw_addr_data_ver1.05.txt | xxd -p -r > \
->    rcar_gen4_pcie.bin
->  $ sha1sum rcar_gen4_pcie.bin
->    1d0bd4b189b4eb009f5d564b1f93a79112994945  rcar_gen4_pcie.bin
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/controller/dwc/pcie-rcar-gen4.c | 207 +++++++++++++++++++-
->  1 file changed, 206 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> index dac78388975d..c67097e718d3 100644
-> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> @@ -5,8 +5,10 @@
->   */
->  
->  #include <linux/delay.h>
-> +#include <linux/firmware.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> +#include <linux/iopoll.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/pci.h>
-> @@ -20,9 +22,10 @@
->  /* Renesas-specific */
->  /* PCIe Mode Setting Register 0 */
->  #define PCIEMSR0		0x0000
-> -#define BIFUR_MOD_SET_ON	BIT(0)
-> +#define APP_SRIS_MODE		BIT(6)
->  #define DEVICE_TYPE_EP		0
->  #define DEVICE_TYPE_RC		BIT(4)
-> +#define BIFUR_MOD_SET_ON	BIT(0)
->  
->  /* PCIe Interrupt Status 0 */
->  #define PCIEINTSTS0		0x0084
-> @@ -37,19 +40,48 @@
->  #define PCIEDMAINTSTSEN		0x0314
->  #define PCIEDMAINTSTSEN_INIT	GENMASK(15, 0)
->  
-> +/* Port Logic Registers 89 */
-> +#define PRTLGC89		0x0b70
-> +
-> +/* Port Logic Registers 90 */
-> +#define PRTLGC90		0x0b74
-> +
->  /* PCIe Reset Control Register 1 */
->  #define PCIERSTCTRL1		0x0014
->  #define APP_HOLD_PHY_RST	BIT(16)
->  #define APP_LTSSM_ENABLE	BIT(0)
->  
-> +/* PCIe Power Management Control */
-> +#define PCIEPWRMNGCTRL		0x0070
-> +#define APP_CLK_REQ_N		BIT(11)
-> +#define APP_CLK_PM_EN		BIT(10)
-> +
->  #define RCAR_NUM_SPEED_CHANGE_RETRIES	10
->  #define RCAR_MAX_LINK_SPEED		4
->  
->  #define RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET	0x1000
->  #define RCAR_GEN4_PCIE_EP_FUNC_DBI2_OFFSET	0x800
->  
-> +/*
-> + * The attached firmware file "104_PCIe_fw_addr_data_ver1.05.txt" in
-> + * the datasheet is a text file. But, Renesas is not able to distribute
-> + * the firmware freely. So, we require converting the text file
-> + * to a binary before the driver runs by using the following script:
-> + *
-> + * $ awk '/^\s*0x[0-9A-Fa-f]{4}\s+0x[0-9A-Fa-f]{4}/ \
-> + *      { print substr($2,5,2) substr($2,3,2) }' \
-> + *      104_PCIe_fw_addr_data_ver1.05.txt | xxd -p -r > \
-> + *      rcar_gen4_pcie.bin
-> + *    $ sha1sum rcar_gen4_pcie.bin
-> + *      1d0bd4b189b4eb009f5d564b1f93a79112994945  rcar_gen4_pcie.bin
-> + */
-> +#define RCAR_GEN4_PCIE_FIRMWARE_NAME		"rcar_gen4_pcie.bin"
-> +#define RCAR_GEN4_PCIE_FIRMWARE_BASE_ADDR	0xc000
-> +MODULE_FIRMWARE(RCAR_GEN4_PCIE_FIRMWARE_NAME);
-> +
->  struct rcar_gen4_pcie;
->  struct rcar_gen4_pcie_drvdata {
-> +	void (*additional_common_init)(struct rcar_gen4_pcie *rcar);
->  	int (*ltssm_control)(struct rcar_gen4_pcie *rcar, bool enable);
->  	enum dw_pcie_device_mode mode;
->  };
-> @@ -57,6 +89,7 @@ struct rcar_gen4_pcie_drvdata {
->  struct rcar_gen4_pcie {
->  	struct dw_pcie dw;
->  	void __iomem *base;
-> +	void __iomem *phy_base;
->  	struct platform_device *pdev;
->  	const struct rcar_gen4_pcie_drvdata *drvdata;
->  };
-> @@ -180,6 +213,9 @@ static int rcar_gen4_pcie_common_init(struct rcar_gen4_pcie *rcar)
->  	if (ret)
->  		goto err_unprepare;
->  
-> +	if (rcar->drvdata->additional_common_init)
-> +		rcar->drvdata->additional_common_init(rcar);
-> +
->  	return 0;
->  
->  err_unprepare:
-> @@ -221,6 +257,10 @@ static void rcar_gen4_pcie_unprepare(struct rcar_gen4_pcie *rcar)
->  
->  static int rcar_gen4_pcie_get_resources(struct rcar_gen4_pcie *rcar)
->  {
-> +	rcar->phy_base = devm_platform_ioremap_resource_byname(rcar->pdev, "phy");
-> +	if (IS_ERR(rcar->phy_base))
-> +		return PTR_ERR(rcar->phy_base);
-> +
 
-I failed to spot this in earlier reviews. Since this 'phy' region is only
-applicable for r8a779g0, wouldn't this fail on other platforms?
+No, it doesn't make sense. This patch introduces ICC vote for CPU-PCIe path, so
+it _should_ also update the error message.
 
 - Mani
 
->  	/* Renesas-specific registers */
->  	rcar->base = devm_platform_ioremap_resource_byname(rcar->pdev, "app");
->  
-> @@ -528,6 +568,167 @@ static int r8a779f0_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, bool enable)
->  	return 0;
->  }
->  
-> +static void rcar_gen4_pcie_additional_common_init(struct rcar_gen4_pcie *rcar)
-> +{
-> +	struct dw_pcie *dw = &rcar->dw;
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(dw, PCIE_PORT_LANE_SKEW);
-> +	val &= ~PORT_LANE_SKEW_INSERT_MASK;
-> +	if (dw->num_lanes < 4)
-> +		val |= BIT(6);
-> +	dw_pcie_writel_dbi(dw, PCIE_PORT_LANE_SKEW, val);
-> +
-> +	val = readl(rcar->base + PCIEPWRMNGCTRL);
-> +	val |= APP_CLK_REQ_N | APP_CLK_PM_EN;
-> +	writel(val, rcar->base + PCIEPWRMNGCTRL);
-> +}
-> +
-> +static void rcar_gen4_pcie_phy_reg_update_bits(struct rcar_gen4_pcie *rcar,
-> +					       u32 offset, u32 mask, u32 val)
-> +{
-> +	u32 tmp;
-> +
-> +	tmp = readl(rcar->phy_base + offset);
-> +	tmp &= ~mask;
-> +	tmp |= val;
-> +	writel(tmp, rcar->phy_base + offset);
-> +}
-> +
-> +/*
-> + * SoC datasheet suggests checking port logic register bits during firmware
-> + * write. If read returns non-zero value, then this function returns -EAGAIN
-> + * indicating that the write needs to be done again. If read returns zero,
-> + * then return 0 to indicate success.
-> + */
-> +static int rcar_gen4_pcie_reg_test_bit(struct rcar_gen4_pcie *rcar,
-> +				       u32 offset, u32 mask)
-> +{
-> +	struct dw_pcie *dw = &rcar->dw;
-> +
-> +	if (dw_pcie_readl_dbi(dw, offset) & mask)
-> +		return -EAGAIN;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rcar_gen4_pcie_download_phy_firmware(struct rcar_gen4_pcie *rcar)
-> +{
-> +	/* The check_addr values are magical numbers in the datasheet */
-> +	const u32 check_addr[] = { 0x00101018, 0x00101118, 0x00101021, 0x00101121};
-> +	struct dw_pcie *dw = &rcar->dw;
-> +	const struct firmware *fw;
-> +	unsigned int i, timeout;
-> +	u32 data;
-> +	int ret;
-> +
-> +	ret = request_firmware(&fw, RCAR_GEN4_PCIE_FIRMWARE_NAME, dw->dev);
-> +	if (ret) {
-> +		dev_err(dw->dev, "Failed to load firmware (%s): %d\n",
-> +			RCAR_GEN4_PCIE_FIRMWARE_NAME, ret);
-> +		return ret;
-> +	}
-> +
-> +	for (i = 0; i < (fw->size / 2); i++) {
-> +		data = fw->data[(i * 2) + 1] << 8 | fw->data[i * 2];
-> +		timeout = 100;
-> +		do {
-> +			dw_pcie_writel_dbi(dw, PRTLGC89, RCAR_GEN4_PCIE_FIRMWARE_BASE_ADDR + i);
-> +			dw_pcie_writel_dbi(dw, PRTLGC90, data);
-> +			if (!rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC89, BIT(30)))
-> +				break;
-> +			if (!(--timeout)) {
-> +				ret = -ETIMEDOUT;
-> +				goto exit;
-> +			}
-> +			usleep_range(100, 200);
-> +		} while (1);
-> +	}
-> +
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x0f8, BIT(17), BIT(17));
-> +
-> +	for (i = 0; i < ARRAY_SIZE(check_addr); i++) {
-> +		timeout = 100;
-> +		do {
-> +			dw_pcie_writel_dbi(dw, PRTLGC89, check_addr[i]);
-> +			ret = rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC89, BIT(30));
-> +			ret |= rcar_gen4_pcie_reg_test_bit(rcar, PRTLGC90, BIT(0));
-> +			if (!ret)
-> +				break;
-> +			if (!(--timeout)) {
-> +				ret = -ETIMEDOUT;
-> +				goto exit;
-> +			}
-> +			usleep_range(100, 200);
-> +		} while (1);
-> +	}
-> +
-> +exit:
-> +	release_firmware(fw);
-> +
-> +	return ret;
-> +}
-> +
-> +static int rcar_gen4_pcie_ltssm_control(struct rcar_gen4_pcie *rcar, bool enable)
-> +{
-> +	struct dw_pcie *dw = &rcar->dw;
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (!enable) {
-> +		val = readl(rcar->base + PCIERSTCTRL1);
-> +		val &= ~APP_LTSSM_ENABLE;
-> +		writel(val, rcar->base + PCIERSTCTRL1);
-> +
-> +		return 0;
-> +	}
-> +
-> +	val = dw_pcie_readl_dbi(dw, PCIE_PORT_FORCE);
-> +	val |= PORT_FORCE_DO_DESKEW_FOR_SRIS;
-> +	dw_pcie_writel_dbi(dw, PCIE_PORT_FORCE, val);
-> +
-> +	val = readl(rcar->base + PCIEMSR0);
-> +	val |= APP_SRIS_MODE;
-> +	writel(val, rcar->base + PCIEMSR0);
-> +
-> +	/*
-> +	 * The R-Car Gen4 datasheet doesn't describe the PHY registers' name.
-> +	 * But, the initialization procedure describes these offsets. So,
-> +	 * this driver has magical offset numbers.
-> +	 */
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(28), 0);
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(20), 0);
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(12), 0);
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x700, BIT(4), 0);
-> +
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(23, 22), BIT(22));
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(18, 16), GENMASK(17, 16));
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(7, 6), BIT(6));
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x148, GENMASK(2, 0), GENMASK(11, 0));
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x1d4, GENMASK(16, 15), GENMASK(16, 15));
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x514, BIT(26), BIT(26));
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x0f8, BIT(16), 0);
-> +	rcar_gen4_pcie_phy_reg_update_bits(rcar, 0x0f8, BIT(19), BIT(19));
-> +
-> +	val = readl(rcar->base + PCIERSTCTRL1);
-> +	val &= ~APP_HOLD_PHY_RST;
-> +	writel(val, rcar->base + PCIERSTCTRL1);
-> +
-> +	ret = readl_poll_timeout(rcar->phy_base + 0x0f8, val, !(val & BIT(18)), 100, 10000);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = rcar_gen4_pcie_download_phy_firmware(rcar);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val = readl(rcar->base + PCIERSTCTRL1);
-> +	val |= APP_LTSSM_ENABLE;
-> +	writel(val, rcar->base + PCIERSTCTRL1);
-> +
-> +	return 0;
-> +}
-> +
->  static struct rcar_gen4_pcie_drvdata drvdata_r8a779f0_pcie = {
->  	.ltssm_control = r8a779f0_pcie_ltssm_control,
->  	.mode = DW_PCIE_RC_TYPE,
-> @@ -539,10 +740,14 @@ static struct rcar_gen4_pcie_drvdata drvdata_r8a779f0_pcie_ep = {
->  };
->  
->  static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie = {
-> +	.additional_common_init = rcar_gen4_pcie_additional_common_init,
-> +	.ltssm_control = rcar_gen4_pcie_ltssm_control,
->  	.mode = DW_PCIE_RC_TYPE,
->  };
->  
->  static struct rcar_gen4_pcie_drvdata drvdata_rcar_gen4_pcie_ep = {
-> +	.additional_common_init = rcar_gen4_pcie_additional_common_init,
-> +	.ltssm_control = rcar_gen4_pcie_ltssm_control,
->  	.mode = DW_PCIE_EP_TYPE,
->  };
->  
-> -- 
-> 2.25.1
+> Other than that, the change looked okay to me.
 > 
+> -- 
+>  i.
+> 
+> >  		return ret;
+> >  	}
+> >  
+> > +	/*
+> > +	 * Since the CPU-PCIe path is only used for activities like register
+> > +	 * access of the host controller and endpoint Config/BAR space access,
+> > +	 * HW team has recommended to use a minimal bandwidth of 1KBps just to
+> > +	 * keep the path active.
+> > +	 */
+> > +	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
+> > +	if (ret) {
+> > +		dev_err(pci->dev, "Failed to set bandwidth for CPU-PCIe interconnect path: %d\n",
+> > +			ret);
+> > +		icc_set_bw(pcie->icc_mem, 0, 0);
+> > +		return ret;
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -1408,7 +1426,7 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
+> >  
+> >  	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+> >  	if (ret) {
+> > -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+> > +		dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
+> >  			ret);
+> >  	}
+> >  }
+> > @@ -1570,7 +1588,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+> >  	 */
+> >  	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
+> >  	if (ret) {
+> > -		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
+> > +		dev_err(dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n", ret);
+> >  		return ret;
+> >  	}
+> >  
+> > @@ -1594,7 +1612,18 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+> >  		pcie->suspended = true;
+> >  	}
+> >  
+> > -	return 0;
+> > +	/*
+> > +	 * Only disable CPU-PCIe interconnect path if the suspend is non-S2RAM.
+> > +	 * Because on some platforms, DBI access can happen very late during the
+> > +	 * S2RAM and a non-active CPU-PCIe interconnect path may lead to NoC
+> > +	 * error.
+> > +	 */
+> > +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+> > +		ret = icc_disable(pcie->icc_cpu);
+> > +		if (ret)
+> > +			dev_err(dev, "Failed to disable CPU-PCIe interconnect path: %d\n", ret);
+> > +	}
+> > +	return ret;
+> >  }
+> >  
+> >  static int qcom_pcie_resume_noirq(struct device *dev)
+> > @@ -1602,6 +1631,14 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+> >  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> >  	int ret;
+> >  
+> > +	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
+> > +		ret = icc_enable(pcie->icc_cpu);
+> > +		if (ret) {
+> > +			dev_err(dev, "Failed to enable CPU-PCIe interconnect path: %d\n", ret);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >  	if (pcie->suspended) {
+> >  		ret = qcom_pcie_host_init(&pcie->pci->pp);
+> >  		if (ret)
+> > 
+> > 
 
 -- 
 மணிவண்ணன் சதாசிவம்
