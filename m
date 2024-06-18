@@ -1,156 +1,154 @@
-Return-Path: <linux-pci+bounces-8917-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8919-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F40B90D8D0
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 18:16:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D795F90D96E
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 18:38:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F13CBB37D78
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 15:22:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0746B23FB2
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 15:55:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D88504D8C2;
-	Tue, 18 Jun 2024 15:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34DD42E3F2;
+	Tue, 18 Jun 2024 15:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GH1xLuWs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16044CE05;
-	Tue, 18 Jun 2024 15:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08645D299;
+	Tue, 18 Jun 2024 15:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718724038; cv=none; b=FQFhpkbRBNDOFrqez/FEOrThWKlnU1FJsxzXtPPzcC+FnvPiksVEn+00LQqDMDq1+Fp+SmsMvbh2u+ZzqgLQqrKoyYqa8de08en149kVHln6uUoRHIbgqKLPdVnuFM81G8gopIQLo3/dx3+RdPWChhPcfGZbaoxr7NNrKuboNfc=
+	t=1718726148; cv=none; b=FJKeQibxLPNyZs/aphdNVHzB58FCGviQhlXjAipYvBqImlZtYrYI9QPzy/5Vl6ntYbMBJTNojMzvg1wuUTnarXJEadVODJ3t4VoLCw/NPLGkykNn8D8P+M5qeqM+7595IVQ9u1NSXjliuzEs0KJeaIshFNpxlsj+5HZABWc8bXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718724038; c=relaxed/simple;
-	bh=n/fRSaMQD1tYH9Xuyl9lD+l+43rICCNzQtg/jdEtL6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cr3BJfP/g/Yrf4OIZWFDKzL5Vp8aCVlTqDXgrkzt6X3dqdSeAeu5vNkT5hkqjC5bX9LGgU2RcrHw/aA//KEDglXmqpux9Hlo4fwpVpVhqeUyZfULhKzXm9WLAeZpJsyxhhuEZByCE55+Ty+GMF2Lw+dU/FRnTqwYrlPIuh2Og64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 9D84B61E5FE01;
-	Tue, 18 Jun 2024 17:19:28 +0200 (CEST)
-Message-ID: <fc546ab5-3ffe-4b72-9d3f-f4807ad4858f@molgen.mpg.de>
-Date: Tue, 18 Jun 2024 17:19:27 +0200
+	s=arc-20240116; t=1718726148; c=relaxed/simple;
+	bh=lhjj25VP5M4sTOzHNNjscKcLGzs0m0KUFagNmmsLVCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ndhp3YFugIpjo7o4053ZIYxfPCjVRPDwuVKXFAylRmw6lG9VknPeQQH8ByZrIXJiAjapzgyhkGcipa8qqfRT2zRqhbNxn8XkKbhu6zgvZgAgEWxWXPr8DGSSkfH07SjkqI734JcNyZoRFrL8ecrGE9wfk3DF4aoOuuYjXFann7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GH1xLuWs; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 833B11BF204;
+	Tue, 18 Jun 2024 15:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718726137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V2KE/O5mxQyzYGqNyk0NZy+aO7Wf1mUhJbeharOTLWU=;
+	b=GH1xLuWsQxAhseqDqFHZLD/PAHYZJjFDGtEsCC1ScJeUUlB6N1r9kc7jpvEKmvzMil1ZLw
+	N7wVAJzKpSnPXXL/hbSWtz0+ILKsU1RIIZRu/IrIfG75FCcKItUgfR+M54pq6bbI7L4dtr
+	IX0N3HpabnDfVqLo0OzGu7jQVD00B2p5g9HSkO5PrG0kZdPRe1U3u/NepoJIeZqKetZj43
+	L5QZaneld0T0Npc8RpVNG6z6+EdYPoreOCeTyULCfvm6IJEp3OOJTx8tqRAoZVp5vYufPZ
+	JeobUn7bnS1yOLi9zePgor/7ilQKJspTnQn9BfPegr1Wx3fffcDxqFTbXCIZIQ==
+Date: Tue, 18 Jun 2024 17:55:33 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Simon Horman" <horms@kernel.org>, "Sai Krishna Gajula"
+ <saikrishnag@marvell.com>, "Thomas Gleixner" <tglx@linutronix.de>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "David S . Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Lee Jones"
+ <lee@kernel.org>, "Horatiu Vultur" <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, "Andrew Lunn" <andrew@lunn.ch>, "Heiner
+ Kallweit" <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>,
+ "Saravana Kannan" <saravanak@google.com>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Lars
+ Povlsen" <lars.povlsen@microchip.com>, "Steen Hegelund"
+ <Steen.Hegelund@microchip.com>, "Daniel Machon"
+ <daniel.machon@microchip.com>, "Alexandre Belloni"
+ <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Allan
+ Nielsen" <allan.nielsen@microchip.com>, "Luca Ceresoli"
+ <luca.ceresoli@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Clement Leger" <clement.leger@bootlin.com>
+Subject: Re: [PATCH v2 01/19] mfd: syscon: Add reference counting and device
+ managed support
+Message-ID: <20240618175533.3e1534ca@bootlin.com>
+In-Reply-To: <b685d5e5-09d3-4916-ad0b-d329c166e149@app.fastmail.com>
+References: <20240527161450.326615-1-herve.codina@bootlin.com>
+	<20240527161450.326615-2-herve.codina@bootlin.com>
+	<b685d5e5-09d3-4916-ad0b-d329c166e149@app.fastmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux warns `Unknown NUMA node; performance will be reduced`
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- Yunsheng Lin <linyunsheng@huawei.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240611151102.GA963259@bhelgaas>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240611151102.GA963259@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-[Cc: +X86 maintainers]
+Hi Arnd,
 
+On Tue, 18 Jun 2024 16:53:30 +0200
+"Arnd Bergmann" <arnd@arndb.de> wrote:
 
-Dear Bjorn, dear Linux folks,
-
-
-Am 11.06.24 um 17:11 schrieb Bjorn Helgaas:
-> On Mon, Jun 10, 2024 at 10:27:37PM +0200, Paul Menzel wrote:
->> Am 10.06.24 um 21:42 schrieb Bjorn Helgaas:
->>> On Sun, Jun 09, 2024 at 10:31:05AM +0200, Paul Menzel wrote:
->>>> On the servers below Linux warns:
->>>>
->>>>        Unknown NUMA node; performance will be reduced
->>>
->>> This warning was added by ad5086108b9f ("PCI: Warn if no host bridge
->>> NUMA node info"), which appeared in v5.5, so I assume this isn't new.
->>>
->>> That commit log says:
->>>
->>>     In pci_call_probe(), we try to run driver probe functions on the node where
->>>     the device is attached.  If we don't know which node the device is attached
->>>     to, the driver will likely run on the wrong node.  This will still work,
->>>     but performance will not be as good as it could be.
->>>
->>>     On NUMA systems, warn if we don't know which node a PCI host bridge is
->>>     attached to.  This is likely an indication that ACPI didn't supply a _PXM
->>>     method or the DT didn't supply a "numa-node-id" property.
->>>
->>> I assume these are all ACPI systems, so likely missing _PXM.  An
->>> acpidump could confirm this.
->>
->> I created an issue in the Linux Kernel Bugzilla [1] and attached the output
->> of `acpidump` on a Dell PowerEdge T630 there. The DSDT contains:
->>
->>          Device (PCI1)
->>          {
->>          […]
->>              Method (_PXM, 0, NotSerialized)  // _PXM: Device Proximity
->>              {
->>                  If ((CLOD == 0x00))
->>                  {
->>                      Return (0x01)
->>                  }
->>                  Else
->>                  {
->>                      Return (0x02)
->>                  }
->>              }
->>          […]
->>          }
+> On Mon, May 27, 2024, at 18:14, Herve Codina wrote:
+> > From: Clément Léger <clement.leger@bootlin.com>
+> >
+> > Syscon releasing is not supported.
+> > Without release function, unbinding a driver that uses syscon whether
+> > explicitly or due to a module removal left the used syscon in a in-use
+> > state.
+> >
+> > For instance a syscon_node_to_regmap() call from a consumer retrieve a
+> > syscon regmap instance. Internally, syscon_node_to_regmap() can create
+> > syscon instance and add it to the existing syscon list. No API is
+> > available to release this syscon instance, remove it from the list and
+> > free it when it is not used anymore.
+> >
+> > Introduce reference counting in syscon in order to keep track of syscon
+> > usage using syscon_{get,put}() and add a device managed version of
+> > syscon_regmap_lookup_by_phandle(), to automatically release the syscon
+> > instance on the consumer removal.
+> >
+> > Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
 > 
-> This machine (the T630, from your first message) has several PCI host
-> bridges:
+> This all looks correct from an implementation perspective,
+> but it does add a lot of complexity if now every syscon user
+> feels compelled to actually free up their resources again,
+> while nothing else should actually depend on this.
 > 
->    ACPI: PCI Root Bridge [UNC1] (domain 0000 [bus ff])
->    pci_bus 0000:ff: root bus resource [bus ff]
+> The only reference I found in your series here is the
+> reset controller, and it only does a single update to
+> the regmap in the probe function.
 > 
->    ACPI: PCI Root Bridge [UNC0] (domain 0000 [bus 7f])
->    pci_bus 0000:7f: root bus resource [bus 7f]
+> Would it be possible to just make the syscon support in
+> the reset driver optional and instead poke the register
+> in the mfd driver itself when this is used as a pci device?
+> Or do you expect to see the syscon get used in other
+> places in the future for the PCI case?
 > 
->    ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-7e])
->    pci_bus 0000:00: root bus resource [io  0x0000-0x03bb window]
->    pci_bus 0000:00: root bus resource [io  0x03bc-0x03df window]
->    pci_bus 0000:00: root bus resource [io  0x03e0-0x0cf7 window]
->    pci_bus 0000:00: root bus resource [io  0x1000-0x7fff window]
->    pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
->    pci_bus 0000:00: root bus resource [mem 0x90000000-0xc7ffbfff window]
->    pci_bus 0000:00: root bus resource [mem 0x38000000000-0x3bfffffffff window]
->    pci_bus 0000:00: root bus resource [bus 00-7e]
-> 
->    ACPI: PCI Root Bridge [PCI1] (domain 0000 [bus 80-fe])
->    pci_bus 0000:80: root bus resource [io  0x8000-0xffff window]
->    pci_bus 0000:80: root bus resource [mem 0xc8000000-0xfbffbfff window]
->    pci_bus 0000:80: root bus resource [mem 0x3c000000000-0x3ffffffffff window]
->    pci_bus 0000:80: root bus resource [bus 80-fe]
-> 
-> PCI0 and PCI1 lead to all your normal PCI devices, they both
-> implement _PXM, and they have all the usual apertures for PCI I/O and
-> MMIO space where device BARs live.
-> 
-> UNC0 and UNC1 lead to these special chipset devices, they don't
-> implement _PXM, and they don't have any resources except the bus
-> number.  The devices on bus 7f and ff can only be used via config
-> space accesses, and I have no idea what they are used for.
 
-Maybe the X86 folks now.
+IMHO, I don't think that poking the register in the mfd driver and so
+avoiding syscon usage is the right solution.
 
+Indeed, additional devices can be added in the DT overlay and an other
+syscon user can be present.
 
-Kind regards,
+Also, overlays can be used on other PCI devices in the future and these PCI
+devices can use drivers that are syscon users. In that case, the same kind
+of workaround will be needed and maybe a quite more complex one depending on
+syscon users.
 
-Paul
+The root issue is that syscon does not support removal.
+I prefer fixing this root issue instead of finding a kind of workaround.
 
+Even if all syscon users are not fixed right now (and probably don't need to
+be fixed), a solution with the new devm_syscon_regmap_lookup_by_phandle() is
+available and drivers that need to release their resources because of a
+device removal can easily move to devm_syscon_regmap_lookup_by_phandle().
 
->> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218951
+Best regards,
+Hervé
 
