@@ -1,50 +1,105 @@
-Return-Path: <linux-pci+bounces-8938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8939-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0640090DFBE
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 01:17:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E09B90E004
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 01:41:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4CFE8B21A9C
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 23:17:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 990F11F22792
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 23:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75D8117B50E;
-	Tue, 18 Jun 2024 23:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F1EB185E50;
+	Tue, 18 Jun 2024 23:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZE0nQmvW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A60813A418;
-	Tue, 18 Jun 2024 23:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CC7176ADB
+	for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 23:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718752656; cv=none; b=ChzjtI2x15eDlbiItAFxNAoVcY7WRqBRR2S6yPRJaM/+WVXexPfpYkv6fqwBCrYqC9tKSIzdWThRjVbAlGhwu/ABXY125QDUUVJGjPAcDkrs6fmLNj/XmME2iEDkcdYE0UGZnC3a+jOmjeoKIkf2bbaUpILj/l3e0YpdJwLIsB4=
+	t=1718754049; cv=none; b=iart4PJv7S/4V6GzmHGmzFgEA3DRup3Ab5lfzcTgGkssVtfY+T8NoBEO/73gjsjTAbbm1eDD9wwfCtnvsLOUoSoF8TCdWyEiFJxI6Bk7xOvCf2PCtnfM8pLLWEZlu2NvP0DMx/oBdew9IXoBc408pVsYptgWnH/At+jpoAzrKdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718752656; c=relaxed/simple;
-	bh=5o/zZD9CIUJGcAQ4b5GF0hZE3sot4sjQkBblKkms7vM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GuKJh+G4OF6s2/ifE8GGdTjDM0fIq0OLSHQYboKKdEV8rL3pRmPNtVCKUhsG1IJvXHXRGImR2KA8HCfvLJxxiiPdIAqyVdoyPjUH1BPsnBn8LkZdxGQI8PGNCBz2yjFpqggeCNHR7mxiF/ak40D5Fjq4Je0k6rjwrCt10jeMVxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BADEAC3277B;
-	Tue, 18 Jun 2024 23:17:35 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: dan.j.williams@intel.com,
-	ira.weiny@intel.com,
-	vishal.l.verma@intel.com,
-	alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave@stgolabs.net,
-	Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: [PATCH v5 2/2] cxl: Calculate region bandwidth of targets with shared upstream link
-Date: Tue, 18 Jun 2024 16:16:41 -0700
-Message-ID: <20240618231730.2533819-3-dave.jiang@intel.com>
+	s=arc-20240116; t=1718754049; c=relaxed/simple;
+	bh=+Xk39ZwrIE1KGhHA9AKUZiS/VoU2xqjKZp1A3FfM24w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sOBe/Yqb9v0WSrhVF09qA103McpSlUBgEEHpWmTmtsbSusoVyulkU2650vR5jiMasJRHFf0Bf3J+kqwZ3bsFWd7+gVoSCG3yjIQ0HnkE5cCtwJXaHHCCtgQOFLATw/aiM5UBQr3wI/it4fCNzPTMjnKxguA5MLxWtisfUji+XiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZE0nQmvW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718754045;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=q6H9H1SHefxyue1HrWMST8kDKDco4keX1wncuBDxteE=;
+	b=ZE0nQmvWdG7rO9DO17wEvD5S6OgeNsJ+mOhAqofnaCWz9UJGqZfqTMyhmpAUqNw5ecgFWV
+	FIpWaIpJNefkFyfaR5DZben4b3LTWp78p0RSGOvZ5Pu5HLb7Ig0z20/WkxuyYy1fKFyRJb
+	UOu1xe+oWOlKzfwrTHgOHI7pZin5nDA=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-153-a5-iAWvyP8ujtcYUBdc70g-1; Tue, 18 Jun 2024 19:40:43 -0400
+X-MC-Unique: a5-iAWvyP8ujtcYUBdc70g-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52cb2fc9434so2581332e87.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 16:40:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718754042; x=1719358842;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q6H9H1SHefxyue1HrWMST8kDKDco4keX1wncuBDxteE=;
+        b=JRApJEVW1RMP3i4eAcIBby66OiVi/L52DfN7bHmgkYY3xXksjgMQ+2oB1sJBPNOp7p
+         QBpG9xB5lkZwuQ+GOyQ5bdDou49lYXOzVFljCpkrJhVi3UGiIFp7kal79ZBIOv4iIjMp
+         8SI8Ce29WfeIaEEotQ59/5cJH0I6bZWZh4HhN4RATjg4T4LtmS5CbNGv7UBgNHZ70VpV
+         HwE8dD8mXDok52DDDpC1PRFVPAvqutcrsmIbcLk/GXvQ/WAj0j+hSH8jqE/Pf3+G8DWU
+         AOXEo7Hh4lOF/5QR2aS08oHuVk7uSCdZXENQ+oo6q+xXd/hZD3N63iaN9IA9qoA9Fbnr
+         KJ5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUWoc1JESGdwVI0E721LdP5zJW0gGiRtqtt65E/2hTQ0sMpvew3LiH2YMjSdKN8nZjuEaWyaWtv+2dCXyK0QZNaNonrYVPDrpoF
+X-Gm-Message-State: AOJu0YzAXlnqR7GTPjUb2OFnlH4WSdgjjp7MnVgG1z8HblEkVbfqu93Z
+	64N9LavwxqgrtVJJ7JuiWV9fipu9/9cMwQqPoizXuA6rMdqcMMKAK+AkuvQB+qPvhJVzbBB9thR
+	RYT6mHL6c1ePJXU29RF7n7v/Lab/og3KqO78oFzpHmxk/CrHSHnaY7b0QiA==
+X-Received: by 2002:a05:6512:3151:b0:52c:897b:4c5a with SMTP id 2adb3069b0e04-52ccaa6595fmr408375e87.34.1718754042400;
+        Tue, 18 Jun 2024 16:40:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFmDtDAFR8V+id/nUJyFRf/A1MigXS0y4xOPObqrZY1ZBL1uSWuEi4ubFGyiuxHcNDLrMrT8w==
+X-Received: by 2002:a05:6512:3151:b0:52c:897b:4c5a with SMTP id 2adb3069b0e04-52ccaa6595fmr408353e87.34.1718754041929;
+        Tue, 18 Jun 2024 16:40:41 -0700 (PDT)
+Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3609aa60a59sm4760760f8f.84.2024.06.18.16.40.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 16:40:41 -0700 (PDT)
+From: Danilo Krummrich <dakr@redhat.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	bhelgaas@google.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	airlied@gmail.com,
+	fujita.tomonori@gmail.com,
+	lina@asahilina.net,
+	pstanner@redhat.com,
+	ajanulgu@redhat.com,
+	lyude@redhat.com,
+	robh@kernel.org,
+	daniel.almeida@collabora.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>
+Subject: [PATCH v2 00/10] Device / Driver and PCI Rust abstractions
+Date: Wed, 19 Jun 2024 01:39:46 +0200
+Message-ID: <20240618234025.15036-1-dakr@redhat.com>
 X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240618231730.2533819-1-dave.jiang@intel.com>
-References: <20240618231730.2533819-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -53,582 +108,100 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current bandwidth calculation aggregates all the targets. This simple
-method does not take into account where multiple targets sharing under
-a switch where the aggregated bandwidth can be less or greater than the
-upstream link of the switch.
+This patch series implements basic device / driver, PCI and devres Rust
+abstractions.
 
-To accurately account for the shared upstream uplink cases, a new update
-function is introduced by walking from the leaves to the root of the
-hierarchy and adjust the bandwidth in the process. This process is done
-when all the targets for a region are present but before the final values
-are send to the HMAT handling code cached access_coordinate targets.
+This patch series is sent in the context of [1], and the corresponding patch
+series [2], which contains some basic DRM Rust abstractions and a stub
+implementation of the Nova GPU driver.
 
-The original perf calculation path was kept to calculate the latency
-performance data that does not require the shared link consideration.
-The shared upstream link calculation is done as a second pass when all
-the endpoints have arrived.
+Nova is intended to be developed upstream, starting out with just a stub driver
+to lift some initial required infrastructure upstream. A more detailed
+explanation can be found in [1].
 
-Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.com/
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+As mentioned above, a driver serving as example on how these abstractions are
+used within a (DRM) driver can be found in [2].
 
----
-v5:
-- Fix cxl_memdev_get_dpa_perf() default return. (Jonathan)
-- Direct return dpa_perf_contains(). (Jonathan)
-- Fix incorrect bandwidth member reference. (Jonathan)
-- Direct return error for pcie_link_speed_mbps(). (Jonathan)
-- Remove stray edit. (Jonathan)
-- Adjust calculated bandwidth of RPs sharing same host bridge. (Jonathan)
-- Fix uninit var gp_is_root. (kernel test robot)
----
- drivers/cxl/core/cdat.c   | 411 ++++++++++++++++++++++++++++++++++++--
- drivers/cxl/core/core.h   |   4 +-
- drivers/cxl/core/pci.c    |  23 +++
- drivers/cxl/core/port.c   |  20 ++
- drivers/cxl/core/region.c |   4 +
- drivers/cxl/cxl.h         |   1 +
- 6 files changed, 446 insertions(+), 17 deletions(-)
+Additionally, the device / driver bits can also be found in [3], all
+abstractions required for Nova in [4] and Nova in [5].
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index fea214340d4b..72f86bc99750 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -548,32 +548,411 @@ void cxl_coordinates_combine(struct access_coordinate *out,
- 
- MODULE_IMPORT_NS(CXL);
- 
--void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
--				    struct cxl_endpoint_decoder *cxled)
-+static void cxl_bandwidth_add(struct access_coordinate *coord,
-+			      struct access_coordinate *c1,
-+			      struct access_coordinate *c2)
- {
--	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
--	struct range dpa = {
--			.start = cxled->dpa_res->start,
--			.end = cxled->dpa_res->end,
--	};
--	struct cxl_dpa_perf *perf;
-+	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-+		coord[i].read_bandwidth = c1[i].read_bandwidth +
-+					  c2[i].read_bandwidth;
-+		coord[i].write_bandwidth = c1[i].write_bandwidth +
-+					   c2[i].write_bandwidth;
-+	}
-+}
- 
--	switch (cxlr->mode) {
-+struct cxl_perf_ctx {
-+	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
-+	struct cxl_port *port;
-+};
-+
-+static struct cxl_dpa_perf *cxl_memdev_get_dpa_perf(struct cxl_memdev_state *mds,
-+						    enum cxl_decoder_mode mode)
-+{
-+	switch (mode) {
- 	case CXL_DECODER_RAM:
--		perf = &mds->ram_perf;
--		break;
-+		return &mds->ram_perf;
- 	case CXL_DECODER_PMEM:
--		perf = &mds->pmem_perf;
--		break;
-+		return &mds->pmem_perf;
- 	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static bool dpa_perf_contains(struct cxl_dpa_perf *perf,
-+			      struct resource *dpa_res)
-+{
-+	struct range dpa = {
-+		.start = dpa_res->start,
-+		.end = dpa_res->end,
-+	};
-+
-+	return range_contains(&perf->dpa_range, &dpa);
-+}
-+
-+static int cxl_endpoint_gather_coordinates(struct cxl_region *cxlr,
-+					   struct cxl_endpoint_decoder *cxled,
-+					   struct xarray *usp_xa)
-+{
-+	struct cxl_port *endpoint = to_cxl_port(cxled->cxld.dev.parent);
-+	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
-+	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
-+	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+	struct cxl_port *parent_port, *gp_port;
-+	struct cxl_perf_ctx *perf_ctx;
-+	struct cxl_dpa_perf *perf;
-+	bool gp_is_root = false;
-+	unsigned long index;
-+	void *ptr;
-+	int rc;
-+
-+	if (cxlds->rcd)
-+		return -ENODEV;
-+
-+	parent_port = to_cxl_port(endpoint->dev.parent);
-+	gp_port = to_cxl_port(parent_port->dev.parent);
-+	if (is_cxl_root(gp_port))
-+		gp_is_root = true;
-+
-+	perf = cxl_memdev_get_dpa_perf(mds, cxlr->mode);
-+	if (IS_ERR(perf))
-+		return PTR_ERR(perf);
-+
-+	if (!dpa_perf_contains(perf, cxled->dpa_res))
-+		return -EINVAL;
-+
-+	/*
-+	 * The index for the xarray is the upstream port device of the upstream
-+	 * CXL switch.
-+	 */
-+	index = (unsigned long)parent_port->uport_dev;
-+	perf_ctx = xa_load(usp_xa, index);
-+	if (!perf_ctx) {
-+		struct cxl_perf_ctx *c __free(kfree) =
-+			kzalloc(sizeof(*perf_ctx), GFP_KERNEL);
-+
-+		if (!c)
-+			return -ENOMEM;
-+		ptr = xa_store(usp_xa, index, c, GFP_KERNEL);
-+		if (xa_is_err(ptr))
-+			return xa_err(ptr);
-+		perf_ctx = no_free_ptr(c);
-+	}
-+
-+	/* Direct upstream link from EP bandwidth */
-+	rc = cxl_pci_get_bandwidth(pdev, pci_coord);
-+	if (rc < 0)
-+		return rc;
-+
-+	/*
-+	 * Min of upstream link bandwidth and Endpoint CDAT bandwidth from
-+	 * DSLBIS.
-+	 */
-+	cxl_coordinates_combine(ep_coord, pci_coord, perf->cdat_coord);
-+
-+	/*
-+	 * If grandparent port is root, then there's no switch involved and
-+	 * the endpoint is connected to a root port.
-+	 */
-+	if (!gp_is_root) {
-+		/*
-+		 * Retrieve the switch SSLBIS for switch downstream port
-+		 * associated with the endpoint bandwidth.
-+		 */
-+		rc = cxl_port_get_switch_dport_bandwidth(endpoint, sw_coord);
-+		if (rc)
-+			return rc;
-+
-+		/*
-+		 * Min of the earlier coordinates with the switch SSLBIS
-+		 * bandwidth
-+		 */
-+		cxl_coordinates_combine(ep_coord, ep_coord, sw_coord);
-+	}
-+
-+	/*
-+	 * Aggregate the computed bandwidth with the current aggregated bandwidth
-+	 * of the endpoints with the same switch upstream port.
-+	 */
-+	cxl_bandwidth_add(perf_ctx->coord, perf_ctx->coord, ep_coord);
-+	perf_ctx->port = parent_port;
-+
-+	return 0;
-+}
-+
-+static struct xarray *cxl_switch_iterate_coordinates(struct xarray *input_xa,
-+						     bool *parent_is_root)
-+{
-+	struct xarray *res_xa __free(kfree) = kzalloc(sizeof(*res_xa), GFP_KERNEL);
-+	struct access_coordinate coords[ACCESS_COORDINATE_MAX];
-+	struct cxl_perf_ctx *ctx, *us_ctx;
-+	unsigned long index, us_index;
-+	void *ptr;
-+	int rc;
-+
-+	if (!res_xa)
-+		return ERR_PTR(-ENOMEM);
-+	xa_init(res_xa);
-+
-+	*parent_is_root = false;
-+	xa_for_each(input_xa, index, ctx) {
-+		struct cxl_port *parent_port, *port, *gp_port;
-+		struct device *dev = (struct device *)index;
-+		struct cxl_dport *dport;
-+		struct pci_dev *pdev;
-+		bool gp_is_root;
-+
-+		gp_is_root = false;
-+		port = ctx->port;
-+		parent_port = to_cxl_port(port->dev.parent);
-+		if (is_cxl_root(parent_port)) {
-+			*parent_is_root = true;
-+		} else {
-+			gp_port = to_cxl_port(parent_port->dev.parent);
-+			gp_is_root = is_cxl_root(gp_port);
-+		}
-+
-+		dport = port->parent_dport;
-+
-+		/*
-+		 * Create an xarray entry with the key of the upstream
-+		 * port of the upstream switch.
-+		 */
-+		us_index = (unsigned long)parent_port->uport_dev;
-+		us_ctx = xa_load(res_xa, us_index);
-+		if (!us_ctx) {
-+			struct cxl_perf_ctx *n __free(kfree) =
-+				kzalloc(sizeof(*n), GFP_KERNEL);
-+
-+			if (!n)
-+				return ERR_PTR(-ENOMEM);
-+
-+			ptr = xa_store(res_xa, us_index, n, GFP_KERNEL);
-+			if (xa_is_err(ptr))
-+				return ERR_PTR(xa_err(ptr));
-+			us_ctx = no_free_ptr(n);
-+		}
-+
-+		us_ctx->port = parent_port;
-+
-+		/*
-+		 * Take the min of the downstream aggregated bandwdith and the
-+		 * GP provided bandwidth if parent is CXL root.
-+		 */
-+		if (*parent_is_root) {
-+			cxl_coordinates_combine(us_ctx->coord, ctx->coord, dport->coord);
-+			continue;
-+		}
-+
-+		/* Below is the calculation for another switch upstream */
-+		if (!gp_is_root) {
-+			/*
-+			 * If the device isn't an upstream PCIe port, there's something
-+			 * wrong with the topology.
-+			 */
-+			if (!dev_is_pci(dev))
-+				return ERR_PTR(-EINVAL);
-+
-+			/* Retrieve the upstream link bandwidth */
-+			pdev = to_pci_dev(dev);
-+			rc = cxl_pci_get_bandwidth(pdev, coords);
-+			if (rc)
-+				return ERR_PTR(-ENXIO);
-+
-+			/*
-+			 * Take the min of downstream bandwidth and the upstream link
-+			 * bandwidth.
-+			 */
-+			cxl_coordinates_combine(coords, coords, ctx->coord);
-+
-+			/*
-+			 * Take the min of the calculated bandwdith and the upstream
-+			 * switch SSLBIS bandwidth.
-+			 */
-+			cxl_coordinates_combine(coords, coords, dport->coord);
-+
-+			/*
-+			 * Aggregate the calculated bandwidth common to an upstream
-+			 * switch.
-+			 */
-+			cxl_bandwidth_add(us_ctx->coord, us_ctx->coord, coords);
-+		} else {
-+			/*
-+			 * Aggregate the bandwidth common to an upstream switch.
-+			 */
-+			cxl_bandwidth_add(us_ctx->coord, us_ctx->coord,
-+					  ctx->coord);
-+		}
-+	}
-+
-+	return_ptr(res_xa);
-+}
-+
-+static void cxl_region_update_access_coordinate(struct cxl_region *cxlr,
-+						struct xarray *input_xa)
-+{
-+	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
-+	struct cxl_perf_ctx *ctx;
-+	unsigned long index;
-+
-+	memset(coord, 0, sizeof(coord));
-+	xa_for_each(input_xa, index, ctx)
-+		cxl_bandwidth_add(coord, coord, ctx->coord);
-+
-+	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-+		cxlr->coord[i].read_bandwidth = coord[i].read_bandwidth;
-+		cxlr->coord[i].write_bandwidth = coord[i].write_bandwidth;
-+	}
-+}
-+
-+static void free_perf_xa(struct xarray *xa)
-+{
-+	struct cxl_perf_ctx *ctx;
-+	unsigned long index;
-+
-+	if (!xa)
-+		return;
-+
-+	xa_for_each(xa, index, ctx)
-+		kfree(ctx);
-+	xa_destroy(xa);
-+	kfree(xa);
-+}
-+
-+/*
-+ * cxl_region_shared_upstream_perf_update - Recalculate the access coordinates
-+ * @cxl_region: the cxl region to recalculate
-+ *
-+ * For certain region construction with endpoints behind CXL switches,
-+ * there is the possibility of the total bandwdith for all the endpoints
-+ * behind a switch being less or more than the switch upstream link. The
-+ * algorithm assumes the configuration is a symmetric topology as that
-+ * maximizes performance.
-+ *
-+ * There can be multiple switches under a RP. There can be multiple RPs under
-+ * a HB.
-+ *
-+ * An example hierarchy:
-+ *
-+ *                 CFMWS 0
-+ *                   |
-+ *          _________|_________
-+ *         |                   |
-+ *     ACPI0017-0          ACPI0017-1
-+ *  GP0/HB0/ACPI0016-0   GP1/HB1/ACPI0016-1
-+ *     |          |        |           |
-+ *    RP0        RP1      RP2         RP3
-+ *     |          |        |           |
-+ *   SW 0       SW 1     SW 2        SW 3
-+ *   |   |      |   |    |   |       |   |
-+ *  EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
-+ *
-+ * Computation for the example hierarchy:
-+ *
-+ * Min (GP0 to CPU BW,
-+ *      Min(SW 0 Upstream Link to RP0 BW,
-+ *          Min(SW0SSLBIS for SW0DSP0 (EP0), EP0 DSLBIS, EP0 Upstream Link) +
-+ *          Min(SW0SSLBIS for SW0DSP1 (EP1), EP1 DSLBIS, EP1 Upstream link)) +
-+ *      Min(SW 1 Upstream Link to RP1 BW,
-+ *          Min(SW1SSLBIS for SW1DSP0 (EP2), EP2 DSLBIS, EP2 Upstream Link) +
-+ *          Min(SW1SSLBIS for SW1DSP1 (EP3), EP3 DSLBIS, EP3 Upstream link))) +
-+ * Min (GP1 to CPU BW,
-+ *      Min(SW 2 Upstream Link to RP2 BW,
-+ *          Min(SW2SSLBIS for SW2DSP0 (EP4), EP4 DSLBIS, EP4 Upstream Link) +
-+ *          Min(SW2SSLBIS for SW2DSP1 (EP5), EP5 DSLBIS, EP5 Upstream link)) +
-+ *      Min(SW 3 Upstream Link to RP3 BW,
-+ *          Min(SW3SSLBIS for SW3DSP0 (EP6), EP6 DSLBIS, EP6 Upstream Link) +
-+ *          Min(SW3SSLBIS for SW3DSP1 (EP7), EP7 DSLBIS, EP7 Upstream link))))
-+ */
-+void cxl_region_shared_upstream_perf_update(struct cxl_region *cxlr)
-+{
-+	struct xarray *usp_xa, *iter_xa, *working_xa;
-+	bool is_root;
-+	int rc;
-+
-+	lockdep_assert_held(&cxl_dpa_rwsem);
-+
-+	usp_xa = kzalloc(sizeof(*usp_xa), GFP_KERNEL);
-+	if (!usp_xa)
- 		return;
-+
-+	xa_init(usp_xa);
-+
-+	/*
-+	 * Collect aggregated endpoint bandwidth and store the bandwidth in
-+	 * an xarray indexed by the upstream port of the switch or RP. The
-+	 * bandwidth is aggregated per switch. Each endpoint consists of the
-+	 * minimum of bandwidth from DSLBIS from the endpoint CDAT, the endpoint
-+	 * upstream link bandwidth, and the bandwidth from the SSLBIS of the
-+	 * switch CDAT for the switch upstream port to the downstream port that's
-+	 * associated with the endpoint. If the device is directly connected to
-+	 * a RP, then no SSLBIS is involved.
-+	 */
-+	for (int i = 0; i < cxlr->params.nr_targets; i++) {
-+		struct cxl_endpoint_decoder *cxled = cxlr->params.targets[i];
-+
-+		rc = cxl_endpoint_gather_coordinates(cxlr, cxled, usp_xa);
-+		if (rc) {
-+			free_perf_xa(usp_xa);
-+			return;
-+		}
- 	}
- 
-+	iter_xa = usp_xa;
-+	usp_xa = NULL;
-+	/*
-+	 * Iterate through the components in the xarray and aggregate any
-+	 * component that share the same upstream link from the switch.
-+	 * The iteration takes consideration of multi-level switch
-+	 * hierarchy.
-+	 *
-+	 * When cxl_switch_iterate_coordinates() detect the grandparent
-+	 * upstream is a cxl root, it aggregates the bandwidth under
-+	 * the host bridge. A RP does not have SSLBIS nor does it have
-+	 * upstream PCIe link.
-+	 *
-+	 * When cxl_switch_iterate_coordinates() detect the parent upstream
-+	 * is a cxl root, it takes the min() of the aggregated RP perfs and
-+	 * the bandwidth from the Generic Port (GP). 'is_root' is set at this
-+	 * point as well.
-+	 */
-+	do {
-+		working_xa = cxl_switch_iterate_coordinates(iter_xa, &is_root);
-+		if (IS_ERR(working_xa))
-+			goto out;
-+		free_perf_xa(iter_xa);
-+		iter_xa = working_xa;
-+	} while (!is_root);
-+
-+	/*
-+	 * Aggregate the bandwidths in the xarray (for all the HBs) and update
-+	 * the region bandwidths with the newly calculated bandwidths.
-+	 */
-+	cxl_region_update_access_coordinate(cxlr, iter_xa);
-+
-+out:
-+	free_perf_xa(iter_xa);
-+}
-+
-+void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
-+				    struct cxl_endpoint_decoder *cxled)
-+{
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_dpa_perf *perf;
-+
-+	perf = cxl_memdev_get_dpa_perf(mds, cxlr->mode);
-+	if (IS_ERR(perf))
-+		return;
-+
- 	lockdep_assert_held(&cxl_dpa_rwsem);
- 
--	if (!range_contains(&perf->dpa_range, &dpa))
-+	if (!dpa_perf_contains(perf, cxled->dpa_res))
- 		return;
- 
- 	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 625394486459..c72a7b9f5e21 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -103,9 +103,11 @@ enum cxl_poison_trace_type {
- };
- 
- long cxl_pci_get_latency(struct pci_dev *pdev);
--
-+int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
- int cxl_update_hmat_access_coordinates(int nid, struct cxl_region *cxlr,
- 				       enum access_coordinate_class access);
- bool cxl_need_node_perf_attrs_update(int nid);
-+int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
-+					struct access_coordinate *c);
- 
- #endif /* __CXL_CORE_H__ */
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 8567dd11eaac..23b3d59c470d 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1074,3 +1074,26 @@ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port)
- 				     __cxl_endpoint_decoder_reset_detected);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_endpoint_decoder_reset_detected, CXL);
-+
-+int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c)
-+{
-+	int speed, bw;
-+	u16 lnksta;
-+	u32 width;
-+
-+	speed = pcie_link_speed_mbps(pdev);
-+	if (speed < 0)
-+		return speed;
-+	speed /= BITS_PER_BYTE;
-+
-+	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnksta);
-+	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, lnksta);
-+	bw = speed * width;
-+
-+	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-+		c[i].read_bandwidth = bw;
-+		c[i].write_bandwidth = bw;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 887ed6e358fb..054b0db87f6d 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2259,6 +2259,26 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- }
- EXPORT_SYMBOL_NS_GPL(cxl_endpoint_get_perf_coordinates, CXL);
- 
-+int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
-+					struct access_coordinate *c)
-+{
-+	struct cxl_dport *dport = port->parent_dport;
-+
-+	/* Check this port is connected to a switch DSP and not an RP */
-+	if (parent_port_is_cxl_root(to_cxl_port(port->dev.parent)))
-+		return -ENODEV;
-+
-+	if (!coordinates_valid(dport->coord))
-+		return -EINVAL;
-+
-+	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
-+		c[i].read_bandwidth = dport->coord[i].read_bandwidth;
-+		c[i].write_bandwidth = dport->coord[i].write_bandwidth;
-+	}
-+
-+	return 0;
-+}
-+
- /* for user tooling to ensure port disable work has completed */
- static ssize_t flush_store(const struct bus_type *bus, const char *buf, size_t count)
- {
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 3c2b6144be23..e8b8635ae8ce 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3281,6 +3281,10 @@ static int cxl_region_probe(struct device *dev)
- 		goto out;
- 	}
- 
-+	down_read(&cxl_dpa_rwsem);
-+	cxl_region_shared_upstream_perf_update(cxlr);
-+	up_read(&cxl_dpa_rwsem);
-+
- 	/*
- 	 * From this point on any path that changes the region's state away from
- 	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 603c0120cff8..34e83a6c55a1 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -891,6 +891,7 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 				      struct access_coordinate *coord);
- void cxl_region_perf_data_calculate(struct cxl_region *cxlr,
- 				    struct cxl_endpoint_decoder *cxled);
-+void cxl_region_shared_upstream_perf_update(struct cxl_region *cxlr);
- 
- void cxl_memdev_update_perf(struct cxl_memdev *cxlmd);
- 
+This patch series is based on [6] (which has been merged in the driver-core tree
+already), as well as two more patches:
+
+- "rust: init: introduce Opaque::try_ffi_init" [7]
+- "rust: introduce InPlaceModule" [8]
+
+@Wedson, please let me know if you want to send the two separately or if you
+want me to pick them up for this series.
+
+Changes in v2:
+==============
+- statically initialize driver structures (Greg)
+- move base device ID abstractions to a separate source file (Greg)
+- remove `DeviceRemoval` trait in favor of using a `Devres` callback to
+  unregister drivers
+- remove `device::Data`, we don't need this abstraction anymore now that we
+  `Devres` to revoke resources and registrations
+- pass the module name to `Module::init` and `InPlaceModule::init` in a separate
+  patch
+- rework of `Io` including compile time boundary checks (Miguel, Wedson)
+- adjust PCI abstractions accordingly and implement a `module_pci_driver!` macro
+- rework `pci::Bar` to support a const SIZE
+- increase the total amount of Documentation, rephrase some safety comments and
+  commit messages for less ambiguity
+- fix compilation issues with some documentation examples
+
+[1] https://lore.kernel.org/dri-devel/Zfsj0_tb-0-tNrJy@cassiopeiae/T/#u
+[2] https://lore.kernel.org/dri-devel/20240618233324.14217-1-dakr@redhat.com/
+[3] https://github.com/Rust-for-Linux/linux/tree/staging/rust-device
+[4] https://github.com/Rust-for-Linux/linux/tree/staging/dev
+[5] https://gitlab.freedesktop.org/drm/nova/-/tree/nova-next
+[6] https://lore.kernel.org/rust-for-linux/20240618154841.6716-1-dakr@redhat.com/
+[7] https://github.com/Rust-for-Linux/linux/commit/9c49161db95f4eb4e55e62873b835fb6c1a0bb39
+[8] https://github.com/Rust-for-Linux/linux/commit/e74d5d33dd2b9361e8cebae77227e3f924b50034
+
+Danilo Krummrich (6):
+  rust: pass module name to `Module::init`
+  rust: implement generic driver registration
+  rust: add `io::Io` base type
+  rust: add devres abstraction
+  rust: pci: add basic PCI device / driver abstractions
+  rust: pci: implement I/O mappable `pci::Bar`
+
+Wedson Almeida Filho (4):
+  rust: implement `IdArray`, `IdTable` and `RawDeviceId`
+  rust: add rcu abstraction
+  rust: add `Revocable` type
+  rust: add `dev_*` print macros.
+
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers.c                  | 145 ++++++++++
+ rust/kernel/device.rs           | 319 +++++++++++++++++++++-
+ rust/kernel/device_id.rs        | 336 +++++++++++++++++++++++
+ rust/kernel/devres.rs           | 168 ++++++++++++
+ rust/kernel/driver.rs           | 128 +++++++++
+ rust/kernel/io.rs               | 219 +++++++++++++++
+ rust/kernel/lib.rs              |  22 +-
+ rust/kernel/net/phy.rs          |   2 +-
+ rust/kernel/pci.rs              | 467 ++++++++++++++++++++++++++++++++
+ rust/kernel/prelude.rs          |   2 +
+ rust/kernel/revocable.rs        | 209 ++++++++++++++
+ rust/kernel/sync.rs             |   1 +
+ rust/kernel/sync/rcu.rs         |  52 ++++
+ rust/macros/module.rs           |   3 +-
+ samples/rust/rust_minimal.rs    |   2 +-
+ samples/rust/rust_print.rs      |   2 +-
+ 17 files changed, 2069 insertions(+), 9 deletions(-)
+ create mode 100644 rust/kernel/device_id.rs
+ create mode 100644 rust/kernel/devres.rs
+ create mode 100644 rust/kernel/driver.rs
+ create mode 100644 rust/kernel/io.rs
+ create mode 100644 rust/kernel/pci.rs
+ create mode 100644 rust/kernel/revocable.rs
+ create mode 100644 rust/kernel/sync/rcu.rs
+
+
+base-commit: e74d5d33dd2b9361e8cebae77227e3f924b50034
 -- 
 2.45.1
 
