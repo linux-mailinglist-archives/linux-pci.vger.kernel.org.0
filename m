@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-8946-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8947-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9D6990E014
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 01:43:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FFB890E016
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 01:43:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EEAFCB21354
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 23:43:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D22C7B221B5
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 23:43:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39E6F18FDD1;
-	Tue, 18 Jun 2024 23:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8338A194C9B;
+	Tue, 18 Jun 2024 23:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGFJ0Mko"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJbm6px9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53286185E70
-	for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 23:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED36191465
+	for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 23:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718754077; cv=none; b=GzlMjbL1Lnbe01fY9GQ7V5A7LZXUo2IRrohRHDlApqCloD+Asp+gj1vZBTw7y8F3Slty0hgrqyKmeu3a7jMQqOkyI54O09iRg9PD0qxB24eASKkYF4Qs/nzjpS+Y8KWE727lRLiKDjzE3imy328zwb95rILOcde+xnL7PnCjkro=
+	t=1718754080; cv=none; b=LpBrx7Xv4uhcDWYJjauJOleLNsRvvJtHoX6956k6PA+h98Pi0DPRZCNbajxqellxhR0DaCWfj6ctbPRenqqyb36I9oXIABB0irAKcn6UVF933f52bMsVxwpH/SBCIOGU94mNaTgckYnVtII61teJCj4/ADYwNNlhLJ/cBFvNLoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718754077; c=relaxed/simple;
-	bh=zvACUlV8IBXU/pD3ic7mnNuB1qziSw9soNd8mfHLC0I=;
+	s=arc-20240116; t=1718754080; c=relaxed/simple;
+	bh=EBw38hbSMJ4L48oAzDUxRJIjvYWmo5x/U079N5zEgOo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HAWQoRCfJ1puKQA+/iyfUtXp3GeZi5jbciCmZnSNINFN25dRRsPFwnn6IsJn0kBZAc2aSjH3kYd2tQcvw6erGskf//idMt+9aBElNMXdqg+tcV9s5dLYyrSLjCp2Ib8crwZB7iZ0PGBskZsfT1GfoB1jhtzl1hSKhEOgx0Ik1O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RGFJ0Mko; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=W9IiXyTGfUf3Z1zqT2SQeX0jhpJmFkvduUmJAo3rAx1WsV2bsnTnBOFjGGVVgA0ez0EIVRkL32uoCZnR9fbBVVWsS32WUR/VosgVSti4ugO/UH7mkUYTiejcoHGLP3gpmK1+I08U5PMnA87QMP/FEqTKK+5dtA30TSP3kL/y4E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hJbm6px9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718754074;
+	s=mimecast20190719; t=1718754077;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2pc4rm2j75XYt4xCDuTDl+9iM4dO3yt5GwjGMzNcQwQ=;
-	b=RGFJ0Mkowo+V/HrXXURf/wkPvjwWLUFA3fYTPFdzNbeeyvok/I7GUlOnQpLWQpFj8Pl9sY
-	zAJCOlxc62myw3MZVZpy2rIdUo/kHhHGkmbopb/MwU+f8YxOabeGxCAokG8t59DDYwZSB8
-	9Rcfy/d+I2JV4BDF29Z2t2a3oGnYUQM=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=XqI5ygNChRTcl6pYO7gGep9CWBe4/cTEl5OVzb7sLnk=;
+	b=hJbm6px95NzWjAZ/aP7WzskQI3MwiTEbXft/kP/9Cqetcz3IU5rfK+RwUhZNGjsFPk2r5a
+	bAM4sPEVgyGb71QFiKA/OHg2PVVAggh4vkPLRKf78HbDfkKrtxxGsKFbDb5YjXE0vYZE1R
+	Za4hgLtrubutU6eLnSIwWu0quKngOas=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-81-mSrmhyveMoS1ZJoJkuXZVg-1; Tue, 18 Jun 2024 19:41:13 -0400
-X-MC-Unique: mSrmhyveMoS1ZJoJkuXZVg-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52c989652e6so4072565e87.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 16:41:12 -0700 (PDT)
+ us-mta-656-CqJva_F9NFa3IsyMfk2Ofw-1; Tue, 18 Jun 2024 19:41:16 -0400
+X-MC-Unique: CqJva_F9NFa3IsyMfk2Ofw-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-35f1fcd3bbcso2904112f8f.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 16:41:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718754071; x=1719358871;
+        d=1e100.net; s=20230601; t=1718754075; x=1719358875;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2pc4rm2j75XYt4xCDuTDl+9iM4dO3yt5GwjGMzNcQwQ=;
-        b=LI5FbC+1fYIeabneDDdAz7TiBVWREmbybss4SFZ3on0z5whYBk8s/sinKm91BGZpvY
-         LhgOT7IrWTStYDAadYAmVkxrHTLd2/9LSkZMZuCTO38omXOfi7Hk6lA1mJWmyQLbk0AS
-         b1zJFEBEfwOwxM+LLXVD6NLJJzr8fWVFE41tF+ml1+0hGpMiTQ9yCi98DqqtXjTkuF+p
-         1TCVm34YVFqFcdthq1JJImDIFDwid3wU07y66SFy3XHtay4Yvgg1BKFN+bShVaDWPmUW
-         tCBYh3oTdR2C0zWvQpHBkjTo+67zYo177kg9fJWLP+kjPschZhWk/kLsfkJkxfJ1hUv6
-         2UDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVj4RVzVL5z9DNzncU5Qg/kv502+VLUmTT2vIh6xODEhxse7QabHQRL8E3aBmxy1WsVwGAYNWIztyhno9ypkxZsoegBdIin3ms8
-X-Gm-Message-State: AOJu0Yx3/Cs7ZVNDK7BAzEX+qOPqSRBqoA3WMIa+h8bJRwr2snkuHQZR
-	rjJi/HiSVNTFI8rftzaxthijZWueD/J5H2UkFIOybUgpvOfsFcau/6qCcIDjDqzr6/7tjo0l22G
-	/479qIX8dGswzbrnhl6EP1rb6JzwUditgDKA98BuO1vDJQ/FrryQ2FnemfQ==
-X-Received: by 2002:a05:6512:1283:b0:52c:5254:b625 with SMTP id 2adb3069b0e04-52ccaa53e28mr724797e87.52.1718754071308;
-        Tue, 18 Jun 2024 16:41:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHyhZD+H4cjxW/UXfmKccooFgq7bXcOlABZ65YfTv5CT4Ga/VtpKU0QwYIRw4WS5nhSk+d31Q==
-X-Received: by 2002:a05:6512:1283:b0:52c:5254:b625 with SMTP id 2adb3069b0e04-52ccaa53e28mr724788e87.52.1718754070819;
-        Tue, 18 Jun 2024 16:41:10 -0700 (PDT)
+        bh=XqI5ygNChRTcl6pYO7gGep9CWBe4/cTEl5OVzb7sLnk=;
+        b=BSWqg7+rgQT8TfujUwnixJb8jJDFpTL517D073obC67NwSk08UsVetYfE2SmKj1+Vo
+         ernwbsyzOfbzc8WnGxFcmuMxDwx4+EnZhjHfoJCiZ0RCeCHGR5DYvvnoQAlKAzYh6I2v
+         Ad8OjLgPSO1COkJvguJzqn3W5JXy8rjudKAj6T3AHcj8lQkEECDkpxFVFahrkJrc55Ea
+         NCD+hKleLeD/P48bEfi7vUsP2aYM0XRl1Q9pFLAmcAWwjB7u1iRJSVOs5IWx6BWtSnIJ
+         V3aIAJASPwYZzIe7ts5SgfRLykB4pdZ7O6/R8bpsZiM2LYvbLvojEg7nNGlLFHIn/kfJ
+         ysxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrUZnCemBVgpqMERMtE9s9rwP8LvvUfEKxNurtx9x8eKiRz/IVjpNooReFP9VheeCaLqsxKFtpPmBh99RSduySmifNNl0Mc2w8
+X-Gm-Message-State: AOJu0YyswnX9ZD4qcGsnAyVX17ZdPNAF01+mhGyCnNT758se2Ju0UB0P
+	8hqY9mlYNo4HRiwLabs987QXX7u5s3p7nCw2jnrFOTuOnww9iTqidOYEIVqKmhjSGvmKRnxUDpm
+	GT6mGl/ZN1pch2iqNKkW9AjUbkTOP+zgTUfLdGss/zDU8dNyfjuRrcbFbsQ==
+X-Received: by 2002:adf:fa44:0:b0:35d:ca63:4e74 with SMTP id ffacd0b85a97d-363199907a4mr576647f8f.70.1718754075073;
+        Tue, 18 Jun 2024 16:41:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFhmtLVbtHLOjx+KKo+aXa8pMAKtnnN15KAyO8GWHBuRqRj3fAwBZG4C2+l0meUQKo6/yav/Q==
+X-Received: by 2002:adf:fa44:0:b0:35d:ca63:4e74 with SMTP id ffacd0b85a97d-363199907a4mr576644f8f.70.1718754074734;
+        Tue, 18 Jun 2024 16:41:14 -0700 (PDT)
 Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36387d9b812sm47454f8f.26.2024.06.18.16.41.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36075114dcfsm15387775f8f.114.2024.06.18.16.41.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 16:41:10 -0700 (PDT)
+        Tue, 18 Jun 2024 16:41:14 -0700 (PDT)
 From: Danilo Krummrich <dakr@redhat.com>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -98,9 +98,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Danilo Krummrich <dakr@redhat.com>
-Subject: [PATCH v2 07/10] rust: add `io::Io` base type
-Date: Wed, 19 Jun 2024 01:39:53 +0200
-Message-ID: <20240618234025.15036-8-dakr@redhat.com>
+Subject: [PATCH v2 08/10] rust: add devres abstraction
+Date: Wed, 19 Jun 2024 01:39:54 +0200
+Message-ID: <20240618234025.15036-9-dakr@redhat.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240618234025.15036-1-dakr@redhat.com>
 References: <20240618234025.15036-1-dakr@redhat.com>
@@ -112,194 +112,94 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I/O memory is typically either mapped through direct calls to ioremap()
-or subsystem / bus specific ones such as pci_iomap().
+Add a Rust abstraction for the kernel's devres (device resource
+management) implementation.
 
-Even though subsystem / bus specific functions to map I/O memory are
-based on ioremap() / iounmap() it is not desirable to re-implement them
-in Rust.
+The Devres type acts as a container to manage the lifetime and
+accessibility of device bound resources. Therefore it registers a
+devres callback and revokes access to the resource on invocation.
 
-Instead, implement a base type for I/O mapped memory, which generically
-provides the corresponding accessors, such as `Io::readb` or
-`Io:try_readb`.
+Users of the Devres abstraction can simply free the corresponding
+resources in their Drop implementation, which is invoked when either the
+Devres instance goes out of scope or the devres callback leads to the
+resource being revoked, which implies a call to drop_in_place().
 
-`Io` supports an optional const generic, such that a driver can indicate
-the minimal expected and required size of the mapping at compile time.
-Correspondingly, calls to the 'non-try' accessors, support compile time
-checks of the I/O memory offset to read / write, while the 'try'
-accessors, provide boundary checks on runtime.
-
-`Io` is meant to be embedded into a structure (e.g. pci::Bar or
-io::IoMem) which creates the actual I/O memory mapping and initializes
-`Io` accordingly.
-
-To ensure that I/O mapped memory can't out-live the device it may be
-bound to, subsystems should embedd the corresponding I/O memory type
-(e.g. pci::Bar) into a `Devres` container, such that it gets revoked
-once the device is unbound.
-
-Co-developed-by: Philipp Stanner <pstanner@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 Signed-off-by: Danilo Krummrich <dakr@redhat.com>
 ---
- rust/helpers.c     | 106 ++++++++++++++++++++++
- rust/kernel/io.rs  | 219 +++++++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs |   1 +
- 3 files changed, 326 insertions(+)
- create mode 100644 rust/kernel/io.rs
+ rust/helpers.c        |   6 ++
+ rust/kernel/devres.rs | 168 ++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs    |   1 +
+ 3 files changed, 175 insertions(+)
+ create mode 100644 rust/kernel/devres.rs
 
 diff --git a/rust/helpers.c b/rust/helpers.c
-index 0ce40ccb978b..824b7c0b98dc 100644
+index 824b7c0b98dc..269f97698588 100644
 --- a/rust/helpers.c
 +++ b/rust/helpers.c
-@@ -26,6 +26,7 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/errname.h>
-+#include <linux/io.h>
- #include <linux/mutex.h>
- #include <linux/rcupdate.h>
- #include <linux/refcount.h>
-@@ -181,6 +182,111 @@ void rust_helper_rcu_read_unlock(void)
- EXPORT_SYMBOL_GPL(rust_helper_rcu_read_unlock);
- /* end rcu */
+@@ -287,6 +287,12 @@ void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
+ EXPORT_SYMBOL_GPL(rust_helper_writeq_relaxed);
+ #endif
  
-+/* io.h */
-+u8 rust_helper_readb(const volatile void __iomem *addr)
++int rust_helper_devm_add_action(struct device *dev, void (*action)(void *), void *data)
 +{
-+	return readb(addr);
++	return devm_add_action(dev, action, data);
 +}
-+EXPORT_SYMBOL_GPL(rust_helper_readb);
-+
-+u16 rust_helper_readw(const volatile void __iomem *addr)
-+{
-+	return readw(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readw);
-+
-+u32 rust_helper_readl(const volatile void __iomem *addr)
-+{
-+	return readl(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readl);
-+
-+#ifdef CONFIG_64BIT
-+u64 rust_helper_readq(const volatile void __iomem *addr)
-+{
-+	return readq(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readq);
-+#endif
-+
-+void rust_helper_writeb(u8 value, volatile void __iomem *addr)
-+{
-+	writeb(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeb);
-+
-+void rust_helper_writew(u16 value, volatile void __iomem *addr)
-+{
-+	writew(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writew);
-+
-+void rust_helper_writel(u32 value, volatile void __iomem *addr)
-+{
-+	writel(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writel);
-+
-+#ifdef CONFIG_64BIT
-+void rust_helper_writeq(u64 value, volatile void __iomem *addr)
-+{
-+	writeq(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeq);
-+#endif
-+
-+u8 rust_helper_readb_relaxed(const volatile void __iomem *addr)
-+{
-+	return readb_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readb_relaxed);
-+
-+u16 rust_helper_readw_relaxed(const volatile void __iomem *addr)
-+{
-+	return readw_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readw_relaxed);
-+
-+u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
-+{
-+	return readl_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readl_relaxed);
-+
-+#ifdef CONFIG_64BIT
-+u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
-+{
-+	return readq_relaxed(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_readq_relaxed);
-+#endif
-+
-+void rust_helper_writeb_relaxed(u8 value, volatile void __iomem *addr)
-+{
-+	writeb_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeb_relaxed);
-+
-+void rust_helper_writew_relaxed(u16 value, volatile void __iomem *addr)
-+{
-+	writew_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writew_relaxed);
-+
-+void rust_helper_writel_relaxed(u32 value, volatile void __iomem *addr)
-+{
-+	writel_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writel_relaxed);
-+
-+#ifdef CONFIG_64BIT
-+void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
-+{
-+	writeq_relaxed(value, addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_writeq_relaxed);
-+#endif
++EXPORT_SYMBOL_GPL(rust_helper_devm_add_action);
 +
  /*
   * `bindgen` binds the C `size_t` type as the Rust `usize` type, so we can
   * use it in contexts where Rust expects a `usize` like slice (array) indices.
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
 new file mode 100644
-index 000000000000..a19a1226181d
+index 000000000000..ab0a3eb1ea4f
 --- /dev/null
-+++ b/rust/kernel/io.rs
-@@ -0,0 +1,219 @@
++++ b/rust/kernel/devres.rs
+@@ -0,0 +1,168 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+//! Memory-mapped IO.
++//! Devres abstraction
 +//!
-+//! C header: [`include/asm-generic/io.h`](srctree/include/asm-generic/io.h)
++//! [`Devres`] represents an abstraction for the kernel devres (device resource management)
++//! implementation.
 +
-+use crate::error::{code::EINVAL, Result};
-+use crate::{bindings, build_assert};
++use crate::{
++    alloc::Flags,
++    bindings,
++    device::Device,
++    error::{Error, Result},
++    prelude::*,
++    revocable::Revocable,
++    sync::Arc,
++};
 +
-+/// IO-mapped memory, starting at the base address @addr and spanning @maxlen bytes.
++use core::ffi::c_void;
++use core::ops::Deref;
++
++#[pin_data]
++struct DevresInner<T> {
++    #[pin]
++    data: Revocable<T>,
++}
++
++/// This abstraction is meant to be used by subsystems to containerize [`Device`] bound resources to
++/// manage their lifetime.
 +///
-+/// The creator (usually a subsystem such as PCI) is responsible for creating the
-+/// mapping, performing an additional region request etc.
++/// [`Device`] bound resources should be freed when either the resource goes out of scope or the
++/// [`Device`] is unbound respectively, depending on what happens first.
 +///
-+/// # Invariant
++/// To achieve that [`Devres`] registers a devres callback on creation, which is called once the
++/// [`Device`] is unbound, revoking access to the encapsulated resource (see also [`Revocable`]).
 +///
-+/// `addr` is the start and `maxsize` the length of valid I/O remapped memory region.
++/// After the [`Devres`] has been unbound it is not possible to access the encapsulated resource
++/// anymore.
 +///
-+/// # Examples
++/// [`Devres`] users should make sure to simply free the corresponding backing resource in `T`'s
++/// [`Drop`] implementation.
++///
++/// # Example
 +///
 +/// ```
-+/// # use kernel::{bindings, io::Io};
++/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io::Io};
 +/// # use core::ops::Deref;
 +///
 +/// // See also [`pci::Bar`] for a real example.
@@ -337,178 +237,104 @@ index 000000000000..a19a1226181d
 +///    }
 +/// }
 +///
++/// # // SAFETY: *NOT* safe, just for the example to get an `ARef<Device>` instance
++/// # let dev = unsafe { Device::from_raw(core::ptr::null_mut()) };
++///
 +/// let iomem = IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD).unwrap();
-+/// iomem.writel(0x42, 0x0);
-+/// assert!(iomem.try_writel(0x42, 0x0).is_ok());
-+/// assert!(iomem.try_writel(0x42, 0x4).is_err());
++/// let devres = Devres::new(&dev, iomem, GFP_KERNEL).unwrap();
++///
++/// let res = devres.try_access().ok_or(ENXIO).unwrap();
++/// res.writel(0x42, 0x0);
 +/// ```
-+pub struct Io<const SIZE: usize = 0> {
-+    addr: usize,
-+    maxsize: usize,
++///
++pub struct Devres<T>(Arc<DevresInner<T>>);
++
++impl<T> DevresInner<T> {
++    fn new(dev: &Device, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
++        let inner = Arc::pin_init(
++            pin_init!( DevresInner {
++                data <- Revocable::new(data),
++            }),
++            flags,
++        )?;
++
++        // Convert `Arc<DevresInner>` into a raw pointer and make devres own this reference until
++        // `Self::devres_callback` is called.
++        let data = inner.clone().into_raw();
++        let ret = unsafe {
++            bindings::devm_add_action(dev.as_raw(), Some(Self::devres_callback), data as _)
++        };
++
++        if ret != 0 {
++            // SAFETY: We just created another reference to `inner` in order to pass it to
++            // `bindings::devm_add_action`. If `bindings::devm_add_action` fails, we have to drop
++            // this reference accordingly.
++            let _ = unsafe { Arc::from_raw(data) };
++            return Err(Error::from_errno(ret));
++        }
++
++        Ok(inner)
++    }
++
++    unsafe extern "C" fn devres_callback(ptr: *mut c_void) {
++        let ptr = ptr as *mut DevresInner<T>;
++        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
++        // reference.
++        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
++        //         `DevresInner::new`.
++        let inner = unsafe { Arc::from_raw(ptr) };
++
++        inner.data.revoke();
++    }
 +}
 +
-+macro_rules! define_read {
-+    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
-+        /// Read IO data from a given offset known at compile time.
-+        ///
-+        /// Bound checks are performed on compile time, hence if the offset is not known at compile
-+        /// time, the build will fail.
-+        $(#[$attr])*
-+        #[inline]
-+        pub fn $name(&self, offset: usize) -> $type_name {
-+            let addr = self.io_addr_assert::<$type_name>(offset);
++impl<T> Devres<T> {
++    /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
++    /// returned `Devres` instance' `data` will be revoked once the device is detached.
++    pub fn new(dev: &Device, data: T, flags: Flags) -> Result<Self> {
++        let inner = DevresInner::new(dev, data, flags)?;
 +
-+            unsafe { bindings::$name(addr as _) }
-+        }
++        Ok(Devres(inner))
++    }
 +
-+        /// Read IO data from a given offset.
-+        ///
-+        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
-+        /// out of bounds.
-+        $(#[$attr])*
-+        pub fn $try_name(&self, offset: usize) -> Result<$type_name> {
-+            let addr = self.io_addr::<$type_name>(offset)?;
++    /// Same as [Devres::new`], but does not return a `Devres` instance. Instead the given `data`
++    /// is owned by devres and will be revoked / dropped, once the device is detached.
++    pub fn new_foreign_owned(dev: &Device, data: T, flags: Flags) -> Result {
++        let _ = DevresInner::new(dev, data, flags)?;
 +
-+            Ok(unsafe { bindings::$name(addr as _) })
-+        }
-+    };
++        Ok(())
++    }
 +}
 +
-+macro_rules! define_write {
-+    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
-+        /// Write IO data from a given offset known at compile time.
-+        ///
-+        /// Bound checks are performed on compile time, hence if the offset is not known at compile
-+        /// time, the build will fail.
-+        $(#[$attr])*
-+        #[inline]
-+        pub fn $name(&self, value: $type_name, offset: usize) {
-+            let addr = self.io_addr_assert::<$type_name>(offset);
++impl<T> Deref for Devres<T> {
++    type Target = Revocable<T>;
 +
-+            unsafe { bindings::$name(value, addr as _, ) }
-+        }
-+
-+        /// Write IO data from a given offset.
-+        ///
-+        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
-+        /// out of bounds.
-+        $(#[$attr])*
-+        pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
-+            let addr = self.io_addr::<$type_name>(offset)?;
-+
-+            unsafe { bindings::$name(value, addr as _) }
-+            Ok(())
-+        }
-+    };
++    fn deref(&self) -> &Self::Target {
++        &self.0.data
++    }
 +}
 +
-+impl<const SIZE: usize> Io<SIZE> {
-+    ///
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `addr` is the start of a valid I/O mapped memory region of size
-+    /// `maxsize`.
-+    pub unsafe fn new(addr: usize, maxsize: usize) -> Result<Self> {
-+        if maxsize < SIZE {
-+            return Err(EINVAL);
-+        }
-+
-+        Ok(Self { addr, maxsize })
++impl<T> Drop for Devres<T> {
++    fn drop(&mut self) {
++        // Revoke the data, such that it gets dropped already and the actual resource is freed.
++        // `DevresInner` has to stay alive until the devres callback has been called. This is
++        // necessary since we don't know when `Devres` is dropped and calling
++        // `devm_remove_action()` instead could race with `devres_release_all()`.
++        self.revoke();
 +    }
-+
-+    /// Returns the base address of this mapping.
-+    #[inline]
-+    pub fn base_addr(&self) -> usize {
-+        self.addr
-+    }
-+
-+    /// Returns the size of this mapping.
-+    #[inline]
-+    pub fn maxsize(&self) -> usize {
-+        self.maxsize
-+    }
-+
-+    #[inline]
-+    const fn offset_valid<U>(offset: usize, size: usize) -> bool {
-+        let type_size = core::mem::size_of::<U>();
-+        if let Some(end) = offset.checked_add(type_size) {
-+            end <= size && offset % type_size == 0
-+        } else {
-+            false
-+        }
-+    }
-+
-+    #[inline]
-+    fn io_addr<U>(&self, offset: usize) -> Result<usize> {
-+        if !Self::offset_valid::<U>(offset, self.maxsize()) {
-+            return Err(EINVAL);
-+        }
-+
-+        // Probably no need to check, since the safety requirements of `Self::new` guarantee that
-+        // this can't overflow.
-+        self.base_addr().checked_add(offset).ok_or(EINVAL)
-+    }
-+
-+    #[inline]
-+    fn io_addr_assert<U>(&self, offset: usize) -> usize {
-+        build_assert!(Self::offset_valid::<U>(offset, SIZE));
-+
-+        self.base_addr() + offset
-+    }
-+
-+    define_read!(readb, try_readb, u8);
-+    define_read!(readw, try_readw, u16);
-+    define_read!(readl, try_readl, u32);
-+    define_read!(
-+        #[cfg(CONFIG_64BIT)]
-+        readq,
-+        try_readq,
-+        u64
-+    );
-+
-+    define_read!(readb_relaxed, try_readb_relaxed, u8);
-+    define_read!(readw_relaxed, try_readw_relaxed, u16);
-+    define_read!(readl_relaxed, try_readl_relaxed, u32);
-+    define_read!(
-+        #[cfg(CONFIG_64BIT)]
-+        readq_relaxed,
-+        try_readq_relaxed,
-+        u64
-+    );
-+
-+    define_write!(writeb, try_writeb, u8);
-+    define_write!(writew, try_writew, u16);
-+    define_write!(writel, try_writel, u32);
-+    define_write!(
-+        #[cfg(CONFIG_64BIT)]
-+        writeq,
-+        try_writeq,
-+        u64
-+    );
-+
-+    define_write!(writeb_relaxed, try_writeb_relaxed, u8);
-+    define_write!(writew_relaxed, try_writew_relaxed, u16);
-+    define_write!(writel_relaxed, try_writel_relaxed, u32);
-+    define_write!(
-+        #[cfg(CONFIG_64BIT)]
-+        writeq_relaxed,
-+        try_writeq_relaxed,
-+        u64
-+    );
 +}
 diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 601c3d3c9d54..f4dd11014a65 100644
+index f4dd11014a65..ef9426e32c18 100644
 --- a/rust/kernel/lib.rs
 +++ b/rust/kernel/lib.rs
-@@ -56,6 +56,7 @@
- 
- #[doc(hidden)]
- pub use bindings;
-+pub mod io;
- pub use macros;
- pub use uapi;
- 
+@@ -31,6 +31,7 @@
+ mod build_assert;
+ pub mod device;
+ pub mod device_id;
++pub mod devres;
+ pub mod driver;
+ pub mod error;
+ #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
 -- 
 2.45.1
 
