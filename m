@@ -1,33 +1,34 @@
-Return-Path: <linux-pci+bounces-8936-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8937-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA49C90DFBC
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 01:17:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F57C90DFBD
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 01:17:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A00531F231E2
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 23:17:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 603821C225D5
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 23:17:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDA8C143C54;
-	Tue, 18 Jun 2024 23:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6EE4178CCD;
+	Tue, 18 Jun 2024 23:17:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFB413A418;
-	Tue, 18 Jun 2024 23:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1E113A418;
+	Tue, 18 Jun 2024 23:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718752653; cv=none; b=au4dJ4G09CN1ASXLlOjrfRVrSKJdnsm0iye1QmK9Iwk+XWV4SdgEuZOlPie7ZTI9zZwTgodYb/W6+/DlvpwYCDE3TGGlWAr1hUNEhXdkLS8PDSi8wBzz6EMLxEwXwkPafGDg0R5uslX/YRwjt5Jtm5ZGYN8VdUh6R00iU/OVGUA=
+	t=1718752654; cv=none; b=Cu0Ttrx/y0IolKyCOumtOAdkq/oaz8nXK6MHXb5D32glJyoWSq7VVuCCxqIytEmv02E32McL6Q9M3GOwMDz5m+TKaNeugRvS0b1npIy8u24Htl+RDjElwTCoRycIqb3sOwKpHRIGsghKprJmO30befhDOI1aGEyE52xNxVYBw+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718752653; c=relaxed/simple;
-	bh=7EuBcAUiIvjdxu/peUOY4j83DVBn06CMn31KM0thf6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=esXRbblQaPQKyMx/rRuUCXmVvaHXIbeFDiqJRXRfqM7ZZ8a+729FXOIwEzIBGDvvpBjUBPlP6ZZrCV7h0xz9zwzS8qttt7Jys2wKiYHgggw3yNX6xkcY2DqkMS5ZdBn4A2JvkVlSL2Xg/qh2CQGiF9dcNh7v1k9ytxj/iGQq7rU=
+	s=arc-20240116; t=1718752654; c=relaxed/simple;
+	bh=LWD4iZOUqQFvh0k1pR6nDI8pFCINP6Ql2GK0ulC2XqA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uee6CTLv/DQLFTORNk1ALqedjyUF72HzZJNVNjg+TAd33TmV6zKqShW7ypDhKVCxfWdmkVubltZYe3+8E4knK+JB0M2f0OebQV5URAernPhvlcQPYXl91F+VMZToArSXxUbLsZZ8do7AnfWE0g2eGlwg3bN8UM9JPyef8S4UNH0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 001D9C3277B;
-	Tue, 18 Jun 2024 23:17:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DDDCC3277B;
+	Tue, 18 Jun 2024 23:17:34 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org,
 	linux-pci@vger.kernel.org
@@ -37,10 +38,12 @@ Cc: dan.j.williams@intel.com,
 	alison.schofield@intel.com,
 	Jonathan.Cameron@huawei.com,
 	dave@stgolabs.net
-Subject: [PATCH v5 0/2] cxl: Region bandwidth calculation for targets with shared upstream link
-Date: Tue, 18 Jun 2024 16:16:39 -0700
-Message-ID: <20240618231730.2533819-1-dave.jiang@intel.com>
+Subject: [PATCH v5 1/2] cxl: Preserve the CDAT access_coordinate for an endpoint
+Date: Tue, 18 Jun 2024 16:16:40 -0700
+Message-ID: <20240618231730.2533819-2-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240618231730.2533819-1-dave.jiang@intel.com>
+References: <20240618231730.2533819-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -49,44 +52,73 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v5:
-- Adjust calculation of RPs under HB to only active RPs (Jonathan)
-- See patches for specific change log
+Keep the access_coordinate from the CDAT tables for region perf
+calculations. The region perf calculation requires all participating
+endpoints to have arrived in order to determine if there are limitations
+of bandwidth data due to shared uplink.
 
-This series provides recalculation of the CXL region bandwidth when the targets have
-shared upstream link by walking the toplogy from bottom up and clamp the bandwdith
-as the code trasverses up the tree. An example topology:
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/cxl/core/cdat.c | 10 ++++++----
+ drivers/cxl/cxlmem.h    |  1 +
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
- An example topology from Jonathan:
-
-                 CFMWS 0
-                   |
-          _________|_________
-         |                   |
-     ACPI0017-0            ACPI0017-1
-   GP0/HB0/ACPI0016-0   GP1/HB1/ACPI0016-1
-     |          |        |           |
-    RP0        RP1      RP2         RP3
-     |          |        |           |
-   SW 0       SW 1     SW 2        SW 3
-   |   |      |   |    |   |       |   |
-  EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
-
- Computation for the example topology:
-
- Min (GP0 to CPU BW,
-      Min(SW 0 Upstream Link to RP0 BW,
-          Min(SW0SSLBIS for SW0DSP0 (EP0), EP0 DSLBIS, EP0 Upstream Link) +
-          Min(SW0SSLBIS for SW0DSP1 (EP1), EP1 DSLBIS, EP1 Upstream link)) +
-      Min(SW 1 Upstream Link to RP1 BW,
-          Min(SW1SSLBIS for SW1DSP0 (EP2), EP2 DSLBIS, EP2 Upstream Link) +
-          Min(SW1SSLBIS for SW1DSP1 (EP3), EP3 DSLBIS, EP3 Upstream link))) +
- Min (GP1 to CPU BW,
-      Min(SW 2 Upstream Link to RP2 BW,
-          Min(SW2SSLBIS for SW2DSP0 (EP4), EP4 DSLBIS, EP4 Upstream Link) +
-          Min(SW2SSLBIS for SW2DSP1 (EP5), EP5 DSLBIS, EP5 Upstream link)) +
-      Min(SW 3 Upstream Link to RP3 BW,
-          Min(SW3SSLBIS for SW3DSP0 (EP6), EP6 DSLBIS, EP6 Upstream Link) +
-          Min(SW3SSLBIS for SW3DSP1 (EP7), EP7 DSLBIS, EP7 Upstream link))))
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+index bb83867d9fec..fea214340d4b 100644
+--- a/drivers/cxl/core/cdat.c
++++ b/drivers/cxl/core/cdat.c
+@@ -15,7 +15,7 @@ struct dsmas_entry {
+ 	struct range dpa_range;
+ 	u8 handle;
+ 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
+-
++	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+ 	int entries;
+ 	int qos_class;
+ };
+@@ -163,7 +163,7 @@ static int cdat_dslbis_handler(union acpi_subtable_headers *header, void *arg,
+ 	val = cdat_normalize(le16_to_cpu(le_val), le64_to_cpu(le_base),
+ 			     dslbis->data_type);
+ 
+-	cxl_access_coordinate_set(dent->coord, dslbis->data_type, val);
++	cxl_access_coordinate_set(dent->cdat_coord, dslbis->data_type, val);
+ 
+ 	return 0;
+ }
+@@ -220,7 +220,7 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+ 	xa_for_each(dsmas_xa, index, dent) {
+ 		int qos_class;
+ 
+-		cxl_coordinates_combine(dent->coord, dent->coord, ep_c);
++		cxl_coordinates_combine(dent->coord, dent->cdat_coord, ep_c);
+ 		dent->entries = 1;
+ 		rc = cxl_root->ops->qos_class(cxl_root,
+ 					      &dent->coord[ACCESS_COORDINATE_CPU],
+@@ -241,8 +241,10 @@ static int cxl_port_perf_data_calculate(struct cxl_port *port,
+ static void update_perf_entry(struct device *dev, struct dsmas_entry *dent,
+ 			      struct cxl_dpa_perf *dpa_perf)
+ {
+-	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++)
++	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
+ 		dpa_perf->coord[i] = dent->coord[i];
++		dpa_perf->cdat_coord[i] = dent->cdat_coord[i];
++	}
+ 	dpa_perf->dpa_range = dent->dpa_range;
+ 	dpa_perf->qos_class = dent->qos_class;
+ 	dev_dbg(dev,
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 19aba81cdf13..fb365453f996 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -402,6 +402,7 @@ enum cxl_devtype {
+ struct cxl_dpa_perf {
+ 	struct range dpa_range;
+ 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
++	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+ 	int qos_class;
+ };
+ 
+-- 
+2.45.1
 
 
