@@ -1,201 +1,362 @@
-Return-Path: <linux-pci+bounces-8927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8928-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 974B090DBDC
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 20:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2890790DBE7
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 20:51:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D2DC28363A
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 18:50:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB54A2836F5
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 18:51:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7BD47773;
-	Tue, 18 Jun 2024 18:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D232C157A41;
+	Tue, 18 Jun 2024 18:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQoLNPNA"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5Rtj8SvJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2045.outbound.protection.outlook.com [40.107.237.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21A21171C
-	for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 18:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718736638; cv=none; b=qP3/eEN2uOgC9qoH2/tNHjRQRoi2VqbSVmJcmIF9Cr5oojeFMUgFxpko84fxGP/C989sDciZF68FdNivraev7+YVHYrC8zHfX8F0EXKCGtZ04ySAR3Z4U9fj+q7lvNwKAiDgFFZPXMhhpU/7YdknjoAJu2voaUujuEvaGV9YaAo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718736638; c=relaxed/simple;
-	bh=oUJCatabl9usSBAb4ICdmrliOYYjGQ1Rcj/EfrmR8co=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ATTahUUoTFfancMB1ps/jcmN1bPFQGNmrXm8e+Ndj7fS6i/Nhs5ZEyjPgOtMoOaawR2vQNEtK9TA87MYjVxsIb5amrOHRIvrCU7TFyFJ+r3NRPLrzJmyTtm1tGeNVhS5Or558kc9TrEwiJo2nDRsP0RMyFf5VFd0VeihIX8m+j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQoLNPNA; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3d2255f84e9so54017b6e.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 11:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718736636; x=1719341436; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MJ/9v8kUM5CrGoi/bcL/1w7QC6LWz1nYjoLr8YXaSO8=;
-        b=YQoLNPNAKcdIpYa03rl8TF8lUWiN3pjA5b2cI1TVYRsbigL2LZpH12J8u7wGidmfwz
-         am8T5wuVANnxc71U2u3ccPj8jmqwESy/znnVB2ZAmw6tr0FznVFsL4CdgCR6Os2BNb8s
-         fx4in3iaDlKbolZqOyYtYd9XDablDTRlw1vRq9x5uFGrAGIiTHPM2AZvpF5xvsTCBEtU
-         nR+CrVhoXXLjrQ6cM7srdMoTEjz1ezao4qPaWD2D6Iw0npQ9TUPhXmlDMGQsuV104TYz
-         V4wvDpyh98YtEmFu66rOK7xWX5j2itePOkSG9uSkB4V3CpRSQ+PXk1y4/H2QiOxsBf0h
-         cw3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718736636; x=1719341436;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MJ/9v8kUM5CrGoi/bcL/1w7QC6LWz1nYjoLr8YXaSO8=;
-        b=tMzudmxieJw9O7SKns0T5e674GSPGXeauc3yWg+hd/KlOYvrHwvK/+sKZbEk6vABs1
-         SOhpHYQc2t9Zrc9rWNk/V2Q7ZkhS+Gf08BQQK0+Du9E6UZGfejSIulAt2pjDDoOMptlS
-         v37aU4i/iIIM3FNBIUOsZyBFXpFjlnTu0gv3WSQxnR1o0//ApSNIbrsYydqpwYSzFTTU
-         yl9RJ+Fqchunt3yIlZ3qzQqV4b/omXxPm8q4Jvj+N6/XYofBElfXQQmaqSseufIvXvrg
-         wOtq3uDW2WNsY8IyaFZS4xjGjHPq2O3z8SXALB67qAmjfF13MdbCf4tlKyGtvrf9xV/L
-         7reQ==
-X-Gm-Message-State: AOJu0YzqvEG1El9yBUjEPHY5vR3rlVbQVRB3F+mqrvtBkpJUshcsMISW
-	ZI3A/fp+i/1DHLDGQLSJthtmvLfbJRv4rVvcy1OUYODMGn8xX1vH
-X-Google-Smtp-Source: AGHT+IF7r+guKXKs8XfNqlpIIVxtA4t4fG1v42nHZIxlW66FrEFmU1Faypehp9QOTUppL3uTtQh/zQ==
-X-Received: by 2002:a05:6808:14c7:b0:3d2:2c03:8642 with SMTP id 5614622812f47-3d51b5bcbcdmr351322b6e.4.1718736635870;
-        Tue, 18 Jun 2024 11:50:35 -0700 (PDT)
-Received: from [192.168.1.224] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3d2475e4e8fsm1872658b6e.10.2024.06.18.11.50.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 11:50:35 -0700 (PDT)
-Message-ID: <20ba8352-c1ce-45ba-8cb7-7ef4c02b3352@gmail.com>
-Date: Tue, 18 Jun 2024 13:50:32 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C311147773;
+	Tue, 18 Jun 2024 18:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718736699; cv=fail; b=C2r66+7QCoeckNK/HpvhfgdC2e/jBt/QWAH2R9Aa1O9IzhZiz39BKENtwznBgv3KMpVTCMrqO6YD8Wv/kId7G9UaAiT7sSDGXLolT3IOfgLrYJix4UW18NeRjqw463cZlU5DEOgyQuFM1Mx0y1qxTDrMWMtlP+oA1uwEFej5LCg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718736699; c=relaxed/simple;
+	bh=jjTxPR90Ckw8ze+b04Jo4MWsawALpO/NEgpBYUnqdfA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:In-Reply-To:
+	 Content-Type:MIME-Version; b=C3pff+xck5gQFazKPtyFFbfC6EUO/P53jI2mb2EtxfzbXLQg+TYHBn3sbilkmEb3g5fRC+CcAZXPNnGuHtOfWllJl3BYEyJkQj5sMscxkMhm2TVS5RKPJsySZEep31Z8skpXe/AcRXPbeh3PHmzapFN33/DZoZw0D24f7S+dRJM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5Rtj8SvJ; arc=fail smtp.client-ip=40.107.237.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EpUUjHfHMG+eOxcifhHvFcYrHXGRL++DlddVF50W1poIgi/Jf2o9l51FPSxPo/EoM6rmTNs4JJ0LLzZrG16N5XHQ5U4RrmutOizRA6bvH5g0iY1Wpxyou1ap19ATpgb8b5Rp/RRPbRA4o4F4oh2qOb+rJlk2j+HyDlDqB6FN7bdo/vreeCclG3DFHf52X4ShKc611LBjyse4s7yGE0OQRqsNqGTAqvFMvdsCdOlO6hBQwb3V2Qho7UX+53kZHxrIfxW1I/p6KyoG9iNVTOvU6YVW9mcKKyO8qm3Ig/l31P2oQd/L9WfEYmr51VTN1luVc20sL3LyDn+8FEY7Q3cT5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=okgzQiQBuMU7KvjgfIGOrHB9Fd3fOLQnRSZEmlJxdBs=;
+ b=dCd7l23pwQBmbzdOQKW1f18cfcL9NTqarZNGP27sn/ekF9+RrmI1TIAu4x/iEEIiYONbox170iEZ0VYSZi5zQTdR26xH5SjoMxtOnB99IqOJrVLKfO7XOVFcqjmusgZwsN1jtNxV/ZWyi4HLbEwYDloOCP73X6iNJt7cWcBieO5rr14MJQoqF0fd/ng8GKNP78LChrFfM42sYIKOvyTjZ8tZ1maHfR79tXAJ9QuaXuFhgk0jOtgRYjp2213gkQImEK/TS18GiUqi9B7PxhNaiZOSpQP4NeQ6+6dXln0d5aK51DQVHCMABdAUXqXiM2HyK2dYaH347lDtOM+pP+l+FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=okgzQiQBuMU7KvjgfIGOrHB9Fd3fOLQnRSZEmlJxdBs=;
+ b=5Rtj8SvJSJICJ/+uEKBZQDGC/BKx2rY4xCnKqu6B5i/03M9a0CtKJmaZwl6PZ/vphCm6n2KX2e1vuS3eeyDCs3HkcyvT2c6S3G0q9KKO4JN4W8BmAtV7gbM/Fw37FD1Bg3YGVn/RPaCvaYe0HRzrjgP/mHzr3U4CkaD2hpp4KcE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by MW4PR12MB7213.namprd12.prod.outlook.com (2603:10b6:303:22a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Tue, 18 Jun
+ 2024 18:51:33 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::56a2:cd83:43e4:fad0]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::56a2:cd83:43e4:fad0%5]) with mapi id 15.20.7698.017; Tue, 18 Jun 2024
+ 18:51:33 +0000
+Subject: Re: [PATCH v2] PCI: pciehp: Clear LBMS on hot-remove to prevent link
+ speed reduction
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>,
+ Yazen Ghannam <yazen.ghannam@amd.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+ Bowman Terry <terry.bowman@amd.com>, Hagan Billy <billy.hagan@amd.com>,
+ Simon Guinot <simon.guinot@seagate.com>,
+ "Maciej W . Rozycki" <macro@orcam.me.uk>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20240617231841.GA1232294@bhelgaas>
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Message-ID: <27be113e-3e33-b969-c1e3-c5e82d1b8b7f@amd.com>
+Date: Tue, 18 Jun 2024 11:51:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+In-Reply-To: <20240617231841.GA1232294@bhelgaas>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0147.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::32) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- Bjorn Helgaas <bhelgaas@google.com>, Dan Williams
- <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
- Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20240528131940.16924-1-mariusz.tkaczyk@linux.intel.com>
- <20240528131940.16924-3-mariusz.tkaczyk@linux.intel.com>
- <05455f36-7027-4fd6-8af7-4fe8e483f25c@gmail.com> <Zm1uCa_l98yFXYqf@wunner.de>
- <20240618105653.0000796d@linux.intel.com>
-Content-Language: en-US
-From: stuart hayes <stuart.w.hayes@gmail.com>
-In-Reply-To: <20240618105653.0000796d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|MW4PR12MB7213:EE_
+X-MS-Office365-Filtering-Correlation-Id: b56582c6-661d-4946-58a8-08dc8fc7ac80
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|376011|366013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S1E2S0YwaVRDL05lSS9uVkpacWdObFlRNlZvQm8zZGd2aUIxNGU0UkZDTGRS?=
+ =?utf-8?B?TEF0UGJlcFJMeHBoSnIwWGZwVXBxWlk0bnZkblpLT3A4TEVFUVBmTzVkMkps?=
+ =?utf-8?B?YkFmTWZ2UitJdCtSdzRqcjgrRmdCcythVld0cjBld082dUR4SHNtZ2l0WlBa?=
+ =?utf-8?B?ZWZ5UHJoUVNXNnhWQU5UdnF4MkZrRzIrTisvSHNFQkFCNE10T1ViNUlXUHJY?=
+ =?utf-8?B?alc1Qm1IUkwvMkRDZ1Jxekl0cG1rTjlwVXMxZ2RuMWoyMzU3cHFzaU0vVlVP?=
+ =?utf-8?B?YXdycTlDK2tuM3BmK3JhMmEyNk5WYmYrM2RyeUxVUTJmY0Vzb05Ba3FEZmtU?=
+ =?utf-8?B?QjJjYWlqMUVvYndnZkFkNlFvSmxuMHNaczFsSTRKTXBpU3BoT2RzWmdoK0Fh?=
+ =?utf-8?B?KytJZ1YwaTNFSmxlVnc2bDNGVnZpN2pia1VtWEh3N2JhZnRERUZQbXVFVWla?=
+ =?utf-8?B?eDIxeVZ1eGxDOEsrMzgrWnJkT0h5RS84S0ovS0R6NnRIM0lFVUhKaXpsbmJO?=
+ =?utf-8?B?OU5TRnpJWkNsZ0p5VnEzc1JSTnN3U0c3dGJxellFRS9HQmRtWjBTWnVDbFNa?=
+ =?utf-8?B?aHZxT2k1T2owV1c4aS8rUG50bnNGUCswN3dnZVhra0FDZHRKdHk2d1lyZmRj?=
+ =?utf-8?B?a1hNeTFuaGxZZ0xyOG16V1Fzb1pFSmNoSUExTU95Um9MVDVmcGE5RU5VMTRJ?=
+ =?utf-8?B?V1RYQzFON1F6UmNoMXZvbnZFbTFpdWFlTzN5QkZ4MmhVc0EySkJOckJLcHVy?=
+ =?utf-8?B?VHFrOG55amJPTXh0Ym5ObENCWnVVcFBtb2JDWURnL1E2dE1iTnQzTVVhMW54?=
+ =?utf-8?B?c1FyRU00NHdzS1RwYkhNaG9uRjJ0SXU5blhOZm9tVkQvN2tLUjZvQ0NGdHpr?=
+ =?utf-8?B?YjNsNmo4d1Y2c2pTenpPTXY1S1RHM2hQeTJocnRJT3NKdmxkeXZlWGtDbGdw?=
+ =?utf-8?B?dE1OUzJUNHFpQnFpU3ZPYlphZkdhYWVJRXJpRkd1bnQxeEhEVlNkMUxnMVVh?=
+ =?utf-8?B?cHFUMTh0dmt4b3VJc1VIUWpGbHBDSkNGYkFOY3B1KzR0bzJPMFpGTlJJTEhT?=
+ =?utf-8?B?Z1ZRejhKRzhyWTNySm02ZmJUUVBTQ3FnUVJjQ05mUEpXS3ErbzF6bjhlN0Z4?=
+ =?utf-8?B?dkQvWnZHbTR1VnpTMSszOW5rVWIzVTVaeXVlMlFCaHBWbnd4UXZtT3M1aWFa?=
+ =?utf-8?B?U2FWREd4YWNKcGxtSTJ5Q1BodDdqSHduV1NsaUk0UGNkenVCZnIxby9xQkZW?=
+ =?utf-8?B?aTRhRDZISWtVaWYzd2c0b1NQcGUzSkkxZXkzVUxYRmFtU0NWeXplYjY5bXNR?=
+ =?utf-8?B?cDRySXJMUWoxbUNUTXdIREtLUjVpczdYM1NWbVN2c3lmSXZ1SStHb3hQV1Vl?=
+ =?utf-8?B?ZTNGd28yeHJBbWI4dExJa2J5M002bHJyM1RuUmE2ZzJuK3YreEptQ05TMDJI?=
+ =?utf-8?B?cnMrY09MOG5KaUMva3hSK3pqZHNISVFiWDVCVDltdDRIMVhoZUJsY21Dd3Q4?=
+ =?utf-8?B?Z1hRNWdCdnA2Zmh0OTV1WCsvRFRVSDdKYnd6eEtwQmFTVG5IM1k4V3ZJeWI5?=
+ =?utf-8?B?UHhlTEdzaGRoZC9QVEFvVXVCVCt0MEZxZ2hQdGpra2JGT1luRGM0a284dDNz?=
+ =?utf-8?B?cDRISGRyTkhjWjRDcy9ESDZRb2hveDVsZ2pQVE9UUzk5djR5QVhBaC9VUjl6?=
+ =?utf-8?B?NXdMUi9sVk1QL2dNNFdneExKWDhuTEVQcDZqK05McFJXVjR5dmsvL2tnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(376011)(366013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OSszbExhZUdJSFFab1lsTU5hUEQxcDNud3FOcTFpY3E2R2dzYlFud2Q2eHZD?=
+ =?utf-8?B?M0ZzaFJOUzM0T0NnZFBNOTFLaStVMjUrQlI0VTgvV3lnZ3FodnpQZXZWMk5m?=
+ =?utf-8?B?SHRubENFV1ZYUzRuYzYvamxsZjcvU1RjTUlXUkJEZ3JiN0JqcC8xQmtZWW51?=
+ =?utf-8?B?cHpmWFpVQ0Z0UFcyUmhnTFgvc3FOWTZYdDhMSTRLOVB1cGVUeUJpR3ZvanRi?=
+ =?utf-8?B?RjNrZk0wWGsrVGtubmlBeDQxTWhyVjk4aDZFTFBWZXFWOGNRc3A2eGFielpR?=
+ =?utf-8?B?bTB5ZFpOdXY4a1F1aW1JL25OaHJLcGtvZ1ZhU0V4S2ppa2hSNm5vQ3M2MXV0?=
+ =?utf-8?B?a2RCNk1VbFh0UTkzOGdXYjl5dmlPcFk3VSt5UjhMbE9LVmtKQWs2cmcvU1VH?=
+ =?utf-8?B?M1JnOFMxcDVQb3B2bnVUNUFSTFpOOXg1S2lsMDEvMytxdzFwWWFISG1LQlpt?=
+ =?utf-8?B?bUJ2NXBjUHI4ck9XKzg5WWRVSzRWbUxCUS9waHdKSmppcDNrT29Ta3hNZlZn?=
+ =?utf-8?B?US9RZHlWZUJ0Z3NiSEdtWHNhbG1BWnZFMTVDSWRMMzBLOWNVUWN3a3JCemdV?=
+ =?utf-8?B?Y2gxNWFDay9lUXFNbms1RW44dDFnL1A5MmdoY0p2Z21HUlkramVkUXpJSk1V?=
+ =?utf-8?B?Y1UrOHBMWkZvVUhqcUVFNlRCeGdQZENJamZVWTRBQ21RK0c5UE9qNkYyeU4z?=
+ =?utf-8?B?bElGV2Nra1FNbWxGUnFjbmlXK2xibWNDU1gyMzdiL2V4amh0U2lJVnk0RUpp?=
+ =?utf-8?B?ZU9YRDNMVVY5eG1IaUZaYmROb1lsWWRhNkRpWFgrR1NkYjFxREMrSkJndzFB?=
+ =?utf-8?B?emtqQnRhOXlIeDZNWVZHaUdZYmt4QndpeWN1SHM4T1QyQ2hiekhwMTNkOWx5?=
+ =?utf-8?B?WWdkc0U1d1lnQ0NWL1AwSFhMSFExUGNFTG85UXdBcjhFNjZKWmpYVjV3UDdu?=
+ =?utf-8?B?WTdKOHZjaVhRclZqbHc5YTNaaTAxUXVVcXJyV1pEMmtHaG04bG1vMmFGaS8v?=
+ =?utf-8?B?RkwvY3BNME55a25mbkJob2ZvYUdCVU5nUDJsbmhkVXBrUC9KYjhZVm9WR2lu?=
+ =?utf-8?B?NGZmQ2puTDVBTmxDNmlydUh2NDZkdk9haE1UR2F6dnUwVlNoUGNDakRsVU9Y?=
+ =?utf-8?B?NjFTaHlBNHBXeERhdEZRTjVWQnY3OVkzejVmREpRTXdubEZEdUtudFJOeDVl?=
+ =?utf-8?B?SG9MMGVPKzJMZ1diaXVlM1NaTUxNN2k4VExOTG13QSs3VWZKNzM3Qnd6cDlM?=
+ =?utf-8?B?bEpxOXc4K2RTK210NlRKSmY2cVVyQ3BmbHhBdmdSMkhJeEQzanVHQWFPaGZH?=
+ =?utf-8?B?c2c5VVBiVEdvd0s4dlV4K2Vta0N0L21rK3RhNmszTjhUdzVEYWo0azhzYXhq?=
+ =?utf-8?B?MHlwUXROTFVGdHRjYW0zVytPQ0h0cXpDVWlMR0dtL2tEVGgzeEZUTzhUNGoy?=
+ =?utf-8?B?VmhxSWJRa0FrZ2I1Y0gvMDgyOWhRMlQvMEQzZVdlNGRUcWFLQWRiTmdyU1lH?=
+ =?utf-8?B?TnZ1RmwxaHFtT2Z6Tit4MmcwL2lRNGo0MUhsV0JQQXJxeUNWQmhYMkVUVWFL?=
+ =?utf-8?B?OG9iRVFDU0tsMk5CSlBkU0N1T01TR1RxYzVLNnN2bjQzK2tmdldlTGR0cy9w?=
+ =?utf-8?B?bXA5OTY0Njk5dFFLMkpsOW1qcmhNTjNwbGdsbjQ4YVhmbGlwM2xWVis2dW8z?=
+ =?utf-8?B?M2xlTmNzWm9EczVWYXBwMUNaV3lybTQrcVh3Q2JCNG0xTUhpMkhNR2UyTVlw?=
+ =?utf-8?B?Y1dsdTdac1NFUGFpdzhlNS90WU9RWkpVU2hNYVB6T0Q4UVI3QnBBNUt6R21s?=
+ =?utf-8?B?UENYem51Q01ZRXVXUXcwd1ZnT0pOVEluTWdyYTJRR0F3TUVNdTB2dnM2LzFU?=
+ =?utf-8?B?Wkc0NW8vUjNhMzgvb1EyL1NaYTFuU1ZBZjhHTnhncjBGN0FPM0tiaDJKNkNt?=
+ =?utf-8?B?M2U1bEhJTVYreDdabTZYVWlXcmxsYXlGbCtncUJBeUg4bVEvdlpFTlhmNmI2?=
+ =?utf-8?B?c3FPdGdqWlFIZVpTREhhc2o3a0xIcHJVYVFVMlpXTjRTTGVTdng0eHZKYmlx?=
+ =?utf-8?B?cjNURk5pa25IWlF3NGJIdllmUjR2V0RXUThmMFdWVW9hbEQ2clRHZGcwNzFh?=
+ =?utf-8?Q?y24zBglu5rFQ/bl3gY+WKzyE3?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b56582c6-661d-4946-58a8-08dc8fc7ac80
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2024 18:51:33.6735
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4sw39WeAhXSiUFGivNhBCWVvgaTR8f4u6kpjHfXVPHMX3SdRG1yVGs6U/5FUyWMQJn0iqMyUSsfofQhCZKQg0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7213
 
-
-
-On 6/18/2024 3:56 AM, Mariusz Tkaczyk wrote:
-> On Sat, 15 Jun 2024 12:33:45 +0200
-> Lukas Wunner <lukas@wunner.de> wrote:
-> 
->> On Fri, Jun 14, 2024 at 04:06:14PM -0500, stuart hayes wrote:
->>> On 5/28/2024 8:19 AM, Mariusz Tkaczyk wrote:
->>>> +static int pci_npem_init(struct pci_dev *dev, const struct npem_ops *ops,
->>>> +			 int pos, u32 caps)
->>>> +{
->> [...]
->>>> +	ret = ops->get_active_indications(npem, &active);
->>>> +	if (ret) {
->>>> +		npem_free(npem);
->>>> +		return -EACCES;
->>>> +	}
+On 6/17/2024 4:18 PM, Bjorn Helgaas wrote:
+> On Mon, Jun 17, 2024 at 03:51:57PM -0700, Smita Koralahalli wrote:
+>> Hi Bjorn,
+>>
+>> On 6/17/2024 1:09 PM, Bjorn Helgaas wrote:
+>>> On Thu, May 16, 2024 at 08:47:48PM +0000, Smita Koralahalli wrote:
+>>>> Clear Link Bandwidth Management Status (LBMS) if set, on a hot-remove
+>>>> event.
+>>>>
+>>>> The hot-remove event could result in target link speed reduction if LBMS
+>>>> is set, due to a delay in Presence Detect State Change (PDSC) happening
+>>>> after a Data Link Layer State Change event (DLLSC).
+>>>>
+>>>> In reality, PDSC and DLLSC events rarely come in simultaneously. Delay in
+>>>> PDSC can sometimes be too late and the slot could have already been
+>>>> powered down just by a DLLSC event. And the delayed PDSC could falsely be
+>>>> interpreted as an interrupt raised to turn the slot on. This false process
+>>>> of powering the slot on, without a link forces the kernel to retrain the
+>>>> link if LBMS is set, to a lower speed to restablish the link thereby
+>>>> bringing down the link speeds [2].
 >>>
->>> Failing pci_npem_init() if this ops->get_active_indications() fails
->>> will keep this from working on most (all?) Dell servers, because the
->>> _DSM get/set functions use an IPMI operation region to get/set the
->>> active LEDs, and this is getting run before the IPMI drivers and
->>> acpi_ipmi module (which provides ACPI access to IPMI operation
->>> regions) get loaded.  (GET_SUPPORTED_STATES works without IPMI.)
+>>> Not sure we need PDSC and DLLSC details to justify clearing LBMS if it
+>>> has no meaning for an empty slot?
 >>
->> CONFIG_ACPI_IPMI is tristate.  Even if it's built-in, the
->> module_initcall() becomes a device_initcall().
+>> I'm trying to also answer your below question here..
 >>
->> PCI enumeration happens from a subsys_initcall(), way earlier
->> than device_initcall().
+>>> I guess the slot is empty, so retraining
+>>> is meaningless and will always fail.  Maybe avoiding it avoids a
+>>> delay?  Is the benefit that we get rid of the message and a delay?"
 >>
->> If you set CONFIG_ACPI_IPMI=y and change the module_initcall() in
->> drivers/acpi/acpi_ipmi.c to arch_initcall(), does the issue go away?
+>> The benefit of this patch is to "avoid link speed drops" on a hot remove
+>> event if LBMS is set and DLLLA is clear. But I'm not trying to solve delay
+>> issues here..
+>>
+>> I included the PDSC and DLLSC details as they are the cause for link speed
+>> drops on a remove event. On an empty slot, DLLLA is cleared and LBMS may or
+>> may not be set. And, we see cases of link speed drops here, if PDSC happens
+>> on an empty slot.
+>>
+>> We know for the fact that slot becomes empty if either of the events PDSC or
+>> DLLSC occur. Also, either of them do not wait for the other to bring down
+>> the device and mark the slot as "empty". That is the reason I was also
+>> thinking of waiting on both events PDSC and DLLSC to bring down the device
+>> as I mentioned in my comments in V1. We could eliminate link speed drops by
+>> taking this approach as well. But then we had to address cases where PDSC is
+>> hardwired to zero.
+>>
+>> On our AMD systems, we expect to see both events on an hot-remove event.
+>> But, mostly we see DLLSC happening first, which does the job of marking the
+>> slot empty. Now, if the PDSC event is delayed way too much and if it occurs
+>> after the slot becomes empty, kernel misinterprets PDSC as the signal to
+>> re-initialize the slot and this is the sequence of steps the kernel takes:
+>>
+>> pciehp_handle_presence_or_link_change()
+>>    pciehp_enable_slot()
+>>      __pciehp_enable_slot()
+>>          board_added
+>>            pciehp_check_link_status()
+>>              pcie_wait_for_link()
+>>                pcie_wait_for_link_delay()
+>>                  pcie_failed_link_retrain()
+>>
+>> while doing so, it hits the case of DLLLA clear and LBMS set and brings down
+>> the speeds.
 > 
-> That seems to be the best option. Please test Lukas proposal and let me know.
-> Shouldn't I make a dependency to ACPI_IPMI in Kconfig (with optional comment
-> about initcall)?
-> 
-> +config PCI_NPEM
-> +	bool "Native PCIe Enclosure Management"
-> +	depends on LEDS_CLASS=y
-> +	depends on ACPI_IPMI=y
-> 
+> So I guess LBMS currently remains set after a device has been removed,
+> so the slot is empty, and later when a device is hot-added, *that*
+> device sees a lower-than expected link speed?
 
-I tried it just to be sure, but changing the module_initcall() to an
-arch_initcall() in acpi_ipmi.c (and compiling it into the kernel) doesn't
-help... acpi_ipmi is loaded before npem, but the underlying IPMI drivers
-that acpi_ipmi uses to provide the IPMI operation region in ACPI aren't
-loaded until later... acpi_ipmi needs the IPMI device.
+Yes, when PDSC is fired after the slot is empty (i.e when DLLLA is clear).
 
-I'll try to think of another solution.  I don't see how to get the IPMI
-drivers to load before PCI devices are enumerated, so it seems to me that
-the only way to get it to work from the moment the LEDs show up in sysfs
-is to somehow delay the npem driver initialization of the LEDs (at least
-for _DSM) or use something to trigger a rescan later.
+Thanks
+Smita
 
-I notice that acpi_ipmi provides a function to wait for it to have an
-IPMI device registered (acpi_wait_for_acpi_ipmi()), which is used by
-acpi_power_meter.c.  It would be kind of awkward to use that... it just
-just waits for a completion (with a 2 second timeout)--it isn't a notifier
-or callback.  On my system, the npem driver failed to run a _DSM at
-0.72 seconds, and ipmi_si driver didn't initialize the IPMI controller
-until 9.54 seconds.
-
->>
->>> (2) providing a mechanism to trigger this driver to rescan a PCI
->>>      device later from user space
->>
->> If this was a regular device driver and -EPROBE_DEFER was returned if
->> IPMI drivers aren't loaded yet, then this would be easy to solve.
->> But neither is the case here.
->>
->> Of course it's possible to exercise the "remove" and "rescan" attributes
->> in sysfs to re-enumerate the device but that's not a great solution.
 > 
-> We cannot expect from users to know and do that. If we cannot configure driver,
-> we should not register it. We have to guarantee that IMPI commands are
-> available at the point we are using them.
-> 
-> There is not better place to add _DSM device than its enumeration and I have a
-> feeling than sooner or later someone else will reach this problem so it would
-> be better for community to solve it now.
-> 
+>> The issue of PDSC and DLLSC never occurring simultaneously was a known thing
+>> from before and it wasn't breaking anything functionally as the kernel would
+>> just exit with the message: "No link" at pciehp_check_link_status().
 >>
+>> However, Commit a89c82249c37 ("PCI: Work around PCIe link training
+>> failures") introduced link speed downgrades to re-establish links if LBMS is
+>> set, and DLLLA is clear. This caused the devices to operate at 2.5GT/s after
+>> they were plugged-in which were previously operating at higher speeds before
+>> hot-remove.
 >>
->>> (3) don't cache the active LEDs--just get the active states using
->>>      NPEM/DSM when brightness is read, and do a get/modify/set when
->>>      setting the brightness... then get_active_indications() wouldn't
->>>      need to be called during init.
+>>>> According to PCIe r6.2 sec 7.5.3.8 [1], it is derived that, LBMS cannot
+>>>> be set for an unconnected link and if set, it serves the purpose of
+>>>> indicating that there is actually a device down an inactive link.
+>>>
+>>> I see that r6.2 added an implementation note about DLLSC, but I'm not
+>>> a hardware person and can't follow the implication about a device
+>>> present down an inactive link.
+>>>
+>>> I guess it must be related to the fact that LBMS indicates either
+>>> completion of link retraining or a change in link speed or width
+>>> (which would imply presence of a downstream device).  But in both
+>>> cases I assume the link would be active.
+>>>
+>>> But IIUC LBMS is set by hardware but never cleared by hardware, so if
+>>> we remove a device and power off the slot, it doesn't seem like LBMS
+>>> could be telling us anything useful (what could we do in response to
+>>> LBMS when the slot is empty?), so it makes sense to me to clear it.
+>>>
+>>> It seems like pciehp_unconfigure_device() does sort of PCI core and
+>>> driver-related things and possibly could be something shared by all
+>>> hotplug drivers, while remove_board() does things more specific to the
+>>> hotplug model (pciehp, shpchp, etc).
+>>>
+>>>   From that perspective, clearing LBMS might fit better in
+>>> remove_board().  In that case, I wonder whether it should be done
+>>> after turning off slot power?  This patch clears is *before* turning
+>>> off the power, so I wonder if hardware could possibly set it again
+>>> before the poweroff?
 >>
->> Not good.  The LEDs are published in sysfs from a subsys_initcall().
->> Brightness changes through sysfs could in theory immediately happen
->> once they're published.  If acpi_ipmi is a module and gets loaded way
->> later, we'd still have to cope with Set State or Get State DSMs going
->> nowhere.
+>> Yeah by talking to HW people I realized that HW could interfere possibly
+>> anytime to set LBMS when the slot power is on. Will change it to include in
+>> remove_board().
 >>
-> 
-> Agree. I can do it and it should be safe but it is not addressing the issue.
-> We would limit time race window but we will not close it.
-> 
-> Thanks,
-> Mariusz
+>>>> However, hardware could have already set LBMS when the device was
+>>>> connected to the port i.e when the state was DL_Up or DL_Active. Some
+>>>> hardwares would have even attempted retrain going into recovery mode,
+>>>> just before transitioning to DL_Down.
+>>>>
+>>>> Thus the set LBMS is never cleared and might force software to cause link
+>>>> speed drops when there is no link [2].
+>>>>
+>>>> Dmesg before:
+>>>> 	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
+>>>> 	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
+>>>> 	pcieport 0000:20:01.1: broken device, retraining non-functional downstream link at 2.5GT/s
+>>>> 	pcieport 0000:20:01.1: retraining failed
+>>>> 	pcieport 0000:20:01.1: pciehp: Slot(59): No link
+>>>>
+>>>> Dmesg after:
+>>>> 	pcieport 0000:20:01.1: pciehp: Slot(59): Link Down
+>>>> 	pcieport 0000:20:01.1: pciehp: Slot(59): Card present
+>>>> 	pcieport 0000:20:01.1: pciehp: Slot(59): No link
+>>>
+>>> I'm a little confused about the problem being solved here.  Obviously
+>>> the message is extraneous.  I guess the slot is empty, so retraining
+>>> is meaningless and will always fail.  Maybe avoiding it avoids a
+>>> delay?  Is the benefit that we get rid of the message and a delay?
+>>>
+>>>> [1] PCI Express Base Specification Revision 6.2, Jan 25 2024.
+>>>>       https://members.pcisig.com/wg/PCI-SIG/document/20590
+>>>> [2] Commit a89c82249c37 ("PCI: Work around PCIe link training failures")
+>>>>
+>>>> Fixes: a89c82249c37 ("PCI: Work around PCIe link training failures")
+>>>
+>>> Lukas asked about this; did you confirm that it is related?  Asking
+>>> because the Fixes tag may cause this to be backported along with
+>>> a89c82249c37.
+>>
+>> Yeah, without this patch we won't see link speed drops.
+>>
+>> Thanks,
+>> Smita
+>>
+>>>
+>>>> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>>>> ---
+>>>> Link to v1:
+>>>> https://lore.kernel.org/all/20240424033339.250385-1-Smita.KoralahalliChannabasappa@amd.com/
+>>>>
+>>>> v2:
+>>>> 	Cleared LBMS unconditionally. (Ilpo)
+>>>> 	Added Fixes Tag. (Lukas)
+>>>> ---
+>>>>    drivers/pci/hotplug/pciehp_pci.c | 3 +++
+>>>>    1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+>>>> index ad12515a4a12..dae73a8932ef 100644
+>>>> --- a/drivers/pci/hotplug/pciehp_pci.c
+>>>> +++ b/drivers/pci/hotplug/pciehp_pci.c
+>>>> @@ -134,4 +134,7 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+>>>>    	}
+>>>>    	pci_unlock_rescan_remove();
+>>>> +
+>>>> +	pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
+>>>> +				   PCI_EXP_LNKSTA_LBMS);
+>>>>    }
+>>>> -- 
+>>>> 2.17.1
+>>>>
 
