@@ -1,236 +1,196 @@
-Return-Path: <linux-pci+bounces-8962-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8963-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0103290E6C8
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 11:20:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12F0B90E815
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 12:15:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61457284EBE
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 09:20:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98EB12830E0
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 10:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03D57FBD1;
-	Wed, 19 Jun 2024 09:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4535A824B2;
+	Wed, 19 Jun 2024 10:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EANk6S/j"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dohXgO9b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAB881ACB
-	for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2024 09:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85022B9AB;
+	Wed, 19 Jun 2024 10:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718788698; cv=none; b=H9EXflL8gdv8cQLG74wH5xLOJE4/Lq0r/Wma+Bk9ra4peQrNLpuJVdBneeNbk6VsAZk7lYHXtgiOodi7OgNkMfbgcXGCXh3KCQInqpuctPhDVBsAkQDsFhlDD9F/CS9qX+EvrZ4eD2f7t0ga8WI2wXO55vv4PB4nCrKPX5td6Mk=
+	t=1718792136; cv=none; b=p8RGZAY8TqKbAuq4/zoK4dacN7JBGO8+O8OVd4jTdXs7Fa2770F8U+Hf0qV3LMNTWahWEBi/KQiUO/kfc+ATjUwpdmHqjfpBqTpGTukrNN676zc+5Cw2+sggod747FKjngNuqDxFyCRC9Y2YRROS1yMGj7pBGpca8UlPqvtXBY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718788698; c=relaxed/simple;
-	bh=MpVu2CG+KvjhnfALLnTmb/atxIChYs9dD6hK3LIeTho=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=A6J/glTfWDeQvaYZNUeulvsr4jsFBsjencZ0rytRLtvtI7fW3OTh1tmo+kS2rXPRpCaJXJN02h+TuJxLqv0da8H7LwIRStw1i8ytcIeyw4l0vwTJHQMSedDv++hdL/R4hc427n5aLaDl4NZF9Op0pbZvIujwPXIRQ3G2fN041Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EANk6S/j; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718788697; x=1750324697;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MpVu2CG+KvjhnfALLnTmb/atxIChYs9dD6hK3LIeTho=;
-  b=EANk6S/jLC+mo368MxcmzBwbot3wMjO1YIY6Sj3N2synFPWBM80vZhoB
-   7Bz0w/mgebGBNWmWmmD8pwGp0uIfNqW2zrEJmyI1JVoV8v5gddLkTMlYP
-   PXgr90+d/vSmjy4xEQAJyvu0INBBuVmUCRyXPSqS+EZMHOPYIEuVJJWI1
-   cSl/n6dtTS6WAQgB/qZyw7gqLuZj/mVmY+4K7tT5K3Qpv4gPtw1xPvQi5
-   WnMNdvysat3QU6gwumk9ZKtgCFVR5pag1cRNsG2MfYamxZAvKqBUYg6k1
-   cGX3qcVIQuxN7UIxp4LgGCC0F3eEwjusITtUP0bMKAwWq3XAkIPBXENRl
-   Q==;
-X-CSE-ConnectionGUID: bz0/wJvuSFKL7jTrR/0r1w==
-X-CSE-MsgGUID: MpvAxPJVSq2ve9X53TfEYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15429139"
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="15429139"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 02:18:16 -0700
-X-CSE-ConnectionGUID: OvOWSqFmS3C+h1v5yFlvyg==
-X-CSE-MsgGUID: 5S/X+LqzS/Syp85XNZ0rhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="46402906"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 19 Jun 2024 02:18:14 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sJrSG-0006Ty-1N;
-	Wed, 19 Jun 2024 09:18:12 +0000
-Date: Wed, 19 Jun 2024 17:18:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org
-Subject: [pci:kwilczynski/sysfs-static-resource-attributes 11/11]
- drivers/pci/pci-sysfs.c:971:5: error: no member named 'legacy_io' in 'struct
- pci_bus'
-Message-ID: <202406191749.Tjh9cRdX-lkp@intel.com>
+	s=arc-20240116; t=1718792136; c=relaxed/simple;
+	bh=oEET+vcMZKMqEubCxQY+kRINnUNZ9uw+rF9qxN+rVwo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AKJEt836bUpdFdTJlSAOIkgE0/flGngXR2WiCU3Vye0F5tRBOl7+BkN8CcOf4PDKqIeHGdpj0+qdjOvxN4RQ82WrsVneE+c69vXDvwa4VnXYG3rkUKoiRJv7hwBQhkwOdsR8MqLxUQ1pGAkPVnD59Yaaao4SHDZGHiSt/KSVpnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dohXgO9b; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9157CE0004;
+	Wed, 19 Jun 2024 10:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718792125;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FQCg7ZLsvGDRPgsO29VZPaQFDsB2sckQAqQKVR+hlT8=;
+	b=dohXgO9b9n8BNyf6kX/KWV99QZlenLSjwYpTmQimpV1gCUd8Dgkdnnjp+DWnwVkJJnpvyx
+	Cvq5WnsiOrq7853+XJTdNqkj5VKsDOBmrgflQ6rsSU+of7pXp6EQIkEbft5+5OObXi+LMS
+	bRviNZkZf6qMz7z5OKKebcVPCMJtUbC7ty2pe1wF/3fAlVpdxFQfLm/Fgjsy8Em7xxtFcY
+	QyShmSPU+pwy9bBsZklCgu/wB82fq0pFOcQVjljEQvWwjZ9Iu2dHhFINMKsTsHMpEQtaXG
+	50Xmec1YZwCZ/PjNvOHDt1rJ4tA9t8p4RjoTmdNWi2x/st09kxtxBO8PVwFldg==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v7 0/7] Add suspend to ram support for PCIe on J7200
+Date: Wed, 19 Jun 2024 12:15:08 +0200
+Message-Id: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKyvcmYC/33Ny07EIBQG4FeZsBYDh1vryvcwLrgcLMYpE2gaz
+ aTvLszONLL8z+X776RiSVjJy+VOCu6ppry2YJ4uxC92/UCaQssEGEjGGdBPA4zRm09IKxSK3nE
+ 7mxmFMqQ9OVuRumJXv/S3q60blr64FYzp+9H09t7ykuqWy8+jeOd9+m/Hzimjk0SlglXthL26n
+ LevtD77fCUd22EMQAdQRhMAJvRwBsQYEA1QHlBaEa3n8QzIMSAboCOPSoiZ+UmdATUGVAOkm7z
+ UhvOA4QzoMaA7oJXGqFEHrf8Cx3H8AjpikcwMAgAA
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, 
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+ thomas.petazzoni@bootlin.com, u-kumar1@ti.com, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Thomas Richard <thomas.richard@bootlin.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git kwilczynski/sysfs-static-resource-attributes
-head:   7f395964ea2fe94ad5099688ff13d6ba89c68f97
-commit: fde9d2216e37abdc20fdbb73878fa040f751cb42 [11/11] PCI/sysfs: Limit pci_sysfs_init() late initcall compile time scope
-config: powerpc-randconfig-002-20240619 (https://download.01.org/0day-ci/archive/20240619/202406191749.Tjh9cRdX-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240619/202406191749.Tjh9cRdX-lkp@intel.com/reproduce)
+This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406191749.Tjh9cRdX-lkp@intel.com/
+In this 7th iteration, the i2c and mux patches were moved to dedicated
+series ([1] and [2]).
+The patch for the gpio-pca953x driver was removed. It will be sent
+separately for further testing and discussion.
 
-All errors (new ones prefixed by >>):
+No merge conflict with 6.10-rc4.
 
->> drivers/pci/pci-sysfs.c:971:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io = kcalloc(2, sizeof(struct bin_attribute),
-           ~  ^
-   drivers/pci/pci-sysfs.c:973:10: error: no member named 'legacy_io' in 'struct pci_bus'
-           if (!b->legacy_io)
-                ~  ^
-   drivers/pci/pci-sysfs.c:977:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->attr.name = "legacy_io";
-           ~  ^
-   drivers/pci/pci-sysfs.c:978:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->size = 0xffff;
-           ~  ^
-   drivers/pci/pci-sysfs.c:979:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->attr.mode = 0600;
-           ~  ^
-   drivers/pci/pci-sysfs.c:980:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->read = pci_read_legacy_io;
-           ~  ^
-   drivers/pci/pci-sysfs.c:981:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->write = pci_write_legacy_io;
-           ~  ^
-   drivers/pci/pci-sysfs.c:983:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->llseek = pci_llseek_resource;
-           ~  ^
-   drivers/pci/pci-sysfs.c:984:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->mmap = pci_mmap_legacy_io;
-           ~  ^
-   drivers/pci/pci-sysfs.c:985:5: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_io->f_mapping = iomem_get_mapping;
-           ~  ^
-   drivers/pci/pci-sysfs.c:987:45: error: no member named 'legacy_io' in 'struct pci_bus'
-           error = device_create_bin_file(&b->dev, b->legacy_io);
-                                                   ~  ^
->> drivers/pci/pci-sysfs.c:992:5: error: no member named 'legacy_mem' in 'struct pci_bus'
-           b->legacy_mem = b->legacy_io + 1;
-           ~  ^
-   drivers/pci/pci-sysfs.c:992:21: error: no member named 'legacy_io' in 'struct pci_bus'
-           b->legacy_mem = b->legacy_io + 1;
-                           ~  ^
-   drivers/pci/pci-sysfs.c:994:5: error: no member named 'legacy_mem' in 'struct pci_bus'
-           b->legacy_mem->attr.name = "legacy_mem";
-           ~  ^
-   drivers/pci/pci-sysfs.c:995:5: error: no member named 'legacy_mem' in 'struct pci_bus'
-           b->legacy_mem->size = 1024*1024;
-           ~  ^
-   drivers/pci/pci-sysfs.c:996:5: error: no member named 'legacy_mem' in 'struct pci_bus'
-           b->legacy_mem->attr.mode = 0600;
-           ~  ^
-   drivers/pci/pci-sysfs.c:997:5: error: no member named 'legacy_mem' in 'struct pci_bus'
-           b->legacy_mem->mmap = pci_mmap_legacy_mem;
-           ~  ^
-   drivers/pci/pci-sysfs.c:999:5: error: no member named 'legacy_mem' in 'struct pci_bus'
-           b->legacy_mem->llseek = pci_llseek_resource;
-           ~  ^
-   drivers/pci/pci-sysfs.c:1000:5: error: no member named 'legacy_mem' in 'struct pci_bus'
-           b->legacy_mem->f_mapping = iomem_get_mapping;
-           ~  ^
-   fatal error: too many errors emitted, stopping now [-ferror-limit=]
-   20 errors generated.
+[1]: https://lore.kernel.org/all/20240613-i2c-omap-wakeup-controller-during-suspend-v1-0-aab001eb1ad1@bootlin.com/
+[2]: https://lore.kernel.org/all/20240613-mux-mmio-resume-support-v1-0-4525bf56024a@bootlin.com/
 
+Regards,
 
-vim +971 drivers/pci/pci-sysfs.c
+Thomas
 
-10a0ef39fbd1d4 Ivan Kokshaysky        2009-02-17   952  
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   953  /**
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   954   * pci_create_legacy_files - create legacy I/O port and memory files
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   955   * @b: bus to create files under
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   956   *
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   957   * Some platforms allow access to legacy I/O port and ISA memory space on
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   958   * a per-bus basis.  This routine creates the files and ties them into
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   959   * their associated read, write and mmap files from pci-sysfs.c
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   960   *
-25985edcedea63 Lucas De Marchi        2011-03-30   961   * On error unwind, but don't propagate the error to the caller
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   962   * as it is ok to set up the PCI bus without these files.
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   963   */
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   964  void pci_create_legacy_files(struct pci_bus *b)
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   965  {
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   966  	int error;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   967  
-efd532a679afae Daniel Vetter          2021-02-05   968  	if (!sysfs_initialized)
-efd532a679afae Daniel Vetter          2021-02-05   969  		return;
-efd532a679afae Daniel Vetter          2021-02-05   970  
-6396bb221514d2 Kees Cook              2018-06-12  @971  	b->legacy_io = kcalloc(2, sizeof(struct bin_attribute),
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   972  			       GFP_ATOMIC);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   973  	if (!b->legacy_io)
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   974  		goto kzalloc_err;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   975  
-62e877b893e635 Stephen Rothwell       2010-03-01   976  	sysfs_bin_attr_init(b->legacy_io);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   977  	b->legacy_io->attr.name = "legacy_io";
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   978  	b->legacy_io->size = 0xffff;
-e2154044dd4168 Kelsey Skunberg        2019-08-13   979  	b->legacy_io->attr.mode = 0600;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   980  	b->legacy_io->read = pci_read_legacy_io;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   981  	b->legacy_io->write = pci_write_legacy_io;
-24de09c16f974d Valentine Sinitsyn     2023-09-25   982  	/* See pci_create_attr() for motivation */
-24de09c16f974d Valentine Sinitsyn     2023-09-25   983  	b->legacy_io->llseek = pci_llseek_resource;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  @984  	b->legacy_io->mmap = pci_mmap_legacy_io;
-f06aff924f9758 Krzysztof Wilczyński   2021-07-29   985  	b->legacy_io->f_mapping = iomem_get_mapping;
-10a0ef39fbd1d4 Ivan Kokshaysky        2009-02-17   986  	pci_adjust_legacy_attr(b, pci_mmap_io);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   987  	error = device_create_bin_file(&b->dev, b->legacy_io);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   988  	if (error)
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   989  		goto legacy_io_err;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   990  
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   991  	/* Allocated above after the legacy_io struct */
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  @992  	b->legacy_mem = b->legacy_io + 1;
-6757eca348fbbd Mel Gorman             2010-03-10   993  	sysfs_bin_attr_init(b->legacy_mem);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   994  	b->legacy_mem->attr.name = "legacy_mem";
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   995  	b->legacy_mem->size = 1024*1024;
-e2154044dd4168 Kelsey Skunberg        2019-08-13   996  	b->legacy_mem->attr.mode = 0600;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03   997  	b->legacy_mem->mmap = pci_mmap_legacy_mem;
-24de09c16f974d Valentine Sinitsyn     2023-09-25   998  	/* See pci_create_attr() for motivation */
-24de09c16f974d Valentine Sinitsyn     2023-09-25   999  	b->legacy_mem->llseek = pci_llseek_resource;
-c6c3c5704ba708 Linus Torvalds         2021-09-01  1000  	b->legacy_mem->f_mapping = iomem_get_mapping;
-10a0ef39fbd1d4 Ivan Kokshaysky        2009-02-17  1001  	pci_adjust_legacy_attr(b, pci_mmap_mem);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1002  	error = device_create_bin_file(&b->dev, b->legacy_mem);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1003  	if (error)
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1004  		goto legacy_mem_err;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1005  
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1006  	return;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1007  
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1008  legacy_mem_err:
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1009  	device_remove_bin_file(&b->dev, b->legacy_io);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1010  legacy_io_err:
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1011  	kfree(b->legacy_io);
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1012  	b->legacy_io = NULL;
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1013  kzalloc_err:
-7db4af43c97b68 Bjorn Helgaas          2019-05-07  1014  	dev_warn(&b->dev, "could not create legacy I/O port and ISA memory resources in sysfs\n");
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1015  }
-f19aeb1f3638b7 Benjamin Herrenschmidt 2008-10-03  1016  
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v7:
+- all: series rebased on Linux 6.10-rc4.
+- i2c: patches moved to a dedicated series.
+- mux: patches moved to a dedicated series.
+- gpio-pca953x: patch removed, will be sent separately.
+- Link to v6: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com
 
-:::::: The code at line 971 was first introduced by commit
-:::::: 6396bb221514d2876fd6dc0aa2a1f240d99b37bb treewide: kzalloc() -> kcalloc()
+Changes in v6:
+- i2c-omap: add a patch to remove __maybe_unused attribute of
+  omap_i2c_runtime_suspend() and omap_i2c_runtime_resume()
+- i2c-omap: fix compile issue if CONFIG_PM_SLEEP is not set
+- Link to v5: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com
 
-:::::: TO: Kees Cook <keescook@chromium.org>
-:::::: CC: Kees Cook <keescook@chromium.org>
+Changes in v5:
+- all: series rebased on Linux 6.9-rc1
+- pinctrl-single: patch removed (already applied to the pinctrl tree)
+- phy: patches moved to a dedicated series.
+- pci: add T_PERST_CLK_US macro.
+- pci-j721e: update the comments about T_PERST_CLK_US.
+- Link to v4: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com
 
+Changes in v4:
+- all: use SoB/Co-developed-by for patches initially developed by Théo
+  Lebrun.
+- pinctrl-single: squash the two commits.
+- i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
+- mux: mux_chip_resume() return 0 or at the first error.
+- phy-j721e-wiz: clean code around dev_err_probe().
+- phy-j721e-wiz: use REF_CLK_100MHZ macros.
+- pci: fix subject line for all PCI patches.
+- pci-cadence: use fsleep() instead of usleep_range().
+- pci-cadence: remove cdns_torrent_clk_cleanup() call in
+  cdns_torrent_phy_resume_noirq().
+- pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in the probe().
+- pci-j721e: fix unordered header files.
+- pci-j721e: remove some log spammers.
+- pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
+- pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
+- Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com
+
+Changes in v3:
+- pinctrl-single: split patch in two parts, a first patch to remove the
+  dead code, a second to move suspend()/resume() callbacks to noirq.
+- i2c-omap: add a comments above the suspend_noirq() callback.
+- mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+  all is ok or the first failure.
+- mmio: fix commit message.
+- phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() in
+  the wiz_clock_init() function.
+- phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+  function to wiz_clock_probe(), extract hardware configuration part in a
+  new function wiz_clock_init().
+- phy-cadence-torrent: use dev_err_probe() and fix commit messages
+- pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+  function and extract the link setup part in a new function
+  cdns_pcie_host_link_setup().
+- pcie-cadence-host: make cdns_pcie_host_init() global.
+- pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+  functions in the resume_noirq() callback.
+- Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com
+
+Changes in v2:
+- all: fix commits messages.
+- all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+- all: remove useless #ifdef CONFIG_PM.
+- pinctrl-single: drop dead code
+- mux: add mux_chip_resume() function in mux core.
+- mmio: resume sequence is now a call to mux_chip_resume().
+- phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+  instead of reset_control_put()).
+- phy-cadence-torrent: use PHY instead of phy.
+- pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+  sequence.
+- pci-j721e: drop dead code.
+- Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
+
+---
+Thomas Richard (5):
+      PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup()
+      PCI: cadence: Set cdns_pcie_host_init() global
+      PCI: j721e: Use dev_err_probe() in the probe() function
+      PCI: Add T_PERST_CLK_US macro
+      PCI: j721e: Use T_PERST_CLK_US macro
+
+Théo Lebrun (2):
+      PCI: j721e: Add reset GPIO to struct j721e_pcie
+      PCI: j721e: Add suspend and resume support
+
+ drivers/pci/controller/cadence/pci-j721e.c         | 121 ++++++++++++++++++---
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
+ drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+ drivers/pci/pci.h                                  |   3 +
+ 4 files changed, 146 insertions(+), 34 deletions(-)
+---
+base-commit: 7510725e693fb5e4b4cd17086cc5a49a7a065b9c
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thomas Richard <thomas.richard@bootlin.com>
+
 
