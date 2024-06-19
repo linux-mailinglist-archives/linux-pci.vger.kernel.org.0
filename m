@@ -1,171 +1,112 @@
-Return-Path: <linux-pci+bounces-8971-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8972-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 117C090E8AD
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 12:53:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7712C90E95D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 13:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD0DE1F22457
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 10:53:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A6C11C22DC7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 11:26:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043F6132102;
-	Wed, 19 Jun 2024 10:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D4813B583;
+	Wed, 19 Jun 2024 11:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3uSaA84"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du+dh5j3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00C11304AD;
-	Wed, 19 Jun 2024 10:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D01C13A263;
+	Wed, 19 Jun 2024 11:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718794372; cv=none; b=ivElyXwrjuPLCingVIPlw7k5Ot61WMbw+bc/WCx+XSW1jw/IG80sszGoVt3np69oZJd8+1vT1oIx9MBFbJ2XrHyUhfD7szgbdgk2CRWNkanmhZULxoruVaCOiDOQpqTwv/fPm4x9BJiKY5/+nRsLsQKMPeHXs64hhnvDb8LA4Yk=
+	t=1718796330; cv=none; b=tclf3A4Sfu2h0yImarDDynnRNahRqgWXLETEQh6HwCk+BHG9GY7qTA6fL9TXCjQky15VuYx4r5Qfm6wzGqO1JnPhle0Xn4FSOUCnZW4A/UxprrEgrhZNxdqO3PoyNfQs7Y0NKcXADL7uHM2kNPFs9Z2SIfVLwI2HP8s63ROoYqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718794372; c=relaxed/simple;
-	bh=x6rRWvFLspQevsB2WpDwXMeeTixJq93OzwM4BU6/jhU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iye1lPntt+VzWKk9p8rvPu2V5b/q4YQdgi8saMK0B/YGBXZB+lrgA6t+nDWlUXoveGF3LmqqRCTseNdyQyC5SfryK8F/c5Zu4ZdFA9GpaRM/t2d5sfXs6EvLKnwaszScUW04S5bjW5akA7YsegmfC+/wqX85rb9egWmW7NJ3T0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3uSaA84; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF89C4AF53;
-	Wed, 19 Jun 2024 10:52:52 +0000 (UTC)
+	s=arc-20240116; t=1718796330; c=relaxed/simple;
+	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SYef2zjdyKcavrR8ShSqjW/HYcZwy3GUzXSJpbpuNe/V1Xf+LPFBVQzF/kiidF4Vyn7k67cZON6kqDrhUWzFGNeaixRUKqL7GBW7AOwhdW0CfJ7+bHBgtWSF9+Ukg6sraHExOO8xAmLvmwgVRsogfadykuWKArMVKrX7ctZ1bxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du+dh5j3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BDFC4AF53;
+	Wed, 19 Jun 2024 11:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718794372;
-	bh=x6rRWvFLspQevsB2WpDwXMeeTixJq93OzwM4BU6/jhU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=u3uSaA84l5gVLsWmwxrOtJWM7MF0Vu51G0CMA1IUhuxDqK7DR2yRzGOKrg5XZfJyp
-	 gc1uZ0BFFh/wA26oymxl7R1SluIcT5SJ5t1Ag6XbCE5Xkm7ygActqF/NpHFUki9mlL
-	 JbLwuS31tzqYMGiroNPmsUu+jF8Vggo/jU2YswgPzfH0OUyJKD3lw6P18dgkFZl/0Y
-	 n5dvVHipC+NvVTsEaLa4yR6Z2kvQMtMEiStK1cuhhGDOlvFIk45u6nd3IWZNz0xwwZ
-	 4TMCjh7s4W1TjzGlDdladzFqHv7/kFYAVMXWKntAeSqEk/WhLSN/siYOf+znixzC+C
-	 tKhqZbYVCrBQQ==
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-254939503baso511628fac.0;
-        Wed, 19 Jun 2024 03:52:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+xyWfe5iJvRVgVyFqt4isgis/bx1GqvNReaBUFx3d2Bs/V5BKLMT0A/SQ4FC8CLEumQMio/zZ90pKkS1AOzWmnYTV9JEh8A5LOkvL1nHDzSgaiDGxtikfn8JvqiQ23io0MbJ9xYXx
-X-Gm-Message-State: AOJu0Yw5cC9ycK6vWlObCi9vyBw8HGojJgkOg5ifLzsyWlW2Fzkc2nl/
-	Vj9xnKJ9geX5rYLpu1QJ5DL79oawH5VCXXb+d/rzXM0gdStl9oc6EhPkeH/YHvcCb9loNsdaUFa
-	pKEpiZdkS8iBSDrn/g/m2Y5vwAKg=
-X-Google-Smtp-Source: AGHT+IHkfbPpplMOo0+AZF3Oi/SLUmBNejk3LQsh8tt80LEVbwbJ0RTdOmOkrR69Re/mAWO5+pPtyJBD56qHP10v7uQ=
-X-Received: by 2002:a05:6820:2210:b0:5ba:ead2:c742 with SMTP id
- 006d021491bc7-5c1ad8a198cmr2995209eaf.0.1718794371598; Wed, 19 Jun 2024
- 03:52:51 -0700 (PDT)
+	s=k20201202; t=1718796329;
+	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Du+dh5j3HHzpa9yey8zGx6MNBhRSP5yQXWuWgd8fZ+2wjMfn2vfuZQWDvD6mfzdDE
+	 ALVAAyypHvZYwZ7gQLIbC6J2/lDVDvJDeXsXPtcoshRW+qweIlKecxXE+xXw1latK0
+	 295u5iSD3QMCimGrhNLiv7f2uBLI/v0yKTZxlMS2mDfY2XsuKPrWFz/lrKGNnw2/fy
+	 OZvO4Q0gC+SetiNpSZ6ZN1vcJ9u8CRoSpaGcKqJJWIfIWAJlXkTRxzn/Dy8jeW38ee
+	 90nqDKny33ACfjWnYETbC+ZOw9mtfcELCdxvaLuYHAXfRzbVQOHsIXmGOzLsGvuq3b
+	 lRykQ6JA79PhQ==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org,
+	Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	=?utf-8?q?Daire_McNamara_=3Cdaire=2Emcnamara=40microchip=2Ecom=3E=2C_Jam?=@web.codeaurora.org,
+	=?utf-8?q?ie_Gibbons_=3Cjamie=2Egibbons=40microchip=2Ecom=3E=2C_Valentina_F?=@web.codeaurora.org,
+	=?utf-8?q?ernandez_=3Cvalentina=2Efernandezalanis=40microchip=2Ecom=3E=2C_L?=@web.codeaurora.org,
+	=?utf-8?q?inus_Walleij_=3Clinus=2Ewalleij=40linaro=2Eorg=3E=2C_Bartosz_Gola?=@web.codeaurora.org,
+	=?utf-8?q?szewski_=3Cbrgl=40bgdev=2Epl=3E=2C_Rob_Herring_=3Crobh=40kernel?=@web.codeaurora.org,
+	=?utf-8?q?=2Eorg=3E=2C_Krzysztof_Kozlowski_=3Ckrzysztof=2Ekozlowski+dt=40li?=@web.codeaurora.org,
+	=?utf-8?q?naro=2Eorg=3E=2C_Lorenzo_Pieralisi_=3Clpieralisi=40kernel=2Eorg?=@web.codeaurora.org,
+	=?utf-8?q?=3E=2C_Krzysztof_Wilczy=C5=84ski_=3Ckw=40linux=2Ecom=3E=2C_Bjorn_?=@web.codeaurora.org,
+	=?utf-8?q?Helgaas_=3Cbhelgaas=40google=2Ecom=3E=2C_linux-gpio=40vger=2Ekern?=@web.codeaurora.org,
+	=?utf-8?q?el=2Eorg=2C_devicetree=40vger=2Ekernel=2Eorg=2C_linux-kernel=40vg?=@web.codeaurora.org,
+	=?utf-8?q?er=2Ekernel=2Eorg=2C_linux-pci=40vger=2Ekernel=2Eorg?=@web.codeaurora.org
+Subject: Re: (subset) [PATCH v1 0/5] BeagleV Fire support
+Date: Wed, 19 Jun 2024 12:24:48 +0100
+Message-ID: <20240619-tightly-stuffed-a91e32ae9fc3@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618204946.1271042-1-helgaas@kernel.org>
-In-Reply-To: <20240618204946.1271042-1-helgaas@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 19 Jun 2024 12:52:39 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hZHnMbTLs3KK3ORQey=-u8SEm5H4X-eDSVzdk8s9Rn5A@mail.gmail.com>
-Message-ID: <CAJZ5v0hZHnMbTLs3KK3ORQey=-u8SEm5H4X-eDSVzdk8s9Rn5A@mail.gmail.com>
-Subject: Re: [PATCH v9 0/2] PCI: Disable AER & DPC on suspend
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	"Oliver O'Halloran" <oohall@gmail.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Chaitanya Kulkarni <kch@nvidia.com>, Christoph Hellwig <hch@lst.de>, Thomas Crider <gloriouseggroll@gmail.com>, 
-	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.com>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-nvme@lists.infradead.org, 
-	regressions@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=693; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=W31/LXvbm3p0gQHN+AHn/iS7bX0lEsjhbAHyFzbXYq0=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGlFBxh8f6/zXfjC9NGcM4ltLn98vHsktk+Z/fxqdsDvr bOvnM6b3lHKwiDGwSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJfAxhZDga2nAq+VdN38M/ d2wvNudvOpjAbmnDcl+8d6Z2N5OBdx3DP+3M/hvHV+4K+s9a98Ofad+XBEtuwxk72msy7u6t2Li 7lREA
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 18, 2024 at 10:49=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> This is an old series from Kai-Heng that I didn't handle soon enough.  Th=
-e
-> intent is to fix several suspend/resume issues:
->
->   - Spurious wakeup from s2idle
->     (https://bugzilla.kernel.org/show_bug.cgi?id=3D216295)
->
->   - Steam Deck doesn't resume after suspend
->     (https://bugzilla.kernel.org/show_bug.cgi?id=3D218090)
->
->   - Unexpected ACS error and DPC event when resuming after suspend
->     (https://bugzilla.kernel.org/show_bug.cgi?id=3D209149)
->
-> It seems that a glitch when the link is powered down during suspend cause=
-s
-> errors to be logged by AER.  When AER is enabled, this causes an AER
-> interrupt, and if that IRQ is shared with PME, it may cause a spurious
-> wakeup.
->
-> Also, errors logged during link power-down and power-up seem to cause
-> unwanted error reporting during resume.
->
-> This series disables AER interrupts, DPC triggering, and DPC interrupts
-> during suspend.  On resume, it clears AER and DPC error status before
-> re-enabling their interrupts.
->
-> I added a couple cosmetic changes for the v9, but this is essentially all
-> Kai-Heng's work.  I'm just posting it as a v9 because I failed to act on
-> this earlier.
->
-> Bjorn
->
-> v9:
->  - Drop pci_ancestor_pr3_present() and pm_suspend_via_firmware; do it
->    unconditionally
->  - Clear DPC status before re-enabling DPC interrupt
->
-> v8: https://lore.kernel.org/r/20240416043225.1462548-1-kai.heng.feng@cano=
-nical.com
->  - Wording.
->  - Add more bug reports.
->
-> v7:
->  - Wording.
->  - Disable AER completely (again) if power will be turned off
->  - Disable DPC completely (again) if power will be turned off
->
-> v6: https://lore.kernel.org/r/20230512000014.118942-1-kai.heng.feng@canon=
-ical.com
->
-> v5: https://lore.kernel.org/r/20230511133610.99759-1-kai.heng.feng@canoni=
-cal.com
->  - Wording.
->
-> v4: https://lore.kernel.org/r/20230424055249.460381-1-kai.heng.feng@canon=
-ical.com
-> v3: https://lore.kernel.org/r/20230420125941.333675-1-kai.heng.feng@canon=
-ical.com
->  - Correct subject.
->
-> v2: https://lore.kernel.org/r/20230420015830.309845-1-kai.heng.feng@canon=
-ical.com
->  - Only disable AER IRQ.
->  - No more AER check on PME IRQ#.
->  - Use AER helper.
->  - Only disable DPC IRQ.
->  - No more DPC check on PME IRQ#.
->
-> v1: https://lore.kernel.org/r/20220727013255.269815-1-kai.heng.feng@canon=
-ical.com
->
-> Kai-Heng Feng (2):
->   PCI/AER: Disable AER service on suspend
->   PCI/DPC: Disable DPC service on suspend
->
->  drivers/pci/pcie/aer.c | 18 +++++++++++++
->  drivers/pci/pcie/dpc.c | 60 +++++++++++++++++++++++++++++++++---------
->  2 files changed, 66 insertions(+), 12 deletions(-)
->
-> --
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Please feel free to add
+On Wed, 27 Mar 2024 12:24:35 +0000, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Yo,
+> 
+> Wee series adding support for the BeagleV Fire. I've had a dts sitting
+> locally for this for over a year for testing Auto Update and I meant to
+> submit something to mainline once the board got announced publicly, but
+> only got around to that now.
+> 
+> [...]
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Applied to riscv-dt-for-next, thanks!
 
-to both patches in the series.
+[1/5] dt-bindings: riscv: microchip: document beaglev-fire
+      https://git.kernel.org/conor/c/76ed031dc750
+[5/5] riscv: dts: microchip: add an initial devicetree for the BeagleV Fire
+      https://git.kernel.org/conor/c/9e2569c28589
 
-Thanks!
+I've applied this with the incorrect PCIe root port node removed.
+
+Cheers,
+Conor.
 
