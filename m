@@ -1,154 +1,277 @@
-Return-Path: <linux-pci+bounces-8950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8951-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 665B190E2AE
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 07:29:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 326F890E303
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 08:05:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7A06B21B04
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 05:29:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EBF51C213EB
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 06:05:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5434155897;
-	Wed, 19 Jun 2024 05:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7374C5B69E;
+	Wed, 19 Jun 2024 06:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UvEwz7G/"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="PMVCc9H/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6974D55887;
-	Wed, 19 Jun 2024 05:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE5156B7C
+	for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2024 06:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718774973; cv=none; b=jMN99mCi9NTphc0wnsghsR03jLMsf58tP4RcJuWG1q90w27RqLZ1W7F9WcrWyibTBTV0MWSN94HH0uIDmB78/x41C6iyW+L93/5pwqNtVwvLtMvoXgYhDscpjXTYCNbDKpnDCbPYLR9LtdmApLQWZBl3AHVCUsYBLCkD/nFohqs=
+	t=1718777151; cv=none; b=OVrLHtzpuioYikgeQ7dQX+Uy+MRCX0+yHGqAcGd/vgNroVoyEHIomEpYt35Vu3QwcesRbZluNKnkqiwp7qUPwW/8sGN06p4u5T0hS+faLhxdp1lU+3yyZiyxS7NqS3keoHtuE8djD2vq1N5wgAnPKy3xMKwMPBf2dJtnlLJvQ/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718774973; c=relaxed/simple;
-	bh=ProNh6WDpQJsTCKWeK/xBB+DgqPo4qArcFsOCcPezwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tSYYEEvVm/OgCbSwU7H+v7GW1YeooXLjWrhIDVOxKzJOiJg5VIkLLMOFnv79dobYZKyIgcTRpC+9T4DpscdMloyNeAno0dUUeA1ZacLEUFQvAF6Fuq52RiR+Tmd/ujGZ3KuJghldw2/S9jB/x7Wr60vAb5ojCiQ6cohfTuO5lw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UvEwz7G/; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718774971; x=1750310971;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ProNh6WDpQJsTCKWeK/xBB+DgqPo4qArcFsOCcPezwM=;
-  b=UvEwz7G/0ZzxFAge9gmBj4C3LxCjmanrdUIp2EwrHCTyyAO7WFm1TNLL
-   8Zr3YXsus3j26122QllO3Aqm0MXiq66jO+5UPaxbbcq8x6z6r3Ve13bGZ
-   d/SuazcVK2mBhyZmOiCEVaqFlFgO24hyXcdO3NBcKlSqqdWJv02Kf96Qb
-   qD29x2+g9fXk6eDZieoj+hKMX1THZutvL2J3LXjlX93trv8A6BIerrHVR
-   gnEN439xbD5dQmm/gzMvhN7S1DVCWG9EkarINWDsG7kRAIfXjqrrL58ex
-   /5rYol0kt3QQogMFEboIUEgEZvJmWWXPocga3L0An0yhdDP4ArlYdTkY8
-   w==;
-X-CSE-ConnectionGUID: czHvkxWIQTm6Q4uEzgfyBw==
-X-CSE-MsgGUID: Rd0kxEWPQQWJL34wAosL/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="33235027"
-X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
-   d="scan'208";a="33235027"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 22:29:30 -0700
-X-CSE-ConnectionGUID: B63f9b/RT0WXS1EvrdiIRg==
-X-CSE-MsgGUID: J9RujRSITdSp2fbnatoSKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
-   d="scan'208";a="65031965"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 18 Jun 2024 22:29:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 705971A3; Wed, 19 Jun 2024 08:29:27 +0300 (EEST)
-Date: Wed, 19 Jun 2024 08:29:27 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Mathias Nyman <mathias.nyman@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-	Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>
-Subject: Re: [PATCH 0/4] Verify devices transition from D3cold to D0
-Message-ID: <20240619052927.GF1532424@black.fi.intel.com>
-References: <20240613054204.5850-1-mario.limonciello@amd.com>
- <20240618131452.GC1532424@black.fi.intel.com>
- <9f465ec4-32b9-4cd8-89de-a57a99880360@amd.com>
+	s=arc-20240116; t=1718777151; c=relaxed/simple;
+	bh=l0mNs/FsDmY5dBfAxFirPNKQAqbJFE+jk9p6H27x4nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eGxt6Zz1pEiXM9n6BrbyPzy3xCht4WIxSLENQRZQuBmd9sf9r5ejcvzDmmK08LWE2YGyj5pk213IIyN+YKr0auJOVKaeN0EQcw0XCkMzakghyIqQDlxJ9z79+e/UEroiq614fXm97AK+vt0dMcCqPCgMgCFDCJFN0GQbx9AgHUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=PMVCc9H/; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E3D9B40344
+	for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2024 06:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1718777139;
+	bh=6Nv2YnUXwNhwZtcnR0l2iX9oZx8TMUNIK8n7g+2X8A0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=PMVCc9H/5ZkJC3MhGqVy72/RfGEZo7Zu7SV7nCVDLpA+yEdiykmKemTKqdbi3b81m
+	 rQ7OF0ib9a9/mR3cpRpxT8fOhJk/nvXYpsT4T2lXrcRIYLcW0muNM3oagYzmxdhUFE
+	 T6K00zf7D4G7mx+JQBUQ+y+QYpl6oRoLUex5h8OpWo+IQ8mpKGLRs/V+Y/mrD6uNQK
+	 sVCFfV7O5CDpZdlXONYUo5YSmY38Ye/AC/d+SVPfeMIZJ9bQT72HglJcuslYZide0c
+	 HVZcauhWPIcjNFhBD9I6bn3qa2nhKytEzxhoBYZwGY0pyNmvVbOKyPlzaOGy7fi2rJ
+	 me9I/lCnDCQSg==
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-70d8b7924e7so1912222a12.2
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 23:05:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718777138; x=1719381938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Nv2YnUXwNhwZtcnR0l2iX9oZx8TMUNIK8n7g+2X8A0=;
+        b=odpLhwk3Jwa6UE1nRacutK3pL//haTbYsWideLX5XtURM9Jw80HOVuponkaKURt220
+         yLGscEdGgXuulUsRHzn3PXJmyVqW9Mpivm1g9/tAavPnSWsOTbASOVtTQHwihg3q8C0d
+         Q1Fcn8JJdD7gn0BtJfkPUjutCxx7vNXs9YB6eMVem7TEhD5LnbLh66xqaZEQwYZXq189
+         OplYQ2xhZ22S3ilSLg7DZE7o0wLPfUfTJx1QiMqx/DdBXRcOjd5JZuKRimW+Lu8H17PQ
+         wh6ZCARaY2kIpmIsh3aClOQzHwygNWwctmzsobsCUqWR23gAA5bujW7sKE3FfrjdB62f
+         ja7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUeHpQpjn6OPmVyoTsW+B203eznGtxwcM9wJx4ofKkPNcU4zK4jvD2t1Ag77XjvJUb+7sgpJgY5QW3DGBrJ37126mAhpEV5asJn
+X-Gm-Message-State: AOJu0Yyi1LZqXvn5cVrqjA/IYY6Qz1isaBYMZ7yzt+nQ8ezING0F2AMW
+	rm4qrlftj9nxFy3ti9goDb0cKXAJQMd6ltoH3LhLJIR6JWND+aaZsMxWKkmO5ha5eDFe0Bmr5y9
+	MC5Sm7IX62oRn0PCKHqc0jViDhOy3BFTjqkOniyr4HsS1kD8l+RmYRN5q7hmcUL9k6jIO6EoP3B
+	LAIrb2faO8i5RqmSvoZpC5T4Hzvsqd9ecWQf8LyIpEl5csgEY3
+X-Received: by 2002:a05:6a20:a8a5:b0:1b2:a94d:4eca with SMTP id adf61e73a8af0-1bcbb5f705dmr1512760637.41.1718777138514;
+        Tue, 18 Jun 2024 23:05:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFmoBDk3wuIfStUvPkgN/DsQ3AqL87wGvMpH6BdkD1tmYIyQo/0+ajiApdNg790feEKy+jeMAf9CLNezX3NDog=
+X-Received: by 2002:a05:6a20:a8a5:b0:1b2:a94d:4eca with SMTP id
+ adf61e73a8af0-1bcbb5f705dmr1512734637.41.1718777138116; Tue, 18 Jun 2024
+ 23:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9f465ec4-32b9-4cd8-89de-a57a99880360@amd.com>
+References: <CAAd53p7O51mG7LMrEobEgGrD8tsDFO3ZFSPAu02Dk-R0W3mkvg@mail.gmail.com>
+ <20240618204837.GA1262769@bhelgaas>
+In-Reply-To: <20240618204837.GA1262769@bhelgaas>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Wed, 19 Jun 2024 14:05:26 +0800
+Message-ID: <CAAd53p4gHQeyDkusDW7rkjVKjTnyi+RjHZLbPU5CqfsuVRtodQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] PCI/AER: Disable AER service on suspend
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, bagasdotme@gmail.com, 
+	regressions@lists.linux.dev, linux-nvme@lists.infradead.org, kch@nvidia.com, 
+	hch@lst.de, gloriouseggroll@gmail.com, kbusch@kernel.org, sagi@grimberg.me, 
+	hare@suse.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 18, 2024 at 11:56:50AM -0500, Mario Limonciello wrote:
-> On 6/18/2024 08:14, Mika Westerberg wrote:
-> > Hi Mario,
-> > 
-> > On Thu, Jun 13, 2024 at 12:42:00AM -0500, Mario Limonciello wrote:
-> > > Gary has reported that when a dock is plugged into a system at the same
-> > > time the autosuspend delay has tripped that the USB4 stack malfunctions.
-> > > 
-> > > Messages show up like this:
-> > > 
-> > > ```
-> > > thunderbolt 0000:e5:00.6: ring_interrupt_active: interrupt for TX ring 0 is already enabled
-> > > ```
-> > > 
-> > > Furthermore the USB4 router is non-functional at this point.
-> > 
-> > Once the USB4 domain starts the sleep transition, it cannot be
-> > interrupted by anything so it always should go through full sleep
-> > transition and only then back from sleep.
-> > 
-> > > Those messages happen because the device is still in D3cold at the time
-> > > that the PCI core handed control back to the USB4 connection manager
-> > > (thunderbolt).
-> > 
-> > This is weird. Yes we should be getting the wake from the hotplug but
-> > that should happen only after the domain is fully in sleep (D3cold). The
-> > BIOS ACPI code is supposed to deal with this.
-> 
-> Is that from from experience or do you mean there is a spec behavior?
-> 
-> IE I'm wondering if we have different "expectations" from different
-> company's hardware designers.
+On Wed, Jun 19, 2024 at 4:48=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Thu, Apr 25, 2024 at 03:33:01PM +0800, Kai-Heng Feng wrote:
+> > On Fri, Apr 19, 2024 at 4:35=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > >
+> > > On Tue, Apr 16, 2024 at 12:32:24PM +0800, Kai-Heng Feng wrote:
+> > > > When the power rail gets cut off, the hardware can create some elec=
+tric
+> > > > noise on the link that triggers AER. If IRQ is shared between AER w=
+ith
+> > > > PME, such AER noise will cause a spurious wakeup on system suspend.
+> > > >
+> > > > When the power rail gets back, the firmware of the device resets it=
+self
+> > > > and can create unexpected behavior like sending PTM messages. For t=
+his
+> > > > case, the driver will always be too late to toggle off features sho=
+uld
+> > > > be disabled.
+> > > >
+> > > > As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power
+> > > > Management", TLP and DLLP transmission are disabled for a Link in L=
+2/L3
+> > > > Ready (D3hot), L2 (D3cold with aux power) and L3 (D3cold) states. S=
+o if
+> > > > the power will be turned off during suspend process, disable AER se=
+rvice
+> > > > and re-enable it during the resume process. This should not affect =
+the
+> > > > basic functionality.
+> > > >
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D209149
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218090
+> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > >
+> > > Thanks for reviving this series.  I tried follow the history about
+> > > this, but there are at least two series that were very similar and I
+> > > can't put it all together.
+> > >
+> > > > ---
+> > > > v8:
+> > > >  - Add more bug reports.
+> > > >
+> > > > v7:
+> > > >  - Wording
+> > > >  - Disable AER completely (again) if power will be turned off
+> > > >
+> > > > v6:
+> > > > v5:
+> > > >  - Wording.
+> > > >
+> > > > v4:
+> > > > v3:
+> > > >  - No change.
+> > > >
+> > > > v2:
+> > > >  - Only disable AER IRQ.
+> > > >  - No more check on PME IRQ#.
+> > > >  - Use helper.
+> > > >
+> > > >  drivers/pci/pcie/aer.c | 25 +++++++++++++++++++++++++
+> > > >  1 file changed, 25 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > > index ac6293c24976..bea7818c2d1b 100644
+> > > > --- a/drivers/pci/pcie/aer.c
+> > > > +++ b/drivers/pci/pcie/aer.c
+> > > > @@ -28,6 +28,7 @@
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/kfifo.h>
+> > > >  #include <linux/slab.h>
+> > > > +#include <linux/suspend.h>
+> > > >  #include <acpi/apei.h>
+> > > >  #include <acpi/ghes.h>
+> > > >  #include <ras/ras_event.h>
+> > > > @@ -1497,6 +1498,28 @@ static int aer_probe(struct pcie_device *dev=
+)
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > +static int aer_suspend(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > > > +     struct pci_dev *pdev =3D rpc->rpd;
+> > > > +
+> > > > +     if (pci_ancestor_pr3_present(pdev) || pm_suspend_via_firmware=
+())
+> > > > +             aer_disable_rootport(rpc);
+> > >
+> > > Why do we check pci_ancestor_pr3_present(pdev) and
+> > > pm_suspend_via_firmware()?  I'm getting pretty convinced that we need
+> > > to disable AER interrupts on suspend in general.  I think it will be
+> > > better if we do that consistently on all platforms, not special cases
+> > > based on details of how we suspend.
+> >
+> > Sure. Will change in next revision.
+> >
+> > > Also, why do we use aer_disable_rootport() instead of just
+> > > aer_disable_irq()?  I think it's the interrupt that causes issues on
+> > > suspend.  I see that there *were* some versions that used
+> > > aer_disable_irq(), but I can't find the reason it changed.
+> >
+> > Interrupt can cause system wakeup, if it's shared with PME.
+> >
+> > The reason why aer_disable_rootport() is used over aer_disable_irq()
+> > is that when the latter is used the error still gets logged during
+> > sleep cycle. Once the pcieport driver resumes, it invokes
+> > aer_root_reset() to reset the hierarchy, while the hierarchy hasn't
+> > resumed yet.
+> >
+> > So use aer_disable_rootport() to prevent such issue from happening.
+>
+> I think the issue is more likely on the resume side.
+>
+> aer_disable_rootport() disables AER interrupts, then clears
+> PCI_ERR_ROOT_STATUS, so the path looks like this:
+>
+>   aer_suspend
+>     aer_disable_rootport
+>       aer_disable_irq()
+>       pci_write_config_dword(PCI_ERR_ROOT_STATUS)    # clear
+>
+> This happens during suspend, so at this point I think the link is
+> still active and the spurious AER errors haven't happened yet and it
+> probably doesn't matter that we clear PCI_ERR_ROOT_STATUS *here*.
+>
+> My guess is that what really matters is that we disable the AER
+> interrupt so it doesn't happen during suspend, and then when we
+> resume, we probably want to clear out the status registers before
+> re-enabling the AER interrupt.
 
-The spec and the CM guide "imply" this behaviour as far as I can tell,
-so that the "sleep event" is done completely once started. I guess this
-can be interpreted differently too because it is not explicitly said
-there.
+Thanks for catching this. Clearing status registers does the trick for
+my cases here.
 
-Can you ask AMD HW folks if this is their interpretation too? Basically
-when we get "Sleep Ready" bit set for all the routers in the domain and
-turn off power (send PERST) there cannot be wake events until that is
-fully completed.
+>
+> In any event, I think we need to push this forward.  I'll post a v9
+> based on this but dropping the pci_ancestor_pr3_present(pdev) and
+> pm_suspend_via_firmware() tests so we do this unconditionally.
 
-There is typically a timeout mechanism in the BIOS side (part of the
-power off method) that waits for the PCIe links to enter L2 before it
-triggers PERST. We have seen an issue on our side that if this L2
-transition is not completed in time a wake event triggered but that was
-a BIOS issue.
+Thanks for the v9.
 
-> > > The issue is that it takes time for a device to enter D3cold and do a
-> > > conventional reset, and then more time for it to exit D3cold.
-> > > 
-> > > This appears not to be a new problem; previously there were very similar
-> > > reports from Ryzen XHCI controllers.  Quirks were added for those.
-> > > Furthermore; adding extra logging it's apparent that other PCI devices
-> > > in the system can take more than 10ms to recover from D3cold as well.
-> > 
-> > They can take anything up to 100ms after the link has trained.
-> 
-> Right; so currently there is nothing checking they really made it back to D0
-> after calling pci_power_up().  I feel like we've "mostly" gotten lucky.
+Kai-Heng
 
-We do have pci_bridge_wait_for_secondary_bus() there but I guess that's
-not called for integrated PCIe endpoints such as xHCI and the USB4 Host
-Interface. They too enter D3cold once power is turned off so I agree we
-might have gotten lucky here with the D3hot 10ms delay.
+>
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int aer_resume(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > > > +     struct pci_dev *pdev =3D rpc->rpd;
+> > > > +
+> > > > +     if (pci_ancestor_pr3_present(pdev) || pm_resume_via_firmware(=
+))
+> > > > +             aer_enable_rootport(rpc);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> > > >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > > > @@ -1561,6 +1584,8 @@ static struct pcie_port_service_driver aerdri=
+ver =3D {
+> > > >       .service        =3D PCIE_PORT_SERVICE_AER,
+> > > >
+> > > >       .probe          =3D aer_probe,
+> > > > +     .suspend        =3D aer_suspend,
+> > > > +     .resume         =3D aer_resume,
+> > > >       .remove         =3D aer_remove,
+> > > >  };
+> > > >
+> > > > --
+> > > > 2.34.1
+> > > >
 
