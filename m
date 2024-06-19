@@ -1,165 +1,96 @@
-Return-Path: <linux-pci+bounces-8975-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8976-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 599B390EA62
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 14:07:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F062190EABE
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 14:19:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D6791C216E7
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 12:07:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D66C1C240A6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 12:19:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B330B13D297;
-	Wed, 19 Jun 2024 12:07:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA93C140E47;
+	Wed, 19 Jun 2024 12:18:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bov0gpWJ"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cu+jPbtp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AEF20B34
-	for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2024 12:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9600213F43B;
+	Wed, 19 Jun 2024 12:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718798859; cv=none; b=hUX4jFbf+9PIbs+VUz4JRIt/wfW6R5wBtOA6trCNJYxVH47NmEZaFUfU2+p+L0W0b83Xr5Egw0HS87hlVPLGhhIcOWRoowoYJGiFtgHMJQucbkiLm3VK6AhTdSkMeqyqmKYY6GhFkwhlcaY6eOlNBylELnfCj70qhQacY1KSm3E=
+	t=1718799481; cv=none; b=aIWwHr8adbzv2TcJ/xP/vfDVOWEQtqSeipKaZ6cKLDhrk3F3xxgx9oNSZ87y8KDPb+y0AYCy9Vz9eKGwuCJgq94H1dyk9XRa6YrdUBqngw5iiqXOp+FimSIWiVI5EwRLrO4f+gJ7AylD9pc1smwNDCcaa8GbOAULyTiPiTW6EOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718798859; c=relaxed/simple;
-	bh=JIJyUxg1hHLWpaDrTaYtA6wRXVsS7EVlY5UzlQ+9j0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lB5i+18Yz5eSb77yQ5RUlJRFJHFKZVfFC/qiNWJOQS+xBDsd8FQIgnWtB5eLmOwX21wa5l22/4o5ZuOSlsLknhtuxNufGSoYQkC1kLsRuIxlE8T9nV1sENGzh5+BPJwW10zv4OnC/4U2LIu54aVS3+tmO0iSKud/g/1jW137vXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bov0gpWJ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718798858; x=1750334858;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JIJyUxg1hHLWpaDrTaYtA6wRXVsS7EVlY5UzlQ+9j0w=;
-  b=bov0gpWJ4yTqykNdP1QN1RM6XUJJrRwQzqVDCqlSpzf6zJUrrTGPrhNh
-   NAMmTbTHhPfkXVWDqNFc3nCk84jRvfCriNO7kcasoSvKHokbnnomyKkVQ
-   oaPMfB4GC9mUxKA2rS0sVe/KN/FWJMZPH34HVYdYfZZlCS9nqLG8hrl6U
-   7R4SKrHoaqhN3963NaCRxBOACdcn7gUS/NOHvH2N/cDCDPA8/J0xJt33h
-   0kjHrAf18XZJdkwSpuq2aa5G3n8bTziU2bP6jBLAovGQ5Z1qkggzcLrP6
-   Zt3PBhIVDbev3SlApet0LnqucGVm+5J4SZerOEaGt1o+WtNEVumhzmwq0
-   A==;
-X-CSE-ConnectionGUID: taSrTxEgTUOekkmg4GhRsA==
-X-CSE-MsgGUID: wvm/v1KfTTSc52rrkqBUnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15863503"
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="15863503"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 05:07:37 -0700
-X-CSE-ConnectionGUID: NMSa17feRLGJIhE2td29RQ==
-X-CSE-MsgGUID: HqkS+z8QQlGEqpoHKpH1vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="41739113"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.246.1.223])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 05:07:34 -0700
-Date: Wed, 19 Jun 2024 14:07:29 +0200
-From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Dan Williams <dan.j.williams@intel.com>, stuart hayes
- <stuart.w.hayes@gmail.com>, linux-pci@vger.kernel.org, Arnd Bergmann
- <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Ilpo Jarvinen
- <ilpo.jarvinen@linux.intel.com>, Keith Busch <kbusch@kernel.org>, Marek
- Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>, Randy Dunlap
- <rdunlap@infradead.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-Message-ID: <20240619140729.000020d1@linux.intel.com>
-In-Reply-To: <ZnKgCos9ZwVzcKuS@wunner.de>
-References: <20240528131940.16924-1-mariusz.tkaczyk@linux.intel.com>
-	<20240528131940.16924-3-mariusz.tkaczyk@linux.intel.com>
-	<05455f36-7027-4fd6-8af7-4fe8e483f25c@gmail.com>
-	<Zm1uCa_l98yFXYqf@wunner.de>
-	<20240618105653.0000796d@linux.intel.com>
-	<20ba8352-c1ce-45ba-8cb7-7ef4c02b3352@gmail.com>
-	<6671e0d13f20_31012949a@dwillia2-xfh.jf.intel.com.notmuch>
-	<ZnKgCos9ZwVzcKuS@wunner.de>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1718799481; c=relaxed/simple;
+	bh=TWnMaEvCvx0cR2o6SryzwIH73EH/ed79KtcNQbuis34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LD5hOIwkScN7b4TX7OIp4reO5S3MU6+UfJaMNz7EXanyPcnQrs83Wrat4QY/za0Frk2Hei0I9lNMpgWXWK7K2CwUsVsyS21eW5tfXatef431WqyhbZPGvYBdhdtej7QnxPtZYpjYtX9qTbTZgV5sBcyaT6zBc3VErpexrRu+KR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cu+jPbtp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E972C2BBFC;
+	Wed, 19 Jun 2024 12:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718799481;
+	bh=TWnMaEvCvx0cR2o6SryzwIH73EH/ed79KtcNQbuis34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cu+jPbtpHoi2meRDzKvODYh9ya5iH0Cxunf+1ho54i1DmRo1nvSbH86+B8G8013z9
+	 4//wy45SeW7fRqiLVNI5CKstKRTCVwQoIsCYYce0zTSjbg3mPW7wKkyckO7e7Y3fSN
+	 WKACsgYJDS5b/pbvYldLJmxcuCuRb3py+6SWFfKE=
+Date: Wed, 19 Jun 2024 14:17:58 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Danilo Krummrich <dakr@redhat.com>, rafael@kernel.org,
+	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+	wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2 00/10] Device / Driver and PCI Rust abstractions
+Message-ID: <2024061929-onstage-mongrel-0c92@gregkh>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240619120407.o7qh6jlld76j5luu@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240619120407.o7qh6jlld76j5luu@vireshk-i7>
 
-On Wed, 19 Jun 2024 11:08:26 +0200
-Lukas Wunner <lukas@wunner.de> wrote:
+On Wed, Jun 19, 2024 at 05:34:07PM +0530, Viresh Kumar wrote:
+> On 19-06-24, 01:39, Danilo Krummrich wrote:
+> > - move base device ID abstractions to a separate source file (Greg)
+> > - remove `DeviceRemoval` trait in favor of using a `Devres` callback to
+> >   unregister drivers
+> > - remove `device::Data`, we don't need this abstraction anymore now that we
+> >   `Devres` to revoke resources and registrations
+> 
+> Hi Danilo,
+> 
+> I am working on writing bindings for CPUFreq drivers [1] and was
+> looking to rebase over staging/rust-device, and I am not sure how to
+> proceed after device::Data is dropped now.
 
-> On Tue, Jun 18, 2024 at 12:32:33PM -0700, Dan Williams wrote:
-> > It strikes me that playing these initcall games is a losing battle and
-> > that this case would be best served by late loading of NPEM
-> > functionality.
-> > 
-> > Something similar is happening with PCI device security where the
-> > enabling depends on a third-party driver for a platform
-> > "security-manager" (TSM) to arrive.
-> > 
-> > The approach there is to make the functionality independent of
-> > device-discovery vs TSM driver load order. So, if the TSM driver is
-> > loaded early then pci_init_capabilities() can immediately enable the
-> > functionality. If the TSM driver is loaded *after* some devices have already
-> > gone through pci_init_capabilities(), then that event is responsible for
-> > doing for_each_pci_dev() to catch up on devices that missed their
-> > initial chance to turn on device security details.
-> > 
-> > So, for NPEM, the thought would be to implement the same rendezvous
-> > flow, i.e. s/TSM/NPEM/.  
-> 
-> A different viewpoint is that these issues are caused by the
-> "division of labor" between OS kernel and platform firmware.
-> 
-> In the NPEM case, Dell servers require the OS to call firmware
-> to change LEDs.  But before OS can do that, OS has to initialize
-> a certain other interface with firmware.
-> 
-> In the TSM case, Intel TDX Connect or AMD SEV-TIO require OS to
-> ask firmware to perform certain authentication steps with devices,
-> wherefore OS has to provide another interface to facilitate
-> communication with the device.
-> 
-> It's a complexity nightmare exacerbated by vendor-specific quirks.
-> 
-> Which is why I'm arguing that firmware functionality (e.g. TDX module)
-> should be constrained to the absolute minimum and the OS should be
-> in control of as much as possible.  That's the approach Apple has
-> been following as it's the only way to achieve their close interplay
-> between hardware and software without making things too complex.
-> 
-> It seems what's keeping this series from working on Dell servers is
-> primarily that the driver wants to read out LED status on probe.
-> So I've recommended to Mariusz off-list to do that lazily if possible,
-> i.e. on first read of a LED's status.
-> 
-> Then if users do try to read or write LED status on Dell servers without
-> loading IPMI modules first, they get to keep the pieces, sorry. :(
+As it should be dropped :)
 
-> 
-Initially, I thought that Dan suggestion is the best option but after taking
-into account use cases of the driver and times provided by Stuart - lazy
-loading wins.
+A struct device does not have a "data" pointer, it has specific other
+pointers to hold data in, but they better be accessed by their proper
+name if you want rust code to be reviewable by anyone.
 
-As a led application maintainer, I can accept fact that I cannot impose led for
-a while and errors will be reported, that is fine. I can left a hint why it is
-happening to user.
+Also, you shouldn't be accessing that field directly anyway, that's what
+the existing dev_set_drvdata/dev_get_drvdata() calls are for.  Just use
+them please.
 
-I would be a nightmare to get new LED controller after some time if LED
-interface appearance is delayed. It is much worse from user perspective because
-no device means that I have no information in userland. I cannot determine if
-something is going to be up soon so I will report disks as not supported -
-unnecessary maintenance hell. I may receive a lot of issues.
+thanks,
 
-Stuart, please give me some time to apply suggestions and introduce lazy
-approach. I'm working on it!
-
-Thanks,
-Mariusz
+greg k-h
 
