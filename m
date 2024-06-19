@@ -1,316 +1,154 @@
-Return-Path: <linux-pci+bounces-8949-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8950-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DA8590E01A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 01:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 665B190E2AE
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 07:29:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5BCBFB23177
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jun 2024 23:44:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7A06B21B04
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 05:29:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8750C1993B9;
-	Tue, 18 Jun 2024 23:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5434155897;
+	Wed, 19 Jun 2024 05:29:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DGwZJ4Yb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UvEwz7G/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED7F19939D
-	for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 23:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6974D55887;
+	Wed, 19 Jun 2024 05:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718754088; cv=none; b=txRp272UX5/fTGHy25QDxiqtp/Rtgaz7Z0vrKHw/p2wmzrlSI9znOAREFclTZrQYkprphoL+jGoGZhnBhfMuDNmazpOadRv3hrfd5OLvXbC8I/QrkCfwSGr0cKf7IRQlX4G2BiBah2/+FplpnpdKpMtxvfd6As8Pm6d/hVXPsMs=
+	t=1718774973; cv=none; b=jMN99mCi9NTphc0wnsghsR03jLMsf58tP4RcJuWG1q90w27RqLZ1W7F9WcrWyibTBTV0MWSN94HH0uIDmB78/x41C6iyW+L93/5pwqNtVwvLtMvoXgYhDscpjXTYCNbDKpnDCbPYLR9LtdmApLQWZBl3AHVCUsYBLCkD/nFohqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718754088; c=relaxed/simple;
-	bh=RCEMwYVvuUbZz+/rEeI8myzcrUIo6owjk7lRZAsrGQM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=thE5itYUOurLMXtov8GjPsdsVZvoPcLKOkus2EKprLZq1JyxBJbhlDw1r/D7SR21hf8viJawWIw7jKf6cqmD8il+7jKzmId7C0SP3W4I5HwaZPl9iNXiEhcJtrAOn+fx+7J2GzRBQjINlqmNUDxmTDtrb+1rlQ25tWcB91FMJl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DGwZJ4Yb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718754085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UVH4NPjG6WbuLQxLO9Ab399xq2yWE6YB8L0prZ4B/nk=;
-	b=DGwZJ4YbtYH9HOJ4/jek+UxxYAhSLg4AUFA61yu553L2BFT0ay0tkZFh0G2I+4fXj3TNzP
-	AZv4F7ptLOlU45QbdFztreZ81iuuz4uy1naky197xC3tvpR0kYik/NJIZlvNJlKzvj0KY+
-	MKoU2LfmnD5P0+GNJHkFiJSIqDnfou4=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-a1ZCXxNgOJa-Fk5kPJldtg-1; Tue, 18 Jun 2024 19:41:24 -0400
-X-MC-Unique: a1ZCXxNgOJa-Fk5kPJldtg-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2ec35a23e59so9652711fa.3
-        for <linux-pci@vger.kernel.org>; Tue, 18 Jun 2024 16:41:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718754083; x=1719358883;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UVH4NPjG6WbuLQxLO9Ab399xq2yWE6YB8L0prZ4B/nk=;
-        b=Q2m1k2kLjuiC+HKBSOqeJ1D5ShgS43wdmI4Kt0X+BxnJh7RCDeRduflRg+wjdKqu4f
-         sjQKk2Im52q63BQFpfPN2ZqN2iiRoCL81kNy4DeOoLh8D6OIp+J9uIBPQtnP9E+ZFk26
-         ntb64bX7+TLwUdNc3mnngzBVXZsIn6TYs0aU+N53f9fI5S2NA5anBDPuBE5a5gTp3SwO
-         TnLYArhVRXHXJlDoy6MerqKh6Ef0fxmCz7iylpkgiveXx9hRlK1i9CpvARNXSXvNavrM
-         KpPPIh/VR1SNqEzzIpBNuBgUlv+5DaJqLp5in0Sx0BXkETpa3xXEXwmdYj/P6nTOs2gJ
-         MF/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXpWNLG1gqB6PP/FaA2swOnxiEGu3L7Z7bCtjKJYj5KsHUM0J9Ji1UN71WRRgeNhv/e/tZ/Xq2U8Tuq51oIc4Hjo+ivtMwxy6j7
-X-Gm-Message-State: AOJu0YzCQkFJwZOmHIHdv9BHBcSkl7jLu6e6/oI/6mVlGe4BZl3kEM3p
-	86fEUCgPfVTHoXBT/53o9UUZ3IeQtDDkzfo88pAUbd6WQRKCVSlGrRzcQgrk5Szqcm4PAyF/UYA
-	MAmzDHGQQVSLIFRbb3C8vWZg5Ksbp6e127LzsL3arGrAiYwSLV34qT6YdaQ==
-X-Received: by 2002:a05:6512:2c9a:b0:52b:c15f:2613 with SMTP id 2adb3069b0e04-52ccaa62157mr550013e87.35.1718754083005;
-        Tue, 18 Jun 2024 16:41:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFoZ2RS3AlTl1V/f0PC+9/w7xUZieCfcwyUejXDg+egJxREfUqX3QPWZZGosxlVoeE0P/NjeQ==
-X-Received: by 2002:a05:6512:2c9a:b0:52b:c15f:2613 with SMTP id 2adb3069b0e04-52ccaa62157mr549994e87.35.1718754082636;
-        Tue, 18 Jun 2024 16:41:22 -0700 (PDT)
-Received: from cassiopeiae.. ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870e9145sm242850535e9.22.2024.06.18.16.41.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 16:41:22 -0700 (PDT)
-From: Danilo Krummrich <dakr@redhat.com>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	bhelgaas@google.com,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	wedsonaf@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	airlied@gmail.com,
-	fujita.tomonori@gmail.com,
-	lina@asahilina.net,
-	pstanner@redhat.com,
-	ajanulgu@redhat.com,
-	lyude@redhat.com,
-	robh@kernel.org,
-	daniel.almeida@collabora.com
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>
-Subject: [PATCH v2 10/10] rust: pci: implement I/O mappable `pci::Bar`
-Date: Wed, 19 Jun 2024 01:39:56 +0200
-Message-ID: <20240618234025.15036-11-dakr@redhat.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240618234025.15036-1-dakr@redhat.com>
-References: <20240618234025.15036-1-dakr@redhat.com>
+	s=arc-20240116; t=1718774973; c=relaxed/simple;
+	bh=ProNh6WDpQJsTCKWeK/xBB+DgqPo4qArcFsOCcPezwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tSYYEEvVm/OgCbSwU7H+v7GW1YeooXLjWrhIDVOxKzJOiJg5VIkLLMOFnv79dobYZKyIgcTRpC+9T4DpscdMloyNeAno0dUUeA1ZacLEUFQvAF6Fuq52RiR+Tmd/ujGZ3KuJghldw2/S9jB/x7Wr60vAb5ojCiQ6cohfTuO5lw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UvEwz7G/; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718774971; x=1750310971;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ProNh6WDpQJsTCKWeK/xBB+DgqPo4qArcFsOCcPezwM=;
+  b=UvEwz7G/0ZzxFAge9gmBj4C3LxCjmanrdUIp2EwrHCTyyAO7WFm1TNLL
+   8Zr3YXsus3j26122QllO3Aqm0MXiq66jO+5UPaxbbcq8x6z6r3Ve13bGZ
+   d/SuazcVK2mBhyZmOiCEVaqFlFgO24hyXcdO3NBcKlSqqdWJv02Kf96Qb
+   qD29x2+g9fXk6eDZieoj+hKMX1THZutvL2J3LXjlX93trv8A6BIerrHVR
+   gnEN439xbD5dQmm/gzMvhN7S1DVCWG9EkarINWDsG7kRAIfXjqrrL58ex
+   /5rYol0kt3QQogMFEboIUEgEZvJmWWXPocga3L0An0yhdDP4ArlYdTkY8
+   w==;
+X-CSE-ConnectionGUID: czHvkxWIQTm6Q4uEzgfyBw==
+X-CSE-MsgGUID: Rd0kxEWPQQWJL34wAosL/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="33235027"
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="33235027"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 22:29:30 -0700
+X-CSE-ConnectionGUID: B63f9b/RT0WXS1EvrdiIRg==
+X-CSE-MsgGUID: J9RujRSITdSp2fbnatoSKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="65031965"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 18 Jun 2024 22:29:28 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 705971A3; Wed, 19 Jun 2024 08:29:27 +0300 (EEST)
+Date: Wed, 19 Jun 2024 08:29:27 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Mathias Nyman <mathias.nyman@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+	Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>
+Subject: Re: [PATCH 0/4] Verify devices transition from D3cold to D0
+Message-ID: <20240619052927.GF1532424@black.fi.intel.com>
+References: <20240613054204.5850-1-mario.limonciello@amd.com>
+ <20240618131452.GC1532424@black.fi.intel.com>
+ <9f465ec4-32b9-4cd8-89de-a57a99880360@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <9f465ec4-32b9-4cd8-89de-a57a99880360@amd.com>
 
-Implement `pci::Bar`, `pci::Device::iomap_region` and
-`pci::Device::iomap_region_sized` to allow for I/O mappings of PCI BARs.
+On Tue, Jun 18, 2024 at 11:56:50AM -0500, Mario Limonciello wrote:
+> On 6/18/2024 08:14, Mika Westerberg wrote:
+> > Hi Mario,
+> > 
+> > On Thu, Jun 13, 2024 at 12:42:00AM -0500, Mario Limonciello wrote:
+> > > Gary has reported that when a dock is plugged into a system at the same
+> > > time the autosuspend delay has tripped that the USB4 stack malfunctions.
+> > > 
+> > > Messages show up like this:
+> > > 
+> > > ```
+> > > thunderbolt 0000:e5:00.6: ring_interrupt_active: interrupt for TX ring 0 is already enabled
+> > > ```
+> > > 
+> > > Furthermore the USB4 router is non-functional at this point.
+> > 
+> > Once the USB4 domain starts the sleep transition, it cannot be
+> > interrupted by anything so it always should go through full sleep
+> > transition and only then back from sleep.
+> > 
+> > > Those messages happen because the device is still in D3cold at the time
+> > > that the PCI core handed control back to the USB4 connection manager
+> > > (thunderbolt).
+> > 
+> > This is weird. Yes we should be getting the wake from the hotplug but
+> > that should happen only after the domain is fully in sleep (D3cold). The
+> > BIOS ACPI code is supposed to deal with this.
+> 
+> Is that from from experience or do you mean there is a spec behavior?
+> 
+> IE I'm wondering if we have different "expectations" from different
+> company's hardware designers.
 
-To ensure that a `pci::Bar`, and hence the I/O memory mapping, can't
-out-live the PCI device, the `pci::Bar` type is always embedded into a
-`Devres` container, such that the `pci::Bar` is revoked once the device
-is unbound and hence the I/O mapped memory is unmapped.
+The spec and the CM guide "imply" this behaviour as far as I can tell,
+so that the "sleep event" is done completely once started. I guess this
+can be interpreted differently too because it is not explicitly said
+there.
 
-A `pci::Bar` can be requested with (`pci::Device::iomap_region_sized`) or
-without (`pci::Device::iomap_region`) a const generic representing the
-minimal requested size of the I/O mapped memory region. In case of the
-latter only runtime checked I/O reads / writes are possible.
+Can you ask AMD HW folks if this is their interpretation too? Basically
+when we get "Sleep Ready" bit set for all the routers in the domain and
+turn off power (send PERST) there cannot be wake events until that is
+fully completed.
 
-Co-developed-by: Philipp Stanner <pstanner@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Signed-off-by: Danilo Krummrich <dakr@redhat.com>
----
- rust/kernel/pci.rs | 142 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 142 insertions(+)
+There is typically a timeout mechanism in the BIOS side (part of the
+power off method) that waits for the PCIe links to enter L2 before it
+triggers PERST. We have seen an issue on our side that if this L2
+transition is not completed in time a wake event triggered but that was
+a BIOS issue.
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index a8230474e9b8..2b61fb59d4a7 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -5,14 +5,18 @@
- //! C header: [`include/linux/pci.h`](srctree/include/linux/pci.h)
- 
- use crate::{
-+    alloc::flags::*,
-     bindings, container_of, device,
-     device_id::{IdTable, RawDeviceId},
-+    devres::Devres,
-     driver,
-     error::{to_result, Result},
-+    io::Io,
-     str::CStr,
-     types::{ARef, ForeignOwnable},
-     ThisModule,
- };
-+use core::ops::Deref;
- use kernel::prelude::*; // for pinned_drop
- 
- /// An adapter for the registration of PCI drivers.
-@@ -281,9 +285,114 @@ pub trait Driver {
- ///
- /// A PCI device is based on an always reference counted `device:Device` instance. Cloning a PCI
- /// device, hence, also increments the base device' reference count.
-+///
-+/// # Invariants
-+///
-+/// `Device` hold a valid reference of `ARef<device::Device>` whose underlying `struct device` is a
-+/// member of a `struct pci_dev`.
- #[derive(Clone)]
- pub struct Device(ARef<device::Device>);
- 
-+/// A PCI BAR to perform I/O-Operations on.
-+///
-+/// # Invariants
-+///
-+/// `Bar` always holds an `Io` inststance that holds a valid pointer to the start of the I/O memory
-+/// mapped PCI bar and its size.
-+pub struct Bar<const SIZE: usize = 0> {
-+    pdev: Device,
-+    io: Io<SIZE>,
-+    num: i32,
-+}
-+
-+impl<const SIZE: usize> Bar<SIZE> {
-+    fn new(pdev: Device, num: u32, name: &CStr) -> Result<Self> {
-+        let len = pdev.resource_len(num)?;
-+        if len == 0 {
-+            return Err(ENOMEM);
-+        }
-+
-+        // Convert to `i32`, since that's what all the C bindings use.
-+        let num = i32::try_from(num)?;
-+
-+        // SAFETY:
-+        // `pdev` is valid by the invariants of `Device`.
-+        // `num` is checked for validity by a previous call to `Device::resource_len`.
-+        // `name` is always valid.
-+        let ret = unsafe { bindings::pci_request_region(pdev.as_raw(), num, name.as_char_ptr()) };
-+        if ret != 0 {
-+            return Err(EBUSY);
-+        }
-+
-+        // SAFETY:
-+        // `pdev` is valid by the invariants of `Device`.
-+        // `num` is checked for validity by a previous call to `Device::resource_len`.
-+        // `name` is always valid.
-+        let ioptr: usize = unsafe { bindings::pci_iomap(pdev.as_raw(), num, 0) } as usize;
-+        if ioptr == 0 {
-+            // SAFETY:
-+            // `pdev` valid by the invariants of `Device`.
-+            // `num` is checked for validity by a previous call to `Device::resource_len`.
-+            unsafe { bindings::pci_release_region(pdev.as_raw(), num) };
-+            return Err(ENOMEM);
-+        }
-+
-+        // SAFETY: `ioptr` is guaranteed to be the start of a valid I/O mapped memory region of size
-+        // `len`.
-+        let io = match unsafe { Io::new(ioptr, len as usize) } {
-+            Ok(io) => io,
-+            Err(err) => {
-+                // SAFETY:
-+                // `pdev` is valid by the invariants of `Device`.
-+                // `ioptr` is guaranteed to be the start of a valid I/O mapped memory region.
-+                // `num` is checked for validity by a previous call to `Device::resource_len`.
-+                unsafe { Self::do_release(&pdev, ioptr, num) };
-+                return Err(err);
-+            }
-+        };
-+
-+        Ok(Bar { pdev, io, num })
-+    }
-+
-+    // SAFETY: `ioptr` must be a valid pointer to the memory mapped PCI bar number `num`.
-+    unsafe fn do_release(pdev: &Device, ioptr: usize, num: i32) {
-+        // SAFETY:
-+        // `pdev` is valid by the invariants of `Device`.
-+        // `ioptr` is valid by the safety requirements.
-+        // `num` is valid by the safety requirements.
-+        unsafe {
-+            bindings::pci_iounmap(pdev.as_raw(), ioptr as _);
-+            bindings::pci_release_region(pdev.as_raw(), num);
-+        }
-+    }
-+
-+    fn release(&self) {
-+        // SAFETY: Safe by the invariants of `Device` and `Bar`.
-+        unsafe { Self::do_release(&self.pdev, self.io.base_addr(), self.num) };
-+    }
-+}
-+
-+impl Bar {
-+    fn index_is_valid(index: u32) -> bool {
-+        // A `struct pci_dev` owns an array of resources with at most `PCI_NUM_RESOURCES` entries.
-+        index < bindings::PCI_NUM_RESOURCES
-+    }
-+}
-+
-+impl<const SIZE: usize> Drop for Bar<SIZE> {
-+    fn drop(&mut self) {
-+        self.release();
-+    }
-+}
-+
-+impl<const SIZE: usize> Deref for Bar<SIZE> {
-+    type Target = Io<SIZE>;
-+
-+    fn deref(&self) -> &Self::Target {
-+        &self.io
-+    }
-+}
-+
- impl Device {
-     /// Create a PCI Device instance from an existing `device::Device`.
-     ///
-@@ -316,6 +425,39 @@ pub fn set_master(&self) {
-         // SAFETY: Safe by the type invariants.
-         unsafe { bindings::pci_set_master(self.as_raw()) };
-     }
-+
-+    /// Returns the size of the given PCI bar resource.
-+    pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
-+        if !Bar::index_is_valid(bar) {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY: Safe by the type invariant.
-+        Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.try_into()?) })
-+    }
-+
-+    /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
-+    /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
-+    pub fn iomap_region_sized<const SIZE: usize>(
-+        &self,
-+        bar: u32,
-+        name: &CStr,
-+    ) -> Result<Devres<Bar<SIZE>>> {
-+        let bar = Bar::<SIZE>::new(self.clone(), bar, name)?;
-+        let devres = Devres::new(self.as_ref(), bar, GFP_KERNEL)?;
-+
-+        Ok(devres)
-+    }
-+
-+    /// Mapps an entire PCI-BAR after performing a region-request on it.
-+    pub fn iomap_region(&self, bar: u32, name: &CStr) -> Result<Devres<Bar>> {
-+        self.iomap_region_sized::<0>(bar, name)
-+    }
-+
-+    /// Returns a new `ARef` of the base `device::Device`.
-+    pub fn as_dev(&self) -> ARef<device::Device> {
-+        self.0.clone()
-+    }
- }
- 
- impl AsRef<device::Device> for Device {
--- 
-2.45.1
+> > > The issue is that it takes time for a device to enter D3cold and do a
+> > > conventional reset, and then more time for it to exit D3cold.
+> > > 
+> > > This appears not to be a new problem; previously there were very similar
+> > > reports from Ryzen XHCI controllers.  Quirks were added for those.
+> > > Furthermore; adding extra logging it's apparent that other PCI devices
+> > > in the system can take more than 10ms to recover from D3cold as well.
+> > 
+> > They can take anything up to 100ms after the link has trained.
+> 
+> Right; so currently there is nothing checking they really made it back to D0
+> after calling pci_power_up().  I feel like we've "mostly" gotten lucky.
 
+We do have pci_bridge_wait_for_secondary_bus() there but I guess that's
+not called for integrated PCIe endpoints such as xHCI and the USB4 Host
+Interface. They too enter D3cold once power is turned off so I agree we
+might have gotten lucky here with the D3hot 10ms delay.
 
