@@ -1,230 +1,171 @@
-Return-Path: <linux-pci+bounces-8970-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3466F90E828
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 12:16:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 117C090E8AD
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 12:53:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82672B21C3C
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 10:16:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD0DE1F22457
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 10:53:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1CCD13CA92;
-	Wed, 19 Jun 2024 10:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043F6132102;
+	Wed, 19 Jun 2024 10:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OIx7SEMx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3uSaA84"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9A012FB31;
-	Wed, 19 Jun 2024 10:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00C11304AD;
+	Wed, 19 Jun 2024 10:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718792139; cv=none; b=cMFYDZm9Ix8wDirw1engWCzPx0526CPxNq4El7mqnjY9SNk8c1E5gNF0w7jCqR58nWKpT9lqcM1VbG8hs0Chg74YO3FXPsBVZ5PprStqoRPkNT4H2hWgVYCSM1iRPDJ6hItueelu9DsSBrwkp5QUA+eWMLl4VNJtHM/bOZLcNh8=
+	t=1718794372; cv=none; b=ivElyXwrjuPLCingVIPlw7k5Ot61WMbw+bc/WCx+XSW1jw/IG80sszGoVt3np69oZJd8+1vT1oIx9MBFbJ2XrHyUhfD7szgbdgk2CRWNkanmhZULxoruVaCOiDOQpqTwv/fPm4x9BJiKY5/+nRsLsQKMPeHXs64hhnvDb8LA4Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718792139; c=relaxed/simple;
-	bh=lpcRI6pbJ32meL/VjTzpGOcoWSJTYnk21moIdV1Kpxk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pnh4OfQ8Rlh6dZsQKGS/kI0ffb9TGeXU92GwF077Uv4l3cXFhV7gnA6YoCLQOw4xnjUDOxFUZMmiOsy+0rLPr5ImO3gQWaJ+C5TJHNqQ3YOiNmvCgXiOCK1DgO/K8cx8yFdELC+3YdMFuJFsDeG2EpeKP+aFphGPRowvmC3R1H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OIx7SEMx; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 00408E0002;
-	Wed, 19 Jun 2024 10:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718792130;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M72jZYyV65DqxQX89BNQFEE+r0wyDWzohfJY2wWVXuo=;
-	b=OIx7SEMxKCHAkmzw1EABsspp6JWEbcRaiTqIri2fmYOm05adSXSwyAGoa/bml9ywzsN97p
-	1Mg9e346QVix8QMXQZnA47xzZUm6gyH7t5AivROVoHex09xnhQzX3RstV4G/934nIQaJ23
-	lBftlAX9KmWbat28HKz8staJSiDtmRjgln44ki/V2RD7OGgvO2GNB1g8IhWV12JKGz0o24
-	BZx75W0yRNfjwD4M/cNO5rfLId2Jbm5Y4xleG1gfQGNHdaq9StDlFa3aZoclOZg8M1x7Mq
-	NIDateKqsd9DaFJG5UkxI31zhUrYBJp4QfYeCpOqvAmEtIjq4DzE+btYr+GADg==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 19 Jun 2024 12:15:15 +0200
-Subject: [PATCH v7 7/7] PCI: j721e: Add suspend and resume support
+	s=arc-20240116; t=1718794372; c=relaxed/simple;
+	bh=x6rRWvFLspQevsB2WpDwXMeeTixJq93OzwM4BU6/jhU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iye1lPntt+VzWKk9p8rvPu2V5b/q4YQdgi8saMK0B/YGBXZB+lrgA6t+nDWlUXoveGF3LmqqRCTseNdyQyC5SfryK8F/c5Zu4ZdFA9GpaRM/t2d5sfXs6EvLKnwaszScUW04S5bjW5akA7YsegmfC+/wqX85rb9egWmW7NJ3T0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3uSaA84; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF89C4AF53;
+	Wed, 19 Jun 2024 10:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718794372;
+	bh=x6rRWvFLspQevsB2WpDwXMeeTixJq93OzwM4BU6/jhU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=u3uSaA84l5gVLsWmwxrOtJWM7MF0Vu51G0CMA1IUhuxDqK7DR2yRzGOKrg5XZfJyp
+	 gc1uZ0BFFh/wA26oymxl7R1SluIcT5SJ5t1Ag6XbCE5Xkm7ygActqF/NpHFUki9mlL
+	 JbLwuS31tzqYMGiroNPmsUu+jF8Vggo/jU2YswgPzfH0OUyJKD3lw6P18dgkFZl/0Y
+	 n5dvVHipC+NvVTsEaLa4yR6Z2kvQMtMEiStK1cuhhGDOlvFIk45u6nd3IWZNz0xwwZ
+	 4TMCjh7s4W1TjzGlDdladzFqHv7/kFYAVMXWKntAeSqEk/WhLSN/siYOf+znixzC+C
+	 tKhqZbYVCrBQQ==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-254939503baso511628fac.0;
+        Wed, 19 Jun 2024 03:52:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW+xyWfe5iJvRVgVyFqt4isgis/bx1GqvNReaBUFx3d2Bs/V5BKLMT0A/SQ4FC8CLEumQMio/zZ90pKkS1AOzWmnYTV9JEh8A5LOkvL1nHDzSgaiDGxtikfn8JvqiQ23io0MbJ9xYXx
+X-Gm-Message-State: AOJu0Yw5cC9ycK6vWlObCi9vyBw8HGojJgkOg5ifLzsyWlW2Fzkc2nl/
+	Vj9xnKJ9geX5rYLpu1QJ5DL79oawH5VCXXb+d/rzXM0gdStl9oc6EhPkeH/YHvcCb9loNsdaUFa
+	pKEpiZdkS8iBSDrn/g/m2Y5vwAKg=
+X-Google-Smtp-Source: AGHT+IHkfbPpplMOo0+AZF3Oi/SLUmBNejk3LQsh8tt80LEVbwbJ0RTdOmOkrR69Re/mAWO5+pPtyJBD56qHP10v7uQ=
+X-Received: by 2002:a05:6820:2210:b0:5ba:ead2:c742 with SMTP id
+ 006d021491bc7-5c1ad8a198cmr2995209eaf.0.1718794371598; Wed, 19 Jun 2024
+ 03:52:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v7-7-a2f9156da6c3@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
- thomas.petazzoni@bootlin.com, u-kumar1@ti.com, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20240618204946.1271042-1-helgaas@kernel.org>
+In-Reply-To: <20240618204946.1271042-1-helgaas@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 19 Jun 2024 12:52:39 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hZHnMbTLs3KK3ORQey=-u8SEm5H4X-eDSVzdk8s9Rn5A@mail.gmail.com>
+Message-ID: <CAJZ5v0hZHnMbTLs3KK3ORQey=-u8SEm5H4X-eDSVzdk8s9Rn5A@mail.gmail.com>
+Subject: Re: [PATCH v9 0/2] PCI: Disable AER & DPC on suspend
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	"Oliver O'Halloran" <oohall@gmail.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Christoph Hellwig <hch@lst.de>, Thomas Crider <gloriouseggroll@gmail.com>, 
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.com>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-nvme@lists.infradead.org, 
+	regressions@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+On Tue, Jun 18, 2024 at 10:49=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> This is an old series from Kai-Heng that I didn't handle soon enough.  Th=
+e
+> intent is to fix several suspend/resume issues:
+>
+>   - Spurious wakeup from s2idle
+>     (https://bugzilla.kernel.org/show_bug.cgi?id=3D216295)
+>
+>   - Steam Deck doesn't resume after suspend
+>     (https://bugzilla.kernel.org/show_bug.cgi?id=3D218090)
+>
+>   - Unexpected ACS error and DPC event when resuming after suspend
+>     (https://bugzilla.kernel.org/show_bug.cgi?id=3D209149)
+>
+> It seems that a glitch when the link is powered down during suspend cause=
+s
+> errors to be logged by AER.  When AER is enabled, this causes an AER
+> interrupt, and if that IRQ is shared with PME, it may cause a spurious
+> wakeup.
+>
+> Also, errors logged during link power-down and power-up seem to cause
+> unwanted error reporting during resume.
+>
+> This series disables AER interrupts, DPC triggering, and DPC interrupts
+> during suspend.  On resume, it clears AER and DPC error status before
+> re-enabling their interrupts.
+>
+> I added a couple cosmetic changes for the v9, but this is essentially all
+> Kai-Heng's work.  I'm just posting it as a v9 because I failed to act on
+> this earlier.
+>
+> Bjorn
+>
+> v9:
+>  - Drop pci_ancestor_pr3_present() and pm_suspend_via_firmware; do it
+>    unconditionally
+>  - Clear DPC status before re-enabling DPC interrupt
+>
+> v8: https://lore.kernel.org/r/20240416043225.1462548-1-kai.heng.feng@cano=
+nical.com
+>  - Wording.
+>  - Add more bug reports.
+>
+> v7:
+>  - Wording.
+>  - Disable AER completely (again) if power will be turned off
+>  - Disable DPC completely (again) if power will be turned off
+>
+> v6: https://lore.kernel.org/r/20230512000014.118942-1-kai.heng.feng@canon=
+ical.com
+>
+> v5: https://lore.kernel.org/r/20230511133610.99759-1-kai.heng.feng@canoni=
+cal.com
+>  - Wording.
+>
+> v4: https://lore.kernel.org/r/20230424055249.460381-1-kai.heng.feng@canon=
+ical.com
+> v3: https://lore.kernel.org/r/20230420125941.333675-1-kai.heng.feng@canon=
+ical.com
+>  - Correct subject.
+>
+> v2: https://lore.kernel.org/r/20230420015830.309845-1-kai.heng.feng@canon=
+ical.com
+>  - Only disable AER IRQ.
+>  - No more AER check on PME IRQ#.
+>  - Use AER helper.
+>  - Only disable DPC IRQ.
+>  - No more DPC check on PME IRQ#.
+>
+> v1: https://lore.kernel.org/r/20220727013255.269815-1-kai.heng.feng@canon=
+ical.com
+>
+> Kai-Heng Feng (2):
+>   PCI/AER: Disable AER service on suspend
+>   PCI/DPC: Disable DPC service on suspend
+>
+>  drivers/pci/pcie/aer.c | 18 +++++++++++++
+>  drivers/pci/pcie/dpc.c | 60 +++++++++++++++++++++++++++++++++---------
+>  2 files changed, 66 insertions(+), 12 deletions(-)
+>
+> --
 
-Add suspend and resume support. Only the rc mode is supported.
+Please feel free to add
 
-During the suspend stage PERST# is asserted, then deasserted during the
-resume stage.
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 98 ++++++++++++++++++++++++++++--
- 1 file changed, 92 insertions(+), 6 deletions(-)
+to both patches in the series.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 967a5bf38e26..96316a79ab8a 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -7,6 +7,8 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/container_of.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -22,6 +24,8 @@
- #include "../../pci.h"
- #include "pcie-cadence.h"
- 
-+#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-+
- #define ENABLE_REG_SYS_2	0x108
- #define STATUS_REG_SYS_2	0x508
- #define STATUS_CLR_REG_SYS_2	0x708
-@@ -531,12 +535,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		pcie->refclk = clk;
- 
- 		/*
--		 * "Power Sequencing and Reset Signal Timings" table in
--		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
--		 * indicates PERST# should be deasserted after minimum of 100us
--		 * once REFCLK is stable. The REFCLK to the connector in RC
--		 * mode is selected while enabling the PHY. So deassert PERST#
--		 * after 100 us.
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
- 		 */
- 		if (gpiod) {
- 			fsleep(PCIE_T_PERST_CLK_US);
-@@ -588,6 +592,87 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	pm_runtime_disable(dev);
- }
- 
-+static int j721e_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+		clk_disable_unprepare(pcie->refclk);
-+	}
-+
-+	cdns_pcie_disable_phy(pcie->cdns_pcie);
-+
-+	return 0;
-+}
-+
-+static int j721e_pcie_resume_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-+	int ret;
-+
-+	ret = j721e_pcie_ctrl_init(pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	j721e_pcie_config_link_irq(pcie);
-+
-+	/*
-+	 * This is not called explicitly in the probe, it is called by
-+	 * cdns_pcie_init_phy().
-+	 */
-+	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-+
-+		ret = clk_prepare_enable(pcie->refclk);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
-+		 */
-+		if (pcie->reset_gpio) {
-+			fsleep(PCIE_T_PERST_CLK_US);
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+		}
-+
-+		ret = cdns_pcie_host_link_setup(rc);
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+
-+		/*
-+		 * Reset internal status of BARs to force reinitialization in
-+		 * cdns_pcie_host_init().
-+		 */
-+		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-+			rc->avail_ib_bar[bar] = true;
-+
-+		ret = cdns_pcie_host_init(rc);
-+		if (ret) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
-+			       j721e_pcie_suspend_noirq,
-+			       j721e_pcie_resume_noirq);
-+
- static struct platform_driver j721e_pcie_driver = {
- 	.probe  = j721e_pcie_probe,
- 	.remove_new = j721e_pcie_remove,
-@@ -595,6 +680,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
-+		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
- 	},
- };
- builtin_platform_driver(j721e_pcie_driver);
-
--- 
-2.39.2
-
+Thanks!
 
