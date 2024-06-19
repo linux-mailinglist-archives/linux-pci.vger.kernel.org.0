@@ -1,179 +1,155 @@
-Return-Path: <linux-pci+bounces-8955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-8956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0A9190E4B5
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 09:39:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5184F90E4D7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 09:48:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3CA41F2182D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 07:39:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E2971C20BDB
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jun 2024 07:48:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B22770E3;
-	Wed, 19 Jun 2024 07:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRS2Hlz6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D8181BF50;
+	Wed, 19 Jun 2024 07:48:01 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68AD762D0;
-	Wed, 19 Jun 2024 07:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE32D208D0;
+	Wed, 19 Jun 2024 07:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718782782; cv=none; b=dtDzuO507JWB79wCAeQ+L7LgOXJjLDhItHxH/qO7jnuKncdTyImDVlgOrNtBr57vhm6r4Xrh5oT7HKHfsonDEBt/32vy3aaa9X57ZCcZCRreUFYIfk/M6YrZf+ly5XrgQrSapebbXbfmanzX2WQF76p84Emgznmwt40CRX8DggY=
+	t=1718783281; cv=none; b=qwpBve1N3AOHEGNP2PeAzCKQ1C9h/B2T4Co1xrvsON8LO68+jszFFoIGeaQmud9JNe8iCmggpKsSqlkpQL7rMrLdCHW3AQlWVQ7D4iFZ9zpe9bjV0mEYJ1HhMVNUdftE9TFJOcPHpZj9yp7s8ZF4b361kbqyWG3obFodqLfTItg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718782782; c=relaxed/simple;
-	bh=yd+Qbx4nPTQvmMaz4GGDPZxPEMS3R3XkEgFtDmeS1FY=;
+	s=arc-20240116; t=1718783281; c=relaxed/simple;
+	bh=0SzwLqthtkETXwopUS/Jo5+thBK5ziuiLb9+Qum/lOo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fo4SLqOgLO200VFBR3JDvfOK7H0lVyCQzH3aZpRqDHmCl/j0ad+rYjRNhrytCPLs6Z2Pwa6Q8lU7lIIT0mCw3GRcegM7s0s8uSZL3ycevJRsu7VrdoPP568yBMrJ1a3UViXoYANjzYKQ7mPDJWE0KUFUWhHTxqWQeY6sQ0uszvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRS2Hlz6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE15C32786;
-	Wed, 19 Jun 2024 07:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718782782;
-	bh=yd+Qbx4nPTQvmMaz4GGDPZxPEMS3R3XkEgFtDmeS1FY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MRS2Hlz6dUGUgEyGGQ9LXICgWCxYjyWYGQqiAqj+m/v5cAT93NNkFpmHiFZvnbDz7
-	 3vF2/nI5TPi3+3JnNRk1/p8nOQSUwmHqgY0rc1k9Xc6vg9efN/VdpXLEYUfIOCON1z
-	 4BA2SwxbrhiXw9cb65AqmaMp+C1zjzj1WqT4ni5P/vTCdw7STSVoNG2Upa0SG3NSPJ
-	 iF6hcB5b8LjYYNaZGdSxJirOfxzygHAY+QhnOdAmtcE1bYLwqniWRYcY5TrdP2m9Xz
-	 NIqJVSF2VPEI8p497O+j1l6Q/ChPLjjEMlNATf9L1PVbGYHd0sDRlraCtw/w84GDQa
-	 j6+3VxfA+wrGw==
-Date: Wed, 19 Jun 2024 13:09:29 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Shunsuke Mie <mie@igel.co.jp>, Manivannan Sadhasivam <mani@kernel.org>,
-	linux-pci@vger.kernel.org, virtualization@lists.linux.dev,
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com
-Subject: Re: [RFC] Legacy Virtio Driver with Device Has Limited Memory Access
-Message-ID: <20240619073929.GA8089@thinkpad>
-References: <20240520090809-mutt-send-email-mst@kernel.org>
- <20240614095033.GA59574@thinkpad>
- <CANXvt5ojosFbt60Gcfym1DX96W7SiX4X15dMGdSCVEPhUTpk=w@mail.gmail.com>
- <20240618054115-mutt-send-email-mst@kernel.org>
- <CANXvt5psZAkEOJtxO250n6vjZTK7as-F-4qr1Rc3awZsmqWCpQ@mail.gmail.com>
- <20240618061705-mutt-send-email-mst@kernel.org>
- <CANXvt5pDjvVwFLS3p0a4hx1-MUJGsKHnpEsjejYUcmvTeKyFmg@mail.gmail.com>
- <20240618064231-mutt-send-email-mst@kernel.org>
- <CANXvt5pbdsSMc9C-nV0MiOAJPVyxXKu5otwLp2yopqBdNLS26A@mail.gmail.com>
- <20240619032703-mutt-send-email-mst@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fcZX7BlTbK/vKVXvyFeD2hQU+5wUJgsbRjoh8fBfYfJHh6EwKj4VK6PJXM5gvHzmTubchMoLUF07UTyEgzqgH1BJW3s//oD+5LKoEF69zuwS/hQUa6TM8PPEtCe3JWzcWEHVo9snv03QyE0hLg6r08WELhOnMh2TiccyAsjol2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 2925B3000C769;
+	Wed, 19 Jun 2024 09:47:51 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 15F92393EF2; Wed, 19 Jun 2024 09:47:51 +0200 (CEST)
+Date: Wed, 19 Jun 2024 09:47:51 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Bowman Terry <terry.bowman@amd.com>,
+	Hagan Billy <billy.hagan@amd.com>,
+	Simon Guinot <simon.guinot@seagate.com>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2] PCI: pciehp: Clear LBMS on hot-remove to prevent link
+ speed reduction
+Message-ID: <ZnKNJxJwdtWRphgX@wunner.de>
+References: <20240617231841.GA1232294@bhelgaas>
+ <27be113e-3e33-b969-c1e3-c5e82d1b8b7f@amd.com>
+ <cf5f3b03-4c70-7a35-056e-5d94fc26f697@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240619032703-mutt-send-email-mst@kernel.org>
+In-Reply-To: <cf5f3b03-4c70-7a35-056e-5d94fc26f697@amd.com>
 
-On Wed, Jun 19, 2024 at 03:32:41AM -0400, Michael S. Tsirkin wrote:
-> On Tue, Jun 18, 2024 at 09:51:41PM +0900, Shunsuke Mie wrote:
-> > 2024年6月18日(火) 19:47 Michael S. Tsirkin <mst@redhat.com>:
-> > >
-> > > On Tue, Jun 18, 2024 at 07:40:34PM +0900, Shunsuke Mie wrote:
-> > > > 2024年6月18日(火) 19:33 Michael S. Tsirkin <mst@redhat.com>:
-> > > > >
-> > > > > On Tue, Jun 18, 2024 at 07:15:47PM +0900, Shunsuke Mie wrote:
-> > > > > > Thank you for your response.
-> > > > > >
-> > > > > > 2024年6月18日(火) 18:47 Michael S. Tsirkin <mst@redhat.com>:
-> > > > > > >
-> > > > > > > On Tue, Jun 18, 2024 at 08:41:09AM +0900, Shunsuke Mie wrote:
-> > > > > > > > Let's clarify the situation.
-> > > > > > > >
-> > > > > > > > The Virtio device and driver are not working properly due to a
-> > > > > > > > combination of the following reasons:
-> > > > > > > >
-> > > > > > > > 1. Regarding VIRTIO_F_ACCESS_PLATFORM:
-> > > > > > > > - The modern spec includes VIRTIO_F_ACCESS_PLATFORM, which allows
-> > > > > > > > Physical DMAC to be used.
-> > > > > > > > - This feature is not available in the legacy spec.
-> > > > > > >
-> > > > > > > ... because legacy drivers don't set it
-> > > > > > >
-> > > > > > > > 2. Regarding Virtio PCIe Capability:
-> > > > > > > > - The modern spec requires Virtio PCIe Capability.
-> > > > > > >
-> > > > > > > It's a PCI capability actually. People have been asking
-> > > > > > > about option to make it a pcie extended capability,
-> > > > > > > but no one did the spec, qemu and driver work, yet.
-> > > > > > >
-> > > > > > > > - In some environments, Virtio PCIe Capability cannot be provided.
-> > > > > > >
-> > > > > > > why not?
-> > > > > > PCIe Endpoint Controller chips are available from several vendors and allow
-> > > > > > software to describe the behavior of PCIe Endpoint functions. However, they
-> > > > > > offer only limited functionality. Specifically, while PCIe bus communication is
-> > > > > > programmable, PCIe Capabilities are fixed and cannot be made to show as
-> > > > > > virtio's.
-> > > > >
-> > > > > Okay. So where could these structures live, if not in pci config?
-> > > > What does "these structures" refer to? PCIe Capabilities? virtio configs?
-> > >
-> > > Virtio uses a bunch of read only structures that look like this:
-> > >
-> > > struct virtio_pci_cap {
-> > >
-> > >         ..... [skipped, specific to pci config caps] ...
-> > >
-> > >         u8 cfg_type;    /* Identifies the structure. */
-> > >         u8 bar;         /* Where to find it. */
-> > >         u8 id;          /* Multiple capabilities of the same type */
-> > >         u8 padding[2];  /* Pad to full dword. */
-> > >         le32 offset;    /* Offset within bar. */
-> > >         le32 length;    /* Length of the structure, in bytes. */
-> > > };
-> > >
-> > >
-> > > The driver uses that to locate parts of device interface it
-> > > later uses.
-> > >
-> > >
-> > > Per spec, they are currently in pci config, you are saying some devices
-> > > can't have this data in pci config - is that right? Where yes?
-> > I understood. The configuration structure is in the space that is
-> > indicated by BAR0.
-> > Follows the instructions in the spec:
-> > ```
-> > 4.1.4.10 Legacy Interfaces: A Note on PCI Device Layout
-> > Transitional devices MUST present part of configuration registers in a
-> > legacy configuration structure in BAR0 in the first I/O region of the
-> > PCI device, as documented below.
-> > ...
-> > ```
+On Tue, Jun 18, 2024 at 02:23:21PM -0700, Smita Koralahalli wrote:
+> On 6/18/2024 11:51 AM, Smita Koralahalli wrote:
+> > > > > But IIUC LBMS is set by hardware but never cleared by hardware, so if
+> > > > > we remove a device and power off the slot, it doesn't seem like LBMS
+> > > > > could be telling us anything useful (what could we do in response to
+> > > > > LBMS when the slot is empty?), so it makes sense to me to clear it.
+> > > > > 
+> > > > > It seems like pciehp_unconfigure_device() does sort of PCI core and
+> > > > > driver-related things and possibly could be something shared by all
+> > > > > hotplug drivers, while remove_board() does things more specific to the
+> > > > > hotplug model (pciehp, shpchp, etc).
+> > > > > 
+> > > > > From that perspective, clearing LBMS might fit better in
+> > > > > remove_board(). In that case, I wonder whether it should be done
+> > > > > after turning off slot power? This patch clears is *before* turning
+> > > > > off the power, so I wonder if hardware could possibly set it again
+> > > > > before the poweroff?
 > 
-> No, and it's best everyone stopped talking about legacy like we
-> are going to add new features to it.
+> While clearing LBMS in remove_board() here:
 > 
-> The configuration structure is in the space that is
-> indicated by the vendor specific structure, which is currently
-> in pci config space.
+> if (POWER_CTRL(ctrl)) {
+> 	pciehp_power_off_slot(ctrl);
+> +	pcie_capability_write_word(ctrl->pcie->port, PCI_EXP_LNKSTA,
+> 				   PCI_EXP_LNKSTA_LBMS);
 > 
-> If use of a vendor specific structure in pci config space is
-> problematic, we can try to fix that by extending the virtio spec.
+> 	/*
+> 	 * After turning power off, we must wait for at least 1 second
+> 	 * before taking any action that relies on power having been
+> 	 * removed from the slot/adapter.
+> 	 */
+> 	msleep(1000);
 > 
+> 	/* Ignore link or presence changes caused by power off */
+> 	atomic_and(~(PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_PDC),
+> 		   &ctrl->pending_events);
+> }
+> 
+> This can happen too right? I.e Just after the slot poweroff and before LBMS
+> clearing the PDC/PDSC could be fired. Then
+> pciehp_handle_presence_or_link_change() would hit case "OFF_STATE" and
+> proceed with pciehp_enable_slot() ....pcie_failed_link_retrain() and
+> ultimately link speed drops..
+> 
+> So, I added clearing just before turning off the slot.. Let me know if I'm
+> thinking it right.
 
-It is indeed problematic as the device vendors usually use those capability
-registers themselves and wouldn't allow users to configure them.
+This was added by 3943af9d01e9 ("PCI: pciehp: Ignore Link State Changes
+after powering off a slot").  You can try reproducing it by writing "0"
+to the slot's "power" file in sysfs, but your hardware needs to support
+slot power.
 
-So if the spec is ammended to support other way of finding the virtio config
-structures, then it would really unblock us from supporting modern virtio
-devices.
+Basically the idea is that after waiting for 1 sec, chances are very low
+that any DLLSC or PDSC events caused by removing slot power may still
+occur.
 
-- Mani
+Arguably the same applies to LBMS changes, so I'd recommend to likewise
+clear stale LBMS after the msleep(1000).
 
-> 
-> > >
-> > > > > --
-> > > > > MST
-> > > > >
-> > >
-> 
+pciehp_ctrl.c only contains the state machine and higher-level logic of
+the hotplug controller and all the actual register accesses are in helpers
+in pciehp_hpc.c.  So if you want to do it picture-perfectly, add a helper
+in pciehp_hpc.c to clear LBMS and call that from remove_board().
 
--- 
-மணிவண்ணன் சதாசிவம்
+That all being said, I'm wondering how this plays together with Ilpo's
+bandwidth control driver?
+
+https://lore.kernel.org/all/20240516093222.1684-1-ilpo.jarvinen@linux.intel.com/
+
+IIUC, the bandwidth control driver will be in charge of handling LBMS
+changes.  So clearing LBMS behind the bandwidth control driver's back
+might be problematic.  Ilpo?
+
+Also, since you've confirmed that this issue is fallout from
+a89c82249c37 ("PCI: Work around PCIe link training failures"),
+I'm wondering if the logic introduced by that commit can be
+changed so that the quirk is applied more narrowly, i.e. *not*
+applied to unaffected hardware, such as AMD's hotplug ports.
+That would avoid the need to undo the effect of the quirk and
+work around the downtraining you're seeing.
+
+Maciej, any ideas?
+
+Thanks,
+
+Lukas
 
