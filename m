@@ -1,160 +1,167 @@
-Return-Path: <linux-pci+bounces-9005-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9006-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B909B90FBAD
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 05:28:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E50D90FCAC
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 08:29:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A7A31F226C7
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 03:28:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2F77285FCC
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 06:29:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C061D556;
-	Thu, 20 Jun 2024 03:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C14532B9B8;
+	Thu, 20 Jun 2024 06:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9gqrc/A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GohHJSct"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1BA1CD2F;
-	Thu, 20 Jun 2024 03:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272C81CFA9
+	for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2024 06:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718854097; cv=none; b=QYIYAzFd43ChTcdUhKec2/c8kjRHadx7djyywsH68BufuI/k8ci7CwqYoChMvwkj64us/+5Z9/QaES1lxdDFJzKzCcJyZasYoQsgnXUDA76yDN6+892SqtNHhEHBiMNBnTqSKhGoIrtQv0+ea+iIlW1ZvEKeANOckvanT+ZaAmw=
+	t=1718864949; cv=none; b=pWwlTebBl6hSSZYaJGCwm3wEOa39VoLhG0+DQgCBionbB2FB1Op2kOl6mIGaoB9d2rybz5PWGNDjdYibAtpzPqWHqB6pjsVxjqDiIVt0q1rQ6vZGE41ngwrBsEZhSP1G+qYiOAMbvk5byv30WmrjDqS5wjeBYLzgF0w75iSsAb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718854097; c=relaxed/simple;
-	bh=vp8t5n8rFVShQT8gyp2X5h16GPqlHOy09DNcnwnr8sk=;
+	s=arc-20240116; t=1718864949; c=relaxed/simple;
+	bh=qSZ4TkMvLzHHdnQyRb7cUKqsQR3bINeDvTqHFWQKxRU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t+S7xcfoZiJYcBX6g4N8kt/0XhGTAU0BWFjEz9c1dCqjx/87GXfPT/vmCh8rJu5OCxC8NuDwxoTq+TBqUGEl6zuEyk7rxjnRR7+wRBpMyXrQ5VH1WmpiUjFjWHxnd6sj0bWhFlAC76q9nNLJ3L5V8q1Nm1E7LTxw7+VBSrfZL3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9gqrc/A; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718854095; x=1750390095;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vp8t5n8rFVShQT8gyp2X5h16GPqlHOy09DNcnwnr8sk=;
-  b=l9gqrc/AGuoz1jLsBKka/D0953eJEMoiIc3WFK8Npy9i2ZyDgu6Kio2G
-   Rd2k+g8WpnGwOwIXvJuhZ3aIRT3KSTLKbkotbVoknj3YA5do8ECIkQ3PW
-   op6OcYiLswVM1YJebu4w2Oxnl6Bwq3ACkcViarVXN8QnvolIoJCJq0Ypi
-   FGf6r7y03FsSrcVycR+zV3w3vkfD2by2menrgjKl1+MZH6Lkn7To8Le1b
-   G36wOQeEtiv35xFMvQpl0eqthy81mAL2lnqBOEOd47eXCcMxt6eR46oTW
-   QLvSpZ6Q0MDd6ncEQIdeDtnKh5CS6/dfQDTQDlkwbplf+H439CdoTKJk7
-   A==;
-X-CSE-ConnectionGUID: XtNNUu1rRCiOEUFMMBh8/g==
-X-CSE-MsgGUID: RK+NR1c3SSmdMoYwXPOsvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="12156132"
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="12156132"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 20:28:15 -0700
-X-CSE-ConnectionGUID: 1G7Zoa7hRYuQ+/ydfUKMQQ==
-X-CSE-MsgGUID: BUFuuXQdR+2iQYQx8Tq75g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,251,1712646000"; 
-   d="scan'208";a="41966318"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 19 Jun 2024 20:28:12 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sK8T4-0007Gw-08;
-	Thu, 20 Jun 2024 03:28:10 +0000
-Date: Thu, 20 Jun 2024 11:27:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Anand Moon <linux.amoon@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=JlpcmZIY1rpuVOxznKMyxVj0nK/y5NwbZ88Ce8dseE1QgJViRuzqTe9S0uEQWis9YlG46BX3fIKA0VVD7FJ5JO5DTnl3QpVyxS8UDDqCHhsUjuSP1c6Dx0B+AKSA+9Q2tnA8i03iyd0HpR6u9BNMrrJQmOWQCkghMckIK4m1Jtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GohHJSct; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-6e40d54e4a3so415182a12.0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Jun 2024 23:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718864947; x=1719469747; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OrOguSW1xSBikrPxVle5u+auw5xGxdyhVPIRfQxuybU=;
+        b=GohHJSct1Y2UIVJmT5O11duROIvLm6Ay4YSGCLJwkbMQQFqu4eWJLOi6C/Z41QKClo
+         aIHhIhfUM3nKdjSIozPifac2FrFZzfmxvLXb61DSfOCXS4qKo4a9SD+HEy5Q4XRpkXSd
+         o9B/jXRaBQwQfbIUTxajLXxlJntW0c7363GVmuvMEotHnooXEglsti0/Vhgwlu7Ln6nW
+         GLIZRe5Sqr+osYky406fB14RfSsWjRQr49E8y0yvQF9UfTzxoHVEx0REK9ROqN492tw/
+         5ipUQEP3/tmpGfB3BMQbYHtCJc2E0dEE7QKwDnBFyADpFvuKV5xpn/d41w4F7pCvJNOe
+         zdDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718864947; x=1719469747;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OrOguSW1xSBikrPxVle5u+auw5xGxdyhVPIRfQxuybU=;
+        b=doAawelxSm18aKAUwjZ6GTkPJbJp/oo58FzJpR18sTr+8fQrEe87beKPYNRGyMIX8i
+         Q6Ch/874aGsQ+Uygf35jFmtr+4UHhxod708CAmRpK89PdglKlCKJOxAX6uKovNRkoI+1
+         hiUNvP4FJYi4t6f6nDezCvHYPltKmPmpGQjWtDj7nPhyDkTjdjvFdGXQdLzztPQt5bjZ
+         9MzmtbGB97RFMaULxehKPV9FZGnpTDqp95vl/4LiNevSeAQAn0mflxUhhn8X30f8aRnk
+         5alWlXUm2DbB71dL4bkACF8jF7D6b9nJMXTyPDZuGGEjx7ZOL/moS7EXcCQN0h51nWgg
+         koag==
+X-Forwarded-Encrypted: i=1; AJvYcCUwEThQIt1Mhb1RA2R+dsGSQdIn2Z1uXoUXyMcjCQ0lzMwIP/qGuPDaistlqziJEjra0i1wp8NxMN8dW37NfaIbrcgrQtoKAx9b
+X-Gm-Message-State: AOJu0YwWXAPUou+UI2er/at0rxxlVlAla7HA5KM0XjP1iTqNipKPBY3n
+	hAUKVlqvf0dr6ZxlB88LJI1Kq3Z+RUp7KthUYGtyIcg2/Ogsns7eLE/DqnKy8g==
+X-Google-Smtp-Source: AGHT+IGhBLmT7J5yTVsjH+i1UCXjrqy1tsA6XXF04aIkSu369kHLPXXzz3maS23iBc759WeKfIKRQg==
+X-Received: by 2002:a17:90a:2f43:b0:2c7:bade:25be with SMTP id 98e67ed59e1d1-2c7bade2676mr3877809a91.14.1718864947153;
+        Wed, 19 Jun 2024 23:29:07 -0700 (PDT)
+Received: from thinkpad ([120.60.54.81])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e53ea57fsm837788a91.14.2024.06.19.23.29.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jun 2024 23:29:06 -0700 (PDT)
+Date: Thu, 20 Jun 2024 11:58:53 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, Anand Moon <linux.amoon@gmail.com>,
-	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] PCI: rockchip: Simplify reset control handling by
- using reset_control_bulk*() function
-Message-ID: <202406201156.PPCyjK8r-lkp@intel.com>
-References: <20240618164133.223194-3-linux.amoon@gmail.com>
+	Bjorn Helgaas <bhelgaas@google.com>, Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx
+ domain
+Message-ID: <20240620062853.GA15813@thinkpad>
+References: <20240619142829.2804-1-kabel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240618164133.223194-3-linux.amoon@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240619142829.2804-1-kabel@kernel.org>
 
-Hi Anand,
++ Marc
 
-kernel test robot noticed the following build errors:
+On Wed, Jun 19, 2024 at 04:28:29PM +0200, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
+> 
+> Documentation for irq_domain_remove() says that all mapping within the
+> domain must be disposed prior to domain remove.
+> 
+> Currently INTx irqs are not disposed in pci-mvebu.c device unbind callback
+> which cause that kernel crashes after unloading driver and trying to read
+> /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
+> 
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.10-rc4 next-20240619]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks a lot for respinning this patch. It is indeed fixing a real problem since
+this driver can be unloaded runtime.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Anand-Moon/PCI-rockchip-Simplify-reset-control-handling-by-using-reset_control_bulk-function/20240619-014145
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240618164133.223194-3-linux.amoon%40gmail.com
-patch subject: [PATCH v1 2/3] PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function
-config: arc-randconfig-001-20240620 (https://download.01.org/0day-ci/archive/20240620/202406201156.PPCyjK8r-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240620/202406201156.PPCyjK8r-lkp@intel.com/reproduce)
+It is always a debate on whether an irqchip controller should be allowed to be
+removed runtime or not, but I hope Marc will provide some inputs here.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406201156.PPCyjK8r-lkp@intel.com/
+> Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
+> Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Reviewed-by: Marek Behún <kabel@kernel.org>
+> [ refactored a little ]
+> Signed-off-by: Marek Behún <kabel@kernel.org>
 
-All errors (new ones prefixed by >>):
+But this patch looks good to me. I hope that we should be able to use this patch
+as a precedent for other drivers as well.
 
-   In file included from drivers/pci/controller/pcie-rockchip-ep.c:20:
->> drivers/pci/controller/pcie-rockchip.h:319:41: error: array type has incomplete element type 'struct reset_control_bulk_data'
-     319 |         struct  reset_control_bulk_data pm_rsts[ROCKCHIP_NUM_PM_RSTS];
-         |                                         ^~~~~~~
-   drivers/pci/controller/pcie-rockchip.h:320:41: error: array type has incomplete element type 'struct reset_control_bulk_data'
-     320 |         struct  reset_control_bulk_data core_rsts[ROCKCHIP_NUM_CORE_RSTS];
-         |                                         ^~~~~~~~~
-   drivers/pci/controller/pcie-rockchip.h:321:31: error: array type has incomplete element type 'struct clk_bulk_data'
-     321 |         struct  clk_bulk_data clks[ROCKCHIP_NUM_CLKS];
-         |                               ^~~~
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+- Mani
 
-vim +319 drivers/pci/controller/pcie-rockchip.h
-
-   313	
-   314	struct rockchip_pcie {
-   315		void	__iomem *reg_base;		/* DT axi-base */
-   316		void	__iomem *apb_base;		/* DT apb-base */
-   317		bool    legacy_phy;
-   318		struct  phy *phys[MAX_LANE_NUM];
- > 319		struct  reset_control_bulk_data pm_rsts[ROCKCHIP_NUM_PM_RSTS];
-   320		struct  reset_control_bulk_data core_rsts[ROCKCHIP_NUM_CORE_RSTS];
-   321		struct  clk_bulk_data clks[ROCKCHIP_NUM_CLKS];
-   322		struct	regulator *vpcie12v; /* 12V power supply */
-   323		struct	regulator *vpcie3v3; /* 3.3V power supply */
-   324		struct	regulator *vpcie1v8; /* 1.8V power supply */
-   325		struct	regulator *vpcie0v9; /* 0.9V power supply */
-   326		struct	gpio_desc *ep_gpio;
-   327		u32	lanes;
-   328		u8      lanes_map;
-   329		int	link_gen;
-   330		struct	device *dev;
-   331		struct	irq_domain *irq_domain;
-   332		int     offset;
-   333		void    __iomem *msg_region;
-   334		phys_addr_t msg_bus_addr;
-   335		bool is_rc;
-   336		struct resource *mem_res;
-   337	};
-   338	
+> ---
+> This was discussed back in 2022
+>   https://lore.kernel.org/linux-arm-kernel/20220709161858.15031-1-pali@kernel.org/
+> IMO Pali gave good arguments about why it should be applied, and Lorenzo
+> agreed.
+> 
+> Can we get this applied?
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 29fe09c99e7d..91a02b23aeb1 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -1683,8 +1683,15 @@ static void mvebu_pcie_remove(struct platform_device *pdev)
+>  			irq_set_chained_handler_and_data(irq, NULL, NULL);
+>  
+>  		/* Remove IRQ domains. */
+> -		if (port->intx_irq_domain)
+> +		if (port->intx_irq_domain) {
+> +			for (int j = 0; j < PCI_NUM_INTX; j++) {
+> +				int virq = irq_find_mapping(port->intx_irq_domain, j);
+> +
+> +				if (virq > 0)
+> +					irq_dispose_mapping(virq);
+> +			}
+>  			irq_domain_remove(port->intx_irq_domain);
+> +		}
+>  
+>  		/* Free config space for emulated root bridge. */
+>  		pci_bridge_emul_cleanup(&port->bridge);
+> -- 
+> 2.44.2
+> 
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
