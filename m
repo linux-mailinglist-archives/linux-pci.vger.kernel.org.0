@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-9024-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9025-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36FB59108AE
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 16:43:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF2E3910909
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 16:53:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6802F1C21379
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 14:43:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 694831F244C6
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 14:53:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51EC81AE09D;
-	Thu, 20 Jun 2024 14:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EF601AED20;
+	Thu, 20 Jun 2024 14:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="C4ODGsL/"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0jRFSQUo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461A1AE08E;
-	Thu, 20 Jun 2024 14:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031D81AE0B3;
+	Thu, 20 Jun 2024 14:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718894582; cv=none; b=BBYAEyDXgqdy/THhyV+khsL6UICt7aH9IqTn4q8G3jL5rwC+oR4ztOxJ5twdk7xNHQdA6PHxPG2RtPaQMjKYr369onJime7VhpEkdGSFU7ehFzwS73OZTb0YBWicHDny6yumLhNFmYnYf/wX1OA+5VsNL5elN+fkgpGc+gfNEiM=
+	t=1718895204; cv=none; b=ajoIfP3COIkmXldbLo6s+ctVFMXgZtPxTw7OFl6r7HCOG2EgoXij1j5htDDzTpYfHS2T5cEMHKwnlIMPggAaqgue/yBCbwueg7Y62iAgcL+xjwi7KJAh6Qk5i9dMOEX1vdN/+hgOdSEmD73INzcc7Lo8jgzX2nq97H863pZG/5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718894582; c=relaxed/simple;
-	bh=LB3eFZ3LD9tM/98Tylvu0XN9sQddU39XYStL0neHiwM=;
+	s=arc-20240116; t=1718895204; c=relaxed/simple;
+	bh=avc6OvD0XCRHJMx1PZPh4isAaMtN3R3Nbi8f+bLT0vw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fo8SB5TOZ7w3XZIatCleTh3jatOXxypXxsMlR+Pcv5Q1Jdz24+k+yeVA4Xi01rjcZimcTv+eU544qkXseNywjI+SvLMkBJcmD+EuBN4Nwzr8X3ajLBIsc/pW5mWSV+twntduLPZsBTbS7SeNj5kMtC/1XWPfhgJq2VcrmuMJEkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=C4ODGsL/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460B6C32786;
-	Thu, 20 Jun 2024 14:43:01 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ScxutoJ+M3WhALDImS7kjmgMjZaJ1kRNifeW+rYE7XCem8KLyt32AkeNvWFZDMof6c9Iy/c0ThfIQOg9bjxgT4pD/tP+dZQIFPgiLAv1mA0R1uj5O7qdD4glM+WpJwv5Qdk2+Yy3m/gg1U32y60zHRfZGq7RaktyPXhofyRce/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0jRFSQUo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF21C2BD10;
+	Thu, 20 Jun 2024 14:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718894581;
-	bh=LB3eFZ3LD9tM/98Tylvu0XN9sQddU39XYStL0neHiwM=;
+	s=korg; t=1718895203;
+	bh=avc6OvD0XCRHJMx1PZPh4isAaMtN3R3Nbi8f+bLT0vw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C4ODGsL/Ef11xCq326gF8VzwNYux96j10sxORRX03a7v0QYRyFY9D7GVy/vHiNCNG
-	 lVjILevGVjfbLKQMSK8iMFUE+K5h5ioXx4S8rnCZMoYY1lGSfRuHS6/j5mgCLbCXwo
-	 bEtPuqSnV9/u16G4yr9PUjaFdHbe0UbdQrFvXHvU=
-Date: Thu, 20 Jun 2024 16:42:59 +0200
+	b=0jRFSQUo2GH5KBK6nnRNsJ9n69tAf0RM3ZBbZ+QAWvYJOYe8HF4TJ4Vj31K3ipY4Y
+	 U77I0HEdeLHXNN7CiZ4CoyrdO+1J9eK8Tx+vkqnI+mCjK5okTt+7kNIjPxKXJXv14I
+	 8bwXdBDuqTY95EHpjkIy91ln8oexJYQdYd+V5fa8=
+Date: Thu, 20 Jun 2024 16:53:20 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Danilo Krummrich <dakr@redhat.com>
 Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
@@ -48,12 +48,11 @@ Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
 	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
 	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
 	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Wedson Almeida Filho <wedsonaf@google.com>
-Subject: Re: [PATCH v2 06/10] rust: add `dev_*` print macros.
-Message-ID: <2024062030-babble-financial-7043@gregkh>
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 07/10] rust: add `io::Io` base type
+Message-ID: <2024062040-wannabe-composer-91bc@gregkh>
 References: <20240618234025.15036-1-dakr@redhat.com>
- <20240618234025.15036-7-dakr@redhat.com>
+ <20240618234025.15036-8-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,36 +61,74 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240618234025.15036-7-dakr@redhat.com>
+In-Reply-To: <20240618234025.15036-8-dakr@redhat.com>
 
-On Wed, Jun 19, 2024 at 01:39:52AM +0200, Danilo Krummrich wrote:
-> From: Wedson Almeida Filho <wedsonaf@google.com>
+On Wed, Jun 19, 2024 at 01:39:53AM +0200, Danilo Krummrich wrote:
+> I/O memory is typically either mapped through direct calls to ioremap()
+> or subsystem / bus specific ones such as pci_iomap().
 > 
-> Implement `dev_*` print macros for `device::Device`.
-> 
-> They behave like the macros with the same names in C, i.e., they print
-> messages to the kernel ring buffer with the given level, prefixing the
-> messages with corresponding device information.
+> Even though subsystem / bus specific functions to map I/O memory are
+> based on ioremap() / iounmap() it is not desirable to re-implement them
+> in Rust.
 
-Nice, but one issue:
+Why not?
 
-> +    /// Prints a debug-level message (level 7) prefixed with device information.
-> +    ///
-> +    /// More details are available from [`dev_dbg`].
-> +    ///
-> +    /// [`dev_dbg`]: crate::dev_dbg
-> +    pub fn pr_dbg(&self, args: fmt::Arguments<'_>) {
-> +        if cfg!(debug_assertions) {
+> Instead, implement a base type for I/O mapped memory, which generically
+> provides the corresponding accessors, such as `Io::readb` or
+> `Io:try_readb`.
 
-That should not be an issue here.  debug_assertions is something
-independent of dev_dbg() calls.  You made this a Rust-only thing, that
-doesn't tie properly into the existing dynamic printk functionality by
-having yet-another-way to turn this on/off, right?
+It provides a subset of the existing accessors, one you might want to
+trim down for now, see below...
 
-So just remove the check please.
+> +/* io.h */
+> +u8 rust_helper_readb(const volatile void __iomem *addr)
+> +{
+> +	return readb(addr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_readb);
 
-And if you want to send this as a single patch after fixing this, I'll
-be glad to add it to the tree now, as it's "obviously" correct :)
+<snip>
+
+You provide wrappers for a subset of what io.h provides, why that
+specific subset?
+
+Why not just add what you need, when you need it?  I doubt you need all
+of these, and odds are you will need more.
+
+> +u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readl_relaxed(addr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_readl_relaxed);
+
+I know everyone complains about wrapper functions around inline
+functions, so I'll just say it again, this is horrid.  And it's going to
+hurt performance, so any rust code people write is not on a level
+playing field here.
+
+Your call, but ick...
+
+> +#ifdef CONFIG_64BIT
+> +u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
+> +{
+> +	return readq_relaxed(addr);
+> +}
+> +EXPORT_SYMBOL_GPL(rust_helper_readq_relaxed);
+> +#endif
+
+Rust works on 32bit targets in the kernel now?
+
+> +macro_rules! define_read {
+> +    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
+> +        /// Read IO data from a given offset known at compile time.
+> +        ///
+> +        /// Bound checks are performed on compile time, hence if the offset is not known at compile
+> +        /// time, the build will fail.
+
+offsets aren't know at compile time for many implementations, as it
+could be a dynamically allocated memory range.  How is this going to
+work for that?  Heck, how does this work for DT-defined memory ranges
+today?
 
 thanks,
 
