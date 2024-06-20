@@ -1,540 +1,199 @@
-Return-Path: <linux-pci+bounces-9010-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9011-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A54FD9101D3
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 12:49:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 609D4910238
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 13:10:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 122CCB21809
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 10:49:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD4101F2204F
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 11:10:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 673821ACE9B;
-	Thu, 20 Jun 2024 10:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 714D51AAE3C;
+	Thu, 20 Jun 2024 11:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2A3TSx9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A491ACE79;
-	Thu, 20 Jun 2024 10:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB561AAE31
+	for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2024 11:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718880367; cv=none; b=CDKuiWCFkNEhjmId1DrgfjhTSL7Rzxp6wprh9ElJLUqF0Xgpjc+8nszQldhkMxmAkZVvDG28fJOP7k3M38EeywCG3FnXpIYytVwsy/jA3KLsiBDVhWyjWfK1TrfObIU7/ASwqrcAEMvdA/c+PWOI3lWRmpWQsT6KboTYOoc7AAY=
+	t=1718881806; cv=none; b=W05qTykdbJzj2IjEQGubOHBr+yuFj21S+twgAMwMekFGKmA+dIKec1reNmvImj+8v48CHxnqn7i7/3uMP7T7f7SOlsBB2LavsovRHQ6uvTKi3x04JVpNYj224QQ37iFQqD7vrpkSOWiaQ1ghnqLK6vQLiHergi5Ld/KiJQ7KsAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718880367; c=relaxed/simple;
-	bh=3auPvs84nBXS0ErxeIR6tM1pk5EZLzcgu7VOLvDqgrk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WHJK4V3y93JP5iHDaHFYaaDHPWuHzaGmDdh4DQ7Kxu1gh/EJ6mK6x/e/w+ovDeKEVjHKKZ+Q6e68ptj2KlpiVVz6QQycHx+Y+DofRCkJznmj37UBkLk8kyIlU6c0zqtfyiHC8jLkHfGfim14bZ+0jNcrVx62ogOoRzty+Y3n+kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W4cbV5cM7z6JB7h;
-	Thu, 20 Jun 2024 18:45:58 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6ADDE140CB1;
-	Thu, 20 Jun 2024 18:46:00 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 20 Jun
- 2024 11:46:00 +0100
-Date: Thu, 20 Jun 2024 11:45:58 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v5 2/2] cxl: Calculate region bandwidth of targets with
- shared upstream link
-Message-ID: <20240620114558.0000154d@Huawei.com>
-In-Reply-To: <20240618231730.2533819-3-dave.jiang@intel.com>
-References: <20240618231730.2533819-1-dave.jiang@intel.com>
-	<20240618231730.2533819-3-dave.jiang@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1718881806; c=relaxed/simple;
+	bh=fjIoyLutiqUfKxBUpky93Pe7mU64/kE4jZSsWuFL0cs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r2ofUm4f56fcsEeymHuCH8owyKeMmLT/AhUu2Q5eVbhb/Bf7k6dyesaaMHIfyxSgYklh9i3DnBVAD/LBmAyzWuNy3+1U/db5M2Gp1m5W8BGXnHk3BBf7wcnJN8jg2z3oYLOVntBc2E3CiLFJuu2LDb84L5lLMo3jz6bNC9PwSko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J2A3TSx9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718881803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j94HKKNLZdh9dITeBbXgdoYL8Fm7iRtd8iIrtfpWm7o=;
+	b=J2A3TSx9Ep0H7DOSjpUycUgY83aXh2StmRLgbDIuUuTe84tJxhR0wOcPQkGZLVv1QuA03c
+	kTDneaPKTrSMxYVoRneXxGM+9f4j/nke2RMsDjrJ4qAl23pdbyeWqCfA5As81PCEr0oRYq
+	jmtXZMASgkOPl9CikL/ho+m/Sb7iMU0=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-679-daDWyVuHPOGNOa5L90x6ug-1; Thu, 20 Jun 2024 07:10:02 -0400
+X-MC-Unique: daDWyVuHPOGNOa5L90x6ug-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52c844aec2eso495625e87.1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2024 04:10:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718881800; x=1719486600;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j94HKKNLZdh9dITeBbXgdoYL8Fm7iRtd8iIrtfpWm7o=;
+        b=Tg9Saq1W7Oafs9HvIfK2OEjkNg4nV/sWosI8K1jjUIJgAvB3xIP+o2rUk6gdjU3+iJ
+         1C2XI7zyWEZNvCEZZsiundSN6XKhQ9kP+ie6G/AGAYXGtUrWjnwp1oiz2Yx7QNA+EX2e
+         hUM17hvNzhK7hpCDwQZvG5Kh8gusV4IaCzLbsR7jHU7eebmsnn+4znFVRpsl393qRvmJ
+         nBlyPTDUDTdd3HAarCENiYLFxyqiBGsG6zHhAtpTVFBYBWF+t+UE7fXzSFrNTJmCLSr1
+         Yi7YSB1oMeUvZclnV/w3pIRJUVr8zkQYPRv65xVl1CMNqv0K16GM59U0SmsT8NfuOYfY
+         fa3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV0EQ39aiIjTWjxSnZEoU3n9xhwdAQK/zqj59QH/ndrPyB/Wc0R7w8hy4Fwjfn3mvSVpJzVF8XVXRyqHMzooIsNjaqwIE0Z01d4
+X-Gm-Message-State: AOJu0Ywo3wBY1+zbiNZ+Pdw7hs1YamDs++iw5podOTTY9j84ohLonyRH
+	FsXMHlFl4GB3ial/g5SOAHN+JBPd7MBftuOR5GCn2r/2gJhcx9mUzleC7xOszFbB9HacUV8GLXt
+	3qn/FxvN6sbYkeqlum8+6JKArMySqFsxNLgdkFBZN1oMBElM5+/R1YrbUbA==
+X-Received: by 2002:a05:6512:2309:b0:52c:9906:fa33 with SMTP id 2adb3069b0e04-52ccaa885ddmr4484209e87.43.1718881800049;
+        Thu, 20 Jun 2024 04:10:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFKYO/OJsiuoxGtopx4SVBBkDAH3hoecb89O6oPnar7s+vD4vlzD4TqI6QPjh899vPhPykpPQ==
+X-Received: by 2002:a05:6512:2309:b0:52c:9906:fa33 with SMTP id 2adb3069b0e04-52ccaa885ddmr4484200e87.43.1718881799652;
+        Thu, 20 Jun 2024 04:09:59 -0700 (PDT)
+Received: from pollux ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247d0ca0afsm21583415e9.25.2024.06.20.04.09.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 04:09:58 -0700 (PDT)
+Date: Thu, 20 Jun 2024 13:09:56 +0200
+From: Danilo Krummrich <dakr@redhat.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@samsung.com,
+	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
+	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com,
+	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2 00/10] Device / Driver and PCI Rust abstractions
+Message-ID: <ZnQOBIQPvB8xQ88r@pollux>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240619120407.o7qh6jlld76j5luu@vireshk-i7>
+ <ZnLQxZjtsmDJb4I1@pollux>
+ <20240620100556.xsehtd7ii25rtn7k@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240620100556.xsehtd7ii25rtn7k@vireshk-i7>
 
-On Tue, 18 Jun 2024 16:16:41 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Thu, Jun 20, 2024 at 03:35:56PM +0530, Viresh Kumar wrote:
+> On 19-06-24, 14:36, Danilo Krummrich wrote:
+> > If you want to split `cpufreq::Registration` in `new()` and `register()`, you
+> > probably want to pass the registration object to `Devres` in `register()`
+> > instead.
+> > 
+> > However, I wouldn't recommend splitting it up (unless you absolutely have to),
+> > it's way cleaner (and probably less racy) if things are registered once the
+> > registration is created.
+> 
+> > The PCI abstraction did not need to change for that, since it uses the
+> > generalized `driver::Registration`, which is handled by the `Module` structure
+> > instead.
+> > 
+> > However, staging/dev also contains the `drm::drv::Registration` type [1], which
+> > in principle does the same thing as `cpufreq::Registration` just for a DRM
+> > device.
+> > 
+> > If you're looking for an example driver making use of this, please have a look
+> > at Nova [1].
+> 
+> Thanks for the pointers Danilo.
+> 
+> There is more to it now and I still don't know what's the best way
+> forward. :(
+> 
+> Devres will probably work well with the frameworks that provide a bus,
+> where a device and driver are matched and probe/remove are called.
+> Obviously Devres needs a struct device, whose probing/removal can
+> allocate/free resources.
 
-> The current bandwidth calculation aggregates all the targets. This simple
-> method does not take into account where multiple targets sharing under
-> a switch where the aggregated bandwidth can be less or greater than the
-> upstream link of the switch.
->=20
-> To accurately account for the shared upstream uplink cases, a new update
-> function is introduced by walking from the leaves to the root of the
-> hierarchy and adjust the bandwidth in the process. This process is done
-> when all the targets for a region are present but before the final values
-> are send to the HMAT handling code cached access_coordinate targets.
->=20
-> The original perf calculation path was kept to calculate the latency
-> performance data that does not require the shared link consideration.
-> The shared upstream link calculation is done as a second pass when all
-> the endpoints have arrived.
->=20
-> Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Link: https://lore.kernel.org/linux-cxl/20240501152503.00002e60@Huawei.co=
-m/
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Indeed, but please note that this was the case before as well. When we had
+`device::Data` with a `Revokable<T>` for Registrations this revokable was
+revoked through the `DeviceRemoval` trait when the driver was unbound from the
+device.
 
-A few trivial things inline. I haven't tested this yet in anger
-(as for 'reasons' my test machine is running an emulation of s390 emulating
- x86 this morning and so is a bit busy).
+> 
+> The CPUFreq framework is a bit different. There is no bus, device or
+> driver there. The device for the framework is the CPU device, but we
+> don't (can't) really bind a struct driver to it. There are more layers
+> in the kernel which use the CPU devices directly, like cpuidle, etc.
+> And so the CPU device isn't really private to the cpufreq/cpuidle
+> frameworks.
 
-I'll try and get at least some tests done in the near future and the
-additional control patches for doing so posted for the QEMU emulation.
-Feel free to poke me if I've not given a tested by the end of next week.
+If there is no bus, device or driver, then those abstractions aren't for your
+use case. Those are abstractions around the device / driver core.
 
-In meantime, lgtm.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Most of the cpufreq drivers register with the cpufreq core from their
+> module_init() function, and unregister from module_exit(). There is no
+> probe/remove() callbacks available. Some drivers though have a
+> platform device/driver model implemented over an imaginary platform
+> device, a hack implemented to get them working because of special
+> requirements (one of them is to allow defer probing to work). The
+> driver I am implementing, cpufreq-dt, also has one such platform
+> device which is created at runtime. But there will be others without a
+> platform device.
+> 
+> The point is that the Rust cpufreq core can't do the Devres stuff
+> itself and it can't expect a struct device to be made available to it
+> by the driver. Some cpufreq drivers will have a platform device, some
+> won't.
 
->=20
-> ---
-> v5:
-> - Fix cxl_memdev_get_dpa_perf() default return. (Jonathan)
-> - Direct return dpa_perf_contains(). (Jonathan)
-> - Fix incorrect bandwidth member reference. (Jonathan)
-> - Direct return error for pcie_link_speed_mbps(). (Jonathan)
-> - Remove stray edit. (Jonathan)
-> - Adjust calculated bandwidth of RPs sharing same host bridge. (Jonathan)
-> - Fix uninit var gp_is_root. (kernel test robot)
-> ---
->  drivers/cxl/core/cdat.c   | 411 ++++++++++++++++++++++++++++++++++++--
->  drivers/cxl/core/core.h   |   4 +-
->  drivers/cxl/core/pci.c    |  23 +++
->  drivers/cxl/core/port.c   |  20 ++
->  drivers/cxl/core/region.c |   4 +
->  drivers/cxl/cxl.h         |   1 +
->  6 files changed, 446 insertions(+), 17 deletions(-)
->=20
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index fea214340d4b..72f86bc99750 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
+That seems to be purely a design question for cpufreq drivers then.
 
-...
+What prevents you from always creating a corresponding platform device?
 
-> +static struct cxl_dpa_perf *cxl_memdev_get_dpa_perf(struct cxl_memdev_st=
-ate *mds,
-> +						    enum cxl_decoder_mode mode)
-> +{
-> +	switch (mode) {
->  	case CXL_DECODER_RAM:
-> -		perf =3D &mds->ram_perf;
-> -		break;
-> +		return &mds->ram_perf;
->  	case CXL_DECODER_PMEM:
-> -		perf =3D &mds->pmem_perf;
-> -		break;
-> +		return &mds->pmem_perf;
->  	default:
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
+If you really want some drivers to bypass the device / driver model (not sure
+if that's a good idea though), you need separate abstractions for that.
 
-Can't get here so delete the below return.
+> 
+> One way to make this whole work is to reintroduce the Data part, just
+> for cpufreq core, but I really don't want to do it.
 
-> +	return ERR_PTR(-EINVAL);
-> +}
+That doesn't help you either. As mentioned above, `device::Data` was supposed to
+receive a callback (`DeviceRemoval`) from the underlying driver (platform_driver
+in your case) on device detach to revoke the registration.
 
-> +static int cxl_endpoint_gather_coordinates(struct cxl_region *cxlr,
-> +					   struct cxl_endpoint_decoder *cxled,
-> +					   struct xarray *usp_xa)
-> +{
-> +	struct cxl_port *endpoint =3D to_cxl_port(cxled->cxld.dev.parent);
-> +	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
-> +	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
-> +	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
-> +	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
-> +	struct cxl_dev_state *cxlds =3D cxlmd->cxlds;
-> +	struct cxl_memdev_state *mds =3D to_cxl_memdev_state(cxlds);
-> +	struct pci_dev *pdev =3D to_pci_dev(cxlds->dev);
-> +	struct cxl_port *parent_port, *gp_port;
-> +	struct cxl_perf_ctx *perf_ctx;
-> +	struct cxl_dpa_perf *perf;
-> +	bool gp_is_root =3D false;
-> +	unsigned long index;
-> +	void *ptr;
-> +	int rc;
-> +
-> +	if (cxlds->rcd)
-> +		return -ENODEV;
-> +
-> +	parent_port =3D to_cxl_port(endpoint->dev.parent);
-> +	gp_port =3D to_cxl_port(parent_port->dev.parent);
-> +	if (is_cxl_root(gp_port))
-> +		gp_is_root =3D true;
+By using `Devres` instead, nothing changes semantically, but it makes the
+resulting code cleaner.
 
-	gp_is_root =3D is_cxl_root(gp_port);
-and drop the initialization at declaration.
-Or just use is_cxl_root(gp_port) at the check below.
+> What else can be done ?
 
-Could set all these at declaration though I guess a few lines
-would be a bit long.
+Think about what you want the lifetime of your cpufreq registration to be.
 
-> +
-> +	perf =3D cxl_memdev_get_dpa_perf(mds, cxlr->mode);
-> +	if (IS_ERR(perf))
-> +		return PTR_ERR(perf);
-> +
-> +	if (!dpa_perf_contains(perf, cxled->dpa_res))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * The index for the xarray is the upstream port device of the upstream
-> +	 * CXL switch.
-> +	 */
-> +	index =3D (unsigned long)parent_port->uport_dev;
-> +	perf_ctx =3D xa_load(usp_xa, index);
-> +	if (!perf_ctx) {
-> +		struct cxl_perf_ctx *c __free(kfree) =3D
-> +			kzalloc(sizeof(*perf_ctx), GFP_KERNEL);
-> +
-> +		if (!c)
-> +			return -ENOMEM;
-> +		ptr =3D xa_store(usp_xa, index, c, GFP_KERNEL);
-> +		if (xa_is_err(ptr))
-> +			return xa_err(ptr);
-> +		perf_ctx =3D no_free_ptr(c);
-> +	}
-> +
-> +	/* Direct upstream link from EP bandwidth */
-> +	rc =3D cxl_pci_get_bandwidth(pdev, pci_coord);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	/*
-> +	 * Min of upstream link bandwidth and Endpoint CDAT bandwidth from
-> +	 * DSLBIS.
-> +	 */
-> +	cxl_coordinates_combine(ep_coord, pci_coord, perf->cdat_coord);
-> +
-> +	/*
-> +	 * If grandparent port is root, then there's no switch involved and
-> +	 * the endpoint is connected to a root port.
-> +	 */
-> +	if (!gp_is_root) {
-> +		/*
-> +		 * Retrieve the switch SSLBIS for switch downstream port
-> +		 * associated with the endpoint bandwidth.
-> +		 */
-> +		rc =3D cxl_port_get_switch_dport_bandwidth(endpoint, sw_coord);
-> +		if (rc)
-> +			return rc;
-> +
-> +		/*
-> +		 * Min of the earlier coordinates with the switch SSLBIS
-> +		 * bandwidth
-> +		 */
-> +		cxl_coordinates_combine(ep_coord, ep_coord, sw_coord);
-> +	}
-> +
-> +	/*
-> +	 * Aggregate the computed bandwidth with the current aggregated bandwid=
-th
-> +	 * of the endpoints with the same switch upstream port.
-> +	 */
-> +	cxl_bandwidth_add(perf_ctx->coord, perf_ctx->coord, ep_coord);
-> +	perf_ctx->port =3D parent_port;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct xarray *cxl_switch_iterate_coordinates(struct xarray *inpu=
-t_xa,
-> +						     bool *parent_is_root)
-> +{
-> +	struct xarray *res_xa __free(kfree) =3D kzalloc(sizeof(*res_xa), GFP_KE=
-RNEL);
-> +	struct access_coordinate coords[ACCESS_COORDINATE_MAX];
-> +	struct cxl_perf_ctx *ctx, *us_ctx;
-> +	unsigned long index, us_index;
-> +	void *ptr;
-> +	int rc;
-> +
-> +	if (!res_xa)
-> +		return ERR_PTR(-ENOMEM);
-> +	xa_init(res_xa);
-> +
-> +	*parent_is_root =3D false;
-> +	xa_for_each(input_xa, index, ctx) {
-> +		struct cxl_port *parent_port, *port, *gp_port;
-> +		struct device *dev =3D (struct device *)index;
-> +		struct cxl_dport *dport;
-> +		struct pci_dev *pdev;
-> +		bool gp_is_root;
-> +
-> +		gp_is_root =3D false;
-> +		port =3D ctx->port;
-> +		parent_port =3D to_cxl_port(port->dev.parent);
+Currently, it seems you want to do both, bind it to probe() / remove(), in case
+the driver is implemented as platform_driver, and to module_init() /
+module_exit(), in case the device / driver model is bypassed.
 
-Maybe set those at declaration?
-
-> +		if (is_cxl_root(parent_port)) {
-> +			*parent_is_root =3D true;
-> +		} else {
-> +			gp_port =3D to_cxl_port(parent_port->dev.parent);
-> +			gp_is_root =3D is_cxl_root(gp_port);
-> +		}
-
-=46rom a pure code organization point of view, this could be moved
-below the upstream port section to where these are first used.
-However I can see some advantage in gathering all the 'who am I'
-stuff in one place, even if it costs a few lines of code.
-So I'm fine with this if you prefer it.
-
-> +
-> +		dport =3D port->parent_dport;
-> +
-> +		/*
-> +		 * Create an xarray entry with the key of the upstream
-> +		 * port of the upstream switch.
-> +		 */
-> +		us_index =3D (unsigned long)parent_port->uport_dev;
-> +		us_ctx =3D xa_load(res_xa, us_index);
-> +		if (!us_ctx) {
-> +			struct cxl_perf_ctx *n __free(kfree) =3D
-> +				kzalloc(sizeof(*n), GFP_KERNEL);
-> +
-> +			if (!n)
-> +				return ERR_PTR(-ENOMEM);
-> +
-> +			ptr =3D xa_store(res_xa, us_index, n, GFP_KERNEL);
-> +			if (xa_is_err(ptr))
-> +				return ERR_PTR(xa_err(ptr));
-> +			us_ctx =3D no_free_ptr(n);
-> +		}
-> +
-> +		us_ctx->port =3D parent_port;
-> +
-> +		/*
-> +		 * Take the min of the downstream aggregated bandwdith and the
-
-bandwidth
-
-> +		 * GP provided bandwidth if parent is CXL root.
-> +		 */
-> +		if (*parent_is_root) {
-> +			cxl_coordinates_combine(us_ctx->coord, ctx->coord, dport->coord);
-> +			continue;
-> +		}
-> +
-> +		/* Below is the calculation for another switch upstream */
-> +		if (!gp_is_root) {
-> +			/*
-> +			 * If the device isn't an upstream PCIe port, there's something
-> +			 * wrong with the topology.
-> +			 */
-> +			if (!dev_is_pci(dev))
-> +				return ERR_PTR(-EINVAL);
-> +
-> +			/* Retrieve the upstream link bandwidth */
-> +			pdev =3D to_pci_dev(dev);
-> +			rc =3D cxl_pci_get_bandwidth(pdev, coords);
-
-might as well combine these 2 lines and drop the pdev local variable
-(which otherwise could have been scoped to this if() block
-
-			rc =3D cxl_pci_get_bandwidth(to_pci_dev(dev), coords);
-
-> +			if (rc)
-> +				return ERR_PTR(-ENXIO);
-> +
-> +			/*
-> +			 * Take the min of downstream bandwidth and the upstream link
-> +			 * bandwidth.
-> +			 */
-> +			cxl_coordinates_combine(coords, coords, ctx->coord);
-> +
-> +			/*
-> +			 * Take the min of the calculated bandwdith and the upstream
-> +			 * switch SSLBIS bandwidth.
-> +			 */
-> +			cxl_coordinates_combine(coords, coords, dport->coord);
-> +
-> +			/*
-> +			 * Aggregate the calculated bandwidth common to an upstream
-> +			 * switch.
-> +			 */
-> +			cxl_bandwidth_add(us_ctx->coord, us_ctx->coord, coords);
-> +		} else {
-> +			/*
-> +			 * Aggregate the bandwidth common to an upstream switch.
-> +			 */
-> +			cxl_bandwidth_add(us_ctx->coord, us_ctx->coord,
-> +					  ctx->coord);
-> +		}
-> +	}
-> +
-> +	return_ptr(res_xa);
-> +}
-> +
-> +static void cxl_region_update_access_coordinate(struct cxl_region *cxlr,
-> +						struct xarray *input_xa)
-> +{
-> +	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
-> +	struct cxl_perf_ctx *ctx;
-> +	unsigned long index;
-> +
-> +	memset(coord, 0, sizeof(coord));
-> +	xa_for_each(input_xa, index, ctx)
-> +		cxl_bandwidth_add(coord, coord, ctx->coord);
-> +
-> +	for (int i =3D 0; i < ACCESS_COORDINATE_MAX; i++) {
-> +		cxlr->coord[i].read_bandwidth =3D coord[i].read_bandwidth;
-> +		cxlr->coord[i].write_bandwidth =3D coord[i].write_bandwidth;
-> +	}
-> +}
-> +
-> +static void free_perf_xa(struct xarray *xa)
-> +{
-> +	struct cxl_perf_ctx *ctx;
-> +	unsigned long index;
-> +
-> +	if (!xa)
-> +		return;
-> +
-> +	xa_for_each(xa, index, ctx)
-> +		kfree(ctx);
-> +	xa_destroy(xa);
-> +	kfree(xa);
-> +}
-> +
-> +/*
-> + * cxl_region_shared_upstream_perf_update - Recalculate the access coord=
-inates
-> + * @cxl_region: the cxl region to recalculate
-> + *
-> + * For certain region construction with endpoints behind CXL switches,
-> + * there is the possibility of the total bandwdith for all the endpoints
-> + * behind a switch being less or more than the switch upstream link. The
-> + * algorithm assumes the configuration is a symmetric topology as that
-> + * maximizes performance.
-> + *
-> + * There can be multiple switches under a RP. There can be multiple RPs =
-under
-> + * a HB.
-> + *
-> + * An example hierarchy:
-> + *
-> + *                 CFMWS 0
-> + *                   |
-> + *          _________|_________
-> + *         |                   |
-> + *     ACPI0017-0          ACPI0017-1
-> + *  GP0/HB0/ACPI0016-0   GP1/HB1/ACPI0016-1
-> + *     |          |        |           |
-> + *    RP0        RP1      RP2         RP3
-> + *     |          |        |           |
-> + *   SW 0       SW 1     SW 2        SW 3
-> + *   |   |      |   |    |   |       |   |
-> + *  EP0 EP1    EP2 EP3  EP4  EP5    EP6 EP7
-> + *
-> + * Computation for the example hierarchy:
-> + *
-> + * Min (GP0 to CPU BW,
-> + *      Min(SW 0 Upstream Link to RP0 BW,
-> + *          Min(SW0SSLBIS for SW0DSP0 (EP0), EP0 DSLBIS, EP0 Upstream Li=
-nk) +
-> + *          Min(SW0SSLBIS for SW0DSP1 (EP1), EP1 DSLBIS, EP1 Upstream li=
-nk)) +
-> + *      Min(SW 1 Upstream Link to RP1 BW,
-> + *          Min(SW1SSLBIS for SW1DSP0 (EP2), EP2 DSLBIS, EP2 Upstream Li=
-nk) +
-> + *          Min(SW1SSLBIS for SW1DSP1 (EP3), EP3 DSLBIS, EP3 Upstream li=
-nk))) +
-> + * Min (GP1 to CPU BW,
-> + *      Min(SW 2 Upstream Link to RP2 BW,
-> + *          Min(SW2SSLBIS for SW2DSP0 (EP4), EP4 DSLBIS, EP4 Upstream Li=
-nk) +
-> + *          Min(SW2SSLBIS for SW2DSP1 (EP5), EP5 DSLBIS, EP5 Upstream li=
-nk)) +
-> + *      Min(SW 3 Upstream Link to RP3 BW,
-> + *          Min(SW3SSLBIS for SW3DSP0 (EP6), EP6 DSLBIS, EP6 Upstream Li=
-nk) +
-> + *          Min(SW3SSLBIS for SW3DSP1 (EP7), EP7 DSLBIS, EP7 Upstream li=
-nk))))
-> + */
-> +void cxl_region_shared_upstream_perf_update(struct cxl_region *cxlr)
-> +{
-> +	struct xarray *usp_xa, *iter_xa, *working_xa;
-> +	bool is_root;
-> +	int rc;
-> +
-> +	lockdep_assert_held(&cxl_dpa_rwsem);
-> +
-> +	usp_xa =3D kzalloc(sizeof(*usp_xa), GFP_KERNEL);
-> +	if (!usp_xa)
->  		return;
-> +
-> +	xa_init(usp_xa);
-> +
-> +	/*
-> +	 * Collect aggregated endpoint bandwidth and store the bandwidth in
-> +	 * an xarray indexed by the upstream port of the switch or RP. The
-> +	 * bandwidth is aggregated per switch. Each endpoint consists of the
-> +	 * minimum of bandwidth from DSLBIS from the endpoint CDAT, the endpoint
-> +	 * upstream link bandwidth, and the bandwidth from the SSLBIS of the
-> +	 * switch CDAT for the switch upstream port to the downstream port that=
-'s
-> +	 * associated with the endpoint. If the device is directly connected to
-> +	 * a RP, then no SSLBIS is involved.
-> +	 */
-> +	for (int i =3D 0; i < cxlr->params.nr_targets; i++) {
-> +		struct cxl_endpoint_decoder *cxled =3D cxlr->params.targets[i];
-> +
-> +		rc =3D cxl_endpoint_gather_coordinates(cxlr, cxled, usp_xa);
-> +		if (rc) {
-> +			free_perf_xa(usp_xa);
-> +			return;
-> +		}
->  	}
-> =20
-> +	iter_xa =3D usp_xa;
-> +	usp_xa =3D NULL;
-> +	/*
-> +	 * Iterate through the components in the xarray and aggregate any
-> +	 * component that share the same upstream link from the switch.
-> +	 * The iteration takes consideration of multi-level switch
-> +	 * hierarchy.
-> +	 *
-> +	 * When cxl_switch_iterate_coordinates() detect the grandparent
-> +	 * upstream is a cxl root, it aggregates the bandwidth under
-> +	 * the host bridge. A RP does not have SSLBIS nor does it have
-> +	 * upstream PCIe link.
-> +	 *
-> +	 * When cxl_switch_iterate_coordinates() detect the parent upstream
-> +	 * is a cxl root, it takes the min() of the aggregated RP perfs and
-> +	 * the bandwidth from the Generic Port (GP). 'is_root' is set at this
-> +	 * point as well.
-> +	 */
-> +	do {
-> +		working_xa =3D cxl_switch_iterate_coordinates(iter_xa, &is_root);
-> +		if (IS_ERR(working_xa))
-> +			goto out;
-> +		free_perf_xa(iter_xa);
-> +		iter_xa =3D working_xa;
-> +	} while (!is_root);
-> +
-> +	/*
-> +	 * Aggregate the bandwidths in the xarray (for all the HBs) and update
-> +	 * the region bandwidths with the newly calculated bandwidths.
-> +	 */
-> +	cxl_region_update_access_coordinate(cxlr, iter_xa);
-> +
-> +out:
-> +	free_perf_xa(iter_xa);
-> +}
+> 
+> -- 
+> viresh
+> 
 
 
