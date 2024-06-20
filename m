@@ -1,44 +1,44 @@
-Return-Path: <linux-pci+bounces-9025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF2E3910909
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 16:53:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0437910926
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 16:58:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 694831F244C6
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 14:53:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 672B628306C
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 14:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EF601AED20;
-	Thu, 20 Jun 2024 14:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 248EC1AE086;
+	Thu, 20 Jun 2024 14:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0jRFSQUo"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Pm8rdDTO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031D81AE0B3;
-	Thu, 20 Jun 2024 14:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CBA1ACE89;
+	Thu, 20 Jun 2024 14:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718895204; cv=none; b=ajoIfP3COIkmXldbLo6s+ctVFMXgZtPxTw7OFl6r7HCOG2EgoXij1j5htDDzTpYfHS2T5cEMHKwnlIMPggAaqgue/yBCbwueg7Y62iAgcL+xjwi7KJAh6Qk5i9dMOEX1vdN/+hgOdSEmD73INzcc7Lo8jgzX2nq97H863pZG/5s=
+	t=1718895521; cv=none; b=cCJeGU6lxXcCmNepOoCI++bumjXrAIVNcIVV2Tmku2S0U2GO2Bpv82ya1UrImjqknkhNNvgFXlPLu80iwMccMEQvZFPr1rHrniAnL43yTxot2qs130usUxVUO5Y/1SMhvdVDl+CAVIh4mQUiQNY1X9WP3m6j9MxHI3VmJIeJLa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718895204; c=relaxed/simple;
-	bh=avc6OvD0XCRHJMx1PZPh4isAaMtN3R3Nbi8f+bLT0vw=;
+	s=arc-20240116; t=1718895521; c=relaxed/simple;
+	bh=sIAmacjUT9hybHQ+dEDQJ3pkqgFTfvJtgU4QdNg0KUM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ScxutoJ+M3WhALDImS7kjmgMjZaJ1kRNifeW+rYE7XCem8KLyt32AkeNvWFZDMof6c9Iy/c0ThfIQOg9bjxgT4pD/tP+dZQIFPgiLAv1mA0R1uj5O7qdD4glM+WpJwv5Qdk2+Yy3m/gg1U32y60zHRfZGq7RaktyPXhofyRce/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0jRFSQUo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF21C2BD10;
-	Thu, 20 Jun 2024 14:53:22 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=b6/L7K4YfZcHAFOw/Au07RVwCpX1FIQt7rVgPm2m81DzqJRfJk8khTn2uugWl030MFB1Xta6/GckLnpVBBDJpeTZlnxZmiqi0KZYFr13H/yzJRpT6tMk5CKO1upH7QT9epnkBm5eQ3k6RrWDJgXqfDlvL4OOR/3x6eqE1UXo7As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Pm8rdDTO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB05FC2BD10;
+	Thu, 20 Jun 2024 14:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718895203;
-	bh=avc6OvD0XCRHJMx1PZPh4isAaMtN3R3Nbi8f+bLT0vw=;
+	s=korg; t=1718895520;
+	bh=sIAmacjUT9hybHQ+dEDQJ3pkqgFTfvJtgU4QdNg0KUM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0jRFSQUo2GH5KBK6nnRNsJ9n69tAf0RM3ZBbZ+QAWvYJOYe8HF4TJ4Vj31K3ipY4Y
-	 U77I0HEdeLHXNN7CiZ4CoyrdO+1J9eK8Tx+vkqnI+mCjK5okTt+7kNIjPxKXJXv14I
-	 8bwXdBDuqTY95EHpjkIy91ln8oexJYQdYd+V5fa8=
-Date: Thu, 20 Jun 2024 16:53:20 +0200
+	b=Pm8rdDTOD/sMRafm7umytx4aVpeIyMdQGw92pURrfU9X+oZzTr8O9DZaLx9fz2y5q
+	 XVMPTUYdFr0NlW4V3LtZQo0kMZ+B5Vmr4OloFRY4kO/+QWJQcVc7Wm+WvSyBDpfl/6
+	 vPhtBuEq3L2vXE6Y5og0kYmBPad+iqaxdV/MKjOk=
+Date: Thu, 20 Jun 2024 16:58:37 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Danilo Krummrich <dakr@redhat.com>
 Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
@@ -49,10 +49,10 @@ Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
 	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
 	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] rust: add `io::Io` base type
-Message-ID: <2024062040-wannabe-composer-91bc@gregkh>
+Subject: Re: [PATCH v2 08/10] rust: add devres abstraction
+Message-ID: <2024062029-timothy-police-4db0@gregkh>
 References: <20240618234025.15036-1-dakr@redhat.com>
- <20240618234025.15036-8-dakr@redhat.com>
+ <20240618234025.15036-9-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,74 +61,220 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240618234025.15036-8-dakr@redhat.com>
+In-Reply-To: <20240618234025.15036-9-dakr@redhat.com>
 
-On Wed, Jun 19, 2024 at 01:39:53AM +0200, Danilo Krummrich wrote:
-> I/O memory is typically either mapped through direct calls to ioremap()
-> or subsystem / bus specific ones such as pci_iomap().
-> 
-> Even though subsystem / bus specific functions to map I/O memory are
-> based on ioremap() / iounmap() it is not desirable to re-implement them
-> in Rust.
+On Wed, Jun 19, 2024 at 01:39:54AM +0200, Danilo Krummrich wrote:
+> Add a Rust abstraction for the kernel's devres (device resource
+> management) implementation.
 
-Why not?
+Ah, here's the devm stuff.  Why not put it right after the "revokable"
+stuff?
 
-> Instead, implement a base type for I/O mapped memory, which generically
-> provides the corresponding accessors, such as `Io::readb` or
-> `Io:try_readb`.
+And why have revokable at all?  Why not just put it all here in devres?
+Who's going to use the generic type?  Especially as it uses rcu when
+devres today does NOT use rcu, so you are might get some "interesting"
+issues with the interaction of the two.
 
-It provides a subset of the existing accessors, one you might want to
-trim down for now, see below...
+> The Devres type acts as a container to manage the lifetime and
+> accessibility of device bound resources. Therefore it registers a
+> devres callback and revokes access to the resource on invocation.
 
-> +/* io.h */
-> +u8 rust_helper_readb(const volatile void __iomem *addr)
-> +{
-> +	return readb(addr);
+Is this last sentence correct?  Revokes on invocation?
+
+> Users of the Devres abstraction can simply free the corresponding
+> resources in their Drop implementation, which is invoked when either the
+> Devres instance goes out of scope or the devres callback leads to the
+> resource being revoked, which implies a call to drop_in_place().
+
+That's not how a normal driver will use it, right?  It's when the
+remove() callback comes into the driver.  That might be well before
+Drop() happens, as there might be other things keeping that memory
+around (again, think of /dev/ node accesses.)
+
+> --- /dev/null
+> +++ b/rust/kernel/devres.rs
+> @@ -0,0 +1,168 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+One note for all of these new files, no copyright notices?  I'm all for
+that, but I know a LOT of lawyers by people who work for companies that
+have been working on this code do NOT want to see files without
+copyright lines.
+
+So please go check.  Otherwise you might get a "stern talking to" in the
+future when someone notices what you all did...
+
+> +
+> +//! Devres abstraction
+> +//!
+> +//! [`Devres`] represents an abstraction for the kernel devres (device resource management)
+> +//! implementation.
+> +
+> +use crate::{
+> +    alloc::Flags,
+> +    bindings,
+> +    device::Device,
+> +    error::{Error, Result},
+> +    prelude::*,
+> +    revocable::Revocable,
+> +    sync::Arc,
+> +};
+> +
+> +use core::ffi::c_void;
+> +use core::ops::Deref;
+> +
+> +#[pin_data]
+> +struct DevresInner<T> {
+> +    #[pin]
+> +    data: Revocable<T>,
 > +}
-> +EXPORT_SYMBOL_GPL(rust_helper_readb);
-
-<snip>
-
-You provide wrappers for a subset of what io.h provides, why that
-specific subset?
-
-Why not just add what you need, when you need it?  I doubt you need all
-of these, and odds are you will need more.
-
-> +u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
-> +{
-> +	return readl_relaxed(addr);
+> +
+> +/// This abstraction is meant to be used by subsystems to containerize [`Device`] bound resources to
+> +/// manage their lifetime.
+> +///
+> +/// [`Device`] bound resources should be freed when either the resource goes out of scope or the
+> +/// [`Device`] is unbound respectively, depending on what happens first.
+> +///
+> +/// To achieve that [`Devres`] registers a devres callback on creation, which is called once the
+> +/// [`Device`] is unbound, revoking access to the encapsulated resource (see also [`Revocable`]).
+> +///
+> +/// After the [`Devres`] has been unbound it is not possible to access the encapsulated resource
+> +/// anymore.
+> +///
+> +/// [`Devres`] users should make sure to simply free the corresponding backing resource in `T`'s
+> +/// [`Drop`] implementation.
+> +///
+> +/// # Example
+> +///
+> +/// ```
+> +/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io::Io};
+> +/// # use core::ops::Deref;
+> +///
+> +/// // See also [`pci::Bar`] for a real example.
+> +/// struct IoMem<const SIZE: usize>(Io<SIZE>);
+> +///
+> +/// impl<const SIZE: usize> IoMem<SIZE> {
+> +///     fn new(paddr: usize) -> Result<Self>{
+> +///
+> +///         // SAFETY: assert safety for this example
+> +///         let addr = unsafe { bindings::ioremap(paddr as _, SIZE.try_into().unwrap()) };
+> +///         if addr.is_null() {
+> +///             return Err(ENOMEM);
+> +///         }
+> +///
+> +///         // SAFETY: `addr` is guaranteed to be the start of a valid I/O mapped memory region of
+> +///         // size `SIZE`.
+> +///         let io = unsafe { Io::new(addr as _, SIZE)? };
+> +///
+> +///         Ok(IoMem(io))
+> +///     }
+> +/// }
+> +///
+> +/// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+> +///     fn drop(&mut self) {
+> +///         // SAFETY: Safe as by the invariant of `Io`.
+> +///         unsafe { bindings::iounmap(self.0.base_addr() as _); };
+> +///     }
+> +/// }
+> +///
+> +/// impl<const SIZE: usize> Deref for IoMem<SIZE> {
+> +///    type Target = Io<SIZE>;
+> +///
+> +///    fn deref(&self) -> &Self::Target {
+> +///        &self.0
+> +///    }
+> +/// }
+> +///
+> +/// # // SAFETY: *NOT* safe, just for the example to get an `ARef<Device>` instance
+> +/// # let dev = unsafe { Device::from_raw(core::ptr::null_mut()) };
+> +///
+> +/// let iomem = IoMem::<{ core::mem::size_of::<u32>() }>::new(0xBAAAAAAD).unwrap();
+> +/// let devres = Devres::new(&dev, iomem, GFP_KERNEL).unwrap();
+> +///
+> +/// let res = devres.try_access().ok_or(ENXIO).unwrap();
+> +/// res.writel(0x42, 0x0);
+> +/// ```
+> +///
+> +pub struct Devres<T>(Arc<DevresInner<T>>);
+> +
+> +impl<T> DevresInner<T> {
+> +    fn new(dev: &Device, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+> +        let inner = Arc::pin_init(
+> +            pin_init!( DevresInner {
+> +                data <- Revocable::new(data),
+> +            }),
+> +            flags,
+> +        )?;
+> +
+> +        // Convert `Arc<DevresInner>` into a raw pointer and make devres own this reference until
+> +        // `Self::devres_callback` is called.
+> +        let data = inner.clone().into_raw();
+> +        let ret = unsafe {
+> +            bindings::devm_add_action(dev.as_raw(), Some(Self::devres_callback), data as _)
+> +        };
+> +
+> +        if ret != 0 {
+> +            // SAFETY: We just created another reference to `inner` in order to pass it to
+> +            // `bindings::devm_add_action`. If `bindings::devm_add_action` fails, we have to drop
+> +            // this reference accordingly.
+> +            let _ = unsafe { Arc::from_raw(data) };
+> +            return Err(Error::from_errno(ret));
+> +        }
+> +
+> +        Ok(inner)
+> +    }
+> +
+> +    unsafe extern "C" fn devres_callback(ptr: *mut c_void) {
+> +        let ptr = ptr as *mut DevresInner<T>;
+> +        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
+> +        // reference.
+> +        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
+> +        //         `DevresInner::new`.
+> +        let inner = unsafe { Arc::from_raw(ptr) };
+> +
+> +        inner.data.revoke();
+> +    }
 > +}
-> +EXPORT_SYMBOL_GPL(rust_helper_readl_relaxed);
-
-I know everyone complains about wrapper functions around inline
-functions, so I'll just say it again, this is horrid.  And it's going to
-hurt performance, so any rust code people write is not on a level
-playing field here.
-
-Your call, but ick...
-
-> +#ifdef CONFIG_64BIT
-> +u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
-> +{
-> +	return readq_relaxed(addr);
+> +
+> +impl<T> Devres<T> {
+> +    /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
+> +    /// returned `Devres` instance' `data` will be revoked once the device is detached.
+> +    pub fn new(dev: &Device, data: T, flags: Flags) -> Result<Self> {
+> +        let inner = DevresInner::new(dev, data, flags)?;
+> +
+> +        Ok(Devres(inner))
+> +    }
+> +
+> +    /// Same as [Devres::new`], but does not return a `Devres` instance. Instead the given `data`
+> +    /// is owned by devres and will be revoked / dropped, once the device is detached.
+> +    pub fn new_foreign_owned(dev: &Device, data: T, flags: Flags) -> Result {
+> +        let _ = DevresInner::new(dev, data, flags)?;
+> +
+> +        Ok(())
+> +    }
 > +}
-> +EXPORT_SYMBOL_GPL(rust_helper_readq_relaxed);
-> +#endif
+> +
+> +impl<T> Deref for Devres<T> {
+> +    type Target = Revocable<T>;
+> +
+> +    fn deref(&self) -> &Self::Target {
+> +        &self.0.data
+> +    }
+> +}
+> +
+> +impl<T> Drop for Devres<T> {
+> +    fn drop(&mut self) {
+> +        // Revoke the data, such that it gets dropped already and the actual resource is freed.
+> +        // `DevresInner` has to stay alive until the devres callback has been called. This is
+> +        // necessary since we don't know when `Devres` is dropped and calling
+> +        // `devm_remove_action()` instead could race with `devres_release_all()`.
+> +        self.revoke();
+> +    }
+> +}
 
-Rust works on 32bit targets in the kernel now?
-
-> +macro_rules! define_read {
-> +    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
-> +        /// Read IO data from a given offset known at compile time.
-> +        ///
-> +        /// Bound checks are performed on compile time, hence if the offset is not known at compile
-> +        /// time, the build will fail.
-
-offsets aren't know at compile time for many implementations, as it
-could be a dynamically allocated memory range.  How is this going to
-work for that?  Heck, how does this work for DT-defined memory ranges
-today?
+Again, I don't think this can happen at "drop", it needs to happen
+earlier sometimes.  Or maybe not, I can't tell when exactly is Drop
+called, where would I find that?
 
 thanks,
 
