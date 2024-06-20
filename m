@@ -1,103 +1,113 @@
-Return-Path: <linux-pci+bounces-9016-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9017-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96C779105A3
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 15:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB6F89107F8
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 16:20:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E68D1C212F4
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 13:16:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06B3C1C20849
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 14:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C5121AD3E9;
-	Thu, 20 Jun 2024 13:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA921AD4AF;
+	Thu, 20 Jun 2024 14:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Xl7/Zs35"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FtHLF3ZO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ED51ACE8A
-	for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2024 13:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04131E48B;
+	Thu, 20 Jun 2024 14:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718889399; cv=none; b=dX7LW6GyltW2OpgtUMfTJKMrN4n/f2zWxNP0aiHsPtmSSld7LtyVjChoDrmirXERaVUWxGwjJrnA5oFSd+icB/I9+NrErPQchza9T5IpP0Rh1nVveHSEHMUue80IFKZQx/RdQHXj48OInzwTxWVwMHgqBD1Nn4c9hmBe5NuRF3I=
+	t=1718893191; cv=none; b=ZAc/CSE5p7i5TfnLwBertnLWi5A6WyfNkZNRebjHiXvGvaLJJg3V/GXtXqA2KopAclUJs6S935QI6QQbzofm+13ehUDiHZWsgomhCSG5UJCGXDWXQDDbdz0G5fiDkWSghel1zRgmY4u0OaNGL+b5fb12gCjUkoYznjHaHmSmuFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718889399; c=relaxed/simple;
-	bh=4EsW15/r7sdZ/gibi4MX2yO17OuqUp9rfY6dl6UKDPs=;
+	s=arc-20240116; t=1718893191; c=relaxed/simple;
+	bh=n4tUnj4Eac6aj+hWgpJmqPCrRk3ihP2085hGyDuOXuc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZG9ZgdVWAth6vf5iNOB5ECmB79RGGNhmKcMudiqaj+r5a04o8WB3KfOANZLi01rKb9FuF2QjZigAqJ5R4H4URRjIx0sOAs2mD1QgWWSiUKP2TL0+1HIiGV9CvpWGHFQue/Wvy5SNmNsqJa3uFeU1yv68NxiR/nwqE3gmtELrD4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Xl7/Zs35; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=bTeaeKHd96ZoUhr7YJ41ztaRyl4DnKoTnHVWxvT3dpo=; b=Xl
-	7/Zs35hYcRCT3YGuqLvZUREi60pDP6vt2O8LbfA38BqM5YCCBlH6skRoBuNnqtNy/p4xse/zPkPDH
-	9JzXPtTZB4BbbqBomPtGI1v3OmGNV0w8d7iozlCY655CeM4GEJPyENFTZl8eyeZ1Xk8tLdbcJhqUG
-	LO/mDUY9cYnl5gc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sKHeQ-000ZfA-Ep; Thu, 20 Jun 2024 15:16:30 +0200
-Date: Thu, 20 Jun 2024 15:16:30 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: mvebu: Dispose INTx irqs prior to removing INTx
- domain
-Message-ID: <0d8658d2-a5bc-4721-a409-7c0eec55f19f@lunn.ch>
-References: <20240619142829.2804-1-kabel@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FWuXIXL0qn5QR9AFxj2bPOD1QRkMjDALC6UhiGgB9x9mheOVb1CV/F8rIu+PPseheWG+5eXcffqL059ToY8AQSZcqHHtt/pvH5IURNg9yBU+ymn9BqONUOLfG3eNIq76azROv6JBRfgckPn0xDxt4baU72OfagYGZhpX9fuxtic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FtHLF3ZO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB58C2BD10;
+	Thu, 20 Jun 2024 14:19:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718893191;
+	bh=n4tUnj4Eac6aj+hWgpJmqPCrRk3ihP2085hGyDuOXuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FtHLF3ZOVju0xqDIklse7AyPztxmeh4jWGWWcyzOZdGlNnvUTiyc+I5gKy4Abp5UR
+	 kaKhrK179HE+JUq2gl2oPVKUC/+orvYots3AOmDrEEtVo9U9XAx8O+tH/xluQnOfGi
+	 8Tgx9vAK5DCib4e5M2+7wDIazhSmCEczTNyTA7KY=
+Date: Thu, 20 Jun 2024 16:19:48 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 01/10] rust: pass module name to `Module::init`
+Message-ID: <2024062038-backroom-crunchy-d4c9@gregkh>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-2-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240619142829.2804-1-kabel@kernel.org>
+In-Reply-To: <20240618234025.15036-2-dakr@redhat.com>
 
-On Wed, Jun 19, 2024 at 04:28:29PM +0200, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
+On Wed, Jun 19, 2024 at 01:39:47AM +0200, Danilo Krummrich wrote:
+> In a subsequent patch we introduce the `Registration` abstraction used
+> to register driver structures. Some subsystems require the module name on
+> driver registration (e.g. PCI in __pci_register_driver()), hence pass
+> the module name to `Module::init`.
+
+I understand the need/want here, but it feels odd that you have to
+change anything to do it.
+
 > 
-> Documentation for irq_domain_remove() says that all mapping within the
-> domain must be disposed prior to domain remove.
+> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> ---
+>  rust/kernel/lib.rs           | 14 ++++++++++----
+>  rust/kernel/net/phy.rs       |  2 +-
+>  rust/macros/module.rs        |  3 ++-
+>  samples/rust/rust_minimal.rs |  2 +-
+>  samples/rust/rust_print.rs   |  2 +-
+>  5 files changed, 15 insertions(+), 8 deletions(-)
 > 
-> Currently INTx irqs are not disposed in pci-mvebu.c device unbind callback
-> which cause that kernel crashes after unloading driver and trying to read
-> /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index a791702b4fee..5af00e072a58 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -71,7 +71,7 @@ pub trait Module: Sized + Sync + Send {
+>      /// should do.
+>      ///
+>      /// Equivalent to the `module_init` macro in the C API.
+> -    fn init(module: &'static ThisModule) -> error::Result<Self>;
+> +    fn init(name: &'static str::CStr, module: &'static ThisModule) -> error::Result<Self>;
 
-I was wondering why this is safe. Are there still users? If the users
-are being removed first, why are there still mappings. This is
-discussed in the old thread:
+Why can't the name come directly from the build system?  Why must it be
+passed into the init function of the module "class"?  What is it going
+to do with it?
 
-> I think that in this case for pci-mvebu.c it is safe because: At the
-> first step of unbind procedure is called unregistraction of PCIe bus
-> with all devices bound on it. This ensures that all PCIe endpoint
-> drivers are unbind, devices removed and no new driver or device and
-> appear. After that there should not be any remaining usage of PCIe
-> resources (if there is then whole PCIe hotplug code is broken and we
-> have other and bigger issue...). Next pci-mvebu.c manually disposes
-> all remaining legacy interrupts (which PCI core code does not
-> because legacy interrupts are shared and it does not know if they
-> are used or not).  This is safe because at these stage there are no
-> PCI drivers bound, there is no PCI device for that controller
-> registered. And after that is removed IRQ domain (which has finally
-> disposed all interrupts).
+A PCI, or other bus, driver "knows" it's name already by virtue of the
+build system, so it can pass that string into whatever function needs
+that, but the module init function itself does NOT need that.
 
-If there is a need to respin, it would be good to include this in the
-commit message.
+So I fail to understand why we need to burden ALL module init functions
+with this, when only a very very very tiny subset of all drivers will
+ever need to know this, and even then, they don't need to know it at
+init module time, they know it at build time and it will be a static
+string at that point, it will not be coming in through an init call.
 
-       Andrew
+thanks,
+
+greg k-h
 
