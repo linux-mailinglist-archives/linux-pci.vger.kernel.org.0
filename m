@@ -1,111 +1,197 @@
-Return-Path: <linux-pci+bounces-9053-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9054-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E8FF911848
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 04:06:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26C9E9118F6
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 05:15:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78F781C21DB3
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 02:06:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1C60284953
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 03:15:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08361537FF;
-	Fri, 21 Jun 2024 02:06:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6290E82488;
+	Fri, 21 Jun 2024 03:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Lw8pn/87"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out198-44.us.a.mail.aliyun.com (out198-44.us.a.mail.aliyun.com [47.90.198.44])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2040.outbound.protection.outlook.com [40.92.40.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9B3259C;
-	Fri, 21 Jun 2024 02:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718935603; cv=none; b=GYZoD41v8QptubvFkrSrzH7GOmuVLS6qRVA0r+3GVYg2uef8Ecg3EArfbrgxx0d6W1tBNp9/VCZ75v12lOmcIBW02oV2xcoZQz3aVWoRLNSxIzKCAutjdUEg9Dz2bKi4R3Zqneyjpg7jEfGXhhq7glml61ukO2pOtCaByyNA+1k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718935603; c=relaxed/simple;
-	bh=/Fv5W48fTiOaQN8+0LAacCvmeX4j9L7ks9Fp1fUPZH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=t0jKpOhyuHjKu37Ixguff4xsrBq6DHxf/OOtBsQOceXahyXKjQjmLQ72v030N6XMc0YOaSI8pfHdj3naFmvGSmmw5pageGN3vFQ8rG7jmFUoZgcAEOBDtFIJ29EdVf4sLCCCd1cXyj1pRLEncSwxP5drY1gIoRGY2rRYxhDcxXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.09405448|-1;BR=01201311R241S19rulernew998_84748_2000303;CH=blue;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0120384-0.0012689-0.986693;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033040120151;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.Y6aXtYh_1718935577;
-Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.Y6aXtYh_1718935577)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Jun 2024 10:06:18 +0800
-From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: zhoushengqing@ttyinfo.com
-Subject: [PATCH] PCI: Enable io space 1k granularity for intel cpu root port
-Date: Fri, 21 Jun 2024 02:06:08 +0000
-Message-Id: <20240621020608.28964-1-zhoushengqing@ttyinfo.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861F643687;
+	Fri, 21 Jun 2024 03:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718939725; cv=fail; b=fG3hRFtJEkjM8IQ1iL0DvsQPy55AynNHVbTftbnYXNh+PUZypkajIX/TcAYdUpuJSMD8AGhCuq96cHkNhF84Q61NXBAT9i+f4J7jTccheLwGdWe59joXcEB4t7EmsV6WAjRNke7vtpaTnXuiA4/2iEf5ROSbIBnboh/WyCXk3Ss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718939725; c=relaxed/simple;
+	bh=T+Svs2Pr8phNpd0qXh24s7IitOyPe+U/ESXBwoqDjjs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gmaAsE+6VsNl9Uy59MkHb6wtoDEG/vpRL+mXroq3vTsc3XfnMmhdFbIoSvRIhFIjj9V9mEcoGAMkzmcJXau4jhhvpWSYSK3xst7rDBpP4M5XkaHfxN6HRKRxEiD3d4Vi65F/kfC+HatHOoAY/bSFnoUUyufFsiu/G7pzR+/3fzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Lw8pn/87; arc=fail smtp.client-ip=40.92.40.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VXjxmcQhJfzTfljVk+Swa3788qiDYa9LVVHNG0/pM1TdbjS3T3Um3aEJC/V9njaKqLsDJ0NdAzXWX23l5tYiKb62NlVZyNKVeLYaaIzeWafHzrBkT7ryrkSBFRBrfrDWx8gEeTFA/TkdO0NIiLgM567gB5GQqNxuQs5ssXjprWK9y3AtXzF2NiYZyJARokGQsfxdjDaoX7wmW3wFr7PaYNFToL6p0AYNHeYJt9rtrNg/ByHnm4rjacGnthQk5Bylq7PboVaczjLQZxbazX9HvWTi1gU+KtSPTe4iBC1I7HQ4KP1gX0fF8BIBnobEu0cgsCNMDczquDxsXE9/hEroCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4Ikv+3V2XA8P7rcQFCwjt9DRYQY+gSwIQyaa7SfbXlE=;
+ b=eKaNDOEunsNrYdsFzV97If0OcahASg3mq1PwzV90Fcg7/ct3mkHeBs780252KX91+nYmyaHa7PnIBTbFNoQYJ+lwIT2V+P5ghg69kt2GRkdtWCs/Zq1hgp6TzII+til9UoXpRnTcoBhYYssIjz+E7Ip2qhCPM9EKM3Xy+4UC0js8oFG8IG+m9oT8s71I70KC8jITSTmjpntpFz4jhKeroXimnYS84f14wsGoLVKhyUD2br8SaAYAz6nzM5vRuBjj44U/WhqcdSf3iiysIjTs/Pz8zZM+c+S+WjhaJwfHw9F3BnHbimC2D4PBJYKiZ4VPiiRftm37gIVEpajrR/tWzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4Ikv+3V2XA8P7rcQFCwjt9DRYQY+gSwIQyaa7SfbXlE=;
+ b=Lw8pn/871pte5+8ZZUZ6fiN8aEL84bVzsAF8v2rs/ufMV+Ce7Sn+9VsVeTeHM/SENeIj3VWs0T4ToXMzKRtLLAym/VokmGskw8hD3v5t5tU9ct8HoESZ6dewznjotzEbGjzctKKXQ18/pJ5MOePHCYGMEu31lDkJrM3W8ObCyPnDcIeeW50Uwsic1xHip3JIfEUJUQlF6LBpCWra3SKKFKNbh3jlNbN6cJxMNLUhEfbw5LAnNSCZHS9eZgeCbCCf8T8q95rtp+BaAPc666cMb4107XpZ9cW2y7woZrdabWybkl7EJWrxomM0BefhSCl5sE9qRTurN2HzEVolcdoPnA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA1PR02MB8970.namprd02.prod.outlook.com (2603:10b6:208:3ad::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Fri, 21 Jun
+ 2024 03:15:20 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7698.017; Fri, 21 Jun 2024
+ 03:15:20 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Wei Liu <wei.liu@kernel.org>, Linux on Hyper-V List
+	<linux-hyperv@vger.kernel.org>
+CC: "stable@kernel.org" <stable@kernel.org>, "K. Y. Srinivasan"
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Dexuan Cui
+	<decui@microsoft.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jake Oshins
+	<jakeo@microsoft.com>, "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT
+ DRIVERS" <linux-pci@vger.kernel.org>, open list
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: fix reading of PCI_INTERRUPT_LINE and
+ PCI_INTERRUPT_PIN
+Thread-Topic: [PATCH] PCI: hv: fix reading of PCI_INTERRUPT_LINE and
+ PCI_INTERRUPT_PIN
+Thread-Index: AQHaw30k6EbhYkH9eEC2TYxCEnOaS7HRiU/A
+Date: Fri, 21 Jun 2024 03:15:19 +0000
+Message-ID:
+ <SN6PR02MB4157C9FD41483E9AC7ED9E70D4C92@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240621014815.263590-1-wei.liu@kernel.org>
+In-Reply-To: <20240621014815.263590-1-wei.liu@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [d/jofPCzOzGIXC7myc0KhYgVAJx8B5EF]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA1PR02MB8970:EE_
+x-ms-office365-filtering-correlation-id: 19640bc0-226a-4232-bc4c-08dc91a061a9
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199025|3412199022|440099025|102099029;
+x-microsoft-antispam-message-info:
+ WGcWRXxAyYBuEtqayRhPZFNHKSyN214hrVM7r2GqgY4I980UiiQrLZnFDijG6o9GNxlW7YvW4kb794w15/pcGXb84prLhXVa2gZCq9Or1OI4IzPujv7rt6FKO91UicAOoY/hEFxWHLiYRAbyYACqjpqXbtTGJ47mZX34mUZHYSOjLj+BV898+DfoPgEpeEetRLruGXycUMwEOONJFX20SZpdWWOfwfpbVQKAXNGJ+8IYijBDXpiddsC8sLyRCKQckkZUavV53P4PE4QRHis3NspV5rwF7UGPWuGRcFpAr3BkolWYsN1Ta4z4tvvogAlNDU6ce5PWd+FVkagVTQSGKvgSBzAM8GddFjHIqqqBwoNsBS/QYOYw8kCubV+l/ns0V+KdEDmT2rm+iw144KjFihFQqJk6bOiXtyUIEkLMr6Q1Hli42KR/E2ky/PLNqSQ2OkxSOJN0WWp7S/VPnP6lCGcl3yJ4xAFInK9KeLhtCn0jsixN2WhnEDrLor+SgH9kM/eT13kA9plwoGGZmfvhLgffshmSKYt3/7Ihu1RpZDJA8f5iAkNA8ACCvwc6WYDJ
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?wRV9nbgVXq7b8+P/hktWlQGMb0+uUeI6b48tCt0BfGxBuJztGeArBNXHlh?=
+ =?iso-8859-2?Q?kDs4yaehUFU4yk1I7Ivke63ovjwV9NUt9Bt0EhdXdbC5qzIKHrZKIbEcHR?=
+ =?iso-8859-2?Q?4BvP3SxlkP8E9DrvJ4y+o4wVX1EG2e6X1TUBKWVG9QHYOc70wNDvJSs6oM?=
+ =?iso-8859-2?Q?9DTY+HyzSzetEaGBcA7x7Ya1cL9eqWM1DGCNIWY8kozMGS97KbaSBYnehr?=
+ =?iso-8859-2?Q?mk+xNIlVIeUadnvqwtDp6r1UJqFV6gAaUPyzc3LAyfu9xJkDEX1vHT10iT?=
+ =?iso-8859-2?Q?9ZchSlPPEyHNTmHYx6EaitDc10RRigY8AXK8an6r8N8ZzihRbPxkT+p3/J?=
+ =?iso-8859-2?Q?LbNiMaKxnTt5gsnFDw+5OznSPkq6JJKt0HU2QwV5nLtsGIIjPkXZeFA+fV?=
+ =?iso-8859-2?Q?99KZ51b2bpTuhXSWSst5XDtoFOBaWpc0WDESZWAuVu6xMjiOqFZIk9WEBg?=
+ =?iso-8859-2?Q?Bhm0ZGbdDmey4S20zLLC42aImq6lB2//58YBvQsb11vrNlHBMNSu098LaR?=
+ =?iso-8859-2?Q?S+zMN4fRaJw8/Q5Csr3lMRjbk9UifM6Q58JVnptNu8IBtPWu6yCcNY0zSe?=
+ =?iso-8859-2?Q?LRnTgdDLhIWiS2ntB7GtPutDyiSnFdXb97LkD+hQDOeeCD0i1F6AN75uTX?=
+ =?iso-8859-2?Q?5HBaWUCcJxcqJk2xx1ekVO7roc1wo+Qdhq9qjKC0UrMvzGICRRxJjHBx1I?=
+ =?iso-8859-2?Q?o8KVINMplVGVT5KhTFTt1ZR7VV5yV293+yDQkkzGTiAqt1Kva6uWIOKVcj?=
+ =?iso-8859-2?Q?iYHIlTNwgeZ0fYYVNE/4onlUDtreW8WRq+ntvFsbp6MtXRVvhYGnNb0CPQ?=
+ =?iso-8859-2?Q?MuACCD1MlkmlO7jZ3ruzp36utGroEUoMUHl2jMpbbPvsNsK4Lp/eCQUWGv?=
+ =?iso-8859-2?Q?zwbuSsFGQrgGR08qRNEtKv4xtiGMBSMCDrnFgyFNSjqjOEkmysF4NxOenm?=
+ =?iso-8859-2?Q?jz4sw9gEd+9ADo/37UU1IVllvoOzuNUthrsnopWsgP2NOYYsOeIyJKJyMk?=
+ =?iso-8859-2?Q?4graXqunqE85BThaBvKND+UsXkuE2TLIiH5pWSHpVe8R1yGmAKFkVqNNc6?=
+ =?iso-8859-2?Q?aWJd6OCiwKh376nMqcHBt/LOg2e+2YSZy5bLeX0PaZMa/yyCut3zUVfZLr?=
+ =?iso-8859-2?Q?sfAJG+GWm+J5BMAfJ1XulprCfZwIQidqPOevnopFdQXK+dF/vhi/X8S2dn?=
+ =?iso-8859-2?Q?Jt6zZ5r9TsZcnaikDA1ZQl7tiG6UTMkUSr+rt05DbnDFgeGBFQILUAJjIi?=
+ =?iso-8859-2?Q?vs0j03MfUrVB9T0n2xNtWW2SySDVtqUEGV+DZtXAY=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19640bc0-226a-4232-bc4c-08dc91a061a9
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2024 03:15:19.8591
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR02MB8970
 
-This patch add 1k granularity for intel root port bridge.Intel latest
-server CPU support 1K granularity,And there is an BIOS setup item named
-"EN1K",but linux doesn't support it. if an IIO has 5 IOU (SPR has 5 IOUs)
-all are bifurcated 2x8.In a 2P server system,There are 20 P2P bridges
-present.if keep 4K granularity allocation,it need 20*4=80k io space,
-exceeding 64k.I test it in a 16*nvidia 4090s system under intel eaglestrem
-platform.There are six 4090s that cannot be allocated I/O resources.
-So I applied this patch.And I found a similar implementation in quirks.c,
-but it only targets the Intel P64H2 platform.
+From: Wei Liu <wei.liu@kernel.org> Sent: Thursday, June 20, 2024 6:48 PM
+>=20
+> The intent of the code snippet is to always return 0 for both fields.
+> The check is wrong though. Fix that.
+>=20
+> This is discovered by this call in VFIO:
+>=20
+>     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+>=20
+> The old code does not set *val to 0 because the second half of the check =
+is
+> incorrect.
+>=20
+> Fixes: 4daace0d8ce85 ("PCI: hv: Add paravirtual PCI front-end for Microso=
+ft Hyper-V
+> VMs")
+> Cc: stable@kernel.org
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index 5992280e8110..eec087c8f670 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_=
+dev
+> *hpdev, int where,
+>  		   PCI_CAPABILITY_LIST) {
+>  		/* ROM BARs are unimplemented */
+>  		*val =3D 0;
+> -	} else if (where >=3D PCI_INTERRUPT_LINE && where + size <=3D
+> -		   PCI_INTERRUPT_PIN) {
+> +	} else if ((where =3D=3D PCI_INTERRUPT_LINE || where =3D=3D PCI_INTERRU=
+PT_PIN) &&
+> +		   size =3D=3D 1) {
 
-Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
----
- drivers/pci/probe.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Any reason not to continue the pattern of the rest of the function,
+and do the following to fix the bug?
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 5fbabb4e3425..3f0c901c6653 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -461,6 +461,8 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
- 	u32 buses;
- 	u16 io;
- 	u32 pmem, tmp;
-+	u16 ven_id, dev_id;
-+	u16 en1k = 0;
- 	struct resource res;
- 
- 	pci_read_config_dword(bridge, PCI_PRIMARY_BUS, &buses);
-@@ -478,6 +480,26 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
- 	}
- 	if (io) {
- 		bridge->io_window = 1;
-+		if (pci_is_root_bus(bridge->bus)) {
-+			list_for_each_entry(dev, &bridge->bus->devices, bus_list) {
-+				pci_read_config_word(dev, PCI_VENDOR_ID, &ven_id);
-+				pci_read_config_word(dev, PCI_DEVICE_ID, &dev_id);
-+				if (ven_id == PCI_VENDOR_ID_INTEL && dev_id == 0x09a2) {
-+					/*IIO MISC Control offset 0x1c0*/
-+					pci_read_config_word(dev, 0x1c0, &en1k);
-+				}
-+			}
-+		/*
-+		 *Intel ICX SPR EMR GNR
-+		 *IIO MISC Control (IIOMISCCTRL_1_5_0_CFG) — Offset 1C0h
-+		 *bit 2:Enable 1K (EN1K)
-+		 *This bit when set, enables 1K granularity for I/O space decode
-+		 *in each of the virtual P2P bridges
-+		 *corresponding to root ports, and DMI ports.
-+		 */
-+		if (en1k & 0x4)
-+			bridge->io_window_1k = 1;
-+		}
- 		pci_read_bridge_io(bridge, &res, true);
- 	}
- 
--- 
-2.39.2
+   	} else if (where >=3D PCI_INTERRUPT_LINE && where + size <=3D=20
+  		   PCI_MIN_GNT) {
+
+Your fix doesn't allow PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN
+to be read together as a 2-byte access, though I don't know if that
+matters.
+
+I have a slight preference for the more consistent approach, but
+don't really object to what you've done.  Treat my idea as a
+suggestion to consider, but if you want to go with your approach,
+that's OK too.
+
+Michael
+
+>  		/*
+>  		 * Interrupt Line and Interrupt PIN are hard-wired to zero
+>  		 * because this front-end only supports message-signaled
+> --
+> 2.43.0
+>=20
 
 
