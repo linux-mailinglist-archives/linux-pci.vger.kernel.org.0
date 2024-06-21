@@ -1,191 +1,199 @@
-Return-Path: <linux-pci+bounces-9081-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FF7F912880
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 16:51:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE4EC912A8E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 17:45:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CF31281669
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 14:51:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9503F2867B0
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 15:45:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD7E3D967;
-	Fri, 21 Jun 2024 14:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005F615A87E;
+	Fri, 21 Jun 2024 15:45:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRkhnmnS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuG/A2u9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F075C40856;
-	Fri, 21 Jun 2024 14:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3569415A85C;
+	Fri, 21 Jun 2024 15:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718981498; cv=none; b=u+noky3VHdYlZ77RaXbEz/hbW5nrhY9NSdyu4FfWoL1UhSTZsDWXfnXfM1TIg+eCMLNOB64h574lBf1zXAAdmmkkeqyUo9MCpIqlVqC0p4DAkv5wa0uWnQSY2k3L7eVpZfX+dg16EFfLZy6zkdsE6lKkUEP8/aHP1/8uC6GYcCk=
+	t=1718984745; cv=none; b=BDe3PGT4hDvmE/42QgJuWE9Y4KLLLLRQigqER28d2/LVcaAWsgkzPSEfKvcRdLpc3TE6cz6aFfyK53FZGXoJMj4Q3hJRr21xyFmTeXolso3e7Tdn557HwUFxM7uV9F0IzMNlT3kJs/O2vjjTfwcFFzHuc8RzGT8EVcOlDic7TgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718981498; c=relaxed/simple;
-	bh=PWBnsEgyaL0bjk7qBCzE5I/+8Xv0QHE5d/sqa4h1zPc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k++Pn9bpFKbzto85Ho5xM5wuoa746scS7Y/FMfKkHKc7s0lL+rFolKaLOBvLCe6807rlkilSljcy5de5mNHygaltm/esTjhX2KlWwTQmlmTH0cRSislU3YmTPg6v3TdMLYFRut3Of1b7jG9QCQvAs9YHbr5Ukghaaf1q1mE0/WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRkhnmnS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99A0BC2BBFC;
-	Fri, 21 Jun 2024 14:51:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718981497;
-	bh=PWBnsEgyaL0bjk7qBCzE5I/+8Xv0QHE5d/sqa4h1zPc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NRkhnmnS6CfFLtlnO3HtF8upTistPGil7dXFYtmncde0D1Gtbfe8a2SsWApXco8Om
-	 Q0hvJNHMoeAOtJfuS+E0pJ9nAH0fgcWpePytj88zHlL2zTKxbzDyKzrkTlA0aFtXTQ
-	 nMxozbWi5Z0sOvywYttURAhhmFjVxbZcIKkitWBlOTzQWHGu5cjaug4VIkcmuCJHgD
-	 +M276skqav2Deq6H0hI6X6Brscw/7iDN7IyWfhqaV8Wy5kqA9q/V6GGTWFbevW9aYE
-	 6Wm+013DCA9nAR/oqtM10UROLPOf8NPGcJsNW4xtWVaPXINaJIZsh5phpoVDggNang
-	 tIvAu8Pm8q7fw==
-Message-ID: <47d156dc-0b80-4e87-9fba-4232ee8235b9@kernel.org>
-Date: Fri, 21 Jun 2024 16:51:20 +0200
+	s=arc-20240116; t=1718984745; c=relaxed/simple;
+	bh=HOSCZ2vrhvGoFP2iw1Ql/Hz/mDzmyBgbdC959qExCDk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kE+KO56hhwx8mv0s3QBGzllCZtHVjBhRnFF6WMCvC9LyNwd8IsVFj7h4mrEeihi2/tjQINipJF6neUbU2VKqdcdbTlBbiNvhLEIQODEf82ANmH8fbFj5T799dI6QT3mHfFdjr6YWKbqRgnuLEY6gHsMabFe4GFuPQS3NWZ5neI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XuG/A2u9; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso302754366b.3;
+        Fri, 21 Jun 2024 08:45:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718984742; x=1719589542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p4CvXaD0p8juFHM/mj9mpOHYuq+vuwl0xPPEP0shwFI=;
+        b=XuG/A2u9OpJtRpPAM5mP7DY2cdn+s7cd7jq28VaTgI2un7In6lh6Z4mbdte580yI98
+         70Grq8EJjXkLFfTONjSn/GOz3Pic1ejLZzF4r3OW4IrCRDOb9dsP2eHtV6ORHbdFRSdm
+         /Z1izixViC4T10HqMKBQvZ8sZtuTjuV/DVqYcNjE2xMRz81bGEJFM1d8TUmCSMYvuLRi
+         aodVgmaK42d9B/5MbMbg+LScbsmE4nbWTw5fbwbSG+/sH4V+TBxnAwMLdUiijTK16DZn
+         RX+obBfORID0lFpxKSXpH/9HzGXR/lYmARMAQZruq6aWPzZyq0JkX9GxCDkCkTDnoVqf
+         5uYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718984742; x=1719589542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p4CvXaD0p8juFHM/mj9mpOHYuq+vuwl0xPPEP0shwFI=;
+        b=WIXnDV6FMcnQ9PJNpsLMlSiG7jZz7k9+4lVkT4cJcR+rcAjdalIAR8IfqrzlVtqjJi
+         NAMeiiiHtBjs1zbaHMXMKHPBxMnnI93V6K2tJ1oLTQSyd9aw9UP4GEKeKIr2fuouDExY
+         1h3Nd4xwuCFdEEdbLC5IZciGVlCWhdGJuAHWUUYPI/pZJag7ulnJBoK2vDfzwc+Uo8QS
+         kA0JcTMNUYvA+m8OtFRpbAU9A6GkIePGKSWjs60eyiw82fcX/PXQFmW+2PLI15zULxgA
+         /faVgSddHZjP9MxoH2qLfweUQCQ0nOiKpedocHVdzzb8BcEF8MJvol1+mqVPCOkksH1G
+         dE4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVTH7ozIHaxrtH7yHjnYm90dvbnOjBUVv2xSPj/ibVTYywH6wV2oUN95ntxNG4Q5itRlnOx/hrlngU28hBjgH+m65AYQjUKFIREPdVsm9I3N3pFUz2Ka8/WmDADj6yiVNcFt+bGud8Y3nPGwPi2taWNFk0IJ2Y3RjhonscUN0P1kHp6L50VWsRZtzj5E0OgphiY3OaWmbVTmymiVA==
+X-Gm-Message-State: AOJu0Yz0rPReYIt/0vVAU6rSciVLIeBclft/rODZpus3t+XJQPVnLml3
+	0R8tGgGBqerIA8O94QJv2v5Krc1m3ITqaGtCbC8rFrXTc889vSGOO34WH4ocpyaIe0mLmVeAjif
+	Iwx/glhhXBGOwq3yQEnWdnAYH6wc=
+X-Google-Smtp-Source: AGHT+IGQG2/pFic6ghI58imlJHEBDuzmWT1uMrn79oh0Id6ZdT6X4Yy9HwZWFVL2JJuDF6fSk19Bw5MO37t5DdaeuQk=
+X-Received: by 2002:a17:907:7a94:b0:a6f:b58f:ae3c with SMTP id
+ a640c23a62f3a-a6fb58fba03mr436111266b.26.1718984742083; Fri, 21 Jun 2024
+ 08:45:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
-To: Lk Sii <lk_sii@163.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: patchwork-bot+bluetooth@kernel.org, marcel@holtmann.org,
- luiz.dentz@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com,
- broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org,
- bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be,
- arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com,
- elder@linaro.org, srinivas.kandagatla@linaro.org,
- gregkh@linuxfoundation.org, abel.vesa@linaro.org, mani@kernel.org,
- lukas@wunner.de, dmitry.baryshkov@linaro.org, amit.pundir@linaro.org,
- wuxilin123@gmail.com, linux-bluetooth@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- bartosz.golaszewski@linaro.org
-References: <20240605123850.24857-1-brgl@bgdev.pl>
- <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
- <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
- <CAMRc=Mf2C4ywa+wQ6pcq5RtehQD00dDhzvS6sDcD8tAn=UypUA@mail.gmail.com>
- <33c7587b-83a4-4be7-b00a-d30874df8c22@163.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <33c7587b-83a4-4be7-b00a-d30874df8c22@163.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240527161450.326615-1-herve.codina@bootlin.com>
+ <20240527161450.326615-19-herve.codina@bootlin.com> <ZmDJi__Ilp7zd-yJ@surfacebook.localdomain>
+ <20240620175646.24455efb@bootlin.com> <CAHp75VdDkv-dxWa60=OLfXAQ8T5CkFiKALbDHaVVKQOK3gJehA@mail.gmail.com>
+ <20240620184309.6d1a29a1@bootlin.com> <20240620191923.3d62c128@bootlin.com>
+In-Reply-To: <20240620191923.3d62c128@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 21 Jun 2024 17:45:05 +0200
+Message-ID: <CAHp75VdeoNXRTmMoK-S6qecU1nOQWDZVONeHU+imFiwcTxe8xg@mail.gmail.com>
+Subject: Re: [PATCH v2 18/19] mfd: Add support for LAN966x PCI device
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Simon Horman <horms@kernel.org>, Sai Krishna Gajula <saikrishnag@marvell.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, 
+	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21/06/2024 11:04, Lk Sii wrote:
-> On 2024/6/21 14:36, Bartosz Golaszewski wrote:
->> On Fri, Jun 21, 2024 at 3:14 AM Lk Sii <lk_sii@163.com> wrote:
->>>
->>>
->>>
->>> On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
->>>> Hello:
->>>>
->>>> This series was applied to bluetooth/bluetooth-next.git (master)
->>>> by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
->>>>
->>> Hi luiz,
->>>
->>> i am curious why Bartosz is able to merge his changes into bluetooth
->>> development tree bluetooth-next directly.
->>>
->>
->> This conversation is getting progressively worse...
->>
->>> 1)
->>> his changes should belong to *POWER* scope instead of *Bluetooth*
->>> obviously, however, there are *NOT* any SOB tag from either power and
->>> bluetooth maintainer. these changes currently only have below Acked-by
->>> and Signed-off-by tags:
->>>
->>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>
->>
->> It's a new subsystem that has been discussed and reviewed for months
->> and thoroughly tested. Please refer to the cover letter under v8
->> linked in this thread. It's not related to power-management or
->> power-supply, it's its own thing but IMO the best place to put it is
->> under drivers/power/. And I will maintain it.
->>
->>> 2)
->>> his changes have not merged into linus mainline tree yet.
->>>
->>
->> This is why they are in next! They are scheduled to go in during the
->> upcoming merge window. But since changes belong in multiple trees, we
->> need a cross-tree merge.
->>
->>> 3)
->>> perhaps, it is safer to pull his changes from linus mainline tree when
->>> merged than to merge into bluetooth-next firstly.
->>>
->>
->> It's not safer at all, why would spending less time in next be safer?
->>
-> it seems this patch serial(new subsystem) does not depend on bluetooth
-> and also does not belong to bluetooth subsystem, but have been contained
-> by tip of bluetooth tree.
-> 
-> why not follow below merging produce?
-> 1) you send this patch serials to Linus to merge within linus mainline tree
-> 2) luiz then pull your changes from linus mainline tree.
+On Thu, Jun 20, 2024 at 7:19=E2=80=AFPM Herve Codina <herve.codina@bootlin.=
+com> wrote:
+> On Thu, 20 Jun 2024 18:43:09 +0200
+> Herve Codina <herve.codina@bootlin.com> wrote:
+> > On Thu, 20 Jun 2024 18:07:16 +0200
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Thu, Jun 20, 2024 at 5:56=E2=80=AFPM Herve Codina <herve.codina@bo=
+otlin.com> wrote:
+> > > > On Wed, 5 Jun 2024 23:24:43 +0300
+> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > > Mon, May 27, 2024 at 06:14:45PM +0200, Herve Codina kirjoitti:
 
-This is not how Linux kernel development works. Read process documents
-before interfering with people's work.
+...
 
-Best regards,
-Krzysztof
+> > > > > > +   if (!dev->of_node) {
+> > > > > > +           dev_err(dev, "Missing of_node for device\n");
+> > > > > > +           return -EINVAL;
+> > > > > > +   }
+> > > > >
+> > > > > Why do you need this? The code you have in _create_intr_ctrl() wi=
+ll take care
+> > > > > already for this case.
+> > > >
+> > > > The code in _create_intr_ctrl checks for fwnode and not an of_node.
+> > > >
+> > > > The check here is to ensure that an of_node is available as it will=
+ be use
+> > > > for DT overlay loading.
+> > >
+> > > So, what exactly do you want to check? fwnode check covers this.
+> > >
+> > > > I will keep the check here and use dev_of_node() instead of dev->of=
+_node.
+> > >
+> > > It needs to be well justified as from a coding point of view this is =
+a
+> > > duplication.
+>
+> On DT based system, if a fwnode is set it is an of_node.
+> On ACPI, if a fwnode is set is is an acpi_node.
+>
+> The core PCI, when it successfully creates the DT node for a device
+> (CONFIG_PCI_DYNAMIC_OF_NODES) set the of_node of this device.
+> So we can have a device with:
+>  - fwnode from ACPI
+>  - of_node from core PCI creation
 
+Does PCI device creation not set fwnode?
+
+> This driver needs the of_node to load the overlay.
+> Even if the core PCI cannot create a DT node for the PCI device right
+> now, I don't expect this LAN855x PCI driver updated when the core PCI
+> is able to create this PCI device DT node.
+
+If it's really needed, I think the correct call here is is_of_node()
+to show exactly why it's not a duplication. It also needs a comment on
+top of this call.
+
+...
+
+> > > > > > +static struct pci_device_id lan966x_pci_ids[] =3D {
+> > > > > > +   { PCI_DEVICE(0x1055, 0x9660) },
+> > > > >
+> > > > > Don't you have VENDOR_ID defined somewhere?
+> > > >
+> > > > No and 0x1055 is taken by PCI_VENDOR_ID_EFAR in pci-ids.h
+> > > > but SMSC acquired EFAR late 1990's and MCHP acquired SMSC in 2012
+> > > > https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet=
+/microchip/lan743x_main.h#L851
+> > > >
+> > > > I will patch pci-ids.h to create:
+> > > >   #define PCI_VENDOR_ID_SMSC PCI_VENDOR_ID_EFAR
+> > > >   #define PCI_VENDOR_ID_MCHP PCI_VENDOR_ID_SMSC
+> > > > As part of this patch, I will update lan743x_main.h to remove its o=
+wn #define
+> > > >
+> > > > And use PCI_VENDOR_ID_MCHP in this series.
+> > >
+> > > Okay, but I don't think (but I haven't checked) we have something lik=
+e
+> > > this ever done there. In any case it's up to Bjorn how to implement
+> > > this.
+>
+> Right, I wait for Bjorn reply before changing anything.
+
+But we already have the vendor ID with the same value. Even if the
+company was acquired, the old ID still may be used. In that case an
+update on PCI IDs can go in a separate change justifying it. In any
+case, I would really want to hear from Bjorn on this and if nothing
+happens, to use the existing vendor ID for now to speed up the series
+to be reviewed/processed.
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
