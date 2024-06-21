@@ -1,199 +1,133 @@
-Return-Path: <linux-pci+bounces-9050-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9051-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A0119115C8
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 00:41:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F8E59117EE
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 03:16:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85B9C1C20B84
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jun 2024 22:41:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEA1D28395A
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 01:16:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7204A6F2F1;
-	Thu, 20 Jun 2024 22:41:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5F774D5A5;
+	Fri, 21 Jun 2024 01:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BItZ1V8U"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SK5Ji/kn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306CF36126
-	for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2024 22:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19DFD3214;
+	Fri, 21 Jun 2024 01:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718923297; cv=none; b=sCmQ6SMhhCtLfHpNTcQ4RximcSX03HBx8y6qRpZYAFun3NnXB7HKTGt1bC5AKO+wnQ9G6DXx9ZI4p8dB8G1sat7/+CvmKDyHTev/vTLovWHKZ6T9Qldo+oPK5TnC6UIcNMmWUmQU6gnvDGZjyLW3/acZFRJA1mZoozzbPCwmOu0=
+	t=1718932557; cv=none; b=neMPkMe+l1VeAsJKD1jNO6lBpmfhpMHh/Ll0Se5i9GEnD8NR5iQjtVpPdlpN18hpMxGuKcKD+IT3NawUd848TJprOSG80zU6q9m4s8bZMjzQKsjUk1GVuFvN15EoimcTGsgumtp7fJOGr7iLRcrULB/yaPR7+CAMqBEEZf6cxdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718923297; c=relaxed/simple;
-	bh=SXIWZlb1KPxMCgPV5kff6lWkOxtaqf2pg3MsRAUkMIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FfhbpTRydoax3Qrf0gH2ZfxW/fCciiK1oqoca0grXsSoNoTAU7JmUIVWB1hudHPkuWuYhCz3txvOATC85BO5soJoTVbZM3b/jzllQCJQ/yFq2sfLzDMs+LpO6HvT87lCaXnkKv6O8DPx0DdrqU0bVXtdKrbapZHHfEBkxUgVEMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BItZ1V8U; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718923296; x=1750459296;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SXIWZlb1KPxMCgPV5kff6lWkOxtaqf2pg3MsRAUkMIY=;
-  b=BItZ1V8UrhqlBA7o6lTsPWvy1ynErSUI+sfi/WwcsoZiz4lypGTYZZGi
-   MTwH+oPB7S+uXcFANAKDUsJ8eQ7oneAKzo0x27bXl3dqDGkBYTCgjoeW4
-   yfAw1yy6/ekNTrHMfMEGJcnE7ownu7ssWSk0UOPyCHy9jTgSN8+K4cKcj
-   vRSUKGUAQyE8N4qZIiB+eUouPwoBZ8aPsmgkiN8/W8O9LAsZA+R7xumuD
-   v9jCRpwMIWz19WZvSVosxihqoaDLwlQStHVKCZm1pHVMyPYOL/6ikI1m2
-   6+WmX8qWTfhOgUDc7vA/c+NQD2XGmrtcbCcLmbJUQ+wAInZiYEtcJa9oI
-   Q==;
-X-CSE-ConnectionGUID: gUb9JApOTlSoWoi1xuT45w==
-X-CSE-MsgGUID: 0vbKLCUTS1aJtctnMTNKtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="15916308"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="15916308"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 15:41:36 -0700
-X-CSE-ConnectionGUID: XqqyK30yTkKY7zzP/7JeIg==
-X-CSE-MsgGUID: xIU2FZ9aR7in+gCuZcaDLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="47351259"
-Received: from patelni-mobl1.amr.corp.intel.com (HELO localhost) ([10.124.83.158])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 15:41:35 -0700
-Date: Thu, 20 Jun 2024 15:41:33 -0700
-From: Nirmal Patel <nirmal.patel@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
- linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: vmd: always enable host bridge hotplug support
- flags
-Message-ID: <20240620154133.000069b7@linux.intel.com>
-In-Reply-To: <20240502225608.GA1553882@bhelgaas>
-References: <bafed3eb-f698-41fa-867c-bfec87e429a4@intel.com>
- <20240502225608.GA1553882@bhelgaas>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
+	s=arc-20240116; t=1718932557; c=relaxed/simple;
+	bh=IABB4tHTtsIHnF9E/p0KMPVd0BwdXUuqJPhJoQzkufw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qa1Zp0Bl9IcPFojM/ybZFFS/ui1cQcyHq2sgeb9tytBXPzWUVAaxacuN+yQFApr9gZ4kiGfHN+iqD1DPCafLyvag+0Xqrjrcw7bJ1pPNWTYRVGv97rFomkko3ZleAfj8OX7t2k57BzT3lJ8yjGDFEkttEL52AO5FO0AX9pegpgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SK5Ji/kn; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=uKgyUTPoIa0HOFwQLliApvt6PD0XnAuEcNuHZ585raA=;
+	b=SK5Ji/kn4sI1W96ZdXt9fW1P5hOX4F2KHB22JEH3nru2ent6WnGuiVcUM3+v0a
+	bz9M9Qf+J4VL5kkplzHMaz4Y0yy0w64OlFXuFeXgwHfk4GUOyJ9cw9g4q51ZaSCI
+	CqKwtoz8Qd3UzzG9zobudai70VLBl+CvzNMiIi4Bazkpg=
+Received: from [192.168.1.26] (unknown [183.195.6.47])
+	by gzga-smtp-mta-g3-1 (Coremail) with SMTP id _____wDnT3z203RmODBWCQ--.32395S2;
+	Fri, 21 Jun 2024 09:14:32 +0800 (CST)
+Message-ID: <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
+Date: Fri, 21 Jun 2024 09:14:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
+To: patchwork-bot+bluetooth@kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org,
+ andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com,
+ broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be,
+ arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com,
+ elder@linaro.org, srinivas.kandagatla@linaro.org,
+ gregkh@linuxfoundation.org, abel.vesa@linaro.org, mani@kernel.org,
+ lukas@wunner.de, dmitry.baryshkov@linaro.org, amit.pundir@linaro.org,
+ wuxilin123@gmail.com, linux-bluetooth@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+ bartosz.golaszewski@linaro.org
+References: <20240605123850.24857-1-brgl@bgdev.pl>
+ <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
+Content-Language: en-US
+From: Lk Sii <lk_sii@163.com>
+In-Reply-To: <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDnT3z203RmODBWCQ--.32395S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ur18uFykGryxtFW7AF17trb_yoW8Aw48pF
+	W3K3Z0kF48Jr1UJF4DKw1fXFy2gw43Xw1xCr4Dtr98Xa4Ygr48tw1FvwnYgr17urWI9w42
+	yFWftryfKw48urDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRWmhrUUUUU=
+X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbiExkFNWXAluX0pAAAs8
 
-On Thu, 2 May 2024 17:56:08 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> On Thu, May 02, 2024 at 03:38:00PM -0700, Paul M Stillwell Jr wrote:
-> > On 5/2/2024 3:08 PM, Bjorn Helgaas wrote:  
-> > > On Mon, Apr 08, 2024 at 11:39:27AM -0700, Paul M Stillwell Jr
-> > > wrote:  
-> > > > Commit 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe
-> > > > features") added code to copy the _OSC flags from the root
-> > > > bridge to the host bridge for each vmd device because the AER
-> > > > bits were not being set correctly which was causing an AER
-> > > > interrupt storm for certain NVMe devices.
-> > > > 
-> > > > This works fine in bare metal environments, but causes problems
-> > > > when the vmd driver is run in a hypervisor environment. In a
-> > > > hypervisor all the _OSC bits are 0 despite what the underlying
-> > > > hardware indicates. This is a problem for vmd users because if
-> > > > vmd is enabled the user *always* wants hotplug support enabled.
-> > > > To solve this issue the vmd driver always enables the hotplug
-> > > > bits in the host bridge structure for each vmd.
-> > > > 
-> > > > Fixes: 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe
-> > > > features") Signed-off-by: Nirmal Patel
-> > > > <nirmal.patel@linux.intel.com> Signed-off-by: Paul M Stillwell
-> > > > Jr <paul.m.stillwell.jr@intel.com> ---
-> > > >   drivers/pci/controller/vmd.c | 10 ++++++++--
-> > > >   1 file changed, 8 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/vmd.c
-> > > > b/drivers/pci/controller/vmd.c index 87b7856f375a..583b10bd5eb7
-> > > > 100644 --- a/drivers/pci/controller/vmd.c
-> > > > +++ b/drivers/pci/controller/vmd.c
-> > > > @@ -730,8 +730,14 @@ static int vmd_alloc_irqs(struct vmd_dev
-> > > > *vmd) static void vmd_copy_host_bridge_flags(struct
-> > > > pci_host_bridge *root_bridge, struct pci_host_bridge
-> > > > *vmd_bridge) {
-> > > > -	vmd_bridge->native_pcie_hotplug =
-> > > > root_bridge->native_pcie_hotplug;
-> > > > -	vmd_bridge->native_shpc_hotplug =
-> > > > root_bridge->native_shpc_hotplug;
-> > > > +	/*
-> > > > +	 * there is an issue when the vmd driver is running
-> > > > within a hypervisor
-> > > > +	 * because all of the _OSC bits are 0 in that case.
-> > > > this disables
-> > > > +	 * hotplug support, but users who enable VMD in their
-> > > > BIOS always want
-> > > > +	 * hotplug suuport so always enable it.
-> > > > +	 */
-> > > > +	vmd_bridge->native_pcie_hotplug = 1;
-> > > > +	vmd_bridge->native_shpc_hotplug = 1;  
-> > > 
-> > > Deferred for now because I think we need to figure out how to set
-> > > all these bits the same, or at least with a better algorithm than
-> > > "here's what we want in this environment."
-> > > 
-> > > Extended discussion about this at
-> > > https://lore.kernel.org/r/20240417201542.102-1-paul.m.stillwell.jr@intel.com
-> > >  
-> > 
-> > That's ok by me. I thought where we left it was that if we could
-> > find a solution to the Correctable Errors from the original issue
-> > that maybe we could revert 04b12ef163d1.
-> > 
-> > I'm not sure I would know if a patch that fixes the Correctable
-> > Errors comes in... We have a test case we would like to test
-> > against that was pre 04b12ef163d1 (BIOS has AER disabled and we
-> > hotplug a disk which results in AER interrupts) so we would be
-> > curious if the issues we saw before goes away with a new patch for
-> > Correctable Errors.  
-> 
-> My current theory is that there's some issue with that particular
-> Samsung NVMe device that causes the Correctable Error flood.  Kai-Heng
-> says they happen even with VMD disabled.
-> 
-> And there are other reports that don't seem to involve VMD but do
-> involve this NVMe device ([144d:a80a]):
-> 
->   https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1852420
->   https://forums.unraid.net/topic/113521-constant-errors-on-logs-after-nvme-upgrade/
->   https://forums.unraid.net/topic/118286-nvme-drives-throwing-errors-filling-logs-instantly-how-to-resolve/
->   https://forum.proxmox.com/threads/pve-kernel-panics-on-reboots.144481/
->   https://www.eevblog.com/forum/general-computing/linux-mint-21-02-clone-replace-1tb-nvme-with-a-2tb-nvme/
-> 
-> NVMe has weird power management stuff, so it's always possible we're
-> doing something wrong in a driver.
-> 
-> But I think we really need to handle Correctable Errors better by:
-> 
->   - Possibly having drivers mask errors if they know about defects
->   - Making the log messages less alarming, e.g.,  a single line report
->   - Rate-limiting them so they're never overwhelming
->   - Maybe automatically masking them in the PCI core to avoid
-> interrupts
-> 
-> > > >   	vmd_bridge->native_aer = root_bridge->native_aer;
-> > > >   	vmd_bridge->native_pme = root_bridge->native_pme;
-> > > >   	vmd_bridge->native_ltr = root_bridge->native_ltr;
-> > > > -- 
-> > > > 2.39.1
-> > > >   
-> > >   
-> >   
 
-Hi Bjorn,
+On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
+> Hello:
+> 
+> This series was applied to bluetooth/bluetooth-next.git (master)
+> by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
+> 
+Hi luiz,
 
-Do we still expect to get this patch accepted?
+i am curious why Bartosz is able to merge his changes into bluetooth
+development tree bluetooth-next directly.
 
-Based on the previous comments, even with AER fixed we will still have
-an issue in Guest OS of disabling all the features which will require
-making adjustments and/or removing 04b12ef163d1.
+1)
+his changes should belong to *POWER* scope instead of *Bluetooth*
+obviously, however, there are *NOT* any SOB tag from either power and
+bluetooth maintainer. these changes currently only have below Acked-by
+and Signed-off-by tags:
 
-Is it possible to accept this patch and add necessary changes
-when AER fix is available?
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Thanks
--nirmal
+2)
+his changes have not merged into linus mainline tree yet.
+
+3)
+perhaps, it is safer to pull his changes from linus mainline tree when
+merged than to merge into bluetooth-next firstly.
+
+> On Wed,  5 Jun 2024 14:38:48 +0200 you wrote:
+>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+>> Hi!
+>>
+>> These are the power sequencing patches sent separately after some
+>> improvements suggested by Bjorn Helgaas. I intend to pick them up into a
+>> new branch and maintain the subsystem from now on. I then plan to
+>> provide an immutable tag to the Bluetooth and PCI subsystems so that the
+>> rest of the C changes can be applied. This new branch will then be
+>> directly sent to Linus Torvalds for the next merge window.
+>>
+>> [...]
+> 
+> Here is the summary with links:
+>   - [v9,1/2] power: sequencing: implement the pwrseq core
+>     https://git.kernel.org/bluetooth/bluetooth-next/c/249ebf3f65f8
+>   - [v9,2/2] power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets
+>     https://git.kernel.org/bluetooth/bluetooth-next/c/2f1630f437df
+> 
+> You are awesome, thank you!
+
 
