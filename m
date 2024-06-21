@@ -1,137 +1,171 @@
-Return-Path: <linux-pci+bounces-9062-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9063-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3CE6911C15
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 08:45:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA7E991200D
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 11:05:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D09E1F244F7
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 06:45:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 074041C22FB0
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 09:05:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44035168C1D;
-	Fri, 21 Jun 2024 06:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7987A16D9DD;
+	Fri, 21 Jun 2024 09:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nI2ngVmU"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XSVkVAVA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8AA1667F6;
-	Fri, 21 Jun 2024 06:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA2181C02;
+	Fri, 21 Jun 2024 09:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718952314; cv=none; b=Wx+gZhhO4c/XUlH0pFyJLk1KOe4m14FBZwpy/TSJUmxQQlkFJLdpw+sJwHO1AAR3f9A81KV1KqZImo3Z3QQGFJXn7bvl7SsZKGkC/ovWbigLkStls+x9YD2XVM1UqbrnTlpd7eRLezSbqHR5jGeBhq8V5Eof7No2SfffFNdn3YI=
+	t=1718960739; cv=none; b=hXnh2d5+7WmW4K0azgH7LZicVIHJgbu3lscEna+ty0d3XO2kzvpr95rGeEPmMQAEBtN9iKey1zhj9LXoPmLGBL+d2FbfnvI3h/tXtMa5kOniOrjjFsEDSnk0KLyHazhGJ/5BmE3rY7yIR1idaXt15tkRWf0IKTeJVvF9YBJsZLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718952314; c=relaxed/simple;
-	bh=qh8In50WwOdpu3xFyQ9ljLj2zMwSwJ5FJpD5RD6c2VI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NH/78CHyUmwvL08+jP8K2MJw+j7JGxxP13u7egoFMV/nhhu22+NKxNY6lmz3syuSy209BkJTzddJisxmO2BwLUW7qkSZJ4l/Xy2nB5COiPWTFOQHSkZBGovfp3BM3Jp0TRXvjJkDSqeLU4Wb16ku2yPzeKnXdoO0dLDpOidoaSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nI2ngVmU; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c9cc66c649so780090b6e.1;
-        Thu, 20 Jun 2024 23:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718952312; x=1719557112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7c3IUUghQlxYHrHfw3/LC7ZyAugPVzJNu5s/S2BsRTI=;
-        b=nI2ngVmUA5uEry5ZjlNpDJ5J5033f1VaxUH+Iv+wr6c9X6ZI2hLffvO3Qk2sFhy70H
-         glmZE9llHg7tKnJYkwTMLxWql7gmwx/6E6rbgXYgJgrm1goGIOBKXa1Xb7+ixziDbLDn
-         pbjCCot/G414y04Kx+aktVNo6EuqAophhC3FaR6NKsnbW59ZQSof8ETtGNrD61+grV38
-         TpeA/PEwUG+l1tWD8un2zTCUOafIkiZPbsLrG/uxfm1ZLbthml9E47vN6nuagq9MGg8b
-         ZO++TpwdLxwLM8k54YPvIX84Bm19tPRm2sRfs0WNJVLfCLDQvvMgMVGJfZqlkq9qU4/V
-         REPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718952312; x=1719557112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7c3IUUghQlxYHrHfw3/LC7ZyAugPVzJNu5s/S2BsRTI=;
-        b=Y1rbuQRZ6tujmHpTgEWpSD6MYZgm2vW8xq96PsCLvMYZqOU8DD5I947O6JsT0gJV+j
-         MvL58epyTnJrnTPmlxhtiCO5Egzye7gclPfbJ1/1LckVYEaaH4vD5oIsp/A1J/+ioHmU
-         5XvMU3Vb8kReSRoGlqHZ8ebJFxpnZJN0Dndzhsg9Oub3PXkenMOJxuJjQo28pAwxZmBp
-         T9h17PJCpqKVFLsEUBV2JQTiClcN6d/PlgYs782r1oPVYrWEBXFmDYHQA2Z6QUpnDH5z
-         bL3G/ED5Ei0BRWFgplQ3O+900A6wRxNE7+NBdAsuZ1yMJ3w0pXDe2kRfGcHB1vvYreSS
-         61Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfZneGtfwIoTc7XxF0a1EEHilECXMnScShDKEKm3ZEfXst0oMdsr+ilXzcZbRUgOhLb2I8AArXI2lEv25CV/Ny05x8ya57fpSRoEpwvIvgawvm1II6Tc8xxjy2hAkyGxkLLgRCOgKC
-X-Gm-Message-State: AOJu0YzrWeidQM2yMTRd2tTgcBxYN4XDqVL5G0c1N5ucb4RWA1QiKiF7
-	vq4Par5mMHKr0mNIWn+7BvYzPD8WkKkV59DT40mREySuj84tPm1A
-X-Google-Smtp-Source: AGHT+IHfpgCmiN4yKZxh9cbTOz2of+YIvMIYN9KZ2/R2f4ckpehIvdm8HVeXkx9Mi7blW/ux8nM4Ow==
-X-Received: by 2002:a05:6808:1784:b0:3d2:2512:5a5c with SMTP id 5614622812f47-3d51bb0f078mr8378774b6e.53.1718952311934;
-        Thu, 20 Jun 2024 23:45:11 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70651194776sm683117b3a.67.2024.06.20.23.45.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 23:45:11 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] PCI: rockchip: Refactor rockchip_pcie_disable_clocks function signature
-Date: Fri, 21 Jun 2024 12:14:22 +0530
-Message-ID: <20240621064426.282048-3-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240621064426.282048-1-linux.amoon@gmail.com>
-References: <20240621064426.282048-1-linux.amoon@gmail.com>
+	s=arc-20240116; t=1718960739; c=relaxed/simple;
+	bh=u3vsruWw3m6yWhKiI6k/Bp6Kz8w7AjrzmFbFuOLhVYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d3KcjybfRXq1d05YzNrV7oWNbkWgLEj/TuiodzasvSHGks1opNoISRV9RaUThRXTOCgksuTxzrOPFjBdcr4WemLoA1Rn9RPcVW9hwt8Ijanyl9nXzkeICY/fFraqxX7+2N2mOkHfeWMPiznIMFlEv5Xp4M9b4bIJEGyPM9O15yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XSVkVAVA; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=+JO4ER5bv9lk/4SoTsJyJX99aDmjGIgbmbYr1Bo8tQk=;
+	b=XSVkVAVAsNqJ+96Z02pJ31GaBFNz9YN//CbiAY3xSDXlzW9DZRGpWkfLE6D4t6
+	dY01mCKPdLNTRImIVZmlHRr2T4mAsCiZU1wET095pPdbUMdnFIB4fzTj6ORn8he6
+	RwFAJ91fUibN1xiEzWdCOrk51MvJGOB/qS+XfaX2POMzY=
+Received: from [192.168.1.26] (unknown [183.195.6.47])
+	by gzga-smtp-mta-g3-4 (Coremail) with SMTP id _____wDn1xgVQnVmlNLkEg--.36559S2;
+	Fri, 21 Jun 2024 17:04:23 +0800 (CST)
+Message-ID: <33c7587b-83a4-4be7-b00a-d30874df8c22@163.com>
+Date: Fri, 21 Jun 2024 17:04:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: patchwork-bot+bluetooth@kernel.org, marcel@holtmann.org,
+ luiz.dentz@gmail.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org,
+ andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com,
+ broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be,
+ arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com,
+ elder@linaro.org, srinivas.kandagatla@linaro.org,
+ gregkh@linuxfoundation.org, abel.vesa@linaro.org, mani@kernel.org,
+ lukas@wunner.de, dmitry.baryshkov@linaro.org, amit.pundir@linaro.org,
+ wuxilin123@gmail.com, linux-bluetooth@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+ bartosz.golaszewski@linaro.org
+References: <20240605123850.24857-1-brgl@bgdev.pl>
+ <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
+ <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
+ <CAMRc=Mf2C4ywa+wQ6pcq5RtehQD00dDhzvS6sDcD8tAn=UypUA@mail.gmail.com>
+Content-Language: en-US
+From: Lk Sii <lk_sii@163.com>
+In-Reply-To: <CAMRc=Mf2C4ywa+wQ6pcq5RtehQD00dDhzvS6sDcD8tAn=UypUA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDn1xgVQnVmlNLkEg--.36559S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXrW7tr1rWw15KrW8XFy3CFg_yoW5CFW5pF
+	W3G3Z0kF4UJr18AF1jgw1fZFy2qw47Xw1fur1Dt3s8ZF90gr18tr1Sy34F9ry7urWI9r18
+	tFWjyrySgw48urDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRWmhrUUUUU=
+X-CM-SenderInfo: 5onb2xrl6rljoofrz/1tbiExoFNWXAlu3dLwAAsV
 
-Updated rockchip_pcie_disable_clocks function to accept
-a struct rockchip pointer instead of a void pointer.
+On 2024/6/21 14:36, Bartosz Golaszewski wrote:
+> On Fri, Jun 21, 2024 at 3:14 AM Lk Sii <lk_sii@163.com> wrote:
+>>
+>>
+>>
+>> On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
+>>> Hello:
+>>>
+>>> This series was applied to bluetooth/bluetooth-next.git (master)
+>>> by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
+>>>
+>> Hi luiz,
+>>
+>> i am curious why Bartosz is able to merge his changes into bluetooth
+>> development tree bluetooth-next directly.
+>>
+> 
+> This conversation is getting progressively worse...
+> 
+>> 1)
+>> his changes should belong to *POWER* scope instead of *Bluetooth*
+>> obviously, however, there are *NOT* any SOB tag from either power and
+>> bluetooth maintainer. these changes currently only have below Acked-by
+>> and Signed-off-by tags:
+>>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+> 
+> It's a new subsystem that has been discussed and reviewed for months
+> and thoroughly tested. Please refer to the cover letter under v8
+> linked in this thread. It's not related to power-management or
+> power-supply, it's its own thing but IMO the best place to put it is
+> under drivers/power/. And I will maintain it.
+> 
+>> 2)
+>> his changes have not merged into linus mainline tree yet.
+>>
+> 
+> This is why they are in next! They are scheduled to go in during the
+> upcoming merge window. But since changes belong in multiple trees, we
+> need a cross-tree merge.
+> 
+>> 3)
+>> perhaps, it is safer to pull his changes from linus mainline tree when
+>> merged than to merge into bluetooth-next firstly.
+>>
+> 
+> It's not safer at all, why would spending less time in next be safer?
+> 
+it seems this patch serial(new subsystem) does not depend on bluetooth
+and also does not belong to bluetooth subsystem, but have been contained
+by tip of bluetooth tree.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/pci/controller/pcie-rockchip.c | 4 +---
- drivers/pci/controller/pcie-rockchip.h | 2 +-
- 2 files changed, 2 insertions(+), 4 deletions(-)
+why not follow below merging produce?
+1) you send this patch serials to Linus to merge within linus mainline tree
+2) luiz then pull your changes from linus mainline tree.
 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index f79e2b0a965b..da210cd96d98 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -284,10 +284,8 @@ int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip)
- }
- EXPORT_SYMBOL_GPL(rockchip_pcie_enable_clocks);
- 
--void rockchip_pcie_disable_clocks(void *data)
-+void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip)
- {
--	struct rockchip_pcie *rockchip = data;
--
- 	clk_bulk_disable_unprepare(ROCKCHIP_NUM_CLKS, rockchip->clks);
- }
- EXPORT_SYMBOL_GPL(rockchip_pcie_disable_clocks);
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 27e951b41b80..3330b1e55dcd 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -354,7 +354,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip);
- int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
- void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
- int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
--void rockchip_pcie_disable_clocks(void *data);
-+void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip);
- void rockchip_pcie_cfg_configuration_accesses(
- 		struct rockchip_pcie *rockchip, u32 type);
- 
--- 
-2.44.0
+>>> On Wed,  5 Jun 2024 14:38:48 +0200 you wrote:
+>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>>
+>>>> Hi!
+>>>>
+>>>> These are the power sequencing patches sent separately after some
+>>>> improvements suggested by Bjorn Helgaas. I intend to pick them up into a
+>>>> new branch and maintain the subsystem from now on. I then plan to
+>>>> provide an immutable tag to the Bluetooth and PCI subsystems so that the
+>>>> rest of the C changes can be applied. This new branch will then be
+>>>> directly sent to Linus Torvalds for the next merge window.
+>>>>
+>>>> [...]
+>>>
+>>> Here is the summary with links:
+>>>   - [v9,1/2] power: sequencing: implement the pwrseq core
+>>>     https://git.kernel.org/bluetooth/bluetooth-next/c/249ebf3f65f8
+>>>   - [v9,2/2] power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets
+>>>     https://git.kernel.org/bluetooth/bluetooth-next/c/2f1630f437df
+>>>
+>>> You are awesome, thank you!
+>>
+> 
+> Why are you top-posting anyway?
+> 
+it is caused by my bad mail client settings. thanks for reminder.
+> Bart
 
 
