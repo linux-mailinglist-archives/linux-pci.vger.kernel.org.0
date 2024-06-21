@@ -1,317 +1,179 @@
-Return-Path: <linux-pci+bounces-9057-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9056-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2089911BE9
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 08:37:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB6D5911BDE
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 08:36:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E9421F248FE
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 06:37:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80511283FC7
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 06:36:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53DC0156641;
-	Fri, 21 Jun 2024 06:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3518515624C;
+	Fri, 21 Jun 2024 06:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b="fNejmAth"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HUVhUVcB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.ngn.tf (ngn.tf [193.106.196.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9B7155CAC;
-	Fri, 21 Jun 2024 06:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.106.196.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C97155726
+	for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2024 06:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718951802; cv=none; b=lj/iDJslRs1utJKSHm76kjB2oSrn0LyTF45V6R94ThJpLizmMDt81fczwkHYCdLNfZutLrDnSAWE5Vkiefryx3NjR5IuZjmgN4tFQRRTmmwX7fi7KzPTM5IIA+LtcP1+DRWXRpiL3k1DCLQaep/xvt7/+15dqFCbcMpOIxiEQsc=
+	t=1718951792; cv=none; b=XU2wEDOXGeAtTnTwrN019WfoMsYLmvtsFGEfp58zwLvuCxb4OTuTrUYNt5397QoaBsam0x7tADydAmm/EV1ZAnSyftrljAgCR9VzVm/pPTavXvnRvSYaKf+fB4rGr8sSnQXKbfMGd6zFkm+WN9iLgIs297RovZwgJvFEh1yPnj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718951802; c=relaxed/simple;
-	bh=gdPe/cZTFIj/WZley7sty4cWNKh/akFFobRCadNluOc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iz1XCr7lFrZ4wbENVHnr498mx68RGs8edQve/qz1qubQx3h6rsBR1a9/0tqL6ZLLsvkhhRmyuUwXvwpDaYkiq5+1AXg8m9OWZzEifpZIGNrrtTT2gpAxrkNyI1W64xhq83qoE6EQM826wSj726mJ2j4VGAygQYaHsAb00V1GMU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf; spf=pass smtp.mailfrom=ngn.tf; dkim=pass (2048-bit key) header.d=ngn.tf header.i=@ngn.tf header.b=fNejmAth; arc=none smtp.client-ip=193.106.196.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ngn.tf
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ngn.tf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ngn.tf; s=mail;
-	t=1718951797; bh=gdPe/cZTFIj/WZley7sty4cWNKh/akFFobRCadNluOc=;
-	h=From:To:Cc:Subject:In-Reply-To:References;
-	b=fNejmAth1zEB8425q7XUOlZePNs93jeTsa7zSJAWFa0n6/sG2/oZ5OtROiPdGjmTb
-	 lFg1tQZWNMp1FUVOSu5WrS90RyAdhHbwNfw9Iyvcm0O+SU7DyVbKyavyvlhkhWyRbc
-	 M2wiFQmAMGQvb4qucM8jtcvlwodkAl4EQW5QsN1s8oFpKxbi3SHoH+IsvNPNw3w6xe
-	 PoMLVfleyOErZhV0c2CmDSQi9NhYjL5UHMHqqd32SfN/yKXaYt/mONoFoO9Q9rljYm
-	 8TTee8t36lVoFUNlL5nDskm5cI4XyFBTlZiYh1I0Y4F7iqZJlGhmZXE1emrB+EAiCa
-	 p1dhWrcrVfWbw==
-From: ngn <ngn@ngn.tf>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ngn <ngn@ngn.tf>
-Subject: [PATCH 2/2] PCI: shpchp: Follow kernel coding style
-Date: Fri, 21 Jun 2024 09:35:01 +0300
-Message-ID: <bad71d39d1a72fceac548a91a3e5df61df2b1c05.1718949042.git.ngn@ngn.tf>
-In-Reply-To: <cover.1718949042.git.ngn@ngn.tf>
-References: <cover.1718949042.git.ngn@ngn.tf>
+	s=arc-20240116; t=1718951792; c=relaxed/simple;
+	bh=tIZJesXUiqyNL0+tf4ZcTxHwPed67ixLIRK/Y7eHy/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B4+D4q/5AEmJK8fEQo0yo/xmDNwCu1uIrlNfjJeXS+7h7snZJWkKvlST/bIk6HhhY2dvR/UCJyK9Rrho6azjuHdyAP/jJcqFQfHQ0BF/PZGFG9RHTfR+swcN5JydFg7eFqWDwC/sf6IV3gbNODwa2feIMiUBTdd1J7gMZXMHtV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HUVhUVcB; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52c89d6b4adso1571735e87.3
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jun 2024 23:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718951788; x=1719556588; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hDlgAx36WtQTmqaDPFS1bjCgqZ49vXGvfFSl1X9D+uI=;
+        b=HUVhUVcBAeDvJ5ZLv1iN1LWfop8ExyJAFdfsg1JKTzJz61HrhU+wCprK6eCgQppvl3
+         87Ev0hVgKDsOwpvg2mP2Vs9sskeVo+EC8InncdH89cRmL7mymKQBKQxTf7BK4gt6JLx1
+         FwGNhlqdkvVDT4gTahsMglZSw4pdSxPT67qqRiqoJ3P9lk8RzQP4zMrzzCy/sTls0Q8J
+         MBCDerIHOSsH0aSWNSGyhNwusYKUAdI0+r6vl52k0YVnh6oIsi3ScQrVJ1t+iC+v2Z8W
+         pS0kxlSmMsd7HHLM9pI8TYKx7Nlx2hPI4TdUnsh/QmfjSR9vmsQTSrCehWz5ZYRZrgHX
+         a0pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718951788; x=1719556588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hDlgAx36WtQTmqaDPFS1bjCgqZ49vXGvfFSl1X9D+uI=;
+        b=uRlo839z6SAAbobdEQtwH+4Tv0XxCFBfVXsPS6kmkpCl2MU+SR014Ug0cfeyjCN//f
+         iNN4RSYywbs/2QAWikY6iDqEMJACOnRLOkrT9GT7PTPOZlHZOgQ0SDpjRWLaMwOieMvM
+         j82NCGbtP+sZdyiuqfZyKpcHUqOPdJLQKU4t4vP0GxMUHL3oiyuLMH1MfUUbc/XdzrPQ
+         o+26Ei3MnMpmd8K5EiAj4bo50kxcbn9TOeA+PzMJ0dUfvLmeS2fx0DecLC3PJTMAvaY4
+         PZE/0lS3xJ/Qqdudteh1MFfCy9NBdZFo1dWTchIaQESQATNtjAySQPZrrI5RyGSWOKxK
+         azeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpLHM+0FRw3YFq4I5+lzhdR0xHwynwLPdJ6Lyq3I9tBn71D2Gj/NlgSniGyJWUlecE4LsqLLdVcpBlMo9GsXvWQXwWl7ci5RZM
+X-Gm-Message-State: AOJu0YwoJoXqA0cXR4q56p1xsar92V6sWNazeQvOCX5atw1jQPw4fzfL
+	jD3whKTowG7gYgh6jvQpMYmAFN9ZuPRCtn1RiA0ECy750L5+e9dc9CeTM2HNFXgKKBuBafBNit8
+	4u5XPSOBssVcc81zzQHVkh5BnJp9M8ichCrV2NQ==
+X-Google-Smtp-Source: AGHT+IETcccKM8WA7GpqQapLV3BglD0CyTXI7Fuf3artRzg+wwCccDOMDfEs5iixeaBWfAxzjwo6k5OyfcLU1ZQouHU=
+X-Received: by 2002:a05:6512:33c9:b0:52c:8a4e:f4bf with SMTP id
+ 2adb3069b0e04-52ccaa98d21mr4559244e87.51.1718951788223; Thu, 20 Jun 2024
+ 23:36:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240605123850.24857-1-brgl@bgdev.pl> <171889385036.4585.6482250630135606154.git-patchwork-notify@kernel.org>
+ <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
+In-Reply-To: <0b144517-4cc5-4c23-be57-d6f5323690ec@163.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Jun 2024 08:36:17 +0200
+Message-ID: <CAMRc=Mf2C4ywa+wQ6pcq5RtehQD00dDhzvS6sDcD8tAn=UypUA@mail.gmail.com>
+Subject: Re: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
+To: Lk Sii <lk_sii@163.com>
+Cc: patchwork-bot+bluetooth@kernel.org, marcel@holtmann.org, 
+	luiz.dentz@gmail.com, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, kvalo@kernel.org, 
+	andersson@kernel.org, konrad.dybcio@linaro.org, lgirdwood@gmail.com, 
+	broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, 
+	bhelgaas@google.com, saravanak@google.com, geert+renesas@glider.be, 
+	arnd@arndb.de, neil.armstrong@linaro.org, m.szyprowski@samsung.com, 
+	elder@linaro.org, srinivas.kandagatla@linaro.org, gregkh@linuxfoundation.org, 
+	abel.vesa@linaro.org, mani@kernel.org, lukas@wunner.de, 
+	dmitry.baryshkov@linaro.org, amit.pundir@linaro.org, wuxilin123@gmail.com, 
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	linux-pm@vger.kernel.org, bartosz.golaszewski@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-fixing checkpatch warnings
+On Fri, Jun 21, 2024 at 3:14=E2=80=AFAM Lk Sii <lk_sii@163.com> wrote:
+>
+>
+>
+> On 2024/6/20 22:30, patchwork-bot+bluetooth@kernel.org wrote:
+> > Hello:
+> >
+> > This series was applied to bluetooth/bluetooth-next.git (master)
+> > by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
+> >
+> Hi luiz,
+>
+> i am curious why Bartosz is able to merge his changes into bluetooth
+> development tree bluetooth-next directly.
+>
 
-Signed-off-by: ngn <ngn@ngn.tf>
----
- drivers/pci/hotplug/shpchp_hpc.c   | 91 +++++++++++++++---------------
- drivers/pci/hotplug/shpchp_sysfs.c |  7 +--
- 2 files changed, 47 insertions(+), 51 deletions(-)
+This conversation is getting progressively worse...
 
-diff --git a/drivers/pci/hotplug/shpchp_hpc.c b/drivers/pci/hotplug/shpchp_hpc.c
-index 012b9e3fe5b0..dd30e7e611a7 100644
---- a/drivers/pci/hotplug/shpchp_hpc.c
-+++ b/drivers/pci/hotplug/shpchp_hpc.c
-@@ -47,24 +47,24 @@
- /*
-  * Interrupt Locator Register definitions
-  */
--#define CMD_INTR_PENDING	(1 << 0)
--#define SLOT_INTR_PENDING(i)	(1 << (i + 1))
-+#define CMD_INTR_PENDING	BIT(0)
-+#define SLOT_INTR_PENDING(i)	BIT((i) + 1)
- 
- /*
-  * Controller SERR-INT Register
-  */
--#define GLOBAL_INTR_MASK	(1 << 0)
--#define GLOBAL_SERR_MASK	(1 << 1)
--#define COMMAND_INTR_MASK	(1 << 2)
--#define ARBITER_SERR_MASK	(1 << 3)
--#define COMMAND_DETECTED	(1 << 16)
--#define ARBITER_DETECTED	(1 << 17)
-+#define GLOBAL_INTR_MASK	BIT(0)
-+#define GLOBAL_SERR_MASK	BIT(1)
-+#define COMMAND_INTR_MASK	BIT(2)
-+#define ARBITER_SERR_MASK	BIT(3)
-+#define COMMAND_DETECTED	BIT(16)
-+#define ARBITER_DETECTED	BIT(17)
- #define SERR_INTR_RSVDZ_MASK	0xfffc0000
- 
- /*
-  * Logical Slot Register definitions
-  */
--#define SLOT_REG(i)		(SLOT1 + (4 * i))
-+#define SLOT_REG(i)		(SLOT1 + (4 * (i)))
- 
- #define SLOT_STATE_SHIFT	(0)
- #define SLOT_STATE_MASK		(3 << 0)
-@@ -78,27 +78,27 @@
- #define ATN_LED_STATE_ON	(1)
- #define ATN_LED_STATE_BLINK	(2)
- #define ATN_LED_STATE_OFF	(3)
--#define POWER_FAULT		(1 << 6)
--#define ATN_BUTTON		(1 << 7)
--#define MRL_SENSOR		(1 << 8)
--#define MHZ66_CAP		(1 << 9)
-+#define POWER_FAULT		BIT(6)
-+#define ATN_BUTTON		BIT(7)
-+#define MRL_SENSOR		BIT(8)
-+#define MHZ66_CAP		BIT(9)
- #define PRSNT_SHIFT		(10)
- #define PRSNT_MASK		(3 << 10)
- #define PCIX_CAP_SHIFT		(12)
- #define PCIX_CAP_MASK_PI1	(3 << 12)
- #define PCIX_CAP_MASK_PI2	(7 << 12)
--#define PRSNT_CHANGE_DETECTED	(1 << 16)
--#define ISO_PFAULT_DETECTED	(1 << 17)
--#define BUTTON_PRESS_DETECTED	(1 << 18)
--#define MRL_CHANGE_DETECTED	(1 << 19)
--#define CON_PFAULT_DETECTED	(1 << 20)
--#define PRSNT_CHANGE_INTR_MASK	(1 << 24)
--#define ISO_PFAULT_INTR_MASK	(1 << 25)
--#define BUTTON_PRESS_INTR_MASK	(1 << 26)
--#define MRL_CHANGE_INTR_MASK	(1 << 27)
--#define CON_PFAULT_INTR_MASK	(1 << 28)
--#define MRL_CHANGE_SERR_MASK	(1 << 29)
--#define CON_PFAULT_SERR_MASK	(1 << 30)
-+#define PRSNT_CHANGE_DETECTED	BIT(16)
-+#define ISO_PFAULT_DETECTED	BIT(17)
-+#define BUTTON_PRESS_DETECTED	BIT(18)
-+#define MRL_CHANGE_DETECTED	BIT(19)
-+#define CON_PFAULT_DETECTED	BIT(20)
-+#define PRSNT_CHANGE_INTR_MASK	BIT(24)
-+#define ISO_PFAULT_INTR_MASK	BIT(25)
-+#define BUTTON_PRESS_INTR_MASK	BIT(26)
-+#define MRL_CHANGE_INTR_MASK	BIT(27)
-+#define CON_PFAULT_INTR_MASK	BIT(28)
-+#define MRL_CHANGE_SERR_MASK	BIT(29)
-+#define CON_PFAULT_SERR_MASK	BIT(30)
- #define SLOT_REG_RSVDZ_MASK	((1 << 15) | (7 << 21))
- 
- /*
-@@ -228,7 +228,7 @@ static void int_poll_timeout(struct timer_list *t)
- static void start_int_poll_timer(struct controller *ctrl, int sec)
- {
- 	/* Clamp to sane value */
--	if ((sec <= 0) || (sec > 60))
-+	if (sec <= 0 || sec > 60)
- 		sec = 2;
- 
- 	ctrl->poll_timer.expires = jiffies + sec * HZ;
-@@ -238,6 +238,7 @@ static void start_int_poll_timer(struct controller *ctrl, int sec)
- static inline int is_ctrl_busy(struct controller *ctrl)
- {
- 	u16 cmd_status = shpc_readw(ctrl, CMD_STATUS);
-+
- 	return cmd_status & 0x1;
- }
- 
-@@ -272,7 +273,7 @@ static inline int shpc_wait_cmd(struct controller *ctrl)
- 		rc = shpc_poll_ctrl_busy(ctrl);
- 	else
- 		rc = wait_event_interruptible_timeout(ctrl->queue,
--						!is_ctrl_busy(ctrl), timeout);
-+						      !is_ctrl_busy(ctrl), timeout);
- 	if (!rc && is_ctrl_busy(ctrl)) {
- 		retval = -EIO;
- 		ctrl_err(ctrl, "Command not completed in 1000 msec\n");
-@@ -355,7 +356,6 @@ int shpchp_check_cmd_status(struct controller *ctrl)
- 	return retval;
- }
- 
--
- int shpchp_get_attention_status(struct slot *slot, u8 *status)
- {
- 	struct controller *ctrl = slot->ctrl;
-@@ -404,7 +404,6 @@ int shpchp_get_power_status(struct slot *slot, u8 *status)
- 	return 0;
- }
- 
--
- int shpchp_get_latch_status(struct slot *slot, u8 *status)
- {
- 	struct controller *ctrl = slot->ctrl;
-@@ -502,23 +501,22 @@ int shpchp_set_attention_status(struct slot *slot, u8 value)
- 	u8 slot_cmd = 0;
- 
- 	switch (value) {
--		case 0:
--			slot_cmd = SET_ATTN_OFF;	/* OFF */
--			break;
--		case 1:
--			slot_cmd = SET_ATTN_ON;		/* ON */
--			break;
--		case 2:
--			slot_cmd = SET_ATTN_BLINK;	/* BLINK */
--			break;
--		default:
--			return -1;
-+	case 0:
-+		slot_cmd = SET_ATTN_OFF;	/* OFF */
-+		break;
-+	case 1:
-+		slot_cmd = SET_ATTN_ON;		/* ON */
-+		break;
-+	case 2:
-+		slot_cmd = SET_ATTN_BLINK;	/* BLINK */
-+		break;
-+	default:
-+		return -1;
- 	}
- 
- 	return shpc_write_cmd(slot, slot->hp_slot, slot_cmd);
- }
- 
--
- void shpchp_green_led_on(struct slot *slot)
- {
- 	shpc_write_cmd(slot, slot->hp_slot, SET_PWR_ON);
-@@ -563,9 +561,9 @@ void shpchp_release_ctlr(struct controller *ctrl)
- 	serr_int &= ~SERR_INTR_RSVDZ_MASK;
- 	shpc_writel(ctrl, SERR_INTR_ENABLE, serr_int);
- 
--	if (shpchp_poll_mode)
-+	if (shpchp_poll_mode) {
- 		del_timer(&ctrl->poll_timer);
--	else {
-+	} else {
- 		free_irq(ctrl->pci_dev->irq, ctrl);
- 		pci_disable_msi(ctrl->pci_dev);
- 	}
-@@ -591,7 +589,7 @@ int shpchp_slot_enable(struct slot *slot)
- 
- 	/* Slot - Enable, Power Indicator - Blink, Attention Indicator - Off */
- 	retval = shpc_write_cmd(slot, slot->hp_slot,
--			SET_SLOT_ENABLE | SET_PWR_BLINK | SET_ATTN_OFF);
-+				SET_SLOT_ENABLE | SET_PWR_BLINK | SET_ATTN_OFF);
- 	if (retval)
- 		ctrl_err(slot->ctrl, "%s: Write command failed!\n", __func__);
- 
-@@ -620,7 +618,7 @@ static int shpc_get_cur_bus_speed(struct controller *ctrl)
- 	u8 pi = shpc_readb(ctrl, PROG_INTERFACE);
- 	u8 speed_mode = (pi == 2) ? (sec_bus_reg & 0xF) : (sec_bus_reg & 0x7);
- 
--	if ((pi == 1) && (speed_mode > 4)) {
-+	if (pi == 1 && speed_mode > 4) {
- 		retval = -ENODEV;
- 		goto out;
- 	}
-@@ -679,7 +677,6 @@ static int shpc_get_cur_bus_speed(struct controller *ctrl)
- 	return retval;
- }
- 
--
- int shpchp_set_bus_speed_mode(struct slot *slot, enum pci_bus_speed value)
- {
- 	int retval;
-@@ -687,7 +684,7 @@ int shpchp_set_bus_speed_mode(struct slot *slot, enum pci_bus_speed value)
- 	u8 pi, cmd;
- 
- 	pi = shpc_readb(ctrl, PROG_INTERFACE);
--	if ((pi == 1) && (value > PCI_SPEED_133MHz_PCIX))
-+	if (pi == 1 && value > PCI_SPEED_133MHz_PCIX)
- 		return -EINVAL;
- 
- 	switch (value) {
-diff --git a/drivers/pci/hotplug/shpchp_sysfs.c b/drivers/pci/hotplug/shpchp_sysfs.c
-index 01d47a42da04..06c928cfbc81 100644
---- a/drivers/pci/hotplug/shpchp_sysfs.c
-+++ b/drivers/pci/hotplug/shpchp_sysfs.c
-@@ -18,7 +18,6 @@
- #include <linux/pci.h>
- #include "shpchp.h"
- 
--
- /* A few routines that create sysfs entries for the hot plug controller */
- 
- static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char *buf)
-@@ -35,7 +34,7 @@ static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char
- 	len += sysfs_emit_at(buf, len, "Free resources: memory\n");
- 	pci_bus_for_each_resource(bus, res) {
- 		if (res && (res->flags & IORESOURCE_MEM) &&
--				!(res->flags & IORESOURCE_PREFETCH)) {
-+		    !(res->flags & IORESOURCE_PREFETCH)) {
- 			len += sysfs_emit_at(buf, len,
- 					     "start = %8.8llx, length = %8.8llx\n",
- 					     (unsigned long long)res->start,
-@@ -45,7 +44,7 @@ static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char
- 	len += sysfs_emit_at(buf, len, "Free resources: prefetchable memory\n");
- 	pci_bus_for_each_resource(bus, res) {
- 		if (res && (res->flags & IORESOURCE_MEM) &&
--			       (res->flags & IORESOURCE_PREFETCH)) {
-+		    (res->flags & IORESOURCE_PREFETCH)) {
- 			len += sysfs_emit_at(buf, len,
- 					     "start = %8.8llx, length = %8.8llx\n",
- 					     (unsigned long long)res->start,
-@@ -73,7 +72,7 @@ static ssize_t show_ctrl(struct device *dev, struct device_attribute *attr, char
- 
- 	return len;
- }
--static DEVICE_ATTR(ctrl, S_IRUGO, show_ctrl, NULL);
-+static DEVICE_ATTR(ctrl, 0444, show_ctrl, NULL);
- 
- int shpchp_create_ctrl_files(struct controller *ctrl)
- {
--- 
-2.45.1
+> 1)
+> his changes should belong to *POWER* scope instead of *Bluetooth*
+> obviously, however, there are *NOT* any SOB tag from either power and
+> bluetooth maintainer. these changes currently only have below Acked-by
+> and Signed-off-by tags:
+>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
 
+It's a new subsystem that has been discussed and reviewed for months
+and thoroughly tested. Please refer to the cover letter under v8
+linked in this thread. It's not related to power-management or
+power-supply, it's its own thing but IMO the best place to put it is
+under drivers/power/. And I will maintain it.
+
+> 2)
+> his changes have not merged into linus mainline tree yet.
+>
+
+This is why they are in next! They are scheduled to go in during the
+upcoming merge window. But since changes belong in multiple trees, we
+need a cross-tree merge.
+
+> 3)
+> perhaps, it is safer to pull his changes from linus mainline tree when
+> merged than to merge into bluetooth-next firstly.
+>
+
+It's not safer at all, why would spending less time in next be safer?
+
+> > On Wed,  5 Jun 2024 14:38:48 +0200 you wrote:
+> >> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>
+> >> Hi!
+> >>
+> >> These are the power sequencing patches sent separately after some
+> >> improvements suggested by Bjorn Helgaas. I intend to pick them up into=
+ a
+> >> new branch and maintain the subsystem from now on. I then plan to
+> >> provide an immutable tag to the Bluetooth and PCI subsystems so that t=
+he
+> >> rest of the C changes can be applied. This new branch will then be
+> >> directly sent to Linus Torvalds for the next merge window.
+> >>
+> >> [...]
+> >
+> > Here is the summary with links:
+> >   - [v9,1/2] power: sequencing: implement the pwrseq core
+> >     https://git.kernel.org/bluetooth/bluetooth-next/c/249ebf3f65f8
+> >   - [v9,2/2] power: pwrseq: add a driver for the PMU module on the QCom=
+ WCN chipsets
+> >     https://git.kernel.org/bluetooth/bluetooth-next/c/2f1630f437df
+> >
+> > You are awesome, thank you!
+>
+
+Why are you top-posting anyway?
+
+Bart
 
