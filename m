@@ -1,139 +1,110 @@
-Return-Path: <linux-pci+bounces-9118-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9119-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2F49913435
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 15:39:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 267B99134A2
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 17:06:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F5D028466F
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 13:39:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDACD284000
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 15:06:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0349D16C445;
-	Sat, 22 Jun 2024 13:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRyrbmEZ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF3D154BE7;
+	Sat, 22 Jun 2024 15:06:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out198-23.us.a.mail.aliyun.com (out198-23.us.a.mail.aliyun.com [47.90.198.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD39B82492;
-	Sat, 22 Jun 2024 13:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F7C1E485;
+	Sat, 22 Jun 2024 15:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719063587; cv=none; b=U1m8kSiie3QcBp+38xvlvbO8J3MuBngo+dUhqmljBkL0vNDi12R36K7brarfTiPX52RkC3ltlrX/tjKe3kzzUpmQoJVq9cWkeULfcBsEElpUJ9HrFruxqpE6NInfgN2Lt1QISJtS6D7mqHdO0NH4TJaqymHVCVirU7owVeZ/l5k=
+	t=1719068798; cv=none; b=eczqnOSMX/w6INnjKRjK6xjK3uDHXUSDBf7RYoffN0+ENOqTGSWALpPSaoLVleyCpSOeH8f2J7N38MGzQKMSpDz1/r0/c4PbKrmmbJIBHnFj2iDsF03fHa3jzfFAi6ItgdR+9JE3O7JW7iamsttwQfo2psj0LUuNJDW3Zn42Seo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719063587; c=relaxed/simple;
-	bh=XoDceAdXs9z6NeEt0iuTL63LGCFyCmlS+FZp9Eo478A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XfmLfb14kNFBkamwkDTiiT6uWm7R8+YVbaUiImXEAIniKutHG8rNWxdNDGc7BMoEhRqS20dT5O1jviDJW8yw30SEgBOfK1f8stW8nVgkePHLUBhS4KTYNdei/n8iRCAeiM5X2hExAuBybdy81XGVnaCVlNAIGje0mP7KqgZbE5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRyrbmEZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864CAC3277B;
-	Sat, 22 Jun 2024 13:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719063587;
-	bh=XoDceAdXs9z6NeEt0iuTL63LGCFyCmlS+FZp9Eo478A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YRyrbmEZwPVx6Kq3OX7UakomyMBYMbHvJTJWNzDVbmFr345rfZhNmE7m4YjIa8tDK
-	 xC9peBlGek6Jcrn1zrUk0ZGyeLcLQLLn/qClDZu01loSvm75xV+jyr6m/OL9mJY/51
-	 1wxxr+qwdWiTwydzXO4rV8hgvgqea39BlGxSmUDlQVcu3CIf4VWPveUPwdm0jNlHU8
-	 c4yrHGfrfcbWhWY+aXlLx+qILyqelFr4X1aSa0IygbEE8FPjk1+PdpDp/B8sC6+xHw
-	 yd4D4xccgu3mC+4iXTc2Ak/X8Kh/rI3ANFjiq3RmiCS+Bw2ZQK+tmRa3solRgU435U
-	 7SfU2RPtQnP2A==
-Date: Sat, 22 Jun 2024 15:39:40 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Damien Le Moal <dlemoal@kernel.org>,
-	Jon Lin <jon.lin@rock-chips.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v5 00/13] PCI: dw-rockchip: Add endpoint mode support
-Message-ID: <ZnbUHI5GEMCmaK2V@ryzen.lan>
-References: <20240607-rockchip-pcie-ep-v1-v5-0-0a042d6b0049@kernel.org>
- <Zm_tGknJe5Ttj9mC@ryzen.lan>
- <20240621193937.GB3008482@rocinante>
+	s=arc-20240116; t=1719068798; c=relaxed/simple;
+	bh=5L6y9idhEpNsN68qMiG/VdseGq/1D+5+vSNa8y9qbvk=;
+	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
+	 Content-Type; b=XhAXXt2rz5331315CbCchWTuFZ7CMfFlhnmemFhB0EhAnKdprYm8hzhsXduYKIh049qLD2BJt6LmJPzsx45PsK5ZzKgX3JcB7n4T5ezhd/TTD4xksc1D4i6tnuQf9hnBY1y61jYqgLW0ufHZkF44czwqmAdjEvK3MXXraoPv3ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.09427714|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0736766-0.000805794-0.925518;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033040120151;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.Y7hfDjz_1719068777;
+Received: from zhoushengqing(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.Y7hfDjz_1719068777)
+          by smtp.aliyun-inc.com;
+          Sat, 22 Jun 2024 23:06:18 +0800
+Date: Sat, 22 Jun 2024 23:06:18 +0800
+From: "zhoushengqing@ttyinfo.com" <zhoushengqing@ttyinfo.com>
+To: "Bjorn Helgaas" <helgaas@kernel.org>
+Cc: "Bjorn Helgaas" <bhelgaas@google.com>, 
+	linux-pci <linux-pci@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	zhoushengqing <zhoushengqing@ttyinfo.com>
+Subject: Re: Re: [PATCH] PCI: Enable io space 1k granularity for intel cpu root port
+References: <20240621210207.GA1405708@bhelgaas>
+X-Priority: 3
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.23.121[cn]
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240621193937.GB3008482@rocinante>
+Mime-Version: 1.0
+Message-ID: <2024062223061743562815@ttyinfo.com>
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On Sat, Jun 22, 2024 at 04:39:37AM +0900, Krzysztof Wilczyński wrote:
-> Hello,
->
-> [...]
-> > If there is anything more I can do to get this picked up, please tell me.
->
-> Looks good! As such...
->
-> Applied to controller/rockchip, thank you!
->
-> [01/04] PCI: dw-rockchip: Fix weird indentation
->         https://git.kernel.org/pci/pci/c/e7e8872191af
->
-> [02/04] PCI: dw-rockchip: Add rockchip_pcie_get_ltssm() helper
->         https://git.kernel.org/pci/pci/c/cbb2d4ae3fdc
->
-> [03/04] PCI: dw-rockchip: Add endpoint mode support
->         https://git.kernel.org/pci/pci/c/67fe449bcd85
->
-> [04/04] PCI: dw-rockchip: Refactor the driver to prepare for EP mode
->         https://git.kernel.org/pci/pci/c/ecdc98a3a912
+Pj4gVGhpcyBwYXRjaCBhZGQgMWsgZ3JhbnVsYXJpdHkgZm9yIGludGVsIHJvb3QgcG9ydCBicmlk
+Z2UuSW50ZWwgbGF0ZXN0CgoKCj4+IHNlcnZlciBDUFUgc3VwcG9ydCAxSyBncmFudWxhcml0eSxB
+bmQgdGhlcmUgaXMgYW4gQklPUyBzZXR1cCBpdGVtIG5hbWVkCgoKCj4+ICJFTjFLIixidXQgbGlu
+dXggZG9lc24ndCBzdXBwb3J0IGl0LiBpZiBhbiBJSU8gaGFzIDUgSU9VIChTUFIgaGFzIDUgSU9V
+cykKCgoKPj4gYWxsIGFyZSBiaWZ1cmNhdGVkIDJ4OC5JbiBhIDJQIHNlcnZlciBzeXN0ZW0sVGhl
+cmUgYXJlIDIwIFAyUCBicmlkZ2VzCgoKCj4+IHByZXNlbnQuaWYga2VlcCA0SyBncmFudWxhcml0
+eSBhbGxvY2F0aW9uLGl0IG5lZWQgMjAqND04MGsgaW8gc3BhY2UsCgoKCj4+IGV4Y2VlZGluZyA2
+NGsuSSB0ZXN0IGl0IGluIGEgMTYqbnZpZGlhIDQwOTBzIHN5c3RlbSB1bmRlciBpbnRlbCBlYWds
+ZXN0cmVtCgoKCj4+IHBsYXRmb3JtLlRoZXJlIGFyZSBzaXggNDA5MHMgdGhhdCBjYW5ub3QgYmUg
+YWxsb2NhdGVkIEkvTyByZXNvdXJjZXMuCgoKCj4+IFNvIEkgYXBwbGllZCB0aGlzIHBhdGNoLkFu
+ZCBJIGZvdW5kIGEgc2ltaWxhciBpbXBsZW1lbnRhdGlvbiBpbiBxdWlya3MuYywKCgoKPj4gYnV0
+IGl0IG9ubHkgdGFyZ2V0cyB0aGUgSW50ZWwgUDY0SDIgcGxhdGZvcm0uCgoKCj4+CgoKCj4+IFNp
+Z25lZC1vZmYtYnk6IFpob3UgU2hlbmdxaW5nIDx6aG91c2hlbmdxaW5nQHR0eWluZm8uY29tPgoK
+Cgo+PiAtLS0KCgoKPj7CoCBkcml2ZXJzL3BjaS9wcm9iZS5jIHwgMjIgKysrKysrKysrKysrKysr
+KysrKysrKwoKCgo+PsKgIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCgoKCj4+CgoK
+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wcm9iZS5jIGIvZHJpdmVycy9wY2kvcHJvYmUu
+YwoKCgo+PiBpbmRleCA1ZmJhYmI0ZTM0MjUuLjNmMGM5MDFjNjY1MyAxMDA2NDQKCgoKPj4gLS0t
+IGEvZHJpdmVycy9wY2kvcHJvYmUuYwoKCgo+PiArKysgYi9kcml2ZXJzL3BjaS9wcm9iZS5jCgoK
+Cj4+IEBAIC00NjEsNiArNDYxLDggQEAgc3RhdGljIHZvaWQgcGNpX3JlYWRfYnJpZGdlX3dpbmRv
+d3Moc3RydWN0IHBjaV9kZXYgKmJyaWRnZSkKCgoKPj7CoCB1MzIgYnVzZXM7CgoKCj4+wqAgdTE2
+IGlvOwoKCgo+PsKgIHUzMiBwbWVtLCB0bXA7CgoKCj4+ICsgdTE2IHZlbl9pZCwgZGV2X2lkOwoK
+Cgo+PiArIHUxNiBlbjFrID0gMDsKCgoKPj7CoCBzdHJ1Y3QgcmVzb3VyY2UgcmVzOwoKCgo+PgoK
+Cgo+PsKgIHBjaV9yZWFkX2NvbmZpZ19kd29yZChicmlkZ2UsIFBDSV9QUklNQVJZX0JVUywgJmJ1
+c2VzKTsKCgoKPj4gQEAgLTQ3OCw2ICs0ODAsMjYgQEAgc3RhdGljIHZvaWQgcGNpX3JlYWRfYnJp
+ZGdlX3dpbmRvd3Moc3RydWN0IHBjaV9kZXYgKmJyaWRnZSkKCgoKPj7CoCB9CgoKCj4+wqAgaWYg
+KGlvKSB7CgoKCj4+wqAgYnJpZGdlLT5pb193aW5kb3cgPSAxOwoKCgo+PiArIGlmIChwY2lfaXNf
+cm9vdF9idXMoYnJpZGdlLT5idXMpKSB7CgoKCj4+ICsgbGlzdF9mb3JfZWFjaF9lbnRyeShkZXYs
+ICZicmlkZ2UtPmJ1cy0+ZGV2aWNlcywgYnVzX2xpc3QpIHsKCgoKPj4gKyBwY2lfcmVhZF9jb25m
+aWdfd29yZChkZXYsIFBDSV9WRU5ET1JfSUQsICZ2ZW5faWQpOwoKCgo+PiArIHBjaV9yZWFkX2Nv
+bmZpZ193b3JkKGRldiwgUENJX0RFVklDRV9JRCwgJmRldl9pZCk7CgoKCj4+ICsgaWYgKHZlbl9p
+ZCA9PSBQQ0lfVkVORE9SX0lEX0lOVEVMICYmIGRldl9pZCA9PSAweDA5YTIpIHsKCgoKPj4gKyAv
+KklJTyBNSVNDIENvbnRyb2wgb2Zmc2V0IDB4MWMwKi8KCgoKPj4gKyBwY2lfcmVhZF9jb25maWdf
+d29yZChkZXYsIDB4MWMwLCAmZW4xayk7CgoKCj4+ICsgfQoKCgo+PiArIH0KCgoKPj4gKyAvKgoK
+Cgo+PiArICpJbnRlbCBJQ1ggU1BSIEVNUiBHTlIKCgoKPj4gKyAqSUlPIE1JU0MgQ29udHJvbCAo
+SUlPTUlTQ0NUUkxfMV81XzBfQ0ZHKSDigJQgT2Zmc2V0IDFDMGgKCgoKPj4gKyAqYml0IDI6RW5h
+YmxlIDFLIChFTjFLKQoKCgo+PiArICpUaGlzIGJpdCB3aGVuIHNldCwgZW5hYmxlcyAxSyBncmFu
+dWxhcml0eSBmb3IgSS9PIHNwYWNlIGRlY29kZQoKCgo+PiArICppbiBlYWNoIG9mIHRoZSB2aXJ0
+dWFsIFAyUCBicmlkZ2VzCgoKCj4+ICsgKmNvcnJlc3BvbmRpbmcgdG8gcm9vdCBwb3J0cywgYW5k
+IERNSSBwb3J0cy4KCgoKPj4gKyAqLwoKCgo+PiArIGlmIChlbjFrICYgMHg0KQoKCgo+PiArIGJy
+aWRnZS0+aW9fd2luZG93XzFrID0gMTsKCgoKPj4gKyB9CgoKCj4KCgoKPkNhbiB5b3UgaW1wbGVt
+ZW50IHRoaXMgYXMgYSBxdWlyayBzaW1pbGFyIHRvIHF1aXJrX3A2NGgyXzFrX2lvKCk/CgoKCj4K
+CgoKPkkgZG9uJ3Qgd2FudCB0byBjbHV0dGVyIHRoZSBnZW5lcmljIGNvZGUgd2l0aCBkZXZpY2Ut
+c3BlY2lmaWMgdGhpbmdzCgoKCj5saWtlIHRoaXMuCgoKCgpJIGhhdmUgYXR0ZW1wdGVkIHRvIGlt
+cGxlbWVudCB0aGlzIHBhdGNoIGluIHF1aXJrcy5jLkJ1dCB0aGVyZSBkb2Vzbid0IHNlZW0KCgoK
+dG8gYmUgYSBzdWl0YWJsZSBERUNMQVJFX1BDSV9GSVhVUCogdG8gZG8gdGhpcy5iZWNhdXNlIHRo
+ZSBwYXRjaCBpcyBub3QgdGFyZ2V0aW5nCgoKCnRoZSBkZXZpY2UgaXRzZWxmLCBJdCB0YXJnZXRz
+IG90aGVyIFAyUCBkZXZpY2VzIHdpdGggdGhlIHNhbWUgYnVzIG51bWJlci4KCgoKQW55IG90aGVy
+IHN1Z2dlc3Rpb25zPyBUaGFua3MuCgoKPgoKCgo+PsKgIHBjaV9yZWFkX2JyaWRnZV9pbyhicmlk
+Z2UsICZyZXMsIHRydWUpOwoKCgo+PsKgIH0KCgoKPj4KCgoKPj4gLS0KCgoKPj4gMi4zOS4yCgoK
+Cj4+CgoKCj7CoAoKCgo+IC0tCgoKCj4gMi4zOS4yCgoKCj4KCgo=
 
-Krzysztof,
-
-unfortunately, the controller/rockchip branch currently doesn't build:
-
-drivers/pci/controller/dwc/pcie-dw-rockchip.c: In function ‘rockchip_pcie_ep_sys_irq_thread’:
-drivers/pci/controller/dwc/pcie-dw-rockchip.c:407:17: error: implicit declaration of function ‘dw_pcie_ep_linkdown’;
-	did you mean ‘dw_pcie_ep_linkup’? [-Wimplicit-function-declaration]
-  407 |                 dw_pcie_ep_linkdown(&pci->ep);
-      |                 ^~~~~~~~~~~~~~~~~~~
-      |                 dw_pcie_ep_linkup
-
-
-Could you possibly include the commit:
-3d2e425263e2 ("PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown() API to handle Link Down event")
-from the controller/dwc branch in the controller/rockchip as well,
-or rebase the controller/rockchip branch on top of the controller/dwc branch,
-or merge the controller/dwc branch to the controller/rockchip branch?
-
-
-
-Additionally, since you picked up Mani's series which removes
-dw_pcie_ep_init_notify() on the controller/dwc branch:
-9eba2f70362f ("PCI: dwc: ep: Remove dw_pcie_ep_init_notify() wrapper")
-
-You will need to pick up this patch as well:
-https://lore.kernel.org/linux-pci/20240622132024.2927799-2-cassel@kernel.org/T/#u
-Otherwise there will be a build error when merging the controller/dwc
-and the controller/rockchip branch to for-next.
-The patch that I sent out can be picked up to the controller/rockchip right
-now (since the API that Mani is switching to already exists in Linus's tree).
-
-
-
-May I ask why all the branches for the different DWC glue drivers are not
-based on the controller/dwc branch?
-They are obviously going to be tightly related.
-
-
-Kind regards,
-Niklas
 
