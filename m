@@ -1,259 +1,354 @@
-Return-Path: <linux-pci+bounces-9105-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9106-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AAB091308A
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 00:44:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E2B0913189
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 04:11:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D13CC1F223D0
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jun 2024 22:44:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B166E1C20EFA
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 02:11:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05C4116F0FB;
-	Fri, 21 Jun 2024 22:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25C24C6B;
+	Sat, 22 Jun 2024 02:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9d7Qf6g"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FHMuCZRy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0E2208C4;
-	Fri, 21 Jun 2024 22:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED351392;
+	Sat, 22 Jun 2024 02:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719009804; cv=none; b=jHDYnMOgE/XQJesdOcqWjpZHzzxkTlX9FxKi9eHDE9bzMd59paHGJevpi9LRHOSwqoLCSQ8AgC868KTNSGdpDHzF6oWkOXvS2Vp3cYh7NFpRcv0hKlJ8S1zMm18Z9JsovB74wmHSOg0XuhH/sfub/12Uk5vQpVH2sPNYtQM0Js0=
+	t=1719022257; cv=none; b=sLY52QfMsYPM/g2qRSBzEHAmYIZ7RLW6PGXIkX1Ao+F4xVboAP9zaxofIKwCSlU9bZpSFvoQ9pOQnIf8RAnrLu3wBlF9Jz62LLYiajVfW7hhXdSfAWVs20wXR7kaXz9hxE3Sma+r/He0fcQVpNSUHXZo56N5yOJ7qUgOGBaSHaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719009804; c=relaxed/simple;
-	bh=RdVFUU7jhxxfEURdipzkFmDuclvZyuceXrMVLDPfN7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ImmIt/4D/iT3WSb+Lo5IEXB9XJhJB6UbWWs0rJADB32DWrTbOlQJVSh6BngTUFQV/6DbnTuBxprQ73hljSVjc/BWSucqKoNJs7nYUCQNsRRwjfZeozE7wG6VX6NM4EzB/6aSxihLKQORRAFk0fG6a+HH7rdAIbdhje2YVXDA+HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9d7Qf6g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13267C2BBFC;
-	Fri, 21 Jun 2024 22:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719009804;
-	bh=RdVFUU7jhxxfEURdipzkFmDuclvZyuceXrMVLDPfN7Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=S9d7Qf6g/FVL0QeM66PKuHQ3U2MOt7QJTBkFU0VBdWPzzKDN6UQegQ94LUR7aRjcF
-	 rfPRD9XW/FLWjkG/qTNfMFjRjf0n3xnzSuEXvWqee/DAZ2THRkXXB34DeegFdUgK4I
-	 3NLMgImM7pXJ/dY+BgzK5hU2vxpZYYMDlCSWD+NnFAThUF81tHV7OmrnYciS08cNbB
-	 G3J+ehiAZJzDABDZP5iFID3n73rnvNctiwfWBKw1w6u79HXETXO2wRLkOYfAjB1JNZ
-	 BQXHEMCFlsDYbKTM/4FLVw6RXmBpxuOrTNcDKQelkT/jTvnG9eoM7YOeB172ZTPWG3
-	 LqNroBEwQcThQ==
-Date: Fri, 21 Jun 2024 17:43:21 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
-	Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
- MSI ITS and IOMMU for i.MX95
-Message-ID: <20240621224321.GA1410825@bhelgaas>
+	s=arc-20240116; t=1719022257; c=relaxed/simple;
+	bh=LQ9XI9AwLJLroNy9nG6dm5ataqAhZs4PbuHvDzKydXc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TwDt593fVcfVfq1TGKInlLVxMTttgr1y+0QeMSlHpyjM1GXVWWwrW+suXBTKDaOc+YWHa/tKY7Hij0H3GYVpDGYTb/OK+uIllRfjhJeNxT3JSAIJw1HaRHwGNChHk4O7wMb+9wyHN26iwWL2CYc8CKDnwGoT4LEAXSmd+p1cgL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FHMuCZRy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45M0jqLF023860;
+	Sat, 22 Jun 2024 02:10:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hEI19Pz7eq0TrCSWx/3PjKXtkmpQFhhyDv8DrtDboeY=; b=FHMuCZRyGj2nlAnx
+	y/p5138zNOxffl/x78LpI6UNqBXwP+AGpon61g7lX4d3yYRZKstuwGeVO3i9dwvl
+	0Z81HdOzyhUzwfwpxSBBf3WJg7j1khQo1fr2gg0H9pH8zVMVFVUncFVYTLe1LLoI
+	wyxYz6q8js1/w1Bq4+6mIbMxJXnSQ+j5oyN0bWGMNGl+6yYEl+Sfx6cmmcR/D04d
+	fNML88SdeEPJRhcsnztLU4H4wecUEdWBteZ8pmsxK4e0K1K1Usu0Q6v47bOrDy3N
+	wbIZuVbOEsk/QWMQUCNF11JWN9o8gNMVFgpu6Bf6+5ogD7Cm6RIRjhZiPqWNB2Nl
+	v4Lf6Q==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywkyn03du-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 22 Jun 2024 02:10:47 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45M2AkTW017949
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 22 Jun 2024 02:10:46 GMT
+Received: from [10.46.163.151] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Jun
+ 2024 19:10:45 -0700
+Message-ID: <0bfb4e4f-f471-4340-aa06-74eae58bdb84@quicinc.com>
+Date: Fri, 21 Jun 2024 19:10:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZnX+3H+bwTr4FbDb@lizhi-Precision-Tower-5810>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] PCI: qcom: Avoid DBI and ATU register space mirror to
+ BAR/MMIO region
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <bhelgaas@google.com>, <robh@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_mrana@quicinc.com>
+References: <20240621204705.GA1395276@bhelgaas>
+Content-Language: en-US
+From: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+In-Reply-To: <20240621204705.GA1395276@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: IYNB-7CKq8Gp0LU_tdlj0VN7PVCZ5O9s
+X-Proofpoint-GUID: IYNB-7CKq8Gp0LU_tdlj0VN7PVCZ5O9s
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-21_12,2024-06-21_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ mlxscore=0 impostorscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 clxscore=1011 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406220012
 
-On Fri, Jun 21, 2024 at 06:29:48PM -0400, Frank Li wrote:
-> On Mon, Jun 17, 2024 at 10:26:36AM -0400, Frank Li wrote:
-> > On Thu, Jun 13, 2024 at 05:41:25PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Jun 06, 2024 at 04:24:17PM -0400, Frank Li wrote:
-> > > > On Mon, Jun 03, 2024 at 04:07:55PM -0400, Frank Li wrote:
-> > > > > On Mon, Jun 03, 2024 at 01:56:27PM -0500, Bjorn Helgaas wrote:
-> > > > > > On Mon, Jun 03, 2024 at 02:42:45PM -0400, Frank Li wrote:
-> > > > > > > On Mon, Jun 03, 2024 at 12:19:21PM -0500, Bjorn Helgaas wrote:
-> > > > > > > > On Fri, May 31, 2024 at 03:58:49PM +0100, Robin Murphy wrote:
-> > > > > > > > > On 2024-05-31 12:08 am, Bjorn Helgaas wrote:
-> > > > > > > > > > [+cc IOMMU and pcie-apple.c folks for comment]
-> > > > > > > > > >
-> > > > > > > > > > On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
-> > > > > > > > > > > For the i.MX95, configuration of a LUT is necessary to convert Bus Device
-> > > > > > > > > > > Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
-> > > > > > > > > > > This involves examining the msi-map and smmu-map to ensure consistent
-> > > > > > > > > > > mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
-> > > > > > > > > > > registers are configured. In the absence of an msi-map, the built-in MSI
-> > > > > > > > > > > controller is utilized as a fallback.
-> > > > > > > > > > >
-> > > > > > > > > > > Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
-> > > > > > > > > > > upon the appearance of a new PCI device and when the bus is an iMX6 PCI
-> > > > > > > > > > > controller. This function configures the correct LUT based on Device Tree
-> > > > > > > > > > > Settings (DTS).
-> > > > > > > > > >
-> > > > > > > > > > This scheme is pretty similar to apple_pcie_bus_notifier().  If we
-> > > > > > > > > > have to do this, I wish it were *more* similar, i.e., copy the
-> > > > > > > > > > function names, bitmap tracking, code structure, etc.
-> > > > > > > > > >
-> > > > > > > > > > I don't really know how stream IDs work, but I assume they are used on
-> > > > > > > > > > most or all arm64 platforms, so I'm a little surprised that of all the
-> > > > > > > > > > PCI host drivers used on arm64, only pcie-apple.c and pci-imx6.c need
-> > > > > > > > > > this notifier.
-> > > > > > > > >
-> > > > > > > > > This is one of those things that's mostly at the mercy of the PCIe root
-> > > > > > > > > complex implementation. Typically the SMMU StreamID and/or GIC ITS DeviceID
-> > > > > > > > > is derived directly from the PCI RID, sometimes with additional high-order
-> > > > > > > > > bits hard-wired to disambiguate PCI segments. I believe this RID-translation
-> > > > > > > > > LUT is a particular feature of the the Synopsys IP - I know there's also one
-> > > > > > > > > on the NXP Layerscape platforms, but on those it's programmed by the
-> > > > > > > > > bootloader, which also generates the appropriate "msi-map" and "iommu-map"
-> > > > > > > > > properties to match. Ideally that's what i.MX should do as well, but hey.
-> > > > > > > >
-> > > > > > > > Maybe this RID-translation is a feature of i.MX, not of Synopsys?  I
-> > > > > > > > see that the LUT CSR accesses use IMX95_* definitions.
-> > > > > > >
-> > > > > > > Yes, it convert 16bit RID to 6bit stream id.
-> > > > > >
-> > > > > > IIUC, you're saying this is not a Synopsys feature, it's an i.MX
-> > > > > > feature.
-> > > > >
-> > > > > Yes, it is i.MX feature. But I think other vendor should have similar
-> > > > > situation if use old arm smmu.
-> > > > >
-> > > > > >
-> > > > > > > > > If it's really necessary to do this programming from Linux, then there's
-> > > > > > > > > still no point in it being dynamic - the mappings cannot ever change, since
-> > > > > > > > > the rest of the kernel believes that what the DT said at boot time was
-> > > > > > > > > already a property of the hardware. It would be a lot more logical, and
-> > > > > > > > > likely simpler, for the driver to just read the relevant map property and
-> > > > > > > > > program the entire LUT to match, all in one go at controller probe time.
-> > > > > > > > > Rather like what's already commonly done with the parsing of "dma-ranges" to
-> > > > > > > > > program address-translation LUTs for inbound windows.
-> > > > > > > > >
-> > > > > > > > > Plus that would also give a chance of safely dealing with bad DTs specifying
-> > > > > > > > > invalid ID mappings (by refusing to probe at all). As it is, returning an
-> > > > > > > > > error from a child's BUS_NOTIFY_ADD_DEVICE does nothing except prevent any
-> > > > > > > > > further notifiers from running at that point - the device will still be
-> > > > > > > > > added, allowed to bind a driver, and able to start sending DMA/MSI traffic
-> > > > > > > > > without the controller being correctly programmed, which at best won't work
-> > > > > > > > > and at worst may break the whole system.
-> > > > > > > >
-> > > > > > > > Frank, could the imx LUT be programmed once at boot-time instead of at
-> > > > > > > > device-add time?  I'm guessing maybe not because apparently there is a
-> > > > > > > > risk of running out of LUT entries?
-> > > > > > >
-> > > > > > > It is not good idea to depend on boot loader so much.
-> > > > > >
-> > > > > > I meant "could this be programmed once when the Linux imx host
-> > > > > > controller driver is probed?"  But from the below, it sounds like
-> > > > > > that's not possible in general because you don't have enough stream
-> > > > > > IDs to do that.
-> > > > >
-> > > > > Oh! sorry miss understand what your means. It is possible like what I did
-> > > > > at v3 version. But I think it is not good enough.
-> > > > >
-> > > > > >
-> > > > > > > Some hot plug devics
-> > > > > > > (SD7.0) may plug after system boot. Two PCIe instances shared one set
-> > > > > > > of 6bits stream id (total 64). Assume total 16 assign to two PCIe
-> > > > > > > controllers. each have 8 stream id. If use uboot assign it static, each
-> > > > > > > PCIe controller have below 8 devices.  It will be failrue one controller
-> > > > > > > connect 7, another connect 9. but if dynamtic alloc when devices add, both
-> > > > > > > controller can work.
-> > > > > > >
-> > > > > > > Although we have not so much devices now,  this way give us possility to
-> > > > > > > improve it in future.
-> > > > > > >
-> > > > > > > > It sounds like the consequences of running out of LUT entries are
-> > > > > > > > catastrophic, e.g., memory corruption from mis-directed DMA?  If
-> > > > > > > > that's possible, I think we need to figure out how to prevent the
-> > > > > > > > device from being used, not just dev_warn() about it.
-> > > > > > >
-> > > > > > > Yes, but so far, we have not met such problem now. We can improve it when
-> > > > > > > we really face such problem.
-> > > > > >
-> > > > > > If this controller can only support DMA from a limited number of
-> > > > > > endpoints below it, I think we should figure out how to enforce that
-> > > > > > directly.  Maybe we can prevent drivers from enabling bus mastering or
-> > > > > > something.  I'm not happy with the idea of waiting for and debugging a
-> > > > > > report of data corruption.
-> > > > >
-> > > > > It may add a pre-add hook function to pci bridge. let me do more research.
-> > > >
-> > > > Hi Bjorn:
-> > > >
-> > > > int pci_setup_device(struct pci_dev *dev)
-> > > > {
-> > > > 	dev->error_state = pci_channel_io_normal;
-> > > > 	...
-> > > > 	pci_fixup_device(pci_fixup_early, dev);
-> > > >
-> > > > 	^^^ I can add fixup hook for pci_fixup_early. If not resource,
-> > > > I can set dev->error_state to pci_channel_io_frozen or
-> > > > pci_channel_io_perm_failure
-> > > >
-> > > > 	And add below check here after call hook function.
-> > > >
-> > > > 	if (dev->error_state != pci_channel_io_normal)
-> > > > 		return -EIO;
-> > > >
-> > > > }
-> > > >
-> > > > How do you think this method? If you agree, I can continue search device
-> > > > remove hook up.
-> > >
-> > > I think this would mean the device would not appear to be enumerated
-> > > at all, right?  I.e., it wouldn't show up in lspci?  And we couldn't
-> > > use even a pure programmed IO driver with no DMA or MSI?
-> >
-> > Make sense. Let me do more research on this.
-> >
-> > Frank
-> > >
-> > > I wonder if we should have a function pointer in struct
-> > > pci_host_bridge, kind of like the existing ->map_irq(), where we could
-> > > do host bridge-specific setup when enumerating a PCI device.
-> 
-> Consider some device may no use MSI or DMA. It'd better set LUT when
-> allocate msi irq. I think insert a irq-domain in irq hierarchy.
-> 
-> static const struct irq_domain_ops lut_pcie_msi_domain_ops = {
->         .alloc  = lut_pcie_irq_domain_alloc,
->         .free   = lut_pcie_irq_domain_free,
-> };
-> 
-> int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
-> {
->         struct fwnode_handle *fwnode = of_node_to_fwnode(pci->dev->of_node);
-> 
->         pp->irq_domain = irq_domain_create_hierarchy(...)
-> 
->         pp->msi_domain = pci_msi_create_irq_domain(...);
-> 
->         return 0;
-> }
-> 
-> Manage lut stream id in lut_pcie_irq_domain_alloc() and
-> lut_pcie_irq_domain_free().
-> 
-> So failure happen only when driver use MSI and no-stream ID avaiable. It
-> should be better than failure when add devices. Some devices may not use
-> at all.
+Hi Bjorn,
 
-I'm not an IRQ expert, but it sounds plausible.  There might even be
-an opportunity to fall back to INTx if there's no stream ID available
-for MSI?
+Thanks for the review comments.
+
+On 6/21/2024 1:47 PM, Bjorn Helgaas wrote:
+> On Thu, Jun 20, 2024 at 02:34:05PM -0700, Prudhvi Yarlagadda wrote:
+>> PARF hardware block which is a wrapper on top of DWC PCIe controller
+>> mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
+>> register to get the size of the memory block to be mirrored and uses
+>> PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
+>> address of DBI and ATU space inside the memory block that is being
+>> mirrored.
+>>
+>> When a memory region which is located above the SLV_ADDR_SPACE_SIZE
+>> boundary is used for BAR region then there could be an overlap of DBI and
+>> ATU address space that is getting mirrored and the BAR region. This
+>> results in DBI and ATU address space contents getting updated when a PCIe
+>> function driver tries updating the BAR/MMIO memory region. Reference
+>> memory map of the PCIe memory region with DBI and ATU address space
+>> overlapping BAR region is as below.
+>>
+>> 			|---------------|
+>> 			|		|
+>> 			|		|
+>> 	-------	--------|---------------|
+>> 	   |	   |	|---------------|
+>> 	   |	   |	|	DBI	|
+>> 	   |	   |	|---------------|---->DBI_BASE_ADDR
+>> 	   |	   |	|		|
+>> 	   |	   |	|		|
+>> 	   |	PCIe	|		|---->2*SLV_ADDR_SPACE_SIZE
+>> 	   |	BAR/MMIO|---------------|
+>> 	   |	Region	|	ATU	|
+>> 	   |	   |	|---------------|---->ATU_BASE_ADDR
+>> 	   |	   |	|		|
+>> 	PCIe	   |	|---------------|
+>> 	Memory	   |	|	DBI	|
+>> 	Region	   |	|---------------|---->DBI_BASE_ADDR
+>> 	   |	   |	|		|
+>> 	   |	--------|		|
+>> 	   |		|		|---->SLV_ADDR_SPACE_SIZE
+>> 	   |		|---------------|
+>> 	   |		|	ATU	|
+>> 	   |		|---------------|---->ATU_BASE_ADDR
+>> 	   |		|		|
+>> 	   |		|---------------|
+>> 	   |		|	DBI	|
+>> 	   |		|---------------|---->DBI_BASE_ADDR
+>> 	   |		|		|
+>> 	   |		|		|
+>> 	----------------|---------------|
+>> 			|		|
+>> 			|		|
+>> 			|		|
+>> 			|---------------|
+> 
+> Nice diagram.  Run it through "expand" to convert the tabs to spaces
+> so it doesn't get messed up if indented.
+
+ACK. I will update it in the next patch.
+
+>> Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
+>> used for BAR region which is why the above mentioned issue is not
+>> encountered. This issue is discovered as part of internal testing when we
+>> tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
+>> we are trying to fix this.
+>>
+>> As PARF hardware block mirrors DBI and ATU register space after every
+>> PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, write
+>> U64_MAX to PARF_SLV_ADDR_SPACE_SIZE register to avoid mirroring DBI and
+>> ATU to BAR/MMIO region. Write the physical base address of DBI and ATU
+>> register blocks to PARF_DBI_BASE_ADDR (default 0x0) and PARF_ATU_BASE_ADDR
+>> (default 0x1000) respectively to make sure DBI and ATU blocks are at
+>> expected memory locations.
+> 
+> This seems ... weird.  You mention BARs, which means a PCI device, so
+> that part must refer to a Root Port.
+> 
+> The diagram also mentions address space *outside* the BAR, so that
+> cannot be a PCI device (unless the device is defective and responds to
+> accesses outside its BARs).  Maybe this space belongs to the Root
+> Complex (which is not a PCI device, so its resources must be described
+> via DT)?
+
+Sorry for the confusion caused.
+
+Yes, it is a Root Complex. The DBI and ATU resources are passed via DT
+and the BAR region is also passed using ranges property in DT.
+
+> Is this overlap of BAR space and ATU/DBI stuff (I assume the ATU/DBI
+> is *not* supposed to be part of the BAR) a result of some invalid
+> configuration done by a bootloader?  Or is it a result of Linux
+> assigning invalid space for the BAR?
+ 
+No, this overlap is caused entirely by the Qcom PARF hardware block
+(wrapper on top of the Root Complex) and the way NOC routing being done.
+PARF doesn't know where the BAR region is and it just keeps mirroring the
+memory region of size PARF_SLV_ADDR_SPACE_SIZE to the memory space accessible
+by the Root Complex. This mirroring effect is causing the DBI and ATU contents
+to overlap with BAR region even though there is no actual overlap in the
+addresses of DBI, ATU and BAR passed in the DT.
+
+The proposed change will help to avoid the mirroring by giving U64_MAX to
+PARF_SLV_ADDR_SPACE_SIZE register. As there won't be system memory greater
+than 64 bit address, PARF block will not be able to do the mirroring.
+
+Power on reset values are good enough to use smaller BAR size (less than 16MB in
+size as the default value of PARF_SLV_ADDR_SPACE_SIZE is 16MB). If we are using
+bigger BAR size, then above set of registers are required to be programmed to
+avoid overlap.
+
+>> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-qcom.c | 40 ++++++++++++++++++++++----
+>>  1 file changed, 35 insertions(+), 5 deletions(-)
+>>
+>> Tested:
+>> - Validated NVME functionality with PCIe6a on x1e80100 platform.
+>> - Validated WiFi functionality with PCIe4 on x1e80100 platform.
+>> - Validated NVME functionality with PCIe0 and PCIe1 on SA8775p platform.
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 5f9f0ff19baa..864548657551 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -49,7 +49,12 @@
+>>  #define PARF_LTSSM				0x1b0
+>>  #define PARF_SID_OFFSET				0x234
+>>  #define PARF_BDF_TRANSLATE_CFG			0x24c
+>> +#define PARF_DBI_BASE_ADDR_V2			0x350
+>> +#define PARF_DBI_BASE_ADDR_V2_HI		0x354
+> 
+> Previously these functions wrote PARF_DBI_BASE_ADDR:
+> 
+>   qcom_pcie_post_init_1_0_0()
+>   qcom_pcie_post_init_2_3_2()
+>   qcom_pcie_post_init_2_3_3()
+>   qcom_pcie_init_2_7_0()      (weird that this is init, not post_init)
+>   qcom_pcie_post_init_2_9_0()
+> 
+> This patch updates qcom_pcie_post_init_2_3_2() and
+> qcom_pcie_init_2_7_0() to use PARF_DBI_BASE_ADDR_V2 instead.
+> 
+> I assume PARF_DBI_BASE_ADDR_V2 and PARF_ATU_BASE_ADDR are new for
+> 2.3.2 and 2.7.0?  And they don't apply to 2.3.3 and 2.9.0?  And 1.0.0,
+> 2.3.3, and 2.9.0 don't have this problem?
+
+Thanks for pointing this. The new PARF_DBI_BASE_ADDR_V2, PARF_ATU_BASE_ADDR
+offsets are only applicable to 2.7.0. I will update the next patchset to 
+have these change only in 2.7.0 and remove the usage with 2.3.2.
+
+The same problem is applicable for all the versions of init/post_init
+functions except 2.1.0. But the PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR and
+PARF_SLV_ADDR_SPACE_SIZE register offsets are different for most of the
+versions compared to 2.7.0. And probably need to review all those devices
+use cases and if they need more BAR size we shall come up with seperate
+patch for those.
+
+> It'd be nice to have a hint in the commit log about which versions are
+> and are not affected.
+
+ACK. I will update it in the next patch.
+
+>>  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
+>> +#define PARF_SLV_ADDR_SPACE_SIZE_HI		0x35C
+>> +#define PARF_ATU_BASE_ADDR			0x634
+>> +#define PARF_ATU_BASE_ADDR_HI			0x638
+>>  #define PARF_NO_SNOOP_OVERIDE			0x3d4
+>>  #define PARF_DEVICE_TYPE			0x1000
+>>  #define PARF_BDF_TO_SID_TABLE_N			0x2000
+>> @@ -319,6 +324,33 @@ static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
+>>  	dw_pcie_dbi_ro_wr_dis(pci);
+>>  }
+>>  
+>> +static void qcom_pcie_avoid_dbi_atu_mirroring(struct qcom_pcie *pcie)
+> 
+> I think I would just call this "configure_dbi_atu" or similar, since I
+> think it's about configuring them correctly, and the mirroring is just
+> a consequence of doing it wrong.
+
+ACK. I will update it in the next patch.
+
+>> +{
+>> +	struct dw_pcie *pci = pcie->pci;
+>> +	struct platform_device *pdev;
+>> +	struct resource *atu_res;
+>> +	struct resource *dbi_res;
+>> +
+>> +	pdev = to_platform_device(pci->dev);
+>> +	if (!pdev)
+>> +		return;
+> 
+> I don't think "!pdev" is even possible.
+
+ACK. I will update it in the next patch.
+
+>> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+>> +	if (dbi_res) {
+>> +		writel(lower_32_bits(dbi_res->start), pcie->parf + PARF_DBI_BASE_ADDR_V2);
+>> +		writel(upper_32_bits(dbi_res->start), pcie->parf + PARF_DBI_BASE_ADDR_V2_HI);
+>> +	}
+>> +
+>> +	atu_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
+>> +	if (atu_res) {
+>> +		writel(lower_32_bits(atu_res->start), pcie->parf + PARF_ATU_BASE_ADDR);
+>> +		writel(upper_32_bits(atu_res->start), pcie->parf + PARF_ATU_BASE_ADDR_HI);
+>> +	}
+>> +
+>> +	writel(lower_32_bits(U64_MAX), pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+>> +	writel(upper_32_bits(U64_MAX), pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_HI);
+>> +}
+>> +
+>>  static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
+>>  {
+>>  	u32 val;
+>> @@ -623,8 +655,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+>>  	val &= ~PHY_TEST_PWR_DOWN;
+>>  	writel(val, pcie->parf + PARF_PHY_CTRL);
+>>  
+>> -	/* change DBI base address */
+>> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+>> +	qcom_pcie_avoid_dbi_atu_mirroring(pcie);
+>>  
+>>  	/* MAC PHY_POWERDOWN MUX DISABLE  */
+>>  	val = readl(pcie->parf + PARF_SYS_CTRL);
+>> @@ -900,6 +931,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>>  	/* Wait for reset to complete, required on SM8450 */
+>>  	usleep_range(1000, 1500);
+>>  
+>> +	qcom_pcie_avoid_dbi_atu_mirroring(pcie);
+> 
+> Why did you move this setup earlier than the previous
+> PARF_DBI_BASE_ADDR write?  Is there some 2.7.0 difference that requires
+> this?
+
+No, there is no requirement to move this. I wanted to do this setup before
+configuring the PARF block to be in Root Complex mode in the line below. I
+will move this back to the original position in the next patch to avoid
+confusion.
+
+Thanks,
+Prudhvi
+
+>>  	/* configure PCIe to RC mode */
+>>  	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+>>  
+>> @@ -908,9 +941,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>>  	val &= ~PHY_TEST_PWR_DOWN;
+>>  	writel(val, pcie->parf + PARF_PHY_CTRL);
+>>  
+>> -	/* change DBI base address */
+>> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+>> -
+>>  	/* MAC PHY_POWERDOWN MUX DISABLE  */
+>>  	val = readl(pcie->parf + PARF_SYS_CTRL);
+>>  	val &= ~MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN;
+> 
+> 
 
