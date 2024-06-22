@@ -1,95 +1,167 @@
-Return-Path: <linux-pci+bounces-9125-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9126-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B84A913573
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 19:52:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F16D79135BE
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 20:53:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3539B281350
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 17:52:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7AF3EB23265
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 18:53:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4FD9DDD8;
-	Sat, 22 Jun 2024 17:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E48D438FB9;
+	Sat, 22 Jun 2024 18:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSs+V+DZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cE33VdhI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E8EBA39;
-	Sat, 22 Jun 2024 17:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DE6288DF
+	for <linux-pci@vger.kernel.org>; Sat, 22 Jun 2024 18:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719078727; cv=none; b=HgqmWKf+IYjzKSKHobri4Z3fbu/qLVzD8rFaZrPDl4t8umLW1KMlSgJvS/iWIOjU4AuorcMBm4eDmILCZyqeNBGD/Ol3mPrtChLevhka4EWl78PUXMSDavG/qwSSjG/nWOlobS+WXHJb4vQ5nTufnwDFeNuZQZ3GRcVJCeMvdUk=
+	t=1719082408; cv=none; b=W2srZnXLFX0buIznHRTAPBYYWOdrnMcEDqy/LkBXQ1w8trYpXiGDh6BOkssF879Ma7G2lSgZxy8AAMTEheR1imkXcgV0WY2C0Jy9MOC1f5+Q2zvrjaD0Hn0G6Xqs1bKsiA3QC4ZRhEvd+ga7rAv+2UQbfVP3h2ILP32M7fMOW5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719078727; c=relaxed/simple;
-	bh=TgcQO5cI1N99h+gDcZZc8jr7775wxXCMauMmVkr4DYU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Xy4j+5AYG36xxnlJ32NVveQyHGzeO0zZ+sLW+9s5qmL/by1x+6Kxc1rsIrqL+LhuyXCjxzmy/DHXkTfLkQr9GkwaK81qtqHPZ+eU0VRMCEZSfhBAnw4+L6Yg7oOA8whvtnnjN2v5iOnJGMjKOfn9+g7Po7EsakSQDIwcLl5BH+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSs+V+DZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA39C3277B;
-	Sat, 22 Jun 2024 17:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719078727;
-	bh=TgcQO5cI1N99h+gDcZZc8jr7775wxXCMauMmVkr4DYU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fSs+V+DZS83pyGpwyU8XOItV98rDKi8EQAxj13OsY3oXv4O4LONKnVidDIhcu6Jqy
-	 SG21le8JZhXy7ys/2wt2Ig2DFvyS2g5DBEWVoSSbETYb2KnoH1TNfAn5AHHOq82iLq
-	 7KHLFS3OXcxBh9bACZWctL5URdqqWB8vnbY7D/trWGqHQLQWaN5XIMKOZ5k/LVk9US
-	 FSuOUMWBarcFIYAx3OwoW7eOf4OesKe2gZ2YUW/Hot42mOkThSQK8vXcjH66U8AeO8
-	 DUuivg0zbBs223qvftuh+poPP+HfnMNxT0OweC1D8pHGgQkVFfyhYyTXROjEoQGRiM
-	 GNAZu7JKEratQ==
-Date: Sat, 22 Jun 2024 12:52:05 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "zhoushengqing@ttyinfo.com" <zhoushengqing@ttyinfo.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] PCI: Enable io space 1k granularity for intel cpu
- root port
-Message-ID: <20240622175205.GA1432837@bhelgaas>
+	s=arc-20240116; t=1719082408; c=relaxed/simple;
+	bh=m1OrJmNO9LwdDEbmkvwbTuZezKxh26mqnnyoNMd0p1U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pMtd/NZPc3e4B0Yj1b6FgUc15sAKplaSRSpevh0BaQf3DuWXU2MArlDrjVPt/44x2tas9EMq7hF7jUaBpia5MsHDFQnw26hLviCc5ZA+UEA+2Bw8blJHx4EBo1BXqBW1rgl6pmZwzGxYzL5a0/m/Xebh5dgc/HauYBxH/qggHbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cE33VdhI; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-443580f290dso620411cf.1
+        for <linux-pci@vger.kernel.org>; Sat, 22 Jun 2024 11:53:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719082406; x=1719687206; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=txY7l5/ugEpTdYb4L91Pc5mOm0tzxQ8JxvQANorTSC4=;
+        b=cE33VdhI3pj8tIEbP416ysmfP9Y/NZNEXvLAOgJVX+3gJ6Qt4041for/Lpv05281UK
+         faNjvcp1gIWo3TAiYi2ktq+8eQhy2HMKHit3P9IzsadXGyygZqHq7B8HtNb71qGI/t0s
+         Pm2ug5MyoyNGp4EGesxO2TSRqeOPlrxNh/gVohSbqaIWOxF9cC4qYh9ONuSZAbmnjH9Y
+         4mMgqxXO9hkJI9KoI3ua6lJMVjs8NFkXoaxRzfgDPkzPeU7s3EGCXTt5/Exue8Mmmxbo
+         Q99voj0cENh+PWP7Skxwu0WBlAlQasu9XWhaKJaVqjVUmveCIKSpbUcT8x6x4GoDwigl
+         f47w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719082406; x=1719687206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=txY7l5/ugEpTdYb4L91Pc5mOm0tzxQ8JxvQANorTSC4=;
+        b=Zy7otP+a5eeYNtz0SSc3WG/SttyJKGo31lgmDB1zcYpRiHpMvw47UvxMm3i+TLbuwf
+         d/gOXdL5bxaRp0lbNTSF8fyhFS1D19cCcbzBW+A/eRxZiv7ng8JCmXll8qaxvW5ABPwD
+         OP+H8e0OO2zyseeEDbEGz9QFuB+ubqWeF/fUpFkmnrpDy8bzqvgF8/1T13y6+xE0whUX
+         19rv4IoAqhYxgJhXJosCY+5OorOcBxi32oZMfkGReRNoQvs8u3GyyaTi0GAd6ODtWJQw
+         t2xZ6z03VJbPdBDp0TaeClq40gX5cAGaKId+MK7j4RP0OigbKA+XRnFTlC2iYfA2YRtd
+         9UGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsurECXyeZOfyJ1lSnlCwaMF5PS1p3JsLA6Atnf5zR3RgTX4T8NRfbK9TB3vxlTfOMss8g76if5onCybAAAD6X1AGu+XuEZEIf
+X-Gm-Message-State: AOJu0YyDDyxwaqQLtVb3XvitrUMc3HCtFwUl5s64ixcpK2IBcJqRFWSW
+	tSr20WW837iwLOzfXWTsWP+E91958x5qAc0meb8c+12vgtn8InWmdZrl3ymlzRjCm/N5QGUbxtS
+	rwekPxUJMJjMAl7/fCV5WAl55KPfnAE9LbtGK87xvyUd7zMPlpQok
+X-Google-Smtp-Source: AGHT+IHogO09eVkiQsY/h9voan3VKsmeXrVbuRNJT7VekYNC+puC0fcVX+/vkGPnLFPB7ZmppPi1l2k9bjOS+FcmBgQ=
+X-Received: by 2002:a05:622a:4b06:b0:444:d3c5:3b0 with SMTP id
+ d75a77b69052e-444d3c5048emr1096181cf.12.1719082406053; Sat, 22 Jun 2024
+ 11:53:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024062223061743562815@ttyinfo.com>
+References: <20240429034112.140594-1-smostafa@google.com> <87zftbswwo.ffs@tglx>
+ <ZjAuJV87RjOu7gSy@google.com>
+In-Reply-To: <ZjAuJV87RjOu7gSy@google.com>
+From: Mostafa Saleh <smostafa@google.com>
+Date: Sat, 22 Jun 2024 19:53:14 +0100
+Message-ID: <CAFgf54rFL0rF2KxGP883Vk8APnSgtNnXJYSO_oYsSqnEjf4-ig@mail.gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Fix UAF in msi_capability_init
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com, 
+	kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 22, 2024 at 11:06:18PM +0800, zhoushengqing@ttyinfo.com wrote:
-> >> This patch add 1k granularity for intel root port bridge.Intel latest
-> 
-> 
-> 
-> >> server CPU support 1K granularity,And there is an BIOS setup item named
-> 
-> 
-> 
+Hi Thomas,
 
-I don't know what your email agent is doing to add all these extra
-blank lines, but it makes it painful to read/reply:
-https://lore.kernel.org/all/2024062223061743562815@ttyinfo.com/
+This has been here for a while without fixing, I will respin V2 with
+your proposed changes,
+please let me know if I should add any tag by you.
 
-> >Can you implement this as a quirk similar to quirk_p64h2_1k_io()?
+Thanks,
+Mostafa
+
+On Tue, Apr 30, 2024 at 12:32=E2=80=AFAM Mostafa Saleh <smostafa@google.com=
+> wrote:
+>
+> Hi Thomas,
+>
+> On Mon, Apr 29, 2024 at 11:04:39PM +0200, Thomas Gleixner wrote:
+> > On Mon, Apr 29 2024 at 03:41, Mostafa Saleh wrote:
+> > >  err:
+> > > -   pci_msi_unmask(entry, msi_multi_mask(entry));
+> > > +   /* Re-read the descriptor as it might have been freed */
+> > > +   entry =3D msi_first_desc(&dev->dev, MSI_DESC_ALL);
+> > > +   if (entry)
+> > > +           pci_msi_unmask(entry, msi_multi_mask(entry));
 > >
-> >I don't want to clutter the generic code with device-specific
-> >things like this.
-> 
-> I have attempted to implement this patch in quirks.c.But there
-> doesn't seem to be a suitable DECLARE_PCI_FIXUP* to do this.because
-> the patch is not targeting the device itself, It targets other P2P
-> devices with the same bus number.
-
-If I understand the patch correctly, if a [8086:09a2] device on a root
-bus has EN1K set, *every* bridge (every Root Port in this case because
-I assume this is a PCIe configuration) on the same bus supports 1K
-granularity?
-
-That seems like a really broken kind of encapsulation.  I'd be
-surprised if there were not a bit in each of those Root Ports that
-indicates this.
+> > What unmasks the entry in the NULL case?
+>
+> Apparently nothing, I missed that. (PCI isn=E2=80=99t really my area, I
+> prefer dealing with non standardised platform devices :))
+>
+> >
+> > The mask has to be undone. So you need something like the uncompiled
+> > below.
+> >
+> > Thanks,
+> >
+> >         tglx
+> > ---
+> >
+> > --- a/drivers/pci/msi/msi.c
+> > +++ b/drivers/pci/msi/msi.c
+> > @@ -349,7 +349,7 @@ static int msi_capability_init(struct pc
+> >                              struct irq_affinity *affd)
+> >  {
+> >       struct irq_affinity_desc *masks =3D NULL;
+> > -     struct msi_desc *entry;
+> > +     struct msi_desc *entry, desc;
+> >       int ret;
+> >
+> >       /* Reject multi-MSI early on irq domain enabled architectures */
+> > @@ -374,6 +374,12 @@ static int msi_capability_init(struct pc
+> >       /* All MSIs are unmasked by default; mask them all */
+> >       entry =3D msi_first_desc(&dev->dev, MSI_DESC_ALL);
+> >       pci_msi_mask(entry, msi_multi_mask(entry));
+> > +     /*
+> > +      * Copy the MSI descriptor for the error path because
+> > +      * pci_msi_setup_msi_irqs() will free it for the hierarchical
+> > +      * interrupt domain case.
+> > +      */
+> > +     memcpy(&desc, entry, sizeof(desc));
+> >
+> >       /* Configure MSI capability structure */
+> >       ret =3D pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSI);
+> > @@ -393,7 +399,7 @@ static int msi_capability_init(struct pc
+> >       goto unlock;
+> >
+> >  err:
+> > -     pci_msi_unmask(entry, msi_multi_mask(entry));
+> > +     pci_msi_unmask(&desc, msi_multi_mask(&desc));
+> >       pci_free_msi_irqs(dev);
+> >  fail:
+> >       dev->msi_enabled =3D 0;
+>
+> I tested it with my stub, but since I didn't write the code, here
+> is my tag, let me know if you want me to respin.
+>
+> Tested-by: Mostafa Saleh <smostafa@google.com>
+>
+> Thanks,
+> Mostafa
+>
 
