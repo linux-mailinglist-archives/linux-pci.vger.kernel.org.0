@@ -1,83 +1,98 @@
-Return-Path: <linux-pci+bounces-9107-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E93449131D1
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 05:55:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 915629131E4
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 06:11:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FD251C21BE8
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 03:55:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11CB61F2337B
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 04:11:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91ED89473;
-	Sat, 22 Jun 2024 03:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CFAD8F5B;
+	Sat, 22 Jun 2024 04:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7SiIvOI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwfNf3NA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085D48BFA
-	for <linux-pci@vger.kernel.org>; Sat, 22 Jun 2024 03:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721925680
+	for <linux-pci@vger.kernel.org>; Sat, 22 Jun 2024 04:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719028495; cv=none; b=NcLWDY85ClObYEpgRVEqpxjZRJcGSggO/qHO4Q19fAtlBFamFyDlp75whVS0/qXfxu6uqIuzRzM84IUfTLvZtsRfdGWwzRrnllqcn4b5lgfk3eJAGbaD8+EBbk4AA46vfDvftaPskLIiRj9iQ45QXvnS4pou3YpxcXhP0hG8aiM=
+	t=1719029492; cv=none; b=opcVEaH4FSZWjRMmtBbB+bIcUPNg3NhpW8pQVlQ54oH3/gl6hjJLw9fHt/GaUtWNnSVntP0oKJEhv9lDkxh9ksBtpsRQ5oFC8YGEEHHtXnuS34EFsWzMLP20fP14JuugoGyUfOak4FZGzBSWoWVDJ3AaTGODEKdpQ7LiNf9Eq7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719028495; c=relaxed/simple;
-	bh=/RrUKDL+vW/8zRMMtlS/A1VrV0Bhny/iSxYfghZhlaU=;
+	s=arc-20240116; t=1719029492; c=relaxed/simple;
+	bh=BycR4VjN1P2/crFqGM7x9mmrtddl8EKh2KJCyfpv2P4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eR00PQCsa8Hi7dFkWdsMTybiQPbx5qRPwl6zsu/+ZbdCjl5lQEYkExrSmRu96cpZqHO2ZEE8gIq8mCD8beY6EXaBTzhir+fcZ3J45JGC/zMM4AgFSp2lHw77VAXMR3AqQDZEsz2z0qC0bEeXYxjhMM+4Kadb+oDZfeyVKK8bkLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f7SiIvOI; arc=none smtp.client-ip=209.85.167.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=VHXCrhvnHm6hQH5JFmXjfJBbKL31L1W62+RArzdRXEDrgqqNdu+cVXWdJvfbdqS3z+qw9mUmOv15yFzoWn/wXB+F55hOnI0LfmnNARLuYzePQhL7EhZbHAVF7Atkuf5U6+6OoSbYSWFkvN1QGsl0PIqbWh3uYhhvpjX+iopBuHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VwfNf3NA; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3d22802674cso1430235b6e.2
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2024 20:54:52 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7065e31ee3cso708985b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2024 21:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719028492; x=1719633292; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719029489; x=1719634289; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=WSffjO/WBtMMLGh1Lm5rhFUdKcIwSNJwS+J6sxe4xzs=;
-        b=f7SiIvOIb7/WzUEt5oBMqE0uzNZtuluYQCJPglsXbfp9Oc0QdYFQZEVtS5ImRbYuFn
-         83Q9xOIJaxxSvy740Ip4OnZ9xnqPBKI3i5WSFkP3Wer5pkdFhPI5gP4s9q2gsMYfqcaT
-         oO6JBU5MzAdW8gS7DK7jpOKsayAm2jLOCvNaPWKVHT56/tHJQIKUMREr3OASVns/8a2b
-         iwH4+aifcAw+laYWVnXaB0Ai/QoxXRK/y82Fl8lq5UNExNZFySMsYQkB2Zimv0d5PY1l
-         lYtUrzMUphb3e3PT+uxj4+sHtieMlQMZEoMFHx57JsKFadvw13Ctx8FCkXXyA6ICVL5j
-         sVxA==
+        bh=TfjJ/7PxukviDUtbYW71wrZoAgJ4L/WBbr7ZDew9h2I=;
+        b=VwfNf3NAXjCBt9CA9bWJToo7wOBaNTlz/Nj4Z8NVLV3YB5wGL9U1jamnDIIwFiVJoU
+         XYCegsJw7oxPfaXWeS5EStppr9H+4awx71MXEHencEuGbiJS95OaVDUrQ5qWzx7mw3Pu
+         kWXnd/ruPjfrQ0uTy6+hocrGLpkz8jrFk45J+Z19y/1qxbKvNNyVv1+tl3ZBcoJ0ME+B
+         XsOXax+SHM5FSJ5hn4SsY7IHTo5GG3kGLGn7V98+lHVWelqXGQ5YR7xT3Z95SfaB4CBW
+         V+o8DY2cVny9ae/pnvaUHO/9uHxzjPYuyy3/iDx1hCeM70IuPppGUMqGsFWak0KzwtKY
+         e6lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719028492; x=1719633292;
+        d=1e100.net; s=20230601; t=1719029489; x=1719634289;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WSffjO/WBtMMLGh1Lm5rhFUdKcIwSNJwS+J6sxe4xzs=;
-        b=qYAv8cnCiapZsAjyjS7bompzrrRszgRDgCbvuE9W4HKQTru9Kx7xNCtmBH03mgL0Q7
-         e/JVnN1vpLCAgLzo5v6vT3JXy7EYo0w5pgC9m3m4il+cSZ23dwPajm8UkWiLGbDMSdTB
-         iErbvfOLz/P+CWBkDiYPGwhgQ/xB3F2GtPXcSYPMJPffB3jGqVTORCfcu7XaCZg7+ipM
-         SBgqDQHKAjU17MfR/ZGxI0iuoFqdc78fmrrIRHHnGGTicaUjvXMa/csVs3hK2FJskT2q
-         kv5enGP9sJsVMnek8pXCLvVUAPaK1gTgA86+bwN213CAmGjl5hYaLHXGBbH3pRboNg6f
-         xygA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqlIDNIXUd1OPgkiaPYyuLnhc68MCIYKRFcHt5+kX7HyoVh832PA8Zh4p4Yc7UIP7SkHATKHWZX55iH6ZRyvPQc5BDQNC6RV9Z
-X-Gm-Message-State: AOJu0Yw1Gk1Gz1P0SbVDkl/bRIr/6nn73H+Dc8Zs9w1t1InoK7FUS8Up
-	P+OOGqFG5yf7Yjxcgt7JBK/zy7YOexIHDmld4O9/YYZ7Ui35H8ioB4/+WrM3sA==
-X-Google-Smtp-Source: AGHT+IG0cHxivOc0gEpJePUthy7iVVOraPA9vUyWTNoK4WEkmPbaZWONEOU+ohHweTatkWVTWfi8qg==
-X-Received: by 2002:a05:6808:3006:b0:3d4:74f3:ebac with SMTP id 5614622812f47-3d51bafb1c2mr11873997b6e.49.1719028491799;
-        Fri, 21 Jun 2024 20:54:51 -0700 (PDT)
+        bh=TfjJ/7PxukviDUtbYW71wrZoAgJ4L/WBbr7ZDew9h2I=;
+        b=azrNJYkZ5xPYquT98hJxI5r/G4fVWZSqraBBJ1i8X1h1lw+eF2qYPKB+DigpvrDyYO
+         JN8LAxwlmUlinkGZgEFz9OZzh6KuI2IP6g2gntdGUmvdE2fdYDFid/lOfu3FlT+VPBto
+         bcNic5kp4tf6PAjTBL9TCvxJLEsEIpv3JgvZYuHDzVvVw2o5Yn45KbCP+gJJ0PrMFLFs
+         M8gZxCQomVkAu1Rk2trHIv6JaIjMTVXG6QeULQQPe6D/o7pDSKyOOQDbnl1FLgqg/JvL
+         nLWSKV08c4IHXVYPySEIRyMsxD32h9Mp834HVWmDPxsQfMLJHGNS+/bpw6QRJjr0BPAb
+         dixg==
+X-Forwarded-Encrypted: i=1; AJvYcCWiGHnNI6iD69cfO5qbsh8ZR55KIY5y+OXdnFM10iiFV4jUDpwDGY7NeYYCWkteQ7mU3S5YHYzEl/MPgRGsFtYO+Y5PPnK0zT7W
+X-Gm-Message-State: AOJu0YyEvL0H8oCTNzmuer45YaQTA6p5zvLZ48B3lJJ9I9/Tp1qCHBQO
+	EMMNHPAtHrg/W0u6Elfx2VkfHNRu3DTx5RKujDUVcb6min/XVUUBZw7To0gRXA==
+X-Google-Smtp-Source: AGHT+IH+yBsETEqfxy9vYW6jfMV4VUEuUCczzbiF/DAMNYGj7eoKv9nvHXCHsH1eneeaZG8RXNzxKQ==
+X-Received: by 2002:a05:6a00:1d0d:b0:704:3a0f:1d88 with SMTP id d2e1a72fcca58-70629ccff3bmr11045925b3a.21.1719029488608;
+        Fri, 21 Jun 2024 21:11:28 -0700 (PDT)
 Received: from thinkpad ([120.60.57.250])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70651301cbesm2165091b3a.203.2024.06.21.20.54.48
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-716b4a74010sm1558983a12.49.2024.06.21.21.11.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 20:54:51 -0700 (PDT)
-Date: Sat, 22 Jun 2024 09:24:44 +0530
+        Fri, 21 Jun 2024 21:11:28 -0700 (PDT)
+Date: Sat, 22 Jun 2024 09:41:15 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	robh@kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_mrana@quicinc.com
-Subject: Re: [PATCH v1] PCI: qcom: Avoid DBI and ATU register space mirror to
- BAR/MMIO region
-Message-ID: <20240622035444.GA2922@thinkpad>
-References: <20240620213405.3120611-1-quic_pyarlaga@quicinc.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
+ MSI ITS and IOMMU for i.MX95
+Message-ID: <20240622041115.GB2922@thinkpad>
+References: <20240528-pci2_upstream-v5-0-750aa7edb8e2@nxp.com>
+ <20240528-pci2_upstream-v5-8-750aa7edb8e2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,204 +102,283 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240620213405.3120611-1-quic_pyarlaga@quicinc.com>
+In-Reply-To: <20240528-pci2_upstream-v5-8-750aa7edb8e2@nxp.com>
 
-On Thu, Jun 20, 2024 at 02:34:05PM -0700, Prudhvi Yarlagadda wrote:
-> PARF hardware block which is a wrapper on top of DWC PCIe controller
-> mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
-> register to get the size of the memory block to be mirrored and uses
-> PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
-> address of DBI and ATU space inside the memory block that is being
-> mirrored.
+On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
+> For the i.MX95, configuration of a LUT is necessary to convert Bus Device
+> Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
+> This involves examining the msi-map and smmu-map to ensure consistent
+> mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
+> registers are configured. In the absence of an msi-map, the built-in MSI
+> controller is utilized as a fallback.
+> 
+> Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
+> upon the appearance of a new PCI device and when the bus is an iMX6 PCI
+> controller. This function configures the correct LUT based on Device Tree
+> Settings (DTS).
 > 
 
-This PARF_SLV_ADDR_SPACE register is a mystery to me. I tried getting to the
-bottom of it, but nobody could explain it to me clearly. Looks like you know
-more about it...
+Sorry for jumping the ship very late... But why can't you configure the LUT
+during probe() itself? Anyway, you are going to use the 'iommu-map' and
+'msi-map' which are static info provided in DT. I don't see a necessity to do it
+during device addition time.
 
-From your description, it seems like this register specifies the size of the
-mirroring region (ATU + DBI), but the response from your colleague indicates
-something different [1].
-
-[1] https://lore.kernel.org/linux-pci/f42559f5-9d4c-4667-bf0e-7abfd9983c36@quicinc.com/
-
-> When a memory region which is located above the SLV_ADDR_SPACE_SIZE
-> boundary is used for BAR region then there could be an overlap of DBI and
-> ATU address space that is getting mirrored and the BAR region. This
-> results in DBI and ATU address space contents getting updated when a PCIe
-> function driver tries updating the BAR/MMIO memory region. Reference
-> memory map of the PCIe memory region with DBI and ATU address space
-> overlapping BAR region is as below.
-> 
-> 			|---------------|
-> 			|		|
-> 			|		|
-> 	-------	--------|---------------|
-> 	   |	   |	|---------------|
-> 	   |	   |	|	DBI	|
-> 	   |	   |	|---------------|---->DBI_BASE_ADDR
-> 	   |	   |	|		|
-> 	   |	   |	|		|
-> 	   |	PCIe	|		|---->2*SLV_ADDR_SPACE_SIZE
-> 	   |	BAR/MMIO|---------------|
-> 	   |	Region	|	ATU	|
-> 	   |	   |	|---------------|---->ATU_BASE_ADDR
-> 	   |	   |	|		|
-> 	PCIe	   |	|---------------|
-> 	Memory	   |	|	DBI	|
-> 	Region	   |	|---------------|---->DBI_BASE_ADDR
-> 	   |	   |	|		|
-> 	   |	--------|		|
-> 	   |		|		|---->SLV_ADDR_SPACE_SIZE
-> 	   |		|---------------|
-> 	   |		|	ATU	|
-> 	   |		|---------------|---->ATU_BASE_ADDR
-> 	   |		|		|
-> 	   |		|---------------|
-> 	   |		|	DBI	|
-> 	   |		|---------------|---->DBI_BASE_ADDR
-> 	   |		|		|
-> 	   |		|		|
-> 	----------------|---------------|
-> 			|		|
-> 			|		|
-> 			|		|
-> 			|---------------|
-> 
-> Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is not
-> used for BAR region which is why the above mentioned issue is not
-> encountered. This issue is discovered as part of internal testing when we
-> tried moving the BAR region beyond the SLV_ADDR_SPACE_SIZE boundary. Hence
-> we are trying to fix this.
-> 
-
-I don't quite understand this. PoR value of SLV_ADDR_SPACE_SIZE is 16MB and most
-of the platforms have the size of whole PCIe region defined in DT as 512MB
-(registers + I/O + MEM). So the range is already crossing the
-SLV_ADDR_SPACE_SIZE boundary.
-
-Ironically, the patch I pointed out above changes the value of this register as
-128MB, and the PCIe region size of that platform is also 128MB. The author of
-that patch pointed out that if the SLV_ADDR_SPACE_SIZE is set to 256MB, then
-they are seeing enumeration failures. If we go by your description of that
-register, the SLV_ADDR_SPACE_SIZE of 256MB should be > PCIe region size of
-128MB. So they should not see any issues, right?
-
-> As PARF hardware block mirrors DBI and ATU register space after every
-> PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary multiple, write
-> U64_MAX to PARF_SLV_ADDR_SPACE_SIZE register to avoid mirroring DBI and
-> ATU to BAR/MMIO region.
-
-Looks like you are trying to avoid this mirroring on a whole. First of all, what
-is the reasoning behind this mirroring?
-
-> Write the physical base address of DBI and ATU
-> register blocks to PARF_DBI_BASE_ADDR (default 0x0) and PARF_ATU_BASE_ADDR
-> (default 0x1000) respectively to make sure DBI and ATU blocks are at
-> expected memory locations.
-> 
-
-Why is this needed? Some configs in this driver writes 0 to PARF_DBI_BASE_ADDR.
-Does the hardware doesn't know where the registers are located?
-
-> Signed-off-by: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 40 ++++++++++++++++++++++----
->  1 file changed, 35 insertions(+), 5 deletions(-)
-> 
-> Tested:
-> - Validated NVME functionality with PCIe6a on x1e80100 platform.
-> - Validated WiFi functionality with PCIe4 on x1e80100 platform.
-> - Validated NVME functionality with PCIe0 and PCIe1 on SA8775p platform.
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 5f9f0ff19baa..864548657551 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -49,7 +49,12 @@
->  #define PARF_LTSSM				0x1b0
->  #define PARF_SID_OFFSET				0x234
->  #define PARF_BDF_TRANSLATE_CFG			0x24c
-> +#define PARF_DBI_BASE_ADDR_V2			0x350
-> +#define PARF_DBI_BASE_ADDR_V2_HI		0x354
->  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-> +#define PARF_SLV_ADDR_SPACE_SIZE_HI		0x35C
-> +#define PARF_ATU_BASE_ADDR			0x634
-> +#define PARF_ATU_BASE_ADDR_HI			0x638
->  #define PARF_NO_SNOOP_OVERIDE			0x3d4
->  #define PARF_DEVICE_TYPE			0x1000
->  #define PARF_BDF_TO_SID_TABLE_N			0x2000
-> @@ -319,6 +324,33 @@ static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
->  	dw_pcie_dbi_ro_wr_dis(pci);
->  }
->  
-> +static void qcom_pcie_avoid_dbi_atu_mirroring(struct qcom_pcie *pcie)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct platform_device *pdev;
-> +	struct resource *atu_res;
-> +	struct resource *dbi_res;
-> +
-> +	pdev = to_platform_device(pci->dev);
-> +	if (!pdev)
-> +		return;
-> +
-> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> +	if (dbi_res) {
-> +		writel(lower_32_bits(dbi_res->start), pcie->parf + PARF_DBI_BASE_ADDR_V2);
-> +		writel(upper_32_bits(dbi_res->start), pcie->parf + PARF_DBI_BASE_ADDR_V2_HI);
-> +	}
-> +
-> +	atu_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
-> +	if (atu_res) {
-> +		writel(lower_32_bits(atu_res->start), pcie->parf + PARF_ATU_BASE_ADDR);
-> +		writel(upper_32_bits(atu_res->start), pcie->parf + PARF_ATU_BASE_ADDR_HI);
-> +	}
-> +
-
-Above 2 resources are already fetched by dw_pcie_get_resources(). So we should
-just store the phys addresses in 'struct dw_pcie' and make use of them here.
+Qcom RC driver also uses a similar configuration in
+qcom_pcie_config_sid_1_9_0().
 
 - Mani
 
-> +	writel(lower_32_bits(U64_MAX), pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> +	writel(upper_32_bits(U64_MAX), pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_HI);
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 175 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 174 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 29309ad0e352b..8ecc00049e20b 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -54,6 +54,22 @@
+>  #define IMX95_PE0_GEN_CTRL_3			0x1058
+>  #define IMX95_PCIE_LTSSM_EN			BIT(0)
+>  
+> +#define IMX95_PE0_LUT_ACSCTRL			0x1008
+> +#define IMX95_PEO_LUT_RWA			BIT(16)
+> +#define IMX95_PE0_LUT_ENLOC			GENMASK(4, 0)
+> +
+> +#define IMX95_PE0_LUT_DATA1			0x100c
+> +#define IMX95_PE0_LUT_VLD			BIT(31)
+> +#define IMX95_PE0_LUT_DAC_ID			GENMASK(10, 8)
+> +#define IMX95_PE0_LUT_STREAM_ID			GENMASK(5, 0)
+> +
+> +#define IMX95_PE0_LUT_DATA2			0x1010
+> +#define IMX95_PE0_LUT_REQID			GENMASK(31, 16)
+> +#define IMX95_PE0_LUT_MASK			GENMASK(15, 0)
+> +
+> +#define IMX95_SID_MASK				GENMASK(5, 0)
+> +#define IMX95_MAX_LUT				32
+> +
+>  #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  enum imx_pcie_variants {
+> @@ -79,6 +95,7 @@ enum imx_pcie_variants {
+>  #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+>  #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
+>  #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
+> +#define IMX_PCIE_FLAG_MONITOR_DEV		BIT(8)
+>  
+>  #define imx_check_flag(pci, val)     (pci->drvdata->flags & val)
+>  
+> @@ -132,6 +149,8 @@ struct imx_pcie {
+>  	struct device		*pd_pcie_phy;
+>  	struct phy		*phy;
+>  	const struct imx_pcie_drvdata *drvdata;
+> +
+> +	struct mutex		lock;
+>  };
+>  
+>  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+> @@ -215,6 +234,66 @@ static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
+>  	return 0;
+>  }
+>  
+> +static int imx_pcie_config_lut(struct imx_pcie *imx_pcie, u16 reqid, u8 sid)
+> +{
+> +	struct dw_pcie *pci = imx_pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	u32 data1, data2;
+> +	int i;
+> +
+> +	if (sid >= 64) {
+> +		dev_err(dev, "Invalid SID for index %d\n", sid);
+> +		return -EINVAL;
+> +	}
+> +
+> +	guard(mutex)(&imx_pcie->lock);
+> +
+> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
+> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
+> +
+> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1);
+> +		if (data1 & IMX95_PE0_LUT_VLD)
+> +			continue;
+> +
+> +		data1 = FIELD_PREP(IMX95_PE0_LUT_DAC_ID, 0);
+> +		data1 |= FIELD_PREP(IMX95_PE0_LUT_STREAM_ID, sid);
+> +		data1 |= IMX95_PE0_LUT_VLD;
+> +
+> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
+> +
+> +		data2 = 0xffff;
+> +		data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, reqid);
+> +
+> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
+> +
+> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
+> +
+> +		return 0;
+> +	}
+> +
+> +	dev_err(dev, "All lut already used\n");
+> +	return -EINVAL;
 > +}
 > +
->  static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
->  {
->  	u32 val;
-> @@ -623,8 +655,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
->  	val &= ~PHY_TEST_PWR_DOWN;
->  	writel(val, pcie->parf + PARF_PHY_CTRL);
->  
-> -	/* change DBI base address */
-> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-> +	qcom_pcie_avoid_dbi_atu_mirroring(pcie);
->  
->  	/* MAC PHY_POWERDOWN MUX DISABLE  */
->  	val = readl(pcie->parf + PARF_SYS_CTRL);
-> @@ -900,6 +931,8 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  	/* Wait for reset to complete, required on SM8450 */
->  	usleep_range(1000, 1500);
->  
-> +	qcom_pcie_avoid_dbi_atu_mirroring(pcie);
+> +static void imx_pcie_remove_lut(struct imx_pcie *imx_pcie, u16 reqid)
+> +{
+> +	u32 data2 = 0;
+> +	int i;
 > +
->  	/* configure PCIe to RC mode */
->  	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+> +	guard(mutex)(&imx_pcie->lock);
+> +
+> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
+> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
+> +
+> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
+> +		if (FIELD_GET(IMX95_PE0_LUT_REQID, data2) == reqid) {
+> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, 0);
+> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, 0);
+> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
+> +		}
+> +	}
+> +}
+> +
+>  static void imx_pcie_configure_type(struct imx_pcie *imx_pcie)
+>  {
+>  	const struct imx_pcie_drvdata *drvdata = imx_pcie->drvdata;
+> @@ -1232,6 +1311,85 @@ static int imx_pcie_resume_noirq(struct device *dev)
+>  	return 0;
+>  }
 >  
-> @@ -908,9 +941,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  	val &= ~PHY_TEST_PWR_DOWN;
->  	writel(val, pcie->parf + PARF_PHY_CTRL);
+> +static bool imx_pcie_match_device(struct pci_bus *bus);
+> +
+> +static int imx_pcie_add_device(struct imx_pcie *imx_pcie, struct pci_dev *pdev)
+> +{
+> +	u32 sid_i = 0, sid_m = 0, rid = pci_dev_id(pdev);
+> +	struct device *dev = imx_pcie->pci->dev;
+> +	int err;
+> +
+> +	err = of_map_id(dev->of_node, rid, "iommu-map", "iommu-map-mask", NULL, &sid_i);
+> +	if (err)
+> +		return err;
+> +
+> +	err = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", NULL, &sid_m);
+> +	if (err)
+> +		return err;
+> +
+> +	if (sid_i != rid && sid_m != rid)
+> +		if ((sid_i & IMX95_SID_MASK) != (sid_m & IMX95_SID_MASK)) {
+> +			dev_err(dev, "its and iommu stream id miss match, please check dts file\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +	/* if iommu-map is not existed then use msi-map's stream id*/
+> +	if (sid_i == rid)
+> +		sid_i = sid_m;
+> +
+> +	sid_i &= IMX95_SID_MASK;
+> +
+> +	if (sid_i != rid)
+> +		return imx_pcie_config_lut(imx_pcie, rid, sid_i);
+> +
+> +	/* Use dwc built-in MSI controller */
+> +	return 0;
+> +}
+> +
+> +static void imx_pcie_del_device(struct imx_pcie *imx_pcie, struct pci_dev *pdev)
+> +{
+> +	imx_pcie_remove_lut(imx_pcie, pci_dev_id(pdev));
+> +}
+> +
+> +
+> +static int imx_pcie_bus_notifier(struct notifier_block *nb, unsigned long action, void *data)
+> +{
+> +	struct pci_host_bridge *host;
+> +	struct imx_pcie *imx_pcie;
+> +	struct pci_dev *pdev;
+> +	int err;
+> +
+> +	pdev = to_pci_dev(data);
+> +	host = pci_find_host_bridge(pdev->bus);
+> +
+> +	if (!imx_pcie_match_device(host->bus))
+> +		return NOTIFY_OK;
+> +
+> +	imx_pcie = to_imx_pcie(to_dw_pcie_from_pp(host->sysdata));
+> +
+> +	if (!imx_check_flag(imx_pcie, IMX_PCIE_FLAG_MONITOR_DEV))
+> +		return NOTIFY_OK;
+> +
+> +	switch (action) {
+> +	case BUS_NOTIFY_ADD_DEVICE:
+> +		err = imx_pcie_add_device(imx_pcie, pdev);
+> +		if (err)
+> +			return notifier_from_errno(err);
+> +		break;
+> +	case BUS_NOTIFY_DEL_DEVICE:
+> +		imx_pcie_del_device(imx_pcie, pdev);
+> +		break;
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block imx_pcie_nb = {
+> +	.notifier_call = imx_pcie_bus_notifier,
+> +};
+> +
+>  static const struct dev_pm_ops imx_pcie_pm_ops = {
+>  	NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_pcie_suspend_noirq,
+>  				  imx_pcie_resume_noirq)
+> @@ -1264,6 +1422,8 @@ static int imx_pcie_probe(struct platform_device *pdev)
+>  	imx_pcie->pci = pci;
+>  	imx_pcie->drvdata = of_device_get_match_data(dev);
 >  
-> -	/* change DBI base address */
-> -	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
-> -
->  	/* MAC PHY_POWERDOWN MUX DISABLE  */
->  	val = readl(pcie->parf + PARF_SYS_CTRL);
->  	val &= ~MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN;
+> +	mutex_init(&imx_pcie->lock);
+> +
+>  	/* Find the PHY if one is defined, only imx7d uses it */
+>  	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
+>  	if (np) {
+> @@ -1551,7 +1711,8 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  	},
+>  	[IMX95] = {
+>  		.variant = IMX95,
+> -		.flags = IMX_PCIE_FLAG_HAS_SERDES,
+> +		.flags = IMX_PCIE_FLAG_HAS_SERDES |
+> +			 IMX_PCIE_FLAG_MONITOR_DEV,
+>  		.clk_names = imx8mq_clks,
+>  		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
+>  		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
+> @@ -1687,6 +1848,8 @@ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
+>  
+>  static int __init imx_pcie_init(void)
+>  {
+> +	int ret;
+> +
+>  #ifdef CONFIG_ARM
+>  	struct device_node *np;
+>  
+> @@ -1705,7 +1868,17 @@ static int __init imx_pcie_init(void)
+>  	hook_fault_code(8, imx6q_pcie_abort_handler, SIGBUS, 0,
+>  			"external abort on non-linefetch");
+>  #endif
+> +	ret = bus_register_notifier(&pci_bus_type, &imx_pcie_nb);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return platform_driver_register(&imx_pcie_driver);
+>  }
+> +
+> +static void __exit imx_pcie_exit(void)
+> +{
+> +	bus_unregister_notifier(&pci_bus_type, &imx_pcie_nb);
+> +}
+> +
+>  device_initcall(imx_pcie_init);
+> +__exitcall(imx_pcie_exit);
+> 
 > -- 
-> 2.25.1
+> 2.34.1
 > 
 
 -- 
