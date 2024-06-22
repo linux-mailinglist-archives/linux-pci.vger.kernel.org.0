@@ -1,140 +1,109 @@
-Return-Path: <linux-pci+bounces-9112-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9113-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 298FF913258
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 08:19:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A93F9132DB
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 11:14:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5493F28400D
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 06:19:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2C4728438E
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 09:14:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0BBA14C586;
-	Sat, 22 Jun 2024 06:19:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCCCD14B09C;
+	Sat, 22 Jun 2024 09:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0rJ3Z5K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6o4K8ZJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-lf1-f68.google.com (mail-lf1-f68.google.com [209.85.167.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C2D14B078;
-	Sat, 22 Jun 2024 06:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A26C14B078;
+	Sat, 22 Jun 2024 09:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719037158; cv=none; b=Y55mfJLKFYpfJh/DJop1304txpNULkSK23BGjrG1T3zERnOVUzR/rMXopIJfyokvtBjNJEYc1/DcLCkBJSxvBIIVU03w6JHL7CO/yqd09HhoJ5J2sQeuHsyOuo3AGfsoHIU1tIS2lbmGounDojgPYEAIAnJfngjjl/s9KRLmgO4=
+	t=1719047648; cv=none; b=SLl6xs5a2FofvpCG0npQASTvMukNZe9i4+699UI4YAogAnskrKtOy6Q+eTOtA8ro8If33mD3aWQQNE/MlCrtDEf8e730eJajk5TqL5tmHY0somYtY1Wmt583sDMFFSGDJ1oO0Dw+9GXCEoT2ZaLLCh6DTqcoFcHbDUtmx7LlHt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719037158; c=relaxed/simple;
-	bh=VBz5/yQBD7J+HuI9LmNFQ1r/JcHYBt/AtMtq7zxIhEk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o3Rjyv+8vJNWIrG5p5LERTjYbEFh7EjgZjgNQ9wF93MYaWBQBXQ+pAL5xWZwcaOQXVeIaB8t2sALFWDz9PCplT38z09zJT7wPTqCddOF6F5dtX2cbL/xaeRbsIpGgixlwe2Aiepc6/zNKazJC483/GmIgxZuhSUhPddF96MOVoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0rJ3Z5K; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1719047648; c=relaxed/simple;
+	bh=RRqQl8uo5OtW4jawNXSK5YjGDnMPsH/r+7OC+raT/cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type; b=J7mJCN8QlerVDAZ33a3Ri6EYwyz3RUPGXdTYwEhdGIOPV4Y538uWja9hkYMxyc95gQNANhAQiRnt9Mby119YHtvmjnvMKPJCn3evx7/LYcyW15wyc7LM7jOhSjjlfge8DxGHuZDeoZACbi6kvK+Xqg6dBl5u9OpqumqI/8IRClY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d6o4K8ZJ; arc=none smtp.client-ip=209.85.167.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2c7a6da20f2so2261984a91.0;
-        Fri, 21 Jun 2024 23:19:17 -0700 (PDT)
+Received: by mail-lf1-f68.google.com with SMTP id 2adb3069b0e04-5295eb47b48so3454490e87.1;
+        Sat, 22 Jun 2024 02:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719037156; x=1719641956; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ntwi3HL2K5aymeEm1Qz35sLbHMAl5G1vzWWeac6e7E0=;
-        b=h0rJ3Z5KGpVZMIjJL2VVKlD4KAQX62v0ap9jcpIu2eZnsK7QELcdAcJ/a/5lJ5beMS
-         dG2Ubpqw524edCcoqGx8GfAyTniJ1l13lxuPgPWhdPkC/yUXjvkAhFhtnIwlIHT2i9IW
-         c6eTaXSq65sgylohgLWNSZqVeOxCRvsBX5yD6EfFJ9oZ9sSJkMEmTWeOrPXmBk+GdEA4
-         mGzDbGgLL5VYnFWaXgm3ZSgh28dXrsu9ibSD2SGzrXq1afqe8n23KyPZK4yyOHRzWrVE
-         VbMsxdwpZ9p744vkT9WVGK/zNuypObt79gpurssEw4szOCiAEHW4OkdKN79+IYmFtTiQ
-         sALw==
+        d=gmail.com; s=20230601; t=1719047645; x=1719652445; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RRqQl8uo5OtW4jawNXSK5YjGDnMPsH/r+7OC+raT/cg=;
+        b=d6o4K8ZJu57LdjhY/tAj8wrNDbsFRKE/o8NquaDh3AOvJvQor8b045q4LCyV/OGAAW
+         Z18hUTcnTdW3+if/mftaG1N+AG1qLsHq48fhqmw4h/NaA0/NTrJMqUVzUxDXIVrizsE0
+         /s7QV8RtUftXFf983jGatUzWeidGkYnuNYRA13w2G5shSZwdUnszo0Cd9z6RRB+a7lSQ
+         cGPejdAcXk5YKS3T5xpriSv/2gAI0y+RI1/JiZr2EFyy8qxp2WvnR6w1NPAI0C0Bnx9F
+         DzlU+gaM2bQh0ndE1DNRgNlmv3b3qftL0KvdF7kMtbfW6rfWuvzZ+BV1OGojPpd9Chjo
+         Kbeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719037156; x=1719641956;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ntwi3HL2K5aymeEm1Qz35sLbHMAl5G1vzWWeac6e7E0=;
-        b=gn79PZK+/aPqb5c/IFMm7yYQamSraIfBk0YKIHPxXofx5rfNwr7i6g+kvkhuyjIbmC
-         zM0bCb5yeaQ5x7ypb6shZw/EgBoicxua2ENevfY6zALiv/XHNayar9e31jLKG6qmIfxz
-         2t8Ttci2h37uCQdGad6LQIx1jO6WV3A/4ExGmfKnEbJlb2wvLZX9sU2CS1X6e2MavnuN
-         /3egc06Y0m8GawAWle7aNfkc2K60QyBpER4rlqCYw+XDyLj+3hfBj5KVnln0m8UTAQHs
-         jKVJHxMurUcVFrkPt6TDDUOedj45BZZeqYVs4v45ZDku9++pFIL6oPCRLM7MZn9/mQMZ
-         W7Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVvZSEd70uS1WOLOCSgI8vNdZF/Dc40BM2uOoGEU32hnfD5lfJ0OY+WIGaqq2Rn3UsGnj1EDc9NqGCpM7AmA9bc9Y/2VKTSUc6GwNccMwmVbEeYt7RwKBHJ7IDAuAAAHD06heAmZLUl
-X-Gm-Message-State: AOJu0Yz4zk3umlUnPJ35IhaMfCcqUNyorjO9UKptkw3evDI3qcNKJ1qO
-	XVMULCuee2QPac++Mmi68j6GQVCPHlVGun/lffUluToseA5WQ0TZqdPWZg==
-X-Google-Smtp-Source: AGHT+IE078jZ03UdYebN/k5h4osUfnzBl8WDffYTEdCg2kBOJHT73FdNJJuuUWpAkRO1OggjBayIKQ==
-X-Received: by 2002:a17:90a:a017:b0:2c6:edb4:1c96 with SMTP id 98e67ed59e1d1-2c8505195f8mr161149a91.23.1719037156523;
-        Fri, 21 Jun 2024 23:19:16 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e53e7bf0sm4692240a91.19.2024.06.21.23.19.13
+        d=1e100.net; s=20230601; t=1719047645; x=1719652445;
+        h=content-transfer-encoding:mime-version:in-reply-to:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RRqQl8uo5OtW4jawNXSK5YjGDnMPsH/r+7OC+raT/cg=;
+        b=MYILWqXGOpn2Wrtm5E4Ww1wk5zp7ca/pv5fkpf7W5IqIQH2HJi8uTc5/+qV7RcsF3F
+         PwF2mNpsaBmB/n9eI8c+Ezp1B+J2s2EjzHbegovbahs+AGErdS30GEvEDZpBo17FbO8Q
+         rH9cTFrH6+jg/Nwjs8wT/nSnA+yEl/wQ/bnWwVyDS5SwynkctkILXMeIoneYWXxArWId
+         /pkASytAKTck+AFY2N4z4Ylk4AEV4+FVysU3QvrB4xEgDbvUGB9zYsOUO+/zk+87d8Si
+         Yiki7dYhGPL/+XvLl+zzLaRExd9nok4Sjuy0mS05XAOdqW5QhRqPsp9qzlNZ6BZUcLpv
+         YfKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVePJC/cpH0lJbd6SEOLitXOgmlucDLn4cbXIoAEvCADrEFJX6LHGLKgFTb8ZhxtVqkZ4Bh5ngjpf1aXWsxfTvv4ljvcx3ZRveL21YJmO4NSyoCcwoWOlsUe+2yBqcIHDIgUOMECmSR/136qp9VdcES/JlKqc/twcmop7fzVHCZk2Eh6w==
+X-Gm-Message-State: AOJu0YzUyDdiRx9h57193y7HuQ+hAtHq7sfiU+NpCni/nNWGHkF+0zSN
+	DZSw/Zithvid3M336d52NeohnryUMKaqJqUL68Di3lk3EQrnenil
+X-Google-Smtp-Source: AGHT+IHJGOCTYSjWGWICe1a7Ey23OXHw285FjRTgowpE0FVV64ic6M/3PuuUaM6lyNhVILMGR8S5RQ==
+X-Received: by 2002:ac2:46d4:0:b0:52b:8c88:2d6b with SMTP id 2adb3069b0e04-52ce061077fmr39891e87.11.1719047644689;
+        Sat, 22 Jun 2024 02:14:04 -0700 (PDT)
+Received: from comp ([95.165.92.141])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cd76516f3sm409314e87.151.2024.06.22.02.14.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 23:19:16 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] PCI: rockchip: Refactor rockchip_pcie_disable_clocks function signature
-Date: Sat, 22 Jun 2024 11:48:40 +0530
-Message-ID: <20240622061845.3678-3-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240622061845.3678-1-linux.amoon@gmail.com>
-References: <20240622061845.3678-1-linux.amoon@gmail.com>
+        Sat, 22 Jun 2024 02:14:04 -0700 (PDT)
+Date: Sat, 22 Jun 2024 12:14:03 +0300
+From: Alexey Lukyanchuk <skifwebdevelop@gmail.com>
+To: minda.chen@starfivetech.com
+Cc: aou@eecs.berkeley.edu, bhelgaas@google.com, conor@kernel.org,
+ daire.mcnamara@microchip.com, devicetree@vger.kernel.org,
+ emil.renner.berthing@canonical.com, kevin.xie@starfivetech.com,
+ krzysztof.kozlowski+dt@linaro.org, kw@linux.com,
+ leyfoon.tan@starfivetech.com, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+ lpieralisi@kernel.org, mason.huo@starfivetech.com, p.zabel@pengutronix.de,
+ palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
+ tglx@linutronix.de
+Subject: Re: [PATCH v16 00/22] Refactoring Microchip PCIe driver and add
+ StarFive PCIe
+Message-ID: <20240622121403.7effa777@comp>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+In-Reply-To: <20240328091835.14797-1-minda.chen@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Updated rockchip_pcie_disable_clocks function to accept
-a struct rockchip pointer instead of a void pointer.
+Hello Minda Chen.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-v3: None
-v2: None
----
- drivers/pci/controller/pcie-rockchip.c | 4 +---
- drivers/pci/controller/pcie-rockchip.h | 2 +-
- 2 files changed, 2 insertions(+), 4 deletions(-)
+I applied your PCIE series patches to v6.10-rc3 and v6.9.0, works like
+a charm - thank you!
 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index f79e2b0a965b..da210cd96d98 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -284,10 +284,8 @@ int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip)
- }
- EXPORT_SYMBOL_GPL(rockchip_pcie_enable_clocks);
- 
--void rockchip_pcie_disable_clocks(void *data)
-+void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip)
- {
--	struct rockchip_pcie *rockchip = data;
--
- 	clk_bulk_disable_unprepare(ROCKCHIP_NUM_CLKS, rockchip->clks);
- }
- EXPORT_SYMBOL_GPL(rockchip_pcie_disable_clocks);
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 27e951b41b80..3330b1e55dcd 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -354,7 +354,7 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip);
- int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
- void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
- int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
--void rockchip_pcie_disable_clocks(void *data);
-+void rockchip_pcie_disable_clocks(struct rockchip_pcie *rockchip);
- void rockchip_pcie_cfg_configuration_accesses(
- 		struct rockchip_pcie *rockchip, u32 type);
- 
--- 
-2.44.0
+So Tested-by: Alexey Lukyanchuk to all series.
 
+Hovewere i had to fix some minor issues, you can view the results here:
+
+https://github.com/skif-web/linux-starfive-vs2-mainline/tree/strafive-visionfive2-pcie-2
+
+Hope it helps.
+
+Hopefully to see this series being eventually applied soon.
 
