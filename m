@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-9124-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9125-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0A2291356B
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 19:42:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B84A913573
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 19:52:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2AAA2B213CF
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 17:42:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3539B281350
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 17:52:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22EB182C5;
-	Sat, 22 Jun 2024 17:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4FD9DDD8;
+	Sat, 22 Jun 2024 17:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOtV/Hd1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSs+V+DZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F4B182D2;
-	Sat, 22 Jun 2024 17:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E8EBA39;
+	Sat, 22 Jun 2024 17:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719078114; cv=none; b=u3rSIGWrInyf2jKATvHgh3+tjpZNTKaNQkU0bxIWQcymomwLhTg3BTQ1PFd8mbwzJzdVGlJegn1irzigGdTKmMU767M25q0GrRe4SYOLCU9ZK32FGs4Yizen0p4CgPluIawZGTmxQkxnZeTSwyoNEc5JIpPlieEkaSDD0lHDpQ4=
+	t=1719078727; cv=none; b=HgqmWKf+IYjzKSKHobri4Z3fbu/qLVzD8rFaZrPDl4t8umLW1KMlSgJvS/iWIOjU4AuorcMBm4eDmILCZyqeNBGD/Ol3mPrtChLevhka4EWl78PUXMSDavG/qwSSjG/nWOlobS+WXHJb4vQ5nTufnwDFeNuZQZ3GRcVJCeMvdUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719078114; c=relaxed/simple;
-	bh=RZ5LAEmzBnNGgd3UpEVbjbDwc57F7VOPS9Upg/UngfY=;
+	s=arc-20240116; t=1719078727; c=relaxed/simple;
+	bh=TgcQO5cI1N99h+gDcZZc8jr7775wxXCMauMmVkr4DYU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=V696rBYEQ7Dx96eyLqSSF4rFQsbBu/oJKEpLdG3YEz29Rdm91FAJDNb9Okcggb29w1CHYPk9sxp2q5v/EebO6eQrdXhzhbpX6WUaNJRMrhA4+LdcwN2bRuiby8wEugcdCZIQwdHCYtKsdAZZ0Kf4ayjAMs7eLujx2le0XPkVtUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOtV/Hd1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B92DFC3277B;
-	Sat, 22 Jun 2024 17:41:53 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Xy4j+5AYG36xxnlJ32NVveQyHGzeO0zZ+sLW+9s5qmL/by1x+6Kxc1rsIrqL+LhuyXCjxzmy/DHXkTfLkQr9GkwaK81qtqHPZ+eU0VRMCEZSfhBAnw4+L6Yg7oOA8whvtnnjN2v5iOnJGMjKOfn9+g7Po7EsakSQDIwcLl5BH+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSs+V+DZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA39C3277B;
+	Sat, 22 Jun 2024 17:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719078114;
-	bh=RZ5LAEmzBnNGgd3UpEVbjbDwc57F7VOPS9Upg/UngfY=;
+	s=k20201202; t=1719078727;
+	bh=TgcQO5cI1N99h+gDcZZc8jr7775wxXCMauMmVkr4DYU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qOtV/Hd1R8oXoaExmi9nXBT9oevGv/U96wHKUIsbpA7OWkXF+/7GeQFrdTCp6Vm6S
-	 gsOKqfSdU3lUzPl0ix2KdAXrQjxslZYPsqw6R0gpJpsJTrTucTPdLUVlg7gxhCG4F2
-	 0vlVDq+VVHAVI79V2FxHOeFKuNx1kFsfPScEmWCDk8RFwUpeeUzfsV3ZIsRTQq37XS
-	 LNE6G9zCLgUvua9loghitU3HGjc6ia9RUJnfpuG2b0Ay2lSp2mjlvMRWsZW7/NF0fK
-	 NXFOgCm03Jw18EFd3lbK2st+caKmZJjsto1e7Mj4k/pjceGD3OTu69u9s6jHGHnfuF
-	 eY++yOGg74bpA==
-Date: Sat, 22 Jun 2024 12:41:52 -0500
+	b=fSs+V+DZS83pyGpwyU8XOItV98rDKi8EQAxj13OsY3oXv4O4LONKnVidDIhcu6Jqy
+	 SG21le8JZhXy7ys/2wt2Ig2DFvyS2g5DBEWVoSSbETYb2KnoH1TNfAn5AHHOq82iLq
+	 7KHLFS3OXcxBh9bACZWctL5URdqqWB8vnbY7D/trWGqHQLQWaN5XIMKOZ5k/LVk9US
+	 FSuOUMWBarcFIYAx3OwoW7eOf4OesKe2gZ2YUW/Hot42mOkThSQK8vXcjH66U8AeO8
+	 DUuivg0zbBs223qvftuh+poPP+HfnMNxT0OweC1D8pHGgQkVFfyhYyTXROjEoQGRiM
+	 GNAZu7JKEratQ==
+Date: Sat, 22 Jun 2024 12:52:05 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>, lpieralisi@kernel.org,
-	kw@linux.com, bhelgaas@google.com, robh@kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com
-Subject: Re: [PATCH v1] PCI: qcom: Avoid DBI and ATU register space mirror to
- BAR/MMIO region
-Message-ID: <20240622174152.GA1432494@bhelgaas>
+To: "zhoushengqing@ttyinfo.com" <zhoushengqing@ttyinfo.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH] PCI: Enable io space 1k granularity for intel cpu
+ root port
+Message-ID: <20240622175205.GA1432837@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,97 +58,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240622035444.GA2922@thinkpad>
+In-Reply-To: <2024062223061743562815@ttyinfo.com>
 
-On Sat, Jun 22, 2024 at 09:24:44AM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Jun 20, 2024 at 02:34:05PM -0700, Prudhvi Yarlagadda wrote:
-> > PARF hardware block which is a wrapper on top of DWC PCIe controller
-> > mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
-> > register to get the size of the memory block to be mirrored and uses
-> > PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
-> > address of DBI and ATU space inside the memory block that is being
-> > mirrored.
+On Sat, Jun 22, 2024 at 11:06:18PM +0800, zhoushengqing@ttyinfo.com wrote:
+> >> This patch add 1k granularity for intel root port bridge.Intel latest
 > 
-> This PARF_SLV_ADDR_SPACE register is a mystery to me. I tried getting to the
-> bottom of it, but nobody could explain it to me clearly. Looks like you know
-> more about it...
 > 
-> From your description, it seems like this register specifies the size of the
-> mirroring region (ATU + DBI), but the response from your colleague indicates
-> something different [1].
 > 
-> [1] https://lore.kernel.org/linux-pci/f42559f5-9d4c-4667-bf0e-7abfd9983c36@quicinc.com/
+> >> server CPU support 1K granularity,And there is an BIOS setup item named
 > 
-> > When a memory region which is located above the SLV_ADDR_SPACE_SIZE
-> > boundary is used for BAR region then there could be an overlap of DBI and
-> > ATU address space that is getting mirrored and the BAR region. This
-> > results in DBI and ATU address space contents getting updated when a PCIe
-> > function driver tries updating the BAR/MMIO memory region. Reference
-> > memory map of the PCIe memory region with DBI and ATU address space
-> > overlapping BAR region is as below.
-> > 
-> > 			|---------------|
-> > 			|		|
-> > 			|		|
-> > 	-------	--------|---------------|
-> > 	   |	   |	|---------------|
-> > 	   |	   |	|	DBI	|
-> > 	   |	   |	|---------------|---->DBI_BASE_ADDR
-> > 	   |	   |	|		|
-> > 	   |	   |	|		|
-> > 	   |	PCIe	|		|---->2*SLV_ADDR_SPACE_SIZE
-> > 	   |	BAR/MMIO|---------------|
-> > 	   |	Region	|	ATU	|
-> > 	   |	   |	|---------------|---->ATU_BASE_ADDR
-> > 	   |	   |	|		|
-> > 	PCIe	   |	|---------------|
-> > 	Memory	   |	|	DBI	|
-> > 	Region	   |	|---------------|---->DBI_BASE_ADDR
-> > 	   |	   |	|		|
-> > 	   |	--------|		|
-> > 	   |		|		|---->SLV_ADDR_SPACE_SIZE
-> > 	   |		|---------------|
-> > 	   |		|	ATU	|
-> > 	   |		|---------------|---->ATU_BASE_ADDR
-> > 	   |		|		|
-> > 	   |		|---------------|
-> > 	   |		|	DBI	|
-> > 	   |		|---------------|---->DBI_BASE_ADDR
-> > 	   |		|		|
-> > 	   |		|		|
-> > 	----------------|---------------|
-> > 			|		|
-> > 			|		|
-> > 			|		|
-> > 			|---------------|
-> > 
-> > Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is
-> > not used for BAR region which is why the above mentioned issue is
-> > not encountered. This issue is discovered as part of internal
-> > testing when we tried moving the BAR region beyond the
-> > SLV_ADDR_SPACE_SIZE boundary. Hence we are trying to fix this.
 > 
-> I don't quite understand this. PoR value of SLV_ADDR_SPACE_SIZE is
-> 16MB and most of the platforms have the size of whole PCIe region
-> defined in DT as 512MB (registers + I/O + MEM). So the range is
-> already crossing the SLV_ADDR_SPACE_SIZE boundary.
 > 
-> Ironically, the patch I pointed out above changes the value of this
-> register as 128MB, and the PCIe region size of that platform is also
-> 128MB. The author of that patch pointed out that if the
-> SLV_ADDR_SPACE_SIZE is set to 256MB, then they are seeing
-> enumeration failures. If we go by your description of that register,
-> the SLV_ADDR_SPACE_SIZE of 256MB should be > PCIe region size of
-> 128MB. So they should not see any issues, right?
-> 
-> > As PARF hardware block mirrors DBI and ATU register space after
-> > every PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary
-> > multiple, write U64_MAX to PARF_SLV_ADDR_SPACE_SIZE register to
-> > avoid mirroring DBI and ATU to BAR/MMIO region.
-> 
-> Looks like you are trying to avoid this mirroring on a whole. First
-> of all, what is the reasoning behind this mirroring?
 
-This sounds like what we usually call "aliasing" that happens when
-some upper address bits are ignored.
+I don't know what your email agent is doing to add all these extra
+blank lines, but it makes it painful to read/reply:
+https://lore.kernel.org/all/2024062223061743562815@ttyinfo.com/
+
+> >Can you implement this as a quirk similar to quirk_p64h2_1k_io()?
+> >
+> >I don't want to clutter the generic code with device-specific
+> >things like this.
+> 
+> I have attempted to implement this patch in quirks.c.But there
+> doesn't seem to be a suitable DECLARE_PCI_FIXUP* to do this.because
+> the patch is not targeting the device itself, It targets other P2P
+> devices with the same bus number.
+
+If I understand the patch correctly, if a [8086:09a2] device on a root
+bus has EN1K set, *every* bridge (every Root Port in this case because
+I assume this is a PCIe configuration) on the same bus supports 1K
+granularity?
+
+That seems like a really broken kind of encapsulation.  I'd be
+surprised if there were not a bit in each of those Root Ports that
+indicates this.
 
