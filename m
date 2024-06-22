@@ -1,386 +1,129 @@
-Return-Path: <linux-pci+bounces-9108-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9109-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 915629131E4
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 06:11:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4273C9131F1
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 06:30:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11CB61F2337B
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 04:11:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D51D02864B7
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Jun 2024 04:29:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CFAD8F5B;
-	Sat, 22 Jun 2024 04:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E6722D02E;
+	Sat, 22 Jun 2024 04:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwfNf3NA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDXuxr81"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721925680
-	for <linux-pci@vger.kernel.org>; Sat, 22 Jun 2024 04:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F122F5A;
+	Sat, 22 Jun 2024 04:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719029492; cv=none; b=opcVEaH4FSZWjRMmtBbB+bIcUPNg3NhpW8pQVlQ54oH3/gl6hjJLw9fHt/GaUtWNnSVntP0oKJEhv9lDkxh9ksBtpsRQ5oFC8YGEEHHtXnuS34EFsWzMLP20fP14JuugoGyUfOak4FZGzBSWoWVDJ3AaTGODEKdpQ7LiNf9Eq7M=
+	t=1719030595; cv=none; b=eOKEwzBHan4bjkNMyuyiAwbVibrwwfw1LsPMVEyk9nqr9i0eEQnxYBI5SANuCO03XUTYQ/EpN6jy/7n2EyD0wQcV6z5mkuyiaxr+pKEMa+IBK9mm77DhaMd+1nS0A6iWOFkpKtu1isfgd+205ci840AohIQcZfgvTMXM5n2Ocf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719029492; c=relaxed/simple;
-	bh=BycR4VjN1P2/crFqGM7x9mmrtddl8EKh2KJCyfpv2P4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VHXCrhvnHm6hQH5JFmXjfJBbKL31L1W62+RArzdRXEDrgqqNdu+cVXWdJvfbdqS3z+qw9mUmOv15yFzoWn/wXB+F55hOnI0LfmnNARLuYzePQhL7EhZbHAVF7Atkuf5U6+6OoSbYSWFkvN1QGsl0PIqbWh3uYhhvpjX+iopBuHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VwfNf3NA; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7065e31ee3cso708985b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jun 2024 21:11:29 -0700 (PDT)
+	s=arc-20240116; t=1719030595; c=relaxed/simple;
+	bh=MqEmGdf9SB+swNuEACU5958c0vsUzARjJZsQOdKU2TI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TNeSRrOc+8O73YlifU1K4NLqGIHW/Q+qH63mL/XLJ19FwBaXu/cyJwUu0NH36d10iuF0FohFAY4ps+ZSc216pz5aSdMKywCTq1QD/PH4PjODaCEz413bCtrgRzY81Rhr7a2q33fbOIi+DWELwmqu1msIU7OVJ57wN9DbLIG5G3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDXuxr81; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5b9706c84e5so1520605eaf.1;
+        Fri, 21 Jun 2024 21:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719029489; x=1719634289; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TfjJ/7PxukviDUtbYW71wrZoAgJ4L/WBbr7ZDew9h2I=;
-        b=VwfNf3NAXjCBt9CA9bWJToo7wOBaNTlz/Nj4Z8NVLV3YB5wGL9U1jamnDIIwFiVJoU
-         XYCegsJw7oxPfaXWeS5EStppr9H+4awx71MXEHencEuGbiJS95OaVDUrQ5qWzx7mw3Pu
-         kWXnd/ruPjfrQ0uTy6+hocrGLpkz8jrFk45J+Z19y/1qxbKvNNyVv1+tl3ZBcoJ0ME+B
-         XsOXax+SHM5FSJ5hn4SsY7IHTo5GG3kGLGn7V98+lHVWelqXGQ5YR7xT3Z95SfaB4CBW
-         V+o8DY2cVny9ae/pnvaUHO/9uHxzjPYuyy3/iDx1hCeM70IuPppGUMqGsFWak0KzwtKY
-         e6lQ==
+        d=gmail.com; s=20230601; t=1719030593; x=1719635393; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=F9KsD8yt6Ys8mXDglDi64CvjPaqmJRjrP6+6ZL6aKWI=;
+        b=BDXuxr81sQjEtDpA6wUf/zlC10OwnIewXeB+5C0J4sJUWW7ViNFPLdXzzjCnqChGdO
+         7JjZEfxuM18To7dBdTPx0x2H/2jlDyfjAjHC2+24bawKCwyj1kIN3ibLD0/8SEK36T32
+         X76niponqDl4qumr1Hs02z4sIEyXhdesDVz4DwTCS1RLmMeazn7yrIZcG6Scz/fsw2iG
+         KNUHe1X0krKDwpN1inQGtSCJJSgOPbOORbdcxm2Y5/4T+RhXFYjvwF6UFtzp73gjYu+4
+         K9124do+jYFzV9hSeyEbu/gXVcAGef6y90CJlnGVDCZx63cmCWQuPLFUSqCku/GBLvFb
+         wBuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719029489; x=1719634289;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TfjJ/7PxukviDUtbYW71wrZoAgJ4L/WBbr7ZDew9h2I=;
-        b=azrNJYkZ5xPYquT98hJxI5r/G4fVWZSqraBBJ1i8X1h1lw+eF2qYPKB+DigpvrDyYO
-         JN8LAxwlmUlinkGZgEFz9OZzh6KuI2IP6g2gntdGUmvdE2fdYDFid/lOfu3FlT+VPBto
-         bcNic5kp4tf6PAjTBL9TCvxJLEsEIpv3JgvZYuHDzVvVw2o5Yn45KbCP+gJJ0PrMFLFs
-         M8gZxCQomVkAu1Rk2trHIv6JaIjMTVXG6QeULQQPe6D/o7pDSKyOOQDbnl1FLgqg/JvL
-         nLWSKV08c4IHXVYPySEIRyMsxD32h9Mp834HVWmDPxsQfMLJHGNS+/bpw6QRJjr0BPAb
-         dixg==
-X-Forwarded-Encrypted: i=1; AJvYcCWiGHnNI6iD69cfO5qbsh8ZR55KIY5y+OXdnFM10iiFV4jUDpwDGY7NeYYCWkteQ7mU3S5YHYzEl/MPgRGsFtYO+Y5PPnK0zT7W
-X-Gm-Message-State: AOJu0YyEvL0H8oCTNzmuer45YaQTA6p5zvLZ48B3lJJ9I9/Tp1qCHBQO
-	EMMNHPAtHrg/W0u6Elfx2VkfHNRu3DTx5RKujDUVcb6min/XVUUBZw7To0gRXA==
-X-Google-Smtp-Source: AGHT+IH+yBsETEqfxy9vYW6jfMV4VUEuUCczzbiF/DAMNYGj7eoKv9nvHXCHsH1eneeaZG8RXNzxKQ==
-X-Received: by 2002:a05:6a00:1d0d:b0:704:3a0f:1d88 with SMTP id d2e1a72fcca58-70629ccff3bmr11045925b3a.21.1719029488608;
-        Fri, 21 Jun 2024 21:11:28 -0700 (PDT)
-Received: from thinkpad ([120.60.57.250])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-716b4a74010sm1558983a12.49.2024.06.21.21.11.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 21:11:28 -0700 (PDT)
-Date: Sat, 22 Jun 2024 09:41:15 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
- MSI ITS and IOMMU for i.MX95
-Message-ID: <20240622041115.GB2922@thinkpad>
-References: <20240528-pci2_upstream-v5-0-750aa7edb8e2@nxp.com>
- <20240528-pci2_upstream-v5-8-750aa7edb8e2@nxp.com>
+        d=1e100.net; s=20230601; t=1719030593; x=1719635393;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F9KsD8yt6Ys8mXDglDi64CvjPaqmJRjrP6+6ZL6aKWI=;
+        b=F+fu1SEvpKudCJd4TUg29TsgIm7oKnGaA4InHs7FuvOa9TMksIGWq1MRj9L2bnXveS
+         j5Pltvu8aNvrWo7Yvv6Y1uwo/bhPC7iOqF7ERnKNwRU0RhGf7elezN5ttS4YAM4wDrw+
+         hJF8JgZVdKuJiIymgOySsLCbPWLN9en+amYpKYA2oVlBE2lcl7TzePtKv/tVo/igWjon
+         +sePf0038LlRu5tHZVXEoJKnPqf3H9PIUa0ZFQHtqrc1ARVdvqxZuPCRhsY66x2Sxw/r
+         6rfJ/Mo0C60bljDT2lAkz9NHJmxhxOCRGtaHEPhoZUJQcM6kfT2B3MV1iiIgpMhvizaq
+         CQWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXz93/LhDrbhDx6inYRbUjLEF6ZroFjmsBd7uoDLMF5+n0Xj6JfOrUfEDnNwcbtWaeyUmoJSwA2BAwILH+IA6MGEdatTW20vvfLQKymaNP6FJw78JAoNIiVghwmo4kzgPaKy1W6ETOx
+X-Gm-Message-State: AOJu0Ywoe6D395GY1aT8DfMM3zJYcDZJ0dnWP9z/oyPstZKLFP24Dzj8
+	moYvNZ1AtHzmXJXUpX3oIl55Pg/Ld6aXr9S0/Qg5i6nzyK16AzQOkHD2JM9kSPL2voE3qM1rcS9
+	eXk8NKo2rwdxN/B45L9ecACrm450+0A==
+X-Google-Smtp-Source: AGHT+IE1+yk8ZA9XkU/ojx39oXVgXLE6ORoPSVISfOrRYQzqC1BHglAPcab/AKI4UKiw3FAoN067oBVJ79pWX7QhtAI=
+X-Received: by 2002:a05:6870:d389:b0:254:c95f:cdb6 with SMTP id
+ 586e51a60fabf-25c94d5c85fmr11605824fac.52.1719030592833; Fri, 21 Jun 2024
+ 21:29:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240528-pci2_upstream-v5-8-750aa7edb8e2@nxp.com>
+References: <20240621064426.282048-1-linux.amoon@gmail.com> <20240621212125.GA1406213@bhelgaas>
+In-Reply-To: <20240621212125.GA1406213@bhelgaas>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Sat, 22 Jun 2024 09:59:38 +0530
+Message-ID: <CANAwSgRiOg4sXX5yEoTcogEAKUvO=r49sheSCjiCC7CF10kd1g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] PCI: rockchip: Simplify clock handling by using
+ clk_bulk*() function
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	kernel test robot <lkp@intel.com>, linux-pci@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
-> For the i.MX95, configuration of a LUT is necessary to convert Bus Device
-> Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
-> This involves examining the msi-map and smmu-map to ensure consistent
-> mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
-> registers are configured. In the absence of an msi-map, the built-in MSI
-> controller is utilized as a fallback.
-> 
-> Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
-> upon the appearance of a new PCI device and when the bus is an iMX6 PCI
-> controller. This function configures the correct LUT based on Device Tree
-> Settings (DTS).
-> 
+Hi Bjorn
 
-Sorry for jumping the ship very late... But why can't you configure the LUT
-during probe() itself? Anyway, you are going to use the 'iommu-map' and
-'msi-map' which are static info provided in DT. I don't see a necessity to do it
-during device addition time.
+On Sat, 22 Jun 2024 at 02:51, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Jun 21, 2024 at 12:14:20PM +0530, Anand Moon wrote:
+> > Refactors the clock handling in the Rockchip PCIe driver,
+> > introducing a more robust and efficient method for enabling and
+> > disabling clocks using clk_bulk*() API. Using the clk_bulk APIs,
+> > the clock handling for the core clocks becomes much simpler.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202406200818.CQ7DXNSZ-lkp@intel.com/
+>
+> Drop these two lines, as suggested in the test robot report:
+>
+>   If you fix the issue in a separate patch/commit (i.e. not just a new
+>   version of the same patch/commit), kindly add following tags ...
+>
+> This is a new version of the same patch, so it doesn't need those
+> tags.
+>
+Ok.
+> The problem you're solving with this patch is that the clock handling
+> is too complicated.  The test robot didn't report *that* problem.
+>
+> Since you'll repost for this, also s/Refactors/Refactor/ in the commit
+> log so this is in imperative mood:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.9#n94
+> https://chris.beams.io/posts/git-commit/
+>
+Ok, I will follow up on this process in the future.
 
-Qcom RC driver also uses a similar configuration in
-qcom_pcie_config_sid_1_9_0().
+> >  drivers/pci/controller/pcie-rockchip.c | 64 ++++----------------------
+> >  drivers/pci/controller/pcie-rockchip.h | 15 ++++--
+> >  2 files changed, 21 insertions(+), 58 deletions(-)
+>
+> Nice reduction in lines!
 
-- Mani
-
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 175 +++++++++++++++++++++++++++++++++-
->  1 file changed, 174 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 29309ad0e352b..8ecc00049e20b 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -54,6 +54,22 @@
->  #define IMX95_PE0_GEN_CTRL_3			0x1058
->  #define IMX95_PCIE_LTSSM_EN			BIT(0)
->  
-> +#define IMX95_PE0_LUT_ACSCTRL			0x1008
-> +#define IMX95_PEO_LUT_RWA			BIT(16)
-> +#define IMX95_PE0_LUT_ENLOC			GENMASK(4, 0)
-> +
-> +#define IMX95_PE0_LUT_DATA1			0x100c
-> +#define IMX95_PE0_LUT_VLD			BIT(31)
-> +#define IMX95_PE0_LUT_DAC_ID			GENMASK(10, 8)
-> +#define IMX95_PE0_LUT_STREAM_ID			GENMASK(5, 0)
-> +
-> +#define IMX95_PE0_LUT_DATA2			0x1010
-> +#define IMX95_PE0_LUT_REQID			GENMASK(31, 16)
-> +#define IMX95_PE0_LUT_MASK			GENMASK(15, 0)
-> +
-> +#define IMX95_SID_MASK				GENMASK(5, 0)
-> +#define IMX95_MAX_LUT				32
-> +
->  #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
->  
->  enum imx_pcie_variants {
-> @@ -79,6 +95,7 @@ enum imx_pcie_variants {
->  #define IMX_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
->  #define IMX_PCIE_FLAG_HAS_SERDES		BIT(6)
->  #define IMX_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
-> +#define IMX_PCIE_FLAG_MONITOR_DEV		BIT(8)
->  
->  #define imx_check_flag(pci, val)     (pci->drvdata->flags & val)
->  
-> @@ -132,6 +149,8 @@ struct imx_pcie {
->  	struct device		*pd_pcie_phy;
->  	struct phy		*phy;
->  	const struct imx_pcie_drvdata *drvdata;
-> +
-> +	struct mutex		lock;
->  };
->  
->  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
-> @@ -215,6 +234,66 @@ static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
->  	return 0;
->  }
->  
-> +static int imx_pcie_config_lut(struct imx_pcie *imx_pcie, u16 reqid, u8 sid)
-> +{
-> +	struct dw_pcie *pci = imx_pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 data1, data2;
-> +	int i;
-> +
-> +	if (sid >= 64) {
-> +		dev_err(dev, "Invalid SID for index %d\n", sid);
-> +		return -EINVAL;
-> +	}
-> +
-> +	guard(mutex)(&imx_pcie->lock);
-> +
-> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
-> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
-> +
-> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1);
-> +		if (data1 & IMX95_PE0_LUT_VLD)
-> +			continue;
-> +
-> +		data1 = FIELD_PREP(IMX95_PE0_LUT_DAC_ID, 0);
-> +		data1 |= FIELD_PREP(IMX95_PE0_LUT_STREAM_ID, sid);
-> +		data1 |= IMX95_PE0_LUT_VLD;
-> +
-> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
-> +
-> +		data2 = 0xffff;
-> +		data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, reqid);
-> +
-> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
-> +
-> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
-> +
-> +		return 0;
-> +	}
-> +
-> +	dev_err(dev, "All lut already used\n");
-> +	return -EINVAL;
-> +}
-> +
-> +static void imx_pcie_remove_lut(struct imx_pcie *imx_pcie, u16 reqid)
-> +{
-> +	u32 data2 = 0;
-> +	int i;
-> +
-> +	guard(mutex)(&imx_pcie->lock);
-> +
-> +	for (i = 0; i < IMX95_MAX_LUT; i++) {
-> +		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, IMX95_PEO_LUT_RWA | i);
-> +
-> +		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
-> +		if (FIELD_GET(IMX95_PE0_LUT_REQID, data2) == reqid) {
-> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, 0);
-> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, 0);
-> +			regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
-> +		}
-> +	}
-> +}
-> +
->  static void imx_pcie_configure_type(struct imx_pcie *imx_pcie)
->  {
->  	const struct imx_pcie_drvdata *drvdata = imx_pcie->drvdata;
-> @@ -1232,6 +1311,85 @@ static int imx_pcie_resume_noirq(struct device *dev)
->  	return 0;
->  }
->  
-> +static bool imx_pcie_match_device(struct pci_bus *bus);
-> +
-> +static int imx_pcie_add_device(struct imx_pcie *imx_pcie, struct pci_dev *pdev)
-> +{
-> +	u32 sid_i = 0, sid_m = 0, rid = pci_dev_id(pdev);
-> +	struct device *dev = imx_pcie->pci->dev;
-> +	int err;
-> +
-> +	err = of_map_id(dev->of_node, rid, "iommu-map", "iommu-map-mask", NULL, &sid_i);
-> +	if (err)
-> +		return err;
-> +
-> +	err = of_map_id(dev->of_node, rid, "msi-map", "msi-map-mask", NULL, &sid_m);
-> +	if (err)
-> +		return err;
-> +
-> +	if (sid_i != rid && sid_m != rid)
-> +		if ((sid_i & IMX95_SID_MASK) != (sid_m & IMX95_SID_MASK)) {
-> +			dev_err(dev, "its and iommu stream id miss match, please check dts file\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +	/* if iommu-map is not existed then use msi-map's stream id*/
-> +	if (sid_i == rid)
-> +		sid_i = sid_m;
-> +
-> +	sid_i &= IMX95_SID_MASK;
-> +
-> +	if (sid_i != rid)
-> +		return imx_pcie_config_lut(imx_pcie, rid, sid_i);
-> +
-> +	/* Use dwc built-in MSI controller */
-> +	return 0;
-> +}
-> +
-> +static void imx_pcie_del_device(struct imx_pcie *imx_pcie, struct pci_dev *pdev)
-> +{
-> +	imx_pcie_remove_lut(imx_pcie, pci_dev_id(pdev));
-> +}
-> +
-> +
-> +static int imx_pcie_bus_notifier(struct notifier_block *nb, unsigned long action, void *data)
-> +{
-> +	struct pci_host_bridge *host;
-> +	struct imx_pcie *imx_pcie;
-> +	struct pci_dev *pdev;
-> +	int err;
-> +
-> +	pdev = to_pci_dev(data);
-> +	host = pci_find_host_bridge(pdev->bus);
-> +
-> +	if (!imx_pcie_match_device(host->bus))
-> +		return NOTIFY_OK;
-> +
-> +	imx_pcie = to_imx_pcie(to_dw_pcie_from_pp(host->sysdata));
-> +
-> +	if (!imx_check_flag(imx_pcie, IMX_PCIE_FLAG_MONITOR_DEV))
-> +		return NOTIFY_OK;
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		err = imx_pcie_add_device(imx_pcie, pdev);
-> +		if (err)
-> +			return notifier_from_errno(err);
-> +		break;
-> +	case BUS_NOTIFY_DEL_DEVICE:
-> +		imx_pcie_del_device(imx_pcie, pdev);
-> +		break;
-> +	default:
-> +		return NOTIFY_DONE;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block imx_pcie_nb = {
-> +	.notifier_call = imx_pcie_bus_notifier,
-> +};
-> +
->  static const struct dev_pm_ops imx_pcie_pm_ops = {
->  	NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_pcie_suspend_noirq,
->  				  imx_pcie_resume_noirq)
-> @@ -1264,6 +1422,8 @@ static int imx_pcie_probe(struct platform_device *pdev)
->  	imx_pcie->pci = pci;
->  	imx_pcie->drvdata = of_device_get_match_data(dev);
->  
-> +	mutex_init(&imx_pcie->lock);
-> +
->  	/* Find the PHY if one is defined, only imx7d uses it */
->  	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
->  	if (np) {
-> @@ -1551,7 +1711,8 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  	},
->  	[IMX95] = {
->  		.variant = IMX95,
-> -		.flags = IMX_PCIE_FLAG_HAS_SERDES,
-> +		.flags = IMX_PCIE_FLAG_HAS_SERDES |
-> +			 IMX_PCIE_FLAG_MONITOR_DEV,
->  		.clk_names = imx8mq_clks,
->  		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
->  		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
-> @@ -1687,6 +1848,8 @@ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
->  
->  static int __init imx_pcie_init(void)
->  {
-> +	int ret;
-> +
->  #ifdef CONFIG_ARM
->  	struct device_node *np;
->  
-> @@ -1705,7 +1868,17 @@ static int __init imx_pcie_init(void)
->  	hook_fault_code(8, imx6q_pcie_abort_handler, SIGBUS, 0,
->  			"external abort on non-linefetch");
->  #endif
-> +	ret = bus_register_notifier(&pci_bus_type, &imx_pcie_nb);
-> +	if (ret)
-> +		return ret;
->  
->  	return platform_driver_register(&imx_pcie_driver);
->  }
-> +
-> +static void __exit imx_pcie_exit(void)
-> +{
-> +	bus_unregister_notifier(&pci_bus_type, &imx_pcie_nb);
-> +}
-> +
->  device_initcall(imx_pcie_init);
-> +__exitcall(imx_pcie_exit);
-> 
-> -- 
-> 2.34.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks
+-Anand
 
