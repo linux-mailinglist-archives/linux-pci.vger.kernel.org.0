@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-9148-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9149-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0B35913C2A
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Jun 2024 17:21:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7284A913C2C
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Jun 2024 17:21:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 674C4285E6C
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Jun 2024 15:21:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95A911C208DD
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Jun 2024 15:21:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DCF0186E57;
-	Sun, 23 Jun 2024 15:18:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7DBF18754C;
+	Sun, 23 Jun 2024 15:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qp5upnBZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YeEWya1K"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OrydrbOY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mTiwwIWB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E721862A8;
-	Sun, 23 Jun 2024 15:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5C0186E4B;
+	Sun, 23 Jun 2024 15:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719155938; cv=none; b=OnSIFoNLLinvE7kOnJVWIC44/Iv8HRsEx0LhzD1TtovyXG9rUu1xhuBGdiW/2d6C/gYJKLGx7djJWx/qKw6b9KQRbpRzVpFos5xVbkOrPBVOIC8d2+GyXQv9g9s2mMq37ECtliOv+iSi3Myq1S2Ut9BK0BWYw6BB26iLeGftwik=
+	t=1719155940; cv=none; b=bYWmLwakjtPttH/+E0/WSKo4S/SfanpTzeySBsp9jbQ5uM9TmVxspyYGMm7lebf74zrFXGjsjmQW/xRnYhNiN/yzkJqEi1aTsOYeZ4ORE5htyA2QCI4miei6pvj5I9MuwrjrkAUj2CZA5pkkjWDLLbV5DpxeFAIMi9j5+vb0u+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719155938; c=relaxed/simple;
-	bh=ofpQ4ZFT0LuyPsr7f1Fo7b2LMIcyd59HGFEuWqF/WwY=;
+	s=arc-20240116; t=1719155940; c=relaxed/simple;
+	bh=E6qjPEEYwVmw+F4gqTEKSAvsF63jIWc0obp5peBUnnA=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=goNXd8R8ny/i7q+01fWu/OUoMloGB3T+rrzW4P1NfkmQscUzbdxYNmVokQBUvyL1Kr1lkygix61pzPTGZfXaXn7SCjCUqR/GhozDTPiHJ5RsGgL84K1CpvpxdUJZDXrsD09wfJJ5iHi8dLeVIRz4UKcAnikRZ+wJ3PCZhv+JngE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qp5upnBZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YeEWya1K; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=bfb9Uvi46COWNH/tp67pe9aQw95qD6HUGO2gLgM2yBBurBC4YZLfvUaTiwgDwbg2j5s7yUC7Nri9Nn3vaEQXr8XGThkZNW56w0L3usycONvxKm2bgaVrggMzm22ESDVarCGznw3FZGZU13/1zfaJA+g+NvcpGNhVG8eEKH9k28M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OrydrbOY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mTiwwIWB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Message-ID: <20240623142235.574932935@linutronix.de>
+Message-ID: <20240623142235.635015886@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719155935;
+	s=2020; t=1719155937;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=xmjvOHOYTgqqA8IGPC6dGdyVEF+BEZiptiYdpVIpqZo=;
-	b=qp5upnBZ+1NyWs0CvwwCQrncLiBS8I6KTxE67kiH5Nv5eXp+ed7OW+wPcarCMqZCD+n1Tn
-	iuVceQsXYCZUWDcCI8TUjcHM0IKFaQjDCSXiqjwxw7ShSL7FPeEy7lnr6LgoAoKKvypvzt
-	2Qh21MURYpsA3KtX6Ur1fzBtxQVFj3geo+enAlnAkxYp7s/s8CDE3MzwRVAgBMF1sM6uKQ
-	eK0DHvM9lKpmY1AGckCLV/QA7c1NIk73G01ibgFJsw/RLlQGjPp7fpYOssPsUPH5x0C6B2
-	XSiMjRq/A7TYxrV5QG6xr/ET744bL/NU8bmyWzBhdAzwbn9rw0yVyG0Y+wTktw==
+	 references:references; bh=WVDuduzaV0/NeHCSHHMPqtE30cncmaLGfawg765I8yw=;
+	b=OrydrbOYbU5fXP3HIlMx4WVB/1mriKWZtneS6oJ7JCWx4Pa/2AUZKhrMNAkt7k3GW4JZZT
+	gRnJv9ceRXnmz9wfgGmPgsCSM212No83MrSMNOX9P45ueUPEzAtrqWiy4XiNbzQpxqMWT5
+	fLJmVrIkI/VgccssVS+gSwqD/cpHD5yomz5DZetKlHt1cNevqomcKogfHqMP++662eGC6t
+	mxzre+4LnUj3cHC3spz0eZA3fN88eoLLevgU+yQGxkyLtdMCY7/sztB88LUFbVOL7DQAM4
+	6+00vzIyvX+yq5tYKafU+Kp2nk2f8KQfXGSl6ozK7eDBztI1CQQvHaQtCu5rUg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719155935;
+	s=2020e; t=1719155937;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=xmjvOHOYTgqqA8IGPC6dGdyVEF+BEZiptiYdpVIpqZo=;
-	b=YeEWya1KcwBS4zD/3+n3R//OLaeRvAQB9LFZb4QIocoHlRBptQiYET/Ptbotl6nf80+FSP
-	Y+H+hqZYpWmTX3Aw==
+	 references:references; bh=WVDuduzaV0/NeHCSHHMPqtE30cncmaLGfawg765I8yw=;
+	b=mTiwwIWBZYNK56HlKxfWJqV8xXn91nuQCTtMIu8chqdUV7glv/y833CGovUXvOetCN+2fh
+	kcjtjC/wjRKYTuAA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org,
@@ -90,7 +90,8 @@ Cc: linux-arm-kernel@lists.infradead.org,
  shameerali.kolothum.thodi@huawei.com,
  yuzenghui@huawei.com,
  shivamurthy.shastri@linutronix.de
-Subject: [patch V4 14/21] irqchip/imx-mu-msi: Switch to MSI parent
+Subject: [patch V4 15/21] irqchip/irq-mvebu-icu: Prepare for real per device
+ MSI
 References: <20240623142137.448898081@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -99,16 +100,32 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Sun, 23 Jun 2024 17:18:55 +0200 (CEST)
+Date: Sun, 23 Jun 2024 17:18:56 +0200 (CEST)
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-All platform MSI users and the PCI/MSI code handle per device MSI domains
-when the irqdomain associated to the device provides MSI parent
-functionality.
+The core infrastructure has everything in place to switch ICU to per
+device MSI domains and avoid the convoluted construct of the existing
+platform-MSI layering violation.
 
-Remove the "global" platform domain related code and provide the MSI parent
-functionality by filling in msi_parent_ops.
+The new infrastructure provides a wired interrupt specific interface in the
+MSI core which converts the 'hardware interrupt number + trigger type'
+allocation which is required for wired interrupts in the regular irqdomain
+code to a normal MSI allocation.
+
+The hardware interrupt number and the trigger type are stored in the MSI
+descriptor device cookie by the core code so the ICU specific code can
+retrieve them.
+
+The new per device domain is only instantiated when the irqdomain which is
+associated to the ICU device provides MSI parent functionality. Up to
+that point it invokes the existing code. Once the parent is converted the
+code for the current platform-MSI mechanism is removed.
+
+The new domain shares the interrupt chip callbacks and the translation
+function. The only new functionality aside of filling out the
+msi_domain_templates is a domain specific set_desc() callback, which will go
+away once all platform-MSI code has been converted.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
@@ -117,117 +134,245 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 
 ---
----
- drivers/irqchip/Kconfig          |    1 
- drivers/irqchip/irq-imx-mu-msi.c |   48 +++++++++++++++++----------------------
- drivers/irqchip/irq-msi-lib.c    |    2 +
- 3 files changed, 24 insertions(+), 27 deletions(-)
+ drivers/irqchip/irq-mvebu-icu.c | 181 ++++++++++++++++++++++++++++++--
+ 1 file changed, 170 insertions(+), 11 deletions(-)
 
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -492,6 +492,7 @@ config IMX_MU_MSI
- 	select IRQ_DOMAIN
- 	select IRQ_DOMAIN_HIERARCHY
- 	select GENERIC_MSI_IRQ
-+	select IRQ_MSI_LIB
- 	help
- 	  Provide a driver for the i.MX Messaging Unit block used as a
- 	  CPU-to-CPU MSI controller. This requires a specially crafted DT
---- a/drivers/irqchip/irq-imx-mu-msi.c
-+++ b/drivers/irqchip/irq-imx-mu-msi.c
-@@ -24,6 +24,8 @@
- #include <linux/pm_domain.h>
- #include <linux/spinlock.h>
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index 3c77acc7ec6a..2a210cd9482e 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -20,6 +20,8 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
  
 +#include "irq-msi-lib.h"
 +
- #define IMX_MU_CHANS            4
+ #include <dt-bindings/interrupt-controller/mvebu-icu.h>
  
- enum imx_mu_xcr {
-@@ -114,20 +116,6 @@ static void imx_mu_msi_parent_ack_irq(st
- 	imx_mu_read(msi_data, msi_data->cfg->xRR + data->hwirq * 4);
- }
- 
--static struct irq_chip imx_mu_msi_irq_chip = {
--	.name = "MU-MSI",
--	.irq_ack = irq_chip_ack_parent,
--};
--
--static struct msi_domain_ops imx_mu_msi_irq_ops = {
--};
--
--static struct msi_domain_info imx_mu_msi_domain_info = {
--	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
--	.ops	= &imx_mu_msi_irq_ops,
--	.chip	= &imx_mu_msi_irq_chip,
--};
--
- static void imx_mu_msi_parent_compose_msg(struct irq_data *data,
- 					  struct msi_msg *msg)
- {
-@@ -195,6 +183,7 @@ static void imx_mu_msi_domain_irq_free(s
- }
- 
- static const struct irq_domain_ops imx_mu_msi_domain_ops = {
-+	.select	= msi_lib_irq_domain_select,
- 	.alloc	= imx_mu_msi_domain_irq_alloc,
- 	.free	= imx_mu_msi_domain_irq_free,
+ /* ICU registers */
+@@ -60,14 +62,52 @@ struct mvebu_icu_msi_data {
+ 	const struct mvebu_icu_subset_data *subset_data;
  };
-@@ -216,6 +205,21 @@ static void imx_mu_msi_irq_handler(struc
- 	chained_irq_exit(chip, desc);
+ 
+-struct mvebu_icu_irq_data {
+-	struct mvebu_icu *icu;
+-	unsigned int icu_group;
+-	unsigned int type;
+-};
+-
+ static DEFINE_STATIC_KEY_FALSE(legacy_bindings);
+ 
++static int mvebu_icu_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
++			       unsigned long *hwirq, unsigned int *type)
++{
++	unsigned int param_count = static_branch_unlikely(&legacy_bindings) ? 3 : 2;
++	struct mvebu_icu_msi_data *msi_data = d->host_data;
++	struct mvebu_icu *icu = msi_data->icu;
++
++	/* Check the count of the parameters in dt */
++	if (WARN_ON(fwspec->param_count != param_count)) {
++		dev_err(icu->dev, "wrong ICU parameter count %d\n",
++			fwspec->param_count);
++		return -EINVAL;
++	}
++
++	if (static_branch_unlikely(&legacy_bindings)) {
++		*hwirq = fwspec->param[1];
++		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
++		if (fwspec->param[0] != ICU_GRP_NSR) {
++			dev_err(icu->dev, "wrong ICU group type %x\n",
++				fwspec->param[0]);
++			return -EINVAL;
++		}
++	} else {
++		*hwirq = fwspec->param[0];
++		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
++
++		/*
++		 * The ICU receives level interrupts. While the NSR are also
++		 * level interrupts, SEI are edge interrupts. Force the type
++		 * here in this case. Please note that this makes the interrupt
++		 * handling unreliable.
++		 */
++		if (msi_data->subset_data->icu_group == ICU_GRP_SEI)
++			*type = IRQ_TYPE_EDGE_RISING;
++	}
++
++	if (*hwirq >= ICU_MAX_IRQS) {
++		dev_err(icu->dev, "invalid interrupt number %ld\n", *hwirq);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static void mvebu_icu_init(struct mvebu_icu *icu,
+ 			   struct mvebu_icu_msi_data *msi_data,
+ 			   struct msi_msg *msg)
+@@ -89,6 +129,14 @@ static void mvebu_icu_init(struct mvebu_icu *icu,
+ 	writel_relaxed(msg[1].address_lo, icu->base + subset->offset_clr_al);
  }
  
-+#define IMX_MU_MSI_FLAGS_REQUIRED	(MSI_FLAG_USE_DEF_DOM_OPS |	\
-+					 MSI_FLAG_USE_DEF_CHIP_OPS |	\
-+					 MSI_FLAG_PARENT_PM_DEV)
++/* Start of area to be removed once all parent chips provide MSI parent */
 +
-+#define IMX_MU_MSI_FLAGS_SUPPORTED	(MSI_GENERIC_FLAGS_MASK)
-+
-+static const struct msi_parent_ops imx_mu_msi_parent_ops = {
-+	.supported_flags	= IMX_MU_MSI_FLAGS_SUPPORTED,
-+	.required_flags		= IMX_MU_MSI_FLAGS_REQUIRED,
-+	.bus_select_token       = DOMAIN_BUS_NEXUS,
-+	.bus_select_mask	= MATCH_PLATFORM_MSI,
-+	.prefix			= "MU-MSI-",
-+	.init_dev_msi_info	= msi_lib_init_dev_msi_info,
++struct mvebu_icu_irq_data {
++	struct mvebu_icu *icu;
++	unsigned int icu_group;
++	unsigned int type;
 +};
 +
- static int imx_mu_msi_domains_init(struct imx_mu_msi *msi_data, struct device *dev)
+ static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
  {
- 	struct fwnode_handle *fwnodes = dev_fwnode(dev);
-@@ -230,19 +234,9 @@ static int imx_mu_msi_domains_init(struc
+ 	struct irq_data *d = irq_get_irq_data(desc->irq);
+@@ -269,6 +317,109 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
+ 	.free      = mvebu_icu_irq_domain_free,
+ };
+ 
++/* End of removal area */
++
++static int mvebu_icu_msi_init(struct irq_domain *domain, struct msi_domain_info *info,
++			      unsigned int virq, irq_hw_number_t hwirq, msi_alloc_info_t *arg)
++{
++	irq_domain_set_hwirq_and_chip(domain, virq, hwirq, info->chip, info->chip_data);
++	return irq_set_irqchip_state(virq, IRQCHIP_STATE_PENDING, false);
++}
++
++static void mvebu_icu_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
++{
++	arg->desc = desc;
++	arg->hwirq = (u32)desc->data.icookie.value;
++}
++
++static void mvebu_icu_write_msi_msg(struct irq_data *d, struct msi_msg *msg)
++{
++	struct mvebu_icu_msi_data *msi_data = d->chip_data;
++	unsigned int icu_group = msi_data->subset_data->icu_group;
++	struct msi_desc *desc = irq_data_get_msi_desc(d);
++	struct mvebu_icu *icu = msi_data->icu;
++	unsigned int type;
++	u32 icu_int;
++
++	if (msg->address_lo || msg->address_hi) {
++		/* One off initialization per domain */
++		mvebu_icu_init(icu, msi_data, msg);
++		/* Configure the ICU with irq number & type */
++		icu_int = msg->data | ICU_INT_ENABLE;
++		type = (unsigned int)(desc->data.icookie.value >> 32);
++		if (type & IRQ_TYPE_EDGE_RISING)
++			icu_int |= ICU_IS_EDGE;
++		icu_int |= icu_group << ICU_GROUP_SHIFT;
++	} else {
++		/* De-configure the ICU */
++		icu_int = 0;
++	}
++
++	writel_relaxed(icu_int, icu->base + ICU_INT_CFG(d->hwirq));
++
++	/*
++	 * The SATA unit has 2 ports, and a dedicated ICU entry per
++	 * port. The ahci sata driver supports only one irq interrupt
++	 * per SATA unit. To solve this conflict, we configure the 2
++	 * SATA wired interrupts in the south bridge into 1 GIC
++	 * interrupt in the north bridge. Even if only a single port
++	 * is enabled, if sata node is enabled, both interrupts are
++	 * configured (regardless of which port is actually in use).
++	 */
++	if (d->hwirq == ICU_SATA0_ICU_ID || d->hwirq == ICU_SATA1_ICU_ID) {
++		writel_relaxed(icu_int, icu->base + ICU_INT_CFG(ICU_SATA0_ICU_ID));
++		writel_relaxed(icu_int, icu->base + ICU_INT_CFG(ICU_SATA1_ICU_ID));
++	}
++}
++
++static const struct msi_domain_template mvebu_icu_nsr_msi_template = {
++	.chip = {
++		.name			= "ICU-NSR",
++		.irq_mask		= irq_chip_mask_parent,
++		.irq_unmask		= irq_chip_unmask_parent,
++		.irq_eoi		= irq_chip_eoi_parent,
++		.irq_set_type		= irq_chip_set_type_parent,
++		.irq_write_msi_msg	= mvebu_icu_write_msi_msg,
++		.flags			= IRQCHIP_SUPPORTS_LEVEL_MSI,
++	},
++
++	.ops = {
++		.msi_translate		= mvebu_icu_translate,
++		.msi_init		= mvebu_icu_msi_init,
++		.set_desc		= mvebu_icu_set_desc,
++	},
++
++	.info = {
++		.bus_token		= DOMAIN_BUS_WIRED_TO_MSI,
++		.flags			= MSI_FLAG_LEVEL_CAPABLE |
++					  MSI_FLAG_USE_DEV_FWNODE,
++	},
++};
++
++static const struct msi_domain_template mvebu_icu_sei_msi_template = {
++	.chip = {
++		.name			= "ICU-SEI",
++		.irq_mask		= irq_chip_mask_parent,
++		.irq_unmask		= irq_chip_unmask_parent,
++		.irq_ack		= irq_chip_ack_parent,
++		.irq_set_type		= irq_chip_set_type_parent,
++		.irq_write_msi_msg	= mvebu_icu_write_msi_msg,
++		.flags			= IRQCHIP_SUPPORTS_LEVEL_MSI,
++	},
++
++	.ops = {
++		.msi_translate		= mvebu_icu_translate,
++		.msi_init		= mvebu_icu_msi_init,
++		.set_desc		= mvebu_icu_set_desc,
++	},
++
++	.info = {
++		.bus_token		= DOMAIN_BUS_WIRED_TO_MSI,
++		.flags			= MSI_FLAG_LEVEL_CAPABLE |
++					  MSI_FLAG_USE_DEV_FWNODE,
++	},
++};
++
+ static const struct mvebu_icu_subset_data mvebu_icu_nsr_subset_data = {
+ 	.icu_group = ICU_GRP_NSR,
+ 	.offset_set_ah = ICU_SETSPI_NSR_AH,
+@@ -298,7 +449,6 @@ static const struct of_device_id mvebu_icu_subset_of_match[] = {
+ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+ {
+ 	struct mvebu_icu_msi_data *msi_data;
+-	struct device_node *msi_parent_dn;
+ 	struct device *dev = &pdev->dev;
+ 	struct irq_domain *irq_domain;
+ 
+@@ -314,15 +464,24 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+ 		msi_data->subset_data = of_device_get_match_data(dev);
  	}
  
- 	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
--
--	msi_data->msi_domain = platform_msi_create_irq_domain(fwnodes,
--					&imx_mu_msi_domain_info,
--					parent);
--
--	if (!msi_data->msi_domain) {
--		dev_err(dev, "failed to create MSI domain\n");
--		irq_domain_remove(parent);
--		return -ENOMEM;
--	}
--
--	irq_domain_set_pm_device(msi_data->msi_domain, dev);
--
-+	parent->dev = parent->pm_dev = dev;
-+	parent->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
-+	parent->msi_parent_ops = &imx_mu_msi_parent_ops;
- 	return 0;
- }
+-	dev->msi.domain = of_msi_get_domain(dev, dev->of_node,
+-					    DOMAIN_BUS_PLATFORM_MSI);
++	dev->msi.domain = of_msi_get_domain(dev, dev->of_node, DOMAIN_BUS_PLATFORM_MSI);
+ 	if (!dev->msi.domain)
+ 		return -EPROBE_DEFER;
  
---- a/drivers/irqchip/irq-msi-lib.c
-+++ b/drivers/irqchip/irq-msi-lib.c
-@@ -89,6 +89,8 @@ bool msi_lib_init_dev_msi_info(struct de
- 	/* Chip updates for all child bus types */
- 	if (!info->chip->irq_eoi)
- 		info->chip->irq_eoi	= irq_chip_eoi_parent;
-+	if (!info->chip->irq_ack)
-+		info->chip->irq_ack	= irq_chip_ack_parent;
+-	msi_parent_dn = irq_domain_get_of_node(dev->msi.domain);
+-	if (!msi_parent_dn)
++	if (!irq_domain_get_of_node(dev->msi.domain))
+ 		return -ENODEV;
  
- 	/*
- 	 * The device MSI domain can never have a set affinity callback. It
++	if (irq_domain_is_msi_parent(dev->msi.domain)) {
++		bool sei = msi_data->subset_data->icu_group == ICU_GRP_SEI;
++		const struct msi_domain_template *tmpl;
++
++		tmpl = sei ? &mvebu_icu_sei_msi_template : &mvebu_icu_nsr_msi_template;
++
++		if (!msi_create_device_irq_domain(dev, MSI_DEFAULT_DOMAIN, tmpl,
++						  ICU_MAX_IRQS, NULL, msi_data))
++			return -ENOMEM;
++	}
++
+ 	irq_domain = platform_msi_create_device_tree_domain(dev, ICU_MAX_IRQS,
+ 							    mvebu_icu_write_msg,
+ 							    &mvebu_icu_domain_ops,
+-- 
+2.34.1
+
 
 
