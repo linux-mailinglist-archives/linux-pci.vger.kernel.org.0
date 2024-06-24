@@ -1,197 +1,160 @@
-Return-Path: <linux-pci+bounces-9201-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9202-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54F3F9154FB
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 19:05:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4529E915606
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 19:57:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D70FB1F2165A
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 17:05:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA5B01F2202A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 17:57:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00CDA19D086;
-	Mon, 24 Jun 2024 17:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A91C81A00F9;
+	Mon, 24 Jun 2024 17:55:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HxJWtwEl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C35ont+Z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583C413E024;
-	Mon, 24 Jun 2024 17:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA9619FA8C;
+	Mon, 24 Jun 2024 17:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719248700; cv=none; b=OGcpy7zowANNLtcBkVykn1XRTeBqNJJmKNXLJtDTugkfZPa8hNX631dcBSx6BvqjVi6D4lWpwaIskRfhNLrh+PeVbncR1MwxQtKSCW4XOUPLCDc2vJa7L7VqmcYNvyUYPrwTPcvTT4VjekPqSTQDHvksJk0+bpfReKvHCT63HvI=
+	t=1719251756; cv=none; b=JrAMXLXKCPYbzOf2Tp7mTRqur49D2XGb35v8iMQg1NzdlRUsgEiB/oqwp/jeTVppB4fRSATXBw7hIYC657ZqBCCe16RUPZB/rPwdh6rOduEhuvCr8wxD9ackyTss+4CqGS8+y/ZepDqwcy+HHyXUuaVU10u5/X+YEClRdqGfMUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719248700; c=relaxed/simple;
-	bh=s4iuFFIT6/bTvstEiFk3M1OXg4LY5fkxalRWxbMSH/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HdU2zPjuGrisU3ENegooR7O96t8VxjQZm0pLYLTR2CIyMtCLvVqte/Ew9+ahPRZQzbfEKLavjEjS8PcWYqduH24VWfBTdDvfqs/f2Nd2Nh9cVWkF2T7D5L4kDU1YPWIVXQAzJjYIlDY10bYoixsnovbhHdSunN9Tcf+1EiaanHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HxJWtwEl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45O8Z0jp008003;
-	Mon, 24 Jun 2024 17:04:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GZzwMo2y8jk+T+3cS1833xk8zuToTgWMeI214HZz4hs=; b=HxJWtwElVO0QQz/X
-	qQvgrl0F+XF6NSo34gicZ6Kj1cc/xg3gupR4NC6In3RgS03vS0J3ojDi3vyAeI56
-	KCjhixQbS0CdSSY87yt5gpqjHnc4c7W8TMQjlGI0kaMRO0l7kcCscjusmgX0YnbC
-	AL8kBBKf8O6C6auWs/un4MIdJa8bgxHZbn0dEWMB0m87/TVp3iN0mSOmtkTUhCnb
-	aHA3P8EpJ6DRcaM4fZRwRBmTKtzk/SwO0I8iMe8BfS9kQoKN1q3f91R2Y/sF3yET
-	/XCYMBZz44we3Uy8pG4kGWHNVEsiqNyCoSJT0hWZK2V3OdxrPosghGwx/eYkPJpo
-	X73Guw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ywnjrvcbf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 17:04:52 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45OH4p0c030543
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Jun 2024 17:04:51 GMT
-Received: from [10.110.88.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Jun
- 2024 10:04:50 -0700
-Message-ID: <9d4cea0c-16be-4341-9b48-2b32a92b75f4@quicinc.com>
-Date: Mon, 24 Jun 2024 10:04:54 -0700
+	s=arc-20240116; t=1719251756; c=relaxed/simple;
+	bh=RWADVfhWFlhGHNw50SjTloO0CnEZU0GqVDdf9sCPQNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rfy6bG+tw2DADkq5xgtly0QxKCEIgxfZo3MoIk9pGwgBF3plVElFR5Mvu6RkdxN7ZaSBk4hm2mO76rqPigFYDiCl3Qd/jQjma4wtH82jR5oUnxvP/wGQPYTH2CDssf39HSs/6VbbF8zkRWfGQPBmJ2gjpDz6bIssMGpvNOwaYKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C35ont+Z; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-80b58104615so1111422241.1;
+        Mon, 24 Jun 2024 10:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719251754; x=1719856554; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZpLcz/0IN/d1gmOSMD86qgPO3fLQN3Whaw5qjKXYF8E=;
+        b=C35ont+ZVOnFNZ7qV4e8MwqLAXmadSllJ8yA2gnmtFa3NGUvFYwQ4rP4ij7sKy+aio
+         UXjdinMR5jBvCKfC6XWBaJFafzNI20Ns5GVPk8XFsFaaq0HhyhGW3DC6JmkOCECAwKt/
+         abTX1oQ36SychUTqgL3Ozjjl9w+H011kTNRhmTircdYdXuwHaV8eNYrdR6SY4eySJUu4
+         q+oTzlOIG2+Z18K2C4AODygWkzHu55IwyjnYB8vCWfTEZSRibce9VCFPXYXqwDpip4wz
+         ecBV0LNa68KXljOzKbbTSbZ5HQoR162SHjJtNMuTfX23GxLkEqu1dyRIeELPa1475U+X
+         pYEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719251754; x=1719856554;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZpLcz/0IN/d1gmOSMD86qgPO3fLQN3Whaw5qjKXYF8E=;
+        b=lSmDbEHmcFDyg5Yk7mqdxmYuMkbJFAXp15mEZon4I0NdwRvEJaXswmPSKKzYx1qqqM
+         y+ssnHVj5+g0olUbSNpPvRuMqC8muoPSE686MYvvkhtMV6AZCbVFvs/dFAk8ZM1DZilp
+         tq5pnIoUhz+s9kAByFaMp+ZUyXQd+3P11sYSIy9pvCYxWrW6J0Z26Z1p8lrjR1K30wXN
+         VZuNoQfRptJfhQQzg246JGjp3WvAo5l3XQ6RuyHSt2Y+77SM2ei86yt5xey4NFiy9lf0
+         /2jbEEbR7rQ1xyNWdruupWybTONWiEbmnGX/aNfAK+Y63V+l3/RSxJwDILrzYf7sFfpK
+         p9UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtAJ3N+kWXz2ggUHLX/BQ5/LrEVMAWKWzjDIQHOtHfZvusuk5pfszf6rrmU782c4LJJiGREkEUl/jL6XjlPnEa3e5kddhmb6L9ayBa9DwZRRgM40WKUXOrtDk5D63uvWNJkTosXs8lHxtcJJDUjq7dqfyIMmjknKzcwHNp/XQkQJD7ZfTJSPZkEm3iqn3RlRHeIMDzx01HpfSVBQ1DJEwWuNSAVnLyFw49P6IaGv3BrY537GNTXk89UNvq3vo=
+X-Gm-Message-State: AOJu0YzjrabFpD8C7hUO5phtbilItylNIO4e1KpMijNNOhdg7wZzBugd
+	zJyEN4NdLtN8S8UxFf0XPqKgjNAH2P4qqITGzdtwk8ToSpDykViz
+X-Google-Smtp-Source: AGHT+IGktNPNlajbgEwLGV8CCMDaPBCtad3PYAuUdbhVE87qwtNwyWAb1yU6hGLFoKjYjjutynzHWw==
+X-Received: by 2002:a05:6102:418b:b0:48f:4507:84d1 with SMTP id ada2fe7eead31-48f52a44350mr5880279137.9.1719251753927;
+        Mon, 24 Jun 2024 10:55:53 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b51ef312a7sm35918576d6.87.2024.06.24.10.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 10:55:53 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 768861200043;
+	Mon, 24 Jun 2024 13:55:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 24 Jun 2024 13:55:52 -0400
+X-ME-Sender: <xms:KLN5ZsP3KRGNsSDceaZDk3UFA4jOft_u2wg48tjEx_0DtTcUScs05w>
+    <xme:KLN5Zi_MMc35phgytbkWMEk5Zxhtt2pjhltFMpBrS2bsEVtYRdSZcdM5elv6WLQMw
+    LUImd6tBKyyi0HFgA>
+X-ME-Received: <xmr:KLN5ZjSCWhCZf3yOFgyCusgS1OlftBCa3Jg3hAASyW1NXWisiBF-QNLfTrFBEw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeguddguddvtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuffkfhggtggujgesth
+    dtredttddtvdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhg
+    sehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehue
+    evledvhfelleeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvg
+    hrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhf
+    vghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:KLN5ZkuUV6zPFB2cLz-kR2Z8aTMedu9T3FISXobjX-Map2WHhDWgzg>
+    <xmx:KLN5ZkdK7QufnuuKdQuQ2UvTx-AaQGBAjN0vIl2ugET8IEo9alGunw>
+    <xmx:KLN5Zo0GH9HvYaP6Md0iuwu_jtHHS6Fr2_Y-mM1yvTKbqou1MwZMFw>
+    <xmx:KLN5Zo8JsqzF27tKSzW3moUJzqEXB7DDMc8SoT4UgI3LjPOWRIUMDw>
+    <xmx:KLN5Zr9Y6VY64Z_9SLci431ZmBaOspT6gBem6CRLppE_w5U5vVn3UozH>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Jun 2024 13:55:51 -0400 (EDT)
+Date: Mon, 24 Jun 2024 10:55:18 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: mhklinux@outlook.com
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, James.Bottomley@hansenpartnership.com,
+	martin.petersen@oracle.com, arnd@arndb.de,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-arch@vger.kernel.org, maz@kernel.org, den@valinux.co.jp,
+	jgowans@amazon.com, dawei.li@shingroup.cn
+Subject: Re: [RFC 11/12] Drivers: hv: vmbus: Wait for MODIFYCHANNEL to finish
+ when offlining CPUs
+Message-ID: <ZnmzBi2y1eq269QA@boqun-archlinux>
+References: <20240604050940.859909-1-mhklinux@outlook.com>
+ <20240604050940.859909-12-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] PCI: qcom: Avoid DBI and ATU register space mirror to
- BAR/MMIO region
-To: Bjorn Helgaas <helgaas@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>
-CC: Prudhvi Yarlagadda <quic_pyarlaga@quicinc.com>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <bhelgaas@google.com>, <robh@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240622174152.GA1432494@bhelgaas>
-Content-Language: en-US
-From: Mayank Rana <quic_mrana@quicinc.com>
-In-Reply-To: <20240622174152.GA1432494@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: eMnuISu32k1cWZqCX1cxLL4h_EtUVROz
-X-Proofpoint-ORIG-GUID: eMnuISu32k1cWZqCX1cxLL4h_EtUVROz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-24_13,2024-06-24_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 mlxscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406240136
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604050940.859909-12-mhklinux@outlook.com>
 
+Hi Michael,
 
+On Mon, Jun 03, 2024 at 10:09:39PM -0700, mhkelley58@gmail.com wrote:
+[...]
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index bf35bb40c55e..571b2955b38e 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -264,6 +264,14 @@ struct vmbus_connection {
+>  	struct irq_domain *vmbus_irq_domain;
+>  	struct irq_chip	vmbus_irq_chip;
+>  
+> +	/*
+> +	 * VM-wide counts of MODIFYCHANNEL messages sent and completed.
+> +	 * Used when taking a CPU offline to make sure the relevant
+> +	 * MODIFYCHANNEL messages have been completed.
+> +	 */
+> +	u64 modchan_sent;
+> +	u64 modchan_completed;
+> +
 
-On 6/22/2024 10:41 AM, Bjorn Helgaas wrote:
-> On Sat, Jun 22, 2024 at 09:24:44AM +0530, Manivannan Sadhasivam wrote:
->> On Thu, Jun 20, 2024 at 02:34:05PM -0700, Prudhvi Yarlagadda wrote:
->>> PARF hardware block which is a wrapper on top of DWC PCIe controller
->>> mirrors the DBI and ATU register space. It uses PARF_SLV_ADDR_SPACE_SIZE
->>> register to get the size of the memory block to be mirrored and uses
->>> PARF_DBI_BASE_ADDR, PARF_ATU_BASE_ADDR registers to determine the base
->>> address of DBI and ATU space inside the memory block that is being
->>> mirrored.
->>
->> This PARF_SLV_ADDR_SPACE register is a mystery to me. I tried getting to the
->> bottom of it, but nobody could explain it to me clearly. Looks like you know
->> more about it...
->>
->>  From your description, it seems like this register specifies the size of the
->> mirroring region (ATU + DBI), but the response from your colleague indicates
->> something different [1].
->>
->> [1] https://lore.kernel.org/linux-pci/f42559f5-9d4c-4667-bf0e-7abfd9983c36@quicinc.com/
->>
->>> When a memory region which is located above the SLV_ADDR_SPACE_SIZE
->>> boundary is used for BAR region then there could be an overlap of DBI and
->>> ATU address space that is getting mirrored and the BAR region. This
->>> results in DBI and ATU address space contents getting updated when a PCIe
->>> function driver tries updating the BAR/MMIO memory region. Reference
->>> memory map of the PCIe memory region with DBI and ATU address space
->>> overlapping BAR region is as below.
->>>
->>> 			|---------------|
->>> 			|		|
->>> 			|		|
->>> 	-------	--------|---------------|
->>> 	   |	   |	|---------------|
->>> 	   |	   |	|	DBI	|
->>> 	   |	   |	|---------------|---->DBI_BASE_ADDR
->>> 	   |	   |	|		|
->>> 	   |	   |	|		|
->>> 	   |	PCIe	|		|---->2*SLV_ADDR_SPACE_SIZE
->>> 	   |	BAR/MMIO|---------------|
->>> 	   |	Region	|	ATU	|
->>> 	   |	   |	|---------------|---->ATU_BASE_ADDR
->>> 	   |	   |	|		|
->>> 	PCIe	   |	|---------------|
->>> 	Memory	   |	|	DBI	|
->>> 	Region	   |	|---------------|---->DBI_BASE_ADDR
->>> 	   |	   |	|		|
->>> 	   |	--------|		|
->>> 	   |		|		|---->SLV_ADDR_SPACE_SIZE
->>> 	   |		|---------------|
->>> 	   |		|	ATU	|
->>> 	   |		|---------------|---->ATU_BASE_ADDR
->>> 	   |		|		|
->>> 	   |		|---------------|
->>> 	   |		|	DBI	|
->>> 	   |		|---------------|---->DBI_BASE_ADDR
->>> 	   |		|		|
->>> 	   |		|		|
->>> 	----------------|---------------|
->>> 			|		|
->>> 			|		|
->>> 			|		|
->>> 			|---------------|
->>>
->>> Currently memory region beyond the SLV_ADDR_SPACE_SIZE boundary is
->>> not used for BAR region which is why the above mentioned issue is
->>> not encountered. This issue is discovered as part of internal
->>> testing when we tried moving the BAR region beyond the
->>> SLV_ADDR_SPACE_SIZE boundary. Hence we are trying to fix this.
->>
->> I don't quite understand this. PoR value of SLV_ADDR_SPACE_SIZE is
->> 16MB and most of the platforms have the size of whole PCIe region
->> defined in DT as 512MB (registers + I/O + MEM). So the range is
->> already crossing the SLV_ADDR_SPACE_SIZE boundary.
->>
->> Ironically, the patch I pointed out above changes the value of this
->> register as 128MB, and the PCIe region size of that platform is also
->> 128MB. The author of that patch pointed out that if the
->> SLV_ADDR_SPACE_SIZE is set to 256MB, then they are seeing
->> enumeration failures. If we go by your description of that register,
->> the SLV_ADDR_SPACE_SIZE of 256MB should be > PCIe region size of
->> 128MB. So they should not see any issues, right?
->>
->>> As PARF hardware block mirrors DBI and ATU register space after
->>> every PARF_SLV_ADDR_SPACE_SIZE (default 0x1000000) boundary
->>> multiple, write U64_MAX to PARF_SLV_ADDR_SPACE_SIZE register to
->>> avoid mirroring DBI and ATU to BAR/MMIO region.
->>
->> Looks like you are trying to avoid this mirroring on a whole. First
->> of all, what is the reasoning behind this mirroring?
-> 
-> This sounds like what we usually call "aliasing" that happens when
-> some upper address bits are ignored.
-Yes, here we are trying to disable altogether aliasing (mirroring of 
-DBI/ATU) address space).
+Looks to me, we can just use atomic64_t here: modifying channels is far
+from hotpath, so the cost of atomic increment is not a big issue, and we
+avoid possible data races now and in the future.
+
+Thoughts?
 
 Regards,
-Mayank
+Boqun
+
+>  	/*
+>  	 * An offer message is handled first on the work_queue, and then
+>  	 * is further handled on handle_primary_chan_wq or
+> -- 
+> 2.25.1
+> 
 
