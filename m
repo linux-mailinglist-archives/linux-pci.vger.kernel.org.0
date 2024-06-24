@@ -1,280 +1,531 @@
-Return-Path: <linux-pci+bounces-9161-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9162-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28DE1913F59
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 02:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AFAEA9140F2
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 06:10:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8D4F1F20F76
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 00:10:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39CBE1F22260
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 04:10:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFEA9621;
-	Mon, 24 Jun 2024 00:10:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1383ADF43;
+	Mon, 24 Jun 2024 04:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPfr056U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v40UpQD9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2527376;
-	Mon, 24 Jun 2024 00:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F385679EA
+	for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2024 04:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719187845; cv=none; b=RZjuB4Ro3xlQdn8r3Dw1HjDkbZpm4mrsi1lYy3Lf9Ez61FzdRk2SyO4pDMZOmVOxoN0qKHmGk2ODdkAwRdY6ys1AY/wH8bgVwmNPVi5N0YWL9Ltykbvx4PenDJTHR+pO1CVcGBURs8ubIfjTzehhr7j6PRRQ5fdj4yGf254eRDw=
+	t=1719202209; cv=none; b=odLNhFLCLfZAmA/MYGiWK7gY4h/3DAQ/ynmodcRNlmv/+36hDfOZGoC3CDZTgA5IJCQDuwY0YRaBwWw5wvTNIAljdsgfylHTc0V1VzRDVYeRFGPylmYKwMP4hL3UegCv1nZ3m/CGOGhtHkDt0GQWSnRgMCkr72DZf0ULch0LNaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719187845; c=relaxed/simple;
-	bh=uL3PJ7KBAAZ9aIO4lfK996y9XsgpTRBRVdBGE+oCmuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Twcr3aSvM1NkcP/H93aZ8A1zcPuUUCOg8BAxU177L3J4E5KP1/yfHsl7/WpJ5mdCesT4cen1QbACIS2gbt+6rwHzWMFEA3pCS4tnh8WZU7RwE9YaOQzayRFiS0hsoEDfyYR2ObV/grUG+BVjhUJvYbPSRaXekGQu815NfZwgjLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPfr056U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39EDC2BD10;
-	Mon, 24 Jun 2024 00:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719187845;
-	bh=uL3PJ7KBAAZ9aIO4lfK996y9XsgpTRBRVdBGE+oCmuw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jPfr056U78oZ/CNjFM1c9XDqxk2tvW9w21CPLvfiGjsctSelYL/9I1htYyKoeU5PC
-	 PTGOgfs4jZjFOzaupZKF7BH53Mfm3iGsSneTkFPULM2AqybSXBedl1ezBVEW1A9h/O
-	 foJt/w+ur8mZCBOQWijMx/NSZJIV/w+YqJAsan3OE9+pCAL9iIU0/8g5leF2wRc4WX
-	 /h6RM6pe2TpYa06hwJe4UUH/a+6f6NSVS/5EvKUZeqhTsj86hRNn7mPKkHeTYP+n4c
-	 uhu2aB7Qbl3zx+ikc4ZZwguYWCkvI7ZVqYc3rOY8koRatgzLv/mbLUmuyDJITQUTCn
-	 6IOR0X3jgNZkA==
-Message-ID: <b39b4a5b-07b7-483b-9c42-3ac80503120d@kernel.org>
-Date: Mon, 24 Jun 2024 09:10:41 +0900
+	s=arc-20240116; t=1719202209; c=relaxed/simple;
+	bh=uDqnT9AuIre5WH/MZArBa58KKA5h3mVWXf5q3RXwpKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbN0TE0906v1DYFTFxUFOJY9oSAlwd6w8mPbJUnhfDnh2kANeIKDhONJnTcfR+L6AQupgy5LXgNhtrvTDMrek64Hdn3WSghYhduVnB7z4pjxSMPGqVw0Zx2Iu7GM4wi6mujzDQ/8p2uQ2jA25pqSSQdBZExQoQvoQBzyLB7lFmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v40UpQD9; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6c4926bf9baso3186463a12.2
+        for <linux-pci@vger.kernel.org>; Sun, 23 Jun 2024 21:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719202206; x=1719807006; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KggaQh+GnmflbHOPUhgs44+0y5+HKtzgKlCgA14TaLA=;
+        b=v40UpQD9b2u02G1c6BKpUP9TesVU0bDueSQJd/UGmEps0AAXbN0v9fk2IG2AhHLPIv
+         0RDCrrkmNSu0FiQKRFAWyY9kiMmx/HMDupVqWXquNZu0HQJ1PWEWxnrW0XrNZAHuAk3l
+         2SGot7VlSA968FY2k7VidqmdY8NQU9xpN9xwBJCwDUi7mbu+IXrW/JzvZIbJAxC86iB+
+         CiO8iL/4e7EJ8z/oYQp4R9Zy5TEwnzx2x2KVdxiZPoY43KX2mGneiPcrkr7uzWkex2Px
+         TNILiC3A9T4bKIxRc7FeSb+LJrO5Ghp3uxHs2d/ICtzHabqAMiW21jNrFyTOyl9zKiB9
+         7onw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719202206; x=1719807006;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KggaQh+GnmflbHOPUhgs44+0y5+HKtzgKlCgA14TaLA=;
+        b=ThVNk3FXvs0uoUyWtNanyvDdRq0zAk7tjIKh4FQ9vPX1HpDJRFJXSRh4tn4TMvF8S2
+         DSlNxIGl50Fo3u+kfy2745bs/gEG67b+j1HNbKPeF8VoUJuVI6lmUqa0IyOpKj1WmADU
+         XmD+vZH7qa+JKS9nfuyzQ3+JUYq4rL0xapEoP4D+AuHRMZxjRcQ+iXD/Xr5R7TZiX9U5
+         Ag7cP1JolMlipbi8SaFKxJQ2msGsgp/EPT4T6T53HT+DhxvoUzTyQrNtXO8afeJgBQdZ
+         yFw4zagAoyLM75sx4L5O/zwP+D0SNQFE+35xzNl0nwf8p8nIaI38BGrqdDk2s9bpdskE
+         1wtg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOr98Y0OQpfXOdQADklwLo97d7NMT4y3Hjib5dgijA58hVFBX0R2YmnM4OePJgAQP5Rqh1cUU6eHPFQ9rP5LOiYl7zUjkc/80M
+X-Gm-Message-State: AOJu0YwFjqdamZ97ykdNugW8W/fq5i6FRVH7iyiF72TlujAZivhYBIYd
+	cXlk517MoNpx9pFTLht/okPGM0v4FjRGtvRNogknBAGi6IYGCgk1ngjd1RJzuA==
+X-Google-Smtp-Source: AGHT+IG2xHy9povS1eoGJuLvvX4zF5xz5cPZv+KkDQgK4M9fud1LMDXZTFyb5CHEBOYJE/sAnh9RWw==
+X-Received: by 2002:a17:90a:6d02:b0:2c7:2fdf:57b7 with SMTP id 98e67ed59e1d1-2c858297598mr3491892a91.46.1719202205931;
+        Sun, 23 Jun 2024 21:10:05 -0700 (PDT)
+Received: from thinkpad ([220.158.156.124])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e5af9b5dsm7647526a91.43.2024.06.23.21.10.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Jun 2024 21:10:05 -0700 (PDT)
+Date: Mon, 24 Jun 2024 09:39:59 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org, quic_kathirav@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 4/8] PCI: qcom: Switch to devm_clk_bulk_get_all() API
+ to get the clocks from Devicetree
+Message-ID: <20240624040959.GA10250@thinkpad>
+References: <20240501040800.1542805-1-mr.nuke.me@gmail.com>
+ <20240501040800.1542805-5-mr.nuke.me@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] scsi: SATA devices missing after FLR is triggered
- during HBA suspended
-To: Yihang Li <liyihang9@huawei.com>
-Cc: cassel@kernel.org, James.Bottomley@HansenPartnership.com,
- martin.petersen@oracle.com, john.g.garry@oracle.com, yanaijie@huawei.com,
- linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
- linuxarm@huawei.com, chenxiang66@hisilicon.com, prime.zeng@huawei.com,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <20240618132900.2731301-1-liyihang9@huawei.com>
- <0c5e14eb-5560-48cb-9086-6ad9c3970427@kernel.org>
- <f27d6fa7-3088-0e60-043e-e71232066b12@huawei.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <f27d6fa7-3088-0e60-043e-e71232066b12@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240501040800.1542805-5-mr.nuke.me@gmail.com>
 
-On 6/22/24 12:31 PM, Yihang Li wrote:
-> Hi Damien,
+On Tue, Apr 30, 2024 at 11:07:46PM -0500, Alexandru Gagniuc wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Thanks for your reply.
+> There is no need for the device drivers to validate the clocks defined in
+> Devicetree. The validation should be performed by the DT schema and the
+> drivers should just get all the clocks from DT. Right now the driver
+> hardcodes the clock info and validates them against DT which is redundant.
 > 
-> On 2024/6/19 7:11, Damien Le Moal wrote:
->> On 6/18/24 22:29, Yihang Li wrote:
->>> Hi Damien,
->>>
->>> I found out that two issues is caused by commit 0c76106cb975 ("scsi: sd:
->>> Fix TCG OPAL unlock on system resume") and 626b13f015e0 ("scsi: Do not
->>> rescan devices with a suspended queue").
->>>
->>> The two issues as follows for the situation that there are ATA disks
->>> connected with SAS controller:
->>
->> Which controller ? What is the driver ?
+> So use devm_clk_bulk_get_all() that just gets all the clocks defined in DT
+> and get rid of all static clocks info from the driver. This simplifies the
+> driver.
 > 
-> I'm using the hisi_sas_v3_hw driver and it supports HiSilicon's SAS controller.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-I do not have access to this HBA, but I have one that uses libsas/pm8001 driver
-so I will try to test with that.
+This is now part of pci/next, hence can be dropped once you rebase on top of
+linux-next.
 
->>> (1) FLR is triggered after all disks and controller are suspended. As a
->>> result, the number of disks is abnormal.
->>
->> I am assuming here that FLR means PCI "Function Level Reset" ?
-> 
-> Yes, I am talking about the PCI "Function Level Reset"
-> 
->> FLR and disk/controller suspend execution timing are unrelated. FLR can be
->> triggered at any time through sysfs. So please give details here. Why is FLR
->> done when the system is being suspended ?
-> 
-> Yes, it is because FLR can be triggered at any time that we are testing the
-> reliability of executing FLR commands after disk/controller suspended.
+- Mani
 
-"can be triggered" ? FLR is not a random asynchronous event. It is an action
-that is *issued* by a user with sys admin rights. And such users can do a lot
-of things that can break a machine...
-
-I fail to see the point of doing a function reset while the device is
-suspended. But granted, I guess the device should comeback up in such case,
-though I would like to hear what the PCI guys have to say about this.
-
-Bjorn,
-
-Is reseting a suspended PCI device something that should be/is supported ?
-
-> Also, the system does not suspended because we have multiple controllers and
-> we only suspend one of them and the attached disk devices while the system is
-> running in the other controller.
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> [moved clks to struct qcom_pcie to reduce code duplication]
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 163 ++++---------------------
+>  1 file changed, 25 insertions(+), 138 deletions(-)
 > 
->>
->>> (2) After all disks and controller are suspended, and resuming all disks
->>> again, the driver reference counting is not 0 (The value of "Used" in the
->>> lsmod command output is not 0).
->>
->> Resuming all disks again ? So you mean system resume ?
->> Are we talking about system suspend to ram ? Hybernation ? or something else ?
->> (e.g. a controller reset through PCI FLR ?)
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 14772edcf0d3..ea81ff68d433 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -154,58 +154,42 @@
+>  #define QCOM_PCIE_LINK_SPEED_TO_BW(speed) \
+>  		Mbps_to_icc(PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]))
+>  
+> -#define QCOM_PCIE_1_0_0_MAX_CLOCKS		4
+>  struct qcom_pcie_resources_1_0_0 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_1_0_0_MAX_CLOCKS];
+>  	struct reset_control *core;
+>  	struct regulator *vdda;
+>  };
+>  
+> -#define QCOM_PCIE_2_1_0_MAX_CLOCKS		5
+>  #define QCOM_PCIE_2_1_0_MAX_RESETS		6
+>  #define QCOM_PCIE_2_1_0_MAX_SUPPLY		3
+>  struct qcom_pcie_resources_2_1_0 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_2_1_0_MAX_CLOCKS];
+>  	struct reset_control_bulk_data resets[QCOM_PCIE_2_1_0_MAX_RESETS];
+>  	int num_resets;
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+>  };
+>  
+> -#define QCOM_PCIE_2_3_2_MAX_CLOCKS		4
+>  #define QCOM_PCIE_2_3_2_MAX_SUPPLY		2
+>  struct qcom_pcie_resources_2_3_2 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_2_3_2_MAX_CLOCKS];
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+>  };
+>  
+> -#define QCOM_PCIE_2_3_3_MAX_CLOCKS		5
+>  #define QCOM_PCIE_2_3_3_MAX_RESETS		7
+>  struct qcom_pcie_resources_2_3_3 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_2_3_3_MAX_CLOCKS];
+>  	struct reset_control_bulk_data rst[QCOM_PCIE_2_3_3_MAX_RESETS];
+>  };
+>  
+> -#define QCOM_PCIE_2_4_0_MAX_CLOCKS		4
+>  #define QCOM_PCIE_2_4_0_MAX_RESETS		12
+>  struct qcom_pcie_resources_2_4_0 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
+> -	int num_clks;
+>  	struct reset_control_bulk_data resets[QCOM_PCIE_2_4_0_MAX_RESETS];
+>  	int num_resets;
+>  };
+>  
+> -#define QCOM_PCIE_2_7_0_MAX_CLOCKS		15
+>  #define QCOM_PCIE_2_7_0_MAX_SUPPLIES		2
+>  struct qcom_pcie_resources_2_7_0 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_2_7_0_MAX_CLOCKS];
+> -	int num_clks;
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_7_0_MAX_SUPPLIES];
+>  	struct reset_control *rst;
+>  };
+>  
+> -#define QCOM_PCIE_2_9_0_MAX_CLOCKS		5
+>  struct qcom_pcie_resources_2_9_0 {
+> -	struct clk_bulk_data clks[QCOM_PCIE_2_9_0_MAX_CLOCKS];
+>  	struct reset_control *rst;
+>  };
+>  
+> @@ -247,6 +231,8 @@ struct qcom_pcie {
+>  	struct icc_path *icc_mem;
+>  	const struct qcom_pcie_cfg *cfg;
+>  	struct dentry *debugfs;
+> +	struct clk_bulk_data *clks;
+> +	int num_clks;
+>  	bool suspended;
+>  };
+>  
+> @@ -337,22 +323,6 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>  	if (ret)
+>  		return ret;
+>  
+> -	res->clks[0].id = "iface";
+> -	res->clks[1].id = "core";
+> -	res->clks[2].id = "phy";
+> -	res->clks[3].id = "aux";
+> -	res->clks[4].id = "ref";
+> -
+> -	/* iface, core, phy are required */
+> -	ret = devm_clk_bulk_get(dev, 3, res->clks);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	/* aux, ref are optional */
+> -	ret = devm_clk_bulk_get_optional(dev, 2, res->clks + 3);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	res->resets[0].id = "pci";
+>  	res->resets[1].id = "axi";
+>  	res->resets[2].id = "ahb";
+> @@ -373,7 +343,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+>  
+> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  	reset_control_bulk_assert(res->num_resets, res->resets);
+>  
+>  	writel(1, pcie->parf + PARF_PHY_CTRL);
+> @@ -413,7 +383,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  
+>  static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
+>  {
+> -	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+>  	struct device_node *node = dev->of_node;
+> @@ -425,7 +394,7 @@ static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
+>  	val &= ~PHY_TEST_PWR_DOWN;
+>  	writel(val, pcie->parf + PARF_PHY_CTRL);
+>  
+> -	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -476,21 +445,11 @@ static int qcom_pcie_get_resources_1_0_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> -	int ret;
+>  
+>  	res->vdda = devm_regulator_get(dev, "vdda");
+>  	if (IS_ERR(res->vdda))
+>  		return PTR_ERR(res->vdda);
+>  
+> -	res->clks[0].id = "iface";
+> -	res->clks[1].id = "aux";
+> -	res->clks[2].id = "master_bus";
+> -	res->clks[3].id = "slave_bus";
+> -
+> -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	res->core = devm_reset_control_get_exclusive(dev, "core");
+>  	return PTR_ERR_OR_ZERO(res->core);
+>  }
+> @@ -500,7 +459,7 @@ static void qcom_pcie_deinit_1_0_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
+>  
+>  	reset_control_assert(res->core);
+> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  	regulator_disable(res->vdda);
+>  }
+>  
+> @@ -517,7 +476,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> -	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  	if (ret) {
+>  		dev_err(dev, "cannot prepare/enable clocks\n");
+>  		goto err_assert_reset;
+> @@ -532,7 +491,7 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+>  	return 0;
+>  
+>  err_disable_clks:
+> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  err_assert_reset:
+>  	reset_control_assert(res->core);
+>  
+> @@ -580,15 +539,6 @@ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
+>  	if (ret)
+>  		return ret;
+>  
+> -	res->clks[0].id = "aux";
+> -	res->clks[1].id = "cfg";
+> -	res->clks[2].id = "bus_master";
+> -	res->clks[3].id = "bus_slave";
+> -
+> -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	return 0;
+>  }
+>  
+> @@ -596,7 +546,7 @@ static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+>  
+> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+>  }
+>  
+> @@ -613,7 +563,7 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> -	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  	if (ret) {
+>  		dev_err(dev, "cannot prepare/enable clocks\n");
+>  		regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> @@ -661,18 +611,6 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  	bool is_ipq = of_device_is_compatible(dev->of_node, "qcom,pcie-ipq4019");
+>  	int ret;
+>  
+> -	res->clks[0].id = "aux";
+> -	res->clks[1].id = "master_bus";
+> -	res->clks[2].id = "slave_bus";
+> -	res->clks[3].id = "iface";
+> -
+> -	/* qcom,pcie-ipq4019 is defined without "iface" */
+> -	res->num_clks = is_ipq ? 3 : 4;
+> -
+> -	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	res->resets[0].id = "axi_m";
+>  	res->resets[1].id = "axi_s";
+>  	res->resets[2].id = "axi_m_sticky";
+> @@ -700,7 +638,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+>  
+>  	reset_control_bulk_assert(res->num_resets, res->resets);
+> -	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  }
+>  
+>  static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+> @@ -726,7 +664,7 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+>  
+>  	usleep_range(10000, 12000);
+>  
+> -	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  	if (ret) {
+>  		reset_control_bulk_assert(res->num_resets, res->resets);
+>  		return ret;
+> @@ -742,16 +680,6 @@ static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
+>  	struct device *dev = pci->dev;
+>  	int ret;
+>  
+> -	res->clks[0].id = "iface";
+> -	res->clks[1].id = "axi_m";
+> -	res->clks[2].id = "axi_s";
+> -	res->clks[3].id = "ahb";
+> -	res->clks[4].id = "aux";
+> -
+> -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	res->rst[0].id = "axi_m";
+>  	res->rst[1].id = "axi_s";
+>  	res->rst[2].id = "pipe";
+> @@ -769,9 +697,7 @@ static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
+>  
+>  static void qcom_pcie_deinit_2_3_3(struct qcom_pcie *pcie)
+>  {
+> -	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
+> -
+> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  }
+>  
+>  static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+> @@ -801,7 +727,7 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
+>  	 */
+>  	usleep_range(2000, 2500);
+>  
+> -	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  	if (ret) {
+>  		dev_err(dev, "cannot prepare/enable clocks\n");
+>  		goto err_assert_resets;
+> @@ -862,8 +788,6 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> -	unsigned int num_clks, num_opt_clks;
+> -	unsigned int idx;
+>  	int ret;
+>  
+>  	res->rst = devm_reset_control_array_get_exclusive(dev);
+> @@ -877,37 +801,6 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+>  	if (ret)
+>  		return ret;
+>  
+> -	idx = 0;
+> -	res->clks[idx++].id = "aux";
+> -	res->clks[idx++].id = "cfg";
+> -	res->clks[idx++].id = "bus_master";
+> -	res->clks[idx++].id = "bus_slave";
+> -	res->clks[idx++].id = "slave_q2a";
+> -
+> -	num_clks = idx;
+> -
+> -	ret = devm_clk_bulk_get(dev, num_clks, res->clks);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	res->clks[idx++].id = "tbu";
+> -	res->clks[idx++].id = "ddrss_sf_tbu";
+> -	res->clks[idx++].id = "aggre0";
+> -	res->clks[idx++].id = "aggre1";
+> -	res->clks[idx++].id = "noc_aggr";
+> -	res->clks[idx++].id = "noc_aggr_4";
+> -	res->clks[idx++].id = "noc_aggr_south_sf";
+> -	res->clks[idx++].id = "cnoc_qx";
+> -	res->clks[idx++].id = "sleep";
+> -	res->clks[idx++].id = "cnoc_sf_axi";
+> -
+> -	num_opt_clks = idx - num_clks;
+> -	res->num_clks = idx;
+> -
+> -	ret = devm_clk_bulk_get_optional(dev, num_opt_clks, res->clks + num_clks);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	return 0;
+>  }
+>  
+> @@ -925,7 +818,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>  		return ret;
+>  	}
+>  
+> -	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+> +	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  	if (ret < 0)
+>  		goto err_disable_regulators;
+>  
+> @@ -977,7 +870,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>  
+>  	return 0;
+>  err_disable_clocks:
+> -	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  err_disable_regulators:
+>  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+>  
+> @@ -1015,7 +908,7 @@ static void qcom_pcie_deinit_2_7_0(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+>  
+> -	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  
+>  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+>  }
+> @@ -1101,17 +994,6 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> -	int ret;
+> -
+> -	res->clks[0].id = "iface";
+> -	res->clks[1].id = "axi_m";
+> -	res->clks[2].id = "axi_s";
+> -	res->clks[3].id = "axi_bridge";
+> -	res->clks[4].id = "rchng";
+> -
+> -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> -	if (ret < 0)
+> -		return ret;
+>  
+>  	res->rst = devm_reset_control_array_get_exclusive(dev);
+>  	if (IS_ERR(res->rst))
+> @@ -1122,9 +1004,7 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
+>  
+>  static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
+>  {
+> -	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> -
+> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>  }
+>  
+>  static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+> @@ -1153,7 +1033,7 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+>  
+>  	usleep_range(2000, 2500);
+>  
+> -	return clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	return clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
+>  }
+>  
+>  static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+> @@ -1561,6 +1441,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  		goto err_pm_runtime_put;
+>  	}
+>  
+> +	pcie->num_clks = devm_clk_bulk_get_all(dev, &pcie->clks);
+> +	if (pcie->num_clks < 0) {
+> +		ret = pcie->num_clks;
+> +		dev_err(dev, "Failed to get clocks\n");
+> +		goto err_pm_runtime_put;
+> +	}
+> +
+>  	ret = qcom_pcie_icc_init(pcie);
+>  	if (ret)
+>  		goto err_pm_runtime_put;
+> -- 
+> 2.40.1
 > 
-> As mentioned earlier, we have multiple controllers, only suspend one of them and
-> the attached data disks, and then resuming the disks again.
-> 
->>
->> Please clarify exactly what your adapter is and the full procedure you do to
->> trigger the issue so that we can try to recreate it.
-> 
-> The system has two HiSilicon's SAS controllers. Controller A is connected to the
-> system disk, and controller B is connected to multiple SATA disks.
-> 
-> The issue 1:
-> a. Suspend all disks on controller B.
-> b. Suspend controller B.
-> c. Trigger the PCI FLR on controller B through sysfs.
-> d. The SATA disks connected to controller B is disabled by libata layer.
-
-Thank you for the explanation, but as Niklas said, it would be a lot easier for
-me to recreate the issue if you send the exact commands you execute to trigger
-the issue. E.g. "suspend all disks" in step a can have a lot of different
-meaning depending on which type os suspend you are using... So please send the
-exact commands you use.
-is what exactly ? autosuspend ? or something else ?
-
-> 
-> kernel message is as follows:
-> [root@localhost]# echo 1 > /sys/bus/pci/devices/0000:b4:02.0/reset		------> trigger PCI FLR
-> [  270.479991] hisi_sas_v3_hw 0000:b4:02.0: resuming from operating state [D0]	------> resuming SAS controller
-> [  271.819775] hisi_sas_v3_hw 0000:b4:02.0: waiting up to 25 seconds for 7 phys to resume
-> [  271.820324] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy7 link_rate=10(sata)
-> [  271.835183] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy0 link_rate=10(sata)
-> [  271.835199] hisi_sas_v3_hw 0000:b4:02.0: dev[8:5] found
-> [  271.835786] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy5 link_rate=10(sata)
-> [  271.835791] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy6 link_rate=10(sata)
-> [  271.846911] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy4 link_rate=10(sata)
-> [  271.851676] hisi_sas_v3_hw 0000:b4:02.0: dev[9:5] found
-> [  271.851688] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
-> [  271.851702] sas: ata5: end_device-6:0: dev error handler
-> [  271.851708] sas: ata6: end_device-6:1: dev error handler
-> [  271.851710] sas: ata7: end_device-6:2: dev error handler
-> [  271.851716] sas: ata8: end_device-6:3: dev error handler
-> [  271.851717] sas: ata9: end_device-6:4: dev error handler
-> [  271.851718] sas: ata10: end_device-6:5: dev error handler
-> [  271.855161] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy1 link_rate=10(sata)
-> [  271.855547] hisi_sas_v3_hw 0000:b4:02.0: dev[10:5] found
-> [  271.855760] hisi_sas_v3_hw 0000:b4:02.0: phydown: phy7 phy_state=0x73
-> [  271.855763] hisi_sas_v3_hw 0000:b4:02.0: ignore flutter phy7 down
-> [  271.899322] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy3 link_rate=11
-> [  271.902737] hisi_sas_v3_hw 0000:b4:02.0: dev[11:5] found
-> [  271.950079] hisi_sas_v3_hw 0000:b4:02.0: dev[12:5] found
-> [  271.955569] hisi_sas_v3_hw 0000:b4:02.0: dev[13:5] found
-> [  271.961037] hisi_sas_v3_hw 0000:b4:02.0: dev[14:1] found
-> [  271.961052] hisi_sas_v3_hw 0000:b4:02.0: end of resuming controller	------> end of resuming controller
-> [  271.973073] hisi_sas_v3_hw 0000:b4:02.0: FLR prepare			------> PCI FLR start
-> [  272.032623] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy7 link_rate=10(sata)
-> [  272.039656] sas: sas_form_port: phy7 belongs to port0 already(1)!
-> [  272.201518] ata5.00: configured for UDMA/133
-> [  272.207713] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 tries: 1
-> [  272.217777] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
-> [  272.227672] sas: ata5: end_device-6:0: dev error handler
-> [  272.227676] sas: ata6: end_device-6:1: dev error handler
-> [  272.227682] sas: ata7: end_device-6:2: dev error handler
-> [  272.227688] sas: ata8: end_device-6:3: dev error handler
-> [  272.227695] sas: ata10: end_device-6:5: dev error handler
-> [  272.227694] sas: ata9: end_device-6:4: dev error handler
-> [  274.888594] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy7 link_rate=10(sata)
-> [  274.895614] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy5 link_rate=10(sata)
-> [  274.895616] sas: sas_form_port: phy7 belongs to port0 already(1)!
-> [  274.900251] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy0 link_rate=10(sata)
-> [  274.902647] sas: sas_form_port: phy5 belongs to port1 already(1)!
-> [  274.902833] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy6 link_rate=10(sata)
-> [  274.903023] sas: sas_form_port: phy0 belongs to port2 already(1)!
-> [  274.914529] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy1 link_rate=10(sata)
-> [  274.916099] sas: sas_form_port: phy6 belongs to port3 already(1)!
-> [  274.916259] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy4 link_rate=10(sata)
-> [  274.916439] sas: sas_form_port: phy1 belongs to port5 already(1)!
-> [  274.961013] sas: sas_form_port: phy4 belongs to port4 already(1)!
-> [  274.967338] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy3 link_rate=11
-> [  274.983663] sas: sas_form_port: phy3 belongs to port6 already(1)!
-> [  275.037230] hisi_sas_v3_hw 0000:b4:02.0: FLR done			------> PCI FLR done
-> [  275.037232] hisi_sas_v3_hw 0000:b4:02.0: phydown: phy0 phy_state=0xfa
-> [  275.049223] hisi_sas_v3_hw 0000:b4:02.0: ignore flutter phy0 down
-> [  275.204142] hisi_sas_v3_hw 0000:b4:02.0: phyup: phy0 link_rate=10(sata)
-> [  275.211001] sas: sas_form_port: phy0 belongs to port2 already(1)!
-> [  278.223079] hisi_sas_v3_hw 0000:b4:02.0: entering suspend state	------> the controller suspend again
-> [  280.527655] ata7.00: qc timeout after 5000 msecs (cmd 0x27)		------> revalidate ATA devices
-> [  280.535667] sas: sas_ata_internal_abort: Task 00000000682de2e7 already finished.
-> [  280.543483] ata7.00: failed to read native max address (err_mask=0x4)
-> [  280.551671] ata7.00: HPA support seems broken, skipping HPA handling
-> [  280.558317] ata7.00: revalidation failed (errno=-5)
-> [  280.563437] sas: Executing internal abort failed 5000000000000600 (-22)
-> [  280.571670] hisi_sas_v3_hw 0000:b4:02.0: I_T nexus reset: internal abort (-22)
-> [  280.579338] sas: ata7: end_device-6:2: Unable to reset ata device?
-> [  280.751675] sas: lldd_execute_task returned: -22
-> [  280.759664] ata7.00: failed to IDENTIFY (I/O error, err_mask=0x40)
-> [  280.766063] ata7.00: revalidation failed (errno=-5)
-> [  285.911663] sas: Executing internal abort failed 5000000000000600 (-22)
-> [  285.919667] hisi_sas_v3_hw 0000:b4:02.0: I_T nexus reset: internal abort (-22)
-> [  285.927353] sas: ata7: end_device-6:2: Unable to reset ata device?
-> [  286.095677] sas: lldd_execute_task returned: -22
-> [  286.103666] ata7.00: failed to IDENTIFY (I/O error, err_mask=0x40)
-> [  286.110078] ata7.00: revalidation failed (errno=-5)			------> revalidation failed due to the controller is suspend state
-> [  286.119424] ata7.00: disable device					------> disable device due to revalidation failed
-> [  286.123185] sas: --- Exit sas_scsi_recover_host: busy: 0 failed: 0 tries: 1
-> [  286.133236] sas: sas_resume_sata: for direct-attached device 5000000000000600 returned -19
-> ...
-> 
-> The issue 2:
-> a. Suspend all disks on controller B.
-> b. Suspend controller B.
-> c. Resuming all disks on controller B.
-> d. Run the "lsmod" command to check the driver reference counting.
-> 
-> Thanks,
-> Yihang
-> 
->>
->>> For the issue 1, After all disks and controller are suspended, FLR command
->>> will resuming the controller and all sas ports. libsas layer will call
->>> ata_sas_port_resume() to resume ata port and schedule EH to recover it.
->>> In libata standard error handler ata_std_error_handler(), it will call ata
->>> reset function, revalidate ATA devices and issue ATA device command
->>> ATA_CMD_READ_NATIVE_MAX_EXT to read native max address. This command will
->>> failed due to the controller enter suspend state again and libata disable
->>> the device finally. The controller enter suspend state again because FLR
->>> command completes and the runtime PM usage counter is 0.
->>>
->>> In commit 0c76106cb975 ("scsi: sd: Fix TCG OPAL unlock on system resume")
->>> and 626b13f015e0 ("scsi: Do not rescan devices with a suspended queue"),
->>> use blk_queue_pm_only() to check the device request queue state, if the
->>> device request queue is not running, the device will not be rescanned.
->>> Therefore, the runtime PM usage counter of the controller will not
->>> increase so that the controller enters the suspended state again.
->>>
->>> For the issue 2, the cause is unknown.
->>>
->>> How to solve these two issues?
->>>
->>> regards,
->>> Yihang
->>>
->>
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+மணிவண்ணன் சதாசிவம்
 
