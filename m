@@ -1,84 +1,127 @@
-Return-Path: <linux-pci+bounces-9207-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9209-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8877915745
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 21:39:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 957839157C3
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 22:18:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9117F1F219AE
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 19:39:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48E421F214A1
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 20:18:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96CBB1A01C0;
-	Mon, 24 Jun 2024 19:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09F171A01DC;
+	Mon, 24 Jun 2024 20:18:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wa7gIXEA"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ifJ4WqkA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DB51A00D6;
-	Mon, 24 Jun 2024 19:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBF51CFBC;
+	Mon, 24 Jun 2024 20:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719257940; cv=none; b=LgFmQFP3GMvj4fJ1sfBLzUyp3H7rMKL3H6OtJe69vZ7RfP7ofX/VDTguYRtnZXkPR8DmCv39JMerfyeMBoXlq3H2kZWrhM9Z7AJFxbM5i7QcboDqJpwczK9Czzh9/SrtRzGOcTgem6NPw3uwVgtNZXYrR3Qo3ZkRvvfrHAxVxwk=
+	t=1719260314; cv=none; b=J5M8RiiJG+mJYD6CpNug0ie2CD1ycj66jhJVyPAT+86aZ+D4PPkh6ZBisVaktmq0QIeMbyQF4PhKIrUXSsO/eU9MAl9yZY0M75Zt8tDTtgklit/VKlMQ/DOjiplS+Mz8Dps6bWppAGy6iOIHUgA1FyU1FlkuWYvqF/ltedbgYW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719257940; c=relaxed/simple;
-	bh=fIpxGxErBMjwvYV2I4WkYrRQiLydJH1phwFbI+ji4G0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V9IIL99EjB1v33HM/LRqmX8TCLXf3LUQuQ8d5zZYV5ClwFKuQ70m7UiMUdPUln6/WxUGdevUXN8U8OHpb9f4ATjwV71K8WMPS9qkLgPMmYRS61oIKRL1z14hsOU6Rr036Xw66yN4a/L+Y+ftGMNeKi9Wtq5RXBQRP4X53142iZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wa7gIXEA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47B1C2BBFC;
-	Mon, 24 Jun 2024 19:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719257940;
-	bh=fIpxGxErBMjwvYV2I4WkYrRQiLydJH1phwFbI+ji4G0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wa7gIXEAi/WfFBiYP6sYL4YJ9C7vmuVsgWLzu3PkrQLSdAg91ODgzJzQMxrcw5HYk
-	 JzSDEo+2Bv0UqHHrHBWtWyeGe2qfcFTwc2LUxCF6EF1OH7UwmSvzQicSZAPTscPNUc
-	 FPkItYLIyozBc78h0aBRh0MgGCOCw/N3Wtz5LvqUYdTD/5bC/Ioy/Pw/K3Mn9bsiH6
-	 GWKYv8reakThPKtlxjrYLodKDrID5eBSkxKIfeZmKHyWmIzFS8t4KTc5wLoe5qlLD0
-	 3ViKxv2KAKpH9PUBInb2mHCcWdOkuv84/vTJiiAPFG8vaky6wzYII/JKg/k6n79nRz
-	 lU7w1NIFA8KXg==
-Date: Mon, 24 Jun 2024 13:38:58 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: daire.mcnamara@microchip.com
-Cc: linux-kernel@vger.kernel.org, conor.dooley@microchip.com, kw@linux.com,
-	krzk+dt@kernel.org, devicetree@vger.kernel.org,
-	lpieralisi@kernel.org, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, conor+dt@kernel.org,
-	linux-riscv@lists.infradead.org, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v4 3/3] dt-bindings: PCI: microchip,pcie-host: allow
- dma-noncoherent
-Message-ID: <171925793172.267714.8378615377109046130.robh@kernel.org>
-References: <20240621112915.3434402-1-daire.mcnamara@microchip.com>
- <20240621112915.3434402-4-daire.mcnamara@microchip.com>
+	s=arc-20240116; t=1719260314; c=relaxed/simple;
+	bh=jAF20gD7kIYUViHBMXcExfj8B25lKFFEaqEeRRIJKmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t8mv3sC5JNE4L3Ypt9uTYOV0wM9eMdE3vHmGQwxvJDp34dhEShO6067IqnmB0nNyKBOeDHZdBaYCe3cJIBg2zXFhE/Svx9sMNvACMZOj7WuH6Z/VAZRz7GHHdUU1L4DWVGpoOpon1Yd799LR2nYOXjVcYgNdheQilFqdv+UIQgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ifJ4WqkA; arc=none smtp.client-ip=80.12.242.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id Lq8tsVsCWs2bgLq8tsSHG0; Mon, 24 Jun 2024 22:18:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1719260304;
+	bh=elAOlOG1WOr8pdRvT+PF6Vndcsz+yUNDpa4N3XRDGSw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=ifJ4WqkAbLBGSWvEokziSvQHFJTuyUYl/RfhR/1tlyof7+bpgmvEoRQALwZQNtaEn
+	 ga/u/N2xFXPHx0IYqqC6E3XAA72bCLVsxYk9+kDwCOiJUDYjIoqweDdNS+fGhBL9wS
+	 0HsLTaOrs9xRyy3gLNIF52BViT1qdbJoy7I3/y4ZbAHQhPPJsAnLSJLq4/g/zgmsla
+	 Rx2jwVrPHyW2yy7201CyyB98m0BqJPPq6KlUw4V1BkLXsX34uOdAqAsTh3In7HNmGr
+	 IPHApck+2r0VajUHdKn+UdYXhIT0Aoi8B5yYS3sLmTBSil34Mx472NKw3t00kEEzR0
+	 gSBk/gLU7Qazw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 24 Jun 2024 22:18:24 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: ls-gen4: Constify struct mobiveil_rp_ops
+Date: Mon, 24 Jun 2024 22:18:20 +0200
+Message-ID: <189fd881cc8fd80220e74e91820e12cf3a5be114.1719260294.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240621112915.3434402-4-daire.mcnamara@microchip.com>
+Content-Transfer-Encoding: 8bit
 
+'struct mobiveil_rp_ops' is not modified in this driver.
 
-On Fri, 21 Jun 2024 12:29:15 +0100, daire.mcnamara@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> PolarFire SoC may be configured in a way that requires non-coherent DMA
-> handling. On RISC-V, buses are coherent by default & the dma-noncoherent
-> property is required to denote buses or devices that are non-coherent.
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> ---
->  Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+   4446	    336	     32	   4814	   12ce	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.o
+
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+   4454	    328	     32	   4814	   12ce	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only
+---
+ drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 2 +-
+ drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+index d7b7350f02dd..5af22bee913b 100644
+--- a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
++++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+@@ -190,7 +190,7 @@ static void ls_g4_pcie_reset(struct work_struct *work)
+ 	ls_g4_pcie_enable_interrupt(pcie);
+ }
+ 
+-static struct mobiveil_rp_ops ls_g4_pcie_rp_ops = {
++static const struct mobiveil_rp_ops ls_g4_pcie_rp_ops = {
+ 	.interrupt_init = ls_g4_pcie_interrupt_init,
+ };
+ 
+diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+index 6082b8afbc31..e63abb887ee3 100644
+--- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
++++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+@@ -151,7 +151,7 @@ struct mobiveil_rp_ops {
+ struct mobiveil_root_port {
+ 	void __iomem *config_axi_slave_base;	/* endpoint config base */
+ 	struct resource *ob_io_res;
+-	struct mobiveil_rp_ops *ops;
++	const struct mobiveil_rp_ops *ops;
+ 	int irq;
+ 	raw_spinlock_t intx_mask_lock;
+ 	struct irq_domain *intx_domain;
+-- 
+2.45.2
 
 
