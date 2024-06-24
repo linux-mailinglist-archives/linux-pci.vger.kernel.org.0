@@ -1,180 +1,181 @@
-Return-Path: <linux-pci+bounces-9173-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9174-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05CD5914485
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 10:20:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F12B914495
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 10:22:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF1ED2810DC
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 08:20:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29B721F23747
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 08:22:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48C244AED4;
-	Mon, 24 Jun 2024 08:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC6E4AED4;
+	Mon, 24 Jun 2024 08:22:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cxujiqvb"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="fxYpPcUZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9AF49645;
-	Mon, 24 Jun 2024 08:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A4745007
+	for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2024 08:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217212; cv=none; b=asA2WTtPnwn1wiWhnULlHEbCbWcflnXL8Y4CcJL4Hhnh9AmAdIETGTnj1gqFPXxknFsm2ijqRFmyBXDXCvrW/mZBG/sh1VO52g0mB7Tgdu5kTepQocutRSkuC9VabqUD49554x274Bd34uvGzcSQYtJzjKci1II6Rx+Fmnxdb9g=
+	t=1719217371; cv=none; b=ml8Tt6SR57uv9hWIdmxQqIq3qm2WTPNwru3cx7rEFc4XTTGoi2SaTZUF7g0Do9QrIVHj+y1oZarIKIRWIyl3ZfUvNuEwwB0QJ3bvyXhz8/K1cvn4klqQqcVWCA+yTkHOXAgoAwV2hcnGymMOFK/zJiIF36Hw8FjTcralNX8p2eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217212; c=relaxed/simple;
-	bh=pq0cmcBY/X2RNBjl7vh86+Fi/2499fm8ZPDUFHIfztc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tn6tgIRmhvGMdUH8cgc8jacrL8kkwWObN/ESYqshQ2X6Oy4TbiM03fwoqEu5v3cRpbc17uh0ao4cKEC6Zctiym8gzDPLBtth6pzZbPPJRpwDXEan4KbSCkYmtBcV24yruG/FIMo9zqIzvHXY12SvG9xg6Va+kLdCcr8tsfb0a8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cxujiqvb; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5563FC0009;
-	Mon, 24 Jun 2024 08:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719217207;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vpj1bjYXlBzUfYOefDTjh4xiC9L+rWuuQmo0xQfNisQ=;
-	b=cxujiqvbjQcjSYkwhcOwJAczyZeKLHaVrwYHhoxhQTlS84njHLtQU7WqYt0TVoLRyIsj/L
-	7b9nOKN5UR7d/5EIQAZ7hEEcyhn0Cq+6hJ3IfkQniOqC7/JJyuIgqQamKLH2mhQ7NOQuh9
-	Bwd3PaIEVlv/8MPvj+C2QLY6hLlABB1P+K4ceJxNEy59dzQIB8t9FyVXIKmlA3YikrJZmh
-	MtHsGb/kZflAGcFqL0O13KM/Hnm0pJ5l2xFN212IJL1m373ToUZfXE1Xq7oNN1cRC82Djb
-	9KGd+YUl4ms/PHS4Zds9ogBeUkZsyvcmGDX34hHAE1a5rk4uYg2iAebmKSH0qw==
-Date: Mon, 24 Jun 2024 10:20:03 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Simon Horman <horms@kernel.org>, Sai Krishna Gajula
- <saikrishnag@marvell.com>, Thomas Gleixner <tglx@linutronix.de>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Philipp
- Zabel <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>,
- Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
- Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 18/19] mfd: Add support for LAN966x PCI device
-Message-ID: <20240624102003.3b11a8cc@bootlin.com>
-In-Reply-To: <CAHp75VdeoNXRTmMoK-S6qecU1nOQWDZVONeHU+imFiwcTxe8xg@mail.gmail.com>
-References: <20240527161450.326615-1-herve.codina@bootlin.com>
- <20240527161450.326615-19-herve.codina@bootlin.com>
- <ZmDJi__Ilp7zd-yJ@surfacebook.localdomain>
- <20240620175646.24455efb@bootlin.com>
- <CAHp75VdDkv-dxWa60=OLfXAQ8T5CkFiKALbDHaVVKQOK3gJehA@mail.gmail.com>
- <20240620184309.6d1a29a1@bootlin.com>
- <20240620191923.3d62c128@bootlin.com>
- <CAHp75VdeoNXRTmMoK-S6qecU1nOQWDZVONeHU+imFiwcTxe8xg@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1719217371; c=relaxed/simple;
+	bh=l8PxRcYIUV+BwhTr/9tnWDMOzSzkqoN1MtjHSsnguGg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RtXTTehJq/u21iod7e51T4qj+qvdjVqvBWDy9dTchRteEeqm33IbCi8TgUq2aLa01tJejZVmQIcC3jE1aOsi5on/A6oyBmjvbw5C7Z0QZbXNaY/HYj5ehRWgXXm7oFr63aR+vrLug0/Nxltmlf7zF3O367dycT+4R813FhK1c48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=fxYpPcUZ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f64ecb1766so29955455ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2024 01:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1719217369; x=1719822169; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TKqXgp0PeCY7zVPXIYmvQu6WZY+HEs+Sn2Z47Kgx7oM=;
+        b=fxYpPcUZsuE9aiH3471SZiJQzzMoSlqLkowXosNEkyMWVlKz/QwPk+rVLeFOaDBOWt
+         N4PQkstLuhKl02eVi0yv9ZAkq/dSRCWjcVznar6vEWRu5Qg29be95rINkTgoKhlz7aqw
+         Xjp7AmCl41xYlm+SDDqkZzzxJVXbvURJs6mw/YJnjiBcat0Ut8xOyfmTdC70EkchrZG7
+         V7eojFfhBN7KsMGLKEmlQUt9dvYfj5QiHHzFvvGfsYQbtPbd/6lVGpyMLBtripypYIf+
+         ZJEs0UGYOl/fj+BwPZu3u5Yq1mugqVsgo8R9R2ZZPajgCrfFmjxg9Mxsn74g7BjK7r+l
+         r4tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719217369; x=1719822169;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TKqXgp0PeCY7zVPXIYmvQu6WZY+HEs+Sn2Z47Kgx7oM=;
+        b=Ac/fD+Z6Czu37PnYLmhy/z1htxG4AWgMpkPqxawC38nxBXS5v6mKiBf/qtqjIDdtCY
+         FMa49dVir4VgS1Y7GZ/73wv+ZtyBw19t96i+IEM0v6TnNSAskPeOXzNZS3e/7ip/+LPI
+         GbpeaAWb9YTBo+iQvUJ3Pi56b2T5xpsIHUMFZTjvaDHUjxC/ier7jGks5B+0qv51WJmu
+         OOWs0jio5de3dziG1Cch1KY4VfnJ9ZzzHLWyhZptnPvjr67iAKjsExCDXz+Ce4FeuS+1
+         eeotnqUPnqcFwCEM9cqAcNBdHh7TsIRMml9Ab45Jjoc1QdjJ0VmgxQJi77v4L6cCsKOQ
+         y3Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdjKkTpgBXbW2/S9/00reYch4v1qhwxrqhxJ+xo4Fbv0v5UVkXup3JWkXPwomXl0GR1DKsJCs80pXKY4EjoajKwPpkP33buzYl
+X-Gm-Message-State: AOJu0YxmzbknvgE1DXaVNh3rF35mRiI+/krTp/RpAbFkKuU2JRzhiNQC
+	UcTbRy2LO3p9BRrsDd+Bqu9CgdCklvNOpN6Gqb/lp8kYFRo3NQ54jAPWXyF77Tyd4gK+XXfWesf
+	u
+X-Google-Smtp-Source: AGHT+IGkoHJq/Uha60iVDfgi2zLJGjHRCAI0OByy2xj9MuNZhuILpLYTi5YuR8zGMv4NTd34FPkw1Q==
+X-Received: by 2002:a17:902:ec91:b0:1f7:1b97:e91f with SMTP id d9443c01a7336-1fa1d5173d9mr51886265ad.26.1719217369112;
+        Mon, 24 Jun 2024 01:22:49 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.167.56])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f9eb3c8b5dsm57068405ad.181.2024.06.24.01.22.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 01:22:48 -0700 (PDT)
+From: Jian-Hong Pan <jhp@endlessos.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>,
+	Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v6 3/3] PCI: vmd: Drop resetting PCI bus action after scan mapped PCI child bus
+Date: Mon, 24 Jun 2024 16:21:45 +0800
+Message-ID: <20240624082144.10265-2-jhp@endlessos.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240624081108.10143-2-jhp@endlessos.org>
+References: <20240624081108.10143-2-jhp@endlessos.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
 
-On Fri, 21 Jun 2024 17:45:05 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the PCIe
+Root Port and the child device, they should be programmed with the same
+LTR1.2_Threshold value. However, they have different values on VMD mapped
+PCI child bus. For example, Asus B1400CEAE's VMD mapped PCI bridge and NVMe
+SSD controller have different LTR1.2_Threshold values:
 
-> On Thu, Jun 20, 2024 at 7:19 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> > On Thu, 20 Jun 2024 18:43:09 +0200
-> > Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > On Thu, 20 Jun 2024 18:07:16 +0200
-> > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> > > > On Thu, Jun 20, 2024 at 5:56 PM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > > > On Wed, 5 Jun 2024 23:24:43 +0300
-> > > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:  
-> > > > > > Mon, May 27, 2024 at 06:14:45PM +0200, Herve Codina kirjoitti:  
-> 
-> ...
-> 
-> > > > > > > +   if (!dev->of_node) {
-> > > > > > > +           dev_err(dev, "Missing of_node for device\n");
-> > > > > > > +           return -EINVAL;
-> > > > > > > +   }  
-> > > > > >
-> > > > > > Why do you need this? The code you have in _create_intr_ctrl() will take care
-> > > > > > already for this case.  
-> > > > >
-> > > > > The code in _create_intr_ctrl checks for fwnode and not an of_node.
-> > > > >
-> > > > > The check here is to ensure that an of_node is available as it will be use
-> > > > > for DT overlay loading.  
-> > > >
-> > > > So, what exactly do you want to check? fwnode check covers this.
-> > > >  
-> > > > > I will keep the check here and use dev_of_node() instead of dev->of_node.  
-> > > >
-> > > > It needs to be well justified as from a coding point of view this is a
-> > > > duplication.  
-> >
-> > On DT based system, if a fwnode is set it is an of_node.
-> > On ACPI, if a fwnode is set is is an acpi_node.
-> >
-> > The core PCI, when it successfully creates the DT node for a device
-> > (CONFIG_PCI_DYNAMIC_OF_NODES) set the of_node of this device.
-> > So we can have a device with:
-> >  - fwnode from ACPI
-> >  - of_node from core PCI creation  
-> 
-> Does PCI device creation not set fwnode?
+10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
+    ...
+    Capabilities: [200 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+        	  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+        	   T_CommonMode=45us LTR1.2_Threshold=101376ns
+        L1SubCtl2: T_PwrOn=50us
 
-No and IMHO it is correct.
-This device has the fwnode that point to an ACPI node: The description used
-for device creation.
+10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
+    ...
+    Capabilities: [900 v1] L1 PM Substates
+        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+                   T_CommonMode=0us LTR1.2_Threshold=0ns
+        L1SubCtl2: T_PwrOn=10us
 
-The of_node set is created based on PCI known information.
-This of_node, at PCI level is not used to create the PCI device but is created
-based on an already existing PCI device.
+After debug in detail, both of the VMD mapped PCI bridge and the NVMe SSD
+controller have been configured properly with the same LTR1.2_Threshold
+value. But, become misconfigured after reset the VMD mapped PCI bus which
+is introduced from commit 0a584655ef89 ("PCI: vmd: Fix secondary bus reset
+for Intel bridges") and commit 6aab5622296b ("PCI: vmd: Clean up domain
+before enumeration"). So, drop the resetting PCI bus action after scan VMD
+mapped PCI child bus.
 
-> 
-> > This driver needs the of_node to load the overlay.
-> > Even if the core PCI cannot create a DT node for the PCI device right
-> > now, I don't expect this LAN855x PCI driver updated when the core PCI
-> > is able to create this PCI device DT node.  
-> 
-> If it's really needed, I think the correct call here is is_of_node()
-> to show exactly why it's not a duplication. It also needs a comment on
-> top of this call.
+Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+---
+v6:
+- Introduced based on the discussion https://lore.kernel.org/linux-pci/CAPpJ_efYWWxGBopbSQHB=Y2+1RrXFR2XWeqEhGTgdiw3XX0Jmw@mail.gmail.com/ 
 
-is_of_node() will not returns the expected result.
-It will return false as the fwnode->ops of the device is not related to 
-of_node ops but ACPI node ops :(
+ drivers/pci/controller/vmd.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-What do you thing it I keep the of_node test using dev_of_node() and add the
-following comment:
-	--- 8< ---
-	/*
-	 * On ACPI system, fwnode can point to the ACPI node.
-	 * This driver needs an of_node to be used as the device-tree overlay
-	 * target. This of_node should be set by the PCI core if it succeeds in
-	 * creating it (CONFIG_PCI_DYNAMIC_OF_NODES feature).
-	 * Check here for the validity of the of_node.
-	 */
-	if (!dev_of_node(dev)) {
-		dev_err(dev, "Missing of_node for device\n");
-		return -EINVAL;
-	}
-	--- 8< ---
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 5309afbe31f9..af413cdb4f4e 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -793,7 +793,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	resource_size_t offset[2] = {0};
+ 	resource_size_t membar2_offset = 0x2000;
+ 	struct pci_bus *child;
+-	struct pci_dev *dev;
+ 	int ret;
+ 
+ 	/*
+@@ -935,25 +934,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	pci_scan_child_bus(vmd->bus);
+ 	vmd_domain_reset(vmd);
+ 
+-	/* When Intel VMD is enabled, the OS does not discover the Root Ports
+-	 * owned by Intel VMD within the MMCFG space. pci_reset_bus() applies
+-	 * a reset to the parent of the PCI device supplied as argument. This
+-	 * is why we pass a child device, so the reset can be triggered at
+-	 * the Intel bridge level and propagated to all the children in the
+-	 * hierarchy.
+-	 */
+-	list_for_each_entry(child, &vmd->bus->children, node) {
+-		if (!list_empty(&child->devices)) {
+-			dev = list_first_entry(&child->devices,
+-					       struct pci_dev, bus_list);
+-			ret = pci_reset_bus(dev);
+-			if (ret)
+-				pci_warn(dev, "can't reset device: %d\n", ret);
+-
+-			break;
+-		}
+-	}
+-
+ 	pci_assign_unassigned_bus_resources(vmd->bus);
+ 
+ 	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
+-- 
+2.45.2
 
-Let me know if this can be ok.
-
-Hervé
 
