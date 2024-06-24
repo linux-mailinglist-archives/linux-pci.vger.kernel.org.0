@@ -1,276 +1,160 @@
-Return-Path: <linux-pci+bounces-9175-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9176-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41E1E914686
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 11:37:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21F039147BA
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 12:42:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64C291C21266
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 09:37:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD39A286CD1
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 10:42:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3C740BE5;
-	Mon, 24 Jun 2024 09:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2311369A3;
+	Mon, 24 Jun 2024 10:42:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mVmiUYE1"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yQy5adox"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2087.outbound.protection.outlook.com [40.92.53.87])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2054.outbound.protection.outlook.com [40.107.96.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7CB79DE;
-	Mon, 24 Jun 2024 09:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB80130485;
+	Mon, 24 Jun 2024 10:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719221839; cv=fail; b=dROF/fiRrjEkrTgjgZO9g2xWNtbyqX7ygfBfriqhaism+SJRm9jY04JmkC0nN3PZUCtfYuFAZZVFnocRVqCjeKjBVO+zsE2iY2b+CcpYQjAVs1huwmr1w6kUPuspm3B3DP8FAaOsmxk1gdunDsJOhK/Y+G0VZEtKum95JRXML+w=
+	t=1719225770; cv=fail; b=ZO3ZwBsoe/qT37ePKKDI5gdbX69zMnmErbF0uyjIZQyzl9fnIqQ6tOh7M1B9QfIjMVvrCZw6MGSGpxJZWR6VTH30iP/8/f04QM4yh9eqWqtbxFL5BKZqMgDP/pTnqRCR7yQKGr6OhynWwLkVcOAx63903QhNNXJWDpGQBv1iHb4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719221839; c=relaxed/simple;
-	bh=zSBAFI5dKU/2uuWX0FiPoDZ1g0dzNNoA4tQLk5wSKaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cHZq3JbDu9j7RxVjHlGTJQ9D8IsV2fiRtEAyfA9yVcgJhJyaYZfBnEGXcGpTBZw0qV/xOin3sSP+oa6Y8ViZboxs5WhOUIp/HDnCmuO8pNTTHwTv1BbGQ4jtMbkKBXcO3mfd8LDmy5Ce9GJFQrqdyYeaMiuxHctmhULRbAHFU2A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mVmiUYE1; arc=fail smtp.client-ip=40.92.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1719225770; c=relaxed/simple;
+	bh=ldSr8n/6t6+7cU1NLJhmTy/OZYzJJfGvKxRumQu/+l8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=m1BHVPguXm/eWw7sZG7s48R7x2NBNnFLdgy9tRXxHo9rtBr7PaC7d9kUlLKe5B8XFNUekaQO1YSRnXxPAKTKvLvE6Rk9kePLWy/lovZoAw2GVFnKy2dVSbLAPqNmArRuHJiN1M+nsb5ozUBfmC71n96miKGs8DGqkzmzNRC8wOs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yQy5adox; arc=fail smtp.client-ip=40.107.96.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OSgRpe4ZN60qoNAXGJU6/WVF8TMtK79LTFXxH7CsXEW2QTD3uvEf0qF59nr4BSvctC4D74v4i6S4wPRs4+Ij2H3MoJpHkoWdeitPiv/AfCHiWBcsFgMhZNougkJvl3/4I5n/4Q0WlWDh1SqYnuWQlmPbh1lXHdAXGQKEcVc591KRY26zY4h3hWN1MLdQ4KfWUOkoBqkvxaZXDvWOqDKffa9FvHpcQ37xAIpZ+yLJmGKi5n2YZNjgbUZnxR6WPhL+2mFTphXn/erIze7Yl2doK7XZY5A2L+8uWim9nsSGswM8KkqznIR546bzM55eYGdCQJ4V6CS5UsF0AqSrujpcGw==
+ b=d0cvkydpU1ijgmkoCmCDpGN0xV0+tP96YDOjqwYopqVtu4WVS8ekudMCY6qQ6bYpH18d2RLouQd/m9LRVaObcdk/wC89qQBO7OFQc+/wnV5NBXoX6WAOl/1vZ/araZTmRhUcSbx0OszA/UNcYp3p7ugOx5wEPOL0SX9bo6zk9ItN3Asy/mMANIJlf78NhU4B4QEDzf3JGdpwlR/DS2ZggsVMdeh5X3KcjIZclCFYGFWocJMV7rCiS98cI4qGw4ue5LVlZ1efA/sWia7j7ArSVkSMZD47ff7ZhUzX03FwuHo9bpoUr8IH5m004OfxYPEFrkrkLJK7upzv/gZBz7YwwA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9CqO0+8fJUZ3zEaLwqbL03U4SYrArv8b5wXBprG1izQ=;
- b=ck6+1L5SDojTuixqENa0I0onCZXzV6BwTt1Mv6PdIi6DozcKnT+gt8GGQu6CIWp2s2ZrEw/BFcaXvhhI81DSAScsshYBICxBHofZNHj8kdypudFQnZVaQtpvDzYbMYGOFR6krcCQxrYvIommBi9I8K0QjoEOCrOM3yoWhXOm35BWItdTqfbm0gqWbe98tu596ZG8PVs8tAtAn+TsQOihGPoBybLzhvkp3g8agE7wWCCfnRhN2ZurHgmXe5Errqd0DNlml0Okie2z0vhlSZ4Zw3sO34db6lI3fMgCbDFzei1GEZg7FLjqZKftIXKLQtTA/tUrVNIfMznyq/C5hKUBOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=Hvso3/X6AUqqRquNnZnjSNR7EFPfVLWUVXjHPHcVjqM=;
+ b=O/+wgSKz+DiqBM1BZC+PJu7YdR0q5R7y2El8lKSLDBxFEph+GTImWMJ49xVclfqr+um8nsUVomZosdlkZY53LnkQDnb79FXiy8cTR86+vlhMa6vUUPFVIAokswqhPko7ex1gq5p898dLJ9wdEfBpvNE+RTnwvGNp62RUwxNKssJ8gSAb18c5U1b7jpwedwh06f6wKVsog96ptUC40UfofSKmHd6TYU04oby/SwWZpn2xEsAoK+8gBaqvCL0vQ2UglXTJnAQO8C/vDZfEJyLQ/HXty/Z4pOtZ8ruaTpc6WwGYgiv8oQ0QX91Jycn+Y7lZ0rLRWU7/JqGtx+q8lKglJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9CqO0+8fJUZ3zEaLwqbL03U4SYrArv8b5wXBprG1izQ=;
- b=mVmiUYE1INWuE0CzU1v42oG8byrFSV8OAd1FdSg3zKkdvQirkUJ/+3dPjVO9QhkoM3pGvZGzy/O6aPSH8ZOZ1cowoshC0tpH5zNgsTEk+UEhjE/xSki588Otqz1fZrwnlFdORwGHf1liN9+d+pwJ4pDoKx/SM1m+vJgzqzSOwoaVMln+d6oPu9EPjdMuU0VAgpAS3FoG+TaJlFbrtL5y02FkTqZoCktv3bnwzbWVdMdee92rYq1BZPjjFY1WhJLz1qPwpU5dGlfsoKM2ONVnRZDF02hXyBRpQqtS0i+Njlla7tv9JalG2D+8ji3Gs0hnspZe2SPhdqW4d3KAkNKbcw==
-Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- (2603:1096:101:76::5) by SEZPR01MB4112.apcprd01.prod.exchangelabs.com
- (2603:1096:101:48::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.28; Mon, 24 Jun
- 2024 09:37:12 +0000
-Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- ([fe80::653b:3492:9140:d2bf]) by SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- ([fe80::653b:3492:9140:d2bf%5]) with mapi id 15.20.7698.024; Mon, 24 Jun 2024
- 09:37:12 +0000
-From: Jiwei Sun <sunjw10@outlook.com>
-To: nirmal.patel@linux.intel.com,
-	jonathan.derrick@linux.dev
-Cc: paul.m.stillwell.jr@intel.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sunjw10@lenovo.com,
-	ahuang12@lenovo.com,
-	sunjw10@outlook.com
-Subject: [PATCH v2] PCI: vmd: Use raw spinlock for cfg_lock
-Date: Mon, 24 Jun 2024 17:37:00 +0800
-Message-ID:
- <SEZPR01MB4527790242E852C3B6EECEC5A8D42@SEZPR01MB4527.apcprd01.prod.exchangelabs.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [YjN6812sfx6W7oFpko39jDHB2JHuxzCv]
-X-ClientProxiedBy: SG2PR03CA0105.apcprd03.prod.outlook.com
- (2603:1096:4:7c::33) To SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- (2603:1096:101:76::5)
-X-Microsoft-Original-Message-ID: <20240624093700.3644-1-sunjw10@outlook.com>
+ bh=Hvso3/X6AUqqRquNnZnjSNR7EFPfVLWUVXjHPHcVjqM=;
+ b=yQy5adox75RG93DT5STgKl+6opW8PaFiT9DlqSyzR7Vbut7PfLiCYFPj+iOCB5A9iA6KW2p1hyzpWk0LKjaeW7eYi+HcjUu2nM/ttfaO/WdiR5T/xJ7IxBwUjlPxjvyv4JWx8FTDvYOGCftErR4ZMWx98t+TIwTdWaRaHOUXFjo=
+Received: from MN2PR14CA0009.namprd14.prod.outlook.com (2603:10b6:208:23e::14)
+ by DM4PR12MB6591.namprd12.prod.outlook.com (2603:10b6:8:8e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Mon, 24 Jun
+ 2024 10:42:46 +0000
+Received: from BN3PEPF0000B076.namprd04.prod.outlook.com
+ (2603:10b6:208:23e:cafe::c4) by MN2PR14CA0009.outlook.office365.com
+ (2603:10b6:208:23e::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
+ Transport; Mon, 24 Jun 2024 10:42:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN3PEPF0000B076.mail.protection.outlook.com (10.167.243.121) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Mon, 24 Jun 2024 10:42:46 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Jun
+ 2024 05:42:45 -0500
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 24 Jun 2024 05:42:42 -0500
+From: Thippeswamy Havalige <thippesw@amd.com>
+To: <bhelgaas@google.com>, <kw@linux.com>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <lpieralisi@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<linux-arm-kernel@lists.infradead.org>, <bharat.kumar.gogada@amd.com>,
+	Thippeswamy Havalige <thippesw@amd.com>
+Subject: [PATCH 0/2] Add support for Xilinx XDMA Soft IP as Root Port
+Date: Mon, 24 Jun 2024 16:12:37 +0530
+Message-ID: <20240624104239.132159-1-thippesw@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB03.amd.com: thippesw@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR01MB4527:EE_|SEZPR01MB4112:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1148e159-deb0-4500-b8df-08dc943139bb
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B076:EE_|DM4PR12MB6591:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71005075-b579-4a56-6939-08dc943a627c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199025|440099025|3412199022|3420499029|1710799023;
+	BCL:0;ARA:13230037|7416011|36860700010|376011|82310400023|1800799021;
 X-Microsoft-Antispam-Message-Info:
-	6E8AYWGX9lc4IotGOFC8R5alHBa4pAr8v6e7X0V1ebAeNL+R5DVPCHL8OoziVwieay8I5XcdZLnGb24mXVt1FSiXWOdIEShbRiO358b7Nz4u2j3esas8TCs/5GRjHsDheRBVgMAmgDgoOQTLD2lBCpJRzFvjLeYdQI+U6EHfBn3mEWj/+Vl13bkTOaR/QhNe5O2zooAj9bgVaeDHkAZA42Br6Iqqq7P1AFhusiiECHlIVf6Ty6XIzj2bwo28UUb1/q6/c8cZ7NtbUuge0vg3x3hC9KbK/kPQGm79gl+sNNSNuWbpDT/3ToV820remBDZV+gIVofk+Si0nzal10zHYOW5TXBKSEbNGdolKJU4v6bYTtIHQbFiowL6/Kysac9PcDnnHKM0S1Q5A/H3SamyjlUYMSvB/QISUTA1pw4fNELbrvDQ1gcL3NGQRMVH2N8z/3G7x/2P0TZFR1IumGVMKDFupX9lHz3zJYxaSnqBfWbjDlbR014DkHzCSgTFtW42vArWYOFGDciWtDhzbctXrdhlmMdCJzaXcEtyqF66PeK+mEQde4XzQtEWOAyI8f5GN15LGuS8iH286qYL9MckTvqfj5oX2b4RbHHc1WYQ2t+ym9gEz0R9HcBU376kMdap
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hjjmxPgEVO/Amd8Zu5rvmATqnoqtxdwUcbZC2yJuTX6XNzpKRGkkFY2z/Kry?=
- =?us-ascii?Q?bRNCrc9wFZJZP3adGvQzoD81V6X39c3oiU5TF39Dqqlu8uU44i5KN1WLBJ00?=
- =?us-ascii?Q?gdOJJiehdwUFkA2L1wbmkA0z4bBpg1Ir1DnK99I5DIGa2bhed1VQHqQvvQhc?=
- =?us-ascii?Q?E/1JYe3BNC/v92AxDYYxnayi0YVCjf2nO5lfJg8iUva6MqUPzmrU3/MePHA6?=
- =?us-ascii?Q?emMYt98cVOXixSR1DdbvTGr0Cn+j8QtrQmyxSltqbpbcv1b/+LCbay6QuH3R?=
- =?us-ascii?Q?fDlxI1YYuHSTaD78nzud4KYz+ZagLaOORN860fxv6WZZy6ZmgtZ1jGVH1b3N?=
- =?us-ascii?Q?pGM9kpj4kJKGfAkxk8QLUxxO5C2MTNfYtEccmIFIZ5easXDteRCHYHFpUcwX?=
- =?us-ascii?Q?bMPDrOicBPE+S3O9BxQfQRJo9PABqcNIonY0QtFOV+8SSHM/b047kV4wknMY?=
- =?us-ascii?Q?+zPvAljRPVhJhPZCRcmq5XwTgN1k8D73MmsKsQ6SO7rRqoRebyGWmkx03lVp?=
- =?us-ascii?Q?mxfMMNaPFrEmRoXrf6OA5vgPY66rc65WJ23UTfMKIm9Gk3bf+XQCtSTBOv4u?=
- =?us-ascii?Q?cC7Gm1iubXttV+5sdjtDzgNnjf54GDsVgIslChv2g72wrLCREP859bf5k45N?=
- =?us-ascii?Q?v3qhzG5zOboGUPWk5Ejb4CGu2I30tWBAkia3t1vMSdJmdrozm1nfrX2hEy8f?=
- =?us-ascii?Q?uu/VxSJIywIT6a/Ua5yniCuPWTFy01S7cG5g+nA7TybWOpKKnWn+gkgHnCo0?=
- =?us-ascii?Q?X/ElzyBE6uOJE4Eue4r9oJ5r673Mi7i11ko46g4X4SoaF29ncqBmAVVtaUCr?=
- =?us-ascii?Q?P2g+dy6ty2/UDjRqCX278TCcr1sVj2wP6jcFMvr5V5+IKdNP8yEtQ5IkHUMW?=
- =?us-ascii?Q?zJre7zPJxEZnWoAI32/lofCef2DKI90dls9uPkIS+mGb9Us1W1WofXGMm7va?=
- =?us-ascii?Q?1ZgTbJKXCKhhCszKeiXSfMPQfMjWwUBqADe22zKq50/hO7IMWVwnP4pXoloa?=
- =?us-ascii?Q?uCzm8B5fQr20NFjFo3g9uogEZzJyLkUPDJmQvzQvqe7AxNwvL7XmoHcpidLG?=
- =?us-ascii?Q?xqSUh6HkXf3IJ8YkKBI1EbCG5UiGLz7yWMqljpjp534xHgCGCO8lYS3kknzU?=
- =?us-ascii?Q?sO422EfLIOSiyeD4OaW5UvwgudeblQzKIFCwNmUOAttNi8CVR8dwpnta+Yae?=
- =?us-ascii?Q?++77hybssKtTSrtcwT1SnYpNkt8TzVmoEKq4J5oCD/tZpo8ahaQlAWH0nbY?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1148e159-deb0-4500-b8df-08dc943139bb
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR01MB4527.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 09:37:12.6997
+	=?us-ascii?Q?yfcaXr3dU6sQle25IAogKv45MqFdFKbWwZpeRl7paVAhzO75ltaJYp+Qt9ze?=
+ =?us-ascii?Q?U8hWCQnKA11IAkowh+PtSKTRIGUxrLQnXHqk00xunWkeSeXzkJLZTMy5LQcx?=
+ =?us-ascii?Q?YR7gd/l8FdxhSAa0ruHfH9ZDxfQB2cY2Mg3J/O9Q4W6ifrZdsQrN/Dsrkvr7?=
+ =?us-ascii?Q?a9k8fbo6jKPnsOUx1NX7PBfLM69obrFBLMSt954PpxlI/2f1KhSd6LbNi8Lw?=
+ =?us-ascii?Q?An74XqY/CAHz0FJWpLnXHlxO0tnN738mycZAkU9RDlbq5wg53FtRqUSyejNp?=
+ =?us-ascii?Q?qeeIHKWCN9EeMvDJ+AF0ZENU+CtpTYpjgFZCQN57tGvKVnRIYLe5nBtQhjdu?=
+ =?us-ascii?Q?WGt7aVm7UmcgA5BVBciH0UVWFaVo0JKgDbc3KV5lhFDNDQWkP856nYcGioxP?=
+ =?us-ascii?Q?ZOprqdGBFOM4pABfzqunSTW8XMRZt28lZ9KMIEjlv/ElRoxZJF6kdchaC/Fa?=
+ =?us-ascii?Q?F49Ac/qoW8EY8+f5lc5nvX7HoHU79qdGPjE9JKFwO1aIfGeGVvh3m5CzRr9v?=
+ =?us-ascii?Q?BVd8jIotGMqnoo5DBhf2R4D2MWqIzY3q1R7FrYsptQRcR2INvMSqTvGg9VUh?=
+ =?us-ascii?Q?aOi7bj+rk8baC7xXHHMNL6+q9qviPXpGehSiPUWGOOJi+c3GmehOHqakRxcK?=
+ =?us-ascii?Q?AcBrkdBrGo1iWLT3bW3XKsSc/pB1qImMVP/WnaYfxJNwpWn/8xy8m0O2lwvn?=
+ =?us-ascii?Q?F95YklVH/iDg79F2HDUEoY8/pBx3kJDOGCH+dmOI3Yppp8bgARSlrRGxuPQL?=
+ =?us-ascii?Q?M8aN/MT20AsGPpzNWssKuHCRazDFetq5H7/8oaBIz95LR5hIJmQDAixfZM3N?=
+ =?us-ascii?Q?b9LPQ1hP3WB7KwJnzyUw2d65Z5OS1RTfMasby9SzCFYKL+QBu9Pz1RDoYtBR?=
+ =?us-ascii?Q?xsTwuyKn13dyqXQoHrLSkiS+ysPTf5cCLmg23qkbVki4fgVBAfzL/AyMI9ZR?=
+ =?us-ascii?Q?98O81Cz3mp5FsIyPLT05shZN1IY+F4So17sqspGXckcQfvdvjODvTSW/eGBN?=
+ =?us-ascii?Q?fqVSflhHGtMRavkjPUPYdGxZyB/mIkWt9O4vU42yelZgYWJ+14XCYXEwx8wo?=
+ =?us-ascii?Q?VFSY34B81xUBUYompDeTzAjzbpsttglXRQnT53lrnKrlD67bomVNJSYnx76H?=
+ =?us-ascii?Q?ninNyAwFlQSJNUGTpUYG7GOEcIpNJz6nEhm/3gL9ggFfThA7ftMNGDdzKt39?=
+ =?us-ascii?Q?pHCd2oDdobuM0I5Mc+8KaAkfAw+HMWJK+/qB2m3reoXWLs9s1n7Yh70B78RF?=
+ =?us-ascii?Q?jTidF/l1IEz62LQkq+PoaOTHkEP5bHUn2qQp4p4c6VuYE+DBErtTG7ZTgs08?=
+ =?us-ascii?Q?flWDAY/sy5EP9R+9WXA8enCVOt0VBC4UYDfJdeM11Fs43HJQdj0yKhvNKElS?=
+ =?us-ascii?Q?lDkH4YzKHuVrIDEVkoJOi7Ghn2cgKTuV1JEV8YoV2+onG7LDZg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(7416011)(36860700010)(376011)(82310400023)(1800799021);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 10:42:46.0321
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR01MB4112
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71005075-b579-4a56-6939-08dc943a627c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B076.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6591
 
-From: Jiwei Sun <sunjw10@lenovo.com>
+This series of patch add support for Xilinx QDMA Soft IP as Root Port.
 
-If the kernel is built with the following configurations and booting
-  CONFIG_VMD=y
-  CONFIG_DEBUG_LOCKDEP=y
-  CONFIG_DEBUG_SPINLOCK=y
-  CONFIG_PROVE_LOCKING=y
-  CONFIG_PROVE_RAW_LOCK_NESTING=y
+The Xilinx QDMA Soft IP support's 32 bit and 64bit BAR's.
+As Root Port it supports MSI and legacy interrupts.
 
-The following log appears,
+Thippeswamy Havalige (2):
+  dt-bindings: PCI: xilinx-xdma: Add schemas for Xilinx QDMA PCIe Root
+    Port Bridge
+  PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
 
-=============================
-[ BUG: Invalid wait context ]
-6.10.0-rc4 #80 Not tainted
------------------------------
-kworker/18:2/633 is trying to lock:
-ffff888c474e5648 (&vmd->cfg_lock){....}-{3:3}, at: vmd_pci_write+0x185/0x2a0
-other info that might help us debug this:
-context-{5:5}
-4 locks held by kworker/18:2/633:
- #0: ffff888100108958 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0xf78/0x1920
- #1: ffffc9000ae1fd90 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: process_one_work+0x7fe/0x1920
- #2: ffff888c483508a8 (&md->mutex){+.+.}-{4:4}, at: __pci_enable_msi_range+0x208/0x800
- #3: ffff888c48329bd8 (&dev->msi_lock){....}-{2:2}, at: pci_msi_update_mask+0x91/0x170
-stack backtrace:
-CPU: 18 PID: 633 Comm: kworker/18:2 Not tainted 6.10.0-rc4 #80 7c0f2526417bfbb7579e3c3442683c5961773c75
-Hardware name: Lenovo ThinkSystem SR630/-[7X01RCZ000]-, BIOS IVEL60O-2.71 09/28/2020
-Workqueue: events work_for_cpu_fn
-Call Trace:
- <TASK>
- dump_stack_lvl+0x7c/0xc0
- __lock_acquire+0x9e5/0x1ed0
- lock_acquire+0x194/0x490
- _raw_spin_lock_irqsave+0x42/0x90
- vmd_pci_write+0x185/0x2a0
- pci_msi_update_mask+0x10c/0x170
- __pci_enable_msi_range+0x291/0x800
- pci_alloc_irq_vectors_affinity+0x13e/0x1d0
- pcie_portdrv_probe+0x570/0xe60
- local_pci_probe+0xdc/0x190
- work_for_cpu_fn+0x4e/0xa0
- process_one_work+0x86d/0x1920
- process_scheduled_works+0xd7/0x140
- worker_thread+0x3e9/0xb90
- kthread+0x2e9/0x3d0
- ret_from_fork+0x2d/0x60
- ret_from_fork_asm+0x1a/0x30
- </TASK>
+ .../devicetree/bindings/pci/xlnx,xdma-host.yaml    | 41 +++++++++++++++-
+ drivers/pci/controller/pcie-xilinx-dma-pl.c        | 56 ++++++++++++++++++++--
+ 2 files changed, 92 insertions(+), 5 deletions(-)
 
-If CONFIG_PREEMPT_RT is not set, the spinlock_t is based on
-raw_spinlock, there is no any question in the above call trace. But if
-CONFIG_PREEMPT_RT is set, the spinlock_t is based on rt_mutex, a task
-will be scheduled when waiting for rt_mutex. For example, there are two
-threads are trying to hold a rt_mutex lock, if A hold the lock firstly,
-and B will be scheduled in rtlock_slowlock_locked() waiting for A to
-release the lock. The raw_spinlock is a real spinning lock, which is
-not allowed the task of the raw_spinlock owner is scheduled in its
-critical region. In other words, we should not try to acquire rt_mutex
-lock in the critical region of the raw_spinlock when CONFIG_PREEMPT_RT
-is set.
-
-CONFIG_PROVE_LOCKING and CONFIG_PROVE_RAW_LOCK_NESTING options are
-used to detect the invalid lock nesting (the raw_spinlock vs. spinlock
-nesting checks). Here is the call path:
-
-  pci_msi_update_mask  ---> hold raw_spinlock dev->msi_lock
-    pci_write_config_dword
-     pci_bus_write_config_dword
-       vmd_pci_write   ---> hold spinlock_t vmd->cfg_lock
-
-The above call path is the invalid lock nesting becuase the vmd driver
-tries to acquire the vmd->cfg_lock spinlock within the raw_spinlock
-region (dev->msi_lock). That's why the message "BUG: Invalid wait contex"
-is shown.
-
-Signed-off-by: Jiwei Sun<sunjw10@lenovo.com>
-Suggested-by: Adrian Huang <ahuang12@lenovo.com>
----
-v2 changes:
- - Add more explanations regarding the root cause in the commit message
-
- drivers/pci/controller/vmd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 87b7856f375a..45d0ebf96adc 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -125,7 +125,7 @@ struct vmd_irq_list {
- struct vmd_dev {
- 	struct pci_dev		*dev;
- 
--	spinlock_t		cfg_lock;
-+	raw_spinlock_t		cfg_lock;
- 	void __iomem		*cfgbar;
- 
- 	int msix_count;
-@@ -402,7 +402,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
- 	if (!addr)
- 		return -EFAULT;
- 
--	spin_lock_irqsave(&vmd->cfg_lock, flags);
-+	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
- 	switch (len) {
- 	case 1:
- 		*value = readb(addr);
-@@ -417,7 +417,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
- 		ret = -EINVAL;
- 		break;
- 	}
--	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
-+	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
- 	return ret;
- }
- 
-@@ -437,7 +437,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
- 	if (!addr)
- 		return -EFAULT;
- 
--	spin_lock_irqsave(&vmd->cfg_lock, flags);
-+	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
- 	switch (len) {
- 	case 1:
- 		writeb(value, addr);
-@@ -455,7 +455,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
- 		ret = -EINVAL;
- 		break;
- 	}
--	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
-+	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
- 	return ret;
- }
- 
-@@ -1015,7 +1015,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
- 		vmd->first_vec = 1;
- 
--	spin_lock_init(&vmd->cfg_lock);
-+	raw_spin_lock_init(&vmd->cfg_lock);
- 	pci_set_drvdata(dev, vmd);
- 	err = vmd_enable_domain(vmd, features);
- 	if (err)
 -- 
-2.27.0
+1.8.3.1
 
 
