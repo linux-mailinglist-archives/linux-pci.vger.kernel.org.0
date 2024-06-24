@@ -1,85 +1,97 @@
-Return-Path: <linux-pci+bounces-9191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E487915132
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 16:59:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED3B2915139
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 17:00:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71B2D1C23CEB
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 14:59:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 764E41F20990
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 15:00:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D25E119B3DD;
-	Mon, 24 Jun 2024 14:58:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E66E13D88B;
+	Mon, 24 Jun 2024 15:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4uAj0npH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="C/wxKQIe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2055.outbound.protection.outlook.com [40.107.101.55])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2073.outbound.protection.outlook.com [40.107.6.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1911219B3C4;
-	Mon, 24 Jun 2024 14:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6481DFD1;
+	Mon, 24 Jun 2024 15:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241091; cv=fail; b=P7z5mdlF3+UCzqhi82Ja55iCrjNuOu/V6ygHEh7QMiQuAKTqAv1ql3nCTzNyPyA9gIusnFfKTAXq+x6LR96hI/e2PbwiLYTWk9UQdu1d8ZsubvEaNotNisCFe2Y3G3LSXzTmjssu1eMiR+hEJyJZlRQ5UkCxG+ZOx9WRZb7nbaU=
+	t=1719241246; cv=fail; b=rC0CNZhku1LCUMenSjaSDVwYbtC43EppuWsNGfQpHXTBlwkmsaYY4Ek3yLkoScjlXtIgJ1rR9wgvZIC8rRfSxcMcKfpmjoDlxO959lkHt3jC5QTpxZ8g/ky7UjqTrXnkkQCSQtIbk4rEp4tnzNryhNHVc1a7Aa3SdKUlMoDJpGQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241091; c=relaxed/simple;
-	bh=sFNDdVgEKACp8cl0Eue2qEWyjU6rhc68y6C4BB3nqPQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=oxDtZ8zLson1tLBb8ypYE4HEzsPjPB+YzoSjTGt6e6MQg4j9VAnvNbX+wiEqg3BzQly9oydK7KAPPF/Pa/3TjB1yOBcjxrWWYPApDQAMiYedlianF6W9jXIgy3jBTWlU6hR240P1m7R4WrWrxNVFmFvPpBhCxq3xm+SafsAzMw4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4uAj0npH; arc=fail smtp.client-ip=40.107.101.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1719241246; c=relaxed/simple;
+	bh=EUq12eUSawT3CQiNr9SRACjHfGzEyrgKA2lfZzC9nwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=igV8HE4jbjlwKPvgGn37R+1p/9f2LZQEEMOkS30zflCDvhs1i9EXcQ96BMcpEMMwsZWnV1eSxEQ+dCeD+6asbaO0+cnVzPm6EPeFda+XbMK0kkUmtp+CtyX4kss0U4MoecaiYwdqMzouOSL9KN90F5i/ZMkd9Tm7SOqVqtTfY3I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=C/wxKQIe; arc=fail smtp.client-ip=40.107.6.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tsb74Do05/vBuIzFhhpY9Vwfm3mI0BsjZBFWYb0ppCGVlgBDU+I+oOdNPT9losXLT8O6IVRE7UT0yLRKtswLOMPvojkLmmobmMGLu4pCQE7abf1XXPV01iV+pyk8WmssrzROtT/9W++TFnMpXFMskardCMRDR3/RK2qzSnyUfdjQsb3O9smjsJRWHLAG8KBqko/0L5hEKVBUEhr82xlSh9PmEnFiwX0z360l+nEjqaZTCVFZqWnSk6Eon8/zDQgafh4+ett9lFnJxVZxH5UVMaswxJCClTvlnFIQwJmbsDE6+5hJEWCsjNHojGQX7ySgXFt3pll1teBbj6H5p3Xipw==
+ b=l211PTk/AlYoOyZQs8uhkol5bR7bHeromLPW8GWnJLVxa4zOzCizgT7QMf7o+J/bRGtfg7lOcVUaD0sqP3FppQz9SIRKgKdjyhjrAuvZ6cDNhivJfswphzt3ScgXqbeFX6MVQfE5yaBBlH6p36CfRgxtLD5SPnMqYBScIbM/NFrkcucPzPKI+Jq0ncvlb4TteH84FYTPtAEyGLcF0x+yxYTMbt4hFcUyayBzqc2VMdShbZ0pHZNpaGpVbnQMwLsyzViVLRaNPKg6NsBWEw52Gv90OziJZbZIf/4q/XSDaTafEl1Wd9OJ/y9PJ5lQgqhzfIn0e/Dehn9GeoInMsJEKg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d77xWLKFXAEoEuzbH3oRL/viJUml0HhZbOJIYy3sfXo=;
- b=Mi0LCl4cg5zYg/aqoMwrpHQJ3ILDGiXN/L1gIMSPxjCxWIXGixkRuuHXEfslUT4NPM1DM61h0DUJ7ozsFazWy3H5sUubCadh+UnKIyHCE/KCrC94dBZuull7oRdmYcf37HdT7TBQwd3EFVgG2kYM3vhTvGpnEQClwbr7ZJcsqgS6EYhn0sn282U/WLExwiChy9pna9SeVvClocFnSFVBRf5t+0Kn8MRXDpHdg2+Pd/Gvx7HPdpMirgAkcV/nZ3ONONkAXznFPtDtXbADhaP9FpfUS38YRZ1E/KFbxh7XGodBZZKqUQVn6gFZQYFQ3sUzPo8VcY7LfSyfBTuFgGoKyA==
+ bh=71AFezmr/iU9ajfbnv/Tt5ZKRiNW8QN7wp52wmUPvlU=;
+ b=OEPJaBWWwG+1tdsrk+1EzoTH/SRZThY8siMLbCx5dLuqGkgyeOqtoV/PWp5TVzg5LQYXfO0L8Gizt8igFuD/XQ6PXbJlmk9vHjvngz+GNi0YmeqhtuZIg1Cr/F2R1mVkvQKncN0RSk4MF6V1CinyXEXcnXlhI59rMiP/45h2IRGxRQFE7a2TZczhl9KbVzLVkXFJKJwOZnQ/9kORz/sC4p+j9dfEhzptfBzaCDj6CiBuAYWW8qILoT/XgHq4VXX0Ww/4Xoi4HpoWbkOgKJFf62XYyQ4S2DIx8N0n9OUvJY7o11NNsSj0AiJbjXK3ff+76X6k5OTjo8plbEhTLiGLxQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d77xWLKFXAEoEuzbH3oRL/viJUml0HhZbOJIYy3sfXo=;
- b=4uAj0npH9yDrvBmtztbSWfY7J5PEmJPcJOQPiHKeimYXTe75fv+pbmgF3G0jJQ3B4AxMzc8mHjUG1CLceWUZZUCk0b/EFadW+Ozu+gq5FBL7sMde6oNALFztC0aMwblIoLU0uKZbrxQGe8KTEltxAZ6KpaFc3x+y/ki/L4/r+6s=
+ bh=71AFezmr/iU9ajfbnv/Tt5ZKRiNW8QN7wp52wmUPvlU=;
+ b=C/wxKQIe1Fm03sTi0X4zVuyCRWiECS4b2TcxdekLk2wyZqh3fLKKfUuaYz2bLSp5704Zztc41zpkYLbhH9v4bCot0ANZi0mPqLPvZMUm+XSaUtLGnowEE9KGYxdZa1ICFiAx2x8ttFvQ3UQXlX3L1V548qdYKmWkkLyohsfmano=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL3PR12MB6380.namprd12.prod.outlook.com (2603:10b6:208:38d::18)
- by MN0PR12MB5905.namprd12.prod.outlook.com (2603:10b6:208:379::15) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by GVXPR04MB9849.eurprd04.prod.outlook.com (2603:10a6:150:112::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
- 2024 14:58:05 +0000
-Received: from BL3PR12MB6380.namprd12.prod.outlook.com
- ([fe80::66cf:5409:24d1:532b]) by BL3PR12MB6380.namprd12.prod.outlook.com
- ([fe80::66cf:5409:24d1:532b%7]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
- 14:58:05 +0000
-Message-ID: <49673ec5-b1dc-4544-935f-650cb9f3d112@amd.com>
-Date: Mon, 24 Jun 2024 09:58:02 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/9] PCI/AER: Update AER driver to call root port and
- downstream port UCE handlers
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: dan.j.williams@intel.com, ira.weiny@intel.com, dave@stgolabs.net,
- dave.jiang@intel.com, alison.schofield@intel.com, ming4.li@intel.com,
- vishal.l.verma@intel.com, jim.harris@samsung.com,
- ilpo.jarvinen@linux.intel.com, ardb@kernel.org,
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, Yazen.Ghannam@amd.com, Robert.Richter@amd.com,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20240617200411.1426554-1-terry.bowman@amd.com>
- <20240617200411.1426554-2-terry.bowman@amd.com>
- <20240620122144.00000faa@Huawei.com>
-From: Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <20240620122144.00000faa@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR18CA0008.namprd18.prod.outlook.com
- (2603:10b6:806:f3::32) To BL3PR12MB6380.namprd12.prod.outlook.com
- (2603:10b6:208:38d::18)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.26; Mon, 24 Jun
+ 2024 15:00:40 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.020; Mon, 24 Jun 2024
+ 15:00:40 +0000
+Date: Mon, 24 Jun 2024 11:00:29 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
+ MSI ITS and IOMMU for i.MX95
+Message-ID: <ZnmKDYg2lsJVlILk@lizhi-Precision-Tower-5810>
+References: <20240621224321.GA1410825@bhelgaas>
+ <20240622173849.GA1432357@bhelgaas>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240622173849.GA1432357@bhelgaas>
+X-ClientProxiedBy: BYAPR08CA0054.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::31) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,166 +99,281 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB6380:EE_|MN0PR12MB5905:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a5d03e1-1665-493c-2711-08dc945e0d57
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GVXPR04MB9849:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12621681-f679-4abb-1c0a-08dc945e69da
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|7416011|376011|1800799021;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230037|366013|52116011|7416011|376011|1800799021|38350700011;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WDh0eUhDc011MjU3S1FHaUxGNGhVRVZaTWFkRVM0Nng0VTVQVUV6RDlpRmdT?=
- =?utf-8?B?TzNjcWZQYjgrNTMzMHFwcVA5U0xZZThaTHNGTmVhWDRLRHphUG1YdnlXRjJk?=
- =?utf-8?B?a2pYNzUrOVhxWHM5bGpjdWlDWGZ5aTZmYUZQNGhmbGlMVXdDak1uanJhUmxH?=
- =?utf-8?B?SkErUlhOWUZGSXYwdWdHbTZZZ1NuRjdrbURGM0UzOElHVFNoUktlOWE5b0p0?=
- =?utf-8?B?QVAvNWI1OHlRMGVMT2NXaXhkT0xoKzZSMUJlTk85RFNRakUvNnUrUW5hYkp2?=
- =?utf-8?B?YkdVWmVITjhGME5lYnErNlgyN01XcGEvQlJVT0lxRFJyUENZclhvNzJDeTlh?=
- =?utf-8?B?aWY2N25CRkVDOEh6c3VlUXI0QzlPd3E2MHd2VVdtdGJtNkxwREFtT3RubkVY?=
- =?utf-8?B?UnFROUFlWWo0V3U1bFRGSEhuS01pRVgwL3oxVWg1aE1Fb3pRSUg0TnIvbGxj?=
- =?utf-8?B?NktPcUZtbGxNemVsRFhyS1FTRmJSdDAyV3pNS3NYSlMzRGlOVGJKM2tQd0o0?=
- =?utf-8?B?SmRscmRzaHZYUHR2cUcyaFJ2MEI2QktGK3VzazdjTW5IVnRqOGJkNS9PVmNi?=
- =?utf-8?B?RXJxWm1rMk13TEFlbFMxdGFVOXB3S3p5YndoUmpxZnRpZSsyTFRIeU9wcTdz?=
- =?utf-8?B?UlR3UFVNc0VIYkpGRnZwVE80RkRPczV3SVkxN0szUHJLRCtxM3I4YXlhNytV?=
- =?utf-8?B?WXZGWUhLTnJWVHZGTmRSZWRlcmZSSVo4bVFhK0RieFJvNkhlSlBLUTloTWlV?=
- =?utf-8?B?M3BUazYxc1dMTklxUlVTbnFDc3RFK0ppU1hzNkdCZldCbXNUZWc5OVZSNTJD?=
- =?utf-8?B?bUlhQytvTTQvdzJuR2h1OXcxT0hJRDE3cE9EWnZnM2NhS2hMeW5RdFI2Z1FO?=
- =?utf-8?B?RW1waHNPOHdtb25kUzhZdTVqTlkzYVdRcUxJVHRESHBpZ2hWUTN3d3gzRUJR?=
- =?utf-8?B?VzlxbjA4Z3loTDZqWEl2VkpON1RhSTlWSEJrdVlyREs1ZW1oWUJEWXp6T0wr?=
- =?utf-8?B?bXpsTDZsY1JBN3FnbDc4T3Rmanh6VDYrek9QVW9Sb3RhaTlsamM3amlRTTFG?=
- =?utf-8?B?Y1NSSE5xZ2tXbTMyVklVYWtaaHJndkpVMHhXbndCNW93anY2aHZWRkVpRUNa?=
- =?utf-8?B?NmVRdmg1NW1IWUlzZkViL2JoWFczOEhueFpOb0g1VDdYak84QWVvK09CZ09i?=
- =?utf-8?B?WlowcnhiajNNNDZ4Zk90ZEszbUhBbnBXaGZ6NzY3UHhxeEF1MnpneUw0ZHZr?=
- =?utf-8?B?aVVqV25saVBkVFlOMkc1emNDdSt2QlFJU0VFbE1SRExZWUlpazdhVk1relZp?=
- =?utf-8?B?MFdWOVdTVnN5YUdxOTluSkVIbDZqZVhYNnQ4MW85blRkWUU4RE9sa3VXbFhW?=
- =?utf-8?B?TThTSGhiNXV5cERsaUpsdHROb2w4eW51b3NyOVNQUUhIUSsxcTFnOGxnVDh6?=
- =?utf-8?B?V0dpc0lXL1FWSktoU3hFM0h2cDRwRlhCVjhLNTFBcmR4ci9BT0xzZzRjRUVQ?=
- =?utf-8?B?aFNoMGQ2RmFjY09jQzY0SmFoY2dObjdnZWpVUWo3ZG1vWXArZVFDWk1GR0VI?=
- =?utf-8?B?aVZJUFhUbkl5MjJXOCs5Ukg4bDZLVnJmTllMeGF3R09xNGc3VkErbFRxdi9O?=
- =?utf-8?B?TUl0OE1ZMytLZjA1akp6N21kdlc2bGV5TU9VQWI4bmo3eXRwYzFCanUvQ1Np?=
- =?utf-8?B?YWo3Z05IOWVUZkNvajJXWmVlSVFvb0ZUcVhZLzhlczNRZzkvMkgvaU9BaUFI?=
- =?utf-8?Q?k+rrUf4XMA5+HgCFIw8eRbdRBCLrLmWEzLq+HRv?=
+	=?us-ascii?Q?yxwuQncggjGliaR8zdUKuxb/XSRMYYX10dG3YoFJle3k+5C4Ur7TmHg7p2YN?=
+ =?us-ascii?Q?ow1Uh28k/fJzuVjdgKZvmmDsrr8TDMvm//J5Q5GbnKuuEwxPLo8ZtDlv12FC?=
+ =?us-ascii?Q?4TLYixPKvasGik37iAWbqVxcZrrPHvtI2p+iYE3mPXM41gZYTZ6jNX4ZGUaY?=
+ =?us-ascii?Q?6WqRWoc+iXZUQM1e8wd1pdhahDrhfrzJQzbP0iYOcoklhuiKYICnnnd0gXDT?=
+ =?us-ascii?Q?tV242BZBWXAH/RI9S8MH5zTG63yrwNj0/ClfYDTpQ+fKanEX+kx0wttR2i8P?=
+ =?us-ascii?Q?+flrkwq6ZMHGjh0t3mX4sMP9SWuFCRIkqTsU+TyCNT/reJwq3mvI2NK+fUUb?=
+ =?us-ascii?Q?cQ+biOpPDs2W7NFt6o0QiOsOQqKUknNi0vTGnxd1mooa90TLaOZEo5lrjpbx?=
+ =?us-ascii?Q?7vkpMiIznQ8raGdPg1RVA+uxthapuj7SH6fC4ipiq7UBSG27hr/26LTAL9dN?=
+ =?us-ascii?Q?9ZGWrAcmwbhGq9spwPQaf4NXozXXe17kuPu8hp7rBosQopXkxDcC6Stvsyfa?=
+ =?us-ascii?Q?vmWlssRcmu9eULP+e9BTfc5LUk5C1Je5rNLookHUZmZITlNZsD5T7hheJKGz?=
+ =?us-ascii?Q?9xox3sOK0EN28Vq8fgPqg6FV1e1PUOYqR+Zjw+DDxJQ/L0ah/OHEA9ivV1Tp?=
+ =?us-ascii?Q?CbpniVru66SAqB4Ar1Vk8ezs71xLWr2bhaCTpl9DLtn/+CXPPuxsSAqdFCKE?=
+ =?us-ascii?Q?WySANGxSwTvch5P+iIdL/0PYN9pnSKKBr5dDooANzZpUh0hIz9zC2Ah39vqo?=
+ =?us-ascii?Q?+dvH/EigwrfoV/t4/WjO7OJlCfuTGp6VXejYmis0dsjA3pT8dpDS8vsfFV+3?=
+ =?us-ascii?Q?T4kdee1ZleyrsZxXJHHOiU/y/pQxipWPb9PAozAJtcMApB/y4lW0EBbVKMSI?=
+ =?us-ascii?Q?A7kQgUKTbigTytSckWZbuM7y8DiR++0z8kXUuDe0rQV//+/AGJ5gfDQGPe43?=
+ =?us-ascii?Q?YzO5SKOQkW3uaOEWL5K0BTq48Cu1c5ReZNEbG+D5vsVdkCp0wjMYvaWq0xgG?=
+ =?us-ascii?Q?EgY+32PqT4LruK8fmtqAfEM1DLuMhhmkbzDNY7vJG0ePuC8rUpCyuOsTtTDu?=
+ =?us-ascii?Q?s5cfvWLIim8kHF/+vyPSiGhXcexYrrrXARUOghm1Hn2dM4fm4ikzpP0UhQIn?=
+ =?us-ascii?Q?kZdOky2GaYePHp8oyRDFcrbJ2weJCawFuIV7XxBRR5JrPmggAjsZSdctQxru?=
+ =?us-ascii?Q?eCxSu5TPObrC7Ry36+1RiwSlKlVqFfPwF/FSgYjXQ9Li5bfCluXphT4eQsN0?=
+ =?us-ascii?Q?cpBeAut7SWdZyCdhcjf4k//1md5lYu3AFzAII2J8F8/cE1KMpkg3d8KZAP9i?=
+ =?us-ascii?Q?fl/3JqFa3fyl1IDvqr/WI/CJ?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6380.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(7416011)(376011)(1800799021);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(52116011)(7416011)(376011)(1800799021)(38350700011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cXArR2ZXTEhFck9QWlJ1L1VrV2hUbDJGazJDNkVlU1RUMUpmMGl6YmZRQjlT?=
- =?utf-8?B?YjAyNFVvUEhrMXR1ejlKWko1TkpnbWVhN1lxeDJuN1g3WTExaGU3cVNSTjcr?=
- =?utf-8?B?dkErN3NhYVN0aHhwZksyVTcycW1VVUVML0R1UzR6NlliNjFRd04rUENVVDlI?=
- =?utf-8?B?d1dtWGJ2QlZydnhvYzhxZEQzK3pZZEVKd2FYdytobzRCQXlmckcvNUEwc0tx?=
- =?utf-8?B?M3RPMzF4ZXlzMlJVTFR3MEhyYzBta3MxeHQ0S3RUWS9pak1iSmpsUjZHLzJ1?=
- =?utf-8?B?VUZjcmRQWUpxYnhZUG4vMFRDTHo3S0FRaTZmRDJSWXNLNm5NQUxhV25xZURh?=
- =?utf-8?B?L3gxRlVQMEtlU1RoS3NrcGEvR3hWbm1lV1RwWW9UVWplZXZCV2JDT2NsSFAv?=
- =?utf-8?B?ay92RVRvVTB0SXVTUEdhVUpITW1lSXVQUWNMNlpaZ0NSRjM4V2RtZDE5OTF3?=
- =?utf-8?B?R2NwdVBrZGFwdlJKUTZtS0w0RG9ZeXJTbWNQQXdrZDZ1QURaMDE2OWc3cm9r?=
- =?utf-8?B?MHRDbnA4N0FFQjRyRCtpVzhnTWFaVDkzdlp3R3dPNm1XZnZrcThzbTBlU2Nw?=
- =?utf-8?B?TUhlZVdTUFR6Ti9tc3RlQUl2VUhzdllmUHNobTYvOHRlY2ZoNm4vakhmNDVM?=
- =?utf-8?B?T1FueER6WDNWbnVEUHAxN3VZV3RENHVZc2syeTlqeStuSUx3VDNLU1ZXNytJ?=
- =?utf-8?B?YXJJSHdibkhMazUzR2NSQnBpdnBhTWdCYitTcTJhK29VVEdxc3N6WVdydDI4?=
- =?utf-8?B?VXJDL2NPVVVzcW5VdDRCbUF2RlFXdWRPWGMrRDl5ellLNnE4ZUY0THI3dFJo?=
- =?utf-8?B?NzZTalpkSzZjRG0rYytHbzZkOUsva2RGdXB0eEo2YklNY2lEZjNwUTZyUTRS?=
- =?utf-8?B?TFRjTVNjb1h5Y3B2UWRCV0xnNndUaWZ2bjFIUkt1OHdYVFY4di9uRHZXaWJN?=
- =?utf-8?B?NXdJR3N5cmZKMnRsSndCMXdTNW1lSkNCN3FFWWxCVnV3MTJsNmcxWEFKeWt2?=
- =?utf-8?B?dHNmOGFWZ011SzhoUnBSdmZnWGJwVkNWSUg5U2t1d1VmMUF3Y3NkVDI0Rzlu?=
- =?utf-8?B?NElsVHcrT1d6V1FsNDJiUjJVL3hPdHdWakdBZzgxMDdBWFJKQVhDTm1JekVy?=
- =?utf-8?B?eHJidllOUDVSQ0c2SmdnTUxMeWtBVVlGUkdNTGZZdTFnTm9qdWVGbEhUMXhi?=
- =?utf-8?B?cy9LMUdOc3N5ZzJKTjdSR1dGR1NWUHRTelJsZXpJRklFa1ZNaUFvVXgyM2ZO?=
- =?utf-8?B?QWY0VFptaVUyNm43bVpIamMySWlIQ0Yydy9mZG55NEtQemZXRURINllvZ1JY?=
- =?utf-8?B?eTdxS20weFI0Q1BxeDVTQjFQZ0k1L2NGRlphY05NSlhSci9pYndLOC9Ldk5G?=
- =?utf-8?B?LzRmTnJmbnJGSGd5dFR0TTlzOTJHY1BPYVlqVTVjTGdpVitjWWlKVHlqRnhq?=
- =?utf-8?B?ay9qN0NRVms3QWJUQWxWYmg1aVNDUk80ZXRsNEhRQm80VWZMTXVQbEhnQ3Jo?=
- =?utf-8?B?MTZ3bHI3aHZFQ2VYekViZS8yNkl6bXJLRXNubmRld1J4NmZCVjNIc2ZVdWxR?=
- =?utf-8?B?M0V2QVloQVNvWkZkZ0pHZ3ZYeXlHa2ZHMTZ1THpRQ2tUdnhmV3dXeFlBWlBy?=
- =?utf-8?B?dGQ4eGIvOEx1WnVXQ1BpeWkrOGY4S0VQNUFoc2xsN0RtVGYvdUdhTDE2NzBD?=
- =?utf-8?B?MEtLNjk5dDNwdzRUTDBlcEY5aTFGZnhNN1BhWmRzcHJ3U1RBUkcvRXpFcWZk?=
- =?utf-8?B?a1pRSHpVMTc5R2pYMHFPSUF3WWZSUDZlVllzMDhzK09md091eHpmTHBsOUFB?=
- =?utf-8?B?SldRdXdsbjMyd3RvRmNDS2xIU1k2d2ZxM0w1QStWMG5EVllCV3hjK28rZUtj?=
- =?utf-8?B?QTBKRHNxUmxhd1FXZXhJcFVPTnQyVkhpZ2tJZ29qZlU5TURxN2Z5dk56UXlN?=
- =?utf-8?B?ckRyVGcyWUpGdm9vcytQaTdQSmh2MmhhZ245R25OdEVMaG9jZW45ZDFtZUVa?=
- =?utf-8?B?SVljbzF3bDErWndiNzZndU5QNk12TnpEYldvMjBMajIvTWtOc1pVVzFOWThI?=
- =?utf-8?B?L0x6MjV0STJFbXRBdVFFU3RLMlpKSDdJby95L2Vnbmcyc0ZybnhFU1lHQlBh?=
- =?utf-8?Q?ZxDXB8iykGTCABPS9K1D0jIhJ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a5d03e1-1665-493c-2711-08dc945e0d57
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6380.namprd12.prod.outlook.com
+	=?us-ascii?Q?HotDFeJ+qltxdOI7hlcumYPjSyujJi7uWBSOQjS2DGFN5LcANQhZmRHKiaYO?=
+ =?us-ascii?Q?2PM+SVokT1ovEdjrBLy//9cChUfyDXaIA9DFjs7xXnMfNY6b8XRH4NB5PL45?=
+ =?us-ascii?Q?340q9Xws2tijIeCQaQzKFjnU39w1CED0XTTy2p8MvPJSyDM/PKblIyLUjj4S?=
+ =?us-ascii?Q?mOpcymsZ8tgHh6Os7Wg/S1wDCqfiBaSCHiK1SUrRs/EJtEuSJkMamr9lTU06?=
+ =?us-ascii?Q?RFKKKXn9qFe6b6xIt8IOD9oqNyPY+SszMBwXxj0pKuTOPaNms61KZ3Fl04FC?=
+ =?us-ascii?Q?+WC2z4m7FJkJasp0mJnWk1R/laXyH8qn79YgbsO0GKGAEc5vyPgs7IQAT5JN?=
+ =?us-ascii?Q?oOze690/1RL0Je9SOD/hFNe1EUQS9YocRDKhaykhWaEO1KU7HMspyPdGP86v?=
+ =?us-ascii?Q?sqRYSjzfiIdr06dvDVV/Y8AX57ff+KtvQnmDTrtFiW/C4Z2SFl9tSl2cF0kj?=
+ =?us-ascii?Q?659jOpxmMisBKZCT4tVo0/I4txah7zVvx2xMcgfOuaUdCv3InUReOza0vtNH?=
+ =?us-ascii?Q?sA//7DymgNoSiJ2pp/LpmZfzXww4WT8RWRGGJvlz0K5vcB0Fs8ESXDfXm0lS?=
+ =?us-ascii?Q?JPblx8k6LUqc16WGQR6YCYvG9LIxR3qjhspiO5ePp65K1uLqzwTPUD7n7zTW?=
+ =?us-ascii?Q?jhy3khZsWrb+4WAk47Ro8m92caovDFgX3Yeg6iJ4g+zVshaZmRANLMapk2uM?=
+ =?us-ascii?Q?yevB9sFoOMoOTrEbmqFSo9BhUDRstTvJx2hfDg1zy1FrkqUBEaa3GAZ0FqcR?=
+ =?us-ascii?Q?+4LlKV0vS2elw43bPxGVv3eeSSPJdK5hy/aI5L23PxTMUSfvkEIWHVRCinF+?=
+ =?us-ascii?Q?jiZR1ikSKAKf7n3xenzubgX2caiQQYxcRgb43Wc6PVCb9beOl3+6CTseg6Cn?=
+ =?us-ascii?Q?5g1h1JRjmfbf/zmLeQt03dyCM59mqFGjG/8xVWrMej+pjnfDBghDe4JQ7Qi0?=
+ =?us-ascii?Q?OLMXhwCTc5p9Ytlrx84wfmTjFUfUmttJysAI0s3SXMoBO0BlWFuZgGzb59Qa?=
+ =?us-ascii?Q?EBQfZmcf9rId0XCm6BZEeuWUbunjXf1ulDex18UrG393siz4JmTFUtkG6Ly5?=
+ =?us-ascii?Q?Bq3Yxtd1IOLZZWBplUhzspbH+PJFoIKr0Td1l2jF6aWQusLXJpoCFMIQxc09?=
+ =?us-ascii?Q?hjF7W6pdoebqK+NRqoUx6PvsrB04jFblfNBDwSzE8u5QRzdlTzRmYOjPX3uU?=
+ =?us-ascii?Q?75fHsrM2Q8Rfjhth71lvXCdiB8hDCcT9z7+mzIAdm+llFhJ3kFMechvQaXT0?=
+ =?us-ascii?Q?Su0LNknOHLqThaEnIstJL3JAUh7ueboqWwe3gTptSy3m+YNeekAlwVACII+J?=
+ =?us-ascii?Q?tjFJ9eDrH/nzBI1zhi9G6nrXqIdHqE0dvkVXM3oAqh17mZ5+v9EuquD57jTI?=
+ =?us-ascii?Q?HjR+5C8ayhF7SGPhMQ/T5Vxi0QW7WudzQjNkCEJX/PAJGs9Op42fdgr1lX5C?=
+ =?us-ascii?Q?lnd7G9UFrP4ujRAtQZLooPN+IH6yodynRkxmPhdMk9b/l//MG6b6x82zgWPN?=
+ =?us-ascii?Q?IceztwhtP2m+E8jMLSQte2OD4C75FJ0olYhD+m8xrbN0R3p+KMEkOzNAXVUt?=
+ =?us-ascii?Q?WS3IqWC4IMUHAoonkV+KKt0GlMjVohoz3AdNaTVa?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12621681-f679-4abb-1c0a-08dc945e69da
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 14:58:05.3545
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 15:00:40.4930
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XgJ0naY+XGojXEWX5PGZ53t3u0scM8RKejkpKCAEKreD+Rcs8jL7sh4vCg/KnXVfFQV0a0PuHclWl99ICdNQnQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5905
+X-MS-Exchange-CrossTenant-UserPrincipalName: izNiBA7u+kn47294+P+J4hnA0EE7dqkHFHySarFgPBCrLp3EwaVuq8khhezpnIcpNI3Oqbq67zbbo8zznY3YVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9849
 
-Hi Jonathan,
-I added a response below.
-
-On 6/20/24 06:21, Jonathan Cameron wrote:
-> On Mon, 17 Jun 2024 15:04:03 -0500
-> Terry Bowman <terry.bowman@amd.com> wrote:
+On Sat, Jun 22, 2024 at 12:38:49PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 21, 2024 at 05:43:21PM -0500, Bjorn Helgaas wrote:
+> > On Fri, Jun 21, 2024 at 06:29:48PM -0400, Frank Li wrote:
+> > > On Mon, Jun 17, 2024 at 10:26:36AM -0400, Frank Li wrote:
+> > > > On Thu, Jun 13, 2024 at 05:41:25PM -0500, Bjorn Helgaas wrote:
+> > > > > On Thu, Jun 06, 2024 at 04:24:17PM -0400, Frank Li wrote:
+> > > > > > On Mon, Jun 03, 2024 at 04:07:55PM -0400, Frank Li wrote:
+> > > > > > > On Mon, Jun 03, 2024 at 01:56:27PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > On Mon, Jun 03, 2024 at 02:42:45PM -0400, Frank Li wrote:
+> > > > > > > > > On Mon, Jun 03, 2024 at 12:19:21PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > > > On Fri, May 31, 2024 at 03:58:49PM +0100, Robin Murphy wrote:
+> > > > > > > > > > > On 2024-05-31 12:08 am, Bjorn Helgaas wrote:
+> > > > > > > > > > > > [+cc IOMMU and pcie-apple.c folks for comment]
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
+> > > > > > > > > > > > > For the i.MX95, configuration of a LUT is necessary to convert Bus Device
+> > > > > > > > > > > > > Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
+> > > > > > > > > > > > > This involves examining the msi-map and smmu-map to ensure consistent
+> > > > > > > > > > > > > mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
+> > > > > > > > > > > > > registers are configured. In the absence of an msi-map, the built-in MSI
+> > > > > > > > > > > > > controller is utilized as a fallback.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
+> > > > > > > > > > > > > upon the appearance of a new PCI device and when the bus is an iMX6 PCI
+> > > > > > > > > > > > > controller. This function configures the correct LUT based on Device Tree
+> > > > > > > > > > > > > Settings (DTS).
+> > > > > > > > > > > >
+> > > > > > > > > > > > This scheme is pretty similar to apple_pcie_bus_notifier().  If we
+> > > > > > > > > > > > have to do this, I wish it were *more* similar, i.e., copy the
+> > > > > > > > > > > > function names, bitmap tracking, code structure, etc.
+> > > > > > > > > > > >
+> > > > > > > > > > > > I don't really know how stream IDs work, but I assume they are used on
+> > > > > > > > > > > > most or all arm64 platforms, so I'm a little surprised that of all the
+> > > > > > > > > > > > PCI host drivers used on arm64, only pcie-apple.c and pci-imx6.c need
+> > > > > > > > > > > > this notifier.
+> > > > > > > > > > >
+> > > > > > > > > > > This is one of those things that's mostly at the mercy of the PCIe root
+> > > > > > > > > > > complex implementation. Typically the SMMU StreamID and/or GIC ITS DeviceID
+> > > > > > > > > > > is derived directly from the PCI RID, sometimes with additional high-order
+> > > > > > > > > > > bits hard-wired to disambiguate PCI segments. I believe this RID-translation
+> > > > > > > > > > > LUT is a particular feature of the the Synopsys IP - I know there's also one
+> > > > > > > > > > > on the NXP Layerscape platforms, but on those it's programmed by the
+> > > > > > > > > > > bootloader, which also generates the appropriate "msi-map" and "iommu-map"
+> > > > > > > > > > > properties to match. Ideally that's what i.MX should do as well, but hey.
+> > > > > > > > > >
+> > > > > > > > > > Maybe this RID-translation is a feature of i.MX, not of Synopsys?  I
+> > > > > > > > > > see that the LUT CSR accesses use IMX95_* definitions.
+> > > > > > > > >
+> > > > > > > > > Yes, it convert 16bit RID to 6bit stream id.
+> > > > > > > >
+> > > > > > > > IIUC, you're saying this is not a Synopsys feature, it's an i.MX
+> > > > > > > > feature.
+> > > > > > >
+> > > > > > > Yes, it is i.MX feature. But I think other vendor should have similar
+> > > > > > > situation if use old arm smmu.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > > > If it's really necessary to do this programming from Linux, then there's
+> > > > > > > > > > > still no point in it being dynamic - the mappings cannot ever change, since
+> > > > > > > > > > > the rest of the kernel believes that what the DT said at boot time was
+> > > > > > > > > > > already a property of the hardware. It would be a lot more logical, and
+> > > > > > > > > > > likely simpler, for the driver to just read the relevant map property and
+> > > > > > > > > > > program the entire LUT to match, all in one go at controller probe time.
+> > > > > > > > > > > Rather like what's already commonly done with the parsing of "dma-ranges" to
+> > > > > > > > > > > program address-translation LUTs for inbound windows.
+> > > > > > > > > > >
+> > > > > > > > > > > Plus that would also give a chance of safely dealing with bad DTs specifying
+> > > > > > > > > > > invalid ID mappings (by refusing to probe at all). As it is, returning an
+> > > > > > > > > > > error from a child's BUS_NOTIFY_ADD_DEVICE does nothing except prevent any
+> > > > > > > > > > > further notifiers from running at that point - the device will still be
+> > > > > > > > > > > added, allowed to bind a driver, and able to start sending DMA/MSI traffic
+> > > > > > > > > > > without the controller being correctly programmed, which at best won't work
+> > > > > > > > > > > and at worst may break the whole system.
+> > > > > > > > > >
+> > > > > > > > > > Frank, could the imx LUT be programmed once at boot-time instead of at
+> > > > > > > > > > device-add time?  I'm guessing maybe not because apparently there is a
+> > > > > > > > > > risk of running out of LUT entries?
+> > > > > > > > >
+> > > > > > > > > It is not good idea to depend on boot loader so much.
+> > > > > > > >
+> > > > > > > > I meant "could this be programmed once when the Linux imx host
+> > > > > > > > controller driver is probed?"  But from the below, it sounds like
+> > > > > > > > that's not possible in general because you don't have enough stream
+> > > > > > > > IDs to do that.
+> > > > > > >
+> > > > > > > Oh! sorry miss understand what your means. It is possible like what I did
+> > > > > > > at v3 version. But I think it is not good enough.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > Some hot plug devics
+> > > > > > > > > (SD7.0) may plug after system boot. Two PCIe instances shared one set
+> > > > > > > > > of 6bits stream id (total 64). Assume total 16 assign to two PCIe
+> > > > > > > > > controllers. each have 8 stream id. If use uboot assign it static, each
+> > > > > > > > > PCIe controller have below 8 devices.  It will be failrue one controller
+> > > > > > > > > connect 7, another connect 9. but if dynamtic alloc when devices add, both
+> > > > > > > > > controller can work.
+> > > > > > > > >
+> > > > > > > > > Although we have not so much devices now,  this way give us possility to
+> > > > > > > > > improve it in future.
+> > > > > > > > >
+> > > > > > > > > > It sounds like the consequences of running out of LUT entries are
+> > > > > > > > > > catastrophic, e.g., memory corruption from mis-directed DMA?  If
+> > > > > > > > > > that's possible, I think we need to figure out how to prevent the
+> > > > > > > > > > device from being used, not just dev_warn() about it.
+> > > > > > > > >
+> > > > > > > > > Yes, but so far, we have not met such problem now. We can improve it when
+> > > > > > > > > we really face such problem.
+> > > > > > > >
+> > > > > > > > If this controller can only support DMA from a limited number of
+> > > > > > > > endpoints below it, I think we should figure out how to enforce that
+> > > > > > > > directly.  Maybe we can prevent drivers from enabling bus mastering or
+> > > > > > > > something.  I'm not happy with the idea of waiting for and debugging a
+> > > > > > > > report of data corruption.
+> > > > > > >
+> > > > > > > It may add a pre-add hook function to pci bridge. let me do more research.
+> > > > > >
+> > > > > > Hi Bjorn:
+> > > > > >
+> > > > > > int pci_setup_device(struct pci_dev *dev)
+> > > > > > {
+> > > > > > 	dev->error_state = pci_channel_io_normal;
+> > > > > > 	...
+> > > > > > 	pci_fixup_device(pci_fixup_early, dev);
+> > > > > >
+> > > > > > 	^^^ I can add fixup hook for pci_fixup_early. If not resource,
+> > > > > > I can set dev->error_state to pci_channel_io_frozen or
+> > > > > > pci_channel_io_perm_failure
+> > > > > >
+> > > > > > 	And add below check here after call hook function.
+> > > > > >
+> > > > > > 	if (dev->error_state != pci_channel_io_normal)
+> > > > > > 		return -EIO;
+> > > > > >
+> > > > > > }
+> > > > > >
+> > > > > > How do you think this method? If you agree, I can continue search device
+> > > > > > remove hook up.
+> > > > >
+> > > > > I think this would mean the device would not appear to be enumerated
+> > > > > at all, right?  I.e., it wouldn't show up in lspci?  And we couldn't
+> > > > > use even a pure programmed IO driver with no DMA or MSI?
+> > > >
+> > > > Make sense. Let me do more research on this.
+> > > >
+> > > > Frank
+> > > > >
+> > > > > I wonder if we should have a function pointer in struct
+> > > > > pci_host_bridge, kind of like the existing ->map_irq(), where we could
+> > > > > do host bridge-specific setup when enumerating a PCI device.
+> > > 
+> > > Consider some device may no use MSI or DMA. It'd better set LUT when
+> > > allocate msi irq. I think insert a irq-domain in irq hierarchy.
+> > > 
+> > > static const struct irq_domain_ops lut_pcie_msi_domain_ops = {
+> > >         .alloc  = lut_pcie_irq_domain_alloc,
+> > >         .free   = lut_pcie_irq_domain_free,
+> > > };
+> > > 
+> > > int dw_pcie_allocate_domains(struct dw_pcie_rp *pp)
+> > > {
+> > >         struct fwnode_handle *fwnode = of_node_to_fwnode(pci->dev->of_node);
+> > > 
+> > >         pp->irq_domain = irq_domain_create_hierarchy(...)
+> > > 
+> > >         pp->msi_domain = pci_msi_create_irq_domain(...);
+> > > 
+> > >         return 0;
+> > > }
+> > > 
+> > > Manage lut stream id in lut_pcie_irq_domain_alloc() and
+> > > lut_pcie_irq_domain_free().
+> > > 
+> > > So failure happen only when driver use MSI and no-stream ID avaiable. It
+> > > should be better than failure when add devices. Some devices may not use
+> > > at all.
+> > 
+> > I'm not an IRQ expert, but it sounds plausible.  There might even be
+> > an opportunity to fall back to INTx if there's no stream ID available
+> > for MSI?
 > 
->> The AER service driver does not currently call a handler for AER
->> uncorrectable errors (UCE) detected in root ports or downstream
->> ports. This is not needed in most cases because common PCIe port
->> functionality is handled by portdrv service drivers.
->>
->> CXL root ports include CXL specific RAS registers that need logging
->> before starting do_recovery() in the UCE case.
->>
->> Update the AER service driver to call the UCE handler for root ports
->> and downstream ports. These PCIe port devices are bound to the portdrv
->> driver that includes a CE and UCE handler to be called.
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: linux-pci@vger.kernel.org
->> ---
->>  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 705893b5f7b0..a4db474b2be5 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -203,6 +203,26 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->>  
->> +	/*
->> +	 * PCIe ports may include functionality beyond the standard
->> +	 * extended port capabilities. This may present a need to log and
->> +	 * handle errors not addressed in this driver. Examples are CXL
->> +	 * root ports and CXL downstream switch ports using AER UIE to
->> +	 * indicate CXL UCE RAS protocol errors.
->> +	 */
->> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
->> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
->> +		struct pci_driver *pdrv = dev->driver;
->> +
->> +		if (pdrv && pdrv->err_handler &&
->> +		    pdrv->err_handler->error_detected) {
->> +			const struct pci_error_handlers *err_handler;
->> +
->> +			err_handler = pdrv->err_handler;
->> +			status = err_handler->error_detected(dev, state);
+> Sorry, I think this was a half-baked thought.  Exhaustion of stream
+> IDs should be an uncommon situation, and the important thing is to
+> prevent terrible things from happening.
 > 
-> This status is going to get overridden by one of the pci_walk_bridge()
-> calls.  Should it be kept around and acted on, or dropped silently?
-> (I'd guess no for silent!).
-> 
+> I don't think it's worth bending over backwards to make everything
+> possible limp along.  If it's easy to just make the device
+> inaccessible, that's fine.  If there's a simple way to make it
+> available but keep from enabling bus mastering, we could do that too,
+> but only if it's really simple.
 
-It should be used later.
+Mani mentions qcom use simple method to config all lut when probe at
+qcom_pcie_config_sid_1_9_0(). It is similar with my v3 version.
 
-According to PCI spec "The only method of recovering from an Uncorrectable
-Internal Error is reset or hardware replacement."
+https://lore.kernel.org/imx/20240402-pci2_upstream-v3-8-803414bdb430@nxp.com/
 
-I need to make certain that carries through below.
+Of course both have not resolved run-out sid problems. But genenerally,
+one PCIE slot only connect one devices. static alloc 8/16 sid are enough
+for 99.9% user case.
 
-Regards,
-Terry
+best regards
+Frank Li
 
->> +		}
->> +	}
->> +
->>  	/*
->>  	 * If the error was detected by a Root Port, Downstream Port, RCEC,
->>  	 * or RCiEP, recovery runs on the device itself.  For Ports, that
-> 
+
+
 
