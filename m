@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-9177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C2A59147BD
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 12:43:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 200F99147C0
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 12:43:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 268EB1F22EAD
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 10:43:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 968FC1F2327A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 10:43:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1869E136E1B;
-	Mon, 24 Jun 2024 10:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B13B137752;
+	Mon, 24 Jun 2024 10:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uFJdqBaB"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pbZlN3a1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2049.outbound.protection.outlook.com [40.107.94.49])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F701369A3;
-	Mon, 24 Jun 2024 10:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715DD13791F;
+	Mon, 24 Jun 2024 10:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719225786; cv=fail; b=W+DGBDAHgq5osFPhtKzkppJwjPRp9EZn2aqhBlnumFH76dKqn8DSl7YrC/b/58e7RBsMm35ZOwu7aWg4egWatL9NJXskT/RUyM64dY1mTmFZSRX7H8gU7tqyXDzBcpAtKeAmQicC+UEENcVot8BXQ4x0UoP8YsDrUFY95gbNkvw=
+	t=1719225792; cv=fail; b=TBP4Hg7mW0bgoGu/bwqeaSTWaraIWQQZpw7s3xrok6LOtzCgIwaDdTAiSkMAgtm5jMCOtVozB+O+ipLJRMwX6bI9++LXudn7q06BOy7SIeRojPCRncd79xTOiGPx/F6HAcpsCTK4tWmYx8ZhLYG9Rfom/Nb5H4vrag6y8lWvSDg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719225786; c=relaxed/simple;
-	bh=EO+kjpms1fUrlGcsp/Yq/4cUtaIBAqKwDFFTL6N0bKU=;
+	s=arc-20240116; t=1719225792; c=relaxed/simple;
+	bh=G8GTwrEXm9q29Ypqw9fegSHrZ124NiHk1UHEoZo3pMI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KdDvg0L1allFi7fylKeQLlYrb8HUgKAtC0BPhfXBPhs6Rl8P5M2YHsdrfkgpAvxPSuUk/aHlnnqNWkD9Lv7mEGXPfDjIr8UzoGcFgxyFrA2OBHgY7hdwAKxzKU5NRB+8P2wUyLL5HGoFtKbtR0qyoQ+sd2o/EnuK+O9HNmuv774=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uFJdqBaB; arc=fail smtp.client-ip=40.107.94.49
+	 MIME-Version:Content-Type; b=EJiPczp5rQzJ6nP44FD53iPrQeOO8tqIeCBhpgKmu3nfY6F5mP1GD1QMFoMNpG6A4drxVI79kS1IdU3TozEZ8I5uG+U2V5U6sBCWhtD8mxWQk31rNU2awMoPf0Wo+wMthL3IgyounKcxV7vZHqLDEQmWXOMdrDSmRJ4mWVVnT5I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pbZlN3a1; arc=fail smtp.client-ip=40.107.93.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e2ogamSzHHggU1CnOfhIswg952/Hp8WuSNq2F5qHfmkb5nsHkzOsxO+NeY/ZEvyGzVOX5/I6L4DTLeZTVvSbIWcu2QY/el1vyLbDZ6AsZZkKsEWpt+uZ82aNb1HuBq6nkug3avRvLlmzp2e+0ekEDQaAzE7fpgScnI8ExcY42lOP0I0enVGxjQBD1ikBXbCLLW87lJ5DtC8EiE8ro1WM8b80JeVEOq0/rwYnvFw1pALd5dHJ7Lx+PO6Cs0+3P1MFu4UGAcll/eKPdRfA+tp21E/riLHRm+nozGRFbzr/0xOC8gmJ77iE8dWLiLlJUM0H4V00N4akSUxOlARdiu6s+w==
+ b=hdBP4t+WoQd+BoNENexqi5ayliKxtoW+NVnvNNklF/cJnD5rbCY9rJvxbeDFP0AsnmazhLAvRXO60zYtxI/ltX9vFbPiAwRp1TKweKAVjitozDztRUY4lzHfOnc5KU4XNT/22RODcvtDI5AucTZmVL3on14Xhv+nUkSPPu1ISZx/jbMdRN8lyCqwB8Q4OwaPCOuS7HHkuuTX9MAj0ONnifhU4l3QF4tt67jqjvIGYJPk7AIYIYLHlgsa/O1mtsCdKSYX/NLg5Uxn8sJycuFmve9AG0BWF2tK3e0dQyy/y4HhgFSWR2wPM56UlgF6dY8uq95IkWZTcANEDBIC6iT7rQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xXJS9l45THhDwuIPD0INZHCMKj22HA2c0gsgoOad7Fk=;
- b=e9MSj0aCPTsRfcRcKwio6ppGGIxLbWf6KhAgOmtRJ5ndhOkIyYBn/lmlqhpl6fGntzrXpIDKHiJ/5Z9w2vSI0fuhcsPaHV/XtLRs/UQjs1jwJm7zelWs5/lHcb47KFxLSiiLrYbNp44YdG8pw9TbqSYsRgvCdjhFqnaeMbbzYeoMPKGoWAjHY5b3w4UBHmi4xqGConserKwAeC43K6Yi8OlITJxax3Tt1vcMGRiANchB1bBMU1EYahWHz5ycAk/oeL5vrsi8QKAXQwTb/gOxmBDUNGI1IEApBKw2CIQirA2344ww+ZNziSrRJSNtxNn9HWvn0a3sWbFZEzkTzOW2iQ==
+ bh=G5xbvILO+7Sv9OFuN/NzUsM0XKp5fJkyQq5pmEOflN0=;
+ b=lcl9BgYN7MXZa8pHZhW7QdmMCjecD1a9eZhydQ23z188kS4szSugGl+ASK1djhlZ0xQGMTGKi+CMUC6zD6Z9YKEp/4cH3RP7mxiNBJ5oDpnlTVWSBSE6sZ3q6qxZyrFQBdAsogP6wXiNSbSOtpxXhqc/AcH6xB0Zk8BIT0CKgmN/hJ2DFSuZ5zBqnw0UpPopiCJNk/2LBXe29rzrU8+D/svo/aMiZUbMGXo9+cV5GSVrDwfAg3a+wH4lulwGfJHspuPxbstGhQMKr770/9rPJtKKzgOt253m7ftBh8QB6hdluu9exSX4SfAHl/SEugChdIZQGRnAQYp2f0S58+Fs5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xXJS9l45THhDwuIPD0INZHCMKj22HA2c0gsgoOad7Fk=;
- b=uFJdqBaB6ZA6LAUEJGpobg1wZHlJr8pM75uZnMb4QQUTUtLZ752ji4aAbHvWAOzgYrnJvFEdzxtGgdwVbDwxrB8jdpRWRabGr9qZD07S///X8AFeCoCVsq1ljzW32gngoL91wzdJGmlkgZToHmudzyvCLkYFLW2GzLGqWdOyk+g=
-Received: from BN9PR03CA0380.namprd03.prod.outlook.com (2603:10b6:408:f7::25)
- by BL1PR12MB5779.namprd12.prod.outlook.com (2603:10b6:208:392::9) with
+ bh=G5xbvILO+7Sv9OFuN/NzUsM0XKp5fJkyQq5pmEOflN0=;
+ b=pbZlN3a1ZYIfDKJmqiXC7XrScQIeFN8hC4gg7lXDhfPS33Upkt0EX+BUiHuXin+8jaCd4UFwV87R5WKElziM7kklBy3HFMWnSW971nlyruVhgrSDOXHi4c7zMtOa+0ugCOQg+aLPwCVm2gW35crYUtU9X5b4B1GeTDVCCaal74w=
+Received: from BN9PR03CA0422.namprd03.prod.outlook.com (2603:10b6:408:113::7)
+ by PH0PR12MB8150.namprd12.prod.outlook.com (2603:10b6:510:293::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.26; Mon, 24 Jun
- 2024 10:43:00 +0000
-Received: from BN2PEPF000044AB.namprd04.prod.outlook.com
- (2603:10b6:408:f7:cafe::7a) by BN9PR03CA0380.outlook.office365.com
- (2603:10b6:408:f7::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.28; Mon, 24 Jun
+ 2024 10:43:08 +0000
+Received: from BN2PEPF000044A9.namprd04.prod.outlook.com
+ (2603:10b6:408:113:cafe::2d) by BN9PR03CA0422.outlook.office365.com
+ (2603:10b6:408:113::7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
- Transport; Mon, 24 Jun 2024 10:43:00 +0000
+ Transport; Mon, 24 Jun 2024 10:43:07 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,16 +63,16 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000044AB.mail.protection.outlook.com (10.167.243.106) with Microsoft
+ BN2PEPF000044A9.mail.protection.outlook.com (10.167.243.103) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Mon, 24 Jun 2024 10:43:00 +0000
+ 15.20.7677.15 via Frontend Transport; Mon, 24 Jun 2024 10:43:07 +0000
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Jun
- 2024 05:42:59 -0500
+ 2024 05:43:06 -0500
 Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 24 Jun 2024 05:42:56 -0500
+ Transport; Mon, 24 Jun 2024 05:43:02 -0500
 From: Thippeswamy Havalige <thippesw@amd.com>
 To: <bhelgaas@google.com>, <kw@linux.com>, <robh@kernel.org>,
 	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <lpieralisi@kernel.org>
@@ -80,9 +80,9 @@ CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
 	<linux-arm-kernel@lists.infradead.org>, <bharat.kumar.gogada@amd.com>,
 	Thippeswamy Havalige <thippesw@amd.com>
-Subject: [PATCH 1/2] dt-bindings: PCI: xilinx-xdma: Add schemas for Xilinx QDMA PCIe Root Port Bridge
-Date: Mon, 24 Jun 2024 16:12:38 +0530
-Message-ID: <20240624104239.132159-2-thippesw@amd.com>
+Subject: [PATCH 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
+Date: Mon, 24 Jun 2024 16:12:39 +0530
+Message-ID: <20240624104239.132159-3-thippesw@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240624104239.132159-1-thippesw@amd.com>
 References: <20240624104239.132159-1-thippesw@amd.com>
@@ -98,117 +98,195 @@ Received-SPF: None (SATLEXMB04.amd.com: thippesw@amd.com does not designate
  permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044AB:EE_|BL1PR12MB5779:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10d03239-8a82-49c9-7c07-08dc943a6b17
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A9:EE_|PH0PR12MB8150:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6ff702bd-ed17-443d-34b4-08dc943a6f51
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|1800799021|82310400023|376011|36860700010|7416011;
+	BCL:0;ARA:13230037|7416011|376011|1800799021|82310400023|36860700010;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4oBIHqaYiJyKssLCAR0/3LPa5lNAg3G+7EkBOf6nnUDoBCsOqcMsHlfxPCJ0?=
- =?us-ascii?Q?N76sM7raJ9lULnPMQfF99eFCr0GW44OnQDVZaWLiiGbBWrWa4qGNwXU/GZQl?=
- =?us-ascii?Q?Akjn2zGA1csYyaFqoXkzpeMacv1zeOE8GOk+ObB6pzOcsG0ZTG6kNSnycWy/?=
- =?us-ascii?Q?0BeMvS5tRSDehTra45Lr1ovIEbyLl0DM7i/mpPNSHXOMB7gGDZhy/f8YyWQs?=
- =?us-ascii?Q?iU4E/wBXIKW7XCggOvpYp2A5OGVuf2QGHp3tgMt9g6lhyBWCpM2oFW3OCNuN?=
- =?us-ascii?Q?3ej8IPpg+tCik3WFUm3ifF7ywHc+l7Ntvf5SO29FIAevPD6xx0r9oyS0SQOF?=
- =?us-ascii?Q?QvYzGQD70BV1JEvrxTVDPxv3w7BC2Dz1Ej4IzQIf6JFybQK0F5cSSV3i/JD3?=
- =?us-ascii?Q?6lA/fFILt7ycVouQcKm26OxUVtNyQYMctLmhggnWuTAJ0ZIVMdvseBY7W6BA?=
- =?us-ascii?Q?/SslmgDRwVtwCJqFdgKQ/jQqjjFwk0T+o1U1S5iHbUrA6LxOIBZQBnjonWjC?=
- =?us-ascii?Q?TrqMUKeYqYDzYEdinfLLbGJwLrK6sFIRiPJJAg9mKUUltSUGQfYDCyqqf0cS?=
- =?us-ascii?Q?z8ubyFfcjAe54uRkhK6XkqrE8W16COr7BmBeMeiL3QYGfYGaTYIj73WLCUWA?=
- =?us-ascii?Q?LuFqnlV+LaZQT17aD0ftg2bKM01npMg1c31Ess0RO+JxzrPJ9QxUgoTUaaL+?=
- =?us-ascii?Q?MS6PxwUaTz6A6wQ3m3zG/b8eNYe6SrLAvo5ITaa8hr5EiCE5xg0gy/zmMPPj?=
- =?us-ascii?Q?40+IB6FoKdATvjPckm3H73BeOx5+gAeDTHnjIYr9FX7r38TeMSlBrADBvndy?=
- =?us-ascii?Q?ylubQgpP0nOrW+0Aw8/CscmXXexi7RGGdNVYRQ5bzeMCLXt3Lxj2slyq8rdm?=
- =?us-ascii?Q?tb3zNK8nU/aiNPE6UGusLxiWfFheyNfsOrDQST2M2yl4OW+6Sofz+ScC5pss?=
- =?us-ascii?Q?9aaxYclpLiF8STd2B3InAp/dYyTWcwDtp/K2pg4wRMZnyQGtG0fwiNSYCXDu?=
- =?us-ascii?Q?sWbZz8JWhi/xDVEJ7g9tXMF/gUQAAOhq408lBOS/jk48wvZDUGH3qKeoMks3?=
- =?us-ascii?Q?GMWPZ0BDHyYlsVQT44sUObC5DWSQP3M6zyH+LvTQv1HuwK8Xf2NRdy82C8vV?=
- =?us-ascii?Q?m0fmpfol9hagbCd68yXRwLobOfxdHhpi5LoKEcuEJICqaeOsX/ff5tL5K5Qv?=
- =?us-ascii?Q?x4WTeE3eknAuyDsgNQ1gwo2CMk7ZCQPVmfFzgYHkY9oC22BoKeky0xS9/yCZ?=
- =?us-ascii?Q?jHz1I/ZycL8rYwLr4csdhBghFUmNTDHWBdYl5eQETXTlb8PRXyPrAKKm2doe?=
- =?us-ascii?Q?+9vLeYm4lSlFzLR+K/e6tOwC/cyDP/yOE3TWNTWTJGpke1HKJUlZPQevALUe?=
- =?us-ascii?Q?DchYXLQGEpiKggxFerNwINEd2sbqiZAi2ARpiPo7uYuQXYOW2g=3D=3D?=
+	=?us-ascii?Q?g6fII/9DI+AeGTcAFgFd+9VJxkWerU4TJBvdj/1SFIogaKSncB17xh0TWgNl?=
+ =?us-ascii?Q?cGzH22EjqMp2rUli/WrfVas7VQ0iru1whZWEEtylrQ3V1EWL5uAG94wKILP1?=
+ =?us-ascii?Q?7kL46C+SDMaB7ZatrlsnSZBHAy1fQ5v+3o8IpNtvbzbL2QQp4rOc6a5vsKNH?=
+ =?us-ascii?Q?8cJgq3SS7I/bhsnb5sIA9ySofZeu74RqlP5TmWHA2aMOOwXAMU6v1iwZH8On?=
+ =?us-ascii?Q?qB7NXmWDQtCUQGsgNsgK3IkB7lkM6eft1qCJ9n+KrHoQB1XIy9pYfEdBCXgb?=
+ =?us-ascii?Q?P+GDZ5ctfc9QY3hIuqzpWHFCaCGXSuQ/83J8nidC2oiLWpecM0xvYlLz6Q/f?=
+ =?us-ascii?Q?58S76Ct2AfRBUWkGvI2UjRYzxpL3TM+WD6xqm1eF+GAuiSSGrNRMra7WHWTK?=
+ =?us-ascii?Q?h2dl/YA4Q4yeyyKh3KaeK9NDQQhBr5XEgl8ng7q2yjIGJkUgnirgjrCEI/3G?=
+ =?us-ascii?Q?2J9oVWLWYmCMTBpmT37o9vlF7qMSRwHzKPb21mqzx/GhrU4SylEJqG8UMq7A?=
+ =?us-ascii?Q?clwo/Gat/4nBJXDqVrKfiG2XvWrSh/iNgRyMk4kngEHSb0b9Mpn2Ss0ydXqC?=
+ =?us-ascii?Q?ZDwTGDSkdjSH4KfggKYSfAnBmuBVT5Wm7AZF583vPkvUd/kqSzSAx946tGQg?=
+ =?us-ascii?Q?p40UeaVnGdS97uHiR6bBmZ1qqs1iuGwLkfKO8JqhXdg0/cxm7io2fLxOAaQV?=
+ =?us-ascii?Q?d+H2FdLz+8RvB504dCeojEabVpI/NmfypMSvOJRfdH5/6QJFs29zmivppeWP?=
+ =?us-ascii?Q?TnUctDgL2LzY872QTmR71Wp3Uyw9LiWoSr62lPD95DxJaLve0SYjxzmSCR7U?=
+ =?us-ascii?Q?tvtfve7o6QSe36QlG6xNEHx6RBLKEsVFSUK+N+SGIGTp4JgLAWsCeapKDlDW?=
+ =?us-ascii?Q?7I247wEVBP4oIDmEiLEWBSEB1RY62bAA/gcOPs0Ncvu9Ei/NGLDmjFvYcN5y?=
+ =?us-ascii?Q?HWUqNyTUyb2eWu9u0jg0O+Wbb13BLkkrhnxKiTCiRh5KouDKGQUtPo3f0oiB?=
+ =?us-ascii?Q?hXF1JNe538INysc4zuWqga/460Ki3SN1OBxVRpZc4ZrXXcHybbmAcy0osEaq?=
+ =?us-ascii?Q?Y+BQ3bBMuhLKEyjwrFGKEfKDYKEHzkg+JptT4IEk3IwR/eESMaQKP8Gs87c+?=
+ =?us-ascii?Q?XBa0c5HGyJ27gwnhQpE+9doq1TSA/znZZLq+Km+QAt1BOKDwVZQqXrJvWspu?=
+ =?us-ascii?Q?wOq1IQwSEnE0Zg5zcQpljlMDZQcZtaCx1S3VjDgN6Wcfz+q8ej5M0r0HBztK?=
+ =?us-ascii?Q?Kp+7I39jMBbzjO+qzxuQbrxXCG+pl/PGUU+sFVM2WFFR1/lW3tK5/2UZR92s?=
+ =?us-ascii?Q?7QlRMXWAZoCzSPpJjzQ09lIlzvpTQyT0k905mbmWz53glqKzIyaCXqokjA/r?=
+ =?us-ascii?Q?nn67lxFCIHFYIkFXIjTqI5FVxiiPtaXmOD4sUgmt1+JpHmWdEA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(1800799021)(82310400023)(376011)(36860700010)(7416011);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(7416011)(376011)(1800799021)(82310400023)(36860700010);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 10:43:00.4701
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 10:43:07.5593
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10d03239-8a82-49c9-7c07-08dc943a6b17
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ff702bd-ed17-443d-34b4-08dc943a6f51
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044AB.namprd04.prod.outlook.com
+	BN2PEPF000044A9.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5779
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8150
 
-Add YAML devicetree schemas for Xilinx QDMA Soft IP PCIe Root Port Bridge.
+Add support for Xilinx QDMA Soft IP core as Root Port.
+
+The versal prime devices support QDMA soft IP module in
+programmable logic.
+
+The integrated QDMA Soft IP block has integrated bridge function that
+can act as PCIe Root Port.
 
 Signed-off-by: Thippeswamy Havalige <thippesw@amd.com>
 ---
- .../devicetree/bindings/pci/xlnx,xdma-host.yaml    | 41 ++++++++++++++++++++--
- 1 file changed, 39 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-xilinx-dma-pl.c | 56 +++++++++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-index 2f59b3a..b705e47 100644
---- a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-@@ -14,10 +14,21 @@ allOf:
+diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+index 5be5dfd..11ba656 100644
+--- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
++++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
+@@ -13,6 +13,7 @@
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
++#include <linux/of_platform.h>
  
- properties:
-   compatible:
--    const: xlnx,xdma-host-3.00
-+    enum:
-+      - xlnx,xdma-host-3.00
-+      - xlnx,qdma-host-3.00
+ #include "../pci.h"
+ #include "pcie-xilinx-common.h"
+@@ -71,10 +72,24 @@
  
-   reg:
--    maxItems: 1
-+    items:
-+      - description: configuration region and XDMA bridge register.
-+      - description: QDMA bridge register.
-+    minItems: 1
+ /* Phy Status/Control Register definitions */
+ #define XILINX_PCIE_DMA_REG_PSCR_LNKUP	BIT(11)
++#define QDMA_BRIDGE_BASE_OFF		0xCD8
+ 
+ /* Number of MSI IRQs */
+ #define XILINX_NUM_MSI_IRQS	64
+ 
++enum xilinx_pl_dma_version {
++	XDMA,
++	QDMA,
++};
 +
-+  reg-names:
-+    items:
-+      - const: cfg
-+      - const: breg
-+    minItems: 1
- 
-   ranges:
-     maxItems: 2
-@@ -111,4 +122,30 @@ examples:
-                 interrupt-controller;
-             };
-         };
++/**
++ * struct xilinx_pl_dma_variant - CPM variant information
++ * @version: DMA version
++ */
++struct xilinx_pl_dma_variant {
++	enum xilinx_pl_dma_version version;
++};
 +
-+        axi-pcie@80000000 {
-+            compatible = "xlnx,qdma-host-3.00";
-+            reg = <0x0 0x80000000 0x0 0x10000000>, <0x0 0x90000000 0x0 0x10000000>;
-+            reg-names = "cfg", "breg";
-+            ranges = <0x2000000 0x0 0xa8000000 0x0 0xa8000000 0x0 0x8000000>,
-+                     <0x43000000 0x4 0x80000000 0x4 0x80000000 0x0 0x40000000>;
-+            #address-cells = <3>;
-+            #interrupt-cells = <1>;
-+            #size-cells = <2>;
-+            device_type = "pci";
-+            interrupt-parent = <&gic>;
-+            interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "misc", "msi0", "msi1";
-+            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+            interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
-+                            <0 0 0 2 &pcie_intc_0 1>,
-+                            <0 0 0 3 &pcie_intc_0 2>,
-+                            <0 0 0 4 &pcie_intc_0 3>;
-+            pcie_intc_1: interrupt-controller {
-+                #address-cells = <0>;
-+                #interrupt-cells = <1>;
-+                interrupt-controller;
-+            };
-+        };
-     };
+ struct xilinx_msi {
+ 	struct irq_domain	*msi_domain;
+ 	unsigned long		*bitmap;
+@@ -101,6 +116,7 @@ struct xilinx_msi {
+ struct pl_dma_pcie {
+ 	struct device			*dev;
+ 	void __iomem			*reg_base;
++	void __iomem			*cfg_base;
+ 	int				irq;
+ 	struct pci_config_window	*cfg;
+ 	phys_addr_t			phys_reg_base;
+@@ -110,16 +126,23 @@ struct pl_dma_pcie {
+ 	struct xilinx_msi		msi;
+ 	int				intx_irq;
+ 	raw_spinlock_t			lock;
++	const struct xilinx_pl_dma_variant   *variant;
+ };
+ 
+ static inline u32 pcie_read(struct pl_dma_pcie *port, u32 reg)
+ {
+-	return readl(port->reg_base + reg);
++	if (port->variant->version == XDMA)
++		return readl(port->reg_base + reg);
++	else
++		return readl(port->reg_base + reg + QDMA_BRIDGE_BASE_OFF);
+ }
+ 
+ static inline void pcie_write(struct pl_dma_pcie *port, u32 val, u32 reg)
+ {
+-	writel(val, port->reg_base + reg);
++	if (port->variant->version == XDMA)
++		writel(val, port->reg_base + reg);
++	else
++		writel(val, port->reg_base + reg + QDMA_BRIDGE_BASE_OFF);
+ }
+ 
+ static inline bool xilinx_pl_dma_pcie_link_up(struct pl_dma_pcie *port)
+@@ -173,7 +196,10 @@ static void __iomem *xilinx_pl_dma_pcie_map_bus(struct pci_bus *bus,
+ 	if (!xilinx_pl_dma_pcie_valid_device(bus, devfn))
+ 		return NULL;
+ 
+-	return port->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
++	if (port->variant->version == XDMA)
++		return port->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
++	else
++		return port->cfg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
+ }
+ 
+ /* PCIe operations */
+@@ -731,6 +757,15 @@ static int xilinx_pl_dma_pcie_parse_dt(struct pl_dma_pcie *port,
+ 
+ 	port->reg_base = port->cfg->win;
+ 
++	if (port->variant->version == QDMA) {
++		port->cfg_base = port->cfg->win;
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "breg");
++		port->reg_base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(port->reg_base))
++			return PTR_ERR(port->reg_base);
++		port->phys_reg_base = res->start;
++	}
++
+ 	err = xilinx_request_msi_irq(port);
+ 	if (err) {
+ 		pci_ecam_free(port->cfg);
+@@ -760,6 +795,8 @@ static int xilinx_pl_dma_pcie_probe(struct platform_device *pdev)
+ 	if (!bus)
+ 		return -ENODEV;
+ 
++	port->variant = of_device_get_match_data(dev);
++
+ 	err = xilinx_pl_dma_pcie_parse_dt(port, bus->res);
+ 	if (err) {
+ 		dev_err(dev, "Parsing DT failed\n");
+@@ -791,9 +828,22 @@ static int xilinx_pl_dma_pcie_probe(struct platform_device *pdev)
+ 	return err;
+ }
+ 
++static const struct xilinx_pl_dma_variant xdma_host = {
++	.version = XDMA,
++};
++
++static const struct xilinx_pl_dma_variant qdma_host = {
++	.version = QDMA,
++};
++
+ static const struct of_device_id xilinx_pl_dma_pcie_of_match[] = {
+ 	{
+ 		.compatible = "xlnx,xdma-host-3.00",
++		.data = &xdma_host,
++	},
++	{
++		.compatible = "xlnx,qdma-host-3.00",
++		.data = &qdma_host,
+ 	},
+ 	{}
+ };
 -- 
 1.8.3.1
 
