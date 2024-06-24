@@ -1,181 +1,276 @@
-Return-Path: <linux-pci+bounces-9174-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9175-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F12B914495
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 10:22:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E1E914686
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 11:37:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29B721F23747
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 08:22:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64C291C21266
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 09:37:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC6E4AED4;
-	Mon, 24 Jun 2024 08:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3C740BE5;
+	Mon, 24 Jun 2024 09:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="fxYpPcUZ"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mVmiUYE1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2087.outbound.protection.outlook.com [40.92.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A4745007
-	for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2024 08:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719217371; cv=none; b=ml8Tt6SR57uv9hWIdmxQqIq3qm2WTPNwru3cx7rEFc4XTTGoi2SaTZUF7g0Do9QrIVHj+y1oZarIKIRWIyl3ZfUvNuEwwB0QJ3bvyXhz8/K1cvn4klqQqcVWCA+yTkHOXAgoAwV2hcnGymMOFK/zJiIF36Hw8FjTcralNX8p2eU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719217371; c=relaxed/simple;
-	bh=l8PxRcYIUV+BwhTr/9tnWDMOzSzkqoN1MtjHSsnguGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RtXTTehJq/u21iod7e51T4qj+qvdjVqvBWDy9dTchRteEeqm33IbCi8TgUq2aLa01tJejZVmQIcC3jE1aOsi5on/A6oyBmjvbw5C7Z0QZbXNaY/HYj5ehRWgXXm7oFr63aR+vrLug0/Nxltmlf7zF3O367dycT+4R813FhK1c48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=fxYpPcUZ; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f64ecb1766so29955455ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jun 2024 01:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1719217369; x=1719822169; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TKqXgp0PeCY7zVPXIYmvQu6WZY+HEs+Sn2Z47Kgx7oM=;
-        b=fxYpPcUZsuE9aiH3471SZiJQzzMoSlqLkowXosNEkyMWVlKz/QwPk+rVLeFOaDBOWt
-         N4PQkstLuhKl02eVi0yv9ZAkq/dSRCWjcVznar6vEWRu5Qg29be95rINkTgoKhlz7aqw
-         Xjp7AmCl41xYlm+SDDqkZzzxJVXbvURJs6mw/YJnjiBcat0Ut8xOyfmTdC70EkchrZG7
-         V7eojFfhBN7KsMGLKEmlQUt9dvYfj5QiHHzFvvGfsYQbtPbd/6lVGpyMLBtripypYIf+
-         ZJEs0UGYOl/fj+BwPZu3u5Yq1mugqVsgo8R9R2ZZPajgCrfFmjxg9Mxsn74g7BjK7r+l
-         r4tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719217369; x=1719822169;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TKqXgp0PeCY7zVPXIYmvQu6WZY+HEs+Sn2Z47Kgx7oM=;
-        b=Ac/fD+Z6Czu37PnYLmhy/z1htxG4AWgMpkPqxawC38nxBXS5v6mKiBf/qtqjIDdtCY
-         FMa49dVir4VgS1Y7GZ/73wv+ZtyBw19t96i+IEM0v6TnNSAskPeOXzNZS3e/7ip/+LPI
-         GbpeaAWb9YTBo+iQvUJ3Pi56b2T5xpsIHUMFZTjvaDHUjxC/ier7jGks5B+0qv51WJmu
-         OOWs0jio5de3dziG1Cch1KY4VfnJ9ZzzHLWyhZptnPvjr67iAKjsExCDXz+Ce4FeuS+1
-         eeotnqUPnqcFwCEM9cqAcNBdHh7TsIRMml9Ab45Jjoc1QdjJ0VmgxQJi77v4L6cCsKOQ
-         y3Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdjKkTpgBXbW2/S9/00reYch4v1qhwxrqhxJ+xo4Fbv0v5UVkXup3JWkXPwomXl0GR1DKsJCs80pXKY4EjoajKwPpkP33buzYl
-X-Gm-Message-State: AOJu0YxmzbknvgE1DXaVNh3rF35mRiI+/krTp/RpAbFkKuU2JRzhiNQC
-	UcTbRy2LO3p9BRrsDd+Bqu9CgdCklvNOpN6Gqb/lp8kYFRo3NQ54jAPWXyF77Tyd4gK+XXfWesf
-	u
-X-Google-Smtp-Source: AGHT+IGkoHJq/Uha60iVDfgi2zLJGjHRCAI0OByy2xj9MuNZhuILpLYTi5YuR8zGMv4NTd34FPkw1Q==
-X-Received: by 2002:a17:902:ec91:b0:1f7:1b97:e91f with SMTP id d9443c01a7336-1fa1d5173d9mr51886265ad.26.1719217369112;
-        Mon, 24 Jun 2024 01:22:49 -0700 (PDT)
-Received: from localhost.localdomain ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f9eb3c8b5dsm57068405ad.181.2024.06.24.01.22.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 01:22:48 -0700 (PDT)
-From: Jian-Hong Pan <jhp@endlessos.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>,
-	David Box <david.e.box@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7CB79DE;
+	Mon, 24 Jun 2024 09:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719221839; cv=fail; b=dROF/fiRrjEkrTgjgZO9g2xWNtbyqX7ygfBfriqhaism+SJRm9jY04JmkC0nN3PZUCtfYuFAZZVFnocRVqCjeKjBVO+zsE2iY2b+CcpYQjAVs1huwmr1w6kUPuspm3B3DP8FAaOsmxk1gdunDsJOhK/Y+G0VZEtKum95JRXML+w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719221839; c=relaxed/simple;
+	bh=zSBAFI5dKU/2uuWX0FiPoDZ1g0dzNNoA4tQLk5wSKaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cHZq3JbDu9j7RxVjHlGTJQ9D8IsV2fiRtEAyfA9yVcgJhJyaYZfBnEGXcGpTBZw0qV/xOin3sSP+oa6Y8ViZboxs5WhOUIp/HDnCmuO8pNTTHwTv1BbGQ4jtMbkKBXcO3mfd8LDmy5Ce9GJFQrqdyYeaMiuxHctmhULRbAHFU2A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mVmiUYE1; arc=fail smtp.client-ip=40.92.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OSgRpe4ZN60qoNAXGJU6/WVF8TMtK79LTFXxH7CsXEW2QTD3uvEf0qF59nr4BSvctC4D74v4i6S4wPRs4+Ij2H3MoJpHkoWdeitPiv/AfCHiWBcsFgMhZNougkJvl3/4I5n/4Q0WlWDh1SqYnuWQlmPbh1lXHdAXGQKEcVc591KRY26zY4h3hWN1MLdQ4KfWUOkoBqkvxaZXDvWOqDKffa9FvHpcQ37xAIpZ+yLJmGKi5n2YZNjgbUZnxR6WPhL+2mFTphXn/erIze7Yl2doK7XZY5A2L+8uWim9nsSGswM8KkqznIR546bzM55eYGdCQJ4V6CS5UsF0AqSrujpcGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9CqO0+8fJUZ3zEaLwqbL03U4SYrArv8b5wXBprG1izQ=;
+ b=ck6+1L5SDojTuixqENa0I0onCZXzV6BwTt1Mv6PdIi6DozcKnT+gt8GGQu6CIWp2s2ZrEw/BFcaXvhhI81DSAScsshYBICxBHofZNHj8kdypudFQnZVaQtpvDzYbMYGOFR6krcCQxrYvIommBi9I8K0QjoEOCrOM3yoWhXOm35BWItdTqfbm0gqWbe98tu596ZG8PVs8tAtAn+TsQOihGPoBybLzhvkp3g8agE7wWCCfnRhN2ZurHgmXe5Errqd0DNlml0Okie2z0vhlSZ4Zw3sO34db6lI3fMgCbDFzei1GEZg7FLjqZKftIXKLQtTA/tUrVNIfMznyq/C5hKUBOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9CqO0+8fJUZ3zEaLwqbL03U4SYrArv8b5wXBprG1izQ=;
+ b=mVmiUYE1INWuE0CzU1v42oG8byrFSV8OAd1FdSg3zKkdvQirkUJ/+3dPjVO9QhkoM3pGvZGzy/O6aPSH8ZOZ1cowoshC0tpH5zNgsTEk+UEhjE/xSki588Otqz1fZrwnlFdORwGHf1liN9+d+pwJ4pDoKx/SM1m+vJgzqzSOwoaVMln+d6oPu9EPjdMuU0VAgpAS3FoG+TaJlFbrtL5y02FkTqZoCktv3bnwzbWVdMdee92rYq1BZPjjFY1WhJLz1qPwpU5dGlfsoKM2ONVnRZDF02hXyBRpQqtS0i+Njlla7tv9JalG2D+8ji3Gs0hnspZe2SPhdqW4d3KAkNKbcw==
+Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:76::5) by SEZPR01MB4112.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:48::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.28; Mon, 24 Jun
+ 2024 09:37:12 +0000
+Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ ([fe80::653b:3492:9140:d2bf]) by SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ ([fe80::653b:3492:9140:d2bf%5]) with mapi id 15.20.7698.024; Mon, 24 Jun 2024
+ 09:37:12 +0000
+From: Jiwei Sun <sunjw10@outlook.com>
+To: nirmal.patel@linux.intel.com,
+	jonathan.derrick@linux.dev
+Cc: paul.m.stillwell.jr@intel.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux@endlessos.org,
-	Jian-Hong Pan <jhp@endlessos.org>
-Subject: [PATCH v6 3/3] PCI: vmd: Drop resetting PCI bus action after scan mapped PCI child bus
-Date: Mon, 24 Jun 2024 16:21:45 +0800
-Message-ID: <20240624082144.10265-2-jhp@endlessos.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240624081108.10143-2-jhp@endlessos.org>
-References: <20240624081108.10143-2-jhp@endlessos.org>
+	sunjw10@lenovo.com,
+	ahuang12@lenovo.com,
+	sunjw10@outlook.com
+Subject: [PATCH v2] PCI: vmd: Use raw spinlock for cfg_lock
+Date: Mon, 24 Jun 2024 17:37:00 +0800
+Message-ID:
+ <SEZPR01MB4527790242E852C3B6EECEC5A8D42@SEZPR01MB4527.apcprd01.prod.exchangelabs.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [YjN6812sfx6W7oFpko39jDHB2JHuxzCv]
+X-ClientProxiedBy: SG2PR03CA0105.apcprd03.prod.outlook.com
+ (2603:1096:4:7c::33) To SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:76::5)
+X-Microsoft-Original-Message-ID: <20240624093700.3644-1-sunjw10@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR01MB4527:EE_|SEZPR01MB4112:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1148e159-deb0-4500-b8df-08dc943139bb
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199025|440099025|3412199022|3420499029|1710799023;
+X-Microsoft-Antispam-Message-Info:
+	6E8AYWGX9lc4IotGOFC8R5alHBa4pAr8v6e7X0V1ebAeNL+R5DVPCHL8OoziVwieay8I5XcdZLnGb24mXVt1FSiXWOdIEShbRiO358b7Nz4u2j3esas8TCs/5GRjHsDheRBVgMAmgDgoOQTLD2lBCpJRzFvjLeYdQI+U6EHfBn3mEWj/+Vl13bkTOaR/QhNe5O2zooAj9bgVaeDHkAZA42Br6Iqqq7P1AFhusiiECHlIVf6Ty6XIzj2bwo28UUb1/q6/c8cZ7NtbUuge0vg3x3hC9KbK/kPQGm79gl+sNNSNuWbpDT/3ToV820remBDZV+gIVofk+Si0nzal10zHYOW5TXBKSEbNGdolKJU4v6bYTtIHQbFiowL6/Kysac9PcDnnHKM0S1Q5A/H3SamyjlUYMSvB/QISUTA1pw4fNELbrvDQ1gcL3NGQRMVH2N8z/3G7x/2P0TZFR1IumGVMKDFupX9lHz3zJYxaSnqBfWbjDlbR014DkHzCSgTFtW42vArWYOFGDciWtDhzbctXrdhlmMdCJzaXcEtyqF66PeK+mEQde4XzQtEWOAyI8f5GN15LGuS8iH286qYL9MckTvqfj5oX2b4RbHHc1WYQ2t+ym9gEz0R9HcBU376kMdap
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hjjmxPgEVO/Amd8Zu5rvmATqnoqtxdwUcbZC2yJuTX6XNzpKRGkkFY2z/Kry?=
+ =?us-ascii?Q?bRNCrc9wFZJZP3adGvQzoD81V6X39c3oiU5TF39Dqqlu8uU44i5KN1WLBJ00?=
+ =?us-ascii?Q?gdOJJiehdwUFkA2L1wbmkA0z4bBpg1Ir1DnK99I5DIGa2bhed1VQHqQvvQhc?=
+ =?us-ascii?Q?E/1JYe3BNC/v92AxDYYxnayi0YVCjf2nO5lfJg8iUva6MqUPzmrU3/MePHA6?=
+ =?us-ascii?Q?emMYt98cVOXixSR1DdbvTGr0Cn+j8QtrQmyxSltqbpbcv1b/+LCbay6QuH3R?=
+ =?us-ascii?Q?fDlxI1YYuHSTaD78nzud4KYz+ZagLaOORN860fxv6WZZy6ZmgtZ1jGVH1b3N?=
+ =?us-ascii?Q?pGM9kpj4kJKGfAkxk8QLUxxO5C2MTNfYtEccmIFIZ5easXDteRCHYHFpUcwX?=
+ =?us-ascii?Q?bMPDrOicBPE+S3O9BxQfQRJo9PABqcNIonY0QtFOV+8SSHM/b047kV4wknMY?=
+ =?us-ascii?Q?+zPvAljRPVhJhPZCRcmq5XwTgN1k8D73MmsKsQ6SO7rRqoRebyGWmkx03lVp?=
+ =?us-ascii?Q?mxfMMNaPFrEmRoXrf6OA5vgPY66rc65WJ23UTfMKIm9Gk3bf+XQCtSTBOv4u?=
+ =?us-ascii?Q?cC7Gm1iubXttV+5sdjtDzgNnjf54GDsVgIslChv2g72wrLCREP859bf5k45N?=
+ =?us-ascii?Q?v3qhzG5zOboGUPWk5Ejb4CGu2I30tWBAkia3t1vMSdJmdrozm1nfrX2hEy8f?=
+ =?us-ascii?Q?uu/VxSJIywIT6a/Ua5yniCuPWTFy01S7cG5g+nA7TybWOpKKnWn+gkgHnCo0?=
+ =?us-ascii?Q?X/ElzyBE6uOJE4Eue4r9oJ5r673Mi7i11ko46g4X4SoaF29ncqBmAVVtaUCr?=
+ =?us-ascii?Q?P2g+dy6ty2/UDjRqCX278TCcr1sVj2wP6jcFMvr5V5+IKdNP8yEtQ5IkHUMW?=
+ =?us-ascii?Q?zJre7zPJxEZnWoAI32/lofCef2DKI90dls9uPkIS+mGb9Us1W1WofXGMm7va?=
+ =?us-ascii?Q?1ZgTbJKXCKhhCszKeiXSfMPQfMjWwUBqADe22zKq50/hO7IMWVwnP4pXoloa?=
+ =?us-ascii?Q?uCzm8B5fQr20NFjFo3g9uogEZzJyLkUPDJmQvzQvqe7AxNwvL7XmoHcpidLG?=
+ =?us-ascii?Q?xqSUh6HkXf3IJ8YkKBI1EbCG5UiGLz7yWMqljpjp534xHgCGCO8lYS3kknzU?=
+ =?us-ascii?Q?sO422EfLIOSiyeD4OaW5UvwgudeblQzKIFCwNmUOAttNi8CVR8dwpnta+Yae?=
+ =?us-ascii?Q?++77hybssKtTSrtcwT1SnYpNkt8TzVmoEKq4J5oCD/tZpo8ahaQlAWH0nbY?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1148e159-deb0-4500-b8df-08dc943139bb
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 09:37:12.6997
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR01MB4112
 
-According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the PCIe
-Root Port and the child device, they should be programmed with the same
-LTR1.2_Threshold value. However, they have different values on VMD mapped
-PCI child bus. For example, Asus B1400CEAE's VMD mapped PCI bridge and NVMe
-SSD controller have different LTR1.2_Threshold values:
+From: Jiwei Sun <sunjw10@lenovo.com>
 
-10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor PCIe Controller (rev 01) (prog-if 00 [Normal decode])
-    ...
-    Capabilities: [200 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
-        	  PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-        	   T_CommonMode=45us LTR1.2_Threshold=101376ns
-        L1SubCtl2: T_PwrOn=50us
+If the kernel is built with the following configurations and booting
+  CONFIG_VMD=y
+  CONFIG_DEBUG_LOCKDEP=y
+  CONFIG_DEBUG_SPINLOCK=y
+  CONFIG_PROVE_LOCKING=y
+  CONFIG_PROVE_RAW_LOCK_NESTING=y
 
-10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express])
-    ...
-    Capabilities: [900 v1] L1 PM Substates
-        L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
-                  PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
-        L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-                   T_CommonMode=0us LTR1.2_Threshold=0ns
-        L1SubCtl2: T_PwrOn=10us
+The following log appears,
 
-After debug in detail, both of the VMD mapped PCI bridge and the NVMe SSD
-controller have been configured properly with the same LTR1.2_Threshold
-value. But, become misconfigured after reset the VMD mapped PCI bus which
-is introduced from commit 0a584655ef89 ("PCI: vmd: Fix secondary bus reset
-for Intel bridges") and commit 6aab5622296b ("PCI: vmd: Clean up domain
-before enumeration"). So, drop the resetting PCI bus action after scan VMD
-mapped PCI child bus.
+=============================
+[ BUG: Invalid wait context ]
+6.10.0-rc4 #80 Not tainted
+-----------------------------
+kworker/18:2/633 is trying to lock:
+ffff888c474e5648 (&vmd->cfg_lock){....}-{3:3}, at: vmd_pci_write+0x185/0x2a0
+other info that might help us debug this:
+context-{5:5}
+4 locks held by kworker/18:2/633:
+ #0: ffff888100108958 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0xf78/0x1920
+ #1: ffffc9000ae1fd90 ((work_completion)(&wfc.work)){+.+.}-{0:0}, at: process_one_work+0x7fe/0x1920
+ #2: ffff888c483508a8 (&md->mutex){+.+.}-{4:4}, at: __pci_enable_msi_range+0x208/0x800
+ #3: ffff888c48329bd8 (&dev->msi_lock){....}-{2:2}, at: pci_msi_update_mask+0x91/0x170
+stack backtrace:
+CPU: 18 PID: 633 Comm: kworker/18:2 Not tainted 6.10.0-rc4 #80 7c0f2526417bfbb7579e3c3442683c5961773c75
+Hardware name: Lenovo ThinkSystem SR630/-[7X01RCZ000]-, BIOS IVEL60O-2.71 09/28/2020
+Workqueue: events work_for_cpu_fn
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x7c/0xc0
+ __lock_acquire+0x9e5/0x1ed0
+ lock_acquire+0x194/0x490
+ _raw_spin_lock_irqsave+0x42/0x90
+ vmd_pci_write+0x185/0x2a0
+ pci_msi_update_mask+0x10c/0x170
+ __pci_enable_msi_range+0x291/0x800
+ pci_alloc_irq_vectors_affinity+0x13e/0x1d0
+ pcie_portdrv_probe+0x570/0xe60
+ local_pci_probe+0xdc/0x190
+ work_for_cpu_fn+0x4e/0xa0
+ process_one_work+0x86d/0x1920
+ process_scheduled_works+0xd7/0x140
+ worker_thread+0x3e9/0xb90
+ kthread+0x2e9/0x3d0
+ ret_from_fork+0x2d/0x60
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
 
-Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+If CONFIG_PREEMPT_RT is not set, the spinlock_t is based on
+raw_spinlock, there is no any question in the above call trace. But if
+CONFIG_PREEMPT_RT is set, the spinlock_t is based on rt_mutex, a task
+will be scheduled when waiting for rt_mutex. For example, there are two
+threads are trying to hold a rt_mutex lock, if A hold the lock firstly,
+and B will be scheduled in rtlock_slowlock_locked() waiting for A to
+release the lock. The raw_spinlock is a real spinning lock, which is
+not allowed the task of the raw_spinlock owner is scheduled in its
+critical region. In other words, we should not try to acquire rt_mutex
+lock in the critical region of the raw_spinlock when CONFIG_PREEMPT_RT
+is set.
+
+CONFIG_PROVE_LOCKING and CONFIG_PROVE_RAW_LOCK_NESTING options are
+used to detect the invalid lock nesting (the raw_spinlock vs. spinlock
+nesting checks). Here is the call path:
+
+  pci_msi_update_mask  ---> hold raw_spinlock dev->msi_lock
+    pci_write_config_dword
+     pci_bus_write_config_dword
+       vmd_pci_write   ---> hold spinlock_t vmd->cfg_lock
+
+The above call path is the invalid lock nesting becuase the vmd driver
+tries to acquire the vmd->cfg_lock spinlock within the raw_spinlock
+region (dev->msi_lock). That's why the message "BUG: Invalid wait contex"
+is shown.
+
+Signed-off-by: Jiwei Sun<sunjw10@lenovo.com>
+Suggested-by: Adrian Huang <ahuang12@lenovo.com>
 ---
-v6:
-- Introduced based on the discussion https://lore.kernel.org/linux-pci/CAPpJ_efYWWxGBopbSQHB=Y2+1RrXFR2XWeqEhGTgdiw3XX0Jmw@mail.gmail.com/ 
+v2 changes:
+ - Add more explanations regarding the root cause in the commit message
 
- drivers/pci/controller/vmd.c | 20 --------------------
- 1 file changed, 20 deletions(-)
+ drivers/pci/controller/vmd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 5309afbe31f9..af413cdb4f4e 100644
+index 87b7856f375a..45d0ebf96adc 100644
 --- a/drivers/pci/controller/vmd.c
 +++ b/drivers/pci/controller/vmd.c
-@@ -793,7 +793,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	resource_size_t offset[2] = {0};
- 	resource_size_t membar2_offset = 0x2000;
- 	struct pci_bus *child;
--	struct pci_dev *dev;
- 	int ret;
+@@ -125,7 +125,7 @@ struct vmd_irq_list {
+ struct vmd_dev {
+ 	struct pci_dev		*dev;
  
- 	/*
-@@ -935,25 +934,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	pci_scan_child_bus(vmd->bus);
- 	vmd_domain_reset(vmd);
+-	spinlock_t		cfg_lock;
++	raw_spinlock_t		cfg_lock;
+ 	void __iomem		*cfgbar;
  
--	/* When Intel VMD is enabled, the OS does not discover the Root Ports
--	 * owned by Intel VMD within the MMCFG space. pci_reset_bus() applies
--	 * a reset to the parent of the PCI device supplied as argument. This
--	 * is why we pass a child device, so the reset can be triggered at
--	 * the Intel bridge level and propagated to all the children in the
--	 * hierarchy.
--	 */
--	list_for_each_entry(child, &vmd->bus->children, node) {
--		if (!list_empty(&child->devices)) {
--			dev = list_first_entry(&child->devices,
--					       struct pci_dev, bus_list);
--			ret = pci_reset_bus(dev);
--			if (ret)
--				pci_warn(dev, "can't reset device: %d\n", ret);
--
--			break;
--		}
--	}
--
- 	pci_assign_unassigned_bus_resources(vmd->bus);
+ 	int msix_count;
+@@ -402,7 +402,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+ 	if (!addr)
+ 		return -EFAULT;
  
- 	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
+-	spin_lock_irqsave(&vmd->cfg_lock, flags);
++	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
+ 	switch (len) {
+ 	case 1:
+ 		*value = readb(addr);
+@@ -417,7 +417,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+ 		ret = -EINVAL;
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
++	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+ 	return ret;
+ }
+ 
+@@ -437,7 +437,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+ 	if (!addr)
+ 		return -EFAULT;
+ 
+-	spin_lock_irqsave(&vmd->cfg_lock, flags);
++	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
+ 	switch (len) {
+ 	case 1:
+ 		writeb(value, addr);
+@@ -455,7 +455,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+ 		ret = -EINVAL;
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
++	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+ 	return ret;
+ }
+ 
+@@ -1015,7 +1015,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
+ 		vmd->first_vec = 1;
+ 
+-	spin_lock_init(&vmd->cfg_lock);
++	raw_spin_lock_init(&vmd->cfg_lock);
+ 	pci_set_drvdata(dev, vmd);
+ 	err = vmd_enable_domain(vmd, features);
+ 	if (err)
 -- 
-2.45.2
+2.27.0
 
 
