@@ -1,196 +1,156 @@
-Return-Path: <linux-pci+bounces-9185-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9187-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF57691491B
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 13:47:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 859D491495F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 14:11:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B2701F24A3E
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 11:47:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B69EE1C22150
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jun 2024 12:11:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2AFF13AA39;
-	Mon, 24 Jun 2024 11:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE67D13A884;
+	Mon, 24 Jun 2024 12:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="UkKXE/DE"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pxBPAbNA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381C3137764;
-	Mon, 24 Jun 2024 11:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989DB13B58A;
+	Mon, 24 Jun 2024 12:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719229638; cv=none; b=AjpqP8jdl9UaKrX/Xl2BYp+TTGAiCdnCrLYq+/d3pTw7VEQnJs/FN+gIRTDLf3X7dtwZCcx09Vy1TzT5K2EvCyOIfqrdpOT+e6d08sPd8REJk5aUAhdMtP+0K7Ao2qfx8qiMefZU71UMKQPM30aYPb51u4DAf8uBEVsQNVdRkjA=
+	t=1719231089; cv=none; b=Gc6xz5nETRajvtJXaRL6OczYs92R0qUdtYANRjelI/X3PVKYciCQqRy13LNeHbYHtEZgLuZzQ1g9OYSzA4rpYBuvImZILxelvPhM/4saLhfGdfYBnlIym2cwmOFsZWmwDN65d3Soh61mEipItlG3bVJZlBxjIgHEg4pj3FEqUOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719229638; c=relaxed/simple;
-	bh=UXyhWmWqUF+A3EaGggTlBQHpsHmlB1hyBFiOougSmO4=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d2GdVAN0KjcnFU8t17hQq6G2T2P7EoCUW8kif9kf1XRnEHS7bxxYc2FKyjp+2Jo5bGNAky4zoQHrl6YKbyTQgEr68i+EfAiWEitjL52t4Ehvcmxmj2ibQAaz8U22sid70G2buXMPYGHIRPeulrfUjBqARLtaBshUJChAYf9YWH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=UkKXE/DE; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719229636; x=1750765636;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=UXyhWmWqUF+A3EaGggTlBQHpsHmlB1hyBFiOougSmO4=;
-  b=UkKXE/DE/crjlsLj0CZaj0K+GXnF3MZzHoCS/fBEdjVZAGOA/UEkfU9E
-   hUMoYh5pDxPFqklCjAnNGF8016fw3j7sKmCBWqsdhIkkbeHOONfy39KQs
-   MBPidYc+OVdqNGn0FC6CVARF70bQ4FaGYXuxuOwlzrkcwVC5cHQNcfNVn
-   W1XsKaAaTHHO260ylmjTLfEKp0RzIdzvthjQufPo63FHgr5UWMeipdI5C
-   TnvuSuPwomZpvFwn9zfjV3Uhl8A58WsAA0tC61dIEvSTvJ/Y8ZHlNWmmW
-   D0Kz3dL1kc3iOt0Y1uj+N/2VnxuoIFXcLbVpi9GL90xzk08d2h5tJte4o
-   Q==;
-X-CSE-ConnectionGUID: t0mypC8PTS6ZgrJ8E5DXQg==
-X-CSE-MsgGUID: RXLnRG+kTIWW+V7yloWFmg==
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="28416866"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 04:47:14 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 24 Jun 2024 04:46:34 -0700
-Received: from DEN-DL-M31857.microsemi.net (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 04:46:28 -0700
-Message-ID: <e85511af9db9de024b5065eeee77108be474f71e.camel@microchip.com>
-Subject: Re: [PATCH v2 18/19] mfd: Add support for LAN966x PCI device
-From: Steen Hegelund <steen.hegelund@microchip.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>
-CC: Herve Codina <herve.codina@bootlin.com>, Simon Horman <horms@kernel.org>,
-	Sai Krishna Gajula <saikrishnag@marvell.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Lee Jones
-	<lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Horatiu Vultur
-	<horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>, Andrew Lunn
-	<andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
-	<linux@armlinux.org.uk>, Saravana Kannan <saravanak@google.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, "Lars
- Povlsen" <lars.povlsen@microchip.com>, Daniel Machon
-	<daniel.machon@microchip.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Allan
- Nielsen" <allan.nielsen@microchip.com>, Luca Ceresoli
-	<luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date: Mon, 24 Jun 2024 13:46:32 +0200
-In-Reply-To: <20240621184923.GA1398370@bhelgaas>
-References: <20240621184923.GA1398370@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1719231089; c=relaxed/simple;
+	bh=A3pq/fOH2jgeoQLWF5Kg1CaL6ssryxdVFixD2L0iTvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QzCMHN30W5vrF0cZwPTX2odhLr1JMUw9uZx4AQVjvGSbJ4grUX9FQyk5JbV2t1NFvxF1GoLGFcFUkNnRUOT+LEBwP4EWhefFjKqyQPH6euv6Vg2Lip30VXVzIjpzk2CqQZqhogeSfGK12z1yWOl0uR7/iNscsnKUzDPrwDzGe9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pxBPAbNA; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45OBSQ31004059;
+	Mon, 24 Jun 2024 12:11:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding; s=pp1; bh=mv+8hpJmnLrXeJFDl75D5QYiO+
+	qeOgS6cd6RcKX27fI=; b=pxBPAbNATypX0ED2MPQ+EZiiCW5XtpzXfJZwufCHrh
+	sUYq3DR/6OVNKoDJ5mJ6L5mf8D4J+aDGazVKwsZwLDdjv7HXt5K/b7RmOtAwuXdY
+	E4OEm2lRDl8ImRPcdmVFPe1S5XbiakhCWCc3Mgpelx98aP7wlRA3VueAMiadBsqe
+	L7ZTE479wUHZ2vHvDRBbV/mQYWcb7lgqRBm9CvydXvkOhQAIyCZ9cF+8ndPXTMCF
+	e+cVKDakgoCbLefeAqUaIbpZw/wZd9pSNsPPK3fZ9wkODEC0oZlE7CLZLbfXE1pY
+	FR7x7r32JPVdPa5MbCQqiaD0yUWnBU2aclCJ9IrsgGEw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7y20480-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 12:11:08 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45OCB8a9020068;
+	Mon, 24 Jun 2024 12:11:08 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yy7y2047v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 12:11:08 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45OC6GS7008176;
+	Mon, 24 Jun 2024 12:11:07 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9b0gs87-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Jun 2024 12:11:07 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45OCB1Ps44106040
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Jun 2024 12:11:03 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 98F7F20043;
+	Mon, 24 Jun 2024 12:11:01 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 855D220040;
+	Mon, 24 Jun 2024 12:10:58 +0000 (GMT)
+Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 24 Jun 2024 12:10:58 +0000 (GMT)
+From: Krishna Kumar <krishnak@linux.ibm.com>
+To: mpe@ellerman.id.au, npiggin@gmail.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
+        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
+        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
+        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
+        mahesh.salgaonkar@in.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
+Subject: [PATCH v3 0/2] PCI hotplug driver fixes
+Date: Mon, 24 Jun 2024 17:39:26 +0530
+Message-ID: <20240624121052.233232-1-krishnak@linux.ibm.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=yes
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ilaggTJo8czV2_IQm31jJ5YLIzkATmAB
+X-Proofpoint-ORIG-GUID: 6CC1qLQr_Tkflwy6jOG_wY3SHcWX4jUD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-24_09,2024-06-24_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=979 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 adultscore=0 phishscore=0
+ clxscore=1011 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2406140001 definitions=main-2406240095
 
-Hi Bjorn,
+The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
+addresses below two issues.
 
-I am not sure what went wrong here.
+1. Kernel Crash during hot unplug of bridge/switch slot.
 
-I have seen that lspci lists 'Microchip / SMSC' for the 0x1055 Vendor
-ID value and as mentioned previously there has been a number of
-aquicisions over the years, so that the ID has been absorbed but not
-necessarily re-registered.
+2. Bridge Support Enablement - Previously, when we do a hot-unplug
+operation on a bridge slot, all the ports and devices behind the
+bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
+operation on the same bridge slot, all the ports and devices behind the
+bridge would not get hot-plugged/online. In this case, Only the first
+port of the bridge gets enabled and the remaining port/devices remain
+unplugged/offline.  After the fix, The hot-unplug and hot-plug
+operations on the slot associated with the bridge started behaving
+correctly and became in sync. Now, after the hot plug operation on the
+same slot, all the bridge ports and devices behind the bridge become
+hot-plugged/online/restored in the same manner as it was before the
+hot-unplug operation.
 
-Anyway I have started an investigation, so we can determine what
-up/down in this.
 
-I agree that for now this will have to be PCI_VENDOR_ID_EFAR, and I
-will return with an update as soon as I know more.
+Krishna Kumar (2):
+  pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
+  powerpc: hotplug driver bridge support
 
-Best Regards
-Steen
+ arch/powerpc/include/asm/ppc-pci.h |  4 ++++
+ arch/powerpc/kernel/pci-hotplug.c  |  5 ++---
+ arch/powerpc/kernel/pci_dn.c       | 32 ++++++++++++++++++++++++++++++
+ drivers/pci/hotplug/pnv_php.c      |  3 +--
+ 4 files changed, 39 insertions(+), 5 deletions(-)
 
-On Fri, 2024-06-21 at 13:49 -0500, Bjorn Helgaas wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you
-> know the content is safe
->=20
-> On Fri, Jun 21, 2024 at 05:45:05PM +0200, Andy Shevchenko wrote:
-> > On Thu, Jun 20, 2024 at 7:19=E2=80=AFPM Herve Codina
-> > <herve.codina@bootlin.com> wrote:
-> > > On Thu, 20 Jun 2024 18:43:09 +0200
-> > > Herve Codina <herve.codina@bootlin.com> wrote:
-> > > > On Thu, 20 Jun 2024 18:07:16 +0200
-> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > > > On Thu, Jun 20, 2024 at 5:56=E2=80=AFPM Herve Codina
-> > > > > <herve.codina@bootlin.com> wrote:
-> > > > > > On Wed, 5 Jun 2024 23:24:43 +0300
-> > > > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > > > > > Mon, May 27, 2024 at 06:14:45PM +0200, Herve Codina
-> > > > > > > kirjoitti:
->=20
-> > > > > > > > +static struct pci_device_id lan966x_pci_ids[] =3D {
-> > > > > > > > +=C2=A0=C2=A0 { PCI_DEVICE(0x1055, 0x9660) },
-> > > > > > >=20
-> > > > > > > Don't you have VENDOR_ID defined somewhere?
-> > > > > >=20
-> > > > > > No and 0x1055 is taken by PCI_VENDOR_ID_EFAR in pci-ids.h
-> > > > > > but SMSC acquired EFAR late 1990's and MCHP acquired SMSC
-> > > > > > in 2012
-> > > > > > https://elixir.bootlin.com/linux/latest/source/drivers/net/ethe=
-rnet/microchip/lan743x_main.h#L851
-> > > > > >=20
-> > > > > > I will patch pci-ids.h to create:
-> > > > > > =C2=A0 #define PCI_VENDOR_ID_SMSC PCI_VENDOR_ID_EFAR
-> > > > > > =C2=A0 #define PCI_VENDOR_ID_MCHP PCI_VENDOR_ID_SMSC
-> > > > > > As part of this patch, I will update lan743x_main.h to
-> > > > > > remove its own #define
-> > > > > >=20
-> > > > > > And use PCI_VENDOR_ID_MCHP in this series.
-> > > > >=20
-> > > > > Okay, but I don't think (but I haven't checked) we have
-> > > > > something like
-> > > > > this ever done there. In any case it's up to Bjorn how to
-> > > > > implement
-> > > > > this.
-> > >=20
-> > > Right, I wait for Bjorn reply before changing anything.
-> >=20
-> > But we already have the vendor ID with the same value. Even if the
-> > company was acquired, the old ID still may be used. In that case an
-> > update on PCI IDs can go in a separate change justifying it. In any
-> > case, I would really want to hear from Bjorn on this and if nothing
-> > happens, to use the existing vendor ID for now to speed up the
-> > series
-> > to be reviewed/processed.
->=20
-> We have "#define PCI_VENDOR_ID_EFAR 0x1055" in pci_ids.h, but
-> https://pcisig.com/membership/member-companies?combine=3D1055=C2=A0shows =
-no
-> results, so it *looks* like EFAR/SMSC/MCHP are currently squatting on
-> that ID without it being officially assigned.
->=20
-> I think MCHP needs to register 0x1055 with the PCI-SIG
-> (administration@pcisig.com) if it wants to continue using it.
-> The vendor is responsible for managing the Device ID space, so this
-> registration includes the burden of tracking all the Device IDs that
-> were assigned by EFAR and SMSC and now MCHP so there are no
-> conflicts.
->=20
-> I don't want to change the existing PCI_VENDOR_ID_EFAR, and I also
-> don't want to add a PCI_VENDOR_ID_MCHP for 0x1055 until that ID has
-> been registered with the PCI-SIG.
->=20
-> So I propose that you use PCI_VENDOR_ID_EFAR for now, and if/when
-> MCHP
-> registers 0x1055 with PCI-SIG so it is unambiguously owned by MCHP,
-> we
-> can add "#define PCI_VENDOR_ID_MCHP PCI_VENDOR_ID_EFAR" or similar.
-> As Andy points out, this would be a separate logical change in its
-> own
-> patch.
->=20
-> Bjorn
+Changelog:
+==========
+
+v3: 24 June 2024
+  - Removed the DPC keyword from description in cover letter and
+    patch2
+
+v2: 14 May 2024
+  - Used of_property_read_u32() in place of of_get_property() and
+    of_read_number(). [patch2]
+  - Removed some unnecessary variable and changed the function return
+    type from void* to void. [patch2]
+  - Removed the export declaration of
+    pci_traverse_sibling_nodes_and_scan_slot() as its not needed.
+    [patch2]
+
+-- 
+2.45.0
 
 
