@@ -1,127 +1,117 @@
-Return-Path: <linux-pci+bounces-9254-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9255-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 260DD91728D
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 22:32:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A7091729C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 22:42:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A446B1F220F0
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 20:32:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76A0F1F228BD
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 20:42:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF88416B39A;
-	Tue, 25 Jun 2024 20:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73628176254;
+	Tue, 25 Jun 2024 20:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BHRgApjD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R6oZZrh0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B5C632;
-	Tue, 25 Jun 2024 20:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6E24C6E
+	for <linux-pci@vger.kernel.org>; Tue, 25 Jun 2024 20:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719347536; cv=fail; b=LyN70X9C2f7tPqDUFB5lyx3pfwMlIki0bcy2pitD92Tz4rK19WbR64up+GzsS34da15xNXCfwPtMPI1bq7sO50MSH8U/Gxro7WLkoxjOtOzDGha70PObXtXePiE3L6eSpdS7toWFe917aFUI0TPJFi5/I54WvIcNDH96d5MZu9E=
+	t=1719348152; cv=fail; b=ot639HuExMwLfM/iX8ZwK6MA46pdBqtOtPs8qHn7Mrve0hFynLaRLsBy3VtoVMi6HJeoCRK5smVxV1RLMBEbC1hZb6Ynt5BbwORoNOp3ZuMKHnNwMuGZFXXGuA5oBXm9K/vZs16uXCMb++6cxfc4ram1N9kyLtRdLZBrrYXsZWw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719347536; c=relaxed/simple;
-	bh=QPysDPExLurSE/r3rXl1cuLuvGUUcz5MHWbYbDfKXzY=;
+	s=arc-20240116; t=1719348152; c=relaxed/simple;
+	bh=jGxPS5yw1cWzUeIgAaJ0LXy0rN+uETL+knhbj2F7rWE=;
 	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MmyOdkDRu6sw6OvAnDC6sEz0+2qpbtaZCjsYl5HEQLFAzUlbo0qR4+BrbmWlzXqOCQ7u0MDKcjOkMJQSA4K5CcP0pExiVKxraJ72MVABWPnCdZGSEUuD8893lqk7y90vd8ZpA57qNrFmb7ZuTToT2hpQqGUWXUd/K9gOHnc94ss=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BHRgApjD; arc=fail smtp.client-ip=198.175.65.11
+	 Content-Type:MIME-Version; b=MeLdhjpiduT1pHMjmyu3Us+tQ2PrwX0xruYIyjpjnazUzz5An8SfT0//ot/gRwFZLZda4u35AvfcFLlmC2siioc0V7q2pMcHVWU/BpRyVGHiiIhNV0iyICV1OIsuLxB/5PPZwLKpbV0Y54SlttD6BTV0hXIL0qol0iF3NgL0D5Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R6oZZrh0; arc=fail smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719347536; x=1750883536;
+  t=1719348150; x=1750884150;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=QPysDPExLurSE/r3rXl1cuLuvGUUcz5MHWbYbDfKXzY=;
-  b=BHRgApjDakXRhfm7rY5H2OT0o8pUcgvBe9+GkGkxo73QXgbTSkxc2e/2
-   xljkkZyMbBiDYQxm47bbw2boXqB+qNodA+aRyCpZW+9QTMwxS2HmYWro3
-   Y48Tfl2CMk/J29FFj8JsECGHc1xcKaElvkIxl3XKVHPRT3Vl2O0MBTMv3
-   QuLoOpExKB1PmWZJ7i6eOObPRnVUYy0qwv5XNkyHhqVC7mNLoMFQ4jqEs
-   8bvN8R2Q1OczWaQpfb7fMF7LGcDoGfIovSc6YvxohK48li4uURLaD/61g
-   0ddQazbBq1I+CGj6Q08MeqUxyMKQ6jb+0JIz8ER0scHR6xpka+qWi/grY
-   w==;
-X-CSE-ConnectionGUID: xWzfvPG/TxSp3HJ8CO0/yw==
-X-CSE-MsgGUID: R1nCSZdQTYewsroB7b5J5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="26979294"
+  bh=jGxPS5yw1cWzUeIgAaJ0LXy0rN+uETL+knhbj2F7rWE=;
+  b=R6oZZrh0EtOF7PGtrG/c5m3HZas+4+zt1bLM43hYYwIDAMWRZhrZcbc2
+   yi+d/GYYZXRihYCBZY3nygcStW1BQ9fNzYx90cCwbat1KDe4xM9nJBpa1
+   7D3IE6I10Zliql6cIcdCJbsKyqT5sKPH+/793XyUFCIzc+mHMfbLod6Ns
+   eY2HnAs4/9u2B9EP91GnhnULR4ZdgblCtwwWgD0/ajERNFECNItbbWDfZ
+   byJVTY+YKPR8AhBWtXrIOm0m1YlYNg/KI72bYv4zJ0SjZfjpsM40Rc4bY
+   sdj9nXLYwJ6WwjetwVjUcxKBldDH25z4vYC2feXbaljQCBNx0tMe0ZTsW
+   Q==;
+X-CSE-ConnectionGUID: IwSv+r0YTVef/LMcOPPCdQ==
+X-CSE-MsgGUID: Bfws97TbQ1aFrMd8iDIxfw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="27796173"
 X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="26979294"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 13:32:14 -0700
-X-CSE-ConnectionGUID: v2PawBV4QL+f2efSh6IW7g==
-X-CSE-MsgGUID: IVbqxPR+TjqitxevnsQSlQ==
+   d="scan'208";a="27796173"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 13:42:29 -0700
+X-CSE-ConnectionGUID: AKoyqqg6T/W3ekHAK3NuxQ==
+X-CSE-MsgGUID: fnihZKBoQE6HxWO354UqCA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="48354387"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jun 2024 13:32:12 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="43663633"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jun 2024 13:42:30 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 25 Jun 2024 13:32:12 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ 15.1.2507.39; Tue, 25 Jun 2024 13:42:29 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 25 Jun 2024 13:32:11 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.39; Tue, 25 Jun 2024 13:42:29 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Tue, 25 Jun 2024 13:32:11 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.39 via Frontend Transport; Tue, 25 Jun 2024 13:42:29 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 25 Jun 2024 13:32:11 -0700
+ 15.1.2507.39; Tue, 25 Jun 2024 13:42:28 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PTYvhFQvF+5kZBfdIgWgJoFCnkzL+kxFuVHyL/j9S5zPdpK5GPKYmT3dPDEJ3hx32mmXZyKT3iyuuQShoI8x9jnn/BGVkqfJsx+J4acUZRDPxVHi/rjN80+EhvuCN9i/irOESWxirdiFmWPKfIheUtmVluj1uWJVDSN+fxfhlgZKIDwccYNsWZ8D8mM5tWgxtdNxL89DpX/vOVmGE4pkrQ+4erpt0zuD+gzMGS5VFDkrc9YBDZ+FXcXFvIrsz1brN9TMvgal+nFhNWAZLkTU2FDdC5mEO4tY8tFu8yD0wQq6mXVhxgjVPz8miMzdDyTQYLi8nRYtW+KmAlNU59apgw==
+ b=RSqFVbrvCm0YC4MQAcR6rxRE0UuT3CI+jXsTpbEZG5zZjZF/M/gSQWPXPIb9So4FAP8deY9kWNVj/FSgkOapBgcw3bElh86GHkx16LqkteUdAa98bNPDCzzZVbuCahJyscLqH6mbJiBRe5wonIEQ7zIy5qDjdYhCK0oSQcFAHI6RsFVZXvSQXMUofbvREv+FliBn6zMWKjm4qmL3OnPISJh7lTciCyNgnXhdbhFr647WuAKZ4tBEr8O+RnnDsP39zVt5dmTWCzTwQkllXI1RX8vaGwqUniPs4mxT26OayxnQy1jwdyW6kJjDOhV9EWrfFUn0ggHYYUnEEuZEHoEXzg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cvlJGj2j7GAEqDf7LaYU6PnFJt60J4aGa7sLq0F86Fo=;
- b=PgKBshAWbyGfaasAfbE0JYdfM/PtNistSReY/Fqa6P2b78zVam8p7UEZimHKHFyZjJ9XvQ31nD3j7rVUavYp0EuNS6ChDHZ2ZamFX7EOdrA9NdOjyGkuO0TlNJM9DGXUuVxoUoTw0oZChST2MLbY74lQ76GcEgF9b6RBvZL4zo0thLNa8L54R8Xj89cxxe98DC1232tITnVqcg7GdkFl29rqqfB/YHN302SLkd8VjzwtX7t00+7JbH0sxOXTlkh0AebPwwA8SnhpwLWjoEyP0RuuyO1DW1DpBLKqbi0PPwksGUYxGjbLN2glxeFruTyxd09farXvLFjvHuCJo94gUQ==
+ bh=HLY3TdBUdIZlfZ8i44QYdaIrIvgw5gIMpwuWL0oKWx0=;
+ b=Di4iJTHxih09EC1fyJDyZsKSflJQOMRAutXVEnTN5ssh5ReiCvn9NuCkkEqHvU1aFt5X07AMeVAUaWos6nVWdF/MdrWRd9X3OE6EDghWthc9tw+/8vN3hykXfXxJeTOYECRqNhJZKbo1CtdtO4wuWZsxpE88S1Gig04UwCYs7BASjOpypMXg994yU3+OaGp8OSO5K1t4DQWACi4ZIWEXLBMrNqSQ+R/qtgeVfZAQQBVSv9Bkjitn6WDuNxGs0g4CUefmc75A6ESPLOpS0kZpVspj4imzi9Wp+zMK0Dd/bvqA4etqmPsOuguwynqvBjrqiP+v2NAmFY8K7zH2/R+i6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from CO6PR11MB5636.namprd11.prod.outlook.com (2603:10b6:5:357::21)
- by PH7PR11MB6649.namprd11.prod.outlook.com (2603:10b6:510:1a7::19) with
+ by PH7PR11MB6953.namprd11.prod.outlook.com (2603:10b6:510:204::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Tue, 25 Jun
- 2024 20:32:09 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.24; Tue, 25 Jun
+ 2024 20:42:19 +0000
 Received: from CO6PR11MB5636.namprd11.prod.outlook.com
  ([fe80::6e1a:9fd8:2300:d3f9]) by CO6PR11MB5636.namprd11.prod.outlook.com
  ([fe80::6e1a:9fd8:2300:d3f9%4]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
- 20:32:09 +0000
-Message-ID: <3ea8faab-f731-4464-9811-c93e638f0cb6@intel.com>
-Date: Tue, 25 Jun 2024 13:32:06 -0700
+ 20:42:18 +0000
+Message-ID: <048d8fd9-e91f-4e15-80a7-380b4179fb0d@intel.com>
+Date: Tue, 25 Jun 2024 13:42:15 -0700
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/3] PCI: vmd: Drop resetting PCI bus action after scan
- mapped PCI child bus
-To: Jian-Hong Pan <jhp@endlessos.org>
-CC: Nirmal Patel <nirmal.patel@linux.intel.com>, Bjorn Helgaas
-	<helgaas@kernel.org>, Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>,
-	Johan Hovold <johan@kernel.org>, David Box <david.e.box@linux.intel.com>,
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Kuppuswamy
- Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, "Mika
- Westerberg" <mika.westerberg@linux.intel.com>, Damien Le Moal
-	<dlemoal@kernel.org>, Jonathan Derrick <jonathan.derrick@linux.dev>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux@endlessos.org>
-References: <20240624081108.10143-2-jhp@endlessos.org>
- <20240624082144.10265-2-jhp@endlessos.org>
- <20240624082458.00006da1@linux.intel.com>
- <897ead26-be10-4bb3-b085-1b8c97d93964@intel.com>
- <CAPpJ_efs9nHrTx=N2NwtmN=py3CFg62izcgJrUkcMDd_ErR5VA@mail.gmail.com>
+Subject: Re: [PATCH v3] PCI: vmd: always enable host bridge hotplug support
+ flags
+To: Bjorn Helgaas <helgaas@kernel.org>, Nirmal Patel
+	<nirmal.patel@linux.intel.com>
+CC: <linux-pci@vger.kernel.org>
+References: <20240621211643.GA1406072@bhelgaas>
 Content-Language: en-US
 From: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-In-Reply-To: <CAPpJ_efs9nHrTx=N2NwtmN=py3CFg62izcgJrUkcMDd_ErR5VA@mail.gmail.com>
+In-Reply-To: <20240621211643.GA1406072@bhelgaas>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR01CA0068.prod.exchangelabs.com (2603:10b6:a03:94::45)
- To CO6PR11MB5636.namprd11.prod.outlook.com (2603:10b6:5:357::21)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0094.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c5::9) To CO6PR11MB5636.namprd11.prod.outlook.com
+ (2603:10b6:5:357::21)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -129,207 +119,219 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR11MB5636:EE_|PH7PR11MB6649:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb99e2a8-a3f0-4264-a2f3-08dc9555e2f0
+X-MS-TrafficTypeDiagnostic: CO6PR11MB5636:EE_|PH7PR11MB6953:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6fdabe0a-9331-41c5-fafb-08dc95574df7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230038|366014|376012|7416012|1800799022;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?S09PTTRtSVYwS1JjbnJ0V1oxVmRDb216a3h5VnhldURwY2FuUi9qM3lsbEd6?=
- =?utf-8?B?TURYTVNyR0gvcGZMZVcyMHRFdVBIUHlvTGpIeGxTbGRQY1NKTFVkb05LZDBM?=
- =?utf-8?B?MW9RQ25RTVhtcmVUKzE4WFZoZDNVd1Y1RW5mTU5RZ0lwdmNxTzRzN1hjdEF4?=
- =?utf-8?B?a0w0aUN0NkY4dFMyeGFldzRjV3J2MitBTm9Ia2lwWHpqWDMrMVdlMTAyTm41?=
- =?utf-8?B?NzJwSjc3ZHJEMERKN3VLblRhQThRZ3VIcXRMcnZET2Z1V0J3WGR5d0V6N016?=
- =?utf-8?B?Wkkvc3JIQkwrWFlUMXlUbkZoQWtSSk9JV0pYRzdEcTE1aGVHZitCRVRRelJC?=
- =?utf-8?B?TG9PNEQ3Nlg3MW1XU0E0QXNtSXpxNS9RTTd4MVNnOWxCcG1HcjJzU1BaMndn?=
- =?utf-8?B?R01DMzdiS2ZiTWgzRllxbkdhOFBsOVBsMitpMDZjaWZwZTBBekFvaWJjbUJH?=
- =?utf-8?B?MlBEaGlXZHZpbXNTYi9xNEV2bVB5Q05ZMzV1dDFaQ2RVR29YQnJiNFFYTlYv?=
- =?utf-8?B?Y1NTVDFXT3N1SE9GQjRQTWJqekNqZ1grZHFMVjVhMHBsaFpjZ2JjYVJEWTBJ?=
- =?utf-8?B?VHBpT0k5K2RONmVxVzIvRWxJdFlyK0tLc3BiK1JCYU9FZ1owUkt5a1MxTG5E?=
- =?utf-8?B?em90OCtBcU9jNEMrZDEybzZMTFhEejZiekFxZEJPOHVycjJhandudm00bHNl?=
- =?utf-8?B?Tld1ZW53RHdFemx3QnEzY1pSOE1sa0FEaytWZFBSY3NFQkx4UkJRNzdEdTla?=
- =?utf-8?B?WTJ4bFVFdDJML3gwQjEzcmZjRjRJSkJJZTVodVAzM1hYdGNhQTI1OGhtMGJ6?=
- =?utf-8?B?dk1KMUJaclFkblZKZnpmNndhRXZFN0t1MXp3UVV5eFdRRDJRb2xERnNvNlhF?=
- =?utf-8?B?SHdsOFZvYnI0Vno2QW9lQktvOThVRy9yNWR3VHloZWdtRFFHMjYyVkkwMmVS?=
- =?utf-8?B?OWI3WUx3Wi9wZVRINU1xUDZaREhKKzRpeW5lMzA0U3RTVUQ0aEpCUlVqMllW?=
- =?utf-8?B?c2JCQzJtanRmS0dqZC9lMkJBQU5pcWozYmtYYTdjM2xTUkhNbnVzaC8wRXNL?=
- =?utf-8?B?L01tNzZTTmROWGF6MWgvelFudHkxaENWenVySTBaa3lhc2VsOWpka1d2REFY?=
- =?utf-8?B?MTJtWU5FbXdKMnlSVkZSZGFKMERYTktiL1QwaE91RzkzcFZwa09mNW42Wms5?=
- =?utf-8?B?bk94S1RTVjhyWkN6bzM4R0xDWXl0QnlFdTJ4ZG5vKzl1ZXYrT2Fud0dtck50?=
- =?utf-8?B?NDE1eWN1TDlxbVQ3SVJJbzM1b3NKcldzQURLMjVUQXBUc2JhYWEzcnlEenBM?=
- =?utf-8?B?M1FwSUxxaDNpQUxwRXRJNHQyL2tBNzU1QW0vcnk3L1RIbEZ6WUFxUGRBN0hJ?=
- =?utf-8?B?VmhTamR6ZDQwY3BobHVSZWY3ZVpFd0dsTEllN1VXdS91SHluVEZGVG5ST3lw?=
- =?utf-8?B?dWtuWThxSUc2M1Jac0NXMmJhWnRHc1ZzRC9Na2xNWkRoMHV3SDNienlsWnYw?=
- =?utf-8?B?SHhSNVNIZVFpSngyckRRbGlDRVhZbXFIdmEwN2dnbWkweVMzUFkxL0VCQm9W?=
- =?utf-8?B?cFRsR3ZKbE03Zis5eWJQeC9EUTVIMGV6aTBhMGZCOEZpM0VObkVRU2Fub2wz?=
- =?utf-8?B?K0ZsUThONXhEZ1ZFN0d2d3gvU1k1RzAyVVFsSkp0OThXbXdoSXVESjdqQk5I?=
- =?utf-8?B?eHFZcWVUOUJ0cklQQ0ljUmxWWFhTWWRYUC9UV1l5OUI5RXVKYzMycDcxd3lk?=
- =?utf-8?Q?U0e6vxQW6Lth7HWpQ0=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5636.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(376012)(7416012)(1800799022);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230038|366014|376012|1800799022;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cE1tUjh0SEE2NXViaEdWQTNINTNvRkFIWWpBVWFDRTFCR0xEcUVCTFJYOWRt?=
+ =?utf-8?B?a1Rjb2oyODVGVnlEeGRzUlhIaVZKcEZJRktpL3lPTVZOckIvRXRkWVhrQlF6?=
+ =?utf-8?B?NWtCYllqM25yTnVUNmFMZzl2MmFSdkZ6S2QwQkI1OFhWajJVUDY2YTJwRDlx?=
+ =?utf-8?B?dVAzL3FPL2VQY1ZETGFRUEJZbitkdncyWXdtRmZneklTTDN2bjN4dlp3bWto?=
+ =?utf-8?B?VXRJbDVlTzlNYXFDMWFBNjc0aFo1elovQmV4cVB4Tm05QlZJbGhEUlNvNGlH?=
+ =?utf-8?B?d3lrSlZFRmx1QzkxSUxPUUJDbWZNRFJ1UkJaaXN6TzVQTnZLM0JyUzI0WTFG?=
+ =?utf-8?B?ZkJBRmJXdTlpZzZxY0pBNHl5VXh1VHVXQTJNUWZwYWo4WUtrZ1psbDBVNnJZ?=
+ =?utf-8?B?SmFkd3V3OW1zalFIUmIxdG5nNWxkb1lnSXEva3o3bkhDOFQvYXlvSlZiQ3lz?=
+ =?utf-8?B?QTNubTRlOVNLRDJpMGhSRXA2ZHNPVjM1ZFE5OGczVXdlS0pVUUJCOFlSeHdZ?=
+ =?utf-8?B?TnZRbzI0TTVLZ01NQWZPcTd1VmdHeUpNNUhnajBmR1ZZL21RbEJZYXlPcEIw?=
+ =?utf-8?B?UUIzeUtVOUFVQ05CbFQ3Wjg3MWxFZ0JxK0d4QWcyUGtRejhvRm5IdVFLb2RG?=
+ =?utf-8?B?WlRtaVBBS21BODJncldqMzNWQ093WGcwYVZxQ2laNksxL1dPTURWMWNMN0da?=
+ =?utf-8?B?R0ptK0xzck1RWjhadis0dld4YUdnYWRYTXhqdDlaYlJvVGx1WlNtcWJlSXN3?=
+ =?utf-8?B?b1V1S0k1S1dIZ1BhVklsZWV6MERaYTcxZzlmd3h4cFdCSCsyRXdiRUZQZ3NQ?=
+ =?utf-8?B?cC9zdTN0VXdmUUxybWZiWk16TDlWR2ZMTWtFb3lvNytta2Fscnp3d0lHV1p3?=
+ =?utf-8?B?Q0p2dXZ6K05RTXhOTzB5amRCeUpGSnRiSmozMzlFS3ljeFd0bFE3YW4wcU1s?=
+ =?utf-8?B?L1BzRXNrWUZ3M1FDcEQ2dWF1QVhwYmtJdlFjdUd0M2RzRGdsaUVFYVZ6YTZt?=
+ =?utf-8?B?bkxRaEZ3N0dPZkxiVW5nSUxOalpWTWNyRVdvMnk5MGVTandWdzloZTZabEht?=
+ =?utf-8?B?SzJSbDJKdHBNYmVmdjdWV3ZHNG1qOGpHYWJLVDcrb2QzRXV6YW5xR3d2YUpZ?=
+ =?utf-8?B?WWpXQXJ6Z2xWVHk4NnprQXpOLytETXJSdWk5ckt1Tmxza015MVI5TkFCcG5o?=
+ =?utf-8?B?aGkxRU9vMEZUdmV5QVY2Q1JHMHJVUEdsWnl4MUFGK0h2aFAvOXh1cURNaVJs?=
+ =?utf-8?B?UmEvd1FMTGZKcXY2ZGo3N1A3VWtJOUMxeTk2MmJRamlUZ3FBOUc0aHBUVkli?=
+ =?utf-8?B?T08zblRYZnNTU0dVbUx0TElSRVJ1MnYyczdKRGcvVXFWMllFZzhwclFsU0F3?=
+ =?utf-8?B?QUJqUkVTeWNHc1ByRW9wRmtVYTdZOUkrSDdHdy9uTzViOEpSUWRpVlVybDl6?=
+ =?utf-8?B?TDdIMFFsc2xYUDdyUHk0Wmc0SDVLVVBYS0JzWHBwb0kyRHFGU05hYlBYaEF5?=
+ =?utf-8?B?VXpqMXgyWmV6MmRXN0kzaklMbEpHT1ZDMVpGYTZwQzZOQkh4MWw4bUtoa1di?=
+ =?utf-8?B?Y1lnbm11SklObk95dzBSOFN0cytib0g1dVlQUXA2WWo3bUZSaTZiQjFJT09F?=
+ =?utf-8?B?ZWovOUhHUzVmZ1gwbUIxSC9QOFFpOHVWbVJodDZhTVlvWVpTeGgvRFV4REd1?=
+ =?utf-8?B?a0gzZjl0QmR4ZDRJRWZKeGJYbTNzcndMRmJwMnFEWW5SbTRaVTlIQnJnPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5636.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(376012)(1800799022);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NkR3elljL3pLSmN4S0dwVVJYWVc5SUJlamhRUTZBRWU4c2xyaWNWQjkxbWlX?=
- =?utf-8?B?T090VXM2SmVtMk9kbWFuWEd0ZzFoZjBNaXBqZk4xNVg5aUR6emRPaTltNXFM?=
- =?utf-8?B?enBRSENGUzVVN2ZoeW80VEd3Tzd0M0tYM3pIWTRlOUk0NUtncnlKTVFadU44?=
- =?utf-8?B?Rmk4MzVCVGNGMFpjYmxyYlBqbGZMQ1c1VGd3TCtwMXBwWnYrbDVYL3Z4Yzk3?=
- =?utf-8?B?d1Y5dlpQaWs5ZDNSMnd4WDZKUnl0QkZOMTh6bWV5QWowYnl4WDYyNDlYVmZu?=
- =?utf-8?B?Z005bm9iT296TE1SRjFtaFpFSlNjRk1lQW5MUTVJbmpJVnArcWpPS1NZMjdm?=
- =?utf-8?B?MVZqVS9tQmkwb3Y1Y251YVh3WVBYSENOd0VtU1V3c01EVFBqYVorMkZNNW83?=
- =?utf-8?B?V0lPVHRpdXJ6RVRtekZpL01ROGhueWF5akdTQ0dnUTVVcm51THNmdGoxdlE4?=
- =?utf-8?B?V2ZiY2hsYW5MeE90WFc1M3N4OGlZa0FzSzdOcXMxWW00V0NlcjNJaCszZjRs?=
- =?utf-8?B?QWRWY2pqajExQXh0c2RyU3ZWZTNYWGNnSUIwOTlCYjZpZ3VqSVBMUXM3SDNL?=
- =?utf-8?B?UDZvc0l0VE5qVDNna2MyNHY1N2xqdlpiTGVXTjVWWTB4dDlvM0twcUFWQ3pK?=
- =?utf-8?B?aXpLSHJETWd1eHJNTHA0UkM2Ym1wSnFWVko4a3pxQjN5M0FOWWs1dEQ1RGdU?=
- =?utf-8?B?TzZFeW9JNFNCZWRoYnc5a1k2aDhmRkZOOFY5VjdGbVROQWg3MGNPRTV0d1kz?=
- =?utf-8?B?T0UrVVNoZGNSbDkxNXJKNmkyUlZmR3lKcGFseFB1TGJvRENVYXJHeWF4b3do?=
- =?utf-8?B?a1p1N3BrZ0tDdTlLQUJTMzAwanVWRnpPNnM1YmRtcVV1MjVydk5BRkR3c0tK?=
- =?utf-8?B?TTNjV2VaQlBJL2UzamMxR1h4TVEyMjNwSG5FeU9VOHNYWVMwVGdSNlhtWko0?=
- =?utf-8?B?S2UrTitQbm9XZ3dTYnEzbzlNSDFuRXNIb2lqWlM2Y20zMjg0THpIc3VBNllm?=
- =?utf-8?B?N2ZnM3Vqd2x5RlpKT2JpanJaSFk1ZlV0S2liZTdPUnhnM1J2NzBWb2NEV0M3?=
- =?utf-8?B?SGp2NFRzZVJTMlFNMXVZSkJ1aEtOS1RTN1JwenF6QjkrNXFUZElpTjlWNUFJ?=
- =?utf-8?B?aUM4K0wrSWc0RVBNekhqazdIOWk0dWdQK0Y4ZWNtbTFiaXJLUkM5WWFxV3px?=
- =?utf-8?B?WDdJUG13U0RqbU1saGE3Z1M4NVNuRTJ4ck1LVVdkaEc0c2hSZWt4ZTJGbVNT?=
- =?utf-8?B?RlNJQzMwUEZNQXJ1NWdiaEM5czRxajAzekFpa3FXeGhvQlNoZENEdkRBVFBh?=
- =?utf-8?B?NlhOMktYZkJKWmhDV1M2cE1ZNWw4OFVOZkpoeGR6d1NWQjV5emtHU1dxRGt6?=
- =?utf-8?B?NEkrTkdvSVJrMk9sRnZlRVJ2WmJ5WkdTQW5MeDRKRkovVjhtcjVZdzNEY2d0?=
- =?utf-8?B?YjYxa2l4TEFWUnVoYTdHVFZKU1pLVU12Y3kvaXc5eDlEK2ZmL3NNVDhWNUlU?=
- =?utf-8?B?a1E0MzhYT2tXdC9DdkF5czc0WWlDMndMKzZ6ZDJxeGdrU1RiK2VreUNwZ0hi?=
- =?utf-8?B?UUZINWIxUDNRZGNwNzNVN1NBQytnU2Y5eDlCU3Z4SVdLRmxhaUtGazRaRGJ2?=
- =?utf-8?B?eVlSbGFtRWp4dzZXOHMxY1hYRWlrZHBNbzN6ZVRKWnJMT3FIV0F6Y1F4NTNr?=
- =?utf-8?B?b0VaNG5VMy9jeFN3a1RKSkF4QmdBUVJzNHM3cWVhMll6aDZ2eUx1amM1WkNx?=
- =?utf-8?B?L0lKWTVXMUJiRVBnbEZla2ZXRFY2QVBhL3FhYXVYdVZESmk4Y05qeTN5SWtH?=
- =?utf-8?B?cXhBLzJoNVlaV0xXVmIxUXFsZURzRXVkb0djejlmamcrdkpjditOcDVKdnkr?=
- =?utf-8?B?Q0NETm9XVS9CTG9uNTFSL3hXbDdtNWR1ZFh4YktPYzZmVWd0aVpQc0NoZzA5?=
- =?utf-8?B?V2ZVVUpxdzB5TU94TkRURmNramVIb0lUS2pmTmdRWjd0ZVhKbThoQWhFZGlG?=
- =?utf-8?B?SGJzQzdzSUJUQ0JoNTdaTEY3TEwvb2hlWUFFQWo3aytRYTJVQzAvR0p5T3Jy?=
- =?utf-8?B?NWE5cTN1N1hJZEVLL0VXU2dNU3MzNGlreXVHRTRhczdyUXRQU2ltWGdCcTVs?=
- =?utf-8?B?T1I4VHZqSzFid0ErQW05TzA3WXUxNThUZ25WMGhMOC9xMnFuNkZwTmdLcVAr?=
- =?utf-8?B?TkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb99e2a8-a3f0-4264-a2f3-08dc9555e2f0
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?R05ITTJCRFB2NW50NWNEeUV0TXVSQUdRYmdSNytudDEzdWVycTdqVzdtblUr?=
+ =?utf-8?B?WW53cjd5d2NBYU4wUDZ1ejNvdDg2S1pmZTk0VU11dHhycmlQVkNiUGZHeHd4?=
+ =?utf-8?B?Rlc3V1Z3Ync5V2p2SGgrajRxNDVWdkZtRUVDSjdabk1pdWF6azVOK21pQ09B?=
+ =?utf-8?B?RXlqUEt1OE9VUFo1RUMwbldBUHRIcjl1L2hsZyswWkVrSjYxTzZlc05SUlgw?=
+ =?utf-8?B?ZWNZL21JNGlTVzdvOS9vdFlCdU83djF0MFNUS0gwOXZ0bFlUdHZucitCSVZW?=
+ =?utf-8?B?bk1laUJVUG1KQ1BjWW9FY0gzL2N1RzQ0dFgyTmRNdURkbEFZQllmUTRxOXZQ?=
+ =?utf-8?B?eU1aR0RaZ1A1SnZqZytBa1ZiT0xRQUlJUUpUWlJ1Tjg2bjcwTkVZbzBKVU9m?=
+ =?utf-8?B?SXVuY2NvN21WaVlhVGlLcHZ4WC8vaFhiR3FISzQxaVl0ZEhhQWlPSFdQTnVT?=
+ =?utf-8?B?NHBzN3ZRdGYydk5TV3N2b2VEakMxaUxOYnR2N1NCQVlOMVlsSGJyQXRyVHFM?=
+ =?utf-8?B?YzFXSEkxUXVCdmlOQ3QvQ0RnSlFVWGFTQUFLVnp6Q1owSGdnVVVaR0t3eGZ6?=
+ =?utf-8?B?MHJWTjAxQjUrcU5mVXJQcHNCM2xBeW41SnVURWNoVVJJZElTbkNxYlpNektv?=
+ =?utf-8?B?a2xtcmpjdHdhTmZRRkNPS3hzeGpKWEdjakVvQms4YnBQR0hpcjhLRVFPSDla?=
+ =?utf-8?B?TU9DaVJPU25DMGZhSituMnpHaGRML0lqRkZ2eUFlTkowc1ByRDVjM1VnTWkw?=
+ =?utf-8?B?a05ocXNHUVZyUHd1TDJFSlkra0tDOVFKK1BEbXdDN2N0Y3FuY0xLRzhVS0Uz?=
+ =?utf-8?B?cnNHT1NVQWVRUE1HL2laemM2SGJic0JRL2plQlJRYjY4enk1ZEloOUpUVlN4?=
+ =?utf-8?B?dmtQcFRWbDkvamRDU2FlN1Z2TmMycG5IZVlEaStJZktCT3k5UE9qVU5WVnNF?=
+ =?utf-8?B?b3NxTVMwdkdlV3MvWUFZSjI5eGNxcisyby91cHlWK09DNFZEOTQrenV4Q1Bw?=
+ =?utf-8?B?ZVA3R1U5cmE4aUFiVHZHOGZEMmpuajFLWm54MXFWOEZsSzRmNzNJNkVlQlBC?=
+ =?utf-8?B?MG8zTzQxZ2ppRmE5NVl6Y283TTQ3Nm83anRtOXo3M0wrSDUwZUNoejRJYUpI?=
+ =?utf-8?B?bjBTb25TTEFjWTYxMldDcjNLNWozcGxDTGcrZ2ZVM296b3gwVXN6ZUNRdERa?=
+ =?utf-8?B?bjk2aTFaOExmQk1VSC9QZk10SmszdHAzRHFwQkN0ckNJa2NBakRNZmkwS3h0?=
+ =?utf-8?B?QWpQdGxNV1I2RG1hN2xxYndkVmw5N1pjYVplT0l0aFFEd2M4Z05IVUdtdHBK?=
+ =?utf-8?B?ekVkKzN4REl3dUFRMzhrV3hlV2h1ZUVzNTZUT0hzN3J0YW4rbGdteGlMNkpm?=
+ =?utf-8?B?NkJtbXFhU1lHZnk5WEZpRXdxeTR0NmQwdHNkY0cyYy9QTXFmQUxWWkQrMlND?=
+ =?utf-8?B?VXdRVGZEVDltdlducDlxSlNCREhoMTcvUjNIWTBRVVRac1E1WlpITUhJd0xk?=
+ =?utf-8?B?VE1vNHJLaW0wOE11SGI4NFJpUFFNY1ErY3ZLdk1PQlIyS2d0aVRrWTZXcmVt?=
+ =?utf-8?B?dnp4cFRnUzFsYUdBUmVyV0Jxb2VVMzkzdjhJamc4SHZWZnZ5aVlXUmZQKzNl?=
+ =?utf-8?B?dSt1ZjcvVlpqYXB2YWhGMmswOHhkbGlNc29uQlJ0cjhVR2EyOUZiK3gvS2Y4?=
+ =?utf-8?B?RmVwSUJva3VKS3BmN0o1OVRkaDh4Wmt0TVJTYndTUjVMUVpJMXRiN0Z6dm5B?=
+ =?utf-8?B?U3pZMHp1eVpIdERwMEk1bzNJczU0SHd5NHN4SWs1ekRJZ2N2WDZSUmxhWkdF?=
+ =?utf-8?B?WDFoakdxWWpsaGprNkQ4ZDdLcmtKY1gzRFRSNk90VENsYmk4SVI3aGVva1oy?=
+ =?utf-8?B?eVJrd21MKzFMTmg5b29DMGd1OGlYU3BqbmM1Y2pEejFQeURMZmxiM204QXNV?=
+ =?utf-8?B?c2E5YmsxZ0d0YmIyd2JzS0tLUTMwYUZ5ZWlJcE5SSHZ0VnhNRGdFTnpJTGkr?=
+ =?utf-8?B?QWJ2eFBHRmgwdVJxVXdldm5KSGdsTHRqTTA4Y0R4bFp5VW01QkJpNDZMYVoz?=
+ =?utf-8?B?T3VnQjFudDdpblh5QVl3YWlKTEhyVFRLdmM2WU1RWmZuL2dIdTh5RHA1OStW?=
+ =?utf-8?B?RDRhM1NBNDJzaGViWUxBampCM3JkZXRFbGplSVBvS3p4Q0phdE5qVWlLWEdM?=
+ =?utf-8?B?VWc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fdabe0a-9331-41c5-fafb-08dc95574df7
 X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5636.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 20:32:09.2968
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 20:42:18.3255
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: afotB7SwFB+0VaPip7C+V2lVupJgKvTIplh4LI9VBNflAGTJQDZGd0vIY+COBTXVseNu4s4f7QaH2O9ZqwWW3unYs9b7IsUIxLJ3Yz1S/8I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6649
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jl51Bx6uWGXNnGeHbfYYlE/P3rOfXJNUSiqwiIcJ02LbtYmH3rjnUwD8Kxb1fDfbdQM1fZ4FOWrRGHDv2cPm89e+QHVd+7xfq2NpAIKxM3Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6953
 X-OriginatorOrg: intel.com
 
-On 6/25/2024 3:31 AM, Jian-Hong Pan wrote:
-> Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com> 於 2024年6月24日 週一 下午11:39寫道：
+On 6/21/2024 2:16 PM, Bjorn Helgaas wrote:
+> On Thu, Jun 20, 2024 at 03:41:33PM -0700, Nirmal Patel wrote:
+>> On Thu, 2 May 2024 17:56:08 -0500
+>> Bjorn Helgaas <helgaas@kernel.org> wrote:
 >>
->> On 6/24/2024 8:24 AM, Nirmal Patel wrote:
->>> On Mon, 24 Jun 2024 16:21:45 +0800
->>> Jian-Hong Pan <jhp@endlessos.org> wrote:
+>>> On Thu, May 02, 2024 at 03:38:00PM -0700, Paul M Stillwell Jr wrote:
+>>>> On 5/2/2024 3:08 PM, Bjorn Helgaas wrote:
+>>>>> On Mon, Apr 08, 2024 at 11:39:27AM -0700, Paul M Stillwell Jr
+>>>>> wrote:
+>>>>>> Commit 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe
+>>>>>> features") added code to copy the _OSC flags from the root
+>>>>>> bridge to the host bridge for each vmd device because the AER
+>>>>>> bits were not being set correctly which was causing an AER
+>>>>>> interrupt storm for certain NVMe devices.
+>>>>>>
+>>>>>> This works fine in bare metal environments, but causes problems
+>>>>>> when the vmd driver is run in a hypervisor environment. In a
+>>>>>> hypervisor all the _OSC bits are 0 despite what the underlying
+>>>>>> hardware indicates. This is a problem for vmd users because if
+>>>>>> vmd is enabled the user *always* wants hotplug support enabled.
+>>>>>> To solve this issue the vmd driver always enables the hotplug
+>>>>>> bits in the host bridge structure for each vmd.
+>>>>>>
+>>>>>> Fixes: 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe
+>>>>>> features") Signed-off-by: Nirmal Patel
+>>>>>> <nirmal.patel@linux.intel.com> Signed-off-by: Paul M Stillwell
+>>>>>> Jr <paul.m.stillwell.jr@intel.com> ---
+>>>>>>    drivers/pci/controller/vmd.c | 10 ++++++++--
+>>>>>>    1 file changed, 8 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/controller/vmd.c
+>>>>>> b/drivers/pci/controller/vmd.c index 87b7856f375a..583b10bd5eb7
+>>>>>> 100644 --- a/drivers/pci/controller/vmd.c
+>>>>>> +++ b/drivers/pci/controller/vmd.c
+>>>>>> @@ -730,8 +730,14 @@ static int vmd_alloc_irqs(struct vmd_dev
+>>>>>> *vmd) static void vmd_copy_host_bridge_flags(struct
+>>>>>> pci_host_bridge *root_bridge, struct pci_host_bridge
+>>>>>> *vmd_bridge) {
+>>>>>> -	vmd_bridge->native_pcie_hotplug =
+>>>>>> root_bridge->native_pcie_hotplug;
+>>>>>> -	vmd_bridge->native_shpc_hotplug =
+>>>>>> root_bridge->native_shpc_hotplug;
+>>>>>> +	/*
+>>>>>> +	 * there is an issue when the vmd driver is running
+>>>>>> within a hypervisor
+>>>>>> +	 * because all of the _OSC bits are 0 in that case.
+>>>>>> this disables
+>>>>>> +	 * hotplug support, but users who enable VMD in their
+>>>>>> BIOS always want
+>>>>>> +	 * hotplug suuport so always enable it.
+>>>>>> +	 */
+>>>>>> +	vmd_bridge->native_pcie_hotplug = 1;
+>>>>>> +	vmd_bridge->native_shpc_hotplug = 1;
+>>>>>
+>>>>> Deferred for now because I think we need to figure out how to set
+>>>>> all these bits the same, or at least with a better algorithm than
+>>>>> "here's what we want in this environment."
+>>>>>
+>>>>> Extended discussion about this at
+>>>>> https://lore.kernel.org/r/20240417201542.102-1-paul.m.stillwell.jr@intel.com
+>>>>
+>>>> That's ok by me. I thought where we left it was that if we could
+>>>> find a solution to the Correctable Errors from the original issue
+>>>> that maybe we could revert 04b12ef163d1.
+>>>>
+>>>> I'm not sure I would know if a patch that fixes the Correctable
+>>>> Errors comes in... We have a test case we would like to test
+>>>> against that was pre 04b12ef163d1 (BIOS has AER disabled and we
+>>>> hotplug a disk which results in AER interrupts) so we would be
+>>>> curious if the issues we saw before goes away with a new patch for
+>>>> Correctable Errors.
 >>>
->>>> According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the
->>>> PCIe Root Port and the child device, they should be programmed with
->>>> the same LTR1.2_Threshold value. However, they have different values
->>>> on VMD mapped PCI child bus. For example, Asus B1400CEAE's VMD mapped
->>>> PCI bridge and NVMe SSD controller have different LTR1.2_Threshold
->>>> values:
->>>>
->>>> 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor
->>>> PCIe Controller (rev 01) (prog-if 00 [Normal decode]) ...
->>>>       Capabilities: [200 v1] L1 PM Substates
->>>>           L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
->>>> L1_PM_Substates+ PortCommonModeRestoreTime=45us PortTPowerOnTime=50us
->>>>           L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->>>>                  T_CommonMode=45us LTR1.2_Threshold=101376ns
->>>>           L1SubCtl2: T_PwrOn=50us
->>>>
->>>> 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
->>>> SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
->>>>       Capabilities: [900 v1] L1 PM Substates
->>>>           L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->>>> L1_PM_Substates+ PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
->>>>           L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
->>>>                      T_CommonMode=0us LTR1.2_Threshold=0ns
->>>>           L1SubCtl2: T_PwrOn=10us
->>>>
->>>> After debug in detail, both of the VMD mapped PCI bridge and the NVMe
->>>> SSD controller have been configured properly with the same
->>>> LTR1.2_Threshold value. But, become misconfigured after reset the VMD
->>>> mapped PCI bus which is introduced from commit 0a584655ef89 ("PCI:
->>>> vmd: Fix secondary bus reset for Intel bridges") and commit
->>>> 6aab5622296b ("PCI: vmd: Clean up domain before enumeration"). So,
->>>> drop the resetting PCI bus action after scan VMD mapped PCI child bus.
->>>>
->>>> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
->>>> ---
->>>> v6:
->>>> - Introduced based on the discussion
->>>> https://lore.kernel.org/linux-pci/CAPpJ_efYWWxGBopbSQHB=Y2+1RrXFR2XWeqEhGTgdiw3XX0Jmw@mail.gmail.com/
->>>>
->>>>    drivers/pci/controller/vmd.c | 20 --------------------
->>>>    1 file changed, 20 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/vmd.c
->>>> b/drivers/pci/controller/vmd.c index 5309afbe31f9..af413cdb4f4e 100644
->>>> --- a/drivers/pci/controller/vmd.c
->>>> +++ b/drivers/pci/controller/vmd.c
->>>> @@ -793,7 +793,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd,
->>>> unsigned long features) resource_size_t offset[2] = {0};
->>>>       resource_size_t membar2_offset = 0x2000;
->>>>       struct pci_bus *child;
->>>> -    struct pci_dev *dev;
->>>>       int ret;
->>>>
->>>>       /*
->>>> @@ -935,25 +934,6 @@ static int vmd_enable_domain(struct vmd_dev
->>>> *vmd, unsigned long features) pci_scan_child_bus(vmd->bus);
->>>>       vmd_domain_reset(vmd);
->>>>
->>>> -    /* When Intel VMD is enabled, the OS does not discover the
->>>> Root Ports
->>>> -     * owned by Intel VMD within the MMCFG space.
->>>> pci_reset_bus() applies
->>>> -     * a reset to the parent of the PCI device supplied as
->>>> argument. This
->>>> -     * is why we pass a child device, so the reset can be
->>>> triggered at
->>>> -     * the Intel bridge level and propagated to all the children
->>>> in the
->>>> -     * hierarchy.
->>>> -     */
->>>> -    list_for_each_entry(child, &vmd->bus->children, node) {
->>>> -            if (!list_empty(&child->devices)) {
->>>> -                    dev = list_first_entry(&child->devices,
->>>> -                                           struct pci_dev,
->>>> bus_list);
->>>> -                    ret = pci_reset_bus(dev);
->>>> -                    if (ret)
->>>> -                            pci_warn(dev, "can't reset device:
->>>> %d\n", ret); -
->>>> -                    break;
->>>> -            }
->>>> -    }
->>>> -
->>>>       pci_assign_unassigned_bus_resources(vmd->bus);
->>>>
->>>>       pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
+>>> My current theory is that there's some issue with that particular
+>>> Samsung NVMe device that causes the Correctable Error flood.  Kai-Heng
+>>> says they happen even with VMD disabled.
 >>>
->>> Thanks for the patch.
+>>> And there are other reports that don't seem to involve VMD but do
+>>> involve this NVMe device ([144d:a80a]):
 >>>
->>> pci_reset_bus is required to avoid failure in vmd domain creation
->>> during multiple soft reboots test. So I believe we can't just remove
->>> it without proper testing. vmd_pm_enable_quirk happens after
->>> pci_reset_bus, then how is it resetting LTR1.2_Threshold value?
+>>>    https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1852420
+>>>    https://forums.unraid.net/topic/113521-constant-errors-on-logs-after-nvme-upgrade/
+>>>    https://forums.unraid.net/topic/118286-nvme-drives-throwing-errors-filling-logs-instantly-how-to-resolve/
+>>>    https://forum.proxmox.com/threads/pve-kernel-panics-on-reboots.144481/
+>>>    https://www.eevblog.com/forum/general-computing/linux-mint-21-02-clone-replace-1tb-nvme-with-a-2tb-nvme/
 >>>
->>> Thanks
->>> -nirmal
+>>> NVMe has weird power management stuff, so it's always possible we're
+>>> doing something wrong in a driver.
+>>>
+>>> But I think we really need to handle Correctable Errors better by:
+>>>
+>>>    - Possibly having drivers mask errors if they know about defects
+>>>    - Making the log messages less alarming, e.g.,  a single line report
+>>>    - Rate-limiting them so they're never overwhelming
+>>>    - Maybe automatically masking them in the PCI core to avoid
+>>> interrupts
+>>>
+>>>>>>    	vmd_bridge->native_aer = root_bridge->native_aer;
+>>>>>>    	vmd_bridge->native_pme = root_bridge->native_pme;
+>>>>>>    	vmd_bridge->native_ltr = root_bridge->native_ltr;
+> 
+>> Hi Bjorn,
 >>
->> To follow up on what Nirmal said: why can't you set the threshold value
->> in vmd_pm_enable_quirk() since we look at LTR there?
+>> Do we still expect to get this patch accepted?
+>>
+>> Based on the previous comments, even with AER fixed we will still have
+>> an issue in Guest OS of disabling all the features which will require
+>> making adjustments and/or removing 04b12ef163d1.
+>>
+>> Is it possible to accept this patch and add necessary changes
+>> when AER fix is available?
 > 
-> Looks like setting the threshold value again in vmd_pm_enable_quirk()
-> is the preferred direction?
-> If so, I can prepare for that in the next version patch.
+> I think 04b12ef163d1 is wrong, and we shouldn't copy any of the bits
+> from the root port.
 > 
-> Jian-Hong Pan
+> If vmd takes ownership of all those features, you can decide what to
+> do with AER, and you can disable it if you want to.
+> 
+> Bjorn
 > 
 
-Yes, I think keeping all the LTR code together is the best thing.
+IIRC we are taking ownership of the flags by (eventually) calling 
+pci_init_host_bridge() which sets the native_* bits, right?
+
+One way we could force a re-look at the original issue that 04b12ef163d1 
+fixed would be to revert it and break those use cases. I'm not sure I'm 
+in favor of that, but right now we have a situation where either VMD is 
+broken in some cases or we revert 04b12ef163d1 and break those cases. 
+Either way someone is not happy.
 
 Paul
 
