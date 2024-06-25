@@ -1,90 +1,111 @@
-Return-Path: <linux-pci+bounces-9213-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9214-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08CA7915B88
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 03:15:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64930915FF9
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 09:25:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0E611F2282F
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 01:15:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ABB27B24DC2
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 07:25:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF3E10A19;
-	Tue, 25 Jun 2024 01:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D3A146A99;
+	Tue, 25 Jun 2024 07:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NgMgMb2J";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="et5PWOAo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BB015AF6;
-	Tue, 25 Jun 2024 01:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3008B1465A8;
+	Tue, 25 Jun 2024 07:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719278098; cv=none; b=kZ3AChF5XYiiGsAkARt6MP0YOc+9Kag+X6WBU4eqIOxyNf0ZUeKY+I5mt77brfj1fGX4rdimLU2Gf/Pucw8sO6Uoqk+rbMrV/xRhlZkicm5dFEodRwqO5ZBpD2ouAS4WOdgLiuE+jZ3/74p3uI7iXZKnsfAq6Ge11J/QNk0IBqs=
+	t=1719300327; cv=none; b=eOMeQknSzP/1aRs8tRvgYa1MRhwYjHwrapUhrP7qWYllGj9X35SBdqXA46dGGgQxi7V9K7wjzoqh2SLSJkEOHZ/IOvlLrX5EBVAVNEzy6fLSFWrVzZmqcpUs46GMMhHvR36/P21YmxFso7DM+/U82mxRJkaVJTUi2+oYFByXRqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719278098; c=relaxed/simple;
-	bh=eV0yzaFqlIC8vZu0Zx3OR7xNW0La5ndN7NeSp+FsvTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uktlwh5BH4K/pMGOn1HbCNBtsksXqdGcgV05oSJQ5wzAFvOcf/KcxuqOHbz4FFe8ir+D02Ul7xSynv17dYGbhkKOQDjMU7V/CSKpMlBui9Imbt4zH2k5w0wx6zjK3L0vi0pZuFPDYkDXZ9A1A4ZjANgctPnJvylEAxCcQDt3V+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1fa2ea1c443so15661445ad.0;
-        Mon, 24 Jun 2024 18:14:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719278096; x=1719882896;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=58+IK4nz8S7JUb3W06qCngcSuzQ69kddYUFOVpCLfY8=;
-        b=ZnL3CXBbuSH0Tepf/BpiYI8NgAgDJaNpdkCcSEMZh0gz/bIr68yqPFMCByVTc0+wAs
-         4vlSQ+kqxakZ2xzXgZTR8k4eRdKlb3HjjIzcYXjvVM0kbIe712FxM6uLN/j7Glz2dEIh
-         Io3ZpJ5RcUazTNw4dfhFOw98sEA1HCBdWhJd9Fdd6a7QeRxeg8h5n+tMPBF+uXW4Qvpx
-         sIMVoDDA4hxBCvaI5fotW502F54F2j17+8tlpPa5I7vMEQQnSJlKbNLu+jsXJgecOykT
-         oWLu0Ej8UKStDk2ow2LTYQ372yYlcdHycpUifQ5kAqVxqknwV0K8XT9oF+BQeJhc2/Ql
-         HYYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPMD0Zyd4vT/QO0Oy1JcZNyCfqCC221eYrrOwvmhvJOvdOGnmUjUA4gO1DzL3lBnyKKYGtm4Xz2QrkUiCIn6ba63OP0nQcj7MuGEopnXx4JGQb6Im+xpPGOZNPBoejToiNJ809FapVYtLX34t/7ro/xhKJHXOHgegFl5GLhL3hXnyRjg==
-X-Gm-Message-State: AOJu0YyfRLbefWK9jFz3zawSmZ7687AN0NRxOM78lqwAPsrTn+u5cGin
-	w2lSFfawNSfT9TMHicR/WYC2Gtse5Ddq1HuFe/ajNRRCNWM8cQt6
-X-Google-Smtp-Source: AGHT+IFSxNNpL4rNjWmswcHmrpd1agEl7SBJjG/npPx3p9kTghopQIoFmVYxjUiv0CqGXjDen0tZCA==
-X-Received: by 2002:a17:902:d4d2:b0:1f7:3a4:f66f with SMTP id d9443c01a7336-1fa23ef7c2cmr71053545ad.43.1719278096395;
-        Mon, 24 Jun 2024 18:14:56 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9f1e2fe37sm66296225ad.69.2024.06.24.18.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 18:14:55 -0700 (PDT)
-Date: Tue, 25 Jun 2024 10:14:54 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Thippeswamy Havalige <thippesw@amd.com>
-Cc: bhelgaas@google.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH] dt-bindings: PCI: xilinx-cpm: Fix ranges property to
- avoid overlapping of bridge register and 32-bit BAR addresses
-Message-ID: <20240625011454.GA431470@rocinante>
-References: <20240624111022.133780-1-thippesw@amd.com>
+	s=arc-20240116; t=1719300327; c=relaxed/simple;
+	bh=ezb77GZXdVAFrfyo9/1iyHlxE3AHchnIk/xpupP7DRk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IHY6hAH8/mhFMmGeaCkeZkqUcsNuMK8pL5d9qCmEvfucdxQrkeEwlL2r8NqIOoYJ9CsJKqBdWRJcFiF14rhd2ULIQmThonw3rjx14lBcaFC40roGJbZkm2knrmqBMGIcgYVsqSZH6GCpg3JHZSA4KPz8r83HUaX2TCecPnVB770=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NgMgMb2J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=et5PWOAo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719300324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lbM9+X7lQHMtCd9+f5UahNU/0eZ7QOoLWzJWZWNqVH8=;
+	b=NgMgMb2JTCsUYPLOwbJdeNIErCWElIL3im8v3aHkfMZrzDiafPyOHz2ZQihqzTZ59feUZI
+	Ph8GKIjDgaGD3fXranxhg0jog/omT47YnESkhPBfZYeXbIutaovJ4h46ymqAOe0w/vObtQ
+	VAmIXZt60RmMYm596wr4gT0oa1Q5nXqkVZVUIagqA0D4lGFhgPTPJ8udrrTUjHf+S93zJK
+	+wZXkqyAEgtttXeUcPfEiN9srR0V1lxTI/minAq/ggs8/RrCLiw1CV//KQH6z6iRPnsBjt
+	Wq6RLW6LZQmqqcZ+Sq9yBw1m4BTlyXefGqZ59SkNO9ZPEoqmyjOKtwBBWmpRsA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719300324;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lbM9+X7lQHMtCd9+f5UahNU/0eZ7QOoLWzJWZWNqVH8=;
+	b=et5PWOAoB6bFhTt4xdB92o5jth/5tAlsTrRR8UenmF/PZcTUGdlGchhMt2EvKAp/MhhBQx
+	vz9Mlm/0DoVUKsCg==
+To: Sunil V L <sunilvl@ventanamicro.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+ linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Rafael J
+ . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Anup Patel <anup@brainfault.org>, Samuel Holland
+ <samuel.holland@sifive.com>, Robert Moore <robert.moore@intel.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Atish
+ Kumar Patra <atishp@rivosinc.com>, Haibo1 Xu <haibo1.xu@intel.com>,
+ =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, Sunil V L
+ <sunilvl@ventanamicro.com>
+Subject: Re: [PATCH v6 00/17] RISC-V: ACPI: Add external interrupt
+ controller support
+In-Reply-To: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+References: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+Date: Tue, 25 Jun 2024 09:25:23 +0200
+Message-ID: <875xtx7acc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624111022.133780-1-thippesw@amd.com>
+Content-Type: text/plain
 
-Hello,
+On Sat, Jun 01 2024 at 20:33, Sunil V L wrote:
+> This series adds support for the below ECR approved by ASWG.
+> 1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
+>
+> The series primarily enables irqchip drivers for RISC-V ACPI based
+> platforms.
+>
+> The series can be broadly categorized like below. 
+>
+> 1) PCI ACPI related functions are migrated from arm64 to common file so
+> that we don't need to duplicate them for RISC-V.
+>
+> 2) Added support for re-ordering the probe of interrupt controllers when
+> IRQCHIP_ACPI_DECLARE is used.
+>
+> 3) To ensure probe order between interrupt controllers and devices,
+> implicit dependency is created similar to when _DEP is present.
+>
+> 4) ACPI support added in RISC-V interrupt controller drivers.
 
-> The current configuration had non-prefetchable memory overlapping with
-> bridge registers by 64KB from base address. This patch fixes the 'ranges'
-> property in the device tree by adjusting the non-prefetchable memory
-> addresses beyond the 64KB mark to prevent conflicts. 
+So this needs eyeballs from the ACPI people and a strategy how to merge
+it.
 
-Applied to dt-bindings, thank you!
+Thanks,
 
-[1/1] dt-bindings: PCI: xilinx-cpm: Fix overlapping of bridge register and 32-bit BAR addresses
-      https://git.kernel.org/pci/pci/c/f55aed050631
-
-	Krzysztof
+        tglx
 
