@@ -1,210 +1,255 @@
-Return-Path: <linux-pci+bounces-9219-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9220-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF6C3916546
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 12:32:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0BDB916565
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 12:40:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70683283FAF
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 10:32:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D9BE1F23A66
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 10:40:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3105D14A4EB;
-	Tue, 25 Jun 2024 10:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DB314A4D4;
+	Tue, 25 Jun 2024 10:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="PXzkzbKK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/CPY5oy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5786614A09F
-	for <linux-pci@vger.kernel.org>; Tue, 25 Jun 2024 10:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E938D11CBD;
+	Tue, 25 Jun 2024 10:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719311553; cv=none; b=JNYm0AZy1wzL0bH8hFSjfUL8BvkErkKHrqp6/9fygRrSOmUxx5m9qOdJoWqScSXBcCd6r9c5A54dutzN3X5vCRWzSVPrjxlgo+e84BQse4YgsMayFWfoGCdsYQVarVZW9jDNg5ZMsgk+V/3uKUs4iISlFSEFaQFkaI1h3/Q+wHY=
+	t=1719312057; cv=none; b=IbxTngdRHu4PY73MVSuO3zLsz25oz4QLLnBp8NYrSUOOrLJNXGsONl+raztfgeCmbU2psk8ox/DtXIPGvuKyIvF/NL3Pai9matDFvNH/Xs4YhSoYt4pYIm0JDo0jswCPax0y3ELdNfKzyhqqeEwa6G7X01cMR6jgYWuPeP1Y8Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719311553; c=relaxed/simple;
-	bh=yexphHRNlx1HBIakVGghbz9IQgLRz7EgKahrZP3O3Hs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B8nJP2g0eu056J6Z3ub/TNiaOFoIoqZFImOEbIkw9Ghd233SWjQYFhrxEVJwKs2a9ATaIKafw7DmTgPf5ypk7gqT1Awo4FBa2wmkEmJwiuSfW3mt1toVEML8WV3KRlvQ08sgKYmvhzv30htMnlcboTSJVCvfmxLpULHqskjnvAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=PXzkzbKK; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-63127fc434aso43080037b3.0
-        for <linux-pci@vger.kernel.org>; Tue, 25 Jun 2024 03:32:31 -0700 (PDT)
+	s=arc-20240116; t=1719312057; c=relaxed/simple;
+	bh=jXbOYxGHu4Vbc9kz7XDfhcIX81LMwxCNM5pvQ+M1knQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NJw79i89UoYD7wdEMS2JSmjjFm9+z7eIeWtAB+EIAVlyjX5yPyNVpNWrNsGeyPX3xhTxd4+hOIflDz2nsZBxXuzV3SCa5mEFlbiRWnNVYiWw8RHVrsU9g66OYW8uakzM7PqUxWExS3XEm5BFvGE4wQvst64qCb14dB8c5ubUxug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/CPY5oy; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7067108f2cdso2109436b3a.1;
+        Tue, 25 Jun 2024 03:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1719311550; x=1719916350; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AeHhF7HwElqfhWVKAUpUcxv4NHbXbC1N1cEo/E0Fnrs=;
-        b=PXzkzbKKHqPZdbiGEA7NhzF+xqwu/aqw90JmvtW8A/Bl3xpLInrvlz6E2hfWTNuv7B
-         E2MpRizGbxzx+cF2LwBo44Ng6ApfC6fy0U+PtpDxgxHLtkYbnTzZEmAlUfCdw5e1WkOH
-         A36qheUArMp82t5Srd9/lRd0cNkXfvHNeFpwlIfW/Z5diDAj56K5XQTq8mH3cz8FmNUK
-         00DoPPx+1fgkjHlAcaqGg/wVEl5q9BNRER/r2AY7nsYQvG4IXsLnuRfkBrPcU7O1nEJP
-         VNV+yAOsV/c1KNyc6g+1dgkQqM9GyCs9AVoUQ7nLfWybSLOeP0NnxveBVn9sF5CPPwjU
-         j92g==
+        d=gmail.com; s=20230601; t=1719312055; x=1719916855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=il3Ey5Gsm4oBBZ02CLeVI03mpmEtmmFpL868Qx4qwFI=;
+        b=I/CPY5oyoGP3HxjUHqJIK6RiQuS2ybTcBK+C0xEVj4mWPwjBDD1C9eVwha8p6PcFLK
+         +tToQH/StjkdoT7YKU2nU8Dau7J0qY3BKVwljiVcdi1C2xzUuf8TaZpSjXK986fNdNEv
+         GOEkqRKAQQ00p+XL4y1qEt1uaqWGUlrW9ts6Dj+yJlcdlv+if2AXxyWx9f8p8i78JWXv
+         ia0UjTo/lyDlyBYJWo9DZVSfvcekduAVtZ+MhLUc55TIW5bqATHh3aTPv5Q43awIfBXM
+         mIUg7l1oReohoaxA0G2fQg8ovI7k6E+AZYCZAPTKiy8CnoLEfOVBFywhwhRHAYd/U9L7
+         zRyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719311550; x=1719916350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AeHhF7HwElqfhWVKAUpUcxv4NHbXbC1N1cEo/E0Fnrs=;
-        b=jOw29N0h51/O5c/hKmMLwwiYCJ+JuQ8QwAb+xYhUkgHDmFOszxhjKtJQIHsGy8oCMn
-         zijLAzBnn4FaL2SWLL1iTyQrmfOP0n4Ez11vwC7P/uLYGddrUm5NE0qZaPWHxlPFRElX
-         +7Wx2ihcFqD9Slvv/MsVPjLdqMmMuGwDG6fme/xm/niP4iaHwv3LJcNE/+azHiqMkW50
-         Cfy0/X8yeLTDsAJsez7zAJfXtTJMGoc5ESH6hx6JfkkLziPpgeP6R9Oo8EWHrvw07hOr
-         85yU4ke8/ZGT52iikBjbAPIiHvjeM1rPHR9a7yU8ZoKZ03TEJRfm5ODrBzri+24Q+/me
-         KRIw==
-X-Forwarded-Encrypted: i=1; AJvYcCU03e0ZLnsV2TuGjp/nkIuzVFK3cq1dbOUhFMtaUIPNvWy9eW75sAE2WrameruucEJhJvacGSgi5UhH0swEubOvi2iHPZxrZE+R
-X-Gm-Message-State: AOJu0YzUkB/TOtGkqiFi17FMYKUKtEuL+Ha+Yiez0yO5bplE6MhCRyRx
-	1HqgdZohPBCcRaRc4PbcYrCm7AO0kLuUwLv4eDVjAGdjVlxnRGrjAvjqOmu1A6nNAkACaicMPnV
-	YJPmmm8BmEEuRt5fDARecePcD7yaAayiSmstVZw==
-X-Google-Smtp-Source: AGHT+IET0vZmsrLZtS70AiPitaD9jDC/goMS3ehzZdEh8KQdRBnZS8rR4Rr5tG5J6ErER+1rbE0z36/BIhmk4qSGM7w=
-X-Received: by 2002:a5b:892:0:b0:e02:45d6:6a4f with SMTP id
- 3f1490d57ef6-e0303f6eacemr6088179276.36.1719311550054; Tue, 25 Jun 2024
- 03:32:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719312055; x=1719916855;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=il3Ey5Gsm4oBBZ02CLeVI03mpmEtmmFpL868Qx4qwFI=;
+        b=VzO2vV0/iDMJkAYPRiLbpaxjDUows2VDSM9uNL07uMN9GCnIvLcnAftNqpkDCqx6P/
+         tDdnEoccTrc2xPDni/VExWH1easI3PJhm6FAZ72L3LCwsYB/tvW2HNC8lY3XxkqJZfay
+         VQy304fJIphOmKT9SecFALIxVMcp0IATqlAxYr4oCN+2oSbqZ/VUL593hUgK4FrWPlYK
+         zYXQ7zqJ/WZeFQ/RZghMtYAFrCKtmVuwdze4VUX6QgRl3D4abGGauc2cclLj3kLyC6DI
+         4AyCqN7JTlexUEWgXoASs7tXjWNV/Dk566ps5V5rG6gpMeXbq/MW1tanZsv9ZcuhwFbG
+         6siA==
+X-Forwarded-Encrypted: i=1; AJvYcCUS+c4mhZwy9pJRmXbRTnoMZCNDdNaGsaASLT+sw1V3JOE32/esaf5f+XfQSi0pTcxniHMUc1ENzKFdxc8Ptq9QGWT+OS+hY0SVC4CrCiebkq5grNtjAdmF0rGNc9NHp9494mM5mVgm
+X-Gm-Message-State: AOJu0YzH13qJL9subF7LXrlFBxFr8zd6/y+9pddqAp/GUEefBlXvoIXW
+	fN/tWKFA0MQ0occNmhiuOpooZHBrKlF26FNxMT/GrUDHJkijtbf2
+X-Google-Smtp-Source: AGHT+IG5jMBJIUjR09xa4CpVgIEtsG2aJEYqUh5bHUayd+mBtoMCOI7oMvAVeuXfekdaoIvcE10DfA==
+X-Received: by 2002:a05:6a00:80ca:b0:705:e773:f8da with SMTP id d2e1a72fcca58-70670ee781dmr6251744b3a.15.1719312054989;
+        Tue, 25 Jun 2024 03:40:54 -0700 (PDT)
+Received: from localhost.localdomain ([113.30.217.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7065e2c103bsm6943684b3a.92.2024.06.25.03.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 03:40:54 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Anand Moon <linux.amoon@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] PCI: rockchip: Simplify clock handling by using clk_bulk*() function
+Date: Tue, 25 Jun 2024 16:10:32 +0530
+Message-ID: <20240625104039.48311-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624081108.10143-2-jhp@endlessos.org> <20240624082144.10265-2-jhp@endlessos.org>
- <20240624082458.00006da1@linux.intel.com> <897ead26-be10-4bb3-b085-1b8c97d93964@intel.com>
-In-Reply-To: <897ead26-be10-4bb3-b085-1b8c97d93964@intel.com>
-From: Jian-Hong Pan <jhp@endlessos.org>
-Date: Tue, 25 Jun 2024 18:31:54 +0800
-Message-ID: <CAPpJ_efs9nHrTx=N2NwtmN=py3CFg62izcgJrUkcMDd_ErR5VA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] PCI: vmd: Drop resetting PCI bus action after scan
- mapped PCI child bus
-To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-Cc: Nirmal Patel <nirmal.patel@linux.intel.com>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>, Johan Hovold <johan@kernel.org>, 
-	David Box <david.e.box@linux.intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux@endlessos.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com> =E6=96=BC 2024=E5=B9=B4=
-6=E6=9C=8824=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8811:39=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> On 6/24/2024 8:24 AM, Nirmal Patel wrote:
-> > On Mon, 24 Jun 2024 16:21:45 +0800
-> > Jian-Hong Pan <jhp@endlessos.org> wrote:
-> >
-> >> According to "PCIe r6.0, sec 5.5.4", before enabling ASPM L1.2 on the
-> >> PCIe Root Port and the child device, they should be programmed with
-> >> the same LTR1.2_Threshold value. However, they have different values
-> >> on VMD mapped PCI child bus. For example, Asus B1400CEAE's VMD mapped
-> >> PCI bridge and NVMe SSD controller have different LTR1.2_Threshold
-> >> values:
-> >>
-> >> 10000:e0:06.0 PCI bridge: Intel Corporation 11th Gen Core Processor
-> >> PCIe Controller (rev 01) (prog-if 00 [Normal decode]) ...
-> >>      Capabilities: [200 v1] L1 PM Substates
-> >>          L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+
-> >> L1_PM_Substates+ PortCommonModeRestoreTime=3D45us PortTPowerOnTime=3D5=
-0us
-> >>          L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> >>                 T_CommonMode=3D45us LTR1.2_Threshold=3D101376ns
-> >>          L1SubCtl2: T_PwrOn=3D50us
-> >>
-> >> 10000:e1:00.0 Non-Volatile memory controller: Sandisk Corp WD Blue
-> >> SN550 NVMe SSD (rev 01) (prog-if 02 [NVM Express]) ...
-> >>      Capabilities: [900 v1] L1 PM Substates
-> >>          L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> >> L1_PM_Substates+ PortCommonModeRestoreTime=3D32us PortTPowerOnTime=3D1=
-0us
-> >>          L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
-> >>                     T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
-> >>          L1SubCtl2: T_PwrOn=3D10us
-> >>
-> >> After debug in detail, both of the VMD mapped PCI bridge and the NVMe
-> >> SSD controller have been configured properly with the same
-> >> LTR1.2_Threshold value. But, become misconfigured after reset the VMD
-> >> mapped PCI bus which is introduced from commit 0a584655ef89 ("PCI:
-> >> vmd: Fix secondary bus reset for Intel bridges") and commit
-> >> 6aab5622296b ("PCI: vmd: Clean up domain before enumeration"). So,
-> >> drop the resetting PCI bus action after scan VMD mapped PCI child bus.
-> >>
-> >> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-> >> ---
-> >> v6:
-> >> - Introduced based on the discussion
-> >> https://lore.kernel.org/linux-pci/CAPpJ_efYWWxGBopbSQHB=3DY2+1RrXFR2XW=
-eqEhGTgdiw3XX0Jmw@mail.gmail.com/
-> >>
-> >>   drivers/pci/controller/vmd.c | 20 --------------------
-> >>   1 file changed, 20 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/controller/vmd.c
-> >> b/drivers/pci/controller/vmd.c index 5309afbe31f9..af413cdb4f4e 100644
-> >> --- a/drivers/pci/controller/vmd.c
-> >> +++ b/drivers/pci/controller/vmd.c
-> >> @@ -793,7 +793,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd,
-> >> unsigned long features) resource_size_t offset[2] =3D {0};
-> >>      resource_size_t membar2_offset =3D 0x2000;
-> >>      struct pci_bus *child;
-> >> -    struct pci_dev *dev;
-> >>      int ret;
-> >>
-> >>      /*
-> >> @@ -935,25 +934,6 @@ static int vmd_enable_domain(struct vmd_dev
-> >> *vmd, unsigned long features) pci_scan_child_bus(vmd->bus);
-> >>      vmd_domain_reset(vmd);
-> >>
-> >> -    /* When Intel VMD is enabled, the OS does not discover the
-> >> Root Ports
-> >> -     * owned by Intel VMD within the MMCFG space.
-> >> pci_reset_bus() applies
-> >> -     * a reset to the parent of the PCI device supplied as
-> >> argument. This
-> >> -     * is why we pass a child device, so the reset can be
-> >> triggered at
-> >> -     * the Intel bridge level and propagated to all the children
-> >> in the
-> >> -     * hierarchy.
-> >> -     */
-> >> -    list_for_each_entry(child, &vmd->bus->children, node) {
-> >> -            if (!list_empty(&child->devices)) {
-> >> -                    dev =3D list_first_entry(&child->devices,
-> >> -                                           struct pci_dev,
-> >> bus_list);
-> >> -                    ret =3D pci_reset_bus(dev);
-> >> -                    if (ret)
-> >> -                            pci_warn(dev, "can't reset device:
-> >> %d\n", ret); -
-> >> -                    break;
-> >> -            }
-> >> -    }
-> >> -
-> >>      pci_assign_unassigned_bus_resources(vmd->bus);
-> >>
-> >>      pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
-> >
-> > Thanks for the patch.
-> >
-> > pci_reset_bus is required to avoid failure in vmd domain creation
-> > during multiple soft reboots test. So I believe we can't just remove
-> > it without proper testing. vmd_pm_enable_quirk happens after
-> > pci_reset_bus, then how is it resetting LTR1.2_Threshold value?
-> >
-> > Thanks
-> > -nirmal
->
-> To follow up on what Nirmal said: why can't you set the threshold value
-> in vmd_pm_enable_quirk() since we look at LTR there?
+Refactor the clock handling in the Rockchip PCIe driver,
+introducing a more robust and efficient method for enabling and
+disabling clocks using clk_bulk*() API. Using the clk_bulk APIs,
+the clock handling for the core clocks becomes much simpler.
 
-Looks like setting the threshold value again in vmd_pm_enable_quirk()
-is the preferred direction?
-If so, I can prepare for that in the next version patch.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+v4: use dev_err_probe for error patch.
+v3: Fix typo in commit message, dropped reported by.
+v2: Fix compilation error reported by Intel test robot.
+---
+ drivers/pci/controller/pcie-rockchip.c | 68 ++++----------------------
+ drivers/pci/controller/pcie-rockchip.h | 15 ++++--
+ 2 files changed, 21 insertions(+), 62 deletions(-)
 
-Jian-Hong Pan
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+index 0ef2e622d36e..804135511528 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/pcie-rockchip.c
+@@ -30,7 +30,7 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct device_node *node = dev->of_node;
+ 	struct resource *regs;
+-	int err;
++	int err, i;
+ 
+ 	if (rockchip->is_rc) {
+ 		regs = platform_get_resource_byname(pdev,
+@@ -127,29 +127,12 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+ 					     "failed to get ep GPIO\n");
+ 	}
+ 
+-	rockchip->aclk_pcie = devm_clk_get(dev, "aclk");
+-	if (IS_ERR(rockchip->aclk_pcie)) {
+-		dev_err(dev, "aclk clock not found\n");
+-		return PTR_ERR(rockchip->aclk_pcie);
+-	}
+-
+-	rockchip->aclk_perf_pcie = devm_clk_get(dev, "aclk-perf");
+-	if (IS_ERR(rockchip->aclk_perf_pcie)) {
+-		dev_err(dev, "aclk_perf clock not found\n");
+-		return PTR_ERR(rockchip->aclk_perf_pcie);
+-	}
+-
+-	rockchip->hclk_pcie = devm_clk_get(dev, "hclk");
+-	if (IS_ERR(rockchip->hclk_pcie)) {
+-		dev_err(dev, "hclk clock not found\n");
+-		return PTR_ERR(rockchip->hclk_pcie);
+-	}
++	for (i = 0; i < ROCKCHIP_NUM_CLKS; i++)
++		rockchip->clks[i].id = rockchip_pci_clks[i];
+ 
+-	rockchip->clk_pcie_pm = devm_clk_get(dev, "pm");
+-	if (IS_ERR(rockchip->clk_pcie_pm)) {
+-		dev_err(dev, "pm clock not found\n");
+-		return PTR_ERR(rockchip->clk_pcie_pm);
+-	}
++	err = devm_clk_bulk_get(dev, ROCKCHIP_NUM_CLKS, rockchip->clks);
++	if (err)
++		return dev_err_probe(dev, err, "failed to get clocks\n");
+ 
+ 	return 0;
+ }
+@@ -372,39 +355,11 @@ int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip)
+ 	struct device *dev = rockchip->dev;
+ 	int err;
+ 
+-	err = clk_prepare_enable(rockchip->aclk_pcie);
+-	if (err) {
+-		dev_err(dev, "unable to enable aclk_pcie clock\n");
+-		return err;
+-	}
+-
+-	err = clk_prepare_enable(rockchip->aclk_perf_pcie);
+-	if (err) {
+-		dev_err(dev, "unable to enable aclk_perf_pcie clock\n");
+-		goto err_aclk_perf_pcie;
+-	}
+-
+-	err = clk_prepare_enable(rockchip->hclk_pcie);
+-	if (err) {
+-		dev_err(dev, "unable to enable hclk_pcie clock\n");
+-		goto err_hclk_pcie;
+-	}
+-
+-	err = clk_prepare_enable(rockchip->clk_pcie_pm);
+-	if (err) {
+-		dev_err(dev, "unable to enable clk_pcie_pm clock\n");
+-		goto err_clk_pcie_pm;
+-	}
++	err = clk_bulk_prepare_enable(ROCKCHIP_NUM_CLKS, rockchip->clks);
++	if (err)
++		return dev_err_probe(dev, err, "failed to enable clocks\n");
+ 
+ 	return 0;
+-
+-err_clk_pcie_pm:
+-	clk_disable_unprepare(rockchip->hclk_pcie);
+-err_hclk_pcie:
+-	clk_disable_unprepare(rockchip->aclk_perf_pcie);
+-err_aclk_perf_pcie:
+-	clk_disable_unprepare(rockchip->aclk_pcie);
+-	return err;
+ }
+ EXPORT_SYMBOL_GPL(rockchip_pcie_enable_clocks);
+ 
+@@ -412,10 +367,7 @@ void rockchip_pcie_disable_clocks(void *data)
+ {
+ 	struct rockchip_pcie *rockchip = data;
+ 
+-	clk_disable_unprepare(rockchip->clk_pcie_pm);
+-	clk_disable_unprepare(rockchip->hclk_pcie);
+-	clk_disable_unprepare(rockchip->aclk_perf_pcie);
+-	clk_disable_unprepare(rockchip->aclk_pcie);
++	clk_bulk_disable_unprepare(ROCKCHIP_NUM_CLKS, rockchip->clks);
+ }
+ EXPORT_SYMBOL_GPL(rockchip_pcie_disable_clocks);
+ 
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 6111de35f84c..72346e17e45e 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -11,6 +11,7 @@
+ #ifndef _PCIE_ROCKCHIP_H
+ #define _PCIE_ROCKCHIP_H
+ 
++#include <linux/clk.h>
+ #include <linux/kernel.h>
+ #include <linux/pci.h>
+ #include <linux/pci-ecam.h>
+@@ -287,6 +288,15 @@
+ 		(((c) << ((b) * 8 + 5)) & \
+ 		 ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b))
+ 
++#define ROCKCHIP_NUM_CLKS	ARRAY_SIZE(rockchip_pci_clks)
++
++static const char * const rockchip_pci_clks[] = {
++	"aclk",
++	"aclk-perf",
++	"hclk",
++	"pm",
++};
++
+ struct rockchip_pcie {
+ 	void	__iomem *reg_base;		/* DT axi-base */
+ 	void	__iomem *apb_base;		/* DT apb-base */
+@@ -299,10 +309,7 @@ struct rockchip_pcie {
+ 	struct	reset_control *pm_rst;
+ 	struct	reset_control *aclk_rst;
+ 	struct	reset_control *pclk_rst;
+-	struct	clk *aclk_pcie;
+-	struct	clk *aclk_perf_pcie;
+-	struct	clk *hclk_pcie;
+-	struct	clk *clk_pcie_pm;
++	struct  clk_bulk_data clks[ROCKCHIP_NUM_CLKS];
+ 	struct	regulator *vpcie12v; /* 12V power supply */
+ 	struct	regulator *vpcie3v3; /* 3.3V power supply */
+ 	struct	regulator *vpcie1v8; /* 1.8V power supply */
+
+base-commit: 35bb670d65fc0f80c62383ab4f2544cec85ac57a
+-- 
+2.44.0
+
 
