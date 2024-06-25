@@ -1,112 +1,154 @@
-Return-Path: <linux-pci+bounces-9234-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9235-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C1AF916822
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 14:39:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E98E9168A4
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 15:12:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B199B25E10
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 12:39:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E80C1C224AC
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 13:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291ED15F3F9;
-	Tue, 25 Jun 2024 12:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47519156227;
+	Tue, 25 Jun 2024 13:12:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="rZm/GF8E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LNtYKk+k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7B7158D97;
-	Tue, 25 Jun 2024 12:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952C5158D97
+	for <linux-pci@vger.kernel.org>; Tue, 25 Jun 2024 13:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719319163; cv=none; b=FJs37uMJR1veSep7VfFtca2fDnqdLSgtzIGxBigO8LsP6TgZ0XX/al4Lj8fIu8yP2rO6Fzhl3pIrgpEBUnJGmb2KpgKbazJlFbuKVGw4V3Uag7w0emzmsVYSYOwAX5RuZOpc3VG/m7jMx2eeNZlK5dC/f+Nw4TcNlvd2c6JKVHM=
+	t=1719321140; cv=none; b=U8LxZltLKVn+HELaQvWFGYljy08GXQd42REt/wJLk1o0s/Yffit27LYycYFZhokMZTfpY9/JKSqosZWLELvyLM8iVJF3QY2Tn5d0LUu/EkJeGn+Xiy47EjIXh55e7j18T9B1S0b+HOIMwKvnxOc9r/Q9jkwYwCFZvP7qGi4Z4Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719319163; c=relaxed/simple;
-	bh=jiUij3wRRe5sE48zPdwi6+NvzYyJIr+GpOYj/SVthjg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DvWGTfu+fn5CpbhtCAfQBGK6aAJPijXglliwoPCuxw68mTox3uwP1JGBk5AXo7j5Bvw9dGS/Ccezgcu9JjTLBFVG4soDS1+MkryqYjS7GixI7SomWZV+Nh07+XaGsN7fw2CU2OT8RimyM6xPZ2yFPtRcvGNHAMxr17vJn+WmuQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=rZm/GF8E; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719319161; x=1750855161;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jiUij3wRRe5sE48zPdwi6+NvzYyJIr+GpOYj/SVthjg=;
-  b=rZm/GF8E4s75sf8xPqLUD8iefmYRmSs7h8ni/x0w4joSnAamdJ6XESRW
-   rz6he4zEqJYcyj5NrdYOyJtuBt3u979rUWKD9NLxfAIHYUuWW/Q0ZJfzS
-   v4iYN9ic8ngJc5SvP+gc4rqnOmVo2KoK19DNYp/29P1b2bBOQa07J7++q
-   neWauSPGCZxqP3VU9EM081U6pcBw0EXUCxmgKgznsGbCi3twK/4uqqfK/
-   HJ6rUXMaCDTec4nQXZaVPCY1YrCIqlMQbvASiAF4SYLMbjYtlYl65ouEW
-   4aHE5yB3UlZsMsda5mJVLR+XOc7AntBVeFNRhPn3NsHZ0aHZO4FA/NlB9
-   g==;
-X-CSE-ConnectionGUID: mB3BUqYURGm5J5zo6AMIVA==
-X-CSE-MsgGUID: f/MOvR+eT6+IIPo7csmNhw==
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="195864242"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2024 05:39:13 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 25 Jun 2024 05:38:52 -0700
-Received: from daire-X570.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 25 Jun 2024 05:38:50 -0700
-From: <daire.mcnamara@microchip.com>
-To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
-	<ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v5 3/3] dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
-Date: Tue, 25 Jun 2024 13:38:45 +0100
-Message-ID: <20240625123845.3747764-4-daire.mcnamara@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240625123845.3747764-1-daire.mcnamara@microchip.com>
-References: <20240625123845.3747764-1-daire.mcnamara@microchip.com>
+	s=arc-20240116; t=1719321140; c=relaxed/simple;
+	bh=TFq4HLn3CLeNg6JyyyzAe6Ha+Upr2kIV3iKB8OJpY7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DzWxyIqUOkexBhxlAjenCpRo76TRcOb0RWbi+VmcTPf+mscMVgXJH+iZS1GazeNYI3dbez4fFtCMV4p8KrNJttYIytYMdvFEV4tU5ahowWHdJ3PNYUUAEIUDzgHQYjbHzpal7itQ/WIZzt1xy+kFejSuBMAf8mbXkR+YmqDmRBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LNtYKk+k; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719321137;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jh/orAWdmX1f20UeUuohMffT1uAlWu31wkSvgtgeopA=;
+	b=LNtYKk+kx+sylzte8gL4QXMLFxw0zFmikPeb9yBTqMEpkJVIRWs0nPv0vR9kMXHVKrxsH8
+	gf+1h0H8P9da/I1x34ROW5nPNJHrk2UcKH1r+dO/X9d40IrlkE9yq/dIQk2X0QlOI+zp8n
+	1ERxHI9e0A7iN2iuNrROGhES/OOAmNE=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-412-qvX3ObTBPXyNlpD-Kb3BTg-1; Tue, 25 Jun 2024 09:12:16 -0400
+X-MC-Unique: qvX3ObTBPXyNlpD-Kb3BTg-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52ce3a9a2daso1939287e87.1
+        for <linux-pci@vger.kernel.org>; Tue, 25 Jun 2024 06:12:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719321135; x=1719925935;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jh/orAWdmX1f20UeUuohMffT1uAlWu31wkSvgtgeopA=;
+        b=gPVieguX0NiZdQ0f25eXeL1mkwqGnKYukMV/eWq6omGCF6fK+iO0JJuL1OzTZMoRk8
+         KJL4uvwcmEpq4fj0Pboih256bszSp9HOnCoeT27qXDPu/3KjCE89vXq1DZUcG+tr1gIC
+         0C97DqKD+kLJQp8nfRMb7Yu/OPGbcBxsXWUS/KQ+AIbRlEgiUZCL13AzKC24lmgEaEsO
+         WiUWEMlfOBkW7XO04XxB3i2X9lFJ2pF+tNlPlcJvFc5dYCgktqFZw+gNYdd8vWLNwNCH
+         d4llezaw4seK9PDufY3dz9hFRwJwgDnznBCRyjBIRQSKypYfBJ9yozYVslcRDfUDmMz4
+         Yqqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVa3UQtT2RAd6M6HKXQVQaiZ/qiQqb6dfhYekQvNYHxofhUy9qiGfmKDeJsjDuoNNXMDZJpVi1oA1RpREdWtMpPJK6lG7We0ua4
+X-Gm-Message-State: AOJu0Yy1dop6IkAZIG2sQU5XPt2yjCncd4Cog4GH2NHo0KciRVPST6hG
+	394tM9TQf0cztt5Yn62GYrpEER1Fa0hAtnUOs5tI5OKrgonSsTj8pn2y95tM1MtrbEuLW2PAzTC
+	K4NZcnfVFJ3JcS64VvFEeqUfezyopsnBTfNbZh2TkpHMRf8IcWDq3/kwV1A==
+X-Received: by 2002:a05:6512:3285:b0:52c:df9c:5983 with SMTP id 2adb3069b0e04-52ce183b3d6mr3992086e87.40.1719321134542;
+        Tue, 25 Jun 2024 06:12:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF35SrdNTXrkT5B2/iGfiGvj53zPOM8OB7zzQf/r/NlUat09myb8xoQxhJ+HmOKZSgeyj5WYA==
+X-Received: by 2002:a05:6512:3285:b0:52c:df9c:5983 with SMTP id 2adb3069b0e04-52ce183b3d6mr3991982e87.40.1719321132655;
+        Tue, 25 Jun 2024 06:12:12 -0700 (PDT)
+Received: from cassiopeiae ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36638f85922sm13038812f8f.63.2024.06.25.06.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 06:12:12 -0700 (PDT)
+Date: Tue, 25 Jun 2024 15:12:09 +0200
+From: Danilo Krummrich <dakr@redhat.com>
+To: Andreas Hindborg <nmi@metaspace.dk>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@samsung.com,
+	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
+	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com,
+	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 07/10] rust: add `io::Io` base type
+Message-ID: <ZnrCKQBaRUlIs8hp@cassiopeiae>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-8-dakr@redhat.com>
+ <87zfr9guer.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zfr9guer.fsf@metaspace.dk>
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Tue, Jun 25, 2024 at 12:59:24PM +0200, Andreas Hindborg wrote:
+> Hi Danilo,
+> 
+> Danilo Krummrich <dakr@redhat.com> writes:
+> 
+> [...]
+> 
+> > +
+> > +macro_rules! define_write {
+> > +    ($(#[$attr:meta])* $name:ident, $try_name:ident, $type_name:ty) => {
+> > +        /// Write IO data from a given offset known at compile time.
+> > +        ///
+> > +        /// Bound checks are performed on compile time, hence if the offset is not known at compile
+> > +        /// time, the build will fail.
+> > +        $(#[$attr])*
+> > +        #[inline]
+> > +        pub fn $name(&self, value: $type_name, offset: usize) {
+> > +            let addr = self.io_addr_assert::<$type_name>(offset);
+> > +
+> > +            unsafe { bindings::$name(value, addr as _, ) }
+> > +        }
+> > +
+> > +        /// Write IO data from a given offset.
+> > +        ///
+> > +        /// Bound checks are performed on runtime, it fails if the offset (plus the type size) is
+> > +        /// out of bounds.
+> > +        $(#[$attr])*
+> > +        pub fn $try_name(&self, value: $type_name, offset: usize) -> Result {
+> > +            let addr = self.io_addr::<$type_name>(offset)?;
+> > +
+> > +            unsafe { bindings::$name(value, addr as _) }
+> > +            Ok(())
+> > +        }
+> > +    };
+> > +}
+> > +
+> 
+> I am curious why we do not need `&mut self` to write to this memory? Is
+> it OK to race on these writes?
 
-PolarFire SoC may be configured in a way that requires non-coherent DMA
-handling. On RISC-V, buses are coherent by default & the dma-noncoherent
-property is required to denote buses or devices that are non-coherent.
+Yes, concurrent writes to the same I/O mapped memory region (within the same
+driver) should be totally fine.
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+In the end it's only the driver that can know about (and has to ensure) the
+semantics, concurrency and ordering of those writes.
 
-diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-index f7a3c2636355..c84e1ae20532 100644
---- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-@@ -52,6 +52,8 @@ properties:
-     items:
-       pattern: '^fic[0-3]$'
- 
-+  dma-noncoherent: true
-+
-   interrupts:
-     minItems: 1
-     items:
--- 
-2.34.1
+> 
+> 
+> Best regards,
+> Andreas
+> 
 
 
