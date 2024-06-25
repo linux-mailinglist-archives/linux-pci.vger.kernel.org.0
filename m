@@ -1,121 +1,110 @@
-Return-Path: <linux-pci+bounces-9246-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9247-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 632B0916E0F
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 18:26:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54C40916E12
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 18:26:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9415C1C23384
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 16:26:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F36901F27FAB
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 16:26:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5769D16F913;
-	Tue, 25 Jun 2024 16:26:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDBBA175554;
+	Tue, 25 Jun 2024 16:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOSWshGx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7500D171E41;
-	Tue, 25 Jun 2024 16:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F731741F6;
+	Tue, 25 Jun 2024 16:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719332774; cv=none; b=syeTg6VudffnTddHzTytfNO9P8F+F7bmcNNJR3mE3a15o9NrcaW14MtMyI2zwNF45q4mbEsfXXXQQtNWqzsaIgkyifRvjZvd1OMoTNF5/ehlo6GeYY1J0krw7xGVIE3P9xuYlqaPWf7ym7nxAc5skpGejWX2OiZsn49nZ2GZa4Q=
+	t=1719332777; cv=none; b=bi02jcc9tp7mn+tO/LwMIBO7hyuZ9jx37AlR0JyduhumZ27MJETstS1NOkzArq/4ZMM7kLScYMStzcl8QRU/a/uTa3lbcJsiOg0P+p4f5gXpceZcU/Qb9AoeigE6gZbUAgxgLvTKoBa/WttnZJXni6TpKuLDpR+S9AfhqcnS6H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719332774; c=relaxed/simple;
-	bh=oy+bElgkbcQmzHj7fmn/6KbrN65wi3Xoq/EADV3ygto=;
+	s=arc-20240116; t=1719332777; c=relaxed/simple;
+	bh=NzFJdhpkPkPsPzXdsQO/C4ohQJeIVQhnJ4XDaukByws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CRIR/FKS7ZIEmi8KjXb0Uw+3EZFx1E7J27GR2jPL7G+0qvCaDUrV82mo1Ru0a59BmTi9E4gn+8tqfAjiTCvS8xg/Tnh8ikMigmrUMYL++Qp3dbRet1zpj0Fo/B1dD3wQ17AbfThLhmbyLXbtIK2LRhg50xQ5joLdvAolF0eK05c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A73F830010DF5;
-	Tue, 25 Jun 2024 18:26:00 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 910484BC19; Tue, 25 Jun 2024 18:26:00 +0200 (CEST)
-Date: Tue, 25 Jun 2024 18:26:00 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: corbet@lwn.net, bhelgaas@google.com, galshalom@nvidia.com,
-	leonro@nvidia.com, jgg@nvidia.com, treding@nvidia.com,
-	jonathanh@nvidia.com, mmoshrefjava@nvidia.com, shahafs@nvidia.com,
-	vsethi@nvidia.com, sdonthineni@nvidia.com, jan@nvidia.com,
-	tdave@nvidia.com, linux-doc@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: Extend ACS configurability
-Message-ID: <ZnrvmGBw-Ss-oOO6@wunner.de>
-References: <20240523063528.199908-1-vidyas@nvidia.com>
- <20240625153150.159310-1-vidyas@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=YK/ZO7d+v53My+MD49ty9bxK4zEqza3S6XuyVI7DdN+K5VYhxdeoLeQIaBM9rJCfOUSDi4CowzHSkHZmNjdtGskEv+EbTnMk//bT0mx2Zhg7FxZ10uNY5HdqM/BsUBgLnFyZNTHu3b1G8pFluEM0LcfHZg350Viak4KT8oZJ9HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOSWshGx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88757C32781;
+	Tue, 25 Jun 2024 16:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719332777;
+	bh=NzFJdhpkPkPsPzXdsQO/C4ohQJeIVQhnJ4XDaukByws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jOSWshGxvpIGg5W+3uakVVD/UZviTeUUghcGHUKWVmzkIOxsHwJjFZn8ewuoxnF5t
+	 CEqLq7BBUwY//+JGrGpAhiGObQyWwiQU4MxzPDYIe/f9uB+58x79Kw7gZAG5jwE6l0
+	 QyVckm7pan8+smkCN2ngJK+WDw+gjE5DYT541DO+2TCKaGr8/QbdAodJxHEml8bjUz
+	 gDFk69fgHBU289NPaetQcMYd4Q4646u9Sfi5WGKKV0X79XuACiWAzB4HNp9VAP78BG
+	 vjTOLe0VgH12YmH8LNpUIOA8Llbj06c2Ca4rSVT4lZLaUpXuAyPYluzrwCcN0VgdF1
+	 wngDuMLL/5BnA==
+Date: Tue, 25 Jun 2024 17:26:12 +0100
+From: Conor Dooley <conor@kernel.org>
+To: daire.mcnamara@microchip.com
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	conor.dooley@microchip.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v5 1/3] PCI: microchip: Fix outbound address translation
+ tables
+Message-ID: <20240625-length-user-c6c36e36bbeb@spud>
+References: <20240625123845.3747764-1-daire.mcnamara@microchip.com>
+ <20240625123845.3747764-2-daire.mcnamara@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="P6b8YckaqdTiq6l6"
+Content-Disposition: inline
+In-Reply-To: <20240625123845.3747764-2-daire.mcnamara@microchip.com>
+
+
+--P6b8YckaqdTiq6l6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240625153150.159310-1-vidyas@nvidia.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 25, 2024 at 09:01:50PM +0530, Vidya Sagar wrote:
-> Add a kernel command-line option 'config_acs' to directly control all the
-> ACS bits for specific devices, which allows the operator to setup the
-> right level of isolation to achieve the desired P2P configuration.
+On Tue, Jun 25, 2024 at 01:38:43PM +0100, daire.mcnamara@microchip.com wrot=
+e:
+> From: Daire McNamara <daire.mcnamara@microchip.com>
+>=20
+> On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind one of
+> three general-purpose Fabric Interface Controller (FIC) buses that
+> encapsulate an AXI-M interface. That FIC is responsible for managing
+> the translations of the upper 32-bits of the AXI-M address. On MPFS,
+> the Root Port driver needs to take account of that outbound address
+> translation done by the parent FIC bus before setting up its own
+> outbound address translation tables.  In all cases on MPFS,
+> the remaining outbound address translation tables are 32-bit only.
+>=20
+> Limit the outbound address translation tables to 32-bit only.
+>=20
+> This necessitates changing a size_t in mc_pcie_setup_window
+> to a resource_size_t to avoid a compile error on 32-bit platforms.
+>=20
+> Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe contro=
+ller driver")
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 
-An example wouldn't hurt, here and in kernel-parameters.txt.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
+--P6b8YckaqdTiq6l6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ACS offers a range of security choices controlling how traffic is
-> allowed to go directly between two devices. Some popular choices:
->   - Full prevention
->   - Translated requests can be direct, with various options
->   - Asymmetric direct traffic, A can reach B but not the reverse
->   - All traffic can be direct
-> Along with some other less common ones for special topologies.
+-----BEGIN PGP SIGNATURE-----
 
-I'm wondering whether it would make more sense to let users choose
-between those "higher-level" options, instead of giving direct access
-to bits (and thus risking users to choose an incorrect setting).
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnrvpAAKCRB4tDGHoIJi
+0hKTAP95sopi5DgFJu1MLiGcqbgay3iUerfxQhqqMp/GXTD+LQEA0OoeZdHlxGKp
+4TxEvb2EORLwww5AnCACQDT0S0Ed5go=
+=5PKF
+-----END PGP SIGNATURE-----
 
-Also, would it be possible to automatically change ACS settings
-when enabling or disabling P2PDMA?
-
-The representation chosen here (as a command line option) seems
-questionable:
-
-We're going to add more user-controllable options going forward.
-E.g., when introducing IDE, we'll have to let user space choose
-whether encryption should be enabled for certain PCIe devices.
-That's because encryption isn't for free, so can't be enabled
-opportunistically.  (The number of crypto engines on a CPU is
-limited and enabling encryption consumes energy.)
-
-What about exposing such user configurable settings with sysctl?
-The networking subsystem has per-interface sysctl settings,
-we could have per-PCI-device settings.
-
-So just like this...
-
-net.ipv4.conf.default.arp_accept = 0
-net.ipv4.conf.eth0.arp_accept = 0
-net.ipv4.conf.eth1.arp_accept = 0
-
-... we could have...
-
-pci.0000:03:00.0.acs = full_prevention
-pci.0000:03:00.0.ide = 1
-pci.0000:03:01.0.acs = all_traffic
-pci.0000:03:01.0.ide = 0
-
-This isn't hard to do, just call register_sysctl() for each device
-on enumeration and unregister_sysctl_table() on pci_destroy_dev().
-
-Thanks,
-
-Lukas
+--P6b8YckaqdTiq6l6--
 
