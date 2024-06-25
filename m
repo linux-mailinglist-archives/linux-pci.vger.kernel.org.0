@@ -1,318 +1,472 @@
-Return-Path: <linux-pci+bounces-9242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5844916AE9
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 16:47:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1699F916D19
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 17:32:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 425951F287F8
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 14:47:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D586B212F0
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 15:32:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D8516D311;
-	Tue, 25 Jun 2024 14:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C3C43ADE;
+	Tue, 25 Jun 2024 15:32:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Y/t6w9nz"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="j00yzSkr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2052.outbound.protection.outlook.com [40.107.22.52])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2053.outbound.protection.outlook.com [40.107.236.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D5D16B720;
-	Tue, 25 Jun 2024 14:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E9BD2F5;
+	Tue, 25 Jun 2024 15:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719326843; cv=fail; b=CaM4pZ/Wahp7GyDIIR0B6Zbk7vBR85vnImwOirr/ZFR8JZwGyQr6g4SuRpljun4WBAAMLMlxtowEmLvTa7EpdlfM0OhRMs5OWrmYBC+XicF6+N+fd7SSZRsfZFponD+h8chSlzhu2IUOrg5I804WqkKsnDg54zOh5+/ekAC0/Y8=
+	t=1719329561; cv=fail; b=UyIYPh8UbY17414aRaFxJEkZURIdW+DEaLfM2tFu7qHFFIhuIipF+gqcnm93l9l+eUXsNJkxflAUpslltVHRLGPgmdlhiyEnRlxWaWYCcX0ZszvkaUQHsWjvgI6hlcXQHmyQJi8SPhbmvxMf/ywhhFk4T8gr6gJFJ6l7DK0csIU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719326843; c=relaxed/simple;
-	bh=ZeW4B+xYqwcgdHxZkId0jusuqOiUWQ33TtnM8CSf9Oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=m2m7VyOJ0Hg3OWg0e3cWV3Z9ah7toNe5qmeLgRosBV8geWO5kSsbmaB845L/Ohy2uqpYwi9Jr31WThYzJxzDLRPjUXvj8BEFVor8eCYDmnNpjoxWezYN9VskptsJyBC4M6Rb+PN4XaVlVYDia7ggkc4fJ9u0Z+CvPp5f4HEntwY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Y/t6w9nz; arc=fail smtp.client-ip=40.107.22.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1719329561; c=relaxed/simple;
+	bh=KHt0RpG5dnA8kOae25yt32DIykKult4obl/GjxJeeYI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CypYcgA2wSZDP5ucT0k8cWOWUIEeZEDnoRoXn7oQ9dzd/DvkxyrznzOY019A+1V9Hq5fzy4nsGNSH6JEb9tTXExzL90K2ACXKVUjPgPdO+u7tor3GFgc6oAuiBpr9RqLiA6Z3K+IuUgUdKwb5hA1E1Gh+xPxdH/LKcNrmPRCWSY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=j00yzSkr; arc=fail smtp.client-ip=40.107.236.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FA1Is1V6YY5poIVXKwnd4Of8qzYRdbwG98H152cRZzIqsetkc3aqAMR/SjVdG5hV+WZst1W4qdsxCwAO0YmEfiLR89fNi6uzpy1H3yb6z0/eWwptLMB57OjpVPnU7aA/rlOlsy6OemdKjbCg7EXQ6k5ZgjAvsl5RZv9VuuroW/7uMXt7Hw7xvIfGUbV6Sfp9I4cZsAgwtv+mIVuXFwTk9qW51klHWHfFbErDbwfk6C+TgoCOTmRb69J7qHh/GeNdkk3odMnZCxd3TE5IKJfHtCxIuPImzrWlyAUXI4bSDMdyd74ymKDe2ECD8hvsuXVSDhoCPyF7YnvixLqwIWuTFw==
+ b=FCsR3aFCjyogkDFisn1v2SKm8F1Y74+pzfW7p6WJ1kt5B/TgAleZdK7kEXSDhMrWOAmrK2KaXC7FFhVRZXFtMznW7cKY/pGT5RVSoPUks4tAotz8hJVJmmO8XtMvnwc7DfGs4AEnQlFvJbh2zlycTUfV4sYfauEDt0bot5CG4VQjsbDHmR6VQy+M9FZ83knntwuh2fbbzTEwTswsf5bqgc2TYT81jhLFOGMzU3V4fsuqUilGQurQqKCIQpko6vh2I5hVCRAH2krQ1O01yri/cFbGIwZNh0uhT5w/ab5ERgnKQ+Dy4/G3mCPmCJwU3ZTlprRQ72n5KWye9WvxwIdwAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iN8va3lu84hAb4wF0yAYO54FTLc32KteCc7kYfIHXI0=;
- b=OOodT2CrjBiRgE9U4DBElIlRTWCCnas78v+oxI+iEn7n/FiblKxSOLXzgOl67QqJ3jF71NDLw0n6a9pXKHfnjuFyByQjIQ+Hzlo2jTbHM0Frr3wct9azPxvgPhy1/PIl2X5zBsVZ+SyCTtwKGkBydmgYQvexnbccZUKiQvZ8NQKBn1n2o+3M6vrpDMeFtYIKmeOB+a9nQqwgZ8/fq1E8vEv9TkoystxzV+WEhdHCQw2atssEZq3QOkVSVX7uVA7viKjwy/x7sSxkHXBocrgRM2TLJx+w427WFtg30AhU+q9re1DJGpEt+9HEzC/5IVZXt9rQwpoFsHubU9qna8FIXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=GaPJcGVSdfrhNeh0Ebq+VIaaX4/pI0PSg5FeC3SeCTw=;
+ b=MGYS7sYGGQfPRGAXHt6iefdsPqD29zY7eBhbe2l34stvMwJsjgJ7Buzs7i3WrNilzX+25EfFTTULWa6CoUKpoP0uG1B8WURjhpsQgluFz13Fgcq5Am0lF7vp3vm8RkKWSQ0YEdwC2cymIFFUNJvZnyTG9/qdCZTyRJc5DJInAkQlkqAvcgPspGYPL4K8ORxubHEsB73EWDN38LFgipJaSR6MSh9kRZi9fO5i/8W0i9Iy2pwRSEWcGK4XXAOzPBR6FuTznGPh2u9dPZS1xR/08Dg863j2v7xRo86ick6omkPE0SnBfOjuC5VO7VhVaCj13OLjikSDckwJ1nCrfE8vcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=lwn.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iN8va3lu84hAb4wF0yAYO54FTLc32KteCc7kYfIHXI0=;
- b=Y/t6w9nzOMbxNIOZQGgDc4GdYcFs3xSPxCMHIMkREJpRhK5QR0NQavVQOCHIqyW526ljKdHyqzSzmx2Y0w7ofVtxRhMHL0b7HAtSbPntIX3Gm62mGeebmmRw64aL0jyxrAaGiTrQJMbl7of6GTEbd7i7VOE3jeIkn8PkMBCEgbc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS5PR04MB10059.eurprd04.prod.outlook.com (2603:10a6:20b:680::19) with
+ bh=GaPJcGVSdfrhNeh0Ebq+VIaaX4/pI0PSg5FeC3SeCTw=;
+ b=j00yzSkrfUBpk6eLCSFBNOZue7l8S0iYQKoQs7yTAs9xZ/hRs9W/lpIomSvb8Ll7zCQOl9wZTF3uwvjLco6RAuDCmQy1zm4kbckuRIzdQeqLKw+DauSoResECskwcJF9sHfIzMMRu1ZYHvbfI/ShA5uwRfFRt3SJPqTczfDZEBeHEnVodhYzvqGhPbC9y+2ODkJ0XfQn+0cnvFzYRaqWGxN5ClYT8d9Qyd+CqBh2+zrnfQMQQ9v4dh5l9o3HMTtrbOykU8p+m+sMj43zrQvW3Bcf/WWQm3c6lNBhym0IFTb9yOV9CjwoiAe9imRy5auNjNhsicfjGH4GHWvP7mZBHA==
+Received: from BYAPR06CA0071.namprd06.prod.outlook.com (2603:10b6:a03:14b::48)
+ by PH7PR12MB5618.namprd12.prod.outlook.com (2603:10b6:510:134::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.28; Tue, 25 Jun
- 2024 14:47:18 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7698.025; Tue, 25 Jun 2024
- 14:47:18 +0000
-Date: Tue, 25 Jun 2024 10:47:05 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pci@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, devicetree@vger.kernel.org,
-	Jason Liu <jason.hui.liu@nxp.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v6 00/10] PCI: imx6: Fix\rename\clean up and add lut
- information for imx95
-Message-ID: <ZnrYaa3XkLJl6j1K@lizhi-Precision-Tower-5810>
-References: <20240617-pci2_upstream-v6-0-e0821238f997@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240617-pci2_upstream-v6-0-e0821238f997@nxp.com>
-X-ClientProxiedBy: BYAPR11CA0074.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Tue, 25 Jun
+ 2024 15:32:30 +0000
+Received: from SJ5PEPF000001F6.namprd05.prod.outlook.com
+ (2603:10b6:a03:14b:cafe::a) by BYAPR06CA0071.outlook.office365.com
+ (2603:10b6:a03:14b::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
+ Transport; Tue, 25 Jun 2024 15:32:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ5PEPF000001F6.mail.protection.outlook.com (10.167.242.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7677.15 via Frontend Transport; Tue, 25 Jun 2024 15:32:29 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 25 Jun
+ 2024 08:32:13 -0700
+Received: from vidyas-desktop.nvidia.com (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 25 Jun 2024 08:32:07 -0700
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <corbet@lwn.net>, <bhelgaas@google.com>, <galshalom@nvidia.com>,
+	<leonro@nvidia.com>, <jgg@nvidia.com>, <treding@nvidia.com>,
+	<jonathanh@nvidia.com>
+CC: <mmoshrefjava@nvidia.com>, <shahafs@nvidia.com>, <vsethi@nvidia.com>,
+	<sdonthineni@nvidia.com>, <jan@nvidia.com>, <tdave@nvidia.com>,
+	<linux-doc@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V4] PCI: Extend ACS configurability
+Date: Tue, 25 Jun 2024 21:01:50 +0530
+Message-ID: <20240625153150.159310-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240523063528.199908-1-vidyas@nvidia.com>
+References: <20240523063528.199908-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS5PR04MB10059:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbe4658e-535e-4143-b4c1-08dc9525b582
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F6:EE_|PH7PR12MB5618:EE_
+X-MS-Office365-Filtering-Correlation-Id: 586d6fab-24da-4653-ca1b-08dc952c062c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|1800799021|7416011|366013|52116011|376011|38350700011|921017;
+	BCL:0;ARA:13230037|36860700010|376011|1800799021|82310400023;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RUhIYWRibnZVR1VNa3ZwQUk1bS9zckN4SEpXYThlUithMGFMTGRBSWRYZm56?=
- =?utf-8?B?RGNNZW16dTRoU09qK3hvSSs1T3lydlhubkc3ZWxSL1pQM0ZFdVVhTE1iTjBR?=
- =?utf-8?B?VndtZlJ4cGtndmRzM1Zxd1JoemZGRlF6S0dFSkZFc3Exc01hVjVYRHozeXUr?=
- =?utf-8?B?a2docGJoVG1CUTF2Z3JkK3RkRTBFaWFaTGFrOWgxMkppUEZDNFVCS09FcmJP?=
- =?utf-8?B?QjdKR05zbC85VGk0c2NvZzhtWHY5elhmTWI5RlFDNWVFMGdPakFHeDMzY2Qy?=
- =?utf-8?B?QTNYOHliMTlXdHIzREp6NktMa093SGxKUEk1OVBDdUJ0eDhNdU5MOFN2TStV?=
- =?utf-8?B?RzYrTXdhRlh0Z0hQMVpvSEMvbUl0Y1F6OVI3c3pnblJBQjJ3NEtEYXZVdWRt?=
- =?utf-8?B?eVlRQVB1T3VZK0pmcHFHL3FXYkVodi83bDc5YkwvdkpHY1ZTT3p5NVBsR1VG?=
- =?utf-8?B?czdYUldBR3FHd3U2b3BpUWJHZHVsYThBT083Q2t6V0hrRjlTWWdMbE1BOWhi?=
- =?utf-8?B?TXI1WjNiMVpKbm5BTy9KNWcreGZpc0tJd0QrNDBmRnI2L25FeW5DWlRHOEl0?=
- =?utf-8?B?TVIrSU1yajVEc2U3cktKMmNWb1Y3eVRIKy8yT3RyNnpGS3YvZ1NLWGtsNmdy?=
- =?utf-8?B?S0VuTnNWdHRHM1EvcVNiMjVjRjlYY2Fvc3BSR21NM3puRlNYTTVUeDhjWXBQ?=
- =?utf-8?B?dDFXQ2FhQUZHT1JpNVJVT0JLTTIwQTZlSWRCQnVRMFZjQzFINklTd1ZZeFZJ?=
- =?utf-8?B?ZWNHdHg4aXNNazNCQTFhTmtHaUtUY093MzlBL3V2THJoa3dLTHRsWmpxS3d4?=
- =?utf-8?B?ZktNczg2VzZIVlFtbG5aYytGRkh2eVBBNy9UakM3ZFlOSGxmQ2RhWHdpMWF2?=
- =?utf-8?B?MHpudE4xRjJFbzJaTFhwaW5NQTMrLzhPcVlobHdVcG9DVzNpYjJnellUN3dK?=
- =?utf-8?B?SmdXNzA1aFJDRy9teW9HcUpxZUpKSmF6SzBBYnFwd1MzWnJpc2FqS2UyVnR3?=
- =?utf-8?B?ekdtZy93Z3dOWDhPT0FJb3kyQnNIenRkYndGRGhtSjBDTGJ4UTQxMEFyOE9q?=
- =?utf-8?B?d09wbS94OXg2R2JPMlo4ZHgybm80M253a0pmRHZzRXk0ZzV3QXd1RFFWYVVE?=
- =?utf-8?B?am4yWk9ubmErTDZuckFNVHQ4Mk5BNndFNTByM0YrMzMrQnVNbE9iTysyMHRE?=
- =?utf-8?B?OFNlSy8raXZRUkhWNWtHZGthWGVZa0lRMGE1bTlmVlZIZzQvb3UyVGVSWjR5?=
- =?utf-8?B?UVZnMDgxaTA2VjI1TkZVNER6Y1pjSmhqRlJqbUV4SDNhNFFsaHloWVlzcDYy?=
- =?utf-8?B?OGhoL1hVYXZEQkJzaVBCeEkxK0RkYkhHUkhMbjB3T052b3NHUEZtWWhmemRV?=
- =?utf-8?B?L1I3cjlEYmxXa1gvWmw4VkUxQkpHMHRkb3VaYXBBak9NQW5aMm9XUXBKcnJO?=
- =?utf-8?B?c3ErMnlNK05jZDZTRk5TQ045K3ZVb0w0dE15dCtUdDVOSG54SnRGMUE0RjFT?=
- =?utf-8?B?a0JocmlMRGxNSFNtNnZZbllySnNHOVllM1VGSHdpQXBQcHIxQmNmRHI0YjN4?=
- =?utf-8?B?cXNEREpiYVZpOUpZSE9FZTBZNlh1M0tnS2JrSmxRTm10bDk5OXRyZk5oanlE?=
- =?utf-8?B?cHNXbjAwZUFMUUx6bHNvZnpYcnJWaDN0OFpYKzFtc1I2UWwrbGRTY1ZXRTRz?=
- =?utf-8?B?Tnp4VkY5ZCtiRkF4N3JCd2plS1hoTlZoNzNrT0RnWGZJQWU5eGFHZStZbVMy?=
- =?utf-8?B?R0tPT1JQV2U3TDhqcjAzdTdlZG9kL0FjcFZsT2VKYllzL3pwNzFEZ2JReHQ1?=
- =?utf-8?B?cG1mR2NoTlp6NjJwT2lkaUw4SExPellFcXUrRVE1K1c0OUZZY0Q3djdaNXFa?=
- =?utf-8?Q?eUX7ocxnPEWbx?=
+	=?utf-8?B?NFdRUThXbXpxN3R0eThkb3Nza1E3SG5Ba0twMTVzNUlPS3g4dXgyMWw0TzFI?=
+ =?utf-8?B?eW9USFhLWkpzNTc2R3lpcWdpVDlyRS9tSUxHZHVBbjUxM2F5ZWQwcDEwL0lm?=
+ =?utf-8?B?YjZGUkpvQUtJQTlQL2VSYm1YNDFWS1RuOHdRRzNnL2pPNUY1N1ROcHVwY04w?=
+ =?utf-8?B?RzNkZjRqUDRrTndQQUQyY3pON0g4VHl3alVFdFhuRDc4aXhZZ0JCVEU2cm94?=
+ =?utf-8?B?aWVrZlhHYS9OdjAwSUdPVU1IR3NHYVNKOG9hV1NpRTFTYngxb2NPT3dyeGZF?=
+ =?utf-8?B?WEM5RE5NYnRDZ0tTRlhuTTQ0ZVp1ekYzRnZGSjR2S2hUOHVKTVZnZ2ZLaUZv?=
+ =?utf-8?B?KzdBalp3MTlrN3hGa0liNWdFcFkwaFlmUUt2L1o2c2NibjJtdDdnWWgyRUsw?=
+ =?utf-8?B?Vno3M0NUNHZ5anYxTDN4UHA5NTRybythWTlVKzZNdGdvRnZkNW5rRWkrRE1C?=
+ =?utf-8?B?WURPR282OVBGS3I0M1dnZG8wajRTWkNBNThBR0RJQ3VrbHhBS0M3cFk4SUc0?=
+ =?utf-8?B?dlJHcGFHMkRCbFJ3S1RGSm9tWEgrK1FEVytHRWtpNWRhYVFiakZhNzRnaW0w?=
+ =?utf-8?B?bWNsOXBsNmxuK2p1REgxY2E1S0R4K1BFQXVyeUNPalc3V2JNR2QyK1hMWG0z?=
+ =?utf-8?B?eXhzV1o4WGhOVW9PQUUyNXdqdTljT1BjM1NUdEtNa084Zno3VjJleDFUNVdj?=
+ =?utf-8?B?WTZOZXNLdGNzOU1uSDRGTVFvb3BMWFlzeW1wa3BRcWNVZVNuNzR3QlUyRjFR?=
+ =?utf-8?B?OHRwMk9mbzRZaTJuS3FQR0J2SHRvNlZZOXV4NGkwNTZ2QTl6eGx0TGhXQ3ov?=
+ =?utf-8?B?K2RIcks1SmdRd3dDVzdaQnlsSzRGNk5HOUgrM3orZWZXMWpTL09HRGFhWE1M?=
+ =?utf-8?B?Q3FvUTNTVXdhWnZGNzFYZWpuU0VRMk9QNC9xOWlmQXkwNmppZ094NWptaHpz?=
+ =?utf-8?B?a01GZVQwTGg0N3lGSEFOc1pnQzZ2Y0kwTGZaSytvOWpGQ1hwNE1HdnpscmNy?=
+ =?utf-8?B?OWQySklLTGxOVjhVTWNCdFRwRk1jUk1qZlZuNVIwclpBWEtkTjdGSVB2bml4?=
+ =?utf-8?B?U3gyUmJmOCtXeVFpZGdBMFB0ZzR5c1NFYVFtWlF1blRGTTUxb3pHQkNiNFBp?=
+ =?utf-8?B?Y1RGeWpyckVyWGp5cHVnSXlRdHV0UTk0Q0FzT3hBeFhhQkhSUTlZMlAzYjN6?=
+ =?utf-8?B?WFNrWkx3emJDWkYya1g4UW1QTnpMbTlERi9NZ3pRSUwvTGkwcFQ1YUttTm1y?=
+ =?utf-8?B?S3VYYUZ4M3MrL2lScXdGT0ZqNXlRVUJKUVFBeVVlYlQzQkRIYzFjNVdqaEJ5?=
+ =?utf-8?B?SE9DTDZUTktSWGxEdk44OU1VN2pOVFR0L0tOa1VqaGpZN0tWZzFSR0hBZmNU?=
+ =?utf-8?B?NTAxQVdRV0gzdzBBMHhWMVZqRGJncTRtRDIwU3VHZXFDRk9XQmVjUFk0Z3o2?=
+ =?utf-8?B?Vjc2YXFMREZNbHMvVk02TVBIVDMxTFJjZ3kreGdid2ZUV2dQVnZXSldrYmxk?=
+ =?utf-8?B?ZlRadjkxOUFtRHVZY0FsNlNkZjRDL2J3UnUvZGpXbkljditTaktHQ2dnNXRz?=
+ =?utf-8?B?bWVxZlVqcEpkNmE1ZUsyWVZXR3N1cUFHNkp2YkxZTnZRUWQwVmV0c0l4czFP?=
+ =?utf-8?B?cDk4MnA0M25PUkgrNTk5VU5zWTBXWmFSNER4ckRaeVFWdGx3Z0xpT2tsY2tY?=
+ =?utf-8?B?Zm1MdlN6YVJNNlMzNi9vL1MzMVVmVHlDbU5jRkZNaVRWQXNMOXFreVMyUmhB?=
+ =?utf-8?B?MEtPQy90N0o1S1FZZXBkZjh4Y3N2MUZCc1RDdGZnTnNjbDQ3SmJUVXJlYm9w?=
+ =?utf-8?B?NWkrVk91Q3VCVXJHNVZMcHNzVFdnb0lyc1gzY1RpUkVYbWJ3M09MT1BXM1d6?=
+ =?utf-8?B?MGpFYTljamlDR0dQdG1ZSlcraklPemNyYitTcEVDcmVEbUE9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(7416011)(366013)(52116011)(376011)(38350700011)(921017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OHZNaWtrOFdUdWpMTjJtVy80OFJIZ0Q5RThlNW1tVzEwUUQwYlRFQ2RYRmNX?=
- =?utf-8?B?OFExZDJ4Nyt2amoxRm9Yc1JiZWtXdWVjQ2ErQjRDYzhEY0V5cUYrMmU1dGsy?=
- =?utf-8?B?UkdwSk1MYTdrM2ZLT2RiMExhWnZmMXY1a25oSVIwL1pGeGVGd2RCRWw3NGUr?=
- =?utf-8?B?ckNtbm9KWTFidUx1ZmxOdFR1YUpkbVFKdXJPMTdMWHBDREJiUUc1S2VYbW1O?=
- =?utf-8?B?cEhBNnBZWElnZUgzQ3RTWWZyR1hxU3QvdUMxd3JVWUlHRXZ5eHNIeENPU21n?=
- =?utf-8?B?NmlTMTBWdGhjc1NWWFo0cHcvWXl5bGszaVBwSTV1SlF6dlZFM1JsS1RScUZ2?=
- =?utf-8?B?QnJFOGFHMkFqVGVXQ2NXUXdGUHR2bXBDeEVQRExyNThoQWFnTjd4NHpFM0I0?=
- =?utf-8?B?QlZ0OStUVmM3cHNXRlZRaUZLdEJ2M0hLVDZEWkdTeHEzZjRqMWpIOGk5eGts?=
- =?utf-8?B?RnVCZUJrcFRKRnJhNkNMWStNLzlNU0lPMGY0VWc3b2ZUNlpnejRqV01BMVlC?=
- =?utf-8?B?cldtTzlOTFRYRmdYV2N0WnNDbjhEdXZNbGV5Y2QrY2ozTnVkV2ozRXNQelpF?=
- =?utf-8?B?cXZ6dHlraXhLRkJTNEhiMDZpTzkydWVwSm51SzhUejFwV0RCRzVmQ0FlVmh5?=
- =?utf-8?B?U3NTQVlldDVYVzVsMkZ4cXhCNTYyZEJudWVNTzM3VkdpZ25hTS8wYUNKbzhr?=
- =?utf-8?B?L0Qvem1pbGk5UHV0MnI0eVE0S2RLTE4rcERXM3pqZDMzbjcybk1ydjRuejkz?=
- =?utf-8?B?aXczd3hqanJKc04wMXNzRjJjK1FwLzJvMkxxbWR5MnY4THFNWlNyRUJhbzhB?=
- =?utf-8?B?S3NJc2ppcVpYeFNJeGg5NVJVRUxNUFh0TE1FREdXYWZIbnpLUDFRQTBxeDha?=
- =?utf-8?B?UVJFUUZhZ0NORmROYVJFcy9pZXhnbkphcDB1ayt1dDNVc2VaR042MTFTQm9E?=
- =?utf-8?B?Ulp0amNPYkVBdDQrUWt1UXlpSkxoeGQwV0FDTzRqQlhYQTZhemhUYWJYb1RT?=
- =?utf-8?B?MVVVcHE0c1RoUXVKblBZaUUwZW5BelM0TDdpVlRBRmtrTGo3K0tUbFppOGRs?=
- =?utf-8?B?KzZRaUluU3hCWjJjNk9DR05pQ3RqQ3NzcThjdWRHc3F4ZFUzbGdTRlQ0UUEw?=
- =?utf-8?B?ZXdTaVluZmw4OVJTNWVleXJoR2lKNjZucFFoV2tKc0hNTFpHV1Mzd0FHZjVs?=
- =?utf-8?B?czlrTkdCaUlVSEtteG1GaVFpT25vODdIN2x4WTZQdkRsSHJ3RUN4Y1JvUklt?=
- =?utf-8?B?Y0luU0lNa3p3Z3ovOFZxWHEvRFRPZGFOc2kwNUlGeUdlTVFabXU3eGZnOFRh?=
- =?utf-8?B?ZmpLSDkrM2drYXJqN0ZBVjdpYjN0OFJQcWRRd2tBNXpXWit1K3BKaFl2QWM2?=
- =?utf-8?B?cTllRkphZHYyUnZvbkVkZFpmK2M2MjZpdVFxV3d4MnU4MXBmcTJWVUo4cmFq?=
- =?utf-8?B?MTRicldtM3BTUW85c2s1MjU2QUo0N2VwcE5mM3VxTi9pWFFIWUhobkRkL1o4?=
- =?utf-8?B?SE5aazBFVmJhNWRvMzg1NzJQcG1RQW1NSDBQU0JpSkhBNXYrdEVJTGR3T016?=
- =?utf-8?B?K01BVUQzc0VQQVU5SWhmRmVRUW83YkptblVLMmNYTU1Nb1B0MWhXVXlJdWM3?=
- =?utf-8?B?UzAvK1FkYWpoL2ZuT0FhTjU3Z0ZxaWhEcEVQaGJWR2tLeXFwUXdlWGpJTk4v?=
- =?utf-8?B?WGVKbGF2ZFZKYzJURDc1MXVGQzFuaTBjeG9rTGQ1aURrU0hyeGwvZzFzVDk5?=
- =?utf-8?B?TDNWZVE0akNTbE9pRzRsbU4xZGJBb2xEaThHNzZyMGlUcWJZS005YWxUa1hw?=
- =?utf-8?B?MUp6RlE1eG4wVitNU0tkVzdielZpQ1dRK2hSMWRPR3FaaVJFY3EyZm9jaHFN?=
- =?utf-8?B?dGJUSlk4L1c3UTRXa25FdEhNRC9lVTQ5QTJNK3RZb1FQTjIrM1F3dmxUaXZF?=
- =?utf-8?B?WkwwV0l6ekFOemlWOWM1L2FaWVQ3aUNodUxWdC8xclI2K09mc0l4WXFGSWZM?=
- =?utf-8?B?dTRqU1N3T3JJZFVZaEtKWlIvZDVzQlplMGtCa2hvMXhEWTNId2xXd0RlZjRl?=
- =?utf-8?B?b3RqV1FSTlo5VjdVMVFyNWY0YXpBVXcwVXY0eWtkcGJGNG9xMzUra2NOZXA3?=
- =?utf-8?Q?tb+onbn4JE8Bc3n5yltvqx+NJ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbe4658e-535e-4143-b4c1-08dc9525b582
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 14:47:17.4197
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230037)(36860700010)(376011)(1800799021)(82310400023);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2024 15:32:29.4153
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R0yMXxJQt31h8n/unDRmcfCWZr0fEMs1FMcg0qKWe39HwhxlVROZq/E1AlK9rPBFhwLJrutgiuY2lw4cQAFEaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB10059
+X-MS-Exchange-CrossTenant-Network-Message-Id: 586d6fab-24da-4653-ca1b-08dc952c062c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F6.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5618
 
-On Mon, Jun 17, 2024 at 04:16:36PM -0400, Frank Li wrote:
-> Fixed 8mp EP mode problem.
-> 
-> imx6 actaully for all imx chips (imx6*, imx7*, imx8*, imx9*). To avoid
-> confuse, rename all imx6_* to imx_*, IMX6_* to IMX_*. pci-imx6.c to
-> pci-imx.c to avoid confuse.
-> 
-> Using callback to reduce switch case for core reset and refclk.
-> 
-> Add iMX8QXP and iMX8QM support. PHY driver ref:
-> https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=next&id=82c56b6dd24fcdf811f2b47b72e5585c8a79b685
-> 
-> Base on linux 6.10-rc1
+PCIe ACS settings control the level of isolation and the possible P2P
+paths between devices. With greater isolation the kernel will create
+smaller iommu_groups and with less isolation there is more HW that
+can achieve P2P transfers. From a virtualization perspective all
+devices in the same iommu_group must be assigned to the same VM as
+they lack security isolation.
 
-Krzysztof Wilczyński and mani:
+There is no way for the kernel to automatically know the correct
+ACS settings for any given system and workload. Existing command line
+options (ex:- disable_acs_redir) allow only for large scale change,
+disabling all isolation, but this is not sufficient for more complex cases.
 
-	Do you have chance to check these patch? I removed imx95 Lut patch,
-which need more time to discussion. 
-	At least first 2 fix patch is important, which fix some function
-issue.
+Add a kernel command-line option 'config_acs' to directly control all the
+ACS bits for specific devices, which allows the operator to setup the
+right level of isolation to achieve the desired P2P configuration.
+The definition is future proof, when new ACS bits are added to the spec
+the open syntax can be extended.
 
-Frank Li
+ACS needs to be setup early in the kernel boot as the ACS settings
+effect how iommu_groups are formed. iommu_group formation is a one
+time event during initial device discovery, changing ACS bits after
+kernel boot can result in an inaccurate view of the iommu_groups
+compared to the current isolation configuration.
 
-> 
-> To: Richard Zhu <hongxing.zhu@nxp.com>
-> To: Lucas Stach <l.stach@pengutronix.de>
-> To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> To: Krzysztof Wilczyński <kw@linux.com>
-> To: Rob Herring <robh@kernel.org>
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> To: Shawn Guo <shawnguo@kernel.org>
-> To: Sascha Hauer <s.hauer@pengutronix.de>
-> To: Pengutronix Kernel Team <kernel@pengutronix.de>
-> To: Fabio Estevam <festevam@gmail.com>
-> To: NXP Linux Team <linux-imx@nxp.com>
-> To: Philipp Zabel <p.zabel@pengutronix.de>
-> To: Liam Girdwood <lgirdwood@gmail.com>
-> To: Mark Brown <broonie@kernel.org>
-> To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-> To: Conor Dooley <conor+dt@kernel.org>
-> Cc: linux-pci@vger.kernel.org
-> Cc: imx@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: bpf@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> 
-> Changes in v6:
-> - Base on Linux 6.10-rc1 by Bjorn's required.
-> - Remove imx95 LUT patch because it need more time to work out the
-> solution. This patch add 8qxp and 8qm and support and some bug fixes.
-> - Link to v5: https://lore.kernel.org/r/20240528-pci2_upstream-v5-0-750aa7edb8e2@nxp.com
-> 
-> Changes in v5:
-> - Rebase to linux-pci next. fix conflict with gpiod change
-> - Add rob and cornor's review tag
-> - Link to v4: https://lore.kernel.org/r/20240507-pci2_upstream-v4-0-e8c80d874057@nxp.com
-> 
-> Changes in v4:
-> - Improve comment message for patch 1 and 2.
-> - Rework commit message for patch 3 and add mani's review tag
-> - Remove file rename patch and update maintainer patch
-> - [PATCH v3 06/11] PCI: imx: Simplify switch-case logic by involve set_ref_clk callback
-> 	remove extra space.
-> 	keep original comments format (wrap at 80 column width)
-> 	update error message "'Failed to enable PCIe REFCLK'"
-> - PATCH v3 07/11] PCI: imx: Simplify switch-case logic by involve core_reset callback
-> 	keep exact the logic as original code
-> - Add patch to update comment about workaround ERR010728
-> - Add patch about help function imx_pcie_match_device()
-> - Using bus device notify to update LUT information for imx95 to avoid
-> parse iommu-map and msi-map in driver code.  Bus notify will better and
-> only update lut when device added.
-> - split patch call PHY interface function.
-> - Improve commit message for imx8q. remove local-address dts proptery. and
-> use standard "range" to convert cpu address to bus address.
-> - Check entry in cpu_fix function is too late. Check it at probe
-> - Link to v3: https://lore.kernel.org/r/20240402-pci2_upstream-v3-0-803414bdb430@nxp.com
-> 
-> Changes in v3:
-> - Add an EP fixed patch
->   PCI: imx6: Fix PCIe link down when i.MX8MM and i.MX8MP PCIe is EP mode
->   PCI: imx6: Fix i.MX8MP PCIe EP can not trigger MSI
-> - Add 8qxp rc support
-> dt-bing yaml pass binding check
-> make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,imx6q-pcie.yaml
->   LINT    Documentation/devicetree/bindings
->   DTEX    Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dts
->   CHKDT   Documentation/devicetree/bindings/processed-schema.json
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->   DTC_CHK Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dtb
-> 
-> - Link to v2: https://lore.kernel.org/r/20240304-pci2_upstream-v2-0-ad07c5eb6d67@nxp.com
-> 
-> Changes in v2:
-> - remove file to 'pcie-imx.c'
-> - keep CONFIG unchange.
-> - Link to v1: https://lore.kernel.org/r/20240227-pci2_upstream-v1-0-b952f8333606@nxp.com
-> 
-> ---
-> Frank Li (6):
->       PCI: imx6: Rename imx6_* with imx_*
->       PCI: imx6: Introduce SoC specific callbacks for controlling REFCLK
->       PCI: imx6: Simplify switch-case logic by involve core_reset callback
->       PCI: imx6: Improve comment for workaround ERR010728
->       PCI: imx6: Consolidate redundant if-checks
->       PCI: imx6: Call: Common PHY API to set mode, speed, and submode
-> 
-> Richard Zhu (4):
->       PCI: imx6: Fix establish link failure in EP mode for iMX8MM and iMX8MP
->       PCI: imx6: Fix i.MX8MP PCIe EP's occasional failure to trigger MSI
->       dt-bindings: imx6q-pcie: Add i.MX8Q pcie compatible string
->       PCI: imx6: Add i.MX8Q PCIe root complex (RC) support
-> 
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   16 +
->  drivers/pci/controller/dwc/pci-imx6.c              | 1004 +++++++++++---------
->  2 files changed, 551 insertions(+), 469 deletions(-)
-> ---
-> base-commit: d9b6deec8e0a49b3ade6559b68c6a77ded0f4a8d
-> change-id: 20240227-pci2_upstream-0cdd19a15163
-> 
-> Best regards,
-> ---
-> Frank Li <Frank.Li@nxp.com>
-> 
+ACS applies to PCIe Downstream Ports and multi-function devices.
+The default ACS settings are strict and deny any direct traffic
+between two functions. This results in the smallest iommu_group the
+HW can support. Frequently these values result in slow or
+non-working P2PDMA.
+
+ACS offers a range of security choices controlling how traffic is
+allowed to go directly between two devices. Some popular choices:
+  - Full prevention
+  - Translated requests can be direct, with various options
+  - Asymmetric direct traffic, A can reach B but not the reverse
+  - All traffic can be direct
+Along with some other less common ones for special topologies.
+
+The intention is that this option would be used with expert knowledge
+of the HW capability and workload to achieve the desired
+configuration.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+v4:
+* Changed commit message (Courtesy: Jason) to provide more details
+
+v3:
+* Fixed a documentation issue reported by kernel test bot
+
+v2:
+* Refactored the code as per Jason's suggestion
+
+ .../admin-guide/kernel-parameters.txt         |  22 +++
+ drivers/pci/pci.c                             | 148 +++++++++++-------
+ 2 files changed, 112 insertions(+), 58 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 500cfa776225..42d0f6fd40d0 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4619,6 +4619,28 @@
+ 				bridges without forcing it upstream. Note:
+ 				this removes isolation between devices and
+ 				may put more devices in an IOMMU group.
++		config_acs=
++				Format:
++				=<ACS flags>@<pci_dev>[; ...]
++				Specify one or more PCI devices (in the format
++				specified above) optionally prepended with flags
++				and separated by semicolons. The respective
++				capabilities will be enabled, disabled or unchanged
++				based on what is specified in flags.
++				ACS Flags is defined as follows
++				bit-0 : ACS Source Validation
++				bit-1 : ACS Translation Blocking
++				bit-2 : ACS P2P Request Redirect
++				bit-3 : ACS P2P Completion Redirect
++				bit-4 : ACS Upstream Forwarding
++				bit-5 : ACS P2P Egress Control
++				bit-6 : ACS Direct Translated P2P
++				Each bit can be marked as
++				‘0‘ – force disabled
++				‘1’ – force enabled
++				‘x’ – unchanged.
++				Note: this may remove isolation between devices
++				and may put more devices in an IOMMU group.
+ 		force_floating	[S390] Force usage of floating interrupts.
+ 		nomio		[S390] Do not use MIO instructions.
+ 		norid		[S390] ignore the RID field and force use of
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 55078c70a05b..6661932afe59 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -946,30 +946,67 @@ void pci_request_acs(void)
+ }
+ 
+ static const char *disable_acs_redir_param;
++static const char *config_acs_param;
+ 
+-/**
+- * pci_disable_acs_redir - disable ACS redirect capabilities
+- * @dev: the PCI device
+- *
+- * For only devices specified in the disable_acs_redir parameter.
+- */
+-static void pci_disable_acs_redir(struct pci_dev *dev)
++struct pci_acs {
++	u16 cap;
++	u16 ctrl;
++	u16 fw_ctrl;
++};
++
++static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
++			     const char *p, u16 mask, u16 flags)
+ {
++	char *delimit;
+ 	int ret = 0;
+-	const char *p;
+-	int pos;
+-	u16 ctrl;
+ 
+-	if (!disable_acs_redir_param)
++	if (!p)
+ 		return;
+ 
+-	p = disable_acs_redir_param;
+ 	while (*p) {
++		if (!mask) {
++			/* Check for ACS flags */
++			delimit = strstr(p, "@");
++			if (delimit) {
++				int end;
++				u32 shift = 0;
++
++				end = delimit - p - 1;
++
++				while (end > -1) {
++					if (*(p + end) == '0') {
++						mask |= 1 << shift;
++						shift++;
++						end--;
++					} else if (*(p + end) == '1') {
++						mask |= 1 << shift;
++						flags |= 1 << shift;
++						shift++;
++						end--;
++					} else if ((*(p + end) == 'x') || (*(p + end) == 'X')) {
++						shift++;
++						end--;
++					} else {
++						pci_err(dev, "Invalid ACS flags... Ignoring\n");
++						return;
++					}
++				}
++				p = delimit + 1;
++			} else {
++				pci_err(dev, "ACS Flags missing\n");
++				return;
++			}
++		}
++
++		if (mask & ~(PCI_ACS_SV | PCI_ACS_TB | PCI_ACS_RR | PCI_ACS_CR |
++			    PCI_ACS_UF | PCI_ACS_EC | PCI_ACS_DT)) {
++			pci_err(dev, "Invalid ACS flags specified\n");
++			return;
++		}
++
+ 		ret = pci_dev_str_match(dev, p, &p);
+ 		if (ret < 0) {
+-			pr_info_once("PCI: Can't parse disable_acs_redir parameter: %s\n",
+-				     disable_acs_redir_param);
+-
++			pr_info_once("PCI: Can't parse acs command line parameter\n");
+ 			break;
+ 		} else if (ret == 1) {
+ 			/* Found a match */
+@@ -989,56 +1026,38 @@ static void pci_disable_acs_redir(struct pci_dev *dev)
+ 	if (!pci_dev_specific_disable_acs_redir(dev))
+ 		return;
+ 
+-	pos = dev->acs_cap;
+-	if (!pos) {
+-		pci_warn(dev, "cannot disable ACS redirect for this hardware as it does not have ACS capabilities\n");
+-		return;
+-	}
+-
+-	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
++	pci_dbg(dev, "ACS mask  = 0x%X\n", mask);
++	pci_dbg(dev, "ACS flags = 0x%X\n", flags);
+ 
+-	/* P2P Request & Completion Redirect */
+-	ctrl &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC);
++	/* If mask is 0 then we copy the bit from the firmware setting. */
++	caps->ctrl = (caps->ctrl & ~mask) | (caps->fw_ctrl & mask);
++	caps->ctrl |= flags;
+ 
+-	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
+-
+-	pci_info(dev, "disabled ACS redirect\n");
++	pci_info(dev, "Configured ACS to 0x%x\n", caps->ctrl);
+ }
+ 
+ /**
+  * pci_std_enable_acs - enable ACS on devices using standard ACS capabilities
+  * @dev: the PCI device
++ * @caps: default ACS controls
+  */
+-static void pci_std_enable_acs(struct pci_dev *dev)
++static void pci_std_enable_acs(struct pci_dev *dev, struct pci_acs *caps)
+ {
+-	int pos;
+-	u16 cap;
+-	u16 ctrl;
+-
+-	pos = dev->acs_cap;
+-	if (!pos)
+-		return;
+-
+-	pci_read_config_word(dev, pos + PCI_ACS_CAP, &cap);
+-	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &ctrl);
+-
+ 	/* Source Validation */
+-	ctrl |= (cap & PCI_ACS_SV);
++	caps->ctrl |= (caps->cap & PCI_ACS_SV);
+ 
+ 	/* P2P Request Redirect */
+-	ctrl |= (cap & PCI_ACS_RR);
++	caps->ctrl |= (caps->cap & PCI_ACS_RR);
+ 
+ 	/* P2P Completion Redirect */
+-	ctrl |= (cap & PCI_ACS_CR);
++	caps->ctrl |= (caps->cap & PCI_ACS_CR);
+ 
+ 	/* Upstream Forwarding */
+-	ctrl |= (cap & PCI_ACS_UF);
++	caps->ctrl |= (caps->cap & PCI_ACS_UF);
+ 
+ 	/* Enable Translation Blocking for external devices and noats */
+ 	if (pci_ats_disabled() || dev->external_facing || dev->untrusted)
+-		ctrl |= (cap & PCI_ACS_TB);
+-
+-	pci_write_config_word(dev, pos + PCI_ACS_CTRL, ctrl);
++		caps->ctrl |= (caps->cap & PCI_ACS_TB);
+ }
+ 
+ /**
+@@ -1047,23 +1066,33 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+  */
+ static void pci_enable_acs(struct pci_dev *dev)
+ {
+-	if (!pci_acs_enable)
+-		goto disable_acs_redir;
++	struct pci_acs caps;
++	int pos;
++
++	pos = dev->acs_cap;
++	if (!pos)
++		return;
+ 
+-	if (!pci_dev_specific_enable_acs(dev))
+-		goto disable_acs_redir;
++	pci_read_config_word(dev, pos + PCI_ACS_CAP, &caps.cap);
++	pci_read_config_word(dev, pos + PCI_ACS_CTRL, &caps.ctrl);
++	caps.fw_ctrl = caps.ctrl;
+ 
+-	pci_std_enable_acs(dev);
++	/* If an iommu is present we start with kernel default caps */
++	if (pci_acs_enable) {
++		if (pci_dev_specific_enable_acs(dev))
++			pci_std_enable_acs(dev, &caps);
++	}
+ 
+-disable_acs_redir:
+ 	/*
+-	 * Note: pci_disable_acs_redir() must be called even if ACS was not
+-	 * enabled by the kernel because it may have been enabled by
+-	 * platform firmware.  So if we are told to disable it, we should
+-	 * always disable it after setting the kernel's default
+-	 * preferences.
++	 * Always apply caps from the command line, even if there is no iommu.
++	 * Trust that the admin has a reason to change the ACS settings.
+ 	 */
+-	pci_disable_acs_redir(dev);
++	__pci_config_acs(dev, &caps, disable_acs_redir_param,
++			 PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC,
++			 ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC));
++	__pci_config_acs(dev, &caps, config_acs_param, 0, 0);
++
++	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
+ }
+ 
+ /**
+@@ -6740,6 +6769,8 @@ static int __init pci_setup(char *str)
+ 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+ 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+ 				disable_acs_redir_param = str + 18;
++			} else if (!strncmp(str, "config_acs=", 11)) {
++				config_acs_param = str + 11;
+ 			} else {
+ 				pr_err("PCI: Unknown option `%s'\n", str);
+ 			}
+@@ -6764,6 +6795,7 @@ static int __init pci_realloc_setup_params(void)
+ 	resource_alignment_param = kstrdup(resource_alignment_param,
+ 					   GFP_KERNEL);
+ 	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
++	config_acs_param = kstrdup(config_acs_param, GFP_KERNEL);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
+
 
