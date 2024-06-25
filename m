@@ -1,111 +1,169 @@
-Return-Path: <linux-pci+bounces-9214-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9215-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64930915FF9
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 09:25:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6533916023
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 09:37:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ABB27B24DC2
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 07:25:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E38091C20E60
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jun 2024 07:37:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D3A146A99;
-	Tue, 25 Jun 2024 07:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA3E9146D60;
+	Tue, 25 Jun 2024 07:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NgMgMb2J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="et5PWOAo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIqWOP8M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3008B1465A8;
-	Tue, 25 Jun 2024 07:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AF21DFFD;
+	Tue, 25 Jun 2024 07:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719300327; cv=none; b=eOMeQknSzP/1aRs8tRvgYa1MRhwYjHwrapUhrP7qWYllGj9X35SBdqXA46dGGgQxi7V9K7wjzoqh2SLSJkEOHZ/IOvlLrX5EBVAVNEzy6fLSFWrVzZmqcpUs46GMMhHvR36/P21YmxFso7DM+/U82mxRJkaVJTUi2+oYFByXRqA=
+	t=1719301032; cv=none; b=u6WT95OKMLUaZBe9IsdGZlnWicNsXjeI6ngem8mBEriEsKLQ3tnDletnT9N0TtPMlyHH49DtUD2BkUtXFnOuCSSo50234XMUU4cI0uapnO10BpnRyeUgnq49/VGNdxSpqB7TGmfeX3MkGxzR4g2Zl3DA4Ch63tbHgG7uFvah2Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719300327; c=relaxed/simple;
-	bh=ezb77GZXdVAFrfyo9/1iyHlxE3AHchnIk/xpupP7DRk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=IHY6hAH8/mhFMmGeaCkeZkqUcsNuMK8pL5d9qCmEvfucdxQrkeEwlL2r8NqIOoYJ9CsJKqBdWRJcFiF14rhd2ULIQmThonw3rjx14lBcaFC40roGJbZkm2knrmqBMGIcgYVsqSZH6GCpg3JHZSA4KPz8r83HUaX2TCecPnVB770=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NgMgMb2J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=et5PWOAo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719300324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lbM9+X7lQHMtCd9+f5UahNU/0eZ7QOoLWzJWZWNqVH8=;
-	b=NgMgMb2JTCsUYPLOwbJdeNIErCWElIL3im8v3aHkfMZrzDiafPyOHz2ZQihqzTZ59feUZI
-	Ph8GKIjDgaGD3fXranxhg0jog/omT47YnESkhPBfZYeXbIutaovJ4h46ymqAOe0w/vObtQ
-	VAmIXZt60RmMYm596wr4gT0oa1Q5nXqkVZVUIagqA0D4lGFhgPTPJ8udrrTUjHf+S93zJK
-	+wZXkqyAEgtttXeUcPfEiN9srR0V1lxTI/minAq/ggs8/RrCLiw1CV//KQH6z6iRPnsBjt
-	Wq6RLW6LZQmqqcZ+Sq9yBw1m4BTlyXefGqZ59SkNO9ZPEoqmyjOKtwBBWmpRsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719300324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lbM9+X7lQHMtCd9+f5UahNU/0eZ7QOoLWzJWZWNqVH8=;
-	b=et5PWOAoB6bFhTt4xdB92o5jth/5tAlsTrRR8UenmF/PZcTUGdlGchhMt2EvKAp/MhhBQx
-	vz9Mlm/0DoVUKsCg==
-To: Sunil V L <sunilvl@ventanamicro.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
- linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Rafael J
- . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Anup Patel <anup@brainfault.org>, Samuel Holland
- <samuel.holland@sifive.com>, Robert Moore <robert.moore@intel.com>, Conor
- Dooley <conor.dooley@microchip.com>, Andrew Jones
- <ajones@ventanamicro.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Marc Zyngier <maz@kernel.org>, Atish
- Kumar Patra <atishp@rivosinc.com>, Haibo1 Xu <haibo1.xu@intel.com>,
- =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, Sunil V L
- <sunilvl@ventanamicro.com>
-Subject: Re: [PATCH v6 00/17] RISC-V: ACPI: Add external interrupt
- controller support
-In-Reply-To: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
-References: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
-Date: Tue, 25 Jun 2024 09:25:23 +0200
-Message-ID: <875xtx7acc.ffs@tglx>
+	s=arc-20240116; t=1719301032; c=relaxed/simple;
+	bh=GQZtXhAEg7WxvHsN/Xrc9fpa1acHEuQJQTIAFZ+PqC0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pVxZAlElAy13uqTgdkrdeUfWMF35zmum7GHKTqdr0fxbEXGk+p77+V0JbJvWV7mxFdzzOWtRebZ+pb8+KBbd3d4XsULKudSfa8R3gja70siwQQ5AqD3R41I6/8C1EF5iPDtQHqr7bgZNtTVvSSxKQEQNI2AP3tJXhuSKJ4e9xLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIqWOP8M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C79C32789;
+	Tue, 25 Jun 2024 07:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719301032;
+	bh=GQZtXhAEg7WxvHsN/Xrc9fpa1acHEuQJQTIAFZ+PqC0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qIqWOP8Mz4OTpTU6AINxjUUFnVqAa143m+m+ERwfP/SPXlVSTWNOvXO7cICeK+iFO
+	 BBexpH+vnbumu3dR/YLAi4qxtqEARjYyPbiEBtrdz4vrWYnIAYlKWrJUrczLNKYYxq
+	 60/AbTm47++9XaDu82f1swvovvgEdr1lkPJK7IphSQNr3vGEvsmmuwYPIQoYs/bCM4
+	 UpyDCykoJtZfEyVS4Puf6S3v72zdTAuOYA6Uov53flqirOp6OwjY1VpdYN06Y0sWBi
+	 WL8hR0DJ9oq6Wy5GpdZaDVArEhopVXrBvSvD8DGmgOAb/wSoP+SKD4tlZe7t24jf67
+	 3GGXM//DpiJVQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sM0jl-0074Fn-Jx;
+	Tue, 25 Jun 2024 08:37:09 +0100
+Date: Tue, 25 Jun 2024 08:37:09 +0100
+Message-ID: <86y16tiica.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	anna-maria@linutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	festevam@gmail.com,
+	bhelgaas@google.com,
+	rdunlap@infradead.org,
+	vidyas@nvidia.com,
+	ilpo.jarvinen@linux.intel.com,
+	apatel@ventanamicro.com,
+	kevin.tian@intel.com,
+	nipun.gupta@amd.com,
+	den@valinux.co.jp,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	alex.williamson@redhat.com,
+	will@kernel.org,
+	lorenzo.pieralisi@arm.com,
+	jgg@mellanox.com,
+	ammarfaizi2@gnuweeb.org,
+	robin.murphy@arm.com,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	kristo@kernel.org,
+	vkoul@kernel.org,
+	okaya@kernel.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	mark.rutland@arm.com,
+	shameerali.kolothum.thodi@huawei.com,
+	yuzenghui@huawei.com
+Subject: Re: [PATCH v3 14/24] genirq/gic-v3-mbi: Remove unused wired MSI mechanics
+In-Reply-To: <87ed8vu033.ffs@tglx>
+References: <20240614102403.13610-1-shivamurthy.shastri@linutronix.de>
+	<20240614102403.13610-15-shivamurthy.shastri@linutronix.de>
+	<86le36jf0q.wl-maz@kernel.org>
+	<87plsfu3sz.ffs@tglx>
+	<86h6drk9h1.wl-maz@kernel.org>
+	<87h6dru0pb.ffs@tglx>
+	<87ed8vu033.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, shivamurthy.shastri@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, Jun 01 2024 at 20:33, Sunil V L wrote:
-> This series adds support for the below ECR approved by ASWG.
-> 1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
->
-> The series primarily enables irqchip drivers for RISC-V ACPI based
-> platforms.
->
-> The series can be broadly categorized like below. 
->
-> 1) PCI ACPI related functions are migrated from arm64 to common file so
-> that we don't need to duplicate them for RISC-V.
->
-> 2) Added support for re-ordering the probe of interrupt controllers when
-> IRQCHIP_ACPI_DECLARE is used.
->
-> 3) To ensure probe order between interrupt controllers and devices,
-> implicit dependency is created similar to when _DEP is present.
->
-> 4) ACPI support added in RISC-V interrupt controller drivers.
+On Mon, 17 Jun 2024 15:15:44 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Mon, Jun 17 2024 at 16:02, Thomas Gleixner wrote:
+> > On Mon, Jun 17 2024 at 14:03, Marc Zyngier wrote:
+> >> Patch 9/24 rewrites the mbigen driver. Which has nothing to do with
+> >> what the gic-v3-mbi code does. They are different blocks, and the sole
+> >> machine that has the mbigen IP doesn't have any gic-v3-mbi support.
+> >> All they have in common are 3 random letters.
+> >>
+> >> What you are doing here is to kill any support for *devices* that need
+> >> to signal level-triggered MSIs in that driver, and nothing to do with
+> >> wire-MSI translation.
+> >>
+> >> So what replaces it?
+> >
+> > Hrm. I must have misread this mess. Let me stare some more.
+> 
+> Ok. Found my old notes.
+> 
+> AFAICT _all_ users of platform_device_msi_init_and_alloc_irqs():
+> 
+>         ufs_qcom_config_esi()
+>         smmu_pmu_setup_msi()
+>         flexrm_mbox_probe()
+>         arm_smmu_setup_msis()
+>         hidma_request_msi()
+>         mv_xor_v2_probe()
+> 
+> just install their special MSI write callback. I don't see any of those
+> setting up LEVEL triggered MSIs.
+> 
+> But then I'm might be missing something. If so can you point me please
+> to the usage instance which actually uses level signaled MSI?
 
-So this needs eyeballs from the ACPI people and a strategy how to merge
-it.
+Good question. I'm pretty sure we had *something* at some point that
+used it, or that was planning on using it. I even vividly remember who
+was asking for this.
+
+But either that never really made it upstream, or they decided to move
+away from the kernel setting the MSI up and relied on firmware for
+that (which is fine as long as the device isn't behind an IOMMU).
+
+In the end, it begs the question of what we want to do with this
+feature.  I don't think it is a big deal to keep it around, but maybe
+we should plan for it to be retired. That's independent of this
+series, IMO.
 
 Thanks,
 
-        tglx
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
 
