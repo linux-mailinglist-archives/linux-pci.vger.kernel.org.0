@@ -1,80 +1,73 @@
-Return-Path: <linux-pci+bounces-9341-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9342-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7978F9198B8
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 22:08:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9636A919952
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 22:44:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C8E41C21F2E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 20:08:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1166A1F21708
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 20:44:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA002190686;
-	Wed, 26 Jun 2024 20:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E075E194096;
+	Wed, 26 Jun 2024 20:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VH+TO8KE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aEmOAJ4C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0126A190679;
-	Wed, 26 Jun 2024 20:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBA9183083
+	for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2024 20:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719432497; cv=none; b=OAgW+CiECtjUEP2ivWhlWUJ4w89iOSiuqdIm1ANoWoIh5jl3OEDxZjLuD8zr6yFlrl0Fbuic9U6Y+66TfesTHC+IBGODIW+fM0K0QFACRtYMk3+JABAmwGtIHKllYrUm1p5a3x3K5WBVB2MfFya5Hh+cCOt7Rze2F1Bo+1XFQpI=
+	t=1719434425; cv=none; b=HMur7Xtnykd/ZCjSZDUXnCD7OOiOx83pERJXskoUDaNFx6BvZnvFU1ye9j5wsh7y0alEeT5Qp6bTWhCCAz5A8pkjyCAXVHqmqHfVx9PUauYVo2atdNjz2/hFp6PQ1bDRPhoa7eJLpPRCBMDU2K37Ft/QgxbQAfVQ0T5nkLpcCVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719432497; c=relaxed/simple;
-	bh=34iE4Kd0i79Uf2wd56kMut6u4yfbhKLiopiMlYYMjV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sGKIIeM/+kDlRaGJy7tgyom8kn9tDUTVPKPL2/VC4+lieoOlewvInGrqunMmDj6yZ7Ca2Z5egRpUjPi+BgiTWaV+5ShwZdVRYVVIdP7H7rvjtsY04XuKZ1kUKCUFGBefQkiUq8GiR8LMG2i9XT5dDtw+hi+hKqSftgRI1dd90Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VH+TO8KE; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1719434425; c=relaxed/simple;
+	bh=prx96gDz5lHXts7ymWvbIjnx0m5y2fFKh/zF9s3vrtc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=tcmoVTy/4q2qqLN3N5GmdC58IriQoj1V6dwwAG2zhI46ICcDcFGkkSYED97K+h9fZ0aZAIcubEiZuCFcVSxc2MRCnEGrdhmM1A39a8s/+/jCGhp9Q3Lkv637zIDsDEsnTFydc8oi0XoZlS9WEK3TlSR6ASnbpDYGNUmVOT3mycA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aEmOAJ4C; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719432495; x=1750968495;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=34iE4Kd0i79Uf2wd56kMut6u4yfbhKLiopiMlYYMjV4=;
-  b=VH+TO8KEiEv+R+vwIwSZux7s2VqSmJ//dFSNP/YWqd207TmYj1HISgGf
-   oinDmEjczzYOkS2hS7g6WuQuoQep5y0uQY1f/j9sb5l27UKM6NbayXi+5
-   qQFv03262SSw5rRL08UJj72oqvn+3wPetfnj/lhUVyY6Bsk0nirgItD75
-   HSQodH+aWy0NeCEiwhR5FjaF2hdWL3COC4leoSYutoXBOh3x38GcNuu7E
-   T0P7cBDASC9KYtCn8d24U1FbwDAzMQZC0j+Wwx1G9VGogPSBmRrBRR53i
-   rwR16NspL5qyjan/muzG66apvPR1DfB6zIo9MclUVElB/PxPIXJuiPhFx
-   g==;
-X-CSE-ConnectionGUID: iPeFRtJyTGSaM48nnMloRw==
-X-CSE-MsgGUID: 7esaBPKxS7emstR81l09Hw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="39035196"
-X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
-   d="scan'208";a="39035196"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 13:08:14 -0700
-X-CSE-ConnectionGUID: cJPws76DSayq6aMCeXO0ww==
-X-CSE-MsgGUID: MwXZkQTkSXOZLtyzkLmqsw==
+  t=1719434424; x=1750970424;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=prx96gDz5lHXts7ymWvbIjnx0m5y2fFKh/zF9s3vrtc=;
+  b=aEmOAJ4C8YGMRdaNaZH6t37J35Y+hD/BIAGCwwA8VivJOIhgXPEPY44h
+   oH4nNAvP+6vgmHbO5B5H/aTABnCSgHYHmlW1zmLiJJ5zmbaYrRjI5Ze7E
+   5E8hl2v9IZ7vU9mN8jmU6oW2nqYEVPX+2zGsdApPnANFfQo0WVPO5G5DZ
+   8rfxhgOeWiIGJfXGCkCyJdr3iMvKkHrLXC4cRfZCqxtOw4BXWgSCkFK2D
+   ggah7xjVhA0NCorPt7xA8QPOcUsAo0xA95AzrZaz9flK6J1yFJYVVg4z6
+   jYnoc/dCWDm/GMB1Xq/75WAf5NZ4PmXJ4kWimwKXwQhwb06dpB5z6DYc8
+   Q==;
+X-CSE-ConnectionGUID: RH039vk0ReKMAkO+YXYkEQ==
+X-CSE-MsgGUID: iGFRP8LcTlmy0urjlaHZKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="16415973"
+X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
+   d="scan'208";a="16415973"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 13:40:23 -0700
+X-CSE-ConnectionGUID: PL31qhj5SA2n3UnTz1xQoQ==
+X-CSE-MsgGUID: 8rlJHDE8SW64uvwWhXq6qg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
-   d="scan'208";a="44535212"
+X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
+   d="scan'208";a="48582016"
 Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 26 Jun 2024 13:08:11 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 26 Jun 2024 13:40:22 -0700
 Received: from kbuild by 68891e0c336b with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sMYw4-000FWd-2C;
-	Wed, 26 Jun 2024 20:08:08 +0000
-Date: Thu, 27 Jun 2024 04:07:03 +0800
+	id 1sMZRE-000FXo-1x;
+	Wed, 26 Jun 2024 20:40:20 +0000
+Date: Thu, 27 Jun 2024 04:40:02 +0800
 From: kernel test robot <lkp@intel.com>
-To: Thippeswamy Havalige <thippesw@amd.com>, bhelgaas@google.com,
-	kw@linux.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, lpieralisi@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, linux-arm-kernel@lists.infradead.org,
-	bharat.kumar.gogada@amd.com,
-	Thippeswamy Havalige <thippesw@amd.com>
-Subject: Re: [PATCH 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
-Message-ID: <202406270344.9nOuTH5k-lkp@intel.com>
-References: <20240624104239.132159-3-thippesw@amd.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/rockchip] BUILD REGRESSION
+ 246afbe0f6fca433d8d918b740719170b1b082cc
+Message-ID: <202406270459.JXtYsIVE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,71 +75,85 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624104239.132159-3-thippesw@amd.com>
 
-Hi Thippeswamy,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
+branch HEAD: 246afbe0f6fca433d8d918b740719170b1b082cc  PCI: dw-rockchip: Use pci_epc_init_notify() directly
 
-kernel test robot noticed the following build warnings:
+Error/Warning reports:
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.10-rc5 next-20240625]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+https://lore.kernel.org/oe-kbuild-all/202406270250.k2esVVnL-lkp@intel.com
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thippeswamy-Havalige/dt-bindings-PCI-xilinx-xdma-Add-schemas-for-Xilinx-QDMA-PCIe-Root-Port-Bridge/20240626-052852
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240624104239.132159-3-thippesw%40amd.com
-patch subject: [PATCH 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20240627/202406270344.9nOuTH5k-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240627/202406270344.9nOuTH5k-lkp@intel.com/reproduce)
+Error/Warning: (recently discovered and may have been fixed)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406270344.9nOuTH5k-lkp@intel.com/
+drivers/pci/controller/dwc/pcie-designware-ep.c:26:(.text+0x1e4): undefined reference to `pci_epc_init_notify'
+drivers/pci/controller/dwc/pcie-designware-ep.c:640:(.text+0x83c): undefined reference to `pci_epc_mem_free_addr'
+drivers/pci/controller/dwc/pcie-designware-ep.c:811:(.text+0x924): undefined reference to `pci_epc_linkup'
+drivers/pci/controller/dwc/pcie-designware-ep.c:836:(.text+0x964): undefined reference to `pci_epc_linkdown'
+drivers/pci/controller/dwc/pcie-designware-ep.c:875:(.text+0xe90): undefined reference to `__devm_pci_epc_create'
+loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.c:643:(.text+0x854): undefined reference to `pci_epc_mem_exit'
+loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.c:888:(.text+0xf20): undefined reference to `pci_epc_mem_init'
+loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.c:895:(.text+0xf54): undefined reference to `pci_epc_mem_alloc_addr'
 
-All warnings (new ones prefixed by >>):
+Error/Warning ids grouped by kconfigs:
 
->> drivers/pci/controller/pcie-xilinx-dma-pl.c:130: warning: Function parameter or struct member 'cfg_base' not described in 'pl_dma_pcie'
->> drivers/pci/controller/pcie-xilinx-dma-pl.c:130: warning: Function parameter or struct member 'variant' not described in 'pl_dma_pcie'
+recent_errors
+`-- loongarch-randconfig-r081-20240626
+    |-- drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-__devm_pci_epc_create
+    |-- drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-pci_epc_init_notify
+    |-- drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-pci_epc_linkdown
+    |-- drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-pci_epc_linkup
+    |-- drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-pci_epc_mem_free_addr
+    |-- loongarch64-linux-ld:drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-pci_epc_mem_alloc_addr
+    |-- loongarch64-linux-ld:drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-pci_epc_mem_exit
+    `-- loongarch64-linux-ld:drivers-pci-controller-dwc-pcie-designware-ep.c:(.text):undefined-reference-to-pci_epc_mem_init
 
+elapsed time: 6017m
 
-vim +130 drivers/pci/controller/pcie-xilinx-dma-pl.c
+configs tested: 41
+configs skipped: 0
 
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  101  
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  102  /**
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  103   * struct pl_dma_pcie - PCIe port information
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  104   * @dev: Device pointer
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  105   * @reg_base: IO Mapped Register Base
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  106   * @irq: Interrupt number
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  107   * @cfg: Holds mappings of config space window
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  108   * @phys_reg_base: Physical address of reg base
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  109   * @intx_domain: Legacy IRQ domain pointer
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  110   * @pldma_domain: PL DMA IRQ domain pointer
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  111   * @resources: Bus Resources
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  112   * @msi: MSI information
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  113   * @intx_irq: INTx error interrupt number
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  114   * @lock: Lock protecting shared register access
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  115   */
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  116  struct pl_dma_pcie {
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  117  	struct device			*dev;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  118  	void __iomem			*reg_base;
-21ff31dc400101 Thippeswamy Havalige 2024-06-24  119  	void __iomem			*cfg_base;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  120  	int				irq;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  121  	struct pci_config_window	*cfg;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  122  	phys_addr_t			phys_reg_base;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  123  	struct irq_domain		*intx_domain;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  124  	struct irq_domain		*pldma_domain;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  125  	struct list_head		resources;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  126  	struct xilinx_msi		msi;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  127  	int				intx_irq;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  128  	raw_spinlock_t			lock;
-21ff31dc400101 Thippeswamy Havalige 2024-06-24  129  	const struct xilinx_pl_dma_variant   *variant;
-8d786149d78c77 Thippeswamy Havalige 2023-10-03 @130  };
-8d786149d78c77 Thippeswamy Havalige 2023-10-03  131  
+tested configs:
+arc                   randconfig-001-20240623   gcc-13.2.0
+arc                   randconfig-002-20240623   gcc-13.2.0
+arm                   randconfig-001-20240623   gcc-13.2.0
+arm                   randconfig-002-20240623   gcc-13.2.0
+arm                   randconfig-003-20240623   gcc-13.2.0
+arm                   randconfig-004-20240623   gcc-13.2.0
+csky                  randconfig-001-20240623   gcc-13.2.0
+csky                  randconfig-002-20240623   gcc-13.2.0
+i386         buildonly-randconfig-004-20240623   gcc-13
+i386                  randconfig-001-20240623   gcc-9
+i386                  randconfig-003-20240623   gcc-13
+i386                  randconfig-005-20240623   gcc-7
+i386                  randconfig-012-20240623   gcc-8
+i386                  randconfig-015-20240623   gcc-8
+loongarch             randconfig-001-20240623   gcc-13.2.0
+loongarch             randconfig-002-20240623   gcc-13.2.0
+nios2                 randconfig-001-20240623   gcc-13.2.0
+nios2                 randconfig-002-20240623   gcc-13.2.0
+parisc                randconfig-001-20240623   gcc-13.2.0
+parisc                randconfig-002-20240623   gcc-13.2.0
+powerpc               randconfig-001-20240623   gcc-13.2.0
+powerpc64             randconfig-001-20240623   gcc-13.2.0
+powerpc64             randconfig-003-20240623   gcc-13.2.0
+s390                  randconfig-001-20240623   gcc-13.2.0
+s390                  randconfig-002-20240623   gcc-13.2.0
+sh                    randconfig-001-20240623   gcc-13.2.0
+sh                    randconfig-002-20240623   gcc-13.2.0
+sparc64               randconfig-001-20240623   gcc-13.2.0
+sparc64               randconfig-002-20240623   gcc-13.2.0
+um                    randconfig-001-20240623   gcc-7
+x86_64                randconfig-001-20240623   gcc-13
+x86_64                randconfig-002-20240623   gcc-13
+x86_64                randconfig-004-20240623   gcc-13
+x86_64                randconfig-005-20240623   gcc-8
+x86_64                randconfig-012-20240623   gcc-13
+x86_64                randconfig-015-20240623   gcc-13
+x86_64                randconfig-071-20240623   gcc-13
+x86_64                randconfig-072-20240623   gcc-13
+x86_64                randconfig-075-20240623   gcc-13
+xtensa                randconfig-001-20240623   gcc-13.2.0
+xtensa                randconfig-002-20240623   gcc-13.2.0
 
 -- 
 0-DAY CI Kernel Test Service
