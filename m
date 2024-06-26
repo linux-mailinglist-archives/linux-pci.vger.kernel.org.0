@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-9265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CA6B9177C9
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 07:00:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A188B9177CD
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 07:01:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F090228335B
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 05:00:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1F581C21117
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 05:01:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABB514A602;
-	Wed, 26 Jun 2024 05:00:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFFCD139D10;
+	Wed, 26 Jun 2024 05:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYQmiC7X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D37DAw8N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFC414A4C1;
-	Wed, 26 Jun 2024 05:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C6E1411E6;
+	Wed, 26 Jun 2024 05:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719378012; cv=none; b=uxw92uZwRDWCppVJGFCaG+F9y5VttNJvukptm7pYQSxKeMQ4jViOgz4j1krtVOvl310SJrKUtQZ31Pz6TDVaZEgORaLmSUkaNhrvzDDPzwh9AmEuEQWP7HkpB4ch5kKtpAM3Yz+kEeVtebppBudoCwZVnUhGrDVITRVgoOdKWlY=
+	t=1719378046; cv=none; b=LQ0IZs1J5S/dsIEatHfI++bqyp+zitBG7G9L9PIWzVkBUUmnVgQMYFzdkBKrmB9CRWQwU1jjCdJsmu8RzkYfUVZX1RjQ+u43LEDqcf7O+86A1XvujZlOXcJSgpfo6mHreOOEO/RPTMZ8ouU48jslGOCAMWVPX4dZA6U9EVP6BYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719378012; c=relaxed/simple;
-	bh=B7rS3ddoXFh+d0mVftdqLtCNNWwgBvZIC+KpeK+E+BU=;
+	s=arc-20240116; t=1719378046; c=relaxed/simple;
+	bh=ZNdxnGPfETJa9uUYOCiuRxUSQF8J7Opi/FFw5TRGvIA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RFwuqBKldNfA16jRKf4Jl3rVoEBYPjhPYRPAJKFcV7rjEVHArwp9gd6y520nABy+mWD9iDvVZ+GjBgRo/CGOs90kLNC++Y4nJhp4nZmqkqMKWyGu5T58Dgd8Uc6YWJlhMJthLrpEB/AAAwFlH8P7G75vwooXVj5ShlUorgxcndQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYQmiC7X; arc=none smtp.client-ip=209.85.210.174
+	 MIME-Version; b=qkRqIhWIw6PG2H03onWF5pTLaEPmzRG4JU4HtVjh3czwuZ6v8G3hmBK8QuAPgZXC+a6ttWyV3UbWYJvcGQucduubfUurPkYD2jOxJeTp4xJbxCTdd3ik+fygMLEAtPhBcHCACWJoGjF0Jv9zeNSE2DdIKtWqjwmFZyi8/ccgXUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D37DAw8N; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70698bcd19eso1170696b3a.0;
-        Tue, 25 Jun 2024 22:00:09 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7024d571d8eso4911859b3a.0;
+        Tue, 25 Jun 2024 22:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719378009; x=1719982809; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719378044; x=1719982844; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CEIUvqjJyZYmZ5r8NWxQEU+DVpcW+w6mjY84VTIRs+0=;
-        b=BYQmiC7X/77rqrbk0M61w4SGOJU+tus+G0ngGD/pKu2hCX4B1I4B7mPgwYksxbKXxu
-         Jw6IHW6Dk/VHzNQQvadjjoVSpDjzO2UqhiwsbOLiob6cStQyIvxm6ftFWXH5UrNxbK4N
-         Bwy4lAxkTyOCa06LUerIKpK9PK9/mSCqwG8dawgKhSXPxdeB/V2wUleoGJ4SUY0AE/UX
-         tFQGDhKHuPHTyU9DvTLcDzA+Tarb6wh5cjKaC5b+7CJcdbd73WcQddTIn2Mj4yUScQi9
-         whFh+8AUK0lG8QvbUuLA6ACRC5uoad9zM6rmGDDKLDsrejBdqVrzvpaMKeaoi4/5lfZ9
-         zGsg==
+        bh=DbE0aIHExF+1pl24Q0B2lrRdlvYWUhpDzJPWc86zCWQ=;
+        b=D37DAw8N4YMqEdD7QB6vYW0VZ+Zpuzd7QDSILWde2L0RcksstgYh/HH6t/xJNqLHoY
+         Nvax7jo6U0t1OpUF2ki6M9pPViaq1SpHZtoWnVBko2Jzq9f5NCT7++5jMPZ1aSXyTPOG
+         0o9GDsme6vYXpHFXoz/5xLt05bXpOQ4FQROGhgwwuiUILdEgQF39SqReJMP1ytdKLwGR
+         U8cwvUU8piAZF7Qso+eNP4IZn0+gR3hQWNSSRwrqcYA3CYlVMrf1A5nNbbzMSCc5MFax
+         6+2cqkSk1r1MrfyFGyyfDLTzWRUSRsvpLukDM012Y7kAgX3zHFJb3xCju/spkd7Z0e9B
+         TupQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719378009; x=1719982809;
+        d=1e100.net; s=20230601; t=1719378044; x=1719982844;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CEIUvqjJyZYmZ5r8NWxQEU+DVpcW+w6mjY84VTIRs+0=;
-        b=F7OD+lwXmDAbBQoLyIPNI3Pey4BpKXBb2JdtuUw/UyKAarMTFtYd/ns62V+Ksu7Oi5
-         jbqXQ3t3URNkzksisJj9N1E0S5WgI6E4/y7dhnNxwe+6RbqVpj/gRDJlblpQRodpGd1X
-         OmmVqAVQE16aSCPfT+nZyPpIQVtIg1lr97cq/4M3cWecvOxs1GxpYSH+SCqezoc05/r5
-         AUHVIJykgtkf5/s3nyxs0F2JIf196vaiGdrOxuYQq+k/+92OiNSHih5DkJPHQ5LlVe+u
-         9ZK/Ok4KpLrMv52ff3nCQah6F5XF0UBv2zRfI0imGCJm+MufqSTJ3g1Ra7bO4+3mPN4Y
-         h1Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjz4Tm/feVqXObwDb+bVLBybnFkQv1h016K7Tc5pZbmX/9dw2xEwHGbelpd1RNmMjXKB2pImOk4MTaIahsSqZ6893Qccql/Inv5SnEnoGn7Mj1ZrQanRpE42BCWDJmOeB2SO9s452K
-X-Gm-Message-State: AOJu0Yy3FqLku9jiB78DhtiQkCJPQMikOPxOY3HB97pn54VyTHbYZZ3B
-	IUN9YDt+/h1iW15Y3x58eDz6xfADRJS83/iJpeemdx7xOKe8QC1y
-X-Google-Smtp-Source: AGHT+IGZll42rGyZOnld1zueDLANKuI9x5K/gw9nXWmAMKUEJ3xpPSSiLthBr9Pg/NtX6bEo+AJEzw==
-X-Received: by 2002:a05:6a00:23d4:b0:706:6962:4b65 with SMTP id d2e1a72fcca58-70674593d3bmr11069174b3a.14.1719378009312;
-        Tue, 25 Jun 2024 22:00:09 -0700 (PDT)
+        bh=DbE0aIHExF+1pl24Q0B2lrRdlvYWUhpDzJPWc86zCWQ=;
+        b=WEEthg0u5o2Z+8gc6i+Ocd8zZHZva02zuzWVoaT/FzuIBqjBylJTsWzuGQaXPy2y2B
+         ezq9csQHB4cMYKMNmdMJNy87Rjdk4Jue2ikhvhLQxxijHTio076GrQarXKZvwRxTI78W
+         R9rR5t6QQmaDnVGMUnHYBjmTt/BTLcTRfWDAZGJsRQ4nUYPPKoS8x27NaWB5j1vNKN7D
+         /gfopryn8D2DldcTiq/3YzkkuhkC3hZB44FG6a3W0S5x4JZiGVdKXnF2I94fVc4OChIC
+         jZhduXUoepgymRO0urY+hDMSFAuAET37K5YqY9Cw/O0Y2c7E9URowdoifHn97inFCfu5
+         BNuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrioZIgy/DTPtXc5KmnENeDht8OiKkct4+J36f5Wmxpdsz27qQlX70pb6Vqdav/7kbRumrqPQEhoXLPSGx3hZ2h8O8DzuXfWfvJQlBmSbS8QR9F3WT8wR7YScZ/3haHD6oodwiOC2D
+X-Gm-Message-State: AOJu0Yy9Rbdk0YaLDNVGOvkV0/suHuoygcvdBgRIIW32rURKmc5Q9MK8
+	c60Hc7LtJ5xN+/w64On7aX90aZrvxTuJTvlG60s++CxsLtmxTLUb
+X-Google-Smtp-Source: AGHT+IFnELHLZrfBMpm1zXtceVdzR+9e2Sv7U6q8ces4omaehRBwdO8Iyy1NaTmd2EHunKJ6NR3wEA==
+X-Received: by 2002:a05:6a00:2d9b:b0:6ed:cd4c:cc1a with SMTP id d2e1a72fcca58-706745be4bamr11947722b3a.8.1719378014524;
+        Tue, 25 Jun 2024 22:00:14 -0700 (PDT)
 Received: from toolbox.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7066f30caa6sm6673382b3a.119.2024.06.25.22.00.04
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7066f30caa6sm6673382b3a.119.2024.06.25.22.00.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 22:00:09 -0700 (PDT)
+        Tue, 25 Jun 2024 22:00:14 -0700 (PDT)
 From: Alistair Francis <alistair23@gmail.com>
 X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
 To: bhelgaas@google.com,
@@ -83,9 +83,9 @@ Cc: alex.williamson@redhat.com,
 	chaitanyak@nvidia.com,
 	rdunlap@infradead.org,
 	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v12 3/4] PCI/DOE: Expose the DOE features via sysfs
-Date: Wed, 26 Jun 2024 14:59:25 +1000
-Message-ID: <20240626045926.680380-3-alistair.francis@wdc.com>
+Subject: [PATCH v12 4/4] PCI/DOE: Allow enabling DOE without CXL
+Date: Wed, 26 Jun 2024 14:59:26 +1000
+Message-ID: <20240626045926.680380-4-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240626045926.680380-1-alistair.francis@wdc.com>
 References: <20240626045926.680380-1-alistair.francis@wdc.com>
@@ -97,378 +97,31 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PCIe 6 specification added support for the Data Object
-Exchange (DOE).
-When DOE is supported the DOE Discovery Feature must be implemented per
-PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-information about the other DOE features supported by the device.
-
-The kernel is already querying the DOE features supported and cacheing
-the values. Expose the values in sysfs to allow user space to
-determine which DOE features are supported by the PCIe device.
-
-By exposing the information to userspace tools like lspci can relay the
-information to users. By listing all of the supported features we can
-allow userspace to parse the list, which might include
-vendor specific features as well as yet to be supported features.
-
-As the DOE Discovery feature must always be supported we treat it as a
-special named attribute case. This allows the usual PCI attribute_group
-handling to correctly create the doe_features directory when registering
-pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
-will seg fault).
-
-After this patch is supported you can see something like this when
-attaching a DOE device
-
-$ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-0001:01        0001:02        doe_discovery
+PCIe devices (not CXL) can support DOE as well, so allow DOE to be
+enabled even if CXL isn't.
 
 Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
-v12:
- - Drop pci_doe_features_sysfs_attr_visible()
-v11:
- - Gracefully handle multiple entried of same feature
- - Minor fixes and code cleanups
-v10:
- - Rebase to use DEFINE_SYSFS_GROUP_VISIBLE and remove
-   special setup function
-v9:
- - Add a teardown function
- - Rename functions to be clearer
- - Tidy up the commit message
- - Remove #ifdef from header
-v8:
- - Inlucde an example in the docs
- - Fixup removing a file that wasn't added
- - Remove a blank line
-v7:
- - Fixup the #ifdefs to keep the test robot happy
-v6:
- - Use "feature" instead of protocol
- - Don't use any devm_* functions
- - Add two more patches to the series
-v5:
- - Return the file name as the file contents
- - Code cleanups and simplifications
-v4:
- - Fixup typos in the documentation
- - Make it clear that the file names contain the information
- - Small code cleanups
- - Remove most #ifdefs
- - Remove extra NULL assignment
-v3:
- - Expose each DOE feature as a separate file
-v2:
- - Add documentation
- - Code cleanups
+ drivers/pci/Kconfig | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- Documentation/ABI/testing/sysfs-bus-pci |  28 +++++
- drivers/pci/doe.c                       | 151 ++++++++++++++++++++++++
- drivers/pci/pci-sysfs.c                 |  13 ++
- drivers/pci/pci.h                       |  10 ++
- 4 files changed, 202 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index ecf47559f495..65a3238ab701 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -500,3 +500,31 @@ Description:
- 		console drivers from the device.  Raw users of pci-sysfs
- 		resourceN attributes must be terminated prior to resizing.
- 		Success of the resizing operation is not guaranteed.
-+
-+What:		/sys/bus/pci/devices/.../doe_features
-+Date:		May 2024
-+Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-+Description:
-+		This directory contains a list of the supported
-+		Data Object Exchange (DOE) features. The features are
-+		the file name. The contents of each file is the raw vendor id and
-+		data object feature values.
-+
-+		The value comes from the device and specifies the vendor and
-+		data object type supported. The lower (RHS of the colon) is
-+		the data object type in hex. The upper (LHS of the colon)
-+		is the vendor ID.
-+
-+		As all DOE devices must support the DOE discovery protocol, if
-+		DOE is supported you will at least see the doe_discovery file, with
-+		this contents
-+
-+		# cat doe_features/doe_discovery
-+		0001:00
-+
-+		If the device supports other protocols you will see other files
-+		as well. For example is CMA/SPDM and secure CMA/SPDM are supported
-+		the doe_features directory will look like this
-+
-+		# ls doe_features
-+		0001:01        0001:02        doe_discovery
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index defc4be81bd4..580370dc71ee 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -14,6 +14,7 @@
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index d35001589d88..09d3f5c8555c 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -122,7 +122,10 @@ config PCI_ATS
+ 	bool
  
- #include <linux/bitfield.h>
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/jiffies.h>
- #include <linux/mutex.h>
- #include <linux/pci.h>
-@@ -47,6 +48,7 @@
-  * @wq: Wait queue for work item
-  * @work_queue: Queue of pci_doe_work items
-  * @flags: Bit array of PCI_DOE_FLAG_* flags
-+ * @sysfs_attrs: Array of sysfs device attributes
-  */
- struct pci_doe_mb {
- 	struct pci_dev *pdev;
-@@ -56,6 +58,10 @@ struct pci_doe_mb {
- 	wait_queue_head_t wq;
- 	struct workqueue_struct *work_queue;
- 	unsigned long flags;
-+
-+#ifdef CONFIG_SYSFS
-+	struct device_attribute *sysfs_attrs;
-+#endif
- };
+ config PCI_DOE
+-	bool
++	bool "Enable PCI Data Object Exchange (DOE) support"
++	help
++	  Say Y here if you want be able to communicate with PCIe DOE
++	  mailboxes.
  
- struct pci_doe_feature {
-@@ -92,6 +98,151 @@ struct pci_doe_task {
- 	struct pci_doe_mb *doe_mb;
- };
- 
-+#ifdef CONFIG_SYSFS
-+static ssize_t doe_discovery_show(struct device *dev,
-+				  struct device_attribute *attr,
-+				  char *buf)
-+{
-+	return sysfs_emit(buf, "0001:00\n");
-+}
-+DEVICE_ATTR_RO(doe_discovery);
-+
-+static struct attribute *pci_doe_sysfs_feature_attrs[] = {
-+	&dev_attr_doe_discovery.attr,
-+	NULL
-+};
-+
-+static bool pci_doe_features_sysfs_group_visible(struct kobject *kobj)
-+{
-+	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-+	struct pci_doe_mb *doe_mb;
-+	unsigned long index;
-+
-+	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-+		if (!xa_empty(&doe_mb->feats))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
-+
-+const struct attribute_group pci_doe_sysfs_group = {
-+	.name	    = "doe_features",
-+	.attrs	    = pci_doe_sysfs_feature_attrs,
-+	.is_visible = SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs),
-+};
-+
-+static ssize_t pci_doe_sysfs_feature_show(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
-+{
-+	return sysfs_emit(buf, "%s\n", attr->attr.name);
-+}
-+
-+static void pci_doe_sysfs_feature_remove(struct pci_dev *pdev,
-+					 struct pci_doe_mb *doe_mb)
-+{
-+	struct device_attribute *attrs = doe_mb->sysfs_attrs;
-+	struct device *dev = &pdev->dev;
-+	unsigned long i;
-+	void *entry;
-+
-+	if (!attrs)
-+		return;
-+
-+	doe_mb->sysfs_attrs = NULL;
-+	xa_for_each(&doe_mb->feats, i, entry) {
-+		if (attrs[i].show)
-+			sysfs_remove_file_from_group(&dev->kobj, &attrs[i].attr,
-+						     pci_doe_sysfs_group.name);
-+		kfree(attrs[i].attr.name);
-+	}
-+	kfree(attrs);
-+}
-+
-+static int pci_doe_sysfs_feature_populate(struct pci_dev *pdev,
-+					  struct pci_doe_mb *doe_mb)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_attribute *attrs;
-+	unsigned long num_features = 0;
-+	unsigned long vid, type;
-+	unsigned long i;
-+	void *entry;
-+	int ret;
-+
-+	xa_for_each(&doe_mb->feats, i, entry)
-+		num_features++;
-+
-+	attrs = kcalloc(num_features, sizeof(*attrs), GFP_KERNEL);
-+	if (!attrs)
-+		return -ENOMEM;
-+
-+	doe_mb->sysfs_attrs = attrs;
-+	xa_for_each(&doe_mb->feats, i, entry) {
-+		sysfs_attr_init(&attrs[i].attr);
-+		vid = xa_to_value(entry) >> 8;
-+		type = xa_to_value(entry) & 0xFF;
-+
-+		if (vid == 0x01 && type == 0x00) {
-+			/* DOE Discovery, manually displayed by `dev_attr_doe_discovery` */
-+			continue;
-+		}
-+
-+		attrs[i].attr.name = kasprintf(GFP_KERNEL,
-+					       "%04lx:%02lx", vid, type);
-+		if (!attrs[i].attr.name) {
-+			ret = -ENOMEM;
-+			goto fail;
-+		}
-+
-+		attrs[i].attr.mode = 0444;
-+		attrs[i].show = pci_doe_sysfs_feature_show;
-+
-+		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
-+					      pci_doe_sysfs_group.name);
-+		if (ret) {
-+			attrs[i].show = NULL;
-+			if (ret != -EEXIST)
-+				goto fail;
-+			else
-+				kfree(attrs[i].attr.name);
-+		}
-+	}
-+
-+	return 0;
-+
-+fail:
-+	pci_doe_sysfs_feature_remove(pdev, doe_mb);
-+	return ret;
-+}
-+
-+void pci_doe_sysfs_teardown(struct pci_dev *pdev)
-+{
-+	struct pci_doe_mb *doe_mb;
-+	unsigned long index;
-+
-+	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-+		pci_doe_sysfs_feature_remove(pdev, doe_mb);
-+}
-+
-+int pci_doe_sysfs_init(struct pci_dev *pdev)
-+{
-+	struct pci_doe_mb *doe_mb;
-+	unsigned long index;
-+	int ret;
-+
-+	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-+		ret = pci_doe_sysfs_feature_populate(pdev, doe_mb);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
- {
- 	if (wait_event_timeout(doe_mb->wq,
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 40cfa716392f..b5db191cb29f 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -16,6 +16,7 @@
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/pci.h>
-+#include <linux/pci-doe.h>
- #include <linux/stat.h>
- #include <linux/export.h>
- #include <linux/topology.h>
-@@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
- {
- 	int i;
- 
-+	if (IS_ENABLED(CONFIG_PCI_DOE))
-+		pci_doe_sysfs_teardown(pdev);
-+
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		struct bin_attribute *res_attr;
- 
-@@ -1227,6 +1231,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
- 	int i;
- 	int retval;
- 
-+	if (IS_ENABLED(CONFIG_PCI_DOE)) {
-+		retval = pci_doe_sysfs_init(pdev);
-+		if (retval)
-+			return retval;
-+	}
-+
- 	/* Expose the PCI resources from this device as files */
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 
-@@ -1661,6 +1671,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
- #endif
- #ifdef CONFIG_PCIEASPM
- 	&aspm_ctrl_attr_group,
-+#endif
-+#ifdef CONFIG_PCI_DOE
-+	&pci_doe_sysfs_group,
- #endif
- 	NULL,
- };
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index fd44565c4756..3aee231dcb0c 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -189,6 +189,7 @@ extern const struct attribute_group *pci_dev_groups[];
- extern const struct attribute_group *pci_dev_attr_groups[];
- extern const struct attribute_group *pcibus_groups[];
- extern const struct attribute_group *pci_bus_groups[];
-+extern const struct attribute_group pci_doe_sysfs_group;
- #else
- static inline int pci_create_sysfs_dev_files(struct pci_dev *pdev) { return 0; }
- static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
-@@ -196,6 +197,7 @@ static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
- #define pci_dev_attr_groups NULL
- #define pcibus_groups NULL
- #define pci_bus_groups NULL
-+#define pci_doe_sysfs_group NULL
- #endif
- 
- extern unsigned long pci_hotplug_io_size;
-@@ -333,6 +335,14 @@ static inline void pci_doe_destroy(struct pci_dev *pdev) { }
- static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
- #endif
- 
-+#if defined(CONFIG_PCI_DOE) && defined(CONFIG_SYSFS)
-+int pci_doe_sysfs_init(struct pci_dev *pci_dev);
-+void pci_doe_sysfs_teardown(struct pci_dev *pdev);
-+#else
-+static inline int pci_doe_sysfs_init(struct pci_dev *pdev) { return 0; }
-+static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
-+#endif
-+
- /**
-  * pci_dev_set_io_state - Set the new error state if possible.
-  *
+ config PCI_ECAM
+ 	bool
 -- 
 2.45.2
 
