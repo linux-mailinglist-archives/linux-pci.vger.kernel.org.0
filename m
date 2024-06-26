@@ -1,56 +1,80 @@
-Return-Path: <linux-pci+bounces-9340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A63AB919857
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 21:38:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7978F9198B8
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 22:08:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34E37B20F38
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 19:38:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C8E41C21F2E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 20:08:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6E6719069C;
-	Wed, 26 Jun 2024 19:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA002190686;
+	Wed, 26 Jun 2024 20:08:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK9/T/Lf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VH+TO8KE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26DA157A5B
-	for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2024 19:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0126A190679;
+	Wed, 26 Jun 2024 20:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719430732; cv=none; b=mrz0+/VU37aNJHU9sAiRcJBbTuLZ6X9+6fj8Xe6nBkUMRUX+WEUXDLChxljbk4yZ6CJJ3JllK10d83a/IY3yOMbAyufu7cawRc1Yj9Lf+MocwYie6d9Potci2VqNLVTo51p1oD6LlrmPDNNMMsHcf+sKRDKpXNoVT/2yxCs8G18=
+	t=1719432497; cv=none; b=OAgW+CiECtjUEP2ivWhlWUJ4w89iOSiuqdIm1ANoWoIh5jl3OEDxZjLuD8zr6yFlrl0Fbuic9U6Y+66TfesTHC+IBGODIW+fM0K0QFACRtYMk3+JABAmwGtIHKllYrUm1p5a3x3K5WBVB2MfFya5Hh+cCOt7Rze2F1Bo+1XFQpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719430732; c=relaxed/simple;
-	bh=trvxvBLVZdv6nfWbDx7p13va+sWdWpQQvWqSJVZqFfk=;
+	s=arc-20240116; t=1719432497; c=relaxed/simple;
+	bh=34iE4Kd0i79Uf2wd56kMut6u4yfbhKLiopiMlYYMjV4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2obonaX2MO2P7logSt7a1WMaO/kKy0TT8AFeLwQKd1bDlEUL8ROZ4AMZt0+xumiQUPqzWT9wbCX0k9XSi+vYj9dHwMAEjyDX9I+leYC/GLpBeEdKSS5yHJnMCoE8KE9E1fo/IoK10YKGCwNlZ3LLXCdPbEBQCXngGH8q3mHnf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK9/T/Lf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E7EC116B1;
-	Wed, 26 Jun 2024 19:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719430732;
-	bh=trvxvBLVZdv6nfWbDx7p13va+sWdWpQQvWqSJVZqFfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eK9/T/LfQ4eCOwGTmqxGgtd/PNpoOI5bgXwhVfi2M9kPhtswOg2RHaTBrSuOjMBnp
-	 gmxnSyP+PK5J7SJi8+AI9B7QJa3GsfPdmNfih7Pw63BfNdxK2fnwcozMgy8NnE5Qhg
-	 uj0HX3sRdFTxuwLc/k2Wj2nItrlFDnNto7aZa+4qsE/4Xc3cwZ0QAME0LdLLwdvR/h
-	 AmoUY690jMVttjPYFPxrulqBwg2xgZWB4rCeFVd8B2fDEWH+nIotu93WgU3e2z1r2h
-	 39l36hHshBJIaxjyo24Jm9N9j86nTjgYFAnex3coT+EoGD8fzSxjxi9wWfjGXMGq2t
-	 AHr1Fkg/ZBV7g==
-Date: Wed, 26 Jun 2024 13:38:49 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/DPC: Fix use-after-free on concurrent DPC and
- hot-removal
-Message-ID: <ZnxuSXnw5wenZ-Fi@kbusch-mbp.dhcp.thefacebook.com>
-References: <8e4bcd4116fd94f592f2bf2749f168099c480ddf.1718707743.git.lukas@wunner.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sGKIIeM/+kDlRaGJy7tgyom8kn9tDUTVPKPL2/VC4+lieoOlewvInGrqunMmDj6yZ7Ca2Z5egRpUjPi+BgiTWaV+5ShwZdVRYVVIdP7H7rvjtsY04XuKZ1kUKCUFGBefQkiUq8GiR8LMG2i9XT5dDtw+hi+hKqSftgRI1dd90Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VH+TO8KE; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719432495; x=1750968495;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=34iE4Kd0i79Uf2wd56kMut6u4yfbhKLiopiMlYYMjV4=;
+  b=VH+TO8KEiEv+R+vwIwSZux7s2VqSmJ//dFSNP/YWqd207TmYj1HISgGf
+   oinDmEjczzYOkS2hS7g6WuQuoQep5y0uQY1f/j9sb5l27UKM6NbayXi+5
+   qQFv03262SSw5rRL08UJj72oqvn+3wPetfnj/lhUVyY6Bsk0nirgItD75
+   HSQodH+aWy0NeCEiwhR5FjaF2hdWL3COC4leoSYutoXBOh3x38GcNuu7E
+   T0P7cBDASC9KYtCn8d24U1FbwDAzMQZC0j+Wwx1G9VGogPSBmRrBRR53i
+   rwR16NspL5qyjan/muzG66apvPR1DfB6zIo9MclUVElB/PxPIXJuiPhFx
+   g==;
+X-CSE-ConnectionGUID: iPeFRtJyTGSaM48nnMloRw==
+X-CSE-MsgGUID: 7esaBPKxS7emstR81l09Hw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="39035196"
+X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
+   d="scan'208";a="39035196"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 13:08:14 -0700
+X-CSE-ConnectionGUID: cJPws76DSayq6aMCeXO0ww==
+X-CSE-MsgGUID: MwXZkQTkSXOZLtyzkLmqsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,267,1712646000"; 
+   d="scan'208";a="44535212"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 26 Jun 2024 13:08:11 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sMYw4-000FWd-2C;
+	Wed, 26 Jun 2024 20:08:08 +0000
+Date: Thu, 27 Jun 2024 04:07:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thippeswamy Havalige <thippesw@amd.com>, bhelgaas@google.com,
+	kw@linux.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, lpieralisi@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, linux-arm-kernel@lists.infradead.org,
+	bharat.kumar.gogada@amd.com,
+	Thippeswamy Havalige <thippesw@amd.com>
+Subject: Re: [PATCH 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
+Message-ID: <202406270344.9nOuTH5k-lkp@intel.com>
+References: <20240624104239.132159-3-thippesw@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,30 +83,72 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e4bcd4116fd94f592f2bf2749f168099c480ddf.1718707743.git.lukas@wunner.de>
+In-Reply-To: <20240624104239.132159-3-thippesw@amd.com>
 
-On Tue, Jun 18, 2024 at 12:54:55PM +0200, Lukas Wunner wrote:
-> Add the missing reference acquisition.
-> 
-> Abridged stack trace:
-> 
->   BUG: unable to handle page fault for address: 00000000091400c0
->   CPU: 15 PID: 2464 Comm: irq/53-pcie-dpc 6.9.0
->   RIP: pci_bus_read_config_dword+0x17/0x50
->   pci_dev_wait()
->   pci_bridge_wait_for_secondary_bus()
->   dpc_reset_link()
->   pcie_do_recovery()
->   dpc_handler()
-> 
-> Fixes: 53b54ad074de ("PCI/DPC: Await readiness of secondary bus after reset")
-> Reported-by: Keith Busch <kbusch@kernel.org>
-> Closes: https://lore.kernel.org/r/20240612181625.3604512-3-kbusch@meta.com/
-> Tested-by: Keith Busch <kbusch@kernel.org>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Keith Busch <kbusch@kernel.org>
-> Cc: stable@vger.kernel.org # v5.10+
+Hi Thippeswamy,
 
-Hey, it's been some time, so just wanted to check on this patch status.
-It's still a good fix.
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.10-rc5 next-20240625]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Thippeswamy-Havalige/dt-bindings-PCI-xilinx-xdma-Add-schemas-for-Xilinx-QDMA-PCIe-Root-Port-Bridge/20240626-052852
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240624104239.132159-3-thippesw%40amd.com
+patch subject: [PATCH 2/2] PCI: xilinx-xdma: Add Xilinx QDMA Root Port driver
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20240627/202406270344.9nOuTH5k-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240627/202406270344.9nOuTH5k-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406270344.9nOuTH5k-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/controller/pcie-xilinx-dma-pl.c:130: warning: Function parameter or struct member 'cfg_base' not described in 'pl_dma_pcie'
+>> drivers/pci/controller/pcie-xilinx-dma-pl.c:130: warning: Function parameter or struct member 'variant' not described in 'pl_dma_pcie'
+
+
+vim +130 drivers/pci/controller/pcie-xilinx-dma-pl.c
+
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  101  
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  102  /**
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  103   * struct pl_dma_pcie - PCIe port information
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  104   * @dev: Device pointer
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  105   * @reg_base: IO Mapped Register Base
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  106   * @irq: Interrupt number
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  107   * @cfg: Holds mappings of config space window
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  108   * @phys_reg_base: Physical address of reg base
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  109   * @intx_domain: Legacy IRQ domain pointer
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  110   * @pldma_domain: PL DMA IRQ domain pointer
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  111   * @resources: Bus Resources
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  112   * @msi: MSI information
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  113   * @intx_irq: INTx error interrupt number
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  114   * @lock: Lock protecting shared register access
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  115   */
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  116  struct pl_dma_pcie {
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  117  	struct device			*dev;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  118  	void __iomem			*reg_base;
+21ff31dc400101 Thippeswamy Havalige 2024-06-24  119  	void __iomem			*cfg_base;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  120  	int				irq;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  121  	struct pci_config_window	*cfg;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  122  	phys_addr_t			phys_reg_base;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  123  	struct irq_domain		*intx_domain;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  124  	struct irq_domain		*pldma_domain;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  125  	struct list_head		resources;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  126  	struct xilinx_msi		msi;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  127  	int				intx_irq;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  128  	raw_spinlock_t			lock;
+21ff31dc400101 Thippeswamy Havalige 2024-06-24  129  	const struct xilinx_pl_dma_variant   *variant;
+8d786149d78c77 Thippeswamy Havalige 2023-10-03 @130  };
+8d786149d78c77 Thippeswamy Havalige 2023-10-03  131  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
