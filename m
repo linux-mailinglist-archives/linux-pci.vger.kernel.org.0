@@ -1,282 +1,326 @@
-Return-Path: <linux-pci+bounces-9309-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9310-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B68449182C8
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 15:40:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 331DF91844C
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 16:34:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 458E81F22F68
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 13:40:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56BB31C23109
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 14:34:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDC221836F9;
-	Wed, 26 Jun 2024 13:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2BD186E36;
+	Wed, 26 Jun 2024 14:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f4GghCfb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRDCTMYN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2066.outbound.protection.outlook.com [40.107.94.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA911850A6;
-	Wed, 26 Jun 2024 13:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719409207; cv=fail; b=JrLNj3pnsGzbkWO+gJb9asHHJsdAzSryYcCoI8dLq7jEVNpfs0xQPG9k2fWwKDmvbx8ZiFI7jlFXUK2W4ks3L3RHiIH7001MceKPhS4ncGCHvzTD7gPh7uhc7z1USzU0MXF6LH1VyvbC29gIcZ9AJQoABD5LDDzHiTD3A9of1So=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719409207; c=relaxed/simple;
-	bh=M4HB0t0wYauoC/jZ31op0mwDO67GMXmPulNVCbLFBzM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SFz4iioRDUUD386l50I9DEURIH0cBwUvTenzOg8l9/v6vDNBGoFZib6bckVY0fCCP/1UmfnaNWD4zvvybg9Z+Oa2wT8YPpPSmbz96MUkVuqzpFPC53OwlSCOfzHmp+EY3SwstEQJLjW1kwLardj9Qu2x2V2Gs6EWQZCOowtwi9U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f4GghCfb; arc=fail smtp.client-ip=40.107.94.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lA32gIrT51JYQelzz/ds4vPi21d0s8VsHuwZwDjqmaNEreFmlPOAz5I2iSN304FMl9bKBVXGj5afY2Mze4U2x6WM8ivu8lYDKqa+V3xd5pSEMScCEwmb8CEt/qce7okOUFuHu+gP3Z49/dod0H5QBnihXMt0a54gh5q/WYF/+WrsU9IxceMSRZAStw+z8iThRp7Ye1Rx7gLdpKpH6mvcR5zb3IBMjjVQgdve0bVq+TjkKfgtPPcML64SfORRTdnb/dCcMVrXR5CjGB2ALvptvQVR0jCmg6gtnpxOPaM/vSDWkRCLWbIw/h9I6d7bvJ1JXgbXSyXWFLcFhqGqZontDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fLAtXGFxVtCXZRPlXF5DGkimhz4+JqUBDQf2dY26IRo=;
- b=bZexS1TpCFEBIKYh1g/6nLTH+Pl+8AdUDpu52ZDZKoi9iQgkqImdN3+RL8WcuzPkgEFQTiGL3bWkYKKjp4WO+j0gucCl3Mgzq/yMTbBpsIIm8kQQuohGgV0bLSeGCnf5H8L0qC+e+fxjPOGetDgYGhiB7KGValvRZuzS9H08Z8V0eooQhFG+mFIlqkVvyVdjEkG8hK6EKS+yrQLL3w02VAad2qwp4wukiZTOwY7nXGhqrfEoeTvSrH98NrBmAmBVlF1lAht30JDUItW1EElKiG8ikqsSB3QM5qysmVhxZ+YJpXwRp+SG5VEDFITYQurj+h+zHW3KpLSdkwAk0KLtEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fLAtXGFxVtCXZRPlXF5DGkimhz4+JqUBDQf2dY26IRo=;
- b=f4GghCfbkPYo+Lwz+9mp2QlFeaJn21JmkOmTGQzWzWKzsXAijAaHwyKF1Tsw29ntlfK8BswuDJeiBG7VkuSVQdDSPjmuStMpKOmwoxobfEVnpjIdnOi/rdVVoui6SJzp0+Q/R82z6eepstDJ6an+rx8wSCKmauCttemG57+1hJk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- PH7PR12MB7378.namprd12.prod.outlook.com (2603:10b6:510:20d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Wed, 26 Jun
- 2024 13:40:02 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%7]) with mapi id 15.20.7698.025; Wed, 26 Jun 2024
- 13:40:02 +0000
-Message-ID: <89bf0d37-5b13-4527-b9de-a2773e0259f4@amd.com>
-Date: Wed, 26 Jun 2024 08:39:59 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/9] PCI/portdrv: Update portdrv with an atomic
- notifier for reporting AER internal errors
-Content-Language: en-US
-To: "Li, Ming4" <ming4.li@intel.com>,
- "Williams, Dan J" <dan.j.williams@intel.com>,
- "Weiny, Ira" <ira.weiny@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
- "Jiang, Dave" <dave.jiang@intel.com>,
- "Schofield, Alison" <Alison.Schofield@intel.com>,
- "Verma, Vishal L" <vishal.l.verma@intel.com>,
- "jim.harris@samsung.com" <jim.harris@samsung.com>,
- "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
- "ardb@kernel.org" <ardb@kernel.org>,
- "sathyanarayanan.kuppuswamy@linux.intel.com"
- <sathyanarayanan.kuppuswamy@linux.intel.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
- "Robert.Richter@amd.com" <Robert.Richter@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20240617200411.1426554-1-terry.bowman@amd.com>
- <20240617200411.1426554-4-terry.bowman@amd.com>
- <6b1bf5ab-0005-4c88-99ec-92edca828f44@intel.com>
-From: Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <6b1bf5ab-0005-4c88-99ec-92edca828f44@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0201.namprd04.prod.outlook.com
- (2603:10b6:806:126::26) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6C3176FA5;
+	Wed, 26 Jun 2024 14:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719412372; cv=none; b=eSNuH46R1fkz2Whcn+hDheZoG1JIu5zFsDZOrAAK11cwFnrrH6AtLUZ9AQCTvnZJcPh2gkoHgQEYjHe53LZMVqXYMfhR3vsUi6YX5fAljRdacFO7/YHCWIYT2kzXG6GWJW7RAmg5Z9n/eeJnu17MKc8eu4pevvZIwIEDAnAVOp8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719412372; c=relaxed/simple;
+	bh=3UAAGIdFQAKH63yiI3sjxjK8fwrSmEbZub1vx0sUm98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7qi9p/4UmjmAu/bYIlWO2zy4oJhu5REIZh80bEsg6jkVrqoqXobptu3a/l7GMJ4Uf3KZ5/nXpeDdB6iJ3Q3f1ftNM/2UqNQ4uFloOlsefIgwl0mUaZGPeHlT7GnkQ0l9MMIsQfJxIvyH5kdC4TSCUHlLdy7zj4bpYlYsnYC++A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRDCTMYN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 466CDC116B1;
+	Wed, 26 Jun 2024 14:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719412372;
+	bh=3UAAGIdFQAKH63yiI3sjxjK8fwrSmEbZub1vx0sUm98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oRDCTMYNgyDZgEHHPlz+iPqlM22zSaSIzJ9a5bZs3tK3NGkCyNKzSB4CfP1N4jygX
+	 9y/rWt6QNj3/iPw1Fksd2hrhnbKpz7f8d6kU3VruLAjCqt99NCrGrCp6LK9ZkrmYgN
+	 KDVxwHK/51CWoq2lJfbq3VNo/7d2bK8wMDL6MQGzNjPnpW+jB9kWcSPs+j5C9Y9sGc
+	 K5L328oExf1BDyu5Ken4gj2dvQD/XadvT5pEcJoQdlKNnk4LtBqyIeJ1OscqwVP1Qg
+	 WfJfVm2UoNTWEo+k43Z1PyjQxvF4He8zNTIQ9Fx311wCyq1HmLeH4nkOUVNV4zVajS
+	 9tmY4mys+MOpQ==
+Date: Wed, 26 Jun 2024 09:31:55 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Jingoo Han <jingoohan1@gmail.com>, quic_vbadigan@quicinc.com, quic_skananth@quicinc.com, 
+	quic_nitegupt@quicinc.com, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 6/7] pci: qcom: Add support for start_link() &
+ stop_link()
+Message-ID: <wcxyba2xxpsfgffa5ds7ctgekt5fanp6udeivh3kf7x7pr6cw4@3i27f7etqqt3>
+References: <20240626-qps615-v1-0-2ade7bd91e02@quicinc.com>
+ <20240626-qps615-v1-6-2ade7bd91e02@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|PH7PR12MB7378:EE_
-X-MS-Office365-Filtering-Correlation-Id: df3efb0a-c28d-4f34-325e-08dc95e57af3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|366014|376012|7416012|1800799022|921018;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bm1BZGJvRlV2QjJYZlNFVXloYnlhUGN3MXpkYVJOT0ZHajlGK0lsejNuTDcz?=
- =?utf-8?B?Q3JjcXEwS0xQTjJFVGhVMk40OHpTZ0k4cmd3eEFrR3R2YmxGbDNZaDJ5YWcz?=
- =?utf-8?B?NE9DVytXQjJURmx0bU8zL3hId0xqK1RBRlZkQkZxMXZIa0NMREZUVHVzck9Y?=
- =?utf-8?B?dXdiYzdiVHV4ZStOM2Z3OVVTWWQ3Y204cjFEQmgxNEV5bzlFQitkU2hGZkFu?=
- =?utf-8?B?Q1FYU253VTYxQTlQbE9Hd09CVW9rcTJwUFViamg2MlByZzNGRUYvVTk2V1NU?=
- =?utf-8?B?WWFuNWhnaUtqOUhlNm5oWHRuVGkyL2VyQjNwQ1BxTEd2Ny8wZThEVEk4ZzV5?=
- =?utf-8?B?V2VrNTJCV2owbUJmRFJUTmJMYVhpVTFZNTBBVDlsbjNHZE5GMzh4eGZjcjBP?=
- =?utf-8?B?ZjFPRXhKMmc5bTM5Tlh1a1FaQ3NNd2VWZlFnNm9QcXZjdURWYWpqUDY3b2FG?=
- =?utf-8?B?UHZZNzFFZmx0VjFxUC9MRHErUXJQY29OdE1VRGpPNUhESk13SXR6S3ZxenF1?=
- =?utf-8?B?b2sxYUJTVmJ5SlY3djZySzJsMXplSGVrck9zTjNHUWFjRTU4UnFqUFZpSXZN?=
- =?utf-8?B?cEppS0V6T3g2c1lRVUpjaVVULzNkcER3SXdaRUtqcnNuUVZyMmtadXp0QlIz?=
- =?utf-8?B?YUVGNEd3OHBDTTZxUXAwVGtJUDliMlFSaG9vVW1OZlVIZldtNnpwYkYwVlpt?=
- =?utf-8?B?MENkZlQ2QnJIQU9va215alhSQmgrZGIxZ2tzakxOU1pqSnlNU2RmU2sxeGM3?=
- =?utf-8?B?TWxmaVdXUllzbTlsVE8zRHdMTUIzc3pVQkFzcWFmSDRWdS9JVHMzUTl2b09G?=
- =?utf-8?B?cFdvcmNVam81NDliUVdKU3EyZUdzaGswdHJMZTlkbStheVNvb0pQM3k0c2VF?=
- =?utf-8?B?dkkzUk84MHBVM1c5eW9ZMm1SSGdGa0tJaHhydGtPL29JaW85d25kYmdxZmN3?=
- =?utf-8?B?SGcvc2R2c3lsN1hKdUZDdjZRbGpBWjlUbEpWZi9SYnJ5ZUdYMU1SU09hVytT?=
- =?utf-8?B?akdIclE0Qm1FMWdGSGQ4a1V5WmNnSlovM0FrQnN2ZmF4TWc4ZElwL0NHSEtE?=
- =?utf-8?B?dGxNeUZBRERtWXZVT1BsdEhxOFZlS0g4azdVOVlEQVNlTm1xZFJVWFdkN1Rw?=
- =?utf-8?B?bHE3UktKYkNQSzU5KzRHYkVKVTBSM2U5ZUpWMnQzOVp4dWxVSkZHQlJybjl2?=
- =?utf-8?B?Y2FDYjJIZmNwa1FpQlBJTGI5RW8zUUFkRWRnTEREcUx1V1h1aEJzVUc2RnZW?=
- =?utf-8?B?MHFBYS9RNGxWSHkyN0hBOXpwM1gxeDBaK09VdjkvK2M0amh6MHpNVXVFblQ5?=
- =?utf-8?B?NlI4RVhSNitGVGJMc3VWbXFQL0xEU3o0Z1lHTldkcDkrYTdPQXNkMXlNRjhn?=
- =?utf-8?B?QVJlSG1FUmp3UUpIbkpzUTlVMmw1OUxTRGNKbFpBQS9Bck54SVFoR3h3ejR0?=
- =?utf-8?B?VEE2MnQ0VnpGelEzTUZub2tFai84UDVoMWJDWCs5Tjd6T2VOWHQ5NDlVWmpG?=
- =?utf-8?B?WW4ycEdZUU9mN1dIb1J6K2ptWmE1REtYcmVMS2RxVXpYM2J1RVJnamZYSGtq?=
- =?utf-8?B?WStzZEhxYzFSck5uQ0pnSmtEbWR4b085Mi9UckM2WVg0RXlGUFZnYVB0UHgv?=
- =?utf-8?B?UW0xaldHK1h4L0R2YjFrY0wyNVQ0OVZReFR1T1RLdTFZeDhmeHI3a2F1S2Mr?=
- =?utf-8?B?NmZmTk9ERnJyT2JCNUg5eFNzT1g2THdlaFBhMzJ4NTUxWXBYWlVDeUgrL2U1?=
- =?utf-8?B?RXJ2WkdBWGRtVnFFaTgxeGZpRllVY3l2WXk2NVdid0I4N053NUE2U09adTVR?=
- =?utf-8?B?dEh5V2wrZ2lSb3NyOFlZSEUyVDNMRXZwRS8rRUt6eDBKcXhoL2lEZXdCNXBT?=
- =?utf-8?Q?uWE4tr2bS82B1?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230038)(366014)(376012)(7416012)(1800799022)(921018);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L1AyVnUyU3FMbENSa2dzTTFPdGRteERueEh3b3VWTXJWZ2ZwSjJSaU43V1Jy?=
- =?utf-8?B?aEFRZVNSMUdaRXpWWjVsekR4cDhDZXVSWmpvV2xpWGdnU29pTFFIbi92MVFr?=
- =?utf-8?B?L3B6Y1lEb0ltYzNIbHlGSHlBRFg0b3R4TWUyb0lLN0dSVGhsQjh0M2JHYzl4?=
- =?utf-8?B?M21IYjdWbVZUb1FGV0FvOEJhbUlMVGFmZW52bVh4RDhsMFVFc05TcERQVEdZ?=
- =?utf-8?B?WkYzOVNXc3JtWEhkUXJ4dVVmRmJRdXcydCt6OE9OMVU1YVpBVHYyWTRtOWhV?=
- =?utf-8?B?S09UaUtnWmxDTjRGZGN1MmQzY1VKS0xmU0tFcWtvUTVNb2kvZmhGWkorOXJ5?=
- =?utf-8?B?U3pKWkFFS2lERFo3NXhQN3JLYk5qRU5OYi9JYkMxWCtKWHZnZGhlVDBUUDFU?=
- =?utf-8?B?Z1VkaXk2OXF5c0ZtVzVST1lseVV2dmwrOTgvZTgrd0JvSC80aml3ZzBtNUxB?=
- =?utf-8?B?UWM0ZWtLK0J1UzNkNnJ2WEVLOXNWVWppZ2ZleTFRQWZhRXh6bTVIWW50STlm?=
- =?utf-8?B?Qmx2QmJDUjZpbnhkekRBWHgzM1BvWXIxb1NwSkJ2UEhDanJIVmFCbnhEYzhH?=
- =?utf-8?B?VjZMWm85Q3FjakVpT1duSTRuY0V1OGY5WW9SalYvS2F2WE9MdEx1OUdYdm9m?=
- =?utf-8?B?QzByQW5rMC9sWW9lcHJ1S2VjVThHS1BscE1RSElwM1h6S1RlempJQ1lJeGw4?=
- =?utf-8?B?MkdERTlZNG1IZ0twa2dkZlpaeDZYcVVXU2xMVkdRUURTM0NhRm9xTkNNR1JX?=
- =?utf-8?B?YVhQU0w1dEJGOHE2OEJHWHhyTUdIanUrR2FQMWhGRFRqTDBxdU9CNG41NSts?=
- =?utf-8?B?SUkrd2hlditYQzJFb0ZJZFNMRE5vSnpCRmxPcURFU0FoaDF5MkNjeTdyZm9u?=
- =?utf-8?B?Z0wyUktqZXA2alh2Z2NDTUhwV1VqOGFlbG84NVJhWjJJd2pqbUdWNmplNldM?=
- =?utf-8?B?ekh1d2dVVExZM0NpZEhLMXV0RlI4UnVzMExZaWZQdUJyUWlxeXRRZWlFcXRr?=
- =?utf-8?B?Z0xRamhuQ2g2bVlyN1dwOERFdEVWSWltZDI4L0ZubXVGd2txK0RGWFpUcG9Z?=
- =?utf-8?B?SzRKdUpadlpINTMvalRaRFAzdVlaU0swNk1EaXdqYUsyQ3ZsaEV4YzEvRWJG?=
- =?utf-8?B?U3FJN0dUWlRRNmU4bXR5ZHFVblZYRGN1YkNCaHhqZXovVk04NW14RDZiVHQ4?=
- =?utf-8?B?cnJKQm9PUUJNNWtxOXk0cGlMaDVaa0FCSEcyR0M0VEo3ekVpeDhBMEtEWC9U?=
- =?utf-8?B?UVppbm1Odld6b0Q1Z0hnNlRFSC9aMzJBb2kwVWllNUJlWmErM01pT2t3VTRX?=
- =?utf-8?B?TFdoTjZlb3ZMdXRvSFJMaDJZTU56UUtVSnQ0QlY4cG44MGVQYWY5bXRGbWtV?=
- =?utf-8?B?VmxVdlQzWWUzWlRaWVBwVWJLaDhFdmFIVTkrU2dXQkVBWWI4WlBQam9BcG82?=
- =?utf-8?B?ZGlZVG9Ta3JtT1JvTEtIVDBDd1F5OUNIbWdFMmk1Q0Z5ZlhOVUdVMXEzUzVR?=
- =?utf-8?B?VkVkbm1ZcjRSVE1TRFp1ZEFRTDNuVHBMUUl3eGw3WEIxS3I3MGJBbnBVdVlY?=
- =?utf-8?B?UFFya1JMRDRqTnJBNzZoR1BMeEY4bzdyemxNTEFoTlVERFNQcjFObm05NlR2?=
- =?utf-8?B?Wks1aXlEN1M3YW9vNnlyTExDdDlpRERIRmVkRUhvaFNJVit3UVcwRUhEeXdt?=
- =?utf-8?B?d3Q3ODVTWit1L2VEM0RpWFhmSUQ2WCtvR3BQV25HNDhBQW0rWXdvRUg4RGZU?=
- =?utf-8?B?c2hYd3cyREcyRERwRkF5VDVDdmFlZ0ZCK1dxc25YMnozWWhJbUpzUkV2RGJi?=
- =?utf-8?B?YlZxWVZlc3FaRUUzV293cmlTcVFpL0dtYWZ4U2J3cllvaGRiSUMvUzVRbmY3?=
- =?utf-8?B?bzRJNzVxQlhqSmNxbjVNTFRsbFlISjRQcmlaVTRPZHgwakNJbVV5NlpzK0F2?=
- =?utf-8?B?THhvQnVtOWF3b2M2NDZQRUZHNEkwemw2UllLdnRON0hPNEJtZEhRL2pLckIy?=
- =?utf-8?B?eG1pVlBGTU0wN3lxTVpDaWRUT2V1TUpOS21jTGFRcS9tdHVOM05oRjA5UG1l?=
- =?utf-8?B?Y2YvZnpsUmdlcTBaaUNSVkZGVm1OODZpOGZ5Qlk2Q1JWQWgwQ1dXTHBrazNE?=
- =?utf-8?Q?jbUz91HzDA26WJiK1qgj9hr9y?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df3efb0a-c28d-4f34-325e-08dc95e57af3
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 13:40:02.3943
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dH67sAKGs2oiHPB31gHBuChnF9haDtIFoFf0r255U78gq0qySd8VLP0JcDEEbCMEWzl/1kVZSzSnrC9DVniHkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7378
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626-qps615-v1-6-2ade7bd91e02@quicinc.com>
 
+On Wed, Jun 26, 2024 at 06:07:54PM GMT, Krishna chaitanya chundru wrote:
 
+Please start your commit message with a description of the problem that
+you're solving, then followed by the technical description of your
+solution (which you have here).
 
-On 6/25/24 21:54, Li, Ming4 wrote:
-> On 6/18/2024 4:04 AM, Terry Bowman wrote:
->> PCIe port devices are bound to portdrv, the PCIe port bus driver. portdrv
->> does not implement an AER correctable handler (CE) but does implement the
->> AER uncorrectable error (UCE). The UCE handler is fairly straightforward
->> in that it only checks for frozen error state and returns the next step
->> for recovery accordingly.
->>
->> As a result, port devices relying on AER correctable internal errors (CIE)
->> and AER uncorrectable internal errors (UIE) will not be handled. Note,
->> the PCIe spec indicates AER CIE/UIE can be used to report implementation
->> specific errors.[1]
->>
->> CXL root ports, CXL downstream switch ports, and CXL upstream switch ports
->> are examples of devices using the AER CIE/UIE for implementation specific
->> purposes. These CXL ports use the AER interrupt and AER CIE/UIE status to
->> report CXL RAS errors.[2]
->>
->> Add an atomic notifier to portdrv's CE/UCE handlers. Use the atomic
->> notifier to report CIE/UIE errors to the registered functions. This will
->> require adding a CE handler and updating the existing UCE handler.
->>
->> For the UCE handler, the CXL spec states UIE errors should return need
->> reset: "The only method of recovering from an Uncorrectable Internal Error
->> is reset or hardware replacement."[1]
->>
->> [1] PCI6.0 - 6.2.10 Internal Errors
->> [2] CXL3.1 - 12.2.2 CXL Root Ports, Downstream Switch Ports, and
->>              Upstream Switch Ports
->>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: linux-pci@vger.kernel.org
->> ---
->>  drivers/pci/pcie/portdrv.c | 32 ++++++++++++++++++++++++++++++++
->>  drivers/pci/pcie/portdrv.h |  2 ++
->>  2 files changed, 34 insertions(+)
->>
->> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
->> index 14a4b89a3b83..86d80e0e9606 100644
->> --- a/drivers/pci/pcie/portdrv.c
->> +++ b/drivers/pci/pcie/portdrv.c
->> @@ -37,6 +37,9 @@ struct portdrv_service_data {
->>  	u32 service;
->>  };
->>  
->> +ATOMIC_NOTIFIER_HEAD(portdrv_aer_internal_err_chain);
->> +EXPORT_SYMBOL_GPL(portdrv_aer_internal_err_chain);
->> +
->>  /**
->>   * release_pcie_device - free PCI Express port service device structure
->>   * @dev: Port service device to release
->> @@ -745,11 +748,39 @@ static void pcie_portdrv_shutdown(struct pci_dev *dev)
->>  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
->>  					pci_channel_state_t error)
->>  {
->> +	if (dev->aer_cap) {
->> +		u32 status;
->> +
->> +		pci_read_config_dword(dev, dev->aer_cap + PCI_ERR_UNCOR_STATUS,
->> +				      &status);
->> +
->> +		if (status & PCI_ERR_UNC_INTN) {
->> +			atomic_notifier_call_chain(&portdrv_aer_internal_err_chain,
->> +						   AER_FATAL, (void *)dev);
->> +			return PCI_ERS_RESULT_NEED_RESET;
->> +		}
->> +	}
->> +
->>  	if (error == pci_channel_io_frozen)
->>  		return PCI_ERS_RESULT_NEED_RESET;
->>  	return PCI_ERS_RESULT_CAN_RECOVER;
->>  }
->>  
->> +static void pcie_portdrv_cor_error_detected(struct pci_dev *dev)
->> +{
->> +	u32 status;
->> +
->> +	if (!dev->aer_cap)
->> +		return;
+Also, uppercase "PCI:" in your subject prefix.
+
+> In the stop_link() if the PCIe link is not up, disable LTSSM enable
+> bit to stop link training otherwise keep the link in D3cold.
+> And in the start_link() the enable LTSSM bit if the resources are
+> turned on other wise do the all the initialization and then start
+> the link.
 > 
-> Seems like that dev->aer_cap checking is not needed for cor_error_detected, aer_get_device_error_info() already checked it and won't call handle_error_source() if device has not AER capability. But I am curious why pci_aer_handle_error() checks dev->aer_cap again after aer_get_device_error_info().
+> Introduce ltssm_disable function op to stop the link training.
 > 
+> Use a flag 'pci_pwrctl_turned_off" to indicate the resources are
+> turned off by the pci pwrctl framework.
+> 
+> If the link is stopped using the stop_link() then just return with
+> doing anything in suspend and resume.
 
-Hi Ming,
+And an empty line between commit message and the tags.
 
-I agree this check should be removed. 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 108 +++++++++++++++++++++++++++++----
+>  1 file changed, 97 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 14772edcf0d3..1ab3ffdb3914 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -37,6 +37,7 @@
+>  /* PARF registers */
+>  #define PARF_SYS_CTRL				0x00
+>  #define PARF_PM_CTRL				0x20
+> +#define PARF_PM_STTS				0x24
+>  #define PARF_PCS_DEEMPH				0x34
+>  #define PARF_PCS_SWING				0x38
+>  #define PARF_PHY_CTRL				0x40
+> @@ -83,6 +84,9 @@
+>  /* PARF_PM_CTRL register fields */
+>  #define REQ_NOT_ENTR_L1				BIT(5)
+>  
+> +/* PARF_PM_STTS register fields */
+> +#define PM_ENTER_L23				BIT(5)
+> +
+>  /* PARF_PCS_DEEMPH register fields */
+>  #define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		FIELD_PREP(GENMASK(21, 16), x)
+>  #define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	FIELD_PREP(GENMASK(13, 8), x)
+> @@ -126,6 +130,7 @@
+>  
+>  /* ELBI_SYS_CTRL register fields */
+>  #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
+> +#define ELBI_SYS_CTRL_PME_TURNOFF_MSG		BIT(4)
+>  
+>  /* AXI_MSTR_RESP_COMP_CTRL0 register fields */
+>  #define CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K	0x4
+> @@ -228,6 +233,7 @@ struct qcom_pcie_ops {
+>  	void (*host_post_init)(struct qcom_pcie *pcie);
+>  	void (*deinit)(struct qcom_pcie *pcie);
+>  	void (*ltssm_enable)(struct qcom_pcie *pcie);
+> +	void (*ltssm_disable)(struct qcom_pcie *pcie);
+>  	int (*config_sid)(struct qcom_pcie *pcie);
+>  };
+>  
+> @@ -248,10 +254,13 @@ struct qcom_pcie {
+>  	const struct qcom_pcie_cfg *cfg;
+>  	struct dentry *debugfs;
+>  	bool suspended;
+> +	bool pci_pwrctl_turned_off;
+>  };
+>  
+>  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+>  
+> +static void qcom_pcie_icc_update(struct qcom_pcie *pcie);
+> +
+>  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+>  {
+>  	gpiod_set_value_cansleep(pcie->reset, 1);
+> @@ -266,17 +275,6 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
+>  	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+>  }
+>  
+> -static int qcom_pcie_start_link(struct dw_pcie *pci)
+> -{
+> -	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> -
+> -	/* Enable Link Training state machine */
+> -	if (pcie->cfg->ops->ltssm_enable)
+> -		pcie->cfg->ops->ltssm_enable(pcie);
+> -
+> -	return 0;
+> -}
+> -
+>  static void qcom_pcie_clear_aspm_l0s(struct dw_pcie *pci)
+>  {
+>  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> @@ -556,6 +554,15 @@ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> +static void qcom_pcie_2_3_2_ltssm_disable(struct qcom_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(pcie->parf + PARF_LTSSM);
+> +	val &= ~LTSSM_EN;
+> +	writel(val, pcie->parf + PARF_LTSSM);
+> +}
+> +
+>  static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+>  {
+>  	u32 val;
+> @@ -1336,6 +1343,7 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
+>  	.post_init = qcom_pcie_post_init_2_7_0,
+>  	.deinit = qcom_pcie_deinit_2_7_0,
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> +	.ltssm_disable = qcom_pcie_2_3_2_ltssm_disable,
+>  };
+>  
+>  /* Qcom IP rev.: 1.9.0 */
+> @@ -1346,6 +1354,7 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+>  	.host_post_init = qcom_pcie_host_post_init_2_7_0,
+>  	.deinit = qcom_pcie_deinit_2_7_0,
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> +	.ltssm_disable = qcom_pcie_2_3_2_ltssm_disable,
+>  	.config_sid = qcom_pcie_config_sid_1_9_0,
+>  };
+>  
+> @@ -1395,9 +1404,81 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
+>  	.no_l0s = true,
+>  };
+>  
+> +static int qcom_pcie_turnoff_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +	u32 ret_l23, val, ret;
+> +
+> +	if (!dw_pcie_link_up(pcie->pci)) {
+> +		if (pcie->cfg->ops->ltssm_disable)
+> +			pcie->cfg->ops->ltssm_disable(pcie);
+> +	} else {
+> +		writel(ELBI_SYS_CTRL_PME_TURNOFF_MSG, pcie->elbi + ELBI_SYS_CTRL);
+> +
+> +		ret_l23 = readl_poll_timeout(pcie->parf + PARF_PM_STTS, val,
+> +					     val & PM_ENTER_L23, 10000, 100000);
+> +		if (ret_l23) {
+> +			dev_err(pci->dev, "Failed to enter L2/L3\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +
+> +		qcom_pcie_host_deinit(&pcie->pci->pp);
+> +
+> +		ret = icc_disable(pcie->icc_mem);
+> +		if (ret)
+> +			dev_err(pci->dev, "Failed to disable PCIe-MEM interconnect path: %d\n",
+> +				ret);
+> +
+> +		pcie->pci_pwrctl_turned_off = true;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_turnon_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +
+> +	if (pcie->pci_pwrctl_turned_off) {
+> +		qcom_pcie_host_init(&pcie->pci->pp);
+> +
+> +		dw_pcie_setup_rc(&pcie->pci->pp);
+> +	}
+> +
+> +	if (pcie->cfg->ops->ltssm_enable)
+> +		pcie->cfg->ops->ltssm_enable(pcie);
+> +
+> +	/* Ignore the retval, the devices may come up later. */
+> +	dw_pcie_wait_for_link(pcie->pci);
+> +
+> +	qcom_pcie_icc_update(pcie);
+> +
+> +	pcie->pci_pwrctl_turned_off = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_start_link(struct dw_pcie *pci)
+> +{
+> +	return qcom_pcie_turnon_link(pci);
+
+If you inline qcom_pcie_turnon_link() here, you don't need to have two
+different words for "start"/"turnon".
+
+> +}
+> +
+> +static void qcom_pcie_stop_link(struct dw_pcie *pci)
+> +{
+> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+> +
+> +	if (!dw_pcie_link_up(pcie->pci))  {
+
+Unless I'm reading it wrong, qcom_pcie_turnoff_link() has exactly the
+same prologue, so you should be able to just inline
+qcom_pcie_turnoff_link() in this function and avoid the "stop"/"turnoff"
+naming.
+
+> +		if (pcie->cfg->ops->ltssm_disable)
+> +			pcie->cfg->ops->ltssm_disable(pcie);
+> +	} else {
+> +		qcom_pcie_turnoff_link(pci);
+> +	}
+> +}
+> +
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = qcom_pcie_link_up,
+>  	.start_link = qcom_pcie_start_link,
+> +	.stop_link = qcom_pcie_stop_link,
+>  };
+>  
+>  static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+> @@ -1604,6 +1685,8 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+>  	int ret;
+>  
+
+This deserves a comment.
+
+> +	if (pcie->pci_pwrctl_turned_off)
+> +		return 0;
+>  	/*
+>  	 * Set minimum bandwidth required to keep data path functional during
+>  	 * suspend.
+> @@ -1642,6 +1725,9 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+>  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+>  	int ret;
+>  
+
+Ditto.
+
+> +	if (pcie->pci_pwrctl_turned_off)
+> +		return 0;
+> +
 
 Regards,
-Terry
+Bjorn
+
+>  	if (pcie->suspended) {
+>  		ret = qcom_pcie_host_init(&pcie->pci->pp);
+>  		if (ret)
+> 
+> -- 
+> 2.42.0
+> 
 
