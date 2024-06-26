@@ -1,128 +1,167 @@
-Return-Path: <linux-pci+bounces-9337-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9338-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAC349194E3
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 21:04:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16B5991954F
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 21:05:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EC271F23342
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 19:04:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 945A6B23CB2
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 19:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C739517D365;
-	Wed, 26 Jun 2024 19:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FCBC17D365;
+	Wed, 26 Jun 2024 19:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnQ/uhCv"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Wux6xPA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bWSUS9H8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E02E17C22A;
-	Wed, 26 Jun 2024 19:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BD21509B8;
+	Wed, 26 Jun 2024 19:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719428644; cv=none; b=Avch9p6zkHc4sn+tvbyHJAn1S4ZZNYq+X/3MXg2tSuQ9RneGA77FB4ScrdPtNkg68NyQHY3HGM8TNSDj0rCKx1LELtbK1alkTdwGNkO2E0VLV8WyD0mNrhAKwpo2wVGPNQs6Mp6oFpED/qP2h6+Bwp9q0dY55eGVv8db8RYzZPY=
+	t=1719428716; cv=none; b=Jbmspg+2uL097ZUfxpvaUedoVIt18lJdQLUrlQfNQCwjF6fmBlZ/zSRpeBTXBiitIAD3XWiODA0AeJ3SrsD+ES3cVC3R8u3HzDclBCC6A1JHXZiA3u83LRrQwMUU08GnUnfNWyawAoVJHSLZSY3gMEREQOmp+A15eyeTlJ50Gbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719428644; c=relaxed/simple;
-	bh=p3XYPWeJ5vWy755pwk4qlysB95s+FcjpaEBY1UpmIRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pEutwNYmRy45RYwysfUZPpozU+jJcM6nweT4A1TXS/bGyU593JyP57KIH1osnEtIZDJZwev06Hbj1j5muH44PI9CMpzHOk0UWhjFsN77QleR1rHXETXzBNpJFGKpkan9e5H8JqRh841hhxeDDxGZR81r+VdJ2bHxMlhDS+Xr8Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnQ/uhCv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4167FC32789;
-	Wed, 26 Jun 2024 19:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719428644;
-	bh=p3XYPWeJ5vWy755pwk4qlysB95s+FcjpaEBY1UpmIRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BnQ/uhCvJZm6OlKDq5Q7p+ZwCZ57vUYhKs5hgyLhfyHuM3fxFBQRowmP2XxoGrbre
-	 f6zeAQSLRf2j5OWhV31rKDOBfgyfcxunOOElfDFpdzBVem4PgwCxvFGdDc0rrLTm0X
-	 LlPN9PBMu8x4cD4MhOKU4nz21Eu8D+cpluBSnuxBEuTjQx80LJybhjXZnMV09TiEMV
-	 75dx4XfV0i4kI5ioQ2xG6R2QplOHRnLwjdVO0n9+fo7MiCaWVgyeGdO2jE8Wc8Tye8
-	 1cCYepmOozNqWvragpi5x6qHXJ9TWaYWBYI9PT5Rmts58T0YRnn8lz8kbf07VhPHPF
-	 gAsMcGXdyHN5Q==
-Date: Wed, 26 Jun 2024 21:03:56 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [pci:controller/rockchip 10/11]
- drivers/pci/controller/dwc/pcie-designware-ep.c:26:undefined reference to
- `pci_epc_init_notify'
-Message-ID: <ZnxmHFkIvm-qTfiD@ryzen.lan>
-References: <202406270250.k2esVVnL-lkp@intel.com>
+	s=arc-20240116; t=1719428716; c=relaxed/simple;
+	bh=iEky2eVs/O3glvmfOmDCeeC/kYZsH9u9lidZrYV2hRs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=swqQwvwb4JA8hSPEoNIPRl8qKbNIWNU2Ys8t6x8ubq2NFSGM5o2KbNoSy2KifnHrwnCAA1mqW3Kv9dOqlcfAUbxy25V7G3ynGidgV8JDnGhJsiSf6X/OTh4op5zE83ScCCOxZWFL5Wh431PIP3RpsTpIrBzJpp3azL916udMjvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Wux6xPA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bWSUS9H8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1719428713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EoN4fj2HCZ+g0Mng6LNWulvp3O8suPrcrYKI0Bnjr5Y=;
+	b=0Wux6xPAFVgp7+gpVoEV8EIVMylNp1e/HDRVtFWKeyZZ1iin6uwo70xKF5Njh/koKi2T06
+	GcjuP4tDa6nmJkaLKHy07rfKmQYIiLJrhdH4uSz2WH10rXQdq8TiIRX7M7ntjPdDmuwvEx
+	nmfllDzP0INE9phqmqDtzS2Qflq7Rfma6ejDGzM6CtcUQ/uHi4fl768/tG14ELxchFlbeR
+	WSE4b7z4zwcMIB+rDX1PFZIZBNAySXrhpwG+RQ8M0wDieBnZSF7S0h0jo+e4L8w0D+47ws
+	0zroKJ6A2G4iRbKJgKptNuGtIsWefoZDV1JMoYIFq6ignSFpodBbKSBg0Tn5Pg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1719428713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EoN4fj2HCZ+g0Mng6LNWulvp3O8suPrcrYKI0Bnjr5Y=;
+	b=bWSUS9H8o0a07mxYPBKc/FjUD9MH5DYeGUJulQv2c3b+enEWz6WaNl6SjMwrResG6vl8Yf
+	NY9Q5wStjlTqSfDQ==
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+ maz@kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
+ rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com,
+ apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com,
+ den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com,
+ sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
+ rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
+ lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org,
+ robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
+ vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
+ andersson@kernel.org, mark.rutland@arm.com,
+ shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com,
+ shivamurthy.shastri@linutronix.de
+Subject: [patch V4-1 01/21] PCI/MSI: Provide MSI_FLAG_PCI_MSI_MASK_PARENT
+In-Reply-To: <20240623142234.778182630@linutronix.de>
+References: <20240623142137.448898081@linutronix.de>
+ <20240623142234.778182630@linutronix.de>
+Date: Wed, 26 Jun 2024 21:05:12 +0200
+Message-ID: <87ed8j34pj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202406270250.k2esVVnL-lkp@intel.com>
+Content-Type: text/plain
 
-On Thu, Jun 27, 2024 at 02:23:38AM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
-> head:   246afbe0f6fca433d8d918b740719170b1b082cc
-> commit: 9b2ba393b3a659a4695691794dc030b6f7744b23 [10/11] PCI: dw-rockchip: Add endpoint mode support
-> config: loongarch-randconfig-r081-20240626 (https://download.01.org/0day-ci/archive/20240627/202406270250.k2esVVnL-lkp@intel.com/config)
-> compiler: loongarch64-linux-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240627/202406270250.k2esVVnL-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202406270250.k2esVVnL-lkp@intel.com/
->
+From: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
 
-Hello Krzysztof,
+Most ARM(64) PCI/MSI domains mask and unmask in the parent domain after or
+before the PCI mask/unmask operation takes place. So there are more than a
+dozen of the same wrapper implementation all over the place.
 
-> All errors (new ones prefixed by >>):
-> 
->    loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.o: in function `dw_pcie_ep_init_notify':
-> >> drivers/pci/controller/dwc/pcie-designware-ep.c:26:(.text+0x1e4): undefined reference to `pci_epc_init_notify'
+Don't make the same mistake with the new per device PCI/MSI domains and
+provide a new MSI feature flag, which lets the domain implementation
+enable this sequence in the PCI/MSI code.
 
-Seeing that it is pcie-designware-ep.c that fails to build, I can see the error.
-I have forgotten to do:
+Signed-off-by: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+v4-1: Remove MSI_FLAG_PCI_MSI_MASK_PARENT from the defaults - Rob
+v3: new patch to replace the global static key - Marc Zyngier
+---
+ drivers/pci/msi/irqdomain.c |   20 ++++++++++++++++++++
+ include/linux/msi.h         |    2 ++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 9c4fb8ba7573..4c38181acffa 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -329,6 +329,7 @@ config PCIE_ROCKCHIP_DW_EP
-        bool "Rockchip DesignWare PCIe controller (endpoint mode)"
-        depends on ARCH_ROCKCHIP || COMPILE_TEST
-        depends on OF
-+       depends on PCI_ENDPOINT
-        select PCIE_DW_EP
-        select PCIE_ROCKCHIP_DW
-        help
-
-(The .config in this build has PCIE_ROCKCHIP_DW_EP selected, but not PCI_ENDPOINT,
-which should not be allowed...)
-
-This is my fault, all the other endpoint drivers have a depends on PCI_ENDPOINT.
-Will send a patch for this shortly. I'm truly sorry for this mistake.
-
-
-
-
-Looking more closely at the pci/controller/rockchip branch,
-I can also see that we have another potential problem:
-
-Commit 7a847796e509 ("PCI: endpoint: Introduce 'epc_deinit' event and notify the EPF drivers"),
-which is on branch: pci/endpoint
-has introduced a stub (dummy definition) for pci_epc_init_notify.
-However, if the test robot builds the pci/controller/rockchip branch with PCIE_ROCKCHIP_DW_HOST
-selected, and not PCIE_ROCKCHIP_DW_EP selected, we could get a failure that pci_epc_init_notify()
-does not have a stub...
-
-This problem can be solved by cherry-picking 7a847796e509 ("PCI: endpoint: Introduce 'epc_deinit'
-event and notify the EPF drivers") to the pci/controller/rockchip branch, or by rebasing the
-pci/controller/rockchip branch on top of the pci/endpoint branch... I'm sorry for this too.
-
-
-Kind regards,
-Niklas
+--- a/drivers/pci/msi/irqdomain.c
++++ b/drivers/pci/msi/irqdomain.c
+@@ -148,17 +148,35 @@ static void pci_device_domain_set_desc(m
+ 	arg->hwirq = desc->msi_index;
+ }
+ 
++static __always_inline void cond_mask_parent(struct irq_data *data)
++{
++	struct msi_domain_info *info = data->domain->host_data;
++
++	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
++		irq_chip_mask_parent(data);
++}
++
++static __always_inline void cond_unmask_parent(struct irq_data *data)
++{
++	struct msi_domain_info *info = data->domain->host_data;
++
++	if (unlikely(info->flags & MSI_FLAG_PCI_MSI_MASK_PARENT))
++		irq_chip_unmask_parent(data);
++}
++
+ static void pci_irq_mask_msi(struct irq_data *data)
+ {
+ 	struct msi_desc *desc = irq_data_get_msi_desc(data);
+ 
+ 	pci_msi_mask(desc, BIT(data->irq - desc->irq));
++	cond_mask_parent(data);
+ }
+ 
+ static void pci_irq_unmask_msi(struct irq_data *data)
+ {
+ 	struct msi_desc *desc = irq_data_get_msi_desc(data);
+ 
++	cond_unmask_parent(data);
+ 	pci_msi_unmask(desc, BIT(data->irq - desc->irq));
+ }
+ 
+@@ -195,10 +213,12 @@ static const struct msi_domain_template
+ static void pci_irq_mask_msix(struct irq_data *data)
+ {
+ 	pci_msix_mask(irq_data_get_msi_desc(data));
++	cond_mask_parent(data);
+ }
+ 
+ static void pci_irq_unmask_msix(struct irq_data *data)
+ {
++	cond_unmask_parent(data);
+ 	pci_msix_unmask(irq_data_get_msi_desc(data));
+ }
+ 
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -556,6 +556,8 @@ enum {
+ 	MSI_FLAG_USE_DEV_FWNODE		= (1 << 7),
+ 	/* Set parent->dev into domain->pm_dev on device domain creation */
+ 	MSI_FLAG_PARENT_PM_DEV		= (1 << 8),
++	/* Support for parent mask/unmask */
++	MSI_FLAG_PCI_MSI_MASK_PARENT	= (1 << 9),
+ 
+ 	/* Mask for the generic functionality */
+ 	MSI_GENERIC_FLAGS_MASK		= GENMASK(15, 0),
 
