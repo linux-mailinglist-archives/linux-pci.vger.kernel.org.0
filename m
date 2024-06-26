@@ -1,59 +1,61 @@
-Return-Path: <linux-pci+bounces-9313-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9314-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FB34918564
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 17:11:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED3A918575
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 17:13:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEF52B21FC9
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 15:08:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F379B26F3D
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 15:10:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D1C4186E33;
-	Wed, 26 Jun 2024 15:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0107D1891DA;
+	Wed, 26 Jun 2024 15:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKLlX19I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHxR4Gl4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4562418509F;
-	Wed, 26 Jun 2024 15:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AD41891CB;
+	Wed, 26 Jun 2024 15:10:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719414503; cv=none; b=pEOe8rYbeRcXBkjgH2Kn9kghmOms3Jy6UP60F7RD76/ol3FEYp9OE1LnImLhK/6dACDF3KRF+ccIZPQSbjSjx0MIBBDpyLnqpCwacFNIq/6oQNd5GhG3ZkWH3NtqVjY+tfHuXRMqEkxHcHs+nom6CrhaNOh5JnLwmGUX62Dhcs0=
+	t=1719414642; cv=none; b=GC6QL2hKCsFSgoVRmLpPjKZkYBnhn6Vv1t2ll4EYUFgUTrNuCkhb+5/KX2yHyvRd64O3OQJQDY73olTJDdLm95Nk0GJlYBDlWM745Gr9AXnvolwurR2okkdaSUhVIS3YaNIWvL+ypqNg7F57i6fzy+bwTuERZ0jrsbhMAIbNkhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719414503; c=relaxed/simple;
-	bh=QPet1PZlyBbbtlEE9TjbBmawH/TuKsCLb0EzxOzVoZU=;
+	s=arc-20240116; t=1719414642; c=relaxed/simple;
+	bh=ekPNzLzryuR1LD67ikqc01Jk5UMQeCiAfkaRGoSGRzs=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=s2HSclEnTxpli2ZZ495htIT2BzlrNwSAsTfsj0RzutADRyldHmV/qJc63w4KYe1GycHxQqtgKvQc4APJrTlFGT7+YchMd7HhN0dr8A4+wm1IhttaI8bBsmpjYqY1Qc7Ha28/H/UwRw4BnxQzN4zQjpS4IN22+Drd7mm8nCaxkY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKLlX19I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F84C116B1;
-	Wed, 26 Jun 2024 15:08:22 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=YjFaWZSySGTlCICCaxbP01qRIR+uF4r0wh1FF1jaM/yaGNuKtvwq0vAwjsbLytGYE6lMbcLKgLWZqyWS49SS+xJto93/dXSihJDHgUbVMn7+drLZRIvn+uceoTGWvjN2TvbS2JSXDrrzBmKv5ncUzKoJLRAnbcXWbGQf/3FLWgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHxR4Gl4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07AD4C116B1;
+	Wed, 26 Jun 2024 15:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719414502;
-	bh=QPet1PZlyBbbtlEE9TjbBmawH/TuKsCLb0EzxOzVoZU=;
+	s=k20201202; t=1719414642;
+	bh=ekPNzLzryuR1LD67ikqc01Jk5UMQeCiAfkaRGoSGRzs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oKLlX19IFDMsVZhAio5B06r4zvLtnslkjhVb3qRAA5y1puDvmhES4RBsf7b/eueBF
-	 IwSM5Xk8qh5ZfEm3kK/0HQwC5KZP7EOLy5i87fFIuYxYnGHVK5uBNAnEaw+Gcwdasi
-	 8hmLVpwLrdEByXHnQxRMZW6FBtQN8TT5ubHTDDMS5RKaZTVFDWxb7bv0+AW5LmVVfI
-	 d8AiRlVyaoeOyv59u51Qao6wI+KNJZHyImUXxBzZmwZQ4ClneYAvb5Idjbmwq8F1Ij
-	 L1u3Dy1E4QyaE7pxeL+1viwYbwU/iEBnWN70cve2PrAmc/QPS19bA/vVJIgYTvuess
-	 UdN/hnyWSyj0A==
-Date: Wed, 26 Jun 2024 10:08:20 -0500
+	b=OHxR4Gl4p5LAIKrmqfWH2GbraItePMGCNEfR+wMu9M4cejZ+RwzM/fPEzl/EKXSWK
+	 sDzKGnAERZZgz1NSiXYYZlkO1DPFVgx4KNNXPx53+uES+riMDC4nu3db17Yznmr+1K
+	 JvvZGWJ4El3IS8tSUk4OajBfYoCRrfCFRp/3/OJVCXp0y4JmXuvFFAnGRL/9Ba1h/i
+	 gKXQBZlHMaQFRmZoZL/BbArG97KotyLM13Drqqqyf1PE4HqhGd0GXk8EIge56Y9E6r
+	 H1rK9h1/EmWjmPkNT4I/oWnJZwFXeFxS8tXU6wrkzIopMw1l6Zxz5w6f9b/9eHGtEv
+	 GtyqRqd8kZHhw==
+Date: Wed, 26 Jun 2024 10:10:39 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, stable@kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] PCI: PM: Fix PCIe MRRS restoring for Loongson
-Message-ID: <20240626150820.GA1466617@bhelgaas>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jake Oshins <jakeo@microsoft.com>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
+Message-ID: <20240626151039.GA1466747@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,48 +64,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240623033940.1806616-1-chenhuacai@loongson.cn>
+In-Reply-To: <20240621210018.350429-1-wei.liu@kernel.org>
 
-On Sun, Jun 23, 2024 at 11:39:40AM +0800, Huacai Chen wrote:
-> Don't limit MRRS during resume, so that saved value can be restored,
-> otherwise the MRRS will become the minimum value after resume.
+1) Capitalize subject to match history
+2) Say something more specific than "fix reading ..."
+
+Apparently this returns garbage in some case where you want to return
+zero?
+
+On Fri, Jun 21, 2024 at 09:00:18PM +0000, Wei Liu wrote:
+> The intent of the code snippet is to always return 0 for both
+> PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
 > 
-> Cc: <stable@vger.kernel.org>
-> Fixes: 8b3517f88ff2983f ("PCI: loongson: Prevent LS7A MRRS increases")
-> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> The check misses PCI_INTERRUPT_PIN. This patch fixes that.
+> 
+> This is discovered by this call in VFIO:
+> 
+>     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+> 
+> The old code does not set *val to 0 because it misses the check for
+> PCI_INTERRUPT_PIN.
+> 
+> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> Cc: stable@kernel.org
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
 > ---
->  drivers/pci/pci.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> v2:
+> * Change the commit subject line and message
+> * Change the code according to feedback
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 35fb1f17a589..bfc806d9e9bd 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -31,6 +31,7 @@
->  #include <asm/dma.h>
->  #include <linux/aer.h>
->  #include <linux/bitfield.h>
-> +#include <linux/suspend.h>
->  #include "pci.h"
->  
->  DEFINE_MUTEX(pci_slot_mutex);
-> @@ -5945,7 +5946,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
->  
->  	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
->  
-> -	if (bridge->no_inc_mrrs) {
-> +	if (bridge->no_inc_mrrs && (pm_suspend_target_state == PM_SUSPEND_ON)) {
-
-I don't think we can check pm_suspend_target_state here.  That seems
-like a layering/encapsulation problem.  Are we failing to save this
-state at suspend?  Seems like something we should address more
-explicitly higher up in the suspend/resume path where we save/restore
-config space.
-
->  		int max_mrrs = pcie_get_readrq(dev);
->  
->  		if (rq > max_mrrs) {
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 5992280e8110..cdd5be16021d 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
+>  		   PCI_CAPABILITY_LIST) {
+>  		/* ROM BARs are unimplemented */
+>  		*val = 0;
+> -	} else if (where >= PCI_INTERRUPT_LINE && where + size <=
+> -		   PCI_INTERRUPT_PIN) {
+> +	} else if ((where >= PCI_INTERRUPT_LINE && where + size <= PCI_INTERRUPT_PIN) ||
+> +		   (where >= PCI_INTERRUPT_PIN && where + size <= PCI_MIN_GNT)) {
+>  		/*
+>  		 * Interrupt Line and Interrupt PIN are hard-wired to zero
+>  		 * because this front-end only supports message-signaled
 > -- 
 > 2.43.0
 > 
