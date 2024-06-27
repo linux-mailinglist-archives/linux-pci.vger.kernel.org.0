@@ -1,178 +1,149 @@
-Return-Path: <linux-pci+bounces-9343-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9344-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15995919B70
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2024 01:54:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1159919C7A
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2024 02:59:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 908081F234DA
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jun 2024 23:54:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD72C286499
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jun 2024 00:59:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92448194147;
-	Wed, 26 Jun 2024 23:54:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB741B813;
+	Thu, 27 Jun 2024 00:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XrunAY7g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UGkpfnYb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB641940B1
-	for <linux-pci@vger.kernel.org>; Wed, 26 Jun 2024 23:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B811B285;
+	Thu, 27 Jun 2024 00:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719446084; cv=none; b=XndgUI7rhZGgC1rXJUfQ4YDW0o7DcuHbGWIMF9SkO/zaE48XGf6oXzcStTeSOjVdOOin0Ay44T9zQb1Rv++OKVb8ruvyy7mdVdaexh5NyXsH/0vY0GDiXJaTddVqtgi8lvBNv0XCEuKdKvaM2PqRN/dqFLqi0x+uO6Qd+DKgjac=
+	t=1719449766; cv=none; b=mtWHYxqtA2PeawfhSVWrARmYS7FuaFCuusuNkw8ZHLjMz+833xX1aDXY8qEvgZMWV6vT34I0PKgIfMrYq4efccVwYfjQbDP8og+n2q8QKuffjhYXTpOAesd5zTZT1uJGp2y7sq16AZWeG8ThJLHpRM7tu+k4ju87lhSPdnf7xsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719446084; c=relaxed/simple;
-	bh=amqNXX4jeKLOLHOVQ5Dx1ljXHzJqEo2sG7Xg6glLmSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RXkq6cKbmQkLv72yZUMc5lJzECtnB6URz8/y2M79iVxfBCYUjPKUyIq2+BAxctY/SV+qP4bZQn1suD9fpW5GD0kFmxsBhHeM68x6uxBOCsGPynOOx6KNV2f7fJb7E4J+2H9sKu8xlKaZN49TFYXvJqd03cBzyq0o0K8eewzOE7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XrunAY7g; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719446083; x=1750982083;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=amqNXX4jeKLOLHOVQ5Dx1ljXHzJqEo2sG7Xg6glLmSM=;
-  b=XrunAY7g1m93Rd+3hZcZhVpTXn0P04g6O3shQDkiSXlIcRoPsDy5ORck
-   qn3f9IS+znR99HolrpiPwIEO5GmTqISHdcISM51k3qGnhmw3pLPUx+tse
-   WXbTGoVte/WB4hYmKfGJ1AlgGOYg9/AN5YTeNw4SMklKGmrh4FxqgTMs3
-   j59ThHcx0OjXAVJCFaIEdxm9836fRx1hCUr/uYKUpLcRvfPrgowp/vT3m
-   QNgrDr8r36e3LpH+Kd4pDdqhJZpBnDQj1fBd4HCKUlk/U4BGgSjrS0dw5
-   5jeseeVdC8F+mdvUaNAQtKjnKk6iqigpB32CAJSJCbw9t+3iApet9MXGi
-   w==;
-X-CSE-ConnectionGUID: GGh/gxgARSqi0uhd3HS3uQ==
-X-CSE-MsgGUID: L6ZkVRHcTL+/gw+Dv6P5Pw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="20370886"
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="20370886"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 16:54:43 -0700
-X-CSE-ConnectionGUID: YkgBcilAT5W3fKKJS2/QmA==
-X-CSE-MsgGUID: 0E/iwxQ/Rw6B9Oon4Cjkfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="48793026"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 26 Jun 2024 16:54:40 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sMcTG-000FgI-1H;
-	Wed, 26 Jun 2024 23:54:38 +0000
-Date: Thu, 27 Jun 2024 07:54:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: [pci:controller/rockchip 11/11]
- drivers/pci/controller/dwc/pcie-dw-rockchip.c:491:undefined reference to
- `pci_epc_init_notify'
-Message-ID: <202406270721.a8SQi2hn-lkp@intel.com>
+	s=arc-20240116; t=1719449766; c=relaxed/simple;
+	bh=UICLH5sFImH9tQWSBxG/F2lJcuSf9UKpImB+14UEmmM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hBAfgM+9043NPlcmXyulkqZV0Kpo3onaLnuDRgs33RcohQAtuhdN89l17WPs6oCjbDZkb6OArWWYKHE7aay4ldap8pk9Z2PgSSO6WjoJDr7tRvIt61GqaI04R+1SJkK/muGUGoV5KiEQxKfOh/htYVwjS2LL2x0LKLBRnDwT688=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UGkpfnYb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1953C32789;
+	Thu, 27 Jun 2024 00:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719449765;
+	bh=UICLH5sFImH9tQWSBxG/F2lJcuSf9UKpImB+14UEmmM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UGkpfnYb4m8b1F2BuycZ2ME4nffdEqQZ5k2uZ7jefztUKUYLrJ40QDJ2WM8rctQCX
+	 teSmfprKPS/EqpvqB2MYF63GLWb72O/IrpNeFlUx+qygdDybyX/DlwJfgnW/M3BiJl
+	 QpECoDwvpy1V1gVmcWZJ2zGGdMV/i87YDoYugtBsemVPw7hdfTCH/TSTUVt01nu8Tg
+	 jY7w6xssV2ZIzcBMLOA5qip9NOuFrEzcdLDWb4FG2M8ZpzrD04lZKvLARXJMriVoFy
+	 jaHvxh+LoV1Ns194aNkz+VEBKNg9Vrt9lOVduTMJLhDU6EEZV314C7sCP/Al3xCwDi
+	 FFm6Yhn7/YHmQ==
+Message-ID: <a6e86954-4ab7-4bb0-b78d-56f44556318e@kernel.org>
+Date: Thu, 27 Jun 2024 09:56:02 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bug report] scsi: SATA devices missing after FLR is triggered
+ during HBA suspended
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Yihang Li <liyihang9@huawei.com>, cassel@kernel.org,
+ James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+ john.g.garry@oracle.com, yanaijie@huawei.com, linux-kernel@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linuxarm@huawei.com, chenxiang66@hisilicon.com,
+ prime.zeng@huawei.com, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+References: <20240626151546.GA1466906@bhelgaas>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20240626151546.GA1466906@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
-head:   246afbe0f6fca433d8d918b740719170b1b082cc
-commit: 246afbe0f6fca433d8d918b740719170b1b082cc [11/11] PCI: dw-rockchip: Use pci_epc_init_notify() directly
-config: loongarch-randconfig-r081-20240626 (https://download.01.org/0day-ci/archive/20240627/202406270721.a8SQi2hn-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240627/202406270721.a8SQi2hn-lkp@intel.com/reproduce)
+On 6/27/24 00:15, Bjorn Helgaas wrote:
+>>> Yes, I am talking about the PCI "Function Level Reset"
+>>>
+>>>> FLR and disk/controller suspend execution timing are unrelated. FLR can be
+>>>> triggered at any time through sysfs. So please give details here. Why is FLR
+>>>> done when the system is being suspended ?
+>>>
+>>> Yes, it is because FLR can be triggered at any time that we are testing the
+>>> reliability of executing FLR commands after disk/controller suspended.
+>>
+>> "can be triggered" ? FLR is not a random asynchronous event. It is an action
+>> that is *issued* by a user with sys admin rights. And such users can do a lot
+>> of things that can break a machine...
+>>
+>> I fail to see the point of doing a function reset while the device is
+>> suspended. But granted, I guess the device should comeback up in such case,
+>> though I would like to hear what the PCI guys have to say about this.
+>>
+>> Bjorn,
+>>
+>> Is reseting a suspended PCI device something that should be/is supported ?
+> 
+> I doubt it.  The PCI core should be preserving all the generic PCI
+> state across suspend/resume.  The driver should only need to
+> save/restore device-specific things the PCI core doesn't know about.
+> 
+> A reset will clear out most state, and the driver doesn't know the
+> reset happened, so it will expect most device state to have been
+> preserved.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406270721.a8SQi2hn-lkp@intel.com/
+That is what I suspected. However, checking the code, reset_store() in
+pci-sysfs.c does:
 
-All errors (new ones prefixed by >>):
+	pm_runtime_get_sync(dev);
+	result = pci_reset_function(pdev);
+	pm_runtime_put(dev);
 
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.o: in function `dw_pcie_ep_init_notify':
-   drivers/pci/controller/dwc/pcie-designware-ep.c:26:(.text+0x1e4): undefined reference to `pci_epc_init_notify'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.o: in function `dw_pcie_ep_deinit':
-   drivers/pci/controller/dwc/pcie-designware-ep.c:640:(.text+0x83c): undefined reference to `pci_epc_mem_free_addr'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.c:643:(.text+0x854): undefined reference to `pci_epc_mem_exit'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.o: in function `dw_pcie_ep_linkup':
-   drivers/pci/controller/dwc/pcie-designware-ep.c:811:(.text+0x924): undefined reference to `pci_epc_linkup'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.o: in function `dw_pcie_ep_linkdown':
-   drivers/pci/controller/dwc/pcie-designware-ep.c:836:(.text+0x964): undefined reference to `pci_epc_linkdown'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.o: in function `dw_pcie_ep_init':
-   drivers/pci/controller/dwc/pcie-designware-ep.c:875:(.text+0xe90): undefined reference to `__devm_pci_epc_create'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.c:888:(.text+0xf20): undefined reference to `pci_epc_mem_init'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.c:895:(.text+0xf54): undefined reference to `pci_epc_mem_alloc_addr'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-designware-ep.c:906:(.text+0xf74): undefined reference to `pci_epc_mem_exit'
-   loongarch64-linux-ld: drivers/pci/controller/dwc/pcie-dw-rockchip.o: in function `rockchip_pcie_configure_ep':
->> drivers/pci/controller/dwc/pcie-dw-rockchip.c:491:(.text+0x7cc): undefined reference to `pci_epc_init_notify'
+and pm_runtime_get_sync() calls __pm_runtime_resume() which will resume a
+suspended device.
 
+So while I still think it is not a good idea to reset a suspended device, things
+should still work as execpected and not cause any problem with the device state,
+right ?
 
-vim +491 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+Yihang,
 
-   441	
-   442	static int rockchip_pcie_configure_ep(struct platform_device *pdev,
-   443					      struct rockchip_pcie *rockchip)
-   444	{
-   445		struct device *dev = &pdev->dev;
-   446		int irq, ret;
-   447		u32 val;
-   448	
-   449		if (!IS_ENABLED(CONFIG_PCIE_ROCKCHIP_DW_EP))
-   450			return -ENODEV;
-   451	
-   452		irq = platform_get_irq_byname(pdev, "sys");
-   453		if (irq < 0) {
-   454			dev_err(dev, "missing sys IRQ resource\n");
-   455			return irq;
-   456		}
-   457	
-   458		ret = devm_request_threaded_irq(dev, irq, NULL,
-   459						rockchip_pcie_ep_sys_irq_thread,
-   460						IRQF_ONESHOT, "pcie-sys", rockchip);
-   461		if (ret) {
-   462			dev_err(dev, "failed to request PCIe sys IRQ\n");
-   463			return ret;
-   464		}
-   465	
-   466		/* LTSSM enable control mode */
-   467		val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-   468		rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-   469	
-   470		rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_EP_MODE,
-   471					 PCIE_CLIENT_GENERAL_CONTROL);
-   472	
-   473		rockchip->pci.ep.ops = &rockchip_pcie_ep_ops;
-   474		rockchip->pci.ep.page_size = SZ_64K;
-   475	
-   476		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-   477	
-   478		ret = dw_pcie_ep_init(&rockchip->pci.ep);
-   479		if (ret) {
-   480			dev_err(dev, "failed to initialize endpoint\n");
-   481			return ret;
-   482		}
-   483	
-   484		ret = dw_pcie_ep_init_registers(&rockchip->pci.ep);
-   485		if (ret) {
-   486			dev_err(dev, "failed to initialize DWC endpoint registers\n");
-   487			dw_pcie_ep_deinit(&rockchip->pci.ep);
-   488			return ret;
-   489		}
-   490	
- > 491		pci_epc_init_notify(rockchip->pci.ep.epc);
-   492	
-   493		/* unmask DLL up/down indicator and hot reset/link-down reset */
-   494		rockchip_pcie_writel_apb(rockchip, 0x60000, PCIE_CLIENT_INTR_MASK_MISC);
-   495	
-   496		return ret;
-   497	}
-   498	
+I think that the issue at hand here is that once the reset finishes, the
+controller goes back to suspended state, and I suspect that is because of the
+"auto" setting for its power/control. That triggers because the FLR is done
+after the controller resumed but *before* the revalidation of the drives
+connected to it completes. So FLR makes the revalidation fail (scsi
+scan/revalidation is asynchronous...).
+
+This seems to me to be the expected behavior for what you are doing and I fail
+to see how that ever worked correctly, even before 0c76106cb975 and 626b13f015e0.
+
+Could you try this: add a call to msleep(30000) at the end of _resume_v3_hw(). I.e.:
+
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index feda9b54b443..54224568d749 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -5104,6 +5104,8 @@ static int _resume_v3_hw(struct device *device)
+
+        dev_warn(dev, "end of resuming controller\n");
+
++       msleep(30000);
++
+        return 0;
+ }
+
+To see if it makes any difference to actually wait for the connected disks to
+resume correctly before doing the FLR.	
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Damien Le Moal
+Western Digital Research
+
 
