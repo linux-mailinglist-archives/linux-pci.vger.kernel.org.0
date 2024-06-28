@@ -1,73 +1,70 @@
-Return-Path: <linux-pci+bounces-9424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0668B91C8E2
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 00:02:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EF2C91C8E5
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 00:05:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B387628141C
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 22:02:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B1141C227AF
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 22:05:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D387F7F5;
-	Fri, 28 Jun 2024 22:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A5B7E101;
+	Fri, 28 Jun 2024 22:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fnm0n9Pd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A8778C93;
-	Fri, 28 Jun 2024 22:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265DB56444;
+	Fri, 28 Jun 2024 22:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719612018; cv=none; b=PaSi1jshpn0reDls6A4rfk8oBPYhJZlWWVTwgsAqYgi4WrXKt0KBnn+b4TSq3jyI9KvMHyFNEpTUEvLS7aXmMHahJFqnsq3CdcBRy8+0Au+CaAnozdFFtNg9W7a5349JDi3+F9+mxyiT3xaJjhsWUxieV57SLiJDedwzJnxtJXE=
+	t=1719612326; cv=none; b=pBER0W+Benieq4864JDAIp3XJ2YkqVRvMYDwPup7b+sA0I8HTlWBClDPSJexbU6TuhHDd30YHPIf1M5L88d9SOJr0HQw2cHVNl1ttW4IUwMmb433c+shN8EEB32y0BYGhxE+g5H2sDomMPPUCicuxwoaiQBZccIME+/hUe8lzHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719612018; c=relaxed/simple;
-	bh=kvDbU/XezxoBQjp8rwunXhYbw8UYN4B5gt0JlVvCgbI=;
+	s=arc-20240116; t=1719612326; c=relaxed/simple;
+	bh=dCbnbxqitHnowclFYORCNIf01H5GUcscv/0xyEOMEOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTtnU/0AQ/hmjaRa6FOQ2gOQ46wSIuRD0ig5rl7BlqxZjK/jQlXGrJsLzMUrrDmtQHqeAnHmccoM5iB/sogZfNOmsQ6k+TIKR4RILegkMf0SY8XQPBAHvssNu9Fsogy8R8Nh2HnHlXVzDLrhpnZNvbY74feQi787jJP7FoH2FQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3760121ad45so4829135ab.0;
-        Fri, 28 Jun 2024 15:00:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719612016; x=1720216816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rBbQvvIs93uOLOxrTo3qyREYhoURV2aSzjNHb1QtPU8=;
-        b=HikfdgZT++oKmuDj4bszFL4UXHKjzE+mMAHi3Xw2I0vqAFp2bxEbse+6NQFfIKD/9/
-         fzCMjs9PngE4mFQ50887V9miVhfNWlmlWlz6JIXPG73LEVTIKZPP0qtse7ccIG04SxrN
-         G+IaNG7cO9yBYhW6bHbpPJe1FTfCxXACGjkfPhsQClIk2LN/tXv+TLA1o45Iifyzs5X5
-         CUxAP5rYDhEftBvNZC6UEOA4B6LZPDxJ2wwm7yVT6721MPLyGnqHeSQlNShvSKxUrJmV
-         LlzBq2wT17BZ+HSZKrl6W/Lpl/rpI71PQxzhV+wRbviP7eP8RSg4e3MPPHbSsX5LdMvu
-         Ja2w==
-X-Forwarded-Encrypted: i=1; AJvYcCX1zdFq16y1K9ZdK96ijxsiCxOqHuQg/K7JDilFVNdc2miVd5xFVb/URlYjzpm+DEMqXPDPsndeQ2vDUEDiljwUfQEpY09b4xdzUitap8ha9GjJih3mgnKOa3r/cCtDP2oJpOhd+3Pz
-X-Gm-Message-State: AOJu0YynHBOjlehq761NEKQolWxjrZWyPHUKcnnFWmNIfmBycOQ/NtQb
-	U/9W4Ard0GkeVeUsAbx1MSI/bjJsAgtMwtroGP8GGuoCNyG0gY5u
-X-Google-Smtp-Source: AGHT+IGuVife5e0U+apbMMf5rMQPQs3djtc0+T9PHHfiJv1oUGeHcgAKL+hqfxGqYx2iJONVEzCpsQ==
-X-Received: by 2002:a05:6e02:138e:b0:375:a0ba:c125 with SMTP id e9e14a558f8ab-3763e06699dmr222604175ab.31.1719612016455;
-        Fri, 28 Jun 2024 15:00:16 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804989460sm2107199b3a.191.2024.06.28.15.00.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 15:00:15 -0700 (PDT)
-Date: Sat, 29 Jun 2024 07:00:14 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5] PCI: keystone: Add workaround for Errata #i2037
- (AM65x SR 1.0)
-Message-ID: <20240628220014.GB2213719@rocinante>
-References: <16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+6pqqR/Duor3Ao5HNNgQhru1+eb8H5ArxvX9YIdSiEseNblX4C08yEuFMkZicGcnyvl4hDabSVGQqKvYhDrCobO5CT4iH3pMVKrZweuVoyQxIaMG7yoaqoZo0KaniGH2jUveNrlhHy+G6UdgbWODR0wV0k+CEvjfs5R0p7CIGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fnm0n9Pd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E97DC116B1;
+	Fri, 28 Jun 2024 22:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719612325;
+	bh=dCbnbxqitHnowclFYORCNIf01H5GUcscv/0xyEOMEOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fnm0n9Pd0KCDyFGG4c0axHmcEhK1HqMMOwxblV+5fo2lw4f6010kKn2/HGY8zNGEt
+	 XuWDkUPo20b293L6Hn8Aq/egdWcwa778HPDPNJuRXLzYAvrqUvvbvYkvyj5Mh+n3QM
+	 zjc1tlq+fZanp1afh+hSqa1LNqOS+S4TisGQHMfrA4dlR1aYokK5cTWZmZxNqZWo0W
+	 tIHJ1be++FApDN1mX3le9yc5+qApwjRTD4bm/xlkIZFP2kMQbIyDdO9IssyTOfJr+H
+	 j5U+DCbjcWGBFG5H1gOmJ26V5YXN4oYM/jndZKcB0zUe80G4YWHUwbZtnxBWpc51HF
+	 vQPP1RL4ROp/A==
+Date: Fri, 28 Jun 2024 16:05:21 -0600
+From: Rob Herring <robh@kernel.org>
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>
+Subject: Re: [PATCH 1/7] dt-bindings: interrupt-controller: Add bcm2712 MSI-X
+ DT bindings
+Message-ID: <20240628220521.GA274493-robh@kernel.org>
+References: <20240626104544.14233-1-svarbanov@suse.de>
+ <20240626104544.14233-2-svarbanov@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,28 +73,117 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com>
+In-Reply-To: <20240626104544.14233-2-svarbanov@suse.de>
 
-Hello,
-
-> Errata #i2037 in AM65x/DRA80xM Processors Silicon Revision 1.0
-> (SPRZ452D_July 2018_Revised December 2019 [1]) mentions when an
-> inbound PCIe TLP spans more than two internal AXI 128-byte bursts,
-> the bus may corrupt the packet payload and the corrupt data may
-> cause associated applications or the processor to hang.
+On Wed, Jun 26, 2024 at 01:45:38PM +0300, Stanimir Varbanov wrote:
+> Adds DT bindings for bcm2712 MSI-X interrupt peripheral controller.
 > 
-> The workaround for Errata #i2037 is to limit the maximum read
-> request size and maximum payload size to 128 bytes. Add workaround
-> for Errata #i2037 here. The errata and workaround is applicable
-> only to AM65x SR 1.0 and later versions of the silicon will have
-> this fixed.
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> ---
+>  .../brcm,bcm2712-msix.yaml                    | 74 +++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
 > 
-> [1] -> https://www.ti.com/lit/er/sprz452i/sprz452i.pdf
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
+> new file mode 100644
+> index 000000000000..ca610e4467d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/brcm,bcm2712-msix.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom bcm2712 MSI-X Interrupt Peripheral support
+> +
+> +maintainers:
+> +  - Stanimir Varbanov <svarbanov@suse.de>
+> +
+> +description: >
+> +  This interrupt controller is used to provide intterupt vectors to the
 
-Applied to controller/keystone, thank you!
+typo
 
-[1/1] PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
-      https://git.kernel.org/pci/pci/c/86f271f22bbb
+> +  generic interrupt controller (GIC) on bcm2712. It will be used as
+> +  external MSI-X controller for PCIe root complex.
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - "brcm,bcm2712-mip-intc"
 
-	Krzysztof
+Don't need quotes. Nor 'items'. And enum can be 'const' 
+
+> +  reg:
+> +    maxItems: 1
+> +    description: >
+> +      Specifies the base physical address and size of the registers
+
+drop. That's *every* reg property.
+
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  msi-controller: true
+
+Add #msi-cells. The default is 0, but that's legacy.
+
+> +
+> +  brcm,msi-base-spi:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The SGI number that MSIs start.
+> +
+> +  brcm,msi-num-spis:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The number of SGIs for MSIs.
+> +
+> +  brcm,msi-offset:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Shift the allocated MSIs up by N.
+
+If only we had a property that every MSI controller seems to need. Go 
+check msi-controller.yaml...
+
+> +
+> +  brcm,msi-pci-addr:
+> +    $ref: /schemas/types.yaml#/definitions/uint64
+> +    description: MSI-X message address.
+
+Why don't other platforms need something like this?
+
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - msi-controller
+> +
+> +examples:
+> +  - |
+> +    msi-controller@130000 {
+> +      compatible = "brcm,bcm2712-mip-intc";
+> +      reg = <0x00130000 0xc0>;
+> +      msi-controller;
+> +      interrupt-controller;
+> +      #interrupt-cells = <2>;
+> +      brcm,msi-base-spi = <128>;
+> +      brcm,msi-num-spis = <64>;
+> +      brcm,msi-offset = <0>;
+> +      brcm,msi-pci-addr = <0xff 0xfffff000>;
+> +    };
+> -- 
+> 2.43.0
+> 
 
