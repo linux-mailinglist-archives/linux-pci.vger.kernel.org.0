@@ -1,75 +1,73 @@
-Return-Path: <linux-pci+bounces-9422-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9423-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3044791C7BB
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 23:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C9B2F91C807
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 23:20:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EB201C20DD8
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 21:00:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 059241C22E04
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 21:20:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80C176046;
-	Fri, 28 Jun 2024 21:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9E9C7D3F4;
+	Fri, 28 Jun 2024 21:20:02 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA771CF8D;
-	Fri, 28 Jun 2024 21:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F34051C4A;
+	Fri, 28 Jun 2024 21:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719608452; cv=none; b=ubwN0xJeDjrVhW6ZsLSMSe7fGlIwDPFTIAvv06szM4ueEn/FxxE46KQOGoeoTrDzPEFqLv9TY9RF9XbdDQK3AGFh99/0GJsaHJFv8X2rawfWQHKbvcntLFhkaaGfYBApqoQVqy4udRsaTVzIjGUWYNslkBgsOtImUId8KgK5yz4=
+	t=1719609602; cv=none; b=rSmhm9vdDYONpS78yBIP+LU4AbzCJu8+OBv3I6dmr+4Oz+sUekCTwLtXCamzkdwnd647pQ/ZR2fIELdNwczDjjDEkBz/QRQrwh77ooMAUGywVlL5pCaUzcjfLCM4dUzXRLY6uAafMZsBNSTMlFTPWeaMI8O7dMiprtshwxzXijk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719608452; c=relaxed/simple;
-	bh=4ENreLtp0JXG6KC4XZho83qrfg7AYsbJoo/otV6WhxQ=;
+	s=arc-20240116; t=1719609602; c=relaxed/simple;
+	bh=YYHEVY/PQM5h9Nab3dkjg/1Wy4dcSZawSulq6PRHrYc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jp0zfpYwMQ84sDUqk2XlaqRb09fdSWFsVkkJPY0ipTh2I4fzHxdMxhlU8YP38sFaD9kyHNOiToWKpP8k0jCS4D15lHSLXttP1puj7oQO96uFU7xAgwpbRcCaSKnafehuqTyLmx3hTNITNiSS/3aMzvLJdFIMV25+LFLxlf3KgEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=cIGM1zpZDLYUiUKI5GTIhTyk5sa7H0uAKKiWd5iRaKeWqTHgpwGgX1AFtmn/t3NaQAUP2zdGTnE+lpq1ziB62cvsSvYSHEcqfj6Gm/kcfZEM+ZJ/DZPbsMTxLpzuVyzcghDdCRhKlBkJQSeAVNU0JDba8muMzQcDr7/O4kQWkb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-71910dfb8c0so696675a12.3;
-        Fri, 28 Jun 2024 14:00:51 -0700 (PDT)
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7182a634815so718992a12.3;
+        Fri, 28 Jun 2024 14:20:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719608450; x=1720213250;
+        d=1e100.net; s=20230601; t=1719609600; x=1720214400;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LXeehienu24I1oRun6Bc8GBlxqPh5TZvh3eBHievpzY=;
-        b=IA+MSDg0D4IGKNMNQTq7Q8wGNTnesIXkCRQLRLZ+o23JDWmZX8GY5g2XZrrhhu921G
-         2VIkGSWrjXkT+N/zN5/iy8zgkKwQVzbMYV5DCWbkqXIOe45PVqFBXGcHCuMH1mtYRraU
-         jaKl69t/rRSQfCNGJ34NSAnoLxwtPcpyhG660cmpQRsZwT9ZmFw8j2G31DTwBCgj94Ng
-         OHVzgmy0mVKFjRkV2eXpseNk6/7XfGKnmhc8f6KI3Uc2BP6BApyspsreVVnVYmAliUrr
-         2WqTYx1FpNY4O1WaFRXgJwF4pb3VBroncGwD5KUlcHRVvEBq+5b8FHag8rbrcKBQfe0e
-         xP+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3ZEEde3S0rP+zwKKzTM8uVvZeyACNIuHSwdeB+duGt2bcbe0LglJI8ZRMOxPF3dxuqv+cEZuokj9KAco4apr0Pv9fOhmjCveM5SNurO5I1yAUSRo8qXQwMi2o9+qzzWU6JGHNyOBYolGkeFWm56WNFkWQqOFDJPhNP/TF+0NJyvTYcv3X2fJIy6yKWTsXIDuiGpsbl5rfIVhrNqMuSZJU+5c=
-X-Gm-Message-State: AOJu0YyGqlIzOgCXIg+MOJkiM/xLjAKj+e6JkGJQGs7pR+BX56xn9RC0
-	TWfXx3I7MOUs3TtUcWmEfMyobYJ/VQ7RRv+Lj+hTDNMW0phIO5q85eTj35GRVGeliA==
-X-Google-Smtp-Source: AGHT+IHw9iXrkQkLoNi1yZuF3G48W5le7cMVZ4zcoBmI7mhMnaaPbYHs2pihEzHYqtk8Kceiv93yzw==
-X-Received: by 2002:a05:6a20:8c8a:b0:1bd:2d53:35d5 with SMTP id adf61e73a8af0-1bd2d539600mr9998932637.9.1719608450326;
-        Fri, 28 Jun 2024 14:00:50 -0700 (PDT)
+        bh=5mjbw+wYvgBhsc9x/A9PPo2uA567jvKEpkLcWndxaX8=;
+        b=LP/iYi4cb9gHM1YQ7Ljo7ahccWAincVZZ7oE7BrtUqIH1rqMIbdMM+LUui4uNByTkj
+         ncyY5B5CxvgHotFclmUTQHtustTB4+nR1oclqZqtgEBEcjdpwTBzFipeNUr3Pr5COChB
+         U+oQe5uC5YOxnjqFwtKURYZDzRvuQ6qR+q72NnFRrFiZGojFrYzMerQTtzrYllJ4Zk0s
+         KYIv0avEUNg1Q1E8JIybxLGxDlF2Ak101cl34yi07XqujpwREh88xAQoouszMyt5VWYj
+         J1r/n2moiUStHqCw20iPOfpEZlvb7Yvg1nmEgPPw8oRYjiEW9Kh6puLnh3g8RnLufN9b
+         0HiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0TpMbvOfbBjhgqGZCe2D/a7+OFzhsNwAhuLUUR1BsFtRScmHHqYluqvVe3aXBdzTJgt23/0JzaLVX8Mt9xd45SWvQp1i6lzfEe07pqeec+PPxeam+rWlnRa7K5S6ccQ/iKmLaCGlF
+X-Gm-Message-State: AOJu0Yz0rdKTB4KK4DyeGFPg5nisxS1Kzbr6Mil9JrkUgM6zwnLnbh6L
+	hmIBDuXESkAWlSYdQPxNkDvaW0f3fCPXW7SrZ4BzMbi9q2c/YzsGhqC1t9ABufJhEA==
+X-Google-Smtp-Source: AGHT+IHk7W3eBsVgTPh+wI3EeKuxmYXiX29cu+Bn/zPnNDcrFdjSo7vy2U8HhFhz/ojtjJhcVspVBQ==
+X-Received: by 2002:a17:90a:d084:b0:2c6:ee50:5af4 with SMTP id 98e67ed59e1d1-2c86127e140mr16251372a91.6.1719609600505;
+        Fri, 28 Jun 2024 14:20:00 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7086207ed02sm1809877b3a.95.2024.06.28.14.00.49
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91d3bc540sm2087779a91.44.2024.06.28.14.19.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 14:00:49 -0700 (PDT)
-Date: Sat, 29 Jun 2024 06:00:47 +0900
+        Fri, 28 Jun 2024 14:20:00 -0700 (PDT)
+Date: Sat, 29 Jun 2024 06:19:58 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v15 0/4] PCI: qcom: Add support for OPP
-Message-ID: <20240628210047.GB2206339@rocinante>
-References: <20240619-opp_support-v15-0-aa769a2173a3@quicinc.com>
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5] PCI: keystone: Add workaround for Errata #i2037
+ (AM65x SR 1.0)
+Message-ID: <20240628211958.GA2213719@rocinante>
+References: <16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,62 +76,28 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240619-opp_support-v15-0-aa769a2173a3@quicinc.com>
+In-Reply-To: <16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com>
 
 Hello,
 
-> This patch adds support for OPP to vote for the performance state of RPMH
-> power domain based upon PCIe speed it got enumerated.
+> Errata #i2037 in AM65x/DRA80xM Processors Silicon Revision 1.0
+> (SPRZ452D_July 2018_Revised December 2019 [1]) mentions when an
+> inbound PCIe TLP spans more than two internal AXI 128-byte bursts,
+> the bus may corrupt the packet payload and the corrupt data may
+> cause associated applications or the processor to hang.
 > 
-> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> maintains hardware state of a regulator by performing max aggregation of
-> the requests made by all of the processors.
+> The workaround for Errata #i2037 is to limit the maximum read
+> request size and maximum payload size to 128 bytes. Add workaround
+> for Errata #i2037 here. The errata and workaround is applicable
+> only to AM65x SR 1.0 and later versions of the silicon will have
+> this fixed.
 > 
-> PCIe controller can operate on different RPMh performance state of power
-> domain based up on the speed of the link. And this performance state varies
-> from target to target.
-> 
-> It is manadate to scale the performance state based up on the PCIe speed
-> link operates so that SoC can run under optimum power conditions.
-> 
-> Add Operating Performance Points(OPP) support to vote for RPMh state based
-> upon GEN speed link is operating.
-> 
-> Before link up PCIe driver will vote for the maximum performance state.
-> 
-> As now we are adding ICC BW vote in OPP, the ICC BW voting depends both
-> GEN speed and link width using opp-level to indicate the opp entry table
-> will be difficult.
-> 
-> In PCIe certain gen speeds like 2.5GT/s x2 & 5.0 GT/s X1 or 8.0 GT/s x2 &
-> 16GT/s x1 use same ICC bw if we use freq in the OPP table to represent the
-> PCIe speed number of PCIe entries can reduced.
-> 
-> So going back to use freq in the OPP table instead of level.
-> 
-> To access PCIe registers of the host controller and endpoint PCIe
-> BAR space, config space the CPU-PCIe ICC (interconnect) path should
-> be voted otherwise it may lead to NoC (Network on chip) timeout.
-> We are surviving because of other driver voting for this path.
-> 
-> As there is less access on this path compared to PCIe to mem path
-> add minimum vote i.e 1KBps bandwidth always which is sufficient enough
-> to keep the path active and is recommended by HW team.
-> 
-> In suspend to ram case there can be some DBI access. Except in suspend
-> to ram case disable CPU-PCIe ICC path after register space access
-> is done.
+> [1] -> https://www.ti.com/lit/er/sprz452i/sprz452i.pdf
 
-Applied to controller/qcom, thank you!
+Jan, thank you for picking up this patch.  Siddharth, thank you for being
+very thorough, chasing after old review comments to be addressed.
 
-[01/03] PCI: qcom: Add ICC bandwidth vote for CPU to PCIe path
-        https://git.kernel.org/pci/pci/c/18f331d9c6db
-
-[02/03] PCI: Bring the PCIe speed to MBps logic to new pcie_dev_speed_mbps()
-        https://git.kernel.org/pci/pci/c/4bf3029dc2a1
-
-[03/03] PCI: qcom: Add OPP support to scale performance
-        https://git.kernel.org/pci/pci/c/78b5f6f8855e
+Much appreciated on both accounts!
 
 	Krzysztof
 
