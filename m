@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-9423-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9424-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9B2F91C807
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 23:20:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0668B91C8E2
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 00:02:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 059241C22E04
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 21:20:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B387628141C
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 22:02:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9E9C7D3F4;
-	Fri, 28 Jun 2024 21:20:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D387F7F5;
+	Fri, 28 Jun 2024 22:00:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F34051C4A;
-	Fri, 28 Jun 2024 21:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A8778C93;
+	Fri, 28 Jun 2024 22:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719609602; cv=none; b=rSmhm9vdDYONpS78yBIP+LU4AbzCJu8+OBv3I6dmr+4Oz+sUekCTwLtXCamzkdwnd647pQ/ZR2fIELdNwczDjjDEkBz/QRQrwh77ooMAUGywVlL5pCaUzcjfLCM4dUzXRLY6uAafMZsBNSTMlFTPWeaMI8O7dMiprtshwxzXijk=
+	t=1719612018; cv=none; b=PaSi1jshpn0reDls6A4rfk8oBPYhJZlWWVTwgsAqYgi4WrXKt0KBnn+b4TSq3jyI9KvMHyFNEpTUEvLS7aXmMHahJFqnsq3CdcBRy8+0Au+CaAnozdFFtNg9W7a5349JDi3+F9+mxyiT3xaJjhsWUxieV57SLiJDedwzJnxtJXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719609602; c=relaxed/simple;
-	bh=YYHEVY/PQM5h9Nab3dkjg/1Wy4dcSZawSulq6PRHrYc=;
+	s=arc-20240116; t=1719612018; c=relaxed/simple;
+	bh=kvDbU/XezxoBQjp8rwunXhYbw8UYN4B5gt0JlVvCgbI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cIGM1zpZDLYUiUKI5GTIhTyk5sa7H0uAKKiWd5iRaKeWqTHgpwGgX1AFtmn/t3NaQAUP2zdGTnE+lpq1ziB62cvsSvYSHEcqfj6Gm/kcfZEM+ZJ/DZPbsMTxLpzuVyzcghDdCRhKlBkJQSeAVNU0JDba8muMzQcDr7/O4kQWkb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=uTtnU/0AQ/hmjaRa6FOQ2gOQ46wSIuRD0ig5rl7BlqxZjK/jQlXGrJsLzMUrrDmtQHqeAnHmccoM5iB/sogZfNOmsQ6k+TIKR4RILegkMf0SY8XQPBAHvssNu9Fsogy8R8Nh2HnHlXVzDLrhpnZNvbY74feQi787jJP7FoH2FQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7182a634815so718992a12.3;
-        Fri, 28 Jun 2024 14:20:01 -0700 (PDT)
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3760121ad45so4829135ab.0;
+        Fri, 28 Jun 2024 15:00:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719609600; x=1720214400;
+        d=1e100.net; s=20230601; t=1719612016; x=1720216816;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5mjbw+wYvgBhsc9x/A9PPo2uA567jvKEpkLcWndxaX8=;
-        b=LP/iYi4cb9gHM1YQ7Ljo7ahccWAincVZZ7oE7BrtUqIH1rqMIbdMM+LUui4uNByTkj
-         ncyY5B5CxvgHotFclmUTQHtustTB4+nR1oclqZqtgEBEcjdpwTBzFipeNUr3Pr5COChB
-         U+oQe5uC5YOxnjqFwtKURYZDzRvuQ6qR+q72NnFRrFiZGojFrYzMerQTtzrYllJ4Zk0s
-         KYIv0avEUNg1Q1E8JIybxLGxDlF2Ak101cl34yi07XqujpwREh88xAQoouszMyt5VWYj
-         J1r/n2moiUStHqCw20iPOfpEZlvb7Yvg1nmEgPPw8oRYjiEW9Kh6puLnh3g8RnLufN9b
-         0HiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0TpMbvOfbBjhgqGZCe2D/a7+OFzhsNwAhuLUUR1BsFtRScmHHqYluqvVe3aXBdzTJgt23/0JzaLVX8Mt9xd45SWvQp1i6lzfEe07pqeec+PPxeam+rWlnRa7K5S6ccQ/iKmLaCGlF
-X-Gm-Message-State: AOJu0Yz0rdKTB4KK4DyeGFPg5nisxS1Kzbr6Mil9JrkUgM6zwnLnbh6L
-	hmIBDuXESkAWlSYdQPxNkDvaW0f3fCPXW7SrZ4BzMbi9q2c/YzsGhqC1t9ABufJhEA==
-X-Google-Smtp-Source: AGHT+IHk7W3eBsVgTPh+wI3EeKuxmYXiX29cu+Bn/zPnNDcrFdjSo7vy2U8HhFhz/ojtjJhcVspVBQ==
-X-Received: by 2002:a17:90a:d084:b0:2c6:ee50:5af4 with SMTP id 98e67ed59e1d1-2c86127e140mr16251372a91.6.1719609600505;
-        Fri, 28 Jun 2024 14:20:00 -0700 (PDT)
+        bh=rBbQvvIs93uOLOxrTo3qyREYhoURV2aSzjNHb1QtPU8=;
+        b=HikfdgZT++oKmuDj4bszFL4UXHKjzE+mMAHi3Xw2I0vqAFp2bxEbse+6NQFfIKD/9/
+         fzCMjs9PngE4mFQ50887V9miVhfNWlmlWlz6JIXPG73LEVTIKZPP0qtse7ccIG04SxrN
+         G+IaNG7cO9yBYhW6bHbpPJe1FTfCxXACGjkfPhsQClIk2LN/tXv+TLA1o45Iifyzs5X5
+         CUxAP5rYDhEftBvNZC6UEOA4B6LZPDxJ2wwm7yVT6721MPLyGnqHeSQlNShvSKxUrJmV
+         LlzBq2wT17BZ+HSZKrl6W/Lpl/rpI71PQxzhV+wRbviP7eP8RSg4e3MPPHbSsX5LdMvu
+         Ja2w==
+X-Forwarded-Encrypted: i=1; AJvYcCX1zdFq16y1K9ZdK96ijxsiCxOqHuQg/K7JDilFVNdc2miVd5xFVb/URlYjzpm+DEMqXPDPsndeQ2vDUEDiljwUfQEpY09b4xdzUitap8ha9GjJih3mgnKOa3r/cCtDP2oJpOhd+3Pz
+X-Gm-Message-State: AOJu0YynHBOjlehq761NEKQolWxjrZWyPHUKcnnFWmNIfmBycOQ/NtQb
+	U/9W4Ard0GkeVeUsAbx1MSI/bjJsAgtMwtroGP8GGuoCNyG0gY5u
+X-Google-Smtp-Source: AGHT+IGuVife5e0U+apbMMf5rMQPQs3djtc0+T9PHHfiJv1oUGeHcgAKL+hqfxGqYx2iJONVEzCpsQ==
+X-Received: by 2002:a05:6e02:138e:b0:375:a0ba:c125 with SMTP id e9e14a558f8ab-3763e06699dmr222604175ab.31.1719612016455;
+        Fri, 28 Jun 2024 15:00:16 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91d3bc540sm2087779a91.44.2024.06.28.14.19.59
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804989460sm2107199b3a.191.2024.06.28.15.00.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 14:20:00 -0700 (PDT)
-Date: Sat, 29 Jun 2024 06:19:58 +0900
+        Fri, 28 Jun 2024 15:00:15 -0700 (PDT)
+Date: Sat, 29 Jun 2024 07:00:14 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Jan Kiszka <jan.kiszka@siemens.com>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -66,7 +66,7 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Subject: Re: [PATCH v5] PCI: keystone: Add workaround for Errata #i2037
  (AM65x SR 1.0)
-Message-ID: <20240628211958.GA2213719@rocinante>
+Message-ID: <20240628220014.GB2213719@rocinante>
 References: <16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -94,10 +94,10 @@ Hello,
 > 
 > [1] -> https://www.ti.com/lit/er/sprz452i/sprz452i.pdf
 
-Jan, thank you for picking up this patch.  Siddharth, thank you for being
-very thorough, chasing after old review comments to be addressed.
+Applied to controller/keystone, thank you!
 
-Much appreciated on both accounts!
+[1/1] PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
+      https://git.kernel.org/pci/pci/c/86f271f22bbb
 
 	Krzysztof
 
