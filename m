@@ -1,339 +1,173 @@
-Return-Path: <linux-pci+bounces-9400-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9401-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F23A91BDB1
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 13:45:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B49491BDF5
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 14:00:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFB041F2304C
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 11:45:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B1841C21173
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jun 2024 12:00:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE6D15356B;
-	Fri, 28 Jun 2024 11:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A39401586F5;
+	Fri, 28 Jun 2024 12:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="aYbO6/4C"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ln4dJ0vJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2084.outbound.protection.outlook.com [40.107.22.84])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E126F307;
-	Fri, 28 Jun 2024 11:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719575140; cv=fail; b=R/fHV0Dzy1V3PeJym0XL/2tGQR03DXc1m1R/l9ay1Ds9TRH9WgbpRWvNFE/oet1dO0H9gyunhDHW76qgEBqGGF0tuM4Qmx8v7K+2btFYfCJ6nuYLZAir+rTQwQOTd3KrLBiBQdN5Pj7GxvDc9m9rj7eJv9jJDbb3BzX2j3jhbSY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719575140; c=relaxed/simple;
-	bh=6/bsnCY3nXYKuVIWq5PrGd/WZRrWILkyVJVTqlaqJWw=;
-	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=YA8t6BnbQCPa+8Yd7hIH3r0uESFmEOxHLdeJRkTrRXJ2/1Lkh8V6hBmb4y+o6Z4UOhvnzRj0DQW2cgo0IHnzN2q1OaIMS1XVAMX/ZuERS8KzsmYpZPhQiyPZ/Z0tRdHh26uwRc5IJQipcX+EbUXW+NYGMrZ8saOwUAa7TkFJtuk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=aYbO6/4C; arc=fail smtp.client-ip=40.107.22.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CQQhNm59MESczFbX0Gs2Qrq3lNXW5Qxydj6Eh0C+2DZVVxP3SUyKfEu7ueGnlCeTDFB93/jPyo2Q1JOfwbcacIMgPegMBaCxLQY/JmjP4AxxKd2E+lyUfQBz3Ptf5owi6KH6+i+WqvqjLkCXrYbIjwz0X9iNRD0ptjSVRjO/1gtIZgDO1Sq1ds4KnN7/KS5OzNzXvnsCat1JRuIDrKQYjsCMFyqwQeaG/zEUDtmtr4QKuaeGN8YsBuVwMb86W4X9NnsixzIC26skIj8ltWJoLSOVuK7g8hRVax98QnMa9GigC326GO5iIxHLHFNQwMyEex51fs8v0UusuUMiPEvzeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sNLOt8SKLbCnXLra5TV1pXRGlAofI4V5vJbsGXmmd4Q=;
- b=JepSJaT53XmWXx6fcV4RFtmrpJNSNqh+7W90EiPWC418M5QkXnKmHZIKXw+NYtABqTuFXMDhUmouR3LU7JezHffbdWh2jPhdtgmTEBQ1DfOj8V9+2iwHes14behZmDsh4FXq621cnBGjxoUoYWwrVwEpnskskqyWMlTrvVdiflUF0N4MVum93x+KrE00jpjpk9kmq86OizJA4z9oUkw7UYryssOy1aeto/7O1cQPf4eLBfvcL+/haIYBTQ8zZY6iw4iRYfjMOeBOtFDaCFGMMTXDr737hu8fn701uPe7X1RaVMWgwossiMHFUgrlJbeqLiYCbmSWuVkQA6HWt5kqQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sNLOt8SKLbCnXLra5TV1pXRGlAofI4V5vJbsGXmmd4Q=;
- b=aYbO6/4CKUpoy3zy4dZb0iFPh9IFVvy0LcJgJcmdiJq8LlCQBdHh1OAyeYiStPHVqGnVWD8z2qGKgDZTIvvUB9uh+4vBaoSOvLSsZCl5npcgfiYA8hn/OJtiOESXaRI30ZcuzSzFbR7NadYtSkRXqSJhBrSZuQpSwOFpgOJFbNq9g+Yt2+j06DKD9hQsNrE613e2m40c6bGnXwCGurzD5reN49Uvl1f9Ozp0ZvW2TwPLPQL8EirX8vSnEhN6xvvQuwmbepN836EidKBwtc5KG5t4TSOetx2yglLQgBnpgCZruCmJ4wwhuLF+XMkSeteku1LFd/XSKUlFSeLqg6QA3A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:588::19)
- by PAXPR10MB5784.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:24a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Fri, 28 Jun
- 2024 11:45:33 +0000
-Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8fe1:7e71:cf4a:7408]) by AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8fe1:7e71:cf4a:7408%4]) with mapi id 15.20.7719.022; Fri, 28 Jun 2024
- 11:45:33 +0000
-Message-ID: <16e1fcae-1ea7-46be-b157-096e05661b15@siemens.com>
-Date: Fri, 28 Jun 2024 13:45:29 +0200
-User-Agent: Mozilla Thunderbird
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH v5] PCI: keystone: Add workaround for Errata #i2037 (AM65x SR
- 1.0)
-Content-Language: en-US
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Autocrypt: addr=jan.kiszka@siemens.com; keydata=
- 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
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0368.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f8::15) To AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:588::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C9F1865A;
+	Fri, 28 Jun 2024 11:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719576002; cv=none; b=YCcCrtBXHIRKfy5uFz4HxdCi0omx6C/9Tp0ib9X1E2Dg2S6a5Yfqi1zJCnUNcwqVRp4QAL5HdwfU8CQlh6jD7BbvBFqv+H1T+o+UOzQDlyog3ZyoECUu7DyIxLvGORxbb1m/JGa/0vcj3248XqaNBabkWMA77WZdMjXJOYbMpVk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719576002; c=relaxed/simple;
+	bh=sf6fbq4Th6RnCsXrNzNrN/n+89ot45o4S3y89hVBu/U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D6s77cbv9W70Ve0Ut1VXxGEfdupocZn23+i5lIdoWPNk2ThTVkCTzQZYOycBW4TBjY3XjDuWx2cQNp1qdujqXg/KAm+PLOBUgI2MAcy1HGC7Q15RNQK5cPT3MqjboIhT9vh5EmNXlC9xGIbHWE85PPlDMXjtkRDnp27PJ8O0Wzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ln4dJ0vJ; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1719576000; x=1751112000;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sf6fbq4Th6RnCsXrNzNrN/n+89ot45o4S3y89hVBu/U=;
+  b=ln4dJ0vJ23Z6l5JADJzrm5uivqoG8H5iqH0g3G8if2KeyMbNhS66h8wK
+   bZkx0E7wz2n+xeyemVmKqpxOn+jnLBJsE8S/IiVrJc5/FRGWajVSZchC0
+   9EwYrG17WqOSpq8p0TPHON5xt4uSWMlNNipaInwXa/Hb69bWJ/p1H/fvY
+   UpxPgLoT49NEn6iqsjNtERR0GmEl0oPHMZrod407J4S17Hm6CwAuhsGby
+   6roqYrXhzvu68GbwjS5tIFnt6DPdlLUPA+5Ah+JjaCu4VOc7RUX21zFIl
+   Lh7ToYBeAYNc1qiOnLMZPneC1b3EUtJ/FvYpVw+Ecek0hOe60evShWdf+
+   A==;
+X-CSE-ConnectionGUID: fhzcQ281QiKf1QfzQI0hzg==
+X-CSE-MsgGUID: Ac/yOfHzTam/pke6/HYVlQ==
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="259502555"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Jun 2024 04:59:59 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 28 Jun 2024 04:59:24 -0700
+Received: from daire-X570.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Fri, 28 Jun 2024 04:59:22 -0700
+From: <daire.mcnamara@microchip.com>
+To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
+	<ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v6 0/3] Fix address translations on MPFS PCIe controller
+Date: Fri, 28 Jun 2024 12:59:20 +0100
+Message-ID: <20240628115923.4133286-1-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR10MB6181:EE_|PAXPR10MB5784:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e85067f-7c2e-494b-28cc-08dc9767d15d
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TStWSVhidnBvQzRFMngrOVg5ODZIazltZ2lmaXoveTQ5SkkwTkFjditud2s3?=
- =?utf-8?B?NHMvT2ZpK2ROd0VTRkxWR2pINDg0aXpxSkZnTnZHWHdZbFNJZ0V6ejJtaUo2?=
- =?utf-8?B?NUhqbFZBZWNPNW9aT29Ka0ZEQ3Z4SWZ4WDB3VFBYUjJKVHVuanpvYituR2E0?=
- =?utf-8?B?QWNLS2hndStGb2o0aHk5NlRycDZ3SGJRM0V2OWFSbU1WL050SEVOaDI2dW9q?=
- =?utf-8?B?emZtQ2RYMUpPQVpycFdYUlpjdHdpRXNnOWZYZ2NGelp1WUpFZXcrMWE2VzBn?=
- =?utf-8?B?WUNSVFNGQXpLSVQzcU1JQllieHpzTklnMUN5d05BUHdQV0RFblc1bUNBeFNh?=
- =?utf-8?B?NzlGVnBwcnp6M0cxdHRoTUV6MnVqL2VMTmRhdTc2Ym9Id3dJWGtWdWsrSGJT?=
- =?utf-8?B?TEE1WkNkdUJJcHp5SG9XT3JiL016eDhscm5yVGtHb0FXWENabTF0WFZoMjla?=
- =?utf-8?B?ZTlIUWV0UnFEMmFUeFhRS3I5ZmxmRGdrdkhlaVVTUDd6WFp2WXNYUVNyWngr?=
- =?utf-8?B?SDV6c3UrdDhXY2wrMEFGNE9Lc0Y0V2RKaCtNdTc0M3JvdW15YWNjK2kxVWtJ?=
- =?utf-8?B?aTdId2ZKNVJ2enBOYitmRkx1UHZ4SzJlaFZCdmFhd2o2VkZibzZMS0ZHQ2Nw?=
- =?utf-8?B?OVhvR0Y5WWNhUEtsTURZeG9iTVNEZGpEUkR1NFBoU3llL0lHNXhrWVhMdG0z?=
- =?utf-8?B?NCtrbVN0b29HcWZNeFhoQ2RkVWk1bTVkUHo0SVpqMUU0ODV3MHczTlF6UFdk?=
- =?utf-8?B?M2h6QXVvVjk5WlJrSGpQeHFORDV0ZGJmTnY5UDd6SHhVdStSUEZrMHp1RWE4?=
- =?utf-8?B?dXNQSkhLVko0ZzRpbWpCdnRaV3pNelRmWlNTVjNhcGE5M0ZnN29yQ0YrNmRy?=
- =?utf-8?B?SklEWFhkM1BMUi91bUEyaTNvQVlsWWgxOUN5SldQZGFqN1MwWXR1bDBwWFlP?=
- =?utf-8?B?aHVWSUdCSGpOUW96YlBBbDdUck84dk5wZXZuclc3cEhBTUVQK2VaQWZEOWRO?=
- =?utf-8?B?d1FvZWkvRllwTDlBTElsem9LZXhtcWJMa0NpZkNBeU1tOVFZcmlOL3hJV0tB?=
- =?utf-8?B?UTBqTU1uOG9hN0IzZE5YdlV0NkZvQkQxbGxFSlpMV0U1bmpLeFlHdEVHdnJz?=
- =?utf-8?B?UG80alU5SktUZTd3QkJBN1Z0TWNXYXdkOE1lSDRML3JBWG1FVXVPeWJBTUtD?=
- =?utf-8?B?a3ppR1FHaVJObFNOSGI4Yk5SUnF6b0plNUJqYkRWNklxRG85cVQrYytUZmNa?=
- =?utf-8?B?OFRsUENybG9wUU1GZTE2M2krQmthSDVTL2w5OU90V0RMd0VDV1czTFhCZXNV?=
- =?utf-8?B?QUlOMHByRjc2blJRYmx2aHI0R0s4Ymdscnd6UG9OUmhQS3NPUmRxNzB1S0hk?=
- =?utf-8?B?Snhpb0l5VWdpY0J4NGltQktVWkVTZzJ6ZTNUdktqOFJkaHhZWFFPRkMyWEJI?=
- =?utf-8?B?R1VmcUMwdUJNVzBOT2NoSGVmb1dMWmROcUg3RUJoeG93NW5CNC9URXVmb0Fh?=
- =?utf-8?B?UWJOZ2hEbGJxd2V5ZVM1TEtyODFJNE8zWDZ3MnUxZWJuSldOdDlZb1BONmpk?=
- =?utf-8?B?MmFpRk84Q0dENC9nbEZtSHJnckd1NjVhT1k2aWNlNWdOa2RQUjZ3Q0hObjVR?=
- =?utf-8?B?ZGhpakRJbitvcHB1K1laWWdUWVJEN2VmQnMreDU1TU1Nam5CUmdaaWRCYURv?=
- =?utf-8?B?R1E2ZlJ4TlgvVUxBRFF2ci9uWTdTbUlyYmw3bTZ5VFR6dlJ4Vm1pellYVWZ1?=
- =?utf-8?Q?sSlqiunC/ijLuzLdrs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RHhjbVdBOXV1dWw5NkpIQUtKN1N4MTJVcUFvdFIvdmcxQ1FnTmQrY3UwQndX?=
- =?utf-8?B?QlNwSElQU0RwUmNqL0lWMGFWSzhUbG5KTFhMK2hnS0VIWmIvbmk2TjFhMWNr?=
- =?utf-8?B?R0FNT2t1RHZiOGEreHFRUDk3MWovZ2UwYVllVW1OMzNBZzJwY3NZcEszbHBR?=
- =?utf-8?B?M3krc1Bvdm5EaTYwcWFJZ0lyczZrcjlnaXZzWFUyVVM1ODBiaGhEemxPOEoz?=
- =?utf-8?B?YVg2aHRjVkdCQWhybzNEZElmZldnbzJvVTYrVUlOc0VlbFlndS9jcEI5NnlZ?=
- =?utf-8?B?QVhpc0cvbkN4dUlnNEZ6b3VXVXFVYzFxSXpJMEtZam9VSVNuS2dnTzhoOU1w?=
- =?utf-8?B?aTQwZ0Y5bnpJV3p3SGcxKzFRK2tCQmROY2YzOTlSM1BGRitqTG5MWldQV3B5?=
- =?utf-8?B?ZmpBQVRia29EU0ZGUFJXRVZRYTczRm9HMmdNVHl6eVdWbzE3SjI0NGNwaG1R?=
- =?utf-8?B?ZmJPMnhPY2NPdlVlQTAycVdXb01lYXBNcHRVdkoxNGhxcU9ZVXNBOHJOT2ZF?=
- =?utf-8?B?WUlLV2g5aCtsU1liSDZQTVh5STR3TExWczJpWjhsUys2UXZoZS8vc1Z1dWJZ?=
- =?utf-8?B?WWgyYWNmaHl0N1VMaEZkMzZQeDVtYXhxUVREWW9USi9zYXJZNmxBWWhMV1lH?=
- =?utf-8?B?UWhlWVFMOUw2clc4QVRjTG0ycHlKYTBVUVVrSlMvSEU0V1hXVkx1UjI5MVRX?=
- =?utf-8?B?ZE5VMWFXdVhrVDZ4RElwd3pwMFZlYi94RVRjSUtrMkI5Mkk4WU56bTVHcmhz?=
- =?utf-8?B?bks2a0NQLzYrUHFqQUUwejB6V2p2Ri9FWWdsNU5FK0RkaDF0bWxRWG9uajVn?=
- =?utf-8?B?QWovc2hkQXpnUGNiVzdlREtNZlR6Q1kxNTcwTXFoRTQ3ckxOSTZSRDZpdVlj?=
- =?utf-8?B?dlV6Qnh6NUE5Zlg2bGlIZmNsakZOaExQc3lrTHRMcFZxZDlzZFpvcnI4d3or?=
- =?utf-8?B?T2ZhMSt3MFpjVU1wQi9KM2FyU2ozbUhRODgxZ3JObzluWC9HZHhOek1COURJ?=
- =?utf-8?B?Y2VOZ3lsWklKVzlNb2NEaTN1aU96SUg3MGNGTEFjWURwcXJCYzRtaXlwbjRL?=
- =?utf-8?B?bUlINnFiY0Y5QnVZeWs5ZnpMWXlEemFraXh2Wlo1Q1ByeEw1WlcwR3gvWWZu?=
- =?utf-8?B?UkhWVHlEQmk4UklFUmsvREkxUzROc091OWVBeWVHZVdVK0RmQ3pGenY2YklI?=
- =?utf-8?B?T3FBQzY2S3k4bmtySHZiYnBlSEJoblZSVG5JbUJLTEJENXp2WUdacHVlU0pM?=
- =?utf-8?B?a1cyUllCWUg2bDdDTGk3b0hjWEdySUd6a3pGMzJaZmFPNUI0cUU4MUNGQTdp?=
- =?utf-8?B?SnA2Vm9iKzJCdzdDRXN0dmpqbmcxMWhPWFlXaVJpRGlYVHRFY0dSSENLZXM4?=
- =?utf-8?B?NCtlam9DMHdNNlpYdjRVQWUvT3pvVExqdzh3YU14NXRMMVNUbGY3ZFl3bkN0?=
- =?utf-8?B?MUNCNDJCZTI0cnVFdkhGc3BqMzRwQklmNk1Hdm1SU3lLVXEwVVNnRWd3OHh1?=
- =?utf-8?B?djh5c1E0OGNxOUs3Q2xXTEdxaXZWYlZVNXpUV2dDSmV4cjRlaTJUQXRQQ2Rp?=
- =?utf-8?B?MER6RDJDK3Vhb3I4Y0phM0V3R0dLSlN5QkljYUxhNm8vNXJWdTRIeS9vc1dZ?=
- =?utf-8?B?a0ZxUXNXdzhlL3cwbUFjbGU4QzRSSWxGc0hCbG9KSEZSRmx4VVRHWmp6eTdh?=
- =?utf-8?B?MUpaMlVqSFRLTzZVSUhIMWdRM3NNQWY5Ly9PblFEcEJkTm9jRkZwNzN6WDdQ?=
- =?utf-8?B?K1Bza045YUFpUitMMXVodWRPb2RhZzM1WFZFc2ErLzNoNktXeXlLNytNNjN3?=
- =?utf-8?B?cVZNUkpYVVgxcUtseHhwTDl5ZHlLWXVPdkpqY0h4QWtDV0hDRS9iSnYrOS9Y?=
- =?utf-8?B?OS9VV3J0WmNMOEFvRHp6TTVhR1F0UFdjY3dEUStabTNhM3p3WTNlZzErdjla?=
- =?utf-8?B?OGJhY0JNcFA4NUdMRUtZbU81NGcxZ2d6eDBkUGMwdE1heGpvNExXeGZtWnFE?=
- =?utf-8?B?QWNrYThZVUt6eEllbHJDaW1aMTNmT0FJMUdVMzNLL2M1OGZ2eER2eUowbVpa?=
- =?utf-8?B?dXFtdXNMUkxxVThnTWV6ay9QR2FtUnFraC9BSHNtemkrL0ttdFQ4bE82Y1Fw?=
- =?utf-8?B?VGZSZVEyekI4UEJMM3lZYUFtY2FrL1hteFdyYnA3dC9oVjQyMnFZOGNEMlQ5?=
- =?utf-8?B?Mmc9PQ==?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e85067f-7c2e-494b-28cc-08dc9767d15d
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2024 11:45:33.0819
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vSu+YOeezSAQMJD022z84gxlBymlnfuSfNYyRK/KekLM+iZzXhrMu1wsM/3H3Up3vvrPN2ptfxZpisDHXp2NAQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR10MB5784
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-Errata #i2037 in AM65x/DRA80xM Processors Silicon Revision 1.0
-(SPRZ452D_July 2018_Revised December 2019 [1]) mentions when an
-inbound PCIe TLP spans more than two internal AXI 128-byte bursts,
-the bus may corrupt the packet payload and the corrupt data may
-cause associated applications or the processor to hang.
+Hi all,
 
-The workaround for Errata #i2037 is to limit the maximum read
-request size and maximum payload size to 128 bytes. Add workaround
-for Errata #i2037 here. The errata and workaround is applicable
-only to AM65x SR 1.0 and later versions of the silicon will have
-this fixed.
+On Microchip PolarFire SoC (MPFS), the PCIe controller is connected to the
+CPU via one of three Fabric Interface Connectors (FICs).  Each FIC present
+to the CPU complex as 64-bit AXI-M and 64-bit AXI-S.  To preserve
+compatibility with other PolarFire family members, the PCIe controller is
+connected to its encapsulating FIC via a 32-bit AXI-M and 32-bit AXI-S
+interface.
 
-[1] -> https://www.ti.com/lit/er/sprz452i/sprz452i.pdf
+Each FIC is implemented in FPGA logic and can incorporate logic along its 64-bit
+AXI-M to 32-bit AXI-M chain (including address translation) and, likewise, along
+its 32-bit AXI-S to 64-bit AXI-S chain (again including address translation).
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Achal Verma <a-verma1@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+In order to reduce the potential support space for the PCIe controller in
+this environment, MPFS supports certain reference designs for these address
+translations: reference designs for cache-coherent memory accesses
+and reference designs for non-cache-coherent memory accesses. The precise
+details of these reference designs and associated customer guidelines
+recommending that customers adhere to the addressing schemes used in those
+reference designs are available from Microchip, but the implication for the
+PCIe controller address translation between CPU-space and PCIe-space are:
 
----
+For outbound address translation, the PCIe controller address translation tables
+are treated as if they are 32-bit only.  Any further address translation must
+be done in FPGA fabric.
 
-Original patch:
-Link: https://lore.kernel.org/linux-pci/20210325090026.8843-7-kishon@ti.com/
----
- drivers/pci/controller/dwc/pci-keystone.c | 44 ++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+For inbound address translation, the PCIe controller is configurable for two
+cases:
+* In the case of cache-coherent designs, the base of the AXI-S side of the
+  address translation must be set to 0 and the size should be 4 GiB wide. The
+  FPGA fabric must complete any address translations based on that 0-based
+  address translation.
+* In the case of non-cache coherent designs, the base of AXI-S side of the
+  address translation must be set to 0x8000'0000 and the size shall be 2 GiB
+  wide.  The FPGA fabric must complete any address translation based on that
+  0x80000000 base.
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index d3a7d14ee685..25e365c0c5c7 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -34,6 +34,11 @@
- #define PCIE_DEVICEID_SHIFT	16
- 
- /* Application registers */
-+#define PID				0x000
-+#define RTL				GENMASK(15, 11)
-+#define RTL_SHIFT			11
-+#define AM6_PCI_PG1_RTL_VER		0x15
-+
- #define CMD_STATUS			0x004
- #define LTSSM_EN_VAL		        BIT(0)
- #define OB_XLAT_EN_VAL		        BIT(1)
-@@ -104,6 +109,8 @@
- 
- #define to_keystone_pcie(x)		dev_get_drvdata((x)->dev)
- 
-+#define PCI_DEVICE_ID_TI_AM654X		0xb00c
-+
- struct ks_pcie_of_data {
- 	enum dw_pcie_device_mode mode;
- 	const struct dw_pcie_host_ops *host_ops;
-@@ -525,7 +532,11 @@ static int ks_pcie_start_link(struct dw_pcie *pci)
- static void ks_pcie_quirk(struct pci_dev *dev)
- {
- 	struct pci_bus *bus = dev->bus;
-+	struct keystone_pcie *ks_pcie;
-+	struct device *bridge_dev;
- 	struct pci_dev *bridge;
-+	u32 val;
-+
- 	static const struct pci_device_id rc_pci_devids[] = {
- 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2HK),
- 		 .class = PCI_CLASS_BRIDGE_PCI_NORMAL, .class_mask = ~0, },
-@@ -537,6 +548,11 @@ static void ks_pcie_quirk(struct pci_dev *dev)
- 		 .class = PCI_CLASS_BRIDGE_PCI_NORMAL, .class_mask = ~0, },
- 		{ 0, },
- 	};
-+	static const struct pci_device_id am6_pci_devids[] = {
-+		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654X),
-+		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
-+		{ 0, },
-+	};
- 
- 	if (pci_is_root_bus(bus))
- 		bridge = dev;
-@@ -558,10 +574,36 @@ static void ks_pcie_quirk(struct pci_dev *dev)
- 	 */
- 	if (pci_match_id(rc_pci_devids, bridge)) {
- 		if (pcie_get_readrq(dev) > 256) {
--			dev_info(&dev->dev, "limiting MRRS to 256\n");
-+			dev_info(&dev->dev, "limiting MRRS to 256 bytes\n");
- 			pcie_set_readrq(dev, 256);
- 		}
- 	}
-+
-+	/*
-+	 * Memory transactions fail with PCI controller in AM654 PG1.0
-+	 * when MRRS is set to more than 128 bytes. Force the MRRS to
-+	 * 128 bytes in all downstream devices.
-+	 */
-+	if (pci_match_id(am6_pci_devids, bridge)) {
-+		bridge_dev = pci_get_host_bridge_device(dev);
-+		if (!bridge_dev && !bridge_dev->parent)
-+			return;
-+
-+		ks_pcie = dev_get_drvdata(bridge_dev->parent);
-+		if (!ks_pcie)
-+			return;
-+
-+		val = ks_pcie_app_readl(ks_pcie, PID);
-+		val &= RTL;
-+		val >>= RTL_SHIFT;
-+		if (val != AM6_PCI_PG1_RTL_VER)
-+			return;
-+
-+		if (pcie_get_readrq(dev) > 128) {
-+			dev_info(&dev->dev, "limiting MRRS to 128 bytes\n");
-+			pcie_set_readrq(dev, 128);
-+		}
-+	}
- }
- DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, ks_pcie_quirk);
- 
+So, for example, in the non-cache-coherent case, with a device tree property
+that maps an inbound range from 0x10'0000'0000 in PCIe space to 0x10'0000'0000
+in CPU space, the PCIe rootport will translate a PCIe address of 0x10'0000'0000
+to an intermediate 32-bit AXI-S address of 0x8000'0000 and the FIC is
+responsible for translating that intermediate 32-bit AXI-S address of
+0x8000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+And similarly, for example, in the cache-coherent case, with a device tree
+property that maps an inbound range from 0x10'0000'0000 in PCIe space to
+0x10'0000'0000 in CPU space, the PCIe rootport will translate a PCIe address
+of 0x10'0000'0000 to an intermediate 32-bit AXI-S address of 0x0000'0000 and
+the FIC is responsible for translating that intermediate 32-bit AXI-S address
+of 0x0000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+See https://lore.kernel.org/all/20220902142202.2437658-1-daire.mcnamara@microchip.com/T/
+for backstory.
+
+Changes since v5:
+- Reverted setup_inbound_atr size parameter to u64 as ci system reported
+  SZ_4G getting truncated to 0 on mips when I try to use size_t or resource_size_t.
+  Added Acked-by tags
+
+Changes since v4:
+- Added more cleanups suggested by Ilpo Jarvinen
+  Added cleanups for inbound v4 and outbound v3.
+
+Changes since v3:
+- Added nice cleanups suggested by Ilpo Jarvinen
+
+Changes since v2:
+- Added <Signed-off-by: tag>
+
+Changes since v1:
+- added bindings patch to allow dma-noncoherent
+- changed a size_t to u64 to pass 32-bit compile tests
+- allowed 64-bit outbound pcie translations
+- tied PCIe side of eCAM translation table to 0
+
+Conor Dooley (1):
+  dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
+
+Daire McNamara (2):
+  PCI: microchip: Fix outbound address translation tables
+  PCI: microchip: Fix inbound address translation tables
+
+ .../bindings/pci/microchip,pcie-host.yaml     |   2 +
+ drivers/pci/controller/pcie-microchip-host.c  | 118 +++++++++++++++---
+ 2 files changed, 106 insertions(+), 14 deletions(-)
+
+
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
 -- 
-2.43.0
+2.34.1
+
 
