@@ -1,120 +1,184 @@
-Return-Path: <linux-pci+bounces-9439-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9440-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09FCB91CC29
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 12:44:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECD8291CC55
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 13:16:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A44841F22B9D
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 10:44:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4EDFAB20B61
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 11:16:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01A9F4502B;
-	Sat, 29 Jun 2024 10:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46814084C;
+	Sat, 29 Jun 2024 11:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nw4MLVWO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OcBbTenA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tq9RP4v3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7954F2033E;
-	Sat, 29 Jun 2024 10:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC151CF8D;
+	Sat, 29 Jun 2024 11:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719657885; cv=none; b=OQXj57xutgahHRIUZVFHj6OEx6XFkB00ZbjUrEHC2agO4+fAkSgHv664q91GpsFOPQB5Mh8DC2dR110KadKn2wP9U8JjGX1+Dz4w8+1+AtBIrpm42yL9lGQr6QGBK9J98TC2p8AuJ+Y/VyIWfQ8lkn0sBBSNjfrQrnRZboJuCuY=
+	t=1719659803; cv=none; b=tudG+HoMUGk4epz94W+IrG8je87+NbkseCY3IBfnSXKDdogRnvuQi7l2Ksh7BnODjtGQH0EVINIQWvZhATLbN0o4o2zOCn1wxp2H3AF8AAd8lSXpMoCwOzHNMVp1c8Vwl6aVOYpC22af/2mdt9b0+Oa1HnnLgZ3QIv5+s7uYc90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719657885; c=relaxed/simple;
-	bh=6VXJiGOnoyju9ruRHYHFhUu95mEhUl6t/2oo8RmMCOA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hFPlLsrGNCGk5Nnl4wYdh/7HJPYERBkPKC3555q2ecHmYZ+PwwLWxck28Q7NuEVWdKwEXUTlUc/KESvErfnnxiQ3b0slzusbGEBZLKKjNvepkUakCjMD9MALi8E/R9M9H2IFkWvKYy2vYG7Xkm0BYMWiuClVsp2bmulhbUTWCjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nw4MLVWO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OcBbTenA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719657882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YBr0wMQUI9nfHEgcW87Tn7+jfpVx+jXLrJH0EYZ954o=;
-	b=nw4MLVWOk00BwhzggrZaMrhcXL2Kh+j64AG8H/iGBr9RQvByomDldI84G3tc8QkuT0uJKc
-	JuKWG0UAs9db/0QVzkXV/K6n3ggUWczQo/SwMVpMRb0aK3hGZs1mGDAKunMoKLtpIaqVN5
-	K92YNbJAFDA/YNlmLdRnfejd/MZwf+4yDiZy+J/NhqWa3IdRYC9dWAZvMjSf0K0uiOPklv
-	L+SWhkCQB5mrSIoujAC6h3KlrFM5D+BAH1M84bE4xK/YmAUNdloOEkY9++dE4vuYHLeeik
-	jPBo2KMuo9ts18/M9C9eWSt9KT0jZ2wRVNTzp8/m3cRm01s4QycJd3tkmAxufA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719657882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YBr0wMQUI9nfHEgcW87Tn7+jfpVx+jXLrJH0EYZ954o=;
-	b=OcBbTenA5kOfmm/vsUhr/wkot+gSaZ5It7tkFtx+SJNb4IWB2rNQq89G4tWsxqSaCti1RQ
-	pcjv31+K/6gJhyAw==
-To: Marc Zyngier <maz@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, LKML
- <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org,
- s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
- rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com,
- apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com,
- den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com,
- sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
- rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
- lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org,
- robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
- vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
- andersson@kernel.org, mark.rutland@arm.com,
- shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com,
- shivamurthy.shastri@linutronix.de
-Subject: Re: [patch V4 05/21] irqchip/gic-v3-its: Provide MSI parent for
- PCI/MSI[-X]
-In-Reply-To: <86bk3khxdt.wl-maz@kernel.org>
-References: <20240623142137.448898081@linutronix.de>
- <20240623142235.024567623@linutronix.de> <Zn84OIS0zLWASKr2@arm.com>
- <87h6dcxhy0.ffs@tglx> <86ed8ghypg.wl-maz@kernel.org>
- <86cyo0hyc6.wl-maz@kernel.org> <86bk3khxdt.wl-maz@kernel.org>
-Date: Sat, 29 Jun 2024 12:44:41 +0200
-Message-ID: <87ed8gxc2u.ffs@tglx>
+	s=arc-20240116; t=1719659803; c=relaxed/simple;
+	bh=IUthPw6q8Xxh7m+uFZiIAUjqhMqeAyzsdGSzigmphv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ET2QeL1PcDs7X/Ni+vZw/4brkQD06k+aU/WUw7lJwHuVfYYr3vP+yhuMXq06vcyOmTnJLmKXZsXLr0vCiNTKY6kxEjH4h09TU5n1nuZxZOPeGBJQ92AuhIeLawSxCRDr0N6y6U5ESAfvIB65yFauH6oYNFiHYVfSZezIjSs3qXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tq9RP4v3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5014C2BBFC;
+	Sat, 29 Jun 2024 11:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719659803;
+	bh=IUthPw6q8Xxh7m+uFZiIAUjqhMqeAyzsdGSzigmphv4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tq9RP4v3wOheZaeTkMoREvNu74nxkxyN2vHE1lEVOpqP5CAzyYguiOXp9hFL3AmLy
+	 eVFZTVEfhULQydrQ1CAxQOd3S51HwZY7FmDWpZy7EGea4s8EEtg8mFAZWNCsDIAkd/
+	 l6t4YxeJQkx9+B2R1Z8TtlbsBv3QikJmATPdBl7/vJPsFXNi95ZoGMS8ucc2f6BhYP
+	 FVhDNA1UeiXsNJYoi4OAgIM4Kk+RvxMo/a/0eNdNJtxT9e4VnF4q3lMGvzMCGIjmKb
+	 32OOyKjubihQksVJW8rvmQpcp/+rVGtkrB/zyR2NY1/FgiJNDH71t/wDrhN9PKBJ0y
+	 gS0SyFCAqeTzw==
+Date: Sat, 29 Jun 2024 13:16:39 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
+	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com,
+	linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+	nbd@nbd.name, dd@embedd.com, upstream@airoha.com,
+	angelogioacchino.delregno@collabora.com
+Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: mediatek-gen3: add support for
+ Airoha EN7581
+Message-ID: <Zn_tF4xNADB1Z2bE@lore-desk>
+References: <cover.1719475568.git.lorenzo@kernel.org>
+ <c11a40dbe3e1d1e4847ceee8715c1f670fd1887b.1719475568.git.lorenzo@kernel.org>
+ <20240627-evergreen-oppressor-21deb5c83412@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Yc80wPPNW1Sai7R4"
+Content-Disposition: inline
+In-Reply-To: <20240627-evergreen-oppressor-21deb5c83412@spud>
 
-Marc!
 
-On Sat, Jun 29 2024 at 11:11, Marc Zyngier wrote:
->> I have the ugly feeling that the flag is applied at the wrong level,
->> or not propagated.
+--Yc80wPPNW1Sai7R4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Indeed.
+> On Thu, Jun 27, 2024 at 10:12:11AM +0200, Lorenzo Bianconi wrote:
+> > Introduce Airoha EN7581 entry in mediatek-gen3 PCIe controller binding
+> >=20
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >  .../bindings/pci/mediatek-pcie-gen3.yaml      | 68 +++++++++++++++++--
+> >  1 file changed, 63 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.y=
+aml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> > index 76d742051f73..59112adc9ba1 100644
+> > --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> > @@ -53,6 +53,7 @@ properties:
+> >                - mediatek,mt8195-pcie
+> >            - const: mediatek,mt8192-pcie
+> >        - const: mediatek,mt8192-pcie
+> > +      - const: airoha,en7581-pcie
+> > =20
+> >    reg:
+> >      maxItems: 1
+> > @@ -76,20 +77,20 @@ properties:
+> > =20
+> >    resets:
+> >      minItems: 1
+> > -    maxItems: 2
+> > +    maxItems: 3
+> > =20
+> >    reset-names:
+> >      minItems: 1
+> > -    maxItems: 2
+> > +    maxItems: 3
+> >      items:
+> > -      enum: [ phy, mac ]
+> > +      enum: [ phy, mac, phy-lane0, phy-lane1, phy-lane2 ]
+> > =20
+> >    clocks:
+> > -    minItems: 4
+> > +    minItems: 1
+> >      maxItems: 6
+> > =20
+> >    clock-names:
+> > -    minItems: 4
+> > +    minItems: 1
+> >      maxItems: 6
+> > =20
+> >    assigned-clocks:
+> > @@ -147,6 +148,9 @@ allOf:
+> >            const: mediatek,mt8192-pcie
+> >      then:
+> >        properties:
+> > +        clocks:
+> > +          maxItems: 6
+> > +
+> >          clock-names:
+> >            items:
+> >              - const: pl_250m
+> > @@ -155,6 +159,15 @@ allOf:
+> >              - const: tl_32k
+> >              - const: peri_26m
+> >              - const: top_133m
+> > +
+> > +        resets:
+> > +          minItems: 1
+> > +          maxItems: 2
+> > +
+> > +        reset-names:
+> > +          minItems: 1
+> > +          maxItems: 2
+> > +
+> >    - if:
+> >        properties:
+> >          compatible:
+> > @@ -164,6 +177,9 @@ allOf:
+> >                - mediatek,mt8195-pcie
+> >      then:
+> >        properties:
+> > +        clocks:
+> > +          maxItems: 6
+>=20
+> How come this is maxItems and not minItems? The max is always 6, before
+> and after your patch.
 
-> Here's a possible fix. Making the masking at the ITS level optional is
-> not an option (haha). It is the PCI masking that is totally
-> superfluous and that could completely be elided.
+ack, I will fix in v3
 
-It's the right fix because ITS requires this bit to be set.
+Regards,
+Lorenzo
 
-Vs. PCI masking, you are right from a pure ITS point of view, but not
-from the PCI side. PCI can't be unmsaked until there is a valid message
-and we need to mask it on shutdown.
+>=20
+> Cheers,
+> Conor.
 
-It's not a run time issue at all because PCI/MSI is edge triggered so
-the mask/unmask dance only matters during startup, shutdown and message
-update.
 
-> With this hack, I can boot a GICv3+ITS guest as usual.
 
-It's not a hack. It's the proper solution. Let me fold that back and
-look at the other PCI conversions which probably have the same issue.
+--Yc80wPPNW1Sai7R4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks for digging into this. This help is truly welcome right now.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZn/tFwAKCRA6cBh0uS2t
+rPBkAPkByGAHSc9sSo+LyYsfPbigChxVRx3RRo8JU9/v060TNwD/UdFWihrwMXYc
+d/pzY8RPKCX5ZnsPem0Fwg0h4BBQwwk=
+=kx87
+-----END PGP SIGNATURE-----
 
-        tglx
+--Yc80wPPNW1Sai7R4--
 
