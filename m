@@ -1,184 +1,158 @@
-Return-Path: <linux-pci+bounces-9440-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9441-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECD8291CC55
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 13:16:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 243B391CCAF
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 14:23:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4EDFAB20B61
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 11:16:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9082A282623
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 12:23:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46814084C;
-	Sat, 29 Jun 2024 11:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDB322D05D;
+	Sat, 29 Jun 2024 12:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tq9RP4v3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mYmf9NGz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC151CF8D;
-	Sat, 29 Jun 2024 11:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507FC7CF18
+	for <linux-pci@vger.kernel.org>; Sat, 29 Jun 2024 12:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719659803; cv=none; b=tudG+HoMUGk4epz94W+IrG8je87+NbkseCY3IBfnSXKDdogRnvuQi7l2Ksh7BnODjtGQH0EVINIQWvZhATLbN0o4o2zOCn1wxp2H3AF8AAd8lSXpMoCwOzHNMVp1c8Vwl6aVOYpC22af/2mdt9b0+Oa1HnnLgZ3QIv5+s7uYc90=
+	t=1719663790; cv=none; b=aerU2tEQl8dEASR4jJrooX+UkRZ+vH2JDSpmc7e2r4nq4P3PEIG1dScDrrmXSRBHgos/rPuu2+CQapoOU7xHdpUja1/9sWaMx59lmna0Z35EfuJwcKfbocbZeGJWIfmb8o3CsFdOW5E4OyFMQuorFwFFld5jwIFxBzcucGNbWUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719659803; c=relaxed/simple;
-	bh=IUthPw6q8Xxh7m+uFZiIAUjqhMqeAyzsdGSzigmphv4=;
+	s=arc-20240116; t=1719663790; c=relaxed/simple;
+	bh=0y5cSgtBlkamEEyslLX8DfwkBZ+qF4qV5H9+Ndn+Qw4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ET2QeL1PcDs7X/Ni+vZw/4brkQD06k+aU/WUw7lJwHuVfYYr3vP+yhuMXq06vcyOmTnJLmKXZsXLr0vCiNTKY6kxEjH4h09TU5n1nuZxZOPeGBJQ92AuhIeLawSxCRDr0N6y6U5ESAfvIB65yFauH6oYNFiHYVfSZezIjSs3qXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tq9RP4v3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5014C2BBFC;
-	Sat, 29 Jun 2024 11:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719659803;
-	bh=IUthPw6q8Xxh7m+uFZiIAUjqhMqeAyzsdGSzigmphv4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tq9RP4v3wOheZaeTkMoREvNu74nxkxyN2vHE1lEVOpqP5CAzyYguiOXp9hFL3AmLy
-	 eVFZTVEfhULQydrQ1CAxQOd3S51HwZY7FmDWpZy7EGea4s8EEtg8mFAZWNCsDIAkd/
-	 l6t4YxeJQkx9+B2R1Z8TtlbsBv3QikJmATPdBl7/vJPsFXNi95ZoGMS8ucc2f6BhYP
-	 FVhDNA1UeiXsNJYoi4OAgIM4Kk+RvxMo/a/0eNdNJtxT9e4VnF4q3lMGvzMCGIjmKb
-	 32OOyKjubihQksVJW8rvmQpcp/+rVGtkrB/zyR2NY1/FgiJNDH71t/wDrhN9PKBJ0y
-	 gS0SyFCAqeTzw==
-Date: Sat, 29 Jun 2024 13:16:39 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com,
-	linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-	nbd@nbd.name, dd@embedd.com, upstream@airoha.com,
-	angelogioacchino.delregno@collabora.com
-Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: mediatek-gen3: add support for
- Airoha EN7581
-Message-ID: <Zn_tF4xNADB1Z2bE@lore-desk>
-References: <cover.1719475568.git.lorenzo@kernel.org>
- <c11a40dbe3e1d1e4847ceee8715c1f670fd1887b.1719475568.git.lorenzo@kernel.org>
- <20240627-evergreen-oppressor-21deb5c83412@spud>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pJKeRmmp7OA2RniAIb3k4rh9LsS1zFwlAR6n/pPb2SCX2vchJfd2PmAxSMSd4Ryik9GBG18fn3NkX7gKjaIEj7urRwEk1ZRlkHUc+Obiz/8ab+2NxTaSszEl7C0+McZddR/1EEMkzWvp6/QD6+5Qg0MMFITpgVrRbuLkowz06rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mYmf9NGz; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7065a2f4573so1106325b3a.2
+        for <linux-pci@vger.kernel.org>; Sat, 29 Jun 2024 05:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719663789; x=1720268589; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hd/fN6JrXuuparzKe/1dgdm1z2pqZRQTyP5PJ9H207I=;
+        b=mYmf9NGz4AEE4ghG7AT/o31qdXDXd3KNh2La/mgNpSBZK+uhD1bBl0P2aRsNV7F5w8
+         V4EPYPUts6FTNdH1ccO/G+eY5aCL2N/yg3KGX+iACfSC3OSCcDavfVW7qlEvu85nBEM7
+         Kkmla1evBKZilJmj1c9+mTN17J/7rSHxXdezrl8piZ7t0R7gimvm/k1fIZvyrV0NL1Ik
+         rwqbBFB+G6WJaB26irForAuStY12KvhoXEXq0+4gMpsmyBR/bdHzmTZOnPwQ0iSjZLl3
+         gKOAHr6BxusrHlV1cevYW/YsYb0Ra35D8KbxHUsg2d/WFyAZxpWgJUGfCWOlOG/k+t8O
+         jYwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719663789; x=1720268589;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hd/fN6JrXuuparzKe/1dgdm1z2pqZRQTyP5PJ9H207I=;
+        b=Po8CPwR/eP+tCEgjKXeAQdUYswyiFLuuWUJ9hyMnqt5KyFE5CD+cEvVeUkj2KjZhRk
+         cpYAemkw8P48UfbI2iEroyJ1HTrfz8xXm9h8ADe7ohuikpdUtXJYVLxBSU9UYDRHRM8O
+         P5BlugJ0Of1Rj6ytl3AlDyPzMn1SC/K/6nsuHLxzdn6WgnQ6TXXGffMVCtyupx+eZMj2
+         H5xpx//QKGFEafDyPS3mOA6tC6JZGqO8F8OfPJ3+vGT30L4rLfSuQWtsYJHmhuBkoaGL
+         kQPJaQVoIv0eKcSsm3Uw/5Q7uMOrFEx2SXBf4oNi6bdk9nYQ7lSppbLhZINDV2lqaKfb
+         95Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXxlX6KmQe4UqZtARWi45NMVLuZEmUm9VCKRmDMiBTtBpSulqEYjJQQlqI+46HzoWHPmeZVjwxNiEVHC/L6Rs8o1qkGE7UKPfJo
+X-Gm-Message-State: AOJu0Yygat6AiCqsm3x5GRfjuknil/USE/bWaBgGlPoXz7gH/ptfkcMI
+	sJPuovkEpxnnWzGvkFTf4l7HeqmZWfBKO//bn8yNGk5MqrZMlHaFgZMcl+VyJA==
+X-Google-Smtp-Source: AGHT+IEW0u5OjNVhFbntAWf/v7zidI2Sjsqla8PVFtRXPmZZ7xJh0N+dgrcQ2vSjwdtKDdMLAlmuaw==
+X-Received: by 2002:a05:6a00:2e18:b0:706:8066:5cd6 with SMTP id d2e1a72fcca58-70aaaf31a15mr736491b3a.32.1719663788507;
+        Sat, 29 Jun 2024 05:23:08 -0700 (PDT)
+Received: from thinkpad ([220.158.156.249])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70803ecf70asm3179116b3a.102.2024.06.29.05.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Jun 2024 05:23:08 -0700 (PDT)
+Date: Sat, 29 Jun 2024 17:53:01 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 01/10] PCI: imx6: Fix establish link failure in EP
+ mode for iMX8MM and iMX8MP
+Message-ID: <20240629122301.GB5608@thinkpad>
+References: <20240617-pci2_upstream-v6-0-e0821238f997@nxp.com>
+ <20240617-pci2_upstream-v6-1-e0821238f997@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Yc80wPPNW1Sai7R4"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240627-evergreen-oppressor-21deb5c83412@spud>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240617-pci2_upstream-v6-1-e0821238f997@nxp.com>
 
+On Mon, Jun 17, 2024 at 04:16:37PM -0400, Frank Li wrote:
+> From: Richard Zhu <hongxing.zhu@nxp.com>
+> 
+> Add IMX6_PCIE_FLAG_HAS_APP_RESET flag to IMX8MM_EP and IMX8MP_EP drvdata.
+> This flag was overlooked during code restructuring. It is crucial to
+> release the app-reset from the System Reset Controller before initiating
+> LTSSM to rectify the issue
+> 
+> Fixes: 0c9651c21f2a ("PCI: imx6: Simplify reset handling by using *_FLAG_HAS_*_RESET")
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
---Yc80wPPNW1Sai7R4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> On Thu, Jun 27, 2024 at 10:12:11AM +0200, Lorenzo Bianconi wrote:
-> > Introduce Airoha EN7581 entry in mediatek-gen3 PCIe controller binding
-> >=20
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> >  .../bindings/pci/mediatek-pcie-gen3.yaml      | 68 +++++++++++++++++--
-> >  1 file changed, 63 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.y=
-aml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> > index 76d742051f73..59112adc9ba1 100644
-> > --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> > @@ -53,6 +53,7 @@ properties:
-> >                - mediatek,mt8195-pcie
-> >            - const: mediatek,mt8192-pcie
-> >        - const: mediatek,mt8192-pcie
-> > +      - const: airoha,en7581-pcie
-> > =20
-> >    reg:
-> >      maxItems: 1
-> > @@ -76,20 +77,20 @@ properties:
-> > =20
-> >    resets:
-> >      minItems: 1
-> > -    maxItems: 2
-> > +    maxItems: 3
-> > =20
-> >    reset-names:
-> >      minItems: 1
-> > -    maxItems: 2
-> > +    maxItems: 3
-> >      items:
-> > -      enum: [ phy, mac ]
-> > +      enum: [ phy, mac, phy-lane0, phy-lane1, phy-lane2 ]
-> > =20
-> >    clocks:
-> > -    minItems: 4
-> > +    minItems: 1
-> >      maxItems: 6
-> > =20
-> >    clock-names:
-> > -    minItems: 4
-> > +    minItems: 1
-> >      maxItems: 6
-> > =20
-> >    assigned-clocks:
-> > @@ -147,6 +148,9 @@ allOf:
-> >            const: mediatek,mt8192-pcie
-> >      then:
-> >        properties:
-> > +        clocks:
-> > +          maxItems: 6
-> > +
-> >          clock-names:
-> >            items:
-> >              - const: pl_250m
-> > @@ -155,6 +159,15 @@ allOf:
-> >              - const: tl_32k
-> >              - const: peri_26m
-> >              - const: top_133m
-> > +
-> > +        resets:
-> > +          minItems: 1
-> > +          maxItems: 2
-> > +
-> > +        reset-names:
-> > +          minItems: 1
-> > +          maxItems: 2
-> > +
-> >    - if:
-> >        properties:
-> >          compatible:
-> > @@ -164,6 +177,9 @@ allOf:
-> >                - mediatek,mt8195-pcie
-> >      then:
-> >        properties:
-> > +        clocks:
-> > +          maxItems: 6
->=20
-> How come this is maxItems and not minItems? The max is always 6, before
-> and after your patch.
+- Mani
 
-ack, I will fix in v3
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 917c69edee1d5..9a71b8aa09b3c 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1578,7 +1578,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  	},
+>  	[IMX8MM_EP] = {
+>  		.variant = IMX8MM_EP,
+> -		.flags = IMX6_PCIE_FLAG_HAS_PHYDRV,
+> +		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
+> +			 IMX6_PCIE_FLAG_HAS_PHYDRV,
+>  		.mode = DW_PCIE_EP_TYPE,
+>  		.gpr = "fsl,imx8mm-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+> @@ -1589,7 +1590,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  	},
+>  	[IMX8MP_EP] = {
+>  		.variant = IMX8MP_EP,
+> -		.flags = IMX6_PCIE_FLAG_HAS_PHYDRV,
+> +		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
+> +			 IMX6_PCIE_FLAG_HAS_PHYDRV,
+>  		.mode = DW_PCIE_EP_TYPE,
+>  		.gpr = "fsl,imx8mp-iomuxc-gpr",
+>  		.clk_names = imx8mm_clks,
+> 
+> -- 
+> 2.34.1
+> 
 
-Regards,
-Lorenzo
-
->=20
-> Cheers,
-> Conor.
-
-
-
---Yc80wPPNW1Sai7R4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZn/tFwAKCRA6cBh0uS2t
-rPBkAPkByGAHSc9sSo+LyYsfPbigChxVRx3RRo8JU9/v060TNwD/UdFWihrwMXYc
-d/pzY8RPKCX5ZnsPem0Fwg0h4BBQwwk=
-=kx87
------END PGP SIGNATURE-----
-
---Yc80wPPNW1Sai7R4--
+-- 
+மணிவண்ணன் சதாசிவம்
 
