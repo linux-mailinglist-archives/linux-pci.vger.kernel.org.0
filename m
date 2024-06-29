@@ -1,69 +1,68 @@
-Return-Path: <linux-pci+bounces-9452-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9453-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59B7091CEE7
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 21:56:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1CFC91CEF3
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 22:06:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DCF8282594
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 19:56:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9DA31F21813
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 20:06:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E30D132118;
-	Sat, 29 Jun 2024 19:56:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA9E885938;
+	Sat, 29 Jun 2024 20:06:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE1680046;
-	Sat, 29 Jun 2024 19:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D094224CE;
+	Sat, 29 Jun 2024 20:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719690979; cv=none; b=iuEYPnzShUagG4vckIU2qgus0QnD+RvDBNdWbGdncRM2rScz5NiwLZ2kjsFzCUlwSOCX5Sfdn80DvDR63diV+0pjUk/iv6aj8UhiN6VfFNZpUOjdpk9o0cfRfyi6Ga5PjlNiccD9k/YRLYUuUWgnHdLwoPk3PlGMZQcUrFRkWNo=
+	t=1719691613; cv=none; b=bv6wA6m/ZQWDzsF8+i7fVAVQ95dTUAXrgSugR3vGd9sw4kc8Jhzd+KlJJEYfa8MIXSzDuu5Cheg/ffAtSs6RNEI9P+0Ze5LuGTo3itLEUtlFoPP0LivSlojyjdQQi9aRDsOjxh71UnT4d7x78aBGGnn+i0+5SSsicamwcB/H33M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719690979; c=relaxed/simple;
-	bh=1zyFjmfrnIpVtD5pfXtivITCYlSVJt8VcSyFAiMzARw=;
+	s=arc-20240116; t=1719691613; c=relaxed/simple;
+	bh=ZPuL5Z/V1gwfGwM/tqdYq4Hp+G95QBXpIZdd+2BpHHk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTnTc5KfBRn38v6ns8JjeGCyCNtDb5x7rx4lMHXEYsXI0wH5YwLPyyy1Xdv+PY+XMlULmCht2Ti4amLmFVMzaZVM1RwF5xQhbfWolQBsHUq/RDK8+gcOfKt6FNW/SlV4SqCI072osjhmuOr3Fvx6UkNZMPuXMAbcmOs1Cx9GPZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=MAtTgIYupFDiFGam+c/D4VO1ueN7ePwzl8yz18B/Qiz4zKwsFaQDoyqigNqcsMUXppK/1bRLaDbad7LQDWxoC/OA1kTyxjZpqAPZA7hTDCpJWqAGF0JMwSB8KcsEAmLrBCmG7CUdrDSb7YyfWug6QzBLKM8kBt4/cnH6f95aRQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70a078edb8aso667385b3a.1;
-        Sat, 29 Jun 2024 12:56:17 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f9cd92b146so10936245ad.3;
+        Sat, 29 Jun 2024 13:06:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719690977; x=1720295777;
+        d=1e100.net; s=20230601; t=1719691612; x=1720296412;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aspJJ3em1+CxpJdRNN6zcOGLZ0iaCLvtwvBApCjFbzg=;
-        b=bp26YanJ5pkSBHL1wXfI2nvGTQFABcVSutstRWrajrSjNEhCYv7ebvO0zX+DrfnFm/
-         jogxfqizkmAlOZRq6mk9OXPza5f4i10JTS6QAJNMae2/yNUtdo02KicEG0DHKtHc/9p8
-         qsMWGCgdLdXYsjzx1fj/x2e+bbaSpUfL/9ioQ7hoObltoh+kRA1W6/NJTRyoIF3BBrZG
-         u9etNRZdgukF5Zep3/Vo7tmUs1erIqtVoW/CLnu7WWv4Jvvs/8mc7zciNE1EGlWbI30D
-         9C+YLND/H4svk7t+SjRtIMrpv6XanedyTbRa5foqfo8uu8BRjAKjedTiTEIYuMPseWM6
-         E/+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWd7I9sEGknpLV+U65tuhLP7djfUAaT6lqnjB6daFHhstgsP4jmFpnm9RG8yg+ZqddXrv/n5uTa6gJyeejnNQHBsLFQZ8I9MQdQWoAkrbeGkR+bIqD/bTakaxomYR2whrFljgQvdcObsp1s6fI=
-X-Gm-Message-State: AOJu0YwQUD1IyTxfHWrucpmwsMEdVrK72kN4YWcm5kh8V1GuLj/sqfRC
-	dQPci9vMdXsU01EsNFO6BM9H1YuCN0CFGV/jFHOaRUdWri/FHymg
-X-Google-Smtp-Source: AGHT+IERcDSCR4toeoJWgnIplqAZZS/9A6vIMCPfeYbEeqAgC/q/zNfEH4MD0+DM+B+i/XYUzWoKZA==
-X-Received: by 2002:a05:6a00:1397:b0:706:2a38:94e2 with SMTP id d2e1a72fcca58-70aaaba9028mr3015397b3a.12.1719690977026;
-        Sat, 29 Jun 2024 12:56:17 -0700 (PDT)
+        bh=OHCdxB1HFRxFuOXeiccRoOgkY9b4f8oK2frgKYhhY8Y=;
+        b=Q6Ea7epgomtyZJmjIEEjIjS99akd5mQhHKyf/WDZ2st5L/Vg7lF4ZOo503l1NtmPti
+         qf5vMPQDeP9gn8IrneByjwiCekqrf+kCtpzso/0HyvBpGrcpmOlDMDlmKhZmSF2o1Rjd
+         u4+BfO0aEK4sLbtmgydXAAOoCLN0/qh0AVjWown7duTTdjmVNdTZOntoWfWyYNwnNsBg
+         h44aP1PvtxxvEgbHzBTN64iT4P6P6ifbiN032/29OPrtm5oa0oxEMPG19F+JD65Rnnr4
+         EOmw0aWqUyvA++/u7nTGvH4iRw6wbBOPO51LKYY3lAhiH24027DpYQ+NVD0iaGSq35ME
+         xVWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUf7KPDuQpA9H08EHq3waxWT9TkjZN5YQI+Kx8t6V3vV2jbhD4Mg8HnCjf0D5wcpOHnHuonTxxh/sHrFf5XOwu43Sd5rcmZ0DYRCdhQY1LQHvvdVk25rBp3y7IaNnYQFrcV9Y9+AiaVTshh+S8=
+X-Gm-Message-State: AOJu0Yy4QoGK3TTFfIRBqiuNzlsKypd+LyYIIUHhVxWci9Z5YmVckqV3
+	vOvODrm3N1gMS7fgyCZ1dOsfuJdDsgSWx354vw0/7hiTuuLF+IFx
+X-Google-Smtp-Source: AGHT+IGO1CKjHuaYlmJqJxWfbnp3aJMhTL4CKmwZNiixM2DreiYq74K0OJIM64qf3hDBOtWSq6bfuA==
+X-Received: by 2002:a17:902:e5c2:b0:1f8:393e:8b88 with SMTP id d9443c01a7336-1fadbd08dc4mr12783535ad.67.1719691611749;
+        Sat, 29 Jun 2024 13:06:51 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7086207ed02sm3407384b3a.95.2024.06.29.12.56.16
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10e365asm36783965ad.86.2024.06.29.13.06.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Jun 2024 12:56:16 -0700 (PDT)
-Date: Sun, 30 Jun 2024 04:56:15 +0900
+        Sat, 29 Jun 2024 13:06:51 -0700 (PDT)
+Date: Sun, 30 Jun 2024 05:06:50 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
 	jingoohan1@gmail.com, mani@kernel.org,
 	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v9 4/5] PCI: rcar-gen4: Add support for r8a779g0
-Message-ID: <20240629195615.GC2249818@rocinante>
+Subject: Re: [PATCH v9 0/5] PCI: rcar-gen4: Add R-Car V4H support
+Message-ID: <20240629200650.GD2249818@rocinante>
 References: <20240611125057.1232873-1-yoshihiro.shimoda.uh@renesas.com>
- <20240611125057.1232873-5-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,39 +71,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240611125057.1232873-5-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20240611125057.1232873-1-yoshihiro.shimoda.uh@renesas.com>
 
 Hello,
 
 [...]
-> +/*
-> + * The attached firmware file "104_PCIe_fw_addr_data_ver1.05.txt" in
-> + * the datasheet is a text file. But, Renesas is not able to distribute
-> + * the firmware freely. So, we require converting the text file
-> + * to a binary before the driver runs by using the following script:
-> + *
-> + * $ awk '/^\s*0x[0-9A-Fa-f]{4}\s+0x[0-9A-Fa-f]{4}/ \
-> + *      { print substr($2,5,2) substr($2,3,2) }' \
-> + *      104_PCIe_fw_addr_data_ver1.05.txt | xxd -p -r > \
-> + *      rcar_gen4_pcie.bin
-> + *    $ sha1sum rcar_gen4_pcie.bin
-> + *      1d0bd4b189b4eb009f5d564b1f93a79112994945  rcar_gen4_pcie.bin
-> + */
+> About the firmware binary, please refer to the following patch
+> descirption:
+>   PCI: rcar-gen4: Add support for r8a779g0
 
-I moved this comment to the top of the file, since it serves as more of
-a documentation bit for the controller itself, and is not specific to the
-function it was attached to, strictly speaking.
+This quite a sad state of affairs, and usually would I oppose including
+drivers that rely on closed proprietary firmware blobs to operate.  That
+said, Renesas is not really setting any precedent here, so we will live
+with this.
 
-That said, I wonder if we should include this at all?  The file name might
-and most likely will eventually change, as the datasheet gets updated to
-include new revisions and erratas, etc.
-
-So, I wonder if this is simply better to be included in the datasheet
-itself, or some product guide and such, where Renesas can keep this up to
-date and the users appraised of what they need to do to convert the
-firmware correctly.
-
-Users who do not have the datasheet and are not licensed wouldn't care.
+Shimoda-san, if you can, please pass the feedback to your bosses that this
+decision to keep the firmware closed is rather unfortunate.
 
 	Krzysztof
 
