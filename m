@@ -1,304 +1,139 @@
-Return-Path: <linux-pci+bounces-9457-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6D9991CFB0
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 01:35:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76CD491CFE8
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 05:08:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BB601F21C9A
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jun 2024 23:35:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AA461F216BF
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 03:08:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59DE23B1AC;
-	Sat, 29 Jun 2024 23:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BoVWdeFH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CA80175A5;
+	Sun, 30 Jun 2024 03:08:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from out198-3.us.a.mail.aliyun.com (out198-3.us.a.mail.aliyun.com [47.90.198.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725A1224CE
-	for <linux-pci@vger.kernel.org>; Sat, 29 Jun 2024 23:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF44422071;
+	Sun, 30 Jun 2024 03:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719704120; cv=none; b=H12DQ1GYATmWscq5qGP4axSCPGsR2dvAR1OH8/5yWb/Y4BqlOtdjuWWkjFIGtVnv4F3il+YEJMVlAd7G/6qWNb0TeFXw2pcQmv+3m7CDvQG0MrFvAHfTjEdm7fuIvYKzAufI6eOD1+jeNuV/vB0JMry35XsQNk4bzydh4KivO7k=
+	t=1719716907; cv=none; b=kRecLebEeWshUGyZOa4WDDA5LqTxH0wGXf3ersay8gnvOniAmD9+YmJRW+z391IDXsdRPOdoho7a0BCtFOvctQ1M8bVg8MCnmbRa15bv7MOxWkUt3uYLunKiinlqnZsG+2sxrvn5GXwq2FmxcqiR7m6UzD6eMabuJjlc12PFMKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719704120; c=relaxed/simple;
-	bh=a/dcUlqNgPm1PwDncpqODK7muBBQXs+VXNikkbI21dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ixVsa6BMdGxufvABo+fChe3ILLEtu6YkYboMQmpAaE1a1s1IsOUQB2IAw+q0gDfo3Thm+nmfiFmednA9AWmFvheH9prtaz54qtbQOZuBKxK7Aw/ItMfNTMCik0Y+SEtEleIzPh32rpq/l+OuXKyc4ZUmrTqkVvpNHDPgJ9eZjlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BoVWdeFH; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719704118; x=1751240118;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=a/dcUlqNgPm1PwDncpqODK7muBBQXs+VXNikkbI21dk=;
-  b=BoVWdeFHNhsGtwpgGFXH26oz1to8Tgd2S2lmmYRJNsdqZKFidN25ONl3
-   ryeqZzbz9J+W4dA5k2HVQbsNHIA/PXPJaCYVTQs2Lve8tQmiM5ewrlRmm
-   BOxzSn/RLMzUOAPxwi54rBl2hQoDqRdXzlQ4pMThOAdVjMJvuwmfRwowK
-   BimXLxmnZKFnCIB9e9u72sG9kP7hQcEV+yT0woN/ilwK6m0xK8LTW2Nyc
-   GsExezuhMWiP8v1OE3esG18CwTkCDGOow4U/xfB60o2+lnt6EDyAQ0P0q
-   3k2ua/RflIypu4+++7SJ9bCpRGZ4f6YsvDCPFytyhpIsaLMRYk0cXwdUR
-   A==;
-X-CSE-ConnectionGUID: ydh16uCzTE6Gm5R/3KdNFQ==
-X-CSE-MsgGUID: Ak5X2LoLTtmHF4vlgu41Zg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11118"; a="12319180"
-X-IronPort-AV: E=Sophos;i="6.09,173,1716274800"; 
-   d="scan'208";a="12319180"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2024 16:35:18 -0700
-X-CSE-ConnectionGUID: H5QSPUs7TK2BGId61P//0w==
-X-CSE-MsgGUID: JR5U1u9fSr6HobZmDwKNZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,173,1716274800"; 
-   d="scan'208";a="49569540"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 29 Jun 2024 16:35:16 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sNhb8-000KPN-1v;
-	Sat, 29 Jun 2024 23:35:14 +0000
-Date: Sun, 30 Jun 2024 07:34:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/keystone] BUILD SUCCESS
- 86f271f22bbb6391410a07e08d6ca3757fda01fa
-Message-ID: <202406300738.tKCDJTld-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1719716907; c=relaxed/simple;
+	bh=aUfF89qSyocSOJjmqewrNT2y/V7573e9/frAQrgOFlE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CWkf9nc6Jb/4Yi7so5uoYug8PMiF408w2wkUDf4LpTym90b2mgSMxEL/J/K/vtaA5mWnIEt74TfWWHtJP55VbzcNK7m3eLywWZy0lnDFktdIRwZlNkpkTBckY96X41gx4vRqQDGK+OFvds38rLP5mGp5tVJbl1K3qBmcOE+jfs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.08012033|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.583777-0.00191743-0.414306;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033068157007;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.YDKtU-w_1719715945;
+Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.YDKtU-w_1719715945)
+          by smtp.aliyun-inc.com;
+          Sun, 30 Jun 2024 10:52:26 +0800
+From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+To: helgaas@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lkp@intel.com,
+	llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	zhoushengqing@ttyinfo.com
+Subject: Re: Re: [PATCH] PCI: Enable io space 1k granularity for intel cpu root port
+Date: Sun, 30 Jun 2024 02:52:25 +0000
+Message-Id: <20240630025225.9910-1-zhoushengqing@ttyinfo.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240629213432.GA1485157@bhelgaas>
+References: <20240629213432.GA1485157@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/keystone
-branch HEAD: 86f271f22bbb6391410a07e08d6ca3757fda01fa  PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
+> On Thu, Jun 27, 2024 at 12:58:56AM +0000, Zhou Shengqing wrote:
+> > This patch add 1k granularity for intel root port bridge.Intel latest
+> > server CPU support 1K granularity,And there is an BIOS setup item named
+> > "EN1K",but linux doesn't support it. if an IIO has 5 IOU (SPR has 5 IOUs)
+> > all are bifurcated 2x8.In a 2P server system,There are 20 P2P bridges
+> > present.if keep 4K granularity allocation,it need 20*4=80k io space,
+> > exceeding 64k.I test it in a 16*nvidia 4090s system under intel eaglestrem
+> > platform.There are six 4090s that cannot be allocated I/O resources.
+> > So I applied this patch.And I found a similar implementation in quirks.c,
+> > but it only targets the Intel P64H2 platform.
+> > 
+> > Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+> > ---
+> >  drivers/pci/probe.c | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> > 
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 5fbabb4e3425..909962795311 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -461,6 +461,9 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
+> >  	u32 buses;
+> >  	u16 io;
+> >  	u32 pmem, tmp;
+> > +	u16 ven_id, dev_id;
+> > +	u16 en1k = 0;
+> > +	struct pci_dev *dev = NULL;
+> >  	struct resource res;
+> >  
+> >  	pci_read_config_dword(bridge, PCI_PRIMARY_BUS, &buses);
+> > @@ -478,6 +481,26 @@ static void pci_read_bridge_windows(struct pci_dev *bridge)
+> >  	}
+> >  	if (io) {
+> >  		bridge->io_window = 1;
+> > +		if (pci_is_root_bus(bridge->bus)) {
+> > +			list_for_each_entry(dev, &bridge->bus->devices, bus_list) {
+> > +				pci_read_config_word(dev, PCI_VENDOR_ID, &ven_id);
+> > +				pci_read_config_word(dev, PCI_DEVICE_ID, &dev_id);
+> > +				if (ven_id == PCI_VENDOR_ID_INTEL && dev_id == 0x09a2) {
+> > +					/*IIO MISC Control offset 0x1c0*/
+> > +					pci_read_config_word(dev, 0x1c0, &en1k);
+> > +				}
+> > +			}
+> > +		/*
+> > +		 *Intel ICX SPR EMR GNR
+> > +		 *IIO MISC Control (IIOMISCCTRL_1_5_0_CFG) — Offset 1C0h
+> > +		 *bit 2:Enable 1K (EN1K)
+> > +		 *This bit when set, enables 1K granularity for I/O space decode
+> > +		 *in each of the virtual P2P bridges
+> > +		 *corresponding to root ports, and DMI ports.
+> > +		 */
+> > +		if (en1k & 0x4)
+> > +			bridge->io_window_1k = 1;
+> > +		}
+> 
+> I still think this is not going to work because I don't want this kind
+> of device-specific clutter in this generic path. The pcibios_*
+> interfaces are history that we'd like to get rid of also, but it would
+> be better than putting it here.
 
-elapsed time: 1491m
+Do you think it should be putted to the pci_bios* interface?
 
-configs tested: 209
-configs skipped: 4
+And if there is no suitable place to apply this patch, 
+then let's just ignore this issue.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> 
+> Please follow english conventions as much as you can, e.g., space
+> after "*" in comments, space after period at end of sentence,
+> capitalize first word of sentence, blank line between paragraphs.
+> Most of this you can see by looking at other comments.
+> 
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                     haps_hs_smp_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240629   gcc-13.2.0
-arc                   randconfig-002-20240629   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                     am200epdkit_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                      footbridge_defconfig   gcc-13.2.0
-arm                       imx_v6_v7_defconfig   gcc-13.2.0
-arm                        mvebu_v5_defconfig   gcc-13.2.0
-arm                       omap2plus_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240629   gcc-13.2.0
-arm                   randconfig-002-20240629   gcc-13.2.0
-arm                   randconfig-003-20240629   gcc-13.2.0
-arm                   randconfig-004-20240629   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240629   gcc-13.2.0
-arm64                 randconfig-002-20240629   gcc-13.2.0
-arm64                 randconfig-003-20240629   gcc-13.2.0
-arm64                 randconfig-004-20240629   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240629   gcc-13.2.0
-csky                  randconfig-002-20240629   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240629   gcc-7
-i386         buildonly-randconfig-001-20240630   clang-18
-i386         buildonly-randconfig-002-20240629   gcc-7
-i386         buildonly-randconfig-002-20240630   clang-18
-i386         buildonly-randconfig-003-20240629   gcc-7
-i386         buildonly-randconfig-003-20240630   clang-18
-i386         buildonly-randconfig-004-20240629   gcc-7
-i386         buildonly-randconfig-004-20240630   clang-18
-i386         buildonly-randconfig-005-20240629   gcc-7
-i386         buildonly-randconfig-005-20240630   clang-18
-i386         buildonly-randconfig-006-20240629   gcc-7
-i386         buildonly-randconfig-006-20240630   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240629   gcc-7
-i386                  randconfig-001-20240630   clang-18
-i386                  randconfig-002-20240629   gcc-7
-i386                  randconfig-002-20240630   clang-18
-i386                  randconfig-003-20240629   gcc-7
-i386                  randconfig-003-20240630   clang-18
-i386                  randconfig-004-20240629   gcc-7
-i386                  randconfig-004-20240630   clang-18
-i386                  randconfig-005-20240629   gcc-7
-i386                  randconfig-005-20240630   clang-18
-i386                  randconfig-006-20240629   gcc-7
-i386                  randconfig-006-20240630   clang-18
-i386                  randconfig-011-20240629   gcc-7
-i386                  randconfig-011-20240630   clang-18
-i386                  randconfig-012-20240629   gcc-7
-i386                  randconfig-012-20240630   clang-18
-i386                  randconfig-013-20240629   gcc-7
-i386                  randconfig-013-20240630   clang-18
-i386                  randconfig-014-20240629   gcc-7
-i386                  randconfig-014-20240630   clang-18
-i386                  randconfig-015-20240629   gcc-7
-i386                  randconfig-015-20240630   clang-18
-i386                  randconfig-016-20240629   gcc-7
-i386                  randconfig-016-20240630   clang-18
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240629   gcc-13.2.0
-loongarch             randconfig-002-20240629   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                         apollo_defconfig   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-m68k                       m5249evb_defconfig   gcc-13.2.0
-m68k                           sun3_defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                           ci20_defconfig   gcc-13.2.0
-mips                      maltasmvp_defconfig   gcc-13.2.0
-mips                         rt305x_defconfig   gcc-13.2.0
-mips                           xway_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240629   gcc-13.2.0
-nios2                 randconfig-002-20240629   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240629   gcc-13.2.0
-parisc                randconfig-002-20240629   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                     akebono_defconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                 canyonlands_defconfig   gcc-13.2.0
-powerpc                       holly_defconfig   gcc-13.2.0
-powerpc                      katmai_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240629   gcc-13.2.0
-powerpc               randconfig-002-20240629   gcc-13.2.0
-powerpc               randconfig-003-20240629   gcc-13.2.0
-powerpc                     tqm8541_defconfig   gcc-13.2.0
-powerpc                         wii_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240629   gcc-13.2.0
-powerpc64             randconfig-002-20240629   gcc-13.2.0
-powerpc64             randconfig-003-20240629   gcc-13.2.0
-riscv                             allnoconfig   gcc-13.2.0
-riscv                               defconfig   gcc-13.2.0
-riscv                 randconfig-001-20240629   gcc-13.2.0
-riscv                 randconfig-002-20240629   gcc-13.2.0
-s390                              allnoconfig   gcc-13.2.0
-s390                                defconfig   gcc-13.2.0
-s390                  randconfig-001-20240629   gcc-13.2.0
-s390                  randconfig-002-20240629   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                         ap325rxa_defconfig   gcc-13.2.0
-sh                         apsh4a3a_defconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                         ecovec24_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240629   gcc-13.2.0
-sh                    randconfig-002-20240629   gcc-13.2.0
-sh                          rsk7203_defconfig   gcc-13.2.0
-sh                   rts7751r2dplus_defconfig   gcc-13.2.0
-sh                           se7343_defconfig   gcc-13.2.0
-sh                           se7722_defconfig   gcc-13.2.0
-sh                           se7724_defconfig   gcc-13.2.0
-sh                           se7780_defconfig   gcc-13.2.0
-sh                             shx3_defconfig   gcc-13.2.0
-sh                            titan_defconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240629   gcc-13.2.0
-sparc64               randconfig-002-20240629   gcc-13.2.0
-um                                allnoconfig   gcc-13.2.0
-um                                  defconfig   gcc-13.2.0
-um                             i386_defconfig   gcc-13.2.0
-um                    randconfig-001-20240629   gcc-13.2.0
-um                    randconfig-002-20240629   gcc-13.2.0
-um                           x86_64_defconfig   gcc-13.2.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240629   clang-18
-x86_64       buildonly-randconfig-001-20240630   gcc-13
-x86_64       buildonly-randconfig-002-20240629   clang-18
-x86_64       buildonly-randconfig-002-20240630   gcc-13
-x86_64       buildonly-randconfig-003-20240629   clang-18
-x86_64       buildonly-randconfig-003-20240630   gcc-13
-x86_64       buildonly-randconfig-004-20240629   clang-18
-x86_64       buildonly-randconfig-004-20240630   gcc-13
-x86_64       buildonly-randconfig-005-20240629   clang-18
-x86_64       buildonly-randconfig-005-20240630   gcc-13
-x86_64       buildonly-randconfig-006-20240629   clang-18
-x86_64       buildonly-randconfig-006-20240630   gcc-13
-x86_64                              defconfig   clang-18
-x86_64                                  kexec   clang-18
-x86_64                randconfig-001-20240629   clang-18
-x86_64                randconfig-001-20240630   gcc-13
-x86_64                randconfig-002-20240629   clang-18
-x86_64                randconfig-002-20240630   gcc-13
-x86_64                randconfig-003-20240629   clang-18
-x86_64                randconfig-003-20240630   gcc-13
-x86_64                randconfig-004-20240629   clang-18
-x86_64                randconfig-004-20240630   gcc-13
-x86_64                randconfig-005-20240629   clang-18
-x86_64                randconfig-005-20240630   gcc-13
-x86_64                randconfig-006-20240629   clang-18
-x86_64                randconfig-006-20240630   gcc-13
-x86_64                randconfig-011-20240629   clang-18
-x86_64                randconfig-011-20240630   gcc-13
-x86_64                randconfig-012-20240629   clang-18
-x86_64                randconfig-012-20240630   gcc-13
-x86_64                randconfig-013-20240629   clang-18
-x86_64                randconfig-013-20240630   gcc-13
-x86_64                randconfig-014-20240629   clang-18
-x86_64                randconfig-014-20240630   gcc-13
-x86_64                randconfig-015-20240629   clang-18
-x86_64                randconfig-015-20240630   gcc-13
-x86_64                randconfig-016-20240629   clang-18
-x86_64                randconfig-016-20240630   gcc-13
-x86_64                randconfig-071-20240629   clang-18
-x86_64                randconfig-071-20240630   gcc-13
-x86_64                randconfig-072-20240629   clang-18
-x86_64                randconfig-072-20240630   gcc-13
-x86_64                randconfig-073-20240629   clang-18
-x86_64                randconfig-073-20240630   gcc-13
-x86_64                randconfig-074-20240629   clang-18
-x86_64                randconfig-074-20240630   gcc-13
-x86_64                randconfig-075-20240629   clang-18
-x86_64                randconfig-075-20240630   gcc-13
-x86_64                randconfig-076-20240629   clang-18
-x86_64                randconfig-076-20240630   gcc-13
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                  cadence_csp_defconfig   gcc-13.2.0
-xtensa                randconfig-001-20240629   gcc-13.2.0
-xtensa                randconfig-002-20240629   gcc-13.2.0
-xtensa                    smp_lx200_defconfig   gcc-13.2.0
+Thank you sincerely for your help with my first patch commitment.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> >  		pci_read_bridge_io(bridge, &res, true);
+> >  	}
+> >  
+> > -- 
+> > 2.39.2
+> > 
 
