@@ -1,228 +1,203 @@
-Return-Path: <linux-pci+bounces-9485-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9486-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6974691D3F7
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 22:33:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AFE791D423
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 23:14:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88A691C20BD0
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 20:33:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17D6D1F211B8
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 21:14:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486DB152E06;
-	Sun, 30 Jun 2024 20:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 904ED2AE68;
+	Sun, 30 Jun 2024 21:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C3Mk42p3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1CF3A268;
-	Sun, 30 Jun 2024 20:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97D14F20E
+	for <linux-pci@vger.kernel.org>; Sun, 30 Jun 2024 21:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719779605; cv=none; b=P9oZdDgnu7SI89ATTx9nhFYmehrx2guxShSp+hXflX+bgkEuc7ibne8i7x3yHRvWTOJKLjJqhAiZHXyZ0JRfGDsX3XVfzslzIGPBr0gRD+piop2+sSOiL1eKINHTTBsvUq8uQgPUCW16VT5b9emi5Dt8/YDpz/edgPpo6yjPjtg=
+	t=1719782046; cv=none; b=qK8lsJRKWo64cIS+4o0XJji9FPiG6lLViYgl+2cUS9vZppI2007Q40LgBtLo1BkqZqaKm3HowPjsRLA5fDwkFDyv39qNBMTW7DT6/i8KR/wu0fgK55AjRaZ6/76RtXu1IYSnqL41Eew5y36qlkA8vS5sbpr29RIj8h0oK5MZiqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719779605; c=relaxed/simple;
-	bh=7nuE1KfZ+7BNLKWM9fT+4fbsltUVH8PuI92OwB6eteQ=;
-	h=Message-ID:In-Reply-To:References:From:Date:Subject:MIME-Version:
-	 Content-Type:To:Cc; b=bY9il4UbsepH1sOch2Di88v1VHHwrsQ31/gllWcC/4ULW8d2a6AAG4LDzTd7PWu0UrtHfoEZUfehGjyWH1y9LfGvBn5Dn8JOdZuX+G6w+50QCe3TF9WIWA6RFWb9Hw0olnysYukaMTu0aQn2t/yUoI0PJFJDF99E/rM57r/hLWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by mailout1.hostsharing.net (Postfix) with ESMTPS id 2A571101917A3;
-	Sun, 30 Jun 2024 22:33:21 +0200 (CEST)
-Received: from localhost (unknown [89.246.108.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h08.hostsharing.net (Postfix) with ESMTPSA id E400161DA805;
-	Sun, 30 Jun 2024 22:33:20 +0200 (CEST)
-X-Mailbox-Line: From ee3248f9f8d60cff9106a5a46c5f5d53ac81e60a Mon Sep 17 00:00:00 2001
-Message-ID: <ee3248f9f8d60cff9106a5a46c5f5d53ac81e60a.1719771133.git.lukas@wunner.de>
-In-Reply-To: <cover.1719771133.git.lukas@wunner.de>
-References: <cover.1719771133.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Sun, 30 Jun 2024 21:53:00 +0200
-Subject: [PATCH v2 18/18] spdm: Allow control of next requester nonce through
- sysfs
+	s=arc-20240116; t=1719782046; c=relaxed/simple;
+	bh=Hyj7jkAZWELidn9VSJwA/jcGLYiFPLaBNuAQbwIsY9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hCzHxQvTCaYCIj7NOgm4dMOw029hoIZX6D5aE319NeiqJg37N9s3et/mojQ0bMYhEsd8z7byoTlmVzR5ntfnbv4e0fHdXfwA6ANOTD2Vbo1O1lzOtQU620bDAQ72PiWq+UXZ+Y+HjPEzzCCIKMOz628b9CHgzmGhwVxotj74iW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C3Mk42p3; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719782044; x=1751318044;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Hyj7jkAZWELidn9VSJwA/jcGLYiFPLaBNuAQbwIsY9w=;
+  b=C3Mk42p3Gcfl1uXCD/9ssgrWrYemETDTMxKXYAhxTfZ6ReozbUCu8xsD
+   bWs6nex/rqYZ8vZ4AkwAc6zDboY0Sl4R8WGEtWSBReY+98UWI8y3KEWEH
+   gmoefqpCJ6PdpQfMfq1aluEuKrfs94pP3sEd/cz+Yi+9VO8qeUUdM3x5l
+   amdkaweYNBYiVbXMU2vKhKMCK20CiSgz/8Z8vn8GVSziCYOVaTZ8reVFE
+   o1B0O1CzV5trAIg4Ha1l2iv1KR/Ov+mnSDBVDJBK3RB12Li8uDjt5oIl0
+   AMNONi+mPOm+7ifrjgZ9ZO7YIi5usgn9HGESb1lO2ISJHrjrD7v5fZNE9
+   A==;
+X-CSE-ConnectionGUID: Aoph5NjoS1qAqwfHa0Cflw==
+X-CSE-MsgGUID: qaDey2OHRjiFdxHp300G6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="17023544"
+X-IronPort-AV: E=Sophos;i="6.09,174,1716274800"; 
+   d="scan'208";a="17023544"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2024 14:14:04 -0700
+X-CSE-ConnectionGUID: +ri4PTaURsKzWifthxx2Tg==
+X-CSE-MsgGUID: jHeE+y3lSgyDdak06oEOvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,174,1716274800"; 
+   d="scan'208";a="49770806"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 30 Jun 2024 14:14:03 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sO1s0-000LxQ-2h;
+	Sun, 30 Jun 2024 21:14:00 +0000
+Date: Mon, 01 Jul 2024 05:13:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/rcar-gen4] BUILD SUCCESS
+ 568925c4a197c46d2561bb56f0148b70d06339a5
+Message-ID: <202407010544.Lep7K8n4-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, James Bottomley <James.Bottomley@HansenPartnership.com>, <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-Cc: <linuxarm@huawei.com>, David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Li, Ming" <ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Alistair Francis <alistair.francis@wdc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, "Damien Le Moal" <dlemoal@kernel.org>, Alexey Kardashevskiy <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>, Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>
+Content-Type: text/plain; charset=us-ascii
 
-Remote attestation services may mistrust the kernel to always use a
-fresh nonce for SPDM authentication.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar-gen4
+branch HEAD: 568925c4a197c46d2561bb56f0148b70d06339a5  PCI: rcar-gen4: Add support for R-Car V4H
 
-So allow user space to set the next requester nonce by writing to a
-sysfs attribute.
+elapsed time: 1413m
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Jérôme Glisse <jglisse@google.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>
----
- Documentation/ABI/testing/sysfs-devices-spdm | 29 ++++++++++++++++
- lib/spdm/core.c                              |  1 +
- lib/spdm/req-authenticate.c                  |  8 ++++-
- lib/spdm/req-sysfs.c                         | 35 ++++++++++++++++++++
- lib/spdm/spdm.h                              |  4 +++
- 5 files changed, 76 insertions(+), 1 deletion(-)
+configs tested: 108
+configs skipped: 3
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-spdm b/Documentation/ABI/testing/sysfs-devices-spdm
-index 5ce34ce10b9c..d315b47b4af0 100644
---- a/Documentation/ABI/testing/sysfs-devices-spdm
-+++ b/Documentation/ABI/testing/sysfs-devices-spdm
-@@ -216,3 +216,32 @@ Description:
- 		necessary to parse the SPDM messages in the transcript to find
- 		and extract the nonces, which is cumbersome.  That's why they
- 		are exposed as separate files.
-+
-+
-+What:		/sys/devices/.../signatures/next_requester_nonce
-+Date:		June 2024
-+Contact:	Lukas Wunner <lukas@wunner.de>
-+Description:
-+		If you do not trust the kernel to always use a fresh nonce,
-+		write 32 bytes to this file to set the requester nonce used
-+		in the next SPDM authentication sequence.
-+
-+		Meant for remote attestation services.  You are responsible
-+		for providing a nonce with sufficient entropy.  The kernel
-+		only uses the nonce once, so provide a new one every time
-+		you reauthenticate the device.  If you do not provide a
-+		nonce, the kernel generates a random one.
-+
-+		After the nonce has been consumed, it becomes readable as
-+		the newest [0-9]*_requester_nonce, which proves its usage::
-+
-+		 # dd if=/dev/random bs=32 count=1 | \
-+		   tee signatures/next_requester_nonce | hexdump
-+		 0000000 e0 77 91 54 bd 56 99 c2 ea 4f 0b 1a 7f ba 6e 59
-+		 0000010 8f ee f6 b2 26 82 58 34 9e e5 8c 8a 31 58 29 7e
-+
-+		 # echo re > authenticated
-+
-+		 # hexdump $(\ls -t signatures/[0-9]*_requester_nonce | head -1)
-+		 0000000 e0 77 91 54 bd 56 99 c2 ea 4f 0b 1a 7f ba 6e 59
-+		 0000010 8f ee f6 b2 26 82 58 34 9e e5 8c 8a 31 58 29 7e
-diff --git a/lib/spdm/core.c b/lib/spdm/core.c
-index b6a46bdbb2f9..7371adb7a52f 100644
---- a/lib/spdm/core.c
-+++ b/lib/spdm/core.c
-@@ -434,6 +434,7 @@ void spdm_destroy(struct spdm_state *spdm_state)
- 	spdm_reset(spdm_state);
- 	spdm_destroy_log(spdm_state);
- 	mutex_destroy(&spdm_state->lock);
-+	kfree(spdm_state->next_nonce);
- 	kfree(spdm_state);
- }
- EXPORT_SYMBOL_GPL(spdm_destroy);
-diff --git a/lib/spdm/req-authenticate.c b/lib/spdm/req-authenticate.c
-index 7c977f5835c1..489fc88de74d 100644
---- a/lib/spdm/req-authenticate.c
-+++ b/lib/spdm/req-authenticate.c
-@@ -626,7 +626,13 @@ static int spdm_challenge(struct spdm_state *spdm_state, u8 slot, bool verify)
- 	};
- 	int rc, length;
- 
--	get_random_bytes(&req.nonce, sizeof(req.nonce));
-+	if (spdm_state->next_nonce) {
-+		memcpy(&req.nonce, spdm_state->next_nonce, sizeof(req.nonce));
-+		kfree(spdm_state->next_nonce);
-+		spdm_state->next_nonce = NULL;
-+	} else {
-+		get_random_bytes(&req.nonce, sizeof(req.nonce));
-+	}
- 
- 	if (spdm_state->version <= 0x12)
- 		req_sz = offsetofend(typeof(req), nonce);
-diff --git a/lib/spdm/req-sysfs.c b/lib/spdm/req-sysfs.c
-index c782054f8e18..232d4a00a510 100644
---- a/lib/spdm/req-sysfs.c
-+++ b/lib/spdm/req-sysfs.c
-@@ -176,13 +176,48 @@ const struct attribute_group spdm_certificates_group = {
- 
- /* signatures attributes */
- 
-+static umode_t spdm_signatures_are_visible(struct kobject *kobj,
-+					   struct bin_attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct spdm_state *spdm_state = dev_to_spdm_state(dev);
-+
-+	if (IS_ERR_OR_NULL(spdm_state))
-+		return SYSFS_GROUP_INVISIBLE;
-+
-+	return a->attr.mode;
-+}
-+
-+static ssize_t next_requester_nonce_write(struct file *file,
-+					  struct kobject *kobj,
-+					  struct bin_attribute *attr,
-+					  char *buf, loff_t off, size_t count)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct spdm_state *spdm_state = dev_to_spdm_state(dev);
-+
-+	guard(mutex)(&spdm_state->lock);
-+
-+	if (!spdm_state->next_nonce) {
-+		spdm_state->next_nonce = kmalloc(SPDM_NONCE_SZ, GFP_KERNEL);
-+		if (!spdm_state->next_nonce)
-+			return -ENOMEM;
-+	}
-+
-+	memcpy(spdm_state->next_nonce + off, buf, count);
-+	return count;
-+}
-+static BIN_ATTR_WO(next_requester_nonce, SPDM_NONCE_SZ);
-+
- static struct bin_attribute *spdm_signatures_bin_attrs[] = {
-+	&bin_attr_next_requester_nonce,
- 	NULL
- };
- 
- const struct attribute_group spdm_signatures_group = {
- 	.name = "signatures",
- 	.bin_attrs = spdm_signatures_bin_attrs,
-+	.is_bin_visible = spdm_signatures_are_visible,
- };
- 
- static unsigned int spdm_max_log_sz = SZ_16M; /* per device */
-diff --git a/lib/spdm/spdm.h b/lib/spdm/spdm.h
-index 448107c92db7..aa36aa55e718 100644
---- a/lib/spdm/spdm.h
-+++ b/lib/spdm/spdm.h
-@@ -475,6 +475,9 @@ struct spdm_error_rsp {
-  *	itself and the transcript with trailing signature.
-  * @log_counter: Number of generated log entries so far.  Will be prefixed to
-  *	the sysfs files of the next generated log entry.
-+ * @next_nonce: Requester nonce to be used for the next authentication
-+ *	sequence.  Populated from user space through sysfs.
-+ *	If user space does not provide a nonce, the kernel uses a random one.
-  */
- struct spdm_state {
- 	struct device *dev;
-@@ -521,6 +524,7 @@ struct spdm_state {
- 	struct list_head log;
- 	size_t log_sz;
- 	u32 log_counter;
-+	u8 *next_nonce;
- };
- 
- extern struct list_head spdm_state_list;
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                                 defconfig   gcc-13.2.0
+arm                            dove_defconfig   gcc-13.2.0
+arm                          exynos_defconfig   gcc-13.2.0
+arm                          pxa168_defconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240630   clang-18
+i386         buildonly-randconfig-002-20240630   clang-18
+i386         buildonly-randconfig-003-20240630   clang-18
+i386         buildonly-randconfig-004-20240630   clang-18
+i386         buildonly-randconfig-005-20240630   clang-18
+i386         buildonly-randconfig-006-20240630   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240630   clang-18
+i386                  randconfig-002-20240630   clang-18
+i386                  randconfig-003-20240630   clang-18
+i386                  randconfig-004-20240630   clang-18
+i386                  randconfig-005-20240630   clang-18
+i386                  randconfig-006-20240630   clang-18
+i386                  randconfig-011-20240630   clang-18
+i386                  randconfig-012-20240630   clang-18
+i386                  randconfig-013-20240630   clang-18
+i386                  randconfig-014-20240630   clang-18
+i386                  randconfig-015-20240630   clang-18
+i386                  randconfig-016-20240630   clang-18
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+m68k                          hp300_defconfig   gcc-13.2.0
+m68k                       m5275evb_defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                     cu1830-neo_defconfig   gcc-13.2.0
+mips                            gpr_defconfig   gcc-13.2.0
+mips                malta_qemu_32r6_defconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                    ge_imp3a_defconfig   gcc-13.2.0
+powerpc                        icon_defconfig   gcc-13.2.0
+powerpc                     ppa8548_defconfig   gcc-13.2.0
+powerpc                    sam440ep_defconfig   gcc-13.2.0
+powerpc                     stx_gp3_defconfig   gcc-13.2.0
+powerpc                     tqm8541_defconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                               defconfig   gcc-13.2.0
+riscv             nommu_k210_sdcard_defconfig   gcc-13.2.0
+s390                              allnoconfig   gcc-13.2.0
+s390                                defconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                             sh03_defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+um                                allnoconfig   gcc-13.2.0
+um                                  defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-13.2.0
+um                           x86_64_defconfig   gcc-13.2.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240630   gcc-13
+x86_64       buildonly-randconfig-002-20240630   gcc-13
+x86_64       buildonly-randconfig-003-20240630   gcc-13
+x86_64       buildonly-randconfig-004-20240630   gcc-13
+x86_64       buildonly-randconfig-005-20240630   gcc-13
+x86_64       buildonly-randconfig-006-20240630   gcc-13
+x86_64                              defconfig   clang-18
+x86_64                randconfig-001-20240630   gcc-13
+x86_64                randconfig-002-20240630   gcc-13
+x86_64                randconfig-003-20240630   gcc-13
+x86_64                randconfig-004-20240630   gcc-13
+x86_64                randconfig-005-20240630   gcc-13
+x86_64                randconfig-006-20240630   gcc-13
+x86_64                randconfig-011-20240630   gcc-13
+x86_64                randconfig-012-20240630   gcc-13
+x86_64                randconfig-013-20240630   gcc-13
+x86_64                randconfig-014-20240630   gcc-13
+x86_64                randconfig-015-20240630   gcc-13
+x86_64                randconfig-016-20240630   gcc-13
+x86_64                randconfig-071-20240630   gcc-13
+x86_64                randconfig-072-20240630   gcc-13
+x86_64                randconfig-073-20240630   gcc-13
+x86_64                randconfig-074-20240630   gcc-13
+x86_64                randconfig-075-20240630   gcc-13
+x86_64                randconfig-076-20240630   gcc-13
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
