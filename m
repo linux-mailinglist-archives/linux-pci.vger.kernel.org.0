@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-9463-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9464-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37C3391D299
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 18:10:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3EF891D2A3
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 18:13:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C4071F213DC
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 16:10:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EDCE281722
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 16:13:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FBA515445B;
-	Sun, 30 Jun 2024 16:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08223155A5D;
+	Sun, 30 Jun 2024 16:13:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obVOonYY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XBVLfJus"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE256154429
-	for <linux-pci@vger.kernel.org>; Sun, 30 Jun 2024 16:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402D6154429
+	for <linux-pci@vger.kernel.org>; Sun, 30 Jun 2024 16:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719763837; cv=none; b=Nj3k5YUyuXxyMfiifIMidya3eGooeDx95u2o7VKJ6S/6plBtviOLTZG8XGTlYE/mO/C5Ci6hzTWq+M7bxIo6y+DjRH9T2GTspROVxq9Q8+CpTLeSqtYg+Ss3ZvmapCctTnQhmsIYxbBI5eOFx2wpuW20Tc4O6fIHLUw0rLR+MlY=
+	t=1719764016; cv=none; b=qBOL+tssIdEQkuEGb6Ufuq8hI9tD2z3XB1gBUJxLNcoccelm5BNObnAT93rSelbYL6Ec0oAa7vLBcusa+nrDiJDzaEC1f7/+STjLnb9g/XD/Q6UOCox6riFvG9lbvFIhnPrmuX4wFwNVzHE8YlNavJKo27FQn8oFplsJCSCMO0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719763837; c=relaxed/simple;
-	bh=5LzWP3O/dnDF2PY01UY6rF4H2MAzHarDD9tAA3WeG8s=;
+	s=arc-20240116; t=1719764016; c=relaxed/simple;
+	bh=8b4X0VJ3g+zSBcJYvF82Zu6Q2u1JUQw1QIF+qvDy3II=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KBevvdjGV1of6sKTkg48GMD+05giWJjmba+yGoBiWC0n1RlNJLlVtdvYWsYC3hfUtTgju8AHS5EHBcl133dqg8jYpUTSx3javZ7YDFBJMQKSqzoDtowO0rd28LxaMuNqP4dsV8xtRIqlsQXuV326ZAvf5PV+Gclbjfi3YbkMIGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=obVOonYY; arc=none smtp.client-ip=209.85.210.175
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hx+MjG1toRACO2Z6lYZl5ee3xmlkOulNYMyMyxW1kv/5ppm7Z/EIZ8AYKnZdmosg9Y8oqh3PVehBicQGWS1ULKt8uZwDhJ1yyqxwNILUtHasGlRqA9O1jzh+jBJFgtdsLdb6Sk2W/0YBvba6Bi6cCSr/KBXTYbV6tU4QQw/PgQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XBVLfJus; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-70698bcd19eso1282871b3a.0
-        for <linux-pci@vger.kernel.org>; Sun, 30 Jun 2024 09:10:35 -0700 (PDT)
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-706b53ee183so2173040b3a.1
+        for <linux-pci@vger.kernel.org>; Sun, 30 Jun 2024 09:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719763835; x=1720368635; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719764013; x=1720368813; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=IszfV8T4b9z12YmSOdHo4qEq5YZATMox6eGaVhw+N9Y=;
-        b=obVOonYY+vSJ0RIU1r24YSD/Cr2Q9L3eQdaLuCSAEgkmYrOe4gH1sZqpqa1bVfSQg1
-         qqdpjiemcB+IdRLj8N4vcQXmitXTDLeLv1M9SgxWKYMmOC3p5mxL51EwKVqayv9Bwh3V
-         ygm7Oh9wT9b7IFR7LfH74/ifKRoaKGXcB+Xd3xmyBJsUDgD28TG+UcuubuHaVtgyMV5d
-         TviE7yKFs5Fuu3mF3hfQYy9smSdmZ5OFNKkQWalE6lXNsqeqvuk+RHMvPa3fsbgCio0r
-         6EJ6I3KZY38OM4xboO3a6U4HJIQGqnzDQ70m10oL92nFwOZS1h+dhgjD2DeROCWN6WRg
-         4B1g==
+        bh=fhYNd6YI+Z5WjMzKTVCzzYrVGlFpZjqEpL+94ljYX4w=;
+        b=XBVLfJusXOuri5DE2d/cp2APJafYAZjnqqX/DXanvHq/EYFog9iRuznfnv2iTURXB0
+         xf7yxK/z4mtCoVaZmtg7Cl1BJHGE1w1v9nrHwuaZM5+xw7x5pDOcT80kpjE28XAjRwCK
+         UQS5vXyZEbTJtC7TT1+jE9HoQSzQU8Z/DO/f+lWVrlUOLVOJtWHbAhk+m9nKg/MBobxB
+         pa/A7bV9s7hitus/ATkdQ9ML9kWd4DAzXr7iBcA8T/Wxk6mlezpWvddaso4siTSLpRTs
+         JcbExyAcsIZoXhBPZ5Zz2VtZcodm6+UDLbKT1u3iM9ZnkXLIXGbA8GQiLJPpDufkN5xp
+         rdOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719763835; x=1720368635;
+        d=1e100.net; s=20230601; t=1719764013; x=1720368813;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IszfV8T4b9z12YmSOdHo4qEq5YZATMox6eGaVhw+N9Y=;
-        b=k79b499dLiP63FgmLQuufbUBE/IHUkR3943kE5BnsTAzJpI4TIiuM6NQ9EwpSq1J9Z
-         DmI9KjtVSFeAlfnf64mDFlUsTrbE7DrG7uY1Yx28hILwpUFe7bw7ndg5iPoBiTiRI0om
-         oAQSrmAe8+xiI65WnHB/9VeyXWeo0hspRKIitr5lNrBBNMOFEZDQdLdGo84MzI8of0+q
-         lT84aTvXesfrxvbGI8eqqrIdQlQdGj19TeZ7lrnVXG6dOrONBA/4GW/gHcMNxIxoxZEE
-         NJyVQVZ73WCiHdpa025IPb8HyrO2NaEROC+LqM3TK8XXBS9rFXS3PdoFoAe3Eaw9OvKt
-         CWAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWaGuO7N1VO95tJfmF4c5pqErnBwlvwF6njNk/eE+ItKkO5oBRRsPspnrqBeFzqUx4XVxBCYYKkTs287LPjj+253bVmO/64vm2S
-X-Gm-Message-State: AOJu0YyfnyxEk8cTHAKIENNImAY4Op1WrzYUk22Dv5OQ0KHjpRolODJ6
-	4rUDAFV37YsLJAXBIl3XE+1KSTRC+YA/wcKNaIF32ebqXanBX/tIn5+8gfByNA==
-X-Google-Smtp-Source: AGHT+IEOaTTCA8LuEGruX/jibPIx1BjotjXmxzwtWRUj2Jf71MrMEA1a/SOWBV+dVrHr2t3qRyLbaQ==
-X-Received: by 2002:a05:6a00:2381:b0:707:ffb3:5933 with SMTP id d2e1a72fcca58-70aaad480f2mr2041308b3a.11.1719763834662;
-        Sun, 30 Jun 2024 09:10:34 -0700 (PDT)
+        bh=fhYNd6YI+Z5WjMzKTVCzzYrVGlFpZjqEpL+94ljYX4w=;
+        b=eVS+jZilAzwk/EdPl0yIM5tmqMKgDWEK/l3mARJHcp3ymaZLigV3ail4sP/uNJdKrL
+         WgZs05QsE8EXvF8u+enGXkLOEE4nHFy9jryAZ8PbuBYhznPrCDqNP8F/XfY4pToprp9C
+         mz0wOxy6N1vCazcMkjaVBo5pHZ94O51YPAKvlLN+EIJd4crbm8SiEbueAka7Kgs81QID
+         AMV15vjxhy2soYJ7OT1MdT1NtNCLAHVvbFoKCNaDaCraOmn687VOLj/qrAMa4EfWmRnP
+         gajJiMamivcrvkzMsO5/ltTz1G0zfMCWXovgLRA2ZouBqjSqXrNZhW+q6NmeLhfOTzmo
+         yBCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFDkMk8gZMdj+/8RGj5PJPN1IqtnWsG9a7GXfDTLULzNj8719pU8//3DqL4paEINN2dHmmHiGLw/p6AkR1qvvUOItjwmzS5j8/
+X-Gm-Message-State: AOJu0YyhxajEQOtdXTYicqx4YUP0/7pirdTXCwzvY/OkZRASXFgE1YKa
+	n+nHhqGe4JEpFmUwf6Cq+Hdw8IllsUzMmL4XbyUsxkIO4aHrHWpC5V1we7wGVw==
+X-Google-Smtp-Source: AGHT+IFBjjMwaBXy0t3lI3KWMbWd86l8kT3eRQj1Z0/ea7k0vDsO6nYMvezqFZjKxlo1m8VkwrYDxA==
+X-Received: by 2002:a05:6a20:daa1:b0:1be:6390:33ee with SMTP id adf61e73a8af0-1bef5fcb66cmr5933847637.0.1719764013349;
+        Sun, 30 Jun 2024 09:13:33 -0700 (PDT)
 Received: from thinkpad ([220.158.156.215])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70801e53f83sm4846872b3a.26.2024.06.30.09.10.29
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708048935c0sm4839644b3a.186.2024.06.30.09.13.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jun 2024 09:10:34 -0700 (PDT)
-Date: Sun, 30 Jun 2024 21:40:26 +0530
+        Sun, 30 Jun 2024 09:13:32 -0700 (PDT)
+Date: Sun, 30 Jun 2024 21:43:25 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Richard Zhu <hongxing.zhu@nxp.com>,
@@ -88,11 +88,11 @@ Cc: Richard Zhu <hongxing.zhu@nxp.com>,
 	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 05/10] PCI: imx6: Simplify switch-case logic by
- involve core_reset callback
-Message-ID: <20240630161026.GB5264@thinkpad>
+Subject: Re: [PATCH v6 06/10] PCI: imx6: Improve comment for workaround
+ ERR010728
+Message-ID: <20240630161325.GC5264@thinkpad>
 References: <20240617-pci2_upstream-v6-0-e0821238f997@nxp.com>
- <20240617-pci2_upstream-v6-5-e0821238f997@nxp.com>
+ <20240617-pci2_upstream-v6-6-e0821238f997@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,221 +102,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240617-pci2_upstream-v6-5-e0821238f997@nxp.com>
+In-Reply-To: <20240617-pci2_upstream-v6-6-e0821238f997@nxp.com>
 
-On Mon, Jun 17, 2024 at 04:16:41PM -0400, Frank Li wrote:
-> Instead of using the switch case statement to assert/dassert the core reset
-> handled by this driver itself, let's introduce a new callback core_reset()
-> and define it for platforms that require it. This simplifies the code.
+On Mon, Jun 17, 2024 at 04:16:42PM -0400, Frank Li wrote:
+> Improve comment about workaround ERR010727 by using official errata
+> document content.
 > 
+
+It is useful to provide a link to the errata document in the commit message.
+
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 134 ++++++++++++++++++----------------
->  1 file changed, 71 insertions(+), 63 deletions(-)
+>  drivers/pci/controller/dwc/pci-imx6.c | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index ff9d0098294fa..6f68bee111029 100644
+> index 6f68bee111029..6e3ac3fc33745 100644
 > --- a/drivers/pci/controller/dwc/pci-imx6.c
 > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -104,6 +104,7 @@ struct imx_pcie_drvdata {
->  	const struct pci_epc_features *epc_features;
->  	int (*init_phy)(struct imx_pcie *pcie);
->  	int (*set_ref_clk)(struct imx_pcie *pcie, bool enable);
-> +	int (*core_reset)(struct imx_pcie *pcie, bool assert);
->  };
+> @@ -715,9 +715,25 @@ static int imx7d_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
+>  		return 0;
 >  
->  struct imx_pcie {
-> @@ -672,35 +673,75 @@ static void imx_pcie_clk_disable(struct imx_pcie *imx_pcie)
->  	clk_bulk_disable_unprepare(imx_pcie->drvdata->clks_cnt, imx_pcie->clks);
->  }
->  
-> +static int imx6sx_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
-> +{
-> +	if (assert)
-> +		regmap_set_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> +				IMX6SX_GPR12_PCIE_TEST_POWERDOWN);
-> +
-> +	/* Force PCIe PHY reset */
-> +	regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR5, IMX6SX_GPR5_PCIE_BTNRST_RESET,
-> +			   assert ? IMX6SX_GPR5_PCIE_BTNRST_RESET : 0);
-> +	return 0;
-> +}
-> +
-> +static int imx6qp_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
-> +{
-> +	regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1, IMX6Q_GPR1_PCIE_SW_RST,
-> +			   assert ? IMX6Q_GPR1_PCIE_SW_RST : 0);
-> +	if (!assert)
-> +		usleep_range(200, 500);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx6q_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
-> +{
-> +	if (!assert)
-> +		return 0;
-> +
-> +	regmap_set_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1, IMX6Q_GPR1_PCIE_TEST_PD);
-> +	regmap_set_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1, IMX6Q_GPR1_PCIE_REF_CLK_EN);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx7d_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
-> +{
-> +	struct dw_pcie *pci = imx_pcie->pci;
-> +	struct device *dev = pci->dev;
-> +
-> +	if (assert)
-> +		return 0;
-> +
-> +	/*
-> +	 * Workaround for ERR010728, failure of PCI-e PLL VCO to
-> +	 * oscillate, especially when cold. This turns off "Duty-cycle
-> +	 * Corrector" and other mysterious undocumented things.
-> +	 */
-> +
-> +	if (likely(imx_pcie->phy_base)) {
-> +		/* De-assert DCC_FB_EN */
-> +		writel(PCIE_PHY_CMN_REG4_DCC_FB_EN, imx_pcie->phy_base + PCIE_PHY_CMN_REG4);
-> +		/* Assert RX_EQS and RX_EQS_SEL */
-> +		writel(PCIE_PHY_CMN_REG24_RX_EQ_SEL | PCIE_PHY_CMN_REG24_RX_EQ,
-> +		       imx_pcie->phy_base + PCIE_PHY_CMN_REG24);
-> +		/* Assert ATT_MODE */
-> +		writel(PCIE_PHY_CMN_REG26_ATT_MODE, imx_pcie->phy_base + PCIE_PHY_CMN_REG26);
-> +	} else {
-> +		dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy phandle ?\n");
-> +	}
-> +	imx7d_pcie_wait_for_phy_pll_lock(imx_pcie);
-> +	return 0;
-> +}
-> +
->  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
->  {
->  	reset_control_assert(imx_pcie->pciephy_reset);
->  	reset_control_assert(imx_pcie->apps_reset);
->  
-> -	switch (imx_pcie->drvdata->variant) {
-> -	case IMX6SX:
-> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> -				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
-> -				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN);
-> -		/* Force PCIe PHY reset */
-> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR5,
-> -				   IMX6SX_GPR5_PCIE_BTNRST_RESET,
-> -				   IMX6SX_GPR5_PCIE_BTNRST_RESET);
-> -		break;
-> -	case IMX6QP:
-> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> -				   IMX6Q_GPR1_PCIE_SW_RST,
-> -				   IMX6Q_GPR1_PCIE_SW_RST);
-> -		break;
-> -	case IMX6Q:
-> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> -				   IMX6Q_GPR1_PCIE_TEST_PD, 1 << 18);
-> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> -				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
-> -		break;
-> -	default:
-> -		break;
-> -	}
-> +	if (imx_pcie->drvdata->core_reset)
-> +		imx_pcie->drvdata->core_reset(imx_pcie, true);
->  
->  	/* Some boards don't have PCIe reset GPIO. */
->  	if (gpio_is_valid(imx_pcie->reset_gpio))
-> @@ -710,47 +751,10 @@ static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
->  
->  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
->  {
-> -	struct dw_pcie *pci = imx_pcie->pci;
-> -	struct device *dev = pci->dev;
-> -
->  	reset_control_deassert(imx_pcie->pciephy_reset);
->  
-> -	switch (imx_pcie->drvdata->variant) {
-> -	case IMX7D:
-> -		/* Workaround for ERR010728, failure of PCI-e PLL VCO to
-> -		 * oscillate, especially when cold.  This turns off "Duty-cycle
-> -		 * Corrector" and other mysterious undocumented things.
-> -		 */
-> -		if (likely(imx_pcie->phy_base)) {
-> -			/* De-assert DCC_FB_EN */
-> -			writel(PCIE_PHY_CMN_REG4_DCC_FB_EN,
-> -			       imx_pcie->phy_base + PCIE_PHY_CMN_REG4);
-> -			/* Assert RX_EQS and RX_EQS_SEL */
-> -			writel(PCIE_PHY_CMN_REG24_RX_EQ_SEL
-> -				| PCIE_PHY_CMN_REG24_RX_EQ,
-> -			       imx_pcie->phy_base + PCIE_PHY_CMN_REG24);
-> -			/* Assert ATT_MODE */
-> -			writel(PCIE_PHY_CMN_REG26_ATT_MODE,
-> -			       imx_pcie->phy_base + PCIE_PHY_CMN_REG26);
-> -		} else {
-> -			dev_warn(dev, "Unable to apply ERR010728 workaround. DT missing fsl,imx7d-pcie-phy phandle ?\n");
-> -		}
-> -
-> -		imx7d_pcie_wait_for_phy_pll_lock(imx_pcie);
-> -		break;
-> -	case IMX6SX:
-> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR5,
-> -				   IMX6SX_GPR5_PCIE_BTNRST_RESET, 0);
-> -		break;
-> -	case IMX6QP:
-> -		regmap_update_bits(imx_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> -				   IMX6Q_GPR1_PCIE_SW_RST, 0);
-> -
-> -		usleep_range(200, 500);
-> -		break;
-> -	default:
-> -		break;
-> -	}
-> +	if (imx_pcie->drvdata->core_reset)
-> +		imx_pcie->drvdata->core_reset(imx_pcie, false);
->  
->  	/* Some boards don't have PCIe reset GPIO. */
->  	if (gpio_is_valid(imx_pcie->reset_gpio)) {
-> @@ -1458,6 +1462,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
->  		.init_phy = imx_pcie_init_phy,
->  		.set_ref_clk = imx6q_pcie_set_ref_clk,
-> +		.core_reset = imx6q_pcie_core_reset,
->  	},
->  	[IMX6SX] = {
->  		.variant = IMX6SX,
-> @@ -1473,6 +1478,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
->  		.init_phy = imx6sx_pcie_init_phy,
->  		.set_ref_clk = imx6sx_pcie_set_ref_clk,
-> +		.core_reset = imx6sx_pcie_core_reset,
->  	},
->  	[IMX6QP] = {
->  		.variant = IMX6QP,
-> @@ -1489,6 +1495,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
->  		.init_phy = imx_pcie_init_phy,
->  		.set_ref_clk = imx6q_pcie_set_ref_clk,
-> +		.core_reset = imx6qp_pcie_core_reset,
->  	},
->  	[IMX7D] = {
->  		.variant = IMX7D,
-> @@ -1502,6 +1509,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
->  		.init_phy = imx7d_pcie_init_phy,
->  		.set_ref_clk = imx7d_pcie_set_ref_clk,
-> +		.core_reset = imx7d_pcie_core_reset,
->  	},
->  	[IMX8MQ] = {
->  		.variant = IMX8MQ,
-> 
-> -- 
-> 2.34.1
-> 
+>  	/*
+> -	 * Workaround for ERR010728, failure of PCI-e PLL VCO to
+> -	 * oscillate, especially when cold. This turns off "Duty-cycle
+> -	 * Corrector" and other mysterious undocumented things.
+> +	 * Workaround for ERR010728 (IMX7DS_2N09P, Rev. 1.1, 4/2023):
+> +	 *
+> +	 * PCIe: PLL may fail to lock under corner conditions Initial VCO
+
+Missing full stop after 'conditions'?
+
+- Mani
 
 -- 
 மணிவண்ணன் சதாசிவம்
