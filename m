@@ -1,194 +1,227 @@
-Return-Path: <linux-pci+bounces-9484-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9485-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A0D091D3F4
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 22:31:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6974691D3F7
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 22:33:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D95B82815B1
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 20:31:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88A691C20BD0
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Jun 2024 20:33:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39D77153800;
-	Sun, 30 Jun 2024 20:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486DB152E06;
+	Sun, 30 Jun 2024 20:33:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD703A268;
-	Sun, 30 Jun 2024 20:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1CF3A268;
+	Sun, 30 Jun 2024 20:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719779500; cv=none; b=hT0y8jHmJC1v5v/bJowDZihAdFNinEg2/YUh7L/k9uiuz9lKa4HuWyjWHrCFtb5eWYw2hb/LTR9S3MKKqPNIeHv3EENBS/rkUlOULT5vSvaM3LDhjuXONdCiFfpBUhn7TdxmxNDEKjkLGxpJtJnnuawvWeG4sc8h3xbS8rt4meg=
+	t=1719779605; cv=none; b=P9oZdDgnu7SI89ATTx9nhFYmehrx2guxShSp+hXflX+bgkEuc7ibne8i7x3yHRvWTOJKLjJqhAiZHXyZ0JRfGDsX3XVfzslzIGPBr0gRD+piop2+sSOiL1eKINHTTBsvUq8uQgPUCW16VT5b9emi5Dt8/YDpz/edgPpo6yjPjtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719779500; c=relaxed/simple;
-	bh=wAoIc602GTzvToc6h/6z0r5MEBnGNorL/xibzZCdKHs=;
-	h=Message-ID:In-Reply-To:References:From:Date:Subject:To:Cc; b=ABwb0GwrgVTDI6IXoeQIkoeWdfCB57P4zu5uKwB7HNbTRS9aH49iLMGAdVoR1WifRFCqGROlQS4wmBy/1Nv3Ly9JvCJ3ID/YVM7zZFn8rl4TQkcmCX1dRWE4WbEVVXbD09JxZIyGKkvxYGFNxGyo+MpFefIjhnAE0z83HKUoju0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
+	s=arc-20240116; t=1719779605; c=relaxed/simple;
+	bh=7nuE1KfZ+7BNLKWM9fT+4fbsltUVH8PuI92OwB6eteQ=;
+	h=Message-ID:In-Reply-To:References:From:Date:Subject:MIME-Version:
+	 Content-Type:To:Cc; b=bY9il4UbsepH1sOch2Di88v1VHHwrsQ31/gllWcC/4ULW8d2a6AAG4LDzTd7PWu0UrtHfoEZUfehGjyWH1y9LfGvBn5Dn8JOdZuX+G6w+50QCe3TF9WIWA6RFWb9Hw0olnysYukaMTu0aQn2t/yUoI0PJFJDF99E/rM57r/hLWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with ESMTPS id 3C55110189B98;
-	Sun, 30 Jun 2024 22:31:36 +0200 (CEST)
+	by mailout1.hostsharing.net (Postfix) with ESMTPS id 2A571101917A3;
+	Sun, 30 Jun 2024 22:33:21 +0200 (CEST)
 Received: from localhost (unknown [89.246.108.87])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by h08.hostsharing.net (Postfix) with ESMTPSA id 0EF6061DA805;
-	Sun, 30 Jun 2024 22:31:36 +0200 (CEST)
-X-Mailbox-Line: From dff8bcb091a3123e1c7c685f8149595e39bbdb8f Mon Sep 17 00:00:00 2001
-Message-ID: <dff8bcb091a3123e1c7c685f8149595e39bbdb8f.1719771133.git.lukas@wunner.de>
+	by h08.hostsharing.net (Postfix) with ESMTPSA id E400161DA805;
+	Sun, 30 Jun 2024 22:33:20 +0200 (CEST)
+X-Mailbox-Line: From ee3248f9f8d60cff9106a5a46c5f5d53ac81e60a Mon Sep 17 00:00:00 2001
+Message-ID: <ee3248f9f8d60cff9106a5a46c5f5d53ac81e60a.1719771133.git.lukas@wunner.de>
 In-Reply-To: <cover.1719771133.git.lukas@wunner.de>
 References: <cover.1719771133.git.lukas@wunner.de>
 From: Lukas Wunner <lukas@wunner.de>
-Date: Sun, 30 Jun 2024 21:52:00 +0200
-Subject: [PATCH v2 17/18] spdm: Authenticate devices despite invalid
- certificate chain
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, James Bottomley <James.Bottomley@HansenPartnership.com>, <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-Cc: <linuxarm@huawei.com>, David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Li, Ming" <ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Alistair Francis <alistair.francis@wdc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, "Damien Le Moal" <dlemoal@kernel.org>, Alexey Kardashevskiy <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>, Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>
+Date: Sun, 30 Jun 2024 21:53:00 +0200
+Subject: [PATCH v2 18/18] spdm: Allow control of next requester nonce through
+ sysfs
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, James Bottomley <James.Bottomley@HansenPartnership.com>, <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>, <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+Cc: <linuxarm@huawei.com>, David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Li, Ming" <ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Alistair Francis <alistair.francis@wdc.com>, Wilfred Mallawa <wilfred.mallawa@wdc.com>, "Damien Le Moal" <dlemoal@kernel.org>, Alexey Kardashevskiy <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>, Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>
 
-The SPDM library has just been amended to keep a log of received
-signatures from a device and expose it in sysfs.
+Remote attestation services may mistrust the kernel to always use a
+fresh nonce for SPDM authentication.
 
-Currently challenge-response authentication with a device is only
-performed if one of its up to 8 certificate chains is considered valid
-by the kernel.
-
-Valid means several things:
-
-* That the certificate chain adheres to requirements in the SPDM
-  specification (e.g. each certificate in the chain is signed by the
-  preceding certificate),
-* that the certificate chain adheres to requirements in other
-  specifications such as PCIe r6.1 sec 6.31.3,
-* that the first certificate in the chain is signed by a trusted root
-  certificate on the kernel's keyring
-* or that none of the certificates in the chain is on the kernel's
-  blacklist_keyring.
-
-User space should be given the chance to make up its own mind on the
-validity of a certificate chain and the signature generated with it.
-So if none of the 8 certificate chains is considered valid by the
-kernel, pick one of them and perform challenge-response authentication
-with it for the sole purpose of exposing a signature to user space.
-
-Do not verify that signature because if the kernel considers the
-certificate chain invalid, the signature implicitly is as well.
-
-Arbitrarily select the certificate chain in the first provisioned slot
-(which is normally slot 0) for such "for user space only" authentication
-attempts.
+So allow user space to set the next requester nonce by writing to a
+sysfs attribute.
 
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Jérôme Glisse <jglisse@google.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
 ---
-I'd like to know whether people actually find this feature useful.
-The patch is somewhat tentative and I may drop it if there is no interest,
-so comments welcome!
-
- Documentation/ABI/testing/sysfs-devices-spdm |  5 +++
- lib/spdm/req-authenticate.c                  | 38 +++++++++++++-------
- 2 files changed, 31 insertions(+), 12 deletions(-)
+ Documentation/ABI/testing/sysfs-devices-spdm | 29 ++++++++++++++++
+ lib/spdm/core.c                              |  1 +
+ lib/spdm/req-authenticate.c                  |  8 ++++-
+ lib/spdm/req-sysfs.c                         | 35 ++++++++++++++++++++
+ lib/spdm/spdm.h                              |  4 +++
+ 5 files changed, 76 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/ABI/testing/sysfs-devices-spdm b/Documentation/ABI/testing/sysfs-devices-spdm
-index 8d8ee01672e1..5ce34ce10b9c 100644
+index 5ce34ce10b9c..d315b47b4af0 100644
 --- a/Documentation/ABI/testing/sysfs-devices-spdm
 +++ b/Documentation/ABI/testing/sysfs-devices-spdm
-@@ -162,6 +162,11 @@ Description:
- 		dissector needs to be fed the concatenation of "transcript"
- 		and "signature".
- 
-+		Signatures are added to the log even if the kernel was unable
-+		to verify them (e.g. due to a missing trusted root certificate
-+		or forged signature).  Thereby, remote attestation services
-+		may make up their own mind on the signature's validity.
+@@ -216,3 +216,32 @@ Description:
+ 		necessary to parse the SPDM messages in the transcript to find
+ 		and extract the nonces, which is cumbersome.  That's why they
+ 		are exposed as separate files.
 +
- 		Because the number prefixed to the filenames is 32 bit, it
- 		wraps around to 0 after 4,294,967,295 signatures.  The kernel
- 		avoids filename collisions on wraparound by purging old files,
++
++What:		/sys/devices/.../signatures/next_requester_nonce
++Date:		June 2024
++Contact:	Lukas Wunner <lukas@wunner.de>
++Description:
++		If you do not trust the kernel to always use a fresh nonce,
++		write 32 bytes to this file to set the requester nonce used
++		in the next SPDM authentication sequence.
++
++		Meant for remote attestation services.  You are responsible
++		for providing a nonce with sufficient entropy.  The kernel
++		only uses the nonce once, so provide a new one every time
++		you reauthenticate the device.  If you do not provide a
++		nonce, the kernel generates a random one.
++
++		After the nonce has been consumed, it becomes readable as
++		the newest [0-9]*_requester_nonce, which proves its usage::
++
++		 # dd if=/dev/random bs=32 count=1 | \
++		   tee signatures/next_requester_nonce | hexdump
++		 0000000 e0 77 91 54 bd 56 99 c2 ea 4f 0b 1a 7f ba 6e 59
++		 0000010 8f ee f6 b2 26 82 58 34 9e e5 8c 8a 31 58 29 7e
++
++		 # echo re > authenticated
++
++		 # hexdump $(\ls -t signatures/[0-9]*_requester_nonce | head -1)
++		 0000000 e0 77 91 54 bd 56 99 c2 ea 4f 0b 1a 7f ba 6e 59
++		 0000010 8f ee f6 b2 26 82 58 34 9e e5 8c 8a 31 58 29 7e
+diff --git a/lib/spdm/core.c b/lib/spdm/core.c
+index b6a46bdbb2f9..7371adb7a52f 100644
+--- a/lib/spdm/core.c
++++ b/lib/spdm/core.c
+@@ -434,6 +434,7 @@ void spdm_destroy(struct spdm_state *spdm_state)
+ 	spdm_reset(spdm_state);
+ 	spdm_destroy_log(spdm_state);
+ 	mutex_destroy(&spdm_state->lock);
++	kfree(spdm_state->next_nonce);
+ 	kfree(spdm_state);
+ }
+ EXPORT_SYMBOL_GPL(spdm_destroy);
 diff --git a/lib/spdm/req-authenticate.c b/lib/spdm/req-authenticate.c
-index 0c74dc0e5cf4..7c977f5835c1 100644
+index 7c977f5835c1..489fc88de74d 100644
 --- a/lib/spdm/req-authenticate.c
 +++ b/lib/spdm/req-authenticate.c
-@@ -615,7 +615,7 @@ static size_t spdm_challenge_rsp_sz(struct spdm_state *spdm_state,
- 	return  size  + spdm_state->sig_len;	/* Signature */
- }
+@@ -626,7 +626,13 @@ static int spdm_challenge(struct spdm_state *spdm_state, u8 slot, bool verify)
+ 	};
+ 	int rc, length;
  
--static int spdm_challenge(struct spdm_state *spdm_state, u8 slot)
-+static int spdm_challenge(struct spdm_state *spdm_state, u8 slot, bool verify)
- {
- 	size_t req_sz, rsp_sz, rsp_sz_max, req_nonce_off, rsp_nonce_off;
- 	struct spdm_challenge_rsp *rsp __free(kfree);
-@@ -661,14 +661,19 @@ static int spdm_challenge(struct spdm_state *spdm_state, u8 slot)
- 	if (rc)
- 		return rc;
- 
--	/* Verify signature at end of transcript against leaf key */
--	rc = spdm_verify_signature(spdm_state, spdm_context);
--	if (rc)
--		dev_err(spdm_state->dev,
--			"Cannot verify challenge_auth signature: %d\n", rc);
--	else
--		dev_info(spdm_state->dev,
--			 "Authenticated with certificate slot %u\n", slot);
-+	rc = -EKEYREJECTED;
-+	if (verify) {
-+		/* Verify signature at end of transcript against leaf key */
-+		rc = spdm_verify_signature(spdm_state, spdm_context);
-+		if (rc)
-+			dev_err(spdm_state->dev,
-+				"Cannot verify challenge_auth signature: %d\n",
-+				rc);
-+		else
-+			dev_info(spdm_state->dev,
-+				 "Authenticated with certificate slot %u\n",
-+				 slot);
+-	get_random_bytes(&req.nonce, sizeof(req.nonce));
++	if (spdm_state->next_nonce) {
++		memcpy(&req.nonce, spdm_state->next_nonce, sizeof(req.nonce));
++		kfree(spdm_state->next_nonce);
++		spdm_state->next_nonce = NULL;
++	} else {
++		get_random_bytes(&req.nonce, sizeof(req.nonce));
 +	}
  
- 	spdm_create_log_entry(spdm_state, spdm_context, slot,
- 			      req_nonce_off, rsp_nonce_off);
-@@ -692,6 +697,7 @@ static int spdm_challenge(struct spdm_state *spdm_state, u8 slot)
-  */
- int spdm_authenticate(struct spdm_state *spdm_state)
- {
-+	bool verify = false;
- 	u8 slot;
- 	int rc;
+ 	if (spdm_state->version <= 0x12)
+ 		req_sz = offsetofend(typeof(req), nonce);
+diff --git a/lib/spdm/req-sysfs.c b/lib/spdm/req-sysfs.c
+index c782054f8e18..232d4a00a510 100644
+--- a/lib/spdm/req-sysfs.c
++++ b/lib/spdm/req-sysfs.c
+@@ -176,13 +176,48 @@ const struct attribute_group spdm_certificates_group = {
  
-@@ -726,13 +732,21 @@ int spdm_authenticate(struct spdm_state *spdm_state)
+ /* signatures attributes */
  
- 	for_each_set_bit(slot, &spdm_state->provisioned_slots, SPDM_SLOTS) {
- 		rc = spdm_validate_cert_chain(spdm_state, slot);
--		if (rc == 0)
-+		if (rc == 0) {
-+			verify = true;
- 			break;
-+		}
- 	}
++static umode_t spdm_signatures_are_visible(struct kobject *kobj,
++					   struct bin_attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct spdm_state *spdm_state = dev_to_spdm_state(dev);
 +
-+	/*
-+	 * If no cert chain validates, perform challenge-response with
-+	 * arbitrary slot to be able to expose a signature in sysfs
-+	 * about which user space can make up its own mind.
-+	 */
- 	if (rc)
--		goto unlock;
-+		slot = __ffs(spdm_state->provisioned_slots);
++	if (IS_ERR_OR_NULL(spdm_state))
++		return SYSFS_GROUP_INVISIBLE;
++
++	return a->attr.mode;
++}
++
++static ssize_t next_requester_nonce_write(struct file *file,
++					  struct kobject *kobj,
++					  struct bin_attribute *attr,
++					  char *buf, loff_t off, size_t count)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct spdm_state *spdm_state = dev_to_spdm_state(dev);
++
++	guard(mutex)(&spdm_state->lock);
++
++	if (!spdm_state->next_nonce) {
++		spdm_state->next_nonce = kmalloc(SPDM_NONCE_SZ, GFP_KERNEL);
++		if (!spdm_state->next_nonce)
++			return -ENOMEM;
++	}
++
++	memcpy(spdm_state->next_nonce + off, buf, count);
++	return count;
++}
++static BIN_ATTR_WO(next_requester_nonce, SPDM_NONCE_SZ);
++
+ static struct bin_attribute *spdm_signatures_bin_attrs[] = {
++	&bin_attr_next_requester_nonce,
+ 	NULL
+ };
  
--	rc = spdm_challenge(spdm_state, slot);
-+	rc = spdm_challenge(spdm_state, slot, verify);
+ const struct attribute_group spdm_signatures_group = {
+ 	.name = "signatures",
+ 	.bin_attrs = spdm_signatures_bin_attrs,
++	.is_bin_visible = spdm_signatures_are_visible,
+ };
  
- unlock:
- 	if (rc)
+ static unsigned int spdm_max_log_sz = SZ_16M; /* per device */
+diff --git a/lib/spdm/spdm.h b/lib/spdm/spdm.h
+index 448107c92db7..aa36aa55e718 100644
+--- a/lib/spdm/spdm.h
++++ b/lib/spdm/spdm.h
+@@ -475,6 +475,9 @@ struct spdm_error_rsp {
+  *	itself and the transcript with trailing signature.
+  * @log_counter: Number of generated log entries so far.  Will be prefixed to
+  *	the sysfs files of the next generated log entry.
++ * @next_nonce: Requester nonce to be used for the next authentication
++ *	sequence.  Populated from user space through sysfs.
++ *	If user space does not provide a nonce, the kernel uses a random one.
+  */
+ struct spdm_state {
+ 	struct device *dev;
+@@ -521,6 +524,7 @@ struct spdm_state {
+ 	struct list_head log;
+ 	size_t log_sz;
+ 	u32 log_counter;
++	u8 *next_nonce;
+ };
+ 
+ extern struct list_head spdm_state_list;
 -- 
 2.43.0
 
