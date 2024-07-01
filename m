@@ -1,64 +1,76 @@
-Return-Path: <linux-pci+bounces-9530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0834F91E8EC
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 21:54:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 014D291E91A
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 22:02:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0361283FA9
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 19:54:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 338131C21423
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 20:02:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 636B216F908;
-	Mon,  1 Jul 2024 19:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQCq2cf6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BED416EC14;
+	Mon,  1 Jul 2024 20:02:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2971116F0C2;
-	Mon,  1 Jul 2024 19:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DA818635;
+	Mon,  1 Jul 2024 20:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719863685; cv=none; b=EYALHYUgRoZHxcI7853pw3l6g3j/0BCQyxTmQnODB7IasVPtyoCmC55VBMUSFDMRiIhWIzc/JjaksKbnuH2Gl2u+3DqgOx+q5LbzXcNw7H0WRaCuWbgLBTfNzav/V8TkV10/p6ZKWpq1AKNc+bbLO2ypxxasfWGH4kr12QZS1MQ=
+	t=1719864125; cv=none; b=GyfQobLp3hhI6we74JuZiOW1NugUJF1Fn9pVemI33BAHICxJ0WDGJfEIPzMWUwAsCUjjz9jo4uWLdA6nAQ6SZc8iDPunvlyRR2KswrE0/wu29cGHISCpgNoSaEgdQgoyLuEQ+aA22813ZHxSg8q88CpcDMYDaD8yaB0w3uVDRWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719863685; c=relaxed/simple;
-	bh=w+IwRyDf2gcSLquuXMXHhJOg/e5P+XyOdiaWytVCB1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LBCir+HsFN5s4D/X16XclA4hZBCG+rHgTdsAdHGmCuxMiU8ftUbKF8+OnuEmK9qr7OhG8cv208uN8kBlWZqp0gyqkhWvtp1hKDjCvQdC3ZFgru/xipiLd3Z1kKbXX0KIxgkQlKMuVuzakgruBZ1DA3hDhJC0feiOQBAs63xCyuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQCq2cf6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38725C116B1;
-	Mon,  1 Jul 2024 19:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719863684;
-	bh=w+IwRyDf2gcSLquuXMXHhJOg/e5P+XyOdiaWytVCB1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XQCq2cf6ueTua29TV8Hbzc7SkMdAxxj34WJUYXIx1Q2P3u3FAaWGY9oHXezkPkkBN
-	 A4HE8Tf4FfFMCaLZshD6ODMMIEhANmbF8rME+qDgrmtNos/T61EBMN+HdzD57gBNhQ
-	 Z6HJQ8+ivJTAuA+5s9wtFOW2UwTbYv4DY8MdLzxo5dq5AEhtxtzPodxrX0ZljCExFW
-	 34LHogp5dK3C7nBExXVdhAIAPv0rv7X8RrhJBjelGqzCn1WYCF573L3m68xUZsBPfg
-	 sbGTUVUEVZerYJznen/oebUVGbcZwUGUCE058ywjZlWEDpPr2iLOYLC7G3Y2BfSXIL
-	 DXscPsPJQRAnQ==
-Date: Mon, 1 Jul 2024 14:54:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	s=arc-20240116; t=1719864125; c=relaxed/simple;
+	bh=HQ5Ft6X4jirIHI3VzqDzxxDVnkqciQhvpGH3lgBlIoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ONFwwClWlAv4SQ1iAS0yo/0E9p3OMfFUXCpYm4JXIv4tTvpN/K1BSMVPPWFqMK6OvOfwyitL766ND1gRe6SMzoi9y4KwZqIX/pbU3WqAuiN1d6Xpv08cY8d1dW9M16IWfTehZVxoX595Mt8zlC/KllR2Ci7rTpF7MXAJyNT2qRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1faad2f1967so33621335ad.0;
+        Mon, 01 Jul 2024 13:02:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719864123; x=1720468923;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pl0ODQwpBTm0P56IW1q19goNWJ90VvENzOaUT1IO7I8=;
+        b=O/HBs6NwDBngijUG+2ppAHiKBGAnqtW3wOcZc0xKiJ+19IOo951Ae/7yDuZa17f9SP
+         GjDWUrP46uzfw/4tuqcMsCT4Dxxj+HVJVUGC8LTfOWZOS671WABzN5NFSXQFKACcvGFE
+         OKfECEvl8+5069Xbkdxn5pD8qFaaR4WzIK7J/xep/m8eEhf4IuEO6kAaPckM2+gRt0On
+         zXuUAvPwM5zFz+sF3hzIt8zyeJv2H1KOEtGtHDNavCdu1VPnF0t0ynZrvrQZi7Wi6Fw0
+         5LJmcm7SqXOYDmNtISd0djx/IDlfwTwDZE6rF7x3Cl9egj8NwJP/hofdjfLn9rfbhbUZ
+         Lugg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHAwxCP1yRNdv9/sECU6GmXKJU8nrZgsDcaw/sCKSkTeZLBO9Dzf1ZG6o6WiWg4ryXrzQblxKDN65IKrF3qmM5LNq7PP7508zjdXv7jOqQvxEmmVJF8rp+sTJpXEExmB2gi9sXWdLOzkJB1PZJzhrLvm7jZ1Zbov9lgtWF1mICAONzBMIp
+X-Gm-Message-State: AOJu0YzBNIthrkThUswwu/4pWxKUFhh+oeVqAN7hzJ3Nc6KEKpCDhYXs
+	bCi6GNNZBmpYUzRs+RkI1D0HxVgKYlzt215mOF46xLqjeVFv4PWy
+X-Google-Smtp-Source: AGHT+IE8ONY6SLH1Ct1FYBEHwLtkKXe6kBj84C+6GW1/N9UcQr8yEwlTg5NzsRsv8TUxc/TOIl2m1w==
+X-Received: by 2002:a17:902:ccca:b0:1f9:f6a7:9330 with SMTP id d9443c01a7336-1fac7e4c1c5mr165770585ad.9.1719864122962;
+        Mon, 01 Jul 2024 13:02:02 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15389b3sm68811735ad.121.2024.07.01.13.02.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 13:02:02 -0700 (PDT)
+Date: Mon, 1 Jul 2024 20:01:52 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+	stable@kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 7/7] pci: pwrctl: Add power control driver for qps615
-Message-ID: <20240701195442.GA14596@bhelgaas>
+	Jake Oshins <jakeo@microsoft.com>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
+Message-ID: <ZoMLMJ9aIPs1lt8a@liuwe-devbox-debian-v2>
+References: <ZoJJsolJJcLUYiVG@liuwe-devbox-debian-v2>
+ <20240701172053.GA10100@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,32 +79,62 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240626-qps615-v1-7-2ade7bd91e02@quicinc.com>
+In-Reply-To: <20240701172053.GA10100@bhelgaas>
 
-On Wed, Jun 26, 2024 at 06:07:55PM +0530, Krishna chaitanya chundru wrote:
-> QPS615 switch needs to configured after powering on and before
-> PCIe link was up.
+On Mon, Jul 01, 2024 at 12:20:53PM -0500, Bjorn Helgaas wrote:
+> On Mon, Jul 01, 2024 at 06:16:18AM +0000, Wei Liu wrote:
+> > On Wed, Jun 26, 2024 at 10:10:39AM -0500, Bjorn Helgaas wrote:
+> > > 1) Capitalize subject to match history
+> > 
+> > What do you mean here? I got the "PCI: hv: ..." format from recent
+> > commits. "PCI" is capitalized. You want to to capitalize "fix"?
+> 
+> Yes.  Look at the history:
+> 
+>   $ git log --oneline --no-merges drivers/pci/controller/pci-hyperv.c
+>   b5ff74c1ef50 PCI: hv: Fix ring buffer size calculation
+>   07e8f88568f5 x86/apic: Drop apic::delivery_mode
+>   f741bcadfe52 PCI: hv: Annotate struct hv_dr_state with __counted_by
+>   04bbe863241a PCI: hv: Fix a crash in hv_pci_restore_msi_msg() during hibernation
+>   067d6ec7ed5b PCI: hv: Add a per-bus mutex state_lock
+>   a847234e24d0 Revert "PCI: hv: Fix a timing issue which causes kdump to fail occasionally"
+>   add9195e69c9 PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
+>   2738d5ab7929 PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
+>   ...
+> 
+> > > 2) Say something more specific than "fix reading ..."
+> > > 
+> > > Apparently this returns garbage in some case where you want to return
+> > > zero?
+> > 
+> > Yes. *val is not changed in the old code, so garbage is returned.
+> > 
+> > Here is the updated commit message. I can resend once you confirm you're
+> > happy with it.
+> > 
+> >     PCI: hv: Fix reading of PCI_INTERRUPT_PIN
+> 
+> Maybe:
+> 
+>   PCI: hv: Return zero, not garbage, when reading PCI_INTERRUPT_PIN
+> 
+> >     The intent of the code snippet is to always return 0 for both
+> >     PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
+> > 
+> >     The check misses PCI_INTERRUPT_PIN. This patch fixes that.
+> > 
+> >     This is discovered by this call in VFIO:
+> > 
+> >         pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+> > 
+> >     The old code does not set *val to 0 because it misses the check for
+> >     PCI_INTERRUPT_PIN. Garbage is returned in this case.
+> > 
+> >     Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> >     Cc: stable@kernel.org
+> >     Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> 
+> Looks fine.
 
-s/need to configured/needs to be configured/
-
-> As the PCIe controller driver already enables the PCIe link training
-> at the host side, stop the link training.
-
-Add blank line between paragraphs or rewrap into a single paragraph.
-
-> Otherwise the moment we turn on the switch it will participate in
-> the link training and link may come before switch is configured through
-> i2c.
-
-s/link may come before/link may come up before/ ?
-
-> The switch can be configured different ways like changing de-emphasis
-> settings of the switch, disabling unused ports etc and these settings
-> can vary from board to board, for that reason the sequence is taken
-> from the firmware file which contains the address of the slave, to address
-> and data to be written to the switch. The driver reads the firmware file
-> and parses them to apply those configurations to the switch.
-
-s/to address and data/the address and the data/ ?
-s/and parses them/and parses it/ (I assume you parse the file?)
+Thanks. I will resend with the updated commit message.
 
