@@ -1,94 +1,180 @@
-Return-Path: <linux-pci+bounces-9502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9503-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13C4791D9B2
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 10:10:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B24591D9B7
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 10:11:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC3491F20F89
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 08:10:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A9F51C221AA
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 08:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79897D095;
-	Mon,  1 Jul 2024 08:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 311B382498;
+	Mon,  1 Jul 2024 08:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EDmpEFyz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2858881AB4;
-	Mon,  1 Jul 2024 08:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8FE347B4;
+	Mon,  1 Jul 2024 08:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719821432; cv=none; b=oP2B5vv441EzVUGnhh2ZuHsfosEkZexr6kyohpnFZLOruoEfpUvE/xV9X/vx1KNIu3lRirA8vQ/IRydGd5T6SLrG+vfeZ630kvUrFl4JcqG/wzj/MKsDJpqPVtPPLWz5Rwahuun38MJE0ixdTNtvgDheN19GWP3FtQr1XvZ512s=
+	t=1719821479; cv=none; b=kK42RispxcuwZFiINA261swNY7xnW6r6ujg/X5j/AjeXitQKnUCd7RywsH5QRMT4LdaCkuWnVd1jeIQ7DfY9dNQJmjbeGvwwrUJ2R2Ug0OWRSByR72NaPf8sAh45kXq2ltHwb0Bp2sLLMcPXUHJZ4O7e2or58zNeT7Fm7DtPCCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719821432; c=relaxed/simple;
-	bh=wrliNvaB7WNZoEVe45hopQEZZ3ZXy9IoZeYgQ0J/6QM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTZ2Rg0TOH7lRVYk+GZM+W+aIewA3CTLUpLC80TCVWMoz26XrEy3mEaI7xoSnMMdZY8CafZ9OlrjqO6VD0YJZqe5yh1Z2uvTy8rHljRIaScXeasYBi7scaQVB+bV7ugNSB/j/v0/zfG9EqvfumAVAOMoWn9003y9cW/tWayMo2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fab03d2f23so17994515ad.0;
-        Mon, 01 Jul 2024 01:10:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719821430; x=1720426230;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b109jZvSI9enMLj/a9Azw6t61SkYdoZr57mQw+e9Y80=;
-        b=Ot0iu+505j/H+SidDc262S21wjfunUobw1tHSS01H2hqew8f4Q9t5MNR/N//6aSxHZ
-         4jwsFMXpnJ0vipDE2T2is1Q+E/BzS7AAZ6MHVbks0HwAZZ+Cc36eEqbMT35fbuIg87ZJ
-         RakotGpmijD4Jezs0eqISnm9jNkGzaKTwtuqIF/oGwHF8T421Zfu56l3X2aaprr9gjRs
-         moFVnldlOX6A01U9gcxxhiXu45Um3WzCilRqcHJ7RMf8k453XMrXSfmI4psioG4wGJQX
-         TxasaBPlFw3mXTnqkihSOvQU4PA48Hym2z5+I/8W6V2uJmzrgkc4vTDZLb6BsaqkyNgA
-         UTnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWreEO7RdVhcMgT8dUkYqJ0XhMooxZeYW82rfk7WuaA3Z25NlwHGDMSYiigSlG2G+MSmBFtgw5Nq+dFCKMWsHPFJjl7epKwedJWiGrheioFEOaLlM9PlXO150rA3jgXki2P2QakS+kt
-X-Gm-Message-State: AOJu0YymVqw+Gfaf1uWdv6SC0rZ8Uw5M7etMaxRTtPr5YvzI+421mxWE
-	UPavwrk5HiPDkEoCdLtrA/Xnd/WrToMaeIc41/npmyANgv8J8xanrhal7oqT
-X-Google-Smtp-Source: AGHT+IFEluso38K5Kxda1/buzHviB4ehPtjvlF6Gj2Uz801GLttJxFqt1LFadAU32WwafSRurW8L9A==
-X-Received: by 2002:a17:902:784c:b0:1f7:2091:978 with SMTP id d9443c01a7336-1fadbcaaf4dmr16151215ad.37.1719821430325;
-        Mon, 01 Jul 2024 01:10:30 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1596675sm58092125ad.249.2024.07.01.01.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 01:10:29 -0700 (PDT)
-Date: Mon, 1 Jul 2024 17:10:28 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH] misc: pci_endpoint_test: Remove some unused functions
-Message-ID: <20240701081028.GA2509636@rocinante>
-References: <20240516083654.44087-1-jiapeng.chong@linux.alibaba.com>
+	s=arc-20240116; t=1719821479; c=relaxed/simple;
+	bh=CO0atmO61p3aGajumua4T4JBohTwicxstoDR6BwINw4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=iR1SXlCtywLilQdJbcepvHxisxo5peCVXI2pOxj86dIcjk3eitpvJ5q+lJ83zuWoht5oUTis136pxVL/1expvjEpFK9rxYNJF+D/kPtrpWfht2fTlZi4I9znN5bvrQumlZdXW9cm+cJqXwOtz6D+VSrMaq74Ueph4QOokUBT900=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EDmpEFyz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4617ucU6018969;
+	Mon, 1 Jul 2024 08:11:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	nCQv8/viKXnzHIWRR3w7m2uDPzOmhLiFd/+m7V5VxVE=; b=EDmpEFyzjuXM29op
+	Xhsg9nsSWUbVnRXaDnP5Qiv4ZJdYfpycohP/HfSMeJqzew0Xb7CQfOyix0475LcO
+	UDmHIKOUDu7lVZdzbaakWf2lfa5hJJaWZPaJhEJqNybhXVkvD6wXuzPQPlBq2NLI
+	+VMmRmlAuTtDeV2DKpWbOn1+ETvUc0uBJEA3zzysrHIncOih9RtWSJpaszNxLCdD
+	5JVx5xRH9CZ/5654DqFwQpkHkndhjCgYCcV6BrNYvzJWYT52IgKxrBl1znp1An0H
+	159AvMqx8l3vejfk0F0rzKY1YgyssueT8jkjsXeZsPABU27hXWM2fvFSCsfG8pdZ
+	e9JrLA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403r3u02w3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 08:11:02 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4618B1MO009261;
+	Mon, 1 Jul 2024 08:11:01 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403r3u02vx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 08:11:01 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46185Ddv026417;
+	Mon, 1 Jul 2024 08:11:00 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 402wkpp5bb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Jul 2024 08:11:00 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4618AsMV30802434
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Jul 2024 08:10:57 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CF6282004B;
+	Mon,  1 Jul 2024 08:10:54 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 968442004D;
+	Mon,  1 Jul 2024 08:10:51 +0000 (GMT)
+Received: from [9.109.241.85] (unknown [9.109.241.85])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Jul 2024 08:10:51 +0000 (GMT)
+Message-ID: <c17fa094-f337-4422-8ae0-d554d66dd92a@ibm.com>
+Date: Mon, 1 Jul 2024 13:40:50 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] pci/hotplug/pnv_php: Fix hotplug driver crash on
+ Powernv
+To: Krishna Kumar <krishnak@linux.ibm.com>, mpe@ellerman.id.au,
+        npiggin@gmail.com
+Cc: nathanl@linux.ibm.com, aneesh.kumar@kernel.org, linux-pci@vger.kernel.org,
+        Shawn Anastasio
+ <sanastasio@raptorengineering.com>,
+        linux-kernel@vger.kernel.org, christophe.leroy@csgroup.eu,
+        gbatra@linux.ibm.com, bhelgaas@google.com,
+        tpearson@raptorengineering.com, oohall@gmail.com,
+        brking@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+References: <20240701074513.94873-1-krishnak@linux.ibm.com>
+ <20240701074513.94873-2-krishnak@linux.ibm.com>
+Content-Language: en-US
+From: Krishna Kumar <krishna.kumar11@ibm.com>
+In-Reply-To: <20240701074513.94873-2-krishnak@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: uGtoPARkEk5c4KUJx69RJXApADgzx_sF
+X-Proofpoint-ORIG-GUID: pmjukpBmqWJ1wsAj0Hj6FZSeQcph6LQ5
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240516083654.44087-1-jiapeng.chong@linux.alibaba.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-01_06,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 phishscore=0 bulkscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2406140001 definitions=main-2407010060
 
-Hello,
+Hi Michael,
 
-> These functions are defined in the pci_endpoint_test.c file, but not
-> called elsewhere, so delete these unused functions.
-> 
-> drivers/misc/pci_endpoint_test.c:144:19: warning: unused function 'pci_endpoint_test_bar_readl'.
-> drivers/misc/pci_endpoint_test.c:150:20: warning: unused function 'pci_endpoint_test_bar_writel'.
+When you apply/merge the patch, please consider below URL in commit message.
+This is the URL where this issue was reported - 
 
-Are you sure these aren't used?
+https://lists.ozlabs.org/pipermail/linuxppc-dev/2023-December/267034.html
 
-Index File                             Line Content
-    0 drivers/misc/pci_endpoint_test.c  143 static inline u32 pci_endpoint_test_bar_readl(struct pci_endpoint_test *test,
-    1 drivers/misc/pci_endpoint_test.c  296 val = pci_endpoint_test_bar_readl(test, barno, j);
+Thanks, 
+Krishna
 
-Index File                             Line Content
-    0 drivers/misc/pci_endpoint_test.c  149 static inline void pci_endpoint_test_bar_writel(struct pci_endpoint_test *test,
-    1 drivers/misc/pci_endpoint_test.c  292 pci_endpoint_test_bar_writel(test, barno, j,
 
-	Krzysztof
+On 7/1/24 1:15 PM, Krishna Kumar wrote:
+> Description of the problem: The hotplug driver for powerpc
+> (pci/hotplug/pnv_php.c) gives kernel crash when we try to
+> hot-unplug/disable the PCIe switch/bridge from the PHB.
+>
+> Root Cause of Crash: The crash is due to the reason that, though the msi
+> data structure has been released during disable/hot-unplug path and it
+> has been assigned with NULL, still during unregistration the code was
+> again trying to explicitly disable the MSI which causes the NULL pointer
+> dereference and kernel crash.
+>
+> The patch fixes the check during unregistration path to prevent invoking
+> pci_disable_msi/msix() since its data structure is already freed.
+>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Gaurav Batra <gbatra@linux.ibm.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Brian King <brking@linux.vnet.ibm.com>
+>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+> Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
+> ---
+>  drivers/pci/hotplug/pnv_php.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+> index 694349be9d0a..573a41869c15 100644
+> --- a/drivers/pci/hotplug/pnv_php.c
+> +++ b/drivers/pci/hotplug/pnv_php.c
+> @@ -40,7 +40,6 @@ static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
+>  				bool disable_device)
+>  {
+>  	struct pci_dev *pdev = php_slot->pdev;
+> -	int irq = php_slot->irq;
+>  	u16 ctrl;
+>  
+>  	if (php_slot->irq > 0) {
+> @@ -59,7 +58,7 @@ static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
+>  		php_slot->wq = NULL;
+>  	}
+>  
+> -	if (disable_device || irq > 0) {
+> +	if (disable_device) {
+>  		if (pdev->msix_enabled)
+>  			pci_disable_msix(pdev);
+>  		else if (pdev->msi_enabled)
 
