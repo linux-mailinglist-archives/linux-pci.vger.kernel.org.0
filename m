@@ -1,100 +1,150 @@
-Return-Path: <linux-pci+bounces-9492-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9493-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9856491D4D0
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 02:10:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E97491D667
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 05:03:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C51DB209DE
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 00:10:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39F1A1F2180C
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 03:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC631389;
-	Mon,  1 Jul 2024 00:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96AB8BFD;
+	Mon,  1 Jul 2024 03:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hm95ZJmG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoD2p6q8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A71633;
-	Mon,  1 Jul 2024 00:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B162F4FA;
+	Mon,  1 Jul 2024 03:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719792622; cv=none; b=g2JkZrbroiRvAXI6mDWPmUKWX4BJ2ic4OEg8Mx6NXxfES+jh6NEeEhNpdCgHdoafcSCHWbVkRvGC8Qme94TDFSho7zwndkCtZ2R9r3crTcNo8YOinD4aBsXBsqKZpHRtzyvpT6+bnJZMeliGlF9KKuRf1O92hTdEax5bl5Ilozc=
+	t=1719802985; cv=none; b=LgsAZJ/SdFjXaOoAYzdfAxA7rDZlxP3syKolgBNToyecBwhzrKJDDtCy5aQ9nPN9iDXKRSbZPX9nTxu4EFp5TBIOQjsMfJ5bYgZGqTzb+W03ZlJUZQqD4i99/zNWiqGtICkPY81cokR8WJotktFnDpAwYMcysqv0YbSFiDOY1tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719792622; c=relaxed/simple;
-	bh=nnClZwL7a9Lo3WGW0DdfJENLXrqDwfN4i6NjSsXCfhc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YN8YqVShrnVpJyp2VUC91y8c+cMvRhS166E2LtJROGtv4UbHdMMqfpGOGxZisp88YHE22GYwIR0F1pM2G4giUF+qvh43hLywxlpgL4RN2eypAnvua9u96gy4g58yp79/coyP6qVR7iXDCz7VuQR4MBy4KPpJ+vhCI0tMVr+BBtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hm95ZJmG; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52ce17f6835so269109e87.1;
-        Sun, 30 Jun 2024 17:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719792619; x=1720397419; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g2zppEwdRUP4lBbNN9dpO2QH9XHyegI1cIfNKuSEDlk=;
-        b=Hm95ZJmGBprIo/iuNj8yCSAvpCL2Vq4mds/bkLy8N7blLgdk7oiwErgl3xnw0ak/vB
-         +sjZW2xcxTxdkuA9mGBVAXu0jqWpdPh+dDepcdccHantP9W84qshm6K3xLe83mKRNdtj
-         1eXBSg+l/RPoc5/jPFFP7X3fBSOnbG0f5/SgD5VhYPL87W3TJOjnDphB62YwtMVKep80
-         7+YlHob9yrFvFQWCNGQiFg/neT563A69IMAYRWaEz0uKtq85la9VL+OQGPgAXtK4PkSm
-         KzmzotvPPUE8urw+MruKXMtsyaQXjHw/BOAnJThuVLzVJma1tNjo+pxLFKMTLxfnZfyb
-         /YFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719792619; x=1720397419;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2zppEwdRUP4lBbNN9dpO2QH9XHyegI1cIfNKuSEDlk=;
-        b=JFEIMIadpeOBjXdwFRnHkuRdUEKj9bejYLMuPqfCPncI6b2ijuTYcvnISdMa84weoJ
-         wmqiWgwNzhJZnkIlt26KBW91szCHlMU50aOEDhf7Dzbl+iQRZiGFiRKOfwivEZPzGC6y
-         P+Z4mnGv7ZTCm/nbCOC9dT2lZYB63fQ3FnOiCsV1XcisOShGLVDt8tsb6nVFy6VFPcRN
-         vfeqK/CsKRByK5Oy+OrZ7NyplpCz2ge1lElWVHIkO/BibaV+pIvadlpv9bWJi56UdeB+
-         SfsnyLkISXP2P/sRjShgd3V7T7NQsGT9xlrJNUxl03+cSVVSU7Y3YNe24rvkGrVdLo+4
-         8MsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTLSS8457WNaiwyqHHnKJpW/VS8DJTOFsgDWCWIGS89gxwWZnP/dtljaY7kwjhFJz62ANr6AFlaHFXrXt11KSeW5g+opG3KCqPUz0vc3RVJmy/viy+tVy5IpxTppcbdHuqZcQ1oE8pNOoUTEtiPmeCWYZvY4wRvKdl3m0FsMttWCYggjCzeJlA68KTStSkNRyDecuPD7BkzQ==
-X-Gm-Message-State: AOJu0YwiUBNc3hLsYTgN2vvsZYZ06SarAvOp7FHLl7Ft0CLHMkxRVxR1
-	3/2B/5xBlOTM6OXQwiC9RpldUg+X8ItyyMGH6p9bU/S5EvQjGGo+F9wTPaa5ikdZFZWJLyA1y9/
-	0xs8YYwASGqcWOi/k7seZtgJPiWY=
-X-Google-Smtp-Source: AGHT+IGfcLlbEM4SexKB3qvZxwtdSASEeJ4vyW8XH9MyjF6BNz8i77fKusEhzt5Z8hmMXUodZLIPP4wsLqpBG8aZWlQ=
-X-Received: by 2002:a2e:a7d5:0:b0:2ec:ca8:4897 with SMTP id
- 38308e7fff4ca-2ee5e6ca046mr27574861fa.4.1719792618943; Sun, 30 Jun 2024
- 17:10:18 -0700 (PDT)
+	s=arc-20240116; t=1719802985; c=relaxed/simple;
+	bh=nyhn01EuqHL8T1OWGhJk6ZNhVB/UOlqWw6s6S1sIt7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bE9ljtEm+ukjsPTc1wW2V4bZ0kNiiEcHpybL38vqpYwjF1ee0sDXIIRKsAdiImhQqSfC/3rphGxG83WY2A425oXJsAReMSlJoVEf9bXSZN8pTxL3P1L5CsKy8o+48Ljmu96wPaezChZlXnwh03h48Ncv313iVWoMFaq5gFiLMWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoD2p6q8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C41C4AF0B;
+	Mon,  1 Jul 2024 03:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719802985;
+	bh=nyhn01EuqHL8T1OWGhJk6ZNhVB/UOlqWw6s6S1sIt7s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DoD2p6q87Diq3qmQGCtzBvh8Pk01XRmjUxHhjbKQ3+xGfub058JAAe108/1Qdam/y
+	 riyP4NQth2xXNLlleq01UfXc4RUrKWHIgEuARvAF8tnOfLAGXUYjd7UNc7rY9UI7fN
+	 DNpdYybZFx1VY2lrr571LaYCe1TFOGuU52OlI6HXgt1NtBOjdR93O7G/LqhjJtmt4k
+	 C+iHjyVEnwEe3uOaQI4OKJxPhiG7BhGBbFQhCtjtlnJ6hMw5YKQbAbrbAMq+LLDlDx
+	 7CnxWQYotEjUPXWqO/2HmwXHiiqVmGNJMuBZh5KyKpSiaUo5JBk6TBzVMfgpY2mJct
+	 KKwkhyBo4ZGaQ==
+Message-ID: <85cebcb9-ce97-43f2-8da5-01c3a745fe2c@kernel.org>
+Date: Mon, 1 Jul 2024 12:03:02 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617-pci2_upstream-v6-0-e0821238f997@nxp.com> <20240617-pci2_upstream-v6-6-e0821238f997@nxp.com>
-In-Reply-To: <20240617-pci2_upstream-v6-6-e0821238f997@nxp.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Sun, 30 Jun 2024 21:10:07 -0300
-Message-ID: <CAOMZO5CpFB4yuZty6zkX0KyGfYvXyuSnmeJyH=pn7DiRPmGxJQ@mail.gmail.com>
-Subject: Re: [PATCH v6 06/10] PCI: imx6: Improve comment for workaround ERR010728
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	NXP Linux Team <linux-imx@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-pci@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bug report] scsi: SATA devices missing after FLR is triggered
+ during HBA suspended
+To: Yihang Li <liyihang9@huawei.com>, cassel@kernel.org
+Cc: James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ john.g.garry@oracle.com, yanaijie@huawei.com, linux-kernel@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linuxarm@huawei.com, chenxiang66@hisilicon.com,
+ prime.zeng@huawei.com, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+References: <20240618132900.2731301-1-liyihang9@huawei.com>
+ <0c5e14eb-5560-48cb-9086-6ad9c3970427@kernel.org>
+ <f27d6fa7-3088-0e60-043e-e71232066b12@huawei.com>
+ <b39b4a5b-07b7-483b-9c42-3ac80503120d@kernel.org>
+ <0d9bce26-c45b-5ce1-93c0-ca8af50547ae@huawei.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <0d9bce26-c45b-5ce1-93c0-ca8af50547ae@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 17, 2024 at 5:17=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
->
-> Improve comment about workaround ERR010727 by using official errata
+On 6/24/24 21:10, Yihang Li wrote:
+>> Thank you for the explanation, but as Niklas said, it would be a lot easier for
+>> me to recreate the issue if you send the exact commands you execute to trigger
+>> the issue. E.g. "suspend all disks" in step a can have a lot of different
+>> meaning depending on which type os suspend you are using... So please send the
+>> exact commands you use.
+>> is what exactly ? autosuspend ? or something else ?
 
-This should be  ERR010728, not  ERR010727.
+I am failing to recreate the exact same issue. I do see a lot of bad things
+happening though, but that is not looking like what you sent. I do endup with
+the 4 drives connected on my HBA being disabled by libata as revalidate/IDENTIFY
+fails. And even worse: I hit a deadlock on dev->mutex when I try to do "rmmod
+pm80xx" after running your test.
+
+I am using a pm80xx adapter as that is the only libsas adapter I have.
+
+I think your test just kicked a big can of worms... There seem to be a lot of
+wrong things going on, but I now need to sort out if the problems are with the
+pm80xx driver, libsas, libata or sd. Probably a combination of all.
+
+ATA device suspend/resume has been a constant source of issues since scsi layer
+switched to doing PM operations asynchronouly. Your issue is latest one.
+This will take a while to debug.
+
+> In step a, I suspend all disks by issuing the following command to all disks
+> attached to the SAS controller 0000:b4:02.0:
+> [root@localhost ~]# echo auto > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:0/end_device-6:0/target6:0:0/6:0:0:0/power/control
+> [root@localhost ~]# echo 5000 > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:0/end_device-6:0/target6:0:0/6:0:0:0/power/autosuspend_delay_ms
+> ...
+> [root@localhost ~]# echo auto > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:6/end_device-6:6/target6:0:6/6:0:6:0/power/control
+> [root@localhost ~]# echo 5000 > /sys/devices/pci0000:b4/0000:b4:02.0/host6/port-6:6/end_device-6:6/target6:0:6/6:0:6:0/power/autosuspend_delay_ms
+
+This works as expected on my system and I see my drives going to sleep after 5s.
+
+> Step b, Suspend the SAS controller:
+> [root@localhost ~]# echo auto > /sys/devices/pci0000:b4/0000:b4:02.0/power/control
+
+This has no effect for me. Can you confirm that your controller is actually
+sleeping ? I.e., what do the following show ?
+
+cat /sys/devices/pci0000:b4/0000:b4:02.0/power/runtime_active_kids
+cat /sys/devices/pci0000:b4/0000:b4:02.0/power/runtime_status
+
+?
+
+> At this point, the SAS controller is suspended. Next step c is trigger PCI FLR.
+> [root@localhost ~]# echo 1 > /sys/bus/pci/devices/0000:b4:02.0/reset
+
+What does
+
+cat /sys/bus/pci/devices/0000:b4:02.0/reset_method
+
+is on your system ?
+
+Mine is "bus" only.
+
+>>> The issue 2:
+>>> a. Suspend all disks on controller B.
+>>> b. Suspend controller B.
+>>> c. Resuming all disks on controller B.
+>>> d. Run the "lsmod" command to check the driver reference counting.
+
+What is the reference count before you do step (a), after you run step (b) and
+at step (d) ?
+
+For my system using the pm80xx driver, I get:
+
+pm80xx                352256  0
+libsas                155648  1 pm80xx
+
+before and after, and that is all normal. But there is the difference that
+suspending the pm80xx controller does not seem to be supported and does nothing.
+
+-- 
+Damien Le Moal
+Western Digital Research
+
 
