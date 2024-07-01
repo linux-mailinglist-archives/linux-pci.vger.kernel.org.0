@@ -1,68 +1,71 @@
-Return-Path: <linux-pci+bounces-9536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9538-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D4A091E98C
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 22:26:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F024091E9A8
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 22:34:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 475501C20E5D
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 20:26:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E84B1C22102
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 20:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C9516FF47;
-	Mon,  1 Jul 2024 20:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E23616F857;
+	Mon,  1 Jul 2024 20:34:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811EE2AD0C
-	for <linux-pci@vger.kernel.org>; Mon,  1 Jul 2024 20:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E2816DEAD;
+	Mon,  1 Jul 2024 20:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719865573; cv=none; b=pmPYvAnmYutQI5Xl8yMdkkWQ421W+P02zceKfXWReWzKCbxy72Dq09dSs+SMuUdQL5Uqt5rlsmupbLj6TRtTlZYYDG2VxbH1FcEd07GMNzPLfRhRP5UF+XBUNnsB0t4z6lJrYRelb1E8eg2iuYCmAnj2uwmDd2ZxaWWsP+Qv650=
+	t=1719866072; cv=none; b=pQYj3Nc58ssQlXSWBCM/xIcMod+ZpyxSEiPneTvF9oe8rA5/Rueyf9qoX2blmYrxA8p2Macoe/cRgdMt7HCg0jnkJ2mFvhy0oU44U+qEe6GBGwXrCZAi2IYDex1doo0LyEtvHYjLVCo80QqjDt89+3LjEreng5avHHk1wMCcbNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719865573; c=relaxed/simple;
-	bh=RUpTbYrbFnD2A3nYaID1YzxGkz/7ue/e6QEQXSZFTEk=;
+	s=arc-20240116; t=1719866072; c=relaxed/simple;
+	bh=Wo6jYVKWt1XsfvW2kocRWwhdmJB1ArOA1W+ONgrcPUo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LUrwVLqeWUyMPEiQHngrSETwkmlt1JJLJgPRxuijJHono4pYrblzkXFVKEEyTdUIzbgzVPORnrKac8e7+yNpddiM2EGAqO4ybhqA8bev5e8PBffcRue2e6Jg7htKNbuvd9G/m+0kyeIIjGKmX4m6BgI1+BT5Qoa3WUtDLUQQnqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=jeeTpVpQJILQUzP8XTq2bj4s3TzkB1JvVEK2tV5f5TRQfKECpXl0W35j7W6V+nx6Ao86LmhMck87rKc7Gcjqk+2HqUGMh5AOohZVbEfJR5ycEK6n5YtHcAUGs5gZEnDFfMmevC4roNwNlYV+cCsxeYqXiQxN6DK3qJQuc2JMEsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f4a5344ec7so24601515ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 01 Jul 2024 13:26:12 -0700 (PDT)
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2c70c08d98fso2550204a91.0;
+        Mon, 01 Jul 2024 13:34:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719865572; x=1720470372;
+        d=1e100.net; s=20230601; t=1719866070; x=1720470870;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OI6uii23gEz50DacL2OQ4dR3F5oxIfsVcOBkpzCjqQI=;
-        b=bD4farD2WoO/tHfPGMg8yp4ufg0ZmUducTIU27TxqrMe+JwJeLgZMVtXC9XbIh2tq8
-         Ccv5GTYEHVOnRPPT4s++AReEwZ7EX30+j2KHirwoyrae+n8jvIV8Eio2moPA1dPP37yF
-         WLanTG5Aks0dIPNIOp/sMn5zdvc2dfz/G5y3H/8UedixLLHoAJ7bp877Ec1aZWqhX4bg
-         LgvDhDgygYS7NqNubQnLxeWX5ujfA8bYM6BiKJeOd5uT9k9YjtH1mbHLXoQv0ruEFvav
-         5GqTmOzz8klCGLdDKSNyYkJN+ydEPNPouIsR+HipETbyqiz0cLymQKcX6ZYVsb5Fsde2
-         wNnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXltqxGaf4+qms/PCl4AeJpsJ/OunbIGdE0f3s9uC+TeGHKfUIcajyTi8Ca4X376P2G8/CAs79+QBhMFwmrTbxPm1bALL+eNR73
-X-Gm-Message-State: AOJu0Yzf70b2WAD03bK95CZNvdwUWpSw/7RVA8rcF+yCoVfiYke2Mfii
-	uHfkWdjtNyim1Yo9+1V6HGisjLxsaNe9Usi3EEM5cS+3M0h7ypt1wM6uCU2rHgo=
-X-Google-Smtp-Source: AGHT+IEQtz+k2yOiy0OPRjJGu/WMCDh9JvomCRm2O4gzVFCwVMYRFXSFPzdUIk1iZMIP97VfWYn2Eg==
-X-Received: by 2002:a17:903:11d0:b0:1f7:22b4:8240 with SMTP id d9443c01a7336-1fadb4d18b5mr108830415ad.29.1719865571786;
-        Mon, 01 Jul 2024 13:26:11 -0700 (PDT)
+        bh=Gt/VCLG0XE9tYQ4KowekIVt6Vm28X9Pkg8zs7uMqPhA=;
+        b=soUasothld5V2uHGgPoIj2iqlw0/Q+DCUqFzx5jEVmpe63GPOMThtkKEOwu9bDv7lY
+         RirFesaJtGIgKQH92sc+xO17XsauDA2u2l4J4D5VR51abyfM05E+9hCPkLxJv1ZbTGcW
+         milM76ROyabOEwPuo0g3lxqE4FjjdLt9+JOOnLLhX9qL4Gqk12IrwAEAu6xE1t+lskX/
+         3BTLDTnBbkXNdwrjuxkbnLy8gvMM3BJcmAUfBw6+KzON6x7NDUqynpfVf3Aa1fTYMdUf
+         /JhF3vxOqj+y+9YymRLY2SJpUS+3sO3wcxCYX4hsMldwaiuwahyGezfkwle9YCFBjkIu
+         N61g==
+X-Forwarded-Encrypted: i=1; AJvYcCWwMbzTSPzfxlKzZU4OBMNcdbA1E4PMtB9vig428cxx5vVxTmGub+cugLXcVbd4f91sB91rX8mnZO7OLDHeJU/BCwINaxvO69NqwhnpPWgGebvI0gn11KQZgU2h4aP5u0V6qeTWw6+tsNuwYbhwZH3CMENddM3JH4KVDjG6BblLbWAOky0RH6H0
+X-Gm-Message-State: AOJu0YyHAQQtLp4z+HKVws6AherE0Hu4mwqopaNF5kAgf47SOkMCGexz
+	xkQZFyqclxCsC+huz/Rer1sPjGNutBHY6GENW84zjxmxQONOD0Z5
+X-Google-Smtp-Source: AGHT+IH37dM54+qflq0oEXeW4Muag9hwYXpu9YtpKLmCGG+T0D5FT3KmTqCArx3LOlD6TcYfx9xJMw==
+X-Received: by 2002:a17:90a:d70b:b0:2c2:d8d7:bf65 with SMTP id 98e67ed59e1d1-2c93d6d72famr5079101a91.7.1719866070429;
+        Mon, 01 Jul 2024 13:34:30 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15bd0edsm69148775ad.306.2024.07.01.13.26.11
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c91ce425bdsm7306981a91.14.2024.07.01.13.34.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 13:26:11 -0700 (PDT)
-Date: Tue, 2 Jul 2024 05:26:09 +0900
+        Mon, 01 Jul 2024 13:34:30 -0700 (PDT)
+Date: Tue, 2 Jul 2024 05:34:28 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/DPC: Fix use-after-free on concurrent DPC and
- hot-removal
-Message-ID: <20240701202609.GF272504@rocinante>
-References: <8e4bcd4116fd94f592f2bf2749f168099c480ddf.1718707743.git.lukas@wunner.de>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: endpoint: fix a couple error handling bugs
+Message-ID: <20240701203428.GA412915@rocinante>
+References: <6eacdf8e-bb07-4e01-8726-c53a9a508945@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,52 +74,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e4bcd4116fd94f592f2bf2749f168099c480ddf.1718707743.git.lukas@wunner.de>
+In-Reply-To: <6eacdf8e-bb07-4e01-8726-c53a9a508945@moroto.mountain>
 
 Hello,
 
-> Keith reports a use-after-free when a DPC event occurs concurrently to
-> hot-removal of the same portion of the hierarchy:
-> 
-> The dpc_handler() awaits readiness of the secondary bus below the
-> Downstream Port where the DPC event occurred.  To do so, it polls the
-> config space of the first child device on the secondary bus.  If that
-> child device is concurrently removed, accesses to its struct pci_dev
-> cause the kernel to oops.
-> 
-> That's because pci_bridge_wait_for_secondary_bus() neglects to hold a
-> reference on the child device.  Before v6.3, the function was only
-> called on resume from system sleep or on runtime resume.  Holding a
-> reference wasn't necessary back then because the pciehp IRQ thread
-> could never run concurrently.  (On resume from system sleep, IRQs are
-> not enabled until after the resume_noirq phase.  And runtime resume is
-> always awaited before a PCI device is removed.)
-> 
-> However starting with v6.3, pci_bridge_wait_for_secondary_bus() is also
-> called on a DPC event.  Commit 53b54ad074de ("PCI/DPC: Await readiness
-> of secondary bus after reset"), which introduced that, failed to
-> appreciate that pci_bridge_wait_for_secondary_bus() now needs to hold a
-> reference on the child device because dpc_handler() and pciehp may
-> indeed run concurrently.  The commit was backported to v5.10+ stable
-> kernels, so that's the oldest one affected.
-> 
-> Add the missing reference acquisition.
-> 
-> Abridged stack trace:
-> 
->   BUG: unable to handle page fault for address: 00000000091400c0
->   CPU: 15 PID: 2464 Comm: irq/53-pcie-dpc 6.9.0
->   RIP: pci_bus_read_config_dword+0x17/0x50
->   pci_dev_wait()
->   pci_bridge_wait_for_secondary_bus()
->   dpc_reset_link()
->   pcie_do_recovery()
->   dpc_handler()
+> Two small error error handling and cleanup patches.  The first one fixes
+> an incorrect error message printed on success.  The other one fixes some
+> cleanup.  Which is probably not required because PCI code is generally
+> required for a functioning system...
 
-Applied to dpc, thank you!
+Applied to endpoint, thank you!
 
-[1/1] PCI/DPC: Fix use-after-free on concurrent DPC and hot-removal
-      https://git.kernel.org/pci/pci/c/11a1f4bc4736
+[01/02] PCI: endpoint: Clean up error handling in vpci_scan_bus()
+        https://git.kernel.org/pci/pci/c/72705e5b5957
+
+[02/02] PCI: endpoint: Fix error handling in epf_ntb_epc_cleanup()
+        https://git.kernel.org/pci/pci/c/05214340e133
 
 	Krzysztof
 
