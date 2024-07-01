@@ -1,58 +1,57 @@
-Return-Path: <linux-pci+bounces-9514-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9515-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7E1091DDA2
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 13:15:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 146DE91DDD0
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 13:27:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D45111C217A0
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 11:15:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BACB81F21E72
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 11:27:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9C646444;
-	Mon,  1 Jul 2024 11:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E70113D63B;
+	Mon,  1 Jul 2024 11:27:29 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33891F949;
-	Mon,  1 Jul 2024 11:15:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AEF13D53D;
+	Mon,  1 Jul 2024 11:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719832551; cv=none; b=J3XJhjEX5ArhNKCUtU6JvNtjJsj8eVD3T8ukr/Qm2Z2Kk4XiAhXqy0032iN8PFqiLIIbRNFu2h3xkCgS8OoiPJy5R27+7JxpX5qgkctX1BOJMYnDeES/oobbVf/5JwKwX9Uffwsik2J35yPGAR4cHx5qudddeDGAO74wzjMr6F8=
+	t=1719833249; cv=none; b=hw7NhAmACnxc+yZP0I4jq0/LFoiRBO9T7MeMAcUaCZ4hgf0DNgzDkgbOM54Ss1FmTmmva6q46vBx2PFPpWgTeL/S/PLm0jASzO2MarERlWtN3307EogK2DugQlul4CxEjOfvoC9Cv8QruP0q9jKpe/LmRukZLfTxqzrwzEdsbhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719832551; c=relaxed/simple;
-	bh=FrjOrKb+tlQmpgbKQBEuV+IA2pjKYmp4EtQ4sHK9Clg=;
+	s=arc-20240116; t=1719833249; c=relaxed/simple;
+	bh=VF7ABEH7CUrrrauei+ZFGbjO1CVQzw2+43N56g2h9Rg=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=liwFO4kDj/M7miA7lvkFGFo/EW+9MguJyJbAUfbjnSugMcf3+JJnVaWSVA7ICJGfx13UAwIDEaCOC10zhPYuGV5v74FJX5Z6D1duuKgvL2PQXiZ0EFM6YfnTJ6wN35Zmuseex0nGs/+4d+JE1GF0zY5SI3dXVDG0+5MhvhzxG44=
+	 MIME-Version:Content-Type; b=XxXIJVDZ4G/2GdOSHEzER5OXmYpyDTjduv1Kd0kNBvHF6u95ZnhMAZOVdvKb91CGeiG1YI/Tq7Kagw+iY9zKZKcvT2toDss4cFAPLt+zxVUbl4KscuNQowgb5It9JOXfJgqViHS35WT8tPP4PlbfXuoMhHqLYuYW6zfV3Ywwj8Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCNhj1kdlz6K9TV;
-	Mon,  1 Jul 2024 19:13:57 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCNzZ5fZpz6JB7Y;
+	Mon,  1 Jul 2024 19:26:50 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id DD25A140D30;
-	Mon,  1 Jul 2024 19:15:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 76B62140B63;
+	Mon,  1 Jul 2024 19:27:23 +0800 (CST)
 Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 1 Jul
- 2024 12:15:45 +0100
-Date: Mon, 1 Jul 2024 12:15:44 +0100
+ 2024 12:27:22 +0100
+Date: Mon, 1 Jul 2024 12:27:21 +0100
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Shradha Todi <shradha.t@samsung.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-	<fancer.lancer@gmail.com>, <yoshihiro.shimoda.uh@renesas.com>,
-	<conor.dooley@microchip.com>, <pankaj.dubey@samsung.com>,
-	<gost.dev@samsung.com>
-Subject: Re: [PATCH v3 0/3] Add support for RAS DES feature in PCIe DW
-Message-ID: <20240701121544.00006faa@Huawei.com>
-In-Reply-To: <20240625093813.112555-1-shradha.t@samsung.com>
-References: <CGME20240625094434epcas5p2e48bda118809ccb841c983d737d4f09d@epcas5p2.samsung.com>
-	<20240625093813.112555-1-shradha.t@samsung.com>
+To: Alistair Francis <alistair23@gmail.com>
+CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
+	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
+	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
+	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
+	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [PATCH v12 3/4] PCI/DOE: Expose the DOE features via sysfs
+Message-ID: <20240701122721.0000034d@Huawei.com>
+In-Reply-To: <20240626045926.680380-3-alistair.francis@wdc.com>
+References: <20240626045926.680380-1-alistair.francis@wdc.com>
+	<20240626045926.680380-3-alistair.francis@wdc.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -63,60 +62,132 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, 25 Jun 2024 15:08:10 +0530
-Shradha Todi <shradha.t@samsung.com> wrote:
+On Wed, 26 Jun 2024 14:59:25 +1000
+Alistair Francis <alistair23@gmail.com> wrote:
 
-> DesignWare controller provides a vendor specific extended capability
-> called RASDES as an IP feature. This extended capability  provides
-> hardware information like:
->  - Debug registers to know the state of the link or controller. 
->  - Error injection mechanisms to inject various PCIe errors including
->    sequence number, CRC
->  - Statistical counters to know how many times a particular event
->    occurred
+> The PCIe 6 specification added support for the Data Object
+> Exchange (DOE).
+> When DOE is supported the DOE Discovery Feature must be implemented per
+> PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
+> information about the other DOE features supported by the device.
 > 
-> However, in Linux we do not have any generic or custom support to be
-> able to use this feature in an efficient manner. This is the reason we
-> are proposing this framework. Debug and bring up time of high-speed IPs
-> are highly dependent on costlier hardware analyzers and this solution
-> will in some ways help to reduce the HW analyzer usage.
+> The kernel is already querying the DOE features supported and cacheing
+> the values. Expose the values in sysfs to allow user space to
+> determine which DOE features are supported by the PCIe device.
 > 
-> The debugfs entries can be used to get information about underlying
-> hardware and can be shared with user space. Separate debugfs entries has
-> been created to cater to all the DES hooks provided by the controller.
-> The debugfs entries interacts with the RASDES registers in the required
-> sequence and provides the meaningful data to the user. This eases the
-> effort to understand and use the register information for debugging.
+> By exposing the information to userspace tools like lspci can relay the
+> information to users. By listing all of the supported features we can
+> allow userspace to parse the list, which might include
+> vendor specific features as well as yet to be supported features.
+> 
+> As the DOE Discovery feature must always be supported we treat it as a
+> special named attribute case. This allows the usual PCI attribute_group
+> handling to correctly create the doe_features directory when registering
+> pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
+> will seg fault).
+> 
+> After this patch is supported you can see something like this when
+> attaching a DOE device
+> 
+> $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
+> 0001:01        0001:02        doe_discovery
+> 
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+Hi Alistair,
 
-To consider this properly I think some documentation is needed.
+I think I missed an error path issue in earlier reviews.
 
-Maybe just ABI in Documentation/ABI/testing/debugfs-*
-or maybe a more freestanding document.
+Suggestion for minimal fix inline. If that is fine feel
+free to add
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index defc4be81bd4..580370dc71ee 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
 
 
-> 
-> v2: https://lore.kernel.org/lkml/20240319163315.GD3297@thinkpad/T/
-> 
-> v1: https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
-> 
-> Shradha Todi (3):
->   PCI: dwc: Add support for vendor specific capability search
->   PCI: debugfs: Add support for RASDES framework in DWC
->   PCI: dwc: Create debugfs files in DWC driver
-> 
->  drivers/pci/controller/dwc/Kconfig            |   8 +
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  .../controller/dwc/pcie-designware-debugfs.c  | 474 ++++++++++++++++++
->  .../controller/dwc/pcie-designware-debugfs.h  |   0
->  .../pci/controller/dwc/pcie-designware-host.c |   2 +
->  drivers/pci/controller/dwc/pcie-designware.c  |  20 +
->  drivers/pci/controller/dwc/pcie-designware.h  |  18 +
->  7 files changed, 523 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-designware-debugfs.c
->  create mode 100644 drivers/pci/controller/dwc/pcie-designware-debugfs.h
-> 
+> +
+> +int pci_doe_sysfs_init(struct pci_dev *pdev)
+> +{
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index;
+> +	int ret;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
+> +		ret = pci_doe_sysfs_feature_populate(pdev, doe_mb);
+
+This doesn't feel quite right.  If we wait after a doe_mb features
+set succeeds and then an error occurs this code doesn't cleanup and...
+
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+>  {
+>  	if (wait_event_timeout(doe_mb->wq,
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 40cfa716392f..b5db191cb29f 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/stat.h>
+>  #include <linux/export.h>
+>  #include <linux/topology.h>
+> @@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
+>  {
+>  	int i;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOE))
+> +		pci_doe_sysfs_teardown(pdev);
+> +
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		struct bin_attribute *res_attr;
+>  
+> @@ -1227,6 +1231,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+>  	int i;
+>  	int retval;
+>  
+> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
+> +		retval = pci_doe_sysfs_init(pdev);
+> +		if (retval)
+
+... this doesn't call pci_remove_resource_files() unlike te
+other error path in this function which does.
+
+I think just calling that here would be sufficient and inline
+with how error cleanup works for the rest of this code.
+Personally I prefer driving for a function to have no side effects
+but such is life.
+
+> +			return retval;
+> +	}
+> +
+>  	/* Expose the PCI resources from this device as files */
+>  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  
+> @@ -1661,6 +1671,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+>  #endif
+>  #ifdef CONFIG_PCIEASPM
+>  	&aspm_ctrl_attr_group,
+> +#endif
+> +#ifdef CONFIG_PCI_DOE
+> +	&pci_doe_sysfs_group,
+>  #endif
+>  	NULL,
+>  };
 
 
