@@ -1,126 +1,122 @@
-Return-Path: <linux-pci+bounces-9537-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9536-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 688D791E98E
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 22:26:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D4A091E98C
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 22:26:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 03BA7B21132
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 20:26:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 475501C20E5D
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 20:26:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40D88171066;
-	Mon,  1 Jul 2024 20:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C9516FF47;
+	Mon,  1 Jul 2024 20:26:13 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE742AD0C;
-	Mon,  1 Jul 2024 20:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811EE2AD0C
+	for <linux-pci@vger.kernel.org>; Mon,  1 Jul 2024 20:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719865580; cv=none; b=a03mz81wQXvjjn/KSnHmsjVybCKhSNxDOIUX/Bic5LI+4Set0QlNN28s02cwTx4xNWc8DqHYD/hYLNXKdXmfrrj/+ABcHxz/vgCteqm6uTmjfrxIK1fmJCXhycpxfZIpQCmZzxBN624x/MDrIze0Slz5m/PrXPByoYtQE+DZX5o=
+	t=1719865573; cv=none; b=pmPYvAnmYutQI5Xl8yMdkkWQ421W+P02zceKfXWReWzKCbxy72Dq09dSs+SMuUdQL5Uqt5rlsmupbLj6TRtTlZYYDG2VxbH1FcEd07GMNzPLfRhRP5UF+XBUNnsB0t4z6lJrYRelb1E8eg2iuYCmAnj2uwmDd2ZxaWWsP+Qv650=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719865580; c=relaxed/simple;
-	bh=eR3hh1+XS210oQnDU9n0EMfkctIm37rEsxObT0XcN7s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I+kVWQFRWz7tpCom7XOgRGB14UyZdd7uzdaIxo7/Cdd1D0pm0lXZKuZ6urSPySsnbqHwn4TkFubnKViM1+LJZ+2kZSOM7WxTaophLIjZ/7bdCdeMl3XoYq83//24mJBc4gMYcfZwqKYbIFBjJDaajyKBwWnMqmli3i3FrA76DnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1719865573; c=relaxed/simple;
+	bh=RUpTbYrbFnD2A3nYaID1YzxGkz/7ue/e6QEQXSZFTEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LUrwVLqeWUyMPEiQHngrSETwkmlt1JJLJgPRxuijJHono4pYrblzkXFVKEEyTdUIzbgzVPORnrKac8e7+yNpddiM2EGAqO4ybhqA8bev5e8PBffcRue2e6Jg7htKNbuvd9G/m+0kyeIIjGKmX4m6BgI1+BT5Qoa3WUtDLUQQnqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f9b364faddso19921735ad.3;
-        Mon, 01 Jul 2024 13:26:18 -0700 (PDT)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f4a5344ec7so24601515ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 01 Jul 2024 13:26:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719865578; x=1720470378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AdHPbFHUncvFeJ/DAqyKKSF/mF1oyNKAV5RldPg7OyM=;
-        b=VkrCmTCc0RB9S80A+L8yaDBgEgbncwa7WNWLZzRe1CWZezq8sHWHA1f80curxo1N2l
-         ixwNroUxBcX7rd1H3eZlhGsyErD1TtYB6rChbCLwYwwlcKW3Kr91CpU8uoPLVUKVux9P
-         4ZKfy3qLGXoxiQupFDq6XGr0vZl6x1EYdZ91CXECY3Z8A2jq5QYzibm6QOTccy0Ahuzp
-         74zlz4kgqn2Ss3xmBzHspslbSzCzGN6iYV0U+9973dz1LxLwzhhLpq9G2ZhY2JRnKifK
-         pYSdNnYCO+FnCk6mhKVx6eE3ufCZsKFHNCtENXU2n88QHZGMRS9HY0iEHCB9nf3c0BV0
-         GxFw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0/XNKC91LvHxioUG7++0rPBVTXNdFhDVj5Pbhq1nQgboqa6ElvfAl8xZ44IMbr5sI6m1GbvdiRKvp4VtSf1edpS/XQ9Rjv2h0+R2geny6BppQE5gKB24fN//VLgVx4J7Vckxs4DCy
-X-Gm-Message-State: AOJu0YyLpt94B+KbycCPVrjcJKzsoctVonTmDcotORPtAFtYibweNnfS
-	jMpo5jTOuZffiW77rj9rtI1Z6OfIi7kR50X/mXegPZMjHnN3QFGJgtdPHw==
-X-Google-Smtp-Source: AGHT+IFXsgetXTOH0qwRvAUhLUDyzqZQeQTG3maWudj/BKSHy5rle/iQ6aEa2iMUR5UuJP0Ll9kUvg==
-X-Received: by 2002:a17:902:f60a:b0:1fa:2c91:f004 with SMTP id d9443c01a7336-1fadbc736f9mr46987895ad.16.1719865577690;
-        Mon, 01 Jul 2024 13:26:17 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1596920sm69135615ad.268.2024.07.01.13.26.16
+        d=1e100.net; s=20230601; t=1719865572; x=1720470372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OI6uii23gEz50DacL2OQ4dR3F5oxIfsVcOBkpzCjqQI=;
+        b=bD4farD2WoO/tHfPGMg8yp4ufg0ZmUducTIU27TxqrMe+JwJeLgZMVtXC9XbIh2tq8
+         Ccv5GTYEHVOnRPPT4s++AReEwZ7EX30+j2KHirwoyrae+n8jvIV8Eio2moPA1dPP37yF
+         WLanTG5Aks0dIPNIOp/sMn5zdvc2dfz/G5y3H/8UedixLLHoAJ7bp877Ec1aZWqhX4bg
+         LgvDhDgygYS7NqNubQnLxeWX5ujfA8bYM6BiKJeOd5uT9k9YjtH1mbHLXoQv0ruEFvav
+         5GqTmOzz8klCGLdDKSNyYkJN+ydEPNPouIsR+HipETbyqiz0cLymQKcX6ZYVsb5Fsde2
+         wNnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXltqxGaf4+qms/PCl4AeJpsJ/OunbIGdE0f3s9uC+TeGHKfUIcajyTi8Ca4X376P2G8/CAs79+QBhMFwmrTbxPm1bALL+eNR73
+X-Gm-Message-State: AOJu0Yzf70b2WAD03bK95CZNvdwUWpSw/7RVA8rcF+yCoVfiYke2Mfii
+	uHfkWdjtNyim1Yo9+1V6HGisjLxsaNe9Usi3EEM5cS+3M0h7ypt1wM6uCU2rHgo=
+X-Google-Smtp-Source: AGHT+IEQtz+k2yOiy0OPRjJGu/WMCDh9JvomCRm2O4gzVFCwVMYRFXSFPzdUIk1iZMIP97VfWYn2Eg==
+X-Received: by 2002:a17:903:11d0:b0:1f7:22b4:8240 with SMTP id d9443c01a7336-1fadb4d18b5mr108830415ad.29.1719865571786;
+        Mon, 01 Jul 2024 13:26:11 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac15bd0edsm69148775ad.306.2024.07.01.13.26.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 13:26:17 -0700 (PDT)
-From: Wei Liu <wei.liu@kernel.org>
-To: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	stable@kernel.org,
-	Michael Kelley <mhklinux@outlook.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jake Oshins <jakeo@microsoft.com>,
-	linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] PCI: hv: Return zero, not garbage, when reading PCI_INTERRUPT_PIN
-Date: Mon,  1 Jul 2024 20:26:05 +0000
-Message-ID: <20240701202606.129606-1-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.43.0
+        Mon, 01 Jul 2024 13:26:11 -0700 (PDT)
+Date: Tue, 2 Jul 2024 05:26:09 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/DPC: Fix use-after-free on concurrent DPC and
+ hot-removal
+Message-ID: <20240701202609.GF272504@rocinante>
+References: <8e4bcd4116fd94f592f2bf2749f168099c480ddf.1718707743.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e4bcd4116fd94f592f2bf2749f168099c480ddf.1718707743.git.lukas@wunner.de>
 
-The intent of the code snippet is to always return 0 for both
-PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
+Hello,
 
-The check misses PCI_INTERRUPT_PIN. This patch fixes that.
+> Keith reports a use-after-free when a DPC event occurs concurrently to
+> hot-removal of the same portion of the hierarchy:
+> 
+> The dpc_handler() awaits readiness of the secondary bus below the
+> Downstream Port where the DPC event occurred.  To do so, it polls the
+> config space of the first child device on the secondary bus.  If that
+> child device is concurrently removed, accesses to its struct pci_dev
+> cause the kernel to oops.
+> 
+> That's because pci_bridge_wait_for_secondary_bus() neglects to hold a
+> reference on the child device.  Before v6.3, the function was only
+> called on resume from system sleep or on runtime resume.  Holding a
+> reference wasn't necessary back then because the pciehp IRQ thread
+> could never run concurrently.  (On resume from system sleep, IRQs are
+> not enabled until after the resume_noirq phase.  And runtime resume is
+> always awaited before a PCI device is removed.)
+> 
+> However starting with v6.3, pci_bridge_wait_for_secondary_bus() is also
+> called on a DPC event.  Commit 53b54ad074de ("PCI/DPC: Await readiness
+> of secondary bus after reset"), which introduced that, failed to
+> appreciate that pci_bridge_wait_for_secondary_bus() now needs to hold a
+> reference on the child device because dpc_handler() and pciehp may
+> indeed run concurrently.  The commit was backported to v5.10+ stable
+> kernels, so that's the oldest one affected.
+> 
+> Add the missing reference acquisition.
+> 
+> Abridged stack trace:
+> 
+>   BUG: unable to handle page fault for address: 00000000091400c0
+>   CPU: 15 PID: 2464 Comm: irq/53-pcie-dpc 6.9.0
+>   RIP: pci_bus_read_config_dword+0x17/0x50
+>   pci_dev_wait()
+>   pci_bridge_wait_for_secondary_bus()
+>   dpc_reset_link()
+>   pcie_do_recovery()
+>   dpc_handler()
 
-This is discovered by this call in VFIO:
+Applied to dpc, thank you!
 
-    pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+[1/1] PCI/DPC: Fix use-after-free on concurrent DPC and hot-removal
+      https://git.kernel.org/pci/pci/c/11a1f4bc4736
 
-The old code does not set *val to 0 because it misses the check for
-PCI_INTERRUPT_PIN. Garbage is returned in that case.
-
-Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-Cc: stable@kernel.org
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
----
-v3:
-* Change commit subject line and message per Bjorn's suggestion
-v2:
-* Change the commit subject line and message
-* Change the code according to feedback
----
- drivers/pci/controller/pci-hyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 5992280e8110..cdd5be16021d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
- 		   PCI_CAPABILITY_LIST) {
- 		/* ROM BARs are unimplemented */
- 		*val = 0;
--	} else if (where >= PCI_INTERRUPT_LINE && where + size <=
--		   PCI_INTERRUPT_PIN) {
-+	} else if ((where >= PCI_INTERRUPT_LINE && where + size <= PCI_INTERRUPT_PIN) ||
-+		   (where >= PCI_INTERRUPT_PIN && where + size <= PCI_MIN_GNT)) {
- 		/*
- 		 * Interrupt Line and Interrupt PIN are hard-wired to zero
- 		 * because this front-end only supports message-signaled
--- 
-2.43.0
-
+	Krzysztof
 
