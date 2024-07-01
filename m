@@ -1,193 +1,87 @@
-Return-Path: <linux-pci+bounces-9515-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9516-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 146DE91DDD0
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 13:27:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FC5991DE80
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 13:57:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BACB81F21E72
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 11:27:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E285FB222EF
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 11:57:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E70113D63B;
-	Mon,  1 Jul 2024 11:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C558284D02;
+	Mon,  1 Jul 2024 11:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G56Y/Su9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AEF13D53D;
-	Mon,  1 Jul 2024 11:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962E61422A6;
+	Mon,  1 Jul 2024 11:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719833249; cv=none; b=hw7NhAmACnxc+yZP0I4jq0/LFoiRBO9T7MeMAcUaCZ4hgf0DNgzDkgbOM54Ss1FmTmmva6q46vBx2PFPpWgTeL/S/PLm0jASzO2MarERlWtN3307EogK2DugQlul4CxEjOfvoC9Cv8QruP0q9jKpe/LmRukZLfTxqzrwzEdsbhQ=
+	t=1719835050; cv=none; b=QAJkYmR7ziBWb5qZK3Uxv5cYz105jNx+VhFwG1T27VqkMzQCmP7u7rd1/k5MmfjSXHAGgNhPKRAQ/TbdcEA9PpyAtJfZQF7c9hFRteEKN1KEAtGHV8yQXFpwCE9lReDfADIdZjqHdyD6aB8kqLq1fKg+TPh20WuzNNjyyL6SUY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719833249; c=relaxed/simple;
-	bh=VF7ABEH7CUrrrauei+ZFGbjO1CVQzw2+43N56g2h9Rg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XxXIJVDZ4G/2GdOSHEzER5OXmYpyDTjduv1Kd0kNBvHF6u95ZnhMAZOVdvKb91CGeiG1YI/Tq7Kagw+iY9zKZKcvT2toDss4cFAPLt+zxVUbl4KscuNQowgb5It9JOXfJgqViHS35WT8tPP4PlbfXuoMhHqLYuYW6zfV3Ywwj8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCNzZ5fZpz6JB7Y;
-	Mon,  1 Jul 2024 19:26:50 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 76B62140B63;
-	Mon,  1 Jul 2024 19:27:23 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 1 Jul
- 2024 12:27:22 +0100
-Date: Mon, 1 Jul 2024 12:27:21 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alistair Francis <alistair23@gmail.com>
-CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
-	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
-	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
-	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
-	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v12 3/4] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <20240701122721.0000034d@Huawei.com>
-In-Reply-To: <20240626045926.680380-3-alistair.francis@wdc.com>
-References: <20240626045926.680380-1-alistair.francis@wdc.com>
-	<20240626045926.680380-3-alistair.francis@wdc.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1719835050; c=relaxed/simple;
+	bh=hzmzErIa14odgkFiGOmGNMUeyolu8zX2etABDTkla90=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oqmAH+YzmQtlm5+q+szrCoYmxHw4DHRCrGx1T3F8JJMsmxwyBcVMvTQRmjU4h0EuBMfMiqY6thGCySgTVsb0V9RgH4wb+1Su1mgxJ2Ddxk38cThphurAMKJaevHCdnwrfqYcSm2xzSJ50x5MRgWqIYunEJvQB3Qe608pCpfQ840=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G56Y/Su9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F873C116B1;
+	Mon,  1 Jul 2024 11:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719835050;
+	bh=hzmzErIa14odgkFiGOmGNMUeyolu8zX2etABDTkla90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G56Y/Su9chR8vStNUMCKGsKq5ePJtlZMhhpmqlWbeUKuCdMezGkSAOL4jSl7YA/QL
+	 BzMU38h/Vrvdzs2VzOKYtvX3E1Tnxzi4KzFRIOpJprR+S4R9A8GCMi7TlJQ4WpF0+O
+	 Ldwkd4eNZelD9OF/h+XsnYXqqTbF8DlwOsI507GJThGgy/GeT6pB0N0Z359w/YY+TW
+	 INT+nuTow3N94NRCEx4hPHqbaVJDx0tyI39Ic0bkqavKJmG7ThRO9haz0UYUO4dAot
+	 tf1B97UsuPagnlL4mAiTJXOhGXN7Wajm1Itm8P3QpLtXVF2oJ8kMo+sevRAVYAciwO
+	 oH/sSRSmOsOYQ==
+Date: Mon, 1 Jul 2024 12:57:23 +0100
+From: Will Deacon <will@kernel.org>
+To: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	liviu.dudau@arm.com, sudeep.holla@arm.com, joro@8bytes.org,
+	robin.murphy@arm.com, nicolinc@nvidia.com, ketanp@nvidia.com,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Enable PCIe ATS for devicetree boot
+Message-ID: <20240701115723.GA1732@willie-the-truck>
+References: <20240607105415.2501934-2-jean-philippe@linaro.org>
+ <20240701102400.GA2414@myrica>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701102400.GA2414@myrica>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, 26 Jun 2024 14:59:25 +1000
-Alistair Francis <alistair23@gmail.com> wrote:
-
-> The PCIe 6 specification added support for the Data Object
-> Exchange (DOE).
-> When DOE is supported the DOE Discovery Feature must be implemented per
-> PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-> information about the other DOE features supported by the device.
+On Mon, Jul 01, 2024 at 11:24:00AM +0100, Jean-Philippe Brucker wrote:
+> On Fri, Jun 07, 2024 at 11:54:13AM +0100, Jean-Philippe Brucker wrote:
+> > Before enabling Address Translation Support (ATS) in endpoints, the OS
+> > needs to confirm that the Root Complex supports it. Obtain this
+> > information from the firmware description since there is no architected
+> > method. ACPI provides a bit via IORT tables, so add the devicetree
+> > equivalent.
+> > 
+> > Since v1 [1] I added the review and ack tags, thanks all. This should be
+> > ready to go via the IOMMU tree.
 > 
-> The kernel is already querying the DOE features supported and cacheing
-> the values. Expose the values in sysfs to allow user space to
-> determine which DOE features are supported by the PCIe device.
+> This series enables ATS for devicetree boot, and is needed on an Nvidia
+> system: https://lore.kernel.org/linux-arm-kernel/ZeJP6CwrZ2FSbTYm@Asurada-Nvidia/
 > 
-> By exposing the information to userspace tools like lspci can relay the
-> information to users. By listing all of the supported features we can
-> allow userspace to parse the list, which might include
-> vendor specific features as well as yet to be supported features.
-> 
-> As the DOE Discovery feature must always be supported we treat it as a
-> special named attribute case. This allows the usual PCI attribute_group
-> handling to correctly create the doe_features directory when registering
-> pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
-> will seg fault).
-> 
-> After this patch is supported you can see something like this when
-> attaching a DOE device
-> 
-> $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-> 0001:01        0001:02        doe_discovery
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-Hi Alistair,
+> Would you mind picking it up for v6.11?
 
-I think I missed an error path issue in earlier reviews.
+I'll take a look.
 
-Suggestion for minimal fix inline. If that is fine feel
-free to add
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index defc4be81bd4..580370dc71ee 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-
-
-> +
-> +int pci_doe_sysfs_init(struct pci_dev *pdev)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +	int ret;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> +		ret = pci_doe_sysfs_feature_populate(pdev, doe_mb);
-
-This doesn't feel quite right.  If we wait after a doe_mb features
-set succeeds and then an error occurs this code doesn't cleanup and...
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
->  {
->  	if (wait_event_timeout(doe_mb->wq,
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 40cfa716392f..b5db191cb29f 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-doe.h>
->  #include <linux/stat.h>
->  #include <linux/export.h>
->  #include <linux/topology.h>
-> @@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
->  {
->  	int i;
->  
-> +	if (IS_ENABLED(CONFIG_PCI_DOE))
-> +		pci_doe_sysfs_teardown(pdev);
-> +
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->  		struct bin_attribute *res_attr;
->  
-> @@ -1227,6 +1231,12 @@ static int pci_create_resource_files(struct pci_dev *pdev)
->  	int i;
->  	int retval;
->  
-> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
-> +		retval = pci_doe_sysfs_init(pdev);
-> +		if (retval)
-
-... this doesn't call pci_remove_resource_files() unlike te
-other error path in this function which does.
-
-I think just calling that here would be sufficient and inline
-with how error cleanup works for the rest of this code.
-Personally I prefer driving for a function to have no side effects
-but such is life.
-
-> +			return retval;
-> +	}
-> +
->  	/* Expose the PCI resources from this device as files */
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->  
-> @@ -1661,6 +1671,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
->  #endif
->  #ifdef CONFIG_PCIEASPM
->  	&aspm_ctrl_attr_group,
-> +#endif
-> +#ifdef CONFIG_PCI_DOE
-> +	&pci_doe_sysfs_group,
->  #endif
->  	NULL,
->  };
-
+Will
 
