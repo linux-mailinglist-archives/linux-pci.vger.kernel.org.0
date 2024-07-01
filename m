@@ -1,231 +1,94 @@
-Return-Path: <linux-pci+bounces-9501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D17D591D953
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 09:46:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13C4791D9B2
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 10:10:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2CAA1C21ABE
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 07:46:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC3491F20F89
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 08:10:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45D2E76EEA;
-	Mon,  1 Jul 2024 07:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T3PuyQYd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79897D095;
+	Mon,  1 Jul 2024 08:10:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428BFC144;
-	Mon,  1 Jul 2024 07:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2858881AB4;
+	Mon,  1 Jul 2024 08:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719819966; cv=none; b=Kw1G8GpEzdnaK4xNw1tc8dz+SWGOKARSMpo7UMXisVa7chXYwwZ/yY6Uka1thPZbmS4vCK8ydsoR1ORkYewt7+9D/ON+pmkH9RDukagy2v/DpH36YEDvIcaKqBhvXWkhGfV/pgzc5XH1dHR4t2clDDl5YERsL4bllvD+wUQzh7s=
+	t=1719821432; cv=none; b=oP2B5vv441EzVUGnhh2ZuHsfosEkZexr6kyohpnFZLOruoEfpUvE/xV9X/vx1KNIu3lRirA8vQ/IRydGd5T6SLrG+vfeZ630kvUrFl4JcqG/wzj/MKsDJpqPVtPPLWz5Rwahuun38MJE0ixdTNtvgDheN19GWP3FtQr1XvZ512s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719819966; c=relaxed/simple;
-	bh=eu+1hRloBkCtTsdD3c7EpT7vZuoZchofbkb1YLuh0Os=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oBtCrUR3TRWyEiP1hhzZGJ/1KaLIsW+JvOBqCPa+3WYD/UgBSVCI6dIREAtZEOa/xSO3rVbJl8iPLBT7zJ0zD0W1Pyf6umagTn83UCa3VlKHk1OJFu+0tOA6Qh4lEsYLvzqpMyoI+xBvxfp6nA9CZvw586fj78VWY1ylVw19Cac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T3PuyQYd; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4616vKvY025560;
-	Mon, 1 Jul 2024 07:45:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=/qWCb0RrNPuPW
-	4UHecWAZj4MlZnWK893nVlQRpserAE=; b=T3PuyQYd7JyaAdKWu5Awb2qzGeULg
-	zV/NIwZBi9JJeMuk/Zb8recslKhawKLuqTXE0LeWcT91B0S99ctMTqBefJ/ZNQUV
-	UpRsQnN5mjR1D5/AYiu/+b1iPoU4AUuw4uqAO/1HJG/+XChq+qqNdFpAqUomVq9W
-	hHrEyskf8zmKUJg/HqQIQXewhu0A6k68pmsjwHBLAKJ/M5Gkfpl5BeShyiSBggP2
-	6YVVgldKm6V1FQj49r1Qz/KUasI33JPOLNG7qtVAn3uYg6mYmV+NqtOjQzsXzKjo
-	VJ8NeID0BBeq0nEvI7tvqLX51jSS39mLsCroPuvmCPD4KP6aYO5RVtSOA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403pb98auk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 07:45:50 +0000 (GMT)
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4617jnfU005813;
-	Mon, 1 Jul 2024 07:45:49 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 403pb98auf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 07:45:49 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46151S8h030022;
-	Mon, 1 Jul 2024 07:45:49 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 402x3mnxud-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Jul 2024 07:45:48 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4617jhCF55771470
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 1 Jul 2024 07:45:45 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 329982004B;
-	Mon,  1 Jul 2024 07:45:43 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 073DD20040;
-	Mon,  1 Jul 2024 07:45:40 +0000 (GMT)
-Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  1 Jul 2024 07:45:39 +0000 (GMT)
-From: Krishna Kumar <krishnak@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
-        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
-        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
-        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
-        Krishna Kumar <krishnak@linux.ibm.com>,
-        Shawn Anastasio <sanastasio@raptorengineering.com>
-Subject: [PATCH v4 2/2] powerpc: hotplug driver bridge support
-Date: Mon,  1 Jul 2024 13:15:07 +0530
-Message-ID: <20240701074513.94873-3-krishnak@linux.ibm.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240701074513.94873-1-krishnak@linux.ibm.com>
-References: <20240701074513.94873-1-krishnak@linux.ibm.com>
+	s=arc-20240116; t=1719821432; c=relaxed/simple;
+	bh=wrliNvaB7WNZoEVe45hopQEZZ3ZXy9IoZeYgQ0J/6QM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTZ2Rg0TOH7lRVYk+GZM+W+aIewA3CTLUpLC80TCVWMoz26XrEy3mEaI7xoSnMMdZY8CafZ9OlrjqO6VD0YJZqe5yh1Z2uvTy8rHljRIaScXeasYBi7scaQVB+bV7ugNSB/j/v0/zfG9EqvfumAVAOMoWn9003y9cW/tWayMo2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fab03d2f23so17994515ad.0;
+        Mon, 01 Jul 2024 01:10:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719821430; x=1720426230;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b109jZvSI9enMLj/a9Azw6t61SkYdoZr57mQw+e9Y80=;
+        b=Ot0iu+505j/H+SidDc262S21wjfunUobw1tHSS01H2hqew8f4Q9t5MNR/N//6aSxHZ
+         4jwsFMXpnJ0vipDE2T2is1Q+E/BzS7AAZ6MHVbks0HwAZZ+Cc36eEqbMT35fbuIg87ZJ
+         RakotGpmijD4Jezs0eqISnm9jNkGzaKTwtuqIF/oGwHF8T421Zfu56l3X2aaprr9gjRs
+         moFVnldlOX6A01U9gcxxhiXu45Um3WzCilRqcHJ7RMf8k453XMrXSfmI4psioG4wGJQX
+         TxasaBPlFw3mXTnqkihSOvQU4PA48Hym2z5+I/8W6V2uJmzrgkc4vTDZLb6BsaqkyNgA
+         UTnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWreEO7RdVhcMgT8dUkYqJ0XhMooxZeYW82rfk7WuaA3Z25NlwHGDMSYiigSlG2G+MSmBFtgw5Nq+dFCKMWsHPFJjl7epKwedJWiGrheioFEOaLlM9PlXO150rA3jgXki2P2QakS+kt
+X-Gm-Message-State: AOJu0YymVqw+Gfaf1uWdv6SC0rZ8Uw5M7etMaxRTtPr5YvzI+421mxWE
+	UPavwrk5HiPDkEoCdLtrA/Xnd/WrToMaeIc41/npmyANgv8J8xanrhal7oqT
+X-Google-Smtp-Source: AGHT+IFEluso38K5Kxda1/buzHviB4ehPtjvlF6Gj2Uz801GLttJxFqt1LFadAU32WwafSRurW8L9A==
+X-Received: by 2002:a17:902:784c:b0:1f7:2091:978 with SMTP id d9443c01a7336-1fadbcaaf4dmr16151215ad.37.1719821430325;
+        Mon, 01 Jul 2024 01:10:30 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1596675sm58092125ad.249.2024.07.01.01.10.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 01:10:29 -0700 (PDT)
+Date: Mon, 1 Jul 2024 17:10:28 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH] misc: pci_endpoint_test: Remove some unused functions
+Message-ID: <20240701081028.GA2509636@rocinante>
+References: <20240516083654.44087-1-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -uKa2DmjEIygamUOQFeGQEff9bnWi5xw
-X-Proofpoint-ORIG-GUID: Eh40lHwqZYgl-C9qUFuzFyouUf-dJovG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-01_05,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407010051
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240516083654.44087-1-jiapeng.chong@linux.alibaba.com>
 
-There is an issue with the hotplug operation when it's done on the
-bridge/switch slot. The bridge-port and devices behind the bridge, which
-become offline by hot-unplug operation, don't get hot-plugged/enabled by
-doing hot-plug operation on that slot. Only the first port of the bridge
-gets enabled and the remaining port/devices remain unplugged. The hot
-plug/unplug operation is done by the hotplug driver
-(drivers/pci/hotplug/pnv_php.c).
+Hello,
 
-Root Cause Analysis: This behavior is due to missing code for the
-switch/bridge. The existing driver depends on pci_hp_add_devices()
-function for device enablement. This function calls pci_scan_slot() on
-only one device-node/port of the bridge, not on all the siblings'
-device-node/port.
+> These functions are defined in the pci_endpoint_test.c file, but not
+> called elsewhere, so delete these unused functions.
+> 
+> drivers/misc/pci_endpoint_test.c:144:19: warning: unused function 'pci_endpoint_test_bar_readl'.
+> drivers/misc/pci_endpoint_test.c:150:20: warning: unused function 'pci_endpoint_test_bar_writel'.
 
-The missing code needs to be added which will find all the sibling
-device-nodes/bridge-ports and will run explicit pci_scan_slot() on
-those.  A new function has been added for this purpose which gets
-invoked from pci_hp_add_devices(). This new function
-pci_traverse_sibling_nodes_and_scan_slot() gets all the sibling
-bridge-ports by traversal and explicitly invokes pci_scan_slot on them.
+Are you sure these aren't used?
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Gaurav Batra <gbatra@linux.ibm.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Brian King <brking@linux.vnet.ibm.com>
+Index File                             Line Content
+    0 drivers/misc/pci_endpoint_test.c  143 static inline u32 pci_endpoint_test_bar_readl(struct pci_endpoint_test *test,
+    1 drivers/misc/pci_endpoint_test.c  296 val = pci_endpoint_test_bar_readl(test, barno, j);
 
-Tested-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-Signed-off-by: Krishna Kumar <krishnak@linux.ibm.com>
----
- arch/powerpc/include/asm/ppc-pci.h |  4 ++++
- arch/powerpc/kernel/pci-hotplug.c  |  5 ++---
- arch/powerpc/kernel/pci_dn.c       | 32 ++++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 3 deletions(-)
+Index File                             Line Content
+    0 drivers/misc/pci_endpoint_test.c  149 static inline void pci_endpoint_test_bar_writel(struct pci_endpoint_test *test,
+    1 drivers/misc/pci_endpoint_test.c  292 pci_endpoint_test_bar_writel(test, barno, j,
 
-diff --git a/arch/powerpc/include/asm/ppc-pci.h b/arch/powerpc/include/asm/ppc-pci.h
-index a8b7e8682f5b..83db8d0798ac 100644
---- a/arch/powerpc/include/asm/ppc-pci.h
-+++ b/arch/powerpc/include/asm/ppc-pci.h
-@@ -28,6 +28,10 @@ struct pci_dn;
- void *pci_traverse_device_nodes(struct device_node *start,
- 				void *(*fn)(struct device_node *, void *),
- 				void *data);
-+
-+void pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start,
-+					       struct pci_bus *bus);
-+
- extern void pci_devs_phb_init_dynamic(struct pci_controller *phb);
- 
- #if defined(CONFIG_IOMMU_API) && (defined(CONFIG_PPC_PSERIES) || \
-diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-index 0fe251c6ac2c..639a3d592fe2 100644
---- a/arch/powerpc/kernel/pci-hotplug.c
-+++ b/arch/powerpc/kernel/pci-hotplug.c
-@@ -106,7 +106,7 @@ EXPORT_SYMBOL_GPL(pci_hp_remove_devices);
-  */
- void pci_hp_add_devices(struct pci_bus *bus)
- {
--	int slotno, mode, max;
-+	int mode, max;
- 	struct pci_dev *dev;
- 	struct pci_controller *phb;
- 	struct device_node *dn = pci_bus_to_OF_node(bus);
-@@ -129,8 +129,7 @@ void pci_hp_add_devices(struct pci_bus *bus)
- 		 * order for fully rescan all the way down to pick them up.
- 		 * They can have been removed during partial hotplug.
- 		 */
--		slotno = PCI_SLOT(PCI_DN(dn->child)->devfn);
--		pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+		pci_traverse_sibling_nodes_and_scan_slot(dn, bus);
- 		max = bus->busn_res.start;
- 		/*
- 		 * Scan bridges that are already configured. We don't touch
-diff --git a/arch/powerpc/kernel/pci_dn.c b/arch/powerpc/kernel/pci_dn.c
-index 38561d6a2079..bea612759832 100644
---- a/arch/powerpc/kernel/pci_dn.c
-+++ b/arch/powerpc/kernel/pci_dn.c
-@@ -493,4 +493,36 @@ static void pci_dev_pdn_setup(struct pci_dev *pdev)
- 	pdn = pci_get_pdn(pdev);
- 	pdev->dev.archdata.pci_data = pdn;
- }
-+
-+void pci_traverse_sibling_nodes_and_scan_slot(struct device_node *start, struct pci_bus *bus)
-+{
-+	struct device_node *dn;
-+	int slotno;
-+
-+	u32 class = 0;
-+
-+	if (!of_property_read_u32(start->child, "class-code", &class)) {
-+		/* Call of pci_scan_slot for non-bridge/EP case */
-+		if (!((class >> 8) == PCI_CLASS_BRIDGE_PCI)) {
-+			slotno = PCI_SLOT(PCI_DN(start->child)->devfn);
-+			pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+			return;
-+		}
-+	}
-+
-+	/* Iterate all siblings */
-+	for_each_child_of_node(start, dn) {
-+		class = 0;
-+
-+		if (!of_property_read_u32(start->child, "class-code", &class)) {
-+			/* Call of pci_scan_slot on each sibling-nodes/bridge-ports */
-+			if ((class >> 8) == PCI_CLASS_BRIDGE_PCI) {
-+				slotno = PCI_SLOT(PCI_DN(dn)->devfn);
-+				pci_scan_slot(bus, PCI_DEVFN(slotno, 0));
-+			}
-+		}
-+	}
-+
-+}
-+
- DECLARE_PCI_FIXUP_EARLY(PCI_ANY_ID, PCI_ANY_ID, pci_dev_pdn_setup);
--- 
-2.45.0
-
+	Krzysztof
 
