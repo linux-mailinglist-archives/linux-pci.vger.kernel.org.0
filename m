@@ -1,64 +1,64 @@
-Return-Path: <linux-pci+bounces-9529-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9530-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5334191E8DB
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 21:49:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0834F91E8EC
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 21:54:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 067A31F23142
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 19:49:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0361283FA9
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 19:54:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FFB917085A;
-	Mon,  1 Jul 2024 19:49:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 636B216F908;
+	Mon,  1 Jul 2024 19:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izRjTP7f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQCq2cf6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D0D16CD15;
-	Mon,  1 Jul 2024 19:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2971116F0C2;
+	Mon,  1 Jul 2024 19:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719863345; cv=none; b=Qj8jShG12RYyg6kmizj5GYZf40VCAX3SkZtoVsUUQbfMdWd/BvLjJJitJS5c2ZnrHM+MdsYYhmpRyazm1Q/6dZd2+DV56YvH4SfUgqfj63n/TUyFAQVhSA8Ch1uqHYzrKi48DYkSuD4MHW2wAT8HSfsIVczCRcR4vWwhXiLhb8s=
+	t=1719863685; cv=none; b=EYALHYUgRoZHxcI7853pw3l6g3j/0BCQyxTmQnODB7IasVPtyoCmC55VBMUSFDMRiIhWIzc/JjaksKbnuH2Gl2u+3DqgOx+q5LbzXcNw7H0WRaCuWbgLBTfNzav/V8TkV10/p6ZKWpq1AKNc+bbLO2ypxxasfWGH4kr12QZS1MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719863345; c=relaxed/simple;
-	bh=zQLlNeL1vEPNYFTUeDSkHfau4N62hdB+0K+910LcGDQ=;
+	s=arc-20240116; t=1719863685; c=relaxed/simple;
+	bh=w+IwRyDf2gcSLquuXMXHhJOg/e5P+XyOdiaWytVCB1k=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lS63IAvceLfxb+6sKRvU19uWvrDwf1hlG3iUZudYL0vdFYcvpCCREiFP09Xdlz7SbT5b/1ZZLtZWmRIf+OuDLyrD87RKmwac3qmccdo0+gWmu3odvxO/JRMRIEdHR02hCn6VPi+d4Y8Mx528La0wNcDStFqdeOz/cIYpFxWJa4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izRjTP7f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3894AC32786;
-	Mon,  1 Jul 2024 19:49:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=LBCir+HsFN5s4D/X16XclA4hZBCG+rHgTdsAdHGmCuxMiU8ftUbKF8+OnuEmK9qr7OhG8cv208uN8kBlWZqp0gyqkhWvtp1hKDjCvQdC3ZFgru/xipiLd3Z1kKbXX0KIxgkQlKMuVuzakgruBZ1DA3hDhJC0feiOQBAs63xCyuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQCq2cf6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38725C116B1;
+	Mon,  1 Jul 2024 19:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719863344;
-	bh=zQLlNeL1vEPNYFTUeDSkHfau4N62hdB+0K+910LcGDQ=;
+	s=k20201202; t=1719863684;
+	bh=w+IwRyDf2gcSLquuXMXHhJOg/e5P+XyOdiaWytVCB1k=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=izRjTP7fn/CmHJ8zsepzQCFxuspZHpEY4VgfgjR53mrr5p9EY3+7ZTr7GLzd/cGYl
-	 9VX0nxhj/ukhlI9kVaENGku38ir6u57ZepHtP6ULabOv74DjOgqEwrunVluJwd2onf
-	 0y1xbLaXMEoYrdfRPP+60R/uiRgpWINoYZsRk1hxd+QcK/Oi+gUnhNilUC1P/PuoSd
-	 6MuBcKlQOF2xg6AsKEZY/omYk/fKKM+vhvxJV3OA82OQSahRsqEr77CqshDbrbqx+g
-	 cyWApNcp+SBy2Yuspcct1eEy7XFvW4Z+ca2KLWMzcshKpGcHbY4Udb2c1Gv2qfa+3t
-	 fhqsetWXDtS+Q==
-Date: Mon, 1 Jul 2024 14:49:02 -0500
+	b=XQCq2cf6ueTua29TV8Hbzc7SkMdAxxj34WJUYXIx1Q2P3u3FAaWGY9oHXezkPkkBN
+	 A4HE8Tf4FfFMCaLZshD6ODMMIEhANmbF8rME+qDgrmtNos/T61EBMN+HdzD57gBNhQ
+	 Z6HJQ8+ivJTAuA+5s9wtFOW2UwTbYv4DY8MdLzxo5dq5AEhtxtzPodxrX0ZljCExFW
+	 34LHogp5dK3C7nBExXVdhAIAPv0rv7X8RrhJBjelGqzCn1WYCF573L3m68xUZsBPfg
+	 sbGTUVUEVZerYJznen/oebUVGbcZwUGUCE058ywjZlWEDpPr2iLOYLC7G3Y2BfSXIL
+	 DXscPsPJQRAnQ==
+Date: Mon, 1 Jul 2024 14:54:42 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/8] PCI: brcmstb: Use "clk_out" error path label
-Message-ID: <20240701194902.GA14422@bhelgaas>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 7/7] pci: pwrctl: Add power control driver for qps615
+Message-ID: <20240701195442.GA14596@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,13 +67,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240628205430.24775-3-james.quinlan@broadcom.com>
+In-Reply-To: <20240626-qps615-v1-7-2ade7bd91e02@quicinc.com>
 
-On Fri, Jun 28, 2024 at 04:54:21PM -0400, Jim Quinlan wrote:
-> Instead of invoking "clk_disable_unprepare(pcie->clk)" in
-> a number of error paths.
+On Wed, Jun 26, 2024 at 06:07:55PM +0530, Krishna chaitanya chundru wrote:
+> QPS615 switch needs to configured after powering on and before
+> PCIe link was up.
 
-It's nice if the commit log is readable by itself, without reading the
-subject line as the first line of the commit log.  Same way a title is
-not directly part of an article/essay/book itself.
+s/need to configured/needs to be configured/
+
+> As the PCIe controller driver already enables the PCIe link training
+> at the host side, stop the link training.
+
+Add blank line between paragraphs or rewrap into a single paragraph.
+
+> Otherwise the moment we turn on the switch it will participate in
+> the link training and link may come before switch is configured through
+> i2c.
+
+s/link may come before/link may come up before/ ?
+
+> The switch can be configured different ways like changing de-emphasis
+> settings of the switch, disabling unused ports etc and these settings
+> can vary from board to board, for that reason the sequence is taken
+> from the firmware file which contains the address of the slave, to address
+> and data to be written to the switch. The driver reads the firmware file
+> and parses them to apply those configurations to the switch.
+
+s/to address and data/the address and the data/ ?
+s/and parses them/and parses it/ (I assume you parse the file?)
 
