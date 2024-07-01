@@ -1,61 +1,65 @@
-Return-Path: <linux-pci+bounces-9521-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9522-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA6D391E68D
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 19:21:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B062691E6B1
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 19:32:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A36D1C217B2
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 17:21:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34450B23BB0
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Jul 2024 17:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C04816E87B;
-	Mon,  1 Jul 2024 17:20:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19E216D4E4;
+	Mon,  1 Jul 2024 17:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTqfCJZ6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkbPs9kW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF28616E87A;
-	Mon,  1 Jul 2024 17:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3E346434;
+	Mon,  1 Jul 2024 17:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719854456; cv=none; b=Wo53KICyXb7AWT9PP74KLM2lH2gX+g1Q87546mikWmYaFiBx57T9t8AXyy5xuAXyTk76fymQdFu14jwXEem/jczTq7dD6TPDGAxFit2xMsIzcaE22k9dNvVdPUWhvxFdng3uHi9YcQHHVVyPKCOITQc+YUf7WU1gsul4fVg3dLI=
+	t=1719855139; cv=none; b=l0yn/2ICXi6GHQ6kGDwGlhyzqndNioDiaaoTqtojvTICFf343qA5vGUVbURupX4FE67yQaC/nuYLmuoH3IzB5Q1d+mPRzTTcN8PFbZysuAaIHfieteCIxzy881U31TsQp2rR1uWtaD85ISfJw5kwRK9Rgpy/6aaYL7yidjg/1n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719854456; c=relaxed/simple;
-	bh=0NqUIdCaQNe/JmGKwMDcVL1B+VgTgCG7plMAVhrtBB4=;
+	s=arc-20240116; t=1719855139; c=relaxed/simple;
+	bh=duLF429OqK4+yYUi2wJlbgb+Kc0mzXjX7pP0HDXNojM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NmZR96vX0UyUhK2ki4M3xBNEbJ/Ewg3lOIjvxhxAjtQ5u8uJWVVPRGcR5VJ/fmCP9bFB+fWzxitRzFNuYGahLAis3tPSsN1AQLzzSxh3LRZyMqxDMJgf5CGNT+RFgZFtdi/aVV0ae5fLTOVZZYxP3QndOcWdC1H/pBJTbaV40G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTqfCJZ6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47121C2BD10;
-	Mon,  1 Jul 2024 17:20:55 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=AKxqWiN4MB9+xMyRvw61Y90kwTZSjeSJCMZdDkdgH6I0fWTHvsy5KSv/c/2rEwrYipksH0B0DyHZNIaBRE/CAWUOOV8LJFEJF8zJanwnCnnIjxraaQxivXNCSXLsO08JpXCxe+QU9pZzCMpVwGCZcgl0KaPhb99bpwntcPW7RQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkbPs9kW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFD2EC116B1;
+	Mon,  1 Jul 2024 17:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719854455;
-	bh=0NqUIdCaQNe/JmGKwMDcVL1B+VgTgCG7plMAVhrtBB4=;
+	s=k20201202; t=1719855139;
+	bh=duLF429OqK4+yYUi2wJlbgb+Kc0mzXjX7pP0HDXNojM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VTqfCJZ6c2Pj7OMrsXKBkVrkXzgrEIbOaGuFg4N/BScgNcEV0wKOu0RUGo4YxoH57
-	 w9kkph99DKesMy0vnRm8GVY6wC+Ak4cRQFLxox4Kh+p/mDjfAp2jVODNJmvkSO4giK
-	 1tJrBu2jrtC1wYtYH5B2HJGK29OYkIek5uQndV5oYKI6rPqxxhMrE3Paeao3qIXH2X
-	 0jJ6SvmSle19OEZ09Ux9SxiOvbbsSSl0czgVUQKlbAn0sS5NeGgzsqFBhxOogojMtP
-	 3gqapU1E+7Mo94KYGEDSTW/kcMEgCcxDt3SRZrcdCzLTo4h8ugHrg+sP7xWCtzmGv1
-	 znraxD0Ey6B7A==
-Date: Mon, 1 Jul 2024 12:20:53 -0500
+	b=VkbPs9kWg4u9U81VCDle7qKzAN8phFWFUnSr0ylXUWhDOj4fOOOlvD6CZSF/+tPsg
+	 ht1QYzjMrpFSUpTUR6ULvs4LfanOrFW6QXr+1sgSwFd0X0g7pzCL+B/gB7FqHtEujy
+	 QBZfv16I44earRPzQI3vCmd7ydjwdp5ldDPfUZw6AHusiWBsKND/9kTIafB2JKQrm9
+	 QyVyMe9/4CUKI+aNANmyivoC8yHeu9QlfFK5f5UUxICrLkg38M36daQGQsiPCUDXb1
+	 NCm4IpTX6vzY7VDKlJG0gdFVSPz9Q0va/HTzAiMnVC5ptSbacTq+xJKsri2B0jySFG
+	 zlasoIEfOUb1g==
+Date: Mon, 1 Jul 2024 12:32:17 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, stable@kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jake Oshins <jakeo@microsoft.com>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: hv: fix reading of PCI_INTERRUPT_PIN
-Message-ID: <20240701172053.GA10100@bhelgaas>
+Subject: Re: [PATCH v1 5/8] PCI: brcmstb: Two more register offsets vary by
+ SOC
+Message-ID: <20240701173217.GA10563@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,59 +68,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZoJJsolJJcLUYiVG@liuwe-devbox-debian-v2>
+In-Reply-To: <20240628205430.24775-6-james.quinlan@broadcom.com>
 
-On Mon, Jul 01, 2024 at 06:16:18AM +0000, Wei Liu wrote:
-> On Wed, Jun 26, 2024 at 10:10:39AM -0500, Bjorn Helgaas wrote:
-> > 1) Capitalize subject to match history
-> 
-> What do you mean here? I got the "PCI: hv: ..." format from recent
-> commits. "PCI" is capitalized. You want to to capitalize "fix"?
+Could mention the registers in the subject, e.g.,
 
-Yes.  Look at the history:
+  PCI: brcmstb: Make HARD_DEBUG, INTR2_CPU_BASE offsets SoC-specific
 
-  $ git log --oneline --no-merges drivers/pci/controller/pci-hyperv.c
-  b5ff74c1ef50 PCI: hv: Fix ring buffer size calculation
-  07e8f88568f5 x86/apic: Drop apic::delivery_mode
-  f741bcadfe52 PCI: hv: Annotate struct hv_dr_state with __counted_by
-  04bbe863241a PCI: hv: Fix a crash in hv_pci_restore_msi_msg() during hibernation
-  067d6ec7ed5b PCI: hv: Add a per-bus mutex state_lock
-  a847234e24d0 Revert "PCI: hv: Fix a timing issue which causes kdump to fail occasionally"
-  add9195e69c9 PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
-  2738d5ab7929 PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
-  ...
-
-> > 2) Say something more specific than "fix reading ..."
-> > 
-> > Apparently this returns garbage in some case where you want to return
-> > zero?
+On Fri, Jun 28, 2024 at 04:54:24PM -0400, Jim Quinlan wrote:
+> Our HW design has again changed a register offset which used to be standard
+> for all Broadcom SOCs with PCIe cores.  This difference is now reconciled.
 > 
-> Yes. *val is not changed in the old code, so garbage is returned.
-> 
-> Here is the updated commit message. I can resend once you confirm you're
-> happy with it.
-> 
->     PCI: hv: Fix reading of PCI_INTERRUPT_PIN
-
-Maybe:
-
-  PCI: hv: Return zero, not garbage, when reading PCI_INTERRUPT_PIN
-
->     The intent of the code snippet is to always return 0 for both
->     PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
-> 
->     The check misses PCI_INTERRUPT_PIN. This patch fixes that.
-> 
->     This is discovered by this call in VFIO:
-> 
->         pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
-> 
->     The old code does not set *val to 0 because it misses the check for
->     PCI_INTERRUPT_PIN. Garbage is returned in this case.
-> 
->     Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
->     Cc: stable@kernel.org
->     Signed-off-by: Wei Liu <wei.liu@kernel.org>
-
-Looks fine.
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
