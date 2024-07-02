@@ -1,260 +1,197 @@
-Return-Path: <linux-pci+bounces-9610-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9611-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AFDA924A31
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 23:57:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97DC7924BE8
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 00:56:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E8F71C21F1F
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 21:57:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2064B1F236CA
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 22:56:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82E88205E0F;
-	Tue,  2 Jul 2024 21:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F9B55C08;
+	Tue,  2 Jul 2024 22:56:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QmkjZVRQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6M6Uvb8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9930B205E05
-	for <linux-pci@vger.kernel.org>; Tue,  2 Jul 2024 21:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D471DA301
+	for <linux-pci@vger.kernel.org>; Tue,  2 Jul 2024 22:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719957453; cv=none; b=dF38bspk/EaqtbjepMD8EXQp2yedfAR5OpF3DHuzDBKAwZRjo3IhyTD2QjcgQS/yzbiO5KCht2sUpfdyASEKSxuxK8d9tcVnyTox+w000O7QUewfQiZYX/Pc2JiFpp8Z9o4ScgOeXuQNZ26/s8EAgqbrhoPARQOYte1V0KpgkoM=
+	t=1719961015; cv=none; b=LpnzeHP/k85ZAljGJFeByOMIQmG/xAY2XNl4+r6i8xq9kKXRJ+zHqqCrnO+/P/f5pgnfLSwcCIKqrxebovJfOpnlm1CfHOGz+c8VDx1+YBW2ai9sxVUKT8JWncIN+k5xLyyjSipI+k1FEClROvMLwioFx/0GFuEfP5P0GsCw52E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719957453; c=relaxed/simple;
-	bh=Oscc2DylMkaS0oYJg48N7RHwhcp+irfVNFu+1ur9r9o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WWxjSF4O01NlCZLVb0UmsDSBXzOASfVFoFSlIEKaK4nH2SfiE5G0fOgrbvSTGHcm/lp7qOJANM0MFMUsloXw4hdVqKv18ZOFwkYBdW6REZH+RomFAbi0WGvPTcHyRQi1RKQahmu61cGjhDXm2vqmJv8mb87OjEzbtQNhJYICGG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=QmkjZVRQ; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ce9ba0cedso8239638e87.2
-        for <linux-pci@vger.kernel.org>; Tue, 02 Jul 2024 14:57:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1719957450; x=1720562250; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJeVqlRzY861Lfogzb4r+VXUwFzhozdPnDaqawXqKis=;
-        b=QmkjZVRQsO68iebhhOx9JdX4SKAwrQeIa0gXWq3id3L+C5AQGwL7JQLQGlozDfcPag
-         xaavDqt1RBvTv5Aw7z8mO0D/EBv5NFlXhgMzUWgSmyEk4oL6mkUcKxifw3ViBtG4Y6Y4
-         yW1/50LIz72+iRfONe5Qhxofl9gt34ZbutrP0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719957450; x=1720562250;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GJeVqlRzY861Lfogzb4r+VXUwFzhozdPnDaqawXqKis=;
-        b=Eny1Hl+Ix6Gl/8e9SZLsT3YaVqbIdijPWbbhKjqajDkLq8vFrDG3VLgsz3LHloDeM9
-         zbJSp3O88xNuXa/Lae02qjPLDWGzLFu+qf6LKHtP+WpEbQYPXC2LwhPxoJUMC9hNaPp8
-         +n4eoM0uWwc3C6ewSv6ebdDD0XAvwaYz1/RCzH+cDzi4I/DbAxCfGc5zJV/NsoUQaolL
-         j2ZDyTUq0FoMz+jlcP68BFNEo3hkLO+UWW0vYtZOA+KO/EOZ/qpV4T0lAH4ofPw50pwD
-         Gl3ahHs5aymXSv+QhNk6V7/NHDQR2/3HYax3wTPmdvY2s8qmkvqgLFTB3RX0hgNt6p7Y
-         mZUg==
-X-Gm-Message-State: AOJu0YyImhJMCZb6RS4R24Dtcl3NoG3SCG/mzZkUyEyWldznEJuumpq+
-	YTh9BfBYxoP8hdFbcDIi+y72SwDPa0j+PtP/0fhu6tFcLFpwRgbPodlF3GTJxZmTWcDwAe2xtXj
-	LIN1E7MEpwSf81BgbMRLQALoGINLztePDGAeq
-X-Google-Smtp-Source: AGHT+IF+RYXnS9P09KG8u4Bf3AZ2HvJkSySrEDejE6ieNhBaC41VEUORI/mqe2KAWvV5bl+hbrNoUVP0FBBN87NT4AA=
-X-Received: by 2002:a05:6512:3d1e:b0:52c:9ae0:beed with SMTP id
- 2adb3069b0e04-52e82705d17mr9360475e87.52.1719957449672; Tue, 02 Jul 2024
- 14:57:29 -0700 (PDT)
+	s=arc-20240116; t=1719961015; c=relaxed/simple;
+	bh=3JQZvQcPhOEZ8dcmWozl3jVtlyLicQyYTF5+PkwSG8g=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=eL8WMqbmQzbsMQSnxgVD+t4iN3CMeRi+a4JV1tEVujjdC++L91aYbl9yIZnjkr+caoJd9GXJXHCpvGgzmg31dO11bW08XpqXYeMgPNc0iwQm92g8vj9QijrcCP8MC26nkDAeFaYOt4HtrkN3EGwVO1YSRervZ9bD/HopVeCB9Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6M6Uvb8; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719961014; x=1751497014;
+  h=date:from:to:cc:subject:message-id;
+  bh=3JQZvQcPhOEZ8dcmWozl3jVtlyLicQyYTF5+PkwSG8g=;
+  b=m6M6Uvb8rztAMQT3TU7P1wfW5QLIWBBOvaCq9X1lJVwBrA8A3loiaojl
+   kW5FjsufEpCgccxUrwpEAX8x5uAUF9YysF2Wb8OLrg0PlDrqZiRJxZsIq
+   N/cqsarUh5hMTfy+N/ZecS2ZZuYPd1ZwWDeRVHtOnEy63qOq4puKV6Bf4
+   hVLU3J8Nt4d/o/Mh2w94qq8Rlb3yZ8b0EFZSOxh+ZpqRaMc07w8Vq5i35
+   DfxuXxPo9plsseosiTdA+zau5f3DGe4/jwMtOSVVEWwXr0UiG6suwObs9
+   STdvhUR2FaRLu8bE8KXJoEaCdJs9bkGmup/JMyGbFTjVcw7yrPJsm1kPE
+   g==;
+X-CSE-ConnectionGUID: k6dk/DMfSHmc8C6dZuwIuQ==
+X-CSE-MsgGUID: qWsH3gA+QriD5AlJogN81w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="28296265"
+X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
+   d="scan'208";a="28296265"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 15:56:53 -0700
+X-CSE-ConnectionGUID: gaJib2PlTuuDW0hk0RCfJQ==
+X-CSE-MsgGUID: C5PjfHZ1QJy0aHqfzn9sKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
+   d="scan'208";a="77201318"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 02 Jul 2024 15:56:51 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sOmQb-000Oqc-19;
+	Tue, 02 Jul 2024 22:56:49 +0000
+Date: Wed, 03 Jul 2024 06:56:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:devres] BUILD SUCCESS
+ 4f491ea63b5af3715703401737ee8903f9e43d6a
+Message-ID: <202407030616.bwro7bk3-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240628205430.24775-1-james.quinlan@broadcom.com>
- <20240628205430.24775-2-james.quinlan@broadcom.com> <5d0950fd-dcd2-4996-aab0-0030f1911960@kernel.org>
-In-Reply-To: <5d0950fd-dcd2-4996-aab0-0030f1911960@kernel.org>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Tue, 2 Jul 2024 17:57:17 -0400
-Message-ID: <CA+-6iNzoPTk0mxwug8Odv4Loj5hN8eDy56AjYmsAa+qV3SnWfA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/8] dt-bindings: PCI: Add Broadcom STB 7712 SOC,
- update maintainter
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000d76b17061c4acce3"
 
---000000000000d76b17061c4acce3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git devres
+branch HEAD: 4f491ea63b5af3715703401737ee8903f9e43d6a  drm/vboxvideo: fix mapping leaks
 
-On Mon, Jul 1, 2024 at 5:12=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 28/06/2024 22:54, Jim Quinlan wrote:
-> > - Update maintainer.
->
-> Why?
+elapsed time: 1736m
 
-I haven't observed any action or feedback from Nicolas in years.
-Nicolas, please
-state your case for being a maintainer because it is not making sense from
-my perspective.
->
-> > - Adds a driver compatible string for the new STB SOC 7712
-> > - Adds two new resets for the 7712: "bridge", for the
-> >   the bridge between the PCIe core and the memory bus;
-> >   and "swinit", the PCIe core reset.
-> >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 24 ++++++++++++++++++-
-> >  1 file changed, 23 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b=
-/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > index 11f8ea33240c..f594fef343a1 100644
-> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -7,12 +7,13 @@ $schema: http://devicetree.org/meta-schemas/core.yaml=
-#
-> >  title: Brcmstb PCIe Host Controller
-> >
-> >  maintainers:
-> > -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > +  - Jim Quinlan <james.quinlan@broadcom.com>
-> >
-> >  properties:
-> >    compatible:
-> >      items:
-> >        - enum:
-> > +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
->
-> Why did you place it here? Isn't the list ordered?
+configs tested: 104
+configs skipped: 2
 
-It is ordered from newest at top to oldest at bottom -- is the
-convention to put the "new" at the bottom?
->
-> >            - brcm,bcm2711-pcie # The Raspberry Pi 4
-> >            - brcm,bcm4908-pcie
-> >            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> > @@ -146,6 +147,27 @@ allOf:
-> >        required:
-> >          - resets
-> >          - reset-names
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: brcm,bcm7712-pcie
-> > +    then:
-> > +      properties:
-> > +        resets:
->
-> Fix the binding first - properties should be defined in top level
-> "properties:" and then customized. Where are "resets"?
->
-> > +          items:
-> > +            - description: phandle pointing to the RESCAL reset contro=
-ller
->
-> Drop redundant text. There is no point in saying that phandle is a
-> phandle. It's obvious. Say something which is not obvious.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-My kernel Yaml-fu is weak.  I will redo.
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                         haps_hs_defconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                          collie_defconfig   gcc-13.2.0
+arm                                 defconfig   gcc-13.2.0
+arm                          gemini_defconfig   gcc-13.2.0
+arm                           imxrt_defconfig   gcc-13.2.0
+arm                       netwinder_defconfig   gcc-13.2.0
+arm                        spear3xx_defconfig   gcc-13.2.0
+arm                         wpcm450_defconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240702   gcc-13
+i386         buildonly-randconfig-001-20240703   clang-18
+i386         buildonly-randconfig-002-20240702   gcc-13
+i386         buildonly-randconfig-002-20240703   clang-18
+i386         buildonly-randconfig-003-20240702   gcc-13
+i386         buildonly-randconfig-003-20240703   clang-18
+i386         buildonly-randconfig-004-20240702   gcc-13
+i386         buildonly-randconfig-004-20240703   clang-18
+i386         buildonly-randconfig-005-20240702   gcc-13
+i386         buildonly-randconfig-005-20240703   clang-18
+i386         buildonly-randconfig-006-20240702   gcc-13
+i386         buildonly-randconfig-006-20240703   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240702   gcc-13
+i386                  randconfig-001-20240703   clang-18
+i386                  randconfig-002-20240702   gcc-13
+i386                  randconfig-002-20240703   clang-18
+i386                  randconfig-003-20240702   gcc-13
+i386                  randconfig-003-20240703   clang-18
+i386                  randconfig-004-20240702   gcc-13
+i386                  randconfig-004-20240703   clang-18
+i386                  randconfig-005-20240702   gcc-13
+i386                  randconfig-005-20240703   clang-18
+i386                  randconfig-006-20240702   gcc-13
+i386                  randconfig-006-20240703   clang-18
+i386                  randconfig-011-20240702   gcc-13
+i386                  randconfig-011-20240703   clang-18
+i386                  randconfig-012-20240702   gcc-13
+i386                  randconfig-012-20240703   clang-18
+i386                  randconfig-013-20240702   gcc-13
+i386                  randconfig-013-20240703   clang-18
+i386                  randconfig-014-20240702   gcc-13
+i386                  randconfig-014-20240703   clang-18
+i386                  randconfig-015-20240702   gcc-13
+i386                  randconfig-015-20240703   clang-18
+i386                  randconfig-016-20240702   gcc-13
+i386                  randconfig-016-20240703   clang-18
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                   motionpro_defconfig   gcc-13.2.0
+powerpc                 mpc8315_rdb_defconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                               defconfig   gcc-13.2.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   gcc-13.2.0
+s390                             allyesconfig   clang-19
+s390                                defconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                         ap325rxa_defconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                          polaris_defconfig   gcc-13.2.0
+sh                   rts7751r2dplus_defconfig   gcc-13.2.0
+sh                              ul2_defconfig   gcc-13.2.0
+sparc                       sparc64_defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+um                                allnoconfig   gcc-13.2.0
+um                                  defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-13.2.0
+um                           x86_64_defconfig   gcc-13.2.0
+x86_64                           alldefconfig   gcc-13.2.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64                              defconfig   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                       common_defconfig   gcc-13.2.0
 
-Regards,
-Jim Quinlan
-Broadcom STB/CM
->
->
-> Best regards,
-> Krzysztof
->
-
---000000000000d76b17061c4acce3
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBwVW8pXlVLww1mPrKvYhO2eKmE4KGc
-/a99BY7AIDuRMDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MDIyMTU3MzBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAgOr5PGRh3EYtSSiNDPp3bD5oLqzQ4gkYdx/y41hzbzVNDuTk
-WFJLIFfb9pOGhuk7ZNNuJQcF4GKClEtfiG532martVSKMJ17ILFRNTo1uad5JlORx/i3D/p3TS03
-HhD7uYx43+zxRp1ZwvrmQ0XWtqsp9LStRdhNfbanW72AIiemlAZEQ2Tidg5paKs03EU/rSTqLdU2
-Givq3fTJ29E/4QstxnqZZZ107YOctvTp5IhZMdsvmlFidE6njFs6WCtr/KBAn9qaV550RNLMk5oo
-PJnh4EY3UoTgpjkGrkx72mIvEjHlW7uownilbL27oGxxPcH9cUwreQV9ysYiWHFEQw==
---000000000000d76b17061c4acce3--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
