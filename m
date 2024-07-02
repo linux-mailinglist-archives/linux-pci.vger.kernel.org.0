@@ -1,83 +1,85 @@
-Return-Path: <linux-pci+bounces-9611-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9612-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97DC7924BE8
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 00:56:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B91BA924C0A
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 01:16:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2064B1F236CA
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 22:56:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEA9D1C22649
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 23:16:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F9B55C08;
-	Tue,  2 Jul 2024 22:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94C531DA322;
+	Tue,  2 Jul 2024 23:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6M6Uvb8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJRkYUk7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D471DA301
-	for <linux-pci@vger.kernel.org>; Tue,  2 Jul 2024 22:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B85A1DA310
+	for <linux-pci@vger.kernel.org>; Tue,  2 Jul 2024 23:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719961015; cv=none; b=LpnzeHP/k85ZAljGJFeByOMIQmG/xAY2XNl4+r6i8xq9kKXRJ+zHqqCrnO+/P/f5pgnfLSwcCIKqrxebovJfOpnlm1CfHOGz+c8VDx1+YBW2ai9sxVUKT8JWncIN+k5xLyyjSipI+k1FEClROvMLwioFx/0GFuEfP5P0GsCw52E=
+	t=1719962172; cv=none; b=Q+ya6B9+Bjj0xLBz4OL8fqCbEzz721AOqPhM3wLmZCeKw1+bhfIi576O/Eb/2VM4NJFYYQRgJavppJdUnVgE1zlqjYojdhFW7rc+Ziw2MwIx9eCif5ibuV40JDmzC9zwn4abNXbrCCCfDB01WfLUkkf5deqADe0nVjbQN2GIFAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719961015; c=relaxed/simple;
-	bh=3JQZvQcPhOEZ8dcmWozl3jVtlyLicQyYTF5+PkwSG8g=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=eL8WMqbmQzbsMQSnxgVD+t4iN3CMeRi+a4JV1tEVujjdC++L91aYbl9yIZnjkr+caoJd9GXJXHCpvGgzmg31dO11bW08XpqXYeMgPNc0iwQm92g8vj9QijrcCP8MC26nkDAeFaYOt4HtrkN3EGwVO1YSRervZ9bD/HopVeCB9Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6M6Uvb8; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1719962172; c=relaxed/simple;
+	bh=E9dVqfmelmg8+TvuCmt6oBoBYZJ4HDM4cETEBDq7evs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CvMSPH9MGJghY2ae743BHYvjPutmAr6lK9LOZavZZ9BDt9NMy9Ve6nv69mSIhi3ByiCuVEwnxLR74jsuhgi71o7CBwx/2weUQ0Vm1RALuy3igdrdzSqoGrGzVByUqbmXiJ8JFC8FXtw0yuY/2NL2at9JQ8wvAjzlUGF+4sPI30s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJRkYUk7; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719961014; x=1751497014;
-  h=date:from:to:cc:subject:message-id;
-  bh=3JQZvQcPhOEZ8dcmWozl3jVtlyLicQyYTF5+PkwSG8g=;
-  b=m6M6Uvb8rztAMQT3TU7P1wfW5QLIWBBOvaCq9X1lJVwBrA8A3loiaojl
-   kW5FjsufEpCgccxUrwpEAX8x5uAUF9YysF2Wb8OLrg0PlDrqZiRJxZsIq
-   N/cqsarUh5hMTfy+N/ZecS2ZZuYPd1ZwWDeRVHtOnEy63qOq4puKV6Bf4
-   hVLU3J8Nt4d/o/Mh2w94qq8Rlb3yZ8b0EFZSOxh+ZpqRaMc07w8Vq5i35
-   DfxuXxPo9plsseosiTdA+zau5f3DGe4/jwMtOSVVEWwXr0UiG6suwObs9
-   STdvhUR2FaRLu8bE8KXJoEaCdJs9bkGmup/JMyGbFTjVcw7yrPJsm1kPE
-   g==;
-X-CSE-ConnectionGUID: k6dk/DMfSHmc8C6dZuwIuQ==
-X-CSE-MsgGUID: qWsH3gA+QriD5AlJogN81w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="28296265"
+  t=1719962169; x=1751498169;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=E9dVqfmelmg8+TvuCmt6oBoBYZJ4HDM4cETEBDq7evs=;
+  b=OJRkYUk7/GISqkd7t5tRzFybNgn8+SbrFWWqLkSzHUI1hO2EkGnB/7ap
+   dveuuLb9+0rFjChmcOV9GQg66qB63Pd8ZqtNxrEmK3HZyZOT0RX1wZqMb
+   L130e3lbxDw2JJtScQY3LvoXdD2Is4grycgc/bWE2rEyfBbDdG9bnRAvA
+   OY+8wlxx6EE/Xw5wDJ2D+2ehmxOMkRapaSQuwlQuh5TQeRbdKsTjCv8Bf
+   hOcR9zehfeADgOTIQFEPqAWRdFXChSr/rHnvr7jRd8Yyy4myWmgL1mk5Y
+   1QpmHsi2ic/dbv7vFGWoVi23yxvo/uQhALJLgZFFFz5zpHVSM0zfJqYwX
+   Q==;
+X-CSE-ConnectionGUID: C9+SB2smStOYxHdLaGaBWA==
+X-CSE-MsgGUID: lAXamxj5Q3uaEiDxIYDrVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="16824524"
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="28296265"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 15:56:53 -0700
-X-CSE-ConnectionGUID: gaJib2PlTuuDW0hk0RCfJQ==
-X-CSE-MsgGUID: C5PjfHZ1QJy0aHqfzn9sKg==
+   d="scan'208";a="16824524"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 16:16:08 -0700
+X-CSE-ConnectionGUID: JZZ6WiYySa6oLGOf0ZrguQ==
+X-CSE-MsgGUID: zpvT5KolR7KzruHZla51qw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="77201318"
+   d="scan'208";a="45970023"
 Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 02 Jul 2024 15:56:51 -0700
+  by orviesa010.jf.intel.com with ESMTP; 02 Jul 2024 16:16:07 -0700
 Received: from kbuild by 68891e0c336b with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sOmQb-000Oqc-19;
-	Tue, 02 Jul 2024 22:56:49 +0000
-Date: Wed, 03 Jul 2024 06:56:18 +0800
+	id 1sOmjE-000OsI-2N;
+	Tue, 02 Jul 2024 23:16:04 +0000
+Date: Wed, 03 Jul 2024 07:15:55 +0800
 From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:devres] BUILD SUCCESS
- 4f491ea63b5af3715703401737ee8903f9e43d6a
-Message-ID: <202407030616.bwro7bk3-lkp@intel.com>
+Subject: [pci:controller/rcar-gen4] BUILD SUCCESS
+ faf5a975ee3b94aac7c8a8054456a85d99a1b7ad
+Message-ID: <202407030749.FE41MwBE-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git devres
-branch HEAD: 4f491ea63b5af3715703401737ee8903f9e43d6a  drm/vboxvideo: fix mapping leaks
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar-gen4
+branch HEAD: faf5a975ee3b94aac7c8a8054456a85d99a1b7ad  PCI: rcar-gen4: Add support for R-Car V4H
 
-elapsed time: 1736m
+elapsed time: 1468m
 
 configs tested: 104
 configs skipped: 2
