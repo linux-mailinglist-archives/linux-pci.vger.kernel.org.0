@@ -1,38 +1,38 @@
-Return-Path: <linux-pci+bounces-9549-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9550-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD75791ED89
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 05:57:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28E4C91EE89
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 07:50:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAB241C21A97
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 03:57:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C4B031F22D36
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jul 2024 05:50:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29BE4182DA;
-	Tue,  2 Jul 2024 03:57:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99ED878C67;
+	Tue,  2 Jul 2024 05:50:02 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out198-5.us.a.mail.aliyun.com (out198-5.us.a.mail.aliyun.com [47.90.198.5])
+Received: from out28-220.mail.aliyun.com (out28-220.mail.aliyun.com [115.124.28.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C377801;
-	Tue,  2 Jul 2024 03:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4A85C8EF;
+	Tue,  2 Jul 2024 05:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719892635; cv=none; b=gdnyvOm4ECQkzsHg5s8oEesH2lrcqL+jMuw82RPi17BAa8mApMkrw1t/aXvIqcK5P2if4LkIMpsUz9uM3cV/7FiWaYFdHX2+L2GqkZGmRSZ9KhM3R+XY2sm4oORyCDotgjWNsUrhl5SnlNLQ1Jrp/y5CcrqIyEhS8oZrmH65mgA=
+	t=1719899402; cv=none; b=gGf07oaW6W4yQD1xHbQC8YPSLVTz1fFYEpxd6Z8KziVJI7T+dMi7nHMYPCLNWDoG/dVm4TPz+mNYVxep0HblvHHdlWNJvtUtc47PzqQvP8aKTlvD9kH0GQbdJy++NlIYMv8etL54W0ZMTOKBVU74Qlj2eVBDHUoROuupG78kszo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719892635; c=relaxed/simple;
-	bh=6L//tL6snjw3XG6uDl5X7hVQvPpkjw9I6A6kHOsg5kM=;
+	s=arc-20240116; t=1719899402; c=relaxed/simple;
+	bh=r3kPzEw7v6TNbHMYTGt40eoeeIKe//M6zF721bQKgPU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KZyBnNHVBH5jkv2I1JGACTcrg3am+MNWtMOZy0/YLyXY1gE05NG1HkK9pL3AHpyPBDmDCqsZJh6mLAloXK1vl/57xeUH0scDv3uELVbK2UNNyCZY1m6aAIebaknOgTJ1tc2Gf5Yxe3BvZC8BzkhqB8FcwNhM4mUSUwGvHU6B/xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=47.90.198.5
+	 MIME-Version; b=SAmTC4Y1wcseglQF3Rbe7MYtaQ17KP8pwa1o0wws9Htd4Z0IMy83YPER63HP/RRsmyNxO9KZCbmu+YDZpQmygUGkHpCTWWQuD9FoawLdMLhLpTaG6R6g0qIzWY2B/9G0t5kExPQ/yY8YLfFHxLpN2LxrxZdmYXFMqd/oWmLMIi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=115.124.28.220
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1156118|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0117572-0.00035777-0.987885;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037088118;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.YEnuEv._1719892611;
-Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.YEnuEv._1719892611)
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1484611|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.180177-0.0129281-0.806895;FP=18286485004836861259|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037136014;MF=zhoushengqing@ttyinfo.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.YEtLVOK_1719899389;
+Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.YEtLVOK_1719899389)
           by smtp.aliyun-inc.com;
-          Tue, 02 Jul 2024 11:56:52 +0800
+          Tue, 02 Jul 2024 13:49:50 +0800
 From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
 To: helgaas@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	oe-kbuild-all@lists.linux.dev,
 	zhoushengqing@ttyinfo.com
-Subject: [PATCH v4] Subject: PCI: Enable io space 1k granularity for intel cpu root port
-Date: Tue,  2 Jul 2024 03:56:49 +0000
-Message-Id: <20240702035649.26039-1-zhoushengqing@ttyinfo.com>
+Subject: Re: Re: Re: [PATCH] PCI: Enable io space 1k granularity for 
+Date: Tue,  2 Jul 2024 05:49:49 +0000
+Message-Id: <20240702054949.14274-1-zhoushengqing@ttyinfo.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240701210656.GA16926@bhelgaas>
 References: <20240701210656.GA16926@bhelgaas>
@@ -53,66 +53,41 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch add 1k granularity for intel root port bridge. Intel latest
-server CPU support 1K granularity, And there is an BIOS setup item named
-"EN1K", but linux doesn't support it. if an IIO has 5 IOU (SPR has 5 IOUs)
-all are bifurcated 2x8.In a 2P server system,There are 20 P2P bridges
-present. if keep 4K granularity allocation,it need 20*4=80k io space,
-exceeding 64k. I test it in a 16*nvidia 4090s system under intel eaglestrem
-platform. There are six 4090s that cannot be allocated I/O resources.
-So I applied this patch. And I found a similar implementation in quirks.c,
-but it only targets the Intel P64H2 platform.
+> > I still think this is not going to work because I don't want this kind
+> > of device-specific clutter in this generic path. The pcibios_*
+> > interfaces are history that we'd like to get rid of also, but it would
+> > be better than putting it here.
+> 
+> Do you think it should be putted to the pci_bios* interface?
+> 
+> And if there is no suitable place to apply this patch, 
+> then let's just ignore this issue.
 
-Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
----
- drivers/pci/quirks.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+> What are the device/function addresses of the IIO and the Root Ports?
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 568410e64ce6..f30083d51e15 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2562,6 +2562,36 @@ static void quirk_p64h2_1k_io(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x1460, quirk_p64h2_1k_io);
- 
-+/* Enable 1k I/O space granularity on the intel root port */
-+static void quirk_intel_rootport_1k_io(struct pci_dev *dev)
-+{
-+	struct pci_dev *d = NULL;
-+	u16 en1k = 0;
-+	struct pci_dev *root_port = pcie_find_root_port(dev);
-+
-+	if (!root_port)
-+		return;
-+
-+	/*
-+	 * Per intel sever CPU EDS vol2(register) spec,
-+	 * Intel Memory Map/Intel VT-d configuration space,
-+	 * IIO MISC Control (IIOMISCCTRL_1_5_0_CFG) — Offset 1C0h
-+	 * bit 2.
-+	 * Enable 1K (EN1K):
-+	 * This bit when set, enables 1K granularity for I/O space decode
-+	 * in each of the virtual P2P bridges
-+	 * corresponding to root ports, and DMI ports.
-+	 */
-+	while ((d = pci_get_device(PCI_VENDOR_ID_INTEL, 0x09a2, d))) {
-+		pci_read_config_word(d, 0x1c0, &en1k);
-+		if (en1k & 0x4) {
-+			pci_info(d, "INTEL: System should support 1k io window\n");
-+			dev->io_window_1k = 1;
-+		}
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_ANY_ID,	quirk_intel_rootport_1k_io);
-+
- /*
-  * Under some circumstances, AER is not linked with extended capabilities.
-  * Force it to be linked by setting the corresponding control bit in the
--- 
-2.39.2
+IIO device = 0,function = 0.
+Root Ports device = 1/2/3/4/5/6/7/8,function = 0, And they are on the same bus.
+
+> 
+> They must all be on the root bus, and if the IIO is enumerated first
+> (i.e., if it has a smaller device/function number), you may be able to 
+> make a quirk that applies to the Root Port vendor/device ID but reads
+> the config bit from the IIO.
+> 
+> quirk_passive_release(), quirk_vialatency(), quirk_amd_780_apc_msi(),
+> etc. do similar things.
+
+I have commited a new patch referred to quirk_passive_release(). 
+https://lore.kernel.org/all/20240702035649.26039-1-zhoushengqing@ttyinfo.com/
+
+And I validate it on my system which previously some devices couldn't have IO space.
+After applying this patch, all devices were able to have IO space.
+
+Thank you again for your assistance.
+
+> 
+> Bjorn
 
 
