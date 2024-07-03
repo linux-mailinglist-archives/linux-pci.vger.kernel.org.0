@@ -1,138 +1,146 @@
-Return-Path: <linux-pci+bounces-9694-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9695-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A9A89252B4
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:53:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EAFD925306
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 07:36:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED8521F23133
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:53:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAD24281BEC
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 05:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6952F3C062;
-	Wed,  3 Jul 2024 04:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662C654276;
+	Wed,  3 Jul 2024 05:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HnQ8dKgo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BB618654;
-	Wed,  3 Jul 2024 04:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A93621;
+	Wed,  3 Jul 2024 05:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719982427; cv=none; b=gTwEivBMv6+ZpClo+LKWxHf0yrHPcqUUTC9nJdk8rOkLZRfZ8QGuHm57FoWrV5Ruv76RTz3GNyAfwjhF9UksqmGM/KMUzhnWCfCViZV9mioc+fiT/vzOakxvBle3531gSZKUkdF/ERi6TqIcDPT8hjtCUw/GWxj2sQBOZxfpzd4=
+	t=1719984952; cv=none; b=ldx64oOxxAVZa88viqXXbXbmOIDny3k5RqZHvaRmwBzxrkQXdXibxcZA8xYa4FxPEE6hiJDYiDDG9fNMSf1l6SsZIWqtZNQs3Epb+bs6EI/Tltl2tVD4SB/qtQOeg5Q0YhVECQdBlIV8RX+wag9kWc/1GWn9VChVYc2wYvRg0I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719982427; c=relaxed/simple;
-	bh=fdph8gzw0bhTlnqkG8OPrbIDgCYt3mQM5oiV54nFOVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hkAgQ1X6ZA5UhHyRmVrqk1H2MpbMmVETumWN6n3gF4QZEakRzD+7PDE9vftEPdWotIt/DG70JlreuP/JVDVlSA7Oge0tQVXmHUEXSjldVay4g0GuMlLDx4EHx5aJf0KuQyaI6s/fvuoKG+dONH2BceHM29GIZtUL/BHf+ubJYps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-726d9b3bcf8so3686524a12.0;
-        Tue, 02 Jul 2024 21:53:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719982425; x=1720587225;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rWbB1JJmNa1nbn2SVD9o6rsFR0fZsKtfpPmjtOkX148=;
-        b=n9i+jIjqyQ8lPgxDmAbi+vCn0vNsvy0IkB9o0yL/5185IHbQfdDXcCOfMJpGDrMpYp
-         XvNBg9ANAerU/wao+yF95b7Qx8Ur2PxtsoVb5fhrMdUo/vuSL4qshr76rhvVAc2Tg9Iz
-         W9CkQ1oiaNdDpnqUsHTxCl1jbI4aLZHJruyJFJyU9kPxHcBPtFgHhmdunBro3DHHdDrE
-         JmiiMYX6jSYPs2kuBWD/bJHjLcdobYmGd6Uhm0U72csOoCB355MinJJDM5LUSMSCCvR+
-         AcqjhyZOBUELvHcmnvmsOvLvo79PbJs+my3Mg81hTfkcqnSX1EATt5OfquCccV4bvi/J
-         T1uA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYSlHrgnMK9tYSV1c6LhIEgVVKfSbOB++CyeON69/mwoLl/jKkd5jkNeyUna3+QVU9RibOr8h73ETVvmYCuk9fFG1z57TnTQnpFbfGMYWIWmR1V3evChIHqfknYb7J18Ca2JJZO23T
-X-Gm-Message-State: AOJu0YwbHKMFFwLNqsYADek4ttbZIPnRFozUWyo7Rk6/tjaFr6eyvNAm
-	t0FxSaP5zlL90Eb3NeG5BAjEP3xgkWSldT6LjWa7zGEWFWfcZH9U9lvkRA==
-X-Google-Smtp-Source: AGHT+IGIYcceA2KedaYCXiAH0dqJI7Aor4j1HCAzEFUPzg8mdkjSUYaas7WBdG7ELRJcdUXVLdFVuA==
-X-Received: by 2002:a05:6a21:99a5:b0:1bd:1aca:2b39 with SMTP id adf61e73a8af0-1bef60e3bcdmr10570053637.8.1719982424714;
-        Tue, 02 Jul 2024 21:53:44 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb1a3d081bsm3172555ad.221.2024.07.02.21.53.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 21:53:44 -0700 (PDT)
-Date: Wed, 3 Jul 2024 04:53:34 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc: Wei Liu <wei.liu@kernel.org>, stable@kernel.org,
-	Michael Kelley <mhklinux@outlook.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jake Oshins <jakeo@microsoft.com>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] PCI: hv: Return zero, not garbage, when reading
- PCI_INTERRUPT_PIN
-Message-ID: <ZoTZTvL-SKxZEmu5@liuwe-devbox-debian-v2>
-References: <20240701202606.129606-1-wei.liu@kernel.org>
+	s=arc-20240116; t=1719984952; c=relaxed/simple;
+	bh=cyzD0wUAP27ebM0C1wGmgyPQGDABAEhZCy96cIpv4A4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mYVLfzINpVex8boUC4qmCeFBmclNS/OOTHFVcV6SKPLrVxeoyKun6M221pnwh4rjHGLhoq1s8O9FOyReXP9ksqxfLfrCdeTUydeT0YV/iyQfn9wZMLcO6fTVKPFb1j8ZYePW0kPnz71pCGQjNxTKIZu9s+M4wVbLDWoYqvSRpt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HnQ8dKgo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462JHdQX031391;
+	Wed, 3 Jul 2024 05:33:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fYJqrKzjWgxA1tLGTt16IvDJolF1+haWbnrvu/yEyQE=; b=HnQ8dKgoUEo+NUMS
+	qSp0bVhva2ZbebPVM1bJ3XgKiCHzx/F5+9MlG9Q/jftEU7qYM4f5SiFxmcIspEju
+	CSp2BM5Ow+Umwm2wul7vP3omB14pRNn27rXuR+mPzR+FbVgJvZc6RPWxhZyUvnDN
+	1LPIGVKfM4DwMQNQ/JEVQfrQ+sjos9PZhQTfQdm2/DeHV2xsu734ZZcztRGEBgun
+	pMVT8P72qc1xs0Mr+9Rkl8WPD9Y9t9+b24R8OhwTQVeuRkg7Kj32kkrkyu++NOwH
+	Be6xGcjrp5jMyEceCKrTBN+juSC0Spe1KOJwDYd9ApZLPeuzQJ0hiqGIDEODI+ot
+	yP9ghw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402bj8abe5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 05:33:58 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4635XvX4015397
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jul 2024 05:33:57 GMT
+Received: from [10.218.0.85] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 2 Jul 2024
+ 22:33:24 -0700
+Message-ID: <e08b4798-b1fe-4e8a-80a4-716696dfdcd6@quicinc.com>
+Date: Wed, 3 Jul 2024 11:03:18 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701202606.129606-1-wei.liu@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 41/47] clk: qcom: rpmh: Add support for QCS9100 rpmh
+ clocks
+To: Tengfei Fan <quic_tengfan@quicinc.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <djakov@kernel.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <jassisinghbrar@gmail.com>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <manivannan.sadhasivam@linaro.org>, <will@kernel.org>,
+        <joro@8bytes.org>, <conor@kernel.org>, <tglx@linutronix.de>,
+        <amitk@kernel.org>, <thara.gopinath@gmail.com>,
+        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
+        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>
+CC: <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
+        <bartosz.golaszewski@linaro.org>, <kishon@kernel.org>,
+        <quic_wcheng@quicinc.com>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <bvanassche@acm.org>, <agross@kernel.org>,
+        <gregkh@linuxfoundation.org>, <robin.murphy@arm.com>,
+        <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
+        <lukasz.luba@arm.com>, <quic_rjendra@quicinc.com>,
+        <ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
+        <otto.pflueger@abscue.de>, <quic_rohiagar@quicinc.com>,
+        <luca@z3ntu.xyz>, <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
+        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
+        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
+        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <ahalaney@redhat.com>,
+        <krzysztof.kozlowski@linaro.org>, <u.kleine-koenig@pengutronix.de>,
+        <dmitry.baryshkov@linaro.org>, <quic_cang@quicinc.com>,
+        <danila@jiaxyga.com>, <quic_nitirawa@quicinc.com>,
+        <mantas@8devices.com>, <athierry@redhat.com>,
+        <quic_kbajaj@quicinc.com>, <quic_bjorande@quicinc.com>,
+        <quic_msarkar@quicinc.com>, <quic_devipriy@quicinc.com>,
+        <quic_tsoni@quicinc.com>, <quic_rgottimu@quicinc.com>,
+        <quic_shashim@quicinc.com>, <quic_kaushalk@quicinc.com>,
+        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703035154.2182083-1-quic_tengfan@quicinc.com>
+ <20240703035154.2182083-12-quic_tengfan@quicinc.com>
+Content-Language: en-US
+From: Taniya Das <quic_tdas@quicinc.com>
+In-Reply-To: <20240703035154.2182083-12-quic_tengfan@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ZtbTBMGZZYIx4VcccwU1bNlGN8pbBbPZ
+X-Proofpoint-GUID: ZtbTBMGZZYIx4VcccwU1bNlGN8pbBbPZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_02,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ spamscore=0 suspectscore=0 mlxlogscore=854 mlxscore=0 priorityscore=1501
+ malwarescore=0 adultscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407030039
 
-On Mon, Jul 01, 2024 at 08:26:05PM +0000, Wei Liu wrote:
-> The intent of the code snippet is to always return 0 for both
-> PCI_INTERRUPT_LINE and PCI_INTERRUPT_PIN.
-> 
-> The check misses PCI_INTERRUPT_PIN. This patch fixes that.
-> 
-> This is discovered by this call in VFIO:
-> 
->     pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
-> 
-> The old code does not set *val to 0 because it misses the check for
-> PCI_INTERRUPT_PIN. Garbage is returned in that case.
-> 
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-> Cc: stable@kernel.org
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
-Bjorn & other PCI maintainers, do you want to pick this up via your
-tree?
 
-I can pick this up via the hyperv tree if you prefer.
+On 7/3/2024 9:21 AM, Tengfei Fan wrote:
+> { .compatible = "qcom,qcs9100-rpmh-clk", .data = &clk_rpmh_sa8775p},
 
-Thanks,
-Wei.
-
-> ---
-> v3:
-> * Change commit subject line and message per Bjorn's suggestion
-> v2:
-> * Change the commit subject line and message
-> * Change the code according to feedback
-> ---
->  drivers/pci/controller/pci-hyperv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 5992280e8110..cdd5be16021d 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1130,8 +1130,8 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
->  		   PCI_CAPABILITY_LIST) {
->  		/* ROM BARs are unimplemented */
->  		*val = 0;
-> -	} else if (where >= PCI_INTERRUPT_LINE && where + size <=
-> -		   PCI_INTERRUPT_PIN) {
-> +	} else if ((where >= PCI_INTERRUPT_LINE && where + size <= PCI_INTERRUPT_PIN) ||
-> +		   (where >= PCI_INTERRUPT_PIN && where + size <= PCI_MIN_GNT)) {
->  		/*
->  		 * Interrupt Line and Interrupt PIN are hard-wired to zero
->  		 * because this front-end only supports message-signaled
-> -- 
-> 2.43.0
-> 
+This is not required, we already have sa8775p bindings.
+-- 
+Thanks & Regards,
+Taniya Das.
 
