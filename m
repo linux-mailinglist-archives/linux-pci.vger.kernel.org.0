@@ -1,270 +1,103 @@
-Return-Path: <linux-pci+bounces-9739-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9740-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D64BD9265CC
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 18:13:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BC2E926710
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 19:26:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5866B1F22789
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 16:13:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EBAF1C21C14
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 17:26:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBD89181CE4;
-	Wed,  3 Jul 2024 16:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3531849EC;
+	Wed,  3 Jul 2024 17:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sdHCiaJ1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sP3CTbrf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C610442C;
-	Wed,  3 Jul 2024 16:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F43E17A920;
+	Wed,  3 Jul 2024 17:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720023207; cv=none; b=lU0fh8OWSzDzbE8TqOwCUBTBmiy5dPOcGCc1jnUwUq2OBA9MBr7yIYlkIhhcSQL4bqhKmMU48xT2eyaQRUH4mpq2Vz6y93W0doqpp6MaK+Z7UmrKvMJujaKlZ0KQPdBo/6400MdzqVeYNcUuhqAcV0yPs7TjyxbtGlGXbe9FGWk=
+	t=1720027589; cv=none; b=MQ0qJ7gmgw0zNfyvDqzVI6B9sQF/bX4CKs22pazZ2YBxful8uaGICo/MsnaOwr/gzVB71cIpwbqwuLvIIQee1Vo2ljK1WWZ9luyU0go/A1DX/ZGFZa+xxQf7StYCX3jCbRrsyjB4+5ET6uIBDxSdGuiuw1aQetRXz85PwXDiPEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720023207; c=relaxed/simple;
-	bh=2kv4sb7mNBQhVZyOzBgcNlJaBqyayPbSv5J7reIf1LM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WlEC4Z6sZNOa6yJvyTnpXe8pU5aRuM/7L2/i/g+yoMFNHLuCYHTSLxCAFhLDJGGKKGICe0N5h89nVWvVoWNuVxtbxt13R/16gEA+2yasFPPTzyuHcgyZrJPhqEq1nzP2/I4N8UORdcceQXLd3FeJZlDZUtj+t6P4AjxTyY8c12I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sdHCiaJ1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC3CCC2BD10;
-	Wed,  3 Jul 2024 16:13:26 +0000 (UTC)
+	s=arc-20240116; t=1720027589; c=relaxed/simple;
+	bh=lG5QlmOYzaCiZ3VzgHUMnRXWLjeAxrYdEL+D1zQh7fs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bS8u+YkI+tDRggEar1Bz5IKHajw3z96EuLaXZDDEIk5UUrIAg9mgmpI1fh4a4s3jnN4HFTUUEkKVclRNaIfl0mYliXDtlLoDKAfMgrOQj1iNuwpXIeQoOklt2QZtEgBfAnPVjrWSgs7GogfPtxZxmf4i8+MjPmtthLv1CH0Oy8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sP3CTbrf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30A70C2BD10;
+	Wed,  3 Jul 2024 17:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720023207;
-	bh=2kv4sb7mNBQhVZyOzBgcNlJaBqyayPbSv5J7reIf1LM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sdHCiaJ1F4Hmys8ywmKLipZkVKixxTiRlGeJphw5xkn/zz36QzNllSNoWiQbNAn+3
-	 t7Cc8cUUt2TmaW9Ud9kX21HJsEb/nBsdDNjLJPDdar80eosU0EXoCm1EU5g/mMalHI
-	 3oN51v4mkbk7oUvs2fQkxIkvDJSpW7AnH4BhcGRQeKEjNyFWdbU5COolSQQMUoo32R
-	 Bfd1j6nvSUMHaDGJSe5AOHhhWsN94GSJA5kSWn3hXxqJS3I3YYaAG2sz7KYIe+plKX
-	 XoPBO0M2tmnttoQSIq3Q/LMfAf97WzQCKapiD0DEjn3+YCG6xFsyvnU0HXZD9xcLcv
-	 d6gcgwau9QJ4w==
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	linux-mediatek@lists.infradead.org,
-	lorenzo.bianconi83@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	devicetree@vger.kernel.org,
-	nbd@nbd.name,
-	dd@embedd.com,
-	upstream@airoha.com,
-	angelogioacchino.delregno@collabora.com
-Subject: [PATCH v4 4/4] PCI: mediatek-gen3: Add Airoha EN7581 support
-Date: Wed,  3 Jul 2024 18:12:44 +0200
-Message-ID: <aca00bd672ee576ad96d279414fc0835ff31f637.1720022580.git.lorenzo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1720022580.git.lorenzo@kernel.org>
-References: <cover.1720022580.git.lorenzo@kernel.org>
+	s=k20201202; t=1720027589;
+	bh=lG5QlmOYzaCiZ3VzgHUMnRXWLjeAxrYdEL+D1zQh7fs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sP3CTbrfWHZH+78Ia9vI8K1sS6Z/38xAHsSBKvQ3WPdm385XgOkySkDfZpprayszs
+	 DLY4JwWPVTlCcZurIpzeCRGAMa/vtXlifnkTZ1quQI8gia7m4DbjGtwlxSMGsu/DlN
+	 eu5vO5fZMnVr/wt33Z2l+B4NbWMpVtDClta34Q7fhC1DzpgYuNuRSAzdAR+7EiMkcg
+	 pFqpC/zcQ5jkrkjgzso/KySuoetO+bt8CdtOaOVI0jjgzdW6G4WBAK5uoYMuKy9vkn
+	 lFOVv81hpMpoMOS9P6I7nWuZ3YH8kKd1S+k9hBOVGT0g8/nJL//YFM29liZtfBMp/X
+	 xpahJAhNhnjDA==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52e992a24a1so973613e87.0;
+        Wed, 03 Jul 2024 10:26:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXVb/rSJuspaOS2gayjjxZTnClfrGnXwkmt/BnmfYeGaVKlkPhlQF2fa7TOIYa5X9X/SKSobJy4D0uO0uGljILIAjkNesI6QV4AlGzMBM1EhFFRGRGf4tZUfuyY/f1x1uRxoLgiAfuZTiIl1lJ+iB8QInjcBi1G1Rmo9sn59tf/coWnjA==
+X-Gm-Message-State: AOJu0YznU0Kt5LxAmK8RW7U31M0XWMQzMweV8UUl5X3o0G1gxQ7YeHMJ
+	cjKdAiF1vdAWa04ZE+vwGrQGjxUneYUcv+iELQZErKgt7tcOoF5W+9ffBYqiUPjwzzfMRXNzMrk
+	kBl7xtgBREgHwX3ONRfM8nzxI8A==
+X-Google-Smtp-Source: AGHT+IGgsfT5BY8AL2ujsw0fXIRG3p1+MPA78RYjJwdUQsIYF3NygJ5dA7fiIYEZmWR4BrxaYTEn1g/FIBjrUo5y8yY=
+X-Received: by 2002:a05:6512:12c4:b0:52e:9acf:b698 with SMTP id
+ 2adb3069b0e04-52e9acfb908mr1150424e87.36.1720027587540; Wed, 03 Jul 2024
+ 10:26:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240702153702.3827386-1-Frank.Li@nxp.com>
+In-Reply-To: <20240702153702.3827386-1-Frank.Li@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 3 Jul 2024 11:26:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJAKXfdSVGrOvZFn7_asmgv_g6a7-A7wq87xXKpJJnC8Q@mail.gmail.com>
+Message-ID: <CAL_JsqJAKXfdSVGrOvZFn7_asmgv_g6a7-A7wq87xXKpJJnC8Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] dt-bindings: PCI: host-generic-pci: Increase maxItems
+ to 8 of ranges
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"open list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-pci@vger.kernel.org>, 
+	"moderated list:PCI DRIVER FOR GENERIC OF HOSTS" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce support for Airoha EN7581 PCIe controller to mediatek-gen3
-PCIe controller driver.
+On Tue, Jul 2, 2024 at 9:37=E2=80=AFAM Frank Li <Frank.Li@nxp.com> wrote:
+>
+> IEEE Std 1275-1994 is Inactive-Withdrawn Standard according to
+> https://standards.ieee.org/ieee/1275/1932/.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Tested-by: Zhengping Zhang <zhengping.zhang@airoha.com>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/pci/controller/Kconfig              |   2 +-
- drivers/pci/controller/pcie-mediatek-gen3.c | 113 +++++++++++++++++++-
- 2 files changed, 113 insertions(+), 2 deletions(-)
+That has nothing to do with this.
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index e534c02ee34f..3bd6c9430010 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -196,7 +196,7 @@ config PCIE_MEDIATEK
- 
- config PCIE_MEDIATEK_GEN3
- 	tristate "MediaTek Gen3 PCIe controller"
--	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
- 	depends on PCI_MSI
- 	help
- 	  Adds support for PCIe Gen3 MAC controller for MediaTek SoCs.
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 438a5222d986..e064f467ced6 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -6,7 +6,9 @@
-  * Author: Jianjun Wang <jianjun.wang@mediatek.com>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
- #include <linux/delay.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
-@@ -15,6 +17,8 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/msi.h>
-+#include <linux/of_device.h>
-+#include <linux/of_pci.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
-@@ -29,6 +33,12 @@
- #define PCI_CLASS(class)		(class << 8)
- #define PCIE_RC_MODE			BIT(0)
- 
-+#define PCIE_EQ_PRESET_01_REG		0x100
-+#define PCIE_VAL_LN0_DOWNSTREAM		GENMASK(6, 0)
-+#define PCIE_VAL_LN0_UPSTREAM		GENMASK(14, 8)
-+#define PCIE_VAL_LN1_DOWNSTREAM		GENMASK(22, 16)
-+#define PCIE_VAL_LN1_UPSTREAM		GENMASK(30, 24)
-+
- #define PCIE_CFGNUM_REG			0x140
- #define PCIE_CFG_DEVFN(devfn)		((devfn) & GENMASK(7, 0))
- #define PCIE_CFG_BUS(bus)		(((bus) << 8) & GENMASK(15, 8))
-@@ -68,6 +78,14 @@
- #define PCIE_MSI_SET_ENABLE_REG		0x190
- #define PCIE_MSI_SET_ENABLE		GENMASK(PCIE_MSI_SET_NUM - 1, 0)
- 
-+#define PCIE_PIPE4_PIE8_REG		0x338
-+#define PCIE_K_FINETUNE_MAX		GENMASK(5, 0)
-+#define PCIE_K_FINETUNE_ERR		GENMASK(7, 6)
-+#define PCIE_K_PRESET_TO_USE		GENMASK(18, 8)
-+#define PCIE_K_PHYPARAM_QUERY		BIT(19)
-+#define PCIE_K_QUERY_TIMEOUT		BIT(20)
-+#define PCIE_K_PRESET_TO_USE_16G	GENMASK(31, 21)
-+
- #define PCIE_MSI_SET_BASE_REG		0xc00
- #define PCIE_MSI_SET_OFFSET		0x10
- #define PCIE_MSI_SET_STATUS_OFFSET	0x04
-@@ -100,7 +118,10 @@
- #define PCIE_ATR_TLP_TYPE_MEM		PCIE_ATR_TLP_TYPE(0)
- #define PCIE_ATR_TLP_TYPE_IO		PCIE_ATR_TLP_TYPE(2)
- 
--#define MAX_NUM_PHY_RESETS		1
-+#define MAX_NUM_PHY_RESETS		3
-+
-+/* Time in ms needed to complete PCIe reset on EN7581 SoC */
-+#define PCIE_EN7581_RESET_TIME_MS	100
- 
- struct mtk_gen3_pcie;
- 
-@@ -847,6 +868,85 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
- 	return 0;
- }
- 
-+static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	int err;
-+	u32 val;
-+
-+	/*
-+	 * Wait for the time needed to complete the bulk assert in
-+	 * mtk_pcie_setup for EN7581 SoC.
-+	 */
-+	mdelay(PCIE_EN7581_RESET_TIME_MS);
-+
-+	err = phy_init(pcie->phy);
-+	if (err) {
-+		dev_err(dev, "failed to initialize PHY\n");
-+		return err;
-+	}
-+
-+	err = phy_power_on(pcie->phy);
-+	if (err) {
-+		dev_err(dev, "failed to power on PHY\n");
-+		goto err_phy_on;
-+	}
-+
-+	err = reset_control_bulk_deassert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
-+	if (err) {
-+		dev_err(dev, "failed to deassert PHYs\n");
-+		goto err_phy_deassert;
-+	}
-+
-+	/*
-+	 * Wait for the time needed to complete the bulk de-assert above.
-+	 * This time is specific for EN7581 SoC.
-+	 */
-+	mdelay(PCIE_EN7581_RESET_TIME_MS);
-+
-+	pm_runtime_enable(dev);
-+	pm_runtime_get_sync(dev);
-+
-+	err = clk_bulk_prepare(pcie->num_clks, pcie->clks);
-+	if (err) {
-+		dev_err(dev, "failed to prepare clock\n");
-+		goto err_clk_prepare;
-+	}
-+
-+	val = FIELD_PREP(PCIE_VAL_LN0_DOWNSTREAM, 0x47) |
-+	      FIELD_PREP(PCIE_VAL_LN1_DOWNSTREAM, 0x47) |
-+	      FIELD_PREP(PCIE_VAL_LN0_UPSTREAM, 0x41) |
-+	      FIELD_PREP(PCIE_VAL_LN1_UPSTREAM, 0x41);
-+	writel_relaxed(val, pcie->base + PCIE_EQ_PRESET_01_REG);
-+
-+	val = PCIE_K_PHYPARAM_QUERY | PCIE_K_QUERY_TIMEOUT |
-+	      FIELD_PREP(PCIE_K_PRESET_TO_USE_16G, 0x80) |
-+	      FIELD_PREP(PCIE_K_PRESET_TO_USE, 0x2) |
-+	      FIELD_PREP(PCIE_K_FINETUNE_MAX, 0xf);
-+	writel_relaxed(val, pcie->base + PCIE_PIPE4_PIE8_REG);
-+
-+	err = clk_bulk_enable(pcie->num_clks, pcie->clks);
-+	if (err) {
-+		dev_err(dev, "failed to prepare clock\n");
-+		goto err_clk_enable;
-+	}
-+
-+	return 0;
-+
-+err_clk_enable:
-+	clk_bulk_unprepare(pcie->num_clks, pcie->clks);
-+err_clk_prepare:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets, pcie->phy_resets);
-+err_phy_deassert:
-+	phy_power_off(pcie->phy);
-+err_phy_on:
-+	phy_exit(pcie->phy);
-+
-+	return err;
-+}
-+
- static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -1113,7 +1213,18 @@ static const struct mtk_gen3_pcie_pdata mtk_pcie_soc_mt8192 = {
- 	},
- };
- 
-+static const struct mtk_gen3_pcie_pdata mtk_pcie_soc_en7581 = {
-+	.power_up = mtk_pcie_en7581_power_up,
-+	.phy_resets = {
-+		.id[0] = "phy-lane0",
-+		.id[1] = "phy-lane1",
-+		.id[2] = "phy-lane2",
-+		.num_resets = 3,
-+	},
-+};
-+
- static const struct of_device_id mtk_pcie_of_match[] = {
-+	{ .compatible = "airoha,en7581-pcie", .data = &mtk_pcie_soc_en7581 },
- 	{ .compatible = "mediatek,mt8192-pcie", .data = &mtk_pcie_soc_mt8192 },
- 	{},
- };
--- 
-2.45.2
+> "require at least one non-prefetchable memory and One or both of
+> prefetchable Memory and IO Space may also be provided". But it does not
+> limit maximum ranges number is 3.
 
+3 was just my poor assumption that a non-prefetch, prefetchable and IO
+region would be enough. Not sure why you'd want multiple fragmented
+regions though. I guess for device assignment based on the comments.
+
+> Inscrease maximum to 8 because freescale ls1028 and iMX95 use more than
+> 3 ranges.
+
+Unless there is some actual limit, I would just drop the minItems and
+maxItems here. Then it will be limited to 32 entries in
+pci-bus-common.yaml (in dtschema) which is also a 'should be enough'
+value.
+
+Rob
 
