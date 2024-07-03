@@ -1,212 +1,181 @@
-Return-Path: <linux-pci+bounces-9687-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9689-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 868C392521A
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:27:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78DDF925261
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:34:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9C291C232F0
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:27:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 136F228F02B
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:34:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD10512FB16;
-	Wed,  3 Jul 2024 04:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A6811E49F;
+	Wed,  3 Jul 2024 04:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHxvaJlI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ma7GZWD4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C4161FE1;
-	Wed,  3 Jul 2024 04:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D4E17996;
+	Wed,  3 Jul 2024 04:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719980430; cv=none; b=VyoVyF3n35ojHJ0dbeE8rwhfGjAY50M7N/RGbijaAPWYRi2My+aEf44QplO0fvtWexvZ7SHgXJpVAaCTQES1ljwM1tqZVi3/7JeEm4qQsWkU56Xfp5n3IRLP7AhQi94rBGALFkvXWVzg1gAVNUEbKjC9U6sQSjy8jNc5r/oQe24=
+	t=1719981239; cv=none; b=LGe8hBT6MqmsDlSeCyT3h5QM8AaavAS+TECacwBoARlyotVDlskMupqfLRnAwa6hdXLWXaRJShwUKXNJdONDNvo6/+/VNfwxIv40ZiLzIYsxnvdpu43e8wGoVvMpNoGw9Atof6a/+8kAabN8zaM7DynQDIpsx7unvKvWgsrHJUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719980430; c=relaxed/simple;
-	bh=Cxg67S+/b4PFpqD8c8jDsQk7LHaaGLk2W+TlIyPL5KA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=P13t/XiuxiLnVQA1yajhS90c7jmBgpgCq5Bs2t6KozRMrEVY4sxtTdQJKEFY8ji6Xm7HvoAO3fRLLPgzl05WH2PxC9w0bIAT2i03UyVqqfEN8IV6hJ+M7jWYosbUxfWLm3M69s4Sp01aRs6NhT4jH7T3bfC7bV35jJnpm5HA0Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHxvaJlI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D42F9C4AF10;
-	Wed,  3 Jul 2024 04:20:29 +0000 (UTC)
+	s=arc-20240116; t=1719981239; c=relaxed/simple;
+	bh=X5aWSNQZEnK+6IDg5HrUNx8ybENNXlOuoc4zcwgb0h8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=icg/OSI+ZvG2A5NfxDFEoY3UhniZUcHx8nuirIPPltwLWWJl3QACicVbNthvgZXDSCQ+ZTj5u+dY3oYNgLbT9I7QetWRJw7jLqIXIORgWht6kqMr13V40w2NwBCjxy1EZMQFKlo72qhga9AGYPV2u5TSJh3MVZIGDSyQ9pj8yRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ma7GZWD4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31BAC32781;
+	Wed,  3 Jul 2024 04:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719980429;
-	bh=Cxg67S+/b4PFpqD8c8jDsQk7LHaaGLk2W+TlIyPL5KA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cHxvaJlIRTeIEa5yxQbgJRndGUYihRVgVhEjwwd0BmcxEKGvhwTuUhe4kOSC/0Zns
-	 EEF3V5+lYu5qldErNDgWMl1McUQVjNs8W/j/DKDtR4Q80pz9RHzOcDy4KRwTVjL9wa
-	 77YeEaVeCA0mBr8iPmJJGE6+4f7GL0RHfeSS9xscpsLKjEIyqTqJkgVmDkKn4h3SBT
-	 i0eMZKAi8e2+OOwCXTYTNNPmt6wmHID+6PXE0VoxqfHdQm8KnEU/Ml4gRYKaut8elu
-	 jkFBzpGnoOLr8//pE0zPeRU4T6CAsxs3jiDBmGaHxGmTQK+D0voIqP3B9mDvUo2foU
-	 WQ3YkURFBJ12Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AD173C41677;
-	Wed,  3 Jul 2024 04:20:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1719981239;
+	bh=X5aWSNQZEnK+6IDg5HrUNx8ybENNXlOuoc4zcwgb0h8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ma7GZWD4U3Ybf6tznAhHwsUKbmN+8eIl5ceUVegr+jAK5JFV6CpmdJ2jZFeznFJWs
+	 FvUo6p5c+pM5AYeZV+WPiz5qvnXXp3tDhmqulVhvXw0RgOiwCfYpQDgD2eEofnonid
+	 J1+HATKkgQ2Y66n20+clY8608i7e9Q5Dpazvyvntaz3S5zuVcmruYUKmba3T/UJ4sx
+	 Pljd4QnSxptn5N/e5dc7RM0+yAMprEXCxE44MfpOEsJX9+SlqA74sGqjAf8gKJLDpZ
+	 j0bS0KABboGH5xddHjD/so5kC4TOH0RmeF3Vm+HE/A6ryZf7Bq1hduIsJ477hN6o0z
+	 m0PulYFwt4T0g==
+Message-ID: <836bb743-beca-4fa0-b23b-6b280765d995@kernel.org>
+Date: Wed, 3 Jul 2024 06:33:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/8] dt-bindings: PCI: Add Broadcom STB 7712 SOC,
+ update maintainter
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20240628205430.24775-1-james.quinlan@broadcom.com>
+ <20240628205430.24775-2-james.quinlan@broadcom.com>
+ <5d0950fd-dcd2-4996-aab0-0030f1911960@kernel.org>
+ <CA+-6iNzoPTk0mxwug8Odv4Loj5hN8eDy56AjYmsAa+qV3SnWfA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CA+-6iNzoPTk0mxwug8Odv4Loj5hN8eDy56AjYmsAa+qV3SnWfA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171998042970.21654.12559535993133117436.git-patchwork-notify@kernel.org>
-Date: Wed, 03 Jul 2024 04:20:29 +0000
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
-In-Reply-To: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, jassisinghbrar@gmail.com,
- herbert@gondor.apana.org.au, davem@davemloft.net,
- manivannan.sadhasivam@linaro.org, will@kernel.org, joro@8bytes.org,
- conor@kernel.org, tglx@linutronix.de, amitk@kernel.org,
- thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org,
- linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org,
- vkoul@kernel.org, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- mcoquelin.stm32@gmail.com, robimarko@gmail.com, quic_gurus@quicinc.com,
- bartosz.golaszewski@linaro.org, kishon@kernel.org, quic_wcheng@quicinc.com,
- alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
- agross@kernel.org, gregkh@linuxfoundation.org, quic_tdas@quicinc.com,
- robin.murphy@arm.com, daniel.lezcano@linaro.org, rui.zhang@intel.com,
- lukasz.luba@arm.com, quic_rjendra@quicinc.com, ulf.hansson@linaro.org,
- quic_sibis@quicinc.com, otto.pflueger@abscue.de, quic_rohiagar@quicinc.com,
- luca@z3ntu.xyz, neil.armstrong@linaro.org, abel.vesa@linaro.org,
- bhupesh.sharma@linaro.org, alexandre.torgue@foss.st.com,
- peppe.cavallaro@st.com, joabreu@synopsys.com, netdev@vger.kernel.org,
- lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- ahalaney@redhat.com, krzysztof.kozlowski@linaro.org,
- u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org,
- quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com,
- mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com,
- quic_bjorande@quicinc.com, quic_msarkar@quicinc.com,
- quic_devipriy@quicinc.com, quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com,
- quic_shashim@quicinc.com, quic_kaushalk@quicinc.com,
- quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com,
- srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, kernel@quicinc.com
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 3 Jul 2024 10:58:03 +0800 you wrote:
-> Introduce support for the QCS9100 SoC device tree (DTSI) and the
-> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-> While the QCS9100 platform is still in the early design stage, the
-> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-> mounts the QCS9100 SoC instead of the SA8775p SoC.
+On 02/07/2024 23:57, Jim Quinlan wrote:
+> On Mon, Jul 1, 2024 at 5:12 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 28/06/2024 22:54, Jim Quinlan wrote:
+>>> - Update maintainer.
+>>
+>> Why?
 > 
-> The QCS9100 SoC DTSI was directly renamed from the SA8775p SoC DTSI. In
-> the upcoming weeks, Nikunj Kela will develop a new device tree related
-> to SA8775p, specifically supporting the SCMI resource firmware solution
-> for the SA8775p platform. If you're already familiar with the
-> background, feel free to skip part[2], which provides a detailed
-> explanation.
+> I haven't observed any action or feedback from Nicolas in years.
+> Nicolas, please
+> state your case for being a maintainer because it is not making sense from
+> my perspective.
+
+Commit msg should explain why.
+
+>>
+>>> - Adds a driver compatible string for the new STB SOC 7712
+>>> - Adds two new resets for the 7712: "bridge", for the
+>>>   the bridge between the PCIe core and the memory bus;
+>>>   and "swinit", the PCIe core reset.
+>>>
+>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>>> ---
+>>>  .../bindings/pci/brcm,stb-pcie.yaml           | 24 ++++++++++++++++++-
+>>>  1 file changed, 23 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>> index 11f8ea33240c..f594fef343a1 100644
+>>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>> @@ -7,12 +7,13 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>  title: Brcmstb PCIe Host Controller
+>>>
+>>>  maintainers:
+>>> -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>> +  - Jim Quinlan <james.quinlan@broadcom.com>
+>>>
+>>>  properties:
+>>>    compatible:
+>>>      items:
+>>>        - enum:
+>>> +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
+>>
+>> Why did you place it here? Isn't the list ordered?
 > 
-> [...]
+> It is ordered from newest at top to oldest at bottom -- is the
+> convention to put the "new" at the bottom?
 
-Here is the summary with links:
-  - [01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and RIDE board
-    (no matching commit)
-  - [02/47] arm64: dts: qcom: qcs9100: Introduce QCS9100 SoC dtsi
-    (no matching commit)
-  - [03/47] arm64: dts: qcom: qcs9100: Introduce QCS9100 PMIC dtsi
-    https://git.kernel.org/netdev/net-next/c/df18948d331e
-  - [04/47] arm64: dts: qcom: qcs9100: Add QCS9100 RIDE board dts
-    (no matching commit)
-  - [05/47] dt-bindings: firmware: qcom,scm: document SCM on QCS9100 SoC
-    (no matching commit)
-  - [06/47] dt-bindings: interconnect: qcom: document the interconnect compatibles for QCS9100
-    (no matching commit)
-  - [07/47] dt-bindings: clock: document QCS9100 GCC compatible
-    (no matching commit)
-  - [08/47] dt-bindings: mailbox: qcom-ipcc: Document the QCS9100 IPCC
-    (no matching commit)
-  - [09/47] dt-bindings: phy: Add QMP UFS PHY comptible for QCS9100
-    (no matching commit)
-  - [10/47] dt-bindings: crypto: ice: Document QCS9100 inline crypto engine
-    (no matching commit)
-  - [11/47] dt-bindings: crypto: qcom,prng: document QCS9100
-    (no matching commit)
-  - [12/47] dt-bindings: phy: qcom,usb-snps-femto-v2: Add bindings for QCS9100
-    (no matching commit)
-  - [13/47] dt-bindings: ufs: qcom: document QCS9100 UFS
-    (no matching commit)
-  - [14/47] dt-bindings: phy: qcom,qmp-usb: Add QCS9100 USB3 PHY
-    (no matching commit)
-  - [15/47] dt-bindings: usb: dwc3: Add QCS9100 compatible
-    (no matching commit)
-  - [16/47] dt-bindings: clock: qcom: describe the GPUCC clock for QCS9100
-    (no matching commit)
-  - [17/47] dt-bindings: arm-smmu: Document QCS9100 GPU SMMU
-    (no matching commit)
-  - [18/47] dt-bindings: phy: describe the Qualcomm SGMII PHY for QCS9100
-    (no matching commit)
-  - [19/47] dt-bindings: cache: qcom,llcc: Add QCS9100 description
-    (no matching commit)
-  - [20/47] dt-bindings: interrupt-controller: qcom,pdc: document pdc on QCS9100
-    (no matching commit)
-  - [21/47] dt-bindings: thermal: qcom-tsens: document the QCS9100 Temperature Sensor
-    (no matching commit)
-  - [22/47] dt-bindings: soc: qcom,aoss-qmp: Document the QCS9100 AOSS channel
-    (no matching commit)
-  - [23/47] dt-bindings: pinctrl: add qcs9100-tlmm compatible
-    (no matching commit)
-  - [24/47] dt-bindings: soc: qcom: add qcom,qcs9100-imem compatible
-    (no matching commit)
-  - [25/47] dt-bindings: watchdog: qcom-wdt: document QCS9100
-    (no matching commit)
-  - [26/47] dt-bindings: clock: qcom-rpmhcc: Add RPMHCC bindings for QCS9100
-    (no matching commit)
-  - [27/47] dt-bindings: cpufreq: cpufreq-qcom-hw: Add QCS9100 compatibles
-    (no matching commit)
-  - [28/47] dt-bindings: power: qcom,rpmpd: document the QCS9100 RPMh Power Domains
-    (no matching commit)
-  - [29/47] dt-bindings: net: qcom,ethqos: add description for qcs9100
-    (no matching commit)
-  - [30/47] dt-bindings: PCI: Document compatible for QCS9100
-    (no matching commit)
-  - [31/47] dt-bindings: PCI: qcom-ep: Add support for QCS9100 SoC
-    (no matching commit)
-  - [32/47] dt-bindings: phy: qcom,qmp: Add qcs9100 QMP PCIe PHY
-    (no matching commit)
-  - [33/47] interconnect: qcom: add driver support for qcs9100
-    (no matching commit)
-  - [34/47] clk: qcom: add the GCC driver support for QCS9100
-    (no matching commit)
-  - [35/47] phy: qcom-qmp-ufs: Add QCS9100 support
-    (no matching commit)
-  - [36/47] phy: qcpm-qmp-usb: Add support for QCS9100
-    (no matching commit)
-  - [37/47] clk: qcom: add the GPUCC driver support for QCS9100
-    (no matching commit)
-  - [38/47] phy: qcom: add the SGMII SerDes PHY driver support
-    (no matching commit)
-  - [39/47] soc: qcom: llcc: Add llcc configuration support for the QCS9100 platform
-    (no matching commit)
-  - [40/47] pinctrl: qcom: add the tlmm driver support for qcs9100 platform
-    (no matching commit)
-  - [41/47] clk: qcom: rpmh: Add support for QCS9100 rpmh clocks
-    (no matching commit)
+Both your proposals lead to conflicts, so of course no. The lists are
+ordered alphabetically, in most cases.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
 
+
+Best regards,
+Krzysztof
 
 
