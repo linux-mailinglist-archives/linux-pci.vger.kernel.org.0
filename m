@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-9617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DE80924E21
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 05:02:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B8AC924E54
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 05:04:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 320C528BD05
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 03:02:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 707861C251C3
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 03:04:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6983F1094E;
-	Wed,  3 Jul 2024 03:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5B4FDDBE;
+	Wed,  3 Jul 2024 03:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GtQ6rSp7"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l2S6p4zH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE3F5228;
-	Wed,  3 Jul 2024 03:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3FDC8D1;
+	Wed,  3 Jul 2024 03:02:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719975691; cv=none; b=triaEY9pcr7aQV4nS8Uhh6MEs7co9+QmM+Pn1U+FKvGVRUDR2nSe/vFMsbn+qj2DVMrFw0wFzPYsj+eJSXDxz+7OOY11dHGP9xmzoqmxbWuXKVuAXg+7Q3mplaa65tnQTU7yis1j8EqGH+cEh8h9eNDaQ8aUFEzrBSgApDi1JMo=
+	t=1719975768; cv=none; b=DWrzdziWYgCI4b560wA6HmZIa0h+sWwNLPwklRybby6wt4H+BilJTow8JBVekga+aIiyvOlR7NnfFXWvSn1qpm6p3NI+zgqfut1kGCumDbJzFxF76Qe7CBQUyzfrVkJJptxAiuF48/0l1M56RCCDDy/0fiAyzHdrsPfgsN0Usy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719975691; c=relaxed/simple;
-	bh=dDymIdmT+abzo7AOqeprGD47OVlvY3MZczC/pmfdNDs=;
+	s=arc-20240116; t=1719975768; c=relaxed/simple;
+	bh=LJShlTBTOHh/ZQ9eZ8bCKuX4BtL0kns6CxsGDFe2FAE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QxqdCfAc/2+et0dwOB5ZtNzFsZ0DmFH6aWn/tAHVWECXiB3hUzYIhkBFhP4VWwlIGK4Sd1cLQzZLBGSyi9aVwr84Fsf5GBZJ/MohW2nWiEYCCUzlWnknnUqz1lQ+VTmWCz633sQX+4JrvnQdmi4t4icT0xNrZArAFEQkJem/uyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GtQ6rSp7; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=tWwr9uejrF22rewL1wXqSZAMj17bM5msCeprUZUXIaSHdFBqN4ifRQ8vCKYFyHgHsMgiFKJWEqb/Ip/TrEyUD95xR5bK/5eaAm3jjFKrCYWNKk2O55F/lbbCfL6TiG+dhvXZ2Qx0qeWhIp0q3KdByse4vwPi6fRrKo5m+Ki5kDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l2S6p4zH; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462HEbLk009347;
-	Wed, 3 Jul 2024 03:00:54 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462HE6nU016472;
+	Wed, 3 Jul 2024 03:01:14 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bEKbNVfup3BpRmVtqOfZwmdPKNA/94dCDdPvl7O48u4=; b=GtQ6rSp7d/hjbo51
-	nZnkkxhWW3yL7cid6ZMbMu9HVJfJj1rscfrHgwzyt1wShiIY5T+1fkcAfRRVKCNE
-	r02xfG7iOFel3UP7d70s+J4E/0BFzw8sMYLVU2SR2N3TSO1ECOlf0xrVytzmAjM9
-	qF2dp3SAJy2Al2reRigabVioBydy1YbO+xfNjiDMxesemZj9tGYDd/b2hdpCMHJG
-	pn5R/cIwBKe1ERNcz19L6ptn1qtR8hfxmuQuRKHYVqQZeDrf8onvLs04HsQFfD1O
-	R0T+0toyWZpZ6gCqU8fcR9fz4S1iqU6kryRWlwWmpjkUyBtFIazuc/l0TJ54gV7c
-	daS7Vw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4029kh7g85-1
+	IXXDdOTj+WV/0I/ZfGsCwa6oxMG9of9UkEPPhel/aX4=; b=l2S6p4zHo4vypJ5L
+	rY8wl3t/Qs2dMsLPsbQ09yAl+EsOSBdsyfDlSR1GmaT18SoLa+YHmGZHuynVGK86
+	U2WB8BqlTKxnup13Yn31DiAS4oziy6ylZgdyIq5CJtOPECLo6/5s+3DpcC33OZzO
+	haEXjH+yWBwUOOEcrgPtZ5wkddKGCrOBVVH5odnrG4m2Z1cy0mWrS9DBEQpGek/f
+	cSaCQaEH1+H9EMGkOEaenXue7e8QcjIZJvIWLXCWuiuyYFv8AR5cC8+Y86knco6r
+	xODRUG9cFokUiO9UNKWvtedfoXHaH9/GJXrwhlNz2Y9UhWEXe3kybZyULRxKbSAN
+	yA7jCg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402an77f80-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 03:00:54 +0000 (GMT)
+	Wed, 03 Jul 2024 03:01:14 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46330q2n024445
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46331C29020290
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 03:00:52 GMT
+	Wed, 3 Jul 2024 03:01:12 GMT
 Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 2 Jul 2024 20:00:30 -0700
+ 15.2.1544.9; Tue, 2 Jul 2024 20:00:50 -0700
 From: Tengfei Fan <quic_tengfan@quicinc.com>
 To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
@@ -102,9 +102,9 @@ CC: <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
         <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>,
         Tengfei Fan <quic_tengfan@quicinc.com>
-Subject: [PATCH 04/47] arm64: dts: qcom: qcs9100: Add QCS9100 RIDE board dts
-Date: Wed, 3 Jul 2024 10:58:07 +0800
-Message-ID: <20240703025850.2172008-5-quic_tengfan@quicinc.com>
+Subject: [PATCH 05/47] dt-bindings: firmware: qcom,scm: document SCM on QCS9100 SoC
+Date: Wed, 3 Jul 2024 10:58:08 +0800
+Message-ID: <20240703025850.2172008-6-quic_tengfan@quicinc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
 References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
@@ -120,78 +120,36 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ioNDR0WSpjsFkf_gFj2yv2Zj7_4HQsIk
-X-Proofpoint-ORIG-GUID: ioNDR0WSpjsFkf_gFj2yv2Zj7_4HQsIk
+X-Proofpoint-GUID: 6yUQLApLKCbzzSg7DOJQ2vdN9vi5I8vw
+X-Proofpoint-ORIG-GUID: 6yUQLApLKCbzzSg7DOJQ2vdN9vi5I8vw
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-02_18,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 adultscore=0 mlxscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407030022
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ phishscore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407030022
 
-Add support for the QCS9100 RIDE board dts. The current QCS9100 RIDE
-board dts is directly renamed from the SA8775p RIDE board dts.
-The difference between the current QCS9100 RIDE board and the SA8775p
-RIDE board lies solely in the replacement of the SA8775p SoC with the
-QCS9100 SoC, all other board resources remain the same.
-The following items have been updated:
-  - use QCS9100-related compatible names for this board dts.
-  - replace the inclusion of sa8775p.dtsi with qcs9100.dtsi.
-  - replace the inclusion of sa8775p-pmics.dtsi with qcs9100-pmics.dtsi
+Document scm compatible for QCS9100 SoC.
 
 Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/Makefile                         | 2 +-
- .../boot/dts/qcom/{sa8775p-ride.dts => qcs9100-ride.dts}  | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
- rename arch/arm64/boot/dts/qcom/{sa8775p-ride.dts => qcs9100-ride.dts} (99%)
+ Documentation/devicetree/bindings/firmware/qcom,scm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 5576c7d6ea06..a7a3792b0691 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -103,6 +103,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qdu1000-idp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qrb2210-rb1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qrb4210-rb2.dtb
-@@ -112,7 +113,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qru1000-idp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sa8155p-adp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sa8295p-adp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sa8540p-ride.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/qcs9100-ride.dts
-similarity index 99%
-rename from arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-rename to arch/arm64/boot/dts/qcom/qcs9100-ride.dts
-index 26ad05bd3b3f..2415d34b8aa5 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs9100-ride.dts
-@@ -8,12 +8,12 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- 
--#include "sa8775p.dtsi"
--#include "sa8775p-pmics.dtsi"
-+#include "qcs9100.dtsi"
-+#include "qcs9100-pmics.dtsi"
- 
- / {
--	model = "Qualcomm SA8775P Ride";
--	compatible = "qcom,sa8775p-ride", "qcom,sa8775p";
-+	model = "Qualcomm QCS9100 Ride";
-+	compatible = "qcom,qcs9100-ride", "qcom,qcs9100";
- 
- 	aliases {
- 		ethernet0 = &ethernet0;
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.yaml b/Documentation/devicetree/bindings/firmware/qcom,scm.yaml
+index 2cc83771d8e7..3596ae0e0610 100644
+--- a/Documentation/devicetree/bindings/firmware/qcom,scm.yaml
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.yaml
+@@ -42,6 +42,7 @@ properties:
+           - qcom,scm-msm8996
+           - qcom,scm-msm8998
+           - qcom,scm-qcm2290
++          - qcom,scm-qcs9100
+           - qcom,scm-qdu1000
+           - qcom,scm-sa8775p
+           - qcom,scm-sc7180
 -- 
 2.25.1
 
