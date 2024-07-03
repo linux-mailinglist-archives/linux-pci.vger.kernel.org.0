@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-9670-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9671-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF32B925140
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:15:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B72925149
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:16:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77AE72824E7
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:15:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBAC41C20893
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFB3517D35E;
-	Wed,  3 Jul 2024 04:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A5CA41C77;
+	Wed,  3 Jul 2024 04:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m3X50lo+"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ilSiosQB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E04812FF8B;
-	Wed,  3 Jul 2024 04:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3D54F5FB;
+	Wed,  3 Jul 2024 04:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719979417; cv=none; b=E8cjFKIPzuR/ath7JcUgrwUeNNCQ5YyGRc+H1d4ZBvwGTtpeumauUhYoeOoYCaCTdtsQ0Zl4bnGS5eiV+CMv3kTl6lSJk2xkAAwEyvWEO1rVHJiDrg5pzW1V40kfKZXLBmiOqBTaoqALDfaU0V6v5PYIB9A4MBAmxG/0R2q6xgI=
+	t=1719979439; cv=none; b=Kj3KKXYPSyNXGJTEaurSYKfFSrdmPHlovXx0wSFlAvNc0Vam76hZbr+B+vV8F0BLM3wIrGyHRcpls2JGMMdm7x+bjkD3toMAg2HwbCrc2G6ry1lskFizU1Rsc/5MA4Cqynoxw6VqSH1z2WDwgcrSopiDZDfSde3Nk9zyJZnFxo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719979417; c=relaxed/simple;
-	bh=tRAhxB6Yt2ErLy0toghNvfUG1D5X0bUk9dSoygsvByI=;
+	s=arc-20240116; t=1719979439; c=relaxed/simple;
+	bh=9fgj0sH+FZtnpbf7JLk4Fw33bze8nZIodeTmUsFHWJE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=px+QE3iNl3Jhh60zreJ6+OF6AMmw9cURAeTfZCivQ3VOZ68exjaHvlhthzTlQEl1Fk6ETv6A4Q9h44prcmIAjknNR6pA4abWhu3hZe1evwBLQQIzgpd5/q/yaVZwFG4Nhcu6YzNCabHRooeeOqGFRBc2G0hPiGfO9Y08gqEslnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=m3X50lo+; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=pu+o9dsohvl3bF3fSGRoIMSMZcSKGx6IUCdRnfVPB0AaMdBskL1xJxtpO++fxUjB5+jRmnTCxJVBd3krtqyvLPeOsXsXmSK7kLC1EF0Y8QKReqvDN/4OduIilTra6c4ZfX+oHptBAgVv6Gu0blmFVj5MHkqEIBWHKfH9/3jDbz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ilSiosQB; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462J4ZUJ001587;
-	Wed, 3 Jul 2024 04:02:56 GMT
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462HE311008349;
+	Wed, 3 Jul 2024 04:03:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vYiUMFWmOzAfZrOHs5pq/gtqqQ9e/1Vdy/HjDdLD2e0=; b=m3X50lo+RrFgMgXP
-	8Ic20Dm0GGiFnrU3cHk3gfC8m2F7J7vmUVKEQu5PAsYk5qbCu0OkGKaPHxwaQejg
-	8ANAdsjkN9INyWKPJsvGT5mxKCB5uoWKBVU/3OqPrkwSLpiylWe2V/dglCdccj5x
-	kJXHUrQbXI6lFjfSrjQoIIAZ8lMSi5fnI6aQ+yMh1YYVAkDAU6DcXf8xbQCrCxhs
-	7f86uj4haoa1W113r1araZlWdb1sqTyKXSCU0IxmeFrpnx5X1k6xpwxlQmSPOvnj
-	iAzEidVM6+YCm8cIUYYazIPGeLJBCyQFYlOwy4sb7TMOW38Owf6i1UvqFTfnMhBb
-	ebbWMA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402bejsxw8-1
+	V51vVhu6eX3n31WP9Ro1eLmfsgYzYtYU9J8Pasxp6a0=; b=ilSiosQBmm28Y1C0
+	djFhv0l/BR/hl3PV+he1YUP7HeBKBlDSObbqh82Cc+jXeeXrkNzBwqfkr4SRNil8
+	Oc2oXVEB4Ou9jPRQH6UWT6ZFqjNN2sIOmOaRWpTdMXSid+rrumP5rrxDqvnuq+8X
+	hisQlEQNGuLSn7rHEYM526lZOF4GRhTRv5NUJBHMMR0BI+QDSme/OmRFDe2eBSss
+	aaLqaylp0tpDulaSBqyOX3VABMgOAOnqurxa9Aq8+BnUlPE5avjHaYLt3tXW1kjT
+	1IfnnlaoNfNmXFPzIkEK6tIRaKvHPvC3WJ1bezRj/mqivZ/I3ehg4Xruh0NYnWjU
+	Xxi/OA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4029kh7kxq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 04:02:56 +0000 (GMT)
+	Wed, 03 Jul 2024 04:03:16 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46342tRc007245
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46343ElG010484
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 04:02:55 GMT
+	Wed, 3 Jul 2024 04:03:14 GMT
 Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 2 Jul 2024 21:02:32 -0700
+ 15.2.1544.9; Tue, 2 Jul 2024 21:02:52 -0700
 From: Tengfei Fan <quic_tengfan@quicinc.com>
 To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
@@ -102,9 +102,9 @@ CC: <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
         <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>,
         Tengfei Fan <quic_tengfan@quicinc.com>
-Subject: [PATCH 13/47] dt-bindings: ufs: qcom: document QCS9100 UFS
-Date: Wed, 3 Jul 2024 11:57:01 +0800
-Message-ID: <20240703035735.2182165-14-quic_tengfan@quicinc.com>
+Subject: [PATCH 14/47] dt-bindings: phy: qcom,qmp-usb: Add QCS9100 USB3 PHY
+Date: Wed, 3 Jul 2024 11:57:02 +0800
+Message-ID: <20240703035735.2182165-15-quic_tengfan@quicinc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240703035735.2182165-1-quic_tengfan@quicinc.com>
 References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
@@ -121,44 +121,52 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DhNT4GzN0EU0-ZkMkj-8yVCVxRc43_WO
-X-Proofpoint-ORIG-GUID: DhNT4GzN0EU0-ZkMkj-8yVCVxRc43_WO
+X-Proofpoint-GUID: um-0dYQJkhlbqHzmlo38V5xY5g0Xq995
+X-Proofpoint-ORIG-GUID: um-0dYQJkhlbqHzmlo38V5xY5g0Xq995
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-02_18,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- bulkscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=909
+ priorityscore=1501 suspectscore=0 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2406140001 definitions=main-2407030028
 
-Document the compatible string for the UFS found on QCS9100.
+Add dt-bindings for USB3 PHY found on Qualcomm QCS9100.
 
 Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml           | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
-index 25a5edeea164..baee567fbcd6 100644
---- a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
-+++ b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
-@@ -26,6 +26,7 @@ properties:
-           - qcom,msm8994-ufshc
-           - qcom,msm8996-ufshc
-           - qcom,msm8998-ufshc
-+          - qcom,qcs9100-ufshc
-           - qcom,sa8775p-ufshc
-           - qcom,sc7180-ufshc
-           - qcom,sc7280-ufshc
-@@ -146,6 +147,7 @@ allOf:
+diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml
+index 5755245ecfd6..8c1bc416646c 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml
+@@ -20,6 +20,7 @@ properties:
+       - qcom,ipq8074-qmp-usb3-phy
+       - qcom,ipq9574-qmp-usb3-phy
+       - qcom,msm8996-qmp-usb3-phy
++      - qcom,qcs9100-qmp-usb3-uni-phy
+       - com,qdu1000-qmp-usb3-uni-phy
+       - qcom,sa8775p-qmp-usb3-uni-phy
+       - qcom,sc8180x-qmp-usb3-uni-phy
+@@ -111,6 +112,7 @@ allOf:
+         compatible:
            contains:
              enum:
-               - qcom,msm8998-ufshc
-+              - qcom,qcs9100-ufshc
-               - qcom,sa8775p-ufshc
-               - qcom,sc7280-ufshc
-               - qcom,sc8180x-ufshc
++              - qcom,qcs9100-qmp-usb3-uni-phy
+               - qcom,qdu1000-qmp-usb3-uni-phy
+               - qcom,sa8775p-qmp-usb3-uni-phy
+               - qcom,sc8180x-qmp-usb3-uni-phy
+@@ -153,6 +155,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - qcom,qcs9100-qmp-usb3-uni-phy
+               - qcom,sa8775p-qmp-usb3-uni-phy
+               - qcom,sc8180x-qmp-usb3-uni-phy
+               - qcom,sc8280xp-qmp-usb3-uni-phy
 -- 
 2.25.1
 
