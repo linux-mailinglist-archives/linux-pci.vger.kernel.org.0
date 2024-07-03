@@ -1,137 +1,180 @@
-Return-Path: <linux-pci+bounces-9702-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9703-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AC82925686
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 11:21:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 709D8925690
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 11:22:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CB171F28728
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 09:21:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26F7B289691
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 09:22:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58F713B5B4;
-	Wed,  3 Jul 2024 09:21:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1857413D279;
+	Wed,  3 Jul 2024 09:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="tcu9U6xc"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GP9s9iCj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF5613D52C;
-	Wed,  3 Jul 2024 09:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9033F1A28C;
+	Wed,  3 Jul 2024 09:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719998469; cv=none; b=ooENJ7JEfQdNZ82QouzjFz+Eja7/6cjt6zz5YMaOylsLCOmQvoy5cOuavh/2xlCEKsHajt/3aeqKadwP4q2YK2i5p1yzKR9IW/3FeMVlW9rj+L8DQzA4/G/S/NKbckoaFC6jcScXC1bglAa7h4/5lY9QYnettnQCneddEheKbbI=
+	t=1719998543; cv=none; b=tlH6gRd+zm5axu27LOhTCoP4gHs+6BNiAdH6MDrU/lNsIeV2Hf0SkaDu4j/MCYy41G+A9Tlz2HEDoDrANfT0saOdh5PaxL83M4qcyWvy8xlzE/AgXwi8JreG5ZRTiEDrUXcfucLNARyMx8gIb4o2WvDGf5qf1PRPs8BTulrTwQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719998469; c=relaxed/simple;
-	bh=Wyl2SFGLVCY9I76VGiszxJyjpFrEkWUOFvTsPtE6pTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gBRranUaUD9QBBWdZqNpkUX2/Jrf+hrawnoGWHMaAK1UYHbQ5ow+/AuGGURD9r2zeSyZaSeS9iyek+DBMbaDDuH1whr29UupLVFXroYNiUO8naPZUOMft0mZF0RuX8n7K5+66BPjLCCJeLDWkrt8g/HxgmnRlDOO8u77WAsM96U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=tcu9U6xc; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1719998458; x=1720603258; i=spasswolf@web.de;
-	bh=oBQFmETLL7D3z7jRwHkLZHsWnUmcK0p0AK8DnuJD78w=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=tcu9U6xckseNUP1+vBU5sqBou5tHz81TQZzdvDP2x/jWhFQZbLnRBsAtKPgzrAuS
-	 cs7NtYC9LTykXu/PKvI4JfiPScC2vF6wn7m8hPKTOc0hMUMcsnFWzF5rXGIfbXRBR
-	 gQqGsAlmpUO3un9spZUP7UKBvp68Wdh7iPf4tGTPbY0hnloKLH+D5OKh/OMyrFzeu
-	 ca6wumnhXPCHZA63DVCN9Ysv8KQxE9bTm1JZL0GZAPrU45/exT1VnuG5YIV9p8WLl
-	 CUqHzf4BzSAg6T3UA1bPMz5XplVW2BVdBcfrZmzsPu2RdaIccvyTP9QXilR3hvweH
-	 cV6VzsnP2qteDGIdnw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([84.119.92.193]) by smtp.web.de
- (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 1M7Nmo-1sUQGE218u-00Elao; Wed, 03 Jul 2024 11:15:38 +0200
-From: Bert Karwatzki <spasswolf@web.de>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	caleb.connolly@linaro.org,
-	bhelgaas@google.com,
-	brgl@bgdev.pl,
-	amit.pundir@linaro.org,
-	neil.armstrong@linaro.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] pci: bus: only call of_platform_populate() if CONFIG_OF is defined
-Date: Wed,  3 Jul 2024 11:15:30 +0200
-Message-ID: <20240703091535.3531-1-spasswolf@web.de>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: 20240612082019.19161-4-brgl@bgdev.pl
-References: 
+	s=arc-20240116; t=1719998543; c=relaxed/simple;
+	bh=Q5OjPZbBpsarH3xfTmO4sLkv4LvQW3w5r57jZNR6d9c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Z5yTWXljDZ0aNNubSs7oPL5zHyyZubUkEpYq0epkmkDkc9KoHPGY4RIW1nh3l2zrRMBBVXySverTiPF7Zs5Mpck/9a2kKUSZY0bH5gwZylzFFzbfhfysvpwh8gcw0kPawEC13QbaQSFdFy4ocWQQv7UNq8iQmkcYqwl8jPCcFXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GP9s9iCj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4638D1LB027444;
+	Wed, 3 Jul 2024 09:21:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zFayjh+1qzFNX/L8mf2pY/rdIsRlH8uG2GflD4xHDhY=; b=GP9s9iCjwlhtGabK
+	ji04H6MUw3QZ2THnZ8MnZmsgkMmwwt1SFfnCMHhSJWVMSNLsHGqj1sbicP/Y0wy+
+	Tlvx86VUUKy+J+eHegc+RNHmJGPmisqYFhLqQigoyoHHTk57KJo2whllN1BY7LJh
+	CvCvkmrHqU+7lrISb+5hEqoYIqIdyWVy+dFXq5SgFzT2fQh5Vg2HiiKkBvdTDuMH
+	uKDXIK+4+MRDGK1o20TcWBR1bhgJUWxcml1xHGD0q/F+wRpstDBvTfyzHvL7aisU
+	bFVa9apUSGJ5qm1MRVyAXMxadQT4eHVx3BF8wOG5lo/gmeWRxFXsh8ATVQZJHcG4
+	yqnVZw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4027mnrp2m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 09:21:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4639LXCm013350
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jul 2024 09:21:33 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
+ 02:21:11 -0700
+Message-ID: <fbeb5969-0b3a-455e-88eb-b83734bf2c50@quicinc.com>
+Date: Wed, 3 Jul 2024 17:21:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nyJcyHhsNSpkSUGZqbvy5cz1+qJWvtRYdbilKOrnaRbpkEucYDI
- OO6X9pZ8KS+LAvp0TY5pUBt13c5CZ5zj58Jvj7gRo7OtAEgAi64mW3/H5Q4f5PEAxJRvddj
- 19rlO8z708zo5053JsZrJq5n5fJsE/CHsT0KUTpAnn9hFrDqamw8Ed6svdI5bvXDv+wctVC
- B/p0EFClr8h/KIYSsBJZw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:20gnE9vcYAw=;5Vn92s0UDnCrY+dgvQFnS2uHqlE
- zJhJX+e4RvaJ0YxUVfTBGS9DpEFmWV17NOxuLmJjHvlA9l0n9M9/bXy8nsSsRtimB32ZA7bAp
- 2dZmY9SSnYrQVaOyMoRfP0VDudwq/YJs++W5FIIAM3nDqZ1C5hRhBh03cFR80R8CYj764VBso
- tO4eH7o56SGLLhtgYEGRFUMy7rl5zRQd6B5O497CRvkYecE6ZFh3SVOH5gTFKTwJYm7AYvNy7
- tqDZ/8xBFxkky9HST5qVSfKrVFy7k8oq/zAuT1CxTyyFyCt1hUSPQR4LL9t8rYSORUMntxQXC
- C4TEyB7o6aF4mCKZr6CbKVI/UkUqs98jwJxNYv+vUkAvLf6NAkGDUEtZnMHilS9dIDfTAf0EN
- GWsj/mgStCv7Trsd71WrZIJ55tjpoJfKCNnUczEUYHpF2dXFscNdFAgHkQGDCXVUMwz8hMRkA
- /+pBgsPxay08zCB+qc+Or1hes7b4uCi1khmkHD21t5WeBh4ghmnKYOQ+o1dPuKMV6t2F0c+iI
- GX2XhI0vW4Se6IElsiL32ATSDehuly8Jjw1DPJBVb6HvOpbZLgseHjqMYDx0YkpPg6kAciw92
- 3aLMlx9fQNQDrtIk5bTPNRkJdSodIndz8jucpl1FvrkGQSzDu3TcAWT4JzrBt23a4E9owVMg+
- OsEGNORflRBAJv8dK/uggUys80Q/HQrJgCmdQSXYbDBp+NFLkUz+hoHRP0mc48Fc+dOqeFcc8
- Vl9ovVrQxPzdg9nf/UVPnFAGpipd6tv5tLW+EibbfJCqM+6P333ufkZmKv10A1q/yX+5wrJpT
- 4tAAA5elsJMFlWsXYwXZWKmIdkdTieKOWI2jWiq1jIL2A=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and
+ RIDE board
+To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <djakov@kernel.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <jassisinghbrar@gmail.com>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <manivannan.sadhasivam@linaro.org>, <will@kernel.org>,
+        <joro@8bytes.org>, <conor@kernel.org>, <tglx@linutronix.de>,
+        <amitk@kernel.org>, <thara.gopinath@gmail.com>,
+        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
+        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>
+CC: <robimarko@gmail.com>, <bartosz.golaszewski@linaro.org>,
+        <kishon@kernel.org>, <quic_wcheng@quicinc.com>,
+        <alim.akhtar@samsung.com>, <avri.altman@wdc.com>, <bvanassche@acm.org>,
+        <agross@kernel.org>, <gregkh@linuxfoundation.org>,
+        <quic_tdas@quicinc.com>, <robin.murphy@arm.com>,
+        <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
+        <lukasz.luba@arm.com>, <quic_rjendra@quicinc.com>,
+        <ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
+        <otto.pflueger@abscue.de>, <luca@z3ntu.xyz>,
+        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
+        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
+        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
+        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <ahalaney@redhat.com>,
+        <krzysztof.kozlowski@linaro.org>, <u.kleine-koenig@pengutronix.de>,
+        <dmitry.baryshkov@linaro.org>, <quic_cang@quicinc.com>,
+        <danila@jiaxyga.com>, <quic_nitirawa@quicinc.com>,
+        <mantas@8devices.com>, <athierry@redhat.com>,
+        <quic_kbajaj@quicinc.com>, <quic_bjorande@quicinc.com>,
+        <quic_msarkar@quicinc.com>, <quic_devipriy@quicinc.com>,
+        <quic_tsoni@quicinc.com>, <quic_rgottimu@quicinc.com>,
+        <quic_shashim@quicinc.com>, <quic_kaushalk@quicinc.com>,
+        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-2-quic_tengfan@quicinc.com>
+ <665f6c8c-4f43-4d20-90e9-9e037a942066@kernel.org>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <665f6c8c-4f43-4d20-90e9-9e037a942066@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 5Ybf8r0PXG_XS31lxeN4m5yOCkbBXD5_
+X-Proofpoint-GUID: 5Ybf8r0PXG_XS31lxeN4m5yOCkbBXD5_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_05,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 mlxscore=0 suspectscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407030069
 
-If of_platform_populate() is called when CONFIG_OF is not defined this
-leads to spurious error messages of the following type:
- pci 0000:00:01.1: failed to populate child OF nodes (-19)
- pci 0000:00:02.1: failed to populate child OF nodes (-19)
 
-Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nod=
-es of the port node")
-Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-=2D--
- drivers/pci/bus.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index e4735428814d..b363010664cd 100644
-=2D-- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -350,6 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+On 7/3/2024 12:38 PM, Krzysztof Kozlowski wrote:
+> On 03/07/2024 04:58, Tengfei Fan wrote:
+>> Document the QCS9100 SoC and RIDE board.
+>>
+>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>> ---
+>>   Documentation/devicetree/bindings/arm/qcom.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+>> index ec1c10a12470..f06543f96026 100644
+>> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+>> @@ -45,6 +45,7 @@ description: |
+>>           qcs8550
+>>           qcm2290
+>>           qcm6490
+>> +        qcs9100
+>>           qdu1000
+>>           qrb2210
+>>           qrb4210
+>> @@ -894,7 +895,9 @@ properties:
+>>   
+>>         - items:
+>>             - enum:
+>> +              - qcom,qcs9100-ride
+>>                 - qcom,sa8775p-ride
+>> +          - const: qcom,qcs9100
+> 
+> This changes existing compatible for sa8775p without any explanation in
+> commit msg.
+> 
+> Best regards,
+> Krzysztof
+> 
 
- 	pci_dev_assign_added(dev, true);
+In the next verion patch series, I will provide relevant explanatory 
+information in this patch commit message.
 
-+#ifdef CONFIG_OF
- 	if (pci_is_bridge(dev)) {
- 		retval =3D of_platform_populate(dev->dev.of_node, NULL, NULL,
- 					      &dev->dev);
-@@ -357,6 +358,7 @@ void pci_bus_add_device(struct pci_dev *dev)
- 			pci_err(dev, "failed to populate child OF nodes (%d)\n",
- 				retval);
- 	}
-+#endif
- }
- EXPORT_SYMBOL_GPL(pci_bus_add_device);
-
-=2D-
-2.45.2
-
-The mentioned error message occur on systems without CONFIG_OF, i.e.
-x86_64. The call to of_platform_depopulate() in drivers/pci/remove.c
-does not need #ifdef CONFIG_OF as the return value is not checked (it
-will most likely be optimized away on platforms witout OF where the
-of_platform_{de,}populate() functions just return -ENODEV)
-
-Please CC me when replying, I'm not subscribed to the lists.
-
-Bert Karwatzki
+-- 
+Thx and BRs,
+Tengfei Fan
 
