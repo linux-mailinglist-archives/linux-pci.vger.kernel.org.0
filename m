@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-9689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78DDF925261
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:34:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38A34925270
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:39:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 136F228F02B
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:34:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF3741F26E00
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:39:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A6811E49F;
-	Wed,  3 Jul 2024 04:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D57F38FA3;
+	Wed,  3 Jul 2024 04:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ma7GZWD4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+hv0vca"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D4E17996;
-	Wed,  3 Jul 2024 04:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F6B2E646;
+	Wed,  3 Jul 2024 04:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719981239; cv=none; b=LGe8hBT6MqmsDlSeCyT3h5QM8AaavAS+TECacwBoARlyotVDlskMupqfLRnAwa6hdXLWXaRJShwUKXNJdONDNvo6/+/VNfwxIv40ZiLzIYsxnvdpu43e8wGoVvMpNoGw9Atof6a/+8kAabN8zaM7DynQDIpsx7unvKvWgsrHJUM=
+	t=1719981537; cv=none; b=pZ+OKe6S0et5ekahCPMpCHNQM6Xj54oGbktKLOZFIbJ70tWBM2s96HpKE4j+W3Ffk4lGCociGzgZIKvtXE/EsZxnfCt51MAqt8Z3ZI6YqeV9pZjBlDNI5vmXneaFVc+cUlNxPqhSja9VcFH8ePiZKEmLNmRFaTAEoBCU2zIIpok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719981239; c=relaxed/simple;
-	bh=X5aWSNQZEnK+6IDg5HrUNx8ybENNXlOuoc4zcwgb0h8=;
+	s=arc-20240116; t=1719981537; c=relaxed/simple;
+	bh=W1kROEg3Fjkby7km6ea2XB5zUQBCta+iGVmjqDJNcd4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=icg/OSI+ZvG2A5NfxDFEoY3UhniZUcHx8nuirIPPltwLWWJl3QACicVbNthvgZXDSCQ+ZTj5u+dY3oYNgLbT9I7QetWRJw7jLqIXIORgWht6kqMr13V40w2NwBCjxy1EZMQFKlo72qhga9AGYPV2u5TSJh3MVZIGDSyQ9pj8yRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ma7GZWD4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31BAC32781;
-	Wed,  3 Jul 2024 04:33:53 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=bZqPUtFLZLcDvSPhlBsWsB7B8aq8z+yUddbX0sc9IqlFyHIPn9eRohJDaWH+wyqvn2Y7pnOa+GP7g6OGwpdbTWkSrLgbI5cDbqW8ql9okxlTCFPHJ0iuQo2u8002k2UtKd29I+NApJAkYBegpUe1QWmyUP8Fc6LWsmxOMdovMr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+hv0vca; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD393C32781;
+	Wed,  3 Jul 2024 04:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719981239;
-	bh=X5aWSNQZEnK+6IDg5HrUNx8ybENNXlOuoc4zcwgb0h8=;
+	s=k20201202; t=1719981536;
+	bh=W1kROEg3Fjkby7km6ea2XB5zUQBCta+iGVmjqDJNcd4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ma7GZWD4U3Ybf6tznAhHwsUKbmN+8eIl5ceUVegr+jAK5JFV6CpmdJ2jZFeznFJWs
-	 FvUo6p5c+pM5AYeZV+WPiz5qvnXXp3tDhmqulVhvXw0RgOiwCfYpQDgD2eEofnonid
-	 J1+HATKkgQ2Y66n20+clY8608i7e9Q5Dpazvyvntaz3S5zuVcmruYUKmba3T/UJ4sx
-	 Pljd4QnSxptn5N/e5dc7RM0+yAMprEXCxE44MfpOEsJX9+SlqA74sGqjAf8gKJLDpZ
-	 j0bS0KABboGH5xddHjD/so5kC4TOH0RmeF3Vm+HE/A6ryZf7Bq1hduIsJ477hN6o0z
-	 m0PulYFwt4T0g==
-Message-ID: <836bb743-beca-4fa0-b23b-6b280765d995@kernel.org>
-Date: Wed, 3 Jul 2024 06:33:51 +0200
+	b=H+hv0vcaiq0XC7+jQ4SkBP6tLioSIe3HKWUbXaOlUbiaFuBk9DLPO6VtNaanYUvzQ
+	 Ev/nx7GDK0z1YI39SPHe5GZWGxN+hkg9cwmbiWCwdESQw03d1YG767i52fPG/rVnuK
+	 UOb1ndi1WGV82b3WM/a5qdpRt3Fb63aRJ2Htb59BTCAqbDCrjlgPQnzyc26BfvChNf
+	 TwFz7y9MCugmzjF5lnkT4ZELHLonzS58O1pg7wcml6uL942bgU0iRWtcikgy03fsKi
+	 KLp8csgIQfcYyKnwjYthjPSFP1QW16hZutMWuBsN+BZQPLf9kUUNuratI9rp68f9O6
+	 ZFOZuNIoRcFng==
+Message-ID: <665f6c8c-4f43-4d20-90e9-9e037a942066@kernel.org>
+Date: Wed, 3 Jul 2024 06:38:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,29 +50,49 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/8] dt-bindings: PCI: Add Broadcom STB 7712 SOC,
- update maintainter
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20240628205430.24775-1-james.quinlan@broadcom.com>
- <20240628205430.24775-2-james.quinlan@broadcom.com>
- <5d0950fd-dcd2-4996-aab0-0030f1911960@kernel.org>
- <CA+-6iNzoPTk0mxwug8Odv4Loj5hN8eDy56AjYmsAa+qV3SnWfA@mail.gmail.com>
+Subject: Re: [PATCH 01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and
+ RIDE board
+To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com,
+ sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au,
+ davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org,
+ joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org,
+ thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org,
+ linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org,
+ vkoul@kernel.org, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ mcoquelin.stm32@gmail.com
+Cc: robimarko@gmail.com, quic_gurus@quicinc.com,
+ bartosz.golaszewski@linaro.org, kishon@kernel.org, quic_wcheng@quicinc.com,
+ alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
+ agross@kernel.org, gregkh@linuxfoundation.org, quic_tdas@quicinc.com,
+ robin.murphy@arm.com, daniel.lezcano@linaro.org, rui.zhang@intel.com,
+ lukasz.luba@arm.com, quic_rjendra@quicinc.com, ulf.hansson@linaro.org,
+ quic_sibis@quicinc.com, otto.pflueger@abscue.de, quic_rohiagar@quicinc.com,
+ luca@z3ntu.xyz, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+ bhupesh.sharma@linaro.org, alexandre.torgue@foss.st.com,
+ peppe.cavallaro@st.com, joabreu@synopsys.com, netdev@vger.kernel.org,
+ lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ ahalaney@redhat.com, krzysztof.kozlowski@linaro.org,
+ u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org,
+ quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com,
+ mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com,
+ quic_bjorande@quicinc.com, quic_msarkar@quicinc.com,
+ quic_devipriy@quicinc.com, quic_tsoni@quicinc.com,
+ quic_rgottimu@quicinc.com, quic_shashim@quicinc.com,
+ quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com,
+ quic_aiquny@quicinc.com, srinivas.kandagatla@linaro.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ kernel@quicinc.com
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-2-quic_tengfan@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -118,62 +138,40 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CA+-6iNzoPTk0mxwug8Odv4Loj5hN8eDy56AjYmsAa+qV3SnWfA@mail.gmail.com>
+In-Reply-To: <20240703025850.2172008-2-quic_tengfan@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 02/07/2024 23:57, Jim Quinlan wrote:
-> On Mon, Jul 1, 2024 at 5:12 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 28/06/2024 22:54, Jim Quinlan wrote:
->>> - Update maintainer.
->>
->> Why?
+On 03/07/2024 04:58, Tengfei Fan wrote:
+> Document the QCS9100 SoC and RIDE board.
 > 
-> I haven't observed any action or feedback from Nicolas in years.
-> Nicolas, please
-> state your case for being a maintainer because it is not making sense from
-> my perspective.
-
-Commit msg should explain why.
-
->>
->>> - Adds a driver compatible string for the new STB SOC 7712
->>> - Adds two new resets for the 7712: "bridge", for the
->>>   the bridge between the PCIe core and the memory bus;
->>>   and "swinit", the PCIe core reset.
->>>
->>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>> ---
->>>  .../bindings/pci/brcm,stb-pcie.yaml           | 24 ++++++++++++++++++-
->>>  1 file changed, 23 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> index 11f8ea33240c..f594fef343a1 100644
->>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> @@ -7,12 +7,13 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->>>  title: Brcmstb PCIe Host Controller
->>>
->>>  maintainers:
->>> -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>> +  - Jim Quinlan <james.quinlan@broadcom.com>
->>>
->>>  properties:
->>>    compatible:
->>>      items:
->>>        - enum:
->>> +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
->>
->> Why did you place it here? Isn't the list ordered?
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> It is ordered from newest at top to oldest at bottom -- is the
-> convention to put the "new" at the bottom?
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+> index ec1c10a12470..f06543f96026 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> @@ -45,6 +45,7 @@ description: |
+>          qcs8550
+>          qcm2290
+>          qcm6490
+> +        qcs9100
+>          qdu1000
+>          qrb2210
+>          qrb4210
+> @@ -894,7 +895,9 @@ properties:
+>  
+>        - items:
+>            - enum:
+> +              - qcom,qcs9100-ride
+>                - qcom,sa8775p-ride
+> +          - const: qcom,qcs9100
 
-Both your proposals lead to conflicts, so of course no. The lists are
-ordered alphabetically, in most cases.
-
-
+This changes existing compatible for sa8775p without any explanation in
+commit msg.
 
 Best regards,
 Krzysztof
