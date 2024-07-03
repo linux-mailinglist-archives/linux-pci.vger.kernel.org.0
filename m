@@ -1,145 +1,170 @@
-Return-Path: <linux-pci+bounces-9706-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9707-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B49949256D0
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 11:32:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BC329256D9
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 11:34:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E0A5281650
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 09:32:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7069B2187C
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 09:34:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CFE3136E3A;
-	Wed,  3 Jul 2024 09:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E093D13D60F;
+	Wed,  3 Jul 2024 09:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vmt1uvqK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idKSNW5a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96511755B
-	for <linux-pci@vger.kernel.org>; Wed,  3 Jul 2024 09:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7BB1755B;
+	Wed,  3 Jul 2024 09:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719999140; cv=none; b=XbYLRqB5fRDb3eY+cD/NPW3QxvcGoSMO9JTTtj6Go4nSN3GcuA2JBqW+mga9dWlSmZbVgdhVIwYgcke9aiEWI5bl6LMVnEABwyvywyxPzmRMtsiJCveULBqx4CSC0l8EYSdwvQjcVXkpw63wu2pOohzdW2cdRRG+9ZoJ1uBtnG8=
+	t=1719999261; cv=none; b=IznmKVkVTFypPqJQOo8czd+L1U3t4C0b6it0doOUi4s3yhYJref1qNtP3dIa9NNKDDxx8HYcxe70g8fwmWpuRWClzNuW7UtlpocvNYa2JNwzW9rzXAKQ5Dt1IrVKX7VXa3ZCuNULW9Crb+FVyH5C18/Cl2MylE6DO2ccDA3J0pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719999140; c=relaxed/simple;
-	bh=wxNTZ9QPmv/pOHH5Udq9kaG7vGTr4w1mp6WoX2yWyRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sZoF7CCP83nrhLIT+GYHGVNN1Zfm/2R+w6AQWFaWPuA48TOKRe/2CyU0ifNPA7NgBAjxNzan3/p0dekKVKH9DpY4tnRMkMKCFyJ4M4/B/okJTCMmvpgMdLVMWjKEt7Rwa1az68tGZd/ZrwsXZS0oTKLp/g7kELj5DiAOnT0L120=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vmt1uvqK; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec1ac1aed2so60972981fa.3
-        for <linux-pci@vger.kernel.org>; Wed, 03 Jul 2024 02:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719999137; x=1720603937; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RZAn7gmriISgeIoJJsOcj52E6C/GbJNEpwWf2THjDNo=;
-        b=vmt1uvqKCg6aw4oUA0C+i2JpAChj2UPu8860Ye/iyo8CXKVCU82AxC5gTzbo44E6KW
-         cxZwSeUl+e6EKI5MWF15S7d4gmEOS1tnLuosvIkjbj1qa2/bbo+O35DMQfqUFWfQ36m+
-         Zg++/qyV2eQCy1DeBJ2mpLKrzuEjAQampW1AHVkXA0500s7Jcd2oa4DqR4YW24Acy3gz
-         FnWXaH8Jku5u2ynBJq0lGP5E0+zeU7ar9EKGbbFMnZ8AUteUGqya70ozKcKnA69e9wub
-         NxisPSPyv9aCAupn9yCT2FrBwMGqHJP8GYAfhGC+C5Nnhnx2RKjUQo+38g7qMoFS/s5T
-         lJgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719999137; x=1720603937;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RZAn7gmriISgeIoJJsOcj52E6C/GbJNEpwWf2THjDNo=;
-        b=lBiwozSZA0xFPVMQV2rJVv0NwJ+K3QBv3E/RBWNn4GEYYxl7VXXibqytFmno73SUbq
-         q66RGdlkyT7W3vnESlN2AaBA8eL+ExK0dxOY+Lxn5Wnlc+l4Yn4/M6bWO0KahXYhYyPo
-         WRDBtvwrOZGHjFiogDjtEk5pMnHnVkO9G8G3MFANhkdDlaqzcm4hFRqmdV/TrusZV+b+
-         QzH19K/ka14gwLSV5ZeTSLEJa/vHk4Hq7fRRa3qtwNBHdbrV/qSEeSZ+arNxo9Y2DdLf
-         dC7F/QAqGQ+ITO134gtdh42aQAqhVKU6/IATvVCTfsw2Vvpk+pHf8BzQMUuSpCKYsUZu
-         B9yw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXnaiLiFqME4nKW4jDEpcSgAdJH064OysdXL7ThRt0zlv/mrYlysDiXKKk2vYzXLkKnAb/1PfrDOB2B8758SVKEJK8Y/9NmYZB
-X-Gm-Message-State: AOJu0Yz0Uet5PqjDeERNTOGa2e/UvwuXkrdjam7hcMVTf87R1e95Wa2b
-	0LzXxcUECnPJ9rJGbMadKN9zq7KEBgosLhG5SkNtP83StifVZ5nQP5jyWH3krVszv290Xs7tcy5
-	dZMLauuqA2bLtJmWo4e1kQ0JjRC/d+DH84Vqt9A==
-X-Google-Smtp-Source: AGHT+IHP41wi4C+FB8VM4BV/A8lqsduH/pzzkvBBD5gkvGC7yWBrX1owIGvGiTiPL5Irzwb3wJnVgKJK7S7IeZ1QTNo=
-X-Received: by 2002:a2e:a5cb:0:b0:2eb:e258:717f with SMTP id
- 38308e7fff4ca-2ee5e6e01b1mr75953791fa.42.1719999136936; Wed, 03 Jul 2024
- 02:32:16 -0700 (PDT)
+	s=arc-20240116; t=1719999261; c=relaxed/simple;
+	bh=pd1eNj6nuYN/3arxBHZTm6B86vapn84OM4Ftt3uk7Wc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DQCDi8iTnzzK1RzsQXT1++QsCFmKB3Toa0Tc2XxL/kzlg4kR6DftzsRmL7Z0KwnS+VUWfsBbYmSO/1EBhmJw/7K6mcaloK05QaYrrKdAtSdO3+zv1cogYFbiSJYi3FxZF5QpZd2H9Y1mU2Clh/U11wPKkLTNVK7IUvajjSa9sBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idKSNW5a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C04C2BD10;
+	Wed,  3 Jul 2024 09:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719999261;
+	bh=pd1eNj6nuYN/3arxBHZTm6B86vapn84OM4Ftt3uk7Wc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=idKSNW5aIlXXBmQQE6vWRFOpWw505inp9Zl02XR45cvPvenChqSxBg9Wy/RjaHG62
+	 DcHCv4wMi6x9k1aA70xUXnrpFUoVgvnITvz1Ta9pyl/xcn3i+ZJs3e/UAE3Sg/i+uw
+	 RnVyMAXBbvb3ZrqjbYIDwpxfiGhuUn3kh7u4UhvWV7VYEoOmzz2M5JO/f/Xlsdusw5
+	 wlNwYmKDFdv79I+d44n9jjGqJMIxe8asfANGwTZyRBt3XoqwaCPY/q4jrTyP0gIX8J
+	 TMA1zz3yhfA2qlUSwZI55XvlyUq8i5Bi89OKKZjMu19Octff7zIq2aOz8tUFs3hMz6
+	 1C87AQNfxUidQ==
+Message-ID: <97c9484b-e257-4163-a104-3457d59bc69b@kernel.org>
+Date: Wed, 3 Jul 2024 11:33:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703091535.3531-1-spasswolf@web.de>
-In-Reply-To: <20240703091535.3531-1-spasswolf@web.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 3 Jul 2024 11:32:05 +0200
-Message-ID: <CAMRc=Md=PnpHVGGO6Nb_efVZ0a3cMxWbLvYmkka5Wznks70drw@mail.gmail.com>
-Subject: Re: [PATCH] pci: bus: only call of_platform_populate() if CONFIG_OF
- is defined
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, caleb.connolly@linaro.org, 
-	bhelgaas@google.com, amit.pundir@linaro.org, neil.armstrong@linaro.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and
+ RIDE board
+To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com,
+ sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au,
+ davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org,
+ joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org,
+ thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org,
+ linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org,
+ vkoul@kernel.org, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ mcoquelin.stm32@gmail.com
+Cc: robimarko@gmail.com, bartosz.golaszewski@linaro.org, kishon@kernel.org,
+ quic_wcheng@quicinc.com, alim.akhtar@samsung.com, avri.altman@wdc.com,
+ bvanassche@acm.org, agross@kernel.org, gregkh@linuxfoundation.org,
+ quic_tdas@quicinc.com, robin.murphy@arm.com, daniel.lezcano@linaro.org,
+ rui.zhang@intel.com, lukasz.luba@arm.com, quic_rjendra@quicinc.com,
+ ulf.hansson@linaro.org, quic_sibis@quicinc.com, otto.pflueger@abscue.de,
+ luca@z3ntu.xyz, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+ bhupesh.sharma@linaro.org, alexandre.torgue@foss.st.com,
+ peppe.cavallaro@st.com, joabreu@synopsys.com, netdev@vger.kernel.org,
+ lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ ahalaney@redhat.com, krzysztof.kozlowski@linaro.org,
+ u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org,
+ quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com,
+ mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com,
+ quic_bjorande@quicinc.com, quic_msarkar@quicinc.com,
+ quic_devipriy@quicinc.com, quic_tsoni@quicinc.com,
+ quic_rgottimu@quicinc.com, quic_shashim@quicinc.com,
+ quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com,
+ quic_aiquny@quicinc.com, srinivas.kandagatla@linaro.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ kernel@quicinc.com
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-2-quic_tengfan@quicinc.com>
+ <665f6c8c-4f43-4d20-90e9-9e037a942066@kernel.org>
+ <fbeb5969-0b3a-455e-88eb-b83734bf2c50@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <fbeb5969-0b3a-455e-88eb-b83734bf2c50@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 3, 2024 at 11:15=E2=80=AFAM Bert Karwatzki <spasswolf@web.de> w=
-rote:
->
-> If of_platform_populate() is called when CONFIG_OF is not defined this
-> leads to spurious error messages of the following type:
->  pci 0000:00:01.1: failed to populate child OF nodes (-19)
->  pci 0000:00:02.1: failed to populate child OF nodes (-19)
->
-> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF no=
-des of the port node")
-> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-> ---
->  drivers/pci/bus.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index e4735428814d..b363010664cd 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -350,6 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
->
->         pci_dev_assign_added(dev, true);
->
-> +#ifdef CONFIG_OF
->         if (pci_is_bridge(dev)) {
->                 retval =3D of_platform_populate(dev->dev.of_node, NULL, N=
-ULL,
->                                               &dev->dev);
-> @@ -357,6 +358,7 @@ void pci_bus_add_device(struct pci_dev *dev)
->                         pci_err(dev, "failed to populate child OF nodes (=
-%d)\n",
->                                 retval);
->         }
-> +#endif
->  }
->  EXPORT_SYMBOL_GPL(pci_bus_add_device);
->
-> --
-> 2.45.2
->
-> The mentioned error message occur on systems without CONFIG_OF, i.e.
-> x86_64. The call to of_platform_depopulate() in drivers/pci/remove.c
-> does not need #ifdef CONFIG_OF as the return value is not checked (it
-> will most likely be optimized away on platforms witout OF where the
-> of_platform_{de,}populate() functions just return -ENODEV)
->
-> Please CC me when replying, I'm not subscribed to the lists.
->
-> Bert Karwatzki
+On 03/07/2024 11:21, Tengfei Fan wrote:
+>>>         - items:
+>>>             - enum:
+>>> +              - qcom,qcs9100-ride
+>>>                 - qcom,sa8775p-ride
+>>> +          - const: qcom,qcs9100
+>>
+>> This changes existing compatible for sa8775p without any explanation in
+>> commit msg.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> In the next verion patch series, I will provide relevant explanatory 
+> information in this patch commit message.
 
-There's a better (less ifdeffery) fix on the list that I'll pick up
-later today[1].
+TBH, I cannot think of any reasonable explanation for this, especially
+considering rest of the patchset which does not fix resulting dtbs_check
+warning.
 
-Bart
+Best regards,
+Krzysztof
 
-[1] https://lore.kernel.org/lkml/20240702180839.71491-1-superm1@kernel.org/=
-T/
 
