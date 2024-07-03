@@ -1,203 +1,186 @@
-Return-Path: <linux-pci+bounces-9729-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9730-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E6179263A4
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 16:42:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD5DB926464
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 17:10:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3154D1C2169D
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 14:42:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 791D628C15E
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 15:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0F9D17BB1E;
-	Wed,  3 Jul 2024 14:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79C8418130B;
+	Wed,  3 Jul 2024 15:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KmLy5Nlm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e52F586N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2041.outbound.protection.outlook.com [40.107.223.41])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCE815ECC6;
-	Wed,  3 Jul 2024 14:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720017754; cv=fail; b=Laby1QxULVOy2buC8YHpkmcOVSueFlpY9IIpIiuVME2y6TM//UWfZRT7tML+W28RoZX32fksJ2CXUORbLNxxfAvq/VCgkwieQ3NLiRGR4EQwaCtRIsJFA1yndWRH2dw0Hu/CJZyChuP+fbgQvpZPXf9SzuTN8ipqef5pnmbMeEo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720017754; c=relaxed/simple;
-	bh=f7ZJeRADllGIDpM2GHENDn4CtIvbThy6KSVfBfffQMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=R++VSIIe8Wb2B+oWUPZmEw4FskqFyn/ytff/7ODC5Y/GZ23yQFGBjSBtdIvcUSPpIVfL6A3Zqb8RjohEGzmRabIkmH182S/sQ6oVa3gc9x2eCj7HSVmTtBBOYQURjmmUPA8lAzqukP/3FfpMNDSOVIZqLSSfmZ2SucxKjwaY9k4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KmLy5Nlm; arc=fail smtp.client-ip=40.107.223.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U4OoYgQsG4YjhuUrgXcKAPojDmIvFnfDKor5w7jFR6k0/RpW51ftdUkpuugcsz8z2QN/qB6/avI0QluHq5OzMkvXxCDxkcIB+g/7gl9lH7SYxO/Dzd6o1lTqzz0lpvelVEGAMrW7W7k9AA7R6ql4fhm7lfMouxmO0oI40Iqcg8YYvbDq6shStMfWL5zjiXx7jnkw2SLFiPaNktnN1Mjqjlakvb8UTCTAA7D/QReItd4YtySTEhYkMcnZcxaInFfRkaQe/McO+cdO692GCkLEhYwLS2JE9Von+Gd9rQoC0P0ZCSJl2KSkDllEpdrLDJtI8FKWzroYVvA2YfANSTerqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fqwOjsn4Qk86KXssOgIrmd3ORxpmUS3dNtsdqwbaG08=;
- b=kkAYUw5P7IPZWSwMunm5p9JlLpNzDsKETtkyAlHxHR1wlTetf2XKzFWJ9PIqpPSK1H3QcZpO0MzW0UX/85aKSbkR+fpHtzTf4oaK8RMtJai2+xpCcRigknpbauitpQXdRJBiI8ZXo4/VqDn3aCLcPP6WYafq8VFH31NUYTGSn6V4tDjcdpZWV2GkKo39Q237KYvr1MpwxC5wgRQrJE0wq4JQbQddSolRaoEofmOddx8tA3jlMYQGLY92EmVjrjR2WVn6eS4MDr3OSS3iQ+Hz6oDpJOCDMosYt4+2DCVliUPN1g9LB/BDonWdaP/y8+XJS2oVIc5k6JcLmYSrlOqjag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fqwOjsn4Qk86KXssOgIrmd3ORxpmUS3dNtsdqwbaG08=;
- b=KmLy5NlmoNHsn2uCj736fg6/JardTrM70bfWbpZa8KaOF//o/ZosIEI/Mo2m8g8BCOZ7odUKMKvB65k1B5lK9Q9Vj2DRLX75ztB26FUYR3TJgll3bFMzTrJGKqBKCEcdaXourzplsexjvAlcdR1aVgtXsUQDS9Jr80K7DEQCXlQq70/y7wgen5OZSb6y0ucSmw47lgZqtHFTSwcWw3qJPVk16w0bM86KUwLvOLnICOPFvSctkvczTzxn+J8EJhwNMNFJ/1kdfuogrLXaNXprCL8NCEf9a1dGNy1IsA0p+kMxqmfoAaUyjg0XMpZ+dUWpGPFjhtIClXm+e9J+lph6Xg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
- by CH2PR12MB4039.namprd12.prod.outlook.com (2603:10b6:610:a8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.23; Wed, 3 Jul
- 2024 14:42:27 +0000
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::9ec8:2099:689a:b41f]) by CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::9ec8:2099:689a:b41f%5]) with mapi id 15.20.7719.036; Wed, 3 Jul 2024
- 14:42:27 +0000
-Date: Wed, 3 Jul 2024 17:42:05 +0300
-From: Ido Schimmel <idosch@nvidia.com>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>, helgaas@kernel.org
-Cc: Petr Machata <petrm@nvidia.com>, mlxsw@nvidia.com,
-	linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH net-next 3/3] mlxsw: pci: Lock configuration space of
- upstream bridge during reset
-Message-ID: <ZoVjPb_OwbKh7kHu@shredder.lan>
-References: <cover.1719849427.git.petrm@nvidia.com>
- <b2090f454fbde67d47c6204e0c127a07fdeb8ca1.1719849427.git.petrm@nvidia.com>
- <79ee5354-1d70-4059-aa9d-9d9ffa18689a@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79ee5354-1d70-4059-aa9d-9d9ffa18689a@intel.com>
-X-ClientProxiedBy: LO4P123CA0165.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18a::8) To CY5PR12MB6179.namprd12.prod.outlook.com
- (2603:10b6:930:24::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EF21802A3
+	for <linux-pci@vger.kernel.org>; Wed,  3 Jul 2024 15:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720019391; cv=none; b=K1VbjQHwv9/kPACwGiwm2Ou9aICwrkYkAaxzcvO5B6otiJIOXW2nXhhPu7qvxNNPHkiIVuft0eEQr7XWXx6Zx+Mrnp+BdLQzc5HyEESnCtajAvsXkDFbdsxlMbI69+FCpGEMgxBTsbc/YwaG/+Xy603VjgFVKWUUVYF+KZPPlfc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720019391; c=relaxed/simple;
+	bh=fhpejWcF/vfLe6nwrakqQTsElpgre49BCBgEinb2+BE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n6aIZu8NJPrPa/bkt8GmhqpetUV6QdUYdj3o1PTP4jZRGVyEfliDEzLqCoSlNVJcSs1hgmkUJK/czRMQuB/UsS1USCx+cVnp2OSk8lfvxRHNG9Ni5H9JTWK/ykaQivYzyI3oM2y1JrjM/9Z8QBXimtAj8McKHrgi+KhjtEVC44c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e52F586N; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720019388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OwJT/oF0rqnt+S31sg05vpTbadEupYIHlD2ocZCHgDI=;
+	b=e52F586NIB84ITfcy2V8nSvLTtElmJHPUfmPuuDiZd9zwPiNVk1909O1xNXgGTzV8Le+fH
+	NfFAbc7XZZDP6ym/1mQt81SWERqw/d1OeHPN3skISyh8yjK4EOlfgPJwLOywaShql0/OFx
+	kkwLXl5vT8l40vYZifvcvwpdCCsqzEM=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-353-CwZP433GPvCqQzlJgtrhsQ-1; Wed, 03 Jul 2024 11:09:47 -0400
+X-MC-Unique: CwZP433GPvCqQzlJgtrhsQ-1
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4450544eaadso69206151cf.1
+        for <linux-pci@vger.kernel.org>; Wed, 03 Jul 2024 08:09:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720019382; x=1720624182;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OwJT/oF0rqnt+S31sg05vpTbadEupYIHlD2ocZCHgDI=;
+        b=gcRd3CTVuokJcGBiNXePc9kA9yXaw+eIU0l6HOa6DeIloFYT4xTOuk9SKs82MLqyZE
+         WMqcsVPMrOvqgkCakmIdc+mY5y+/2FLjuaTYRVpMcQkQJe04mwVbJIP/vjMFEofW18C7
+         z9F+iTI3yQ6bSqTSMFSVfOcojIvxvZjuBtiBqGADll2Gi99pdXEgEeHFmpLAgOlpQ1ZO
+         tsP8T0dq6brVAQX0JVrFaGaM1SZ6vB6Sl7EuEgbYQOhztLVbgrIS4Ej9nKtVcKj/3Zv+
+         RnPA9WOorzNKTdIYEaCSqi3+jOAxLz9Qp4wO1mQhkqNExQtU7hCrzd1Ceem6Nc1bWwn3
+         237g==
+X-Forwarded-Encrypted: i=1; AJvYcCWtdm1tNlUmsetGm9xjz3/ODI/2A3S7eFKo1KtOI1z2kX7H7G7mFMCNj1XLkyiK+5majrVObs2VvhLIoCuVY3hUP8sPTKizvoJe
+X-Gm-Message-State: AOJu0Yx9HCnChr80pvhljJHT0YtPwWpV8TjO3BOKxr7IBpzW9LFvRcHQ
+	VH1rTN15CgvDOhtqS4r/CDgaALDrXklwu0hRdjjoWxnz7xI2uj2DLe3ew84enad0rJx0MBahMz6
+	VYFhqFr55yHN6hgorJxQGknSHEbPP1qkGjkEhBmBqGLAE/X0bGarAGypljg==
+X-Received: by 2002:ac8:7d84:0:b0:444:b495:e94d with SMTP id d75a77b69052e-44662c99f4bmr119753101cf.3.1720019381980;
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8jWmpy5/3+Y1qV1pkAlEofbtK+RF6spB2E3wXQKII8gdILaaxSAxoLFic14g5Q4iTwcc7CA==
+X-Received: by 2002:ac8:7d84:0:b0:444:b495:e94d with SMTP id d75a77b69052e-44662c99f4bmr119751991cf.3.1720019381501;
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::40])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4465c4bf7ecsm43222571cf.80.2024.07.03.08.09.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+Date: Wed, 3 Jul 2024 10:09:36 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au, 
+	davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org, 
+	joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org, 
+	thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org, 
+	linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org, vkoul@kernel.org, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com, 
+	robimarko@gmail.com, quic_gurus@quicinc.com, bartosz.golaszewski@linaro.org, 
+	kishon@kernel.org, quic_wcheng@quicinc.com, alim.akhtar@samsung.com, 
+	avri.altman@wdc.com, bvanassche@acm.org, agross@kernel.org, 
+	gregkh@linuxfoundation.org, quic_tdas@quicinc.com, robin.murphy@arm.com, 
+	daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com, 
+	quic_rjendra@quicinc.com, ulf.hansson@linaro.org, quic_sibis@quicinc.com, 
+	otto.pflueger@abscue.de, quic_rohiagar@quicinc.com, luca@z3ntu.xyz, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, bhupesh.sharma@linaro.org, 
+	alexandre.torgue@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com, 
+	netdev@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	krzysztof.kozlowski@linaro.org, u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org, 
+	quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com, 
+	mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com, 
+	quic_bjorande@quicinc.com, quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, 
+	quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com, quic_shashim@quicinc.com, 
+	quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com, 
+	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, kernel@quicinc.com
+Subject: Re: [PATCH 29/47] dt-bindings: net: qcom,ethqos: add description for
+ qcs9100
+Message-ID: <u5ekupjqvgoehkl76pv7ljyqqzbnnyh6ci2dilfxfkcdvdy3dp@ehdujhkul7ow>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-30-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|CH2PR12MB4039:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5022029f-948c-4cd5-9856-08dc9b6e5c29
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?J9rBeG7yLvsN5acvgr5vT/w3LWefzN1BVvQoFE+xIqFnKQZFMY0sI3DfpyQm?=
- =?us-ascii?Q?tmiZM3XfS4h+lPgZgNAeLBlIPYynpQeC5lmlYSiSBoV5b6KbHG3MVTefp+wr?=
- =?us-ascii?Q?0KgI1PEGqVjcC/rVzO5t+QCijWvMORJZDb8/17Xk6DAYdWlEW3SgrzIF4aZ2?=
- =?us-ascii?Q?9dMtTlMj84H6KACI4EbHwCVS42z0wplwAsCmmxwEcEpF8smv8Ws8WBboisXC?=
- =?us-ascii?Q?bgA4SIKY2l2RMSAA6A274nTQbQctLrCDqXg7G8mrQx7sPPP8N9xmjczZ3kWt?=
- =?us-ascii?Q?Unv9AfLvcNOCy0DCiBENhRX+pMU8rp5adTHD+1Q/E7L7Qc5ljAV4aoVCoYF0?=
- =?us-ascii?Q?P/q+OnQ7w3a4By+q5Vk0ryATllrrQ+hSxrMl5QpbcMTmJBzwR/PFC1Ty+j21?=
- =?us-ascii?Q?Rv1G8KPqVocjyJ+j8wFdrgV/goWEG4lYoNLMRHx0NupTnsphYbvualcI8d7f?=
- =?us-ascii?Q?H5IbwrOMZiMNjnqURTCrpa+znRU+Hnkjnr5tSil4vhhzg19P3U/7AmK6HWz5?=
- =?us-ascii?Q?WILpdlcrUpV5RwLrLWNOz6TwxYYYb29IJ5IFD087sKWMKkozQ4kA6MndrZmf?=
- =?us-ascii?Q?STOb8Csk4gWBLrxOE3yCWS06MnGYrC6sAgZrEx0beNWcT6HBVNL1/r61Zmxh?=
- =?us-ascii?Q?L/T4jMpZol4ZeFvHY3UcPjauuw3+4SSVKfw9nq039Vl+zXSTvOvAKE/uD/Fc?=
- =?us-ascii?Q?gc/7V42xhu7xMBbaLk28U5h3aUoa1fHgHj0zdw7Fps0rG/GkP0V6hn/NUUAb?=
- =?us-ascii?Q?cWfYE+/kl2u6kwr1fAGoemoDIoxISIJW61SnkIBBiMTLqcUigj3bB3PLwNxh?=
- =?us-ascii?Q?EU9eJYq/PWtOAmy9bYrvfrEZrdDTkOZY6uerwVqLpt50ccp9XpwJVPHnV2ig?=
- =?us-ascii?Q?WLfmzG2HeHETI9Rf4xkq7k2OAQd+dZXW60LDRETvMXmmertiJ2Ud3OCTlmIA?=
- =?us-ascii?Q?cC5EJOlo8jVhuqpOlW0vCtZjzvUw8yZkxYNRA4A2saAXTDjSeJGq4n01ivq/?=
- =?us-ascii?Q?kHUtiXCWpJmjfJcswkGErclf4Nra4rgQb56J1nTbWW/Tx3emltDLjYLsDdX+?=
- =?us-ascii?Q?ZJeTaYednX2q+YpB8htpUq2dVnIkODjOBNIZPn1XS4r2Zp7zON789wBHP8dy?=
- =?us-ascii?Q?sdg8kROe8VG1TSo6Q829aWyxk+9Ws/PGVclnx/9AnFPsgVQOLEc2KqT5LXR6?=
- =?us-ascii?Q?DI7m5HgYqA7W/Huq9eRbG/K01r/iCbyYpO/vJA+ovx5H8+HgeMCtb4zY3pzq?=
- =?us-ascii?Q?cGnvYrAUyPhnZxtMMntl4hJgO6ivAuBHt1CttmmdU1fChCPQUFbDkTdGJ0lo?=
- =?us-ascii?Q?L7ckvyzNUVDP9rRYKtJnq/VPYV/LjqIMTmg4j07VtAR6LMevOZKLe3G27tSh?=
- =?us-ascii?Q?9dwXSqo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gHwy/D2irqQxJMXIoxtgPOp3PgnTFfYds+qg0nUL0aqJsfteep1eoyC45ouG?=
- =?us-ascii?Q?giJAPepAzT7coGhauowE8goyOZr4EAogH4N9sa0ULV8vsKYFiGJ84riuvXa9?=
- =?us-ascii?Q?Zi7MBaXSlQUsGWsh/3ABJIL5f5IFsPNphi4mOX6iou+VFuYmgk2d6cXiEo0M?=
- =?us-ascii?Q?rwkLfuQX4rIrV8iiBUwu/UGzsIu+eMU/5kzO5ROM9xRwEMDgu373mhFMNEpz?=
- =?us-ascii?Q?aB0KHBwcCH/Vv+z272WrbbIbrF6DOnCBaySbHMSbVJlIXqpqo0tXPLvr0xLN?=
- =?us-ascii?Q?JJ12QsyJaF3Pi4c8BXCZBqecLoTZXt7Si3Apz7MPTKwR08BtR2A9GwUvGU8N?=
- =?us-ascii?Q?XDB5maeo+OprxKgv/gUfaPVonFMVPC2HdDjvhdCwFwqqAjxRIaIOJPtpvnS3?=
- =?us-ascii?Q?aVvljJvqmPZfplxU1DT29XVde4sewdYdOnRGhQ36xHbrDRZZWUg5gDowlYBa?=
- =?us-ascii?Q?H+yCvfCPkK+o9mnHzQqkusUumTF18RwKfxwKDFPWUMDVZQP1h+zRR7faBBTC?=
- =?us-ascii?Q?zTZTFy1FZizwlDigY0VdaW9tTV/eilKvomH+OBNWigoI1fWNTvMGrOIzidxh?=
- =?us-ascii?Q?LqSdzUWvjJlcBl+VuIl3On63NbdidQe6gfb4qP9N25ZAT3n97Ik0PH5bk/mn?=
- =?us-ascii?Q?1w1fquP8S7b9nlUuDh9l5I/RZFWZNvU5QIa39krqRC2LqoycTcgF8pCyZiO+?=
- =?us-ascii?Q?epl/9OZ/2coJs0MRCnYKKj8HTxz1RLIUVLKRBWt8C6ffSiFaqu/CViL3/AyU?=
- =?us-ascii?Q?H3CCUNtC2cM8hUp57/RO52a7xVGItzMtb0o09YD1YdOguJzUwXc+FwqmZtCp?=
- =?us-ascii?Q?BrXJ+/heClPhnjCb1vJPPryX5ortSTMyJrHWD9AFZ8W93uWrlRAlO3uZ2hgV?=
- =?us-ascii?Q?dH14BO7nIiWCMBnIXzL5LD/Mk1fZsWFaziQXpXnPw7xmmT3LqbZnFbHbnRva?=
- =?us-ascii?Q?bhNDukOuAvKitCv5vqsysZt7xJA2o0DJcHQx0G7tKwcp8t0jY6f9WlSI4cSJ?=
- =?us-ascii?Q?JrlOWyK5pN+IEpITdfLLg/GQZoeyvvNR9k3QgjrmhVe0gsa+efWjrT6U49JL?=
- =?us-ascii?Q?Q2MVvdbDQYF0c4aDA/eNyx4Xgp90MOBbZbSTWxVO9McwroRrlKbjdaYtWHXY?=
- =?us-ascii?Q?W+RjOKhKaWyTReRmu03Jj6+amXolkpn8j7k/wfikAqXPFBjohYQZCOW/kDUH?=
- =?us-ascii?Q?BZsqVsnJV5ZSKlog1O2OKnFzlVFZzn1+zqy20Lf9Z3zXjZfNPIAn8wa9hCpe?=
- =?us-ascii?Q?fkvxj++ds+6u6bjgWJQqyA8ugMKgBr9KXNLkKu7THHrBn95EqNQetKbU00Ix?=
- =?us-ascii?Q?6Ifzo2/MK5F6g3SIGI9hHW1UfoNwnyWfiEeIkmLIifsc++hn0eX2ULXBKlbd?=
- =?us-ascii?Q?vy6wrwyXJChyD2B8Yf+PHDgSU4UgroZraiuIq/Pk4JPOy6jKspN9BOuPdnIM?=
- =?us-ascii?Q?c5S08OzdHATpe8drhwMWx8RJ7Adzj9hXMhKZYqKE7uM69OErMp52lkZZa3++?=
- =?us-ascii?Q?iy3JL33Lywvyg5AMglMsGJdA6hrzUzRbzD9irMZC154Hi8HaqgcfmR9Eq3wr?=
- =?us-ascii?Q?sInJ5vWh9RWdzEgoC6/TFPvgBooE41A702dGvjNJ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5022029f-948c-4cd5-9856-08dc9b6e5c29
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 14:42:27.6866
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SzzaumycEoL2eUIafjclZkUaVh36IoFuCsHgbuFWOzFNtnqt82igqGt2iIHBciakefpcWAD+Recu6VJTan0zNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4039
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703025850.2172008-30-quic_tengfan@quicinc.com>
 
-On Tue, Jul 02, 2024 at 09:35:50AM +0200, Przemek Kitszel wrote:
-> On 7/1/24 18:41, Petr Machata wrote:
-> > From: Ido Schimmel <idosch@nvidia.com>
-> > 
-> > The driver triggers a "Secondary Bus Reset" (SBR) by calling
-> > __pci_reset_function_locked() which asserts the SBR bit in the "Bridge
-> > Control Register" in the configuration space of the upstream bridge for
-> > 2ms. This is done without locking the configuration space of the
-> > upstream bridge port, allowing user space to access it concurrently.
-> 
-> This means your patch is a bugfix.
-> 
-> > 
-> > Linux 6.11 will start warning about such unlocked resets [1][2]:
-> > 
-> > pcieport 0000:00:01.0: unlocked secondary bus reset via: pci_reset_bus_function+0x51c/0x6a0
-> > 
-> > Avoid the warning by locking the configuration space of the upstream
-> > bridge prior to the reset and unlocking it afterwards.
-> 
-> You are not avoiding the warning but protecting concurrent access,
-> please add a Fixes tag.
+On Wed, Jul 03, 2024 at 10:58:32AM GMT, Tengfei Fan wrote:
+> Add the compatible for the MAC controller on qcs9100 platforms. This MAC
+> works with a single interrupt so add minItems to the interrupts property.
+> The fourth clock's name is different here so change it. Enable relevant
+> PHY properties. Add the relevant compatibles to the binding document for
+> snps,dwmac as well.
 
-The patch that added the missing lock in PCI core was posted without a
-Fixes tag and merged as part of the 6.10 PR. See commit 7e89efc6e9e4
-("PCI: Lock upstream bridge for pci_reset_function()").
-
-I don't see a good reason for root to poke in the configuration space of
-the upstream bridge during SBR, but AFAICT the worst that can happen is
-that reset will fail and while it is a bug, it is not a regression.
-
-Bjorn, do you see a reason to post this as a fix?
-
-Thanks
+This description doesn't match what was done in this patch, its what
+Bart did when he made changes to add the sa8775 changes. Please consider
+using a blurb indicating that this is the same SoC as sa8775p, just with
+different firmware strategies or something along those lines?
 
 > 
-> > 
-> > [1] https://lore.kernel.org/all/171711746953.1628941.4692125082286867825.stgit@dwillia2-xfh.jf.intel.com/
-> > [2] https://lore.kernel.org/all/20240531213150.GA610983@bhelgaas/
-> > 
-> > Cc: linux-pci@vger.kernel.org
-> > Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-> > Signed-off-by: Petr Machata <petrm@nvidia.com>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 1 +
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml  | 3 +++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> index 6672327358bc..8ab11e00668c 100644
+> --- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> +++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> @@ -20,6 +20,7 @@ properties:
+>    compatible:
+>      enum:
+>        - qcom,qcs404-ethqos
+> +      - qcom,qcs9100-ethqos
+>        - qcom,sa8775p-ethqos
+>        - qcom,sc8280xp-ethqos
+>        - qcom,sm8150-ethqos
+> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> index 3bab4e1f3fbf..269c21779396 100644
+> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> @@ -67,6 +67,7 @@ properties:
+>          - loongson,ls2k-dwmac
+>          - loongson,ls7a-dwmac
+>          - qcom,qcs404-ethqos
+> +        - qcom,qcs9100-ethqos
+>          - qcom,sa8775p-ethqos
+>          - qcom,sc8280xp-ethqos
+>          - qcom,sm8150-ethqos
+> @@ -582,6 +583,7 @@ allOf:
+>                - ingenic,x1600-mac
+>                - ingenic,x1830-mac
+>                - ingenic,x2000-mac
+> +              - qcom,qcs9100-ethqos
+>                - qcom,sa8775p-ethqos
+>                - qcom,sc8280xp-ethqos
+>                - snps,dwmac-3.50a
+> @@ -639,6 +641,7 @@ allOf:
+>                - ingenic,x1830-mac
+>                - ingenic,x2000-mac
+>                - qcom,qcs404-ethqos
+> +              - qcom,qcs9100-ethqos
+>                - qcom,sa8775p-ethqos
+>                - qcom,sc8280xp-ethqos
+>                - qcom,sm8150-ethqos
+> -- 
+> 2.25.1
+> 
+
 
