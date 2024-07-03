@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-9692-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9693-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F44192528F
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:41:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2E5B9252A3
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:45:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33B6D1C2289C
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:41:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69DCF1F2504C
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:45:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288B33A1B5;
-	Wed,  3 Jul 2024 04:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 377DA4503C;
+	Wed,  3 Jul 2024 04:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdQs7Pgc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGCvU4O7"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02E5288D1;
-	Wed,  3 Jul 2024 04:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF32A17BCE;
+	Wed,  3 Jul 2024 04:45:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719981659; cv=none; b=e16Y/iClyQjf3DwUzgqQ7CvU5eXkUK2UBzt655726uB3A4S8WGzrWMAMULXdbM7EH11ni/KnoYWMyhAu4JKZjqJDKGWwAsAWyWLB1RM3RbGDD7yUtnHhCWuuay9MtSzf6jZJZ7FU7Hr9FHKXZqToxOzRMTHlLYT6efstFKH9FYI=
+	t=1719981934; cv=none; b=hbLkvVlcax+ngdEH2AUGAKh4EonDjTw/CFo2MoK0TcNNBnY9u56mLgSF7wL/Y06Sscx9s0G9oQVGL/zO9UEI3E570JZ4TlL6nNBgO0GftoWRmuJ933jkESxaRI3chFkzwzXfhBV6+Ao77ot7H9SEO4oqO7DKvi6O6ECKsH0d4MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719981659; c=relaxed/simple;
-	bh=b86s8S/BWvsC8b0Mn14aMXJORMOj66Dtkv35CE2w6/I=;
+	s=arc-20240116; t=1719981934; c=relaxed/simple;
+	bh=ivVCeA51TNNPsWY2k1Ev7Ipke2mr3itsaOxAPyIsJRE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I4OgblM6KtlEZK1nD2kZHySuvfEV6k5vzSPNxntkncGPqdntFevmF1L+RkuhUiii2rCXbvvWq3j1uquaz/WZhyo5e3myiLgQShZmOaUOvywGQS3KO8YvfTgBtakW8UW8Wu4Ew/cPt0pz0Rfo/sAcTUgkq/IZMhVZIPgZ3TEAqPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdQs7Pgc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937ECC32781;
-	Wed,  3 Jul 2024 04:40:29 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Pyas6SVPRlvXgcWxITJcxUSbkN4RC84oFIZsSRN/Dv2EkAWS8D9cuyumvf3YnC+tVl8fh4FuNrI9w8xyAfuIOuWFyjlOxp/l4DE/x0EMAZfQ1pFwh3hqStAWEZ0BFpPsbLil7lEoFoyuF/2dhX6k1fAAw/S1SIVYDMgGYyVN/G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGCvU4O7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7995AC32781;
+	Wed,  3 Jul 2024 04:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719981658;
-	bh=b86s8S/BWvsC8b0Mn14aMXJORMOj66Dtkv35CE2w6/I=;
+	s=k20201202; t=1719981933;
+	bh=ivVCeA51TNNPsWY2k1Ev7Ipke2mr3itsaOxAPyIsJRE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IdQs7PgcbxsPwEncmdYaFJmEXnmYSVcHoJr79LohJ1CYXuI/JRvZMhO1hcr18Q+3o
-	 6/nxa2D8sj3fytR16Fq+gNRwD+T6TlovWNZvbslMHfBeJeHGeoERJImjNBrdBhZaGY
-	 EkmM6PtmSK1f894i4a68Td4K13OpcHsT8xQGnljlKzfAxpV64EKxrr48t7LH4UXVFS
-	 2F2x+BoUXDyko4wCeNYLtGp/FeebprTLgySeglF27lgP4oedQF42+T63P5dgtSABZL
-	 Bo6OhpmHgeqpe1OTT/mGGbyzyEPbMstxECbphZixRogIgh85OBkrJfqcU4vMBXv59q
-	 g51bSRCCZzisQ==
-Message-ID: <8593db2e-8a69-418f-b00e-8fafe434dd30@kernel.org>
-Date: Wed, 3 Jul 2024 06:40:27 +0200
+	b=lGCvU4O78jSX5Z/RvG6MGLCGu3VOiw/KJ2zd+NsxhJmZchr9MD2NOK9ST1AXns3zX
+	 rFdrprQoXklrYc5cA1+pUDI9IvxmL/IQ2hB09EahjNP5/wgwVSdJra3s8dNHsqRC1B
+	 hoMZicWiuJEvPMM+AwB8EfChaaHBfGYrgIRbEbI/xEy4w74/FddnT6Hf23grJEmXGz
+	 ErXgLMKa0MbGdZPh7ia42T9Ig9ISFxM60Ok45BRjDoq59SjS2WzP4Xn8qeFMPOt6bX
+	 cM40OSOiTGUo3wxiCxPkfxfNqzHVkXWWf9RT6A7oicjlQ0rIXXSj8b8Af6YEdf71dQ
+	 qiRerIFmh0gtg==
+Message-ID: <7417fd8c-e852-45ee-bac9-d92921036e2f@kernel.org>
+Date: Wed, 3 Jul 2024 06:45:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/47] arm64: dts: qcom: qcs9100: Introduce QCS9100 SoC
- dtsi
+Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
 To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
  konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com,
@@ -92,7 +91,7 @@ Cc: robimarko@gmail.com, quic_gurus@quicinc.com,
  linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
  kernel@quicinc.com
 References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703025850.2172008-3-quic_tengfan@quicinc.com>
+ <20240703035735.2182165-1-quic_tengfan@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -138,82 +137,41 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240703025850.2172008-3-quic_tengfan@quicinc.com>
+In-Reply-To: <20240703035735.2182165-1-quic_tengfan@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/07/2024 04:58, Tengfei Fan wrote:
-> Introduce QCS9100 SoC dtsi, QCS9100 is mainly used in IoT products.
-> QCS9100 is drived from SA8775p.
-> The current QCS9100 SoC dtsi is directly renamed from the SA8775p SoC
-> dtsi.
-> The QCS9100 platform is currently in the early design stage. Currently,
-> Both the QCS9100 platform and SA8775p platform use non-SCMI resources,
-> In the future, the SA8775p platform will transition to using SCMI
-> resources and it will have new sa8775p-related device tree.
-> This QCS9100 SoC dtsi remains consistent with the current SA8775p SoC
-> dtsi, except for updating the following sa8775p-related compatible names
-> to the qcs9100-related compatible name:
->   - qcom,sa8775p-clk-virt
->   - qcom,sa8775p-mc-virt
->   - qcom,sa8775p-adsp-pas
->   - qcom,sa8775p-cdsp-pas
->   - qcom,sa8775p-cdsp1-pas
->   - qcom,sa8775p-gpdsp0-pas
->   - qcom,sa8775p-gpdsp1-pas
->   - qcom,sa8775p-gcc
->   - qcom,sa8775p-ipcc
->   - qcom,sa8775p-config-noc
->   - qcom,sa8775p-system-noc
->   - qcom,sa8775p-aggre1-noc
->   - qcom,sa8775p-aggre2-noc
->   - qcom,sa8775p-pcie-anoc
->   - qcom,sa8775p-gpdsp-anoc
->   - qcom,sa8775p-mmss-noc
->   - qcom,sa8775p-trng
->   - qcom,sa8775p-ufshc
->   - qcom,sa8775p-qmp-ufs-phy
->   - qcom,sa8775p-qce
->   - qcom,sa8775p-lpass-ag-noc
->   - qcom,sa8775p-usb-hs-phy
->   - qcom,sa8775p-dc-noc
->   - qcom,sa8775p-gem-noc
->   - qcom,sa8775p-dwc3
->   - qcom,sa8775p-qmp-usb3-uni-phy
->   - qcom,sa8775p-gpucc
->   - qcom,sa8775p-smmu-500
->   - qcom,sa8775p-dwmac-sgmii-phy
->   - qcom,sa8775p-llcc-bwmon
->   - qcom,sa8775p-cpu-bwmon
->   - qcom,sa8775p-llcc
->   - qcom,sa8775p-videocc
->   - qcom,sa8775p-camcc
->   - qcom,sa8775p-dispcc0
->   - qcom,sa8775p-pdc
->   - qcom,sa8775p-aoss-qmp
->   - qcom,sa8775p-tlmm
->   - qcom,sa8775p-imem
->   - qcom,sa8775p-smmu-500
->   - qcom,sa8775p-rpmh-clk
->   - qcom,sa8775p-rpmhpd
->   - qcom,sa8775p-cpufreq-epss
->   - qcom,sa8775p-dispcc1
->   - qcom,sa8775p-ethqos
->   - qcom,sa8775p-nspa-noc
->   - qcom,sa8775p-nspb-noc
->   - qcom,sa8775p-qmp-gen4x2-pcie-phy
->   - qcom,sa8775p-qmp-gen4x4-pcie-phy
-> 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
->  .../dts/qcom/{sa8775p.dtsi => qcs9100.dtsi}   | 112 +++++++++---------
->  1 file changed, 56 insertions(+), 56 deletions(-)
->  rename arch/arm64/boot/dts/qcom/{sa8775p.dtsi => qcs9100.dtsi} (97%)
-> 
+On 03/07/2024 05:56, Tengfei Fan wrote:
+> Introduce support for the QCS9100 SoC device tree (DTSI) and the
+> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+> While the QCS9100 platform is still in the early design stage, the
+> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+> mounts the QCS9100 SoC instead of the SA8775p SoC.
 
-How do any things compile at this point? Please squash the patches. Your
-patchset must be bisectable at build level (dtschema validation does not
-have to).
+The same huge patchset, to huge number of recipients was sent twice.
+First, sorry, this is way too big. Second, it has way too many
+recipients, but this is partially a result of first point. Only
+partially because you put here dozen of totally unrelated emails. Sorry,
+that does not make even sense. See form letter at the end how this
+works. Third, sending it to everyone twice is a way to annoy them off
+twice... Fourth,
+
+Please split your work and do not cc dozen of unrelated folks.
+
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC (and consider --no-git-fallback argument). It might
+happen, that command when run on an older kernel, gives you outdated
+entries. Therefore please be sure you base your patches on recent Linux
+kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline), work on fork of kernel
+(don't, instead use mainline) or you ignore some maintainers (really
+don't). Just use b4 and everything should be fine, although remember
+about `b4 prep --auto-to-cc` if you added new patches to the patchset.
+</form letter>
 
 Best regards,
 Krzysztof
