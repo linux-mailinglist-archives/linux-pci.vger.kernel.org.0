@@ -1,219 +1,145 @@
-Return-Path: <linux-pci+bounces-9705-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9706-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7361D9256BF
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 11:26:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B49949256D0
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 11:32:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 296522890FD
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 09:26:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E0A5281650
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 09:32:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D21313D613;
-	Wed,  3 Jul 2024 09:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CFE3136E3A;
+	Wed,  3 Jul 2024 09:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lbbWWjue"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vmt1uvqK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A50137760;
-	Wed,  3 Jul 2024 09:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96511755B
+	for <linux-pci@vger.kernel.org>; Wed,  3 Jul 2024 09:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719998748; cv=none; b=ctfa4EcCYJwCU/qCAfGSK98tPW2WspiGdeul27Ko9TJSUQ0BJdYhy9L4/Pn70kSxF4eM5VCEPZldnhEA0X0gkMaIkpL//BJZDoxpzGO5CeAwi+j6UTAg9x7Rk5epmr+ts3KsyD9Emrsaldp5kICRZvgI07bIOpBcrj2Ev8S1Aeo=
+	t=1719999140; cv=none; b=XbYLRqB5fRDb3eY+cD/NPW3QxvcGoSMO9JTTtj6Go4nSN3GcuA2JBqW+mga9dWlSmZbVgdhVIwYgcke9aiEWI5bl6LMVnEABwyvywyxPzmRMtsiJCveULBqx4CSC0l8EYSdwvQjcVXkpw63wu2pOohzdW2cdRRG+9ZoJ1uBtnG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719998748; c=relaxed/simple;
-	bh=c0JvzLh5DpeNsGgQt+W9f6HSLP0IxixpFFDQ/B5hKCw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SIlTEj1QKNOSpmHiyRyZAcnpsj2q+mW6Z3DkjrDOLE3bNdCS6A8aHSuXRb9CKSTkoF1ol+7xS2guGFz490VWiOR6ruZ6G4RtYV6kZwQfbzvWWQ5WGkr2clUP23Z05OUwwGvr9fMXx2UBoPVfcuKm9ksLPC3mXNySrHumJYyNZMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lbbWWjue; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4637OU4R003862;
-	Wed, 3 Jul 2024 09:25:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ejzttzK64DsVwhu9fW5iFUwBdmhQXcGVqYJFfm7aIMQ=; b=lbbWWjueKNvpEWjA
-	RAA5DftQD3q0+U6ZgGao7lzjhJRSMcYSaEOsweno5jTAQvs4hpHbzUb7ctdrxz5X
-	Dd3GhhNQ3C0WLrFdsZmVo2ga1Tc5BMOi585odphd3MSApS2fx0DqwGFEiktRzoQX
-	mc65K3bS8okVJ0QdKNSaRBDFOMXsQ1NCttFYR1Lw53jP+BfLWBoUMxmKw8Q5faee
-	CREPgsKN4yEK6QBPotgtPcUH4TUQjPl6mGpwugG4wDKTJ6FJhtJGvZHR1bbT/Tcx
-	5YGBPKV5k7NavnZA48gOL0Bgsxg+VfA8Ul/GgA8hPt4OrM2lwborKxVQXN3VgN8U
-	mmC8Sg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4027yfbbtd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 09:25:01 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4639P0HE027548
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 09:25:00 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 3 Jul 2024
- 02:24:38 -0700
-Message-ID: <d81740ba-0b15-4f9f-be75-9958ed9f032c@quicinc.com>
-Date: Wed, 3 Jul 2024 17:24:36 +0800
+	s=arc-20240116; t=1719999140; c=relaxed/simple;
+	bh=wxNTZ9QPmv/pOHH5Udq9kaG7vGTr4w1mp6WoX2yWyRo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sZoF7CCP83nrhLIT+GYHGVNN1Zfm/2R+w6AQWFaWPuA48TOKRe/2CyU0ifNPA7NgBAjxNzan3/p0dekKVKH9DpY4tnRMkMKCFyJ4M4/B/okJTCMmvpgMdLVMWjKEt7Rwa1az68tGZd/ZrwsXZS0oTKLp/g7kELj5DiAOnT0L120=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vmt1uvqK; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec1ac1aed2so60972981fa.3
+        for <linux-pci@vger.kernel.org>; Wed, 03 Jul 2024 02:32:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719999137; x=1720603937; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RZAn7gmriISgeIoJJsOcj52E6C/GbJNEpwWf2THjDNo=;
+        b=vmt1uvqKCg6aw4oUA0C+i2JpAChj2UPu8860Ye/iyo8CXKVCU82AxC5gTzbo44E6KW
+         cxZwSeUl+e6EKI5MWF15S7d4gmEOS1tnLuosvIkjbj1qa2/bbo+O35DMQfqUFWfQ36m+
+         Zg++/qyV2eQCy1DeBJ2mpLKrzuEjAQampW1AHVkXA0500s7Jcd2oa4DqR4YW24Acy3gz
+         FnWXaH8Jku5u2ynBJq0lGP5E0+zeU7ar9EKGbbFMnZ8AUteUGqya70ozKcKnA69e9wub
+         NxisPSPyv9aCAupn9yCT2FrBwMGqHJP8GYAfhGC+C5Nnhnx2RKjUQo+38g7qMoFS/s5T
+         lJgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719999137; x=1720603937;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RZAn7gmriISgeIoJJsOcj52E6C/GbJNEpwWf2THjDNo=;
+        b=lBiwozSZA0xFPVMQV2rJVv0NwJ+K3QBv3E/RBWNn4GEYYxl7VXXibqytFmno73SUbq
+         q66RGdlkyT7W3vnESlN2AaBA8eL+ExK0dxOY+Lxn5Wnlc+l4Yn4/M6bWO0KahXYhYyPo
+         WRDBtvwrOZGHjFiogDjtEk5pMnHnVkO9G8G3MFANhkdDlaqzcm4hFRqmdV/TrusZV+b+
+         QzH19K/ka14gwLSV5ZeTSLEJa/vHk4Hq7fRRa3qtwNBHdbrV/qSEeSZ+arNxo9Y2DdLf
+         dC7F/QAqGQ+ITO134gtdh42aQAqhVKU6/IATvVCTfsw2Vvpk+pHf8BzQMUuSpCKYsUZu
+         B9yw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXnaiLiFqME4nKW4jDEpcSgAdJH064OysdXL7ThRt0zlv/mrYlysDiXKKk2vYzXLkKnAb/1PfrDOB2B8758SVKEJK8Y/9NmYZB
+X-Gm-Message-State: AOJu0Yz0Uet5PqjDeERNTOGa2e/UvwuXkrdjam7hcMVTf87R1e95Wa2b
+	0LzXxcUECnPJ9rJGbMadKN9zq7KEBgosLhG5SkNtP83StifVZ5nQP5jyWH3krVszv290Xs7tcy5
+	dZMLauuqA2bLtJmWo4e1kQ0JjRC/d+DH84Vqt9A==
+X-Google-Smtp-Source: AGHT+IHP41wi4C+FB8VM4BV/A8lqsduH/pzzkvBBD5gkvGC7yWBrX1owIGvGiTiPL5Irzwb3wJnVgKJK7S7IeZ1QTNo=
+X-Received: by 2002:a2e:a5cb:0:b0:2eb:e258:717f with SMTP id
+ 38308e7fff4ca-2ee5e6e01b1mr75953791fa.42.1719999136936; Wed, 03 Jul 2024
+ 02:32:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/47] arm64: dts: qcom: qcs9100: Add QCS9100 RIDE board
- dts
-To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <djakov@kernel.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <jassisinghbrar@gmail.com>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <manivannan.sadhasivam@linaro.org>, <will@kernel.org>,
-        <joro@8bytes.org>, <conor@kernel.org>, <tglx@linutronix.de>,
-        <amitk@kernel.org>, <thara.gopinath@gmail.com>,
-        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
-        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>
-CC: <robimarko@gmail.com>, <bartosz.golaszewski@linaro.org>,
-        <kishon@kernel.org>, <quic_wcheng@quicinc.com>,
-        <alim.akhtar@samsung.com>, <avri.altman@wdc.com>, <bvanassche@acm.org>,
-        <agross@kernel.org>, <gregkh@linuxfoundation.org>,
-        <quic_tdas@quicinc.com>, <robin.murphy@arm.com>,
-        <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <quic_rjendra@quicinc.com>,
-        <ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
-        <otto.pflueger@abscue.de>, <luca@z3ntu.xyz>,
-        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
-        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
-        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
-        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <ahalaney@redhat.com>,
-        <krzysztof.kozlowski@linaro.org>, <u.kleine-koenig@pengutronix.de>,
-        <dmitry.baryshkov@linaro.org>, <quic_cang@quicinc.com>,
-        <danila@jiaxyga.com>, <quic_nitirawa@quicinc.com>,
-        <mantas@8devices.com>, <athierry@redhat.com>,
-        <quic_kbajaj@quicinc.com>, <quic_bjorande@quicinc.com>,
-        <quic_msarkar@quicinc.com>, <quic_devipriy@quicinc.com>,
-        <quic_tsoni@quicinc.com>, <quic_rgottimu@quicinc.com>,
-        <quic_shashim@quicinc.com>, <quic_kaushalk@quicinc.com>,
-        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703025850.2172008-5-quic_tengfan@quicinc.com>
- <9b739f4a-c9e1-4d2a-9bec-83106dcf8868@kernel.org>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <9b739f4a-c9e1-4d2a-9bec-83106dcf8868@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fpiIBsiH_E6Bhr5OJ8BTnX5KfJw6CL5q
-X-Proofpoint-ORIG-GUID: fpiIBsiH_E6Bhr5OJ8BTnX5KfJw6CL5q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_05,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
- clxscore=1011 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407030069
+References: <20240703091535.3531-1-spasswolf@web.de>
+In-Reply-To: <20240703091535.3531-1-spasswolf@web.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Jul 2024 11:32:05 +0200
+Message-ID: <CAMRc=Md=PnpHVGGO6Nb_efVZ0a3cMxWbLvYmkka5Wznks70drw@mail.gmail.com>
+Subject: Re: [PATCH] pci: bus: only call of_platform_populate() if CONFIG_OF
+ is defined
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, caleb.connolly@linaro.org, 
+	bhelgaas@google.com, amit.pundir@linaro.org, neil.armstrong@linaro.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jul 3, 2024 at 11:15=E2=80=AFAM Bert Karwatzki <spasswolf@web.de> w=
+rote:
+>
+> If of_platform_populate() is called when CONFIG_OF is not defined this
+> leads to spurious error messages of the following type:
+>  pci 0000:00:01.1: failed to populate child OF nodes (-19)
+>  pci 0000:00:02.1: failed to populate child OF nodes (-19)
+>
+> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF no=
+des of the port node")
+> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
+> ---
+>  drivers/pci/bus.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index e4735428814d..b363010664cd 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -350,6 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+>
+>         pci_dev_assign_added(dev, true);
+>
+> +#ifdef CONFIG_OF
+>         if (pci_is_bridge(dev)) {
+>                 retval =3D of_platform_populate(dev->dev.of_node, NULL, N=
+ULL,
+>                                               &dev->dev);
+> @@ -357,6 +358,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+>                         pci_err(dev, "failed to populate child OF nodes (=
+%d)\n",
+>                                 retval);
+>         }
+> +#endif
+>  }
+>  EXPORT_SYMBOL_GPL(pci_bus_add_device);
+>
+> --
+> 2.45.2
+>
+> The mentioned error message occur on systems without CONFIG_OF, i.e.
+> x86_64. The call to of_platform_depopulate() in drivers/pci/remove.c
+> does not need #ifdef CONFIG_OF as the return value is not checked (it
+> will most likely be optimized away on platforms witout OF where the
+> of_platform_{de,}populate() functions just return -ENODEV)
+>
+> Please CC me when replying, I'm not subscribed to the lists.
+>
+> Bert Karwatzki
 
+There's a better (less ifdeffery) fix on the list that I'll pick up
+later today[1].
 
-On 7/3/2024 12:39 PM, Krzysztof Kozlowski wrote:
-> On 03/07/2024 04:58, Tengfei Fan wrote:
->> Add support for the QCS9100 RIDE board dts. The current QCS9100 RIDE
->> board dts is directly renamed from the SA8775p RIDE board dts.
->> The difference between the current QCS9100 RIDE board and the SA8775p
->> RIDE board lies solely in the replacement of the SA8775p SoC with the
->> QCS9100 SoC, all other board resources remain the same.
->> The following items have been updated:
->>    - use QCS9100-related compatible names for this board dts.
->>    - replace the inclusion of sa8775p.dtsi with qcs9100.dtsi.
->>    - replace the inclusion of sa8775p-pmics.dtsi with qcs9100-pmics.dtsi
->>
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile                         | 2 +-
->>   .../boot/dts/qcom/{sa8775p-ride.dts => qcs9100-ride.dts}  | 8 ++++----
->>   2 files changed, 5 insertions(+), 5 deletions(-)
->>   rename arch/arm64/boot/dts/qcom/{sa8775p-ride.dts => qcs9100-ride.dts} (99%)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index 5576c7d6ea06..a7a3792b0691 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -103,6 +103,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qdu1000-idp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qrb2210-rb1.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= qrb4210-rb2.dtb
->> @@ -112,7 +113,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qru1000-idp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sa8155p-adp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sa8295p-adp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sa8540p-ride.dtb
->> -dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
->>   dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1.dtb
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/qcs9100-ride.dts
->> similarity index 99%
->> rename from arch/arm64/boot/dts/qcom/sa8775p-ride.dts
->> rename to arch/arm64/boot/dts/qcom/qcs9100-ride.dts
->> index 26ad05bd3b3f..2415d34b8aa5 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
->> +++ b/arch/arm64/boot/dts/qcom/qcs9100-ride.dts
->> @@ -8,12 +8,12 @@
->>   #include <dt-bindings/gpio/gpio.h>
->>   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->>   
->> -#include "sa8775p.dtsi"
->> -#include "sa8775p-pmics.dtsi"
->> +#include "qcs9100.dtsi"
->> +#include "qcs9100-pmics.dtsi"
->>   
->>   / {
->> -	model = "Qualcomm SA8775P Ride";
->> -	compatible = "qcom,sa8775p-ride", "qcom,sa8775p";
->> +	model = "Qualcomm QCS9100 Ride";
->> +	compatible = "qcom,qcs9100-ride", "qcom,qcs9100";
-> 
-> It does not look like you tested the DTS against bindings. Please run
-> `make dtbs_check W=1` (see
-> Documentation/devicetree/bindings/writing-schema.rst or
-> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-> for instructions).
-> 
-> Your own internal guideline tells you to perform above tests, doesn't it?
-> 
-> Best regards,
-> Krzysztof
-> 
+Bart
 
-I have performed relevant check, and it's possible that there are some 
-issues about the parameters used. I will follow your advice and refer to 
-the relevant documentation to perform DTBS check again, ensuring that 
-similar issues do not arise in the future.
-
--- 
-Thx and BRs,
-Tengfei Fan
+[1] https://lore.kernel.org/lkml/20240702180839.71491-1-superm1@kernel.org/=
+T/
 
