@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-9688-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9687-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8947892521E
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:27:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 868C392521A
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 06:27:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4548C28FF28
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:27:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9C291C232F0
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jul 2024 04:27:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C287C130A58;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD10512FB16;
 	Wed,  3 Jul 2024 04:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4GZm3W3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHxvaJlI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6417C61FE7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C4161FE1;
 	Wed,  3 Jul 2024 04:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719980430; cv=none; b=ttMGqAV7G5JT/9daLAABxDfBdAu8EVciIDfNb/TItEnA+u2kPF8YCwc80OnAQsZVas2lm++snsZ2q6zoddtP3iZ0V9Unqu2lHv8+EQz67jnW1MDFhxgUEDLf8QKL/mDSMp2rJ1cnJn706gx+sN0PNGDD5dYVf1L6H13+n4c68pM=
+	t=1719980430; cv=none; b=VyoVyF3n35ojHJ0dbeE8rwhfGjAY50M7N/RGbijaAPWYRi2My+aEf44QplO0fvtWexvZ7SHgXJpVAaCTQES1ljwM1tqZVi3/7JeEm4qQsWkU56Xfp5n3IRLP7AhQi94rBGALFkvXWVzg1gAVNUEbKjC9U6sQSjy8jNc5r/oQe24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719980430; c=relaxed/simple;
-	bh=5+RRC9YtK/dpU9PvT6M4Kinr+sN6vQFSkkmB2wAChzw=;
+	bh=Cxg67S+/b4PFpqD8c8jDsQk7LHaaGLk2W+TlIyPL5KA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=VfQcj7qqtZW5MASdrvzjnLdnPueHhtmvFqohSdzt2TFaphPoAj5yfihcfXzsLkOju2dNuLkERT3I6bwgJE+pXs+44z+U/ckSEScFygv+1mpbN1Vasc0QIHx3i8sumdyoTBV6lCt/rfbQ82N4Bu4bgjzntsb4fuQbCIEO4p+CZMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4GZm3W3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E524CC4AF12;
+	 In-Reply-To:To:Cc; b=P13t/XiuxiLnVQA1yajhS90c7jmBgpgCq5Bs2t6KozRMrEVY4sxtTdQJKEFY8ji6Xm7HvoAO3fRLLPgzl05WH2PxC9w0bIAT2i03UyVqqfEN8IV6hJ+M7jWYosbUxfWLm3M69s4Sp01aRs6NhT4jH7T3bfC7bV35jJnpm5HA0Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHxvaJlI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D42F9C4AF10;
 	Wed,  3 Jul 2024 04:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719980430;
-	bh=5+RRC9YtK/dpU9PvT6M4Kinr+sN6vQFSkkmB2wAChzw=;
+	s=k20201202; t=1719980429;
+	bh=Cxg67S+/b4PFpqD8c8jDsQk7LHaaGLk2W+TlIyPL5KA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=k4GZm3W301fozxrlMm1PKo9FsrahhfCRNckbTsGEZa9SeQ+BWLat/mKmf07qyo2G3
-	 7HtwKjoOP3sIsaFy2XjRZDzVRuUes1+zYsx28GSHReW4r/TAnQGMOEEKRLYmD64oC3
-	 5HP9MPj/nxQA+V27pTEIfcLwguB9ztP53hOcAocJ8K9oNSLPKWKOorDcVlvgMFJF1s
-	 +n2tF3wXBYNtPARGAecITkoFb4M6nTKpdWYYZeYAdYbdYZZKaSoWocmvH6J+ZT8brS
-	 VN8xCBQKSwOqbotAq8HYrCEO3PdOEojLlkxDblTHAb20rLyhxfhjNFZbG6OokWLJZa
-	 gK2QnmHcjiCBg==
+	b=cHxvaJlIRTeIEa5yxQbgJRndGUYihRVgVhEjwwd0BmcxEKGvhwTuUhe4kOSC/0Zns
+	 EEF3V5+lYu5qldErNDgWMl1McUQVjNs8W/j/DKDtR4Q80pz9RHzOcDy4KRwTVjL9wa
+	 77YeEaVeCA0mBr8iPmJJGE6+4f7GL0RHfeSS9xscpsLKjEIyqTqJkgVmDkKn4h3SBT
+	 i0eMZKAi8e2+OOwCXTYTNNPmt6wmHID+6PXE0VoxqfHdQm8KnEU/Ml4gRYKaut8elu
+	 jkFBzpGnoOLr8//pE0zPeRU4T6CAsxs3jiDBmGaHxGmTQK+D0voIqP3B9mDvUo2foU
+	 WQ3YkURFBJ12Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C5DF7CF3B95;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AD173C41677;
 	Wed,  3 Jul 2024 04:20:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -52,14 +52,13 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and RIDE
- board
+Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171998042979.21654.8518238511530738014.git-patchwork-notify@kernel.org>
+ <171998042970.21654.12559535993133117436.git-patchwork-notify@kernel.org>
 Date: Wed, 03 Jul 2024 04:20:29 +0000
-References: <20240703035735.2182165-2-quic_tengfan@quicinc.com>
-In-Reply-To: <20240703035735.2182165-2-quic_tengfan@quicinc.com>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+In-Reply-To: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
 To: Tengfei Fan <quic_tengfan@quicinc.com>
 Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
  krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org,
@@ -104,13 +103,21 @@ Hello:
 This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Wed, 3 Jul 2024 11:56:49 +0800 you wrote:
-> Document the QCS9100 SoC and RIDE board.
+On Wed, 3 Jul 2024 10:58:03 +0800 you wrote:
+> Introduce support for the QCS9100 SoC device tree (DTSI) and the
+> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+> While the QCS9100 platform is still in the early design stage, the
+> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+> mounts the QCS9100 SoC instead of the SA8775p SoC.
 > 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+> The QCS9100 SoC DTSI was directly renamed from the SA8775p SoC DTSI. In
+> the upcoming weeks, Nikunj Kela will develop a new device tree related
+> to SA8775p, specifically supporting the SCMI resource firmware solution
+> for the SA8775p platform. If you're already familiar with the
+> background, feel free to skip part[2], which provides a detailed
+> explanation.
+> 
+> [...]
 
 Here is the summary with links:
   - [01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and RIDE board
@@ -170,6 +177,30 @@ Here is the summary with links:
   - [28/47] dt-bindings: power: qcom,rpmpd: document the QCS9100 RPMh Power Domains
     (no matching commit)
   - [29/47] dt-bindings: net: qcom,ethqos: add description for qcs9100
+    (no matching commit)
+  - [30/47] dt-bindings: PCI: Document compatible for QCS9100
+    (no matching commit)
+  - [31/47] dt-bindings: PCI: qcom-ep: Add support for QCS9100 SoC
+    (no matching commit)
+  - [32/47] dt-bindings: phy: qcom,qmp: Add qcs9100 QMP PCIe PHY
+    (no matching commit)
+  - [33/47] interconnect: qcom: add driver support for qcs9100
+    (no matching commit)
+  - [34/47] clk: qcom: add the GCC driver support for QCS9100
+    (no matching commit)
+  - [35/47] phy: qcom-qmp-ufs: Add QCS9100 support
+    (no matching commit)
+  - [36/47] phy: qcpm-qmp-usb: Add support for QCS9100
+    (no matching commit)
+  - [37/47] clk: qcom: add the GPUCC driver support for QCS9100
+    (no matching commit)
+  - [38/47] phy: qcom: add the SGMII SerDes PHY driver support
+    (no matching commit)
+  - [39/47] soc: qcom: llcc: Add llcc configuration support for the QCS9100 platform
+    (no matching commit)
+  - [40/47] pinctrl: qcom: add the tlmm driver support for qcs9100 platform
+    (no matching commit)
+  - [41/47] clk: qcom: rpmh: Add support for QCS9100 rpmh clocks
     (no matching commit)
 
 You are awesome, thank you!
