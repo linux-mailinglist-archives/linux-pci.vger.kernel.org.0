@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-9789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9791-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C73B927229
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 10:54:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 766A492722D
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 10:54:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12D21289C8F
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 08:54:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 020A91F21972
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 08:54:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 247A41A4F38;
-	Thu,  4 Jul 2024 08:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129BC1A4F35;
+	Thu,  4 Jul 2024 08:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R3Ka+HQt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AsMuDZ6J"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA39C1370;
-	Thu,  4 Jul 2024 08:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9ED1A4F22;
+	Thu,  4 Jul 2024 08:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720083243; cv=none; b=uapQZO0xnXw+u1nqLWw6cIweCClJx/rIHGYneZh8F0JT79V8kyvrB2GXxMlvBbA4trkQSfqQxooAeFTUqScIutNY/u/ZmKSYZlzZyGMQdSCSbhnvbgWd2bStLgDlPYyD6mVONLZ/nOPVjozDraMC0jvODSpk4cYHRaWlics4duo=
+	t=1720083248; cv=none; b=dYXxGrlUQJ95E26w5w6MnXuAheAfAplsW9liH68xlHrVDEQ/B+95KtZ625r6WGn+324HFwueN1Z2MxXQhf7BcMFlrsBWmZFJ8QmBF2AODNbfcgUi4tKvf4aag63K687KVoI76g4sqfOCy9HAJHPX24bB4Hv95IvmbWJEh3gsFT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720083243; c=relaxed/simple;
-	bh=tOZ91IT2s8wpY7yLumZ5kw412vfzz4MXb5MVorwZxpY=;
+	s=arc-20240116; t=1720083248; c=relaxed/simple;
+	bh=tqqJI6wD144Ba0q2mBEunzNzlWBhDW4D6RtTx5VSFGA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jinBEhnwxnWaZDQ2M17/gDvpQODlbGD5p/g1TXC/PgriVQE3LcVf7Jit82aaTbznM6I9wdQ4Rx3ZAfaWAJQbMibdlYqS+LAl4d0MjY1i+0/D1aHfMRJ1V5FFnH4aTqj9yla8pB3uyYUj6jxQ/vy61Vsbi58dwUXn4eU10wPrnFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R3Ka+HQt; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=JMfrCFId0f4/bZLlrOP+n44QDL+l/CT6g+vetPN9dGp2lYOGVjDFnOMUYyzYq4oYk/1bmhqnAXNf2LSntMWXSeHQ6N8lxY6utzfe5vEn9cU1kheoEUwSluCE4fXjDEsWpNz3+2KlwYRR2rDL1y2JMGPXOuHkdLA3HZxKhoVDBoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AsMuDZ6J; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720083242; x=1751619242;
+  t=1720083247; x=1751619247;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tOZ91IT2s8wpY7yLumZ5kw412vfzz4MXb5MVorwZxpY=;
-  b=R3Ka+HQtDTXfOJxNbqqWclzNFuf5kAvC8LnnyTeonpUDojxFsy1QMPIw
-   ml0hZ4QlpWyAFt7/t9ovXS4c8E0lnuDjj8Gtg+Gm6H/sn3Dqcq+o3bDf0
-   eQ9PcDtD9GlGrPvooXTWKxkoCB5PLvoMC6TJ8hHhn9LJnGHCv6u2hRWFF
-   Q4b3tR9+DbyvsOe46IRFxtevVGerXFUI1R/L1fXNeCoIMoKwSlHBWhtFS
-   hPey/sg2gKs6qwAC4Vw5vdujKa/4Oe+CNBllvxEg7M9gwJq3b2KT3D0s9
-   kwwqlFZnDSTkzDNQAmkAwu81NAN8PGnYn3pIZZ7pi0zIL7lEha97wBds2
+  bh=tqqJI6wD144Ba0q2mBEunzNzlWBhDW4D6RtTx5VSFGA=;
+  b=AsMuDZ6Jd6NZPEwfh+mhFnwYuEaOgEjDdLwfN/mL1y4fCPqSLoyImBMG
+   y+0MIWt+9MSUlt93DXWjS2zjur6N8lCx5yyHbqNt9l7iDpKMwQEx29Jg0
+   iaV1vxctQvh0nGD0MaqEBGkxliQx7mqNd/MPR/mTqi0FmJtcLK2n6B+mN
+   vKczR6JowWxr3QNkGGfcIdhrQLOEkWKrNnwGqJ+5icf34IGNuvI/Cf4O2
+   KDOB3weVKESTb2iAtD1/lgZzDDizRSnUge7OrpUPgj9wxCScdcqhgqfgM
+   QyeWUOFvO63Iglty5SwQ6ktBO8umzDLiFbUETvh4nt9JVxJ0YAjTmEUWu
    g==;
-X-CSE-ConnectionGUID: Acmao5/CTEy5OTcdeVeeYw==
-X-CSE-MsgGUID: icDADqHkTm2N6lWEoZuDqw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17300616"
+X-CSE-ConnectionGUID: 3Eilkjp7TZ6Ozg/Sa2+D8A==
+X-CSE-MsgGUID: tx+jcSZfSsKOOuYKJlDeZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17300627"
 X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17300616"
+   d="scan'208";a="17300627"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 01:54:00 -0700
-X-CSE-ConnectionGUID: feaz4qYQTZSFUs4KYcU5Eg==
-X-CSE-MsgGUID: eo2k59IXTn+ivr9a3pStTQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 01:54:02 -0700
+X-CSE-ConnectionGUID: xTETAE2ZTNaJKvgcdcv0wQ==
+X-CSE-MsgGUID: l7GzGtQ9SK6N+9G7AgNkiQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="51708576"
+   d="scan'208";a="51708597"
 Received: from bergbenj-mobl1.ger.corp.intel.com (HELO pbossart-mobl6.intel.com) ([10.245.246.90])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 01:53:54 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 01:53:58 -0700
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To: linux-sound@vger.kernel.org
 Cc: alsa-devel@alsa-project.org,
@@ -66,12 +66,12 @@ Cc: alsa-devel@alsa-project.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
 	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
 	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
 	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v3 4/6] ASoC: Intel: soc-acpi-intel-ptl-match: add rt711-sdca table
-Date: Thu,  4 Jul 2024 10:53:28 +0200
-Message-ID: <20240704085330.371332-5-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v3 5/6] ASoC: Intel: soc-acpi-intel-ptl-match: Add rt722 support
+Date: Thu,  4 Jul 2024 10:53:29 +0200
+Message-ID: <20240704085330.371332-6-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240704085330.371332-1-pierre-louis.bossart@linux.intel.com>
 References: <20240704085330.371332-1-pierre-louis.bossart@linux.intel.com>
@@ -86,61 +86,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-Add rt711-sdca on sdw link0.
+This patch adds match table for rt722 multiple
+function codec on link 0.
 
-Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- .../intel/common/soc-acpi-intel-ptl-match.c   | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ .../intel/common/soc-acpi-intel-ptl-match.c   | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
 diff --git a/sound/soc/intel/common/soc-acpi-intel-ptl-match.c b/sound/soc/intel/common/soc-acpi-intel-ptl-match.c
-index dba45fa7a453..ce4234fd3895 100644
+index ce4234fd3895..d01646f52d1f 100644
 --- a/sound/soc/intel/common/soc-acpi-intel-ptl-match.c
 +++ b/sound/soc/intel/common/soc-acpi-intel-ptl-match.c
-@@ -15,6 +15,31 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_ptl_machines[] = {
+@@ -22,6 +22,31 @@ static const struct snd_soc_acpi_endpoint single_endpoint = {
+ 	.group_id = 0,
  };
- EXPORT_SYMBOL_GPL(snd_soc_acpi_intel_ptl_machines);
  
-+static const struct snd_soc_acpi_endpoint single_endpoint = {
-+	.num = 0,
-+	.aggregated = 0,
-+	.group_position = 0,
-+	.group_id = 0,
++/*
++ * RT722 is a multi-function codec, three endpoints are created for
++ * its headset, amp and dmic functions.
++ */
++static const struct snd_soc_acpi_endpoint rt722_endpoints[] = {
++	{
++		.num = 0,
++		.aggregated = 0,
++		.group_position = 0,
++		.group_id = 0,
++	},
++	{
++		.num = 1,
++		.aggregated = 0,
++		.group_position = 0,
++		.group_id = 0,
++	},
++	{
++		.num = 2,
++		.aggregated = 0,
++		.group_position = 0,
++		.group_id = 0,
++	},
 +};
 +
-+static const struct snd_soc_acpi_adr_device rt711_sdca_0_adr[] = {
+ static const struct snd_soc_acpi_adr_device rt711_sdca_0_adr[] = {
+ 	{
+ 		.adr = 0x000030025D071101ull,
+@@ -31,6 +56,24 @@ static const struct snd_soc_acpi_adr_device rt711_sdca_0_adr[] = {
+ 	}
+ };
+ 
++static const struct snd_soc_acpi_adr_device rt722_0_single_adr[] = {
 +	{
-+		.adr = 0x000030025D071101ull,
-+		.num_endpoints = 1,
-+		.endpoints = &single_endpoint,
-+		.name_prefix = "rt711"
++		.adr = 0x000030025d072201ull,
++		.num_endpoints = ARRAY_SIZE(rt722_endpoints),
++		.endpoints = rt722_endpoints,
++		.name_prefix = "rt722"
 +	}
 +};
 +
-+static const struct snd_soc_acpi_link_adr ptl_rvp[] = {
++static const struct snd_soc_acpi_link_adr ptl_rt722_only[] = {
 +	{
 +		.mask = BIT(0),
-+		.num_adr = ARRAY_SIZE(rt711_sdca_0_adr),
-+		.adr_d = rt711_sdca_0_adr,
++		.num_adr = ARRAY_SIZE(rt722_0_single_adr),
++		.adr_d = rt722_0_single_adr,
 +	},
 +	{}
 +};
 +
- /* this table is used when there is no I2S codec present */
- struct snd_soc_acpi_mach snd_soc_acpi_intel_ptl_sdw_machines[] = {
- 	/* mockup tests need to be first */
-@@ -36,6 +61,12 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_ptl_sdw_machines[] = {
+ static const struct snd_soc_acpi_link_adr ptl_rvp[] = {
+ 	{
+ 		.mask = BIT(0),
+@@ -67,6 +110,12 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_ptl_sdw_machines[] = {
  		.drv_name = "sof_sdw",
- 		.sof_tplg_filename = "sof-ptl-rt715-rt711-rt1308-mono.tplg",
+ 		.sof_tplg_filename = "sof-ptl-rt711.tplg",
  	},
 +	{
 +		.link_mask = BIT(0),
-+		.links = ptl_rvp,
++		.links = ptl_rt722_only,
 +		.drv_name = "sof_sdw",
-+		.sof_tplg_filename = "sof-ptl-rt711.tplg",
++		.sof_tplg_filename = "sof-ptl-rt722-l0.tplg",
 +	},
  	{},
  };
