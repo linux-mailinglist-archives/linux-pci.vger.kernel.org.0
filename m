@@ -1,107 +1,129 @@
-Return-Path: <linux-pci+bounces-9815-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9816-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9709B9279F3
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 17:24:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FFB8927ACF
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 18:04:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32150B22725
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 15:24:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 090351F22321
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:04:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D0331B140B;
-	Thu,  4 Jul 2024 15:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01A8A1B3720;
+	Thu,  4 Jul 2024 16:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uctUXtst"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806C61B1409;
-	Thu,  4 Jul 2024 15:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459E11B29CD;
+	Thu,  4 Jul 2024 16:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720106636; cv=none; b=gJWCq08qqBxyaweAahgO41WcC2flWgLR1nWx2Ft+D9GBTBaPjFjoCEiu78ydllVxlfzSEs8vlq2ZXUyDFGSB4P+S8f2nmZrTFb72nf7aYNd9RPNdCJlYKkKPYzAXn6TerOAEUTob5q9yaOFPxrVWI4UvRZPlcr+gcOy9cMVi/Fs=
+	t=1720109064; cv=none; b=dtotdWw6xNKVeLbu9nkBsgl+d+Ed+1vwQeHAagnj/e11FE65YnwU6qlhWO9BGGh57KKu/4TV+ENUh768lDIG/SqPxv9e66cSOD/382TzdLqDlrU56elUvJWfSxf3PVKVoS21PCxC75KusaT0wmia6/RCBJfaLdayoKyefWf4LC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720106636; c=relaxed/simple;
-	bh=1G7Ua2w5pwj1vzd80lgSEf5Gu1FS96EaOAuyyE4ofNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J6IT0jGM/TrwV3vr44Jcs8mGAefYpcKw+geHd7dJC5r01IARDkyxj18PlmP2I5BnLNP153GU7julaLZQbNY4dAOzgc39ETKLsQaXjczWq6ewIj4Nldl/edve6fkq3g7BK64rQGrUnl0U3PnGCXMqwKqJIMqkKnRHzhSq+Zd+kL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA206367;
-	Thu,  4 Jul 2024 08:24:18 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E2F73F766;
-	Thu,  4 Jul 2024 08:23:50 -0700 (PDT)
-Message-ID: <249ec228-4ffd-4121-bd51-f4a19275fee1@arm.com>
-Date: Thu, 4 Jul 2024 16:23:47 +0100
+	s=arc-20240116; t=1720109064; c=relaxed/simple;
+	bh=1+toRJY35/129MSR44qFWaryqVoiascuVBFB3NmaZ/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tvy2tcntNmsqvvyfx7GRr4698K+UJKCPlS582UAIpLc0LbyuwfhuvStqlafx/vfeO2vBDPvFSJpXbYjJKO0E8g7YPCjOsPQRamI2/vrn/+eLnpWPL2KDaxbDaOIOwKwvCJwFuYZm/Oj01MidtxcDaio519FI6guNC5V/3e7Swkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uctUXtst; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=NUvYT0Apw8SqjInlbdvt2ov0pZsd3AGE3tETszdRDzg=; b=uctUXtstqOdYStp1RAdEevee8A
+	og2m1rbeRGyNCyWKUOMtyM5AqIVxQFyxOPDwVFm9FnkbszNQ36vazTBa9yXYKCDMQBhsJURhhsCMA
+	j1mTGX2YuuLQQvVFM9F5PJp4GaLgK5ASkZXssZl/rnBc5yDOus60fNPX7zh7xaHLB3Ec=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sPOvS-001pKc-Qp; Thu, 04 Jul 2024 18:03:14 +0200
+Date: Thu, 4 Jul 2024 18:03:14 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: Andrew Halaney <ahalaney@redhat.com>, andersson@kernel.org,
+	konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com,
+	sboyd@kernel.org, jassisinghbrar@gmail.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	manivannan.sadhasivam@linaro.org, will@kernel.org, joro@8bytes.org,
+	conor@kernel.org, tglx@linutronix.de, amitk@kernel.org,
+	thara.gopinath@gmail.com, linus.walleij@linaro.org,
+	wim@linux-watchdog.org, linux@roeck-us.net, rafael@kernel.org,
+	viresh.kumar@linaro.org, vkoul@kernel.org, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
+	robimarko@gmail.com, bartosz.golaszewski@linaro.org,
+	kishon@kernel.org, quic_wcheng@quicinc.com, alim.akhtar@samsung.com,
+	avri.altman@wdc.com, bvanassche@acm.org, agross@kernel.org,
+	gregkh@linuxfoundation.org, quic_tdas@quicinc.com,
+	robin.murphy@arm.com, daniel.lezcano@linaro.org,
+	rui.zhang@intel.com, lukasz.luba@arm.com, quic_rjendra@quicinc.com,
+	ulf.hansson@linaro.org, quic_sibis@quicinc.com,
+	otto.pflueger@abscue.de, luca@z3ntu.xyz, neil.armstrong@linaro.org,
+	abel.vesa@linaro.org, bhupesh.sharma@linaro.org,
+	alexandre.torgue@foss.st.com, peppe.cavallaro@st.com,
+	joabreu@synopsys.com, netdev@vger.kernel.org, lpieralisi@kernel.org,
+	kw@linux.com, bhelgaas@google.com, krzysztof.kozlowski@linaro.org,
+	u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org,
+	quic_cang@quicinc.com, danila@jiaxyga.com,
+	quic_nitirawa@quicinc.com, mantas@8devices.com, athierry@redhat.com,
+	quic_kbajaj@quicinc.com, quic_bjorande@quicinc.com,
+	quic_msarkar@quicinc.com, quic_devipriy@quicinc.com,
+	quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com,
+	quic_shashim@quicinc.com, quic_kaushalk@quicinc.com,
+	quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com,
+	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	kernel@quicinc.com
+Subject: Re: [PATCH 29/47] dt-bindings: net: qcom,ethqos: add description for
+ qcs9100
+Message-ID: <add1bdda-2321-4c47-91ef-299f99385bc8@lunn.ch>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-30-quic_tengfan@quicinc.com>
+ <u5ekupjqvgoehkl76pv7ljyqqzbnnyh6ci2dilfxfkcdvdy3dp@ehdujhkul7ow>
+ <f4162b7f-d957-4dd6-90a0-f65c1cbc213a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 18/18] nvme-pci: use new dma API
-To: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
- Christoph Hellwig <hch@lst.de>, "Zeng, Oak" <oak.zeng@intel.com>,
- Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Sagi Grimberg <sagi@grimberg.me>, Bjorn Helgaas <bhelgaas@google.com>,
- Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <cover.1719909395.git.leon@kernel.org>
- <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4162b7f-d957-4dd6-90a0-f65c1cbc213a@quicinc.com>
 
-On 02/07/2024 10:09 am, Leon Romanovsky wrote:
-[...]
-> +static inline dma_addr_t nvme_dma_link_page(struct page *page,
-> +					   unsigned int poffset,
-> +					   unsigned int len,
-> +					   struct nvme_iod *iod)
->   {
-> -	int i;
-> -	struct scatterlist *sg;
-> +	struct dma_iova_attrs *iova = &iod->dma_map->iova;
-> +	struct dma_iova_state *state = &iod->dma_map->state;
-> +	dma_addr_t dma_addr;
-> +	int ret;
-> +
-> +	if (iod->dma_map->use_iova) {
-> +		phys_addr_t phys = page_to_phys(page) + poffset;
+On Thu, Jul 04, 2024 at 09:13:59AM +0800, Tengfei Fan wrote:
+> 
+> 
+> On 7/3/2024 11:09 PM, Andrew Halaney wrote:
+> > On Wed, Jul 03, 2024 at 10:58:32AM GMT, Tengfei Fan wrote:
+> > > Add the compatible for the MAC controller on qcs9100 platforms. This MAC
+> > > works with a single interrupt so add minItems to the interrupts property.
+> > > The fourth clock's name is different here so change it. Enable relevant
+> > > PHY properties. Add the relevant compatibles to the binding document for
+> > > snps,dwmac as well.
+> > 
+> > This description doesn't match what was done in this patch, its what
+> > Bart did when he made changes to add the sa8775 changes. Please consider
+> > using a blurb indicating that this is the same SoC as sa8775p, just with
+> > different firmware strategies or something along those lines?
+> 
+> I will update this commit message as you suggested.
 
-Yeah, there's no way this can possibly work. You can't do the 
-dev_use_swiotlb() check up-front based on some overall DMA operation 
-size, but then build that operation out of arbitrarily small fragments 
-of different physical pages that *could* individually need bouncing to 
-not break coherency.
+Hi Andrew, Tengfei
 
-Thanks,
-Robin.
+Please trim emails when replying to just the needed context.
 
-> +
-> +		dma_addr = state->iova->addr + state->range_size;
-> +		ret = dma_link_range(&iod->dma_map->state, phys, len);
-> +		if (ret)
-> +			return DMA_MAPPING_ERROR;
-> +	} else {
-> +		dma_addr = dma_map_page_attrs(iova->dev, page, poffset, len,
-> +					      iova->dir, iova->attrs);
-> +	}
-> +	return dma_addr;
-> +}
+Thanks
+	Andrew
 
