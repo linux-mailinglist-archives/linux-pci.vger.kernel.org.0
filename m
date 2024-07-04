@@ -1,117 +1,217 @@
-Return-Path: <linux-pci+bounces-9806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3C5B92777A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 15:50:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEB6F92777D
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 15:51:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B8851F23FB0
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 13:50:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 968882818CF
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 13:51:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5058D1AC435;
-	Thu,  4 Jul 2024 13:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12F571411F9;
+	Thu,  4 Jul 2024 13:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtojCYjb"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rm5zWawA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jEKcehOI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rm5zWawA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jEKcehOI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F4B41A81;
-	Thu,  4 Jul 2024 13:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551601822E2;
+	Thu,  4 Jul 2024 13:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720101012; cv=none; b=COvLsAR9HyDZOY4npDlAEk7Tezg0A6RwtGEwjLZ3BOjpE/kM7OtBdh/4pqUwHZFwcs/y5Lig9a16PS3/+7MTO2wii7c5MuHSljOfLQmP/+7PBK7h1XUIdc43R/66SfaHV9YWgcrHHyXfHpZ2Yl8bX7Tv03pDzL0g80eYMpbJjmg=
+	t=1720101096; cv=none; b=iqpuN0xzD8VpFqNWYKjAMNh5DTvKk5WpnJjlqSvOsG0TkpTmPLoxq8CPLTl8JKjnBosT6l96KqCLtE2vrunAsVoh1/C8ySHRGDyBNEaqnUKtHVkbvuZdw7xsuYREkb/z644JzFNIJYMyLH+XEQwjnJu/2f+Qrt+qU203aJJ8CG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720101012; c=relaxed/simple;
-	bh=+ps+mPqvUr3UdUKN2F/JW+Y5JpOkV/Up2p6K6Mg6aYo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WHWlzZnjN65eaT5E5V7FyM0sLkYkiXrAUtXjILF7MIQpztNvRbveaa93NMf5UKGn5TwOHD3VaK9Q2Txk9y60Nu/c/Ny5Qp0NfA3FLLmyu8et3zM20WDzrINszyqY5d3ympb5A7kZvj4YEBslQmfBrcNsmhMHxOQOJJhns8ngaAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NtojCYjb; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-58ba3e37feeso950399a12.3;
-        Thu, 04 Jul 2024 06:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720101009; x=1720705809; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q6r/waSsOqXycyGSsbPh3a4zrLTjlE29Ir1GCdLEYT0=;
-        b=NtojCYjbt7VDNH9ZgLSTidJVTLTORvvw+WcWdxM5t7l391Old8gpb4pI/Ym5Rmfvnz
-         xzYonWrq633ySdxZ4X10+T+x7JuAIfU6gn5PWNUg9BZ7X12TmEYiQ7kaUoHM4Sno9k0L
-         Mo+pZE8HavHgt11sOMtt9ZW2kFFn+S0Xwj52/Fq4xLHtmk2Cpc+yXyiQ3nxgFHVvv6Ll
-         KW5vV4fpJzDPhxbYe2tMiwk/MmZQRjCn3gp++wk8+LDCVq5HJzAVdwsLbf0U+G06v+4e
-         P1Z6MadA/w+t+To2e3ak6u5qopwJNPzNolKRc2rErLY4YA14PYRH+CKzcMNzIhzUrNq0
-         5IvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720101009; x=1720705809;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q6r/waSsOqXycyGSsbPh3a4zrLTjlE29Ir1GCdLEYT0=;
-        b=ili4xSNSrvVr7nLtREQW3Cw7GH+uKQQRa6O2ZRXB4E9VxBocFoXNXeNXz1ThYH4d9h
-         gkv196g4i7aeoVazd9t8alTKcVPeYjoizbBxDZ2aaqwj/yDI+0TfQPohKbR8nvUNV6o2
-         2cl8smC1Y7q8kD/Yh2z4/9u5DuJtAnHGisb5Z2iknKf+CgaaVKNuaM6T5seF7qqSmRdI
-         5jl4/3Q21jU+yk3hmxNtkD32CxJEc/O89XxRksqqOyjY94+maqmD/rpxRKCyv6BMLBBz
-         Lgg87p2uQTfN03SpHhzIM5loQjN2W/9N55wPcChuwlJsSGKN6i2cOnC/eP7x1EHQU8ub
-         r3bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNm6OHqErcRSnLNRIwTLkBjHX+2EB2IpmjX/+ydzuYU+lMRcd4dURyKvG3Ns1ccUzt1kw1FxJ/+b/3TmVZd0faEFCz+Zjrf4LQl25rNkL/+hn1s/XYBGCpnnfAqST8t/2cfqqv2ewa
-X-Gm-Message-State: AOJu0YwUz0/oo9sbKj4OASfzze7BjWNZGpSJSKTEk9RUywgwcMc1GjfV
-	NZePmLlQcfnVveriI+TJcjLWK9BncUNzxkndAf/3fN4d+gkHNfYQ
-X-Google-Smtp-Source: AGHT+IFuD9zVB2yFYSSPQOQHSaVbxcTPs1qG6SlqZuDT8SRutE/v4wcFP+815XVElc3D9v0bfMxVaQ==
-X-Received: by 2002:aa7:c25a:0:b0:58b:585b:42a2 with SMTP id 4fb4d7f45d1cf-58e5bb8742emr1044311a12.38.1720101008745;
-        Thu, 04 Jul 2024 06:50:08 -0700 (PDT)
-Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-58615037a8fsm8434753a12.92.2024.07.04.06.50.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 06:50:08 -0700 (PDT)
-From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-To: kw@linux.com
-Cc: abaci@linux.alibaba.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	jiapeng.chong@linux.alibaba.com,
-	kishon@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: Re: [PATCH -next v2] misc: pci_endpoint_test: Remove some unused functions
-Date: Thu,  4 Jul 2024 15:49:53 +0200
-Message-Id: <20240704134953.2360738-1-rick.wertenbroek@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240704071406.GA2735079@rocinante>
-References: <20240704071406.GA2735079@rocinante>
+	s=arc-20240116; t=1720101096; c=relaxed/simple;
+	bh=+O+y5QdPN80z5fv8mWzZ0GG5KG9s3k/1cGLfxmwxkXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=citpLKxZtEYc/74pYH+KcS2n1H9Bsxh8mAEBokrMs6CUjFioPped2OK2R/bktDFCM/JRfhne4JCRLWgxudi8CG1xiwkzAknEAvsMFTYXG0Soi66lkREg/77JiJDA83je3W/ACTR1nq9+Modf7zcN5uvoQ2IoyGfET1hIcqXX5Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rm5zWawA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jEKcehOI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rm5zWawA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jEKcehOI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 89E0E1F7DA;
+	Thu,  4 Jul 2024 13:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720101092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3fJXbnT02eDQyoivQSk4Ej7vugA+zzAv/AFaDuj4jXw=;
+	b=rm5zWawA43TloSyZ43YWPtLdNOBzGgy2ee9i91oLQf7oP/rPKG7A8AqSYqd03oOUZtX5kt
+	0j++N//zCeW4I0jLAKwMrrCyQalr3jcawzMs0+UHpM2CEU4MEciGNpuI27axeNEu6WQaOB
+	0CQ4+ZCnYIgcjALEwKK5xb2Ke6LJ4DA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720101092;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3fJXbnT02eDQyoivQSk4Ej7vugA+zzAv/AFaDuj4jXw=;
+	b=jEKcehOIIwc5FC/xCYAxPHeAgEye666qL2E4nmm4ue8t0/Sdwhd11qsuofQPebXLxbMlrC
+	jJrm+XEKO+PfKuAA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720101092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3fJXbnT02eDQyoivQSk4Ej7vugA+zzAv/AFaDuj4jXw=;
+	b=rm5zWawA43TloSyZ43YWPtLdNOBzGgy2ee9i91oLQf7oP/rPKG7A8AqSYqd03oOUZtX5kt
+	0j++N//zCeW4I0jLAKwMrrCyQalr3jcawzMs0+UHpM2CEU4MEciGNpuI27axeNEu6WQaOB
+	0CQ4+ZCnYIgcjALEwKK5xb2Ke6LJ4DA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720101092;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3fJXbnT02eDQyoivQSk4Ej7vugA+zzAv/AFaDuj4jXw=;
+	b=jEKcehOIIwc5FC/xCYAxPHeAgEye666qL2E4nmm4ue8t0/Sdwhd11qsuofQPebXLxbMlrC
+	jJrm+XEKO+PfKuAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BE0991369F;
+	Thu,  4 Jul 2024 13:51:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wAPsK+OohmaiJgAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Thu, 04 Jul 2024 13:51:31 +0000
+Message-ID: <ed3f2b70-fc71-4bde-b4d6-c9ad4bb0f715@suse.de>
+Date: Thu, 4 Jul 2024 16:51:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/12] PCI: brcmstb: Enable 7712 SOCs
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240703180300.42959-1-james.quinlan@broadcom.com>
+ <20240703180300.42959-12-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <20240703180300.42959-12-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.29
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
 
-On Thu, Jul 04, 2024 at 04:14:06PM +0900, Krzysztof Wilczyński wrote:
-> Hello,
+Hi Jim,
+
+On 7/3/24 21:02, Jim Quinlan wrote:
+> The Broadcom STB 7712 is the sibling chip of the RPi 5 (2712).
 > 
-> > These functions are defined in the pci_endpoint_test.c file, but not
-> > called elsewhere, so delete these unused functions.
-> > 
-> > drivers/misc/pci_endpoint_test.c:144:19: warning: unused function 'pci_endpoint_test_bar_readl'.
-> > drivers/misc/pci_endpoint_test.c:150:20: warning: unused function 'pci_endpoint_test_bar_writel'.
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 > 
-> Have you see my question to the first version of this patch?
-> 
-> 	Krzysztof
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 1c3ce0c182d1..39d7dea282ff 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1216,7 +1216,9 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
+>  		 * atypical and should happen only with older devices.
+>  		 */
+>  		clkreq_cntl |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
+> -		brcm_extend_rbus_timeout(pcie);
+> +		/* 7712 does not have this (RGR1) timer */
+> +		if (pcie->type != BCM7712)
+> +			brcm_extend_rbus_timeout(pcie);
 
-Hello,
-The functions were removed in this patch : https://lore.kernel.org/linux-pci/20240322164139.678228-1-cassel@kernel.org/
-So in linux-next they are indeed not used anymore.
+I'd move the check in brcm_extend_rbus_timeout() function.
 
-You applied it to misc : https://lore.kernel.org/linux-pci/20240517100929.GB202520@rocinante/
+Otherwise:
 
-Regards,
-Rick
+Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+
+>  
+>  	} else {
+>  		/*
+> @@ -1628,6 +1630,13 @@ static const int pcie_offsets_bmips_7425[] = {
+>  	[PCIE_INTR2_CPU_BASE] = 0x4300,
+>  };
+>  
+> +static const int pcie_offset_bcm7712[] = {
+> +	[EXT_CFG_INDEX]  = 0x9000,
+> +	[EXT_CFG_DATA]   = 0x9004,
+> +	[PCIE_HARD_DEBUG] = 0x4304,
+> +	[PCIE_INTR2_CPU_BASE] = 0x4400,
+> +};
+> +
+>  static const struct pcie_cfg_data generic_cfg = {
+>  	.offsets	= pcie_offsets,
+>  	.type		= GENERIC,
+> @@ -1686,6 +1695,13 @@ static const struct pcie_cfg_data bcm7216_cfg = {
+>  	.has_phy	= true,
+>  };
+>  
+> +static const struct pcie_cfg_data bcm7712_cfg = {
+> +	.offsets	= pcie_offset_bcm7712,
+> +	.perst_set	= brcm_pcie_perst_set_7278,
+> +	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
+> +	.type		= BCM7712,
+> +};
+> +
+>  static const struct of_device_id brcm_pcie_match[] = {
+>  	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
+>  	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
+> @@ -1695,6 +1711,7 @@ static const struct of_device_id brcm_pcie_match[] = {
+>  	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
+>  	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
+>  	{ .compatible = "brcm,bcm7425-pcie", .data = &bcm7425_cfg },
+> +	{ .compatible = "brcm,bcm7712-pcie", .data = &bcm7712_cfg },
+>  	{},
+>  };
+>  
 
