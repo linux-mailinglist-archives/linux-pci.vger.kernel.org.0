@@ -1,101 +1,84 @@
-Return-Path: <linux-pci+bounces-9783-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9784-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1EBE9270E0
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 09:49:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AAA2927199
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 10:23:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2D761C21C80
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 07:49:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 84547B21297
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 08:23:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7DB31A0AEA;
-	Thu,  4 Jul 2024 07:49:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA7E1A3BAE;
+	Thu,  4 Jul 2024 08:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="wQzwXGsY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A796D1A0B07;
-	Thu,  4 Jul 2024 07:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6111A0AE1;
+	Thu,  4 Jul 2024 08:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720079345; cv=none; b=AGs7ij/xR1djEhQQQCowh8ylEdHuJSNbEczNx2cqBAdVZDeaV89Qflgv5KZE7eLWfwBuMez0Q64gJnOfUvoxlm9QuZ9OjlKBlQyE1928IHPOREC5ugccTeEHTobqIE5azA30KrIxPkXBW4hLNE+hxtdAnnn1V/9/fva7JAdqscM=
+	t=1720081427; cv=none; b=SmAeQoLFuBdchyLeF5nVIyb9Q2S+xk2SEmqHY7yc+TZ8ftT11m6ssyx/pXwq6ZyAOfT4B2swM4C2537WikHCGMpjVn7F0n/5OtYPQLqgotf8FBKspg9dtu7eHcsmje+NHKLqeORKYEVDt9jj4OPugink8ozEomhZdbhnWG1tqdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720079345; c=relaxed/simple;
-	bh=FXyIm8BUSs84k8MRehwyXAfw5xJzi4jT6joRNBHNI+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+WhsXfcNXzm1hi5OwIu/A4uoYih80ee3L42dPuBnnEHTZTucpMyo+8y+8RK3RN+HqQz/gXlbxKbwXIlmDFbPFUpi7Z99B3aQRNW9GQ/kwtHoVI//JMXSyRWJCZDuHFx5WekoM17nrHi5MtZ4PxkvtY6lzpr5V0mcmYZwJr38xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 52B5468AA6; Thu,  4 Jul 2024 09:48:56 +0200 (CEST)
-Date: Thu, 4 Jul 2024 09:48:56 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Keith Busch <kbusch@kernel.org>, "Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240704074855.GA26913@lst.de>
-References: <cover.1719909395.git.leon@kernel.org> <20240703054238.GA25366@lst.de> <20240703105253.GA95824@unreal> <20240703143530.GA30857@lst.de> <20240703155114.GB95824@unreal>
+	s=arc-20240116; t=1720081427; c=relaxed/simple;
+	bh=esn5rcvEb3vNv/CngWyv8T7Sc4+TxLPVDrRzXw12GD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nWopjjE1owD4MokM24rAzy6J64z6naeZOPhylRoHMk2gXREnEpQizLe7VezkTkvlZ/BLvS0KDxJCWllOPBI5mC3uWA7+Y51pSAlem2hXeYD1XOwCPSbTRv5n0CeSCxAqkUtgYtZHtNAG3QZLC+hZ1AMV0oH1Q/gai18HIGNaE78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=wQzwXGsY; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1720081423;
+	bh=esn5rcvEb3vNv/CngWyv8T7Sc4+TxLPVDrRzXw12GD0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=wQzwXGsYKsDAeR+5zdRKqJFfOZ1j08lGsYYbpNc4+PmBucADurA1et4EaDLqcHCW8
+	 gyk8yAf5nNYyj2DVvcb447GCIdesTFC1kp0Lan59RGR+fHV026WFK375cPaPzN67mx
+	 P0jFACM+wiwsiK+OG8/RZax1r0xlsZ4Igv0syUPS6x6rQBjDhmV3IgfdzVy/b+yE6U
+	 mSBUy/1LnGArEh9m3rQ3WsUP/1/10bR31lwgxS+3gho/e43/u70YOKWzp/zH3w3swQ
+	 iaftYYJYzpvt1p0l6xR7A6uTTHeKM5BRQWqmv9/aM7rNDBRa7u9axQtKITfIV7h9+P
+	 fCGpLiIDLgE1w==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A9445378216A;
+	Thu,  4 Jul 2024 08:23:42 +0000 (UTC)
+Message-ID: <90342fc9-19ed-4976-8125-f8fccc8d4970@collabora.com>
+Date: Thu, 4 Jul 2024 10:23:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703155114.GB95824@unreal>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] dt-bindings: PCI: mediatek-gen3: add support for
+ Airoha EN7581
+To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-pci@vger.kernel.org
+Cc: ryder.lee@mediatek.com, jianjun.wang@mediatek.com, lpieralisi@kernel.org,
+ kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
+ linux-arm-kernel@lists.infradead.org, krzysztof.kozlowski+dt@linaro.org,
+ devicetree@vger.kernel.org, nbd@nbd.name, dd@embedd.com, upstream@airoha.com
+References: <cover.1720022580.git.lorenzo@kernel.org>
+ <138d65a140c3dcf2a6aefecc33ba6ba3ca300a23.1720022580.git.lorenzo@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <138d65a140c3dcf2a6aefecc33ba6ba3ca300a23.1720022580.git.lorenzo@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 03, 2024 at 06:51:14PM +0300, Leon Romanovsky wrote:
-> If we put aside this issue, do you think that the proposed API is the right one?
+Il 03/07/24 18:12, Lorenzo Bianconi ha scritto:
+> Introduce Airoha EN7581 entry in mediatek-gen3 PCIe controller binding
+> 
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-I haven't look at it in detail yet, but from a quick look there is a
-few things to note:
-
-
-1) The amount of code needed in nvme worries me a bit.  Now NVMe a messy
-driver due to the stupid PRPs vs just using SGLs, but needing a fair
-amount of extra boilerplate code in drivers is a bit of a warning sign.
-I plan to look into this to see if I can help on improving it, but for
-that I need a working version first.
-
-
-2) The amount of seemingly unrelated global headers pulled into other
-global headers.  Some of this might just be sloppiness, e.g. I can't
-see why dma-mapping.h would actually need iommu.h to start with,
-but pci.h in dma-map-ops.h is a no-go.
-
-3) which brings me to real layering violations.  dev_is_untrusted and
-dev_use_swiotlb are DMA API internals, no way I'd ever want to expose
-them. dma-map-ops.h is a semi-internal header only for implementations
-of the dma ops (as very clearly documented at the top of that file),
-it must not be included by drivers.  Same for swiotlb.h.
-
-Not quite as concerning, but doing an indirect call for each map
-through dma_map_ops in addition to the iommu ops is not every efficient.
-We've through for a while to allow direct calls to dma-iommu similar
-how we do direct calls to dma-direct from the core mapping.c code.
-This might be a good time to do that as a prep step for this work.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 
