@@ -1,162 +1,210 @@
-Return-Path: <linux-pci+bounces-9819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0E2F927BC5
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 19:16:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03F9B927E3C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 22:12:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E1F81C231AD
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 17:16:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6520D1F21DD8
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 20:12:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68EA12941B;
-	Thu,  4 Jul 2024 17:16:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7101E533;
+	Thu,  4 Jul 2024 20:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaAwoQJr"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p0jEnROu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xntnrW+z";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p0jEnROu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xntnrW+z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5EDA20;
-	Thu,  4 Jul 2024 17:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DF12F23;
+	Thu,  4 Jul 2024 20:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720113368; cv=none; b=p+6vB3T7+FYdSI83BE/iskMHeukX6UcZzT0dzn9jfj3v2C5PRxfAvhzaSysVSQiDn8yjDJPFJDK8mAhUwJfs9lhAHT9mpqBWEC89vgWTFHrVQYhFnN6twsyaN9DmR99vd8/J82X4sYrWeHgi55h4onmYlk63dyVMTOvpDxt4TIw=
+	t=1720123925; cv=none; b=qa1HB6v1elCtl8LlMM2yOJUEWnh0lfIG2dTd8Dq9eOOs+Gvkp5R3ymYSm2cqhe9ULAG7a0A+1qfpV4aL465vQBB7fmLfGE1FqqI+QHmA2clsQlQDEokeqIOaxrxeWkUACnWzHMothdMHqwSxn3o9gQ9Ilt1sUhEMiIUkG5EWXBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720113368; c=relaxed/simple;
-	bh=pNA8/Q/+goKs7oTKt+a3Cw9yHcXIncdaNs7gbU3axuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fBUia8SHkmAOliNqojRLTQThukET53mIvX5tr+DV+G7FISNT7JUNypgOOPLSq1TonrE71ArH83tmNzOhPO6FxSMzJJ7q9uPcspqbIyNZ8PvdSOR2ahICWPgTj4KpPIY3+fGsxb6fmSceueM7vpUce2qLjt4TP8fiPyq/z/S1MQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaAwoQJr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33CBDC3277B;
-	Thu,  4 Jul 2024 17:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720113368;
-	bh=pNA8/Q/+goKs7oTKt+a3Cw9yHcXIncdaNs7gbU3axuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CaAwoQJrZLArTEOfKusmY+hI3dr6PuiWIDAGemB23zwQ/bD7VJTzy3rb1U9K40ZyB
-	 /otipiTe+bwUNsaC6ZuVc/FviZm+4xAk2xQacK3lQNi9b9C6Rc7h/wCI7BS0VScrsf
-	 4tpxSoBJ33RZtNcI49felKJ65GDyJxoFFc0vfS3DWE0TZBsc0CA7zajLlHMMZq2nJ1
-	 BWwTxUhNOiJTR9T9zELEmujZkVJUUwVvWzO3p2r1Bum7+UJPdGxvl/n/B2MHdq+XCm
-	 MP6AVd9901F70GjDlGUnmWKECr+ExRRv6xOr2s0RZ4V/pVSadlxpSNJHRlLbIQ94pP
-	 b/fDR1hY0KIrA==
-Date: Thu, 4 Jul 2024 20:16:02 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	"Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 18/18] nvme-pci: use new dma API
-Message-ID: <20240704171602.GE95824@unreal>
-References: <cover.1719909395.git.leon@kernel.org>
- <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
- <249ec228-4ffd-4121-bd51-f4a19275fee1@arm.com>
+	s=arc-20240116; t=1720123925; c=relaxed/simple;
+	bh=QKoMp6r/NggWhLsCXSjs5G35obDLVBLLQSngu8mj0Fc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nUsLDyLDPIOaFizDe7kWV+pUzQ5swcXNTRFhacbWy4LR4U8z2Kh+wFpD21EJlMobjkJUW3EQlPR6kwhbaGCzhzyGNIciQCwho1jFy0uaJs0JQZBHkEFHgKI/rucCpEVlfmteoKSc2ARjWJqlaw9pt5Pt4XrjOs4BOwuwhXbnhak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p0jEnROu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xntnrW+z; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p0jEnROu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xntnrW+z; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 528EF2122A;
+	Thu,  4 Jul 2024 20:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720123921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q0xbNEADlo/VTmNhYiX7C6UqOBxQAFv1iUFTviJbX8g=;
+	b=p0jEnROu7r9nuu+S8CHJBYoCitB0oKTfcDYQ+cNaF0W4q16sUyXlE+9XmteucPIsT9oBLT
+	NeqRtk8AS2FUW1ucTpvfgWDORvWmj8DRRFmAZfM52mMo7lB5iYBF8Z8bf5n1eKYkfD/KS4
+	jZ0PieDjr6yRM9q7V/l+cfvBFMOLaWY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720123921;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q0xbNEADlo/VTmNhYiX7C6UqOBxQAFv1iUFTviJbX8g=;
+	b=xntnrW+zxxt5ymncllo44PNkWC6pcGVRl2bt/SpCv33+HAc/F/j6BMcbQwqg7Xzls8BLIj
+	vWj9+GZBFKJx4VBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1720123921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q0xbNEADlo/VTmNhYiX7C6UqOBxQAFv1iUFTviJbX8g=;
+	b=p0jEnROu7r9nuu+S8CHJBYoCitB0oKTfcDYQ+cNaF0W4q16sUyXlE+9XmteucPIsT9oBLT
+	NeqRtk8AS2FUW1ucTpvfgWDORvWmj8DRRFmAZfM52mMo7lB5iYBF8Z8bf5n1eKYkfD/KS4
+	jZ0PieDjr6yRM9q7V/l+cfvBFMOLaWY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1720123921;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q0xbNEADlo/VTmNhYiX7C6UqOBxQAFv1iUFTviJbX8g=;
+	b=xntnrW+zxxt5ymncllo44PNkWC6pcGVRl2bt/SpCv33+HAc/F/j6BMcbQwqg7Xzls8BLIj
+	vWj9+GZBFKJx4VBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 40AE41369F;
+	Thu,  4 Jul 2024 20:12:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xVpCDRACh2bkCAAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Thu, 04 Jul 2024 20:12:00 +0000
+Message-ID: <bd097824-17a7-407f-ba92-6c4ef2c0029f@suse.de>
+Date: Thu, 4 Jul 2024 23:11:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <249ec228-4ffd-4121-bd51-f4a19275fee1@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/12] PCI: brcmstb: Refactor for chips with many
+ regular inbound BARs
+To: Stanimir Varbanov <svarbanov@suse.de>,
+ Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com,
+ jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240703180300.42959-1-james.quinlan@broadcom.com>
+ <20240703180300.42959-10-james.quinlan@broadcom.com>
+ <8433a148-47d5-49a0-b7ed-75801060bce7@suse.de>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <8433a148-47d5-49a0-b7ed-75801060bce7@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	FREEMAIL_TO(0.00)[suse.de,broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,gmail.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.29
+X-Spam-Level: 
 
-On Thu, Jul 04, 2024 at 04:23:47PM +0100, Robin Murphy wrote:
-> On 02/07/2024 10:09 am, Leon Romanovsky wrote:
-> [...]
-> > +static inline dma_addr_t nvme_dma_link_page(struct page *page,
-> > +					   unsigned int poffset,
-> > +					   unsigned int len,
-> > +					   struct nvme_iod *iod)
-> >   {
-> > -	int i;
-> > -	struct scatterlist *sg;
-> > +	struct dma_iova_attrs *iova = &iod->dma_map->iova;
-> > +	struct dma_iova_state *state = &iod->dma_map->state;
-> > +	dma_addr_t dma_addr;
-> > +	int ret;
-> > +
-> > +	if (iod->dma_map->use_iova) {
-> > +		phys_addr_t phys = page_to_phys(page) + poffset;
+Hi,
+
+On 7/4/24 16:30, Stanimir Varbanov wrote:
+> Hi Jim,
 > 
-> Yeah, there's no way this can possibly work. You can't do the
-> dev_use_swiotlb() check up-front based on some overall DMA operation size,
-> but then build that operation out of arbitrarily small fragments of
-> different physical pages that *could* individually need bouncing to not
-> break coherency.
+> On 7/3/24 21:02, Jim Quinlan wrote:
+>> Previously, our chips provided three inbound "BARS" with fixed purposes:
+>> the first was for mapping SOC registers, the second was for memory, and the
+>> third was for memory but with the endian swapped.  We typically only used
+>> one of these BARs.
+>>
+>> Complicating that BARs usage was the fact that the PCIe HW would do a
+>> baroque internal mapping of system memory, and concatenate the regions of
+>> multiple memory controllers.
+>>
+>> Newer chips such as the 7712 and Cable Modem SOCs have taken a step forward
+>> and now provide multiple inbound BARs.  This works in concert with the
+>> dma-ranges property, where each provided range becomes an inbound BAR.
+>>
+>> This commit provides support for these new chips and their multiple
+>> inbound BARs but also keeps the legacy support for the older system.
+>>
+>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>> ---
+>>  drivers/pci/controller/pcie-brcmstb.c | 199 +++++++++++++++++++-------
+>>  1 file changed, 150 insertions(+), 49 deletions(-)
 
-This is exactly how dma_map_sg() works. It checks in advance all SG and
-proceeds with bounce buffer if needed. In our case all checks which
-exists in dev_use_sg_swiotlb() will give "false". In v0, Christoph said
-that NVMe guarantees alignment, which is only one "dynamic" check in
-that function.
+<cut>
 
-   600 static bool dev_use_sg_swiotlb(struct device *dev, struct scatterlist *sg,
-   601                                int nents, enum dma_data_direction dir)
-   602 {
-   603         struct scatterlist *s;
-   604         int i;
-   605
-   606         if (!IS_ENABLED(CONFIG_SWIOTLB))
-   607                 return false;
-   608
-   609         if (dev_is_untrusted(dev))
-   610                 return true;
-   611
-   612         /*
-   613          * If kmalloc() buffers are not DMA-safe for this device and
-   614          * direction, check the individual lengths in the sg list. If any
-   615          * element is deemed unsafe, use the swiotlb for bouncing.
-   616          */
-   617         if (!dma_kmalloc_safe(dev, dir)) {
-   618                 for_each_sg(sg, s, nents, i)
-   619                         if (!dma_kmalloc_size_aligned(s->length))
-   620                                 return true;
-   621         }
-   622
-   623         return false;
-   624 }
-
-   ...
-  1338 static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
-  1339                 int nents, enum dma_data_direction dir, unsigned long attrs)
-  ...
-  1360         if (dev_use_sg_swiotlb(dev, sg, nents, dir))                          
-  1361                 return iommu_dma_map_sg_swiotlb(dev, sg, nents, dir, attrs);   
-
-Thanks
-
+>>  static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>>  {
+>> -	u64 rc_bar2_offset, rc_bar2_size;
+>> +	struct rc_bar rc_bars[PCIE_BRCM_MAX_RC_BARS];
+>>  	void __iomem *base = pcie->base;
+>>  	struct pci_host_bridge *bridge;
+>>  	struct resource_entry *entry;
+>>  	u32 tmp, burst, aspm_support;
+>> -	int num_out_wins = 0;
+>> -	int ret, memc;
+>> +	int num_out_wins = 0, num_rc_bars = 0;
+>> +	int i, memc;
+>>  
+>>  	/* Reset the bridge */
+>>  	pcie->bridge_sw_init_set(pcie, 1);
+>> @@ -933,17 +1016,47 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>>  	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK);
+>>  	writel(tmp, base + PCIE_MISC_MISC_CTRL);
+>>  
+>> -	ret = brcm_pcie_get_rc_bar2_size_and_offset(pcie, &rc_bar2_size,
+>> -						    &rc_bar2_offset);
+>> -	if (ret)
+>> -		return ret;
+>> +	num_rc_bars = brcm_pcie_get_rc_bar_sizes_and_offsets(pcie, rc_bars);
 > 
-> Thanks,
-> Robin.
-> 
-> > +
-> > +		dma_addr = state->iova->addr + state->range_size;
-> > +		ret = dma_link_range(&iod->dma_map->state, phys, len);
-> > +		if (ret)
-> > +			return DMA_MAPPING_ERROR;
-> > +	} else {
-> > +		dma_addr = dma_map_page_attrs(iova->dev, page, poffset, len,
-> > +					      iova->dir, iova->attrs);
-> > +	}
-> > +	return dma_addr;
-> > +}
-> 
+> Can we change the function name to brcm_pcie_get_inbound_regions? ...
+
+... or better brcm_pcie_get_inbound_wins() ?
+
+~Stan
 
