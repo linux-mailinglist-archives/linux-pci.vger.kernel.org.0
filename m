@@ -1,123 +1,203 @@
-Return-Path: <linux-pci+bounces-9808-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9809-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2166D927798
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:00:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68C129277AD
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:04:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 511D81C2315A
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 14:00:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1EC1F281CA5
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 14:04:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA803DDAB;
-	Thu,  4 Jul 2024 14:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQTXxXQ1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819E51822E2;
+	Thu,  4 Jul 2024 14:03:59 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E572F37;
-	Thu,  4 Jul 2024 14:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295962F37;
+	Thu,  4 Jul 2024 14:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720101638; cv=none; b=jKPD47XxPg6pLxCx3Pt82PJIEJMRDjvCkCsxc5dD3jimcV7+AyxbVYlpRrSrhxJZT3L12nWlW1z+RvEk2PDwHsafh/sTql73gwqucR8qUKOM9+YW+o4HCwvgtMFFB1KxhHgT6zPcITqyCiBtSLMbPyo3LgUI4Z1SnHWAgFAIIC0=
+	t=1720101839; cv=none; b=fwJL8Mo9R3MYPb3i2MEQJRwy2dpl5VAfL3tenKIFZNNAAroVcpfG0KSpJgWF2Kpg2xduUPrQBXg7PMuc6UURqKx9PWAX09AFphtc4+QPUefN0iLx4eEIGu2AjcZrUz9rDAb0YCF7r0pNrUFAwg3uL/rwKgCZdm2r16sA9nm1fbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720101638; c=relaxed/simple;
-	bh=BI3K9B4fHdsqsHWD9vA0RUdsadmFzyQ94cYJLOtuDUw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NNLF3WycQVlnM88M6txw/Qp6J1H13CgZv9GoWwVEHkoHTbvRww1+4EFBuPp8MGbKrbU1zwS6oC46G9HVhGj5vaW8jII9DLmpS5SoGSoMy00ACL4VRvGcpEzBFVZe8Gp0t73mra0YinnQmxuY/OO8DHWBYbkDWhO+UHNY2RLjFoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VQTXxXQ1; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57cc1c00ba6so1003156a12.1;
-        Thu, 04 Jul 2024 07:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720101635; x=1720706435; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BI3K9B4fHdsqsHWD9vA0RUdsadmFzyQ94cYJLOtuDUw=;
-        b=VQTXxXQ1x64rzqNcU3ulfo3ndw6OP1/a9OFyN1vuSdb81kMuqPBfwpL/mZc2TBu7YR
-         /T3fjBwE9R+WvX9aReCJG9y6d/4UIIelAFkXG2traAo808Qse62wzD/+a5BpJvxwuAVc
-         a+rIwLSgI2ZndZmgHvRXEMSxNLihF7xkdoHRwTzGWmCqZ7WoVFjosMf7WrGhehyIbByV
-         +UnSJhjSQDRBJ31TEdjjXuLMre41X6DGe5DGoghOHadawlkHWPkrs2KHw3CYxW+j5sju
-         nVPFpGwkg9wsCGN1zo8WFG0BfnLaJw5c2LGaScfbAxUKGWpHE7Nnp4XV5Qbb/azAiDQc
-         L/aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720101635; x=1720706435;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BI3K9B4fHdsqsHWD9vA0RUdsadmFzyQ94cYJLOtuDUw=;
-        b=KsTIbpCF72Edi5dpdQVf+3ofzFv0w6rxLSmysgVwahShHoA/FiP1cYyDHiEL/A93B5
-         92TprEqgbmXEFFHr+tlj2PmbBYxrCUZQ8suzi7CCr+0yNt1yG+gq9Javn++19RnlNtEt
-         443o8czMyhzc4TiS3SCl/SmVr17qVm7xIfbozwUpJHOKTTKMdvufz4mwRuJISU65m6ij
-         pECbAZMEV6/CKJG3JCbPemgMq9M1taSfPDNIBVLDKthaAvPyGf1Ufw9V5Z41v35F3ktc
-         DMCSDSdFQnILBWULv3aWd4/h50CTpgjL9WD8tZQLXFS6vDNBHYxmoWUHMdEbYwShyDqR
-         1MtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkZMuJT3oz0F+So8m/04x1TOd9d0jK9ywNOt1NregJMZLBFsmKx5x53dtlFgfweO/V1bJAPIoXTK1ClP0tPEu3/GvRGQVRptUCVKvNDdcA6xvZkixzv2Ajo8CMXZAQJODXEYzPA1OL
-X-Gm-Message-State: AOJu0YwR+xacPwMg8fNVhkmYf2x1sKmR7jEe7o9Jr0spIYnc3c18sOPf
-	2QPUkE7W5hTqMqYLQYKR1//5MR03AzvFUMk+XrkCcPPTdH5y2PtV
-X-Google-Smtp-Source: AGHT+IEQxWoQEdIqpOkEDDklRMrrllojJRx4vtnOba5QfkjeMPJhS52NS3hiUZx/2dMDFf8CR3JUxg==
-X-Received: by 2002:a17:906:cb8b:b0:a72:7bd6:7e4a with SMTP id a640c23a62f3a-a77ba478995mr122294366b.24.1720101635396;
-        Thu, 04 Jul 2024 07:00:35 -0700 (PDT)
-Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a77b8195453sm55100866b.1.2024.07.04.07.00.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 07:00:34 -0700 (PDT)
-From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: abaci@linux.alibaba.com,
-	arnd@arndb.de,
-	jiapeng.chong@linux.alibaba.com,
-	kishon@kernel.org,
-	kw@linux.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Subject: Re: Re: [PATCH -next v2] misc: pci_endpoint_test: Remove some unused functions
-Date: Thu,  4 Jul 2024 16:00:21 +0200
-Message-Id: <20240704140021.2363403-1-rick.wertenbroek@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <2024070442-garden-visa-a7d0@gregkh>
-References: <2024070442-garden-visa-a7d0@gregkh>
+	s=arc-20240116; t=1720101839; c=relaxed/simple;
+	bh=MVrBqmDA7ChNGeqJBxGNH6p6O8C0qTo2ty+kIsd+RT4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OvhW2aEbukvsNeK2+VDQPS8fqNW5mDjpN1yXsyLwMRd7P8aeeW1Jfm5SZ/64nTQu5dU1RzR6FgwWGH7MXQhaPhXc9WjN83kfY/176hbPFdFZat2Hs/JSrfORejcgsx7Mpxkv+N+F3lSUSvvLF9VLlzewjyexgEWehwjNrosiP7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFJJ52gxsz6K65F;
+	Thu,  4 Jul 2024 22:02:45 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id DAF781400D1;
+	Thu,  4 Jul 2024 22:03:52 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 4 Jul
+ 2024 15:03:45 +0100
+Date: Thu, 4 Jul 2024 15:03:44 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <ira.weiny@intel.com>,
+	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
+Subject: Re: [PATCH v6 2/2] cxl: Calculate region bandwidth of targets with
+ shared upstream link
+Message-ID: <20240704150344.00007f46@Huawei.com>
+In-Reply-To: <6685f3bb2be5a_4fe7f2942f@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20240701215020.3813275-1-dave.jiang@intel.com>
+	<20240701215020.3813275-3-dave.jiang@intel.com>
+	<6685f3bb2be5a_4fe7f2942f@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Jul 04, 2024 at 02:58:10PM +0200, Greg KH wrote:
-> On Thu, Jul 04, 2024 at 04:14:06PM +0900, Krzysztof Wilczyński wrote:
-> > Hello,
-> >
-> > > These functions are defined in the pci_endpoint_test.c file, but not
-> > > called elsewhere, so delete these unused functions.
-> > >
-> > > drivers/misc/pci_endpoint_test.c:144:19: warning: unused function 'pci_endpoint_test_bar_readl'.
-> > > drivers/misc/pci_endpoint_test.c:150:20: warning: unused function 'pci_endpoint_test_bar_writel'.
-> >
-> > Have you see my question to the first version of this patch?
->
-> Yeah, I don't understand this at all, how is this patch even building?
->
-> What tree/branch is it made against?
->
-> thanks,
->
-> greg k-h
+On Wed, 3 Jul 2024 17:58:35 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Hi,
-I can confirm in linux-next tag next-20240703 the functions are indeed removed.
-See commit 0ace3d3b70ed6a474d52fc44ee9b0b1f16ca3724
-misc: pci_endpoint_test: Use memcpy_toio()/memcpy_fromio() for BAR tests
+> Dave Jiang wrote:
+> > The current bandwidth calculation aggregates all the targets. This simple
+> > method does not take into account where multiple targets sharing under
+> > a switch where the aggregated bandwidth can be less or greater than the
+> > upstream link of the switch.
+> > 
+> > To accurately account for the shared upstream uplink cases, a new update
+> > function is introduced by walking from the leaves to the root of the
+> > hierarchy and adjust the bandwidth in the process. This process is done
+> > when all the targets for a region are present but before the final values
+> > are send to the HMAT handling code cached access_coordinate targets.
+> > 
+> > The original perf calculation path was kept to calculate the latency
+> > performance data that does not require the shared link consideration.
+> > The shared upstream link calculation is done as a second pass when all
+> > the endpoints have arrived.  
+> 
+> The complication of this algorithm really wants some Documentation for
+> regression testing it. Can you include some "how to test this" or how it
+> was tested notes?
 
-Regards,
-Rick
+Hi Dave, Dan,
+
+FWIW I finally managed to get a flexible QEMU setup for testing this
+and it looks almost prefect wrt to reported BW. Note I can't
+do 2 layer switches without fixing some other assumptions in
+the CXL QEMU emualation (shortcuts we took a long time ago) +
+I'm hoping your maths is good for any thing that isn't 1 or 2
+devices at each level.
+
+I've got one case that isn't giving right answer.
+
+Imagine system with a CPU Die between two IO dies (each in their
+own NUMA nodes - typically because there are multiple CPU dies
+and we care about the latencies / bandwidths from each to the
+Host bridges).  If we always interleaved then we would just
+make one magic GP node, but we might not for reasons of what else
+is below those ports.  Equal distance, opposite direction on
+interconnect so separate BW. Topology wise this isn't a fairy tale
+btw so we should make it work.  Also can easily end up with this
+if people are doing cross socket interleave.
+
+   _____________  ____________  ____________
+  |             ||            ||            |
+  |   IO Die    ||   CPU Die  ||   IO Die   |
+  |             ||            ||            |
+  |   HB A      ||            ||   HB B     |
+  |_____________||____________||____________|
+        |                            |
+
+etc.
+
+ACPI / Discoverable components.
+
+
+                 _____________
+                |             |
+                |  CPU node 0 |
+                |_____________|
+                  |         |
+         _________|___    __|__________
+        |             |  |             |
+        |   GP Node 1 |  | GP Node 2   |
+        |             |  |             |
+        |   HB A      |  | HB B        |
+        |_____________|  |_____________|
+              |                |
+             RPX              RPY
+              |                |
+            Type3J           Type3K
+
+If the minimum BW is the sum of the CPU0 to GP Node 1 and GP Node 2
+I'm currently seeing it reported as just one of those (so half what
+is expected) I've checked the ACPI tables and it's all correct.
+
+I'm not 100% sure why yet but suspect it's the bit under the comment
+/*
+ * Take the min of the downstream aggregated bandwidth and the
+ * GP provided bandwidth if the parent is CXL Root.
+ */
+In case of multiple GP Nodes being involved, need to aggregate
+across them and I don't think that is currently done.
+
+Tests run.
+
+CPU and GI (GI nearer to GP so access 0 and access 1 are slightly different)
+
+GP/ 1HB / 2RP / 2Direct Connect Type 3
+- Minimum BW at GP
+- Minimum BW as Sum of Links.
+- Minimum BW as Sum of read / write at devices.
+
+2GP in one numa node/ 2HB/ 1RP per HB / 1 type 3 per RP. (should be same as above)
+- Minimum BW at GP
+
+2GP in separate numa node - rest as previous
+- Minimum BW at GP (should be double previous one as no sharing of the HMAT
+  described part - but it's not :()
+
+GP / 1HB / 1RP / Shared Link / SW USP / 2 SW DSP / Separate Link / Type 3.
+- Minimum BW at GP
+- Minimum BW on the shared link.
+- Minimum BW on the sum of the SSLBIS values for the switch.
+- Minimum BW as sum of separate links.
+- Minimum BW on the type 3.
+
+I'll post the patches that add x-speed and x-width controls to
+the various downstream ends of links (QEMU link negotiation is
+minimalist to put it lightly and if your USP is no capable
+will merrily let it appear to train with the DSP end faster
+than the USP end) and also sets all the USPs to
+support up to 64G / 16X
+
+To actually poke the corners I'm hacking the CDAT tables
+as don't have properties to control of those bandwidths yet.
+I guess that needs to be part of a series intended to allow
+general testing of this functionality.
+
+I've only been focusing on BW in these tests given that's
+what matters here.
+
+The algorithm you have to make this work is complex so
+I'd definitely be keen on hearing if you think it could
+be simplified - took me a while to figure out what was
+going on in this series.
+
+Jonathan
+
+p.s. Anyone like writing tests?  Lots more tests we could
+write for this.  I'll include some docs in cover letter for
+the QEMU RFC.
+
 
