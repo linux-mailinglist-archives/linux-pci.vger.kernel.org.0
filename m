@@ -1,90 +1,108 @@
-Return-Path: <linux-pci+bounces-9810-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9811-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36EAD92780C
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:17:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A45392781F
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:19:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5C1228536E
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 14:17:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBA8C1C21544
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 14:19:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3AAD1AEFE9;
-	Thu,  4 Jul 2024 14:17:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7FB1B11E9;
+	Thu,  4 Jul 2024 14:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mipZ7g1m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ep7+sx7/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE661AEFE7;
-	Thu,  4 Jul 2024 14:17:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6461B010A;
+	Thu,  4 Jul 2024 14:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720102641; cv=none; b=ag8JXqF3PgzZ0phbU21W1Fgip+Noj6fH5SYe4FncAcCkfDL0ZrIXAP70RI/hd/LCJnV9NnuepHv2+zDovNDVj4FeVGBVKLxRzxUAtVp5D/2WouOGUDJoR6l18nYuM0bj766S/OVUpjH+ZKg2z/CkEvhnSkOTKkFGSUZrc7vl/Gs=
+	t=1720102757; cv=none; b=r/Sl/kwxFsIYUsoCMXAeWg6W/5uKPXlwjErzU7Io/YCZzEN1LtCuUCYrV3p95sgFNtXTWL5hxV8BMQ62TnNw3O09jfZ7KQNL9I7d6pqOvyJXPx+36nDInnWvh4WZYBl1SVIvWMHyD7GXWmuMMzaFiQbZFNo1NUN7fqIObKfJ9JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720102641; c=relaxed/simple;
-	bh=NTEkeVWFX9WMfFqfduEV0Oz357OTuGc2THuDt0lLwiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LmFbgWg+HjZ0cej05oSQGuUnGBRjJjombZrYf1Hl+rzuun7CAcUmtq30q1/HJVmrUV1YKqdzH6EOJpMlH2FF3k+NMNNMLWfFX1sTZV7Sf1Xg1XnnXOVTONYU+cg0REXwHnQmkJwMjjr9mbfGDl0WTueBj79DJEv84AAY5fpV6AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mipZ7g1m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD826C3277B;
-	Thu,  4 Jul 2024 14:17:20 +0000 (UTC)
+	s=arc-20240116; t=1720102757; c=relaxed/simple;
+	bh=YUUaox4QmEDxktmHdK7cEJhex29ZOYDxVznfPTuSThk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=unaA8j+QVn/glpz+cndpU6Icv/WvXTVSC25E373EazQkCPCa+wB0D9+DaQoWFsF2lxOd3r5zdAzck5UgfWYd6mWAJQ/3a6kEU+/pAw85Vpcc8IcF7KUHRLWb/cHrmsdsHhCsnHb9sx/ZDWJIMpC1AzBNBR1HMlYYghRps0Ynxoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ep7+sx7/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44BA7C4AF0D;
+	Thu,  4 Jul 2024 14:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720102641;
-	bh=NTEkeVWFX9WMfFqfduEV0Oz357OTuGc2THuDt0lLwiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mipZ7g1mOE4nImWzjY6Jzs0DNKVjtia5LK8idfImTPMbRGI3rwJJb8f6mRL3/8svP
-	 NjMTS8AZ0AjD+LVPgOQsIGNNzfJd8KjJ1/MuYwRdm0QIvglkLQv0NDEAgWBpEVcGCy
-	 kvTtc46rpRFY0aFyb6JS4QSx3x7+0dsxcuZVoM0d3EbhSK4JmYceZNOdQmg9HOj9SR
-	 t5O1pDeVrafIM47fE9GG4UaKctcUZhl4aI+alsLW+au9fon1fqIkyTV6vYhWNGvp5G
-	 FGKoYwTqG61HiBswwwSBb21f1D9lEk75Yyz0OTyEd2Nt542d+yH1eWKVoeN1Avk2QC
-	 L2mTVCGeNEZKQ==
-Date: Thu, 4 Jul 2024 23:17:19 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: Philip Li <philip.li@intel.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	kernel test robot <lkp@intel.com>, Abel Vesa <abel.vesa@linaro.org>,
-	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [pci:dt-bindings 10/11]
- arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: pci@1bf8000: reg: [[0, 29327360,
- 0, 12288], [0, 1879048192, 0, 3869], [0, 1879052064, 0, 168], [0,
- 1879052288, 0, 4096], [0, 1880096768, 0, 1048576]] is too short
-Message-ID: <20240704141719.GA1215610@rocinante>
-References: <202407041154.pTMBERxA-lkp@intel.com>
- <20240704072006.GA2768618@rocinante>
- <bd96c9e5-9342-41b8-aa14-2db4828e37f3@kernel.org>
- <20240704073908.GA2877677@rocinante>
- <ZoZjKN1N8QfRYn7n@rli9-mobl>
+	s=k20201202; t=1720102756;
+	bh=YUUaox4QmEDxktmHdK7cEJhex29ZOYDxVznfPTuSThk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ep7+sx7/U+a3JxROBWJy6PYSDV4eOSDAMdRwK8A32iMc9lfmXlx1R5Qzb+pdZSHHy
+	 UJQvhMhJhuw/YwRpoxmwSYWIJbH85JatxZf65aDs0Kivz8dL98GHtGfsmWJSSX76Bm
+	 zfIM1BwXura0tiP3JZk/S+k/Z3bXRPkrW1qHwT/likboAN2ZinR5uGrVi7MqyaJg5a
+	 JTPK74vUKgRKqt7r9CBgZb3OkVASfOkMkLMA8bh0m+2MQo5Ol9aVSrRHpR+j6NFrKP
+	 C3hM4CgpL8jbs5OZ+5NtK6Ey5RqwENMIJ/29nDjnje8kWHTcKfTriQy4oz9g/7XfPq
+	 1kkdG91zSKzwQ==
+From: Will Deacon <will@kernel.org>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	liviu.dudau@arm.com,
+	sudeep.holla@arm.com,
+	joro@8bytes.org,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	robin.murphy@arm.com,
+	nicolinc@nvidia.com,
+	ketanp@nvidia.com,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Enable PCIe ATS for devicetree boot
+Date: Thu,  4 Jul 2024 15:18:58 +0100
+Message-Id: <172010124265.2651905.5967081185838500176.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240607105415.2501934-2-jean-philippe@linaro.org>
+References: <20240607105415.2501934-2-jean-philippe@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZoZjKN1N8QfRYn7n@rli9-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
-
-> > > > I removed this patch from the dt-bindings branch for the time being.
-
-I will add this patch back to the branch.
-
-> > > These reports are useless. I suggest ignore all of them...
-> > 
-> > I see.  Just a lot of noise then...
+On Fri, 07 Jun 2024 11:54:13 +0100, Jean-Philippe Brucker wrote:
+> Before enabling Address Translation Support (ATS) in endpoints, the OS
+> needs to confirm that the Root Complex supports it. Obtain this
+> information from the firmware description since there is no architected
+> method. ACPI provides a bit via IORT tables, so add the devicetree
+> equivalent.
 > 
-> Sorry about this, we will skip these reports in future as discussed in [1]
-> to avoid false positive.
+> Since v1 [1] I added the review and ack tags, thanks all. This should be
+> ready to go via the IOMMU tree.
 > 
-> [1] https://lore.kernel.org/oe-kbuild-all/ZoZhvjDsHSHtvpP3@rli9-mobl/
+> [...]
 
-No worries.  Thank you for taking care of this!  Much appreciated.
+Applied to iommu (pci/ats), thanks!
 
-	Krzysztof
+[1/3] dt-bindings: PCI: generic: Add ats-supported property
+      https://git.kernel.org/iommu/c/40929e8e5449
+[2/3] iommu/of: Support ats-supported device-tree property
+      https://git.kernel.org/iommu/c/86e02a88bedc
+[3/3] arm64: dts: fvp: Enable PCIe ATS for Base RevC FVP
+      https://git.kernel.org/iommu/c/6bac3388889c
+
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
 
