@@ -1,120 +1,151 @@
-Return-Path: <linux-pci+bounces-9794-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9795-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01A689273BD
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 12:14:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 672D8927550
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 13:41:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3312A1C20B8D
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 10:14:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 951151C212DA
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 11:41:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80D601AB8E0;
-	Thu,  4 Jul 2024 10:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B820E1AC447;
+	Thu,  4 Jul 2024 11:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="P0Snfnhk"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="OZK3/FWa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBB61A0730;
-	Thu,  4 Jul 2024 10:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2C01AC427;
+	Thu,  4 Jul 2024 11:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720088053; cv=none; b=oHd9Pnx8zrxMNTFEi8nucf65sKyAi9RtM4p3XQa3ML+wqrftDtfdN5LTe6pwh3h6YjbZWI/SPRpzDOdIuOyY5t9+6D0FlwV8RJGnTo6S6In/B6kF5rSDoaZzh0493nSQYVCb5PHEpdWlriHlwAN1CfWuS5wGMZUoaSNb8isEtdc=
+	t=1720093257; cv=none; b=T4hIqg0lPYk+BMybeoIpedSk69gz+W8ObFMhCDlwvkTd1yypXZc/nh82Ah0LMvdLDQ0YHn4OeA/aVRFJCxTIxWiFiJNmUxNolcFEQMfiaewQReydBqlJKeuVnKPbs7USKIoE7EwYkHH90WMiNuGpqHSWBH/bpBQMoPsL/NI4EM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720088053; c=relaxed/simple;
-	bh=//9ECFtIGDXgr32mbIQKVc5AnOz194f6V+ACEj8MpgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fDHPo9PsbvbxWrc7Tyonm5fqF5tpTxLNpsAkjybA5DGWlpLjkJI0xdyDPSEYplJWHLYFBbi6afjdHzdPFw/0cIV6OuoQ/l3w3w4zTpqRFO+J9Z6iKd2roBK0JellRR52i2Ww2fP0Q/8fzSJOZWOI0HukigTNEid9gPcieTgphrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=P0Snfnhk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE24C3277B;
-	Thu,  4 Jul 2024 10:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1720088052;
-	bh=//9ECFtIGDXgr32mbIQKVc5AnOz194f6V+ACEj8MpgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P0Snfnhkj7uh2n7nFP/HQF3ZtnaVvZYR1xwzsS0dArbNGUFC5+LHN2ThdInM8ZElo
-	 MJLN06S9UKEw3wfnzRZr31xLe4MeAKuMCFZEoz5h+nghEzu2GncPBwjAYYtjopSi+0
-	 eaHIaJSdXhwv/RyirzP6bvWuHIUBHv8L/40yEph0=
-Date: Thu, 4 Jul 2024 12:14:10 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Li, Ming" <ming4.li@intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
-	Jerome Glisse <jglisse@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
-	Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v2 14/18] sysfs: Allow symlinks to be added between
- sibling groups
-Message-ID: <2024070459-valley-partly-88e2@gregkh>
-References: <cover.1719771133.git.lukas@wunner.de>
- <7b4e324bdcd5910c9460bb5fc37aaf354f596ebf.1719771133.git.lukas@wunner.de>
+	s=arc-20240116; t=1720093257; c=relaxed/simple;
+	bh=0t5V8hGpWOJtneO7w5BxKJ5cMBWLj2YmpoYFdgKhhJ4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=qUIPj4r8kavU0F/DoXdLXz2WA1DEY9FfvgpRPKTYtGiLyvuIMCvNUziBlBYe3xKXqxD4ekyyaHA5sWAH62cekzRk4x9IbBATFFiVU1dgPRN411UJtKrdUojaZ9Z/I1MbiZJdKlyspgpG5S5JTx6E/gfk0Bk0jTvH7sfurE3JWnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=OZK3/FWa; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720093225; x=1720698025; i=markus.elfring@web.de;
+	bh=eHPsQyXMv+fdN2eJFWuA9EeCEwuGrpNdVdYusCYWAas=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=OZK3/FWa2MGNwyWHZ8eTEIucLKs6nxHp35hxJcby7u4aCdMN14vWVHntgn+RZ7Xx
+	 ITmdeyF9dMPzUPyMfjnGWTHnhiqnU+c0zsErpfa4LRCHr6lkprsDXKVrW5l3Mtm1b
+	 zpZKx/c0I9s8pqwNJRBkry0k1LCRZqJbYRydcFIKY1tGdMt+cGPBMOxvfG3gR60dA
+	 m5QzpJ0kWtXiVJfmoPkuA/LI+b6pcjBZBgkc2ErXvVDM5kO0f38GVIdK/WhFrsRp5
+	 gfZCXnL7iIW0VeruFY7MEb9ZuoRWGOp3FNQFYADYjVr+Vc8WAreqt2ge9KOrVkPga
+	 MbwpIlh7w8AEZ2zJ/g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MgiXO-1rvVqv2Noq-00j6Tf; Thu, 04
+ Jul 2024 13:40:25 +0200
+Message-ID: <54dc90df-fc31-457d-a18d-b2070b055d60@web.de>
+Date: Thu, 4 Jul 2024 13:40:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b4e324bdcd5910c9460bb5fc37aaf354f596ebf.1719771133.git.lukas@wunner.de>
+User-Agent: Mozilla Thunderbird
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Cyril Brulebois <kibi@debian.org>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Stanimir Varbanov <svarbanov@suse.de>
+Cc: Jim Quinlan <jim2101024@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>
+References: <20240703180300.42959-3-james.quinlan@broadcom.com>
+Subject: Re: [PATCH v2 02/12] PCI: brcmstb: Use "clk_out" error path label
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240703180300.42959-3-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wFzxrPxvHc3jR+5oeOUWhDC+27wywMwXg1v28CkwWXzxj6HqIwN
+ szjygXKEBIPIAoKgUsSGWyLNCQYC30GkKqPcxUcCrO+/r0CFNzzrECeISUPYFfyWq6ldd/z
+ v4OQOuCl/sVHXfnr5lXdwlf7YattVGTodwudESgn0AyCFhEAjrNx+J16OZAFrJ2h4pynXJe
+ bxuNw37pFEF2n4n85ymlA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VBgHkCdOBcA=;6wT380QZCi8u1Ubr53ZAKOMXK/5
+ Gm8/hqXRmLIuNIxKTfLkP7GgPbEEq77t7q/gl5dq+lgTtuw2c6izvudaU7PYk8spmx+DdG3Jj
+ 2gnZwjZ1kQ1f8JGFMdO9K1A9CjYrJdT0nVintaSXLKzWRktf1E/wpo0ZrI2FYnGv174iX0t2X
+ eMTLCqLB1kKTpDqBddQ13ygmcOhFLQpYJ1ppQGG5pwHGd++h8+R//WhNbizqDL6bfoLHCg2b7
+ 1THQ0+vh+ypZdfJ/OUBaIw+gUbQXyN9TIQdoStLUpoH3vFYYkPqP8fb6QLVqtVYi+vuMVheCC
+ MsWeZiL5uiZdMy76KrJHD5xpPzW37zIz33tKISHYOzb1sD06UVkW1PrKjruBjsR4s6QSIk7/p
+ wbo5+PysatPVYvegmurZADvnhnxG/u3DdqSQQdp/DMYO3awnxuOZj1SLimYov02zE8FWGME0U
+ X38X0AVuttjqJOYamH51RYd61GBsvBxDOBPRkC+29byuZ5PiiYRKBT10l71+wgpj9iEZ++eSm
+ SHaQHGweGOak+1yVexmivlLWXLsRqvNOVSjmUAs3nGrdfDB2Rc54uijqGMMjn7riRG68P+vQT
+ 7Q9lee5kI5yGne/YaAUlVuZUe7UBut3S81m8x3sHbkWVX9lUe/9Euv9YRTKnpBOptQTya88Fc
+ mpJbRm7pu/vxoHyz3N+kEen7sRkXWSdu8d/aOq7dZWxvA3ahg4+gAs7xLcWmTH6HxzKRduoZ3
+ ++eI19JUXjfiaucJpQ46wxVA94mI+Cf/qeEqjbKCl2pZz4vrud6ipEr92/ij8/lMA0XniWYoi
+ T+9LMo8Ba58E50eVbcOEcZ6cEFhrVMz5qaTKdGzrciTQk=
 
-On Sun, Jun 30, 2024 at 09:49:00PM +0200, Lukas Wunner wrote:
-> A subsequent commit has the need to create a symlink from an attribute
-> in a first group to an attribute in a second group.  Both groups belong
-> to the same kobject.
-> 
-> More specifically, each signature received from an authentication-
-> capable device is going to be represented by a file in the first group
-> and shall be accompanied by a symlink pointing to the certificate slot
-> in the second group which was used to generate the signature (a device
-> may have multiple certificate slots and each is represented by a
-> separate file in the second group):
-> 
-> /sys/devices/.../signatures/0_certificate_chain -> .../certificates/slot0
-> 
-> There is already a sysfs_add_link_to_group() helper to add a symlink to
-> a group which points to another kobject, but this isn't what's needed
-> here.
-> 
-> So add a new function to add a symlink among sibling groups of the same
-> kobject.
-> 
-> The existing sysfs_add_link_to_group() helper goes through a locking
-> dance of acquiring sysfs_symlink_target_lock in order to acquire a
-> reference on the target kobject.  That's unnecessary for the present
-> use case as the link itself and its target reside below the same
-> kobject.
-> 
-> To simplify error handling in the newly introduced function, add a
-> DEFINE_FREE() clause for kernfs_put().
+> [-- Attachment #1: Type: text/plain, Size: 1685 bytes --]
 
-Nice!
+Can improved adjustments be provided as regular diff data
+(without an extra attachment)?
 
-> 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Instead of invoking "clk_disable_unprepare(pcie->clk)" in
+> a number of error paths, we can just use a "clk_out" label
+> and goto the label after setting the return value.
+
+* Please improve such a change description with imperative wordings.
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n94
+
+* How do you think about to use a summary phrase like
+  =E2=80=9CUse more common error handling code in brcm_pcie_probe()=E2=80=
+=9D?
+
+
+=E2=80=A6
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+=E2=80=A6
+>  	ret =3D reset_control_reset(pcie->rescal);
+> -	if (ret)
+> +	if (ret) {
+>  		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+> +		goto clk_out;
+> +	}
+>
+>  	ret =3D brcm_phy_start(pcie);
+=E2=80=A6
+
+Does this software update complete the exception handling?
+
+Would you like to add any tags (like =E2=80=9CFixes=E2=80=9D and =E2=80=9C=
+Cc=E2=80=9D) accordingly?
+
+
+=E2=80=A6
+> @@ -1676,6 +1677,9 @@ static int brcm_pcie_probe(struct platform_device =
+*pdev)
+>
+>  	return 0;
+>
+> +clk_out:
+> +	clk_disable_unprepare(pcie->clk);
+> +	return ret;
+>  fail:
+=E2=80=A6
+
+I suggest to add a blank line before the second label.
+
+Regards,
+Markus
 
