@@ -1,245 +1,134 @@
-Return-Path: <linux-pci+bounces-9802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9803-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E5469276DA
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 15:08:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD204927703
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 15:18:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31F1D1C20922
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 13:08:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D72F7B22AE8
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 13:18:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1684F13BADF;
-	Thu,  4 Jul 2024 13:08:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A353E1AD9DE;
+	Thu,  4 Jul 2024 13:18:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UM58ipex";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uwFPuFSt";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UM58ipex";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uwFPuFSt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/KR/8A6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777AA1E507;
-	Thu,  4 Jul 2024 13:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC377E9;
+	Thu,  4 Jul 2024 13:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098495; cv=none; b=KMUz8ESzIXUgxiF4C2KdMHrM+HbZT3LysAKcFESJc6v+cFJHfxv/XRIZDene3m4VHb168NyxSA2wd69Sj54+C9bnImhLowO2wLSW/7eE2LlfCSSxnuBh2VxhvnQJpIYPQlIpTYU+gmM//KMciCCAgSBgAx+/tZ2eSo2Uxl2tQNM=
+	t=1720099125; cv=none; b=Cd3Oq5FROlN2cmWhNuf6CWLbi+G/3Yqp9irgCUD27yC2o+JDLUMzi99Lw5Sa7FFT6ABbO4J1dAgIDWA/o+rj6dx6pdyWHV9QUmAjNC9v3xs5MtIWSwWzVcPrWDhsdE7WGaZua8F5SQyP8AfhtwUoBzlehEfVRk7NosE7gVNkX28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720098495; c=relaxed/simple;
-	bh=16VrZBErTD146vQu/aKXiccnd7n3RPjwuiPreYGNt6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ke7toUSr1I2LEadjyCzFf36nvmgY3ZrvI6WR7XuvYwqbh8LZW3DY2eaTmzbFpbCDl5MxFzAEqRGsnZ1iDA3VEGXzTe8HZmWZkX5nEMeZfukVvIHRRNuwPfSbsr7b4SkeU/s76ttf610WAbpwRKFzVfVddMmQzYT0bt6KuNd7yVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UM58ipex; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uwFPuFSt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UM58ipex; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uwFPuFSt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 93AA61F7C0;
-	Thu,  4 Jul 2024 13:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720098491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5kl0J7BZG559ce4+Nlj/455w9qo5G54P1ACweVuwSs=;
-	b=UM58ipexMjnXHpT75p9mORqpnGxxYHUY2Cvs+UY5QjSBy5rKfDVOCEpY8zT62IEAi0yHKT
-	nGkTGhYAIPgr5crNxXbmx303bc0l4ezdv79eEy/6SP85fodtdLnQnWxrF/CfAeh/8R+RXY
-	ITSn/QrCDd1J0CQ1BgsYeJjxx6hzKZc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720098491;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5kl0J7BZG559ce4+Nlj/455w9qo5G54P1ACweVuwSs=;
-	b=uwFPuFStyv8p0g9P3l8l/Y1RMsHqxhhPY9eOZ8rOyejLVMkh2khazpSV11gC4QBWHOG6Pd
-	Oc821XhkQjqEZyCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UM58ipex;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uwFPuFSt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1720098491; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5kl0J7BZG559ce4+Nlj/455w9qo5G54P1ACweVuwSs=;
-	b=UM58ipexMjnXHpT75p9mORqpnGxxYHUY2Cvs+UY5QjSBy5rKfDVOCEpY8zT62IEAi0yHKT
-	nGkTGhYAIPgr5crNxXbmx303bc0l4ezdv79eEy/6SP85fodtdLnQnWxrF/CfAeh/8R+RXY
-	ITSn/QrCDd1J0CQ1BgsYeJjxx6hzKZc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1720098491;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5kl0J7BZG559ce4+Nlj/455w9qo5G54P1ACweVuwSs=;
-	b=uwFPuFStyv8p0g9P3l8l/Y1RMsHqxhhPY9eOZ8rOyejLVMkh2khazpSV11gC4QBWHOG6Pd
-	Oc821XhkQjqEZyCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D36C713889;
-	Thu,  4 Jul 2024 13:08:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BIglMbqehmbuGQAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Thu, 04 Jul 2024 13:08:10 +0000
-Message-ID: <6e46418f-e0a6-46bf-8490-c261cf95edb0@suse.de>
-Date: Thu, 4 Jul 2024 16:08:10 +0300
+	s=arc-20240116; t=1720099125; c=relaxed/simple;
+	bh=nkzC1R2Sn6KADvFNDPp0hrnIwln3xVG+eb9R42IPSdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VsSMcTzcsbyiGYoOpFqQH4/YM3fyL9SB7SHhF+aWCkS//437E/E9pPZWigixewpzn/P9N462CeAWLWNHpMXpz0Ti7r1V0dh3O9RBJYqMJuZ6382D0UR20xjJ6DPlYJaihfpiojqnqMvBV78Qk556H7FT+OIvxjUVFS78lQ8jDZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/KR/8A6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0368AC3277B;
+	Thu,  4 Jul 2024 13:18:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720099124;
+	bh=nkzC1R2Sn6KADvFNDPp0hrnIwln3xVG+eb9R42IPSdQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D/KR/8A6xd5D4R/wyMmVXVBhTLC00uoxpBMQxG4XlqhIi5KAQVaC2WfSC/JKuTQBK
+	 kEFxwYczrrp8jHD/rU7Io7O7FanCrAZSqBu/PdOnbPEDswb3D7N14ui//u++auZfNR
+	 SUqz2Rl1HBcmgvgZwCQlOkR19edRQbzDh6tI/mypTJD/RTH4hYtagEvYh76WNN1/VY
+	 UCe/SDCeqqwlLAKAvWNk+uJtnN8vjygt8Gaomlc3u7lhSQZuSImjGamtHE5l/qm9H/
+	 l7cdU0pdx3G3PZZgD6CMT+HJGLLMzzhXBkWp2c6sJY4t+AJp3EHJFmV84AgiTky6jN
+	 DmhQgo4POHvOw==
+Date: Thu, 4 Jul 2024 16:18:39 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	"Zeng, Oak" <oak.zeng@intel.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
+Message-ID: <20240704131839.GD95824@unreal>
+References: <cover.1719909395.git.leon@kernel.org>
+ <20240703054238.GA25366@lst.de>
+ <20240703105253.GA95824@unreal>
+ <20240703143530.GA30857@lst.de>
+ <20240703155114.GB95824@unreal>
+ <20240704074855.GA26913@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/12] PCI: brcmstb: Don't conflate the reset rescal
- with phy ctrl
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240703180300.42959-1-james.quinlan@broadcom.com>
- <20240703180300.42959-9-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20240703180300.42959-9-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 93AA61F7C0
-X-Spam-Score: -5.50
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-5.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	MX_GOOD(-0.01)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[broadcom.com,vger.kernel.org,kernel.org,google.com,arm.com,debian.org,suse.de,gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240704074855.GA26913@lst.de>
 
-Hi Jim,
-
-
-On 7/3/24 21:02, Jim Quinlan wrote:
-> We've been assuming that if an SOC has a "rescal" reset controller that we
-> should automatically invoke brcm_phy_cntl(...).  This will not be true in
-> future SOCs, so we create a bool "has_phy" and adjust the cfg_data
-> appropriately (we need to give 7216 its own cfg_data structure instead of
-> sharing one).
+On Thu, Jul 04, 2024 at 09:48:56AM +0200, Christoph Hellwig wrote:
+> On Wed, Jul 03, 2024 at 06:51:14PM +0300, Leon Romanovsky wrote:
+> > If we put aside this issue, do you think that the proposed API is the right one?
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-
-Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
-
-~Stan
+> I haven't look at it in detail yet, but from a quick look there is a
+> few things to note:
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 3aa82871e9b3..ffb3e8d8fb2a 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -222,6 +222,7 @@ enum pcie_type {
->  struct pcie_cfg_data {
->  	const int *offsets;
->  	const enum pcie_type type;
-> +	const bool has_phy;
->  	void (*perst_set)(struct brcm_pcie *pcie, u32 val);
->  	void (*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
->  };
-> @@ -272,6 +273,7 @@ struct brcm_pcie {
->  	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
->  	struct subdev_regulators *sr;
->  	bool			ep_wakeup_capable;
-> +	bool			has_phy;
->  };
->  
->  static inline bool is_bmips(const struct brcm_pcie *pcie)
-> @@ -1311,12 +1313,12 @@ static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
->  
->  static inline int brcm_phy_start(struct brcm_pcie *pcie)
->  {
-> -	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-> +	return pcie->has_phy ? brcm_phy_cntl(pcie, 1) : 0;
->  }
->  
->  static inline int brcm_phy_stop(struct brcm_pcie *pcie)
->  {
-> -	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-> +	return pcie->has_phy ? brcm_phy_cntl(pcie, 0) : 0;
->  }
->  
->  static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-> @@ -1559,12 +1561,20 @@ static const struct pcie_cfg_data bcm2711_cfg = {
->  	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
->  };
->  
-> +static const struct pcie_cfg_data bcm7216_cfg = {
-> +	.offsets	= pcie_offset_bcm7278,
-> +	.type		= BCM7278,
-> +	.perst_set	= brcm_pcie_perst_set_7278,
-> +	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
-> +	.has_phy	= true,
-> +};
-> +
->  static const struct of_device_id brcm_pcie_match[] = {
->  	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
->  	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
->  	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
->  	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-> -	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-> +	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7216_cfg },
->  	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
->  	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
->  	{ .compatible = "brcm,bcm7425-pcie", .data = &bcm7425_cfg },
-> @@ -1612,6 +1622,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  	pcie->type = data->type;
->  	pcie->perst_set = data->perst_set;
->  	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
-> +	pcie->has_phy = data->has_phy;
->  
->  	pcie->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(pcie->base))
+> 
+> 1) The amount of code needed in nvme worries me a bit.  Now NVMe a messy
+> driver due to the stupid PRPs vs just using SGLs, but needing a fair
+> amount of extra boilerplate code in drivers is a bit of a warning sign.
+> I plan to look into this to see if I can help on improving it, but for
+> that I need a working version first.
+
+Chaitanya is working on this and I'll join him to help on next Sunday,
+after I'll return to the office from my sick leave/
+
+> 
+> 
+> 2) The amount of seemingly unrelated global headers pulled into other
+> global headers.  Some of this might just be sloppiness, e.g. I can't
+> see why dma-mapping.h would actually need iommu.h to start with,
+> but pci.h in dma-map-ops.h is a no-go.
+
+pci.h was pulled because I needed to call to pci_p2pdma_map_type()
+in dma_can_use_iova().
+
+> 
+> 3) which brings me to real layering violations.  dev_is_untrusted and
+> dev_use_swiotlb are DMA API internals, no way I'd ever want to expose
+> them. dma-map-ops.h is a semi-internal header only for implementations
+> of the dma ops (as very clearly documented at the top of that file),
+> it must not be included by drivers.  Same for swiotlb.h.
+
+These item shouldn't worry you and will be changed in the final version.
+They are outcome of patch "RDMA/umem: Prevent UMEM ODP creation with SWIOTLB".
+https://lore.kernel.org/all/d18c454636bf3cfdba9b66b7cc794d713eadc4a5.1719909395.git.leon@kernel.org/
+
+All HMM users need such "prevention" so it will be moved to a common place.
+
+> 
+> Not quite as concerning, but doing an indirect call for each map
+> through dma_map_ops in addition to the iommu ops is not every efficient.
+> We've through for a while to allow direct calls to dma-iommu similar
+> how we do direct calls to dma-direct from the core mapping.c code.
+> This might be a good time to do that as a prep step for this work.
+
+Sure, no problem, will start in parallel to work on this.
+
+> 
 
