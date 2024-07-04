@@ -1,269 +1,201 @@
-Return-Path: <linux-pci+bounces-9817-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9818-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76312927AE6
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 18:14:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 156E1927B52
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 18:41:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AAA6B1C21E99
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:14:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 363031C223AC
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:41:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 453821AED21;
-	Thu,  4 Jul 2024 16:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB3091B29DA;
+	Thu,  4 Jul 2024 16:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YqZU6YS7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010008.outbound.protection.outlook.com [52.101.69.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D905E1A0711;
-	Thu,  4 Jul 2024 16:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720109683; cv=none; b=mTCqV4bxJz8PgC46V1LTfz59CIyKc960njwWGAGq7LkW9GYYTPV0ETcQExKxgphumAXtJoRvo/zXZVCdM1y28SG+p5bM73afg/FSMt/ggPGAQWqAOoVdCkD1Z+V3sUBnCLtLemUFipMHFLVxTxXUlDWEZDPGdoRw3hD0T/stoYk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720109683; c=relaxed/simple;
-	bh=uQlL+tNagVhJLhuj/Y2eOdtJ8ILwyDcKD+TbGWQFVhg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SO9NV7HTvZFHnCjQl/44DvisUSAJuVb1cKfJlVhfI6a+375HSt5BrARntHFhp2XAu+VmOFDC1wjJNKxva6jE/bvV+gepN9WVrhrRb8I/DeWJvS/pWa2/9xMKITu9Zti7NI5pB5i2BzBiPUidOUqs8r7KnuslQ+5yKgK43Ijeq+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFM9x2ZyNz6K9KL;
-	Fri,  5 Jul 2024 00:12:37 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id B806C140D1A;
-	Fri,  5 Jul 2024 00:14:31 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 4 Jul
- 2024 17:14:15 +0100
-Date: Thu, 4 Jul 2024 17:14:13 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, <linuxarm@huawei.com>,
-	<linuxarm@huawei.com>
-CC: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "Dave
- Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, Will Deacon <will@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	<terry.bowman@amd.com>, Kuppuswamy Sathyanarayanan
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [RFC PATCH 0/9] pci: portdrv: Add auxiliary bus and register
- CXL PMUs (and aer)
-Message-ID: <20240704171340.00004294@huawei.com>
-In-Reply-To: <20240605213910.00003034@huawei.com>
-References: <20240529164103.31671-1-Jonathan.Cameron@huawei.com>
-	<20240605180409.GA520888@bhelgaas>
-	<20240605204428.00001cb2@Huawei.com>
-	<20240605213910.00003034@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6101AE859;
+	Thu,  4 Jul 2024 16:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720111242; cv=fail; b=Fi47XR2lrlxRIAQtXP7HWK1nZPJ5Gs/pcOfmJWq65+EG5f95Mok5hEkmhNoif+fliGUdChLGJ7CJnY/4Zkwhs+A8ZrGNTUtENSCKRHjIkbU6jfG9arzl2cW3KysQibJTCJ5H5cjjqOCGIbxcZ6AzRDWs86Kb+Nn+NiVOdVBgcLI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720111242; c=relaxed/simple;
+	bh=TSrTxfJQEV/vRH41CEqM1AT+jFmUNlsYy3Pjp5EbEgE=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=PRGBsX8ttwNeT+WA2gEojSl9T5geJGfbUFR1RL7r617lvyiKLyx9qwHUtk/0YDI5x943bWUpNHxxMhikNZ6V2Hj7a3YljICE3dr+DQpKTHBMMG8xrkj5V97HupVavuSJjNGrx3efr5wVYMutB6obZi7XyddlUq/xjOf4ImFTMY4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=YqZU6YS7; arc=fail smtp.client-ip=52.101.69.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XOEd30xojylZDGVPG6aMnx9EX35JFfEQ1N/I9PAGF+VCrtb0UOyLAEvKVsjY69tBGl+qaEe1SbFvc6//E22C7aRrCQ65CeRmxpVxz20Gj50iiaDyIMgxhmhSTYom39rriAtwSwr6iUlOuxqUWc4cBgS9huu9e4Dx8/pUvvLXUeAN8j6/5S8zQQK3/Tgw/RgZCpfCMeD8oeIpBfqgqMuivk0mknabHLmtlyDRJrpFH4AYGDcRRbQTfV9zzJ5sll5IpjoRzaS0Q3YT+rc5147ZJfDQUX79MLM8kfsvMlypmF7elWfzI/11JAwekTtRrb3Z15VbejjhSdkFUVhJNKe30Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uD5BwmEM+mJwWfW4Czq3K7L7DWXG2AEbxcy0yyD+/5E=;
+ b=ek59qbGX4l+xWlFmyq4L2/6zYyu14/zMLM29DAO0JMATeX5UGurT3l8XUhHtgEFuK2gdpLyxidyz55bMvP0hcp+J3sLAD1wDKXC3sRKAl32fMghmJwiyNPAw6wZQV/Ek4yY0oW27hQPDYjEq5yYzyciLGPJgJDBbWssUM0hg/hIldesQ6aVZMvDOGAweyFv70EerRq84a0LsIqOiewAgtzsfHWLRbqeDfDxQuRpQM4YZwqsDWKK2fVOWe0EXNywa/1f4/D7Jj/3TKtwmfzKgIrxTEKuhjcfj5rdhP3HHa3UNuscSFNck4MG5AYTS9IQd3XXaapJ/TTbZCBeQd6tGpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uD5BwmEM+mJwWfW4Czq3K7L7DWXG2AEbxcy0yyD+/5E=;
+ b=YqZU6YS7CGQ5bpNf2gWC7t2S5gviBIofoVBjPlQKnMYSSP+RlgiwfP72JwfAoJz7Hpwh1Nzbae3L3nAqxtSlv4HtZ/ensCfNN5m1hFa81bUcgnihsvRUS5ZZC8aNKcUI0/iZkQjgAvTzA/LagwGdiobkexqgYdbTs/9s1GB8zxw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7915.eurprd04.prod.outlook.com (2603:10a6:10:1ea::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.25; Thu, 4 Jul
+ 2024 16:40:37 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7741.027; Thu, 4 Jul 2024
+ 16:40:37 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Will Deacon <will@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pci@vger.kernel.org (open list:PCI DRIVER FOR GENERIC OF HOSTS),
+	linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR GENERIC OF HOSTS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH v2 1/1] dt-bindings: PCI: host-generic-pci: Drop minItems and maxItems of ranges
+Date: Thu,  4 Jul 2024 12:40:19 -0400
+Message-Id: <20240704164019.611454-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR08CA0071.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::48) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7915:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e910ccb-9a35-4cf1-5323-08dc9c480896
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|376014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WAQRMwe/8wcfBUwQIjYaglmsVIDuOqVk2cEhbLlMelpmWp5PftUeOJsw4S4I?=
+ =?us-ascii?Q?DJG6IcSH+iIg2j1w/cBiA8eZqZ4LlU23+9njl668CafDWZhzqFiCKT7jT/Ak?=
+ =?us-ascii?Q?ZVOHE488ZJUPekqNrWqXlXR4Lnv4fEJeqz8crwJPb8zmhlxyqe+krqlgaq0V?=
+ =?us-ascii?Q?jPB2IF8qKdSySVzHjWv3mdz6jFhmMBIYX/FlK8rKTU2C5kaGWQjMdEvtWHPA?=
+ =?us-ascii?Q?JpEQIkveYOqyO4MPL4yY/tF0+g/pifSvkbeuV+wB8v3ApemBQ6Q5beTBl4pw?=
+ =?us-ascii?Q?HMDzmeH612fUa7MRPVsE58X7xSHLiqRiJ4HwH8E85dHGX6jq6/s7pS0PejnB?=
+ =?us-ascii?Q?y70U4yUj4Gp/advPMUxOAgR8ctuX7nsquTnzhy4dVvmXJZFVjfFuTQ73ON7F?=
+ =?us-ascii?Q?9kfJ+TLg2ju+a8xeJCKCYPaXib+whVN7cEKuYiRxNvkLWrVJe44U+Ocdsl1r?=
+ =?us-ascii?Q?bBgOVbzUbQ4ytFlyNFpIKI38vdtTxMPXq0tQb9tinQfYF86HmB4x7433QRUs?=
+ =?us-ascii?Q?/9NLpqTgNal6rgtKfYleo2mK8SR7wdKDEb2cdVPCmPG/fflt/xlg+eL0jHqH?=
+ =?us-ascii?Q?VRfujdMt6BgpPsYcuJbJBoWRxtY/T6yW+sEyAF3eIyTYE7Y0M5RgFVSojE8A?=
+ =?us-ascii?Q?ePCAOFOB4UV5OgfeEs7LP01Bt9L/dSIbXM2huolPq2dJZo7jZ0lJj71oaqmc?=
+ =?us-ascii?Q?RGx5pmwnJFsFH17ggxWOeaSi8Z326/Oji2YYms9p68GCNyp99N5oeGe5HuQW?=
+ =?us-ascii?Q?6b08zj2fkcOvXJWx3CPwEOsN+ycpd2jBhR2D1Ci4PcmU0lpJeU1FRkDFLuqu?=
+ =?us-ascii?Q?FbQoG4WuGyCjifrzcqBkcD1/mhP24zHR31vhfchXqMh+7XXA2h3zt14YfyfL?=
+ =?us-ascii?Q?U1e4wOL2dN4hRkWE0qobLd59a5i65UbQ6mMuzfnxQoiFkrnPdHuS6W3zU6ar?=
+ =?us-ascii?Q?/BG4Z93Cg20baCDMAxADPo1goGwvdqOK5nB1NlO8R7L+ks3wm1FCcXw215XN?=
+ =?us-ascii?Q?c8klwqycFsFspqxUWtdG7LLmEGsb/IFuaCnVAI24x6UrN9DoID7gl3RmPlMj?=
+ =?us-ascii?Q?sV9FNzjg7GjKwpPwoKRaTdp5KRSuyIPQIS0O5eSqtSQr3hmeeU8Iz0rm8oOL?=
+ =?us-ascii?Q?iWXUKAugFaYeJtgfEBcUECjxDJoLtil9CcuoD71xpBifENFhIO61eZRt/Zpi?=
+ =?us-ascii?Q?wlxeSaZJ5+zwiRPWwrWbAim1Cc9A53Oiqw0N/0fCfIprvmtN2Zu6+VELcbh5?=
+ =?us-ascii?Q?kL2BlQtBrpWRXZXRTn21mSGjTKN0+s4ssUuC7cgkTJzXfrnOLwbmi6la0zQM?=
+ =?us-ascii?Q?Pvi+8mcfYdOAaNGE7YD7sO+vJN/OWaxT3os8mmdyBjVeCMzlw/nuPWehc4Bm?=
+ =?us-ascii?Q?UHb0IvVimbjtYddGvsL37FWN8NjeXvybOA6ZU3ymsCL5hV4OAjYQZE/gKswY?=
+ =?us-ascii?Q?dDAAZwmuA28=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?u+nP/4UXe9D73dmxXR6btC+lHtnlw/UHjRcHgT/6IPtm23/XtR5aRHYCFyaz?=
+ =?us-ascii?Q?+PbgnepmMBxQGVp92bkJEGQiZ2ZN7pco1wqfxQ+AQYYEl+/W9dKqKk1yM7b7?=
+ =?us-ascii?Q?OJrwTY1Ea7yTCkHP9N1uJn1cGpTI3JMeIuEdSidtObOaX4Qx4pAewgrTLiHH?=
+ =?us-ascii?Q?AbCSctCBj422EnUF49IJYWaujByUlpJKeEQbJGPoeeJywkcG32xnkZzYWjyV?=
+ =?us-ascii?Q?v+tmp5OBlUJNgvBXEHRRXtzAjp02klTKsOs9FDaF59mVtWkGLuX4UZ1q994J?=
+ =?us-ascii?Q?gnsHZ9+5fB0k2lQQkqyTWtjH/lK8smhVaqx2vysbsFyXGPuJIRk6WXLV50Oc?=
+ =?us-ascii?Q?W5VieWW8iS6TfkYiCP2oi9siCfl8MeoW2bx0A3VQXMUOnqvCzOsN+Lf3H33J?=
+ =?us-ascii?Q?ZRaeCpEUGQ47MaI7EJdxYEDLw/Qr6NARRX0IVtUl0hyQ20V3e/Qf3Isi3+ZP?=
+ =?us-ascii?Q?yhPYWfhKW4JekT/rZsLyXrDfaSrgBdtlWksTGDuFGKVBE8WepmA0t+pQq/om?=
+ =?us-ascii?Q?ma1GQDL4ogO4/95y2bW5Lbn9BKeYrVFhxHt4vqdXwH5rboHv2osq60ccM5qz?=
+ =?us-ascii?Q?zOVCHGBWQYY2yQtyoaVFMXkz8BtlJ66DhzsRNCs53qzkaHncV/Ybk0sc4Cri?=
+ =?us-ascii?Q?ydYDyX+DieYO5efSwBKyo8ybLPSCQbkztQn+4G6tnIbwsUBlQ4nSrwIktZAV?=
+ =?us-ascii?Q?nrYsPK/UzAyr4Fojb8yy+N1bp0bBLT3wupUusfgmthGDf6AQDnzCHMB6tV1f?=
+ =?us-ascii?Q?VffoTAXJ1xREIN0R6Y0BGzutIubnN06SsAgfv7gtnig+YIISU3m5SkM7EnNY?=
+ =?us-ascii?Q?kKTSa/2ijpRn208cDVonF1zcbYjGulV+5ayPwq2vG26fvne1lI3n8RhgTeUE?=
+ =?us-ascii?Q?ezpT9LMEG4yA6MLP0rPMfjxD/9Z8n82bZfvszX14nhcKb0xfNmzh+cqYvjGI?=
+ =?us-ascii?Q?S/fIoMwkokHxwVQqYPMJISpBxbazqNFT1PXpSTgZIfqQAiPFe28yWfkR1WA/?=
+ =?us-ascii?Q?9zcdEAN73ABPEQOCIuloLDyGvUHHj3Q0k5khd2nMCO/JcRA/aOpDqjuZh+7F?=
+ =?us-ascii?Q?PC7V4I2tUEm12TEVRtTut5I0cq5rrKKnTBOqp6BS6+erHMKJJ2YhArZtLb0O?=
+ =?us-ascii?Q?yl4ZesCR3ePDpsddQTVbJGcDfHbeHwwj2kiCQfFHaGVS/Dn0kAvwuNFm4yFy?=
+ =?us-ascii?Q?N/1389n8hQFrICaYgdLrJBgiwAUA+KHXAGV1SRf6nrR86GOGsmeJuIAdRiRn?=
+ =?us-ascii?Q?3EHH0HFrHvV0v83moDDDTQ2G18LgslrzA5BcnL2DLQjX2oIl1EfHcKzAcLzS?=
+ =?us-ascii?Q?vFv23G/oLGeMQ7a8+Qr2Muhx3yCvBevPEUqYROs0WOPspkfWft0v6hE3LZM3?=
+ =?us-ascii?Q?KzEN4wt/cqzcn+pZkb4LbMMuhZkapbeZE0Dyj/KDlKcQe/H+bgC3Qihv7pZ7?=
+ =?us-ascii?Q?bxpGgpXnBTUB7IDOfvUupE3WByRszzgnQ8xT7t/E2AzaO6hQfT2ukce3d2J0?=
+ =?us-ascii?Q?Ozb5mF4rbkN737Fi8V+1KjGB6nvLk8mSMexyoL+DVeEAN2AP1dPSxMKy4rmu?=
+ =?us-ascii?Q?2cdKCAdxySWL4STHWRR8qljbdtq50fJLTyQ06VON?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e910ccb-9a35-4cf1-5323-08dc9c480896
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 16:40:37.7652
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4Pw5Yyq9L5kzo2uu/d5qnIuMj/OLZShhULtb1ytaAdeyAx7/rZj9omqNn0Wy6PGQE3AVx/7kp1pUug1v39bSoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7915
 
-On Thu, 6 Jun 2024 13:57:56 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+The ranges description states that "at least one non-prefetchable memory
+and one or both of prefetchable memory and IO space may also be provided."
 
-> On Wed, 5 Jun 2024 20:44:28 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> > On Wed, 5 Jun 2024 13:04:09 -0500
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > > On Wed, May 29, 2024 at 05:40:54PM +0100, Jonathan Cameron wrote:    
-> > > > Focus of this RFC is CXL Performance Monitoring Units in CXL Root Ports +
-> > > > Switch USP and DSPs.
-> > > > 
-> > > > The final patch moving AER to the aux bus is in the category of 'why
-> > > > not try this' rather than something I feel is a particularly good idea.
-> > > > I would like to get opinions on the various ways to avoid the double bus
-> > > > situation introduced here. Some comments on other options for those existing
-> > > > 'pci_express' bus devices at the end of this cover letter.
-> > > > 
-> > > > The primary problem this RFC tries to solve is providing a means to
-> > > > register the CXL PMUs found in devices which will be bound to the
-> > > > PCIe portdrv. The proposed solution is to avoid the limitations of
-> > > > the existing pcie service driver approach by bolting on support
-> > > > for devices registered on the auxiliary_bus.
-> > > > 
-> > > > Background
-> > > > ==========
-> > > > 
-> > > > When the CXL PMU driver was added, only the instances found in CXL type 3
-> > > > memory devices (end points) were supported. These PMUs also occur in CXL
-> > > > root ports, and CXL switch upstream and downstream ports.  Adding
-> > > > support for these was deliberately left for future work because theses
-> > > > ports are all bound to the pcie portdrv via the appropriate PCI class
-> > > > code.  Whilst some CXL support of functionality on RP and Switch Ports
-> > > > is handled by the CXL port driver, that is not bound to the PCIe device,
-> > > > is only instantiated as part of enumerating endpoints, and cannot use
-> > > > interrupts because those are in control of the PCIe portdrv. A PMU with
-> > > > out interrupts would be unfortunate so a different solution is needed.
-> > > > 
-> > > > Requirements
-> > > > ============
-> > > > 
-> > > > - Register multiple CXL PMUs (CPMUs) per portdrv instance.      
-> > > 
-> > > What resources do CPMUs use?  BARs?  Config space registers in PCI
-> > > Capabilities?  Interrupts?  Are any of these resources
-> > > device-specific, or are they all defined by the CXL specs?    
-> > 
-> > Uses the whole lot (there isn't a toy out there that the CXL
-> > spec doesn't like to play with :). Discoverable via a CXL defined DVSEC
-> > in config space. Registers are in a BAR (discovered from the DVSEC).
-> > MSI/MSIX, number in a register in the BAR.
-> > 
-> > All the basic infrastructure and some performance event definitions
-> > are in the CXL spec.  It's all discoverable. 
-> > 
-> > The events are even tagged with VID so a vendor can implement
-> > someone else's definitions or those coming from another specification.
-> > A bunch of CXL VID tagged ones exist for protocol events etc.
-> > 
-> > It's a really nice general spec.  If I were more of a dreamer and had
-> > the time I'd try to get PCI-SIG to adopt it and we'd finally have
-> > something generic for PCI performance counting.
-> >   
-> > > 
-> > > The "device" is a nice way to package those up and manage ownership
-> > > since there are often interdependencies.
-> > > 
-> > > I wish portdrv was directly implemented as part of the PCI core,
-> > > without binding to the device as a "driver".  We handle some other
-> > > pieces of functionality that way, e.g., the PCIe Capability itself,
-> > > PM, VPD, MSI/MSI-X,     
-> > 
-> > Understood, though I would guess that even then there needs to
-> > be a pci_driver binding to the class code to actually query all those
-> > facilities and get interrupts registered etc.  
-> 
-> Or are you thinking we can make something like the following work
-> (even when we can't do dynamic msix)?
-> 
-> Core bring up facilities and interrupt etc.  That includes bus master
-> so msi/msix can be issued (which makes me nervous - putting aside other
-> concerns as IIRC there are drivers where you have to be careful to
-> tweak registers to ensure you don't get a storm of traffic when you
-> hit bus master enable.
-> 
-> Specific driver may bind later - everything keeps running until 
-> the specific driver calls pci_alloc_irq_vectors(), then we have to disable all
-> interrupts for core managed services, change the number of vectors and
-> then move them to wherever they end up before starting them again.
-> We have to do the similar in the unwind path.
-> 
-> I can see we might make something like that work, but I'd be very worried
-> we'd hit devices that didn't behave correctly under this flow even if
-> there aren't any specification caused problems.
-> 
-> Even if this is a possible long term plan, maybe we don't want to try and
-> get there in one hop?
+However, it should not limit the maximum number of ranges to 3.
 
-In the spirit of 'conference driven' development. I'm planning to put in a
-proposal for a discussion of portdrv issues for the LPC VFIO/IOMMU/PCI uconf
-having prototyped some options.  A key bit will be agreeing what the
-actual requirements are and how we might meet them.
+Freescale LS1028 and iMX95 use more than 3 ranges because the space splits
+some discontinuous prefetchable and non-prefetchable segments.
 
-If it's not selected I'd still be keen to discuss whatever state things
-are in come September - I'll just have a less busy summer ;)
+Drop minItems and maxItems. The number of entries will be limited to 32
+in pci-bus-common.yaml in dtschema, which should be sufficient.
 
-Jonathan
+Fix the below CHECK_DTBS warning.
+arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dtb: pcie@1f0000000: ranges: [[2181038080, 1, 4160749568, 1, 4160749568, 0, 1441792], [3254779904, 1, 4162191360, 1, 4162191360, 0, 458752], [2181038080, 1, 4162650112, 1, 4162650112, 0, 131072], [3254779904, 1, 4162781184, 1, 4162781184, 0, 131072], [2181038080, 1, 4162912256, 1, 4162912256, 0, 131072], [3254779904, 1, 4163043328, 1, 4163043328, 0, 131072], [2181038080, 1, 4227858432, 1, 4227858432, 0, 4194304]] is too long
 
-> 
-> Jonathan
-> 
-> >   
-> > >     
-> > > > - portdrv binds to the PCIe class code for PCI_CLASS_BRIDGE_PCI_NORMAL which
-> > > >   covers any PCI-Express port.
-> > > > - PCI MSI / MSIX message based interrupts must be registered by one driver -
-> > > >   in this case it's the portdrv.      
-> > > 
-> > > The fact that AER/DPC/hotplug/etc (the portdrv services) use MSI/MSI-X
-> > > is a really annoying part of PCIe because bridges may have a BAR or
-> > > two and are allowed to have device-specific endpoint-like behavior, so
-> > > we may have to figure out how to share those interrupts between the
-> > > PCIe-architected stuff and the device-specific stuff.  I guess that's
-> > > messy no matter whether portdrv is its own separate driver or it's
-> > > integrated into the core.    
-> > 
-> > Yes, the interrupt stuff is the tricky bit.  I think whatever happens
-> > we end up with a pci device driver that binds to the class code.
-> > Maybe we have a way to switch in alternative drivers if that turns
-> > out to be necessary.
-> > 
-> > Trying to actually manage the interrupts in the core (without a driver binding)
-> > is really tricky.  Maybe we'll get there one day, but I don't think
-> > it is the first target.  We should however make sure not to do anything
-> > that would make that harder such as adding ABI in the wrong places.
-> >   
-> > >     
-> > > > Side question.  Does anyone care if /sys/bus/pci_express goes away?
-> > > > - in theory it's ABI, but in practice it provides very little
-> > > >   actual ABI.      
-> > > 
-> > > I would *love* to get rid of /sys/bus/pci_express, but I don't know
-> > > what, if anything, would break if we removed it.    
-> > 
-> > Could try it and see who screams ;) or fake it via symlinks or similar
-> > (under a suitable 'legacy' config variable that is on by default.)
-> > 
-> > How about I try the following steps:
-> > 0) An experiment to make sure I can fake /sys/bus/pci_express so it's
-> >    at least hard to tell there aren't real 'devices' registered on that
-> >    bus. Even if we decide not to do that long term, we need to know
-> >    we can if a regressions report comes in.
-> >    Worst comes to the worse we can register fake devices that fake
-> >    drivers bind to that don't do anything beyond fill in sysfs.
-> > 1) Replace the bus/pci_express with direct functional calls in
-> >    portdrv.  
-> >    I'm thinking we have a few calls for each:
-> >     bool aer_present(struct pci_dev *pci);
-> >     aer_query_max_message_num() etc - used so we can do the msi/msix bit.
-> >     aer_initialize()
-> >     aer_finalize()
-> >     aer_runtime_suspend() (where relevant for particular services)
-> > 
-> >    at the cost of a few less loops and a few more explicit calls
-> >    that should simplify how things fit together.
-> > 
-> > 2) Fix up anything in all that functionality that really cares
-> >    that they are part of portdrv.  Not sure yet, but we may need
-> >    a few additional things in struct pci_dev, or a to pass in some
-> >    state storage in the ae_initialize() call or similar.
-> > 3) Consider moving that functionality to a more appropriate place.
-> >    At this point we'll have services that can be used by other
-> >    drivers - though I'm not yet sure how useful that will be.
-> > 4) End up with a small pci_driver that binds to pci devices with
-> >    the appropriate class code. Should even be able to make it
-> >    a module.
-> > 5) (maybe do this first) carry my auxiliary_bus + cpmu stuff
-> >    and allow adopting other similar cases alongside the other
-> >    parts.
-> > 
-> > Of course, no statements on 'when' I'll make progress if this seems
-> > like a step forwards, but probably sometime this summer. Maybe sooner.
-> > 
-> > Jonathan
-> >   
-> > > 
-> > > Bjorn    
-> > 
-> >   
-> 
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Change from v1 to v2
+- Rework commit message
+- drop minItems and maxItems according to Rob's comments.
+---
+ Documentation/devicetree/bindings/pci/host-generic-pci.yaml | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+index 3484e0b4b412e..3be1fff411f8d 100644
+--- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
++++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
+@@ -102,8 +102,6 @@ properties:
+       As described in IEEE Std 1275-1994, but must provide at least a
+       definition of non-prefetchable memory. One or both of prefetchable Memory
+       and IO Space may also be provided.
+-    minItems: 1
+-    maxItems: 3
+ 
+   dma-coherent: true
+   iommu-map: true
+-- 
+2.34.1
 
 
