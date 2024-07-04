@@ -1,70 +1,68 @@
-Return-Path: <linux-pci+bounces-9778-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9779-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4816926FD5
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 08:44:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D752927050
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 09:14:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5FB19283452
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 06:44:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8AC7B22BA4
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 07:14:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98791A08C0;
-	Thu,  4 Jul 2024 06:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pCvebEww"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2E601849C6;
+	Thu,  4 Jul 2024 07:14:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A6E1A08C4;
-	Thu,  4 Jul 2024 06:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6703113E024;
+	Thu,  4 Jul 2024 07:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720075449; cv=none; b=L8Q4wdvGFZDwstwQkwhFvzauN3p9GAwcRUqpSoUgybXEDMcJftCrCe5j21WCrFedomPepQKXt4IXQN3q9grIwS4EIOGFPMhfaNX1GC8/ypjkfw121mUQ10ZF6mvooXbvwdxZz2PmvMqUNkKp7Yhs+kh4oCWREvWal3m+g0mI6hY=
+	t=1720077250; cv=none; b=gWe2HtBu8InO/PIdKGH8db2sP6zN8OCEG50BagLLIQWDbOJP26yK4Foby3TBD1FVDDpC45hJomeDdN79M+Ay/KodgRHAI8ac1enJX4eqzr2JuWFhdfA7uwsFnBeUl4WT1Pq99aB86X/pChPJuiboZQEYvZxsqxYhSXZR/f2Of+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720075449; c=relaxed/simple;
-	bh=C5Gt6GpTd+UsQ/97Qqy5yrcQBhYdMqxjLWLGNWygVh4=;
+	s=arc-20240116; t=1720077250; c=relaxed/simple;
+	bh=tj9yNwlUIOcUFugv9LXKvCjof10V014dJ1Bv2oFdMOk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JeyaH9yEkunZSXW5RFNbqmSlo4o5UzLoS/Q3SjPsGowfdQvdOwSVNyckGcHoZXX3bpjS17LkLHNVGLCMRZ1ogGtThJCj1Yo8qVAeSkrhuWcP69IlKjIe6tZP8tS5/K/Y37TLBdqPyYsPXLfecUoMkyWi32XXcya6D4Pc6MyubZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pCvebEww; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=awbbpRBWE7W7u7wrmPj3r9l6ibvQU6/aKWQd0BnOj3E=; b=pCvebEwwcRQB0joWcPaJO8Kjdn
-	BTvYHfsCLSn9ahVnzayRvc05y0EaNrYH6iQOaEHQk4cxPsJi28HOOB+N1T7ITjjqv8mXhhhbP2kf4
-	AswB51esYrF1Y70lh+P81+ld8wwZLYOZXl4liuWnNSbQj01TkejS+RwqmbseJVWduw62XQSBe+QgI
-	RvAc49bsqeST3MO8yWEAI0icb9sfUjp4esAoAro11pHHTuwLzXXV12a4wAvVsR98owwwuAGaZNKRv
-	ucHAbsMSGIIsB5n4DxDTJXSmu5rTfy9z2ftRUJyncUiMSlpdqBDkUvCUldhjYEzI4sO7ALuSL73ld
-	8IN3t2Hg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sPGCK-0000000CN3T-3LQT;
-	Thu, 04 Jul 2024 06:44:04 +0000
-Date: Wed, 3 Jul 2024 23:44:04 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	bhelgaas@google.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: PCIe coherency in spec (was: [RFC PATCH 2/2] drm/ttm: downgrade
- cached to write_combined when snooping not available)
-Message-ID: <ZoZEtLe66MZRBDLc@infradead.org>
-References: <20240703210831.GA63958@bhelgaas>
- <99ff395019901c5c1a7b298481c8261b30fdbd01.camel@icenowy.me>
- <ZoY9HZwon3_yiq6F@infradead.org>
- <51603213d16493879c85417c0c8cc3f2df0cf7cf.camel@icenowy.me>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oE703y3UuzPER7aDafoisnMxxMDqE9Cidduh3IobBTflI+LpSYEu7pM/Agf+jKfpEciWUsDJPdQktnJ3DJshZR4dpbyxkE2RsKVMjm9E6j7O0/7R772mwgJRrCc7jqVjVzKW22jdx+oxUKKyKylBkBOLN0kQYKpcbIMoRdfHnFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-713fa1aea36so98365a12.1;
+        Thu, 04 Jul 2024 00:14:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720077249; x=1720682049;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H74/f8x03FUG3BDt391zaig/HBmXDzV+z27vo8M+/2k=;
+        b=LadX0eKU5+AJ7raeSJzSQjGK+mpJ1IN8eNkPmG+TXfI2fZOnuHWa/wRANhgp7EfA9b
+         SNpqfGKb5Ia3eKIRBLgqQBGX+PlcnoPJLwRn1IPxi8LcHlrTXaA2utpw4rXfrgMroRDa
+         B3wqoA1ycjpTAWiK0gLSz23QZx0AOO1Vg5/skEjxwLvujAoa8C5iFbPGw+Dbya+FUar2
+         79NnhCgqI9PUoGooRc/mjM1rEMhh5kvbaR6EbOE0iTH0exn2ldD/UcleEmSYbislT59C
+         YrC6rL2qcfHwASHfVnlEe1sCtKoFcfBCEoNoM2gvyPysEUHLn4iy9+VU6CPv1b/N3HfD
+         /HOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqcOl90hCFZu7BRiWp0B28JT/aB8/jG7joFWdag04Zx1qnxBZCAsE14MtIvLlzw1e4T27mC+fNEcx2t8MiMkobOk7DMipWyGuh0Z8t7C/l0A+JNMLUU0MrQw0FojaPaOWPew+nPSmQ
+X-Gm-Message-State: AOJu0YzLGI8ETJOOcjnXsxAN5cL3xTM7v3ePvkUcxuVGFbiK0scQll5L
+	bs8xs3lIcbiAGQCz9HH7q1FJwz5u8ImcVYCt6tQQcyfYNf8ngSg0
+X-Google-Smtp-Source: AGHT+IE1qiGN1ScEWjOCXA9MaFnDN6kocxyeCLRtgfWaGTfcne56Ja13NPR8zln6aWuqLklQjEy5IA==
+X-Received: by 2002:a05:6a20:7346:b0:1bd:2485:b83c with SMTP id adf61e73a8af0-1c0cc74aa44mr679071637.21.1720077248539;
+        Thu, 04 Jul 2024 00:14:08 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aa90ab4sm737795a91.52.2024.07.04.00.14.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 00:14:08 -0700 (PDT)
+Date: Thu, 4 Jul 2024 16:14:06 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH -next v2] misc: pci_endpoint_test: Remove some unused
+ functions
+Message-ID: <20240704071406.GA2735079@rocinante>
+References: <20240704023227.87039-1-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,30 +71,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51603213d16493879c85417c0c8cc3f2df0cf7cf.camel@icenowy.me>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20240704023227.87039-1-jiapeng.chong@linux.alibaba.com>
 
-On Thu, Jul 04, 2024 at 02:40:16PM +0800, Icenowy Zheng wrote:
-> > Nothing in the PCIe specifications that mandates a programming model.
-> > Non-coherent DMA is extremely common in lower end devices, and
-> > despite
-> > all the issues that it causes well supported in Linux.
-> > 
-> > What are you trying to solve?
+Hello,
+
+> These functions are defined in the pci_endpoint_test.c file, but not
+> called elsewhere, so delete these unused functions.
 > 
-> Currently the DRM TTM subsystem (and GPU drivers using it) will assume
-> coherency and fail on these non-coherent systems with cryptic error
-> messages (like `[drm:amdgpu_ring_test_helper [amdgpu]] *ERROR* ring gfx
-> test failed (-110)`) without mentioning coherency issues at all.
-> 
-> My original patchset tries to solve this problem by make the TTM
-> subsystem sensible of coherency status (and prevent CPU-side cached
-> mapping when non-coherent), but got argued by TTM maintainer and the
-> maintainer says TTM's ignorance on non-coherent systems is intentional.
+> drivers/misc/pci_endpoint_test.c:144:19: warning: unused function 'pci_endpoint_test_bar_readl'.
+> drivers/misc/pci_endpoint_test.c:150:20: warning: unused function 'pci_endpoint_test_bar_writel'.
 
-From the dma mapping subsystem POV all drivers not supporting DMA
-incoherent devices are buggy.  But if the drm maintaintainers disagree
-(and they have in the past) there is not much I can do, especially
-given the DRM is rather special in abuses of all kinds of APIs anyway.
+Have you see my question to the first version of this patch?
 
+	Krzysztof
 
