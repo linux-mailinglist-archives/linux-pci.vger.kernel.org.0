@@ -1,203 +1,90 @@
-Return-Path: <linux-pci+bounces-9809-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9810-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68C129277AD
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:04:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 36EAD92780C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:17:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1EC1F281CA5
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 14:04:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5C1228536E
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 14:17:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 819E51822E2;
-	Thu,  4 Jul 2024 14:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3AAD1AEFE9;
+	Thu,  4 Jul 2024 14:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mipZ7g1m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295962F37;
-	Thu,  4 Jul 2024 14:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE661AEFE7;
+	Thu,  4 Jul 2024 14:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720101839; cv=none; b=fwJL8Mo9R3MYPb3i2MEQJRwy2dpl5VAfL3tenKIFZNNAAroVcpfG0KSpJgWF2Kpg2xduUPrQBXg7PMuc6UURqKx9PWAX09AFphtc4+QPUefN0iLx4eEIGu2AjcZrUz9rDAb0YCF7r0pNrUFAwg3uL/rwKgCZdm2r16sA9nm1fbk=
+	t=1720102641; cv=none; b=ag8JXqF3PgzZ0phbU21W1Fgip+Noj6fH5SYe4FncAcCkfDL0ZrIXAP70RI/hd/LCJnV9NnuepHv2+zDovNDVj4FeVGBVKLxRzxUAtVp5D/2WouOGUDJoR6l18nYuM0bj766S/OVUpjH+ZKg2z/CkEvhnSkOTKkFGSUZrc7vl/Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720101839; c=relaxed/simple;
-	bh=MVrBqmDA7ChNGeqJBxGNH6p6O8C0qTo2ty+kIsd+RT4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OvhW2aEbukvsNeK2+VDQPS8fqNW5mDjpN1yXsyLwMRd7P8aeeW1Jfm5SZ/64nTQu5dU1RzR6FgwWGH7MXQhaPhXc9WjN83kfY/176hbPFdFZat2Hs/JSrfORejcgsx7Mpxkv+N+F3lSUSvvLF9VLlzewjyexgEWehwjNrosiP7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFJJ52gxsz6K65F;
-	Thu,  4 Jul 2024 22:02:45 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id DAF781400D1;
-	Thu,  4 Jul 2024 22:03:52 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 4 Jul
- 2024 15:03:45 +0100
-Date: Thu, 4 Jul 2024 15:03:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <ira.weiny@intel.com>,
-	<vishal.l.verma@intel.com>, <alison.schofield@intel.com>, <dave@stgolabs.net>
-Subject: Re: [PATCH v6 2/2] cxl: Calculate region bandwidth of targets with
- shared upstream link
-Message-ID: <20240704150344.00007f46@Huawei.com>
-In-Reply-To: <6685f3bb2be5a_4fe7f2942f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240701215020.3813275-1-dave.jiang@intel.com>
-	<20240701215020.3813275-3-dave.jiang@intel.com>
-	<6685f3bb2be5a_4fe7f2942f@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720102641; c=relaxed/simple;
+	bh=NTEkeVWFX9WMfFqfduEV0Oz357OTuGc2THuDt0lLwiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LmFbgWg+HjZ0cej05oSQGuUnGBRjJjombZrYf1Hl+rzuun7CAcUmtq30q1/HJVmrUV1YKqdzH6EOJpMlH2FF3k+NMNNMLWfFX1sTZV7Sf1Xg1XnnXOVTONYU+cg0REXwHnQmkJwMjjr9mbfGDl0WTueBj79DJEv84AAY5fpV6AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mipZ7g1m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD826C3277B;
+	Thu,  4 Jul 2024 14:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720102641;
+	bh=NTEkeVWFX9WMfFqfduEV0Oz357OTuGc2THuDt0lLwiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mipZ7g1mOE4nImWzjY6Jzs0DNKVjtia5LK8idfImTPMbRGI3rwJJb8f6mRL3/8svP
+	 NjMTS8AZ0AjD+LVPgOQsIGNNzfJd8KjJ1/MuYwRdm0QIvglkLQv0NDEAgWBpEVcGCy
+	 kvTtc46rpRFY0aFyb6JS4QSx3x7+0dsxcuZVoM0d3EbhSK4JmYceZNOdQmg9HOj9SR
+	 t5O1pDeVrafIM47fE9GG4UaKctcUZhl4aI+alsLW+au9fon1fqIkyTV6vYhWNGvp5G
+	 FGKoYwTqG61HiBswwwSBb21f1D9lEk75Yyz0OTyEd2Nt542d+yH1eWKVoeN1Avk2QC
+	 L2mTVCGeNEZKQ==
+Date: Thu, 4 Jul 2024 23:17:19 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: Philip Li <philip.li@intel.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	kernel test robot <lkp@intel.com>, Abel Vesa <abel.vesa@linaro.org>,
+	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [pci:dt-bindings 10/11]
+ arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: pci@1bf8000: reg: [[0, 29327360,
+ 0, 12288], [0, 1879048192, 0, 3869], [0, 1879052064, 0, 168], [0,
+ 1879052288, 0, 4096], [0, 1880096768, 0, 1048576]] is too short
+Message-ID: <20240704141719.GA1215610@rocinante>
+References: <202407041154.pTMBERxA-lkp@intel.com>
+ <20240704072006.GA2768618@rocinante>
+ <bd96c9e5-9342-41b8-aa14-2db4828e37f3@kernel.org>
+ <20240704073908.GA2877677@rocinante>
+ <ZoZjKN1N8QfRYn7n@rli9-mobl>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoZjKN1N8QfRYn7n@rli9-mobl>
 
-On Wed, 3 Jul 2024 17:58:35 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hello,
 
-> Dave Jiang wrote:
-> > The current bandwidth calculation aggregates all the targets. This simple
-> > method does not take into account where multiple targets sharing under
-> > a switch where the aggregated bandwidth can be less or greater than the
-> > upstream link of the switch.
+> > > > I removed this patch from the dt-bindings branch for the time being.
+
+I will add this patch back to the branch.
+
+> > > These reports are useless. I suggest ignore all of them...
 > > 
-> > To accurately account for the shared upstream uplink cases, a new update
-> > function is introduced by walking from the leaves to the root of the
-> > hierarchy and adjust the bandwidth in the process. This process is done
-> > when all the targets for a region are present but before the final values
-> > are send to the HMAT handling code cached access_coordinate targets.
-> > 
-> > The original perf calculation path was kept to calculate the latency
-> > performance data that does not require the shared link consideration.
-> > The shared upstream link calculation is done as a second pass when all
-> > the endpoints have arrived.  
+> > I see.  Just a lot of noise then...
 > 
-> The complication of this algorithm really wants some Documentation for
-> regression testing it. Can you include some "how to test this" or how it
-> was tested notes?
+> Sorry about this, we will skip these reports in future as discussed in [1]
+> to avoid false positive.
+> 
+> [1] https://lore.kernel.org/oe-kbuild-all/ZoZhvjDsHSHtvpP3@rli9-mobl/
 
-Hi Dave, Dan,
+No worries.  Thank you for taking care of this!  Much appreciated.
 
-FWIW I finally managed to get a flexible QEMU setup for testing this
-and it looks almost prefect wrt to reported BW. Note I can't
-do 2 layer switches without fixing some other assumptions in
-the CXL QEMU emualation (shortcuts we took a long time ago) +
-I'm hoping your maths is good for any thing that isn't 1 or 2
-devices at each level.
-
-I've got one case that isn't giving right answer.
-
-Imagine system with a CPU Die between two IO dies (each in their
-own NUMA nodes - typically because there are multiple CPU dies
-and we care about the latencies / bandwidths from each to the
-Host bridges).  If we always interleaved then we would just
-make one magic GP node, but we might not for reasons of what else
-is below those ports.  Equal distance, opposite direction on
-interconnect so separate BW. Topology wise this isn't a fairy tale
-btw so we should make it work.  Also can easily end up with this
-if people are doing cross socket interleave.
-
-   _____________  ____________  ____________
-  |             ||            ||            |
-  |   IO Die    ||   CPU Die  ||   IO Die   |
-  |             ||            ||            |
-  |   HB A      ||            ||   HB B     |
-  |_____________||____________||____________|
-        |                            |
-
-etc.
-
-ACPI / Discoverable components.
-
-
-                 _____________
-                |             |
-                |  CPU node 0 |
-                |_____________|
-                  |         |
-         _________|___    __|__________
-        |             |  |             |
-        |   GP Node 1 |  | GP Node 2   |
-        |             |  |             |
-        |   HB A      |  | HB B        |
-        |_____________|  |_____________|
-              |                |
-             RPX              RPY
-              |                |
-            Type3J           Type3K
-
-If the minimum BW is the sum of the CPU0 to GP Node 1 and GP Node 2
-I'm currently seeing it reported as just one of those (so half what
-is expected) I've checked the ACPI tables and it's all correct.
-
-I'm not 100% sure why yet but suspect it's the bit under the comment
-/*
- * Take the min of the downstream aggregated bandwidth and the
- * GP provided bandwidth if the parent is CXL Root.
- */
-In case of multiple GP Nodes being involved, need to aggregate
-across them and I don't think that is currently done.
-
-Tests run.
-
-CPU and GI (GI nearer to GP so access 0 and access 1 are slightly different)
-
-GP/ 1HB / 2RP / 2Direct Connect Type 3
-- Minimum BW at GP
-- Minimum BW as Sum of Links.
-- Minimum BW as Sum of read / write at devices.
-
-2GP in one numa node/ 2HB/ 1RP per HB / 1 type 3 per RP. (should be same as above)
-- Minimum BW at GP
-
-2GP in separate numa node - rest as previous
-- Minimum BW at GP (should be double previous one as no sharing of the HMAT
-  described part - but it's not :()
-
-GP / 1HB / 1RP / Shared Link / SW USP / 2 SW DSP / Separate Link / Type 3.
-- Minimum BW at GP
-- Minimum BW on the shared link.
-- Minimum BW on the sum of the SSLBIS values for the switch.
-- Minimum BW as sum of separate links.
-- Minimum BW on the type 3.
-
-I'll post the patches that add x-speed and x-width controls to
-the various downstream ends of links (QEMU link negotiation is
-minimalist to put it lightly and if your USP is no capable
-will merrily let it appear to train with the DSP end faster
-than the USP end) and also sets all the USPs to
-support up to 64G / 16X
-
-To actually poke the corners I'm hacking the CDAT tables
-as don't have properties to control of those bandwidths yet.
-I guess that needs to be part of a series intended to allow
-general testing of this functionality.
-
-I've only been focusing on BW in these tests given that's
-what matters here.
-
-The algorithm you have to make this work is complex so
-I'd definitely be keen on hearing if you think it could
-be simplified - took me a while to figure out what was
-going on in this series.
-
-Jonathan
-
-p.s. Anyone like writing tests?  Lots more tests we could
-write for this.  I'll include some docs in cover letter for
-the QEMU RFC.
-
+	Krzysztof
 
