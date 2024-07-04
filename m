@@ -1,96 +1,107 @@
-Return-Path: <linux-pci+bounces-9814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CBE392795D
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 16:57:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9709B9279F3
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 17:24:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 376EA1F21A08
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 14:57:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32150B22725
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 15:24:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66301B1413;
-	Thu,  4 Jul 2024 14:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D0331B140B;
+	Thu,  4 Jul 2024 15:23:56 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D6D1B140E;
-	Thu,  4 Jul 2024 14:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806C61B1409;
+	Thu,  4 Jul 2024 15:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720105052; cv=none; b=dpDQ6ASGYMvBfQ57JXBED7lD5YhoJXp3OP8X7Bu6rHnwkN+6IP4y7e7/dNWMD1mBRC3Qg8YDKLHIRKk2AGChBqshZnNFwmxyJdZ5bIQIXvOsDohlfx9FT7viNPy2R7ywKI8edbPFf8SNdaoriHbVmbcTG97LXzcUoqXFgHXQoUE=
+	t=1720106636; cv=none; b=gJWCq08qqBxyaweAahgO41WcC2flWgLR1nWx2Ft+D9GBTBaPjFjoCEiu78ydllVxlfzSEs8vlq2ZXUyDFGSB4P+S8f2nmZrTFb72nf7aYNd9RPNdCJlYKkKPYzAXn6TerOAEUTob5q9yaOFPxrVWI4UvRZPlcr+gcOy9cMVi/Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720105052; c=relaxed/simple;
-	bh=wXM+lJtWqpCmqArY5lzSjLj6RYQU+kkOlea0ctvZMa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egL51UDIRUTJr2btoulI/bm9mjLEyOzIjhMB6R7wO9KbsMrYGrvZ1KmlK5W8vqvq+SHoSDZlAjBAZ8++Hg4bq2x4iig7r7hDIXeHhyUAB2LnPUt8n0jmpEPc6kfAYNFAs4fGnj3SH7/ES2qrBy/hNjNJGZ5wu/SOgMzgQRC9loo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb3cf78ff3so3567085ad.0;
-        Thu, 04 Jul 2024 07:57:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720105050; x=1720709850;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5DuG8BbNPK7ojcgHp1GrfarVfxf/VgJ2PLuBOxAwREc=;
-        b=e5GCrdQyQOoP8qImxD3X5vmgJloS3H3+FIX6A5kc0nF/l0h0X3rIWi8rA68mqH+qJn
-         fqAFT3UV3OJ14LacTO5T9P4WahTO6BNZvbuYFEIdx+UUGfWCDeV9YUM43s3VfOCotVPM
-         y7FLlJCDMH2jxXNcvNGzii/HuHNflpJ1iMqHKPLj9Ksr56vbcZrnxsgBQhrG2/oJB5N+
-         KyB1bk1jYD4OTUz/GrYAyBOIrmM2aKBj6l+l0dto9X9/PD6gF9HbXF6omsfdi7nvoryU
-         /HNh/89qljQ61BWyCgJwE3QlXvQUtb46hedrokMfFPBYyHczbrv/OUhewNdUPkRb1fkk
-         1saA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKNvJae4rsebOqgzyX/lmHvQfSXoG4ZEEHiX3HB6JYAOnBtHplCUt81LScdXSRJM2W/zeKWzlxmGMSAZaBz096fm6RO0A18POfbGnEi0utJwtLgVMQl+RKgkH5u7crjYBDkxfLsG3y
-X-Gm-Message-State: AOJu0YxCZ6X37x/SSQNNQFGuAUGFsqbWu/tWKPG/mohC/lNYe5FFDfeZ
-	6mPlth1AiPEqPS0v0k49nPBKRo8H+hDeq7GZRmzONw/y+K/WuJMF8JbwIZvINZw=
-X-Google-Smtp-Source: AGHT+IHk5PkhvF9EcZ3zJ6njIbJGTp/esa3YKK4JMSn2BQdtg/TkdHRJSLj1ooKN9HxkK4SpokV7yA==
-X-Received: by 2002:a17:902:f688:b0:1fb:2ba3:2f7d with SMTP id d9443c01a7336-1fb33efe3cfmr16243485ad.45.1720105050293;
-        Thu, 04 Jul 2024 07:57:30 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598cfbsm123832235ad.250.2024.07.04.07.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 07:57:29 -0700 (PDT)
-Date: Thu, 4 Jul 2024 23:57:27 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: kirin: fix memory leak in kirin_pcie_parse_port()
-Message-ID: <20240704145727.GC1215610@rocinante>
-References: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
- <7a8d4e4d-4e2b-48a6-b8e2-d23460154777@gmail.com>
+	s=arc-20240116; t=1720106636; c=relaxed/simple;
+	bh=1G7Ua2w5pwj1vzd80lgSEf5Gu1FS96EaOAuyyE4ofNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J6IT0jGM/TrwV3vr44Jcs8mGAefYpcKw+geHd7dJC5r01IARDkyxj18PlmP2I5BnLNP153GU7julaLZQbNY4dAOzgc39ETKLsQaXjczWq6ewIj4Nldl/edve6fkq3g7BK64rQGrUnl0U3PnGCXMqwKqJIMqkKnRHzhSq+Zd+kL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA206367;
+	Thu,  4 Jul 2024 08:24:18 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E2F73F766;
+	Thu,  4 Jul 2024 08:23:50 -0700 (PDT)
+Message-ID: <249ec228-4ffd-4121-bd51-f4a19275fee1@arm.com>
+Date: Thu, 4 Jul 2024 16:23:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a8d4e4d-4e2b-48a6-b8e2-d23460154777@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 18/18] nvme-pci: use new dma API
+To: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, "Zeng, Oak" <oak.zeng@intel.com>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>, Bjorn Helgaas <bhelgaas@google.com>,
+ Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
+References: <cover.1719909395.git.leon@kernel.org>
+ <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
-
+On 02/07/2024 10:09 am, Leon Romanovsky wrote:
 [...]
-> Hi, has this patch been applied anywhere? I couldn't find it in
-> linux-next and pci/next.
+> +static inline dma_addr_t nvme_dma_link_page(struct page *page,
+> +					   unsigned int poffset,
+> +					   unsigned int len,
+> +					   struct nvme_iod *iod)
+>   {
+> -	int i;
+> -	struct scatterlist *sg;
+> +	struct dma_iova_attrs *iova = &iod->dma_map->iova;
+> +	struct dma_iova_state *state = &iod->dma_map->state;
+> +	dma_addr_t dma_addr;
+> +	int ret;
+> +
+> +	if (iod->dma_map->use_iova) {
+> +		phys_addr_t phys = page_to_phys(page) + poffset;
 
-No, not yet.  It's on my TODO list.  You can always have a peek at our
-Patchwork to see how are things progressing.
+Yeah, there's no way this can possibly work. You can't do the 
+dev_use_swiotlb() check up-front based on some overall DMA operation 
+size, but then build that operation out of arbitrarily small fragments 
+of different physical pages that *could* individually need bouncing to 
+not break coherency.
 
-Meanwhile, there are always patches to be reviewed, if you feel particularly
-restless, so feel free.
+Thanks,
+Robin.
 
-Thank you!
-
-	Krzysztof
+> +
+> +		dma_addr = state->iova->addr + state->range_size;
+> +		ret = dma_link_range(&iod->dma_map->state, phys, len);
+> +		if (ret)
+> +			return DMA_MAPPING_ERROR;
+> +	} else {
+> +		dma_addr = dma_map_page_attrs(iova->dev, page, poffset, len,
+> +					      iova->dir, iova->attrs);
+> +	}
+> +	return dma_addr;
+> +}
 
