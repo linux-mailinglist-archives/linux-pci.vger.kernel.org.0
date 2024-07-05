@@ -1,174 +1,157 @@
-Return-Path: <linux-pci+bounces-9832-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9833-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F5F49287F3
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 13:29:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DBF9692891C
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 14:56:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71910B221E2
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 11:29:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 656FDB211D7
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 12:56:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DFF148FF3;
-	Fri,  5 Jul 2024 11:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417A613C8F9;
+	Fri,  5 Jul 2024 12:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNlmWEo2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WWjLg2hV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6251A147C82;
-	Fri,  5 Jul 2024 11:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8ED14B96A
+	for <linux-pci@vger.kernel.org>; Fri,  5 Jul 2024 12:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720178956; cv=none; b=AsdmaWMdQQqAC397NhvI16alg4dANYLXFCwRLe258kH47zEs/ozbFbs6stH34sW8zNgy7zGmTqKtJdVHIyD2QA0HhGibqap/0te/3FWzKsmn02kRrTHN7wVDdKkHdJcDi3zsDO/8NMv7iNAeC214DFaSyDzbPLhkuT+pNa3zx5I=
+	t=1720184164; cv=none; b=Dwl82Adst8/oI9RmKIdLALjQ9r5oXnKQsz9ihSOhcMwaR0u8EMwgSlZYgD9YNHx2sNVqb6t/PEJsSAZEDQ8JbLjTg0XQO+nNBX1o6oJfH4u5Cr/8ZMIPkkyTVCJ5dszCThifF+0c6WCeZM7Zs39KP5OJkyeAJfwoPBQEmpyVBWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720178956; c=relaxed/simple;
-	bh=LoGBmcIo3SuMSH3EZoacTkEgM1YqWya/J1Afhe1fL9Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UQ3i3QA2RqopSZtdCTNF8Qu2bbAfn2PQ87iR8/8zqxRTrPnX4ZrWfIOYzqbcIk8IowPnOfmVrmhAUyt2avhzUdijb8gaBI3+DQn8sLzGA8USaAcUqmKaXyxH9jHBVKZ0lpZ+373l6c5jS6jbECX8chEcRN7tdKX2UWjxWm64nAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNlmWEo2; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a72517e6225so170827566b.0;
-        Fri, 05 Jul 2024 04:29:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720178953; x=1720783753; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aZtKODdyTz+UonfNfzulBHnApCudbH53/CM7WiMNY8g=;
-        b=kNlmWEo22ADteaUD9iqa8srbzCQPT0crAzTRDArgt6NmpnrPwg9jF00KXa/V+0nNUX
-         oDKqpHvI59ScQR+SZ7rOP6ig2zP7SgMlWVaZ1hjU0Y7I4/X1/PTfRX5VqVK65K7Bj1wL
-         XbJGif8ysdnre64cBjZut4nalds9Z7hgXwQknJ06aXYJQc6uqkvNNp/hTWFF4cS5O+44
-         wzVZ8L5BKR85znAoX0826joouKP/WcTG6TKcHWJ4NE8XtifpuwFQl35GJzdPJVKJFXbX
-         S2VZeIi6potWyh2ZSLvFzP3eX2z/b6ONCiz9A65ErXQrETd3WlwPOTRWymDLjY7WK6AH
-         nkmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720178953; x=1720783753;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aZtKODdyTz+UonfNfzulBHnApCudbH53/CM7WiMNY8g=;
-        b=jf6WJ9p38JUW+sM7GgGHOTpbYNlFzB2ZEInyDD5Z2I3t+ye+NuDZifCEtlo7H21FDt
-         mLHyBwes93H9OJJgZNtH8I1zdt6CeCQfDJPgKhw/EGFbc6eTTx4Bn/IHT2tFehUBCKnN
-         TOa7yELcOA0Bj2UCHftJzSyNQadPVq18WnCJOWI3kY9Yxr6LoO2lZM+uTYBXlJO0AkKS
-         uCLdZvtmif0CLHv5vviOnCE3pLxQ1uGhoyxrGAqCco3tyNQ+ucXRjOOXx+VtYDNPijhq
-         tnjX+KbAtyrSQJfAdXVSrKO38xNx3Y4K6VR4s8fm5e7ntjJHbVq7tLUUpbCTGRek22qq
-         POKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXq16tF/rF1FcMrfPARG+fXXWx67JPRFTIf8FZ4ssnmw6sKAZOW2gA2RHULRyr1roz46EnQy1LXdNrkn1GeANYIEtB6+q+3WNh8PZTjAfU/EOXp7Pywr0BIqtbknkm6sycyFCz1vHGc
-X-Gm-Message-State: AOJu0YwUN8JE00tdSBUKFKOnSyumCpO0NUyHDldJS/gp/cu8hdOJqwKS
-	CvCgSQ8YykKW0eK78hIrhgbo5GE05KHHF/KA3mPdCUccOM41/mLf
-X-Google-Smtp-Source: AGHT+IGRWF6p3xNjR48nC5OZUkbVBKaD+Qvqm3tC68/R6wj49SE8Ok+/VvAlOGrxcLnL7j8GjRDcgg==
-X-Received: by 2002:a17:906:eb56:b0:a72:5598:f03d with SMTP id a640c23a62f3a-a77ba70a8cbmr302412966b.59.1720178952551;
-        Fri, 05 Jul 2024 04:29:12 -0700 (PDT)
-Received: from [10.10.12.27] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77be903eb6sm116027366b.23.2024.07.05.04.29.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jul 2024 04:29:12 -0700 (PDT)
-Message-ID: <d061d545-4694-4d5b-86fa-03d1f7251b45@gmail.com>
-Date: Fri, 5 Jul 2024 13:29:10 +0200
+	s=arc-20240116; t=1720184164; c=relaxed/simple;
+	bh=R50hgsseQTBHJ9zehpvjuoR+dSYXAyRbmH14lQ/UmJ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=a8lZPh00hzcfIXMcIPw7H4d0a0SYowTwjez9L3RkL7JsQ0n9ACsARzkm8QbapvLK8IznqOpSLNbQ/KQd+WoZOTMRW8aY9/rXz6z5nf7I6cjUthNElFyRGsmE0sG6xEPamHXsu9gC4FvedWn7OldiXFMJU8dreHPcgXJgr8OBpho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WWjLg2hV; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720184161; x=1751720161;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R50hgsseQTBHJ9zehpvjuoR+dSYXAyRbmH14lQ/UmJ0=;
+  b=WWjLg2hVOPncBNW+EhbRxkyivYm4a+rgGCALa0rpXlvjirrfL63ApWxE
+   jsPNRp6iKppj4SahhhgB7LlhPAaAbNkG57O1CWkvgHn/HW1XFdExnsMZ+
+   /ZkGxTWKia5nnPkNiBu9wAH1A6pyLwg6TvI2HgULDD+s/5jw4XJUtb30T
+   u+emIRKJHbHeVvl3zbnO3B6NB0ulSATxVo0l3EHvej+pcG50vALeZM6RA
+   cnRBPcraYw166pEZuBOtJhXkReQlHaxnANRW1Zw4bJaX5XqV/BfX4z9U/
+   E4oidHiTw8xKv1OiyD0JbDa7qJx+P3lPHvrfbZgvLvO9zMrQ4CM/6qjP9
+   A==;
+X-CSE-ConnectionGUID: cVFaJA9XSuSK0qmb90n/hQ==
+X-CSE-MsgGUID: HtojYXY8Rwylsmf4aEs4eQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="21347935"
+X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
+   d="scan'208";a="21347935"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 05:54:28 -0700
+X-CSE-ConnectionGUID: Q/2w0AT1To+Nva05aFfRBA==
+X-CSE-MsgGUID: 1+oDOxcaQjySpubV8osILg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,184,1716274800"; 
+   d="scan'208";a="47620687"
+Received: from mtkaczyk-dev.igk.intel.com ([10.102.108.41])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 05:54:25 -0700
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: linux-pci@vger.kernel.org
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Marek Behun <marek.behun@nic.cz>,
+	Pavel Machek <pavel@ucw.cz>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH v3 0/3] PCIe Enclosure LED Management
+Date: Fri,  5 Jul 2024 14:54:33 +0200
+Message-Id: <20240705125436.26057-1-mariusz.tkaczyk@linux.intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: kirin: fix memory leak in kirin_pcie_parse_port()
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Xiaowei Song <songxiaowei@hisilicon.com>,
- Binghui Wang <wangbinghui@hisilicon.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
- <20240705111805.00002010@Huawei.com>
-Content-Language: en-US, de-AT
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-In-Reply-To: <20240705111805.00002010@Huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 05/07/2024 12:18, Jonathan Cameron wrote:
-> On Sun, 09 Jun 2024 12:56:14 +0200
-> Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
-> 
->> The conversion of this file to use the agnostic GPIO API has introduced
->> a new early return where the refcounts of two device nodes (parent and
->> child) are not decremented.
->>
->> Given that the device nodes are not required outside the loops where
->> they are used, and to avoid potential bugs every time a new error path
->> is introduced to the loop, the _scoped() versions of the macros have
->> been applied. The bug was introduced recently, and the fix is not
->> relevant for old stable kernels that might not support the scoped()
->> variant.
->>
->> Fixes: 1d38f9d89f85 ("PCI: kirin: Convert to use agnostic GPIO API")
->> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-> Diff on this on is irritating as it doesn't actually show the
-> buggy code...  Ah well.
-> 
-> Change is valid, but one suggestion inline.
-> 
-> Looks like it's queued now already, but if not.
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> 
->> ---
->> This bug was found while analyzing the code and I don't have hardware to
->> validate it beyond compilation and static analysis. Any test with real
->> hardware to make sure there are no regressions is always welcome.
->>
->> The dev_err() messages have not been converted into dev_err_probe() to
->> keep the current format, but I am open to convert them if preferred.
->> ---
->>  drivers/pci/controller/dwc/pcie-kirin.c | 21 ++++++---------------
->>  1 file changed, 6 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
->> index d1f54f188e71..0a29136491b8 100644
->> --- a/drivers/pci/controller/dwc/pcie-kirin.c
->> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
->> @@ -403,11 +403,10 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->>  				 struct device_node *node)
->>  {
->>  	struct device *dev = &pdev->dev;
->> -	struct device_node *parent, *child;
->>  	int ret, slot, i;
->>  
->> -	for_each_available_child_of_node(node, parent) {
->> -		for_each_available_child_of_node(parent, child) {
->> +	for_each_available_child_of_node_scoped(node, parent) {
->> +		for_each_available_child_of_node_scoped(parent, child) {
->>  			i = pcie->num_slots;
->>  
->>  			pcie->id_reset_gpio[i] = devm_fwnode_gpiod_get_index(dev,
->> @@ -424,14 +423,13 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
->>  			pcie->num_slots++;
->>  			if (pcie->num_slots > MAX_PCI_SLOTS) {
->>  				dev_err(dev, "Too many PCI slots!\n");
->> -				ret = -EINVAL;
->> -				goto put_node;
->> +				return -EINVAL;
-> Perhaps a future change, but this would be nicer as
-> 				return dev_err_probe(dev, -EINVAL,
-> 						     "Too many PCI slots!\n");
-> Maybe as part of a general change to this driver to use
-> dev_err_probe() for all the error prints in paths only called
-> from probe().
-> 
+Patchset is named as PCIe Enclosure LED Management because it adds two features:
+- Native PCIe Enclosure Management (NPEM)
+- PCIe SSD Status LED Management (DSM)
 
-Yeah, it seems that other paths that have nothing to do with this fix
-would require the same modification.
+Both are pattern oriented standards, they tell which "indication" should blink.
+It doesn't control physical LED or pattern visualization.
 
-Best regards,
-Javier Carrasco
+Overall, driver is simple but it was not simple to fit it into interfaces
+we have in kernel (We considered leds and enclosure interfaces). It reuses
+leds interface, this approach seems to be the best because:
+- leds are actively maintained, no new interface added.
+- leds do not require any extensions, enclosure needs to be adjusted first.
+
+There are trade-offs:
+- "brightness" is the name of sysfs file to control led. It is not
+  natural to use brightness to set patterns, that is why multiple led
+  devices are created (one per indication);
+- Update of one led may affect other leds, led triggers may not work
+  as expected.
+
+It was tested with _DSM but I do some minor updates after review.
+Stuart please retest.
+
+Changes from v1:
+- Renamed "pattern" to indication.
+- DSM support added.
+- fixed nits reported by Bjorn.
+
+Changes from v2:
+- Introduce lazy loading to allow DELL _DSM quirks to work, reported by Stuart.
+- leds class initcall moved up in Makefile, proposed by Dan.
+- fix other nits reported by Dan and Iipo.
+
+No feedback received from leds maintainers. No updates in Kconifg.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Marek Behun <marek.behun@nic.cz>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
+Link: https://lore.kernel.org/linux-pci/20240215142345.6073-1-mariusz.tkaczyk@linux.intel.com/
+
+Mariusz Tkaczyk (3):
+  leds: Init leds class earlier
+  PCI/NPEM: Add Native PCIe Enclosure Management support
+  PCI/NPEM: Add _DSM PCIe SSD status LED management
+
+ drivers/Makefile              |   4 +-
+ drivers/pci/Kconfig           |   9 +
+ drivers/pci/Makefile          |   1 +
+ drivers/pci/npem.c            | 588 ++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h             |   8 +
+ drivers/pci/probe.c           |   2 +
+ drivers/pci/remove.c          |   2 +
+ include/linux/pci.h           |   3 +
+ include/uapi/linux/pci_regs.h |  35 ++
+ 9 files changed, 651 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/npem.c
+
+-- 
+2.35.3
+
 
