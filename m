@@ -1,241 +1,201 @@
-Return-Path: <linux-pci+bounces-9824-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79D7E927FBE
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 03:25:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6C4F9280FA
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 05:39:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1471B20EF3
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 01:24:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B7CB282B33
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 03:39:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC67EAC5;
-	Fri,  5 Jul 2024 01:24:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EFAF175BE;
+	Fri,  5 Jul 2024 03:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaDZlbp+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mgQY1Vdg";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="TKPv9TzE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F045033DD;
-	Fri,  5 Jul 2024 01:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720142694; cv=none; b=o+Bz37lnIdk9qSfTbxJ2DdIle4PcO+T4bc29BsjSKq5lsUxRs+msi14qAoi5MF8lqy/xHqTksouxUd6SDb7Hss/CN+qniDr4pRCSPujUMu8cLyHGRkwcJYbRM3sCSFW1ZC5DSSRToRMQwiyr7oRjZIM5BaHBaIE7NZOKkprRu1w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720142694; c=relaxed/simple;
-	bh=Fgj8tbj91yyhS/Vj4oRJpCZVDxl3ws8xvqFaTEtx97A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tKrFZP1jEcWZPoV7fYAQeXWcnTbbw0eTE/tgk7kfgSglxY6pFb1nnWKjTXQHP62zVk2twsG6laHuSaZqVawvXE8n0+SBVj6kL/W3v/EEvl14teS6DqjrTDp1cNNvhwvPyoLdSz/hLt521AqhQFPBKhnstmuJHm8ZuPeFcWyt4xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kaDZlbp+; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4f2ea4d80d6so396562e0c.2;
-        Thu, 04 Jul 2024 18:24:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EC4101F2;
+	Fri,  5 Jul 2024 03:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720150744; cv=fail; b=OS5TkeRLfrNjx9ldYZxtaez7dzYQDKPmBo4P2lkxFiwf43iguw+71gDdZdrPfAa5K4RdpohayuLQ8Fg57S5+u1EUuLZip+ly0tdYkfK+r/YizV9fTLTEhyZZOyNxUM1v0Dlh3n1uMm93ULTpQQ1+0jv5W7zmqlFNPv3l0OxXDig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720150744; c=relaxed/simple;
+	bh=9Nsx1AZ7uin99mE0fOtiJPaGuuGbNPflvUmMSDF85D8=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=e/L+/wUZxNNW9qENugX9sFr0TJRl8L7Pn9KpF8loZRks3IRIig/8qEOmJr8lQVEd9qHQOJW5JyanTC8r0Ci+it9NEDVe3vkTT/m8gCT7Ka2j4tbRVHb0S9X019BmnNhueYzMEOgCcVpgudhcoJ2HoRuR6IcqbxJMMUpc9AG3XcU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mgQY1Vdg; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=TKPv9TzE; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 464Nwx3w008587;
+	Fri, 5 Jul 2024 03:38:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to
+	:cc:subject:from:in-reply-to:message-id:references:date
+	:content-type:mime-version; s=corp-2023-11-20; bh=9KDfPqCDLd5nfe
+	jRqKqqGxPpF4+F8zhinzO3Im68NqY=; b=mgQY1VdgWobXlfEENuRKaBHawRBXRt
+	swBPFssITpHvUoqGSO67MNZhZk1KwzN+I1g3CZ93TC0BtRpPaCWaicF+frEplclT
+	2CCzLQkAP+EuX12aZ19MarK8ZrtSXnhcR5Tzehy+1mhMWo4UNsbyEvDjxJu6nUBK
+	SzDCmKousH7RA4gbiHBwHY4mpb8/ULpYGc2/ZzuyjXFO4GPFN3lOBiPdh7gDoMHa
+	tZAuJ4vwnYYEq2Cj8dXp2yjEE5rAP6a6wL4p68r4aZrQNzhWkGrJ5imDQGhn0xrj
+	3yYqb4g5nA2O//ss0kkdKLrH/01+fGfsZVMev3FOEjJhTgsZXvLJAzvA==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 404nxgmkkc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Jul 2024 03:38:58 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 46507FhV021474;
+	Fri, 5 Jul 2024 03:38:57 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4028qh06uq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Jul 2024 03:38:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LH23QKGlSvyMmHma1LS8N915VOu2Qf4tcOqmoZSBBaGMYXIYZvR2lg0w49kcqaDXdmDYjY5lJS+XCA5w5KWfGwqLNg5+rQq1Mb0+hpIm2Alszyh+xs7S8bBwxNgb1qmdhquuSd4KYMwcqNLkIKJ1xuXiUe7jxX7/GzuqqTUcrhWTJLLUhMAP6jLQYvoAvXQY4XKTPThEjVP82Td0/c0Fhfow6f6NlXl4M3XqfMHkrJrkW8l9bLz+Z4lDX3zc9mt34OFp01Vfydu/UnS2029AmRC7ft48rMHgW2Kzu9yId3avHi262m3L9ZkIpfvJX7GmUQsWZkUWFTD31UmVT+38kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9KDfPqCDLd5nfejRqKqqGxPpF4+F8zhinzO3Im68NqY=;
+ b=SNT6CHhkwuvvPE1+bdngtzDrjjRFNRDg8WCYcv6zZo08ecsxD67Y12K4GZqfCqd9cQShWxlyBA/pPSQUUscc9G2KHxu02iN8Qz1uJq8k1y2PiAcrYrYwptjFFCzcusWaJ/5I1vYj0vwPHUQYkLY11ZLiKq0o9leppK4UILoRGUxkdVbtiZ9z0H/WZifAIolTLVFPimAkFL2rR96sDFcWhyd5xAK2s3OyKhjhZb0T8v4TKjbT8RZP1IPoTACzb+1tIcoivGdUcmMZJnNO4F8eIYM1P+a51tsu2vzluocvWDMWMdmbKm/Q6jjwrWn95nAQe8OMzZLyr/ZR+N/CsxRfPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720142692; x=1720747492; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/TCgQDZcwng8bXM5BPYmuZDEk5bETYHoKH5imxDkoNw=;
-        b=kaDZlbp+oKANSrOw6kPz454eYKeG+PmNZQbgvXNtIoKJVeNc7ShFapguZsgrl+UlLH
-         jEEEz2lfrflF/WSADDtCY78oN0icEO04AimktHYUbHrcqQn+EwChMNpF6tcW3M85X3KZ
-         uMVJlqpbwJfmzX5x+Sxi5ydI6QDiikxFO+GDNpCzKuCWmnM94x5712JDLgu1iMYwi+XT
-         v4XDsaEAudByuCISnCILCz8pUfIr97FJZilUbs40t7PhJLBI2cAMwcJZkj4ZhXAcef97
-         WXA8xJmpyNT2h32b/D2+F2qG34ud7U/u0uCfPl/tZZw54uQiXx7G6xulD3dNQf9O5FBn
-         +FXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720142692; x=1720747492;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/TCgQDZcwng8bXM5BPYmuZDEk5bETYHoKH5imxDkoNw=;
-        b=nAKGgca3rbwr7p06qTM/4DZydetFxG5u1JuzPIl+w/NIyYLsRUtWdiwZpDTrKPyIZC
-         EGLakj3GroOj2wTAZLN5QIxOx4pStuqlPp9ZJabgeswYwIiTyJhP3e8dhwCYoKZN9N8u
-         QHcAq7swCuYp2T6g3XpsxlrVaK7WLlkJTLB2/wDw/0yZryfedlCyiAAZ0BeWQgN+WBmU
-         NqWGsvCIPdsieO6OF967zH4c9SI45MZ1IaZ57tb7y3XmY5NuXfYAKheT0O1GF/LMdcWV
-         OGp/drjBPEEU3Nmo+4S05fBWc2DNPm7fAdGwKIqU1wIeDpKdY+oID/NQ/DWCHrnY+q3a
-         d93A==
-X-Forwarded-Encrypted: i=1; AJvYcCUGJq1cathPtfQWoTVCx9my3QkNqeql9LGOG6/ZYHIXZFHlgyejfb2CnR6E20RiibKNvKt2oRLN0KObMqV4UU8O4shtz+hDy9pU9S99+aQvzrKVnzYwgF9lNAOuJjrCuUOUT44dZr4I
-X-Gm-Message-State: AOJu0Yz1I8dHdIUaCAJ54dkFGhdxCim2uhMe/P1t6wSBFT3eZqOMRwfH
-	gcrCE+hRZnOYw0pnu8A3ev9iePTOf9SK8QmZybFt0p7lC8M8+wigiSTc26DHl8aY3gX3uWAqrZd
-	lBtKJyMXHuRfEQfiDVkvVmgXEw3M34saL
-X-Google-Smtp-Source: AGHT+IG2WtReVuVppXAmKVRmFBS9mPu9FFYDWdrZ1dEdPQ+YNP8wCPhUls6aSK2NWBqqZqqHRHZB8s7kL0xSK1yk/m4=
-X-Received: by 2002:a05:6122:1b10:b0:4ea:edfb:8d89 with SMTP id
- 71dfb90a1353d-4f2f3f518b5mr3181388e0c.12.1720142691734; Thu, 04 Jul 2024
- 18:24:51 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9KDfPqCDLd5nfejRqKqqGxPpF4+F8zhinzO3Im68NqY=;
+ b=TKPv9TzEzTOPRgkgfIQoQW3BrKUzRMH9Vlem+DadhihDBYLhOrt+1sGfxXyzewRRhSMfFRSvUYRyAHAIiU5gtVbmBLPkG1M3rDADRvH7/UG+k8V/8Bx8dvgprFb42Jdrfoy5iV+ZxZccvkO2AQ/EbyuEQgnx1oqEWCgPTX3WVcQ=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by CH3PR10MB6858.namprd10.prod.outlook.com (2603:10b6:610:152::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.34; Fri, 5 Jul
+ 2024 03:38:55 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::5c74:6a24:843e:e8f7]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::5c74:6a24:843e:e8f7%4]) with mapi id 15.20.7719.029; Fri, 5 Jul 2024
+ 03:38:55 +0000
+To: Sumit Saxena <sumit.saxena@broadcom.com>
+Cc: martin.petersen@oracle.com, helgaas@kernel.org,
+        sathya.prakash@broadcom.com, chandrakanth.patil@broadcom.com,
+        ranjan.kumar@broadcom.com, prayas.patel@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 0/3] mpi3mr: Support PCI Error Recovery
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20240627101735.18286-1-sumit.saxena@broadcom.com> (Sumit
+	Saxena's message of "Thu, 27 Jun 2024 15:47:32 +0530")
+Organization: Oracle Corporation
+Message-ID: <yq1a5iwa4os.fsf@ca-mkp.ca.oracle.com>
+References: <20240627101735.18286-1-sumit.saxena@broadcom.com>
+Date: Thu, 04 Jul 2024 23:38:50 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P265CA0256.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:37c::16) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702060418.387500-1-alistair.francis@wdc.com>
- <20240702060418.387500-3-alistair.francis@wdc.com> <20240702145806.0000669b@Huawei.com>
-In-Reply-To: <20240702145806.0000669b@Huawei.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Fri, 5 Jul 2024 11:24:25 +1000
-Message-ID: <CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
-Subject: Re: [PATCH v13 3/4] PCI/DOE: Expose the DOE features via sysfs
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de, 
-	alex.williamson@redhat.com, christian.koenig@amd.com, kch@nvidia.com, 
-	gregkh@linuxfoundation.org, logang@deltatee.com, linux-kernel@vger.kernel.org, 
-	chaitanyak@nvidia.com, rdunlap@infradead.org, 
-	Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|CH3PR10MB6858:EE_
+X-MS-Office365-Filtering-Correlation-Id: 20716bde-28ab-489b-a244-08dc9ca3ff20
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?zX466IHTTI+JXvLLvk+SkYu9gD6k7zqMDD1COKmenCrGUYAogTG+JPZsqHoA?=
+ =?us-ascii?Q?uKplnpmP3jeZKTxz8oCxGIVfbaH8/Pp+Hlf69jfAcjobzq78TMcSvUKMe3Uu?=
+ =?us-ascii?Q?/6Asi0bt2bBJppc1Yr2bVSq9yhzX7ONMKBeYtPGr6EwCgEftp4rigq/JPH+Y?=
+ =?us-ascii?Q?OPTzUor3KOy5rXjQWfEAyNh+77m3i9LWiCuUOGVsPwq4La2tdiPS8XhorEvN?=
+ =?us-ascii?Q?hzg7x0eV3ajoRIfZhkl7tAwNGcpcUChB/gNjzcIHmnbKKi23XOn9IzXWbiL1?=
+ =?us-ascii?Q?aDsmLsSdrGvqpsAQKkdnyDYBTunDpXj10P5vk7ozzQNF/VS38ywe7z8U5EPC?=
+ =?us-ascii?Q?kcnzFDVD3yVAPyUkd/PqDGa5L3/PCd7G7D0Y2sQuOKhF6kUlBbL+OWGYfCK7?=
+ =?us-ascii?Q?nZBDeBc1W9S1byCLG9Y0MC1u/vv0P2lyAaqS3ke9JSoVvF/tQ4u6J1VwnstJ?=
+ =?us-ascii?Q?E+SBMUfyjwFj0DcBxYbBEaoj/gXlM4fXFO/W5OslMkZm+W6YDUnVP63HGJnZ?=
+ =?us-ascii?Q?ad056CCmk+gcCdjQ7FIA2j+ylT/T0fHQiCdgjwuO8Nty2J48HAVlFFe/8kQq?=
+ =?us-ascii?Q?wNaV9VpX4iwnUwMVwAvh0Ru+hOWcejWoNTMEHx7MsFzUSS77jh64d81Pji2N?=
+ =?us-ascii?Q?Vr8ZLXthD293MLuqQrS04XMTo71KjFWkyeNlEKg2VnhAEjSq7FiOGHEfqUct?=
+ =?us-ascii?Q?wgo/lOPpOmFuNUwRol9OLPxEGyDvbn2RJfFOPbOeC+ZpBXCZufK/WBpjp/my?=
+ =?us-ascii?Q?TSp1yZXM+rlArQmY+vnhLOszNMhzY1UHWwbgGQY8w7g/dtEK4qxBZiztxli1?=
+ =?us-ascii?Q?s8rx4d08Y6YH8c+HGIvOQMTbTpGVeOaoQo9jjIS6IZy8g7HoiFgzRG2Ma4Tu?=
+ =?us-ascii?Q?DjdEDCX+SQ37WxquP/qWrKJoUgEjO5XFniHZBzb30y7sOfy5P59JsIx4rPiY?=
+ =?us-ascii?Q?6lZzHIOK7mIVvpI2eoc0reylTqZqlDJ7QuxiDFSV9ckTogg6x5NVmYDf0L51?=
+ =?us-ascii?Q?zfkRsd4DWCuLguHQwQ8d17+cV4R52vI0jr4ATSivjLdQYmueH+20wiHASqRI?=
+ =?us-ascii?Q?mpvsGmhrIXLCZ8t/BZ7Bs3Qa56wGE4JqkdBt1v/djUuWXrnMCPcKARzK1yCo?=
+ =?us-ascii?Q?SmCYmBaXxgpdKiK+mhYZttw2gxuj6jSxf+y7320EMAuV9APyeQDOb++oAse6?=
+ =?us-ascii?Q?EShy4lBlonKccACVmlUhlFMftkXX5k/YnPKBPJDdYsJ9p2U1MtvbxtTkSv6y?=
+ =?us-ascii?Q?ZFjSko7ne7HD0O74eDeT6OYnKug0mddRq/49FMAiaDeCZ9CnLJ6Bv4n1etUU?=
+ =?us-ascii?Q?kSbnyUENtSjR9Ci5KnvmxD2mZzkNSKoDdfobQ1h5+Tgcbg=3D=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?JeYz5KTzsVgm0ppVlgXcPz9xLGe6maOWy694VlS4XbppmtLqgVoQuffSMww2?=
+ =?us-ascii?Q?vhZSdJU1KnanNPFxK9a50u5cAhvsCXJWBeyYGy7hGtWJ0yGy0htWcvUC0m2e?=
+ =?us-ascii?Q?BYhnLBFx1fWEUl1bIdeFNSZ36R6K7jVvem4fBGJvoHCsyFSUfs+dVReQyZsI?=
+ =?us-ascii?Q?ODzWPcR1RyCpjbH8M6spjgWt0hSaF4LjAa6moEex+MTiZGZxHx4rd5DCLLTx?=
+ =?us-ascii?Q?oG/AQChy2jR6UCSvPetXE2lG4cpVHg6Jz7tvUSXcuAjhauZtRMLZi5/oqLTo?=
+ =?us-ascii?Q?2ru1KczpnIYqh42t7bb/zq2hwyc0VFFkEKlPrrb/YrI5CD1yNR58KYJgcNBF?=
+ =?us-ascii?Q?8d6VjccJ2slatW9fgNQ1h/1u+RiMUnVXDIu/+XeVTgxrOWp7GU5cQdY9EKe/?=
+ =?us-ascii?Q?sI1qWEdKuqRP14PVBKBRtgwVgSFBjigXvlONcaF7aDalzpzfN71FTSOEtVPc?=
+ =?us-ascii?Q?bDX5e4QUXZjQIUHfrh9HGiMOBAv+ct8gioMWGp2blJaUHurq1GeLTZW/ax9d?=
+ =?us-ascii?Q?IxpHvPrLHqFcyX0NXiqs+7JzsFMSDffaXPMmKm2SdttY85eLxy3Ve4md5QFv?=
+ =?us-ascii?Q?0WYNlJhmT3cgUK1NfK1s/2JnHJmLi5nQ0wbs+uqHhcWh2QDxPqx1X8csDkom?=
+ =?us-ascii?Q?8g0czZsjgWk4FJx36EoH3z8jGrdEXn1DZuLNP3p6UPC079H2IUoY7M+jgn7Q?=
+ =?us-ascii?Q?VIBV13YJ/EJrvGK2UJCMwNkBB0qwkoOW6enbmtiWtsjjHGWxV0ddCRiGWNAa?=
+ =?us-ascii?Q?DuHBgYExMPaXDS7XjmX/sI3E3GmaSllE4fuXQ7zYZC+FmEk8VLAVjJyJ5LLt?=
+ =?us-ascii?Q?LV+1YGulMUwaAsrjdrXYL2Yw+GmZdFJC9F01gqVzGg8CGHwAhDcLMP4TJpnm?=
+ =?us-ascii?Q?sL+g5qT4dNTbcxQapIn4yrwZxd+Bl5TP8wXsI7jn2DgNYZNFK0LMFFaC9OQu?=
+ =?us-ascii?Q?NsX8JEBJWvHWjN2JTsbGhueZc6gUa90Si/1opatBUH9Z9aFp/syRxNJ7h+2x?=
+ =?us-ascii?Q?gHGtei1Taz8JqnEtOVcodTZp5/At8efdwz7N2kvz6WSMt04PbNiFSvC8QlLO?=
+ =?us-ascii?Q?GXBFhUUq55nJUXggOTkPdrXBrVWbsz8LmQI1ZticedJj8oe00Qnn9aA7klMY?=
+ =?us-ascii?Q?4cHSrhHsrGSjtNnnpzXei0syxA9S5YZZRZoQ0n9oc5dFMT/NxP+RA1VjDV+z?=
+ =?us-ascii?Q?iyYTyztsjf0OMRT31ebxI8oinrO+Vzbk6oF4Ru3Y6Si0i3aSVXWtrNZTt/M9?=
+ =?us-ascii?Q?7dibyuTP34iWf0Ho5r8cWfz4qIJTXTKYi85XZn9hXBTFSLFvpehfZWhkix5m?=
+ =?us-ascii?Q?MHwZQfiKTcogn00OlWV6PPztfXAsz5Htv+OsgK7v84E6NMUJdISNoBrvztPh?=
+ =?us-ascii?Q?eZEQlYI7y+1yQAuQ4HN+dvch+OBPLQborZ57megYCGDNuDolfI/1lIJfuk28?=
+ =?us-ascii?Q?P58zMIkRhpe/sN/SMUcxGhDgzPHFCbgn8oMDbiDSdyspxokvAz5wA3VMfbLP?=
+ =?us-ascii?Q?ArnZdigcPfixKFVsiYuiJGMnD0EVH3dIV+UgdvvxKSpZtFa6KV81zuXD1Y31?=
+ =?us-ascii?Q?f5L1ZGzl4xIh1bFSylcB0kobbFC0uc2TCqFlD49y9QRgi7m8NUqfe8rYWpde?=
+ =?us-ascii?Q?RA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	DyXLOAe/QZe7vjW+3wWNKbxoubR/9OMpXiHWP7G4DWwDZ0iC6obhXZDfoiw8Ibntipzj7ClpJVW7eeXNgDJ60GOstu/9Bmj08Rsorp6Ac4xDGBn61cATObchuToeNf4JiYPFWBKWh7SOkjXugirl3icbeyNQxs7eOgIxUj432D8shwM3YmTQ42j2hwlka57VTCwyQuryaoFfKN3Y3ssHtSL1/CV4vnarZ0MRDYpt0rcuao3tmBArxPvj+lVUtqeenT4oa5AaIDARI57a4Adv56d1uAuvJ/EjiDB22gPvpzXUUBhzGn6+V6ditxNLgIvQlqDgsiwUgrI6lhut9QwR/+mrt3fJpFvBvQpkWgXZquV2NcYVBMHKPGQS6GFomF/TroCW3lvq5iUZaAPQeMWzptnp6hdAxBurOrA2V5NE106DasPuGe0WnAGVYXBL+SdyWrFZjSZPIkv4ZyU27RF/wZ3SeHVf1Oz7QAuW/QAblakG/Y6ND1abO+IQ34zy6s9Uk/K913OwTH9nNFi/VIPwf6OecF0UR4Sw7s2U+zAFRvqbT6jWN+Ag45d3rbbivznfzO4x6RjO/v2hRSkNy/kM/cWpymEBn2jRkDDMZgI03tM=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20716bde-28ab-489b-a244-08dc9ca3ff20
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2024 03:38:55.4577
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Rh+JX4mNgw5BcKipkf5HunmbrKwvt+OGhjs/zvQdzPQhmjN4SJ0qhefg04QTo7SxRvrFzb9Nr5gI2gVhHsLE+Nt3cVVzdC43P3rodT3j+Wk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6858
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-04_21,2024-07-03_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=632 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2406180000
+ definitions=main-2407050025
+X-Proofpoint-GUID: QRhkSbdNefBHIpQ7O1BR-zw0h1TtLmkH
+X-Proofpoint-ORIG-GUID: QRhkSbdNefBHIpQ7O1BR-zw0h1TtLmkH
 
-On Tue, Jul 2, 2024 at 11:58=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Tue,  2 Jul 2024 16:04:17 +1000
-> Alistair Francis <alistair23@gmail.com> wrote:
->
-> > The PCIe 6 specification added support for the Data Object
-> > Exchange (DOE).
-> > When DOE is supported the DOE Discovery Feature must be implemented per
-> > PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-> > information about the other DOE features supported by the device.
-> >
-> > The kernel is already querying the DOE features supported and cacheing
-> > the values. Expose the values in sysfs to allow user space to
-> > determine which DOE features are supported by the PCIe device.
-> >
-> > By exposing the information to userspace tools like lspci can relay the
-> > information to users. By listing all of the supported features we can
-> > allow userspace to parse the list, which might include
-> > vendor specific features as well as yet to be supported features.
-> >
-> > After this patch is supported you can see something like this when
-> > attaching a DOE device
-> >
-> > $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-> > 0001:00        0001:01        0001:02
-> >
-> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> > ---
-> > v13:
-> >  - Drop pci_doe_sysfs_init() and use pci_doe_sysfs_group
-> >      - As discussed in https://lore.kernel.org/all/20231019165829.GA138=
-1099@bhelgaas/
-> >        we can just modify pci_doe_sysfs_group at the DOE init and let
->
-> Can't do that as it is global so you expose the same DOE features for
-> all DOEs.
->
-> Also, I think that this is only processing features on last doe_mb found
-> for a given device. Fix that and the duplicates problem resurfaces.
->
->
-> >        device_add() handle the sysfs attributes.
->
->
-> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > index defc4be81bd4..e7b702afce88 100644
-> > --- a/drivers/pci/doe.c
-> > +++ b/drivers/pci/doe.c
->
-> > +
-> >  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeo=
-ut)
-> >  {
-> >       if (wait_event_timeout(doe_mb->wq,
-> > @@ -687,6 +747,12 @@ void pci_doe_init(struct pci_dev *pdev)
-> >  {
-> >       struct pci_doe_mb *doe_mb;
-> >       u16 offset =3D 0;
-> > +     struct attribute **sysfs_attrs;
-> > +     struct device_attribute *attrs;
-> > +     unsigned long num_features =3D 0;
-> > +     unsigned long i;
-> > +     unsigned long vid, type;
-> > +     void *entry;
-> >       int rc;
-> >
-> >       xa_init(&pdev->doe_mbs);
-> > @@ -707,6 +773,45 @@ void pci_doe_init(struct pci_dev *pdev)
-> >                       pci_doe_destroy_mb(doe_mb);
-> >               }
-> >       }
->
-> The above is looping over multiple DOEs but this just considers last one.
-> That doesn't look right...
 
-Yeah... That isn't
+Sumit,
 
->
-> I think this needs to be in the loop and having done that
-> the duplicate handing may be an issue.  I'm not sure what happens
-> in that path with a presupplied set of attributes.
->
-> > +
-> > +     if (doe_mb) {
-> > +             xa_for_each(&doe_mb->feats, i, entry)
-> > +                     num_features++;
-> > +
-> > +             sysfs_attrs =3D kcalloc(num_features + 1, sizeof(*sysfs_a=
-ttrs), GFP_KERNEL);
-> > +             if (!sysfs_attrs)
-> > +                     return;
-> > +
-> > +             attrs =3D kcalloc(num_features, sizeof(*attrs), GFP_KERNE=
-L);
-> > +             if (!attrs) {
-> > +                     kfree(sysfs_attrs);
-> > +                     return;
-> > +             }
-> > +
-> > +             doe_mb->device_attrs =3D attrs;
-> > +             doe_mb->sysfs_attrs =3D sysfs_attrs;
-> > +
-> > +             xa_for_each(&doe_mb->feats, i, entry) {
-> > +                     sysfs_attr_init(&attrs[i].attr);
-> > +
-> > +                     vid =3D xa_to_value(entry) >> 8;
-> > +                     type =3D xa_to_value(entry) & 0xFF;
-> > +
-> > +                     attrs[i].attr.name =3D kasprintf(GFP_KERNEL, "%04=
-lx:%02lx", vid, type);
-> > +                     if (!attrs[i].attr.name) {
-> > +                             pci_doe_sysfs_feature_remove(pdev, doe_mb=
-);
-> > +                             return;
-> > +                     }
-> > +                     attrs[i].attr.mode =3D 0444;
-> > +                     attrs[i].show =3D pci_doe_sysfs_feature_show;
-> > +
-> > +                     sysfs_attrs[i] =3D &attrs[i].attr;
-> > +             }
-> > +
-> > +             sysfs_attrs[num_features] =3D NULL;
-> > +
-> > +             pci_doe_sysfs_group.attrs =3D sysfs_attrs;
-> Hmm. Isn't this global?  What if you have multiple devices.
+> This patch series contains the changes done in the driver to support
+> PCI error recovery. It is rework of older patch series from Ranjan Kumar,
 
-Any input from a PCI maintainer here?
+Applied to 6.11/scsi-staging, thanks!
 
-There are basically two approaches.
-
- 1. We can have a pci_doe_sysfs_init() function that is called where
-we dynamically add the entries, like in v12
- 2. We can go down the dev->groups and device_add() path, like this
-patch and discussed at
-https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
-
-For the second we will have to create a global pci_doe_sysfs_group
-that contains all possible DOE entries on the system and then have the
-show functions determine if they should be displayed for that device.
-
-Everytime we call pci_doe_init() we can check for any missing entries
-in pci_doe_sysfs_group.attrs and then realloc
-pci_doe_sysfs_group.attrs to add them. Untested, but that should work
-even for hot-plugged devices. pci_doe_sysfs_group.attrs would just
-grow forever though as I don't think we have an easy way to deallocate
-anything as we aren't sure if we are the only entry.
-
-Thoughts?
-
-Alistair
+-- 
+Martin K. Petersen	Oracle Linux Engineering
 
