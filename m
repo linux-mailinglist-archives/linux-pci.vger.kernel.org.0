@@ -1,61 +1,73 @@
-Return-Path: <linux-pci+bounces-9856-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 666E4928DBD
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 21:20:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43C22928DDE
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 21:39:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8DFA41C21D26
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 19:20:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE893286E07
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 19:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB501465B3;
-	Fri,  5 Jul 2024 19:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 519FB16EBF5;
+	Fri,  5 Jul 2024 19:38:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBwILHie"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FF4vGeeV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8D718AF4;
-	Fri,  5 Jul 2024 19:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18923178390
+	for <linux-pci@vger.kernel.org>; Fri,  5 Jul 2024 19:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720207237; cv=none; b=NsmI3I1/q2Az1leaEyV8TjqAw0otld6k31Kc0FD33+L5l9yf0STLDQN0LLxDWeFE2b3ss1o5gGm5zIvkQ5qV51p8OpjFdWDILAdx+WdH+pCTj8z2OgpIHGJ4KpNBHa5+PXvuOlgFbXu/+bDTjBZZlfJF4x2VFbKqoh+ZyF7UCK4=
+	t=1720208285; cv=none; b=B055qciq8Ho45Qqv1FibeOa7Dvfos0chRS0RrK6Dye8bJepbQk8n7yERAAu5c7+nPZBfaIAX41Po1WrkjRShGj1zXQzuKAJbVBdamqwHuguf8PSS7De26f3CXCDlTRgLSD2dN5rZnIaqCKAGPNoOVLu5q8aQqiM0c4fjL5cpq88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720207237; c=relaxed/simple;
-	bh=HchELO8nLBln8sfZVXM5+tcXKtpO4xsgC76A+YN3J8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IBStLihpRUAhHvBeh5n0meSW/IwTuF+tVNoty1RAq/j+j/UpdWirytmfCTnGhAnM9ua0fQeY21QzUMPP3cwgnJO2me42D2CYLb8Crm9o059bwzs38VnojfE/xlBfWgYj3BjUxf6qE1qA0NxQsqBCbyfxODIUxf75NejRl6KLop8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBwILHie; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6141BC116B1;
-	Fri,  5 Jul 2024 19:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720207236;
-	bh=HchELO8nLBln8sfZVXM5+tcXKtpO4xsgC76A+YN3J8g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kBwILHieC1Z6CJbKtY8lqZJUEsArAzL7hXxABbptIQwOhgNlWFXh9w8DeirvYXyYC
-	 d/e80w4K5Dvyuiq7djURjha6yprVRBwnwpuepZYwjO8hHPM4Eky4Fw87WTZV84eHMP
-	 j0QhW0xQ3idturpI38gYhlFARaO67tsFjbB+/1NZdtNNA9MdhRNhsSLS7OI2G4YpCq
-	 M8rGgPPJ1aauE62olyF3L8DBMukj7fzZrNetCy92bKy21NAesRhcP9SBPDkJfsLuAR
-	 dbSAp5iZtsVPGzpSCf/kxV6fF3oF2gCaMSEPQxnppoB/Oknp5hhM8vAr2BoX8qsVDf
-	 3KayVZCxp5rRQ==
-Date: Fri, 5 Jul 2024 14:20:34 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Amit Machhiwal <amachhiw@linux.ibm.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Lizhi Hou <lizhi.hou@amd.com>, Vaibhav Jain <vaibhav@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-	Kowshik Jois B S <kowsjois@linux.ibm.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] PCI: Fix crash during pci_dev hot-unplug on pseries KVM
- guest
-Message-ID: <20240705192034.GA73447@bhelgaas>
+	s=arc-20240116; t=1720208285; c=relaxed/simple;
+	bh=VgbM7DMQhNGABnnn4TAcBjfadvKGyvslRsysDBNisJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Zwb/+EPOb37b+BH7FWEEoFs6wyP52Ts9V/4qSGEY7TVZcR0qYJG+osMIeyVmDsCqGX9rfcO2fCYTonVR2zExTMG00pOYuBQ6QUseiLXAUqBwQmGbkum+qSLOxodYDqY+TNi9dWDyPdYeCw6rGm9pQbN6VAacUSvNoVX3vAKGD24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FF4vGeeV; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720208283; x=1751744283;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=VgbM7DMQhNGABnnn4TAcBjfadvKGyvslRsysDBNisJw=;
+  b=FF4vGeeVLWWA+VMdk2XbgKbxeq4NaUghlZn5RBzkAMowFr+rQ//ZUjpb
+   8iu5B8ss5GmNnZdTZf1AtZ7Xhaku0yE1qc67jO1q7UW2Qx+TgvN/BnO/6
+   ozLblxWIOat7h8r9RfUDLpeN6WI3hverpN4BrbkUsItMJJWL59pXWrsfM
+   mxidnVwf1A2OhsxkbahExScu8Je27hJ1VG9wZzy611afeKEnSYF1OhDP2
+   C849kDP8WjaBni6MIWR/6vsuDVcRAgcjwL26j7RZ2qdTMvoyBTGDGzXbV
+   EzWnCuOqvJ0gx6V30RhIoa8s96ZCjmTQWvgkWz2n3LmW6G6g9GT6l8YhE
+   g==;
+X-CSE-ConnectionGUID: VUXEBv/HRUG8vXPfvFweoQ==
+X-CSE-MsgGUID: w8JM2x4ORjm+/F1MKiBD6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="20408252"
+X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
+   d="scan'208";a="20408252"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2024 12:38:03 -0700
+X-CSE-ConnectionGUID: XuI9YjchTV6u0/Hrb4nAyg==
+X-CSE-MsgGUID: AaH0uY5PSXaKnGmuPOmxeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,185,1716274800"; 
+   d="scan'208";a="47600107"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 05 Jul 2024 12:38:01 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sPokp-000Smd-0F;
+	Fri, 05 Jul 2024 19:37:59 +0000
+Date: Sat, 06 Jul 2024 03:37:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/loongson] BUILD SUCCESS
+ b69d24a763b478ae2131b028bd31cfcb42043c01
+Message-ID: <202407060325.RqgMzmdO-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,96 +75,219 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703141634.2974589-1-amachhiw@linux.ibm.com>
 
-[+cc Lukas, FYI]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/loongson
+branch HEAD: b69d24a763b478ae2131b028bd31cfcb42043c01  PCI: loongson: Add LS7A MSI enablement quirk
 
-On Wed, Jul 03, 2024 at 07:46:34PM +0530, Amit Machhiwal wrote:
-> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
-> of a PCI device attached to a PCI-bridge causes following kernel Oops on
-> a pseries KVM guest:
-> 
->  RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
->  Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
->  BUG: Unable to handle kernel data access on read at 0x10ec00000048
->  Faulting instruction address: 0xc0000000012d8728
->  Oops: Kernel access of bad area, sig: 11 [#1]
->  LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
-> <snip>
->  NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
->  LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
->  Call Trace:
->  [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
->  [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
->  [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
->  [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
->  [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
->  [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
->  [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
->  [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
->  [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
->  [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
->  [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
->  [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
-> <snip>
-> 
-> A git bisect pointed this regression to be introduced via [1] that added
-> a mechanism to create device tree nodes for parent PCI bridges when a
-> PCI device is hot-plugged.
-> 
-> The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
-> device-tree node associated with the pci_dev that was earlier
-> hot-plugged and was attached under a pci-bridge. The PCI dev header
-> `dev->hdr_type` being 0, results a conditional check done with
-> `pci_is_bridge()` into false. Consequently, a call to
-> `of_pci_make_dev_node()` to create a device node is never made. When at
-> a later point in time, in the device node removal path, a memcpy is
-> attempted in `__of_changeset_entry_invert()`; since the device node was
-> never created, results in an Oops due to kernel read access to a bad
-> address.
-> 
-> To fix this issue the patch updates `pci_stop_dev()` to ensure that a
-> call to `of_pci_remove_node()` is only made for pci-bridge devices.
-> 
-> [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
-> Tested-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
-> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+elapsed time: 1250m
 
-Thanks for the patch and testing!  Would like a reviewed-by from
-Lizhi.
+configs tested: 198
+configs skipped: 7
 
-> ---
->  drivers/pci/remove.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index d749ea8250d6..4e51c64af416 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -22,7 +22,8 @@ static void pci_stop_dev(struct pci_dev *dev)
->  		device_release_driver(&dev->dev);
->  		pci_proc_detach_device(dev);
->  		pci_remove_sysfs_dev_files(dev);
-> -		of_pci_remove_node(dev);
-> +		if (pci_is_bridge(dev))
-> +			of_pci_remove_node(dev);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-IIUC, this basically undoes the work that was done by
-of_pci_make_dev_node().
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                          axs101_defconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                     haps_hs_smp_defconfig   gcc-13.2.0
+arc                   randconfig-001-20240705   gcc-13.2.0
+arc                   randconfig-002-20240705   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                         axm55xx_defconfig   gcc-13.2.0
+arm                     davinci_all_defconfig   gcc-13.2.0
+arm                                 defconfig   gcc-13.2.0
+arm                       omap2plus_defconfig   gcc-13.2.0
+arm                          pxa3xx_defconfig   gcc-13.2.0
+arm                   randconfig-001-20240705   gcc-13.2.0
+arm                   randconfig-002-20240705   gcc-13.2.0
+arm                   randconfig-003-20240705   gcc-13.2.0
+arm                   randconfig-004-20240705   gcc-13.2.0
+arm                          sp7021_defconfig   gcc-13.2.0
+arm                           u8500_defconfig   gcc-13.2.0
+arm                         vf610m4_defconfig   gcc-13.2.0
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240705   gcc-13.2.0
+arm64                 randconfig-002-20240705   gcc-13.2.0
+arm64                 randconfig-003-20240705   gcc-13.2.0
+arm64                 randconfig-004-20240705   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240705   gcc-13.2.0
+csky                  randconfig-002-20240705   gcc-13.2.0
+hexagon                          allmodconfig   clang-19
+hexagon                          allyesconfig   clang-19
+i386                             allmodconfig   clang-18
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   clang-18
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   clang-18
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240705   gcc-13
+i386         buildonly-randconfig-002-20240705   gcc-13
+i386         buildonly-randconfig-003-20240705   gcc-13
+i386         buildonly-randconfig-004-20240705   gcc-13
+i386         buildonly-randconfig-005-20240705   gcc-13
+i386         buildonly-randconfig-006-20240705   gcc-13
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240705   gcc-13
+i386                  randconfig-002-20240705   gcc-13
+i386                  randconfig-003-20240705   gcc-13
+i386                  randconfig-004-20240705   gcc-13
+i386                  randconfig-005-20240705   gcc-13
+i386                  randconfig-006-20240705   gcc-13
+i386                  randconfig-011-20240705   gcc-13
+i386                  randconfig-012-20240705   gcc-13
+i386                  randconfig-013-20240705   gcc-13
+i386                  randconfig-014-20240705   gcc-13
+i386                  randconfig-015-20240705   gcc-13
+i386                  randconfig-016-20240705   gcc-13
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240705   gcc-13.2.0
+loongarch             randconfig-002-20240705   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+m68k                         apollo_defconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+m68k                          hp300_defconfig   gcc-13.2.0
+m68k                            mac_defconfig   gcc-13.2.0
+m68k                          sun3x_defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                  decstation_64_defconfig   gcc-13.2.0
+mips                     decstation_defconfig   gcc-13.2.0
+mips                     loongson1c_defconfig   gcc-13.2.0
+mips                          rb532_defconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240705   gcc-13.2.0
+nios2                 randconfig-002-20240705   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                         allyesconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                           allmodconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                           allyesconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc                generic-64bit_defconfig   gcc-13.2.0
+parisc                randconfig-001-20240705   gcc-13.2.0
+parisc                randconfig-002-20240705   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                          allyesconfig   gcc-13.2.0
+powerpc                    amigaone_defconfig   gcc-13.2.0
+powerpc                   bluestone_defconfig   gcc-13.2.0
+powerpc                      cm5200_defconfig   gcc-13.2.0
+powerpc                   currituck_defconfig   gcc-13.2.0
+powerpc                          g5_defconfig   gcc-13.2.0
+powerpc                    ge_imp3a_defconfig   gcc-13.2.0
+powerpc                  iss476-smp_defconfig   gcc-13.2.0
+powerpc                 mpc8313_rdb_defconfig   gcc-13.2.0
+powerpc               mpc834x_itxgp_defconfig   gcc-13.2.0
+powerpc                      pasemi_defconfig   gcc-13.2.0
+powerpc                      pcm030_defconfig   gcc-13.2.0
+powerpc                      pmac32_defconfig   gcc-13.2.0
+powerpc                     ppa8548_defconfig   gcc-13.2.0
+powerpc                       ppc64_defconfig   gcc-13.2.0
+powerpc                      ppc64e_defconfig   gcc-13.2.0
+powerpc                     rainier_defconfig   gcc-13.2.0
+powerpc                     redwood_defconfig   gcc-13.2.0
+powerpc                     tqm8548_defconfig   gcc-13.2.0
+powerpc64             randconfig-001-20240705   gcc-13.2.0
+powerpc64             randconfig-002-20240705   gcc-13.2.0
+powerpc64             randconfig-003-20240705   gcc-13.2.0
+riscv                            allmodconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                            allyesconfig   gcc-13.2.0
+riscv                               defconfig   gcc-13.2.0
+riscv                 randconfig-001-20240705   gcc-13.2.0
+riscv                 randconfig-002-20240705   gcc-13.2.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                              allnoconfig   gcc-13.2.0
+s390                             allyesconfig   clang-19
+s390                             allyesconfig   gcc-13.2.0
+s390                                defconfig   gcc-13.2.0
+s390                  randconfig-001-20240705   gcc-13.2.0
+s390                  randconfig-002-20240705   gcc-13.2.0
+s390                       zfcpdump_defconfig   gcc-13.2.0
+sh                               allmodconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                               allyesconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                          lboxre2_defconfig   gcc-13.2.0
+sh                    randconfig-001-20240705   gcc-13.2.0
+sh                    randconfig-002-20240705   gcc-13.2.0
+sh                   rts7751r2dplus_defconfig   gcc-13.2.0
+sh                            shmin_defconfig   gcc-13.2.0
+sh                          urquell_defconfig   gcc-13.2.0
+sparc                            allmodconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+sparc64               randconfig-001-20240705   gcc-13.2.0
+sparc64               randconfig-002-20240705   gcc-13.2.0
+um                               allmodconfig   gcc-13.2.0
+um                                allnoconfig   clang-17
+um                                allnoconfig   gcc-13.2.0
+um                               allyesconfig   gcc-13.2.0
+um                                  defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-13.2.0
+um                    randconfig-001-20240705   gcc-13.2.0
+um                    randconfig-002-20240705   gcc-13.2.0
+um                           x86_64_defconfig   gcc-13.2.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240705   gcc-7
+x86_64       buildonly-randconfig-002-20240705   gcc-7
+x86_64       buildonly-randconfig-003-20240705   gcc-7
+x86_64       buildonly-randconfig-004-20240705   gcc-7
+x86_64       buildonly-randconfig-005-20240705   gcc-7
+x86_64       buildonly-randconfig-006-20240705   gcc-7
+x86_64                              defconfig   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                randconfig-001-20240705   gcc-7
+x86_64                randconfig-002-20240705   gcc-7
+x86_64                randconfig-003-20240705   gcc-7
+x86_64                randconfig-004-20240705   gcc-7
+x86_64                randconfig-005-20240705   gcc-7
+x86_64                randconfig-006-20240705   gcc-7
+x86_64                randconfig-011-20240705   gcc-7
+x86_64                randconfig-012-20240705   gcc-7
+x86_64                randconfig-013-20240705   gcc-7
+x86_64                randconfig-014-20240705   gcc-7
+x86_64                randconfig-015-20240705   gcc-7
+x86_64                randconfig-016-20240705   gcc-7
+x86_64                randconfig-071-20240705   gcc-7
+x86_64                randconfig-072-20240705   gcc-7
+x86_64                randconfig-073-20240705   gcc-7
+x86_64                randconfig-074-20240705   gcc-7
+x86_64                randconfig-075-20240705   gcc-7
+x86_64                randconfig-076-20240705   gcc-7
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                  audio_kc705_defconfig   gcc-13.2.0
+xtensa                       common_defconfig   gcc-13.2.0
+xtensa                randconfig-001-20240705   gcc-13.2.0
+xtensa                randconfig-002-20240705   gcc-13.2.0
+xtensa                    xip_kc705_defconfig   gcc-13.2.0
 
-The call of of_pci_make_dev_node() from pci_bus_add_device() was added
-by 407d1a51921e and is conditional on pci_is_bridge(), so it makes
-sense to me that the remove needs a similar condition.
-
->  		pci_dev_assign_added(dev, false);
->  	}
-> 
-> base-commit: e9d22f7a6655941fc8b2b942ed354ec780936b3e
-> -- 
-> 2.45.2
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
