@@ -1,185 +1,249 @@
-Return-Path: <linux-pci+bounces-9846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9847-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E896D928AAE
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 16:29:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A459A928ADB
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 16:49:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 775B51F25E19
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 14:29:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D01C1F2395F
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 14:49:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D9B816A934;
-	Fri,  5 Jul 2024 14:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B1414C58A;
+	Fri,  5 Jul 2024 14:49:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Q4LIFxdN"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CjP2RrqD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C014D1684A3
-	for <linux-pci@vger.kernel.org>; Fri,  5 Jul 2024 14:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C413149E14
+	for <linux-pci@vger.kernel.org>; Fri,  5 Jul 2024 14:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720189731; cv=none; b=lvdZOpw6X3UVpZN5Pc8PzPA30kCRKZD/dAqSM+MkMgDcwdOc30aPm0ZciEPE2qWti9IIwPHQ255+8AQNQA6PkjGAreFaQ05fdGrRLA7uC+Qdna4hQADT2aUZLOuL00sHxbztlgr8fWjKbQBBNX/EIdc+vcQAYpPO7hnBkIPesF8=
+	t=1720190943; cv=none; b=ofldvxCm3ZCYjKbcsWntAbR8LdvSNPGyKU4879SHKpLGHNnZsMBZXEgCHb1D0QcUS2mb/uaFXjESOMC2uwPDlMnkvqpCN3ctcXqePtyTQLEBllmR7q2QBjnj9zcA/mTgOsAp6jszJg6OHcpL/NgVpp6M4VCj/AQ4EM6H/0o2ao8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720189731; c=relaxed/simple;
-	bh=zMEnup+OejxwTjFZT2PmC9IpRhwFrDM28oXC/iDx6i8=;
+	s=arc-20240116; t=1720190943; c=relaxed/simple;
+	bh=7yKb72FQ12LEf/bnOXk0tiOa96B25qtgOdv9m+ppZl0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S34JX0qpc0nd6suqx3QJuImaYtTej2SAgbbllRvnJlp5lBZ4GSneIEYgJRyzi+Z7TU9AxQg4hiFY4WZgn8tNrhGRptIKY2hPk/s+5ZjrliASftaBiwcYRyVu2oaI78UbcmsK029HbDmUrGpEbqq8w04uHHAhvdTmmWdG5fNSLZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Q4LIFxdN; arc=none smtp.client-ip=209.85.167.52
+	 To:Cc:Content-Type; b=s0nn+FBh8+b+zYxtA5L0D0BF5rh9yyv24KKTucoVVq73/cRZHBI7kuWTtCdh8FLghCZGeDGc7UL+bns6yn8snrBsNxiozCJYa1pX/HeI40cVz5zVyfbZy6uyUxTOvwHCuZ/moAP6ZWctJ2jOogEyKhj1Sy0dda+B3rNO4eUWlKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=CjP2RrqD; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52e9a550e9fso2485948e87.0
-        for <linux-pci@vger.kernel.org>; Fri, 05 Jul 2024 07:28:49 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ee4ae13aabso17952991fa.2
+        for <linux-pci@vger.kernel.org>; Fri, 05 Jul 2024 07:49:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1720189728; x=1720794528; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1720190940; x=1720795740; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Jn/bvNXdHTsJSdL1mb3hwVy4nfw9OO+0gS86LIX45w=;
-        b=Q4LIFxdNSuBiVgAPKyz0Q5o2XJvhWkeYZP5SgNmKlgWMA0X8cPWoJ6ZHWDkSQg36dU
-         7/vc49H+pjhDr492R97gDN+A4GoMVrqx5rec4RPkIA/6X3qfVApDwv/57FbfIjIBN+LY
-         IaV6BnP+0zqtt7Mns8IrnBYH/cL3q1yMSO6q0=
+        bh=hWrFXmb0hLRR4pTeLUu1I+sTEInc5n8JNHhVoXFYQBI=;
+        b=CjP2RrqDae+lYAbSvC+w23/qAcKZd+Ef6n5p99rCQjjwmxTSCsMZS421Ux/NWyaJGV
+         qOEq4TwSq5Ya4tXKWhaRCla6mEhCKgzArCgQJERfVIR5rRkqei4L9URtHkpURR9Lma4R
+         mANNVwRfNPoHQ+TIUbXTypvL7QXs1TuHOEbBw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720189728; x=1720794528;
+        d=1e100.net; s=20230601; t=1720190940; x=1720795740;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3Jn/bvNXdHTsJSdL1mb3hwVy4nfw9OO+0gS86LIX45w=;
-        b=fJmi9C0QM8LB1h38/hLyExY7S9AIDiY31ces/0ghigL1m97aMfLNSTWNCoEY6JtAtB
-         KaXx3RDhnQnaQXx5KCvC4Z/biNPA5aOGnYL3bKkBPL8/VmTtwCCsOyhB+JdSTC3Tws3p
-         4bNqG0zvldLHO6qcaLNaAOvcDtyF2LF8P0G3SmzOXJyPlnUZR2NgzCAPHJBPBDrmgVYo
-         MDyPCTq8ABbrKhcDHenNf/ucpSMM6UGeS3ooTQxUaSeNw97VE2bgpSl3qmLTNclWKr3z
-         dsVRSNSoL7VDyFgeVZJsRdVECmUfse/vhfDvrkYJEjX4wfRkCRc6eSR0vFMvO/VPsqL+
-         N1Mg==
-X-Gm-Message-State: AOJu0Yxrk3HsUBi6cEAZqIlQ5JCJQ6B3nubBFnEIXCqrhRQrLAVqDE3M
-	zy1Pa9UvRuhTxyJqSqtoClj5BIwRnCICGR1J4PJKEDvJrohh4CqGJGBrHrPqFLOP55QmYWbzs1d
-	YytO93UkdC90x8eOxBSjnG9r4dXbHBuFptXyu
-X-Google-Smtp-Source: AGHT+IGqteEPvNmFETavcqRCqnx7D0L0eOHclysWQhX9SsGK3tR0w2MhpVQo9DHoSLD3vJi66n7FZBLNyjvc6V33Qdw=
-X-Received: by 2002:a05:6512:3c87:b0:52c:ccf3:f20a with SMTP id
- 2adb3069b0e04-52ea0dffd18mr1919601e87.23.1720189727862; Fri, 05 Jul 2024
- 07:28:47 -0700 (PDT)
+        bh=hWrFXmb0hLRR4pTeLUu1I+sTEInc5n8JNHhVoXFYQBI=;
+        b=nbcjki3KtuuSIVykqr6kzSJyXjySiEJee0r6yzPO9bYv6ahoPSdZEhLcGFdgSYCRZ8
+         ynOJdWau3h3xJJKBwBnEPD4jVcAq7k/BPpe1UUz8QjgDuBp0/qGw5UYdkANBW2M595i/
+         dr1qtWQd24uXuudFqlRy4jVCnKlzdPt5/0Vod2BpGc5wlaw6HECaCnt4YDRbqN2mtpJ+
+         9mXrfrJepYHrbt/KKEZyvPIvMbPC2hfFbGoRTY5cS8mnGZEjW79ZGR8snShu2nj3AJFp
+         dzCNPMrtz0JaSIkpFWqpOrG/b4Vfc1p5E1/8SHLTkBReg7fHQmm+1UgwB+pNmO9nv8/b
+         vYYQ==
+X-Gm-Message-State: AOJu0YwW8P76q8HAT1Ac+P4KTRSRNNNn2Fb3dd0iHBHKvltUnLztUJ2h
+	z9s83c4jJndU9m9xfhqbKCWygVhWYhuFb9xa1yaCjFQYDKjqPdONTk7Z0dBk4rZx63yPjUicxVt
+	uHaSO73CA0hKAuurQF2X1YMtQyQK7JQklzSOG
+X-Google-Smtp-Source: AGHT+IG5AzyBBsGPDSPo85Ihz0Zv1yTsag8HC6OlcHdg1qx6oatrETmFc+eGgqcTB2I4RoKizGDx6Swp94S0MJEwLpY=
+X-Received: by 2002:a2e:780b:0:b0:2ec:5ff1:227a with SMTP id
+ 38308e7fff4ca-2ee8ed8f49bmr31706371fa.17.1720190940063; Fri, 05 Jul 2024
+ 07:49:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703180300.42959-1-james.quinlan@broadcom.com>
- <20240703180300.42959-11-james.quinlan@broadcom.com> <b8705488-2af8-473a-bb2e-7c4c5d5bd736@suse.de>
-In-Reply-To: <b8705488-2af8-473a-bb2e-7c4c5d5bd736@suse.de>
+References: <20240703180300.42959-3-james.quinlan@broadcom.com> <54dc90df-fc31-457d-a18d-b2070b055d60@web.de>
+In-Reply-To: <54dc90df-fc31-457d-a18d-b2070b055d60@web.de>
 From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Fri, 5 Jul 2024 10:28:35 -0400
-Message-ID: <CA+-6iNz5rsb0T+rYKJ91q-M4=QcfO6VtPnSp_vMokWpx1FJoRg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/12] PCI: brcmstb: Check return value of all
- reset_control_xxx calls
-To: Stanimir Varbanov <svarbanov@suse.de>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com, 
-	jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
+Date: Fri, 5 Jul 2024 10:48:48 -0400
+Message-ID: <CA+-6iNxqZRdknUVammcgDC2HUmacZSAkdJNVLba32Ujgsa9vpg@mail.gmail.com>
+Subject: Re: [PATCH v2 02/12] PCI: brcmstb: Use "clk_out" error path label
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, 
+	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, Cyril Brulebois <kibi@debian.org>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Stanimir Varbanov <svarbanov@suse.de>, Jim Quinlan <jim2101024@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b29445061c80e1a3"
+	boundary="000000000000f4fcf4061c81291d"
 
---000000000000b29445061c80e1a3
-Content-Type: multipart/alternative; boundary="000000000000ad1a33061c80e196"
+--000000000000f4fcf4061c81291d
+Content-Type: multipart/alternative; boundary="000000000000edf39c061c812975"
 
---000000000000ad1a33061c80e196
+--000000000000edf39c061c812975
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 4, 2024 at 9:49=E2=80=AFAM Stanimir Varbanov <svarbanov@suse.de=
-> wrote:
+On Thu, Jul 4, 2024 at 7:40=E2=80=AFAM Markus Elfring <Markus.Elfring@web.d=
+e> wrote:
 
-> Hi Jim,
+> > [-- Attachment #1: Type: text/plain, Size: 1685 bytes --]
 >
-> On 7/3/24 21:02, Jim Quinlan wrote:
-> > In some cases the result of a reset_control_xxx() call have been ignore=
-d.
-> > Now we check all return values of such functions and at the least issue=
- a
-> > dev_err(...) message if the return value is not zero.
-> >
->
-> When I made the comment for the return value of reset_control_xxx API I
-> was thinking for propagating the error to upper PCI layer and not just
-> print it.
->
-> Printing the error is a step forward but I don't think it is enough.
-> Please drop the patch from the series, we can fix that problem in the
-> driver with follow up patches.
+> Can improved adjustments be provided as regular diff data
+> (without an extra attachment)?
 >
 
-I'll return the value up the chain as you want as there is a list of things
-anyway for v3.
+I'm not sure what you are referring to... I see no attachment in the copy
+of this email I received, and I am sending my patches  with "git
+send-email".
 
-Regards
+I will address your other comments in v3.
+
+Regards,
 Jim Quinlan
-Broadcom STB
+Broadcom STB/CM
 
 >
-> ~Stan
 >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 33 ++++++++++++++++++++-------
-> >  1 file changed, 25 insertions(+), 8 deletions(-)
+> > Instead of invoking "clk_disable_unprepare(pcie->clk)" in
+> > a number of error paths, we can just use a "clk_out" label
+> > and goto the label after setting the return value.
+>
+> * Please improve such a change description with imperative wordings.
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
+ocumentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n94
+>
+> * How do you think about to use a summary phrase like
+>   =E2=80=9CUse more common error handling code in brcm_pcie_probe()=E2=80=
+=9D?
+>
+>
+> =E2=80=A6
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> =E2=80=A6
+> >       ret =3D reset_control_reset(pcie->rescal);
+> > -     if (ret)
+> > +     if (ret) {
+> >               dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+> > +             goto clk_out;
+> > +     }
 > >
+> >       ret =3D brcm_phy_start(pcie);
+> =E2=80=A6
+>
+> Does this software update complete the exception handling?
+>
+> Would you like to add any tags (like =E2=80=9CFixes=E2=80=9D and =E2=80=
+=9CCc=E2=80=9D) accordingly?
+>
+>
+> =E2=80=A6
+> > @@ -1676,6 +1677,9 @@ static int brcm_pcie_probe(struct platform_device
+> *pdev)
+> >
+> >       return 0;
+> >
+> > +clk_out:
+> > +     clk_disable_unprepare(pcie->clk);
+> > +     return ret;
+> >  fail:
+> =E2=80=A6
+>
+> I suggest to add a blank line before the second label.
+>
+> Regards,
+> Markus
 >
 
---000000000000ad1a33061c80e196
+--000000000000edf39c061c812975
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Thu, Jul 4, 2024 at 9:49=E2=80=AFA=
-M Stanimir Varbanov &lt;<a href=3D"mailto:svarbanov@suse.de">svarbanov@suse=
-.de</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
-x">Hi Jim,<br>
+<div dir=3D"ltr" class=3D"gmail_attr">On Thu, Jul 4, 2024 at 7:40=E2=80=AFA=
+M Markus Elfring &lt;<a href=3D"mailto:Markus.Elfring@web.de">Markus.Elfrin=
+g@web.de</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D=
+"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-le=
+ft:1ex">&gt; [-- Attachment #1: Type: text/plain, Size: 1685 bytes --]<br>
 <br>
-On 7/3/24 21:02, Jim Quinlan wrote:<br>
-&gt; In some cases the result of a reset_control_xxx() call have been ignor=
-ed.<br>
-&gt; Now we check all return values of such functions and at the least issu=
-e a<br>
-&gt; dev_err(...) message if the return value is not zero.<br>
-&gt; <br>
+Can improved adjustments be provided as regular diff data<br>
+(without an extra attachment)?<br></blockquote><div><br></div><div>I&#39;m =
+not sure what you are referring to... I see no attachment in the copy of th=
+is email I received, and I am sending my patches=C2=A0 with &quot;git send-=
+email&quot;.</div><div><br></div><div>I will address your other comments in=
+ v3.</div><div><br></div><div>Regards,</div><div>Jim Quinlan</div><div>Broa=
+dcom STB/CM</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px =
+0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
 <br>
-When I made the comment for the return value of reset_control_xxx API I<br>
-was thinking for propagating the error to upper PCI layer and not just<br>
-print it.<br>
 <br>
-Printing the error is a step forward but I don&#39;t think it is enough.<br=
->
-Please drop the patch from the series, we can fix that problem in the<br>
-driver with follow up patches.<br></blockquote><div><br></div><div>I&#39;ll=
- return the value up the chain as you want as there is a list of things any=
-way for v3.</div><div><br></div><div>Regards</div><div>Jim Quinlan</div><di=
-v>Broadcom STB=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin=
-:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"=
->
+&gt; Instead of invoking &quot;clk_disable_unprepare(pcie-&gt;clk)&quot; in=
 <br>
-~Stan<br>
+&gt; a number of error paths, we can just use a &quot;clk_out&quot; label<b=
+r>
+&gt; and goto the label after setting the return value.<br>
 <br>
-&gt; Signed-off-by: Jim Quinlan &lt;<a href=3D"mailto:james.quinlan@broadco=
-m.com" target=3D"_blank">james.quinlan@broadcom.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 drivers/pci/controller/pcie-brcmstb.c | 33 ++++++++++++++++++++-=
-------<br>
-&gt;=C2=A0 1 file changed, 25 insertions(+), 8 deletions(-)<br>
-&gt; <br>
+* Please improve such a change description with imperative wordings.<br>
+=C2=A0 <a href=3D"https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/=
+linux.git/tree/Documentation/process/submitting-patches.rst?h=3Dv6.10-rc6#n=
+94" rel=3D"noreferrer" target=3D"_blank">https://git.kernel.org/pub/scm/lin=
+ux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patc=
+hes.rst?h=3Dv6.10-rc6#n94</a><br>
+<br>
+* How do you think about to use a summary phrase like<br>
+=C2=A0 =E2=80=9CUse more common error handling code in brcm_pcie_probe()=E2=
+=80=9D?<br>
+<br>
+<br>
+=E2=80=A6<br>
+&gt; +++ b/drivers/pci/controller/pcie-brcmstb.c<br>
+=E2=80=A6<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D reset_control_reset(pcie-&gt;rescal)=
+;<br>
+&gt; -=C2=A0 =C2=A0 =C2=A0if (ret)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0if (ret) {<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(&amp;pde=
+v-&gt;dev, &quot;failed to deassert &#39;rescal&#39;\n&quot;);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto clk_out;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D brcm_phy_start(pcie);<br>
+=E2=80=A6<br>
+<br>
+Does this software update complete the exception handling?<br>
+<br>
+Would you like to add any tags (like =E2=80=9CFixes=E2=80=9D and =E2=80=9CC=
+c=E2=80=9D) accordingly?<br>
+<br>
+<br>
+=E2=80=A6<br>
+&gt; @@ -1676,6 +1677,9 @@ static int brcm_pcie_probe(struct platform_devic=
+e *pdev)<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
+&gt;<br>
+&gt; +clk_out:<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0clk_disable_unprepare(pcie-&gt;clk);<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0return ret;<br>
+&gt;=C2=A0 fail:<br>
+=E2=80=A6<br>
+<br>
+I suggest to add a blank line before the second label.<br>
+<br>
+Regards,<br>
+Markus<br>
 </blockquote></div></div>
 
---000000000000ad1a33061c80e196--
+--000000000000edf39c061c812975--
 
---000000000000b29445061c80e1a3
+--000000000000f4fcf4061c81291d
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -250,14 +314,14 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCH9sIa/JyXGDoVKI/tNRfLjIucG2bu
-T/cBiaKNKuw7bzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MDUxNDI4NDhaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAqKk8v66ut57olRk8bRN9jkZSdK5RV
+kfRNSE7yoZ9/JjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MDUxNDQ5MDBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAOBArrpeToFX0+enob0SzGhqRfG76PKBqHS25E1lvXntxWNIk
-NCzz42RovERNtJVyOBZtQnqaF0TD+QFYIXGEb8e7zDv3BDz32RLVIARL/jBEO2OpNrf8V2ipzLPe
-tweJjnNnl9MwY4N2nUSZr3KuLSCeb/KGN3jXlu7IZqjdE117NjLgdY/a2Ksc4Xdp9xoyw2Ul2qha
-dCLtC89DSkUbyvHfHdjCxaWBkKyvmYdXixbVbOXGNfJUuSwzq2WczMhBb1OkAG2AQbKZv45UJ2ny
-6F/4L9E6eutO09PrZfp5Oeu65rpbgp9hSE+D7sIFEaEhLbVgVyPT1PQVMSM9IfqL/Q==
---000000000000b29445061c80e1a3--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAPqR9sRpAzTat3icuQMsL08lxIg8n5UQweMRYCkErIpxdKTAl
+XZjvtjYtb+IPiECyaDQCtUQLBFRKFOQEJxBv0w310shPIaqOo+aTzM98cH7Zr6KPLLFYIbMY48R7
+GJltcJ4+uPYzHgU8mDQjDBum1IUL32BJnzcNZxBR4ccWkd+6JVrJvu0ABpeDpl2fpRRQu/I/VvXj
+i6thxxNn2vAn8mNZLZDj+34iM4AoOFJWya3m1Kyl+OMmj9G0yBg2EeVFesuu3Gs57JH03RZDFxcj
+Fm8SBfBV4BKsNYhwarfI5i0jKSnV4+y3MrtTMpBv1PwGOjuJ6vW0CmVnZqylAdhtSw==
+--000000000000f4fcf4061c81291d--
 
