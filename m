@@ -1,234 +1,174 @@
-Return-Path: <linux-pci+bounces-9831-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9832-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7102B9286CA
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 12:30:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F5F49287F3
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 13:29:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 268C5285559
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 10:30:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71910B221E2
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 11:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A53148304;
-	Fri,  5 Jul 2024 10:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DFF148FF3;
+	Fri,  5 Jul 2024 11:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNlmWEo2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D911474A5;
-	Fri,  5 Jul 2024 10:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6251A147C82;
+	Fri,  5 Jul 2024 11:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720175401; cv=none; b=k9EQoUsRbm1m73/COYhWypRLAArTVk9nGnlzQ+WInZ724ilJT9WueyxBQ7pzj95EJKlxf42Geqq80Jra1KSq1R0JWQf0Z6U2hnE/Bf7vXEo5Cy+G5tZIk3GCA4pxAnfFSzHI58PNO2zDgTvKYcP8sZ7l0uC3xaeAgZAdXB/cGnY=
+	t=1720178956; cv=none; b=AsdmaWMdQQqAC397NhvI16alg4dANYLXFCwRLe258kH47zEs/ozbFbs6stH34sW8zNgy7zGmTqKtJdVHIyD2QA0HhGibqap/0te/3FWzKsmn02kRrTHN7wVDdKkHdJcDi3zsDO/8NMv7iNAeC214DFaSyDzbPLhkuT+pNa3zx5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720175401; c=relaxed/simple;
-	bh=yFFmze1H5Kfxuphzf+WxW76hJgBDs2OHBU71tQurbfk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pZEZDu1MDUGHx1kPwlvUN1Si4Ky4twcj+s28qqIvLR7ZfLolcLWzmIxQFTAxrMq2R0feEUYsJUgWnf6W+U//e2bGpldTEer8aVlZOseOsuuA24Kp4qvApiAH90qVXHSVRl23CAYrOtJkI6LKthc10O0dNJPSRgGfnQ9o3zh+ibU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WFqVj1gSPz67kSy;
-	Fri,  5 Jul 2024 18:28:45 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 09DEE140B2A;
-	Fri,  5 Jul 2024 18:29:55 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 5 Jul
- 2024 11:29:54 +0100
-Date: Fri, 5 Jul 2024 11:29:53 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alistair Francis <alistair23@gmail.com>
-CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
-	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
-	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
-	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
-	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v13 3/4] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <20240705112953.00007303@Huawei.com>
-In-Reply-To: <CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
-References: <20240702060418.387500-1-alistair.francis@wdc.com>
-	<20240702060418.387500-3-alistair.francis@wdc.com>
-	<20240702145806.0000669b@Huawei.com>
-	<CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720178956; c=relaxed/simple;
+	bh=LoGBmcIo3SuMSH3EZoacTkEgM1YqWya/J1Afhe1fL9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UQ3i3QA2RqopSZtdCTNF8Qu2bbAfn2PQ87iR8/8zqxRTrPnX4ZrWfIOYzqbcIk8IowPnOfmVrmhAUyt2avhzUdijb8gaBI3+DQn8sLzGA8USaAcUqmKaXyxH9jHBVKZ0lpZ+373l6c5jS6jbECX8chEcRN7tdKX2UWjxWm64nAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNlmWEo2; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a72517e6225so170827566b.0;
+        Fri, 05 Jul 2024 04:29:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720178953; x=1720783753; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aZtKODdyTz+UonfNfzulBHnApCudbH53/CM7WiMNY8g=;
+        b=kNlmWEo22ADteaUD9iqa8srbzCQPT0crAzTRDArgt6NmpnrPwg9jF00KXa/V+0nNUX
+         oDKqpHvI59ScQR+SZ7rOP6ig2zP7SgMlWVaZ1hjU0Y7I4/X1/PTfRX5VqVK65K7Bj1wL
+         XbJGif8ysdnre64cBjZut4nalds9Z7hgXwQknJ06aXYJQc6uqkvNNp/hTWFF4cS5O+44
+         wzVZ8L5BKR85znAoX0826joouKP/WcTG6TKcHWJ4NE8XtifpuwFQl35GJzdPJVKJFXbX
+         S2VZeIi6potWyh2ZSLvFzP3eX2z/b6ONCiz9A65ErXQrETd3WlwPOTRWymDLjY7WK6AH
+         nkmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720178953; x=1720783753;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aZtKODdyTz+UonfNfzulBHnApCudbH53/CM7WiMNY8g=;
+        b=jf6WJ9p38JUW+sM7GgGHOTpbYNlFzB2ZEInyDD5Z2I3t+ye+NuDZifCEtlo7H21FDt
+         mLHyBwes93H9OJJgZNtH8I1zdt6CeCQfDJPgKhw/EGFbc6eTTx4Bn/IHT2tFehUBCKnN
+         TOa7yELcOA0Bj2UCHftJzSyNQadPVq18WnCJOWI3kY9Yxr6LoO2lZM+uTYBXlJO0AkKS
+         uCLdZvtmif0CLHv5vviOnCE3pLxQ1uGhoyxrGAqCco3tyNQ+ucXRjOOXx+VtYDNPijhq
+         tnjX+KbAtyrSQJfAdXVSrKO38xNx3Y4K6VR4s8fm5e7ntjJHbVq7tLUUpbCTGRek22qq
+         POKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXq16tF/rF1FcMrfPARG+fXXWx67JPRFTIf8FZ4ssnmw6sKAZOW2gA2RHULRyr1roz46EnQy1LXdNrkn1GeANYIEtB6+q+3WNh8PZTjAfU/EOXp7Pywr0BIqtbknkm6sycyFCz1vHGc
+X-Gm-Message-State: AOJu0YwUN8JE00tdSBUKFKOnSyumCpO0NUyHDldJS/gp/cu8hdOJqwKS
+	CvCgSQ8YykKW0eK78hIrhgbo5GE05KHHF/KA3mPdCUccOM41/mLf
+X-Google-Smtp-Source: AGHT+IGRWF6p3xNjR48nC5OZUkbVBKaD+Qvqm3tC68/R6wj49SE8Ok+/VvAlOGrxcLnL7j8GjRDcgg==
+X-Received: by 2002:a17:906:eb56:b0:a72:5598:f03d with SMTP id a640c23a62f3a-a77ba70a8cbmr302412966b.59.1720178952551;
+        Fri, 05 Jul 2024 04:29:12 -0700 (PDT)
+Received: from [10.10.12.27] (91-118-163-37.static.upcbusiness.at. [91.118.163.37])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77be903eb6sm116027366b.23.2024.07.05.04.29.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 04:29:12 -0700 (PDT)
+Message-ID: <d061d545-4694-4d5b-86fa-03d1f7251b45@gmail.com>
+Date: Fri, 5 Jul 2024 13:29:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: kirin: fix memory leak in kirin_pcie_parse_port()
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Xiaowei Song <songxiaowei@hisilicon.com>,
+ Binghui Wang <wangbinghui@hisilicon.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240609-pcie-kirin-memleak-v1-1-62b45b879576@gmail.com>
+ <20240705111805.00002010@Huawei.com>
+Content-Language: en-US, de-AT
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+In-Reply-To: <20240705111805.00002010@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 5 Jul 2024 11:24:25 +1000
-Alistair Francis <alistair23@gmail.com> wrote:
+On 05/07/2024 12:18, Jonathan Cameron wrote:
+> On Sun, 09 Jun 2024 12:56:14 +0200
+> Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+> 
+>> The conversion of this file to use the agnostic GPIO API has introduced
+>> a new early return where the refcounts of two device nodes (parent and
+>> child) are not decremented.
+>>
+>> Given that the device nodes are not required outside the loops where
+>> they are used, and to avoid potential bugs every time a new error path
+>> is introduced to the loop, the _scoped() versions of the macros have
+>> been applied. The bug was introduced recently, and the fix is not
+>> relevant for old stable kernels that might not support the scoped()
+>> variant.
+>>
+>> Fixes: 1d38f9d89f85 ("PCI: kirin: Convert to use agnostic GPIO API")
+>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> Diff on this on is irritating as it doesn't actually show the
+> buggy code...  Ah well.
+> 
+> Change is valid, but one suggestion inline.
+> 
+> Looks like it's queued now already, but if not.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> 
+>> ---
+>> This bug was found while analyzing the code and I don't have hardware to
+>> validate it beyond compilation and static analysis. Any test with real
+>> hardware to make sure there are no regressions is always welcome.
+>>
+>> The dev_err() messages have not been converted into dev_err_probe() to
+>> keep the current format, but I am open to convert them if preferred.
+>> ---
+>>  drivers/pci/controller/dwc/pcie-kirin.c | 21 ++++++---------------
+>>  1 file changed, 6 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+>> index d1f54f188e71..0a29136491b8 100644
+>> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+>> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+>> @@ -403,11 +403,10 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
+>>  				 struct device_node *node)
+>>  {
+>>  	struct device *dev = &pdev->dev;
+>> -	struct device_node *parent, *child;
+>>  	int ret, slot, i;
+>>  
+>> -	for_each_available_child_of_node(node, parent) {
+>> -		for_each_available_child_of_node(parent, child) {
+>> +	for_each_available_child_of_node_scoped(node, parent) {
+>> +		for_each_available_child_of_node_scoped(parent, child) {
+>>  			i = pcie->num_slots;
+>>  
+>>  			pcie->id_reset_gpio[i] = devm_fwnode_gpiod_get_index(dev,
+>> @@ -424,14 +423,13 @@ static int kirin_pcie_parse_port(struct kirin_pcie *pcie,
+>>  			pcie->num_slots++;
+>>  			if (pcie->num_slots > MAX_PCI_SLOTS) {
+>>  				dev_err(dev, "Too many PCI slots!\n");
+>> -				ret = -EINVAL;
+>> -				goto put_node;
+>> +				return -EINVAL;
+> Perhaps a future change, but this would be nicer as
+> 				return dev_err_probe(dev, -EINVAL,
+> 						     "Too many PCI slots!\n");
+> Maybe as part of a general change to this driver to use
+> dev_err_probe() for all the error prints in paths only called
+> from probe().
+> 
 
-> On Tue, Jul 2, 2024 at 11:58=E2=80=AFPM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Tue,  2 Jul 2024 16:04:17 +1000
-> > Alistair Francis <alistair23@gmail.com> wrote:
-> > =20
-> > > The PCIe 6 specification added support for the Data Object
-> > > Exchange (DOE).
-> > > When DOE is supported the DOE Discovery Feature must be implemented p=
-er
-> > > PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-> > > information about the other DOE features supported by the device.
-> > >
-> > > The kernel is already querying the DOE features supported and cacheing
-> > > the values. Expose the values in sysfs to allow user space to
-> > > determine which DOE features are supported by the PCIe device.
-> > >
-> > > By exposing the information to userspace tools like lspci can relay t=
-he
-> > > information to users. By listing all of the supported features we can
-> > > allow userspace to parse the list, which might include
-> > > vendor specific features as well as yet to be supported features.
-> > >
-> > > After this patch is supported you can see something like this when
-> > > attaching a DOE device
-> > >
-> > > $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-> > > 0001:00        0001:01        0001:02
-> > >
-> > > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> > > ---
-> > > v13:
-> > >  - Drop pci_doe_sysfs_init() and use pci_doe_sysfs_group
-> > >      - As discussed in https://lore.kernel.org/all/20231019165829.GA1=
-381099@bhelgaas/
-> > >        we can just modify pci_doe_sysfs_group at the DOE init and let=
- =20
-> >
-> > Can't do that as it is global so you expose the same DOE features for
-> > all DOEs.
-> >
-> > Also, I think that this is only processing features on last doe_mb found
-> > for a given device. Fix that and the duplicates problem resurfaces.
-> >
-> > =20
-> > >        device_add() handle the sysfs attributes. =20
-> >
-> > =20
-> > > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> > > index defc4be81bd4..e7b702afce88 100644
-> > > --- a/drivers/pci/doe.c
-> > > +++ b/drivers/pci/doe.c =20
-> > =20
-> > > +
-> > >  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long tim=
-eout)
-> > >  {
-> > >       if (wait_event_timeout(doe_mb->wq,
-> > > @@ -687,6 +747,12 @@ void pci_doe_init(struct pci_dev *pdev)
-> > >  {
-> > >       struct pci_doe_mb *doe_mb;
-> > >       u16 offset =3D 0;
-> > > +     struct attribute **sysfs_attrs;
-> > > +     struct device_attribute *attrs;
-> > > +     unsigned long num_features =3D 0;
-> > > +     unsigned long i;
-> > > +     unsigned long vid, type;
-> > > +     void *entry;
-> > >       int rc;
-> > >
-> > >       xa_init(&pdev->doe_mbs);
-> > > @@ -707,6 +773,45 @@ void pci_doe_init(struct pci_dev *pdev)
-> > >                       pci_doe_destroy_mb(doe_mb);
-> > >               }
-> > >       } =20
-> >
-> > The above is looping over multiple DOEs but this just considers last on=
-e.
-> > That doesn't look right... =20
->=20
-> Yeah... That isn't
->=20
-> >
-> > I think this needs to be in the loop and having done that
-> > the duplicate handing may be an issue.  I'm not sure what happens
-> > in that path with a presupplied set of attributes.
-> > =20
-> > > +
-> > > +     if (doe_mb) {
-> > > +             xa_for_each(&doe_mb->feats, i, entry)
-> > > +                     num_features++;
-> > > +
-> > > +             sysfs_attrs =3D kcalloc(num_features + 1, sizeof(*sysfs=
-_attrs), GFP_KERNEL);
-> > > +             if (!sysfs_attrs)
-> > > +                     return;
-> > > +
-> > > +             attrs =3D kcalloc(num_features, sizeof(*attrs), GFP_KER=
-NEL);
-> > > +             if (!attrs) {
-> > > +                     kfree(sysfs_attrs);
-> > > +                     return;
-> > > +             }
-> > > +
-> > > +             doe_mb->device_attrs =3D attrs;
-> > > +             doe_mb->sysfs_attrs =3D sysfs_attrs;
-> > > +
-> > > +             xa_for_each(&doe_mb->feats, i, entry) {
-> > > +                     sysfs_attr_init(&attrs[i].attr);
-> > > +
-> > > +                     vid =3D xa_to_value(entry) >> 8;
-> > > +                     type =3D xa_to_value(entry) & 0xFF;
-> > > +
-> > > +                     attrs[i].attr.name =3D kasprintf(GFP_KERNEL, "%=
-04lx:%02lx", vid, type);
-> > > +                     if (!attrs[i].attr.name) {
-> > > +                             pci_doe_sysfs_feature_remove(pdev, doe_=
-mb);
-> > > +                             return;
-> > > +                     }
-> > > +                     attrs[i].attr.mode =3D 0444;
-> > > +                     attrs[i].show =3D pci_doe_sysfs_feature_show;
-> > > +
-> > > +                     sysfs_attrs[i] =3D &attrs[i].attr;
-> > > +             }
-> > > +
-> > > +             sysfs_attrs[num_features] =3D NULL;
-> > > +
-> > > +             pci_doe_sysfs_group.attrs =3D sysfs_attrs; =20
-> > Hmm. Isn't this global?  What if you have multiple devices. =20
->=20
-> Any input from a PCI maintainer here?
->=20
-> There are basically two approaches.
->=20
->  1. We can have a pci_doe_sysfs_init() function that is called where
-> we dynamically add the entries, like in v12
->  2. We can go down the dev->groups and device_add() path, like this
-> patch and discussed at
-> https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
->=20
-> For the second we will have to create a global pci_doe_sysfs_group
-> that contains all possible DOE entries on the system and then have the
-> show functions determine if they should be displayed for that device.
->=20
-> Everytime we call pci_doe_init() we can check for any missing entries
-> in pci_doe_sysfs_group.attrs and then realloc
-> pci_doe_sysfs_group.attrs to add them.=20
-> Untested, but that should work
-> even for hot-plugged devices. pci_doe_sysfs_group.attrs would just
-> grow forever though as I don't think we have an easy way to deallocate
-> anything as we aren't sure if we are the only entry.
+Yeah, it seems that other paths that have nothing to do with this fix
+would require the same modification.
 
-I think this needs to be per device, not global and you'll have to manually
-do the group visibility magic rather than using the macros.
-
->=20
-> Thoughts?
->=20
-> Alistair
-
+Best regards,
+Javier Carrasco
 
