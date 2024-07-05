@@ -1,293 +1,241 @@
-Return-Path: <linux-pci+bounces-9823-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9824-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9FDD927EEF
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 00:10:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79D7E927FBE
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 03:25:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32D4D1F21E0D
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jul 2024 22:10:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1471B20EF3
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 01:24:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE6A13C3D3;
-	Thu,  4 Jul 2024 22:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC67EAC5;
+	Fri,  5 Jul 2024 01:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B9WgwkVM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaDZlbp+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597E249651
-	for <linux-pci@vger.kernel.org>; Thu,  4 Jul 2024 22:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F045033DD;
+	Fri,  5 Jul 2024 01:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720131043; cv=none; b=MtlWTtKn5hytLjtpD/UsPekccXjwVlqc65zEmC+/SIZBBdGVCdZUoEOBqMFA1Q6IK+WXgNhdfwQqRsB8niBXsAly0i79xCAbV6CjVqy9qMQxk9PQxMw8rWHIICPJ0ypc0PnNv1J2KlGzs8aB72VHgRRIJJqMGDVkGBRFTvs8VFo=
+	t=1720142694; cv=none; b=o+Bz37lnIdk9qSfTbxJ2DdIle4PcO+T4bc29BsjSKq5lsUxRs+msi14qAoi5MF8lqy/xHqTksouxUd6SDb7Hss/CN+qniDr4pRCSPujUMu8cLyHGRkwcJYbRM3sCSFW1ZC5DSSRToRMQwiyr7oRjZIM5BaHBaIE7NZOKkprRu1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720131043; c=relaxed/simple;
-	bh=mFeZqLkqnQ7z1qKDjcuiOEk+6OnQcAlbixAE4PXEhOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MTsF420hWjcctgDuxToQ3sfBFhVfurDSgxDvWUKU0sZOGt62Q39h+7r9IzSxMwNk72lqbubDv5LUDcoZCY6eA9tyrr7IZk0gztKJhoil1blW+RZspSO0bqSTn11WgB1ZFVbPhY6ZyOi5zDditz/4r+QHHUg0WxodlgiKJHz0QgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B9WgwkVM; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720131041; x=1751667041;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=mFeZqLkqnQ7z1qKDjcuiOEk+6OnQcAlbixAE4PXEhOo=;
-  b=B9WgwkVMhZCpAb/BTA9rtafH+e0mFCLHTbul4VagJmj+LVJ6t4sUQfjp
-   wbIhjyV87JYbs4ew9l0ZeWI+DOAU5EWPBja/lpTN8PqNrjJwyAhPr+6g+
-   1H83hWnInXfA/xDbmJoEcGv6szZYXeqHqr87iEBtjSDl9wrKR778ci2tX
-   GOtu+QEdkEA5t6hAmYxuPMa9QY9gCmliYuErZQtwmY/0bZy2PgZ27F8xD
-   JbcwcrQQzUQ2ftEITJlmKX6Pd+DnVMjhXvLBuwnhl1M92eS0TQPvXJOGp
-   C8+rIbkAAXLTQz0aLPO+HGOkn294MWtS72AZQdoE5XpWSpfOskIN30cf2
-   g==;
-X-CSE-ConnectionGUID: BkMjMFqvSGiRctS9ShOykA==
-X-CSE-MsgGUID: YMt7O2w/TKO0k5J0b0Qyjw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="21184195"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="21184195"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 15:10:41 -0700
-X-CSE-ConnectionGUID: xgVWj7/nTtewnfPn8siGaQ==
-X-CSE-MsgGUID: O7ujVLprTDuPrzO8ZXznBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="47349330"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 04 Jul 2024 15:10:40 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sPUez-000RWN-1A;
-	Thu, 04 Jul 2024 22:10:37 +0000
-Date: Fri, 05 Jul 2024 06:10:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:vmd] BUILD SUCCESS
- 7a13782e6150154abdf34ced3b733502275a16d1
-Message-ID: <202407050615.DaofmrHR-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1720142694; c=relaxed/simple;
+	bh=Fgj8tbj91yyhS/Vj4oRJpCZVDxl3ws8xvqFaTEtx97A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tKrFZP1jEcWZPoV7fYAQeXWcnTbbw0eTE/tgk7kfgSglxY6pFb1nnWKjTXQHP62zVk2twsG6laHuSaZqVawvXE8n0+SBVj6kL/W3v/EEvl14teS6DqjrTDp1cNNvhwvPyoLdSz/hLt521AqhQFPBKhnstmuJHm8ZuPeFcWyt4xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kaDZlbp+; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4f2ea4d80d6so396562e0c.2;
+        Thu, 04 Jul 2024 18:24:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720142692; x=1720747492; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/TCgQDZcwng8bXM5BPYmuZDEk5bETYHoKH5imxDkoNw=;
+        b=kaDZlbp+oKANSrOw6kPz454eYKeG+PmNZQbgvXNtIoKJVeNc7ShFapguZsgrl+UlLH
+         jEEEz2lfrflF/WSADDtCY78oN0icEO04AimktHYUbHrcqQn+EwChMNpF6tcW3M85X3KZ
+         uMVJlqpbwJfmzX5x+Sxi5ydI6QDiikxFO+GDNpCzKuCWmnM94x5712JDLgu1iMYwi+XT
+         v4XDsaEAudByuCISnCILCz8pUfIr97FJZilUbs40t7PhJLBI2cAMwcJZkj4ZhXAcef97
+         WXA8xJmpyNT2h32b/D2+F2qG34ud7U/u0uCfPl/tZZw54uQiXx7G6xulD3dNQf9O5FBn
+         +FXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720142692; x=1720747492;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/TCgQDZcwng8bXM5BPYmuZDEk5bETYHoKH5imxDkoNw=;
+        b=nAKGgca3rbwr7p06qTM/4DZydetFxG5u1JuzPIl+w/NIyYLsRUtWdiwZpDTrKPyIZC
+         EGLakj3GroOj2wTAZLN5QIxOx4pStuqlPp9ZJabgeswYwIiTyJhP3e8dhwCYoKZN9N8u
+         QHcAq7swCuYp2T6g3XpsxlrVaK7WLlkJTLB2/wDw/0yZryfedlCyiAAZ0BeWQgN+WBmU
+         NqWGsvCIPdsieO6OF967zH4c9SI45MZ1IaZ57tb7y3XmY5NuXfYAKheT0O1GF/LMdcWV
+         OGp/drjBPEEU3Nmo+4S05fBWc2DNPm7fAdGwKIqU1wIeDpKdY+oID/NQ/DWCHrnY+q3a
+         d93A==
+X-Forwarded-Encrypted: i=1; AJvYcCUGJq1cathPtfQWoTVCx9my3QkNqeql9LGOG6/ZYHIXZFHlgyejfb2CnR6E20RiibKNvKt2oRLN0KObMqV4UU8O4shtz+hDy9pU9S99+aQvzrKVnzYwgF9lNAOuJjrCuUOUT44dZr4I
+X-Gm-Message-State: AOJu0Yz1I8dHdIUaCAJ54dkFGhdxCim2uhMe/P1t6wSBFT3eZqOMRwfH
+	gcrCE+hRZnOYw0pnu8A3ev9iePTOf9SK8QmZybFt0p7lC8M8+wigiSTc26DHl8aY3gX3uWAqrZd
+	lBtKJyMXHuRfEQfiDVkvVmgXEw3M34saL
+X-Google-Smtp-Source: AGHT+IG2WtReVuVppXAmKVRmFBS9mPu9FFYDWdrZ1dEdPQ+YNP8wCPhUls6aSK2NWBqqZqqHRHZB8s7kL0xSK1yk/m4=
+X-Received: by 2002:a05:6122:1b10:b0:4ea:edfb:8d89 with SMTP id
+ 71dfb90a1353d-4f2f3f518b5mr3181388e0c.12.1720142691734; Thu, 04 Jul 2024
+ 18:24:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <20240702060418.387500-1-alistair.francis@wdc.com>
+ <20240702060418.387500-3-alistair.francis@wdc.com> <20240702145806.0000669b@Huawei.com>
+In-Reply-To: <20240702145806.0000669b@Huawei.com>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Fri, 5 Jul 2024 11:24:25 +1000
+Message-ID: <CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
+Subject: Re: [PATCH v13 3/4] PCI/DOE: Expose the DOE features via sysfs
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de, 
+	alex.williamson@redhat.com, christian.koenig@amd.com, kch@nvidia.com, 
+	gregkh@linuxfoundation.org, logang@deltatee.com, linux-kernel@vger.kernel.org, 
+	chaitanyak@nvidia.com, rdunlap@infradead.org, 
+	Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git vmd
-branch HEAD: 7a13782e6150154abdf34ced3b733502275a16d1  PCI: vmd: Create domain symlink before pci_bus_add_devices()
+On Tue, Jul 2, 2024 at 11:58=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue,  2 Jul 2024 16:04:17 +1000
+> Alistair Francis <alistair23@gmail.com> wrote:
+>
+> > The PCIe 6 specification added support for the Data Object
+> > Exchange (DOE).
+> > When DOE is supported the DOE Discovery Feature must be implemented per
+> > PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
+> > information about the other DOE features supported by the device.
+> >
+> > The kernel is already querying the DOE features supported and cacheing
+> > the values. Expose the values in sysfs to allow user space to
+> > determine which DOE features are supported by the PCIe device.
+> >
+> > By exposing the information to userspace tools like lspci can relay the
+> > information to users. By listing all of the supported features we can
+> > allow userspace to parse the list, which might include
+> > vendor specific features as well as yet to be supported features.
+> >
+> > After this patch is supported you can see something like this when
+> > attaching a DOE device
+> >
+> > $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
+> > 0001:00        0001:01        0001:02
+> >
+> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> > ---
+> > v13:
+> >  - Drop pci_doe_sysfs_init() and use pci_doe_sysfs_group
+> >      - As discussed in https://lore.kernel.org/all/20231019165829.GA138=
+1099@bhelgaas/
+> >        we can just modify pci_doe_sysfs_group at the DOE init and let
+>
+> Can't do that as it is global so you expose the same DOE features for
+> all DOEs.
+>
+> Also, I think that this is only processing features on last doe_mb found
+> for a given device. Fix that and the duplicates problem resurfaces.
+>
+>
+> >        device_add() handle the sysfs attributes.
+>
+>
+> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> > index defc4be81bd4..e7b702afce88 100644
+> > --- a/drivers/pci/doe.c
+> > +++ b/drivers/pci/doe.c
+>
+> > +
+> >  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeo=
+ut)
+> >  {
+> >       if (wait_event_timeout(doe_mb->wq,
+> > @@ -687,6 +747,12 @@ void pci_doe_init(struct pci_dev *pdev)
+> >  {
+> >       struct pci_doe_mb *doe_mb;
+> >       u16 offset =3D 0;
+> > +     struct attribute **sysfs_attrs;
+> > +     struct device_attribute *attrs;
+> > +     unsigned long num_features =3D 0;
+> > +     unsigned long i;
+> > +     unsigned long vid, type;
+> > +     void *entry;
+> >       int rc;
+> >
+> >       xa_init(&pdev->doe_mbs);
+> > @@ -707,6 +773,45 @@ void pci_doe_init(struct pci_dev *pdev)
+> >                       pci_doe_destroy_mb(doe_mb);
+> >               }
+> >       }
+>
+> The above is looping over multiple DOEs but this just considers last one.
+> That doesn't look right...
 
-elapsed time: 1451m
+Yeah... That isn't
 
-configs tested: 198
-configs skipped: 7
+>
+> I think this needs to be in the loop and having done that
+> the duplicate handing may be an issue.  I'm not sure what happens
+> in that path with a presupplied set of attributes.
+>
+> > +
+> > +     if (doe_mb) {
+> > +             xa_for_each(&doe_mb->feats, i, entry)
+> > +                     num_features++;
+> > +
+> > +             sysfs_attrs =3D kcalloc(num_features + 1, sizeof(*sysfs_a=
+ttrs), GFP_KERNEL);
+> > +             if (!sysfs_attrs)
+> > +                     return;
+> > +
+> > +             attrs =3D kcalloc(num_features, sizeof(*attrs), GFP_KERNE=
+L);
+> > +             if (!attrs) {
+> > +                     kfree(sysfs_attrs);
+> > +                     return;
+> > +             }
+> > +
+> > +             doe_mb->device_attrs =3D attrs;
+> > +             doe_mb->sysfs_attrs =3D sysfs_attrs;
+> > +
+> > +             xa_for_each(&doe_mb->feats, i, entry) {
+> > +                     sysfs_attr_init(&attrs[i].attr);
+> > +
+> > +                     vid =3D xa_to_value(entry) >> 8;
+> > +                     type =3D xa_to_value(entry) & 0xFF;
+> > +
+> > +                     attrs[i].attr.name =3D kasprintf(GFP_KERNEL, "%04=
+lx:%02lx", vid, type);
+> > +                     if (!attrs[i].attr.name) {
+> > +                             pci_doe_sysfs_feature_remove(pdev, doe_mb=
+);
+> > +                             return;
+> > +                     }
+> > +                     attrs[i].attr.mode =3D 0444;
+> > +                     attrs[i].show =3D pci_doe_sysfs_feature_show;
+> > +
+> > +                     sysfs_attrs[i] =3D &attrs[i].attr;
+> > +             }
+> > +
+> > +             sysfs_attrs[num_features] =3D NULL;
+> > +
+> > +             pci_doe_sysfs_group.attrs =3D sysfs_attrs;
+> Hmm. Isn't this global?  What if you have multiple devices.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Any input from a PCI maintainer here?
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.2.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                 nsimosci_hs_smp_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240704   gcc-13.2.0
-arc                   randconfig-002-20240704   gcc-13.2.0
-arc                        vdk_hs38_defconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                     am200epdkit_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                            hisi_defconfig   gcc-13.2.0
-arm                         lpc18xx_defconfig   gcc-13.2.0
-arm                         mv78xx0_defconfig   gcc-13.2.0
-arm                             mxs_defconfig   gcc-13.2.0
-arm                         orion5x_defconfig   gcc-13.2.0
-arm                          pxa168_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240704   gcc-13.2.0
-arm                   randconfig-002-20240704   gcc-13.2.0
-arm                   randconfig-003-20240704   gcc-13.2.0
-arm                   randconfig-004-20240704   gcc-13.2.0
-arm                             rpc_defconfig   gcc-13.2.0
-arm                         s5pv210_defconfig   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240704   gcc-13.2.0
-arm64                 randconfig-002-20240704   gcc-13.2.0
-arm64                 randconfig-003-20240704   gcc-13.2.0
-arm64                 randconfig-004-20240704   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240704   gcc-13.2.0
-csky                  randconfig-002-20240704   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240704   clang-18
-i386         buildonly-randconfig-002-20240704   clang-18
-i386         buildonly-randconfig-003-20240704   clang-18
-i386         buildonly-randconfig-004-20240704   clang-18
-i386         buildonly-randconfig-005-20240704   clang-18
-i386         buildonly-randconfig-006-20240704   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240704   clang-18
-i386                  randconfig-002-20240704   clang-18
-i386                  randconfig-003-20240704   clang-18
-i386                  randconfig-004-20240704   clang-18
-i386                  randconfig-005-20240704   clang-18
-i386                  randconfig-006-20240704   clang-18
-i386                  randconfig-011-20240704   clang-18
-i386                  randconfig-012-20240704   clang-18
-i386                  randconfig-013-20240704   clang-18
-i386                  randconfig-014-20240704   clang-18
-i386                  randconfig-015-20240704   clang-18
-i386                  randconfig-016-20240704   clang-18
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240704   gcc-13.2.0
-loongarch             randconfig-002-20240704   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                         apollo_defconfig   gcc-13.2.0
-m68k                       bvme6000_defconfig   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-m68k                        m5307c3_defconfig   gcc-13.2.0
-microblaze                       alldefconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                      bmips_stb_defconfig   gcc-13.2.0
-mips                         db1xxx_defconfig   gcc-13.2.0
-mips                 decstation_r4k_defconfig   gcc-13.2.0
-mips                            gpr_defconfig   gcc-13.2.0
-mips                           ip22_defconfig   gcc-13.2.0
-mips                           ip27_defconfig   gcc-13.2.0
-mips                           ip28_defconfig   gcc-13.2.0
-mips                  maltasmvp_eva_defconfig   gcc-13.2.0
-mips                    maltaup_xpa_defconfig   gcc-13.2.0
-nios2                         3c120_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240704   gcc-13.2.0
-nios2                 randconfig-002-20240704   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                         allyesconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-openrisc                  or1klitex_defconfig   gcc-13.2.0
-openrisc                       virt_defconfig   gcc-13.2.0
-parisc                           allmodconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                           allyesconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240704   gcc-13.2.0
-parisc                randconfig-002-20240704   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                          allyesconfig   gcc-13.2.0
-powerpc                  iss476-smp_defconfig   gcc-13.2.0
-powerpc                     ksi8560_defconfig   gcc-13.2.0
-powerpc                    mvme5100_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240704   gcc-13.2.0
-powerpc                    sam440ep_defconfig   gcc-13.2.0
-powerpc                     sequoia_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240704   gcc-13.2.0
-powerpc64             randconfig-002-20240704   gcc-13.2.0
-powerpc64             randconfig-003-20240704   gcc-13.2.0
-riscv                            allmodconfig   gcc-13.2.0
-riscv                             allnoconfig   gcc-13.2.0
-riscv                            allyesconfig   gcc-13.2.0
-riscv                               defconfig   gcc-13.2.0
-riscv                 randconfig-001-20240704   gcc-13.2.0
-riscv                 randconfig-002-20240704   gcc-13.2.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                              allnoconfig   gcc-13.2.0
-s390                             allyesconfig   clang-19
-s390                             allyesconfig   gcc-13.2.0
-s390                          debug_defconfig   gcc-13.2.0
-s390                                defconfig   gcc-13.2.0
-s390                  randconfig-001-20240704   gcc-13.2.0
-s390                  randconfig-002-20240704   gcc-13.2.0
-sh                               allmodconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-13.2.0
-sh                         ap325rxa_defconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                             espt_defconfig   gcc-13.2.0
-sh                            migor_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240704   gcc-13.2.0
-sh                    randconfig-002-20240704   gcc-13.2.0
-sh                          sdk7786_defconfig   gcc-13.2.0
-sh                           se7619_defconfig   gcc-13.2.0
-sh                           se7750_defconfig   gcc-13.2.0
-sh                           sh2007_defconfig   gcc-13.2.0
-sh                        sh7757lcr_defconfig   gcc-13.2.0
-sparc                            allmodconfig   gcc-13.2.0
-sparc                       sparc64_defconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240704   gcc-13.2.0
-sparc64               randconfig-002-20240704   gcc-13.2.0
-um                               allmodconfig   gcc-13.2.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-13.2.0
-um                               allyesconfig   gcc-13.2.0
-um                                  defconfig   gcc-13.2.0
-um                             i386_defconfig   gcc-13.2.0
-um                    randconfig-001-20240704   gcc-13.2.0
-um                    randconfig-002-20240704   gcc-13.2.0
-um                           x86_64_defconfig   gcc-13.2.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240704   clang-18
-x86_64       buildonly-randconfig-002-20240704   clang-18
-x86_64       buildonly-randconfig-003-20240704   clang-18
-x86_64       buildonly-randconfig-004-20240704   clang-18
-x86_64       buildonly-randconfig-005-20240704   clang-18
-x86_64       buildonly-randconfig-006-20240704   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                                  kexec   clang-18
-x86_64                randconfig-001-20240704   clang-18
-x86_64                randconfig-002-20240704   clang-18
-x86_64                randconfig-003-20240704   clang-18
-x86_64                randconfig-004-20240704   clang-18
-x86_64                randconfig-005-20240704   clang-18
-x86_64                randconfig-006-20240704   clang-18
-x86_64                randconfig-011-20240704   clang-18
-x86_64                randconfig-012-20240704   clang-18
-x86_64                randconfig-013-20240704   clang-18
-x86_64                randconfig-014-20240704   clang-18
-x86_64                randconfig-015-20240704   clang-18
-x86_64                randconfig-016-20240704   clang-18
-x86_64                randconfig-071-20240704   clang-18
-x86_64                randconfig-072-20240704   clang-18
-x86_64                randconfig-073-20240704   clang-18
-x86_64                randconfig-074-20240704   clang-18
-x86_64                randconfig-075-20240704   clang-18
-x86_64                randconfig-076-20240704   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                  nommu_kc705_defconfig   gcc-13.2.0
-xtensa                randconfig-001-20240704   gcc-13.2.0
-xtensa                randconfig-002-20240704   gcc-13.2.0
+There are basically two approaches.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ 1. We can have a pci_doe_sysfs_init() function that is called where
+we dynamically add the entries, like in v12
+ 2. We can go down the dev->groups and device_add() path, like this
+patch and discussed at
+https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
+
+For the second we will have to create a global pci_doe_sysfs_group
+that contains all possible DOE entries on the system and then have the
+show functions determine if they should be displayed for that device.
+
+Everytime we call pci_doe_init() we can check for any missing entries
+in pci_doe_sysfs_group.attrs and then realloc
+pci_doe_sysfs_group.attrs to add them. Untested, but that should work
+even for hot-plugged devices. pci_doe_sysfs_group.attrs would just
+grow forever though as I don't think we have an easy way to deallocate
+anything as we aren't sure if we are the only entry.
+
+Thoughts?
+
+Alistair
 
