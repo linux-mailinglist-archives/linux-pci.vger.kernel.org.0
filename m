@@ -1,75 +1,55 @@
-Return-Path: <linux-pci+bounces-9853-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9854-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7A00928D9C
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 20:48:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE598928DAE
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 21:05:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03B861C21D62
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 18:48:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53E661F2249F
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jul 2024 19:05:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A5A13AD37;
-	Fri,  5 Jul 2024 18:48:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D05CE14374F;
+	Fri,  5 Jul 2024 19:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ht2Sg2t2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2pFA3gK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B73A955;
-	Fri,  5 Jul 2024 18:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6401132123;
+	Fri,  5 Jul 2024 19:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720205332; cv=none; b=mxo4bqYlqGV3arZLnd3h5xdSarTRP7IHhkMRbKaEJbLUJoX1hSoBFjW1PZi8BXgWuUQztUZRr6p1j430aiF+C2QnJpRmJGXQszztHesRGRiKi47ICR09SMDyTgokvzEMrHgxyW/N4/ZmMbK3jZlTXp8paRhfVLUIwe+vjX7Awx0=
+	t=1720206316; cv=none; b=pm/JCbMyuoFKaI3aWkqvbKm/5IVYTfSPCfqHRaslSMIu+V9Ky9qzVOD2xWxJXEifwp2wr+elE/8iD/zYeWoKq9BpsIyfhLClXhJORLpgODEWxxqurGL2DDlQp059YMvGs6LKdjH4hCTT0JUFwsjMC5qBwK6BSS7nq/8nQNABQn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720205332; c=relaxed/simple;
-	bh=3gQdxm9rrq4HH+3IgyK33e5U18PihTEsMAv3ZFMKGl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n7cJcpkzqsPw1YsYGmiGRJ7dhq9Cl+rI7cU1j6SertII/9DAuQYBCk01jiO03k3oHaL47F25qx6e8onWv1ta1yDMRGuczxAOZEtFtb2XWBVt2nzdxQJO5kx2tdxiBSc205vUmbRyO9rgoFkcmIWP5DXLtn4AGX7guIsBHBZn/ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ht2Sg2t2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D17E5C116B1;
-	Fri,  5 Jul 2024 18:48:50 +0000 (UTC)
+	s=arc-20240116; t=1720206316; c=relaxed/simple;
+	bh=LMlOvHMoTtCWNHgxApxYlsBCHydkvIY0tqr+FN+Hktw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rerljT2Z0l8ZVuiIqtac/EWQ/7y2W4emQy4LegAr2ri918XsyPwyot+i9E/sqZvGP1SieUyE6QaXo4BbP4Ntc9mkQsN7n/uHcDidvyAMV2CZGP5MepjI7DH2/bAzUYAfCB3HBeYutRfWw/PzztDPLIRlziMjRgp4eP36pSvydJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2pFA3gK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8241C116B1;
+	Fri,  5 Jul 2024 19:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720205331;
-	bh=3gQdxm9rrq4HH+3IgyK33e5U18PihTEsMAv3ZFMKGl4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ht2Sg2t2ndCjMGA6QKO2lqpTrzx5fDYVZJW7Ovgfr1eplx4adbkUHrvVY0Fu92JLt
-	 mU5W84MEOLzWeruLzCzFJBMcezP+9RWb4w2qbxVzYCrWWzfG7s4lg/Gv7+t1mLvgfO
-	 2fdSWrA5Q1UyDcQM7GTChwnkpqlcbSPsNUt/V748Qr4OW0E18YwIXE9gUZ8xqbm3Pa
-	 QZ5HR5+kS74PefChnaUbAqlutm/0zUWk4Ir6koict+0o/SIMktXHfmKvALkPRAwy7e
-	 60A1hFUaIMAvaXkUU5Xx3C78C3VfTgwAozfACG4DXiep2AGvT26MouaYytY3hJ3pYn
-	 tSYLgRXYv+5hA==
-Date: Fri, 5 Jul 2024 21:48:46 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Robin Murphy <robin.murphy@arm.com>, Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	"Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 18/18] nvme-pci: use new dma API
-Message-ID: <20240705184846.GF95824@unreal>
-References: <cover.1719909395.git.leon@kernel.org>
- <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org>
- <249ec228-4ffd-4121-bd51-f4a19275fee1@arm.com>
- <20240704171602.GE95824@unreal>
- <20240705055806.GA11885@lst.de>
+	s=k20201202; t=1720206316;
+	bh=LMlOvHMoTtCWNHgxApxYlsBCHydkvIY0tqr+FN+Hktw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=U2pFA3gKJKRiVUpN/ADWvSJaYN+i/tJTEzFgBI3A61V/wyj63rn4ikP5cxYpHDGiF
+	 xhv+W9L6H6/vE5Whsx9ejRzmN3hOgb/XS60Mbf+r+MbdBK2vZvR+x7YSAae1qam2gK
+	 HXAN97jxJHzgL5JErY6xrfTC1ZX/Z6yh5Cn7saMJZdARRVGdMFt45ko1SIK/Jz1oUs
+	 r7ATjhfJkLGGzpL+JNNNPv/dU8AeNybWNTo0u6ws+eO+e7VPFwanlVHcmTIWxXdm6u
+	 Xv8soqhgl6C+dDQGXVQ288ThmztZuXyPiXb98NaISLkHpjTSQcuLjD+tBIJPw0LTao
+	 P5JRl+T+RbnEw==
+Date: Fri, 5 Jul 2024 14:05:13 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [GIT PULL] PCI fixes for v6.10
+Message-ID: <20240705190513.GA72897@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,25 +58,31 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240705055806.GA11885@lst.de>
 
-On Fri, Jul 05, 2024 at 07:58:06AM +0200, Christoph Hellwig wrote:
-> > This is exactly how dma_map_sg() works.
-> 
-> Which dma_map_sg?  swiotlb handling is implemented in the underlying
-> ops, dma-direct and dma-iommu specifically.
-> 
-> dma-direct just iterates over the entries and calls dma_direct_map_page,
-> which does a per-entry decision to bounce based on
-> is_swiotlb_force_bounce, dma_capable and dma_kmalloc_needs_bounce.
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
 
-dma-direct is not going to have "use_iova" flag. Robin pointed to
-dma-iommu path.
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
 
-In that case the flow is dma_map_sg()->iommu_dma_map_sg()->dev_use_sg_swiotlb().
+are available in the Git repository at:
 
-Thanks
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pci-v6.10-fixes-2
 
-> 
-> 
+for you to fetch changes up to 419d57d429f6e1fbd9024d34b11eb84b3138c60e:
+
+  CREDITS: Add Synopsys DesignWare eDMA driver for Gustavo Pimentel (2024-06-11 10:26:06 -0500)
+
+----------------------------------------------------------------
+- Update MAINTAINERS and CREDITS to credit Gustavo Pimentel with the
+  Synopsys DesignWare eDMA driver and reflect that he is no longer at
+  Synopsys and isn't in a position to maintain the DesignWare xData
+  traffic generator (Bjorn Helgaas)
+
+----------------------------------------------------------------
+Bjorn Helgaas (2):
+      MAINTAINERS: Orphan Synopsys DesignWare xData traffic generator
+      CREDITS: Add Synopsys DesignWare eDMA driver for Gustavo Pimentel
+
+ CREDITS     | 4 +++-
+ MAINTAINERS | 3 +--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
