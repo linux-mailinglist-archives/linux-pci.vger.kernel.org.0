@@ -1,87 +1,112 @@
-Return-Path: <linux-pci+bounces-9872-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9873-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9433929150
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 08:26:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7532992915C
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 08:44:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 840FD283D50
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 06:26:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3A451C21809
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 06:44:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189E31B947;
-	Sat,  6 Jul 2024 06:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF6EB1BC53;
+	Sat,  6 Jul 2024 06:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VUVvQQaE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1E118E06;
-	Sat,  6 Jul 2024 06:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA1117BD3;
+	Sat,  6 Jul 2024 06:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720247171; cv=none; b=itD6WTkqIdURCgSMKiXfelltqhEzbQ6HQpTsxZLuQ4jbS1y4rovX/JQNgvh3uQ+kyZtRx5ncNWfphHp8a1E2Kko2FSuKnhqXQo4H7RMAajBCq/VRrXWAJE5bhL3mfUMobWeVc4zduzZdEN8H8MJ0QK/s4u3yHBNKs4SYezxFOLA=
+	t=1720248290; cv=none; b=KvCb08YQjSuI2xgihSi+cySnPlBwQVVrsbYzNOavgyiIDGAxeHIgrVwOuWG/M1kkQamItpXfkBdN5LrZ5abLjVYrci2IxgvxuYCAZpSF7orGLzyarTKYVNj0rDLFaQUmxZEEytr8MA8Ei2EO+JlhPEs3UfX9MvDaWCeLlxtiKLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720247171; c=relaxed/simple;
-	bh=qSS2aQCHFsEoF8vnLdLxeJXMBQprUWrDR4lqJIC0dEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EPDf9mezaClkhyD0erbPXGbhv5Gb8FOEQay96HG1axJt85dddyqZFLtWzB2Y/OVgUkgIftFxZBIsEKxHl2665JUqJsijnwh+GmOFYnT6YcwP4CBO6kbMPoRs/hKDH4A3eBNJGLcHD0RpCwvkwwURAlyLo417REBWz0z91sfw48g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id AA8AA68D0E; Sat,  6 Jul 2024 08:26:04 +0200 (CEST)
-Date: Sat, 6 Jul 2024 08:26:04 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	"Zeng, Oak" <oak.zeng@intel.com>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240706062604.GA13874@lst.de>
-References: <cover.1719909395.git.leon@kernel.org> <20240703054238.GA25366@lst.de> <20240703105253.GA95824@unreal> <20240703143530.GA30857@lst.de> <a7f1c69a-bbaf-4263-b2c2-3c92d65522c2@nvidia.com>
+	s=arc-20240116; t=1720248290; c=relaxed/simple;
+	bh=NH0U8SYMXqcCSrXZ7qu6VT16yVW+2MZ7RLvA2Zodprg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n6Azp8bgDE60bk4tcr6dCjeIkW+8uVIllkGykaJesjrGz4Ee90DlBtJ3hXZyMahvhyJYy4n4cN9yMzR/PIpArFUd1wxDB7p4YA8vHV6aLaRuwTta+HpVzVN3J2Q8/DlFK0YCRLSuNPa1zQY4SF++M4fJLEezBNWZClwamAs1s0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VUVvQQaE; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4666iFk8071877;
+	Sat, 6 Jul 2024 01:44:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1720248255;
+	bh=qYoP9culH6ZxGxGoSntIgBVMnx2ZLL7C0Z7bcNlrEfY=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=VUVvQQaEWs2FXOiJayzv62yXOQtE+NILGMyD9icXubuakt6GyqqkCgo7pJBIs+F1Z
+	 /hlfr+pYwhw/HUESI10cWv99ZAkH3L4LtfVS+l+CnxfJHK1exInVmW68F/QY4d+Scl
+	 UweOR31QJP+f0KhUBHdiT/sldL/k22LgKkBoLwek=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4666iFsQ009824
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 6 Jul 2024 01:44:15 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 6
+ Jul 2024 01:44:14 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 6 Jul 2024 01:44:14 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4666iDda074785;
+	Sat, 6 Jul 2024 01:44:14 -0500
+Date: Sat, 6 Jul 2024 12:14:13 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Siddharth
+ Vadapalli <s-vadapalli@ti.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Francesco Dolcini <francesco.dolcini@toradex.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v1 0/2] PCI: ti: k3: Fix TI J721E PERST# polarity
+Message-ID: <2def13f4-aea3-466c-9f8c-1e44694eeb4a@ti.com>
+References: <20240703100036.17896-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <a7f1c69a-bbaf-4263-b2c2-3c92d65522c2@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20240703100036.17896-1-francesco@dolcini.it>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Jul 05, 2024 at 10:53:06PM +0000, Chaitanya Kulkarni wrote:
-> I tried to reproduce this issue somehow it is not reproducible.
+On Wed, Jul 03, 2024 at 12:00:34PM +0200, Francesco Dolcini wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
 > 
-> I'll try again on Leon's setup on my Saturday night, to fix that
-> case.
+> Fix PCIe PERST# signal polarity in TI J721E used on TI K3 machines.
+> 
+> PCIe PERST# needs to be de-asserted for PCIe to work, however, the driver is
+> doing the opposite and the device tree files are defining the signal with the
+> wrong polarity to cope with that. Fix both the driver and the affected DT
+> files.
 
-It is passthrough I/O from userspace.  The address is not page aligned
-as seen in the printk.  Forcing bounce buffering of all passthrough
-I/O makes it go away.
+For the series,
 
-The problem is the first mapped segment does not have to be aligned
-and we're missing the code to places it at the aligned offset into
-the IOVA space.
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
+Since DT and driver patches go to different subsystems, both patches need
+to go in simultaneously to avoid making devices non-functional if one of
+the patches gets applied but the other one doesn't.
+
+Regards,
+Siddharth.
 
