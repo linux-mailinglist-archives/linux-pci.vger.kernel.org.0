@@ -1,149 +1,140 @@
-Return-Path: <linux-pci+bounces-9878-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9879-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F355B929457
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 17:08:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FE239294DA
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 19:13:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC210282DDF
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 15:08:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D918B21CC3
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 17:13:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 565CA13B58B;
-	Sat,  6 Jul 2024 15:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A20213C3CF;
+	Sat,  6 Jul 2024 17:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiHeHYf0"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FhkiUXjD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7ADB13AD06;
-	Sat,  6 Jul 2024 15:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAA0132464
+	for <linux-pci@vger.kernel.org>; Sat,  6 Jul 2024 17:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720278481; cv=none; b=bsRHEmbeY7WrHMuUw3ikNisb7+LLsT9YsAAwDdHTNE+ZWVqOOwK8rqx2TCI+K0IVA2YnGYZ9gJ1gl7crHwQtBm11tKsG/6WW1GSavQGqCFJY9Eun7XlKlF+Xy6/nYwgrTbz30ondwliGZ07h6Zk4L3YfD43MZFibdo7S2vPzwzQ=
+	t=1720285983; cv=none; b=Zc6iT4ErfaYGGLdwf7+lklZ+ZwDAwyHTBegwbhssmQWkFjWIrzV7z5umDMcCagH7VBeaLHJTfoviQJbIjy6w5kdOIrTJ8rfo3y7e8DKfDkPNLUz5l0FQqXbX+rXnPDcclQiNNAF9ryHFqvJk7YdoIsN3ep0LOAxE6LKmlm27OBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720278481; c=relaxed/simple;
-	bh=Aj0FTMQ6ziAfGNoL39PuVZNWcf3cIo8t3fpEww1eCso=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q7vGkvEGgUoq4zWhU4/JfySf9XmXhz6g3a0nhXZEPX73u93g8V3EMDNPXAc/9/umH2rKeFbfPh8cb9EGJu2wy7W/W2+j4/niVb285fVumuhJ+awKoHocq5v8TD6D+jf4e+IGJlUJETb+AscDinQHE4l7zZHV1BSO50jbqjTJdAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MiHeHYf0; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-36796aee597so1528331f8f.1;
-        Sat, 06 Jul 2024 08:07:59 -0700 (PDT)
+	s=arc-20240116; t=1720285983; c=relaxed/simple;
+	bh=FdzhW8jckQ9Gfs/TGcGvimbU0+jBM8TysWBJmSELGmU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K7E1CMasV7gjRkmDQe8sxNiqiyMMuZl0CxGHn3jacSyjPOmO+aTxo6PWKz7DNcsEBNlIBhmwbLxL5KnFxk4M0FoOThzvRXaq9QYsKEdz/fmPQYxbnGquq3z8COyHUwwPFD99/kLql6Fd7xs/nn8ELhEhx/Xp5uHd3AnjYPoZJLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FhkiUXjD; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52e9f788e7bso2725515e87.0
+        for <linux-pci@vger.kernel.org>; Sat, 06 Jul 2024 10:13:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720278478; x=1720883278; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AjL3qyowNZJyDqoLGtKUFEYrHzdrW4lz2WRY4ZZz4uw=;
-        b=MiHeHYf0aocvMNnZINVibEZ2cRAmXQxYi1hqu+ySLha9udeZlLPCDmD/lu90dp9HBD
-         ynXEwfoiMONWTNpP3ZPlpetKQVvjFAV2wSdYt2aKUrcV1CYwcOs6uV/236c/oHTroT4a
-         bqOU6w8dqiVpPXNtJXxe8+cdZ4yn0AjgJ2rDqFI6plKmm1dXiI+IZObHPrJ/gIOKCkK6
-         USv8lvoARWs4fqXRJcnKxGEN2CmqVC0IdaG5SYvvSX0Og/L3Dj9dlxBGca7vCdMVhHsL
-         MiMKGcteJWZpa1Dy7ult0vKbrELcmm6nZwTGTA05SkxHqtGivPg9G1gK7mGxEB95g/NB
-         Lt5Q==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720285979; x=1720890779; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WIHDkPjH3WVeZvlg0BnUYWSb8SNl5wUtj3icTP0TxI0=;
+        b=FhkiUXjDQZC7b9B2WQSjZNl42nJ+1beh8umM7xDUslWrF+DH+h5ld+vIYGtK7xfzPP
+         gRMfLYFtaHpQh0owRY95RaPGC4rFF9tmz2U1l8qDCwcMhQvcIpAWh0bHB7XX9T01gLTi
+         FD37E6c3//8mW3c+3ajl4rjxEeGierdk/KZOKY0mlITnTXRwcc+3S6yML6Ff+BX2CXbh
+         WTFrPe5RcKHInUZuyjEA4qbAUHQa4tJ2lzsLqtbVsYQM7ZlSjp/0wQCqAJN9hc/H7BHx
+         9J259wZSNE4eKjJY+fj2SrvYPR4WUy5QIMHjOb5v1wLY1EE173y/kp2dcsRhltCBx2pL
+         eLIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720278478; x=1720883278;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720285979; x=1720890779;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AjL3qyowNZJyDqoLGtKUFEYrHzdrW4lz2WRY4ZZz4uw=;
-        b=bq/nnDdPbcPbaAkWgy50nCG5T6i7anboGIx/Qnx5XDrmdA9Bqsvd+sloQOxxxvhw0G
-         tAa2ZJRCU9BvyU44FcwHKCaIJFmAliWDrbynqzkK/q4gky9ILj5MxNtQKAavOCVGbnLe
-         dUGeKYyTDrwcUmlYFzjWZKvjiDk5Iiy8W9jwR6Y2YPMryyvGcM9gC4LHVKL3LfJ0Llg0
-         wTz0Rvc2LqCvyfQejqcya7PNWZIyD3ouJtLIZJmKtGX2V37IyQL86c23WZyFrW5bnA1u
-         2GhlQQa95APKAhfitP0e1tDefsXhanraJXrZlyOcNnTUR1IOql00HVuy61BnZa0gtqYQ
-         mpXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCcgSuImvudBreN0YSwP9mMbF1VNZLVW5IaZepNiD2T3yek+zYe5DZ3imDmtEtMDfLrxD0heVy8s+u9Is6QNZBkO/gz9/Tp3tP5KMW
-X-Gm-Message-State: AOJu0YyRJNp7vTGksJoqYlvdx+LlAwGk4CX4rtGrWoOmc2TOjb5brjJM
-	AKYAjEVArXT8i/KaOKv7hYqt1Bmt6LK5iL/nWJBC4UsvoPCxyJl+
-X-Google-Smtp-Source: AGHT+IG6jSeqx5EZbXOPart54XwPBHNDh2n6ekhDnLKyOfX6o+3EF0gaUeYCKKE1pQDgw8IwtSKPuA==
-X-Received: by 2002:a5d:6502:0:b0:367:9ac6:d56a with SMTP id ffacd0b85a97d-3679dd723c6mr5002757f8f.59.1720278478034;
-        Sat, 06 Jul 2024 08:07:58 -0700 (PDT)
-Received: from [127.0.1.1] (2a02-8389-41cf-e200-d11b-8ec4-ea76-796c.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:d11b:8ec4:ea76:796c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367a1805e53sm5896437f8f.22.2024.07.06.08.07.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 08:07:57 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Sat, 06 Jul 2024 17:07:47 +0200
-Subject: [PATCH 2/2] PCI: kirin: use
- for_each_available_child_of_node_scoped()
+        bh=WIHDkPjH3WVeZvlg0BnUYWSb8SNl5wUtj3icTP0TxI0=;
+        b=M8JwwYWFxC8CGMfRtAT+Ee0IzgEymNCW42GXuttPN2Rluvc+Ns7A1zyH4RITuNuext
+         wxN6MDeqnlFCHwdhYLcxdcv/ru7+SwBpgbcM2ksOiPmKc3mJVqA3siZWxIBm2JslKfpB
+         8fjrR2s48wscW304hvT6FMCnTWiotsNiLItb0VdvX6bkC6LmEKXBYR39kxTxBKykBo9x
+         JhCNd6BxD6GbNp8sx+kgbIpm+NigHQGgPbJhZrjVyuvTbrMHnHUj2a8SfkhkknsF1/4j
+         1nawbXVQoZ01XF9Sm5rj2m9NV4YFn3ickhA34BlI0foz7C+Q1VtxOrUoDsXlac9Vkqez
+         wUpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvUWL8y3vT3sv0eP2hvKZ81BOEPF0sshKxjMSyvF4orXnDbJF86BSA4xwCnz8YtjDJi+XiGBeX/sMlW89eKtcGXuSUNEudJ9nD
+X-Gm-Message-State: AOJu0YznzLtalwlR2YfaOKN4syoWS5lUubM3Y8BcSDCXO3BxJW6upFJ/
+	k25d+05XcHSs/MP5W3MKmf9B+pw+OzNofJu3txkNAEWQk6vCAW2eslociGeUhS6ug3XRS62pn7y
+	csZFJToJLl4tqOZkJClTTZyVrz5+rSmWa5SGDOw==
+X-Google-Smtp-Source: AGHT+IHr8D+f+x90g+9LqHGNVFw5Ew01Hdekxrn8HMMGKFPoL76ifPylZFsoFm8kiPgvrQKiKpfSbCcCqu0cm2Km+Cc=
+X-Received: by 2002:ac2:5dcc:0:b0:52e:9c26:5c0c with SMTP id
+ 2adb3069b0e04-52ea0639ae9mr5147645e87.37.1720285979207; Sat, 06 Jul 2024
+ 10:12:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240706-pcie-kirin-dev_err_probe-v1-2-56df797fb8ee@gmail.com>
-References: <20240706-pcie-kirin-dev_err_probe-v1-0-56df797fb8ee@gmail.com>
-In-Reply-To: <20240706-pcie-kirin-dev_err_probe-v1-0-56df797fb8ee@gmail.com>
-To: Xiaowei Song <songxiaowei@hisilicon.com>, 
- Binghui Wang <wangbinghui@hisilicon.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, 
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720278473; l=1398;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=Aj0FTMQ6ziAfGNoL39PuVZNWcf3cIo8t3fpEww1eCso=;
- b=6m1K/lU7liwiBGvKjtNORkPhwp23OJWS4+tSb1IyB5y7ffKdbG3RhP4hrrrgTAEL3r/aXdu6v
- WdfjQ2GvuvdBWAbDr3mhwBoRoWq1F2n6g6EwaYYduDNR2pavO5x+UA9
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+References: <20240703091535.3531-1-spasswolf@web.de> <CAMRc=Md=PnpHVGGO6Nb_efVZ0a3cMxWbLvYmkka5Wznks70drw@mail.gmail.com>
+ <ZokDkyfn2Xt2Ki-i@wunner.de>
+In-Reply-To: <ZokDkyfn2Xt2Ki-i@wunner.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sat, 6 Jul 2024 19:12:48 +0200
+Message-ID: <CAMRc=McBpqP=qSbxDGcreTcktq_0vQH_PrtQS0V=Mw3w-_Zmwg@mail.gmail.com>
+Subject: Re: [PATCH] pci: bus: only call of_platform_populate() if CONFIG_OF
+ is defined
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bert Karwatzki <spasswolf@web.de>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	caleb.connolly@linaro.org, bhelgaas@google.com, amit.pundir@linaro.org, 
+	neil.armstrong@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The scoped version of the macro automatically decrements the child node
-refcount on early exits, removing the need for the `goto` and
-`of_node_put()`.
+On Sat, Jul 6, 2024 at 10:43=E2=80=AFAM Lukas Wunner <lukas@wunner.de> wrot=
+e:
+>
+> On Wed, Jul 03, 2024 at 11:32:05AM +0200, Bartosz Golaszewski wrote:
+> > On Wed, Jul 3, 2024 at 11:15 AM Bert Karwatzki <spasswolf@web.de> wrote=
+:
+> > > If of_platform_populate() is called when CONFIG_OF is not defined thi=
+s
+> > > leads to spurious error messages of the following type:
+> > >  pci 0000:00:01.1: failed to populate child OF nodes (-19)
+> > >  pci 0000:00:02.1: failed to populate child OF nodes (-19)
+> > >
+> > > Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child O=
+F nodes of the port node")
+> > > Signed-off-by: Bert Karwatzki <spasswolf@web.de>
+> > > ---
+> > >  drivers/pci/bus.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > > index e4735428814d..b363010664cd 100644
+> > > --- a/drivers/pci/bus.c
+> > > +++ b/drivers/pci/bus.c
+> > > @@ -350,6 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+> > >
+> > >         pci_dev_assign_added(dev, true);
+> > >
+> > > +#ifdef CONFIG_OF
+> > >         if (pci_is_bridge(dev)) {
+>
+> Per section 21 of Documentation/process/coding-style.rst,
+> IS_ENABLED() is strongly preferred to #ifdef.
+>
+>
+> > There's a better (less ifdeffery) fix on the list that I'll pick up
+> > later today[1].
+> >
+> > [1] https://lore.kernel.org/lkml/20240702180839.71491-1-superm1@kernel.=
+org/T/
+>
+> That other fix doesn't feel very robust as it depends on
+> of_platform_populate() never returning -ENODEV in the
+> CONFIG_OF=3Dy case.
+>
 
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
- drivers/pci/controller/dwc/pcie-kirin.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+If we even have to play these ifdef games then the stubs for
+of_platform_populate() are broken and should probably return 0 with
+!OF as otherwise the stubs themselves are useless.
 
-diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index da8091f6b22b..ac0aacb11489 100644
---- a/drivers/pci/controller/dwc/pcie-kirin.c
-+++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -447,7 +447,7 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 				    struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *child, *node = dev->of_node;
-+	struct device_node *node = dev->of_node;
- 	void __iomem *apb_base;
- 	int ret;
- 
-@@ -472,17 +472,13 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 		return ret;
- 
- 	/* Parse OF children */
--	for_each_available_child_of_node(node, child) {
-+	for_each_available_child_of_node_scoped(node, child) {
- 		ret = kirin_pcie_parse_port(kirin_pcie, pdev, child);
- 		if (ret)
--			goto put_node;
-+			return ret;
- 	}
- 
- 	return 0;
--
--put_node:
--	of_node_put(child);
--	return ret;
- }
- 
- static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
-
--- 
-2.40.1
-
+Bart
 
