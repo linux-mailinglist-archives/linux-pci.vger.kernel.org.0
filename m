@@ -1,82 +1,61 @@
-Return-Path: <linux-pci+bounces-9870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9871-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C7A792909B
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 05:54:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A55C929134
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 08:08:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF9EB1F227D0
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 03:54:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B62F1F2194B
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 06:08:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6044F510;
-	Sat,  6 Jul 2024 03:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66C617C95;
+	Sat,  6 Jul 2024 06:08:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF7EE552;
-	Sat,  6 Jul 2024 03:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34D81BF3A;
+	Sat,  6 Jul 2024 06:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720238059; cv=none; b=FMiJunnt+TMxXYOr3DTCC2u4MzcsboQwypponkQqwsMuneqalF3Zg+nyw5q+3pVZNbETZ0dKnseIEXIhby+DEMiHzNyq96mTkr/XpzRN5d6iwVKO7rwzyo+i0d3O68/Y9J/tv772iBmfqyQhmF9y0IcV1Hg5dIPPeIh0oSchbpU=
+	t=1720246106; cv=none; b=WkIdPJrGJ2gyuNFmYhdl2XA5seje8ktjVYT7KE+VR9WXUUROLcRLCN75emgJUXz96FurkelVrJK83WWn0S81MtW4JxOGIKJ1UwSrt7PejYSvjV6ieS8LzlEhg3jbVAZE49YjgcKYFbrTOJxtlrgUpLTlp31ynuKNXbNIX+dRG+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720238059; c=relaxed/simple;
-	bh=ITg6qRMPQUBa0g5V9kbsJV7gEtIiSexsTKQ1w1qpxm0=;
+	s=arc-20240116; t=1720246106; c=relaxed/simple;
+	bh=FJjvC1mF0q7aqcVpwtDwuOCzqnQ0w4rL5HfWLZFRs+E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UtYyOBgtMzjC6jhueQsv8ONJpvlwyXlQIw9DxkMQL4Ey+0u58IthqE2KsJvIYl2WZ8GGb9AoMrP6LlrfUz/9BiDRpU1H2eNhAQL6Wh6SwkCpSrndXcGCsaeLR1/4YZk8ZikgXiR0qA4FKrl/ypT55DEOtmol7wGjHZFO9BQ7x2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-380deeb250eso8115835ab.1;
-        Fri, 05 Jul 2024 20:54:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720238057; x=1720842857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5D4tI0AD6TKB5f8V0gI1Ny//6YFM3x96o/cMbfklP+8=;
-        b=oW7a11WXUyNhgXoH/hyrXGd7nRvanv9WMt2xnOFNfjYgLEdBwwX44bkxmW+6GOnl0O
-         PpnXlq7EmYuwYbM8CgT3PkHi2IPcJa0g2kRv8Vzo2X+BIYLChqFEdW3xfDsM9gky0eZ1
-         +8B8LHoIMzPh5fUJ6i/I21BcEZqk2NS/J5yUfWoY+LPVEbgx+fJ0DFUp8+S5pUjDdi3t
-         RdaTEC8U0WjrlRKHYQcCgUluvpwXYVHggEZuB/dNyNz3ZxK/PBunKZOSURN52TgA/dEp
-         SmcbsmT4532uIhye24lrsdwG1jCRyWuYN2AyVJbvZqlsMn4J8Tt5UeF+JG1LfVBtzXHS
-         3MmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfTzEk3MW9kOC5J4gicLvjTtReehrHM93r4ox0dcyMQz9N6GH4mw/2q3VRtIrs/lnqB+kGDd5QCnDgOjjSTHz1JpQm9r+zqohHB0jiY9A1lr6JQz+CHzsm5y9lFOd+5aYRtZD3dl7G0jrDxcKW7MpY3k3VZIfAGoMbKZpmTLo9QidimyYGcNRLUD1CGp8pgHKxE40Ke/pcfll9M606FVc0LMi27068MDNL33s=
-X-Gm-Message-State: AOJu0YwgeBpUm+qfsl6OxmKg8WGT7GNIG7QuQT2zueNwaUUMIk7CfflT
-	b27Da65LdKNCX+Y1VQqTFs/3xR1zZb6mch4LKiuBRg9989veq/eQyrqHQ4N9sPE=
-X-Google-Smtp-Source: AGHT+IFkmr6rOVVQ6tzIaz/yVRjICqptKhGOdC6MQB/5XVn5kCPoeWBDP61rz3vPYC4BMP0jc8MmoA==
-X-Received: by 2002:a05:6e02:1ca5:b0:381:40be:4ce6 with SMTP id e9e14a558f8ab-38398a01bcbmr78518675ab.11.1720238057336;
-        Fri, 05 Jul 2024 20:54:17 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b12e6712esm1565477b3a.25.2024.07.05.20.54.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 20:54:16 -0700 (PDT)
-Date: Sat, 6 Jul 2024 12:54:15 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Will Deacon <will@kernel.org>, Joyce Ooi <joyce.ooi@intel.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marc Zyngier <maz@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: controller: add missing MODULE_DESCRIPTION()
- macros
-Message-ID: <20240706035415.GJ1195499@rocinante>
-References: <20240626-md-drivers-pci-controller-v2-1-94c811db7a51@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BEb/+bNpw4k0/OlOTSoSmH0xT3iME0ny60bKPxXQadgFevqb/A3XV5yALGDx5K65jQf0aw938Bf7wHHolC3OYGGwbDurPcP1pOCw/zGGJb5UmEIo41xAnshS02PvKEobCtL5T37lRsc2Tn9X4klVVrfdrHsP0DttZdQzfM/nmAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 1FCD868D0E; Sat,  6 Jul 2024 08:08:19 +0200 (CEST)
+Date: Sat, 6 Jul 2024 08:08:18 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>,
+	Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Keith Busch <kbusch@kernel.org>, "Zeng, Oak" <oak.zeng@intel.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v1 18/18] nvme-pci: use new dma API
+Message-ID: <20240706060818.GA13470@lst.de>
+References: <cover.1719909395.git.leon@kernel.org> <47eb0510b0a6aa52d9f5665d75fa7093dd6af53f.1719909395.git.leon@kernel.org> <249ec228-4ffd-4121-bd51-f4a19275fee1@arm.com> <20240704171602.GE95824@unreal> <20240705055806.GA11885@lst.de> <20240705184846.GF95824@unreal>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,27 +64,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240626-md-drivers-pci-controller-v2-1-94c811db7a51@quicinc.com>
+In-Reply-To: <20240705184846.GF95824@unreal>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hello,
+On Fri, Jul 05, 2024 at 09:48:46PM +0300, Leon Romanovsky wrote:
+> In that case the flow is dma_map_sg()->iommu_dma_map_sg()->dev_use_sg_swiotlb().
 
-> When ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/dwc/pci-exynos.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pci-host-generic.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera-msi.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mediatek.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mediatek-gen3.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/vmd.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-apple.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mt7621.o
-> 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+Even for that you'll still need to check the first and last entry
+for being kmalloc misaligned if we assume that all middle entries are
+aligned (which for NVMe they have to, but we're probably better off
+figuring out a way to enforce that).
 
-Applied to misc, thank you!
-
-[1/1] PCI: controller: Add missing MODULE_DESCRIPTION() macros
-      https://git.kernel.org/pci/pci/c/df472e9b08e2
-
-	Krzysztof
 
