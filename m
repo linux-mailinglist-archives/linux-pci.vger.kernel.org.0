@@ -1,170 +1,120 @@
-Return-Path: <linux-pci+bounces-9875-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9876-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A72A9293C3
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 15:28:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85CA5929453
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 17:08:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9434E1C20E6D
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 13:28:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CB281C211FB
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jul 2024 15:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 913B961FCE;
-	Sat,  6 Jul 2024 13:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2365D13174B;
+	Sat,  6 Jul 2024 15:07:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="UfvdYXaH";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="SgR4mwPu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igsRWnH5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F86482D3;
-	Sat,  6 Jul 2024 13:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDBD1CA9E;
+	Sat,  6 Jul 2024 15:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720272505; cv=none; b=KHGvH7Hrt9INzxw3CSmxGnVF0faMxqVxov5OsCJqXvpcotpSIo0zLkmocp4fz7es7IuC6IvaAkUqss2wZ3+/NJ/a+Eub5oSy/40DBn8wrN0XndWMrISGvry5zzG455f+7O9SKF/ZXL41S5llPDJwl6eClL5/1cuHAHkOFNT94nI=
+	t=1720278479; cv=none; b=QPp5NErh+6gohdMZCEJ8LCaLd/BHlH6n8QYZFTPigtVyaa8vvxQ1cF1ugyGbrvQsh1J1MPMniNcMLIftkp62HgcIC5hD4oor/QVOCMd0+7dTirN3SKiufMk27erFZOB1g1SKOLabceuqRF2HkSSJ+gneLZRVZn4SPMk1z0CagZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720272505; c=relaxed/simple;
-	bh=+YOserGKjpmqK1DcdX+zb0jn/RQAHpubIlZ0wMr/FuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sCOeHbjPb6SOuZg1ucX2GywJ4ulWMp9q/itYIlbcUiU0Rf98xV0E5UH7JHwOHSoUGFtcKHXQ+A50l8NqvqGlnlgfbGtLzNsEB38+63K9VlMkEk6PVdb4Abd+rl962X5kr7XHcMociRxmqW+GIEA1/dku68lcOROkLyGCpZqYSHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=UfvdYXaH; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=SgR4mwPu; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4WGWRM2kz2z9sWp;
-	Sat,  6 Jul 2024 15:28:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1720272495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ZHVRL15PnSrx71qs8MKdRnPeHyG2B0QZU0YiU4awXBw=;
-	b=UfvdYXaHY2epDVfv14vStlUtGyuJfuavf+e8MTeO8cFJbjeHlEIWaUZvqZ6uV0aGjPLg+m
-	YvsIQVMXQDQhSCARH7LmMO/cBuv5M1ytNB9xqNDa8kwT5I5DkvNDO3KuDVc9wKSoyeIdp5
-	rSje2fpv0KSAZF24E5ekNH9PkBfOSerRtNdJ8aQZHY1iS0XD1lEliG3AiOq5ggNM9I0F4R
-	LO6H6BVLIpzzHBsfEWM/7HDyBjHbN8pacWoF3znVj7RhfPVBfOevnqHyJXhLvr3nZaO0wH
-	DnWvvpZfsN/4j6ETPsvPbjCdLYmTyjG15q1pNwWX/q+SAyZsWMdJMKnQtJDfCA==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1720272493;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ZHVRL15PnSrx71qs8MKdRnPeHyG2B0QZU0YiU4awXBw=;
-	b=SgR4mwPusxQDIqQmEiUmCbflZEiXB24ablBX3D7fp+7TCBhyuZ4JwzX3Ht/JoODctuEZbo
-	uE4NWqtCSsruCb43w5AYa/zUSCsicmLeRS4uutjFnAPa0gCDKZTfpPyqujY44Q8HE65bYL
-	EFiz/t7KtVqCAy64I3HxyfMXtwLdyWEDnTu8wFcd10RGytzl/5mhE3MTzZAYmSO52TWO4x
-	lCivAiSjaLPag+TZ97u6mTmY3Q8w96Hc6VBHihsVxAM/QSJu+TU3Lp7xvDjWqKcMAmAyWm
-	YVXh7loF2TOv/hOw3h/eg/gT55QcyA6wftIkOoaZv/22FSoMMi7ksyd+XzP7Hg==
-To: linux-pci@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] [RFC] genirq/cpuhotplug, PCI/rcar-host: Silence set affinity failed warning
-Date: Sat,  6 Jul 2024 15:27:55 +0200
-Message-ID: <20240706132758.53298-1-marek.vasut+renesas@mailbox.org>
+	s=arc-20240116; t=1720278479; c=relaxed/simple;
+	bh=kN7BNkKB+q1VniaudwOp2tJM4ZcCoG9XGgAHAIqzsA8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lWE50lpM+VVWpoUQ8Eu9uwEl1TgVqwmMUy/0tgdlTrRZY1uDRZWOFqc2qlBCmkv/FwXLBvWQmSk4EJlRWriK/vY9zYlyBXE/eCcfxfEAM9fsoYkQQmK+zRj7UC2nUg4WI1wDbGE+ZdjMb+XFW9FtI9i40P8ClHFa2KwODRRdviw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igsRWnH5; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52e9f788e7bso2655343e87.0;
+        Sat, 06 Jul 2024 08:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720278476; x=1720883276; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IR3n0YOSDNRlaYf+6kWGi9hthaw2SKnILPsbGs3PKS4=;
+        b=igsRWnH5WE9HJyYVvICbEP5Hlzkip1qdmTBnwOFLEI06qELYZ1o57ejHlt0tDMmJwl
+         5OY5J2AZMjqGM906JSIv9/4OnBeJxOC4KV5GpDLU5ptHICf901/RdVCYAV66Yf6TDYm3
+         iLm3cJbemDnwUlHR3MgLCzcJjIw53+jDnTw8oU5+p96wmzqFzSSFZ7oD/Fu9/LOm0tK1
+         90gftIqE/d16gluzD5NmLdsiE3cD9MT41wq1lxqWqkLJjaDFAg2OI6a1i1C2VAK1QSsa
+         5g6Nkvg6BvinqYbQN6i53sPEp1Bm5NpFVuCHJWj8o49ZQe7wicmGDGzl/D9DTdAnMbgO
+         XMFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720278476; x=1720883276;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IR3n0YOSDNRlaYf+6kWGi9hthaw2SKnILPsbGs3PKS4=;
+        b=wDw3yOfbR7Xlt/hII8bfQB3mOhTGJyoS+hjMI7/pstxiYC+JAGkkhz2ZkOH545yFfA
+         9zB5PzF6ZDhK3PUuVYmECLYp/2jyr9QgWujL6Pxl6rbArF7OelxX63yGPZJYdfX3/JfD
+         hh4LdNmVC4D1DqWZQLcE2PUIxpoCyZQJoR9pkcJanF+uu3lqyvHgVzTi6Ka+rew6lEk3
+         R0OC/qKOEo4vyjCGlyKYjFial1gckFVayNee7Pq57E/dftk0E6wqMEh0oQvUFgJes1b+
+         ca13e21L0rEosH+OH18jQD8eoxPjPh2w/ESXpyYqXC745J8xfbPzaVNx/las3yqHMfVR
+         tvVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMXdlDAqIc2ACAZlGFipAp2LxvYL2O/D7OjLlbb/PaOQmORPBRgc4iZtXZnSOp4WYVoHWyM1sRS3B5GkDeeYeod9MNL5HXO2LRP2p8
+X-Gm-Message-State: AOJu0Yw8oVHIpg51AZ4zRBmjuSFxaHAiFKz8m68Ea0W/2db/R9zafOVW
+	xqgHaeBM67pQ6nOqOjk6ap1cVT8w+qhP9yYshTxEeSoGWETCbH7+
+X-Google-Smtp-Source: AGHT+IFfue8oOZphMo3omglURELUTg+oQzJA9svdv0kMBCC+KibDQJ7xEWCvbp9Hr3xSruXHrlKCfA==
+X-Received: by 2002:a05:6512:20b:b0:52e:9b9e:2c14 with SMTP id 2adb3069b0e04-52ea06e23a4mr5029821e87.60.1720278475359;
+        Sat, 06 Jul 2024 08:07:55 -0700 (PDT)
+Received: from [127.0.1.1] (2a02-8389-41cf-e200-d11b-8ec4-ea76-796c.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:d11b:8ec4:ea76:796c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367a1805e53sm5896437f8f.22.2024.07.06.08.07.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jul 2024 08:07:54 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH 0/2] PCI: kirin: cleanup (dev_err_probe() and scoped loop)
+Date: Sat, 06 Jul 2024 17:07:45 +0200
+Message-Id: <20240706-pcie-kirin-dev_err_probe-v1-0-56df797fb8ee@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: 07b05804bee78fc8a55
-X-MBO-RS-META: srdmci7tm17pehydis9zuaepjse7i1sx
-X-Rspamd-Queue-Id: 4WGWRM2kz2z9sWp
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMFdiWYC/x3MWwqDMBBG4a3IPDsw2oqXrYiIjX/sIMQwASmIe
+ 2/w8Xs456IEUyQaiosMpyY9QkZVFuS+S9jAumZTLfVbWmk4OgXvahp4xTnDbI52fMDienk1Vdd
+ 531POo8Hr71mP033/ASlcKQ5qAAAA
+To: Xiaowei Song <songxiaowei@hisilicon.com>, 
+ Binghui Wang <wangbinghui@hisilicon.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720278473; l=651;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=kN7BNkKB+q1VniaudwOp2tJM4ZcCoG9XGgAHAIqzsA8=;
+ b=S9X/yWTuP6Fy75uz7cQW2oiv/bsUWuUJTjgmNfpGG9CcBOTctVgHT4+4gFvxlhLzuG9L/yw3u
+ 9Cpw0axS/FEBScKqkXfrbN6mGjbRIgC8hLy4IwNg2sObhSCFsMmMgQg
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-This is an RFC patch, I am looking for input on the approach taken here.
-If the approach is sound, this patch would be split into proper patchset.
+This series removes some patterns that require multiple steps to achieve
+what single calls can achieve.
 
-Various PCIe controllers that mux MSIs onto single IRQ line produce these
-"IRQ%d: set affinity failed" warnings when entering suspend. This has been
-discussed before [1] [2] and an example test case is included at the end
-of this commit message.
-
-Attempt to silence the warning by returning specific error code -EOPNOTSUPP
-from the irqchip .irq_set_affinity callback, which skips printing the warning
-in cpuhotplug.c . The -EOPNOTSUPP was chosen because it indicates exactly what
-the problem is, it is not possible to set affinity of each MSI IRQ line to a
-specific CPU due to hardware limitation.
-
-```
-$ grep 25 /proc/interrupts
- 25:   0 0 0 0 0 0 0 0   PCIe MSI   0   Edge   PCIe PME
-
-$ echo core > /sys/power/pm_test ; echo mem > /sys/power/state
-...
-Disabling non-boot CPUs ...
-IRQ25: set affinity failed(-22). <---------- This is being silenced here
-psci: CPU7 killed (polled 4 ms)
-...
-```
-
-[1] https://lore.kernel.org/all/d4a6eea3c5e33a3a4056885419df95a7@kernel.org/
-[2] https://lore.kernel.org/all/5f4947b18bf381615a37aa81c2242477@kernel.org/
-
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 ---
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
----
- drivers/pci/controller/pcie-rcar-host.c | 2 +-
- kernel/irq/cpuhotplug.c                 | 6 ++++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Javier Carrasco (2):
+      PCI: kirin: use dev_err_probe() in probe error paths
+      PCI: kirin: use for_each_available_child_of_node_scoped()
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index c01efc6ea64f6..2314b2b30df8a 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -660,7 +660,7 @@ static void rcar_msi_irq_unmask(struct irq_data *d)
- 
- static int rcar_msi_set_affinity(struct irq_data *d, const struct cpumask *mask, bool force)
- {
--	return -EINVAL;
-+	return -EOPNOTSUPP;
- }
- 
- static void rcar_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
-index eb86283901565..822bd6ca40bf9 100644
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -147,8 +147,10 @@ static bool migrate_one_irq(struct irq_desc *desc)
- 	}
- 
- 	if (err) {
--		pr_warn_ratelimited("IRQ%u: set affinity failed(%d).\n",
--				    d->irq, err);
-+		if (err != -EOPNOTSUPP) {
-+			pr_warn_ratelimited("IRQ%u: set affinity failed(%d).\n",
-+					    d->irq, err);
-+		}
- 		brokeaff = false;
- 	}
- 
+ drivers/pci/controller/dwc/pcie-kirin.c | 49 ++++++++++++---------------------
+ 1 file changed, 18 insertions(+), 31 deletions(-)
+---
+base-commit: 412d6f897b7a494b373986e63a14a94d0fbd0fdb
+change-id: 20240705-pcie-kirin-dev_err_probe-0c9035188ff9
+
+Best regards,
 -- 
-2.43.0
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
 
