@@ -1,116 +1,131 @@
-Return-Path: <linux-pci+bounces-9892-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9893-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5D7192981E
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 15:32:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A8D7929833
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 15:54:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34966B21822
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 13:32:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85F961C20A58
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 13:54:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C46518029;
-	Sun,  7 Jul 2024 13:32:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AB2221345;
+	Sun,  7 Jul 2024 13:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjLMVxwc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7966E12E75;
-	Sun,  7 Jul 2024 13:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D131E532;
+	Sun,  7 Jul 2024 13:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720359132; cv=none; b=XduSonQ+b3HF7ykHf1P/lLEm+0B+z403H/QuzbEt9MRvpAKeloYSX5Uq1HUrVz6OdhS5e2M9exlxIVqKOpbKUhwKvvuHjRJyvtsLUTvyGjfTStoJ0VYdcdpPRhIPPXwTIyU48J5ekQ4R6irsnLvep8ZzJ6LCAOdvF3uglEsrMf8=
+	t=1720360455; cv=none; b=aRl500JnAvgzaFaEP5fW1xRRNN+zQ0XF0e56oQsbbc+z+HqebaYDyB5XTxjod12yLFdvx+Y5sJIh1LDiIRmc+67IjDZNrHTqxLz+sotWDmJ16t34XmubUqg/LsfUr3M4hya+aBrdXiB1qjI2D0NptLHZUl0r/YRy1M6AEmABPnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720359132; c=relaxed/simple;
-	bh=ynGU++zhioewJL2BkkX4ZIJhoDGCLiy4COlay3jKV6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sYgmtMTRW16oxikmRdsLe3aGovzUvXxb4A6X/Ytng3o0/TSE9mO79WAPJpGgYXflOvbCVbjZB8mfAiIrKRHdvDcBsQ/I+y0+kq37KLmxNidtd7bAsiyw0uBtcrAQZQsDbAqqSTfTWAQX8o6fL7PUf4x+UOJPWG1jKHTHAWU1+Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id A55EF100D943E;
-	Sun,  7 Jul 2024 15:31:59 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 6C2A255998; Sun,  7 Jul 2024 15:31:59 +0200 (CEST)
-Date: Sun, 7 Jul 2024 15:31:59 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	caleb.connolly@linaro.org, bhelgaas@google.com,
-	amit.pundir@linaro.org, neil.armstrong@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci: bus: only call of_platform_populate() if CONFIG_OF
- is defined
-Message-ID: <ZoqYz-MWD06GmKPJ@wunner.de>
-References: <20240703091535.3531-1-spasswolf@web.de>
- <CAMRc=Md=PnpHVGGO6Nb_efVZ0a3cMxWbLvYmkka5Wznks70drw@mail.gmail.com>
- <ZokDkyfn2Xt2Ki-i@wunner.de>
- <CAMRc=McBpqP=qSbxDGcreTcktq_0vQH_PrtQS0V=Mw3w-_Zmwg@mail.gmail.com>
+	s=arc-20240116; t=1720360455; c=relaxed/simple;
+	bh=1dKlQO4wGI6Bmh4Kk42Q8QE+Ynhz/UihyldzXeyqZVo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Gma7SZpjusxmk7SMES5XZmLeCo3v1XkFa9E8HXWkVIfqsBkKx3J8VKfDtGr8m0oYEO6s1xTm9ZenfqGPn7AaQrSTelICdV8OjyXIzQwvYzTcyG1rRhjbE5C/LfruMhuPstdD0lBVcwVQ+1hn/f9YIesp2jRvkarEQzoPQVgnCyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjLMVxwc; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42666fd6261so2341595e9.3;
+        Sun, 07 Jul 2024 06:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720360452; x=1720965252; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6QamPIeb2ulP2v+viFyxNqj6Z6PsQ7JsthoBDWMeRgE=;
+        b=cjLMVxwcs8ZAeJmwFuTUC1OG1/cNKfW2ykh/cpzbG9Yy4aH+A96y82pneELmS7Y7Zl
+         q9d7XYACWMIkDBjGRWUa3GVxklOBbSGkuXv+bNTY+p4bAxDHmtGJk0AObjTj+zv2rGPm
+         M63/bY8fliZxEP3pyYfLW9dAZ6z4IzzU53B0oOCzf7H1deYAxFg4OiENgEN6m+i3rgBW
+         cG1vilzptBMDeo/2bMH4mUn0rXhg9AqY7V91tuY820x/RXjzsYeb1Jn1brUcaw+QQTeZ
+         rWNoz8nUlJ5QHoB5PlFHrQvI8VnS2Jo+Cjt59jfB5ki2Yrrnt7MTPs/pNI+oCRsFvy3N
+         0uNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720360452; x=1720965252;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6QamPIeb2ulP2v+viFyxNqj6Z6PsQ7JsthoBDWMeRgE=;
+        b=T6G2LmrH89cye9Mcz07XFOQTDZ31PhkV6MuCgu1UXqv0zVSPBpECRcds+QWHVdp6bo
+         S1nXgKmayGpJkcXi3pIPH4T4BeX1Vrbf5LZiW5E1108yOSc1ikaKe0h29KPwKXgk2+bC
+         NJTt2DgKZMRFhaqp2QpiIgHKVDtey6HXIJ4pp9VdCf8ogUdtbwNTVLp9xGFReQaTauO+
+         IBVoY1bzrl8qMuMyJlvLi5pGeRLFMdDIQd99/+0Z9lqkGqSxp+Qb+nY8BN9tV9u/1ilo
+         E/IKWLEeMLFUVmQzzbgVYyUgfvLUvk4Vdw1dtTLhPoqVhZfsFMj/YhImJNrusi/fj85g
+         iY+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWSdmjokWEOdtcaP+xpwVMGkoRIzT++TivHL18CGax95TeTisz5ZZFBulp/PAgjZMyZRajN2kyQXT0GO77FpVQU1YMJgY3PsTo+QyDF
+X-Gm-Message-State: AOJu0Yxsp1/IvT4+kxCYZcglOlU04gQZAOA8zon4HF7+ynxy8diYpim9
+	pPSyvbSx0YEloBkgaSbbUcRqMQGeMv2ZNYLFkOFhdQB9Dob97Cup
+X-Google-Smtp-Source: AGHT+IESzT1XUgVRMF488izUXht3+igsQhXI+ukrLyeh7D4Yw6XJibWUnht1jr2UA7/arYTX1I+7HQ==
+X-Received: by 2002:a05:600c:68c5:b0:426:60bc:8f4e with SMTP id 5b1f17b1804b1-42660bc9349mr19671835e9.5.1720360451994;
+        Sun, 07 Jul 2024 06:54:11 -0700 (PDT)
+Received: from [127.0.1.1] (2a02-8389-41cf-e200-768b-c763-2748-445c.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:768b:c763:2748:445c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a2fc49fsm129684005e9.39.2024.07.07.06.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jul 2024 06:54:11 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH v2 0/2] PCI: kirin: cleanup (dev_err_probe() and scoped
+ loop)
+Date: Sun, 07 Jul 2024 15:54:00 +0200
+Message-Id: <20240707-pcie-kirin-dev_err_probe-v2-0-2fa94951d84d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McBpqP=qSbxDGcreTcktq_0vQH_PrtQS0V=Mw3w-_Zmwg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPidimYC/3WNyw6CMBBFf4XM2jEF5eXK/zCEQJnCRKFkahoN6
+ b9bSVy6PCe5527gSJgcXJINhDw7tkuE7JCAnrplJOQhMmQqO6tS5bhqJryz8IID+ZZE2lVsT6h
+ 0rU55WlXG1BDnq5Dh156+NZEndk8r7/3Jp1/7ixb/oz5FhXkxmLIuTV8RXce548dR2xmaEMIHe
+ FjmfcAAAAA=
+To: Xiaowei Song <songxiaowei@hisilicon.com>, 
+ Binghui Wang <wangbinghui@hisilicon.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720360450; l=1033;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=1dKlQO4wGI6Bmh4Kk42Q8QE+Ynhz/UihyldzXeyqZVo=;
+ b=Gg1vVXlPiJb15gdFQ0og90C9bOYQYuLKjSE10dlwDTTQn7NKh52JFelv0Yquld59XSdJ5aneo
+ mRUu1ZDSWgTDcOu4bC5wyh+qG+Zb8VnZUrcEEofE5LuQNL6rlvIAhkx
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-On Sat, Jul 06, 2024 at 07:12:48PM +0200, Bartosz Golaszewski wrote:
-> On Sat, Jul 6, 2024 at 10:43???AM Lukas Wunner <lukas@wunner.de> wrote:
-> > On Wed, Jul 03, 2024 at 11:32:05AM +0200, Bartosz Golaszewski wrote:
-> > > On Wed, Jul 3, 2024 at 11:15 AM Bert Karwatzki <spasswolf@web.de> wrote:
-> > > > If of_platform_populate() is called when CONFIG_OF is not defined this
-> > > > leads to spurious error messages of the following type:
-> > > >  pci 0000:00:01.1: failed to populate child OF nodes (-19)
-> > > >  pci 0000:00:02.1: failed to populate child OF nodes (-19)
-[...]
-> > > > --- a/drivers/pci/bus.c
-> > > > +++ b/drivers/pci/bus.c
-> > > > @@ -350,6 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
-> > > >
-> > > >         pci_dev_assign_added(dev, true);
-> > > >
-> > > > +#ifdef CONFIG_OF
-> > > >         if (pci_is_bridge(dev)) {
-> > > 
-> > > There's a better (less ifdeffery) fix on the list that I'll pick up
-> > > later today[1].
-> > >
-> > > [1] https://lore.kernel.org/lkml/20240702180839.71491-1-superm1@kernel.org/T/
-> >
-> > That other fix doesn't feel very robust as it depends on
-> > of_platform_populate() never returning -ENODEV in the
-> > CONFIG_OF=y case.
-> 
-> If we even have to play these ifdef games then the stubs for
-> of_platform_populate() are broken and should probably return 0 with
-> !OF as otherwise the stubs themselves are useless.
+This series removes some patterns that require multiple steps to achieve
+what single calls can achieve.
 
-The stub was introduced by commit 964dba283439 ("devicetree: Add empty
-of_platform_populate() for !CONFIG_OF_ADDRESS (sparc)") some twelve
-years ago.
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+Changes in v2:
+- Remove error value from the message "failed to parse devfn: %d\n", as
+  it is already handled by dev_err_probe().
+- Fix capitalization in error messages.
+- Return -ENODEV and provide more appropriate error message if no
+  dev->of_node is available.
+- Link to v1: https://lore.kernel.org/r/20240706-pcie-kirin-dev_err_probe-v1-0-56df797fb8ee@gmail.com
 
-From a brief look I'm under the impression that the commit used -ENODEV
-on purpose (instead of 0).
+---
+Javier Carrasco (2):
+      PCI: kirin: use dev_err_probe() in probe error paths
+      PCI: kirin: use for_each_available_child_of_node_scoped()
 
-There are 100 files in the kernel source tree referencing
-of_platform_populate().  The majority is probably not compiled
-in the CONFIG_OF=n case, nevertheless changing the stub risks
-regressing some of those 100 callers unless great care is
-observed.
+ drivers/pci/controller/dwc/pcie-kirin.c | 54 ++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 34 deletions(-)
+---
+base-commit: 412d6f897b7a494b373986e63a14a94d0fbd0fdb
+change-id: 20240705-pcie-kirin-dev_err_probe-0c9035188ff9
 
-Just making this conditional on IS_ENABLED(CONFIG_OF) is the
-least risky option.
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Thanks,
-
-Lukas
 
