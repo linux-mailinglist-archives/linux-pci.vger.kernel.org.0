@@ -1,72 +1,79 @@
-Return-Path: <linux-pci+bounces-9886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3BE49296E6
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 08:54:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC8FB92973E
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 11:16:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D7121F20F5F
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 06:54:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE13B1C20D04
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 09:16:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 176C979CD;
-	Sun,  7 Jul 2024 06:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03FEE125DB;
+	Sun,  7 Jul 2024 09:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrzWOY/i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF58125B2;
-	Sun,  7 Jul 2024 06:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB448F9E8;
+	Sun,  7 Jul 2024 09:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720335243; cv=none; b=a/VfzrpoT9DnfaUt5WycwU+CRmqicuyY6JorBq/xuRBILyubndOOmp6+L7M0b/zdmFbECeanTvPvGpAtlVEcfiTTcAWJvK8OPQ2ygXHFLfidzeZMj7X/pPuodI74dD7jsDB85RLJL51RCCpoiTrvtOobNP7IMm/4ytZaxt7Gw78=
+	t=1720343790; cv=none; b=MMjHHxnTYEWu+AbFMm1i/H9FAUuAVIQgo7du67r5PLEeZmXCdbvxVXFm+MiR2nnaGtACutkRbJ9Dc1Bz5zlA6zp/QVd/QA9cMVWYqhiK9D4/VystGNrn4ui5CzbQ4OIwT1Kf2Zz0NdnoqJckYzKcEEEVKrUWnwZaK3kknQO09ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720335243; c=relaxed/simple;
-	bh=0W2OvKgWkCMl1uTMluMqC8LesqCmJbfOCaU1FmjtyLQ=;
+	s=arc-20240116; t=1720343790; c=relaxed/simple;
+	bh=izDf2P+sHbjiti59EE/8GV6nvVep7QKF5KGW0AiU1Mc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SNWl5Di5vxHt7PbxQPmiF/rgRmgIe17f4sM/jO7DQXbLt+3h8cUn8VpQmf4AGNWsgs+GXayGSI2r/KPkoSI3AIJNu72jrK9K+CwBYnmdiVndkuIQJVqPt4o/UkaE5uLCTal3nTOBGWL3EKx0lVVYijC4GzTXG9Mf5NnOm/gTMNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fb05b0be01so17094655ad.2;
-        Sat, 06 Jul 2024 23:54:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720335241; x=1720940041;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4JYBMADKU5e43KLTkm4N5GBLxm7MyujvJUYfrOxGV6o=;
-        b=HrmpOYrj84goPDx9YkK01Qka4l5m9irwVZCBWh00/kfGHI4cHllAn9A1g0+97TrohE
-         YwN2bg3U/QW5VLaUN4hk6LLKcyKt+5PCOOX53vBbjznTuKy6eB7lJ2x/BSMbcIfOHYgy
-         8+TbAetCcC75D178BKZEssuedUxUF3ORGgFhQ6S5BCNhs6Qr9xMASceYBIRNbLoZMNUz
-         eLKOOLl/Ekbt6JRJy+JAFzqlm1Vmwckcr+4hCFF1sa2M93TA/Y1KPE3vgFEFd7qPdzpw
-         H3A1fmACZaSYj7haZxlXCH61+eobkouykgRDYVkKBiPZKcaYyaJ4FpiFW1s6prkYr6GG
-         BzzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHWP5xLdHFveonie0EW6auSu5dJPVf3kyXu9t1te8qa46OQOTWPEZkQHGBoZqSgDlgQdhBjuqVIav7iDfsB3/+1MfBGdfN/QKgBBzH9HTafVfmn20U7Qd5/9xrZP2S1jhsOAi3dlg8
-X-Gm-Message-State: AOJu0YzeLUZ7ZPzJep5K5nsg4WGroLwu9SbaNxvhRgBgb+95sMDUuMpb
-	8W3ftx8A6NbPGrdCHAS4d2n4Pu6eI7jkA4bCjPv+gIskd9iCrlwB
-X-Google-Smtp-Source: AGHT+IEQ+FaOtzEXvU/iRRCzYUPGAkAvN7iYcrCrlRo+z+uOsIDeaKNAYLV1qz1NKphWv1sY69O5gA==
-X-Received: by 2002:a17:902:e546:b0:1fb:6ddf:654b with SMTP id d9443c01a7336-1fb6ddf666fmr27777895ad.65.1720335240768;
-        Sat, 06 Jul 2024 23:54:00 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb3dbd7dcdsm50783255ad.157.2024.07.06.23.53.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 23:53:59 -0700 (PDT)
-Date: Sun, 7 Jul 2024 15:53:58 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: kirin: use dev_err_probe() in probe error paths
-Message-ID: <20240707065358.GA3809216@rocinante>
-References: <20240706-pcie-kirin-dev_err_probe-v1-0-56df797fb8ee@gmail.com>
- <20240706-pcie-kirin-dev_err_probe-v1-1-56df797fb8ee@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=V9reP2PqMclml2dOmO2JWWxuGowhCQMaZOZcCC5T31r39cban/wyZfzz6HyWhedoTRGM6Vjsc0b5wJ2jzldPmXzzCRbnpbWAuP7hieku8CFXC9d4qspt50Ju8o4sFrj7Bkvj53ICRkqWoj3OGg9N9SWyra8MvNCTv2xitPgK+fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrzWOY/i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E6FC3277B;
+	Sun,  7 Jul 2024 09:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720343790;
+	bh=izDf2P+sHbjiti59EE/8GV6nvVep7QKF5KGW0AiU1Mc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CrzWOY/iDzSJOaiIMaP3xE97eiLSDi4CB0wI1+TEQAHNCz2g05KYsFt/aL1GPMP5r
+	 HBnYK2RTylUHc0Vx3NyVD3bOosNt0zckrQesG42uJ6MRet5D6FmAW0PeAe7m5PvfaN
+	 iwrSjlS4jkggMxmOqgmohWVRswxNEnNV8RBiej41b/zEaRlr+A3diLegBHOwF8ZWa6
+	 9dtd/aY/wBeNy4rWL2+0ucK1I0ZgukePTbNlgwltGYYIXxXU7unResX6O/FNT5nk51
+	 W41NViVj5N3M41fW4A1fLX7G15TRIE214CPnx2WARzr2ky472lBfuc0iEJOgY0DDB3
+	 Pn2He452QkIyw==
+Date: Sun, 7 Jul 2024 12:16:26 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Jens Axboe <axboe@kernel.dk>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
+	"Zeng, Oak" <oak.zeng@intel.com>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
+Message-ID: <20240707091626.GH6695@unreal>
+References: <cover.1719909395.git.leon@kernel.org>
+ <20240703054238.GA25366@lst.de>
+ <20240703105253.GA95824@unreal>
+ <20240703143530.GA30857@lst.de>
+ <a7f1c69a-bbaf-4263-b2c2-3c92d65522c2@nvidia.com>
+ <20240706062604.GA13874@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,42 +82,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240706-pcie-kirin-dev_err_probe-v1-1-56df797fb8ee@gmail.com>
+In-Reply-To: <20240706062604.GA13874@lst.de>
 
-Hello,
+On Sat, Jul 06, 2024 at 08:26:04AM +0200, Christoph Hellwig wrote:
+> On Fri, Jul 05, 2024 at 10:53:06PM +0000, Chaitanya Kulkarni wrote:
+> > I tried to reproduce this issue somehow it is not reproducible.
+> > 
+> > I'll try again on Leon's setup on my Saturday night, to fix that
+> > case.
+> 
+> It is passthrough I/O from userspace.  The address is not page aligned
+> as seen in the printk.  Forcing bounce buffering of all passthrough
+> I/O makes it go away.
+> 
+> The problem is the first mapped segment does not have to be aligned
+> and we're missing the code to places it at the aligned offset into
+> the IOVA space.
 
-[...]
-> Use dev_err_probe() in all error paths with that construction.
-
-Thank you for this nice refactoring!  Much appreciated.
-
-[...]
-> -	if (ret > MAX_PCI_SLOTS) {
-> -		dev_err(dev, "Too many GPIO clock requests!\n");
-> -		return -EINVAL;
-> -	}
-> +	if (ret > MAX_PCI_SLOTS)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "Too many GPIO clock requests!\n");
-
-Something that would be nice to get consistent: adjust all the errors
-capitalisation to make everything consistent, as appropriate, so that it's
-either all lower-case or title case.  A mix of both often looks a bit
-sloppy.
-
-Do you think this would be something you would be willing to clean up in
-this series too?  Especially since we are touching this code now.
-
-> -	if (!dev->of_node) {
-> -		dev_err(dev, "NULL node\n");
-> -		return -EINVAL;
-> -	}
-> +	if (!dev->of_node)
-> +		return dev_err_probe(dev, -EINVAL, "NULL node\n");
-
-Perhaps -ENODEV would be more appropriate here?  Also, the error message is
-not the best, as such, I wonder if we could make it better while we are at
-it, so to speak.
-
-	Krzysztof
+Thanks for the explanation.
 
