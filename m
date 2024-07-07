@@ -1,101 +1,78 @@
-Return-Path: <linux-pci+bounces-9897-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9898-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC1A792995B
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 20:47:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37E0C929961
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 20:56:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D49DC1C20615
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 18:47:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D4D1E1F20FD7
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jul 2024 18:56:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26B5F3D57E;
-	Sun,  7 Jul 2024 18:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sDntQ3FT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JtoKb1ia"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431E957888;
+	Sun,  7 Jul 2024 18:56:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA28A1429B;
-	Sun,  7 Jul 2024 18:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECCB1E529;
+	Sun,  7 Jul 2024 18:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720378063; cv=none; b=XofPW/LIKbbjWncmMqKCUDOaPqN/g6RpIGulw+IzVfLjOpfdYwNlLzT8pbtL4yem0qtOPb5qxk/iOuzugHBFMW6Z25vHfb7R5wFdC1BpcVKmei5K4yMm+JjZoYK7s+0VA1nLLMxBoEjyi/MeeysFIH+UbR5r1vWYGjCPejeu0oE=
+	t=1720378611; cv=none; b=mM+7KdZmAFCKdayEUyS0kp4wfXPPkGTwKCzP9N3Zr2aVtobTcXEcVHTTDZc37XgY6tFmdnbMc6kkhbuxC86oLENwISaEoBI3sVjXl9I13svUlSbfntQDv97Ine2lCrGo5qvdTcjL65MnSiFwLUFMxRYG5SfDmfFovsXES8dDGTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720378063; c=relaxed/simple;
-	bh=v4h9od8K6fTONBvJosxZ6rQ5SiZd8ic36+1lPp+yduY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=azcXFxQZZLXdE7fsUVp6VelAfh/mekOE8o/LJMFzNV0FEtzsJXMASE8nEYZjGDo3MCKMiF2zq8CTLFTr64dKdxm1kpmPL1LssEZLhrA0q9F5kAUHAogyfCxJOGbw+gZknHFYzGqbs8udzNNV8e5oUy1mc5FnUzP1A7P5DJhsDPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sDntQ3FT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JtoKb1ia; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720378060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SGabcz1S+/3HqptjW5xYki+/7SJtSmlNFb9FyOSKDUs=;
-	b=sDntQ3FTjBt3eqSfX9DOeKBLbWiEr+G0N8R9bFsC7b3yyC9uBFA0P29rjHuOAOGIb3mYJh
-	qTzhMlrTglYzexCJN6YwleyNY/QZAKlpwNEb2z9Sr7BJqcEOuOQYGGSzYe3fb7ZQ7IqBwo
-	FpxawuqQoLg/Sp+wV86NdU9LUonvNM/Qze0SUeHGSbJ94vzd69EVaJ+F3Bxtm0bcnC6h2y
-	pJJ/WZktD0ulVwFUkQo4T7pPY2Lg7zlv+uaBmCAe9QHjsHks9E9o44nFhiNgRbOKYLBGx1
-	crPZLMQOsVxUdbdZpxUTAV4bhNFcQmv2qP47sx7dYAi1lmgE5o6PBFNxEB/EAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720378060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SGabcz1S+/3HqptjW5xYki+/7SJtSmlNFb9FyOSKDUs=;
-	b=JtoKb1ia/90BOJcqkbEkYho7f3FcH2fphFta2N3Ws6G9dtZSOuVEBx8ripsCgGZDQKnp7R
-	SHRu789wnTetbFBA==
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, Krzysztof =?utf-8?Q?Wil?=
- =?utf-8?Q?czy=C5=84ski?=
- <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, Jisheng Zhang
- <Jisheng.Zhang@synaptics.com>, Jon Hunter <jonathanh@nvidia.com>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, Marc Zyngier <maz@kernel.org>, Rob
- Herring <robh@kernel.org>, Yoshihiro Shimoda
- <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] [RFC] genirq/cpuhotplug, PCI/rcar-host: Silence set
- affinity failed warning
-In-Reply-To: <20240706132758.53298-1-marek.vasut+renesas@mailbox.org>
-References: <20240706132758.53298-1-marek.vasut+renesas@mailbox.org>
-Date: Sun, 07 Jul 2024 20:47:39 +0200
-Message-ID: <87h6d1vy2c.ffs@tglx>
+	s=arc-20240116; t=1720378611; c=relaxed/simple;
+	bh=WwA+gBa6WmaJrf+U9hWzrMFbTeN1iGQqbO34ilR7CWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a0CEu/rc3gy0lZCC54dbTA4KJcBpHtPjAiRs5a61qg4V4h9xqGJc8q8hFZsXdoglWQCv2pmjBngxSz+/PrngEUhtbWDARx9C9Id/6lscy7DQseTQ+I+eCmNz+eKKmH1h/PKXKQQ8RIjEzy4saeNZDLyvAZ1rrnJn0rMEkYBxPzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1F1F3300097A2;
+	Sun,  7 Jul 2024 20:47:43 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 0A37AD3DEB; Sun,  7 Jul 2024 20:47:43 +0200 (CEST)
+Date: Sun, 7 Jul 2024 20:47:43 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	caleb.connolly@linaro.org, bhelgaas@google.com,
+	amit.pundir@linaro.org, neil.armstrong@linaro.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Praveenkumar Patil <PraveenKumar.Patil@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
+ CONFIG_OF is enabled
+Message-ID: <Zoriz1XDMiGX_Gr5@wunner.de>
+References: <20240707183829.41519-1-spasswolf@web.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240707183829.41519-1-spasswolf@web.de>
 
-Marek!
+On Sun, Jul 07, 2024 at 08:38:28PM +0200, Bert Karwatzki wrote:
+> If of_platform_populate() is called when CONFIG_OF is not defined this
+> leads to spurious error messages of the following type:
+>  pci 0000:00:01.1: failed to populate child OF nodes (-19)
+>  pci 0000:00:02.1: failed to populate child OF nodes (-19)
+> 
+> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
+> 
+> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
 
-On Sat, Jul 06 2024 at 15:27, Marek Vasut wrote:
-
-> This is an RFC patch, I am looking for input on the approach taken here.
-> If the approach is sound, this patch would be split into proper patchset.
->
-> Various PCIe controllers that mux MSIs onto single IRQ line produce these
-> "IRQ%d: set affinity failed" warnings when entering suspend. This has been
-> discussed before [1] [2] and an example test case is included at the end
-> of this commit message.
->
-> Attempt to silence the warning by returning specific error code -EOPNOTSUPP
-> from the irqchip .irq_set_affinity callback, which skips printing the warning
-> in cpuhotplug.c . The -EOPNOTSUPP was chosen because it indicates exactly what
-> the problem is, it is not possible to set affinity of each MSI IRQ line to a
-> specific CPU due to hardware limitation.
-
-Why does the irq_chip in question have an irq_set_affinity() callback in
-the first place?
-
-Thanks,
-
-        tglx
+Reported-by: Praveenkumar Patil <PraveenKumar.Patil@amd.com>
+Closes: https://lore.kernel.org/all/20240702173255.39932-1-superm1@kernel.org/
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Cc: Mario Limonciello <mario.limonciello@amd.com>
 
