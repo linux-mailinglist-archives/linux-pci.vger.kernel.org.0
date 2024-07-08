@@ -1,256 +1,337 @@
-Return-Path: <linux-pci+bounces-9966-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9967-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09E4092AB76
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 23:47:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85DE092ABE7
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 00:16:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C4BF1C211B2
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 21:47:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A4221F22F4F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 22:16:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B72C44C8F;
-	Mon,  8 Jul 2024 21:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2618B14F9E7;
+	Mon,  8 Jul 2024 22:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HYdPNGuj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lass6E3i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4923F1CD23;
-	Mon,  8 Jul 2024 21:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720475234; cv=fail; b=hM2HzDkCtQ60JrCVKNWbFndKUbYbv2LkmY8wWKwfy+vV3pBXRllMSlsk/K8WaYOEE4ZKedVbZM8GICXF+LVpWzhD9Kqx1HEiuzdmLFgqFvE/tUxD5s5iBuE2ZzmUKO1uxtXQFsvuFYpHvoc/Czhf2b178Cvvp3gKHbzFVTn3L40=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720475234; c=relaxed/simple;
-	bh=/BwcokY2vW7tKXbWETim8k22TRJ7fHGY2SE6Fv9uJgs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KW1UQ4YYBZooONHPUqtDGLu531KG1TNq7C0wDybsuXatvV0dDFeggD0F7u0sjQnS2G9KxG6mIGWVtIl6TN/VVdXk6t/njqhgFdmTmCUL86aXvZCMD2synIov05OdlndW4z6THMfwrIUn7I8oVZEheul3p9EcccjuZms2EaZzQtw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HYdPNGuj; arc=fail smtp.client-ip=40.107.223.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=COXn5FvtDmgoRFVFWPLZpyHgBJrjfYPzswoHIZAL1G2gcB0oUD1PwLjorG/a9aNq1XRJLbPWeZmxhVGKNhgtEsTtdGXam5b761b27/RVmT3zogeqQYaIlZuKHrGMvVXejQqxToTvSQOBrC8TmJNIrZYd0U8yd5smEIAvvdcHoo+nYdZ7CXxMub/8N6xIqP4foL2A2dgcWqHv07l+DmSLc6YpqGoKLGhbzd/60xs5qO2aOqmRyaY1c9060NtbM0edRLFLrnDYq7AKzt9lyTOMWrw86JO/1Pd6WMyrLWW+tz9UCsvSV3BgqDQuJ3Bq01qmv6qH6btlk8/LNN9XhTSLEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OXdiJvLiOfy8bH3v7JnIC7YPid5NxFMs5jccm3ffUSY=;
- b=Phd3UlEXqQXGIIWg5ToE5uxljnFDKtRq5ql246YzXZZzjsYLePnTV3lNppH7zqgRDdEV7o1iOJzc/pjHAYWRJRS+s8KeJ8gl+T9LYVkkIKDBvJMnCMF/1tNxwrkgizXTYVl0Gvl8UHcvvm5yC2b+yKoSOudQ920a1FRu8dflRIPBnSYiITTYTcIpBu5z6/AncPjJMm63VbkspfWKxYEC+6XJX8fAR4wfc2NMj/TRN6mM8t9ixI3bmdNR9ExnAitSiOLdNcTvheJWMkwqqc8TS2Fl5zRd76NMRn31wX2Z+gc8D51Wpjab0DpZvQX3SQ+YMtpFWy/KG4Ipp0EWVqphPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OXdiJvLiOfy8bH3v7JnIC7YPid5NxFMs5jccm3ffUSY=;
- b=HYdPNGujRsQMeYTxa32GojFDIQpitQRoJAWhmrdnJV3mL1a05V3IV932xju/XVcCi12tY2WhGs8xjfJlXuqTpP9pIwk9vZvBlk0hP6sv+GaLAcPlB94ub2O6ZgdJace8tpGk280VhYTArr3nTqbEcxEEFR00fyKnLksT9bxojYE=
-Received: from MW4PR04CA0237.namprd04.prod.outlook.com (2603:10b6:303:87::32)
- by PH8PR12MB6820.namprd12.prod.outlook.com (2603:10b6:510:1cb::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.34; Mon, 8 Jul
- 2024 21:47:09 +0000
-Received: from MWH0EPF000A6734.namprd04.prod.outlook.com
- (2603:10b6:303:87:cafe::1d) by MW4PR04CA0237.outlook.office365.com
- (2603:10b6:303:87::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35 via Frontend
- Transport; Mon, 8 Jul 2024 21:47:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000A6734.mail.protection.outlook.com (10.167.249.26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7762.17 via Frontend Transport; Mon, 8 Jul 2024 21:47:08 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 8 Jul
- 2024 16:47:06 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <pstanner@redhat.com>
-CC: <airlied@gmail.com>, <bhelgaas@google.com>, <dakr@redhat.com>,
-	<daniel@ffwll.ch>, <dri-devel@lists.freedesktop.org>, <hdegoede@redhat.com>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<sam@ravnborg.org>, <tzimmermann@suse.de>, <thomas.lendacky@amd.com>,
-	<mario.limonciello@amd.com>
-Subject: Re: [PATCH v9 10/13] PCI: Give pci_intx() its own devres callback
-Date: Mon, 8 Jul 2024 21:46:56 +0000
-Message-ID: <20240708214656.4721-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240613115032.29098-11-pstanner@redhat.com>
-References: <20240613115032.29098-11-pstanner@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EB614EC44;
+	Mon,  8 Jul 2024 22:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720476950; cv=none; b=G9VMXy6d2yipXj5o9XWZ42IYQTDwR/pr/TnbLUjyC7TORk2V/oARQFdDYcjn971W4uJrLhqYUtJYCU8nUzdjUuYHqccpl95CQzPnLwDLX4uENxZztVnqcvGxmwVvXju5W5OoFxyqlkUTBUK+J+PQKJvEAP5sVQ5n9kLCnLiziRk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720476950; c=relaxed/simple;
+	bh=ymbu5+bIDcpN0rmlC5oWU/KXdLu7wOWeG7hHztdx8Gg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q0RfamCXKDGdJWErg7ymbttbbUO7VdjsJudaB8ud+8wvkwFWierb2H/PYgKaDNkKWANyUXczzeaUxvb9KsnLQu/EyBumhaxMoP2eNs9JLSGkIhY1Y5gui+emNciwhLF8QV4gBLOp/0p+QOtRQM1+YNR+EQnHX7KnqenUj7TLPgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lass6E3i; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a77c080b521so488829166b.3;
+        Mon, 08 Jul 2024 15:15:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720476946; x=1721081746; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=WakRVrhzYTWXcephGvejlAmFzJ/7jV1NnXpteDXimuk=;
+        b=Lass6E3iMA+UWW4RV+iMJ7WfgOsRHUIiLS+iP7l/NGf2U79oJT4T0SBR+VCJH7f7J2
+         0hLfKPc3jVuiYECqICoqrpdsSGwN8MCcRNTnb+wy82wGEElnJBU+jUgYBgShv0vtJAXR
+         jXTF6/DrM7ntJDg4yAcx5XQAzUf148SHpQuUNUbN89JwQl+4wo/z/cg9601cINj2lyzt
+         rkbaB6iQJ2fKMa8O5o30lm24T552W2Opo78lTQktigPakDiIfTa5Gdqw5FAyjHipBfZ7
+         42OUeHP6zIIdfH6qH8tGS9kGL8iRshRLaXe6d9MczLV/j2RBRmiVIOaGzi0uRM4DZjt3
+         x4Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720476946; x=1721081746;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WakRVrhzYTWXcephGvejlAmFzJ/7jV1NnXpteDXimuk=;
+        b=Jko+iYb7CSaYgr5EzxweH0xUGdhsCnQZ6FGfSCg8jmltppfVv1a/9BE9s56TIZL3Xn
+         WiZM0eJvXdvNf5yYswy9L3mR5JkKdwdHkM3rhqO3PeZkHfd7cT41viR8j12p0U6NQ2pC
+         UAPdcNq1kxxL+vzPzul0gC0V8P6tUBM+DeIasgfy8Nxl9m0JZQB8IuEti9XI2zWxosr9
+         rHjJLd7XOQ1CS3xPAa/vURWAJqHCBP/GRoWN4IB7nvBKErlHrqGWzv35RHfrQDgVWRJe
+         ajd+nzLNOvX1W2t4YDj7xSd7rS5PSMJxiJdpb06csFwLEUNf1ZWBTvpbyFsHisdMMKWE
+         y6Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2zvRMPalTUNAa8JXmR9BdsgT3Mocwt4d8d66gnQqbpoVsWJxr7xcpOeTt124obv7WuFysAiY+AingCVRfArVuV+FMU9pQ7NynGIeAk3DiyXPbbrA4pGl868CZrKvdYLNvvA5Zr4Mvif1NgYDhCXfGsM+/S9pW6T/WIjy3TJwO
+X-Gm-Message-State: AOJu0Ywavk2W69P8HGKgDL9NoW1MfptdGOWadsBLq4bFStvIvjflbELV
+	qRT2/ukQvhWiwcJdcz20NUKwjpYyKun8cKjBqyUSVJg4Vx3dzvNU
+X-Google-Smtp-Source: AGHT+IEZcHx32uwM0SrELtiDJgoF/S5vkZBXbHEgN/9T6mcWUeRzj4UwPkYWYyBBm364aazg6hohtw==
+X-Received: by 2002:a17:906:11ca:b0:a75:1006:4f23 with SMTP id a640c23a62f3a-a780b6fe8d0mr40318666b.34.1720476946294;
+        Mon, 08 Jul 2024 15:15:46 -0700 (PDT)
+Received: from ?IPV6:2a01:c22:7b0c:a200:89f2:32cc:d63b:a6ad? (dynamic-2a01-0c22-7b0c-a200-89f2-32cc-d63b-a6ad.c22.pool.telefonica.de. [2a01:c22:7b0c:a200:89f2:32cc:d63b:a6ad])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a780a6dc626sm26656866b.46.2024.07.08.15.15.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jul 2024 15:15:45 -0700 (PDT)
+Message-ID: <e1ed82cb-6d20-4ca8-b047-4a02dde115a8@gmail.com>
+Date: Tue, 9 Jul 2024 00:15:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000A6734:EE_|PH8PR12MB6820:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8ed2d98-6cb0-4642-fe59-08dc9f978451
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Y83mq33wIyUuuvco3rh/YszKgkEMQoFzIOllQ1IHAOXA3JpdPujc+4afHXiX?=
- =?us-ascii?Q?YQ1KU3VBO7hMUUTPD59onOCJRK96+g0rKm02fujw3eD6OXpVaeoXpqmFBVby?=
- =?us-ascii?Q?gl4B/ar4LqMcmNl+rT5aHZwAnRfI+gYqABFv2f6BVwBd8yxZXjWBDHCPU+/Z?=
- =?us-ascii?Q?vQecLRWURXqBqMNYnxVCcoKzVRTeEx4+Z86sLpu1bIp1z4E2JyQYTzOUDUwT?=
- =?us-ascii?Q?cKGKIFH/sgjn94stM5L56j0g3ZAOVK+dFM3vzLzqbdDMNJhva823XKiWqXUD?=
- =?us-ascii?Q?s+vBiehe0L+5ubUZ3J+uYmdI6srl2Ie034KF4g+k6TsKIhnTTAQ6FMr18YsO?=
- =?us-ascii?Q?brEEROLwxZ3Ip+3mmal59OMsK/V4z+mHcw9vvcAC0qQx3ymT0SAGvFgduXHO?=
- =?us-ascii?Q?iS3se1sIrsiDsFO19uHo1BHLcZ/Z5uwOVsJ/JEkn+WGFw1S18G9t51w513pg?=
- =?us-ascii?Q?MBxuIQFYJ3g45eP+1e3oE7mWU0KRKnZlKSrZefqBPVtgaj32E7XBw5uMPc0H?=
- =?us-ascii?Q?H4DoV/2FTJztdD3ut9VVnKo8SjnqU0/4qBD8d8IhnuLRqvLsju0eDZ975mI4?=
- =?us-ascii?Q?dKA4OceoVvq3StFAbmLipNfVyMxO4zENX+toLEOxjzVfmrR/yopGWyE8kB07?=
- =?us-ascii?Q?IZ5AU8WFXSMkPSSjdpyUeDojahGZKVY3lX9+NmmR7PpwhFWqXY7LsmElQLjP?=
- =?us-ascii?Q?Zzt323jeVEClrCf/9A5nrkuQocGydrZkYSc/qor+HcOkMWDMOjW5jK0poh7u?=
- =?us-ascii?Q?HtbIACBa1Xn6Fh5q7+96AHbskhqKJ+e5b5+B3JrVylL41iFuw0n130u2qhjP?=
- =?us-ascii?Q?W2SYrghLVgV7G/0KwTRjKK56g0OiKpdgrjfzRhTjZcmco0nkRKkCDanPn5u4?=
- =?us-ascii?Q?TvtEwxnPxGG9vSq6y3HsFC1E28A55huRifks+BVgtzLbPniO2JDhJMV7Tyw9?=
- =?us-ascii?Q?b2DHd40uFzRe0y2jd+wsDxTAsHg0Xgt4/3dT3HMPGkO32VrIUYIQDpLs4ZQA?=
- =?us-ascii?Q?3cxfKyqAlYzLsjNhZXMGHpLmCsUK0JKiacnBLsyFFUeV+vuAmjj/L/SzWSB1?=
- =?us-ascii?Q?3gxdnWSmgk8I7hNS151b69FmlDyVqslTtTKMa0o11lI+x4HyspzEDmmoLg6a?=
- =?us-ascii?Q?lpSyz3CylfwbNUxdiXwMRsHUoVoAmmBqtBOmm9lEVad4YaeeBN3wX1CsH61d?=
- =?us-ascii?Q?VWq7ctVcM4okedwQGnch9irTwtrnCje+ndsjtRyOdmbwnCw2+GV5foDFkuhx?=
- =?us-ascii?Q?vA0Q98bIO6QRBrI4yPHh5vouLpR4wlejc/owKkGUfjlAcMVK1cb3UMhqxCcO?=
- =?us-ascii?Q?fSKVntATpdYREamF9T+9ig5iV15Iq6OY8sDRM5yTQPrd0QAJJ+aWDPfRVbfU?=
- =?us-ascii?Q?/Ow0itLn6d2iGcAEXTDUO105jw665IZA3vJSFFY/qwP3kiXiOg2PnNMDsbCr?=
- =?us-ascii?Q?uq4bCPL92IewU3bA8dbzg47yzUxvnL1X?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2024 21:47:08.6893
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8ed2d98-6cb0-4642-fe59-08dc9f978451
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000A6734.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6820
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: r8169: add suspend/resume aspm quirk
+To: George-Daniel Matei <danielgeorgem@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nic_swsd@realtek.com, netdev@vger.kernel.org,
+ Bjorn Helgaas <helgaas@kernel.org>
+References: <20240708172339.GA139099@bhelgaas>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <20240708172339.GA139099@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-With this patch applied, we are observing unloading and then reloading issues with the AMD Crypto (CCP) driver:
+On 08.07.2024 19:23, Bjorn Helgaas wrote:
+> [+cc r8169 folks]
+> 
+> On Mon, Jul 08, 2024 at 03:38:15PM +0000, George-Daniel Matei wrote:
+>> Added aspm suspend/resume hooks that run
+>> before and after suspend and resume to change
+>> the ASPM states of the PCI bus in order to allow
+>> the system suspend while trying to prevent card hangs
+> 
+> Why is this needed?  Is there a r8169 defect we're working around?
+> A BIOS defect?  Is there a problem report you can reference here?
+> 
 
-with DEVRES logging enabled, we observe the following logs:
+Basically the same question from my side. Apparently such a workaround
+isn't needed on any other system. And Realtek NICs can be found on more
+or less every consumer system. What's the root cause of the issue?
+A silicon bug on the host side?
 
-[  218.093588] ccp 0000:a2:00.1: DEVRES REL 00000000c18c52fb 0xffff8d09dc1972c0 devm_kzalloc_release (152 bytes)
-[  218.105527] ccp 0000:a2:00.1: DEVRES REL 000000003091fb95 0xffff8d09d3aad000 devm_kzalloc_release (3072 bytes)
-[  218.117500] ccp 0000:a2:00.1: DEVRES REL 0000000049e4adfe 0xffff8d09d588f000 pcim_intx_restore (4 bytes)
-[  218.129519] ccp 0000:a2:00.1: DEVRES ADD 000000001a2ac6ad 0xffff8cfa867b7cc0 pcim_intx_restore (4 bytes)
-[  218.140434] ccp 0000:a2:00.1: DEVRES REL 00000000627ecaf7 0xffff8d09d588f680 pcim_msi_release (16 bytes)
-[  218.151665] ccp 0000:a2:00.1: DEVRES REL 0000000058b2252a 0xffff8d09dc199680 msi_device_data_release (80 bytes)
-[  218.163625] ccp 0000:a2:00.1: DEVRES REL 00000000435cc85e 0xffff8d09d588ff80 devm_attr_group_remove (8 bytes)
-[  218.175224] ccp 0000:a2:00.1: DEVRES REL 00000000cb6fcd9b 0xffff8d09eb583660 pcim_addr_resource_release (40 bytes)
-[  218.187319] ccp 0000:a2:00.1: DEVRES REL 00000000d64a8b84 0xffff8d09eb583180 pcim_iomap_release (48 bytes)
-[  218.198615] ccp 0000:a2:00.1: DEVRES REL 0000000099ac6b28 0xffff8d09eb5830c0 pcim_addr_resource_release (40 bytes)
-[  218.210730] ccp 0000:a2:00.1: DEVRES REL 00000000bdd27f88 0xffff8d09d3ac2700 pcim_release (0 bytes)
-[  218.221489] ccp 0000:a2:00.1: DEVRES REL 00000000e763315c 0xffff8d09d3ac2240 devm_kzalloc_release (20 bytes)
-[  218.233008] ccp 0000:a2:00.1: DEVRES REL 00000000ae90f983 0xffff8d09dc25a800 devm_kzalloc_release (184 bytes)
-[  218.245251] ccp 0000:23:00.1: DEVRES REL 00000000a2ec0085 0xffff8cfa86bee700 fw_name_devm_release (16 bytes)
-[  218.256748] ccp 0000:23:00.1: DEVRES REL 0000000021bccd98 0xffff8cfaa528d5c0 devm_pages_release (16 bytes)
-[  218.268044] ccp 0000:23:00.1: DEVRES REL 000000003ef7cbc7 0xffff8cfaa1b5ec00 devm_kzalloc_release (104 bytes)
-[  218.279631] ccp 0000:23:00.1: DEVRES REL 00000000619322e1 0xffff8cfaa1b5e480 devm_kzalloc_release (152 bytes)
-[  218.300438] ccp 0000:23:00.1: DEVRES REL 00000000c261523b 0xffff8cfaad88b000 devm_kzalloc_release (3072 bytes)
-[  218.331000] ccp 0000:23:00.1: DEVRES REL 00000000fbd19618 0xffff8cfaa528d140 pcim_intx_restore (4 bytes)
-[  218.361330] ccp 0000:23:00.1: DEVRES ADD 0000000057f8e767 0xffff8cfa867b7740 pcim_intx_restore (4 bytes)
-[  218.391226] ccp 0000:23:00.1: DEVRES REL 0000000058c9dce1 0xffff8cfaa528d880 pcim_msi_release (16 bytes)
-[  218.421340] ccp 0000:23:00.1: DEVRES REL 00000000c8ab08a7 0xffff8cfa9e617300 msi_device_data_release (80 bytes)
-[  218.452357] ccp 0000:23:00.1: DEVRES REL 00000000cf5baccb 0xffff8cfaa528d8c0 devm_attr_group_remove (8 bytes)
-[  218.483011] ccp 0000:23:00.1: DEVRES REL 00000000b8cbbadd 0xffff8cfa9c596060 pcim_addr_resource_release (40 bytes)
-[  218.514343] ccp 0000:23:00.1: DEVRES REL 00000000920f9607 0xffff8cfa9c596c60 pcim_iomap_release (48 bytes)
-[  218.544659] ccp 0000:23:00.1: DEVRES REL 00000000d401a708 0xffff8cfa9c596840 pcim_addr_resource_release (40 bytes)
-[  218.575774] ccp 0000:23:00.1: DEVRES REL 00000000865d2fa2 0xffff8cfaa528d940 pcim_release (0 bytes)
-[  218.605758] ccp 0000:23:00.1: DEVRES REL 00000000f5b79222 0xffff8cfaa528d080 devm_kzalloc_release (20 bytes)
-[  218.636260] ccp 0000:23:00.1: DEVRES REL 0000000037ef240a 0xffff8cfa9eeb3f00 devm_kzalloc_release (184 bytes)
+What is the RTL8168 chip version used on these systems?
 
-and the CCP driver reload issue during driver probe:
+ASPM L1 is disabled per default in r8169. So why is the patch needed
+at all?
 
-[  226.552684] pci 0000:23:00.1: Resources present before probing
-[  226.568846] pci 0000:a2:00.1: Resources present before probing
+> s/Added/Add/
+> 
+> s/aspm/ASPM/ above
+> 
+> s/PCI bus/device and parent/
+> 
+> Add period at end of sentence.
+> 
+> Rewrap to fill 75 columns.
+> 
+>> Signed-off-by: George-Daniel Matei <danielgeorgem@chromium.org>
+>> ---
+>>  drivers/pci/quirks.c | 142 +++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 142 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index dc12d4a06e21..aa3dba2211d3 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -6189,6 +6189,148 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b0, aspm_l1_acceptable_latency
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+>> +
+>> +static const struct dmi_system_id chromebox_match_table[] = {
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Brask"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aurash"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +		{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Bujia"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Gaelin"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Gladios"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Hahn"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Jeev"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Kinox"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Kuldax"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Lisbon"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{
+>> +			.matches = {
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Moli"),
+>> +			DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>> +		}
+>> +	},
+>> +	{ }
+>> +};
+>> +
+>> +static void rtl8169_suspend_aspm_settings(struct pci_dev *dev)
+>> +{
+>> +	u16 val = 0;
+>> +
+>> +	if (dmi_check_system(chromebox_match_table)) {
+>> +		//configure parent
+>> +		pcie_capability_clear_and_set_word(dev->bus->self,
+>> +						   PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC,
+>> +						   PCI_EXP_LNKCTL_ASPM_L1);
+>> +
+>> +		pci_read_config_word(dev->bus->self,
+>> +				     dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				     &val);
+>> +		val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
+>> +		      PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
+>> +		      PCI_L1SS_CTL1_ASPM_L1_1;
+>> +		pci_write_config_word(dev->bus->self,
+>> +				      dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				      val);
+>> +
+>> +		//configure device
+>> +		pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC,
+>> +						   PCI_EXP_LNKCTL_ASPM_L1);
+>> +
+>> +		pci_read_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, &val);
+>> +		val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
+>> +		      PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
+>> +		      PCI_L1SS_CTL1_ASPM_L1_1;
+>> +		pci_write_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, val);
+>> +	}
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_REALTEK, 0x8168,
+>> +			  rtl8169_suspend_aspm_settings);
+>> +
+>> +static void rtl8169_resume_aspm_settings(struct pci_dev *dev)
+>> +{
+>> +	u16 val = 0;
+>> +
+>> +	if (dmi_check_system(chromebox_match_table)) {
+>> +		//configure device
+>> +		pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC, 0);
+>> +
+>> +		pci_read_config_word(dev->bus->self,
+>> +				     dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				     &val);
+>> +		val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
+>> +		pci_write_config_word(dev->bus->self,
+>> +				      dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				      val);
+>> +
+>> +		//configure parent
+>> +		pcie_capability_clear_and_set_word(dev->bus->self,
+>> +						   PCI_EXP_LNKCTL,
+>> +						   PCI_EXP_LNKCTL_ASPMC, 0);
+>> +
+>> +		pci_read_config_word(dev->bus->self,
+>> +				     dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				     &val);
+>> +		val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
+>> +		pci_write_config_word(dev->bus->self,
+>> +				      dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>> +				      val);
+> 
+> Updates the parent (dev->bus->self) twice; was the first one supposed
+> to update the device (dev)?
+> 
+> This doesn't restore the state as it existed before suspend.  Does
+> this rely on other parts of restore to do that?
+> 
+>> +	}
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_REALTEK, 0x8168,
+>> +			 rtl8169_resume_aspm_settings);
+>>  #endif
+>>  
+>>  #ifdef CONFIG_PCIE_DPC
+>> -- 
+>> 2.45.2.803.g4e1b14247a-goog
+>>
 
-From the above DEVRES logging, it looks like pcim_intx_restore associated resource is being released but then
-being re-added during detach/unload, which causes really_probe() to fail at probe time, as dev->devres_head is
-not empty due to this added resource:
-...
-[  218.331000] ccp 0000:23:00.1: DEVRES REL 00000000fbd19618 0xffff8cfaa528d140 pcim_intx_restore (4 bytes)
-[  218.361330] ccp 0000:23:00.1: DEVRES ADD 0000000057f8e767 0xffff8cfa867b7740 pcim_intx_restore (4 bytes)
-...
-
-Going more deep into this: 
-
-This is the initial pcim_intx_resoure associated resource being added during first (CCP) driver load:
-
-[   40.418933]  pcim_intx+0x3a/0x120
-[   40.418936]  pci_intx+0x8b/0xa0
-[   40.418939]  __pci_enable_msix_range+0x369/0x530
-[   40.418943]  pci_enable_msix_range+0x18/0x20
-[   40.418946]  sp_pci_probe+0x106/0x310 [ccp]
-[   40.418965] ipmi device interface
-[   40.418960]  ? srso_alias_return_thunk+0x5/0xfbef5
-[   40.418969]  local_pci_probe+0x4f/0xb0
-[   40.418973]  work_for_cpu_fn+0x1e/0x30
-[   40.418976]  process_one_work+0x183/0x350
-[   40.418980]  worker_thread+0x2df/0x3f0
-[   40.418982]  ? __pfx_worker_thread+0x10/0x10
-[   40.418985]  kthread+0xd0/0x100
-[   40.418987]  ? __pfx_kthread+0x10/0x10
-[   40.418990]  ret_from_fork+0x40/0x60
-[   40.418993]  ? __pfx_kthread+0x10/0x10
-[   40.418996]  ret_from_fork_asm+0x1a/0x30
-[   40.419001]  </TASK>
-..
-..
-[   40.419012] ccp 0000:23:00.1: DEVRES ADD 00000000fbd19618 0xffff8cfaa528d140 pcim_intx_restore (4 bytes)
-
-Now, at driver unload: 
-devres_release_all() -> remove_nodes() -> release_nodes() ...
-
-remove_nodes() moves normal devres entries to the todo list, as can be seen with the following log:
-...
-[  218.245241] moving node 00000000fbd19618 0xffff8cfaa528d140 from devres to todo list
-...
-
-So, now this pcim_intx_resource associated resource is no longer part of dev->devres_head list and has been
-moved to the todo list.
-
-Later, when release_nodes() is invoked, it calls the associated release() callback associated with this devres:
-...
-[  218.331000] ccp 0000:23:00.1: DEVRES REL 00000000fbd19618 0xffff8cfaa528d140 pcim_intx_restore (4 bytes)
-...
-
-The call flow for that is:
-pcim_intx_restore() -> pci_intx() -> pcim_intx() ...
-
-Now, pcim_intx() calls get_or_create_intx_devres() which tries to find it's associated devres using devres_find(), but 
-that fails to find the devres, as the devres is no longer on dev->devres_head and has been moved to todo list.
-
-Therefore, get_or_create_intx_devres() adds a new devres at driver unload/detach time:
-...
-[  218.361330] ccp 0000:23:00.1: DEVRES ADD 0000000057f8e767 0xffff8cfa867b7740 pcim_intx_restore (4 bytes)
-...
-
-But, then this is an issue as pcim_intx() is supposed to restore the original PCI INTx state on driver detach, but it now
-operating on a newly added devres and not the original devres (added at driver probe) which contains the original PCI INTx
-state, so it will be restoring an incorrect PCI INTx state ?
-
-Additionally, this newly added devres causes driver reload/probe failure as really_probe() now finds resources present
-before probing.
-
-Not sure, if this issue has been observed with other PCI device drivers.
-
-Thanks,
-Ashish
 
