@@ -1,203 +1,133 @@
-Return-Path: <linux-pci+bounces-9928-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9929-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F44B92A399
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 15:26:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AFC8892A3BC
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 15:35:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEFD41F21DF8
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:26:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AC8D1F22272
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:35:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45BFA13774A;
-	Mon,  8 Jul 2024 13:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF588120D;
+	Mon,  8 Jul 2024 13:35:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF70B665
-	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 13:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CC47E56B;
+	Mon,  8 Jul 2024 13:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720445200; cv=none; b=EZtVZJocM1kHszlF3nmsXVRVxL4pnOFbYoUxkKeMi6G48g3PR0UfdOV6l8lJFnn04V0MvgR72OK9FrDVkBrXcrgg+HHznpV1qiD3SS4nn+2RcVZo1GiL2PY0ll/OQO0bHbsg4jmebnTJSk4lz1ns7Gf1kUcF/dKpZoWV6+10PaE=
+	t=1720445750; cv=none; b=HrnWaFkTVAzwdy9/K2YcJZkkvgFzUrV0al77r93WFa3j2dyTq7qTdBxVDZand2NShRrNOB4q+h7Y3Ot/xwbWpC1oivC0cspGYtwh4Ppci3gxbsVeYDRqmW4iIkmna51A7a4L90Q4RqlYNkSg+flpMpRgLjSPoyJBjzw2PPoZ42Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720445200; c=relaxed/simple;
-	bh=AvFqGfbnluOKabfJ1gbc14MMS0SNBJ1bdZX+YIROD1s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WErsNBvr3gz/8oGOK47hDd/GKQAP8xyiQpVlbkFZPi3ChGNI79zgMa09jMENSSC1bbkfaqSWIMtshzrGew8qFAM8I7F73zyN7tsrg5B0UoudWfpyMHbaPKhQA+8QEGsvVIO1WaHexvfSzP89LlhsLu89lIU9GtK76yuPbnFdkM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sQoNn-0000eo-AU; Mon, 08 Jul 2024 15:26:19 +0200
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sQoNl-0083J2-Sg; Mon, 08 Jul 2024 15:26:17 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1sQoNl-000AG3-2b;
-	Mon, 08 Jul 2024 15:26:17 +0200
-Message-ID: <39583bdf7e79d33240e7dd5f09123b94cab4147c.camel@pengutronix.de>
-Subject: Re: [PATCH v2 04/12] PCI: brcmstb: Use swinit reset if available
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Stanimir Varbanov <svarbanov@suse.de>, Jim Quinlan
-	 <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
- <lorenzo.pieralisi@arm.com>, Cyril Brulebois <kibi@debian.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,  Florian
- Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>, Rob Herring <robh@kernel.org>, "moderated list:BROADCOM
- BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>, open list
- <linux-kernel@vger.kernel.org>
-Date: Mon, 08 Jul 2024 15:26:17 +0200
-In-Reply-To: <f89d7f45-5d2b-4d8b-9d6a-2d83cd584756@suse.de>
-References: <20240703180300.42959-1-james.quinlan@broadcom.com>
-	 <20240703180300.42959-5-james.quinlan@broadcom.com>
-	 <362a728f-5487-47da-b7b9-a9220b27d567@suse.de>
-	 <CA+-6iNynwxcBAbRQ18TfJXwCctf+Ok7DnFyjgv4wNasX9MjV1Q@mail.gmail.com>
-	 <7b03c38f44f295a5484d0162a193f41b39039b85.camel@pengutronix.de>
-	 <f89d7f45-5d2b-4d8b-9d6a-2d83cd584756@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1720445750; c=relaxed/simple;
+	bh=wgD9a4DNK3P6VEZab1/0rPVhR9Z/fDFUP3wzihfV+GE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DNi7HA2B7uV2Z6A59Qy0yGCL5u8Pkzx3dyvUi/SqCTDQM3G26qqPoQDCyPCBafpz0qIvfQx38Y0BCNUbukSNOTTKk3qSgmXvJC45ju7TFDvUTPkN10MTneC/cV85R+UPWVh4r1pmE6K8MC91OFUXIso/4S3Z9ggkLOq9B+zOEwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id F044A100D9438;
+	Mon,  8 Jul 2024 15:35:39 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id BF9321F5CA; Mon,  8 Jul 2024 15:35:39 +0200 (CEST)
+Date: Mon, 8 Jul 2024 15:35:39 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Woodhouse <dwmw2@infradead.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+	David Box <david.e.box@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"Li, Ming" <ming4.li@intel.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Dhaval Giani <dhaval.giani@amd.com>,
+	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+	Jerome Glisse <jglisse@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2 00/18] PCI device authentication
+Message-ID: <ZovrK7GsDpOMp3Bz@wunner.de>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com>
 
-Hi Stanimir,
+On Mon, Jul 08, 2024 at 07:47:51PM +1000, Alexey Kardashevskiy wrote:
+> On 1/7/24 05:35, Lukas Wunner wrote:
+> > PCI device authentication v2
+> > 
+> > Authenticate PCI devices with CMA-SPDM (PCIe r6.2 sec 6.31) and
+> > expose the result in sysfs.
+> 
+> What is it based on?
 
-On Mo, 2024-07-08 at 14:14 +0300, Stanimir Varbanov wrote:
-> Hi Philipp,
->=20
-> On 7/8/24 12:37, Philipp Zabel wrote:
-> > On Fr, 2024-07-05 at 13:46 -0400, Jim Quinlan wrote:
-> > > On Thu, Jul 4, 2024 at 8:56=E2=80=AFAM Stanimir Varbanov <svarbanov@s=
-use.de> wrote:
-> > > >=20
-> > > > Hi Jim,
-> > > >=20
-> > > > On 7/3/24 21:02, Jim Quinlan wrote:
-> > > > > The 7712 SOC adds a software init reset device for the PCIe HW.
-> > > > > If found in the DT node, use it.
-> > > > >=20
-> > > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > > > ---
-> > > > >  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++++++++
-> > > > >  1 file changed, 19 insertions(+)
-> > > > >=20
-> > > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/=
-controller/pcie-brcmstb.c
-> > > > > index 4104c3668fdb..69926ee5c961 100644
-> > > > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > > > @@ -266,6 +266,7 @@ struct brcm_pcie {
-> > > > >       struct reset_control    *rescal;
-> > > > >       struct reset_control    *perst_reset;
-> > > > >       struct reset_control    *bridge;
-> > > > > +     struct reset_control    *swinit;
-> > > > >       int                     num_memc;
-> > > > >       u64                     memc_size[PCIE_BRCM_MAX_MEMC];
-> > > > >       u32                     hw_rev;
-> > > > > @@ -1626,6 +1627,13 @@ static int brcm_pcie_probe(struct platform=
-_device *pdev)
-> > > > >               dev_err(&pdev->dev, "could not enable clock\n");
-> > > > >               return ret;
-> > > > >       }
-> > > > > +
-> > > > > +     pcie->swinit =3D devm_reset_control_get_optional_exclusive(=
-&pdev->dev, "swinit");
-> > > > > +     if (IS_ERR(pcie->swinit)) {
-> > > > > +             ret =3D dev_err_probe(&pdev->dev, PTR_ERR(pcie->swi=
-nit),
-> > > > > +                                 "failed to get 'swinit' reset\n=
-");
-> > > > > +             goto clk_out;
-> > > > > +     }
-> > > > >       pcie->rescal =3D devm_reset_control_get_optional_shared(&pd=
-ev->dev, "rescal");
-> > > > >       if (IS_ERR(pcie->rescal)) {
-> > > > >               ret =3D PTR_ERR(pcie->rescal);
-> > > > > @@ -1637,6 +1645,17 @@ static int brcm_pcie_probe(struct platform=
-_device *pdev)
-> > > > >               goto clk_out;
-> > > > >       }
-> > > > >=20
-> > > > > +     ret =3D reset_control_assert(pcie->swinit);
-> > > > > +     if (ret) {
-> > > > > +             dev_err_probe(&pdev->dev, ret, "could not assert re=
-set 'swinit'\n");
-> > > > > +             goto clk_out;
-> > > > > +     }
-> > > > > +     ret =3D reset_control_deassert(pcie->swinit);
-> > > > > +     if (ret) {
-> > > > > +             dev_err(&pdev->dev, "could not de-assert reset 'swi=
-nit' after asserting\n");
-> > > > > +             goto clk_out;
-> > > > > +     }
-> > > >=20
-> > > > why not call reset_control_reset(pcie->swinit) directly?
-> > > Hi Stan,
-> > >=20
-> > > There is no reset_control_reset() method defined for reset-brcmstb.c.
-> > > The only reason I can
-> > > think of for this is that it allows the callers of assert/deassert to
-> > > insert a delay if desired.
-> >=20
-> > The main reason for the existence of reset_control_reset() is that
-> > there are reset controllers that can only be triggered (e.g. by writing
-> > a bit to a self-clearing register) to produce a complete reset pulse,
-> > with assertion, delay, and deassertion all handled by the reset
-> > controller.
->=20
-> Got it. Thank you for explanation.
->=20
-> But, IMO that means that the consumer driver should have knowledge of
-> low-level reset implementation, which is not generic API?
+This series is based on v6.10-rc1.
 
-Kind of. If the reset controller hardware has self-clearing resets, it
-is impossible to implement manual reset_control_assert/deassert() on
-top. So if a reset consumer requires that level of control, it just
-can't work with a self-deasserting controller. The other way around, a
-reset controller driver can emulate self-deasserting resets, iff it
-knows the timing requirements of all consumers.
+I also successfully cherry-picked the patches onto v6.10-rc6 and
+linux-next 20240628 (no merge conflicts and no issues reported by 0-day).
 
-If the reset consumer only needs to see a pulse on the reset line, and
-there are no ordering requirements with other resets or clocks, and the
-device either doesn't care about timing or the reset controller knows
-how to produce the required delay, then using reset_control_reset()
-would be semantically correct.
+Older kernels than v6.10-rc1 won't work because they're missing
+ecdsa-nist-p521 support as well as a few preparatory sysfs patches
+of mine that went into v6.10-rc1.
 
-> Otherwise, I don't see a problem to implement asset/deassert sequence in
-> .reset op in this particular reset-brcmstb.c low-level driver.
 
-When reset_control_reset() is used, every reset controller that can be
-paired with this consumer needs to implement the .reset method,
-requiring to know the delay requirements for all of their consumers.
-The reset-simple driver implements this with a configurable worst-case
-delay, for example. As far as I can see, that has never been used.
+> I am using https://github.com/l1k/linux.git branch cma_v2 for now but wonder
+> if that's the right one.
 
-So yes, in this particular case, pcie-brcmstb only ever being paired
-with reset-brcmstb, it might be no problem to implement .reset in
-reset-brcmstb correctly, if all its consumers and their required delays
-are known.
+Yes that's fine.
 
-regards
-Philipp
+There's now also a kernel.org repository with a testing branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/devsec/spdm.git/
+
+Future maintenance of the SPDM library is intended to be happening
+in that repo.  I assumed that Bjorn may not be keen on having to
+deal with SPDM patches forever, so creating a dedicated repo seemed
+to make sense.
+
+Most patches in this series with a "PCI/CMA: " subject actually
+only change very few lines in the PCI core.  The bulk of the changes
+is in the SPDM library instead.  I used that subject merely to
+highlight that at least an ack from Bjorn is required.  The only
+patches containing PCI core changes to speak of are patches 8, 9, 10.
+
+The devsec group (short for Device Security Alphabet Soup) currently
+only contains the spdm.git repo.  Going forward, further repos may be
+added below the devsec umbrella, such as tsm.git to deal with a
+vendor-neutral interface between kernel and Trusted Security Module.
+
+Thanks,
+
+Lukas
 
