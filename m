@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-9924-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9925-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12D6392A140
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:33:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 506AE92A14C
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:40:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCDF8281FEC
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 11:33:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F04A01F21FE3
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 11:40:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 505D278C71;
-	Mon,  8 Jul 2024 11:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A01BE11CA1;
+	Mon,  8 Jul 2024 11:40:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fVBVT10d"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zdgh2m5Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C29F7F466
-	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 11:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07AB101E2
+	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 11:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720438426; cv=none; b=Bmc5ghK4P6l9bDc/VS0FkiF5iOLTHUZA5nAr8aifh9y5TPfNc5pSEWvjbkOUJZSSWlFU5reQauHL/euwv+jPJI3/ghRutucp3BjMSOcD/cBxFcfgnHTiw7xysRfr4Vx0Tmt+ZKZCfE1BSuyyvW0Z6jO1w8MX6cHtw3Tc2XR+2XA=
+	t=1720438804; cv=none; b=SrF4iAcN9lh8vYDEdUoAnrEKu4dWXCjSef2II9yr5ZzD8nAN9EatSLOoSct9MvV7/ipy7GrsxlVmBSsu+ULTrdShr/Xl+FuBmzWymWuufNyH1KRzOB3dvEESGNPKBWjGDPsSylqL77LQEWOt9adyQGjyFXovBJCNNLcJRnp/9h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720438426; c=relaxed/simple;
-	bh=aBdLMkkPZs5AGv0uiAydtdIDhTHaK7/ySurVjMioEuI=;
+	s=arc-20240116; t=1720438804; c=relaxed/simple;
+	bh=54wa11/hz+J1Y1lVR2LnaMFWGrZy7uhL9aaHZOfJxso=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YyganiQ3C4oUQMNFNUjNb/PBzy4c9qFOnNkzC6+KnaKs0EMOkE9TsNXVR73ywcLLg4rIXl25aJ+KT0/8EiM6DopZyubxExYgCbCyIWm06QkCkxLmO51GJ50M8YLTYSyenC9+Jt5ZRkQNH48WYo9Gb48psMfL/35S9kO9YNZMrnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fVBVT10d; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=Qd/Rf/3PxjmIhmNi1H8O57q+6OeZswhXAvIU3Crb/fbYF4MaP35MchhUZIC0Vr0f4F8DMejlNe8xC129pOUibOq3GecSPybeOhQoY0K3A4jAlGTFAkgh7gEzqBf15EMU/dNwzCMeczTT2cwp8HUpJ67VwSdYAN4/E8gr4Mgoib4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zdgh2m5Q; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720438425; x=1751974425;
+  t=1720438803; x=1751974803;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=aBdLMkkPZs5AGv0uiAydtdIDhTHaK7/ySurVjMioEuI=;
-  b=fVBVT10dcWfog9ANcJ57vQFj93YPfeiWzATHtTAmJLeh2gPqLa7ydrTA
-   i5R9MHXaaC1DLWWh+GVBTiS3NFELlCfDpdJxtCC4mCKYB73sHNR5HpqlT
-   BvuiWc8Pxsqmg/o1Wo0OcFTlm1o/ILIg+BmfT16OV9QZH00sfd10S7CUI
-   37Y+mP5i1XMNUtyLkuOGYUt9yKME4N/w8GeWMnBrT0SBKkO1tCE/QtDwz
-   UMRk1+ah4oeWIjuNMa8pke/dUY6ZbUeQgB9KtyCHK6mMyhi1fxNSvcmaF
-   nu1pk9waSLKuPcM3lLEr1J7OryJnNU2UezgCv1ZEBFK7NpqYZHNPqhjJX
+   references:mime-version;
+  bh=54wa11/hz+J1Y1lVR2LnaMFWGrZy7uhL9aaHZOfJxso=;
+  b=Zdgh2m5Qj4tXu4nfwO88X7if0GitBc1qaZU/FMm2JSpK5Lk5bmUW4X8V
+   WSw5zJnLG75w0etsRHA78jAkvGW8C9/W25MCJG2GaQAMJpXZXnT/YzO9q
+   /35ZsqhLMQOGU8JmctWHuUlZFG5YHD5rU7EKe8hDJlnymsz6kpl6M8ZsV
+   rWAx9zHNrv3kbWmJwZcTaoZpn4fIONIzUf99GAxAnsNnSl/SAtwD8MVdi
+   x/nK8NTypxBcwKNSKOSe0hUnVpkLSdlkN2ZVUHxtW+99JkWaGOcjflfPD
+   K3QxEnpXNPikkliMyQoyoKKdCIjWpFe5+evoB16vtLJi+lErWno/vzYKA
    A==;
-X-CSE-ConnectionGUID: Ydku8cAeTFK2OfeZnILLuw==
-X-CSE-MsgGUID: k+iS/R8QQCaw1PskNC92EQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="28240789"
+X-CSE-ConnectionGUID: /4dzIVJrQNOeK6qOpy9h+A==
+X-CSE-MsgGUID: NNUn3t6LQlmdstYY1RBumg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="28789663"
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="28240789"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 04:33:44 -0700
-X-CSE-ConnectionGUID: fEb5XNlyQoyyZW5NkXFwfQ==
-X-CSE-MsgGUID: PSPu08sEQ4CvoywLOOfaSA==
+   d="scan'208";a="28789663"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 04:40:03 -0700
+X-CSE-ConnectionGUID: m0o2a9DsQc6WC+LRkV5AzQ==
+X-CSE-MsgGUID: OBqyitl/Q3+Mhqrbej4ewA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="52419932"
+   d="scan'208";a="48210631"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.115])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 04:33:39 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 04:39:57 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Jul 2024 14:33:34 +0300 (EEST)
+Date: Mon, 8 Jul 2024 14:39:53 +0300 (EEST)
 To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 cc: linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
     Bjorn Helgaas <bhelgaas@google.com>, 
@@ -70,145 +70,127 @@ cc: linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
     Randy Dunlap <rdunlap@infradead.org>, 
     Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
     Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: Re: [PATCH v3 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-In-Reply-To: <20240705125436.26057-3-mariusz.tkaczyk@linux.intel.com>
-Message-ID: <f318f400-88ef-fe56-dcd5-27434e305d9f@linux.intel.com>
-References: <20240705125436.26057-1-mariusz.tkaczyk@linux.intel.com> <20240705125436.26057-3-mariusz.tkaczyk@linux.intel.com>
+Subject: Re: [PATCH v3 3/3] PCI/NPEM: Add _DSM PCIe SSD status LED
+ management
+In-Reply-To: <20240705125436.26057-4-mariusz.tkaczyk@linux.intel.com>
+Message-ID: <32fc307d-5d72-fe5c-03cf-efe57704144c@linux.intel.com>
+References: <20240705125436.26057-1-mariusz.tkaczyk@linux.intel.com> <20240705125436.26057-4-mariusz.tkaczyk@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1501028441-1720437734=:1343"
-Content-ID: <605f87d2-5c36-9e50-4f93-50d7824e2d5f@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-181078046-1720438793=:1343"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1501028441-1720437734=:1343
-Content-Type: text/plain; CHARSET=UTF-8
+--8323328-181078046-1720438793=:1343
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <2354a271-84ff-1026-6669-f1f32e85c38f@linux.intel.com>
 
 On Fri, 5 Jul 2024, Mariusz Tkaczyk wrote:
 
-> Native PCIe Enclosure Management (NPEM, PCIe r6.1 sec 6.28) allows
-> managing LED in storage enclosures. NPEM is indication oriented
-> and it does not give direct access to LED. Although each of
-> the indications *could* represent an individual LED, multiple
-> indications could also be represented as a single,
-> multi-color LED or a single LED blinking in a specific interval.
-> The specification leaves that open.
+> Device Specific Method PCIe SSD Status LED Management (_DSM) defined in
+> PCI Firmware Spec r3.3 sec 4.7 provides a way to manage LEDs via ACPI.
 >=20
-> Each enabled indication (capability register bit on) is represented as a
-> ledclass_dev which can be controlled through sysfs. For every ledclass
-> device only 2 brightness states are allowed: LED_ON (1) or LED_OFF (0).
-> It is corresponding to NPEM control register (Indication bit on/off).
+> The design is similar to NPEM defined in PCIe Base Specification r6.1
+> sec 6.28:
+>   - both standards are indication oriented,
+>   - _DSM supported bits are corresponding to NPEM capability
+>     register bits
+>   - _DSM control bits are corresponding to NPEM control register
+>     bits.
 >=20
-> Ledclass devices appear in sysfs as child devices (subdirectory) of PCI
-> device which has an NPEM Extended Capability and indication is enabled
-> in NPEM capability register. For example, these are leds created for
-> pcieport "10000:02:05.0" on my setup:
+> _DSM does not support enclosure specific indications and special NPEM
+> commands NPEM_ENABLE and NPEM_RESET.
 >=20
-> leds/
-> =E2=94=9C=E2=94=80=E2=94=80 10000:02:05.0:enclosure:fail
-> =E2=94=9C=E2=94=80=E2=94=80 10000:02:05.0:enclosure:locate
-> =E2=94=9C=E2=94=80=E2=94=80 10000:02:05.0:enclosure:ok
-> =E2=94=94=E2=94=80=E2=94=80 10000:02:05.0:enclosure:rebuild
+> _DSM is implemented as a second op in NPEM driver. The standard used
+> in background is not presented to user. The interface is accessed same
+> as NPEM.
 >=20
-> They can be also found in "/sys/class/leds" directory. Parent PCIe device
-> bdf is used to guarantee uniqueness across leds subsystem.
+> According to spec, _DSM has higher priority and availability  of _DSM
+> in not limited to devices with NPEM support. It is followed in
+> implementation.
 >=20
-> To enable/disable fail indication "brightness" file can be edited:
-> echo 1 > ./leds/10000:02:05.0:enclosure:fail/brightness
-> echo 0 > ./leds/10000:02:05.0:enclosure:fail/brightness
->=20
-> PCIe r6.1, sec 7.9.19.2 defines the possible indications.
->=20
-> Multiple indications for same parent PCIe device can conflict and
-> hardware may update them when processing new request. To avoid issues,
-> driver refresh all indications by reading back control register.
->=20
-> Driver is projected to be exclusive NPEM extended capability manager.
-> It waits up to 1 second after imposing new request, it doesn't verify if
-> controller is busy before write, assuming that mutex lock gives protectio=
-n
-> from concurrent updates. Driver is not registered if _DSM LED management
-> is available.
->=20
-> NPEM is a PCIe extended capability so it should be registered in
-> pcie_init_capabilities() but it is not possible due to LED dependency.
-> Parent pci_device must be added earlier for led_classdev_register()
-> to be successful. NPEM does not require configuration on kernel side, it
-> is safe to register LED devices later.
->=20
-> Link: https://members.pcisig.com/wg/PCI-SIG/document/19849 [1]
+> Link: https://members.pcisig.com/wg/PCI-SIG/document/14025
+> Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
 > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 > Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+> ---
+>  drivers/pci/npem.c | 147 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 144 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pci/npem.c b/drivers/pci/npem.c
+> index fd3366bc3fb0..e3bc28d089d3 100644
+> --- a/drivers/pci/npem.c
+> +++ b/drivers/pci/npem.c
+> @@ -11,6 +11,14 @@
+>   *=09PCIe Base Specification r6.1 sec 6.28
+>   *=09PCIe Base Specification r6.1 sec 7.9.19
+>   *
+> + * _DSM Definitions for PCIe SSD Status LED
+> + *=09 PCI Firmware Specification, r3.3 sec 4.7
+> + *
+> + * Two backends are supported to manipulate indications:  Direct NPEM re=
+gister
+> + * access (npem_ops) and indirect access through the ACPI _DSM (dsm_ops)=
+=2E
+> + * _DSM is used if supported, else NPEM.
+> + *
+> + * Copyright (c) 2021-2022 Dell Inc.
+>   * Copyright (c) 2023-2024 Intel Corporation
+>   *=09Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+>   */
+> @@ -55,6 +63,21 @@ static const struct indication npem_indications[] =3D =
+{
+>  =09{0,=09=09=09NULL}
+>  };
+> =20
+> +/* _DSM PCIe SSD LED States are corresponding to NPEM register values */
+> +static const struct indication dsm_indications[] =3D {
+> +=09{PCI_NPEM_IND_OK,=09"enclosure:ok"},
+> +=09{PCI_NPEM_IND_LOCATE,=09"enclosure:locate"},
+> +=09{PCI_NPEM_IND_FAIL,=09"enclosure:fail"},
+> +=09{PCI_NPEM_IND_REBUILD,=09"enclosure:rebuild"},
+> +=09{PCI_NPEM_IND_PFA,=09"enclosure:pfa"},
+> +=09{PCI_NPEM_IND_HOTSPARE,=09"enclosure:hotspare"},
+> +=09{PCI_NPEM_IND_ICA,=09"enclosure:ica"},
+> +=09{PCI_NPEM_IND_IFA,=09"enclosure:ifa"},
+> +=09{PCI_NPEM_IND_IDT,=09"enclosure:idt"},
+> +=09{PCI_NPEM_IND_DISABLED,=09"enclosure:disabled"},
+> +=09{0,=09=09=09NULL}
+> +};
+> +
+>  #define for_each_indication(ind, inds) \
+>  =09for (ind =3D inds; ind->bit; ind++)
+> =20
+> @@ -250,6 +273,120 @@ static bool npem_has_dsm(struct pci_dev *pdev)
+>  =09=09=09      BIT(GET_STATE_DSM) | BIT(SET_STATE_DSM));
+>  }
+> =20
+> +struct dsm_output {
+> +=09u16 status;
+> +=09u8 function_specific_err;
+> +=09u8 vendor_specific_err;
+> +=09u32 state;
+> +} __packed;
 
-Looks to be in quite good shape already, one comment below I think should=
+As mentioned by Christoph, __packed is not required here due to natural=20
+alignment (Using __packed will cause other effects beyond just preventing=
 =20
-be addressed before this is ready to go.
+compiler from adding padding which is why it's good to avoid it where=20
+it's not needed).
 
-> +static int npem_set_active_indications(struct npem *npem, u32 inds)
-> +{
-> +=09int ctrl, ret, ret_val;
-> +=09u32 cc_status;
-> +
-> +=09lockdep_assert_held(&npem->lock);
-> +
-> +=09/* This bit is always required */
-> +=09ctrl =3D inds | PCI_NPEM_CTRL_ENABLE;
-> +
-> +=09ret =3D npem_write_ctrl(npem, ctrl);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09/*
-> +=09 * For the case where a NPEM command has not completed immediately,
-> +=09 * it is recommended that software not continuously =E2=80=9Cspin=E2=
-=80=9D on polling
-> +=09 * the status register, but rather poll under interrupt at a reduced
-> +=09 * rate; for example at 10 ms intervals.
-> +=09 *
-> +=09 * PCIe r6.1 sec 6.28 "Implementation Note: Software Polling of NPEM
-> +=09 * Command Completed"
-> +=09 */
-> +=09ret =3D read_poll_timeout(npem_read_reg, ret_val,
-> +=09=09=09=09ret_val || (cc_status & PCI_NPEM_STATUS_CC),
-> +=09=09=09=0910 * USEC_PER_MSEC, USEC_PER_SEC, false, npem,
-> +=09=09=09=09PCI_NPEM_STATUS, &cc_status);
-> +=09if (ret)
-> +=09=09return ret_val;
+With that removed,
 
-Will this work as intended?
-
-If ret_val gets set, cond in read_poll_timeout() is true and it returns 0=
-=20
-so the return branch is not taken.
-
-Also, when read_poll_timeout() times out, ret_val might not be non-zero.
-
-> +
-> +=09/*
-> +=09 * All writes to control register, including writes that do not chang=
-e
-> +=09 * the register value, are NPEM commands and should eventually result
-> +=09 * in a command completion indication in the NPEM Status Register.
-> +=09 *
-> +=09 * PCIe Base Specification r6.1 sec 7.9.19.3
-> +=09 *
-> +=09 * Register may not be updated, or other conflicting bits may be
-> +=09 * cleared. Spec is not strict here. Read NPEM Control register after
-> +=09 * write to keep cache in-sync.
-> +=09 */
-> +=09return npem_get_active_indications(npem, &npem->active_indications);
-> +}
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 
 --=20
  i.
---8323328-1501028441-1720437734=:1343--
+
+--8323328-181078046-1720438793=:1343--
 
