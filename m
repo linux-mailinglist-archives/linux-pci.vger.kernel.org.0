@@ -1,139 +1,136 @@
-Return-Path: <linux-pci+bounces-9926-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9927-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34BC092A1B5
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:55:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3554B92A34D
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 14:54:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E41B9284B4E
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 11:55:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E355B2817C0
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 12:54:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 546A07FBC3;
-	Mon,  8 Jul 2024 11:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="nc+paXFo";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="PRioF75z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F7CB84E13;
+	Mon,  8 Jul 2024 12:54:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5990B7FBB6;
-	Mon,  8 Jul 2024 11:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A510824A3;
+	Mon,  8 Jul 2024 12:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720439750; cv=none; b=jBQTKPh3I+ZqJwX8JMqwcJRpZ3iyDDjZIfs+HAV/z4VUtCH9Tat2B+eVqwxFb4+Ns0sRFcM3RHdcfMnZyscXxzOO7VOYz102A5eWgd8YOz55ExO/OkEQJMjDK56Mca/AfWU+1SGJQnhvM1e7IQuboQLkKk0rhIJRwvtTyuq+uUU=
+	t=1720443250; cv=none; b=shzc//4TCz/ShNV6u7dDYnnfZQi0eTfdhyU2vHPO1jjKE6osdUkmG8MMV6pF8nkVbfNW+oUFbOGFputVHdE+lB1fdd28aVmzTi1W6rxFhHyxbGSgtUV4EmPgV8hqFucK8D8JappY5ykH+C3E4qpci/XcRoYa6qIMD0n2298yox8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720439750; c=relaxed/simple;
-	bh=svJk2a68EMvPk89NhoK9u0qey+5pU5BmhsmnZzUUpX4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AqhBPgTeEdcM+qV+bQPRgSKzRbVXTvFwf3iwQ6H6az4CDbAXYYeI/EkC3lO86sPwwjs1uzeGC4y1gD2AAb4CWKpGPVOO5SVG/z81KIhcdFRJo95HSmW1hWfyts7CgfJKwMbrIT43EWHoUflSZOIo0wZpp2tO7DKsUCyk8JE3//0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=nc+paXFo; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=PRioF75z; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	s=arc-20240116; t=1720443250; c=relaxed/simple;
+	bh=RMVniVhF/wGXXn+M2jkcQzFQemX/je9WFzpBwZlKox4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+BjmM2SSnPhmlmLfBHwEias06XK8wYKCGJJF/2Mht3gmXnQR1YwIRnwpWvSSMihrq25fcujlw7Iley1NUGKvU9qPrE/xoKiDj9rhgdPXKcYTlFMQ0l+IMCERF/I2wqK7MIMGqj4fbP+SX6UXq4EaVVP6NF2R2nJo24o+0/o+k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4WHjHj22f5z9sb5;
-	Mon,  8 Jul 2024 13:55:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1720439745;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PWAfYfaY0yizK6Woa1K0h62J6G5j6wjoIDC1zSclttU=;
-	b=nc+paXFoiJ6MO7pRa/4FJbjQD07IyOGvO0JFV6dvJQDTnqYY0gtFclkjLWdSEu5v0r21Pl
-	PZVGQl+//PHuCRNslbOqRh6tG9adyZ0g37PM+SFyzo6pgLSEFhr986GQBF/BhvecmsPXuD
-	rEuV9ub3UYyfsCnapYxk4ItoBdahhT2mOyfFH89tgv+X5m+TidLHQgmSy+IcfGxyWcXVR7
-	x/IPWLHYyD1ZQf+SUUPrNsxshZYCyti7zCqHomFyxcrE16fFRMKa1t/Qc0+pV5hgwVwRuE
-	Kiv0B6l3Zu/MoI/danlzWeH4cTVJZezhPCxR4wFbBph/wkJRJALAi6rzy39t0A==
-Message-ID: <43e4c568-083f-4b14-9f08-563ba6a71220@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1720439743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PWAfYfaY0yizK6Woa1K0h62J6G5j6wjoIDC1zSclttU=;
-	b=PRioF75zNznjMMWWIQchA+cYL7jATlGd1Gb/LPyaz19qiHgAxW5NT5YKdRSPepIy/Id+sv
-	NQtRGs3qdVqfJSOfL6V8Iv0vKVekHIJIro4uK2qF5z/y6wpvbo6jV918YzsNzfInuOekFt
-	nvBhZDMwf8jqHFFlmnce5n/4mzq0rQ3SLMSiRWJxARDajGm2TQCqJzWueEEOtlVLhJ7e+J
-	oJe19ol9wOkdVT2m+L71AvAzuVJJ0rNuyyGcDnOZcaVRAIAa8FkC1H9EECbph8LTs+ys7x
-	vxr70POMpWG0StzJ0DhdR/6MB0DGnYtbCC9965pgMlgl4M/1/AFsFMwGohl21g==
-Date: Mon, 8 Jul 2024 13:55:39 +0200
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 89319300000BD;
+	Mon,  8 Jul 2024 14:54:03 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 713143512D; Mon,  8 Jul 2024 14:54:03 +0200 (CEST)
+Date: Mon, 8 Jul 2024 14:54:03 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Woodhouse <dwmw2@infradead.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+	David Box <david.e.box@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	"Li, Ming" <ming4.li@intel.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Dhaval Giani <dhaval.giani@amd.com>,
+	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+	Jerome Glisse <jglisse@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Stefan Berger <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v2 07/18] spdm: Introduce library to authenticate devices
+Message-ID: <Zovha33CS76PwAMF@wunner.de>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <bbbea6e1b7d27463243a0fcb871ad2953312fe3a.1719771133.git.lukas@wunner.de>
+ <26715537-5dc4-46c1-bdcd-c760696dd418@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] [RFC] genirq/cpuhotplug, PCI/rcar-host: Silence set
- affinity failed warning
-To: Thomas Gleixner <tglx@linutronix.de>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
- Jon Hunter <jonathanh@nvidia.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-renesas-soc@vger.kernel.org
-References: <20240706132758.53298-1-marek.vasut+renesas@mailbox.org>
- <87h6d1vy2c.ffs@tglx>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <87h6d1vy2c.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: fbspjz5oatamk7pou8zhtrktx5cmz91g
-X-MBO-RS-ID: 5a863fed5a6295c1127
-X-Rspamd-Queue-Id: 4WHjHj22f5z9sb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26715537-5dc4-46c1-bdcd-c760696dd418@amd.com>
 
-On 7/7/24 8:47 PM, Thomas Gleixner wrote:
-> Marek!
-
-Hello Thomas,
-
-> On Sat, Jul 06 2024 at 15:27, Marek Vasut wrote:
+On Mon, Jul 08, 2024 at 07:57:02PM +1000, Alexey Kardashevskiy wrote:
+> > +	rc = spdm_exchange(spdm_state, req, req_sz, rsp, rsp_sz);
 > 
->> This is an RFC patch, I am looking for input on the approach taken here.
->> If the approach is sound, this patch would be split into proper patchset.
->>
->> Various PCIe controllers that mux MSIs onto single IRQ line produce these
->> "IRQ%d: set affinity failed" warnings when entering suspend. This has been
->> discussed before [1] [2] and an example test case is included at the end
->> of this commit message.
->>
->> Attempt to silence the warning by returning specific error code -EOPNOTSUPP
->> from the irqchip .irq_set_affinity callback, which skips printing the warning
->> in cpuhotplug.c . The -EOPNOTSUPP was chosen because it indicates exactly what
->> the problem is, it is not possible to set affinity of each MSI IRQ line to a
->> specific CPU due to hardware limitation.
+> rsp_sz is 36 bytes here. And spdm_exchange() cannot return more than 36
+> because this is how pci_doe() works...
 > 
-> Why does the irq_chip in question have an irq_set_affinity() callback in
-> the first place?
-I believe originally (at least that's what's being discussed in the 
-linked threads) it was because the irqchip code didn't check whether 
-.irq_set_affinity was not NULL at all, so if it was missing, there would 
-be NULL pointer dereference.
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	length = rc;
+> > +	if (length < sizeof(*rsp) ||
+> > +	    length < sizeof(*rsp) + rsp->param1 * sizeof(*req_alg_struct)) {
+> > +		dev_err(spdm_state->dev, "Truncated algorithms response\n");
+> 
+> ... but here you expect more than 36 as realistically rsp->param1 > 0.
+> How was this tested and what do I miss here?
 
-Now this is checked and irq_do_set_affinity() returns -EINVAL, which 
-triggers the warning that is being silenced by this patch.
+I assume you tested this patch set against a libspdm responder
+and got a "Truncated algorithms response" error.
 
-If you think this is better, I can:
-- Tweak the cpuhotplug.c code to do some
-   if (chip && !chip->irq_set_affinity) return false;
-- Remove all the .irq_set_affinity implementations from PCI drivers
-   which only return -EINVAL
+The short answer is, it's a bug in libspdm and the issue should
+go away once you update libspdm to version 3.1.0 or newer.
 
-Would that be better ?
+If you need to stay at an older version, consider cherry-picking
+libspdm commits 941f0ae0d24e ("libspdm_rsp_algorithms: fixup spec
+conformance") and 065fb17b74c7 ("responder: negotiate algorithms
+conformance").
 
--- 
-Best regards,
-Marek Vasut
+The bug was found and fixed by Wilfred Mallawa when testing the
+in-kernel SPDM implementation against libspdm:
 
+https://github.com/l1k/linux/issues/3
+https://github.com/DMTF/libspdm/pull/2341
+https://github.com/DMTF/libspdm/issues/2344
+https://github.com/DMTF/libspdm/pull/2353
+
+Problem is, most SPDM-enabled products right now are based on
+libspdm (the DMTF reference implementation) and thus are bug-by-bug
+compatible.  However such a software monoculture is dangerous and
+having a from-scratch kernel implementation has already proven useful
+to identify issues like this which otherwise wouldn't have been noticed.
+
+The in-kernel SPDM implementation currently doesn't send any
+ReqAlgStructs and per the spec, the responder isn't supposed to
+send any RespAlgStructs which the requester didn't ask for.
+Yet libspdm always sent a hardcoded array of RespAlgStructs.
+
+So the *reference* implementation wasn't conforming to the spec. :(
+
+Thanks,
+
+Lukas
 
