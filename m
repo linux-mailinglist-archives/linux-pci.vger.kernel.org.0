@@ -1,121 +1,85 @@
-Return-Path: <linux-pci+bounces-9963-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9964-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67F9292A8A7
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 20:06:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD33092A99D
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 21:13:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22654280F10
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 18:06:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 35BA1B21898
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 19:13:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DFC14BFBF;
-	Mon,  8 Jul 2024 18:05:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F90A14A4D4;
+	Mon,  8 Jul 2024 19:13:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KeaLQbf2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDhx8NJW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE1A14A60C
-	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 18:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060CD7D07E;
+	Mon,  8 Jul 2024 19:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720461953; cv=none; b=mfjNwLN0iQriylUMDls5PH6otIsBfmUzr7g/CebHLKRd7EHt/Njzsc74jcS1B6iUN+mHQq3556zlt9s2ghlvSyqC/dNDNGwIj0Iqa9bKDeLiWV0n0lC4gJcwKr4+Sex4ejtx3TPf3LpylSfRJCJOKjBOP422XYncrboRye7PpHg=
+	t=1720466017; cv=none; b=fXMxZchW+FmYh1I5naS8snu3P88dcSGBWyH/sS2Vvx50+ljH0Pep6+BVcZMqF8GHMc+w9U9cu/gOjG4EWw9d8qN6VcXAhA5G3kXqsUXG+g+7FvEkvibLnuEqXvUvfFYMyh8HOmXd25rlU8WIC0SmCAH2XQ+b1gC6Mue/Op8JkCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720461953; c=relaxed/simple;
-	bh=sQurFjBE9L3fAEjeupv9dzjJcGbx0I4IJJjL3X9WlHE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EX0gjDhzdY6M/UQe7QZFtc4U1IfqHg9ihzhMd7/8kxSt0qpkempZxeIS5gpR6uwDAaBM9D7VWx+HRdqTvwhU5DKSteu0pIWd7AgLQn21irs93v/3D1acU8sasj+ccQ0xF5YQt+rDT4EtaYe/tUbbsKu4wlez/iS13J5AUJ7cu4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KeaLQbf2; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-70365f905b6so1058790a34.0
-        for <linux-pci@vger.kernel.org>; Mon, 08 Jul 2024 11:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720461950; x=1721066750; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qYngg2/AvD5ABD/9akPCHM96QJ+CMJBmjqIZiNK6u3U=;
-        b=KeaLQbf268m2mnCh//+CQ1tbqfpeXynd5ZCLBgYHjLnUM5GzEJonArueM+iKZH184s
-         Q1AmcFw9bP/eZZv5vKZ6mC8NuUUniwA/VT/WHFxAKWmBXjRq2fYKbtVYdWQQz2c+giMw
-         Y0vPCnNW1PFopbFP6fhwEmvFIGMQL0YU9WUXAvSpwkRhIqyY0AMBQHGj/gI1HktKtYLU
-         SqFSwrCLCG2FP6uJV78fNnsKvq8RgE5nT8vB92GgBiaYRgwfqn4qTOATCSommvZ/XtAH
-         LX4lHySvrtArDPdmzcBPo5QDBIkBBLUWHnC9Ufb8ftEw0qWKLIrRcLr7kOd2H2oHrAWK
-         v/XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720461950; x=1721066750;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qYngg2/AvD5ABD/9akPCHM96QJ+CMJBmjqIZiNK6u3U=;
-        b=bQr+BB01ItCNeRP0VlGONUSiD3xKo3nY8zeatO/FKGH2WFBdNMcp4IL0qZywfkszpj
-         MQc87t9gDJscl5Ee0Q9J6GgWIXbJ8OgJ10ZvlT8hbELOCanwwp3WKv/hVtVLe85tMmpT
-         MVYmrRPDYUdICOqX1y+DL8GkvmqoZhqjujyYtRB3LTUsr34YDoBGJ+1Ck+rJMtiLy587
-         UhdgyP5DKM2pTNxZk+HTU1EpgcDhAKLRF5w28S7X2SwMjlQAawDYO/1N8jXBWl+M6Jbl
-         Q1SOYlt8opa8JmJ4617Np59DYAo2vMgHzSTyaGaoQ3DZl9zmjdeqFoXm8H0oJ3LX+xsX
-         vtLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGNbWX64VnHUSv6O74pIFl6/wCkDusulIgKKuu/yr02hOPCfZOMcOHNFLYddZMOmN5FJc+/8KuMjIDy0b3u5i3/QE3ulsYqPzM
-X-Gm-Message-State: AOJu0YxKz1oP13DLCKsebk4y+cFD+6Z+SLrRcVojexO0v6fKiZgGvNFl
-	5Uny4TEeshAm7EHRYvqnDxmcNkK0BFNXNaBnBsi/TVg5NkoHiKIu9kbomQ2fA2w=
-X-Google-Smtp-Source: AGHT+IFotg/OqzVapLsDoyFgjgyedblYoClmUMzMboNvrP7Hf0zFKYNPw6ZcbTQzYlbt4UCndKAUOw==
-X-Received: by 2002:a05:6830:91d:b0:703:5fba:5e1a with SMTP id 46e09a7af769-70375a0512dmr309192a34.9.1720461949870;
-        Mon, 08 Jul 2024 11:05:49 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:cdd0:d497:b7b2:fe])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-70374f7a2d3sm86559a34.32.2024.07.08.11.05.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 11:05:49 -0700 (PDT)
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] PCI: qcom: Potential uninitialized variable in qcom_pcie_suspend_noirq()
-Date: Mon,  8 Jul 2024 13:05:38 -0500
-Message-ID: <20240708180539.1447307-4-dan.carpenter@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240708180539.1447307-1-dan.carpenter@linaro.org>
-References: <20240708180539.1447307-1-dan.carpenter@linaro.org>
+	s=arc-20240116; t=1720466017; c=relaxed/simple;
+	bh=nizOjn5+V1A/82KeFshXPXn6MYyfeMgzRxMbO+ZmUtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ginuwegki1reRpTC1WpWkY4K82spR1dCaKD9qwA0Sw4+SFB8weDjMDRf8ioyWz9mBsHM7EJnTMJLpz5LeyybMiBhgbuEFpvude2sT56EH2+Z1Ses2lUMsdPiF/UqgTsC8U0iwmsU9J6sCVdAJpX/m2Ya31D0niqz3hZ1tYgGshI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDhx8NJW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D978C116B1;
+	Mon,  8 Jul 2024 19:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720466016;
+	bh=nizOjn5+V1A/82KeFshXPXn6MYyfeMgzRxMbO+ZmUtI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KDhx8NJWseQrF2Jxned2G+7OqXzBdp+q1vFpE33jl3sCQ1k8WPpSy9m4Z1OCxeTbz
+	 1YdiZngXq+21zSY1I1jvGhi1qNfghAExqedZM50jxcxU2FwzvmUlLIsawFt5kG/2j9
+	 uEOurQr40WdpLUtDtmV88+dRtwZQ8jFlcWiBZkfqEx6qclF31Rllyg46e4Ht0cjGGn
+	 c0z/yusaDDK0D55NpjT1QhysQVlLBKpM8sfXJW+PT+VVT+G7I5aAbU0m2ak6xASH04
+	 L9ptRpU2DLuRmS8cIaXNaX3NOUpRPftm1flFJKzORhUaIIcw9pfPsCTdXf8USljlpa
+	 vU4MKBFrDM9Rw==
+Date: Mon, 8 Jul 2024 14:13:28 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	caleb.connolly@linaro.org, bhelgaas@google.com,
+	amit.pundir@linaro.org, neil.armstrong@linaro.org,
+	Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
+ CONFIG_OF is enabled
+Message-ID: <20240708191328.GA144620@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240707183829.41519-1-spasswolf@web.de>
 
-Smatch complains that "ret" could be uninitialized if "pcie->icc_mem"
-is NULL and "pm_suspend_target_state == PM_SUSPEND_MEM".  Silence this
-warning by initializing ret to zero.
+On Sun, Jul 07, 2024 at 08:38:28PM +0200, Bert Karwatzki wrote:
+> If of_platform_populate() is called when CONFIG_OF is not defined this
+> leads to spurious error messages of the following type:
+>  pci 0000:00:01.1: failed to populate child OF nodes (-19)
+>  pci 0000:00:02.1: failed to populate child OF nodes (-19)
+> 
+> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
+> 
+> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
 
-Fixes: 78b5f6f8855e ("PCI: qcom: Add OPP support to scale performance")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I didn't trace all the history of this patch so I don't know whether
+it's in or out.  If it hasn't been applied yet or will be revised, run
+"git log --oneline drivers/pci/bus.c" and match the style, e.g.,
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index e06c4ad3a72a..74e2acf4ae11 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1633,7 +1633,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- static int qcom_pcie_suspend_noirq(struct device *dev)
- {
- 	struct qcom_pcie *pcie = dev_get_drvdata(dev);
--	int ret;
-+	int ret = 0;
- 
- 	/*
- 	 * Set minimum bandwidth required to keep data path functional during
--- 
-2.43.0
+  PCI/pwrctl: Call of_platform_populate() only when CONFIG_OF enabled
 
+This would also match the 8fb18619d910 subject so it's more obvious
+they are connected.
+
+Bjorn
 
