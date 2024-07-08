@@ -1,184 +1,214 @@
-Return-Path: <linux-pci+bounces-9923-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9924-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A18992A0C9
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:14:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12D6392A140
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:33:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D25C1C20EB4
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 11:14:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCDF8281FEC
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 11:33:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141996F2FB;
-	Mon,  8 Jul 2024 11:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 505D278C71;
+	Mon,  8 Jul 2024 11:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fVBVT10d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63998482DE;
-	Mon,  8 Jul 2024 11:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C29F7F466
+	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 11:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720437267; cv=none; b=q/OedEgOIYtooHJr/JcDNJYRElDWAgCtXxpey21GuLrM8oNmtLy7Ow9zFIhL4n2hz2CBc1DY2BgBl5uRdmzMSf1WToSjiuALbXNQjwADiuqvuJGC/I756mqp3J4O8v/Y6D7F0V+/M31KVNqhU62/r6DdTb5y7p/r5EDpu6sJzHM=
+	t=1720438426; cv=none; b=Bmc5ghK4P6l9bDc/VS0FkiF5iOLTHUZA5nAr8aifh9y5TPfNc5pSEWvjbkOUJZSSWlFU5reQauHL/euwv+jPJI3/ghRutucp3BjMSOcD/cBxFcfgnHTiw7xysRfr4Vx0Tmt+ZKZCfE1BSuyyvW0Z6jO1w8MX6cHtw3Tc2XR+2XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720437267; c=relaxed/simple;
-	bh=LhPjovSVZgqmN9GfmU1S+wlhD8gvlbotPiGGcn0WHgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=azMSPW43k9wbEpJZhgb3pOFgREHrq15DBE9EkEu3zxrBOyeDV4NiTjtSqFWF2NrweemvYbX+yeC+fIw9fHEaJN4jhDwnzyEQP5h94juJf0HgXCgL2J1UAUpyfz89SnmB4Xd7bg2e85hTcvqhQ4B+JRmz47SOsgyaVR7TiVHfQb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A86D71FC0D;
-	Mon,  8 Jul 2024 11:14:23 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E6EB01396E;
-	Mon,  8 Jul 2024 11:14:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EiMJNg7Ki2YXWAAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Mon, 08 Jul 2024 11:14:22 +0000
-Message-ID: <f89d7f45-5d2b-4d8b-9d6a-2d83cd584756@suse.de>
-Date: Mon, 8 Jul 2024 14:14:18 +0300
+	s=arc-20240116; t=1720438426; c=relaxed/simple;
+	bh=aBdLMkkPZs5AGv0uiAydtdIDhTHaK7/ySurVjMioEuI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YyganiQ3C4oUQMNFNUjNb/PBzy4c9qFOnNkzC6+KnaKs0EMOkE9TsNXVR73ywcLLg4rIXl25aJ+KT0/8EiM6DopZyubxExYgCbCyIWm06QkCkxLmO51GJ50M8YLTYSyenC9+Jt5ZRkQNH48WYo9Gb48psMfL/35S9kO9YNZMrnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fVBVT10d; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720438425; x=1751974425;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=aBdLMkkPZs5AGv0uiAydtdIDhTHaK7/ySurVjMioEuI=;
+  b=fVBVT10dcWfog9ANcJ57vQFj93YPfeiWzATHtTAmJLeh2gPqLa7ydrTA
+   i5R9MHXaaC1DLWWh+GVBTiS3NFELlCfDpdJxtCC4mCKYB73sHNR5HpqlT
+   BvuiWc8Pxsqmg/o1Wo0OcFTlm1o/ILIg+BmfT16OV9QZH00sfd10S7CUI
+   37Y+mP5i1XMNUtyLkuOGYUt9yKME4N/w8GeWMnBrT0SBKkO1tCE/QtDwz
+   UMRk1+ah4oeWIjuNMa8pke/dUY6ZbUeQgB9KtyCHK6mMyhi1fxNSvcmaF
+   nu1pk9waSLKuPcM3lLEr1J7OryJnNU2UezgCv1ZEBFK7NpqYZHNPqhjJX
+   A==;
+X-CSE-ConnectionGUID: Ydku8cAeTFK2OfeZnILLuw==
+X-CSE-MsgGUID: k+iS/R8QQCaw1PskNC92EQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="28240789"
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="28240789"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 04:33:44 -0700
+X-CSE-ConnectionGUID: fEb5XNlyQoyyZW5NkXFwfQ==
+X-CSE-MsgGUID: PSPu08sEQ4CvoywLOOfaSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="52419932"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.115])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 04:33:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Jul 2024 14:33:34 +0300 (EEST)
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+cc: linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    Dan Williams <dan.j.williams@intel.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>, 
+    Marek Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>, 
+    Randy Dunlap <rdunlap@infradead.org>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: Re: [PATCH v3 2/3] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+In-Reply-To: <20240705125436.26057-3-mariusz.tkaczyk@linux.intel.com>
+Message-ID: <f318f400-88ef-fe56-dcd5-27434e305d9f@linux.intel.com>
+References: <20240705125436.26057-1-mariusz.tkaczyk@linux.intel.com> <20240705125436.26057-3-mariusz.tkaczyk@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/12] PCI: brcmstb: Use swinit reset if available
-To: Philipp Zabel <p.zabel@pengutronix.de>,
- Jim Quinlan <james.quinlan@broadcom.com>,
- Stanimir Varbanov <svarbanov@suse.de>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com,
- jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240703180300.42959-1-james.quinlan@broadcom.com>
- <20240703180300.42959-5-james.quinlan@broadcom.com>
- <362a728f-5487-47da-b7b9-a9220b27d567@suse.de>
- <CA+-6iNynwxcBAbRQ18TfJXwCctf+Ok7DnFyjgv4wNasX9MjV1Q@mail.gmail.com>
- <7b03c38f44f295a5484d0162a193f41b39039b85.camel@pengutronix.de>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <7b03c38f44f295a5484d0162a193f41b39039b85.camel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Queue-Id: A86D71FC0D
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+Content-Type: multipart/mixed; BOUNDARY="8323328-1501028441-1720437734=:1343"
+Content-ID: <605f87d2-5c36-9e50-4f93-50d7824e2d5f@linux.intel.com>
 
-Hi Philipp,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 7/8/24 12:37, Philipp Zabel wrote:
-> On Fr, 2024-07-05 at 13:46 -0400, Jim Quinlan wrote:
->> On Thu, Jul 4, 2024 at 8:56 AM Stanimir Varbanov <svarbanov@suse.de> wrote:
->>>
->>> Hi Jim,
->>>
->>> On 7/3/24 21:02, Jim Quinlan wrote:
->>>> The 7712 SOC adds a software init reset device for the PCIe HW.
->>>> If found in the DT node, use it.
->>>>
->>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>>> ---
->>>>  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++++++++
->>>>  1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
->>>> index 4104c3668fdb..69926ee5c961 100644
->>>> --- a/drivers/pci/controller/pcie-brcmstb.c
->>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
->>>> @@ -266,6 +266,7 @@ struct brcm_pcie {
->>>>       struct reset_control    *rescal;
->>>>       struct reset_control    *perst_reset;
->>>>       struct reset_control    *bridge;
->>>> +     struct reset_control    *swinit;
->>>>       int                     num_memc;
->>>>       u64                     memc_size[PCIE_BRCM_MAX_MEMC];
->>>>       u32                     hw_rev;
->>>> @@ -1626,6 +1627,13 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->>>>               dev_err(&pdev->dev, "could not enable clock\n");
->>>>               return ret;
->>>>       }
->>>> +
->>>> +     pcie->swinit = devm_reset_control_get_optional_exclusive(&pdev->dev, "swinit");
->>>> +     if (IS_ERR(pcie->swinit)) {
->>>> +             ret = dev_err_probe(&pdev->dev, PTR_ERR(pcie->swinit),
->>>> +                                 "failed to get 'swinit' reset\n");
->>>> +             goto clk_out;
->>>> +     }
->>>>       pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
->>>>       if (IS_ERR(pcie->rescal)) {
->>>>               ret = PTR_ERR(pcie->rescal);
->>>> @@ -1637,6 +1645,17 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->>>>               goto clk_out;
->>>>       }
->>>>
->>>> +     ret = reset_control_assert(pcie->swinit);
->>>> +     if (ret) {
->>>> +             dev_err_probe(&pdev->dev, ret, "could not assert reset 'swinit'\n");
->>>> +             goto clk_out;
->>>> +     }
->>>> +     ret = reset_control_deassert(pcie->swinit);
->>>> +     if (ret) {
->>>> +             dev_err(&pdev->dev, "could not de-assert reset 'swinit' after asserting\n");
->>>> +             goto clk_out;
->>>> +     }
->>>
->>> why not call reset_control_reset(pcie->swinit) directly?
->> Hi Stan,
->>
->> There is no reset_control_reset() method defined for reset-brcmstb.c.
->> The only reason I can
->> think of for this is that it allows the callers of assert/deassert to
->> insert a delay if desired.
-> 
-> The main reason for the existence of reset_control_reset() is that
-> there are reset controllers that can only be triggered (e.g. by writing
-> a bit to a self-clearing register) to produce a complete reset pulse,
-> with assertion, delay, and deassertion all handled by the reset
-> controller.
+--8323328-1501028441-1720437734=:1343
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <2354a271-84ff-1026-6669-f1f32e85c38f@linux.intel.com>
+
+On Fri, 5 Jul 2024, Mariusz Tkaczyk wrote:
+
+> Native PCIe Enclosure Management (NPEM, PCIe r6.1 sec 6.28) allows
+> managing LED in storage enclosures. NPEM is indication oriented
+> and it does not give direct access to LED. Although each of
+> the indications *could* represent an individual LED, multiple
+> indications could also be represented as a single,
+> multi-color LED or a single LED blinking in a specific interval.
+> The specification leaves that open.
+>=20
+> Each enabled indication (capability register bit on) is represented as a
+> ledclass_dev which can be controlled through sysfs. For every ledclass
+> device only 2 brightness states are allowed: LED_ON (1) or LED_OFF (0).
+> It is corresponding to NPEM control register (Indication bit on/off).
+>=20
+> Ledclass devices appear in sysfs as child devices (subdirectory) of PCI
+> device which has an NPEM Extended Capability and indication is enabled
+> in NPEM capability register. For example, these are leds created for
+> pcieport "10000:02:05.0" on my setup:
+>=20
+> leds/
+> =E2=94=9C=E2=94=80=E2=94=80 10000:02:05.0:enclosure:fail
+> =E2=94=9C=E2=94=80=E2=94=80 10000:02:05.0:enclosure:locate
+> =E2=94=9C=E2=94=80=E2=94=80 10000:02:05.0:enclosure:ok
+> =E2=94=94=E2=94=80=E2=94=80 10000:02:05.0:enclosure:rebuild
+>=20
+> They can be also found in "/sys/class/leds" directory. Parent PCIe device
+> bdf is used to guarantee uniqueness across leds subsystem.
+>=20
+> To enable/disable fail indication "brightness" file can be edited:
+> echo 1 > ./leds/10000:02:05.0:enclosure:fail/brightness
+> echo 0 > ./leds/10000:02:05.0:enclosure:fail/brightness
+>=20
+> PCIe r6.1, sec 7.9.19.2 defines the possible indications.
+>=20
+> Multiple indications for same parent PCIe device can conflict and
+> hardware may update them when processing new request. To avoid issues,
+> driver refresh all indications by reading back control register.
+>=20
+> Driver is projected to be exclusive NPEM extended capability manager.
+> It waits up to 1 second after imposing new request, it doesn't verify if
+> controller is busy before write, assuming that mutex lock gives protectio=
+n
+> from concurrent updates. Driver is not registered if _DSM LED management
+> is available.
+>=20
+> NPEM is a PCIe extended capability so it should be registered in
+> pcie_init_capabilities() but it is not possible due to LED dependency.
+> Parent pci_device must be added earlier for led_classdev_register()
+> to be successful. NPEM does not require configuration on kernel side, it
+> is safe to register LED devices later.
+>=20
+> Link: https://members.pcisig.com/wg/PCI-SIG/document/19849 [1]
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+
+Looks to be in quite good shape already, one comment below I think should=
+=20
+be addressed before this is ready to go.
+
+> +static int npem_set_active_indications(struct npem *npem, u32 inds)
+> +{
+> +=09int ctrl, ret, ret_val;
+> +=09u32 cc_status;
+> +
+> +=09lockdep_assert_held(&npem->lock);
+> +
+> +=09/* This bit is always required */
+> +=09ctrl =3D inds | PCI_NPEM_CTRL_ENABLE;
+> +
+> +=09ret =3D npem_write_ctrl(npem, ctrl);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09/*
+> +=09 * For the case where a NPEM command has not completed immediately,
+> +=09 * it is recommended that software not continuously =E2=80=9Cspin=E2=
+=80=9D on polling
+> +=09 * the status register, but rather poll under interrupt at a reduced
+> +=09 * rate; for example at 10 ms intervals.
+> +=09 *
+> +=09 * PCIe r6.1 sec 6.28 "Implementation Note: Software Polling of NPEM
+> +=09 * Command Completed"
+> +=09 */
+> +=09ret =3D read_poll_timeout(npem_read_reg, ret_val,
+> +=09=09=09=09ret_val || (cc_status & PCI_NPEM_STATUS_CC),
+> +=09=09=09=0910 * USEC_PER_MSEC, USEC_PER_SEC, false, npem,
+> +=09=09=09=09PCI_NPEM_STATUS, &cc_status);
+> +=09if (ret)
+> +=09=09return ret_val;
+
+Will this work as intended?
+
+If ret_val gets set, cond in read_poll_timeout() is true and it returns 0=
+=20
+so the return branch is not taken.
+
+Also, when read_poll_timeout() times out, ret_val might not be non-zero.
+
+> +
+> +=09/*
+> +=09 * All writes to control register, including writes that do not chang=
+e
+> +=09 * the register value, are NPEM commands and should eventually result
+> +=09 * in a command completion indication in the NPEM Status Register.
+> +=09 *
+> +=09 * PCIe Base Specification r6.1 sec 7.9.19.3
+> +=09 *
+> +=09 * Register may not be updated, or other conflicting bits may be
+> +=09 * cleared. Spec is not strict here. Read NPEM Control register after
+> +=09 * write to keep cache in-sync.
+> +=09 */
+> +=09return npem_get_active_indications(npem, &npem->active_indications);
+> +}
 
 
-Got it. Thank you for explanation.
-
-But, IMO that means that the consumer driver should have knowledge of
-low-level reset implementation, which is not generic API?
-
-Otherwise, I don't see a problem to implement asset/deassert sequence in
-.reset op in this particular reset-brcmstb.c low-level driver.
-
-
-~Stan
+--=20
+ i.
+--8323328-1501028441-1720437734=:1343--
 
