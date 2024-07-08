@@ -1,122 +1,187 @@
-Return-Path: <linux-pci+bounces-9901-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9902-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8350929A6C
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 02:55:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B289929B4C
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 06:29:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9A601C20A2D
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 00:55:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15461B20DBF
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 04:29:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8F064B;
-	Mon,  8 Jul 2024 00:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E47C86FB9;
+	Mon,  8 Jul 2024 04:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KDDjJCPV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3267B18E;
-	Mon,  8 Jul 2024 00:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF160AD21;
+	Mon,  8 Jul 2024 04:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720400137; cv=none; b=d3KDgyuLM89+ZMdVAR3DBmZujYJnvumm1X3UUkrMcGYGFjEq0Q8uT+sph3FPlqcQ2xFDc0GE67IMh8QfnCAoCXeroIbrcRJpg9ATYvEl0Av5jKmC1rynOZOeJzqGampXKiCaaNDuqTXMTU9c5QcKK5+7lAwSAem2RooXIUsdOwU=
+	t=1720412936; cv=none; b=OMRFwBVXO+5z7xhhomr7SmMAhMh/NkBa3gDZtFDe1OTUEL8zfemhkljgR31z8GRzxy+fRRJxDGxFJbp75Lfez/CUEWEXLY2Xo06XIG0Wblgyp3xZCONM4Gleodcj3EuKrPOR9vZ2PT/dv5tVLQiUv26DCrFz3In1cNOZ4t24LCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720400137; c=relaxed/simple;
-	bh=ERXbQUuJWEgOsNCx2q78Ud0n+TUu5fUHCLROMqVVCVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7++pCfv43RzybijYjJhmZ61XNuZ1w62SzLaMnu2QDgsbbMoLyvHYtg4rs3PKK2ZFj0KXHHB8aBZvI+p/ooG5/KZd4fNJJ4J+tIgYw4vtZEzrnIwihev+fjZp5GajkhRh5axDncxdUkoRZ0YLg2+pLBLDiaX5mn10vUnPkO/2KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1fb0d88fd25so21006105ad.0;
-        Sun, 07 Jul 2024 17:55:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720400135; x=1721004935;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RDJcioIgRokoEknQP/HTNblVSt1TW8hmi/54+StFqeE=;
-        b=Topt8Rj1ScFqCV0ZlmJe379wQslBkwTlGK/1Ze5eQr35Xf+ygS0FuiJDAaj+/jJkhT
-         oJyFd7tpVqFdWudcCPhOQsb+Kb3Y6w2hqRqDFWgyrKdBPSMbqafQw+KN8cNdcERUXg2Q
-         HJex0s2v0MkyWoE7AZ1LrbQcE3Areg4+c3IMNH/rHijlfesKdXGS9T9PRoeJOL0kjK0Z
-         gcexe6ZExMf2gMs/9BpMbgCMKn5QSqk/vP1kmg9BH/zyYUIwmM0dt/GgoU2ZzcyboY3d
-         WNYTzLtFLIcN4rypduKov03RZuEwDgGlP3434OsgDNBo3OCcXEhsa81ojXz+qilfQl+c
-         xu6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUMDi9u0NOtegXCtJFNiF4/DNOctmNSc1TGTpJc9s26DH6Xb4sC6Doqd4EH/K+1ZXE7X7ND5l4exSCVh1U6n3ENrJ9kVZux2+qagh1uNsTJv1cj1Wv06y4yqRGDzotMDBVJaU4Dz41K
-X-Gm-Message-State: AOJu0YxYO+fyVsxvGMMn2ShrQ6TZKehWccRwLCrcDerAE/RwofaezwG9
-	i9/erxiF86C5ACAH4G7rNIq9v+9UmnbO7SyxRuaddTm/SSqUKuLP
-X-Google-Smtp-Source: AGHT+IEkJcV1nhz6kvCkwOiNdOEu8m3NKshaNXgH6aBbiceLbDy1XIpqsBC01SAiq5mdA67stW12gA==
-X-Received: by 2002:a17:902:ea0b:b0:1fb:4985:22e0 with SMTP id d9443c01a7336-1fb498524d9mr114885495ad.23.1720400135325;
-        Sun, 07 Jul 2024 17:55:35 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb4e7c31afsm46915785ad.2.2024.07.07.17.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 17:55:34 -0700 (PDT)
-Date: Mon, 8 Jul 2024 09:55:33 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, lukas@wunner.de,
-	alex.williamson@redhat.com, christian.koenig@amd.com,
-	kch@nvidia.com, gregkh@linuxfoundation.org, logang@deltatee.com,
-	linux-kernel@vger.kernel.org, chaitanyak@nvidia.com,
-	rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v13 3/4] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <20240708005533.GC586698@rocinante>
-References: <20240702060418.387500-1-alistair.francis@wdc.com>
- <20240702060418.387500-3-alistair.francis@wdc.com>
- <20240702145806.0000669b@Huawei.com>
- <CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
- <20240705112953.00007303@Huawei.com>
+	s=arc-20240116; t=1720412936; c=relaxed/simple;
+	bh=u2dvuQpQzqhCs0g4IjQ4wZu0OThTOkRlkLcVW5za8e0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WO1FrKtMr+HEptE7ox65sUm9iAOGsk3DUVb1zUA0D7QKFQhBfFU0MUfUScdxBpyNn3rlCD9LOifvE2pRaXJIvXx+EGe6kzVnm9hDjF4h8J/jbgnjyBa6mPC/jIBYd0jt5LhQrO9b63LqNLWJemlLNhKS/zkynpkAvMHV5L43aG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KDDjJCPV; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 467Moh8P017926;
+	Mon, 8 Jul 2024 04:28:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TAV6s6XApo1U20XEbYHTaWuf5u8aUOnk4RbEr7gq3qs=; b=KDDjJCPVj7MVkc7D
+	q+o9QFF8mMDjLShVQGmCIJm59eDnG34DHldbfZqUDr99uaeZyjzph5BQkO0f8C4R
+	3R5TQyD3uYRlyeu8L9sL2ANhBr3p4zlPNytlGvqt2jYFh9X3BbfUz3ggbU5ml9Yz
+	S9zuFiztE1iy3gynzlHty55jTsB9M4niHKHMhMS18WK6YCO+Xp0UZYTVTBYxMfKJ
+	U5wHE/RxbIBCgt8aTenx+/VPwatOzc0b2Nvh5sx6ZaM9J8ZQRZopgLE5us5fp5lk
+	JCEpANzj2zIhPIgvNDh9eIkKfv8nxRJYjPg/7+u57IM6EB/I+LLixhoiOkkGxtI7
+	vgp4Bg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wg3tmtj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jul 2024 04:28:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4684Sla5005382
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Jul 2024 04:28:47 GMT
+Received: from [10.216.31.252] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 7 Jul 2024
+ 21:28:44 -0700
+Message-ID: <31f75b20-7e7b-c070-bd52-9343276a43e3@quicinc.com>
+Date: Mon, 8 Jul 2024 09:58:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240705112953.00007303@Huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3] PCI: Enable runtime pm of the host bridge
+Content-Language: en-US
+To: Mayank Rana <quic_mrana@quicinc.com>, Bjorn Helgaas <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Rafael J.
+ Wysocki" <rjw@rjwysocki.net>, <quic_vbadigan@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
+References: <20240609-runtime_pm-v3-1-3d0460b49d60@quicinc.com>
+ <4b81e0f0-ecc6-44b3-9388-aacf54230788@quicinc.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <4b81e0f0-ecc6-44b3-9388-aacf54230788@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: xkaQo6iEjunOtJ1z9jUWT4C8JDmNR5K_
+X-Proofpoint-GUID: xkaQo6iEjunOtJ1z9jUWT4C8JDmNR5K_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-08_01,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 clxscore=1011 impostorscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407080033
 
-Hello,
 
-> > Any input from a PCI maintainer here?
 
-Something that I am curious about: can we make this a single file with a
-bitmask inside that denotes what DOE features are enabled?  Would this be
-approach be even feasible here?
-
-Thoughts?  Or is it too late to think about this now?
-
-> > There are basically two approaches.
-> > 
-> >  1. We can have a pci_doe_sysfs_init() function that is called where
-> > we dynamically add the entries, like in v12
-> >  2. We can go down the dev->groups and device_add() path, like this
-> > patch and discussed at
-> > https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
-> > 
-> > For the second we will have to create a global pci_doe_sysfs_group
-> > that contains all possible DOE entries on the system and then have the
-> > show functions determine if they should be displayed for that device.
-> > 
-> > Everytime we call pci_doe_init() we can check for any missing entries
-> > in pci_doe_sysfs_group.attrs and then realloc
-> > pci_doe_sysfs_group.attrs to add them. 
-> > Untested, but that should work
-> > even for hot-plugged devices. pci_doe_sysfs_group.attrs would just
-> > grow forever though as I don't think we have an easy way to deallocate
-> > anything as we aren't sure if we are the only entry.
+On 6/11/2024 12:04 AM, Mayank Rana wrote:
 > 
-> I think this needs to be per device, not global and you'll have to manually
-> do the group visibility magic rather than using the macros.
+> On 6/8/2024 8:14 PM, Krishna chaitanya chundru wrote:
+>> The Controller driver is the parent device of the PCIe host bridge,
+>> PCI-PCI bridge and PCIe endpoint as shown below.
+>>
+>>          PCIe controller(Top level parent & parent of host bridge)
+>>                          |
+>>                          v
+>>          PCIe Host bridge(Parent of PCI-PCI bridge)
+>>                          |
+>>                          v
+>>          PCI-PCI bridge(Parent of endpoint driver)
+>>                          |
+>>                          v
+>>                  PCIe endpoint driver
+>>
+>> Now, when the controller device goes to runtime suspend, PM framework
+>> will check the runtime PM state of the child device (host bridge) and
+>> will find it to be disabled. So it will allow the parent (controller
+>> device) to go to runtime suspend. Only if the child device's state was
+>> 'active' it will prevent the parent to get suspended.
+>>
+>> Since runtime PM is disabled for host bridge, the state of the child
+>> devices under the host bridge is not taken into account by PM framework
+>> for the top level parent, PCIe controller. So PM framework, allows
+>> the controller driver to enter runtime PM irrespective of the state
+>> of the devices under the host bridge. And this causes the topology
+>> breakage and also possible PM issues like controller driver goes to
+>> runtime suspend while endpoint driver is doing some transfers.
+>>
+>> So enable runtime PM for the host bridge, so that controller driver
+>> goes to suspend only when all child devices goes to runtime suspend.
+>>
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>> ---
+>> Changes in v3:
+>> - Moved the runtime API call's from the dwc driver to PCI framework
+>>    as it is applicable for all (suggested by mani)
+>> - Updated the commit message.
+>> - Link to v3: 
+>> https://lore.kernel.org/all/20240305-runtime_pm_enable-v2-1-a849b74091d1@quicinc.com
+>> Changes in v2:
+>> - Updated commit message as suggested by mani.
+>> - Link to v1: 
+>> https://lore.kernel.org/r/20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com
+>> ---
+>>
+>> ---
+>>   drivers/pci/probe.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 20475ca30505..b7f9ff75b0b3 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -3108,6 +3108,10 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+>>           pcie_bus_configure_settings(child);
+>>       pci_bus_add_devices(bus);
+>> +
+>> +    pm_runtime_set_active(&bridge->dev);
+>> +    pm_runtime_enable(&bridge->dev);
+> Can you consider using devm_pm_runtime_enable() instead of 
+> pm_runtime_enable() ?
+> It serves calling pm_runtime_disable() when bridge device is removed as 
+> seeing pcie driver is using pci_host_probe() after allocating bridge 
+> device, and as part of pcie driver removal calls pci_remove_host_bus(), 
+> and bridge device would be freed, but it doesn't call 
+> pm_runtime_disable() on it. I don't see any specific functionality issue 
+> here as bridge device would be freed anyway, although as we have way to 
+> undo what is probe() is doing when bridge device is binding with bridge 
+> device. Perhaps we can use available mechanism.
+> 
+> Regards,
+> Mayank
+Sure I will add as suggested in my next patch.
 
-Lukas proposes a very interesting feature of kernfs recently per:
-
-  https://lore.kernel.org/linux-pci/16490618cbde91b5aac04873c39c8fb7666ff686.1719771133.git.lukas@wunner.de
-
-Would this help with DOE features?
-
-	Krzysztof
+- Krishna Chaitanya
+>>       return 0;
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_host_probe);
+>>
+>> ---
+>> base-commit: 30417e6592bfc489a78b3fe564cfe1960e383829
+>> change-id: 20240609-runtime_pm-7e6de1190113
+>>
+>> Best regards,
 
