@@ -1,193 +1,134 @@
-Return-Path: <linux-pci+bounces-9907-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9908-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13EB4929CDE
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 09:14:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F3D1929D01
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 09:22:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E777B20BB5
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 07:14:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4919D1F2161F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 07:22:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C70311CD00;
-	Mon,  8 Jul 2024 07:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F781D52D;
+	Mon,  8 Jul 2024 07:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k4k0gjOT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="naJtVH36"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24421C68F;
-	Mon,  8 Jul 2024 07:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A12EDF
+	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 07:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720422883; cv=none; b=NMknlXC7eHKbvs+wQeZvhttJn8sE5vgb1jZhPvgRnUuJAKgbwsUxDVZbj/UfnRLBcWvbMmE7JBvqghtTGwOftV4T5fmC4T+7wS3P37xVmERL0BfqEB0ZDZjgfWgG/PrErwqNspWaI0Ltb3XEp/NYiJ9PnA9y/LvVWFyGpbfmYBo=
+	t=1720423354; cv=none; b=IV+dxyNx22UuX8Vloiwz8dj8FxOukpGiRY3NwuYu8CdBLm7rXanI0sdnA53NG4hCkShq4mSXVRoAINXQJpu1Hke8fvDvXLf2JoiM3ndrIKZKjVjTZM2Hk01XQAZjy5kYIpWGKW2WYzMNr5v37cZtBSChWgFDK0vM6FD33OWlUhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720422883; c=relaxed/simple;
-	bh=CsZBoXzk0XIRrdPyPdyogoIooR3030G2XvdRQtmGPcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bt8Bsbn0Ah9hQc5BQp2GYj6J+S65oqzmJz3aYJkicaQdf0chE5ASV8ld2KbTf1MQ8BgS+upQOJieNUAp1aClAUbjpZBZadzMwGrHNeXTLsvi3v2YYy4WZWdi4tw467fB8N8TkCXOxc+CN3qUtUWnwdXqbst22qItU29sIeXBC8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k4k0gjOT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4680R1T3031488;
-	Mon, 8 Jul 2024 07:13:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	oVQgIh72nNA4GfK+pn5YNj9SZPpD84n0grZ2Sjd1hiM=; b=k4k0gjOTh+Vxo9s/
-	h9S8/RA7yKThjmbvcW/tFXO+sXXLk07A8ojbHYxPlHvFElRS9CX2tSmoPlG0WvoA
-	BD3e0KVxPgnJK5C7Q8ARMoE5DvnYQmSnBTz8b/EusqvvIUmk+krrOnkSUZLTcUko
-	yPM5CWKPOhDhwHhIninv839irig80p5xHdCayzX+4VCwSAyLd2RjWvHwkb+yrAxA
-	I3JL/ihKAuVbLfn6472ACWvJdbgeUUMZcaWc4u+iE9EbBg7NrSKPSxvdd0FcVLUv
-	1//BmZOHCzJnmVQqJkSlzIdbXEXACBKgaJ8/R3Nel/axg3KwBECd7MtoM431QbS4
-	zpDsQQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406wgwjvnj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jul 2024 07:13:46 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4687DiCn028522
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jul 2024 07:13:44 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Jul 2024
- 00:13:23 -0700
-Message-ID: <c9822569-896c-4d5f-b917-2826bf414e67@quicinc.com>
-Date: Mon, 8 Jul 2024 15:13:20 +0800
+	s=arc-20240116; t=1720423354; c=relaxed/simple;
+	bh=idrcO3j6ZJtjys03L4/z16VLpQLwc7Vr6ABcCm9c4rg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oIks/m4QKPs7FTbQTJj60YVtR549U2Ip/HhqcyXqiKMQl1zSTZpgBPXOvpBuGI2HrVMf/3U0ab+X0UNC4+1uRULH/nb/xicZgrskXKLQDaLhd8Fel84cGYstKl2r9sTN0o3aAWox3iBub2MuVZTAPdH3NZfNGZAxoQ1NL0EHPqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=naJtVH36; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f6a837e9a3so14291335ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 08 Jul 2024 00:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720423351; x=1721028151; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WBYy4DFhtHluGvHK6v5yjGoMYZnZkSaBjiQQhAn19qs=;
+        b=naJtVH36XF1jE7eLb7qFGnd0s0CnBklb/R39zYap08YrXaBuLp78z7BBvXdSrpE081
+         dyGO9RSJQTN7tv8YG7K9z1n99aJgSvVw1cL8tswEV6SfYzr7hbU8wAVwUG0wJOgsBMvU
+         At9CxJ5F/uAkyQVEupaqc0nejtYCzSKggO1r3eRIGfuTq7vPq2YwCdAuK7Xjr7xp40dM
+         /9xgz9n1i8vgFDGwapEbewocYCDWiPAxhQ5ULRNn02BeqDeUyHH6jF9QmHWwdex98qN6
+         uzsPXMlhc47SYLlmdC8sCIw7hBqcOi1M0t2TrbmsoG8nGj2PvapGR+s50K/dFCoSlwxK
+         Psnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720423351; x=1721028151;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WBYy4DFhtHluGvHK6v5yjGoMYZnZkSaBjiQQhAn19qs=;
+        b=PTwmkMi71Mbg5zmaAACPzxKwyTxZejb3Q3Q855YKKDWFwNdgV99GwSjKIhiRzqmgZ7
+         Es3Z5py+A3Yptal+lZMuAFDajBIEPk8K+c6+Jhj/ibxvH+57cFMpQhsNvq/9BdBiKNBJ
+         edPw36fD2XYvpVM9oi8kCOdLs0iJJ5h+PPpmnRjKWTEqQ3zUraHWfTE351DN46YvQOAp
+         DKXUUQHp8VAUXV5x4mYrId4siBZ0gL1WOjGvwSPkY9nUbdEszq5nEmRmrd6Uk9rbQpsW
+         ZBJb/VXSZ+rLwRiLS2AdXmFAz+IrjZ0AlftiaT4WFSBCvwUt+qyNYZy2nWNKdn1K4BCt
+         kbPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+PfDwcja+Nw/RVXV0gN3TCnV59pwJCASXjIInoiMQWdZxn6euKIWxBC/84cUfW3WnNTSSLJLkPTqgvKTH7V9jCindORMUymBz
+X-Gm-Message-State: AOJu0Yxj3PRXTKC+8AZJGcTj1WqSa/hIfj7vY/324wP9KZjS3ZbGKF+L
+	brjN0l81rE8nt92mqYKSjwtLsmjZD9Xymu6WNxKzptQZ/Dl+pgqMroUWxymStg==
+X-Google-Smtp-Source: AGHT+IFngwXllRFZcKK0nuNe7EQX8bnOyVP4qDVSraN9DPENqjrGFBeOrH4P+ZLdpGIK4/tpQ4aKPg==
+X-Received: by 2002:a17:90a:f0d6:b0:2c9:8d5d:d175 with SMTP id 98e67ed59e1d1-2c99c825acbmr5927647a91.48.1720423351318;
+        Mon, 08 Jul 2024 00:22:31 -0700 (PDT)
+Received: from thinkpad ([120.56.204.122])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aab8e04sm7429684a91.56.2024.07.08.00.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jul 2024 00:22:30 -0700 (PDT)
+Date: Mon, 8 Jul 2024 12:52:26 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	caleb.connolly@linaro.org, bhelgaas@google.com,
+	amit.pundir@linaro.org, neil.armstrong@linaro.org,
+	Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
+ CONFIG_OF is enabled
+Message-ID: <20240708072226.GB3866@thinkpad>
+References: <20240707183829.41519-1-spasswolf@web.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and
- RIDE board
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>,
-        Tengfei Fan <quic_tengfan@quicinc.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <djakov@kernel.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <jassisinghbrar@gmail.com>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <manivannan.sadhasivam@linaro.org>, <will@kernel.org>,
-        <joro@8bytes.org>, <conor@kernel.org>, <tglx@linutronix.de>,
-        <amitk@kernel.org>, <thara.gopinath@gmail.com>,
-        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
-        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>
-CC: <robimarko@gmail.com>, <bartosz.golaszewski@linaro.org>,
-        <kishon@kernel.org>, <quic_wcheng@quicinc.com>,
-        <alim.akhtar@samsung.com>, <avri.altman@wdc.com>, <bvanassche@acm.org>,
-        <agross@kernel.org>, <gregkh@linuxfoundation.org>,
-        <quic_tdas@quicinc.com>, <robin.murphy@arm.com>,
-        <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <quic_rjendra@quicinc.com>,
-        <ulf.hansson@linaro.org>, <quic_sibis@quicinc.com>,
-        <otto.pflueger@abscue.de>, <luca@z3ntu.xyz>,
-        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
-        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
-        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
-        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <ahalaney@redhat.com>,
-        <u.kleine-koenig@pengutronix.de>, <dmitry.baryshkov@linaro.org>,
-        <quic_cang@quicinc.com>, <danila@jiaxyga.com>,
-        <quic_nitirawa@quicinc.com>, <mantas@8devices.com>,
-        <athierry@redhat.com>, <quic_kbajaj@quicinc.com>,
-        <quic_bjorande@quicinc.com>, <quic_msarkar@quicinc.com>,
-        <quic_devipriy@quicinc.com>, <quic_tsoni@quicinc.com>,
-        <quic_rgottimu@quicinc.com>, <quic_shashim@quicinc.com>,
-        <quic_kaushalk@quicinc.com>, <quic_tingweiz@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703025850.2172008-2-quic_tengfan@quicinc.com>
- <665f6c8c-4f43-4d20-90e9-9e037a942066@kernel.org>
- <fbeb5969-0b3a-455e-88eb-b83734bf2c50@quicinc.com>
- <97c9484b-e257-4163-a104-3457d59bc69b@kernel.org>
- <63eb3f58-d4a4-4a27-b78c-f4cb83e62c63@quicinc.com>
- <f8f3c4d4-bf24-4195-a7b0-eec95cd64b57@linaro.org>
-From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <f8f3c4d4-bf24-4195-a7b0-eec95cd64b57@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Xv0uyNlFtYweTJimUd2_Zu7YnPGml5J3
-X-Proofpoint-ORIG-GUID: Xv0uyNlFtYweTJimUd2_Zu7YnPGml5J3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-08_02,2024-07-05_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=966 mlxscore=0
- adultscore=0 malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 priorityscore=1501 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407080054
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240707183829.41519-1-spasswolf@web.de>
 
-
-
-On 7/8/2024 2:07 PM, Krzysztof Kozlowski wrote:
-> On 08/07/2024 06:45, Aiqun Yu (Maria) wrote:
->>
->>
->> On 7/3/2024 5:33 PM, Krzysztof Kozlowski wrote:
->>> On 03/07/2024 11:21, Tengfei Fan wrote:
->>>>>>         - items:
->>>>>>             - enum:
->>>>>> +              - qcom,qcs9100-ride
->>>>>>                 - qcom,sa8775p-ride
->>>>>> +          - const: qcom,qcs9100
->>>>>
->>>>> This changes existing compatible for sa8775p without any explanation in
->>>>> commit msg.
->>>>>
->>>>> Best regards,
->>>>> Krzysztof
->>>>>
->>>>
->>>> In the next verion patch series, I will provide relevant explanatory 
->>>> information in this patch commit message.
->>>
->>> TBH, I cannot think of any reasonable explanation for this, especially
->>> considering rest of the patchset which does not fix resulting dtbs_check
->>> warning.
->>
->> The existing compatible "sa8775p" warning can only be addressed When
->> @Nikunj's "sa8775p" changes merged.
->>
->> Let me know if you have other suggestions for this.
+On Sun, Jul 07, 2024 at 08:38:28PM +0200, Bert Karwatzki wrote:
+> If of_platform_populate() is called when CONFIG_OF is not defined this
+> leads to spurious error messages of the following type:
+>  pci 0000:00:01.1: failed to populate child OF nodes (-19)
+>  pci 0000:00:02.1: failed to populate child OF nodes (-19)
 > 
-> I don't have, because I don't understand why do you want/need to change
-> existing board compatible.
-
-We can left the current existing sa8775p board compatible as it is. And
-have a brand new qcs9100 and qcs9100-board item for current non-scmi
-resources compatible.
-
-Will that be more reasonable from your end?
-
+> Fixes: 8fb18619d910 ("PCI/pwrctl: Create platform devices for child OF nodes of the port node")
 > 
-> Best regards,
-> Krzysztof
+> Signed-off-by: Bert Karwatzki <spasswolf@web.de>
+
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+>  drivers/pci/bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index e4735428814d..3bab78cc68f7 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -350,7 +350,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+> 
+>  	pci_dev_assign_added(dev, true);
+> 
+> -	if (pci_is_bridge(dev)) {
+> +	if (IS_ENABLED(CONFIG_OF) && pci_is_bridge(dev)) {
+>  		retval = of_platform_populate(dev->dev.of_node, NULL, NULL,
+>  					      &dev->dev);
+>  		if (retval)
+> --
+> 2.45.2
+> 
+> Just in case this is needed.
+> 
+> Bert Karwatzki
 > 
 
 -- 
-Thx and BRs,
-Aiqun(Maria) Yu
+மணிவண்ணன் சதாசிவம்
 
