@@ -1,101 +1,184 @@
-Return-Path: <linux-pci+bounces-9922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9923-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8088192A001
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 12:17:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A18992A0C9
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 13:14:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D69CAB2B1C1
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 10:14:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D25C1C20EB4
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 11:14:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597B313ACC;
-	Mon,  8 Jul 2024 10:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B5gPE/aS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141996F2FB;
+	Mon,  8 Jul 2024 11:14:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10EC6A022
-	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 10:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63998482DE;
+	Mon,  8 Jul 2024 11:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720433689; cv=none; b=ZQNaJL4mTYpsCj31CIHAdjDj1a3lwR1RBpfTSZrZlZqJvyl0erSoH9j+q/q8SOKatZAReefYglKtjJQWQVXmTPjLA5n2VpLD9hbhI8M7ElYsqCnnxgTDaCtK0FepeJtPmNZztOrlKnk4JmelQtiIiTSwG0PTsX1/LB9/h645/uM=
+	t=1720437267; cv=none; b=q/OedEgOIYtooHJr/JcDNJYRElDWAgCtXxpey21GuLrM8oNmtLy7Ow9zFIhL4n2hz2CBc1DY2BgBl5uRdmzMSf1WToSjiuALbXNQjwADiuqvuJGC/I756mqp3J4O8v/Y6D7F0V+/M31KVNqhU62/r6DdTb5y7p/r5EDpu6sJzHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720433689; c=relaxed/simple;
-	bh=QeLRnze+FOvuy3NL83/3Z/skQXmg1uH40KAxHheU4Ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DRMZxyNfs4XnEw4RL0+KVXDYzmZUVrAfqdHRcXvvudJrk6BZC/UQgvTgyXQqUtKK9zMzOOwk2Gmhohkm8EXiiJJTAbpVhB3ef7oPv0AZiWvMf0C9KAkqFgDVNIXU3uxA1IMiyN0Rvo1Yr5G1KoW/wuUy9ruioT/MBzUxnla0Biw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B5gPE/aS; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bJk0CJJMGqhc7FGJgXNbOb0zn5yf/CCUUfbN0Er0hOk=; b=B5gPE/aSVMsesE1Yhux06rrxbN
-	r0cOwRjtVhP0hxUYbuQcpgIKD/MxvmSUgyZdCMl9iW3Z9sZ2x3v15Ud4Ke1aJ9oCF+cuJ4AfWxYbp
-	X1ENUdbPWXxRkdYNsIH40Vixb4Ib0jBQJxMeDLOUhW4loZ8EUU1cM2ByzSeFqH5C5zmiAsJZ0lUj5
-	3iNEgNg0unHG2VF4P1zj8B7tKlD4p5emSTjValdmikBaZg0VcfAEG1/2zs2GClMwC9zcRespNRfts
-	ZvTilLZwkgWobZlduYKjpTjWPAeNPHe56GVKo1h8hd+7CsdSLt/4zrdnSsQtiVYYLWzjbiq5suT2p
-	2NZWVlIw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sQlOO-00000003QRm-13Gi;
-	Mon, 08 Jul 2024 10:14:44 +0000
-Date: Mon, 8 Jul 2024 03:14:44 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-	linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>,
-	Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: Re: [PATCH v3 3/3] PCI/NPEM: Add _DSM PCIe SSD status LED management
-Message-ID: <Zou8FJLJ-3H7CInO@infradead.org>
-References: <20240705125436.26057-1-mariusz.tkaczyk@linux.intel.com>
- <20240705125436.26057-4-mariusz.tkaczyk@linux.intel.com>
- <ZofvZyzIe_7tH6zZ@infradead.org>
- <Zof-P7jNmoLvJTF-@wunner.de>
+	s=arc-20240116; t=1720437267; c=relaxed/simple;
+	bh=LhPjovSVZgqmN9GfmU1S+wlhD8gvlbotPiGGcn0WHgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=azMSPW43k9wbEpJZhgb3pOFgREHrq15DBE9EkEu3zxrBOyeDV4NiTjtSqFWF2NrweemvYbX+yeC+fIw9fHEaJN4jhDwnzyEQP5h94juJf0HgXCgL2J1UAUpyfz89SnmB4Xd7bg2e85hTcvqhQ4B+JRmz47SOsgyaVR7TiVHfQb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A86D71FC0D;
+	Mon,  8 Jul 2024 11:14:23 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E6EB01396E;
+	Mon,  8 Jul 2024 11:14:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EiMJNg7Ki2YXWAAAD6G6ig
+	(envelope-from <svarbanov@suse.de>); Mon, 08 Jul 2024 11:14:22 +0000
+Message-ID: <f89d7f45-5d2b-4d8b-9d6a-2d83cd584756@suse.de>
+Date: Mon, 8 Jul 2024 14:14:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zof-P7jNmoLvJTF-@wunner.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/12] PCI: brcmstb: Use swinit reset if available
+To: Philipp Zabel <p.zabel@pengutronix.de>,
+ Jim Quinlan <james.quinlan@broadcom.com>,
+ Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, bcm-kernel-feedback-list@broadcom.com,
+ jim2101024@gmail.com, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240703180300.42959-1-james.quinlan@broadcom.com>
+ <20240703180300.42959-5-james.quinlan@broadcom.com>
+ <362a728f-5487-47da-b7b9-a9220b27d567@suse.de>
+ <CA+-6iNynwxcBAbRQ18TfJXwCctf+Ok7DnFyjgv4wNasX9MjV1Q@mail.gmail.com>
+ <7b03c38f44f295a5484d0162a193f41b39039b85.camel@pengutronix.de>
+Content-Language: en-US
+From: Stanimir Varbanov <svarbanov@suse.de>
+In-Reply-To: <7b03c38f44f295a5484d0162a193f41b39039b85.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Queue-Id: A86D71FC0D
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-On Fri, Jul 05, 2024 at 04:07:59PM +0200, Lukas Wunner wrote:
-> On Fri, Jul 05, 2024 at 06:04:39AM -0700, Christoph Hellwig wrote:
-> > > +struct dsm_output {
-> > > +	u16 status;
-> > > +	u8 function_specific_err;
-> > > +	u8 vendor_specific_err;
-> > > +	u32 state;
-> > > +} __packed;
-> > 
-> > This structure is naturally aligned, so no need for the __packed.
+Hi Philipp,
+
+On 7/8/24 12:37, Philipp Zabel wrote:
+> On Fr, 2024-07-05 at 13:46 -0400, Jim Quinlan wrote:
+>> On Thu, Jul 4, 2024 at 8:56 AM Stanimir Varbanov <svarbanov@suse.de> wrote:
+>>>
+>>> Hi Jim,
+>>>
+>>> On 7/3/24 21:02, Jim Quinlan wrote:
+>>>> The 7712 SOC adds a software init reset device for the PCIe HW.
+>>>> If found in the DT node, use it.
+>>>>
+>>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>>>> ---
+>>>>  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++++++++
+>>>>  1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+>>>> index 4104c3668fdb..69926ee5c961 100644
+>>>> --- a/drivers/pci/controller/pcie-brcmstb.c
+>>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
+>>>> @@ -266,6 +266,7 @@ struct brcm_pcie {
+>>>>       struct reset_control    *rescal;
+>>>>       struct reset_control    *perst_reset;
+>>>>       struct reset_control    *bridge;
+>>>> +     struct reset_control    *swinit;
+>>>>       int                     num_memc;
+>>>>       u64                     memc_size[PCIE_BRCM_MAX_MEMC];
+>>>>       u32                     hw_rev;
+>>>> @@ -1626,6 +1627,13 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>>>>               dev_err(&pdev->dev, "could not enable clock\n");
+>>>>               return ret;
+>>>>       }
+>>>> +
+>>>> +     pcie->swinit = devm_reset_control_get_optional_exclusive(&pdev->dev, "swinit");
+>>>> +     if (IS_ERR(pcie->swinit)) {
+>>>> +             ret = dev_err_probe(&pdev->dev, PTR_ERR(pcie->swinit),
+>>>> +                                 "failed to get 'swinit' reset\n");
+>>>> +             goto clk_out;
+>>>> +     }
+>>>>       pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+>>>>       if (IS_ERR(pcie->rescal)) {
+>>>>               ret = PTR_ERR(pcie->rescal);
+>>>> @@ -1637,6 +1645,17 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>>>>               goto clk_out;
+>>>>       }
+>>>>
+>>>> +     ret = reset_control_assert(pcie->swinit);
+>>>> +     if (ret) {
+>>>> +             dev_err_probe(&pdev->dev, ret, "could not assert reset 'swinit'\n");
+>>>> +             goto clk_out;
+>>>> +     }
+>>>> +     ret = reset_control_deassert(pcie->swinit);
+>>>> +     if (ret) {
+>>>> +             dev_err(&pdev->dev, "could not de-assert reset 'swinit' after asserting\n");
+>>>> +             goto clk_out;
+>>>> +     }
+>>>
+>>> why not call reset_control_reset(pcie->swinit) directly?
+>> Hi Stan,
+>>
+>> There is no reset_control_reset() method defined for reset-brcmstb.c.
+>> The only reason I can
+>> think of for this is that it allows the callers of assert/deassert to
+>> insert a delay if desired.
 > 
-> Isn't the compiler free to insert padding wherever it sees fit?
+> The main reason for the existence of reset_control_reset() is that
+> there are reset controllers that can only be triggered (e.g. by writing
+> a bit to a self-clearing register) to produce a complete reset pulse,
+> with assertion, delay, and deassertion all handled by the reset
+> controller.
 
-In terms of the standard: yes.  It could even reorder members.  In
-terms of not breaking the Linux kernel (or other low-level software)
-left, right and center: no.
 
-> structs passed to ACPI firmware would no longer comply with the
-> spec-prescribed layout then and declaring them __packed seems to be
-> the only way to ensure that doesn't happen.
+Got it. Thank you for explanation.
 
-Take a look at just about any driver, file system or network protocol.
+But, IMO that means that the consumer driver should have knowledge of
+low-level reset implementation, which is not generic API?
 
+Otherwise, I don't see a problem to implement asset/deassert sequence in
+.reset op in this particular reset-brcmstb.c low-level driver.
+
+
+~Stan
 
