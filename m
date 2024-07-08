@@ -1,108 +1,178 @@
-Return-Path: <linux-pci+bounces-9913-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9914-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E3C7929E53
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 10:33:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA432929EA2
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 11:04:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 720D01C21542
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 08:33:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81BF62823F7
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 09:04:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5D728DA5;
-	Mon,  8 Jul 2024 08:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D9882EAF9;
+	Mon,  8 Jul 2024 09:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aqcgCVnp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3648E1C287;
-	Mon,  8 Jul 2024 08:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BD58C06;
+	Mon,  8 Jul 2024 09:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720427601; cv=none; b=RLB27BWREAEbSvispyiXJP746fl3IBwPwcXSrvErbYo6leYB11ZlZ1uK33krnk/NHi1hrdTHm+Lny95xEM7EusU8SOuUwvtr6ajQnjO9Qvbp2VGAfFS/FpDuK7Pe13Tjzn4FM3oFX8I363uPXTpWgymrhqBFV1TOIe728iBIJsM=
+	t=1720429480; cv=none; b=aNQj0VVjJs+/ZE7bCaqNZOC1Z9nCOnQpA9nNJ37ck7/m1O5KxoTuQfdkSPKXjpSNi0OAaqCLi6Ow1WuKa42m6BnWjleT/Tk6zU4bF78lY0BR6oh2ovqyrpQrxKphX4+nbxfm7RlsKZ80UCjslIvJNr5l3BrNqSsE/EQc3qDxqYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720427601; c=relaxed/simple;
-	bh=M1s9gHRLneMSQKfM915SxnU4cfflNxs9yEQE6srfUn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PhWLNaVPjsrSSz/cjak/0M60aAM+zhQKqccnN/YBa6x0UmLL8bU/viDpYmT2tAhr+dexduDz+CuUD2LtetYkitvyBcwXLb6pKgIplO9SVcLjTptP7t1VRgPOpIN3WE/VM5EovLWHp9BJI4lkMgrkTf3IlPyENDMVNLT7gG1rj3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-706524adf91so2910077b3a.2;
-        Mon, 08 Jul 2024 01:33:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720427599; x=1721032399;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0sIr2o1x1jHhG08Gxd7uCxXV5IgNE724QrJblm21mGY=;
-        b=MDdQOymGI3/mJ85Bl/2WqO+YdkOuTzbalMNmmctUszPzEv+EWAz8VSiOlYAxi8Z7Rh
-         YrEOZAiYx36eHrB6zbzKNFcBnu3HEbm1UGhbVRzAGewW5tEC8ClpTMpGFUY+Xo+t1pxB
-         u7RdQ1rHlbzkOAY5mr+FKZ53WZOvMi5tOepEFXPwnO2MuO/lrLqS5SDoyzBNiFvdE6wo
-         iVGBHQAIqUJGlCx66sW2l/rg2iBUneueXaYt/tkDwK4PnCDOYFB6S4y+0F5aGopeB1ro
-         eUbnGDxj3mBPgP6T5MNEfoUrj0bG7Jfr6tsu24P1bNt203NC+ygulYXK9tJ8gkX4XXFw
-         ASvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyx9I+9z4Mj7bYwxoQ3+GCNEFhrR+l0Advs7BPvj92TlaVhFqSCFLtcZEGUFmFigf/ghoPqfQtbzIw1awBA6pzDKZfoi7HwCWZ1q0eKzbRBZEm2EFcEt/EnSt3JLNamiGmVhrHESH7
-X-Gm-Message-State: AOJu0YxKDijMkRhyNEFUgd0cX2jbOaNJRjTHjrsKmZyx94Nhz4eUehGz
-	14GDoJA2y+fx56WNnB4FW09PyomH9AJe57NCE2Ts4bkcgN4/+5MIkdnyZWZBlMz3Ag==
-X-Google-Smtp-Source: AGHT+IG42SMDWCUIqzHYgHqAqKv15PH1bKNfDrHBp5TpRaEQlqiNwfPOdKKljZuU/3N862VSQcbv3Q==
-X-Received: by 2002:a05:6a00:3306:b0:704:37b2:4ced with SMTP id d2e1a72fcca58-70b00945e6emr15157016b3a.11.1720427599443;
-        Mon, 08 Jul 2024 01:33:19 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-72c6a6f0817sm12386061a12.27.2024.07.08.01.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 01:33:18 -0700 (PDT)
-Date: Mon, 8 Jul 2024 17:33:17 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Lukas Wunner <lukas@wunner.de>, Bert Karwatzki <spasswolf@web.de>,
-	caleb.connolly@linaro.org, bhelgaas@google.com,
-	amit.pundir@linaro.org, neil.armstrong@linaro.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Praveenkumar Patil <PraveenKumar.Patil@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2] pci: bus: only call of_platform_populate() if
- CONFIG_OF is enabled
-Message-ID: <20240708083317.GA3715331@rocinante>
-References: <20240707183829.41519-1-spasswolf@web.de>
- <Zoriz1XDMiGX_Gr5@wunner.de>
- <20240708003730.GA586698@rocinante>
- <CACMJSevHmnuDk8hpK8W+R7icySmNF8nT1T9+dJDE_KMd4CbGNg@mail.gmail.com>
+	s=arc-20240116; t=1720429480; c=relaxed/simple;
+	bh=0aI49ZEwUflNdgkB5KmEXIC466KnmIbQc17d0H6wyiU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=osKWboFTnp69XNse+EQO3hVt2cwHDXi4gvNoAEAbmUNSr13r1d6SGL6DnqhHNXU134pn1pvrSutpzJH/UHWWMJVDlGtUvODF3pjEcDNSQPYvwYhmDPaRUZYSTDjukb/sjPt6NsOr781ZNIqqB/fizZ20ZMFU1qlFTcfI46nF/eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aqcgCVnp; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720429478; x=1751965478;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0aI49ZEwUflNdgkB5KmEXIC466KnmIbQc17d0H6wyiU=;
+  b=aqcgCVnpKzoDolEw0GMjEa2sryv8aUSJi4rndyUe3Qpnh0jK1q9AKGXe
+   WGGkKJXHLXnvMiy3e6wvM0LQN9141uSFpWuus8SyK8Uk08bkvh+a3i8XW
+   ZcjOUVCA9Or+Gi81wWg69RM5Ni+xxjsE8eVhDLcLRJqpz/+gUuEW5g06r
+   I3dDOii7+Klm0g1jDCn9C1mkyBZuLPRMrQB8X9bk3TsDpgfTUmmvzN/MH
+   7GoEDBKsvkaJjKZ5SAsqVoEKspOWkpHcQHF0DKOws2as3Y8y9/UPhtyKH
+   0hU1+F961LjAAaX5KUReSipPjUb1vv3AMNOTA01TQ6ZKkrYJi67T2v6gU
+   w==;
+X-CSE-ConnectionGUID: n3GQKVskT0GimjxTotXspA==
+X-CSE-MsgGUID: DTq9CWWWQMuSC2MfGgmo0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17754111"
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="17754111"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:04:38 -0700
+X-CSE-ConnectionGUID: q9lJAyFqTYyN1F2sobzr4w==
+X-CSE-MsgGUID: VMNX/6kuSp24CnC+3hRKRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
+   d="scan'208";a="47323026"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.115])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 02:04:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Jul 2024 12:04:31 +0300 (EEST)
+To: daire.mcnamara@microchip.com
+cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    conor.dooley@microchip.com, lpieralisi@kernel.org, kw@linux.com, 
+    robh@kernel.org, bhelgaas@google.com, LKML <linux-kernel@vger.kernel.org>, 
+    linux-riscv@lists.infradead.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v6 1/3] PCI: microchip: Fix outbound address translation
+ tables
+In-Reply-To: <20240628115923.4133286-2-daire.mcnamara@microchip.com>
+Message-ID: <6c879527-4578-e3b5-2cc2-cf0638901f24@linux.intel.com>
+References: <20240628115923.4133286-1-daire.mcnamara@microchip.com> <20240628115923.4133286-2-daire.mcnamara@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACMJSevHmnuDk8hpK8W+R7icySmNF8nT1T9+dJDE_KMd4CbGNg@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-728995024-1720429471=:1343"
 
-[...]
-> > If there aren't any objections, I will take this via the PCI tree, and add
-> > the missing tags.  So, no need to send a new version of this patch.
-> >
-> > Thank you for the work here!  Appreciated.
-> >
-> >         Krzysztof
-> 
-> I don't think you can take it via the PCI tree as it depends on the
-> changes that went via the new pwrseq tree (with Bjorn's blessing).
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Aye.
+--8323328-728995024-1720429471=:1343
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> Please leave your Ack here and I will take it with the other PCI
-> pwrctl changes.
+On Fri, 28 Jun 2024, daire.mcnamara@microchip.com wrote:
 
-Sounds good!  With that...
+> From: Daire McNamara <daire.mcnamara@microchip.com>
+>=20
+> On Microchip PolarFire SoC (MPFS) the PCIe Root Port can be behind one of
+> three general-purpose Fabric Interface Controller (FIC) buses that
+> encapsulate an AXI-M interface. That FIC is responsible for managing
+> the translations of the upper 32-bits of the AXI-M address. On MPFS,
+> the Root Port driver needs to take account of that outbound address
+> translation done by the parent FIC bus before setting up its own
+> outbound address translation tables.  In all cases on MPFS,
+> the remaining outbound address translation tables are 32-bit only.
+>=20
+> Limit the outbound address translation tables to 32-bit only.
+>=20
+> This necessitates changing a size_t in mc_pcie_setup_window
+> to a resource_size_t to avoid a compile error on 32-bit platforms.
 
-Acked-by: Krzysztof Wilczyński <kw@linux.com>
+Do you really mean "a compile error" here, that is, building 32-bit kernel=
+=20
+fails during compile stage? If not, it would be good to rephrase this line.
 
-> After the upcoming merge window we should go back to normal.
+Other than that,
 
-Thank you!
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-	Krzysztof
+--
+ i.
+
+> Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip Polarfire PCIe contro=
+ller driver")
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  drivers/pci/controller/pcie-microchip-host.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/c=
+ontroller/pcie-microchip-host.c
+> index 137fb8570ba2..47c397ae515a 100644
+> --- a/drivers/pci/controller/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> @@ -23,6 +23,8 @@
+>  /* Number of MSI IRQs */
+>  #define MC_MAX_NUM_MSI_IRQS=09=09=0932
+> =20
+> +#define MC_OUTBOUND_TRANS_TBL_MASK=09=09GENMASK(31, 0)
+> +
+>  /* PCIe Bridge Phy and Controller Phy offsets */
+>  #define MC_PCIE1_BRIDGE_ADDR=09=09=090x00008000u
+>  #define MC_PCIE1_CTRL_ADDR=09=09=090x0000a000u
+> @@ -933,7 +935,7 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *p=
+ort)
+> =20
+>  static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 ind=
+ex,
+>  =09=09=09=09 phys_addr_t axi_addr, phys_addr_t pci_addr,
+> -=09=09=09=09 size_t size)
+> +=09=09=09=09 resource_size_t size)
+>  {
+>  =09u32 atr_sz =3D ilog2(size) - 1;
+>  =09u32 val;
+> @@ -983,7 +985,8 @@ static int mc_pcie_setup_windows(struct platform_devi=
+ce *pdev,
+>  =09=09if (resource_type(entry->res) =3D=3D IORESOURCE_MEM) {
+>  =09=09=09pci_addr =3D entry->res->start - entry->offset;
+>  =09=09=09mc_pcie_setup_window(bridge_base_addr, index,
+> -=09=09=09=09=09     entry->res->start, pci_addr,
+> +=09=09=09=09=09     entry->res->start & MC_OUTBOUND_TRANS_TBL_MASK,
+> +=09=09=09=09=09     pci_addr,
+>  =09=09=09=09=09     resource_size(entry->res));
+>  =09=09=09index++;
+>  =09=09}
+> @@ -1117,9 +1120,8 @@ static int mc_platform_init(struct pci_config_windo=
+w *cfg)
+>  =09int ret;
+> =20
+>  =09/* Configure address translation table 0 for PCIe config space */
+> -=09mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
+> -=09=09=09     cfg->res.start,
+> -=09=09=09     resource_size(&cfg->res));
+> +=09mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & MC_OUTBOUN=
+D_TRANS_TBL_MASK,
+> +=09=09=09     0, resource_size(&cfg->res));
+> =20
+>  =09/* Need some fixups in config space */
+>  =09mc_pcie_enable_msi(port, cfg->win);
+
+
+--8323328-728995024-1720429471=:1343--
 
