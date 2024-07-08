@@ -1,318 +1,221 @@
-Return-Path: <linux-pci+bounces-9933-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4C6292A4DD
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 16:38:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 182B592A4E1
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 16:39:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 135C4B20A22
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 14:38:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6DD3AB20CD2
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 14:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA97B7E56C;
-	Mon,  8 Jul 2024 14:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC751C06;
+	Mon,  8 Jul 2024 14:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Y5ZTEQiJ"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="L7KDJzOy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2086.outbound.protection.outlook.com [40.107.220.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE941C06
-	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 14:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720449527; cv=none; b=ndVapmPu+DsmyvX5DubJckEUga20BIcGyHS78GT20Qzv2jgqwZqHLMq1e+QFBK7PzlfMpp0NuW3L21w0jV6msbIlO4cSDcdfH8N11u2AF4Xz4mvRL1M1QDODnjtHKBbOroS+z8ldueiTob+ACXDJVygGdz7E7kSRnLkzDW4khJA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720449527; c=relaxed/simple;
-	bh=z7NJJceZUY3lQp80s4sxivGDl9cG5KKYHjfH5sj3dv8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=njn5MIwFyFdQv05xQdmHxOrqwL2mrb81gy2unsAOkdla4g18a2BrMoExQzGAvghdSN1/tOwKtDzYPR2C7OX2kV2UWNkcmuW2NSnAKLif++QZvryllhfQ0k50P1UUw2a/QdmH/o8Dnt0L19iXB6IMdOstHXcDbDVrmZHiwRo+GyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Y5ZTEQiJ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52ea2b6a9f5so4156346e87.0
-        for <linux-pci@vger.kernel.org>; Mon, 08 Jul 2024 07:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1720449523; x=1721054323; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dHgEjK7Jul7gt+7c00A5IfP1fCC8T/s8HGOOo3AeXi4=;
-        b=Y5ZTEQiJtdmR/7rf2IY8W2aXCx8HnMPIrBptE5sK1G+SBjHy6E96f2FlODXCLZKHjk
-         SvfTdo4naQYsiD/UVX7ov4IgS9RSvxHjamlFqmbgWjxpYp0ueTOyxZqjewDpOVFX7BxS
-         EuXsy16AemByGlnFV6zYwQT49vU9Dax1qpVw0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720449523; x=1721054323;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dHgEjK7Jul7gt+7c00A5IfP1fCC8T/s8HGOOo3AeXi4=;
-        b=RCtHrS0bA8y6HoKrYOBYEHEKmacKsfdemIW1jMP81Z92EUjfclRim67c3WzKEgG4CR
-         YlkCIbLx39BS814nwYZ9f9tFe1ID05q0/cPzpeMGSki9KYOaE/QsiPnoveL5zXODA4Bc
-         cGKD+uVTQXkCMDvGO2d46cl8Yj09CsAjGLhjqWLadf0LcIFYsTYRCjhD8674wIfDbJFu
-         7xQ69nKp68/n2LWyGx5hqYdgEREbeEMxHDbS+uPkAPXLwgrpWG4SEieASN9a96k/fxys
-         7e9rISmz1XME04Knf3Vp0Elni5ME53L0xbpTPNty7+H2bzwUTN/sfTrY+rC1ykLNSstM
-         uz6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXmJAP5X2BUV+qQJ/HZaRJqdItQbLVk8GHNFh3Cjbg10AhoeJLBlNn8wjO9frnz6QTtWMD+XoDc3gGiC1uzKZI6lCkxWtoBzP3Y
-X-Gm-Message-State: AOJu0Yxg2jQsmvwc/p/wdZOChUO61nH2ipJjjub5qp37X+6i0gNFDog0
-	c0sL2MLylEe/QT5iEhgSqCOzwoES7vcfzdQOt3pMBnj0t0hlGLlq9J5RONckm8Fq2vdX2zXtdLi
-	Xv+CJvsYXItFpxVzF4QvTQ4c3Vp7RJ8Vh0Mu2
-X-Google-Smtp-Source: AGHT+IFcSPILMhghRpL6i2daNPsKNgeaZT6tK+kpJLAPAw01EVsQ5XBjWbh3Z6yMI92hoLVfP2kIALjOs3Ru8U2BK4w=
-X-Received: by 2002:ac2:555b:0:b0:52c:9413:d02f with SMTP id
- 2adb3069b0e04-52ea0632accmr8234824e87.17.1720449522996; Mon, 08 Jul 2024
- 07:38:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704B62744C;
+	Mon,  8 Jul 2024 14:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720449563; cv=fail; b=Ss1WB0daQFpYZ/fG+Oapfn8ilmRRUhVVwg2dBK1B7yzeTHhQbPhqlS+7IQhO663NqMAyXaRLN34sxOCgHDST9q48lTDkEqeoSriStt/lnXEAmtE06ULd7eGyJs6wweaapPolBjqdo09f1CsvsnX7nnvRS1rdxYT+PcgHg3v/ZkE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720449563; c=relaxed/simple;
+	bh=yn1CB74pCcuSj5r/VhuinitdLp+gkkL8+kaVx1PsaQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=B7Q3cXTV+TJNUSg0RRvn28CGr8onh254KNszCa2GgNkN3rZlhs4JCa9lFnMQjIaWL6vcEViqnWGbuCm6IjGA1ynXG3EYthUTcwgsisunlNEUC48SICZDSac0yYVLzpHXy1Wya4gAOAzVu6txsCZxLd2HBn2MUItBxkuk0UScxeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=L7KDJzOy; arc=fail smtp.client-ip=40.107.220.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gqwEQe0+qw2RPhQGPnjnZQhiODX/KESAIqwOnIVUuRkD43K4Z9NTFxZcDdnGB3bkX5u6KLDKPO2OdZwcf98X50ev50piTICPLdxn8VhW/qG/AbxouwJAsU81kqh9Z9aRDOBuMpgQkZFQTvwHg9g7sqH9gKE5gQ9uOq9+p9uqb6a3VUqO8AWeQFSD9hZwGtRDkCT4JUnmxbpKva+uHjOY5orWZ+CkNO/lWua+6KYLHamCQXCTGWa1ECTiGQ8mIP/9Q+qgdHR+ng6FDxQE34+YJQ68Emecnlu6yp/LMWWSg6QwuFl+tfXzNN500rw/VhYeGOtmkPIvIW0ZsO1jyt3PVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K6+3GFkuUMAVB3rmIGMNGeDxOjg8vfXv4k7kokRhpxg=;
+ b=Lq57hLeUtZPbFeWGGpZE8+9noc+bMLso2aI7G1eAdHgBEQ7xt6S2G5exlghiamedySdEhguQNX2rJOyoSKtdI9XH/Qu5YQzjm+bf7iTj1Ei0OByfZ/P7YcdH8CMtIykSIHrYyim0sW1BhjEKpZeBN9/2NcCj6IkD+RQ/WtLK89fZ+3KdvQ2IA4gsVkntJ6wsu9qncfYfakCfl3uBxZefiqfgib7gtQcVgXpW83e139EZPEFov9p7FFSy9wOLn7kPpxie20u9So30JOMvjzeKthWJe72hscF7cp9mXjEg/H5a2PV66Oj3Nk6ylDyRFe8ryauA3eDwkuGpAzgkKbY8CQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K6+3GFkuUMAVB3rmIGMNGeDxOjg8vfXv4k7kokRhpxg=;
+ b=L7KDJzOyatbn4QRS86xd7Ks+UHxClg76ZG7ggwCJbXdGrGhjWE1qHN0GD87yW6oCSwy9edIm/nwy9FECItx9fDqBYa1plpB0UHpFvYCpng0ZNyqTYtDq1lmOIeC7W7ZbPUxqhEGwSdeMAUhNQvNwHCnsNeHdoUhoJUhQLf88tnT4W5AsY47y+xSkKnjdthsqhO43gX+2BLKcvQaB+a1g+YV02+RFYY0o7jnfzv+MKLhhs5wHOBNH/78FkYoqbnY7lV9DNnIRZmcmCoyF8wb9heK6m3QRSsVzdFb1+j2TDqS6f9WcpCwoM0A7qAa8dio2HOnBOPmSZQxyQJbCMfdaSg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
+ by PH8PR12MB6916.namprd12.prod.outlook.com (2603:10b6:510:1bd::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Mon, 8 Jul
+ 2024 14:39:17 +0000
+Received: from DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
+ ([fe80::c296:774b:a5fc:965e%5]) with mapi id 15.20.7741.033; Mon, 8 Jul 2024
+ 14:39:17 +0000
+Date: Mon, 8 Jul 2024 11:39:15 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Vidya Sagar <vidyas@nvidia.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>
+Cc: corbet@lwn.net, bhelgaas@google.com, galshalom@nvidia.com,
+	leonro@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com,
+	mmoshrefjava@nvidia.com, shahafs@nvidia.com, vsethi@nvidia.com,
+	sdonthineni@nvidia.com, jan@nvidia.com, tdave@nvidia.com,
+	linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kthota@nvidia.com,
+	mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4] PCI: Extend ACS configurability
+Message-ID: <20240708143915.GF14004@nvidia.com>
+References: <20240523063528.199908-1-vidyas@nvidia.com>
+ <20240625153150.159310-1-vidyas@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240625153150.159310-1-vidyas@nvidia.com>
+X-ClientProxiedBy: BL0PR0102CA0030.prod.exchangelabs.com
+ (2603:10b6:207:18::43) To DM6PR12MB3849.namprd12.prod.outlook.com
+ (2603:10b6:5:1c7::26)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703180300.42959-1-james.quinlan@broadcom.com>
- <20240703180300.42959-5-james.quinlan@broadcom.com> <362a728f-5487-47da-b7b9-a9220b27d567@suse.de>
- <CA+-6iNynwxcBAbRQ18TfJXwCctf+Ok7DnFyjgv4wNasX9MjV1Q@mail.gmail.com>
- <7b03c38f44f295a5484d0162a193f41b39039b85.camel@pengutronix.de>
- <f89d7f45-5d2b-4d8b-9d6a-2d83cd584756@suse.de> <39583bdf7e79d33240e7dd5f09123b94cab4147c.camel@pengutronix.de>
-In-Reply-To: <39583bdf7e79d33240e7dd5f09123b94cab4147c.camel@pengutronix.de>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Mon, 8 Jul 2024 10:38:31 -0400
-Message-ID: <CA+-6iNzGP3E7xkSk2N4=ms5TR4ozMPUf-KAstD9CBjpA=HoyHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 04/12] PCI: brcmstb: Use swinit reset if available
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Stanimir Varbanov <svarbanov@suse.de>, linux-pci@vger.kernel.org, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Cyril Brulebois <kibi@debian.org>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b295eb061cbd5eb3"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|PH8PR12MB6916:EE_
+X-MS-Office365-Filtering-Correlation-Id: d25f8b7e-6af7-49f4-0575-08dc9f5bbeb7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?psXaDcIHOVlN4uhV5CaBHIW0aaDB6KPx+zy+j4/zZqsj0bvcytnzu4JhwR0x?=
+ =?us-ascii?Q?7Eaqj8QB7GAzPHpssp593+a97YYQIXePknWWAhzVLP3LhsOICrm4cP+OZIal?=
+ =?us-ascii?Q?OcWUOr8C8gyHvVwrv9/U/Dh8hU2Y+sLs1q16a1OBv9AKATd+pu8HUQsnBbLe?=
+ =?us-ascii?Q?oiNatw9+13099f+opBhkUmF83/i7ZIYIAX9tte2LLrKzWqmUDccu7SvsqgNL?=
+ =?us-ascii?Q?R0IR59TH6pvt9DQLNxC7yjaxmU2/3LkM6tNazsmCRuIxzD3Nd+7XTSR+pMXi?=
+ =?us-ascii?Q?iexHYM0Uodd38nhaI8JsNPFmn6eEAgrnUw9SB/ZgXngRNMpOtbq3xWqOEt5V?=
+ =?us-ascii?Q?D5hXWUMr5CcJY6/2CIllX0D4hSE57QA3VVxKzCx/dPs/KNdvtoLGyvAU4WW8?=
+ =?us-ascii?Q?cGs4kWaSlGcYLYazgdumIz7Qk+/GXDuaodQ5Y1iIkOVqixLULGSfg6IJvQpk?=
+ =?us-ascii?Q?ErY4v+jvFvcHUDxHFS48yojNajCfK4L3iyHqZSowEI/N92sMf/0br9nk35XL?=
+ =?us-ascii?Q?BPx2aNJraBvi0vsXJSjrTZLN+kz/H3Eehf20SgVIGAiJzPqnWjb8jO1Bi7u0?=
+ =?us-ascii?Q?FhKZslr8KWOemYT738yPIyQvE3GgAwZthS9Enua/j1jhROX5ct14RCVAxCjl?=
+ =?us-ascii?Q?PGsqZFIfpG0I+jh3E6WuACcPdnzt8VMNsUDP/jS4AX/8e/wnxdObS1ufKfG7?=
+ =?us-ascii?Q?NLP0viSPC9octFHAl9XJOVu1soc0QbJt+RnnCBIJhkANTC6IDQ+XbkGkfWrh?=
+ =?us-ascii?Q?gz01+6eHK9fMHEbmmQBfeDft0gJFZfhuIKUOAPhWnTUWVMEbIqbfqEKao/Uy?=
+ =?us-ascii?Q?+3Dl/7c3upY0py1aklm4uWWDuIiKq8gSZ8IcTU7LjIS5ikrowV4V9GTkzof2?=
+ =?us-ascii?Q?dqCos3iDFR4vQUtbrS9lLjFEFQ3Wkl4QGgzDQev4ArYIXcy90VbXBXwWg49V?=
+ =?us-ascii?Q?/ekcBKIeXCADEgrgSWuhRrs7UXcwkpby7Co1xj+DwqSrfsFux6TaR7Iuhe0t?=
+ =?us-ascii?Q?2ebDOCMfJLwDvosjR1XRj90jn93++/HdtLD9K4W1c59JwLx69rWLFM75DQOX?=
+ =?us-ascii?Q?cyH7bJXZf0zlFcsbD+kDIZt6/gdNbq+xvC06YRe5jwXDTPqMul86Wh+zYXwo?=
+ =?us-ascii?Q?IM2dX7o2aHAwkbi1b0EUlbmL737TVDqZ4LJsT8EaD1HAKkmgaqeXinuksKbg?=
+ =?us-ascii?Q?ldjxq7wDgZLi8WN8M0z47qiByxfoa/HpipTKquuSHcyQGvgUAh3VjSvHDF4L?=
+ =?us-ascii?Q?N3u2lGaVkjuy0oVCphKDORW1csa6PTSrLI5jH3TSGTFZj34fMu5HTh7ussCS?=
+ =?us-ascii?Q?hkmtxq+F8kjXwjnXNzx9OBB3j2a3uW4LkftKzehvhvzAGg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hWC1azDVx10MkIcMI3D4Tk9MwKxqkbtmT7NrxWRyY+NGz7dqIrFqzNZihwMm?=
+ =?us-ascii?Q?EzRdQDQeviUdvtWcjwWLOuqmgUap5iYpGiJnRI3SVGKA1yJA7U1tyg+38M8M?=
+ =?us-ascii?Q?08u3XU1tpa1z6I8KFRXb0epxXrqLNxxtJC8p2JctKbmmrm3sQaW8X1IT1h7A?=
+ =?us-ascii?Q?Dep80vUd262Tf7DVMZcD+JLbZitSZjrEf2PXaC5mUGCyt4qyC6xM+2quvqsq?=
+ =?us-ascii?Q?IwtB6aysQET6xFWWs7ONdbP8WhGfGiseAjtDM+lKQs4cUwHJ4gbqsfx4Fivn?=
+ =?us-ascii?Q?s8qmUuBmF7TWEbZa+QCF+vjnd1SahRz4XTLEvn505zfAB2bnWiIiTjg1coh8?=
+ =?us-ascii?Q?NP2PYiYTiT9D7KISSnLSXKrhzZr5lPYGv0ky7lV36kBoC9HVjgVMmZfbTkvH?=
+ =?us-ascii?Q?BJSQu9zyOngIOycJsRFYRSbA8t5LxVizDXs+rU31PJyMkkVJG11zKeHiWs2P?=
+ =?us-ascii?Q?qFmdCrDZrsWZE/Qb6VeKE+sUZl7OboXvbWuxUPG13zjmO2GHgypMgjXE4ua9?=
+ =?us-ascii?Q?+f/Jyd++pNRI7NPbZ75wjoVpMbwaZT0uJGI3R2YdgYCt3slt/kvfWA3OYAgc?=
+ =?us-ascii?Q?gAKYGLFGpZpkZqye4Sdup51MkUnXwqHwIYGx4YskYkIAuKSRLDGlaOou7ZIG?=
+ =?us-ascii?Q?+AbV6kpz2DlIUxJxyC5YYLaDarmsV7BR4yYTBbvOfGTqI+Xv1uxvm4l8Oddt?=
+ =?us-ascii?Q?JEIK0vVA4PTPK8WLxd+nPg8OTWkoViuXQYPbTyS84iI8msPWw4QTRPgTVocs?=
+ =?us-ascii?Q?8/GJMy3AGrI3ijc8KdkHd049YEjkdUuBWyt/UD/BHDw854AZykSVyvz1Y2NY?=
+ =?us-ascii?Q?3oCZo5ASJF67HFoMcKvnFW+qHk3MhMQI/y3yLUaDXYiceTIbebSbe56aY9i8?=
+ =?us-ascii?Q?vB9Eng0YWKlmBNq3zuVCtbqfvYHpPIiFP+k1NTgnjb/CgYsh+FHPg/9HcwHD?=
+ =?us-ascii?Q?xHRAXiYpadcBaaY8B3G+eZ5wQFdfbbz6FdBUa+uFd6UAIMTImAnKuMU+mP0x?=
+ =?us-ascii?Q?VvMoki5rA5DJXTSqPVFZNv8zlnOSRJtF2W8SzqbQ7oKqQEYqHlmKVVsT7SG5?=
+ =?us-ascii?Q?vvsycvQcVjAzrGOmCnt3Ih63SeA5/zOsLz/QWI/H9Hu06XXDztyy7eW2N3QT?=
+ =?us-ascii?Q?90nyU0Pz1mLOcw1S/aVr7qKDYdvChOJDtSerO+YPfRiaOEy4O8uReXYKu1ou?=
+ =?us-ascii?Q?U0j/pHBCZj94ddixJupVyaEK09xjo5yzy5q1roVcS2iXtYL9MPQOM8XCKSAO?=
+ =?us-ascii?Q?e7avKNQmxtqxAdsfSYGQlZHQ/wwWSM3TLg2jGRkRpelaE8w575eYrzzO04tI?=
+ =?us-ascii?Q?Wlo6QUdgFJ0vubAmqgpvYP03s3ZDi3lXogEe26UTaHo8CDr16fYe2pGicnob?=
+ =?us-ascii?Q?uqWGsH0B5rQ5xTtT9ftebaj7/LzsCqC9buVR2A1NjzHX+pN56m4Jlzbsbfu5?=
+ =?us-ascii?Q?usla7EAfaWTF9kJIhAIGfUCua2m0rFsCtm3g0emq3hSEasalj2bCeJ6qEH85?=
+ =?us-ascii?Q?HA2EcS+Zvs0sQ42a/FvVi9Cfp2NyHsrhMMQj6BnlSZ6GxhEiW9542POBfGV3?=
+ =?us-ascii?Q?Qk9c4fFnT/RJ644FVYeTBKVukNazfk8CzyfFQhNc?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d25f8b7e-6af7-49f4-0575-08dc9f5bbeb7
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2024 14:39:17.2197
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b0Nt4FRjh2hQPFD9rNTV92Y+7GPHllIBbBQYb+34xzefjnTA1ndb1H3Yz8G+aohd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6916
 
---000000000000b295eb061cbd5eb3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 25, 2024 at 09:01:50PM +0530, Vidya Sagar wrote:
+> PCIe ACS settings control the level of isolation and the possible P2P
+> paths between devices. With greater isolation the kernel will create
+> smaller iommu_groups and with less isolation there is more HW that
+> can achieve P2P transfers. From a virtualization perspective all
+> devices in the same iommu_group must be assigned to the same VM as
+> they lack security isolation.
+> 
+> There is no way for the kernel to automatically know the correct
+> ACS settings for any given system and workload. Existing command line
+> options (ex:- disable_acs_redir) allow only for large scale change,
+> disabling all isolation, but this is not sufficient for more complex cases.
+> 
+> Add a kernel command-line option 'config_acs' to directly control all the
+> ACS bits for specific devices, which allows the operator to setup the
+> right level of isolation to achieve the desired P2P configuration.
+> The definition is future proof, when new ACS bits are added to the spec
+> the open syntax can be extended.
+> 
+> ACS needs to be setup early in the kernel boot as the ACS settings
+> effect how iommu_groups are formed. iommu_group formation is a one
+> time event during initial device discovery, changing ACS bits after
+> kernel boot can result in an inaccurate view of the iommu_groups
+> compared to the current isolation configuration.
+> 
+> ACS applies to PCIe Downstream Ports and multi-function devices.
+> The default ACS settings are strict and deny any direct traffic
+> between two functions. This results in the smallest iommu_group the
+> HW can support. Frequently these values result in slow or
+> non-working P2PDMA.
+> 
+> ACS offers a range of security choices controlling how traffic is
+> allowed to go directly between two devices. Some popular choices:
+>   - Full prevention
+>   - Translated requests can be direct, with various options
+>   - Asymmetric direct traffic, A can reach B but not the reverse
+>   - All traffic can be direct
+> Along with some other less common ones for special topologies.
+> 
+> The intention is that this option would be used with expert knowledge
+> of the HW capability and workload to achieve the desired
+> configuration.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> v4:
+> * Changed commit message (Courtesy: Jason) to provide more details
+> 
+> v3:
+> * Fixed a documentation issue reported by kernel test bot
+> 
+> v2:
+> * Refactored the code as per Jason's suggestion
+> 
+>  .../admin-guide/kernel-parameters.txt         |  22 +++
+>  drivers/pci/pci.c                             | 148 +++++++++++-------
+>  2 files changed, 112 insertions(+), 58 deletions(-)
 
-On Mon, Jul 8, 2024 at 9:26=E2=80=AFAM Philipp Zabel <p.zabel@pengutronix.d=
-e> wrote:
->
-> Hi Stanimir,
->
-> On Mo, 2024-07-08 at 14:14 +0300, Stanimir Varbanov wrote:
-> > Hi Philipp,
-> >
-> > On 7/8/24 12:37, Philipp Zabel wrote:
-> > > On Fr, 2024-07-05 at 13:46 -0400, Jim Quinlan wrote:
-> > > > On Thu, Jul 4, 2024 at 8:56=E2=80=AFAM Stanimir Varbanov <svarbanov=
-@suse.de> wrote:
-> > > > >
-> > > > > Hi Jim,
-> > > > >
-> > > > > On 7/3/24 21:02, Jim Quinlan wrote:
-> > > > > > The 7712 SOC adds a software init reset device for the PCIe HW.
-> > > > > > If found in the DT node, use it.
-> > > > > >
-> > > > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > > > > ---
-> > > > > >  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++++++++
-> > > > > >  1 file changed, 19 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pc=
-i/controller/pcie-brcmstb.c
-> > > > > > index 4104c3668fdb..69926ee5c961 100644
-> > > > > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > > > > @@ -266,6 +266,7 @@ struct brcm_pcie {
-> > > > > >       struct reset_control    *rescal;
-> > > > > >       struct reset_control    *perst_reset;
-> > > > > >       struct reset_control    *bridge;
-> > > > > > +     struct reset_control    *swinit;
-> > > > > >       int                     num_memc;
-> > > > > >       u64                     memc_size[PCIE_BRCM_MAX_MEMC];
-> > > > > >       u32                     hw_rev;
-> > > > > > @@ -1626,6 +1627,13 @@ static int brcm_pcie_probe(struct platfo=
-rm_device *pdev)
-> > > > > >               dev_err(&pdev->dev, "could not enable clock\n");
-> > > > > >               return ret;
-> > > > > >       }
-> > > > > > +
-> > > > > > +     pcie->swinit =3D devm_reset_control_get_optional_exclusiv=
-e(&pdev->dev, "swinit");
-> > > > > > +     if (IS_ERR(pcie->swinit)) {
-> > > > > > +             ret =3D dev_err_probe(&pdev->dev, PTR_ERR(pcie->s=
-winit),
-> > > > > > +                                 "failed to get 'swinit' reset=
-\n");
-> > > > > > +             goto clk_out;
-> > > > > > +     }
-> > > > > >       pcie->rescal =3D devm_reset_control_get_optional_shared(&=
-pdev->dev, "rescal");
-> > > > > >       if (IS_ERR(pcie->rescal)) {
-> > > > > >               ret =3D PTR_ERR(pcie->rescal);
-> > > > > > @@ -1637,6 +1645,17 @@ static int brcm_pcie_probe(struct platfo=
-rm_device *pdev)
-> > > > > >               goto clk_out;
-> > > > > >       }
-> > > > > >
-> > > > > > +     ret =3D reset_control_assert(pcie->swinit);
-> > > > > > +     if (ret) {
-> > > > > > +             dev_err_probe(&pdev->dev, ret, "could not assert =
-reset 'swinit'\n");
-> > > > > > +             goto clk_out;
-> > > > > > +     }
-> > > > > > +     ret =3D reset_control_deassert(pcie->swinit);
-> > > > > > +     if (ret) {
-> > > > > > +             dev_err(&pdev->dev, "could not de-assert reset 's=
-winit' after asserting\n");
-> > > > > > +             goto clk_out;
-> > > > > > +     }
-> > > > >
-> > > > > why not call reset_control_reset(pcie->swinit) directly?
-> > > > Hi Stan,
-> > > >
-> > > > There is no reset_control_reset() method defined for reset-brcmstb.=
-c.
-> > > > The only reason I can
-> > > > think of for this is that it allows the callers of assert/deassert =
-to
-> > > > insert a delay if desired.
-> > >
-> > > The main reason for the existence of reset_control_reset() is that
-> > > there are reset controllers that can only be triggered (e.g. by writi=
-ng
-> > > a bit to a self-clearing register) to produce a complete reset pulse,
-> > > with assertion, delay, and deassertion all handled by the reset
-> > > controller.
-> >
-> > Got it. Thank you for explanation.
-> >
-> > But, IMO that means that the consumer driver should have knowledge of
-> > low-level reset implementation, which is not generic API?
->
-> Kind of. If the reset controller hardware has self-clearing resets, it
-> is impossible to implement manual reset_control_assert/deassert() on
-> top. So if a reset consumer requires that level of control, it just
-> can't work with a self-deasserting controller. The other way around, a
-> reset controller driver can emulate self-deasserting resets, iff it
-> knows the timing requirements of all consumers.
->
-> If the reset consumer only needs to see a pulse on the reset line, and
-> there are no ordering requirements with other resets or clocks, and the
-> device either doesn't care about timing or the reset controller knows
-> how to produce the required delay, then using reset_control_reset()
-> would be semantically correct.
->
-> > Otherwise, I don't see a problem to implement asset/deassert sequence i=
-n
-> > .reset op in this particular reset-brcmstb.c low-level driver.
->
-> When reset_control_reset() is used, every reset controller that can be
-> paired with this consumer needs to implement the .reset method,
-> requiring to know the delay requirements for all of their consumers.
-> The reset-simple driver implements this with a configurable worst-case
-> delay, for example. As far as I can see, that has never been used.
->
-> So yes, in this particular case, pcie-brcmstb only ever being paired
-> with reset-brcmstb, it might be no problem to implement .reset in
-> reset-brcmstb correctly, if all its consumers and their required delays
-> are known.
+Bjorn?
 
-This will not work.  reset-brcmstb.c is a reset provider; it provides
-resets for dozens of different HW blocks.  Forcing  dozens of the
-resets  to operate at the worst-case delay of the slowest one of them
-is unacceptable, especially if a particular HW block uses its reset
-often  and/or requires timely execution.
-
-Regards,
-Jim Quinlan
-Broadcom STB/CM
-
-
->
-> regards
-> Philipp
-
---000000000000b295eb061cbd5eb3
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDTpDyKGp6WN4Vr9+9rNpQIhDPbj834
-2i9E/lWxJ0h2gDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MDgxNDM4NDNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAfBku4bZC0rFoNLf/rlv0pFLzsM8Lbwvxv3Z5qo6hmW6BIWxy
-70EG80CfKS9MF6Wrzscw8aS4IAx0rTz5qadAFmll0j/xMZ6ha+XUNwJA4qYT5NC/gPlrNkJP+hGO
-88B63GQz05p9tw4ywvhmIQHIxQZ9sfjmCFK1rGc5wcxo9o34EaxyvvMeyrXgiVQsskLMpjEV+JIL
-JC0HynBRtlVY+rKPL7vQ2t+OnJwiW/ONivE5Oh2IremH7rYcEwXs8/TbSrgCZnhRuL3cqfPx5y+M
-KcYK39LmR6v9TGHA2D1hlHsVACeaxO5qth0pQiAYhX506g/IPOZwHom53Eipf2xWrQ==
---000000000000b295eb061cbd5eb3--
+Jason
 
