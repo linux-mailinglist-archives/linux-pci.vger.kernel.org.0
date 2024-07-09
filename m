@@ -1,126 +1,200 @@
-Return-Path: <linux-pci+bounces-10023-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10024-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33E7792C484
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 22:27:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C150D92C50C
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 22:59:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3C43282A0A
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 20:27:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3F841C21798
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 20:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D80F7182A59;
-	Tue,  9 Jul 2024 20:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B390B5FB8A;
+	Tue,  9 Jul 2024 20:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="OREnGqB/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mn+8JYl2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B0014F108
-	for <linux-pci@vger.kernel.org>; Tue,  9 Jul 2024 20:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD491B86DD;
+	Tue,  9 Jul 2024 20:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720556850; cv=none; b=VbA/a8EAHlgNs71xboI9rTxN2YkwD+tu0s/sOpU7OMxVDfGpvAxf7XoU7nQJVDVqr2qJg+PFC+6fzV2TXIHLZp0ucW52G/23Qbrf4eOdIjQ9S42VPU9IyE8LgIqs7UyhJVYS/jlM7LsJHKMgHWBy53NC1PiQ4W6/WQOAzwkKEQU=
+	t=1720558781; cv=none; b=k+0LNy7A67aUSi3pJsWJVZ9UUyGWJt/ohfcwOOusSStNSozC6nY0/s6ji8FKUrZ8Cnr/5ZlTW+YtrxafB44wVU1LXgD9rwS7Lq6Zc25E55m/EJT5oqfIpqlStArJtYiKff28Msgf1cc8IDMRkwvQfOZzw50BMzT8YfvFUFuI8sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720556850; c=relaxed/simple;
-	bh=Grz+iCnGALIJgOkups8vD/xhHYut8O5IgcRUVEl2CYU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WndTQkCIqUCB4fQDZopWX4CCi78qxAGu+Jr8W1uC8SfINU/+YyU0Fpesvkj+biDChSs2WMM0Nz4kF9akc5DaJqn0dt/d6bEjhVYa4AerMAGSFUosLIpQNLdLQPPxkQTn38HjcxH3wZ9Qocup12eR6gT656bMoAXwwW6p4jg35Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=OREnGqB/; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469K8dFh027144
-	for <linux-pci@vger.kernel.org>; Tue, 9 Jul 2024 13:27:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=s2048-2021-q4; bh=Hyy
-	KRsdN7VvUv7WDUfO7bx06ZGoHXYrPnn/wh26pnvA=; b=OREnGqB/KxJjb9WA8s+
-	qL3saYbx8OHVeSWL7YIcpaRjuMNUMKxt5dSjfm/MtszfHBlXH3a+t9x9JlzJuHyu
-	x0l4lUT8393Pry+AwiY0Mhfnc0pRn4Ekj5FabGYWhOOEeHMgXF5NnzcGOCAMt0Ov
-	KBbv5P+ObZfMxQnK4mYM+sMuF92lPeSdDjJpcjJDzjsRqhxmPVLXhuY1rTgXQSRM
-	673JBN4q+YWYsEDRfVNAFnZ/TBAjzLLTMGeFlut9xLKl6Tjvn2uBHuNSRyvv2Qun
-	dTWy5VuwQ5icmJWBIyebKkIjLNUlcTZxFfJ5nEvMIiwkbn0odViWU1jiPYq1+Aht
-	PuQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 408um5e354-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 09 Jul 2024 13:27:28 -0700 (PDT)
-Received: from twshared15999.02.ash9.facebook.com (2620:10d:c085:108::8) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Tue, 9 Jul 2024 19:57:26 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 895E11060AB77; Tue,  9 Jul 2024 12:57:17 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <linux-pci@vger.kernel.org>
-CC: <bhelgaas@google.com>, <kwilczynski@kernel.org>,
-        Keith Busch
-	<kbusch@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [RESEND PATCH] PCI: fix recursive device locking
-Date: Tue, 9 Jul 2024 12:57:16 -0700
-Message-ID: <20240709195716.3354637-1-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1720558781; c=relaxed/simple;
+	bh=HNdKvXLI7TM6d3cSHLxTHT3u4cUef/wDMLp/LvR/pSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EnnMcoHz1zR62eALS+XHsFiJ8CucGN+zIVgvK9gwzE/ukZDcx83ga29rx1M97YpkA56IwGOvwVLalufElE6khBxsv2+IgrEBS+5mHg+0dwMP7BWvIzIApngmFN0Yz/pCygZNT8lnHpL8ndFmjbr2TkysTciqqAe0ia2nI9A3sD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mn+8JYl2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEBD0C3277B;
+	Tue,  9 Jul 2024 20:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720558781;
+	bh=HNdKvXLI7TM6d3cSHLxTHT3u4cUef/wDMLp/LvR/pSI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mn+8JYl2FfrXayOEfIf4H1W0qJyAEYOJonZj2sptzGs8meU6UBBR0Qoj8Gt71Z0lE
+	 q+JS2ps8nvCppTzRrpxnOb3VvVIN8rRdO/iZSX1rhTEJB6nhkauxc6tMqDMJCgmLpc
+	 zDELXtiLhsDq6UN8QtpHaJGjY8Kjl7mtKFpLiT6fHmnz7AZzOb4bAQ6j9x7t9JXBqo
+	 p1kwmhQhuONOx878EZp79wrgGhfzfZScv8xEsSPn3uzz77p7B1iFKcVKTjium6U03t
+	 2h7K5Rm0za1PH1NjGqpfrDGk1BfabuqfbU6Ev6RVZ/ztGJS8fqPJM7V7l2oB/zCDZ8
+	 4/IAAVb20HvzQ==
+Date: Tue, 9 Jul 2024 15:59:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jiwei Sun <sjiwei@163.com>
+Cc: nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+	paul.m.stillwell.jr@intel.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, sunjw10@lenovo.com,
+	ahuang12@lenovo.com, Pawel Baldysiak <pawel.baldysiak@intel.com>,
+	Alexey Obitotskiy <aleksey.obitotskiy@intel.com>,
+	Tomasz Majchrzak <tomasz.majchrzak@intel.com>
+Subject: Re: [PATCH v3] PCI: vmd: Create domain symlink before
+ pci_bus_add_devices()
+Message-ID: <20240709205938.GA194355@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: EbV79jULbhzfX2Q9z2LblG9CFpJOjkxh
-X-Proofpoint-ORIG-GUID: EbV79jULbhzfX2Q9z2LblG9CFpJOjkxh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-09_09,2024-07-09_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605124844.24293-1-sjiwei@163.com>
 
-From: Keith Busch <kbusch@kernel.org>
+[+cc Pawel, Alexey, Tomasz for mdadm history]
 
-If one of the bus' devices has subordinates, the recursive call locks
-itself, so no need to lock the device before the recursion or it will
-surely deadlock.
+On Wed, Jun 05, 2024 at 08:48:44PM +0800, Jiwei Sun wrote:
+> From: Jiwei Sun <sunjw10@lenovo.com>
+> 
+> During booting into the kernel, the following error message appears:
+> 
+>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+>   (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+> 
+> This symptom prevents the OS from booting successfully.
 
-Fixes: dbc5b5c0d268f87 ("PCI: Add missing bridge lock to pci_bus_lock()"
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
-Sending to the correct mailing list this time, and fixed up two typos
-in the commit message.
+I guess the root filesystem must be on a RAID device, and it's the
+failure to assemble that RAID device that prevents OS boot?  The
+messages are just details about why the assembly failed?
 
- drivers/pci/pci.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> After a NVMe disk is probed/added by the nvme driver, the udevd executes
+> some rule scripts by invoking mdadm command to detect if there is a
+> mdraid associated with this NVMe disk. The mdadm determines if one
+> NVMe devce is connected to a particular VMD domain by checking the
+> domain symlink. Here is the root cause:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index df550953fa260..5ab13bf5a3caa 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5488,9 +5488,10 @@ static void pci_bus_lock(struct pci_bus *bus)
-=20
- 	pci_dev_lock(bus->self);
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		pci_dev_lock(dev);
- 		if (dev->subordinate)
- 			pci_bus_lock(dev->subordinate);
-+		else
-+			pci_dev_lock(dev);
- 	}
- }
-=20
-@@ -5502,7 +5503,8 @@ static void pci_bus_unlock(struct pci_bus *bus)
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
- 		if (dev->subordinate)
- 			pci_bus_unlock(dev->subordinate);
--		pci_dev_unlock(dev);
-+		else
-+			pci_dev_unlock(dev);
- 	}
- 	pci_dev_unlock(bus->self);
- }
---=20
-2.43.0
+Can you tell us something about what makes this a vmd-specific issue?
 
+I guess vmd is the only driver that creates a "domain" symlink, so
+*that* part is vmd-specific.  But I guess there's something in mdadm
+or its configuration that looks for that symlink?
+
+I suppose it has to do with the mdadm code at [1] and the commit at
+[2]?
+
+[1] https://github.com/md-raid-utilities/mdadm/blob/96b8035a09b6449ea99f2eb91f9ba4f6912e5bd6/platform-intel.c#L199
+[2] https://github.com/md-raid-utilities/mdadm/commit/60f0f54d6f5227f229e7131d34f93f76688b085f
+
+I assume this is a race between vmd_enable_domain() and mdadm?  And
+vmd_enable_domain() only loses the race sometimes?  Trying to figure
+out why this hasn't been reported before or on non-VMD configurations.
+Now that I found [2], the non-VMD part is obvious, but I'm still
+curious about why we haven't seen it before.
+
+The VMD device is sort of like another host bridge, and I wouldn't
+think mdadm would normally care about a host bridge, but it looks like
+mdadm does need to know about VMD for some reason.
+
+> Thread A                   Thread B             Thread mdadm
+> vmd_enable_domain
+>   pci_bus_add_devices
+>     __driver_probe_device
+>      ...
+>      work_on_cpu
+>        schedule_work_on
+>        : wakeup Thread B
+>                            nvme_probe
+>                            : wakeup scan_work
+>                              to scan nvme disk
+>                              and add nvme disk
+>                              then wakeup udevd
+>                                                 : udevd executes
+>                                                   mdadm command
+>        flush_work                               main
+>        : wait for nvme_probe done                ...
+>     __driver_probe_device                        find_driver_devices
+>     : probe next nvme device                     : 1) Detect the domain
+>     ...                                            symlink; 2) Find the
+>     ...                                            domain symlink from
+>     ...                                            vmd sysfs; 3) The
+>     ...                                            domain symlink is not
+>     ...                                            created yet, failed
+>   sysfs_create_link
+>   : create domain symlink
+> 
+> sysfs_create_link() is invoked at the end of vmd_enable_domain().
+> However, this implementation introduces a timing issue, where mdadm
+> might fail to retrieve the vmd symlink path because the symlink has not
+> been created yet.
+> 
+> Fix the issue by creating VMD domain symlinks before invoking
+> pci_bus_add_devices().
+> 
+> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+> Suggested-by: Adrian Huang <ahuang12@lenovo.com>
+> ---
+> v3 changes:
+>  - Per Paul's comment, move sysfs_remove_link() after
+>    pci_stop_root_bus()
+> 
+> v2 changes:
+>  - Add "()" after function names in subject and commit log
+>  - Move sysfs_create_link() after vmd_attach_resources()
+> 
+>  drivers/pci/controller/vmd.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 87b7856f375a..4e7fe2e13cac 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -925,6 +925,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  		dev_set_msi_domain(&vmd->bus->dev,
+>  				   dev_get_msi_domain(&vmd->dev->dev));
+>  
+> +	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+> +			       "domain"), "Can't create symlink to domain\n");
+> +
+>  	vmd_acpi_begin();
+>  
+>  	pci_scan_child_bus(vmd->bus);
+> @@ -964,9 +967,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	pci_bus_add_devices(vmd->bus);
+>  
+>  	vmd_acpi_end();
+> -
+> -	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+> -			       "domain"), "Can't create symlink to domain\n");
+>  	return 0;
+>  }
+>  
+> @@ -1042,8 +1042,8 @@ static void vmd_remove(struct pci_dev *dev)
+>  {
+>  	struct vmd_dev *vmd = pci_get_drvdata(dev);
+>  
+> -	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>  	pci_stop_root_bus(vmd->bus);
+> +	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>  	pci_remove_root_bus(vmd->bus);
+>  	vmd_cleanup_srcu(vmd);
+>  	vmd_detach_resources(vmd);
+> -- 
+> 2.27.0
+> 
 
