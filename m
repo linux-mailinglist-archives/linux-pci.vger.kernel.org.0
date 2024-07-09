@@ -1,161 +1,127 @@
-Return-Path: <linux-pci+bounces-9970-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9971-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3041592AD3F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 02:51:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1CD392AE5E
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 04:57:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA890282350
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 00:51:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E63C31C21DD9
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 02:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A15061EA80;
-	Tue,  9 Jul 2024 00:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EC783612D;
+	Tue,  9 Jul 2024 02:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bwYc0puv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJTFvf0B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ED110FA;
-	Tue,  9 Jul 2024 00:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159633A29C;
+	Tue,  9 Jul 2024 02:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720486256; cv=none; b=lfzpIKwmcvmE9WXDqQVhDZ9ZLkVFnzpOjgoZ9Loe3d6M52/4Eiuy+QUQC1+fOXZqn68nh17XhFDbcMvsnQMWul/ofOaIE9c/enzaGRgK4uG28SigNjlDtgKoVFbUbDcWlKxQUurWGxQz+4rFmulWl8CEu5IaHr2FRFCRSc+bA/M=
+	t=1720493828; cv=none; b=a+YKt37iP5zQwej83SOuKul0+pTpdtHDc7EETC+T/477DE6cbyoOZuxNRSO7gMGa3rkvR9IvYHdz7IVRXmkgHIm2D358Q2poSyFJVRM4Ch4WCU7U7B+TPoN9Nq7TFXsfPglcgjsVgIiNlEOkZ8qA4s4Ya7+MI0uCujb6fOtMD7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720486256; c=relaxed/simple;
-	bh=BdXpEabngZDyg/iduns/YDXTEYzjjdakPHcMyl7lzlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=amBmHJWKdI9ghFyF+23ZeWcr2NCkKfJCZlIGLB/PsGNSTf+NVhd3yCtdoLxut8CTBkeuReKeuIwMNQQH69KJg4tppMu+DXjcFyTIoXzEKSGaNC7ywi5dIceqL0JmA5wKBYwP/j9ovn452+EnwgLkl6luglBLYVq1+lnVeJ23Llg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bwYc0puv; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-48fe76c0180so1523297137.1;
-        Mon, 08 Jul 2024 17:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720486250; x=1721091050; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jGCm7ULkHrxj85VKoDXAjcmHZHESjN0FxE0aujX1liU=;
-        b=bwYc0puvP1MjnrwUV+NBpBYnizLM1WCMhkGAitm46e7O94TjgHCjqM9nOdPxxwLu73
-         OSlqAUpPnjh8uBaiLREcNXd/8lEd0xqPnnQJb1hs2BGAtGA/bPeVOVRzn9W3Lk68QUWT
-         GYB8wIc3sn4VOdUKiEjIF34OY0Xnl89ujY552l2oMJfE/wQyf/wLA+dAWOZjl2V8zopd
-         2+FQ21aPJpM4mGjacHfay7sRQh7eueQoEqgzwcywgvL7oVYZeFBtTCWTPKNZxEfF7Lyu
-         MrWt37oqlpxvljkT+awkl/CsYPFJJx6VEClPMIqLaz5M+KYJhxsnoYLtwiWnlm++WiqW
-         uH0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720486250; x=1721091050;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jGCm7ULkHrxj85VKoDXAjcmHZHESjN0FxE0aujX1liU=;
-        b=AmAPJ2P0xSYaaRfUfcCfnvFbCCOnvkKOVRCRkmP6d0/rQJXXa6EW2som1zH+Gtiz8Y
-         D0i0LEAhenqFveEeceTmZF5EBn9PUbe8TL4/xTlL1pyg1bgqLk7ZWP8fh9EMoUYm2/xu
-         kK0NjNecFCPUW4VU3Rxk+UlJghWdU7rV2kCGMnSc51ymTLS4z2uBxl9MNJnZJV8J8Wba
-         UrV7zS5ueRmjoyHNWQo7EMcXZ08gRpJGbHj9mI+8WVvPKVRkBijzZGT6QLIN7uMRZVwS
-         gECGd2FpHXUpYxRwYZWqDtvuMgAjodml1x+BjDZ3wmsHP3yiRSpNbZfMGenwNWUNC8vn
-         jqcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJfXN7pultl9S4ROlLlbSe0XwZkKR1xQsRlirq94OCItOlMNUf6o/QluiUK/9LHCMeppMm3T+NxHbsFRrF0Nv0r1EnlYiI7p9IQiuwoAoQ0NKYH9Mb61LqEtStrXOVRNlV9kNrvp+O
-X-Gm-Message-State: AOJu0YzEX7wzdZuNIjsQ49iXFfqYy3utqCNeEvUNhvdfO7LhgDSf6rFE
-	0NN2JRKYUTPS2aPRryYS0SSaOuat3c22gtsvHgBHkfXkjiRykvGTy3hOd5N9FvM7GDuW/J2bJlt
-	FF3CMDILjVKaQhkNDYa+K5NzyTP8=
-X-Google-Smtp-Source: AGHT+IFXBIwiAdVJ2BbfSrFesf65v19ToW/by4CvTTpI4KW4/C2pWNEGAbprVYqYhVYM+Wxo7ApbBEdYo7ePOAaMkBI=
-X-Received: by 2002:a05:6102:c13:b0:48f:e62f:8863 with SMTP id
- ada2fe7eead31-49032153e82mr1287941137.2.1720486250168; Mon, 08 Jul 2024
- 17:50:50 -0700 (PDT)
+	s=arc-20240116; t=1720493828; c=relaxed/simple;
+	bh=L4KvOLHA9APNyAatBQSWMGun+WkqibNGe1IIFkU3g1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i8G3Rw3shNNdxmiF7f02t3R0B9/ZzdZr9mA1AoWRmvM0eAKwilF5p5Ux0/k10LcXT2W4AqYupgDauCdBh24I+9yq56BJCGQNNKIvPBpxlXYHtyPIdt2uH2BDfEJ+L2M5y8OdAI2065Z/7dpbMNfPl0JcFqpoYb7+ABoPPEe6oXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJTFvf0B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20843C116B1;
+	Tue,  9 Jul 2024 02:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720493827;
+	bh=L4KvOLHA9APNyAatBQSWMGun+WkqibNGe1IIFkU3g1M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kJTFvf0BvektW9iHALrfIGynBQq3arEi0n0dtny0Wolco0jDKblApjyZgjjwHIbrd
+	 wqBltwIW8POIay2xibWNM0rR1iPrF87KKYQ82J6OicGQeILAguPYmonDQoSg1SP4of
+	 NPoETE7RQtRwfstO7BcMTwk4K7s3+b+YWNUD3iKJ0ZDDynjc/fPrbU3Z3oA2mXtwRq
+	 1W4N2TPNGL5hbjj5GQsJ3GLB2FE+OWQrWbzsNXlTwgq/LItfsg88rz8N4PaMqApm36
+	 RZxw42FQGP/CvapHoJPer/2JrmbWk4RjdupEdlzssohwFSNHHGl1Tx6SbaTJ+SiHi3
+	 spy+8h5f4MbXQ==
+Message-ID: <bf238892-4d53-4732-a138-11aa6af1dbe3@kernel.org>
+Date: Mon, 8 Jul 2024 21:57:06 -0500
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702060418.387500-1-alistair.francis@wdc.com>
- <20240702060418.387500-3-alistair.francis@wdc.com> <20240702145806.0000669b@Huawei.com>
- <CAKmqyKPEX632ywm5DiKvVZU=hr-yHNBJ=tcN2DasKpfWdykgZg@mail.gmail.com>
- <20240705112953.00007303@Huawei.com> <20240708005533.GC586698@rocinante>
-In-Reply-To: <20240708005533.GC586698@rocinante>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Tue, 9 Jul 2024 10:50:24 +1000
-Message-ID: <CAKmqyKOa2nf1yRuZ_zpkH422JRkoHi2cC0Yq8RnNap6Meu80Uw@mail.gmail.com>
-Subject: Re: [PATCH v13 3/4] PCI/DOE: Expose the DOE features via sysfs
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, lukas@wunner.de, alex.williamson@redhat.com, 
-	christian.koenig@amd.com, kch@nvidia.com, gregkh@linuxfoundation.org, 
-	logang@deltatee.com, linux-kernel@vger.kernel.org, chaitanyak@nvidia.com, 
-	rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/PM: Avoid D3cold for HP Spectre x360 Convertible
+ 15-ch0xx PCIe Ports
+To: superm1@kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc: "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, Tony Murray <murraytony@gmail.com>
+References: <20240629001743.1573581-1-superm1@kernel.org>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20240629001743.1573581-1-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 8, 2024 at 10:55=E2=80=AFAM Krzysztof Wilczy=C5=84ski <kw@linux=
-.com> wrote:
->
-> Hello,
->
-> > > Any input from a PCI maintainer here?
->
-> Something that I am curious about: can we make this a single file with a
-> bitmask inside that denotes what DOE features are enabled?  Would this be
-> approach be even feasible here?
+On 6/28/2024 19:17, superm1@kernel.org wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> HP Spectre x360 Convertible 15-ch0xx is an Intel Kaby Lake-G system that
+> contains an AMD Polaris Radeon dGPU.
+> Attempting to use the dGPU fails with the following sequence:
+> 
+>    amdgpu 0000:01:00.0: not ready 1023ms after resume; waiting
+>    amdgpu 0000:01:00.0: not ready 2047ms after resume; waiting
+>    amdgpu 0000:01:00.0: not ready 4095ms after resume; waiting
+>    amdgpu 0000:01:00.0: not ready 8191ms after resume; waiting
+>    amdgpu 0000:01:00.0: not ready 16383ms after resume; waiting
+>    amdgpu 0000:01:00.0: not ready 32767ms after resume; waiting
+>    amdgpu 0000:01:00.0: not ready 65535ms after resume; giving up
+>    amdgpu 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+>    [drm:atom_op_jump [amdgpu]] *ERROR* atombios stuck in loop for more than 20secs aborting
+> 
+> The issue is that the Root Port the dGPU is connected to can't handle the
+> transition from D3cold to D0 so the dGPU can't properly exit runtime PM.
+> 
+> The existing logic in pci_bridge_d3_possible() checks for systems that are
+> newer than 2015 to decide that D3 is safe, but this system appears not to
+> work properly.
+> 
+> Add the system to bridge_d3_blacklist to prevent D3cold from being used.
+> 
+> Reported-and-tested-by: Tony Murray <murraytony@gmail.com>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3389
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>   drivers/pci/pci.c | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 35fb1f17a589..65e3a550052f 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2965,6 +2965,17 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
+>   			DMI_MATCH(DMI_BOARD_VERSION, "95.33"),
+>   		},
+>   	},
+> +	{
+> +		/*
+> +		 * Changing power state of root port dGPU is connected fails
+> +		 * https://gitlab.freedesktop.org/drm/amd/-/issues/3229
+> +		 */
+> +		.ident = "HP Spectre x360 Convertible 15-ch0xx",
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "83BB"),
+> +		},
+> +	},
+>   #endif
+>   	{ }
+>   };
 
-In theory there can be any vendor ID (16-bits but not 0xFFFF) and any
-feature (8-bits). So there is a huge possibility of values here.
+Bjorn,
 
->
-> Thoughts?  Or is it too late to think about this now?
+Ping on this one.  It's a trivial quirk that Tony and I already root 
+caused on Gitlab, I'd hope this can be squeezed in.
 
-It's just too many possible options to use a bitmask. I guess we could
-use a feature bit mask per vendor if people feel strongly
-
->
-> > > There are basically two approaches.
-> > >
-> > >  1. We can have a pci_doe_sysfs_init() function that is called where
-> > > we dynamically add the entries, like in v12
-> > >  2. We can go down the dev->groups and device_add() path, like this
-> > > patch and discussed at
-> > > https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
-> > >
-> > > For the second we will have to create a global pci_doe_sysfs_group
-> > > that contains all possible DOE entries on the system and then have th=
-e
-> > > show functions determine if they should be displayed for that device.
-> > >
-> > > Everytime we call pci_doe_init() we can check for any missing entries
-> > > in pci_doe_sysfs_group.attrs and then realloc
-> > > pci_doe_sysfs_group.attrs to add them.
-> > > Untested, but that should work
-> > > even for hot-plugged devices. pci_doe_sysfs_group.attrs would just
-> > > grow forever though as I don't think we have an easy way to deallocat=
-e
-> > > anything as we aren't sure if we are the only entry.
-> >
-> > I think this needs to be per device, not global and you'll have to manu=
-ally
-> > do the group visibility magic rather than using the macros.
->
-> Lukas proposes a very interesting feature of kernfs recently per:
->
->   https://lore.kernel.org/linux-pci/16490618cbde91b5aac04873c39c8fb7666ff=
-686.1719771133.git.lukas@wunner.de
->
-> Would this help with DOE features?
-
-That was the previous approach used here:
-https://lore.kernel.org/linux-pci/20240626045926.680380-3-alistair.francis@=
-wdc.com/
-
-Bjorn wanted to try and avoid using a function pci_doe_sysfs_init()
-[1], which is what I tried here. It sounds like the v12 approach is
-the way to go then. I'll send a v14 based on v12 with the comments
-addressed
-
-1: https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
-
-Alistair
-
->
->         Krzysztof
+Thanks,
 
