@@ -1,119 +1,149 @@
-Return-Path: <linux-pci+bounces-10016-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10017-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88C0792C270
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 19:28:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD83192C2EF
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 19:58:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2F461C22F60
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 17:28:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DED151C227A7
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 17:58:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 830EB17B034;
-	Tue,  9 Jul 2024 17:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D87D17B049;
+	Tue,  9 Jul 2024 17:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgUOSnJm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hSUtqeMc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0EF1B86C5;
-	Tue,  9 Jul 2024 17:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED98E17B038
+	for <linux-pci@vger.kernel.org>; Tue,  9 Jul 2024 17:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720546118; cv=none; b=XGU0Zk1R2kKdMnbivBx8Y/+cH/aqQbgGOMjG7R7wot7cABgcHzErsP33ZzMg4xkJKLTCCNjlETAhsIoMOBlXDrIG+HVQLJHuvTFcKy0V2ejAWjnMIi8vt6F0PKoZo5NGjch9G7Cgauq33rzIa7k1BBj6VBeU/bsDw8LFHrYCNRM=
+	t=1720547914; cv=none; b=iue1GOrU8HAVtBUOKrm14z9+P1nJElnn/v54iMr6lgqZuiXMBmtdXkqguZjtJ0UkEYaGlZeTSI1jdwatANhB5ro0saxDBrfx4f5yJpEJE8z1P4i//ztnE0nzSeiaA5DElzdKPcDzSVRv6SpGghXFdIAvobxnkdm6HM7TYt2kw/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720546118; c=relaxed/simple;
-	bh=Fh3+YN6x4wQRVGUysFM6HXguzt0afiR9ubQe7ALSnGA=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k/p5hOcp3YYnUmzjTlk+OZaIDlIrBP/adyAD6AWs/PWL0QwJEoVXB45C2Uq4wlI5fVbLP91pWo0iMTaEJAgIwIHeLxNoRvVPL7k1EJhWZn/voL56vF7VRdbBuW+9QueoI2wzuHSiwlG63d8PsNebAZZsUGCTK34BWlPsg7MfPZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgUOSnJm; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70af2b1a35aso3534191b3a.1;
-        Tue, 09 Jul 2024 10:28:36 -0700 (PDT)
+	s=arc-20240116; t=1720547914; c=relaxed/simple;
+	bh=+/+EC2l+olOF7KyGXIXNGZzNzi+/+As1tcpMx62bp4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qdcyEqoXXa/irlKjKoqkqhnrc4AYpmSI4hb53/rg8nKBtOJyCRAywPum8rGLJYNWnxyMgUsVuy2FRWEUv2vUL38OmeCVXEkEk2Gs6K9QeITv6IGSKkq5+swbmoZDEb4uP5TZ4dbcKLVExDTLIN4ukhzRc99wmNuwc55QLuOy+W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hSUtqeMc; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb72eb3143so43765ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 09 Jul 2024 10:58:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720546116; x=1721150916; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:message-id:date:cc:to:from:subject:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=W5KxrsmOj10YgMpkQiTq5L07X8mvZPUOQamgvBk8/U8=;
-        b=UgUOSnJm2AQ0nNi8vBWKYtGlzM2ktw9XT004X9pp13ZUqVe3MKi8qIjAxejn54Yqee
-         PslpHn1hJO5JxVfpDwyA+OmVsyGLZyzle2eEtfeJBe3ekdlp51k/8w0UWH27pIiUh+Qp
-         OILpylrBC+V2eNTbQgJ5wJ60KbB0CfffA/Fe0H1i7HZKyN2BJV98gZKy42ltiLRtZ13m
-         CiKO2y1kSLfZ7e80H5ajCLTrTlwHC73R5YeNOpX9mCHbAP3xqvlvfrcMFPzer1V2QOE9
-         3PN0OS0rN+DOcVCRqH5wu7pRgrNStB2KXLPzIXh8M4hxTClUzwpHH9iUl7dfPQpctbIN
-         LzNw==
+        d=linaro.org; s=google; t=1720547912; x=1721152712; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=akLpSFPHdkCvX8sa/CAhBoiIqmBtSWHSGyWXF/WIX2o=;
+        b=hSUtqeMcYpwX1GU75LrK8Vmb/HUmegrPhyzc5tspqVTl7IP/h2w2irN/igVSUdP3WQ
+         0vFZc7dhhFUwNIRwGdR7dIWGrkifRDhk6OMLh86AzVd4wtD6kNny8JXf/DeTcRQFbofY
+         laJfTZhpaJEA83Y6Nq8Cp9Ey5RspuLBEklPnGwEdrzsESm5mPv8M1o48r9Ntd90eKUwl
+         L9GPOBHJ7qBSHusKh6LG3LjVpteSki/67WDZSUKr9T9/BMv32IXPiZv/oUfPsqz6NZ7U
+         V2BiwxTKMsWOnUHh8QpjvOO4+FVzQEH5tQyOtlmZHYPddGgpTCUbuIe3Yv2NylVRtlD7
+         cK/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720546116; x=1721150916;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:message-id:date:cc:to:from:subject:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W5KxrsmOj10YgMpkQiTq5L07X8mvZPUOQamgvBk8/U8=;
-        b=ZZpr55H2FxNu7TwKkmN14/Dgh4LduHDWn2n4XHMJNSkKHVESG76wweGtI62dkUl8Vp
-         aVkMMZE16bqDXjmjMJTX32RFOrAF5TrYnfyPyBtdVVPwL+bzG0VauTy38/CB82Led9yc
-         4j0l4zWGDBFAqRsmzD6TOd+2ujpQpvlLRTmLQLmI4W/+uuQA2VHTdk7FaTWoZRrcy+b4
-         lVUhEX3aiK4OVkKfyjKkrJNT90t0zmVDchJ6NioAU8wjToLHr3iDg+rZjtdqdWa4//fJ
-         amp9gk7oBaSq8pmpMBrBxgyrl6Fk5K0KNFfE2sScjfZskV66bQpCX0jTB+nPa9HJg78P
-         TxUA==
-X-Gm-Message-State: AOJu0YyHPHKHEaTtquAde0Snl+HvURsqQA4G0N15aKwk9LgMr86/wgpT
-	QjcqMmTn5Efr1oHe/eCv+kQlfovRKJK0fiLy5r7LVTXM9hz15sa+
-X-Google-Smtp-Source: AGHT+IHX0VwQ8KFeA72DMn2B0pnWum1FSZBxM9VAb03ea80FtBUr6B3HAQxwxtpZ+nm8akmiHlx+4g==
-X-Received: by 2002:a05:6a00:9285:b0:70b:1b51:b8af with SMTP id d2e1a72fcca58-70b43586d9dmr3679042b3a.19.1720546116369;
-        Tue, 09 Jul 2024 10:28:36 -0700 (PDT)
-Received: from ahduyck-xeon-server.home.arpa ([98.97.103.43])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b438c70a4sm2096867b3a.83.2024.07.09.10.28.35
+        d=1e100.net; s=20230601; t=1720547912; x=1721152712;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=akLpSFPHdkCvX8sa/CAhBoiIqmBtSWHSGyWXF/WIX2o=;
+        b=qs0TDgYyJdorS3qIh02Q7d3LcHoYaHoB4nL/B/GfVDT0VtRH1RyFUCnMwySCTc+MTc
+         gAiYmd1nGir5CLmy805dHYVc1AzVCryBIC5IJsE40CgYJetA6JU4xJWcEHEh97luf3ro
+         OKRbjPgox9fO01l2O2YZ6I9JP6B6qoFVo1qPXvJVA5goDQkiHUnir8e6zQ9OQUAZgWSS
+         tFGMYTa7d+g4L8ced5Bp6+1pxAJnsPvpugUIswnWMgJgaet/TNFZRZ0ka8OwlsUAtcOK
+         SddQRZTSZjizBQ9vdJeGTj/1aOurAG242idjSK7Y/2LiSVYslh3kEGWddxvZqsyxApVC
+         LBQg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/nAw5m8jBUFOqPV0I1d1Mv0vlxzkxdcpvh0gvwyIkJ0t+CjN7GrGdEtPsbjypbP8/7NkCT4HKofLdM/30nW3kH3DjSNeIaJD8
+X-Gm-Message-State: AOJu0Yw0bixhIkagwsNCTcLxiLngyzsuehwQ2xvR77OoMc1FWHJAXq+i
+	jDiJqHhpGseTaLlGqN6KV7uuz6OtfEmCIajIYd/QgwFLonG7fkeHsQm/qleutdU8MdmXWED+1kQ
+	=
+X-Google-Smtp-Source: AGHT+IFVh2IfVOJVgTJ8rxZyJ6qhLDArqH/TiLZO7RAzJ4aVX61SuWXJwMdf52YpYAsJ0SEWy7Yk/g==
+X-Received: by 2002:a17:902:fc4e:b0:1fb:58e3:717d with SMTP id d9443c01a7336-1fbb7fc8302mr48538235ad.12.1720547912078;
+        Tue, 09 Jul 2024 10:58:32 -0700 (PDT)
+Received: from thinkpad ([117.193.213.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab7debsm19019685ad.166.2024.07.09.10.58.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 10:28:36 -0700 (PDT)
-Subject: [net-next PATCH v4 01/15] PCI: Add Meta Platforms vendor ID
-From: Alexander Duyck <alexander.duyck@gmail.com>
-To: netdev@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
- Bjorn Helgaas <bhelgaas@google.com>, kuba@kernel.org, davem@davemloft.net,
- pabeni@redhat.com, edumazet@google.com, kernel-team@meta.com
-Date: Tue, 09 Jul 2024 10:28:34 -0700
-Message-ID: 
- <172054611479.1305884.16620350406334873674.stgit@ahduyck-xeon-server.home.arpa>
-In-Reply-To: 
- <172054602727.1305884.10973465571854855750.stgit@ahduyck-xeon-server.home.arpa>
-References: 
- <172054602727.1305884.10973465571854855750.stgit@ahduyck-xeon-server.home.arpa>
-User-Agent: StGit/1.5
+        Tue, 09 Jul 2024 10:58:31 -0700 (PDT)
+Date: Tue, 9 Jul 2024 23:28:23 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>, kernel@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] PCI: qcom: Add QCS9100 PCIe compatible
+Message-ID: <20240709175823.GB44420@thinkpad>
+References: <20240709-add_qcs9100_pcie_compatible-v2-0-04f1e85c8a48@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240709-add_qcs9100_pcie_compatible-v2-0-04f1e85c8a48@quicinc.com>
 
-From: Alexander Duyck <alexanderduyck@fb.com>
+On Tue, Jul 09, 2024 at 10:59:28PM +0800, Tengfei Fan wrote:
+> Introduce support for the QCS9100 SoC device tree (DTSI) and the
+> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+> While the QCS9100 platform is still in the early design stage, the
+> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+> mounts the QCS9100 SoC instead of the SA8775p SoC.
+> 
+> The QCS9100 SoC DTSI is directly renamed from the SA8775p SoC DTSI, and
+> all the compatible strings will be updated from "SA8775p" to "QCS9100".
+> The QCS9100 device tree patches will be pushed after all the device tree
+> bindings and device driver patches are reviewed.
+> 
 
-Add Meta as a vendor ID for PCI devices so we can use the macro for future
-drivers.
+Are you going to remove SA8775p compatible from all drivers as well?
 
-CC: linux-pci@vger.kernel.org
-Signed-off-by: Alexander Duyck <alexanderduyck@fb.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- include/linux/pci_ids.h |    2 ++
- 1 file changed, 2 insertions(+)
+- Mani
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 677aea20d3e1..76a8f2d6bd64 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2601,6 +2601,8 @@
- 
- #define PCI_VENDOR_ID_HYGON		0x1d94
- 
-+#define PCI_VENDOR_ID_META		0x1d9b
-+
- #define PCI_VENDOR_ID_FUNGIBLE		0x1dad
- 
- #define PCI_VENDOR_ID_HXT		0x1dbf
+> The final dtsi will like:
+> https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-3-quic_tengfan@quicinc.com/
+> 
+> The detailed cover letter reference:
+> https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
+> 
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+> Changes in v2:
+>   - Split huge patch series into different patch series according to
+>     subsytems
+>   - Update patch commit message
+> 
+> prevous disscussion here:
+> [1] v1: https://lore.kernel.org/linux-arm-msm/20240703025850.2172008-1-quic_tengfan@quicinc.com/
+> 
+> ---
+> Tengfei Fan (2):
+>       dt-bindings: PCI: Document compatible for QCS9100
+>       PCI: qcom: Add support for QCS9100 SoC
+> 
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 5 ++++-
+>  drivers/pci/controller/dwc/pcie-qcom.c                       | 1 +
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+> change-id: 20240709-add_qcs9100_pcie_compatible-ceec013a335d
+> 
+> Best regards,
+> -- 
+> Tengfei Fan <quic_tengfan@quicinc.com>
+> 
 
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
