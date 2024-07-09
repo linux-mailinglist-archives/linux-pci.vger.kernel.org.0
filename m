@@ -1,143 +1,263 @@
-Return-Path: <linux-pci+bounces-9968-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9969-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4F6A92ACC6
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 01:57:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B72892AD3C
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 02:45:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80217282BED
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jul 2024 23:57:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22C1828247E
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 00:45:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 551561534E7;
-	Mon,  8 Jul 2024 23:57:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D611EA80;
+	Tue,  9 Jul 2024 00:45:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="al5nZvOv"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UteIjJb+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B221315217B
-	for <linux-pci@vger.kernel.org>; Mon,  8 Jul 2024 23:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720483045; cv=none; b=GeO92vyHEMXGBh9n4wZsHl8zx7Sgqj/n8BHbvkY6tCDeFKuGhgpVoK1M62/FZAW2l6N6u+jZWo1fLI2Y7XZXnjfsUCnV+LK9T2qRRjio3/Y8YHXh4D6XhrGgcsUOCJY/1UFpTeG1/iFAfUGkomNBIdRrQ+S8m1wGKhP8JyC5YN8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720483045; c=relaxed/simple;
-	bh=p7iQjHJ2M5dwP07IVo/MoA0+Dlglnl6jpSoHPFEK4Mk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V9K3esKMNBpM/0ckNQTfK88wzSg3sxhS8vthNlYyXVAW/8bo8Iyi6XuWh7r5AdvmRzVvPoR8cwIKtUHakw8MRD9ZQbNQ2tD3xq+2jmfvSi2iZgSkXXuEMjF2q+21pfqp5MFQCKjZvMppeyNWSKuBiPx9kde0O8FgmA/Mz+qjVQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=al5nZvOv; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e02748b2402so4937779276.0
-        for <linux-pci@vger.kernel.org>; Mon, 08 Jul 2024 16:57:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1720483042; x=1721087842; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w81yhK/4eC4FICM5BdCB5730Wjijfv+GUBmbab3qDKE=;
-        b=al5nZvOvTQgd0+PLH+wEqyGI34zrtBrPl0sh4/DvnqRTier4GyenayxwkcEoV0UylR
-         oYPLyoC4X1Y1qupf4DQ6QhZEMhXlpSrfAjrtk+/wzLylYwHdlE/lU0L9j6518du3Lh/P
-         9505Ih1x8pdAHacpozHNXGLwisZWFK87wTmdeSkEqNhy8KtlqkfWZ1xKj0GmJPNFh+st
-         bYQsUSyHUftG+JDTjJy1QyOnz3NuY/q9IteUepxJhWa++pz3FVzLfALbaDZ5EKO2U01z
-         97o0xtujbO8Sb/lktaPRzrLBcHlprLxOjnWS5xziKEBREJUxIuhnxYHqO2kb4rW51v1c
-         bMEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720483042; x=1721087842;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w81yhK/4eC4FICM5BdCB5730Wjijfv+GUBmbab3qDKE=;
-        b=A0rg1h2cyBPj8JoDYMl/h/8Cmm/lEydlqWvzR36GP+t3YYZex23ShEpWBN8RXR4PD8
-         Uz/QlzfOCt/e++njfj7gV0rMeybarSVKsynqRFMkJab8USz8zVcWToPJBusO5z9Nmr5x
-         HmqRm8bDocoyhmb8xCOv7fCSsG8hAhP6nZkxa5kLWAT/g66NZ6M/HiYlsmy9UIigSoF1
-         wh0HzRgqksmHWRedGd0Z/SkAKgtIoPtOv75umeYvp09UElAPevP8hYdt4GT+OZfekjB0
-         XQcT/5pIo9PLTacdh7M9LRgvpHJ093ld3HX2u1uRYXX58Hw6gBEphEy5CHwqn6OBPWo+
-         Sdfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQfqRtNe0560uC/BqLN6LrNPAPOrOzb4N0pLcLM4qijhTzPUAf18+VMu5N1hA8vFHyNhNros1HxUsSE1+UNV1c08ot3PNQvn6p
-X-Gm-Message-State: AOJu0Yz36G9wVrEpHiBVIn20aQ36M1liCvPsegCJCfWnzjdeXlGhDlaq
-	CKHAYxtG71Uj+aHyF0AEUMRAQSWiTlhVEZuWP4pgKYWpXM8a4LLDfKd9r2YZaJk=
-X-Google-Smtp-Source: AGHT+IFVd0YPFm+CFj+OFAbn4VlgzR0c7GB9Ja/EMJb3su7krIj2ap0s4sP+8C7C1jj96rzmX8e+3g==
-X-Received: by 2002:a25:d694:0:b0:e03:b14e:350f with SMTP id 3f1490d57ef6-e041b125e84mr1427037276.50.1720483042570;
-        Mon, 08 Jul 2024 16:57:22 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b61ba8ad1esm3902106d6.105.2024.07.08.16.57.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 16:57:22 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sQyET-0014tP-5Q;
-	Mon, 08 Jul 2024 20:57:21 -0300
-Date: Mon, 8 Jul 2024 20:57:21 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Leon Romanovsky <leon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	"Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240708235721.GF14050@ziepe.ca>
-References: <cover.1719909395.git.leon@kernel.org>
- <20240705063910.GA12337@lst.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A999410FA;
+	Tue,  9 Jul 2024 00:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720485945; cv=fail; b=mZm4jxpFYn1xJPcIiEYxD6qYPKhyhMwXSftw+TixzHtOJtk6c3AWKT+khTB4cEvpv3xZfFWr63L/IUqDx0Wtl9V7NkztrzaEcQS16bE0BQ21izTdgGA7t75tw5OC1Cyccv+CQDqkb4dQtBzXEVrWV/2/XpH1HGWeBeQUncqut8s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720485945; c=relaxed/simple;
+	bh=rGFr0jN3Ie3bvyaORMNdQ0xbRTSgux4SNRR2pP4kHKc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rz5/5frlkAqaBXE1dfHtb8Hic9TwMSgdTEHeaZIbJZcYgBPG1Ey8bQQtSLQ+CqeErlBEFTPM7r5d5NpeML/WZHMtJYVyGqNjK/ff42Xny+cKrTTL+8PU1qiDZg8ZKIw+4IK+GJ/bNq6TXgcOx6BSaZJnjanFmJQ7TgorfJCMWHY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UteIjJb+; arc=fail smtp.client-ip=40.107.92.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B1WQ2z7m90w22TI2ebD8PU6ev5B1ibXbPyJBZ8yTmjiaf3nDsoMDIUxHkE5RJHMQsH5iJ5V0Nn82auxXl1aZJE8ZAkOJGgWGiwJi1KCxkEJkOs2W5Rx105+z7dU1ugYcX2I28S5F2Sl8lwwOYjtU0PCTo9cmCwlce4bcCTud1yWI+cwTZwaN28QV9k5yhM7LW48mTBeFNLAimp5E7lhlbq97SIRqkDcJ97zd+YNrNgyQ1NWW+nsZFAIti39BNFapCp8/bsAFQrG5y0yNkVyoKtGNOpiZ1ecF+2iWcuap2Dj6NDlJ8b9rr4+HoXXHUUry/7Hu4jesz+OxFf4OA5vuXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hUTfeJBv2PsoDPUeHTGIRl0vzv6SecbVWj6TOPuNzrc=;
+ b=lWYl05ho7GSmBfP9ko1BR03JvoERcpdbN/AcbCr8WLWPrDUtwqxnC8JjtsPRtIZaERoZiZkMBNvsTQ3r8lEQTFY123GQBo8cGTcK9Kc/+sGPjglTlydR0BkMfa2nPS1plRrkBOCnR1ARbve59EPWUfrUevzwBpYa7GMNJG5Kru9++m9keKl3fcxMWkjr49StfV9Ilg3PrtcBvEKqQN4F1W14H00+pDsKTqMvl8j+URT7bdNOCKkzBs/RW+eZ04iPP9e8i3GGrlg34LI0+bM4imEayFfeEVhtVJEFEcqjz3Uc97Gs/oWwuIUy0lKirz7jVZYsCgohyrG4did9GiF2VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hUTfeJBv2PsoDPUeHTGIRl0vzv6SecbVWj6TOPuNzrc=;
+ b=UteIjJb+nodnJIRIJDUvHf2//toi7Tv05XOKyKtcH406PCr1M72xA2XiK+fSxKU9mJRFyLLPRI7edWTkxyRuJhbd+6K6y2mr6FpF2EkeOeyrLd1AHY6floOc1a+ECX1JmZPLzRrJNC9/g6ZnMVT147+zLXL/rPHttLX9FI0GQxU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV3PR12MB9213.namprd12.prod.outlook.com (2603:10b6:408:1a6::20)
+ by DS7PR12MB8420.namprd12.prod.outlook.com (2603:10b6:8:e9::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Tue, 9 Jul
+ 2024 00:45:40 +0000
+Received: from LV3PR12MB9213.namprd12.prod.outlook.com
+ ([fe80::dcd3:4b39:8a3a:869a]) by LV3PR12MB9213.namprd12.prod.outlook.com
+ ([fe80::dcd3:4b39:8a3a:869a%4]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
+ 00:45:40 +0000
+Message-ID: <ad7b3e48-2e61-476f-8fea-28424f46d306@amd.com>
+Date: Tue, 9 Jul 2024 10:45:27 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 07/18] spdm: Introduce library to authenticate devices
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ David Woodhouse <dwmw2@infradead.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+ David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ "Li, Ming" <ming4.li@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+ Alistair Francis <alistair.francis@wdc.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
+ Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+ Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>,
+ Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+ Eric Biggers <ebiggers@google.com>, Stefan Berger <stefanb@linux.ibm.com>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <bbbea6e1b7d27463243a0fcb871ad2953312fe3a.1719771133.git.lukas@wunner.de>
+ <26715537-5dc4-46c1-bdcd-c760696dd418@amd.com> <Zovha33CS76PwAMF@wunner.de>
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <Zovha33CS76PwAMF@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY5P282CA0108.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:20b::14) To LV3PR12MB9213.namprd12.prod.outlook.com
+ (2603:10b6:408:1a6::20)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240705063910.GA12337@lst.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR12MB9213:EE_|DS7PR12MB8420:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ea6bc1a-6da3-4e26-d3c3-08dc9fb074ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZGNLRHZMUW16RndqVm9xdWk1YVZSdHk5c2ppT2hrb28zUWN6Q3dwOFlleEpp?=
+ =?utf-8?B?VGdHSGNNODYzZzJHSzhocFlwWSsrTXZhc2I1S2pHUk12cWozZG02ZDVTTk1q?=
+ =?utf-8?B?T3pNOFc5S1NVRmw3VG1jaXZoN3owSU9vb1Bzc2dFeFhwdzNOVHlBTURpdHE1?=
+ =?utf-8?B?Q0lIMzVxRzJCSTl3Umtib0JMZEhUNFBRM2QwRjBnTXpLcVpSVkNlalk0NFFT?=
+ =?utf-8?B?eEN1c0szdUkvL3g2MWUxQ2FhejJhZUd2M3MrSVVONjdCL0tjTWx5dDVWOE0v?=
+ =?utf-8?B?VTNRODVnK3JQRE5LUlFGckQvc1o0YVZCcW9EWEtEZ1pROE9SK1J6aDFLWE5n?=
+ =?utf-8?B?dVRnc21ta3lzWTE4dFhrZXFnK1EyNjV3MkxEU1BrODAxY0lIN055S3pkNTEz?=
+ =?utf-8?B?ejc3bWZRWllreldkcGN1NTRWcWxBT210cTNtZEdXVk1QeThrVUJ0QlV3ZjRF?=
+ =?utf-8?B?aTFDZ1J1cW1TVE5BakI2NDFRT0YvNnJtelplYkNZbDNmT09RQ05KeUdYR25B?=
+ =?utf-8?B?eUtpWXFCTmtGRk1OVm8wc0JGNllOV0MvQUtVU2x6TE1Gd09xRkFVRVVGSXNm?=
+ =?utf-8?B?Mkh4TlZFa05CalFxaHN3VWtscFpnbklidGZ6RWhmODVYa2QyczFYRkNQdmxM?=
+ =?utf-8?B?V3JoalkzcFVVUngvUzYzNk1IcUgwQnpkQTRrRHhjcFZsMkFWcUZVQXBPSFNO?=
+ =?utf-8?B?RWZTYUdIeU9GcGx6a1MrNmc0YmJLMTU4OG9TbU9EOEhzeXN6T0hGMmJBVFNx?=
+ =?utf-8?B?dTBVa2RNNFBqV1VVNDBIN091cURreENWTWFVajZEb2xPQ29YbGFCcStFbGR1?=
+ =?utf-8?B?ZEtzcjUxQ2YyeHZJZ3hKK0ZBaEVnWmQxUUptSGYwaXNZWldZMmhJbEhUT0lK?=
+ =?utf-8?B?TStLR1Q5aUJnNVFheXVSM0crT0dXbTRSY3lvL3NSeEFNUmhqQ2lKZTR1MzJM?=
+ =?utf-8?B?N0s1Vy9hNFBydG92Q3RSOU5DU2NwR3hNNUxndlRaVWpENWEvTUhySWNneEhp?=
+ =?utf-8?B?M2c2d21oaDZuMXZ5OEJuMmZQUFRCQVh0V0QrcENsSlVmT2IxQkdOVU5mVC83?=
+ =?utf-8?B?OXV5WEhiSFlWZTEzOFl3d1NrWG5VMTF4bVdKUlBvZmNQS3plYkFHbmowT3Nr?=
+ =?utf-8?B?MFcxdkVlNzc4cGFlNm5FaFlyWVV0MmlhclpMZkhYWDJzNnY0K3crQThqOCs1?=
+ =?utf-8?B?RjNLcXVXanp5dzRidytQaEJkRzVSd3JlbXJYRVZVcUVqTnRxSllvSW12dzlX?=
+ =?utf-8?B?eCtQbkJFU2w5WXcwRU00a0FXcFdCWkw1VUV2SWs1cWZSUTd4RzZNR3plMlpt?=
+ =?utf-8?B?VXliSHNPYkp2WkhITU5WRTEzazRzY1JZL3cvMmEvSHJFOEtkbzh2YXU0eDFT?=
+ =?utf-8?B?MmQ0cWJRTHhyeTh4Tm01NWp4YTkrQmdWengyS0ZVZTVhMURrUEJuQkVZZ0xC?=
+ =?utf-8?B?VU5IZSsvdWVjN2hhWHhuV3pINGFEOU5JeXM2OTcvUDBmeHhLZEFXdE1LdTZs?=
+ =?utf-8?B?NGZmeW9neDdYQVRYQU56MzBwRU9Kc3ozUkxKaGxqYm9qb1hQR2Rza2R1clRC?=
+ =?utf-8?B?dmgxc2g4UVQ0UzlXSFBVWkhDMGRzUjJCL1NUaWN4ODJuaEJhY05qVGJtZG9p?=
+ =?utf-8?B?VkRMWkkwU21tM2RrM2JTQ0EyeUNGWlNpNU9HWUxLc1RKQjVvYmg4Y2dSS2NZ?=
+ =?utf-8?B?ZWw0QUp1RDZqbWIxNGhrWDh1VHRqSmVlYndvYVJHUjF5THZzdlFmWkUrUDFi?=
+ =?utf-8?Q?AeEvQf6qrFnLQgchj04uE5tJL+l6/yYC9yKBOTx?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9213.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a2xqUDFiZk5GZHdXbVdIMERuVGpNc1JUWXFKVkZ2RFVNK0JNbDlLUmY4U0Z1?=
+ =?utf-8?B?NnhQamh3eTRwNWc3ZmJZT0VtR3d4T3NwdEk1bVVOUmx0RmFoaldWRXVnRmVS?=
+ =?utf-8?B?S0RZSU1ldVladWxhK0hzKzNEUEtTZ2M1MGp2Q0ZQK0pja3JQbnd6UEJvVU1q?=
+ =?utf-8?B?c25wMk5peEt5OExMR080bzhSZEQ5SzdrV2gyaE9VY2JvdjVMUTVTUVVwR3Ir?=
+ =?utf-8?B?bGtnVGE0V2VCamc3eXM1dUVWVFU3aEQwYThjejNpWmxiMG1KaWhLc1hwQjg0?=
+ =?utf-8?B?dGNqUFkwT2ttYUlVSmhrdnl5RUF6S1RFeVhkK3JnMjFOQ3l0SEF2YnBrSUZq?=
+ =?utf-8?B?L2d2cWREbEF6ZTRnYy9CTmZqczUrQVY3ZUVnNldUczhlWFZ6ZXVVU3NoRWhZ?=
+ =?utf-8?B?V21UWEZjMWtTdERlQkJBQUVmcFhBR2VSODRKcDEyZ0lkVXZPRVgwWHFvRXM4?=
+ =?utf-8?B?d0lUSXhsU1RJQkM5VEI0Y0ZGZWl4anlxc2F4MlcyTkNHSlZEM1FiQmRZdmlT?=
+ =?utf-8?B?dm1laXpJN2NWa3IvZkhtNXdHZHNPTmw1czYrTmlIYUMwcXlpSFJQTGZZb3dZ?=
+ =?utf-8?B?RkRQdm1pMkdnMzc3cCtLVm93cThZNDZFa0FUZHFxUG9JTHhlTWxRMExHaEt5?=
+ =?utf-8?B?Ty91dmh3STI4WGIzeHZRcDFNbWtSMEtsM1hCWWZCQzA0OUMwaEdqS1Y5Tmla?=
+ =?utf-8?B?YWJKZ0ZXUWVHSWtGWVI2L0VyZXowV3NLNjBIMzYzdElSQ3E2a1Q5R2hoNGxp?=
+ =?utf-8?B?OTdDSnVaend2ZkYxK0RSRzBjeFc3L1RBL3FHb3orMjVUd0tlYWxvNmtRME9p?=
+ =?utf-8?B?YjFKb3c3TVpOZGNyd0kvWGdVYzJKYjd4bTJmZHhNVGp6cDlzbC9SZWp5RDFm?=
+ =?utf-8?B?SHZKZWNMT3lyZkhEYjF3aVV5ZTFTMTZvUzk3ZXcvKzNTR0JYbi9JeUgra0hC?=
+ =?utf-8?B?TmoxY2NNbjJBV0tHS2dnckZlNk9pOXdnSmJsZWhSa1JtbVA3TEYxS3BncjBL?=
+ =?utf-8?B?TWRDSkZKT0h0RGg3dDZBSlg0b2lITHcrMGRNZUtsVDZnMmJkOWxTb2xxZUxk?=
+ =?utf-8?B?ckRydjA2NUN2TGlKalp6UzFCNG56ckdrSDk3YVRYdDdkeG9vVHROWkpHZHVs?=
+ =?utf-8?B?a2FyMGNNK0FjNVo0bXFCQmJWV1B3TDlZeldpb2FzYTUwbERSZ1piUnBZVXd0?=
+ =?utf-8?B?ZnhvYytKdzZRaUdJemo1RThDKzlTeE9WQVVzN094OFhuNHVGaGlGcHJ3aDhN?=
+ =?utf-8?B?a3BFbmlFY0M4bDVBdUhDODc0WFVydFNobXZzbU5SNlVSRDBUNjRYZVdxanU5?=
+ =?utf-8?B?VTlBN1dYNUZsZHlJM2lvdTdJRU8xdXVVQmdPdTBTR0NvQUxhSGR1MEtRaElz?=
+ =?utf-8?B?aWFHZThnSk5jcWZ0NzRDMW53VkdFYkJ1Q3ZqM200R2dwTXRtZUFVTGg5b2M4?=
+ =?utf-8?B?RjJRUG9UYUFGV0VOVXdWVHhsVTI3cmxzOVVGWE13b2NkRjlhZ2NQWFVzZmU3?=
+ =?utf-8?B?VTAyc2hOY1pNN3h0Z1JTbG9RdTA1U0VObTdmOVNZdXY4cEFXUyt2ZnhoaVBm?=
+ =?utf-8?B?SmVFRHIyRVBmQ09NUTB3dTlIUVBqdGh1OVlXMFNhei9mN1UybndqZWl1cjhi?=
+ =?utf-8?B?cmJMeHdEVlJQdENYY1Zycko5dlArUHBVR0ZWNUc4eUZ4RkcyTWxWZXFWdGdZ?=
+ =?utf-8?B?WWwrQUkzRVIyd1lYRWNsbVBNUVpRSjJPa2J0Rlc2UWwyN0VtVUc3U0RXUm9P?=
+ =?utf-8?B?cUs4TGducmV1Um5lL2JEeXF1d2VYOFV6QzBLNUx0VkVFcllKR0x0ZzRtUDNZ?=
+ =?utf-8?B?UzMrZGpnaUJFR3pua2JhNkNZemZBOEVSLzlreVdPa0lTVE94R0xkcXkzSFF1?=
+ =?utf-8?B?OElqcGhJbm5CenNhRlpYemhNRmYzYm5hc1kwaGR4K3Noa1kzUWxVQ3NadnF6?=
+ =?utf-8?B?Z0pyQWd3WGRQYlFUTXUzeWVMRmp1QTZiVC9QbnhJZWhYL2dJeEI0ZVFWa1RL?=
+ =?utf-8?B?N0hVRmowNElkdW5DZjd6TTFBbDBZNGZUV1p1dWVKcy9GdFFYeVFFZ0JlZWRI?=
+ =?utf-8?B?MW81QUFFRVEvR2hXeHhZd1J1MDJvV1kwbXc3UklrUGorSkFuMzFqbmNoM2JP?=
+ =?utf-8?Q?s3JO7VTv56xyN5hxCziOIqHL8?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ea6bc1a-6da3-4e26-d3c3-08dc9fb074ba
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9213.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 00:45:40.4318
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OQdoAJXpF0A+Qq0uZcSshjvhBtLQieNq/6YlFcrxU2dkLgsfiQgUs/vWTmAJbCf1sL7S8HAmtyj504dxwBFQug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8420
 
-On Fri, Jul 05, 2024 at 08:39:10AM +0200, Christoph Hellwig wrote:
-> Review from the NVMe driver consumer perspective.  I think if all these
-> were implement we'd probably end up with less code than before the
-> conversion.
 
-One of the topics that came up with at LSF is what to do with the
-dma_memory_type data?
 
-The concept here was that the new DMA API would work on same-type
-memory only, meaning the caller would have to split up by type.
+On 8/7/24 22:54, Lukas Wunner wrote:
+> On Mon, Jul 08, 2024 at 07:57:02PM +1000, Alexey Kardashevskiy wrote:
+>>> +	rc = spdm_exchange(spdm_state, req, req_sz, rsp, rsp_sz);
+>>
+>> rsp_sz is 36 bytes here. And spdm_exchange() cannot return more than 36
+>> because this is how pci_doe() works...
+>>
+>>> +	if (rc < 0)
+>>> +		return rc;
+>>> +
+>>> +	length = rc;
+>>> +	if (length < sizeof(*rsp) ||
+>>> +	    length < sizeof(*rsp) + rsp->param1 * sizeof(*req_alg_struct)) {
+>>> +		dev_err(spdm_state->dev, "Truncated algorithms response\n");
+>>
+>> ... but here you expect more than 36 as realistically rsp->param1 > 0.
+>> How was this tested and what do I miss here?
+> 
+> I assume you tested this patch set against a libspdm responder
+> and got a "Truncated algorithms response" error.
 
-I understand the block stack already does this using P2P and !P2P, but
-that isn't quite enough here as we want to split principally based on
-IOMMU or !IOMMU.
+It is against a device with libspdm in its firmware, likely to be older 
+than 3.1.0.
 
-Today that boils down to splitting based on a few things, like
-grouping encrypted memory, and grouping by P2P provider.
+> The short answer is, it's a bug in libspdm and the issue should
+> go away once you update libspdm to version 3.1.0 or newer.
 
-So the idea was the "struct dma_memory_type" would encapsulate
-whatever grouping was needed and the block layer would drive its
-splitting on this, same structs can be merged.
+Easier to hack lib/spdm/req-authenticate.c just to see how far I can get 
+with my device, now it is "Malformed certificate at slot 0 offset 0". It 
+is just a bit inconvenient that CMA is not a module and requires the 
+system reboot after every change.
 
-I didn't notice this got included in this RFC..
+> If you need to stay at an older version, consider cherry-picking
+> libspdm commits 941f0ae0d24e ("libspdm_rsp_algorithms: fixup spec
+> conformance") and 065fb17b74c7 ("responder: negotiate algorithms
+> conformance").
+> 
+> The bug was found and fixed by Wilfred Mallawa when testing the
+> in-kernel SPDM implementation against libspdm:
+> 
+> https://github.com/l1k/linux/issues/3
+> https://github.com/DMTF/libspdm/pull/2341
+> https://github.com/DMTF/libspdm/issues/2344
+> https://github.com/DMTF/libspdm/pull/2353
+> 
+> Problem is, most SPDM-enabled products right now are based on
+> libspdm (the DMTF reference implementation) and thus are bug-by-bug
+> compatible.  However such a software monoculture is dangerous and
+> having a from-scratch kernel implementation has already proven useful
+> to identify issues like this which otherwise wouldn't have been noticed.
 
-The trivial option is to store the dma_memory_type per-BIO and drive
-the de-duplication like that. The other could be to derive it from
-first entry in the bio_vect every time a new page is added.
+True and a bit hilarious :)
 
-This same-type design is one of the key elements of this API
-arrangement - for RDMA I expect we will need a data structure storing
-a list of types with a list of pages, and we will DMA map type by
-type.
+> The in-kernel SPDM implementation currently doesn't send any
+> ReqAlgStructs and per the spec, the responder isn't supposed to
+> send any RespAlgStructs which the requester didn't ask for.
+> Yet libspdm always sent a hardcoded array of RespAlgStructs.
 
-Jason
+Uff, I see. So it should probably be "Malformed algorithms response" 
+(where param1 is actually checked) than "Truncated algorithms response", 
+a minor detail though. Thanks for the explanation.
+
+> So the *reference* implementation wasn't conforming to the spec. :(
+> 
+> Thanks,
+> 
+> Lukas
+
+-- 
+Alexey
+
 
