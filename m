@@ -1,108 +1,112 @@
-Return-Path: <linux-pci+bounces-10013-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10014-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74C2292C181
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 19:00:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 906F492C238
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 19:19:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D586286C76
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 17:00:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C10C21C20B2A
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 17:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF01D1AC450;
-	Tue,  9 Jul 2024 16:29:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4248D1B86EB;
+	Tue,  9 Jul 2024 17:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NycS/DkI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PnOVroRK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zPcdei8D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D931AC42B;
-	Tue,  9 Jul 2024 16:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF6D79EA;
+	Tue,  9 Jul 2024 17:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542554; cv=none; b=eo52i0YqPS66dh90BXCqpom6+dw3kvpkJkc+oeRoBQz6PAZOIsTzqZ80nunqBIDugQ0zgKcit1bjo2FhHCfoAjQNSwhkfmnwytjr0aKaSZ5mpxNvLXgMpacQlKchDG4kZfYUCwZIHarYngMz+lq51dYZnXDxIrttcp2Dloe4Q40=
+	t=1720545547; cv=none; b=URXvL20uY5uIwUA5sAEdFJsHdsRNTRlKjZBakbU3T4WUQFWkGrLXCaNZ63XgL6J3jzbQE0dHvE0bHmBIKEkiTAKsZ7OVqusAKaTPM49dcE/VtvGqZsJ5bZXbdZD29bwrpjct112OSZQVYX9B8fymQvmNi0LVT+S6Mh0dVJGIqHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542554; c=relaxed/simple;
-	bh=RhV3fJwYtKN6ViNUPQofsewkE0uvNr9XIDbS7PLjJpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=J5qzoWofJcWN6ab+9yuT/+AsJU9ESBL6c/X0l/BUz/EVH9pyv8/uWP2S7shyfmFU/Rpgjq+A7aw2H7Zjze75MwmeNS2aYiuMWgxJlHopKqs1+KwomxCIX/0x3JO8yClU9U8EJU6IIt5kebs+Nb1YjsUBsqcTsQAnkhYLc+tgVn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NycS/DkI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12EBEC32782;
-	Tue,  9 Jul 2024 16:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542554;
-	bh=RhV3fJwYtKN6ViNUPQofsewkE0uvNr9XIDbS7PLjJpE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NycS/DkI7P9OF8H7e3aIHR6J18UeZ3d2k6bf2FQxhS/x45SkstJat09iSyVjn7+Ez
-	 RP+Ll0mLC3OIvrHnagNJwjfpHVPX5Qmzttc4icEnTFA20a4L2U+vRdk9a1jYGIRdLt
-	 jeUhwZnTy+I1jSwBAuFH1pnu699lKjEDQJi/DqrIRtd1HtQn+d30kLkrZVFT0kKQQy
-	 Q2V38FOoy1WTcmc05qi3X+8TFtbhZ62hEogDtoV3kloxhTQpS843Czd+BbwmFU6rlv
-	 +rmEYVY0JvOrChWyMzHWXRXIWxh7ScxSxMbG2MQMMIyEStlSWkjpM+ZEUf9rTSd32B
-	 EeCHYTCpIYJng==
-Date: Tue, 9 Jul 2024 11:29:12 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	kernel@quicinc.com, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: Document compatible for QCS9100
-Message-ID: <20240709162912.GA176161@bhelgaas>
+	s=arc-20240116; t=1720545547; c=relaxed/simple;
+	bh=LlPiCSoSA7uRdyDT/x8+7RpEOMTj3SUxN/O3lN+evHs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DzyksStTt/9pUdOTsrzadNOSfXi5rLwceXTChxxumi/ISbxFWO8LKcOa+1/K11eny2CrZ832YXpPc6Z9v5kHyiiBI/1P2Nm3kjsCyfJzRa6CvxdY8NDp/gWP1mbQWInRrZHGwCPhqEX22JemUNHSIBdNi9mXH++/vmgUh47nFoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PnOVroRK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zPcdei8D; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720545538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HXRtPpmIr/zw1VxZFsrUYY1TxMhVL7bZNIcSYI84kW8=;
+	b=PnOVroRKqR2qbZWMXqbKarnlYlUwZgz7LosWN7IMdwMc5ENufM6Q/QKcWK0Gvl0jgYYmJx
+	e4ggy9EXk8VLq9c0UJY0rrycGmvMo2qbMM3OPQ1B6lNga6dVWAm8r87rC5eCrkeyplAVI+
+	M1z+3LCjJyqNwd6n9n75euE0pAbOHY+3wacaX+pjfdrYBN+nPa1PYGQPJ3zEPAknYBmtsP
+	MKNhvUPxusR1XXbSEw3yhcCDhpOWsxQMUSuLOJYL44DZST7b+V1lXwhTkP/+gfYk0akIqS
+	8Mn7op+uulq2FE5lljlv66QBAy5NB02Jt90jt5q0J/0Juoh3NHE1/jGqDtLJFA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720545538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HXRtPpmIr/zw1VxZFsrUYY1TxMhVL7bZNIcSYI84kW8=;
+	b=zPcdei8DMuFfkYYzd8DODeB87OYLTJ4pR2v6KgrL0E7OGzxoNT7natX7rpIMQ0Rb0yzoWb
+	nk0rVPNu1nu0ZyBg==
+To: Marek Vasut <marek.vasut@mailbox.org>, Marek Vasut
+ <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Jon
+ Hunter <jonathanh@nvidia.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>, Yoshihiro
+ Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] [RFC] genirq/cpuhotplug, PCI/rcar-host: Silence set
+ affinity failed warning
+In-Reply-To: <43e4c568-083f-4b14-9f08-563ba6a71220@mailbox.org>
+References: <20240706132758.53298-1-marek.vasut+renesas@mailbox.org>
+ <87h6d1vy2c.ffs@tglx> <43e4c568-083f-4b14-9f08-563ba6a71220@mailbox.org>
+Date: Tue, 09 Jul 2024 19:18:57 +0200
+Message-ID: <875xtewkji.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709-add_qcs9100_pcie_compatible-v2-1-04f1e85c8a48@quicinc.com>
+Content-Type: text/plain
 
-On Tue, Jul 09, 2024 at 10:59:29PM +0800, Tengfei Fan wrote:
-> Document compatible for QCS9100 platform.
+On Mon, Jul 08 2024 at 13:55, Marek Vasut wrote:
+> On 7/7/24 8:47 PM, Thomas Gleixner wrote:
+>> Why does the irq_chip in question have an irq_set_affinity() callback in
+>> the first place?
+> I believe originally (at least that's what's being discussed in the 
+> linked threads) it was because the irqchip code didn't check whether 
+> .irq_set_affinity was not NULL at all, so if it was missing, there would 
+> be NULL pointer dereference.
+>
+> Now this is checked and irq_do_set_affinity() returns -EINVAL, which 
+> triggers the warning that is being silenced by this patch.
+>
+> If you think this is better, I can:
+> - Tweak the cpuhotplug.c code to do some
+>    if (chip && !chip->irq_set_affinity) return false;
 
-Add blank line for paragraph breaks.
+It does already:
 
-> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
-> platform use non-SCMI resource. In the future, the SA8775p platform will
-> move to use SCMI resources and it will have new sa8775p-related device
-> tree. Consequently, introduce "qcom,pcie-qcs9100" to describe non-SCMI
-> based PCIe.
+migrate_one_irq()
+  if (chip && !chip->irq_set_affinity)
+    return false;
 
-Not connected to the patch below.  Move to where it is relevant.
+Right at the top.
 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> index efde49d1bef8..4de33df6963f 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-> @@ -16,7 +16,10 @@ description:
->  
->  properties:
->    compatible:
-> -    const: qcom,pcie-sa8775p
-> +    items:
-> +      - enum:
-> +          - qcom,pcie-qcs9100
-> +          - qcom,pcie-sa8775p
->  
->    reg:
->      minItems: 6
-> 
-> -- 
-> 2.25.1
-> 
+> - Remove all the .irq_set_affinity implementations from PCI drivers
+>    which only return -EINVAL
+>
+> Would that be better ?
+
+I think so.
+
+Thanks,
+
+        tglx
 
