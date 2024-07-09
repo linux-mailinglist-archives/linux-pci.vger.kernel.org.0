@@ -1,118 +1,163 @@
-Return-Path: <linux-pci+bounces-10006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0D3A92BE9F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 17:41:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA1F892BF81
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 18:17:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CEDE28191D
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 15:40:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B17F0B28FAC
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 16:16:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BE5F1891C4;
-	Tue,  9 Jul 2024 15:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 823B4158A36;
+	Tue,  9 Jul 2024 16:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWGpJxc0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C88C3612D;
-	Tue,  9 Jul 2024 15:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FBBA34;
+	Tue,  9 Jul 2024 16:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720539656; cv=none; b=ce47gKZ0RtDAO9WKnzA4r1pA+6A1ieEwmnlqiTWXgakkp7sk2HcOgdvTyqzXMpJpXQNdo4NrNY+zjhfiDGzUL0W9stvrwC+rzgsWpXb4Pd6UcU+YqC34Opqb1Vz83Ga65bSee5ShPPvZbv/SQ11dPYEI0J1t6o/GcHR4EVMsbt0=
+	t=1720541808; cv=none; b=Do5OO0Ok6huvtIbYT+L7+He7FCw+m6hVmDxVIlySX6biprTyDChpXVAg8ffwOgN1CIaGaUWX9DZi0zQRSEB8VwWccgvK4P4r4PMmS7ZosNLHhHxKsV0f34NZa0mnBHnMyaMJ5CNHMw4lbwcP08C6fXnHbLegrokh2yrPbz66gNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720539656; c=relaxed/simple;
-	bh=yLujh+quyCP5qinagyJXHAIxWyF9PCjlaNWetj7c5k0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lu1kTpeNLgi1heq3i8x3GRyJy1CD8z0AASSfM1dfbTFkyjC50/2tWt2vRh4MT50DmzeEZkF4MDG79IL6V2IJRDD5ITO5M3t0nRcsXyysxzDdKsU/MLXfO1vUWUfXnDTQNVUs2kQqdx5pcRb1gZVF/IEf0aoRsYl+JmOq8Oy88og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WJQCF3wqcz6H7nx;
-	Tue,  9 Jul 2024 23:39:21 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 62213140C72;
-	Tue,  9 Jul 2024 23:40:44 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 9 Jul
- 2024 16:40:43 +0100
-Date: Tue, 9 Jul 2024 16:40:43 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-CC: Xiaowei Song <songxiaowei@hisilicon.com>, Binghui Wang
-	<wangbinghui@hisilicon.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: kirin: use
- for_each_available_child_of_node_scoped()
-Message-ID: <20240709164043.0000184e@Huawei.com>
-In-Reply-To: <20240707-pcie-kirin-dev_err_probe-v2-2-2fa94951d84d@gmail.com>
-References: <20240707-pcie-kirin-dev_err_probe-v2-0-2fa94951d84d@gmail.com>
-	<20240707-pcie-kirin-dev_err_probe-v2-2-2fa94951d84d@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720541808; c=relaxed/simple;
+	bh=vdma4KF67C8gW5qlqW+swN2xS/cp0Eop6RE/FsVYWdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=YkI6CMjfQI7MYOTiPr49XnTUVA1pV2E29g+3vsRHl97C450G4nK42eddJOrxdEZ1ozCo4kM7s9QfhqKIh8gvIni3vDEgJwVfHdXVpmcZYb31axpz7cZnkOGurJeEpuSDN15BNZlbQaGRcOwFoOEFr9TFA9W98J20dIYoiL4EGFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWGpJxc0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2A75C3277B;
+	Tue,  9 Jul 2024 16:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720541808;
+	bh=vdma4KF67C8gW5qlqW+swN2xS/cp0Eop6RE/FsVYWdE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HWGpJxc0J4bXMh2e7MJaz+CAQlgTrxDNNH8x86vxaWuDwsovOMtWeJkA/kB3kAbNz
+	 ndTm8BXgmSRIFNZWcaSJMW9FbNeuN5VbPn9Yhld4zfk0AHR2WqjOuDrhdZUh82w3S9
+	 E3OdPLJDh9WytoN0ui2HvPKl+JJT/GiPYsa3MVHOJRxNLC9qWJa1w9cUJ43CD1j3Dw
+	 QaoD0+H4y8Ca1yty2zRCstkkhb5ca+JiUvWhDtn7/UN0RR1WryEGGT0O/36g8Lie3v
+	 CQPFlZUzTKwnRl5Z5IeGCTNiUjV5dX0uSxjTvVxy5CD5JTJ9WxcSHZtbKGRJeAktQJ
+	 BPQXYHuJgwJaw==
+Date: Tue, 9 Jul 2024 11:16:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Stewart Hildebrand <stewart.hildebrand@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] PCI: restore memory decoding after reallocation
+Message-ID: <20240709161646.GA175516@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709133610.1089420-4-stewart.hildebrand@amd.com>
 
-On Sun, 07 Jul 2024 15:54:02 +0200
-Javier Carrasco <javier.carrasco.cruz@gmail.com> wrote:
+On Tue, Jul 09, 2024 at 09:36:00AM -0400, Stewart Hildebrand wrote:
+> Currently, the PCI subsystem unconditionally clears the memory decoding
+> bit of devices with resource alignment specified. Unfortunately, some
+> drivers assume memory decoding was enabled by firmware. Restore the
+> memory decoding bit after the resource has been reallocated.
 
-> The scoped version of the macro automatically decrements the child node
-> refcount on early exits, removing the need for the `goto` and
-> `of_node_put()`.
-> 
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Which drivers have you tripped over?  Those drivers apparently don't
+call pci_enable_device() and assume the firmware has left memory
+decoding enabled.  I don't think there's any guarantee that firmware
+must do that, so the drivers are probably broken on some platforms,
+and we could improve things overall by adding the pci_enable_device()
+to them.
 
+> Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
 > ---
->  drivers/pci/controller/dwc/pcie-kirin.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
+> Relevant prior discussion at [1]
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-> index e00152b1ee99..7c591f50d0b2 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -446,7 +446,7 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
->  				    struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct device_node *child, *node = dev->of_node;
-> +	struct device_node *node = dev->of_node;
->  	void __iomem *apb_base;
->  	int ret;
+> [1] https://lore.kernel.org/linux-pci/20160906165652.GE1214@localhost/
+> ---
+>  drivers/pci/pci.c       |  1 +
+>  drivers/pci/setup-bus.c | 25 +++++++++++++++++++++++++
+>  include/linux/pci.h     |  2 ++
+>  3 files changed, 28 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index f017e7a8f028..7953e75b9129 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6633,6 +6633,7 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
 >  
-> @@ -471,17 +471,13 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
->  		return ret;
->  
->  	/* Parse OF children */
-> -	for_each_available_child_of_node(node, child) {
-> +	for_each_available_child_of_node_scoped(node, child) {
->  		ret = kirin_pcie_parse_port(kirin_pcie, pdev, child);
->  		if (ret)
-> -			goto put_node;
-> +			return ret;
+>  	pci_read_config_word(dev, PCI_COMMAND, &command);
+>  	if (command & PCI_COMMAND_MEMORY) {
+> +		dev->dev_flags |= PCI_DEV_FLAGS_MEMORY_ENABLE;
+>  		command &= ~PCI_COMMAND_MEMORY;
+>  		pci_write_config_word(dev, PCI_COMMAND, command);
 >  	}
->  
->  	return 0;
-> -
-> -put_node:
-> -	of_node_put(child);
-> -	return ret;
+
+It would be nice if this could be contained to
+pci_reassigndev_resource_alignment() so the clear and restore could be
+in the same function.  But I suppose the concern is that re-enabling
+decoding too early could be an issue in a hierarchy where bridge
+windows are also reassigned?
+
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index ab7510ce6917..6847b251e19a 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -2131,6 +2131,29 @@ pci_root_bus_distribute_available_resources(struct pci_bus *bus,
+>  	}
 >  }
 >  
->  static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
+> +static void restore_memory_decoding(struct pci_bus *bus)
+> +{
+> +	struct pci_dev *dev;
+> +
+> +	list_for_each_entry(dev, &bus->devices, bus_list) {
+> +		struct pci_bus *b;
+> +
+> +		if (dev->dev_flags & PCI_DEV_FLAGS_MEMORY_ENABLE) {
+> +			u16 command;
+> +
+> +			pci_read_config_word(dev, PCI_COMMAND, &command);
+> +			command |= PCI_COMMAND_MEMORY;
+> +			pci_write_config_word(dev, PCI_COMMAND, command);
+> +		}
+> +
+> +		b = dev->subordinate;
+> +		if (!b)
+> +			continue;
+> +
+> +		restore_memory_decoding(b);
+> +	}
+> +}
+> +
+>  /*
+>   * First try will not touch PCI bridge res.
+>   * Second and later try will clear small leaf bridge res.
+> @@ -2229,6 +2252,8 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+>  	goto again;
+>  
+>  dump:
+> +	restore_memory_decoding(bus);
+> +
+>  	/* Dump the resource on buses */
+>  	pci_bus_dump_resources(bus);
+>  }
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index e83ac93a4dcb..cb5df4c6a999 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -245,6 +245,8 @@ enum pci_dev_flags {
+>  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+>  	/* Device does honor MSI masking despite saying otherwise */
+>  	PCI_DEV_FLAGS_HAS_MSI_MASKING = (__force pci_dev_flags_t) (1 << 12),
+> +	/* Firmware enabled memory decoding, to be restored if BAR is updated */
+> +	PCI_DEV_FLAGS_MEMORY_ENABLE = (__force pci_dev_flags_t) (1 << 13),
+>  };
+>  
+>  enum pci_irq_reroute_variant {
+> -- 
+> 2.45.2
 > 
-
 
