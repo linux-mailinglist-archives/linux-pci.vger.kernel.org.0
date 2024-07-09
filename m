@@ -1,127 +1,246 @@
-Return-Path: <linux-pci+bounces-9971-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9972-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1CD392AE5E
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 04:57:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 558EF92AE67
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 05:03:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E63C31C21DD9
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 02:57:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEB901F210A9
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 03:03:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EC783612D;
-	Tue,  9 Jul 2024 02:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 025593987D;
+	Tue,  9 Jul 2024 03:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJTFvf0B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XnhMjbYm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159633A29C;
-	Tue,  9 Jul 2024 02:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CF9A47
+	for <linux-pci@vger.kernel.org>; Tue,  9 Jul 2024 03:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720493828; cv=none; b=a+YKt37iP5zQwej83SOuKul0+pTpdtHDc7EETC+T/477DE6cbyoOZuxNRSO7gMGa3rkvR9IvYHdz7IVRXmkgHIm2D358Q2poSyFJVRM4Ch4WCU7U7B+TPoN9Nq7TFXsfPglcgjsVgIiNlEOkZ8qA4s4Ya7+MI0uCujb6fOtMD7Y=
+	t=1720494185; cv=none; b=a4LCoyx+fiVeSHFFCR+P5nUpAKRKlpSe2sMPEIE6U8QzDkP1TiD7bNFpkEfPVEedIgpl6JS8JprOJpAbtNP/brOz7OO1peswAenXd1U6qEgk+rAMOHEDqSblgYhcQGTiQM0AHk3OV47PVwg2jTleMHY42fItkq0SViHDs1xKbCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720493828; c=relaxed/simple;
-	bh=L4KvOLHA9APNyAatBQSWMGun+WkqibNGe1IIFkU3g1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i8G3Rw3shNNdxmiF7f02t3R0B9/ZzdZr9mA1AoWRmvM0eAKwilF5p5Ux0/k10LcXT2W4AqYupgDauCdBh24I+9yq56BJCGQNNKIvPBpxlXYHtyPIdt2uH2BDfEJ+L2M5y8OdAI2065Z/7dpbMNfPl0JcFqpoYb7+ABoPPEe6oXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJTFvf0B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20843C116B1;
-	Tue,  9 Jul 2024 02:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720493827;
-	bh=L4KvOLHA9APNyAatBQSWMGun+WkqibNGe1IIFkU3g1M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kJTFvf0BvektW9iHALrfIGynBQq3arEi0n0dtny0Wolco0jDKblApjyZgjjwHIbrd
-	 wqBltwIW8POIay2xibWNM0rR1iPrF87KKYQ82J6OicGQeILAguPYmonDQoSg1SP4of
-	 NPoETE7RQtRwfstO7BcMTwk4K7s3+b+YWNUD3iKJ0ZDDynjc/fPrbU3Z3oA2mXtwRq
-	 1W4N2TPNGL5hbjj5GQsJ3GLB2FE+OWQrWbzsNXlTwgq/LItfsg88rz8N4PaMqApm36
-	 RZxw42FQGP/CvapHoJPer/2JrmbWk4RjdupEdlzssohwFSNHHGl1Tx6SbaTJ+SiHi3
-	 spy+8h5f4MbXQ==
-Message-ID: <bf238892-4d53-4732-a138-11aa6af1dbe3@kernel.org>
-Date: Mon, 8 Jul 2024 21:57:06 -0500
+	s=arc-20240116; t=1720494185; c=relaxed/simple;
+	bh=shANIEMlYiCCqkS1/+u9UeAfPYwIRrEGaqvwf8htYKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ExEYJxbplqXPjQbPRa/XGspsnjzS+jalPBqq1SxP2p1EgzoL+jy94QtlV2YMePqHChP8LHbZqrkj4WOMm3oXwZNj17kxp1qC08mK4wMlW4nAWFmhJuO2rW5V+z6mERclYXCthDXa6MFm4eHmKIlAFiieZAjT1QY3SNeifNAynwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XnhMjbYm; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720494184; x=1752030184;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=shANIEMlYiCCqkS1/+u9UeAfPYwIRrEGaqvwf8htYKo=;
+  b=XnhMjbYmhDAZ5JSYa9lohI44oQnxmOGwcgNFMKZkcPpTUkX/Xe1Hsbcq
+   29BXBl8OHxv2HAlLL04mVV9Cy407QsgIvGdRbCTrUedOL5a3xs6k7DLs8
+   ErE/x0FUF5cWZRKYkLHbvFvy+wtdhq77Nnolgxo3X5PhZbTWrYwI1mLB8
+   tZsj0UIFvuU/o5Ktau39CCALNdTXRsCYRfUHKfXlYIZV6A6EIB6BIpORC
+   b+B9Hncoij+41IhVWx5e8P0aNi8JMpg5+38xPvb/CBjNJXlDpTSwENgR3
+   nCuoLqWyeFEgS+3IZJSSppMK/egQ1fF+JtGnofM5ocfKkahYdQiErCWXB
+   Q==;
+X-CSE-ConnectionGUID: mGSNpmmFQLSA2HWSwCqp3Q==
+X-CSE-MsgGUID: wgHm4ccgTKiMknhFbKT1sA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="43145751"
+X-IronPort-AV: E=Sophos;i="6.09,193,1716274800"; 
+   d="scan'208";a="43145751"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 20:03:03 -0700
+X-CSE-ConnectionGUID: eITjKhJpSlKd1nfMUwno2g==
+X-CSE-MsgGUID: TPUdfXpDSdWsbUJPl1/2dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,193,1716274800"; 
+   d="scan'208";a="52501734"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 08 Jul 2024 20:03:02 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sR187-000WHQ-2d;
+	Tue, 09 Jul 2024 03:02:59 +0000
+Date: Tue, 09 Jul 2024 11:02:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ cc7fe8c237ed004cc3cc1705e52e9befb814a7b9
+Message-ID: <202407091140.NiJSLlzw-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/PM: Avoid D3cold for HP Spectre x360 Convertible
- 15-ch0xx PCIe Ports
-To: superm1@kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc: "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, Tony Murray <murraytony@gmail.com>
-References: <20240629001743.1573581-1-superm1@kernel.org>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20240629001743.1573581-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 
-On 6/28/2024 19:17, superm1@kernel.org wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> HP Spectre x360 Convertible 15-ch0xx is an Intel Kaby Lake-G system that
-> contains an AMD Polaris Radeon dGPU.
-> Attempting to use the dGPU fails with the following sequence:
-> 
->    amdgpu 0000:01:00.0: not ready 1023ms after resume; waiting
->    amdgpu 0000:01:00.0: not ready 2047ms after resume; waiting
->    amdgpu 0000:01:00.0: not ready 4095ms after resume; waiting
->    amdgpu 0000:01:00.0: not ready 8191ms after resume; waiting
->    amdgpu 0000:01:00.0: not ready 16383ms after resume; waiting
->    amdgpu 0000:01:00.0: not ready 32767ms after resume; waiting
->    amdgpu 0000:01:00.0: not ready 65535ms after resume; giving up
->    amdgpu 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
->    [drm:atom_op_jump [amdgpu]] *ERROR* atombios stuck in loop for more than 20secs aborting
-> 
-> The issue is that the Root Port the dGPU is connected to can't handle the
-> transition from D3cold to D0 so the dGPU can't properly exit runtime PM.
-> 
-> The existing logic in pci_bridge_d3_possible() checks for systems that are
-> newer than 2015 to decide that D3 is safe, but this system appears not to
-> work properly.
-> 
-> Add the system to bridge_d3_blacklist to prevent D3cold from being used.
-> 
-> Reported-and-tested-by: Tony Murray <murraytony@gmail.com>
-> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3389
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   drivers/pci/pci.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 35fb1f17a589..65e3a550052f 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2965,6 +2965,17 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
->   			DMI_MATCH(DMI_BOARD_VERSION, "95.33"),
->   		},
->   	},
-> +	{
-> +		/*
-> +		 * Changing power state of root port dGPU is connected fails
-> +		 * https://gitlab.freedesktop.org/drm/amd/-/issues/3229
-> +		 */
-> +		.ident = "HP Spectre x360 Convertible 15-ch0xx",
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "83BB"),
-> +		},
-> +	},
->   #endif
->   	{ }
->   };
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: cc7fe8c237ed004cc3cc1705e52e9befb814a7b9  Merge branch 'controller/tegra194' into next
 
-Bjorn,
+elapsed time: 742m
 
-Ping on this one.  It's a trivial quirk that Tony and I already root 
-caused on Gitlab, I'd hope this can be squeezed in.
+configs tested: 151
+configs skipped: 1
 
-Thanks,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                   randconfig-001-20240709   gcc-13.2.0
+arc                   randconfig-002-20240709   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   clang-19
+arm                              allyesconfig   gcc-13.2.0
+arm                          ixp4xx_defconfig   gcc-13.2.0
+arm                         nhk8815_defconfig   clang-19
+arm                   randconfig-001-20240709   gcc-13.2.0
+arm                   randconfig-002-20240709   clang-19
+arm                   randconfig-003-20240709   clang-19
+arm                   randconfig-004-20240709   gcc-13.2.0
+arm64                            allmodconfig   clang-19
+arm64                             allnoconfig   gcc-13.2.0
+arm64                 randconfig-001-20240709   clang-19
+arm64                 randconfig-002-20240709   clang-17
+arm64                 randconfig-003-20240709   clang-19
+arm64                 randconfig-004-20240709   clang-19
+csky                              allnoconfig   gcc-13.2.0
+csky                  randconfig-001-20240709   gcc-13.2.0
+csky                  randconfig-002-20240709   gcc-13.2.0
+hexagon                          allmodconfig   clang-19
+hexagon                           allnoconfig   clang-19
+hexagon                          allyesconfig   clang-19
+hexagon               randconfig-001-20240709   clang-19
+hexagon               randconfig-002-20240709   clang-19
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240709   gcc-11
+i386         buildonly-randconfig-002-20240709   gcc-13
+i386         buildonly-randconfig-003-20240709   clang-18
+i386         buildonly-randconfig-004-20240709   clang-18
+i386         buildonly-randconfig-005-20240709   clang-18
+i386         buildonly-randconfig-006-20240709   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240709   gcc-13
+i386                  randconfig-002-20240709   clang-18
+i386                  randconfig-003-20240709   gcc-11
+i386                  randconfig-004-20240709   gcc-13
+i386                  randconfig-005-20240709   gcc-13
+i386                  randconfig-006-20240709   gcc-13
+i386                  randconfig-011-20240709   clang-18
+i386                  randconfig-012-20240709   gcc-13
+i386                  randconfig-013-20240709   gcc-12
+i386                  randconfig-014-20240709   clang-18
+i386                  randconfig-015-20240709   clang-18
+i386                  randconfig-016-20240709   gcc-10
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch             randconfig-001-20240709   gcc-13.2.0
+loongarch             randconfig-002-20240709   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                      malta_kvm_defconfig   gcc-13.2.0
+mips                    maltaup_xpa_defconfig   gcc-13.2.0
+nios2                         3c120_defconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                 randconfig-001-20240709   gcc-13.2.0
+nios2                 randconfig-002-20240709   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                         allyesconfig   gcc-13.2.0
+parisc                           allmodconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                           allyesconfig   gcc-13.2.0
+parisc                randconfig-001-20240709   gcc-13.2.0
+parisc                randconfig-002-20240709   gcc-13.2.0
+powerpc                          allmodconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                          allyesconfig   clang-19
+powerpc                   lite5200b_defconfig   clang-14
+powerpc                    mvme5100_defconfig   gcc-13.2.0
+powerpc                      pcm030_defconfig   clang-19
+powerpc                     powernv_defconfig   gcc-13.2.0
+powerpc                         ps3_defconfig   gcc-13.2.0
+powerpc               randconfig-001-20240709   clang-19
+powerpc               randconfig-002-20240709   gcc-13.2.0
+powerpc               randconfig-003-20240709   clang-15
+powerpc                     redwood_defconfig   clang-19
+powerpc                      tqm8xx_defconfig   clang-19
+powerpc64             randconfig-001-20240709   gcc-13.2.0
+powerpc64             randconfig-002-20240709   gcc-13.2.0
+powerpc64             randconfig-003-20240709   clang-19
+riscv                            allmodconfig   clang-19
+riscv                             allnoconfig   gcc-13.2.0
+riscv                            allyesconfig   clang-19
+riscv                 randconfig-001-20240709   clang-17
+riscv                 randconfig-002-20240709   gcc-13.2.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                             allyesconfig   gcc-13.2.0
+s390                  randconfig-001-20240709   gcc-13.2.0
+s390                  randconfig-002-20240709   clang-19
+sh                               allmodconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                               allyesconfig   gcc-13.2.0
+sh                ecovec24-romimage_defconfig   gcc-13.2.0
+sh                    randconfig-001-20240709   gcc-13.2.0
+sh                    randconfig-002-20240709   gcc-13.2.0
+sh                           se7206_defconfig   gcc-13.2.0
+sh                           se7619_defconfig   gcc-13.2.0
+sparc                            allmodconfig   gcc-13.2.0
+sparc64                          alldefconfig   gcc-13.2.0
+sparc64               randconfig-001-20240709   gcc-13.2.0
+sparc64               randconfig-002-20240709   gcc-13.2.0
+um                               allmodconfig   clang-19
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-13
+um                    randconfig-001-20240709   gcc-13
+um                    randconfig-002-20240709   gcc-11
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240709   gcc-11
+x86_64       buildonly-randconfig-002-20240709   clang-18
+x86_64       buildonly-randconfig-003-20240709   clang-18
+x86_64       buildonly-randconfig-004-20240709   gcc-9
+x86_64       buildonly-randconfig-005-20240709   gcc-13
+x86_64       buildonly-randconfig-006-20240709   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                randconfig-001-20240709   clang-18
+x86_64                randconfig-002-20240709   gcc-10
+x86_64                randconfig-003-20240709   clang-18
+x86_64                randconfig-004-20240709   gcc-12
+x86_64                randconfig-005-20240709   gcc-13
+x86_64                randconfig-006-20240709   gcc-8
+x86_64                randconfig-011-20240709   clang-18
+x86_64                randconfig-012-20240709   clang-18
+x86_64                randconfig-013-20240709   clang-18
+x86_64                randconfig-014-20240709   clang-18
+x86_64                randconfig-015-20240709   clang-18
+x86_64                randconfig-016-20240709   clang-18
+x86_64                randconfig-071-20240709   gcc-7
+x86_64                randconfig-072-20240709   clang-18
+x86_64                randconfig-073-20240709   gcc-13
+x86_64                randconfig-074-20240709   gcc-13
+x86_64                randconfig-075-20240709   gcc-11
+x86_64                randconfig-076-20240709   gcc-13
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240709   gcc-13.2.0
+xtensa                randconfig-002-20240709   gcc-13.2.0
+xtensa                    xip_kc705_defconfig   gcc-13.2.0
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
