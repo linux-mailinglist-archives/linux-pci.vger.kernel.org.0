@@ -1,146 +1,126 @@
-Return-Path: <linux-pci+bounces-10022-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10023-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25E8792C3ED
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 21:33:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33E7792C484
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 22:27:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56AED1C2224D
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 19:33:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3C43282A0A
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 20:27:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77E5118003A;
-	Tue,  9 Jul 2024 19:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D80F7182A59;
+	Tue,  9 Jul 2024 20:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="OREnGqB/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0A41B86D5;
-	Tue,  9 Jul 2024 19:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B0014F108
+	for <linux-pci@vger.kernel.org>; Tue,  9 Jul 2024 20:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720553589; cv=none; b=MQONhcn6CmZOHnT6ZLniYnKvNpKsG2CmxjaeWOIKZXNFCQl5vsGRkyUoZEQQ5NR2yKSpffRNwN0g8l8/9hhtVvzqPU2fAxLO4ayAUJ6UvXXJbxCOtR1SMsJ9Cl01ebIoMmAoNkKesNpKA0RQWvcy9mysGkz2jD9QfMkXdogSOX4=
+	t=1720556850; cv=none; b=VbA/a8EAHlgNs71xboI9rTxN2YkwD+tu0s/sOpU7OMxVDfGpvAxf7XoU7nQJVDVqr2qJg+PFC+6fzV2TXIHLZp0ucW52G/23Qbrf4eOdIjQ9S42VPU9IyE8LgIqs7UyhJVYS/jlM7LsJHKMgHWBy53NC1PiQ4W6/WQOAzwkKEQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720553589; c=relaxed/simple;
-	bh=hNXOWe8lteOgViqy/EYlSV9Y+hmjJwlEra6rH3zbBKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WwMC4ISV5P6FNWlX1CL0wHtDxKNwVMDnNkUM8XX0BfuYddM3uS+OVYqts9PNvw87gOtZoxfRrcVi6tNCctci7cLU6N18yaWeopO8bOPcH/HHeAfiNF/uDov+ncQdjzwwjf0O9dRGssNeoN5JfIQMdlM1irTpq9EXctUQHaApOWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6048210278761;
-	Tue,  9 Jul 2024 21:32:56 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id EA81C4A175; Tue,  9 Jul 2024 21:32:55 +0200 (CEST)
-Date: Tue, 9 Jul 2024 21:32:55 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
-	Jerome Glisse <jglisse@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>
-Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
-Message-ID: <Zo2QZ_4xkMR_Nmsf@wunner.de>
-References: <cover.1719771133.git.lukas@wunner.de>
- <6d4361f13a942efc4b4d33d22e56b564c4362328.1719771133.git.lukas@wunner.de>
- <668d7d318082b_102cc2942f@dwillia2-xfh.jf.intel.com.notmuch>
+	s=arc-20240116; t=1720556850; c=relaxed/simple;
+	bh=Grz+iCnGALIJgOkups8vD/xhHYut8O5IgcRUVEl2CYU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WndTQkCIqUCB4fQDZopWX4CCi78qxAGu+Jr8W1uC8SfINU/+YyU0Fpesvkj+biDChSs2WMM0Nz4kF9akc5DaJqn0dt/d6bEjhVYa4AerMAGSFUosLIpQNLdLQPPxkQTn38HjcxH3wZ9Qocup12eR6gT656bMoAXwwW6p4jg35Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=OREnGqB/; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469K8dFh027144
+	for <linux-pci@vger.kernel.org>; Tue, 9 Jul 2024 13:27:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=s2048-2021-q4; bh=Hyy
+	KRsdN7VvUv7WDUfO7bx06ZGoHXYrPnn/wh26pnvA=; b=OREnGqB/KxJjb9WA8s+
+	qL3saYbx8OHVeSWL7YIcpaRjuMNUMKxt5dSjfm/MtszfHBlXH3a+t9x9JlzJuHyu
+	x0l4lUT8393Pry+AwiY0Mhfnc0pRn4Ekj5FabGYWhOOEeHMgXF5NnzcGOCAMt0Ov
+	KBbv5P+ObZfMxQnK4mYM+sMuF92lPeSdDjJpcjJDzjsRqhxmPVLXhuY1rTgXQSRM
+	673JBN4q+YWYsEDRfVNAFnZ/TBAjzLLTMGeFlut9xLKl6Tjvn2uBHuNSRyvv2Qun
+	dTWy5VuwQ5icmJWBIyebKkIjLNUlcTZxFfJ5nEvMIiwkbn0odViWU1jiPYq1+Aht
+	PuQ==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 408um5e354-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 09 Jul 2024 13:27:28 -0700 (PDT)
+Received: from twshared15999.02.ash9.facebook.com (2620:10d:c085:108::8) by
+ mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Tue, 9 Jul 2024 19:57:26 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id 895E11060AB77; Tue,  9 Jul 2024 12:57:17 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-pci@vger.kernel.org>
+CC: <bhelgaas@google.com>, <kwilczynski@kernel.org>,
+        Keith Busch
+	<kbusch@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [RESEND PATCH] PCI: fix recursive device locking
+Date: Tue, 9 Jul 2024 12:57:16 -0700
+Message-ID: <20240709195716.3354637-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <668d7d318082b_102cc2942f@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: EbV79jULbhzfX2Q9z2LblG9CFpJOjkxh
+X-Proofpoint-ORIG-GUID: EbV79jULbhzfX2Q9z2LblG9CFpJOjkxh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-09_09,2024-07-09_01,2024-05-17_01
 
-On Tue, Jul 09, 2024 at 11:10:57AM -0700, Dan Williams wrote:
-> Lukas Wunner wrote:
-> > --- a/drivers/pci/Kconfig
-> > +++ b/drivers/pci/Kconfig
-> > @@ -121,6 +121,19 @@ config XEN_PCIDEV_FRONTEND
-> >  config PCI_ATS
-> >  	bool
-> >  
-> > +config PCI_CMA
-> > +	bool "Component Measurement and Authentication (CMA-SPDM)"
-> 
-> What is driving the requirement for CMA to be built-in?
+From: Keith Busch <kbusch@kernel.org>
 
-There is no way to auto-load modules needed for certain PCI features.
-We'd have to call request_module() on PCI bus enumeration when
-encountering devices with specific PCI features.  But what do we do
-if module loading fails?  The PCI bus is enumerated in a subsys_initcall,
-when neither the root filesystem has been mounted nor run_init_process()
-has been called.  So any PCI core modules would have to be in the initrd.
-What if they aren't?  Kernel panic?  That question seems particularly
-pertinent for a security feature like CMA.
+If one of the bus' devices has subordinates, the recursive call locks
+itself, so no need to lock the device before the recursion or it will
+surely deadlock.
 
-So we've made PCI core features non-modular by default.
-In seven cases we even switched from tristate to bool because building
-as modules turned out not to be working properly:
+Fixes: dbc5b5c0d268f87 ("PCI: Add missing bridge lock to pci_bus_lock()"
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+Sending to the correct mailing list this time, and fixed up two typos
+in the commit message.
 
-82280f7af729 ("PCI: shpchp: Convert SHPC to be builtin only")
-a4959d8c1eaa ("PCI: Remove DPC tristate module option")
-774104399459 ("PCI: Convert ioapic to be builtin only, not modular")
-67f43f38eeb3 ("s390/pci/hotplug: convert to be builtin only")
-c10cc483bf3f ("PCI: pciehp: Convert pciehp to be builtin only, not modular")
-7cd29f4b22be ("PCI: hotplug: Convert to be builtin only, not modular")
-6037a803b05e ("PCI: acpiphp: Convert acpiphp to be builtin only, not modular")
+ drivers/pci/pci.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-There has not been a single case where we switched from bool to tristate,
-with the exception of PCI_IOAPIC with commit b95a7bd70046, but that was
-subsequently reverted back to bool with the above-listed 774104399459.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index df550953fa260..5ab13bf5a3caa 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5488,9 +5488,10 @@ static void pci_bus_lock(struct pci_bus *bus)
+=20
+ 	pci_dev_lock(bus->self);
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+-		pci_dev_lock(dev);
+ 		if (dev->subordinate)
+ 			pci_bus_lock(dev->subordinate);
++		else
++			pci_dev_lock(dev);
+ 	}
+ }
+=20
+@@ -5502,7 +5503,8 @@ static void pci_bus_unlock(struct pci_bus *bus)
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
+ 	pci_dev_unlock(bus->self);
+ }
+--=20
+2.43.0
 
-
-> All of the use cases I know about to date are built around userspace
-> policy auditing devices after the fact.
-
-I think we should also support use cases where user space sets a policy
-(e.g. not to bind devices to a driver unless they authenticate) and lets
-the kernel do the rest (i.e. autonomously authenticate devices based on
-a set of trusted root certificates).  User space does not *have* to be
-the one auditing each device on a case-by-case basis, although I do see
-the usefulness of such scenarios and am open to supporting them.  In fact
-this v2 takes a step in that direction by exposing signatures received
-from the device to user space and doing so even if the kernel cannot
-validate the device's certificate chains as well-formed and trusted.
-
-In other words, I'm trying to support both:  Fully autonomous in-kernel
-authentication of certificates, but also allowing user space to make a
-decision if it wants to.  It's simply not clear to me at the moment
-what the use cases will be.  I can very well imagine that, say,
-ChromeBooks will want to authenticate Thunderbolt-attached PCI devices
-based on a keyring of trusted vendor certificates.  The fully autonomous
-in-kernel authentication caters to such a use case.  I don't want to
-preclude such use cases just because Confidential Computing in the
-cloud happens to be the buzzword du jour.
-
-Thanks,
-
-Lukas
 
