@@ -1,84 +1,131 @@
-Return-Path: <linux-pci+bounces-9982-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-9983-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E22C692B08C
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 08:50:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3329492B0DA
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 09:09:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E05D1C216A1
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 06:50:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D15011F21C10
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 07:09:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31D161474A2;
-	Tue,  9 Jul 2024 06:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637BF13A24B;
+	Tue,  9 Jul 2024 07:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G3iN3ZOH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4EF142E7C;
-	Tue,  9 Jul 2024 06:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E121B13A89A
+	for <linux-pci@vger.kernel.org>; Tue,  9 Jul 2024 07:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720507800; cv=none; b=sFeUVff6V7xtlsLOULfPLyiibBs2WeSIhmd2Fwc3zkDyFbU1yYReY5rIX+jxu8XDta+oA+s7JuUDJss+AahGB7HQYup8RYiqAfHdbjTf/zSsSzg58F9NwM4yLbNs/pVYnmZHJ3NeJf3igvtJai6QGsgJBDVzFaycj4Qnf3YMmpI=
+	t=1720508965; cv=none; b=Ho2h/UNgWiG4SJ3zsQicMJizhH5vJaz1IgtfmoS6nmBBzYKECCbeTK4vgYMD1BojbyCq3T3C2t4NO3KkSpuYL+EnooPe9shqy38Ez5o2TFrSJWgduJlJmVi3fr9TFxXh1hJd347W2D9wzuojONiXdIrGpGPS8qYgP+fbqqMf9Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720507800; c=relaxed/simple;
-	bh=oK26MeuwQ1MFCnNuoz/pidSKdLW6v7Z0iBsPecYmL08=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=t0oR9KqguUO+uczjFZksvg4o4Z9zuZOZabYlhNw1x3ZIixsNtUu8cBsCHPuynSyAt6qb2PZDWXFAhDkcY04oTu6LqidXFcHLu4bepldHdPwGDk7YywecDOuKwsHVtTl7o5mRvGtWtNY/c0H/irjEGc7IWxp/o0zvp/CYIC9T5ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WJBSJ0k2hz4w2M;
-	Tue,  9 Jul 2024 16:49:52 +1000 (AEST)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: mpe@ellerman.id.au, npiggin@gmail.com, Krishna Kumar <krishnak@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, brking@linux.ibm.com, gbatra@linux.ibm.com, aneesh.kumar@kernel.org, christophe.leroy@csgroup.eu, nathanl@linux.ibm.com, bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com
-In-Reply-To: <20240701074513.94873-1-krishnak@linux.ibm.com>
-References: <20240701074513.94873-1-krishnak@linux.ibm.com>
-Subject: Re: [PATCH v4 0/2] PCI hotplug driver fixes
-Message-Id: <172050773908.27948.6452109648223872879.b4-ty@ellerman.id.au>
-Date: Tue, 09 Jul 2024 16:48:59 +1000
+	s=arc-20240116; t=1720508965; c=relaxed/simple;
+	bh=0EbaZGBCGAlDdaBpz5q6jU7//pUs+PQe1Irem1Hb25U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L6eQAd3qijc726H677Eps7TpN/NJZZDGjZ2ltCc6odm0L8ous+Ij++nHP4uSesQ//tfCZoKryuB+5W1CEi18aEC8uFMgdFwd83cSkUnMjfNwjZCUyVcAzatyTHRTC4sUu/1Pw58xanc5lc11rJad+qYOgCBkb/MCItQNK19KTEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G3iN3ZOH; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70b4267ccfcso774123b3a.3
+        for <linux-pci@vger.kernel.org>; Tue, 09 Jul 2024 00:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720508963; x=1721113763; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ktSm4q1vxdmtkavfLnfXdh6fXORXctBwSCyUPkuRKh8=;
+        b=G3iN3ZOHopm3mtgq9x4VbtBLd7+87pueMbEYcQnnSp50fQkEH9BunryS3idlc32bpT
+         lICEHU3GZHkY6Fwt7b9n/M5TKQFOVUQZvoD74yUU+EpI3lFFb8632YEi03ZfU+Qi5bnJ
+         4idXjAj9chCnjQ10t+syErNh4P75UXzPKEs+Tz59s2qZo2Ovi/589E5YmZu8JIV+LHKy
+         jzKgFEDncvzG8JmfsCPJJ8u97LtgXRSHL1jyNzPe7YOmQZSklLEXEV/3FUMbBhu+vgi5
+         2aS5lOpQPue0NMExEIelXgPamT6oLqKd1j2UffxQpiGZKmHarRAwnIy17hJ8C0wWXYgb
+         mLoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720508963; x=1721113763;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ktSm4q1vxdmtkavfLnfXdh6fXORXctBwSCyUPkuRKh8=;
+        b=TcR//Cn6Zw60ytkbsfqOQcxr9hUmphnN9gzS8+SdLGW4pMFEAUjvzwuXhwXlJBR1HQ
+         sQtacW5eC2R2UlS1jKReO2zui6XcQvtDWAONJYKkUOJxjQuqiCYkIeTo4rvUbDJN/hvg
+         IBTnMYAkVF6qd3uGxqmo+94iTriohuHv1vI/dJkqMVm+n5Ecp6UiK/sKfcsY2cRzvEX3
+         xM/ivwqFkAyYb+zZ6c01vZSBaPKli30VolGq7VtBGgqr0IAxTRhPT5Pkipg9OOrnRAhd
+         xrUBrQmIj7oU0gKs71fp4C+VajiRHCvtHHE3a2eTUs5zb2xwY/UTj/LF8ZA8UI+9OZp+
+         xSJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWRiwqhH/MSYVe9dhpQnKOxhh2tJQ4d0EeWXBdeptMQQe+NB2RY+I2sW5T+PyE0pCvgbBk3X6nkKtWTGP0xPndnxFYyTTcoxnAT
+X-Gm-Message-State: AOJu0YwG4tW76XVA/6tze5m+OcXeeIdtmPyyDWsYsAt86I55eizqMjry
+	a5UTuAbl0XiZWcrSkvXM4SRwb3SRa9cTUoPcYf3cXlriWsPTygzdHSUoNY2ugw==
+X-Google-Smtp-Source: AGHT+IFqpYgrrt5uc3kzJJ3RWffhZnZTxn37z39ek238VkDPJg7zYx6wk2uXBCCVizNNoOnNVTUF1w==
+X-Received: by 2002:a05:6a00:2352:b0:70b:1525:9adf with SMTP id d2e1a72fcca58-70b4364fe15mr2135383b3a.22.1720508963273;
+        Tue, 09 Jul 2024 00:09:23 -0700 (PDT)
+Received: from thinkpad ([120.60.141.33])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b438c27b0sm1064532b3a.64.2024.07.09.00.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 00:09:22 -0700 (PDT)
+Date: Tue, 9 Jul 2024 12:39:15 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, quic_krichai@quicinc.com,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pci: qcom: Fix 'opp' variable usage
+Message-ID: <20240709070915.GA7865@thinkpad>
+References: <20240709063620.4125951-1-quic_varada@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240709063620.4125951-1-quic_varada@quicinc.com>
 
-On Mon, 01 Jul 2024 13:15:05 +0530, Krishna Kumar wrote:
-> The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
-> addresses below two issues.
+On Tue, Jul 09, 2024 at 12:06:20PM +0530, Varadarajan Narayanan wrote:
+> qcom_pcie_icc_opp_update() calls 'dev_pm_opp_put(opp)' regardless
+> of the success of dev_pm_opp_find_freq_exact().
 > 
-> 1. Kernel Crash during hot unplug of bridge/switch slot.
+> If dev_pm_opp_find_freq_exact() had failed and 'opp' had some
+> error value, the subsequent dev_pm_opp_put(opp) results in a
+> crash. Hence call dev_pm_opp_put(opp) only if 'opp' has a valid
+> value.
 > 
-> 2. Bridge Support Enablement - Previously, when we do a hot-unplug
-> operation on a bridge slot, all the ports and devices behind the
-> bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
-> operation on the same bridge slot, all the ports and devices behind the
-> bridge would not get hot-plugged/online. In this case, Only the first
-> port of the bridge gets enabled and the remaining port/devices remain
-> unplugged/offline.  After the fix, The hot-unplug and hot-plug
-> operations on the slot associated with the bridge started behaving
-> correctly and became in sync. Now, after the hot plug operation on the
-> same slot, all the bridge ports and devices behind the bridge become
-> hot-plugged/online/restored in the same manner as it was before the
-> hot-unplug operation.
+> Fixes: 78b5f6f8855e ("PCI: qcom: Add OPP support to scale performance")
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+
+Fix was already submitted: https://lore.kernel.org/linux-pci/20240708180539.1447307-3-dan.carpenter@linaro.org/
+
+- Mani
+
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> [...]
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 26405fcfa499..2a80d4499c25 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1443,8 +1443,8 @@ static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
+>  			if (ret)
+>  				dev_err(pci->dev, "Failed to set OPP for freq (%lu): %d\n",
+>  					freq_kbps * width, ret);
+> +			dev_pm_opp_put(opp);
+>  		}
+> -		dev_pm_opp_put(opp);
+>  	}
+>  }
+>  
+> -- 
+> 2.34.1
+> 
 
-Applied to powerpc/next.
-
-[1/2] pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
-      https://git.kernel.org/powerpc/c/335e35b748527f0c06ded9eebb65387f60647fda
-[2/2] powerpc: hotplug driver bridge support
-      https://git.kernel.org/powerpc/c/20ce0c247b2500cb7060cb115274ba71abda2626
-
-cheers
+-- 
+மணிவண்ணன் சதாசிவம்
 
