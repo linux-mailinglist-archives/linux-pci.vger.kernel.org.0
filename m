@@ -1,53 +1,62 @@
-Return-Path: <linux-pci+bounces-10009-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10010-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AB8292C024
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 18:32:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DD8E92C118
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 18:51:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B3651C239C4
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 16:32:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23755281AEC
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jul 2024 16:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A211B4C3A;
-	Tue,  9 Jul 2024 16:21:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC1E91A4F14;
+	Tue,  9 Jul 2024 16:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsryhlAU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IDBLvmZB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812581B47C6;
-	Tue,  9 Jul 2024 16:21:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13D01A4F07;
+	Tue,  9 Jul 2024 16:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542116; cv=none; b=JcCSnbuIBtXg16cPl/3Cz6gtzif6amXLlXX25MQ1tHA/WKRiILvsuXET5/RMU+jteF3vGaFTZlU+0ozVPDACHhedEB+g1wIziQxoiQ+NbaKcdjDE5rYlNF7UNc90vPKMxanO0LiDZ2aVtPbCC/ArUq+KidRfttziuvVyYcJQ2iw=
+	t=1720542378; cv=none; b=seG3k32gfkFOUR74rpVtH+w3Z/aEKkMJ/C7qmKMYVmXwpIOSx6iFT3kz7ocMrC+heoNt/i+Y7tf7MRcgBCvEPV4Nftas3QhQG9wPrmDpkgveg5WRPL6nFqV9JG8+kgMMgcfKqoGE/NSCyFbUKAELisY+BkdJwo6nRh5yw2dMayo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542116; c=relaxed/simple;
-	bh=9Gcw21XytUn5kvBs9uu7DBexRcY56exFFjtUr3t699k=;
+	s=arc-20240116; t=1720542378; c=relaxed/simple;
+	bh=+bZLGqWY1DDBcyTEH10hsAqp0+mebKEECO2I2Lb/wl8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LR2eBEqBvjNk0c+dC1+Kz12ijmRw0e4QItTij5nmZNmA8nsob2qlav+itKPXV3gMeroxHpcDSP2U1CY3s+kLEBxHsNr95aAOQ8PDeoGPvCRNuta8M40uSRMj9C9egWrN1g8IpTq2/v6uF/8s1EkNZ6m1sf9kSF6pkAS9D6bhyjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsryhlAU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38363C32782;
-	Tue,  9 Jul 2024 16:21:56 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=cKTYgS6+0y02D5Agn+k8Q3TCAyJX8LGBys+E+wOSZo2sb92ayoG9Unz9RARG+kCLu0C4iAa6RBiYDJVnhdwb9qXTKjU6UEAqq6f5C9YFB5tJ99/+ySwNMP0wShIA8+Q6ep/eTAq+Oi3jQ0Hbh4lwy3ycXHIQ/ZRdvWkLkJPFavI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IDBLvmZB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03FCBC3277B;
+	Tue,  9 Jul 2024 16:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542116;
-	bh=9Gcw21XytUn5kvBs9uu7DBexRcY56exFFjtUr3t699k=;
+	s=k20201202; t=1720542378;
+	bh=+bZLGqWY1DDBcyTEH10hsAqp0+mebKEECO2I2Lb/wl8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fsryhlAU8McMtVI0ObeJxYWgTWf3CZ+c3jtBxSQ0lvW4w31TM72q1Vra5slo085y6
-	 HyuwO6rW9GvZ+Qj9IDGSjAM7prFMNbVFZnN1vmYgtQZpKF501gayYCHQJ2Nbhi77C7
-	 rX1gOlqqiV4yzP6/WYRisT/NQGr2aWjBfM1/W8U6iTkPnbTI8wpZgA5A8eQjY++G31
-	 4AmqRBd3vEHOejCeHFBP66VWvPeF0jVFHuZrIELtYhp586/Txg3HgwDx6gDq4tAvl1
-	 dGdpvJ7nJoYWHoxcEuGmGfci23P6hXShiQHEwCWO33yXWK8LJ5aJ8R0MGJPdy5xTbE
-	 E4RrqgZ/8JGog==
-Date: Tue, 9 Jul 2024 11:21:54 -0500
+	b=IDBLvmZBCCFufsM+sPjL6bm0hoX51V5WbYI6jjJCmWNdXwhUXuEWUtbmUAVlSVtaY
+	 7VUq0dOWOd5vPkGKLT6vEIzv94XAWqZLNJ0yNkJYm9G7wTSvtjbe/j+RIa4fNLaHvQ
+	 eVe67BFLUV9sbdO/iuphzr8kwE/ZExgNxGeTcHa1LKQV0Ig+5Py1irT1nVCktdT/xt
+	 N7Gzb3U01PW2GVllWF9hXRL3FDHxBhuSbtnJ/BDkR6J0GhrLKlgbTEUzCh9k32nLVb
+	 90Ve4y/HS6L+EKvDda1dkV+pYt8E0xyUFicvcX9xixXBZ+tIDg/VWptNhM+M8k5Yl0
+	 /RqOzI/LgAMVQ==
+Date: Tue, 9 Jul 2024 11:26:16 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Stewart Hildebrand <stewart.hildebrand@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	kernel@quicinc.com, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] PCI: align small (<4k) BARs
-Message-ID: <20240709162154.GA175839@bhelgaas>
+Subject: Re: [PATCH v2 2/2] PCI: qcom: Add support for QCS9100 SoC
+Message-ID: <20240709162616.GA175928@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,63 +65,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240709133610.1089420-7-stewart.hildebrand@amd.com>
+In-Reply-To: <20240709-add_qcs9100_pcie_compatible-v2-2-04f1e85c8a48@quicinc.com>
 
-On Tue, Jul 09, 2024 at 09:36:03AM -0400, Stewart Hildebrand wrote:
-> Issues observed when small (<4k) BARs are not 4k aligned are:
-> 
-> 1. Devices to be passed through (to e.g. a Xen HVM guest) with small
-> (<4k) BARs require each memory BAR to be page aligned. Currently, the
-> only way to guarantee this alignment from a user perspective is to fake
-> the size of the BARs using the pci=resource_alignment= option. This is a
-> bad user experience, and faking the BAR size is not always desirable.
-> See the comment in drivers/pci/pci.c:pci_request_resource_alignment()
-> for further discussion.
+On Tue, Jul 09, 2024 at 10:59:30PM +0800, Tengfei Fan wrote:
+> Add support for QCS9100 SoC that uses controller version 5.90
+> reusing the 1.9.0 config.
 
-Include the relevant part of this discussion directly here so this log
-is self-contained.  Someday that function will change, which will make
-this commit log less useful.
+Add blank line here if this is a paragraph break.
 
-> 2. Devices with multiple small (<4k) BARs could have the MSI-X tables
-> located in one of its small (<4k) BARs. This may lead to the MSI-X
-> tables being mapped in the same 4k region as other data. The PCIe 6.1
-> specification (section 7.7.2 MSI-X Capability and Table Structure) says
-> we probably shouldn't do that.
+> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
+> platform use non-SCMI resource. In the future, the SA8775p platform will
+> move to use SCMI resources and it will have new sa8775p-related device
+> tree. Consequently, introduce "qcom,pcie-qcs9100" to the PCIe device
+> match table.
 > 
-> To improve the user experience, and increase conformance to PCIe spec,
-> set the default minimum resource alignment of memory BARs to 4k. Choose
-> 4k (rather than PAGE_SIZE) for the alignment value in the common code,
-> since that is the value called out in the PCIe 6.1 spec, section 7.7.2.
-> The new default alignment may be overridden by arches by implementing
-> pcibios_default_alignment(), or by the user with the
-> pci=resource_alignment= option.
-> 
-> Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 > ---
-> Preparatory patches in this series are prerequisites to this patch.
-> ---
->  drivers/pci/pci.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9f7894538334..e7b648304383 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6453,7 +6453,12 @@ struct pci_dev __weak *pci_real_dma_dev(struct pci_dev *dev)
->  
->  resource_size_t __weak pcibios_default_alignment(void)
->  {
-> -	return 0;
-> +	/*
-> +	 * Avoid MSI-X tables being mapped in the same 4k region as other data
-> +	 * according to PCIe 6.1 specification section 7.7.2 MSI-X Capability
-> +	 * and Table Structure.
-> +	 */
-> +	return 4 * 1024;
->  }
->  
->  /*
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 26405fcfa499..ea3fddc74498 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1722,6 +1722,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+>  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+> +	{ .compatible = "qcom,pcie-qcs9100", .data = &cfg_sc8280xp },
+>  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
+>  	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_34_0},
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+> 
 > -- 
-> 2.45.2
+> 2.25.1
 > 
 
