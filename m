@@ -1,156 +1,273 @@
-Return-Path: <linux-pci+bounces-10073-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10074-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2961592D191
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 14:28:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 887C592D2A5
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 15:21:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D79B72865D3
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 12:28:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A7CE287098
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:21:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 190EE19149E;
-	Wed, 10 Jul 2024 12:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE3818560A;
+	Wed, 10 Jul 2024 13:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwlfmMxZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ofk1DF5B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BBB19149D
-	for <linux-pci@vger.kernel.org>; Wed, 10 Jul 2024 12:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FC31DDC5
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jul 2024 13:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720614494; cv=none; b=jD6F93gBdNB6SHWPOHjXOieyP9JtfL4Ut9YhxeFcG5M063cUlbULGzdEo6h85NV5Lmi0SNG39u9uBMn7lCNJfjZ72zq0HE6pq1q/Cs+Iw2gwRTGcq4I2ennKdmUkLTWlvfNDWahkBUPtxTAXU7bo4z/SMiDxSeAtXs7tqvFXZEE=
+	t=1720617693; cv=none; b=qwVkW8KPrFzxmEjK8Pewhheso51UbQaEluvFnD0rJWv2h48G1QyfV5t2hLcjoGPy0a/YqZ32T9+M3My+7dyMvLx61Gojygy9cw88R8s6HdyxjAU7lQKsRtSqlzMJi0m1WNaL160SYD3M3c+NMsngyEJkCkUGzkVJxRjsJij/pB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720614494; c=relaxed/simple;
-	bh=vCETmodMEdDHEJwZMFmoty0smE5wU/UkBqql1Zvvvfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dF9gIZpebhvN1sZaOCVQ6t72sF5AvSLJ3JXWJVA2Qdx2qJhn3b6TmEYim3HtDtFbqGmRD4G/W41Ys3/0v9VRpgues88Bnrz9vX6f8L4XMdOQxwB8KGKAvJVQjGwHzfb4RigJWfxQy+0IiQWh2dUepEKT4XzAJ/UxoHAUxaia+hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwlfmMxZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F38C32781;
-	Wed, 10 Jul 2024 12:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720614493;
-	bh=vCETmodMEdDHEJwZMFmoty0smE5wU/UkBqql1Zvvvfg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kwlfmMxZJNZnrECmYKDnnyO+x2nj4TTZTTj4eOUAuDnOfMEaCn6KL+EFUu6wZYom/
-	 GmIdKss+WZG4KD5TVAfeB8hnIBnYs48dr/o74c8V44uinc6pfq8rJQEF+4UfuxfAKj
-	 8YPRREJ4XdlBlm3WBnR/3BPgofvxKeagiOTTxApdDJ/Cikm6fcHKjyTjD9pM3wG6k9
-	 a2KYYe59lP3gaBMKXVBeMMM7YW7M9sU9fxBNpkpAV/KGLOfUVky+5uAtkvmx8cztdE
-	 Gam4rZVq5R/g08+Am43rBYfAdW389+KOJSDSjFMKduayP24zURMh9l+DPlASD8Ohv3
-	 17qTALeyIeiQg==
-Date: Wed, 10 Jul 2024 07:28:11 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+	s=arc-20240116; t=1720617693; c=relaxed/simple;
+	bh=5EucVgItmtZS4959ihiiOlwy4zf++nhb5FNLWyq/PoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=J59oRsNFxAfTliS4BQwiIxK05YxrtzuDnd9qWZwLDIBOemWQpWc6kfpiQvSC+axe8vMYrx/wBu4s6idABFhfMGjpMAk3oNU+nY3VAe8fHCXmf0S6wIfoJTAwa0x4ZLk4/pYapDFfpOLQk6z0BsgCONHWA+1OchICAduBtrjg0/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ofk1DF5B; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720617691; x=1752153691;
+  h=date:from:to:cc:subject:message-id;
+  bh=5EucVgItmtZS4959ihiiOlwy4zf++nhb5FNLWyq/PoQ=;
+  b=Ofk1DF5BrCHd9bIvGcUe55SxwnUmDJnMeV7DiooJjJ08e1GsdBSQUQcw
+   j/p7r2E9WgJsfkRvCGo1ULH4xMumWlCkktVufU4aLV09BW9NFpWkE4Edn
+   KU76qIZSnEhyehNpw5dquw1v9qq5VXOgM8u/4Js54q78YGylgcfhmPvVI
+   FbancUDTa+jhcsIbyFD7/IaLVh4oQrb+T4FPL231JNaODA/pYt5WCBsF5
+   i6hgoy8RldbVFswF0g0NqLep3PYgsFL0vimXISeCyoyIYm8be4tcRYA8x
+   9CDKRS5b+bqKV4Ncp5c/IOC9oVav2l+kvGwuotk2z3x92QTnp7BtKigvM
+   g==;
+X-CSE-ConnectionGUID: Qo3vo+aPT56sV2Grzp7xdg==
+X-CSE-MsgGUID: 6QM8hzKwSvKWK4YbO2sAoA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="21809190"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="21809190"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 06:21:30 -0700
+X-CSE-ConnectionGUID: d6TSSTI2SXueBCwhlSONVg==
+X-CSE-MsgGUID: 9W9pnuzVQjiDqgX82TjNwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="48097936"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 10 Jul 2024 06:21:29 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sRXGA-000Xsz-3B;
+	Wed, 10 Jul 2024 13:21:26 +0000
+Date: Wed, 10 Jul 2024 21:20:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH v1] Export PBEC Data register into sysfs
-Message-ID: <20240710122811.GA241615@bhelgaas>
+Subject: [pci:controller/kirin] BUILD SUCCESS
+ 5f101ebdbf3cc021959c47a7d96d23c987254d1a
+Message-ID: <202407102129.o9ynNP6R-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626044330.106658-1-kobayashi.da-06@fujitsu.com>
 
-Note subject line convention for drivers/pci (use "git log --oneline
-drivers/pci/pci-sysfs.c")
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/kirin
+branch HEAD: 5f101ebdbf3cc021959c47a7d96d23c987254d1a  PCI: kirin: Fix memory leak in kirin_pcie_parse_port()
 
-On Wed, Jun 26, 2024 at 01:43:30PM +0900, Kobayashi,Daisuke wrote:
-> This proposal aims to add a feature that outputs PCIe device power 
-> consumption information to sysfs.
-> 
-> This feature can be implemented by adding support for PBEC (Power 
-> Budgeting Extended Capability) output to the PCIe driver. PBEC is 
-> defined in the PCIe specification(7.8.1) and is a standard method for
-> obtaining device power consumption information.
+elapsed time: 883m
 
-s/This feature can be implemented by adding support/Add support/
+configs tested: 180
+configs skipped: 4
 
-(To change this to imperative mood and say what the patch actually
-*does*, as opposed to what *could* be done.)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Include spec revision, e.g., "PCIe r6.0, sec 7.8.1"
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240710   gcc-13.2.0
+arc                   randconfig-002-20240710   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-13.3.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.3.0
+arm                          collie_defconfig   gcc-13.3.0
+arm                                 defconfig   gcc-13.2.0
+arm                            dove_defconfig   gcc-13.3.0
+arm                           imxrt_defconfig   gcc-13.3.0
+arm                   randconfig-001-20240710   gcc-13.2.0
+arm                   randconfig-002-20240710   gcc-13.2.0
+arm                   randconfig-003-20240710   gcc-13.2.0
+arm                   randconfig-004-20240710   gcc-13.2.0
+arm                           sama7_defconfig   gcc-13.3.0
+arm64                            allmodconfig   clang-19
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240710   gcc-13.2.0
+arm64                 randconfig-002-20240710   gcc-13.2.0
+arm64                 randconfig-003-20240710   gcc-13.2.0
+arm64                 randconfig-004-20240710   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.3.0
+csky                  randconfig-001-20240710   gcc-13.2.0
+csky                  randconfig-002-20240710   gcc-13.2.0
+hexagon                          allmodconfig   clang-19
+hexagon                          allyesconfig   clang-19
+i386                             allmodconfig   clang-18
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   clang-18
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   clang-18
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240710   clang-18
+i386         buildonly-randconfig-002-20240710   clang-18
+i386         buildonly-randconfig-003-20240710   clang-18
+i386         buildonly-randconfig-004-20240710   clang-18
+i386         buildonly-randconfig-005-20240710   clang-18
+i386         buildonly-randconfig-006-20240710   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240710   clang-18
+i386                  randconfig-002-20240710   clang-18
+i386                  randconfig-003-20240710   clang-18
+i386                  randconfig-004-20240710   clang-18
+i386                  randconfig-005-20240710   clang-18
+i386                  randconfig-006-20240710   clang-18
+i386                  randconfig-011-20240710   clang-18
+i386                  randconfig-012-20240710   clang-18
+i386                  randconfig-013-20240710   clang-18
+i386                  randconfig-014-20240710   clang-18
+i386                  randconfig-015-20240710   clang-18
+i386                  randconfig-016-20240710   clang-18
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                        allmodconfig   gcc-13.3.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240710   gcc-13.2.0
+loongarch             randconfig-002-20240710   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.3.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.3.0
+m68k                          amiga_defconfig   gcc-13.3.0
+m68k                                defconfig   gcc-13.2.0
+m68k                            q40_defconfig   gcc-13.3.0
+microblaze                       alldefconfig   gcc-13.3.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.3.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.3.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                           mtx1_defconfig   gcc-13.3.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240710   gcc-13.2.0
+nios2                 randconfig-002-20240710   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                         allyesconfig   gcc-13.3.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                           allmodconfig   gcc-13.3.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                           allyesconfig   gcc-13.3.0
+parisc                              defconfig   gcc-13.2.0
+parisc                randconfig-001-20240710   gcc-13.2.0
+parisc                randconfig-002-20240710   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-13.3.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                          allyesconfig   gcc-13.3.0
+powerpc                          g5_defconfig   gcc-13.3.0
+powerpc                        icon_defconfig   gcc-13.3.0
+powerpc                       maple_defconfig   gcc-13.3.0
+powerpc                     mpc512x_defconfig   gcc-13.3.0
+powerpc                      ppc44x_defconfig   gcc-13.3.0
+powerpc               randconfig-001-20240710   gcc-13.2.0
+powerpc               randconfig-002-20240710   gcc-13.2.0
+powerpc               randconfig-003-20240710   gcc-13.2.0
+powerpc                         wii_defconfig   gcc-13.3.0
+powerpc64             randconfig-001-20240710   gcc-13.2.0
+powerpc64             randconfig-002-20240710   gcc-13.2.0
+powerpc64             randconfig-003-20240710   gcc-13.2.0
+riscv                            allmodconfig   gcc-13.3.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                            allyesconfig   gcc-13.3.0
+riscv                               defconfig   gcc-13.2.0
+riscv                 randconfig-001-20240710   gcc-13.2.0
+riscv                 randconfig-002-20240710   gcc-13.2.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                              allnoconfig   gcc-13.2.0
+s390                             allyesconfig   clang-19
+s390                             allyesconfig   gcc-13.2.0
+s390                                defconfig   gcc-13.2.0
+s390                  randconfig-001-20240710   gcc-13.2.0
+s390                  randconfig-002-20240710   gcc-13.2.0
+sh                               allmodconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                               allyesconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                    randconfig-001-20240710   gcc-13.2.0
+sh                    randconfig-002-20240710   gcc-13.2.0
+sparc                            allmodconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+sparc64               randconfig-001-20240710   gcc-13.2.0
+sparc64               randconfig-002-20240710   gcc-13.2.0
+um                               allmodconfig   gcc-13.3.0
+um                                allnoconfig   clang-17
+um                                allnoconfig   gcc-13.2.0
+um                               allyesconfig   gcc-13.3.0
+um                                  defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-13.2.0
+um                    randconfig-001-20240710   gcc-13.2.0
+um                    randconfig-002-20240710   gcc-13.2.0
+um                           x86_64_defconfig   gcc-13.2.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240710   clang-18
+x86_64       buildonly-randconfig-002-20240710   clang-18
+x86_64       buildonly-randconfig-003-20240710   clang-18
+x86_64       buildonly-randconfig-004-20240710   clang-18
+x86_64       buildonly-randconfig-005-20240710   clang-18
+x86_64       buildonly-randconfig-006-20240710   clang-18
+x86_64                              defconfig   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                randconfig-001-20240710   clang-18
+x86_64                randconfig-002-20240710   clang-18
+x86_64                randconfig-003-20240710   clang-18
+x86_64                randconfig-004-20240710   clang-18
+x86_64                randconfig-005-20240710   clang-18
+x86_64                randconfig-006-20240710   clang-18
+x86_64                randconfig-011-20240710   clang-18
+x86_64                randconfig-012-20240710   clang-18
+x86_64                randconfig-013-20240710   clang-18
+x86_64                randconfig-014-20240710   clang-18
+x86_64                randconfig-015-20240710   clang-18
+x86_64                randconfig-016-20240710   clang-18
+x86_64                randconfig-071-20240710   clang-18
+x86_64                randconfig-072-20240710   clang-18
+x86_64                randconfig-073-20240710   clang-18
+x86_64                randconfig-074-20240710   clang-18
+x86_64                randconfig-075-20240710   clang-18
+x86_64                randconfig-076-20240710   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240710   gcc-13.2.0
+xtensa                randconfig-002-20240710   gcc-13.2.0
 
-> PCIe devices can significantly impact the overall power consumption of
-> a system. However, obtaining PCIe device power consumption information 
-> has traditionally been difficult. This is because the 'lspci' command, 
-> which is a standard tool for displaying information about PCI devices, 
-> cannot access PBEC information. `lspci` is a standard tool for displaying
-> information about PCI devices.
-
-lspci detail isn't really necessary here.  Maybe lspci *could* be
-extended to display PBEC information, but that's a separate project.
-It looks like the Data/Data Select issue might mean lspci would have
-to get the info from the kernel, e.g., from this sysfs file, to avoid
-synchronization issues.
-
-> The PBEC Data register changes depending on the value of the PBEC Data 
-> Select register. To obtain all PBEC Data register values defined in the 
-> device, obtain the value of the PBEC Data register while changing the 
-> value of the PBEC Data Select register.
-> 
-> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-> ---
->  drivers/pci/pci-sysfs.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 2321fdfefd7d..b13d30da38a1 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -182,6 +182,33 @@ static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(resource);
->  
-> +static ssize_t pbec_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct pci_dev *pci_dev = to_pci_dev(dev);
-> +	size_t len = 0;
-> +	int i, pos;
-> +	u32 data;
-> +
-> +	if (!pci_is_pcie(pci_dev))
-> +		return 0;
-
-Unnecessary.  Already covered by pcie_dev_attrs_are_visible().
-
-> +	pos = pci_find_ext_capability(pci_dev, PCI_EXT_CAP_ID_PWR);
-> +	if (!pos)
-> +		return 0;
-> +
-> +	for (i = 0; i < 0xff; i++) {
-> +		pci_write_config_byte(pci_dev, pos + PCI_PWR_DSR, (u8)i);
-> +		pci_read_config_dword(pci_dev, pos + PCI_PWR_DATA, &data);
-> +		if (!data)
-> +			break;
-> +		len += sysfs_emit_at(buf, len, "%04x\n", data);
-> +	}
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_RO(pbec);
-
-Needs a more descriptive name, I think.  Also some documentation in
-Documentation/ABI/.
-
->  static ssize_t max_link_speed_show(struct device *dev,
->  				   struct device_attribute *attr, char *buf)
->  {
-> @@ -629,6 +656,7 @@ static struct attribute *pcie_dev_attrs[] = {
->  	&dev_attr_current_link_width.attr,
->  	&dev_attr_max_link_width.attr,
->  	&dev_attr_max_link_speed.attr,
-> +	&dev_attr_pbec.attr,
->  	NULL,
->  };
->  
-> -- 
-> 2.44.0
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
