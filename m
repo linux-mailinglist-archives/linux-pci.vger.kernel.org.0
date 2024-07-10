@@ -1,72 +1,61 @@
-Return-Path: <linux-pci+bounces-10041-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10042-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20B3992CA35
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 07:43:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 217F792CAE7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 08:22:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B587428198A
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 05:43:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C970C1F23698
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 06:22:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F09B24A08;
-	Wed, 10 Jul 2024 05:43:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B90FC5EE8D;
+	Wed, 10 Jul 2024 06:22:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3065D3C39;
-	Wed, 10 Jul 2024 05:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C115BAF0;
+	Wed, 10 Jul 2024 06:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720590207; cv=none; b=kneGuPqUnGueSBp+Cfl8N6dpP+sI3aFNzEXV0XWJHz/ssVG4ShHMKp+x3Q45umj/vk3oTnL72jy5oWd3MoQqQB29Xlbe+vz3Hbg9j/p8qi8FK0o836YP1EEyePrcXcv4hfWJnM8MnFnRDUdB1c/J2PNXLxGVS8FUJ7bjJYjtIEE=
+	t=1720592539; cv=none; b=ehRfjnBLffcoV6YgiCpuc+cxdmxbNrbZT6V6Jf9u0v79mYkDlXM/peFXTRjCuAy8kEOO/RhWUpxz1uoUsDv7fw9TKL2pZKK11J6sLut5CDioai3ZWFyjnNqlcIt6rG3l1MHn6aU4tke5k1jFcZXlBIhhQmUWA5raE7SXyTDRocg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720590207; c=relaxed/simple;
-	bh=5dh2BM5kmusIF/emCATu6OKJF3a52TlVjNE7020QT0c=;
+	s=arc-20240116; t=1720592539; c=relaxed/simple;
+	bh=NGY6+a5EweXEppSGRkflKSDqFxD1LoZFRBntbil7k4w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rI2l0ihBTf5B95rR9fnG4+T6mqBJJMk0vRNZd46BM5WjvxgnYGwRSSgTV3J8Ca65XoPz1tDJaVq+cwxxcd+XhsfXjicwJcKvdr2hlS8cjOyiQx3uM3RIltLuG+NLmuZsFAYMXAjBAnqxJGOmIH9hWDfLqIYjCsJAUvlYYHmNGK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb0d88fd25so3025965ad.0;
-        Tue, 09 Jul 2024 22:43:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720590205; x=1721195005;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CG2UsJ19/k/VCkkO2JedqMRmNYp6nm/WZ7sVX+CbtOw=;
-        b=aoj+fDfIkMsn7e0BvNTzcSgzG3HCS2++9PeDGgzuaqruqoNF1rPk4ltfOzx3AWOB7C
-         tMWhPQYF+kHMps6uXWupLGcUldU/YgdCkqhWlBNBq2sjjEV0gp61bnMp84aGKBjIvvSi
-         7Ml3Mv1rdg+1fydafBKTp85jkGClc8y77JMHRqdiOS6oosJBfrneEvizhWnHG0MdWQSV
-         TPOaZhIm1iF/9dZFo1j0rRAkC3/kuXXRe4rHB1kYzEmIqjgcNmO9jZsINe+wQty/Yk0m
-         iRL2B5wjX06ls+n33l2xksKTmfL4l1Agcyc/MrLWJVy4f98ZWC6Oc2AGHxtfn62AqJjJ
-         izPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXjYkVdqdqcYffaOi63xf94RujYObB3D0u1ZjcA36k/u4DOl6F3KsA7YW5cWNZm8GSin6frHqviEs44lTi0Pw2HeY9O6gvvxO/8iYrGcpjjFarKhoBaOZpACgbF7i8VET3DW/tsBwgFtPPacMh9wYxsklDg4oIjgohnlx2ya/RUHJhv0/0Tw==
-X-Gm-Message-State: AOJu0YyZDDswbbzb/hVyJTsc7AAqb8J6EDxyelvwT0X2rZNYfTXC/0Z+
-	/mMoaJ4jCzC3DRRHpsLu8bR8g4UpEQkdMQ0d0FlCXz+gdwCbn0OnwczrEnURrCw=
-X-Google-Smtp-Source: AGHT+IFe/bQ14uIzohPNP8ZGjEv1nOW827IvMmY9fB+n2PcsmRtGUNgfl4Zi3BEYozS4OnDo5N563w==
-X-Received: by 2002:a17:902:ec87:b0:1fa:2b11:657d with SMTP id d9443c01a7336-1fbb7fbe431mr66342375ad.10.1720590205188;
-        Tue, 09 Jul 2024 22:43:25 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab6c48sm25166755ad.152.2024.07.09.22.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 22:43:24 -0700 (PDT)
-Date: Wed, 10 Jul 2024 14:43:22 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Anders Roxell <anders.roxell@linaro.org>
-Cc: dan.carpenter@linaro.org,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	bhelgaas@google.com, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org
-Subject: Re: [PATCH 2/3] PCI: qcom: Prevent potential error pointer
- dereference
-Message-ID: <20240710054322.GA3763187@rocinante>
-References: <20240708180539.1447307-1-dan.carpenter@linaro.org>
- <20240708180539.1447307-3-dan.carpenter@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PmSyOAwZE3d2YSfLl9Dt976QbrPsBEdrpqzDa3eqGxfn3oq+4uO+7HddSmmKRx+8gRr1xC+2QR3wpE13877RgaDLurM8J0fCZIIfE89bQUOsGWdsHBW+31KhYdPzDS54e0UYrAPTFgNazP7W4RmUiyFlIAi6dgMg9wTafJ4uwgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id ACBCC227A87; Wed, 10 Jul 2024 08:22:12 +0200 (CEST)
+Date: Wed, 10 Jul 2024 08:22:12 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Keith Busch <kbusch@kernel.org>, "Zeng, Oak" <oak.zeng@intel.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
+Message-ID: <20240710062212.GA25895@lst.de>
+References: <cover.1719909395.git.leon@kernel.org> <20240705063910.GA12337@lst.de> <20240708235721.GF14050@ziepe.ca> <20240709062015.GB16180@lst.de> <20240709190320.GN14050@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,27 +64,27 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240708180539.1447307-3-dan.carpenter@linaro.org>
+In-Reply-To: <20240709190320.GN14050@ziepe.ca>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hello,
-
-[...]
-> > Only call dev_pm_opp_put() if dev_pm_opp_find_freq_exact() succeeds.
-> > Otherwise it leads to an error pointer dereference.
-> > 
-> > Fixes: 78b5f6f8855e ("PCI: qcom: Add OPP support to scale performance")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+On Tue, Jul 09, 2024 at 04:03:20PM -0300, Jason Gunthorpe wrote:
+> > Except for the powerpc bypass IOMMU or not is a global decision,
+> > and the bypass is per I/O.  So I'm not sure what else you want there?
 > 
-> Tested-by: Anders Roxell <anders.roxell@linaro.org>
-> 
-> Applied this patch ontop of linux-next tag, next-20240709.
-> 
-> Booted fine on dragonboard-845c HW.
+> For P2P we know if the DMA will go through the IOMMU or not based on
+> the PCIe fabric path between the initiator (the one doing the DMA) and
+> the target (the one providing the MMIO memory).
 
-Thank you for testing!
+Oh, yes.  So effectively you are asking if we can arbitrarily mix
+P2P sources in a single map request.  I think the only sane answer
+from the iommu/dma subsystem perspective is: hell no.
 
-I took the liberty and added your Tested-by: tag to the relevant commits
-on our controller/qcom branch.
+But that means the upper layer need to split at such a boundary.
+E.g. get_user_pages needs to look at this and stop at the boundary,
+leaving the rest to the next call.
 
-	Krzysztof
+For the block layer just having one kind per BIO is fine right now,
+although I could see use cases where people would want to combine
+them.  We can probably defer that until it is needed, though.
+
 
