@@ -1,169 +1,321 @@
-Return-Path: <linux-pci+bounces-10056-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10057-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79B2792D004
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:03:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 410AD92CFBD
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 12:50:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 74FE3B27F74
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 10:49:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64B2E1C23AC9
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 10:50:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C543518FDDE;
-	Wed, 10 Jul 2024 10:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D66B818784E;
+	Wed, 10 Jul 2024 10:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n9CArpfZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ul/DvtK2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4877917FD;
-	Wed, 10 Jul 2024 10:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A018D13AD22;
+	Wed, 10 Jul 2024 10:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720608066; cv=none; b=o/NI7uMCHl6SzSWzvrMa8woDvVKWLMQjPWVH1O7nMwV5CVUaCSClYcdwNohBIB7Wp4BygJbNsUi0VmY/uqdvV4W0CGsr5OelcV3nLRWHLQP31tMrWQTy7sjlyxcMmdxzL+zBKRs+UrX8Lrl7gj6etHOGKTerrYPz+IS+LZhmBtU=
+	t=1720608314; cv=none; b=AkIYdZTxhaKAEIDktLUO+sPDk1dfzS5KDk1qIu8Z1ieifotcdJJeYvISUZJ5yK1lZijpllZXTyl895mNuQAoQeKn3se9rO/tzLuro3SJhrS/z8Ed5ztt1EAClK0fX7ujh5Ufv9UTr2qWBqwurlySnhw4CY20zki6x3xG4sMvrWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720608066; c=relaxed/simple;
-	bh=V+Xzd4T8gRHtE5SIGX6HgfmhzyhFHWBnKG0fpEpyF48=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VdRSP2ueO9nx8AsP6EGs/OAGbPo8eKKMqYtZyyTdacc8o2X/NXgb/Vz/VYOXG72B84jJned7wXUyq98weSaZWuUbjd6Bs81bOBn5Uv1obpJv5oie4GRfJdD/veSSOTQF8gkdILhcykX+JaOKnbJDAlO48uMXlTjP/la6Hxgx4jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n9CArpfZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46A4qgDF017922;
-	Wed, 10 Jul 2024 10:40:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0uvwgFO82mJjVzpSSxqWkoUibs3dI6vEoYgSRG6/zZo=; b=n9CArpfZ39PQbIyt
-	u5L0TatN7z80chW8lcN/st22rc4bEEupT0bUoxHan64lkcnnmTUg63Q2gO6C6ovR
-	JbjpJfx/uMg3Mkslsy86gHr04dKpHjMVk4llFbBLsyBIkuINeGDd7776jnobfNa6
-	6wPJqHkB525GC/8ie+PsxcaZCfrHB8dnlkt5aGYO1qJehCfgvM4vdqcVhBJ4up64
-	r7S+VXQQjsNhubW1VH9Hg9BDxdf/eYeAvHgi3zGBN0wWettNBiOqFWg4g6yxlFez
-	g2REvUwSMIktu6NZ1XLUO3/o+PMKdE1lAPDRi+zi9jF/PJB7iHlehVu4P1RMfm8N
-	3mqiYQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406xpdrshp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 10:40:47 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46AAeklg017907
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 10:40:46 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Jul
- 2024 03:40:40 -0700
-Message-ID: <6ddf2c14-c8f6-4440-a8ac-93bdbdd6d08c@quicinc.com>
-Date: Wed, 10 Jul 2024 18:40:38 +0800
+	s=arc-20240116; t=1720608314; c=relaxed/simple;
+	bh=LE/oYnTYJnZzNSZjVdRZsuFUBrpiaPaP6arHr61Ezs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PoOM2yd5+b7fpm2A1BmwzgCbtMxjBpcaT9GnjrRmO9cQlLhJubgZHxKppTHDzL6ugZQwlM8kn9zSyH7SnmiIaqpYkgCUjH2bjHFVLf80i+InfoSIs+jTEy/6xcclM28n4cJqr05WT4phEJBB9rDw4ybEkF8MHf8bDCmg8B1sy5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ul/DvtK2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEBE4C32781;
+	Wed, 10 Jul 2024 10:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720608314;
+	bh=LE/oYnTYJnZzNSZjVdRZsuFUBrpiaPaP6arHr61Ezs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ul/DvtK2rX+5FMBNGck+kBMzIRGpz4orkB2r1kF3F5/H/AeS899Ul9hgipFnF2Lsm
+	 fqhIZOiv0leypARDaRmv+aZkXZtcOvdUsj+5wap2S1ZSPRJLotPgXA81bc6A5UAr0z
+	 z5VHQSdaDORQpwUmL9AwWVjobHdkprOWnNJAWDyejM5upkZwlW91BAuftToNssIxV9
+	 EPNxe6DUirVuysfk8vJy1WkTXiFl6rFYV46XNiVG+oPrdlwGwMZBTH8vZCI8bMMe5G
+	 /7D7ufOL9UNFYDutNSZl10IpjTK0gCefF+Rg+k1DThhxQ1VVYHUolVBiV04f72Jh8X
+	 OofIXEtB5nDgQ==
+Date: Wed, 10 Jul 2024 12:45:06 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
+Subject: Re: [PATCH v6 11/17] ACPI: RISC-V: Initialize GSI mapping structures
+Message-ID: <Zo5mMiWbEtKEeZ2r@lpieralisi>
+References: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+ <20240601150411.1929783-12-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI: qcom-ep: Add HDMA support for QCS9100 SoC
-To: Bjorn Helgaas <helgaas@kernel.org>, Tengfei Fan <quic_tengfan@quicinc.com>
-CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Lorenzo
- Pieralisi" <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <kernel@quicinc.com>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240709162621.GA175973@bhelgaas>
-Content-Language: en-US
-From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-In-Reply-To: <20240709162621.GA175973@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: r7Ma-t8_NhOdj2fuFRGGglFshNBXaM5P
-X-Proofpoint-ORIG-GUID: r7Ma-t8_NhOdj2fuFRGGglFshNBXaM5P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-10_06,2024-07-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 lowpriorityscore=0 priorityscore=1501 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407100073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240601150411.1929783-12-sunilvl@ventanamicro.com>
 
-
-
-On 7/10/2024 12:26 AM, Bjorn Helgaas wrote:
-> On Tue, Jul 09, 2024 at 10:53:44PM +0800, Tengfei Fan wrote:
->> QCS9100 SoC supports the new Hyper DMA (HDMA) DMA Engine inside the DWC IP,
->> so add support for it by passing the mapping format and the number of
->> read/write channels count.
->>
->> The PCIe EP controller used on this SoC is of version 1.34.0, so a separate
->> config struct is introduced for the sake of enabling HDMA conditionally.
+On Sat, Jun 01, 2024 at 08:34:05PM +0530, Sunil V L wrote:
+> RISC-V has PLIC and APLIC in MADT as well as namespace devices.
+> Initialize the list of those structures using MADT and namespace devices
+> to create mapping between the ACPI handle and the GSI ranges. This will
+> be used later to add dependencies.
 > 
-> This patch doesn't add a new config struct.
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> ---
+>  arch/riscv/include/asm/irq.h |  22 ++++++
+>  drivers/acpi/riscv/init.c    |   2 +
+>  drivers/acpi/riscv/init.h    |   4 +
+>  drivers/acpi/riscv/irq.c     | 142 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 170 insertions(+)
+>  create mode 100644 drivers/acpi/riscv/init.h
 > 
->> It should be noted that for the eDMA support (predecessor of HDMA), there
->> are no mapping format and channels count specified. That is because eDMA
->> supports auto detection of both parameters, whereas HDMA doesn't.
->>
->> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
->> platform use non-SCMI resource. In the future, the SA8775p platform will
->> move to use SCMI resources and it will have new sa8775p-related device
->> tree. Consequently, introduce "qcom,qcs9100-pcie-ep" to the PCIe device
->> match table.
-> 
-> This series doesn't add the new SCMI stuff you mention.  It sounds
-> like this should be deferred and added when you actually move to using
-> SCMI resources.
+> diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+> index 8e10a94430a2..44a0b128c602 100644
+> --- a/arch/riscv/include/asm/irq.h
+> +++ b/arch/riscv/include/asm/irq.h
+> @@ -16,4 +16,26 @@ void riscv_set_intc_hwnode_fn(struct fwnode_handle *(*fn)(void));
+>  
+>  struct fwnode_handle *riscv_get_intc_hwnode(void);
+>  
+> +#ifdef CONFIG_ACPI
+> +
+> +enum riscv_irqchip_type {
+> +	ACPI_RISCV_IRQCHIP_INTC		= 0x00,
+> +	ACPI_RISCV_IRQCHIP_IMSIC	= 0x01,
+> +	ACPI_RISCV_IRQCHIP_PLIC		= 0x02,
+> +	ACPI_RISCV_IRQCHIP_APLIC	= 0x03,
+> +};
+> +
+> +int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
+> +			    u32 *id, u32 *nr_irqs, u32 *nr_idcs);
+> +struct fwnode_handle *riscv_acpi_get_gsi_domain_id(u32 gsi);
+> +
+> +#else
+> +static inline int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
+> +					  u32 *id, u32 *nr_irqs, u32 *nr_idcs)
+> +{
+> +	return 0;
+> +}
+> +
+> +#endif /* CONFIG_ACPI */
+> +
+>  #endif /* _ASM_RISCV_IRQ_H */
+> diff --git a/drivers/acpi/riscv/init.c b/drivers/acpi/riscv/init.c
+> index 5f7571143245..22db97f7a772 100644
+> --- a/drivers/acpi/riscv/init.c
+> +++ b/drivers/acpi/riscv/init.c
+> @@ -6,7 +6,9 @@
+>   */
+>  
+>  #include <linux/acpi.h>
+> +#include "init.h"
+>  
+>  void __init acpi_riscv_init(void)
+>  {
+> +	riscv_acpi_init_gsi_mapping();
+>  }
+> diff --git a/drivers/acpi/riscv/init.h b/drivers/acpi/riscv/init.h
+> new file mode 100644
+> index 000000000000..0b9a07e4031f
+> --- /dev/null
+> +++ b/drivers/acpi/riscv/init.h
+> @@ -0,0 +1,4 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#include <linux/init.h>
+> +
+> +void __init riscv_acpi_init_gsi_mapping(void);
+> diff --git a/drivers/acpi/riscv/irq.c b/drivers/acpi/riscv/irq.c
+> index f56e103a501f..0473428e8d1e 100644
+> --- a/drivers/acpi/riscv/irq.c
+> +++ b/drivers/acpi/riscv/irq.c
+> @@ -7,6 +7,21 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/sort.h>
+> +#include <linux/irq.h>
+> +
+> +#include "init.h"
+> +
+> +struct riscv_ext_intc_list {
+> +	acpi_handle handle;
+> +	u32 gsi_base;
+> +	u32 nr_irqs;
+> +	u32 nr_idcs;
+> +	u32 id;
+> +	u32 type;
+> +	struct list_head list;
+> +};
+> +
+> +LIST_HEAD(ext_intc_list);
+>  
+>  static int irqchip_cmp_func(const void *in0, const void *in1)
+>  {
+> @@ -30,3 +45,130 @@ void arch_sort_irqchip_probe(struct acpi_probe_entry *ap_head, int nr)
+>  		return;
+>  	sort(ape, nr, sizeof(*ape), irqchip_cmp_func, NULL);
+>  }
+> +
+> +static void riscv_acpi_update_gsi_handle(u32 gsi_base, acpi_handle handle)
+> +{
+> +	struct riscv_ext_intc_list *ext_intc_element;
+> +	struct list_head *i, *tmp;
+> +
+> +	list_for_each_safe(i, tmp, &ext_intc_list) {
+> +		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
+> +		if (gsi_base == ext_intc_element->gsi_base) {
+> +			ext_intc_element->handle = handle;
+> +			return;
+> +		}
+> +	}
+> +
+> +	acpi_handle_err(handle, "failed to find the GSI mapping entry\n");
+> +}
+> +
+> +int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
+> +			    u32 *id, u32 *nr_irqs, u32 *nr_idcs)
+> +{
+> +	struct riscv_ext_intc_list *ext_intc_element;
+> +	struct list_head *i, *tmp;
+> +
+> +	list_for_each_safe(i, tmp, &ext_intc_list) {
+> +		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
+> +		if (ext_intc_element->handle == ACPI_HANDLE_FWNODE(fwnode)) {
+> +			*gsi_base = ext_intc_element->gsi_base;
+> +			*id = ext_intc_element->id;
+> +			*nr_irqs = ext_intc_element->nr_irqs;
+> +			if (nr_idcs)
+> +				*nr_idcs = ext_intc_element->nr_idcs;
+> +
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +struct fwnode_handle *riscv_acpi_get_gsi_domain_id(u32 gsi)
+> +{
+> +	struct riscv_ext_intc_list *ext_intc_element;
+> +	struct acpi_device *adev;
+> +	struct list_head *i, *tmp;
+> +
+> +	list_for_each_safe(i, tmp, &ext_intc_list) {
+> +		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
+> +		if (gsi >= ext_intc_element->gsi_base &&
+> +		    gsi < (ext_intc_element->gsi_base + ext_intc_element->nr_irqs)) {
+> +			adev = acpi_fetch_acpi_dev(ext_intc_element->handle);
+> +			if (!adev)
+> +				return NULL;
+> +
+> +			return acpi_fwnode_handle(adev);
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static int __init riscv_acpi_register_ext_intc(u32 gsi_base, u32 nr_irqs, u32 nr_idcs,
+> +					       u32 id, u32 type)
+> +{
+> +	struct riscv_ext_intc_list *ext_intc_element;
+> +
+> +	ext_intc_element = kzalloc(sizeof(*ext_intc_element), GFP_KERNEL);
+> +	if (!ext_intc_element)
+> +		return -ENOMEM;
+> +
+> +	ext_intc_element->gsi_base = gsi_base;
+> +	ext_intc_element->nr_irqs = nr_irqs;
+> +	ext_intc_element->nr_idcs = nr_idcs;
+> +	ext_intc_element->id = id;
+> +	list_add_tail(&ext_intc_element->list, &ext_intc_list);
+> +	return 0;
+> +}
+> +
+> +static acpi_status __init riscv_acpi_create_gsi_map(acpi_handle handle, u32 level,
+> +						    void *context, void **return_value)
+> +{
+> +	acpi_status status;
+> +	u64 gbase;
+> +
+> +	if (!acpi_has_method(handle, "_GSB")) {
+> +		acpi_handle_err(handle, "_GSB method not found\n");
+> +		return AE_OK;
+> +	}
+> +
+> +	status = acpi_evaluate_integer(handle, "_GSB", NULL, &gbase);
+> +	if (ACPI_FAILURE(status)) {
+> +		acpi_handle_err(handle, "failed to evaluate _GSB method\n");
+> +		return AE_OK;
+> +	}
+> +
+> +	riscv_acpi_update_gsi_handle((u32)gbase, handle);
+> +	return AE_OK;
+> +}
+> +
+> +static int __init riscv_acpi_aplic_parse_madt(union acpi_subtable_headers *header,
+> +					      const unsigned long end)
+> +{
+> +	struct acpi_madt_aplic *aplic = (struct acpi_madt_aplic *)header;
+> +
+> +	return riscv_acpi_register_ext_intc(aplic->gsi_base, aplic->num_sources, aplic->num_idcs,
+> +					    aplic->id, ACPI_RISCV_IRQCHIP_APLIC);
+> +}
+> +
+> +static int __init riscv_acpi_plic_parse_madt(union acpi_subtable_headers *header,
+> +					     const unsigned long end)
+> +{
+> +	struct acpi_madt_plic *plic = (struct acpi_madt_plic *)header;
+> +
+> +	return riscv_acpi_register_ext_intc(plic->gsi_base, plic->num_irqs, 0,
+> +					    plic->id, ACPI_RISCV_IRQCHIP_PLIC);
+> +}
+> +
+> +void __init riscv_acpi_init_gsi_mapping(void)
+> +{
+> +	/* There can be either PLIC or APLIC */
+> +	if (acpi_table_parse_madt(ACPI_MADT_TYPE_PLIC, riscv_acpi_plic_parse_madt, 0) > 0) {
+> +		acpi_get_devices("RSCV0001", riscv_acpi_create_gsi_map, NULL, NULL);
+> +		return;
+> +	}
+> +
+> +	if (acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, riscv_acpi_aplic_parse_madt, 0) > 0)
+> +		acpi_get_devices("RSCV0002", riscv_acpi_create_gsi_map, NULL, NULL);
+> +}
 
-We can rename "sa8775p" to "qcs9100" compatible name in next patchset
-for this driver. Let's know if this is reasonable from your point of view?
+I don't know if it is needed in RISC-V - it is a question - but how would you
+resolve a GSI mapping before the ACPI intepreter is initialized ?
 
-SCMI resource solution will come in a later point, and at that time it
-can have scmi related resource operations in this driver and add
-"sa8775p" compatible with correct resources ops at that time.
+This model relies on the _GSB method to be called on the interrupt controller
+device to discover the GSI range it actually covers, I was wondering how this
+works for "devices" (eg components described in static table, eg timers)
+that require a GSI mapping before you are able to retrieve the required
+information from the namespace devices.
 
-More background:
-We want to make QCS9100 non-SCMI resources not blocking by current SCMI
-resources changes, since SCMI changes are also pending to merge in order
-to not blocking non-scmi resource platforms like current QCS9100
-project. So the splitting base device trees are pending here. Don't want
-to have a circular dependency loop. :)
-> 
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>  drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> index 236229f66c80..e2775f4ca7ee 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> @@ -904,6 +904,7 @@ static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
->>  };
->>  
->>  static const struct of_device_id qcom_pcie_ep_match[] = {
->> +	{ .compatible = "qcom,qcs9100-pcie-ep", .data = &cfg_1_34_0},
->>  	{ .compatible = "qcom,sa8775p-pcie-ep", .data = &cfg_1_34_0},
->>  	{ .compatible = "qcom,sdx55-pcie-ep", },
->>  	{ .compatible = "qcom,sm8450-pcie-ep", },
->>
->> -- 
->> 2.25.1
->>
-
--- 
-Thx and BRs,
-Aiqun(Maria) Yu
+Thanks,
+Lorenzo
 
