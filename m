@@ -1,325 +1,358 @@
-Return-Path: <linux-pci+bounces-10076-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10077-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 722B792D2DB
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 15:32:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A50C392D33C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 15:44:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F1941C20B18
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:32:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1040CB26B6A
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:44:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDA72190076;
-	Wed, 10 Jul 2024 13:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464031E502;
+	Wed, 10 Jul 2024 13:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SDAMP48G"
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ha1FyJEj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288FE1CA9C;
-	Wed, 10 Jul 2024 13:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7F9194C85
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jul 2024 13:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618350; cv=none; b=WulDiyPPoYdJ73hQG/GiziKM4cyutH8uiWPEwqgeFu/LuhnDLVGxOBT1lc6fsIOdgBQ9IyYqOTnUKu9KIxD27Mxkcu+JvSwgOGDEvpPwnRCaBu0zNJ1oqAiFByP3cxXTNmZRkc429he9jns5t9qhCAYIL93NBSz9EUsAo5H8oEA=
+	t=1720618967; cv=none; b=d7IIOLf+9cImS53nkbEONGBYi5/hauyV+HGtVcRh9NNcept8vuUENB58GRW3Gd7Zgpjoy2mXAHtkfhhXVkyvhdt10OS0HwK6jnzlooAQQKqvsXRF7r9dTkeS9aA77GpqhRUwDe+Pub/PH1Xs2f4sIlquglEf+Sv1PAWIn2O4YY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618350; c=relaxed/simple;
-	bh=1sQbIrS1JVYEEZ8wsStgULcn7YAsrepfKI36ed3D5FI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AQup+a2bvTWsNRVU08PADFGjb03ist3utE1tuwdwiBhJG5CKZRcn+RWo1KPdaTgafhhxoloT+Ofy2QmR1w3Rb4sEwrkiM90WnG+vV1BZKOBI8FxplnZtaFHbrOXHdwcI+8zung+nswS+ItEJ0z4iLeWfDpJLAEAYArfNLRp4o/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SDAMP48G; arc=none smtp.client-ip=45.254.50.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=hcluSJjCmhnWXX8YTDLv8feP55y3/EV9PtZgqhLBZl8=;
-	b=SDAMP48GpwvMjb58QXp8GEGj44RTz7mlOO8xCFH7BY2iqW9p9OK/lcQMmDZyYE
-	V428UhzNIKOqn7e0q+nDWYXml9IweBrAB9MZUIgXES5dOjYkutIE55zQc/jpU+Sx
-	ZJqQl/8Bwq9b60PPfy5+2gMqb+zMuqJoXWAAtEXqtuUgM=
-Received: from [10.0.2.15] (unknown [111.205.43.230])
-	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wD3X5a2jI5mqCcSCg--.45966S2;
-	Wed, 10 Jul 2024 21:29:27 +0800 (CST)
-Message-ID: <b5d99ec8-9e4d-494a-bf62-02b992a042e8@163.com>
-Date: Wed, 10 Jul 2024 21:29:25 +0800
+	s=arc-20240116; t=1720618967; c=relaxed/simple;
+	bh=1UTWdzOxOelSHpVSNprV23qUyNKV7uNp5Ou37TT94+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fIeaBBrrvI4oP6V8sUVGIJSZZN6cBck43HjzwJQM56m4nVn/qFNiDOkDtxhYzl0dbPkv651jwGeeCaM2sVRJUxVcM9sDOXeXhRQRflGB3ARA3xlLrozX6gwBeLt9bVceAyIxIrvPUSZ6tLtKXiHUgeUK7fg08SEp5lhypKu3WB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ha1FyJEj; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5c691c6788eso950588eaf.2
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jul 2024 06:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1720618964; x=1721223764; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZYo7hiyQeiuXBsG523lCpU3OjDoScc8p3LqrHOuQZw8=;
+        b=ha1FyJEjoqX27cMRURisxJOE0AQtS5Br8zauxvuXfh5Lgon7Bnp0PauwQIc4QJUi4B
+         7XHDTHN3fKkr7H1EfmNKRj/TBhn/YLSQLKoFkm3D4+ZbiRRFMC+FnMJ+DFaSLSNTJze9
+         oCCAO+1jvkhKqraPmKzjK/gYr8nuEexebKDg1U1HR+ZCjhleQ589m1GzrLNxlGWHmNwD
+         +gdsWqwAelOlICXuUkjqAQNmG8MAxfst8YiEH5wyb0SvERTx9rzG5RiJKT2PMra9ieJK
+         L4cUTo31L1EpP8001Q4xX8CNowvON8ajgIHzOr4E9OAgcTjQziWeRHkofD+oPurJZw3p
+         6tDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720618964; x=1721223764;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZYo7hiyQeiuXBsG523lCpU3OjDoScc8p3LqrHOuQZw8=;
+        b=plipHNAjZQbBAv8/+jFMWJjGjmSD6kX8Vn/7ZgTjaloUP57wdKsufWr4W2balwxhX7
+         a4uTeTNWrhtVJjOaZRIUK+nzPSfzB6NfpsoiXS+T1S0puyLG6+Zb2epfZG01mcs4gghh
+         Undx6Fu+NBHwQo1qtxUmw9qkAY7mcq5IygIuX0klXId1UWgzzqoUPFeGZ2o33nYli8lI
+         FoeYplD6dX7EPds/9l9kzvPR7iHdFykKxcOq42GbNdg9dc7ai7cUiE7ub0PZfD7S9kny
+         2NGhpwEdQsGrxi2MfvSLxe2heJGRNFyj4sKn+CKuc/TKGEwPLKc7QNZomhjEIzE4LLsL
+         duvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrok0qyzHOX56emRRDpu7WP30DaIkrqQwLYI9NYdTQyOA8jl727ke9FwPZivNPCp8+BZgFne/WmTmfr7xC7EFd01CWeJSnGxbT
+X-Gm-Message-State: AOJu0Yyk9r4KsygJrqaA4KrwXoS+P7CdZpWgDvPISZFsmhnXcO13uZsT
+	hT3DlQOhXc8zUVJbZL9WleEjDPAFTvlTwKN3xZC4LMsTt6r6QW5xVQxOjKOcfNUTZL/FfN0OzHU
+	aJdQ=
+X-Google-Smtp-Source: AGHT+IEKatB3eqFgez+wXc1iMLGNbwHvkjmaIQf9kU0G+YZPSgDIUnJE7UlX38DLcJq5LYXxTX1LPA==
+X-Received: by 2002:a4a:6c4:0:b0:5c4:68b8:e27f with SMTP id 006d021491bc7-5c68e19136bmr5609120eaf.6.1720618964379;
+        Wed, 10 Jul 2024 06:42:44 -0700 (PDT)
+Received: from sunil-laptop ([106.51.187.237])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5c68cd9a709sm674614eaf.22.2024.07.10.06.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 06:42:43 -0700 (PDT)
+Date: Wed, 10 Jul 2024 19:12:29 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, acpica-devel@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Subject: Re: [PATCH v6 11/17] ACPI: RISC-V: Initialize GSI mapping structures
+Message-ID: <Zo6PxdFM2GzTV1yc@sunil-laptop>
+References: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+ <20240601150411.1929783-12-sunilvl@ventanamicro.com>
+ <Zo5mMiWbEtKEeZ2r@lpieralisi>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: vmd: Create domain symlink before
- pci_bus_add_devices()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
- paul.m.stillwell.jr@intel.com, lpieralisi@kernel.org, kw@linux.com,
- robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, sunjw10@lenovo.com, ahuang12@lenovo.com,
- Pawel Baldysiak <pawel.baldysiak@intel.com>,
- Alexey Obitotskiy <aleksey.obitotskiy@intel.com>,
- Tomasz Majchrzak <tomasz.majchrzak@intel.com>
-References: <20240709205938.GA194355@bhelgaas>
-Content-Language: en-US
-From: Jiwei Sun <sjiwei@163.com>
-In-Reply-To: <20240709205938.GA194355@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3X5a2jI5mqCcSCg--.45966S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3XryfurWrAr4UKF17Aw48Crg_yoWftF48pF
-	ZxW3W5tFs7Gr43XayUu3y8WFyayw4vvry5try5Kw1jv3yDAFy09FW0kF45Cr42vF1DKasF
-	vw4qgrn09Fn0kaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UnmRUUUUUU=
-X-CM-SenderInfo: 5vml4vrl6rljoofrz/1tbiDxoYmWVOFIrZegAAsC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zo5mMiWbEtKEeZ2r@lpieralisi>
 
-
-On 7/10/24 04:59, Bjorn Helgaas wrote:
-> [+cc Pawel, Alexey, Tomasz for mdadm history]
+On Wed, Jul 10, 2024 at 12:45:06PM +0200, Lorenzo Pieralisi wrote:
+> On Sat, Jun 01, 2024 at 08:34:05PM +0530, Sunil V L wrote:
+> > RISC-V has PLIC and APLIC in MADT as well as namespace devices.
+> > Initialize the list of those structures using MADT and namespace devices
+> > to create mapping between the ACPI handle and the GSI ranges. This will
+> > be used later to add dependencies.
+> > 
+> > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> > ---
+> >  arch/riscv/include/asm/irq.h |  22 ++++++
+> >  drivers/acpi/riscv/init.c    |   2 +
+> >  drivers/acpi/riscv/init.h    |   4 +
+> >  drivers/acpi/riscv/irq.c     | 142 +++++++++++++++++++++++++++++++++++
+> >  4 files changed, 170 insertions(+)
+> >  create mode 100644 drivers/acpi/riscv/init.h
+> > 
+> > diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+> > index 8e10a94430a2..44a0b128c602 100644
+> > --- a/arch/riscv/include/asm/irq.h
+> > +++ b/arch/riscv/include/asm/irq.h
+> > @@ -16,4 +16,26 @@ void riscv_set_intc_hwnode_fn(struct fwnode_handle *(*fn)(void));
+> >  
+> >  struct fwnode_handle *riscv_get_intc_hwnode(void);
+> >  
+> > +#ifdef CONFIG_ACPI
+> > +
+> > +enum riscv_irqchip_type {
+> > +	ACPI_RISCV_IRQCHIP_INTC		= 0x00,
+> > +	ACPI_RISCV_IRQCHIP_IMSIC	= 0x01,
+> > +	ACPI_RISCV_IRQCHIP_PLIC		= 0x02,
+> > +	ACPI_RISCV_IRQCHIP_APLIC	= 0x03,
+> > +};
+> > +
+> > +int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
+> > +			    u32 *id, u32 *nr_irqs, u32 *nr_idcs);
+> > +struct fwnode_handle *riscv_acpi_get_gsi_domain_id(u32 gsi);
+> > +
+> > +#else
+> > +static inline int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
+> > +					  u32 *id, u32 *nr_irqs, u32 *nr_idcs)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +#endif /* CONFIG_ACPI */
+> > +
+> >  #endif /* _ASM_RISCV_IRQ_H */
+> > diff --git a/drivers/acpi/riscv/init.c b/drivers/acpi/riscv/init.c
+> > index 5f7571143245..22db97f7a772 100644
+> > --- a/drivers/acpi/riscv/init.c
+> > +++ b/drivers/acpi/riscv/init.c
+> > @@ -6,7 +6,9 @@
+> >   */
+> >  
+> >  #include <linux/acpi.h>
+> > +#include "init.h"
+> >  
+> >  void __init acpi_riscv_init(void)
+> >  {
+> > +	riscv_acpi_init_gsi_mapping();
+> >  }
+> > diff --git a/drivers/acpi/riscv/init.h b/drivers/acpi/riscv/init.h
+> > new file mode 100644
+> > index 000000000000..0b9a07e4031f
+> > --- /dev/null
+> > +++ b/drivers/acpi/riscv/init.h
+> > @@ -0,0 +1,4 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +#include <linux/init.h>
+> > +
+> > +void __init riscv_acpi_init_gsi_mapping(void);
+> > diff --git a/drivers/acpi/riscv/irq.c b/drivers/acpi/riscv/irq.c
+> > index f56e103a501f..0473428e8d1e 100644
+> > --- a/drivers/acpi/riscv/irq.c
+> > +++ b/drivers/acpi/riscv/irq.c
+> > @@ -7,6 +7,21 @@
+> >  
+> >  #include <linux/acpi.h>
+> >  #include <linux/sort.h>
+> > +#include <linux/irq.h>
+> > +
+> > +#include "init.h"
+> > +
+> > +struct riscv_ext_intc_list {
+> > +	acpi_handle handle;
+> > +	u32 gsi_base;
+> > +	u32 nr_irqs;
+> > +	u32 nr_idcs;
+> > +	u32 id;
+> > +	u32 type;
+> > +	struct list_head list;
+> > +};
+> > +
+> > +LIST_HEAD(ext_intc_list);
+> >  
+> >  static int irqchip_cmp_func(const void *in0, const void *in1)
+> >  {
+> > @@ -30,3 +45,130 @@ void arch_sort_irqchip_probe(struct acpi_probe_entry *ap_head, int nr)
+> >  		return;
+> >  	sort(ape, nr, sizeof(*ape), irqchip_cmp_func, NULL);
+> >  }
+> > +
+> > +static void riscv_acpi_update_gsi_handle(u32 gsi_base, acpi_handle handle)
+> > +{
+> > +	struct riscv_ext_intc_list *ext_intc_element;
+> > +	struct list_head *i, *tmp;
+> > +
+> > +	list_for_each_safe(i, tmp, &ext_intc_list) {
+> > +		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
+> > +		if (gsi_base == ext_intc_element->gsi_base) {
+> > +			ext_intc_element->handle = handle;
+> > +			return;
+> > +		}
+> > +	}
+> > +
+> > +	acpi_handle_err(handle, "failed to find the GSI mapping entry\n");
+> > +}
+> > +
+> > +int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
+> > +			    u32 *id, u32 *nr_irqs, u32 *nr_idcs)
+> > +{
+> > +	struct riscv_ext_intc_list *ext_intc_element;
+> > +	struct list_head *i, *tmp;
+> > +
+> > +	list_for_each_safe(i, tmp, &ext_intc_list) {
+> > +		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
+> > +		if (ext_intc_element->handle == ACPI_HANDLE_FWNODE(fwnode)) {
+> > +			*gsi_base = ext_intc_element->gsi_base;
+> > +			*id = ext_intc_element->id;
+> > +			*nr_irqs = ext_intc_element->nr_irqs;
+> > +			if (nr_idcs)
+> > +				*nr_idcs = ext_intc_element->nr_idcs;
+> > +
+> > +			return 0;
+> > +		}
+> > +	}
+> > +
+> > +	return -ENODEV;
+> > +}
+> > +
+> > +struct fwnode_handle *riscv_acpi_get_gsi_domain_id(u32 gsi)
+> > +{
+> > +	struct riscv_ext_intc_list *ext_intc_element;
+> > +	struct acpi_device *adev;
+> > +	struct list_head *i, *tmp;
+> > +
+> > +	list_for_each_safe(i, tmp, &ext_intc_list) {
+> > +		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
+> > +		if (gsi >= ext_intc_element->gsi_base &&
+> > +		    gsi < (ext_intc_element->gsi_base + ext_intc_element->nr_irqs)) {
+> > +			adev = acpi_fetch_acpi_dev(ext_intc_element->handle);
+> > +			if (!adev)
+> > +				return NULL;
+> > +
+> > +			return acpi_fwnode_handle(adev);
+> > +		}
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +static int __init riscv_acpi_register_ext_intc(u32 gsi_base, u32 nr_irqs, u32 nr_idcs,
+> > +					       u32 id, u32 type)
+> > +{
+> > +	struct riscv_ext_intc_list *ext_intc_element;
+> > +
+> > +	ext_intc_element = kzalloc(sizeof(*ext_intc_element), GFP_KERNEL);
+> > +	if (!ext_intc_element)
+> > +		return -ENOMEM;
+> > +
+> > +	ext_intc_element->gsi_base = gsi_base;
+> > +	ext_intc_element->nr_irqs = nr_irqs;
+> > +	ext_intc_element->nr_idcs = nr_idcs;
+> > +	ext_intc_element->id = id;
+> > +	list_add_tail(&ext_intc_element->list, &ext_intc_list);
+> > +	return 0;
+> > +}
+> > +
+> > +static acpi_status __init riscv_acpi_create_gsi_map(acpi_handle handle, u32 level,
+> > +						    void *context, void **return_value)
+> > +{
+> > +	acpi_status status;
+> > +	u64 gbase;
+> > +
+> > +	if (!acpi_has_method(handle, "_GSB")) {
+> > +		acpi_handle_err(handle, "_GSB method not found\n");
+> > +		return AE_OK;
+> > +	}
+> > +
+> > +	status = acpi_evaluate_integer(handle, "_GSB", NULL, &gbase);
+> > +	if (ACPI_FAILURE(status)) {
+> > +		acpi_handle_err(handle, "failed to evaluate _GSB method\n");
+> > +		return AE_OK;
+> > +	}
+> > +
+> > +	riscv_acpi_update_gsi_handle((u32)gbase, handle);
+> > +	return AE_OK;
+> > +}
+> > +
+> > +static int __init riscv_acpi_aplic_parse_madt(union acpi_subtable_headers *header,
+> > +					      const unsigned long end)
+> > +{
+> > +	struct acpi_madt_aplic *aplic = (struct acpi_madt_aplic *)header;
+> > +
+> > +	return riscv_acpi_register_ext_intc(aplic->gsi_base, aplic->num_sources, aplic->num_idcs,
+> > +					    aplic->id, ACPI_RISCV_IRQCHIP_APLIC);
+> > +}
+> > +
+> > +static int __init riscv_acpi_plic_parse_madt(union acpi_subtable_headers *header,
+> > +					     const unsigned long end)
+> > +{
+> > +	struct acpi_madt_plic *plic = (struct acpi_madt_plic *)header;
+> > +
+> > +	return riscv_acpi_register_ext_intc(plic->gsi_base, plic->num_irqs, 0,
+> > +					    plic->id, ACPI_RISCV_IRQCHIP_PLIC);
+> > +}
+> > +
+> > +void __init riscv_acpi_init_gsi_mapping(void)
+> > +{
+> > +	/* There can be either PLIC or APLIC */
+> > +	if (acpi_table_parse_madt(ACPI_MADT_TYPE_PLIC, riscv_acpi_plic_parse_madt, 0) > 0) {
+> > +		acpi_get_devices("RSCV0001", riscv_acpi_create_gsi_map, NULL, NULL);
+> > +		return;
+> > +	}
+> > +
+> > +	if (acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, riscv_acpi_aplic_parse_madt, 0) > 0)
+> > +		acpi_get_devices("RSCV0002", riscv_acpi_create_gsi_map, NULL, NULL);
+> > +}
 > 
-> On Wed, Jun 05, 2024 at 08:48:44PM +0800, Jiwei Sun wrote:
->> From: Jiwei Sun <sunjw10@lenovo.com>
->>
->> During booting into the kernel, the following error message appears:
->>
->>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
->>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
->>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
->>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
->>   (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
->>
->> This symptom prevents the OS from booting successfully.
+> I don't know if it is needed in RISC-V - it is a question - but how would you
+> resolve a GSI mapping before the ACPI intepreter is initialized ?
 > 
-> I guess the root filesystem must be on a RAID device, and it's the
-> failure to assemble that RAID device that prevents OS boot?  The
-> messages are just details about why the assembly failed?
-
-Yes, you are right, in our test environment, we installed the SLES15SP6
-on a VROC RAID 1 device which is set up by two NVME hard drivers. And
-there is also a hardware RAID kit on the motherboard with other two NVME 
-hard drivers.
-
-# lsblk
-NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
-nvme0n1     259:1    0     7T  0 disk
-├─nvme0n1p1 259:2    0   512M  0 part
-├─nvme0n1p2 259:3    0    40G  0 part
-└─nvme0n1p3 259:4    0   6.9T  0 part
-nvme1n1     259:6    0   1.7T  0 disk
-├─md126       9:126  0   1.7T  0 raid1
-│ ├─md126p1 259:9    0   600M  0 part  /boot/efi
-│ ├─md126p2 259:10   0     1G  0 part
-│ ├─md126p3 259:11   0    40G  0 part  /usr/local
-│ │                                    /var
-│ │                                    /tmp
-│ │                                    /srv
-│ │                                    /root
-│ │                                    /opt
-│ │                                    /boot/grub2/x86_64-efi
-│ │                                    /boot/grub2/i386-pc
-│ │                                    /.snapshots
-│ │                                    /
-│ ├─md126p4 259:12   0   1.5T  0 part  /home
-│ └─md126p5 259:13   0 125.5G  0 part  [SWAP]
-└─md127       9:127  0     0B  0 md
-nvme2n1     259:8    0   1.7T  0 disk
-├─md126       9:126  0   1.7T  0 raid1
-│ ├─md126p1 259:9    0   600M  0 part  /boot/efi
-│ ├─md126p2 259:10   0     1G  0 part
-│ ├─md126p3 259:11   0    40G  0 part  /usr/local
-│ │                                    /var
-│ │                                    /tmp
-│ │                                    /srv
-│ │                                    /root
-│ │                                    /opt
-│ │                                    /boot/grub2/x86_64-efi
-│ │                                    /boot/grub2/i386-pc
-│ │                                    /.snapshots
-│ │                                    /
-│ ├─md126p4 259:12   0   1.5T  0 part  /home
-│ └─md126p5 259:13   0 125.5G  0 part  [SWAP]
-└─md127       9:127  0     0B  0 md
-
-And the nvme0n1 is hardware RAID kit,
-the nvme1n1 and nvme2n1 is VROC.
-
-The OS entered emergency mode after installation and restart. And we
-found that no RAID was detected on the first NVME hard driver according
-to the emergency mode log, but when we try to detect it manually by 
-using the following command
-
-#/sbin/mdadm -I /dev/nvme1n1
-
-It works, the RAID device was found, it tells us that the RAID is just
-not detected in the booting process. We added the "rd.udev.debug" to 
-kernel's cmdline, the error logs appears.
-
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
-  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
-  (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
-
+> This model relies on the _GSB method to be called on the interrupt controller
+> device to discover the GSI range it actually covers, I was wondering how this
+> works for "devices" (eg components described in static table, eg timers)
+> that require a GSI mapping before you are able to retrieve the required
+> information from the namespace devices.
 > 
->> After a NVMe disk is probed/added by the nvme driver, the udevd executes
->> some rule scripts by invoking mdadm command to detect if there is a
->> mdraid associated with this NVMe disk. The mdadm determines if one
->> NVMe devce is connected to a particular VMD domain by checking the
->> domain symlink. Here is the root cause:
-> 
-> Can you tell us something about what makes this a vmd-specific issue?
-> 
-> I guess vmd is the only driver that creates a "domain" symlink, so
-> *that* part is vmd-specific.  But I guess there's something in mdadm
-> or its configuration that looks for that symlink?
+Hi Lorenzo,
 
-According to the following error log,
-
-  mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device
-
-We enable the dyndbg log of the drivers/base/*(add dyndbg="file drivers/base/* +p" to cmdline),
-and add some debug logs in the find_driver_devices() of the madam source code [1],
-We found that the "domain" has not been created when the error log appears.
-And as you stated, the "domain" symlink is created by vmd driver.
-
-> 
-> I suppose it has to do with the mdadm code at [1] and the commit at
-> [2]?
-
-Yes, you are right, mdadm determine which NVMe dev is connected to the VMD
-domain by checking "/sys/bus/%s/drivers/%s/%s/domain/device", according to the following mdadm code[1],
-              /*
-              * Each VMD device (domain) adds separate PCI bus, it is better
-              * to store path as a path to that bus (easier further
-              * determination which NVMe dev is connected to this particular
-              * VMD domain).
-              */
-              if (type == SYS_DEV_VMD) {
-                     sprintf(path, "/sys/bus/%s/drivers/%s/%s/domain/device",
-                            bus, driver, de->d_name);
-              }
-              p = realpath(path, NULL);
-              if (p == NULL) {
-                     pr_err("Unable to get real path for '%s'\n", path);
-                     continue;
-              }
-
-[1] https://github.com/md-raid-utilities/mdadm/blob/main/platform-intel.c#L208
-
-> 
-> [1] https://github.com/md-raid-utilities/mdadm/blob/96b8035a09b6449ea99f2eb91f9ba4f6912e5bd6/platform-intel.c#L199
-> [2] https://github.com/md-raid-utilities/mdadm/commit/60f0f54d6f5227f229e7131d34f93f76688b085f
-> 
-> I assume this is a race between vmd_enable_domain() and mdadm?  And
-> vmd_enable_domain() only loses the race sometimes?  Trying to figure
-
-Yes, you are right, what you said is the conclusion of our investigation.
-
-> out why this hasn't been reported before or on non-VMD configurations.
-> Now that I found [2], the non-VMD part is obvious, but I'm still
-> curious about why we haven't seen it before.
-
-According to our test, if we remove that hardware RAID kit, the issue
-can't be reproduced, the driver name on the hardware RAID kit is nvme0, 
-and the driver name on VROC is nvme1 and nvme2. It seems the special 
-configuration makes the problem more apparent.
-
-> 
-> The VMD device is sort of like another host bridge, and I wouldn't
-> think mdadm would normally care about a host bridge, but it looks like
-> mdadm does need to know about VMD for some reason.
-
-I think so, it is better if the application doesn't have to pay too 
-much attention to hardware details. Just we can see, the mdadm uses 
-the "domain" symlink.
+This model is based on the idea of _DEP method to describe dependencies
+between devices and interrupt controller. So, you are right it needs
+interpreter to be up. RISC-V doesn't have devices like timers defined in
+a static table. Every other platform device which needs GSIs should be
+defined in the namespace.
 
 Thanks,
-Regards,
-Jiwei
-
-> 
->> Thread A                   Thread B             Thread mdadm
->> vmd_enable_domain
->>   pci_bus_add_devices
->>     __driver_probe_device
->>      ...
->>      work_on_cpu
->>        schedule_work_on
->>        : wakeup Thread B
->>                            nvme_probe
->>                            : wakeup scan_work
->>                              to scan nvme disk
->>                              and add nvme disk
->>                              then wakeup udevd
->>                                                 : udevd executes
->>                                                   mdadm command
->>        flush_work                               main
->>        : wait for nvme_probe done                ...
->>     __driver_probe_device                        find_driver_devices
->>     : probe next nvme device                     : 1) Detect the domain
->>     ...                                            symlink; 2) Find the
->>     ...                                            domain symlink from
->>     ...                                            vmd sysfs; 3) The
->>     ...                                            domain symlink is not
->>     ...                                            created yet, failed
->>   sysfs_create_link
->>   : create domain symlink
->>
->> sysfs_create_link() is invoked at the end of vmd_enable_domain().
->> However, this implementation introduces a timing issue, where mdadm
->> might fail to retrieve the vmd symlink path because the symlink has not
->> been created yet.
->>
->> Fix the issue by creating VMD domain symlinks before invoking
->> pci_bus_add_devices().
->>
->> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
->> Suggested-by: Adrian Huang <ahuang12@lenovo.com>
->> ---
->> v3 changes:
->>  - Per Paul's comment, move sysfs_remove_link() after
->>    pci_stop_root_bus()
->>
->> v2 changes:
->>  - Add "()" after function names in subject and commit log
->>  - Move sysfs_create_link() after vmd_attach_resources()
->>
->>  drivers/pci/controller/vmd.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index 87b7856f375a..4e7fe2e13cac 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -925,6 +925,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->>  		dev_set_msi_domain(&vmd->bus->dev,
->>  				   dev_get_msi_domain(&vmd->dev->dev));
->>  
->> +	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
->> +			       "domain"), "Can't create symlink to domain\n");
->> +
->>  	vmd_acpi_begin();
->>  
->>  	pci_scan_child_bus(vmd->bus);
->> @@ -964,9 +967,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->>  	pci_bus_add_devices(vmd->bus);
->>  
->>  	vmd_acpi_end();
->> -
->> -	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
->> -			       "domain"), "Can't create symlink to domain\n");
->>  	return 0;
->>  }
->>  
->> @@ -1042,8 +1042,8 @@ static void vmd_remove(struct pci_dev *dev)
->>  {
->>  	struct vmd_dev *vmd = pci_get_drvdata(dev);
->>  
->> -	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
->>  	pci_stop_root_bus(vmd->bus);
->> +	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
->>  	pci_remove_root_bus(vmd->bus);
->>  	vmd_cleanup_srcu(vmd);
->>  	vmd_detach_resources(vmd);
->> -- 
->> 2.27.0
->>
+Sunil
 
 
