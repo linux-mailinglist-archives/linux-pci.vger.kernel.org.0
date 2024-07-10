@@ -1,65 +1,64 @@
-Return-Path: <linux-pci+bounces-10064-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10067-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8F9992D036
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:10:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 171E092D06B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:17:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 658202846A1
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 11:10:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46A361C217CF
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 11:17:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BAF18FDC7;
-	Wed, 10 Jul 2024 11:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA46190485;
+	Wed, 10 Jul 2024 11:16:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fn4UcLnB"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QjjaP2Ev"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E338318FDDE;
-	Wed, 10 Jul 2024 11:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE0818FDB8;
+	Wed, 10 Jul 2024 11:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720609739; cv=none; b=K1mjvV8mi8wFmnLCBpNO7G1xDNKS9PQo1gMqyQEHw2nN1OGPJHPLh6/McmxazLeaI1x0wabxvGKI7sNdrkzHLUIwTbV1Mi6ASFiCMRyS/eP50UuGeGZsstr1o38zvgzECDqPY2/SmjC4isBoLMoH1RsOy+vNSblXwZCQkRZpySs=
+	t=1720610204; cv=none; b=cNj0hmzFCLBsDdY7Q3VxiRm1pLjWu1N3RgLgbhBN8xy7w7AaZLdO4+cRoiGlVEnLz5z5GBHnPirfPkY9B6qZrd71hfIPMPazBgDgWzIkkTKFSb7d6+obBCGD40LOrzQUPc1bnYl882nFDXYOkSgUY1jVdjDGJjH2uYmV4l9+cdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720609739; c=relaxed/simple;
-	bh=sNSmlaFT8GMQD/kiM+wV8aqxn2SQiVisO8vrATvj/Z8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=BWlRFy2k8lwOqHwvWOR/80IlWWK0BQna8fdhvchn9R4vR3VAWJssBKGhdLRYZFIF0zkRjUq6JPoRRcVRdGCjv7p1qUe+cjHtK+9n0GpW83fICb+sB/i8X4a798WL2kxnqlX+RLzcVsQxZMop//umOBhHVqjfLLjD7ALZa1gLTfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fn4UcLnB; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1720610204; c=relaxed/simple;
+	bh=r8QytOePkTEZVCs2LBZ0SFa0RCHJwJbo5ta6H0vboiA=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=t/tFFyosLljeA0Js8s6cJF7M1gc298mVlRgcIEafA+/eL8TkmJqcvM2XMWC2T0pDXopHxT2Ya4zX1iZDbX6STT/JucGav3pdlA7DCL4z4lbGDzK5M6wWyJInoYuf+sFdmD/jN+ThVrPQCfO2uJHEE5CYlSz8BArsdpYfPzQ0Gvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QjjaP2Ev; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46A4NXn4030713;
-	Wed, 10 Jul 2024 11:08:47 GMT
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46A78XXP025652;
+	Wed, 10 Jul 2024 11:16:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lkltbZ8Rj0N7ZQ2MS8y2Uf/sIKt4S6/RYtcBe+ypCe0=; b=Fn4UcLnBX4CdYvFq
-	U3QduBVHkuEBCUKUSN2rW3OQNl/UJG5vl/0Fn5YtUyIllgV7gm3xVMDg0liRoVMc
-	IvmuvgzWEtpp0dfBx/10hrQnwvckEouoFllFj/cEmvxK+kK34veq2jBvfUBZqF6s
-	DOyDzDy4R1uNr8NChJ3zdffm6/Rgi03Xx2oWRW3PLuVoSs/SvmdJ/Hdy4aECmz8N
-	MOJeJnQkxesmTy6Vje9u8Iw/S7TOe1R7qnj4ZA+7kA2Ja/Rmd2jj6aCDYL6oraYP
-	zrwa5ni8TfRq5lMextxg8rIAbv1wX1MOdRXdpt30tJFRlF+AISVlPL5eeA1F+wQJ
-	itaAGQ==
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=1Qr29arU9YM+UDsPsgqFkS
+	QwVNnU31xc2/gXBRmu4ec=; b=QjjaP2EvpfWNntWKlwtO00bj+r1q9fBGF3+YRf
+	tid1g1hySnOGmaFdS7DxYoQ+36U3VYDHBgO3dWaNSIdEcPPC0JMUDj5M5qgxWhtU
+	fn0Tgte2jJ2nGxVJ/bL6gxUgdcT39zLm5uOcv4ai5ID93dfvTMNcNRGrEs5VcjWQ
+	yx37nUEzQ93KKc6w5+g87mPuGE8vTI7tG4Wz0f7jjFAB3gq0nATeMmdGWNsPnW7e
+	ys/HRhF9249iR6mhiaJZQKVUbS5L60XbSWvpsuN1naS/im+LokV/Rp9ianZVs5qF
+	c4Dg6XcxsXafEIieIb+rAUwyq4B0r94309MH2rYe2zjPzb9A==
 Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406we90yhj-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4091jdke63-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 11:08:47 +0000 (GMT)
+	Wed, 10 Jul 2024 11:16:17 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46AB8k5d025122
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46ABGG1O004084
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jul 2024 11:08:46 GMT
+	Wed, 10 Jul 2024 11:16:16 GMT
 Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 10 Jul 2024 04:08:40 -0700
+ 15.2.1544.9; Wed, 10 Jul 2024 04:16:11 -0700
 From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Wed, 10 Jul 2024 16:38:17 +0530
-Subject: [PATCH v7 4/4] PCI: epf-mhi: Add support for handling D-state
- notify from EPC
+Subject: [PATCH v6 0/5] PCI: EPC: Add support to wake up host from D3
+ states
+Date: Wed, 10 Jul 2024 16:46:07 +0530
+Message-ID: <20240710-wakeup_host-v6-0-ef00f31ea38d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,18 +67,19 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240710-dstate_notifier-v7-4-8d45d87b2b24@quicinc.com>
-References: <20240710-dstate_notifier-v7-0-8d45d87b2b24@quicinc.com>
-In-Reply-To: <20240710-dstate_notifier-v7-0-8d45d87b2b24@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAHdtjmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyzHQUlJIzE
+ vPSU3UzU4B8JSMDIxMDc0MD3fLE7NTSgviM/OISXaMkS1MLI5Nkg6TkNCWgjoKi1LTMCrBp0bG
+ 1tQAg7k5EXQAAAA==
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Kishon Vijay Abraham I
 	<kishon@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet
 	<corbet@lwn.net>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>
 CC: <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <mhi@lists.linux.dev>, <quic_vbadigan@quicinc.com>,
@@ -88,88 +88,90 @@ CC: <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         "Krishna chaitanya
  chundru" <quic_krichai@quicinc.com>
 X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1720609699; l=1803;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720610170; l=2675;
  i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=sNSmlaFT8GMQD/kiM+wV8aqxn2SQiVisO8vrATvj/Z8=;
- b=RnCkMXimzqjTSLGhyAjfHzalAWF1i1gsJB+BgYE+0lj42Pd/YI4QVZ5LLGb53yqONRm5h7Itq
- FqoX50NO2rzA2aJvwrZjD01RCABdAREvaxfA4/Sh9n/7gyRs7zjDJjh
+ bh=r8QytOePkTEZVCs2LBZ0SFa0RCHJwJbo5ta6H0vboiA=;
+ b=NLDbUAJ2ehUlBTIGcAux90I/d0zt5PZp/BeBehOFrdY28JLzdAde+jpol2332b5PNjmkC8y7Z
+ aTwHi1bzofJButnPwiOBeUhvjd/SgtKDjimovwzYPypVwJYshnwUKMR
 X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
  pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: EhlpC7mepEndcM4bfwMkL-ZxePXrOYyU
-X-Proofpoint-GUID: EhlpC7mepEndcM4bfwMkL-ZxePXrOYyU
+X-Proofpoint-GUID: PxmjERrOPNZGCrwgg1Cp9_EaZ4D5Gh06
+X-Proofpoint-ORIG-GUID: PxmjERrOPNZGCrwgg1Cp9_EaZ4D5Gh06
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-10_06,2024-07-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=859 malwarescore=0 mlxscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=901
+ mlxscore=0 priorityscore=1501 phishscore=0 clxscore=1015 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407100076
+ definitions=main-2407100077
 
-Add support for handling D-state notify for MHI EPF.
+Here we propose this patch series to add support in PCI endpoint
+driver to wake up host from D3 states.
+
+As endpoint cannot send any data/MSI when the D-state is in
+D3Cold or D3hot. Endpoint needs to bring the device back to D0
+to send any kind of data.
+
+For this endpoint needs to send inband PME the device is in D3hot
+state or toggle wake when the device is D3 cold and vaux is not supplied.
+
+Based on the D-state the EPF driver decides to wake host either by
+toggling wake or by sending PME.
+
+When the MHI state is in M3 MHI driver will wakeup the host using the
+wakeup op.
+
+This change is dependent on this series PCI: endpoint: add D-state change notifier
+support
+https://lore.kernel.org/all/20240710-dstate_notifier-v7-0-8d45d87b2b24@quicinc.com/T/#t
 
 Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 11 +++++++++++
- include/linux/mhi_ep.h                       |  3 +++
- 2 files changed, 14 insertions(+)
+Changes from v5:
+	- rebased on linux next.
+	- Link to v5: https://lore.kernel.org/linux-pci/1690952359-8625-4-git-send-email-quic_krichai@quicinc.com/T/#
+Changes from v4:
+	- removed the enum to select to send PME or toggle wake and use bool variable in 
+	  the api itself as suggested by mani.
+Changes from v3:
+	- changed the bool return type to int for waking the host in mhi ep driver
+	 as suggested by dan and bjorn.
+	- Changed commit logs as suggested by bjorn.
+Changes from v2:
+        - Addressed review comments made by mani.
+Changes from v1:
+        - Moved from RFC patch to regular patch
+        - Inclueded EPF patch and added a new op patch to notify D-state change.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index 7d070b1def11..6de9014e6e53 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -863,6 +863,16 @@ static int pci_epf_mhi_bus_master_enable(struct pci_epf *epf)
- 	return 0;
- }
- 
-+static int pci_epf_mhi_dstate_notify(struct pci_epf *epf, pci_power_t state)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+
-+	mhi_cntrl->dstate = state;
-+
-+	return 0;
-+}
-+
- static int pci_epf_mhi_bind(struct pci_epf *epf)
- {
- 	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-@@ -921,6 +931,7 @@ static const struct pci_epc_event_ops pci_epf_mhi_event_ops = {
- 	.link_up = pci_epf_mhi_link_up,
- 	.link_down = pci_epf_mhi_link_down,
- 	.bus_master_enable = pci_epf_mhi_bus_master_enable,
-+	.dstate_notify = pci_epf_mhi_dstate_notify,
- };
- 
- static int pci_epf_mhi_probe(struct pci_epf *epf,
-diff --git a/include/linux/mhi_ep.h b/include/linux/mhi_ep.h
-index 7b40fc8cbe77..7c9e5895ea2c 100644
---- a/include/linux/mhi_ep.h
-+++ b/include/linux/mhi_ep.h
-@@ -8,6 +8,7 @@
- 
- #include <linux/dma-direction.h>
- #include <linux/mhi.h>
-+#include <linux/pci.h>
- 
- #define MHI_EP_DEFAULT_MTU 0x8000
- 
-@@ -167,6 +168,8 @@ struct mhi_ep_cntrl {
- 
- 	enum mhi_state mhi_state;
- 
-+	pci_power_t dstate;
-+
- 	u32 max_chan;
- 	u32 mru;
- 	u32 event_rings;
+---
+Krishna chaitanya chundru (5):
+      PCI: endpoint: Add wakeup host API to EPC core
+      PCI: dwc: Add wakeup host op to pci_epc_ops
+      PCI: qcom-ep: Add wake up host op to dw_pcie_ep_ops
+      PCI: epf-mhi: Add wakeup host op
+      bus: mhi: ep: wake up host if the MHI state is in M3
 
+ Documentation/PCI/endpoint/pci-endpoint.rst     |  6 +++++
+ drivers/bus/mhi/ep/main.c                       | 28 +++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 12 ++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h    |  1 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c       | 25 +++++++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-mhi.c    | 11 +++++++++
+ drivers/pci/endpoint/pci-epc-core.c             | 30 +++++++++++++++++++++++++
+ include/linux/mhi_ep.h                          |  1 +
+ include/linux/pci-epc.h                         |  5 +++++
+ 9 files changed, 119 insertions(+)
+---
+base-commit: 4e0938fbb7efe1df1e57c0450a840d9605734c27
+change-id: 20240710-wakeup_host-2b95824c0bcf
+
+Best regards,
 -- 
-2.42.0
+Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
 
