@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-10030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 407BB92C895
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 04:34:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12E8392C897
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 04:34:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7DA86B2142E
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 02:34:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 93D3A1F23593
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 02:34:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC5936124;
-	Wed, 10 Jul 2024 02:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6C1182C5;
+	Wed, 10 Jul 2024 02:33:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WcZKUYwR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwDoZbYx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E402C1BA;
-	Wed, 10 Jul 2024 02:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1743B2BB;
+	Wed, 10 Jul 2024 02:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720578826; cv=none; b=gA9OSECDvNI751r1duOocm70A30VteDSbJu2uKSHR1F3VhQQfdYRtJSdepcs3AbXMAvFaXIto2rWADgifua1/YhlTrcuJruVtTMtDlvUtiiqsrBOuw7jK1WeFg8rtSjin0mlF8sNOXgG/WmkpVrY9Soyc1NMgk+GV7s4tNlSli0=
+	t=1720578832; cv=none; b=ABm6eIxMzQow//12UW4noc4ExlxbYUf/ewkY6OeC/2K1tbASpYQ742BuS4XmXLi/IsUW3omWcwYlMmxxhJzrGLzUzwEezGrK7uZWZhYHxpFoC9HQczUXLuG7wFWEbBQnt15OS0opSVmmBlwS1lxiyEI3uPa8Vq3A/gZQ6kIwHJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720578826; c=relaxed/simple;
-	bh=eOgmxtB/x7JT6a1/AmJiXWxPHEcNVP+bI9sGnWp1yXE=;
+	s=arc-20240116; t=1720578832; c=relaxed/simple;
+	bh=ZwQwlF47E7PtI7FlM+YTy9TdbgDQSr+oLU8C7pzy6Mw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CuaKUTp8QkJIaJ2Y7WCqnny/kfLMVbmqaGXlkawiKJP9yvLC5U73XxuLCAdis+noC95705SXMUcze2dRiej+XUBTByfTPD1nYvoPXKVxTfv0BbkrGzCQ0fkJRmf3mfj+1Vd7vgNu9Z70uHCWsWrfoCpNbNceh8eNbcVWPXTQZXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WcZKUYwR; arc=none smtp.client-ip=209.85.161.43
+	 MIME-Version; b=CSC/7b3sjahDhO5ibDCFvWWfI+dEiea/9f/3/tWpmd9IDSC2AHg/ZtUXHszx99F9VF2C6CQzgvJzNvcrCjj5CHWtxm5M+DaQkafoLfemfa3SkHqENtR5Cna/lhI20FFRi4XQnlgH7s8RFXLeMnvEEO/oDqNpwcWuQd/tHIQyTcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lwDoZbYx; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5b9778bb7c8so3138981eaf.3;
-        Tue, 09 Jul 2024 19:33:44 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3d9dd7e5f6eso70455b6e.2;
+        Tue, 09 Jul 2024 19:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720578824; x=1721183624; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720578829; x=1721183629; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wIvx7f/E46Io7lL1f2KBTCaQJpNKOTzfIoHw4smzaV0=;
-        b=WcZKUYwR0JR+wzj7OWoLdcjeEBT6PdPloxKiRcs9ZApyeWi6kEygGUVgzGtJGpL5CI
-         +U4IVVT3b/qRXkIveH4A4rEoI05/y8cAh0Px9RaYnmAKuPLc3vWEZxsiG4PkmMYHkKhn
-         Z67dmZ1b6If9Ekq3tNYkIEEIv5Q9J1FrQ/PS/4BfRdh7CmrUfzpxqNamO7Sxe3Xd0vIU
-         2XETHkB3vkSqA8I+vj4QntJwbuO5BTBnLbW3/AycYOhxIw0nTKILQlA0jfOevrcXWCsb
-         ZLsagHw9vOBpHSBZ5a1/XYlG4GWrEZPkwkjal9niTmFeMSJhvxF+RQkwZ2ZnR3IdT/+E
-         3GFQ==
+        bh=SjGiz+1O53z4zlo501+oylDw+437L8q98TUMeoGUWcQ=;
+        b=lwDoZbYx/qwvt0zE8nRKvr2VvIAuPXwd0NnrTw25Nt2h8Gu0Nfy9zzT4uI4lmLlT90
+         /72+3C95rYyRikEcw2geDdncMWClv4B4XThAGaGqVAIVk1g1TF5lmCTqGPUDVDLPPT8g
+         tDYQpAsuOQOiG+miiVyVraeGs7IIQKLHMpWKyXAoiw9dEVhILn1aN6gPyo+yNFolq1d4
+         1t3wezryOwUqRCjBFm062L22T1HGwfk6yPq90UUzr9/OQrz8pTQjC1bhfeBCaKoZcbRu
+         7WZf9qkgMxe+MJSnAaRh2rF+DRlKlP+D5o1RvPunWjapmBebPejw2a8pDyJ/o81ppFoM
+         ZwbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720578824; x=1721183624;
+        d=1e100.net; s=20230601; t=1720578829; x=1721183629;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wIvx7f/E46Io7lL1f2KBTCaQJpNKOTzfIoHw4smzaV0=;
-        b=iDBmES3InvEniO9IlR8+YcUcQWXF5XVqsQmz7QNqIvlR0vBgrWYu17Uox3EYkOeOwC
-         B8b/F3cQ4ImvYhJHwFALhshiErCnHo9DhuLkTIB0TSM3IR34ZBYiRB8W+OHywWxmpPJh
-         1437FGB61j6KxiWEcz2MlG0vK7lpwyfTFu1dhp9uWQ7VnusiNyG2EEXIWXLG0gNLlzZq
-         JcM/5m0QU/C199+mFhZPb8lOr1cynOxrPj7R6iPLAbGkXEdvpmly1LAxTmbCy2gb3Ena
-         JLivI3QnPdaw7iYgpiyRceSdO/uirhXHzpncWXcMQF66BvEvMuXoez/mz+Bzn2KKAd7Q
-         tOxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGiHdqVrkuah0q41Pf/72juO7ituEqhoqmsfeSL80ZS0KWG3cfmchOl55lIQ+8Mp8fLr9Jw2rWYioAfTVS8z3JlJCpRY2cRxcw5VabmC8SN3l2vA5q6igxCF7Vnp7n5iI5V5PDUSxt
-X-Gm-Message-State: AOJu0YwiF4qTKQbssGUUKphG3yGu8lwZ69JBPIU+krWZNFEput/Dmqro
-	T5KpfgFE8zrPKEoKTS5yML3KF2eJ7Tge+17vw9y7pE/b/I76iBoT
-X-Google-Smtp-Source: AGHT+IHZPEEoCpaQaBIN4vpOnluNcKcuAVs7tfe5M53e8bu5YsaKB9/ePHDHIyZYpFJ+XBjpwQReTQ==
-X-Received: by 2002:a05:6871:580b:b0:259:8420:8e3b with SMTP id 586e51a60fabf-25eae7f55f8mr3090954fac.21.1720578823894;
-        Tue, 09 Jul 2024 19:33:43 -0700 (PDT)
+        bh=SjGiz+1O53z4zlo501+oylDw+437L8q98TUMeoGUWcQ=;
+        b=DaOg16TxTp4Lf/6vvfBMb3D6nP8Bt8G8XoThScNpL3iyZT6RXYt6YwODaW76s11BYZ
+         yOB279I1ta1ZMzIMrY6gW9gZ8zSNrrvM59p4VdvDtFyyllhvRmWfzPaBCcmmU+cU2jD2
+         6+F2aK6ZUgPrDALvGQP/EmWUj8Qk1AdUjmuHQfLySTFc7aEHc8SbNuI8MqSQtEv1QXmx
+         Gm2c2IMy86a6mvkbcz6qv44+WHCSaOGEEZVaXS4Ab35E18bw+xtt9soo6Gs8S73d5vNq
+         hmvzK6zoGFLTvjRrLZY927nbJlaCAKoNJgYaw+H4m5lvowz8JftgClrYQR9pCSDrdyaD
+         /tdA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLwPrikOa+FE9orKMloplqqTYHO9z2eFl9ns3oNO4QhyaEX/SRgTAA/iJzcuUQsJRNqtU+7hHkWxcGWqex1s3j8K2IX8rHw3Ijvb+o72yc+9WVOeUIxId9ABqjyFfSM1BSvMfSa14x
+X-Gm-Message-State: AOJu0Yyp2SMZn/iVAvCbYqZcaOpaGOeoLf5iWV/L9/6bThAJEgOU09rV
+	HSv/Ur7rZjnFzbhs2/2liZSC6mtPE70qE40pJJyPmtzdgWNwJ9OKzfW/0Q==
+X-Google-Smtp-Source: AGHT+IGjcQAOROW+mxC6HIuQRjAkTEOL9s11oGQVae8i4QFhFoteZU/eo1jOyzibxYPRsyVWOc2Ufw==
+X-Received: by 2002:a05:6808:1911:b0:3d9:2ec9:4bb8 with SMTP id 5614622812f47-3d93c016d5amr5414568b6e.19.1720578829282;
+        Tue, 09 Jul 2024 19:33:49 -0700 (PDT)
 Received: from toolbox.alistair23.me (2403-580b-97e8-0-82ce-f179-8a79-69f4.ip6.aussiebb.net. [2403:580b:97e8:0:82ce:f179:8a79:69f4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b439b30b9sm2630992b3a.178.2024.07.09.19.33.38
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b439b30b9sm2630992b3a.178.2024.07.09.19.33.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 19:33:43 -0700 (PDT)
+        Tue, 09 Jul 2024 19:33:48 -0700 (PDT)
 From: Alistair Francis <alistair23@gmail.com>
 X-Google-Original-From: Alistair Francis <alistair.francis@wdc.com>
 To: bhelgaas@google.com,
@@ -83,9 +83,9 @@ Cc: alex.williamson@redhat.com,
 	chaitanyak@nvidia.com,
 	rdunlap@infradead.org,
 	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH v14 2/4] PCI/DOE: Rename Discovery Response Data Object Contents to type
-Date: Wed, 10 Jul 2024 12:33:08 +1000
-Message-ID: <20240710023310.480713-2-alistair.francis@wdc.com>
+Subject: [PATCH v14 3/4] PCI/DOE: Expose the DOE features via sysfs
+Date: Wed, 10 Jul 2024 12:33:09 +1000
+Message-ID: <20240710023310.480713-3-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240710023310.480713-1-alistair.francis@wdc.com>
 References: <20240710023310.480713-1-alistair.francis@wdc.com>
@@ -97,116 +97,389 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PCIe r6.1 (which was published July 24) describes a "Vendor ID", a
-"Data Object Type" and "Next Index" as the fields in the DOE
-Discovery Response Data Object. The DOE driver currently uses
-both the terms type and prot for the second element.
+The PCIe 6 specification added support for the Data Object
+Exchange (DOE).
+When DOE is supported the DOE Discovery Feature must be implemented per
+PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
+information about the other DOE features supported by the device.
 
-This patch renames all uses of the DOE Discovery Response Data Object
-to use type as the second element of the object header, instead of
-type/prot as it currently is.
+The kernel is already querying the DOE features supported and cacheing
+the values. Expose the values in sysfs to allow user space to
+determine which DOE features are supported by the PCIe device.
+
+By exposing the information to userspace tools like lspci can relay the
+information to users. By listing all of the supported features we can
+allow userspace to parse the list, which might include
+vendor specific features as well as yet to be supported features.
+
+As the DOE Discovery feature must always be supported we treat it as a
+special named attribute case. This allows the usual PCI attribute_group
+handling to correctly create the doe_features directory when registering
+pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
+will seg fault).
+
+After this patch is supported you can see something like this when
+attaching a DOE device
+
+$ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
+0001:01        0001:02        doe_discovery
 
 Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
-v14
- - No changes
-v13
- - No changes
+v14:
+ - Revert back to v12 with extra pci_remove_resource_files() call
+v13:
+ - Drop pci_doe_sysfs_init() and use pci_doe_sysfs_group
+     - As discussed in https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
+       we can just modify pci_doe_sysfs_group at the DOE init and let
+       device_add() handle the sysfs attributes.
 v12:
- - Use PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE for PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL
+ - Drop pci_doe_features_sysfs_attr_visible()
 v11:
- - Avoid breaking changes to userspace header
+ - Gracefully handle multiple entried of same feature
+ - Minor fixes and code cleanups
 v10:
- - Split original patch into two
+ - Rebase to use DEFINE_SYSFS_GROUP_VISIBLE and remove
+   special setup function
 v9:
- - Rename two more DOE macros
+ - Add a teardown function
+ - Rename functions to be clearer
+ - Tidy up the commit message
+ - Remove #ifdef from header
 v8:
- - Rename prot to feat as well
+ - Inlucde an example in the docs
+ - Fixup removing a file that wasn't added
+ - Remove a blank line
 v7:
- - Initial patch
+ - Fixup the #ifdefs to keep the test robot happy
+v6:
+ - Use "feature" instead of protocol
+ - Don't use any devm_* functions
+ - Add two more patches to the series
+v5:
+ - Return the file name as the file contents
+ - Code cleanups and simplifications
+v4:
+ - Fixup typos in the documentation
+ - Make it clear that the file names contain the information
+ - Small code cleanups
+ - Remove most #ifdefs
+ - Remove extra NULL assignment
+v3:
+ - Expose each DOE feature as a separate file
+v2:
+ - Add documentation
+ - Code cleanups
 
- drivers/pci/doe.c             | 18 +++++++++---------
- include/uapi/linux/pci_regs.h |  5 ++++-
- 2 files changed, 13 insertions(+), 10 deletions(-)
 
+ Documentation/ABI/testing/sysfs-bus-pci |  28 +++++
+ drivers/pci/doe.c                       | 151 ++++++++++++++++++++++++
+ drivers/pci/pci-sysfs.c                 |  15 +++
+ drivers/pci/pci.h                       |  10 ++
+ 4 files changed, 204 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index ecf47559f495..65a3238ab701 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -500,3 +500,31 @@ Description:
+ 		console drivers from the device.  Raw users of pci-sysfs
+ 		resourceN attributes must be terminated prior to resizing.
+ 		Success of the resizing operation is not guaranteed.
++
++What:		/sys/bus/pci/devices/.../doe_features
++Date:		May 2024
++Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
++Description:
++		This directory contains a list of the supported
++		Data Object Exchange (DOE) features. The features are
++		the file name. The contents of each file is the raw vendor id and
++		data object feature values.
++
++		The value comes from the device and specifies the vendor and
++		data object type supported. The lower (RHS of the colon) is
++		the data object type in hex. The upper (LHS of the colon)
++		is the vendor ID.
++
++		As all DOE devices must support the DOE discovery protocol, if
++		DOE is supported you will at least see the doe_discovery file, with
++		this contents
++
++		# cat doe_features/doe_discovery
++		0001:00
++
++		If the device supports other protocols you will see other files
++		as well. For example is CMA/SPDM and secure CMA/SPDM are supported
++		the doe_features directory will look like this
++
++		# ls doe_features
++		0001:01        0001:02        doe_discovery
 diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index f776f5304a3e..defc4be81bd4 100644
+index defc4be81bd4..580370dc71ee 100644
 --- a/drivers/pci/doe.c
 +++ b/drivers/pci/doe.c
-@@ -406,7 +406,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+@@ -14,6 +14,7 @@
  
- 	response_pl = le32_to_cpu(response_pl_le);
- 	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
--	*feature = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
-+	*feature = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE,
- 			      response_pl);
- 	*index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX,
- 			   response_pl);
-@@ -414,9 +414,9 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
- 	return 0;
- }
- 
--static void *pci_doe_xa_feat_entry(u16 vid, u8 prot)
-+static void *pci_doe_xa_feat_entry(u16 vid, u8 type)
- {
--	return xa_mk_value((vid << 8) | prot);
-+	return xa_mk_value((vid << 8) | type);
- }
- 
- static int pci_doe_cache_features(struct pci_doe_mb *doe_mb)
-@@ -430,19 +430,19 @@ static int pci_doe_cache_features(struct pci_doe_mb *doe_mb)
- 	do {
- 		int rc;
- 		u16 vid;
--		u8 prot;
-+		u8 type;
- 
- 		rc = pci_doe_discovery(doe_mb, PCI_EXT_CAP_VER(hdr), &index,
--				       &vid, &prot);
-+				       &vid, &type);
- 		if (rc)
- 			return rc;
- 
- 		pci_dbg(doe_mb->pdev,
--			"[%x] Found feature %d vid: %x prot: %x\n",
--			doe_mb->cap_offset, xa_idx, vid, prot);
-+			"[%x] Found feature %d vid: %x type: %x\n",
-+			doe_mb->cap_offset, xa_idx, vid, type);
- 
- 		rc = xa_insert(&doe_mb->feats, xa_idx++,
--			       pci_doe_xa_feat_entry(vid, prot), GFP_KERNEL);
-+			       pci_doe_xa_feat_entry(vid, type), GFP_KERNEL);
- 		if (rc)
- 			return rc;
- 	} while (index);
-@@ -663,7 +663,7 @@ EXPORT_SYMBOL_GPL(pci_doe);
-  *
-  * @pdev: PCI device
-  * @vendor: Vendor ID
-- * @prot: Data Object Type
-+ * @type: Data Object Type
-  *
-  * Find first DOE mailbox of a PCI device which supports the given feature.
-  *
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 94c00996e633..795e49304ae4 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1146,9 +1146,12 @@
- #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
- #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_VER		0x0000ff00
- #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
--#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
-+#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE		0x00ff0000
- #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
- 
-+/* Deprecated old name, replaced with PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE */
-+#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		PCI_DOE_DATA_OBJECT_DISC_RSP_3_TYPE
+ #include <linux/bitfield.h>
+ #include <linux/delay.h>
++#include <linux/device.h>
+ #include <linux/jiffies.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+@@ -47,6 +48,7 @@
+  * @wq: Wait queue for work item
+  * @work_queue: Queue of pci_doe_work items
+  * @flags: Bit array of PCI_DOE_FLAG_* flags
++ * @sysfs_attrs: Array of sysfs device attributes
+  */
+ struct pci_doe_mb {
+ 	struct pci_dev *pdev;
+@@ -56,6 +58,10 @@ struct pci_doe_mb {
+ 	wait_queue_head_t wq;
+ 	struct workqueue_struct *work_queue;
+ 	unsigned long flags;
 +
- /* Compute Express Link (CXL r3.1, sec 8.1.5) */
- #define PCI_DVSEC_CXL_PORT				3
- #define PCI_DVSEC_CXL_PORT_CTL				0x0c
++#ifdef CONFIG_SYSFS
++	struct device_attribute *sysfs_attrs;
++#endif
+ };
+ 
+ struct pci_doe_feature {
+@@ -92,6 +98,151 @@ struct pci_doe_task {
+ 	struct pci_doe_mb *doe_mb;
+ };
+ 
++#ifdef CONFIG_SYSFS
++static ssize_t doe_discovery_show(struct device *dev,
++				  struct device_attribute *attr,
++				  char *buf)
++{
++	return sysfs_emit(buf, "0001:00\n");
++}
++DEVICE_ATTR_RO(doe_discovery);
++
++static struct attribute *pci_doe_sysfs_feature_attrs[] = {
++	&dev_attr_doe_discovery.attr,
++	NULL
++};
++
++static bool pci_doe_features_sysfs_group_visible(struct kobject *kobj)
++{
++	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
++	struct pci_doe_mb *doe_mb;
++	unsigned long index;
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
++		if (!xa_empty(&doe_mb->feats))
++			return true;
++	}
++
++	return false;
++}
++DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
++
++const struct attribute_group pci_doe_sysfs_group = {
++	.name	    = "doe_features",
++	.attrs	    = pci_doe_sysfs_feature_attrs,
++	.is_visible = SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs),
++};
++
++static ssize_t pci_doe_sysfs_feature_show(struct device *dev,
++					  struct device_attribute *attr,
++					  char *buf)
++{
++	return sysfs_emit(buf, "%s\n", attr->attr.name);
++}
++
++static void pci_doe_sysfs_feature_remove(struct pci_dev *pdev,
++					 struct pci_doe_mb *doe_mb)
++{
++	struct device_attribute *attrs = doe_mb->sysfs_attrs;
++	struct device *dev = &pdev->dev;
++	unsigned long i;
++	void *entry;
++
++	if (!attrs)
++		return;
++
++	doe_mb->sysfs_attrs = NULL;
++	xa_for_each(&doe_mb->feats, i, entry) {
++		if (attrs[i].show)
++			sysfs_remove_file_from_group(&dev->kobj, &attrs[i].attr,
++						     pci_doe_sysfs_group.name);
++		kfree(attrs[i].attr.name);
++	}
++	kfree(attrs);
++}
++
++static int pci_doe_sysfs_feature_populate(struct pci_dev *pdev,
++					  struct pci_doe_mb *doe_mb)
++{
++	struct device *dev = &pdev->dev;
++	struct device_attribute *attrs;
++	unsigned long num_features = 0;
++	unsigned long vid, type;
++	unsigned long i;
++	void *entry;
++	int ret;
++
++	xa_for_each(&doe_mb->feats, i, entry)
++		num_features++;
++
++	attrs = kcalloc(num_features, sizeof(*attrs), GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++
++	doe_mb->sysfs_attrs = attrs;
++	xa_for_each(&doe_mb->feats, i, entry) {
++		sysfs_attr_init(&attrs[i].attr);
++		vid = xa_to_value(entry) >> 8;
++		type = xa_to_value(entry) & 0xFF;
++
++		if (vid == 0x01 && type == 0x00) {
++			/* DOE Discovery, manually displayed by `dev_attr_doe_discovery` */
++			continue;
++		}
++
++		attrs[i].attr.name = kasprintf(GFP_KERNEL,
++					       "%04lx:%02lx", vid, type);
++		if (!attrs[i].attr.name) {
++			ret = -ENOMEM;
++			goto fail;
++		}
++
++		attrs[i].attr.mode = 0444;
++		attrs[i].show = pci_doe_sysfs_feature_show;
++
++		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
++					      pci_doe_sysfs_group.name);
++		if (ret) {
++			attrs[i].show = NULL;
++			if (ret != -EEXIST)
++				goto fail;
++			else
++				kfree(attrs[i].attr.name);
++		}
++	}
++
++	return 0;
++
++fail:
++	pci_doe_sysfs_feature_remove(pdev, doe_mb);
++	return ret;
++}
++
++void pci_doe_sysfs_teardown(struct pci_dev *pdev)
++{
++	struct pci_doe_mb *doe_mb;
++	unsigned long index;
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb)
++		pci_doe_sysfs_feature_remove(pdev, doe_mb);
++}
++
++int pci_doe_sysfs_init(struct pci_dev *pdev)
++{
++	struct pci_doe_mb *doe_mb;
++	unsigned long index;
++	int ret;
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
++		ret = pci_doe_sysfs_feature_populate(pdev, doe_mb);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++#endif
++
+ static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+ {
+ 	if (wait_event_timeout(doe_mb->wq,
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 40cfa716392f..db795bfe3c56 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/pci.h>
++#include <linux/pci-doe.h>
+ #include <linux/stat.h>
+ #include <linux/export.h>
+ #include <linux/topology.h>
+@@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
+ {
+ 	int i;
+ 
++	if (IS_ENABLED(CONFIG_PCI_DOE))
++		pci_doe_sysfs_teardown(pdev);
++
+ 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 		struct bin_attribute *res_attr;
+ 
+@@ -1227,6 +1231,14 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+ 	int i;
+ 	int retval;
+ 
++	if (IS_ENABLED(CONFIG_PCI_DOE)) {
++		retval = pci_doe_sysfs_init(pdev);
++		if (retval) {
++			pci_remove_resource_files(pdev);
++			return retval;
++		}
++	}
++
+ 	/* Expose the PCI resources from this device as files */
+ 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 
+@@ -1661,6 +1673,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+ #endif
+ #ifdef CONFIG_PCIEASPM
+ 	&aspm_ctrl_attr_group,
++#endif
++#ifdef CONFIG_PCI_DOE
++	&pci_doe_sysfs_group,
+ #endif
+ 	NULL,
+ };
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index fd44565c4756..3aee231dcb0c 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -189,6 +189,7 @@ extern const struct attribute_group *pci_dev_groups[];
+ extern const struct attribute_group *pci_dev_attr_groups[];
+ extern const struct attribute_group *pcibus_groups[];
+ extern const struct attribute_group *pci_bus_groups[];
++extern const struct attribute_group pci_doe_sysfs_group;
+ #else
+ static inline int pci_create_sysfs_dev_files(struct pci_dev *pdev) { return 0; }
+ static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+@@ -196,6 +197,7 @@ static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
+ #define pci_dev_attr_groups NULL
+ #define pcibus_groups NULL
+ #define pci_bus_groups NULL
++#define pci_doe_sysfs_group NULL
+ #endif
+ 
+ extern unsigned long pci_hotplug_io_size;
+@@ -333,6 +335,14 @@ static inline void pci_doe_destroy(struct pci_dev *pdev) { }
+ static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+ #endif
+ 
++#if defined(CONFIG_PCI_DOE) && defined(CONFIG_SYSFS)
++int pci_doe_sysfs_init(struct pci_dev *pci_dev);
++void pci_doe_sysfs_teardown(struct pci_dev *pdev);
++#else
++static inline int pci_doe_sysfs_init(struct pci_dev *pdev) { return 0; }
++static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
++#endif
++
+ /**
+  * pci_dev_set_io_state - Set the new error state if possible.
+  *
 -- 
 2.45.2
 
