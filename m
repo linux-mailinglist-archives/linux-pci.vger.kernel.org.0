@@ -1,261 +1,175 @@
-Return-Path: <linux-pci+bounces-10093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E9EB92D8C3
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 21:05:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64A2892D97F
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 21:48:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1917A1F21F92
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 19:05:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 247F6282768
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 19:48:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2F41195FE0;
-	Wed, 10 Jul 2024 19:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74EC682C7E;
+	Wed, 10 Jul 2024 19:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PjesXR4q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+BNFP2i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE6019645C
-	for <linux-pci@vger.kernel.org>; Wed, 10 Jul 2024 19:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4924315E88;
+	Wed, 10 Jul 2024 19:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720638344; cv=none; b=uTEjDuD891vZCnt70fUhTxqbFQhHu87YHhOJoNKRnF3YO0TAwiqTM6IfY3nFOV7FtHQQV2bpBJ0WB3z28UMhzyBgIORvGRe3shsIAYoh0QJ0ClQqF9YgPktXcbHAmmPV8x5kcsKD2MUN/UXZKmsT3QZTc+liWTI32gVtzwTg9sc=
+	t=1720640913; cv=none; b=opl1wmD5LFl2CcHl2eWxBHqgnvnQ9rDGDfd1rEXktdXuWJToytpajYb0o/+81blfw4tGwjUk4+CvwucvJMJG/apFZfJc7b+1n195kZUVcNUJa9S+uyldK1ypE+H1q/CGp4CEGIwMpRwTZghu30SKOXi5g29DcqUZjytTy/EY8Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720638344; c=relaxed/simple;
-	bh=0rSNMoEUOBv51NHWu2z+CeEJfapST1FQRkQEyWZ9u5s=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Vz1jPy7abmncEppIOSUefEhwDX64Ig512MtdpRz4D4aUhfft5/pR1Hzx61CqgiitBOcQkXw8Vr1UWlBhH1B056zZ2DQQTV0nkYzZQS7QTXZXyFgC412/M/qPP3VbkTKr9jYMr0+itSVWfX0Jv23Z5QwBn7dXBSzyXWZKFwHnQ2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PjesXR4q; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720638343; x=1752174343;
-  h=date:from:to:cc:subject:message-id;
-  bh=0rSNMoEUOBv51NHWu2z+CeEJfapST1FQRkQEyWZ9u5s=;
-  b=PjesXR4qmB85CmKqe+C5oWktZEAaA3D1t5P/l7hyplaf96VXihhH/Kqd
-   KT4SAr8JXZCkK3fwmsuXPI0yZ/QbO2YlJntC/Vnfu7zim9CCZ9gF01lA6
-   dSQezgpJUWBP4OLupw9+52ucyRE03wk9L+OxidnWPTmn7g/TRegL1ifAw
-   RiRQ3lg0SHure3ES/5dqQMnx6THIKeErmYMHFAtcnQ8kWYELd/1qh6ICn
-   cBOIPS2VUmreXc91mXLuHWQ0888De/6Y8MVERM3FWz1i5Q14S6DVtn7Sc
-   /Zt+Dol5wW+0Vp4TWfWtkmivRoJ6SjMbnegyUhR44plw2SzmselzloBmR
-   Q==;
-X-CSE-ConnectionGUID: pqvj9gsaRMWKxk0jnTnDOQ==
-X-CSE-MsgGUID: XreW3SVuQK+T17by9HHcrg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18098670"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="18098670"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 12:05:43 -0700
-X-CSE-ConnectionGUID: a+4JFnm9QfmhNn9SBhMeaQ==
-X-CSE-MsgGUID: S39WzkATT+aS6dWGz+SKyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="52612853"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 10 Jul 2024 12:05:41 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sRcdH-000YBk-0O;
-	Wed, 10 Jul 2024 19:05:39 +0000
-Date: Thu, 11 Jul 2024 03:04:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/rockchip] BUILD SUCCESS
- 84e30b878aed9353d74904d72cba9f968ae5675b
-Message-ID: <202407110343.ov0NCRFZ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1720640913; c=relaxed/simple;
+	bh=XhQRF5UFco4b8sHe0w5DuTqYrq5XvTZ+7qMoY5GC1cY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=iodEqSOCW/XquB+fXk6z29HpocHZdq20+qnkzlvPfWypLDZxvz13dRGTPCEojamIKnNmz1646su23ahKGeuCuceld1k/CYx1S5mq0irb4qOPhNImUg6+D55GIyJrOfnQNBe5Fij+bATGd5LpjT4s9NkilnXSWWK7Qx6MUchMjvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+BNFP2i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A9CC32781;
+	Wed, 10 Jul 2024 19:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720640912;
+	bh=XhQRF5UFco4b8sHe0w5DuTqYrq5XvTZ+7qMoY5GC1cY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=g+BNFP2iIcvstd2oGpRAoM3V5PXWP69kXLn6JnzG/TqTCLFcbl+OYmE8Q9DF83B7Q
+	 MVckDciTYFAogF0BVSIqv3fMB4g/pmX2dd2VMs6nkjjiP6LaBDFWGfkF9QNE9ArB8G
+	 cM2hG65N7yXXt54lV2FkrlnCNt4krjPdD6CC47SbkuKUcmEfUhfnQPg8ptnJZi9JVz
+	 l6bZF1DsQWcEKG5KT+BZQM+zNuXOId6ymIU3L3A8EjCmrfg3Nq50xer99a+hJnomLl
+	 FiaVzL117RNozitipajNxrYE2usIyVvN5UbZyZbKzkcvvyDGnOVHWiinjZCrB2YXES
+	 pVHwfOjkqr1Og==
+Date: Wed, 10 Jul 2024 14:48:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, loongarch@lists.linux.dev,
+	linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
+	Sheng Wu <wusheng@loongson.cn>
+Subject: Re: [PATCH] PCI: loongson: Add LS7A MSI enablement quirk
+Message-ID: <20240710194830.GA255085@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6=nOf_cSv7K3hS3jdXsGcWR7Go30EFyZeqxYNQKhtH8A@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rockchip
-branch HEAD: 84e30b878aed9353d74904d72cba9f968ae5675b  PCI: dw-rockchip: Use pci_epc_init_notify() directly
+On Wed, Jul 10, 2024 at 11:04:24AM +0800, Huacai Chen wrote:
+> Hi, Bjorn,
+> 
+> On Wed, Jul 10, 2024 at 5:24 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Wed, Jun 12, 2024 at 02:53:15PM +0800, Huacai Chen wrote:
+> > > LS7A chipset can be used as a downstream bridge which connected to a
+> > > high-level host bridge. In this case DEV_LS7A_PCIE_PORT5 is used as the
+> > > upward port. We should always enable MSI caps of this port, otherwise
+> > > downstream devices cannot use MSI.
+> >
+> > Can you clarify this topology a bit?  Since DEV_LS7A_PCIE_PORT5
+> > apparently has a class of PCI_CLASS_BRIDGE_HOST, I guess that in PCIe
+> > terms, it is basically a PCI host bridge (Root Complex, if you prefer)
+> > that is materialized as a PCI Endpoint?
+>
+> Now most of the existing LoongArch CPUs don't have an integrated PCIe
+> RC, instead they have HyperTransport controllers. But the latest CPU
+> (Loongson-3C6000) has an integrated PCIe RC and removed
+> HyperTransport.
+> 
+> LS7A bridge can work together with both old (HT) CPUs and new (PCIe)
+> CPUs. If it is connected to an old CPU, its upstream port is a HT
+> port, and DEV_LS7A_PCIE_PORT5 works as a normal downstream PCIe port.
+> If it is connected to a new CPU, DEV_LS7A_PCIE_PORT5 works as an
+> upstream port (the class code becomes PCI_CLASS_BRIDGE_HOST) and the
+> HT port is idle.
 
-elapsed time: 1140m
+What does lspci look like for both the old HT and the new PCIe CPUs?
 
-configs tested: 168
-configs skipped: 4
+With the old HT CPU, I imagine this:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  [LS7A includes a HT port that doesn't appear as a PCI device and
+  basically implements a PCIe Root Complex]
+  00:00.0 Root Port to [bus 01-1f] (DEV_LS7A_PCIE_PORT5)
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240710   gcc-13.2.0
-arc                   randconfig-002-20240710   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-13.3.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.3.0
-arm                        clps711x_defconfig   clang-19
-arm                          collie_defconfig   gcc-13.3.0
-arm                                 defconfig   gcc-13.2.0
-arm                            dove_defconfig   gcc-13.3.0
-arm                           imxrt_defconfig   gcc-13.3.0
-arm                            mmp2_defconfig   clang-19
-arm                        multi_v5_defconfig   clang-19
-arm                       omap2plus_defconfig   clang-19
-arm                   randconfig-001-20240710   gcc-13.2.0
-arm                   randconfig-002-20240710   gcc-13.2.0
-arm                   randconfig-003-20240710   gcc-13.2.0
-arm                   randconfig-004-20240710   gcc-13.2.0
-arm                           sama7_defconfig   gcc-13.3.0
-arm                       versatile_defconfig   clang-19
-arm64                            allmodconfig   clang-19
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240710   gcc-13.2.0
-arm64                 randconfig-002-20240710   gcc-13.2.0
-arm64                 randconfig-003-20240710   gcc-13.2.0
-arm64                 randconfig-004-20240710   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.3.0
-csky                  randconfig-001-20240710   gcc-13.2.0
-csky                  randconfig-002-20240710   gcc-13.2.0
-hexagon                          allmodconfig   clang-19
-hexagon                          allyesconfig   clang-19
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240710   clang-18
-i386         buildonly-randconfig-002-20240710   clang-18
-i386         buildonly-randconfig-003-20240710   clang-18
-i386         buildonly-randconfig-004-20240710   clang-18
-i386         buildonly-randconfig-005-20240710   clang-18
-i386         buildonly-randconfig-006-20240710   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240710   clang-18
-i386                  randconfig-002-20240710   clang-18
-i386                  randconfig-003-20240710   clang-18
-i386                  randconfig-004-20240710   clang-18
-i386                  randconfig-005-20240710   clang-18
-i386                  randconfig-006-20240710   clang-18
-i386                  randconfig-011-20240710   clang-18
-i386                  randconfig-012-20240710   clang-18
-i386                  randconfig-013-20240710   clang-18
-i386                  randconfig-014-20240710   clang-18
-i386                  randconfig-015-20240710   clang-18
-i386                  randconfig-016-20240710   clang-18
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                        allmodconfig   gcc-13.3.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240710   gcc-13.2.0
-loongarch             randconfig-002-20240710   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.3.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.3.0
-m68k                          amiga_defconfig   gcc-13.3.0
-m68k                                defconfig   gcc-13.2.0
-m68k                            q40_defconfig   gcc-13.3.0
-microblaze                       alldefconfig   gcc-13.3.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-13.3.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.3.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                          eyeq5_defconfig   clang-19
-mips                      malta_kvm_defconfig   clang-19
-mips                           mtx1_defconfig   gcc-13.3.0
-mips                        qi_lb60_defconfig   clang-19
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240710   gcc-13.2.0
-nios2                 randconfig-002-20240710   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                         allyesconfig   gcc-13.3.0
-openrisc                            defconfig   gcc-13.2.0
-parisc                           allmodconfig   gcc-13.3.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                           allyesconfig   gcc-13.3.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240710   gcc-13.2.0
-parisc                randconfig-002-20240710   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                     akebono_defconfig   clang-19
-powerpc                          allmodconfig   gcc-13.3.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                          allyesconfig   gcc-13.3.0
-powerpc                     asp8347_defconfig   clang-19
-powerpc                          g5_defconfig   gcc-13.3.0
-powerpc                        icon_defconfig   gcc-13.3.0
-powerpc                       maple_defconfig   clang-19
-powerpc                       maple_defconfig   gcc-13.3.0
-powerpc                   microwatt_defconfig   clang-19
-powerpc                     mpc512x_defconfig   gcc-13.3.0
-powerpc                      ppc44x_defconfig   gcc-13.3.0
-powerpc               randconfig-001-20240710   gcc-13.2.0
-powerpc               randconfig-002-20240710   gcc-13.2.0
-powerpc               randconfig-003-20240710   gcc-13.2.0
-powerpc                         wii_defconfig   gcc-13.3.0
-powerpc64             randconfig-001-20240710   gcc-13.2.0
-powerpc64             randconfig-002-20240710   gcc-13.2.0
-powerpc64             randconfig-003-20240710   gcc-13.2.0
-riscv                            allmodconfig   gcc-13.3.0
-riscv                             allnoconfig   gcc-13.2.0
-riscv                            allyesconfig   gcc-13.3.0
-riscv                               defconfig   gcc-13.2.0
-riscv                 randconfig-001-20240710   gcc-13.2.0
-riscv                 randconfig-002-20240710   gcc-13.2.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                              allnoconfig   gcc-13.2.0
-s390                             allyesconfig   clang-19
-s390                             allyesconfig   gcc-13.2.0
-s390                                defconfig   gcc-13.2.0
-s390                  randconfig-001-20240710   gcc-13.2.0
-s390                  randconfig-002-20240710   gcc-13.2.0
-sh                               allmodconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                    randconfig-001-20240710   gcc-13.2.0
-sh                    randconfig-002-20240710   gcc-13.2.0
-sparc                            allmodconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240710   gcc-13.2.0
-sparc64               randconfig-002-20240710   gcc-13.2.0
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-13.2.0
-um                               allyesconfig   gcc-13.3.0
-um                                  defconfig   gcc-13.2.0
-um                             i386_defconfig   gcc-13.2.0
-um                    randconfig-001-20240710   gcc-13.2.0
-um                    randconfig-002-20240710   gcc-13.2.0
-um                           x86_64_defconfig   gcc-13.2.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                randconfig-001-20240710   gcc-13.2.0
-xtensa                randconfig-002-20240710   gcc-13.2.0
+With a new PCIe CPU, if DEV_LS7A_PCIE_PORT5 is a PCIe Upstream Port,
+it would be part of a switch, so I'm imagining something like this:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  00:00.0 Root Port to [bus 01-1f] (integrated into Loongson-3C6000)
+  01:00.0 Upstream Port to [bus 02-1f] (DEV_LS7A_PCIE_PORT5)
+  02:00.0 Downstream Port to [bus 03-1f] (part of the LS7A switch)
+
+In both cases, 00:00.0 and 01:00.0 (DEV_LS7A_PCIE_PORT5) would be a
+Type 1 device that is enumerated as a PCI-to-PCI bridge, which would
+normally have a Class Code of 0x0604 (PCI_CLASS_BRIDGE_PCI).
+
+But you're saying DEV_LS7A_PCIE_PORT5 has a Class Code of
+PCI_CLASS_BRIDGE_HOST, which is 0x0600.  That would normally be a Type
+0 device and would not have a secondary bus.
+
+> > I'm curious about what's going on here because the normal PCI MSI
+> > support should set PCI_MSI_FLAGS_ENABLE since it's completely
+> > specified by the spec, which says it controls whether *this function*
+> > can use MSI.
+> >
+> > But in this case PCI_MSI_FLAGS_ENABLE seems to have non-architected
+> > behavior of controlling MSI from *other* devices below this host
+> > bridge?  That's a little bit weird too because MSI looks like DMA to
+> > any bridges upstream from the device that is using MSI, and the Bus
+> > Master Enable bit in those bridges controls whether they forward those
+> > MSI DMA accesses upstream.  And of course the PCI core should already
+> > make sure those bridges have Bus Master Enable set when downstream
+> > devices use MSI.
+>
+> In my opinion this is a hardware bug, when DEV_LS7A_PCIE_PORT5 works
+> as a host bridge, it should enable MSI automatically. But
+> unfortunately hardware doesn't behave like this, so we need a quirk
+> here.
+
+I'm fine with the quirk to work around this issue.  But the commit log
+is confusing.
+
+> > > Cc: <stable@vger.kernel.org>
+> > > Signed-off-by: Sheng Wu <wusheng@loongson.cn>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > >  drivers/pci/controller/pci-loongson.c | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> > > index 8b34ccff073a..ffc581605834 100644
+> > > --- a/drivers/pci/controller/pci-loongson.c
+> > > +++ b/drivers/pci/controller/pci-loongson.c
+> > > @@ -163,6 +163,18 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON,
+> > >                       DEV_LS7A_HDMI, loongson_pci_pin_quirk);
+> > >
+> > > +static void loongson_pci_msi_quirk(struct pci_dev *dev)
+> > > +{
+> > > +     u16 val, class = dev->class >> 8;
+> > > +
+> > > +     if (class == PCI_CLASS_BRIDGE_HOST) {
+> > > +             pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &val);
+> > > +             val |= PCI_MSI_FLAGS_ENABLE;
+> > > +             pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, val);
+> > > +     }
+> > > +}
+> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
+> > > +
+> > >  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+> > >  {
+> > >       struct pci_config_window *cfg;
+> > > --
+> > > 2.43.0
+> > >
 
