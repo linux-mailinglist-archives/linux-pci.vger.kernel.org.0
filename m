@@ -1,460 +1,325 @@
-Return-Path: <linux-pci+bounces-10075-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F06D92D2B9
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 15:29:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 722B792D2DB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 15:32:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B04EA1F23710
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:29:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F1941C20B18
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 13:32:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC60F190670;
-	Wed, 10 Jul 2024 13:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDA72190076;
+	Wed, 10 Jul 2024 13:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SDAMP48G"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780281DDC5;
-	Wed, 10 Jul 2024 13:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288FE1CA9C;
+	Wed, 10 Jul 2024 13:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720618148; cv=none; b=n69A/zIrL2kSl2ZWfCiOpnd5G+ryGKyTJaOdCOO521MeH0ur7iAxa6gCABsqNqlv/Oilp0JD3kq+20oWe6x2IbmaebAsPfjBOWBYv6V6X1I4zRaYfomtVAlhxgJTo7IwVuJgVASMzVyz4XFYLzbk+q3PvDyiWvAoyU3QTnpO3rE=
+	t=1720618350; cv=none; b=WulDiyPPoYdJ73hQG/GiziKM4cyutH8uiWPEwqgeFu/LuhnDLVGxOBT1lc6fsIOdgBQ9IyYqOTnUKu9KIxD27Mxkcu+JvSwgOGDEvpPwnRCaBu0zNJ1oqAiFByP3cxXTNmZRkc429he9jns5t9qhCAYIL93NBSz9EUsAo5H8oEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720618148; c=relaxed/simple;
-	bh=kkkadeWsONCZ1GBao8ohHpL1p+uHMOC6ZOIwKVbElr8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qu9zJ4RLlSYkxD6M5p5saaeUuY8t1dMbBl9L8w+4+uQ8MOM8kg80LS/nSlKQz+s4oLG6N3n3kZ8uF1uhzrpfP96SbNh69tvBwj5ozLpRY6S6lCE4KN95UInpfmXFAE53l9Rx/O6x435+ZaBVIFGXH9xtWgeKB+t/myI1lVCFcnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WJzD35Ympz6K9J1;
-	Wed, 10 Jul 2024 21:26:59 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A43901404F5;
-	Wed, 10 Jul 2024 21:29:03 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 10 Jul
- 2024 14:29:03 +0100
-Date: Wed, 10 Jul 2024 14:29:02 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Alistair Francis <alistair23@gmail.com>
-CC: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <lukas@wunner.de>,
-	<alex.williamson@redhat.com>, <christian.koenig@amd.com>, <kch@nvidia.com>,
-	<gregkh@linuxfoundation.org>, <logang@deltatee.com>,
-	<linux-kernel@vger.kernel.org>, <chaitanyak@nvidia.com>,
-	<rdunlap@infradead.org>, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v14 3/4] PCI/DOE: Expose the DOE features via sysfs
-Message-ID: <20240710142902.00002e1f@Huawei.com>
-In-Reply-To: <20240710023310.480713-3-alistair.francis@wdc.com>
-References: <20240710023310.480713-1-alistair.francis@wdc.com>
-	<20240710023310.480713-3-alistair.francis@wdc.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1720618350; c=relaxed/simple;
+	bh=1sQbIrS1JVYEEZ8wsStgULcn7YAsrepfKI36ed3D5FI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AQup+a2bvTWsNRVU08PADFGjb03ist3utE1tuwdwiBhJG5CKZRcn+RWo1KPdaTgafhhxoloT+Ofy2QmR1w3Rb4sEwrkiM90WnG+vV1BZKOBI8FxplnZtaFHbrOXHdwcI+8zung+nswS+ItEJ0z4iLeWfDpJLAEAYArfNLRp4o/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SDAMP48G; arc=none smtp.client-ip=45.254.50.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=hcluSJjCmhnWXX8YTDLv8feP55y3/EV9PtZgqhLBZl8=;
+	b=SDAMP48GpwvMjb58QXp8GEGj44RTz7mlOO8xCFH7BY2iqW9p9OK/lcQMmDZyYE
+	V428UhzNIKOqn7e0q+nDWYXml9IweBrAB9MZUIgXES5dOjYkutIE55zQc/jpU+Sx
+	ZJqQl/8Bwq9b60PPfy5+2gMqb+zMuqJoXWAAtEXqtuUgM=
+Received: from [10.0.2.15] (unknown [111.205.43.230])
+	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wD3X5a2jI5mqCcSCg--.45966S2;
+	Wed, 10 Jul 2024 21:29:27 +0800 (CST)
+Message-ID: <b5d99ec8-9e4d-494a-bf62-02b992a042e8@163.com>
+Date: Wed, 10 Jul 2024 21:29:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI: vmd: Create domain symlink before
+ pci_bus_add_devices()
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+ paul.m.stillwell.jr@intel.com, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, sunjw10@lenovo.com, ahuang12@lenovo.com,
+ Pawel Baldysiak <pawel.baldysiak@intel.com>,
+ Alexey Obitotskiy <aleksey.obitotskiy@intel.com>,
+ Tomasz Majchrzak <tomasz.majchrzak@intel.com>
+References: <20240709205938.GA194355@bhelgaas>
+Content-Language: en-US
+From: Jiwei Sun <sjiwei@163.com>
+In-Reply-To: <20240709205938.GA194355@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3X5a2jI5mqCcSCg--.45966S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3XryfurWrAr4UKF17Aw48Crg_yoWftF48pF
+	ZxW3W5tFs7Gr43XayUu3y8WFyayw4vvry5try5Kw1jv3yDAFy09FW0kF45Cr42vF1DKasF
+	vw4qgrn09Fn0kaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UnmRUUUUUU=
+X-CM-SenderInfo: 5vml4vrl6rljoofrz/1tbiDxoYmWVOFIrZegAAsC
 
-On Wed, 10 Jul 2024 12:33:09 +1000
-Alistair Francis <alistair23@gmail.com> wrote:
 
-> The PCIe 6 specification added support for the Data Object
-> Exchange (DOE).
-> When DOE is supported the DOE Discovery Feature must be implemented per
-> PCIe r6.1 sec 6.30.1.1. The protocol allows a requester to obtain
-> information about the other DOE features supported by the device.
+On 7/10/24 04:59, Bjorn Helgaas wrote:
+> [+cc Pawel, Alexey, Tomasz for mdadm history]
 > 
-> The kernel is already querying the DOE features supported and cacheing
-> the values. Expose the values in sysfs to allow user space to
-> determine which DOE features are supported by the PCIe device.
+> On Wed, Jun 05, 2024 at 08:48:44PM +0800, Jiwei Sun wrote:
+>> From: Jiwei Sun <sunjw10@lenovo.com>
+>>
+>> During booting into the kernel, the following error message appears:
+>>
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+>>   (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+>>
+>> This symptom prevents the OS from booting successfully.
 > 
-> By exposing the information to userspace tools like lspci can relay the
-> information to users. By listing all of the supported features we can
-> allow userspace to parse the list, which might include
-> vendor specific features as well as yet to be supported features.
-> 
-> As the DOE Discovery feature must always be supported we treat it as a
-> special named attribute case. This allows the usual PCI attribute_group
-> handling to correctly create the doe_features directory when registering
-> pci_doe_sysfs_group (otherwise it doesn't and sysfs_add_file_to_group()
-> will seg fault).
-> 
-> After this patch is supported you can see something like this when
-> attaching a DOE device
-> 
-> $ ls /sys/devices/pci0000:00/0000:00:02.0//doe*
-> 0001:01        0001:02        doe_discovery
-> 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> v14:
->  - Revert back to v12 with extra pci_remove_resource_files() call
-You should probably document why here given there isn't a cover letter
-to do so in.
+> I guess the root filesystem must be on a RAID device, and it's the
+> failure to assemble that RAID device that prevents OS boot?  The
+> messages are just details about why the assembly failed?
 
-J
+Yes, you are right, in our test environment, we installed the SLES15SP6
+on a VROC RAID 1 device which is set up by two NVME hard drivers. And
+there is also a hardware RAID kit on the motherboard with other two NVME 
+hard drivers.
 
-> v13:
->  - Drop pci_doe_sysfs_init() and use pci_doe_sysfs_group
->      - As discussed in https://lore.kernel.org/all/20231019165829.GA1381099@bhelgaas/
->        we can just modify pci_doe_sysfs_group at the DOE init and let
->        device_add() handle the sysfs attributes.
-> v12:
->  - Drop pci_doe_features_sysfs_attr_visible()
-> v11:
->  - Gracefully handle multiple entried of same feature
->  - Minor fixes and code cleanups
-> v10:
->  - Rebase to use DEFINE_SYSFS_GROUP_VISIBLE and remove
->    special setup function
-> v9:
->  - Add a teardown function
->  - Rename functions to be clearer
->  - Tidy up the commit message
->  - Remove #ifdef from header
-> v8:
->  - Inlucde an example in the docs
->  - Fixup removing a file that wasn't added
->  - Remove a blank line
-> v7:
->  - Fixup the #ifdefs to keep the test robot happy
-> v6:
->  - Use "feature" instead of protocol
->  - Don't use any devm_* functions
->  - Add two more patches to the series
-> v5:
->  - Return the file name as the file contents
->  - Code cleanups and simplifications
-> v4:
->  - Fixup typos in the documentation
->  - Make it clear that the file names contain the information
->  - Small code cleanups
->  - Remove most #ifdefs
->  - Remove extra NULL assignment
-> v3:
->  - Expose each DOE feature as a separate file
-> v2:
->  - Add documentation
->  - Code cleanups
+# lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+nvme0n1     259:1    0     7T  0 disk
+├─nvme0n1p1 259:2    0   512M  0 part
+├─nvme0n1p2 259:3    0    40G  0 part
+└─nvme0n1p3 259:4    0   6.9T  0 part
+nvme1n1     259:6    0   1.7T  0 disk
+├─md126       9:126  0   1.7T  0 raid1
+│ ├─md126p1 259:9    0   600M  0 part  /boot/efi
+│ ├─md126p2 259:10   0     1G  0 part
+│ ├─md126p3 259:11   0    40G  0 part  /usr/local
+│ │                                    /var
+│ │                                    /tmp
+│ │                                    /srv
+│ │                                    /root
+│ │                                    /opt
+│ │                                    /boot/grub2/x86_64-efi
+│ │                                    /boot/grub2/i386-pc
+│ │                                    /.snapshots
+│ │                                    /
+│ ├─md126p4 259:12   0   1.5T  0 part  /home
+│ └─md126p5 259:13   0 125.5G  0 part  [SWAP]
+└─md127       9:127  0     0B  0 md
+nvme2n1     259:8    0   1.7T  0 disk
+├─md126       9:126  0   1.7T  0 raid1
+│ ├─md126p1 259:9    0   600M  0 part  /boot/efi
+│ ├─md126p2 259:10   0     1G  0 part
+│ ├─md126p3 259:11   0    40G  0 part  /usr/local
+│ │                                    /var
+│ │                                    /tmp
+│ │                                    /srv
+│ │                                    /root
+│ │                                    /opt
+│ │                                    /boot/grub2/x86_64-efi
+│ │                                    /boot/grub2/i386-pc
+│ │                                    /.snapshots
+│ │                                    /
+│ ├─md126p4 259:12   0   1.5T  0 part  /home
+│ └─md126p5 259:13   0 125.5G  0 part  [SWAP]
+└─md127       9:127  0     0B  0 md
+
+And the nvme0n1 is hardware RAID kit,
+the nvme1n1 and nvme2n1 is VROC.
+
+The OS entered emergency mode after installation and restart. And we
+found that no RAID was detected on the first NVME hard driver according
+to the emergency mode log, but when we try to detect it manually by 
+using the following command
+
+#/sbin/mdadm -I /dev/nvme1n1
+
+It works, the RAID device was found, it tells us that the RAID is just
+not detected in the booting process. We added the "rd.udev.debug" to 
+kernel's cmdline, the error logs appears.
+
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+  (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+  (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+
 > 
+>> After a NVMe disk is probed/added by the nvme driver, the udevd executes
+>> some rule scripts by invoking mdadm command to detect if there is a
+>> mdraid associated with this NVMe disk. The mdadm determines if one
+>> NVMe devce is connected to a particular VMD domain by checking the
+>> domain symlink. Here is the root cause:
 > 
->  Documentation/ABI/testing/sysfs-bus-pci |  28 +++++
->  drivers/pci/doe.c                       | 151 ++++++++++++++++++++++++
->  drivers/pci/pci-sysfs.c                 |  15 +++
->  drivers/pci/pci.h                       |  10 ++
->  4 files changed, 204 insertions(+)
+> Can you tell us something about what makes this a vmd-specific issue?
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> index ecf47559f495..65a3238ab701 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -500,3 +500,31 @@ Description:
->  		console drivers from the device.  Raw users of pci-sysfs
->  		resourceN attributes must be terminated prior to resizing.
->  		Success of the resizing operation is not guaranteed.
-> +
-> +What:		/sys/bus/pci/devices/.../doe_features
-> +Date:		May 2024
-> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
-> +Description:
-> +		This directory contains a list of the supported
-> +		Data Object Exchange (DOE) features. The features are
-> +		the file name. The contents of each file is the raw vendor id and
-> +		data object feature values.
-> +
-> +		The value comes from the device and specifies the vendor and
-> +		data object type supported. The lower (RHS of the colon) is
-> +		the data object type in hex. The upper (LHS of the colon)
-> +		is the vendor ID.
-> +
-> +		As all DOE devices must support the DOE discovery protocol, if
-> +		DOE is supported you will at least see the doe_discovery file, with
-> +		this contents
-> +
-> +		# cat doe_features/doe_discovery
-> +		0001:00
-> +
-> +		If the device supports other protocols you will see other files
-> +		as well. For example is CMA/SPDM and secure CMA/SPDM are supported
-> +		the doe_features directory will look like this
-> +
-> +		# ls doe_features
-> +		0001:01        0001:02        doe_discovery
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index defc4be81bd4..580370dc71ee 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -14,6 +14,7 @@
->  
->  #include <linux/bitfield.h>
->  #include <linux/delay.h>
-> +#include <linux/device.h>
->  #include <linux/jiffies.h>
->  #include <linux/mutex.h>
->  #include <linux/pci.h>
-> @@ -47,6 +48,7 @@
->   * @wq: Wait queue for work item
->   * @work_queue: Queue of pci_doe_work items
->   * @flags: Bit array of PCI_DOE_FLAG_* flags
-> + * @sysfs_attrs: Array of sysfs device attributes
->   */
->  struct pci_doe_mb {
->  	struct pci_dev *pdev;
-> @@ -56,6 +58,10 @@ struct pci_doe_mb {
->  	wait_queue_head_t wq;
->  	struct workqueue_struct *work_queue;
->  	unsigned long flags;
-> +
-> +#ifdef CONFIG_SYSFS
-> +	struct device_attribute *sysfs_attrs;
-> +#endif
->  };
->  
->  struct pci_doe_feature {
-> @@ -92,6 +98,151 @@ struct pci_doe_task {
->  	struct pci_doe_mb *doe_mb;
->  };
->  
-> +#ifdef CONFIG_SYSFS
-> +static ssize_t doe_discovery_show(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  char *buf)
-> +{
-> +	return sysfs_emit(buf, "0001:00\n");
-> +}
-> +DEVICE_ATTR_RO(doe_discovery);
-> +
-> +static struct attribute *pci_doe_sysfs_feature_attrs[] = {
-> +	&dev_attr_doe_discovery.attr,
-> +	NULL
-> +};
-> +
-> +static bool pci_doe_features_sysfs_group_visible(struct kobject *kobj)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> +		if (!xa_empty(&doe_mb->feats))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
-> +
-> +const struct attribute_group pci_doe_sysfs_group = {
-> +	.name	    = "doe_features",
-> +	.attrs	    = pci_doe_sysfs_feature_attrs,
-> +	.is_visible = SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs),
-> +};
-> +
-> +static ssize_t pci_doe_sysfs_feature_show(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  char *buf)
-> +{
-> +	return sysfs_emit(buf, "%s\n", attr->attr.name);
-> +}
-> +
-> +static void pci_doe_sysfs_feature_remove(struct pci_dev *pdev,
-> +					 struct pci_doe_mb *doe_mb)
-> +{
-> +	struct device_attribute *attrs = doe_mb->sysfs_attrs;
-> +	struct device *dev = &pdev->dev;
-> +	unsigned long i;
-> +	void *entry;
-> +
-> +	if (!attrs)
-> +		return;
-> +
-> +	doe_mb->sysfs_attrs = NULL;
-> +	xa_for_each(&doe_mb->feats, i, entry) {
-> +		if (attrs[i].show)
-> +			sysfs_remove_file_from_group(&dev->kobj, &attrs[i].attr,
-> +						     pci_doe_sysfs_group.name);
-> +		kfree(attrs[i].attr.name);
-> +	}
-> +	kfree(attrs);
-> +}
-> +
-> +static int pci_doe_sysfs_feature_populate(struct pci_dev *pdev,
-> +					  struct pci_doe_mb *doe_mb)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_attribute *attrs;
-> +	unsigned long num_features = 0;
-> +	unsigned long vid, type;
-> +	unsigned long i;
-> +	void *entry;
-> +	int ret;
-> +
-> +	xa_for_each(&doe_mb->feats, i, entry)
-> +		num_features++;
-> +
-> +	attrs = kcalloc(num_features, sizeof(*attrs), GFP_KERNEL);
-> +	if (!attrs)
-> +		return -ENOMEM;
-> +
-> +	doe_mb->sysfs_attrs = attrs;
-> +	xa_for_each(&doe_mb->feats, i, entry) {
-> +		sysfs_attr_init(&attrs[i].attr);
-> +		vid = xa_to_value(entry) >> 8;
-> +		type = xa_to_value(entry) & 0xFF;
-> +
-> +		if (vid == 0x01 && type == 0x00) {
-> +			/* DOE Discovery, manually displayed by `dev_attr_doe_discovery` */
-> +			continue;
-> +		}
-> +
-> +		attrs[i].attr.name = kasprintf(GFP_KERNEL,
-> +					       "%04lx:%02lx", vid, type);
-> +		if (!attrs[i].attr.name) {
-> +			ret = -ENOMEM;
-> +			goto fail;
-> +		}
-> +
-> +		attrs[i].attr.mode = 0444;
-> +		attrs[i].show = pci_doe_sysfs_feature_show;
-> +
-> +		ret = sysfs_add_file_to_group(&dev->kobj, &attrs[i].attr,
-> +					      pci_doe_sysfs_group.name);
-> +		if (ret) {
-> +			attrs[i].show = NULL;
-> +			if (ret != -EEXIST)
-> +				goto fail;
-> +			else
-> +				kfree(attrs[i].attr.name);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +fail:
-> +	pci_doe_sysfs_feature_remove(pdev, doe_mb);
-> +	return ret;
-> +}
-> +
-> +void pci_doe_sysfs_teardown(struct pci_dev *pdev)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-> +		pci_doe_sysfs_feature_remove(pdev, doe_mb);
-> +}
-> +
-> +int pci_doe_sysfs_init(struct pci_dev *pdev)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +	int ret;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb) {
-> +		ret = pci_doe_sysfs_feature_populate(pdev, doe_mb);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
->  {
->  	if (wait_event_timeout(doe_mb->wq,
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 40cfa716392f..db795bfe3c56 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-doe.h>
->  #include <linux/stat.h>
->  #include <linux/export.h>
->  #include <linux/topology.h>
-> @@ -1143,6 +1144,9 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
->  {
->  	int i;
->  
-> +	if (IS_ENABLED(CONFIG_PCI_DOE))
-> +		pci_doe_sysfs_teardown(pdev);
-> +
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->  		struct bin_attribute *res_attr;
->  
-> @@ -1227,6 +1231,14 @@ static int pci_create_resource_files(struct pci_dev *pdev)
->  	int i;
->  	int retval;
->  
-> +	if (IS_ENABLED(CONFIG_PCI_DOE)) {
-> +		retval = pci_doe_sysfs_init(pdev);
-> +		if (retval) {
-> +			pci_remove_resource_files(pdev);
-> +			return retval;
-> +		}
-> +	}
-> +
->  	/* Expose the PCI resources from this device as files */
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->  
-> @@ -1661,6 +1673,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
->  #endif
->  #ifdef CONFIG_PCIEASPM
->  	&aspm_ctrl_attr_group,
-> +#endif
-> +#ifdef CONFIG_PCI_DOE
-> +	&pci_doe_sysfs_group,
->  #endif
->  	NULL,
->  };
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index fd44565c4756..3aee231dcb0c 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -189,6 +189,7 @@ extern const struct attribute_group *pci_dev_groups[];
->  extern const struct attribute_group *pci_dev_attr_groups[];
->  extern const struct attribute_group *pcibus_groups[];
->  extern const struct attribute_group *pci_bus_groups[];
-> +extern const struct attribute_group pci_doe_sysfs_group;
->  #else
->  static inline int pci_create_sysfs_dev_files(struct pci_dev *pdev) { return 0; }
->  static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
-> @@ -196,6 +197,7 @@ static inline void pci_remove_sysfs_dev_files(struct pci_dev *pdev) { }
->  #define pci_dev_attr_groups NULL
->  #define pcibus_groups NULL
->  #define pci_bus_groups NULL
-> +#define pci_doe_sysfs_group NULL
->  #endif
->  
->  extern unsigned long pci_hotplug_io_size;
-> @@ -333,6 +335,14 @@ static inline void pci_doe_destroy(struct pci_dev *pdev) { }
->  static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
->  #endif
->  
-> +#if defined(CONFIG_PCI_DOE) && defined(CONFIG_SYSFS)
-> +int pci_doe_sysfs_init(struct pci_dev *pci_dev);
-> +void pci_doe_sysfs_teardown(struct pci_dev *pdev);
-> +#else
-> +static inline int pci_doe_sysfs_init(struct pci_dev *pdev) { return 0; }
-> +static inline void pci_doe_sysfs_teardown(struct pci_dev *pdev) { }
-> +#endif
-> +
->  /**
->   * pci_dev_set_io_state - Set the new error state if possible.
->   *
+> I guess vmd is the only driver that creates a "domain" symlink, so
+> *that* part is vmd-specific.  But I guess there's something in mdadm
+> or its configuration that looks for that symlink?
+
+According to the following error log,
+
+  mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device
+
+We enable the dyndbg log of the drivers/base/*(add dyndbg="file drivers/base/* +p" to cmdline),
+and add some debug logs in the find_driver_devices() of the madam source code [1],
+We found that the "domain" has not been created when the error log appears.
+And as you stated, the "domain" symlink is created by vmd driver.
+
+> 
+> I suppose it has to do with the mdadm code at [1] and the commit at
+> [2]?
+
+Yes, you are right, mdadm determine which NVMe dev is connected to the VMD
+domain by checking "/sys/bus/%s/drivers/%s/%s/domain/device", according to the following mdadm code[1],
+              /*
+              * Each VMD device (domain) adds separate PCI bus, it is better
+              * to store path as a path to that bus (easier further
+              * determination which NVMe dev is connected to this particular
+              * VMD domain).
+              */
+              if (type == SYS_DEV_VMD) {
+                     sprintf(path, "/sys/bus/%s/drivers/%s/%s/domain/device",
+                            bus, driver, de->d_name);
+              }
+              p = realpath(path, NULL);
+              if (p == NULL) {
+                     pr_err("Unable to get real path for '%s'\n", path);
+                     continue;
+              }
+
+[1] https://github.com/md-raid-utilities/mdadm/blob/main/platform-intel.c#L208
+
+> 
+> [1] https://github.com/md-raid-utilities/mdadm/blob/96b8035a09b6449ea99f2eb91f9ba4f6912e5bd6/platform-intel.c#L199
+> [2] https://github.com/md-raid-utilities/mdadm/commit/60f0f54d6f5227f229e7131d34f93f76688b085f
+> 
+> I assume this is a race between vmd_enable_domain() and mdadm?  And
+> vmd_enable_domain() only loses the race sometimes?  Trying to figure
+
+Yes, you are right, what you said is the conclusion of our investigation.
+
+> out why this hasn't been reported before or on non-VMD configurations.
+> Now that I found [2], the non-VMD part is obvious, but I'm still
+> curious about why we haven't seen it before.
+
+According to our test, if we remove that hardware RAID kit, the issue
+can't be reproduced, the driver name on the hardware RAID kit is nvme0, 
+and the driver name on VROC is nvme1 and nvme2. It seems the special 
+configuration makes the problem more apparent.
+
+> 
+> The VMD device is sort of like another host bridge, and I wouldn't
+> think mdadm would normally care about a host bridge, but it looks like
+> mdadm does need to know about VMD for some reason.
+
+I think so, it is better if the application doesn't have to pay too 
+much attention to hardware details. Just we can see, the mdadm uses 
+the "domain" symlink.
+
+Thanks,
+Regards,
+Jiwei
+
+> 
+>> Thread A                   Thread B             Thread mdadm
+>> vmd_enable_domain
+>>   pci_bus_add_devices
+>>     __driver_probe_device
+>>      ...
+>>      work_on_cpu
+>>        schedule_work_on
+>>        : wakeup Thread B
+>>                            nvme_probe
+>>                            : wakeup scan_work
+>>                              to scan nvme disk
+>>                              and add nvme disk
+>>                              then wakeup udevd
+>>                                                 : udevd executes
+>>                                                   mdadm command
+>>        flush_work                               main
+>>        : wait for nvme_probe done                ...
+>>     __driver_probe_device                        find_driver_devices
+>>     : probe next nvme device                     : 1) Detect the domain
+>>     ...                                            symlink; 2) Find the
+>>     ...                                            domain symlink from
+>>     ...                                            vmd sysfs; 3) The
+>>     ...                                            domain symlink is not
+>>     ...                                            created yet, failed
+>>   sysfs_create_link
+>>   : create domain symlink
+>>
+>> sysfs_create_link() is invoked at the end of vmd_enable_domain().
+>> However, this implementation introduces a timing issue, where mdadm
+>> might fail to retrieve the vmd symlink path because the symlink has not
+>> been created yet.
+>>
+>> Fix the issue by creating VMD domain symlinks before invoking
+>> pci_bus_add_devices().
+>>
+>> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
+>> Suggested-by: Adrian Huang <ahuang12@lenovo.com>
+>> ---
+>> v3 changes:
+>>  - Per Paul's comment, move sysfs_remove_link() after
+>>    pci_stop_root_bus()
+>>
+>> v2 changes:
+>>  - Add "()" after function names in subject and commit log
+>>  - Move sysfs_create_link() after vmd_attach_resources()
+>>
+>>  drivers/pci/controller/vmd.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+>> index 87b7856f375a..4e7fe2e13cac 100644
+>> --- a/drivers/pci/controller/vmd.c
+>> +++ b/drivers/pci/controller/vmd.c
+>> @@ -925,6 +925,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>>  		dev_set_msi_domain(&vmd->bus->dev,
+>>  				   dev_get_msi_domain(&vmd->dev->dev));
+>>  
+>> +	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+>> +			       "domain"), "Can't create symlink to domain\n");
+>> +
+>>  	vmd_acpi_begin();
+>>  
+>>  	pci_scan_child_bus(vmd->bus);
+>> @@ -964,9 +967,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>>  	pci_bus_add_devices(vmd->bus);
+>>  
+>>  	vmd_acpi_end();
+>> -
+>> -	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+>> -			       "domain"), "Can't create symlink to domain\n");
+>>  	return 0;
+>>  }
+>>  
+>> @@ -1042,8 +1042,8 @@ static void vmd_remove(struct pci_dev *dev)
+>>  {
+>>  	struct vmd_dev *vmd = pci_get_drvdata(dev);
+>>  
+>> -	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>>  	pci_stop_root_bus(vmd->bus);
+>> +	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
+>>  	pci_remove_root_bus(vmd->bus);
+>>  	vmd_cleanup_srcu(vmd);
+>>  	vmd_detach_resources(vmd);
+>> -- 
+>> 2.27.0
+>>
 
 
