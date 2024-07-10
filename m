@@ -1,127 +1,264 @@
-Return-Path: <linux-pci+bounces-10081-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B5D992D3C6
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 16:05:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3840E92D3E5
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 16:11:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C2821C21479
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 14:05:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE5F128678D
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 14:11:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 779B919344F;
-	Wed, 10 Jul 2024 14:05:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F0D41940B0;
+	Wed, 10 Jul 2024 14:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ahhp7u+V"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JAxcEy7C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DE7193096;
-	Wed, 10 Jul 2024 14:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4123419346A;
+	Wed, 10 Jul 2024 14:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720620352; cv=none; b=X+O2GzvO1Src8mfut7Tg7O+78ipSFJpiI2xVWWDCfGCqMkei8ulemf1MFvQTWkEB1IoMIzJf0zb3APdpnBIO33Y2vl39bRF/wNaliVP//QHAWhVzx1EoSfomfr6h47LQ2Bz08NN9LMkn3qA1D5gwplnfV/I6ktwi/Mks8dARuIk=
+	t=1720620643; cv=none; b=eB26ueZXhR1YgwwSYu3DIO6q6AhZPiCbN+JVjk0pxC4GPcKWhxjnStqviyiHj3JDYK//Vg8x8dESNREkxBFs7U/auHVQZUZLKpjtbTXs6L+VUUd2Lpr6G8UzvNXwfx5ajdFfXViDEtFlMT8fNXdlVYZwRi2LZ565JvT/N4UVBu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720620352; c=relaxed/simple;
-	bh=Xt4bkgZHwxsHrvxmJbV75SNzVSxCstIYh/IHaJrCNPo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RmkXWKnQSElcJxPAbjd9vNBO9msq2il+pCNr8c5+vDpBSUQlQk94TW2LVUnWryTRNUW1tbPNORvVDpwzfmK+doa3XSeq8z0oVedUqKe29J+V+lYkP49VMYPCljcYe0xki7G3ZCBsebe2yGEpswlXlkezqGAXAN0CIRDOS3VCW8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ahhp7u+V; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720620350; x=1752156350;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Xt4bkgZHwxsHrvxmJbV75SNzVSxCstIYh/IHaJrCNPo=;
-  b=ahhp7u+VDABtZkip837hIuVws9pmBVreuFsh/4EShi/IdgsSZ7nMsb3s
-   OOzFNW2AkW57J4t0N9cZHevgGb8xbjD2WDUUtZ+gKamcWccoqFTnYe/+E
-   11K6ZA+v0B5hNzzWZsAlGFk7G7hyytyt1sWpyrtViadEGqF8XIdqzr+FF
-   tRv6lx284cLjkhSCm1wpkhtHRkCP75Cekj2CV6LwCrNf5Ub0349j7/FUV
-   IFzA10QMN46RcvIs8mWVAj3UPgvJ4PL/XhCTDq4SleyShgUq5xcNv5Gh+
-   nYF/0FaM/Lwgz6tvfCrnJrBP/nSPOswdb9PC3yh5E/4bz3S9eJL+3DkMb
-   A==;
-X-CSE-ConnectionGUID: NgyQEVIhRKGSWjlwQm1+dA==
-X-CSE-MsgGUID: 7v1GY/RBQa2RzBKCqvMERA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="43363387"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="43363387"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 07:05:49 -0700
-X-CSE-ConnectionGUID: z25MDvvgR6eofElbSbzQEQ==
-X-CSE-MsgGUID: OhmxU+l5SIqlGQ7BwjhNIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="79382288"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.125])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 07:05:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 10 Jul 2024 17:05:43 +0300 (EEST)
-To: Stewart Hildebrand <stewart.hildebrand@amd.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 4/6] x86: PCI: preserve IORESOURCE_STARTALIGN
- alignment
-In-Reply-To: <20240709133610.1089420-5-stewart.hildebrand@amd.com>
-Message-ID: <22e339c1-0ada-0824-cd34-d5779328b522@linux.intel.com>
-References: <20240709133610.1089420-1-stewart.hildebrand@amd.com> <20240709133610.1089420-5-stewart.hildebrand@amd.com>
+	s=arc-20240116; t=1720620643; c=relaxed/simple;
+	bh=nDTy8rPWM2cyZ0nmnNV1tC8bbKmApbzgWSzmCTAq4gw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gw+6SNtoMBkQRUv7FqEnX3i3YMY1Gj6LVkX22AXC6FjN5LXtJHgfL1GhusLIps/2355s0v8VgJ+vnQ3KsH/IwdIpxgs9bHMR07k+YDLk94hEiQPm7DRxal+vjsSQbjpYibkMrj0FcQJxML8IjXc2Sq9iHk+66jjRIZL7kxrMlLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JAxcEy7C; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31FAFC32781;
+	Wed, 10 Jul 2024 14:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1720620642;
+	bh=nDTy8rPWM2cyZ0nmnNV1tC8bbKmApbzgWSzmCTAq4gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JAxcEy7CxmTqyvvy3ArzfYyP8035acIouQ67LSfrd3qEoUlreswixmuhOBvq9egi0
+	 OW40zZOrUQ+9rC51WW87KPZ188bp1YBpqP5I4HX0JPYn0f/flG9LblKRtlR6Rb7j+K
+	 fbt2+J1pECTgx9Ic0OvGqstXS4yDxgn0CSRu65fc=
+Date: Wed, 10 Jul 2024 16:10:40 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org,
+	daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 02/10] rust: implement generic driver registration
+Message-ID: <2024071052-bunion-kinswoman-6577@gregkh>
+References: <20240618234025.15036-1-dakr@redhat.com>
+ <20240618234025.15036-3-dakr@redhat.com>
+ <2024062025-wrecking-utilize-30cf@gregkh>
+ <ZnRjCnvtPBhEatt_@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZnRjCnvtPBhEatt_@cassiopeiae>
 
-On Tue, 9 Jul 2024, Stewart Hildebrand wrote:
-
-> Currently, it's not possible to use the IORESOURCE_STARTALIGN flag on
-> x86 due to the alignment being overwritten in
-> pcibios_allocate_dev_resources(). Make one small change in arch/x86 to
-> make it work on x86.
+On Thu, Jun 20, 2024 at 07:12:42PM +0200, Danilo Krummrich wrote:
+> On Thu, Jun 20, 2024 at 04:28:23PM +0200, Greg KH wrote:
+> > On Wed, Jun 19, 2024 at 01:39:48AM +0200, Danilo Krummrich wrote:
+> > > Implement the generic `Registration` type and the `DriverOps` trait.
+> > 
+> > I don't think this is needed, more below...
+> > 
+> > > The `Registration` structure is the common type that represents a driver
+> > > registration and is typically bound to the lifetime of a module. However,
+> > > it doesn't implement actual calls to the kernel's driver core to register
+> > > drivers itself.
+> > 
+> > But that's not what normally happens, more below...
 > 
-> Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
-> ---
-> RFC: We don't have enough info in this function to re-calculate the
->      alignment value in case of IORESOURCE_STARTALIGN. Luckily our
->      alignment value seems to be intact, so just don't touch it...
->      Alternatively, we could call pci_reassigndev_resource_alignment()
->      after the loop. Would that be preferable?
-> ---
->  arch/x86/pci/i386.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> I can't find below a paragraph that seems related to this, hence I reply here.
 > 
-> diff --git a/arch/x86/pci/i386.c b/arch/x86/pci/i386.c
-> index f2f4a5d50b27..ff6e61389ec7 100644
-> --- a/arch/x86/pci/i386.c
-> +++ b/arch/x86/pci/i386.c
-> @@ -283,8 +283,11 @@ static void pcibios_allocate_dev_resources(struct pci_dev *dev, int pass)
->  						/* We'll assign a new address later */
->  						pcibios_save_fw_addr(dev,
->  								idx, r->start);
-> -						r->end -= r->start;
-> -						r->start = 0;
-> +						if (!(r->flags &
-> +						      IORESOURCE_STARTALIGN)) {
-> +							r->end -= r->start;
-> +							r->start = 0;
-> +						}
->  					}
->  				}
->  			}
+> The above is just different wording for: A driver is typically registered in
+> module_init() and unregistered in module_exit().
 > 
+> Isn't that what happens normally?
 
-As a general comment to that loop in pcibios_allocate_dev_resources() 
-function, it would be nice to reverse some of the logic in the if 
-conditions and use continue to limit the runaway indentation level.
+Yes, but it's nothing we have ever used in the kernel before.  You are
+defining new terms in some places, and renaming existing ones in others,
+which is going to do nothing but confuse us all.
 
--- 
- i.
+I don't see why you need a "registration" structure here when no .c
+driver ever does.  You just have a module init/exit call and go from
+there.  Why not stick with that?
 
+> > > Instead the `DriverOps` trait is provided to subsystems, which have to
+> > > implement `DriverOps::register` and `DrvierOps::unregister`. Subsystems
+> > > have to provide an implementation for both of those methods where the
+> > > subsystem specific variants to register / unregister a driver have to
+> > > implemented.
+> > 
+> > So you are saying this should be something that a "bus" would do?
+> > Please be explicit as to what you mean by "subsystem" here.
+> 
+> Yes, I agree it's more precise to say that this should be implemented by a bus
+> (e.g. PCI). I can reword this one.
+
+Wording matters.
+
+> > > For instance, the PCI subsystem would call __pci_register_driver() from
+> > > `DriverOps::register` and pci_unregister_driver() from
+> > > `DrvierOps::unregister`.
+> > 
+> > So this is a BusOps, or more in general, a "subsystem" if it's not a
+> > bus (i.e. it's a class).  Note, we used to use the term "subsystem" a
+> > very long time ago but got rid of them in the driver core, let's not
+> > bring it back unless we REALLY know we want it this time.
+> > 
+> > So why isn't this just a BusOps?
+> 
+> I think it's really about perspective. Generally speaking, when a driver is
+> registered it gets added to a bus through bus_add_driver(). Now, one could argue
+> that the "register" operation is a bus operation, since something gets
+> registered on the bus, but one could also argue that it's a driver operation,
+> since a driver is registered on something.
+> 
+> Consequently, I think it's neither wrong to call this one `BusOps` nor is it
+> wrong to call it `DriverOps`.
+> 
+> I still think `DriverOps` is more appropriate, since here we're looking at it
+> from the perspective of the driver.
+
+Stick with the same terms we have today please.  These are specific bus
+operations.  Some drivers implement multiple bus operations within them
+as they can handle multiple bus types.  Keep the same names we have
+today, it will save maintaining this for the next 40+ years easier.
+
+> In the end we call it as `driver.register()` instead of `bus.register()`. For
+> instance, in the PCI implementation of it, we call __pci_register_driver() from
+> `DriverOps::register`.
+
+You are registering with a bus, stick with that term please.
+
+> > > +/// The [`DriverOps`] trait serves as generic interface for subsystems (e.g., PCI, Platform, Amba,
+> > > +/// etc.) to privide the corresponding subsystem specific implementation to register / unregister a
+> > > +/// driver of the particular type (`RegType`).
+> > > +///
+> > > +/// For instance, the PCI subsystem would set `RegType` to `bindings::pci_driver` and call
+> > > +/// `bindings::__pci_register_driver` from `DriverOps::register` and
+> > > +/// `bindings::pci_unregister_driver` from `DriverOps::unregister`.
+> > > +pub trait DriverOps {
+> > > +    /// The type that holds information about the registration. This is typically a struct defined
+> > > +    /// by the C portion of the kernel.
+> > > +    type RegType: Default;
+> > > +
+> > > +    /// Registers a driver.
+> > > +    ///
+> > > +    /// # Safety
+> > > +    ///
+> > > +    /// `reg` must point to valid, initialised, and writable memory. It may be modified by this
+> > > +    /// function to hold registration state.
+> > > +    ///
+> > > +    /// On success, `reg` must remain pinned and valid until the matching call to
+> > > +    /// [`DriverOps::unregister`].
+> > > +    fn register(
+> > > +        reg: &mut Self::RegType,
+> > > +        name: &'static CStr,
+> > > +        module: &'static ThisModule,
+> > > +    ) -> Result;
+> > > +
+> > > +    /// Unregisters a driver previously registered with [`DriverOps::register`].
+> > > +    ///
+> > > +    /// # Safety
+> > > +    ///
+> > > +    /// `reg` must point to valid writable memory, initialised by a previous successful call to
+> > > +    /// [`DriverOps::register`].
+> > > +    fn unregister(reg: &mut Self::RegType);
+> > > +}
+> > 
+> > So you are getting into what a bus wants/needs to support here, why is
+> > register/unregister the "big" things to be implemented first?  Why not
+> > just map the current register/unregister bus functions to a bus-specific
+> > trait for now?  And then, if you think it really should be generic, we
+> 
+> A bus specific trait would not add any value. The whole point if a trait is to
+> represent a generic interface. It basically describes the functionality we
+> expect from a certain category of types.
+> 
+> In this case we know that every driver can be registered and unregistered, hence
+> we can define a generic trait that every bus specific driver structure, e.g. PCI
+> driver, has to implement.
+
+So this is a generic trait that all drivers of all bus types must do?
+Ick, no, don't make this so generic it's impossible to unwind.
+
+Make things specific FIRST.  Then implement a second one.  Then a third
+one.  And THEN see what you can make generic, before then it's going to
+be hard and a mess.
+
+Stick with specifics first, you can always make them more generic later.
+
+> > can make it that way then.  I don't see why this needs to be generic now
+> > as you aren't implementing a bus in rust at this point in time, right?
+> 
+> With the above tait (or interface) we now can have a generic `Registration` that
+> calls `T::register` and `T::unregister` and works for all driver types (PCI,
+> platform, etc.). Otherwise we'd need a `pci::Registration`, a
+> `platform::Registration` etc. and copy-paste the below code for all of them.
+
+Good, copy/paste to start with and then if it gets messy on the third
+implementation, THEN we can think about unifying them.
+
+I'm going to argue that registering with a pci bus is VERY different
+than registering with the platform bus, or a USB bus, which, if you look
+at the kernel today, is why those are different functions!  Only in the
+driver core is the unified portions.  Don't attempt to make the rust
+code generic and then have it split back out, and THEN have it become
+generic afterward.  That's an odd way to do things, please don't.
+
+> > > +
+> > > +/// A [`Registration`] is a generic type that represents the registration of some driver type (e.g.
+> > > +/// `bindings::pci_driver`). Therefore a [`Registration`] is initialized with some type that
+> > > +/// implements the [`DriverOps`] trait, such that the generic `T::register` and `T::unregister`
+> > > +/// calls result in the subsystem specific registration calls.
+> > > +///
+> > > +///Once the `Registration` structure is dropped, the driver is unregistered.
+> > > +#[pin_data(PinnedDrop)]
+> > > +pub struct Registration<T: DriverOps> {
+> > > +    #[pin]
+> > > +    reg: Opaque<T::RegType>,
+> > > +}
+> > > +
+> > > +// SAFETY: `Registration` has no fields or methods accessible via `&Registration`, so it is safe to
+> > > +// share references to it with multiple threads as nothing can be done.
+> > > +unsafe impl<T: DriverOps> Sync for Registration<T> {}
+> > > +
+> > > +// SAFETY: Both registration and unregistration are implemented in C and safe to be performed from
+> > > +// any thread, so `Registration` is `Send`.
+> > > +unsafe impl<T: DriverOps> Send for Registration<T> {}
+> > > +
+> > > +impl<T: DriverOps> Registration<T> {
+> > > +    /// Creates a new instance of the registration object.
+> > > +    pub fn new(name: &'static CStr, module: &'static ThisModule) -> impl PinInit<Self, Error> {
+> > 
+> > Drivers have modules, not busses.  So you are registering a driver with
+> > a bus here, it's not something that a driver itself implements as you
+> > have named here.
+> 
+> We are registering a driver on bus here, see the below `T::register` call, this
+> one ends up in __pci_register_driver() or __platform_driver_register(), etc. Hence
+> we need the module and the module name.
+
+Again, let's be specific first, make things generic later.  Why do you
+need/want a trait at all when you have only 1 bus type in the whole
+kernel?
+
+Keep it simple, make it so obvious that I would be foolish to reject it.
+Right now, it's so complex and generic that I feel foolish accepting it.
+
+thanks,
+
+greg k-h
 
