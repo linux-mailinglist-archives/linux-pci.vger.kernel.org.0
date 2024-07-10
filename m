@@ -1,261 +1,239 @@
-Return-Path: <linux-pci+bounces-10125-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10126-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B9CE92DC16
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 00:50:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1650692DC92
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 01:23:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4ACCB25B69
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 22:49:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 953BF1F271A9
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 23:23:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F63414A605;
-	Wed, 10 Jul 2024 22:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C7B71527A7;
+	Wed, 10 Jul 2024 23:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lSZG81PL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UrEKVL+1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41725143740;
-	Wed, 10 Jul 2024 22:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EA0152798;
+	Wed, 10 Jul 2024 23:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720651796; cv=fail; b=Hsv5CEdK6uuzwMhAbTxxs9wnqjI50a4dxGuM1aCQZ1PeMMQQZHEgmeuOuIPJnBcya50VrAxQtL38oIS0JdgbkFYOAXDpUVDYcCZklPYzHMTubFW2zNb3Lc4I9lb0GQwgyiyYqHxYlLZATqu8o5qVUO9k5mzxqncVRdywtotF5Og=
+	t=1720653798; cv=fail; b=uhjCEc4F8RT557V21Y9bLfe296Vpegd3DJMW7p0L+0UyakHKoV+Tsir+tWcFAyGfHfSnKm3JrCN050hI9ooxvCKglhOlEfeLUG1nkILKwKq6L+eSG6shoJ7UfWaW2QIUVx4uIIJhmMiTB0XJYl4w+wd2qh8aReV33XW9eFZnvc4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720651796; c=relaxed/simple;
-	bh=B++4k6xniOfPpg67/N5GHCNFJODzxWSlvbQVwv+ZwhQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DDTJPh6SRvLTJHIeopkaLKPY98yS8y/UoMUWqe+UfRZ5m2L9aOs2c8m4sfmL4Nbj/eU1QmZBzMRXycw9koUVs42spFgZxUrV+pF680lWBmTiZ7O07q4h4rNwCEcxNfj09f0UU+yB8KykCt1A8QjwP2QzK/wp7cGhvXYUBJbFNz0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lSZG81PL; arc=fail smtp.client-ip=40.107.237.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1720653798; c=relaxed/simple;
+	bh=RoxqLoOez/2RYpm6o+5bBXrZ4jizD7p5IPqWzq8+AzI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gKKzNgOiWNiGZjteTKTQxuINXh75fkaNnowemWNLfCtyOxsci4zaMfO6ISuFLvnWTePTtgxFul/e/FInKlJDOTAa/DAjGPT/mubXLNkrTKiEyKfYVtfw7eEgjra0H1h0fZzOZLx60NUOIBckVlXpCJdH7Hsy3Goko6fdbp4iGXw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UrEKVL+1; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720653797; x=1752189797;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=RoxqLoOez/2RYpm6o+5bBXrZ4jizD7p5IPqWzq8+AzI=;
+  b=UrEKVL+1nJY0rAnT7GfxTQJ3FAwUfg/X3MpVmaRq8GrIBzrr0ETXfJnS
+   RmRp1g1emGfpaHMj5SgiNgByX15rbjMKNkYHY1U0YBmn+7FBYdNjN7t8v
+   M7HPCtfQa+k7JZQi1XXThacyUXZ47ib/e7IScEXHasd7Co/ByxUFA8nBL
+   dt1Nm7jHNmhZdRal/q2J+Mrz2U1XdocWETzeS0Lx/6H7jB8sUFU4Vtfqv
+   P9wUmkMcmxHRSGMMnFJ4mA+40dBblItXnCcjb0okXr7ZQD5rkua1D7uAs
+   xVv4IQ0DtN+BESwkMfExIWkLZ1N7Gkj8RRb/3AS3gRTk40yIZUZGVBbzT
+   g==;
+X-CSE-ConnectionGUID: s0wC+3EwS86Y7xqiNGE0jA==
+X-CSE-MsgGUID: MdWQetTESHalNZ4NGYn7Og==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18142242"
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="18142242"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 16:23:10 -0700
+X-CSE-ConnectionGUID: Kf0RqAYdQzWlIjnJOo9Z+w==
+X-CSE-MsgGUID: A/vZzjnZTdKHdagFChi9ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
+   d="scan'208";a="48256105"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Jul 2024 16:23:09 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 10 Jul 2024 16:23:08 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Wed, 10 Jul 2024 16:23:08 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 10 Jul 2024 16:23:08 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EFjziPCpeIto/IOPakF2mJ3dp7sT2nlb7Ln92rzWaFBasBeW2om7x79orsXBmHR5fshFGHT518Gnj/qF4KGyhTLnkn6if42rBX3whMHFehKY8Yb38HVUAF4ggJ6qtqoAx9xuPJZmCCnpM5MUOdBkUG5kfgzMRmEZQ+CMQi5FCwsn/CyTyX7Bv4n/i4Zbr2B/sh76S1Scv641C3QFne0qTIkL/pz4k1Ieutj+c0AWv99xCP8qhOfShwZXWGVpANtHAKxFCcOysscLJMLBbvl//gBUlgTK4OL8dGSsrv1uAQuBQy5/uIs6ktnxRqnuCeiy5zQwpReXQrvZj2fI2Mel7w==
+ b=bkH6NzilnLaxrT87pDVx/Z/Gc4IPEKtQ9MZGduR6E8UHGUhuyO2Q4sm2UIlr3JAgk/d7dn1xo3Jkk6x/KJkJS92yXlVCMiSIuiXKUBB+SIox4GYqi3dwm8LFr1T7MsutreLACAGio+R7KjF6h41slYTwka5RRviwGVyd8jb1jPJZ73CTyfYBBxBnaVCKHxAkHxb6rTTWEhKVukg6HX8n16aQs8xO8y9uqaMZDxf5HPkNFtNmy6KPOw4tL5C9p6DdWcdqRP+V7i+2UbpHxreyNs2O1h9UjMTu80aXnM5WnJplqITNFYCMSCgtKuZvy4r35La7mz1GQYNn+TxOaty7lw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MsdP2zMDPwbNwHRwQXGfim/gzq/Av4l/UGXnrzhvkAg=;
- b=AhaBE3yAXbRD3gXL8663twwPpU31eQDf7QW7v6rka7BhccS+eqCc8RsscbKlo7HzWTSCiGCCyADxCN4jXMQXwc6znCtxWmSSHyylRzhyWRIoM/cbnCrQYFGbcRZgjh1eVKOI8vCVQIMBe0P6PCETASLj+3T/LRefc4CWz3NN6B4mXwwSaKabDww+jcZm+MywdmDdTcDebJkFoAbwl7rlIpTQ3mwyTC7Cb8h0v2Hwu77bdm44CtmCobkyYJTuzaag0LU9Az2g1QJCxylN5BvMpe5evVy5cLBYQuCp0KeCTY/fa+QLWaYOGbpiqM0s8E9KEOrD54EjX3NiuUufzUnXKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MsdP2zMDPwbNwHRwQXGfim/gzq/Av4l/UGXnrzhvkAg=;
- b=lSZG81PLIQVafVuamAtUVVSIXhe0+zsoP7VgygCnRuVgBi2oaVgU1w0LhfkMNEtQu1vG8eKDKtMmMPw/0A9Y3xAUGo13l5+v1tUPls3Td/D7VfUwEY0m7P4q9U0PBR+e0kY750vZfaLgVbhmui+Fv7yag5D6mjBPxxdqFBQGmSE=
-Received: from SJ0PR13CA0119.namprd13.prod.outlook.com (2603:10b6:a03:2c5::34)
- by DS0PR12MB9423.namprd12.prod.outlook.com (2603:10b6:8:192::11) with
+ bh=p2Aop+tG3S7CJ1rBwmgrugxsNpES0n3WVm+/3QW/Eyc=;
+ b=kCLTYYM0tOwK2+FQmxUKXUnhXslXhu8EguN2fhj7KSe3uO93BxuR1Do87++3yHLEU1l680p2I02j09V4jY+ctvAu1SapZgfmHFMl0it3muPcxisNBb3/cSMQIoI1XcXOfOOVSLQmNxVS6usqo4ltNxcpb1N84DCunx0Ib2JMViBC4wOTXWoYap27iFero33l75y+KXcg5toZwTINB2mfghWa1us0DJ0sqwITtb84f68C7N10MS2OulV42fyFRAfXwqn7t05J4MhN2FG7ZM5taRjT316HqDL3wzNAWjl64I5xmEPROqDuP8B/iOQi021i8CnMVV5JmufkgLXrCKUsGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH7PR11MB7594.namprd11.prod.outlook.com (2603:10b6:510:268::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Wed, 10 Jul
- 2024 22:49:50 +0000
-Received: from SJ5PEPF000001CB.namprd05.prod.outlook.com
- (2603:10b6:a03:2c5:cafe::aa) by SJ0PR13CA0119.outlook.office365.com
- (2603:10b6:a03:2c5::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.20 via Frontend
- Transport; Wed, 10 Jul 2024 22:49:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SJ5PEPF000001CB.mail.protection.outlook.com (10.167.242.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7762.17 via Frontend Transport; Wed, 10 Jul 2024 22:49:50 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 10 Jul
- 2024 17:49:48 -0500
-Received: from [172.25.198.154] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 10 Jul 2024 17:49:47 -0500
-Message-ID: <a9c7ceb4-264f-4464-9f22-597d24f74f33@amd.com>
-Date: Wed, 10 Jul 2024 18:49:42 -0400
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Wed, 10 Jul
+ 2024 23:23:04 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7741.027; Wed, 10 Jul 2024
+ 23:23:04 +0000
+Date: Wed, 10 Jul 2024 16:23:00 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Lukas Wunner <lukas@wunner.de>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Bjorn Helgaas <helgaas@kernel.org>, "David
+ Howells" <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, David Woodhouse
+	<dwmw2@infradead.org>, James Bottomley
+	<James.Bottomley@hansenpartnership.com>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+CC: <linuxarm@huawei.com>, David Box <david.e.box@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, "Li, Ming" <ming4.li@intel.com>, Ilpo Jarvinen
+	<ilpo.jarvinen@linux.intel.com>, Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>, Damien Le Moal
+	<dlemoal@kernel.org>, Alexey Kardashevskiy <aik@amd.com>, Dhaval Giani
+	<dhaval.giani@amd.com>, Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>, "Jerome
+ Glisse" <jglisse@google.com>, Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>
+Subject: Re: [PATCH v2 10/18] PCI/CMA: Reauthenticate devices on reset and
+ resume
+Message-ID: <668f17d4553_6de2294ba@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <bd850e8257552d47433bdb2e10fa9b0a49659a4e.1719771133.git.lukas@wunner.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <bd850e8257552d47433bdb2e10fa9b0a49659a4e.1719771133.git.lukas@wunner.de>
+X-ClientProxiedBy: MW4PR04CA0123.namprd04.prod.outlook.com
+ (2603:10b6:303:84::8) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/6] x86: PCI: preserve IORESOURCE_STARTALIGN
- alignment
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	<x86@kernel.org>, <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240710212406.GA257375@bhelgaas>
-Content-Language: en-US
-From: Stewart Hildebrand <stewart.hildebrand@amd.com>
-In-Reply-To: <20240710212406.GA257375@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB03.amd.com: stewart.hildebrand@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CB:EE_|DS0PR12MB9423:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b53c2cc-2e8f-4504-67be-08dca1329b30
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB7594:EE_
+X-MS-Office365-Filtering-Correlation-Id: a8e32c83-6b6c-43fd-86d0-08dca1373fa7
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QUJwc3o3S1RnWml2dG41Szl5SDFYUHFiYW4yV0FYazY4TVF3U0Q5UTFtN0cr?=
- =?utf-8?B?NGlmcDY0LzMrR1N3RHIvODFpalpwazFselRMalhmbTBlaHhkSGlCeWMyM3NJ?=
- =?utf-8?B?YmhweHFvV2M1ZmdYVHhxci9aR2kzM09pWlVhNDkwSkdscmdPT3MyeVI1Mm5D?=
- =?utf-8?B?VjRNa0RyNUNodk42T3ZYalp1UjVlZFdpY1c2MXZUenJvQlZxRGxBeDlYb1BQ?=
- =?utf-8?B?SDIzaTVOdCs1MlFxMmZjOHNscnVDdmxCQTVqU0JrSTVjMkFDNVpKTU01ZFFP?=
- =?utf-8?B?d3ZhZWxybk9kZ3lwMHAzWDNQRVA5RUthc0ViSU9HK2pVNys3RngxTWk1dFU3?=
- =?utf-8?B?SWpiM0FKNDRXdTJLOVdwZ1Vqd2YxNUptbDM4MnZLT3RSWUttbm5vc000QW9u?=
- =?utf-8?B?U0Y5Vjd5SG94eVF6OFB2dnY0TW1walFhM0lNKzh0UEtDSmdLRldlU25WT3l2?=
- =?utf-8?B?Rks4MFZ0SHAyUEVIdDV2dENmQnNrWFVXSzZMdzY1cTRuM3VWZExDSWdlMWhu?=
- =?utf-8?B?Tkl2MFYwbFNmWG5BYVhrdXlycUsxSk5uZ0dROWY3emMzdy84UlBEN3Fsbk9B?=
- =?utf-8?B?SzlUc0xuSHpwUzhXc0ZpR1U1azMyRW1NaFRwbVRUNUs1UUZZak9taDdaM0Zt?=
- =?utf-8?B?RGJudHV2MFF6R2pXZnhvOWtXYmtickE5aDBSQy9DRlhZV3NxaE5zc3lNdCtB?=
- =?utf-8?B?bjRrdkpETUJTa1ZRbXZXTGN0UTN2djJnVi95bE5DQnlPd3R6MUpsVDdGTW9I?=
- =?utf-8?B?MkF3TThkeVE3bEZmMGs1aU5ReVRTOXFqL1dZTTAvbFJ1aG5Cb1d3L1BVOHUx?=
- =?utf-8?B?K0JpYVJKRDY2TFRMRnlNcTdVQUZndk5JeVVpRUZLMXJiZm95NGxHU2VoREFr?=
- =?utf-8?B?RmJpQms0TDhBZ1dBQnlkSDhIMHJsWlo2eWU4NHlSZjQwcmR1TWdkUFZIaXp0?=
- =?utf-8?B?SGdvRTdsRTFsd2pQVVI1RDdDTjhabTZlWE4xTzNOdWtJVDhKOHBObDAwN1oz?=
- =?utf-8?B?V0xkTzcwYzdqMnNkQmdmVUVSOThVSUs5UFRzWC9zVUJDM3Z2L3FIa3hwNWhY?=
- =?utf-8?B?amcwSzRxazIrcGZKUGNwN1hkYjFldk01ak9WTXpra1o0SDREV29vVGo1dW1u?=
- =?utf-8?B?cThHcGlVYktqSnhCemN5TDRwQ0ZSaHNXbFpSdGxGZDBoc3VJckUvVmczMm5u?=
- =?utf-8?B?UzE5bmx2NXk0bU0rM1Btb3dZV2lKNTEyWXNLdlpjRDhCOVM2L2IxL1djMHdR?=
- =?utf-8?B?R2tSVE04dndHTFQ2SURCQXdjZXcvZEdrNFdFc0VrUzJ4OWg2cHZYbkxBMU1C?=
- =?utf-8?B?c2hKb0U5Y0JzMStmUlpBaEVLdnl0T3E3WnNHbEJPQmNlajkxYkw1YW5sV3NL?=
- =?utf-8?B?TG44MFVUeE1VMXgrcnZPZ2ZnZlQ5dW93blBnejdpVUlYa09pZzM0YW5MY3FX?=
- =?utf-8?B?NE1zZ29hRVExYmxFWGU1dHJyYzM4cFptSnRFbXlsZmFzWUZoWGxTSHh1bVFO?=
- =?utf-8?B?MlZqZEI4akRTTlhZcFlLMDNoTkluMEw3Q3Z3dzg0RTVoaVpYaXJrcWtscHBs?=
- =?utf-8?B?VEl1VS95UU1laS9rU2t2OXk5SkRFZFJ2WWRaSCtnS2x5VWhhYjBkOUVqZWho?=
- =?utf-8?B?YUtqZ0JadDdHRDFqVExaNjdLbDJLQ3RmQUs2TXZSRE10QTVnQUFkQW9DTUNF?=
- =?utf-8?B?Y1lvYjBJOGZPUXJiWENBVmYvR2dvaTVqSHdMT0RPbWREaWw4NjlyTmp0L2xY?=
- =?utf-8?B?OUFwMW5Ba2I2M0NiV3VuVUhscWZ2MndGS2JPNmFSUTlaV3hPMUFJU2tVMGpB?=
- =?utf-8?B?emJYUGZDbFgxU0xXYmdCQisvNkRlM0FTaTcwa09LbVd0b2JWRk1iQ3FsRUcv?=
- =?utf-8?B?MURIQXJCamZwcUJKQ3V6bDhER1YwZ1JtSy9LWlJNVWJrMURBWkxsV0JWTDRx?=
- =?utf-8?Q?cl58hnw2lWm6t+sxBAidSOt1CDZy2hix?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 22:49:50.1032
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SaEDD+YN3q7jhybxc+TvtkXN1H+XcPgSsX3Py2XnfTwpT5KweRuGGMjGY3RG?=
+ =?us-ascii?Q?vuPtPlBMuaYIyc+lO9pC9YrQ3ZCPhVxXd2mYYWsXFbOfXnaPmYmZDAwClNX2?=
+ =?us-ascii?Q?B/PTOez3r+8Cxlqcgdke4sf/BVSa6lgjfpYLtr+ygcIdmOz46lmbwpvgJT+Z?=
+ =?us-ascii?Q?FAiQeXdhbBeuiRd+wlfuGTwDckrUwnZ12tY5H0MvRgseUgWYgzVzrxH8NavY?=
+ =?us-ascii?Q?6cVO16DkS7mrbmD6gR6UQ9IOx58/BDyPRRnmbyK6YmvsTAPDQLOR3oF0wCH7?=
+ =?us-ascii?Q?O3PAiYOzSdlT4mbIt5CxAZuX65gIAUNAp05gN20A2MO7Mf5vgWFwUJ/bun7T?=
+ =?us-ascii?Q?eIvgg1P/DBdvKKHAnfMcccyxB1stt86wWRX6h0iKNfd78OtLV2IwQRdSjzp0?=
+ =?us-ascii?Q?V9NVI7VMI/fOUIWMtQutxyt22IoSdFkPfbYyqB1Er/7st0glBlXt1CzHLDwA?=
+ =?us-ascii?Q?lsxZblPyB9Y5dDw2mg/E8i9pdKrhEyEZomjZ5xxY4OmK3Nr17nbK2TJaYmre?=
+ =?us-ascii?Q?xf8cUWoVS2VsObweF/7t+oBcELMYQted/gHm2Dkcv4XKAx5nXJjvfWl/LJVj?=
+ =?us-ascii?Q?3H7EXOMjd/gMxWZbQRWZS1Vted2k8f+jf+p+/CqV30qVeb3ccVgNZMynIMO0?=
+ =?us-ascii?Q?9JZH8avpQschCESq4CYA18kj2ogkiR+yns43dHybknNbUa6Vuh1UF95G0Nsx?=
+ =?us-ascii?Q?xllWoWhOBMF+zDdnxUAYPXvkx1b354VGVAbTvY+mW9uxsIOzDVh+ugQENkXZ?=
+ =?us-ascii?Q?kFlFdcHLwS7/H/dO2gShUzFBB/pLV1U9cnqVp+/Q9Qhj6P2fZJ0imYaf7YEN?=
+ =?us-ascii?Q?ZZ7RKeu/PTKj5PSGrOTIxKxo91xl3XTZNTkgDCp0m5bMppYSp4MPEaKeoR4/?=
+ =?us-ascii?Q?MQ/+YZ4D4+Ycb2jraKq8mRfuGAm4+3WkVAJ1gmV0nf7JFnPU84h4asMbqzMu?=
+ =?us-ascii?Q?Iiw+leulC2pZuyRC9GLA5klQORf1WH+7++g2I5g2IZWt1KvVJFDMnU1GjT4c?=
+ =?us-ascii?Q?LxATrT8JsJdzC0vzIQToXdygCRMZ6A+KQDGYvsLCS34FM3s6l4zg04qo8CDX?=
+ =?us-ascii?Q?hhk3JW1lIySxE/UOoR5//wFkjAlJCxoFLb+tvinHYUZkC5t7oZe6KZNNjIVm?=
+ =?us-ascii?Q?KzRinBZqF1qeBYPqgHbeKQ4eHpbkKBB4slWk68akSFvB1GDedEYew7yULltE?=
+ =?us-ascii?Q?ox/9RHKQvlsqY4sijiGR/NADuFAl+PMmZ3TKV2JkfNnwwz7Axr5YBpqvKlqq?=
+ =?us-ascii?Q?NBCMGWJZ62UfbqH0UpPDmeLL3YoSPW+S4p4PXQqLCqzo88+wIKBu0FnBmgB6?=
+ =?us-ascii?Q?fPIeVziE/0u5vW/EquNC3VPPYj9pb2ElDcSQ+JPV/yPTrsgJDcohOaNSblPK?=
+ =?us-ascii?Q?h9O4ZA69og7KKmDN2NciJ9qULb/V?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DEc2OFIdQwCyFfeKDHcC1zPaEKJPxGHZ7c8Ukk0GfUO8UIp2fMrcOIqGizxb?=
+ =?us-ascii?Q?/K0XPoyBlElYnVILJ0NAgljkhIAu9enJRgwJ6uuppJngLRvXLJPQqLjD/cnu?=
+ =?us-ascii?Q?KsGCozbjT9wTtxHk77vdeGoffrLUXqGrW0qqchWkWP0h08fgP1eswlxAOZij?=
+ =?us-ascii?Q?27b6k7sndBPbegAV4Az/MIKbVHhYKoCGqlJEKtuDaW8iWdg64t72B/m81w9Y?=
+ =?us-ascii?Q?IZ0mwgPRh58umIUf5u2IIGUQJYyQTAQVGHwgqwFlvJ+4t8ySnOlFPkG4jtk8?=
+ =?us-ascii?Q?nEOSjDmNgAQ4FtESMJoDHzUMFxvRf4bD465CKMXrcplB8p2Vs0vxCKTmEtC1?=
+ =?us-ascii?Q?bnkxCORcBd0LiLEmdbnd0FDUW8XMO23My7Q93DzfAWFSmVB2Ch5NE2mhVB5Z?=
+ =?us-ascii?Q?NmoR3QFKP0aUc4rHjA5AZ+9PU4bkJ2pKXjdbXta4g8w7TR9d1BVi1G+R93qj?=
+ =?us-ascii?Q?F1WVyM2wipHXfuPN5yD16VmHAUVIT0/EHc/fgBl/KXQSM/7/Cb87CsWHjXcf?=
+ =?us-ascii?Q?t6D3aQSWx2N3L4N1tsf+uAXwp2mtcvQM/QD/AGpQk0lHDIb/w9MNf1N/3qyd?=
+ =?us-ascii?Q?lrgj1bbHlFPe1wkH4ZlH/vPGr4atVezLW+m9xKe/sH9BcZenRGO82iZlaHH3?=
+ =?us-ascii?Q?b+i/mZ+STXPXn+sdGFQkaVHgCl8A9LMfJH02c+uYDb/9sjgCtI55YF9Vwkxu?=
+ =?us-ascii?Q?7Kzpm1moIKcJfRyACmNVZIfKJD1BC8sbXMU23dfYLQ0KjNV8t53qlv8xKShD?=
+ =?us-ascii?Q?pqp2NgL4bDUTosXx6YmidP6CkJG37NtoMQg39FfaC8MeRrZEwAmJF65lYLud?=
+ =?us-ascii?Q?mbKFFck7MaI+Kdarcpa0lD6TXjNwIWdodc0oL7mhyQQUwAVqv4p57tLQhj2Q?=
+ =?us-ascii?Q?NqSCPj8eymyjF1n1CxxCPKs9IZwY4IRtDMxrVxe/5f1lZrW0jgUMehKozrJ8?=
+ =?us-ascii?Q?J2CqeDWSt3nCsmjgC0UVjPSM/poBeAkOEZj3++NSMcnW3Yism0BYRTMh3zfT?=
+ =?us-ascii?Q?t6lQM0bdB8Zzwlng9+W5ccMMMQB0oBuT5B5GuKzeEOXGa3vsMKSv+BGik3zE?=
+ =?us-ascii?Q?qokyrgie4om7VCR0ByTG0oL7+Zpp+uVMXPCt1IOcIn1sL2QJHaJafP/m9e3F?=
+ =?us-ascii?Q?Vk+bx+7wyq3BRH8UONq+cMbd2TRiwoqjj0ELDWweFB46PVF/03Yah3iEjib7?=
+ =?us-ascii?Q?xOJW97GDhMEr9hYrXfVJjdT6ISLtHoZDqRhtu07cSbuUCMhocXr/pyQono1G?=
+ =?us-ascii?Q?PWh2Vgs5jZtVfU+R5Xf8JVfIWRn5nrzNUbb8RwYPS2bFNMCr8/PFka7q4iej?=
+ =?us-ascii?Q?Y4PTIbBSP/URY90ehFXZ7WtIlzLhV8yuH3aqUmjM7Dc/Q51D5Tqc4rssj9yx?=
+ =?us-ascii?Q?Pu1YjKPS5/WGLnA4ZDvYIs3kJdCoi+Co4SEa9n513aY86/As76fSt5CIRL+Z?=
+ =?us-ascii?Q?2FS5NodwrAb4Eg6o4AhtaZ+pMZnhLqTulUF+rzxHI+xNRVtYTToQE6TZOyDq?=
+ =?us-ascii?Q?PR/nl7mI34MaWLinqGfJ+UgMQHkfyEq1CV2ttnABeioWnaLDrjLTfIapTOvO?=
+ =?us-ascii?Q?zM6umPcV72qOMozjRl0y+33RXC5rIAOFw+u73wVn//Y1QBzy+yKeeihC5A3p?=
+ =?us-ascii?Q?rA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8e32c83-6b6c-43fd-86d0-08dca1373fa7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 23:23:04.4304
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b53c2cc-2e8f-4504-67be-08dca1329b30
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001CB.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9423
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sMFiqYW5CKq2cHMMf4A0rXL0UJm30axui1GGbVXyek87mnfpVc6hgQSHoLiaY0JzgymZcw2WLaVLl8liewqVa1SMPICCglog8GqkvlxFVgQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7594
+X-OriginatorOrg: intel.com
 
-On 7/10/24 17:24, Bjorn Helgaas wrote:
-> On Wed, Jul 10, 2024 at 12:16:24PM -0400, Stewart Hildebrand wrote:
->> On 7/9/24 12:19, Bjorn Helgaas wrote:
->>> On Tue, Jul 09, 2024 at 09:36:01AM -0400, Stewart Hildebrand wrote:
->>>> Currently, it's not possible to use the IORESOURCE_STARTALIGN flag on
->>>> x86 due to the alignment being overwritten in
->>>> pcibios_allocate_dev_resources(). Make one small change in arch/x86 to
->>>> make it work on x86.
->>>
->>> Is this a regression?  I didn't look up when IORESOURCE_STARTALIGN was
->>> added, but likely it was for some situation on x86, so presumably it
->>> worked at one time.  If something broke it in the meantime, it would
->>> be nice to identify the commit that broke it.
->>
->> No, I don't have reason to believe it's a regression.
->>
->> IORESOURCE_STARTALIGN was introduced in commit 884525655d07 ("PCI: clean
->> up resource alignment management").
+Lukas Wunner wrote:
+> CMA-SPDM state is lost when a device undergoes a Conventional Reset.
+> (But not a Function Level Reset, PCIe r6.2 sec 6.6.2.)  A D3cold to D0
+> transition implies a Conventional Reset (PCIe r6.2 sec 5.8).
 > 
-> Ah, OK.  IORESOURCE_STARTALIGN is used for bridge windows, which don't
-> need to be aligned on their size as BARs do.  It would be terrible if
-> that usage was broken, which is why I was alarmed by the idea of it
-> not working on x86> 
-> But this patch is only relevant for BARs.  I was a little confused
-> about IORESOURCE_STARTALIGN for a BAR, but I guess the point is to
-> force alignment on *more* than the BAR's size, e.g., to prevent
-> multiple BARs from being put in the same page.
+> Thus, reauthenticate devices on resume from D3cold and on recovery from
+> a Secondary Bus Reset or DPC-induced Hot Reset.
 > 
-> Bottom line, this would need to be a little more specific so it
-> doesn't suggest that IORESOURCE_STARTALIGN for windows is broken.
+> The requirement to reauthenticate devices on resume from system sleep
+> (and in the future reestablish IDE encryption) is the reason why SPDM
 
-I'll make the commit message clearer.
+TSM "connect" state also needs to be managed over reset, so stay tuned
+for some collaboration here.
 
-> IIUC, the main purpose of the series is to align all BARs to at least
-> 4K.  I don't think the series relies on IORESOURCE_STARTALIGN to do
-> that.
+> needs to be in-kernel:  During ->resume_noirq, which is the first phase
+> after system sleep, the PCI core walks down the hierarchy, puts each
+> device in D0, restores its config space and invokes the driver's
+> ->resume_noirq callback.  The driver is afforded the right to access the
+> device already during this phase.
 
-Yes, it does rely on IORESOURCE_STARTALIGN for BARs.
+I agree that CMA should be in kernel, it's not clear that authentication
+needs to be automatic, and certainly not in a way that a driver can not
+opt-out of.
 
-> But there's an issue with "pci=resource_alignment=..." that you
-> noticed sort of incidentally, and this patch fixes that?
+What if a use case cares about resume time latency?  What if a driver
+knows that authentication is only needed later in the resume flow? Seems
+presumptious for the core to assume it knows best when authentication
+needs to happen.
 
-No, pci=resource_alignment= results in IORESOURCE_SIZEALIGN, which
-breaks pcitest. And we'd like pcitest to work properly for PCI
-passthrough validation with Xen, hence the need for
-IORESOURCE_STARTALIGN.
+At a minimum I think pci_cma_reauthenticate() should do something like:
 
-> If so, it's
-> important to mention that parameter.
-> 
->>>> RFC: We don't have enough info in this function to re-calculate the
->>>>      alignment value in case of IORESOURCE_STARTALIGN. Luckily our
->>>>      alignment value seems to be intact, so just don't touch it...
->>>>      Alternatively, we could call pci_reassigndev_resource_alignment()
->>>>      after the loop. Would that be preferable?
->>
->> Any comments on this? After some more thought, I think calling
->> pci_reassigndev_resource_alignment() after the loop is probably more
->> correct, so if there aren't any comments, I'll plan on changing it.
-> 
-> Sounds like this might be a separate patch unless it logically has to
-> be part of this one to avoid an issue
-> 
->>>> ---
->>>>  arch/x86/pci/i386.c | 7 +++++--
->>>>  1 file changed, 5 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/x86/pci/i386.c b/arch/x86/pci/i386.c
->>>> index f2f4a5d50b27..ff6e61389ec7 100644
->>>> --- a/arch/x86/pci/i386.c
->>>> +++ b/arch/x86/pci/i386.c
->>>> @@ -283,8 +283,11 @@ static void pcibios_allocate_dev_resources(struct pci_dev *dev, int pass)
->>>>  						/* We'll assign a new address later */
->>>>  						pcibios_save_fw_addr(dev,
->>>>  								idx, r->start);
->>>> -						r->end -= r->start;
->>>> -						r->start = 0;
->>>> +						if (!(r->flags &
->>>> +						      IORESOURCE_STARTALIGN)) {
->>>> +							r->end -= r->start;
->>>> +							r->start = 0;
->>>> +						}
-> 
-> I wondered why this only touched x86 and whether other arches need a
-> similar change.  This is used in two paths:
-> 
->   1) pcibios_resource_survey_bus(), which is only implemented by x86
-> 
->   2) pcibios_resource_survey(), which is implemented by x86 and
->   powerpc.  The powerpc pcibios_allocate_resources() is similar to the
->   x86 pcibios_allocate_dev_resources(), but powerpc doesn't have the
->   r->end and r->start updates you're making conditional.
-> 
-> So it looks like x86 is indeed the only place that needs this change.
-> None of this stuff is arch-specific, so it's a shame that we don't
-> have generic code for it all.  Sigh, oh well.
-> 
->>>>  					}
->>>>  				}
->>>>  			}
->>>> -- 
->>>> 2.45.2
->>>>
->>
+/* not previously authenticated skip authentication */
+if (!spdm_state->authenticated)
+	return;
 
+...so that spdm capable devices can opt-out of automatic reauthentication.
 
