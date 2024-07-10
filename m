@@ -1,63 +1,52 @@
-Return-Path: <linux-pci+bounces-10072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EE9D92D162
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 14:18:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2961592D191
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 14:28:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0C161C23684
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 12:18:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D79B72865D3
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jul 2024 12:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395A4190074;
-	Wed, 10 Jul 2024 12:17:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 190EE19149E;
+	Wed, 10 Jul 2024 12:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMjej+vm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwlfmMxZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2539189F26;
-	Wed, 10 Jul 2024 12:17:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BBB19149D
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jul 2024 12:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720613878; cv=none; b=p855eqjbPi7e4hB8DHsv0JD8RtDGIXpWnY7uFRaaqxKLmV8xyHk4z3VoYmfgVqDao0llhrwafI1bJwRUziXT5lP0Dl2eltfUcaQVDVnDJwS8+S0VbfoKiZKpoMGl0TdEI5tiNuXJ1nCr0uijqaf7SvkHT0uCvmlHe4AgfVNOT+U=
+	t=1720614494; cv=none; b=jD6F93gBdNB6SHWPOHjXOieyP9JtfL4Ut9YhxeFcG5M063cUlbULGzdEo6h85NV5Lmi0SNG39u9uBMn7lCNJfjZ72zq0HE6pq1q/Cs+Iw2gwRTGcq4I2ennKdmUkLTWlvfNDWahkBUPtxTAXU7bo4z/SMiDxSeAtXs7tqvFXZEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720613878; c=relaxed/simple;
-	bh=snlE/mM+mgp/RDcYubsA7024pVIJBBJzpHzKyn0y0M8=;
+	s=arc-20240116; t=1720614494; c=relaxed/simple;
+	bh=vCETmodMEdDHEJwZMFmoty0smE5wU/UkBqql1Zvvvfg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R/4qWFugMJF8mlsGuz8BYIg3f0HxrZg9B6hHZlTuM0xv1B86Tp43ChV3K4gtu8eB9hQom5Bb5gzA5EPFic9pdwYOB+xNLg0/Azbn5th8vMHMkygtlz8rWLjf+eUaIx6KX8kuVbM7ji0o3szCl5T1c2hqiquoEiZcnVya6J/82OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMjej+vm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B31C32781;
-	Wed, 10 Jul 2024 12:17:57 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=dF9gIZpebhvN1sZaOCVQ6t72sF5AvSLJ3JXWJVA2Qdx2qJhn3b6TmEYim3HtDtFbqGmRD4G/W41Ys3/0v9VRpgues88Bnrz9vX6f8L4XMdOQxwB8KGKAvJVQjGwHzfb4RigJWfxQy+0IiQWh2dUepEKT4XzAJ/UxoHAUxaia+hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwlfmMxZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F38C32781;
+	Wed, 10 Jul 2024 12:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720613877;
-	bh=snlE/mM+mgp/RDcYubsA7024pVIJBBJzpHzKyn0y0M8=;
+	s=k20201202; t=1720614493;
+	bh=vCETmodMEdDHEJwZMFmoty0smE5wU/UkBqql1Zvvvfg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mMjej+vmUpM7I9BH0vnYE0nwzvX79yf3+/SLO4A9eOW+DMVAhO4qakpjctZBYDxZ3
-	 7I0a9zUl1QjowjjIknkhg4/RKOK/yhbyh+TJHNuqFAfUiwi2rzOmnKj/J8Et4ecPqD
-	 XmykTM/DUVocMiuHe+WhTufQMD3AeYUrm0VRGRGeU7c0oA27hfaCQNsOJucUYOh2Tg
-	 u4aVzghOk/V/8zyWLff02qdbye9ud8rgKAN229nK1yXziR56CeUF7gbNuS+Ee1RVqU
-	 5UhNu/ZnSMOfPElWtstqnedmC2EXNmXX7nqSkSqGb0R2UywDHppZVjvowha8X20Mk7
-	 c81h7RrA9aeVQ==
-Date: Wed, 10 Jul 2024 07:17:55 -0500
+	b=kwlfmMxZJNZnrECmYKDnnyO+x2nj4TTZTTj4eOUAuDnOfMEaCn6KL+EFUu6wZYom/
+	 GmIdKss+WZG4KD5TVAfeB8hnIBnYs48dr/o74c8V44uinc6pfq8rJQEF+4UfuxfAKj
+	 8YPRREJ4XdlBlm3WBnR/3BPgofvxKeagiOTTxApdDJ/Cikm6fcHKjyTjD9pM3wG6k9
+	 a2KYYe59lP3gaBMKXVBeMMM7YW7M9sU9fxBNpkpAV/KGLOfUVky+5uAtkvmx8cztdE
+	 Gam4rZVq5R/g08+Am43rBYfAdW389+KOJSDSjFMKduayP24zURMh9l+DPlASD8Ohv3
+	 17qTALeyIeiQg==
+Date: Wed, 10 Jul 2024 07:28:11 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-	quic_parass@quicinc.com
-Subject: Re: [PATCH v6 1/5] PCI: endpoint: Add wakeup host API to EPC core
-Message-ID: <20240710121755.GA241182@bhelgaas>
+To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Cc: linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH v1] Export PBEC Data register into sysfs
+Message-ID: <20240710122811.GA241615@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,24 +55,102 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240710-wakeup_host-v6-1-ef00f31ea38d@quicinc.com>
+In-Reply-To: <20240626044330.106658-1-kobayashi.da-06@fujitsu.com>
 
-On Wed, Jul 10, 2024 at 04:46:08PM +0530, Krishna chaitanya chundru wrote:
-> Endpoint cannot send any data/MSI when the D-state is in
-> D3cold or D3hot. Endpoint needs to wake up the host to
-> bring the D-state to D0.
+Note subject line convention for drivers/pci (use "git log --oneline
+drivers/pci/pci-sysfs.c")
+
+On Wed, Jun 26, 2024 at 01:43:30PM +0900, Kobayashi,Daisuke wrote:
+> This proposal aims to add a feature that outputs PCIe device power 
+> consumption information to sysfs.
 > 
-> Endpoint can toggle wake signal when the D-state is in D3cold and vaux is
-> not supplied or can send inband PME.
+> This feature can be implemented by adding support for PBEC (Power 
+> Budgeting Extended Capability) output to the PCIe driver. PBEC is 
+> defined in the PCIe specification(7.8.1) and is a standard method for
+> obtaining device power consumption information.
+
+s/This feature can be implemented by adding support/Add support/
+
+(To change this to imperative mood and say what the patch actually
+*does*, as opposed to what *could* be done.)
+
+Include spec revision, e.g., "PCIe r6.0, sec 7.8.1"
+
+> PCIe devices can significantly impact the overall power consumption of
+> a system. However, obtaining PCIe device power consumption information 
+> has traditionally been difficult. This is because the 'lspci' command, 
+> which is a standard tool for displaying information about PCI devices, 
+> cannot access PBEC information. `lspci` is a standard tool for displaying
+> information about PCI devices.
+
+lspci detail isn't really necessary here.  Maybe lspci *could* be
+extended to display PBEC information, but that's a separate project.
+It looks like the Data/Data Select issue might mean lspci would have
+to get the info from the kernel, e.g., from this sysfs file, to avoid
+synchronization issues.
+
+> The PBEC Data register changes depending on the value of the PBEC Data 
+> Select register. To obtain all PBEC Data register values defined in the 
+> device, obtain the value of the PBEC Data register while changing the 
+> value of the PBEC Data Select register.
 > 
-> To support this add wakeup_host() callback to the EPC core.
+> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 2321fdfefd7d..b13d30da38a1 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -182,6 +182,33 @@ static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(resource);
+>  
+> +static ssize_t pbec_show(struct device *dev, struct device_attribute *attr,
+> +			 char *buf)
+> +{
+> +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> +	size_t len = 0;
+> +	int i, pos;
+> +	u32 data;
+> +
+> +	if (!pci_is_pcie(pci_dev))
+> +		return 0;
 
-Wrap to fill 75 columns consistently.  Also applies to other patches
-in series.  In some cases you may intend separate paragraphs; add
-blank lines between in those cases.
+Unnecessary.  Already covered by pcie_dev_attrs_are_visible().
 
-s/D-state is in D3cold/D-state is D3cold/ (a couple times here, also
-applies to other patches and MHI state)
+> +	pos = pci_find_ext_capability(pci_dev, PCI_EXT_CAP_ID_PWR);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	for (i = 0; i < 0xff; i++) {
+> +		pci_write_config_byte(pci_dev, pos + PCI_PWR_DSR, (u8)i);
+> +		pci_read_config_dword(pci_dev, pos + PCI_PWR_DATA, &data);
+> +		if (!data)
+> +			break;
+> +		len += sysfs_emit_at(buf, len, "%04x\n", data);
+> +	}
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_RO(pbec);
 
-s/vaux/Vaux/ to match spec usage.
+Needs a more descriptive name, I think.  Also some documentation in
+Documentation/ABI/.
+
+>  static ssize_t max_link_speed_show(struct device *dev,
+>  				   struct device_attribute *attr, char *buf)
+>  {
+> @@ -629,6 +656,7 @@ static struct attribute *pcie_dev_attrs[] = {
+>  	&dev_attr_current_link_width.attr,
+>  	&dev_attr_max_link_width.attr,
+>  	&dev_attr_max_link_speed.attr,
+> +	&dev_attr_pbec.attr,
+>  	NULL,
+>  };
+>  
+> -- 
+> 2.44.0
+> 
 
