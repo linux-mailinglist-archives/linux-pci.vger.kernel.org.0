@@ -1,130 +1,125 @@
-Return-Path: <linux-pci+bounces-10161-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10162-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E974092EB57
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 17:10:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93C4192EB9B
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 17:25:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8869D1F24600
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 15:10:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 456971F22C5D
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 15:25:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DB3D16B388;
-	Thu, 11 Jul 2024 15:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B58E16B747;
+	Thu, 11 Jul 2024 15:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TrSsgktt"
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="aqiA9ufA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79781684A8;
-	Thu, 11 Jul 2024 15:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD8A166317;
+	Thu, 11 Jul 2024 15:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720710646; cv=none; b=LqW1Hy2sDxQOq0D7IVK1yBeQVxMqiiGpYk1sSOHJU1V1E7r682QbMrCSbw8HURBPhAp8EaIGAke9DkTwkE+R9/oTwYNb0Gv2mszUKPsRd5aF3vZa9GP6BJ1QgJwl0ZQAQXFXeAlq9vGqnIK3ZRuc1QcHgSwO08L0jWOPLVCodi0=
+	t=1720711550; cv=none; b=jYBBXEgA3osbVhNLuaEFJbhguYi+NEKnuWFrCw1OKSDn/94xMuUEd4kw+Lw1mVntQy8z0pEc9EI4Uzk4v6+OPVSnMLQzlY7Zc3BknHkKfIX7IdtkBYVw7msfwcphhvDhyK3/vqTL9q1xwTKfSfdTcUo/hpipADyflVFHQ6hl2TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720710646; c=relaxed/simple;
-	bh=kq070wDFSGkEJkksHI5NpvJYQDS1pUfXAVJqY4xUS18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FDBuajLeYoGkDVwDAjYiS84ZIqVxmd+todPvX6NB/02aQ3e+jqcZLUQlYxeFu3GOHeB2a4GGp/KOH1prdttSs91retUBPf+1RxFSY0mFPwvgY93gdbyS3O2ytoMTLAljK2RsYI63IAt7KC173/AEPmaIZBFEDz2pRnlAlc0gLt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TrSsgktt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF2AC116B1;
-	Thu, 11 Jul 2024 15:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720710646;
-	bh=kq070wDFSGkEJkksHI5NpvJYQDS1pUfXAVJqY4xUS18=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TrSsgkttWW4owJY2LJMoroCTdINUAJb46AgltBnu+IxySoKNCUTiaund5qkd0mqvs
-	 MT1ugqlMWgVT0e+MzYamP/VZUkjKQ6/poPwZA3kQMkkAPZVR13kUTliaw2lyg5qKF6
-	 15fAUHy9YydPiQ/Vgg4DqoRgBtiir+Fnq8+2m9Y5U+MW+kUn9s8FzHh09JnyRdaxMS
-	 VXA2sZOqTRnWXvwOAgbeDx2I1WBvowMS2ZmwvKNFtY5fSxAebenMaeJO3D39byMk3i
-	 i/0ZZhJbNTmbW3tn0G0s8l551PRNmuo3MNpkRspaPy60vtgtM7x23IVOtQm0UPMXgc
-	 ZCiBxDqHQagaQ==
-Message-ID: <dcaefa84-09f5-4be5-9f66-aac6bf5fabf7@kernel.org>
-Date: Thu, 11 Jul 2024 10:10:44 -0500
+	s=arc-20240116; t=1720711550; c=relaxed/simple;
+	bh=zZ7J6+mm32LlLjWxlIjEykH6hwYEPzq7Mm6VwSTr5FI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=on/EaA0tzwNm03xYsPmjwHhrYQejynD9qQ3QVMwb2cGGC+mqTwU7ALrfpELc2UlgjOwpaVAN8XnU2CDFzzQCQXV3Wy/CQMTSKD3tWSONY++Ob4040sfX6NszknM3934wQkTRl+F9lrnlq2qY2QIpmwJOHoh+b7ZwwaVim7vT7fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=aqiA9ufA; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 026BB1FE38;
+	Thu, 11 Jul 2024 17:25:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1720711535;
+	bh=YGIW/Vx8HzQ+wbnotFUYU6SkJgDBJDLpbLvh5NfbH1U=; h=From:To:Subject;
+	b=aqiA9ufASPnH6b6V4P6BPI7AB+4uEnEMqaPoC0ArVsGTNSvRFxhySQnZ602RrPPvf
+	 Dzu2CXVJVDeZ07XVJcyL0Acuu6pVSV4D07PqaqT8STbAAg7T1zR0IvzXyAoJXbKzTU
+	 vnrT3supUY50qsvdN5fqHY41lghet08QeFgwL7pobq8oOILfGN0V1/Is+duFHOWIw3
+	 7Xocx9RS+ehnRRPmAXIw0BGr+6kv4S6s0be11CPsy5pxXzPlIUxLrAzBbekJeY6+fE
+	 fb5rOXCjVDlZzyWcpo5CnKI8WTBRRgBClUkHz8ecxeR/mRzcN/hfIC9qkBYxLkGwmV
+	 ghvNkBLJWASEw==
+Date: Thu, 11 Jul 2024 17:25:31 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] PCI: ti: k3: Fix TI J721E PERST# polarity
+Message-ID: <20240711152531.GA35875@francesco-nb>
+References: <20240703100036.17896-1-francesco@dolcini.it>
+ <Zo_qbspq0vA_p8VC@ryzen.lan>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] PCI: Check PCI_PM_CTRL in pci_dev_wait()
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Mathias Nyman <mathias.nyman@intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
- Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20240710205838.2413465-1-superm1@kernel.org>
- <20240710205838.2413465-2-superm1@kernel.org>
- <15091369-fc5c-af2d-7591-e1732097e84c@linux.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <15091369-fc5c-af2d-7591-e1732097e84c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zo_qbspq0vA_p8VC@ryzen.lan>
 
-On 7/11/2024 10:07, Ilpo Järvinen wrote:
-> On Wed, 10 Jul 2024, superm1@kernel.org wrote:
-> 
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> A device that has gone through a reset may return a value in PCI_COMMAND
->> but that doesn't mean it's finished transitioning to D0.  On devices that
->> support power management explicitly check PCI_PM_CTRL on everything but
->> system resume to ensure the transition happened.
->>
->> Devices that don't support power management and system resume will
->> continue to use PCI_COMMAND.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/pci/pci.c | 27 ++++++++++++++++++++-------
->>   1 file changed, 20 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 35fb1f17a589c..4ad02ad640518 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1270,21 +1270,34 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->>   	 * the read (except when CRS SV is enabled and the read was for the
->>   	 * Vendor ID; in that case it synthesizes 0x0001 data).
->>   	 *
->> -	 * Wait for the device to return a non-CRS completion.  Read the
->> -	 * Command register instead of Vendor ID so we don't have to
->> -	 * contend with the CRS SV value.
->> +	 * Wait for the device to return a non-CRS completion.  On devices
->> +	 * that support PM control and on waits that aren't part of system
->> +	 * resume read the PM control register to ensure the device has
->> +	 * transitioned to D0.  On devices that don't support PM control,
->> +	 * or during system resume read the command register to instead of
->> +	 * Vendor ID so we don't have to contend with the CRS SV value.
->>   	 */
->>   	for (;;) {
->> -		u32 id;
->>   
->>   		if (pci_dev_is_disconnected(dev)) {
->>   			pci_dbg(dev, "disconnected; not waiting\n");
->>   			return -ENOTTY;
->>   		}
->>   
->> -		pci_read_config_dword(dev, PCI_COMMAND, &id);
->> -		if (!PCI_POSSIBLE_ERROR(id))
->> -			break;
->> +		if (dev->pm_cap && strcmp(reset_type, "resume") != 0) {
-> 
-> Comparing to a string makes me feel reset_type should be changed to
-> something that allows direct compare and those values only mapped into
-> string while printing it.
-> 
+Hello Niklas,
 
-Thanks, that's a great suggestion.  I'll add a patch earlier in the 
-series to make an enum of the types instead and a mapping function for 
-them to get the string as needed.
+On Thu, Jul 11, 2024 at 04:21:34PM +0200, Niklas Cassel wrote:
+> On Wed, Jul 03, 2024 at 12:00:34PM +0200, Francesco Dolcini wrote:
+> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > 
+> > Fix PCIe PERST# signal polarity in TI J721E used on TI K3 machines.
+> > 
+> > PCIe PERST# needs to be de-asserted for PCIe to work, however, the driver is
+> > doing the opposite and the device tree files are defining the signal with the
+> > wrong polarity to cope with that. Fix both the driver and the affected DT
+> > files.
+> 
+> While I understand why you want to fix this,
+> I'm not sure if you can actually do so without breaking device tree backwards
+> compatibility.
+
+I understand this, and at the same time I know that this was done in the
+past for exactly the same reason, see for example commit 87620512681a
+("PCI: apple: Fix PERST# polarity").
+
+This patch was send not because the issue was noticed analyzing the
+code, but because during a bring-up of a new platform (based on
+k3-j784s4) using this PCIe controller driver the PCIe was not working
+and this lead to some time consuming debugging on both the
+hardware/software before finding this issue. That was worked around just
+by describing the HW incorrectly in the DT (the device tree of this
+board is not in mainline - yet).
+
+With that said I cannot 100% judge the exact impact, I know most (but
+not all) of the boards and I think that making the change is beneficial
+despite what you correctly write.
+
+Most of the boards affected are from Texas Instruments (eval boards),
+plus one beagle and one board from Siemens. Let's see what these folks
+think about this change, these boards are all relatively recent.
+
+> Perhaps you could add a comment in the driver and the DTS files explaining
+> that the DTS is actually wrong, but cannot be changed because of DT backwards
+> compatibility.
+As I wrote my concern is on new boards. 
+
+BTW, the RS485 polarity for the UART used on all TI platform (including
+the very old ones) have a similar bug [1], however this bug is so old and
+deep into the code that we'll have to live with it.
+
+[1] https://lore.kernel.org/all/ZBItlBhzo+YETcJO@francesco-nb.int.toradex.com/
+
+Francesco
+
 
