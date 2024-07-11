@@ -1,58 +1,64 @@
-Return-Path: <linux-pci+bounces-10174-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10175-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8570992EF05
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 20:40:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD45E92EF20
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 20:48:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0EB5CB22220
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 18:40:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8283B1F236FE
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 18:48:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9784116DC0C;
-	Thu, 11 Jul 2024 18:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1599316EB55;
+	Thu, 11 Jul 2024 18:48:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZgotSba"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZygdmSj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DA754657;
-	Thu, 11 Jul 2024 18:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9F816EB47;
+	Thu, 11 Jul 2024 18:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720723238; cv=none; b=YSdD9vrA23Xn4u2ENzvpGdAUYQE8aC1vXswX+q2U+JTmkq+74XDARjPwXj6Zbtyzrppot9+y9pGnC9lNC2Vtcsnr403MynPr3MIX7lw536cxOe3R6sZAn+HUNjvbVfOxpbSzvgrrTq59VQRF2wYwu7o14vOJ/Ud93xhDKvxC3/o=
+	t=1720723725; cv=none; b=OegOGU06SvUvw0iIWp2M5WFYKelI35Zezklam36Bmvyt6SWLhOppke6e6U4SAyEslqiM93imGAhTusryKxcxnixwTHavGjdSnqbJcde/ltaOKVBXLfrbiEed8BS8Df7ul6KgtU5rMEGoKcjyu+ZF5uTUr/siFzNCMA8u7qopNCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720723238; c=relaxed/simple;
-	bh=yExZdVqBIAQfVWWzrI3974OVS4cKu6NLKKNVvN1boSY=;
+	s=arc-20240116; t=1720723725; c=relaxed/simple;
+	bh=xImh/e9JhSxNtzbEgiJpo+w6gMpGyqEXopSKCcJ76JE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=q4MDOUP7DkxInhXZRGfIlrdSlwk0/Dx3lRYvSWOSgCTQS22DwBiQMzZpiWAt9qFB4D/BUDWpExXJgS71Skrk10CDoZXTr55klw1LqcngJ7FYBQk97w6FrBX2D18C8MuQuQeO276/Sah/5tX3CW8f5FFVUcuKX+NMUsbLqH0KEzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZgotSba; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE9FC32786;
-	Thu, 11 Jul 2024 18:40:37 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=oSBnDCjDtyEc1giFbc4oNF8ox+s8aLQVF8i9xzmzVibSNrfxGk9TG7Purwyl2f4nvYfBNvl/PI0mEWR4wjQ8Z56ufxW936bOIfQ049/baHOwKWkFNyiSw4QYlsYtMoihRJZTATJiBiZ7fxFXSMWNTaAjiqCYNPn5ie0cSSiwwks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZygdmSj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C3AC116B1;
+	Thu, 11 Jul 2024 18:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720723237;
-	bh=yExZdVqBIAQfVWWzrI3974OVS4cKu6NLKKNVvN1boSY=;
+	s=k20201202; t=1720723724;
+	bh=xImh/e9JhSxNtzbEgiJpo+w6gMpGyqEXopSKCcJ76JE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gZgotSbabuI/ysZhMOp2LT5EDwQU/ic4lMoZLJpvWDoGBoj4RWIuuzTV641iGJyNA
-	 PtYeBzVevF2uD9fjF9dt1Da2QRfF4p4rECCGg0OQQlpQ8Mq+TIWUtk/nmlydM56hAn
-	 QEjZpTqg9ZnS+zdEmF1N7MgsMeLCukksVGqwC15EeBybyicQ7NObU8JkaNxe0JXHlb
-	 DQLXTDnAlY32CijPxMQhsTjRG8jq0TUv3PCjqJwBrXi5BTdWHj3R4hfBNlfJ9kk7EH
-	 HS0IxaZsUhHuS/djAc09jl8y9NAHPCL4I+AIRWfO8pA4QfSNAFrXHbEdLVLFF/QT51
-	 3PbwKFQfyjqhw==
-Date: Thu, 11 Jul 2024 13:40:35 -0500
+	b=LZygdmSjEBpl4BTzHjE4t6PNNOmKPMRI7FZ/b1BLxrLEXxaj8fb4aIjEFQNjxcYoz
+	 PS6pWF6WsLll9Lm97lHZxJUp5EMg0QhRasnMH++9lIhSWQE9EiYRulC6i3E29wKIJm
+	 EgQ/e6l6JHagNIE9p2YTnS0RKbuxF0+SYDd6fwSoYifX5W4kL91Xywnx3dSdzIBr/2
+	 iYuBu5xUHRJteBQbjTGqISKKM2NpN7GsRB0WzDkoa5ecwVxOIrpxaaLvuz8nK5cImL
+	 K8rELPM3xoktpef/j0j0HJ8Cu7qBURte99paPdTDbtyH1qAe4CDpYNTgJ8WwUF+KxO
+	 0gLOhoseGdpMg==
+Date: Thu, 11 Jul 2024 13:48:42 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Stewart Hildebrand <stewart.hildebrand@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 4/6] x86: PCI: preserve IORESOURCE_STARTALIGN
- alignment
-Message-ID: <20240711184035.GA287904@bhelgaas>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+	quic_parass@quicinc.com, Manivannan Sadhasivam <mani@kernel.org>
+Subject: Re: [PATCH v7 2/4] PCI: qcom-ep: Add support for D-state change
+ notification
+Message-ID: <20240711184842.GA285502@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,63 +67,83 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a9c7ceb4-264f-4464-9f22-597d24f74f33@amd.com>
+In-Reply-To: <a56de2dc-30a0-a292-c03c-16ec5393eea8@quicinc.com>
 
-On Wed, Jul 10, 2024 at 06:49:42PM -0400, Stewart Hildebrand wrote:
-> On 7/10/24 17:24, Bjorn Helgaas wrote:
-> > On Wed, Jul 10, 2024 at 12:16:24PM -0400, Stewart Hildebrand wrote:
-> >> On 7/9/24 12:19, Bjorn Helgaas wrote:
-> >>> On Tue, Jul 09, 2024 at 09:36:01AM -0400, Stewart Hildebrand wrote:
-> >>>> Currently, it's not possible to use the IORESOURCE_STARTALIGN flag on
-> >>>> x86 due to the alignment being overwritten in
-> >>>> pcibios_allocate_dev_resources(). Make one small change in arch/x86 to
-> >>>> make it work on x86.
-> >>>
-> >>> Is this a regression?  I didn't look up when IORESOURCE_STARTALIGN was
-> >>> added, but likely it was for some situation on x86, so presumably it
-> >>> worked at one time.  If something broke it in the meantime, it would
-> >>> be nice to identify the commit that broke it.
-> >>
-> >> No, I don't have reason to believe it's a regression.
-> >>
-> >> IORESOURCE_STARTALIGN was introduced in commit 884525655d07 ("PCI: clean
-> >> up resource alignment management").
-> > 
-> > Ah, OK.  IORESOURCE_STARTALIGN is used for bridge windows, which don't
-> > need to be aligned on their size as BARs do.  It would be terrible if
-> > that usage was broken, which is why I was alarmed by the idea of it
-> > not working on x86> 
-> > But this patch is only relevant for BARs.  I was a little confused
-> > about IORESOURCE_STARTALIGN for a BAR, but I guess the point is to
-> > force alignment on *more* than the BAR's size, e.g., to prevent
-> > multiple BARs from being put in the same page.
-> > 
-> > Bottom line, this would need to be a little more specific so it
-> > doesn't suggest that IORESOURCE_STARTALIGN for windows is broken.
-> 
-> I'll make the commit message clearer.
-> 
-> > IIUC, the main purpose of the series is to align all BARs to at least
-> > 4K.  I don't think the series relies on IORESOURCE_STARTALIGN to do
-> > that.
-> 
-> Yes, it does rely on IORESOURCE_STARTALIGN for BARs.
+On Thu, Jul 11, 2024 at 11:57:35AM +0530, Krishna Chaitanya Chundru wrote:
+> On 7/10/2024 5:41 PM, Bjorn Helgaas wrote:
+> > On Wed, Jul 10, 2024 at 04:38:15PM +0530, Krishna chaitanya chundru wrote:
+> > > Add support to pass D-state change notification to Endpoint
+> > > function driver.
+> ...
 
-Oh, I missed that, sorry.  The only places I see that set
-IORESOURCE_STARTALIGN are pci_request_resource_alignment(), which is
-where I got the "pci=resource_alignment=..." connection, and
-pbus_size_io(), pbus_size_mem(), and pci_bus_size_cardbus(), which are
-for bridge windows, AFAICS.
+> > I don't understand the connection between PERST# state and the device
+> > D state.  D3cold is defined to mean main power is absent.  Is the
+> > endpoint firmware still running when main power is absent?
+>
+> Host as part of its d3cold sequence will assert the perst. so we are
+> reading perst to know the link the state.
 
-Doesn't the >= 4K alignment in this series hinge on the
-pcibios_default_alignment() change?  It looks like that would force at
-least 4K alignment independent of IORESOURCE_STARTALIGN.
+I think it's true that when the device is in D3cold, PERST# will be
+asserted (PCIe CEM r5.0, sec 2.2.3, fig 2-6).
 
-> > But there's an issue with "pci=resource_alignment=..." that you
-> > noticed sort of incidentally, and this patch fixes that?
+But I don't think it's necessarily true that when PERST# is asserted,
+the device is in D3cold.  For example, PCIe Mini CEM r2.1, sec
+3.2.5.3, says "The system may also use PERST# to cause a warm reset of
+the add-in card."  In a warm reset, the component remains powered up,
+i.e., it is not in D3cold (PCIe r6.0, sec 6.6.1).
+
+I would think the endpoint firmware would be able to directly read the
+state of main power or the LTSSM state of the link, without having to
+use PERST# to infer it.
+
+I guess the ultimate point of figuring out D3hot vs D3cold is to
+figure out whether to use PME or WAKE#?  I'm a little bit dubious
+about that being racy, as I mentioned elsewhere.  If there were a way
+to attempt PME and fall back to WAKE# if you can determine that PME
+failed, maybe that would be safer and obviate the need for the D-state
+tracking?
+
+> Qcom devices are drawing power from the PCIe, so even when PCIe is in
+> D3cold endpoint firmware can still run.
 > 
-> No, pci=resource_alignment= results in IORESOURCE_SIZEALIGN, which
-> breaks pcitest. And we'd like pcitest to work properly for PCI
-> passthrough validation with Xen, hence the need for
-> IORESOURCE_STARTALIGN.
+> - Krishna Chaitanya.
+> > > Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+> > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-qcom-ep.c | 8 +++++++-
+> > >   1 file changed, 7 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > index 236229f66c80..817fad805c51 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> > > @@ -648,6 +648,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+> > >   	struct device *dev = pci->dev;
+> > >   	u32 status = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_STATUS);
+> > >   	u32 mask = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_MASK);
+> > > +	pci_power_t state;
+> > >   	u32 dstate, val;
+> > >   	writel_relaxed(status, pcie_ep->parf + PARF_INT_ALL_CLEAR);
+> > > @@ -671,11 +672,16 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
+> > >   		dstate = dw_pcie_readl_dbi(pci, DBI_CON_STATUS) &
+> > >   					   DBI_CON_STATUS_POWER_STATE_MASK;
+> > >   		dev_dbg(dev, "Received D%d state event\n", dstate);
+> > > -		if (dstate == 3) {
+> > > +		state = dstate;
+> > > +		if (dstate == PCI_D3hot) {
+> > >   			val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
+> > >   			val |= PARF_PM_CTRL_REQ_EXIT_L1;
+> > >   			writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
+> > > +
+> > > +			if (gpiod_get_value(pcie_ep->reset))
+> > > +				state = PCI_D3cold;
+> > >   		}
+> > > +		pci_epc_dstate_notify(pci->ep.epc, state);
+> > >   	} else if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+> > >   		dev_dbg(dev, "Received Linkup event. Enumeration complete!\n");
+> > >   		dw_pcie_ep_linkup(&pci->ep);
+> > > 
+> > > -- 
+> > > 2.42.0
+> > > 
 
