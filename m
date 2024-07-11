@@ -1,132 +1,121 @@
-Return-Path: <linux-pci+bounces-10165-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10166-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A4E992EC58
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 18:10:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2BB992EC6A
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 18:12:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0040E1F22B1D
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 16:10:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E525285CC1
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 16:12:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6FDF16C857;
-	Thu, 11 Jul 2024 16:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA1E16C862;
+	Thu, 11 Jul 2024 16:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="rVVHP500"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mtz5Oqfx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DA315957E;
-	Thu, 11 Jul 2024 16:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8519F16C86A;
+	Thu, 11 Jul 2024 16:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720714217; cv=none; b=XUUt/G5D6x7HmmXeqQHnqLg9axlZloKs8nRrQCNhnjK8m1t60gLy/yg+B8T8/JHMQRsuDd24tw1an0PjLDzZjb6L39aTESkr9YG+IFNZ1VseUheA9AiP+UeU5AMmOJIOCrhxbHMMnjCfQfBT9x3hgzHvUdwXGxiHEZlb2CleMQo=
+	t=1720714369; cv=none; b=WlM/RvCZH68dBidmLsgPjE6s9qo2SpN67sKdl5va3NsljnNmW20Uss3XrdUOxb9E2aqy87lcwMCq4zQnt9BMhZnt7F8za4fb8C+ogBDa1qcI/5zlUzDeoGzMttoafVO1Sqrvq/Qljy6SxoyYlCOc+qky9qPD3igNISN1agLyADs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720714217; c=relaxed/simple;
-	bh=toos/atAMxpoRk1QwVzwIn/xX8NOj8ffSwRiozlKcbQ=;
-	h=Message-ID:Date:MIME-Version:To:References:Subject:From:Cc:
-	 In-Reply-To:Content-Type; b=QlZQ9jCVgFEFIZ5fw0hcJ9oMb6SPOewOg/5KmCC1hI+foJ237eS5SqMtKGNLDE4LXyUwd+Z2wQR+cT0BGyqtowFW0GCAyCfDE99Da/hvfefr4Dv04DoBkR0FoL5vgyjMpQIjXnDQmUHNZMQbklqAYT7GCgN1v2MSJizhZVU1j3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=rVVHP500; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1720714178; x=1721318978; i=markus.elfring@web.de;
-	bh=iCA+wBBrDEg85srNLY95LSkrYDhC1QURR+TnrO0mB7U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:References:
-	 Subject:From:Cc:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=rVVHP50064H3+NxqWnBBbLlsmJUgKEtW3UUIn0sX6hPrgvYM1R4yuk2oKp7i+Y+5
-	 tyfL1TpDF8L52wT0a3hRXYjVSL1P7ZcSZ7vPvzcfLyS5DEw59Jtw8cIVSRgRVSzlN
-	 CaHhrWpMZ4jNl5i9ed3mzjoYKQ0vqzptTWOvLxoTjTEfCATlR8hVF8yD76z2xC2s0
-	 WVzDHw/TJNhyVHhgYbXYSDWfZp56x6BVyo0ItJ3AYJ77sOTnOdU66ZnP3gO5BHpl1
-	 iYjGfgou8UiPltcWBQPbBV0dTWUdK58OiRCFc87VkdxP4ijB5IyfBJio1AHX5YrPS
-	 1lB0UXOYL3SX1hiGYw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLzn1-1sjsih2sAD-00M8X2; Thu, 11
- Jul 2024 18:09:38 +0200
-Message-ID: <91cfc410-744f-49f8-8331-733c41a43121@web.de>
-Date: Thu, 11 Jul 2024 18:09:26 +0200
+	s=arc-20240116; t=1720714369; c=relaxed/simple;
+	bh=7mWvZuNwbK/tZKZmGG9Fc+5OqBJtk/2uCg8dn6+VxCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=sPz7U/isDgz5yABAuw34pZZYaLvjFjROvhYSfE9Bl9/IAejUkpr6YQUVm+RjJUBfiQSUP9jwic13mP+UDCYg3XziA3c/cT2FW2g/9sYI/cQlEXaMAQZbp/6PEkL0asg1gTqPxPc88f0MkMzLq7LxsLcxfEH196jzVkog+N/KyMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mtz5Oqfx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB97BC116B1;
+	Thu, 11 Jul 2024 16:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720714369;
+	bh=7mWvZuNwbK/tZKZmGG9Fc+5OqBJtk/2uCg8dn6+VxCs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Mtz5Oqfx2Ol7a9hd6OZI2WqTNgkKgfQ7sp6Yhj409+Zy/rRC6VzEF9giyZcxV5WVw
+	 T56W934LfT7L81pW8EMSmWONHLZwDejku5ia1+3TPxetOR506psyyyR7JmUAtIdUeJ
+	 4lStaXHYq4hbIui01CMqPrMnlxTZSv4Y8EEhItdrYdrzDXqDJ9thGPa5RxWZbXgQPF
+	 yi/MmV7g4DprxwH9Wj8Ar8NcHzkX6Un0HwkB5EGMSW0+JGtYrbWnMMwMKorjvtk1HV
+	 oXmmWTNx9HZ226Z8gU12m9cRV/slufeYElG5zY6qs1wgd7dnD7VSy2+AREkrFDkkdh
+	 2/HpnA5pL00Rw==
+Date: Thu, 11 Jul 2024 11:12:46 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jiwei Sun <sjiwei@163.com>
+Cc: nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+	paul.m.stillwell.jr@intel.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, sunjw10@lenovo.com,
+	ahuang12@lenovo.com
+Subject: Re: [PATCH v3] PCI: vmd: Create domain symlink before
+ pci_bus_add_devices()
+Message-ID: <20240711161246.GA285252@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
- Herve Codina <herve.codina@bootlin.com>, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, netdev@vger.kernel.org,
- UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Daniel Machon <daniel.machon@microchip.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Lars Povlsen <lars.povlsen@microchip.com>, Lee Jones <lee@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Saravana Kannan <saravanak@google.com>, Simon Horman <horms@kernel.org>,
- Steen Hegelund <Steen.Hegelund@microchip.com>
-References: <20240627091137.370572-2-herve.codina@bootlin.com>
-Subject: Re: [PATCH v3 1/7] mfd: syscon: Add reference counting and device
- managed support
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Allan Nielsen <allan.nielsen@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,
- Jakub Kicinski <kuba@kernel.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Paolo Abeni <pabeni@redhat.com>,
- Steen Hegelund <steen.hegelund@microchip.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-In-Reply-To: <20240627091137.370572-2-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LFxBbBSDsYV2z0yRm6Y6oG29nFJqIo210Cv0lweQhRokoOaMp2c
- 5IeyRxm67QFt5Y7Kojegg5OSD8tkKd7cq3tnAlbxWNukHx/4YKeDX3rhdrZ/sKghJaq923J
- O2zNJ9p/wKlhm/m5firh2qWJlH5tKas6Mkctf7fVwpFX3hlLTA6e3Hi5lI7yVgvZQsU50SS
- b8WAsD4LmYcDCTtg6J2lw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:67zTDbbpL1Y=;r8OJ82Rzrd5kNER/6Bwtek2zluy
- EEiPx4/efkk2tspOBTpJqtkZJ7zHi47ROcfdLPW9GPGf0mRGZ/QZ8R+5MgQym8MT/SoaHOhGJ
- VL7y3ItFOn45TFVHkQoKx2MBjG8+vjFle8ksRxHqslQZn4WY1jaBq8gk/smnklDS5XTQNESw4
- ypOUWNNPNicq+wdJcTdqBEjCXCohmB4JIPSJwCRU5ptM6x6X3FaQKLcWgTb6qX9EDF7zXt3IN
- GWukiV7uncVinK648zXKgI8gArw+dK2++f7gtpBf0OLCynRSgvcL7E04S2meNm3Tmct1+e4NC
- CnxyJGxLYkhDm9PPn+4vtArcTJy6jQR+c46dQ+aF7ODGtm6IYKMrhkYdWdMR6UXdyr+EUC0Au
- uDBprMwxw6s0PXckmi3vbZEh0dmz+HQh6lRzYCJqvu0qezIoGoAx81/Ox9H+nt+vxPqNoGHz7
- GI5NkRazUiDO2Fc5UbHkSHYTGpoMP9E+iE3npQ6PsGFjWVcX1P/K6Yf6MhS4Z6HX1YmDbDF7v
- 9Y9nLnh30Zhj9RAtlif45fFXEBUskZA4VY/iBduY4881M/U/+3qUt0djrQvwDWYuX322w1xDo
- cLG2s3ac7K75p4qFa4XkJBxolm8J7Id5roCQrYoFwLaWklxaWHkfsqLsohgjKhXr+R/k3gNB5
- 1boR3x1dyK4Ngu0YXXt7ZNIqoaID6pQ0Yh19CBo0dnz0MTHhOB3NGbZ0419d+HD8p0rFbne7t
- S13hVp+2Rn5u7xt6sInh0J7frMYrJfBE2NUDT8KX2k2riV53B9Vyu4ErhO01Wic5CooymJUOo
- TRWQsnSINZ3uUaoBpp14nOhg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db1d3c1d-de04-401e-a03e-a8bc8cce639e@163.com>
 
-=E2=80=A6
-> +++ b/drivers/mfd/syscon.c
-=E2=80=A6
-> +static struct syscon *syscon_from_regmap(struct regmap *regmap)
-+{
-> +	struct syscon *entry, *syscon =3D NULL;
-> +
-> +	spin_lock(&syscon_list_slock);
-> +
-> +	list_for_each_entry(entry, &syscon_list, list)
-=E2=80=A6
-> +	spin_unlock(&syscon_list_slock);
-> +
-> +	return syscon;
-> +}
-=E2=80=A6
+On Thu, Jul 11, 2024 at 09:32:46AM +0800, Jiwei Sun wrote:
+> 
+> On 7/11/24 06:16, Bjorn Helgaas wrote:
+> > [-cc Pawel, Alexey, Tomasz, which all bounced]
+> > 
+> > On Wed, Jul 10, 2024 at 09:29:25PM +0800, Jiwei Sun wrote:
+> >> On 7/10/24 04:59, Bjorn Helgaas wrote:
+> >>> [+cc Pawel, Alexey, Tomasz for mdadm history]
+> >>> On Wed, Jun 05, 2024 at 08:48:44PM +0800, Jiwei Sun wrote:
+> >>>> From: Jiwei Sun <sunjw10@lenovo.com>
+> >>>>
+> >>>> During booting into the kernel, the following error message appears:
+> >>>>
+> >>>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
+> >>>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
+> >>>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
+> >>>>   (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
+> >>>>   (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
+> >>>>
+> >>>> This symptom prevents the OS from booting successfully.
+> >>>
+> >>> I guess the root filesystem must be on a RAID device, and it's the
+> >>> failure to assemble that RAID device that prevents OS boot?  The
+> >>> messages are just details about why the assembly failed?
+> >>
+> >> Yes, you are right, in our test environment, we installed the SLES15SP6
+> >> on a VROC RAID 1 device which is set up by two NVME hard drivers. And
+> >> there is also a hardware RAID kit on the motherboard with other two NVME 
+> >> hard drivers.
+> > 
+> > OK, thanks for all the details.  What would you think of updating the
+> > commit log like this?
+> 
+> Thanks, I think this commit log is clearer than before. Do I need to 
+> send another v4 patch for the changes?
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(spinlock)(&syscon_list_slock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.10-rc7/source/include/linux/spinlock.h=
-#L561
+No need, if you think it's OK, I can update the commit log locally.
 
-Regards,
-Markus
+> >   The vmd driver creates a "domain" symlink in sysfs for each VMD bridge.
+> >   Previously this symlink was created after pci_bus_add_devices() added
+> >   devices below the VMD bridge and emitted udev events to announce them to
+> >   userspace.
+> > 
+> >   This led to a race between userspace consumers of the udev events and the
+> >   kernel creation of the symlink.  One such consumer is mdadm, which
+> >   assembles block devices into a RAID array, and for devices below a VMD
+> >   bridge, mdadm depends on the "domain" symlink.
+> > 
+> >   If mdadm loses the race, it may be unable to assemble a RAID array, which
+> >   may cause a boot failure or other issues, with complaints like this:
+> > 
+> >   ...
+> > 
+> >   Create the VMD "domain" symlink before invoking pci_bus_add_devices() to
+> >   avoid this race.
+> 
 
