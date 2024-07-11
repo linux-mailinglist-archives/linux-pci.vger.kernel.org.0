@@ -1,180 +1,124 @@
-Return-Path: <linux-pci+bounces-10154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4A8992E89A
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 14:57:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEC3B92E978
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 15:26:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03BE41C2160D
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 12:57:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EA392842CA
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 13:26:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9DD315E5AB;
-	Thu, 11 Jul 2024 12:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ECF415FA92;
+	Thu, 11 Jul 2024 13:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="ZagcQCku"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLjjkocx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9B4155C95;
-	Thu, 11 Jul 2024 12:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDB015ECE3
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jul 2024 13:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720702656; cv=none; b=WKtQ+JRPLK9SRYGEC/0d7SEwuFLq+Zlf5lOpMdYx+e4CndtOrh5giu4mNC2KU5xj6BU63V2kSFAhi1euqgfLKecsteyjIKXbkgQjStyvk24GNmHucBrzpF5xgZwf17wLra6zOUfjuTCldCvoKcghzwV7JI0b863ICxxXswSzxgQ=
+	t=1720704350; cv=none; b=IioHkd5XlrTm6Er1tCgpT2JxpGdNiq8iQpOs83Vcsp7X9Y6c0dpln4KMjCb1fXbTcusd6b4cYd2N2GjL14oa4eHxwOWE695AcLOdKqMbq3iPwqXnf9kxXtAtRiyVo70VfCFjH17A6O5ubxUOrsUQao3S0+1pG5O4q1bRk3Ldpuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720702656; c=relaxed/simple;
-	bh=IgnTnnjkD8FFGi6ivzy/g9+noQ1C0Ks2nR19HopGtQc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ltwn991fJJKAYGT0cT3egnR3ibbLQSTXiS2UBElbGmIaHUi2Pkb7FPgWmkf2OtjaWqdw8Tw8c6X1cku8fhdPemGE2Hgy5zSoRouiBunLc9PLofXWV26kPpug14DxQmK1AKtqdTd/LzgBHzZaNu3eWPNNi0HCG1cGAnFdcD1NR6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=ZagcQCku; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UP29LTmvlHTs/OoBfoU8insLR5ShRbL+0hC3P+TNI/s=; t=1720702652; x=1721307452; 
-	b=ZagcQCkubL7WN9c6ifIlQ7V4f1nvNypRwbpsOr6yNJz/zLKkc5CVkwSmdVykIAiceMjcd+tlFhi
-	Z6esyr52TZWMGkYUYwtfh4H7TJxIH53oxLXtYWkJqIjS35ZZHJ2g53M3oeryf9QNQolTvtRVjoF6O
-	u+FRxbjhG18U6NMR7SiNrhLOGniHRXNrKp+vU+UWbYbCUI9ApaVeOTAiS/WjNP3zByje+XK+Sk3YG
-	Kclf0XoiA/XnE0aNwqxLeSwyjkoa6HNjucmI1UC1H5o1HeWUMK9OZsjmHNhQVuyvxZtxcmS/Z4ZIG
-	fwhQz6fKZeF1nxzzy9c4NHDkCvz66FCT+fvg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1sRtMO-00000003KGI-40qJ; Thu, 11 Jul 2024 14:57:20 +0200
-Received: from p5b13a475.dip0.t-ipconnect.de ([91.19.164.117] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1sRtMO-00000001SHj-2Zok; Thu, 11 Jul 2024 14:57:20 +0200
-Message-ID: <cb7a69949c08be858b107a2b8184d1da92d794a0.camel@physik.fu-berlin.de>
-Subject: Re: [DO NOT MERGE v8 20/36] serial: sh-sci: fix SH4 OF support.
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org
-Cc: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,  Geert Uytterhoeven
- <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>,  David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner
- <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,  Lorenzo
- Pieralisi <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
- <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, Lee Jones
- <lee@kernel.org>, Helge Deller <deller@gmx.de>, Heiko Stuebner
- <heiko.stuebner@cherry.de>, Neil Armstrong <neil.armstrong@linaro.org>,
- Chris Morgan <macromorgan@hotmail.com>, Sebastian Reichel <sre@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
- Masahiro Yamada <masahiroy@kernel.org>, Baoquan He <bhe@redhat.com>, Andrew
- Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>,
- Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell
- <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, Guo Ren
- <guoren@kernel.org>, Max Filippov <jcmvbkbc@gmail.com>,  Jernej Skrabec
- <jernej.skrabec@gmail.com>, Herve Codina <herve.codina@bootlin.com>, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>, Anup Patel
- <apatel@ventanamicro.com>,  Jacky Huang <ychuang3@nuvoton.com>, Hugo
- Villeneuve <hvilleneuve@dimonoff.com>, Jonathan Corbet <corbet@lwn.net>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Sam Ravnborg
- <sam@ravnborg.org>, Javier Martinez Canillas <javierm@redhat.com>, Sergey
- Shtylyov <s.shtylyov@omp.ru>, Laurent Pinchart
- <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
- linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Date: Thu, 11 Jul 2024 14:57:18 +0200
-In-Reply-To: <57525900a4876323467612d73eded183315c1680.1716965617.git.ysato@users.sourceforge.jp>
-References: <cover.1716965617.git.ysato@users.sourceforge.jp>
-	 <57525900a4876323467612d73eded183315c1680.1716965617.git.ysato@users.sourceforge.jp>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	s=arc-20240116; t=1720704350; c=relaxed/simple;
+	bh=k5bmhPA0dDj6lZmlZdKcCm/UQoTJ5B2ESn1wu8a6a/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VUOYZOio5DqXzX6Z4cJg0sDaHdxEmUD8lCie52FziUp4BT6BxMPiV22FBStzFCMm7effDm64oQPrPXzJhQDDayVjRutsF5cZAfWhm/UxUCSIB26BLfAomeMuHxHt9Klr9puA5hAwzVL7511tJgPhO859ZRdz9havFuEgu9tlogA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLjjkocx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B655C116B1;
+	Thu, 11 Jul 2024 13:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720704349;
+	bh=k5bmhPA0dDj6lZmlZdKcCm/UQoTJ5B2ESn1wu8a6a/c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lLjjkocx3f+o5YelJRRiposcM0mqy+7gZDX7kCmb3rfnVvpigoB8RszkbphxROCDg
+	 PBtWRjTeqtnBw6ZF8pQTszOhleOUi7HXsLFBjxAswSHic8lgQERhGRJb3LSneBqH52
+	 bKInMPPUC3lhGIMeQWWL6XTo9jsDIZrETljX2qI5NTsGHtLKTbe2sJKzHMnx2X0il7
+	 Sz0MFPiLEFAhUhsxhQlZEa0VbTr6FPV5RvfgnzbGiNa/UcDgn/o5/vbpLBgNcw4oUU
+	 ZsAhvpgELMj0cuxSxlMS9PgRocs2y0jgC6z5aHTYBbz703yqi0Vn2OM8lIRc+EViLs
+	 uGFsDOmWICViA==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH v2] PCI: mvebu: Dispose INTx IRQs before to removing INTx domain
+Date: Thu, 11 Jul 2024 15:25:44 +0200
+Message-ID: <20240711132544.9048-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Yoshinori,
+From: Pali Rohár <pali@kernel.org>
 
-On Wed, 2024-05-29 at 17:01 +0900, Yoshinori Sato wrote:
-> - Separated RZ's earlycon initialization from normal SCIF.
-> - fix earlyprintk hung (NULL pointer reference).
-> - fix SERIAL_SH_SCI_EARLYCON enablement
+The documentation for the irq_domain_remove() function says that all
+mappings within the IRQ domain must be disposed before the domain is
+removed.
 
-I feel like this could actually be split into three patches.
+Currently, the INTx IRQs are not disposed in pci-mvebu driver .remove()
+method, which causes the kernel to crash when unloading the driver and
+then reading /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
 
-Adrian
+Unmapping of the IRQs at this point of the .remove() method is safe,
+since the PCIe bus is already unregistered, and all its devices are
+unbound from their drivers and removed. If there was indeed any
+remaining use of PCIe resources, then it would mean that PCIe hotplug
+code is broken, and we have bigger problems.
 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/tty/serial/Kconfig  | 2 +-
->  drivers/tty/serial/sh-sci.c | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 4fdd7857ef4d..eeb22b582470 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -664,7 +664,7 @@ config SERIAL_SH_SCI_EARLYCON
->  	depends on SERIAL_SH_SCI=3Dy
->  	select SERIAL_CORE_CONSOLE
->  	select SERIAL_EARLYCON
-> -	default ARCH_RENESAS
-> +	default ARCH_RENESAS || SUPERH
-> =20
->  config SERIAL_SH_SCI_DMA
->  	bool "DMA support" if EXPERT
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index f738980a8b2c..068f483401e3 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -2723,7 +2723,7 @@ static int sci_remap_port(struct uart_port *port)
->  	if (port->membase)
->  		return 0;
-> =20
-> -	if (port->dev->of_node || (port->flags & UPF_IOREMAP)) {
-> +	if (dev_of_node(port->dev) || (port->flags & UPF_IOREMAP)) {
->  		port->membase =3D ioremap(port->mapbase, sport->reg_size);
->  		if (unlikely(!port->membase)) {
->  			dev_err(port->dev, "can't remap port#%d\n", port->line);
-> @@ -3551,8 +3551,8 @@ static int __init hscif_early_console_setup(struct =
-earlycon_device *device,
-> =20
->  OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
->  OF_EARLYCON_DECLARE(scif, "renesas,scif", scif_early_console_setup);
-> -OF_EARLYCON_DECLARE(scif, "renesas,scif-r7s9210", rzscifa_early_console_=
-setup);
-> -OF_EARLYCON_DECLARE(scif, "renesas,scif-r9a07g044", rzscifa_early_consol=
-e_setup);
-> +OF_EARLYCON_DECLARE(rzscifa, "renesas,scif-r7s9210", rzscifa_early_conso=
-le_setup);
-> +OF_EARLYCON_DECLARE(rzscifa, "renesas,scif-r9a07g044", rzscifa_early_con=
-sole_setup);
->  OF_EARLYCON_DECLARE(scifa, "renesas,scifa", scifa_early_console_setup);
->  OF_EARLYCON_DECLARE(scifb, "renesas,scifb", scifb_early_console_setup);
->  OF_EARLYCON_DECLARE(hscif, "renesas,hscif", hscif_early_console_setup);
+Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
+Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Marek Behún <kabel@kernel.org>
+[ Marek: refactored a little, added more explanation to commit message ]
+Signed-off-by: Marek Behún <kabel@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Changes since v1:
+- added explanation into commit message about why this is safe to do,
+  as suggested by Andy. The explanation originally comes from Pali:
+    https://lore.kernel.org/linux-arm-kernel/20220809133911.hqi7eyskcq2sojia@pali/
+---
+ drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index 29fe09c99e7d..91a02b23aeb1 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -1683,8 +1683,15 @@ static void mvebu_pcie_remove(struct platform_device *pdev)
+ 			irq_set_chained_handler_and_data(irq, NULL, NULL);
+ 
+ 		/* Remove IRQ domains. */
+-		if (port->intx_irq_domain)
++		if (port->intx_irq_domain) {
++			for (int j = 0; j < PCI_NUM_INTX; j++) {
++				int virq = irq_find_mapping(port->intx_irq_domain, j);
++
++				if (virq > 0)
++					irq_dispose_mapping(virq);
++			}
+ 			irq_domain_remove(port->intx_irq_domain);
++		}
+ 
+ 		/* Free config space for emulated root bridge. */
+ 		pci_bridge_emul_cleanup(&port->bridge);
+-- 
+2.44.2
+
 
