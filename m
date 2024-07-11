@@ -1,75 +1,48 @@
-Return-Path: <linux-pci+bounces-10138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 185C492DFC1
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 07:45:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4036092DFFA
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 08:21:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99F811F2296F
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 05:45:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A1AF1C20FCA
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 06:21:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E65A77105;
-	Thu, 11 Jul 2024 05:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D7937FBBD;
+	Thu, 11 Jul 2024 06:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNGJ+/jk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OT5DfYyE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88ED92119;
-	Thu, 11 Jul 2024 05:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9FB1C14;
+	Thu, 11 Jul 2024 06:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720676743; cv=none; b=hfMORjllAurO1UyZP91O0usuSWX8iW/lxVllwGcGUI08RyD/Nvio3fRGoIssVYmB+1eI/YMexuJlkXmPfkJWADwWR05dXvGRqd/U7I0IdIaUN6lvQEODRf/pfBiI31DqLOhdrEqm69FIoAzNmT4R6ksUh1PCXQA511FZhOvNTNI=
+	t=1720678899; cv=none; b=GBoPiIhXjqa1EOWVMucRdIHnSI1THeRFJ5GabEvFpukN3W5wQHM3SsdLO3EUo+/ojf0fudVKyzOBdyEAOLTnZ/KRZqN5xUbDSbUCEeOX4UNnDS2xHVQDo5Xq9BkR4/Fp+OKA+Swr6XBbGE2wW+845OSD5silH6XsfNc7wG7jMwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720676743; c=relaxed/simple;
-	bh=ELoHEJ2+KbO+wHuoqBpQ70khjf9eHXpu783a8MGEV8I=;
+	s=arc-20240116; t=1720678899; c=relaxed/simple;
+	bh=9Shl6MffKtYg+faCj77eGnW5QRGHcfbO3NAol1je+k4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=alyK1qRw/nJFfLXM3chBkWQM76e1hii/x9arkUJLP0BoyvFfU7k58TJpli/EpPxl4CDSuTafW0kWV5gGCj6/Rv4z34kXjPeLN3UBI+XZ5M3chSXdGTdhSQ67Z988hMfbaZ1XNKBe9JvFGIw8JqfSsbBhnlJVEnFPZ69wgKpixj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QNGJ+/jk; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-58e76294858so2826190a12.0;
-        Wed, 10 Jul 2024 22:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720676740; x=1721281540; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FB4o4e+0EEgnFpZcz2u80/4PAAOac+hLFukD7y+GNS0=;
-        b=QNGJ+/jkkZoda+VCysqrrImsF+U6YPC5Gy9ISZm4b3jXqzRqaOXC20pabNM21Lr5cn
-         56Cl5XnN5xihfWCjAwF7QFb/F5bOM94qKfoC0VbDyZ2GWlnK7RyiCBvGsRRvdpqipY/w
-         H/Ey2ezh06/Q2707BBaEEf+Gt4HoqVVRcNI6scHwKB5StMD5oIdpjqj4AVlpa13VU+IU
-         rXlk1/Ee03KbfbE7brJ3hcQ7i8+J6jDjZ0i/4ouN1X02lqOKwAwmsMmO9WVhEExT+HSO
-         mgABl2QoxDLLdI8WBUG7C9BA+L71OF7G69BnfyvD6V3hCBE9y2VIk/agU5nBECwSAJZW
-         NvgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720676740; x=1721281540;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FB4o4e+0EEgnFpZcz2u80/4PAAOac+hLFukD7y+GNS0=;
-        b=bcB3f8ElIGMi/csa7QVZFzdi15PoUOjg8uBh9HhaliUIeFSr3oO4yE6HaLKyac4dMx
-         Fg30IUdl+IoIZGk6YfxBbiTAeH/6T9o6VMvv3HmNa8+lUaaJIjgP9cmhI5vfop1sbwPv
-         IB0ybt0yi+EL/3+yYbkZzOK02QH+sfCXuVtE/IYU8uFmk3HN4mEeVYFirDprwf4d7u6Z
-         LKgBMJeHBOclg/6pipiFtMGsXyjFAInDxKjTmYmrPJhG+89Mq3BFf6t8hTnZq+lQog1F
-         CH4ojVlZyRdTCe9gZRxXOalRiPtcCf8+q+8G2Jf6eZGrgs9Y6OFYRmEtAUDeH5Ae6SQF
-         ZycQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNLSBoqLiZk62zWdcG/5ramH11XudLXi6o5nwovWiLe2hvprtjtv7BqgY7DZP3EMCKCYptZpRviHmwcvIkxxvq76cE2fdFt+H4UucLT6RiEe7c1+IrM4+1PVtR0kVnzh/g2FjJM1rOxDn3p9SL/bs2AT1b+HfzjlNV52BkfD+i
-X-Gm-Message-State: AOJu0Ywo+9iEGoFi65GNzQAByRfT3YBXnZNsa0o/cp/yYwNr/69iEQyi
-	OEiPGEw5e7OPzph0WX5SrWeuVeiLQ2WfehEQmZ3hDIi6GFtUnFEb8eyMVQ==
-X-Google-Smtp-Source: AGHT+IHDd0CIJO740tR2d0J+wToPFSwIiOEAmx+JE2OwGEkLe8GK5JkNjCeLsNlyH1fZCa/WXTJ7dg==
-X-Received: by 2002:a17:906:3891:b0:a77:afd5:62aa with SMTP id a640c23a62f3a-a798a48817emr112440166b.23.1720676739581;
-        Wed, 10 Jul 2024 22:45:39 -0700 (PDT)
-Received: from ?IPV6:2a02:3100:958a:400:20d6:5852:848d:41f6? (dynamic-2a02-3100-958a-0400-20d6-5852-848d-41f6.310.pool.telefonica.de. [2a02:3100:958a:400:20d6:5852:848d:41f6])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a780a6bc86bsm223560566b.31.2024.07.10.22.45.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jul 2024 22:45:39 -0700 (PDT)
-Message-ID: <ad0d1201-1fe1-4170-8cfa-d23e74ef8bfd@gmail.com>
-Date: Thu, 11 Jul 2024 07:45:39 +0200
+	 In-Reply-To:Content-Type; b=pqsgrRU5Uf50VlX1Nxr2gHZD8vN+g4jQemY9IyBhwRWHdu+JmofrKmF0iv7HNmLkwgKfG53uyhimGEJjoDPov3a8/fY6I8SGlQxQT4C+xmGfYxPtpK0+0ECjdtRZYC04CoxPkpzfZrKmt0g5twJesqtxElfQLOOObWqPvdorucY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OT5DfYyE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C154DC116B1;
+	Thu, 11 Jul 2024 06:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720678898;
+	bh=9Shl6MffKtYg+faCj77eGnW5QRGHcfbO3NAol1je+k4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OT5DfYyEj9bmQ7SolyhQqoA3iu1+c3PGwXFqPlHZs7GXqA7JoS0MKmL/qtzCrr78p
+	 3nND2Ng3seL/6PYVldLrOQKdKjUdad+RHYdoBM6Hpg+jFYie05s+0CPVmm+2mWkSIz
+	 HGVNphuu1XF+xCC/159+uZ6Sl1ZGIpG+b/n/FB/2m5+i6hjNqQIAOkSKoTGTNmdP9W
+	 6loK0dLa1JF/peWi1zBWT0ppTu2dubAWZc9Mz7IFxFwi+ab4aQR9c2Ok6hywa6SLWB
+	 YmbNBk5ExE5LzeRN3rBhrCtID21rtkc/TQJK6ii4SU/HSZ20i60iulqeIQmg3GNIxD
+	 KH/4BPFYYWgxQ==
+Message-ID: <3cc6db43-4c3c-441a-8e2b-7de58ad0cce4@kernel.org>
+Date: Thu, 11 Jul 2024 08:21:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,356 +50,150 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: r8169: add suspend/resume aspm quirk
-To: George-Daniel Matei <danielgeorgem@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nic_swsd@realtek.com, netdev@vger.kernel.org,
- Bjorn Helgaas <helgaas@kernel.org>
-References: <20240708172339.GA139099@bhelgaas>
- <e1ed82cb-6d20-4ca8-b047-4a02dde115a8@gmail.com>
- <CACfW=qpNmSeQVG_qSeYpEdk9pf_RTAEEKp+OiBYrRFd3d6HOXg@mail.gmail.com>
+Subject: Re: [PATCH v3 02/12] dt-bindings: PCI: Cleanup of brcmstb YAML and
+ add 7712 SoC
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+References: <20240710221630.29561-1-james.quinlan@broadcom.com>
+ <20240710221630.29561-3-james.quinlan@broadcom.com>
 Content-Language: en-US
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
- sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
- MVE4yNwdS+UsPeCF/6CQQTzHc+n7DomE7fjJD5J1hOJjqz2XWe71fTvYXzxCFLwXXbBiqDC9
- dNqOe5odPsa4TsWZ09T33g5n2nzTJs4Zw8fCy8rLqix/raVsqr8fw5qM66MVtdmEljFaJ9N8
- /W56qGCp+H8Igk/F7CjlbWXiOlKHA25mPTmbVp7VlFsvsmMokr/imQr+0nXtmvYVaKEUwY2g
- 86IU6RAOuA8E0J5bD/BeyZdMyVEtX1kT404UJZekFytJZrDZetwxM/cAH+1fMx4z751WJmxQ
- J7mIXSPuDfeJhRDt9sGM6aRVfXbZt+wBogxyXepmnlv9K4A13z9DVLdKLrYUiu9/5QEl6fgI
- kPaXlAZmJsQfoKbmPqCHVRYj1lpQtDM/2/BO6gHASflWUHzwmBVZbS/XRs64uJO8CB3+V3fa
- cIivllReueGCMsHh6/8wgPAyopXOWOxbLsZ291fmZqIR0L5Y6b2HvdFN1Xhc+YrQ8TKK+Z4R
- mJRDh0wNQ8Gm89g92/YkHji4jIWlp2fwzCcx5+lZCQ1XdqAiHQARAQABzSZIZWluZXIgS2Fs
- bHdlaXQgPGhrYWxsd2VpdDFAZ21haWwuY29tPsLBjgQTAQgAOBYhBGxfqY/yOyXjyjJehXLe
- ig9U8DoMBQJf9GRVAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHLeig9U8DoMSycQ
- AJbfg8HZEK0ljV4M8nvdaiNixWAufrcZ+SD8zhbxl8GispK4F3Yo+20Y3UoZ7FcIidJWUUJL
- axAOkpI/70YNhlqAPMsuudlAieeYZKjIv1WV5ucNZ3VJ7dC+dlVqQdAr1iD869FZXvy91KhJ
- wYulyCf+s4T9YgmLC6jLMBZghKIf1uhSd0NzjyCqYWbk2ZxByZHgunEShOhHPHswu3Am0ftt
- ePaYIHgZs+Vzwfjs8I7EuW/5/f5G9w1vibXxtGY/GXwgGGHRDjFM7RSprGOv4F5eMGh+NFUJ
- TU9N96PQYMwXVxnQfRXl8O6ffSVmFx4H9rovxWPKobLmqQL0WKLLVvA/aOHCcMKgfyKRcLah
- 57vGC50Ga8oT2K1g0AhKGkyJo7lGXkMu5yEs0m9O+btqAB261/E3DRxfI1P/tvDZpLJKtq35
- dXsj6sjvhgX7VxXhY1wE54uqLLHY3UZQlmH3QF5t80MS7/KhxB1pO1Cpcmkt9hgyzH8+5org
- +9wWxGUtJWNP7CppY+qvv3SZtKJMKsxqk5coBGwNkMms56z4qfJm2PUtJQGjA65XWdzQACib
- 2iaDQoBqGZfXRdPT0tC1H5kUJuOX4ll1hI/HBMEFCcO8++Bl2wcrUsAxLzGvhINVJX2DAQaF
- aNetToazkCnzubKfBOyiTqFJ0b63c5dqziAgzsFNBF/0ZFUBEADF8UEZmKDl1w/UxvjeyAeX
- kghYkY3bkK6gcIYXdLRfJw12GbvMioSguvVzASVHG8h7NbNjk1yur6AONfbUpXKSNZ0skV8V
- fG+ppbaY+zQofsSMoj5gP0amwbwvPzVqZCYJai81VobefTX2MZM2Mg/ThBVtGyzV3NeCpnBa
- 8AX3s9rrX2XUoCibYotbbxx9afZYUFyflOc7kEpc9uJXIdaxS2Z6MnYLHsyVjiU6tzKCiVOU
- KJevqvzPXJmy0xaOVf7mhFSNQyJTrZpLa+tvB1DQRS08CqYtIMxRrVtC0t0LFeQGly6bOngr
- ircurWJiJKbSXVstLHgWYiq3/GmCSx/82ObeLO3PftklpRj8d+kFbrvrqBgjWtMH4WtK5uN5
- 1WJ71hWJfNchKRlaJ3GWy8KolCAoGsQMovn/ZEXxrGs1ndafu47yXOpuDAozoHTBGvuSXSZo
- ythk/0EAuz5IkwkhYBT1MGIAvNSn9ivE5aRnBazugy0rTRkVggHvt3/7flFHlGVGpBHxFUwb
- /a4UjJBPtIwa4tWR8B1Ma36S8Jk456k2n1id7M0LQ+eqstmp6Y+UB+pt9NX6t0Slw1NCdYTW
- gJezWTVKF7pmTdXszXGxlc9kTrVUz04PqPjnYbv5UWuDd2eyzGjrrFOsJEi8OK2d2j4FfF++
- AzOMdW09JVqejQARAQABwsF2BBgBCAAgFiEEbF+pj/I7JePKMl6Fct6KD1TwOgwFAl/0ZFUC
- GwwACgkQct6KD1TwOgxUfg//eAoYc0Vm4NrxymfcY30UjHVD0LgSvU8kUmXxil3qhFPS7KA+
- y7tgcKLHOkZkXMX5MLFcS9+SmrAjSBBV8omKoHNo+kfFx/dUAtz0lot8wNGmWb+NcHeKM1eb
- nwUMOEa1uDdfZeKef/U/2uHBceY7Gc6zPZPWgXghEyQMTH2UhLgeam8yglyO+A6RXCh+s6ak
- Wje7Vo1wGK4eYxp6pwMPJXLMsI0ii/2k3YPEJPv+yJf90MbYyQSbkTwZhrsokjQEaIfjrIk3
- rQRjTve/J62WIO28IbY/mENuGgWehRlTAbhC4BLTZ5uYS0YMQCR7v9UGMWdNWXFyrOB6PjSu
- Trn9MsPoUc8qI72mVpxEXQDLlrd2ijEWm7Nrf52YMD7hL6rXXuis7R6zY8WnnBhW0uCfhajx
- q+KuARXC0sDLztcjaS3ayXonpoCPZep2Bd5xqE4Ln8/COCslP7E92W1uf1EcdXXIrx1acg21
- H/0Z53okMykVs3a8tECPHIxnre2UxKdTbCEkjkR4V6JyplTS47oWMw3zyI7zkaadfzVFBxk2
- lo/Tny+FX1Azea3Ce7oOnRUEZtWSsUidtIjmL8YUQFZYm+JUIgfRmSpMFq8JP4VH43GXpB/S
- OCrl+/xujzvoUBFV/cHKjEQYBxo+MaiQa1U54ykM2W4DnHb1UiEf5xDkFd4=
-In-Reply-To: <CACfW=qpNmSeQVG_qSeYpEdk9pf_RTAEEKp+OiBYrRFd3d6HOXg@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240710221630.29561-3-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 10.07.2024 17:09, George-Daniel Matei wrote:
-> Hi,
-> 
->>> Added aspm suspend/resume hooks that run
->>> before and after suspend and resume to change
->>> the ASPM states of the PCI bus in order to allow
->>> the system suspend while trying to prevent card hangs
->>
->> Why is this needed?  Is there a r8169 defect we're working around?
->> A BIOS defect?  Is there a problem report you can reference here?
->>
-> 
-> We encountered this issue while upgrading from kernel v6.1 to v6.6.
-> The system would not suspend with 6.6. We tracked down the problem to
-> the NIC of the device, mainly that the following code was removed in
-> 6.6:
->> else if (tp->mac_version >= RTL_GIGA_MAC_VER_46)
->>         rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1_2);1
+On 11/07/2024 00:16, Jim Quinlan wrote:
+> o Change order of the compatible strings to be alphabetical
 
-With this (older) 6.1 version everything is ok?
-Would mean that L1.1 is active and the system suspends (STR?) properly
-also with L1.1 being active.
+That's a cleanup. You can squash it with previous patch.
 
-Under 6.6 per default L1 (incl. sub-states) is disabled.
-Then you manually enable L1 (incl. L1.1, but not L1.2?) via sysfs,
-and now the system hangs on suspend?
+> o Describe resets/reset-names before using them in rules
 
-Is this what you're saying? Would be strange because in both cases
-L1.1 is active when suspending.
+That's a new commit.
+
+> o Add in new resets for 7712 (swinit, bridge)
+> o Add in changes for 7712
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 46 +++++++++++++++++--
+>  1 file changed, 41 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 558a18fd2e77..dd7c76ec9ceb 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -16,11 +16,12 @@ properties:
+>            - brcm,bcm2711-pcie # The Raspberry Pi 4
+>            - brcm,bcm4908-pcie
+>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
+>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
+>  
+>    reg:
+>      maxItems: 1
+> @@ -95,6 +96,20 @@ properties:
+>        minItems: 1
+>        maxItems: 3
+>  
+> +  resets:
+
+<form letter>
+This is a friendly reminder during the review process.
+
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
+
+Thank you.
+</form letter>
+
+minItems
+
+> +    items:
+> +      - description: reset for phy reset calibration
+> +      - description: reset for PCIe/CPU bus bridge
+> +      - description: reset for soft PCIe core reset
+> +      - description: reset for external PCIe PERST# signal
+> +
+> +  reset-names:
+
+Same here
+
+> +    items:
+> +      - const: rescal
+> +      - const: bridge
+> +      - const: swinit
+> +      - const: perst
 
 
-> For the listed devices, ASPM L1 is disabled entirely in 6.6. As for
-> the reason, L1 was observed to cause some problems
-> (https://bugzilla.kernel.org/show_bug.cgi?id=217814). We use a Raptor
-> Lake soc and it won't change residency if the NIC doesn't have L1
-> enabled. I saw in 6.1 the following comment:
->> Chips from RTL8168h partially have issues with L1.2, but seem
->> to work fine with L1 and L1.1.
-> I was thinking that disabling/enabling L1.1 on the fly before/after
-> suspend could help mitigate the risk associated with L1/L1.1 . I know
-> that ASPM settings are exposed in sysfs and that this could be done
-> from outside the kernel, that was my first approach, but it was
-> suggested to me that this kind of workaround would be better suited
-> for quirks. I did around 1000 suspend/resume cycles of 16-30 seconds
-> each (correcting the resume dev->bus->self being configured twice
-> mistake) and did not notice any problems. What do you think, is this a
-> good approach ... ?
-> 
->>> +             //configure device
->>> +             pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
->>> +                                                PCI_EXP_LNKCTL_ASPMC, 0);
->>> +
->>> +             pci_read_config_word(dev->bus->self,
->>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>> +                                  &val);
->>> +             val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
->>> +             pci_write_config_word(dev->bus->self,
->>> +                                   dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>> +                                   val);
->> Updates the parent (dev->bus->self) twice; was the first one supposed
->> to update the device (dev)?
-> Yes, it was supposed to update the device (dev). It's my first time
-> sending a patch and I messed something up while doing some style
-> changes, I will correct it. I'm sorry for that.
-> 
->> This doesn't restore the state as it existed before suspend.  Does
->> this rely on other parts of restore to do that?
-> It operates on the assumption that after driver initialization
-> PCI_EXP_LNKCTL_ASPMC is 0 and that there are no states enabled in
-> CTL1. I did a lspci -vvv dump on the affected devices before and after
-> the quirks ran and saw no difference. This could be improved.
-> 
->> What is the RTL8168 chip version used on these systems?
-> It should be RTL8111H.
-> 
->> What's the root cause of the issue?
->> A silicon bug on the host side?
-> I think it's the ASPM implementation of the soc.
-> 
->> ASPM L1 is disabled per default in r8169. So why is the patch needed
->> at all?
-> Leaving it disabled all the time prevents the system from suspending.
-> 
-> Thank you,
-> George-Daniel Matei
-> 
-> 
-> 
-> 
-> 
-> On Tue, Jul 9, 2024 at 12:15 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->>
->> On 08.07.2024 19:23, Bjorn Helgaas wrote:
->>> [+cc r8169 folks]
->>>
->>> On Mon, Jul 08, 2024 at 03:38:15PM +0000, George-Daniel Matei wrote:
->>>> Added aspm suspend/resume hooks that run
->>>> before and after suspend and resume to change
->>>> the ASPM states of the PCI bus in order to allow
->>>> the system suspend while trying to prevent card hangs
->>>
->>> Why is this needed?  Is there a r8169 defect we're working around?
->>> A BIOS defect?  Is there a problem report you can reference here?
->>>
->>
->> Basically the same question from my side. Apparently such a workaround
->> isn't needed on any other system. And Realtek NICs can be found on more
->> or less every consumer system. What's the root cause of the issue?
->> A silicon bug on the host side?
->>
->> What is the RTL8168 chip version used on these systems?
->>
->> ASPM L1 is disabled per default in r8169. So why is the patch needed
->> at all?
->>
->>> s/Added/Add/
->>>
->>> s/aspm/ASPM/ above
->>>
->>> s/PCI bus/device and parent/
->>>
->>> Add period at end of sentence.
->>>
->>> Rewrap to fill 75 columns.
->>>
->>>> Signed-off-by: George-Daniel Matei <danielgeorgem@chromium.org>
->>>> ---
->>>>  drivers/pci/quirks.c | 142 +++++++++++++++++++++++++++++++++++++++++++
->>>>  1 file changed, 142 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>> index dc12d4a06e21..aa3dba2211d3 100644
->>>> --- a/drivers/pci/quirks.c
->>>> +++ b/drivers/pci/quirks.c
->>>> @@ -6189,6 +6189,148 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b0, aspm_l1_acceptable_latency
->>>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
->>>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
->>>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
->>>> +
->>>> +static const struct dmi_system_id chromebox_match_table[] = {
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Brask"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Aurash"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +            {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Bujia"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Gaelin"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Gladios"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Hahn"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Jeev"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Kinox"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Kuldax"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +            .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Lisbon"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    {
->>>> +                    .matches = {
->>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Moli"),
->>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
->>>> +            }
->>>> +    },
->>>> +    { }
->>>> +};
->>>> +
->>>> +static void rtl8169_suspend_aspm_settings(struct pci_dev *dev)
->>>> +{
->>>> +    u16 val = 0;
->>>> +
->>>> +    if (dmi_check_system(chromebox_match_table)) {
->>>> +            //configure parent
->>>> +            pcie_capability_clear_and_set_word(dev->bus->self,
->>>> +                                               PCI_EXP_LNKCTL,
->>>> +                                               PCI_EXP_LNKCTL_ASPMC,
->>>> +                                               PCI_EXP_LNKCTL_ASPM_L1);
->>>> +
->>>> +            pci_read_config_word(dev->bus->self,
->>>> +                                 dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>>> +                                 &val);
->>>> +            val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
->>>> +                  PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
->>>> +                  PCI_L1SS_CTL1_ASPM_L1_1;
->>>> +            pci_write_config_word(dev->bus->self,
->>>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>>> +                                  val);
->>>> +
->>>> +            //configure device
->>>> +            pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
->>>> +                                               PCI_EXP_LNKCTL_ASPMC,
->>>> +                                               PCI_EXP_LNKCTL_ASPM_L1);
->>>> +
->>>> +            pci_read_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, &val);
->>>> +            val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
->>>> +                  PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
->>>> +                  PCI_L1SS_CTL1_ASPM_L1_1;
->>>> +            pci_write_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, val);
->>>> +    }
->>>> +}
->>>> +
->>>> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_REALTEK, 0x8168,
->>>> +                      rtl8169_suspend_aspm_settings);
->>>> +
->>>> +static void rtl8169_resume_aspm_settings(struct pci_dev *dev)
->>>> +{
->>>> +    u16 val = 0;
->>>> +
->>>> +    if (dmi_check_system(chromebox_match_table)) {
->>>> +            //configure device
->>>> +            pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
->>>> +                                               PCI_EXP_LNKCTL_ASPMC, 0);
->>>> +
->>>> +            pci_read_config_word(dev->bus->self,
->>>> +                                 dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>>> +                                 &val);
->>>> +            val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
->>>> +            pci_write_config_word(dev->bus->self,
->>>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>>> +                                  val);
->>>> +
->>>> +            //configure parent
->>>> +            pcie_capability_clear_and_set_word(dev->bus->self,
->>>> +                                               PCI_EXP_LNKCTL,
->>>> +                                               PCI_EXP_LNKCTL_ASPMC, 0);
->>>> +
->>>> +            pci_read_config_word(dev->bus->self,
->>>> +                                 dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>>> +                                 &val);
->>>> +            val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
->>>> +            pci_write_config_word(dev->bus->self,
->>>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
->>>> +                                  val);
->>>
->>> Updates the parent (dev->bus->self) twice; was the first one supposed
->>> to update the device (dev)?
->>>
->>> This doesn't restore the state as it existed before suspend.  Does
->>> this rely on other parts of restore to do that?
->>>
->>>> +    }
->>>> +}
->>>> +
->>>> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_REALTEK, 0x8168,
->>>> +                     rtl8169_resume_aspm_settings);
->>>>  #endif
->>>>
->>>>  #ifdef CONFIG_PCIE_DPC
->>>> --
->>>> 2.45.2.803.g4e1b14247a-goog
->>>>
->>
+
+Best regards,
+Krzysztof
 
 
