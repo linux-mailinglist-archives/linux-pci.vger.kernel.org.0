@@ -1,137 +1,177 @@
-Return-Path: <linux-pci+bounces-10147-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10149-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A82392E2B8
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 10:49:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0D6792E47D
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 12:23:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C6BD1C211DD
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 08:49:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6AF201F21FEC
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 10:23:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4312512BF02;
-	Thu, 11 Jul 2024 08:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6CA415958E;
+	Thu, 11 Jul 2024 10:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ky0nytD8"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OL9FphUU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B996312EBF3
-	for <linux-pci@vger.kernel.org>; Thu, 11 Jul 2024 08:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DA92209B;
+	Thu, 11 Jul 2024 10:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720687784; cv=none; b=SLYWVRdKH6IG8uQni4AHbtU2z5LhtVKJ6DYGEaCZXGMWlUJ8ht3UwMEnubQmMbgho6j1CTu0WOnEbw4dpNMR7ipE5HRf7GTH/OifT/psRDreBiIXbh95Y7NBUqdwtnb0ccHH8uRXFwepwQPp/ZqAoM0OcONawFRHr/TXLz+Qye0=
+	t=1720693394; cv=none; b=G+2FGsOs/UJCUi0Z+kHnzvGagN8GcXqlfwyWH7jJzJXprBmcgboxBjBLb+pdnq7TF+n1p+zN1nFrD5ClOPoFroPp1irM8AhQu1+2DfMwIDjIWrURUCdv7m1lq4K0v/4gD2mak9o+D1mS1E15pwRnASEtHO68G9e7EU6xu1yhuTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720687784; c=relaxed/simple;
-	bh=jQkt4JF6VbhTeIjD8J8JeQpvbzV1eLCs/7iK8lQtXCA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iWTalw27YNQJ8ovDOaFsx8FXhrJp0CzPgjHr2y4d6tDq7HuJdw2avRSXfK9wATyCMWrFv4bGFaOAAKt5pI7y7/BYombeYheZ56JmfHnSRYqtPuJNvwfkNMaYQx6t3umaaTu/HJlUKeem2TIX/TQ4LOQAVI/1uTGw7cu4jKUzLNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ky0nytD8; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720693394; c=relaxed/simple;
+	bh=5eOBNsf+jwV+h0RzTv0eE/tJU0vhACX+653VYPCJlEE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fDT9D5Kwa6DuT1V/fMPZgq2PWcYaZYWZnzcRnTFIP0TcjLNUWaasZbGzUon5YVSaBEzexYnPygJ4WZEis1kiuoN6b/eQ55RB/5lyDV56Ie+PMfvu8FhoSDXnGL4xvxmgm1BTwqsi+Ddvkrf9hV/O6FOXQPkaK3GPsXGSa+CChLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OL9FphUU; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720687783; x=1752223783;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jQkt4JF6VbhTeIjD8J8JeQpvbzV1eLCs/7iK8lQtXCA=;
-  b=Ky0nytD88i6DOJDEgKUxaLMrYkycntUZRRym61Q6HEMn7XyCgz/4jxiL
-   S4HdM0sQcHFFfAyg71FHwTD+zmv2Zo7pXqjAaccIBpXErT2A9KFOUw1ob
-   z/bCKWNOSvUc16MURixbnqphdVH4PPqLWvP/N++z45tpxU9jkKpGfWsVd
-   AyUes9i+y2O9wedgTc9eR6gieywaE5Urg7QlY3xCpno28b9uA76P1erQk
-   LRJ+9roWtPPRhnJ3YGjBEMZvYrvc1THsxXKQ2j9t00CTUuaF4XGS9BNkB
-   7BVp1sawa2vL7trrF1hS1T2xXOglzmCQR70wu6/5YMddAltrbXvno7VaL
-   Q==;
-X-CSE-ConnectionGUID: bDBS660jRsKcrufYNS6eAA==
-X-CSE-MsgGUID: iStKNO6vTUWNUFrYlCELEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18000362"
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1720693393; x=1752229393;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5eOBNsf+jwV+h0RzTv0eE/tJU0vhACX+653VYPCJlEE=;
+  b=OL9FphUUYA01FWxQFP7afZL3fMST5NmN/i9BJuXOdJ2LyjL4MFO5GRXS
+   kkvpVL5/fIE/NcMne9vJpd83gvVubqnZpayVv7//EwWk8u3cI0QSTOUgo
+   aRXJ4aB561Z4hXnhdv72Rv1Ov3RPpqpGMzKAt2YnmaWT63bQYAkPDmmVY
+   NR0d2JckxFCJY+MOKWMYdRbtv92ZOm78If6h8PftarfB59IPlGsxcXVUN
+   xqcecPIypMCJ8ZuTxSPwa+NnquQHaHMVFZ5wPL1eax7BJNQWOFbV1Rtd6
+   4o42paCNu4oVVMUFvYQnF2ZYYsTGzBCvLLE8lqDsH2jM+y13uf5YYHvFW
+   A==;
+X-CSE-ConnectionGUID: oE7M2H4IRp2wJBQtwWzi7w==
+X-CSE-MsgGUID: k9cvsCnLTNuRKH2hv9zXkg==
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="18000362"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:49:25 -0700
-X-CSE-ConnectionGUID: WLEaIcNORjar4CIxzAIXRQ==
-X-CSE-MsgGUID: 6IkNsypvSvKrBhiZk711lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="49143136"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:49:21 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jul 2024 11:49:18 +0300 (EEST)
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-cc: linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-    Christoph Hellwig <hch@lst.de>, Stuart Hayes <stuart.w.hayes@gmail.com>, 
-    Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Dan Williams <dan.j.williams@intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Keith Busch <kbusch@kernel.org>, Marek Behun <marek.behun@nic.cz>, 
-    Pavel Machek <pavel@ucw.cz>, Randy Dunlap <rdunlap@infradead.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 1/3] leds: Init leds class earlier
-In-Reply-To: <20240711083009.5580-2-mariusz.tkaczyk@linux.intel.com>
-Message-ID: <f6a5bb0d-61f0-571a-a206-5f93a0a45782@linux.intel.com>
-References: <20240711083009.5580-1-mariusz.tkaczyk@linux.intel.com> <20240711083009.5580-2-mariusz.tkaczyk@linux.intel.com>
+   d="scan'208";a="29112240"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jul 2024 03:23:13 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Jul 2024 03:22:52 -0700
+Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 11 Jul 2024 03:22:50 -0700
+From: <daire.mcnamara@microchip.com>
+To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>,
+	<ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v7 0/3] Fix address translations on MPFS PCIe controller
+Date: Thu, 11 Jul 2024 11:22:16 +0100
+Message-ID: <20240711102218.2895429-2-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1617298853-1720687758=:6262"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
---8323328-1617298853-1720687758=:6262
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Hi all,
 
-On Thu, 11 Jul 2024, Mariusz Tkaczyk wrote:
+On Microchip PolarFire SoC (MPFS), the PCIe controller is connected to the
+CPU via one of three Fabric Interface Connectors (FICs).  Each FIC present
+to the CPU complex as 64-bit AXI-M and 64-bit AXI-S.  To preserve
+compatibility with other PolarFire family members, the PCIe controller is
+connected to its encapsulating FIC via a 32-bit AXI-M and 32-bit AXI-S
+interface.
 
-> NPEM driver will require leds class, there is an init-order conflict.
-> Make sure that LEDs initialization happens first and add comment.
->=20
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Each FIC is implemented in FPGA logic and can incorporate logic along its 64-bit
+AXI-M to 32-bit AXI-M chain (including address translation) and, likewise, along
+its 32-bit AXI-S to 64-bit AXI-S chain (again including address translation).
 
-FWIW (I trust LKP to catch the problems if this new build ordering is not=
-=20
-ok for some reason),
+In order to reduce the potential support space for the PCIe controller in
+this environment, MPFS supports certain reference designs for these address
+translations: reference designs for cache-coherent memory accesses
+and reference designs for non-cache-coherent memory accesses. The precise
+details of these reference designs and associated customer guidelines
+recommending that customers adhere to the addressing schemes used in those
+reference designs are available from Microchip, but the implication for the
+PCIe controller address translation between CPU-space and PCIe-space are:
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+For outbound address translation, the PCIe controller address translation tables
+are treated as if they are 32-bit only.  Any further address translation must
+be done in FPGA fabric.
 
---=20
- i.
+For inbound address translation, the PCIe controller is configurable for two
+cases:
+* In the case of cache-coherent designs, the base of the AXI-S side of the
+  address translation must be set to 0 and the size should be 4 GiB wide. The
+  FPGA fabric must complete any address translations based on that 0-based
+  address translation.
+* In the case of non-cache coherent designs, the base of AXI-S side of the
+  address translation must be set to 0x8000'0000 and the size shall be 2 GiB
+  wide.  The FPGA fabric must complete any address translation based on that
+  0x80000000 base.
+
+So, for example, in the non-cache-coherent case, with a device tree property
+that maps an inbound range from 0x10'0000'0000 in PCIe space to 0x10'0000'0000
+in CPU space, the PCIe rootport will translate a PCIe address of 0x10'0000'0000
+to an intermediate 32-bit AXI-S address of 0x8000'0000 and the FIC is
+responsible for translating that intermediate 32-bit AXI-S address of
+0x8000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+And similarly, for example, in the cache-coherent case, with a device tree
+property that maps an inbound range from 0x10'0000'0000 in PCIe space to
+0x10'0000'0000 in CPU space, the PCIe rootport will translate a PCIe address
+of 0x10'0000'0000 to an intermediate 32-bit AXI-S address of 0x0000'0000 and
+the FIC is responsible for translating that intermediate 32-bit AXI-S address
+of 0x0000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+See https://lore.kernel.org/all/20220902142202.2437658-1-daire.mcnamara@microchip.com/T/
+for backstory.
+
+Changes since v6:
+- Added Reviewed-by: Ilpo tag to outbound patch
+- Fixed typos/capitalisation/etc as suggested by Ilpo
+
+Changes since v5:
+- Reverted setup_inbound_atr size parameter to u64 as ci system reported
+  SZ_4G getting truncated to 0 on mips when I try to use size_t or resource_size_t.
+  Added Acked-by tags
+
+Changes since v4:
+- Added more cleanups suggested by Ilpo Jarvinen
+  Added cleanups for inbound v4 and outbound v3.
+
+Changes since v3:
+- Added nice cleanups suggested by Ilpo Jarvinen
+
+Changes since v2:
+- Added <Signed-off-by: tag>
+
+Changes since v1:
+- added bindings patch to allow dma-noncoherent
+- changed a size_t to u64 to pass 32-bit compile tests
+- allowed 64-bit outbound pcie translations
+- tied PCIe side of eCAM translation table to 0
+
+Conor Dooley (1):
+  dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
+
+Daire McNamara (2):
+  PCI: microchip: Fix outbound address translation tables
+  PCI: microchip: Fix inbound address translation tables
+
+ .../bindings/pci/microchip,pcie-host.yaml     |   2 +
+ drivers/pci/controller/pcie-microchip-host.c  | 118 +++++++++++++++---
+ 2 files changed, 106 insertions(+), 14 deletions(-)
 
 
-> ---
->  drivers/Makefile | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/Makefile b/drivers/Makefile
-> index fe9ceb0d2288..45d1c3e630f7 100644
-> --- a/drivers/Makefile
-> +++ b/drivers/Makefile
-> @@ -17,6 +17,9 @@ obj-$(CONFIG_PINCTRL)=09=09+=3D pinctrl/
->  obj-$(CONFIG_GPIOLIB)=09=09+=3D gpio/
->  obj-y=09=09=09=09+=3D pwm/
-> =20
-> +# LEDs must come before PCI, it is needed by NPEM driver
-> +obj-y=09=09=09=09+=3D leds/
-> +
->  obj-y=09=09=09=09+=3D pci/
-> =20
->  obj-$(CONFIG_PARISC)=09=09+=3D parisc/
-> @@ -130,7 +133,6 @@ obj-$(CONFIG_CPU_IDLE)=09=09+=3D cpuidle/
->  obj-y=09=09=09=09+=3D mmc/
->  obj-y=09=09=09=09+=3D ufs/
->  obj-$(CONFIG_MEMSTICK)=09=09+=3D memstick/
-> -obj-y=09=09=09=09+=3D leds/
->  obj-$(CONFIG_INFINIBAND)=09+=3D infiniband/
->  obj-y=09=09=09=09+=3D firmware/
->  obj-$(CONFIG_CRYPTO)=09=09+=3D crypto/
->=20
---8323328-1617298853-1720687758=:6262--
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+-- 
+2.34.1
+
 
