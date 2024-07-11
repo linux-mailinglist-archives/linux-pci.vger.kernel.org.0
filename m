@@ -1,145 +1,129 @@
-Return-Path: <linux-pci+bounces-10171-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10172-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4CD192ED6B
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 19:05:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9E5F92ED74
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 19:09:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 826D128B1C2
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 17:05:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05FBA1C21005
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 17:09:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40968166319;
-	Thu, 11 Jul 2024 17:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7460816D4E7;
+	Thu, 11 Jul 2024 17:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VweLSb3c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npMBJKAK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052CD450FA;
-	Thu, 11 Jul 2024 17:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E6A450FA;
+	Thu, 11 Jul 2024 17:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720717497; cv=none; b=Z4cw74cet8dMyVNYtrBRiVa9q8KYQ0D0f+lLVTJKuvsb6rRx4j1jevS7LSksrAW1Oy8OuYDFuOUe4fC8IP7x7K3hzHbE4ELpieoBwAjRvvoue5IHZ8FSNkwNrfJSx78V1OEm9OHNMmxj7vmL+84kjvOnzVbY+a9ZW4Gamn4vXYU=
+	t=1720717760; cv=none; b=AshVg+WkTIP4hmp+l5XC+48fVfQfxHcMIWpfitpRxS3bJxFAuPgKFoOPswVaUWX3KTvUCgKTGzYus3CrIDTk8tODK9Bv/5OaKEH8vaRxhhYANWQrtfX1l8q/PHpU+k9u2fYtjImkdkosPHUig9QNcViBCSokVwpIMSPRDc77N+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720717497; c=relaxed/simple;
-	bh=8bA1Af5JkTKsPfzcax7n6cvmceZSVM+9DQAXTzJTRpc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hVkl1p7txz8RPwZbPiaNiOZ0Yf3uFAKQIGGh3y/lEoKZrL9Qkw2P5X0p66L9zZr+uO4V8pGUIjdUCGxTbzJ0VROoXOxTLhSjjzeWRiKRuiHHtvqo/H9jnDble+acZve3gyaRKMNzVGmEcikkowmR4Pr+A75dkYC55gAL4KaHKFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VweLSb3c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B3EC116B1;
-	Thu, 11 Jul 2024 17:04:56 +0000 (UTC)
+	s=arc-20240116; t=1720717760; c=relaxed/simple;
+	bh=4AsmtB1c0/haUg/T+xK8LCVjZIWcIFk1GR+agnIeol0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fpbU9eEF5zr1N9qaNnnqHQqXoZxNh8pj0gMg7htuGhDJfnghrjM2uxVG5sF57HKbIl785aJv/1R+dSFlkZL4+YHSJyEl5/OoUt2Wr9Mr2MO7aTDPszsUYm2yCWjMi3xeN4xLshBkBCZmfqMpmApazpmisFyospbeLeqVX3vH2Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npMBJKAK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF51C116B1;
+	Thu, 11 Jul 2024 17:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720717496;
-	bh=8bA1Af5JkTKsPfzcax7n6cvmceZSVM+9DQAXTzJTRpc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VweLSb3cn8veFY/O7cKAlfEIwL3f2HLsE7eAtPdboROuKAnEbFm8vDuj3NQQ0noao
-	 dN7r3qfljVRi538GReGxRpj/BZP6uhySPravw3Uif9gWH09HvlUsmyMNqhJWCN2tiY
-	 x0gVO7rJZxk8OL2BbRGPUUPmGfyW/FA4bQ35Lco/dQlFGfQ1t+daYbjcQ0dezjNRcQ
-	 Js4nQR/KKCirmE+Yn0JLq6WCIHpsGVNO4Taf0Lk16eAsHo+vvB9oWCGeMwhv1D6zbn
-	 irDjHcQbE+kCucOfJrocRzdzuxEnojQ+F1ZaM4ay4bcSKmAVQUE04h07Ef6Et2QUwQ
-	 VbuDzDmJbTkxQ==
-Date: Thu, 11 Jul 2024 12:04:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Corbet <corbet@lwn.net>, Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-	quic_parass@quicinc.com
-Subject: Re: [PATCH v6 3/5] PCI: qcom-ep: Add wake up host op to
- dw_pcie_ep_ops
-Message-ID: <20240711170454.GA287440@bhelgaas>
+	s=k20201202; t=1720717759;
+	bh=4AsmtB1c0/haUg/T+xK8LCVjZIWcIFk1GR+agnIeol0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=npMBJKAK7s69Z/WDXZvryOrC1AXCklNKsLLxOCs3gsJfApoz0/Ox9lYee1sJ6JwFC
+	 lzx5PgO1lGRj2EKUh3icE9RHKreJLdJFw+BKutxdCPSHRfth/k1X0ATH8iFfNL9fcK
+	 AI83yw0uN4QfyYXRNmqakAMB+ri/2WvgtUJy8Mjvte/exqSdq9GP9l6B0P7O2MzXBy
+	 YOUJ1fOXUHj22VvxXuP2nytibhRZMRTAMgjS3uLsA1nwarmZ1yF+vWOcbIiKCKhuJR
+	 dY8lY7THLhQ9ec1bS3ImuG5ExziA3ve8s3lT6skT1KkhFWulvX1K9EsKrDDU/OQ5Bc
+	 qrs9k3Yd9wRMQ==
+Date: Thu, 11 Jul 2024 18:09:10 +0100
+From: Lee Jones <lee@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com,
+	linux-arm-kernel@lists.infradead.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Simon Horman <horms@kernel.org>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 1/7] mfd: syscon: Add reference counting and device
+ managed support
+Message-ID: <20240711170910.GN501857@google.com>
+References: <20240627091137.370572-2-herve.codina@bootlin.com>
+ <91cfc410-744f-49f8-8331-733c41a43121@web.de>
+ <20240711182528.1402892d@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240710-wakeup_host-v6-3-ef00f31ea38d@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240711182528.1402892d@bootlin.com>
 
-On Wed, Jul 10, 2024 at 04:46:10PM +0530, Krishna chaitanya chundru wrote:
-> Add wakeup host op to dw_pcie_ep_ops to wake up host.
-> If the wakeup type is PME, then trigger inband PME by writing to the PARF
-> PARF_PM_CTRL register, otherwise toggle #WAKE.
+On Thu, 11 Jul 2024, Herve Codina wrote:
 
-Wrap into single paragraph or add blank line between.
-
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> Hi Markus,
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 627a33a1c5ca..d17e8542d07a 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -97,6 +97,7 @@
->  /* PARF_PM_CTRL register fields */
->  #define PARF_PM_CTRL_REQ_EXIT_L1		BIT(1)
->  #define PARF_PM_CTRL_READY_ENTR_L23		BIT(2)
-> +#define PARF_PM_CTRL_XMT_PME			BIT(4)
->  #define PARF_PM_CTRL_REQ_NOT_ENTR_L1		BIT(5)
->  
->  /* PARF_MHI_CLOCK_RESET_CTRL fields */
-> @@ -817,10 +818,34 @@ static void qcom_pcie_ep_init(struct dw_pcie_ep *ep)
->  		dw_pcie_ep_reset_bar(pci, bar);
->  }
->  
-> +static bool qcom_pcie_ep_wakeup_host(struct dw_pcie_ep *ep, u8 func_no, bool send_pme)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct qcom_pcie_ep *pcie_ep = to_pcie_ep(pci);
-> +	struct device *dev = pci->dev;
-> +	u32 val;
-> +
-> +	if (send_pme) {
-> +		dev_dbg(dev, "Waking up the host using PME\n");
-> +		val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
-> +		writel_relaxed(val | PARF_PM_CTRL_XMT_PME, pcie_ep->parf + PARF_PM_CTRL);
-> +		writel_relaxed(val, pcie_ep->parf + PARF_PM_CTRL);
-> +
-> +	} else {
-> +		dev_dbg(dev, "Waking up the host by toggling WAKE#\n");
-> +		gpiod_set_value_cansleep(pcie_ep->wake, 1);
-> +		usleep_range(WAKE_DELAY_US, WAKE_DELAY_US + 500);
-
-PCIe r6.0, sec 5.3.3.2, says
-
-  When WAKE# is used as a wakeup mechanism, once WAKE# has been
-  asserted, the asserting Function must continue to drive the signal
-  low until main power has been restored to the component as indicated
-  by Fundamental Reset going inactive.
-
-That doesn't seem compatible with a simple delay as you have here.
-
-> +		gpiod_set_value_cansleep(pcie_ep->wake, 0);
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  static const struct dw_pcie_ep_ops pci_ep_ops = {
->  	.init = qcom_pcie_ep_init,
->  	.raise_irq = qcom_pcie_ep_raise_irq,
->  	.get_features = qcom_pcie_epc_get_features,
-> +	.wakeup_host = qcom_pcie_ep_wakeup_host,
->  };
->  
->  static int qcom_pcie_ep_probe(struct platform_device *pdev)
+> On Thu, 11 Jul 2024 18:09:26 +0200
+> Markus Elfring <Markus.Elfring@web.de> wrote:
 > 
-> -- 
-> 2.42.0
+> > …
+> > > +++ b/drivers/mfd/syscon.c  
+> > …
+> > > +static struct syscon *syscon_from_regmap(struct regmap *regmap)  
+> > +{
+> > > +	struct syscon *entry, *syscon = NULL;
+> > > +
+> > > +	spin_lock(&syscon_list_slock);
+> > > +
+> > > +	list_for_each_entry(entry, &syscon_list, list)  
+> > …
+> > > +	spin_unlock(&syscon_list_slock);
+> > > +
+> > > +	return syscon;
+> > > +}  
+> > …
+> > 
+> > Under which circumstances would you become interested to apply a statement
+> > like “guard(spinlock)(&syscon_list_slock);”?
+> > https://elixir.bootlin.com/linux/v6.10-rc7/source/include/linux/spinlock.h#L561
+> > 
 > 
+> I used the spin_{lock,unlock}() pattern call already present in syscon.c.
+> Of course, I can add a new patch in this series converting syscon.c to
+> the guard() family and use guard() in my introduced lock/unlock.
+> 
+> Lee, any opinion ?
+
+I'm intentionally leaving this one for Arnd.
+
+-- 
+Lee Jones [李琼斯]
 
