@@ -1,124 +1,129 @@
-Return-Path: <linux-pci+bounces-10168-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10169-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E23392ECFD
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 18:44:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0FFB92ED04
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 18:47:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 480771C21AD5
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 16:44:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60086B20DA8
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 16:47:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D9916D4C3;
-	Thu, 11 Jul 2024 16:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 794EE16CD39;
+	Thu, 11 Jul 2024 16:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="P8v+jtd1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDAEbHv5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4F31474D3;
-	Thu, 11 Jul 2024 16:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37622381AD;
+	Thu, 11 Jul 2024 16:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720716287; cv=none; b=cUCNQ+CHAqJIG2jrvzTnnfj+gmUeFvyEzTlKg3tHxuVRrZJ8ttLiUAAQIN2FIo0j9LW6iVlYfOANLtxpD5Oo0tVNL2JKrpd/daO2aJcpsGm1fcHLXITOeu83OWx2zlJvuiiETKjlgBjHm9CgT9q5Sdfvw3mQVbhyKuT+OyI6CQ8=
+	t=1720716432; cv=none; b=jo3h5pS+SLdj05IQzQ4K2Oj/Hp8q2HncgHkWweENmSDH6zHf+SqTduvgmNPSsdqE7+I7bMRxo79O9Xztoz3sN/7VlvYqP2ttgiGhGYxp5+l7ZgzA0jcDYEcEXPyyO9arudbKS/zV8vFNXWaMjK15pWSIwJcvQXZDXIV1sib/bcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720716287; c=relaxed/simple;
-	bh=2vqenC3vyN4xU/GXyPVLXXzBBrBJTvgmVlmz9ziNDvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o1wtoa8DqC3BD4QyMOyQYuefja6noPU34yZY4pUrjqF7L64CYgn0LgchfMocFKhTZkXx9TqQSjDtnNn4MczRrkrU5eq9KdgF6jW77LdZAwXX5HummZmLW1eOvc9lyXCP5ZbzdncuWD+31ToxTVhCQf5Vy0ca34keyD/OdhOU51U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=P8v+jtd1; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 668B7E0004;
-	Thu, 11 Jul 2024 16:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720716282;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vybloJtqAMD3XBXViDgsQDiBzU52F1YzHw5VHYlk7nY=;
-	b=P8v+jtd1ys5EiH6FMRVDPUMNPab4NRp9wkAGbEK57+f4iby7pSGs18DQ8P4Y4ZLvuK5WLj
-	SQQ1kcxRfly3QwFY6kvql7ACeTUqF57HksCL4JJj4Fkf4v/J/gipIXtdkVgOEht7nCCpcH
-	hEPaFCptezq+Derxp7uiXWiOq1+bGEkLmF5fpqbhzgrbwsAqNmlwhxYGjUTsZA9avOX4tH
-	LwtljISqcHPjmdYuHF1pQYHr/9B1esqtLWTba+vvfMLxU/2lO970tOuj2sZRFMyqDBuGLK
-	9l0YwOfE2kna6alACHj/ngciu9N3lo4TKwV0QkCg2l8wMRw1lRswMsGlr3HVLw==
-Date: Thu, 11 Jul 2024 18:44:38 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Simon Horman
- <horms@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, UNGLinuxDriver@microchip.com, Saravana Kannan
- <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, Lars Povlsen <lars.povlsen@microchip.com>, Steen
- Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon
- <daniel.machon@microchip.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Horatiu Vultur <horatiu.vultur@microchip.com>,
- Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, netdev@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Allan
- Nielsen <allan.nielsen@microchip.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 6/7] mfd: Add support for LAN966x PCI device
-Message-ID: <20240711184438.65446cc3@bootlin.com>
-In-Reply-To: <20240711152952.GL501857@google.com>
-References: <20240627091137.370572-1-herve.codina@bootlin.com>
-	<20240627091137.370572-7-herve.codina@bootlin.com>
-	<20240711152952.GL501857@google.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1720716432; c=relaxed/simple;
+	bh=zjKGt7H07M4pHCU9lW4ij/982X9n70FZYJhQRgYo+h0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CwTA9g2xKZX9hvZmD/x5sFP+CimRiH0ljJXUg52t5raBDW3WYxIAHxVmiMYKj4SJkpP71io/YhjMr88980DZOEhfpUVNsZ8g+I7G3GpQaj9lwkNTN46eoF8yh8cBOjwdjHgrC/Y0F8+5j5Si337emO71ayd07qgSxHIHkEqsR6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDAEbHv5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83252C4AF07;
+	Thu, 11 Jul 2024 16:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720716431;
+	bh=zjKGt7H07M4pHCU9lW4ij/982X9n70FZYJhQRgYo+h0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=uDAEbHv5tSBif6DWfuyRc6xa2Jjph3rGHMIE7faBVxp3oCT1EN0M8FD/RbJC0uvVm
+	 K/AaQLW6f7vyAJTlPnH6z8TVSz7VymQHE/i1ayxIBMQBli3frcs+zHD1xwj+DT3/gQ
+	 UCdZ0HAcir/EkpkMVQ81V/lblG/5KbfkUjzDwmWu6LsOGonfwiVA8Y+rztE9WtFSWC
+	 XF7d2txz9ewDXWu8nrCcai+VaV3qUgMKxB0nh6IsGTntMH+9PuoZIPbfU27kkAxX++
+	 v4H/5qWR7VnDpgndnOMWO5E5DypfDq4g7h5aQzd0Zg3/4CNZnrDsaGB3AnaPgO5DHh
+	 j0vJ+bTv/Ru5A==
+Date: Thu, 11 Jul 2024 11:47:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+	quic_parass@quicinc.com
+Subject: Re: [PATCH v6 5/5] bus: mhi: ep: wake up host if the MHI state is in
+ M3
+Message-ID: <20240711164709.GA286955@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240710-wakeup_host-v6-5-ef00f31ea38d@quicinc.com>
 
-Hi Lee,
+On Wed, Jul 10, 2024 at 04:46:12PM +0530, Krishna chaitanya chundru wrote:
+> If the MHI state is in M3 then most probably the host kept the
+> device in D3 hot or D3 cold, due to that endpoint transactions will not
+> reach the host, endpoint needs to wakes up the host to bring the host
+> to D0 which eventually bring back the MHI state to M0.
 
-On Thu, 11 Jul 2024 16:29:52 +0100
-Lee Jones <lee@kernel.org> wrote:
+s/needs to wakes up/needs to wake up/
 
-> On Thu, 27 Jun 2024, Herve Codina wrote:
+s/D3 hot/D3hot/
+s/D3 cold/D3cold/
+to match other uses and make grep more effective.
+
+> while queueing packets if the MHI state is in M3 wakeup host to bring
+> back link to M0.
+
+s/while/While/
+s/MHI state is in M3/MHI is in M3/ (twice)
+
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  drivers/bus/mhi/ep/main.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> > Add a PCI driver that handles the LAN966x PCI device using a device-tree
-> > overlay. This overlay is applied to the PCI device DT node and allows to
-> > describe components that are present in the device.
-> > 
-> > The memory from the device-tree is remapped to the BAR memory thanks to
-> > "ranges" properties computed at runtime by the PCI core during the PCI
-> > enumeration.
-> > 
-> > The PCI device itself acts as an interrupt controller and is used as the
-> > parent of the internal LAN966x interrupt controller to route the
-> > interrupts to the assigned PCI INTx interrupt.  
-> 
-> Not entirely sure why this is in MFD.
+> diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
+> index b3eafcf2a2c5..b8713e5c1e1a 100644
+> --- a/drivers/bus/mhi/ep/main.c
+> +++ b/drivers/bus/mhi/ep/main.c
+> @@ -25,6 +25,26 @@ static DEFINE_IDA(mhi_ep_cntrl_ida);
+>  static int mhi_ep_create_device(struct mhi_ep_cntrl *mhi_cntrl, u32 ch_id);
+>  static int mhi_ep_destroy_device(struct device *dev, void *data);
+>  
+> +static int mhi_ep_wake_host(struct mhi_ep_cntrl *mhi_cntrl)
+> +{
+> +	enum mhi_state state;
+> +	bool mhi_reset;
+> +	u32 count = 0;
+> +
+> +	mhi_cntrl->wakeup_host(mhi_cntrl);
+> +
+> +	/* Wait for Host to set the M0 state */
+> +	while (count++ < M0_WAIT_COUNT) {
+> +		msleep(M0_WAIT_DELAY_MS);
 
-This PCI driver purpose is to instanciate many other drivers using a DT
-overlay. I think MFD is the right subsystem.
+Tangent: the "M0_WAIT_DELAY_MS" name suggests that is the maximum
+delay, but it seems the actual maximum delay is
+M0_WAIT_DELAY_MS * M0_WAIT_COUNT.
 
-It acts as an interrupt controller because we need to have a bridge between the
-device-tree interrupt world and the the PCI world.
-This bridge is needed and specific to the driver in order to have resources
-available from the device-tree world present in the applied overlay.
+Tangent 2: unless there's a reason to be different, it would be nice
+to use the same loop structure as the similar delay in mhi_ep_enable().
 
-> 
-> Also I'm unsure of his current views, but Greg has voiced pretty big
-> feelings about representing PCI drivers as Platform ones in the past.
-
-PCI drivers as Plaform ones ?
-I probably missed something. Can you give me more details ?
-
-Best regards,
-Hervé
+> +		mhi_ep_mmio_get_mhi_state(mhi_cntrl, &state, &mhi_reset);
+> +		if (state == MHI_STATE_M0)
+> +			return 0;
+> +	}
+> +
+> +	return -ENODEV;
+> +}
 
