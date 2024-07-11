@@ -1,171 +1,157 @@
-Return-Path: <linux-pci+bounces-10159-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10160-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E883692EB2F
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 17:00:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9098192EB4C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 17:08:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F50E1F243CC
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 15:00:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34A601F21C28
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jul 2024 15:08:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9916B15D5D9;
-	Thu, 11 Jul 2024 15:00:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68BBC1684A8;
+	Thu, 11 Jul 2024 15:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XP8sa9FD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626B316B743;
-	Thu, 11 Jul 2024 15:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737C21EB2B;
+	Thu, 11 Jul 2024 15:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720710037; cv=none; b=dzQJvLy+IEuYf+ut96ILlapwvC06+MhuUJ3CYx5WuFYtUB6ICymq1+9TE/sSS9qx7uwafdixm5LQQ4C4RabIdrqhIb3Vg3CNhfimUj6G7wQaOpRqIwcxrcy8f21v0HDYI9MYf1hMG4RUCA84bH/lbw7Ee7sd4VL4zdjVm4O7BmY=
+	t=1720710488; cv=none; b=J4n2AQkS8IvFwq7R/mUsxj+ILfddv1ZuwA1tSMrfR9HqUcpxDqQWgLZIBYezl7898X1R+uwGFZxmv4h9okT762shpMhq+BRr40sMqEQye84aSrSIIJhXZTyefSb48EBQS/DZqp4lBtoM9Mzvg9HV/A8ve6VOR17BY8ZyIZ3MP4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720710037; c=relaxed/simple;
-	bh=LudTEYRfZlnvYQXONEYRd3VAVe+JaXveGK9Bk1Rqur4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=G1EMuzTidY7VdMQEWnTPbjbB7bo/Cd5ATKYih75/vFRYicYK9Dpkl8Qt0+1tFAVOZTtetUOeajubvt6WvLeqGAMfqk7VlKR13aWzz+Y27ZHu0FxYNiLGZOoo5FJ2hUfeOJflOrUbnMSp4xANHfDnUZzjmLG66toGpSHDJNBRvTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1FB3830002534;
-	Thu, 11 Jul 2024 17:00:26 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 0F242EEAB0; Thu, 11 Jul 2024 17:00:26 +0200 (CEST)
-Date: Thu, 11 Jul 2024 17:00:26 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Woodhouse <dwmw2@infradead.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
-	Jerome Glisse <jglisse@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>
-Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
-Message-ID: <Zo_zivacyWmBuQcM@wunner.de>
+	s=arc-20240116; t=1720710488; c=relaxed/simple;
+	bh=gplzIMy6tDZKQyX7R/6cvDR7QUKJOY9aNfrBXHwSBUY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EaRulOxjCAHd9GEDyMQsHse39pF2oG50sA0ncTB10mAYiI0d9yk/gzgXB9jkVyCPiUz+DthjmO6X/cU7jxZY1RV7yNwdspHyUv3MzXkZw0y4GKwyV6czSITFM/Wg6QkeqiRxzQUKd+3IPeDlARK9tWSWXpcMpOaek65Bacp6glY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XP8sa9FD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720710486; x=1752246486;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gplzIMy6tDZKQyX7R/6cvDR7QUKJOY9aNfrBXHwSBUY=;
+  b=XP8sa9FDaNcDeeQvYCvvhHAYUSGjAvybtH+KrVaejOEZF7S31u8ccoN8
+   IwGX2S3/39XhnkpiPmJG9nxgGAo+kUjonX6sYNOXIhOitEm2UFv48ylFm
+   UKPcvqoppKoJr/E/++WUx/ilsZXXtFkA91XYkfLpHDoeR4aXaSIJ3VUQJ
+   En7Wdv/LDCCd43s+fUlFrhi+JIjolwJbypmhWY2mayxPk0imKt5wdCcVB
+   i8N1vnqgJ+Lmi8288aKWM3kA5+LSs3eLdIP7bW9K0aFaEKmh9vTGHMy5p
+   G2gSJ1QAo9ElnzKImPZvL8fQHsw/IHNS99wwc8Mk6oV3T05kJxd5/YtI7
+   Q==;
+X-CSE-ConnectionGUID: uGqOYsNNQVm8iSEAJhmYUA==
+X-CSE-MsgGUID: rXIbJZOZT+WzH41ZCOKM+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="18241601"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="18241601"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:08:05 -0700
+X-CSE-ConnectionGUID: izqK40QBSoSzDCqbdqbSWw==
+X-CSE-MsgGUID: GYYjZhCXTFOea1TyBbSawA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="49022225"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:08:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Jul 2024 18:07:57 +0300 (EEST)
+To: superm1@kernel.org
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Mathias Nyman <mathias.nyman@intel.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>, 
+    Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 1/4] PCI: Check PCI_PM_CTRL in pci_dev_wait()
+In-Reply-To: <20240710205838.2413465-2-superm1@kernel.org>
+Message-ID: <15091369-fc5c-af2d-7591-e1732097e84c@linux.intel.com>
+References: <20240710205838.2413465-1-superm1@kernel.org> <20240710205838.2413465-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <668f17d4553_6de2294ba@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <668dc8525d9e7_102cc294f8@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Jul 09, 2024 at 04:31:30PM -0700, Dan Williams wrote:
-> Non-authenticated operation is the status quo. CMA is a building block
-> to other security features.
+On Wed, 10 Jul 2024, superm1@kernel.org wrote:
 
-That's not quite correct:  Products exist which support CMA but neither
-IDE nor TDISP.  CMA is not just a building block for IDE or TDISP,
-but is useful on its own merits.
-
-> Nothing currently cares about CMA being
-> established before a driver loads and it is not clear that now is the
-> time to for the kernel to paint itself into a corner to make that
-> guarantee.
-
-The PCI core initializes all of the device's capabilities upon enumeration.
-CMA is no different than any of the other capabilities.
-
-Chromebooks and many Linux distributions prevent driver binding to
-Thunderbolt-attached devices unless they're authorized by the user.
-I fully expect that vendors will want to additionally take advantage
-of authentication.  I don't want to wait for Windows or macOS to go
-ahead and add automatic authentication, then follow in their footsteps.
-I want Linux to lead the way here, so yes, absolutely, that's the corner
-I want the kernel to paint itself in, no less.
-
-> I think you are conflating automatic authentication and built-in
-> functionality. There are counter examples of security features like
-> encrypted root filesystems built on top of module drivers.
-
-Encrypted root filesystems are mounted after all initcall levels have run
-and user space has been launched.  At that point it's possible to invoke
-request_module().  But request_module() cannot be invoked from a
-subsys_initcall(), which is when device capabilities are enumerated.
-
-TSM can be a module because it's geared towards the passthrough use case
-and passthrough only happens when user space is up and running.
-
-> What I am trying to avoid is CMA setting unnecessary expectations that
-> can not be duplicated by TSM like "all authentication capable PCI
-> devices will be authenticated prior to driver attach".
-
-I don't want to artificially cripple CMA in order to achieve only a
-lowest common denominator with TSM.  Both, native CMA and TSM-driven
-authentication have their respective use cases and (dis)advantages.
-Should we try to strive for commonalities in the ABI?  Of course!
-But not at the expense of reducing functionality.
-
-> I agree that CMA should be in kernel, it's not clear that authentication
-> needs to be automatic, and certainly not in a way that a driver can not
-> opt-out of.
-
-If there is a need to opt out, that feature can be retrofitted easily.
-But systems need to be "secure by default":
-https://en.wikipedia.org/wiki/Secure_by_default
-
-> What if a use case cares about resume time latency?
-
-Resume is parallelized (see dpm_noirq_resume_devices()), so the latency
-is bounded by the time to authenticate a single device.
-
-Unfortunately boot-time enumeration of the PCI bus is not parallelized
-for historic reasons, we may indeed have to look into that.
-
-> What if a driver
-> knows that authentication is only needed later in the resume flow?
-
-If authentication is not possible in the ->resume_noirq phase because
-the driver needs to perform some initialization steps, it can just call
-on the PCI core to reauthenticate the device after those steps.
-
-The declaration of pci_cma_reauthenticate() can be moved from
-drivers/pci/pci.h to include/linux/pci.h once that need arrives.
-
-> At a minimum I think pci_cma_reauthenticate() should do something like:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> /* not previously authenticated skip authentication */
-> if (!spdm_state->authenticated)
-> 	return;
+> A device that has gone through a reset may return a value in PCI_COMMAND
+> but that doesn't mean it's finished transitioning to D0.  On devices that
+> support power management explicitly check PCI_PM_CTRL on everything but
+> system resume to ensure the transition happened.
 > 
-> ...so that spdm capable devices can opt-out of automatic reauthentication.
+> Devices that don't support power management and system resume will
+> continue to use PCI_COMMAND.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci.c | 27 ++++++++++++++++++++-------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 35fb1f17a589c..4ad02ad640518 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1270,21 +1270,34 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>  	 * the read (except when CRS SV is enabled and the read was for the
+>  	 * Vendor ID; in that case it synthesizes 0x0001 data).
+>  	 *
+> -	 * Wait for the device to return a non-CRS completion.  Read the
+> -	 * Command register instead of Vendor ID so we don't have to
+> -	 * contend with the CRS SV value.
+> +	 * Wait for the device to return a non-CRS completion.  On devices
+> +	 * that support PM control and on waits that aren't part of system
+> +	 * resume read the PM control register to ensure the device has
+> +	 * transitioned to D0.  On devices that don't support PM control,
+> +	 * or during system resume read the command register to instead of
+> +	 * Vendor ID so we don't have to contend with the CRS SV value.
+>  	 */
+>  	for (;;) {
+> -		u32 id;
+>  
+>  		if (pci_dev_is_disconnected(dev)) {
+>  			pci_dbg(dev, "disconnected; not waiting\n");
+>  			return -ENOTTY;
+>  		}
+>  
+> -		pci_read_config_dword(dev, PCI_COMMAND, &id);
+> -		if (!PCI_POSSIBLE_ERROR(id))
+> -			break;
+> +		if (dev->pm_cap && strcmp(reset_type, "resume") != 0) {
 
-Unfortunately that doesn't work:
+Comparing to a string makes me feel reset_type should be changed to
+something that allows direct compare and those values only mapped into 
+string while printing it.
 
-A device may have been reset due to a firmware update which adds
-CMA support.  Or the keyring of trusted root certificates may have
-been missing the certificate for authenticating the device, but the
-certificate has since been added.  Or the device came back from reset
-with a different certificate chain.  Or it was hot-replaced with a
-CMA-capable one...
+-- 
+ i.
 
-Thanks,
-
-Lukas
+> +			u16 pmcsr;
+> +
+> +			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+> +			if (!PCI_POSSIBLE_ERROR(pmcsr) &&
+> +			    (pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D0)
+> +				break;
+> +		} else {
+> +			u32 id;
+> +
+> +			pci_read_config_dword(dev, PCI_COMMAND, &id);
+> +			if (!PCI_POSSIBLE_ERROR(id))
+> +				break;
+> +		}
+>  
+>  		if (delay > timeout) {
+>  			pci_warn(dev, "not ready %dms after %s; giving up\n",
+> 
 
