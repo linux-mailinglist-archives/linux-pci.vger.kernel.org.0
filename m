@@ -1,297 +1,388 @@
-Return-Path: <linux-pci+bounces-10210-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10211-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 363D692FF1A
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 19:10:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76DAA92FFA0
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 19:19:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF801282053
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 17:10:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A3491C239A2
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 17:19:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846771EA85;
-	Fri, 12 Jul 2024 17:03:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC05717BCD;
+	Fri, 12 Jul 2024 17:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h6QKjxSk"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pTa1Lz4N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47826176ACE
-	for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 17:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87114168C4;
+	Fri, 12 Jul 2024 17:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720803781; cv=none; b=KZqCkd82wZ42YoIZVyvgES5jG95NM/Hirs5n5ldk5SW4baen010XwCUOu8/ku1xaz15iPETZ4SgoLPD7Ywvht9fRpppNmYOyygWJtn2I4vEF6WhfLUhq7W9nCaq3ExCAzddkDmHKF+jM58GE23jaF5b7rMBBAK3MGrQe4aQ46gs=
+	t=1720804785; cv=none; b=Nc1kWHsOjs0GT169hhPR0HPYoOjplai3Lbjj7BkHAHoV13MMLkv8VwdziG2S/88zA4n2FqJLuECwBJRXZgjnLGZkbSAdjp+s4jqnogPkKJVsGtPuKbmhjLaisplXKomTERnpa+oUHx8zUGmLpP96ZjgS2cMARI+egPcpmFOSLJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720803781; c=relaxed/simple;
-	bh=IaBx4UBHyme8Pqksryn4KJzz019OCNH5PobdZQh0ago=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZySJX/NGiKbsZgosnNzQbMW6GBuJ1IbSU56/iRD1X6/ieNdjZ7JdIKXRIsgQwHxC4yrnWuXDkuf+KuIyjAwKIuSlXIajPkvBG2BMTHTGwHnNKCFjNqBfG07sxC+PZkwAo+mXZ9aMWzoS+FVauwcP+zisW+V9WXIyGd0PwDpFcRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h6QKjxSk; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720803780; x=1752339780;
-  h=date:from:to:cc:subject:message-id;
-  bh=IaBx4UBHyme8Pqksryn4KJzz019OCNH5PobdZQh0ago=;
-  b=h6QKjxSkOcCAby6bopuzu3Qx7wJSOI97JEPba44eNx9DVmStl7VoDZIY
-   L4kWfT5/vPeKP0lpcPF1vfmEwKwpg4ZUe5BcSTTynGXJqgJ+KUGdhI7sU
-   L5ii39PM45roIxhnr7agfDad+oYoHiIvdxzwo9JTkV53SUxPeyiVjmwok
-   sLzlKsQq77SE66p3lZ4k92goYZi4aC3StYOETLBKZbZ9NRspYfPFulTJ4
-   aJ7qBvKXGm6BbNHBXxdt+140HxhUObISMQDIrV+UlNtlfe+qRVJAjaE2L
-   nYie31o7gh6XjeNowslytJwUQzMJltfCy5D2LLvFcOusyxIz35IZgbr6c
-   Q==;
-X-CSE-ConnectionGUID: mBwABNQ+QducsGmNXP2hXQ==
-X-CSE-MsgGUID: l/Ct5MQ9QvOgZaoYvsoLkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="18098533"
-X-IronPort-AV: E=Sophos;i="6.09,203,1716274800"; 
-   d="scan'208";a="18098533"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 10:02:39 -0700
-X-CSE-ConnectionGUID: H2I3Qt19Ssy9SDu7ovSkPA==
-X-CSE-MsgGUID: Dvj/XH+qQgGGuFlHUi0dbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,203,1716274800"; 
-   d="scan'208";a="53335873"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 12 Jul 2024 10:02:37 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sSJfH-000b1w-04;
-	Fri, 12 Jul 2024 17:02:35 +0000
-Date: Sat, 13 Jul 2024 01:02:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/vmd] BUILD SUCCESS
- f24c9bfcd423e2b2bb0d198456412f614ec2030a
-Message-ID: <202407130157.978EaAbm-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1720804785; c=relaxed/simple;
+	bh=jnRhT7ArZ/dsV+9o7ONQPq3w6RnKrbvARoEhLJOnquQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ehP21Lm1MQlqFYg4q0eFvzcyByU8hs5aJfgWgEpwoQIf6FTt+G5fZ1umJRopD0QW8xwVJM9ENzul2LCvKsIfDTsgqD5rQE9zfETdZZ8CRsz62cJgBjUXrtQjrRjjfmq2UzoLdSCQUFveWUGloWI/pNowW5EotZtYp9qmORV+lG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pTa1Lz4N; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CFvUvD014723;
+	Fri, 12 Jul 2024 17:19:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=pp1; bh=P
+	KLdN+4HvBPUBpPcjX23XjukBoXJmaIgK0lpyBVPehs=; b=pTa1Lz4N4kcksyH25
+	aui4MTWaA6mHQS9axVcYmtR4CBTepfVSa+CDXN08hm71FdZWdUzen3OUGhrdtSMy
+	KKcxBbHxTvq/BuJL5oUxwSyWJY3KUTgAfNtwXAVqljrFIAzwoYwa8CE8DjCjkKpp
+	kZvILS7XC4SrDquKE74oSMAiWzFg9EEdpPBHxVy/kBLRD46zvQgTeCLBRorfnuOP
+	lY/zTAeShcR3CYb1lDL+auybtsERiSyTyNwy5jQ5Q6CvWuTQOVZIsLTpmt4HHdIY
+	A2HEbvtsLP/kjIJcMy716uBLOourR9ebkT9VaoV/42BuCbQ7DN/7gkwWnbKpNIxQ
+	9+/mA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40b4y7gmbv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jul 2024 17:19:26 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46CHJPgM023228;
+	Fri, 12 Jul 2024 17:19:25 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40b4y7gmbs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jul 2024 17:19:25 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46CE1mO1024583;
+	Fri, 12 Jul 2024 17:19:25 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 407hrn7k5n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jul 2024 17:19:24 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46CHJJua34996642
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Jul 2024 17:19:21 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5171520043;
+	Fri, 12 Jul 2024 17:19:19 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C46E20040;
+	Fri, 12 Jul 2024 17:19:16 +0000 (GMT)
+Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.195.45.199])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 12 Jul 2024 17:19:16 +0000 (GMT)
+Date: Fri, 12 Jul 2024 22:49:10 +0530
+From: Amit Machhiwal <amachhiw@linux.ibm.com>
+To: Lizhi Hou <lizhi.hou@amd.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>, Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Kowshik Jois B S <kowsjois@linux.ibm.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH] PCI: Fix crash during pci_dev hot-unplug on pseries KVM
+ guest
+Message-ID: <parclvdotds2m44iphcy7qlhnxg6ugdtk7ad7wxodtktj6m5zj@wpuwa7xc6ve4>
+Mail-Followup-To: Lizhi Hou <lizhi.hou@amd.com>, 
+	Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Rob Herring <robh@kernel.org>, Vaibhav Jain <vaibhav@linux.ibm.com>, 
+	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S <kowsjois@linux.ibm.com>, 
+	Lukas Wunner <lukas@wunner.de>
+References: <20240705192034.GA73447@bhelgaas>
+ <2359de90-1712-903e-c3c9-1f1f694718db@amd.com>
+ <k5h7tto6kdwcgtxoeglqncojjwact6xxqnin4inffol74jdows@fj5ujezqwb24>
+ <f1c2125e-c87e-d816-c92b-db814f501134@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f1c2125e-c87e-d816-c92b-db814f501134@amd.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: sEAC1-5TYDh5GqKpo8s93-VQZKLYqtNZ
+X-Proofpoint-ORIG-GUID: qmakTHWV9aEhnRW0UZq7bentTl0ZwFwN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-12_13,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2406140001
+ definitions=main-2407120116
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/vmd
-branch HEAD: f24c9bfcd423e2b2bb0d198456412f614ec2030a  PCI: vmd: Create domain symlink before pci_bus_add_devices()
+Hi Lizhi,
 
-elapsed time: 1436m
+On 2024/07/11 02:18 PM, Lizhi Hou wrote:
+> 
+> On 7/11/24 11:48, Amit Machhiwal wrote:
+> > On 2024/07/10 09:48 PM, Lizhi Hou wrote:
+> > > On 7/5/24 12:20, Bjorn Helgaas wrote:
+> > > > [+cc Lukas, FYI]
+> > > > 
+> > > > On Wed, Jul 03, 2024 at 07:46:34PM +0530, Amit Machhiwal wrote:
+> > > > > With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
+> > > > > of a PCI device attached to a PCI-bridge causes following kernel Oops on
+> > > > > a pseries KVM guest:
+> > > > > 
+> > > > >    RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
+> > > > >    Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
+> > > > >    BUG: Unable to handle kernel data access on read at 0x10ec00000048
+> > > > >    Faulting instruction address: 0xc0000000012d8728
+> > > > >    Oops: Kernel access of bad area, sig: 11 [#1]
+> > > > >    LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+> > > > > <snip>
+> > > > >    NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
+> > > > >    LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
+> > > > >    Call Trace:
+> > > > >    [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
+> > > > >    [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
+> > > > >    [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
+> > > > >    [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
+> > > > >    [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
+> > > > >    [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
+> > > > >    [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
+> > > > >    [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
+> > > > >    [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
+> > > > >    [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
+> > > > >    [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
+> > > > >    [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
+> > > > > <snip>
+> > > > > 
+> > > > > A git bisect pointed this regression to be introduced via [1] that added
+> > > > > a mechanism to create device tree nodes for parent PCI bridges when a
+> > > > > PCI device is hot-plugged.
+> > > > > 
+> > > > > The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
+> > > > > device-tree node associated with the pci_dev that was earlier
+> > > > > hot-plugged and was attached under a pci-bridge. The PCI dev header
+> > > > > `dev->hdr_type` being 0, results a conditional check done with
+> > > > > `pci_is_bridge()` into false. Consequently, a call to
+> > > > > `of_pci_make_dev_node()` to create a device node is never made. When at
+> > > > > a later point in time, in the device node removal path, a memcpy is
+> > > > > attempted in `__of_changeset_entry_invert()`; since the device node was
+> > > > > never created, results in an Oops due to kernel read access to a bad
+> > > > > address.
+> > > > > 
+> > > > > To fix this issue the patch updates `pci_stop_dev()` to ensure that a
+> > > > > call to `of_pci_remove_node()` is only made for pci-bridge devices.
+> > > > > 
+> > > > > [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> > > > > 
+> > > > > Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> > > > > Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
+> > > > > Tested-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
+> > > > > Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+> > > > Thanks for the patch and testing!  Would like a reviewed-by from
+> > > > Lizhi.
+> > > of_pci_make_dev_node() will create of nodes for some endpoint devices (not a
+> > > bridge) as well. And actually this is the main purpose.
+> > > 
+> > > Maybe the patch as below would resolve the Oops?
+> > Thanks for the patch, Lizhi! I tried out this patch and don't see the issue with
+> > the same. The hot-plug and hot-unplug of PCI device seem to work fine as
+> > expected.
+> 
+> Cool! Thanks for trying it. Will you re-spin the patch or you would like me
+> to create a patch?
 
-configs tested: 204
-configs skipped: 5
+Sure, I'll re-spin and send the V2 of the patch.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+~ Amit
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                         haps_hs_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240712   gcc-13.2.0
-arc                   randconfig-002-20240712   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                     am200epdkit_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                          exynos_defconfig   clang-17
-arm                         lpc18xx_defconfig   clang-17
-arm                   milbeaut_m10v_defconfig   gcc-13.2.0
-arm                        multi_v7_defconfig   clang-17
-arm                        multi_v7_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240712   gcc-13.2.0
-arm                   randconfig-002-20240712   gcc-13.2.0
-arm                   randconfig-003-20240712   gcc-13.2.0
-arm                   randconfig-004-20240712   gcc-13.2.0
-arm                       spear13xx_defconfig   gcc-13.2.0
-arm                           stm32_defconfig   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240712   gcc-13.2.0
-arm64                 randconfig-002-20240712   gcc-13.2.0
-arm64                 randconfig-003-20240712   gcc-13.2.0
-arm64                 randconfig-004-20240712   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240712   gcc-13.2.0
-csky                  randconfig-002-20240712   gcc-13.2.0
-hexagon                          allmodconfig   clang-19
-hexagon                          allyesconfig   clang-19
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-13
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-13
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-13
-i386         buildonly-randconfig-001-20240712   gcc-9
-i386         buildonly-randconfig-002-20240712   clang-18
-i386         buildonly-randconfig-002-20240712   gcc-9
-i386         buildonly-randconfig-003-20240712   clang-18
-i386         buildonly-randconfig-003-20240712   gcc-9
-i386         buildonly-randconfig-004-20240712   clang-18
-i386         buildonly-randconfig-004-20240712   gcc-9
-i386         buildonly-randconfig-005-20240712   gcc-11
-i386         buildonly-randconfig-005-20240712   gcc-9
-i386         buildonly-randconfig-006-20240712   clang-18
-i386         buildonly-randconfig-006-20240712   gcc-9
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240712   clang-18
-i386                  randconfig-001-20240712   gcc-9
-i386                  randconfig-002-20240712   clang-18
-i386                  randconfig-002-20240712   gcc-9
-i386                  randconfig-003-20240712   clang-18
-i386                  randconfig-003-20240712   gcc-9
-i386                  randconfig-004-20240712   clang-18
-i386                  randconfig-004-20240712   gcc-9
-i386                  randconfig-005-20240712   clang-18
-i386                  randconfig-005-20240712   gcc-9
-i386                  randconfig-006-20240712   clang-18
-i386                  randconfig-006-20240712   gcc-9
-i386                  randconfig-011-20240712   clang-18
-i386                  randconfig-011-20240712   gcc-9
-i386                  randconfig-012-20240712   clang-18
-i386                  randconfig-012-20240712   gcc-9
-i386                  randconfig-013-20240712   clang-18
-i386                  randconfig-013-20240712   gcc-9
-i386                  randconfig-014-20240712   gcc-10
-i386                  randconfig-014-20240712   gcc-9
-i386                  randconfig-015-20240712   gcc-10
-i386                  randconfig-015-20240712   gcc-9
-i386                  randconfig-016-20240712   gcc-12
-i386                  randconfig-016-20240712   gcc-9
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240712   gcc-13.2.0
-loongarch             randconfig-002-20240712   gcc-13.2.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-13.2.0
-m68k                       m5208evb_defconfig   gcc-13.2.0
-m68k                        stmark2_defconfig   gcc-13.2.0
-m68k                           virt_defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                          ath79_defconfig   clang-17
-mips                           ci20_defconfig   clang-17
-mips                           ip27_defconfig   gcc-13.2.0
-mips                           jazz_defconfig   gcc-13.2.0
-mips                        omega2p_defconfig   clang-17
-nios2                            alldefconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240712   gcc-13.2.0
-nios2                 randconfig-002-20240712   gcc-13.2.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240712   gcc-13.2.0
-parisc                randconfig-002-20240712   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                        fsp2_defconfig   clang-17
-powerpc                 mpc8313_rdb_defconfig   clang-17
-powerpc                      ppc6xx_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240712   gcc-13.2.0
-powerpc               randconfig-002-20240712   gcc-13.2.0
-powerpc               randconfig-003-20240712   gcc-13.2.0
-powerpc                     tqm8548_defconfig   gcc-13.2.0
-powerpc64                        alldefconfig   clang-17
-powerpc64             randconfig-001-20240712   gcc-13.2.0
-powerpc64             randconfig-002-20240712   gcc-13.2.0
-powerpc64             randconfig-003-20240712   gcc-13.2.0
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-14.1.0
-riscv                 randconfig-001-20240712   gcc-13.2.0
-riscv                 randconfig-002-20240712   gcc-13.2.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   clang-19
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-14.1.0
-s390                  randconfig-001-20240712   gcc-13.2.0
-s390                  randconfig-002-20240712   gcc-13.2.0
-s390                       zfcpdump_defconfig   clang-17
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sh                               j2_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240712   gcc-13.2.0
-sh                    randconfig-002-20240712   gcc-13.2.0
-sh                            shmin_defconfig   gcc-13.2.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240712   gcc-13.2.0
-sparc64               randconfig-002-20240712   gcc-13.2.0
-um                               allmodconfig   clang-19
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-13
-um                               allyesconfig   gcc-13.3.0
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-14.1.0
-um                    randconfig-001-20240712   gcc-13.2.0
-um                    randconfig-002-20240712   gcc-13.2.0
-um                           x86_64_defconfig   clang-17
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240712   clang-18
-x86_64       buildonly-randconfig-002-20240712   clang-18
-x86_64       buildonly-randconfig-003-20240712   clang-18
-x86_64       buildonly-randconfig-004-20240712   clang-18
-x86_64       buildonly-randconfig-005-20240712   clang-18
-x86_64       buildonly-randconfig-006-20240712   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                randconfig-001-20240712   clang-18
-x86_64                randconfig-002-20240712   clang-18
-x86_64                randconfig-003-20240712   clang-18
-x86_64                randconfig-004-20240712   clang-18
-x86_64                randconfig-005-20240712   clang-18
-x86_64                randconfig-006-20240712   clang-18
-x86_64                randconfig-011-20240712   clang-18
-x86_64                randconfig-012-20240712   clang-18
-x86_64                randconfig-013-20240712   clang-18
-x86_64                randconfig-014-20240712   clang-18
-x86_64                randconfig-015-20240712   clang-18
-x86_64                randconfig-016-20240712   clang-18
-x86_64                randconfig-071-20240712   clang-18
-x86_64                randconfig-072-20240712   clang-18
-x86_64                randconfig-073-20240712   clang-18
-x86_64                randconfig-074-20240712   clang-18
-x86_64                randconfig-075-20240712   clang-18
-x86_64                randconfig-076-20240712   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                randconfig-001-20240712   gcc-13.2.0
-xtensa                randconfig-002-20240712   gcc-13.2.0
-xtensa                    xip_kc705_defconfig   gcc-13.2.0
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> Lizhi
+> 
+> > 
+> > ~ Amit
+> > 
+> > > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> > > index dda6092e6d3a..3c693b091ecf 100644
+> > > --- a/drivers/of/dynamic.c
+> > > +++ b/drivers/of/dynamic.c
+> > > @@ -492,21 +492,29 @@ struct device_node *__of_node_dup(const struct
+> > > device_node *np,
+> > >    * a given changeset.
+> > >    *
+> > >    * @ocs: Pointer to changeset
+> > > + * @np: Pointer to device node. If it is not null, init it directly instead
+> > > of
+> > > + *      allocate a new node.
+> > >    * @parent: Pointer to parent device node
+> > >    * @full_name: Node full name
+> > >    *
+> > >    * Return: Pointer to the created device node or NULL in case of an error.
+> > >    */
+> > >   struct device_node *of_changeset_create_node(struct of_changeset *ocs,
+> > > +                                            struct device_node *np,
+> > >                                               struct device_node *parent,
+> > >                                               const char *full_name)
+> > >   {
+> > > -       struct device_node *np;
+> > >          int ret;
+> > > 
+> > > -       np = __of_node_dup(NULL, full_name);
+> > > -       if (!np)
+> > > -               return NULL;
+> > > +       if (!np) {
+> > > +               np = __of_node_dup(NULL, full_name);
+> > > +               if (!np)
+> > > +                       return NULL;
+> > > +       } else {
+> > > +               of_node_set_flag(np, OF_DYNAMIC);
+> > > +               of_node_set_flag(np, OF_DETACHED);
+> > > +       }
+> > > +
+> > >          np->parent = parent;
+> > > 
+> > >          ret = of_changeset_attach_node(ocs, np);
+> > > diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> > > index 445ad13dab98..087de26852cc 100644
+> > > --- a/drivers/of/unittest.c
+> > > +++ b/drivers/of/unittest.c
+> > > @@ -871,7 +871,7 @@ static void __init of_unittest_changeset(void)
+> > >          unittest(!of_changeset_add_property(&chgset, parent, ppadd), "fail
+> > > add prop prop-add\n");
+> > >          unittest(!of_changeset_update_property(&chgset, parent, ppupdate),
+> > > "fail update prop\n");
+> > >          unittest(!of_changeset_remove_property(&chgset, parent, ppremove),
+> > > "fail remove prop\n");
+> > > -       n22 = of_changeset_create_node(&chgset, n2, "n22");
+> > > +       n22 = of_changeset_create_node(&chgset, NULL, n2, "n22");
+> > >          unittest(n22, "fail create n22\n");
+> > >          unittest(!of_changeset_add_prop_string(&chgset, n22, "prop-str",
+> > > "abcd"),
+> > >                   "fail add prop prop-str");
+> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > index 51e3dd0ea5ab..92c079b2e570 100644
+> > > --- a/drivers/pci/of.c
+> > > +++ b/drivers/pci/of.c
+> > > @@ -608,18 +608,28 @@ int devm_of_pci_bridge_init(struct device *dev, struct
+> > > pci_host_bridge *bridge)
+> > > 
+> > >   #ifdef CONFIG_PCI_DYNAMIC_OF_NODES
+> > > 
+> > > +void of_pci_free_node(struct device_node *np)
+> > > +{
+> > > +       struct of_changeset *cset;
+> > > +
+> > > +       cset = (struct of_changeset *)(np + 1);
+> > > +
+> > > +       np->data = NULL;
+> > > +       of_changeset_revert(cset);
+> > > +       of_changeset_destroy(cset);
+> > > +       of_node_put(np);
+> > > +}
+> > > +
+> > >   void of_pci_remove_node(struct pci_dev *pdev)
+> > >   {
+> > >          struct device_node *np;
+> > > 
+> > >          np = pci_device_to_OF_node(pdev);
+> > > -       if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+> > > +       if (!np || np->data != of_pci_free_node)
+> > >                  return;
+> > >          pdev->dev.of_node = NULL;
+> > > 
+> > > -       of_changeset_revert(np->data);
+> > > -       of_changeset_destroy(np->data);
+> > > -       of_node_put(np);
+> > > +       of_pci_free_node(np);
+> > >   }
+> > > 
+> > >   void of_pci_make_dev_node(struct pci_dev *pdev)
+> > > @@ -655,14 +665,18 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+> > >          if (!name)
+> > >                  return;
+> > > 
+> > > -       cset = kmalloc(sizeof(*cset), GFP_KERNEL);
+> > > -       if (!cset)
+> > > +       np = kzalloc(sizeof(*np) + sizeof(*cset), GFP_KERNEL);
+> > > +       if (!np)
+> > >                  goto out_free_name;
+> > > +       np->full_name = name;
+> > > +       of_node_init(np);
+> > > +
+> > > +       cset = (struct of_changeset *)(np + 1);
+> > >          of_changeset_init(cset);
+> > > 
+> > > -       np = of_changeset_create_node(cset, ppnode, name);
+> > > +       np = of_changeset_create_node(cset, np, ppnode, NULL);
+> > >          if (!np)
+> > > -               goto out_destroy_cset;
+> > > +               goto out_free_node;
+> > > 
+> > >          ret = of_pci_add_properties(pdev, cset, np);
+> > >          if (ret)
+> > > @@ -672,9 +686,8 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+> > >          if (ret)
+> > >                  goto out_free_node;
+> > > 
+> > > -       np->data = cset;
+> > > +       np->data = of_pci_free_node;
+> > >          pdev->dev.of_node = np;
+> > > -       kfree(name);
+> > > 
+> > >          return;
+> > > 
+> > > diff --git a/include/linux/of.h b/include/linux/of.h
+> > > index a0bedd038a05..f774459d0d84 100644
+> > > --- a/include/linux/of.h
+> > > +++ b/include/linux/of.h
+> > > @@ -1631,6 +1631,7 @@ static inline int of_changeset_update_property(struct
+> > > of_changeset *ocs,
+> > >   }
+> > > 
+> > >   struct device_node *of_changeset_create_node(struct of_changeset *ocs,
+> > > +                                            struct device_node *np,
+> > >                                               struct device_node *parent,
+> > >                                               const char *full_name);
+> > >   int of_changeset_add_prop_string(struct of_changeset *ocs,
+> > > 
+> > > Thanks,
+> > > 
+> > > Lizhi
+> > > 
+> > > > > ---
+> > > > >    drivers/pci/remove.c | 3 ++-
+> > > > >    1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> > > > > index d749ea8250d6..4e51c64af416 100644
+> > > > > --- a/drivers/pci/remove.c
+> > > > > +++ b/drivers/pci/remove.c
+> > > > > @@ -22,7 +22,8 @@ static void pci_stop_dev(struct pci_dev *dev)
+> > > > >    		device_release_driver(&dev->dev);
+> > > > >    		pci_proc_detach_device(dev);
+> > > > >    		pci_remove_sysfs_dev_files(dev);
+> > > > > -		of_pci_remove_node(dev);
+> > > > > +		if (pci_is_bridge(dev))
+> > > > > +			of_pci_remove_node(dev);
+> > > > IIUC, this basically undoes the work that was done by
+> > > > of_pci_make_dev_node().
+> > > > 
+> > > > The call of of_pci_make_dev_node() from pci_bus_add_device() was added
+> > > > by 407d1a51921e and is conditional on pci_is_bridge(), so it makes
+> > > > sense to me that the remove needs a similar condition.
+> > > > 
+> > > > >    		pci_dev_assign_added(dev, false);
+> > > > >    	}
+> > > > > 
+> > > > > base-commit: e9d22f7a6655941fc8b2b942ed354ec780936b3e
+> > > > > -- 
+> > > > > 2.45.2
+> > > > > 
 
