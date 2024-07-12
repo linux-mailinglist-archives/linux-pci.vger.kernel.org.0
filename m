@@ -1,225 +1,214 @@
-Return-Path: <linux-pci+bounces-10207-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10208-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1676C92FD12
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 16:59:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A02892FDD4
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 17:49:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A7401F2433E
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 14:59:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47A921C2275A
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 15:49:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D42C172BD9;
-	Fri, 12 Jul 2024 14:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6A37407B;
+	Fri, 12 Jul 2024 15:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jWmWSxml"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5Tt3M3b"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2082.outbound.protection.outlook.com [40.107.93.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92587172BC8;
-	Fri, 12 Jul 2024 14:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720796352; cv=fail; b=TmL5eMwZS10z6h8kYXAMwCOhmc6OaCpt/OjVSyeksrHsokRTxmGHIOx//ee9Q35augaM0fEwB8APLtyfnshS/yjB5d0U0XTsWV0a+l1+/8KZrDCLw193SGPW24W/1jLa5826SrOnABPGZ8pu4IEvHUkAjzhRh4bWhanlx1QuVoE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720796352; c=relaxed/simple;
-	bh=14trOAk1AEl+TAk18JMo+OMFFX0++xTxGLpaKC0865g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kWgfFCMPXeiRuo1uQGPunbLihF41FaSZdI0uzxLCDTw6kbsHStDi2orXP1RFM7D6OO36no/tKEfYFMUcFOYFm+RrlnqxxDqbLMQdBKQlrNn2qmgpG/b+WErzYATDaRo4xISae+8pRFa3ZDAzvXRs0G+WmxGuvcuYRujhg+vP3cA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jWmWSxml; arc=fail smtp.client-ip=40.107.93.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V7BceMsg66sZoQvNg6D3rb9Cb1rZPKL8A+6u1VjlTobpH3z8uohnZC6WNaOtDZGCcjPyjiFI7kTI4TyjfhwXbmBflxqa0fjGoR61YQ9FEdagdSpPGlkQP+ium74r/WZ1AjsX9MKbu2yt/BFu4xJBfmYlqcvv3HObA2HkVZ738AWaNRsDZkWvYvej7Ls0uz18SzVz4a3jFesf8UrMcknj+6EOB59mVjwBrWSnt4uH4aPgydA19CkEkxzkF02l3EbYVdPUghnU/exIZ2NaQ74sXaDr41UeRZy0QW4n1+3/De9L7PLy27FpWcIQ3zabodxRBCmSt2UAG7NjWGc6o2NpMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dBWKaNWTI9yZS+Tmlf2Mz12hkjPy3SRsXg2JvM9difk=;
- b=iTHQVq8btl7hlDeAj1n1HuZ4k2EA6UCq0hJ1/JAlYLLpmbYvEdBovkJ3EO1TVDvD8PWo6zXN/0JBoWM/UWisLy3OF3wnT3HcdtR7fXI2eI2xs9XYe1fvq1UtEJELSkJpUf2J+GmdVSWHKiaO4V1e/n45P+W5XL4t+YlGcarlEYBvDZCkjpRdpd/Jz5ta14R/uFF44hr/kDl8iioE650cE6TovGMwo1uc1OTQC4kta1CqH/RbsqEfhClJN8gwuFRGXsNHR874rQ0kdKzvPvswH4Sz7Ke2mbSbfNG6OIw3jm3ty64G2GMV7G/Ll/O88IGRqddTXwq8hhig0h+2yvarNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dBWKaNWTI9yZS+Tmlf2Mz12hkjPy3SRsXg2JvM9difk=;
- b=jWmWSxmlK0nmAeMjBwHpiI0+R42K0kdMjcKXDL54b3CxHUbIqcRWTsTNsw1A/96KXJkiKxR0GWrhguZV5ocLdjSBwYyLOqgbCSSLzwqW1hSejSSyoifPVBEnxRNUdn7ZD+lwow3IDYAROXnF9E4dQscpAODCJgQtlhMlEFvDA9Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH3PR12MB7500.namprd12.prod.outlook.com (2603:10b6:610:148::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.41; Fri, 12 Jul
- 2024 14:59:07 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7741.033; Fri, 12 Jul 2024
- 14:59:07 +0000
-Message-ID: <9d2f1619-1c61-4e8c-b28d-d4eddefa45c3@amd.com>
-Date: Fri, 12 Jul 2024 09:59:05 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/PM: Put devices to low power state on shutdown
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
-Cc: mika.westerberg@linux.intel.com, linux-pci@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mark Pearson <mpearson-lenovo@squebb.ca>
-References: <20240712062411.35732-1-kai.heng.feng@canonical.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240712062411.35732-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN1PR12CA0107.namprd12.prod.outlook.com
- (2603:10b6:802:21::42) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BAD440C;
+	Fri, 12 Jul 2024 15:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720799353; cv=none; b=CZDu7RigPUPx2GcNxvdeWdH6aG/AiMDzO7FODTitwo4KsLIXSmqWKl682kLIgSzp9kGBNWhklDh67IuctZ0CzQcgGKNHDekCFsKbM6iJOlUxeBh2htIbxugGSGiXXenrFD+7/5IZjVWp2W0rAVCbRWWje7u1LZEMXGQjn/aqHAw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720799353; c=relaxed/simple;
+	bh=g1er5zB3UAFTH4lX5fNuFAOLI9apgTGC1UiZhvyXbRM=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=mIWH76/RQLbZERvIMNrPZOISxYl4FTuW7krjoJLFKZwWUNn9+7zCKf1eLreC7XM8l9+8oWthGPtNv1k3DSGiUL1IgIm5FVWUfWUTqEHhn5iKZ16ZZfYUcX2bPX6sILX1HjA6DucuU3yPOiQTKA18nADKNMmgksKu/pcwUVbGDM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E5Tt3M3b; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb3cf78fcaso15497105ad.1;
+        Fri, 12 Jul 2024 08:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720799351; x=1721404151; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:user-agent:message-id:date
+         :cc:to:from:subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=JaS6RpQt+MamVjsgff8AGDxYYt3AH7aJY3AIKOLyOL8=;
+        b=E5Tt3M3biLq+rZBlh10Ru4v1vQCS5KbEqJKeXZ1oh6sCQ/3Im7kdZY/OlXCWgPxcog
+         ben6N+w6pdkcVxP2hCpc64MueegGswwQGXOtmLi4JbPAM/IhoSz8M6kPceBPHKUANfqc
+         dBNwdf5X7W1KJuRQl1+pYK9Orb7+KYIygfy8JmsGd0fsV7e7YZk6kJcIxgufX917asYf
+         +haFVLItRdiju4dqc35LjTEOWEYS+RthKoL00164bxZj+3Y7JgUoFcnmcDEe3MRyv9Ql
+         GF/p6ZcoCBAttNJoBK7nlRqB7aMEr6MLVwHXGFKp4utfgJyMriNtbNn97VYG5YHpELZ4
+         LqSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720799351; x=1721404151;
+        h=content-transfer-encoding:mime-version:user-agent:message-id:date
+         :cc:to:from:subject:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JaS6RpQt+MamVjsgff8AGDxYYt3AH7aJY3AIKOLyOL8=;
+        b=flkRKXAvAH8zCQKOd7YabPpR8em9rVkMLkniQSZHkyHUmdYnZ/V5yQG2pcK0nN3mNm
+         b11+YqM4tziAC1NTAlv1HeLDOmC2pu8CthyD3aP7cPSSq01oUfZRCRhCK25vVVXWWrJp
+         ayRUHrcD7fd8YC+qhQnE7aOhsxKe1CftqztHo+0vQ0nP4q/MIEdqUphXIJAIF0JwcCCt
+         XjOMSk+ozCapDBpcBeaDUfgaTgV+e2eZVzbLUqgQxAR4YAuo5Zmul6apIIIyQNuPiT0Z
+         hcgogha03kMhFPVd7+4bUZXhlk6M3WpQi6ZFxDc0fD0XKOKszVgwClJvVGMyHb2yJFgk
+         7Rqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOaTSwdri7E9y60V6M65RxDsb7oXye8GrCHtMUKI8ExqBluUJVpUG0+zqrqQqxTtrYf4ylyavzR+Ua+RypoV92NprSuBjI/Pj1
+X-Gm-Message-State: AOJu0YwAw+vXeZpHeSVEZM9Sf7NVyGR+fUCPBY5VE+YSqfQrvpK2JKPw
+	vVpXkJ7BfsT1LuzWN73u12EWaXwocEQTZF3NVjHiPLBH1etE+j6e
+X-Google-Smtp-Source: AGHT+IFSqmR0leuCe0IizcK7N+eyo2wzUnolI72x2l87lggQk3I13Vt86DY7vf8tKyZwiZ/jevzRDg==
+X-Received: by 2002:a17:902:ec8a:b0:1f7:123e:2c6f with SMTP id d9443c01a7336-1fbb6d4de4emr111279555ad.37.1720799350535;
+        Fri, 12 Jul 2024 08:49:10 -0700 (PDT)
+Received: from ahduyck-xeon-server.home.arpa ([98.97.103.43])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbd34694a5sm45178325ad.7.2024.07.12.08.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jul 2024 08:49:10 -0700 (PDT)
+Subject: [net-next PATCH v5 00/15] eth: fbnic: Add network driver for Meta
+ Platforms Host Network Interface
+From: Alexander Duyck <alexander.duyck@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ Alexander Duyck <alexanderduyck@fb.com>, Andrew Lunn <andrew@lunn.ch>,
+ Sanman Pradhan <sanmanpradhan@meta.com>,
+ Russell King <linux@armlinux.org.uk>, kuba@kernel.org, davem@davemloft.net,
+ pabeni@redhat.com, edumazet@google.com, kernel-team@meta.com
+Date: Fri, 12 Jul 2024 08:49:08 -0700
+Message-ID: 
+ <172079913640.1778861.11459276843992867323.stgit@ahduyck-xeon-server.home.arpa>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB7500:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70ea0fc1-c00f-4eab-37a1-08dca2832daf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Mk05OHNmVXdCaHBMdHlaeXpJV1VWanRLbzhTNjhMQWtiY0crRUNKYm9nSEFB?=
- =?utf-8?B?ZERxRGNZazNuLzQxaGR1ajZEVXMyeVFwWE5uYW84UjBSSjRKWk9XeW96Z1B2?=
- =?utf-8?B?eHk5MkJsb3RsY0N0U1JpU29JRzJyWTMxRWx0alVEUmpEdXJXVkQ3TjlIdjRQ?=
- =?utf-8?B?Y25RRDMwY21iaUxIRHA4a1NmYnIweUFIMjBMRWpPVHRkUktnMEx2QzhNbVY3?=
- =?utf-8?B?RlczcC9Zdkk5UFM0ZDJ2ek9EcEtRNFRPN0hOMC9CbEdTbGlTdk9FSnFCS25W?=
- =?utf-8?B?WmFKdTBtT1hDWHQ3aWUySExPNmhLcnpkR3F6eXE2K3BhakFhalhnb1JneFJT?=
- =?utf-8?B?WldMVlhhd2FuckhhYzR2Q0p3VGJIa21IendRdnUzdVFPQzV3ZGNhVEkza1Nl?=
- =?utf-8?B?ek56ajhsK1JPc2VBZnlXVGxhWkJQbC9lS1R1R2pvaFZLbXFibjl0cUJ4VUxw?=
- =?utf-8?B?TXZ4NkxWaWlQcEJiMThnWHRON3dqQTNGaHkyTVlocXlwVEdqYkZSUHhRcmZ3?=
- =?utf-8?B?OEpLWUlqdVI5NVNSZVFNZjJtK1ZsNThwcnhXK3BXQ2ZNYXN5aGZFTnozd1ZV?=
- =?utf-8?B?V1I1UGowbExqaTJnS0hjRjVHR0tzSGZweDhkbFRmT3I5b2U3Sk1FSjVaTnM2?=
- =?utf-8?B?cEpYTk81a0FsOWdpbDRybkpjTkZPcHFSSUJnb1JUSmZMS3VWUnl5WUhldDlm?=
- =?utf-8?B?eWhlc25YeGZaMXVZQ3ZlZ2oyeDFFYUw0TWdqQkNWQnFFU1dyTW85aDY5ODJJ?=
- =?utf-8?B?NXAyWVRXbUhXdmo5THN5SFJEWUszVHpEV0x5WW02aHJwOUV0V1k5akhHY0xN?=
- =?utf-8?B?bktJOGtNVmpWdSs4eks5OFo0S1ErenltbndIYmpVN2lDUUs0eXZuMVpubENs?=
- =?utf-8?B?dWlmRVRhLyswcm5uUXRkcCtnRGdxaVFFRUptVGFKMlpOU2NmZHp0QU5YanFu?=
- =?utf-8?B?Nk1XS3JmSkg4eUdGcGw4Qk5sZkJ1bHMrd0szU3VpRWJjUG5naCsxT1R4NFI0?=
- =?utf-8?B?MnpHZmprTHBxSWN1ZllWRWpTdDNSWjh4cERrRzNYeTRJZ1oxSkJselVTSnVS?=
- =?utf-8?B?R3dvVmFVcW8ya3RzU085dW9ManViS1ZRZXdoTnozWXQwWkljSjYybzVRd1pZ?=
- =?utf-8?B?cmUwbG9jei8rdkgyZkI1TDBOWCtlUWxXZ0k2S1dQZ1ZWTG5nVWdFTGE3eTdT?=
- =?utf-8?B?RVc5SE1adVlGMDBpaHFicXpyRWlBODcrcWRBS2JNV1FOY0E2U2V6Ly8rVCtH?=
- =?utf-8?B?UmxqZzNuYVNzMlJ4Y1dLVzFNSzBUL3Q5dWY3Q2tQZFdIcGFSUlNIamR1eFQw?=
- =?utf-8?B?anlOSUUyTHpZZzhyMng5R0JlRmdVYVFjdlgzMFpRY2dBQlFYcnpjMVJGdk0w?=
- =?utf-8?B?NGVVN1VJTkg5UUJiL2JWNTBOWjVRQUkxMnIzazlrY1VQQS9EY2hrT20yYzJN?=
- =?utf-8?B?L01FNW56QzYxWXIxM0U5eFlGUEh2TnB3RWJZdDZUL3BUaVNyb252aHFLeCt3?=
- =?utf-8?B?azVUcXJUMk1FanVqYU1qZFJkakN4SGJ6NDBpbVZsQmZsN2MvbkpGeEorSlJC?=
- =?utf-8?B?TVg2NTR3NWpHMzhHY05uRkE5Tms5RVVyZnJ1b1EvNnp5V1k0OXorVUhITnRK?=
- =?utf-8?B?aEU3UDBLYkRxOVd3clhQb0dudlJvdzFhd09JcVBHSnJYcFFCS0RqekFrUzVX?=
- =?utf-8?B?UTllN0xoRDBQSUxjQkUvcEVWNElORDFFSWZuWG9ybEhuaGpFVHVoOVpMYTVu?=
- =?utf-8?Q?0qUTMG/yJvqICFAL90=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N2R5ZU9oT0EwdXJpTUhodExSUWJMRGhSSy82V3hGU0xjZlF1RXo5dUgzR0tR?=
- =?utf-8?B?aVZRN2Jlampld0NUaEFLMkJCZWdlY3hNd2dtQTNyZEIvdUV1YkhsN1RKUVp1?=
- =?utf-8?B?QjR5M0VFd28rMTJSemNUYXBrNHkvRE1TVUNCQ2lxa2hLQ2VrVllhMUlBNm42?=
- =?utf-8?B?T0p2TGIzMVAvbUJxMHRWNWUybk1CUUNqVXdZdC8wd3pLcGNVd0MwaEZ4SVF4?=
- =?utf-8?B?YUVtTnhQOEFpV28rU1E5MkE1OWlESlZWYjQ3QTVQKzJKL3pMbTZ3SkpvME9Q?=
- =?utf-8?B?RjFOZkFVNGg5YXNVUzA1OG5CdzZ6ZTRrNy9mV0FIVmJ2aldRa0hXekZDcmF1?=
- =?utf-8?B?cWRVZG9Fcm13VmhLNXQ5eHMwZXk3NkEzL3ROeUdtZVpURWgxbm5XM0VWVi83?=
- =?utf-8?B?MW1QQ2xTVnd5NzJINkpuS3kyMlZ6RS9zbnZ2SEpPWlh0RjhuVmRLdXNzSHpm?=
- =?utf-8?B?RjJjZDNFcEpBelE5VGk0MWFsRndoeko0dzhhWDdXNnM2U1ZEbmRXekNJV1cr?=
- =?utf-8?B?bGVuMDJTajY5NDNXSFZTWE9tVTNmRk9EYmhDWVMxZTF1Q2Ryc1hhM0dTa3JH?=
- =?utf-8?B?cG9wNW9yei9mRWtCU2MxcllVbUZrTmNMZW5LRkFydHR1b1VnNzBOYjhtV2lz?=
- =?utf-8?B?Vi9yeFplcmViQkVQZWNNU1JpMDE4dHhIUXNsVXF6UlJoa29UeC82aDBZMWlL?=
- =?utf-8?B?ZEhlang5aVkvNE04L3RONHR2c2dTRjJkdmdTbWo5RzFnejFtRGQ1UW9zWDNY?=
- =?utf-8?B?ODA5RGxzb25ZYzR2K09HSUVwQjd4NVRnWFZUY25GcVdtcllEVWJIc2dDRmpZ?=
- =?utf-8?B?WG04MUNHTE8xTDJtbldad04yUlV2ZTAxTHY3OHlyRkp6eFZlRTBnUElYRnI1?=
- =?utf-8?B?UEZTekRybis2SjJkR1VQM2RoS1pRRG1hSzNWQ01mZnlXNW9SeVVyOUVKTVdK?=
- =?utf-8?B?UlNkVkR1RHdjemhvUUtOa0U1NFZRMnE5VEUwL3p2bXVqSXpiUDFDdmRFY1JG?=
- =?utf-8?B?Ny9oWWgwakl0ZFg1a21wblVvUjhaMzU3OW9vVEJuek93djIzVmVreERJK3V5?=
- =?utf-8?B?VjlYNXc4UXlXLzFYUkdKV2FVZHYxRHV4MUdOK0pManN5SWNCd3oxQllaaktm?=
- =?utf-8?B?QzRVY2tCRE85MkEvWTRNR0VmWFdRbVlRRWdVaUFHKzE0MEExaTdwTVZqUkw2?=
- =?utf-8?B?YWlRZ0szV2ZQdFdmQUNhOUtaZU1vTFhScW16QlJHd2h4aXJXUmhiczZnaUoz?=
- =?utf-8?B?TVIvd25YVElPSC9HaVY2QStyMUhrV3p5UW1wMjdTVEdGSVR3OWpIOGt3TUFX?=
- =?utf-8?B?U21NcXU2L1NIcjk2cURBb0RVU0NwdHFFeExLUThxSWl1MEo4QU9tUlp4OVRQ?=
- =?utf-8?B?QndzWmJlVEVUUzhWSkhtdmpLWnloeVVJckZQRW13QTBUeHBzUjVkYUxwQ2pj?=
- =?utf-8?B?YzRRWFJEb3J4cUIvTWpqSmhxVXVQUkFORGt0YjArUkZGNE1WSEljeEdtTWFl?=
- =?utf-8?B?KzN1ais1d0pUdHJzR2dvQ1BIWU1ILzVnUGhMZXBoeWVqcHREbWlnL3VXSXJN?=
- =?utf-8?B?VzlnSVV3WDV4dWNPRjZJT2hicUF6VXZUUUdrN08vNEcwelJzek95cHZQdmI1?=
- =?utf-8?B?R0tWcnppMk83ZCs3Q29GNEJKUHRBdkQzWnllMmxpM0JRdzRDei94S0NVMEMw?=
- =?utf-8?B?QmpNRnlpZzhZdTA1SnpMTFVPcXplRDRUcHh4MHd6dS9sQWRJZWZsMnFMT0Y3?=
- =?utf-8?B?RnZIVHBlTGRHQTJVd2pMSWhUSGlNTUk4emVacDN3RWQvQVc1VWNkeGR2UDZa?=
- =?utf-8?B?dTZoY3l6aTZSM1g5UFp2VFdvRnI1VUNXSG9Gd1AxTWYwQmE3WERDODRLRlNt?=
- =?utf-8?B?TGg0d1FGNXVvSDdpL2tsYi83Tll0ZnJ4SmZUVnZrOFJjYUFIbnYyNUMxYmFm?=
- =?utf-8?B?Y3NIVlI2WlQ4dEdZRllQSTZ1NC91ajI4T1BkYXZzWUljdERRd050OFVObU93?=
- =?utf-8?B?eG94dkNrdXMvaEE3UFU0Tm9QL0RCS1pucSt4REdIeDh3NDQySHZFOEJROTZ2?=
- =?utf-8?B?dFdzZG5ZbFEraU5BZ0JTK0pPK2lkcXNmN2lyQUlPcHJFYlFzS1Q4WE9qd2l0?=
- =?utf-8?Q?O7vfRDNV/F8aDOOS2NJYDtEqU?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70ea0fc1-c00f-4eab-37a1-08dca2832daf
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 14:59:07.2665
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F7NuayO+qHGM69Exbqah4fcOUwXPESKK++ORKNalbBrdwHcwI6W6EUQOSSKrE4H69QMAiKbTUB3switvDod7zQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 7/12/2024 1:24, Kai-Heng Feng wrote:
-> Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
-> connected.
-> 
-> The following error message can be found during shutdown:
-> pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
-> pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-> pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
-> pcieport 0000:09:04.0:    [ 7] BadDLLP
-> 
-> Calling aer_remove() during shutdown can quiesce the error message,
-> however the spurious wakeup still happens.
-> 
-> The issue won't happen if the device is in D3 before system shutdown, so
-> putting device to low power state before shutdown to solve the issue.
-> 
-> I don't have a sniffer so this is purely guesswork, however I believe
-> putting device to low power state it's the right thing to do.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+This patch set includes the necessary patches to enable basic Tx and Rx
+over the Meta Platforms Host Network Interface. To do this we introduce a
+new driver and driver directories in the form of
+"drivers/net/ethernet/meta/fbnic".
 
-This is directionally very similar to the proposal that I had at the end 
-of last year.
+The NIC itself is fairly simplistic. As far as speeds we support 25Gb,
+50Gb, and 100Gb and we are mostly focused on speeds and feeds. As far as
+future patch sets we will be supporting the basic Rx/Tx offloads such as
+header/payload data split, TSO, checksum, and timestamp offloads. We have
+access to the MAC and PCS from the NIC, however the PHY and QSFP are hidden
+behind a FW layer as it is shared between 4 slices and the BMC.
 
-https://lore.kernel.org/linux-pci/20231213182656.6165-1-mario.limonciello@amd.com/#t
+Due to submission limits the general plan to submit a minimal driver for
+now almost equivalent to a UEFI driver in functionality, and then follow up
+over the coming months enabling additional offloads and enabling more
+features for the device.
 
-I definitely think we should be aiming at all devices that don't wake 
-the system as being in D3 at shutdown.
+v2:
+- Pulled out most of the link logic leaving minimal phylink link interface
+- Added support for up to 64K pages by spanning multiple descriptors
+- Limited driver load message to only display on successful loading
+- Removed LED configuration, will add back in follow-on patch
+- Replaced pci_enable_msix_range with pci_alloc_irq_vectors
+- Updated comments to start with a capital letter
+- Limited architectures to x86_64 for now
+- Updated to "Return:" tag for kernel-doc
+- Added fbd to read/write CSR macros
 
-> ---
->   drivers/pci/pci-driver.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index af2996d0d17f..4c6f66f3eb54 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
->   	if (drv && drv->shutdown)
->   		drv->shutdown(pci_dev);
->   
-> +	/*
-> +	 * If driver already changed device's power state, it can mean the
-> +	 * wakeup setting is in place, or a workaround is used. Hence keep it
-> +	 * as is.
-> +	 */
-> +	if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
-> +		pci_prepare_to_sleep(pci_dev);
-> +
->   	/*
->   	 * If this is a kexec reboot, turn off Bus Master bit on the
->   	 * device to tell it to not continue to do DMA. Don't touch
+v3:
+- Fixed resource issues due to not calling pci_disable_device
+- Addressed sparse errors for !x | y
+- CCed Eric Dumazet and Kernel Team at meta to submission
+- Cleaned up kdoc to include missing Return: and formatting issues
+- Removed unneeded inlines from fbnic_txrx.c
+- Added support for setting queue to NAPI mapping
+- Added support for setting NAPI to IRQ mapping
+- Updated phylink to make use of rx_pause, tx_pause in mac_link_up function
+
+v4:
+- Removed _pause variables from fbnic_net
+- Removed link_state variable
+- Make link_direction an enum from fbnic_pcs_get_link_event_asic
+- Switched to using phylink_resume/suspend to avoid blocking BMC traffic
+- Always pass "false" to phylink_pcs_change
+- Added "TBD:" comments to call out temporary workarounds for phylink code
+- moved fbnic_fill to Rx enablement patch to address several issues
+- Refactored BMC MAC address configuration to avoid MACDA reads
+
+v5:
+- Added IRQF_ONESHOT to mailbox IRQ request to document behavioral expectation
+- Fixed a few typos in comments
+
+---
+
+Alexander Duyck (15):
+      PCI: Add Meta Platforms vendor ID
+      eth: fbnic: Add scaffolding for Meta's NIC driver
+      eth: fbnic: Allocate core device specific structures and devlink interface
+      eth: fbnic: Add register init to set PCIe/Ethernet device config
+      eth: fbnic: Add message parsing for FW messages
+      eth: fbnic: Add FW communication mechanism
+      eth: fbnic: Allocate a netdevice and napi vectors with queues
+      eth: fbnic: Implement Tx queue alloc/start/stop/free
+      eth: fbnic: Implement Rx queue alloc/start/stop/free
+      eth: fbnic: Add initial messaging to notify FW of our presence
+      eth: fbnic: Add link detection
+      eth: fbnic: Add basic Tx handling
+      eth: fbnic: Add basic Rx handling
+      eth: fbnic: Add L2 address programming
+      eth: fbnic: Write the TCAM tables used for RSS control and Rx to host
+
+
+ MAINTAINERS                                   |    7 +
+ drivers/net/ethernet/Kconfig                  |    1 +
+ drivers/net/ethernet/Makefile                 |    1 +
+ drivers/net/ethernet/meta/Kconfig             |   31 +
+ drivers/net/ethernet/meta/Makefile            |    6 +
+ drivers/net/ethernet/meta/fbnic/Makefile      |   19 +
+ drivers/net/ethernet/meta/fbnic/fbnic.h       |  144 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_csr.h   |  838 ++++++++
+ .../net/ethernet/meta/fbnic/fbnic_devlink.c   |   88 +
+ .../net/ethernet/meta/fbnic/fbnic_drvinfo.h   |    5 +
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c    |  791 +++++++
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.h    |  124 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_irq.c   |  208 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_mac.c   |  666 ++++++
+ drivers/net/ethernet/meta/fbnic/fbnic_mac.h   |   86 +
+ .../net/ethernet/meta/fbnic/fbnic_netdev.c    |  488 +++++
+ .../net/ethernet/meta/fbnic/fbnic_netdev.h    |   63 +
+ drivers/net/ethernet/meta/fbnic/fbnic_pci.c   |  564 +++++
+ .../net/ethernet/meta/fbnic/fbnic_phylink.c   |  161 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_rpc.c   |  651 ++++++
+ drivers/net/ethernet/meta/fbnic/fbnic_rpc.h   |  189 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_tlv.c   |  529 +++++
+ drivers/net/ethernet/meta/fbnic/fbnic_tlv.h   |  175 ++
+ drivers/net/ethernet/meta/fbnic/fbnic_txrx.c  | 1913 +++++++++++++++++
+ drivers/net/ethernet/meta/fbnic/fbnic_txrx.h  |  127 ++
+ include/linux/pci_ids.h                       |    2 +
+ 26 files changed, 7877 insertions(+)
+ create mode 100644 drivers/net/ethernet/meta/Kconfig
+ create mode 100644 drivers/net/ethernet/meta/Makefile
+ create mode 100644 drivers/net/ethernet/meta/fbnic/Makefile
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_csr.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_drvinfo.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_irq.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_mac.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_mac.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_netdev.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_netdev.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_pci.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_phylink.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_rpc.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_rpc.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_tlv.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_tlv.h
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_txrx.c
+ create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_txrx.h
+
+--
 
 
