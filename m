@@ -1,142 +1,226 @@
-Return-Path: <linux-pci+bounces-10224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30BFC93018B
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 23:22:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F29509301A2
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 23:30:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A03CCB21E56
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 21:22:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 761A91F2416D
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 21:30:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 517B6481C4;
-	Fri, 12 Jul 2024 21:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF471BDD5;
+	Fri, 12 Jul 2024 21:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DySCCANj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NfkAaeMn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258014E1B3;
-	Fri, 12 Jul 2024 21:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333A346542
+	for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 21:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720819320; cv=none; b=E59BofArBntIx1FyLxoLlbC1beH/vPBgvkSxxO0FAfDdl6rAGGWyrXxzddFNESEww3veDWSR8Go7bpgBksQpNgFEoHzFJrHCHC66B12tg0lrdPp9NxV6TS9HFQcnX24GtPWYVtIIUyXftaSaMdli35/GYLZsuD8pdWtn3ve/gao=
+	t=1720819851; cv=none; b=X40ySv3NgGHq/yDBL3/wXX31qYrxlTtRtcR0g2hmS1TSe83CAIwzZQK6tDPrm5whcb8tCCMBFCy1CUt04BVaDsQWWbQxyfwUBwXL0hCCZ1ugbkkqIjxEjJDwQBz4I6sY76/PeY3HSlVGWH8KamgjKJZ8YZFCuuGJg2VvsexgW/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720819320; c=relaxed/simple;
-	bh=1R6ZX7cZ3pXxqRSrZRDKYLvh6AiHVFa4qAE7L37CZiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=E/SYYwDVYE7Rov7OzuVXwRyR3HYarmER3M/dK+Iz4kpq3jN7r6yqW8aYGylfQJB6LjsoLdlWtANjvlxnBkXyx8bfKNE9utivLr6S6Q3hIzLa7czDvWX7ESJeFVzbcBMt/bF2SXW6pxeJ6Fc2TJOV5j3fHFCosOEh9vEQi233dCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DySCCANj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D54C32782;
-	Fri, 12 Jul 2024 21:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720819319;
-	bh=1R6ZX7cZ3pXxqRSrZRDKYLvh6AiHVFa4qAE7L37CZiE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DySCCANjC6vYHAdezVU3WoGOyLvO1pLxK5RMvUbC52znmNzc9/RzHtFOvzm+L+F3c
-	 RYAyK8p8/Qc60ft6up2kR6YPRBLHfwe+EcAr5uDpVM1HB4jYIP1naQd2jFXw3Dbz3b
-	 EkjgfN4PBzmMDOIzMn59IBpJuFsft6f8shaYCYBufNX5NsIXBWDuvs2RwzH4URxI32
-	 9QCkBARkepXwkrxREyZAjZGi8I+UDJ3H3vsasxuqYIUtvT7uMQwiTOBZvWeNy4f6G7
-	 TnUEfiMUpHuGZH/kb3IfD2OrsZLqbGPCeMLmzSHYjfLGd/LA+/7GJBXPArO6NR4Vrt
-	 jOnUoZW2+2R5w==
-Date: Fri, 12 Jul 2024 16:21:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ido Schimmel <idosch@nvidia.com>
-Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Petr Machata <petrm@nvidia.com>, mlxsw@nvidia.com,
-	linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH net-next 3/3] mlxsw: pci: Lock configuration space of
- upstream bridge during reset
-Message-ID: <20240712212157.GA339030@bhelgaas>
+	s=arc-20240116; t=1720819851; c=relaxed/simple;
+	bh=zSEQHFNDWdwTsV1aUpRFZoDWMnDptjil20sAR/oEjbc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=u7JKxOEF7UdsWeGBpV/QRvUM4ZPsDpg5jNK/tHaT8BujEBInk/lgRHY/FVbErcpKRhP9vhQJDlsiG78hm8JsiF6R+VGp6C+5tGaPcblsmH+8ZaOgOFcWSyFcfpKfCSVWjo5fYrfFbHh+ufJITNZz3/iY9tby1f8MaAnIs3MbetU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NfkAaeMn; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720819851; x=1752355851;
+  h=date:from:to:cc:subject:message-id;
+  bh=zSEQHFNDWdwTsV1aUpRFZoDWMnDptjil20sAR/oEjbc=;
+  b=NfkAaeMnYwYZ0DbcVh/HdrJZm4zMJkg9qLwzoVXRKJ9exTQ+qFjQCyrX
+   J1MOkoj1L+nUAe4q+aPVHJjR3Oz34hGL53CKcudGiIuHSPch81iQh6DAY
+   k01dyUIlMY8NsQ1/DUirqMIz9a1OeCfSSkvdJekSlIyVxjivPOfyMlJXa
+   aHVJuyG+uKUC2iVWaIHMtPeHAOZfQf8Sn4cd/MgOpYLOsc03hsYIxSdl7
+   UxTaeKjX5gEo8OwBYVN02AYqDDCrpvzpKjt54kZ40cKBf3gON/aMiyG8w
+   mnIv1IsvRJCRJWdCgMYAgsHt7SGfvm1r2qUSmEFu/ddACAaUoeeUBasSF
+   w==;
+X-CSE-ConnectionGUID: ZyeIzGHuQ+24jmVIuYpiPQ==
+X-CSE-MsgGUID: qqsukdu2T7u/pZEah3IKTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="35710580"
+X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
+   d="scan'208";a="35710580"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 14:30:50 -0700
+X-CSE-ConnectionGUID: D/r7QhrBQIqi8e4xfv4jAQ==
+X-CSE-MsgGUID: Dbx03DwHTNqBQXhpZB/sTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
+   d="scan'208";a="86535847"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 12 Jul 2024 14:30:48 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sSNqo-000bJu-1E;
+	Fri, 12 Jul 2024 21:30:46 +0000
+Date: Sat, 13 Jul 2024 05:30:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 7499baead046f7533dcdccff66f338cbf1d760f4
+Message-ID: <202407130515.1aJU8tOW-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZoVjPb_OwbKh7kHu@shredder.lan>
 
-[+cc Dan]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 7499baead046f7533dcdccff66f338cbf1d760f4  Merge branch 'pci/misc'
 
-On Wed, Jul 03, 2024 at 05:42:05PM +0300, Ido Schimmel wrote:
-> On Tue, Jul 02, 2024 at 09:35:50AM +0200, Przemek Kitszel wrote:
-> > On 7/1/24 18:41, Petr Machata wrote:
-> > > From: Ido Schimmel <idosch@nvidia.com>
-> > > 
-> > > The driver triggers a "Secondary Bus Reset" (SBR) by calling
-> > > __pci_reset_function_locked() which asserts the SBR bit in the "Bridge
-> > > Control Register" in the configuration space of the upstream bridge for
-> > > 2ms. This is done without locking the configuration space of the
-> > > upstream bridge port, allowing user space to access it concurrently.
-> > 
-> > This means your patch is a bugfix.
-> > 
-> > > Linux 6.11 will start warning about such unlocked resets [1][2]:
-> > > 
-> > > pcieport 0000:00:01.0: unlocked secondary bus reset via: pci_reset_bus_function+0x51c/0x6a0
-> > > 
-> > > Avoid the warning by locking the configuration space of the upstream
-> > > bridge prior to the reset and unlocking it afterwards.
-> > 
-> > You are not avoiding the warning but protecting concurrent access,
-> > please add a Fixes tag.
-> 
-> The patch that added the missing lock in PCI core was posted without a
-> Fixes tag and merged as part of the 6.10 PR. See commit 7e89efc6e9e4
-> ("PCI: Lock upstream bridge for pci_reset_function()").
-> 
-> I don't see a good reason for root to poke in the configuration space of
-> the upstream bridge during SBR, but AFAICT the worst that can happen is
-> that reset will fail and while it is a bug, it is not a regression.
-> 
-> Bjorn, do you see a reason to post this as a fix?
+elapsed time: 1397m
 
-Sorry, I was on vacation and missed this when I returned.
+configs tested: 133
+configs skipped: 2
 
-mlxsw is one of the few users of __pci_reset_function_locked().
-Others are liquidio (octeon), VFIO, and Xen.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-You need __pci_reset_function_locked() if you're already holding the
-device mutex, i.e., device_lock(&pdev->dev).  I looked at the
-mlxsw_pci_reset_at_pci_disable() path, and didn't see where it holds
-that device lock, but I probably missed it.
+tested configs:
+alpha                             allnoconfig   gcc-13.3.0
+alpha                            allyesconfig   gcc-13.3.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                   randconfig-001-20240712   gcc-13.2.0
+arc                   randconfig-002-20240712   gcc-13.2.0
+arm                              allmodconfig   gcc-14.1.0
+arm                               allnoconfig   clang-19
+arm                              allyesconfig   gcc-14.1.0
+arm                   randconfig-001-20240712   clang-19
+arm                   randconfig-002-20240712   clang-19
+arm                   randconfig-003-20240712   gcc-14.1.0
+arm                   randconfig-004-20240712   clang-15
+arm64                            allmodconfig   clang-19
+arm64                             allnoconfig   gcc-14.1.0
+arm64                 randconfig-001-20240712   gcc-14.1.0
+arm64                 randconfig-002-20240712   gcc-14.1.0
+arm64                 randconfig-003-20240712   clang-19
+arm64                 randconfig-004-20240712   clang-17
+csky                              allnoconfig   gcc-14.1.0
+csky                  randconfig-001-20240712   gcc-14.1.0
+csky                  randconfig-002-20240712   gcc-14.1.0
+hexagon                          allmodconfig   clang-19
+hexagon                           allnoconfig   clang-19
+hexagon                          allyesconfig   clang-19
+hexagon               randconfig-001-20240712   clang-14
+hexagon               randconfig-002-20240712   clang-19
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240712   gcc-9
+i386         buildonly-randconfig-002-20240712   clang-18
+i386         buildonly-randconfig-003-20240712   clang-18
+i386         buildonly-randconfig-004-20240712   clang-18
+i386         buildonly-randconfig-005-20240712   gcc-11
+i386         buildonly-randconfig-006-20240712   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240712   clang-18
+i386                  randconfig-002-20240712   clang-18
+i386                  randconfig-003-20240712   clang-18
+i386                  randconfig-004-20240712   clang-18
+i386                  randconfig-005-20240712   clang-18
+i386                  randconfig-006-20240712   clang-18
+i386                  randconfig-011-20240712   clang-18
+i386                  randconfig-012-20240712   clang-18
+i386                  randconfig-013-20240712   clang-18
+i386                  randconfig-014-20240712   gcc-10
+i386                  randconfig-015-20240712   gcc-10
+i386                  randconfig-016-20240712   gcc-12
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-14.1.0
+loongarch             randconfig-001-20240712   gcc-14.1.0
+loongarch             randconfig-002-20240712   gcc-14.1.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-14.1.0
+microblaze                       allyesconfig   gcc-14.1.0
+mips                              allnoconfig   gcc-14.1.0
+nios2                             allnoconfig   gcc-14.1.0
+nios2                 randconfig-001-20240712   gcc-14.1.0
+nios2                 randconfig-002-20240712   gcc-14.1.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                randconfig-001-20240712   gcc-14.1.0
+parisc                randconfig-002-20240712   gcc-14.1.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   clang-19
+powerpc               randconfig-001-20240712   clang-15
+powerpc               randconfig-002-20240712   clang-19
+powerpc               randconfig-003-20240712   clang-19
+powerpc64             randconfig-001-20240712   clang-19
+powerpc64             randconfig-002-20240712   clang-19
+powerpc64             randconfig-003-20240712   gcc-14.1.0
+riscv                            allmodconfig   clang-19
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   clang-19
+riscv                 randconfig-001-20240712   clang-19
+riscv                 randconfig-002-20240712   gcc-14.1.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                             allyesconfig   gcc-14.1.0
+s390                  randconfig-001-20240712   gcc-14.1.0
+s390                  randconfig-002-20240712   gcc-14.1.0
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                    randconfig-001-20240712   gcc-14.1.0
+sh                    randconfig-002-20240712   gcc-14.1.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64               randconfig-001-20240712   gcc-14.1.0
+sparc64               randconfig-002-20240712   gcc-14.1.0
+um                               allmodconfig   clang-19
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-13
+um                    randconfig-001-20240712   clang-19
+um                    randconfig-002-20240712   clang-15
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240712   clang-18
+x86_64       buildonly-randconfig-002-20240712   clang-18
+x86_64       buildonly-randconfig-003-20240712   clang-18
+x86_64       buildonly-randconfig-004-20240712   clang-18
+x86_64       buildonly-randconfig-005-20240712   clang-18
+x86_64       buildonly-randconfig-006-20240712   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                randconfig-001-20240712   gcc-12
+x86_64                randconfig-002-20240712   gcc-13
+x86_64                randconfig-003-20240712   gcc-12
+x86_64                randconfig-004-20240712   clang-18
+x86_64                randconfig-005-20240712   gcc-13
+x86_64                randconfig-006-20240712   clang-18
+x86_64                randconfig-011-20240712   clang-18
+x86_64                randconfig-012-20240712   clang-18
+x86_64                randconfig-013-20240712   clang-18
+x86_64                randconfig-014-20240712   gcc-13
+x86_64                randconfig-015-20240712   clang-18
+x86_64                randconfig-016-20240712   clang-18
+x86_64                randconfig-071-20240712   gcc-13
+x86_64                randconfig-072-20240712   gcc-11
+x86_64                randconfig-073-20240712   clang-18
+x86_64                randconfig-074-20240712   gcc-9
+x86_64                randconfig-075-20240712   clang-18
+x86_64                randconfig-076-20240712   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-14.1.0
 
-The usual pci_reset_function() path, which would be preferable if you
-can use it, does basically this:
-
-  pci_dev_lock(bridge)
-    device_lock(&bridge->dev)
-    pci_cfg_access_lock(bridge)
-  pci_dev_lock(pdev)
-    device_lock(&pdev->dev)
-    pci_cfg_access_lock(pdev)
-  pci_dev_save_and_disable(dev)
-  __pci_reset_function_locked(pdev)
-
-This patch adds pci_cfg_access_lock(bridge), but doesn't acquire the
-device_lock for the bridge.
-
-It looks like you always reset the device at mlxsw_pci_probe()-time,
-which is quite unusual in the first place, but I suppose there's some
-good reason for it.
-
-If you can use pci_reset_function() directly (or avoid the reset
-altogether), it would be far preferable and would avoid potential
-issues like the warning here.
-
-Bjorn
-
-> > > [1] https://lore.kernel.org/all/171711746953.1628941.4692125082286867825.stgit@dwillia2-xfh.jf.intel.com/
-> > > [2] https://lore.kernel.org/all/20240531213150.GA610983@bhelgaas/
-> > > 
-> > > Cc: linux-pci@vger.kernel.org
-> > > Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-> > > Signed-off-by: Petr Machata <petrm@nvidia.com>
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
