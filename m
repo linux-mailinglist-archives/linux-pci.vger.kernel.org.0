@@ -1,89 +1,115 @@
-Return-Path: <linux-pci+bounces-10194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10195-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ABC092F4BE
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 06:54:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20AF992F58F
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 08:30:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFF7D1F23E1E
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 04:54:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF5352837D8
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 06:30:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E0917555;
-	Fri, 12 Jul 2024 04:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D742219E2;
+	Fri, 12 Jul 2024 06:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="MsLatVbt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F631754B;
-	Fri, 12 Jul 2024 04:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CDF13D520;
+	Fri, 12 Jul 2024 06:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720760069; cv=none; b=qVosB9TmoKmUiRNzVZ90TqqQUs/AXWZUdON/OUobjOc43LoLHTdqiZWhx9yeI+N5srrghu3iSidhn0cuqI/9jGlVLAnbN2qnVG5TcpeUcFY4qqHpaMy6uDzs8bkeTahfuaUZNDR9xTMO34NBrqlz7ZZcbKC9NDOxIH+AxMJ/cKE=
+	t=1720765807; cv=none; b=m76PoDcvxscBHzK9BUmxCW0FIfkSNmJcoFvvTjjOqBD2cO05rMJkaYzR7WkGxz6dBsp447Z0OVT6k8OktbxzJMS1VfvmzN30/hg8M/IdZSEKPP6EGRuKoQcLlL8U4ajJ2wXbREYb+0Bca44d1AWo978xkk0J/kFBO1hWzEddJeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720760069; c=relaxed/simple;
-	bh=TMu0MQvA9M0EFsXQs2/I0o+BYZmm1BaNxhY+TcEXn20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FjSWn5pee+HO83jG/R7hK0v0KPUZRh/lPxzF8EPoK7GTxV9TVwXXreIf9fsv5/OuslK1jov9wdI+N72vr7JO0RX4RUWCptWU7B6/3khgcNWt9sqFbxJatXyUGe+6nIOGVpOYzZ8jYMfKoewAZlhZDh1zwF7Fr+QPbtUCkhWumoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 1F8DD68BEB; Fri, 12 Jul 2024 06:54:23 +0200 (CEST)
-Date: Fri, 12 Jul 2024 06:54:22 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Keith Busch <kbusch@kernel.org>, "Zeng, Oak" <oak.zeng@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v1 00/18] Provide a new two step DMA API mapping API
-Message-ID: <20240712045422.GA4774@lst.de>
-References: <cover.1719909395.git.leon@kernel.org> <20240705063910.GA12337@lst.de> <20240708235721.GF14050@ziepe.ca> <20240709062015.GB16180@lst.de> <20240709190320.GN14050@ziepe.ca> <20240710062212.GA25895@lst.de> <20240711232917.GR14050@ziepe.ca>
+	s=arc-20240116; t=1720765807; c=relaxed/simple;
+	bh=KuZfxdNvcEKZcB/S7+Dx2Tux/HsIBYp3cDVVxqENwhw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oAR+zCJe+VpFQgU2bGftnnJE97lBNGKfeXb8a9EZ/K47BxpeY/dILQSd59Nqfcxf7Iz7DfYH8xxjFXdXu9J7kk3tOcHNIXJRRUI6FjJu8MHXQn2XSjkfopPuoVAI/GoTifdutDl4KWkVZsaKIJyti6bMEfCZzQzcLyL1kgSpD8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=MsLatVbt; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from HP-EliteBook-x360-830-G8-Notebook-PC.. (114-136-183-165.emome-ip.hinet.net [114.136.183.165])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 9CEE63F2EF;
+	Fri, 12 Jul 2024 06:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1720765459;
+	bh=i6hzXoHNLWliF1K00cSPyBGiejHxlcP1pWL+nbbCtIk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=MsLatVbtWA+f7aS/jR6sttFvHsfUYQzIbkW21uybxoUDdDSRGZ4jHyW9dhM6bAXMU
+	 E8kVQZ9cZAucXN65xTypQUAkbHlAVibOYzXPNBfqnBSTsv2F5YiLP6YX6j8JIqJbPz
+	 cazeKJVD4uGSN1nLA0Sn/r4glSK7jPPhGOG/sA3SM+2umRWcXCk3JEHOdpU6IJ6Ik6
+	 jUhoN1fXgqK/ZjqJo1IP4cPzxMLkefhel0Rd3MnESo7lA2czTQcrVfvu0xBaKoWd0A
+	 74qDWcMNT1114zlXjm+OAb9nmvWYW0V8zua5WYrPmCXU6P30olw1faxZSoLjjQfPUo
+	 6mn3C1pKVQU3A==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: bhelgaas@google.com
+Cc: mario.limonciello@amd.com,
+	mika.westerberg@linux.intel.com,
+	linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI/PM: Put devices to low power state on shutdown
+Date: Fri, 12 Jul 2024 14:24:11 +0800
+Message-ID: <20240712062411.35732-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711232917.GR14050@ziepe.ca>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 11, 2024 at 08:29:17PM -0300, Jason Gunthorpe wrote:
-> So this little detail needs to be taken care of somehow as well, and I
-> didn't see it in this RFC.
+Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
+connected.
 
-Yes.  Same about generally not mixing P2P and non-P2P.
+The following error message can be found during shutdown:
+pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
+pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
+pcieport 0000:09:04.0:    [ 7] BadDLLP
 
-> 
-> > For the block layer just having one kind per BIO is fine right now,
-> > although I could see use cases where people would want to combine
-> > them.  We can probably defer that until it is needed, though.
-> 
-> Do you have an application in mind that would want multi-kind per BIO?
+Calling aer_remove() during shutdown can quiesce the error message,
+however the spurious wakeup still happens.
 
-If you are doing say garbage collection in a file system, and do write
-that sources data from multiple devices, where some sit directly on the
-root port and others behind a switch.
+The issue won't happen if the device is in D3 before system shutdown, so
+putting device to low power state before shutdown to solve the issue.
 
-This is all purely hypothetical, and I'm happy to just check for it
-and reject it for it now.
+I don't have a sniffer so this is purely guesswork, however I believe
+putting device to low power state it's the right thing to do.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pci-driver.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index af2996d0d17f..4c6f66f3eb54 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
+ 	if (drv && drv->shutdown)
+ 		drv->shutdown(pci_dev);
+ 
++	/*
++	 * If driver already changed device's power state, it can mean the
++	 * wakeup setting is in place, or a workaround is used. Hence keep it
++	 * as is.
++	 */
++	if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
++		pci_prepare_to_sleep(pci_dev);
++
+ 	/*
+ 	 * If this is a kexec reboot, turn off Bus Master bit on the
+ 	 * device to tell it to not continue to do DMA. Don't touch
+-- 
+2.43.0
+
 
