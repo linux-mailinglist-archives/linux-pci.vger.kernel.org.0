@@ -1,81 +1,83 @@
-Return-Path: <linux-pci+bounces-10208-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10209-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A02892FDD4
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 17:49:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EACF492FDD7
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 17:49:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47A921C2275A
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 15:49:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CAA9B21A66
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 15:49:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6A37407B;
-	Fri, 12 Jul 2024 15:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE942174EC8;
+	Fri, 12 Jul 2024 15:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5Tt3M3b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhBp3UcY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BAD440C;
-	Fri, 12 Jul 2024 15:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672811741FF;
+	Fri, 12 Jul 2024 15:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720799353; cv=none; b=CZDu7RigPUPx2GcNxvdeWdH6aG/AiMDzO7FODTitwo4KsLIXSmqWKl682kLIgSzp9kGBNWhklDh67IuctZ0CzQcgGKNHDekCFsKbM6iJOlUxeBh2htIbxugGSGiXXenrFD+7/5IZjVWp2W0rAVCbRWWje7u1LZEMXGQjn/aqHAw=
+	t=1720799356; cv=none; b=HkFZmygQSlDPA4fIFlF3Oa9rAjJP7PQJC2nFIuve4kZiYzydUR0qt3X4hoN8HyDzYrof855EaRZKdEXok3gH3hnUE0kL3IyB8Y9nWJDacTYv3sfx+9WI8d4vGcYkWxvPb3kcAzQtrJASGcanpxVWHb39vI3rYcvjg3xz7v9eSsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720799353; c=relaxed/simple;
-	bh=g1er5zB3UAFTH4lX5fNuFAOLI9apgTGC1UiZhvyXbRM=;
-	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=mIWH76/RQLbZERvIMNrPZOISxYl4FTuW7krjoJLFKZwWUNn9+7zCKf1eLreC7XM8l9+8oWthGPtNv1k3DSGiUL1IgIm5FVWUfWUTqEHhn5iKZ16ZZfYUcX2bPX6sILX1HjA6DucuU3yPOiQTKA18nADKNMmgksKu/pcwUVbGDM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E5Tt3M3b; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1720799356; c=relaxed/simple;
+	bh=Fh3+YN6x4wQRVGUysFM6HXguzt0afiR9ubQe7ALSnGA=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RYCjwysEYGJ6HyxUZvawNeTT4L/hz8hkxFmxQD1bMuz+EbcK6h2Sx/U0sfeCEWbhUFl8AQbu97PSL8MsMJcTJ62b9q98f1YV/yPRcm93MhHhYYBABGGN9/6rSsGHB8q4YrdeX2t8jSC5egCrCBM5r11e2cN8jgbmILgmoAwws8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KhBp3UcY; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb3cf78fcaso15497105ad.1;
-        Fri, 12 Jul 2024 08:49:11 -0700 (PDT)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-75a6c290528so1480970a12.1;
+        Fri, 12 Jul 2024 08:49:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720799351; x=1721404151; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :cc:to:from:subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=JaS6RpQt+MamVjsgff8AGDxYYt3AH7aJY3AIKOLyOL8=;
-        b=E5Tt3M3biLq+rZBlh10Ru4v1vQCS5KbEqJKeXZ1oh6sCQ/3Im7kdZY/OlXCWgPxcog
-         ben6N+w6pdkcVxP2hCpc64MueegGswwQGXOtmLi4JbPAM/IhoSz8M6kPceBPHKUANfqc
-         dBNwdf5X7W1KJuRQl1+pYK9Orb7+KYIygfy8JmsGd0fsV7e7YZk6kJcIxgufX917asYf
-         +haFVLItRdiju4dqc35LjTEOWEYS+RthKoL00164bxZj+3Y7JgUoFcnmcDEe3MRyv9Ql
-         GF/p6ZcoCBAttNJoBK7nlRqB7aMEr6MLVwHXGFKp4utfgJyMriNtbNn97VYG5YHpELZ4
-         LqSg==
+        d=gmail.com; s=20230601; t=1720799354; x=1721404154; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:message-id:date:cc:to:from:subject:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W5KxrsmOj10YgMpkQiTq5L07X8mvZPUOQamgvBk8/U8=;
+        b=KhBp3UcYQZam+1zgsinz0LZ7TBjVoG3J8Cexo1F+alaIY3BBbbx1a+CwzuRySLubak
+         h0R+RYhFiAQTZj2JKS8Yz4meKNO9jaUelj2pKgj4SY0EUMIoJMjt26osNY0h2peTHh5j
+         3HUMaMaH5CTRlf3+BekqDK61hwEoNLGX6DU/jBkkmey39k/XNWUWQsZC2vE8YCm3ED/E
+         DFCUn3h9d8a4FeZdWXrGUMGNYnt4rQd5gpUMq9ZZ+Wj6z2pt7exD/dY7X86jPBnGk8pb
+         5bMvEtpxJtFVkvp2oyGsDO3dNmB/Xp4UPY5+E/0ilJkyyozLIu3XkPdz8caYehz9e7xz
+         WJ9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720799351; x=1721404151;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :cc:to:from:subject:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JaS6RpQt+MamVjsgff8AGDxYYt3AH7aJY3AIKOLyOL8=;
-        b=flkRKXAvAH8zCQKOd7YabPpR8em9rVkMLkniQSZHkyHUmdYnZ/V5yQG2pcK0nN3mNm
-         b11+YqM4tziAC1NTAlv1HeLDOmC2pu8CthyD3aP7cPSSq01oUfZRCRhCK25vVVXWWrJp
-         ayRUHrcD7fd8YC+qhQnE7aOhsxKe1CftqztHo+0vQ0nP4q/MIEdqUphXIJAIF0JwcCCt
-         XjOMSk+ozCapDBpcBeaDUfgaTgV+e2eZVzbLUqgQxAR4YAuo5Zmul6apIIIyQNuPiT0Z
-         hcgogha03kMhFPVd7+4bUZXhlk6M3WpQi6ZFxDc0fD0XKOKszVgwClJvVGMyHb2yJFgk
-         7Rqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOaTSwdri7E9y60V6M65RxDsb7oXye8GrCHtMUKI8ExqBluUJVpUG0+zqrqQqxTtrYf4ylyavzR+Ua+RypoV92NprSuBjI/Pj1
-X-Gm-Message-State: AOJu0YwAw+vXeZpHeSVEZM9Sf7NVyGR+fUCPBY5VE+YSqfQrvpK2JKPw
-	vVpXkJ7BfsT1LuzWN73u12EWaXwocEQTZF3NVjHiPLBH1etE+j6e
-X-Google-Smtp-Source: AGHT+IFSqmR0leuCe0IizcK7N+eyo2wzUnolI72x2l87lggQk3I13Vt86DY7vf8tKyZwiZ/jevzRDg==
-X-Received: by 2002:a17:902:ec8a:b0:1f7:123e:2c6f with SMTP id d9443c01a7336-1fbb6d4de4emr111279555ad.37.1720799350535;
-        Fri, 12 Jul 2024 08:49:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720799354; x=1721404154;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:message-id:date:cc:to:from:subject:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W5KxrsmOj10YgMpkQiTq5L07X8mvZPUOQamgvBk8/U8=;
+        b=XtfBzt+7m5BVvo23k9HPNpU0TXnGQwwMRs+FNlBj/mT557I4qD5vMyvqM3UmfaRl5f
+         ttloZPHinp94ARv3OK7yJocrfiMhweQxlafBA/taUFYyYL9Lhk2htUARWWiZZBxwTGb/
+         jpGyJR3r+xP5w9dzXlwHcUCzNDvvQtPdPeaR2oY9fwU3i/OG/Sc+f+U7x5GX1x6Q/B9d
+         XY4RzwJm2Do6/CouVDRqyOCkkcNYYSL02LcBEvOuaYzYKy8hLMXFyEW9UaueF0XVtoBD
+         934t/Dvq+g95LpGePuF/++YPAJKYz4Z/6C+NtAEU2o1W3IZHED3eoADpE/nNQZS55Hpz
+         +N4g==
+X-Gm-Message-State: AOJu0Yx6nCO6MxyLKuYOVOkABXmxPB2F+7mlGtC6XauTtYLgbepefaMY
+	C0iJKFimys74TuTRGFf1puMCUASDj/bzq/lWi+4lkh7pHhq/TsM7oYOk1Q==
+X-Google-Smtp-Source: AGHT+IEZ3xOyM2z9grn3qrk2AnL7c58B2pqHUATRWF8aRKGpck+f0/AMR/5xAzyLXl7ILYQ1Hz3qFA==
+X-Received: by 2002:a05:6a21:e88:b0:1c3:b2b3:442d with SMTP id adf61e73a8af0-1c3b2b3448cmr6159536637.40.1720799354290;
+        Fri, 12 Jul 2024 08:49:14 -0700 (PDT)
 Received: from ahduyck-xeon-server.home.arpa ([98.97.103.43])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbd34694a5sm45178325ad.7.2024.07.12.08.49.09
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b438e53a7sm7671150b3a.88.2024.07.12.08.49.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 08:49:10 -0700 (PDT)
-Subject: [net-next PATCH v5 00/15] eth: fbnic: Add network driver for Meta
- Platforms Host Network Interface
+        Fri, 12 Jul 2024 08:49:13 -0700 (PDT)
+Subject: [net-next PATCH v5 01/15] PCI: Add Meta Platforms vendor ID
 From: Alexander Duyck <alexander.duyck@gmail.com>
 To: netdev@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- Alexander Duyck <alexanderduyck@fb.com>, Andrew Lunn <andrew@lunn.ch>,
- Sanman Pradhan <sanmanpradhan@meta.com>,
- Russell King <linux@armlinux.org.uk>, kuba@kernel.org, davem@davemloft.net,
+Cc: linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, kuba@kernel.org, davem@davemloft.net,
  pabeni@redhat.com, edumazet@google.com, kernel-team@meta.com
-Date: Fri, 12 Jul 2024 08:49:08 -0700
+Date: Fri, 12 Jul 2024 08:49:12 -0700
 Message-ID: 
+ <172079935272.1778861.13619056509276833225.stgit@ahduyck-xeon-server.home.arpa>
+In-Reply-To: 
+ <172079913640.1778861.11459276843992867323.stgit@ahduyck-xeon-server.home.arpa>
+References: 
  <172079913640.1778861.11459276843992867323.stgit@ahduyck-xeon-server.home.arpa>
 User-Agent: StGit/1.5
 Precedence: bulk
@@ -87,128 +89,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-This patch set includes the necessary patches to enable basic Tx and Rx
-over the Meta Platforms Host Network Interface. To do this we introduce a
-new driver and driver directories in the form of
-"drivers/net/ethernet/meta/fbnic".
+From: Alexander Duyck <alexanderduyck@fb.com>
 
-The NIC itself is fairly simplistic. As far as speeds we support 25Gb,
-50Gb, and 100Gb and we are mostly focused on speeds and feeds. As far as
-future patch sets we will be supporting the basic Rx/Tx offloads such as
-header/payload data split, TSO, checksum, and timestamp offloads. We have
-access to the MAC and PCS from the NIC, however the PHY and QSFP are hidden
-behind a FW layer as it is shared between 4 slices and the BMC.
+Add Meta as a vendor ID for PCI devices so we can use the macro for future
+drivers.
 
-Due to submission limits the general plan to submit a minimal driver for
-now almost equivalent to a UEFI driver in functionality, and then follow up
-over the coming months enabling additional offloads and enabling more
-features for the device.
-
-v2:
-- Pulled out most of the link logic leaving minimal phylink link interface
-- Added support for up to 64K pages by spanning multiple descriptors
-- Limited driver load message to only display on successful loading
-- Removed LED configuration, will add back in follow-on patch
-- Replaced pci_enable_msix_range with pci_alloc_irq_vectors
-- Updated comments to start with a capital letter
-- Limited architectures to x86_64 for now
-- Updated to "Return:" tag for kernel-doc
-- Added fbd to read/write CSR macros
-
-v3:
-- Fixed resource issues due to not calling pci_disable_device
-- Addressed sparse errors for !x | y
-- CCed Eric Dumazet and Kernel Team at meta to submission
-- Cleaned up kdoc to include missing Return: and formatting issues
-- Removed unneeded inlines from fbnic_txrx.c
-- Added support for setting queue to NAPI mapping
-- Added support for setting NAPI to IRQ mapping
-- Updated phylink to make use of rx_pause, tx_pause in mac_link_up function
-
-v4:
-- Removed _pause variables from fbnic_net
-- Removed link_state variable
-- Make link_direction an enum from fbnic_pcs_get_link_event_asic
-- Switched to using phylink_resume/suspend to avoid blocking BMC traffic
-- Always pass "false" to phylink_pcs_change
-- Added "TBD:" comments to call out temporary workarounds for phylink code
-- moved fbnic_fill to Rx enablement patch to address several issues
-- Refactored BMC MAC address configuration to avoid MACDA reads
-
-v5:
-- Added IRQF_ONESHOT to mailbox IRQ request to document behavioral expectation
-- Fixed a few typos in comments
-
+CC: linux-pci@vger.kernel.org
+Signed-off-by: Alexander Duyck <alexanderduyck@fb.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
+ include/linux/pci_ids.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
-Alexander Duyck (15):
-      PCI: Add Meta Platforms vendor ID
-      eth: fbnic: Add scaffolding for Meta's NIC driver
-      eth: fbnic: Allocate core device specific structures and devlink interface
-      eth: fbnic: Add register init to set PCIe/Ethernet device config
-      eth: fbnic: Add message parsing for FW messages
-      eth: fbnic: Add FW communication mechanism
-      eth: fbnic: Allocate a netdevice and napi vectors with queues
-      eth: fbnic: Implement Tx queue alloc/start/stop/free
-      eth: fbnic: Implement Rx queue alloc/start/stop/free
-      eth: fbnic: Add initial messaging to notify FW of our presence
-      eth: fbnic: Add link detection
-      eth: fbnic: Add basic Tx handling
-      eth: fbnic: Add basic Rx handling
-      eth: fbnic: Add L2 address programming
-      eth: fbnic: Write the TCAM tables used for RSS control and Rx to host
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 677aea20d3e1..76a8f2d6bd64 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2601,6 +2601,8 @@
+ 
+ #define PCI_VENDOR_ID_HYGON		0x1d94
+ 
++#define PCI_VENDOR_ID_META		0x1d9b
++
+ #define PCI_VENDOR_ID_FUNGIBLE		0x1dad
+ 
+ #define PCI_VENDOR_ID_HXT		0x1dbf
 
-
- MAINTAINERS                                   |    7 +
- drivers/net/ethernet/Kconfig                  |    1 +
- drivers/net/ethernet/Makefile                 |    1 +
- drivers/net/ethernet/meta/Kconfig             |   31 +
- drivers/net/ethernet/meta/Makefile            |    6 +
- drivers/net/ethernet/meta/fbnic/Makefile      |   19 +
- drivers/net/ethernet/meta/fbnic/fbnic.h       |  144 ++
- drivers/net/ethernet/meta/fbnic/fbnic_csr.h   |  838 ++++++++
- .../net/ethernet/meta/fbnic/fbnic_devlink.c   |   88 +
- .../net/ethernet/meta/fbnic/fbnic_drvinfo.h   |    5 +
- drivers/net/ethernet/meta/fbnic/fbnic_fw.c    |  791 +++++++
- drivers/net/ethernet/meta/fbnic/fbnic_fw.h    |  124 ++
- drivers/net/ethernet/meta/fbnic/fbnic_irq.c   |  208 ++
- drivers/net/ethernet/meta/fbnic/fbnic_mac.c   |  666 ++++++
- drivers/net/ethernet/meta/fbnic/fbnic_mac.h   |   86 +
- .../net/ethernet/meta/fbnic/fbnic_netdev.c    |  488 +++++
- .../net/ethernet/meta/fbnic/fbnic_netdev.h    |   63 +
- drivers/net/ethernet/meta/fbnic/fbnic_pci.c   |  564 +++++
- .../net/ethernet/meta/fbnic/fbnic_phylink.c   |  161 ++
- drivers/net/ethernet/meta/fbnic/fbnic_rpc.c   |  651 ++++++
- drivers/net/ethernet/meta/fbnic/fbnic_rpc.h   |  189 ++
- drivers/net/ethernet/meta/fbnic/fbnic_tlv.c   |  529 +++++
- drivers/net/ethernet/meta/fbnic/fbnic_tlv.h   |  175 ++
- drivers/net/ethernet/meta/fbnic/fbnic_txrx.c  | 1913 +++++++++++++++++
- drivers/net/ethernet/meta/fbnic/fbnic_txrx.h  |  127 ++
- include/linux/pci_ids.h                       |    2 +
- 26 files changed, 7877 insertions(+)
- create mode 100644 drivers/net/ethernet/meta/Kconfig
- create mode 100644 drivers/net/ethernet/meta/Makefile
- create mode 100644 drivers/net/ethernet/meta/fbnic/Makefile
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_csr.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_drvinfo.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_fw.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_fw.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_irq.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_mac.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_mac.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_netdev.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_netdev.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_pci.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_phylink.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_rpc.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_rpc.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_tlv.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_tlv.h
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_txrx.c
- create mode 100644 drivers/net/ethernet/meta/fbnic/fbnic_txrx.h
-
---
 
 
