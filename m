@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-10220-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10221-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26736930125
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 21:54:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D61B930137
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 22:13:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 43C7DB221CC
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 19:54:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB29428410C
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 20:13:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DD143A8F7;
-	Fri, 12 Jul 2024 19:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 976333B1A4;
+	Fri, 12 Jul 2024 20:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gFkkfBKy"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YpsYo5el"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D01F381A4
-	for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 19:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920A83B1BC
+	for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 20:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720814068; cv=none; b=IQB2DHxr7ugE9tXHw+dWof3Cx84RPVkSSqwYEFoxy4qJhTm9jtP483MYsudYJjEdyjS7CUK5DYKwpnVjBzdzqF2SYiKP8CT9JsXIEZmubktIkmlcgJEPjQv6gf2Z5xfjHU2tR7H4ySoZNS19JfoPjB7sA55Y4andu3tDO1TR5+s=
+	t=1720815210; cv=none; b=NeeITVsWgsPcVxHd+BfLgYFH5LuUce8GaffWLePhOmkrlr/20LT2Jx0mi2IR4yITNA+gybqEMHFCLu6c75eqBCit5vcUWzr4EIPS2LEkjyd7v5M6afAkI+q83jDWUz4tnwmOwD1Zdmkh+g7VmEOh+cJ5W9Hpw6KKN/yfbMlZ0WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720814068; c=relaxed/simple;
-	bh=XeNLAjtJemrHe8gWdJCHe4/TmZcmt3aCJnKQJBgdVUw=;
+	s=arc-20240116; t=1720815210; c=relaxed/simple;
+	bh=MD/dx5zBG/sxtUfD1ugFRqGWssy8umlq12IU9xLCwbc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IEA2Zh1Ur2zMBdEbGYqv2HVbXx3VM3eXah3+yvP+n7cqhQYDVaOsxo1+Ok1v02NbPdNK4tLxfgFjk2HJ5L8Xbv11Cr3dUYoa1MiG+KHvx+wGSw7LuxjUjvZAbdHYIp55mBFj10CM9xlj87q9M3cWjHCra+/u8wDlbf6dDI5bo/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gFkkfBKy; arc=none smtp.client-ip=209.85.167.47
+	 To:Cc:Content-Type; b=h2PSvI9N3JxPHH5fKuEc39pgOR7erUQuho5yBPheCtrNXx0fmimHa/lDvxyyyta5AohNBsu9gXe8xuOaxEkQ7JUGzRgrDvp/H2Pqb8qz7rDaZVZaLFWc+RAD07TUGFreQea1ScNGg7i3ZT782rStAWd4YVGO75a055ZmkdF7y2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YpsYo5el; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52e96d4986bso2435569e87.3
-        for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 12:54:24 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eedebccfa4so3073611fa.1
+        for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 13:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1720814063; x=1721418863; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1720815207; x=1721420007; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T4/ngcGZOUlv2g+pqP0qZ+P94MpN9p5eXZQFViqHO+g=;
-        b=gFkkfBKy/g0ZvMjdZxOjTE/bLFvtclZq+vmhMi734RrIaeDomFENWw4xBQeFeIneuC
-         s1l9F/HZr9DELLRuf4bxAmAzKrhATYfn5Y3BWyCylqsVWp1ywgxCjZDPgjU/6EwQcMZY
-         WalNxq8n2dxNVY2F9lKEqdfJQWMw8VDnHIkto=
+        bh=kGMLNdifmCVZfgyiOn8TGvix/ie1jBF30HsnXZRKsXI=;
+        b=YpsYo5elVIDrg6yFVHXYR5UdALY7HUTuYxWzINkFIN2jPDJnnQeblKxJu6E8+G7lko
+         4Ka7+RunB4oG+Nniuh6Pdmttqt85OipWA1kGIvhAIE/E2m1t8vGiP9pj6RQ6JeocjFfL
+         JyJLKOV6OvPJHndByI9QpCuK4zbE1CUr4PvrM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720814063; x=1721418863;
+        d=1e100.net; s=20230601; t=1720815207; x=1721420007;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=T4/ngcGZOUlv2g+pqP0qZ+P94MpN9p5eXZQFViqHO+g=;
-        b=gTbtTgcKg/mbZqKO4DAJdUZxODWksfgEAHDO5q5wJCO32cDyTKOZkTT2+3X/1dbw79
-         9VSzHQxrDiGihykOXELHmnslxzv9VKUTspALP1yzqxpSLVFLbZA0mWcj3jDg50SYdEnF
-         dOoUCfI8DDjxSJQwoo+br06PoBDCJmMl9ydX8DPo0VbYrTBONMEeuv030Wm6kkLISZdz
-         bELbkWXhi2FaPkJN/KijxKDJMU0OJlVD1HEbtzB7iGJmWSeUBpsfXGjYJYLoD/3aXiA8
-         SQZw8/AvSWzwi1XjllvS0r17xyeJFihAql89JQ71Vg9FGL4gUTQS+ifZIGwkWvLvZ233
-         h0EQ==
-X-Gm-Message-State: AOJu0Yz9c6pr75ABFVYwyG2Bsa1UbWaTIrf+kIFEqFyQGdIp/TvJ4i0B
-	SJn7ApkT3JnRIbZ+CjmOo4vUJmjq9qY1yZiNfLeHsI75+d83QHVlbiHd+nQCpFoQScEDg3oob+y
-	z4e0tSJdUiyQEgUHhMGKSamFh28tq8TgKdFD3
-X-Google-Smtp-Source: AGHT+IGJuM1c7+e270c4HHeAdZ6qyvrnZgiURFgBr33k7YX1eBlG7UqjyAgHgpZY63G/27Gs+JdxfRb9SXuQc0Ck3pE=
-X-Received: by 2002:ac2:5448:0:b0:52c:e0fb:92c0 with SMTP id
- 2adb3069b0e04-52eb99a2750mr6352658e87.34.1720814063237; Fri, 12 Jul 2024
- 12:54:23 -0700 (PDT)
+        bh=kGMLNdifmCVZfgyiOn8TGvix/ie1jBF30HsnXZRKsXI=;
+        b=t8AEgHICFrwPUa8MVKNC9OmxhX7/iEHeXqbttWQu5afXegK/icWyphUFlPWsFDKfIg
+         iVQeHiq6wOf76y7mANC6y8tqtGYwktspnik8eUh0I6DyVjkmw2ceaaRqLAw5EK/F0Mjh
+         3PVlz+XQuPUYCcQtPlt4rDvAQ3wpTWIZcIB2XhYtvMX9BoS35TGrbOeOlCjnfr90TReh
+         4F+mB80+sKhAPRAVb4WW4CbVPeKGPWQTwu9/r7GA7un/HpXt5Z1LQowbzEMP3+m+e4in
+         cADhlbKVsMzPGdl+aFBVr47hdrc6B6bjMEb9dXlWnrr5MegDMf2sKebYkOnjfZgsoigX
+         F2Zw==
+X-Gm-Message-State: AOJu0YxI6xu6t8zWOCEdTY6fVu93XXRxHCvkmjohLYqGFeblOAVNeuOh
+	T9lrNStYIRt5KePUVpklyWrxkywD9YqqXs/agLrcemiHAq75eZhIa/ZVBHA/yllUzREQIocbNTd
+	rTe8i5P1gEEUqQh1yH09IwEXVwHJWAGXPOkAy
+X-Google-Smtp-Source: AGHT+IE57BZGL6UUOfC/s6HKDIw6QB6AjtdcfugVSb5hMU4zLcZnTTdLQIU9GKCNRsiLP2rRd1KYU4FivkrC2CBmKQI=
+X-Received: by 2002:a2e:9b57:0:b0:2ec:4de9:7334 with SMTP id
+ 38308e7fff4ca-2eeb30b9a2amr89089711fa.11.1720815206680; Fri, 12 Jul 2024
+ 13:13:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,10 +68,11 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240703180300.42959-1-james.quinlan@broadcom.com>
  <20240703180300.42959-2-james.quinlan@broadcom.com> <df291860-cbbe-4f94-a18d-00ae9cf905b1@kernel.org>
-In-Reply-To: <df291860-cbbe-4f94-a18d-00ae9cf905b1@kernel.org>
+ <CA+-6iNwSk9-k=BZLbmPtwHHgqWs4ZB9OPGfF3Ruy4883dSTH7A@mail.gmail.com> <b71cb924-7f63-4141-97da-319d8c840465@kernel.org>
+In-Reply-To: <b71cb924-7f63-4141-97da-319d8c840465@kernel.org>
 From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Fri, 12 Jul 2024 15:54:11 -0400
-Message-ID: <CA+-6iNzZXF+yTmjMZ0SU0jO4L0ZzETZ-VvQpe4txv=SNTyo_bA@mail.gmail.com>
+Date: Fri, 12 Jul 2024 16:13:15 -0400
+Message-ID: <CA+-6iNxcmkd9O9y6=2By7pm+dAiyZt7GwYSMM++AUzLFF7yC4g@mail.gmail.com>
 Subject: Re: [PATCH v2 01/12] dt-bindings: PCI: Add Broadcom STB 7712 SOC,
  update maintainer
 To: Krzysztof Kozlowski <krzk@kernel.org>
@@ -86,214 +87,180 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
 	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000fd6d96061d123e1a"
+	boundary="000000000000245e1f061d12835e"
 
---000000000000fd6d96061d123e1a
+--000000000000245e1f061d12835e
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 4, 2024 at 2:40=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
+On Sun, Jul 7, 2024 at 7:58=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
 > wrote:
 >
-> On 03/07/2024 20:02, Jim Quinlan wrote:
-> > - Update maintainer; Nicolas hasn't been active and it
-> >   makes more sense to have a Broadcom maintainer
-> > - Add a driver compatible string for the new STB SOC 7712
+> On 05/07/2024 22:02, Jim Quinlan wrote:
+> > On Thu, Jul 4, 2024 at 2:40=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> >>
+> >> On 03/07/2024 20:02, Jim Quinlan wrote:
+> >>> - Update maintainer; Nicolas hasn't been active and it
+> >>>   makes more sense to have a Broadcom maintainer
+> >>> - Add a driver compatible string for the new STB SOC 7712
+> >>
+> >> You meant device? Bindings are for hardware.
+> >>
+> >>> - Add two new resets for the 7712: "bridge", for the
+> >>>   the bridge between the PCIe core and the memory bus;
+> >>>   "swinit", the PCIe core reset.
+> >>> - Order the compatible strings alphabetically
+> >>> - Restructure the reset controllers so that the definitions
+> >>>   appear first before any rules that govern them.
+> >>
+> >> Please split cleanups from new device support.
+> >>
+> >>>
+> >>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> >>> ---
+> >>>  .../bindings/pci/brcm,stb-pcie.yaml           | 44 +++++++++++++++--=
+--
+> >>>  1 file changed, 36 insertions(+), 8 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml=
+ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> >>> index 11f8ea33240c..a070f35d28d7 100644
+> >>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> >>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> >>> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml=
+#
+> >>>  title: Brcmstb PCIe Host Controller
+> >>>
+> >>>  maintainers:
+> >>> -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> >>> +  - Jim Quinlan <james.quinlan@broadcom.com>
+> >>>
+> >>>  properties:
+> >>>    compatible:
+> >>> @@ -16,11 +16,12 @@ properties:
+> >>>            - brcm,bcm2711-pcie # The Raspberry Pi 4
+> >>>            - brcm,bcm4908-pcie
+> >>>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+> >>> -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> >>>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> >>> -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> >>> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+> >>>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
+> >>>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+> >>> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+> >>> +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
+> >>>
+> >>>    reg:
+> >>>      maxItems: 1
+> >>> @@ -95,6 +96,20 @@ properties:
+> >>>        minItems: 1
+> >>>        maxItems: 3
+> >>>
+> >>> +  resets:
+> >>> +    items:
+> >>> +      - description: reset for phy calibration
+> >>> +      - description: reset for PCIe/CPU bus bridge
+> >>> +      - description: reset for soft PCIe core reset
+> >>> +      - description: reset for PERST# PCIe signal
+> >>
+> >> This won't work and I doubt you tested your code. You miss minItems.
+> >
+> > I did test my code and there were no errors.  I perform the following t=
+est:
+> >
+> > make ARCH=3Darm64 dt_binding_check DT_CHECKER_FLAGS=3D-m
+> > DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/pci/brcm,stb-pcie.y=
+aml
+> >
+> > Is this incorrect?
 >
-> You meant device? Bindings are for hardware.
-
-Hello Krzysztof,
-
-I should have replied to this before sending out V3.  Since your form
-letter says I did not address previous comments, I will address them
-here and now (your v2 review of the bindings commit).
-
+> That's correct and you are right - it passes the checks. Recent dtschema
+> changed the logic behind this. I am not sure if the new approach will
+> stay, I would find explicit minItems here more obvious and readable, so:
+> resets:
+>   minItems: 1
+>   items:
+>     - .........
+>     - .........
+>     - .........
+>     - .........
 >
-> > - Add two new resets for the 7712: "bridge", for the
-> >   the bridge between the PCIe core and the memory bus;
-> >   "swinit", the PCIe core reset.
-> > - Order the compatible strings alphabetically
-> > - Restructure the reset controllers so that the definitions
-> >   appear first before any rules that govern them.
->
-> Please split cleanups from new device support.
-Okay.
 >
 > >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 44 +++++++++++++++----
-> >  1 file changed, 36 insertions(+), 8 deletions(-)
+> >>
+> >>> +
+> >>> +  reset-names:
+> >>> +    items:
+> >>> +      - const: rescal
+> >>> +      - const: bridge
+> >>> +      - const: swinit
+> >>> +      - const: perst
+> >>
+> >> This does not match what you have in conditional, so just keep min and
+> >> max Items here.
 > >
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b=
-/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > index 11f8ea33240c..a070f35d28d7 100644
-> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
-> >  title: Brcmstb PCIe Host Controller
+> > I'm not sure what you mean.  One chips uses a single reset, another
+> > chip uses a different single reset,
+> > and the third (7712) uses three of the four resets.
+>
+> Your conditional in allOf:if:then has different order.
+Different order then what, and ordering by chip or by reset name?
+
+>
 > >
-> >  maintainers:
-> > -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > +  - Jim Quinlan <james.quinlan@broadcom.com>
+> > I was instructed to separate the descriptions from the rules, or at
+> > least that's what I thought I was asked.
+> >>
+> >>
+> >>> +
+> >>>  required:
+> >>>    - compatible
+> >>>    - reg
+> >>> @@ -118,13 +133,10 @@ allOf:
+> >>>      then:
+> >>>        properties:
+> >>>          resets:
+> >>> -          items:
+> >>> -            - description: reset controller handling the PERST# sign=
+al
+> >>> -
+> >>> +          minItems: 1
+> >>
+> >> maxItems instead. Why three resets should be valid?
 > >
-> >  properties:
-> >    compatible:
-> > @@ -16,11 +16,12 @@ properties:
-> >            - brcm,bcm2711-pcie # The Raspberry Pi 4
-> >            - brcm,bcm4908-pcie
-> >            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
-> > -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-> >            - brcm,bcm7216-pcie # Broadcom 7216 Arm
-> > -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
-> > +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
-> >            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
-> >            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
-> > +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
-> > +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
+> > See above.  Note that I was just instructed to separate the rules from
+> > the descriptions.
+> > In doing so I placed all of the reset descripts on the top and then
+> > the rules below.
+> > There are four possible resets but no single chip uses all of them and
+> > three chips
+> > use one or three of them.
 > >
-> >    reg:
-> >      maxItems: 1
-> > @@ -95,6 +96,20 @@ properties:
-> >        minItems: 1
-> >        maxItems: 3
-> >
-> > +  resets:
-> > +    items:
-> > +      - description: reset for phy calibration
-> > +      - description: reset for PCIe/CPU bus bridge
-> > +      - description: reset for soft PCIe core reset
-> > +      - description: reset for PERST# PCIe signal
+> > Please advise.
 >
-> This won't work and I doubt you tested your code. You miss minItems.
->
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: rescal
-> > +      - const: bridge
-> > +      - const: swinit
-> > +      - const: perst
->
-> This does not match what you have in conditional, so just keep min and
-> max Items here.
+> I don't understand that explanation. Why this particular variant works
+> with 1, 2, 3 or 4 resets in the same time?
 
-I do not understand.  There are four possible resets, but any one chip
-uses only 0, 1, or 3 of them:
-
-    CHIP            NUM_RESETS    NAMES
-    =3D=3D=3D=3D            =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=
-=3D
-    4908            1             perst
-    7216            1             rescal
-    7712            3             rescal, bridge, swinit
-    Other_Chips     0             -
-
-Although I list four "reset-names", I have, in the rule for 7712,
-maxItems=3D3 because it only uses rescal, bridge, and swinit.  So I
-don't know what you mean when you say "this does not match what you
-have in your conditional".  AFAICT, they are not supposed to match.
-
-
->
->
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -118,13 +133,10 @@ allOf:
-> >      then:
-> >        properties:
-> >          resets:
-> > -          items:
-> > -            - description: reset controller handling the PERST# signal
-> > -
-> > +          minItems: 1
->
-> maxItems instead. Why three resets should be valid?
-For the "4908" conditional, minItems=3D=3DmaxItems=3D=3D1.  I do not
-understand your question "Why three resets should be valid" -- can you
-please elaborate?
-
->
->
-> >          reset-names:
-> >            items:
-> >              - const: perst
-> > -
-> >        required:
-> >          - resets
-> >          - reset-names
-> > @@ -136,12 +148,28 @@ allOf:
-> >      then:
-> >        properties:
-> >          resets:
-> > +          minItems: 1
-> > +        reset-names:
-> >            items:
-> > -            - description: phandle pointing to the RESCAL reset contro=
-ller
-> > +            - const: rescal
-> > +      required:
-> > +        - resets
-> > +        - reset-names
->
-> Why?
-
-I do not know what you are questioning.  The 7216 device uses one
-reset: the "rescal".  Again, maxItems=3D=3DminItems=3D=3D1.  Please see the
-summary note below.
-
->
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: brcm,bcm7712-pcie
-> > +    then:
-> > +      properties:
-> > +        resets:
-> > +          minItems: 3
->
-> Again, you do not have 4 items here.
-
-I do not want to have 4 items here; I want to have 3 for "rescal",
-"bridge," and "swinit".  In this case, maxItems=3D=3DminItems=3D=3D3.
-
-Now , for V1 you requested that I define all resets at the top; I've
-done that and there are 4 of them.  But no chip uses all 4; each
-individual chip only uses 0, 1, or 3 resets.
-
-So there is no way that each chip's conditional rule can define
-minItems and maxItems to match the description list of 4 resets,
-unless you want me to undo your V1 request of describing the resets at
-the top level instead of describing them in the rules.
-
-Please advise,
+What do you mean in the "same time"?  The resets are just not present
+in most of our PCIe HW.  In two chips there is only 1 reset in the HW,
+and in the 7712 there are 3 resets in the HW.   You asked me to
+describe all of the resets first at the top level and I have done
+that.  But none of our chips ever use all four.
 
 Regards,
 Jim Quinlan
 Broadcom STB/CM
 
 
-
-
 >
-> >
-> >          reset-names:
-> >            items:
-> >              - const: rescal
-> > +            - const: bridge
-> > +            - const: swinit
-> >
-> >        required:
-> >          - resets
+> Constraints are supposed to be precise / exact.
 >
 > Best regards,
 > Krzysztof
 >
 
---000000000000fd6d96061d123e1a
+--000000000000245e1f061d12835e
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -364,14 +331,14 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCD4eqSx89iB24GzTtViyTkO9/pnn4iF
-WHv4/RqZL/3TPDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MTIxOTU0MjNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCB4hXQzzs02PkdS3jE7+mARjROx3mbP
+RtRbA87CmKQ5gTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MTIyMDEzMjdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAgGZik5zWCU9Ka9L6RUnOxktoxMtwuNPq0USYaxntvHGA4SNC
-fVfLI/uKhNup+/qCGc8VHU5HAb3S3xqm272Pl5zMpYWMfD6F+j+hIHgopNFvZXR6W98rHRpTOKYT
-66zMmRL4zBkDjljhYgvZE7RLMhCK+TjkOW+tUtOXFRYjTEZZIafpA+Kg4VlVV9udzm2az3pwep9G
-6yjknwfidgJbrhLs4UhtCEp5bBzW1bJC9EXve8s52xjqgJGORsl4k9fsCsKj0oPqrQvLr3ven8c4
-9P37hxTGMiI70HUy6UYFIjI81tUoDeexw9sF7bZxSPkewUENjKv+Fh+0i+4/sMHzsA==
---000000000000fd6d96061d123e1a--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAborR7bvGr/E6jZM8hYZy8/MYtJqvmT1R7S/3hlJV6xUkQ2OZ
+jzJvqtbGCkcpkX/D5QijnlS1yzBHqHw1dK0wUVbKOFXEhG1HU91WZsiwVLy8HCRJRVwutYiSInB/
+slF3g1xzbSWEU7zB0wo3w9HVcGK6Gi7wCnLfA3GFnL8N8Gayzau6U39WRviV0UCJG5CjqKAIKI7H
+UyMmMOB0GLf0uAJqhiZYYBb7gVdTjp4njXtCj9zYNE8JP2lNM3xW2KPiJCjNuFAfgNBAjVHeyYEX
+WouXAy57ho9VaV2WRoS93j1UyZmsSQ504nQzGg+pHL0dVKSHgzfMYbNBA9pTjvAczw==
+--000000000000245e1f061d12835e--
 
