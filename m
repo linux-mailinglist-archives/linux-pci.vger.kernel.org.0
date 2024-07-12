@@ -1,142 +1,236 @@
-Return-Path: <linux-pci+bounces-10222-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10223-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D559A930151
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 22:41:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0CC5930166
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 23:00:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66E541F22C58
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 20:41:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3C831C20EF7
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 21:00:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F08D53BBF2;
-	Fri, 12 Jul 2024 20:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91F2D200CD;
+	Fri, 12 Jul 2024 21:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJslttH7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YxTL+hQR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC83F2C879
-	for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 20:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C2C1094E
+	for <linux-pci@vger.kernel.org>; Fri, 12 Jul 2024 21:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720816870; cv=none; b=En8NLZ4qQBpoQPgA7Sp7Xf/KG8THYQzgp4aFEUOqA+/Xn5tmkwvoux4o+AdMSi7LesAUekNa2fqfb+QkGhIhGXodgLYIAVR9VKb6NG/sryAHEqZnAThhnHACSWgBZVtbxdGNnLCwsyQV6ukYS+xDM72/QhZFE6tbNRo0+rNth2M=
+	t=1720818053; cv=none; b=nsZmMQ7n2QUig2uXyJ3xptOuDQAkOLizBqkHFkXq//eacAWPGJCXRS4ZII7je+PRCyQbHMtBi78GxkS4xa36bUzG2i/9gWDgOaQWRxp5y+xS6L5v+g5olTQMLpkTvsyBXd9OIYPYc79TXxgEYe8OD9gCenSHumHOGbFPC6p8QoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720816870; c=relaxed/simple;
-	bh=dTCn1JYLyphG0HhWrMCWZ3fJpATH0SVWmU5AKhmUuB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=p+Rdr2DrElZQhK6XjVsuEztgzEDoofHeWtziYkzD9VXPUpKnGZRKY1ii27XvCFyHKE1bxETr1PBcJKR8FeanZIJWd/U8pCNhLQlScJYYOwpvAXKHPBS4w+VfgWhhsXZAWoCben33jKVGIGGGTbZTpaW8WH7qWaIP4y0xwEM1VvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJslttH7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33009C32782;
-	Fri, 12 Jul 2024 20:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720816869;
-	bh=dTCn1JYLyphG0HhWrMCWZ3fJpATH0SVWmU5AKhmUuB4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=sJslttH73a0cpLDLwR87f0mObTZUfDNuCKXbAOGIY6SF6g/OkijCAmpQfJcov7YR3
-	 9ctuwnfbtDYGuPVUtwBtCJTq0nHS5ThC0Ov0u9hT7yb9GrXWPHqQtsGNr2i4vS86OR
-	 jIK9HXN6CxvCSVwDheGTjzRjGqWuScQ3FQ2NzRuvdKqnwfIKuBgcVs/zzzYGNMAiXu
-	 Rmy6djQQaNlP0DlSat5r3z7DcfR6tvazV/KvEMaTgvWhknzT6XLBX4r5lscKz/i9KZ
-	 s8dpQR0Oe1T/0R6IGgTm/ln4wOInXCVlb2YLR35zIbwuZCTdf2vj9Scig/9FIQLyGi
-	 EpuZRX6W9zqXg==
-Date: Fri, 12 Jul 2024 15:41:06 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2] PCI: mvebu: Dispose INTx IRQs before to removing INTx
- domain
-Message-ID: <20240712204106.GA336836@bhelgaas>
+	s=arc-20240116; t=1720818053; c=relaxed/simple;
+	bh=cKz9ZdBHxKpSIxsmYcX6bvLlRIPBoAs/rNeoFrwG9FY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=B7U72mJP0v5NKF+njIkG66dlV+ziBYQNX7E4IsWxYRVCYnukD/5q9J2izeBgZaqbLUFobPNFevMzXdOPrbC//jzUIN22WewlCekhunTx1+ZMlvfdR+MHzD5uXIK2b4x8mdlHEhYq0O+t1YjkS+OouL4ga/ZtdjNCBrkAztVpKWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YxTL+hQR; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720818052; x=1752354052;
+  h=date:from:to:cc:subject:message-id;
+  bh=cKz9ZdBHxKpSIxsmYcX6bvLlRIPBoAs/rNeoFrwG9FY=;
+  b=YxTL+hQR4lWCNgYUfS2N8JYsZlUUAuQiDIgcqkVxAQdLSKwg/WFCLnvM
+   mno3YAKn4v2Pmw/kkajP9U0Xz5ETD6UNIxuE+x2oIo0D8Pfhg8zm5KL0m
+   D3NFmOyOcMp512T/PirhxtyCI1OM8tUOkI/nJsOLLCy6xeKeDl/aik2IZ
+   Z+9084mSEd29MuGqSt8Xm626zcO/5UX4wPClG5m133DOMrPjLVQUg0PkR
+   20K/7gEn0Aa9vpXkj2y8sQWepHGSme0Kwoy/yPBkeYAf1SvP/ffsBDRcA
+   dbt/NgZImrkPJLWuHXbBl0XFFMTVeuBA/Id1nL6TwwYW+YLW/7f7wB8L3
+   g==;
+X-CSE-ConnectionGUID: vVrT+nLOSqC7U0JwWczKvA==
+X-CSE-MsgGUID: E6yarLiCQYuz5QnLPJNe6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="18090278"
+X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
+   d="scan'208";a="18090278"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 14:00:49 -0700
+X-CSE-ConnectionGUID: 0vvas7cdTCKGDAXmFu7nEQ==
+X-CSE-MsgGUID: wDtgCRhVQVWYmPKYUclegg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,203,1716274800"; 
+   d="scan'208";a="53976949"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 12 Jul 2024 14:00:47 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sSNNl-000bHY-16;
+	Fri, 12 Jul 2024 21:00:45 +0000
+Date: Sat, 13 Jul 2024 04:59:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:reset] BUILD SUCCESS
+ 0708331374d618575f073a5a6d3662f4f8d0f8ce
+Message-ID: <202407130448.kYwwiQwV-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240711132544.9048-1-kabel@kernel.org>
 
-[+cc Pali, seems like the author should be included,
-Thomas, Marc since they actually know about IRQs, unlike me]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git reset
+branch HEAD: 0708331374d618575f073a5a6d3662f4f8d0f8ce  PCI: Add missing bridge lock to pci_bus_lock()
 
-On Thu, Jul 11, 2024 at 03:25:44PM +0200, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
-> 
-> The documentation for the irq_domain_remove() function says that all
-> mappings within the IRQ domain must be disposed before the domain is
-> removed.
-> 
-> Currently, the INTx IRQs are not disposed in pci-mvebu driver .remove()
-> method, which causes the kernel to crash when unloading the driver and
-> then reading /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
-> 
-> Unmapping of the IRQs at this point of the .remove() method is safe,
-> since the PCIe bus is already unregistered, and all its devices are
-> unbound from their drivers and removed. If there was indeed any
-> remaining use of PCIe resources, then it would mean that PCIe hotplug
-> code is broken, and we have bigger problems.
-> 
-> Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
-> Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
+elapsed time: 1445m
 
-Is there a URL for this report?
+configs tested: 143
+configs skipped: 2
 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Reviewed-by: Marek Behún <kabel@kernel.org>
-> [ Marek: refactored a little, added more explanation to commit message ]
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> Changes since v1:
-> - added explanation into commit message about why this is safe to do,
->   as suggested by Andy. The explanation originally comes from Pali:
->     https://lore.kernel.org/linux-arm-kernel/20220809133911.hqi7eyskcq2sojia@pali/
-> ---
->  drivers/pci/controller/pci-mvebu.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 29fe09c99e7d..91a02b23aeb1 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -1683,8 +1683,15 @@ static void mvebu_pcie_remove(struct platform_device *pdev)
->  			irq_set_chained_handler_and_data(irq, NULL, NULL);
->  
->  		/* Remove IRQ domains. */
-> -		if (port->intx_irq_domain)
-> +		if (port->intx_irq_domain) {
-> +			for (int j = 0; j < PCI_NUM_INTX; j++) {
-> +				int virq = irq_find_mapping(port->intx_irq_domain, j);
-> +
-> +				if (virq > 0)
-> +					irq_dispose_mapping(virq);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I am not an IRQ expert, so all I can really do is compare this to
-usage in other drivers.
+tested configs:
+alpha                             allnoconfig   gcc-13.3.0
+alpha                            allyesconfig   gcc-13.3.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                   randconfig-001-20240712   gcc-13.2.0
+arc                   randconfig-002-20240712   gcc-13.2.0
+arm                              allmodconfig   gcc-14.1.0
+arm                               allnoconfig   clang-19
+arm                              allyesconfig   gcc-14.1.0
+arm                   randconfig-001-20240712   clang-19
+arm                   randconfig-002-20240712   clang-19
+arm                   randconfig-003-20240712   gcc-14.1.0
+arm                   randconfig-004-20240712   clang-15
+arm64                            allmodconfig   clang-19
+arm64                             allnoconfig   gcc-14.1.0
+arm64                 randconfig-001-20240712   gcc-14.1.0
+arm64                 randconfig-002-20240712   gcc-14.1.0
+arm64                 randconfig-003-20240712   clang-19
+arm64                 randconfig-004-20240712   clang-17
+csky                              allnoconfig   gcc-14.1.0
+csky                  randconfig-001-20240712   gcc-14.1.0
+csky                  randconfig-002-20240712   gcc-14.1.0
+hexagon                          allmodconfig   clang-19
+hexagon                           allnoconfig   clang-19
+hexagon                          allyesconfig   clang-19
+hexagon               randconfig-001-20240712   clang-14
+hexagon               randconfig-002-20240712   clang-19
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240712   gcc-9
+i386         buildonly-randconfig-002-20240712   clang-18
+i386         buildonly-randconfig-003-20240712   clang-18
+i386         buildonly-randconfig-004-20240712   clang-18
+i386         buildonly-randconfig-005-20240712   gcc-11
+i386         buildonly-randconfig-006-20240712   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240712   clang-18
+i386                  randconfig-002-20240712   clang-18
+i386                  randconfig-003-20240712   clang-18
+i386                  randconfig-004-20240712   clang-18
+i386                  randconfig-005-20240712   clang-18
+i386                  randconfig-006-20240712   clang-18
+i386                  randconfig-011-20240712   clang-18
+i386                  randconfig-012-20240712   clang-18
+i386                  randconfig-013-20240712   clang-18
+i386                  randconfig-014-20240712   gcc-10
+i386                  randconfig-015-20240712   gcc-10
+i386                  randconfig-016-20240712   gcc-12
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-14.1.0
+loongarch             randconfig-001-20240712   gcc-14.1.0
+loongarch             randconfig-002-20240712   gcc-14.1.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-14.1.0
+microblaze                       allyesconfig   gcc-14.1.0
+mips                              allnoconfig   gcc-14.1.0
+nios2                             allnoconfig   gcc-14.1.0
+nios2                 randconfig-001-20240712   gcc-14.1.0
+nios2                 randconfig-002-20240712   gcc-14.1.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                randconfig-001-20240712   gcc-14.1.0
+parisc                randconfig-002-20240712   gcc-14.1.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   clang-19
+powerpc               randconfig-001-20240712   clang-15
+powerpc               randconfig-002-20240712   clang-19
+powerpc               randconfig-003-20240712   clang-19
+powerpc64             randconfig-001-20240712   clang-19
+powerpc64             randconfig-002-20240712   clang-19
+powerpc64             randconfig-003-20240712   gcc-14.1.0
+riscv                            allmodconfig   clang-19
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   clang-19
+riscv                               defconfig   clang-19
+riscv                 randconfig-001-20240712   clang-19
+riscv                 randconfig-002-20240712   gcc-14.1.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   clang-19
+s390                  randconfig-001-20240712   gcc-14.1.0
+s390                  randconfig-002-20240712   gcc-14.1.0
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sh                    randconfig-001-20240712   gcc-14.1.0
+sh                    randconfig-002-20240712   gcc-14.1.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-14.1.0
+sparc64               randconfig-001-20240712   gcc-14.1.0
+sparc64               randconfig-002-20240712   gcc-14.1.0
+um                               allmodconfig   clang-19
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-13
+um                                  defconfig   clang-19
+um                             i386_defconfig   gcc-13
+um                    randconfig-001-20240712   clang-19
+um                    randconfig-002-20240712   clang-15
+um                           x86_64_defconfig   clang-15
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240712   clang-18
+x86_64       buildonly-randconfig-002-20240712   clang-18
+x86_64       buildonly-randconfig-003-20240712   clang-18
+x86_64       buildonly-randconfig-004-20240712   clang-18
+x86_64       buildonly-randconfig-005-20240712   clang-18
+x86_64       buildonly-randconfig-006-20240712   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                randconfig-001-20240712   gcc-12
+x86_64                randconfig-002-20240712   gcc-13
+x86_64                randconfig-003-20240712   gcc-12
+x86_64                randconfig-004-20240712   clang-18
+x86_64                randconfig-005-20240712   gcc-13
+x86_64                randconfig-006-20240712   clang-18
+x86_64                randconfig-011-20240712   clang-18
+x86_64                randconfig-012-20240712   clang-18
+x86_64                randconfig-013-20240712   clang-18
+x86_64                randconfig-014-20240712   gcc-13
+x86_64                randconfig-015-20240712   clang-18
+x86_64                randconfig-016-20240712   clang-18
+x86_64                randconfig-071-20240712   gcc-13
+x86_64                randconfig-072-20240712   gcc-11
+x86_64                randconfig-073-20240712   clang-18
+x86_64                randconfig-074-20240712   gcc-9
+x86_64                randconfig-075-20240712   clang-18
+x86_64                randconfig-076-20240712   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-14.1.0
+xtensa                randconfig-001-20240712   gcc-14.1.0
+xtensa                randconfig-002-20240712   gcc-14.1.0
 
-There are 20+ drivers in drivers/pci/controller, and I don't see
-irq_dispose_mapping() usage similar to this elsewhere.  Does that mean
-most or all of the other drivers have a similar defect?
-
-> +			}
->  			irq_domain_remove(port->intx_irq_domain);
-> +		}
->  
->  		/* Free config space for emulated root bridge. */
->  		pci_bridge_emul_cleanup(&port->bridge);
-> -- 
-> 2.44.2
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
