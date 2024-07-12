@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-10214-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10215-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B08D693004C
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 20:16:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B9B3930051
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 20:17:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3E4B1C21F89
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 18:16:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEC07B22775
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jul 2024 18:17:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2641A17D36F;
-	Fri, 12 Jul 2024 18:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE0517D89D;
+	Fri, 12 Jul 2024 18:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGmcLY1c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oibZr1LI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC96617D35D;
-	Fri, 12 Jul 2024 18:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A64A17D898;
+	Fri, 12 Jul 2024 18:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720807975; cv=none; b=rXVRd52/DhvmCgjXrJtW7Fq5Qqfq1U5+Mm8RWpzG1qDKVCL0uYoh56qLfEObq5DXzgBoMWrRI9iHzu9SKfJi0xxVyizPVjq2R2iTRAhxnqPuAusTe6EDeEnPvCgwnTd8/sUnuXLc8rZUlhQbFE7LHIcacqY8m+kfKvM7DADaTWs=
+	t=1720807976; cv=none; b=LWjFjIlU0z0be8pH9C322b2UPZ+JcqGWvTmeQxJWNEA2VXK117n6l1bsnL3hx3kV6qOeBemel9hER3dUJAZeAcf9N0IcoouPW+Nej7JzuDb9FoYgvjlzIvt98azx2sEVo99/Z4IhZoTX2RM/Wcf1VVvpyUOdsMoQQJEB72deU2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720807975; c=relaxed/simple;
-	bh=AMtk4b2IlFGIBldcx6HMuJbUNmXf2iqdlc1O1ICsuTg=;
+	s=arc-20240116; t=1720807976; c=relaxed/simple;
+	bh=hLZ13tB6qAQEHvHpUsidz/Qnom4FichvzgyqtE0sOJw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VupyPPZyxSzLWNMZ2o04DHJUMqf5D+OBdvnXml/4fz8gYMorq9qPaAK7oHJ+NgOi7RISge9SNFfgaEqtiTfA42qGPFTtWeaPU40J0B1fJ2XC0b99sfDwrSAFLImxVVpMnzYGCLZMpR8IBhKlyvZQmVJEiLTRooXRs8e05+TAiAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGmcLY1c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E3BC4AF13;
-	Fri, 12 Jul 2024 18:12:53 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ZZAQNkucNpGpCk/IRrNKvlSBMeVpqIG2JZ81C6PlMdmTyOpaFKy2fUkQOSx2vxHgGGM/1oITQ5SkY8RaLDboJix0V3wtL5WJUk52KgzORnO3urufIM6eUgCiJrtVZbo7e3AMiepvfVat74f0hkRZkCTd8Ll7eqyXr2Ac075SO3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oibZr1LI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A43D8C4AF12;
+	Fri, 12 Jul 2024 18:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720807974;
-	bh=AMtk4b2IlFGIBldcx6HMuJbUNmXf2iqdlc1O1ICsuTg=;
+	s=k20201202; t=1720807975;
+	bh=hLZ13tB6qAQEHvHpUsidz/Qnom4FichvzgyqtE0sOJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZGmcLY1cEouptx9VXFMDD6hB8itjvpeUsKLDbxROK2AvjDLYed2Gz7BVk6YUKUjf4
-	 M3vomZtilLfZmhhy4vS/m5DTUAXsZKse6MHPslgIxyR1dVVjPDBkM2CdzGHchF8+un
-	 M/uZ+ydwZplcCUcSTibuTuCF8XcvhF3CnVTVT3P3rPnujrbhk/+VTvxBVLf3UutyN2
-	 zluHaFrbQoWZbNyzr/aXKKSOvfazv5e0je5UN47ELZG1CKZbTGgb4vN01opzLxcaee
-	 KkkjscBdv+SUeMaOtylR0Dtpb4/6XSWdiXI44AdDMWcA0G3WunkHVRSHYkFlUD2ivw
-	 1Ln6qOnKSyKwQ==
+	b=oibZr1LIQWv1tC997nGrg8NSafblI/Uv6Mgy30HhWxzN5aOrL0agOBXi9y7Weo3CU
+	 +9pBEMHGJRcQ2XqHYqYbYT4JEUTEB0Bp/oAtwJA1+IIFKX6SPpLb9Fu+A4kaWpVS/h
+	 hgiMks3LioZnDfGWCgFneN2BeNs6/fewsrcokSP1BrEeIhwrUDcwJZp8nY2rxzLA4A
+	 gQDA/TSPNJzHPgBvwPDvMoFWgP1b+kdJTbyeCOdKAKH0DxwgHx4aMWerTMFSdg4DXV
+	 A11910we7S8LsTZ2JgsdYWJiribIqwImSJHwa1vGhp/lyQwxvmEJGgJzi71p3Blb+2
+	 KyEChaAligCHg==
 From: superm1@kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Mathias Nyman <mathias.nyman@intel.com>,
@@ -51,10 +51,11 @@ Cc: "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
 	Daniel Drake <drake@endlessos.org>,
 	Gary Li <Gary.Li@amd.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v3 2/5] PCI: Check PCI_PM_CTRL instead of PCI_COMMAND in pci_dev_wait()
-Date: Fri, 12 Jul 2024 13:12:43 -0500
-Message-ID: <20240712181246.811044-3-superm1@kernel.org>
+	Mario Limonciello <mario.limonciello@amd.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v3 3/5] PCI: Verify functions currently in D3cold have entered D0
+Date: Fri, 12 Jul 2024 13:12:44 -0500
+Message-ID: <20240712181246.811044-4-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240712181246.811044-1-superm1@kernel.org>
 References: <20240712181246.811044-1-superm1@kernel.org>
@@ -64,69 +65,71 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Mario Limonciello <mario.limonciello@amd.com>
 
-A device that has gone through a reset may return a value in PCI_COMMAND
-but that doesn't mean it's finished transitioning to D0.  On devices that
-support power management explicitly check PCI_PM_CTRL on everything but
-system resume to ensure the transition happened.
+It is reported that USB4 routers and downstream devices may behave
+incorrectly if a dock cable is plugged in at approximately the time that
+the autosuspend_delay is configured. In this situation the device has
+attempted to enter D3cold, but didn't finish D3cold entry when the PCI
+core tried to transition it back to D0.
 
-Devices that don't support power management and system resume will
-continue to use PCI_COMMAND.
+Empirically measuring this situation an "aborted" D3cold exit takes
+~60ms and a "normal" D3cold exit takes ~6ms.
 
+The PCI-PM 1.2 spec specifies that the restore time for functions
+in D3cold is either 'Full context restore or boot latency'.
+
+As PCIe r6.0 sec 5.8 specifies that the device will have gone
+through a conventional reset, it may take some time for the
+device to be ready.
+
+Wait up to 1 sec as specified in PCIe r6.0 sec 6.6.1 for a device
+in D3cold to return to D0.
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/pci/pci.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ drivers/pci/pci.c | 11 +++++++++++
+ drivers/pci/pci.h |  1 +
+ 2 files changed, 12 insertions(+)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 115361a08d9e3..658a139f74ab0 100644
+index 658a139f74ab0..14dab7bc64ba4 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -1279,21 +1279,33 @@ static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_type, int
- 	 * the read (except when CRS SV is enabled and the read was for the
- 	 * Vendor ID; in that case it synthesizes 0x0001 data).
- 	 *
--	 * Wait for the device to return a non-CRS completion.  Read the
--	 * Command register instead of Vendor ID so we don't have to
--	 * contend with the CRS SV value.
-+	 * Wait for the device to return a non-CRS completion.  On devices
-+	 * that support PM control and on waits that aren't part of system
-+	 * resume read the PM control register to ensure the device has
-+	 * transitioned to D0.  On devices that don't support PM control,
-+	 * or during system resume read the command register to instead of
-+	 * Vendor ID so we don't have to contend with the CRS SV value.
- 	 */
- 	for (;;) {
--		u32 id;
--
- 		if (pci_dev_is_disconnected(dev)) {
- 			pci_dbg(dev, "disconnected; not waiting\n");
- 			return -ENOTTY;
- 		}
+@@ -1396,6 +1396,17 @@ int pci_power_up(struct pci_dev *dev)
+ 	else if (state == PCI_D2)
+ 		udelay(PCI_PM_D2_DELAY);
  
--		pci_read_config_dword(dev, PCI_COMMAND, &id);
--		if (!PCI_POSSIBLE_ERROR(id))
--			break;
-+		if (dev->pm_cap && reset_type != PCI_DEV_WAIT_RESUME) {
-+			u16 pmcsr;
++	/*
++	 * D3cold -> D0 will have gone through a conventional reset and may need
++	 * time to be ready.
++	 */
++	if (dev->current_state == PCI_D3cold) {
++		int ret;
 +
-+			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-+			if (!PCI_POSSIBLE_ERROR(pmcsr) &&
-+				(pmcsr & PCI_PM_CTRL_STATE_MASK) == PCI_D0)
-+				break;
-+		} else {
-+			u32 id;
-+
-+			pci_read_config_dword(dev, PCI_COMMAND, &id);
-+			if (!PCI_POSSIBLE_ERROR(id))
-+				break;
-+		}
++		ret = pci_dev_wait(dev, PCI_DEV_WAIT_D3COLD_D0, PCI_RESET_WAIT);
++		if (ret)
++			return ret;
++	}
+ end:
+ 	dev->current_state = PCI_D0;
+ 	if (need_restore)
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 88f54d22118dc..9482539b9830a 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -11,6 +11,7 @@ enum pci_reset_type {
+ 	PCI_DEV_WAIT_BUS_RESET,
+ 	PCI_DEV_WAIT_RESUME,
+ 	PCI_DEV_WAIT_DPC,
++	PCI_DEV_WAIT_D3COLD_D0,
+ };
  
- 		if (delay > timeout) {
- 			pci_warn(dev, "not ready %dms after %s; giving up\n",
+ /* Number of possible devfns: 0.0 to 1f.7 inclusive */
 -- 
 2.43.0
 
