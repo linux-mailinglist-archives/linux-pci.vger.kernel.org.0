@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-10231-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10232-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E25209304C6
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Jul 2024 11:52:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60BD09304CA
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Jul 2024 11:53:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01B6B1C20D34
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Jul 2024 09:52:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7A76AB22072
+	for <lists+linux-pci@lfdr.de>; Sat, 13 Jul 2024 09:53:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8692946558;
-	Sat, 13 Jul 2024 09:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0EC24964C;
+	Sat, 13 Jul 2024 09:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTIJHVcq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoi6pzI3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1D21C280;
-	Sat, 13 Jul 2024 09:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD011BC57;
+	Sat, 13 Jul 2024 09:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720864359; cv=none; b=jTyFpi+Dk1aUaWk6FWNm+UJiP8L+aNhK5lJ/YG6Oh0iEmDfeNlcAMewZITqnSrSndAQrXmaUP/foqzRkHfAZPiVPkKLNQpFAUuSTIHALVLmqMcpb2oFgN2EcoT8F2AHBDE+hrF54mfKcqoImcJbNS+pODSpdp15NAeUeA24I7T8=
+	t=1720864431; cv=none; b=Fd/zETU0SKSGHfj0UCsVFN4DQMwOWFMT0yWWZftOe2IsmWPdKfV5bniWHYVKqlKsTS4d1fJY2GOooOWsxX4LaSDUpW0Ttfp7BJ0Is6sKhUTbYoXXNe/asMBfH4yYT5mnuMWxnaYsN7A40bosJYzB8dr4NNaGkugbB6+ffPxBgn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720864359; c=relaxed/simple;
-	bh=dO8JRg3tW996RKEzTLC6VYgYN0soO2YWXjMijWbOZzg=;
+	s=arc-20240116; t=1720864431; c=relaxed/simple;
+	bh=RLGuewcKeMcKJCtVg6hn99HtGiVFDk4BWax3UwXsF68=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n6ip/CJyPZw4Ql2zigC+NkRDXJDi4fx3ZiIjqG/UtBV5DyJ8U4jSlax8AR2KPbSy5QIP5mCdEKFr/ZyG95eTHCAjF4ZBvY/rNh998qIfIK3ZOlOm9ZXT1ghF+lwhusOp87gjzr7Kt20IxCyZut3rpMG7NWtThVurOo5Bm9WkRbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTIJHVcq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A57FC32781;
-	Sat, 13 Jul 2024 09:52:33 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=MfZ4Q2NR7P6OKZt0P9t/nT3or6WPjkWKD/DvBoCqyPYdYyIWBv0v6XJQOHIRmU64/NO4vLsf2bZaCJRUei49q/ToJhza8uXSJgPfK5Itgt+RhsJUIw0XF96Em0xFby1gRR7qVjKqcAzxdORY/Sv66h4L8mqjUoT7b0Cc+ADlbm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoi6pzI3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1112C32781;
+	Sat, 13 Jul 2024 09:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720864358;
-	bh=dO8JRg3tW996RKEzTLC6VYgYN0soO2YWXjMijWbOZzg=;
+	s=k20201202; t=1720864431;
+	bh=RLGuewcKeMcKJCtVg6hn99HtGiVFDk4BWax3UwXsF68=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PTIJHVcqL2qoGT+Y5G6hNDnJMl4k8uMlHovvUtrVHB4OdmMNOZSROYBQVN03s5APB
-	 eKjTY2bP3lgRc4+f2kSEOMLq7Hepy8HFMG4n8MljMXg7VdeSfJjtCVcgT99yzYR1yK
-	 w0sWXYG19ya5/DX5/zCFZY2Yv41PUQB01IfW5/iXhZ0pW3xBzRD51DE5lO/I2CAibA
-	 1f4zmRpHTEujNISbwMpYQYQIHwXu1sxjgkrxK7HUfQ97X+sDIntEFBbHIO0T1asWqK
-	 oS6F6Q20I9genVfIx0d9GJTS8Rq5567E+bp8KGFJAwYRxYkP66fT3z/jUWY4m4iL5i
-	 BS3QT0spl8Q4A==
-Message-ID: <a547d143-261e-4a46-b27f-40581ed06d32@kernel.org>
-Date: Sat, 13 Jul 2024 11:52:27 +0200
+	b=hoi6pzI3mhNuXPEFZgxDpnG4g0L0PWSE5rtgLbXjFTyOKt4re1ei9t3Src6T91idq
+	 ECtU3m4rE2h9dGBnSnbttuAGfyo6rcQBbETkNW7xxPdgQYI0q0fNh2NUblT14ohrmg
+	 TFsXjIJA5G5C8hb6uLPIvIk+5ooVu2pfsaOlmpzT8LZQHzzYa3CP35DHgNo7xhEEdv
+	 iK5s67n2cDtMQtz7fwx7ti0ETp6bceIJrBUF4jLmiQ21Xzg2bZObcbHkH8QnvyP2/z
+	 BgGLHCwiC+15Po5syWpFMO16ZAqwvs6jTLAKfmSLtylJTdFzd3RV/RKpKuJOpvhG0m
+	 5/Ieuz1nLqC6w==
+Message-ID: <3cecb092-2175-4e57-83d4-4507a902762a@kernel.org>
+Date: Sat, 13 Jul 2024 11:53:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,7 +72,9 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 References: <20240703180300.42959-1-james.quinlan@broadcom.com>
  <20240703180300.42959-2-james.quinlan@broadcom.com>
  <df291860-cbbe-4f94-a18d-00ae9cf905b1@kernel.org>
- <CA+-6iNzZXF+yTmjMZ0SU0jO4L0ZzETZ-VvQpe4txv=SNTyo_bA@mail.gmail.com>
+ <CA+-6iNwSk9-k=BZLbmPtwHHgqWs4ZB9OPGfF3Ruy4883dSTH7A@mail.gmail.com>
+ <b71cb924-7f63-4141-97da-319d8c840465@kernel.org>
+ <CA+-6iNxcmkd9O9y6=2By7pm+dAiyZt7GwYSMM++AUzLFF7yC4g@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -118,205 +120,166 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CA+-6iNzZXF+yTmjMZ0SU0jO4L0ZzETZ-VvQpe4txv=SNTyo_bA@mail.gmail.com>
+In-Reply-To: <CA+-6iNxcmkd9O9y6=2By7pm+dAiyZt7GwYSMM++AUzLFF7yC4g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 12/07/2024 21:54, Jim Quinlan wrote:
-> On Thu, Jul 4, 2024 at 2:40 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On 12/07/2024 22:13, Jim Quinlan wrote:
+> On Sun, Jul 7, 2024 at 7:58 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >>
->> On 03/07/2024 20:02, Jim Quinlan wrote:
->>> - Update maintainer; Nicolas hasn't been active and it
->>>   makes more sense to have a Broadcom maintainer
->>> - Add a driver compatible string for the new STB SOC 7712
+>> On 05/07/2024 22:02, Jim Quinlan wrote:
+>>> On Thu, Jul 4, 2024 at 2:40 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>
+>>>> On 03/07/2024 20:02, Jim Quinlan wrote:
+>>>>> - Update maintainer; Nicolas hasn't been active and it
+>>>>>   makes more sense to have a Broadcom maintainer
+>>>>> - Add a driver compatible string for the new STB SOC 7712
+>>>>
+>>>> You meant device? Bindings are for hardware.
+>>>>
+>>>>> - Add two new resets for the 7712: "bridge", for the
+>>>>>   the bridge between the PCIe core and the memory bus;
+>>>>>   "swinit", the PCIe core reset.
+>>>>> - Order the compatible strings alphabetically
+>>>>> - Restructure the reset controllers so that the definitions
+>>>>>   appear first before any rules that govern them.
+>>>>
+>>>> Please split cleanups from new device support.
+>>>>
+>>>>>
+>>>>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>>>>> ---
+>>>>>  .../bindings/pci/brcm,stb-pcie.yaml           | 44 +++++++++++++++----
+>>>>>  1 file changed, 36 insertions(+), 8 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>>>> index 11f8ea33240c..a070f35d28d7 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>>>> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>  title: Brcmstb PCIe Host Controller
+>>>>>
+>>>>>  maintainers:
+>>>>> -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>>>> +  - Jim Quinlan <james.quinlan@broadcom.com>
+>>>>>
+>>>>>  properties:
+>>>>>    compatible:
+>>>>> @@ -16,11 +16,12 @@ properties:
+>>>>>            - brcm,bcm2711-pcie # The Raspberry Pi 4
+>>>>>            - brcm,bcm4908-pcie
+>>>>>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+>>>>> -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>>>>>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+>>>>> -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+>>>>> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>>>>>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
+>>>>>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
+>>>>> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+>>>>> +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
+>>>>>
+>>>>>    reg:
+>>>>>      maxItems: 1
+>>>>> @@ -95,6 +96,20 @@ properties:
+>>>>>        minItems: 1
+>>>>>        maxItems: 3
+>>>>>
+>>>>> +  resets:
+>>>>> +    items:
+>>>>> +      - description: reset for phy calibration
+>>>>> +      - description: reset for PCIe/CPU bus bridge
+>>>>> +      - description: reset for soft PCIe core reset
+>>>>> +      - description: reset for PERST# PCIe signal
+>>>>
+>>>> This won't work and I doubt you tested your code. You miss minItems.
+>>>
+>>> I did test my code and there were no errors.  I perform the following test:
+>>>
+>>> make ARCH=arm64 dt_binding_check DT_CHECKER_FLAGS=-m
+>>> DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>>>
+>>> Is this incorrect?
 >>
->> You meant device? Bindings are for hardware.
-> 
-> Hello Krzysztof,
-> 
-> I should have replied to this before sending out V3.  Since your form
-> letter says I did not address previous comments, I will address them
-> here and now (your v2 review of the bindings commit).
-> 
+>> That's correct and you are right - it passes the checks. Recent dtschema
+>> changed the logic behind this. I am not sure if the new approach will
+>> stay, I would find explicit minItems here more obvious and readable, so:
+>> resets:
+>>   minItems: 1
+>>   items:
+>>     - .........
+>>     - .........
+>>     - .........
+>>     - .........
 >>
->>> - Add two new resets for the 7712: "bridge", for the
->>>   the bridge between the PCIe core and the memory bus;
->>>   "swinit", the PCIe core reset.
->>> - Order the compatible strings alphabetically
->>> - Restructure the reset controllers so that the definitions
->>>   appear first before any rules that govern them.
->>
->> Please split cleanups from new device support.
-> Okay.
 >>
 >>>
->>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>> ---
->>>  .../bindings/pci/brcm,stb-pcie.yaml           | 44 +++++++++++++++----
->>>  1 file changed, 36 insertions(+), 8 deletions(-)
+>>>>
+>>>>> +
+>>>>> +  reset-names:
+>>>>> +    items:
+>>>>> +      - const: rescal
+>>>>> +      - const: bridge
+>>>>> +      - const: swinit
+>>>>> +      - const: perst
+>>>>
+>>>> This does not match what you have in conditional, so just keep min and
+>>>> max Items here.
 >>>
->>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> index 11f8ea33240c..a070f35d28d7 100644
->>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
->>> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->>>  title: Brcmstb PCIe Host Controller
+>>> I'm not sure what you mean.  One chips uses a single reset, another
+>>> chip uses a different single reset,
+>>> and the third (7712) uses three of the four resets.
+>>
+>> Your conditional in allOf:if:then has different order.
+> Different order then what, and ordering by chip or by reset name?
+
+Where is my comment? Comment is under reset-names.
+
+> 
+>>
 >>>
->>>  maintainers:
->>> -  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>> +  - Jim Quinlan <james.quinlan@broadcom.com>
+>>> I was instructed to separate the descriptions from the rules, or at
+>>> least that's what I thought I was asked.
+>>>>
+>>>>
+>>>>> +
+>>>>>  required:
+>>>>>    - compatible
+>>>>>    - reg
+>>>>> @@ -118,13 +133,10 @@ allOf:
+>>>>>      then:
+>>>>>        properties:
+>>>>>          resets:
+>>>>> -          items:
+>>>>> -            - description: reset controller handling the PERST# signal
+>>>>> -
+>>>>> +          minItems: 1
+>>>>
+>>>> maxItems instead. Why three resets should be valid?
 >>>
->>>  properties:
->>>    compatible:
->>> @@ -16,11 +16,12 @@ properties:
->>>            - brcm,bcm2711-pcie # The Raspberry Pi 4
->>>            - brcm,bcm4908-pcie
->>>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
->>> -          - brcm,bcm7278-pcie # Broadcom 7278 Arm
->>>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
->>> -          - brcm,bcm7445-pcie # Broadcom 7445 Arm
->>> +          - brcm,bcm7278-pcie # Broadcom 7278 Arm
->>>            - brcm,bcm7425-pcie # Broadcom 7425 MIPs
->>>            - brcm,bcm7435-pcie # Broadcom 7435 MIPs
->>> +          - brcm,bcm7445-pcie # Broadcom 7445 Arm
->>> +          - brcm,bcm7712-pcie # STB sibling SOC of Raspberry Pi 5
+>>> See above.  Note that I was just instructed to separate the rules from
+>>> the descriptions.
+>>> In doing so I placed all of the reset descripts on the top and then
+>>> the rules below.
+>>> There are four possible resets but no single chip uses all of them and
+>>> three chips
+>>> use one or three of them.
 >>>
->>>    reg:
->>>      maxItems: 1
->>> @@ -95,6 +96,20 @@ properties:
->>>        minItems: 1
->>>        maxItems: 3
->>>
->>> +  resets:
->>> +    items:
->>> +      - description: reset for phy calibration
->>> +      - description: reset for PCIe/CPU bus bridge
->>> +      - description: reset for soft PCIe core reset
->>> +      - description: reset for PERST# PCIe signal
+>>> Please advise.
 >>
->> This won't work and I doubt you tested your code. You miss minItems.
->>
->>> +
->>> +  reset-names:
->>> +    items:
->>> +      - const: rescal
->>> +      - const: bridge
->>> +      - const: swinit
->>> +      - const: perst
->>
->> This does not match what you have in conditional, so just keep min and
->> max Items here.
+>> I don't understand that explanation. Why this particular variant works
+>> with 1, 2, 3 or 4 resets in the same time?
 > 
-> I do not understand.  There are four possible resets, but any one chip
-> uses only 0, 1, or 3 of them:
-> 
->     CHIP            NUM_RESETS    NAMES
->     ====            ==========    =====
->     4908            1             perst
->     7216            1             rescal
->     7712            3             rescal, bridge, swinit
->     Other_Chips     0             -
-> 
-> Although I list four "reset-names", I have, in the rule for 7712,
-> maxItems=3 because it only uses rescal, bridge, and swinit.  So I
-> don't know what you mean when you say "this does not match what you
-> have in your conditional".  AFAICT, they are not supposed to match.
+> What do you mean in the "same time"?  The resets are just not present
 
-One place says they have order A+B+C, other place says they have order
-C+B+A or whatever other combination. Look at first element: A ! = C. So
-they do not match.
+Your schema says that you can have 1, 2, 3 or 4 resets.
 
-
-> 
-> 
->>
->>
->>> +
->>>  required:
->>>    - compatible
->>>    - reg
->>> @@ -118,13 +133,10 @@ allOf:
->>>      then:
->>>        properties:
->>>          resets:
->>> -          items:
->>> -            - description: reset controller handling the PERST# signal
->>> -
->>> +          minItems: 1
->>
->> maxItems instead. Why three resets should be valid?
-> For the "4908" conditional, minItems==maxItems==1.  I do not
-> understand your question "Why three resets should be valid" -- can you
-> please elaborate?
-
-Where do you have maxItems? I see only minItems.
-
-> 
->>
->>
->>>          reset-names:
->>>            items:
->>>              - const: perst
->>> -
->>>        required:
->>>          - resets
->>>          - reset-names
->>> @@ -136,12 +148,28 @@ allOf:
->>>      then:
->>>        properties:
->>>          resets:
->>> +          minItems: 1
->>> +        reset-names:
->>>            items:
->>> -            - description: phandle pointing to the RESCAL reset controller
->>> +            - const: rescal
->>> +      required:
->>> +        - resets
->>> +        - reset-names
->>
->> Why?
-> 
-> I do not know what you are questioning.  The 7216 device uses one
-> reset: the "rescal".  Again, maxItems==minItems==1.  Please see the
-> summary note below.
-
-You are breaking the ABI, so I am questioning. I don't see ABI break
-explained in the commit msg.
-
-> 
->>
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: brcm,bcm7712-pcie
->>> +    then:
->>> +      properties:
->>> +        resets:
->>> +          minItems: 3
->>
->> Again, you do not have 4 items here.
-> 
-> I do not want to have 4 items here; I want to have 3 for "rescal",
-> "bridge," and "swinit".  In this case, maxItems==minItems==3.
-
-Your schema does not define that.
-
-> 
-> Now , for V1 you requested that I define all resets at the top; I've
-> done that and there are 4 of them.  But no chip uses all 4; each
-> individual chip only uses 0, 1, or 3 resets.
-
-I assumed they follow same order. If you have different order, the top
-defines only widest constraints.
-
-> 
-> So there is no way that each chip's conditional rule can define
-> minItems and maxItems to match the description list of 4 resets,
-> unless you want me to undo your V1 request of describing the resets at
-> the top level instead of describing them in the rules.
+> in most of our PCIe HW.  In two chips there is only 1 reset in the HW,
+> and in the 7712 there are 3 resets in the HW.   You asked me to
+> describe all of the resets first at the top level and I have done
+> that.  But none of our chips ever use all four.
 > 
 
+Then express specific constraints in schema.
 
 Best regards,
 Krzysztof
