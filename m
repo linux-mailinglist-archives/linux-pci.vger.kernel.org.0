@@ -1,114 +1,90 @@
-Return-Path: <linux-pci+bounces-10327-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10328-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13A87931C74
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 23:12:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D13EA931CBA
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 23:45:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE1AB1F22784
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:12:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9543528334C
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:45:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E9713C660;
-	Mon, 15 Jul 2024 21:12:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1981D530;
+	Mon, 15 Jul 2024 21:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRoISNkn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ie6E4w+I"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515C9C15B;
-	Mon, 15 Jul 2024 21:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102D11CA9E;
+	Mon, 15 Jul 2024 21:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721077930; cv=none; b=oxd0wdgx6/6rMgyegHbRspGp6YfwrPlIwPiPfVlp1ZbwuAsMVGSi71RZjeODM02QWt3dUV1H8FqvCF7ZpsQK1BvwlY5zXfxdF5q++lTZeCbxzr3d4lnVaPmUXWJO9vmIbIphGujlar/EAJ5tohRkrAn7Uo+vDSWpX35cK2sIyeA=
+	t=1721079932; cv=none; b=ryIa8v9j1V6YYhZdJDBAszwTzK1QmaOcEblG9Din4uAOnxXE1x1t9GtMX82McZ3Hf0/GEmQ9oE+4g9zR8/yupbfksjL8tLzIXLOr9ZAhLcgqFeV70zStaP0UW5SbIkwQV/pIfRQJOlc7dmpVsNKTrV2XZI3YUXlXE/dhxebyNmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721077930; c=relaxed/simple;
-	bh=us8GqDaCkjGAU//vFSFamwrqORjpNoy7S81+kh7YrrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZeMk8OcMThVCYXFoYP+8qF/8SwkKYF0EtaDRldg9j7bLq8hu1BQljcbIMawBqc1qYJsbW9GarqrORpBseP0BMdqafVSnrog5WuiJyTnqpmCkOCqhikq5ey9tsCj1PHXieGmG3ZZig5o3e1PjRFok3NYGBNMNzLnVp/jWkF4vdGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRoISNkn; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6b6176e59e7so29639476d6.1;
-        Mon, 15 Jul 2024 14:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721077928; x=1721682728; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Jq9mEPwo5wEjkwS5WRanwBnfVGH6o13HCMZMfsDDMaM=;
-        b=XRoISNkn2/jMlRWDjAHqcQVlif0etYMGOFkQfD8YVOXrgh23tTonZE+eoPIj6ruoKJ
-         NBclcpK9AztgYixeio8cl3qKYxc8cgEtiFPevDPsVVS1tYLgjn0A2mEtXCmN3EBIwZ7q
-         U1YYeSPxSX55KxnlkCsbAimbIH+Jag6rdnXMTcp9HoQzqEU8Q4ufHWrrQ/OAR+R4iNz7
-         ku2LZuChhMFHPFTZy6b8/3gq1gSCUelnQW5p+2I1f1+Zxq3L7vNbamYJSGJz8KEIVZKi
-         zbw4uQ1lVlQRJxwO58jdcG7rf+1dcWZaTu6UmLU9zaWsJG9uAt09i//TG6PCqNv5Wbqz
-         55/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721077928; x=1721682728;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jq9mEPwo5wEjkwS5WRanwBnfVGH6o13HCMZMfsDDMaM=;
-        b=XJVNcSXpYaSiDaAGtb7keXF+sXtr0H9qzenjCijZxRtz9jzjJE+OfGp1L7vaUVW89L
-         HmdJUbeWBJ+qgKGhrThu/Zz5dMpj8CMHeZadMfr3NBUG0V4g1/R0HdJmPS0TVZdVwc9s
-         r6wxI0dLAs2wcAkxAqHqBPiUY67rv8SWUGwN8DAvhd344GZ015PE5C60rKLLTx8GEJnn
-         6uREKQ16Ikgyi2GvKhx9EnSAvB0iGwscuO8zLGhXzWQ8P5WTpSUJst/2Hdm5d9I32pS5
-         HeBzAaDaObbXFeSYOdOyacwo8b3TC3TEGoxaxezq8FZOJ0mPugRiCe8pZ450Wy+SVKGW
-         f3eA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpIkRsDsyfzOXoSYHvHi9OKzYsWWpGMzxnQQpWMnHTbfbEpEr1bWjb/WMQwUY0EO3ln0M1bjIJ1Yu/7ksKFLLJleUPm++Gq7/JOPAjQH4iIqAkfCXgU8gr8wNBG8HaQKAc7GlfU4Db
-X-Gm-Message-State: AOJu0Yyg3ebLgJkAL8TcYo2ZNDvIR/Tf+/wenKkSHX1rcuiSazo8gWti
-	6CUtX2Lbxq1DgTW5fwlMupTO5o0i8wTWPBgvsufHVAXu8Y3O3X6t/Td4Kg==
-X-Google-Smtp-Source: AGHT+IEVKTcg9Po8YqXKxoxrHXrayRvjEg595EafYJ23X9++zcK7ruMTxyj6nWBycqirI6/ylxICgQ==
-X-Received: by 2002:a05:6214:19e8:b0:6b5:8e2c:e715 with SMTP id 6a1803df08f44-6b77f4ea0e3mr4921416d6.20.1721077928244;
-        Mon, 15 Jul 2024 14:12:08 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6b76198d795sm24978726d6.53.2024.07.15.14.12.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 14:12:06 -0700 (PDT)
-Message-ID: <d64b9123-14d1-405d-9509-872c0339929f@gmail.com>
-Date: Mon, 15 Jul 2024 14:12:03 -0700
+	s=arc-20240116; t=1721079932; c=relaxed/simple;
+	bh=3sYQn+Jepl4NDUemgHAqThiTYJbdffNlfepowdj0XM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DIbEucXg9DICbU9+n/IJVrgzd2kAEViuHmM9HrRXcalwKp/LBDLj6T6Ae2wiMCtDTtJiLRa2mwTQsMB9kYu2mFKkEmkMQjJll7L1B+iuaac3f2qKpBo1kcY7AbbqQy3uHt3/mwZchVsiXTlaa1Nt64RvR9G2tjw92MaZHSwMC0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ie6E4w+I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE2B9C32782;
+	Mon, 15 Jul 2024 21:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721079931;
+	bh=3sYQn+Jepl4NDUemgHAqThiTYJbdffNlfepowdj0XM4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Ie6E4w+IyxnWuRi4lHGvmEzWfxoGda7leZahZG+bqbcwyXddpVWlG0xtXaiqyhGYx
+	 2SdVCN6ar9DOP8xCzvTi0tAWQdoee7pAkTRPk0/VDS6amDRbwAdPE33hLgqiU/jsAT
+	 FlrAnMviFuMa37CNTBcFlycd2b7gB8cfUbJc2D4tOjZvEIrGqbw5VgOod0nyO6oKZF
+	 Dp4kpKZBUp4go9/eZg+l3QbDUyoEikn1cU3plT9v5oHXIQrVkAg3XP3VBW0loQ6wm7
+	 ac5N9cq2FnGjxz6YiQ6XEz5Og9nvM07XS82UFl2ynR/DyxV1D/d93mhOP+4LzW5uD0
+	 S2NTuUSnk3BWQ==
+Date: Mon, 15 Jul 2024 16:45:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc: Austin Bolen <Austin.Bolen@dell.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Lack of _HPX after reset, DPC
+Message-ID: <20240715214529.GA447149@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 12/12] PCI: brcmstb: Enable 7712 SOCs
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240710221630.29561-1-james.quinlan@broadcom.com>
- <20240710221630.29561-13-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240710221630.29561-13-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 7/10/24 15:16, Jim Quinlan wrote:
-> The Broadcom STB 7712 is the sibling chip of the RPi 5 (2712).
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
+I think Linux is missing some important _HPX functionality.  Per ACPI
+r6.5, sec 6.2.9,
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+  OSPM uses the information returned by _HPX to determine how to
+  configure PCI Functions that are hot-plugged into the system, to
+  configure Functions not configured by the platform firmware during
+  initial system boot, and to configure Functions any time they lose
+  configuration space settings (e.g. OSPM issues a Secondary Bus
+  Reset/Function Level Reset or Downstream Port Containment is
+  triggered).
 
+Linux currently *does* process _HPX for hot-added devices.
+
+The spec doesn't call it out for boot-time enumeration, except for
+"Functions not configured by the platform firmware during initial
+system boot", but Linux does process _HPX for all devices enumerated
+at boot-time because it's not clear how to identify devices that
+weren't configured by firmware.
+
+But AFAICT, Linux does not do anything with _HPX in the device reset,
+AER, or DPC flows.  I don't have any problem reports that I can say
+are caused by lack of _HPX after reset, but it seems like something we
+should fix.
+
+If we could find a system with _HPX that does something interesting,
+we might be able to demonstrate a defect by looking at a device before
+and after a reset.
+
+Bjorn
 
