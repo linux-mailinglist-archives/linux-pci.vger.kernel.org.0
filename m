@@ -1,173 +1,125 @@
-Return-Path: <linux-pci+bounces-10263-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10264-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18951931409
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 14:21:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7B3893142C
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 14:26:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99F331F220B0
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 12:21:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B0BB280F6F
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 12:26:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A4B18C326;
-	Mon, 15 Jul 2024 12:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A5EF18787F;
+	Mon, 15 Jul 2024 12:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="FD1sZ2KJ";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="GvJLStJ0"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="wMuqxhom";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="wpTJ/K+s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01D518C170;
-	Mon, 15 Jul 2024 12:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1455E13B295;
+	Mon, 15 Jul 2024 12:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721046048; cv=none; b=MTYkrsnK3hAFJBpskzfX1Ron/BzgKaFHh1TkQP3u4KFBhwzY8Ozb8KdHPb7HV3DE3tQ4chOd31mu0KCba6+adbQjB5+7Bbq6QHMJ/8c2ErOjiWnETJtdKNsK4QBcTp27Wpp1/5D1n63jCf9+oNi6hedxASteAQCOMUr2eUrJdb8=
+	t=1721046397; cv=none; b=sRMv+aElR0Epfeu5DcTCtiqD/sOS2JmOwfCk+PH+dQJEIY6FdjFJsks6/KUsUbNHxLO2oSp3q6fJT87Vk8u3VQUJr9eH4DcdlLwT5zep499k+PgKk7VlnYffZstkqt/rOGuDuOBuXTSPMgT9Sx+fvRwePSjblO0hkyM2O3I9s7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721046048; c=relaxed/simple;
-	bh=DmUnzz7NWMRUBhVdsvhXisqW/f88mWV4Qx2UxuBzzb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZFGpalTzFYitd2y7E4MPKLtQsojM4AtZ4ehW4P/9rsqP9B2Ha24AMQUjHkamupidrN0XRi712Uv2bQmsHUb0rxk1p+vYSo8wkEDlbrrTTQpYuySNVYaA6MnzZfs4KcgduikfrkpnsrLFArLIDeZhnlNifwfuh2BtNeZerF0Beow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=FD1sZ2KJ; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=GvJLStJ0; arc=none smtp.client-ip=80.241.56.152
+	s=arc-20240116; t=1721046397; c=relaxed/simple;
+	bh=vPW7JAF6bYAUWq5ndRyxC0bBzDNzXxdx/wR3+iiqHfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kJNNlrdXV9aKJ7dDUMYENPuKRzYJauU5HwhmsenI0KY6c1e4au3pxicsvhLpwyHStKreRY1US667+dPIFqZ7yaj8qhDz34z5MrZB5UJiI1r2mt5PTLU1b2YxyEAl/941kA1YzzJpc5tRDllMCtQv1fRUO0TBZOHvRQj/Tg2h2s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=wMuqxhom; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=wpTJ/K+s; arc=none smtp.client-ip=80.241.56.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4WN1WJ13D5z9slg;
-	Mon, 15 Jul 2024 14:20:44 +0200 (CEST)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4WN1f075QZz9sNb;
+	Mon, 15 Jul 2024 14:26:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1721046044;
+	t=1721046393;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=unnL5I7d5jwqGcATBu9+KiMley5zwh8pHHnERosyJX0=;
-	b=FD1sZ2KJWKvbikfo0CFFnUXMcjvpeXxPrWTeKtyVK80YnDTfmpiX4sN3ogrdVtxJVJnEo4
-	R6N80Z5IpFPUc1Gtonl7HJWkCAXASjL/ns9FgLZAxjDRlPYMstOqIHY+yOwGZNKJYf1PGi
-	elaQO0Y69K3dwrDEpBTyKaiz6EhHGLXbHX4xB9xoYaCYQ61oo4AIiz/F/FfjLPraX/UIjY
-	GwsqPJJbePf2jPvLm0/EbJhkpTOeeUDg45TLvKVstZuPOCjLs4y/p72kf2Uq9W47fCWfKL
-	acpb4N2uHjMwTDbekWSUBwXc3S2VrYughEHUYxfZ9tu+iy7PfLbi3Y1GeJESjg==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+	bh=fAYtw0P54MFPhiA1yNO4FQTOtoDQDCXNbjWPVB1cXx0=;
+	b=wMuqxhomrJ6BipJvBccdLLORTVBwFh0KARw7lV3P2omP1AWa8o0TEKXVy0vLnXSrSbaGkf
+	IqWX9oIw3waZaAQJKeYNJfGab9KGbI4YHZ0i5RkWoo+4n5sW+ylmlcD6SVhNqR2+QUK0BI
+	BvOrhKau+zwVzupU0igkXw+ZbvaPOD467wdwk+P5NIJIvO2jAo9Q7Otd4+3qqm6CgR0GdG
+	S9rbCuuwBoNBc/sqpeWsS4TY+u/r/T1fomD+770aP6GPeipIQxQwO1nUazAIWo5GVApzHn
+	3nQyVVgl5Fkt2XFdNNFn9yXuo0pPh959hByHjE7nKtLBMpFZBvjUfPo8UheSqw==
+Message-ID: <d5efcb28-dd5a-4b96-aabd-c73c95dff8e7@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1721046042;
+	t=1721046391;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=unnL5I7d5jwqGcATBu9+KiMley5zwh8pHHnERosyJX0=;
-	b=GvJLStJ0kCwyDcLcB85cZ1u+Pr7On6yeqKVP8shWvkvwE/UAj5lvU6HXH4qYliKYqxXxGE
-	tumjk4uOks5kd62kAJ9FkzE9VBbdsRSRxQ0w8NwmH7evO1T6PpGrctd3I1jePNBmXCurq9
-	81AWvVOLMvKMNx6or/dj3Ly/1A+M1oHLfG/JCnkGMULguufluWO/XWMnhn1LibmDB7twTL
-	REGLKdBPh2B3EiImNB+uh4m6xfIKvlN8ysXGIPfbNkTLfX+Mo+L30uxcDYzNkFZn/A+C36
-	da/ahDXcUj1LOFEsNKty8B2KhPRH/20dNBje/hXXr35iWxOiDHrxjCBr0cqxbw==
-To: linux-pci@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Koichiro Den <den@valinux.co.jp>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Rob Herring <robh@kernel.org>,
-	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH v3 3/3] PCI: tegra: Silence set affinity failed warning
-Date: Mon, 15 Jul 2024 14:19:28 +0200
-Message-ID: <20240715122012.35222-3-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20240715122012.35222-1-marek.vasut+renesas@mailbox.org>
-References: <20240715122012.35222-1-marek.vasut+renesas@mailbox.org>
+	bh=fAYtw0P54MFPhiA1yNO4FQTOtoDQDCXNbjWPVB1cXx0=;
+	b=wpTJ/K+suGEFWXrIfkxrReFUhCnCqxKhxQh3sq0t4LaOvOg3N715I84biDAcMht79vKJ+L
+	4uuR3UWd/LfMf4rqI9IMlgmNT0JwbCBQ/7eZfL/bNKsJRaWefhyYkrt6eAfjkn4ws5yV3e
+	sqgOV1ZmWzh4GFTbzY84S5GirLd6CRA2+VDs7H9fjBu5HwPG3Ola+dXvaDd9d3MW9kmGkJ
+	gTkOSVrvI8gv4WbqA/Q+mrjR7yTvpxNc+wiScqVXiurpbSCHnphPBy5VQuim8v1l+eBGHI
+	TtPNUdklwL1VLi3tzeFcGYTz8Bg1qibqivcXRWA45+Arpvz0RSNYJRbvIBAFhg==
+Date: Mon, 15 Jul 2024 14:26:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: c9fbb42232487850b10
-X-MBO-RS-META: wk8zixksezs68dzd8b88ci6y5fu1jciy
+Subject: Re: [PATCH v2] [RFC] genirq/cpuhotplug, PCI/rcar-host: Silence set
+ affinity failed warning
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+ Jon Hunter <jonathanh@nvidia.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-renesas-soc@vger.kernel.org
+References: <20240714122405.27548-1-marek.vasut+renesas@mailbox.org>
+ <87wmlnrdkf.ffs@tglx>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <87wmlnrdkf.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: 58fbf58eab3c27b7366
+X-MBO-RS-META: aspsmutygi5hja3duf1zym8jucwta81g
+X-Rspamd-Queue-Id: 4WN1f075QZz9sNb
 
-Use newly introduced MSI_FLAG_NO_AFFINITY, which keeps .irq_set_affinity unset
-and allows migrate_one_irq() code in cpuhotplug.c to exit right away, without
-printing "IRQ...: set affinity failed(-22)" warning.
+On 7/14/24 9:14 PM, Thomas Gleixner wrote:
+> Marek!
 
-Remove .irq_set_affinity implementation which only return -EINVAL from this
-controller driver.
+Hello Thomas,
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
----
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Anup Patel <apatel@ventanamicro.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: Koichiro Den <den@valinux.co.jp>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Nipun Gupta <nipun.gupta@amd.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org
----
-V3: - New patch
----
- drivers/pci/controller/pci-tegra.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+> On Sun, Jul 14 2024 at 14:23, Marek Vasut wrote:
+>> --- a/drivers/base/platform-msi.c
+>> +++ b/drivers/base/platform-msi.c
+>> @@ -100,7 +100,7 @@ static void platform_msi_update_chip_ops(struct msi_domain_info *info)
+>>   		chip->irq_unmask = irq_chip_unmask_parent;
+>>   	if (!chip->irq_eoi)
+>>   		chip->irq_eoi = irq_chip_eoi_parent;
+>> -	if (!chip->irq_set_affinity)
+>> +	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_USE_DEF_CHIP_OPS_NOAFF))
+>>   		chip->irq_set_affinity = msi_domain_set_affinity;
+> 
+> I'm not really a fan of this new flag.
+> 
+> I'd rather leave MSI_FLAG_USE_DEF_CHIP_OPS alone and introduce a
+> dedicated flag MSI_FLAG_NO_AFFINITY to tell the core code that these
+> interrupts cannot be steered. Other than that this approach looks sane.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 038d974a318ea..d7517c3976e7f 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1629,11 +1629,6 @@ static void tegra_msi_irq_unmask(struct irq_data *d)
- 	spin_unlock_irqrestore(&msi->mask_lock, flags);
- }
- 
--static int tegra_msi_set_affinity(struct irq_data *d, const struct cpumask *mask, bool force)
--{
--	return -EINVAL;
--}
--
- static void tegra_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct tegra_msi *msi = irq_data_get_irq_chip_data(data);
-@@ -1648,7 +1643,6 @@ static struct irq_chip tegra_msi_bottom_chip = {
- 	.irq_ack		= tegra_msi_irq_ack,
- 	.irq_mask		= tegra_msi_irq_mask,
- 	.irq_unmask		= tegra_msi_irq_unmask,
--	.irq_set_affinity 	= tegra_msi_set_affinity,
- 	.irq_compose_msi_msg	= tegra_compose_msi_msg,
- };
- 
-@@ -1697,8 +1691,8 @@ static const struct irq_domain_ops tegra_msi_domain_ops = {
- };
- 
- static struct msi_domain_info tegra_msi_info = {
--	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		   MSI_FLAG_PCI_MSIX),
-+	.flags	= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-+		  MSI_FLAG_NO_AFFINITY | MSI_FLAG_PCI_MSIX,
- 	.chip	= &tegra_msi_top_chip,
- };
- 
+Should be fixed in V3. I also converted Tegra so far and sent it 
+alongside V3. There are many more controllers to convert that will follow.
+
 -- 
-2.43.0
+Best regards,
+Marek Vasut
 
 
