@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-10285-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10282-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C65CE931996
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 19:34:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CBC393198E
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 19:34:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 797091F235EC
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 17:34:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCAD6283289
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 17:34:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9140D132464;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E184131E38;
 	Mon, 15 Jul 2024 17:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ou0Pq0AR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cz8UW8mr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305D37172F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004AC5EE97;
 	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064830; cv=none; b=WPePuyjv5sP0GNlTq8Ti0U8TjwZd4RAaaQVdKQI0tnmHovp/5xaPekZ5uDhMVQxfMw/L19NeLILGs+EJJGkXdYNf1wagDi4Ax3znX5qN9sjTYzyHU8H6UKh7sdn3LDtEy9SKE9bxD7yCXL3Kr39Pi4qXJSMTfS2Ba7geWZtQG88=
+	t=1721064830; cv=none; b=ojzdhOdpX6+B2LQSzc0nhkaG5G/clfVBpnDzjd9PYYql6mD1NLcJGn/Eav6W6SFnZbSQaWYz34DO0uc5mh0SnhJ9FWRXBWzE0xB+vBs/UXO2Mb/HtelrPgGwF8ZWdimFpSbgI2B6T+083a7Qgo/J7WhuUGPIrT93+O097hf8Psk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721064830; c=relaxed/simple;
-	bh=VDKSHzhinHhMd2hc1HddY9yOlQzYGMP04iRbR68jXgc=;
+	bh=AqLKtDzeOWTpfLlD5Nunw5Lx2M3YMLzkFuSgYFTXBK0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UcJaQZgBwt1ifxG4rX8rOSiVP5eSB/lIKbo7Q/sPWkuRgEYHf9Wz/RaVb15Hq45YMvp5vjpo1HAmDJu6wW/gfpUwKbH7PBYCybVk7Hk8Do9dEPOElJgdJNQL7/ftSXdV5h4Wl6nG8wD5vhL1WKCAIIIJdlmoYf9zhLtNC6yCNH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ou0Pq0AR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A239AC4AF1C;
+	 In-Reply-To:To:Cc; b=DfSrcdG0C21S+D96Q8kDl4jHZ4DM8cJ2W9v+jpzJjHzU1iKkXcvoznQ8p8hCrZn4mEuFNxZa1RukwCQ2DWIXYPJsnSHpoNobdhDeOAVZ+3m7o3KK+uVsWjIYUO30g4JJWl/7RsZhG6aEPLLtrMddtRU9cBj+C9iyxPwayfz4d3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cz8UW8mr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AFCCFC4AF68;
 	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1721064829;
-	bh=VDKSHzhinHhMd2hc1HddY9yOlQzYGMP04iRbR68jXgc=;
+	bh=AqLKtDzeOWTpfLlD5Nunw5Lx2M3YMLzkFuSgYFTXBK0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Ou0Pq0ARmDSwfRaqSdp+ax+sOe9Hj3aBWPPm4jJV2JgYSe17rsM1wu6xafLa/eNMT
-	 m4qQTHgbN//nMRq7kJvc0cwAO2S32lGNRehX+rzl8E7eoEXAcQR8EGEFYsWKVdRuZr
-	 tzxREtUFZPevDr16kmaoL3WExOyKahLKKRcPdWxPCd9Fsz3bqdy9VhtldMf3JbcG1j
-	 HCY6Ua/kx+UjYOOMb1pStOxR3uUj5+XA2gb/iZsux4EgEWTxHWmFFGkePYuvbqXHSg
-	 xYfrOECZKXOaGb+JfxaTTnFGZTg2rT/GwVyYl2duzSb9Sb+ZIO9jtZWGHhuhwwLK9y
-	 U+VK4Fv7iJ6kg==
+	b=Cz8UW8mrn7ilYlUyn/ZEjHnPBbOTbPqmvtEZOEMr0dxoJvZ9/8fIMn8y8VfzPR/nD
+	 oKQ7YmIxp281g9QGtVH0EeO+omxQ/AqDv3KJYXLbIiW5GlhzvSSfwHdS1PycRGNW7T
+	 rd5QvH4vOwgdI6Cm/Hlibkm2Pqjj1VoBFcQoDLNTAJpUlQexYq7ncADIhpduaUp8IL
+	 mu+4VCX4zsIYUjWjonIqDWBnL/6yJ4kEycvP59oX7knbN/hGeLT0eHqPyZ6bewqslF
+	 CNZZMdYGYSPLsD4M4VVlSHBuJEXQ9ebGpRjTiDMniwlDpMrGlPao/OENZ7ZZo74jaH
+	 Wny2zli0OjYHA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97756C3DA59;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A371EC3DA4A;
 	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Mon, 15 Jul 2024 23:03:47 +0530
-Subject: [PATCH 05/14] dt-bindings: PCI: qcom-ep: Document
- "linux,pci-domain" property
+Date: Mon, 15 Jul 2024 23:03:48 +0530
+Subject: [PATCH 06/14] PCI: endpoint: Assign PCI domain number for endpoint
+ controllers
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-pci-qcom-hotplug-v1-5-5f3765cc873a@linaro.org>
+Message-Id: <20240715-pci-qcom-hotplug-v1-6-5f3765cc873a@linaro.org>
 References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
 In-Reply-To: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -71,16 +71,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=988;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2371;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=4/Y3NDpzD8Z8CE/W/YJnbzDjm+Dvqo0pEX0LWeYt20k=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmlV14OxNu2Wouvfh0sC2iqACXk4KaF46EPflGP
- K5SvUq1GKOJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpVdeAAKCRBVnxHm/pHO
- 9ZRqB/9aiqXGr2qOBpgTi78f/kJz/f1LUHV2LmgvzXET9Xqx2UNmEVcAilBQQBSZK52d6X4PBxv
- aWJ1oX8Zue/z2xEAHNwZIjg/wR/hFMku4gJNvheAE3UrigmeKAgd2aiIHEI7FVZ8SbJwCe/5QHT
- ADzYloawz3PUkbN6zWNY0S1mag5KAW1nWGsjbYfKCx5sNqfTMMFOT1ZdJBpdDXgmLnNuAbEGCnl
- l0yTmZ0jDL1tYtYO+5AgKlVF7I/3q5GlfL6Ps3EqFVbCT/epaLH0FK2OO1VseRjmrpocaZf89YA
- YWyMEcgnFosgHbVde+NZnLhEzA36wQHjoVhcHEgvw1CHn9Ci
+ bh=BECkU4Os6kOoCK6Qfv68t/qW5FxIjT+Q5kndhCEtOC8=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmlV15F+kcwS5+/FEQPBlLHWbPgXesdW/M72MTi
+ jRCb9LZ6RqJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpVdeQAKCRBVnxHm/pHO
+ 9RpyCACSS3TlQfGlFVAKsoeJSe8dQG6CTaoBm5QHJxDiod8PIj9/kepgh3unKrlSjKH3NrHA8LW
+ T3mT1GOAXHTeIculrZKZ2LCZSTWEWutKG/mDGXR3oNv2GC5E2EY5cF32Yrwd/RMWpHG0vuKkrpx
+ yKjDMh3zTPOZDOzDIPe1F27RsgmoQVqgxdk9+DwrluZJjz9eXfKaWj76Axnupy6Nc1TPRFbhO53
+ 6zbJvq121HlgtYIRoChhSY0o7vopBiQk74jL4WKtUgZzh336aWq2cUi9+7mjkNaB9zRIV13FAGZ
+ jWFYl5ADIqCZIGgQKl6raghKvnk0G5DqL7/UB1lI+BkxYv7W
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -90,28 +90,59 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-'linux,pci-domain' property provides the PCI domain number for the PCI
-endpoint controllers in a SoC. If this property is not present, then an
-unstable (across boots) unique number will be assigned.
+Right now, PCI endpoint subsystem doesn't assign PCI domain number for the
+PCI endpoint controllers. But this domain number could be useful to the EPC
+drivers to uniquely identify each controller based on the hardware instance
+when there are multiple ones present in an SoC (even multiple RC/EP).
 
-Use this property to specify the domain number based on the actual hardware
-instance of the PCI endpoint controllers in a SoC.
+So let's make use of the existing pci_bus_find_domain_nr() API to allocate
+domain numbers based on either Devicetree (linux,pci-domain) property or
+dynamic domain number allocation scheme.
+
+It should be noted that the domain number allocated by this API will be
+based on both RC and EP controllers in a SoC. If the 'linux,pci-domain' DT
+property is present, then the domain number represents the actual hardware
+instance of the PCI endpoint controller. If not, then the domain number
+will be allocated based on the PCI EP/RC controller probe order.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/endpoint/pci-epc-core.c | 1 +
+ include/linux/pci-epc.h             | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-index 46802f7d9482..1226ee5d08d1 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-@@ -280,4 +280,5 @@ examples:
-         phy-names = "pciephy";
-         max-link-speed = <3>;
-         num-lanes = <2>;
-+        linux,pci-domain = <0>;
-     };
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 84309dfe0c68..7e8bf4ac003a 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -899,6 +899,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+ 	epc->dev.parent = dev;
+ 	epc->dev.release = pci_epc_release;
+ 	epc->ops = ops;
++	epc->domain_nr = pci_bus_find_domain_nr(NULL, dev);
+ 
+ 	ret = dev_set_name(&epc->dev, "%s", dev_name(dev));
+ 	if (ret)
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 85bdf2adb760..8e3dcac55dcd 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -128,6 +128,7 @@ struct pci_epc_mem {
+  * @group: configfs group representing the PCI EPC device
+  * @lock: mutex to protect pci_epc ops
+  * @function_num_map: bitmap to manage physical function number
++ * @domain_nr: PCI domain number of the endpoint controller
+  * @init_complete: flag to indicate whether the EPC initialization is complete
+  *                 or not
+  */
+@@ -145,6 +146,7 @@ struct pci_epc {
+ 	/* mutex to protect against concurrent access of EP controller */
+ 	struct mutex			lock;
+ 	unsigned long			function_num_map;
++	int				domain_nr;
+ 	bool				init_complete;
+ };
+ 
 
 -- 
 2.25.1
