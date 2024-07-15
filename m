@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-10286-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10288-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EED99931990
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 19:34:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84EA8931985
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 19:34:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BA751C21CF1
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 17:34:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 368021F23416
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 17:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99D97481A3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E691386D1;
 	Mon, 15 Jul 2024 17:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZeAHLaQK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+RknX5M"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403CF73462;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E8B78C6C;
 	Mon, 15 Jul 2024 17:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064830; cv=none; b=n+6fo1ZholsGqIkfnE817biJhe7tINOYVXaB5r9OyDqQSvZKThjCY1XGHTMP3+mVevQw19QLZ8Yees8jpwUN5tPBfTfoG7GjOLos0oChFqo2JWH7M4OeCX3GAqiA/ebB+UAkdCqAHpFFh+qsdhZxHG8RgNxtdiM0NV1fTKA0pmc=
+	t=1721064830; cv=none; b=lVeO3Ybl2K2ulbMAWbQvQTYj33aqsHzmp6CrDMBi/bXSxnKu4gvscVlMAbZgMjvPrdgt9RsDXjgALMIFKpYU985TXWgTCH3WVeKYnJZJyAC5hCDk6+A/Y4pRm7dE2GgMnjkVBT7s9fZi06/eVmy+OyM0dDUvt4R5LxwcLCTHtZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721064830; c=relaxed/simple;
-	bh=uf2gmip5094Xe/ELLjWs+bvQfphMpBDzXrzLLgYLAUE=;
+	bh=RQxgelkyLN8Ts/HTeZBS0QZuoUf1hPKhZohT5VJ5sqM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qXcnBsnmKxLuQRV2su/TWkkmb6akZMHZ+3NaLvhv91v6rE+vkqwYcgXMXtBendCG9do76P5G4LJ0BEEusknzxDXU6PJNKRga8MMyWzAVRNEKwcEyUXgAsrmMpLB/w4F7IVl1pcAfLJNTOSvrp3+UeHjOMfrOJ2/IImsnMY+hvV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZeAHLaQK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D8905C4DDF1;
+	 In-Reply-To:To:Cc; b=FHK1/z9YvaJ1qnq/vxKpaCSTBUhuVWA346REul5KdC2aaXTpAWVmHjWojW2BuZgJYJGj32HeSDRipP4NRD4PQD/BjSj4Xw58Wu0oLbWWpE56/hD02YeF1zUxqwKWixFophY+tl7FatZip1qYN5Hi4yTrE5Jk6sM9kj775OcS/pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+RknX5M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EF8D3C4AF0D;
 	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721064829;
-	bh=uf2gmip5094Xe/ELLjWs+bvQfphMpBDzXrzLLgYLAUE=;
+	s=k20201202; t=1721064830;
+	bh=RQxgelkyLN8Ts/HTeZBS0QZuoUf1hPKhZohT5VJ5sqM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ZeAHLaQKECA6DixHkpXmrQd3abxj3/ZpiFkmEL9SuZBsg+pb4Y0raxj+Onj7rf+nl
-	 Xof8UTC4q2eKMc++EypFRE6WuLkrdfiXpECnsOcL+j0V8F9V7xs12Zxq3rq8nyZY8Q
-	 9J2hr+r+15XReB/tD5EZtvuopbmftKzB6aUSzBE3AUZi9+JTqIPXo9G9RyEnM5Ximb
-	 WaAYd9ndBsuSXRYzAkdjw5LTpS+p2b9SfcRI8or6zXdWk3r4gq57F/QSg09VbkLo5C
-	 eqHXOCmgX16d4wk/JzNXkObtWCHHd4OV2fhS3+eSU8itZkcLnRhEXueNz73tNmN095
-	 aMoctYu49hEGw==
+	b=B+RknX5MeQRmZ/kd4fnU8RSCgroHa5yOjbwuvrY2cGaBWA/OP2FNJfxMYi5ja0RBM
+	 qQDS9FSLzfwMH1p9y8PwK/jE51VRxvxW22RkDRot5gxLLJq2HZewK0SGJStNJAeeyS
+	 B+vZNzU2ba3Z5Sbw+cggFsGxjpjf3idAlgswRl79e5Klku87E8Ir5exBQG1m9S/jgy
+	 5wY2B896UYNw7erCblX9hqzrQWPLZKBirShHc8CBZkAOQmfUS9NrMu7r369a1kvtsY
+	 vpSh6ARjR6MIgKhJAjK3leDN2ofZxOzeOb5RsGdgFzZgXDhWotiKan3mERRlXvlz6J
+	 /0v0etCAQTLyw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D017DC3DA59;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A5DC3DA60;
 	Mon, 15 Jul 2024 17:33:49 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Mon, 15 Jul 2024 23:03:51 +0530
-Subject: [PATCH 09/14] ARM: dts: qcom: sdx65: Add 'linux,pci-domain' to
- PCIe EP controller node
+Date: Mon, 15 Jul 2024 23:03:52 +0530
+Subject: [PATCH 10/14] arm64: dts: qcom: sa8775p: Add 'linux,pci-domain' to
+ PCIe EP controller nodes
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240715-pci-qcom-hotplug-v1-9-5f3765cc873a@linaro.org>
+Message-Id: <20240715-pci-qcom-hotplug-v1-10-5f3765cc873a@linaro.org>
 References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
 In-Reply-To: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -71,16 +71,16 @@ Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=906;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1234;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=csDoZP2OLES7tPZyHjq00PkbEc3m+4OOmtcZKbO5fqQ=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmlV15ILF+SBcNiGMrBAY25nZOAZu7j9Kv2LBvw
- ZMFFcRVTL6JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpVdeQAKCRBVnxHm/pHO
- 9Sv8B/4yrtadvSEQqOUXqW6F0dvNf6+Zln9x+SGI/lNhwGwZqkjc55QHUCEyTPwRmWWUB89jP78
- q0a/m4kXRCkrAYxsPcLRwJmyUY2zqh2/k5Cih1iFqcNbqALrMSRxQ9rXxNbQ7uKkbOZsRCS6lsB
- YkfrQbRNZouw7BU7+FRVa1y1NQdCMVbKIdoJVD9XeD2xVFg0v9RrpIssIZ6WTmoAgyOFq6EEr3D
- rzbwgTcqBSwcFaW5M+oKVS8BLg73fwMqX6+ZofQH5DNK2mhRVUHfwiGyjV2M56z/3hlzvbTqe3a
- 9wZ5g8IytbMFVCnWUEEFo+0xViAHeDhrpmr8nN6BOeWNSu7f
+ bh=yEgvSXmb27DZa3gudFLW4zQMizODQlbDCoGJB1twpkY=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmlV16mrEo9NAV0hiS5F8uIuEUCRNSQ3KaNpcjJ
+ xlqNZmego+JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZpVdegAKCRBVnxHm/pHO
+ 9a0UB/9rL1u5DYb4E5GiDOZUSXZC+9jk0Sxesl5D3WH2U2toRZncQIw6kUqORTEnnyoTGA/gYsr
+ DpZJ3HVigPzTH4uJIwNDKBX+9/9CaaPfkfXbxMBhix1cI0dbX1NJ4QXSAkQhAsbk+qt+pZNBSMa
+ 7oTrmIgYW0Ptw/LQ0pdXv5dYsg2JX20BMyYhl500pLJj8CPzihAb+7qgFgR5IgjuYdSW4H3OYkV
+ yUt4wSE9GhhGCT3D9Clor1IvW0sPTeaVv8udq5s0QeX6zsREGU57pF1ozrWsXqVBgD9MpNsY0WZ
+ OF2AcDFy4RofVwZ6G2h3zxK4W90JPVcMpqBOEC6vqbB5H2k4
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -95,25 +95,33 @@ endpoint controllers in a SoC. If this property is not present, then an
 unstable (across boots) unique number will be assigned.
 
 Use this property to specify the domain number based on the actual hardware
-instance of the PCI endpoint controllers in SDX65 SoC.
+instance of the PCI endpoint controllers in SA8775P SoC.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm/boot/dts/qcom/qcom-sdx65.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-index a949454212e9..fcfec4228670 100644
---- a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-@@ -345,6 +345,7 @@ pcie_ep: pcie-ep@1c00000 {
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+index 23f1b2e5e624..198b39abde97 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+@@ -4618,6 +4618,7 @@ pcie0_ep: pcie-ep@1c00000 {
+ 		phy-names = "pciephy";
+ 		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
+ 		num-lanes = <2>;
++		linux,pci-domain = <0>;
  
- 			max-link-speed = <3>;
- 			num-lanes = <2>;
-+			linux,pci-domain = <0>;
+ 		status = "disabled";
+ 	};
+@@ -4775,6 +4776,7 @@ pcie1_ep: pcie-ep@1c10000 {
+ 		phy-names = "pciephy";
+ 		max-link-speed = <3>; /* FIXME: Limiting the Gen speed due to stability issues */
+ 		num-lanes = <4>;
++		linux,pci-domain = <1>;
  
- 			status = "disabled";
- 		};
+ 		status = "disabled";
+ 	};
 
 -- 
 2.25.1
