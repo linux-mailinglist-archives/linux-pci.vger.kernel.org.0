@@ -1,125 +1,308 @@
-Return-Path: <linux-pci+bounces-10264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7B3893142C
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 14:26:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B80B931475
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 14:37:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B0BB280F6F
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 12:26:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 277961F21F8A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 12:37:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A5EF18787F;
-	Mon, 15 Jul 2024 12:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6168218C199;
+	Mon, 15 Jul 2024 12:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="wMuqxhom";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="wpTJ/K+s"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WriNx1Kw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1455E13B295;
-	Mon, 15 Jul 2024 12:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9E18A944;
+	Mon, 15 Jul 2024 12:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721046397; cv=none; b=sRMv+aElR0Epfeu5DcTCtiqD/sOS2JmOwfCk+PH+dQJEIY6FdjFJsks6/KUsUbNHxLO2oSp3q6fJT87Vk8u3VQUJr9eH4DcdlLwT5zep499k+PgKk7VlnYffZstkqt/rOGuDuOBuXTSPMgT9Sx+fvRwePSjblO0hkyM2O3I9s7s=
+	t=1721047021; cv=none; b=E3ufxU/m9w23as1Z93B06omEuX7zb3UeuV+N55HsvWGHhKA2J/OrenvWbpq0Nf+u3H9bh0fHkeGLAb6/dL9xueYbwHh8PIcmUCsyq655xbp6eyDolHMERp37gkhNMkj5r5NenISXkLnRHJpddm+psHbAS8QqdDi/qWASGYmyy+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721046397; c=relaxed/simple;
-	bh=vPW7JAF6bYAUWq5ndRyxC0bBzDNzXxdx/wR3+iiqHfk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kJNNlrdXV9aKJ7dDUMYENPuKRzYJauU5HwhmsenI0KY6c1e4au3pxicsvhLpwyHStKreRY1US667+dPIFqZ7yaj8qhDz34z5MrZB5UJiI1r2mt5PTLU1b2YxyEAl/941kA1YzzJpc5tRDllMCtQv1fRUO0TBZOHvRQj/Tg2h2s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=wMuqxhom; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=wpTJ/K+s; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4WN1f075QZz9sNb;
-	Mon, 15 Jul 2024 14:26:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1721046393;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fAYtw0P54MFPhiA1yNO4FQTOtoDQDCXNbjWPVB1cXx0=;
-	b=wMuqxhomrJ6BipJvBccdLLORTVBwFh0KARw7lV3P2omP1AWa8o0TEKXVy0vLnXSrSbaGkf
-	IqWX9oIw3waZaAQJKeYNJfGab9KGbI4YHZ0i5RkWoo+4n5sW+ylmlcD6SVhNqR2+QUK0BI
-	BvOrhKau+zwVzupU0igkXw+ZbvaPOD467wdwk+P5NIJIvO2jAo9Q7Otd4+3qqm6CgR0GdG
-	S9rbCuuwBoNBc/sqpeWsS4TY+u/r/T1fomD+770aP6GPeipIQxQwO1nUazAIWo5GVApzHn
-	3nQyVVgl5Fkt2XFdNNFn9yXuo0pPh959hByHjE7nKtLBMpFZBvjUfPo8UheSqw==
-Message-ID: <d5efcb28-dd5a-4b96-aabd-c73c95dff8e7@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1721046391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fAYtw0P54MFPhiA1yNO4FQTOtoDQDCXNbjWPVB1cXx0=;
-	b=wpTJ/K+suGEFWXrIfkxrReFUhCnCqxKhxQh3sq0t4LaOvOg3N715I84biDAcMht79vKJ+L
-	4uuR3UWd/LfMf4rqI9IMlgmNT0JwbCBQ/7eZfL/bNKsJRaWefhyYkrt6eAfjkn4ws5yV3e
-	sqgOV1ZmWzh4GFTbzY84S5GirLd6CRA2+VDs7H9fjBu5HwPG3Ola+dXvaDd9d3MW9kmGkJ
-	gTkOSVrvI8gv4WbqA/Q+mrjR7yTvpxNc+wiScqVXiurpbSCHnphPBy5VQuim8v1l+eBGHI
-	TtPNUdklwL1VLi3tzeFcGYTz8Bg1qibqivcXRWA45+Arpvz0RSNYJRbvIBAFhg==
-Date: Mon, 15 Jul 2024 14:26:28 +0200
+	s=arc-20240116; t=1721047021; c=relaxed/simple;
+	bh=lGTgDdw0D3LgnUyX4dXtePNOhp9in10pEAeYuGJ54gU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YAXIT0jDJ206YpV0/dX5DWf+Fv1sWEJF1qKE2cmRW9N7Q0wc7TDg9Mi0jEV6RQGg9tnqorZm6OCCDwnSwGc8ZFoV8hyqdtYKjcbfZSqI/KiNPXs2KqjOM0eodcdbbL2NoUypkNlSOtwZ26QK1i1JdLG/wtacU2yKz5Va9HSmxMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WriNx1Kw; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721047019; x=1752583019;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=lGTgDdw0D3LgnUyX4dXtePNOhp9in10pEAeYuGJ54gU=;
+  b=WriNx1KwLAohhyialObweRLoxZu+zw4ldANGsmbmBqMte76ud3fA8b2s
+   lIfHk5I77lvvxFckk/N6qrX+L1P/L3rm1DJB9XpbkNz/+1AX9tDEqJpUJ
+   r1fqHPA6YNQGhEaOTeLW9mRlDYxuFFl69LtfKO7iBD6kdxupUJt8MYHiM
+   jWF6RITfxK9xqsYTMcXXZaAa4oha2Ol6XZ8oyIO+JeItEl1IuEBhVudfg
+   zaDP9LOGUAgqiEwUGfx52js24pnsFJ8Xznv1Em+rAWd2DQjAWGNb29G7y
+   G8xCwbT9HcwdSpve8N1dJmCTciIrKZHgd49XI5iDWmRbgWIPp9LPj2cfH
+   g==;
+X-CSE-ConnectionGUID: aCJYLc8KRCC6rIXrFJlQVw==
+X-CSE-MsgGUID: vmh8KRdWR/KOE1FSi4iMWg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="29012835"
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="29012835"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 05:36:59 -0700
+X-CSE-ConnectionGUID: p79mAvRxS6uC/AWugJ5V4Q==
+X-CSE-MsgGUID: 0bsbbmOVQXK+BgeNncbNrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="49497247"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.131])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 05:36:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 15 Jul 2024 15:36:50 +0300 (EEST)
+To: superm1@kernel.org
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Mathias Nyman <mathias.nyman@intel.com>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "open list : PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    "open list : USB XHCI DRIVER" <linux-usb@vger.kernel.org>, 
+    Daniel Drake <drake@endlessos.org>, Gary Li <Gary.Li@amd.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 1/5] PCI: Use an enum for reset type in
+ pci_dev_wait()
+In-Reply-To: <20240712181246.811044-2-superm1@kernel.org>
+Message-ID: <c67b005a-2378-2ce9-e55b-da807fd1811a@linux.intel.com>
+References: <20240712181246.811044-1-superm1@kernel.org> <20240712181246.811044-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] [RFC] genirq/cpuhotplug, PCI/rcar-host: Silence set
- affinity failed warning
-To: Thomas Gleixner <tglx@linutronix.de>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pci@vger.kernel.org
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
- Jon Hunter <jonathanh@nvidia.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- linux-renesas-soc@vger.kernel.org
-References: <20240714122405.27548-1-marek.vasut+renesas@mailbox.org>
- <87wmlnrdkf.ffs@tglx>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <87wmlnrdkf.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: 58fbf58eab3c27b7366
-X-MBO-RS-META: aspsmutygi5hja3duf1zym8jucwta81g
-X-Rspamd-Queue-Id: 4WN1f075QZz9sNb
+Content-Type: multipart/mixed; BOUNDARY="8323328-1789045202-1721046575=:1424"
+Content-ID: <798844da-5d0a-555d-6478-d69161bbec3b@linux.intel.com>
 
-On 7/14/24 9:14 PM, Thomas Gleixner wrote:
-> Marek!
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hello Thomas,
+--8323328-1789045202-1721046575=:1424
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <3b6b0dbd-8593-9c57-8b49-00a0de00e557@linux.intel.com>
 
-> On Sun, Jul 14 2024 at 14:23, Marek Vasut wrote:
->> --- a/drivers/base/platform-msi.c
->> +++ b/drivers/base/platform-msi.c
->> @@ -100,7 +100,7 @@ static void platform_msi_update_chip_ops(struct msi_domain_info *info)
->>   		chip->irq_unmask = irq_chip_unmask_parent;
->>   	if (!chip->irq_eoi)
->>   		chip->irq_eoi = irq_chip_eoi_parent;
->> -	if (!chip->irq_set_affinity)
->> +	if (!chip->irq_set_affinity && !(info->flags & MSI_FLAG_USE_DEF_CHIP_OPS_NOAFF))
->>   		chip->irq_set_affinity = msi_domain_set_affinity;
-> 
-> I'm not really a fan of this new flag.
-> 
-> I'd rather leave MSI_FLAG_USE_DEF_CHIP_OPS alone and introduce a
-> dedicated flag MSI_FLAG_NO_AFFINITY to tell the core code that these
-> interrupts cannot be steered. Other than that this approach looks sane.
+On Fri, 12 Jul 2024, superm1@kernel.org wrote:
 
-Should be fixed in V3. I also converted Tegra so far and sent it 
-alongside V3. There are many more controllers to convert that will follow.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>=20
+> A string is passed to all callers of pci_dev_wait() which is utilized
+> to demonstrate what kind of reset happened when there was a problem.
+>=20
+> This doesn't allow making the behavior for different reset types
+> conditional though. Lay some plumbing to allow making comparisons of
+> reset types with integers instead. No functional changes.
+>=20
+> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci-driver.c |  2 +-
+>  drivers/pci/pci.c        | 29 +++++++++++++++++++----------
+>  drivers/pci/pci.h        | 11 ++++++++++-
+>  drivers/pci/pcie/dpc.c   |  2 +-
+>  4 files changed, 31 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index af2996d0d17ff..ff97d08741df7 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -572,7 +572,7 @@ static void pci_pm_bridge_power_up_actions(struct pci=
+_dev *pci_dev)
+>  {
+>  =09int ret;
+> =20
+> -=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, "resume");
+> +=09ret =3D pci_bridge_wait_for_secondary_bus(pci_dev, PCI_DEV_WAIT_RESUM=
+E);
+>  =09if (ret) {
+>  =09=09/*
+>  =09=09 * The downstream link failed to come up, so mark the
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 35fb1f17a589c..115361a08d9e3 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -181,6 +181,15 @@ static int __init pcie_port_pm_setup(char *str)
+>  }
+>  __setup("pcie_port_pm=3D", pcie_port_pm_setup);
+> =20
+> +const char * const pci_reset_types[] =3D {
 
--- 
-Best regards,
-Marek Vasut
+Sparse is not happy about this and expects static as it is not defined=20
+by any header (LKP seems to also have caught this).
 
+> +=09"FLR",
+> +=09"AF_FLR",
+> +=09"PM D3HOT->D0",
+> +=09"bus reset",
+> +=09"resume",
+> +=09"DPC",
+
+Perhaps the index-based array initialization format would be beneficial=20
+here.
+
+--=20
+ i.
+
+> +};
+> +
+>  /**
+>   * pci_bus_max_busnr - returns maximum PCI bus number of given bus' chil=
+dren
+>   * @bus: pointer to PCI bus structure to search
+> @@ -1250,7 +1259,7 @@ void pci_resume_bus(struct pci_bus *bus)
+>  =09=09pci_walk_bus(bus, pci_resume_one, NULL);
+>  }
+> =20
+> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeo=
+ut)
+> +static int pci_dev_wait(struct pci_dev *dev, enum pci_reset_type reset_t=
+ype, int timeout)
+>  {
+>  =09int delay =3D 1;
+>  =09bool retrain =3D false;
+> @@ -1288,7 +1297,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
+reset_type, int timeout)
+> =20
+>  =09=09if (delay > timeout) {
+>  =09=09=09pci_warn(dev, "not ready %dms after %s; giving up\n",
+> -=09=09=09=09 delay - 1, reset_type);
+> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
+>  =09=09=09return -ENOTTY;
+>  =09=09}
+> =20
+> @@ -1301,7 +1310,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *=
+reset_type, int timeout)
+>  =09=09=09=09}
+>  =09=09=09}
+>  =09=09=09pci_info(dev, "not ready %dms after %s; waiting\n",
+> -=09=09=09=09 delay - 1, reset_type);
+> +=09=09=09=09 delay - 1, pci_reset_types[reset_type]);
+>  =09=09}
+> =20
+>  =09=09msleep(delay);
+> @@ -1310,10 +1319,10 @@ static int pci_dev_wait(struct pci_dev *dev, char=
+ *reset_type, int timeout)
+> =20
+>  =09if (delay > PCI_RESET_WAIT)
+>  =09=09pci_info(dev, "ready %dms after %s\n", delay - 1,
+> -=09=09=09 reset_type);
+> +=09=09=09 pci_reset_types[reset_type]);
+>  =09else
+>  =09=09pci_dbg(dev, "ready %dms after %s\n", delay - 1,
+> -=09=09=09reset_type);
+> +=09=09=09pci_reset_types[reset_type]);
+> =20
+>  =09return 0;
+>  }
+> @@ -4465,7 +4474,7 @@ int pcie_flr(struct pci_dev *dev)
+>  =09 */
+>  =09msleep(100);
+> =20
+> -=09return pci_dev_wait(dev, "FLR", PCIE_RESET_READY_POLL_MS);
+> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_FLR, PCIE_RESET_READY_POLL_MS);
+>  }
+>  EXPORT_SYMBOL_GPL(pcie_flr);
+> =20
+> @@ -4532,7 +4541,7 @@ static int pci_af_flr(struct pci_dev *dev, bool pro=
+be)
+>  =09 */
+>  =09msleep(100);
+> =20
+> -=09return pci_dev_wait(dev, "AF_FLR", PCIE_RESET_READY_POLL_MS);
+> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_AF_FLR, PCIE_RESET_READY_POLL_M=
+S);
+>  }
+> =20
+>  /**
+> @@ -4577,7 +4586,7 @@ static int pci_pm_reset(struct pci_dev *dev, bool p=
+robe)
+>  =09pci_write_config_word(dev, dev->pm_cap + PCI_PM_CTRL, csr);
+>  =09pci_dev_d3_sleep(dev);
+> =20
+> -=09return pci_dev_wait(dev, "PM D3hot->D0", PCIE_RESET_READY_POLL_MS);
+> +=09return pci_dev_wait(dev, PCI_DEV_WAIT_D3HOT_D0, PCIE_RESET_READY_POLL=
+_MS);
+>  }
+> =20
+>  /**
+> @@ -4751,7 +4760,7 @@ static int pci_bus_max_d3cold_delay(const struct pc=
+i_bus *bus)
+>   * Return 0 on success or -ENOTTY if the first device on the secondary b=
+us
+>   * failed to become accessible.
+>   */
+> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
+ype)
+> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
+t_type reset_type)
+>  {
+>  =09struct pci_dev *child;
+>  =09int delay;
+> @@ -4885,7 +4894,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *=
+dev)
+>  {
+>  =09pcibios_reset_secondary_bus(dev);
+> =20
+> -=09return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
+> +=09return pci_bridge_wait_for_secondary_bus(dev, PCI_DEV_WAIT_BUS_RESET)=
+;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+> =20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index fd44565c47562..88f54d22118dc 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -4,6 +4,15 @@
+> =20
+>  #include <linux/pci.h>
+> =20
+> +enum pci_reset_type {
+> +=09PCI_DEV_WAIT_FLR,
+> +=09PCI_DEV_WAIT_AF_FLR,
+> +=09PCI_DEV_WAIT_D3HOT_D0,
+> +=09PCI_DEV_WAIT_BUS_RESET,
+> +=09PCI_DEV_WAIT_RESUME,
+> +=09PCI_DEV_WAIT_DPC,
+> +};
+> +
+>  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
+>  #define MAX_NR_DEVFNS 256
+> =20
+> @@ -94,7 +103,7 @@ void pci_msi_init(struct pci_dev *dev);
+>  void pci_msix_init(struct pci_dev *dev);
+>  bool pci_bridge_d3_possible(struct pci_dev *dev);
+>  void pci_bridge_d3_update(struct pci_dev *dev);
+> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_t=
+ype);
+> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, enum pci_rese=
+t_type reset_type);
+> =20
+>  static inline void pci_wakeup_event(struct pci_dev *dev)
+>  {
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index a668820696dc0..306efc399e503 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -174,7 +174,7 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+>  =09pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
+>  =09=09=09      PCI_EXP_DPC_STATUS_TRIGGER);
+> =20
+> -=09if (pci_bridge_wait_for_secondary_bus(pdev, "DPC")) {
+> +=09if (pci_bridge_wait_for_secondary_bus(pdev, PCI_DEV_WAIT_DPC)) {
+>  =09=09clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+>  =09=09ret =3D PCI_ERS_RESULT_DISCONNECT;
+>  =09} else {
+>=20
+--8323328-1789045202-1721046575=:1424--
 
