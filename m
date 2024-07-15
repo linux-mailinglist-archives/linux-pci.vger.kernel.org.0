@@ -1,506 +1,430 @@
-Return-Path: <linux-pci+bounces-10270-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10271-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83563931664
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 16:10:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4CA5931860
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 18:20:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 780241C20D4B
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 14:10:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BD032830BE
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 16:20:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E6D4433B3;
-	Mon, 15 Jul 2024 14:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07CD51BF24;
+	Mon, 15 Jul 2024 16:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7FyWfrR"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3At6vbjR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2067.outbound.protection.outlook.com [40.107.244.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163072AD18;
-	Mon, 15 Jul 2024 14:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721052605; cv=none; b=W04wqkoapac+bfrlwleHzP01Af2M7gQVp3DptOjJQw0s13xPt0ih8WFBHk6VMnhaLvOXkHTuQHkL1CH4Mxk6fIIgmPfMYfaQ6C8PAGkFZvxSyxt/93WJ28ZcE5kevqBX15quuWVsIwITH4KlT4G0lXjE9Z6FzmdRlN5Dtp/VV4c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721052605; c=relaxed/simple;
-	bh=Pk57MI3jO4xSkQSW4nKl0SGTDju4WXj/DgLsoV/xxLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g/bxh9GbGN19+qwBLm1J53vigrljfI1R99GYh+QVm3/o8IpwFIuPRNQsYR4ULVrd7p+gOFGxR1cs5t0VUU9sv4XOiU8417RlkIedjAC7CObAB3+e5lJPNPo4cfoYVA2AoR8wZHFCR8Bfj5oxdgZnytPC9uwhnMt8MYahOFXNygA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7FyWfrR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29B08C32782;
-	Mon, 15 Jul 2024 14:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721052604;
-	bh=Pk57MI3jO4xSkQSW4nKl0SGTDju4WXj/DgLsoV/xxLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a7FyWfrRhDhl4DFutpfyHL6+1J4TPwh9ni4iJdOdko32R4inVB7hEr0+iFNvTK6nI
-	 DYqrelA+s8hCshp3QqueSh0I/9LEvh0kk/VnV0N/k2zvl7yZLOf1mok9uF8D7/8slM
-	 h04xm2MhFnHik3NEL8smEGGScubS7IMBV42WMAZZofUIdMkOVHRltzRRmCFJms2Nvd
-	 O3EWE4loQ6SX+EcvnnhFlp1PW09r7oepU5WwGV5TYT5+CWoTawLuYzP3waKxaDk3CL
-	 2EMGMd2wCrT6fqEai9EwmnRszi4c/TPp2YXTKkvl7qYvC+5BpYQNb4lFCPa8pc6S5E
-	 9RqlvTX+e19AA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sTMOv-000000007zU-1GHx;
-	Mon, 15 Jul 2024 16:10:01 +0200
-Date: Mon, 15 Jul 2024 16:10:01 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	anna-maria@linutronix.de, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
-	rdunlap@infradead.org, vidyas@nvidia.com,
-	ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com,
-	kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp,
-	andrew@lunn.ch, gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
-	rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
-	lorenzo.pieralisi@arm.com, jgg@mellanox.com,
-	ammarfaizi2@gnuweeb.org, robin.murphy@arm.com,
-	lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
-	vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
-	andersson@kernel.org, mark.rutland@arm.com,
-	shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com,
-	shivamurthy.shastri@linutronix.de
-Subject: Re: [patch V4 00/21] genirq, irqchip: Convert ARM MSI handling to
- per device MSI domains
-Message-ID: <ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
-References: <20240623142137.448898081@linutronix.de>
- <ZpUFl4uMCT8YwkUE@hovoldconsulting.com>
- <878qy26cd6.wl-maz@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7078210FB;
+	Mon, 15 Jul 2024 16:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721060413; cv=fail; b=N/fYEKYp9k9hLR9pVyVRhDHGlER9S+fk4g/rIjUX6flTqW6sGsQN3d0aQ2WRdeNfQcbpbWP5sjomkNZn9IHuOO/ooSYCrTQVvUcu4+ea5jqNufnYlZ8zTZKw0od+9/jdQE7tSK4klUUxEQo4Ai2+OXl22wBU/pNG0N6IRuTG3Is=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721060413; c=relaxed/simple;
+	bh=kgO79gmiRGbyWr+WcNPfCZB29JxlRFlAH5KYRA9HdBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VGC8AzP8eLPc0AITjq6DEpwj7X2E7LVcL7d6ltAFKolxQlo5HbluSkHVZ8i5AhjIW13HjTs0vKwtaGYioJrocpj/qdrwtzadHgtdjgkF+2Zwox6mMOAlOtbw1+A8WMnzYDR9YFch928M3i2nE55SsASkdyPgKvjaJXNgwedjyaY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3At6vbjR; arc=fail smtp.client-ip=40.107.244.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=io2pRyaUZ1hHk99Pfz8Kd/froHqRtoN18wuD8wAiqX6gJes4ZZAmByr4pszGOqxbcNjYcSc+M/AX992BBNb/zRLxflNtrNgSGF63iCeK38RankAOGaN5H3eB6xYZMk2dBtS/DZ/Vn41AHHldG3OdZ0Oo+b8fuh9rG4sZlyHF6zdMjXgS/yS+cQ0+B1DPR+G7Z36iKuUf0xaCvNsUZhggHwXot4fZKSb40WH8uJIJtB6Z6h4N19daHkidxKi3pMiMeD2QpOa5sYOxtVzZ+HqntFx5WsU5nG19SQpD0BD+WB4StCLNRWO/r2XJpej6bRUVL2rh/bD7+QElgzF3WgkVhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=053l8PAKCnnQpmN1qy0wYiYG5v3/QvExPVrZVhtEc8k=;
+ b=ZAA7T8PtfoUZtVbwbgWXxgJ2OmUGuV/5r7S5eqn9xodmihX7KcHRCcAWCIeOw/AxZ0BgifsWLE4YqK6zkwqn06YzJRvKhiqCTARO7e6cV7K4n0p9tTMMUegX2IXP8bZhzQIPMdRMA3FC7lsbJOhxV1DLxCzfeB4F753AUxoMIjX4ufV9/x5ezLJSMLhrjmYsRuPGnLi3cHm0HKejyDpYMkrobfvRlZFNM2/KUKshcb4bSrnCfEtaRRwJ/o6FvMP6lwkmuIUp2Imj1i4rBhuvND8L/0WkgMzvAZrCaFoDujnXZWCQfjAMTy4DZrl8WQpeEYWasobwBFuqypkulH2yVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=053l8PAKCnnQpmN1qy0wYiYG5v3/QvExPVrZVhtEc8k=;
+ b=3At6vbjRC146cQ7UsPe+wemPm0hj2WJx/K+Is+fa97kp/7vAc01w8d84mVSPM7KfpTueZPtcno4BHOuVZibIg6dRJ6N8GB+NhJ5YUbhlgJT7Woz1aOj5b3rROVv+MsM0v5hgnp3zDiI/rFFvGfhGu0HHPVyIOKWEdhoZWA29TzA=
+Received: from SJ0PR05CA0114.namprd05.prod.outlook.com (2603:10b6:a03:334::29)
+ by PH7PR12MB9176.namprd12.prod.outlook.com (2603:10b6:510:2e9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Mon, 15 Jul
+ 2024 16:20:09 +0000
+Received: from SJ1PEPF0000231B.namprd03.prod.outlook.com
+ (2603:10b6:a03:334:cafe::4a) by SJ0PR05CA0114.outlook.office365.com
+ (2603:10b6:a03:334::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.13 via Frontend
+ Transport; Mon, 15 Jul 2024 16:20:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF0000231B.mail.protection.outlook.com (10.167.242.232) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Mon, 15 Jul 2024 16:20:08 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 15 Jul
+ 2024 11:20:08 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 15 Jul
+ 2024 11:20:07 -0500
+Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 15 Jul 2024 11:20:06 -0500
+Message-ID: <87d645e3-69ac-170d-bdc2-26bc3c03b890@amd.com>
+Date: Mon, 15 Jul 2024 09:20:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878qy26cd6.wl-maz@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+Content-Language: en-US
+To: Amit Machhiwal <amachhiw@linux.ibm.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <linuxppc-dev@lists.ozlabs.org>, <kvm-ppc@vger.kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Saravana Kannan
+	<saravanak@google.com>, Vaibhav Jain <vaibhav@linux.ibm.com>, Nicholas Piggin
+	<npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, "Vaidyanathan
+ Srinivasan" <svaidy@linux.ibm.com>, Kowshik Jois B S
+	<kowsjois@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>
+References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF0000231B:EE_|PH7PR12MB9176:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b703277-ff3e-4bb9-c01c-08dca4e9fef8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?blQweDZuUE5SaWlEV2hkZzR2bkVUV2ovY0QzV203b0p3N3AxT2JkeGdNc3lr?=
+ =?utf-8?B?TUJSOGdlWXRYdGZPNnJTdVNmbjhKQ1FIeTBLamlKNlBhY2xUaTM1SnlwWGpZ?=
+ =?utf-8?B?Yy81dFVhczU2dVpKaTNwbHZJQzNOcVdYdmpjRWREU2dNblNqM2IzRGtPN2RK?=
+ =?utf-8?B?dnRvaHlwekRuYWxDOTFacEkrZTN0ZEhJVFBwdW5TZm9HWUQ5N0p2WE1jSSt5?=
+ =?utf-8?B?WHZWOVpsVFc5d1pIOWM5VkRNU1RQUlR4RFdIaThGUWJhcWxsQk1qM3haL0ZL?=
+ =?utf-8?B?amhzRHFnbHlHektRczdWV1lGSFcrZUVhdGVCakJRREx0RWRXWml5QkJ4bFVJ?=
+ =?utf-8?B?NGpYMm13WnA4UnJrT0ViMlUzTUdxL3hleGo0clVPR05qOVp4M0IvVlppTm9U?=
+ =?utf-8?B?V3ZPblFmSkM5MWNXTzYvcUJWQnQ0NmN6S3dJMkVjTjR1TGxSYXlLWXV5ZEJW?=
+ =?utf-8?B?V0dncUhHNUl5dFc2M3JTdlNoWWwva0pMdGNWRVpPVjJMb3c2amZYZkY3SXEz?=
+ =?utf-8?B?UzlwV1pPTk14d1FJYlZKWkw4QmZPR1g4V0c3TE1JL0hGTkJXZ29Db0J4UGVO?=
+ =?utf-8?B?M0hLV3p1aDM2bFdHemVpM2VSQUNSNkl0SzBxSkxqNmZ1UEpwVm10Z2tsemxT?=
+ =?utf-8?B?bHdUdzNFRE9MT2VxZk1sYmtXT1puUFVZTmdYWUc2ekloQzM2YWRnVVhiZjZu?=
+ =?utf-8?B?NnJ6Uys3VnRac25OdFc4SDVDSlF1WmxaM25xK2VzN2Q5THFrOEsvc2VpVlZQ?=
+ =?utf-8?B?T1JKU3BhL0Ivb3E1eWU0eitiTzBsSW9hWE9jRnJmeVhaWWE2QVNxN2ZhM2Jn?=
+ =?utf-8?B?aUgwaVZ6K0xsWkxZZ1VrQzQvSWp2Wjc5UGprNFlEWFFCSnlpTm5nc3pvNG1U?=
+ =?utf-8?B?OTltc3EvZm4yV1lmdFpWQlhjbWoyOUc0SHh2Zzl0QWswSjBJQmNTOU10enJ2?=
+ =?utf-8?B?cXRrY1l6VjNKVlp0dEZZVXZ0Yi9HbnBsUnlEZXRxWjdHSndtaGJrNjhFZlpq?=
+ =?utf-8?B?QzN2NXNMZzgyWWNvaS9BWUFCdjhmNGVtZkdQZzk2MFFUM2xlMnpla2JLVElZ?=
+ =?utf-8?B?a2N2d1V2eHlqK0MwVkRHQ2ZEQmQ1bXZFWjgyZ1U4dUdWbVkrc04vM01rS0M5?=
+ =?utf-8?B?VHN1K1NTb2lxNUFVRHVLQXdBSzVseGVxWVpoTUlJUDFjcDFuZHdaR25PNHVo?=
+ =?utf-8?B?ZlgrclhNbXhHVjUrekdIYjFYODU3Qm54aEljK0pITE0rMFBUUVlVUWlEeXg0?=
+ =?utf-8?B?dkNUV3pvakRqeGRKc2xVanJUT0lGc2lUNUpYY2FNdkxwd3dzTGdPWE1ZTWtw?=
+ =?utf-8?B?OVdWckFzZEwybkVVWnB5d3VBMmtTcnRaYUdBVkduazdJRVlxNk9GZlJ0QUt1?=
+ =?utf-8?B?NVBORkE5cFlFelVncFYvMEpTOWwvUFh3emJQWFpYN0ZEZDRpUjNHcnpEUzFZ?=
+ =?utf-8?B?WEs2d3J1RlI1TFR0b25iZlMvSXgrNVArL3dvY0hWWm84R0JhQ1o5Rk02eVBK?=
+ =?utf-8?B?WEw2Q1lTUCtPYnkrb3NRdEtxUHQ0bVN1Wnpoa3U1MVEzU2JaRVVvaVIrc2Fi?=
+ =?utf-8?B?TzdVSEk4c0dIY0hOT0FBdHVnRjk1cFhDNVlwZHoxbGNCcWVNcFhqdXR2L2RK?=
+ =?utf-8?B?bE53M1ZiVXRBcXNuTXA2ellqa3dJdHJmbk1UWi9KbitFbFl2S1dVVU83c0xo?=
+ =?utf-8?B?ZW5pTXk5QUhhUFZscDlzR012eUJXUTA4RWxFWWYxc0J1VHN2QklhVmoyYW8y?=
+ =?utf-8?B?eCtzeldmaEcyTnhySlBwclU2U3IxY1NTZmczUm52WDlSNlQ5MVZsQTdNdEJ4?=
+ =?utf-8?B?MXl3elV1OHoxR0FuMDE4TkJLOEdSUjBvK0dlMWp5RGVnMS9iVGs3NzNHUlFu?=
+ =?utf-8?B?WndIa1hnVkxlTUFxOUhnQ21VMU5lcU13N2FhWWtvTXd2RGc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 16:20:08.9474
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b703277-ff3e-4bb9-c01c-08dca4e9fef8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF0000231B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9176
 
-On Mon, Jul 15, 2024 at 01:58:13PM +0100, Marc Zyngier wrote:
-> On Mon, 15 Jul 2024 12:18:47 +0100,
-> Johan Hovold <johan@kernel.org> wrote:
-> > On Sun, Jun 23, 2024 at 05:18:31PM +0200, Thomas Gleixner wrote:
-> > > This is version 4 of the series to convert ARM MSI handling over to
-> > > per device MSI domains.
 
-> > This series only showed up in linux-next last Friday and broke interrupt
-> > handling on Qualcomm platforms like sc8280xp (e.g. Lenovo ThinkPad X13s)
-> > and x1e80100 that use the GIC ITS for PCIe MSIs.
-> > 
-> > I've applied the series (21 commits from linux-next) on top of 6.10 and
-> > can confirm that the breakage is caused by commits:
-> > 
-> > 	3d1c927c08fc ("irqchip/gic-v3-its: Switch platform MSI to MSI parent")
-> > 	233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
-> > 
-> > Applying the series up until the change before 3d1c927c08fc unbreaks the
-> > wifi on one machine:
-> > 
-> > 	ath11k_pci 0006:01:00.0: failed to enable msi: -22
-> > 	ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -22
-> >
-> > and backing up until the commit before 233db05bc37f makes the NVMe come
-> > up again during boot on another.
-> > 
-> > I have not tried to debug this further.
-> 
-> I need a few things from you though, because you're not giving much to
-> help you (and I'm travelling, which doesn't help).
+On 7/15/24 01:07, Amit Machhiwal wrote:
+> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
+> of a PCI device attached to a PCI-bridge causes following kernel Oops on
+> a pseries KVM guest:
+>
+>   RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
+>   Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
+>   BUG: Unable to handle kernel data access on read at 0x10ec00000048
+>   Faulting instruction address: 0xc0000000012d8728
+>   Oops: Kernel access of bad area, sig: 11 [#1]
+>   LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+> <snip>
+>   NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
+>   LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
+>   Call Trace:
+>   [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
+>   [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
+>   [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
+>   [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
+>   [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
+>   [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
+>   [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
+>   [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
+>   [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
+>   [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
+>   [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
+>   [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
+> <snip>
+>
+> A git bisect pointed this regression to be introduced via [1] that added
+> a mechanism to create device tree nodes for parent PCI bridges when a
+> PCI device is hot-plugged.
+>
+> The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
+> device-tree node associated with the pci_dev that was earlier
+> hot-plugged and was attached under a pci-bridge. The PCI dev header
+> `dev->hdr_type` being 0, results a conditional check done with
+> `pci_is_bridge()` into false. Consequently, a call to
+> `of_pci_make_dev_node()` to create a device node is never made. When at
+> a later point in time, in the device node removal path, a memcpy is
+> attempted in `__of_changeset_entry_invert()`; since the device node was
+> never created, results in an Oops due to kernel read access to a bad
+> address.
+>
+> To fix this issue, the patch updates `of_changeset_create_node()` to
+> allocate a new node only when the device node doesn't exist and init it
+> in case it does already. Also, introduce `of_pci_free_node()` to be
+> called to only revert and destroy the changeset device node that was
+> created via a call to `of_changeset_create_node()`.
+>
+> [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
+>
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+> ---
+> Changes since v1:
+>      * Included Lizhi's suggested changes on V1
+>      * Fixed below two warnings from Lizhi's changes and rearranged the cleanup
+>        part a bit in `of_pci_make_dev_node`
+> 	drivers/pci/of.c:611:6: warning: no previous prototype for ‘of_pci_free_node’ [-Wmissing-prototypes]
+> 	  611 | void of_pci_free_node(struct device_node *np)
+> 	      |      ^~~~~~~~~~~~~~~~
+> 	drivers/pci/of.c: In function ‘of_pci_make_dev_node’:
+> 	drivers/pci/of.c:696:1: warning: label ‘out_destroy_cset’ defined but not used [-Wunused-label]
+> 	  696 | out_destroy_cset:
+> 	      | ^~~~~~~~~~~~~~~~
+>      * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@linux.ibm.com/
+>
+>   drivers/of/dynamic.c  | 16 ++++++++++++----
+>   drivers/of/unittest.c |  2 +-
+>   drivers/pci/bus.c     |  3 +--
+>   drivers/pci/of.c      | 39 ++++++++++++++++++++++++++-------------
+>   drivers/pci/pci.h     |  2 ++
+>   include/linux/of.h    |  1 +
+>   6 files changed, 43 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index dda6092e6d3a..9bba5e82a384 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -492,21 +492,29 @@ struct device_node *__of_node_dup(const struct device_node *np,
+>    * a given changeset.
+>    *
+>    * @ocs: Pointer to changeset
+> + * @np: Pointer to device node. If null, allocate a new node. If not, init an
+> + *	existing one.
+>    * @parent: Pointer to parent device node
+>    * @full_name: Node full name
+>    *
+>    * Return: Pointer to the created device node or NULL in case of an error.
+>    */
+>   struct device_node *of_changeset_create_node(struct of_changeset *ocs,
+> +					     struct device_node *np,
+>   					     struct device_node *parent,
+>   					     const char *full_name)
+>   {
+> -	struct device_node *np;
+>   	int ret;
+>   
+> -	np = __of_node_dup(NULL, full_name);
+> -	if (!np)
+> -		return NULL;
+> +	if (!np) {
+> +		np = __of_node_dup(NULL, full_name);
+> +		if (!np)
+> +			return NULL;
+> +	} else {
+> +		of_node_set_flag(np, OF_DYNAMIC);
+> +		of_node_set_flag(np, OF_DETACHED);
+> +	}
+> +
+>   	np->parent = parent;
+>   
+>   	ret = of_changeset_attach_node(ocs, np);
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 445ad13dab98..b1bcc9ed40a6 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -871,7 +871,7 @@ static void __init of_unittest_changeset(void)
+>   	unittest(!of_changeset_add_property(&chgset, parent, ppadd), "fail add prop prop-add\n");
+>   	unittest(!of_changeset_update_property(&chgset, parent, ppupdate), "fail update prop\n");
+>   	unittest(!of_changeset_remove_property(&chgset, parent, ppremove), "fail remove prop\n");
+> -	n22 = of_changeset_create_node(&chgset, n2, "n22");
+> +	n22 = of_changeset_create_node(&chgset, NULL,  n2, "n22");
+>   	unittest(n22, "fail create n22\n");
+>   	unittest(!of_changeset_add_prop_string(&chgset, n22, "prop-str", "abcd"),
+>   		 "fail add prop prop-str");
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 826b5016a101..d7ca20cb146a 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -342,8 +342,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+>   	 */
+>   	pcibios_bus_add_device(dev);
+>   	pci_fixup_device(pci_fixup_final, dev);
+> -	if (pci_is_bridge(dev))
+> -		of_pci_make_dev_node(dev);
+> +	of_pci_make_dev_node(dev);
 
-Yeah, this was just an early heads up.
+Please undo this change. It should only create the device node for 
+bridges and the pci endpoints listed in quirks for now.
 
-> Can you at least investigate what in ath11k_pci_alloc_msi() causes the
-> wifi driver to be upset? Does it normally use a single MSI vector or
-> MSI-X? How about your nVME device?
 
-It uses multiple vectors, but now it falls back to trying to allocate a
-single one and even that fails with -ENOSPC:
+Thanks,
 
-	ath11k_pci 0006:01:00.0: ath11k_pci_alloc_msi - requesting one vector failed: -28
+Lizhi
 
-Similar for the NVMe, it uses multiple vectors normally, but now only
-the AER interrupts appears to be allocated for each controller and there
-is a GICv3 interrupt for the NVMe:
-
-208:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
-212:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
-214:        161          0          0          0          0          0          0          0     GICv3 562 Level     nvme0q0, nvme0q1
-215:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
-
-Next boot, after disabling PCIe controller async probing, it's an MSI-X?!:
-
-201:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
-203:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
-205:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
-206:          0          0          0          0          0          0          0          0  ITS-PCI-MSIX-0002:01:00.0   0 Edge      nvme0q0
-
-This time ath11k vector allocation succeeded, but the driver times out
-eventually:
-
-[    8.984619] ath11k_pci 0006:01:00.0: MSI vectors: 32
-[   29.690841] ath11k_pci 0006:01:00.0: failed to power up mhi: -110
-[   29.697136] ath11k_pci 0006:01:00.0: failed to start mhi: -110
-[   29.703153] ath11k_pci 0006:01:00.0: failed to power up :-110
-[   29.732144] ath11k_pci 0006:01:00.0: failed to create soc core: -110
-[   29.738694] ath11k_pci 0006:01:00.0: failed to init core: -110
-[   32.841758] ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -110
-
-> It would also help if you could define the DEBUG symbol at the very
-> top of irq-gic-v3-its.c and report the debug information that the ITS
-> driver dumps.
-
-See below (with synchronous probing of the pcie controllers).
-
-Johan
-
-[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-[    0.000000] GICv3: 960 SPIs implemented
-[    0.000000] GICv3: 0 Extended SPIs implemented
-[    0.000000] Root IRQ handler: gic_handle_irq
-[    0.000000] GICv3: GICv3 features: 16 PPIs
-[    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x0000000017a60000
-[    0.000000] ITS [mem 0x17a40000-0x17a5ffff]
-[    0.000000] ITS@0x0000000017a40000: allocated 8192 Devices @100100000 (indirect, esz 8, psz 64K, shr 1)
-[    0.000000] ITS@0x0000000017a40000: allocated 32768 Interrupt Collections @100110000 (flat, esz 2, psz 64K, shr 1)
-[    0.000000] GICv3: using LPI property table @0x0000000100120000
-[    0.000000] ITS: Allocator initialized for 57344 LPIs
-[    0.000000] GICv3: CPU0: using allocated LPI pending table @0x0000000100130000
-
-[    0.010428] GICv3: CPU1: found redistributor 100 region 0:0x0000000017a80000
-[    0.010438] GICv3: CPU1: using allocated LPI pending table @0x0000000100140000
-[    0.010477] CPU1: Booted secondary processor 0x0000000100 [0x410fd4b0]
-[    0.011496] Detected PIPT I-cache on CPU2
-[    0.011535] GICv3: CPU2: found redistributor 200 region 0:0x0000000017aa0000
-[    0.011545] GICv3: CPU2: using allocated LPI pending table @0x0000000100150000
-[    0.011576] CPU2: Booted secondary processor 0x0000000200 [0x410fd4b0]
-[    0.012593] Detected PIPT I-cache on CPU3
-[    0.012631] GICv3: CPU3: found redistributor 300 region 0:0x0000000017ac0000
-[    0.012641] GICv3: CPU3: using allocated LPI pending table @0x0000000100160000
-[    0.012671] CPU3: Booted secondary processor 0x0000000300 [0x410fd4b0]
-[    0.015590] Detected PIPT I-cache on CPU4
-[    0.015637] GICv3: CPU4: found redistributor 400 region 0:0x0000000017ae0000
-[    0.015647] GICv3: CPU4: using allocated LPI pending table @0x0000000100170000
-[    0.015675] CPU4: Booted secondary processor 0x0000000400 [0x410fd4c0]
-[    0.016698] Detected PIPT I-cache on CPU5
-[    0.016733] GICv3: CPU5: found redistributor 500 region 0:0x0000000017b00000
-[    0.016742] GICv3: CPU5: using allocated LPI pending table @0x0000000100180000
-[    0.016772] CPU5: Booted secondary processor 0x0000000500 [0x410fd4c0]
-[    0.020807] Detected PIPT I-cache on CPU6
-[    0.020841] GICv3: CPU6: found redistributor 600 region 0:0x0000000017b20000
-[    0.020851] GICv3: CPU6: using allocated LPI pending table @0x0000000100190000
-[    0.020879] CPU6: Booted secondary processor 0x0000000600 [0x410fd4c0]
-[    0.021878] Detected PIPT I-cache on CPU7
-[    0.021914] GICv3: CPU7: found redistributor 700 region 0:0x0000000017b40000
-[    0.021922] GICv3: CPU7: using allocated LPI pending table @0x00000001001a0000
-[    0.021952] CPU7: Booted secondary processor 0x0000000700 [0x410fd4c0]
-
-[    8.358586] qcom-pcie 1c00000.pcie: host bridge /soc@0/pcie@1c00000 ranges:
-[    8.365787] qcom-pcie 1c00000.pcie:       IO 0x0030200000..0x00302fffff -> 0x0000000000
-[    8.381670] qcom-pcie 1c00000.pcie:      MEM 0x0030300000..0x0031ffffff -> 0x0030300000
-[    8.507519] qcom-pcie 1c00000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 1024G
-[    8.603797] qcom-pcie 1c00000.pcie: PCIe Gen.2 x1 link up
-[    8.610023] qcom-pcie 1c00000.pcie: PCI host bridge to bus 0006:00
-[    8.616805] pci_bus 0006:00: root bus resource [bus 00-ff]
-[    8.622872] pci_bus 0006:00: root bus resource [io  0x0000-0xfffff]
-[    8.629844] pci_bus 0006:00: root bus resource [mem 0x30300000-0x31ffffff]
-[    8.636981] pci 0006:00:00.0: [17cb:010e] type 01 class 0x060400 PCIe Root Port
-[    8.655493] pci 0006:00:00.0: BAR 0 [mem 0x00000000-0x00000fff]
-[    8.672909] pci 0006:00:00.0: PCI bridge to [bus 01-ff]
-[    8.688721] pci 0006:00:00.0:   bridge window [io  0x0000-0x0fff]
-[    8.703805] pci 0006:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[    8.719789] pci 0006:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[    8.736680] pci 0006:00:00.0: PME# supported from D0 D3hot D3cold
-[    8.745548] pci 0006:01:00.0: [17cb:1103] type 00 class 0x028000 PCIe Endpoint
-[    8.745646] pci 0006:01:00.0: BAR 0 [mem 0x00000000-0x001fffff 64bit]
-[    8.746274] pci 0006:01:00.0: PME# supported from D0 D3hot D3cold
-[    8.746442] pci 0006:01:00.0: 4.000 Gb/s available PCIe bandwidth, limited by 5.0 GT/s PCIe x1 link at 0006:00:00.0 (capable of 7.876 Gb/s with 8.0 GT/s PCIe x1 link)
-[    8.836195] pci 0006:00:00.0: bridge window [mem 0x30400000-0x305fffff]: assigned
-[    8.853287] pci 0006:00:00.0: BAR 0 [mem 0x30300000-0x30300fff]: assigned
-[    8.870163] pci 0006:01:00.0: BAR 0 [mem 0x30400000-0x305fffff 64bit]: assigned
-[    8.887617] pci 0006:00:00.0: PCI bridge to [bus 01-ff]
-[    8.902850] pci 0006:00:00.0:   bridge window [mem 0x30400000-0x305fffff]
-[    8.933586] ITS: alloc 8192:32
-[    8.933599] ITT 32 entries, 5 bits
-[    8.951573] ID:0 pID:8192 vID:201
-[    8.951585] ID:1 pID:8193 vID:202
-[    8.951591] ID:2 pID:8194 vID:203
-[    8.951597] ID:3 pID:8195 vID:204
-[    8.951603] ID:4 pID:8196 vID:205
-[    8.951609] ID:5 pID:8197 vID:206
-[    8.951615] ID:6 pID:8198 vID:207
-[    8.951621] ID:7 pID:8199 vID:208
-[    8.951627] ID:8 pID:8200 vID:209
-[    8.951633] ID:9 pID:8201 vID:210
-[    8.951639] ID:10 pID:8202 vID:211
-[    8.951645] ID:11 pID:8203 vID:212
-[    8.951650] ID:12 pID:8204 vID:213
-[    8.951656] ID:13 pID:8205 vID:214
-[    8.951662] ID:14 pID:8206 vID:215
-[    8.951667] ID:15 pID:8207 vID:216
-[    8.951673] ID:16 pID:8208 vID:217
-[    8.951679] ID:17 pID:8209 vID:218
-[    8.951685] ID:18 pID:8210 vID:219
-[    8.951691] ID:19 pID:8211 vID:220
-[    8.951696] ID:20 pID:8212 vID:221
-[    8.951702] ID:21 pID:8213 vID:222
-[    8.951708] ID:22 pID:8214 vID:223
-[    8.951714] ID:23 pID:8215 vID:224
-[    8.951720] ID:24 pID:8216 vID:225
-[    8.951725] ID:25 pID:8217 vID:226
-[    8.951772] ID:26 pID:8218 vID:227
-[    8.951778] ID:27 pID:8219 vID:228
-[    8.951784] ID:28 pID:8220 vID:229
-[    8.951790] ID:29 pID:8221 vID:230
-[    8.951796] ID:30 pID:8222 vID:231
-[    8.951802] ID:31 pID:8223 vID:232
-[    8.951919] IRQ201 -> 0-7 CPU0
-[    8.951940] IRQ202 -> 0-7 CPU1
-[    8.951952] IRQ203 -> 0-7 CPU2
-[    8.951963] IRQ204 -> 0-7 CPU3
-[    8.951975] IRQ205 -> 0-7 CPU4
-[    8.951987] IRQ206 -> 0-7 CPU5
-[    8.951998] IRQ207 -> 0-7 CPU6
-[    8.952010] IRQ208 -> 0-7 CPU7
-[    8.952022] IRQ209 -> 0-7 CPU0
-[    8.952033] IRQ210 -> 0-7 CPU1
-[    8.952045] IRQ211 -> 0-7 CPU2
-[    8.952056] IRQ212 -> 0-7 CPU3
-[    8.952068] IRQ213 -> 0-7 CPU4
-[    8.952079] IRQ214 -> 0-7 CPU5
-[    8.952091] IRQ215 -> 0-7 CPU6
-[    8.952103] IRQ216 -> 0-7 CPU7
-[    8.952115] IRQ217 -> 0-7 CPU0
-[    8.952126] IRQ218 -> 0-7 CPU1
-[    8.952138] IRQ219 -> 0-7 CPU2
-[    8.952150] IRQ220 -> 0-7 CPU3
-[    8.952162] IRQ221 -> 0-7 CPU4
-[    8.952174] IRQ222 -> 0-7 CPU5
-[    8.952185] IRQ223 -> 0-7 CPU6
-[    8.952197] IRQ224 -> 0-7 CPU7
-[    8.952209] IRQ225 -> 0-7 CPU0
-[    8.952220] IRQ226 -> 0-7 CPU1
-[    8.952232] IRQ227 -> 0-7 CPU2
-[    8.952244] IRQ228 -> 0-7 CPU3
-[    8.952255] IRQ229 -> 0-7 CPU4
-[    8.952267] IRQ230 -> 0-7 CPU5
-[    8.952278] IRQ231 -> 0-7 CPU6
-[    8.952290] IRQ232 -> 0-7 CPU7
-[    8.954072] ITS: alloc 8192:32
-[    8.954081] ITT 32 entries, 5 bits
-[    8.954128] ID:0 pID:8192 vID:201
-[    8.954137] IRQ201 -> 0-7 CPU0
-[    8.954328] IRQ201 -> 0-7 CPU0
-[    8.954357] pcieport 0006:00:00.0: PME: Signaling with IRQ 201
-[    8.960980] pcieport 0006:00:00.0: AER: enabled with IRQ 201
-[    8.967607] ath11k_pci 0006:01:00.0: BAR 0 [mem 0x30400000-0x305fffff 64bit]: assigned
-[    8.976146] ath11k_pci 0006:01:00.0: enabling device (0000 -> 0002)
-[    8.983071] ITS: alloc 8224:32
-[    8.983080] ITT 32 entries, 5 bits
-[    8.983842] ID:0 pID:8224 vID:202
-[    8.983849] ID:1 pID:8225 vID:203
-[    8.983855] ID:2 pID:8226 vID:204
-[    8.983861] ID:3 pID:8227 vID:205
-[    8.983867] ID:4 pID:8228 vID:206
-[    8.983873] ID:5 pID:8229 vID:207
-[    8.983878] ID:6 pID:8230 vID:208
-[    8.983884] ID:7 pID:8231 vID:209
-[    8.983890] ID:8 pID:8232 vID:210
-[    8.983895] ID:9 pID:8233 vID:211
-[    8.983901] ID:10 pID:8234 vID:212
-[    8.983907] ID:11 pID:8235 vID:213
-[    8.983913] ID:12 pID:8236 vID:214
-[    8.983919] ID:13 pID:8237 vID:215
-[    8.983925] ID:14 pID:8238 vID:216
-[    8.983931] ID:15 pID:8239 vID:217
-[    8.983937] ID:16 pID:8240 vID:218
-[    8.983942] ID:17 pID:8241 vID:219
-[    8.983948] ID:18 pID:8242 vID:220
-[    8.983954] ID:19 pID:8243 vID:221
-[    8.983960] ID:20 pID:8244 vID:222
-[    8.983965] ID:21 pID:8245 vID:223
-[    8.983971] ID:22 pID:8246 vID:224
-[    8.983977] ID:23 pID:8247 vID:225
-[    8.983983] ID:24 pID:8248 vID:226
-[    8.983989] ID:25 pID:8249 vID:227
-[    8.983995] ID:26 pID:8250 vID:228
-[    8.984000] ID:27 pID:8251 vID:229
-[    8.984006] ID:28 pID:8252 vID:230
-[    8.984012] ID:29 pID:8253 vID:231
-[    8.984018] ID:30 pID:8254 vID:232
-[    8.984024] ID:31 pID:8255 vID:233
-[    8.984102] IRQ202 -> 0-7 CPU1
-[    8.984148] IRQ203 -> 0-7 CPU2
-[    8.984160] IRQ204 -> 0-7 CPU3
-[    8.984172] IRQ205 -> 0-7 CPU4
-[    8.984184] IRQ206 -> 0-7 CPU5
-[    8.984196] IRQ207 -> 0-7 CPU6
-[    8.984208] IRQ208 -> 0-7 CPU7
-[    8.984220] IRQ209 -> 0-7 CPU0
-[    8.984231] IRQ210 -> 0-7 CPU1
-[    8.984243] IRQ211 -> 0-7 CPU2
-[    8.984255] IRQ212 -> 0-7 CPU3
-[    8.984267] IRQ213 -> 0-7 CPU4
-[    8.984279] IRQ214 -> 0-7 CPU5
-[    8.984291] IRQ215 -> 0-7 CPU6
-[    8.984303] IRQ216 -> 0-7 CPU7
-[    8.984315] IRQ217 -> 0-7 CPU0
-[    8.984326] IRQ218 -> 0-7 CPU1
-[    8.984338] IRQ219 -> 0-7 CPU2
-[    8.984350] IRQ220 -> 0-7 CPU3
-[    8.984362] IRQ221 -> 0-7 CPU4
-[    8.984373] IRQ222 -> 0-7 CPU5
-[    8.984385] IRQ223 -> 0-7 CPU6
-[    8.984398] IRQ224 -> 0-7 CPU7
-[    8.984409] IRQ225 -> 0-7 CPU0
-[    8.984422] IRQ226 -> 0-7 CPU1
-[    8.984434] IRQ227 -> 0-7 CPU2
-[    8.984445] IRQ228 -> 0-7 CPU3
-[    8.984457] IRQ229 -> 0-7 CPU4
-[    8.984469] IRQ230 -> 0-7 CPU5
-[    8.984481] IRQ231 -> 0-7 CPU6
-[    8.984492] IRQ232 -> 0-7 CPU7
-[    8.984504] IRQ233 -> 0-7 CPU0
-[    8.984619] ath11k_pci 0006:01:00.0: MSI vectors: 32
-[    8.990070] ath11k_pci 0006:01:00.0: wcn6855 hw2.0
-[    8.998289] IRQ202 -> 0-7 CPU1
-[    8.998348] IRQ203 -> 0-7 CPU2
-[    8.998376] IRQ204 -> 0-7 CPU3
-[    9.001890] IRQ205 -> 0-7 CPU4
-[    9.001923] IRQ206 -> 0-7 CPU5
-[    9.001953] IRQ207 -> 0-7 CPU6
-[    9.001977] IRQ208 -> 0-7 CPU7
-[    9.002003] IRQ209 -> 0-7 CPU0
-[    9.002031] IRQ210 -> 0-7 CPU1
-[    9.002055] IRQ211 -> 0-7 CPU2
-[    9.002117] IRQ216 -> 0-7 CPU7
-[    9.002168] IRQ217 -> 0-7 CPU0
-[    9.002210] IRQ218 -> 0-7 CPU1
-[    9.002257] IRQ220 -> 0-7 CPU3
-[    9.002296] IRQ221 -> 0-7 CPU4
-[    9.002337] IRQ222 -> 0-7 CPU5
-[    9.002381] IRQ223 -> 0-7 CPU6
-[    9.002421] IRQ224 -> 0-7 CPU7
-[    9.002460] IRQ225 -> 0-7 CPU0
-[    9.002499] IRQ226 -> 0-7 CPU1
-[    9.162382] mhi mhi0: Requested to power ON
-[    9.167114] mhi mhi0: Power on setup success
-
-[   29.680356] mhi mhi0: Device link is not accessible
-[   29.685437] mhi mhi0: MHI did not enter READY state
-[   29.690841] ath11k_pci 0006:01:00.0: failed to power up mhi: -110
-[   29.697136] ath11k_pci 0006:01:00.0: failed to start mhi: -110
-[   29.703153] ath11k_pci 0006:01:00.0: failed to power up :-110
-[   29.732144] ath11k_pci 0006:01:00.0: failed to create soc core: -110
-[   29.738694] ath11k_pci 0006:01:00.0: failed to init core: -110
-[   32.841758] ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -110
-[   32.852799] qcom-pcie 1c10000.pcie: supply vdda not found, using dummy regulator
-[   32.860924] qcom-pcie 1c10000.pcie: host bridge /soc@0/pcie@1c10000 ranges:
-[   32.868157] qcom-pcie 1c10000.pcie:       IO 0x0034200000..0x00342fffff -> 0x0000000000
-[   32.876428] qcom-pcie 1c10000.pcie:      MEM 0x0034300000..0x0035ffffff -> 0x0034300000
-[   33.001705] qcom-pcie 1c10000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 1024G
-[   33.111456] qcom-pcie 1c10000.pcie: PCIe Gen.3 x2 link up
-[   33.117554] qcom-pcie 1c10000.pcie: PCI host bridge to bus 0004:00
-[   33.124000] pci_bus 0004:00: root bus resource [bus 00-ff]
-[   33.129745] pci_bus 0004:00: root bus resource [io  0x100000-0x1fffff] (bus address [0x0000-0xfffff])
-[   33.139324] pci_bus 0004:00: root bus resource [mem 0x34300000-0x35ffffff]
-[   33.146525] pci 0004:00:00.0: [17cb:010e] type 01 class 0x060400 PCIe Root Port
-[   33.154167] pci 0004:00:00.0: BAR 0 [mem 0x00000000-0x00000fff]
-[   33.160373] pci 0004:00:00.0: PCI bridge to [bus 01-ff]
-[   33.165804] pci 0004:00:00.0:   bridge window [io  0x100000-0x100fff]
-[   33.172482] pci 0004:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[   33.179515] pci 0004:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[   33.187622] pci 0004:00:00.0: PME# supported from D0 D3hot D3cold
-[   33.195555] pci 0004:01:00.0: [17cb:0306] type 00 class 0xff0000 PCIe Endpoint
-[   33.203462] pci 0004:01:00.0: BAR 0 [mem 0x00000000-0x00000fff 64bit]
-[   33.210163] pci 0004:01:00.0: BAR 2 [mem 0x00000000-0x00000fff 64bit]
-[   33.217379] pci 0004:01:00.0: PME# supported from D0 D3hot D3cold
-[   33.223825] pci 0004:01:00.0: 15.752 Gb/s available PCIe bandwidth, limited by 8.0 GT/s PCIe x2 link at 0004:00:00.0 (capable of 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
-[   33.251876] pci 0004:00:00.0: bridge window [mem 0x34300000-0x343fffff]: assigned
-[   33.259599] pci 0004:00:00.0: BAR 0 [mem 0x34400000-0x34400fff]: assigned
-[   33.266621] pci 0004:01:00.0: BAR 0 [mem 0x34300000-0x34300fff 64bit]: assigned
-[   33.274186] pci 0004:01:00.0: BAR 2 [mem 0x34301000-0x34301fff 64bit]: assigned
-[   33.281748] pci 0004:00:00.0: PCI bridge to [bus 01-ff]
-[   33.287133] pci 0004:00:00.0:   bridge window [mem 0x34300000-0x343fffff]
-[   33.294322] Reusing ITT for devID 0
-[   33.296005] Reusing ITT for devID 0
-[   33.296053] ID:1 pID:8193 vID:203
-[   33.296066] IRQ203 -> 0-7 CPU1
-[   33.296176] IRQ203 -> 0-7 CPU1
-[   33.296240] pcieport 0004:00:00.0: PME: Signaling with IRQ 203
-[   33.302538] pcieport 0004:00:00.0: AER: enabled with IRQ 203
-[   33.308587] mhi-pci-generic 0004:01:00.0: MHI PCI device found: foxconn-sdx55
-[   33.315945] mhi-pci-generic 0004:01:00.0: BAR 0 [mem 0x34300000-0x34300fff 64bit]: assigned
-[   33.324583] mhi-pci-generic 0004:01:00.0: enabling device (0000 -> 0002)
-[   33.331610] ITS: alloc 8224:8
-[   33.331619] ITT 8 entries, 3 bits
-[   33.331750] ID:0 pID:8224 vID:204
-[   33.331756] ID:1 pID:8225 vID:205
-[   33.331762] ID:2 pID:8226 vID:206
-[   33.331769] ID:3 pID:8227 vID:207
-[   33.331774] ID:4 pID:8228 vID:208
-[   33.331791] IRQ204 -> 0-7 CPU2
-[   33.331837] IRQ205 -> 0-7 CPU3
-[   33.331848] IRQ206 -> 0-7 CPU4
-[   33.331860] IRQ207 -> 0-7 CPU5
-[   33.331872] IRQ208 -> 0-7 CPU6
-[   33.332711] IRQ204 -> 0-7 CPU2
-[   33.333016] IRQ205 -> 0-7 CPU3
-[   33.333042] IRQ206 -> 0-7 CPU4
-[   33.333066] IRQ207 -> 0-7 CPU5
-[   33.333090] IRQ208 -> 0-7 CPU6
-[   33.335976] mhi mhi0: Requested to power ON
-[   33.340327] mhi mhi0: Power on setup success
-[   54.242353] mhi-pci-generic 0004:01:00.0: failed to power up MHI controller
-[   54.251547] mhi-pci-generic 0004:01:00.0: probe with driver mhi-pci-generic failed with error -110
-[   54.262662] qcom-pcie 1c20000.pcie: supply vdda not found, using dummy regulator
-[   54.270794] qcom-pcie 1c20000.pcie: host bridge /soc@0/pcie@1c20000 ranges:
-[   54.278042] qcom-pcie 1c20000.pcie:       IO 0x003c200000..0x003c2fffff -> 0x0000000000
-[   54.286340] qcom-pcie 1c20000.pcie:      MEM 0x003c300000..0x003dffffff -> 0x003c300000
-[   54.409356] qcom-pcie 1c20000.pcie: iATU: unroll T, 8 ob, 8 ib, align 4K, limit 1024G
-[   54.519604] qcom-pcie 1c20000.pcie: PCIe Gen.3 x4 link up
-[   54.525609] qcom-pcie 1c20000.pcie: PCI host bridge to bus 0002:00
-[   54.532017] pci_bus 0002:00: root bus resource [bus 00-ff]
-[   54.537732] pci_bus 0002:00: root bus resource [io  0x200000-0x2fffff] (bus address [0x0000-0xfffff])
-[   54.547830] pci_bus 0002:00: root bus resource [mem 0x3c300000-0x3dffffff]
-[   54.555523] pci 0002:00:00.0: [17cb:010e] type 01 class 0x060400 PCIe Root Port
-[   54.563629] pci 0002:00:00.0: BAR 0 [mem 0x00000000-0x00000fff]
-[   54.570244] pci 0002:00:00.0: PCI bridge to [bus 01-ff]
-[   54.576099] pci 0002:00:00.0:   bridge window [io  0x200000-0x200fff]
-[   54.583121] pci 0002:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
-[   54.590473] pci 0002:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
-[   54.598841] pci 0002:00:00.0: PME# supported from D0 D3hot D3cold
-[   54.606657] pci 0002:01:00.0: [1e0f:0001] type 00 class 0x010802 PCIe Endpoint
-[   54.614458] pci 0002:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
-[   54.621900] pci 0002:01:00.0: PME# supported from D0 D3hot
-[   54.635232] sd 0:0:0:0: [sda] Starting disk
-[   54.641117] pci 0002:00:00.0: bridge window [mem 0x3c300000-0x3c3fffff]: assigned
-[   54.649086] pci 0002:00:00.0: BAR 0 [mem 0x3c400000-0x3c400fff]: assigned
-[   54.656299] pci 0002:01:00.0: BAR 0 [mem 0x3c300000-0x3c303fff 64bit]: assigned
-[   54.664083] pci 0002:00:00.0: PCI bridge to [bus 01-ff]
-[   54.669688] pci 0002:00:00.0:   bridge window [mem 0x3c300000-0x3c3fffff]
-[   54.677113] Reusing ITT for devID 0
-[   54.678960] Reusing ITT for devID 0
-[   54.678994] ID:2 pID:8194 vID:205
-[   54.679005] IRQ205 -> 0-7 CPU2
-[   54.679103] IRQ205 -> 0-7 CPU2
-[   54.679123] pcieport 0002:00:00.0: PME: Signaling with IRQ 205
-[   54.685994] pcieport 0002:00:00.0: AER: enabled with IRQ 205
-[   54.693042] nvme nvme0: pci function 0002:01:00.0
-[   54.698150] nvme 0002:01:00.0: enabling device (0000 -> 0002)
-[   54.704457] Reusing ITT for devID 100
-[   54.704500] ID:0 pID:8224 vID:206
-[   54.704509] IRQ206 -> 0-7 CPU3
-[   54.706919] IRQ206 -> 0-7 CPU3
-
-[  115.695904] nvme nvme0: I/O tag 0 (1000) QID 0 timeout, completion polled
-[  177.135829] nvme nvme0: I/O tag 1 (1001) QID 0 timeout, completion polled
-[  238.575830] nvme nvme0: I/O tag 2 (1002) QID 0 timeout, completion polled
-[  300.023834] nvme nvme0: I/O tag 3 (1003) QID 0 timeout, completion polled
-[  300.055992] nvme nvme0: allocated 61 MiB host memory buffer.
+>   	pci_create_sysfs_dev_files(dev);
+>   	pci_proc_attach_device(dev);
+>   	pci_bridge_d3_update(dev);
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 51e3dd0ea5ab..883bf15211a5 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -608,18 +608,28 @@ int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
+>   
+>   #ifdef CONFIG_PCI_DYNAMIC_OF_NODES
+>   
+> +void of_pci_free_node(struct device_node *np)
+> +{
+> +	struct of_changeset *cset;
+> +
+> +	cset = (struct of_changeset *)(np + 1);
+> +
+> +	np->data = NULL;
+> +	of_changeset_revert(cset);
+> +	of_changeset_destroy(cset);
+> +	of_node_put(np);
+> +}
+> +
+>   void of_pci_remove_node(struct pci_dev *pdev)
+>   {
+>   	struct device_node *np;
+>   
+>   	np = pci_device_to_OF_node(pdev);
+> -	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+> +	if (!np || np->data != of_pci_free_node)
+>   		return;
+>   	pdev->dev.of_node = NULL;
+>   
+> -	of_changeset_revert(np->data);
+> -	of_changeset_destroy(np->data);
+> -	of_node_put(np);
+> +	of_pci_free_node(np);
+>   }
+>   
+>   void of_pci_make_dev_node(struct pci_dev *pdev)
+> @@ -655,14 +665,18 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>   	if (!name)
+>   		return;
+>   
+> -	cset = kmalloc(sizeof(*cset), GFP_KERNEL);
+> -	if (!cset)
+> +	np = kzalloc(sizeof(*np) + sizeof(*cset), GFP_KERNEL);
+> +	if (!np)
+>   		goto out_free_name;
+> +	np->full_name = name;
+> +	of_node_init(np);
+> +
+> +	cset = (struct of_changeset *)(np + 1);
+>   	of_changeset_init(cset);
+>   
+> -	np = of_changeset_create_node(cset, ppnode, name);
+> +	np = of_changeset_create_node(cset, np, ppnode, NULL);
+>   	if (!np)
+> -		goto out_destroy_cset;
+> +		goto out_free_node;
+>   
+>   	ret = of_pci_add_properties(pdev, cset, np);
+>   	if (ret)
+> @@ -670,19 +684,18 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>   
+>   	ret = of_changeset_apply(cset);
+>   	if (ret)
+> -		goto out_free_node;
+> +		goto out_destroy_cset;
+>   
+> -	np->data = cset;
+> +	np->data = of_pci_free_node;
+>   	pdev->dev.of_node = np;
+> -	kfree(name);
+>   
+>   	return;
+>   
+> -out_free_node:
+> -	of_node_put(np);
+>   out_destroy_cset:
+>   	of_changeset_destroy(cset);
+>   	kfree(cset);
+> +out_free_node:
+> +	of_node_put(np);
+>   out_free_name:
+>   	kfree(name);
+>   }
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index fd44565c4756..7b1a455306b8 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -702,11 +702,13 @@ struct of_changeset;
+>   
+>   #ifdef CONFIG_PCI_DYNAMIC_OF_NODES
+>   void of_pci_make_dev_node(struct pci_dev *pdev);
+> +void of_pci_free_node(struct device_node *np);
+>   void of_pci_remove_node(struct pci_dev *pdev);
+>   int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
+>   			  struct device_node *np);
+>   #else
+>   static inline void of_pci_make_dev_node(struct pci_dev *pdev) { }
+> +static inline void of_pci_free_node(struct device_node *np) { }
+>   static inline void of_pci_remove_node(struct pci_dev *pdev) { }
+>   #endif
+>   
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index a0bedd038a05..f774459d0d84 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -1631,6 +1631,7 @@ static inline int of_changeset_update_property(struct of_changeset *ocs,
+>   }
+>   
+>   struct device_node *of_changeset_create_node(struct of_changeset *ocs,
+> +					     struct device_node *np,
+>   					     struct device_node *parent,
+>   					     const char *full_name);
+>   int of_changeset_add_prop_string(struct of_changeset *ocs,
+>
+> base-commit: 43db1e03c086ed20cc75808d3f45e780ec4ca26e
 
