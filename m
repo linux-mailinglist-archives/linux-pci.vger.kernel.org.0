@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-10320-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10321-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 131CE931C60
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 23:08:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89465931C62
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 23:08:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD3A5B214E1
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:08:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 436422846F1
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:08:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FE788174E;
-	Mon, 15 Jul 2024 21:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 911738174E;
+	Mon, 15 Jul 2024 21:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kg2Ri8CY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4xyRFUc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CCAC15B;
-	Mon, 15 Jul 2024 21:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E3C13AA2A;
+	Mon, 15 Jul 2024 21:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721077694; cv=none; b=n2hrOwST3Ny+FzSw+gZU+mf2kWFo5Egss+OXziPUZkUUkHw6SLEvWb22UCVpAj0h3Jz7GTwgfBO6+dj6EozulhzUcZkQDV+7OHac0x2fUQbg6pUI9mU7CZe6xfFcLIdR5R+tU7vOGpaM8g8P6qkFkjQPp6rK1mqvhn8B2rJ75zw=
+	t=1721077720; cv=none; b=fBOBWG6V7fcl0PRmS0Ao0dlgE0SSIB3jtLugWp/gnVgkLWikMUuCrpSsZXGuU+JVw7Scmyeg14jjtzaK05dcRTPbM2MtOzseqkHWr1zKqZ+GXP1RDVyL1lVLjySym2WTHyMLJsXkbBaQMehJyBtXq3yt1h+TB2VzIEVxy1/e5a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721077694; c=relaxed/simple;
-	bh=oZxs7uMZgQJNvo05GBkwy2kem79Sbej//qBl59hixjU=;
+	s=arc-20240116; t=1721077720; c=relaxed/simple;
+	bh=Uh70xKxX3+mFPrDX/kE70rsVBc5GCAcwlqsL7wr2mnM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=os3njDCtjdZO97MAFV774qG84BW+EFzkJzPrAdgP65ZYAjdlFEap984qQt2IA+GX0U8LoxVsctsh4KAg/w1zKlo8Fyi3vUtl0I5w/20GBCPyVEnMBC70qrWf5PhfCMh8GIvFCEqVPBqPgrJoNzp4hBpJAX4XY43BdOVD7GYKf5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kg2Ri8CY; arc=none smtp.client-ip=209.85.167.180
+	 In-Reply-To:Content-Type; b=Ix1fKha9c8I3S4pXuwKG5FPqmZVfS85+SiHU/7V1pf+Zqs9Z78uFkjWUo/SMvilAOSBi/K4J2fKu5Rw4xm6AboU5N0gk5oseg2Gp0vLN+FbGBNfx11QeFKZT54CEvjaCiEOh4lQ1hcoxoB/ndpiffSggJDeHC3+MSZ36rfnSPRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K4xyRFUc; arc=none smtp.client-ip=209.85.160.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3cabac56b38so3188174b6e.3;
-        Mon, 15 Jul 2024 14:08:12 -0700 (PDT)
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-44caaf77c7eso25868151cf.3;
+        Mon, 15 Jul 2024 14:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721077692; x=1721682492; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1721077718; x=1721682518; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lyvE6urTPVamT9pSOus9wZnlWNzaHagto7pFzrNb3B8=;
-        b=kg2Ri8CYDxT7PlPDhJDzL6zLC2KqspWJ2lWhO3yoNJ10Cey8+vE4AguxINoB/AJjHA
-         Wkb98iSEW26Dmn3YgjZVt1K0tfViJPhiU4B+XIgS1f55UJoSgYiiZQ4dsyL+g7eEmyMm
-         gXk8LZlnLZnz/Ic0tISpruh9mONAr2z57YKO091aL1nJYchcZFEuuCwDoqx4qo7ELpkm
-         QfRl7jUH3Q7i0SH291dJqXpA9vENDvqmTYHxKGkNtyhgMdRzeFunfNE5D05utrfZrwdA
-         xaf6jCdMV/4WeHLEemk8wYZoG0KWAvLFV5u2tyoDAEMhEfqMD2PwdQDhiNVwlIednbCq
-         3MkQ==
+        bh=xg52cnsRYDFLsxiQv0l8fuhhgGtnnB1PWzGQf27DmEc=;
+        b=K4xyRFUcrhaB+K0LNBiIoMKOqshU314jPIHmYh2ZsHgQImk+QrkOVVbC31beuYO9st
+         yxT7AE/4tCbwfwgS3jXHqIdD1eW/+1Xe2iNoCFC3nYfDAmTFAWSwPUZRUje5RxsLzO4k
+         hW8HG0HkICVTSPkTvUteIwxXdnzvjaOuR/G3j5dsjTTOEAwknkht6GeCF7UiugfSW+28
+         eXkhpdCYCTFpEraf/cl2gPiBppE+W98gmoA302SAPJ3q07S2/2VnWUeAVhmtFttIH4gb
+         eA7dG/B64a3S7GgnYSn7tn+VhG3iJU2ZRkcu471nHBxrjZburdB5Ku/gFHgPtDJF9rn5
+         fONg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721077692; x=1721682492;
+        d=1e100.net; s=20230601; t=1721077718; x=1721682518;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lyvE6urTPVamT9pSOus9wZnlWNzaHagto7pFzrNb3B8=;
-        b=kmLqVRZ9gi2AvnYd0qaTrsN6Js9jwz+nbZiVai3bH41pMXjr0hsonmR49VNG/HtIJK
-         Or5t+QvpZljucB7F077T08UgfY2oUcZPrbacMATJOCcmBBVzRw7UwgqPyFIJ5cZvVqKk
-         SpkXHbD4sQ6Z4qqkX0tq4GTKt5MVA6TWZXvzB4Pe2FCsJN57ONqFuj6ZSFnKcjgYGGnz
-         KMHzc3uxzPESvqCTbXMKjDMzRUN6WHpBvnrTMWMzH1QqZ17WCuLKj7I4vWXx5o88O8qI
-         4uHtJWL0sXmD1xOk4ammQZD7vT5H45VVQKpmmMoFxQWGCJZmAnrLy16+tdRb+tOE/sSz
-         mr6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWtGivStPuOTrpuXj9bv57mIsDgg1zZpe4B51SzGQH4ZpPmbdXFlLsIlI4Mse6i/jGxJdSeJxqJ0McwKmISkwbOCVCniMDRgZYrcIJkzTMHfKmSU4AG3sz9Mz6EetxoTqt3XEHhAn+F
-X-Gm-Message-State: AOJu0YwUoP5dA8MHoxQnM7x9kQ+2vm/osHyS3klZd9Jcxs8Y/YtGo8CH
-	GdixBTpTtXlI9giL8f4GPQQb+gRcSF8QkiL7hrOUCG2ptUPsr/Pl
-X-Google-Smtp-Source: AGHT+IGb0JLgQ89zCXwrgRht/SY1laLNjkHpfsoEeGcW5BLArDQlvq47vSme6kHuDdvslIrm3b+kTQ==
-X-Received: by 2002:a05:6808:1402:b0:3d9:40c2:eb42 with SMTP id 5614622812f47-3dac7c00ab5mr518093b6e.39.1721077691704;
-        Mon, 15 Jul 2024 14:08:11 -0700 (PDT)
+        bh=xg52cnsRYDFLsxiQv0l8fuhhgGtnnB1PWzGQf27DmEc=;
+        b=doPS3fHHBS/aI9ihK5m50iZnYoajlYufmNJKsRFUCGdmgFDJWaIm9DmicjHd6bBMIJ
+         WN3V2bWEv99fcez7T78A8UBFw1119ij2XzJD05yNPUH4YjKVT4cZFhpWFUvNc0wkYf7g
+         rZCJKkNWnFDLyiv1FKEI/PcWfetqRiYq8CIfK+nSZSGPd13g3nEuuC+XSOrN5xOAlXhQ
+         LVut6UYUk1vDzIZN7/oa9hTEAgT0d8brjz0gZr9eRSes7HLE6W6htE0HbJqXpCU9iZ1p
+         4Dabe1rbp0auZE3x8Ht/RyTi4xhRYMRiZQKS+R1lRxWBHb8K3kJFg7Mr7Ezl4NYdw+IS
+         Lusw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaA3VGF5Y/G8jeXtIRA3XNBz5pCNxLqGpe13lE4crrSjlaEI/iuxqtQs9gtYLOT4Whsq0iLsKQ1xu1fxZnDIAFjGJCoHAI+t7CRocT7/7rHKrTC7H3tkXyLvQCCD5igmaYGKikNNsX
+X-Gm-Message-State: AOJu0YwbNqL5iKjE9VwkBfvPRQf8+DrlnTHFFwnt/pKLM3NHAkk0tdSU
+	vClifjjcnAtGJJqjwq5Bk3HQbcUVVtvkBIcbVsI81TAlSFpZZS29
+X-Google-Smtp-Source: AGHT+IGcMQSi6ArxHHMMJh/alK4lucEdIGS992m6FlQ+Hm+NO/rUt9RTFtrb9+8V4/v5EOEaKQiONQ==
+X-Received: by 2002:a05:622a:2c3:b0:440:6ccb:e6d5 with SMTP id d75a77b69052e-44f7aeb38c6mr4494751cf.51.1721077717690;
+        Mon, 15 Jul 2024 14:08:37 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id af79cd13be357-7a160bc0158sm230794685a.54.2024.07.15.14.08.08
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-44f5b7eded2sm28534331cf.39.2024.07.15.14.08.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 14:08:10 -0700 (PDT)
-Message-ID: <ea4ffbe3-61b0-49b1-b04a-5748ff8e6353@gmail.com>
-Date: Mon, 15 Jul 2024 14:08:07 -0700
+        Mon, 15 Jul 2024 14:08:36 -0700 (PDT)
+Message-ID: <67b6fc09-7edc-4fae-859a-dc386d4deada@gmail.com>
+Date: Mon, 15 Jul 2024 14:08:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,8 +76,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/12] PCI: brcmstb: Check return value of all
- reset_control_xxx calls
+Subject: Re: [PATCH v3 08/12] PCI: brcmstb: Don't conflate the reset rescal
+ with phy ctrl
 To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
  Nicolas Saenz Julienne <nsaenz@kernel.org>,
  Bjorn Helgaas <bhelgaas@google.com>,
@@ -88,26 +88,29 @@ To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
 Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>,
  "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
  <linux-rpi-kernel@lists.infradead.org>,
  "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
  <linux-arm-kernel@lists.infradead.org>,
  open list <linux-kernel@vger.kernel.org>
 References: <20240710221630.29561-1-james.quinlan@broadcom.com>
- <20240710221630.29561-11-james.quinlan@broadcom.com>
+ <20240710221630.29561-9-james.quinlan@broadcom.com>
 Content-Language: en-US
 From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240710221630.29561-11-james.quinlan@broadcom.com>
+In-Reply-To: <20240710221630.29561-9-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 7/10/24 15:16, Jim Quinlan wrote:
-> In some cases the result of a reset_control_xxx() call have been ignored.
-> Now we check all return values of such functions and propagate the error to
-> the next level.
+> We've been assuming that if an SOC has a "rescal" reset controller that we
+> should automatically invoke brcm_phy_cntl(...).  This will not be true in
+> future SOCs, so we create a bool "has_phy" and adjust the cfg_data
+> appropriately (we need to give 7216 its own cfg_data structure instead of
+> sharing one).
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
