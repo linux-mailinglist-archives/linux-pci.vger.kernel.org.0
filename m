@@ -1,261 +1,298 @@
-Return-Path: <linux-pci+bounces-10317-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10318-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91BCD931C0B
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 22:39:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B606931C42
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 22:52:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 47BA3283296
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 20:39:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92C3F1F21FBF
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 20:52:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1402E13D260;
-	Mon, 15 Jul 2024 20:36:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D62CA13C3DD;
+	Mon, 15 Jul 2024 20:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P4v66wUm"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dRuP6B5K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2063.outbound.protection.outlook.com [40.107.101.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B1D13C816;
-	Mon, 15 Jul 2024 20:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11DC1369B1;
+	Mon, 15 Jul 2024 20:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721075809; cv=fail; b=sdUvBqwyTKkP95qug+pXVez81cTxJ9u8Gm9MJAS1M/gPV6ejIfvMcBC+RVPPu5UCXxrCqhXWAcmnSW0ow2kuTJTVgY0wX8YiADNYdeuTNy2OI9HMl0Wgk3y+EfaHHHpOX6xgukNQ9uOLlkGoAZf659+k8VRq5JYmp58RjJXUTJI=
+	t=1721076762; cv=fail; b=HpRPFjAs9fPuLn7nzcGdgYAx0lhPBHismF8q8U190fVuMNIbL55+XD5nhJtgpLWTfbMuVYecpVjZK182nwV/AcKgcZn/akmisIRZe+wOIjQBnlxB/zs5O6AGAw5DsQnVfGunhkve7oTnNGMQ+7RWgTa+Z4NBcNkbF04XVx5TMyg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721075809; c=relaxed/simple;
-	bh=HmCs5BvVoKHCGutv6kKCIrNnO7VvmkuRf6XgczLQ38E=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kpCDkIfxNMEjSNiIoQpi0AqbAumkiLkYB8sFiHePrt0TSyc/Zy0/iqGkdMcQCmWoSRvB3zox4Adj99PUo3S7CRE/NEB8/ga6LdzuPGpLkTP8uF/XQEtPpIq6R8VShWUuL8KfrqE2+N1hNdZT5Qev5BwU9Hi7m0OujAMMuC/Ag5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P4v66wUm; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721075807; x=1752611807;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=HmCs5BvVoKHCGutv6kKCIrNnO7VvmkuRf6XgczLQ38E=;
-  b=P4v66wUmNqDdTcJwXGzrLCuw71IpPVqRNy+J9DFEFlCR0DhXowzYdZCy
-   3PekRcp4yrRIO1RUb7VMaenT1Y1Q1qzRwCz7/vuhDFnKc0W6OJQP/xUqS
-   z5WgqBqdneeT+vNPlRq6LYAu+95iDHB+wmRn7XXexSu9ykJpog+55NGIM
-   JXn5SkQ4Vdfti3gWbfWzlCBv3U7UVS3Y+k1g724rML8M/qjOXM8NghmLi
-   5wY9zb8w1vzDO5pE33ZztJvr0c1eXKfNatreMpl2mx9YGe07meoJkuZMV
-   3r0lNbnVoq0GD5VRU5SIACjnLc5pPoYVJH+X0Ubfqoqj4mxPEGQ6hsgrO
-   A==;
-X-CSE-ConnectionGUID: x2o65SFDSM+ZrBByLk81LA==
-X-CSE-MsgGUID: IKopFzhQQhuwTbJBi4epmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="21395535"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="21395535"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 13:36:46 -0700
-X-CSE-ConnectionGUID: 22yGHXVlT6+Q8uC83KGANA==
-X-CSE-MsgGUID: E9QzMCfeQhqliWQtO5Bi+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="87244770"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jul 2024 13:36:44 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 15 Jul 2024 13:36:43 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 15 Jul 2024 13:36:43 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 15 Jul 2024 13:36:43 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 15 Jul 2024 13:36:43 -0700
+	s=arc-20240116; t=1721076762; c=relaxed/simple;
+	bh=pYkjPEX+PRVem+HrTGkMIS9JQmcmOELF/ks98gJ9t30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=empsvwt3MFbAQ8eO8KnGxWJEZBIlr3/sribnj2cXeUPbN6UlnRjAGogh6uQrymXIY/ibtCzXej/w46PBlpLQZ4jcn+VEvtQ7TjhCER79GNjAKLJokNZwBnYcC3tOaoPAU7HqP1d1hu3R9VUgKUFB1taD6R+miegUlvjuIKj6JJY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dRuP6B5K; arc=fail smtp.client-ip=40.107.101.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BSG1xgJcK6R+cSKXzdnSe0vYMtBPxI6OGxuqjxiMjyyHgzlQdGEDsZnAn7CODI/0bK6dxsez5J7cOLDIQmT1HsuNq4QlbpfEDqSCv7nbS0yCws4wVgknQggtUGuU/zaFehv8dar++7/wVA18bjMAXwsnyMtkkhaN2zeUSbjvyxdCaMkVwV+VFVGBIceXWJ31/IMbsIuceha6a1YNuiHWo8rlrhFiPPe5e0f5ImoJDJ5pEh9MQPryaCDmOH1+EmusWKf+5gdiaSMODYY9AIQEJHiSTK1LENkSfYvEIOd1Lrk0CEHL4kDBBFVt0n8Wa9Zhvqe/VDzQahDg3De+n7oIcw==
+ b=v5vNY6+x4LWIn83G/31T041mExcYicwXaVliAn2El70UAS6Hdsieg6qfwtcgCeNhwVgWDLipROE9qm3ugzIzp6eMxzSK4RRH3CDwvCUwW3REOXxMDxoxB+TFkHXnDhVt00YJNf07FpzEJCbej/tLEdSOclPOJXOCBVHIjiJJtEg0DuY3dmPgCll+QzJvdL7O3xt4x5wAY474G8QGEZPyzUgdWf9S9V2J9aPTx9J0oDusAht9sR78lwQorsVWoy8Z/csg1VCOWWF5pwgP8MGHG4OzYjAK1C7LPGPnyEHXdTzJgwjwJip+02+/0YGRbypHO98frIEbAYv0wg9N1lXKgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Eo/MCvkGiG5SkFw71y2+YDR9aCaEAjmvGVACl9HTrdw=;
- b=ZaCNV72Ulau02xFVVzk3E3SbqdOPbzbm31F9wI/1s5llp4KecNkNfg5da4Q7OrqTjPpwUW4PAkkgu+3Av4H15kjkNiPl/lQ0TeBVuPrmtYSL81ArQ1+OpY2RTjhx3ZbTDK8FFNKxk0AP4K1cO5RZGcez1sPGLMtpnAZ3yPB9CDtunmp1ApZADUYC1/6lDMPgJjGdc2yRcBQETkgWUKkJm5S594yLA+X6HpPVTrtR0bpK7/A5yfG4C+Yjbm2RSBE6DYCEk7e612jSprie6dC1JhAj27oN2y39ubp9lKY1/vLt+cJUuLz2/FlZP/XkF16NPLJGOMmyHakfm2vaa0oIhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB5263.namprd11.prod.outlook.com (2603:10b6:5:38a::22) with
+ bh=ZAJZR9z6JdoPBYREPRDgPQAqP51s1OtADcF923iSvko=;
+ b=oT5QufM2zPJAO6UJdAVMz6HkNE0A1Rw4Jvf8oUw+ZWI0nF8J3a8TpZlyzIHAVLiQRHq2RREhcttj/8Zx4kpiJtgR8hs99dK/KZXGVKwc96WrvgC3d/w0MQ0vOiObaDQNemg3dTFq3/P2PdMb9iJm1E+ovAkTke5o8f/2G9VdF3M3ea7c5iVcDWcyTeV7k7fJ7pw6ej2dH7NsH6q5vedcv7V1B+PwVrIeOhZbq9rLo0Z3Cw07x75zTXVwFT4HCEwdHfDNGX/3hvU7JB1JDrq7DkdZOaE5NqR32LJb0bj4ZO2qQZNiWSKgOsTKEe9NgiocVoU/5ur8UQ/gktSDOOp3Ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZAJZR9z6JdoPBYREPRDgPQAqP51s1OtADcF923iSvko=;
+ b=dRuP6B5KmI0tc4YprOyfB8RKD22Wz2SFg3X8CPpPgzsOqLe2pyCRZbnU78mNMD9yLrbakGAMk8tsL4HPQfGxcLJXA8x8LqN34oZy7l1RThTOt8uaOhayD7Kax2BlSUvIOwtxtzNGaVGXSxWHhQTjcm8lNf3hJNciHeR3TEcHUiI=
+Received: from CH0PR08CA0010.namprd08.prod.outlook.com (2603:10b6:610:33::15)
+ by LV3PR12MB9332.namprd12.prod.outlook.com (2603:10b6:408:20f::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Mon, 15 Jul
- 2024 20:36:37 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.7762.027; Mon, 15 Jul 2024
- 20:36:37 +0000
-Date: Mon, 15 Jul 2024 13:36:32 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, Kees Cook <kees@kernel.org>
-CC: Lukas Wunner <lukas@wunner.de>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas
-	<helgaas@kernel.org>, David Howells <dhowells@redhat.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, David
- Woodhouse <dwmw2@infradead.org>, James Bottomley
-	<James.Bottomley@hansenpartnership.com>, <linux-pci@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
-	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<linuxarm@huawei.com>, David Box <david.e.box@intel.com>, "Li, Ming"
-	<ming4.li@intel.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Alistair
- Francis <alistair.francis@wdc.com>, Wilfred Mallawa
-	<wilfred.mallawa@wdc.com>, Damien Le Moal <dlemoal@kernel.org>, "Alexey
- Kardashevskiy" <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>,
-	Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>, Peter Gonda
-	<pgonda@google.com>, Jerome Glisse <jglisse@google.com>, "Sean
- Christopherson" <seanjc@google.com>, Alexander Graf <graf@amazon.com>,
-	"Samuel Ortiz" <sameo@rivosinc.com>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
-Message-ID: <66958850db394_8f74d2942b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <Zo_zivacyWmBuQcM@wunner.de>
- <66901b646bd44_1a7742941d@dwillia2-xfh.jf.intel.com.notmuch>
- <ZpOPgcXU6eNqEB7M@wunner.de>
- <202407151005.15C1D4C5E8@keescook>
- <20240715181252.GU1482543@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240715181252.GU1482543@nvidia.com>
-X-ClientProxiedBy: MW3PR06CA0026.namprd06.prod.outlook.com
- (2603:10b6:303:2a::31) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ 2024 20:52:38 +0000
+Received: from CH1PEPF0000A348.namprd04.prod.outlook.com
+ (2603:10b6:610:33:cafe::21) by CH0PR08CA0010.outlook.office365.com
+ (2603:10b6:610:33::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28 via Frontend
+ Transport; Mon, 15 Jul 2024 20:52:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CH1PEPF0000A348.mail.protection.outlook.com (10.167.244.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Mon, 15 Jul 2024 20:52:37 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 15 Jul
+ 2024 15:52:37 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 15 Jul
+ 2024 15:52:36 -0500
+Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 15 Jul 2024 15:52:35 -0500
+Message-ID: <a6c92c73-13fb-8e9c-29de-1437654c3880@amd.com>
+Date: Mon, 15 Jul 2024 13:52:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2] PCI: Fix crash during pci_dev hot-unplug on pseries
+ KVM guest
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>, Amit Machhiwal <amachhiw@linux.ibm.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<kvm-ppc@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "Saravana
+ Kannan" <saravanak@google.com>, Vaibhav Jain <vaibhav@linux.ibm.com>,
+	"Nicholas Piggin" <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+	Vaidyanathan Srinivasan <svaidy@linux.ibm.com>, Kowshik Jois B S
+	<kowsjois@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>
+References: <20240715080726.2496198-1-amachhiw@linux.ibm.com>
+ <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <CAL_JsqKKkcXDJ2nz98WNCvsSFzzc3dVXVnxMCntFXsCP=MeKsA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB5263:EE_
-X-MS-Office365-Filtering-Correlation-Id: 16bfceb5-f0c3-48ff-0564-08dca50dd31d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A348:EE_|LV3PR12MB9332:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e8cc9a5-a002-4c11-8277-08dca5100f8e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?A0OY9o69yx9D19EeT7bMtm4fepIxDuMeSd9EL1sh9t2n+NNKEAoIYFGt5N01?=
- =?us-ascii?Q?mRnfMuoOcdeYzU8Ur9fTpEhqvjwEwJZAdcJwQgxxb8DHlOdZJY2b1C/YIRir?=
- =?us-ascii?Q?Mrgx+tDReb5JwJh5oXtLazAGcX12GrhBlyonkZDiezouKkhSonBpjI9lOcbE?=
- =?us-ascii?Q?lhYzWiGeSvLVp9QX2joNwEXgIqs3VfzfdMQgCCRdeshC8rHFuUnKckBKAoww?=
- =?us-ascii?Q?5vL39yrG7Ogb9NBcsq1CrC1Lf4zxSzL7K1WVYEk+Cq7iF4g/I01LBkeyhyNw?=
- =?us-ascii?Q?3OBNj+f8uPDetzy9wWCnPvy9IEEKrvLWh/mTcdOVPcIIwtEDdvsOqfcffSSn?=
- =?us-ascii?Q?uiNepB0W6FvaIqQ7/eIYWVyU3t/jGIHBcAsVnRTm8KPnf/4HONRqhq3xz/Sr?=
- =?us-ascii?Q?Y2elLf90wc9GNv3c/802G9HqyfdpgwwAXCzhnx2zCNejOh+TI7xgXEZuyfMc?=
- =?us-ascii?Q?+ZDi6fCY/sLmWVbEmycK3CU1RMFdY770Ean7XD7EFgulXtZLjqd7bbUtcmLi?=
- =?us-ascii?Q?r17aTXhiFV/NKsUCXCryhDG6Bi2h4JmOKeRnNKNCRhVl/PzIEMjmGZbZHm70?=
- =?us-ascii?Q?Ur1vzw/hZR36XWWWveV4qs5kMJSyJEET8uBGkanTjRMFtnBYFOaIUrJm48cg?=
- =?us-ascii?Q?VVfluHEg3lgtW5kfKXUUFRPtDr5BajF8Ianw5HAtAsFuFUgm1n+W8176HNgd?=
- =?us-ascii?Q?kbk4pVyIH8N+4L2yM+EXWJ13O4Q76FrOp1ebQBPd9Ub3co5/oNTrCuITNgMq?=
- =?us-ascii?Q?s21XtH0tn3lMVzo7ajp2WeusFFSmwceiVapGcjNiUjArZWaEW9aT9otj4GND?=
- =?us-ascii?Q?GXjx5xFO6YnFOwNIAdmgS/mUBoJX+f1gg1OY+5IHHd6RCY5sL37zkS1JIQZW?=
- =?us-ascii?Q?5QJCBExdJFcrJLeHTkob7XE8tbWtWnnHs3szKBAkg2kLGhP/FZlliCHqcM1/?=
- =?us-ascii?Q?cX8P+XsFMGAX4C6J9D5h1ZF+aMNDc/sFgTdX5/5JAxCf6GRFtRboBm4hvc7p?=
- =?us-ascii?Q?cC0/bSIO9dUa+IuqjN+j/A7ePp3D2PhJVsKcuAAYHJdYAZrPocEsh3lL7CO3?=
- =?us-ascii?Q?EDvgqyLLGoDi3zI76q8lcj4VbbzIyGaRGJWXsVvzL3yoVAwByYCGjuze9hN/?=
- =?us-ascii?Q?Tmnm4OJmvr2bD0bPd4Dd6xwhrb08vk3JpdRj4BHtgE+Y2E/69BqQC+woTOF9?=
- =?us-ascii?Q?qrMxTpr9jxOCFGtjaoZ/Qi/jEnAq7otKaQGCVAkFbnQmRtdJAG8rsNP2TTV9?=
- =?us-ascii?Q?hSaTzP+Ulyj9hk3s46rcE2NsmxlwLOpNgT5uyGyFecYrCvnU/a1lW8b63fT4?=
- =?us-ascii?Q?Scm4HZMNTTmnLOita2gJ3dqLd7/aEc9ujIOH9T5erTt1Yw=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JgvKLPIlTXaM9RYPygqL0cSkjp8jvEKGW5ATCSeQ9/bcv9Y57txcGPBVcPfV?=
- =?us-ascii?Q?GrpC2Y+nQJxxvhOci5O+55iWCGHW+edep4sfXh/XHQbMpx7lS3MFEaHmLctH?=
- =?us-ascii?Q?fxukkRIq6WsvM8Sy6CUfBpZvEyVuvhND8FJfKQY6Q/8j3I1uiIf37vmsiro4?=
- =?us-ascii?Q?vuXAquBmnzSDI7FkUrEb3QpewFE5Pa2LGUJLsOMygJdcjDAcF9BVPnE39Mw0?=
- =?us-ascii?Q?hEjtbuJn21Fksshsge8F38DDGq6QKUaSIRX7M3nbVWrUyejDoJl/fzFzjZp+?=
- =?us-ascii?Q?OI4CKX+w9UqDDLxhrzgKAIcDbNBmdjom61thHfhI8KhoeTPww/uMOHj4VgL3?=
- =?us-ascii?Q?AmgxQgoI/vT6VWcoulJjjCovHIaCUKKSsan5q695Z/ob+zFl5BaSzeoAPz7Q?=
- =?us-ascii?Q?pVdr2EIOofF4eazkN/XelxglPh+/MfT8thTMrvXxfAQ3FbL8cnQoy/fMjdrj?=
- =?us-ascii?Q?lKjmoMChcQAyJ7rHRVXOEcoestT60zU70xMD2qgba/kU97ZLWOC2I2yz2vLx?=
- =?us-ascii?Q?IomvfzZhAn/E9pAmZsXAs5DUii3J/QqaDAygBdh/opTNgYCN30ylEyybuOcV?=
- =?us-ascii?Q?Ztk2UmXIGu1/wVSA8Ns0btPFg1se8wZWKIsyBikONt0rf04MDwdaNU7ISyuH?=
- =?us-ascii?Q?BJsU6sMTx7hOMm3Z53So21QTaXcDpDodfEVjtHS2XFsiwrRb7bfvWcKJazYe?=
- =?us-ascii?Q?rtulM0ErWUgPxBBx5hnBXL0ZN4lgqmCNqNHkkFt+Yw3ZqQXQHXKLBLrF5euy?=
- =?us-ascii?Q?mfvDRoKTM/kaw1jmy0BSoOFFXW1R9ryEBFw7NYxtzcGGx2Cy5Qf9x/f669Ey?=
- =?us-ascii?Q?3XjMWguJzrAI+xDn70K5Hi2VcR26f6xGjiTpGFIqL3Uj4YE8+SbwNR9uuOw/?=
- =?us-ascii?Q?GLg+HCj6nQkMGw6pifjGKkuhbx9LkX/TNFCMQp4TdvmDf0vk2ALucQKstUce?=
- =?us-ascii?Q?Q5oNguFzvupDwlErU4DbeBp44r+4BSSRyG0tHfsZJIJJRAhje4z5sArp2EBN?=
- =?us-ascii?Q?7LpR+siI/JpIyMV4BLB+W7BEBLDq30wejahZUTKWPQ3+uiqvN0neOTpseWpz?=
- =?us-ascii?Q?ds7VP5zotZFS2QyTY3/tv+aYZIbXDXWvH/kcBgZDK3Gw+xtVMknJSW/N/+s6?=
- =?us-ascii?Q?1OP3gQox/hzbg6qwlRJEtLq3uXGxGy8m7iWT2/iovGwfEBV2ibvn32zACviQ?=
- =?us-ascii?Q?TQBr+WcCcTuCPnCtXM51VOPXm2dRkzCuQeOEYf/Hv1MYAQFFpfvEXKCKAck4?=
- =?us-ascii?Q?cOzVG3Bnnz0i41MJG5TfG9qkDcpjD4uIad2tfHkS66AZ+06Qsgtw1O9CIKkR?=
- =?us-ascii?Q?0jo6a2zC6UJ3HGyWmzUTJvtIJjnJHyXpYVxDUBrCpr45a2PZu8rhIC5gIRSv?=
- =?us-ascii?Q?sDeP/7ru14DycUOtaTCN234A4+ktXpfQb/t0zmy63zdjwgOHCZXQN6BNVRxz?=
- =?us-ascii?Q?KcDQVt//QVI1HwhSvss7It68CbZhxKj3pEVLCP/KF4HUny7oqojhcp9mXcoq?=
- =?us-ascii?Q?ihNYJNcIW7pBa4Bj9HtdtDhqNnr1ptvcNYkBZ4nJvi0ro7g+8EA6v3M4Lr5r?=
- =?us-ascii?Q?zk7ybqT8LIBpyPDq0WMcy3lNRARmkiLWTVXBR35gclgYX6G0CWihne4ipNJx?=
- =?us-ascii?Q?8g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16bfceb5-f0c3-48ff-0564-08dca50dd31d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 20:36:37.6124
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aEVFdG1TVjlHNGoyakNmblY1MVRIOE9OdGhaWGd4aVVKOTFyU01xcm1mcWJi?=
+ =?utf-8?B?SU1IenkxLzBpSS9jc3Fnc0hLczAwMTVFZ0V5MU12YXhDR3hjRGVCcDFJNVlh?=
+ =?utf-8?B?VGRqeE56WnhZb3pRbTJmanBTWDFFRjQ2TXU1eFRXblIwM29XSndBR0ZwMUNy?=
+ =?utf-8?B?RmJSNkdVRG4yb2dTcDdhZlloN2pKMklteDd1UVJ1UktTanh3aTV5cXBLKzc2?=
+ =?utf-8?B?MXhNMCtjSFNkek5zTmJ3akp0TXVtNTRnbGdwNGVVUVBIOG95cnRQQllYZVA2?=
+ =?utf-8?B?Nk5NeHlUV1JZNU9UdzFPNjVSSDZKUndPYU8wOHc0R1psM1VGMS9hamtBYjUr?=
+ =?utf-8?B?MkRBUjNoVlh3ODVOeEdPakFNcjB3NWEreFY2ZFZPMWo0d0lRSWgzZ0I4bHpk?=
+ =?utf-8?B?WkR1L2Z2Rk9jMW1sN09RUHlFNHdXbnBiUTNJUkkrQjBPL1o2Z3paV1AyRXFJ?=
+ =?utf-8?B?d0lCVWkvVGF4WWdrM2hrQXhUU09XMFZWR3BhWm1ua1dQcHZqbjJzNXg2bG9F?=
+ =?utf-8?B?eGxIUFJDaVhVaXh5MXErR3FPTkgzdSt6QmVaRUtIOEdmbGh0T0NFTGEvRHIr?=
+ =?utf-8?B?Zys4Mk9xZUhTeHVrdkRNZDNaRmx4VWRsN08rajEwQnBSZndzWmpmcG8vV2Yw?=
+ =?utf-8?B?OXpVbFBIazBxTTZOVEFPN1BVUFpjaDB5dWx1cjF0cG12L0tDODRvZ3RVb1RU?=
+ =?utf-8?B?UnF3RU5Gais0R3Nwd0hXdElPa2J2bjBud2RnWlpYbFIySHd1TzVEWGsrOW56?=
+ =?utf-8?B?Zy9VbXpndDdLYnYwVE5jejk4L3p3VUh3UGtXcHNaZ3Qza1lxNktMYjJqc3Z3?=
+ =?utf-8?B?cHFNejN4NEY5ZlNqem5sRm5UdDNYM3JGM0VIRTg3a2FqYU9qSHNoUk0rS2Qv?=
+ =?utf-8?B?SFY4TGQ3NGJaOWh4TjhVMkQ5WktGUDJQUW9YZ1lsM2FkZFlubUZ4TkwxenRn?=
+ =?utf-8?B?SStSL2FLZENUQUVxVmhEcThTNGtjbVVYeCtYZFg5RjUzd2RBZ2MzckM5Ylpk?=
+ =?utf-8?B?YkpHbDlLcEc4djdJQ29HZEVRN1luMFVkcXFKbS9LeDVmRzlDcVdQbitjcDVY?=
+ =?utf-8?B?cmJ5djloSDhwMVVMelhqYkY4ZU5pNUkybnFtN2NXV2RmZUZXZThjb3NFOURw?=
+ =?utf-8?B?SHdZTWdQWGpvRHFDMGR1ZlpoUnllL0c1b2w3WEZkSC91K2Z5OHJYSHFKMVQ5?=
+ =?utf-8?B?bnl0OFpNSm91bndFVk9iNGFVaUc4TEdCeE14Wm9kRnQyTWcxM2ZXVmRZRk1P?=
+ =?utf-8?B?bjdPRXJvVm5OVnU0bTRIN2lleFhXRWtINGtCTTlldGpCUmEzU0ZvNWVKYnJt?=
+ =?utf-8?B?MkNENkJMSUxCYXBPcTRLWWxLUVBMMkFuems5SUNPaGhINnJMV25rVFRNNTdT?=
+ =?utf-8?B?YUJpbDd2aHl3RDBYWW1LWWI5R1h2QW1LSE5JTmdpZEY3UGtkc2phWlNTTU1h?=
+ =?utf-8?B?THBuZXlUUWxiVzlKcitNV2dqbEJWYkxiT1N3dkYwY29nbEdvVmdWbWt3TGF3?=
+ =?utf-8?B?Tk9RWkpML2hrbVErQWlwekg5cno1bjk5MkJSSys3b0RBa3pKcjFkOHEzQWI3?=
+ =?utf-8?B?OHBhNTV0NTBzbEZhc0hoZkxlSVludU1oZTJLR1NUYjBOWG5sZTB1V1RwVSs5?=
+ =?utf-8?B?enJVaDdqU3RWcEVWMTJiNlIvK2JzVWViZDFiKy8xUlc3TUgwSFZabVliTlhS?=
+ =?utf-8?B?cjIwamM2Rm45V2o4SGFIMlZZSGlBRUh5MFc1Q2ptKyt0Z0svYkx6ZWZBNlJH?=
+ =?utf-8?B?Vk9ZajJrYTdIUTNqNmQ0c3duL3Iwd2p0TVdnaHU5TWtFSlFWZHZBejRpeStC?=
+ =?utf-8?B?K1FiRHFicStPcEFWMWhmaFo4dGdCUmVlYlYyNW1tVjE2YlVhckNjYmdwY1JY?=
+ =?utf-8?Q?She5uOD3BBE6m?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2024 20:52:37.7262
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xGt3BOCwGo69M6JojaAnOkorqR/ALuIoE7gAJAEDSTlJAxiPky2IdrpT/KeSNAip/j4zcDiZbhVrLWYqA2sERlwf3YIgfcv4wecq0gbZW2s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5263
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e8cc9a5-a002-4c11-8277-08dca5100f8e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A348.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9332
 
-Jason Gunthorpe wrote:
-> On Mon, Jul 15, 2024 at 10:21:48AM -0700, Kees Cook wrote:
-> 
-> > Anyway, following the threat model, it doesn't seem like half measures
-> > make any sense. If the threat model is "we cannot trust bus members" and
-> > authentication is being used to establish trust, then anything else must
-> > be explicitly excluded. If this can only be done via the described
-> > firewalling, then that really does seem to be the right choice.
-> 
-> There is supposed to be a state machine here, devices start up at VM
-> time 0 unable to DMA to secure guest memory under any conditions. This
-> property must be enforced by the trusted platform.
-> 
-> Further the trusted plaform is supposed to prevent "replacement"
-> attacks, so once the VM says it trusts a device it cannot be replaced
-> with something else.
->  
-> When the guest decides it would like the device to reach secure memory
-> the trusted platform is part of making that happen.
-> 
-> From a kernel and lifecycle perspective we need a bunch of new options
-> for PCI devices that should be triggered after userspace has had a
-> look at the device.
-> 
->  - A device is just forbidden from anything using it
->  - A device used only with untrusted memory
->  - A device is usable with trusted memory
-> 
-> IMHO this determination needs to be made before the device driver is
-> bound.
 
-Yes, and it depends on the device. Some devices should be filtered
-early, some devices need to be operated against untrusted memory just
-to get to the point where they can complete the acceptance flow into the
-TCB.
+On 7/15/24 11:55, Rob Herring wrote:
+> On Mon, Jul 15, 2024 at 2:08 AM Amit Machhiwal <amachhiw@linux.ibm.com> wrote:
+>> With CONFIG_PCI_DYNAMIC_OF_NODES [1], a hot-plug and hot-unplug sequence
+>> of a PCI device attached to a PCI-bridge causes following kernel Oops on
+>> a pseries KVM guest:
+>>
+>>   RTAS: event: 2, Type: Hotplug Event (229), Severity: 1
+>>   Kernel attempted to read user page (10ec00000048) - exploit attempt? (uid: 0)
+>>   BUG: Unable to handle kernel data access on read at 0x10ec00000048
+>>   Faulting instruction address: 0xc0000000012d8728
+>>   Oops: Kernel access of bad area, sig: 11 [#1]
+>>   LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+>> <snip>
+>>   NIP [c0000000012d8728] __of_changeset_entry_invert+0x10/0x1ac
+>>   LR [c0000000012da7f0] __of_changeset_revert_entries+0x98/0x180
+>>   Call Trace:
+>>   [c00000000bcc3970] [c0000000012daa60] of_changeset_revert+0x58/0xd8
+>>   [c00000000bcc39c0] [c000000000d0ed78] of_pci_remove_node+0x74/0xb0
+>>   [c00000000bcc39f0] [c000000000cdcfe0] pci_stop_bus_device+0xf4/0x138
+>>   [c00000000bcc3a30] [c000000000cdd140] pci_stop_and_remove_bus_device_locked+0x34/0x64
+>>   [c00000000bcc3a60] [c000000000cf3780] remove_store+0xf0/0x108
+>>   [c00000000bcc3ab0] [c000000000e89e04] dev_attr_store+0x34/0x78
+>>   [c00000000bcc3ad0] [c0000000007f8dd4] sysfs_kf_write+0x70/0xa4
+>>   [c00000000bcc3af0] [c0000000007f7248] kernfs_fop_write_iter+0x1d0/0x2e0
+>>   [c00000000bcc3b40] [c0000000006c9b08] vfs_write+0x27c/0x558
+>>   [c00000000bcc3bf0] [c0000000006ca168] ksys_write+0x90/0x170
+>>   [c00000000bcc3c40] [c000000000033248] system_call_exception+0xf8/0x290
+>>   [c00000000bcc3e50] [c00000000000d05c] system_call_vectored_common+0x15c/0x2ec
+>> <snip>
+>>
+>> A git bisect pointed this regression to be introduced via [1] that added
+>> a mechanism to create device tree nodes for parent PCI bridges when a
+>> PCI device is hot-plugged.
+>>
+>> The Oops is caused when `pci_stop_dev()` tries to remove a non-existing
+>> device-tree node associated with the pci_dev that was earlier
+>> hot-plugged and was attached under a pci-bridge. The PCI dev header
+>> `dev->hdr_type` being 0, results a conditional check done with
+>> `pci_is_bridge()` into false. Consequently, a call to
+>> `of_pci_make_dev_node()` to create a device node is never made. When at
+>> a later point in time, in the device node removal path, a memcpy is
+>> attempted in `__of_changeset_entry_invert()`; since the device node was
+>> never created, results in an Oops due to kernel read access to a bad
+>> address.
+>>
+>> To fix this issue, the patch updates `of_changeset_create_node()` to
+>> allocate a new node only when the device node doesn't exist and init it
+>> in case it does already. Also, introduce `of_pci_free_node()` to be
+>> called to only revert and destroy the changeset device node that was
+>> created via a call to `of_changeset_create_node()`.
+>>
+>> [1] commit 407d1a51921e ("PCI: Create device tree node for bridge")
+>>
+>> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+>> Reported-by: Kowshik Jois B S <kowsjois@linux.ibm.com>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>> Signed-off-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+>> ---
+>> Changes since v1:
+>>      * Included Lizhi's suggested changes on V1
+>>      * Fixed below two warnings from Lizhi's changes and rearranged the cleanup
+>>        part a bit in `of_pci_make_dev_node`
+>>          drivers/pci/of.c:611:6: warning: no previous prototype for ‘of_pci_free_node’ [-Wmissing-prototypes]
+>>            611 | void of_pci_free_node(struct device_node *np)
+>>                |      ^~~~~~~~~~~~~~~~
+>>          drivers/pci/of.c: In function ‘of_pci_make_dev_node’:
+>>          drivers/pci/of.c:696:1: warning: label ‘out_destroy_cset’ defined but not used [-Wunused-label]
+>>            696 | out_destroy_cset:
+>>                | ^~~~~~~~~~~~~~~~
+>>      * V1: https://lore.kernel.org/all/20240703141634.2974589-1-amachhiw@linux.ibm.com/
+>>
+>>   drivers/of/dynamic.c  | 16 ++++++++++++----
+>>   drivers/of/unittest.c |  2 +-
+>>   drivers/pci/bus.c     |  3 +--
+>>   drivers/pci/of.c      | 39 ++++++++++++++++++++++++++-------------
+>>   drivers/pci/pci.h     |  2 ++
+>>   include/linux/of.h    |  1 +
+>>   6 files changed, 43 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index dda6092e6d3a..9bba5e82a384 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -492,21 +492,29 @@ struct device_node *__of_node_dup(const struct device_node *np,
+>>    * a given changeset.
+>>    *
+>>    * @ocs: Pointer to changeset
+>> + * @np: Pointer to device node. If null, allocate a new node. If not, init an
+>> + *     existing one.
+>>    * @parent: Pointer to parent device node
+>>    * @full_name: Node full name
+>>    *
+>>    * Return: Pointer to the created device node or NULL in case of an error.
+>>    */
+>>   struct device_node *of_changeset_create_node(struct of_changeset *ocs,
+>> +                                            struct device_node *np,
+>>                                               struct device_node *parent,
+>>                                               const char *full_name)
+>>   {
+>> -       struct device_node *np;
+>>          int ret;
+>>
+>> -       np = __of_node_dup(NULL, full_name);
+>> -       if (!np)
+>> -               return NULL;
+>> +       if (!np) {
+>> +               np = __of_node_dup(NULL, full_name);
+>> +               if (!np)
+>> +                       return NULL;
+>> +       } else {
+>> +               of_node_set_flag(np, OF_DYNAMIC);
+>> +               of_node_set_flag(np, OF_DETACHED);
+> Are we going to rename the function to
+> of_changeset_create_or_maybe_modify_node()? No. The functions here are
+> very clear in that they allocate new objects and don't reuse what's
+> passed in.
 
-The motivation for the security policy is "there is trusted memory to
-protect". Absent trusted memory, the status quo for the device-driver
-model applies.
+Ok. How about keeping of_changeset_create_node unchanged.
 
-> The kernel will self-accept a bunch of platform devices, but something
-> like the boot volume's device will need something to go look and
-> approve it.
-> 
-> Today the kernel self-approves untrusted devices, but this is perhaps
-> not a great idea in the long run.
+Instead, call kzalloc(), of_node_init() and of_changeset_attach_node()
 
-Right, I think the capability to "forbid devices to protect trusted
-memory" can one day be deployed in the absence of any trusted memory to
-protect. I am just not convinced that needs to be the task on day1 to
-assert "mere authentication exists, all devices are malicious now even
-in the absence of trusted memory".
+in of_pci_make_dev_node() directly.
+
+A similar example is dlpar_parse_cc_node().
+
+
+Does this sound better?
+
+
+Thanks,
+
+Lizhi
+
+>
+> Rob
 
