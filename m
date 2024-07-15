@@ -1,74 +1,75 @@
-Return-Path: <linux-pci+bounces-10304-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10305-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E3D2931B49
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:58:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 661B8931B4F
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:58:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2B3C1F21E48
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 19:58:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9797E1C219A8
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 19:58:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6567513A276;
-	Mon, 15 Jul 2024 19:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E09E13A895;
+	Mon, 15 Jul 2024 19:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dmJgJAUn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O4Jv5H3z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971AC13959D
-	for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2024 19:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B055137930
+	for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2024 19:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721073480; cv=none; b=c0h9iZYDMBCsNB6Hh/ifqsjLZ7tfo7rnyA53nvOMxf1na+OeydF/1Of+KhKj3Flp9EOrj44A2gBbG6GW76gWdlAMYB7eAVIlGVmNXywfia0HzTcI5k/5x2pNAaUE1bnZM5uV5EOMTWUVEYTK/C6RdDUGWAfyD0isHxw0nn3fb1Y=
+	t=1721073501; cv=none; b=blYqRit0NxKtmh51tAJbLmlxzEdXmCifRJygipxp7Jpr0LNSONofzPdtYcn6qWZEbFOjzZSiiH6gdJt/fPVR4kjFmjkGtoJLyzQX01JSzGituqGOC5faEiHignCGRviqGFw+2Ozm9xh/eOkKnwCNUi8dtlYnsF8Vi1Ul0KyxZTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721073480; c=relaxed/simple;
-	bh=KOmXi++wYMID5l4uz8LnyIv3y/cRu9tioPFx20esDCs=;
+	s=arc-20240116; t=1721073501; c=relaxed/simple;
+	bh=pCPL9JPlyVfGG8+qL0vHbuFtezv4cJKqC2xVvcULzBU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KwfEH6OetI1aOAmUptUBY8ASSNsuv7IgVTYbF9IofrcHLVxeyoldGZm5W2P7znrTQm83/McGhAz0kApXf5ZdIMctCYLj/YUnduuTDmhl36Qp70bDs8477iOsLL7NvlDVICCpZ5l2fA+IIEIdMWbsmp0Qa5mp+1LxsYUwJ0081Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dmJgJAUn; arc=none smtp.client-ip=209.85.208.42
+	 In-Reply-To:Content-Type; b=V6FrmQAYnYhW7p1CucCKLBRoLPNAGFlFBkT9Icwwd+T8L/ILKKjdf6iPRBGtFpEFBqrVWl7GxZY5SMuEDA+4upYQZ9mpdtZ/qUAd/xOg4bkQDuv88gqGJX73Wt1aEtmv7pON0yo8IB3v/mrWRNKhoEx/2fdUqOE5QIMAAYuj+Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O4Jv5H3z; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-58be2b8b6b2so5966061a12.3
-        for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2024 12:57:58 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-58b447c519eso6342009a12.3
+        for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2024 12:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721073477; x=1721678277; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721073497; x=1721678297; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=i0tr5lJQGUPso5CX1gkmQbe4RUUi3hRtP2dJY6GjKvM=;
-        b=dmJgJAUnMhCL/KaQZCP5zCiW4CJUxmo6FwMbbBbksCZXuEgQ0CIo+hXceJSXzDN/mt
-         qtuCdoyELdZzJNXnzHaiLKo4TcFRiH3P29Myr8AVGJ06jI+Ln1kHOzcpkfXn5yeiL3pf
-         MfT67chFVTq2v2IEZ2z+fxWXTmMhYNlAm1/ifKmgDgIVUC4UNv1F6wsIYgGBjmTFUt53
-         14C8BSVVnqZzIrYn1gL2tL9kKfKLqW8TmhJWYBbcBxzMg/zKphUZ+nxPGH6IyOLvcG7p
-         ylgZ49cKq1mAyO2nzWbssFfx8Y0ecqOorxVc6U1nNweYWIjKNWdFoDfV4fUXKUJdMC0B
-         SxYA==
+        bh=K500GZ7XXN83x8BruHYG6V4fPaTrSJwImTXsSI1Xsu0=;
+        b=O4Jv5H3zq/rqkWlPM+ysKiVo+/LxIQTTDJCmJsCZR7r9RfqLVFJjsOhlPMnkHx5iZr
+         lfNwCjjNbz7F10hNCeEJQBzqBd7rnRGcB9dp4isWdDb+/RMgijBHPz3SGLT9EPDgPKCS
+         +3EfpOlxXh5PmtAplIHMT5p+dE4P8ZJn4+RxjFr0Qjxd2df22LY48myCqRe8zKTrvQTt
+         dF+ZOJFRfcYNeW/7w0U+7CeVU7ZrELKdfPCBgIPNLbYFWwnVJztYyZyixc/z1kAjX5hK
+         LpX7opq2srcA97EL0tsOeZVmi4m2+J+scnMuPn3nNT+Q6ogdL3GEMwcuHB3ftVNVgPi+
+         sA1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721073477; x=1721678277;
+        d=1e100.net; s=20230601; t=1721073497; x=1721678297;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i0tr5lJQGUPso5CX1gkmQbe4RUUi3hRtP2dJY6GjKvM=;
-        b=FqlaCBKSSPZE+M/JlEzwyKfxdnDx/Rjr6ycHBbdPs0n9QvjGXY/mRzPk2mGARWreER
-         OTjh73oQDCShhfVZVCSvn1SI7z5MwJHIB8UVnpAIyq141oVojbE4cow+6B09f5Vw4wrX
-         9xNpFQ9cupM8qoverZujG1nxm+6jQ4hWiYcLv0OBf6pTICfgJI5pdbdP0WmUb9Y7/2Wt
-         qk85VGlifEQEScsPATTGY7c/P6HFjV5M45niDa6VErnkW57rQLuqrunqColU/Bdo2R1w
-         M5fllhkhMY415Xk06YIv9OHzg6zMqfewz0ORZANXw9U4ItSoCLrFPsjZyyDXMUOUvu0G
-         pK0g==
-X-Gm-Message-State: AOJu0Yz45KvIlc3l1jbYZxZcPqpJdd1WxY2VqrZUhxc4Do8bZNVIZ61v
-	QSKcaVZx3hbErqPrZNXsjifg8H+bL13bijiFoRAZsvtECldQndI6rAEwcaqrV3A=
-X-Google-Smtp-Source: AGHT+IGLcngsEisWKRCm5v3AnL5eybsN6oUPIZLhlzD7UFwMf/5q3Cx35Mn1QCTl/MclVtZlrO5kQA==
-X-Received: by 2002:a05:6402:3551:b0:582:7e6d:6816 with SMTP id 4fb4d7f45d1cf-59e974356a9mr643992a12.8.1721073476548;
-        Mon, 15 Jul 2024 12:57:56 -0700 (PDT)
+        bh=K500GZ7XXN83x8BruHYG6V4fPaTrSJwImTXsSI1Xsu0=;
+        b=TCPOHSDM3K6Nei+zYI37m0sHBRy9/Iu3QTh3XyRy5GYFtGH9tCLIH1g+41Cn5GC5I6
+         6OUzuQaf2ZV8IIaGz4+V7AMkpvbwB2Z3XJ+w+KYafZYaq4U5k0s0M6YqMjjtFCzO7GPs
+         g2/GlVs0ob8tXNElOMQNgjlDowX1fbbX1uYFe0qZQYsJh/8d8NVBxA+O+5g8eNFx2ecV
+         impKvms+HeFRHx0NHO7foIRaaYjgLNUM0chm9mubei9efPJWsMKbfDvGmi+CsSbBjxya
+         PNl802qXV3b+/WSFDVT2EWR2IgiofJw+gbfQkZuqJrvv2hHtWfpSdknRM2piBYfh9GEu
+         xzgQ==
+X-Gm-Message-State: AOJu0YyOp+qtk7eRwQUqwhuxIzWd+XuU7c8muX9Ep9oJvD4ZvBaYld8z
+	UcoTqVSiFhq4AqWzw3iS60+BnfkX8Q5lihaAJ/vcmUnIKdYLxlpKzYcl9ZgoFDiAyNfdsbzdNEe
+	t
+X-Google-Smtp-Source: AGHT+IHDi2v9N89fUJKJwTtcOtaBmnu9Ylf3yliXHnkoVvYtdmj5VYosIV+F6ZIrkxSArUI6mrSwbg==
+X-Received: by 2002:a17:906:7c0b:b0:a77:ba92:b1d8 with SMTP id a640c23a62f3a-a79e9e0b8e6mr3404866b.0.1721073496708;
+        Mon, 15 Jul 2024 12:58:16 -0700 (PDT)
 Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b268a29b9sm3720024a12.61.2024.07.15.12.57.54
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820e7csm234769666b.193.2024.07.15.12.58.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 12:57:56 -0700 (PDT)
-Message-ID: <60254ff0-0544-47eb-864b-b7c1ff09df4a@linaro.org>
-Date: Mon, 15 Jul 2024 21:57:54 +0200
+        Mon, 15 Jul 2024 12:58:16 -0700 (PDT)
+Message-ID: <958ad3f8-5326-44e2-9600-777c07cd90c0@linaro.org>
+Date: Mon, 15 Jul 2024 21:58:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,8 +77,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/14] PCI: qcom-ep: Drop the redundant masking of global
- IRQ events
+Subject: Re: [PATCH 02/14] PCI: qcom-ep: Reword the error message for
+ receiving unknown global IRQ event
 To: manivannan.sadhasivam@linaro.org,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -88,7 +89,7 @@ To: manivannan.sadhasivam@linaro.org,
 Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
- <20240715-pci-qcom-hotplug-v1-1-5f3765cc873a@linaro.org>
+ <20240715-pci-qcom-hotplug-v1-2-5f3765cc873a@linaro.org>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
@@ -126,23 +127,20 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20240715-pci-qcom-hotplug-v1-1-5f3765cc873a@linaro.org>
+In-Reply-To: <20240715-pci-qcom-hotplug-v1-2-5f3765cc873a@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15.07.2024 7:33 PM, Manivannan Sadhasivam via B4 Relay wrote:
 > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Once the events are disabled in PARF_INT_ALL_MASK register, only the
-> enabled events will generate global IRQ. So there is no need to do the
-> masking again in the IRQ handler, drop it.
-> 
-> If there are any spurious IRQs getting generated, they will be reported
-> using the existing dev_err() in the handler.
+> Current error message just prints the contents of PARF_INT_ALL_STATUS
+> register as if like the IRQ event number. It could mislead the users.
+> Reword it to make it clear that the error message is actually showing the
+> interrupt status register to help debug spurious IRQ events.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
-
 
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
