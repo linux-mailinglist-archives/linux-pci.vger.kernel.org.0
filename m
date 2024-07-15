@@ -1,118 +1,109 @@
-Return-Path: <linux-pci+bounces-10255-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10258-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3360193136A
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 13:49:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F0DB9313A9
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 14:10:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C3CC7B21AC3
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 11:49:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EE1A1C225A7
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 12:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6086618A93B;
-	Mon, 15 Jul 2024 11:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 694E718C32C;
+	Mon, 15 Jul 2024 12:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhS6XZKX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SHSH/BLx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA3B143878
-	for <linux-pci@vger.kernel.org>; Mon, 15 Jul 2024 11:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B435C18C187;
+	Mon, 15 Jul 2024 12:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721044146; cv=none; b=DanbB/J0oj5wIPebrNP7Y8sTk+aWeRlXjlWTe3NibVXFl/NicH3sb2xlmR+fSW6s1v83XRfzKFperraZudH47nHcO+yujCh9Bje8SqL9xSrI2dNOG5HvG1LIWpZN5zVAHrGrKPuxFFSHlN3fID1GWArJkP0CvcNZfRmGCFqT/Dk=
+	t=1721045418; cv=none; b=Q5nS2db7X0GeAUxSUHvgUVsecaR0SgLiHZN2UtPVbZTMCcbr6tluO2vTi7mvrlLN/wM/Pn3l1GGdAm2gaAaDVHoS4quo45VmhA0K7KQjq5c8yHy6QMzNCsmY/0Ub7PIZPj6qhTUEYEflRiG6oLonmAocXjYrYPUr/R7Uwy0SWBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721044146; c=relaxed/simple;
-	bh=GBWvRjJ6Uyft1k+kSz5hldpNuIiPrjwuJYXhdOBdovA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RrHFv41I2pFm2B/sWLzR+kvhsLU1GNcXgnH2ovzYRHr7Hv0mTfT/S3azOWvxVredrPaFzABXlLUBCSjKQ0U2OWZmOgHsC0mhupPJtxT6L1r2QcoUJT82G+rUp4mkBur1hVHv2Qy7kx94Y5XyDS2AGW78mKsd4+qQS3a8y7DT9fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhS6XZKX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0D2C4AF10;
-	Mon, 15 Jul 2024 11:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721044145;
-	bh=GBWvRjJ6Uyft1k+kSz5hldpNuIiPrjwuJYXhdOBdovA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EhS6XZKXwXzsjtqjy/rJaeb44sU681IzCcpp0DwpeVIAEGtX2j1axs8+3kGfSqN8C
-	 GEVA7dcOlqc/DzC8FL9g/VrntK6pP6S+6IjgZypPlgoRke6TOJQnFxfh6zLLlFpr0f
-	 hsnoUgXfT0mVw6e7biUQxB4ZJtxsii0LX0it9W9txkZtsUxHyXN4LryI35wcW30uv8
-	 XxvWSgds8nxXfzwBgb/fPzh9Zjlm+AIaMhJAMPGEysPQ8A5HgMcxjBX0IdO4/T4HOY
-	 0Q0lR2hCea/E7YVgCrm2eryS84RlnsUsxg9Fx/wLnlxHJu5hLdmh4lWJAZR3ly5hPs
-	 YvfAVtVJtRBOg==
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v3 2/2] PCI: mvebu: Dispose INTx IRQs before to removing INTx domain
-Date: Mon, 15 Jul 2024 13:48:54 +0200
-Message-ID: <20240715114854.4792-3-kabel@kernel.org>
-X-Mailer: git-send-email 2.44.2
-In-Reply-To: <20240715114854.4792-1-kabel@kernel.org>
-References: <20240715114854.4792-1-kabel@kernel.org>
+	s=arc-20240116; t=1721045418; c=relaxed/simple;
+	bh=Igv9P5b9xyPs7ch22N3cjMBkjk6low4zX+8qxLLX+b4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e76TN15+iefGjLVFE/MBl75IZCliHujhPluVhrorEmh01eKF6TrrQNttjKmFrk7FH1f/4qfmuC7NgStpgpdHNNiA6f5ibMVVxiNeh8f28RXzQnO6kDuCVyVaBG2khqVxavX0L6BpkdCC4lHGvVDLjoiZjlr6FguEC525589aRdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SHSH/BLx; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46FC9g5e109144;
+	Mon, 15 Jul 2024 07:09:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1721045382;
+	bh=1cazo7ReNItzF76RUs5P1QS+l8y6IS0p/XVRdyZj368=;
+	h=From:To:CC:Subject:Date;
+	b=SHSH/BLxBSuqEdfH3DsJalseBTtzzsODlv71vWch1UQgswLoZFOMUpoRkFN2JGfgY
+	 000HsQw49SJ5Ej9vwMu/PgEY9XODrz2g7fMVzdsX6dETYd+4VkbnZnUbVTvLHhX1JE
+	 UzkMinQ1rhEg/DssLLnf9//ljvGCODMvSeYpZGpY=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46FC9gkB012672
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 15 Jul 2024 07:09:42 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 15
+ Jul 2024 07:09:41 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 15 Jul 2024 07:09:41 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.81])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46FC9anV060344;
+	Mon, 15 Jul 2024 07:09:37 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH 0/3] Add support for ACSPCIE refclk output on J784S4-EVM
+Date: Mon, 15 Jul 2024 17:39:33 +0530
+Message-ID: <20240715120936.1150314-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Pali Rohár <pali@kernel.org>
+Hello,
 
-The documentation for the irq_domain_remove() function says that all
-mappings within the IRQ domain must be disposed before the domain is
-removed.
+This series adds support to drive out the reference clock required by
+the PCIe Endpoint device using the ACSPCIE buffer.
 
-Use the new helper function pci_remove_irq_domain() that also disposes
-all IRQ mappings of a IRQ domain before removing sait domain.
+Series is based on linux-next tagged next-20240715.
 
-Currently, the INTx IRQs are not disposed in pci-mvebu driver .remove()
-method, which causes the kernel to crash when unloading the driver and
-then reading /sys/kernel/debug/irq/irqs/<num> or /proc/interrupts.
+Series has been tested with the following device-tree change:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/8206ea3a89753c309e4c82d825c75dae
+on J784S4-EVM with an NVMe SSD connected to the PCIe connector
+corresponding to the PCIe1 instance of PCIe. Logs:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/d825068cfe55bba7a869469c1ef64ddd
 
-Unmapping of the IRQs at this point of the .remove() method is safe,
-since the PCIe bus is already unregistered, and all its devices are
-unbound from their drivers and removed. If there was indeed any
-remaining use of PCIe resources, then it would mean that PCIe hotplug
-code is broken, and we have bigger problems.
+Regards,
+Siddharth.
 
-Fixes: ec075262648f ("PCI: mvebu: Implement support for legacy INTx interrupts")
-Reported-by: Hajo Noerenberg <hajo-linux-bugzilla@noerenberg.de>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <kabel@kernel.org>
-[ Marek: refactored a little, added more explanation to commit message ]
-Signed-off-by: Marek Behún <kabel@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/pci-mvebu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Siddharth Vadapalli (3):
+  dt-bindings: mfd: syscon: Add ti,j784s4-acspcie-proxy-ctrl compatible
+  dt-bindings: PCI: ti,j721e-pci-host: Add ACSPCIE proxy control
+    property
+  PCI: j721e: Add support for enabling ACSPCIE PAD IO Buffer output
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 29fe09c99e7d..590f121bd91a 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -1684,7 +1684,7 @@ static void mvebu_pcie_remove(struct platform_device *pdev)
- 
- 		/* Remove IRQ domains. */
- 		if (port->intx_irq_domain)
--			irq_domain_remove(port->intx_irq_domain);
-+			pci_remove_irq_domain(port->intx_irq_domain);
- 
- 		/* Free config space for emulated root bridge. */
- 		pci_bridge_emul_cleanup(&port->bridge);
+ .../devicetree/bindings/mfd/syscon.yaml       |  1 +
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 10 ++++++
+ drivers/pci/controller/cadence/pci-j721e.c    | 33 +++++++++++++++++++
+ 3 files changed, 44 insertions(+)
+
 -- 
-2.44.2
+2.40.1
 
 
