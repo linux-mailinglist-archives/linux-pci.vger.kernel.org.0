@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-10326-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10327-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF12D931C72
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 23:11:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13A87931C74
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 23:12:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 054241C219B4
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:11:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE1AB1F22784
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 21:12:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7FBF13BC31;
-	Mon, 15 Jul 2024 21:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E9713C660;
+	Mon, 15 Jul 2024 21:12:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdXS8kSA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRoISNkn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773AEC15B;
-	Mon, 15 Jul 2024 21:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515C9C15B;
+	Mon, 15 Jul 2024 21:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721077875; cv=none; b=XsEJmfSlFpaz+aRPaNAYWdCii3vdJmAwMCaSEAzIdGWHFokPkDCWdNNKRXvw5QBtHf3131mC9BMneoOHqSwVPCf1mKDpL/hW40vVXaoWjzFMBNRgQca+Dtho6wNby3riNc3tBk/OmuOy3p3GaNxX4q3YNrS12C1cuDAsC/q6A6M=
+	t=1721077930; cv=none; b=oxd0wdgx6/6rMgyegHbRspGp6YfwrPlIwPiPfVlp1ZbwuAsMVGSi71RZjeODM02QWt3dUV1H8FqvCF7ZpsQK1BvwlY5zXfxdF5q++lTZeCbxzr3d4lnVaPmUXWJO9vmIbIphGujlar/EAJ5tohRkrAn7Uo+vDSWpX35cK2sIyeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721077875; c=relaxed/simple;
-	bh=HCObT36yh2xerziJOz7Z2mwqf6JyXvpLpU7sfIPrpaU=;
+	s=arc-20240116; t=1721077930; c=relaxed/simple;
+	bh=us8GqDaCkjGAU//vFSFamwrqORjpNoy7S81+kh7YrrM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B2hOxLHwMJ3s2tsGId87J5z6wL85Wa2zBL9ESHbSKfES/OYLQX2bjzrpy9nY9scAXs9MKV4B/foniDNo9xZxcFh4O16iLX0834rV6BbIDwjz7Zk2fq1j2nj3KLNKNGTHrP3XhYr7v7gIH7J1CqDhmOujtU//y1cTa3RnyiKM+y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fdXS8kSA; arc=none smtp.client-ip=209.85.219.54
+	 In-Reply-To:Content-Type; b=ZeMk8OcMThVCYXFoYP+8qF/8SwkKYF0EtaDRldg9j7bLq8hu1BQljcbIMawBqc1qYJsbW9GarqrORpBseP0BMdqafVSnrog5WuiJyTnqpmCkOCqhikq5ey9tsCj1PHXieGmG3ZZig5o3e1PjRFok3NYGBNMNzLnVp/jWkF4vdGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRoISNkn; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6b5db7936b3so28588666d6.1;
-        Mon, 15 Jul 2024 14:11:14 -0700 (PDT)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6b6176e59e7so29639476d6.1;
+        Mon, 15 Jul 2024 14:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721077873; x=1721682673; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1721077928; x=1721682728; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZDgo6/roqthuSa9h2cJWgH9Wy9T/pvV7p+6Nl8xKZW4=;
-        b=fdXS8kSA9bCeTmYiyM7tvzWr53Fjit6yj4KIvbD3znQMHIg+YKjVHeIYUZN9/JUZmZ
-         dP2odfgjuETs+9jeII/KxD72EHdCbIJBEKNEQ/hJ46N7P6SNZn+GFLFCw41D31DUQVjM
-         MiRw/t59J+iR8xeo8azZCC/6CNFr93Ty1hGBrzeAVUmc7MtBUsVl3KqsPTDBVGPNnAKq
-         4iaw7HKvuAn7uU4BGMH5VPkGGPFGzt6G+hhNktNWG8/WhGL7OyH/QYXoQ9HMe+CmmcOR
-         LABFTTCs3nheUtx83oD3dN5epZ3vRygZtvJOQztUtopLBWTPYyXPHmCPLnGHS49FQG/N
-         4XkQ==
+        bh=Jq9mEPwo5wEjkwS5WRanwBnfVGH6o13HCMZMfsDDMaM=;
+        b=XRoISNkn2/jMlRWDjAHqcQVlif0etYMGOFkQfD8YVOXrgh23tTonZE+eoPIj6ruoKJ
+         NBclcpK9AztgYixeio8cl3qKYxc8cgEtiFPevDPsVVS1tYLgjn0A2mEtXCmN3EBIwZ7q
+         U1YYeSPxSX55KxnlkCsbAimbIH+Jag6rdnXMTcp9HoQzqEU8Q4ufHWrrQ/OAR+R4iNz7
+         ku2LZuChhMFHPFTZy6b8/3gq1gSCUelnQW5p+2I1f1+Zxq3L7vNbamYJSGJz8KEIVZKi
+         zbw4uQ1lVlQRJxwO58jdcG7rf+1dcWZaTu6UmLU9zaWsJG9uAt09i//TG6PCqNv5Wbqz
+         55/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721077873; x=1721682673;
+        d=1e100.net; s=20230601; t=1721077928; x=1721682728;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZDgo6/roqthuSa9h2cJWgH9Wy9T/pvV7p+6Nl8xKZW4=;
-        b=OBgEF79B4hRetXdFXppScjO+wScbRiP6lg1+LbeCwLe+dAqhlAr7m5Am68KeGHYByy
-         KJd99pY8no0xY/PGIW/kTCksxjGx0xQALdQqdN/qNlKobxnqmpDGroqYNNrx+Bch6/1r
-         rPDcLr3rc7GRD2GyAdjo1Du6K6OZwyqQ6hsZuhdSqzrf7/NQGDzXI+rq1NM3Bs5es5Cn
-         lfiJ1P5SMspgcPbtiHBShBkcbGiTHW4emC2fJ28ObrHHyl+JtVmIfiBKT+I8LFFwRhI/
-         FttyLveWA0u4boAVAJrUkOqY93yvat9dhOGjDmD+/n0tiF7CCH412i7Zbm36KA0jqMSk
-         3H1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVKngtUYCrrVJUGsCFoAIdWRaKox+P5ssyJLbOreV/k61/Rb4U+dbqOn0TjKEaPvWd+SQ3crIcwUdy3u/Aq++iTTmhPOa2ia9Gwu5XTWSDKGphGthE2NmXUJfls8TjF80paXPt5V3cs
-X-Gm-Message-State: AOJu0Yx0sXd9H3K3RHXAlTIfNDfGcGrQjXLBrcW14gBjhGSW3kA6vPiE
-	uu21oo8SardzLmn7AlDZIh9e4BNstnIQoOupnhEfRA0kMwKbh4E1
-X-Google-Smtp-Source: AGHT+IHFvWkX/s7qTAtzppR7TyaZgVXpSaehoSrKXhXImnANwBQKzLvb6NAoTQZ43XF6+UpQvvC6hw==
-X-Received: by 2002:a05:6214:e88:b0:6b5:4ca8:2798 with SMTP id 6a1803df08f44-6b77f5161e1mr4873286d6.27.1721077873338;
-        Mon, 15 Jul 2024 14:11:13 -0700 (PDT)
+        bh=Jq9mEPwo5wEjkwS5WRanwBnfVGH6o13HCMZMfsDDMaM=;
+        b=XJVNcSXpYaSiDaAGtb7keXF+sXtr0H9qzenjCijZxRtz9jzjJE+OfGp1L7vaUVW89L
+         HmdJUbeWBJ+qgKGhrThu/Zz5dMpj8CMHeZadMfr3NBUG0V4g1/R0HdJmPS0TVZdVwc9s
+         r6wxI0dLAs2wcAkxAqHqBPiUY67rv8SWUGwN8DAvhd344GZ015PE5C60rKLLTx8GEJnn
+         6uREKQ16Ikgyi2GvKhx9EnSAvB0iGwscuO8zLGhXzWQ8P5WTpSUJst/2Hdm5d9I32pS5
+         HeBzAaDaObbXFeSYOdOyacwo8b3TC3TEGoxaxezq8FZOJ0mPugRiCe8pZ450Wy+SVKGW
+         f3eA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpIkRsDsyfzOXoSYHvHi9OKzYsWWpGMzxnQQpWMnHTbfbEpEr1bWjb/WMQwUY0EO3ln0M1bjIJ1Yu/7ksKFLLJleUPm++Gq7/JOPAjQH4iIqAkfCXgU8gr8wNBG8HaQKAc7GlfU4Db
+X-Gm-Message-State: AOJu0Yyg3ebLgJkAL8TcYo2ZNDvIR/Tf+/wenKkSHX1rcuiSazo8gWti
+	6CUtX2Lbxq1DgTW5fwlMupTO5o0i8wTWPBgvsufHVAXu8Y3O3X6t/Td4Kg==
+X-Google-Smtp-Source: AGHT+IEVKTcg9Po8YqXKxoxrHXrayRvjEg595EafYJ23X9++zcK7ruMTxyj6nWBycqirI6/ylxICgQ==
+X-Received: by 2002:a05:6214:19e8:b0:6b5:8e2c:e715 with SMTP id 6a1803df08f44-6b77f4ea0e3mr4921416d6.20.1721077928244;
+        Mon, 15 Jul 2024 14:12:08 -0700 (PDT)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6b761a583a3sm24941056d6.126.2024.07.15.14.10.55
+        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6b76198d795sm24978726d6.53.2024.07.15.14.12.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 14:10:57 -0700 (PDT)
-Message-ID: <cf5dcee0-a7f5-4bf1-84d0-d39256d5a6bf@gmail.com>
-Date: Mon, 15 Jul 2024 14:10:54 -0700
+        Mon, 15 Jul 2024 14:12:06 -0700 (PDT)
+Message-ID: <d64b9123-14d1-405d-9509-872c0339929f@gmail.com>
+Date: Mon, 15 Jul 2024 14:12:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,8 +76,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/12] PCI: brcmstb: Use common error handling code in
- brcm_pcie_probe()
+Subject: Re: [PATCH v3 12/12] PCI: brcmstb: Enable 7712 SOCs
 To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
  Nicolas Saenz Julienne <nsaenz@kernel.org>,
  Bjorn Helgaas <bhelgaas@google.com>,
@@ -95,24 +94,18 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
  <linux-arm-kernel@lists.infradead.org>,
  open list <linux-kernel@vger.kernel.org>
 References: <20240710221630.29561-1-james.quinlan@broadcom.com>
- <20240710221630.29561-4-james.quinlan@broadcom.com>
+ <20240710221630.29561-13-james.quinlan@broadcom.com>
 Content-Language: en-US
 From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240710221630.29561-4-james.quinlan@broadcom.com>
+In-Reply-To: <20240710221630.29561-13-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 7/10/24 15:16, Jim Quinlan wrote:
-> o Move the clk_prepare_enable() below the resource allocations.
-> o Add a jump target (clk_out) so that a bit of exception handling can be
->    better reused at the end of this function implementation.
+> The Broadcom STB 7712 is the sibling chip of the RPi 5 (2712).
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> 
-> Fixes: bb610757fcd7 ("PCI: brcmstb: Use reset/rearm instead of deassert/assert")
-
-(no need for an empty line between your Signed-off-by and the Fixes tags 
-BTW).
+> Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
