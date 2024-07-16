@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-10415-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10416-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3361C9333AA
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 23:34:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A34729333AB
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 23:34:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 566BB1C22B12
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:34:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5993E286A68
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66DB414389F;
-	Tue, 16 Jul 2024 21:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E27514601F;
+	Tue, 16 Jul 2024 21:32:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="R9h8gGFp"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ImptZRS8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5BC143898
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 21:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8A514600C
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 21:32:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721165543; cv=none; b=XP5H003OZiZ+B5lnXmfv/3D7Rqu5bDhXl+Obxgw+Wmsm2KVWGf6HDpmmfKfGXSutDCQguMYyKVrcvgD+rL4dwZ2D8sc7dQEBMSJWI0emFuB6l9pTa/SHiVlgoRm/g27cGO0bxT+RKIex4wq/R6sk/PTCZKKoVOV+eYhdpEYdt4U=
+	t=1721165544; cv=none; b=fOB7tlokvsOWKvk1/ND5iGe+w+DPHZpc9/2UXxytkOjQL7peUevUTvC1Cm/wNJ4H9/94uGwz4sEUJa1Xnfiu6rY519LGS/ftKR0n+PrtViGrdTNhcbNfxw/MsGfvNsD7vagxMRUZdHjQTWp1hRn17XKrfj6hyYb866zZKdneVJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721165543; c=relaxed/simple;
-	bh=TC1U5tyTxGYt1MBH8C3oTkPwP9JnTgiG8hcH7kJgemo=;
+	s=arc-20240116; t=1721165544; c=relaxed/simple;
+	bh=C2p2QHrHO86v8QlhU3nQeNCgnFdoGliH8iSzjZ1qojw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type; b=DHru51zNW0ObXqjwAC/bsr11t29/YohdDc3ii8WNZ7wCFuzVY1OnbD0aB35mO9b2g0yX8bwk6R7n+2M2av6l8PvnSNJI/NEzYgUTy4dfI0p0yKiXh3fnIcRU9CF5PqtzNJuWhTxHkPPx8uyG12I6LPEKyr3eTKK67H2bjfxzZHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=R9h8gGFp; arc=none smtp.client-ip=209.85.210.173
+	 Content-Type; b=nKKKnVqsv1w3qQsmkT6g+iVhug9Yk6Z47hnYldyX77DeMIi/WdPUo1W6kCOYWjF5zeCT+1sjqGnQDNFGI93X5hx7yGzS8po1PdhV1qypYeQguK6ugDUTILlA4cBFMQfC4HTkHjuFsLOt/dWm+ynDelDgFBdSTnVSVlJNn3FTkTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ImptZRS8; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70b31272a04so122279b3a.1
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 14:32:20 -0700 (PDT)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70b0d0a7a56so4590727b3a.0
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 14:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1721165539; x=1721770339; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1721165542; x=1721770342; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=iyT2L2Twi325SiV+6njhsVpKWqQ/IDKq+ZlXdzosV1M=;
-        b=R9h8gGFpqrncihhKN0fv/+6TtPHk73V/3hp9SnSmn3e/gTtFYgiGY44PFzXQuJtY0U
-         9llrJU6Y702L1wizNCeC5M/nE2kaZ2jZL0DNHDOcVd+zViljk59sOamUfVsa/49sEPI3
-         gMJrBhll+RAxKDuokBhj+GoXGiT1u4gUs/6tI=
+        bh=bDu58s/yu8k7/K65TlDoP49u82ZMCl/2qPk9wT4mQSk=;
+        b=ImptZRS8HPC+ISjz3v9yw+zs0xyJmb87wjcCFWTZjppcYeNYzgxKTFLd+rEyOzpxZ9
+         e4biQ/bTsWhKJwdHBu+0DDXdfBwy7MScRMIWFxUr3sg2zTK8dr1f7WINppia7jDZadmN
+         cGVsfBLjbcasRQW++zv9835Fp7bslqkCXJpPc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721165539; x=1721770339;
+        d=1e100.net; s=20230601; t=1721165542; x=1721770342;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iyT2L2Twi325SiV+6njhsVpKWqQ/IDKq+ZlXdzosV1M=;
-        b=RXfPeYjlY81R19r627/p7+d2+VqgWZSETRRAfEGjZgCzbSVMNdcWztisHqECUJicao
-         z1b5BZufOA9S6MgZsIJFtB0u6KZlbTn3Ui7wPkfv7xQT10ABCOOSg7DS0pQfX8VP3CAJ
-         H6k5h7EkCpQ8xefkc/WkHm4idmCEUH2ckJ6Rq+63kZPRzxChZbxqVP28VgjXvNKfqYQh
-         ciTGEFStUGheMGa2eUdXUeiL05gC3/LTa/r5kAnncROTosdmr+pbl9QnCGsEVd+nz1vx
-         oUJh8qDTK+252HFtQ+2XEExa0ZlIpJZf26v0aLNnDUnLjMDZXVLNGkHbaLzZDKL1RNkS
-         XxHg==
-X-Gm-Message-State: AOJu0Yw/136a9dT7n6uzcXd8brUZ4f2NGlh9HcjwmoPHSBsFKxHA+ygz
-	jB/trrcX6koDU9SSoR7THJXXGVUCmPEX1r4TTLrhxyk9ehWHM2pCtWu4pPUJg1xUzvxjcfsMD4W
-	l/HT/sNBpE1XXUAKkKeRvRUXzFcgxc9Xo6zbHTWcRale3ibiGkxNOsbJM/W4pJQ78jGxN2xdX39
-	aBgZiLnSlbkjWNUnBlsDIE/DcmIYYP06fdveiYxot5bip9LgUn
-X-Google-Smtp-Source: AGHT+IGx3fCh6S2QfTNtvLqxaswCxSc1oIJxvnMZ0D0dcPdjNSV74JcS7F3v925N9gUIHSu7fi3oxg==
-X-Received: by 2002:a05:6a20:7487:b0:1c0:f630:97a5 with SMTP id adf61e73a8af0-1c3f1fb382amr5190270637.10.1721165538637;
-        Tue, 16 Jul 2024 14:32:18 -0700 (PDT)
+        bh=bDu58s/yu8k7/K65TlDoP49u82ZMCl/2qPk9wT4mQSk=;
+        b=uFa2V6uvgil9mssJbjFaGQ/DJRX9O9RlT/cB+0aRf8vRsORTbCyxathSlcs1VY12AW
+         obYaUwIFqLo2aIcpnZZNS94fAHPCn1lGp2s8qF1RYN7MjglxdEVsGBb7S+NXFmw5EDuZ
+         FtcghxixxW+X8tEETigkPnErXkO4DRIHCM446evZgUbV4DHJ8wHzWFPMU94yA3t4uYdF
+         kIOrry43O+mFmggF0C6w41wQNe04IlyirVMbbkIH7DcM/XBktks7Zu/LE1EF6R2bdO8z
+         XrPP4X9JoiQtlJndNFxhlYG8bSWryTgTPOo5dJriQYgPov6ZCB+KePwKWbPHMFdgvxqT
+         Q1Xg==
+X-Gm-Message-State: AOJu0YyD1JY34NsnsOlBQqBxj5S9J9IOw/iDs3EQ+EXk++ga6gp1ntRO
+	xzvenLc2xkd3Gyhzw6o4G1F6C+LL6hmYN2z/iZgDl1nnWbs3xsbiAVus/MxrIYYdFcdnVy0O85c
+	pg3c+tCoQr8mxRWqB+ai7uOmojHLEzDZFrnCVTc30oGMqyvAM/JH+pfbDe6pVTjU4MqQkBsEdKa
+	7PORPvGhAqeK/OQBRJillTFuNESL8F9Q06Pp629bW06BQcvw==
+X-Google-Smtp-Source: AGHT+IH0Y9+x+k35oeCTVD3LE8/SAcgucMDAoq8oz6zUhM4uRLOH0VIwFmwWNPm22oM56uujdUQQpA==
+X-Received: by 2002:a05:6a00:2e15:b0:70a:fa4c:4b28 with SMTP id d2e1a72fcca58-70c1fbe1812mr4531776b3a.15.1721165542191;
+        Tue, 16 Jul 2024 14:32:22 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7eb9e20fsm6812828b3a.31.2024.07.16.14.32.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7eb9e20fsm6812828b3a.31.2024.07.16.14.32.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 14:32:18 -0700 (PDT)
+        Tue, 16 Jul 2024 14:32:21 -0700 (PDT)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -81,226 +81,89 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 11/12] PCI: brcmstb: Change field name from 'type' to 'model'
-Date: Tue, 16 Jul 2024 17:31:26 -0400
-Message-Id: <20240716213131.6036-12-james.quinlan@broadcom.com>
+Subject: [PATCH v4 12/12] PCI: brcmstb: Enable 7712 SOCs
+Date: Tue, 16 Jul 2024 17:31:27 -0400
+Message-Id: <20240716213131.6036-13-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240716213131.6036-1-james.quinlan@broadcom.com>
 References: <20240716213131.6036-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000927c50061d641483"
+	boundary="000000000000c73acf061d64142a"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
---000000000000927c50061d641483
+--000000000000c73acf061d64142a
 
-The 'type' field used in the driver to discern SoC differences is confusing
-so change it to the more apt 'model'.  We considered using 'family' but
-this conflicts with Broadcom's conception of a family; for example, 7216a0
-and 7216b0 chips are both considered separate families as each has multiple
-derivative product chips based on the original design.
+The Broadcom STB 7712 is the sibling chip of the RPi 5 (2712).
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Reviewed-by: Stanimir Varbanov <svarbanov@suse.de>
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 42 +++++++++++++--------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 2fe1f2a26697..fa5616a56383 100644
+index fa5616a56383..7debb3599789 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -211,7 +211,7 @@ enum {
- 	PCIE_INTR2_CPU_BASE,
+@@ -1193,6 +1193,10 @@ static void brcm_extend_rbus_timeout(struct brcm_pcie *pcie)
+ 	const unsigned int REG_OFFSET = PCIE_RGR1_SW_INIT_1(pcie) - 8;
+ 	u32 timeout_us = 4000000; /* 4 seconds, our setting for L1SS */
+ 
++	/* 7712 does not have this (RGR1) timer */
++	if (pcie->model == BCM7712)
++		return;
++
+ 	/* Each unit in timeout register is 1/216,000,000 seconds */
+ 	writel(216 * timeout_us, pcie->base + REG_OFFSET);
+ }
+@@ -1664,6 +1668,13 @@ static const int pcie_offsets_bmips_7425[] = {
+ 	[PCIE_INTR2_CPU_BASE] = 0x4300,
  };
  
--enum pcie_type {
-+enum pcie_model {
- 	GENERIC,
- 	BCM7425,
- 	BCM7435,
-@@ -229,7 +229,7 @@ struct rc_bar {
- 
- struct pcie_cfg_data {
- 	const int *offsets;
--	const enum pcie_type type;
-+	const enum pcie_model model;
- 	const bool has_phy;
- 	unsigned int num_inbound;
- 	int (*perst_set)(struct brcm_pcie *pcie, u32 val);
-@@ -270,7 +270,7 @@ struct brcm_pcie {
- 	u64			msi_target_addr;
- 	struct brcm_msi		*msi;
- 	const int		*reg_offsets;
--	enum pcie_type		type;
-+	enum pcie_model		model;
- 	struct reset_control	*rescal;
- 	struct reset_control	*perst_reset;
- 	struct reset_control	*bridge;
-@@ -288,7 +288,7 @@ struct brcm_pcie {
- 
- static inline bool is_bmips(const struct brcm_pcie *pcie)
- {
--	return pcie->type == BCM7435 || pcie->type == BCM7425;
-+	return pcie->model == BCM7435 || pcie->model == BCM7425;
- }
- 
- /*
-@@ -852,7 +852,7 @@ static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
- 	 * security considerations, and is not implemented in our modern
- 	 * SoCs.
- 	 */
--	if (pcie->type != BCM7712)
-+	if (pcie->model != BCM7712)
- 		set_bar(b++, &n, 0, 0, 0);
- 
- 	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-@@ -869,7 +869,7 @@ static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
- 		 * That being said, each BARs size must still be a power of
- 		 * two.
- 		 */
--		if (pcie->type == BCM7712)
-+		if (pcie->model == BCM7712)
- 			set_bar(b++, &n, size, cpu_beg, pcie_beg);
- 
- 		if (n > pcie->num_inbound)
-@@ -886,7 +886,7 @@ static int brcm_pcie_get_inbound_wins(struct brcm_pcie *pcie,
- 	 * that enables multiple memory controllers.  As such, it can return
- 	 * now w/o doing special configuration.
- 	 */
--	if (pcie->type == BCM7712)
-+	if (pcie->model == BCM7712)
- 		return n;
- 
- 	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
-@@ -1008,7 +1008,7 @@ static void set_inbound_win_registers(struct brcm_pcie *pcie, const struct rc_ba
- 		 * 7712:
- 		 *     All of their BARs need to be set.
- 		 */
--		if (pcie->type == BCM7712) {
-+		if (pcie->model == BCM7712) {
- 			/* BUS remap register settings */
- 			reg_offset = brcm_ubus_reg_offset(i);
- 			tmp = lower_32_bits(cpu_addr) & ~0xfff;
-@@ -1036,7 +1036,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 		return ret;
- 
- 	/* Ensure that PERST# is asserted; some bootloaders may deassert it. */
--	if (pcie->type == BCM2711) {
-+	if (pcie->model == BCM2711) {
- 		ret = pcie->perst_set(pcie, 1);
- 		if (ret) {
- 			pcie->bridge_sw_init_set(pcie, 0);
-@@ -1067,9 +1067,9 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	 */
- 	if (is_bmips(pcie))
- 		burst = 0x1; /* 256 bytes */
--	else if (pcie->type == BCM2711)
-+	else if (pcie->model == BCM2711)
- 		burst = 0x0; /* 128 bytes */
--	else if (pcie->type == BCM7278)
-+	else if (pcie->model == BCM7278)
- 		burst = 0x3; /* 512 bytes */
- 	else
- 		burst = 0x2; /* 512 bytes */
-@@ -1666,7 +1666,7 @@ static const int pcie_offsets_bmips_7425[] = {
- 
++static const int pcie_offset_bcm7712[] = {
++	[EXT_CFG_INDEX]  = 0x9000,
++	[EXT_CFG_DATA]   = 0x9004,
++	[PCIE_HARD_DEBUG] = 0x4304,
++	[PCIE_INTR2_CPU_BASE] = 0x4400,
++};
++
  static const struct pcie_cfg_data generic_cfg = {
  	.offsets	= pcie_offsets,
--	.type		= GENERIC,
-+	.model		= GENERIC,
- 	.perst_set	= brcm_pcie_perst_set_generic,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
+ 	.model		= GENERIC,
+@@ -1729,6 +1740,14 @@ static const struct pcie_cfg_data bcm7216_cfg = {
  	.num_inbound	= 3,
-@@ -1674,7 +1674,7 @@ static const struct pcie_cfg_data generic_cfg = {
+ };
  
- static const struct pcie_cfg_data bcm7425_cfg = {
- 	.offsets	= pcie_offsets_bmips_7425,
--	.type		= BCM7425,
-+	.model		= BCM7425,
- 	.perst_set	= brcm_pcie_perst_set_generic,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
- 	.num_inbound	= 3,
-@@ -1682,7 +1682,7 @@ static const struct pcie_cfg_data bcm7425_cfg = {
++static const struct pcie_cfg_data bcm7712_cfg = {
++	.offsets	= pcie_offset_bcm7712,
++	.perst_set	= brcm_pcie_perst_set_7278,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
++	.model		= BCM7712,
++	.num_inbound	= 10,
++};
++
+ static const struct of_device_id brcm_pcie_match[] = {
+ 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
+ 	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
+@@ -1738,6 +1757,7 @@ static const struct of_device_id brcm_pcie_match[] = {
+ 	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
+ 	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
+ 	{ .compatible = "brcm,bcm7425-pcie", .data = &bcm7425_cfg },
++	{ .compatible = "brcm,bcm7712-pcie", .data = &bcm7712_cfg },
+ 	{},
+ };
  
- static const struct pcie_cfg_data bcm7435_cfg = {
- 	.offsets	= pcie_offsets,
--	.type		= BCM7435,
-+	.model		= BCM7435,
- 	.perst_set	= brcm_pcie_perst_set_generic,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
- 	.num_inbound	= 3,
-@@ -1690,7 +1690,7 @@ static const struct pcie_cfg_data bcm7435_cfg = {
- 
- static const struct pcie_cfg_data bcm4908_cfg = {
- 	.offsets	= pcie_offsets,
--	.type		= BCM4908,
-+	.model		= BCM4908,
- 	.perst_set	= brcm_pcie_perst_set_4908,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
- 	.num_inbound	= 3,
-@@ -1706,7 +1706,7 @@ static const int pcie_offset_bcm7278[] = {
- 
- static const struct pcie_cfg_data bcm7278_cfg = {
- 	.offsets	= pcie_offset_bcm7278,
--	.type		= BCM7278,
-+	.model		= BCM7278,
- 	.perst_set	= brcm_pcie_perst_set_7278,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
- 	.num_inbound	= 3,
-@@ -1714,7 +1714,7 @@ static const struct pcie_cfg_data bcm7278_cfg = {
- 
- static const struct pcie_cfg_data bcm2711_cfg = {
- 	.offsets	= pcie_offsets,
--	.type		= BCM2711,
-+	.model		= BCM2711,
- 	.perst_set	= brcm_pcie_perst_set_generic,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
- 	.num_inbound	= 3,
-@@ -1722,7 +1722,7 @@ static const struct pcie_cfg_data bcm2711_cfg = {
- 
- static const struct pcie_cfg_data bcm7216_cfg = {
- 	.offsets	= pcie_offset_bcm7278,
--	.type		= BCM7278,
-+	.model		= BCM7278,
- 	.perst_set	= brcm_pcie_perst_set_7278,
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
- 	.has_phy	= true,
-@@ -1779,7 +1779,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	pcie->dev = &pdev->dev;
- 	pcie->np = np;
- 	pcie->reg_offsets = data->offsets;
--	pcie->type = data->type;
-+	pcie->model = data->model;
- 	pcie->perst_set = data->perst_set;
- 	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
- 	pcie->has_phy = data->has_phy;
-@@ -1848,7 +1848,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		goto fail;
- 
- 	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
--	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
-+	if (pcie->model == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
- 		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
- 		ret = -ENODEV;
- 		goto fail;
-@@ -1863,7 +1863,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	bridge->ops = pcie->type == BCM7425 ? &brcm7425_pcie_ops : &brcm_pcie_ops;
-+	bridge->ops = pcie->model == BCM7425 ? &brcm7425_pcie_ops : &brcm_pcie_ops;
- 	bridge->sysdata = pcie;
- 
- 	platform_set_drvdata(pdev, pcie);
 -- 
 2.17.1
 
 
---000000000000927c50061d641483
+--000000000000c73acf061d64142a
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -371,14 +234,14 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCA20GgJbcpMtQsRFp1ZZVfgpPIdruH3
-BESXTuYsMt2YsTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
-MTYyMTMyMTlaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBKP1cBYJUxrBX4b83scdDjYcDM00xe
+WHy5ZfwVBhIWwzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA3
+MTYyMTMyMjJaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAnrU9EWGLaI7In/hUBA807bPgwFZmT5d4X/1LUNTfBMzLtgXu
-JmYvuyEoxZNQMjQVy8PKb5IWb38557E3s2Bhsf0GgZWju2ggQd4jZJXJqMdSyRhCXYDe3SRkico/
-4XZ8bt4lxo1o/cwmsWoE/Yyj+NsZuJEL5TziEJkDkYAoRgYwW2EIfKdQ1uQWYfB1mx7AoneXD7V2
-Hf+wgZ2qOqPW0a9vaRmBCrrn6a2QQ32vc25xfw89P0zcfcq7TG9fMxB+WaMdjDPJEH7zx52Mntu7
-Uq1U8MsflXsNoEIGODKIsXJJXKgAzcl7by/+b2IBOLAnSz4BZmlj+Gz1Yp3DK30Pbw==
---000000000000927c50061d641483--
+AgEwDQYJKoZIhvcNAQEBBQAEggEANjORoHJnfoeKmeo2WfYbP302ss1J55DBN67O20N+xPtpMmSw
+7ZaODs8J1GSf4IW9+06sHMi7MnmgoKLshhpsbFUt+HMDdP64aguWiJrC7CtsPE+IMzUN4cMKVvAx
+Hp1xSvClM61L/TdxOfrY4RGjYESfXTGJbZH3mbC1rfBgwmnUPrk1B5tf6fO6qR8mOB4y6PH7uUGQ
+yPL0Cl/p5QI0rFKr8E5EthIyiz3+VRAorQsCWo36QLN4DswaZoWF/90tFuAkwlEqgahbK8zjO3js
+q7GJjtxlD3e/9SFDq8pllJA4rj3NIrp2FWtFmhG0YyQ5IjDydSPb/mdVPA7wc6uYlg==
+--000000000000c73acf061d64142a--
 
