@@ -1,242 +1,207 @@
-Return-Path: <linux-pci+bounces-10366-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10367-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F6729323CC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 12:20:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01BB19323E3
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 12:30:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F4A01F23EBD
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:20:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20C151C20D58
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:30:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFBB2199234;
-	Tue, 16 Jul 2024 10:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 387B913D601;
+	Tue, 16 Jul 2024 10:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8j9wOGo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqyuFhOD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB06A1953A8
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 10:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E43B143875;
+	Tue, 16 Jul 2024 10:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125211; cv=none; b=G670zxrkK+FckE+t5SG0fYW5dawXahBCDjLNYcHTB4CYBUHEz5gOVKs89hHaKgxfsLM+vRBVdtv3srH7Vlhc7ej7R8BeFoGYmp0ZeRRJs0F2cx+I0iT+k3kDg18EL0ovkSqVbkd+3NMcDLOSqTJkE6A+Yff13gZT6n/UrOTD8sU=
+	t=1721125809; cv=none; b=RCjk4jERu26Qc7/UfmV+pHcfeh36BCfmyrLjaeRWAQEM/F0cX0NDif9UPJqv8rXNRcA/jBA2rsDo29HnkE2wdYUl/AVVOtQ18sUmQnQCc3HIbmaCA2Y532VDoxfs0QA0Li+RQ57emsZGkW9rGa8xevzd0xmIc9KRCavx7qpgmk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125211; c=relaxed/simple;
-	bh=fpBGbCyhd772qcFb498tGT8nDnPB0drFxt8PUU3Fn/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H8148pgoyDlUKcjGisd71kh14CKKPUOv6SuDBfn77qwXUBsyOic8w1dadvYbKB25x7gUvAra/RjpSOEDnxCVTqSowq4Au2qDZsCuAxWfdlcNHb0m0y52Lbb5U7dfY3v/GIwC9s6opnYOtDvmbnHcZI93sTNGor5w2RAhY9DSIH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j8j9wOGo; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c9a1ea8cc3so3724874a91.0
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 03:20:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721125208; x=1721730008; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=D+ol9qghEAKP5PzeXFlIx+5EzD/KmRIHav75fqb24zE=;
-        b=j8j9wOGodFTXIbUL2kSwiayGcRIXUgD4tzOHilnZgKFJG5jNXsOjJvKqeiSskshRs5
-         sn6apw3dVwPMLS4zHzXcac5vKmxradqV3H67xWP/4m8fmLdil08FZkHT/CpcvrqMLPxm
-         GKHW0ACPbsyVVFU1jIF+HXC0rYixS/o9VTw28sTDatDv/adl59hvThzoOTphPZtaOuwA
-         wxQTvTkx5HmxQZGkpcCnAqE6qs0MexLfER264/gXhcupb0RIn7Rj79tOtFRVa1nqk4jP
-         mtr0ieAQjM7h09u3NfzDjwQefD+8UVNU0xINtwj7fOKwyA0v5T5JMPtyIoLyWuilpYO6
-         d7BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721125208; x=1721730008;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D+ol9qghEAKP5PzeXFlIx+5EzD/KmRIHav75fqb24zE=;
-        b=gqWve1RMKaQiEJNdkt/qOXPYTc4MMkCYihPkuWz7NHWFozfW+XyKFaWUpB8qrP4MJK
-         akV2EBAu5hZsTD28hH4YTll1gF4FEyF2Pkzp3sGN8061Xqud3QO5d2+EqzUeuHOB6hKw
-         oH7cAZx/eTSNyGs0ALjwGhMo55RAoBOXsXT126OZlQw1YvIHcCnNIH3xTqNZYXq4tzuf
-         vjwpm5pV60HBn/acdsEcjXtXxQVBVu1++SeI11mq09vWEU82oFXeCx/rqlRJ+jgAuoTJ
-         inipeuTNNQDbB3418TnrFAPyoz6xWez4ryjSGbkzL1WBftkG+4rbdaD5VGUpp1J79iez
-         8uPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXDfchxeAMy+x56OXwVmuLxpjMnFlN98cZPYNfxVq1bAKdZGK5/EQAOW4dq+jMtjOa8gw8fq5oya7N+2p7vR7QKRgtD12DqxQW4
-X-Gm-Message-State: AOJu0YyAHnzOGWQJqcvKMy2SdK5122bBgk7eymK9p4oWgjxeDWExRh9h
-	K7GKYMHtST91uSzAFNu4K273fHyxQMTwWTEYBXaETWIJKTTBz9dM3R4KEnN9cw==
-X-Google-Smtp-Source: AGHT+IGupWa3ROtnkyEzp23i/w3DYfSyvrtmr9ayct2cPDFjJpWs4HnKGVa0ZLEWtcIFzwRkSYamKg==
-X-Received: by 2002:a17:90b:516:b0:2c9:36bf:ba6f with SMTP id 98e67ed59e1d1-2cb37dcaf25mr2162210a91.3.1721125208072;
-        Tue, 16 Jul 2024 03:20:08 -0700 (PDT)
-Received: from thinkpad ([220.158.156.207])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cacd704f8csm7902347a91.56.2024.07.16.03.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 03:20:07 -0700 (PDT)
-Date: Tue, 16 Jul 2024 15:50:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: neil.armstrong@linaro.org
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 13/14] PCI: qcom: Simulate PCIe hotplug using 'global'
- interrupt
-Message-ID: <20240716102002.GL3446@thinkpad>
-References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
- <20240715-pci-qcom-hotplug-v1-13-5f3765cc873a@linaro.org>
- <5f0a751a-f1b9-4cb5-af31-624c08833b10@linaro.org>
+	s=arc-20240116; t=1721125809; c=relaxed/simple;
+	bh=QysKPyiFau2fw2f0p+pSgBtnoBOL8OjYbm8noFYeFeY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EFTS3DC5wxGLP/owk20ka8CW5GT8eKTgpe5Dq1nKQRWNqL0BOBCRJsLDm16D0RphJE5U1vJZ4jF8R2zk8MvRjM3Ys+lnCiamzt0J6SM1EGYYCv1TGBJXVv8J4yf/K82vdr8byKRQANJdCzZ0/RZKZ5640bHn0Qc9dG1NnYEyNvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqyuFhOD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E84AC116B1;
+	Tue, 16 Jul 2024 10:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721125808;
+	bh=QysKPyiFau2fw2f0p+pSgBtnoBOL8OjYbm8noFYeFeY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rqyuFhODQa3Qr5Fjyld3vuMaw73GnEGfh7LiSlIU39EKJ6H6OuvH7DpkPRCVmIO2D
+	 fnSFR9X3Zd3yFE7NAMVIM+2zmmZsGd1KsjQp6yCBL3xqSVCTEDihI/N5+A7RUF6s3+
+	 uEnXbXRkSpNlv8ngsrYtTQ1gXPRYCPKIAc+DnsxuVrWdRPgV4xz+ArhaF4bXvuOjLY
+	 bv5phdTOyK3wSd0wgm8N3BrCTJappg15Km3/XMLexZn8BOqN3HVoD5UUo/CpPrjCwT
+	 6ZBAL7iRhgoDMIjI1yqvEGsLJELRBHmbW7ay/1NLHoCAK/tyaYw4EyEV26WZuuZRhk
+	 Lrq9p3Bow9nCw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sTfRd-00ClkI-MZ;
+	Tue, 16 Jul 2024 11:30:05 +0100
+Date: Tue, 16 Jul 2024 11:30:05 +0100
+Message-ID: <86r0bt39zm.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	anna-maria@linutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	festevam@gmail.com,
+	bhelgaas@google.com,
+	rdunlap@infradead.org,
+	vidyas@nvidia.com,
+	ilpo.jarvinen@linux.intel.com,
+	apatel@ventanamicro.com,
+	kevin.tian@intel.com,
+	nipun.gupta@amd.com,
+	den@valinux.co.jp,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	alex.williamson@redhat.com,
+	will@kernel.org,
+	lorenzo.pieralisi@arm.com,
+	jgg@mellanox.com,
+	ammarfaizi2@gnuweeb.org,
+	robin.murphy@arm.com,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	kristo@kernel.org,
+	vkoul@kernel.org,
+	okaya@kernel.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	mark.rutland@arm.com,
+	shameerali.kolothum.thodi@huawei.com,
+	yuzenghui@huawei.com,
+	shivamurthy.shastri@linutronix.de
+Subject: Re: [patch V4 00/21] genirq, irqchip: Convert ARM MSI handling to per device MSI domains
+In-Reply-To: <ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
+References: <20240623142137.448898081@linutronix.de>
+	<ZpUFl4uMCT8YwkUE@hovoldconsulting.com>
+	<878qy26cd6.wl-maz@kernel.org>
+	<ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f0a751a-f1b9-4cb5-af31-624c08833b10@linaro.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com, shivamurthy.shastri@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Jul 16, 2024 at 10:40:55AM +0200, neil.armstrong@linaro.org wrote:
-> On 15/07/2024 19:33, Manivannan Sadhasivam via B4 Relay wrote:
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > Historically, Qcom PCIe RC controllers lack standard hotplug support. So
-> > when an endpoint is attached to the SoC, users have to rescan the bus
-> > manually to enumerate the device. But this can be avoided by simulating the
-> > PCIe hotplug using Qcom specific way.
-> > 
-> > Qcom PCIe RC controllers are capable of generating the 'global' SPI
-> > interrupt to the host CPUs. The device driver can use this event to
-> > identify events such as PCIe link specific events, safety events etc...
-> > 
-> > One such event is the PCIe Link up event generated when an endpoint is
-> > detected on the bus and the Link is 'up'. This event can be used to
-> > simulate the PCIe hotplug in the Qcom SoCs.
-> > 
-> > So add support for capturing the PCIe Link up event using the 'global'
-> > interrupt in the driver. Once the Link up event is received, the bus
-> > underneath the host bridge is scanned to enumerate PCIe endpoint devices,
-> > thus simulating hotplug.
-> > 
-> > All of the Qcom SoCs have only one rootport per controller instance. So
-> > only a single 'Link up' event is generated for the PCIe controller.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/pci/controller/dwc/pcie-qcom.c | 55 ++++++++++++++++++++++++++++++++++
-> >   1 file changed, 55 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 0180edf3310e..38ed411d2052 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -50,6 +50,9 @@
-> >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> >   #define PARF_Q2A_FLUSH				0x1ac
-> >   #define PARF_LTSSM				0x1b0
-> > +#define PARF_INT_ALL_STATUS			0x224
-> > +#define PARF_INT_ALL_CLEAR			0x228
-> > +#define PARF_INT_ALL_MASK			0x22c
-> >   #define PARF_SID_OFFSET				0x234
-> >   #define PARF_BDF_TRANSLATE_CFG			0x24c
-> >   #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-> > @@ -121,6 +124,9 @@
-> >   /* PARF_LTSSM register fields */
-> >   #define LTSSM_EN				BIT(8)
-> > +/* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> > +#define PARF_INT_ALL_LINK_UP			BIT(13)
-> > +
-> >   /* PARF_NO_SNOOP_OVERIDE register fields */
-> >   #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
-> >   #define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
-> > @@ -260,6 +266,7 @@ struct qcom_pcie {
-> >   	struct icc_path *icc_cpu;
-> >   	const struct qcom_pcie_cfg *cfg;
-> >   	struct dentry *debugfs;
-> > +	int global_irq;
+On Mon, 15 Jul 2024 15:10:01 +0100,
+Johan Hovold <johan@kernel.org> wrote:
 > 
-> I think you can drop this, the irq number is no more needed after probe
+> On Mon, Jul 15, 2024 at 01:58:13PM +0100, Marc Zyngier wrote:
+> > On Mon, 15 Jul 2024 12:18:47 +0100,
+> > Johan Hovold <johan@kernel.org> wrote:
+> > > On Sun, Jun 23, 2024 at 05:18:31PM +0200, Thomas Gleixner wrote:
+> > > > This is version 4 of the series to convert ARM MSI handling over to
+> > > > per device MSI domains.
 > 
-> >   	bool suspended;
-> >   };
-> > @@ -1488,6 +1495,29 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
-> >   				    qcom_pcie_link_transition_count);
-> >   }
-> > +static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-> > +{
-> > +	struct qcom_pcie *pcie = data;
-> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> > +	struct device *dev = pcie->pci->dev;
-> > +	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
-> > +
-> > +	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
-> > +
-> > +	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-> > +		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-> > +		/* Rescan the bus to enumerate endpoint devices */
-> > +		pci_lock_rescan_remove();
-> > +		pci_rescan_bus(pp->bridge->bus);
-> > +		pci_unlock_rescan_remove();
-> > +	} else {
-> > +		dev_err(dev, "Received unknown event. INT_STATUS: 0x%08x\n",
-> > +			status);
+> > > This series only showed up in linux-next last Friday and broke interrupt
+> > > handling on Qualcomm platforms like sc8280xp (e.g. Lenovo ThinkPad X13s)
+> > > and x1e80100 that use the GIC ITS for PCIe MSIs.
+> > > 
+> > > I've applied the series (21 commits from linux-next) on top of 6.10 and
+> > > can confirm that the breakage is caused by commits:
+> > > 
+> > > 	3d1c927c08fc ("irqchip/gic-v3-its: Switch platform MSI to MSI parent")
+> > > 	233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
+> > > 
+> > > Applying the series up until the change before 3d1c927c08fc unbreaks the
+> > > wifi on one machine:
+> > > 
+> > > 	ath11k_pci 0006:01:00.0: failed to enable msi: -22
+> > > 	ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -22
+> > >
+> > > and backing up until the commit before 233db05bc37f makes the NVMe come
+> > > up again during boot on another.
+> > > 
+> > > I have not tried to debug this further.
+> > 
+> > I need a few things from you though, because you're not giving much to
+> > help you (and I'm travelling, which doesn't help).
 > 
-> Can this happen ? perhaps dev_warn_once instead ?
+> Yeah, this was just an early heads up.
 > 
+> > Can you at least investigate what in ath11k_pci_alloc_msi() causes the
+> > wifi driver to be upset? Does it normally use a single MSI vector or
+> > MSI-X? How about your nVME device?
+> 
+> It uses multiple vectors, but now it falls back to trying to allocate a
+> single one and even that fails with -ENOSPC:
+> 
+> 	ath11k_pci 0006:01:00.0: ath11k_pci_alloc_msi - requesting one vector failed: -28
+> 
+> Similar for the NVMe, it uses multiple vectors normally, but now only
+> the AER interrupts appears to be allocated for each controller and there
+> is a GICv3 interrupt for the NVMe:
+> 
+> 208:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
+> 212:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
+> 214:        161          0          0          0          0          0          0          0     GICv3 562 Level     nvme0q0, nvme0q1
+> 215:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
+>
 
-I did see one such issue that went unreported and ended by taking some debug
-cycles. But dev_warn_once() makes sense.
+That's an indication of the driver having failed its MSI allocation
+and gone back to INTx signalling.
 
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> >   static int qcom_pcie_probe(struct platform_device *pdev)
-> >   {
-> >   	const struct qcom_pcie_cfg *pcie_cfg;
-> > @@ -1498,6 +1528,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >   	struct dw_pcie_rp *pp;
-> >   	struct resource *res;
-> >   	struct dw_pcie *pci;
-> > +	char *name;
-> >   	int ret;
-> >   	pcie_cfg = of_device_get_match_data(dev);
-> > @@ -1617,6 +1648,28 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >   		goto err_phy_exit;
-> >   	}
-> > +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_global_irq%d",
-> > +			      pci_domain_nr(pp->bridge->bus));
-> > +	if (!name) {
-> > +		ret = -ENOMEM;
-> > +		goto err_host_deinit;
-> > +	}
-> > +
-> > +	pcie->global_irq = platform_get_irq_byname_optional(pdev, "global");
-> > +	if (pcie->global_irq > 0) {
-> > +		ret = devm_request_threaded_irq(&pdev->dev, pcie->global_irq,
-> > +						NULL,
-> > +						qcom_pcie_global_irq_thread,
-> > +						IRQF_ONESHOT, name, pcie);
-> > +		if (ret) {
-> > +			dev_err_probe(&pdev->dev, ret,
-> > +				      "Failed to request Global IRQ\n");
-> > +			goto err_host_deinit;
-> > +		}
-> > +
-> > +		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
+> Next boot, after disabling PCIe controller async probing, it's an MSI-X?!:
 > 
-> Is this available on all PCIe RC core versions ?
-> perhaps this should be moved into a callback of ops_1_9_0 for now ?
+> 201:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
+> 203:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
+> 205:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
+> 206:          0          0          0          0          0          0          0          0  ITS-PCI-MSIX-0002:01:00.0   0 Edge      nvme0q0
+>
+
+So is this issue actually tied to the async probing? Does it always
+work if you disable it?
+
+> This time ath11k vector allocation succeeded, but the driver times out
+> eventually:
 > 
+> [    8.984619] ath11k_pci 0006:01:00.0: MSI vectors: 32
+> [   29.690841] ath11k_pci 0006:01:00.0: failed to power up mhi: -110
+> [   29.697136] ath11k_pci 0006:01:00.0: failed to start mhi: -110
+> [   29.703153] ath11k_pci 0006:01:00.0: failed to power up :-110
+> [   29.732144] ath11k_pci 0006:01:00.0: failed to create soc core: -110
+> [   29.738694] ath11k_pci 0006:01:00.0: failed to init core: -110
+> [   32.841758] ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -110
+> 
+> > It would also help if you could define the DEBUG symbol at the very
+> > top of irq-gic-v3-its.c and report the debug information that the ITS
+> > driver dumps.
+> 
+> See below (with synchronous probing of the pcie controllers).
 
-This register should be available on all version afaik. Even if it is not on
-some legacy ones, it can be moved later if required (once the dts for those
-platforms start defining 'global' interrupt).
+I don't see much going wrong there, and the ITS driver correctly
+dishes out interrupts. I'll take the current -next for a ride on my
+own HW and see what happens.
 
-- Mani
+	M.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Without deviation from the norm, progress is not possible.
 
