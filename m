@@ -1,67 +1,91 @@
-Return-Path: <linux-pci+bounces-10365-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10366-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEB29932337
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 11:45:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F6729323CC
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 12:20:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F25D71C20A48
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 09:45:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F4A01F23EBD
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:20:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67C55197A61;
-	Tue, 16 Jul 2024 09:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFBB2199234;
+	Tue, 16 Jul 2024 10:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OL8Tthax"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j8j9wOGo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F11D197A6C;
-	Tue, 16 Jul 2024 09:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB06A1953A8
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 10:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721123091; cv=none; b=eq4lKIbnWUE7v0YlWhV6GEKQv/IVnmuksWyz2bmdi5vpINy2iwuhzgobyIdoXc9KJyTMjH70ziIWtbCY80r4C5+61ZSN8Kbhla2Hw9Y6Pvwf7eMS6wUfvrOHvz9o9uWoKFmQ4GG1UtHeef+uu3tklMKRzCA1SOCO6TcE/0HG2uE=
+	t=1721125211; cv=none; b=G670zxrkK+FckE+t5SG0fYW5dawXahBCDjLNYcHTB4CYBUHEz5gOVKs89hHaKgxfsLM+vRBVdtv3srH7Vlhc7ej7R8BeFoGYmp0ZeRRJs0F2cx+I0iT+k3kDg18EL0ovkSqVbkd+3NMcDLOSqTJkE6A+Yff13gZT6n/UrOTD8sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721123091; c=relaxed/simple;
-	bh=MtGlrZPxgs3fghxn7ifSEXSWjlnQg1V5rFVgMxytc1E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=p0m3RMk7/aebCAZV8tY1eODakgeckEofAi5gsGTZF8ya/r9BKLP4tyRlY9L0f+Xdjh9rQ2luOfgozfjT4cPQN0i+2+tQMK7/kE7mLVl18ccI0V7JhrqqdhzlyixvSttybDUqyZowkYB2GnavfwHAPliDKceRv5FdvQyU5Om9H8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OL8Tthax; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1BFF61BF211;
-	Tue, 16 Jul 2024 09:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1721123081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9yl6nMiA8YdoBSPgX1+Zx077ilmmU2Drf2VLw5jFcKY=;
-	b=OL8TthaxwgE0pXxZQM2UpgeP0Rbg1N5qjaJLWdsAH2I1Jc5taoQ0mID7ODzSo8NAbBriq2
-	GoRo0XuspIUGET9d2oRKyD8aNM6gaGLAvb9TH2cFGyUUDfYyIk8muNDbk7iMwVXCYrEggn
-	DqZXqcpw7QT/JVStX24jh4/aeNX1xRCKUDKF43dQ99h5rUeExg60YqHZvVbuzJuLYdQU7Y
-	mVNp4a1gwjboEVXzimEnlCbchUK2zYWf8TUnn+gPrhkY+8xofvr7T4VBRfuYJpyaU4uouw
-	MT2X1BIv90wkGVW1FlGrVqHoh14A9c2KAZDlM85+mD5xFmltjvuMg4m2tzrR8w==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Thomas Richard <thomas.richard@bootlin.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>, Rob Herring
- <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vignesh
- Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas
- Richard <thomas.richard@bootlin.com>, Francesco Dolcini
- <francesco.dolcini@toradex.com>, Richard Genoud
- <richard.genoud@bootlin.com>
-Subject: Re: [PATCH v7 0/7] Add suspend to ram support for PCIe on J7200
-In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
-Date: Tue, 16 Jul 2024 11:44:39 +0200
-Message-ID: <875xt5llh4.fsf@BLaptop.bootlin.com>
+	s=arc-20240116; t=1721125211; c=relaxed/simple;
+	bh=fpBGbCyhd772qcFb498tGT8nDnPB0drFxt8PUU3Fn/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H8148pgoyDlUKcjGisd71kh14CKKPUOv6SuDBfn77qwXUBsyOic8w1dadvYbKB25x7gUvAra/RjpSOEDnxCVTqSowq4Au2qDZsCuAxWfdlcNHb0m0y52Lbb5U7dfY3v/GIwC9s6opnYOtDvmbnHcZI93sTNGor5w2RAhY9DSIH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j8j9wOGo; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c9a1ea8cc3so3724874a91.0
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 03:20:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721125208; x=1721730008; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=D+ol9qghEAKP5PzeXFlIx+5EzD/KmRIHav75fqb24zE=;
+        b=j8j9wOGodFTXIbUL2kSwiayGcRIXUgD4tzOHilnZgKFJG5jNXsOjJvKqeiSskshRs5
+         sn6apw3dVwPMLS4zHzXcac5vKmxradqV3H67xWP/4m8fmLdil08FZkHT/CpcvrqMLPxm
+         GKHW0ACPbsyVVFU1jIF+HXC0rYixS/o9VTw28sTDatDv/adl59hvThzoOTphPZtaOuwA
+         wxQTvTkx5HmxQZGkpcCnAqE6qs0MexLfER264/gXhcupb0RIn7Rj79tOtFRVa1nqk4jP
+         mtr0ieAQjM7h09u3NfzDjwQefD+8UVNU0xINtwj7fOKwyA0v5T5JMPtyIoLyWuilpYO6
+         d7BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721125208; x=1721730008;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+ol9qghEAKP5PzeXFlIx+5EzD/KmRIHav75fqb24zE=;
+        b=gqWve1RMKaQiEJNdkt/qOXPYTc4MMkCYihPkuWz7NHWFozfW+XyKFaWUpB8qrP4MJK
+         akV2EBAu5hZsTD28hH4YTll1gF4FEyF2Pkzp3sGN8061Xqud3QO5d2+EqzUeuHOB6hKw
+         oH7cAZx/eTSNyGs0ALjwGhMo55RAoBOXsXT126OZlQw1YvIHcCnNIH3xTqNZYXq4tzuf
+         vjwpm5pV60HBn/acdsEcjXtXxQVBVu1++SeI11mq09vWEU82oFXeCx/rqlRJ+jgAuoTJ
+         inipeuTNNQDbB3418TnrFAPyoz6xWez4ryjSGbkzL1WBftkG+4rbdaD5VGUpp1J79iez
+         8uPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDfchxeAMy+x56OXwVmuLxpjMnFlN98cZPYNfxVq1bAKdZGK5/EQAOW4dq+jMtjOa8gw8fq5oya7N+2p7vR7QKRgtD12DqxQW4
+X-Gm-Message-State: AOJu0YyAHnzOGWQJqcvKMy2SdK5122bBgk7eymK9p4oWgjxeDWExRh9h
+	K7GKYMHtST91uSzAFNu4K273fHyxQMTwWTEYBXaETWIJKTTBz9dM3R4KEnN9cw==
+X-Google-Smtp-Source: AGHT+IGupWa3ROtnkyEzp23i/w3DYfSyvrtmr9ayct2cPDFjJpWs4HnKGVa0ZLEWtcIFzwRkSYamKg==
+X-Received: by 2002:a17:90b:516:b0:2c9:36bf:ba6f with SMTP id 98e67ed59e1d1-2cb37dcaf25mr2162210a91.3.1721125208072;
+        Tue, 16 Jul 2024 03:20:08 -0700 (PDT)
+Received: from thinkpad ([220.158.156.207])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cacd704f8csm7902347a91.56.2024.07.16.03.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 03:20:07 -0700 (PDT)
+Date: Tue, 16 Jul 2024 15:50:02 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: neil.armstrong@linaro.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 13/14] PCI: qcom: Simulate PCIe hotplug using 'global'
+ interrupt
+Message-ID: <20240716102002.GL3446@thinkpad>
+References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
+ <20240715-pci-qcom-hotplug-v1-13-5f3765cc873a@linaro.org>
+ <5f0a751a-f1b9-4cb5-af31-624c08833b10@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,151 +93,150 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: gregory.clement@bootlin.com
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5f0a751a-f1b9-4cb5-af31-624c08833b10@linaro.org>
 
-Hello PCIe maintainers!
+On Tue, Jul 16, 2024 at 10:40:55AM +0200, neil.armstrong@linaro.org wrote:
+> On 15/07/2024 19:33, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Historically, Qcom PCIe RC controllers lack standard hotplug support. So
+> > when an endpoint is attached to the SoC, users have to rescan the bus
+> > manually to enumerate the device. But this can be avoided by simulating the
+> > PCIe hotplug using Qcom specific way.
+> > 
+> > Qcom PCIe RC controllers are capable of generating the 'global' SPI
+> > interrupt to the host CPUs. The device driver can use this event to
+> > identify events such as PCIe link specific events, safety events etc...
+> > 
+> > One such event is the PCIe Link up event generated when an endpoint is
+> > detected on the bus and the Link is 'up'. This event can be used to
+> > simulate the PCIe hotplug in the Qcom SoCs.
+> > 
+> > So add support for capturing the PCIe Link up event using the 'global'
+> > interrupt in the driver. Once the Link up event is received, the bus
+> > underneath the host bridge is scanned to enumerate PCIe endpoint devices,
+> > thus simulating hotplug.
+> > 
+> > All of the Qcom SoCs have only one rootport per controller instance. So
+> > only a single 'Link up' event is generated for the PCIe controller.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >   drivers/pci/controller/dwc/pcie-qcom.c | 55 ++++++++++++++++++++++++++++++++++
+> >   1 file changed, 55 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 0180edf3310e..38ed411d2052 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -50,6 +50,9 @@
+> >   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> >   #define PARF_Q2A_FLUSH				0x1ac
+> >   #define PARF_LTSSM				0x1b0
+> > +#define PARF_INT_ALL_STATUS			0x224
+> > +#define PARF_INT_ALL_CLEAR			0x228
+> > +#define PARF_INT_ALL_MASK			0x22c
+> >   #define PARF_SID_OFFSET				0x234
+> >   #define PARF_BDF_TRANSLATE_CFG			0x24c
+> >   #define PARF_SLV_ADDR_SPACE_SIZE		0x358
+> > @@ -121,6 +124,9 @@
+> >   /* PARF_LTSSM register fields */
+> >   #define LTSSM_EN				BIT(8)
+> > +/* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
+> > +#define PARF_INT_ALL_LINK_UP			BIT(13)
+> > +
+> >   /* PARF_NO_SNOOP_OVERIDE register fields */
+> >   #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
+> >   #define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
+> > @@ -260,6 +266,7 @@ struct qcom_pcie {
+> >   	struct icc_path *icc_cpu;
+> >   	const struct qcom_pcie_cfg *cfg;
+> >   	struct dentry *debugfs;
+> > +	int global_irq;
+> 
+> I think you can drop this, the irq number is no more needed after probe
+> 
+> >   	bool suspended;
+> >   };
+> > @@ -1488,6 +1495,29 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
+> >   				    qcom_pcie_link_transition_count);
+> >   }
+> > +static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
+> > +{
+> > +	struct qcom_pcie *pcie = data;
+> > +	struct dw_pcie_rp *pp = &pcie->pci->pp;
+> > +	struct device *dev = pcie->pci->dev;
+> > +	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
+> > +
+> > +	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
+> > +
+> > +	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
+> > +		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+> > +		/* Rescan the bus to enumerate endpoint devices */
+> > +		pci_lock_rescan_remove();
+> > +		pci_rescan_bus(pp->bridge->bus);
+> > +		pci_unlock_rescan_remove();
+> > +	} else {
+> > +		dev_err(dev, "Received unknown event. INT_STATUS: 0x%08x\n",
+> > +			status);
+> 
+> Can this happen ? perhaps dev_warn_once instead ?
+> 
 
-> This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
->
-> In this 7th iteration, the i2c and mux patches were moved to dedicated
-> series ([1] and [2]).
-> The patch for the gpio-pca953x driver was removed. It will be sent
-> separately for further testing and discussion.
->
-> No merge conflict with 6.10-rc4.
->
-> [1]: https://lore.kernel.org/all/20240613-i2c-omap-wakeup-controller-duri=
-ng-suspend-v1-0-aab001eb1ad1@bootlin.com/
-> [2]:
-> https://lore.kernel.org/all/20240613-mux-mmio-resume-support-v1-0-4525bf5=
-6024a@bootlin.com/
+I did see one such issue that went unreported and ended by taking some debug
+cycles. But dev_warn_once() makes sense.
 
-I noticed that this series has not been merged yet, even though it
-seemed that there were no remaining comments to address.
+> > +	}
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> >   static int qcom_pcie_probe(struct platform_device *pdev)
+> >   {
+> >   	const struct qcom_pcie_cfg *pcie_cfg;
+> > @@ -1498,6 +1528,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> >   	struct dw_pcie_rp *pp;
+> >   	struct resource *res;
+> >   	struct dw_pcie *pci;
+> > +	char *name;
+> >   	int ret;
+> >   	pcie_cfg = of_device_get_match_data(dev);
+> > @@ -1617,6 +1648,28 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> >   		goto err_phy_exit;
+> >   	}
+> > +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_global_irq%d",
+> > +			      pci_domain_nr(pp->bridge->bus));
+> > +	if (!name) {
+> > +		ret = -ENOMEM;
+> > +		goto err_host_deinit;
+> > +	}
+> > +
+> > +	pcie->global_irq = platform_get_irq_byname_optional(pdev, "global");
+> > +	if (pcie->global_irq > 0) {
+> > +		ret = devm_request_threaded_irq(&pdev->dev, pcie->global_irq,
+> > +						NULL,
+> > +						qcom_pcie_global_irq_thread,
+> > +						IRQF_ONESHOT, name, pcie);
+> > +		if (ret) {
+> > +			dev_err_probe(&pdev->dev, ret,
+> > +				      "Failed to request Global IRQ\n");
+> > +			goto err_host_deinit;
+> > +		}
+> > +
+> > +		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
+> 
+> Is this available on all PCIe RC core versions ?
+> perhaps this should be moved into a callback of ops_1_9_0 for now ?
+> 
 
-Is there any reason why it has not been applied yet?
+This register should be available on all version afaik. Even if it is not on
+some legacy ones, it can be moved later if required (once the dts for those
+platforms start defining 'global' interrupt).
 
-Thanks,
+- Mani
 
-Gregory
-
->
-> Regards,
->
-> Thomas
->
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
-> Changes in v7:
-> - all: series rebased on Linux 6.10-rc4.
-> - i2c: patches moved to a dedicated series.
-> - mux: patches moved to a dedicated series.
-> - gpio-pca953x: patch removed, will be sent separately.
-> - Link to v6: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v6-0-4656=
-ef6e6d66@bootlin.com
->
-> Changes in v6:
-> - i2c-omap: add a patch to remove __maybe_unused attribute of
->   omap_i2c_runtime_suspend() and omap_i2c_runtime_resume()
-> - i2c-omap: fix compile issue if CONFIG_PM_SLEEP is not set
-> - Link to v5: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v5-0-4b8c=
-46711ded@bootlin.com
->
-> Changes in v5:
-> - all: series rebased on Linux 6.9-rc1
-> - pinctrl-single: patch removed (already applied to the pinctrl tree)
-> - phy: patches moved to a dedicated series.
-> - pci: add T_PERST_CLK_US macro.
-> - pci-j721e: update the comments about T_PERST_CLK_US.
-> - Link to v4: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v4-0-6f1f=
-53390c85@bootlin.com
->
-> Changes in v4:
-> - all: use SoB/Co-developed-by for patches initially developed by Th=C3=
-=A9o
->   Lebrun.
-> - pinctrl-single: squash the two commits.
-> - i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
-> - mux: mux_chip_resume() return 0 or at the first error.
-> - phy-j721e-wiz: clean code around dev_err_probe().
-> - phy-j721e-wiz: use REF_CLK_100MHZ macros.
-> - pci: fix subject line for all PCI patches.
-> - pci-cadence: use fsleep() instead of usleep_range().
-> - pci-cadence: remove cdns_torrent_clk_cleanup() call in
->   cdns_torrent_phy_resume_noirq().
-> - pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in t=
-he probe().
-> - pci-j721e: fix unordered header files.
-> - pci-j721e: remove some log spammers.
-> - pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
-> - pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
-> - Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e=
-4a3fac1f@bootlin.com
->
-> Changes in v3:
-> - pinctrl-single: split patch in two parts, a first patch to remove the
->   dead code, a second to move suspend()/resume() callbacks to noirq.
-> - i2c-omap: add a comments above the suspend_noirq() callback.
-> - mux: now mux_chip_resume() try to restores all muxes, then return 0 if
->   all is ok or the first failure.
-> - mmio: fix commit message.
-> - phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() =
-in
->   the wiz_clock_init() function.
-> - phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
->   function to wiz_clock_probe(), extract hardware configuration part in a
->   new function wiz_clock_init().
-> - phy-cadence-torrent: use dev_err_probe() and fix commit messages
-> - pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
->   function and extract the link setup part in a new function
->   cdns_pcie_host_link_setup().
-> - pcie-cadence-host: make cdns_pcie_host_init() global.
-> - pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
->   functions in the resume_noirq() callback.
-> - Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f=
-7d228ec2@bootlin.com
->
-> Changes in v2:
-> - all: fix commits messages.
-> - all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
-> - all: remove useless #ifdef CONFIG_PM.
-> - pinctrl-single: drop dead code
-> - mux: add mux_chip_resume() function in mux core.
-> - mmio: resume sequence is now a call to mux_chip_resume().
-> - phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
->   instead of reset_control_put()).
-> - phy-cadence-torrent: use PHY instead of phy.
-> - pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
->   sequence.
-> - pci-j721e: drop dead code.
-> - Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e5=
-5da52400@bootlin.com
->
-> ---
-> Thomas Richard (5):
->       PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup=
-()
->       PCI: cadence: Set cdns_pcie_host_init() global
->       PCI: j721e: Use dev_err_probe() in the probe() function
->       PCI: Add T_PERST_CLK_US macro
->       PCI: j721e: Use T_PERST_CLK_US macro
->
-> Th=C3=A9o Lebrun (2):
->       PCI: j721e: Add reset GPIO to struct j721e_pcie
->       PCI: j721e: Add suspend and resume support
->
->  drivers/pci/controller/cadence/pci-j721e.c         | 121 +++++++++++++++=
-+++---
->  drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
->  drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
->  drivers/pci/pci.h                                  |   3 +
->  4 files changed, 146 insertions(+), 34 deletions(-)
-> ---
-> base-commit: 7510725e693fb5e4b4cd17086cc5a49a7a065b9c
-> change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
->
-> Best regards,
-> --=20
-> Thomas Richard <thomas.richard@bootlin.com>
+-- 
+மணிவண்ணன் சதாசிவம்
 
