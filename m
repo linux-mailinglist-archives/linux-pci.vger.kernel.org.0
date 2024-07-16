@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-10354-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10355-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 008E5932124
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 09:25:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E426893212E
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 09:28:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 316CDB21652
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 07:25:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 137EC1C20E60
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 07:28:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A9722F11;
-	Tue, 16 Jul 2024 07:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4395025761;
+	Tue, 16 Jul 2024 07:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uR7Ufq5z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QypRgdP9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28AE22619;
-	Tue, 16 Jul 2024 07:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18ABC4C7B;
+	Tue, 16 Jul 2024 07:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721114717; cv=none; b=o+kjbbVjKZv2lgrMcV2HyJ5Bt8lPm2j/ovF6G3J2fGyfoNvgiAgqjuo/WmVt/Fi1zoiWUg2MZKyKIgw0Ra72VMcPfjjGr7pQgHy1AZ+yYWpTjdNa0t7iyR/L+V9daW0jVff1yUnQSDXvb7LLQjDKWx4jxK31ulqDMQh5cjLCK7Y=
+	t=1721114915; cv=none; b=GR1rKnKB5eyrfDKepRe237aZ1EweFq+5PIFdDBVaKCgl+XWgqQ1bNq7Ee3oTHjPmPXSRitR686aDlTy0C0eSs+da0LQFyq1GBiaDg7O7xdJY9WEuaphMYXjSo/3fGFsv+4OR/xwMNSrXZFq3dyd2/jk53zvswaK4a2cWCYLIoBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721114717; c=relaxed/simple;
-	bh=r3mGYS735n6Kpf+W0MDkb4qzQlTavr+UClBdemaX3/c=;
+	s=arc-20240116; t=1721114915; c=relaxed/simple;
+	bh=c8gKwuCOk0BMePqrAmzJ+naO6NCHrALTjEZjLHRx63w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E7dRKY9LjuINwmkvQmNM+cm4Iuxe87gD06AxpRVrOSk5bEwwraKBJAT0I4iCD03Iw4BKA1G+Lg1GXOwn9D/v77jO9ruSBw59nA0v52QsZtNzbq01R+ziwzjzrDnMDcWO9crp0FUsDMVXNu2PdpmsCQV3hR/0790BgjOdK9QR0TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uR7Ufq5z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B55C4AF09;
-	Tue, 16 Jul 2024 07:25:09 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=OhrczpTcLYM7726ts7cQhun6F7S40T8Sp9kzSjdKamMtZhLCECrydwlPdaaqAEPu0clRIAaxxKLKit8wabY7lcYYwdWLKlJATxVw9U3VyFYx554DeGEkms69TaVNLoL5vwLFldR0UWbU05VCgq8cLQvYOiqMaS8p854XCdd5TG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QypRgdP9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 571F4C116B1;
+	Tue, 16 Jul 2024 07:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721114717;
-	bh=r3mGYS735n6Kpf+W0MDkb4qzQlTavr+UClBdemaX3/c=;
+	s=k20201202; t=1721114914;
+	bh=c8gKwuCOk0BMePqrAmzJ+naO6NCHrALTjEZjLHRx63w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uR7Ufq5zEz0ldfumh9hV1O2Sf+WCqcqVY0iJ/1Dk+GKzLZvS1dfwst6hEYlJlj4Oc
-	 dCbVIfr7dNZPR1Th7kfHJdheq4XcGq4Ddr1MJKCqgWyzEFFarQ89WXgr14lYCSZozC
-	 0ddKd/Fu2vXtP3y3wFprjCkqwuU5jwGxH9svCSSFUREb1rtmvT+7lrPFriyZsVcSXz
-	 BB6nvrLKJsbPTKuh2OUXEvN1W1BtEkiSqzQj8B92BGAqBkwQkt+ht/porzS++obDZe
-	 aoLD+RTqafQrZuoiLWYoKp33l9qKj+yfvVwpgPCPY9UW2bsIVdOHl68AMsg5s+JFcK
-	 v3/pGsnTiGWcQ==
-Message-ID: <bc7ced85-8bba-46d4-be1e-6a436bfd2ee3@kernel.org>
-Date: Tue, 16 Jul 2024 09:25:06 +0200
+	b=QypRgdP93HikE8gYcxiniC0B9ttTo4MRomj/N2VgOQlPTlw2jUjPvHBzoFkS1eb+W
+	 pR2K59Hx7msXMNLofqRuIyShXS4CTs5m/SkvnxlqPzMkXuv5DDy0L9/HBnHEbTtlTp
+	 +Fdlr0GKtV4As8fYL3PApOVqC1JrOyPtZ+S0COJDBOq0ZKdQPLiJXubxyTnUWl6XWa
+	 H3PSnQZyEnwj4h4o43jKsM4/89gYmO+MAQEVSkiVXWCMARmr1z0SPRG9Z4pVAz1D3z
+	 EAupEF/jIG+/WpiV5SwcQ+JNvZn54bBuAqV8Y3+DjiYmR19VuIshaOecI9uNT0OFbP
+	 IXb6E0i1hEy1A==
+Message-ID: <5f029f16-2030-4e86-929b-0b2832958912@kernel.org>
+Date: Tue, 16 Jul 2024 09:28:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 4/7] dt-bindings: PCI: host-generic-pci: Add
- power-domains related binding
+Subject: Re: [PATCH V226/7] dt-bindings: PCI: host-generic-pci: Add
+ snps,dw-pcie-ecam-msi binding
 To: Mayank Rana <quic_mrana@quicinc.com>, will@kernel.org,
  lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
  jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, cassel@kernel.org,
@@ -66,7 +66,7 @@ Cc: quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
  quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
  quic_nitegupt@quicinc.com
 References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
- <1721067215-5832-5-git-send-email-quic_mrana@quicinc.com>
+ <1721067215-5832-7-git-send-email-quic_mrana@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,47 +112,75 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <1721067215-5832-5-git-send-email-quic_mrana@quicinc.com>
+In-Reply-To: <1721067215-5832-7-git-send-email-quic_mrana@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/07/2024 20:13, Mayank Rana wrote:
-> Add "power-domains" usage (optional) related binding to power up ECAM
-> compliant PCIe root complex.
+> To support MSI functionality using Synopsys DesignWare PCIe controller
+> based MSI controller with ECAM driver, add "snps,dw-pcie-ecam-msi
+> compatible binding which uses provided SPIs to support MSI functionality.
+
+To support MSI, you add MSI support... That's a tautology. Describe
+hardware instead.
+
 > 
 > Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
 > ---
->  Documentation/devicetree/bindings/pci/host-generic-pci.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  .../devicetree/bindings/pci/host-generic-pci.yaml  | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
-> index 3484e0b..9c714fa 100644
+> index 9c714fa..9e860d5 100644
 > --- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
 > +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
-> @@ -110,6 +110,12 @@ properties:
->    iommu-map-mask: true
->    msi-parent: true
+> @@ -81,6 +81,12 @@ properties:
+>                - marvell,armada8k-pcie-ecam
+>                - socionext,synquacer-pcie-ecam
+>            - const: snps,dw-pcie-ecam
+> +      - description: |
+> +         Firmware is configuring Synopsys DesignWare PCIe controller in RC mode with
+> +         ECAM compatible fashion. To use MSI controller of Synopsys DesignWare PCIe
+> +         controller for MSI functionality, this compatible is used.
+> +        items:
+> +          - const: snps,dw-pcie-ecam-msi
+
+MSI is already present in the binding, isn't it? Anyway, aren't you
+forgetting specific compatible? Please open your internal (quite
+comprehensive) guideline on bindings and DTS.
+
+
+>        - description:
+>            CAM or ECAM compliant PCI host controllers without any quirks
+>          enum:
+> @@ -116,6 +122,20 @@ properties:
+>        A phandle to the node that controls power or/and system resource or interface to firmware
+>        to enable ECAM compliant PCIe root complex.
 >  
-> +  power-domains:
-> +    maxItems: 1
+> +  interrupts:
 > +    description:
-> +      A phandle to the node that controls power or/and system resource or interface to firmware
-
-Wrap how Coding Style asks (so 80).
-
-I am sorry, but power domains are power domains, not interface to
-firmware to enable your hardware. Rephrase it to actually describe the
-hardware.
-
-Also, drop all redundant information. It cannot be anything else than
-phandle to the node...
-
-> +      to enable ECAM compliant PCIe root complex.
+> +      DWC PCIe Root Port/Complex specific MSI interrupt/IRQs.
+> +    minItems: 1
+> +    maxItems: 8
 > +
+> +  interrupt-names:
+> +    description:
+> +      MSI interrupt names
+> +    minItems: 1
+> +    maxItems: 8
+> +    items:
+> +        pattern: '^msi[0-9]+$'
 
-Anyway, there are no DTS users with such power domain. Look at the
-binding and its compatibles. Does any of these devices have power
-domain? No.
+Why the same devices have variable numbers?
+
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -146,11 +166,22 @@ allOf:
+>          reg:
+>            maxItems: 1
+
 
 Best regards,
 Krzysztof
