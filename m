@@ -1,75 +1,75 @@
-Return-Path: <linux-pci+bounces-10357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26310932207
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:41:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E745B93220D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:41:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF6DF280DB6
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 08:41:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 254061C21BB7
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 08:41:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07DCE17CA19;
-	Tue, 16 Jul 2024 08:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42CEF17D374;
+	Tue, 16 Jul 2024 08:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Psutq6jX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tJDOOh49"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173B317BB15
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 08:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DF017CA19
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 08:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721119261; cv=none; b=ivDKSVnBObGYgDl+EGzJZTsA8/tl1bPH93gfPQ7L82sx3iC59Z1eNULsSLejkBYYGIDVQjdQsDP4fm/J0ubv2Bw9GS5UnZMXB+q+BpOAeq2bMPtUD+WG5SU0p5BXK0AZh6Z132auKq27pBJdvsbsXiFZMmvIuYxHqKurDSQV8Bg=
+	t=1721119282; cv=none; b=FEWWDkSanTsJY98vKaG5akl2ZGywJ5aN66T8I4YnSkoCCt/Og3+hBIMOBg55/YiKXPmAbWdzGdyjmSu+dpuQqh93zZV8W0NdfdsI5Slr/o5nL4ZHBrVp8f5e/2cgV1Cui+sQB3FFWhrEuYvCsTv9FqoTO4R4PMznxBrCIkaXWYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721119261; c=relaxed/simple;
-	bh=xQ9/x2GqWi4zcKLiTBi4C62v+VnYNcJ/Tm16XoWVmgw=;
+	s=arc-20240116; t=1721119282; c=relaxed/simple;
+	bh=WNymJro5dlv26B+surn01E8GmGRXJStnqiU6mG+qE64=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=udqtHBSNoPnNxHd8dtfZ/nKCNTAs5+OwQNvTenzv+DJi9KZYINfYTAKfznUHHdjJ0GZGO7IKUelo7r5ng7zEeQltsREuJd/i0vvUhTC4mRBLo6CTkDkbvgbIfiK0gQ3S8crBsQ0AZTYDPRuDPudBpfL//uSXhhhczi8thFYSq+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Psutq6jX; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:Content-Type; b=qGvwS6ui3jG+x3woWSRB/YQnoUbEE7IzY4GDUDmD4qt9hp2VBW6ioCUzBcDw8AgDS8+Kjk8GRB2OujuJg7czqHK27Ok1ZH0N6aILBEZ0Bigec5tjlWpu955MMxZ55MQM3RVFDqaBAm4NHml9SNSTRwj6UE9AKC//WzYnejYWGWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tJDOOh49; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-427aeebaecdso12231075e9.1
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 01:40:59 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-36816ff695dso1419666f8f.1
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 01:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721119258; x=1721724058; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721119279; x=1721724079; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qGZ95YmptuK5HlceEeqL/CGEkmBT458I94bArLpmhkk=;
-        b=Psutq6jXvD5HxYpWGMqFboX0Yjvx6igIhAcLxbbEf1U9Q+bayHP0kcN9nh/hMyX1ip
-         0Z1lrL+e4hL+J0L8qe0mBxgXyPoUk2SNmzfT0aMXAn3x7NX2+Tx2QOWkt7Ef0B8Uz6/I
-         V4Gq3HVPy0uXGfQSmyw0nTg7cTo/UwxKL3b+O5Q/9OcI2v4dHGysua1tkUszaDfoC7Pu
-         566r2+Bj4v1ec0pBQ6JaADVL9AVEYgzKUZXMcBeiVYA+PVZM4kIm0dy94t2nDYZKwwpN
-         Sikix6RF8ukSsEqaZx7goIZpP655odvfpgCds5aK93JZm8WFzWPavKCUysm6CY70l8sL
-         yV2A==
+        bh=wlYOPT3wlLjl2m/yJYxdg50G+hHzFjPas8Jb5Muv/MQ=;
+        b=tJDOOh497ZZvPc8qTh8fjbuM6VJfCasVln6l+A7OTHDz3GzIkVeEtlXURVC0x9g7ti
+         xqSSuAjowChXP4hnte5U+lZK5O7TQ1UAURuJneqVB0qeBJCzNC/YUlGoB/inMgA8+ibf
+         mwoXkvceu9TMj2X7smZ7dDVug8AfxuqtelLVIG6r9pYtWlc4nu8dM6JbuMJdrc/WbGVC
+         OWaiHcksZgyiysNrvK6OSLuFjZTFo6Ix2k0uJrfQwATkTe0GilLyPYz2P0IcqNdY9hLe
+         XmoqHGtBgB2Dr4TTMXm6Kx22YSb8yMyheo1mRJH1rp7iZapPzruq8fDTyNaoe3F0ADOL
+         jMmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721119258; x=1721724058;
+        d=1e100.net; s=20230601; t=1721119279; x=1721724079;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=qGZ95YmptuK5HlceEeqL/CGEkmBT458I94bArLpmhkk=;
-        b=wclRe3U3Stkjso6jCq0hG8CGnYtuvDQYeU9FNMSzNLVSJHbuTt4TjUeTuvVVwMWb9V
-         yX7/ybRprOu7YrdRPRBtGGMHc/6hArLrRaX35OQhx48a1Z/R/sONSpdF7WUTFiKY/PZN
-         2W7jYkB9FsNDfMp4BwWPKkU67EPpyP3SR31SIqOCa7YWtj6eCWVt8U29uOgfrNL3NePw
-         ZVb9psn6m12MAAFcbcerqCjPHRWIHQ8xO4ciN5yS4uL2n0z6EH6lkxEMpOQdWo8ib7sN
-         kLJ903M94adiJFB9sg4z+F0Cw0+BfyktbT7cQmlzYdpAcw9fShm54wymveUZr8T4whzW
-         Wz1Q==
-X-Gm-Message-State: AOJu0YyZCqQxJyQ/0mnSw/Sg8ywoeQ10iJagKCCBNjTiqwylWwWmcLDE
-	2bbzK6q/X8NLYZRw8hdFDu2AQb8qeUmW3yeBaZ3bNqujPGmLLUpUXBUJt1CiTUU=
-X-Google-Smtp-Source: AGHT+IFJ3ZZ66ZwgXY6S7JWiWlM0Gkw+rArroSfqSWDk1RItR9IE3Osm2Pe1IjmAFkBqHB+A2+qrJA==
-X-Received: by 2002:a05:600c:4f96:b0:426:6379:3b56 with SMTP id 5b1f17b1804b1-427ba62e3a7mr11223485e9.15.1721119257970;
-        Tue, 16 Jul 2024 01:40:57 -0700 (PDT)
+        bh=wlYOPT3wlLjl2m/yJYxdg50G+hHzFjPas8Jb5Muv/MQ=;
+        b=U8Io7h6S6rPe/nmpIM6dntBCRiVXC4i84hEqjUFvMKzqfuqiHHrNPUnHhCMmyu7Unb
+         4GeyySG3b3PeCcTdjzsaFc0eNisB7gSyoIj4PNRrfbP3tm8onvucwgpR+Iz0v7J4snHp
+         I/mThTDIlUX2z4XQJ6GYltELVyZsg6iLM6uHqm9jfGTzLyUwIDGCTrVGssCeWk3zDLyS
+         vP5Gz0KKn7UEguyRR3Ea69VwhG84WZ7E4eSNAijn+VNEhD0DPwsCb4kxT9j+T9ZJGXPz
+         Ox/N39bIg/7SDKhb5hrEg9U+2JhVIvfCLkgHSOa0PArlu4zd9UfA2Z09jkgwM/0OCesR
+         MhQg==
+X-Gm-Message-State: AOJu0YxVLVOEG2sjN8ixUnKyWTNewHtKFNKKrSEN6tKWP4ZqBGHPTI1E
+	Ike3hrkMygvaRLjZV60Kj7RIrjQ3HLlqymB9YP5kg/GMFgT3ZMCvKNZPHjP+qvs=
+X-Google-Smtp-Source: AGHT+IHitN2iUSi+nETjW8vRkmCEH+FB1hHkmGru6BjWujgfY9Dcss3M0nBlN7VjyW58jL9G5NzyBg==
+X-Received: by 2002:a05:6000:1fa7:b0:366:ef25:de51 with SMTP id ffacd0b85a97d-3682631f774mr1064513f8f.49.1721119278530;
+        Tue, 16 Jul 2024 01:41:18 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:982:cbb0:f5ba:a94c:e43a:d197? ([2a01:e0a:982:cbb0:f5ba:a94c:e43a:d197])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db04581sm8405607f8f.97.2024.07.16.01.40.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbe5dsm8294386f8f.81.2024.07.16.01.41.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 01:40:57 -0700 (PDT)
-Message-ID: <5f0a751a-f1b9-4cb5-af31-624c08833b10@linaro.org>
-Date: Tue, 16 Jul 2024 10:40:55 +0200
+        Tue, 16 Jul 2024 01:41:18 -0700 (PDT)
+Message-ID: <f89e333b-6361-4f19-b1e8-d87ea6e4bbd6@linaro.org>
+Date: Tue, 16 Jul 2024 10:41:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,8 +79,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 13/14] PCI: qcom: Simulate PCIe hotplug using 'global'
- interrupt
+Subject: Re: [PATCH 05/14] dt-bindings: PCI: qcom-ep: Document
+ "linux,pci-domain" property
 To: manivannan.sadhasivam@linaro.org,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
@@ -92,7 +92,7 @@ To: manivannan.sadhasivam@linaro.org,
 Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
- <20240715-pci-qcom-hotplug-v1-13-5f3765cc873a@linaro.org>
+ <20240715-pci-qcom-hotplug-v1-5-5f3765cc873a@linaro.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -119,157 +119,38 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20240715-pci-qcom-hotplug-v1-13-5f3765cc873a@linaro.org>
+In-Reply-To: <20240715-pci-qcom-hotplug-v1-5-5f3765cc873a@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 15/07/2024 19:33, Manivannan Sadhasivam via B4 Relay wrote:
 > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Historically, Qcom PCIe RC controllers lack standard hotplug support. So
-> when an endpoint is attached to the SoC, users have to rescan the bus
-> manually to enumerate the device. But this can be avoided by simulating the
-> PCIe hotplug using Qcom specific way.
+> 'linux,pci-domain' property provides the PCI domain number for the PCI
+> endpoint controllers in a SoC. If this property is not present, then an
+> unstable (across boots) unique number will be assigned.
 > 
-> Qcom PCIe RC controllers are capable of generating the 'global' SPI
-> interrupt to the host CPUs. The device driver can use this event to
-> identify events such as PCIe link specific events, safety events etc...
-> 
-> One such event is the PCIe Link up event generated when an endpoint is
-> detected on the bus and the Link is 'up'. This event can be used to
-> simulate the PCIe hotplug in the Qcom SoCs.
-> 
-> So add support for capturing the PCIe Link up event using the 'global'
-> interrupt in the driver. Once the Link up event is received, the bus
-> underneath the host bridge is scanned to enumerate PCIe endpoint devices,
-> thus simulating hotplug.
-> 
-> All of the Qcom SoCs have only one rootport per controller instance. So
-> only a single 'Link up' event is generated for the PCIe controller.
+> Use this property to specify the domain number based on the actual hardware
+> instance of the PCI endpoint controllers in a SoC.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->   drivers/pci/controller/dwc/pcie-qcom.c | 55 ++++++++++++++++++++++++++++++++++
->   1 file changed, 55 insertions(+)
+>   Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 0180edf3310e..38ed411d2052 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -50,6 +50,9 @@
->   #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
->   #define PARF_Q2A_FLUSH				0x1ac
->   #define PARF_LTSSM				0x1b0
-> +#define PARF_INT_ALL_STATUS			0x224
-> +#define PARF_INT_ALL_CLEAR			0x228
-> +#define PARF_INT_ALL_MASK			0x22c
->   #define PARF_SID_OFFSET				0x234
->   #define PARF_BDF_TRANSLATE_CFG			0x24c
->   #define PARF_SLV_ADDR_SPACE_SIZE		0x358
-> @@ -121,6 +124,9 @@
->   /* PARF_LTSSM register fields */
->   #define LTSSM_EN				BIT(8)
->   
-> +/* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-> +#define PARF_INT_ALL_LINK_UP			BIT(13)
-> +
->   /* PARF_NO_SNOOP_OVERIDE register fields */
->   #define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
->   #define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
-> @@ -260,6 +266,7 @@ struct qcom_pcie {
->   	struct icc_path *icc_cpu;
->   	const struct qcom_pcie_cfg *cfg;
->   	struct dentry *debugfs;
-> +	int global_irq;
-
-I think you can drop this, the irq number is no more needed after probe
-
->   	bool suspended;
->   };
->   
-> @@ -1488,6 +1495,29 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
->   				    qcom_pcie_link_transition_count);
->   }
->   
-> +static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-> +{
-> +	struct qcom_pcie *pcie = data;
-> +	struct dw_pcie_rp *pp = &pcie->pci->pp;
-> +	struct device *dev = pcie->pci->dev;
-> +	u32 status = readl_relaxed(pcie->parf + PARF_INT_ALL_STATUS);
-> +
-> +	writel_relaxed(status, pcie->parf + PARF_INT_ALL_CLEAR);
-> +
-> +	if (FIELD_GET(PARF_INT_ALL_LINK_UP, status)) {
-> +		dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-> +		/* Rescan the bus to enumerate endpoint devices */
-> +		pci_lock_rescan_remove();
-> +		pci_rescan_bus(pp->bridge->bus);
-> +		pci_unlock_rescan_remove();
-> +	} else {
-> +		dev_err(dev, "Received unknown event. INT_STATUS: 0x%08x\n",
-> +			status);
-
-Can this happen ? perhaps dev_warn_once instead ?
-
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->   static int qcom_pcie_probe(struct platform_device *pdev)
->   {
->   	const struct qcom_pcie_cfg *pcie_cfg;
-> @@ -1498,6 +1528,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->   	struct dw_pcie_rp *pp;
->   	struct resource *res;
->   	struct dw_pcie *pci;
-> +	char *name;
->   	int ret;
->   
->   	pcie_cfg = of_device_get_match_data(dev);
-> @@ -1617,6 +1648,28 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->   		goto err_phy_exit;
->   	}
->   
-> +	name = devm_kasprintf(dev, GFP_KERNEL, "qcom_pcie_global_irq%d",
-> +			      pci_domain_nr(pp->bridge->bus));
-> +	if (!name) {
-> +		ret = -ENOMEM;
-> +		goto err_host_deinit;
-> +	}
-> +
-> +	pcie->global_irq = platform_get_irq_byname_optional(pdev, "global");
-> +	if (pcie->global_irq > 0) {
-> +		ret = devm_request_threaded_irq(&pdev->dev, pcie->global_irq,
-> +						NULL,
-> +						qcom_pcie_global_irq_thread,
-> +						IRQF_ONESHOT, name, pcie);
-> +		if (ret) {
-> +			dev_err_probe(&pdev->dev, ret,
-> +				      "Failed to request Global IRQ\n");
-> +			goto err_host_deinit;
-> +		}
-> +
-> +		writel_relaxed(PARF_INT_ALL_LINK_UP, pcie->parf + PARF_INT_ALL_MASK);
-
-Is this available on all PCIe RC core versions ?
-perhaps this should be moved into a callback of ops_1_9_0 for now ?
-
-> +	}
-> +
->   	qcom_pcie_icc_opp_update(pcie);
->   
->   	if (pcie->mhi)
-> @@ -1624,6 +1677,8 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->   
->   	return 0;
->   
-> +err_host_deinit:
-> +	dw_pcie_host_deinit(pp);
->   err_phy_exit:
->   	phy_exit(pcie->phy);
->   err_pm_runtime_put:
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> index 46802f7d9482..1226ee5d08d1 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> @@ -280,4 +280,5 @@ examples:
+>           phy-names = "pciephy";
+>           max-link-speed = <3>;
+>           num-lanes = <2>;
+> +        linux,pci-domain = <0>;
+>       };
 > 
 
+I think this should be squashed into the previous patch
+
+Neil
 
