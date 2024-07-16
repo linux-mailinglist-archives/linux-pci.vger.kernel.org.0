@@ -1,60 +1,61 @@
-Return-Path: <linux-pci+bounces-10392-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10393-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7683933209
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:34:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FF3193320B
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:34:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 152651C22671
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 19:34:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C12441C20AD6
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 19:34:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED1E02B9B3;
-	Tue, 16 Jul 2024 19:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44681CD2C;
+	Tue, 16 Jul 2024 19:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ULB5aMOy"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2n6OCWqB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2086.outbound.protection.outlook.com [40.107.96.86])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2061.outbound.protection.outlook.com [40.107.95.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236111CD2C;
-	Tue, 16 Jul 2024 19:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B34B1A01BF;
+	Tue, 16 Jul 2024 19:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721158437; cv=fail; b=R6WW/NYMl9EP6j6Lq+SrULnsPU52GSVUEkdwjn5DrlL5e28y/WwVkhX1JDSW3JnqFXRbz8xsgoqCAPmiOKMt3VprM/dKttdCybltPsktUVIfwrLmL8nClCESk23j66nKM31abXrfz1+9knl/YjBWoil9T0J1KemWZfxw0GiKaNo=
+	t=1721158443; cv=fail; b=AaqDGTebjb2wR5QOpP6FB3ibwJK560AgPfeuLY2vV+aDF4+pyc4EoouaaosqhHHyGVLAqq5otYha/eqOy6kOZoLefP/D73AqpYxwYRqRN5gbzll3TTK+kjrmMq6d5u4ssg+SwVdbAVOU0yFjJsuXFRjKIKo0Oz6dwBywf7PAVL8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721158437; c=relaxed/simple;
-	bh=UoAKZ7UG2gWc2C/jW6AOwIxbyjGeSk7Gg/uLJwFlP3k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JbnM2vjG+ymajSNyLewSlTEu/Gnn9lfuuE+NAvE89hoT6HGIqP/EQZ2meQ4xzS1MsiqM55qSyAMt7vAkxWkL+FxKFgqtcEJfTcI65UnMDqkpYs978pMsyjKpWZ2TcTZqtbGQ+2H7VxJ/vxkuQyJFIcfkvetKMjY66Y67eAZvNVs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ULB5aMOy; arc=fail smtp.client-ip=40.107.96.86
+	s=arc-20240116; t=1721158443; c=relaxed/simple;
+	bh=Lol+t45pncGBscKOp8l89pe71lSJrpqq3ZpYdENqlP0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XCa2rOp4vU27LA0z8BLjqC8kxlNKKo2EBRaLd4H68ZdbD+NYcRuUlQtpwxbJHuoqU7FxdyCDTJU2Nfp52m+GrBjz15Jgqbu3WgzKlPeRHsjy7BKoOwDbPh5ueKZVfDAhwVriKZHhPLVyiWZd+d27Ii/uwNq0nmQq1xdY5fUlOJ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2n6OCWqB; arc=fail smtp.client-ip=40.107.95.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KcHPMn3pw340zMOb5OX/iwvzfyDQgoMIquMwBoIuIQTtxyxXL3YLrcqOSiSfPzi3ZMI85l0TeIZece7wln1ginxXH6NqdXUNetH5XEjCu9627KQDnYExlPhcUjlqTf0zLtnXw+P0L821r+iL5CJ+AvnA4Hm5kZc6mcEXqNkgqcm7L04T+2vHNp+xPCJD9k8OgKedW5iKQFRpkpcNJNdrvoTto/m2QtcAjNn5cwyh0yFUvXu6vWSnyH33wfKijPjdCj378MnTbNX4/h29hAy5ARwiMrsZQUohPXfaX1GmDI1qtP0bloglsPEYX0aJ6p9wV8WlJaSsod1u0yrkDsBvrg==
+ b=VSS7QrnmLSn/bSOxqxsPSCfhCiRkbiTXkii02YS3KA9CcUXo2pmqrb4ZJ59ASkERJdaZRIXeGFNO0WH9FsZDE/X6qzrVWfxEqz5D6OdVfq1/E1iPGhbiNQ25u4KFx/1zYS5Lte8JOkX089y+lW3Kz5OvlNrsLRxUiQIUAyL2P9N0pE+M8qUhX1fCcQieF8NpVV+/E1MQAbAm4whf4RLW2PvvWEncg1mLFnxI/tt9GG4GkDdbtJaQRxRQCfkuWQtmEyjHpELlKx9HoeftOmmoD44qnxkD+kprt3q8RdE3dfqKrtAdwbhVKv0qgwV9CxCBolc6NG6obaUs9bRlMe5mqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FUaZ2CCCwah1S2bUG1wuLlx9XA+UQHA5nrENPkn/Gb0=;
- b=Yn1dabyW8TDy6A/otBKBQTNt39fqQGqtFXsc229rBW2o5WHNU8fAC9O4wKbCTw5x6fX11NgpWQWyY4mlxBlThbvWFmB+afxain3vU3lFGtv1iuxox6svV7eECkGiKS8oZgAl01qUjXaBkk6mWoxdPZJWVvPxh8ZUjEHYzRmJcoBYYaq7EBe+FxXcvx0bSz1zSE7b+WlzITXp0hPxlHgoP9jF8DREQq0QWcqonznEpuu1OAV2/lehpQpMtmGdzXotuYUVMyD4ylJ0eZx3zS0ye7ogSvkpof343DA2ix1p+XiSUCfkhDKjyPC3+Np+YtezCKtduHNx80110vBOX2y6PA==
+ bh=wHZ8rE7ZuzLlPkM9bugQIILHFC2fzewUG1nE8V0cQa8=;
+ b=MpqtXDMkxW2y0cqicvRubRhDwLbBupXv9S2zoBwr/VCdvj1fCyOibG8Ixy6uuf/mhr7EWJUUtMEaE0GlTpliRkzUQaZq7vHEcJzc+PUHcwBGKDFEu8PSmgHiH4RRFS7wuJrIN6TuIpPN6+0BKxXs9hiWzC9OP1CeamGPtHFXw54fIncWNEjeNVwUjsKfzApzqFnBBrqUDWxSN/dVuNLgyy1N7v5u/vdu7eKSRa/gf0h8V3hcQ6hpf2l6fVYXMdHo4X+bM8Z4O42E6HDF3QY2EVpX8h9tyVBNrRV96nzHkDtgZZrE2+tGST71hbsPaqsiI0j5QgE+IBMLpYDNCnZrpA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FUaZ2CCCwah1S2bUG1wuLlx9XA+UQHA5nrENPkn/Gb0=;
- b=ULB5aMOycgpJlV5PgHbMZ5Hqnk6geQrG/Tt0l8KWpmbusv/w1YR2UF2GPxpWcxWxNu2fWuoZNq9OObmPqAmKkIfBxe2TvxhO+CxBstUaUejUrkLr4jdUW0X/1d4jywDiYqo7z1PPOD6mXJmTcys/D/ehHYaKVn9rYc1NoYwyXVg=
-Received: from MN0P220CA0024.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:52e::18)
- by DS0PR12MB8220.namprd12.prod.outlook.com (2603:10b6:8:f5::12) with
+ bh=wHZ8rE7ZuzLlPkM9bugQIILHFC2fzewUG1nE8V0cQa8=;
+ b=2n6OCWqBVyTBYKOcwPAGL0qmSZpwTKH0xuNcSrr1i8KYXrTw6+WbUM/nsWEArQru2+xSknoGeA5fHquxixe8q9XHCVv5i9ffUXteBKEzdogVEd25u5WSyzwVxhiMbiIyFNvmV83+hTiP5/z6xw+a5RYWAPCjrHTsfJwsWclGRcw=
+Received: from BL0PR05CA0009.namprd05.prod.outlook.com (2603:10b6:208:91::19)
+ by SJ2PR12MB7895.namprd12.prod.outlook.com (2603:10b6:a03:4c6::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.15; Tue, 16 Jul
- 2024 19:33:52 +0000
-Received: from BL6PEPF0001AB52.namprd02.prod.outlook.com
- (2603:10b6:208:52e:cafe::25) by MN0P220CA0024.outlook.office365.com
- (2603:10b6:208:52e::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.16 via Frontend
- Transport; Tue, 16 Jul 2024 19:33:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Tue, 16 Jul
+ 2024 19:33:59 +0000
+Received: from BL6PEPF0001AB53.namprd02.prod.outlook.com
+ (2603:10b6:208:91:cafe::13) by BL0PR05CA0009.outlook.office365.com
+ (2603:10b6:208:91::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.14 via Frontend
+ Transport; Tue, 16 Jul 2024 19:33:58 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -62,33 +63,33 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB52.mail.protection.outlook.com (10.167.241.4) with Microsoft
+ BL6PEPF0001AB53.mail.protection.outlook.com (10.167.241.5) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7784.11 via Frontend Transport; Tue, 16 Jul 2024 19:33:50 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ 15.20.7784.11 via Frontend Transport; Tue, 16 Jul 2024 19:33:58 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 16 Jul
- 2024 14:33:50 -0500
+ 2024 14:33:58 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 16 Jul
+ 2024 14:33:57 -0500
 Received: from ubuntu.mshome.net (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 16 Jul 2024 14:33:48 -0500
+ Transport; Tue, 16 Jul 2024 14:33:56 -0500
 From: Stewart Hildebrand <stewart.hildebrand@amd.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "Michael
- Ellerman" <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
-	<naveen.n.rao@linux.ibm.com>, Thomas Zimmermann <tzimmermann@suse.de>, "Arnd
- Bergmann" <arnd@arndb.de>, Sam Ravnborg <sam@ravnborg.org>, Yongji Xie
-	<elohimes@gmail.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
+	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 CC: Stewart Hildebrand <stewart.hildebrand@amd.com>, <x86@kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>
-Subject: [PATCH v2 0/8] PCI: Align small (<4k) BARs
-Date: Tue, 16 Jul 2024 15:32:30 -0400
-Message-ID: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/8] x86/PCI: Move some logic to new function
+Date: Tue, 16 Jul 2024 15:32:31 -0400
+Message-ID: <20240716193246.1909697-2-stewart.hildebrand@amd.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
+References: <20240716193246.1909697-1-stewart.hildebrand@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,99 +98,121 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: stewart.hildebrand@amd.com does not
- designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB52:EE_|DS0PR12MB8220:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6b27bc0-1815-4322-0773-08dca5ce384c
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB53:EE_|SJ2PR12MB7895:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1e5af91-334f-4aa6-9618-08dca5ce3d0f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026|7416014|921020;
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?COLMGyPoWBIX6dKXpjF5ZkY9S/jC6swul93KXEgkvHAxULSkdVmAvfbJ0zu0?=
- =?us-ascii?Q?Hjwj1BwOpo7RBCbdRz58Ba5Ww2YllC1gUFYmbEmIZ1T9jrlQ/rf8dtFxT4zw?=
- =?us-ascii?Q?IP0ciO3Aa4mtddZ+fs7t6zWdGv4cuStuyLUsy+qZ1S81jwOVDhhdwPewZB2l?=
- =?us-ascii?Q?I8zBvZjI8ZVXcKSMKX5L/W7TqepZMRPdH8K+6cTF4AzDayEMw+7gg8DhZQ8b?=
- =?us-ascii?Q?hH/Z4WGN42frQRWcfseLMicXcR4M1Y8MAIXlXC7WFo6+26iT/iKwvKTPQzbV?=
- =?us-ascii?Q?w0Eek9dBaea9kqER2Zj+Laj785QG4nyuoBLETs1BRO+BAlyQILvEE8h34azh?=
- =?us-ascii?Q?fTxcZkJ8CE79+couOnJsnTn9f3C4DJzUrJJFYcrKUPGb0r+WY4qZ0v4oSbEK?=
- =?us-ascii?Q?xN43Jqqc5asvoooX84Rq4Zqk61Kig2yNHF0hszGVWXVlyF5jmYKiVKP9tN84?=
- =?us-ascii?Q?hXvrIhbJc+6HE/roB7hjLTlBPsYfGrlIBJYWAF7SsjcAcnPAsqgReOgAoPxn?=
- =?us-ascii?Q?Y91MzDNT8rMybSxjkOTrFJoMdha6rqDDu/fi3oIecFddxek630dAhYgFaNnM?=
- =?us-ascii?Q?KObQifLWVIK+h1B/lLGIsW/Z4sUb+pO/hUNy4lgoQT7vmWlZLpRJ54hUJZRz?=
- =?us-ascii?Q?5HMzb9xK7LzzvLDCz5Mhjpl9eG9/UFsK5SY+LuZBU4vvVF+IQup4ybHcVbm/?=
- =?us-ascii?Q?0oUWei880rMdbu6/IuhKMni8Z+fmD70p6YGk9DrxYmDA5RRnweeeI+Z/TPBb?=
- =?us-ascii?Q?xd5dnDsiFmO4d59nS9cl3AUje47pachDH8Vsi3po9fX0lRdRm8KhImJPNC7c?=
- =?us-ascii?Q?jxZLxCIt1DmpQFtVJ00Bf4YTPPf/uQ4iIr/fF3jmh2wrHV4jVb7fM+kSiK1h?=
- =?us-ascii?Q?6+SWihE8xspqmF01zEJOtD2PECX7oZv7OwMmZ3nj7zdlGkqQsP32EPDJptDg?=
- =?us-ascii?Q?H6FkIKaaiAmus7SiShZ6B19T9DVwc3roHDrufZH2FslrSETBpdB3EtkgqozQ?=
- =?us-ascii?Q?vceBV0rAVtiffE/BhQfbvLyqAV5GUunpduzH3jR+XPufQzFHs/G6L5/YQvIv?=
- =?us-ascii?Q?U4O7xC+6kAXofrXF1I4MIuFg8b+ulmgzBpdNNF3qSbjMdqHCACqLfzwcb0O3?=
- =?us-ascii?Q?P3HweNzMJLQpn6i6B7RAGnpBF71MRITHTv7FCLU5WzFtmam+t9Qzk9JMmp/z?=
- =?us-ascii?Q?R3F/fRUbLHrYTGq9kEi2+DuWbHmSkaAb0mJnaOZyYNfcXZLrSQ6gT5t1alKK?=
- =?us-ascii?Q?gts9eRNy1+T4C56HJ0oai2jbC3WTcNRR9frSci3saHYffhxhnXNBUX51A/2o?=
- =?us-ascii?Q?62ivYuybuFdDHBomVUDGuvE8FtjjGV5C4USBbqHNswWFAac5J05t3TO+f+si?=
- =?us-ascii?Q?quQcgJLM0F4iYRvjPoeGybXaursRHaWBAJSj4yq4iXTa3rlKxg=3D=3D?=
+	=?us-ascii?Q?KeWIxDpZnLzKsYQSjkQYwIrQpcUI9UUkrY/pFINauygLzt6lnWwBPMU37BBA?=
+ =?us-ascii?Q?unSbb5KGpyoeH85NUrY/QVzR4GarQ7VljTZwdU8uwe4O2QL66I4iTFNUgw26?=
+ =?us-ascii?Q?/3kMQKKYsmG+AAOuvkqPnPMFCsE2LlfBq1sRtIO7+FW9fGqAe/e9+2DQD4AK?=
+ =?us-ascii?Q?CRJb+SX59Rs7kJeAcBrPi2znYL/2+xjo9UKjaqRKJ/BfgkxGxAco1f5SKnt0?=
+ =?us-ascii?Q?lvsWBCwaa8uz9Ar5Ltni/cFIjxbvuAevUJahDRrT9mXRIEqn0RInFnwcQk2y?=
+ =?us-ascii?Q?gS19zL5BWhTdA6kROg/v02kbukt1PNckWi0zy06dxpLnxflfVXqoK6lZ/pxi?=
+ =?us-ascii?Q?TUexlO4cVhehEJbEE77FE+0hcxAmDqd+MIWjyj2DRJrz1UlGv2d7Ptk3OXZG?=
+ =?us-ascii?Q?m/jjQzYeKpFzgjYFFiU/96cVh4cLZ7LtbmgNoquftJxQqIVZCDeHEnbfiOZK?=
+ =?us-ascii?Q?FFizqa3A0I15nxORyJjbOByT3qtor1I55LmwnLYfyRqQgF6jhHXngX1xgUW7?=
+ =?us-ascii?Q?bgC4do/7v1dJUz1y8h+vgh7SdLZpBR7hUKAePjw5Bvi2JfRroP2bMDFqiKRu?=
+ =?us-ascii?Q?CxFyWj/bxiYmprVD3XbaSvITrTPmSpR7jV1aEUVsriTJZZHzoh3iTOQayLUe?=
+ =?us-ascii?Q?JR9p4fht5cq+7FioAT+suENciPhgOShf8oyhx1AKJvr1iBBV3dDTaiJ680N4?=
+ =?us-ascii?Q?sdlFPF1yIc3q7IvyQO6YzQVRDQw6Lza3zAuhjtkbgHNFBSLaemhlyQkJZTHi?=
+ =?us-ascii?Q?3qkjkPUiUi61fenDLt6hB4KaphZmMf8SjmuTAcU90Lz36Lmtu6k2/b8k7oXb?=
+ =?us-ascii?Q?IJgAzAllfpBDfswXJ9waN6HO3qSoSk+Pknnuj4nmP/KXm8MparkmYjVCdsKx?=
+ =?us-ascii?Q?6pfAhR/CJdTlAKpOwTzakdvClbB9AVrL3F1lMT4KkX20TbNjuLrZYc34wMG9?=
+ =?us-ascii?Q?aMEmpzhuyEionSlWxcPHibj+JsB0RFG9ztTVnuG+Vpiin02mDGtmVtU0jlJt?=
+ =?us-ascii?Q?c9mRParL/gxNuZmfG/WA28pMbY92tXZvZreHecOrtuI3+kcOpD1BUj4rVHU+?=
+ =?us-ascii?Q?lpdhsza6jq4jlMQa28x1k2qX23DKWscb4BBqHD5YGIkpLruPddJpccKPu4hD?=
+ =?us-ascii?Q?f8oNZ5qLc90Zk9hBi5TgbTkhGuhyibCddkMC4O9JrGJznwcpaKrJSFc4KXmy?=
+ =?us-ascii?Q?Ltex46ji2c2OIdPH28uyKgOKjUgWZoowbKSbzK2QYPn7wF9gQe5cQEuQXQ4m?=
+ =?us-ascii?Q?XI4qwbjgYre8ev/xN+292fMpnQak1K/hZ78FNCNhONleByHdma9chk/gwCLS?=
+ =?us-ascii?Q?yHaKYP6d3lo5r++/9icsgOMxQ8xA/vcHj6wsb2fzQ62kqpgZJ/NdHYXXtRrS?=
+ =?us-ascii?Q?MsR8zCsHCqr1UFBO9GoMC/EuNNgv55GjgZy+XFZy0OBl+RsoTAHxiRqqFDaf?=
+ =?us-ascii?Q?5b/+V8mFapogm4I3Y1KK5kwGMRYkFt07?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026)(7416014)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 19:33:50.5495
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 19:33:58.5264
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6b27bc0-1815-4322-0773-08dca5ce384c
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1e5af91-334f-4aa6-9618-08dca5ce3d0f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB52.namprd02.prod.outlook.com
+	BL6PEPF0001AB53.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8220
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7895
 
-This series sets the default minimum resource alignment to 4k for memory
-BARs. In preparation, it makes an optimization and addresses some corner
-cases observed when reallocating BARs. I consider the prepapatory
-patches to be prerequisites to changing the default BAR alignment.
+... to reduce indentation level. Take the opportunity to remove
+redundant info from debug print string.
 
-I considered introducing checks for the specific scenarios described,
-but chose not to pursue this. A check such as "if (xen_domain())" may be
-pretty simple, but that doesn't account for other hypervisors. If other
-hypervisors are to be considered, or if we try to dynamically reallocate
-BARs for devices being marked for passthrough, such a check may quickly
-grow unwieldy. Further, checking for the MSI-X tables residing in a
-small (<4k) BAR is unlikely to be a one-liner. Making 4k alignment the
-default seems more robust. Lastly, when using IORESOURCE_STARTALIGN, all
-resources in the system need to be aligned.
-
-I considered alternatively adding new functionality to the
-pci=resource_alignment= option, but that approach was already attempted
-and decided against [1].
-
-[1] https://lore.kernel.org/linux-pci/1473757234-5284-4-git-send-email-xyjxie@linux.vnet.ibm.com/
-
+Signed-off-by: Stewart Hildebrand <stewart.hildebrand@amd.com>
+---
 v1->v2:
-* rename ("PCI: don't clear already cleared bit") to
-  ("PCI: Don't unnecessarily disable memory decoding")
-* new patch: ("x86/PCI: Move some logic to new function")
-* new patch: ("powerpc/pci: Preserve IORESOURCE_STARTALIGN alignment")
+* new patch
+---
+ arch/x86/pci/i386.c | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-Stewart Hildebrand (8):
-  x86/PCI: Move some logic to new function
-  PCI: Don't unnecessarily disable memory decoding
-  PCI: Restore resource alignment
-  PCI: Restore memory decoding after reallocation
-  x86/PCI: Preserve IORESOURCE_STARTALIGN alignment
-  powerpc/pci: Preserve IORESOURCE_STARTALIGN alignment
-  PCI: Don't reassign resources that are already aligned
-  PCI: Align small (<4k) BARs
-
- arch/powerpc/kernel/pci-common.c |  6 +++--
- arch/x86/pci/i386.c              | 38 +++++++++++++++------------
- drivers/pci/pci.c                | 43 +++++++++++++++++++++++--------
- drivers/pci/setup-bus.c          | 44 ++++++++++++++++++++++++++++++++
- include/linux/pci.h              |  2 ++
- 5 files changed, 103 insertions(+), 30 deletions(-)
-
+diff --git a/arch/x86/pci/i386.c b/arch/x86/pci/i386.c
+index f2f4a5d50b27..3abd55902dbc 100644
+--- a/arch/x86/pci/i386.c
++++ b/arch/x86/pci/i386.c
+@@ -246,6 +246,25 @@ struct pci_check_idx_range {
+ 	int end;
+ };
+ 
++static void alloc_resource(struct pci_dev *dev, int idx, int pass)
++{
++	struct resource *r = &dev->resource[idx];
++
++	dev_dbg(&dev->dev, "BAR %d: reserving %pr (p=%d)\n", idx, r, pass);
++
++	if (pci_claim_resource(dev, idx) < 0) {
++		if (r->flags & IORESOURCE_PCI_FIXED) {
++			dev_info(&dev->dev, "BAR %d %pR is immovable\n",
++				 idx, r);
++		} else {
++			/* We'll assign a new address later */
++			pcibios_save_fw_addr(dev, idx, r->start);
++			r->end -= r->start;
++			r->start = 0;
++		}
++	}
++}
++
+ static void pcibios_allocate_dev_resources(struct pci_dev *dev, int pass)
+ {
+ 	int idx, disabled, i;
+@@ -271,23 +290,8 @@ static void pcibios_allocate_dev_resources(struct pci_dev *dev, int pass)
+ 				disabled = !(command & PCI_COMMAND_IO);
+ 			else
+ 				disabled = !(command & PCI_COMMAND_MEMORY);
+-			if (pass == disabled) {
+-				dev_dbg(&dev->dev,
+-					"BAR %d: reserving %pr (d=%d, p=%d)\n",
+-					idx, r, disabled, pass);
+-				if (pci_claim_resource(dev, idx) < 0) {
+-					if (r->flags & IORESOURCE_PCI_FIXED) {
+-						dev_info(&dev->dev, "BAR %d %pR is immovable\n",
+-							 idx, r);
+-					} else {
+-						/* We'll assign a new address later */
+-						pcibios_save_fw_addr(dev,
+-								idx, r->start);
+-						r->end -= r->start;
+-						r->start = 0;
+-					}
+-				}
+-			}
++			if (pass == disabled)
++				alloc_resource(dev, idx, pass);
+ 		}
+ 	if (!pass) {
+ 		r = &dev->resource[PCI_ROM_RESOURCE];
 -- 
 2.45.2
 
