@@ -1,145 +1,112 @@
-Return-Path: <linux-pci+bounces-10378-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10379-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E58DE932CFC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 17:59:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87EED932E50
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 18:29:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 848BEB2438E
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 15:59:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D838B223CB
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 16:29:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13AA61DA4D;
-	Tue, 16 Jul 2024 15:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4FC19E7D8;
+	Tue, 16 Jul 2024 16:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WY0JRKAh"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xyUlONno"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720AF199EA3
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 15:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7316319E7D0
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 16:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721145590; cv=none; b=YY7PzB/9dxvDRdpQcw9fp6R7MeLE2eAGY42unt2QD6JkhHGASSv8d2Jljlo3j5jD+4AGtsWvPUssW1xgPbaaiqyNwIV6Y2ghkQ27/eo3Q6SfqpPmVffbcLeAqKbif02CibjlKICCJQsYv3dh2a4Ld8vop5pla5vpCeJosMfgjdo=
+	t=1721147359; cv=none; b=APlV5YOowdDl9xuiBkGkbpnPpUtrqSxlfIH4gMNe2D2Gq87n+CZbvu15sR8jTgPoUyiJGJjMf7VIUH3ovJyn/kY8KTFh/phn+bCmyyuTNoW1f4/lBRh96QRGX87x5p8zpkbRgPXu02AC5LnX++oUBsAbrvGXjdJYjTowMeV2ETQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721145590; c=relaxed/simple;
-	bh=/f9cEEl/8MayIBFDh5qE7G73v8hj1iS5ECJxNgSsu4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GC0OLM4Bxx4FXDyaVhzTn31MMFcst8/BRP9IbLVyvFvWdxKvifRS9zmxKdAxaBMJ4LNWPFTmG6ilib9BMoPZq4Leh6EnExjzemgp1A3mUydT+s4YMFkBd0HozT8IoAtlsKYoGKnHylyQW5n9D54XKcLMPa6RRrouGaJ31ykLDt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WY0JRKAh; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2cb217f17acso1422318a91.1
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 08:59:48 -0700 (PDT)
+	s=arc-20240116; t=1721147359; c=relaxed/simple;
+	bh=jaELMgsH3dwDaFt7EQM2pp+dxyHJV8grSRMCO/j51GY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MHRaB2M/t0Ss9xrzs1Adnlm5KMEjdB6aEPYOgid48jwzdvCNthgiJ/DOWeW9Rdcr/vGZiZg7LF0XdHF7pdccJVA1x7swN4ZjWvhUhbb0emICGnIFOFsceV+DUY8/vgMCK22/VxhDoXciP9mA6bgVELXY3s3vNl3pcyAlCSIUmsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xyUlONno; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso61375231fa.3
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 09:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721145588; x=1721750388; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kl3Jx4H/WoP0kRmoJKehZi92SYKLfR+SxVfx7nbEybM=;
-        b=WY0JRKAhQJVDB1jbkAmT9dTD1ZuzxGieKRzJMbonixWI6s2iQwjMKDeI3J+PqPs13i
-         WENE5IPFrJviymrNeJJ9LOjZ89TGAdWi0uNoox+M/HVutjVTmJlRuOTPGrvd5LxctLzr
-         rwnkUQwOEEeV8IWEMHEbtfbNgCgTL+BXfGJ7//40qDadj29Sj+v1oju/McmpomAITMBx
-         sC5ea/kxhSBdKpeL1779ei8dObvoAQSoZEF9ltCrU2GI+PUcw380bDUXzmF8BfMIZNpz
-         8RAFUN5KcCzTwLEjdF7008WSgdgHkZ+px/j329CNb4vkWjPMGxYlbWqw8ZCPr7DjU0bC
-         p3iw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721147355; x=1721752155; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jaELMgsH3dwDaFt7EQM2pp+dxyHJV8grSRMCO/j51GY=;
+        b=xyUlONnouG0EZNNiIdE5iDSXnkABgXZwFh0RB+wA7Rte/e6gE4ad+F/B82lbt7YVhf
+         yyGtQ381x69owuFBAWXHF69uT+rKsC9pTHfgkW7GaZeJzkryulfYryRq4WvepmsoAU3S
+         z1ImnwovdYNvEJ+pZj/t8zTJzsbHhR+1k+ZkZhoCguFfQBX4ObR3fsygzZYCnw9LIqtn
+         ogRsoNbbGtyHAgkVbW+R6nki+1LmdX0PcZsC03Qlg7TGBXjU8+E5LUwJ81f3Qa02pdyz
+         hI6YtFgW7ZrtJB2YFn0vjhEHx/BXSoDiKoQfbzP8kxZBVcZjyf5hylc59Qg40gqRzjI5
+         VCqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721145588; x=1721750388;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kl3Jx4H/WoP0kRmoJKehZi92SYKLfR+SxVfx7nbEybM=;
-        b=JFHoM+f5cPzH0EM+o4SbH2nQ81F/hITMFiBGG0HXTe+joO5o2kSVlsnE4vbt/JsZt3
-         nfUGCFNptAdATjyUaTx1MZJh2JIuYUqbHJzA5sTYr++bO+PPGUMt/j8gZxcxNRpAwSc/
-         hHJw1bePPCNgVDHnRBsspmrhgGR/n7XEpZrOWm4WSJ49Vaa95L8lisNsVY9rD1Qw3LTd
-         SytBVnllKTE8wqa/1sWuMUjECZgm6uO+oM7sxVv0Xkz8l2mcWuJXKjYXetRFEAgZ8yl4
-         t8dw9eqZoLuHtFbje0TosqrJgunJCOQVu3TVbQpGntz4XEJQh1VFIVlq0j/2h37ThBry
-         onXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgNRlCRUIip3omOQaHa20gnwWJ1phJ2FU8Ltaj9v6qD899YHLlA+a+JmuwKTLwrBnHkz1QVqwk4OmwhIN2ZrbSTBvqMWZAqFXr
-X-Gm-Message-State: AOJu0Yz7iX7QCB1vRbHZBapz8llo33TYSBAanYo/4Xrob+MsEn9lxFRg
-	8KVVNZnGsGXkRwJy/BXkf3FogaGlUiHgVcx+C3d5f66UyZYmCIpIp/6pK2uVHw==
-X-Google-Smtp-Source: AGHT+IHHz98ceVJ8T5HzQt1BnBw5Awqzt0u6lGO5YK4BDL0d0/bxDwtAIk26dAssJfi7VGkM8sJGdw==
-X-Received: by 2002:a17:90b:4c8a:b0:2c9:63ef:95b9 with SMTP id 98e67ed59e1d1-2cb37402065mr1970857a91.14.1721145587606;
-        Tue, 16 Jul 2024 08:59:47 -0700 (PDT)
-Received: from thinkpad ([220.158.156.207])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cacd419b6bsm8487009a91.27.2024.07.16.08.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 08:59:47 -0700 (PDT)
-Date: Tue, 16 Jul 2024 21:29:43 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
-Message-ID: <20240716155943.GM3446@thinkpad>
-References: <20240716152318.207178-1-brgl@bgdev.pl>
+        d=1e100.net; s=20230601; t=1721147355; x=1721752155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jaELMgsH3dwDaFt7EQM2pp+dxyHJV8grSRMCO/j51GY=;
+        b=Ub/dYOrUq7zhu3EJ8bSyv32ZAf2fmrRELBAtnvCC1ZjGjmIgVoZi2tgzQrI+Mb9KRk
+         aVWD8dAQhyfLnqSmpvQSu5VKmai0gXomQDsTgOCGufJ9VWcNOkvp1aGGZOFOD/7V/EHc
+         fF0hJMLsMWuPKupxKhx5oF7SI6jZB9aG2GtCXc8dFlodPREusilIre9868h/71lQF2nH
+         uhyR+eMcx+hNglvUA8N/Z1rdutdXdIPsPmQ9AonIvhMQIrnGqhgoaSZOBc4HCl3hGKVe
+         ROlbrFUtGXbpgJnMkPxvzmjwNKmLm7T58oUj3pf7oruoOjG4GRzkAMg+7mpNc8CAAjJ0
+         0NhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqmfJ/Wl6yn39RpgdI0IbOb4P/9/+4iYqptlGF0EV6RDp2tvqrX6qItc+H+s2AHHdAOCtWB3OBu83TwRa+qjYJUHNl4wKw3RRr
+X-Gm-Message-State: AOJu0Yw2amipqReHKYGw3s6tGd+oNARo8PcVTt5ieoicAk1u7RvY6wwz
+	IaTT5GnaAAqJv66KszdXaVy2zTj7tsCVpmPXOjS/N/Eg2f0k/4nU/injFtbXCw1IP0Vw+QxZdx0
+	kWxxzfrW8VUg+KS/y1Nayjnfi3PUfrmyEyCegZQ==
+X-Google-Smtp-Source: AGHT+IF8SDILOwF8rus+TVFHYwfHk25fVEqtCeF5iCh/e2abbWdCVtd8k0KCYLtTvI3BEyv+vV6eNO/gqJBcwvibr4E=
+X-Received: by 2002:a2e:a306:0:b0:2ee:5ed4:792f with SMTP id
+ 38308e7fff4ca-2eef415b58fmr18866581fa.2.1721147355577; Tue, 16 Jul 2024
+ 09:29:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240716152318.207178-1-brgl@bgdev.pl>
+References: <20240716152318.207178-1-brgl@bgdev.pl> <20240716155943.GM3446@thinkpad>
+In-Reply-To: <20240716155943.GM3446@thinkpad>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 16 Jul 2024 18:29:04 +0200
+Message-ID: <CAMRc=McObC-+xPfZADQ2wEHO5c3htLbPZLU0Ng-VmgBPEN-2Yw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 16, 2024 at 05:23:18PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Kconfig will ask the user twice about power sequencing: once for the QCom
-> WCN power sequencing driver and then again for the PCI power control
-> driver using it.
-> 
-> Let's remove the public menuconfig entry for PCI pwrctl and instead
-> default the relevant symbol to 'm' only for the architectures that
-> actually need it.
-> 
+On Tue, Jul 16, 2024 at 5:59=E2=80=AFPM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Tue, Jul 16, 2024 at 05:23:18PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Kconfig will ask the user twice about power sequencing: once for the QC=
+om
+> > WCN power sequencing driver and then again for the PCI power control
+> > driver using it.
+> >
+> > Let's remove the public menuconfig entry for PCI pwrctl and instead
+> > default the relevant symbol to 'm' only for the architectures that
+> > actually need it.
+> >
+>
+> Why can't you put it in defconfig instead?
+>
 
-Why can't you put it in defconfig instead?
+Only Qualcomm uses it right now. I don't think it's worth building it
+for everyone just yet. Let's cross that bridge when we have more
+platforms selecting it?
 
-- Mani
-
-> Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Closes: https://lore.kernel.org/lkml/CAHk-=wjWc5dzcj2O1tEgNHY1rnQW63JwtuZi_vAZPqy6wqpoUQ@mail.gmail.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/pci/pwrctl/Kconfig | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/pwrctl/Kconfig b/drivers/pci/pwrctl/Kconfig
-> index f1b824955d4b..b8f289e6a185 100644
-> --- a/drivers/pci/pwrctl/Kconfig
-> +++ b/drivers/pci/pwrctl/Kconfig
-> @@ -1,17 +1,10 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  
-> -menu "PCI Power control drivers"
-> -
->  config PCI_PWRCTL
->  	tristate
->  
->  config PCI_PWRCTL_PWRSEQ
-> -	tristate "PCI Power Control driver using the Power Sequencing subsystem"
-> +	tristate
->  	select POWER_SEQUENCING
->  	select PCI_PWRCTL
->  	default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
-> -	help
-> -	  Enable support for the PCI power control driver for device
-> -	  drivers using the Power Sequencing subsystem.
-> -
-> -endmenu
-> -- 
-> 2.43.0
-> 
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Bartosz
 
