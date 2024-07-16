@@ -1,270 +1,460 @@
-Return-Path: <linux-pci+bounces-10390-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10391-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 891C89331B2
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:12:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A67D89331CF
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:26:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DF3F1F27C05
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 19:12:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2141FB213D4
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 19:26:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1EC819E7F7;
-	Tue, 16 Jul 2024 19:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95CDC1A0710;
+	Tue, 16 Jul 2024 19:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="pcuOxhl1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faL0ZqvU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54021A08DE;
-	Tue, 16 Jul 2024 19:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721156871; cv=fail; b=KJCPUPknhV8aPK7aQQBOBkEBaHJRWdR0+n0rVO/BKa20UnGquov5aEn/nLzKqJ2MevebVd+379xVqQYYr5QqXh7yjSObRvlvhBqAlXNAom3l/+UtzZmR2NRdneqMKkriWcBHUO2Rk5in5dqba4o3TII+zT/xXnXTJ2chpe4lylI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721156871; c=relaxed/simple;
-	bh=trKhTSEHnSXXLl64OFicedox6Pb/WaYdowAvClqKzLI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MyMSBQFrJbzqfOD26eJimprdQ3/YHCKftnhxJQoUwIGH8fDaswkkZIB4+HYpc/elhLp9MgGIVVtM/s43srQX7W+XZGFulq/aGaz1wzzok6DjlqrM94RJkuLFzjlKRPsqmtW/Vfh7UwEcc2KJrsDisMhO354GgkWBQHVU+CuBsGw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=pcuOxhl1; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46GHc2Nr009381;
-	Tue, 16 Jul 2024 12:07:18 -0700
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2173.outbound.protection.outlook.com [104.47.73.173])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 40dwe7gcen-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 12:07:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XKl/XjN+nFMpeKjr9gD+RyL8KEDpfw3iP0AL2sOOd30OJT8KUhF+M2+AXvKxTNZc9EfR9qCGaOjLeChfS2bTtcnp+a2OoEhF0QMdu5YVImVSfKDuWOyu9RDbBf9sBKxOlZ9X0cbu53WnUuPQFM2zI669PIbpYBFqRViWWJwzdDE1073ZFwbF7zO2R79/UPLsLEKml69JcetPyLBrFWYyFGxxC+Xu0r6/VYaBM1Rsv6BMA6GRu85eqsKjjDCnyT93XRnELeyrX4oQvfppTujWgUXmB7YTMZuMMPCcau0NNiihwOEiU4+PQP8Q4865lRup63GIpuL5iVbpiH1xOw9DFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JY4UGQBS/qRDuP0ewCjHoK26Ck5jn9G46+JrHSrsUCU=;
- b=QQ+HXPtEKoxiYZal4Sa4ZoZMNxL+GN5Llsg9SsZhSrrUtnyk8jLS6wzcYIoVUL3zd5SZhjGAOAq95zd/9lKu0QX48ZTfURHQJG0wT0kgCDzipmfHabfE57gtiOtXp9DdVDlHnyjtC4knaOORMgGbZU0B5ONfVsd09s0HPaqzippWBa34Xye0nhYRbGNcydaUXIgUF2a9OxPOE1hB5+Bjz1xp+O69WdLh2BHW77ndLsz+BDmO1ASzCIZHZN/1mN0FpWwjg1E+iZycKQL19qWmeWH9++2cBz6GjvLFle3obkgDZXbpkKLg1b7/gnUXyGvoGKw/pDqBD8lRvEFmH1pzPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JY4UGQBS/qRDuP0ewCjHoK26Ck5jn9G46+JrHSrsUCU=;
- b=pcuOxhl1f/vgaj34jXQEW1+ZVFZxvIR+jTgoYz/FhGLmNMOeAGDGnRk//f4sIpwWdyFoIgIxT0QU8z8hxX4/ky4Zh38DzDCLszRLrQkBpIL6TunZzVF6j94P5YunD4wAUwKGwAuWEvApTkl9+RPBOKnCNmjADwELtbE09CPtPiA=
-Received: from MW4PR18MB5084.namprd18.prod.outlook.com (2603:10b6:303:1a7::8)
- by DM4PR18MB4383.namprd18.prod.outlook.com (2603:10b6:5:39f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.14; Tue, 16 Jul
- 2024 19:07:03 +0000
-Received: from MW4PR18MB5084.namprd18.prod.outlook.com
- ([fe80::1fe2:3c84:eebf:a905]) by MW4PR18MB5084.namprd18.prod.outlook.com
- ([fe80::1fe2:3c84:eebf:a905%6]) with mapi id 15.20.7762.027; Tue, 16 Jul 2024
- 19:07:03 +0000
-Message-ID: <fc972506-7fde-4b79-ac51-4657409e462f@marvell.com>
-Date: Wed, 17 Jul 2024 00:36:52 +0530
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v3 04/12] PCI: brcmstb: Use bridge reset if available
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Stanimir Varbanov <svarbanov@suse.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20240710221630.29561-1-james.quinlan@broadcom.com>
- <20240710221630.29561-5-james.quinlan@broadcom.com>
- <2c539dc6-bfb1-4dbe-8fbd-4dc04984f473@marvell.com>
- <CA+-6iNxm0mVDKWAH1P8ZYs5cVf7YEKSeM-r38Re8ST2v8+BKXQ@mail.gmail.com>
-Content-Language: en-US
-From: Amit Singh Tomar <amitsinght@marvell.com>
-In-Reply-To: <CA+-6iNxm0mVDKWAH1P8ZYs5cVf7YEKSeM-r38Re8ST2v8+BKXQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1P287CA0021.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:40::24) To MW4PR18MB5084.namprd18.prod.outlook.com
- (2603:10b6:303:1a7::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFF31A01DE;
+	Tue, 16 Jul 2024 19:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721157943; cv=none; b=PvhOSbd83XTzFRNasUomhfQWbX6VknN/wfL9UjmaeZ0G50LrxMy61Hw7dWXV8eXp51WQ+XJH7fGNETI83h1Izc50qlDVasS28/vHedeh3B6IBvrugLw0HqyyQwmmFnKMzdSs2f//5chlFMqPvWuDbSPUsCrKUN7MRt7BlQr0MIA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721157943; c=relaxed/simple;
+	bh=Oy9orJQlnzmosURdz4u2TBCFQUqY3pnr54riaR8Qfuc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m1OAQw60hZzOFV166i3XB0oedprwiSKsV4AhJxzvvm1mGZ17/zYiTROvLZ40pkDsx+XoIuTr8sVdSv6Mrqss7/DmA668sQrPy5uXiQhxxQUB6YnER7bdv04xO7wobYUKKYtDZUITcCSZfILAywKQ7RXecXq6vasw64QdarN04IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faL0ZqvU; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a77ec5d3b0dso721562266b.0;
+        Tue, 16 Jul 2024 12:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721157940; x=1721762740; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=mbmokd8A3LcVExoMw0BoXVJBkxw3JiYS/bqgbqiIm6M=;
+        b=faL0ZqvUpVpnPdGBEE3c9ivMvEHcEns0NYvUAkeWb+SUFMY0s8unVwALBDIOMOvq6v
+         bMvZ/WNxOS7Npo1M+D3Ljj7tyNbmDhaiTZNdz8VpBMoFucr25Fa8aSSrpPR2TA/171Rr
+         I0XhII4aDQ7ODoAg5BnnS2byuVpJdo359psfhjyZg50iyfM+jZH55unWmf7/YNnUIrpQ
+         avUKarYM0+wnW6h4VbF6Q6oZNNakXFlZLKBa32PGjve4zDWLhUGz66mEG7a4zWsUrkh3
+         luzWrI6sEEcw8F8Yo07vns1lQNPxhemwe7bsuSrriRA1wDlTe+ZtSBF8BBWgARSh2/p2
+         8Q2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721157940; x=1721762740;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mbmokd8A3LcVExoMw0BoXVJBkxw3JiYS/bqgbqiIm6M=;
+        b=FI90EUneyJJ/3UxivnQjjqSxR8hlc9zuii/Webq1qDMnuDJGIDh/Ic0IjGuBbIAqjC
+         NfGaoo3IUOWp9nMK8oeZAErMPqdA0kCUltpd4zLmYglYB3VHWOH39nfiLd35rDlsk+RT
+         NmervLbWTzkQEAsk/zEK6WX+NPY127eFJQ1PT+ghevbrQoUaEjQFMjEPTpQjdNEjGgCP
+         yCjmEPNEPoW+1BGbVaZClCSrea89RSlkQxrEeCbZTENwLLBgDRJijJnRJlMoOmy5lzlX
+         8oXGDqw5Hu7haGi76+NnLxrUE5sOvV5SbNhlq8uZDYtE+b+7YDvXOFCeE2dGLKQinNJq
+         3PZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWS4TRhv2rhJ3TkDIe1RuRZ+4fKWDyPNlh9vBk33MkW4ycvp7Wq7pAOh07fCmfyWBuLzpEdkRoFaRjB//kraaeUYXrW5J/KRVlrgTC4tneCeR9F1/PmKsqtgq8hZXAdpPGh5tiJtRjOTWTktyoASFNKAvfPLfH1ueNdanQcV/P2
+X-Gm-Message-State: AOJu0Yz4heMA9GeYMV0R5FQTyg3mLpw5gbAYXZKDlOpXLtkNuuRvhN7P
+	8BtgvIlHlshh67L2iIVcVNYR5IJp3MccPMKFL+88nCuP4TFV6mRU
+X-Google-Smtp-Source: AGHT+IFmW6F+kPS5eVF31Cuhh854bQynqQvfDAwz33W1cxly0W7Q+2Tg1bLG1S9fS3lQyMIrwpYz2A==
+X-Received: by 2002:a17:906:2cc7:b0:a77:e0ed:8c4 with SMTP id a640c23a62f3a-a79ea3ebe2amr191310466b.7.1721157939325;
+        Tue, 16 Jul 2024 12:25:39 -0700 (PDT)
+Received: from ?IPV6:2a01:c22:7287:1c00:f14f:4022:635f:3750? (dynamic-2a01-0c22-7287-1c00-f14f-4022-635f-3750.c22.pool.telefonica.de. [2a01:c22:7287:1c00:f14f:4022:635f:3750])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a79bc5a3560sm351579966b.4.2024.07.16.12.25.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 12:25:38 -0700 (PDT)
+Message-ID: <3e0e1ceb-9da8-4227-8964-04e891c1d9e3@gmail.com>
+Date: Tue, 16 Jul 2024 21:25:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR18MB5084:EE_|DM4PR18MB4383:EE_
-X-MS-Office365-Filtering-Correlation-Id: 025eb13e-b198-4ba6-c7f8-08dca5ca79fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?NUJUUnpzQjdZOExPUjdrYU1jakc3UkFqYXJSUFlxeWFTV0E4R0xNZ3B4eUVL?=
- =?utf-8?B?VUhyOFVEb0RRclhyQXhBb3dFN0xoMVZ6aloyT0pOWHdLYUtIZS84ZmsvZ1Z6?=
- =?utf-8?B?cUdTSlp3bldITWlQWTZGNWZlbFRjc3ZRZElMdzNsR1pZUk1QS3U3SkVtdDEy?=
- =?utf-8?B?U1F3VGNQZFc3U0FWbThiT1huYS81NTZlVW11N3Q2emVWc05IaDJDR1B1VUVm?=
- =?utf-8?B?bkNPa0JWUzJtMWdWQ2UvNXZEd3l2ZWRjUmZWdXJaaTFNRUJ3ZnJXMFhCU3N6?=
- =?utf-8?B?bjhvTnJGbE5FK1FOalV6ekxmdytvUjh1bG1FYzZFc0phVjhpMVoyMVNvaUhD?=
- =?utf-8?B?MTVKNUJpZTJVWlUyVWt3d3d2KzZKNmlzVXhwcktIeDhzc2FCMkk5NFFLYis4?=
- =?utf-8?B?OHEyWldLUGpiMTIzWktYU3BxZEFWR0s5K1lrUVoybU1tdmFXY014V01HNSs4?=
- =?utf-8?B?dG1qblE3cDZSamM4Y3lBVkdQNFN3dlQ3TURESnRYNUdrQkZOaGFHWTVoRmRS?=
- =?utf-8?B?VkZiUzE4d0Vac2cxZUhoSEhWNVNKZnc2d044Y3ROUmorVHRoUjlmV1JiSnNL?=
- =?utf-8?B?UFJYbGFMeFQ3TkYyT0xld2hvM3o2MnJDVkRmZG8weElSVFVSZllabVd2alBl?=
- =?utf-8?B?WXByd2dKcUhWQlJKbzd3ekN5cGNsMVR4NlFZZXhNNHZxeFN1UHJKaFR4aWd2?=
- =?utf-8?B?STl1TlRtRDNJZTUvQUI3UDdhc2x3Wk1pbXdFM0VPU3craVpMaUU1K0Q2OVdu?=
- =?utf-8?B?S0docXVXc0svei9qSjZBNmRUMHY1UnpvSzc4RXFSOEphcXUrR0F1dkRLTlp1?=
- =?utf-8?B?MXk1VjRmUDNmenZPaXVQTVB3Q2J3ZWNMRENSNnpYZUZrQzMyd2FsZFhzNVQ0?=
- =?utf-8?B?emgxMTVnOU95MU54M3YydzFIZGZtRHhVYnlPWUFoZEtYSjcwLzQvakRlVi9a?=
- =?utf-8?B?b3hmcUp4UmRoVnh0Um1wNlBKVVp3T3lPUldpQy9pYXVZTTE3b1JnRHc3K2d2?=
- =?utf-8?B?ZVZLMlBBUVZTQjZNbHhYZUdBc0dVdWZOUzU4eFZ0N2U5V1FSZTRERWt2Q2Qy?=
- =?utf-8?B?OXhkSldkYktjOEg3ei9Vd0dFZEVsSDVtUFMvSEw1d2NkZk9vQjkxdStSOFpW?=
- =?utf-8?B?UndDWEpUNEFjNGdjQjZzMWFycUtlUkRIYXhrYzFmSTN4TktKTnU4THZrRzhB?=
- =?utf-8?B?U2ZicGNzL21SaXpReER5Zm9vZjdOQlQvakc2d0VqM2Zxb2VuK1ZKa3ZHeVhD?=
- =?utf-8?B?T1hoZGZVOXI1TW9ONzd6Y0plNTRJUm9CMzc3eEw1MjlEZlZ3a3NFTzNPc0NG?=
- =?utf-8?B?NS9oY2J4bkpkU2t6alJ4OUhLeEpoT2RqRFpDWjlZK2YvQk8yMGdjZXBxY2Z2?=
- =?utf-8?B?amFleDgxMnkwZ2FkQUFrVytJNWhHbzRFS0k0Ym5VdDM1K1F1K081NnMxT1pF?=
- =?utf-8?B?YnNBMlFRT0JOaFN3T0VpU2hDT2JScC9NZVdmSGdrSGJKUERpckt3dEU1OVZ3?=
- =?utf-8?B?dkNOOG11N0dTMEk4WS9TK1gvdFJxVHUydmlYNHBPQzhyTmZMUE1TN1Z3ejFp?=
- =?utf-8?B?Q2hEVGU0QVBtcDgzdFlzNkwwUUFQYmcydEtoeEVNUWxYUFhkdDBRdWlxRHJT?=
- =?utf-8?B?S1E3cXBLVGZnYll6OGI4Zys1SWY3aVdMVC9sYVVObzR6V2RBdWtMMldKaDNI?=
- =?utf-8?B?V2N2MDh0THpLaHZIaGxVNDg5dkVwSC93cmovOUp6M0VZVmg4b3VSQWJ5SjhC?=
- =?utf-8?B?YVZJMlVtR3ZaN3FYRjJzUC9uMEtVTXpXMXBPMzFrdnY0QnZteUFBTlNncjE0?=
- =?utf-8?B?UHJQWmV2elVGS0lMeFBIQT09?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR18MB5084.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?S2c0WEFTWS9IQzUzNGdCZTd4NUlLaEF6REhPS1hUQU40R1UybExmQlRDeXRV?=
- =?utf-8?B?Q3BsTmRNUFp3RWxrZ0lwZ3hHVFNJQjVoa29xTSt2YlBrT3RpV216T0UvOGVU?=
- =?utf-8?B?Z1hWNklhR01oQW9HbGd1UHhRQnF5bmU0dEFTaWxBdFlTaFI4RXlVejJBeXhI?=
- =?utf-8?B?bEJ5RE1WK0NHd2JVclk1NDZCeUdKVUNTUUExT1hyUDVydjk2M0s2WlQ4eEdY?=
- =?utf-8?B?TFZBc2RuelBHeVN2WXhUc0dpN2tSaHV5azVvOHNWdFNjMGZiajQwRS9GQ3Nz?=
- =?utf-8?B?SEo1N3k5M0gyaXpGV0xtaXptZjZJUEUvSzE5NGpvZ0ZXeFRxbklwMGZGZk5Q?=
- =?utf-8?B?S3hPandQQ2N4Q0t4cjMwVDZCM24rSUdkbGpWbWZXU1lsT3AvaGVlRklvc2Rv?=
- =?utf-8?B?akJLcml1eWxpY2wrb3dGMHJXZDJuM3J4Z056eHUvSFZLNU1yNFFVVmkyNzR5?=
- =?utf-8?B?VDBqY3RHaWkxYzRGQ0dpbmdoYm1CMlFrRzQ0M28vYjRxWk84ejlLMi92N0h2?=
- =?utf-8?B?R1JTbWNVbEZGNExDVzU0YkxVQ1lQWWZzYmEzc3J6R3VFMm5CcTFEMW9iZWV0?=
- =?utf-8?B?NXhlRkEvV3MranFVcWhreUkwVFMwc2liK0NKMjVTVHlNSzdDVUZObUN1bVdt?=
- =?utf-8?B?QlJJMDdRanpSaVJmVk01MHBiNUtMVk40bnp6WVpjNksvLzN2Nkc2R2FUbGx2?=
- =?utf-8?B?Y2ZoSE5QSDVOOUpnSGxZb0x4b3JCdEEvb2d3eUhKaERaZmtJOUlhSTZwQTl4?=
- =?utf-8?B?dXhMRVhQQkJhMkllalMzNUFndDBCM24xTVpIYmVhYnpFTCtWQlJ2TVJ0RVY0?=
- =?utf-8?B?Z0lscVR1VUJOSGxFbk51dUlPdjV2MjMwV0thenRtYmZwb01yV1Zpam9pT0U5?=
- =?utf-8?B?dk4vdUkyVEd4ZEVubUNMcm82amliWWVSRUxGYVdZQ1FIUVhOTUhnVmltYnM4?=
- =?utf-8?B?MGM2L3paY1N3ckNMTjJWdVk5OEgxSFJTS2ovc3RKRkNSd2kzZElKRkpQYjFO?=
- =?utf-8?B?K0FLWlBsMTJqeEtrZnNFUy9aeHR3L1h4R2RvbXhra0dyUy9uOWlqZmdjdHpW?=
- =?utf-8?B?WkpJSzRSUy9TS29kL0U1Z3RUVUpuaTlyREMyNTRMaE1VSDZDSVVwWEJUMmVo?=
- =?utf-8?B?QTNVdG50dmJVc29zUlZLRXZwd3pZUk8zVFF3VWR6Z3EydVBydEc5aWsvT2VS?=
- =?utf-8?B?WUZCU2RINWJ0QXk4R3VEMzcxc0UzU3Vram10RUdFaXcwT053cStHcFBZU1Zo?=
- =?utf-8?B?NVN5MjA5a3d6MTRYQ2pTSkVJbGpxQ1VjVm4wYlZYb3ZkQ2oxRjBIOERCZTN3?=
- =?utf-8?B?d2kzQm5DTTRkT2RTQkxKdXFObXlzdU1VR3Y2MVhYcHNZYkZ2czIzSWxCeU96?=
- =?utf-8?B?OW9PY1MrTUNjajBMd1FOckx6UjlueFFXaWtZdFNyMldOc0hWMk0zNmpPbU9K?=
- =?utf-8?B?NGVYclhieHQ2QTNVVDVVVENVbW1XQTBzb0NTaDdjTC9NeWVtdlJmOU9yZUpF?=
- =?utf-8?B?ZEg0c0ZTZUtlZWdYekUwN0htSnhBaytYMnRhWW1DQjBpclljQncrQTBVc1hn?=
- =?utf-8?B?cmdUL1JRUEZzZUxKRVNrQWkrWGJER1VxY0RZaHU2OUt1SEtwcHpVT1VybmtZ?=
- =?utf-8?B?bWo1OW5wVU1HZG14cGNlZUE4anN3UlB0ajUreHVxQkY1TkdCZ25VanJLd2k0?=
- =?utf-8?B?dDN1enBVS09uZngyVVlQcy8zcnM1K09vdHAxNHdVQzN3RStFL055MDB2WkZV?=
- =?utf-8?B?WjN3TlVSNDNkcXM2bkJMWmFqUURGNjEwR3poekN4aWdTRjh2OTgvZHk2c09X?=
- =?utf-8?B?MXY1UWtyWnBYU3piRHk3ck9ZN1RnWDVvVXlaVGdPcE5COVp1Y3BqYjB4cnhY?=
- =?utf-8?B?QkxaVFVtYUlOcGw4UjNtcW80MURJM2g1V2ZMQVNBeTVjNGUvM09TR1dBbG44?=
- =?utf-8?B?czJJcWdWRHNnNVR0OTZmRnV3Q3JIN1BoZVdlbDBMYk9JN3N3SXc3SHQwWDc3?=
- =?utf-8?B?VDB2aFBLcHJKUlNlV0N2TU1MWlo5VFV5ekg5S042Q1Rya2xoRzhyZUJrMnhu?=
- =?utf-8?B?bmJCb0lCY2lkMTdIVEVYVFJUVUlMak1LQ3F5L3JodW9ZWGRvcjF2RWVBTHBz?=
- =?utf-8?Q?foXNPGgUOVzJu6vlJQF5zawQi?=
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 025eb13e-b198-4ba6-c7f8-08dca5ca79fe
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR18MB5084.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 19:07:03.1722
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XkDJBVss+pAGTn+hE0fbRUJFA1snGHgHazfhhseVMOcxC3yiTuqhulQV6ebrAc2kvUubXC5xqtLYGN2J5K3Luw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR18MB4383
-X-Proofpoint-GUID: oA83C6Q5Gw7pCwZmIbJSHOWJzNr1hDu8
-X-Proofpoint-ORIG-GUID: oA83C6Q5Gw7pCwZmIbJSHOWJzNr1hDu8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-16_02,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: r8169: add suspend/resume aspm quirk
+To: George-Daniel Matei <danielgeorgem@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nic_swsd@realtek.com, netdev@vger.kernel.org,
+ Bjorn Helgaas <helgaas@kernel.org>
+References: <20240708172339.GA139099@bhelgaas>
+ <e1ed82cb-6d20-4ca8-b047-4a02dde115a8@gmail.com>
+ <CACfW=qpNmSeQVG_qSeYpEdk9pf_RTAEEKp+OiBYrRFd3d6HOXg@mail.gmail.com>
+ <ad0d1201-1fe1-4170-8cfa-d23e74ef8bfd@gmail.com>
+ <CACfW=qrCrXM6Et=Yafug00pbYZzifhVGLhdLMsdYiYXSh=tGFA@mail.gmail.com>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
+ sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
+ MVE4yNwdS+UsPeCF/6CQQTzHc+n7DomE7fjJD5J1hOJjqz2XWe71fTvYXzxCFLwXXbBiqDC9
+ dNqOe5odPsa4TsWZ09T33g5n2nzTJs4Zw8fCy8rLqix/raVsqr8fw5qM66MVtdmEljFaJ9N8
+ /W56qGCp+H8Igk/F7CjlbWXiOlKHA25mPTmbVp7VlFsvsmMokr/imQr+0nXtmvYVaKEUwY2g
+ 86IU6RAOuA8E0J5bD/BeyZdMyVEtX1kT404UJZekFytJZrDZetwxM/cAH+1fMx4z751WJmxQ
+ J7mIXSPuDfeJhRDt9sGM6aRVfXbZt+wBogxyXepmnlv9K4A13z9DVLdKLrYUiu9/5QEl6fgI
+ kPaXlAZmJsQfoKbmPqCHVRYj1lpQtDM/2/BO6gHASflWUHzwmBVZbS/XRs64uJO8CB3+V3fa
+ cIivllReueGCMsHh6/8wgPAyopXOWOxbLsZ291fmZqIR0L5Y6b2HvdFN1Xhc+YrQ8TKK+Z4R
+ mJRDh0wNQ8Gm89g92/YkHji4jIWlp2fwzCcx5+lZCQ1XdqAiHQARAQABzSZIZWluZXIgS2Fs
+ bHdlaXQgPGhrYWxsd2VpdDFAZ21haWwuY29tPsLBjgQTAQgAOBYhBGxfqY/yOyXjyjJehXLe
+ ig9U8DoMBQJf9GRVAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHLeig9U8DoMSycQ
+ AJbfg8HZEK0ljV4M8nvdaiNixWAufrcZ+SD8zhbxl8GispK4F3Yo+20Y3UoZ7FcIidJWUUJL
+ axAOkpI/70YNhlqAPMsuudlAieeYZKjIv1WV5ucNZ3VJ7dC+dlVqQdAr1iD869FZXvy91KhJ
+ wYulyCf+s4T9YgmLC6jLMBZghKIf1uhSd0NzjyCqYWbk2ZxByZHgunEShOhHPHswu3Am0ftt
+ ePaYIHgZs+Vzwfjs8I7EuW/5/f5G9w1vibXxtGY/GXwgGGHRDjFM7RSprGOv4F5eMGh+NFUJ
+ TU9N96PQYMwXVxnQfRXl8O6ffSVmFx4H9rovxWPKobLmqQL0WKLLVvA/aOHCcMKgfyKRcLah
+ 57vGC50Ga8oT2K1g0AhKGkyJo7lGXkMu5yEs0m9O+btqAB261/E3DRxfI1P/tvDZpLJKtq35
+ dXsj6sjvhgX7VxXhY1wE54uqLLHY3UZQlmH3QF5t80MS7/KhxB1pO1Cpcmkt9hgyzH8+5org
+ +9wWxGUtJWNP7CppY+qvv3SZtKJMKsxqk5coBGwNkMms56z4qfJm2PUtJQGjA65XWdzQACib
+ 2iaDQoBqGZfXRdPT0tC1H5kUJuOX4ll1hI/HBMEFCcO8++Bl2wcrUsAxLzGvhINVJX2DAQaF
+ aNetToazkCnzubKfBOyiTqFJ0b63c5dqziAgzsFNBF/0ZFUBEADF8UEZmKDl1w/UxvjeyAeX
+ kghYkY3bkK6gcIYXdLRfJw12GbvMioSguvVzASVHG8h7NbNjk1yur6AONfbUpXKSNZ0skV8V
+ fG+ppbaY+zQofsSMoj5gP0amwbwvPzVqZCYJai81VobefTX2MZM2Mg/ThBVtGyzV3NeCpnBa
+ 8AX3s9rrX2XUoCibYotbbxx9afZYUFyflOc7kEpc9uJXIdaxS2Z6MnYLHsyVjiU6tzKCiVOU
+ KJevqvzPXJmy0xaOVf7mhFSNQyJTrZpLa+tvB1DQRS08CqYtIMxRrVtC0t0LFeQGly6bOngr
+ ircurWJiJKbSXVstLHgWYiq3/GmCSx/82ObeLO3PftklpRj8d+kFbrvrqBgjWtMH4WtK5uN5
+ 1WJ71hWJfNchKRlaJ3GWy8KolCAoGsQMovn/ZEXxrGs1ndafu47yXOpuDAozoHTBGvuSXSZo
+ ythk/0EAuz5IkwkhYBT1MGIAvNSn9ivE5aRnBazugy0rTRkVggHvt3/7flFHlGVGpBHxFUwb
+ /a4UjJBPtIwa4tWR8B1Ma36S8Jk456k2n1id7M0LQ+eqstmp6Y+UB+pt9NX6t0Slw1NCdYTW
+ gJezWTVKF7pmTdXszXGxlc9kTrVUz04PqPjnYbv5UWuDd2eyzGjrrFOsJEi8OK2d2j4FfF++
+ AzOMdW09JVqejQARAQABwsF2BBgBCAAgFiEEbF+pj/I7JePKMl6Fct6KD1TwOgwFAl/0ZFUC
+ GwwACgkQct6KD1TwOgxUfg//eAoYc0Vm4NrxymfcY30UjHVD0LgSvU8kUmXxil3qhFPS7KA+
+ y7tgcKLHOkZkXMX5MLFcS9+SmrAjSBBV8omKoHNo+kfFx/dUAtz0lot8wNGmWb+NcHeKM1eb
+ nwUMOEa1uDdfZeKef/U/2uHBceY7Gc6zPZPWgXghEyQMTH2UhLgeam8yglyO+A6RXCh+s6ak
+ Wje7Vo1wGK4eYxp6pwMPJXLMsI0ii/2k3YPEJPv+yJf90MbYyQSbkTwZhrsokjQEaIfjrIk3
+ rQRjTve/J62WIO28IbY/mENuGgWehRlTAbhC4BLTZ5uYS0YMQCR7v9UGMWdNWXFyrOB6PjSu
+ Trn9MsPoUc8qI72mVpxEXQDLlrd2ijEWm7Nrf52YMD7hL6rXXuis7R6zY8WnnBhW0uCfhajx
+ q+KuARXC0sDLztcjaS3ayXonpoCPZep2Bd5xqE4Ln8/COCslP7E92W1uf1EcdXXIrx1acg21
+ H/0Z53okMykVs3a8tECPHIxnre2UxKdTbCEkjkR4V6JyplTS47oWMw3zyI7zkaadfzVFBxk2
+ lo/Tny+FX1Azea3Ce7oOnRUEZtWSsUidtIjmL8YUQFZYm+JUIgfRmSpMFq8JP4VH43GXpB/S
+ OCrl+/xujzvoUBFV/cHKjEQYBxo+MaiQa1U54ykM2W4DnHb1UiEf5xDkFd4=
+In-Reply-To: <CACfW=qrCrXM6Et=Yafug00pbYZzifhVGLhdLMsdYiYXSh=tGFA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 7/17/2024 12:10 AM, Jim Quinlan wrote:
-> On Sat, Jul 13, 2024 at 3:12 PM Amit Singh Tomar <amitsinght@marvell.com> wrote:
+On 16.07.2024 14:13, George-Daniel Matei wrote:
+> On Thu, Jul 11, 2024 at 7:45 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
 >>
->> On 7/11/2024 3:46 AM, Jim Quinlan wrote:
->>> The 7712 SOC has a bridge reset which can be described in the device tree.
->>> If it is present, use it. Otherwise, continue to use the legacy method to
->>> reset the bridge.
+>> On 10.07.2024 17:09, George-Daniel Matei wrote:
+>>> Hi,
 >>>
->>> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
->>> ---
->>>    drivers/pci/controller/pcie-brcmstb.c | 22 +++++++++++++++++-----
->>>    1 file changed, 17 insertions(+), 5 deletions(-)
+>>>>> Added aspm suspend/resume hooks that run
+>>>>> before and after suspend and resume to change
+>>>>> the ASPM states of the PCI bus in order to allow
+>>>>> the system suspend while trying to prevent card hangs
+>>>>
+>>>> Why is this needed?  Is there a r8169 defect we're working around?
+>>>> A BIOS defect?  Is there a problem report you can reference here?
+>>>>
 >>>
->>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
->>> index c257434edc08..92816d8d215a 100644
->>> --- a/drivers/pci/controller/pcie-brcmstb.c
->>> +++ b/drivers/pci/controller/pcie-brcmstb.c
->>> @@ -265,6 +265,7 @@ struct brcm_pcie {
->>>        enum pcie_type          type;
->>>        struct reset_control    *rescal;
->>>        struct reset_control    *perst_reset;
->>> +     struct reset_control    *bridge;
->>>        int                     num_memc;
->>>        u64                     memc_size[PCIE_BRCM_MAX_MEMC];
->>>        u32                     hw_rev;
->>> @@ -732,12 +733,19 @@ static void __iomem *brcm7425_pcie_map_bus(struct pci_bus *bus,
->>>
->>>    static void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val)
->>>    {
->>> -     u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
->>> -     u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
->>> +     if (pcie->bridge) {
->>> +             if (val)
->>> +                     reset_control_assert(pcie->bridge);
->>> +             else
->>> +                     reset_control_deassert(pcie->bridge);
->>> +     } else {
->>> +             u32 tmp, mask =  RGR1_SW_INIT_1_INIT_GENERIC_MASK;
->>> +             u32 shift = RGR1_SW_INIT_1_INIT_GENERIC_SHIFT;
->>>
->>> -     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
->>> -     tmp = (tmp & ~mask) | ((val << shift) & mask);
->>> -     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
->>> +             tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
->>> +             tmp = (tmp & ~mask) | ((val << shift) & mask);
->>> +             writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
->>> +     }
->>>    }
->>>
->>>    static void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32 val)
->>> @@ -1621,6 +1629,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->>>        if (IS_ERR(pcie->perst_reset))
->>>                return PTR_ERR(pcie->perst_reset);
->>>
->>> +     pcie->bridge = devm_reset_control_get_optional_exclusive(&pdev->dev, "bridge");
->>> +     if (IS_ERR(pcie->bridge))
->>> +             return PTR_ERR(pcie->bridge);
->> How about using "dev_err_probe," which utilizes "dev_err" for logging
->> error messages and recording the deferred probe reason?
+>>> We encountered this issue while upgrading from kernel v6.1 to v6.6.
+>>> The system would not suspend with 6.6. We tracked down the problem to
+>>> the NIC of the device, mainly that the following code was removed in
+>>> 6.6:
+>>>> else if (tp->mac_version >= RTL_GIGA_MAC_VER_46)
+>>>>         rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1_2);1
+>>
+>> With this (older) 6.1 version everything is ok?
+>> Would mean that L1.1 is active and the system suspends (STR?) properly
+>> also with L1.1 being active.
+>>
+> Yes, with 6.1 everything was ok. L1 was active and just the L1.1 substate
+> was enabled, L1.2 was disabled.
 > 
-> Hello Amit,
-> 
-> Someone else brought this up and I want to defer moving to
-> dev_err_probe() in a future series.  I'd like to get this series out
-> now as Stan is waiting to apply his commits on top of it.
-> 
+>> Under 6.6 per default L1 (incl. sub-states) is disabled.
+>> Then you manually enable L1 (incl. L1.1, but not L1.2?) via sysfs,
+>> and now the system hangs on suspend?
+>>
+> Yes, in 6.6 L1 (+substates) is disabled. Like Bjorn mentioned, I
+> think that is because of 90ca51e8c654 ("r8169:
+> fix ASPM-related issues on a number of systems with NIC version from
+> RTL8168h". With L1 disabled the system would not suspend so I enabled
+> back L1 along with just L1.1 substate through sysfs, just to test, and
+> saw that the system could
 
-Sure, that's fine with me.
+It still sounds very weird that a system does not suspend to ram
+just because ASPM L1 is disabled for a single device.
+What if a PCI device is used which doesn't support ASPM?
 
-Thanks,
--Amit
+Which subsystem fails to suspend? Can you provide a log showing
+the suspend error?
+
+> suspend again.  L1 is disabled by default for a reason, that's because
+> it could cause tx timeouts. So to try to work around the possible timeouts
+> I thought  of changing the ASPM states before suspending and then
+> restoring on resume.
+> 
+>> Is this what you're saying? Would be strange because in both cases
+>> L1.1 is active when suspending.
+>>
+>>
+>>> For the listed devices, ASPM L1 is disabled entirely in 6.6. As for
+>>> the reason, L1 was observed to cause some problems
+>>> (https://bugzilla.kernel.org/show_bug.cgi?id=217814). We use a Raptor
+>>> Lake soc and it won't change residency if the NIC doesn't have L1
+>>> enabled. I saw in 6.1 the following comment:
+>>>> Chips from RTL8168h partially have issues with L1.2, but seem
+>>>> to work fine with L1 and L1.1.
+>>> I was thinking that disabling/enabling L1.1 on the fly before/after
+>>> suspend could help mitigate the risk associated with L1/L1.1 . I know
+>>> that ASPM settings are exposed in sysfs and that this could be done
+>>> from outside the kernel, that was my first approach, but it was
+>>> suggested to me that this kind of workaround would be better suited
+>>> for quirks. I did around 1000 suspend/resume cycles of 16-30 seconds
+>>> each (correcting the resume dev->bus->self being configured twice
+>>> mistake) and did not notice any problems. What do you think, is this a
+>>> good approach ... ?
+>>>
+>>>>> +             //configure device
+>>>>> +             pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+>>>>> +                                                PCI_EXP_LNKCTL_ASPMC, 0);
+>>>>> +
+>>>>> +             pci_read_config_word(dev->bus->self,
+>>>>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>> +                                  &val);
+>>>>> +             val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
+>>>>> +             pci_write_config_word(dev->bus->self,
+>>>>> +                                   dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>> +                                   val);
+>>>> Updates the parent (dev->bus->self) twice; was the first one supposed
+>>>> to update the device (dev)?
+>>> Yes, it was supposed to update the device (dev). It's my first time
+>>> sending a patch and I messed something up while doing some style
+>>> changes, I will correct it. I'm sorry for that.
+>>>
+>>>> This doesn't restore the state as it existed before suspend.  Does
+>>>> this rely on other parts of restore to do that?
+>>> It operates on the assumption that after driver initialization
+>>> PCI_EXP_LNKCTL_ASPMC is 0 and that there are no states enabled in
+>>> CTL1. I did a lspci -vvv dump on the affected devices before and after
+>>> the quirks ran and saw no difference. This could be improved.
+>>>
+>>>> What is the RTL8168 chip version used on these systems?
+>>> It should be RTL8111H.
+>>>
+>>>> What's the root cause of the issue?
+>>>> A silicon bug on the host side?
+>>> I think it's the ASPM implementation of the soc.
+>>>
+>>>> ASPM L1 is disabled per default in r8169. So why is the patch needed
+>>>> at all?
+>>> Leaving it disabled all the time prevents the system from suspending.
+>>>
+>>> Thank you,
+>>> George-Daniel Matei
+>>>
+>>>
+>>>
+>>>
+>>>
+>>> On Tue, Jul 9, 2024 at 12:15 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>>>>
+>>>> On 08.07.2024 19:23, Bjorn Helgaas wrote:
+>>>>> [+cc r8169 folks]
+>>>>>
+>>>>> On Mon, Jul 08, 2024 at 03:38:15PM +0000, George-Daniel Matei wrote:
+>>>>>> Added aspm suspend/resume hooks that run
+>>>>>> before and after suspend and resume to change
+>>>>>> the ASPM states of the PCI bus in order to allow
+>>>>>> the system suspend while trying to prevent card hangs
+>>>>>
+>>>>> Why is this needed?  Is there a r8169 defect we're working around?
+>>>>> A BIOS defect?  Is there a problem report you can reference here?
+>>>>>
+>>>>
+>>>> Basically the same question from my side. Apparently such a workaround
+>>>> isn't needed on any other system. And Realtek NICs can be found on more
+>>>> or less every consumer system. What's the root cause of the issue?
+>>>> A silicon bug on the host side?
+>>>>
+>>>> What is the RTL8168 chip version used on these systems?
+>>>>
+>>>> ASPM L1 is disabled per default in r8169. So why is the patch needed
+>>>> at all?
+>>>>
+>>>>> s/Added/Add/
+>>>>>
+>>>>> s/aspm/ASPM/ above
+>>>>>
+>>>>> s/PCI bus/device and parent/
+>>>>>
+>>>>> Add period at end of sentence.
+>>>>>
+>>>>> Rewrap to fill 75 columns.
+>>>>>
+>>>>>> Signed-off-by: George-Daniel Matei <danielgeorgem@chromium.org>
+>>>>>> ---
+>>>>>>  drivers/pci/quirks.c | 142 +++++++++++++++++++++++++++++++++++++++++++
+>>>>>>  1 file changed, 142 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>>>>> index dc12d4a06e21..aa3dba2211d3 100644
+>>>>>> --- a/drivers/pci/quirks.c
+>>>>>> +++ b/drivers/pci/quirks.c
+>>>>>> @@ -6189,6 +6189,148 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b0, aspm_l1_acceptable_latency
+>>>>>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
+>>>>>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
+>>>>>>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
+>>>>>> +
+>>>>>> +static const struct dmi_system_id chromebox_match_table[] = {
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Brask"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Aurash"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +            {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Bujia"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Gaelin"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Gladios"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Hahn"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Jeev"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Kinox"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Kuldax"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Lisbon"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +                    .matches = {
+>>>>>> +                    DMI_MATCH(DMI_PRODUCT_NAME, "Moli"),
+>>>>>> +                    DMI_MATCH(DMI_BIOS_VENDOR, "coreboot"),
+>>>>>> +            }
+>>>>>> +    },
+>>>>>> +    { }
+>>>>>> +};
+>>>>>> +
+>>>>>> +static void rtl8169_suspend_aspm_settings(struct pci_dev *dev)
+>>>>>> +{
+>>>>>> +    u16 val = 0;
+>>>>>> +
+>>>>>> +    if (dmi_check_system(chromebox_match_table)) {
+>>>>>> +            //configure parent
+>>>>>> +            pcie_capability_clear_and_set_word(dev->bus->self,
+>>>>>> +                                               PCI_EXP_LNKCTL,
+>>>>>> +                                               PCI_EXP_LNKCTL_ASPMC,
+>>>>>> +                                               PCI_EXP_LNKCTL_ASPM_L1);
+>>>>>> +
+>>>>>> +            pci_read_config_word(dev->bus->self,
+>>>>>> +                                 dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>>> +                                 &val);
+>>>>>> +            val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
+>>>>>> +                  PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
+>>>>>> +                  PCI_L1SS_CTL1_ASPM_L1_1;
+>>>>>> +            pci_write_config_word(dev->bus->self,
+>>>>>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>>> +                                  val);
+>>>>>> +
+>>>>>> +            //configure device
+>>>>>> +            pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+>>>>>> +                                               PCI_EXP_LNKCTL_ASPMC,
+>>>>>> +                                               PCI_EXP_LNKCTL_ASPM_L1);
+>>>>>> +
+>>>>>> +            pci_read_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, &val);
+>>>>>> +            val = (val & ~PCI_L1SS_CTL1_L1SS_MASK) |
+>>>>>> +                  PCI_L1SS_CTL1_PCIPM_L1_2 | PCI_L1SS_CTL1_PCIPM_L1_2 |
+>>>>>> +                  PCI_L1SS_CTL1_ASPM_L1_1;
+>>>>>> +            pci_write_config_word(dev, dev->l1ss + PCI_L1SS_CTL1, val);
+>>>>>> +    }
+>>>>>> +}
+>>>>>> +
+>>>>>> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_REALTEK, 0x8168,
+>>>>>> +                      rtl8169_suspend_aspm_settings);
+>>>>>> +
+>>>>>> +static void rtl8169_resume_aspm_settings(struct pci_dev *dev)
+>>>>>> +{
+>>>>>> +    u16 val = 0;
+>>>>>> +
+>>>>>> +    if (dmi_check_system(chromebox_match_table)) {
+>>>>>> +            //configure device
+>>>>>> +            pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
+>>>>>> +                                               PCI_EXP_LNKCTL_ASPMC, 0);
+>>>>>> +
+>>>>>> +            pci_read_config_word(dev->bus->self,
+>>>>>> +                                 dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>>> +                                 &val);
+>>>>>> +            val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
+>>>>>> +            pci_write_config_word(dev->bus->self,
+>>>>>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>>> +                                  val);
+>>>>>> +
+>>>>>> +            //configure parent
+>>>>>> +            pcie_capability_clear_and_set_word(dev->bus->self,
+>>>>>> +                                               PCI_EXP_LNKCTL,
+>>>>>> +                                               PCI_EXP_LNKCTL_ASPMC, 0);
+>>>>>> +
+>>>>>> +            pci_read_config_word(dev->bus->self,
+>>>>>> +                                 dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>>> +                                 &val);
+>>>>>> +            val = val & ~PCI_L1SS_CTL1_L1SS_MASK;
+>>>>>> +            pci_write_config_word(dev->bus->self,
+>>>>>> +                                  dev->bus->self->l1ss + PCI_L1SS_CTL1,
+>>>>>> +                                  val);
+>>>>>
+>>>>> Updates the parent (dev->bus->self) twice; was the first one supposed
+>>>>> to update the device (dev)?
+>>>>>
+>>>>> This doesn't restore the state as it existed before suspend.  Does
+>>>>> this rely on other parts of restore to do that?
+>>>>>
+>>>>>> +    }
+>>>>>> +}
+>>>>>> +
+>>>>>> +DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_REALTEK, 0x8168,
+>>>>>> +                     rtl8169_resume_aspm_settings);
+>>>>>>  #endif
+>>>>>>
+>>>>>>  #ifdef CONFIG_PCIE_DPC
+>>>>>> --
+>>>>>> 2.45.2.803.g4e1b14247a-goog
+>>>>>>
+>>>>
+>>
+
 
