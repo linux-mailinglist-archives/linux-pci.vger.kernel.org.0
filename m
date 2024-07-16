@@ -1,127 +1,130 @@
-Return-Path: <linux-pci+bounces-10401-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10402-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0EE3933255
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:42:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E7439332A5
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 22:11:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CC88282A30
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 19:42:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2ADCB2832E4
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 20:11:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAE2B19FA8F;
-	Tue, 16 Jul 2024 19:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B88619DF73;
+	Tue, 16 Jul 2024 20:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAHy4RtG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDGmCwWn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABF1195B27;
-	Tue, 16 Jul 2024 19:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0886D19B3EE
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 20:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721158929; cv=none; b=Kn7nKYjeV0QnzZcskpfCobzIrd1kWXS84tY1babhfrKoA9TauvgWuAUTVQfWI2OMH/xGntz5aSGGcbQRhJkSid60mBxu6VsBYB2U21/3JNYKNbRIgZ4snh4AdajZCyATPklpi12ME7gbLMfIZ/XIpDF7DI1CVjatw1TNadcMDcU=
+	t=1721160656; cv=none; b=UfnG5HfGU1farUH7ueA8c9ex/XQjoZCkoaWo/m+bvUBLiUYje/dia+5S8efB5gKSJ6KHOted6rUfVmT2cUQFoVZJooIa0RHfEv5kOALyOKxi47BYs62kQ6otLo2WAm/VlDqGdCiP/emrt3/F5rPJToxEcKhVsG1oHb8xZ25strA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721158929; c=relaxed/simple;
-	bh=6DvLx3sKolVTpOiafMSeKq1oULOoas8XiUb/mMWIEbY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J9nH5BoHHcZzYahtH8ROT4DNRwOnu61lcDeCYuVUGrIoGQsPtmwRdmUhSNZYJ7CLE3rkss3rM88qsGZI53CAzQ6/9cg+WLXL82d+g0IHOH1AAO4VC0j1DMrFiKjtQYZisi3qUfFLmYd/iS7cVIkvmdWe+0EW5VEaGCUU0lRQErw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAHy4RtG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61064C116B1;
-	Tue, 16 Jul 2024 19:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721158929;
-	bh=6DvLx3sKolVTpOiafMSeKq1oULOoas8XiUb/mMWIEbY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CAHy4RtGF80Hu9aODyMUCooU8tqaZoGRo6kb6XRWkaGuYAMzJqoCzthEATl4QjSAL
-	 7TElFupQl6IkGWfM3mEQ+szvvSmHi3W/9ul54rAa8RcxByDLQR15D+HAqsnQw7JxIy
-	 H504OTvG3j4MfcGqAssPtrjqIhkWm0gowykOHzbu07lquvz7tkfbbKqHR7xMqCf6x2
-	 m8+Yq//4M6qV9ycqiWjftgD7h2K71SOtL+6Os8fd+imUqiQVwRvtVfwAi+BYBihz09
-	 hAJ4El+nhDbKYnmA1d9uocsbx18fXCgFWH9nTd8M4NhFtykm9vbOv7G9d51EQ72fPZ
-	 T4xEfLOlSD7ow==
-Message-ID: <c696fac6-1f26-437d-84fc-b14eb15ccce4@kernel.org>
-Date: Tue, 16 Jul 2024 21:42:01 +0200
+	s=arc-20240116; t=1721160656; c=relaxed/simple;
+	bh=6e4uF3PDb6zCI/M1+hUeYkltQ9Exj2kKi2I18RA898Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rwtg1Oksm2H0IBxKdJgEFAQNkM+UWONs7pMk6i/BbRmN3gb7sOyQ9CKx6cWX4LR9W9/ILnBdAC6jsR62MaJd5v1Vd82N69Lo9MTcR9BD6TAydt4Q3H/EwtxJpq9S816AUm+LuN1ZIGV4KfyDv+mlSSTalFl8qIEKAQAfoHa2xLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oDGmCwWn; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e05e7dccfb1so325578276.2
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 13:10:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721160654; x=1721765454; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=k6o0C+IKAqmJeb1QfPBhGO124UhbiVtdAxc9Xgn0aeM=;
+        b=oDGmCwWn90HZFDned1OEPULKTS6RdHg4aLAsL8NSbuZQo2gRJVGEoZg3z1pSFFY96c
+         gZ55uAflIamFCRftlzVhG4Ii15r2GIY43H3LmU+FFrYAXn3rewy1PvXeZ9U3PWWQG/6z
+         CIyviRjddmto9SGiFAyDVCwxr/MJOTZH9LPSGoW2MA+IBowjn1i5nwE5WqP8iOKMaViU
+         L7eCAQSb/ru2efPANWHUV14bCfifv0dzUdSX8Z8+QEbbIrJiGAzHi0cMj2oH7MkpaRT9
+         1OMZeV+B4NnT4TIVTOjX0lm6sXep/xYvll1hDSEvvIWIq8WU8kl/e+tY782lfZCiIOw1
+         mNQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721160654; x=1721765454;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k6o0C+IKAqmJeb1QfPBhGO124UhbiVtdAxc9Xgn0aeM=;
+        b=APWjET+ROMgIfPzVwNxFIi5n3ontH5641SRDXLlPwxAwgjL42i/J+DzTSIm2BKPeqV
+         hqOL4vr9KdnxCOYbjI6c2IxPz4Qxl7Nhzzse5WC3OfOJ1ko37h5psy/9bXfSGWqXEQrQ
+         3Gs7tTJ65yk+jvz+XpDjR8TFVBpQqBcVdJKcQ6+oOVuKEnZe0SRwd/Cesk5Spj1sX84c
+         RSgU08glJEyC1vMFiqxUtMzKcUYrwATY/0zOfx35eIbVZbcLqH9ZDEX145LqcnNuOv7b
+         3qWR4aNSzk07htcI0Ck4OgsNpQ219EI9PD5L8lwJ3nIFQ/iXi6o5vOVbltITEzsOgB/j
+         YJJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiuftYPPCqwNMsi7AbdaApe9RFLJiuL+TnkOsir02bgA5FIUlu6Ftl47+YjutBHR2PHPNxVQsGpGw8qW9llBwQ7/OFIU8tpYjq
+X-Gm-Message-State: AOJu0Yyxmkh6G1RjouGu/uRtK2eLurBltd+t/cgDSAcXIafZFLSGcoyO
+	YQ4tzS2OSGtcrV5YvlbRE92ACfTsbmHIhBfzTNXs65xEqTf4mjfrDjwNiNYdBIcdVqzwa1ylnAp
+	Cbla92Hvg0fXDSUBxJreXFZse4Qm6QaMne7+3PA==
+X-Google-Smtp-Source: AGHT+IEyWqLHoPQ96lQsYyho252NePtS7Mu7PAoguxVebnklP1PTUgbyzdxEN+r88MBwR5XfMwMKyspOnXw1eHJyDto=
+X-Received: by 2002:a05:6902:2489:b0:df7:8f1b:3ea2 with SMTP id
+ 3f1490d57ef6-e05d56581efmr4135689276.5.1721160654089; Tue, 16 Jul 2024
+ 13:10:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 1/4] dt-bindings: PCI: qcom: Document the IPQ9574 PCIe
- controller.
-To: Sricharan R <quic_srichara@quicinc.com>, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
- manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: devi priya <quic_devipriy@quicinc.com>
-References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
- <20240716092347.2177153-2-quic_srichara@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240716092347.2177153-2-quic_srichara@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240716152318.207178-1-brgl@bgdev.pl> <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
+ <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com> <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Tue, 16 Jul 2024 22:10:43 +0200
+Message-ID: <CACMJSeuSS1GBeMP66xt8CP3=6X9xNUZvj9cZHm_Lav6iaw9Gdw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 16/07/2024 11:23, Sricharan R wrote:
-> From: devi priya <quic_devipriy@quicinc.com>
-> 
-> Document the PCIe controller on IPQ9574 platform.
+On Tue, 16 Jul 2024 at 21:02, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, 16 Jul 2024 at 11:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > But this patch does it. PCI_PWRCTL_PWRSEQ becomes a hidden symbol and
+> > the entire submenu for PCI_PWRCTL disappears. There's no question in
+> > Kconfig anymore.
+>
+> Yes, but look here:
+>
+>         default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
+>
+> That has at least two issues:
+>
+>  - what if ATH11K_PCI or ATH12K is built-in and needs this driver?
+> "default m" is *NOT* valid.
+>
+>  - what happens when you add new drivers? You keep making this line
+> longer and more complicated?
+>
+> See why I say "use select" instead? It means that the drivers that
+> need it can select it, and you avoid complicated "list X drivers"
+> things, but you can also get the *right* selection criteria, so that a
+> built-in driver will select a built-in PCI_PWRCTL_PWRSEQ option.
+>
+>            Linus
 
-Subjects are without full stop.
+Should we do:
 
-With that fixed:
+    select PCI_PWRCTL_PWRSEQ if ARCH_QCOM
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+in the ATH11K_PCI and ATH12K Kconfig entries? Am I getting this right?
 
-Best regards,
-Krzysztof
+Because unconditional select here makes no sense - 99,9% users of ATH
+drivers don't need PCI_PWRCTL_PWRSEQ.
 
+Or add a new symbol like ARCH_NEED_PWRCTL_PWRSEQ and select it from
+ARCH_QCOM (and later from any other arch that will use it) and do:
+
+    select PCI_PWRCTL_PWRSEQ if ARCH_NEED_PWRCTL_PWRSEQ
+
+in ATH entries?
+
+Bartosz
 
