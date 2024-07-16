@@ -1,207 +1,200 @@
-Return-Path: <linux-pci+bounces-10367-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10368-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01BB19323E3
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 12:30:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3335B93261A
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 14:03:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20C151C20D58
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:30:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B48AD1F226FA
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 12:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 387B913D601;
-	Tue, 16 Jul 2024 10:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A211993B8;
+	Tue, 16 Jul 2024 12:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqyuFhOD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="umfoXaB2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E43B143875;
-	Tue, 16 Jul 2024 10:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CB01CA9F
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 12:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721125809; cv=none; b=RCjk4jERu26Qc7/UfmV+pHcfeh36BCfmyrLjaeRWAQEM/F0cX0NDif9UPJqv8rXNRcA/jBA2rsDo29HnkE2wdYUl/AVVOtQ18sUmQnQCc3HIbmaCA2Y532VDoxfs0QA0Li+RQ57emsZGkW9rGa8xevzd0xmIc9KRCavx7qpgmk8=
+	t=1721131408; cv=none; b=b5l7dJ+NkoWb92TwoAGz2cx6uVR4ZSD2Y1xI/2AnuRUFdbqMduGOklaayAuaTP5uDCqAPnxLN1GGgCoBshIuWp7Qg+vqPkHJQnRqWHEvHkcbHwP+O8m4KsK8zwB2pVh8zo/iJeco2fmUyozoWsRg+Rt87WBfA7dDYoRIpHgKc4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721125809; c=relaxed/simple;
-	bh=QysKPyiFau2fw2f0p+pSgBtnoBOL8OjYbm8noFYeFeY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EFTS3DC5wxGLP/owk20ka8CW5GT8eKTgpe5Dq1nKQRWNqL0BOBCRJsLDm16D0RphJE5U1vJZ4jF8R2zk8MvRjM3Ys+lnCiamzt0J6SM1EGYYCv1TGBJXVv8J4yf/K82vdr8byKRQANJdCzZ0/RZKZ5640bHn0Qc9dG1NnYEyNvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqyuFhOD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E84AC116B1;
-	Tue, 16 Jul 2024 10:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721125808;
-	bh=QysKPyiFau2fw2f0p+pSgBtnoBOL8OjYbm8noFYeFeY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rqyuFhODQa3Qr5Fjyld3vuMaw73GnEGfh7LiSlIU39EKJ6H6OuvH7DpkPRCVmIO2D
-	 fnSFR9X3Zd3yFE7NAMVIM+2zmmZsGd1KsjQp6yCBL3xqSVCTEDihI/N5+A7RUF6s3+
-	 uEnXbXRkSpNlv8ngsrYtTQ1gXPRYCPKIAc+DnsxuVrWdRPgV4xz+ArhaF4bXvuOjLY
-	 bv5phdTOyK3wSd0wgm8N3BrCTJappg15Km3/XMLexZn8BOqN3HVoD5UUo/CpPrjCwT
-	 6ZBAL7iRhgoDMIjI1yqvEGsLJELRBHmbW7ay/1NLHoCAK/tyaYw4EyEV26WZuuZRhk
-	 Lrq9p3Bow9nCw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sTfRd-00ClkI-MZ;
-	Tue, 16 Jul 2024 11:30:05 +0100
-Date: Tue, 16 Jul 2024 11:30:05 +0100
-Message-ID: <86r0bt39zm.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	anna-maria@linutronix.de,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	festevam@gmail.com,
-	bhelgaas@google.com,
-	rdunlap@infradead.org,
-	vidyas@nvidia.com,
-	ilpo.jarvinen@linux.intel.com,
-	apatel@ventanamicro.com,
-	kevin.tian@intel.com,
-	nipun.gupta@amd.com,
-	den@valinux.co.jp,
-	andrew@lunn.ch,
-	gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	alex.williamson@redhat.com,
-	will@kernel.org,
-	lorenzo.pieralisi@arm.com,
-	jgg@mellanox.com,
-	ammarfaizi2@gnuweeb.org,
-	robin.murphy@arm.com,
-	lpieralisi@kernel.org,
-	nm@ti.com,
-	kristo@kernel.org,
-	vkoul@kernel.org,
-	okaya@kernel.org,
-	agross@kernel.org,
-	andersson@kernel.org,
-	mark.rutland@arm.com,
-	shameerali.kolothum.thodi@huawei.com,
-	yuzenghui@huawei.com,
-	shivamurthy.shastri@linutronix.de
-Subject: Re: [patch V4 00/21] genirq, irqchip: Convert ARM MSI handling to per device MSI domains
-In-Reply-To: <ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
-References: <20240623142137.448898081@linutronix.de>
-	<ZpUFl4uMCT8YwkUE@hovoldconsulting.com>
-	<878qy26cd6.wl-maz@kernel.org>
-	<ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1721131408; c=relaxed/simple;
+	bh=mxky7Z35mYu8dOsmCPjLx3OpqGDfDGLLRBHm5XgFQxw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aFK7Py480krS9AVeAmjM5axlgN2eyen3zvnWA2WaOTgZfP3hu50uYiqGL5FwQSzQqjNVS/19xWb9fi/wAYSm6Sx6mmB9/8dKTfGbxGcykbXZDc5c4D7Bk3XiqZOISVFM22KGJl+Y85MRUTZ3RONKzaMmbBz67U/RHIcXlQIHqyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=umfoXaB2; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52e9944764fso6260461e87.3
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 05:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721131405; x=1721736205; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2b7CP/wU73MNXl1V9QJJzs2YC0XsPlI+HUf1xHPYiO8=;
+        b=umfoXaB2yFa8LYHCw1l+miYESIIdoY308TivqoljPmCQxnj/f0yNV8obvkcxoJa0dd
+         /H7S8vmoF7AMJ8ndJYInVxe9JRdAOEXupfrboH0FrZBlK6J4/tsC4qmCIsvZ1fxRrlnA
+         NgESRP4+Cz9sC3kSmIK//tf3BAWf4g3i2Sg1lUVvg2p1vhLH06gnTorQrGzcF1JTdZ6d
+         xTDS18EJPaMtHL+l+oTmwiqFjzdX6db2tGDzYOo/onwqiaHnqBQC/iWBRauf/pdU8iDL
+         dExWuZBAZyeDXjYXBdhOq7G82RiWXzLVY2ngjLKlwR070MD6FX9v6sIaub71Tlogyjvl
+         mUOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721131405; x=1721736205;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2b7CP/wU73MNXl1V9QJJzs2YC0XsPlI+HUf1xHPYiO8=;
+        b=ZgOYP+70cSSPW/wPOFH+mL+zHinqZ9c9wKvTZtUA3aOhzpAWGaXbE2ogau9R2ZHaZ2
+         hSFbaPDSKU4NLQ74bdTmcQ/LrlvSzjRGR48dp6B602yK0g77NJB/Tj69nq/NzTm5NWf2
+         /GbZENft8Lv2lvSkTHydE2nOCSdSTiN4EGTrP5Hkv5Q03xVfA05jDEplVxVgZmd73lLN
+         q4Z1UoD2vGKNhXjDz9L4csQah/PIZ0ErMzfkWmZkWO2j26GuGf2vQC9i1Qx4kSfQ0Ly6
+         tBa9SNlzY9i7MCMW4iN4EMBg2lBUWV62DF0GjuocJa4gJ5jEHFVE0k1nVua97WWxT8yC
+         5w/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUmoub4B81LoK+ms9BYzVysqBCiRWqjgLR7/E16QpVcpasmN/sV0IpftBzu2txKIzMocx/EmSFA2PEHldxp+aNxMIsFBFz2oh0F
+X-Gm-Message-State: AOJu0YxvjhprjrV734QOhjdHScGqQ74wF/foJxT4+etqJa2zJBRVTOX2
+	220l2oKIjFlk2vdyNakHdIQt+oya5eTduryqv45OJg+moL1yr0KkshLFh5//yTk=
+X-Google-Smtp-Source: AGHT+IGYGqTgU5GXDT/ErWkLc2RaCe6gXE0v8od/sgqoKr/yVEl/EPpqQ3deVnUeRcsbcJkt+1QFFw==
+X-Received: by 2002:a05:6512:3196:b0:52c:9e51:c3f with SMTP id 2adb3069b0e04-52edf02aa16mr1372224e87.42.1721131404853;
+        Tue, 16 Jul 2024 05:03:24 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc7ff6fbsm306042166b.167.2024.07.16.05.03.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 05:03:24 -0700 (PDT)
+Message-ID: <dbd172e0-d7c6-4ecc-b8cd-1329a4b03374@linaro.org>
+Date: Tue, 16 Jul 2024 14:03:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: johan@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com, shivamurthy.shastri@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6 2/4] arm64: dts: qcom: ipq9574: Add PCIe PHYs and
+ controller nodes
+To: Sricharan R <quic_srichara@quicinc.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, andersson@kernel.org, manivannan.sadhasivam@linaro.org,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devi priya <quic_devipriy@quicinc.com>
+References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
+ <20240716092347.2177153-3-quic_srichara@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240716092347.2177153-3-quic_srichara@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 15 Jul 2024 15:10:01 +0100,
-Johan Hovold <johan@kernel.org> wrote:
+On 16.07.2024 11:23 AM, Sricharan R wrote:
+> From: devi priya <quic_devipriy@quicinc.com>
 > 
-> On Mon, Jul 15, 2024 at 01:58:13PM +0100, Marc Zyngier wrote:
-> > On Mon, 15 Jul 2024 12:18:47 +0100,
-> > Johan Hovold <johan@kernel.org> wrote:
-> > > On Sun, Jun 23, 2024 at 05:18:31PM +0200, Thomas Gleixner wrote:
-> > > > This is version 4 of the series to convert ARM MSI handling over to
-> > > > per device MSI domains.
+> Add PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
+> found on IPQ9574 platform. The PCIe0 & PCIe1 are 1-lane Gen3
+> host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
 > 
-> > > This series only showed up in linux-next last Friday and broke interrupt
-> > > handling on Qualcomm platforms like sc8280xp (e.g. Lenovo ThinkPad X13s)
-> > > and x1e80100 that use the GIC ITS for PCIe MSIs.
-> > > 
-> > > I've applied the series (21 commits from linux-next) on top of 6.10 and
-> > > can confirm that the breakage is caused by commits:
-> > > 
-> > > 	3d1c927c08fc ("irqchip/gic-v3-its: Switch platform MSI to MSI parent")
-> > > 	233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
-> > > 
-> > > Applying the series up until the change before 3d1c927c08fc unbreaks the
-> > > wifi on one machine:
-> > > 
-> > > 	ath11k_pci 0006:01:00.0: failed to enable msi: -22
-> > > 	ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -22
-> > >
-> > > and backing up until the commit before 233db05bc37f makes the NVMe come
-> > > up again during boot on another.
-> > > 
-> > > I have not tried to debug this further.
-> > 
-> > I need a few things from you though, because you're not giving much to
-> > help you (and I'm travelling, which doesn't help).
-> 
-> Yeah, this was just an early heads up.
-> 
-> > Can you at least investigate what in ath11k_pci_alloc_msi() causes the
-> > wifi driver to be upset? Does it normally use a single MSI vector or
-> > MSI-X? How about your nVME device?
-> 
-> It uses multiple vectors, but now it falls back to trying to allocate a
-> single one and even that fails with -ENOSPC:
-> 
-> 	ath11k_pci 0006:01:00.0: ath11k_pci_alloc_msi - requesting one vector failed: -28
-> 
-> Similar for the NVMe, it uses multiple vectors normally, but now only
-> the AER interrupts appears to be allocated for each controller and there
-> is a GICv3 interrupt for the NVMe:
-> 
-> 208:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
-> 212:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
-> 214:        161          0          0          0          0          0          0          0     GICv3 562 Level     nvme0q0, nvme0q1
-> 215:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
->
+> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
 
-That's an indication of the driver having failed its MSI allocation
-and gone back to INTx signalling.
+[...]
 
-> Next boot, after disabling PCIe controller async probing, it's an MSI-X?!:
-> 
-> 201:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
-> 203:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
-> 205:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
-> 206:          0          0          0          0          0          0          0          0  ITS-PCI-MSIX-0002:01:00.0   0 Edge      nvme0q0
->
+> +
+> +			ranges = <0x01000000 0x0 0x00000000 0x10200000 0x0 0x100000>,  /* I/O */
+> +				 <0x02000000 0x0 0x10300000 0x10300000 0x0 0x7d00000>; /* MEM */
 
-So is this issue actually tied to the async probing? Does it always
-work if you disable it?
+Drop these comments, please
 
-> This time ath11k vector allocation succeeded, but the driver times out
-> eventually:
-> 
-> [    8.984619] ath11k_pci 0006:01:00.0: MSI vectors: 32
-> [   29.690841] ath11k_pci 0006:01:00.0: failed to power up mhi: -110
-> [   29.697136] ath11k_pci 0006:01:00.0: failed to start mhi: -110
-> [   29.703153] ath11k_pci 0006:01:00.0: failed to power up :-110
-> [   29.732144] ath11k_pci 0006:01:00.0: failed to create soc core: -110
-> [   29.738694] ath11k_pci 0006:01:00.0: failed to init core: -110
-> [   32.841758] ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -110
-> 
-> > It would also help if you could define the DEBUG symbol at the very
-> > top of irq-gic-v3-its.c and report the debug information that the ITS
-> > driver dumps.
-> 
-> See below (with synchronous probing of the pcie controllers).
+> +
+> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +
 
-I don't see much going wrong there, and the ITS driver correctly
-dishes out interrupts. I'll take the current -next for a ride on my
-own HW and see what happens.
+Inconsistent newline
 
-	M.
+> +			interrupt-names = "msi0",
+> +					  "msi1",
+> +					  "msi2",
+> +					  "msi3",
+> +					  "msi4",
+> +					  "msi5",
+> +					  "msi6",
+> +					  "msi7";
+> +
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 0 35 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +					<0 0 0 2 &intc 0 0 49 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +					<0 0 0 3 &intc 0 0 84 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +					<0 0 0 4 &intc 0 0 85 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
 
--- 
-Without deviation from the norm, progress is not possible.
+Drop these comments, please
+
+(all these comments apply to all the similar nodes)
+
+[...]
+
+> +
+> +		pcie3: pcie@18000000 {
+> +			compatible = "qcom,pcie-ipq9574";
+> +			reg =  <0x18000000 0xf1d>,
+> +			       <0x18000f20 0xa8>,
+> +			       <0x18001000 0x1000>,
+> +			       <0x000f0000 0x4000>,
+> +			       <0x18100000 0x1000>;
+> +			reg-names = "dbi", "elbi", "atu", "parf", "config";
+> +			device_type = "pci";
+> +			linux,pci-domain = <4>;
+
+Any reason the PCI domain for PCIeN is N+1? You can start at 0
+
+Konrad
 
