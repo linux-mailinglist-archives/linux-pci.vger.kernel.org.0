@@ -1,156 +1,167 @@
-Return-Path: <linux-pci+bounces-10358-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E745B93220D
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:41:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CCD1932253
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 10:58:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 254061C21BB7
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 08:41:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE5BB1C20A40
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 08:58:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42CEF17D374;
-	Tue, 16 Jul 2024 08:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1A2C1448ED;
+	Tue, 16 Jul 2024 08:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tJDOOh49"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYaCedXe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DF017CA19
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 08:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E0841A8E;
+	Tue, 16 Jul 2024 08:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721119282; cv=none; b=FEWWDkSanTsJY98vKaG5akl2ZGywJ5aN66T8I4YnSkoCCt/Og3+hBIMOBg55/YiKXPmAbWdzGdyjmSu+dpuQqh93zZV8W0NdfdsI5Slr/o5nL4ZHBrVp8f5e/2cgV1Cui+sQB3FFWhrEuYvCsTv9FqoTO4R4PMznxBrCIkaXWYo=
+	t=1721120300; cv=none; b=Abz0S/fv8MCscoZexT+fGo1d9x22CLEG4SLqiEsWeodv1eenqYvqM2zdFi7aFtFnrjYkXAzWZ1/pfQO4c2wBI3K7mUyKTuq7RL7f7QAmaZz263DJILC7aIsSEqujxUWwF5DON+9qryjSfZYq5MX7hz8Ki4+v+SxSQ5y3kNXqFYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721119282; c=relaxed/simple;
-	bh=WNymJro5dlv26B+surn01E8GmGRXJStnqiU6mG+qE64=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qGvwS6ui3jG+x3woWSRB/YQnoUbEE7IzY4GDUDmD4qt9hp2VBW6ioCUzBcDw8AgDS8+Kjk8GRB2OujuJg7czqHK27Ok1ZH0N6aILBEZ0Bigec5tjlWpu955MMxZ55MQM3RVFDqaBAm4NHml9SNSTRwj6UE9AKC//WzYnejYWGWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tJDOOh49; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-36816ff695dso1419666f8f.1
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 01:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721119279; x=1721724079; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wlYOPT3wlLjl2m/yJYxdg50G+hHzFjPas8Jb5Muv/MQ=;
-        b=tJDOOh497ZZvPc8qTh8fjbuM6VJfCasVln6l+A7OTHDz3GzIkVeEtlXURVC0x9g7ti
-         xqSSuAjowChXP4hnte5U+lZK5O7TQ1UAURuJneqVB0qeBJCzNC/YUlGoB/inMgA8+ibf
-         mwoXkvceu9TMj2X7smZ7dDVug8AfxuqtelLVIG6r9pYtWlc4nu8dM6JbuMJdrc/WbGVC
-         OWaiHcksZgyiysNrvK6OSLuFjZTFo6Ix2k0uJrfQwATkTe0GilLyPYz2P0IcqNdY9hLe
-         XmoqHGtBgB2Dr4TTMXm6Kx22YSb8yMyheo1mRJH1rp7iZapPzruq8fDTyNaoe3F0ADOL
-         jMmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721119279; x=1721724079;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wlYOPT3wlLjl2m/yJYxdg50G+hHzFjPas8Jb5Muv/MQ=;
-        b=U8Io7h6S6rPe/nmpIM6dntBCRiVXC4i84hEqjUFvMKzqfuqiHHrNPUnHhCMmyu7Unb
-         4GeyySG3b3PeCcTdjzsaFc0eNisB7gSyoIj4PNRrfbP3tm8onvucwgpR+Iz0v7J4snHp
-         I/mThTDIlUX2z4XQJ6GYltELVyZsg6iLM6uHqm9jfGTzLyUwIDGCTrVGssCeWk3zDLyS
-         vP5Gz0KKn7UEguyRR3Ea69VwhG84WZ7E4eSNAijn+VNEhD0DPwsCb4kxT9j+T9ZJGXPz
-         Ox/N39bIg/7SDKhb5hrEg9U+2JhVIvfCLkgHSOa0PArlu4zd9UfA2Z09jkgwM/0OCesR
-         MhQg==
-X-Gm-Message-State: AOJu0YxVLVOEG2sjN8ixUnKyWTNewHtKFNKKrSEN6tKWP4ZqBGHPTI1E
-	Ike3hrkMygvaRLjZV60Kj7RIrjQ3HLlqymB9YP5kg/GMFgT3ZMCvKNZPHjP+qvs=
-X-Google-Smtp-Source: AGHT+IHitN2iUSi+nETjW8vRkmCEH+FB1hHkmGru6BjWujgfY9Dcss3M0nBlN7VjyW58jL9G5NzyBg==
-X-Received: by 2002:a05:6000:1fa7:b0:366:ef25:de51 with SMTP id ffacd0b85a97d-3682631f774mr1064513f8f.49.1721119278530;
-        Tue, 16 Jul 2024 01:41:18 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:f5ba:a94c:e43a:d197? ([2a01:e0a:982:cbb0:f5ba:a94c:e43a:d197])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680dafbe5dsm8294386f8f.81.2024.07.16.01.41.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 01:41:18 -0700 (PDT)
-Message-ID: <f89e333b-6361-4f19-b1e8-d87ea6e4bbd6@linaro.org>
-Date: Tue, 16 Jul 2024 10:41:16 +0200
+	s=arc-20240116; t=1721120300; c=relaxed/simple;
+	bh=j0EqPXGuG0quxNlrfhnIBzFiLmPDYm3mbVK7absS/vE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=na1hpIlMhSOXbeMRaZuAhOMRHdPpJxfCnFiHdWZuc+7G6xgpNsZCeHQJ8lnjnvlx84b7P4RujxOanopGKGtAveRQNORVHBJRevBO6KfkvF0jFRa5oWhotuGYbVOlFNtmeAr4kiaDnw0gOpfjqZgoOpNhMheuim2xGTh0orBqU7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYaCedXe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8136CC116B1;
+	Tue, 16 Jul 2024 08:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721120300;
+	bh=j0EqPXGuG0quxNlrfhnIBzFiLmPDYm3mbVK7absS/vE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sYaCedXe89NSHfvs6/uFxg5inoi6tDWSof8byXQ44WD/VT+Un5E7E2Z2ga0jyKEBR
+	 HV5e+u4qTmk+xrrsxE1iaG3/4fRV5htwO0slIPXP4TFobSMJAvMsOm8jEa9cjH4ZoG
+	 ICZKqOZRZBvtZue0h1ANxQG8RojmiIFUaJ0Ppn6Is097DHtavZtU4U2fmPnpvNMQEw
+	 0KZb6OjvH4/6a9C1v6hxJ6e+L5ahVblxqElAv/fgarRH09Nw28Z4KVbRZz8XMXZe4l
+	 V37ADzPSgfdKIvo7Ouy/1ChP3plGbRoow5HNJCS2tOJnfoJEgtykR1gGHZgj61xCNS
+	 33/A1aoT1L40g==
+Date: Tue, 16 Jul 2024 09:58:12 +0100
+From: Will Deacon <will@kernel.org>
+To: Mayank Rana <quic_mrana@quicinc.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org, cassel@kernel.org,
+	yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com,
+	u.kleine-koenig@pengutronix.de, dlemoal@kernel.org,
+	amishin@t-argos.ru, thierry.reding@gmail.com, jonathanh@nvidia.com,
+	Frank.Li@nxp.com, ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com,
+	marek.vasut+renesas@gmail.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
+	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
+	quic_nitegupt@quicinc.com
+Subject: Re: [PATCH V2 7/7] PCI: host-generic: Add dwc PCIe controller based
+ MSI controller usage
+Message-ID: <20240716085811.GA19348@willie-the-truck>
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+ <1721067215-5832-8-git-send-email-quic_mrana@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 05/14] dt-bindings: PCI: qcom-ep: Document
- "linux,pci-domain" property
-To: manivannan.sadhasivam@linaro.org,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240715-pci-qcom-hotplug-v1-0-5f3765cc873a@linaro.org>
- <20240715-pci-qcom-hotplug-v1-5-5f3765cc873a@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240715-pci-qcom-hotplug-v1-5-5f3765cc873a@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1721067215-5832-8-git-send-email-quic_mrana@quicinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 15/07/2024 19:33, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Mon, Jul 15, 2024 at 11:13:35AM -0700, Mayank Rana wrote:
+> Add usage of Synopsys Designware PCIe controller based MSI controller to
+> support MSI functionality with ECAM compliant Synopsys Designware PCIe
+> controller. To use this functionality add device compatible string as
+> "snps,dw-pcie-ecam-msi".
 > 
-> 'linux,pci-domain' property provides the PCI domain number for the PCI
-> endpoint controllers in a SoC. If this property is not present, then an
-> unstable (across boots) unique number will be assigned.
-> 
-> Use this property to specify the domain number based on the actual hardware
-> instance of the PCI endpoint controllers in a SoC.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
 > ---
->   Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 1 +
->   1 file changed, 1 insertion(+)
+>  drivers/pci/controller/pci-host-generic.c | 92 ++++++++++++++++++++++++++++++-
+>  1 file changed, 91 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> index 46802f7d9482..1226ee5d08d1 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> @@ -280,4 +280,5 @@ examples:
->           phy-names = "pciephy";
->           max-link-speed = <3>;
->           num-lanes = <2>;
-> +        linux,pci-domain = <0>;
->       };
-> 
+> diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
+> index c2c027f..457ae44 100644
+> --- a/drivers/pci/controller/pci-host-generic.c
+> +++ b/drivers/pci/controller/pci-host-generic.c
+> @@ -8,13 +8,73 @@
+>   * Author: Will Deacon <will.deacon@arm.com>
+>   */
+>  
+> -#include <linux/kernel.h>
+>  #include <linux/init.h>
+> +#include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_address.h>
+>  #include <linux/pci-ecam.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  
+> +#include "dwc/pcie-designware-msi.h"
+> +
+> +struct dw_ecam_pcie {
+> +	void __iomem *cfg;
+> +	struct dw_msi *msi;
+> +	struct pci_host_bridge *bridge;
+> +};
+> +
+> +static u32 dw_ecam_pcie_readl(void *p_data, u32 reg)
+> +{
+> +	struct dw_ecam_pcie *ecam_pcie = (struct dw_ecam_pcie *)p_data;
+> +
+> +	return readl(ecam_pcie->cfg + reg);
+> +}
+> +
+> +static void dw_ecam_pcie_writel(void *p_data, u32 reg, u32 val)
+> +{
+> +	struct dw_ecam_pcie *ecam_pcie = (struct dw_ecam_pcie *)p_data;
+> +
+> +	writel(val, ecam_pcie->cfg + reg);
+> +}
+> +
+> +static struct dw_ecam_pcie *dw_pcie_ecam_msi(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_ecam_pcie *ecam_pcie;
+> +	struct dw_msi_ops *msi_ops;
+> +	u64 addr;
+> +
+> +	ecam_pcie = devm_kzalloc(dev, sizeof(*ecam_pcie), GFP_KERNEL);
+> +	if (!ecam_pcie)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	if (of_property_read_reg(dev->of_node, 0, &addr, NULL) < 0) {
+> +		dev_err(dev, "Failed to get reg address\n");
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	ecam_pcie->cfg = devm_ioremap(dev, addr, PAGE_SIZE);
+> +	if (ecam_pcie->cfg == NULL)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	msi_ops = devm_kzalloc(dev, sizeof(*msi_ops), GFP_KERNEL);
+> +	if (!msi_ops)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	msi_ops->readl_msi = dw_ecam_pcie_readl;
+> +	msi_ops->writel_msi = dw_ecam_pcie_writel;
+> +	msi_ops->pp = ecam_pcie;
+> +	ecam_pcie->msi = dw_pcie_msi_host_init(pdev, msi_ops, 0);
+> +	if (IS_ERR(ecam_pcie->msi)) {
+> +		dev_err(dev, "dw_pcie_msi_host_init() failed\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	dw_pcie_msi_init(ecam_pcie->msi);
+> +	return ecam_pcie;
+> +}
 
-I think this should be squashed into the previous patch
+Hmm. This looks like quite a lot of not-very-generic code to be adding
+to pci-host-generic.c. The file is now, what, 50% designware logic?
 
-Neil
+Will
 
