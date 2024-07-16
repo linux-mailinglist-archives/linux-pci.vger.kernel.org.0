@@ -1,135 +1,189 @@
-Return-Path: <linux-pci+bounces-10384-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10385-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE59C932FB3
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 20:08:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 845DB932FDA
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 20:21:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B4171C20EEF
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 18:08:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17AC61F22C8B
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 18:21:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67A161A01A6;
-	Tue, 16 Jul 2024 18:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFBAE1A00F7;
+	Tue, 16 Jul 2024 18:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OlsXrQcT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Moe6rkWH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B4C111AA
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 18:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68801C6B7;
+	Tue, 16 Jul 2024 18:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721153334; cv=none; b=Yp0m+44WYbVQhiry6u/LF4DoA/0YZ/wib5ouqtC0zp9wBeV3gXrjY+JCxJJ5eDqLLeGKlGUmfU/zwYLSDK7wQeWoYRXDjq43QbnSXAWtf3Sc3Mm4Lv7+d5RzS1c4NKda9SQUaaTQE7sLdwWlm7jTZdF05/j6mJOrdHvqV8rlu38=
+	t=1721154102; cv=none; b=B7NVmwOos10NXDIkFs5CCTGjQJJ/lpdMEXiKoGPh0zJrM22k5yy/gvGTgBOKJU1ofQOYesWYXzPeaqFShCJ/gNCqklgx4u+59WMJbwVtFPhDvyqrWtVohkuGiCx3v7cHQEAorQ2xjSqoRLPsfq3BuzZUhnVQ7Ix7mYi1zuYdnf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721153334; c=relaxed/simple;
-	bh=qhvpW9ySp0c3Q3YTMvLYSq349/2CtNUgGU8+Fc3TzLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RYmiP9rV65C6BU/zw081NcGSmyBgc11xjmGDC6/OWNUI0OD/DJOwXjKVrTJJkXdlwLfYGqgTfE3LTQTrfkd3yeHpgFWOuGFWFNCxMKlOrKJmnkIxjta16rZkjnUu+w55esI6QU60JlQgLf6hdObsYnjBsCGnfV05xhsoy+p6mIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OlsXrQcT; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52e976208f8so6345766e87.2
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 11:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1721153330; x=1721758130; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KOjYz7yaXpRDTT5QSfg/sdBFbTuHViu6MqiHwYD6nv8=;
-        b=OlsXrQcTw3YmwbV8vUTIhDfhRjflVdUKWDMGcYEC/b4EW3A8bh0e4CTU+nbdNfyKpT
-         VxOBMPXukfUG/bVrPyvYQuf2eVOrfc3OYQqbY/0jnqVGY6BCoJqh2aGZTv3M33vfmT+G
-         Dck2ys6z68rHiFzrAiSagq7p8uqWwxqDrahYo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721153330; x=1721758130;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KOjYz7yaXpRDTT5QSfg/sdBFbTuHViu6MqiHwYD6nv8=;
-        b=i/UIlSYGBQ1d5QsuuSm/k4E8FqnsEWfxNrhvYmI7K71aUrlWpO3xr4u7+WONzmrz2e
-         Ewsd2xf7wGnbETWBLLYy3Q+JgDpb5+kFY1DsN3XXok/UaygMmnpd38lZnOyfIOukbDZc
-         SEDsacCz5ij1T0sM0IjPzv67FLBRDfWvOselW9ZbsBcdytTteLiAKnMTKD4kGJOS0twl
-         nvm1Q+/hylpByM1ize4aaILb/ezLjbBfNuPKGb2/ji2Iv1G1nvUm1l+ZtxDLxKdhI/tJ
-         o9JVLxLtlHHPQh3a5ZdPuKJ6H7WW8nT0MbvRwR9NJJ4ryUc/HxydGBEOrZorakKBXYrP
-         Fi/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVKtI4t8xlJlanQZk0CWvgTtE3b6/DM+7VqdnNKda18AO86n70u7uwuNT/XMS3qW2doTGsY215Oxd9xe80OusYRLDgxf0MmwQmD
-X-Gm-Message-State: AOJu0Yypdcyv5zmqnxNiF3dVAIxf0vIFsAwxfX2GhwZp4eZIzDHvkBuH
-	risqQDyisq+CO4ycyLpNsNtSU9JRGVsiUiTLdN43KKD7n8HS+ZpD+pjfS9H7RrwQMX6i+Xly299
-	DE5jzrg==
-X-Google-Smtp-Source: AGHT+IFa6JfXfn2kHhNPEuDEenkEQVhUubLwvm6wbZe3UIulowzS24gBn2wF4iYEuw3vKb+yb+dSnQ==
-X-Received: by 2002:a05:6512:104e:b0:52c:d70d:5ff8 with SMTP id 2adb3069b0e04-52edef1039cmr1817712e87.1.1721153330346;
-        Tue, 16 Jul 2024 11:08:50 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ed25396edsm1204567e87.293.2024.07.16.11.08.49
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jul 2024 11:08:49 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2eedebccfa4so40180081fa.1
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 11:08:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU9XE0k2SoQ+joDvcE4822nIrrE+7vH6u6FD+nvmMSNrk5akPc/tP4bC2MVfxVG1QYOX3jERBY54rNmC6MWu2OLWnullSVELs5L
-X-Received: by 2002:a2e:9acd:0:b0:2ee:56b0:38e3 with SMTP id
- 38308e7fff4ca-2eef4184785mr22070261fa.24.1721153329186; Tue, 16 Jul 2024
- 11:08:49 -0700 (PDT)
+	s=arc-20240116; t=1721154102; c=relaxed/simple;
+	bh=ntHqDMyy/4I/yJt5qk7IPvkZsikYxf20GiACJzvxlp8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hLDGYLNhiSOtp11+ExQvAEymh5YKV8nAVsjD0OfSTLFApW0gbKHNYrd/B3Gy6OdcXu0Mx07/a3HIbtXUmbaSer7b+dtffhA7DDs6BnlV33YNSc1czrmIvmdmrB/m7PJwBoOSIvYExteKlvbDJAkY51t1Idfl1lwCAaFCZE9qA3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Moe6rkWH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA22C116B1;
+	Tue, 16 Jul 2024 18:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721154102;
+	bh=ntHqDMyy/4I/yJt5qk7IPvkZsikYxf20GiACJzvxlp8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Moe6rkWHIpcISLL9Bdv+AIX3fWvauZDaxK6/G/uXTLrViAMp3gu2NAEKxY4bWa8i9
+	 HZFVra7oHheW9IwUVFEW1rh9y359eLgJ9RHkS1GIjBCIKNAn01u8ggLgsF/HhKJDQZ
+	 rFRO/WiIos5YcA9ANiZte57+IW6XZ2Ucb+Y+itOtIr7c3A/HWlVYt5/W+117hS2tMf
+	 bXimsSdEXKKaTPeTGBf2slLCFtN16gvfzj3CRdNxIPDjL6BFLgsGW8Ncz2etBTHUUG
+	 Cfl9iyyV+XSvFOjNNLgkTBu4CySnCGMHoFG75PeFjRuFl4wFzo4zC7E6wV1iMUYiNV
+	 Z3Rxh5xR7VO9w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sTmnz-00Cu51-NC;
+	Tue, 16 Jul 2024 19:21:39 +0100
+Date: Tue, 16 Jul 2024 19:21:39 +0100
+Message-ID: <86plrd2o5o.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	anna-maria@linutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	festevam@gmail.com,
+	bhelgaas@google.com,
+	rdunlap@infradead.org,
+	vidyas@nvidia.com,
+	ilpo.jarvinen@linux.intel.com,
+	apatel@ventanamicro.com,
+	kevin.tian@intel.com,
+	nipun.gupta@amd.com,
+	den@valinux.co.jp,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	alex.williamson@redhat.com,
+	will@kernel.org,
+	lorenzo.pieralisi@arm.com,
+	jgg@mellanox.com,
+	ammarfaizi2@gnuweeb.org,
+	robin.murphy@arm.com,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	kristo@kernel.org,
+	vkoul@kernel.org,
+	okaya@kernel.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	mark.rutland@arm.com,
+	shameerali.kolothum.thodi@huawei.com,
+	yuzenghui@huawei.com
+Subject: Re: [patch V4 00/21] genirq, irqchip: Convert ARM MSI handling to per device MSI domains
+In-Reply-To: <ZpaJaM1G721FdLFn@hovoldconsulting.com>
+References: <20240623142137.448898081@linutronix.de>
+	<ZpUFl4uMCT8YwkUE@hovoldconsulting.com>
+	<878qy26cd6.wl-maz@kernel.org>
+	<ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
+	<86r0bt39zm.wl-maz@kernel.org>
+	<ZpaJaM1G721FdLFn@hovoldconsulting.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.3
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240716152318.207178-1-brgl@bgdev.pl>
-In-Reply-To: <20240716152318.207178-1-brgl@bgdev.pl>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 16 Jul 2024 11:08:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
-Message-ID: <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
-Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: johan@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, anna-maria@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com, rdunlap@infradead.org, vidyas@nvidia.com, ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com, kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org, lorenzo.pieralisi@arm.com, jgg@mellanox.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, 16 Jul 2024 at 08:23, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+[Dropping shivamurthy.shastri@linutronix.de who is now bouncing...]
+
+On Tue, 16 Jul 2024 15:53:28 +0100,
+Johan Hovold <johan@kernel.org> wrote:
+> 
+> On Tue, Jul 16, 2024 at 11:30:05AM +0100, Marc Zyngier wrote:
+> > On Mon, 15 Jul 2024 15:10:01 +0100,
+> > Johan Hovold <johan@kernel.org> wrote:
+> > > On Mon, Jul 15, 2024 at 01:58:13PM +0100, Marc Zyngier wrote:
+> > > > On Mon, 15 Jul 2024 12:18:47 +0100,
+> > > > Johan Hovold <johan@kernel.org> wrote:
+> > > > > On Sun, Jun 23, 2024 at 05:18:31PM +0200, Thomas Gleixner wrote:
+> > > > > > This is version 4 of the series to convert ARM MSI handling over to
+> > > > > > per device MSI domains.
+> > > 
+> > > > > This series only showed up in linux-next last Friday and broke interrupt
+> > > > > handling on Qualcomm platforms like sc8280xp (e.g. Lenovo ThinkPad X13s)
+> > > > > and x1e80100 that use the GIC ITS for PCIe MSIs.
+> > > > > 
+> > > > > I've applied the series (21 commits from linux-next) on top of 6.10 and
+> > > > > can confirm that the breakage is caused by commits:
+> > > > > 
+> > > > > 	3d1c927c08fc ("irqchip/gic-v3-its: Switch platform MSI to MSI parent")
+> > > > > 	233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
+> > > > > 
+> > > > > Applying the series up until the change before 3d1c927c08fc unbreaks the
+> > > > > wifi on one machine:
+> > > > > 
+> > > > > 	ath11k_pci 0006:01:00.0: failed to enable msi: -22
+> > > > > 	ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -22
+> 
+> Correction, this doesn't fix the wifi, but I'm not seeing these errors
+> with the commit before cc23d1dfc959 as the ath11k driver doesn't get
+> this far (or doesn't probe at all).
+
+I think we need to track one thing at a time. The wifi and nvme
+problems seem subtly different... Which is the exact commit that
+breaks nvme on your machine?
+
+[...]
+
+> > So is this issue actually tied to the async probing? Does it always
+> > work if you disable it?
+> 
+> There seem to multiple issues here.
+> 
+> With the full series applied and normal async (i.e. parallel) probing of
+> the PCIe controllers I sometimes see allocation failing with -ENOSPC
+> (e.g. the above ath11k errors). This seems to indicate broken locking
+> somewhere.
+
+Your log doesn't support this theory. At least not from an ITS
+perspective, as it keeps dishing out INTIDs (and it is very hard to
+run out of IRQs with the ITS).
+
 >
-> Let's remove the public menuconfig entry for PCI pwrctl and instead
-> default the relevant symbol to 'm' only for the architectures that
-> actually need it.
+> With synchronous probing, allocation always seems to succeed but the
+> ath11k (and modem) drivers time out as no interrupts are received.
+> 
+> The NVMe driver sometimes falls back to INTx signalling and can access
+> the drive, but often end up with an MSIX (?!) allocation and then fails
+> to probe:
+> 
+> 	[  132.084740] nvme nvme0: I/O tag 17 (1011) QID 0 timeout, completion polled
 
-This feels like you should just use "select" instead.
+So one of my test boxes (ThunderX) fails this exact way, while another
+(Synquacer) is pretty happy. Still trying to understand the difference
+in behaviour.
 
-IOW, don't make PCI_PWRCTL_PWRSEQ a question at all. Instead, have the
-drivers that need it just select it automatically.
+How do you enforce synchronous probing?
 
-It's much better to ask people "do you have hardware XYZ" that they
-can hopefully answer, and then we enable all the things that hardware
-needs.
+	M.
 
-In contrast, asking people "do you need support for ABC?" when they
-don't know what ABC is is _not_ helpful.
-
-IOW, when you write Kconfig entries, your rules should be:
-
- - NOTHING is ever enabled by default, unless it's an old feature that
-was enabled before and got split out (so that "make oldconfig" gives a
-working kernel)
-
- - you NEVER ask questions that normal people can't answer.
-
-For example, we have *way* too many questions that come about because
-some developer went "I don't know what the answer is, I'll just make
-it a Kconfig option". And I absolutely *HATE* those questions. Dammit,
-if the developer doesn't know, then a user sure as hell doesn't
-either.
-
-I tend to keep on harping on Kconfig issues, because I really do think
-that it's one of the biggest hurdles for normal users to just build
-their own kernels. We make the rest of the build system pretty damn
-simple, with a simple "make" and then as root "make modules_install
-install".
-
-But the Kconfig phase is a complete disaster, and it's because kernel
-developers don't seem to think about users.
-
-              Linus
+-- 
+Without deviation from the norm, progress is not possible.
 
