@@ -1,185 +1,144 @@
-Return-Path: <linux-pci+bounces-10376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0B1F932B2B
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 17:42:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D66A932CDD
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 17:59:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A54F1C22DE2
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 15:42:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24FB91F21681
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 15:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02B019F47B;
-	Tue, 16 Jul 2024 15:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 069BC19F49D;
+	Tue, 16 Jul 2024 15:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YnSaJsGD"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f5WUxMue"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECB5F9E8;
-	Tue, 16 Jul 2024 15:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888BE19FA99;
+	Tue, 16 Jul 2024 15:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721144529; cv=none; b=cO/YZLXQZShHtd+9DM6RrayQOpQVqhuRN17Uyir5hSApScKQ58zmzJgjjwJXEDGHxjkDeXdJ61bLIFaohHb835tDNDglvtuJWrxvhaA8C4AKa2MqLULDHbLxfzSuOs7MCGC4Xa4YzQX4LlT0gwrxsCa5E1Wh0ln66M4ebJKgwbI=
+	t=1721145513; cv=none; b=h4dmr00aE326tCaqP8D3k8hu7sqE0QudcixCXPv1xG/3Ky5ohn/bqbuGfFEKzcQQQGYlLk1HlSO1iDyohXM7VEKdYdFFu0pQ1gtTpr5QS2zdI8pch5CZ90yeHMKaWOZtkqe3yGLnw+HXBx7RIf1o8JDCFPEPnf2bUfmRy/eeJyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721144529; c=relaxed/simple;
-	bh=3K3HETqJm/ZpKc+V9IVxrUF1fl+PRjx9X/4MZOmKgiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xqghypbe1VZteRfUsOX1wjJfc4ZBnTKqucZG7yRzEVBSA5qa3syWofBQEYW8gssEMZQlqD9bs+kIE2awLqMyGR4k6JSvU3/6+sXYlzFp5secNU0+WxvJb7oR+xCVnHqbXGrjVRRBqStT2rIuL4lBJXJunZ+yyD21kEhJOOC+MhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YnSaJsGD; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721144528; x=1752680528;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3K3HETqJm/ZpKc+V9IVxrUF1fl+PRjx9X/4MZOmKgiI=;
-  b=YnSaJsGDct8n9k5I33VKgPskUIx89iftfDhcZPu141UhNcofXMYq5PJv
-   8FSBPDRrxMzLNFgJc7GUC3ZFf1wPRkixe30boTvLZM92oXJQakG+Wozzc
-   gcbcZcpByRv/X2zqjKOEokBatc9ltuWuBdY0rtjArL4w9pAsLPNPxi8QX
-   SWFHsCYU7Z4dhB/PK2cWLj63HtwYtwkJPeTRHOtmuhXIid9Z6zXkwlAVi
-   RCRZRShE7u6KLMshUobwzN9C4h0enNLnawrBEa/dQYxsI1RR5cwvCtm0k
-   Y9S6KqytgLsaBiHwvC23GsJeiqxekOAUV3aMBE7iuZxoSwi31mouTF/eK
-   Q==;
-X-CSE-ConnectionGUID: MuFkh7rLQcmJ2QxGZz2APg==
-X-CSE-MsgGUID: jpalR6obQwC1MgNyPCcOjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="29200476"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="29200476"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 08:42:07 -0700
-X-CSE-ConnectionGUID: RIs+OzhpQTufLz9ioQbl6A==
-X-CSE-MsgGUID: 6ifkXvsmSRiAbDvZ718bpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="50136221"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 16 Jul 2024 08:42:04 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sTkJV-000fOs-1x;
-	Tue, 16 Jul 2024 15:42:01 +0000
-Date: Tue, 16 Jul 2024 23:41:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 06/14] PCI: endpoint: Assign PCI domain number for
- endpoint controllers
-Message-ID: <202407162357.A9pxRKuo-lkp@intel.com>
-References: <20240715-pci-qcom-hotplug-v1-6-5f3765cc873a@linaro.org>
+	s=arc-20240116; t=1721145513; c=relaxed/simple;
+	bh=NDRLYyT8pN/HFDs6K/Dfs1m0KHkA5QT/h/5XhCFwghE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZmqWHx4vv+wKebDsPnFU0RSRvZUxFtHSLNNScHzz/kuOj3yHN2NU5XUKM9m7P2sqYI5bftC2ro3DPmt/z6MDguLPSEUvE3tkTgd4rbLs4z40ygxZ/ANPnZImPXfEQPf6rM8RHii5wzr9Zm9KHtpicyKof08smRjs1yjg3s6xmlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f5WUxMue; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BEAA81C0006;
+	Tue, 16 Jul 2024 15:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721145503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/6fyfU7hh9xia4CKde5/FfdqWurIEu+oueFw1Yyue2o=;
+	b=f5WUxMuemYRLVJeAA6sWlmzDtzBkqz+hbBTE5MQ0kHlOXdG6MUR0c8BtaEs+EqnSCI3Ila
+	oWQ7hQ1r4xxK56Gmh+RY5r0HAgbmte0NZFR2vK51PpC9WmuJ/qjiPYGOT91n7b/wmAvwQp
+	AARSmzwvBd3AaTQqEiU4c/eNwjxx6JXYEtgDlRT+bI0GkZgmiM4QPzIB8k+kFbXNo+dtNP
+	1SjaHNhg6AUvxBYJq9luF1KHnqww9r9kj2tCfM9rbGp0vB4vRmq7N1rQF1xSSxdUBp7MZU
+	CCweZyaBh2wC4Xd+/EE6L01nAU2Rf5ke/xhu79Ld/dvkiLfpjzSnInlHCk2qjg==
+Date: Tue, 16 Jul 2024 17:58:18 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Rob Herring" <robh@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Conor Dooley" <conor@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Lee Jones" <lee@kernel.org>, "Andy
+ Shevchenko" <andy.shevchenko@gmail.com>, "Simon Horman" <horms@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, UNGLinuxDriver@microchip.com,
+ "Saravana Kannan" <saravanak@google.com>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Lars
+ Povlsen" <lars.povlsen@microchip.com>, "Steen Hegelund"
+ <Steen.Hegelund@microchip.com>, "Daniel Machon"
+ <daniel.machon@microchip.com>, "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Horatiu Vultur"
+ <horatiu.vultur@microchip.com>, "Andrew Lunn" <andrew@lunn.ch>,
+ devicetree@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Allan
+ Nielsen" <allan.nielsen@microchip.com>, "Luca Ceresoli"
+ <luca.ceresoli@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 6/7] mfd: Add support for LAN966x PCI device
+Message-ID: <20240716175818.2ef948d9@bootlin.com>
+In-Reply-To: <7289bb54-99f2-4630-a437-21997a9e2b1f@app.fastmail.com>
+References: <20240627091137.370572-1-herve.codina@bootlin.com>
+	<20240627091137.370572-7-herve.codina@bootlin.com>
+	<20240711152952.GL501857@google.com>
+	<20240711184438.65446cc3@bootlin.com>
+	<2024071113-motocross-escalator-e034@gregkh>
+	<CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh0XJaBsB9fuX5nBCQ@mail.gmail.com>
+	<20240712151122.67a17a94@bootlin.com>
+	<83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com>
+	<20240715141229.506bfff7@bootlin.com>
+	<7289bb54-99f2-4630-a437-21997a9e2b1f@app.fastmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240715-pci-qcom-hotplug-v1-6-5f3765cc873a@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Manivannan,
+On Tue, 16 Jul 2024 16:44:12 +0200
+"Arnd Bergmann" <arnd@arndb.de> wrote:
 
-kernel test robot noticed the following build errors:
+> On Mon, Jul 15, 2024, at 14:12, Herve Codina wrote:
+> > Hi Arnd,
+> >
+> > On Fri, 12 Jul 2024 16:14:31 +0200
+> > "Arnd Bergmann" <arnd@arndb.de> wrote:
+> >  
+> >> On Fri, Jul 12, 2024, at 15:11, Herve Codina wrote:  
+> >> > On Thu, 11 Jul 2024 14:33:26 -0600 Rob Herring <robh@kernel.org> wrote:    
+> >> >> On Thu, Jul 11, 2024 at 1:08 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:    
+> >>   
+> >> >> > >
+> >> >> > > This PCI driver purpose is to instanciate many other drivers using a DT
+> >> >> > > overlay. I think MFD is the right subsystem.      
+> >> >> 
+> >> >> It is a Multi-function Device, but it doesn't appear to use any of the
+> >> >> MFD subsystem. So maybe drivers/soc/? Another dumping ground, but it
+> >> >> is a driver for an SoC exposed as a PCI device.
+> >> >>     
+> >> >
+> >> > In drivers/soc, drivers/soc/microchip/ could be the right place.
+> >> >
+> >> > Conor, are you open to have the PCI LAN966x device driver in
+> >> > drivers/soc/microchip/ ?    
+> >> 
+> >> That sounds like a much worse fit than drivers/mfd: the code
+> >> here does not actually run on the lan966x soc, it instead runs
+> >> on whatever other machine you happen to plug it into as a
+> >> PCI device.  
+> >
+> > Maybe drivers/misc ?  
+> 
+> That's probably a little better, and there is already
+> drivers/misc/mchp_pci1xxxx in there, which also has some
+> aux devices.
+> 
+> Maybe we need a new place and then move both of these
+> and some of the similar devices from drivers/mfd to that, but
+> we don't really have to pick one now.
+> 
 
-[auto build test ERROR on 91e3b24eb7d297d9d99030800ed96944b8652eaf]
+In the next iteration, I plan to move the lan966x pci driver in
+drivers/misc/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-qcom-ep-Drop-the-redundant-masking-of-global-IRQ-events/20240716-014703
-base:   91e3b24eb7d297d9d99030800ed96944b8652eaf
-patch link:    https://lore.kernel.org/r/20240715-pci-qcom-hotplug-v1-6-5f3765cc873a%40linaro.org
-patch subject: [PATCH 06/14] PCI: endpoint: Assign PCI domain number for endpoint controllers
-config: i386-randconfig-001-20240716 (https://download.01.org/0day-ci/archive/20240716/202407162357.A9pxRKuo-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240716/202407162357.A9pxRKuo-lkp@intel.com/reproduce)
+Not sure that it needs to be in a subdir.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407162357.A9pxRKuo-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/pci/endpoint/pci-epc-core.c:902:19: error: call to undeclared function 'pci_bus_find_domain_nr'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     902 |         epc->domain_nr = pci_bus_find_domain_nr(NULL, dev);
-         |                          ^
-   1 error generated.
-
-
-vim +/pci_bus_find_domain_nr +902 drivers/pci/endpoint/pci-epc-core.c
-
-   866	
-   867	/**
-   868	 * __pci_epc_create() - create a new endpoint controller (EPC) device
-   869	 * @dev: device that is creating the new EPC
-   870	 * @ops: function pointers for performing EPC operations
-   871	 * @owner: the owner of the module that creates the EPC device
-   872	 *
-   873	 * Invoke to create a new EPC device and add it to pci_epc class.
-   874	 */
-   875	struct pci_epc *
-   876	__pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
-   877			 struct module *owner)
-   878	{
-   879		int ret;
-   880		struct pci_epc *epc;
-   881	
-   882		if (WARN_ON(!dev)) {
-   883			ret = -EINVAL;
-   884			goto err_ret;
-   885		}
-   886	
-   887		epc = kzalloc(sizeof(*epc), GFP_KERNEL);
-   888		if (!epc) {
-   889			ret = -ENOMEM;
-   890			goto err_ret;
-   891		}
-   892	
-   893		mutex_init(&epc->lock);
-   894		mutex_init(&epc->list_lock);
-   895		INIT_LIST_HEAD(&epc->pci_epf);
-   896	
-   897		device_initialize(&epc->dev);
-   898		epc->dev.class = &pci_epc_class;
-   899		epc->dev.parent = dev;
-   900		epc->dev.release = pci_epc_release;
-   901		epc->ops = ops;
- > 902		epc->domain_nr = pci_bus_find_domain_nr(NULL, dev);
-   903	
-   904		ret = dev_set_name(&epc->dev, "%s", dev_name(dev));
-   905		if (ret)
-   906			goto put_dev;
-   907	
-   908		ret = device_add(&epc->dev);
-   909		if (ret)
-   910			goto put_dev;
-   911	
-   912		epc->group = pci_ep_cfs_add_epc_group(dev_name(dev));
-   913	
-   914		return epc;
-   915	
-   916	put_dev:
-   917		put_device(&epc->dev);
-   918	
-   919	err_ret:
-   920		return ERR_PTR(ret);
-   921	}
-   922	EXPORT_SYMBOL_GPL(__pci_epc_create);
-   923	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards
+Hervé
 
