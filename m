@@ -1,203 +1,219 @@
-Return-Path: <linux-pci+bounces-10364-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10365-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5E559322C6
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 11:26:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEB29932337
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 11:45:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 504911F225D3
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 09:26:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F25D71C20A48
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 09:45:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D151991C6;
-	Tue, 16 Jul 2024 09:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67C55197A61;
+	Tue, 16 Jul 2024 09:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lofwExXw"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OL8Tthax"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF47619755B;
-	Tue, 16 Jul 2024 09:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F11D197A6C;
+	Tue, 16 Jul 2024 09:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721121895; cv=none; b=AwtQ7CEZ16aQSTr8e6+vvuEZThRCo9Ucnio9Vb1X8MS7V6QfVJ/XmTx1aQusZvhYu8P+PC7sF+ZJZkxYxOQSglb5p9XShFu2Wk6kmdE1vKa62xqNx2XaPRpVOdGcuvfsSsdqJvKI4G1iUZzNYflul30SGW4xLtzmUD4YMZvhw74=
+	t=1721123091; cv=none; b=eq4lKIbnWUE7v0YlWhV6GEKQv/IVnmuksWyz2bmdi5vpINy2iwuhzgobyIdoXc9KJyTMjH70ziIWtbCY80r4C5+61ZSN8Kbhla2Hw9Y6Pvwf7eMS6wUfvrOHvz9o9uWoKFmQ4GG1UtHeef+uu3tklMKRzCA1SOCO6TcE/0HG2uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721121895; c=relaxed/simple;
-	bh=rcokNA6tRK/q0PVbebMPqEhkSskhnHgviY5zxmP2MQg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hh2QPJNxL00uSvTRTqB6YharlPUz7pEYDQJYkEaWwhLmXLy47JAA9pzvV3N4V7Ci2J6Frnp/Epy/T1S5RqCs2rDzpCsNkfL3RRnB3pgNohfgrAeIkM/6sSp4wFyia/HrjGAqN4PJkdeShNQm/0KzVnSW2NAUwPgM0wVoL4SOuJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lofwExXw; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46G4X2Vw001297;
-	Tue, 16 Jul 2024 09:24:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WpZ/z5HPss1VQyE/J7rNj/n8s8SnkeSPfry5IAh4DF0=; b=lofwExXwQGSUnAbq
-	/oIEfS4I0dxQXbaFHrdxex4743YrdrcwT4Cz0Sac0SKN7KzSFoXO9BmubXpj6hJV
-	NuIOv+gQYR0RahSdKc/rmTvBN7cXu2VtM2K1iZhETcDI9GfYBOtG/1nn+hfVgTCM
-	81b3XdHmL/Ly3pXwunegqeDXOGuV0c2ivoTqOAzWEL+Zykb/7Z/u6TEPMR3HnvXf
-	AR2DzKdHU4VBnatxSD2BHlztmsxGoGiwAHEiQAXE+9f2uE/tzp5wfLKAA3cFNpw6
-	GRjD73ui/cIycrQvXu0R58jfdzZne3dRWc1K8D/Y52FWXn/znTYcg7V7AwBVogB7
-	UxHGog==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bhnupjxa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 09:24:45 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46G9OiEt022137
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jul 2024 09:24:44 GMT
-Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 16 Jul 2024 02:24:38 -0700
-From: Sricharan R <quic_srichara@quicinc.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <manivannan.sadhasivam@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_srichara@quicinc.com>
-CC: devi priya <quic_devipriy@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Anusha Rao <quic_anusha@quicinc.com>
-Subject: [PATCH V6 4/4] PCI: qcom: Add support for IPQ9574
-Date: Tue, 16 Jul 2024 14:53:47 +0530
-Message-ID: <20240716092347.2177153-5-quic_srichara@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240716092347.2177153-1-quic_srichara@quicinc.com>
-References: <20240716092347.2177153-1-quic_srichara@quicinc.com>
+	s=arc-20240116; t=1721123091; c=relaxed/simple;
+	bh=MtGlrZPxgs3fghxn7ifSEXSWjlnQg1V5rFVgMxytc1E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=p0m3RMk7/aebCAZV8tY1eODakgeckEofAi5gsGTZF8ya/r9BKLP4tyRlY9L0f+Xdjh9rQ2luOfgozfjT4cPQN0i+2+tQMK7/kE7mLVl18ccI0V7JhrqqdhzlyixvSttybDUqyZowkYB2GnavfwHAPliDKceRv5FdvQyU5Om9H8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OL8Tthax; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1BFF61BF211;
+	Tue, 16 Jul 2024 09:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721123081;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9yl6nMiA8YdoBSPgX1+Zx077ilmmU2Drf2VLw5jFcKY=;
+	b=OL8TthaxwgE0pXxZQM2UpgeP0Rbg1N5qjaJLWdsAH2I1Jc5taoQ0mID7ODzSo8NAbBriq2
+	GoRo0XuspIUGET9d2oRKyD8aNM6gaGLAvb9TH2cFGyUUDfYyIk8muNDbk7iMwVXCYrEggn
+	DqZXqcpw7QT/JVStX24jh4/aeNX1xRCKUDKF43dQ99h5rUeExg60YqHZvVbuzJuLYdQU7Y
+	mVNp4a1gwjboEVXzimEnlCbchUK2zYWf8TUnn+gPrhkY+8xofvr7T4VBRfuYJpyaU4uouw
+	MT2X1BIv90wkGVW1FlGrVqHoh14A9c2KAZDlM85+mD5xFmltjvuMg4m2tzrR8w==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Thomas Richard <thomas.richard@bootlin.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>, Rob Herring
+ <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas
+ Richard <thomas.richard@bootlin.com>, Francesco Dolcini
+ <francesco.dolcini@toradex.com>, Richard Genoud
+ <richard.genoud@bootlin.com>
+Subject: Re: [PATCH v7 0/7] Add suspend to ram support for PCIe on J7200
+In-Reply-To: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+References: <20240102-j7200-pcie-s2r-v7-0-a2f9156da6c3@bootlin.com>
+Date: Tue, 16 Jul 2024 11:44:39 +0200
+Message-ID: <875xt5llh4.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: J0aC2uIDpAadMhmhUEtMXr7p2tSw6mWU
-X-Proofpoint-GUID: J0aC2uIDpAadMhmhUEtMXr7p2tSw6mWU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-15_19,2024-07-16_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 clxscore=1011 spamscore=0 malwarescore=0
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407160067
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: gregory.clement@bootlin.com
 
-From: devi priya <quic_devipriy@quicinc.com>
+Hello PCIe maintainers!
 
-The IPQ9574 platform has four Gen3 PCIe controllers:
-two single-lane and two dual-lane based on SNPS core 5.70a.
+> This adds suspend to ram support for the PCIe (RC mode) on J7200 platform.
+>
+> In this 7th iteration, the i2c and mux patches were moved to dedicated
+> series ([1] and [2]).
+> The patch for the gpio-pca953x driver was removed. It will be sent
+> separately for further testing and discussion.
+>
+> No merge conflict with 6.10-rc4.
+>
+> [1]: https://lore.kernel.org/all/20240613-i2c-omap-wakeup-controller-duri=
+ng-suspend-v1-0-aab001eb1ad1@bootlin.com/
+> [2]:
+> https://lore.kernel.org/all/20240613-mux-mmio-resume-support-v1-0-4525bf5=
+6024a@bootlin.com/
 
-QCOM IP rev is 1.27.0 and Synopsys IP rev is 5.80a.
-Add a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
-which reuses all the members of 'ops_2_9_0' except for the
-post_init as the SLV_ADDR_SPACE_SIZE configuration differs
-between 2_9_0 and 1_27_0.
+I noticed that this series has not been merged yet, even though it
+seemed that there were no remaining comments to address.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: devi priya <quic_devipriy@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
----
- [V6] Fixed all Manivannan's and Bjorn Helgaas comments.
-      Removed the SLV_ADDR_SPACE_SZ_1_27_0 macro to have default value.
+Is there any reason why it has not been applied yet?
 
- drivers/pci/controller/dwc/pcie-qcom.c | 31 ++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 0180edf3310e..26acd9f5385e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1116,16 +1116,13 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
- 	return clk_bulk_prepare_enable(res->num_clks, res->clks);
- }
- 
--static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+static int qcom_pcie_post_init(struct qcom_pcie *pcie)
- {
- 	struct dw_pcie *pci = pcie->pci;
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 	int i;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
-@@ -1165,6 +1162,18 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-+{
-+	return qcom_pcie_post_init(pcie);
-+}
-+
-+static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+{
-+	writel(SLV_ADDR_SPACE_SZ, pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	return qcom_pcie_post_init(pcie);
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-@@ -1318,6 +1327,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 1.27.0  Synopsys IP rev.: 5.80a */
-+static const struct qcom_pcie_ops ops_1_27_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_9_0,
-+	.init = qcom_pcie_init_2_9_0,
-+	.post_init = qcom_pcie_post_init_1_27_0,
-+	.deinit = qcom_pcie_deinit_2_9_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+};
-+
- static const struct qcom_pcie_cfg cfg_1_0_0 = {
- 	.ops = &ops_1_0_0,
- };
-@@ -1360,6 +1378,10 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
- 	.no_l0s = true,
- };
- 
-+static const struct qcom_pcie_cfg cfg_1_27_0 = {
-+	.ops = &ops_1_27_0,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- 	.start_link = qcom_pcie_start_link,
-@@ -1724,6 +1746,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-+	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
- 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_sc8280xp },
--- 
-2.34.1
+Gregory
 
+>
+> Regards,
+>
+> Thomas
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+> Changes in v7:
+> - all: series rebased on Linux 6.10-rc4.
+> - i2c: patches moved to a dedicated series.
+> - mux: patches moved to a dedicated series.
+> - gpio-pca953x: patch removed, will be sent separately.
+> - Link to v6: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v6-0-4656=
+ef6e6d66@bootlin.com
+>
+> Changes in v6:
+> - i2c-omap: add a patch to remove __maybe_unused attribute of
+>   omap_i2c_runtime_suspend() and omap_i2c_runtime_resume()
+> - i2c-omap: fix compile issue if CONFIG_PM_SLEEP is not set
+> - Link to v5: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v5-0-4b8c=
+46711ded@bootlin.com
+>
+> Changes in v5:
+> - all: series rebased on Linux 6.9-rc1
+> - pinctrl-single: patch removed (already applied to the pinctrl tree)
+> - phy: patches moved to a dedicated series.
+> - pci: add T_PERST_CLK_US macro.
+> - pci-j721e: update the comments about T_PERST_CLK_US.
+> - Link to v4: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v4-0-6f1f=
+53390c85@bootlin.com
+>
+> Changes in v4:
+> - all: use SoB/Co-developed-by for patches initially developed by Th=C3=
+=A9o
+>   Lebrun.
+> - pinctrl-single: squash the two commits.
+> - i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
+> - mux: mux_chip_resume() return 0 or at the first error.
+> - phy-j721e-wiz: clean code around dev_err_probe().
+> - phy-j721e-wiz: use REF_CLK_100MHZ macros.
+> - pci: fix subject line for all PCI patches.
+> - pci-cadence: use fsleep() instead of usleep_range().
+> - pci-cadence: remove cdns_torrent_clk_cleanup() call in
+>   cdns_torrent_phy_resume_noirq().
+> - pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in t=
+he probe().
+> - pci-j721e: fix unordered header files.
+> - pci-j721e: remove some log spammers.
+> - pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
+> - pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
+> - Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e=
+4a3fac1f@bootlin.com
+>
+> Changes in v3:
+> - pinctrl-single: split patch in two parts, a first patch to remove the
+>   dead code, a second to move suspend()/resume() callbacks to noirq.
+> - i2c-omap: add a comments above the suspend_noirq() callback.
+> - mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+>   all is ok or the first failure.
+> - mmio: fix commit message.
+> - phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() =
+in
+>   the wiz_clock_init() function.
+> - phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+>   function to wiz_clock_probe(), extract hardware configuration part in a
+>   new function wiz_clock_init().
+> - phy-cadence-torrent: use dev_err_probe() and fix commit messages
+> - pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+>   function and extract the link setup part in a new function
+>   cdns_pcie_host_link_setup().
+> - pcie-cadence-host: make cdns_pcie_host_init() global.
+> - pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+>   functions in the resume_noirq() callback.
+> - Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f=
+7d228ec2@bootlin.com
+>
+> Changes in v2:
+> - all: fix commits messages.
+> - all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+> - all: remove useless #ifdef CONFIG_PM.
+> - pinctrl-single: drop dead code
+> - mux: add mux_chip_resume() function in mux core.
+> - mmio: resume sequence is now a call to mux_chip_resume().
+> - phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+>   instead of reset_control_put()).
+> - phy-cadence-torrent: use PHY instead of phy.
+> - pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+>   sequence.
+> - pci-j721e: drop dead code.
+> - Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e5=
+5da52400@bootlin.com
+>
+> ---
+> Thomas Richard (5):
+>       PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup=
+()
+>       PCI: cadence: Set cdns_pcie_host_init() global
+>       PCI: j721e: Use dev_err_probe() in the probe() function
+>       PCI: Add T_PERST_CLK_US macro
+>       PCI: j721e: Use T_PERST_CLK_US macro
+>
+> Th=C3=A9o Lebrun (2):
+>       PCI: j721e: Add reset GPIO to struct j721e_pcie
+>       PCI: j721e: Add suspend and resume support
+>
+>  drivers/pci/controller/cadence/pci-j721e.c         | 121 +++++++++++++++=
++++---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
+>  drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+>  drivers/pci/pci.h                                  |   3 +
+>  4 files changed, 146 insertions(+), 34 deletions(-)
+> ---
+> base-commit: 7510725e693fb5e4b4cd17086cc5a49a7a065b9c
+> change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+>
+> Best regards,
+> --=20
+> Thomas Richard <thomas.richard@bootlin.com>
 
