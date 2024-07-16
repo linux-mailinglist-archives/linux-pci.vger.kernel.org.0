@@ -1,181 +1,176 @@
-Return-Path: <linux-pci+bounces-10371-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10372-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37CEB9327B5
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 15:42:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE15F932994
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 16:46:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7B022853D3
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 13:42:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6252D283503
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 14:46:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2D919ADB1;
-	Tue, 16 Jul 2024 13:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A2E19B5A3;
+	Tue, 16 Jul 2024 14:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utfsRQKU"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="KrQ+Yfl5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hoW7cth5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow6-smtp.messagingengine.com (flow6-smtp.messagingengine.com [103.168.172.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1355B197A72;
-	Tue, 16 Jul 2024 13:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB38919CD0F;
+	Tue, 16 Jul 2024 14:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721137333; cv=none; b=RaZbkq0VPgBePI8rC8KTqP/i0ggsgaRJJA9eOpvYrpbQHeJTWgTLcIBjyrtlxNDK1Ggn6RMYgTcFGjnMulLojcKdOS6o9QVJvll+b5S6M9MvHOcQRJYsP64G/3ER9GO0mpoTta7wW0Vg0nCzNXK2VDZwRoQxMe0mkEUajECsWik=
+	t=1721141077; cv=none; b=EcOxxVwZX9AdTSN1WzUGnnlFmVL38vZppAOJ/E4oGqdSiEV1J9OqYI426E+WJg2kppVdgd66N42rNv5+ov91xK+ZpA0rAI1gkDkliZyCCF5yTHIF+gJSZjqjAbcQoLogB3yItOayxhXF85+Fammc131IGpMb/MyKNa8DoCQY2Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721137333; c=relaxed/simple;
-	bh=eOH48dunNLTsABrLCx37z6olk5dF9XDyjImDI5wsews=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zkf/QAoPwPgpo1ynqqEc+brXqfU9IwV8pXF7ukt7S0IG70X0SCgle/G/h9/uWXlGj96+xY+J2aPaVL0hhwRkTeHwwEecp5Zo4t5qpAX0CBk2x0NwAalkfTEIZp2R59EUUUGUIUBh5lyzE7NX+w3LkCvjGC5IMzrCJF1KQrf+/ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utfsRQKU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D944C116B1;
-	Tue, 16 Jul 2024 13:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721137332;
-	bh=eOH48dunNLTsABrLCx37z6olk5dF9XDyjImDI5wsews=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=utfsRQKUyppf+MLIJiQNb9329FA+IDvzRZijmX6zElfA+9+MuTbJA4R3NFfj+uSqm
-	 6HKw4cF8rGJFPVMkHfBeKScFCoh67hvHKs7WLIhpT+B4vjm8+e2XymYQz3Yxk/qu5s
-	 e+wtShgILbTmSc5evNSy5BGcwzanUiEh2MdCQRO6vXpj3PSy84eOuvQeDTC3aS1OXJ
-	 aSYE1LXEcc64ihSnKRkzN0vkN8/qPEgKuOmrX9CDtwts8YY97ouKtwW/ZW3S7mPQzY
-	 Y/femgch1Z1Dv5U+5G6AK58mvBIUcN7e7Kn3LtprdUUHA41bkrMmjcWa/xLpAT2Vfj
-	 6yu2jjFD/0qzg==
-Date: Tue, 16 Jul 2024 07:42:10 -0600
-From: Rob Herring <robh@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Mayank Rana <quic_mrana@quicinc.com>, lpieralisi@kernel.org,
-	kw@linux.com, bhelgaas@google.com, jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org, cassel@kernel.org,
-	yoshihiro.shimoda.uh@renesas.com, s-vadapalli@ti.com,
-	u.kleine-koenig@pengutronix.de, dlemoal@kernel.org,
-	amishin@t-argos.ru, thierry.reding@gmail.com, jonathanh@nvidia.com,
-	Frank.Li@nxp.com, ilpo.jarvinen@linux.intel.com, vidyas@nvidia.com,
-	marek.vasut+renesas@gmail.com, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	quic_ramkri@quicinc.com, quic_nkela@quicinc.com,
-	quic_shazhuss@quicinc.com, quic_msarkar@quicinc.com,
-	quic_nitegupt@quicinc.com
-Subject: Re: [PATCH V2 7/7] PCI: host-generic: Add dwc PCIe controller based
- MSI controller usage
-Message-ID: <20240716134210.GA3534018-robh@kernel.org>
-References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
- <1721067215-5832-8-git-send-email-quic_mrana@quicinc.com>
- <20240716085811.GA19348@willie-the-truck>
+	s=arc-20240116; t=1721141077; c=relaxed/simple;
+	bh=mmtDwPVL52S1ppeyOGcnNXo9IJrhAWZKJS7aQ6gfkYw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=Tdf32y2mx8S9P7o77QR6OG7AkQAmR7MLbVSWElQQdywZdmW7WNc5yj86OJsc2p9EAfBG7ilRRQyc3PaqkobqgxKclOZqqq0ZZLEB/Qm4FTx1ZO4D93MLurz+qLDx2Pr/dbu/UWn1qxYp1oPPoeBoiXR3A3lzq4FZYZswo5gInsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=KrQ+Yfl5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hoW7cth5; arc=none smtp.client-ip=103.168.172.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailflow.nyi.internal (Postfix) with ESMTP id C3416200EC4;
+	Tue, 16 Jul 2024 10:44:34 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 16 Jul 2024 10:44:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1721141074;
+	 x=1721148274; bh=HdJd8R2v0UjEhqZCfsPDGAEjh3MgAu1qHR6wGuu4iUc=; b=
+	KrQ+Yfl5XPrmhmvBUQ4viYOZ5BU/9t0cJnJKfn8BzZOV7J86Dc27qIzbbyRqmZkN
+	L+RIF+FYOYSlA9jzGLh0YACdteyqUPbTWf9bhfOoBLC0IKbem2Y746umkeJYhKO1
+	USpO3R7/KM1Wn2fyqJ+PdyaVweaCMbG3cg1BWFtXYswGobw0QF1w5cXK1lFrfVCL
+	epgUay9MYSblfwLMYArlaz3dDnUSHBJBEZjVSObVyw1Ia/vi93VsmBqTnsPDPHag
+	X48V1hTibYmOFiSNVL8LG1ruAqTy1hNeTfL87eAwqTxlXqaIHQXOT9vz+ojWX8b5
+	koXReCi+2dgp1vgChQ7PmA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721141074; x=
+	1721148274; bh=HdJd8R2v0UjEhqZCfsPDGAEjh3MgAu1qHR6wGuu4iUc=; b=h
+	oW7cth5YO/ae5/c6V4w0yozDre/5a5M2vpdkW4jmES5p+r7bMWgWijNxf6QCEgkY
+	+orQ7LceDdtdadru66WV0LDdiGUFhuMR9cwR1xXsuX+qWEUbiqvcib5Fuuc1cdQB
+	wFtLMZYDjgUFrpD16fAfTeDvShFoJn5y/czLAJl7qglL02WVe7DCyjzVztlH4pGF
+	2SA7oPuno3JGV//uaX0SF/7bJmIMI8PScam2x1TXXqZkZ8IUC6IB1BC/o2uUDHjy
+	kg101OgHbfAm2gyi9YYXQkVDtgwxhwDj2X99XzouZvFD2fTyXPMDC3Bwfx68wG7i
+	MpJWTiBA7vxwW04Hy2DRA==
+X-ME-Sender: <xms:UYeWZgOlzLVK6pPrE3NrPY78YiwTPVCb84BmEKwi9A8K1M6Mq7pLGQ>
+    <xme:UYeWZm8QHUVGMAHXRL0vdH6hlTv32lXQFgfUJ-22spbA51y-f533cjst5JMMx9NDD
+    icg581UmNi3x-mHCVc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdejlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
+    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:UYeWZnQR2OnTiBxDMja5WmiWQIWwkoYDv7cvsWUbfM-dGS7Q4W3jIw>
+    <xmx:UYeWZosSgaQfnvpklvQAR7hZgOKSA_p44n9zCcSK7SOyHIkfcW8few>
+    <xmx:UYeWZoeLBeC2WKu0TGio3_kbWuP1suwlEVoxl62TCsHZz7Tei0V9oA>
+    <xmx:UYeWZs1OEpFYJkwzomTzgENZWRrJy_yFywvoeYb9UKks-NVwhwDuPA>
+    <xmx:UoeWZvm5iwGDrgAAEN8i-IU9wGdWRNFAEeonKyUof9iwl06HMnKOPR0k>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id B26ACB6008D; Tue, 16 Jul 2024 10:44:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240716085811.GA19348@willie-the-truck>
+Message-Id: <7289bb54-99f2-4630-a437-21997a9e2b1f@app.fastmail.com>
+In-Reply-To: <20240715141229.506bfff7@bootlin.com>
+References: <20240627091137.370572-1-herve.codina@bootlin.com>
+ <20240627091137.370572-7-herve.codina@bootlin.com>
+ <20240711152952.GL501857@google.com> <20240711184438.65446cc3@bootlin.com>
+ <2024071113-motocross-escalator-e034@gregkh>
+ <CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh0XJaBsB9fuX5nBCQ@mail.gmail.com>
+ <20240712151122.67a17a94@bootlin.com>
+ <83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com>
+ <20240715141229.506bfff7@bootlin.com>
+Date: Tue, 16 Jul 2024 16:44:12 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Herve Codina" <herve.codina@bootlin.com>
+Cc: "Rob Herring" <robh@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Conor Dooley" <conor@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Lee Jones" <lee@kernel.org>,
+ "Andy Shevchenko" <andy.shevchenko@gmail.com>,
+ "Simon Horman" <horms@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, UNGLinuxDriver@microchip.com,
+ "Saravana Kannan" <saravanak@google.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>,
+ "Lars Povlsen" <lars.povlsen@microchip.com>,
+ "Steen Hegelund" <Steen.Hegelund@microchip.com>,
+ "Daniel Machon" <daniel.machon@microchip.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Horatiu Vultur" <horatiu.vultur@microchip.com>,
+ "Andrew Lunn" <andrew@lunn.ch>, devicetree@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ "Allan Nielsen" <allan.nielsen@microchip.com>,
+ "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 6/7] mfd: Add support for LAN966x PCI device
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 16, 2024 at 09:58:12AM +0100, Will Deacon wrote:
-> On Mon, Jul 15, 2024 at 11:13:35AM -0700, Mayank Rana wrote:
-> > Add usage of Synopsys Designware PCIe controller based MSI controller to
-> > support MSI functionality with ECAM compliant Synopsys Designware PCIe
-> > controller. To use this functionality add device compatible string as
-> > "snps,dw-pcie-ecam-msi".
-> > 
-> > Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
-> > ---
-> >  drivers/pci/controller/pci-host-generic.c | 92 ++++++++++++++++++++++++++++++-
-> >  1 file changed, 91 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
-> > index c2c027f..457ae44 100644
-> > --- a/drivers/pci/controller/pci-host-generic.c
-> > +++ b/drivers/pci/controller/pci-host-generic.c
-> > @@ -8,13 +8,73 @@
-> >   * Author: Will Deacon <will.deacon@arm.com>
-> >   */
-> >  
-> > -#include <linux/kernel.h>
-> >  #include <linux/init.h>
-> > +#include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of_address.h>
-> >  #include <linux/pci-ecam.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_runtime.h>
-> >  
-> > +#include "dwc/pcie-designware-msi.h"
-> > +
-> > +struct dw_ecam_pcie {
-> > +	void __iomem *cfg;
-> > +	struct dw_msi *msi;
-> > +	struct pci_host_bridge *bridge;
-> > +};
-> > +
-> > +static u32 dw_ecam_pcie_readl(void *p_data, u32 reg)
-> > +{
-> > +	struct dw_ecam_pcie *ecam_pcie = (struct dw_ecam_pcie *)p_data;
-> > +
-> > +	return readl(ecam_pcie->cfg + reg);
-> > +}
-> > +
-> > +static void dw_ecam_pcie_writel(void *p_data, u32 reg, u32 val)
-> > +{
-> > +	struct dw_ecam_pcie *ecam_pcie = (struct dw_ecam_pcie *)p_data;
-> > +
-> > +	writel(val, ecam_pcie->cfg + reg);
-> > +}
-> > +
-> > +static struct dw_ecam_pcie *dw_pcie_ecam_msi(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct dw_ecam_pcie *ecam_pcie;
-> > +	struct dw_msi_ops *msi_ops;
-> > +	u64 addr;
-> > +
-> > +	ecam_pcie = devm_kzalloc(dev, sizeof(*ecam_pcie), GFP_KERNEL);
-> > +	if (!ecam_pcie)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	if (of_property_read_reg(dev->of_node, 0, &addr, NULL) < 0) {
+On Mon, Jul 15, 2024, at 14:12, Herve Codina wrote:
+> Hi Arnd,
+>
+> On Fri, 12 Jul 2024 16:14:31 +0200
+> "Arnd Bergmann" <arnd@arndb.de> wrote:
+>
+>> On Fri, Jul 12, 2024, at 15:11, Herve Codina wrote:
+>> > On Thu, 11 Jul 2024 14:33:26 -0600 Rob Herring <robh@kernel.org> wr=
+ote: =20
+>> >> On Thu, Jul 11, 2024 at 1:08=E2=80=AFPM Greg Kroah-Hartman <gregkh=
+@linuxfoundation.org> wrote: =20
+>>=20
+>> >> > >
+>> >> > > This PCI driver purpose is to instanciate many other drivers u=
+sing a DT
+>> >> > > overlay. I think MFD is the right subsystem.   =20
+>> >>=20
+>> >> It is a Multi-function Device, but it doesn't appear to use any of=
+ the
+>> >> MFD subsystem. So maybe drivers/soc/? Another dumping ground, but =
+it
+>> >> is a driver for an SoC exposed as a PCI device.
+>> >>  =20
+>> >
+>> > In drivers/soc, drivers/soc/microchip/ could be the right place.
+>> >
+>> > Conor, are you open to have the PCI LAN966x device driver in
+>> > drivers/soc/microchip/ ? =20
+>>=20
+>> That sounds like a much worse fit than drivers/mfd: the code
+>> here does not actually run on the lan966x soc, it instead runs
+>> on whatever other machine you happen to plug it into as a
+>> PCI device.
+>
+> Maybe drivers/misc ?
 
-Using this function on MMIO addresses is wrong. It is an untranslated 
-address.
+That's probably a little better, and there is already
+drivers/misc/mchp_pci1xxxx in there, which also has some
+aux devices.
 
-> > +		dev_err(dev, "Failed to get reg address\n");
-> > +		return ERR_PTR(-ENODEV);
-> > +	}
-> > +
-> > +	ecam_pcie->cfg = devm_ioremap(dev, addr, PAGE_SIZE);
-> > +	if (ecam_pcie->cfg == NULL)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	msi_ops = devm_kzalloc(dev, sizeof(*msi_ops), GFP_KERNEL);
-> > +	if (!msi_ops)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	msi_ops->readl_msi = dw_ecam_pcie_readl;
-> > +	msi_ops->writel_msi = dw_ecam_pcie_writel;
-> > +	msi_ops->pp = ecam_pcie;
-> > +	ecam_pcie->msi = dw_pcie_msi_host_init(pdev, msi_ops, 0);
-> > +	if (IS_ERR(ecam_pcie->msi)) {
-> > +		dev_err(dev, "dw_pcie_msi_host_init() failed\n");
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	dw_pcie_msi_init(ecam_pcie->msi);
-> > +	return ecam_pcie;
-> > +}
-> 
-> Hmm. This looks like quite a lot of not-very-generic code to be adding
-> to pci-host-generic.c. The file is now, what, 50% designware logic?
+Maybe we need a new place and then move both of these
+and some of the similar devices from drivers/mfd to that, but
+we don't really have to pick one now.
 
-Agreed.
-
-I would suggest you add ECAM support to the DW/QCom driver reusing some 
-of the common ECAM support code.
-
-I suppose another option would be to define a node and driver which is 
-just the DW MSI controller. That might not work given the power domain 
-being added (which is not very generic either).
-
-Rob
+   Arnd
 
