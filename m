@@ -1,48 +1,63 @@
-Return-Path: <linux-pci+bounces-10339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95106931DE6
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 01:58:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 895F6931DEF
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 02:05:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7BBBB22B3E
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jul 2024 23:58:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DB351F2220F
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 00:05:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A17E9143C53;
-	Mon, 15 Jul 2024 23:57:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02145193;
+	Tue, 16 Jul 2024 00:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CpjlGoO2"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fIdAhbT+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFAA143C6C;
-	Mon, 15 Jul 2024 23:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE08182;
+	Tue, 16 Jul 2024 00:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721087839; cv=none; b=JhCo+dWxdb6loN9fqx5OpmX4jwCrClas4oCaw0OhWK7eZQn+n8HEzjGZaXxXeLIDcaR5+GokxGIBaz1Z8GXZOETBC/Ly7D47yfsekTuTTyGSiggCFFr5xLoIVbLP5koAujjTx2klDWSgCanGmslSIAhM4U21Zad+oOFQ+N1T8NY=
+	t=1721088343; cv=none; b=qvh9Y9kubKequqFRjfIwIyvPK1RAfvh6a9Pfryw6OUVGWlGxndl32IaM43GH1ATf//nflbTdLci+736bpdhD3QCSKnNGBjDWr+PZnZ1tImtp+QTSM1Llk+V1l/NR3rCpxpubKJXK/01T4WAuSXe7xp1aDXIlVIyZ0b1NfoA+7Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721087839; c=relaxed/simple;
-	bh=djDVMLy8012REatdkamKJadfXs9qmSxCHfOhPtpMocg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j1yvie9R5B7xYWZ8xkX/g++VfeHCm9PTwMB934bSv0z6tHE4ey7+sC5trgr9KLvihbbTd6mjF2PXIj02OTZt4wvkNrVlEu5XPauOcpgILvcLJMzXYc543S06aZ/+eslrRz1eMLsIRCXz7RbRmTqfyr/1o7pbQJcqvsC/XKfi7FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CpjlGoO2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 692DBC32782;
-	Mon, 15 Jul 2024 23:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721087839;
-	bh=djDVMLy8012REatdkamKJadfXs9qmSxCHfOhPtpMocg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CpjlGoO2qzevP2D7uZAGUe1Xj73fz+shsIlGR1s3G6tuaBMemsg1dAnRn7R8pJ2+8
-	 0Kfh3yUnJ0uGwbdvtCfG3aK5dxwR9XQvFRg4bghZie2bJSekTet3Uy1pKACflDxjWx
-	 Dhval8OIRetyBafzWUJYT/kR/mlD8mCygXZD7mWIaXqFACKno5c5+u8BPXCRn/NAV/
-	 KpIEE/yxArk6M2wNTgwOGRqeTQ3V7rsUafFWe/pEWOgE+6wR6ftMIXUdrTenKcqsDQ
-	 taWiGrdIts3UDLEmjEiKlMEuyTNf+XweL/cBY2bOs7TKNoAwYoewgjOBnNUqx6DTzr
-	 1XdtUfpeqQXOQ==
-Message-ID: <5f7fca8b-ab74-4fba-8df8-152ad6f94227@kernel.org>
-Date: Tue, 16 Jul 2024 08:57:14 +0900
+	s=arc-20240116; t=1721088343; c=relaxed/simple;
+	bh=C4aKHdI+pMXhQa1VV2fGMqBHzjAK+98g4idgc3puck0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=a+gJ61C2R1/+Ay10mSYIGnWkuYjP0EcRC3+PcCR7+kFKOpYwyXrtlaKVTl33mQIOAHaQ91uF2oxhqYLaWdXHTACuqd6NgeB6vrJzSPu3dibGSKVQfXTbm0t2qJmMJtCZg2pSsH5PreJFfoksToOIZnWoHjtVTcdFYrB4Chz/z1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fIdAhbT+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46FH8nhE022489;
+	Tue, 16 Jul 2024 00:04:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	s3COLPyUyljWm+zU/iZd1HAfm7/jelNuscT18zuMsDc=; b=fIdAhbT+/+21xzOW
+	xINy3j+33nK4EIF/CkoBKfScxuulSUDJ+DBvD/FJX/DpVlG1zsGPj7B7qYIdZlAH
+	hCYbzVrBE3dcjs10e79RfnyRoCdrpNFlrCej1rmUCID/MN3Cpt9MlNiAVUnaFQN+
+	4mhbm5nSgCGK38Mcz/gqEQdJ2ITKJeSpMlz+DimL2VbFmu6VyB0kGLUDXepdiS+z
+	mySJqEY+c+oPXAVA5Xih+I/jb5zaWaVeNuRkXyIu9lMLlea8MLa1B3gweGzNN1Ot
+	TQ358tuNtW5q3Q7LvrQ9BNGAK+5aS1tIbsU/pqvp4/R2aAkQHYYVcQMugIUugFeR
+	Sr3/Lw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40bjv8nj30-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jul 2024 00:04:13 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46G04CnA000664
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jul 2024 00:04:12 GMT
+Received: from [10.110.79.225] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 15 Jul
+ 2024 17:04:11 -0700
+Message-ID: <32bd8297-761a-4132-b168-800709e0d703@quicinc.com>
+Date: Mon, 15 Jul 2024 17:04:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,124 +65,85 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/18] PCI/CMA: Authenticate devices on enumeration
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <kees@kernel.org>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- David Woodhouse <dwmw2@infradead.org>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linuxarm@huawei.com,
- David Box <david.e.box@intel.com>, "Li, Ming" <ming4.li@intel.com>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Alistair Francis <alistair.francis@wdc.com>,
- Wilfred Mallawa <wilfred.mallawa@wdc.com>, Alexey Kardashevskiy
- <aik@amd.com>, Dhaval Giani <dhaval.giani@amd.com>,
- Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
- Peter Gonda <pgonda@google.com>, Jerome Glisse <jglisse@google.com>,
- Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>,
- Samuel Ortiz <sameo@rivosinc.com>, Jann Horn <jannh@google.com>
-References: <Zo_zivacyWmBuQcM@wunner.de>
- <66901b646bd44_1a7742941d@dwillia2-xfh.jf.intel.com.notmuch>
- <ZpOPgcXU6eNqEB7M@wunner.de> <202407151005.15C1D4C5E8@keescook>
- <20240715181252.GU1482543@nvidia.com>
- <66958850db394_8f74d2942b@dwillia2-xfh.jf.intel.com.notmuch>
- <20240715220206.GV1482543@nvidia.com>
- <57791455-5c70-4ede-97d9-d5784eef7abe@kernel.org>
- <20240715230333.GX1482543@nvidia.com>
- <f228526a-984f-4754-8ade-3f998a8b436a@kernel.org>
- <20240715234259.GZ1482543@nvidia.com>
-From: Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH V2 3/7] PCI: dwc: Add pcie-designware-msi driver related
+ Kconfig option
+To: Andrew Lunn <andrew@lunn.ch>
+CC: <will@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+        <manivannan.sadhasivam@linaro.org>, <cassel@kernel.org>,
+        <yoshihiro.shimoda.uh@renesas.com>, <s-vadapalli@ti.com>,
+        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
+        <amishin@t-argos.ru>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <Frank.Li@nxp.com>,
+        <ilpo.jarvinen@linux.intel.com>, <vidyas@nvidia.com>,
+        <marek.vasut+renesas@gmail.com>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <quic_ramkri@quicinc.com>, <quic_nkela@quicinc.com>,
+        <quic_shazhuss@quicinc.com>, <quic_msarkar@quicinc.com>,
+        <quic_nitegupt@quicinc.com>
+References: <1721067215-5832-1-git-send-email-quic_mrana@quicinc.com>
+ <1721067215-5832-4-git-send-email-quic_mrana@quicinc.com>
+ <c6e0a6db-588b-4838-a134-5ce51b1cebea@lunn.ch>
 Content-Language: en-US
-Organization: Western Digital Research
-In-Reply-To: <20240715234259.GZ1482543@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+From: Mayank Rana <quic_mrana@quicinc.com>
+In-Reply-To: <c6e0a6db-588b-4838-a134-5ce51b1cebea@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: rSKTVtABDCg_TXZcrjpZqy72xLeFk4FS
+X-Proofpoint-GUID: rSKTVtABDCg_TXZcrjpZqy72xLeFk4FS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-15_17,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 spamscore=0 malwarescore=0 clxscore=1011 priorityscore=1501
+ phishscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=825 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407150187
 
-On 7/16/24 08:42, Jason Gunthorpe wrote:
-> On Tue, Jul 16, 2024 at 08:26:55AM +0900, Damien Le Moal wrote:
->> On 7/16/24 08:03, Jason Gunthorpe wrote:
->>> On Tue, Jul 16, 2024 at 07:17:55AM +0900, Damien Le Moal wrote:
->>>
->>>> Of note though is that in the case of SCSI/ATA storage, the device
->>>> (the HDD or SSD) is not the one doing DMA directly to the host/guest
->>>> memory. That is the adapter (the HBA). So we could ask ourselves if
->>>> it makes sense to authenticate storage devices without the HBA being
->>>> authenticated first.
->>>
->>> For sure, you have to have all parts of the equation
->>> authenticated before you can turn on access to trusted memory.
->>>
->>> Is there some way these non DOE messages channel bind the attestation
->>> they return to the PCI TDISP encryption keys?
+Hi Andrew
+
+On 7/15/2024 11:39 AM, Andrew Lunn wrote:
+> On Mon, Jul 15, 2024 at 11:13:31AM -0700, Mayank Rana wrote:
+>> PCIe designware MSI driver (pcie-designware-msi.c) shall be used without
+>> enabling pcie-designware core drivers (e.g. usage with ECAM driver). Hence
+>> add Kconfig option to enable pcie-designware-msi driver as separate module.
 >>
->> For the scsi/ata case, at least initially, I think the use case will be only
->> device authentication to ensure that the storage device is genuine (not
->> counterfeit), has a good FW, and has not been tempered with and not the
->> confidential VM case.
-> 
-> Oh, I see, that is something quite different then.
-> 
-> In that case you probably want to approve the storage device before
-> allowing read/write on the block device which is a quite a different
-> gate than the confidential VM people are talking about.
-> 
-> It is the equivalent we are talking about here about approving the PCI
-> device before allowing an OS driver to use it.
-> 
->> 100% agree, but I can foresee PCI NVMe device vendors adding SPDM support
->> "cheaply" using these commands since that can be implemented as a FW change
->> while adding DOE would be a controller HW change... So at least initially, it
->> may be safer to simply not support the NVMe SPDM-over-storage case, or at least
->> not support it for trusted platform/confidential VMs and only allow it for
->> storage authentication (in addition to the usual encryption, OPAL locking etc).
-> 
-> Yeah, probably.
-> 
-> Without a way to bind the NVMe SPDM support to the TDISP it doesn't
-> seem useful to me for CC cases.
-
-Yes, that likely would not work at all anyway as the driver needs to start
-probing the device before authentication can happen, meaning that DMA needs to
-be working before we can authenticate. So unless device probing is changed to
-use untrusted memory for probing, that would not work anyway.
-
-> 
-> Something like command based SPDM seems more useful to load an OPAL
-> media encryption secret or something like that - though you can't use
-> it to exclude an interposer attack so I wonder if it really matters..
-> 
->>> Still, my remarks from before stand, it looks like it is going to be
->>> complex to flip a device from non-trusted to trusted.
+>> Signed-off-by: Mayank Rana <quic_mrana@quicinc.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig               |  8 ++++++++
+>>   drivers/pci/controller/dwc/Makefile              |  3 ++-
+>>   drivers/pci/controller/dwc/pcie-designware-msi.h | 14 ++++++++++++++
+>>   3 files changed, 24 insertions(+), 1 deletion(-)
 >>
->> Indeed, and we may need to have different ways of doing that given the different
->> transport and use cases.
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 8afacc9..a4c8920 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -6,8 +6,16 @@ menu "DesignWare-based PCIe controllers"
+>>   config PCIE_DW
+>>   	bool
+>>   
+>> +config PCIE_DW_MSI
+>> +	bool "DWC PCIe based MSI controller"
+>> +	depends on PCI_MSI
+>> +	help
+>> +	  Say Y here to enable DWC PCIe based MSI controller to support
+>> +	  MSI functionality.
+>> +
 > 
-> To be clear there are definately different sorts of trusted/untrusted
-> here
-> 
-> For CC VMs and TDISP trusted/untrusted means the device is allowed to
-> DMA to secure memory.
-> 
-> For storage trusted/untrusted may mean the drive is allowed to get a
-> media encryption secret, or have it's media accessed.
-> 
-> I think they are very different targets
+> Nit picking, but in the commit message you say separate module. But it
+> is a bool, not a tristate, so it cannot be built as a module.
+I don't mean to make this driver as loadable module here. Saying this
+I agree that commit text is saying as separate module. I shall update
+commit text by replacing "separate module" as "separate driver".
 
-Initially, we can certainly treat them like that. But eventually, we may need
-something more as CC VMs access to storage has to be trusted too and so will
-require both HBA and the device to be trusted. For the TDISP handling, I am
-however not sure how that should looks like (is it the HBA or the storage device
-secrets that are used, both ?). As I said, I have not spent any time yet
-thinking about that use case.
-
--- 
-Damien Le Moal
-Western Digital Research
-
+> 	Andrew
+> 
+Regards,
+Mayank
 
