@@ -1,114 +1,118 @@
-Return-Path: <linux-pci+bounces-10388-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10389-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CBB79330A9
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 20:49:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 033EB9331AA
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 21:11:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC74BB22487
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 18:49:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 366B11C22350
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 19:11:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193121C6B7;
-	Tue, 16 Jul 2024 18:49:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD901A08B0;
+	Tue, 16 Jul 2024 19:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YZeiCBxt"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DjC3DG1s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784081B94F
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 18:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD511A08AB
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 19:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721155755; cv=none; b=Kv7HOJFdHynm+Bv3/pcKOF01xRXVQeFwYtzZ5vMZN5XV4MW/XNLjtqH0ggLAp9Q/eWDjBVBLjNiwYMD/xlSC5oexMv3oYQoGS4Ubur+IS1lZjkM9GCyKw/B7cj93S9wtRQQ3K/gM2VH2NCFxyE5q3aLJghfOPvGAx/t1VFYsZzc=
+	t=1721156545; cv=none; b=n1zo05aBqf37bTHgfBYJUmq1ThYWwVnqGiAeqiELXgRJfOetbV0tsSEBbFjxSs86wQuRIhXcDYkgRJRQCrEUN2IZVsc5IQGPW24rFClPk2ErYce0kG7rpFuF2Alfen77hH81PaAP9lY8LoN8X6sqxtW3B/Pd0mm1P1Z+hqk1fbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721155755; c=relaxed/simple;
-	bh=cF3LVwQ6uUCjs8vvD7smezICijmUnzP/qRxxOPn0ueo=;
+	s=arc-20240116; t=1721156545; c=relaxed/simple;
+	bh=IcvoyPAiBWsnUIXDnUolardaawkNmtHP8hBYcpNxiyc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nouRz4LSndBCq69v2QnQMbDKfix1Kp2KvGUjEJ1tHEN3tUXFBAht5+5Oq6wYQ8b1F8mtC7Rxs04cszX0rYr/9hlR9iyTWq3L2aoQckBN45t+nC12lvPuZdwyNq26PmxIy97iKPmhGJpYEhh+2bmxqDz+7/dNmO+yj7XO1F3CxKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YZeiCBxt; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ee9b1b422fso542421fa.0
-        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 11:49:13 -0700 (PDT)
+	 To:Cc:Content-Type; b=MGId/eMpzNzIypvuGfYSGXHNQZiJ8a8mvwZcNePkY0LfYT3Wmvy2OEgWn+3lp6rUC+eIJ5bKU1OT290AdokQzrqpBZ4YlcXyYsvCUafKAhxI8O9jWlAWy0ETuhnrwsAyIK95BTthqV5ZFAzT85FIrUvfiCdHNLb1EsSKdiFSgHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DjC3DG1s; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52e97e5a84bso8468712e87.2
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 12:02:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721155752; x=1721760552; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/KhgLmJzF0SWWsLaDdoCGwx7sJaZZjiB4NDQ1hg4zPI=;
-        b=YZeiCBxtSR3k8QS8qBZEhIPv/LF7JY9wZPhZV+Ll5T+w+uWwySlJ8V6MeLiTM5vOhB
-         2BM2GSUL04dpiLGk9slYqbyG8rGfE+tP18j2SlIr8r+20uip4L2UNxZSFD6twSwuhHpq
-         ZpuYLtRAycQbKDQw4LVbudB9tIpd3QFifUZOEUq5cqloVpgexU7XkpTM5vpMugtUosi2
-         seXiOJO7RX/cbXTcuhxuUW1HP9vWaleBXjuQZsKUpL2swATJ2wOgEiVCmA/Iu+bOG6zY
-         u/oT8czDVIkj8blkjT+DiPDBmujabEzDj89M1h1f9H92pbXCFs0uiRClhWDJXJXfNezK
-         DhGw==
+        d=linux-foundation.org; s=google; t=1721156541; x=1721761341; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jlb1twGtDgpkIuFqjFEwx2dSO55N1dWs34CngBK1sSM=;
+        b=DjC3DG1syj+8WSO1pxFbqFTP+TOp+lIH0IWW+wDZL5r8mvx0s3kLYLacdRyQfVHrfM
+         fSpfvbcJDRlqjRFXakdba/0DLKI/m9W3MLpsvOsRZa15cEUl26zZ2zbGNvwhUzyKvIQy
+         GcX4Dz7UdalhsxLEfukx90CkMyF6zeqXqbMAI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721155752; x=1721760552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/KhgLmJzF0SWWsLaDdoCGwx7sJaZZjiB4NDQ1hg4zPI=;
-        b=dUvSsyxKruC5sXeMwozRT44rO4iW+lw6AspUGZA2epABjrAWxNa8iZTmjOhwuowBsn
-         koV3anM8F7pRMmJkPvMTd3ixcV+/2FZRXpz0tEgDqIeSFwqm5tgh1+ngXxNj0uzpSRFW
-         arIqIernfGhJQCK1bjqpqL4/tOn1NrbZprKlDjGozC6c2aGPPfIdhr142Zr/G3PR+ohm
-         RzKNVzkAvJebC4bhQJlD0lmwWygVXG+0EXyhM+ojCELshYHVoQ5j2XQz+hk3bAtmyIDE
-         BgG1GcOLOq0POzgLI4y8VyUi7EXEM2fsAU2yl5vSeRNSlpcZ2Pg66tCnaIKVr1dZLiR/
-         DChw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTa1fKXYcbFVo3o/ai9Dwtb7e+Af7tu2CvFdqMy3yeGa7nFewCkus9qPOcRMaQAjTSWng5BNfjrVXw7uM8tyEpNVJvzvHSV8Vn
-X-Gm-Message-State: AOJu0Yyk08WD8w4tbfVuJZc3I9nNibFyKlp9vBG2jSwDvI3at5mu/wgC
-	/SflXPAv9Rhmn5ftL1bikg6JoUE/OwLM6QdfnhgOdP4ddIrL+sVPkBKlOM4ObfAYLVR6Bz2qiWQ
-	A4cEoT+IcDXUXvm89FUt2O0hNQWq3Rs2RGINnSg==
-X-Google-Smtp-Source: AGHT+IEZMw76FXm6ot0bsZAM4mhixLO229IEyn6XfMcbFPHJP6T9l/LLjNPp2I7LLmbp65K6cGxGFYcaG+fuqjewhOY=
-X-Received: by 2002:a2e:a609:0:b0:2ec:5324:805c with SMTP id
- 38308e7fff4ca-2eef56c6298mr8166411fa.11.1721155751656; Tue, 16 Jul 2024
- 11:49:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721156541; x=1721761341;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jlb1twGtDgpkIuFqjFEwx2dSO55N1dWs34CngBK1sSM=;
+        b=qOAA/S15TgYSoahQL8ZMFJCGjR9dNlcON+xjfRBGYoemrL/bwafprAGMNkq26icx7U
+         lfqc/PShLs5kAgbE1yApYQ0ecpakHM564/iOxBz+MZu7Fs4vJjBdMm+6VV1QNmGFcJAp
+         DRo3HOcf7izWsySsklQww/ZpHl3l0jmp8Qh7bWJTPfOALIdBNNZqx0ACgGGRowQdcuYs
+         iMcxNgjb4wdcDXDNV1Zr/VgghGXRDPQj03IcS7YGtzmTF/0jHW9kFGvD6EYHMYVVoqpp
+         uXNfDOWLCUXw4H1C4GmoA/f1vma6LbEfBS32tOWP7KXt+P8LQy5ZAQ0PYMGfwXioWYH7
+         otSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHPXjtwvYxGu6Dm1GXvVTy19MNEVTnAVcjPAQyzQcrgdZDZjqUEsR0JF50d8EVGatzmBPVYp7APtYB1AMK7wDHOevPrqp1pYbV
+X-Gm-Message-State: AOJu0Yw9ZICrF42AQxJsPKbSAwa2mKwiABw2bKACY9NFaodVecPtCGTo
+	TWbu7l4EF4/uYON2mG4gtLbx7CCuBD3BCNQXuL754MbWYcyl5VAIqQyEfOcNlmOk1NzqlBTMgtm
+	C7/La1A==
+X-Google-Smtp-Source: AGHT+IFJvTM8Tm3xHIIthBQR0uSwstqZXVGTbL809Ng3cEHW4+5vBAVo7E0MiujhgVItUmh9/2pWPw==
+X-Received: by 2002:a05:6512:1088:b0:52e:9904:71e with SMTP id 2adb3069b0e04-52edf0192f4mr2634877e87.28.1721156541385;
+        Tue, 16 Jul 2024 12:02:21 -0700 (PDT)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc7ff91esm352391166b.168.2024.07.16.12.02.20
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 12:02:20 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4257d5fc9b7so46950335e9.2
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 12:02:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWMjjvL1CofAo4lVPH+T9FOIWl+JnT7nCy80bUyUg6sIzNM/YE/fQX1KtftsKJpeCjp4EO3bDiaYlY1ZhJ/oj/I0ey/Cv9xHBOY
+X-Received: by 2002:a05:6000:1848:b0:367:434f:cab8 with SMTP id
+ ffacd0b85a97d-368261eda5cmr3359220f8f.43.1721156540333; Tue, 16 Jul 2024
+ 12:02:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716080418.34426-1-manivannan.sadhasivam@linaro.org> <CAHk-=wjxiAvNJejbpMbn_CMYzU97uHFPiRmYQ5Gaxw56UyK8sA@mail.gmail.com>
-In-Reply-To: <CAHk-=wjxiAvNJejbpMbn_CMYzU97uHFPiRmYQ5Gaxw56UyK8sA@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 16 Jul 2024 20:49:00 +0200
-Message-ID: <CAMRc=MdvZQSwC93MuAse2cGuKpNCHO+0jGOjMRNyXYwvCrY_dw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Check for the existence of 'dev.of_node' before
- calling of_platform_populate()
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240716152318.207178-1-brgl@bgdev.pl> <CAHk-=wj+4yA5jtzbTjctrk7Xu+88H=it2m5a-bpnnFeCQP7r=A@mail.gmail.com>
+ <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com>
+In-Reply-To: <CAMRc=MemuOOrEwN6U3usY+d0y2=Pof1dC=xE2P=23d2n5xZHLw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 16 Jul 2024 12:02:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
+Message-ID: <CAHk-=wg-L1K6N+0zZ-bcU7kGZMMDbXj4Z8smrsi1gvbi5U-GiQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 16, 2024 at 8:02=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, 16 Jul 2024 at 11:48, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> On Tue, 16 Jul 2024 at 01:04, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > -       if (IS_ENABLED(CONFIG_OF) && pci_is_bridge(dev)) {
-> > +       if (IS_ENABLED(CONFIG_OF) && dev_of_node(&dev->dev) && pci_is_b=
-ridge(dev)) {
-> >                 retval =3D of_platform_populate(dev->dev.of_node, NULL,=
- NULL,
+> But this patch does it. PCI_PWRCTL_PWRSEQ becomes a hidden symbol and
+> the entire submenu for PCI_PWRCTL disappears. There's no question in
+> Kconfig anymore.
 
-While at it: you could replace the dev.of_node here with dev_of_node()
-too. I seem to have missed this helper.
+Yes, but look here:
 
-Bartosz
+        default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
 
-> >                                               &dev->dev);
->
-> I think you should just drop the IS_ENABLED(CONFIG_OF) check entirely.
->
-> afaik, dev_of_node() already returns NULL if CONFIG_OF isn't set.
->
-> So the bug was literally that you based the decision on something
-> pointless that shouldn't be there at all.
->
->                 Linus
+That has at least two issues:
+
+ - what if ATH11K_PCI or ATH12K is built-in and needs this driver?
+"default m" is *NOT* valid.
+
+ - what happens when you add new drivers? You keep making this line
+longer and more complicated?
+
+See why I say "use select" instead? It means that the drivers that
+need it can select it, and you avoid complicated "list X drivers"
+things, but you can also get the *right* selection criteria, so that a
+built-in driver will select a built-in PCI_PWRCTL_PWRSEQ option.
+
+           Linus
 
