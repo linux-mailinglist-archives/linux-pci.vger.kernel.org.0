@@ -1,177 +1,129 @@
-Return-Path: <linux-pci+bounces-10373-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-10374-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91B799329C5
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 16:53:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D43DA932A5C
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 17:23:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 107101F21092
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 14:53:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67B51286D87
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jul 2024 15:23:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80FE11990CF;
-	Tue, 16 Jul 2024 14:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8370E19E7C7;
+	Tue, 16 Jul 2024 15:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsRy29LJ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BwYbrj/n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54753198A3E;
-	Tue, 16 Jul 2024 14:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82809198E80
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 15:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721141610; cv=none; b=ib54rIGsmj+eSppD/DOEp9uaLA7IU1GXp3rMJQdO4R3V0YqQ5H9iJypHFAJJ6zNVLsqfyBCTjb+QkbrnEP0CB7UGNa27C4ukj4WSq4jr2Thg+T3muaIh+pBe1B5Ri32RdzF/wNO5l2Hp+Ronx944xZLsW5qyDtukwFQ02Nxoe7U=
+	t=1721143416; cv=none; b=dWRESFDYxw2NKAxMaM03pAKM8zO/2D9V1AplcDhoFldsNqMo2uUpFkGCvocC2D6aWGUfuW9PnnMvAuBgBg4dWD2tV2H14rMeS8B1DP1JWbEn5sJm3vtHYv9HcKiFs5RkIGWwKrVZfUQCpbUGJpNpp1fHjacm4vvjRFVAFBz6FV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721141610; c=relaxed/simple;
-	bh=bbvpHxvxvWZpxLx/447Pfo7DJPV230th4g89I8p8jw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mk4+uwVEDcbUQb2vdYYebZQz6tFDDm0n2jcrgxw+ZXNd34si/W1b58VR8P9ecDL9kSn05KsG2cy9AA7ZDSZimmL8vF62HG5SXVrTJN1Ij0Ij0/FZAaiebXFNI5RQRYHvy5geWfd7Y+udVlan+4lo2I15EYtEAWqxtX9vfDNCigM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsRy29LJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2A9C116B1;
-	Tue, 16 Jul 2024 14:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721141609;
-	bh=bbvpHxvxvWZpxLx/447Pfo7DJPV230th4g89I8p8jw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tsRy29LJN46BlaAm8d6qHqxhYztrt36r6ibmGcq9s+rjXmgh8ndd1Y200MQd3De7Q
-	 wpRXlBW7q8gvLQZt7MB2/CbE6kyHrA96mejIHOKMn5D9ALkYiRuJS02NZVVWym+UtE
-	 T+V5KTJelZqS8FTbKIOdF/8qt6U84ualjNwNMt8BkZZZnAT/66uIF+TirX/DNdF4LJ
-	 egzNOiGFaHLlFLCBXNYFjidhUL5LVHtBs1u9DSPQjHr71bpyuHvGd0jnwzRZdiTfF+
-	 04oUHm8zW/c5wZC4544M10rTllGD+9FK/uUXaoQuHzb8MZCVw4RlFLcAqMP8mzqfnk
-	 Jdsgkw+tjsPsA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sTjYW-000000003hI-3ht7;
-	Tue, 16 Jul 2024 16:53:29 +0200
-Date: Tue, 16 Jul 2024 16:53:28 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	anna-maria@linutronix.de, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, festevam@gmail.com, bhelgaas@google.com,
-	rdunlap@infradead.org, vidyas@nvidia.com,
-	ilpo.jarvinen@linux.intel.com, apatel@ventanamicro.com,
-	kevin.tian@intel.com, nipun.gupta@amd.com, den@valinux.co.jp,
-	andrew@lunn.ch, gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com, gregkh@linuxfoundation.org,
-	rafael@kernel.org, alex.williamson@redhat.com, will@kernel.org,
-	lorenzo.pieralisi@arm.com, jgg@mellanox.com,
-	ammarfaizi2@gnuweeb.org, robin.murphy@arm.com,
-	lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org,
-	vkoul@kernel.org, okaya@kernel.org, agross@kernel.org,
-	andersson@kernel.org, mark.rutland@arm.com,
-	shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com,
-	shivamurthy.shastri@linutronix.de
-Subject: Re: [patch V4 00/21] genirq, irqchip: Convert ARM MSI handling to
- per device MSI domains
-Message-ID: <ZpaJaM1G721FdLFn@hovoldconsulting.com>
-References: <20240623142137.448898081@linutronix.de>
- <ZpUFl4uMCT8YwkUE@hovoldconsulting.com>
- <878qy26cd6.wl-maz@kernel.org>
- <ZpUtuS65AQTJ0kPO@hovoldconsulting.com>
- <86r0bt39zm.wl-maz@kernel.org>
+	s=arc-20240116; t=1721143416; c=relaxed/simple;
+	bh=bGn+rHjny5c1SxClfYzY2jWr2ZLUz5ncts1GzjAekJs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sPaqBYsSrR87X+WOTcsTbmJvtNNtfjGF40eztcWLNGzM+GnjRiYf1QmgLGljHmtxRoakrh0/tjG1o5CcriwAWzkMpHHyTUV49sqh/6mRoV7Kte5mtC+X2ES7OoRbivT23AJIbKW0JVnr2FWsPyUA02yrYacY3zGxjgwE7thQoiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BwYbrj/n; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-585e774fd3dso7205310a12.0
+        for <linux-pci@vger.kernel.org>; Tue, 16 Jul 2024 08:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721143413; x=1721748213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wxoFfd3TTbAHl2yndd9wu69CQvAfo9xTQ8OCO+y4mlk=;
+        b=BwYbrj/ntSqdom7U6NEJtmA0YVHsYbeTIchcm4Uf9CODIbNN1lZbFiMYlBMjvKRrhd
+         cCDEYPtLhTCv0O2p81vkgrDjZEO2WbZKxI2RbVY35Kye1g6rfW5kYBG0X2A8EHgzRVEx
+         vsxOwOEqq7v+CjGMeWmzpt3eWo3dQCvAYjn9m+y2elx04qN6Cs3UJ5WolFvID/x9w9k6
+         LERFRjBMPVdb5BU7Zv4UykFrnCmiEZAW8eQlg0H3j8VrBjyMh3SQBPa8O4Nz8W2cbqOD
+         1u1a/jR1AAt3NJXKvDs1tVYh224GpD4yowudI+L2imOUSPWTkwDuCYt3e/4IHGpUiEmu
+         I/gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721143413; x=1721748213;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wxoFfd3TTbAHl2yndd9wu69CQvAfo9xTQ8OCO+y4mlk=;
+        b=XCO5tcBZgjmg5swogdNd8hIOAZwcwRN1AG6qe3KJ7q3+0vSuMAx0IunkPLbiqxRkzz
+         m2KsCpY07IRaiMCL4Rx3nvanbUT7rs1iwRhEZuqM703KzFVHr805y4oyVfx89CpLqKt9
+         GR2wV4I3rZUldM+XnIZ7blfPqQ2wHifF60AaKrqXuBG6OJQFjpzjFXGg+Kqq22ULffL1
+         fx7QwT1Mt7WappmHJkxME0q6sd5dfDIQyo1RY3ZqfX4zpcidzaQHH5YNYdM9nJ1djoRX
+         HyBDuHGfdlLLBiURdyOkhulmGYRrcDsNZ8tPHtRJxHdvvr+XtpJni56uNyyN+JWR4pdj
+         7Gpg==
+X-Gm-Message-State: AOJu0YxVhuAohIIbjuxtyz2yxWv/yX9BRmRpU/y+9F+Yurrlb5xuIc/7
+	qR5WuQOJkk0y7YrnH9SZqrI61na1su2dXl26uxeABEhl6GrQQC7VEwjD1bxy5cY=
+X-Google-Smtp-Source: AGHT+IHrZNQzj825v+rX0fE3xtI3Zhmow/MvKLEWELV6f65wff1M5rMXQGR/8kN/c0sQD3CaC703UA==
+X-Received: by 2002:a50:f694:0:b0:58d:d3f6:58d2 with SMTP id 4fb4d7f45d1cf-59eee83203bmr1687238a12.3.1721143412642;
+        Tue, 16 Jul 2024 08:23:32 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3bd0:8776:e8bf:4da9])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59e663e4a6esm1938627a12.80.2024.07.16.08.23.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jul 2024 08:23:32 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] PCI/pwrctl: reduce the amount of Kconfig noise
+Date: Tue, 16 Jul 2024 17:23:18 +0200
+Message-ID: <20240716152318.207178-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86r0bt39zm.wl-maz@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 16, 2024 at 11:30:05AM +0100, Marc Zyngier wrote:
-> On Mon, 15 Jul 2024 15:10:01 +0100,
-> Johan Hovold <johan@kernel.org> wrote:
-> > On Mon, Jul 15, 2024 at 01:58:13PM +0100, Marc Zyngier wrote:
-> > > On Mon, 15 Jul 2024 12:18:47 +0100,
-> > > Johan Hovold <johan@kernel.org> wrote:
-> > > > On Sun, Jun 23, 2024 at 05:18:31PM +0200, Thomas Gleixner wrote:
-> > > > > This is version 4 of the series to convert ARM MSI handling over to
-> > > > > per device MSI domains.
-> > 
-> > > > This series only showed up in linux-next last Friday and broke interrupt
-> > > > handling on Qualcomm platforms like sc8280xp (e.g. Lenovo ThinkPad X13s)
-> > > > and x1e80100 that use the GIC ITS for PCIe MSIs.
-> > > > 
-> > > > I've applied the series (21 commits from linux-next) on top of 6.10 and
-> > > > can confirm that the breakage is caused by commits:
-> > > > 
-> > > > 	3d1c927c08fc ("irqchip/gic-v3-its: Switch platform MSI to MSI parent")
-> > > > 	233db05bc37f ("irqchip/gic-v3-its: Provide MSI parent for PCI/MSI[-X]")
-> > > > 
-> > > > Applying the series up until the change before 3d1c927c08fc unbreaks the
-> > > > wifi on one machine:
-> > > > 
-> > > > 	ath11k_pci 0006:01:00.0: failed to enable msi: -22
-> > > > 	ath11k_pci 0006:01:00.0: probe with driver ath11k_pci failed with error -22
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Correction, this doesn't fix the wifi, but I'm not seeing these errors
-with the commit before cc23d1dfc959 as the ath11k driver doesn't get
-this far (or doesn't probe at all).
+Kconfig will ask the user twice about power sequencing: once for the QCom
+WCN power sequencing driver and then again for the PCI power control
+driver using it.
 
-> > > > and backing up until the commit before 233db05bc37f makes the NVMe come
-> > > > up again during boot on another.
-> > > > 
-> > > > I have not tried to debug this further.
-> > > 
-> > > I need a few things from you though, because you're not giving much to
-> > > help you (and I'm travelling, which doesn't help).
-> > 
-> > Yeah, this was just an early heads up.
-> > 
-> > > Can you at least investigate what in ath11k_pci_alloc_msi() causes the
-> > > wifi driver to be upset? Does it normally use a single MSI vector or
-> > > MSI-X? How about your nVME device?
-> > 
-> > It uses multiple vectors, but now it falls back to trying to allocate a
-> > single one and even that fails with -ENOSPC:
-> > 
-> > 	ath11k_pci 0006:01:00.0: ath11k_pci_alloc_msi - requesting one vector failed: -28
-> > 
-> > Similar for the NVMe, it uses multiple vectors normally, but now only
-> > the AER interrupts appears to be allocated for each controller and there
-> > is a GICv3 interrupt for the NVMe:
-> > 
-> > 208:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
-> > 212:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
-> > 214:        161          0          0          0          0          0          0          0     GICv3 562 Level     nvme0q0, nvme0q1
-> > 215:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
-> >
-> 
-> That's an indication of the driver having failed its MSI allocation
-> and gone back to INTx signalling.
-> 
-> > Next boot, after disabling PCIe controller async probing, it's an MSI-X?!:
-> > 
-> > 201:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0006:00:00.0   0 Edge      PCIe PME, aerdrv
-> > 203:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0004:00:00.0   0 Edge      PCIe PME, aerdrv
-> > 205:          0          0          0          0          0          0          0          0  ITS-PCI-MSI-0002:00:00.0   0 Edge      PCIe PME, aerdrv
-> > 206:          0          0          0          0          0          0          0          0  ITS-PCI-MSIX-0002:01:00.0   0 Edge      nvme0q0
-> >
-> 
-> So is this issue actually tied to the async probing? Does it always
-> work if you disable it?
+Let's remove the public menuconfig entry for PCI pwrctl and instead
+default the relevant symbol to 'm' only for the architectures that
+actually need it.
 
-There seem to multiple issues here.
+Fixes: 4565d2652a37 ("PCI/pwrctl: Add PCI power control core code")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Closes: https://lore.kernel.org/lkml/CAHk-=wjWc5dzcj2O1tEgNHY1rnQW63JwtuZi_vAZPqy6wqpoUQ@mail.gmail.com/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/pci/pwrctl/Kconfig | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-With the full series applied and normal async (i.e. parallel) probing of
-the PCIe controllers I sometimes see allocation failing with -ENOSPC
-(e.g. the above ath11k errors). This seems to indicate broken locking
-somewhere.
+diff --git a/drivers/pci/pwrctl/Kconfig b/drivers/pci/pwrctl/Kconfig
+index f1b824955d4b..b8f289e6a185 100644
+--- a/drivers/pci/pwrctl/Kconfig
++++ b/drivers/pci/pwrctl/Kconfig
+@@ -1,17 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-menu "PCI Power control drivers"
+-
+ config PCI_PWRCTL
+ 	tristate
+ 
+ config PCI_PWRCTL_PWRSEQ
+-	tristate "PCI Power Control driver using the Power Sequencing subsystem"
++	tristate
+ 	select POWER_SEQUENCING
+ 	select PCI_PWRCTL
+ 	default m if ((ATH11K_PCI || ATH12K) && ARCH_QCOM)
+-	help
+-	  Enable support for the PCI power control driver for device
+-	  drivers using the Power Sequencing subsystem.
+-
+-endmenu
+-- 
+2.43.0
 
-With synchronous probing, allocation always seems to succeed but the
-ath11k (and modem) drivers time out as no interrupts are received.
-
-The NVMe driver sometimes falls back to INTx signalling and can access
-the drive, but often end up with an MSIX (?!) allocation and then fails
-to probe:
-
-	[  132.084740] nvme nvme0: I/O tag 17 (1011) QID 0 timeout, completion polled
-
-Johan
 
